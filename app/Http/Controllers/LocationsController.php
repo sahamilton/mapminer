@@ -157,7 +157,7 @@ class LocationsController extends BaseController {
 		}
 		$location = $this->location->with('company')->findOrFail($id);
 
-		$dom = new DOMDocument("1.0");
+		$dom = new \DOMDocument("1.0");
 		$node = $dom->createElement("markers");
 		$parnode = $dom->appendChild($node);
 		

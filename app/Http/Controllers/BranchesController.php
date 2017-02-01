@@ -309,7 +309,7 @@ class BranchesController extends BaseController {
 			\Debugbar::disable();
 		}
 		
-		$dom = new DOMDocument("1.0");
+		$dom = new \DOMDocument("1.0");
 		$node = $dom->createElement("markers");
 		//$parnode = $dom->appendChild($node);
 		
@@ -456,7 +456,7 @@ class BranchesController extends BaseController {
 	
 	public function makeMyBranchXML($result) {
 		
-		$dom = new DOMDocument("1.0");
+		$dom = new \DOMDocument("1.0");
 		$node = $dom->createElement("markers");
 		$parnode = $dom->appendChild($node);
 		

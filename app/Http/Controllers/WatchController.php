@@ -195,7 +195,7 @@ class WatchController extends BaseController {
 	protected function makewatchmap($result) {
 	
 		
-		$dom = new DOMDocument("1.0");
+		$dom = new \DOMDocument("1.0");
 		$node = $dom->createElement("markers");
 		$parnode = $dom->appendChild($node);
 		

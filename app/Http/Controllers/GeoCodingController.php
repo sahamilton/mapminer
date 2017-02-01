@@ -182,7 +182,7 @@ class GeoCodingController extends BaseController {
 		if (App::environment() == 'local'){
 			\Debugbar::disable();
 		}
-		$dom = new DOMDocument("1.0");
+		$dom = new \DOMDocument("1.0");
 		$node = $dom->createElement("markers");
 		$parnode = $dom->appendChild($node);
 		
