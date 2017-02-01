@@ -1,0 +1,98 @@
+<!-- Navbar -->
+		<div class="navbar navbar-default navbar-inverse navbar-fixed-top">
+        <div style="width:80;position:relative;float:left">
+        <a href="{{{ URL::to('/findme') }}}"><img src="{{{ asset('assets/img/TrueBlue_cw.png')}}}" /></a>
+        </div>
+			 <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                </div>
+                <div class="collapse navbar-collapse navbar-ex1-collapse">
+                    <ul class="nav navbar-nav">
+                     @if (!Auth::check())
+						<li {{ (Request::is('/') ? ' class="active"' : '') }}><a href="{{{ URL::to('') }}}">Welcome</a>
+                        @if (App::environment() != 'production') 
+                         <li><a href="">{{{App::environment()}}}</a>}</li>
+                       @endif</li>
+                        @else
+                        <li class="dropdown{{ (Request::is('company*','branch*' ,'person*','findme') ? ' active' : '') }}">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="{{{ URL::to('findme') }}}">
+    							<span class="glyphicon glyphicon-search"></span> Search<span class="caret"></span>
+    						</a>
+    						<ul class="dropdown-menu">
+                            <li {{ (Request::is('findme') ? ' class="active"' : '') }}><a href="{{{ URL::to('findme') }}}">Maps</a></li>
+                            <li {{ (Request::is('company*') ? ' class="active"' : '') }}><a href="{{{ URL::to('company') }}}">Accounts</a></li>
+                            <li {{ (Request::is('branch*') ? ' class="active"' : '') }}><a href="{{{ URL::to('branch/map') }}}">Branches</a></li>
+                            <li {{ (Request::is('person*') ? ' class="active"' : '') }}><a href="{{{ URL::to('person') }}}">People</a></li>
+                            </ul>
+                            </li>
+                        <li {{ (Request::is('watch') ? ' class="active"' : '') }}><a href="{{{ URL::to('watch') }}}">
+                        <span class ="glyphicon glyphicon-eye-open"></span> Watch List</a></li>
+                        <li class="dropdown{{ (Request::is('news*','comment*') ? ' active' : '') }}">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="{{{ route('news.index') }}}">
+    							<span class="glyphicon glyphicon-flag"></span> Updates & Feedback<span class="caret"></span>
+    						</a>
+    						<ul class="dropdown-menu">
+                                <li {{ (Request::is('news') ? ' class="active"' : '') }}><a href="{{{ route('news.index') }}}">Updates</a></li>
+                                <li {{ (Request::is('comment') ? ' class="active"' : '') }}><a href="{{{ route('comment.index') }}}">Feedback</a></li>
+                               
+                              
+                            </ul>
+                        </li> 
+                        <li><a href="{{route('resources.view')}}">Sales Resources</a></li>
+                         @if (Auth::user()->hasRole('Admin') or Auth::user()->hasRole('National Account Manager'))
+                         <li><a href="{{route('managers.view')}}">Managers View</a></li>
+                        
+                        
+                        @endif
+                        @if (App::environment() != 'production') 
+                         <li><a href="">{{{App::environment()}}}</a>}</li>
+                       @endif
+					</ul>
+                
+					<ul class="nav navbar-nav pull-right">
+ 						
+                        @if (Auth::user()->hasRole('Admin'))
+                         <li>
+    						<a href="{{{ URL::to('admin') }}}">
+    							<span class="glyphicon glyphicon-wrench"></span> Admin </a>
+    						
+    					</li>
+                        @endif
+    					<li class="divider-vertical"></li>
+    					<li class="dropdown">
+    							<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+    								<span class="glyphicon glyphicon-user"></span> {{{ Auth::user()->firstname }}}	<span class="caret"></span>
+    							</a>
+    							<ul class="dropdown-menu">
+    								<li><a href="{{{ URL::to('user/settings') }}}"><span class="glyphicon glyphicon-wrench"></span> Profile</a></li>
+    								<li class="divider"></li>
+    								<li>
+                                        <a href="{{ url('/logout') }}" 
+                                             onclick="event.preventDefault();
+                                             document.getElementById('logout-form').submit();">
+                                              Logout
+                                        </a>
+                                         <form id="logout-form" 
+                                                action="{{ url('/logout') }}" 
+                                            method="POST" 
+                                            style="display: none;">
+                                                        {{ csrf_field() }}
+                                          </form>
+                                    </li>
+    							</ul>
+    					</li>
+    				</ul>
+                    @endif
+					<!-- ./ nav-collapse -->
+				</div>
+                
+			</div>
+		</div>
+        
+		<!-- ./ navbar -->

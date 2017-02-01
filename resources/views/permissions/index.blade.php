@@ -1,0 +1,81 @@
+@extends('layouts.app')
+
+@section('content')
+<div class="container">
+<h2>Permissions</h2>
+<div class="container">
+
+<div class="pull-right">
+        <a href ="{{route('permission.create')}}"><button class="btn btn-success" >Add permission
+        </button></a>
+    </div>    
+   
+        
+<div class="col-md-10 col-md-offset-1">
+        <table class="table" id = "sorttable">
+            <thead>
+
+                <th>Name</th>
+                <th>Roles</th>
+                
+                <th>Actions</th>
+                
+            </thead>
+            <tbody>
+            @foreach ($permissions as $permission)
+        
+                <tr> 
+                
+                <td>{!! $permission->name !!}</td>
+               
+                <td>
+                @foreach ($permission->roles as $role)
+                    <li>{{$role->name}}</li>
+                @endforeach
+                </td>
+                
+                 <td class="col-md-2">
+                @include('partials/modal')
+
+                <div class="btn-group">
+                    <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
+                    <span class="caret"></span>
+                    <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+
+                    <li><a href="{{route('permission.edit',$permission->id)}}"><i class="glyphicon glyphicon-pencil"></i> Edit permission</a></li>
+
+                    <li><a data-href="{{route('permission.purge',$permission->id)}}" 
+                    data-toggle="modal" 
+                    data-target="#confirm-delete" 
+                    data-title = "location" 
+                    href="#"><i class="glyphicon glyphicon-trash"></i> Delete permission</a>
+                    </li>
+
+
+
+                    </ul>
+                </div>
+               
+               </td> 
+
+
+                            
+                  
+
+             
+                
+               
+                </tr>  
+            
+            @endforeach
+            </tbody>
+            
+
+
+        </table>
+        </div>
+    </div>
+</div>
+@endsection

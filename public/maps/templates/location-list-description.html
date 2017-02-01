@@ -1,0 +1,17 @@
+{{#location}}
+<li data-markerid="{{markerid}}">
+	<div class="list-label">{{marker}}</div>
+	<div class="list-details">
+		<div class="list-content">
+			<div class="loc-name">{{name}}</div>
+            {{#if account }}<div>(<i><a href="{{accountweb}}">{{account}}</a></i>{{vertical}})</div>{{/if}}
+			<div class="loc-addr">{{address}}</div> 
+            <div class="loc-addr"></div> 
+             {{#if locationweb}}<div><a href="{{locationweb}}">Location Details</a></div>{{/if}}
+			{{#if distance}}<div class="loc-dist">{{distance}} {{length}}</div>
+			<div class="loc-directions"><a href="https://maps.google.com/maps?saddr={{origin}}&amp;daddr={{address}} {{address2}} {{city}}, {{state}} {{postal}}" target="_blank">Directions</a></div>{{/if}}
+		</div>
+		
+	</div>
+</li>
+{{/location}}

@@ -1,0 +1,1 @@
+D:\xampp\htdocs\mapminer\app/views/accounttypes/index.blade.php

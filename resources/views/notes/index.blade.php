@@ -1,0 +1,1 @@
+D:\xampp\htdocs\mapminer\app/views/notes/index.blade.php
