@@ -378,7 +378,7 @@ class PersonsController extends BaseController {
 		{
 			
 			$data['selectedAccounts'] = array();
-			while(list($keys,$value) =each($data['accounts']))
+			foreach ($data['accounts'] as $keys=>$value)
 			{
 				$data['selectedAccounts'][] = $keys;
 			}

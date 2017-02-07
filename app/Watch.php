@@ -30,20 +30,20 @@ class Watch extends Model {
 		$output='';
 		foreach ($fields as $field) {
 			if(is_array($field)) {
-					while(list($key,$value) =each($field)){
-						$output.=$key.",";
+				foreach($field as $key=>$value){
+					$output.=$key.",";
 
-					}
-				 }else{
-			 $output.=$field.",";
-				 }
+				}
+			 }else{
+		 		$output.=$field.",";
+			 }
 		}
 		$output.="\n";
 	  	foreach ($watchList as $row) {
 		  reset ($fields);
 		  foreach ($fields as $field) {
 			 if(is_array($field)) {
-				while(list($key,$value) =each($field)){
+				foreach($field as $key=>$value){
 					if($key == 'notes'){
 
 						foreach ($row->$value as $watched){
