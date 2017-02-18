@@ -6,7 +6,7 @@ $session = Session::get('geo');
 if(! isset($session)) {
 	$session = array('type'=>'accounts','distance'=>'10','address'=>NULL,'view'=>'maps','lat'=>'39.8282','lng'=>'-98.5795');
 }
-while(list($key,$value) =each($session))
+foreach($session as $key=>$value)
 {
 	if(!isset($data[$key])){
 		$data[$key] = $value;
@@ -25,27 +25,29 @@ $values = Config::get('app.search_radius');
 {{Form::label('type','Show a')}}
 <?php ?>
        <select name='view' class="btn btn-mini" onchange='this.form.submit()'>
-           @while(list($key,$value) = each($views))
+          
+           @foreach($views as $key=>$field)
 				@if($key === $data['view'])
                 <option selected value="{{$key}}">{{$value}}</option>
                 @else
             
            		<option value="{{$key}}">{{$value}}</option>
 				@endif
-           @endwhile
+           @endforeach
         </select>
   {{Form::label('view','of')}} 
       
 
        <select name='type' class="btn btn-mini"  onchange='this.form.submit()'>
-           @while(list($key,$value) = each($types))
+          
+            @foreach($types as $key=>$value)
 				@if($key === $data['type'])
                 <option selected value="{{$key}}">{{$value}}</option>
                 @else
             
            		<option value="{{$key}}">{{$value}}</option>
 				@endif
-           @endwhile
+           @endforeach
         </select>
       
       {{Form::label('distance','within')}}

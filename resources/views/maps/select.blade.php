@@ -4,20 +4,21 @@
 Show a
  <?php $views = array('map'=>'map','list'=>'list');?>
        <select name='type' class="btn btn-mini" onchange='this.form.submit()'>
-           @while(list($key,$value) = each($views))
+          
+            @foreach($views as $key=>$value)
 				@if($key === 'list')
                 <option selected value="{{$key}}">{{$value}}</option>
                 @else
             
            		<option value="{{$key}}">{{$value}}</option>
 				@endif
-           @endwhile
+           @endforeach
         </select>
         of <?php $views = array('location'=>'accounts','branch'=>'branches');?>
        <select name='view' class="btn btn-mini"  onchange='this.form.submit()'>
-           @while(list($key,$value) = each($views))
+             @foreach($views as $key=>$value)
            		<option selected value="{{$key}}">{{$value}}</option>
-           @endwhile
+           @endforeach
         </select>
          
  within 

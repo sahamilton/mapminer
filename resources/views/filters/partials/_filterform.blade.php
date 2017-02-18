@@ -18,7 +18,7 @@
 <div class="form-group @if ($errors->has('type')) has-error @endif">
 {{Form::label('type')}}
 <?php $options =['one'=>'select one of','multiple'=>'select multiple','group'=>'Group'];?>
-@while(list($key,$value) =each ($options))
+ @foreach($options as $key=>$value)
     @if((isset($filter->type) and $filter->type == $key) or (!isset($filter->type) and $key =='multiple'))
     	<div>{{Form::radio('type',$key,true)}}{{$value}}</div>
     @else
@@ -26,7 +26,7 @@
 		<div>{{Form::radio('type',$key,false)}}{{$value}}</div>
     @endif
 
-@endwhile
+@endforeach
 
  @if ($errors->has('type')) <p class="help-block">{{ $errors->first('type') }}</p> @endif
 </div>
@@ -37,14 +37,14 @@
 {{Form::label('parent')}}
 
 <select name='parent' class ='form-control'>
-@while(list($key,$value) =each ($parents))
-	
+
+ @foreach($parents as $key=>$value)	
 	@if(isset($filter->parent_id) and $filter->parent_id == $key)
 		<option selected='selected' value='{{$key}}' >{{$value}}</option>
 	@else
 		<option value='{{$key}}' >{{$value}}</option>
     @endif
-@endwhile
+@endforeach
 </select>
 
 @if ($errors->has('parents')) <p class="help-block">{{ $errors->first('parents') }}</p> @endif
@@ -56,7 +56,7 @@
 {{Form::label('Filter Applies To:')}}
 <?php //$tables =['companies'=>'Companies','locations'=>'Locations'];
 $tables = ['companies|vertical'=>'Vertical','locations|business'=>'Business Type','locations|segment'=>'Segment'];?>
-@while(list($key,$value) =each ($tables))
+ @foreach($tables as $key=>$value)
 	<?php $filterOption = explode("|",$key);?>
     @if((isset($filter->searchtable) and $filter->searchtable == $filterOption[0])
 	 and (isset($filter->searchcolumn) and $filter->searchcolumn == $filterOption[1]))
@@ -66,7 +66,7 @@ $tables = ['companies|vertical'=>'Vertical','locations|business'=>'Business Type
 		<div>{{Form::radio('filterOption',$key)}}{{$value}}</div>
     @endif
 
-@endwhile
+@endforeach
  @if ($errors->has('vertical')) <p class="help-block">{{ $errors->first('vertical') }}</p> @endif
 </div>
 
@@ -76,7 +76,8 @@ $tables = ['companies|vertical'=>'Vertical','locations|business'=>'Business Type
 <div class="form-group @if ($errors->has('searchcolumn')) has-error @endif">
 {{Form::label('Can Be Null')}}
 <?php $canbenull =[1=>'Yes',0=>'No'];?>
-@while(list($key,$value) =each ($canbenull))
+
+ @foreach($canbenull as $key=>$value)
     @if((isset($filter->canbenull) and $filter->canbenull == $key) or (!isset($filter->canbenull) and $key ==0))
     	<div>{{Form::radio('canbenull',$key,true)}}{{$value}}</div>
     @else
@@ -84,7 +85,7 @@ $tables = ['companies|vertical'=>'Vertical','locations|business'=>'Business Type
 		<div>{{Form::radio('canbenull',$key)}}{{$value}}</div>
     @endif
 
-@endwhile
+@endforeach
  @if ($errors->has('canbenull')) <p class="help-block">{{ $errors->first('canbenull') }}</p> @endif
 </div>
 
@@ -93,7 +94,7 @@ $tables = ['companies|vertical'=>'Vertical','locations|business'=>'Business Type
 <div class="form-group @if ($errors->has('searchcolumn')) has-error @endif">
 {{Form::label('Active')}}
 <?php $active =[0=>'Yes',1=>'No'];?>
-@while(list($key,$value) =each ($active))
+ @foreach($active as $key=>$value)
     @if((isset($filter->inactive) and $filter->inactive == $key) or (!isset($filter->inactive) and $key ==0))
     	<div>{{Form::radio('inactive',$key,true)}}{{$value}}</div>
     @else
@@ -101,6 +102,6 @@ $tables = ['companies|vertical'=>'Vertical','locations|business'=>'Business Type
 		<div>{{Form::radio('inactive',$key)}}{{$value}}</div>
     @endif
 
-@endwhile
+@endforeach
  @if ($errors->has('inactive')) <p class="help-block">{{ $errors->first('inactive') }}</p> @endif
 </div>

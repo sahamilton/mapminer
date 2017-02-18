@@ -122,7 +122,8 @@ class BranchesController extends BaseController {
 		$branch = $this->branch->create($input);
 		// get the service lines that have been selected and reduce to the simple array
 		$serviceline = \Input::only('serviceline');
-		while(list($key,$value) =each ($serviceline['serviceline'])) {
+		foreach($serviceline['serviceline'] as $key=>$value)
+		{
 			$lines[] = $key;	
 		}
 		
@@ -272,7 +273,8 @@ class BranchesController extends BaseController {
 		// get the service lines that have been selected and reduce to the simple array
 		$serviceline = \Input::only('serviceline');
 	
-		while(list($key,$value) =each ($serviceline['serviceline'])) {
+		foreach($serviceline['serviceline'] as $key=>$value)
+		{
 		
 			$lines[] = $key;	
 		}

@@ -17,11 +17,11 @@
 
     <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
-     @while(list($key,$field)=each($fields))
+     @foreach($fields as $key=>$value)
     <th>
     {{$key}}
     </th>
-    @endwhile
+    @endforeach
        
     </thead>
     <tbody>
@@ -34,7 +34,7 @@
    	
     <tr>  
 	<?php reset($fields);?>
-    @while(list($key,$field)=each($fields))
+    @foreach($fields as $key=>$value)
     <td><?php 
 	
 		
@@ -131,7 +131,7 @@
 	};?>
 	
     </td>
-    @endwhile
+    @endforeach
     
     
     

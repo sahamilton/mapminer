@@ -56,7 +56,8 @@ $group = $groups[0]->fieldname;
 					$values = unserialize(urldecode($element->value));
 					$fields =explode(',',$element->fields->values);
 					echo "<strong>".$element->fields->fieldname."</strong>:<br />";
-					while(list($key,$value) =each($values)) {
+					foreach ($values as $key=>$value)
+					{
 						echo  "<input type=\"checkbox\" checked disabled />".$fields[$key];
 						
 					}
@@ -70,8 +71,10 @@ $group = $groups[0]->fieldname;
 					
 
 					echo "<strong>".$element->fields->fieldname."</strong>:<br />";
-					while(list($key,$value) =each($values)) {
-						if(file_exists(public_path($attachmentsPath.$value))){
+					foreach ($values as $key=>$value)
+					{
+						if(file_exists(public_path($attachmentsPath.$value)))
+						{
 							echo "<p><a target=\"_blank\" href=\"".url($attachmentsPath.$value)."\" />". $key. "</a></p>";
 						}
 					

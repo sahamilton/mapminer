@@ -179,7 +179,7 @@ public $tables = ['companies','locations'];
 
 			}
 		// Clean out any junk	
-		/*while(list($key,$value) = each ($searchFilter))
+		/*foreach ($searchFilter as $key=>$value)
 		{
 			if (in_array($key,$this->tables)) {
 				

@@ -323,7 +323,7 @@ class AdminUsersController extends AdminController {
 		$rules = array('username' => 'required|alpha_num',
             	'email' => 'required|email');
 		
-		while(list($key, $value) = each ($rules))
+		foreach ($rules as $key=>$value)
 		{
 			if($oldUser->$key != $user->$key)
 			{

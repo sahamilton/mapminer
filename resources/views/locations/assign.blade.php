@@ -4,15 +4,18 @@
 <?php $headings = array('Business'=>'businessname','Address'=>'street','City'=>'city','State'=>'state');?>
 <table class="table table-striped">
 <thead>
-<?php while(list($key,$value) =each($headings)) {
+<?php foreach($headings as $key=>$value)
+{
 	echo "<th>" . $key ."</th>";
 }
+
 echo "</thead>";
 echo "<tbody>";
 reset ($headings);
 foreach ($data as $location){
 echo "<tr>";
-while(list($key,$value) =each($headings)) {
+foreach($headings as $key=>$value)
+{
 	echo "<td>" . $location[$value] ."</td>";
 }
 echo "</tr>";

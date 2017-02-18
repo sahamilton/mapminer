@@ -33,7 +33,8 @@ $group = "";
 				
 					$values =explode(',',$field->values);
 					echo "<strong>".$field->fieldname."</strong>:<br />";
-					while(list($key,$value) =each($values)) {
+					foreach ($values as $key=>$value)
+					{
 						
 						if (isset($currentvalues[$field->id]) &&is_array($currentvalues[$field->id]) && in_array($values[$key],$currentvalues[$field->id]))
 						{

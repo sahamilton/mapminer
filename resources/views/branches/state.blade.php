@@ -1,6 +1,5 @@
 @extends('site/layouts/default')
 @section('content')
-
 <h2>{{$data['fullstate']}} State Branches</h2>
 <h4> <a href="/branch" title="Show all branches" />Show all branches</a></h4>
 <?php $route='branch.state';?>
@@ -8,18 +7,18 @@
 <p><a href='{{URL::to("branch/statemap/".$data['state'])}}'><i class="glyphicon glyphicon-flag"></i> Map view</a></p>
 <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
-     @while(list($key,$field)=each($fields))
+     @foreach($fields as $key=>$field)
     <th>
     {{$key}}
     </th>
-    @endwhile
+    @endforeach
        
     </thead>
     <tbody>
    @foreach($branches as $branch)
     <tr>  
 	<?php reset($fields);?>
-    @while(list($key,$field)=each($fields))
+     @foreach($fields as $key=>$field)
     <td>
 	<?php 
 	/*'Number'=>'branchnumber',
@@ -99,7 +98,7 @@
 	};?>
 	
     </td>
-    @endwhile
+    @endforeach
     </tr>
    @endforeach
     

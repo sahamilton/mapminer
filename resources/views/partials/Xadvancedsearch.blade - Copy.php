@@ -41,11 +41,13 @@ $verticals =array('Waste Management'=>array('Hauling','Recycling'),'Auctions'=>'
         <ul style="list-style-type: none">
         <li><input checked type="checkbox" name= "checkAll"id="checkAll" />Check All
         <ul style="list-style-type: none">
-        <?php while(list($key,$value)= each($verticals)){
+        <?php foreach($verticals as $key=>$value)
+        {
             	echo "<li><input checked type=\"checkbox\" name= \"vertical[]\" value=\"".$key."\" />". $key;
 				if(is_array($value)){
 				echo "<ul style=\"list-style-type: none\";>";
-					while(list($subkey,$subvalue)= each($value)){
+					foreach($value as $subkey=>$subvalue)
+                    {
 						echo "<li><input checked type=\"checkbox\" name= \"".$key."|segment[]\" value=\"".$subvalue."\" />". $subvalue."</li>";
 					}
 				echo "</ul>";

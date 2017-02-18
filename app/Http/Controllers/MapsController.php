@@ -48,7 +48,7 @@ class MapsController extends BaseController {
 			->get();
 			
 			
-			return \View::make('maps.showme',compact('news'));
+			return view()->make('maps.showme',compact('news'));
 
 	}
 	

@@ -6,22 +6,23 @@
 
  <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
-     @while(list($title,$field) = each($fields))
+     
+     @foreach($fields as $title=>$field)
     <th>
     {{$title}}
     </th>
-    @endwhile
+    @endforeach
        
     </thead>
     <tbody>
    @foreach($notes as $note)
     <tr>  
 	<?php reset($fields);?>
-    @while(list($key,$field)=each($fields))
+  @foreach($fields as $title=>$field)
     <td>
     <?php 
 	
-	switch ($key) {
+	switch ($title) {
 		case 'Business Name':
 			$title = "See details of the ".$note->relatesTo[$field]." location";
 			echo "<a href=\"/location/".$note->relatesTo['id']."\"";
@@ -41,7 +42,7 @@
 	};?>
 	</td>
 
-    @endwhile
+    @endforeach
     </tr>
    @endforeach
     

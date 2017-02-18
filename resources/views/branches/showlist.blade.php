@@ -5,18 +5,18 @@
 
  <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
-     @while(list($title,$field) = each($fields))
+     @foreach($fields as $title=>$field)
     <th>
     {{$title}}
     </th>
-    @endwhile
+    @endforeach
        
     </thead>
     <tbody>
    @foreach($locations as $location)
     <tr>  
 	<?php reset($fields);?>
-    @while(list($key,$field)=each($fields))
+    @foreach($fields as $key=>$value)
     <?php 
 	
 	switch ($key) {
@@ -46,7 +46,7 @@
 	};?>
 	
 
-    @endwhile
+    @endforeach
     </tr>
    @endforeach
     

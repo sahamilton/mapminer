@@ -9,7 +9,8 @@
 	<h1>Your Profile</h1>
 </div>
 
-@while (list($key,$value) =each ($fields))
+
+@foreach($fields as $key=>$field)
 
 <p><strong>{{$key}}:</strong>
 @if($value == 'username')
@@ -30,7 +31,7 @@
 
 
 
-@endwhile
+@endforeach
 
 @if (isset($user->nonews))
 <p><strong>No News before:</strong>{{date("d M Y",strtotime($user->nonews))}}</p><p>  Uncheck to reset:<input checked type='checkbox' id='nonews' name='noNews' /></p>

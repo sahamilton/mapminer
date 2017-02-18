@@ -23,7 +23,7 @@
 @include('maps/partials/_form')
 @include('partials.advancedsearch')
 <table id='sorttable' class ='table table-bordered table-striped table-hover dataTable'><thead>
-		@while(list($key,$field) =each($fields)) 
+		 @foreach($fields as $key=>$value)
 			<th><span>{{$key}}</span>
 			<!-- @if ($key == 'Watch')
 			more research needed!
@@ -32,13 +32,13 @@
 			@endif -->
 			</th>
 			
-		@endwhile
+		@endforeach
 		</thead>
 
         @foreach($data['result'] as $row)
 			<?php reset ($fields);?>
 			<tr>
-			@while(list($key,$field) =each($fields))
+			 @foreach($fields as $key=>$field)
             @if($field == 'watch_list')
            	 <td style ="text-align: center; vertical-align: middle;">
            @else
@@ -95,7 +95,7 @@
 					break;
 				};?>
                 </td>
-			@endwhile
+			@endforeach
 			</tr>
 		@endforeach
         

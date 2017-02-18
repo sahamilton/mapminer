@@ -10,12 +10,11 @@
 
 
 <table id='sorttable' class ='table table-bordered table-striped table-hover dataTable'><thead>
-		@while(list($key,$field) =each($fields)) 
-			
+		@foreach($fields as $key=>$field)
 			<th><span>{{$key}}</span>
 			
 			</th>
-		@endwhile
+		@endforeach
         
 		</thead>
 <tbody>
@@ -25,7 +24,7 @@
 
 			<?php reset ($fields);?>
 			<tr>
-			@while(list($key,$field) =each($fields))
+			@foreach($fields as $key=>$field)
 				<?php switch ($field) {
 					
 					case 'businessname':
@@ -78,7 +77,7 @@
 					echo "<td>" . $row['watching'][0]->$field ."</td>";
 					break;
 				};?>
-			@endwhile
+			@endforeach
 			</tr>
 @endforeach
 

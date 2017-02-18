@@ -14,6 +14,7 @@ class PersonsController extends BaseController {
 		$this->persons = $person;
 		$this->user = $user;
 		$this->branch = $branch;
+		//$this->persons->rebuild();
 	}
 	
 	
@@ -154,6 +155,8 @@ class PersonsController extends BaseController {
 	 */
 	public function show($person)
 	{
+		
+
 		$people = $person
 			->with('directReports',
 				'reportsTo',
@@ -195,6 +198,7 @@ class PersonsController extends BaseController {
 			return \View::make('persons.showlist', compact('people','branches','fields'));
 			
 		}else{
+			
 			if($people->isLeaf())
 			{
 				// Show branches serviced by sales rep
@@ -207,24 +211,19 @@ class PersonsController extends BaseController {
 			
 				return \View::make('persons.salesteam', compact('people','fields'));
 			}else{
+			
 				
-				$directReports = array();
-				foreach ($people->directReports as $reports)
-				{
-				
-					
-					$directReports[$reports->id]['name'] = $reports->firstname . " " . $reports->lastname;
-					$directReports[$reports->id]['id'] = $reports->id;
-					$directReports[$reports->id]['branches'] = count($reports->branchesServiced);
-				}
-				$fields = ['Name'=>'name','Branches Serviced'=>'branches'];
-				return \View::make('persons.salesmanager', compact('directReports','people','fields'));
+				$fields = ['Name'=>'name','Role'=>'role','Branches Serviced'=>'branches'];
+				return \View::make('persons.salesmanager', compact('people','fields'));
 			}
 			
 			
 		}
+			
+			
+		}
 		
-	}
+
 	
 	
 	/**

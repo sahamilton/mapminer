@@ -1,5 +1,6 @@
 @extends('site/layouts/default')
 @section('content')
+
 <?php $company = $data ['company'];
 $data['type']='company';
 $data['company'] = $company->id;
@@ -22,52 +23,52 @@ $data['distance'] = Config::get('default_radius');?>
 			</div>
 	    <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
-     @while(list($title,$field) = each($fields))
+      @foreach($fields as $title=>$field)
     <th>
     {{$title}}
     </th>
-    @endwhile
+    @endforeach
        
     </thead>
     <tbody>
    @foreach($locations as $location)
     <tr>  
 	<?php reset($fields);?>
-    @while(list($key,$field)=each($fields))
+    @foreach($fields as $title=>$field)
     <?php 
 	
-	switch ($key) {
+	switch ($title) {
 		case 'Business Name':
-			$title = "See details of the ".$location[$field]." location";
-			echo "<td><a href=\"/location/".$location['id']."\"";
-			echo " title=\"".$title."\">".$location[$field]."</a></td>";
+			$title = "See details of the ".$location->$field." location";
+			echo "<td><a href=\"/location/".$location->id."\"";
+			echo " title=\"".$title."\">".$location->$field."</a></td>";
 		break;
 		
 		case 'Segment':
 			echo "<td>";
 			
 
-				echo $location['segment'] ? "<a href=\"/company/".$data['company']."/segment/".$location['segment']."\">". $filters[$location['segment']] . "</a>" : 'Not Specified';
+				echo $location->segment ? "<a href=\"/company/".$data['company']."/segment/".$location->segment."\">". $filters[$location->segment] . "</a>" : 'Not Specified';
 			echo "</td>";
 		break;
 		
 		case 'Business Type':
 			echo "<td>";
-				echo $location['businesstype'] ? $filters[$location['businesstype']] : 'Not Specified';
+				echo $location->businesstype ? $filters[$location->businesstype] : 'Not Specified';
 			echo "</td>";
 		break;
 		
 		case 'Watching':
 			echo "<td style =\"text-align: center; vertical-align: middle;\">";
-			if(in_array($location['id'],$mywatchlist)){
+			if(in_array($location->id,$mywatchlist)){
 				echo "<input checked";
 				
 			}else{
 				echo "<input ";
 			}
-			echo " id=\"".$location['id']."\" ";
+			echo " id=\"".$location->id."\" ";
 			echo " type='checkbox' name='watchList' class='watchItem' ";
-			echo " value='".$location['id']."' ></td>";
+			echo " value='".$location->id."' ></td>";
 		break;
 		
 		case 'Actions':
@@ -82,8 +83,8 @@ $data['distance'] = Config::get('default_radius');?>
 			  </button>
 			  <ul class="dropdown-menu" role="menu">
 				
-				<li><a href="/location/{{$location['id']}}/edit/"><i class="glyphicon glyphicon-pencil"></i> Edit {{$location['businessname']}}</a></li>
-				<li><a data-href="/location/{{$location['id']}}/delete" data-toggle="modal" data-target="#confirm-delete" data-title = "{{$location['businessname']}} and all associated notes" href="#"><i class="glyphicon glyphicon-trash"></i> Delete {{$location['businessname']}}</a></li>
+				<li><a href="/location/{{$location->id}}/edit/"><i class="glyphicon glyphicon-pencil"></i> Edit {{$location->businessname}}</a></li>
+				<li><a data-href="/location/{{$location->id}}/delete" data-toggle="modal" data-target="#confirm-delete" data-title = "{{$location->businessname}} and all associated notes" href="#"><i class="glyphicon glyphicon-trash"></i> Delete {{$location->businessname}}</a></li>
 			  </ul>
 			</div>
 		
@@ -95,13 +96,13 @@ $data['distance'] = Config::get('default_radius');?>
 		
 		
 		default:
-			echo "<td>".$location[$field]."</td>";
+			echo "<td>".$location->$field."</td>";
 		break;
 		
 	};?>
 	
 
-    @endwhile
+    @endforeach
     </tr>
    @endforeach
     

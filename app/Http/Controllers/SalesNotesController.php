@@ -290,7 +290,8 @@ class SalesNotesController extends BaseController {
 		$salesnote = Salesnote::where('company_id','=',$data['companyId']);
 		$queryArray=array();
 
-		while(list($key,$value) = each($data)) {
+		foreach($data as $key=>$value)
+		{
 			try {
 				if(is_array($value)) {
 

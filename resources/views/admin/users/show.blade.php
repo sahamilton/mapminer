@@ -10,13 +10,13 @@ $newTZ = new DateTimeZone('America/Los_Angeles');
 @section('content')
 	<div class="page-header">
 		<h4>Users who have logged in {{$views[$view]}}</h4>
-        @while (list($key,$value) = each($views))
+       @foreach($views as $key=>$field)
         	@if($view != $key)
         		<a href="/admin/userlogin/{{$key}}">{{$value}}</a> | 
        	 	@else
         		{{$value}} |
             @endif
-        @endwhile
+        @endforeach
          <a href="/admin/users">All Users</a>
 	</div>
 

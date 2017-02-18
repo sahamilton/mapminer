@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 use App\User;
+use App\State;
 use App\Person;
 use App\Company;
 use App\Location;
@@ -36,6 +37,7 @@ class CompaniesController extends BaseController {
 	public function index()
 	{
 		$this->userServiceLines = $this->company->currentUserServiceLines();
+
 		//dd($this->userServiceLines);
 		$filtered = $this->company->isFiltered(['companies'],['vertical']);
 
@@ -441,7 +443,7 @@ class CompaniesController extends BaseController {
 	 
 	public function stateselect()
 	{
-		
+		$this->userServiceLines = $this->company->currentUserServiceLines();
 		$id = \Input::get('id');
 		// Check if user can view company based on user serviceline
 		// association.
@@ -505,8 +507,8 @@ class CompaniesController extends BaseController {
 			$locations = \DB::table('locations')
 				 ->where('company_id','=',$id)
 				 ->where('state','=',$state)
-				 ->whereIn('segment', $keys)
-				 ->orWhereIn('businesstype', $keys)
+				// ->whereIn('segment', $keys)
+				// ->orWhereIn('businesstype', $keys)
 				 ->orderBy('state')
 				 ->get();
 		

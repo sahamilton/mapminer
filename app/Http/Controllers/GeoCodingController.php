@@ -39,13 +39,13 @@ class GeoCodingController extends BaseController {
 			$address = urlencode($data['address']);
 			
 		}
-		if(!$data['lat']){
+		if(! $data['lat']){
 
-			$geocode = Geocoder::geocode($address);
+			$geocode = \Geocoder::geocode($address);
 			
-			if(!$geocode){
+			if(! $geocode){
 
-				return \Redirect::back()->withInput()->with('message', 'Unable to Geocode that address');
+				return redirect()->back()->withInput()->with('message', 'Unable to Geocode that address');
 			}
 			$data['lat'] = $geocode['latitude'];
 			$data['lng'] = $geocode['longitude'];

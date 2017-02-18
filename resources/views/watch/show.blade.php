@@ -7,11 +7,11 @@ title="Download {{$user->person->firstname}} {{$user->person->lastname}}'s Watch
 <i class="glyphicon glyphicon-cloud-download"></i> Download {{$user->person->firstname}} {{$user->person->lastname}}'s Watch List</a> </p>
 
 <table id='sorttable' class ='table table-bordered table-striped table-hover dataTable'><thead>
-		@while(list($key,$field) =each($fields)) 
+		@foreach($fields as $key=>$field)
 			
-			<th><span>{{$key}}</span></th>
+			<th>{{$key}}</th>
 			
-		@endwhile
+		@endforeach
         
 		</thead>
 <tbody>
@@ -22,7 +22,7 @@ title="Download {{$user->person->firstname}} {{$user->person->lastname}}'s Watch
 
 			<?php reset ($fields);?>
 			<tr>
-			@while(list($key,$field) =each($fields))
+			@foreach($fields as $key=>$field)
 				<?php switch ($field) { 
 					
 					case 'businessname':
@@ -52,7 +52,7 @@ title="Download {{$user->person->firstname}} {{$user->person->lastname}}'s Watch
 					<td>{{{$row['watching'][0]->$field or ''}}}</td>
 				<?php break;
 				};?>
-			@endwhile
+			@endforeach
 			</tr>
 @endforeach
 </tbody>

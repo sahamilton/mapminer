@@ -247,7 +247,7 @@ public function _import_csv($filename, $table,$fields)
 		// get the selected session keys
 		$searchKeys = array_flatten(\Session::get('Search'));
 		
-		
+		dd('Search keys', $searchKeys);
 		
 
 		// get all the keys for the selected table and columns

@@ -4,18 +4,18 @@
 <h1>All Location Notes</h1>
     <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
-     @while(list($key,$field)=each($fields))
+     @foreach($fields as $key=>$value)
     <th>
     {{$key}}
     </th>
-    @endwhile
+    @endforeach
        
     </thead>
     <tbody>
    @foreach($notes as $note)
     <tr>  
 	<?php reset($fields);?>
-    @while(list($key,$field)=each($fields))
+    @foreach($fields as $key=>$field)
     <td><?php 
 	
 		
@@ -35,7 +35,7 @@
 	};?>
 	
     </td>
-    @endwhile
+    @endforeach
     
     
     

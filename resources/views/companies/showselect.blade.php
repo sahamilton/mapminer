@@ -53,11 +53,11 @@
    <p style="background-color:yellow">Here are the 500 closest to your location</p>
 <table id ='sorttable'  class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
-     @while(list($title,$field) = each($fields))
+     @foreach($fields as $title=>$field)
     <th>
     {{$title}}
     </th>
-    @endwhile
+    @endforeach
        
     </thead>
     <tbody>
@@ -65,10 +65,10 @@
 
     <tr>  
 	<?php reset($fields);?>
-    @while(list($key,$field)=each($fields))
+    @foreach($fields as $title=>$field)
     <?php 
 	
-	switch ($key) {
+	switch ($title) {
 		case 'Business Name':
 			$title = "See details of the ".$location->$field." location";
 			echo "<td><a href=\"/location/".$location->id."\"";
@@ -135,7 +135,7 @@
 	};?>
 	
 
-    @endwhile
+    @endforeach
     </tr>
    @endforeach
     
