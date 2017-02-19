@@ -21,6 +21,7 @@ $views = array('map'=>'map','list'=>'list');
 $values = Config::get('app.search_radius');
 
 ?>
+
 {{Form::open(array('route'=>'findme','class'=>'form', 'id'=>'selectForm'))}}
 {{Form::label('type','Show a')}}
 <?php ?>
@@ -28,10 +29,10 @@ $values = Config::get('app.search_radius');
           
            @foreach($views as $key=>$field)
 				@if($key === $data['view'])
-                <option selected value="{{$key}}">{{$value}}</option>
+                <option selected value="{{$key}}">{{$key}}</option>
                 @else
             
-           		<option value="{{$key}}">{{$value}}</option>
+           		<option value="{{$key}}">{{$key}}</option>
 				@endif
            @endforeach
         </select>

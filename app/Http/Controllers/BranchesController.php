@@ -163,7 +163,7 @@ class BranchesController extends BaseController {
 	 */
 	public function show($id)
 	{
-		//dd($id);
+		
 		$user = new User;
 		$this->userServiceLines = $user->currentUserServiceline();
 		$servicelines = $this->serviceline->whereIn('id',$this->userServiceLines)->get();

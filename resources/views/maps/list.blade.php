@@ -49,30 +49,30 @@
 					case 'businessname':
 				
 					echo "<a href=\"/location/";
-					echo  $row['id']."\">" . $row[$field] ."</a>";
+					echo  $row->id."\">" . $row->$field ."</a>";
 					break;
 					
 					case 'companyname':
 				
 					echo "<a href=\"/company/";
-					echo $row['company_id']."\">" . $row[$field]  ."</a>";
+					echo $row->company_id."\">" . $row->$field  ."</a>";
 					break;
 					
 					case 'branchname':
 				
-						echo "<a href=\"/branch/" . $row['id']."\">";
-						echo $row[$field] ."</a>";
+						echo "<a href=\"/branch/" . $row->id."\">";
+						echo $row->$field ."</a>";
 					break;
 					
 					
 					
 					case 'distance_in_mi':
-						echo  number_format($row[$field] ,2) ;	
+						echo  number_format($row->$field ,2) ;	
 					break;
 					
 					case 'watch_list':
 						
-						if(isset($watchlist) && in_array($row['id'],$watchlist)) {
+						if(isset($watchlist) && in_array($row->id,$watchlist)) {
 							echo "<input checked ";
 							
 							
@@ -82,16 +82,16 @@
 							
 							
 						}
-						echo "id=\"".$row['id']."\" ";
+						echo "id=\"".$row->id."\" ";
 						echo " type='checkbox' name='watchList' ";
-						echo "class='watchItem' value='".$row['id']."' >";
+						echo "class='watchItem' value='".$row->id."' >";
 			
 			
 					break;
 					
 					default:
 				
-						echo  $row[$field] ;
+						echo  $row->$field ;
 					break;
 				};?>
                 </td>

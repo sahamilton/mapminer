@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 use App\Serviceline;
 use App\Location;
 use App\Branch;
+use App\Watch;
 
 class GeoCodingController extends BaseController {
 	
@@ -41,14 +42,19 @@ class GeoCodingController extends BaseController {
 		}
 		if(! $data['lat']){
 
-			$geocode = \Geocoder::geocode($address);
+			$geocode = \Geocoder::geocode($address)->get();
 			
 			if(! $geocode){
 
 				return redirect()->back()->withInput()->with('message', 'Unable to Geocode that address');
 			}
-			$data['lat'] = $geocode['latitude'];
-			$data['lng'] = $geocode['longitude'];
+
+			foreach ($geocode as $address)
+			{
+				$data['lat']=$address['latitude'];
+				$data['lng'] =$address['longitude'];
+			}
+
 			
 			
 		}
@@ -143,7 +149,7 @@ class GeoCodingController extends BaseController {
 	 
 	public function getGeoListData($data ) {
 		$company = isset($data['company']) ? $data['company'] : NULL;
-
+		$this->userServiceLines = $this->serviceline->currentUserServicelines();;
 		
 		switch ($data['type']) {
 			
