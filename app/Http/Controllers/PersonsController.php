@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 use App\User;
 use App\Person;
 use App\Branch;
+use App\Company;
 class PersonsController extends BaseController {
 
 	public $branch;
@@ -366,6 +367,7 @@ class PersonsController extends BaseController {
 			$this->managerID = \Input::get('manager');
 			
 		}
+	
 		$data = $this->getMyAccounts($data);
 		
 		$data['managerList'] = $this->getManagers();
@@ -386,6 +388,7 @@ class PersonsController extends BaseController {
 			
 			$data['selectedAccounts'] = explode("','",$data['accountstring']);	
 		}
+
 		$data['notes'] = $this->getMyNotes($data['accountstring']);
 		$data['watching'] = $this->getManagersWatchers($data['accountstring']);
 		$data['nocontact'] = $this->getLocationsWoContacts($data['accountstring']);
@@ -556,6 +559,7 @@ class PersonsController extends BaseController {
 			
 			$data['accounts'] = Company::orderBy('companyname')->pluck('companyname','id');
 			$data['title'] = "All Managers Accounts";
+			
 		}
 		
 		return $data;
@@ -575,7 +579,7 @@ class PersonsController extends BaseController {
 			$query = 
 			"select 
 				count(notes.id) as notes,
-				companyname,companies.id as companyid 
+				companyname,companies.id  
 			from 
 				notes,
 				locations,
@@ -585,7 +589,8 @@ class PersonsController extends BaseController {
 				and locations.company_id = companies.id 
 				and companies.id in ('".$accountstring."') 
 			group by 
-				companyname 
+				companies.id,
+				companyname
 			order by 
 				companyname";
 			$notes = \DB::select(\DB::raw($query));
@@ -662,13 +667,14 @@ class PersonsController extends BaseController {
 	{
 		
 		
-		$query ="select persons.user_id, count(persons.user_id) as watching,concat(firstname,' ',lastname) as name 
+		$query ="select persons.user_id, count(persons.user_id) as watching,concat(firstname,' ',lastname) as name,
+		locations.company_id
 				from locations,location_user,users,persons
 				where location_user.user_id = users.id
 				and location_user.location_id = locations.id
 				and locations.company_id in ('".$accountstring."') 
 				and persons.user_id = users.id
-				group by name 
+				group by locations.company_id,persons.user_id,firstname,lastname 
 				order by watching DESC";
 		
 		$result = \DB::select(\DB::raw($query));
@@ -701,7 +707,7 @@ class PersonsController extends BaseController {
 				on st2.coid =  companies.id 
 				where companies.id = locations.company_id
 				and companies.id in ('".$accountstring."')
-				group by companyname 
+				group by companyname,company_id,st2.nocontacts 
 				order by percent DESC,locations DESC";
 		$result = \DB::select(\DB::raw($query));
 		return $result;	

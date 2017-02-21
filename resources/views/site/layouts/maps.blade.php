@@ -22,7 +22,7 @@
         
         <link rel="stylesheet" href="{{asset('bootstrap/css/bootstrap.min.css')}}">
         <link rel="stylesheet" href="{{asset('bootstrap/css/bootstrap-theme.min.css')}}">
-        <link rel="stylesheet" href="{{asset('assets/css/mapminer.css')}}">
+        <link rel="stylesheet" href="{{asset('assets/css/prmapminer.css')}}">
         <link rel="stylesheet" type="text/css" href="{{asset('maps/css/map.css')}}">
 <link rel="stylesheet" href="{{asset('assets/css/bootstrap-colorpicker.min.css')}}">
     <script src="https://code.jquery.com/jquery-1.10.1.min.js"></script>
