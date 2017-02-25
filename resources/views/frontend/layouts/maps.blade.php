@@ -27,8 +27,7 @@
 
     <script src="//code.jquery.com/jquery-1.10.1.min.js"></script>
     <script src="{{asset('maps/js/handlebars-1.0.0.min.js')}}"></script>
-    <script src="https://maps.google.com/maps/api/js?client={{Config::get('app.google_clientid')}}&sensor=false"></script>
-    <script src="{{asset('maps/js/jquery.storelocator.js')}}"></script>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={{env('GOOGLE_MAPS_API_KEY')}}"></script>
        
       
 
