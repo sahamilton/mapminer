@@ -31,7 +31,7 @@
 
 
     
-        <link rel="stylesheet" href="{{asset('assets/css/mapminer.css')}}">
+        <link rel="stylesheet" href="{{asset('assets/css/prmapminer.css')}}">
         <link rel="stylesheet" type="text/css" href="{{asset('maps/css/map.css')}}">
 <!-- jQuery -->
 

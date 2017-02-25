@@ -1,7 +1,7 @@
 {
     "name": "sahamilton/mapminerv25",
     "description": "People Ready Mapminer.",
-    "keywords": ["trueblue", "mapminer"],
+    "keywords": ["trueblue", "people ready", "mapminer"],
     "license": "MIT",
     "type": "project",
     "require": {

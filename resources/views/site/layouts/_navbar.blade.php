@@ -1,7 +1,8 @@
 <!-- Navbar -->
 		<div class="navbar navbar-default navbar-inverse navbar-fixed-top">
-        <div style="width:80;position:relative;float:left">
-        <a href="{{{ URL::to('/findme') }}}"><img src="{{{ asset('assets/img/TrueBlue_cw.png')}}}" /></a>
+        <div class="logo" >
+        
+        <a href="{{ URL::to('/findme') }}"><img src="{{ asset('assets/img/PRlogo.png')}}" /></a>
         </div>
 			 <div class="container">
                 <div class="navbar-header">
@@ -17,7 +18,8 @@
                      @if (!Auth::check())
 						<li {{ (Request::is('/') ? ' class="active"' : '') }}><a href="{{{ URL::to('') }}}">Welcome</a>
                         @if (App::environment() != 'production') 
-                         <li><a href="">{{{App::environment()}}}</a>}</li>
+                         <li><a href="">{{{App::environment()}}}
+                         | {{env('APP_VERSION')}}</a></li>
                        @endif</li>
                         @else
                         <li class="dropdown{{ (Request::is('company*','branch*' ,'person*','findme') ? ' active' : '') }}">
@@ -33,17 +35,7 @@
                             </li>
                         <li {{ (Request::is('watch') ? ' class="active"' : '') }}><a href="{{{ URL::to('watch') }}}">
                         <span class ="glyphicon glyphicon-eye-open"></span> Watch List</a></li>
-                        <li class="dropdown{{ (Request::is('news*','comment*') ? ' active' : '') }}">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="{{{ route('news.index') }}}">
-    							<span class="glyphicon glyphicon-flag"></span> Updates & Feedback<span class="caret"></span>
-    						</a>
-    						<ul class="dropdown-menu">
-                                <li {{ (Request::is('news') ? ' class="active"' : '') }}><a href="{{{ route('news.index') }}}">Updates</a></li>
-                                <li {{ (Request::is('comment') ? ' class="active"' : '') }}><a href="{{{ route('comment.index') }}}">Feedback</a></li>
-                               
-                              
-                            </ul>
-                        </li> 
+                        
                         <li><a href="{{route('resources.view')}}">Sales Resources</a></li>
                          @if (Auth::user()->hasRole('Admin') or Auth::user()->hasRole('National Account Manager'))
                          <li><a href="{{route('managers.view')}}">Managers View</a></li>
@@ -51,7 +43,8 @@
                         
                         @endif
                         @if (App::environment() != 'production') 
-                         <li><a href="">{{{App::environment()}}}</a>}</li>
+                         <li><a href="">{{{App::environment()}}} | {{env('APP_VERSION')}}</a></li>
+                          
                        @endif
 					</ul>
                 

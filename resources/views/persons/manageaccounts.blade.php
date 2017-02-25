@@ -42,13 +42,15 @@ Check all:{{Form::checkbox('checkAll', 'yes', true,array('id'=>'checkAllAccounts
        
     </thead>
     <tbody>
+
    @foreach($data['watching'] as $watchers)
+   
 <tr>
 <td>
-<a href="/watcher/{{$watchers['user_id']}}" >{{$watchers['name']}}</a>
+<a href="/watcher/{{$watchers['user_id']}}" >{{$watchers->name}}</a>
 </td>
 <td>
-{{$watchers['watching']}}
+{{$watchers->watching}}
 </td>
 
  </tr>
@@ -59,7 +61,7 @@ Check all:{{Form::checkbox('checkAll', 'yes', true,array('id'=>'checkAllAccounts
 
 
 </div>
-
+{{dd('here')}}
 
 
 <div style="border:1px solid #000;width:300px;margin:20px;padding:20px;float:left">
