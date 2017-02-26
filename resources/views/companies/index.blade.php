@@ -34,6 +34,7 @@
    	
     <tr>  
 	<?php reset($fields);?>
+
     @foreach($fields as $key=>$value)
     <td><?php 
 	

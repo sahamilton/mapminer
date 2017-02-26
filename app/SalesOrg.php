@@ -1,5 +1,6 @@
 <?php
 namespace App;
+
 class SalesOrg extends Eloquent {
 
 	// Add your validation rules here
@@ -12,7 +13,7 @@ class SalesOrg extends Eloquent {
 
 	public function SalesOrgRole()
 	{
-		return $this->hasMany(Person::class,'position')
+		return $this->hasMany(Person::class,'position');
 	}
 
 }

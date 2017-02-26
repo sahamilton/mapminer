@@ -119,6 +119,7 @@ class LocationsController extends BaseController {
 		$branch = $this->findBranch(1);
 		$watch = $this->watch->where("location_id","=",$id->id)->where('user_id',"=",\Auth::id())->first();
 		$location = $this->location;
+	
 		return \View::make('locations.show', compact('location','branch','watch'));
 	}
 	
