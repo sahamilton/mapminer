@@ -72,22 +72,51 @@
 				<!-- ./ password confirm -->
 				<!-- Address -->
 				<div class="form-group {{{ $errors->has('address') ? 'error' : '' }}}">
-					<label class="col-md-2 control-label" for="address">Address</label>
+					<label class="col-md-2 control-label" for="address">Full Address</label>
 					<div class="col-md-10">
-						<input class="form-control" type="text" name="address" id="address" value="{{{ Input::old('address', isset($user) ? $user->person->address : null) }}}" />
+						<input class="form-control" type="text" 
+						placeholder="Full address with city & state"
+						name="address" id="address" value="{{{ Input::old('address', isset($user) ? $user->person->address : null) }}}" />
 						{{ $errors->first('address', '<span class="help-inline">:message</span>') }}
 					</div>
 				</div>
 				<!-- ./ address -->
+				@if(isset($user->person->city))
+				<!-- City -->
+				<div class="form-group {{{ $errors->has('city') ? 'error' : '' }}}">
+					<label class="col-md-2 control-label" for="city">City</label>
+					<div class="col-md-10">
+						<input class="form-control" type="text" 
+						placeholder="Leave blank unless you want to override geocode"
+						name="city" id="city" value="{{{ Input::old('city', isset($user) ? $user->person->city : null) }}}" />
+						{{ $errors->first('city', '<span class="help-inline">:message</span>') }}
+					</div>
+				</div>
+				@endif
+				<!-- ./ city -->
+				@if(isset($user->person->state))
+				<!-- State -->
+				<div class="form-group {{{ $errors->has('state') ? 'error' : '' }}}">
+					<label class="col-md-2 control-label" for="state">State</label>
+					<div class="col-md-10">
+						<input class="form-control" type="text" 
+						placeholder="Leave blank unless you want to override geocode"
+						name="state" id="state" value="{{{ Input::old('state', isset($user) ? $user->person->state : null) }}}" />
+						{{ $errors->first('state', '<span class="help-inline">:message</span>') }}
+					</div>
+				</div>
+				<!-- ./ state -->
+				@endif
+
 				<!-- Phone -->
 				<div class="form-group {{{ $errors->has('phone') ? 'error' : '' }}}">
 					<label class="col-md-2 control-label" for="address">Phone</label>
 					<div class="col-md-10">
-						<input class="form-control" type="text" name="phone" id="phone" value="{{{ Input::old('phone', isset($user) ? $user->person->phone : null) }}}" />
+						<input class="form-control" type="text" name="phone" id="phone"  value="{{{ Input::old('phone', isset($user) ? $user->person->phone : null) }}}" />
 						{{ $errors->first('phone', '<span class="help-inline">:message</span>') }}
 					</div>
 				</div>
-				<!-- ./ address -->
+				<!-- ./ phone -->
 				<!-- Activation Status -->
 				<div class="form-group {{{ $errors->has('activated') || $errors->has('confirm') ? 'error' : '' }}}">
 					<label class="col-md-2 control-label" for="confirm">Activate User?</label>
@@ -134,7 +163,7 @@
 					{{Form::label('ServiceLine','Service Lines:', array('class'=>"col-md-2 control-label"))}}
 
 					<div class="col-md-6">
-						{{Form::select('serviceline[]',$servicelines,isset($user) ? $user->serviceline->pluck('id') :'',array('class'=>'form-control','multiple'=>true))}}
+						{{Form::select('serviceline[]',$servicelines,isset($user) ? $user->serviceline->lists('id') :'',array('class'=>'form-control','multiple'=>true))}}
 
 						@if ($errors->has('serviceline')) <p class="help-block">{{ $errors->first('serviceline') }}</p> @endif
 					</div>
@@ -146,7 +175,7 @@
 					{{Form::label('Industry Focus','Industry Focus:', array('class'=>"col-md-2 control-label"))}}
 
 					<div class="col-md-6">
-						{{Form::select('vertical[]',$verticals,isset($user) ? $user->person->industryfocus->pluck('id') :'',array('class'=>'form-control','multiple'=>true))}}
+						{{Form::select('vertical[]',$verticals,isset($user) ? $user->person->industryfocus->lists('id') :'',array('class'=>'form-control','multiple'=>true))}}
 
 						@if ($errors->has('vertical')) <p class="help-block">{{ $errors->first('vertical') }}</p> @endif
 					</div>
@@ -158,14 +187,37 @@
             <div class="form-group {{{ $errors->has('manager') ? 'error' : '' }}}">
 	                <label class="col-md-2 control-label" for="roles">Manager</label>
 	                <div class="col-md-6">
-		                {{Form::select('mgrid',$managerlist,isset($user->mgrid) ?$user->mgrid : '' ,array('class'=>"form-control"))}}
+		                {{Form::select('mgrid',$managerlist,isset($user->person) ?$user->person->reports_to : '' ,array('class'=>"form-control"))}}
                      <span class="help-block">
 							Select the manager the user reports to.
 						</span>
 	            	</div>
 				</div>   
             <!---./ Managers ---->
+            
+            <!--- Branches ---->
+            <div class="form-group {{{ $errors->has('branches') ? 'error' : '' }}}">
+	                <label class="col-md-2 control-label" for="roles">Branch Association</label>
+	                <div class="col-md-6">
+		                {{Form::select('branches[]',$branches, isset($branchesServiced) ? $branchesServiced : '' ,array('class'=>"form-control",'multiple'=>true))}}
+                     <span class="help-block">
+							Select the branches associated with this user.
+						</span>
+	            	</div>
+				</div> 
+				<!---- or entr comma separated string -->  
+				<div class="form-group {{{ $errors->has('branchstring') ? 'error' : '' }}}">
+					<label class="col-md-2 control-label" for="branchstring">Branches</label>
+					<div class="col-md-10">
+						<input class="form-control" type="text" name="branchstring" id="branchstring"  />
+						{{ $errors->first('branchstring', '<span class="help-inline">:message</span>') }}
+					
+					<span class="help-block">
+							or enter a comma separated list of branches.
+						</span></div>
+				</div>
 
+            <!---./ branches ---->
 		<!-- Form Actions -->
 		<div class="form-group">
 			<div class="col-md-offset-2 col-md-10">

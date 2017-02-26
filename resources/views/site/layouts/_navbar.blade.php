@@ -50,7 +50,7 @@
                         
                         @endif
                         @if (App::environment() != 'production') 
-                         <li><a href="">{{{App::environment()}}} | {{{App::version()}}}</a></li>
+                         <li><a href="">{{{App::environment()}}} | {{{App::version()}}}| {{{env('APP_VERSION')}}}</a></li>
                           
                        @endif
 					</ul>
