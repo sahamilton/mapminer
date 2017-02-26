@@ -43,7 +43,7 @@
                         
                         @endif
                         @if (App::environment() != 'production') 
-                         <li><a href="">{{{App::environment()}}} | {{env('APP_VERSION')}}</a></li>
+                         <li><a href="">{{{App::environment()}}} | {{{App::version()}}}</a></li>
                           
                        @endif
 					</ul>

@@ -74,8 +74,8 @@ class SalesNotesController extends BaseController {
 	{
 		
 		
-		dd($this->userServiceLines);
-		
+		$this->userServiceLines = $this->company->getUserServiceLines();
+	
 		
 		if (! $this->company->checkCompanyServiceLine($id,$this->userServiceLines))
 		{

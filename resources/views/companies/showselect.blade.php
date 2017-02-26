@@ -1,6 +1,10 @@
 @extends('site/layouts/default')
 @section('content')
 <?php $account = Request::segment(2);
+$data['type']='company';
+
+$data['company'] = $company->id;
+$data['companyname']=$company->companyname;
 
 
 ?>

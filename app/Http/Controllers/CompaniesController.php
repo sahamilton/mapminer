@@ -400,6 +400,7 @@ class CompaniesController extends BaseController {
 	{
 		// Check if user can view company based on user serviceline
 		// association.
+		$this->userServiceLines = $this->company->currentUserServiceLines();
 		if (! $this->company->checkCompanyServiceLine($id,$this->userServiceLines))
 		{
 			return \Redirect::route('company.index');

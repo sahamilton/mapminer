@@ -12,7 +12,7 @@ class Howtofield extends Model {
 
 	public function usedBy() {
 		
-		return belongsToMany('companies'Comapny::class);	
+		return belongsToMany(Company::class);	
 	
 	}
 
