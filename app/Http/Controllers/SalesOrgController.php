@@ -1,7 +1,8 @@
 <?php
 namespace App\Http\Controllers;
-use App\Person;
 use App\Branch;
+use App\Person;
+
 class SalesOrgController extends BaseController {
 	public $distance = 20;
 	public $limit = 5;
@@ -9,97 +10,69 @@ class SalesOrgController extends BaseController {
 	public $person;
 	
 
+
 	public function __construct(Branch $branch, Person $person)
 	{
 		$this->person = $person;
 		$this->branch = $branch;
+		//$this->person->rebuild();
+		
 	}
-	/**
-	 * Display a listing of salesorg
-	 *
-	 * @return Response
-	 */
 	
-	public function getSalesTeam($id=null)
+	
+	public function getSalesOrgList($salesperson)
 	{
+				
+			$salesteam = $salesperson->descendantsAndSelf()->with('reportsTo','userdetails','userdetails.roles')->orderBy('lft')->get();
+			return \View::make('salesorg.salesmanagerlist', compact('salesteam'));
 
-		if(! $id)
-		{
-			$salesorg = $this->person->where('lft','=','1')->with('directReports')->first();
-		}else{
 
-			$salesorg = $this->person->where('id','=',$id)->with('directReports')->first();
-		}
-		
-		//dd($salesorg->getLeaves());
 	}
 
-	public function getSalesBranches(Person $person=null)
-	{
-
-		if(! $person)
-		{
-			$salesorg = $this->person->where('lft','=','1')->with('directReports')->first();
-		}else{
-
-			$salesorg = $person->with('branchesServiced')->where('id','=',$person->id)->first();
-			$data['salesrep']['name'] =$salesorg->firstname . " " . $salesorg->lastname;
-			$data['salesrep']['lat']=$salesorg->lat;
-			$data['salesrep']['lng']=$salesorg->lng;
-
-			foreach($salesorg->branchesServiced as $branch)
-			{
-				$data['branch'][$branch->id]['name'] = $branch->branchnumber . " / " . $branch->branchname;
-				$data['branch'][$branch->id]['lat'] = $branch->lat;
-				$data['branch'][$branch->id]['lng'] = $branch->lng;
-				$data['branch'][$branch->id]['radius'] = $branch->radius;
-				$data['branch'][$branch->id]['id'] = $branch->id;
-				$data['branch'][$branch->id]['info'] = "Branch <a href=\"".route('branch.show',$branch->id)."\">" . $branch->branchnumber ." " . $branch->branchname ."</a></br>".$branch->address." ".$branch->street .", ".$branch->city ;
-			}
-			
-			//dd($data['branch']);
-			return \View::make('salesorg.map', compact('data'));
-		}
-		
-		
-	}
 	/*
 	
 	 */
-	public function  assignSalesToBranches()
+		public function getSalesBranches($salesPerson=null)
 	{
-		$salesorg = $this->getSalesOrg();
+			// if not id then find root salesorg id
+			
+			if (! $salesPerson){
+				$salesLeader = $this->getSalesLeaders();
+				$salesperson = Person::whereIn('id',$salesLeader)->first();
+			}else{
+				$salesperson = Person::whereId($salesPerson->id)->first();
+			}
+			
+			// if leaf
+			
+			
+			if( $salesperson->isLeaf())
+			{
+				
+				$salesorg = Person::whereId($salesPerson->id)->with('userdetails.roles','reportsTo','reportsTo.userdetails.roles')->first();
 
+				return \View::make('salesorg.map', compact('salesorg'));
+				
+			}else{
+				$salesteam = $salesperson->descendantsAndSelf()
+				->with('userdetails.roles','directReports.userdetails','directReports.userdetails.roles','reportsTo.userdetails.roles')
+				->orderBy('lft')
+				->get();
+							
+				return \View::make('salesorg.managermap', compact('salesteam'));
+			}
+			
 	
-		foreach($salesorg as $salesrep)
-		{
-			$branchIds = $this->getLocalBranches($salesrep);
-			$person = $this->person->find($salesrep->id);
-			
-			$person->branchesServiced()->sync($branchIds);
-			
-		}
-		dd('OK');
+		
 	}
 
 	public function salesCoverageMap()
 	{
 		$this->salesCoverageData();
-		return \View::make('salesorg.coveragemap');
+		return View::make('salesorg.coveragemap');
 	}
 
-	private function salesCoverageData()
-	{
-
-		$branches = $this->branch
-			->with('servicedBy','servicelines')
-			->get()
-			->toArray();
-
-		$xml = $this->branch->makeNearbyBranchXML($branches);
-		dd($xml);
-		$file = file_put_contents(public_path(). '/uploads/salescoverage.xml', $xml);
-	}
+	
 
 	/*
 	
@@ -144,7 +117,7 @@ class SalesOrgController extends BaseController {
 	{
 		$salesorg = Salesorg::all();
 
-		return \View::make('salesorg.index', compact('salesorg'));
+		return View::make('salesorg.index', compact('salesorg'));
 	}
 
 	/**
@@ -154,7 +127,7 @@ class SalesOrgController extends BaseController {
 	 */
 	public function create()
 	{
-		return \View::make('salesorg.create');
+		return View::make('salesorg.create');
 	}
 
 	/**
@@ -164,16 +137,16 @@ class SalesOrgController extends BaseController {
 	 */
 	public function store()
 	{
-		$validator = Validator::make($data = \Input::all(), Salesorg::$rules);
+		$validator = Validator::make($data = Input::all(), Salesorg::$rules);
 
 		if ($validator->fails())
 		{
-			return \Redirect::back()->withErrors($validator)->withInput();
+			return Redirect::back()->withErrors($validator)->withInput();
 		}
 
 		Salesorg::create($data);
 
-		return \Redirect::route('salesorg.index');
+		return Redirect::route('salesorg.index');
 	}
 
 	/**
@@ -186,7 +159,7 @@ class SalesOrgController extends BaseController {
 	{
 		$salesorg = Salesorg::findOrFail($id);
 
-		return \View::make('salesorg.show', compact('salesorg'));
+		return View::make('salesorg.show', compact('salesorg'));
 	}
 
 	/**
@@ -199,7 +172,7 @@ class SalesOrgController extends BaseController {
 	{
 		$salesorg = Salesorg::find($id);
 
-		return \View::make('salesorg.edit', compact('salesorg'));
+		return View::make('salesorg.edit', compact('salesorg'));
 	}
 
 	/**
@@ -212,16 +185,16 @@ class SalesOrgController extends BaseController {
 	{
 		$salesorg = Salesorg::findOrFail($id);
 
-		$validator = Validator::make($data = \Input::all(), Salesorg::$rules);
+		$validator = Validator::make($data = Input::all(), Salesorg::$rules);
 
 		if ($validator->fails())
 		{
-			return \Redirect::back()->withErrors($validator)->withInput();
+			return Redirect::back()->withErrors($validator)->withInput();
 		}
 
 		$salesorg->update($data);
 
-		return \Redirect::route('salesorg.index');
+		return Redirect::route('salesorg.index');
 	}
 
 	/**
@@ -234,7 +207,14 @@ class SalesOrgController extends BaseController {
 	{
 		Salesorg::destroy($id);
 
-		return \Redirect::route('salesorg.index');
+		return Redirect::route('salesorg.index');
 	}
 
+	private function getSalesLeaders()
+	{
+		return (Person::where('depth','=',0)
+			->whereNull('reports_to')
+			->whereRaw('lft+1 != rgt')
+			->pluck('id'));
+	}
 }

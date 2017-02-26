@@ -110,6 +110,12 @@ Route::group(['middleware' => 'auth'], function () {
 	#Comments
 		Route::resource('comment','CommentsController');
 	
+	# Sales organization
+		Route::get('salesorg/{person?}',['as'=>'salesorg','uses'=>'SalesOrgController@getSalesBranches']);
+		Route::get('salesorg/{person}/list',['as'=>'salesorg.list','uses'=>'SalesOrgController@getSalesOrgList']);
+		Route::get('salesorg/coverage',['as'=>'salescoverage','uses'=>'SalesOrgController@salesCoverageMap']);
+
+
 	#Notes
 		
 		Route::get('notes/{noteId}/delete',array('as' => 'delete/note', 'uses' => 'NotesController@destroy'));

@@ -1,6 +1,6 @@
 @extends('site/layouts/default')
 @section('content')
-<<<<<<< Updated upstream
+
 <?php $account = Request::segment(2);
 $data['type']='company';
 
@@ -24,7 +24,7 @@ $data['companyname']=$company->companyname;
 </ul>
 
 
-{{dd('now here')}}
+
 @include('companies/partials/segment')
 
 
