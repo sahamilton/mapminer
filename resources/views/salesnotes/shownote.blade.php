@@ -8,7 +8,7 @@
 
 @if (Auth::user()->hasRole('Admin'))
 <div class="pull-right">
-	<a href="{{{ route('salesnotes.create',$company->id) }}}" class="btn btn-small btn-info iframe"><span class="glyphicon glyphicon-plus-sign"></span> Create / Edit</a>
+	<a href="" class="btn btn-small btn-info iframe"><span class="glyphicon glyphicon-plus-sign"></span> Create / Edit</a>
 </div>
 
 @endif
@@ -27,7 +27,7 @@
 <div id="tabs" style="margin-top:20px">
 <ul>
 <?php 
-$groups = Howtofield::select('group')->distinct()->get();
+$groups = App\Howtofield::select('group')->distinct()->get();
 
 foreach ($groups as $tab) {
 	echo "<li>";

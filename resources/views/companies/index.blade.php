@@ -29,7 +29,7 @@
    	@if(isset($locationFilter) && $locationFilter != 'both'  
    	&& (isset( $company->countlocations->first()->count) && $locationFilter=='nolocations') 
    	|| ! isset( $company->countlocations->first()->count) && $locationFilter=='locations') 
-   		<?php continue; ?>
+   		
    	@endif
    	
     <tr>  
@@ -40,12 +40,12 @@
 		
 	switch ($key) {
 		case 'Company':
-			$title = "See all ".$company->$field." locations";
+			$title = "See all ".$company->companyname." locations";
 			if(isset( $company->countlocations->first()->count) &&  $company->countlocations->first()->count > 0)
 			{
-				echo "<a href=\"/company/".$company->id."\" title=\"".$title."\">".$company->$field."</a>";
+				echo "<a href=\"/company/".$company->id."\" title=\"".$title."\">".$company->companyname."</a>";
 			}else{
-				echo $company->$field;
+				echo $company->companyname;
 			}
 			
 		break;

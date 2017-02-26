@@ -3,13 +3,13 @@
 <label>Segments</label>
 
 @foreach ($segments as $segment)
-	@if(isset($data['segment']) && $data['segment'] == $segment['filter'])
-        <input type='checkbox' name ='{{$segment['id']}}'checked  />
-        {{$segment['filter']}}
+	@if(isset($data['segment']) && $data['segment'] == $segment->filter)
+        <input type='checkbox' name ='{{$segment->id}}'checked  />
+        {{$segment->filter}}
     @else
-    <a href="/company/{{$data['company']}}/segment/{{$segment['id']}}" >
-    <input type='checkbox' name='{{$segment['id']}}'  />
-    {{$segment['filter']}}</a>
+    <a href="/company/{{$data['company']}}/segment/{{$segment->id}}" >
+    <input type='checkbox' name='{{$segment->id}}'  />
+    {{$segment->filter}}</a>
     
     @endif
 

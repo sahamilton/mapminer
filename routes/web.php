@@ -101,22 +101,22 @@ Route::group(['middleware' => 'auth'], function () {
 	
 		
 	#People
-		Route::resource('person','PersonsController',array('only' => array('index', 'show')));
+		
 		Route::get('person/{personId}/showmap', array('as'=>'showmap/person', 'uses'=>'PersonsController@showmap'));
 		Route::get('people/map', array('as'=>'person.map', 'uses'=>'PersonsController@map'));
 		
 		Route::get('geocode/people',['as'=>'person.geocode','uses'=>'PersonsController@geoCodePersons']);
-	
+		Route::resource('person','PersonsController',array('only' => array('index', 'show')));
 	#Comments
 		Route::resource('comment','CommentsController');
 	
 	#Notes
-		Route::resource('notes','NotesController');
+		
 		Route::get('notes/{noteId}/delete',array('as' => 'delete/note', 'uses' => 'NotesController@destroy'));
 		Route::get('mynotes',array('as'=>'mynotes','uses'=>'NotesController@mynotes'));
 		
 		Route::get('exportlocationnotes/{companyID}', array('as'=>'exportlocationnotes','uses'=>'PersonsController@exportManagerNotes'));
-			
+		Route::resource('notes','NotesController');	
 	#Geocoding
 		
 		Route::post('findme',array('as'=>'findme','uses'=>'GeoCodingController@findMe'));

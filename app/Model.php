@@ -380,8 +380,11 @@ public function _import_csv($filename, $table,$fields)
 	public function getUserServiceLines()
 	{
 		
-		
-		return $userServiceLines = Serviceline::whereIn('id',\Session::get('user.servicelines'))->pluck('id')->toArray();
+		if (\Session::has('user.servicelines')){
+			return \Session::get('user.servicelines');
+		}
+
+		return $this->currentUserServicelines();
 	}
 
 	public function currentUserServicelines(){
