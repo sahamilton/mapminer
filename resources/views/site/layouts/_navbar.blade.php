@@ -36,7 +36,14 @@
                         <li {{ (Request::is('watch') ? ' class="active"' : '') }}><a href="{{{ URL::to('watch') }}}">
                         <span class ="glyphicon glyphicon-eye-open"></span> Watch List</a></li>
                         
-                        <li><a href="{{route('resources.view')}}">Sales Resources</a></li>
+                        <li class="dropdown{{ (Request::is('salesorg*','resources*') ? ' active' : '') }}">
+                        <a class="dropdown-toggle" data-toggle="dropdown" >
+                         Sales Resources<span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                        <li><a href="{{route('salesorg')}}">Sales Organization</a></li>
+                        <li><a href="{{route('resources.view')}}">Sales Library</a></li>
+                        </ul>
                          @if (Auth::user()->hasRole('Admin') or Auth::user()->hasRole('National Account Manager'))
                          <li><a href="{{route('managers.view')}}">Managers View</a></li>
                         
