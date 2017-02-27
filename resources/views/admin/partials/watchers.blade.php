@@ -15,10 +15,10 @@
    @foreach($data['watchlists'] as $watchers)
 <tr>
 <td>
-<a href="/admin/watching/{{$watchers['user_id']}}" >{{$watchers['name']}}</a>
+<a href="/admin/watching/{{$watchers->user_id}}" >{{$watchers->name}}</a>
 </td>
 <td>
-{{$watchers['watching']}}
+{{$watchers->watching}}
 </td>
 
  </tr>

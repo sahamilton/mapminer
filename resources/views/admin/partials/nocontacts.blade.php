@@ -22,16 +22,16 @@
    @foreach($data['nocontact'] as $nocontact)
 <tr>
 <td>
-<a href="/company/{{$nocontact['company_id']}}" >{{$nocontact['companyname']}}</a>
+<a href="/company/{{$nocontact->company_id}}" >{{$nocontact->companyname}}</a>
 </td>
 <td>
-{{$nocontact['locations']}}
+{{$nocontact->locations}}
 </td>
 <td>
-{{$nocontact['nocontacts']}}
+{{$nocontact->nocontacts}}
 </td>
 <td>
-{{number_format($nocontact['percent']).'%'}}
+{{number_format($nocontact->percent).'%'}}
 </td>
  </tr>
  

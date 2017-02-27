@@ -187,3 +187,128 @@ Route::group(['middleware' => 'auth'], function () {
 		
     
 });
+
+/** ------------------------------------------
+ *  Admin Routes 
+ *  ------------------------------------------
+ */ 
+
+
+Route::group(array('prefix' => 'admin', 'before' => 'Admin'), function()
+{
+
+     
+    # # User Management	
+		
+		/*Route::get('users/{user}/show', 'AdminUsersController@getShow');
+		Route::get('users/export', 'AdminUsersController@export');
+		Route::get('users/create', 'AdminUsersController@getCreate');
+		Route::get('users/{user}/edit', ['as'=>'user.edit','uses'=>'AdminUsersController@getEdit']);
+		//Route::get('users/{user}/edit', function(){
+			//dd('here');
+		//});
+		Route::post('users/{user}/edit', ['as'=>'user.edit','uses'=>'AdminUsersController@postEdit']);
+		Route::get('users/{user}/delete', 'AdminUsersController@getDelete');*/
+		
+		Route::get('users/import',array('as'=>'admin.users.import', 'uses'=>'AdminUsersController@import'));
+		Route::post('users/bulkimport',array('as'=>'admin.users.bulkimport', 'uses'=>'AdminUsersController@bulkImport'));
+		Route::get('users/{user}/purge', 'AdminUsersController@destroy');
+		Route::get('users/serviceline/{servicelineId}', array('as'=>'serviceline.user','uses'=>'AdminUsersController@index'));
+
+		Route::resource('users', 'AdminUsersController');  
+
+
+    # User Role Management
+		/*Route::get('roles/{role}/show', ['as'=>'role.show','uses'=>'AdminRolesController@getShow']);
+		Route::get('roles/create', ['as'=>'role.create','uses'=>'AdminRolesController@getCreate']);
+		Route::post('roles/create','AdminRolesController@postCreate');
+		Route::get('roles/{role}/edit', 'AdminRolesController@getEdit');
+		Route::post('roles/{role}/edit', 'AdminRolesController@postEdit');
+		Route::get('roles/{role}/delete', 'AdminRolesController@getDelete');
+		Route::post('roles/{role}/delete', 'AdminRolesController@postDelete');
+		Route::get('roles','AdminRolesController@getIndex');
+		Route::get('roles/{roleId}',array('as'=>'role.show','AdminRolesController@getShow'));*/
+    	Route::resource('roles', 'AdminRolesController');
+
+
+	#Locations
+		Route::resource('locations','LocationsController');
+		Route::post('locations/bulkimport', array('as'=>'locations.import', 'uses'=>'LocationsController@bulkImport'));
+		Route::get('locationnotes',array('as'=>'locations.notes', 'uses'=>'LocationsController@locationnotes'));
+		Route::get('api/geocode',array('as'=>'api.geocode','uses'=>'LocationsController@bulkGeoCodeLocations'));
+	
+	#Companies
+		Route::get('companies/export', array('as'=>'companies.export', 'uses'=>'CompaniesController@export'));
+		Route::post('companies/export', array('as'=>'companies.locationsexport', 'uses'=>'CompaniesController@locationsExport'));
+		Route::get('companies/download', array('as'=>'companies.download','uses'=>'CompaniesController@exportAccounts'));
+		Route::get('company/{companyId}/export',array('as'=>'company.export','uses'=>'WatchController@companyexport'));
+		Route::post('company/filter',array('as'=>'company.filter','uses'=>'CompaniesController@filter'));
+		/* deprecated
+			Used to assign locations to branches
+		 Route::get('location/{locationId}/assign', array('as' => 'assign.location', 'uses' => 'LocationsController@getClosestBranch'));
+		*/
+	
+	
+	#Branches
+		Route::get('branches/import', array('as'=>'branches.import', 'uses'=>'BranchesController@import'));
+		Route::get('branches/export', array('as'=>'branches.export', 'uses'=>'BranchesController@export'));
+		Route::post('branches/bulkimport', array('as'=>'admin.branches.bulkimport', 'uses'=>'BranchesController@branchImport'));
+		Route::get('geocode', array('as'=>'admin.branches.geocode', 'uses'=>'BranchesController@geoCodeBranches'));
+		Route::get('branchmap', array('as'=>'admin.branches.genmap', 'uses'=>'BranchesController@rebuildBranchMap'));
+		
+		
+	#Howtofields	
+		Route::resource('howtofields','HowtofieldsController');
+		Route::get('howtofields/{fieldId}/delete', array('as'=>'howtofield.delete', 'uses'=>'HowtofieldsController@destroy'));
+	
+	#People
+		Route::get('person/import',array('as'=>'person.bulkimport', 'uses'=>'PersonsController@import'));
+		Route::post('person/import',array('as'=>'person.import', 'uses'=>'PersonsController@processimport'));
+		Route::get('person/export', array('as'=>'person.export', 'uses'=>'PersonsController@export'));
+
+	
+	#ServiceLines
+	
+		Route::get('serviceline/{servicelineId}/delete', array('as'=>'serviceline.delete', 'uses'=>'ServicelinesController@destroy'));
+		Route::resource('serviceline','ServicelinesController');
+
+	
+	#Salesnotes
+		
+		Route::resource('salesnotes','SalesNotesController');
+		//Route::post('salesnotes/create',array('as'=>'salesnotes.postcreate','uses'=>'CompaniesController@createSalesNotes'));
+		Route::get('salesnotes/create/{companyId}',array('as'=>'salesnotes.create','uses'=>'SalesNotesController@createSalesNotes'));
+		//Route::post('salesnotes/store/{companyID}',array('as'=>'salesnotes.store','uses'=>'CompaniesController@storeSalesNotes'));
+		
+		Route::get('cleanse',array('as'=>'users.cleanse','uses'=>'AdminUsersController@cleanse'));
+		Route::get('salesnotes/filedelete/{file}', array('as'=>'salesnotes.filedelete', 'uses'=>'SalesNotesController@filedelete'));
+	#Wathclists
+		Route::get('watchlist/{userid}', array('as'=>'watch.watchexport', 'uses'=>'WatchController@export'));
+	
+	# Admin Dashboard
+		Route::get('watching/{userid}', array('as'=>'watch.watching', 'uses'=>'WatchController@watching'));
+		Route::get('userlogin/{view?}',array('as'=>'admin.showlogins', 'uses'=>'AdminDashboardController@logins'));
+		Route::get('/', array('uses'=>'admin\AdminDashboardController@dashboard'));
+	
+	#Comments
+		Route::get('comment/download', array('as'=>'comment.download', 'uses'=>'CommentsController@download'));
+	
+	#News
+		Route::resource('news', 'NewsController');
+		Route::get('news',array('uses'=>'NewsController@admin'));
+		Route::get('news/{newsId}/delete', array('as'=>'admin.news.delete', 'uses'=>'NewsController@destroy'));
+		Route::post('news/{newsId}', array('as'=>'admin.news.update', 'uses'=>'NewsController@update'));
+	
+	#Search Filters
+		Route::resource('searchfilters','SearchFiltersController');
+		Route::get('searchfilters/promote/{filterid}',array('as'=>'admin.searchfilter.promote','uses'=>'SearchFiltersController@promote'));
+		Route::get('searchfilters/demote/{filterid}',array('as'=>'admin.searchfilter.demote','uses'=>'SearchFiltersController@demote'));
+		Route::get('filterform','SearchFiltersController@filterForm');
+		Route::get('searchfilters/{id}/delete',array('as'=>'admin.searchfilter.delete','uses'=>'SearchFiltersController@destroy'));
+		Route::get('api/searchfilters/getAccounts',array('as'=>'getAccountSegments','uses'=>'SearchFiltersController@getAccountSegments'));
+		Route::post('api/searchfilters/postAccounts',array('as'=>'postAccountSegments','uses'=>'SearchFiltersController@getAccountSegments'));
+		
+	# Seeder for relationships with servicelines
+		Route::get('seeder',array('as'=>'seeder','uses'=>'CompaniesController@seeder'));
+	
+});

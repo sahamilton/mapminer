@@ -2,9 +2,10 @@
 
 <?php $labels = $values = $n = $skip =NULL;
 $cumulative = array();
+
 foreach ($data['logins'] as $element) {
 	if($skip > 10){
- 		$labels.= "'" .$element['day_first_logged']. "',";
+ 		$labels.= "'" .$element->day_first_logged. "',";
  		$skip=0;
 	}else{
 		$labels.= "'',";
@@ -12,9 +13,9 @@ foreach ($data['logins'] as $element) {
 	$skip++;
 	// $values.= $element['logins'].",";
 	 if($n > 0){
-		 $cumulative[]=$element['logins'] + $cumulative[$n-1];
+		 $cumulative[]=$element->logins + $cumulative[$n-1];
 	 }else{
-		 $cumulative[]=$element['logins'];
+		 $cumulative[]=$element->logins;
 	 }
  $n++;
 }
@@ -26,8 +27,9 @@ $total = implode(",",$cumulative);
 $color=array("#2c9c69","#00FF00","#FFFF99","#FF9933","#CC3300","#FF0000");
 $n=0;
 $datastring=NULL;
+
 foreach ($data['status'] as $status){
-	$datastring.="{ value:". $status['count'] .",label:'". $status['status'] ."', color:\"".$color[$n]."\"},";
+	$datastring.="{ value:". $status->count .",label:'". $status->status ."', color:\"".$color[$n]."\"},";
 	$n++;
 }
 $datastring = substr($datastring,0,-1);

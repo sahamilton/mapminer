@@ -19,13 +19,13 @@
    @foreach($data['duplicates'] as $duplicates)
 <tr>
 <td>
-<a href ="{{route('company.state',array($duplicates['company_id'],$duplicates['state']))}}" >{{$duplicates['companyname']}}</a>
+<a href ="{{route('company.state',array($duplicates->company_id,$duplicates->state))}}" >{{$duplicates->companyname}}</a>
 </td>
 <td>
-{{$duplicates['fulladdress']}}
+{{$duplicates->fulladdress}}
 </td>
 <td>
-{{$duplicates['total']}}
+{{$duplicates->total}}
 </td>
 
  </tr>

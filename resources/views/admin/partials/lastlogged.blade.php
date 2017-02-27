@@ -12,9 +12,9 @@
 $cum = 0;
 foreach ($data['status'] as $status){
 	echo "<tr><td><span style=\"background-color:".$color[$n]."\">&nbsp;&nbsp;&nbsp;&nbsp;</span></td>";
-	echo "<td><a href=\"/admin/userlogin/".(substr($status['status'],0,1) - 1) ."\" title=\"list these users\">".$status['status']."</a> </td>";
-	echo "<td style=\"text-align:right\">" . $status['count']."</td>";
-	$cum = $cum + $status['count'];
+	echo "<td><a href=\"/admin/userlogin/".(substr($status->status,0,1) - 1) ."\" title=\"list these users\">".$status->status."</a> </td>";
+	echo "<td style=\"text-align:right\">" . $status->count."</td>";
+	$cum = $cum + $status->count;
 	echo "<td style=\"text-align:right\">" . $cum."</td></tr>";
 	$n++;
 	
