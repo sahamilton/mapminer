@@ -41,7 +41,7 @@ public $fillable = ['username','email','lastlogin','mgrid'];
 
    public function roles()
 	{
-		return $this->belongsToMany(Role::class,'assigned_roles');
+		return $this->belongsToMany(Role::class);
 	}
 
 	

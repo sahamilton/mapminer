@@ -3,8 +3,8 @@ namespace App\Http\Controllers;
 use App\Person;
 use App\Permission;
 use App\Role;
-
-class AdminUsersController extends AdminController {
+use App\User;
+class AdminUsersController extends BaseController {
 
 
     /**

@@ -19,7 +19,7 @@
 						<li {{ (Request::is('/') ? ' class="active"' : '') }}><a href="{{{ URL::to('') }}}">Welcome</a>
                         @if (App::environment() != 'production') 
                          <li><a href="">{{{App::environment()}}}
-                         | {{env('APP_VERSION')}}</a></li>
+                         | {{env('APP_VERSION')}} |2.5</a></li>
                        @endif</li>
                         @else
                         <li class="dropdown{{ (Request::is('company*','branch*' ,'person*','findme') ? ' active' : '') }}">
@@ -44,6 +44,7 @@
                         <li><a href="{{route('salesorg')}}">Sales Organization</a></li>
                         <li><a href="{{route('resources.view')}}">Sales Library</a></li>
                         </ul>
+
                          @if (Auth::user()->hasRole('Admin') or Auth::user()->hasRole('National Account Manager'))
                          <li><a href="{{route('managers.view')}}">Managers View</a></li>
                         

@@ -26,7 +26,7 @@
                                 <span class="glyphicon glyphicon-wrench"></span>  Manage Accounts</a>
                                 </li>
                                 <li{{ (Request::is('admin/serviceline*') ? ' class="active"' : '') }}>
-                                <a href="{{{ route('admin.serviceline.index') }}}">
+                                <a href="{{{ route('serviceline.index') }}}">
                                 <span class="glyphicon glyphicon-wrench"></span>  Manage Service Lines</a>
                                 </li>
 

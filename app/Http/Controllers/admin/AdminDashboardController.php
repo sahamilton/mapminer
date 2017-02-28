@@ -1,10 +1,10 @@
 <?php
 namespace App\Http\Controllers\admin;
-use App\Http\Controllers\AdminController;
 use App\Location;
 use App\Note;
+use App\Http\Controllers\BaseController;
 
-class AdminDashboardController extends AdminController {
+class AdminDashboardController extends BaseController {
 	
 	private $offset; // time offset in seconds from server time and local time
 	private $localTimeZone = 'America/Los_Angeles';

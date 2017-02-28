@@ -1,6 +1,15 @@
 <?php
+namespace App\Http\Controllers\admin;
+use App\User;
+use App\Role;
+use App\Person;
+use App\Permission;
+use App\Branch;
+use App\Track;
+use App\Serviceline;
+use App\Http\Controllers\BaseController;
 
-class AdminUsersController extends AdminController {
+class AdminUsersController extends BaseController {
 
 
     /**

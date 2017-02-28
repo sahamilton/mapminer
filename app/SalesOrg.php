@@ -1,7 +1,7 @@
 <?php
 namespace App;
 
-class SalesOrg extends Eloquent {
+class SalesOrg extends \Eloquent {
 
 	// Add your validation rules here
 	public static $rules = [

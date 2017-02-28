@@ -200,35 +200,19 @@ Route::group(array('prefix' => 'admin', 'before' => 'Admin'), function()
      
     # # User Management	
 		
-		/*Route::get('users/{user}/show', 'AdminUsersController@getShow');
-		Route::get('users/export', 'AdminUsersController@export');
-		Route::get('users/create', 'AdminUsersController@getCreate');
-		Route::get('users/{user}/edit', ['as'=>'user.edit','uses'=>'AdminUsersController@getEdit']);
-		//Route::get('users/{user}/edit', function(){
-			//dd('here');
-		//});
-		Route::post('users/{user}/edit', ['as'=>'user.edit','uses'=>'AdminUsersController@postEdit']);
-		Route::get('users/{user}/delete', 'AdminUsersController@getDelete');*/
 		
-		Route::get('users/import',array('as'=>'admin.users.import', 'uses'=>'AdminUsersController@import'));
-		Route::post('users/bulkimport',array('as'=>'admin.users.bulkimport', 'uses'=>'AdminUsersController@bulkImport'));
-		Route::get('users/{user}/purge', 'AdminUsersController@destroy');
-		Route::get('users/serviceline/{servicelineId}', array('as'=>'serviceline.user','uses'=>'AdminUsersController@index'));
+		
+		Route::get('users/import',array('as'=>'admin.users.import', 'uses'=>'admin\AdminUsersController@import'));
+		Route::post('users/bulkimport',array('as'=>'admin.users.bulkimport', 'uses'=>'admin\AdminUsersController@bulkImport'));
+		Route::get('users/{user}/purge', 'admin\AdminUsersController@destroy');
+		Route::get('users/serviceline/{servicelineId}', array('as'=>'serviceline.user','uses'=>'admin\AdminUsersController@index'));
 
-		Route::resource('users', 'AdminUsersController');  
+		Route::resource('users', 'admin\AdminUsersController');  
 
 
     # User Role Management
-		/*Route::get('roles/{role}/show', ['as'=>'role.show','uses'=>'AdminRolesController@getShow']);
-		Route::get('roles/create', ['as'=>'role.create','uses'=>'AdminRolesController@getCreate']);
-		Route::post('roles/create','AdminRolesController@postCreate');
-		Route::get('roles/{role}/edit', 'AdminRolesController@getEdit');
-		Route::post('roles/{role}/edit', 'AdminRolesController@postEdit');
-		Route::get('roles/{role}/delete', 'AdminRolesController@getDelete');
-		Route::post('roles/{role}/delete', 'AdminRolesController@postDelete');
-		Route::get('roles','AdminRolesController@getIndex');
-		Route::get('roles/{roleId}',array('as'=>'role.show','AdminRolesController@getShow'));*/
-    	Route::resource('roles', 'AdminRolesController');
+		
+    	Route::resource('roles', 'admin\AdminRolesController');
 
 
 	#Locations
@@ -280,14 +264,14 @@ Route::group(array('prefix' => 'admin', 'before' => 'Admin'), function()
 		Route::get('salesnotes/create/{companyId}',array('as'=>'salesnotes.create','uses'=>'SalesNotesController@createSalesNotes'));
 		//Route::post('salesnotes/store/{companyID}',array('as'=>'salesnotes.store','uses'=>'CompaniesController@storeSalesNotes'));
 		
-		Route::get('cleanse',array('as'=>'users.cleanse','uses'=>'AdminUsersController@cleanse'));
+		Route::get('cleanse',array('as'=>'users.cleanse','uses'=>'admin\AdminUsersController@cleanse'));
 		Route::get('salesnotes/filedelete/{file}', array('as'=>'salesnotes.filedelete', 'uses'=>'SalesNotesController@filedelete'));
 	#Wathclists
 		Route::get('watchlist/{userid}', array('as'=>'watch.watchexport', 'uses'=>'WatchController@export'));
 	
 	# Admin Dashboard
 		Route::get('watching/{userid}', array('as'=>'watch.watching', 'uses'=>'WatchController@watching'));
-		Route::get('userlogin/{view?}',array('as'=>'admin.showlogins', 'uses'=>'AdminDashboardController@logins'));
+		Route::get('userlogin/{view?}',array('as'=>'admin.showlogins', 'uses'=>'admin\AdminDashboardController@logins'));
 		Route::get('/', array('uses'=>'admin\AdminDashboardController@dashboard'));
 	
 	#Comments

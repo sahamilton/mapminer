@@ -22,9 +22,10 @@ foreach ($data['logins'] as $element) {
 
 $labels = substr($labels,0,-1);
 //$values = substr($values,0,-1);
+
 $total = implode(",",$cumulative);
 
-$color=array("#2c9c69","#00FF00","#FFFF99","#FF9933","#CC3300","#FF0000");
+$color=["#2c9c69","#00FF00","#FFFF99","#FF9933","#CC3300","#FF0000"];
 $n=0;
 $datastring=NULL;
 
@@ -52,7 +53,7 @@ $datastring = substr($datastring,0,-1);
     <div id="home" class="tab-pane fade in active">
       <h3>Usage</h3>
       	@include ('admin.partials.firstlogged')
-		@include ('admin.partials.lastlogged')
+		    @include ('admin.partials.lastlogged')
     
     </div>
     <div id="menu1" class="tab-pane fade">

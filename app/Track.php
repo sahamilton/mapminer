@@ -1,6 +1,6 @@
 <?php
 namespace App;
-class Track extends Eloquent {
+class Track extends \Eloquent {
 
 	// Add your validation rules here
 	public static $rules;
