@@ -18,9 +18,9 @@
                      @if (!Auth::check())
 						<li {{ (Request::is('/') ? ' class="active"' : '') }}><a href="{{{ URL::to('') }}}">Welcome</a>
                         @if (App::environment() != 'production') 
-                         <li><a href="">{{{App::environment()}}}
-                         | {{env('APP_VERSION')}} |2.5</a></li>
-                       @endif</li>
+                         <li><a href="">{{{App::environment()}}} | {{{App::version()}}}| {{{env('APP_VERSION')}}}</a></li>
+                       @endif
+                       </li>
                         @else
                         <li class="dropdown{{ (Request::is('company*','branch*' ,'person*','findme') ? ' active' : '') }}">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="{{{ URL::to('findme') }}}">
