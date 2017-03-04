@@ -2,23 +2,26 @@
 
 {{-- Content --}}
 @section('content')
+
     <!-- Tabs -->
         <ul class="nav nav-tabs">
             <li class="active"><a href="#tab-general" data-toggle="tab">General</a></li>
         </ul>
     <!-- ./ tabs -->
-
-    {{-- Delete User Form --}}
-    <form id="deleteForm" class="form-horizontal" method="post" action="@if (isset($user)){{ route('admin.user.delete',$user->id) }}@endif" autocomplete="off">
+    {{-- Delete Post Form --}}
+    <form id="deleteForm" class="form-horizontal" method="post" action="@if (isset($permission)){{ URL::to('admin/permissions/' . $permission->id . '/delete') }}@endif" autocomplete="off">
+        
         <!-- CSRF Token -->
         <input type="hidden" name="_token" value="{{{ csrf_token() }}}" />
-        <input type="hidden" name="id" value="{{ $user->id }}" />
+        <input type="hidden" name="id" value="{{ $permission->id }}" />
+        <!-- <input type="hidden" name="_method" value="DELETE" /> -->
         <!-- ./ csrf token -->
 
         <!-- Form Actions -->
         <div class="form-group">
             <div class="controls">
-                <element class="btn-cancel close_popup">Cancel!</element>
+                Delete permission
+                <element class="btn-cancel close_popup">Cancel</element>
                 <button type="submit" class="btn btn-danger">Delete</button>
             </div>
         </div>

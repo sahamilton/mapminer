@@ -95,7 +95,7 @@ var options = {legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><%
 };
 
 var data = {
-    labels: [{{$labels}}],
+    labels: [{!!$labels!!}],
     datasets: [
         
 		{
@@ -114,7 +114,7 @@ var data = {
 new Chart(ctx).Bar(data, options);
 
 var data = [
-    {{$datastring}}
+    {!!$datastring!!}
 
 ];
 var canvas = document.getElementById("pieChart");

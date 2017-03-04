@@ -7,9 +7,9 @@
     </div>
 
 	{{-- Create User Form --}}
-	<form class="form-horizontal" method="post" action="@if (isset($user)){{ URL::to('admin/users/' . $user->id . '/edit') }}@endif" autocomplete="off">
-		<!-- CSRF Token -->
-		
+	<form class="form-horizontal" method="post" action="{{ route('admin.user.store') }}" autocomplete="off">
+	@include('admin.users.partials._form')
+
 		<!-- Form Actions -->
 		<div class="form-group">
 			<div class="col-md-offset-2 col-md-10">

@@ -28,7 +28,7 @@
 
                                 <ul class="dropdown-menu" role="menu">
                                     <li>
-                                        <a href="{{route('quotes.index')}}">Quotes</a>
+                                        
                                     </li>
                                 </ul>
                             </li>

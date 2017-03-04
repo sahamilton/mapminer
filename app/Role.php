@@ -16,7 +16,12 @@ class Role extends Model
     	return $this->permissions()->save($permission);
     }
 
-    public function assignRole($role)
+    public function assignedRoles()
+    {
+        return $this->belongsToMany(User::class);
+    }
+
+    public function assignRoles($role)
     {
     	return $this->roles()->save(
     		Role::whereName($role)->firstOrFail()

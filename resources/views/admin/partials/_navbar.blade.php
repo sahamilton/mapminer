@@ -1,5 +1,5 @@
 <!-- Navbar -->
-		<div class="navbar navbar-default navbar-inverse navbar-fixed-top"><div style="width:80;position:relative;float:left"><a href="{{{ URL::to('/findme') }}}"><img src="{{{ asset('assets/img/TrueBlue_cw.png')}}}" /></a></div>
+		<div class="navbar navbar-default navbar-inverse navbar-fixed-top"><div class="logo"><a href="{{{ URL::to('/findme') }}}"><img src="{{{ asset('assets/img/PRlogo.png')}}}" width ='164'/></a></div>
 			 <div class="container">
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
@@ -25,7 +25,7 @@
                                 <a href="{{{ URL::to('company') }}}">
                                 <span class="glyphicon glyphicon-wrench"></span>  Manage Accounts</a>
                                 </li>
-                                <li{{ (Request::is('admin/serviceline*') ? ' class="active"' : '') }}>
+                                <li{{ (Request::is('serviceline*') ? ' class="active"' : '') }}>
                                 <a href="{{{ route('serviceline.index') }}}">
                                 <span class="glyphicon glyphicon-wrench"></span>  Manage Service Lines</a>
                                 </li>

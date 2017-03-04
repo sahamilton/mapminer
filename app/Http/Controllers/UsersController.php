@@ -13,6 +13,7 @@ class UsersController extends Controller
      */
     public function index(User $user)
     {
+        dd('here');
         $users = $user->with('roles')->get();
         return view ('users.index', compact('users'));
     }

@@ -10,7 +10,7 @@
 	<!-- ./ tabs -->
 
 	{{-- Create Role Form --}}
-	<form class="form-horizontal" method="post" action="" autocomplete="off">
+	<form class="form-horizontal" method="post" action="{{route('admin.roles.store')}}" autocomplete="off">
 		<!-- CSRF Token -->
 		<input type="hidden" name="_token" value="{{{ csrf_token() }}}" />
 		<!-- ./ csrf token -->
@@ -50,8 +50,6 @@
 		<!-- Form Actions -->
 		<div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-				<element class="btn-cancel close_popup">Cancel</element>
-				<button type="reset" class="btn btn-default">Reset</button>
 				<button type="submit" class="btn btn-success">Create Role</button>
             </div>
 		</div>

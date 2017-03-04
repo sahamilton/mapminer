@@ -2,11 +2,11 @@
 
 {{-- Web site Title --}}
 @section('title')
-{{{ Lang::get('user/user.settings') }}} ::
+Settings ::
 @parent
 @stop
 
-{{-- New Laravel 4 Feature in use --}}
+
 @section('styles')
 @parent
 body {

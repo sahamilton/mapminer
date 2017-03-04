@@ -1,10 +1,10 @@
-<h1>{{ Lang::get('confide::confide.email.password_reset.subject') }}</h1>
+<h1>Password Reset</h1>
 
-<p>{{ Lang::get('confide::confide.email.password_reset.greetings', array( 'name' => $user['username'])) }},</p>
+<p>Hi {{$user['username']}},</p>
 
-<p>{{ Lang::get('confide::confide.email.password_reset.body') }}</p>
+<p>SOmeone, hopefully you, requested to reset your password on the TrueBlue Mapminer system.  You can use this link to create a new password:</p>
 <a href='{{ URL::to('user/reset/'.$token) }}'>
     {{ URL::to('user/reset/'.$token)  }}
 </a>
 
-<p>{{ Lang::get('confide::confide.email.password_reset.farewell') }}</p>
+<p>Sincerely</p>

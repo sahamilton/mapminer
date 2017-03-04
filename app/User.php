@@ -144,12 +144,6 @@ public $fillable = ['username','email','lastlogin','mgrid'];
         return $this->email;
     }
 	
-
-
-
-
-
-
 	/**
      * Bulk import csv file of users.
      * @param $path

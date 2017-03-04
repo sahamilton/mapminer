@@ -7,6 +7,7 @@ use App\Permission;
 use App\Branch;
 use App\Track;
 use App\Serviceline;
+use App\SearchFilter;
 use App\Http\Controllers\BaseController;
 
 class AdminUsersController extends BaseController {
@@ -57,7 +58,7 @@ class AdminUsersController extends BaseController {
      */
     public function __construct(User $user, Role $role, Person $person, Permission $permission, Branch $branch, Track $track,Serviceline $serviceline)
     {
-        parent::__construct();
+        
         $this->user = $user;
         $this->role = $role;
         $this->permission = $permission;
@@ -65,9 +66,7 @@ class AdminUsersController extends BaseController {
         $this->track = $track;
         $this->branch = $branch;
         $this->serviceline = $serviceline;
-        parent::__construct();
-
-        
+                
     }
 
     /**
@@ -77,9 +76,9 @@ class AdminUsersController extends BaseController {
      */
     public function index($id=NULL)
     {
-        // Title
-      
-        $title = Lang::get('admin/users/title.user_management');
+       $this->userServiceLines = $this->branch->getUserServiceLines();
+
+        $title = 'User Management';
 
         if(! $id)
         // Grab all the users
@@ -110,7 +109,7 @@ class AdminUsersController extends BaseController {
 		
 	       	
         // Show the page
-        return View::make('admin/users/index', compact('users', 'title','serviceline'));
+        return \View::make('admin/users/index', compact('users', 'title','serviceline'));
     }
 
     /**
@@ -127,13 +126,13 @@ class AdminUsersController extends BaseController {
         $permissions = $this->permission->all();
 
         // Selected groups
-        $selectedRoles = Input::old('roles', array());
+        $selectedRoles = \Input::old('roles', array());
 
         // Selected permissions
-        $selectedPermissions = Input::old('permissions', array());
+        $selectedPermissions = \Input::old('permissions', array());
 
 		// Title
-		$title = Lang::get('admin/users/title.create_a_new_user');
+		$title = 'Create New User';
 
 		// Mode
 		$mode = 'create';
@@ -141,15 +140,15 @@ class AdminUsersController extends BaseController {
 		// Service lines
 		
 		$servicelines = Serviceline::whereIn('id',$this->userServiceLines)
-						->lists('ServiceLine','id');
+						->pluck('ServiceLine','id');
 		$branches = $this->getUsersBranches($this->user);
 		$verticals = SearchFilter::where('searchcolumn','=','vertical')
 		->where('type','!=','group')			
-		->lists('filter','id');
+		->pluck('filter','id');
 		
 		$managerlist = $this->getManagerList();
 		// Show the page
-		return View::make('admin/users/create', compact('roles', 'permissions', 'verticals','selectedRoles', 'selectedPermissions', 'title', 'mode','managerlist','servicelines','branches'));
+		return \View::make('admin/users/create', compact('roles', 'permissions', 'verticals','selectedRoles', 'selectedPermissions', 'title', 'mode','managerlist','servicelines','branches'));
     }
 
     /**
@@ -160,80 +159,68 @@ class AdminUsersController extends BaseController {
     public function store()
     {
        
-		$this->user->username = Input::get( 'username' );
-        $this->user->email = Input::get( 'email' );
-        $this->user->password = Input::get( 'password' );
-		/*if (Input::get('mgrid') != 0)
+		$this->user->username = \Input::get( 'username' );
+        $this->user->email = \Input::get( 'email' );
+        $this->user->password = \Input::get( 'password' );
+		/*if (\Input::get('mgrid') != 0)
 		{
-			$this->user->mgrid = Input::get('mgrid');
+			$this->user->mgrid = \Input::get('mgrid');
 		}else{*/
 			// Moved manager relationship to person reports_to
 			$this->user->mgrid = NULL;
 		//}
 
-		$servicelines = Input::get('servicelines');
+		$servicelines = \Input::get('servicelines');
         // The password confirmation will be removed from model
         // before saving. This field will be used in Ardent's
         // auto validation.
-        $this->user->password_confirmation = Input::get( 'password_confirmation' );
+        $this->user->password_confirmation = \Input::get( 'password_confirmation' );
 
         // Generate a random confirmation code
         $this->user->confirmation_code = md5(uniqid(mt_rand(), true));
 
-        if (Input::get('confirm')) {
-            $this->user->confirmed = Input::get('confirm');
+        if (\Input::get('confirm')) {
+            $this->user->confirmed = \Input::get('confirm');
         }
 
         // Permissions are currently tied to roles. Can't do this yet.
-        //$user->permissions = $user->roles()->preparePermissionsForSave(Input::get( 'permissions' ));
+        //$user->permissions = $user->roles()->preparePermissionsForSave(\Input::get( 'permissions' ));
 
         // Save if valid. Password field will be hashed before save
         $this->user->save();
 
         if ( $this->user->id ) {
 			$person = new Person;
-			$person->firstname = Input::get('firstname');
-			$person->lastname = Input::get('lastname');
-			$person->address = Input::get('address');
-			$person->phone = Input::get('phone');
-			$person->reports_to = Input::get('mgrid');
-			$latLng = $this->geoCodeAddress($person->address);
+			$person->firstname = \Input::get('firstname');
+			$person->lastname = \Input::get('lastname');
+			$person->address = \Input::get('address');
+			$person->phone = \Input::get('phone');
+			$person->reports_to = \Input::get('mgrid');
+			$latLng = $this->getLatLng($person->address);
+            dd($latLng['latitude']);
 			$person->lat = $latLng['lat'];
 			$person->lng = $latLng['lng'];
             $person->city = $latLng['city'];
             $person->state= $latLng['regionCode'];
 			$person = $this->user->person()->save($person);
 			
-			$person->industryfocus()->attach(Input::get('vertical'));
-            //$person->industryfocus()->sync(Input::get('vertical'));
+			$person->industryfocus()->attach(\Input::get('vertical'));
+            //$person->industryfocus()->sync(\Input::get('vertical'));
 
 			// set up tracking
 			$track = $this->track;
 			$track->user_id =  $this->user->id ;
 			$track->save();
-            $this->user->saveRoles(Input::get( 'roles' ));
-			$this->user->serviceline()->attach(Input::get('serviceline'));
+            $this->user->saveRoles(\Input::get( 'roles' ));
+			$this->user->serviceline()->attach(\Input::get('serviceline'));
 			
-            /*if (Config::get('confide::signup_email')) {
-               
-				$user = $this->user;
-                Mail::queueOn(
-                    Config::get('confide::email_queue'),
-                    Config::get('confide::email_account_confirmation'),
-                    compact('user'),
-                    function ($message) use ($user) {
-                        $message
-                            ->to($user->email, $user->username)
-                            ->subject(Lang::get('confide::confide.email.account_confirmation.subject'));
-                    }
-                );
-            }*/
+            
 
             // Redirect to the new user page
              $person = new Person;
             $person->rebuild();
             return Redirect::to('admin/users/')
-                ->with('success', Lang::get('admin/users/messages.create.success'));
+                ->with('success', 'User created succesfully');
 
         } else {
 
@@ -241,7 +228,7 @@ class AdminUsersController extends BaseController {
             $error = $this->user->errors()->all();
 
             return Redirect::to('admin/users/create')
-                ->withInput(Input::except('password'))
+                ->withInput(\Input::except('password'))
                 ->with( 'error', $error );
         }
     }
@@ -278,20 +265,20 @@ class AdminUsersController extends BaseController {
             $permissions = $this->permission->all();
 
             // Title
-        	$title = Lang::get('admin/users/title.user_update');
+        	$title = 'Update user';
         	// mode
         	$mode = 'edit';
 			$managerlist = $this->getManagerList();
 			// Allow the admin user to add themselves to any service line
 			// Technically this is redundant as only admins can add / edit users
-			if($user->id == Auth::id()){
-				$servicelines = Serviceline::lists('ServiceLine','id');
+			if($user->id == \Auth::id()){
+				$servicelines = Serviceline::pluck('ServiceLine','id');
 			}else{
 				$servicelines = Serviceline::whereIn('id',$this->userServiceLines)
-				->lists('ServiceLine','id');
+				->pluck('ServiceLine','id');
 			}
 			//get current branches serviced
-			$branchesServiced = $user->person->branchesServiced->lists('id');
+			$branchesServiced = $user->person->branchesServiced->pluck('id');
 			
 			// Ether get close branches 
 			//$branches=array();
@@ -299,13 +286,14 @@ class AdminUsersController extends BaseController {
 			
 			$verticals = SearchFilter::where('searchcolumn','=','vertical')
 			->where('type','!=','group')			
-			->lists('filter','id');
-             $verticals = array('0' => 'none') + $verticals;
-        	return View::make('admin.users.edit', compact('user', 'roles', 'permissions', 'verticals','title', 'mode','managerlist','servicelines','branches','branchesServiced'));
+			->pluck('filter','id');
+            
+             $verticals = ['0' => 'none'] + $verticals->toArray();
+        	return \View::make('admin.users.edit', compact('user', 'roles', 'permissions', 'verticals','title', 'mode','managerlist','servicelines','branches','branchesServiced'));
         }
         else
         {
-            return Redirect::to('admin/users')->with('error', Lang::get('admin/users/messages.does_not_exist'));
+            return Redirect::to(route('users.index'))->with('error', 'User does not exist');
         }
     }
 
@@ -323,45 +311,46 @@ class AdminUsersController extends BaseController {
 		
 		$user = $this->user->find($id);
         $oldUser = clone($user);
-		$user->username = Input::get( 'username' );
-		$user->email = Input::get( 'email' );
+		$user->username = \Input::get( 'username' );
+		$user->email = \Input::get( 'email' );
 		if (count($person)==0)
 		{
 			$person = $this->person;
 			$person->user_id=$user->id;
 			$person = $user->person()->save($person);
-			$person->industryfocus()->attach(Input::get('vertical'));
+			$person->industryfocus()->attach(\Input::get('vertical'));
 
-			$person->branchesServiced()->attach(Input::get('branches'));
+			$person->branchesServiced()->attach(\Input::get('branches'));
 			
 		}
 
 
 
-		$user->person->address = Input::get('address');
-		$latLng = $this->geoCodeAddress($user->person->address);
-		//$person->reportsto = Input::get('manager');
-		$user->person->lat = $latLng['latitude'];
+		$user->person->address = \Input::get('address');
+		$latLng = $this->getLatLng($user->person->address);
+		//$person->reportsto = \Input::get('manager');
+    dd($latLng['results']);
+		$user->person->lat = $latLng->latitude;
 		$user->person->lng = $latLng['longitude'];
-        if(Input::has('city')){
-            $user->person->city = Input::get('city');
+        if(\Input::has('city')){
+            $user->person->city = \Input::get('city');
         }else{
              $user->person->city = $latLng['city'];
         }
-       if(Input::has('state')){
-            $user->person->state =Input::get('state');
+       if(\Input::has('state')){
+            $user->person->state =\Input::get('state');
         }else{
              $user->person->state = $latLng['regionCode'];
         }
        
-		$user->person->firstname = Input::get('firstname');
-		$user->person->lastname = Input::get('lastname');
-		$user->person->phone = Input::get('phone');
-		$user->confirmed = Input::get( 'confirm' );
-		$user->person->reports_to = Input::get('mgrid');
-		if (Input::get('mgrid') != 0)
+		$user->person->firstname = \Input::get('firstname');
+		$user->person->lastname = \Input::get('lastname');
+		$user->person->phone = \Input::get('phone');
+		$user->confirmed = \Input::get( 'confirm' );
+		$user->person->reports_to = \Input::get('mgrid');
+		if (\Input::get('mgrid') != 0)
 		{
-			$user->mgrid = Input::get('mgrid');
+			$user->mgrid = \Input::get('mgrid');
 		}else{
 			$user->mgrid = NULL;
 		}
@@ -379,8 +368,8 @@ class AdminUsersController extends BaseController {
 			
 		}*/
 	
-        $password = Input::get( 'password' );
-        $passwordConfirmation = Input::get( 'password_confirmation' );
+        $password = \Input::get( 'password' );
+        $passwordConfirmation = \Input::get( 'password_confirmation' );
 
         if(! empty($password)) {
             if($password === $passwordConfirmation) {
@@ -392,7 +381,7 @@ class AdminUsersController extends BaseController {
             } else {
                 // Redirect to the new user page
                 return Redirect::to('admin/users/' . $user->id . '/edit')
-                ->with('error', Lang::get('admin/users/messages.password_does_not_match'));
+                ->with('error', 'Passwords do not match');
             }
         }
             
@@ -402,13 +391,13 @@ class AdminUsersController extends BaseController {
 
         if ($user->save($rules)) {
             // Save roles. Handles updating.
-            $user->saveRoles(Input::get( 'roles' ));
+            $user->saveRoles(\Input::get( 'roles' ));
 			$user->person->save();
 			//$person->rebuild();
         } else {
 			
             return Redirect::to('admin/users/' . $user->id . '/edit')
-                ->with('error', Lang::get('admin/users/messages.edit.error'));
+                ->with('error', 'Unable to update user');
         }
 
         // Get validation errors (see Ardent package)
@@ -418,26 +407,26 @@ class AdminUsersController extends BaseController {
         	
         	
             // Redirect to the new user page
-           if(Input::has('serviceline')){
+           if(\Input::has('serviceline')){
 
-                $user->serviceline()->sync(Input::get('serviceline'));
+                $user->serviceline()->sync(\Input::get('serviceline'));
         	}
-        	if(Input::has('vertical')){
-                if(Input::get('vertical')[0]==0){
+        	if(\Input::has('vertical')){
+                if(\Input::get('vertical')[0]==0){
                   $person->industryfocus()->sync([]);
                 }else{
-        		  $person->industryfocus()->sync(Input::get('vertical'));
+        		  $person->industryfocus()->sync(\Input::get('vertical'));
                 }
         	}
            
 
-            if(Input::has('branchstring') or Input::has('branches'))
+            if(\Input::has('branchstring') or \Input::has('branches'))
             {
             	
-            	if(Input::has('branchstring')){
-        		  $branches = $this->branch->getBranchIdFromBranchNumber(Input::get('branchstring'));
+            	if(\Input::has('branchstring')){
+        		  $branches = $this->branch->getBranchIdFromBranchNumber(\Input::get('branchstring'));
 	        	}else{
-	        		$branches = Input::get('branches');
+	        		$branches = \Input::get('branches');
 	        	}
                 
                 if(isset($branches[0]))
@@ -454,24 +443,25 @@ class AdminUsersController extends BaseController {
             
             $person = new Person;
             $person->rebuild();
-            return Redirect::to('admin/users/')->with('success', Lang::get('admin/users/messages.edit.success'));
+            return Redirect::to('admin/users/')->with('success', 'User updated succesfully');
         } else {
-            return Redirect::to('admin/users/' . $user->id . '/edit')->with('error', Lang::get('admin/users/messages.edit.error'));
+            return Redirect::to('admin/users/' . $user->id . '/edit')->with('error', 'Unable to update user');
         }
 
     }
     private function getUsersBranches($user){
 			if(isset($user->person->lat) && $user->person->lat !=0){
-				$userServiceLines= $user->serviceline->lists('id');
+				$userServiceLines= $user->serviceline->pluck('id');
 
 				$nearbyBranches = $this->branch->findNearbyBranches($user->person->lat,$user->person->lng,100,100,$userServiceLines);
 				$branches[0] = 'none';
 				foreach($nearbyBranches as $nearbyBranch){
-					$branches[$nearbyBranch['branchid']] = $nearbyBranch['name'];
+
+					$branches[$nearbyBranch->branchid ]= $nearbyBranch->branchname;
 				}
 			// or all branches	
 			}else{
-				$branches = Branch::select(DB::raw("CONCAT_WS(' / ',branchname,branchnumber) AS name"),'id')->lists('name','id');
+				$branches = Branch::select(\DB::raw("CONCAT_WS(' / ',branchname,branchnumber) AS name"),'id')->pluck('name','id');
 			}
 			return $branches;
 		}	
@@ -484,10 +474,10 @@ class AdminUsersController extends BaseController {
     public function delete($user)
     {
         // Title
-        $title = Lang::get('admin/users/title.user_delete');
+        $title = 'Delete user';
 
         // Show the page
-        return View::make('admin/users/delete', compact('user', 'title'));
+        return \View::make('admin/users/delete', compact('user', 'title'));
     }
 
     /**
@@ -506,12 +496,12 @@ class AdminUsersController extends BaseController {
         {
             // Redirect to the user management page
             return Redirect::to('admin/users')
-            ->with('error', Lang::get('admin/users/messages.delete.impossible'));
+            ->with('error', 'You cannot delete yourself');
         }
   
         $user->delete();
 		return Redirect::to('admin/users')
-		->with('success', Lang::get('admin/users/messages.delete.success'));
+		->with('success', 'User deleted succesfully');
        
     }
 	
@@ -519,8 +509,8 @@ class AdminUsersController extends BaseController {
 	public function import()
 	{
 		$servicelines = Serviceline::whereIn('id',$this->userServiceLines)
-				->lists('ServiceLine','id');
-		return View::make('admin/users/import',compact('servicelines'));
+				->pluck('ServiceLine','id');
+		return \View::make('admin/users/import',compact('servicelines'));
 		
 	}
 
@@ -529,7 +519,7 @@ class AdminUsersController extends BaseController {
 		$rules= ['upload' => 'required'];
    		
 		// Make sure we have a file
-		$validator = Validator::make(Input::all(), $rules);
+		$validator = Validator::make(\Input::all(), $rules);
 
     	if ($validator->fails())
 		{
@@ -545,7 +535,7 @@ class AdminUsersController extends BaseController {
 		 	return Redirect::back()->withErrors(['Only CSV files are allowed']);
 		}
 
-		$file = Input::file('upload');
+		$file = \Input::file('upload');
 		$name = time() . '-' . $file->getClientOriginalName();
 
 
@@ -643,10 +633,10 @@ class AdminUsersController extends BaseController {
 		// we have to assign the users to the servicelines
 		// and role user
 		// 
-		$roleid = Role::where('name','=','User')->lists('id');
+		$roleid = Role::where('name','=','User')->pluck('id');
 	
-		if (null!==(Input::get('serviceline'))){
-			$servicelines = Input::get('serviceline');
+		if (null!==(\Input::get('serviceline'))){
+			$servicelines = \Input::get('serviceline');
 			
 			$users = $this->user->whereIn('username',$newUsers)->get();
 
@@ -702,7 +692,7 @@ class AdminUsersController extends BaseController {
 	public function export(){
 		$data = $this->user->with('person')->get();
 		$export = $this->user->export($data);	
-		return Response::make(rtrim($export['output'], "\n"), 200, $export['headers']);
+		return \Response::make(rtrim($export['output'], "\n"), 200, $export['headers']);
 	}
 	
 	
@@ -723,21 +713,12 @@ class AdminUsersController extends BaseController {
 	}
 
 
-
-	private function geoCodeAddress($address)
-	{
-		
-
-		return  $this->getLatLng($address);
-
-			
-	}
 	
 	private function getLatLng($address)
 	{
 		try {
 			
-		$geocode = Geocoder::geocode($address);
+		$geocode = \Geocoder::geocode($address);
 		// The GoogleMapsProvider will return a result
 		return $geocode;
 		

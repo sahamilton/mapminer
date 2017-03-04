@@ -12,7 +12,7 @@
 			Role Management
 
 			<div class="pull-right">
-				<a href="{{{ URL::to('admin/roles/create') }}}" class="btn btn-small btn-info iframe"><span class="glyphicon glyphicon-plus-sign"></span> Create New Role</a>
+				<a href="{{{ route('admin.roles.create') }}}" class="btn btn-small btn-info iframe"><span class="glyphicon glyphicon-plus-sign"></span> Create New Role</a>
 			</div>
 		</h3>
 	</div>
@@ -21,7 +21,9 @@
 		<thead>
 			<tr>
 				<th class="col-md-6">{{{ Lang::get('admin/roles/table.name') }}}</th>
+				<th class="col-md-2">Permissions</th>
 				<th class="col-md-2">{{{ Lang::get('admin/roles/table.users') }}}</th>
+
                 <th class="col-md-2">Actions</th>
 				
 			</tr>
@@ -29,7 +31,12 @@
 		<tbody>
         @foreach ($roles as $role)
         <tr>
-        <td><a href="{{url('admin/roles/'.$role->id.'/show')}}" >{{$role->name}}</td>
+        <td><a href="{{route('admin.roles.show',$role->id)}}" >{{$role->name}}</td>
+        <td>
+        @foreach($role->permissions as $permission)
+        	<li>{{ucwords($permission->display_name)}}</li>
+        @endforeach
+        </td>
         <td>{{$role->assignedRoles->count()}}
         <td>
         @include('partials/_modal')
@@ -41,8 +48,8 @@
 			  </button>
 			  <ul class="dropdown-menu" role="menu">
 				
-				<li><a href="/admin/roles/{{$role->id}}/edit/"><i class="glyphicon glyphicon-pencil"></i> Edit {{$role->name}}</a></li>
-				<li><a data-href="/admin/roles/{{$role->id}}/delete" data-toggle="modal" data-target="#confirm-delete" data-title = "{{$role->name}}" href="#"><i class="glyphicon glyphicon-trash"></i> Delete {{$role->name}}</a></li>
+				<li><a href="{{route('admin.roles.edit',$role->id)}}"><i class="glyphicon glyphicon-pencil"></i> Edit {{$role->name}}</a></li>
+				<li><a data-href="{{route('admin.roles.purge',$role->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = "{{$role->name}}" href="#"><i class="glyphicon glyphicon-trash"></i> Delete {{$role->name}}</a></li>
 			  </ul>
 			</div>
         

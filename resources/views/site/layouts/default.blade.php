@@ -87,7 +87,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 		<!-- To make sticky footer need to wrap in a div -->
 		<div id="wrap">
-		@include ('site/layouts/_navbar')
+		@include ('site.layouts._navbar')
 
 		<!-- Container -->
 		<div class="container">
@@ -107,9 +107,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 		<!-- ./wrap -->
 
 
-	    <div id="footer" >
-	      <div class="container">
-	        <p class="muted credit">&copy; 2014 - <?php echo date("Y");?>  ELA Consulting Group, LLC / TrueBlue, Inc</a>.</p></div>
+	    @include('site.layouts.footer')
             <script
     src="//d2s6cp23z9c3gz.cloudfront.net/js/embed.widget.min.js"
     data-domain="trueblue.besnappy.com"

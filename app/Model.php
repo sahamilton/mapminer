@@ -46,7 +46,7 @@ public function _import_csv($filename, $table,$fields)
 	echo $query ."<br />";
 	
 	try {
-		$result = DB::connection()->getpdo()->exec($query);
+		$result = \DB::connection()->getpdo()->exec($query);
 		return $result;
 	}
 	catch (Exception $e)
@@ -64,20 +64,20 @@ public function _import_csv($filename, $table,$fields)
 		try{
 			switch ($type) {
 				case 'insert':
-					$result = DB::insert( DB::raw($query ) );
+					$result = \DB::insert( \DB::raw($query ) );
 					break;
 				case 'select':
-					$result = DB::select( DB::raw($query ) );
+					$result = \DB::select( \DB::raw($query ) );
 				break;
 				
 				case 'update':
-					$result = DB::select( DB::raw($query ) );
+					$result = \DB::select( \DB::raw($query ) );
 				break;
 
 				
 			
 				default:
-					$result = DB::select( DB::raw($query ) );
+					$result = \DB::select( \DB::raw($query ) );
 				break;
 			}
 			echo $query . ";<br />";		
@@ -389,6 +389,8 @@ public function _import_csv($filename, $table,$fields)
 
 	public function currentUserServicelines(){
         $user = \Auth::user()->with('serviceline')->first();
-        return $user->serviceline->pluck('id')->toArray();
+       $userServicelines= $user->serviceline->pluck('id')->toArray();
+       \Session::put('user.servicelines',$userServicelines) ;
+        return $userServicelines;
     }
 }

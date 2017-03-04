@@ -2,7 +2,7 @@
 		<div class="navbar navbar-default navbar-inverse navbar-fixed-top">
         <div class="logo" >
         
-        <a href="{{ URL::to('/findme') }}"><img src="{{ asset('assets/img/PRlogo.png')}}" /></a>
+        <a href="{{ URL::to('/findme') }}"><img src="{{ asset('assets/img/PRlogo.png')}}"  width ='164'/></a>
         </div>
 			 <div class="container">
                 <div class="navbar-header">
@@ -16,10 +16,8 @@
                 <div class="collapse navbar-collapse navbar-ex1-collapse">
                     <ul class="nav navbar-nav">
                      @if (!Auth::check())
-						<li {{ (Request::is('/') ? ' class="active"' : '') }}><a href="{{{ URL::to('') }}}">Welcome</a>
-                        @if (App::environment() != 'production') 
-                         <li><a href="">{{{App::environment()}}} | {{{App::version()}}}| {{{env('APP_VERSION')}}}</a></li>
-                       @endif
+						<li {{ (Request::is('/') ? ' class="active"' : '') }}><a href="{{{ URL::to('/') }}}">Welcome</a>
+                       
                        </li>
                         @else
                         <li class="dropdown{{ (Request::is('company*','branch*' ,'person*','findme') ? ' active' : '') }}">
@@ -50,10 +48,7 @@
                         
                         
                         @endif
-                        @if (App::environment() != 'production') 
-                         <li><a href="">{{{App::environment()}}} | {{{App::version()}}}| {{{env('APP_VERSION')}}}</a></li>
-                          
-                       @endif
+                        
 					</ul>
                 
 					<ul class="nav navbar-nav pull-right">

@@ -135,12 +135,7 @@
 		<!-- ./wrap -->
 
 
-	    <div id="footer" >
-	      <div class="container">
-	        <p class="muted credit">&copy; <?php echo date("Y");?>  ELA Consulting Group, LLC / TrueBlue, Inc</a>.</p></div>
-            	    </div>
-          </div>
-
+	@include('site.layouts.footer')
 
             
 

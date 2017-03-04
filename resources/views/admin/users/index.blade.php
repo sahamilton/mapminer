@@ -12,17 +12,19 @@ $newTZ = new DateTimeZone('America/Los_Angeles');
 {{-- Content --}}
 @section('content')
 	<div class="page-header">
-		<h3>
-			{{{ $title }}}
+		<h3>{{ $title }}</h3>
 			
-				<p>{{{ $serviceline}}} Users</p>
+				
 			@if($serviceline != 'All')
-				<h6><a href="{{route('serviceline.user','')}}">See All Users</a></h6>
+				<h6><a href="{{route('admin.user.index')}}">See All Users</a></h6>
 			@endif
 			<div class="pull-right">
-				<a href="{{{ URL::to('admin/users/create') }}}" class="btn btn-small btn-info iframe"><span class="glyphicon glyphicon-plus-sign"></span> Create</a>
+
+				<a href="{{{ route('admin.user.create') }}}" class="btn btn-small btn-info iframe">
+				<span class="glyphicon glyphicon-plus-sign"></span> Create</a>
+
 			</div>
-		</h3>
+		
 	</div>
 
 	<table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
@@ -52,14 +54,14 @@ $newTZ = new DateTimeZone('America/Los_Angeles');
     <td class="col-md-2">
     @foreach($user->roles as $role)
     
-    <li>{{ $role->name }}</li>
+    <li><a title="Show all {{$role->name}} users" href="{{route('admin.roles.show',$role->id)}}">{{ $role->name }}</a></li>
    
     @endforeach
     </td>
     <td class="col-md-2">
     @foreach($user->serviceline as $serviceline)
     
-    <li><a href= "{{route('serviceline.user',$serviceline->id)}}" >{{ $serviceline->ServiceLine }}</a></li>
+    <li><a href="{{route('admin.serviceline.show',$serviceline->id)}}"> {{$serviceline->ServiceLine }}</a></li>
    
     @endforeach
     </td>
@@ -89,8 +91,10 @@ $newTZ = new DateTimeZone('America/Los_Angeles');
 			  </button>
 			  <ul class="dropdown-menu" role="menu">
 				
-				<li><a href="/admin/users/{{$user->id}}/edit/"><i class="glyphicon glyphicon-pencil"></i> Edit {{$user->username}}</a></li>
-				<li><a data-href="/admin/users/{{$user->id}}/purge" data-toggle="modal" data-target="#confirm-delete" data-title = "{{$user->username}}" href="#"><i class="glyphicon glyphicon-trash"></i> Delete {{$user->username}}</a></li>
+				<li><a href="{{route('admin.user.edit',$user->id)}}"><i class="glyphicon glyphicon-pencil"></i> Edit {{$user->username}}</a></li>
+
+				<li><a data-href="/admin/user/{{$user->id}}/purge" data-toggle="modal" data-target="#confirm-delete" data-title = "{{$user->username}}" href="#"><i class="glyphicon glyphicon-trash"></i> Delete {{$user->username}}</a></li>
+
 			  </ul>
 			</div>
             </td>

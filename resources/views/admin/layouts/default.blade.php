@@ -27,7 +27,7 @@
        <link rel="stylesheet" href="{{asset('assets/css/responsive-tables.css')}}">
        
         <link rel="stylesheet" type="text/css" href="//code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css" />        
-        <link rel="stylesheet" href="{{asset('assets/css/mapminer.css')}}">
+        <link rel="stylesheet" href="{{asset('assets/css/prmapminer.css')}}">
         <link rel="stylesheet" type="text/css" href="{{asset('maps/css/map.css')}}">
 <!-- jQuery -->
 
@@ -74,7 +74,7 @@
 	<body>
 		<!-- To make sticky footer need to wrap in a div -->
 		<div id="wrap">
-		@include ('admin/partials/_navbar')
+		@include ('admin.partials._navbar')
 
 		<!-- Container -->
 		<div class="container">
@@ -94,12 +94,7 @@
 		<!-- ./wrap -->
 
 
-	    <div id="footer" >
-	      <div class="container">
-	        <p class="muted credit">&copy;2014 - <?php echo date("Y");?>  ELA Consulting Group, LLC / TrueBlue, Inc</a>.</p></div>
-            	    </div>
-          </div>
-
+	   @include('site.layouts.footer')
 
             
 

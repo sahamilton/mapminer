@@ -10,9 +10,10 @@
 	<!-- ./ tabs -->
 
 	{{-- Edit Role Form --}}
-	<form class="form-horizontal" method="post" action="" autocomplete="off">
+	<form class="form-horizontal" method="post" action="{{route('admin.roles.update',$role->id)}}" autocomplete="off">
 		<!-- CSRF Token -->
 		<input type="hidden" name="_token" value="{{{ csrf_token() }}}" />
+		<input type="hidden" name="_method" value="put" />
 		<!-- ./ csrf token -->
 
 		<!-- Tabs Content -->

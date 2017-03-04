@@ -2,7 +2,7 @@
 
 {{-- Web site Title --}}
 @section('title')
-{{{ Lang::get('user/user.login') }}} ::
+User login ::
 @parent
 @stop
 
@@ -18,17 +18,17 @@
     <input type="hidden" name="_token" value="{{ csrf_token() }}">
     <fieldset>
         <div class="form-group">
-            <label class="col-md-2 control-label" for="email">{{ Lang::get('confide::confide.username_e_mail') }}</label>
+            <label class="col-md-2 control-label" for="email">Email</label>
             <div class="col-md-10">
-                <input class="form-control" tabindex="1" placeholder="{{ Lang::get('confide::confide.username_e_mail') }}" type="text" name="email" id="email" value="{{ Input::old('email') }}">
+                <input class="form-control" tabindex="1" placeholder="Your email" type="text" name="email" id="email" value="{{ Input::old('email') }}">
             </div>
         </div>
         <div class="form-group">
             <label class="col-md-2 control-label" for="password">
-                {{ Lang::get('confide::confide.password') }}
+                Password
             </label>
             <div class="col-md-10">
-                <input class="form-control" tabindex="2" placeholder="{{ Lang::get('confide::confide.password') }}" type="password" name="password" id="password">
+                <input class="form-control" tabindex="2" placeholder="password" type="password" name="password" id="password">
             </div>
         </div>
 
@@ -43,8 +43,8 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <button tabindex="3" type="submit" class="btn btn-primary">{{ Lang::get('confide::confide.login.submit') }}</button>
-                <a class="btn btn-default" href="forgot">{{ Lang::get('confide::confide.login.forgot_password') }}</a>
+                <button tabindex="3" type="submit" class="btn btn-primary">Submit</button>
+                <a class="btn btn-default" href="forgot">Forgot password</a>
             </div>
         </div>
     </fieldset>

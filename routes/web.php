@@ -36,12 +36,6 @@ Route::group(['middleware' => 'auth'], function () {
    
 
 
-	Route::get('role/{role}/purge',['as'=>'role.purge','uses'=>'RolesController@purge']);
-	Route::resource('role','RolesController');
-
-	Route::get('permission/{permission}/purge',['as'=>'permission.purge','uses'=>'PermissionsController@purge']);
-	Route::resource('permission','PermissionsController');
-
 	#Companies
 		Route::resource('company', 'CompaniesController',array('only' => array('index', 'show')));
 		Route::get('/company/{companyId}/state/{state?}', array('as'=>'company.state','uses'=>'CompaniesController@state'));
@@ -201,18 +195,24 @@ Route::group(array('prefix' => 'admin', 'before' => 'Admin'), function()
     # # User Management	
 		
 		
-		
-		Route::get('users/import',array('as'=>'admin.users.import', 'uses'=>'admin\AdminUsersController@import'));
-		Route::post('users/bulkimport',array('as'=>'admin.users.bulkimport', 'uses'=>'admin\AdminUsersController@bulkImport'));
-		Route::get('users/{user}/purge', 'admin\AdminUsersController@destroy');
-		Route::get('users/serviceline/{servicelineId}', array('as'=>'serviceline.user','uses'=>'admin\AdminUsersController@index'));
+		Route::get('cleanse',array('as'=>'users.cleanse','uses'=>'Admin\AdminUsersController@cleanse'));
+		Route::get('users/import',array('as'=>'admin.users.import', 'uses'=>'Admin\AdminUsersController@import'));
+		Route::post('users/bulkimport',array('as'=>'admin.users.bulkimport', 'uses'=>'Admin\AdminUsersController@bulkImport'));
+		Route::get('users/{user}/purge', 'Admin\AdminUsersController@destroy');
+		Route::get('users/serviceline/{servicelineId}', array('as'=>'serviceline.user','uses'=>'Admin\AdminUsersController@index'));
 
-		Route::resource('users', 'admin\AdminUsersController');  
+		Route::resource('users', 'Admin\AdminUsersController');  
 
 
-    # User Role Management
-		
-    	Route::resource('roles', 'admin\AdminRolesController');
+  # User Role Management
+	Route::get('roles/{role}/purge',['as'=>'roles.purge','uses'=>'RolesController@purge']);
+	Route::resource('roles','RolesController');
+    #  Permissions 
+	Route::get('permissions/{permission}/purge',['as'=>'permission.purge','uses'=>'PermissionsController@purge']);
+	Route::resource('permissions','PermissionsController');
+     
+
+    	
 
 
 	#Locations
@@ -264,15 +264,15 @@ Route::group(array('prefix' => 'admin', 'before' => 'Admin'), function()
 		Route::get('salesnotes/create/{companyId}',array('as'=>'salesnotes.create','uses'=>'SalesNotesController@createSalesNotes'));
 		//Route::post('salesnotes/store/{companyID}',array('as'=>'salesnotes.store','uses'=>'CompaniesController@storeSalesNotes'));
 		
-		Route::get('cleanse',array('as'=>'users.cleanse','uses'=>'admin\AdminUsersController@cleanse'));
+		
 		Route::get('salesnotes/filedelete/{file}', array('as'=>'salesnotes.filedelete', 'uses'=>'SalesNotesController@filedelete'));
 	#Wathclists
 		Route::get('watchlist/{userid}', array('as'=>'watch.watchexport', 'uses'=>'WatchController@export'));
 	
 	# Admin Dashboard
 		Route::get('watching/{userid}', array('as'=>'watch.watching', 'uses'=>'WatchController@watching'));
-		Route::get('userlogin/{view?}',array('as'=>'admin.showlogins', 'uses'=>'admin\AdminDashboardController@logins'));
-		Route::get('/', array('uses'=>'admin\AdminDashboardController@dashboard'));
+		Route::get('userlogin/{view?}',array('as'=>'admin.showlogins', 'uses'=>'Admin\AdminDashboardController@logins'));
+		Route::get('/', array('uses'=>'Admin\AdminDashboardController@dashboard'));
 	
 	#Comments
 		Route::get('comment/download', array('as'=>'comment.download', 'uses'=>'CommentsController@download'));

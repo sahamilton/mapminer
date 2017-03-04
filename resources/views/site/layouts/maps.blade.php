@@ -76,7 +76,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <!-- End Google Tag Manager -->
 		<!-- To make sticky footer need to wrap in a div -->
 		<div id="wrap">
-		@include ('site/layouts/_navbar')
+		@include ('site.layouts._navbar')
 
 
 		<!-- Container -->
@@ -98,11 +98,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 		<!-- ./wrap -->
 
 
-	    <div id="footer" >
-	      <div class="container">
-	        <p class="muted credit">&copy; 2014 - <?php echo date("Y");?>  ELA Consulting Group, LLC / TrueBlue, Inc</a>.</p></div>
-            	    </div>
-          </div>
+	    @include('site.layouts.footer')
+            	    
+
 
  <script
     src="https://d2s6cp23z9c3gz.cloudfront.net/js/embed.widget.min.js"

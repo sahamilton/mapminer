@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('admin.layouts.default')
 
 @section('content')
 <div class="container">
@@ -6,7 +6,7 @@
 <div class="container">
 
 <div class="pull-right">
-        <a href ="{{route('role.create')}}"><button class="btn btn-success" >Add role
+        <a href ="{{route('roles.create')}}"><button class="btn btn-success" >Add role
         </button></a>
     </div>    
    
@@ -47,9 +47,9 @@
                     </button>
                     <ul class="dropdown-menu" role="menu">
 
-                    <li><a href="{{route('role.edit',$role->id)}}"><i class="glyphicon glyphicon-pencil"></i> Edit role</a></li>
+                    <li><a href="{{route('roles.edit',$role->id)}}"><i class="glyphicon glyphicon-pencil"></i> Edit role</a></li>
 
-                    <li><a data-href="{{route('role.purge',$role->id)}}" 
+                    <li><a data-href="{{route('roles.purge',$role->id)}}" 
                     data-toggle="modal" 
                     data-target="#confirm-delete" 
                     data-title = "location" 
