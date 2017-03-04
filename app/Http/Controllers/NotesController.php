@@ -26,7 +26,7 @@ class NotesController extends BaseController {
 		
 		$notes = $this->notes->all();
 
-		return \View::make('notes.index', compact('notes'));
+		return response()->view('notes.index', compact('notes'));
 	}
 
 	/**
@@ -36,7 +36,7 @@ class NotesController extends BaseController {
 	 */
 	public function create()
 	{
-		return \View::make('notes.create');
+		return response()->view('notes.create');
 	}
 
 	/**
@@ -71,7 +71,7 @@ class NotesController extends BaseController {
 	{
 		$note = $this->notes->findOrFail($id);
 
-		return \View::make('notes.show', compact('note'));
+		return response()->view('notes.show', compact('note'));
 	}
 
 	/**
@@ -84,7 +84,7 @@ class NotesController extends BaseController {
 	{
 		$note = $this->notes->find($id);
 
-		return \View::make('notes.edit', compact('note'));
+		return response()->view('notes.edit', compact('note'));
 	}
 
 	/**
@@ -154,7 +154,7 @@ class NotesController extends BaseController {
 		$notes = $this->notes->where('user_id','=',$user->id)->with('relatesTo')->get();
 		$fields= ['Created'=>'created_at','Business Name'=>'businessname','Note'=>'note'];
 
-		return \View::make('notes.show', compact('notes','fields'));
+		return response()->view('notes.show', compact('notes','fields'));
 		
 	}
 }

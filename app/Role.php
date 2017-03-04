@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Role extends Model
 {
+    public $fillable = ['name'];
+
     public function permissions()
     {
     	return $this->belongsToMany(Permission::class);
@@ -27,5 +29,15 @@ class Role extends Model
     		Role::whereName($role)->firstOrFail()
     		);
 
+    }
+    public function getCurrentPermissions(Role $role){
+        $permissions = $this->whereId($role->id)->with('permissions')->first();
+        $currentPermissions=array();
+        foreach($permissions->permissions as $permission){
+            
+            $currentPermissions[]= $permission->id;
+        }
+
+        return $currentPermissions;
     }
 }

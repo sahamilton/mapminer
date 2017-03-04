@@ -7,7 +7,7 @@
     </div>
 
 	{{-- Create User Form --}}
-	<form class="form-horizontal" method="post" action="{{ route('admin.user.store') }}" autocomplete="off">
+	<form class="form-horizontal" method="post" action="{{ route('users.store') }}" autocomplete="off">
 	@include('admin.users.partials._form')
 
 		<!-- Form Actions -->

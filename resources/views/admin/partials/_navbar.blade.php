@@ -124,10 +124,14 @@
     							<span class="glyphicon glyphicon-wrench"></span> Users <span class="caret"></span>
     						</a>
     						<ul class="dropdown-menu">
-    							<li{{ (Request::is('admin/users*') ? ' class="active"' : '') }}><a href="{{{ URL::to('admin/users') }}}"><span class="glyphicon glyphicon-wrench"></span> Users</a></li>
+    							<li{{ (Request::is('admin/users*') ? ' class="active"' : '') }}><a href="{{{ URL::to('admin/users') }}}"><span class="glyphicon glyphicon-user"></span> Users</a></li>
     							<li{{ (Request::is('admin/roles*') ? ' class="active"' : '') }}><a href="{{{ URL::to('admin/roles') }}}"><span class="glyphicon glyphicon-wrench"></span> Roles</a></li>
- <li{{ (Request::is('admin/companies*') ? ' class="active"' : '') }}><a href="{{{ URL::to('admin/users/import') }}}"><span class="glyphicon glyphicon-import"></span> Import Users</a></li>
- <li{{ (Request::is('admin/users/export') ? ' class="active"' : '') }}><a href="{{{ URL::to('admin/users/export') }}}"><span class="glyphicon glyphicon-export"></span> Export Users</a></li>
+                  <li{{ (Request::is('admin/permissions*') ? ' class="active"' : '') }}><a href="{{{ route('permissions.index') }}}"><span class="glyphicon glyphicon-check"></span> Permissions</a></li>
+
+
+
+                 <li{{ (Request::is('admin/companies*') ? ' class="active"' : '') }}><a href="{{{ URL::to('admin/users/import') }}}"><span class="glyphicon glyphicon-import"></span> Import Users</a></li>
+                 <li{{ (Request::is('admin/users/export') ? ' class="active"' : '') }}><a href="{{{ URL::to('admin/users/export') }}}"><span class="glyphicon glyphicon-export"></span> Export Users</a></li>
     						</ul>
     					</li>
                        <!-- Manage Ness  -->      

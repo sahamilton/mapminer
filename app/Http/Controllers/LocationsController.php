@@ -36,7 +36,7 @@ class LocationsController extends BaseController {
 		$this->userServiceLines = $this->location->getUserServiceLines();
 		$companies = $this->company->orderBy('companyname')->pluck('companyname','id');
 		
-		return \View::make('locations.index',compact('companies'));
+		return response()->view('locations.index',compact('companies'));
 	}
 
 	/**
@@ -56,7 +56,7 @@ class LocationsController extends BaseController {
 
 		$location = $this->company->findOrFail($accountID);
 		
-		return \View::make('locations.create',compact('location', 'segments'));
+		return response()->view('locations.create',compact('location', 'segments'));
 	}
 
 	/**
@@ -94,7 +94,7 @@ class LocationsController extends BaseController {
 	{
 		$location = $this->location->where('state','=',$state)->where('company_id','=',$id)->get();
 		$filtered = $this->location->isFiltered(['locations'],['segment','business']);	
-		return \View::make('locations.state', compact('location','filtered'));
+		return response()->view('locations.state', compact('location','filtered'));
 	}
 	
 	public function getStateLocations ($id,$state) {
@@ -120,7 +120,7 @@ class LocationsController extends BaseController {
 		$watch = $this->watch->where("location_id","=",$id->id)->where('user_id',"=",\Auth::id())->first();
 		$location = $this->location;
 	
-		return \View::make('locations.show', compact('location','branch','watch'));
+		return response()->view('locations.show', compact('location','branch','watch'));
 	}
 	
 	private function getCompanyServiceLines(){
@@ -184,7 +184,7 @@ class LocationsController extends BaseController {
 	public function edit($location)
 	{
 		
-		return \View::make('locations.edit', compact('location'));
+		return response()->view('locations.edit', compact('location'));
 	}
 
 	/**
@@ -278,7 +278,7 @@ class LocationsController extends BaseController {
 		$data['branch'] = $this->findBranch($n);
 		
 
-		return \View::make('branches.assign', compact('data'));
+		return response()->view('branches.assign', compact('data'));
 
 		
 	}
@@ -301,7 +301,7 @@ class LocationsController extends BaseController {
 		$this->location = $this->location->with('company','company.serviceline')->findOrFail($id);
 		$data['location']= $this->location;
 		$servicelines = $this->serviceline->all();
-		return \View::make('branches.nearbymap', compact('data','servicelines'));
+		return response()->view('branches.nearbymap', compact('data','servicelines'));
 
 	}
 	public function showNearbyLocations()
@@ -317,7 +317,7 @@ class LocationsController extends BaseController {
 
 		
 
-		return \View::make('locations.nearby', compact('data'));
+		return response()->view('locations.nearby', compact('data'));
 	}
 
 
@@ -351,7 +351,7 @@ class LocationsController extends BaseController {
 		}
 
 		$fields = array('Business Name'=>'businessname','Street'=>'street','City'=>'city','State'=>'state','ZIP'=>'zip','Watching'=>'watch');
-		return \View::make('branches.showlist', compact('data','locations','mywatchlist','fields','filtered'));
+		return response()->view('branches.showlist', compact('data','locations','mywatchlist','fields','filtered'));
 	}
 		
 	
@@ -409,7 +409,7 @@ class LocationsController extends BaseController {
 		order by companyname,notes.created_at";
 		$notes = \DB::select(\DB::raw($query));
 		$fields=['Company'=>'companyname','Location Name'=>'businessname','Note'=>'note','Posted By'=>'posted_by','Date'=>'dateposted'];
-		return \View::make('locations.notes',compact('notes','fields'));
+		return response()->view('locations.notes',compact('notes','fields'));
 	}	
 	
 	
@@ -500,7 +500,7 @@ class LocationsController extends BaseController {
 		$this->executeQuery("DROP TABLE ".$temptable);
 		
 
-		return \Redirect::to('/company/'.$company_id);
+		return \return redirect()->to('/company/'.$company_id);
 	}
 	
 	private function executeQuery($query)
@@ -554,7 +554,7 @@ class LocationsController extends BaseController {
 	{
 		try {
 			
-		$geocode = Geocoder::geocode($address);
+		$geocode = Geocoder::geocode($address)->get();
 		// The GoogleMapsProvider will return a result
 		return $geocode;
 		

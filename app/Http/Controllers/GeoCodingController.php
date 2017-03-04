@@ -49,12 +49,10 @@ class GeoCodingController extends BaseController {
 				return redirect()->back()->withInput()->with('message', 'Unable to Geocode that address');
 			}
 
-			foreach ($geocode as $address)
-			{
-				$data['lat']=$address['latitude'];
-				$data['lng'] =$address['longitude'];
-			}
-
+			
+				$data['lat']=$address[0]['latitude'];
+				$data['lng'] =$address[0]['longitude'];
+			
 			
 			
 		}
@@ -84,13 +82,13 @@ class GeoCodingController extends BaseController {
 			}
 			$fields = ['Business Name'=>'businessname','Street'=>'street','City'=>'city','State'=>'state','ZIP'=>'zip','Watching'=>'watch'];
 			
-			return \View::make('maps.list', compact('data','watchlist','fields','filtered'));
+			return response()->view('maps.list', compact('data','watchlist','fields','filtered'));
 		}else{
 			$this->userServiceLines = $this->serviceline->currentUserServicelines();
 			$data = $this->setZoomLevel($data);
 			$servicelines = $this->serviceline->whereIn('id',$this->userServiceLines)
     						->get();
-			return \View::make('maps.map', compact('data','filtered','servicelines'));
+			return response()->view('maps.map', compact('data','filtered','servicelines'));
 		}
 		
 	}
@@ -223,7 +221,7 @@ class GeoCodingController extends BaseController {
 			if($data['type'] == 'list') {
 				$data['result'] = $this->getGeoListData($data);
 				
-				return \View::make('maps.list', compact('data','filtered'));
+				return response()->view('maps.list', compact('data','filtered'));
 			}else{
 				$data = $this->setZoomLevel($data);
 				if($data['view'] =='branch'){
@@ -232,10 +230,10 @@ class GeoCodingController extends BaseController {
 					$data['urllocation'] ="api/mylocalaccounts";
 				}
 				$filtered = $this->location->isFiltered(['locations'],['business','segment']);
-				return \View::make('maps.map', compact('data','filtered'));
+				return response()->view('maps.map', compact('data','filtered'));
 			}
 		}else{
-			return \View::make('maps.form');
+			return response()->view('maps.form');
 			
 		}
 		

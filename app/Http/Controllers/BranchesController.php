@@ -55,7 +55,7 @@ class BranchesController extends BaseController {
 		
 		
 		
-		return \View::make('branches.index', compact('branches','fields'));
+		return response()->view('branches.index', compact('branches','fields'));
 	}
 	
 	/**
@@ -67,7 +67,7 @@ class BranchesController extends BaseController {
 		
 		$servicelines = $this->serviceline->all();
 		
-		return \View::make('branches.map',compact('servicelines'));
+		return response()->view('branches.map',compact('servicelines'));
 	}
 	
 	
@@ -96,7 +96,7 @@ class BranchesController extends BaseController {
 		$servicelines = $this->serviceline->whereIn('id',$this->userServiceLines)->get();
     
 
-		return \View::make('branches.create',compact('servicelines','managers'));
+		return response()->view('branches.create',compact('servicelines','managers'));
 	}
 
 	/**
@@ -189,13 +189,13 @@ class BranchesController extends BaseController {
 		$data['distance'] = '10';
 
 
-		return \View::make('branches.show',compact('data','servicelines','filtered'));
+		return response()->view('branches.show',compact('data','servicelines','filtered'));
 	}
 	
 	public function showSalesTeam($id)
 	{
 		$salesteam = $this->branch->with('servicedBy','manager','servicelines')->find($id);
-		return \View::make('branches.showteam',compact('salesteam'));
+		return response()->view('branches.showteam',compact('salesteam'));
 	}
 	
 	/**
@@ -218,7 +218,7 @@ class BranchesController extends BaseController {
 
 		
 
-		return \View::make('branches.nearby', compact('data'));
+		return response()->view('branches.nearby', compact('data'));
 	}
 	/**
 	 * Show the map of locations assigned to branches
@@ -247,7 +247,7 @@ class BranchesController extends BaseController {
 		$managers = $this->branch->getbranchManagers();
 
 
-		return \View::make('branches.edit', compact('branch','servicelines','managers'));
+		return response()->view('branches.edit', compact('branch','servicelines','managers'));
 	}
 
 	/**
@@ -416,7 +416,7 @@ class BranchesController extends BaseController {
 			$data['state'] = $data->instate->statecode;
 			break;
 		}
-		return \View::make('branches.statemap', compact('data','servicelines'));	
+		return response()->view('branches.statemap', compact('data','servicelines'));	
 		
 	}
 	/**
@@ -516,7 +516,7 @@ class BranchesController extends BaseController {
 			$fields['Actions']='actions';
 		}			
 						
-		return \View::make('branches.state', compact('branches','data','fields'));
+		return response()->view('branches.state', compact('branches','data','fields'));
 		
 	}
 	
@@ -525,7 +525,7 @@ class BranchesController extends BaseController {
 
 		$servicelines = $this->serviceline->whereIn('id',$this->userServiceLines)
 				->pluck('ServiceLine','id');
-		return \View::make('branches.import', compact('servicelines'));
+		return response()->view('branches.import', compact('servicelines'));
 	}
 	public function branchImport() {
 
@@ -674,7 +674,7 @@ class BranchesController extends BaseController {
 		$type='update';
 		$error="Can't delete temporay table " . $temptable;
 		$this->branch->rawQuery($query,$error,$type);
-		return \Redirect::to('/branch');
+		return \return redirect()->to('/branch');
 			
 		
 		
@@ -722,7 +722,7 @@ protected function getBranchGeoCode($address)
 
 	try {
 			
-			$geocode = Geocoder::geocode($address);
+			$geocode = Geocoder::geocode($address)->get();
 			// The GoogleMapsProvider will return a result
 			
 			} catch (\Exception $e) {

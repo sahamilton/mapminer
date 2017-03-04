@@ -21,7 +21,7 @@ class ServicelinesController extends BaseController {
     	->get();
 		
 		$fields = ['ServiceLine'=>'ServiceLine','Companies'=>'companyCount', 'Branches'=>'branchCount', 'Users'=>'userCount'];
-		return \View::make('servicelines.index', compact('servicelines','fields'));
+		return response()->view('servicelines.index', compact('servicelines','fields'));
 	}
 
 	/**
@@ -32,7 +32,7 @@ class ServicelinesController extends BaseController {
 	public function create()
 	{
 		
-		return \View::make('servicelines.create');
+		return response()->view('servicelines.create');
 	}
 
 	/**
@@ -92,7 +92,7 @@ class ServicelinesController extends BaseController {
 							'Region'=>'region_id',
 							'Actions'=>'action');
 
-			return \View::make('servicelines.show', compact('serviceline','branches','fields'));
+			return response()->view('servicelines.show', compact('serviceline','branches','fields'));
 		}else{
 			
 
@@ -120,7 +120,7 @@ class ServicelinesController extends BaseController {
 		$filtered=NULL;
 		$title = 'All ' .$serviceline->ServiceLine .' Accounts';
 		
-		return \View::make('companies.index', compact('companies','fields','title','filtered'));
+		return response()->view('companies.index', compact('companies','fields','title','filtered'));
 		}
 	}
 
@@ -135,7 +135,7 @@ class ServicelinesController extends BaseController {
 	public function edit($serviceline)
 	{
 		
-		return \View::make('servicelines.edit', compact('serviceline'));
+		return response()->view('servicelines.edit', compact('serviceline'));
 	}
 
 	/**

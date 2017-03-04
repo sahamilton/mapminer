@@ -5,7 +5,8 @@
     <ul class="nav nav-tabs">
     <li class="active"><a data-toggle="tab" href="#home">UserDetails</a></li>
     <li><a data-toggle="tab" href="#menu1">Personal Details</a></li>
-  </ul>
+    </ul>
+
 		<div class="tab-content">
     <div id="home" class="tab-pane fade in active">
       <h3>User</h3>

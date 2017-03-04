@@ -43,10 +43,10 @@ class SalesNotesController extends BaseController {
 		}
 		
 		if(isset($companyid)) {
-			return \Redirect::to('salesnotes/'.$companyid);
+			return \return redirect()->to('salesnotes/'.$companyid);
 		}else{
 			$companies = $this->company->orderBy('companyname')->pluck('companyname','id');
-			return \View::make('salesnotes.index',compact('companies','salesnotes'));
+			return response()->view('salesnotes.index',compact('companies','salesnotes'));
 			
 		}
 	}
@@ -59,7 +59,7 @@ class SalesNotesController extends BaseController {
 	public function create()
 	{
 		
-		return \View::make('salesnotes.create');
+		return response()->view('salesnotes.create');
 	}
 
 	
@@ -87,7 +87,7 @@ class SalesNotesController extends BaseController {
 
 		$data = $this->getSalesNotes($id);
 
-		return \View::make('salesnotes.shownote', compact('data','company'));
+		return response()->view('salesnotes.shownote', compact('data','company'));
 		
 	
 
@@ -105,7 +105,7 @@ class SalesNotesController extends BaseController {
 	public function edit($salesnote)
 	{
 		
-		return \View::make('salesnote.edit', compact('salesnote'));
+		return response()->view('salesnote.edit', compact('salesnote'));
 	}
 
 	/**
@@ -173,7 +173,7 @@ class SalesNotesController extends BaseController {
 		}
 
 
-		return \Redirect::to('salesnotes/'.$company_id);
+		return \return redirect()->to('salesnotes/'.$company_id);
 		
 	}
 
@@ -227,10 +227,10 @@ class SalesNotesController extends BaseController {
 				}
 			}
 
-			return \View::make('salesnotes.edit', compact('data','company'));
+			return response()->view('salesnotes.edit', compact('data','company'));
 		}else{
 			
-			return \View::make('salesnotes.create', compact('fields','company'));
+			return response()->view('salesnotes.create', compact('fields','company'));
 		}
 
 		
@@ -261,7 +261,7 @@ class SalesNotesController extends BaseController {
 			if ($validator->fails())
 			{
 				
-				return \Redirect::to('admin/salesnotes/create/'.$data['companyId'])->withErrors($validator);
+				return \return redirect()->to('admin/salesnotes/create/'.$data['companyId'])->withErrors($validator);
 			}
 
 			$file = \Input::file('attachment');
@@ -313,7 +313,7 @@ class SalesNotesController extends BaseController {
 		if(count($queryArray)>0){
 			\DB::table('company_howtofield')->insert($queryArray);
 		}
-		return \Redirect::to('salesnotes/'.$data['companyId']);
+		return \return redirect()->to('salesnotes/'.$data['companyId']);
 		
 	}
 	
@@ -330,7 +330,7 @@ class SalesNotesController extends BaseController {
 			if ($validator->fails())
 			{
 				
-				return \Redirect::to('admin/salesnotes/create/'.$data['companyId'])->withErrors($validator);
+				return \return redirect()->to('admin/salesnotes/create/'.$data['companyId'])->withErrors($validator);
 			}
 
 			$file = \Input::file('attachment');
@@ -396,7 +396,7 @@ class SalesNotesController extends BaseController {
 		//$data = $this->getSalesNotes($id);
 		$fields = Howtofield::orderBy('group','sequence')->get();
 
-		return \View::make('salesnotes.printnote', compact('data','fields','company'));
+		return response()->view('salesnotes.printnote', compact('data','fields','company'));
 		
 	}
 	

@@ -27,7 +27,7 @@ protected $permission;
 		$persons = Person::all();
 		$fields=array('Name'=>'name','Role'=>'mgrtype','Email'=>'email');
 
-		return \View::make('admin.persons.index', compact('persons','fields'));
+		return response()->view('admin.persons.index', compact('persons','fields'));
 	}
 
 	/**
@@ -37,7 +37,7 @@ protected $permission;
 	 */
 	public function create()
 	{
-		return \View::make('persons.create');
+		return response()->view('persons.create');
 	}
 
 	/**
@@ -79,14 +79,14 @@ protected $permission;
 						'Branch Address'=>'street',
 						'City'=>'city',
 						'State'=>'state');
-			return \View::make('persons.showlist', compact('people','branches','fields'));
+			return response()->view('persons.showlist', compact('people','branches','fields'));
 			
 		}else{
 			$people = Person::with('managesAccount')->findorFail($id->id);
 			$accounts = $people->managesAccount;
 			$fields = array('Account'=>'account');
 			
-			return \View::make('persons.showaccount', compact('people','accounts','fields'));
+			return response()->view('persons.showaccount', compact('people','accounts','fields'));
 		}
 		
 	}
@@ -128,7 +128,7 @@ protected $permission;
 			
 		}
 
-		return \View::make('persons.showmap', compact('data'));
+		return response()->view('persons.showmap', compact('data'));
 	}
 
 	/**
@@ -139,7 +139,7 @@ protected $permission;
 	 */
 	public function edit($person)
 	{
-		return \View::make('persons.edit', compact('person'));
+		return response()->view('persons.edit', compact('person'));
 	}
 
 	/**

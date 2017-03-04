@@ -205,11 +205,11 @@ Route::group(array('prefix' => 'admin', 'before' => 'Admin'), function()
 
 
   # User Role Management
-	Route::get('roles/{role}/purge',['as'=>'roles.purge','uses'=>'RolesController@purge']);
-	Route::resource('roles','RolesController');
+	Route::get('roles/{role}/purge',['as'=>'roles.purge','uses'=>'Admin\AdminRolesController@purge']);
+	Route::resource('roles','Admin\AdminRolesController');
     #  Permissions 
-	Route::get('permissions/{permission}/purge',['as'=>'permission.purge','uses'=>'PermissionsController@purge']);
-	Route::resource('permissions','PermissionsController');
+	Route::get('permissions/{permission}/purge',['as'=>'permissions.purge','uses'=>'Admin\AdminPermissionsController@purge']);
+	Route::resource('permissions','Admin\AdminPermissionsController');
      
 
     	

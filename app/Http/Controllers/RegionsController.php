@@ -19,7 +19,7 @@ class RegionsController extends BaseController {
 	{
 		$regions = $this->region->all();
 
-		return \View::make('regions.index', compact('regions'));
+		return response()->view('regions.index', compact('regions'));
 	}
 
 	/**
@@ -29,7 +29,7 @@ class RegionsController extends BaseController {
 	 */
 	public function create()
 	{
-		return \View::make('regions.create');
+		return response()->view('regions.create');
 	}
 
 	/**
@@ -78,7 +78,7 @@ class RegionsController extends BaseController {
 						'State'=>'state',
 						'Manager'=>'manager');
 						
-		return \View::make('regions.show', compact('data','branches','fields'));
+		return response()->view('regions.show', compact('data','branches','fields'));
 	}
 
 	/**
@@ -91,7 +91,7 @@ class RegionsController extends BaseController {
 	{
 		$region = $this->region->find($id);
 
-		return \View::make('regions.edit', compact('region'));
+		return response()->view('regions.edit', compact('region'));
 	}
 
 	/**

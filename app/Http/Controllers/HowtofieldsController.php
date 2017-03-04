@@ -19,7 +19,7 @@ class HowtofieldsController extends BaseController {
 		$howtofields = $this->howtofield->get();
 		$fields= array('Field'=>'fieldname','Reqd'=>'required','Type'=>'type','Values'=>'values','Group'=>'group','Actions'=>'actions');
 		
-		return \View::make('howtofields.index',compact('howtofields','fields'));
+		return response()->view('howtofields.index',compact('howtofields','fields'));
 	}
 
 	/**
@@ -29,7 +29,7 @@ class HowtofieldsController extends BaseController {
 	 */
 	public function create()
 	{
-		return \View::make('howtofields.create');
+		return response()->view('howtofields.create');
 	}
 
 	/**
@@ -64,7 +64,7 @@ class HowtofieldsController extends BaseController {
 	{
 		$howtofield = $this->howtofield->findOrFail($id);
 
-		return \View::make('howtofields.show', compact('howtofield'));
+		return response()->view('howtofields.show', compact('howtofield'));
 	}
 
 	/**
@@ -76,7 +76,7 @@ class HowtofieldsController extends BaseController {
 	public function edit($howtofield)
 	{
 		
-		return \View::make('howtofields.edit', compact('howtofield'));
+		return response()->view('howtofields.edit', compact('howtofield'));
 	}
 
 	/**

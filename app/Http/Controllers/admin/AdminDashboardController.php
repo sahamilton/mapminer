@@ -43,7 +43,7 @@ class AdminDashboardController extends BaseController {
 		$data['recentLocationNotes'] = $this->recentLocationNotes();
 		
 		
-		return \View::make('admin.dashboard',compact('data'));
+		return response()->view('admin.dashboard',compact('data'));
 		
 	}
 	
@@ -55,7 +55,7 @@ class AdminDashboardController extends BaseController {
 		$users = $this->getUsersByLoginDate($view);
 		$views = ['0'=>'Today','1'=>'Last 24 hrs','2'=>'Last Week','3'=>'Last Month','4'=>'Earlier','5'=>'Never'];
 
-		return \View::make('admin.users.show',compact('users','views','view'));
+		return response()->view('admin.users.show',compact('users','views','view'));
 	
 	}
 	

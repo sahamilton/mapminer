@@ -12,7 +12,7 @@ class AccounttypesController extends BaseController {
 	{
 		$accounttypes = Accounttype::all();
 		
-		return \View::make('accounttypes.index', compact('accounttypes'));
+		return response()->view('accounttypes.index', compact('accounttypes'));
 	}
 
 	/**
@@ -22,7 +22,7 @@ class AccounttypesController extends BaseController {
 	 */
 	public function create()
 	{
-		return \View::make('accounttypes.create');
+		return response()->view('accounttypes.create');
 	}
 
 	/**
@@ -56,7 +56,7 @@ class AccounttypesController extends BaseController {
 		//$accounttype->load('companies');
 		$accounttype = Accounttype::where('id','=',$id)->get();
 		
-		return \View::make('accounttypes.show', compact('accounttype'));
+		return response()->view('accounttypes.show', compact('accounttype'));
 	}
 
 	/**
@@ -69,7 +69,7 @@ class AccounttypesController extends BaseController {
 	{
 		$accounttype = Accounttype::find($id);
 
-		return \View::make('accounttypes.edit', compact('accounttype'));
+		return response()->view('accounttypes.edit', compact('accounttype'));
 	}
 
 	/**

@@ -51,7 +51,7 @@ class CompaniesController extends BaseController {
 		
 
 
-		return \View::make('companies.index', compact('companies','fields','title','filtered','locationFilter'));
+		return response()->view('companies.index', compact('companies','fields','title','filtered','locationFilter'));
 	}
 	
 
@@ -120,7 +120,7 @@ class CompaniesController extends BaseController {
 		$servicelines = Serviceline::whereIn('id',$this->userServiceLines)
 			->pluck('ServiceLine','id');
 
-		return \View::make('companies.create',compact('managers','filters','servicelines'));
+		return response()->view('companies.create',compact('managers','filters','servicelines'));
 	}
 
 	/**
@@ -242,10 +242,10 @@ class CompaniesController extends BaseController {
 			$locations = $this->locations->findNearbyLocations($lat,$lng,'1000',$number=null,$company->id,$this->userServiceLines, $limit = 500);
 			
 			
-			return \View::make('companies.showselect',compact('count','company','locations','mywatchlist','fields','states','filtered','filters','segments'));
+			return response()->view('companies.showselect',compact('count','company','locations','mywatchlist','fields','states','filtered','filters','segments'));
 		}
 		$mywatchlist = $this->getWatchList();
-		return \View::make('companies.show', compact('company','locations','mywatchlist','fields','states','filtered','filters','segments'));
+		return response()->view('companies.show', compact('company','locations','mywatchlist','fields','states','filtered','filters','segments'));
 	}
 	
 	private function getStatesInArray($locations)
@@ -333,7 +333,7 @@ class CompaniesController extends BaseController {
 		$fields = array('Company'=>'companyname','Manager'=>'manager','Email'=>'email','Vertical'=>'vertical');
 		
 
-		return \View::make('companies.index', compact('companies','fields','title','filtered'));
+		return response()->view('companies.index', compact('companies','fields','title','filtered'));
 		
 	}
 	
@@ -344,7 +344,7 @@ class CompaniesController extends BaseController {
 			$companies = $this->getAllCompanies();
 			$title = 'All Accounts';
 			$fields = array('Company'=>'companyname','Manager'=>'manager','Email'=>'email','Vertical'=>'vertical','Service Lines'=>'serviceline','Has Locations'=>'locationcount',);
-			return \View::make('companies.index', compact('companies','fields','title','filtered','locationFilter'));
+			return response()->view('companies.index', compact('companies','fields','title','filtered','locationFilter'));
 
 	}
 	
@@ -384,7 +384,7 @@ class CompaniesController extends BaseController {
 		}
 		
 	
-		return \View::make('companies.state', compact('data','locations','mywatchlist','fields','states','filtered','segments'));
+		return response()->view('companies.state', compact('data','locations','mywatchlist','fields','states','filtered','segments'));
 	}
 	
 	
@@ -429,7 +429,7 @@ class CompaniesController extends BaseController {
 		}
 		
 	
-		return \View::make('companies.segment', compact('data','locations','mywatchlist','fields','states','filtered','segments'));
+		return response()->view('companies.segment', compact('data','locations','mywatchlist','fields','states','filtered','segments'));
 	}
 	
 	
@@ -480,7 +480,7 @@ class CompaniesController extends BaseController {
 		$keys = $this->locations->getSearchKeys(['locations'],['segment','businesstype']);
 		$states= $this->getCompanyStates($id,$filtered,$keys);
 		$filters= SearchFilter::all()->pluck('filter','id');
-		return \View::make('companies.state', compact('data','locations','mywatchlist','fields','states','filtered','filters','segments'));
+		return response()->view('companies.state', compact('data','locations','mywatchlist','fields','states','filtered','filters','segments'));
 	}
 	
 	/**
@@ -609,7 +609,7 @@ class CompaniesController extends BaseController {
 		}
 		$data = $this->getStateCompanyInfo($id,$state);
 
-		return \View::make('companies.statemap', compact('data'));
+		return response()->view('companies.statemap', compact('data'));
 	}
 	
 	
@@ -632,7 +632,7 @@ class CompaniesController extends BaseController {
 		$servicelines = Serviceline::pluck('ServiceLine','id');
 		$filters = SearchFilter::where('searchtable','=','companies')->pluck('filter', 'id');
 		
-		return \View::make('companies.edit', compact('company','managers','filters','servicelines'));
+		return response()->view('companies.edit', compact('company','managers','filters','servicelines'));
 	}
 
 	/**
@@ -728,7 +728,7 @@ class CompaniesController extends BaseController {
 
 							})
 						->orderBy('companyname')->pluck('companyname','id');
-		return \View::make('locations.export',compact('companies'));
+		return response()->view('locations.export',compact('companies'));
 	}
 	
 	public function locationsexport() {

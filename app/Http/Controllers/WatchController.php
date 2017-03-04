@@ -36,7 +36,7 @@ class WatchController extends BaseController {
 					 'My Notes'=>'notes',
 					 'Watch'=>'watch_list'); 
  
-		return \View::make('watch.index', compact('fields','watch'));
+		return response()->view('watch.index', compact('fields','watch'));
 
 	}
 
@@ -58,7 +58,7 @@ class WatchController extends BaseController {
 					 'State'=>'state',
 					 'ZIP'=>'zip',
 					 'Watch'=>'watch_list']; 
-		return \View::make('watch.index', compact('watch','fields'));
+		return response()->view('watch.index', compact('watch','fields'));
 	}
 	
 	/**
@@ -88,7 +88,7 @@ class WatchController extends BaseController {
 		$this->delete($id);
 		
 		$watch = $this->getMyWatchList(\Auth::id());
-		return \View::make('watch.index', compact('watch'));
+		return response()->view('watch.index', compact('watch'));
 	}
 	
 	/**
@@ -120,7 +120,7 @@ class WatchController extends BaseController {
 			 'State'=>'state',
 			 'ZIP'=>'zip']; 
 		
-		return \View::make('watch.show', compact('watch','fields','user'));
+		return response()->view('watch.show', compact('watch','fields','user'));
 		
 		
 	}
@@ -178,7 +178,7 @@ class WatchController extends BaseController {
 		$data['lat'] = array_sum($lat) / count($lat);
 		$data['lng'] = array_sum($lng) / count($lng);
 		}
-		return \View::make('watch.map', compact('data'));
+		return response()->view('watch.map', compact('data'));
 		
 	}
 	
@@ -241,6 +241,6 @@ class WatchController extends BaseController {
 	{
 		$watch = $this->getMyWatchList(\Auth::id());
 		
-		return \View::make('resources.show', compact('watch'));
+		return response()->view('resources.show', compact('watch'));
 	}
 }

@@ -12,7 +12,7 @@
 			Permission Management
 
 			<div class="pull-right">
-				<a href="{{{ route('admin.permissions.create') }}}" class="btn btn-small btn-info iframe"><span class="glyphicon glyphicon-plus-sign"></span> Create New Permission</a>
+				<a href="{{{ route('permissions.create') }}}" class="btn btn-small btn-info iframe"><span class="glyphicon glyphicon-plus-sign"></span> Create New Permission</a>
 			</div>
 		</h3>
 	</div>
@@ -29,7 +29,7 @@
 		<tbody>
         @foreach ($permissions as $permission)
         <tr>
-        <td><a href="{{route('admin.permissions.show',$permission->id)}}" >{{$permission->display_name}}</td>
+        <td><a href="{{route('permissions.show',$permission->id)}}" >{{$permission->display_name}}</td>
         <td>
         @foreach ($permission->roles as $role)
         <li>{{$role->name}}</li>
@@ -44,8 +44,8 @@
 			  </button>
 			  <ul class="dropdown-menu" permission="menu">
 				
-				<li><a href="{{route('admin.permissions.edit',$permission->id)}}"><i class="glyphicon glyphicon-pencil"></i> Edit {{$permission->name}}</a></li>
-				<li><a data-href="{{route('admin.permissions.purge',$permission->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = "{{$permission->name}}" href="#"><i class="glyphicon glyphicon-trash"></i> Delete {{$permission->name}}</a></li>
+				<li><a href="{{route('permissions.edit',$permission->id)}}"><i class="glyphicon glyphicon-pencil"></i> Edit {{$permission->name}}</a></li>
+				<li><a data-href="{{route('permissions.purge',$permission->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = "{{$permission->name}}" href="#"><i class="glyphicon glyphicon-trash"></i> Delete {{$permission->name}}</a></li>
 			  </ul>
 			</div>
         

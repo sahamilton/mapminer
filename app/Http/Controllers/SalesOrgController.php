@@ -24,7 +24,7 @@ class SalesOrgController extends BaseController {
 	{
 				
 			$salesteam = $salesperson->descendantsAndSelf()->with('reportsTo','userdetails','userdetails.roles')->orderBy('lft')->get();
-			return \View::make('salesorg.salesmanagerlist', compact('salesteam'));
+			return response()->view('salesorg.salesmanagerlist', compact('salesteam'));
 
 
 	}
@@ -51,7 +51,7 @@ class SalesOrgController extends BaseController {
 				
 				$salesorg = Person::whereId($salesPerson->id)->with('userdetails.roles','reportsTo','reportsTo.userdetails.roles')->first();
 
-				return \View::make('salesorg.map', compact('salesorg'));
+				return response()->view('salesorg.map', compact('salesorg'));
 				
 			}else{
 				$salesteam = $salesperson->descendantsAndSelf()
@@ -59,7 +59,7 @@ class SalesOrgController extends BaseController {
 				->orderBy('lft')
 				->get();
 							
-				return \View::make('salesorg.managermap', compact('salesteam'));
+				return response()->view('salesorg.managermap', compact('salesteam'));
 			}
 			
 	

@@ -22,7 +22,7 @@ class SearchFiltersController extends BaseController {
 		
 		$tree = $this->filter->root();
 		
-		return \View::make('filters.index', compact('tree'));
+		return response()->view('filters.index', compact('tree'));
 	}
 
 	/**
@@ -36,7 +36,7 @@ class SearchFiltersController extends BaseController {
 		$parents = SearchFilter::getNestedList('filter','id','    .');
 		//$parents = $this->filter->select('filter', 'id','depth')->orderBy('lft')->get();
 
-		return \View::make('filters.create',compact('parents'));
+		return response()->view('filters.create',compact('parents'));
 	}
 
 	/**
@@ -79,7 +79,7 @@ class SearchFiltersController extends BaseController {
 	{
 		$filter = $this->filter->findOrFail($id);
 
-		return \View::make('filters.show', compact('filter'));
+		return response()->view('filters.show', compact('filter'));
 	}
 
 	/**
@@ -94,7 +94,7 @@ class SearchFiltersController extends BaseController {
 		
 		$parents = SearchFilter::getNestedList('filter','id','    .');
 		
-		return \View::make('filters.edit', compact('filter','parents'));
+		return response()->view('filters.edit', compact('filter','parents'));
 	}
 
 	/**
@@ -147,7 +147,7 @@ class SearchFiltersController extends BaseController {
 		$filters = $this->filter->all();
 		$tree = $this->filter->first();
 		
-		return \View::make('filters.filterform', compact('tree'));
+		return response()->view('filters.filterform', compact('tree'));
 		
 		
 	}

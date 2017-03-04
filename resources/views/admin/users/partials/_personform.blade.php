@@ -73,7 +73,7 @@
 					{{Form::label('Industry Focus','Industry Focus:', array('class'=>"col-md-2 control-label"))}}
 
 					<div class="col-md-6">
-						{{Form::select('vertical[]',$verticals,isset($user) ? $user->person->industryfocus->lists('id') :'',array('class'=>'form-control','multiple'=>true))}}
+						{{Form::select('vertical[]',$verticals,isset($user) ? $user->person->industryfocus->pluck('id') :'',array('class'=>'form-control','multiple'=>true))}}
 
 						@if ($errors->has('vertical')) <p class="help-block">{{ $errors->first('vertical') }}</p> @endif
 					</div>

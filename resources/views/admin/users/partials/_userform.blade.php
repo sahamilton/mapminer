@@ -65,7 +65,7 @@
 					{{Form::label('ServiceLine','Service Lines:', array('class'=>"col-md-2 control-label"))}}
 
 					<div class="col-md-6">
-						{{Form::select('serviceline[]',$servicelines,isset($user) ? $user->serviceline->lists('id') :'',array('class'=>'form-control','multiple'=>true))}}
+						{{Form::select('serviceline[]',$servicelines,isset($user) ? $user->serviceline->pluck('id') :'',array('class'=>'form-control','multiple'=>true))}}
 
 						@if ($errors->has('serviceline')) <p class="help-block">{{ $errors->first('serviceline') }}</p> @endif
 					</div>

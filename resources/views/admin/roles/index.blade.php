@@ -12,7 +12,7 @@
 			Role Management
 
 			<div class="pull-right">
-				<a href="{{{ route('admin.roles.create') }}}" class="btn btn-small btn-info iframe"><span class="glyphicon glyphicon-plus-sign"></span> Create New Role</a>
+				<a href="{{{ route('roles.create') }}}" class="btn btn-small btn-info iframe"><span class="glyphicon glyphicon-plus-sign"></span> Create New Role</a>
 			</div>
 		</h3>
 	</div>
@@ -31,7 +31,7 @@
 		<tbody>
         @foreach ($roles as $role)
         <tr>
-        <td><a href="{{route('admin.roles.show',$role->id)}}" >{{$role->name}}</td>
+        <td><a href="{{route('roles.show',$role->id)}}" >{{$role->name}}</td>
         <td>
         @foreach($role->permissions as $permission)
         	<li>{{ucwords($permission->display_name)}}</li>
@@ -48,8 +48,8 @@
 			  </button>
 			  <ul class="dropdown-menu" role="menu">
 				
-				<li><a href="{{route('admin.roles.edit',$role->id)}}"><i class="glyphicon glyphicon-pencil"></i> Edit {{$role->name}}</a></li>
-				<li><a data-href="{{route('admin.roles.purge',$role->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = "{{$role->name}}" href="#"><i class="glyphicon glyphicon-trash"></i> Delete {{$role->name}}</a></li>
+				<li><a href="{{route('roles.edit',$role->id)}}"><i class="glyphicon glyphicon-pencil"></i> Edit {{$role->name}}</a></li>
+				<li><a data-href="{{route('roles.purge',$role->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = "{{$role->name}}" href="#"><i class="glyphicon glyphicon-trash"></i> Delete {{$role->name}}</a></li>
 			  </ul>
 			</div>
         

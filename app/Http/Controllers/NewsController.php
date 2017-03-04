@@ -35,7 +35,7 @@ class NewsController extends BaseController {
 		->with('author','author.person','serviceline','comments')
 		->orderBy('startdate', 'DESC')->paginate(10);
 
-		return \View::make('news.index', compact('news'));
+		return response()->view('news.index', compact('news'));
 	}
 
 	public function admin()
@@ -54,7 +54,7 @@ class NewsController extends BaseController {
 				'Comments'=>'comments',
 				'Serviceline'=>'Serviceline',
 				'Actions'=>'actions'];
-		return \View::make('admin.news.index', compact('news','fields'));
+		return response()->view('admin.news.index', compact('news','fields'));
 		
 	}
 	/**
@@ -66,7 +66,7 @@ class NewsController extends BaseController {
 	{
 		
 		$servicelines = $this->news->getUserServiceLines();
-		return \View::make('news.create', compact('servicelines'));
+		return response()->view('news.create', compact('servicelines'));
 	}
 
 	/**
@@ -114,7 +114,7 @@ class NewsController extends BaseController {
 		->with('author','author.person','comments','comments.postedBy.person')->get();
 
 
-		return \View::make('news.show', compact('news'));
+		return response()->view('news.show', compact('news'));
 	}
 
 	/**
@@ -127,7 +127,7 @@ class NewsController extends BaseController {
 	{
 		
 		$servicelines = $this->news->getUserServiceLines();
-		return \View::make('news.edit', compact('news','servicelines'));
+		return response()->view('news.edit', compact('news','servicelines'));
 	}
 
 	/**

@@ -37,7 +37,7 @@ class PersonsController extends BaseController {
 		$fields=array('Name'=>'name','Role'=>'mgrtype','Email'=>'email','Industry'=>'industry');
 		
 		
-		return \View::make('persons.index', compact('persons','fields'));
+		return response()->view('persons.index', compact('persons','fields'));
 	}
 
 
@@ -60,7 +60,7 @@ class PersonsController extends BaseController {
 		}
 		$colors = $this->getColors($filtered);
 
-		return \View::make('persons.map',compact('filtered','keys','mylocation','colors'));
+		return response()->view('persons.map',compact('filtered','keys','mylocation','colors'));
 
 	}
 
@@ -182,7 +182,7 @@ class PersonsController extends BaseController {
 			
 			$fields = array('Account'=>'account','Vertical'=>'vertical');
 			
-			return \View::make('persons.showaccount', compact('people','accounts','fields'));
+			return response()->view('persons.showaccount', compact('people','accounts','fields'));
 			
 		}elseif(in_array('Market manager',$roles)){
 		
@@ -196,7 +196,7 @@ class PersonsController extends BaseController {
 						'City'=>'city',
 						'State'=>'state',
 						'Sales Team'=>'servedBy');
-			return \View::make('persons.showlist', compact('people','branches','fields'));
+			return response()->view('persons.showlist', compact('people','branches','fields'));
 			
 		}else{
 			
@@ -210,12 +210,12 @@ class PersonsController extends BaseController {
 						'City'=>'city',
 						'State'=>'state'];
 			
-				return \View::make('persons.salesteam', compact('people','fields'));
+				return response()->view('persons.salesteam', compact('people','fields'));
 			}else{
 			
 				
 				$fields = ['Name'=>'name','Role'=>'role','Branches Serviced'=>'branches'];
-				return \View::make('persons.salesmanager', compact('people','fields'));
+				return response()->view('persons.salesmanager', compact('people','fields'));
 			}
 			
 			
@@ -261,7 +261,7 @@ class PersonsController extends BaseController {
 			
 		}
 
-		return \View::make('persons.showmap', compact('data'));
+		return response()->view('persons.showmap', compact('data'));
 	}
 
 	
@@ -270,7 +270,7 @@ class PersonsController extends BaseController {
 	 * @return [type] [description]
 	 */
 	public function import() {
-		return \View::make('persons.import');
+		return response()->view('persons.import');
 		
 	}
 	
@@ -333,7 +333,7 @@ class PersonsController extends BaseController {
 			$fields['Actions']='actions';
 		}
 
-		return \View::make('persons.index', compact('persons','fields'));
+		return response()->view('persons.index', compact('persons','fields'));
 	}
 	
 	/**
@@ -394,7 +394,7 @@ class PersonsController extends BaseController {
 		$data['nocontact'] = $this->getLocationsWoContacts($data['accountstring']);
 		$data['nosalesnotes'] = $this->getNoSalesNotes($data['accountstring']);
 		$data['segments'] = $this->getSegmentDetails($data['accountstring']);
-		return \View::make('persons.manageaccounts', compact('data'));
+		return response()->view('persons.manageaccounts', compact('data'));
 	}
 	
 
@@ -472,7 +472,7 @@ class PersonsController extends BaseController {
 
 		$data['title'] = $notes[0]['companyname'] . ' Location Notes';
 		$fields = ['Location Name'=>'businessname', 'Note'=>'note','Posted By'=>'person','Posted'=>'date'];
-		return \View::make('persons.managernotes', compact('data','notes','fields','companyID'));
+		return response()->view('persons.managernotes', compact('data','notes','fields','companyID'));
 		
 		
 	}
@@ -815,7 +815,7 @@ class PersonsController extends BaseController {
 		{
 			try {
 			
-				$geocode = Geocoder::geocode($person->address );
+				$geocode = Geocoder::geocode($person->address )->get();
 				// The GoogleMapsProvider will return a result
 				
 				} catch (\Exception $e) {

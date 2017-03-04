@@ -34,7 +34,7 @@ class CommentsController extends BaseController {
 			$fields['Actions']='actions';
 		}
 		
-		return \View::make('comments.index', compact('comments','fields'));
+		return response()->view('comments.index', compact('comments','fields'));
 	}
 
 	/**
@@ -44,7 +44,7 @@ class CommentsController extends BaseController {
 	 */
 	public function create()
 	{
-		return \View::make('comments.create');
+		return response()->view('comments.create');
 	}
 
 	/**
@@ -86,7 +86,7 @@ class CommentsController extends BaseController {
 	{
 		
 		$people = Comments::with('manages')->findorFail($id->id);
-		return \View::make('comments.showlist', compact('people'));
+		return response()->view('comments.showlist', compact('people'));
 	}
 	
 	/**
@@ -105,7 +105,7 @@ class CommentsController extends BaseController {
 		$comment->save();
 
 		$comments = $this->comment->all();	
-		return \View::make('comments.index', compact('comments'));
+		return response()->view('comments.index', compact('comments'));
 		
 			
 	}
@@ -120,7 +120,7 @@ class CommentsController extends BaseController {
 	 */
 	public function edit($comment)
 	{
-			return \View::make('comments.edit', compact('comment'));
+			return response()->view('comments.edit', compact('comment'));
 	}
 
 	/**
