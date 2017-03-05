@@ -1,5 +1,5 @@
 <?php
-namespace App\Http\Controllers\admin;
+namespace App\Http\Controllers\Admin;
 use App\Location;
 use App\Note;
 use App\Http\Controllers\BaseController;
