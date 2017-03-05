@@ -53,23 +53,25 @@ $datastring = substr($datastring,0,-1);
     <div id="home" class="tab-pane fade in active">
       <h3>Usage</h3>
       	@include ('admin.partials.firstlogged')
-		    @include ('admin.partials.lastlogged')
+
+		@include ('admin.partials.lastlogged')
+
     
     </div>
     <div id="menu1" class="tab-pane fade">
       <h3>Account Activity</h3>
-     @include('admin.partials.watchers')
+    @include('admin.partials.watchers')
  	@include('admin.partials.newNotes')
      
     </div>
     <div id="menu2" class="tab-pane fade">
       <h3>Account Health</h3>
-     @include ('admin.partials.nosalesnotes')
+   <@include ('admin.partials.nosalesnotes')
      @include ('admin.partials.duplicate')
     </div>
     <div id="menu3" class="tab-pane fade">
       <h3>Location Health</h3>
-     @include('admin.partials.nocontacts')
+   @include('admin.partials.nocontacts')
    @include('admin.partials.nogeocode')
     </div>
   </div>
@@ -91,11 +93,12 @@ $datastring = substr($datastring,0,-1);
 <script type="text/javascript" src="{{asset('assets/js/Chart.min.js')}}"></script>
 <script>
 var ctx = document.getElementById("barChart").getContext("2d");
-var options = {legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].lineColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>"
-};
+
 
 var data = {
-    labels: [{!!$labels!!}],
+
+    labels: [{!! $labels !!}],
+
     datasets: [
         
 		{
@@ -106,12 +109,12 @@ var data = {
             highlightStroke: "rgba(151,187,205,1)",
 			
     		
-            data: [{{$total}}]
+            data: [{!!$total!!}]
         }
     ]
 };
 
-new Chart(ctx).Bar(data, options);
+new Chart(ctx).Bar(data);
 
 var data = [
     {!!$datastring!!}
