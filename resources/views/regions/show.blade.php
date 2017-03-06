@@ -2,80 +2,98 @@
 @section('content')
 <h1>{{$data['region']->region}} Region Branches</h1>
 
-<h4> <a href="{{ URL::to('branch') }}">Show all branches</a></h4>	
+<h4> <a href="{{ route('branches.index') }}">Show all branches</a></h4>	
 <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
-   @foreach($fields as $key=>$field)
-    <th>
-    {{$key}}
-    </th>
-    @endforeach
-    
+	<th>Branch</th>
+	<th>Number</th>
+	<th>Service Line</th>
+	<th>Branch Address</th>
+	<th>City</th>
+	<th>State</th>
+	<th>Region</th>
+	<th>Manager</th>
+	<th>Sales Team</th>
+	@if(Auth::user()->hasRole('Admin'))
+	<th>Actions</th>
+	@endif 
     </thead>
     <tbody>
    @foreach($branches as $branch)
+
     <tr>  
-	<?php reset($fields);?>
-   @foreach($fields as $key=>$field)
-    <td>
-	<?php 
-	/*'Number'=>'branchnumber',
-						'Service Line'=>'brand',
-						'Branch Address'=>'street',
-						'City'=>'city',
-						'State'=>'state',
-						'Region'=>'region',
-						'Manager'=>'manager');*/
+	<td>
+		<a href="{{route('branches.show',$branch->id)}}" 
+		title="See details of {{$branch->branchname}} branch">
+		{{$branch->branchname}}
+		</a>
+	</td>
+	<td>
+		{{$branch->branchnumber}}
+	</td>
+	<td>
+	@if(count($branch->servicelines) > 0)
+		@foreach($branch->servicelines as $serviceline)
+				<a href = "{{route('serviceline.show',$serviceline->id)}}" 
+				title =" See all {{$serviceline->ServiceLine}} branches">
+				{{$serviceline->ServiceLine}}
+				</a>
+		@endforeach
+	@endif
+	</td>
+	<td>
+		{{$branch->street}} {{$branch->address2}}
+	</td>
 
-	switch ($key) {
-		case 'Branch':
-			$title = "See details of branch ".$branch->$field;
-			echo "<a href=\"/branch/".$branch->id."\" title=\"".$title."\">".$branch->$field."</a>";
-		break;
-		
-		case 'Manager':
-			if(isset($branch->manager->firstname)) {
-			$name = $branch->manager->firstname . " " . $branch->manager->lastname;
-			$title = "See all branches managed by ".$name;
-			echo "<a href=\"/person/".$branch->manager->id."\" title=\"".$title."\">".$name."</a>";
-			}
-		break;
-		
-		case 'Email':
-			$name = $branch->manager->firstname . " " . $branch->manager->lastname;
-			$title="Send email to ".$name;
-			echo "<a href=\"mailto:".$branch->manager->email."\" title=\"".$title."\">".$branch->manager->email."</a>";
-		break;
-		
-		case 'Service Line':
+	<td>
+		{{$branch->city}}
+	</td>
+	<td>
+		{{$branch->state}}
+	</td>
+	<td>
 
-			foreach($branch->servicelines as $serviceline){
-				$title="See all ".$serviceline->ServiceLine ." branches";
-				echo "<a href=\"/serviceline/".$serviceline->id."\" title=\"".$title."\">".$serviceline->ServiceLine."</a>";
-			}
-		break;
-		
-		case 'Branch Address':
-			echo $branch->street ." " .$branch->address2;
-		
-		break;
-		
-		case 'State':
-				$title="See all ".$branch->state." branches";
-				echo "<a href=\"/branch/state/".$branch->state."\" title=\"".$title."\">".$branch->state."</a>";
+		<a href="{{route('region.show',$branch->region->id)}}" 
+		title="See all {{$branch->region->region}} branches">
+		{{$branch->region->region}}
+		</a>
 
-		break;
-		
-		
-		
-		default:
-			echo $branch->$field;
-		break;
-		
-	};?>
+	</td>
+	<td>
+	@if(null!==$branch->manager)
+		<a href="{{route('person.show',$branch->manager->id)}}" 
+		title="See all branches managed by {{$branch->manager->firstname}} {{ $branch->manager->lastname }}" >
+		{{$branch->manager->firstname}} {{ $branch->manager->lastname }}
+		</a>
+		@endif
+	</td>
+	<td>
+	@if(null!==$branch->servicedBy)
+		<a href="{{route('branches.show',$branch->id)}}" 
+		title="See details of {{$branch->branchname}} branch">
+		{{count($branch->servicedBy)}}
+		</a>
+	@endif
+	</td>
+	@if(Auth::user()->hasRole('Admin'))
+		<td>
+            @include('partials/_modal')
+    
+            <div class="btn-group">
+			  <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
+				<span class="caret"></span>
+				<span class="sr-only">Toggle Dropdown</span>
+			  </button>
+			  <ul class="dropdown-menu" role="menu">
+				
+				<li><a href="/branch/{{$branch->id}}/edit/"><i class="glyphicon glyphicon-pencil"></i> Edit {{$branch->branchname}} Branch</a></li>
+				<li><a data-href="/branch/{{$branch->id}}/delete" data-toggle="modal" data-target="#confirm-delete" data-title = "{{$branch->branchname}} branch" href="#"><i class="glyphicon glyphicon-trash"></i> Delete {{$branch->branchname}} branch</a></li>
+			  </ul>
+			</div>
 	
-    </td>
-    @endforeach
+    	</td>
+    @endif
+
     </tr>
    @endforeach
     

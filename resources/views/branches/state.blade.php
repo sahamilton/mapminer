@@ -1,77 +1,77 @@
 @extends('site/layouts/default')
 @section('content')
 <h2>{{$data['fullstate']}} State Branches</h2>
-<h4> <a href="/branch" title="Show all branches" />Show all branches</a></h4>
-<?php $route='branch.state';?>
-@include('branches/partials/_state')
-<p><a href='{{URL::to("branch/statemap/".$data['state'])}}'><i class="glyphicon glyphicon-flag"></i> Map view</a></p>
+<h4> <a href="{{route('branches.index')}}" title="Show all branches" />Show all branches</a></h4>
+<?php $route='branches.state';?>
+@include('branches.partials._state')
+<p><a href="{{route('branches.statemap',$data['state'])}}""><i class="glyphicon glyphicon-flag"></i> Map view</a></p>
 <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
-    <thead>
-     @foreach($fields as $key=>$field)
-    <th>
-    {{$key}}
-    </th>
-    @endforeach
-       
-    </thead>
+	<thead>
+		<th>Branch</th>
+		<th>Number</th>
+		<th>Service Line</th>
+		<th>Branch Address</th>
+		<th>City</th>
+		<th>State</th>
+		<th>Region</th>
+		<th>Manager</th>
+		<th>Sales Team</th>
+		@if(Auth::user()->hasRole('Admin'))
+			<th>Actions</th>
+		@endif 
+	</thead>
     <tbody>
-   @foreach($branches as $branch)
+		@foreach($branches as $branch)
     <tr>  
-	<?php reset($fields);?>
-     @foreach($fields as $key=>$field)
-    <td>
-	<?php 
-	/*'Number'=>'branchnumber',
-						'Service Line'=>'brand',
-						'Branch Address'=>'street',
-						'City'=>'city',
-						'State'=>'state',
-						'Region'=>'region',
-						'Manager'=>'manager');*/
-	$name = $branch['manager']['firstname'] . " " . $branch['manager']['lastname'] ;
-	switch ($key) {
-		case 'Branch':
-			$title = "See details of branch ".$branch[$field];
-			echo "<a href=\"/branch/".$branch['id']."\" title=\"".$title."\">".$branch[$field]."</a>";
-		break;
-		
-		case 'Manager':
-			
-			
-			$title = "See all branches managed by ".$name;
-			echo "<a href=\"/person/".$branch['manager']['id']."\" title=\"".$title."\">".$name."</a>";
-		break;
-		
-		case 'Email':
-			
-			$title="Send email to ".$name;
-			echo "<a href=\"mailto:".$branch['manager']['email']."\" title=\"".$title."\">".$branch['manager']['email']."</a>";
-		break;
-		
-		case 'Service Line':
-			foreach($branch['servicelines'] as $serviceline){
-				$title="See all ".$serviceline['ServiceLine'] ." branches";
-				echo "<a href=\"/serviceline/".$serviceline['id']."\" title=\"".$title."\">".$serviceline['ServiceLine']."</a>";
-			}
-		break;
-		
-		case 'Branch Address':
-			echo $branch['street'] ." " .$branch['address2'];
-		
-		break;
-		
-		
-		
-		case 'Region':
-				$title="See all ".$branch['region']['region']." branches";
-				echo "<a href=\"/region/".$branch['region']['id']."\" title=\"".$title."\">".$branch['region']['region']."</a>";
+	<td>
+		<a href="{{route('branches.show',$branch->id)}}" 
+		title="See details of {{$branch->branchname}} branch">
+		{{$branch->branchname}}
+		</a>
+	</td>
+	<td>
+		{{$branch->branchnumber}}
+	</td>
+	<td>
+		@foreach($branch->servicelines as $serviceline)
+				<a href = "{{route('serviceline.show',$serviceline->id)}}" 
+				title =" See all {{$serviceline->ServiceLine}} branches">
+				{{$serviceline->ServiceLine}}
+				</a>
+		@endforeach
+	</td>
+	<td>
+		{{$branch->street}} {{$branch->address2}}
+	</td>
 
-		break;
-		
-		
-		case 'Actions':
+	<td>
+		{{$branch->city}}
+	</td>
+	<td>
+		{{$branch->state}}
+	</td>
+	<td>
+		<a href="{{route('region.show',$branch->region->id)}}" 
+		title="See all {{$branch->region->region}} branches">
+		{{$branch->region->region}}
+		</a>
 
-			?>
+	</td>
+	<td>
+		<a href="{{route('person.show',$branch->manager->id)}}" 
+		title="See all branches managed by {{$branch->manager->firstname}} {{ $branch->manager->lastname }}" >
+		{{$branch->manager->firstname}} {{ $branch->manager->lastname }}
+		</a>
+
+	</td>
+	<td>
+		<a href="{{route('branches.show',$branch->id)}}" 
+		title="See details of {{$branch->branchname}} branch">
+		{{count($branch->servicedBy)}}
+		</a>
+	</td>
+	@if(Auth::user()->hasRole('Admin'))
+		<td>
             @include('partials/_modal')
     
             <div class="btn-group">
@@ -85,25 +85,15 @@
 				<li><a data-href="/branch/{{$branch->id}}/delete" data-toggle="modal" data-target="#confirm-delete" data-title = "{{$branch->branchname}} branch" href="#"><i class="glyphicon glyphicon-trash"></i> Delete {{$branch->branchname}} branch</a></li>
 			  </ul>
 			</div>
-		
-		<?php
-
-		break;	
-		
-		
-		default:
-			echo $branch[$field];
-		break;
-		
-	};?>
 	
-    </td>
-    @endforeach
+    	</td>
+    @endif
+
     </tr>
    @endforeach
     
-    </tbody>
-    </table>
+	</tbody>
+</table>
 
 
 

@@ -1,8 +1,9 @@
 <?php
 namespace App\Http\Controllers;
 use App\User;
+use App\State;
 class BaseController extends Controller {
-
+	
 	public $userServiceLines;
 
     /**
@@ -14,7 +15,7 @@ class BaseController extends Controller {
     public function __construct()
     {
        
-      
+     
       
         
 		

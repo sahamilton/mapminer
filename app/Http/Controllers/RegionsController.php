@@ -64,21 +64,15 @@ class RegionsController extends BaseController {
 		$data['region'] = $region;
 		
 		$branches = $region->branches()
-				->with('servicelines')
+				->with('servicelines','manager','region','servicedBy')
 				->orderBy('state','ASC')
 				->orderBy('city','ASC')
 				->get();
 		
 		
-		$fields = array('Branch'=>'branchname',
-						'Number'=>'branchnumber',
-						'Service Line'=>'brand',
-						'Branch Address'=>'street',
-						'City'=>'city',
-						'State'=>'state',
-						'Manager'=>'manager');
+
 						
-		return response()->view('regions.show', compact('data','branches','fields'));
+		return response()->view('regions.show', compact('data','branches'));
 	}
 
 	/**

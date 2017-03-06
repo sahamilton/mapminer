@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 use App\Branch;
 use App\Serviceline;
 use App\User;
+use App\State;
 use App\Person;
 use  App\Http\Requests\BranchFormRequest;
 
@@ -17,12 +18,14 @@ class BranchesController extends BaseController {
 	protected $branch;
 	protected $serviceline;
 	protected $person;
+	protected $state;
 	
 	
-	public function __construct(Branch $branch, Serviceline $serviceline,Person $person) {
+	public function __construct(Branch $branch, Serviceline $serviceline,Person $person, State $state) {
 			$this->branch = $branch;
 			$this->serviceline = $serviceline;
 			$this->person = $person;
+			$this->state = $state;
 			parent::__construct();
 	}
 	
@@ -162,7 +165,7 @@ class BranchesController extends BaseController {
 	public function show($branch)
 	{
 		
-		$user = new User;
+		
 		$this->userServiceLines = $this->branch->getUserServiceLines();
 		$servicelines = $this->serviceline->whereIn('id',$this->userServiceLines)->get();
 		$data['branch'] = $this->branch
@@ -380,6 +383,7 @@ class BranchesController extends BaseController {
 	 */
 	public function statemap($state=NULL)
 	{
+		$this->userServiceLines = $this->branch->getUserServiceLines();
 		$servicelines = $this->serviceline->whereIn('id',$this->userServiceLines)->get();
 
 		if(!isset($state)){
@@ -387,14 +391,7 @@ class BranchesController extends BaseController {
 			
 		}
 		
-		$branch =  $this->branch
-		->with('instate')
-		->whereHas('servicelines', function($q){
-					    $q->whereIn('serviceline_id',$this->userServiceLines);
-
-					})
-		->where('state','=',$state)
-		->get();
+		$branch = $this->retrieveStateBranches($state);
 
 		foreach ($branch as $data) 
 		{
@@ -416,10 +413,26 @@ class BranchesController extends BaseController {
 	public function getStateBranches($state)
 	
 	{
+		$branches= $this->retrieveStateBranches($state);
 		
-		$branch =  $this->branch
+		if (\Auth::user()->hasRole('Admin')) {
+			$fields['Actions']='actions';
+		}
+	
+		$fullState = $this->state->getStates();
+		$data['fullstate'] = $fullState[$state];
+		$data['state'] = $state;
+		return response()->view('branches.state', compact('data','branches'));
+		//echo $this->branch->makeNearbyBranchXML($branch);
+
+		
+	}
+	
+	public function retrieveStateBranches($state){
+		$this->userServiceLines = $this->branch->getUserServiceLines();
+		$branches =  $this->branch
 		->where('state','=',$state)
-		->with('servicelines')
+		->with('servicelines','servicedBy')
 		->whereHas('servicelines', function($q){
 					    $q->whereIn('serviceline_id',$this->userServiceLines);
 
@@ -427,11 +440,8 @@ class BranchesController extends BaseController {
 		->orderBy('city')
 		->get();
 
-		echo $this->branch->makeNearbyBranchXML($branch);
-
-		
+		return $branches;
 	}
-	
 	public function getMyBranches($id)
 	{
 		
