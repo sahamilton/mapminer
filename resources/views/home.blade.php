@@ -7,30 +7,30 @@
 <div id="welcome">
 
 @if(Auth::check()) 
-<div id="accountbtn" style="text-align:left; padding-left:20%;padding-top:100px">
-<a href="{{route('company.index')}}" class='btn btn-lg btn-primary' title='Search for specific accounts'>Account Views</a>
+	<div id="accountbtn" style="text-align:left; padding-left:20%;padding-top:100px">
+	<a href="{{route('company.index')}}" class='btn btn-lg btn-primary' title='Search for specific accounts'>Account Views</a>
 
 
-</div>
+	</div>
 
 
-<div id="branchbtn" style="text-align:left; padding-left:70%;padding-top:50px">
-<a href="{{route('branches.index')}}" class='btn btn-lg btn-warning' title='Explore Branches and their national account locations'>Branch Views</a>
+	<div id="branchbtn" style="text-align:left; padding-left:70%;padding-top:50px">
+	<a href="{{route('branches.index')}}" class='btn btn-lg btn-warning' title='Explore Branches and their national account locations'>Branch Views</a>
 
 
-</div>
-<div id="peoplebtn" style="text-align:left; padding-left:50%;padding-top:100px">
-<a href="{{route('person.index')}}" class='btn btn-lg btn-success' title='Search for people'>People Views</a>
+	</div>
+	<div id="peoplebtn" style="text-align:left; padding-left:50%;padding-top:100px">
+	<a href="{{route('person.index')}}" class='btn btn-lg btn-success' title='Search for people'>People Views</a>
 
 
-</div>
+	</div>
 
 @else
-<div id="loginbtn" style="padding-left:0px;padding-top:200px">
-<a href='login'class='btn btn-lg btn-success'>Login</a>
+	<div id="loginbtn" style="padding-left:0px;padding-top:200px">
+	<a href='login'class='btn btn-lg btn-success'>Login</a>
 
 
-</div>
+	</div>
 @endif
 </div>
   </div>
