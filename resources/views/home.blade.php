@@ -8,7 +8,7 @@
 
 @if(Auth::check()) 
 <div id="accountbtn" style="text-align:left; padding-left:20%;padding-top:100px">
-<a href="{{route('companies.index')}}" class='btn btn-lg btn-primary' title='Search for specific accounts'>Account Views</a>
+<a href="{{route('company.index')}}" class='btn btn-lg btn-primary' title='Search for specific accounts'>Account Views</a>
 
 
 </div>
