@@ -4,6 +4,8 @@ use App\Branch;
 use App\Serviceline;
 use App\User;
 use App\Person;
+use  App\Http\Requests\BranchFormRequest;
+
 class BranchesController extends BaseController {
 
 	/**
@@ -104,13 +106,9 @@ class BranchesController extends BaseController {
 	 *
 	 * @return Response
 	 */
-	public function store()
+	public function store(BranchFormRequest $request)
 	{
-		$input = \Input::all();
-
-		if(! $this->branch->isValid($input)){
-			return redirect()->back()->withInput()->withErrors($this->branch->errors);
-		}
+		$input = $request->all();
 
 		// Attempt to geo code the new branch address	
 		$address = $input['street'] . ",". $input['city'] . ",". $input['state'] . ",". $input['zip'];	
@@ -121,7 +119,7 @@ class BranchesController extends BaseController {
 
 		$branch = $this->branch->create($input);
 		// get the service lines that have been selected and reduce to the simple array
-		$serviceline = \Input::only('serviceline');
+		$serviceline = $reuqest->get('serviceline');
 		foreach($serviceline['serviceline'] as $key=>$value)
 		{
 			$lines[] = $key;	
@@ -241,6 +239,9 @@ class BranchesController extends BaseController {
 	 */
 	public function edit($branch)
 	{
+		
+		$this->userServiceLines = $this->branch->getUserServiceLines();
+
 		$data = $branch->where('id','=',$branch->id)->with('servicelines')->get();
 		$branch = $data[0];
 		$servicelines = $this->serviceline->whereIn('id',$this->userServiceLines )->get();
@@ -256,33 +257,23 @@ class BranchesController extends BaseController {
 	 * @param  array  $branch
 	 * @return Response
 	 */
-	public function update($branch)
+	public function update(BranchFormRequest $request,$branch)
 	{
-		
-		
-		$this->branch = $branch->with('servicelines')->findOrFail($branch->id);
-		$input = \Input::only('branchname','branchnumber','street','address2','city','state','zip','region_id','person_id','radius');
-		
 
-		if(! $this->branch->isValid($input)){
-			return redirect()->back()->withInput()->withErrors($this->branch->errors);
-		}
-
-		$this->branch->update($input);
-		
-		// get the service lines that have been selected and reduce to the simple array
-		$serviceline = \Input::only('serviceline');
 	
-		foreach($serviceline['serviceline'] as $key=>$value)
+		$this->branch = $branch->with('servicelines')->findOrFail($branch->id);
+		$this->branch->update($request->all());
+		$serviceline = $request->get('serviceline');
+		$lines=array();
+		foreach($serviceline as $key=>$value)
 		{
 		
 			$lines[] = $key;	
 		}
 		
 		$this->branch->servicelines()->sync($lines);
-		$branch_id = $this->branch->id;
 		$this->rebuildXMLfile();
-		return redirect()->route('branch.show',$branch_id );
+		return redirect()->route('branches.show',$this->branch->id );
 
 		
 	}

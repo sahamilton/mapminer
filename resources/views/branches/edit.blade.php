@@ -13,7 +13,7 @@ Edit Branch ::
 		Edit Branch
 
 		<div class="pull-right">
-			<a href="{{ route('branch.index') }}" class="btn btn-small btn-inverse"><i class="icon-circle-arrow-left icon-white"></i> Back</a>
+			<a href="{{ route('branches.index') }}" class="btn btn-small btn-inverse"><i class="icon-circle-arrow-left icon-white"></i> Back</a>
 		</div>
 	</h3>
 </div>
@@ -23,7 +23,7 @@ Edit Branch ::
 		$served[] = $serving->id;
 	}
 $buttonLabel = 'Edit Branch';?>
-{{Form::model($branch, ['method'=>'PATCH','route'=>['branch.update', $branch->id]]) }}
+{{Form::model($branch, ['method'=>'PATCH','route'=>['branches.update', $branch->id]]) }}
 	@include('branches/partials/_form')
 {{Form::close()}}
 

@@ -1,3 +1,9 @@
+<?php
+
+$state = new App\State;
+$states = $state->getStates();
+
+?>
 <div>
 {{Form::label('branchnumber','Branch Number:')}}
 <div>
@@ -37,7 +43,7 @@
 <div>
 {{Form::label('state','State')}}
 <div>
-{{Form::select('state',Form::states())}}
+{{Form::select('state',$states)}}
 {{ $errors->first('state') }}
 </div></div>
 
@@ -100,9 +106,7 @@
 <!-- Form Actions -->
 	<div style="margin-top:20px">
 		<div class="controls">
-			<a class="btn btn-link" href="{{ route('branch.index') }}">Cancel</a>
 
-			<button type="reset" class="btn">Reset</button>
 
 			<button type="submit" class="btn btn-success">{{$buttonLabel}}</button>
 		</div>

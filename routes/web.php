@@ -194,8 +194,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function()
 {
 
      
-    # # User Management	
-		
+    # # User Management
 		
 		Route::get('cleanse',['as'=>'users.cleanse','uses'=>'Admin\AdminUsersController@cleanse']);
 		Route::get('users/import',['as'=>'admin.users.import', 'uses'=>'Admin\AdminUsersController@import']);
