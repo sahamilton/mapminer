@@ -4,6 +4,7 @@ use App\Watch;
 use App\Branch;
 use App\Company;
 use App\Location;
+use App\Serviceline;
 
 
 class LocationsController extends BaseController {
@@ -298,10 +299,12 @@ class LocationsController extends BaseController {
 	}
 	public function getClosestBranchMap($id,$n=5)
 	{
-		$this->location = $this->location->with('company','company.serviceline')->findOrFail($id);
-		$data['location']= $this->location;
-		$servicelines = $this->serviceline->all();
-		return response()->view('branches.nearbymap', compact('data','servicelines'));
+		
+		$location = $this->location->with('company','company.serviceline')->findOrFail($id);
+
+
+		$servicelines = Serviceline::all();
+		return response()->view('branches.nearbymap', compact('location','servicelines'));
 
 	}
 	public function showNearbyLocations()
@@ -500,7 +503,7 @@ class LocationsController extends BaseController {
 		$this->executeQuery("DROP TABLE ".$temptable);
 		
 
-		return \return redirect()->to('/company/'.$company_id);
+		return redirect()->to('/company/'.$company_id);
 	}
 	
 	private function executeQuery($query)

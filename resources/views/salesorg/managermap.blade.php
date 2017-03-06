@@ -68,7 +68,7 @@
               radius : {{$branch->radius}},
               name : '{{$branch->branchname}}',
               contentString: 
-                  '<a href="{{route('branch.show',$branch->id)}}">{{$branch->branchname}}</a>',
+                  '<a href="{{route('branches.show',$branch->id)}}">{{$branch->branchname}}</a>',
             },
             @endforeach
           

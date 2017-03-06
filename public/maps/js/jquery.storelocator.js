@@ -474,6 +474,8 @@ $.fn.storeLocator = function(options) {
                   'featured': $(this).attr('featured'),
         				  'type': $(this).attr('type'),
         				  'brand': $(this).attr('brand'),
+                  'reportsto': $(this).attr('reportsto'),
+                  'salesorg': $(this).attr('salesorg'),
         				  'account': $(this).attr('account'),
         				  'locid': $(this).attr('locationid'),
         				  'link':$(this).attr('link')
@@ -754,15 +756,10 @@ $.fn.storeLocator = function(options) {
               //Custom marker function - alphabetical
               function createMarker(point, name, address, letter,type,brand,color){
     				  if(type === "branch"){
-                  if(brand === 'CLP'){
+                  if(brand === 'People Ready'){
 
-                      var pinColor = "f6ee66";
-                    }else if(brand === 'Labor_Ready'  ||  brand ==='Labor Ready'){						
-                      var pinColor = "6991FD";
-                    
-                    }else if(brand === 'Spartan' ){            
-                      var pinColor = "60d860";
-                     }else if(brand === 'Centerline' ){            
+                    var pinColor = "f6ee66";
+                    }else if(brand === 'Centerline' ){            
                       var pinColor = "59AB3D";
                     }else {	
                       var pinColor = "FDF569";
@@ -779,7 +776,7 @@ $.fn.storeLocator = function(options) {
                 }
 				
                 //Set up pin icon with the Google Charts API for all of our markers
-                var pinImage = new google.maps.MarkerImage("https://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=" + letter + "|" + pinColor + "|" + settings.pinTextColor,
+                var pinImage = new google.maps.MarkerImage("//chart.googleapis.com/chart?chst=d_map_pin_letter&chld=" + letter + "|" + pinColor + "|" + settings.pinTextColor,
                   new google.maps.Size(21, 34),
                   new google.maps.Point(0,0),
                   new google.maps.Point(10, 34));

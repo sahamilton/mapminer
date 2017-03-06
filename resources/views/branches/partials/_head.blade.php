@@ -1,5 +1,5 @@
 <div class="pull-right">
-	 <p><a href="{{ URL::to('branch') }}">Show all branches</a></p>	
+	 <p><a href="{{ route('branches.index') }}">Show all branches</a></p>	
 		</div>
         <h1>{{$data['title']}}</h1>
        {{$filtered ? "<h4 class='filtered'>Filtered</h4>" : ''}}
@@ -15,8 +15,14 @@
          href = "{{route('person.show',$data['manager']->id)}}">{{$data['manager']->firstname}} {{$data['manager']->lastname}}</a>
         @endif
         </p>
-        <p>Branch serviced by <a title="View {{$data['branch']->branchname}} branch sales team" href ="{{route('showlist/salesteam',$data['branch']->id)}}">{{count($data['branch']['servicedBy'])}} sales reps.</a></p>
-        
+        @if(count($data['branch']['servicedBy'])>0)
+        <p>Branch serviced by: 
+        @foreach ($data['branch']['servicedBy'] as $salesreps)
+            <li><a href="{{route('salesorg',$salesreps->id)}}">
+            {{$salesreps->firstname }} {{$salesreps->lastname}}</a></li>
+        @endforeach
+        </p>
+        @endif
         <p>Branch service radius: {{$data['branch']->radius}} miles.</p>
         <h4>Service Lines:</h4>
         <ul style="margin-left:40px">
@@ -32,9 +38,9 @@ $data['lng'] = $data['branch']->lng;
 ?>
 
 @if($type=='map')
-<p><a href="{{URL::to('branch/'.$data['branch']->id.'/showlist')}}"><i class="glyphicon glyphicon-th-list"></i> List view</a></p>
+<p><a href="{route('branches.showlist',$data['branch']->id)}}"><i class="glyphicon glyphicon-th-list"></i> List view</a></p>
 @else
-<p><a href="{{URL::to('branch/'.$data['branch']->id)}}"><i class="glyphicon glyphicon-flag"> </i>Map View</a></p>
+<p><a href="{{route('branches.show',$data['branch']->id)}}"><i class="glyphicon glyphicon-flag"> </i>Map View</a></p>
 @endif
 <div>
 @include('partials/advancedsearch')

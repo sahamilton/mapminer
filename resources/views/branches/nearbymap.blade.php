@@ -5,10 +5,10 @@
 <p>The closest branches that can serve the 
 
 
-<a href="{{route('location.show',$data['location']['id'])}}">{{$data['location']['businessname']}} </a>
+<a href="{{route('location.show',$location->id)}}">{{$location->businessname}} </a>
 
-location in {{$data['location']['city']}}<p>
-<p><a href='{{route("assign.location",$data['location']['id'])}}'>
+location in {{$location->city}}<p>
+<p><a href='{{route("assign.location",$location->id)}}'>
   <i class="glyphicon glyphicon-th-list"></i> List view</a></p>
   @include('maps.partials._keys')
 <div id="store-locator-container">
@@ -23,7 +23,7 @@ location in {{$data['location']['city']}}<p>
 
 <script>
 	  $(function() {
-          $('#map-container').storeLocator({'slideMap' : false, 'defaultLoc': true, 'defaultLat': '{{$data['location']['lat']}}', 'defaultLng' : '{{$data['location']['lng']}}', 'dataLocation' : '{{ route("shownearby.branchlocation",$data['location']['id'])}}','zoomLevel': 7, 'infowindowTemplatePath' : '{{asset('maps/templates/infowindow-branch.html')}}','listTemplatePath' : '{{asset('maps/templates/branch-list-description.html')}}'} );
+          $('#map-container').storeLocator({'slideMap' : false, 'defaultLoc': true, 'defaultLat': '{{$location->lat}}', 'defaultLng' : '{{$location->lng}}', 'dataLocation' : '{{ route("shownearby.branchlocation",$location->id)}}','zoomLevel': 7, 'infowindowTemplatePath' : '{{asset('maps/templates/infowindow-branch.html')}}','listTemplatePath' : '{{asset('maps/templates/branch-list-description.html')}}'} );
         });
     </script>
     

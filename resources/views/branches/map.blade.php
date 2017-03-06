@@ -2,8 +2,8 @@
 @section('content')
 <h2>All Branches</h2>
 
-<p><a href='{{URL::to("branch")}}'><i class="glyphicon glyphicon-th-list"></i> List view</a></p>
-<?php $route ='branch.statemap';?>
+<p><a href='{{route("branches.index")}}'><i class="glyphicon glyphicon-th-list"></i> List view</a></p>
+<?php $route ='branches.statemap';?>
 	@include('branches/partials/_state')
   @include('maps/partials/_form')
    @include('maps/partials/_keys')
@@ -50,6 +50,7 @@
           var address = markers[i].getAttribute("address");
           var brand = markers[i].getAttribute("brand");
           var color = markers[i].getAttribute("color");
+
     		  var branchlink = markers[i].getAttribute("locationweb");
     		  var linktitle = "Review the " + name + " branch";
           var point = new google.maps.LatLng(

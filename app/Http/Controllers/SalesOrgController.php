@@ -49,7 +49,7 @@ class SalesOrgController extends BaseController {
 			if( $salesperson->isLeaf())
 			{
 				
-				$salesorg = Person::whereId($salesPerson->id)->with('userdetails.roles','reportsTo','reportsTo.userdetails.roles')->first();
+				$salesorg = Person::whereId($salesPerson->id)->with('userdetails.roles','reportsTo','reportsTo.userdetails.roles','branchesServiced')->first();
 
 				return response()->view('salesorg.map', compact('salesorg'));
 				

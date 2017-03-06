@@ -30,11 +30,11 @@ class BranchesController extends BaseController {
 	 */
 	public function index()
 	{
-			
+		$userServicelines = $this->branch->getUserServiceLines();
 		$branches = $this->branch
 			->with('region','manager','servicedBy')
-			->whereHas('servicelines', function($q){
-					    $q->whereIn('serviceline_id',['1','2','3']);
+			->whereHas('servicelines', function($q) use($userServicelines){
+					    $q->whereIn('serviceline_id',$userServicelines);
 
 					})
 			->orderBy('branchnumber')
@@ -109,7 +109,7 @@ class BranchesController extends BaseController {
 		$input = \Input::all();
 
 		if(! $this->branch->isValid($input)){
-			return \Redirect::back()->withInput()->withErrors($this->branch->errors);
+			return redirect()->back()->withInput()->withErrors($this->branch->errors);
 		}
 
 		// Attempt to geo code the new branch address	
@@ -130,13 +130,13 @@ class BranchesController extends BaseController {
 		$branch->servicelines()->sync($lines);
 		$this->rebuildXMLfile();
 
-		return \Redirect::route('branch.index');
+		return redirect()->route('branch.index');
 	}
 
 	public function rebuildBranchMap()
 	{
 		$this->rebuildXMLfile();
-		return \Redirect::route('branch.map');
+		return redirect()->route('branch.map');
 
 	}
 	/**
@@ -161,11 +161,11 @@ class BranchesController extends BaseController {
 	 * @param  int  $id
 	 * @return View
 	 */
-	public function show($id)
+	public function show($branch)
 	{
 		
 		$user = new User;
-		$this->userServiceLines = $user->currentUserServiceline();
+		$this->userServiceLines = $this->branch->getUserServiceLines();
 		$servicelines = $this->serviceline->whereIn('id',$this->userServiceLines)->get();
 		$data['branch'] = $this->branch
 		->whereHas('servicelines', function($q){
@@ -173,7 +173,7 @@ class BranchesController extends BaseController {
 
 					})
 		->with('servicedBy')
-		->find($id);
+		->find($branch->id);
 
 		$filtered = $this->branch->isFiltered(['companies'],['vertical']);
 		
@@ -265,7 +265,7 @@ class BranchesController extends BaseController {
 		
 
 		if(! $this->branch->isValid($input)){
-			return \Redirect::back()->withInput()->withErrors($this->branch->errors);
+			return redirect()->back()->withInput()->withErrors($this->branch->errors);
 		}
 
 		$this->branch->update($input);
@@ -282,7 +282,7 @@ class BranchesController extends BaseController {
 		$this->branch->servicelines()->sync($lines);
 		$branch_id = $this->branch->id;
 		$this->rebuildXMLfile();
-		return \Redirect::route('branch.show',$branch_id );
+		return redirect()->route('branch.show',$branch_id );
 
 		
 	}
@@ -297,7 +297,7 @@ class BranchesController extends BaseController {
 	{
 		$this->branch->destroy($id);
 		$this->rebuildXMLfile();
-		return \Redirect::route('branch.index');
+		return redirect()->route('branch.index');
 	}
 	/**
 	 * Generate XML of location served by branch query.
@@ -307,9 +307,6 @@ class BranchesController extends BaseController {
 	 */
 	public function MakeLocationsServedXML($result)
 	{
-		if (App::environment() == 'local'){
-			\Debugbar::disable();
-		}
 		
 		$dom = new \DOMDocument("1.0");
 		$node = $dom->createElement("markers");
@@ -539,14 +536,14 @@ class BranchesController extends BaseController {
     	if ($validator->fails())
 		{
 			
-			return \Redirect::back()->withErrors($validator);
+			return redirect()->back()->withErrors($validator);
 		}
 
 		// Make sure its a CSV file - test #1
 		$mimes = array('application/vnd.ms-excel','text/plain','text/csv','text/tsv');
 		if(!in_array($_FILES['upload']['type'],$mimes)){
 			
-		 	return \Redirect::back()->withErrors(['Only CSV files are allowed']);
+		 	return redirect()->back()->withErrors(['Only CSV files are allowed']);
 		}
 	
 		$file = \Input::file('upload');
@@ -570,7 +567,7 @@ class BranchesController extends BaseController {
 			var_dump($data);
 			var_dump($this->branch->fillable);
 			dd(array_diff($this->branch->fillable,$data));
-			return \Redirect::back()->withErrors(['Invalid file format.  Check the fields' . $fields]);
+			return redirect()->back()->withErrors(['Invalid file format.  Check the fields' . $fields]);
 		}
 		
 		
@@ -674,7 +671,7 @@ class BranchesController extends BaseController {
 		$type='update';
 		$error="Can't delete temporay table " . $temptable;
 		$this->branch->rawQuery($query,$error,$type);
-		return \return redirect()->to('/branch');
+		redirect()->to(route('branches.index'));
 			
 		
 		
@@ -688,7 +685,7 @@ class BranchesController extends BaseController {
 	
 	$fields=['id','branchnumber','branchname','street','address2','city','state','zip','phone','lat','lng'];
 	$results = $this->branch->export($fields,$data,'Branches');
-	return Response::make(rtrim($results['output'], "\n"), 200, $results['headers']);
+	return response()->make(rtrim($results['output'], "\n"), 200, $results['headers']);
 	
 }
 

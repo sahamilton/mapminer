@@ -5,7 +5,7 @@
 @include('partials/_showsearchoptions')
 @include('partials/advancedsearch')
 @include('maps/partials/_industry_keys')
-<p><a href='{{URL::to("person")}}'><i class="glyphicon glyphicon-th-list"></i> List view</a></p>
+<p><a href='{{route("person.index")}}'><i class="glyphicon glyphicon-th-list"></i> List view</a></p>
 
 	
       

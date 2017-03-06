@@ -1,6 +1,14 @@
 @extends('site/layouts/default')
 @section('content')
-<?php $roles ='';?>
+<?php $roles ='';
+   $fields = ['First Name'=>'firstname',
+				'Last Name'=>'lastname',
+				'Phone'=>'phone',
+				'Address'=>'address',
+				'User Name'=>'username',
+				'Latitude'=>'lat',
+				'Longitude'=>'lng',
+				'Roles'=>'role->role'];?>
 
 
 {{-- Content --}}
@@ -10,7 +18,7 @@
 </div>
 
 
-@foreach($fields as $key=>$field)
+@foreach($fields as $key=>$value)
 
 <p><strong>{{$key}}:</strong>
 @if($value == 'username')

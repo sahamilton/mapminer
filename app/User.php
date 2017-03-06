@@ -12,7 +12,7 @@ class User extends Authenticatable
 
 
 
-public $fillable = ['username','email','lastlogin','mgrid'];
+public $fillable = ['username','email','lastlogin','confirmed','confirmation_code'];
     /**
      * Get user by username
      * @param $username

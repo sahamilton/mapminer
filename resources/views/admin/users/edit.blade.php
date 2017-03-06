@@ -6,7 +6,8 @@
 
     </div>
 
-	{{-- Create User Form --}}
+	{{-- Edit User Form --}}
+
 	<form class="form-horizontal" method="post" action="{{ route('users.update' , $user->id ) }}" autocomplete="off">
 	<input type="hidden" name="_method" value="put" />
 		<!-- CSRF Token -->

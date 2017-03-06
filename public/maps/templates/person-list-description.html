@@ -1,15 +1,17 @@
 {{#location}}
 <li data-markerid="{{markerid}}">
-	<div class="list-label">{{marker}}P</div>
+	<div class="list-label">{{marker}}</div>
 	<div class="list-details">
 		<div class="list-content">
 			<div class="loc-name">{{name}}</div>
             <div>{{industry}}</div>
             <div>{{phone}}</div>
-
+            
             <div><a href="mailto:{{email}}" title="Email {{name}}" >{{email}}</a></div>
             <div class="loc-addr">{{address}}</div> 
-
+{{#if salesorg}}
+            <div>Reports to <a href="{{salesorg}}">{{reportsto}}</a></div>
+            {{/if}}
 		</div>
 	</div>
 </li>

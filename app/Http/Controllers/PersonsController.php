@@ -109,7 +109,7 @@ class PersonsController extends BaseController {
 					    	->orWhereNull('search_filter_id');
 
 					})
-					->with('userdetails','industryfocus','userdetails.roles')
+					->with('userdetails','reportsTo','industryfocus','userdetails.roles')
 					->get();
 
 			}else{

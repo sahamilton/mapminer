@@ -43,7 +43,7 @@ class SalesNotesController extends BaseController {
 		}
 		
 		if(isset($companyid)) {
-			return \return redirect()->to('salesnotes/'.$companyid);
+			return redirect()->to('salesnotes/'.$companyid);
 		}else{
 			$companies = $this->company->orderBy('companyname')->pluck('companyname','id');
 			return response()->view('salesnotes.index',compact('companies','salesnotes'));
@@ -173,7 +173,7 @@ class SalesNotesController extends BaseController {
 		}
 
 
-		return \return redirect()->to('salesnotes/'.$company_id);
+		return redirect()->to('salesnotes/'.$company_id);
 		
 	}
 
@@ -261,7 +261,7 @@ class SalesNotesController extends BaseController {
 			if ($validator->fails())
 			{
 				
-				return \return redirect()->to('admin/salesnotes/create/'.$data['companyId'])->withErrors($validator);
+				return redirect()->to('admin/salesnotes/create/'.$data['companyId'])->withErrors($validator);
 			}
 
 			$file = \Input::file('attachment');
@@ -313,7 +313,7 @@ class SalesNotesController extends BaseController {
 		if(count($queryArray)>0){
 			\DB::table('company_howtofield')->insert($queryArray);
 		}
-		return \return redirect()->to('salesnotes/'.$data['companyId']);
+		return redirect()->to('salesnotes/'.$data['companyId']);
 		
 	}
 	
@@ -330,7 +330,7 @@ class SalesNotesController extends BaseController {
 			if ($validator->fails())
 			{
 				
-				return \return redirect()->to('admin/salesnotes/create/'.$data['companyId'])->withErrors($validator);
+				return redirect()->to('admin/salesnotes/create/'.$data['companyId'])->withErrors($validator);
 			}
 
 			$file = \Input::file('attachment');

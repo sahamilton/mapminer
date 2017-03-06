@@ -57,9 +57,9 @@
             
             @endif
            @if($descendant->color != '')
-            <img src='http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|{{$descendant->color}}' />
+            <img src='//chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|{{$descendant->color}}' />
            @else
-            <img src='http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|eeeeee' />
+            <img src='//chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|eeeeee' />
            @endif
           
 			<?php $n[$descendant->depth]['rgt'] = $descendant->rgt;?>

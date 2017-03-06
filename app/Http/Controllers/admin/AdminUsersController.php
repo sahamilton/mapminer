@@ -138,7 +138,7 @@ class AdminUsersController extends BaseController {
 		$mode = 'create';
 
 		// Service lines
-		
+		$this->userServiceLines = $this->person->getUserServiceLines();
 		$servicelines = Serviceline::whereIn('id',$this->userServiceLines)
 						->pluck('ServiceLine','id');
 		$branches = $this->getUsersBranches($this->user);
@@ -158,27 +158,14 @@ class AdminUsersController extends BaseController {
      */
     public function store()
     {
+        $data=\Input::all();
+		
+
+        $user = $this->user->create($data);
+		
        
-		$this->user->username = \Input::get( 'username' );
-        $this->user->email = \Input::get( 'email' );
-        $this->user->password = \Input::get( 'password' );
-		/*if (\Input::get('mgrid') != 0)
-		{
-			$this->user->mgrid = \Input::get('mgrid');
-		}else{*/
-			// Moved manager relationship to person reports_to
-			$this->user->mgrid = NULL;
-		//}
-
-		$servicelines = \Input::get('servicelines');
-        // The password confirmation will be removed from model
-        // before saving. This field will be used in Ardent's
-        // auto validation.
-        $this->user->password_confirmation = \Input::get( 'password_confirmation' );
-
-        // Generate a random confirmation code
-        $this->user->confirmation_code = md5(uniqid(mt_rand(), true));
-
+        $user->confirmation_code = md5(uniqid(mt_rand(), true));
+        $user->password = \Hash::make(\Input::get('password'));
         if (\Input::get('confirm')) {
             $this->user->confirmed = \Input::get('confirm');
         }
@@ -187,32 +174,38 @@ class AdminUsersController extends BaseController {
         //$user->permissions = $user->roles()->preparePermissionsForSave(\Input::get( 'permissions' ));
 
         // Save if valid. Password field will be hashed before save
-        $this->user->save();
+        $user->save();
+        $servicelines = \Input::get('servicelines');
 
-        if ( $this->user->id ) {
+        if ( $user->id ) {
 			$person = new Person;
 			$person->firstname = \Input::get('firstname');
 			$person->lastname = \Input::get('lastname');
-			$person->address = \Input::get('address');
+			
 			$person->phone = \Input::get('phone');
 			$person->reports_to = \Input::get('mgrid');
-			$latLng = $this->getLatLng($person->address);
-            
-			$person->lat = $latLng['latitude'];
-			$person->lng = $latLng['longitude'];
-            $person->city = $latLng['locality'];
-            $person->state= $latLng['adminLevels'][1]['code'];
-			$person = $this->user->person()->save($person);
+            if(\Input::has('address')){
+
+
+                $person->address = \Input::get('address');
+    			$latLng = $this->getLatLng($person->address);
+                
+    			$person->lat = $latLng['latitude'];
+    			$person->lng = $latLng['longitude'];
+                $person->city = $latLng['locality'];
+                $person->state= $latLng['adminLevels'][1]['code'];
+            }
+			$person = $user->person()->save($person);
 			
 			$person->industryfocus()->attach(\Input::get('vertical'));
             //$person->industryfocus()->sync(\Input::get('vertical'));
 
 			// set up tracking
-			$track = $this->track;
-			$track->user_id =  $this->user->id ;
-			$track->save();
-            $this->user->saveRoles(\Input::get( 'roles' ));
-			$this->user->serviceline()->attach(\Input::get('serviceline'));
+
+            $track=Track::create(['user_id'=>$user->id]);
+			
+            $user->saveRoles(\Input::get( 'roles' ));
+			$user->serviceline()->attach(\Input::get('serviceline'));
 			
             
 
@@ -253,11 +246,12 @@ class AdminUsersController extends BaseController {
      * @param $user
      * @return Response
      */
-    public function edit($id)
+    public function edit($userid)
     {
-      $user = $this->user
+        $this->userServiceLines = $this->person->getUserServiceLines();
+        $user = $this->user
           ->with('serviceline','person','person.branchesServiced','roles')
-          ->find($id);
+          ->find($userid->id);
 
 	    if ( $user )
         {
@@ -281,13 +275,13 @@ class AdminUsersController extends BaseController {
 			$branchesServiced = $user->person->branchesServiced->pluck('id');
 			
 			// Ether get close branches 
-			//$branches=array();
+			
 			$branches = $this->getUsersBranches($user);
 			
 			$verticals = SearchFilter::where('searchcolumn','=','vertical')
 			->where('type','!=','group')			
 			->pluck('filter','id');
-            
+        
              $verticals = ['0' => 'none'] + $verticals->toArray();
         	return response()->view('admin.users.edit', compact('user', 'roles', 'permissions', 'verticals','title', 'mode','managerlist','servicelines','branches','branchesServiced'));
         }
@@ -303,60 +297,17 @@ class AdminUsersController extends BaseController {
      * @param $user
      * @return Response
      */
-    public function update($id)
+    public function update($user)
     {
-    	
-		$person = $this->person->where('user_id','=',$id)->first();
-
-		
-		$user = $this->user->find($id);
+        $user = $this->user->with('person')->find($user->id);
         $oldUser = clone($user);
-		$user->username = \Input::get( 'username' );
-		$user->email = \Input::get( 'email' );
-		if (count($person)==0)
-		{
-			$person = $this->person;
-			$person->user_id=$user->id;
-			$person = $user->person()->save($person);
-			$person->industryfocus()->attach(\Input::get('vertical'));
-
-			$person->branchesServiced()->attach(\Input::get('branches'));
-			
-		}
-
-
-
-		$user->person->address = \Input::get('address');
-		$latLng = $this->getLatLng($user->person->address);
-		//$person->reportsto = \Input::get('manager');
-
-		$user->person->lat = $latLng[0]['latitude'];
-		$user->person->lng = $latLng[0]['longitude'];
-        if(\Input::has('city')){
-            $user->person->city = \Input::get('city');
-        }else{
-             $user->person->city = $latLng[0]['locality'];
-        }
-       if(\Input::has('state')){
-            $user->person->state =\Input::get('state');
-        }else{
-             $user->person->state = $latLng[0]['adminLevels'][1]['code'];
-        }
-       
-		$user->person->firstname = \Input::get('firstname');
-		$user->person->lastname = \Input::get('lastname');
-		$user->person->phone = \Input::get('phone');
-		$user->confirmed = \Input::get( 'confirm' );
-		$user->person->reports_to = \Input::get('mgrid');
-		if (\Input::get('mgrid') != 0)
-		{
-			$user->mgrid = \Input::get('mgrid');
-		}else{
-			$user->mgrid = NULL;
-		}
-		//set update rules
-		
-		$rules = array('username' => 'required|alpha_num',
+        $data= \Input::all();
+		$user->update($data);
+        $person = $this->updateAssociatedPerson($user,$data);
+        $person=$this->associateBranchesWithPerson($person,$data);
+        
+		// All this should go to UsersRequestForm
+		/*$rules = array('username' => 'required|alpha_num',
             	'email' => 'required|email');
 		
 		
@@ -377,65 +328,107 @@ class AdminUsersController extends BaseController {
             }
         }
             
-        if($user->confirmed == null) {
-            $user->confirmed = $oldUser->confirmed;
-        }
-
-        if ($user->save($rules)) {
-            // Save roles. Handles updating.
-            $user->saveRoles(\Input::get( 'roles' ));
-			$user->person->save();
-			//$person->rebuild();
+        
+        if ($user->save()) {
+            
+            $user->roles->sync(\Input::get( 'roles' ));
+			$person->rebuild();
         } else {
 			
             return redirect()->to('admin/users/' . $user->id . '/edit')
                 ->with('error', 'Unable to update user');
-        }
+        }*/
 
         
         // Redirect to the new user page
-       if(\Input::has('serviceline')){
+       if(isset($data['serviceline'])){
 
-            $user->serviceline()->sync(\Input::get('serviceline'));
+            $user->serviceline()->sync($data['serviceline']);
     	}
-    	if(\Input::has('vertical')){
-            if(\Input::get('vertical')[0]==0){
+    	if(isset($data['vertical'])){
+            if($data['vertical'][0]==0){
               $person->industryfocus()->sync([]);
             }else{
-    		  $person->industryfocus()->sync(\Input::get('vertical'));
+               
+    		  $person->industryfocus()->sync($data['vertical']);
             }
-    	}
-       
+    	}else{
 
-        if(\Input::has('branchstring') or \Input::has('branches'))
-        {
-        	
-        	if(\Input::has('branchstring')){
-    		  $branches = $this->branch->getBranchIdFromBranchNumber(\Input::get('branchstring'));
-        	}else{
-        		$branches = \Input::get('branches');
-        	}
-            
-            if(isset($branches[0]))
-            {
-                $syncData=array();
-            }else{
-	        	foreach ($branches as $branch){
-	            	$syncData[$branch]=['role_id'=>5];
-	            }
-            }
-            $person->branchesServiced()->sync($syncData);
         }
-        
-        
-        $person = new Person;
-        $person->rebuild();
+       
+       
         return redirect()->to(route('users.index'))->with('success', 'User updated succesfully');
 
 
     }
+    private function associateBranchesWithPerson($person, $data)
+    {
+         if(isset($data['branchstring']) or isset($data['branches'])){
+            
+            if(isset($data['branchstring'])){
+              $branches = $this->branch->getBranchIdFromBranchNumber($data['branchstring']);
+            }else{
+                $branches = $data['branches'];
+            }
+            
+            if(count($branches)>0)
+            {
+                $syncData=array();
+            }else{
+                foreach ($branches as $branch){
+                    $syncData[$branch]=['role_id'=>5];
+                }
+            }
+            $person->branchesServiced()->sync($syncData);
+        }
+
+        $person->rebuild();
+        return $person;
+    }
+
+    private function updateAssociatedPerson($user,$data){
+
+        $person = $this->person->where('user_id','=',$user->id)->first();
+        $person->update($data);
+        
+        if(isset($data['vertical'])){
+            $person->industryfocus()->sync($data['vertical']);
+        }
+        if(isset($data['branches'])){
+            $person->branchesServiced()->sync($data['branches']);
+        }
+        if(isset($data['address'])){
+
+            $person->address = $data['address'];
+            $latLng = $this->getLatLng($user->person->address);
+            //$person->reportsto = \Input::get('manager');
+
+            $person->lat = $latLng[0]['latitude'];
+            $person->lng = $latLng[0]['longitude'];
+            if($data['city']){
+                $person->city = $data['city'];
+            }else{
+                 $person->city = $latLng[0]['locality'];
+            }
+            
+           if($data['state']){
+                $user->person->state =$data['state'];
+            }else{
+                 $user->person->state = $latLng[0]['adminLevels'][1]['code'];
+            }
+       }else{
+            $person->lat = null;
+            $person->lng = null;
+            $person->city = null;
+            $person->state = null;
+        }
+        $person->save();
+        return $person;
+    }
+
     private function getUsersBranches($user){
 			if(isset($user->person->lat) && $user->person->lat !=0){
+
 				$userServiceLines= $user->serviceline->pluck('id');
 
 				$nearbyBranches = $this->branch->findNearbyBranches($user->person->lat,$user->person->lng,100,100,$userServiceLines);
@@ -448,6 +441,7 @@ class AdminUsersController extends BaseController {
 			}else{
 				$branches = Branch::select(\DB::raw("CONCAT_WS(' / ',branchname,branchnumber) AS name"),'id')->pluck('name','id');
 			}
+            
 			return $branches;
 		}	
     /**

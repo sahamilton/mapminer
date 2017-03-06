@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 use App\Watch;
+use App\User;
 class WatchController extends BaseController {
 	protected $watch;
 	

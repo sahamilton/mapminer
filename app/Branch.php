@@ -73,11 +73,12 @@ class Branch extends Model {
 		if (! $userServiceLines)
 		{
 			$userServiceLines = $this->getUserServiceLines();
-			$userServiceLines =$userServiceLines->toArray();
+			
 		}
+
 		$coordinates = $this->getPositionCoordinates($lat,$lng,$distance, $number);
 	
-		
+
 		
 		$query = "select haversine(x(position), y(position), ".$coordinates['lat'].",".$coordinates['lon'].") as distance_in_mi, 
 		branches.id as branchid,branchnumber,branchname,street,address2,city,state,zip,lat,lng,Serviceline as servicelines,color
@@ -146,36 +147,36 @@ class Branch extends Model {
 		  // ADD TO XML DOCUMENT NODE
 			$node = $dom->createElement("marker");
 			$newnode = $parnode->appendChild($node);
-			$newnode->setAttribute("name",trim($row['branchname']));
+			$newnode->setAttribute("name",trim($row->branchname));
 			$newnode->setAttribute("address", 
-				trim($row['street'])." ". 
-				trim($row['city'])." ". 
-				trim($row['state']));
-			$newnode->setAttribute("lat", $row['lat']);
-			$newnode->setAttribute("lng", $row['lng']);
-			if(isset($row['id']))
+				trim($row->street)." ". 
+				trim($row->city)." ". 
+				trim($row->state));
+			$newnode->setAttribute("lat", $row->lat);
+			$newnode->setAttribute("lng", $row->lng);
+			if(isset($row->id))
 			{
-				$newnode->setAttribute("locationweb",route('branch.show',$row['id']) );
-				$newnode->setAttribute("id", $row['id']);	
+				$newnode->setAttribute("locationweb",route('branches.show',$row->id) );
+				$newnode->setAttribute("id", $row->id);	
 			}else{
-				$newnode->setAttribute("locationweb",route('branch.show',$row['branchid']) );
-				$newnode->setAttribute("id", $row['branchid']);	
+				$newnode->setAttribute("locationweb",route('branches.show',$row->branchid) );
+				$newnode->setAttribute("id", $row->branchid);	
 			}
 			$newnode->setAttribute("type", 'branch');
-			if(isset($row['serviced_by']) )
+			if(isset($row->serviced_by) )
 			{
-				$newnode->setAttribute("salesreps", count($row['serviced_by']));
+				$newnode->setAttribute("salesreps", count($row->serviced_by));
 			}
 			
-				if(is_object($row['servicelines']) && count($row['servicelines']) > 0){
+				if(is_object($row->servicelines) && count($row->servicelines) > 0){
 					
-					$newnode->setAttribute("brand", $row['servicelines'][0]['ServiceLine']);
-					$newnode->setAttribute("color", $row['servicelines'][0]['color']);
+					$newnode->setAttribute("brand", $row->servicelines[0]->ServiceLine);
+					$newnode->setAttribute("color", $row->servicelines[0]->color);
 				}
-				if( is_string($row['servicelines'])){
+				if( is_string($row->servicelines)){
 					
-					$newnode->setAttribute("brand", $row['servicelines']);
-					//$newnode->setAttribute("color", $row['color']);
+					$newnode->setAttribute("brand", $row->servicelines);
+					//$newnode->setAttribute("color", $row->color);
 				}
 				
 				

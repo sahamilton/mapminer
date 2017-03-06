@@ -112,6 +112,12 @@ class Person extends NodeModel {
 				$newnode->setAttribute("brand",$row->industryfocus[0]->id);
 				$newnode->setAttribute("color",$row->industryfocus[0]->color);
 			}
+			if(isset($row->reportsTo)){
+				$newnode->setAttribute('salesorg',route('salesorg',$row->reportsTo->id));
+				$newnode->setAttribute('reportsto',$row->reportsTo->firstname .' ' . $row->reportsTo->lastname);
+
+			}
+
 			$newnode->setAttribute("lat", $row->lat);
 			$newnode->setAttribute("lng", $row->lng);
 			$newnode->setAttribute("id", $row->id);

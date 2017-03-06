@@ -13,7 +13,7 @@ class UsersController extends Controller
      */
     public function index(User $user)
     {
-        dd('here');
+        
         $users = $user->with('roles')->get();
         return view ('users.index', compact('users'));
     }
@@ -82,5 +82,12 @@ class UsersController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function settings()
+    {
+        $user = User::whereId(\Auth::user()->id)->with('person','serviceline','manager','roles')->first();
+       return response()->view('site.user.profile',compact('user'));
+
     }
 }

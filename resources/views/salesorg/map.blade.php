@@ -1,9 +1,21 @@
 @extends('site.layouts.maps')
 @section('content')
-  <h1>{{$data['salesrep']['name']}}</h1>
+  <h1>{{$salesorg->firstname}} {{$salesorg->lastname}}</h1>
+  @if(count($salesorg->reportsTo)==1 && isset($salesorg->reportsTo->id))
+  <h4>Reports to:<a href="{{route('salesorg',$salesorg->reportsTo->id)}}" 
+  title="See {{$salesorg->reportsTo->firstname}} {{$salesorg->reportsTo->lastname}}'s sales team">
+    {{$salesorg->reportsTo->firstname}} {{$salesorg->reportsTo->lastname}}
+    </a> 
+  @endif
+   @if(isset ($salesorg->reportsTo->userdetails) )
+
+    - {{$salesorg->reportsTo->userdetails->roles[0]->name}}
+  @endif
+</h4>
   <h4>Branches served:</h4>
-  @foreach ($data['branch'] as $branch)
-    <li><a href="{{route('branch.show',$branch['id'])}}">{{$branch['name']}}</a></li>
+  @foreach ($salesorg->branchesServiced as $branch)
+
+    <li><a href="{{route('branches.show',$branch->id)}}">{{$branch->branchname}}</a></li>
 
 
   @endforeach
@@ -13,13 +25,13 @@
       // First, create an object containing LatLng and details for each branch.
       var branchmap = {
         
-      @foreach ($data['branch'] as $branch)
-            '{{$branch['name']}}' : {
-              center : {lat: {{$branch['lat']}}, lng: {{$branch['lng']}}},
-              radius : {{$branch['radius']}},
-              name : '{{$branch['name']}}',
+      @foreach ($salesorg->branchesServiced as $branch)
+            '{{$branch->branchname}}' : {
+              center : {lat: {{$branch->lat}}, lng: {{$branch->lng}}},
+              radius : {{$branch->radius}},
+              name : '{{$branch->branchname}}',
               contentString: 
-                  '{{$branch['info']}}',
+                  '{{$branch->info}}',
             },
       @endforeach
         
@@ -30,7 +42,7 @@
         // Create the map.
         var map = new google.maps.Map(document.getElementById('map'), {
           zoom: 9,
-          center: {lat: {{$data['salesrep']['lat']}}, lng: {{$data['salesrep']['lng']}}},
+          center: {lat: {{$salesorg->lat}}, lng: {{$salesorg->lng}}},
           mapTypeId: 'terrain'
         });
       var infowindow = new google.maps.InfoWindow();

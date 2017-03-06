@@ -5,6 +5,7 @@ $statelist = App\Branch::distinct()->orderBy('state')->get(array('state'));
 			
 		}
 		?>
+
 {{Form::open(array('route'=>$route,'class'=>'form', 'id'=>'selectForm'))}}
 
 <label>Search for branches in </label>

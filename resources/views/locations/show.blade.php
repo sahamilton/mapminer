@@ -27,7 +27,7 @@ Account managed by <a href="{{route('person.show',$location->company->managedBy-
 @endif
 
 <?php if(isset($branch[0]->branchid)){?>
-<p>Closest Branch: <a href="{{ route('branch.show', $branch[0]->branchid) }}" title='show all {{trim($branch[0]->branchname)}} national accounts'>{{$branch[0]->branchnumber}}:{{$branch[0]->branchname}} </a></p>
+<p>Closest Branch: <a href="{{ route('branches.show', $branch[0]->branchid) }}" title='show all {{trim($branch[0]->branchname)}} national accounts'>{{$branch[0]->branchnumber}}:{{$branch[0]->branchname}} </a></p>
 <?php }else{?>
 <p>Closest Branch: <a href="{{ route('assign.location', $location->id) }}" title=''>Closest Branch</a></p>
 

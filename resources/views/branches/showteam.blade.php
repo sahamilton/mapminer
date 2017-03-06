@@ -46,7 +46,7 @@ function initialize() {
   var map = new google.maps.Map(document.getElementById('map'), mapOptions);
     var name = "{{$salesteam->branchname}}";
     var address = "{{$salesteam->street}}" + "{{$salesteam->address2}}" + "  {{$salesteam->city}}" + " {{$salesteam->state}}" + " {{$salesteam->zip}}";
-    var html = "<a href='{{route('branch.show' , $salesteam->id) }}'>" + name + "</a> <br/>" + address;
+    var html = "<a href='{{route('branches.show' , $salesteam->id) }}'>" + name + "</a> <br/>" + address;
     var marker = new google.maps.Marker({
       position: myLatlng,
       map: map,

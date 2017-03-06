@@ -23,19 +23,20 @@ location in {{$data['location']['city']}} are:<p>
 <th>Distance</th>
 </thead>
 <tbody>
-@for ($i = 0; $i < count($data['branch']); $i++)
+
+@foreach($data['branch'] as $branch)
 <tr>
 	
-    <td><a href="{{route('branch.show',$data['branch'][$i]['branchid'])}}" title="Review {{trim($data['branch'][$i]['branchname'])}} branch">{{$data['branch'][$i]['branchname']}}</a></td>
-    <td>{{$data['branch'][$i]['branchnumber']}}</td>
+    <td><a href="{{route('branches.show',$branch->branchid)}}" title="Review {{trim($branch->branchname)}} branch">{{$branch->branchname}}</a></td>
+    <td>{{$branch->branchnumber}}</td>
    
-    <td>{{$data['branch'][$i]['street']}}</td>
-    <td>{{$data['branch'][$i]['city']}}</td>
-    <td>{{$data['branch'][$i]['state']}}</td>
-    <td>{{number_format($data['branch'][$i]['distance_in_mi'],2)}} miles away.</td>
+    <td>{{$branch->street}}</td>
+    <td>{{$branch->city}}</td>
+    <td>{{$branch->state}}</td>
+    <td>{{number_format($branch->distance_in_mi,2)}} miles away.</td>
 
    </tr>
- @endfor
+ @endforeach
  </table>
 </p>
 </div>
