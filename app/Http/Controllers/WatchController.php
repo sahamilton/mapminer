@@ -161,7 +161,7 @@ class WatchController extends BaseController {
 			  'Content-Type' => 'text/csv',
 			  'Content-Disposition' => $filename ,
 		  );
- 	 	return Response::make(rtrim($output, "\n"), 200, $headers);
+ 	 	return response()->make(rtrim($output, "\n"), 200, $headers);
 	}
 	
 	

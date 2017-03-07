@@ -93,7 +93,7 @@ class Branch extends Model {
 			)
 			and branches.id = branch_serviceline.branch_id
 		    			and branch_serviceline.serviceline_id = servicelines.id
-		    			AND branch_serviceline.serviceline_id in ('".implode("','",$userServiceLines->toArray())."')
+		    			AND branch_serviceline.serviceline_id in ('".implode("','",$userServiceLines)."')
 		order by distance_in_mi
 		limit " . $number;
 		
