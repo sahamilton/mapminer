@@ -391,6 +391,7 @@ public function _import_csv($filename, $table,$fields)
         $user = \Auth::user()->with('serviceline')->first();
        $userServicelines= $user->serviceline->pluck('id')->toArray();
        \Session::put('user.servicelines',$userServicelines) ;
+      
         return $userServicelines;
     }
 }

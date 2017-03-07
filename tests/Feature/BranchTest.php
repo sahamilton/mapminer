@@ -7,22 +7,15 @@ use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-class ExampleTest extends TestCase
+class BranchTest extends TestCase
 {
     /**
      * A basic test example.
      *
      * @return void
      */
-    public function testBasicTest()
+    public function testExample()
     {
-       
-    $this->browse(function ($first) {
-    $first->loginAs(User::find(1))
-          ->visit('/home')
-          ->waitForText('National Account')
-          ->assertSee('Account Views');
-});
-       
+        $this->assertTrue(true);
     }
 }

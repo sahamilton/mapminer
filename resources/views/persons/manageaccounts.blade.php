@@ -12,7 +12,7 @@
 {{Form::label('','Manager:',array('class'=>'control-label col-sm-2'))}}
 <div class="input-group date col-sm-4">
 
-{{Form::select("manager[]",$data['managerList'],isset($data['manager']['id']) ? $data['manager']['id'] : '',array('id'=>"selectManager",'onchange' => 'this.form.submit()'))}}
+{{Form::select("manager[]",$data['managerList'],isset($data['manager']->id) ? $data['manager']->id : '',array('id'=>"selectManager",'onchange' => 'this.form.submit()'))}}
 </div></div>
 @endif
 
@@ -47,7 +47,7 @@ Check all:{{Form::checkbox('checkAll', 'yes', true,array('id'=>'checkAllAccounts
    
 <tr>
 <td>
-<a href="/watcher/{{$watchers['user_id']}}" >{{$watchers->name}}</a>
+<a href="/watcher/{{$watchers->user_id}}" >{{$watchers->name}}</a>
 </td>
 <td>
 {{$watchers->watching}}
@@ -61,7 +61,7 @@ Check all:{{Form::checkbox('checkAll', 'yes', true,array('id'=>'checkAllAccounts
 
 
 </div>
-{{dd('here')}}
+
 
 
 <div style="border:1px solid #000;width:300px;margin:20px;padding:20px;float:left">
@@ -82,10 +82,10 @@ Check all:{{Form::checkbox('checkAll', 'yes', true,array('id'=>'checkAllAccounts
 
 <tr>
 <td>
-<a href="{{route('locationnotes.show',$notes['companyid'])}}">{{$notes['companyname']}}</a>
+<a href="{{route('locationnotes.show',$notes->id)}}">{{$notes->companyname}}</a>
 </td>
 <td>
-{{$notes['notes']}}</td>
+{{$notes->notes}}</td>
 </tr>
 
 
@@ -119,24 +119,24 @@ Check all:{{Form::checkbox('checkAll', 'yes', true,array('id'=>'checkAllAccounts
     </thead>
     <tbody>
    @foreach($data['nocontact'] as $nocontact)
-   @if($nocontact['percent'] > '25')
+   @if($nocontact->percent > '25')
    	<tr class="danger">
-    @elseif ($nocontact['percent'] > '10')
+    @elseif ($nocontact->percent > '10')
     <tr class ="warning">
     @else
-<tr class ='success'>
-@endif
+    <tr class ='success'>
+  @endif
 <td>
-<a href="/company/{{$nocontact['company_id']}}" >{{$nocontact['companyname']}}</a>
+<a href="/company/{{$nocontact->company_id}}" >{{$nocontact->companyname}}</a>
 </td>
 <td>
-{{$nocontact['locations']}}
+{{$nocontact->locations}}
 </td>
 <td>
-{{$nocontact['nocontacts']}}
+{{$nocontact->nocontacts}}
 </td>
 <td>
-{{number_format($nocontact['percent']).'%'}}
+{{number_format($nocontact->percent).'%'}}
 </td>
  </tr>
  
@@ -161,13 +161,13 @@ Check all:{{Form::checkbox('checkAll', 'yes', true,array('id'=>'checkAllAccounts
     </thead>
     <tbody>
    @foreach($data['nosalesnotes'] as $company)
-    @if (isset($company['notes']))
+    @if (isset($company->notes))
     <tr class="success"> 
-    <td><a href="/salesnotes/{{$company['id']}}">{{$company['companyname']}}</a>  </td>
+    <td><a href="/salesnotes/{{$company->id}}">{{$company->companyname}}</a>  </td>
     <td><span style="color:green" class="glyphicon glyphicon-ok"> </span></td>
 	@else
     <tr class='danger'>
-    <td>{{$company['companyname']}}</td>
+    <td>{{$company->companyname}}</td>
     <td><span style="color:red" class="glyphicon glyphicon-remove"> </span>No 'How to Sell' Notes</td>
     @endif
     
@@ -209,10 +209,10 @@ Check all:{{Form::checkbox('checkAll', 'yes', true,array('id'=>'checkAllAccounts
    @foreach($data['segments'] as $segment)
    <tr>
   
-   <td>{{$segment['companyname']}}</td>
+   <td>{{$segment->companyname}}</td>
    
-   <td>{{$segment['filter'] ? $segment['filter'] : 'Not Assigned'}}</td>
-   <td>{{$segment['count']}}</td></tr>
+   <td>{{$segment->filter ? $segment->filter : 'Not Assigned'}}</td>
+   <td>{{$segment->count}}</td></tr>
     
     
 		

@@ -18,7 +18,7 @@
          You can edit the feedback at <a href="{{route('comment.edit',$comments->id)}}" >this link</a></p>
        <p> Sincerely</p>
         
-        <p>TrueBlue National Account Mapping Support</p>
+        <p>PeopleReady National Account Mapping Support</p>
 		</div>
 	</body>
 </html>

@@ -6,7 +6,7 @@
 		<meta charset="utf-8" />
 		<title>
 			@section('title')
-			TrueBlue MapMiner
+			{{env('APP_NAME')}}
 			@show
 		</title>
 		<meta name="keywords" content="National Accounts, True BLue Inc,Branch Mapping " />

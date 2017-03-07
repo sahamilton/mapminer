@@ -419,7 +419,7 @@ class PersonsController extends BaseController {
 				$data =array();
 				$data =  $this->getMyAccounts($data);
 				
-				$accountstring = implode("','",array_keys($data['accounts']));
+				$accountstring = implode("','",array_keys($data['accounts']->toArray()));
 				
 		}else{
 			$data['accounts'] = \Input::get('accounts');
@@ -430,11 +430,11 @@ class PersonsController extends BaseController {
 		\Session::flash('manager', $this->managerID);
 		if($this->managerID[0] == 'All' and !isset($data['accounts']))
 		{
-			return  Redirect::route('managers.view');
+			return  redirect()->to(route('managers.view'));
 		}
 		if(! is_array($data['accounts']))
 		{
-			return  Redirect::route('managers.view');
+			return  redirect()->to(route('managers.view'));
 		}
 		
 		

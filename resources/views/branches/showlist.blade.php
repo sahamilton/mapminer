@@ -5,48 +5,51 @@
 
  <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
-     @foreach($fields as $title=>$field)
-    <th>
-    {{$title}}
-    </th>
-    @endforeach
-       
+    
+		<th>Business Name</th> 
+		<th>Street </th> 
+		<th>City </th> 
+		<th>State </th> 
+		<th>ZIP </th> 
+		<th>Watching </th> 
+
     </thead>
     <tbody>
    @foreach($locations as $location)
     <tr>  
-	<?php reset($fields);?>
-    @foreach($fields as $key=>$value)
-    <?php 
-	
-	switch ($key) {
-		case 'Business Name':
-			$title = "See details of the ".$location[$field]." location";
-			echo "<td><a href=\"/location/".$location['id']."\"";
-			echo " title=\"".$title."\">".$location[$field]."</a></td>";
-		break;
-		
-		case 'Watching':
-			echo "<td style =\"text-align: center; vertical-align: middle;\">";
-			if(in_array($location['id'],$mywatchlist)){
-				echo "<input checked";
-				
-			}else{
-				echo "<input ";
-			}
-			echo " id=\"".$location['id']."\" ";
-			echo " type='checkbox' name='watchList' class='watchItem' ";
-			echo " value='".$location['id']."' ></td>";
-		break;		
-		
-		default:
-			echo "<td>".$location[$field]."</td>";
-		break;
-		
-	};?>
-	
 
-    @endforeach
+	<td>
+		<a href="{{route('location.show',$location->id)}}"
+				title="See details of the {{$location->businessname}} location">
+				{{$location->businessname}}
+		</a>
+	</td>
+	<td>
+			{{$location->street}}
+
+	</td>
+	<td>
+			{{$location->city}}
+
+	</td>
+	<td>
+			{{$location->state}}
+
+	</td>
+	<td>
+			{{$location->zip}}
+
+	</td>
+
+
+	<td style ="text-align: center; vertical-align: middle;">
+
+		<input type='checkbox' name='watchList' class='watchItem' 
+		{{ in_array($location->id,$mywatchlist) ? 'checked' : '' }}
+	 	id="{{$location->id}}"
+	 	value='{{$location->id}}' >
+	</td>
+		
     </tr>
    @endforeach
     

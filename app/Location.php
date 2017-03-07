@@ -77,7 +77,10 @@ class Location extends Model {
 	public function findNearbyLocations($lat,$lng,$distance,$number,$company=NULL,$userServiceLines, $limit=null)
 	
 	{
-		
+		if(null=== $userServiceLines){
+					$userServiceLines = $this->getUserServiceLines();
+		}
+
 		$keyset = ['vertical','segment','businesstype'];
 		$searchKeys = array();
 		$filtered = $this->isFiltered(['companies','locations'],['vertical','segment','business']);

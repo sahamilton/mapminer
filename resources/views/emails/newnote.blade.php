@@ -12,7 +12,7 @@
 		<p>{{$user->firstname}} {{$user->lastname}} has added a note to {{$company[0]->businessname}}.  You can review the note at this link <a href="{{route('location.show',$company[0]->id)}}" >this link</a></p>
         Sincerely
         
-        <p>TrueBlue National Account Mapping Support</p>
+        <p>PeopleReady National Account Mapping Support</p>
 		</div>
 	</body>
 </html>
