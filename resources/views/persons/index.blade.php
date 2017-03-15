@@ -85,7 +85,7 @@
 			  <ul class="dropdown-menu" role="menu">
 				
 				<li><a href="/person/{{$person->id}}/edit/"><i class="glyphicon glyphicon-pencil"></i> Edit {{$name}} Branch</a></li>
-				<li><a data-href="/person/{{$person->id}}/delete" data-toggle="modal" data-target="#confirm-delete" data-title = "{{$name}}" href="#">
+				<li><a data-href="{{route('user.purge',person->userdetails->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = "{{$name}}" href="#">
                 <i class="glyphicon glyphicon-trash"></i> Delete {{$name}} branch</a></li>
 			  </ul>
 			</div>

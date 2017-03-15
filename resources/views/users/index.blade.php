@@ -49,7 +49,7 @@
 
                     <li><a href="{{route('users.edit',$user->id)}}"><i class="glyphicon glyphicon-pencil"></i> Edit user</a></li>
 
-                    <li><a data-href="{{route('user.purge',$user->id)}}" 
+                    <li><a data-href="{{route('users.purge',$user->id)}}" 
                     data-toggle="modal" 
                     data-target="#confirm-delete" 
                     data-title = "location" 

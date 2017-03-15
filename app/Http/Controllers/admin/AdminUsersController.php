@@ -167,7 +167,7 @@ class AdminUsersController extends BaseController {
         $user->confirmation_code = md5(uniqid(mt_rand(), true));
         $user->password = \Hash::make(\Input::get('password'));
         if (\Input::get('confirm')) {
-            $this->user->confirmed = \Input::get('confirm');
+            $user->confirmed = \Input::get('confirm');
         }
 
         // Permissions are currently tied to roles. Can't do this yet.

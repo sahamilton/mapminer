@@ -780,15 +780,12 @@ class CompaniesController extends BaseController {
 	public function getManagers($roles)
 	{
 		
-		$accountmanagers = $this->user->whereHas('roles', 
+		$managers = Person::select(\DB::raw('concat(firstname," ",lastname) as name,user_id as id'))
+			->whereHas('userdetails.roles', 
 			function($q) use($roles){
 			$q->whereIn('role_id',$roles);
-			})->with('Person')->get();
-		foreach ($accountmanagers as $manager) 
-		{
-			$managers[$manager->id] = $manager->person->firstname . " ". $manager->person->lastname;
-		
-		}
+			})->orderBy('lastname')->pluck('name','id');
+
 		return $managers;
 	}
 	

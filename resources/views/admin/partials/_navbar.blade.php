@@ -69,8 +69,8 @@
     						</a>
     						<ul class="dropdown-menu">
                             
-                                <li{{ (Request::is('company*') ? ' class="active"' : '') }}>
-                                    <a href="{{{ route('person.index') }}}">
+                                <li{{ (Request::is('person*') ? ' class="active"' : '') }}>
+                                    <a href="{{{ route('users.index') }}}">
                                     <span class="glyphicon glyphicon-wrench"></span>  Manage People
                                     </a>
                                  </li>

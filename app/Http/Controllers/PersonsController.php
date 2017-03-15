@@ -157,16 +157,18 @@ class PersonsController extends BaseController {
 	public function show($person)
 	{
 		
-
-		$people = $person
+//note remove manages & manages.servicedby
+		$people = $this->persons
 			->with('directReports',
+				'directReports.userdetails.roles',
+				'directReports.branchesServiced',
 				'reportsTo',
-				'manages',
+				
 				'managesAccount',
 				'userdetails',
 				'userdetails.roles',
 				'branchesServiced',
-				'manages.servicedBy',
+		
 				'directReports.branchesServiced')
 			
 			->find($person->id);

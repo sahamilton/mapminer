@@ -199,7 +199,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function()
 		Route::get('cleanse',['as'=>'users.cleanse','uses'=>'Admin\AdminUsersController@cleanse']);
 		Route::get('users/import',['as'=>'admin.users.import', 'uses'=>'Admin\AdminUsersController@import']);
 		Route::post('users/bulkimport',['as'=>'admin.users.bulkimport', 'uses'=>'Admin\AdminUsersController@bulkImport']);
-		Route::get('users/{user}/purge',['as'=>'user.purge','uses'=> 'Admin\AdminUsersController@destroy']);
+		Route::get('users/{user}/purge',['as'=>'users.purge','uses'=> 'Admin\AdminUsersController@destroy']);
 		Route::get('users/serviceline/{servicelineId}', ['as'=>'serviceline.user','uses'=>'Admin\AdminUsersController@index']);
 
 		Route::resource('users', 'Admin\AdminUsersController');  
