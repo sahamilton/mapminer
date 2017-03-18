@@ -189,11 +189,11 @@ class AdminUsersController extends BaseController {
 
                 $person->address = \Input::get('address');
     			$latLng = $this->getLatLng($person->address);
-                
-    			$person->lat = $latLng['latitude'];
-    			$person->lng = $latLng['longitude'];
-                $person->city = $latLng['locality'];
-                $person->state= $latLng['adminLevels'][1]['code'];
+               
+    			$person->lat = $latLng[0]['latitude'];
+    			$person->lng = $latLng[0]['longitude'];
+                $person->city = $latLng[0]['locality'];
+                $person->state= $latLng[0]['adminLevels'][1]['code'];
             }
 			$person = $user->person()->save($person);
 			

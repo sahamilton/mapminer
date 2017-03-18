@@ -70,12 +70,15 @@ class Branch extends Model {
 	public function findNearbyBranches($lat,$lng,$distance,$number,$userServiceLines)
 	{
 		
+
 		if (! $userServiceLines)
 		{
 			$userServiceLines = $this->getUserServiceLines();
 			
 		}
-
+		if (is_a($userServiceLines,'Illuminate\Support\Collection')) {
+			$userServiceLines = $userServiceLines->toArray();
+		}
 		$coordinates = $this->getPositionCoordinates($lat,$lng,$distance, $number);
 	
 

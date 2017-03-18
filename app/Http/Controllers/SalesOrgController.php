@@ -44,7 +44,7 @@ class SalesOrgController extends BaseController {
 			}
 			
 			// if leaf
-			
+		
 			
 			if( $salesperson->isLeaf())
 			{
@@ -212,9 +212,10 @@ class SalesOrgController extends BaseController {
 
 	private function getSalesLeaders()
 	{
-		return (Person::where('depth','=',0)
+		/*return (Person::where('depth','=',0)
 			->whereNull('reports_to')
 			->whereRaw('lft+1 != rgt')
-			->pluck('id'));
+			->pluck('id'));*/
+		return $person = ['1767'];
 	}
 }
