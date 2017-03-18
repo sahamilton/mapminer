@@ -24,7 +24,7 @@ class WatchController extends BaseController {
 	
 	public function index()
 	{
-		
+	
 		$watch = $this->getMyWatchList(\Auth::id());
 		$fields = array('Business Name'=>'businessname',
 					 'National Acct'=>'companyname',
@@ -88,8 +88,8 @@ class WatchController extends BaseController {
 	{
 		$this->delete($id);
 		
-		$watch = $this->getMyWatchList(\Auth::id());
-		return response()->view('watch.index', compact('watch'));
+
+		return redirect()->route('watch');
 	}
 	
 	/**
@@ -102,6 +102,7 @@ class WatchController extends BaseController {
 	public function delete($id) {
 		$watch = $this->watch->findOrFail($id);
 		$watch->destroy($id);
+		return redirect()->route('watch');
 	}
 	/**
 	 * Show watch list for user.
@@ -135,7 +136,10 @@ class WatchController extends BaseController {
 	
 	protected function getMyWatchList($id) {
 		
-		$watchList = $this->watch->with('watching','watching.company')->with('watchnotes')->where("user_id","=", $id)->get();
+		$watchList = $this->watch->with('watching','watching.company')
+		->with('watchnotes')
+		->where("user_id","=", $id)
+		->get();
 	
 		return $watchList;
 		
