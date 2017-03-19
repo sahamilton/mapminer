@@ -4,6 +4,7 @@ use App\User;
 use App\Role;
 use App\Person;
 use App\Permission;
+use App\Http\Requests\UserFormRequest;
 use App\Branch;
 use App\Track;
 use App\Serviceline;
@@ -156,18 +157,16 @@ class AdminUsersController extends BaseController {
      *
      * @return Response
      */
-    public function store()
+    public function store(UserFormRequest $request)
     {
-        $data=\Input::all();
-		
-
-        $user = $this->user->create($data);
+        
+        $user = $this->user->create($request->all());
 		
        
         $user->confirmation_code = md5(uniqid(mt_rand(), true));
         $user->password = \Hash::make(\Input::get('password'));
-        if (\Input::get('confirm')) {
-            $user->confirmed = \Input::get('confirm');
+        if ($request->has('confirm')) {
+            $user->confirmed = $request->get('confirm');
         }
 
         // Permissions are currently tied to roles. Can't do this yet.
@@ -175,19 +174,19 @@ class AdminUsersController extends BaseController {
 
         // Save if valid. Password field will be hashed before save
         $user->save();
-        $servicelines = \Input::get('servicelines');
+        $servicelines = $request->get('servicelines');
 
         if ( $user->id ) {
 			$person = new Person;
-			$person->firstname = \Input::get('firstname');
-			$person->lastname = \Input::get('lastname');
+			$person->firstname = $request->get('firstname');
+			$person->lastname = $request->get('lastname');
 			
-			$person->phone = \Input::get('phone');
-			$person->reports_to = \Input::get('mgrid');
-            if(\Input::has('address')){
+			$person->phone = $request->get('phone');
+			$person->reports_to = $request->get('mgrid');
+            if($request->has('address')){
 
 
-                $person->address = \Input::get('address');
+                $person->address = $request->get('address');
     			$latLng = $this->getLatLng($person->address);
                
     			$person->lat = $latLng[0]['latitude'];
@@ -197,15 +196,15 @@ class AdminUsersController extends BaseController {
             }
 			$person = $user->person()->save($person);
 			
-			$person->industryfocus()->attach(\Input::get('vertical'));
+			$person->industryfocus()->attach($request->get('vertical'));
             //$person->industryfocus()->sync(\Input::get('vertical'));
 
 			// set up tracking
 
             $track=Track::create(['user_id'=>$user->id]);
 			
-            $user->saveRoles(\Input::get( 'roles' ));
-			$user->serviceline()->attach(\Input::get('serviceline'));
+            $user->saveRoles($request->get( 'roles' ));
+			$user->serviceline()->attach($request->get('serviceline'));
 			
             
 
@@ -221,7 +220,7 @@ class AdminUsersController extends BaseController {
             $error = $this->user->errors()->all();
 
             return redirect()->to('admin/users/create')
-                ->withInput(\Input::except('password'))
+                ->withInput($request->except('password'))
                 ->with( 'error', $error );
         }
     }
