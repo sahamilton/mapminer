@@ -61,31 +61,7 @@
                                 
 
     						</ul>
-                            <!-- Manage People -->
-  
-                            <li class="dropdown{{ (Request::is('person*') ? ' class="active"' : '') }}">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="{{{ route('person.index') }}}">
-    							<span class="glyphicon glyphicon-wrench"></span> People<span class="caret"></span>
-    						</a>
-    						<ul class="dropdown-menu">
-                            
-                                <li{{ (Request::is('person*') ? ' class="active"' : '') }}>
-                                    <a href="{{{ route('users.index') }}}">
-                                    <span class="glyphicon glyphicon-wrench"></span>  Manage People
-                                    </a>
-                                 </li>
-                                
-                                
-                                 <li{{ (Request::is('admin/person*') ? ' class="active"' : '') }}>
-                                 <a href="{{{ route('person.bulkimport') }}}">
-                                 <span class="glyphicon glyphicon-import"></span> 
-                                 Import Managers
-                                 </a>
-                                 </li>
-                                 
-                                  <li{{ (Request::is('admin/person/export') ? ' class="active"' : '') }}><a href="{{{ route('person.export') }}}"><span class="glyphicon glyphicon-export"></span> Export Managers</a></li>
-                            </ul>
-                            </li>
+                           
                            <!-- Manage Branches  -->           
 
 							
