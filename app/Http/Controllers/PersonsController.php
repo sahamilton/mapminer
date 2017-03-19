@@ -4,6 +4,7 @@ use App\User;
 use App\Person;
 use App\Branch;
 use App\Company;
+use Illuminate\Http\Request;
 class PersonsController extends BaseController {
 
 	public $branch;
@@ -404,14 +405,14 @@ class PersonsController extends BaseController {
 	 * [selectAccounts description]
 	 * @return [type] [description]
 	 */
-	public function selectAccounts()
+	public function selectAccounts(Request $request)
 	{
-		if(null === \Input::get('manager')){
+		if(! $request->has('manager')){
 			$managerArray = $this->getManagers(\Auth::id());
 			$managerId = array_keys($managerArray);
-				$this->managerID = $managerId [0];
+			$this->managerID = $managerId[0];
 		}else{
-			$this->managerID = \Input::get('manager');
+			$this->managerID = $request->get('manager');
 			
 		}
 		
@@ -420,11 +421,11 @@ class PersonsController extends BaseController {
 				
 				$data =array();
 				$data =  $this->getMyAccounts($data);
-				
-				$accountstring = implode("','",array_keys($data['accounts']->toArray()));
+
+				$accountstring = implode("','",array_keys($data['accounts']));
 				
 		}else{
-			$data['accounts'] = \Input::get('accounts');
+			$data['accounts'] = $request->get('accounts');
 			
 			$accountstring = implode("','",$data['accounts']);
 			
@@ -432,10 +433,12 @@ class PersonsController extends BaseController {
 		\Session::flash('manager', $this->managerID);
 		if($this->managerID[0] == 'All' and !isset($data['accounts']))
 		{
+			
 			return  redirect()->to(route('managers.view'));
 		}
 		if(! is_array($data['accounts']))
 		{
+
 			return  redirect()->to(route('managers.view'));
 		}
 		
@@ -538,7 +541,10 @@ class PersonsController extends BaseController {
 	{
 		if(\Auth::user()->hasRole('National Account Manager'))
 		{
-			$data['accounts'] = Company::where('user_id',"=",\Auth::id())->orderBy('companyname')->pluck('companyname','id');
+			$data['accounts'] = Company::where('user_id',"=",\Auth::id())
+			->orderBy('companyname')
+			->pluck('companyname','id')
+			->toArray();;
 			$data['title'] = 'Your Accounts';
 		}elseif(isset($this->managerID) and $this->managerID[0] !='All'){
 			
@@ -550,7 +556,10 @@ class PersonsController extends BaseController {
 			}
 			\Session::flash('manager', $this->managerID);
 			
-			$data['accounts'] = Company::whereIn('user_id',$this->managerID)->orderBy('companyname')->pluck('companyname','id');
+			$data['accounts'] = Company::whereIn('user_id',$this->managerID)
+			->orderBy('companyname')
+			->pluck('companyname','id')
+			->toArray();
 
 			$managerTemp = $this->getManagers($this->managerID);
 			$data['manager'] = array('id' => current(array_keys($managerTemp)),'name'=>array_values($managerTemp)[0]);
@@ -559,7 +568,9 @@ class PersonsController extends BaseController {
 			
 		}else{
 			
-			$data['accounts'] = Company::orderBy('companyname')->pluck('companyname','id');
+			$data['accounts'] = Company::orderBy('companyname')
+			->pluck('companyname','id')
+			->toArray();;
 			$data['title'] = "All Managers Accounts";
 			
 		}
