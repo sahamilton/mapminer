@@ -8,7 +8,7 @@ $newTZ = new DateTimeZone('America/Los_Angeles');
 @section('title')
 	{{{ $title }}} :: @parent
 @stop
-
+ @include('partials/_modal')
 {{-- Content --}}
 @section('content')
 	<div class="page-header">
@@ -82,7 +82,7 @@ $newTZ = new DateTimeZone('America/Los_Angeles');
 
 	?>
     <td class="col-md-2">
-     @include('partials/_modal')
+    
 
             <div class="btn-group">
 			  <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">

@@ -78,13 +78,13 @@ class AdminUsersController extends BaseController {
     {
        $this->userServiceLines = $this->branch->getUserServiceLines();
 
-        $title = 'User Management';
+        $title = 'People / User Management';
 
         if(! $id)
         // Grab all the users
 	       {
 	       		$users = $this->user
-	       	       ->with('roles','usage','person')
+	       	       ->with('roles','usage','person','serviceline')
 	       	       ->whereHas('serviceline', function($q)  {
 					    $q->whereIn('serviceline_id',$this->userServiceLines);
 
