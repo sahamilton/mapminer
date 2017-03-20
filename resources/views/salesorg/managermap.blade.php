@@ -13,8 +13,7 @@
     </a> 
   @endif
 
-  @if(isset ($salesteam[0]->reportsTo->userdetails) )
-
+@if(isset ($salesteam[0]->reportsTo->userdetails->roles) && count($salesteam[0]->reportsTo->userdetails->roles)>0) 
     - {{$salesteam[0]->reportsTo->userdetails->roles[0]->name}}
   @endif
 
