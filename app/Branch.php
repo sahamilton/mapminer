@@ -100,7 +100,7 @@ class Branch extends Model {
 		    			AND branch_serviceline.serviceline_id in ('".implode("','",$userServiceLines)."')
 		order by distance_in_mi
 		limit " . $number;
-		dd($query);
+	
 		$result = \DB::select($query);	 
 
 		return $result;
