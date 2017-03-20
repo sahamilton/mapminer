@@ -25,7 +25,7 @@ class GeoCodingController extends BaseController {
 	 * @return [type]
 	 */
 	public function findMe() {
-	dd('ok buddy');	
+	
 		$data = \Input::all();
 
 		$rules = array('address'=>array('required'));
@@ -57,7 +57,7 @@ class GeoCodingController extends BaseController {
 			
 		}
 		$data['latlng'] = $data['lat'].":".$data['lng'];
-
+dd('ok buddy');	
 		\Session::put('geo', $data);
 
 		$watchlist = array();
