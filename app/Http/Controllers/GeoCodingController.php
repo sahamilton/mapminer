@@ -49,7 +49,7 @@ class GeoCodingController extends BaseController {
 
 				return redirect()->back()->withInput()->with('message', 'Unable to Geocode that address');
 			}
-			dd($geocode->first());
+			dd($geocode->first()->getLatitude());
 
 				$data['lat']=$geocode->get('latitude');
 				$data['lng'] =$geocode->get('longitude');
