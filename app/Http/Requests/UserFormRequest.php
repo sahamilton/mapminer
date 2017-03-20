@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Http\Requests;
-
+use Illuminate\Http\Request;
+use App\User;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UserFormRequest extends FormRequest
@@ -21,14 +22,18 @@ class UserFormRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(Request $request)
     {
+        
+       
         return [
-            'username'=>'required',
-            'firstname'=>'required',
-            'lastname'=>'required',
-            'email'=>'required',
-            
+        'username'=>'required|alpha_num|unique:users,username,'.$request->get('id'),
+        'firstname'=>'required',
+        'lastname'=>'required',
+        'email' => 'required|email|unique:users,email,'.$request->get('id'),
+        'password'=>'confirmed',
+        'serviceline'=>'required',
+
         ];
     }
 }

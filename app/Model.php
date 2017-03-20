@@ -381,6 +381,7 @@ public function _import_csv($filename, $table,$fields)
 	{
 		
 		if (\Session::has('user.servicelines')){
+			
 			return \Session::get('user.servicelines');
 		}
 
@@ -388,7 +389,7 @@ public function _import_csv($filename, $table,$fields)
 	}
 
 	public function currentUserServicelines(){
-        $user = \Auth::user()->with('serviceline')->first();
+       $user = \Auth::user()->with('serviceline')->first();
        $userServicelines= $user->serviceline->pluck('id')->toArray();
        \Session::put('user.servicelines',$userServicelines) ;
       

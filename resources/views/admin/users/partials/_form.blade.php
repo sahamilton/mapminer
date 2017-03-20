@@ -9,12 +9,12 @@
 
 		<div class="tab-content">
     <div id="home" class="tab-pane fade in active">
-      <h3>User</h3>
+      <h3>User Details</h3>
       	@include ('admin.users.partials._userform')
 		    
     </div>
     <div id="menu1" class="tab-pane fade">
-      <h3>Manager / Branch</h3>
+      <h3>Personal Details</h3>
     	@include ('admin.users.partials._personform')
      
     </div>

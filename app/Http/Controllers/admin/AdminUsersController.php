@@ -139,9 +139,8 @@ class AdminUsersController extends BaseController {
 		$mode = 'create';
 
 		// Service lines
-		$this->userServiceLines = $this->person->getUserServiceLines();
-		$servicelines = Serviceline::whereIn('id',$this->userServiceLines)
-						->pluck('ServiceLine','id');
+		$servicelines = $this->person->getUserServiceLines();
+		
 		$branches = $this->getUsersBranches($this->user);
 		$verticals = SearchFilter::where('searchcolumn','=','vertical')
 		->where('type','!=','group')			
@@ -161,22 +160,17 @@ class AdminUsersController extends BaseController {
     {
         
         $user = $this->user->create($request->all());
-		
-       
-        $user->confirmation_code = md5(uniqid(mt_rand(), true));
+	        $user->confirmation_code = md5(uniqid(mt_rand(), true));
         $user->password = \Hash::make(\Input::get('password'));
         if ($request->has('confirm')) {
             $user->confirmed = $request->get('confirm');
         }
+       
+        ;
+        
 
-        // Permissions are currently tied to roles. Can't do this yet.
-        //$user->permissions = $user->roles()->preparePermissionsForSave(\Input::get( 'permissions' ));
-
-        // Save if valid. Password field will be hashed before save
-        $user->save();
-        $servicelines = $request->get('servicelines');
-
-        if ( $user->id ) {
+        if ( $user->save() ) {
+            $servicelines = $request->get('servicelines');
 			$person = new Person;
 			$person->firstname = $request->get('firstname');
 			$person->lastname = $request->get('lastname');
@@ -184,7 +178,6 @@ class AdminUsersController extends BaseController {
 			$person->phone = $request->get('phone');
 			$person->reports_to = $request->get('mgrid');
             if($request->has('address')){
-
 
                 $person->address = $request->get('address');
     			$latLng = $this->getLatLng($person->address);
@@ -197,31 +190,21 @@ class AdminUsersController extends BaseController {
 			$person = $user->person()->save($person);
 			
 			$person->industryfocus()->attach($request->get('vertical'));
-            //$person->industryfocus()->sync(\Input::get('vertical'));
-
-			// set up tracking
+           
 
             $track=Track::create(['user_id'=>$user->id]);
 			
             $user->saveRoles($request->get( 'roles' ));
 			$user->serviceline()->attach($request->get('serviceline'));
-			
-            
-
-            // Redirect to the new user page
-             $person = new Person;
-            $person->rebuild();
+	        $person->rebuild();
             return redirect()->to('admin/users/')
                 ->with('success', 'User created succesfully');
 
         } else {
-
-            // Get validation errors (see Ardent package)
-            $error = $this->user->errors()->all();
-
+           
             return redirect()->to('admin/users/create')
                 ->withInput($request->except('password'))
-                ->with( 'error', $error );
+                ->with( 'error', 'Unable to create user' );
         }
     }
 
@@ -247,7 +230,7 @@ class AdminUsersController extends BaseController {
      */
     public function edit($userid)
     {
-        $this->userServiceLines = $this->person->getUserServiceLines();
+        $servicelines = $this->person->getUserServiceLines();
         $user = $this->user
           ->with('serviceline','person','person.branchesServiced','roles')
           ->find($userid->id);
@@ -262,21 +245,13 @@ class AdminUsersController extends BaseController {
         	// mode
         	$mode = 'edit';
 			$managerlist = $this->getManagerList();
-			// Allow the admin user to add themselves to any service line
-			// Technically this is redundant as only admins can add / edit users
-			if($user->id == \Auth::id()){
-				$servicelines = Serviceline::pluck('ServiceLine','id');
-			}else{
-				$servicelines = Serviceline::whereIn('id',$this->userServiceLines)
-				->pluck('ServiceLine','id');
-			}
-			//get current branches serviced
+			
 			$branchesServiced = $user->person->branchesServiced->pluck('id');
 			
 			// Ether get close branches 
 			
 			$branches = $this->getUsersBranches($user);
-			
+			dd($branches);
 			$verticals = SearchFilter::where('searchcolumn','=','vertical')
 			->where('type','!=','group')			
 			->pluck('filter','id');
@@ -296,68 +271,38 @@ class AdminUsersController extends BaseController {
      * @param $user
      * @return Response
      */
-    public function update($user)
+    public function update(UserFormRequest $request,$user)
     {
         $user = $this->user->with('person')->find($user->id);
         $oldUser = clone($user);
-        $data= \Input::all();
-		$user->update($data);
-        $person = $this->updateAssociatedPerson($user,$data);
-        $person=$this->associateBranchesWithPerson($person,$data);
-        
-		// All this should go to UsersRequestForm
-		/*$rules = array('username' => 'required|alpha_num',
-            	'email' => 'required|email');
-		
-		
-        $password = \Input::get( 'password' );
-        $passwordConfirmation = \Input::get( 'password_confirmation' );
+      
+		if($user->update($request->all())){
+            $person = $this->updateAssociatedPerson($user,$request->all());
+            $person = $this->associateBranchesWithPerson($person,$request->all());
+      
+           if($request->has('serviceline')){
 
-        if(! empty($password)) {
-            if($password === $passwordConfirmation) {
-                $user->password = $password;
-                // The password confirmation will be removed from model
-                // before saving. This field will be used in Ardent's
-                // auto validation.
-                $user->password_confirmation = $passwordConfirmation;
-            } else {
-                // Redirect to the new user page
-                return redirect()->to('admin/users/' . $user->id . '/edit')
-                ->with('error', 'Passwords do not match');
+                $user->serviceline()->sync($request->get('serviceline'));
+        	}
+
+        	if($request->has('vertical')){
+                $verticals = $request->get('vertical');
+                    if($verticals[0]==0){
+                      $person->industryfocus()->sync([]);
+                    }else{
+                       
+            		  $person->industryfocus()->sync($data['vertical']);
+                    }
+        	}else{
+                $person->industryfocus()->sync([]);
             }
-        }
+
+            return redirect()->to(route('users.index'))->with('success', 'User updated succesfully');
+        }else{
             
-        
-        if ($user->save()) {
-            
-            $user->roles->sync(\Input::get( 'roles' ));
-			$person->rebuild();
-        } else {
-			
             return redirect()->to('admin/users/' . $user->id . '/edit')
                 ->with('error', 'Unable to update user');
-        }*/
-
-        
-        // Redirect to the new user page
-       if(isset($data['serviceline'])){
-
-            $user->serviceline()->sync($data['serviceline']);
-    	}
-    	if(isset($data['vertical'])){
-            if($data['vertical'][0]==0){
-              $person->industryfocus()->sync([]);
-            }else{
-               
-    		  $person->industryfocus()->sync($data['vertical']);
-            }
-    	}else{
-
         }
-       
-       
-        return redirect()->to(route('users.index'))->with('success', 'User updated succesfully');
-
 
     }
     private function associateBranchesWithPerson($person, $data)
@@ -428,9 +373,10 @@ class AdminUsersController extends BaseController {
     private function getUsersBranches($user){
 			if(isset($user->person->lat) && $user->person->lat !=0){
 
-				$userServiceLines= $user->serviceline->pluck('id');
-
+				$userServiceLines= $user->serviceline->pluck('id')->toArray();
+             
 				$nearbyBranches = $this->branch->findNearbyBranches($user->person->lat,$user->person->lng,100,100,$userServiceLines);
+                dd($nearbyBranches);
 				$branches[0] = 'none';
 				foreach($nearbyBranches as $nearbyBranch){
 

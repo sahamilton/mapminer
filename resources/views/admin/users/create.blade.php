@@ -14,7 +14,7 @@
 		<div class="form-group">
 			<div class="col-md-offset-2 col-md-10">
 				
-				<button type="submit" class="btn btn-success">OK</button>
+				<button type="submit" class="btn btn-success">Create New Person</button>
 			</div>
 		</div>
 		<!-- ./ form actions -->

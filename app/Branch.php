@@ -83,7 +83,8 @@ class Branch extends Model {
 	
 
 		
-		$query = "select haversine(x(position), y(position), ".$coordinates['lat'].",".$coordinates['lon'].") as distance_in_mi, 
+		$query = "select haversine(x(position), y(position), ".$coordinates['lat'].",".$coordinates['lon'].") as 
+		distance_in_mi, 
 		branches.id as branchid,branchnumber,branchname,street,address2,city,state,zip,lat,lng,Serviceline as servicelines,color
 		from branches,branch_serviceline,servicelines
 		where st_within (position, 
@@ -99,7 +100,7 @@ class Branch extends Model {
 		    			AND branch_serviceline.serviceline_id in ('".implode("','",$userServiceLines)."')
 		order by distance_in_mi
 		limit " . $number;
-		
+		dd($query);
 		$result = \DB::select($query);	 
 
 		return $result;
@@ -123,7 +124,7 @@ class Branch extends Model {
 		$coordinates['rlon2'] = $box['max']->degLon;
 		$coordinates['rlat1'] = $box['min']->degLat;
 		$coordinates['rlat2'] = $box['max']->degLat;
-
+		dd($coordinates);
 		return $coordinates;
 	}
 	
