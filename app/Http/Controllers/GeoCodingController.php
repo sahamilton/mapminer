@@ -50,8 +50,8 @@ class GeoCodingController extends BaseController {
 			}
 
 			
-				$data['lat']=$address[0]['latitude'];
-				$data['lng'] =$address[0]['longitude'];
+				$data['lat']=$geocode[0]['latitude'];
+				$data['lng'] =$geocode[0]['longitude'];
 			
 			
 			
