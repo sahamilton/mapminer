@@ -170,6 +170,7 @@ class CompaniesController extends BaseController {
 	public function show($company)
 	{
 		// Is the user permitted to see this company based on servicelines?
+	
 		$this->userServiceLines = $this->company->currentUserServicelines();
 		if (! $this->company->checkCompanyServiceLine($company->id,$this->userServiceLines))
 		{
@@ -243,7 +244,8 @@ class CompaniesController extends BaseController {
 			
 			
 			return response()->view('companies.showselect',compact('count','company','locations','mywatchlist','fields','states','filtered','filters','segments'));
-		}
+		}	
+
 		$mywatchlist = $this->getWatchList();
 		return response()->view('companies.show', compact('company','locations','mywatchlist','fields','states','filtered','filters','segments'));
 	}
@@ -359,7 +361,7 @@ class CompaniesController extends BaseController {
 	{
 		// check if user can view company (id) 
 		// based on serviceline	association
-
+		$this->userServiceLines = $this->company->currentUserServicelines();
 		if (! $this->company->checkCompanyServiceLine($id,$this->userServiceLines))
 		{
 			return \Redirect::route('company.index');
