@@ -88,7 +88,7 @@ class GeoCodingController extends BaseController {
 			$data = $this->setZoomLevel($data);
 			$servicelines = $this->serviceline->whereIn('id',$this->userServiceLines)
     						->get();
-    						dd('here we go');
+    						
 			return response()->view('maps.map', compact('data','filtered','servicelines'));
 		}
 		
