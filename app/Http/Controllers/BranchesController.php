@@ -478,6 +478,10 @@ class BranchesController extends BaseController {
 	
 	
 	public function state($statecode=NULL) {
+		if(! $this->userServiceLines){
+			$this->userServiceLines = $this->branch->getUserServiceLines();
+		}
+
 		if(!$statecode){
 			$statecode = \Input::get('state');
 		}
