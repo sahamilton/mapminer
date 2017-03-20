@@ -1,6 +1,8 @@
 <?php
 namespace App\Http\Controllers;
 use App\Serviceline;
+use App\Company;
+use Illuminate\Http\Request;
 class ServicelinesController extends BaseController {
 	public $serviceline;
 	public $userServiceLines;
@@ -42,7 +44,7 @@ class ServicelinesController extends BaseController {
 	 */
 	public function store()
 	{
-		$validator = Validator::make($data = \Input::all(), Serviceline::$rules);
+		$validator = \Validator::make($data = \Input::all(), Serviceline::$rules);
 
 		if ($validator->fails())
 		{
@@ -132,9 +134,9 @@ class ServicelinesController extends BaseController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function edit($serviceline)
+	public function edit($id)
 	{
-		
+		$serviceline = $this->serviceline->find($id);
 		return response()->view('servicelines.edit', compact('serviceline'));
 	}
 
@@ -144,17 +146,17 @@ class ServicelinesController extends BaseController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update($serviceline)
+	public function update(Request $request, $id)
 	{
-
-		$validator = Validator::make($data = \Input::all(), Serviceline::$rules);
+		$serviceline = $this->serviceline->find($id);
+		$validator = \Validator::make($request->all(), Serviceline::$rules);
 
 		if ($validator->fails())
 		{
 			return \Redirect::back()->withErrors($validator)->withInput();
 		}
 
-		$serviceline->update($data);
+		$serviceline->update($request->all());
 
 		return \Redirect::route('serviceline.index');
 	}

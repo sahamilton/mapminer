@@ -4,7 +4,7 @@ use App\User;
 use App\Person;
 use App\Branch;
 use App\Company;
-use Illuminate\Http\Request;
+
 class PersonsController extends BaseController {
 
 	public $branch;

@@ -27,7 +27,7 @@
 	<link rel="stylesheet" href="{{asset('assets/css/bootstrap-colorpicker.min.css')}}">
     <script src="https://code.jquery.com/jquery-1.10.1.min.js"></script>
     <script src="{{asset('maps/js/handlebars-1.0.0.min.js')}}"></script>
-    <script src="https://maps.google.com/maps/api/js"></script>
+    <script src="https://maps.google.com/maps/api/js?key=AIzaSyBtoJDOdhDa2HyIwlEihEIJUhfzd-6SNBE"></script>
     
     <script src="{{asset('maps/js/jquery.storelocator.js')}}"></script>
     <script src="{{asset('assets/js/bootstrap-colorpicker.min.js')}}"></script>

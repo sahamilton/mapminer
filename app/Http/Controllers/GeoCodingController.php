@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 use App\Serviceline;
 use App\Location;
+use App\Company;
 use App\Branch;
 use App\Watch;
 

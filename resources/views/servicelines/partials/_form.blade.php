@@ -31,8 +31,7 @@
 <!-- Form Actions -->
 	<div style="margin-top:20px" class= "row col-md-4" >
 		<div class="controls">
-			<a class="btn btn-link" href="{{ route('admin.serviceline.index') }}">Cancel</a>
-
+			
 			
 
 			<button type="submit" class="btn btn-success">{{$buttonLabel}}</button>

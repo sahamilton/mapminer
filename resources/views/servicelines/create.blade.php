@@ -11,7 +11,7 @@ Create a Service Line::
 		Create a New Service Line
 
 		<div class="pull-right">
-			<a href="{{ route('admin.serviceline.index') }}" class="btn btn-small btn-inverse"><i class="icon-circle-arrow-left icon-white"></i> Back</a>
+			<a href="{{ route('serviceline.index') }}" class="btn btn-small btn-inverse"><i class="icon-circle-arrow-left icon-white"></i> Back</a>
 		</div>
 	</h3>
 </div>
@@ -19,7 +19,7 @@ Create a Service Line::
 <!-- Tabs -->
 
 <?php $buttonLabel = 'Create Service Line';?>
-{{Form::open(['route'=>'admin.serviceline.store'])}}
+{{Form::open(['route'=>'serviceline.store'])}}
 	@include('servicelines.partials._form')
 {{Form::close()}}
 </div>

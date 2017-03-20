@@ -3,11 +3,7 @@ namespace App;
 class Salesnote extends Model {
 
 	// Add your validation rules here
-	public static $rules = [
-	/*'subject'=>'required',
-	'title'=>'required',
-	 'comment' => 'required'*/
-	];
+	
 	protected $table ='company_howtofield';
 
 	// Don't forget to fill this array
