@@ -69,7 +69,7 @@ class Branch extends Model {
 	
 	public function findNearbyBranches($lat,$lng,$distance,$number,$userServiceLines)
 	{
-		
+	
 
 		if (! $userServiceLines)
 		{
@@ -124,7 +124,7 @@ class Branch extends Model {
 		$coordinates['rlon2'] = $box['max']->degLon;
 		$coordinates['rlat1'] = $box['min']->degLat;
 		$coordinates['rlat2'] = $box['max']->degLat;
-		dd($coordinates);
+	
 		return $coordinates;
 	}
 	

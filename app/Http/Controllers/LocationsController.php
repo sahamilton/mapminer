@@ -111,14 +111,16 @@ class LocationsController extends BaseController {
 	
 	public function show($id)
 	{
-	
+
 		$this->location = $this->location
 			->with('company','company.industryVertical','company.serviceline','relatedNotes','clienttype','verticalsegment')
 			->findOrFail($id->id);
 		
 
 		$this->getCompanyServiceLines();
+	
 		$branch = $this->findBranch(1);
+
 		$watch = $this->watch->where("location_id","=",$id->id)->where('user_id',"=",\Auth::id())->first();
 		$location = $this->location;
 	
@@ -203,7 +205,7 @@ class LocationsController extends BaseController {
 		$input = \Input::only('businessname','street','city','state','zip','company_id','id','phone','contact','segment','businesstype');
 		
 		if(! $this->location->isValid($input)){
-			return \Redirect::back()->withInput()->withErrors($this->location->errors);
+			return redirect()->back()->withInput()->withErrors($this->location->errors);
 		}
 // geocode location
 
@@ -212,7 +214,7 @@ class LocationsController extends BaseController {
 		$this->geoCodeAddress($address);
 		$company_id = $input['company_id'];
 		
-		return \Redirect::route('location.show',$this->location->id );
+		return redirect()->route('location.show',$this->location->id );
 	}
 
 	/**
