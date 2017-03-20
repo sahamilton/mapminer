@@ -165,37 +165,17 @@ class AdminUsersController extends BaseController {
         if ($request->has('confirm')) {
             $user->confirmed = $request->get('confirm');
         }
-       
-        ;
+
         
 
         if ( $user->save() ) {
-            $servicelines = $request->get('servicelines');
+            
 			$person = new Person;
-			$person->firstname = $request->get('firstname');
-			$person->lastname = $request->get('lastname');
-			
-			$person->phone = $request->get('phone');
-			$person->reports_to = $request->get('mgrid');
-            if($request->has('address')){
-
-                $person->address = $request->get('address');
-    			$latLng = $this->getLatLng($person->address);
-               
-    			$person->lat = $latLng[0]['latitude'];
-    			$person->lng = $latLng[0]['longitude'];
-                $person->city = $latLng[0]['locality'];
-                $person->state= $latLng[0]['adminLevels'][1]['code'];
-            }
-			$person = $user->person()->save($person);
-			
-			$person->industryfocus()->attach($request->get('vertical'));
-           
-
-            $track=Track::create(['user_id'=>$user->id]);
-			
+			$person = $this->updateAssociatedPerson($person,$request->all());        
+			$user->person()->save($person);
+            $track=Track::create(['user_id'=>$user->id]);		
             $user->saveRoles($request->get( 'roles' ));
-			$user->serviceline()->attach($request->get('serviceline'));
+            $user->serviceline()->attach($request->get('serviceline'));
 	        $person->rebuild();
             return redirect()->to('admin/users/')
                 ->with('success', 'User created succesfully');
@@ -208,8 +188,7 @@ class AdminUsersController extends BaseController {
         }
     }
 
-
-
+   
     /**
      * Display the specified resource.
      *
@@ -251,7 +230,7 @@ class AdminUsersController extends BaseController {
 			// Ether get close branches 
 			
 			$branches = $this->getUsersBranches($user);
-			dd($branches);
+		
 			$verticals = SearchFilter::where('searchcolumn','=','vertical')
 			->where('type','!=','group')			
 			->pluck('filter','id');
@@ -285,17 +264,7 @@ class AdminUsersController extends BaseController {
                 $user->serviceline()->sync($request->get('serviceline'));
         	}
 
-        	if($request->has('vertical')){
-                $verticals = $request->get('vertical');
-                    if($verticals[0]==0){
-                      $person->industryfocus()->sync([]);
-                    }else{
-                       
-            		  $person->industryfocus()->sync($data['vertical']);
-                    }
-        	}else{
-                $person->industryfocus()->sync([]);
-            }
+        	
 
             return redirect()->to(route('users.index'))->with('success', 'User updated succesfully');
         }else{
@@ -330,10 +299,10 @@ class AdminUsersController extends BaseController {
         return $person;
     }
 
-    private function updateAssociatedPerson($user,$data){
+    private function updateAssociatedPerson($person,$data){
 
-        $person = $this->person->where('user_id','=',$user->id)->first();
         $person->update($data);
+        $person->reports_to  = $data['manager'];
         
         if(isset($data['vertical'])){
             $person->industryfocus()->sync($data['vertical']);
@@ -344,18 +313,18 @@ class AdminUsersController extends BaseController {
         if(isset($data['address'])){
 
             $person->address = $data['address'];
-            $latLng = $this->getLatLng($user->person->address);
-            //$person->reportsto = \Input::get('manager');
-
+            $latLng = $this->getLatLng($person->address);
+           
+           
             $person->lat = $latLng[0]['latitude'];
             $person->lng = $latLng[0]['longitude'];
-            if($data['city']){
+            if(isset($data['city'])){
                 $person->city = $data['city'];
             }else{
                  $person->city = $latLng[0]['locality'];
             }
             
-           if($data['state']){
+           if(isset($data['state'])){
                 $user->person->state =$data['state'];
             }else{
                  $user->person->state = $latLng[0]['adminLevels'][1]['code'];
@@ -376,7 +345,7 @@ class AdminUsersController extends BaseController {
 				$userServiceLines= $user->serviceline->pluck('id')->toArray();
              
 				$nearbyBranches = $this->branch->findNearbyBranches($user->person->lat,$user->person->lng,100,100,$userServiceLines);
-                dd($nearbyBranches);
+               
 				$branches[0] = 'none';
 				foreach($nearbyBranches as $nearbyBranch){
 

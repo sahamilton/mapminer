@@ -83,8 +83,9 @@ class Branch extends Model {
 	
 
 		
-		$query = "select haversine(x(position), y(position), ".$coordinates['lat'].",".$coordinates['lon'].") as 
-		distance_in_mi, 
+
+		/*$query = "select haversine(x(position), y(position), ".$coordinates['lat'].",".$coordinates['lon'].") as distance_in_mi, 
+
 		branches.id as branchid,branchnumber,branchname,street,address2,city,state,zip,lat,lng,Serviceline as servicelines,color
 		from branches,branch_serviceline,servicelines
 		where st_within (position, 
@@ -101,6 +102,36 @@ class Branch extends Model {
 		order by distance_in_mi
 		limit " . $number;
 		dd($query);
+
+		*/
+				$query = "select  branchid,branchnumber,branchname,street,address2,city,state,zip,lat,lng, distance_in_mi,Serviceline as servicelines,
+			  CONCAT_WS(' / ',branchname,branchnumber) AS name FROM (
+			SELECT branches.id as branchid, branchnumber, branchname,street,address2,city,state,zip,lat,lng,r,
+				   69.0 * DEGREES(ACOS(COS(RADIANS(latpoint))
+							 * COS(RADIANS(lat))
+							 * COS(RADIANS(longpoint) - RADIANS(lng))
+							 + SIN(RADIANS(latpoint))
+							 * SIN(RADIANS(lat)))) AS distance_in_mi,
+    			Serviceline
+			 FROM branches,branch_serviceline,servicelines 
+			 JOIN (
+					SELECT  ".$lat."  AS latpoint,  ".$lng." AS longpoint, ".$distance." AS r
+			   ) AS p
+			 WHERE 
+			 	branches.id = branch_serviceline.branch_id
+    			and branch_serviceline.serviceline_id = servicelines.id
+    			AND branch_serviceline.serviceline_id in ('".implode("','",$userServiceLines)."')
+    			and lat
+			  BETWEEN latpoint  - (r / 69)
+				  AND latpoint  + (r / 69)
+			   AND lng
+			  BETWEEN longpoint - (r / (69 * COS(RADIANS(latpoint))))
+				  AND longpoint + (r / (69 * COS(RADIANS(latpoint))))
+			  ) d
+			 WHERE distance_in_mi <= r
+			 ORDER BY distance_in_mi";
+		dd(str_replace('\t','',$query));
+
 		$result = \DB::select($query);	 
 
 		return $result;
