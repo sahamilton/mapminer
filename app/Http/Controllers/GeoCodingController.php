@@ -57,7 +57,7 @@ class GeoCodingController extends BaseController {
 			
 		}
 		$data['latlng'] = $data['lat'].":".$data['lng'];
-dd($data);	
+dd('Data', $data);	
 		\Session::put('geo', $data);
 
 		$watchlist = array();
