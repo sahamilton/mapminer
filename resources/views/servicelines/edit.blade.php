@@ -11,7 +11,7 @@ Edit a Service Line::
 		Edit Service Line
 
 		<div class="pull-right">
-			<a href="{{ route('admin.serviceline.index') }}" class="btn btn-small btn-inverse"><i class="icon-circle-arrow-left icon-white"></i> Back</a>
+			<a href="{{ route('serviceline.index') }}" class="btn btn-small btn-inverse"><i class="icon-circle-arrow-left icon-white"></i> Back</a>
 		</div>
 	</h3>
 </div>
@@ -19,7 +19,7 @@ Edit a Service Line::
 <!-- Tabs -->
 
 <?php $buttonLabel = 'Edit Service Line';?>
-{{Form::model($serviceline, ['method'=>'PATCH','route'=>['admin.serviceline.update', $serviceline->id]]) }}
+{{Form::model($serviceline, ['method'=>'PATCH','route'=>['serviceline.update', $serviceline->id]]) }}
 
 	@include('servicelines.partials._form')
 {{Form::close()}}

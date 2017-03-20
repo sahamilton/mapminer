@@ -24,10 +24,11 @@
         <link rel="stylesheet" href="{{asset('bootstrap/css/bootstrap-theme.min.css')}}">
         <link rel="stylesheet" href="{{asset('assets/css/prmapminer.css')}}">
         <link rel="stylesheet" type="text/css" href="{{asset('maps/css/map.css')}}">
-<link rel="stylesheet" href="{{asset('assets/css/bootstrap-colorpicker.min.css')}}">
+	<link rel="stylesheet" href="{{asset('assets/css/bootstrap-colorpicker.min.css')}}">
     <script src="https://code.jquery.com/jquery-1.10.1.min.js"></script>
     <script src="{{asset('maps/js/handlebars-1.0.0.min.js')}}"></script>
-    <script src="https://maps.google.com/maps/api/js?key={{env('GOOGLE_MAPS_API_KEY')}}"></script>
+    <script src="https://maps.google.com/maps/api/js?key={{config('maps.api_key')}}"></script>
+    
     <script src="{{asset('maps/js/jquery.storelocator.js')}}"></script>
     <script src="{{asset('assets/js/bootstrap-colorpicker.min.js')}}"></script>
        

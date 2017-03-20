@@ -3,9 +3,9 @@
 <?php $group = NULL;?>
 <h3>Add Sales Notes for {{$company->companyname}}</h3>
 <div>
-<a href="{{route('admin.howtofields.index')}}">Edit sales note fields</a>
+<a href="{{route('howtofields.index')}}">Edit sales note fields</a>
 </div>
-@if ($errors->has())
+@if (count($errors)>0)
         <div class="alert alert-danger">
             @foreach ($errors->all() as $error)
                 {{ $error }}<br>        
@@ -16,7 +16,7 @@
 <div id='tabs'>
 <ul>
 <?php 
-$groups = Howtofield::select('group')->distinct()->get();
+
 
 foreach ($groups as $tab) {
 	if(!isset($n)) {
@@ -31,7 +31,7 @@ foreach ($groups as $tab) {
 </ul>
 
 <div id="{{$group}}">
-{{Form::open(array('route'=>'admin.salesnotes.store','files'=>true))}}
+{{Form::open(array('route'=>'salesnotes.store','files'=>true))}}
 <?php $data = $fields;?>
 @include('salesnotes.partials._form')
  {{Form::hidden('companyId',$company->id)}}

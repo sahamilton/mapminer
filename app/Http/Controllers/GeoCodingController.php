@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 use App\Serviceline;
 use App\Location;
+use App\Company;
 use App\Branch;
 use App\Watch;
 
@@ -48,10 +49,10 @@ class GeoCodingController extends BaseController {
 
 				return redirect()->back()->withInput()->with('message', 'Unable to Geocode that address');
 			}
-
 			
-				$data['lat']=$address[0]['latitude'];
-				$data['lng'] =$address[0]['longitude'];
+
+				$data['lat']=$geocode[0]['latitude'];
+				$data['lng'] =$geocode[0]['longitude'];
 			
 			
 			

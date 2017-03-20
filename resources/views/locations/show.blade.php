@@ -1,5 +1,6 @@
 @extends('site/layouts/default')
 @section('content')
+
 <h2>{{$location->businessname}}</h2>
 
 
@@ -65,13 +66,14 @@ Account managed by <a href="{{route('person.show',$location->company->managedBy-
      <div id="map" style="height:300px;width:500px;border:red solid 1px"/>
 </div>
 </div>
+
 <div id="notes" style="clear:both">
 
 
 
 </div>
 
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={{env('GOOGLE_MAPS_API_KEY')}}"></script>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={{config('maps.api_key')}}"></script>
 
 <script type="text/javascript">
 function initialize() {

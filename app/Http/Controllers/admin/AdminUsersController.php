@@ -264,7 +264,18 @@ class AdminUsersController extends BaseController {
                 $user->serviceline()->sync($request->get('serviceline'));
         	}
 
-        	
+        	if($request->has('vertical')){
+                $verticals = $request->get('vertical');
+                    if($verticals[0]==0){
+                      $person->industryfocus()->sync([]);
+                    }else{
+                       
+            		  $person->industryfocus()->sync($request->get('vertical'));
+                    }
+        	}else{
+                $person->industryfocus()->sync([]);
+            }
+
 
             return redirect()->to(route('users.index'))->with('success', 'User updated succesfully');
         }else{
@@ -345,7 +356,7 @@ class AdminUsersController extends BaseController {
 				$userServiceLines= $user->serviceline->pluck('id')->toArray();
              
 				$nearbyBranches = $this->branch->findNearbyBranches($user->person->lat,$user->person->lng,100,100,$userServiceLines);
-               
+
 				$branches[0] = 'none';
 				foreach($nearbyBranches as $nearbyBranch){
 

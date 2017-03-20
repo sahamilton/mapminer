@@ -15,7 +15,7 @@
 <p><span class="glyphicon glyphicon-trash"></span> = Delete | <span class="glyphicon glyphicon-ban-circle"></span> = Inactive | <span class="glyphicon glyphicon-home"></span> = Applies to Accounts  | <span class="glyphicon glyphicon-flag"></span> = Applies to locations  | <span class="glyphicon glyphicon-arrow-up"></span> <span class="glyphicon glyphicon-arrow-down"></span>= Resequence</p>
 	@if (Auth::user()->hasRole('Admin'))
         <div class="pull-right">
-            <a href="{{{ route('admin.searchfilters.create') }}}" 
+            <a href="{{{ route('searchfilters.create') }}}" 
             class="btn btn-small btn-info iframe">
             <span class="glyphicon glyphicon-plus-sign"></span> Create New Filter</a>
         </div>
@@ -26,7 +26,7 @@
         @if($descendant->depth == 1)
             </fieldset><fieldset><legend><a data-href="{{route('admin.searchfilter.delete',$descendant->id)}}" style="color:red"  data-toggle="modal" data-target="#confirm-delete" data-title = "{{$descendant->filter}} filter group and all its 'children'" href="#"title="Remove {{$descendant->filter}} filter group"><span class="glyphicon glyphicon-trash"> </span></a>  
             
-            <a href="{{route('admin.searchfilters.edit',$descendant->id)}}"
+            <a href="{{route('searchfilters.edit',$descendant->id)}}"
             title="Edit {{$descendant->filter}} filter">{{{$descendant->filter}}}</a>
             
             </legend>
@@ -41,7 +41,7 @@
             <span class="glyphicon glyphicon-flag"></span>
            @endif
             <a data-href="{{route('admin.searchfilter.delete',$descendant->id)}}" style="color:red" data-toggle="modal" data-target="#confirm-delete" data-title = "{{$descendant->filter}} filter and all its 'children'" href="#" title="Remove {{$descendant->filter}} filter"><span class="glyphicon glyphicon-trash"> </span></a>
-            <a href="{{route('admin.searchfilters.edit',$descendant->id)}}"
+            <a href="{{route('searchfilters.edit',$descendant->id)}}"
             title="Edit {{$descendant->filter}} filter">{{{$descendant->filter}}}</a>
             ( {{$descendant->id}})
             

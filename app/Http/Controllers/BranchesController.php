@@ -5,7 +5,7 @@ use App\Serviceline;
 use App\User;
 use App\State;
 use App\Person;
-use  App\Http\Requests\BranchFormRequest;
+use App\Http\Requests\BranchFormRequest;
 
 class BranchesController extends BaseController {
 
@@ -478,6 +478,10 @@ class BranchesController extends BaseController {
 	
 	
 	public function state($statecode=NULL) {
+		if(! $this->userServiceLines){
+			$this->userServiceLines = $this->branch->getUserServiceLines();
+		}
+
 		if(!$statecode){
 			$statecode = \Input::get('state');
 		}

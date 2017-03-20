@@ -1,6 +1,6 @@
 <?php
 namespace App\Http\Controllers;
-use App\Searchfilter;
+use App\SearchFilter;
 class SearchFiltersController extends BaseController {
 
 	public $filter;

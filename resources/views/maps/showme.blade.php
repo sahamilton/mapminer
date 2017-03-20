@@ -15,6 +15,7 @@
     @include('maps.partials._form')
 
    @include('partials.advancedsearch')
+  
     <div id="map_canvas"></div>
 </div>
 

@@ -6,7 +6,7 @@
 @if (Auth::user()->hasRole('Admin'))
 <?php $fields['Actions']='actions';?>
 <div class="pull-right">
-				<p><a href="{{{ route('admin.serviceline.create') }}}" class="btn btn-small btn-info iframe"><span class="glyphicon glyphicon-plus-sign"></span> Create New Service Line</a></p>
+				<p><a href="{{{ route('serviceline.create') }}}" class="btn btn-small btn-info iframe"><span class="glyphicon glyphicon-plus-sign"></span> Create New Service Line</a></p>
 			</div>
     @endif
 
@@ -42,7 +42,7 @@
 			  </button>
 			  <ul class="dropdown-menu" role="menu">
 				
-				<li><a href="{{route('admin.serviceline.edit',$serviceline->id)}}/"><i class="glyphicon glyphicon-pencil"></i> 
+				<li><a href="{{route('serviceline.edit',$serviceline->id)}}/"><i class="glyphicon glyphicon-pencil"></i> 
 				Edit {{$serviceline->ServiceLine}}</a></li>
 				<li><a data-href="/admin/serviceline/{{$serviceline->id}}/delete" data-toggle="modal" data-target="#confirm-delete" data-title = "{{$serviceline->ServiceLine}} and all its associations" href="#"><i class="glyphicon glyphicon-trash"></i> Delete {{$serviceline->ServiceLine}}</a></li>
 			  </ul>

@@ -1,5 +1,6 @@
 @extends('site.layouts.maps')
 @section('content')
+
   <h2>{{$salesteam[0]->firstname}} {{$salesteam[0]->lastname}}'s Sales Team</h2>
   @if(isset($salesteam[0]->usersdetails->roles))
   <h3>

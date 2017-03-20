@@ -69,7 +69,7 @@ class Branch extends Model {
 	
 	public function findNearbyBranches($lat,$lng,$distance,$number,$userServiceLines)
 	{
-		
+	
 
 		if (! $userServiceLines)
 		{
@@ -101,6 +101,7 @@ class Branch extends Model {
 		    			AND branch_serviceline.serviceline_id in ('".implode("','",$userServiceLines)."')
 		order by distance_in_mi
 		limit " . $number;
+<<<<<<< HEAD
 		dd($query);
 
 		*/
@@ -130,7 +131,6 @@ class Branch extends Model {
 			  ) d
 			 WHERE distance_in_mi <= r
 			 ORDER BY distance_in_mi";
-		dd(str_replace('\t','',$query));
 
 		$result = \DB::select($query);	 
 
@@ -155,7 +155,7 @@ class Branch extends Model {
 		$coordinates['rlon2'] = $box['max']->degLon;
 		$coordinates['rlat1'] = $box['min']->degLat;
 		$coordinates['rlat2'] = $box['max']->degLat;
-		dd($coordinates);
+	
 		return $coordinates;
 	}
 	
