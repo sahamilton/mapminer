@@ -11,6 +11,7 @@
 {{Form::label($field['id'],$field['fieldname'])}}
 <div>
 <?php 
+
 switch ($field['type']) {
 	
 	case ('text'):
@@ -111,13 +112,13 @@ switch ($field['type']) {
 		echo "<div class=\"form-group\" >";
 		echo Form::label('description','Description') ;
 		echo Form::textarea('attachmentdescription','',array('class'=>'form-control')) ;
-		echo "</div>";
-		echo "<div class=\"form-group has-error\" >";
-		echo Form::file('attachment','','',array('class'=>'form-control'));
-		echo "</div>";
-		echo "</fieldset>";
+		echo "</div>";?>
+		<div class="form-group" >
+		<input class ='form-control' type='file' name='attachment' />
+		</div>
+		</fieldset>
 
-	
+	<?php
 	
 	break;
 	
@@ -128,15 +129,12 @@ switch ($field['type']) {
 }?>
     {{ $errors->first($field['id']) }}
     </div></div>
-    
+
     
 @endforeach
 <!-- Form Actions -->
 	</div><div style="margin-top:20px">
 		<div class="controls">
-			<a class="btn btn-link" href="{{ route('company.index') }}">Cancel</a>
-
-			
 
 			<button type="submit" class="btn btn-success">Edit Notes</button>
 		</div>

@@ -5,7 +5,7 @@ use App\Serviceline;
 use App\User;
 use App\State;
 use App\Person;
-use  App\Http\Requests\BranchFormRequest;
+use App\Http\Requests\BranchFormRequest;
 
 class BranchesController extends BaseController {
 

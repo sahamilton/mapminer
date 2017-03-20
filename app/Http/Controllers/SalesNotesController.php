@@ -2,6 +2,8 @@
 namespace App\Http\Controllers;
 use App\Company;
 use App\Salesnote;
+use App\Howtofield;
+use App\Http\Requests\SalesNotesFormRequest;
 class SalesNotesController extends BaseController {
 	public $salesnote;
 		
@@ -114,20 +116,10 @@ class SalesNotesController extends BaseController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update($salesnote)
+	public function update(SalesNotesFormRequest $request, $salesnote)
 	{
 		
-
-		$validator = Validator::make($data = \Input::all(), Salesnote::$rules);
-
-		if ($validator->fails())
-		{
-			
-
-			return \Redirect::back()->withErrors($validator)->withInput();
-		}
-		
-		$howtofield->update($data);
+		$howtofield->update($request->all());
 
 		return \Redirect::route('salesnotes.index');
 	}
@@ -189,6 +181,7 @@ class SalesNotesController extends BaseController {
 				$id = \Input::get('companyId');
 
 		}
+		$this->userServiceLines = $this->company->getUserServiceLines();
 		// Check that user can view company 
 		// based on user service line associations.
 		
@@ -203,7 +196,7 @@ class SalesNotesController extends BaseController {
 		$fields = Howtofield::orderBy('group')->get();
 		
 		$salesnote = Salesnote::where('company_id','=',$id)->with('fields')->get();
-		
+		$groups = Howtofield::select('group')->distinct()->get();
 		if(count($salesnote)!=0) {
 			$data = array();
 			// Fields that need to be convereted to an array
@@ -227,10 +220,10 @@ class SalesNotesController extends BaseController {
 				}
 			}
 
-			return response()->view('salesnotes.edit', compact('data','company'));
+			return response()->view('salesnotes.edit', compact('data','company','groups'));
 		}else{
 			
-			return response()->view('salesnotes.create', compact('fields','company'));
+			return response()->view('salesnotes.create', compact('fields','company','groups'));
 		}
 
 		
@@ -246,30 +239,20 @@ class SalesNotesController extends BaseController {
 	 * @return none
 	 */
 
-	public function store() {
-		$data = \Input::all();
+	public function store(SalesNotesFormRequest $request) {
+		$data = $request->all();
 
 
 
-		if (\Input::hasFile('attachment'))
+		if ($request->hasFile('attachment'))
 		{
-			$validator = Validator::make(
-			    $data,
-			    array('attachmentname' => 'required|min:5')
-			);
 			
-			if ($validator->fails())
-			{
-				
-				return redirect()->to('admin/salesnotes/create/'.$data['companyId'])->withErrors($validator);
-			}
-
-			$file = \Input::file('attachment');
+			$file = $request->file('attachment');
 			$attachment = $data['companyId'] ."_". $file->getClientOriginalName();
 			// check that company attachments directory exists and create if neccessary
-			if(!File::exists(public_path().'/documents/attachments/'.$data['companyId']))
+			if(! \File::exists(public_path().'/documents/attachments/'.$data['companyId']))
 			{ 
-				if(! File::makeDirectory(public_path().'/documents/attachments/'.$data['companyId'], 0775, true)) 
+				if(! \File::makeDirectory(public_path().'/documents/attachments/'.$data['companyId'], 0775, true)) 
 				{
 					dd('sorry couldnt do that');
 				}

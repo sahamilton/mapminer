@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 use App\Serviceline;
 use App\Location;
+use App\Company;
 use App\Branch;
 use App\Watch;
 
@@ -24,7 +25,7 @@ class GeoCodingController extends BaseController {
 	 * @return [type]
 	 */
 	public function findMe() {
-
+	
 		$data = \Input::all();
 
 		$rules = array('address'=>array('required'));
@@ -50,10 +51,11 @@ class GeoCodingController extends BaseController {
 			}
 			
 
-				$data['lat']=$geocode[0]['latitude'];
-				$data['lng'] =$geocode[0]['longitude'];
+				$data['lat']=$geocode->first()->getLatitude();
+				$data['lng'] =$geocode->first()->getLongitude();
+
 			
-			
+	
 			
 		}
 		$data['latlng'] = $data['lat'].":".$data['lng'];
@@ -88,6 +90,7 @@ class GeoCodingController extends BaseController {
 			$data = $this->setZoomLevel($data);
 			$servicelines = $this->serviceline->whereIn('id',$this->userServiceLines)
     						->get();
+    						
 			return response()->view('maps.map', compact('data','filtered','servicelines'));
 		}
 		
