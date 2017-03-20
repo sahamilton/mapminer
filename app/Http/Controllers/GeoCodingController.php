@@ -25,7 +25,7 @@ class GeoCodingController extends BaseController {
 	 * @return [type]
 	 */
 	public function findMe() {
-
+	dd('ok buddy');	
 		$data = \Input::all();
 
 		$rules = array('address'=>array('required'));
@@ -53,7 +53,7 @@ class GeoCodingController extends BaseController {
 				$data['lat']=$geocode->first()->getLatitude();
 				$data['lng'] =$geocode->first()->getLongitude();
 			
-		dd($data);	
+	
 			
 		}
 		$data['latlng'] = $data['lat'].":".$data['lng'];
