@@ -43,7 +43,7 @@ class GeoCodingController extends BaseController {
 		}
 		if(! $data['lat']){
 
-			$geocode = \Geocoder::geocode($address);
+			$geocode = \Geocoder::geocode($address)->get();
 			
 			if(! $geocode){
 
