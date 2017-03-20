@@ -291,7 +291,7 @@ class AdminUsersController extends BaseController {
                       $person->industryfocus()->sync([]);
                     }else{
                        
-            		  $person->industryfocus()->sync($data['vertical']);
+            		  $person->industryfocus()->sync($request->get('vertical'));
                     }
         	}else{
                 $person->industryfocus()->sync([]);
@@ -376,7 +376,7 @@ class AdminUsersController extends BaseController {
 				$userServiceLines= $user->serviceline->pluck('id')->toArray();
              
 				$nearbyBranches = $this->branch->findNearbyBranches($user->person->lat,$user->person->lng,100,100,$userServiceLines);
-                dd($nearbyBranches);
+
 				$branches[0] = 'none';
 				foreach($nearbyBranches as $nearbyBranch){
 
