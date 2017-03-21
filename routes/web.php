@@ -207,12 +207,12 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function()
 		Route::resource('users', 'Admin\AdminUsersController');  
 
 
-  # User Role Management
-	Route::get('roles/{role}/purge',['as'=>'roles.purge','uses'=>'Admin\AdminRolesController@purge']);
-	Route::resource('roles','Admin\AdminRolesController');
-    #  Permissions 
-	Route::get('permissions/{permission}/purge',['as'=>'permissions.purge','uses'=>'Admin\AdminPermissionsController@purge']);
-	Route::resource('permissions','Admin\AdminPermissionsController');
+	  # User Role Management
+		Route::get('roles/{role}/purge',['as'=>'roles.purge','uses'=>'Admin\AdminRolesController@purge']);
+		Route::resource('roles','Admin\AdminRolesController');
+	    #  Permissions 
+		Route::get('permissions/{permission}/purge',['as'=>'permissions.purge','uses'=>'Admin\AdminPermissionsController@purge']);
+		Route::resource('permissions','Admin\AdminPermissionsController');
      
 
     	
@@ -295,7 +295,10 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function()
 		Route::get('searchfilters/{id}/delete',['as'=>'admin.searchfilter.delete','uses'=>'SearchFiltersController@destroy']);
 		Route::get('api/searchfilters/getAccounts',['as'=>'getAccountSegments','uses'=>'SearchFiltersController@getAccountSegments']);
 		Route::post('api/searchfilters/postAccounts',['as'=>'postAccountSegments','uses'=>'SearchFiltersController@getAccountSegments']);
-		
+		Route::get('/about',['as'=>'about',function(){
+
+			return response()->view('site.about');
+		}]);
 	# Seeder for relationships with servicelines
 		Route::get('seeder',['as'=>'seeder','uses'=>'CompaniesController@seeder']);
 	
