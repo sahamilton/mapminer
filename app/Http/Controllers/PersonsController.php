@@ -85,12 +85,13 @@ class PersonsController extends BaseController {
 
 	public function getMapLocations()
 	{
+	
 		$filtered = $this->persons->isFiltered(['companies'],['vertical']);
-		
 		$this->validroles=['5'];
-		$persons = $this->getAllPeople($filtered);
-		$this->persons->makePeopleXMLObject($persons);
-
+		$persons = $this->getAllPeople($filtered);	
+		$content = view('persons.xml', compact('persons'));
+        return response($content, 200)
+            ->header('Content-Type', 'text/xml');
 
 
 	}

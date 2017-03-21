@@ -44,15 +44,15 @@ class GeoCodingController extends BaseController {
 		if(! $data['lat']){
 
 			$geocode = \Geocoder::geocode($address)->get();
-			
+		
 			if(! $geocode){
 
 				return redirect()->back()->withInput()->with('message', 'Unable to Geocode that address');
 			}
 			
 
-				$data['lat']=$geocode->first()->getLatitude();
-				$data['lng'] =$geocode->first()->getLongitude();
+				$data['lat']=$geocode[0]['latitude'];
+				$data['lng'] =$geocode[0]['longitude'];
 
 			
 	

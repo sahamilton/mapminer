@@ -79,10 +79,11 @@ class BranchesController extends BaseController {
 	public function getAllbranchmap()
 	
 	{
-		$branch = $this->branch->all();
-
-				
-		echo $this->branch->makeNearbyBranchXML($branch);
+		$branches = $this->branch->with('servicelines')->get();
+		$content = view('branches.xml', compact('branches'));
+        return response($content, 200)
+            ->header('Content-Type', 'text/xml');	
+		
 
 	}
 	
@@ -147,9 +148,9 @@ class BranchesController extends BaseController {
 	 * 
 	 */
 	private function rebuildXMLfile(){
-		$result = $this->branch->with('servicelines')->get();
+		$branches = $this->branch->with('servicelines')->get();
 		
-		$xml = $this->branch->makeNearbyBranchXML($result);
+		$xml = $content = view('branches.xml', compact('branches'));
 		$file = file_put_contents(public_path(). '/uploads/branches.xml', $xml);
 		
 		
@@ -369,9 +370,11 @@ class BranchesController extends BaseController {
 
 		$loclat = $branch->lat;
 		$loclng = $branch->lng;
-		$result = $branch->findNearbyBranches($loclat,$loclng,$distance,$number=1,$this->userServiceLines);
-				
-		echo $this->branch->makeNearbyBranchXML($result);
+		$branches = collect($branch->findNearbyBranches($loclat,$loclng,$distance,$number=1,$this->userServiceLines));
+		
+		$content = view('branches.xml', compact('branches'));
+        return response($content, 200)
+            ->header('Content-Type', 'text/xml');
 
 		
 	}
