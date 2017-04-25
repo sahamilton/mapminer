@@ -28,7 +28,6 @@
     <script src="https://code.jquery.com/jquery-1.10.1.min.js"></script>
     <script src="{{asset('maps/js/handlebars-1.0.0.min.js')}}"></script>
     <script src="https://maps.google.com/maps/api/js?key={{config('maps.api_key')}}"></script>
-    
     <script src="{{asset('maps/js/jquery.storelocator.js')}}"></script>
     <script src="{{asset('assets/js/bootstrap-colorpicker.min.js')}}"></script>
        

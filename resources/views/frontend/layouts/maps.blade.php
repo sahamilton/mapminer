@@ -27,7 +27,7 @@
 
     <script src="//code.jquery.com/jquery-1.10.1.min.js"></script>
     <script src="{{asset('maps/js/handlebars-1.0.0.min.js')}}"></script>
-    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBtoJDOdhDa2HyIwlEihEIJUhfzd-6SNBE"></script>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={{config('maps.api_key')}}"></script>
        
       
 

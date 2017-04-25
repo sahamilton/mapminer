@@ -25,7 +25,7 @@ class GeoCodingController extends BaseController {
 	 * @return [type]
 	 */
 	public function findMe() {
-
+	
 		$data = \Input::all();
 
 		$rules = array('address'=>array('required'));
@@ -44,7 +44,7 @@ class GeoCodingController extends BaseController {
 		if(! $data['lat']){
 
 			$geocode = \Geocoder::geocode($address)->get();
-			
+		
 			if(! $geocode){
 
 				return redirect()->back()->withInput()->with('message', 'Unable to Geocode that address');
@@ -53,8 +53,9 @@ class GeoCodingController extends BaseController {
 
 				$data['lat']=$geocode[0]['latitude'];
 				$data['lng'] =$geocode[0]['longitude'];
+
 			
-			
+	
 			
 		}
 		$data['latlng'] = $data['lat'].":".$data['lng'];
@@ -89,6 +90,7 @@ class GeoCodingController extends BaseController {
 			$data = $this->setZoomLevel($data);
 			$servicelines = $this->serviceline->whereIn('id',$this->userServiceLines)
     						->get();
+    						
 			return response()->view('maps.map', compact('data','filtered','servicelines'));
 		}
 		
@@ -240,4 +242,3 @@ class GeoCodingController extends BaseController {
 		
 	}
 }
-?>

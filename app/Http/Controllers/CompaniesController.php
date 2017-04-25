@@ -7,6 +7,7 @@ use App\Company;
 use App\Location;
 use App\Pagination;
 use App\SearchFilter;
+use App\Http\Requests\CompanyFormRequest;
 class CompaniesController extends BaseController {
 
 	public $user;
@@ -129,14 +130,11 @@ class CompaniesController extends BaseController {
 	 * @return Response
 	 */
 	
-	public function store()
+	public function store(CompanyFormRequest $request)
 	{
 		
-
-		if(! $this->company->isValid($input = \Input::all())){
-			return \Redirect::back()->withInput()->withErrors($this->company->errors);
-		}
-		
+		$input = $request->all();
+				
 		$input['person_id'] = $this->getPersonId($input['user_id']);
 		
 		$this->company = $this->company->create($input);
@@ -643,18 +641,14 @@ class CompaniesController extends BaseController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update($company)
+	public function update(CompanyFormRequest $request,$company)
 	{
 		
 		$this->company = $company;
-		$input = \Input::only('companyname','vertical','id','user_id','serviceline');
+		$input = $request->all();
 		$input['person_id'] = $this->getPersonID($input['user_id']);
-		if(! $this->company->isValid($input)){
-			return \Redirect::back()->withInput()->withErrors($this->company->errors);
-		}
 		$this->company->update($input);
-		$servicelines = $input['serviceline'];
-		$this->company->serviceline()->sync($servicelines);
+		$this->company->serviceline()->sync( $input['serviceline']);
 		return \Redirect::route('company.index');
 	}
 

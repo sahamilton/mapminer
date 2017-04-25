@@ -67,6 +67,12 @@
     							</a>
     							<ul class="dropdown-menu">
     								<li><a href="{{{ url::to('user/settings') }}}"><span class="glyphicon glyphicon-wrench"></span> Profile</a></li>
+                                    @if(Auth::user()->hasRole('Admin'))
+
+                                     <a href="{{route('about')}}">
+                                    <li><span class="glyphicon glyphicon-copyright-mark"></span>
+                                    About Mapminer</a></li>
+                                    @endif
     								<li class="divider"></li>
     								<li>
                                         <a href="{{ url('logout') }}" 

@@ -89,46 +89,7 @@ class Person extends NodeModel {
 		
 	}
 
-	public function makePeopleXMLObject($result) {	
-		$dom = new \DOMDocument("1.0");
-		$node = $dom->createElement("markers");
-		$parnode = $dom->appendChild($node);
-		foreach($result as $row){
-			if($row->lat){
-		  // ADD TO XML DOCUMENT NODE
-			$node = $dom->createElement("marker");
-			$newnode = $parnode->appendChild($node);
-			$newnode->setAttribute("person",route('person.show' , $row->id) );
-			$newnode->setAttribute("name",trim($row->firstname . ' ' .$row->lastname));
-			$newnode->setAttribute("address",$row->address);
-			if(isset($row->industryfocus[0]))
-			{
-				if($row->industryfocus[0]->id ==14)
-				{
-					$newnode->setAttribute("industry","General");
-				}else{
-					$newnode->setAttribute("industry",$row->industryfocus[0]->filter);
-				}
-				$newnode->setAttribute("brand",$row->industryfocus[0]->id);
-				$newnode->setAttribute("color",$row->industryfocus[0]->color);
-			}
-			if(isset($row->reportsTo)){
-				$newnode->setAttribute('salesorg',route('salesorg',$row->reportsTo->id));
-				$newnode->setAttribute('reportsto',$row->reportsTo->firstname .' ' . $row->reportsTo->lastname);
-
-			}
-
-			$newnode->setAttribute("lat", $row->lat);
-			$newnode->setAttribute("lng", $row->lng);
-			$newnode->setAttribute("id", $row->id);
-			$newnode->setAttribute("email", $row->userdetails->email);
-			$newnode->setAttribute("phone", $row->phone);
-			$newnode->setAttribute("type","industry");
-			
-		}
-		}
-		echo $dom->saveXML();
-	}
+	
 	private function getPersonsServiceLines(){
 
 		foreach($this->person->serviceline as $serviceline){

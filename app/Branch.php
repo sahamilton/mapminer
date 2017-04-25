@@ -81,12 +81,32 @@ class Branch extends Model {
 		}
 		$coordinates = $this->getPositionCoordinates($lat,$lng,$distance, $number);
 	
-
+		/*$result = $this->branches
+		->select(\DB::raw("haversine(x(position), y(position), ".$coordinates['lat'].",".$coordinates['lon'].") as 
+				distance_in_mi
+				where st_within (position, 
+					envelope(
+								linestring(
+									point(".$coordinates['rlat1'].",".$coordinates['rlon1']."), 
+									point(".$coordinates['rlat2'].",".$coordinates['rlon2'].")
+								)
+							)
+					)" ))
+		->with('ServiceLines')
+		->orderBy('distance_in_mi')
+		->limit($number)
+		->get();*/
 		
+<<<<<<< HEAD
 
 		/*$query = "select haversine(x(position), y(position), ".$coordinates['lat'].",".$coordinates['lon'].") as distance_in_mi, 
 
 		branches.id as branchid,branchnumber,branchname,street,address2,city,state,zip,lat,lng,Serviceline as servicelines,color
+=======
+		$query = "select haversine(x(position), y(position), ".$coordinates['lat'].",".$coordinates['lon'].") as 
+		distance_in_mi, 
+		branches.id as branchid,branches.id as id, branchnumber,branchname,street,address2,city,state,zip,lat,lng,Serviceline as servicelines,color
+>>>>>>> 863f145102d8cb842a77127bb1f4f42bdb3510be
 		from branches,branch_serviceline,servicelines
 		where st_within (position, 
 			envelope(
@@ -100,6 +120,7 @@ class Branch extends Model {
 		    			and branch_serviceline.serviceline_id = servicelines.id
 		    			AND branch_serviceline.serviceline_id in ('".implode("','",$userServiceLines)."')
 		order by distance_in_mi
+<<<<<<< HEAD
 		limit " . $number;
 <<<<<<< HEAD
 		dd($query);
@@ -133,6 +154,12 @@ class Branch extends Model {
 			 ORDER BY distance_in_mi";
 
 		$result = \DB::select($query);	 
+=======
+		limit " . $number; 
+		$query = str_replace("\r\n",' ',$query);
+
+		$result = \DB::select($query);	
+>>>>>>> 863f145102d8cb842a77127bb1f4f42bdb3510be
 
 		return $result;
 	}

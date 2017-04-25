@@ -81,8 +81,11 @@ class MapsController extends BaseController {
 
 		
 		$result = $this->location->findNearbyLocations($geo[0],$geo[1],$distance,$number=1,$company,$this->userServiceLines);
+		$content = view('locations.xml', compact('result'));
 
-		echo $this->location->makeNearbyLocationsXML($result);
+        return response($content, 200)
+            ->header('Content-Type', 'text/xml');
+		//$this->location->makeNearbyLocationsXML($result);
 		
 	}
 	// hmmmmm I dont think this works~

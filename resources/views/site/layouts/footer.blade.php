@@ -5,7 +5,7 @@
 		</div>
 		 
 			<div class="pull-right col-sm-4" style="color:black">
-				{{{App::environment()}}} | {{{App::version()}}}| {{{env('APP_VERSION')}}} | {{ phpversion() }}
+				{{{App::environment()}}} | {{{App::version()}}}| {{{config('mapminer.app_version')}}} | {{ phpversion() }}
 			</div>
 		
 	</div>

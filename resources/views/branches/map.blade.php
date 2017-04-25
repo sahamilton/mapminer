@@ -25,11 +25,11 @@
       'CLP': {
         icon: 'https://maps.google.com/mapfiles/ms/icons/yellow-dot.png'
       },
-	  'Labor Ready':{
-		   icon: 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png'
+	  'People Ready':{
+		   icon: 'https://maps.gstatic.com/mapfiles/ridefinder-images/mm_20_orange.png'
 	  },
     'Centerline':{
-       icon: 'https://maps.google.com/mapfiles/ms/icons/red-dot.png'
+       icon: 'https://maps.gstatic.com/mapfiles/ridefinder-images/mm_20_red.png'
     }
     };
 
@@ -42,7 +42,7 @@
       var infoWindow = new google.maps.InfoWindow;
 
       // Change this depending on the name of your PHP file
-      downloadUrl("/uploads/branches.xml", function(data) {
+      downloadUrl("/api/branch/map", function(data) {
         var xml = data.responseXML;
         var markers = xml.documentElement.getElementsByTagName("marker");
         for (var i = 0; i < markers.length; i++) {
