@@ -8,7 +8,7 @@
 
 <label>Search Address</label>
        <input type="text" name="address" /> within 
- <select name='distance' class="btn btn-mini"  onchange='this.form.submit()'>
+ <select name='distance' class="btn btn-mini" >
            @foreach($values as $value)
               @if($value == $default)
               <option selected value="{{$value}}">{{$value}} miles</option>
