@@ -80,6 +80,7 @@ class BranchesController extends BaseController {
 	
 	{
 		$branches = $this->branch->with('servicelines')->get();
+	
 		$content = view('branches.xml', compact('branches'));
         return response($content, 200)
             ->header('Content-Type', 'text/xml');	
