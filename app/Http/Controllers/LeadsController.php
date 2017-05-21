@@ -29,7 +29,7 @@ class LeadsController extends BaseController
 				dd('bummer');
 				
 			}
-            dd($geoCode[0]->getLatitude());
+            dd($geoCode->first()->getLatitude());
 			$people = $this->person->findNearByPeople($geoCode[0]['latitude'],$geoCode[0]['longitude'],$request->get('distance'),5,'Sales');
 			return response()->view('leads.address',compact('people'));
 			
