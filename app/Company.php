@@ -5,7 +5,8 @@ class Company extends Model {
 
 	// Add your validation rules here
 	public static $rules = [
-		 'companyname' => 'required'
+		 'companyname' => 'required',
+		 'serviceline'=>'required'
 	];
 
 	// Don't forget to fill this array
