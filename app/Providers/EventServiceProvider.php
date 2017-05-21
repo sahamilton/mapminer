@@ -12,9 +12,9 @@ class EventServiceProvider extends ServiceProvider
      *
      * @var array
      */
-    protected $listen = [
-        'App\Events\SomeEvent' => [
-            'App\Listeners\EventListener',
+     protected $listen = [
+        'Illuminate\Auth\Events\Login' => [
+        'App\Listeners\Users\UpdateLastLoggedInAt',
         ],
     ];
 

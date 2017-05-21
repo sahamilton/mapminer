@@ -153,7 +153,7 @@ public $fillable = ['username','email','lastlogin','confirmed','confirmation_cod
      * @return string
      */
 
-public function _import_csv($filename, $table,$fields)
+	public function _import_csv($filename, $table,$fields)
 	{
 		$filename = str_replace("\\","/",$filename);
 

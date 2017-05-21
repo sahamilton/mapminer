@@ -2,7 +2,7 @@
 @section('content')
 
 <div class="pull-right">
-		 <p><a href="{{ route('branch.index') }}">Show all branches</a></p>	
+		 <p><a href="{{ route('branches.index') }}">Show all branches</a></p>	
 		</div>
         
 <h4>Branches managed by {{$people->firstname}} {{$people->lastname}}</h4>
@@ -10,7 +10,7 @@
         
    
 
-           <p><a href="{{route('showmap/person',$people->id)}}"><i class="glyphicon glyphicon-flag"></i> Map View</a></p>	
+           <p><a href="{{route('showmap.person',$people->id)}}"><i class="glyphicon glyphicon-flag"></i> Map View</a></p>	
 <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
     @foreach($fields as $key=>$field)
@@ -55,7 +55,7 @@
 		break;
 		
 		case 'Sales Team':
-			echo "<a title=\"View ".$branch->branchname. " branch sales team\" href = \"". route('showlist/salesteam',$branch->id) ."\">".count($branch->servicedBy)."</a>";
+			echo "<a title=\"View ".$branch->branchname. " branch sales team\" href = \"". route('showlist.salesteam',$branch->id) ."\">".count($branch->servicedBy)."</a>";
 		break;
 		
 		default:

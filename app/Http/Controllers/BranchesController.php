@@ -96,12 +96,9 @@ class BranchesController extends BaseController {
 	{
 		
 		$managers = $this->branch->getbranchManagers();
-		
-		
-		
+			
 		$servicelines = $this->serviceline->whereIn('id',$this->userServiceLines)->get();
     
-
 		return response()->view('branches.create',compact('servicelines','managers'));
 	}
 
@@ -302,7 +299,7 @@ class BranchesController extends BaseController {
 	 */
 	public function MakeLocationsServedXML($result)
 	{
-		
+		// this can be replaced by xml creation
 		$dom = new \DOMDocument("1.0");
 		$node = $dom->createElement("markers");
 		//$parnode = $dom->appendChild($node);

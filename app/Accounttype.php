@@ -5,7 +5,7 @@ class Accounttype extends Model {
 
 	// Add your validation rules here
 	public static $rules = [
-		 'title' => 'type'
+		 'type' => 'required'
 	];
 
 	// Don't forget to fill this array

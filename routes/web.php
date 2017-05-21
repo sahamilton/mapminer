@@ -11,15 +11,16 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+	Route::get('/', function () {
+	    return view('welcome');
+	});
 
 //Route::auth();  
-Route::get('/error',function(){
-	Bugsnag::notifyError('ErrorType', 'Test Error');
-});
+	Route::get('/error',function(){
+		Bugsnag::notifyError('ErrorType', 'Test Error');
+	});
 // Authentication Routes...
+/* 
 Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
 Route::post('login', 'Auth\LoginController@login');
 Route::post('logout', 'Auth\LoginController@logout')->name('logout');
@@ -30,7 +31,9 @@ Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail'
 Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
 Route::post('password/reset', 'Auth\ResetPasswordController@reset');
 
+*/
 
+Route::auth();
 
 Route::get('/home', 'HomeController@index');
 
@@ -99,7 +102,7 @@ Route::group(['middleware' => 'auth'], function () {
 		
 	#People
 		
-		Route::get('person/{personId}/showmap', ['as'=>'showmap/person', 'uses'=>'PersonsController@showmap']);
+		Route::get('person/{personId}/showmap', ['as'=>'showmap.person', 'uses'=>'PersonsController@showmap']);
 		Route::get('people/map', ['as'=>'person.map', 'uses'=>'PersonsController@map']);
 		
 		Route::get('geocode/people',['as'=>'person.geocode','uses'=>'PersonsController@geoCodePersons']);
@@ -259,7 +262,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function()
 	
 		Route::get('serviceline/{servicelineId}/delete', ['as'=>'serviceline.delete', 'uses'=>'ServicelinesController@destroy']);
 		Route::resource('serviceline','ServicelinesController');
-
+	#Leads
+		Route::get('lead/address',['as'=>'lead.address','uses'=>'LeadsController@address']);
+		Route::post('lead/find',['as'=>'lead.find','uses'=>'LeadsController@find']);
 	
 	#Salesnotes
 		
@@ -295,10 +300,10 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function()
 		Route::get('searchfilters/{id}/delete',['as'=>'admin.searchfilter.delete','uses'=>'SearchFiltersController@destroy']);
 		Route::get('api/searchfilters/getAccounts',['as'=>'getAccountSegments','uses'=>'SearchFiltersController@getAccountSegments']);
 		Route::post('api/searchfilters/postAccounts',['as'=>'postAccountSegments','uses'=>'SearchFiltersController@getAccountSegments']);
-		Route::get('/about',['as'=>'about',function(){
+		Route::get('about',function(){
 
 			return response()->view('site.about');
-		}]);
+		})->name('about');
 	# Seeder for relationships with servicelines
 		Route::get('seeder',['as'=>'seeder','uses'=>'CompaniesController@seeder']);
 	

@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 use App\AccountType;
+use App\Http\Requests\AccountTypeRequest;
 class AccounttypesController extends BaseController {
 
 	/**
@@ -30,18 +31,12 @@ class AccounttypesController extends BaseController {
 	 *
 	 * @return Response
 	 */
-	public function store()
+	public function store(AccountTypeRequest $request)
 	{
-		$validator = Validator::make($data = \Input::all(), Accounttype::$rules);
+		
+		Accounttype::create($request->all());
 
-		if ($validator->fails())
-		{
-			return \Redirect::back()->withErrors($validator)->withInput();
-		}
-
-		Accounttype::create($data);
-
-		return \Redirect::route('accounttypes.index');
+		return redirect()->route('accounttypes.index');
 	}
 
 	/**
@@ -78,20 +73,11 @@ class AccounttypesController extends BaseController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update($id)
+	public function update($id,AccountTypeRequest $request)
 	{
-		$accounttype = Accounttype::findOrFail($id);
+		$accounttype = Accounttype::findOrFail($id)->update($request->all());
 
-		$validator = Validator::make($data = \Input::all(), Accounttype::$rules);
-
-		if ($validator->fails())
-		{
-			return \Redirect::back()->withErrors($validator)->withInput();
-		}
-
-		$accounttype->update($data);
-
-		return \Redirect::route('accounttypes.index');
+		return redirect()->route('accounttypes.index');
 	}
 
 	/**
@@ -104,7 +90,7 @@ class AccounttypesController extends BaseController {
 	{
 		Accounttype::destroy($id);
 
-		return \Redirect::route('accounttypes.index');
+		return redirect()->route('accounttypes.index');
 	}
 
 }
