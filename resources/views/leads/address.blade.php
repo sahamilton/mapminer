@@ -31,4 +31,5 @@
 </table>
 @endif
 </div>
+@include('partials/_scripts')
 @endsection
