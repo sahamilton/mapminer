@@ -1,15 +1,7 @@
 @extends('site/layouts/default')
 @section('content')
 <div class="container" style="margin-top:40px">
-<form method ="post"  action ="{{route('lead.find')}}" name="leadaddress">
-{{csrf_field()}}
-
-<label>Lead Address</label>
-       <input type="text" name="address" />
- 
-         <button type="submit"  class= "btn btn-default btn-xs"><span class="glyphicon glyphicon-search"></span> Search!</button>
-
-</form>
+@include('leads.partials.search')
 @if(count($people)>0)
 <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
     <thead>

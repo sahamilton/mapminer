@@ -51,9 +51,11 @@
   @endforeach
 
   </div>
-
-    <div id="map" style="border:solid 1px red"></div> 
-  </div>
+  <div class="container">
+  @include('leads.partials.search')
+ 
+    <div id="map" style="border:solid 1px red;margin-bottom:40px;"></div> 
+  </div> </div>
     <script>
      
       // First, create an object containing LatLng and details for each branch.

@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class LeadAddressFormRequest extends FormRequest
+class CommentFormRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,8 +24,7 @@ class LeadAddressFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'address'=>'required',
-            'distance'=>'required',
+            //
         ];
     }
 }

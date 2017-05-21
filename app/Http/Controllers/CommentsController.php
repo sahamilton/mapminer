@@ -1,6 +1,9 @@
 <?php
 namespace App\Http\Controllers;
 use App\Comments;
+use App\Http\Requests\CommentFormRequest;
+
+
 class CommentsController extends BaseController {
 
 	/**
@@ -52,28 +55,19 @@ class CommentsController extends BaseController {
 	 *
 	 * @return Response
 	 */
-	public function store()
+	public function store(CommentFormRequest $request)
 	{
-		$data = \Input::all();
-		
-		$slug = $data['title'];
+		$data = $request->all();
+	
+		$data['title'] = $request->get('slug');
 		$data['user_id'] = \Auth::user()->id;
-
-		
-		$validator = Validator::make($data, $this->comment->rules);
-
-		if ($validator->fails())
-		{
-			return \Redirect::back()->withErrors($validator)->withInput();
-		}
-
 		$data = Comments::create($data);
-		if (App::environment() == 'production') 
+		if (\App::environment() == 'production') 
 		{
 			$this->notify($data);
 		}
 		
-		return \Redirect::route('comment.index');
+		return redirect()->route('news.index');
 	}
 
 	/**

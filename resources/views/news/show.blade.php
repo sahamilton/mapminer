@@ -5,7 +5,7 @@
 <div class='col-md-8'>
 <h3>{{ $news[0]->title }}</h3>
 
-{{ $news[0]->news }}</div>
+{!! $news[0]->news !!}</div>
 <div class='col-md-12'>
 <p><strong>Posted by:</strong>{{ $news[0]->author->person->firstname }} {{ $news[0]->author->person->lastname }}</p>
 

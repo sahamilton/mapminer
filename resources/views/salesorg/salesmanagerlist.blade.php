@@ -23,7 +23,7 @@ title= "See {{$salesteam[0]->reportsTo->firstname}} {{$salesteam[0]->reportsTo->
   <p><a href="{{route('salesorg',$salesteam[0]->id)}}"
   title="See map view of {{$salesteam[0]->firstname}} {{$salesteam[0]->lastname}}'s sales team"><i class="glyphicon glyphicon-flag"></i> Map View</a></p>    
 
-
+@include('leads.partials.search')
 <table id ='sorttablenosort' class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
      

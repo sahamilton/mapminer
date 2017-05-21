@@ -24,9 +24,6 @@ class NewsController extends BaseController {
 		$this->userServiceLines = $this->news->getUserServiceLines();
 		$now = date('Y-m-d h:i:s');
 		$news = $this->news
-		
-		->where('startdate','<=',$now)
-		->where('enddate','>=',$now)
 		->whereHas('serviceline', function($q) {
 					    $q->whereIn('serviceline_id', $this->userServiceLines);
 
@@ -40,6 +37,7 @@ class NewsController extends BaseController {
 
 	public function admin()
 	{
+		$this->userServiceLines = $this->news->getUserServiceLines();
 		$news = $this->news
 		->whereHas('serviceline', function($q) {
 					    $q->whereIn('serviceline_id', $this->userServiceLines);
@@ -103,7 +101,7 @@ class NewsController extends BaseController {
 	 */
 	public function show($slug)
 	{
-		
+		$this->userServiceLines = $this->news->getUserServiceLines();
 		$news = $this->news
 		->where('slug','=',$slug)
 		->whereHas('serviceline', function($q) {

@@ -1,6 +1,7 @@
 @extends('site.layouts.maps')
 @section('content')
   <h1>{{$salesorg->firstname}} {{$salesorg->lastname}}</h1>
+  
   @if(count($salesorg->reportsTo)==1 && isset($salesorg->reportsTo->id))
   <h4>Reports to:<a href="{{route('salesorg',$salesorg->reportsTo->id)}}" 
   title="See {{$salesorg->reportsTo->firstname}} {{$salesorg->reportsTo->lastname}}'s sales team">
