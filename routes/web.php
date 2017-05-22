@@ -126,6 +126,10 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::get('process/{process}/purge',['as'=>'process.purge','uses'=>'SalesProcessController@destroy']);
 			Route::resource('process','SalesProcessController');
 
+	# Sales Activity
+			Route::get('salesactivity/{activity}/purge',['as'=>'salesactivity.purge','uses'=>'SalesActivityController@destroy']);
+			Route::resource('salesactivity','SalesActivityController');
+
 	# Watch List	
 		Route::get('watch',['as'=>'watch', 'uses'=>'WatchController@index']);
 		
