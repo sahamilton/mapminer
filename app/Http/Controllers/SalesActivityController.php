@@ -106,7 +106,6 @@ class SalesActivityController extends Controller
     {
         $activity = $this->activity->findOrFail($id);
         $data = $request->all();
-
         $data['from'] = \Carbon\Carbon::createFromFormat('m/d/Y', $data['from']);
         $data['to'] = \Carbon\Carbon::createFromFormat('m/d/Y', $data['to']);
         $activity->update($data);
