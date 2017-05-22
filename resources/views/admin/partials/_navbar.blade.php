@@ -110,9 +110,14 @@
                  <li{{ (Request::is('admin/users/export') ? ' class="active"' : '') }}><a href="{{{ route('person.export') }}}"><span class="glyphicon glyphicon-export"></span> Export Users</a></li>
     						</ul>
     					</li>
-                       <!-- Manage Ness  -->      
-
-    							<li{{ (Request::is('admin/news*') ? ' class="active"' : '') }}><a href="{{{ route('news.index') }}}"><span class="glyphicon glyphicon-wrench"></span> Updates</a></li>
+                       <!-- Manage Resources  -->      
+<li class="dropdown{{ (Request::is('admin/users*','admin/roles*','admin/document*') ? ' active' : '') }}">
+    <a class="dropdown" data-toggle="dropdown" href="{{{ route('users.index') }}}">
+                                <span class="glyphicon glyphicon-wrench"></span> Resources <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+    							<li{{ (Request::is('admin/news*') ? ' class="active"' : '') }}><a href="{{{ route('news.index') }}}"><span class="glyphicon glyphicon-wrench"></span> News</a></li>
+                                <li{{ (Request::is('admin/documents*') ? ' class="active"' : '') }}><a href="{{{ route('documents.index') }}}"><span class="glyphicon glyphicon-book"></span> Sales Library</a></li>
                     </ul>
     					</li>
                         

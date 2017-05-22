@@ -17,6 +17,7 @@
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
+        "laracasts/generators": "dev-master",
         "mockery/mockery": "0.9.*"
     },
     "autoload": {

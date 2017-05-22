@@ -195,5 +195,14 @@ public $tables = ['companies','locations'];
 		
 	}
 	
+  public function vertical(){
+
+    return $this->where('searchColumn','=','vertical')
+    ->where('canbenull','=',0)
+    ->where('type','!=','group')
+    ->orderBy('filter')
+    ->pluck('filter','id');
+
+  }
 	
 }

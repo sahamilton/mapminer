@@ -223,7 +223,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function()
 		Route::resource('permissions','Admin\AdminPermissionsController');
      
 
-    	
+    # Documents
+    	Route::resource('documents','DocumentsController');
+    	Route::get('documents/{document}/purge',['as'=>'documents.purge','uses'=>'DocumentsController@destroy']);
 
 
 	#Locations

@@ -1,11 +1,11 @@
 @extends ('site.layouts.default')
 @section('content')
 <div class="container">
-<h2>Sales Process</h2>
+<h2>Document Library</h2>
 <div class="container">
 
 <div class="pull-right">
-        <a href ="{{route('process.create')}}"><button class="btn btn-success" >Add Sales Step
+        <a href ="{{route('documents.create')}}"><button class="btn btn-success" >Add Document
         </button></a>
     </div>    
    
@@ -14,22 +14,35 @@
         <table class="table" id = "sorttable">
             <thead>
 
-                <th>Name</th>
-                <th>Sequence</th>
+                <th>Title</th>
+                <th>Description</th>
                 
+                <th>Sales Process</th>
+                <th>Vertical</th>
+
+                <td>Link</td>
                 <th>Actions</th>
                 
             </thead>
             <tbody>
-            @foreach ($process as $step)
-
+            @foreach ($documents as $document)
+              
                 <tr> 
                 
-                <td>{{$step->step }}</td>
-               
-                <td>
-                        {{$step->sequence}}
+                <td><a href="{{route('documents.show',$document->id)}}">{{$document->title }}</a></td>
+               <td>{{$document->description}}</td>
+                
+                <td>@foreach ($document->process as $process)
+                    <li>{{$process->step}}</li>
+                    @endforeach
                 </td>
+                <td>@foreach ($document->vertical as $vertical)
+                    <li>{{$vertical->filter}}</li>
+                    @endforeach
+                </td>
+                
+ 
+                <td><a href="{{$document->link}}" target="_new">{{$document->link}}</a></td>
                 
                  <td class="col-md-2">
                 @include('partials/modal')
@@ -41,13 +54,13 @@
                     </button>
                     <ul class="dropdown-menu" role="menu">
 
-                    <li><a href="{{route('process.edit',$step->id)}}"><i class="glyphicon glyphicon-pencil"></i> Edit Sales Step</a></li>
+                    <li><a href="{{route('documents.edit',$document->id)}}"><i class="glyphicon glyphicon-pencil"></i> Edit Sales document</a></li>
 
-                    <li><a data-href="{{route('process.purge',$step->id)}}" 
+                    <li><a data-href="{{route('documents.purge',$document->id)}}" 
                     data-toggle="modal" 
                     data-target="#confirm-delete" 
                     data-title = "location" 
-                    href="#"><i class="glyphicon glyphicon-trash"></i> Delete Sales Step</a>
+                    href="#"><i class="glyphicon glyphicon-trash"></i> Delete Sales document</a>
                     </li>
 
 
@@ -75,4 +88,5 @@
         </div>
     </div>
 </div>
+@include('partials._scripts')
 @endsection
