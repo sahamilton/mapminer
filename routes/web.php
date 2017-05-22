@@ -133,6 +133,11 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('salesnotes/{companyId}',['as'=>'salesnotes','uses'=>'SalesNotesController@show']);
 		Route::get('salesnotes/print/{companyId}',['as'=>'salesnotes/print','uses'=>'SalesNotesController@printSalesNotes']);
 
+	
+	# Sales Process
+			Route::get('process/{process}/purge',['as'=>'process.purge','uses'=>'SalesProcessController@destroy']);
+			Route::resource('process','SalesProcessController');
+
 	# Watch List	
 		Route::get('watch',['as'=>'watch', 'uses'=>'WatchController@index']);
 		

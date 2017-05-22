@@ -10,9 +10,9 @@
 <select name='number' class="btn btn-mini" >
            @foreach($number as $value)
               @if($value == $count)
-              <option selected value="{{$value}}">{{$value}} closest to</option>
+              <option selected value="{{$value}}">{{$value}} closest within</option>
               @else
-              <option value="{{$value}}">{{$value}} closest to</option>
+              <option value="{{$value}}">{{$value}} closest within</option>
               @endif
            @endforeach
         </select> 
