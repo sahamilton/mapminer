@@ -113,4 +113,38 @@ class DocumentsController extends Controller
          $this->document->destroy($id);
          return redirect()->route('documents.index');
     }
+
+    public function select(){
+        $verticals = $this->vertical->vertical();
+
+        $process = $this->process->pluck('step','id');
+        return response()->view('documents.select',compact('verticals','process'));
+
+    }
+    /*
+     * Select documents filtered by sales process and vertical.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+
+     */
+    public function getDocuments(Request $request){
+
+        $documents = $this->document->with('author','vertical','process')
+        ->when($request->has('verticals'),function($q) use ($request){
+            $q->whereHas('verticals',function($q1) use ($request){
+                $q1->whereIn('id',$request->get('verticals'));
+            });
+         
+        })        
+        ->when($request->has('salesprocess'),function($q) use($request) {
+           
+            $q->whereHas('process',function($q1) use ($request) {
+                $q1->whereIn('id',$request->get('salesprocess'));
+            });
+        })
+        ->get();
+    $request= $request->all();
+        return response()->view('documents.index',compact('documents','request'));
+    }
 }

@@ -19,19 +19,7 @@
 	Route::get('/error',function(){
 		Bugsnag::notifyError('ErrorType', 'Test Error');
 	});
-// Authentication Routes...
-/* 
-Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
-Route::post('login', 'Auth\LoginController@login');
-Route::post('logout', 'Auth\LoginController@logout')->name('logout');
 
-// Password Reset Routes...
-Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
-Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail');
-Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
-Route::post('password/reset', 'Auth\ResetPasswordController@reset');
-
-*/
 
 Route::auth();
 
@@ -190,6 +178,8 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('api/watchmap',['as'=>'api.watchmap','uses'=>'WatchController@watchmap']);
 
 		Route::post('api/advancedsearch',['as'=>'setSearch','uses'=>'SearchFiltersController@setSessionSearch']);	
+		Route::get('documents/select',['as'=>'documents.select','uses'=>'DocumentsController@select']);
+		Route::post('documents/select',['as'=>'documents.select','uses'=>'DocumentsController@getDocuments']);
 		
     
 });

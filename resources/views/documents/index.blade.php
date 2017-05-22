@@ -8,7 +8,7 @@
         <a href ="{{route('documents.create')}}"><button class="btn btn-success" >Add Document
         </button></a>
     </div>    
-   
+    
         
 <div class="col-md-10 col-md-offset-1">
         <table class="table" id = "sorttable">
