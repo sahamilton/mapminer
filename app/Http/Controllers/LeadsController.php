@@ -29,8 +29,12 @@ class LeadsController extends BaseController
 				dd('bummer');
 				
 			}
-            //dd($geoCode->first()->getLatitude());
-			$people = $this->person->findNearByPeople($geoCode->first()->getLatitude(),$geoCode->first()->getLongitude(),$request->get('distance'),5,'Sales');
+            if(is_array($geoCode)){
+                $people = $this->person->findNearByPeople($geoCode[0]['latitude'],$geoCode[0]['longitude'],$request->get('distance'),$request->get('number'),'Sales');
+            }else{
+                $people = $this->person->findNearByPeople($geoCode->first()->getLatitude(),$geoCode->first()->getLongitude(),$request->get('distance'),$request->get('number'),'Sales');
+            }
+			
 			return response()->view('leads.address',compact('people'));
 			
     }

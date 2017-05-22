@@ -26,6 +26,7 @@ class LeadAddressFormRequest extends FormRequest
         return [
             'address'=>'required',
             'distance'=>'required',
+            'number'=>'required',
         ];
     }
 }
