@@ -122,17 +122,7 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('salesnotes/print/{companyId}',['as'=>'salesnotes/print','uses'=>'SalesNotesController@printSalesNotes']);
 
 	
-	# Sales Process
-			Route::get('process/{process}/purge',['as'=>'process.purge','uses'=>'SalesProcessController@destroy']);
-			Route::resource('process','SalesProcessController');
-
-	# Sales Activity
-			Route::get('salesactivity/{activity}/purge',['as'=>'salesactivity.purge','uses'=>'SalesActivityController@destroy']);
-			Route::resource('salesactivity','SalesActivityController');
-
-			Route::get('campaigndocs/{id}',['as'=>'salesdocuments.index','uses'=>'SalesActivityController@getSalesActivity']);
-			Route::get('campaigns',['as'=>'mycampaigns','uses'=>'SalesActivityController@mycampaigns']);
-
+	
 	# Watch List	
 		Route::get('watch',['as'=>'watch', 'uses'=>'WatchController@index']);
 		
@@ -153,7 +143,12 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('locationnotes/{companyID}',['as'=>'locationnotes.show','uses'=>'PersonsController@showManagerNotes']);
 	## Sales Resources
 		Route::get('resources',['as'=>'resources.view','uses'=>'WatchController@getCompaniesWatched']);
-
+		#Sales Campaigns
+		
+		Route::get('campaigns',['as'=>'salescampaigns','uses'=>'SalesActivityController@mycampaigns']);
+		Route::resource('salesactivity','SalesActivityController',
+			['only' => ['show']]);
+	
 	#AJAX Links
 		Route::get('api/company/{companyId}/statemap/{state}', ['as'=>'company.statemap','uses'=>'LocationsController@getStateLocations']);
 
@@ -279,7 +274,21 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function()
 		
 		
 		Route::get('salesnotes/filedelete/{file}', ['as'=>'salesnotes.filedelete', 'uses'=>'SalesNotesController@filedelete']);
-	#Wathclists
+	
+		# Sales Process
+			Route::get('process/{process}/purge',['as'=>'process.purge','uses'=>'SalesProcessController@destroy']);
+			Route::resource('process','SalesProcessController');
+
+		# Sales Activity
+			Route::get('salesactivity/{activity}/purge',['as'=>'salesactivity.purge','uses'=>'SalesActivityController@destroy']);
+			Route::resource('salesactivity','SalesActivityController',['except' => ['show']]);
+
+			Route::get('campaigndocs/{id}',['as'=>'salesdocuments.index','uses'=>'SalesActivityController@getSalesActivity']);
+			
+
+
+
+	#Watchlists
 		Route::get('watchlist/{userid}', ['as'=>'watch.watchexport', 'uses'=>'WatchController@export']);
 	
 	# Admin Dashboard

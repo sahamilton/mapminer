@@ -110,48 +110,57 @@
                  <li{{ (Request::is('admin/users/export') ? ' class="active"' : '') }}><a href="{{{ route('person.export') }}}"><span class="glyphicon glyphicon-export"></span> Export Users</a></li>
     						</ul>
     					</li>
-                       <!-- Manage Resources  -->      
-<li class="dropdown{{ (Request::is('admin/users*','admin/roles*','admin/document*') ? ' active' : '') }}">
-    <a class="dropdown" data-toggle="dropdown" href="{{{ route('users.index') }}}">
-                                <span class="glyphicon glyphicon-wrench"></span> Resources <span class="caret"></span>
-                            </a>
-                            <ul class="dropdown-menu">
-    							<li{{ (Request::is('admin/news*') ? ' class="active"' : '') }}><a href="{{{ route('news.index') }}}"><span class="glyphicon glyphicon-wrench"></span> News</a></li>
-                                <li{{ (Request::is('admin/documents*') ? ' class="active"' : '') }}><a href="{{{ route('documents.index') }}}"><span class="glyphicon glyphicon-book"></span> Sales Library</a></li>
-                    </ul>
-    					</li>
+          <!-- Manage Resources  -->      
+            <li class="dropdown{{ (Request::is('admin/users*','admin/roles*','admin/document*') ? ' active' : '') }}">
+                <a class="dropdown" data-toggle="dropdown" href="{{{ route('users.index') }}}">
+                    <span class="glyphicon glyphicon-wrench"></span> 
+                    Resources 
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+					<li{{ (Request::is('admin/news*') ? ' class="active"' : '') }}><a href="{{{ route('news.index') }}}">
+                    <span class="glyphicon glyphicon-folder-open"></span> News</a></li>
+                    <li{{ (Request::is('admin/documents*') ? ' class="active"' : '') }}><a href="{{{ route('documents.index') }}}">
+                    <span class="glyphicon glyphicon-book"></span> Sales Library</a></li>
+                    <li {{ (Request::is('admin/process*') ? ' class="active"' : '') }}><a href="{{{ route('process.index') }}}">
+                    <span class="glyphicon glyphicon-tower"></span> Sales Process</a></li>
+                    <li {{ (Request::is('admin/salesactivity*') ? ' class="active"' : '') }}><a href="{{{ route('salesactivity.index') }}}">
+                    <span class="glyphicon glyphicon-briefcase"></span> 
+                    Sales Campaigns</a></li>
+                </ul>
+			</li>
                         
                         
-</ul>
-<ul class="nav navbar-nav pull-right">
+    </ul>
+    <ul class="nav navbar-nav pull-right">
     					
-    					<li class="dropdown">
-    							<a class="dropdown-toggle" data-toggle="dropdown" href="#">
-    								<span class="glyphicon glyphicon-user"></span> {{{ Auth::user()->username }}}	<span class="caret"></span>
-    							</a>
-    							<ul class="dropdown-menu">
-    								<li>
-                                    <a href="{{{ route('profile') }}}">
-                                    <span class="glyphicon glyphicon-wrench"></span> 
-                                    Profile</a>
-                                    </li>
-                                    <li>
-                                    <a href="{{route('about')}}">About</a></li>
-    								<li class="divider"></li>
-    								<li>
-                                        <a href="{{ url('/logout') }}"
-                                            onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                            Logout
-                                        </a>
+		<li class="dropdown">
+				<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+					<span class="glyphicon glyphicon-user"></span> {{{ Auth::user()->username }}}	<span class="caret"></span>
+				</a>
+				<ul class="dropdown-menu">
+					<li>
+                    <a href="{{{ route('profile') }}}">
+                    <span class="glyphicon glyphicon-wrench"></span> 
+                    Profile</a>
+                    </li>
+                    <li>
+                    <a href="{{route('about')}}">About</a></li>
+					<li class="divider"></li>
+					<li>
+                        <a href="{{ url('/logout') }}"
+                            onclick="event.preventDefault();
+                                     document.getElementById('logout-form').submit();">
+                            Logout
+                        </a>
 
-                                        <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
-                                            {{ csrf_field() }}
-                                        </form>
-                                    </li>
-    							</ul>
-    					</li>
-    				</ul>
+                        <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
+                            {{ csrf_field() }}
+                        </form>
+                    </li>
+				</ul>
+		</li>
+	</ul>
 
 					<!-- ./ nav-collapse -->
 				</div>

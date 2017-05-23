@@ -59,10 +59,8 @@ class SalesActivityController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->all();
+        $data = $this->getDates($request->all());
 
-        $data['from'] = \Carbon\Carbon::createFromFormat('m/d/Y', $data['from']);
-        $data['to'] = \Carbon\Carbon::createFromFormat('m/d/Y', $data['to']);
         $activity = $this->activity->create($data);
         foreach ($request->get('salesprocess') as $process){
             foreach ($request->get('vertical') as $vertical){
@@ -78,16 +76,17 @@ class SalesActivityController extends Controller
         
         $userVerticals = $this->activity->getUserVerticals();
         $activities = $this->activity->with('salesprocess','vertical')
-        ->when(count($userVerticals)>0,function($q) use ($userVerticals){
+         ->when(count($userVerticals)>0,function($q) use ($userVerticals){
             $q->whereHas('vertical',function($q1) use($userVerticals){
                 $q1->whereIn('vertical_id',$userVerticals);
             });
         })
-        ->where('from','<=',date('Y-m-d'))
-        ->where('to','>=',date('Y-m-d'))
-        ->get();
         
-        return response()->view('salesactivity.index',compact('activities'));
+        ->where('datefrom','<=',date('Y-m-d'))
+        ->where('dateto','>=',date('Y-m-d'))
+        ->get();
+        $calendar = \Calendar::addEvents($activities);
+        return response()->view('salesactivity.calendar',compact('calendar'));
     }
 
     /**
@@ -98,7 +97,8 @@ class SalesActivityController extends Controller
      */
     public function show($id)
     {
-        //
+        $activity = $this->activity->with('salesprocess','vertical')->findOrFail($id);
+        return response()->view('salesactivity.show',compact('activity'));
     }
 
     /**
@@ -126,11 +126,8 @@ class SalesActivityController extends Controller
     public function update(SalesActivityFormRequest $request, $id)
     {
         $activity = $this->activity->findOrFail($id);
-        $data = $request->all();
-        $data['from'] = \Carbon\Carbon::createFromFormat('m/d/Y', $data['from']);
-        $data['to'] = \Carbon\Carbon::createFromFormat('m/d/Y', $data['to']);
+        $data = $this->getDates($request->all());
         $activity->update($data);
-
         $activity->salesprocess()->detach();
 
         foreach ($data['salesprocess'] as $process){
@@ -177,5 +174,11 @@ class SalesActivityController extends Controller
          $documents = $this->document->getDocumentsWithVerticalProcess($data);
 
         return response()->view('documents.index',compact('documents','data'));
+    }
+
+    private function getDates($data){
+        $data['datefrom'] = \Carbon\Carbon::createFromFormat('m/d/Y', $data['datefrom']);
+        $data['dateto'] = \Carbon\Carbon::createFromFormat('m/d/Y', $data['dateto']);
+        return $data;
     }
 }

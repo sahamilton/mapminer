@@ -51,7 +51,7 @@ class CompaniesController extends BaseController {
 		$fields = array('Company'=>'companyname','Manager'=>'manager','Email'=>'email','Vertical'=>'vertical','Service Lines'=>'serviceline','Has Locations'=>'locationcount');
 		
 
-
+	
 		return response()->view('companies.index', compact('companies','fields','title','filtered','locationFilter'));
 	}
 	

@@ -4,12 +4,62 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Salesactivity extends Model
+class Salesactivity extends Model implements \MaddHatter\LaravelFullcalendar\IdentifiableEvent
 {
     public $table='salesactivity';
-    public $fillable=['from','to','title'];
-    public $dates = ['from','to'];
+    public $fillable=['datefrom','dateto','title'];
+    public $dates = ['datefrom','dateto'];
+// Methods for Calendar
+// 
+    public function getId() {
+        return $this->id;
+    }
 
+    /**
+     * Get the event's title
+     *
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    /**
+     * Is it an all day event?
+     *
+     * @return bool
+     */
+    public function isAllDay()
+    {
+        return true;
+    }
+
+    /**
+     * Get the start time
+     *
+     * @return DateTime
+     */
+    public function getStart()
+    {
+        return $this->datefrom;
+    }
+    public function getEventOptions()
+    {
+        return [
+            'url' => route('salesactivity.show',$this->id),
+            //etc
+        ];
+    }   
+    /**
+     * Get the end time
+     *
+     * @return DateTime
+     */
+    public function getEnd()
+    {
+        return $this->dateto;
+    }
     public function salesprocess(){
     	return $this->belongsToMany(Salesprocess::class,'activity_process_vertical','activity_id','salesprocess_id')->withPivot('vertical_id');
     }

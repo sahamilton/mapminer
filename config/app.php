@@ -172,6 +172,7 @@ return [
         Baum\Providers\BaumServiceProvider::class,
         Geocoder\Laravel\Providers\GeocoderService::class,
         Collective\Html\HtmlServiceProvider::class,
+        MaddHatter\LaravelFullcalendar\ServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -240,6 +241,7 @@ return [
         'Html' => Collective\Html\HtmlFacade::class,
         'Input' => Illuminate\Support\Facades\Input::class,
         'Bugsnag' => Bugsnag\BugsnagLaravel\Facades\Bugsnag::class,
+        'Calendar' => MaddHatter\LaravelFullcalendar\Facades\Calendar::class,
 
 
     ],

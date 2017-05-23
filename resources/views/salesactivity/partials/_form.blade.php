@@ -6,25 +6,25 @@
 
 <!--- Date From -->
 
-<div id="datepicker" class="form-group @if ($errors->has('from')) has-error @endif">
-<label class="control-label col-sm-2" for="from">Date From:</label>
+<div id="datepicker" class="form-group @if ($errors->has('datefrom')) has-error @endif">
+<label class="control-label col-sm-2" for="datefrom">Date From:</label>
    <div class="input-group date col-sm-4">       
-  <input type="text" name='from' required name='from' class="form-control" readonly value="{{isset($activity->from) ? date('m/d/Y',strtotime( 
-  $activity->from)) : date('m/d/Y')}}" />
+  <input type="text"  required name='datefrom' class="form-control" readonly value="{{isset($activity->datefrom) ? date('m/d/Y',strtotime( 
+  $activity->datefrom)) : date('m/d/Y')}}" />
   <span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
  </div> 
- @if ($errors->has('from')) <p class="help-block">{{ $errors->first('from') }}</p> @endif
+ @if ($errors->has('datefrom')) <p class="help-block">{{ $errors->first('datefrom') }}</p> @endif
 </div>
 <!--- Date To -->
 
-<div id="datepicker1" class="form-group @if ($errors->has('to')) has-error @endif">
-<label class="control-label col-sm-2" for="edndate">DateTo:</label>
+<div id="datepicker1" class="form-group @if ($errors->has('dateto')) has-error @endif">
+<label class="control-label col-sm-2" for="dateto">DateTo:</label>
           <div class="input-group date col-sm-4">
-  <input type="text" name='to' required name ='to' class="form-control" readonly value="{{isset($activity->to) ? date('m/d/Y',strtotime( 
-  $activity->to)): date('m/d/Y', strtotime("+1 months",strtotime(date('m/d/Y'))))}}" />
+  <input type="text"  required name ='dateto' class="form-control" readonly value="{{isset($activity->dateto) ? date('m/d/Y',strtotime( 
+  $activity->dateto)): date('m/d/Y', strtotime("+1 months",strtotime(date('m/d/Y'))))}}" />
   <span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
 </div>   
-@if ($errors->has('to')) <p class="help-block">{{ $errors->first('to') }}</p> @endif
+@if ($errors->has('dateto')) <p class="help-block">{{ $errors->first('dateto') }}</p> @endif
 
 </div>
 
