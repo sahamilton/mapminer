@@ -18,15 +18,19 @@ class Salesactivity extends Model
     	return $this->belongsToMany(SearchFilter::class,'activity_process_vertical','activity_id','vertical_id')->withPivot('salesprocess_id');
     }
     
-
-
-    /*public function relatedDocuments(){
-
+    public function relatedDocuments(){
+     
     	return Document::whereHas('process',function($q) {
-    		$q->where('id',$this->salesprocess_id);
+    		$q->whereIn('id',$this->salesprocess()->pluck('salesprocess_id'));
     	})
-    	whereHas('vertical',function($q) {
-    		$q->where('id',$this->vertical_id);
-    	})->get()
-    }*/
+    	->whereHas('vertical',function($q) {
+    		$q->whereIn('id',$this->vertical()->pluck('vertical_id'));
+    	})->get();
+    }
+
+    public function getUserVerticals(){
+        $user = \Auth::user()->with('person')->firstOrFail();
+        return $user->person->industryfocus()->pluck('search_filter_id');
+        
+    }
 }

@@ -1,11 +1,11 @@
 @extends ('site.layouts.default')
 @section('content')
 <div class="container">
-<h2>Sales Activities</h2>
+<h2>Sales Campaigns</h2>
 <div class="container">
 
 <div class="pull-right">
-        <a href ="{{route('salesactivity.create')}}"><button class="btn btn-success" >Add Sales Activity
+        <a href ="{{route('salesactivity.create')}}"><button class="btn btn-success" >Add Sales Campaign
         </button></a>
     </div>    
    
@@ -19,6 +19,7 @@
                 <th>To</th>
                 <th>Verticals</th>
                 <th>Sales Process</th>
+                <td>Documents</td>
                 <th>Actions</th>
                 
             </thead>
@@ -47,6 +48,9 @@
                     @endif
                 @endforeach
                 </td>
+                <td>
+{{count($activity->relatedDocuments())}}
+                </td>
 
                  <td class="col-md-2">
                 @include('partials/modal')
@@ -58,13 +62,13 @@
                     </button>
                     <ul class="dropdown-menu" role="menu">
 
-                    <li><a href="{{route('salesactivity.edit',$activity->id)}}"><i class="glyphicon glyphicon-pencil"></i> Edit Sales activity</a></li>
-
+                    <li><a href="{{route('salesactivity.edit',$activity->id)}}"><i class="glyphicon glyphicon-pencil"></i> Edit {{$activity->title}} campaign</a></li>
+                    <li><a href = "{{route('salesdocuments.index',$activity->id)}}"><i class="glyphicon glyphicon-book"></i> {{$activity->title}} campaign Documents</a></li>
                     <li><a data-href="{{route('salesactivity.purge',$activity->id)}}" 
                     data-toggle="modal" 
                     data-target="#confirm-delete" 
                     data-title = "location" 
-                    href="#"><i class="glyphicon glyphicon-trash"></i> Delete Sales activity</a>
+                    href="#"><i class="glyphicon glyphicon-trash"></i> Delete {{$activity->title}} campaign</a>
                     </li>
 
 

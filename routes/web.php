@@ -130,6 +130,9 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::get('salesactivity/{activity}/purge',['as'=>'salesactivity.purge','uses'=>'SalesActivityController@destroy']);
 			Route::resource('salesactivity','SalesActivityController');
 
+			Route::get('campaigndocs/{id}',['as'=>'salesdocuments.index','uses'=>'SalesActivityController@getSalesActivity']);
+			Route::get('campaigns',['as'=>'mycampaigns','uses'=>'SalesActivityController@mycampaigns']);
+
 	# Watch List	
 		Route::get('watch',['as'=>'watch', 'uses'=>'WatchController@index']);
 		

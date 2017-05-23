@@ -53,7 +53,7 @@ class DocumentsController extends Controller
      */
     public function store(DocumentFormRequest $request)
     {
-        $this->document->create($request->all());
+         $document = $this->document->create($request->all());
          $document->vertical()->attach($request->get('vertical'));
          $document->process()->attach($request->get('salesprocess'));
         return redirect()->route('documents.index');
@@ -129,22 +129,12 @@ class DocumentsController extends Controller
 
      */
     public function getDocuments(Request $request){
+        $data = $request->all();
 
-        $documents = $this->document->with('author','vertical','process')
-        ->when($request->has('verticals'),function($q) use ($request){
-            $q->whereHas('verticals',function($q1) use ($request){
-                $q1->whereIn('id',$request->get('verticals'));
-            });
-         
-        })        
-        ->when($request->has('salesprocess'),function($q) use($request) {
-           
-            $q->whereHas('process',function($q1) use ($request) {
-                $q1->whereIn('id',$request->get('salesprocess'));
-            });
-        })
-        ->get();
-    $request= $request->all();
-        return response()->view('documents.index',compact('documents','request'));
+        $documents = $this->document->getDocumentsWithVerticalProcess($data);
+
+        return response()->view('documents.index',compact('documents','data'));
     }
+   
+
 }

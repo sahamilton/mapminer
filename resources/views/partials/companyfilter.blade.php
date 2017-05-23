@@ -6,8 +6,12 @@
 <div class="form-group">
 {{Form::label($locationFilter,'Select Companies:',array('class'=>'control-label col-sm-2'))}}
 <div class="input-group date col-sm-4">
+<select name='locationFilter' onchange="this.form.submit()">
+@foreach ($selectors as $key=>$value)
+<option {{$locationFilter == $key ? 'selected' : ''}} value="{{$key}}">{{$value}}</option>
+@endforeach
+</select>
 
-{{Form::select("locationFilter",$selectors,$locationFilter,array('id'=>"selectManager",'onchange' => 'this.form.submit()'),$locationFilter)}}
 </div></div>
 
 

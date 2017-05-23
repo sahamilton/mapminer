@@ -376,7 +376,7 @@ public function _import_csv($filename, $table,$fields)
 			
 		return $nullable;
 	}
-
+	
 	public function getUserServiceLines()
 	{
 		

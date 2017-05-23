@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Salesactivity;
 use App\SearchFilter;
 use App\SalesProcess;
+use App\Document;
 
 use App\Http\Requests\SalesActivityFormRequest;
 use Illuminate\Http\Request;
@@ -15,12 +16,14 @@ class SalesActivityController extends Controller
     public $activity;
     public $vertical;
     public $process;
+    public $document;
 
-    public function __construct(Salesactivity $activity, SearchFilter $vertical, SalesProcess $process){
+    public function __construct(Salesactivity $activity, SearchFilter $vertical, SalesProcess $process, Document $document){
 
         $this->activity = $activity;
-         $this->vertical = $vertical; 
-         $this->process = $process;
+        $this->vertical = $vertical; 
+        $this->process = $process;
+        $this->document = $document;
     }
 
     /**
@@ -31,6 +34,7 @@ class SalesActivityController extends Controller
     public function index()
     {
         $activities = $this->activity->with('salesprocess','vertical')->get();
+        
         return response()->view('salesactivity.index',compact('activities'));
     }
 
@@ -67,6 +71,23 @@ class SalesActivityController extends Controller
 
         }
         return redirect()->route('salesactivity.index');
+    }
+
+    public function mycampaigns()
+    {
+        
+        $userVerticals = $this->activity->getUserVerticals();
+        $activities = $this->activity->with('salesprocess','vertical')
+        ->when(count($userVerticals)>0,function($q) use ($userVerticals){
+            $q->whereHas('vertical',function($q1) use($userVerticals){
+                $q1->whereIn('vertical_id',$userVerticals);
+            });
+        })
+        ->where('from','<=',date('Y-m-d'))
+        ->where('to','>=',date('Y-m-d'))
+        ->get();
+        
+        return response()->view('salesactivity.index',compact('activities'));
     }
 
     /**
@@ -132,5 +153,29 @@ class SalesActivityController extends Controller
     {
         $this->activity->destroy($id);
         return redirect()->route('salesactivity.index');
+    }
+
+
+    public function getSalesActivity($id){
+
+        $activity = $this->activity->with('salesprocess','vertical')->findOrFail($id);
+        $data['salesprocess'] = array();
+        $data['verticals']= array();
+        foreach($activity->salesprocess as $process)
+        {
+            if(! in_array($process->id, $data['salesprocess'])){
+
+            $data['salesprocess'][]=$process->id;
+            }
+            if(! in_array($process->pivot->vertical_id,$data['verticals'])){
+                 $data['verticals'][]=$process->pivot->vertical_id;
+            }
+           
+            
+        }
+       
+         $documents = $this->document->getDocumentsWithVerticalProcess($data);
+
+        return response()->view('documents.index',compact('documents','data'));
     }
 }
