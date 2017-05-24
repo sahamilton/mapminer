@@ -63,9 +63,10 @@ Back to all campaigns</a>
 		<div class="col-md-10 col-md-offset-1">
 			<table class="table" id = "sorttable">
 			<thead>
-
-			<th>Location</th>
 			<th>Company</th>
+			<th>Vertical</th>
+			<th>Location</th>
+			
 			<th>Address</th>
 
 			<th>Contact</th>
@@ -76,9 +77,11 @@ Back to all campaigns</a>
 			<tbody>
 			@foreach ($locations as $location)
 
-			<tr> 
+			<tr>
+			<td>{{$location->companyname}}</td> 
+			<td>{{$location->vertical}}</td>
 			<td>{{$location->businessname}}</td>
-			<td>{{$location->companyname}}</td>
+			
 			<td>{!! $location->street . "<br /> " .$location->city. " "   . $location->state !!}</td>
 			<td>{{$location->contact }}</td> 
 			<td>{{$location->phone }}</td>
