@@ -23,7 +23,7 @@ class CompaniesController extends BaseController {
 		$this->searchfilter = $searchfilter;
 		$this->user = $user;
 		parent::__construct();
-		
+
 		
 
 	}
@@ -311,13 +311,14 @@ class CompaniesController extends BaseController {
 	 */
 	public function vertical($vertical)
 	{
+		$this->userServiceLines = $this->company->currentUserServiceLines();
 		
 		$filtered = FALSE;
 		$verticalname = SearchFilter::where('id','=',$vertical)->pluck('filter');
 
 		$title = 'All '. $verticalname[0]. ' Accounts';
 
-		
+		$locationFilter = 'both';
 		$companies = $this->company
 		->with('managedBy')
 		->with('industryVertical')
@@ -333,7 +334,7 @@ class CompaniesController extends BaseController {
 		$fields = array('Company'=>'companyname','Manager'=>'manager','Email'=>'email','Vertical'=>'vertical');
 		
 
-		return response()->view('companies.index', compact('companies','fields','title','filtered'));
+		return response()->view('companies.index', compact('companies','fields','title','filtered','locationFilter'));
 		
 	}
 	

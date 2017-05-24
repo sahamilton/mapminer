@@ -74,25 +74,30 @@ class Location extends Model {
 	
 	*/	
 	
-	public function findNearbyLocations($lat,$lng,$distance,$number,$company=NULL,$userServiceLines, $limit=null)
+	public function findNearbyLocations($lat,$lng,$distance,$number,$company=NULL,$userServiceLines, $limit=null, $verticals=null)
 	
 	{
+		
+
 		if(null=== $userServiceLines){
 					$userServiceLines = $this->getUserServiceLines();
 		}
-
-		$keyset = ['vertical','segment','businesstype'];
-		$searchKeys = array();
-		$filtered = $this->isFiltered(['companies','locations'],['vertical','segment','business']);
-		
-		if($filtered)
-		{
+		if(! $verticals){
+			$keyset = ['vertical','segment','businesstype'];
+			$searchKeys = array();
+			$filtered = $this->isFiltered(['companies','locations'],['vertical','segment','business']);
 			
-			$searchKeys = $this->getQuerySearchKeys();
-			
-			
+			if($filtered)
+			{
+				
+				$searchKeys = $this->getQuerySearchKeys();
+				
+				
+			}
+		}else{
+			$keyset = ['vertical','segment','businesstype'];
+			$searchKeys = $verticals;
 		}
-		
 		$params = array(":loclat"=>$lat,":loclng"=>$lng,":distance"=>$distance);
 		
 		// Get the users serviceline associations
@@ -100,10 +105,12 @@ class Location extends Model {
 		
 		
 			
-		$query = "SELECT id,businessname,companyname,company_id,street,city,state,zip,lat,lng, distance_in_mi,segment,businesstype,vertical
+		$query = "SELECT id,businessname,phone,contact,companyname,company_id,street,city,state,zip,lat,lng, distance_in_mi,segment,businesstype,vertical
 			  FROM (
 					SELECT DISTINCT locations.id as id, 
 						businessname,
+						phone,
+						contact,
 						searchfilters.filter as vertical,
 						locations.segment as segment, 
 						locations.businesstype as businesstype,

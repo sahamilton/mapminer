@@ -300,6 +300,8 @@ class LocationsController extends BaseController {
 		echo $branch->makeNearbyBranchXML($branches);
 
 	}
+
+
 	public function getClosestBranchMap($id,$n=5)
 	{
 		
@@ -310,6 +312,8 @@ class LocationsController extends BaseController {
 		return response()->view('branches.nearbymap', compact('location','servicelines'));
 
 	}
+
+
 	public function showNearbyLocations()
 	{
 		
@@ -332,9 +336,7 @@ class LocationsController extends BaseController {
 		$result = $this->getNearbyLocations();
 		echo $this->location->makeNearbyLocationsXML($result);
 	}
-
-
-
+	
 	
 	public function listNearbyLocations($id){
 		
@@ -361,10 +363,10 @@ class LocationsController extends BaseController {
 	}
 		
 	
-	private function getNearbyLocations($lat=NULL,$lng=NULL,$distance=NULL,$company_id = null)
+	private function getNearbyLocations($lat=NULL,$lng=NULL,$distance=NULL,$company_id = null,$vertical=null)
 	
 	{
-		
+		$this->userServiceLines = '';
 		
 		if (\Input::get('d')) {
 			$distance = \Input::get('d');
@@ -384,7 +386,7 @@ class LocationsController extends BaseController {
 			$loclng = '-122.44';
 		}
 		
-		$result = $this->location->findNearbyLocations($loclat,$loclng,$distance,$number=1,$company_id,$this->userServiceLines);
+		$result = $this->location->findNearbyLocations($loclat,$loclng,$distance,$number=1,$company_id,$this->userServiceLines,$vertical);
 		return $result;		
 		
 

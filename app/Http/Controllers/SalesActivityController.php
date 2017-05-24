@@ -6,6 +6,7 @@ use App\Salesactivity;
 use App\SearchFilter;
 use App\SalesProcess;
 use App\Document;
+use App\Location;
 
 use App\Http\Requests\SalesActivityFormRequest;
 use Illuminate\Http\Request;
@@ -17,13 +18,15 @@ class SalesActivityController extends Controller
     public $vertical;
     public $process;
     public $document;
+    public $location;
 
-    public function __construct(Salesactivity $activity, SearchFilter $vertical, SalesProcess $process, Document $document){
+    public function __construct(Salesactivity $activity, SearchFilter $vertical, SalesProcess $process, Document $document,Location $location){
 
         $this->activity = $activity;
         $this->vertical = $vertical; 
         $this->process = $process;
         $this->document = $document;
+        $this->location = $location;
     }
 
     /**
@@ -97,8 +100,16 @@ class SalesActivityController extends Controller
      */
     public function show($id)
     {
+        $userServiceLines = $this->location->getUserServiceLines();
+       
         $activity = $this->activity->with('salesprocess','vertical')->findOrFail($id);
-        return response()->view('salesactivity.show',compact('activity'));
+        $lat = \Auth::user()->person->lat;
+        $lng = \Auth::user()->person->lng;
+        $verticals = array_unique ($activity->vertical->pluck('id')->toArray()); 
+        $locations = $this->location->findNearbyLocations($lat,$lng,25,$number=null,$company=NULL,$userServiceLines, $limit=null, $verticals);
+        
+
+        return response()->view('salesactivity.show',compact('activity','locations'));
     }
 
     /**
