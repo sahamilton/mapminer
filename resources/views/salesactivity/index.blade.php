@@ -28,8 +28,8 @@
 
                 <tr> 
                 <td>{{$activity->title}}</td>
-                <td>{{$activity->from->format('Y-m-d') }}</td>
-               <td>{{$activity->to->format('Y-m-d') }}</td>
+                <td>{{$activity->datefrom->format('Y-m-d') }}</td>
+               <td>{{$activity->dateto->format('Y-m-d') }}</td>
                 <td>
                 <?php $filter =array();?>
                 @foreach ($activity->vertical as $vertical)

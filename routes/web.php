@@ -284,6 +284,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function()
 			Route::resource('salesactivity','SalesActivityController',['except' => ['show']]);
 
 			Route::get('campaigndocs/{id}',['as'=>'salesdocuments.index','uses'=>'SalesActivityController@getSalesActivity']);
+
+			Route::get('campaign/{id}/announce',['as'=>'campaign.announce','uses'=>'SalesActivityController@announce']);
 			
 
 

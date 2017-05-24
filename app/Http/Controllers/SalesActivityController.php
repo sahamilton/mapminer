@@ -7,6 +7,7 @@ use App\SearchFilter;
 use App\SalesProcess;
 use App\Document;
 use App\Location;
+use App\SalesOrg;
 
 use App\Http\Requests\SalesActivityFormRequest;
 use Illuminate\Http\Request;
@@ -19,14 +20,16 @@ class SalesActivityController extends Controller
     public $process;
     public $document;
     public $location;
+    public $salesorg;
 
-    public function __construct(Salesactivity $activity, SearchFilter $vertical, SalesProcess $process, Document $document,Location $location){
+    public function __construct(Salesactivity $activity, SearchFilter $vertical, SalesProcess $process, Document $document,Location $location, SalesOrg $salesorg){
 
         $this->activity = $activity;
         $this->vertical = $vertical; 
         $this->process = $process;
         $this->document = $document;
         $this->location = $location;
+        $this->salesorg = $salesorg;
     }
 
     /**
@@ -162,7 +165,30 @@ class SalesActivityController extends Controller
         $this->activity->destroy($id);
         return redirect()->route('salesactivity.index');
     }
+    public function announce($id){
+        $activity = $this->activity->with('vertical')->findOrFail($id);
+        $verticals = array_unique($activity->vertical->pluck('id')->toArray());
+        
+        $salesorg = $this->salesorg->getSalesOrg();
+        $salesorg = $this->filterSalesReps($salesorg,$verticals);
+        dd($salesorg);
+        //find all persons who have role sales reps 
+        //in these verticals or who have no vertical
+        //industryfocus
+    }
 
+    private function filterSalesReps($salesorg, $verticals){
+        $data = array();
+        foreach($salesorg as $sales){
+            foreach ($sales->industryfocus as $focus){
+                if(in_array($focus->id,$verticals)){
+                    $data[] = $sales->id;
+                    break;
+                }
+            }
+        }
+        return $data;
+    }
 
     public function getSalesActivity($id){
 

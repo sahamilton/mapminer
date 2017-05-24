@@ -83,4 +83,11 @@ class Salesactivity extends Model implements \MaddHatter\LaravelFullcalendar\Ide
         return $user->person->industryfocus()->pluck('search_filter_id');
         
     }
+
+    public function relatedSalesReps(){
+        $salesreps = User::whereHas('roles',function($q){
+            $q->where('name','=','Sales');
+        })->get();
+
+    }
 }
