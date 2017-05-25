@@ -1,4 +1,5 @@
 @extends ('site.layouts.default')
+<link type="css" >
 @section('content')
 <div class="container">
 <h1>{{$activity->title}}</h1>
@@ -48,8 +49,17 @@ Back to all campaigns</a>
 <div class="row">
 	<h2> Sales Resources</h2>
 	@foreach ($activity->relatedDocuments() as $document)
-		<h4>{{$document->title}}</h4>
+		<h4><a href="{{route('documents.show',$document->id)}}" title="See {{$document->title}} document details">{{$document->title}}</a></h4>
 		<p>{{$document->summary}}</p>
+		@if(count($document->rankings) >0)
+			
+		<div id="{{$document->id}}" data-rating="{{round($document->score[0]->score/count($document->rankings))}}" class="starrr" >
+         <span id="count-existing"> {{round($document->score[0]->score/count($document->rankings))}} </span></div>
+		
+		@if($document->myranking())
+		Your Ranking: {{$document->myranking()->pivot->rank}}
+		@endif
+		@endif
 		<p><a href="{{$document->link}}" target="_blank">{{$document->link}}</a></p>
 		<hr />
 

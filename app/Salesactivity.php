@@ -75,7 +75,9 @@ class Salesactivity extends Model implements \MaddHatter\LaravelFullcalendar\Ide
     	})
     	->whereHas('vertical',function($q) {
     		$q->whereIn('id',$this->vertical()->pluck('vertical_id'));
-    	})->get();
+    	})
+        ->with('rankings','score')
+        ->get();
     }
 
     public function getUserVerticals(){

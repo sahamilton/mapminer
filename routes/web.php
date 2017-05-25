@@ -184,6 +184,7 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::post('documents/select',['as'=>'documents.select','uses'=>'DocumentsController@getDocuments']);
 		Route::get('/rank',['as'=>'api.rank','uses'=>'DocumentsController@rank']);
     	Route::get('watchedby/{id}',['as'=>'watchedby','uses'=>'DocumentsController@watchedby']);
+    	Route::get('documents/{id}',['as'=>'documents.show','uses'=>'DocumentsController@show']);
 });
 
 /** ------------------------------------------

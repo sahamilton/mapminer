@@ -53,6 +53,10 @@ class Document extends Model
         return $this->belongsToMany(User::class)->withPivot('rank');
     }
 
+    public function myranking(){
+        return $this->belongsToMany(User::class)->where('user_id','=',\Auth::user()->id)->withPivot('rank')->first();
+    }
+
     public function rank()
     {
         return $this->rankings()
