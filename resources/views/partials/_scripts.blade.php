@@ -29,7 +29,46 @@ $(document).ready(function()
 		
 	$('#sorttable6').DataTable();
 	
-	
+	$('.starrr').on('starrr:change', function(e, value){
+  
+		    var id = e.target.id;
+		    var returnVal = ranked(id,parseInt(value));
+
+		  function ranked(id,value)
+		       {
+		         $.ajax(
+		      
+		          {
+		          
+		          type: "GET",
+		          
+		          cache: false,
+		          
+		          url: '{{route('api.rank')}}?api_token={{\Auth::user()->api_token}}',
+		          data: {id: id,value: value},
+		          
+		          dataType: "xml",
+		          
+		          contentType: "text/html",
+		          
+		          success: processData,
+		          
+		          error: errorAlert
+		          
+		          }); //end of $.ajax
+		         
+		        
+		       }
+
+		        function processData(){
+		         //alert("I did it!");
+		       }
+		       
+		       function errorAlert() {
+		         alert("Whoops that didnt work");
+		       }
+
+		});
 
 	
     $('#sorttable, #store-locator-container').on('change','.watchItem',function() {

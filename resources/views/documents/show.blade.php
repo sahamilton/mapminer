@@ -8,5 +8,10 @@
 <p><strong>Type:</strong></p>
 <p><strong>Link:</strong> <a href="{{$document->link}}" target="_blank" >{{$document->link}}</a></p>
 
+@if(count($document->rank) > 0 && count($document->score)> 0 && count($document->rankings) >0)
+   <?php $rank = round($document->rank[0]->rank,2);?>
 
+@endif
+ <div id="{{$document->id}}" data-rating="{{intval($rank)}}" class="starrr" ></div>
+            <span id="count-existing">{{$rank}}</span>
 @endsection

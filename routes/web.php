@@ -182,8 +182,8 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::post('api/advancedsearch',['as'=>'setSearch','uses'=>'SearchFiltersController@setSessionSearch']);	
 		Route::get('documents/select',['as'=>'documents.select','uses'=>'DocumentsController@select']);
 		Route::post('documents/select',['as'=>'documents.select','uses'=>'DocumentsController@getDocuments']);
-		
-    
+		Route::get('/rank',['as'=>'api.rank','uses'=>'DocumentsController@rank']);
+    	Route::get('watchedby/{id}',['as'=>'watchedby','uses'=>'DocumentsController@watchedby']);
 });
 
 /** ------------------------------------------
@@ -321,5 +321,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function()
 		})->name('about');
 	# Seeder for relationships with servicelines
 		Route::get('seeder',['as'=>'seeder','uses'=>'CompaniesController@seeder']);
+		Route::get('apiseeder',['as'=>'apiseeder','uses'=>'UsersController@seeder']);
 	
 });

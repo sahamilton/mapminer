@@ -28,7 +28,7 @@ class DocumentsController extends Controller
      */
     public function index()
     {
-        $documents = $this->document->with('author','vertical','process')->get();
+        $documents = $this->document->with('rankings','rank','score','author','vertical','process')->get();
         return response()->view('documents.index',compact('documents'));
     }
 
@@ -135,6 +135,25 @@ class DocumentsController extends Controller
 
         return response()->view('documents.index',compact('documents','data'));
     }
-   
+    /*
+     * Accept user ranking of document
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * 
 
+     */
+
+    public function rank(Request $request)
+    {
+   
+       $user = User::where('api_token','=',$request->get('api_token'))->first();
+       $user->rankings()->sync([$request->get('id') => ['rank' => $request->get('value')]],false);
+       
+    }
+   
+    public function watchedby ($id)
+    {
+        $document = $this->document->with('rankings','owner','owner.person')->find($id);
+        return response()->view('documents.watchedby',compact('document'));
+    }
 }

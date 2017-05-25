@@ -70,6 +70,15 @@ public $fillable = ['username','email','lastlogin','confirmed','confirmation_cod
     {
         return \String::date(\Carbon::createFromFormat('Y-n-j G:i:s', $this->created_at));
     }
+	/**
+     * Rank documents
+     *
+     */
+
+	public function rankings()
+	{
+		return $this->belongsToMany(Document::class)->withPivot('rank');
+	}
 
     /**
      * Save roles inputted from multiselect
@@ -246,5 +255,8 @@ public $fillable = ['username','email','lastlogin','confirmed','confirmation_cod
 	
 	}
 
-	
+	public function seeder(){
+		$this->api_token =\Hash::make(str_random(60));
+		$this->save();
+	}
 }

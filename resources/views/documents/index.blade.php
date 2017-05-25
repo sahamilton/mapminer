@@ -21,6 +21,8 @@
                 <th>Vertical</th>
 
                 <td>Link</td>
+                <td>Rank</td>
+                <td>Watched By</td>
                 <th>Actions</th>
                 
             </thead>
@@ -43,7 +45,20 @@
                 
  
                 <td><a href="{{$document->link}}" target="_new">{{$document->link}}</a></td>
-                
+                <td> 
+                 @if(count($document->rank) > 0 && count($document->score)> 0 && count($document->rankings) >0)
+                  {{$document->rank[0]->rank}}
+
+            @endif
+                  </td>
+                  <td>
+                  @if(count($document->rankings) >0)
+                    <a href="{{route('watchedby',$document->id)}}">
+                        {{count($document->rankings)}}
+                    </a>
+                  @else
+                  {{count($document->rankings)}}
+                  @endif
                  <td class="col-md-2">
                 @include('partials/modal')
 

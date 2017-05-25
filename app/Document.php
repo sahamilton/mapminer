@@ -42,4 +42,37 @@ class Document extends Model
                 ->get();
         
     }
+
+    /*
+    
+    Rank documents
+
+     */
+    public function rankings()
+    {
+        return $this->belongsToMany(User::class)->withPivot('rank');
+    }
+
+    public function rank()
+    {
+        return $this->rankings()
+        ->selectRaw('document_id, avg(rank) as rank')
+        ->groupBy('document_id');
+
+    
+    }
+    public function score()
+    {
+        return $this->rankings()
+        ->selectRaw('document_id, sum(rank) as score')
+        ->groupBy('document_id');
+
+    
+    }
+
+    public function owner()
+    {
+        return $this->belongsTo(User::class,'user_id');
+    }
+
 }
