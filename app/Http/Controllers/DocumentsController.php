@@ -148,7 +148,12 @@ class DocumentsController extends Controller
     {
    
        $user = User::where('api_token','=',$request->get('api_token'))->first();
-       $user->rankings()->sync([$request->get('id') => ['rank' => $request->get('value')]],false);
+       if($user->rankings()->sync([$request->get('id') => ['rank' => $request->get('value')]],false))
+        {
+            return 'success';
+        }
+        return 'error';
+    
        
     }
    

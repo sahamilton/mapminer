@@ -52,14 +52,17 @@ Back to all campaigns</a>
 		<h4><a href="{{route('documents.show',$document->id)}}" title="See {{$document->title}} document details">{{$document->title}}</a></h4>
 		<p>{{$document->summary}}</p>
 		@if(count($document->rankings) >0)
-			
-		<div id="{{$document->id}}" data-rating="{{round($document->score[0]->score/count($document->rankings))}}" class="starrr" >
-         <span id="count-existing"> {{round($document->score[0]->score/count($document->rankings))}} </span></div>
+			<?php $rank = round($document->score[0]->score/count($document->rankings));?>
+		@else
+			<?php $rank = null;?>
+		@endif
+		<div id="{{$document->id}}" data-rating="{{$rank}}" class="starrr" >
+         <span id="count-existing"> {{$rank}} </span></div>
 		
 		@if($document->myranking())
 		Your Ranking: {{$document->myranking()->pivot->rank}}
 		@endif
-		@endif
+	
 		<p><a href="{{$document->link}}" target="_blank">{{$document->link}}</a></p>
 		<hr />
 

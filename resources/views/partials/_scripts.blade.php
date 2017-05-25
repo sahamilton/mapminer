@@ -36,13 +36,14 @@ $(document).ready(function()
 
 		  function ranked(id,value)
 		       {
-		         $.ajax(
+		         var myajax = $.ajax(
 		      
 		          {
 		          
 		          type: "GET",
 		          
 		          cache: false,
+		       
 		          
 		          url: '{{route('api.rank')}}?api_token={{\Auth::user()->api_token}}',
 		          data: {id: id,value: value},
@@ -51,11 +52,11 @@ $(document).ready(function()
 		          
 		          contentType: "text/html",
 		          
-		          success: processData,
+		         
 		          
-		          error: errorAlert
-		          
-		          }); //end of $.ajax
+		          }); 
+		          return myajax.responseText;
+		          //end of $.ajax
 		         
 		        
 		       }
