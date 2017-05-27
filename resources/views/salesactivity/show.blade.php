@@ -57,13 +57,13 @@ Back to all campaigns</a>
 			<?php $rank = null;?>
 		@endif
 		<div id="{{$document->id}}" data-rating="{{$rank}}" class="starrr" >
-         <span id="count-existing"> {{$rank}} </span></div>
+         <span id="count-existing"> {{count($document->rankings)}} ratings averaging {{round($document->score[0]->score/count($document->rankings),2)}} </span></div>
 		
 		@if($document->myranking())
 		Your Ranking: {{$document->myranking()->pivot->rank}}
 		@endif
 	
-		<p><a href="{{$document->link}}" target="_blank">{{$document->link}}</a></p>
+		<p><a href="{{$document->location}}" target="_blank">{{$document->location}}</a></p>
 		<hr />
 
 	@endforeach

@@ -8,7 +8,13 @@ class Document extends Model
 {
     public $table='documents';
 
-    public $fillable=['title','summary','user_id','link','description'];
+    public $dates =['datefrom','dateto'];
+
+    protected $dateFormat = "m/d/Y";
+
+    public $fillable=['title','summary','description','plaintext','location','doctype','user_id','dateto','datefrom'];
+
+    public $doctypes =['docx'=>'word','pptx'=>'powerpoint','pdf'=>'pdf','xlsx'=>'excel','html'=>'webpage'];
 
     public function author(){
     	return $this->belongsTo(User::class, 'user_id','id')->with('person');
@@ -39,6 +45,8 @@ class Document extends Model
                         $q1->whereIn('id',$data['salesprocess']);
                     });
                 })
+                ->where('datefrom','<=',date('Y-m-d'))
+                ->where('dateto','>=',date('Y-m-d'))
                 ->get();
         
     }
@@ -79,4 +87,31 @@ class Document extends Model
         return $this->belongsTo(User::class,'user_id');
     }
 
+     public function scrubDocument()
+    {
+        $documents = $this->document->all();
+        foreach ($documents as $document)
+        {
+            
+          $data ['text'] = $document->plaintext;
+          $clean = $this->cleanse($data);
+          $document->plaintext = $clean['text'];
+          $document->save();
+          
+
+        }
+    }
+
+
+
+    private function cleanse($data)
+        {
+
+                $data['text'] = trim( preg_replace('/\r\n?/', " ", $data['text']));
+                $data['text'] = trim(str_replace("  "," ",$data['text']));
+                $data['text'] = trim(preg_replace('/\t+/', ' ',$data['text']));
+                $data['text'] = trim( preg_replace("/\\n/", " ", $data['text']));
+                $data['text'] = trim( strip_tags($data['text']));
+                return $data;
+        }
 }

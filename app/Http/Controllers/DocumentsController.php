@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\User;
 use App\Document;
+use App\DocumentReader;
 use App\SalesProcess;
 use App\SearchFilter;
 use App\Http\Requests\DocumentFormRequest;
@@ -55,6 +56,9 @@ class DocumentsController extends Controller
     public function store(DocumentFormRequest $request)
     {
          $document = $this->document->create($request->all());
+         
+        $text = new DocumentReader;
+        dd($text->plaintext($request));
          $document->vertical()->attach($request->get('vertical'));
          $document->process()->attach($request->get('salesprocess'));
         return redirect()->route('documents.index');
@@ -162,4 +166,6 @@ class DocumentsController extends Controller
         $document = $this->document->with('rankings','owner','owner.person')->find($id);
         return response()->view('documents.watchedby',compact('document'));
     }
+
+    
 }

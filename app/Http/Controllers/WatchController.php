@@ -2,9 +2,11 @@
 namespace App\Http\Controllers;
 use App\Watch;
 use App\User;
+use App\Document;
+
 class WatchController extends BaseController {
 	protected $watch;
-	
+	public $document;
 	
 	
 	/**
@@ -12,8 +14,8 @@ class WatchController extends BaseController {
 	 *
 	 * @return Response
 	 */
-	public function __construct(Watch $watch) {
-		
+	public function __construct(Watch $watch, Document $document) {
+		$this->document = $document;
 		$this->watch = $watch;
 	}
 	
@@ -245,7 +247,13 @@ class WatchController extends BaseController {
 	public function getCompaniesWatched()
 	{
 		$watch = $this->getMyWatchList(\Auth::id());
-		
-		return response()->view('resources.show', compact('watch'));
+		$data['verticals'] = $this->watch->getUserVerticals();
+		if(count($data['verticals']=0)){
+			$data['verticals'] = null;
+		}
+		$data['salesprocess'] = null;
+		$documents = $this->document->getDocumentsWithVerticalProcess($data);
+
+		return response()->view('resources.show', compact('watch','documents'));
 	}
 }

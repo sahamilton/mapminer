@@ -11,7 +11,7 @@
     
         
 <div class="col-md-10 col-md-offset-1">
-        <table class="table" id = "sorttable">
+        <table class='table table-striped' id='sorttable'>
             <thead>
 
                 <th>Title</th>
@@ -20,20 +20,25 @@
                 <th>Sales Process</th>
                 <th>Vertical</th>
 
-                <td>Link</td>
+                <td>location</td>
                 <td>Rank</td>
-                <td>Watched By</td>
+                <td>Rated By</td>
                 <th>Actions</th>
                 
             </thead>
-            <tbody>
+            <tbody >
             @foreach ($documents as $document)
               
                 <tr> 
                 
                 <td><a href="{{route('documents.show',$document->id)}}">{{$document->title }}</a></td>
-               <td>{{$document->description}}</td>
-                
+               <td>
+                    <span class="teaser">{{substr($document->description,0,100)}}</span>
+
+                    <span class="complete"> {{$document->description}}</span>
+
+                    <span class="more">more...</span>
+                </td>
                 <td>@foreach ($document->process as $process)
                     <li>{{$process->step}}</li>
                     @endforeach
@@ -44,7 +49,7 @@
                 </td>
                 
  
-                <td><a href="{{$document->link}}" target="_new">{{$document->link}}</a></td>
+                <td><a href="{{$document->location}}" target="_new">{{$document->location}}</a></td>
                 <td> 
                  @if(count($document->rank) > 0 && count($document->score)> 0 && count($document->rankings) >0)
                   {{$document->rank[0]->rank}}

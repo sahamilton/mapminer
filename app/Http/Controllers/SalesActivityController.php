@@ -79,7 +79,7 @@ class SalesActivityController extends Controller
 
     public function mycampaigns()
     {
-        
+     
         $userVerticals = $this->activity->getUserVerticals();
         $activities = $this->activity->with('salesprocess','vertical')
          ->when(count($userVerticals)>0,function($q) use ($userVerticals){

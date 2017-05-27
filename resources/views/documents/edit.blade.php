@@ -3,7 +3,7 @@
 <div class="container">
 <h2>Edit Sales Document</h2>
 <div class="form-group">
-<form method="post" name="editDocument" action="{{route('documents.update',$document->id)}}">
+<form method="post" name="editDocument" action="{{route('documents.update',$document->id)}}" enctype="multipart/form-data">>
 <input type="hidden" name="_method" value="PUT" />
 {{csrf_field()}}
 

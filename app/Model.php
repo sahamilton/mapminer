@@ -395,4 +395,11 @@ public function _import_csv($filename, $table,$fields)
       
         return $userServicelines;
     }
+
+    public function getUserVerticals(){
+        $user = \Auth::user()->with('person')->firstOrFail();
+        return $user->person->industryfocus()->pluck('search_filter_id');
+        
+    }
+
 }

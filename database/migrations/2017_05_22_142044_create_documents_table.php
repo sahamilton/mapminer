@@ -18,9 +18,11 @@ class CreateDocumentsTable extends Migration
             $table->string('title');
             $table->text('description');
             $table->text('summary');
-            $table->text('text');
-            $table->string('link');
-            $table->string('type');
+            $table->text('plaintext');
+            $table->date('datefrom');
+            $table->date('dateto');
+            $table->string('location')->nullable();
+            $table->string('doctype');
             $table->integer('user_id');
             $table->timestamps();
         });

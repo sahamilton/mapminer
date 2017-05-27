@@ -9,12 +9,22 @@ $(document).ready(function()
       $(".watchItem").prop('checked', $(this).prop('checked')).change();
      });
 
+    $(".more").toggle(function(){
+    $(this).text("less..").siblings(".complete").show();    
+	}, function(){
+	    $(this).text("more..").siblings(".complete").hide();    
+	});
     
 	$(document).on('show.bs.modal','#confirm-delete', function(e) {
     	$(this).find('.danger').attr('href', $(e.relatedTarget).data('href'));
 		$(this).find('#title').html($(e.relatedTarget).data('title'));
 	});	
 	
+	$( "#todatepicker" ).datepicker( {altField : "#todate",
+    altFormat: "yyyy-mm-dd"});
+	
+    $( "#fromdatepicker" ).datepicker({ altField : "#fromdate",
+    altFormat: "yyyy-mm-dd"});
 	$('#sorttable').DataTable();
 	
 	$('#sorttable1').DataTable();

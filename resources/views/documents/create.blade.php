@@ -3,7 +3,7 @@
 <div class="container">
 <h2>Add Sales Document to Library</h2>
 <div class="form-group">
-<form method="post" name="createDocument" action="{{route('documents.store')}}">
+<form method="post" name="createDocument" action="{{route('documents.store')}}" enctype="multipart/form-data">
 {{csrf_field()}}
 
 @include('documents.partials._form')
@@ -15,5 +15,5 @@
 
 </div>
 
-
+@include('partials._scripts')
 @endsection
