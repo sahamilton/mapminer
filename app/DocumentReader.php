@@ -20,27 +20,41 @@ class DocumentReader extends Model
     public function plaintext(Request $request)
     {
             
-            $data = $request->all();
+            
            
             if ($request->hasFile('file')) {
                 
              /*   $data['location'] =  
                 $this->uploadStoreDocument($request->file('file'));*/
 
-                $data['location'] = asset(Storage::url($request->file('file')->store('public/library')));
-               
-              
+               $data['filename'] = $request->file('file')->store('public/library');
+
+               $data['location'] = asset(Storage::url($data['filename']));
+               dd($data);
+                
         
             }
+            
+            
+
             if($request->has('plaintext') && $request->get('plaintext') != '')
             {
                 $plaintext['text'] = $request->get('plaintext');
                 $plaintext['doctype'] = 'store';
 
             }else{
-
+                // turn off ssl verification if local
+            if (env('APP_ENV')=='local') {
+                            
+                    stream_context_set_default(array(
+                        "ssl"=>array(
+                            "verify_peer"=>false,
+                            "verify_peer_name"=>false,
+                        ),
+                     ));  
+                }
                 $type =  get_headers($data['location'], 1)["Content-Type"];
-                dd($type);
+               
                 //set type here and pass array back;
                 // if application then get file content
 
