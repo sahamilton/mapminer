@@ -10,7 +10,7 @@
 <p><strong>Type:</strong></p>
 <p><strong>location:</strong> <a href="{{$document->location}}" target="_blank" >{{$document->location}}</a></p>
 
-@if(count($document->rank) > 0 && count($document->score)> 0 && count($document->rankings) >0)
+@if($document->rank && count($document->rank) > 0 && count($document->score)> 0 && count($document->rankings) >0)
    <?php $rank = round($document->rank[0]->rank,2);?>
 
 @endif
