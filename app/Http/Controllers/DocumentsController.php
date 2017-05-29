@@ -55,12 +55,14 @@ class DocumentsController extends Controller
      */
     public function store(DocumentFormRequest $request)
     {
-         $document = $this->document->create($request->all());
-         
+        
         $text = new DocumentReader;
-        dd($text->plaintext($request));
-         $document->vertical()->attach($request->get('vertical'));
-         $document->process()->attach($request->get('salesprocess'));
+        $data = $text->readDocument($request);
+
+        $document = $this->document->create($data);
+
+        $document->vertical()->attach($request->get('vertical'));
+        $document->process()->attach($request->get('salesprocess'));
         return redirect()->route('documents.index');
     }
 

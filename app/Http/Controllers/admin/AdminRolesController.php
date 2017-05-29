@@ -35,7 +35,7 @@ class AdminRolesController extends BaseController {
      */
     public function __construct(User $user, Role $role, Permission $permission)
     {
-        parent::__construct();
+        parent::__construct($role);
         $this->user = $user;
 		$this->role = $role;
 		$this->permission = $permission;

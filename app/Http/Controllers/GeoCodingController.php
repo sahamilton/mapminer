@@ -17,7 +17,7 @@ class GeoCodingController extends BaseController {
 		$this->location = $location;
 		$this->serviceline = $serviceline;	
 		$this->branch = $branch;
-		parent::__construct();	
+		parent::__construct($location);	
 }
 	
 	
@@ -86,7 +86,7 @@ class GeoCodingController extends BaseController {
 			
 			return response()->view('maps.list', compact('data','watchlist','fields','filtered'));
 		}else{
-			$this->userServiceLines = $this->serviceline->currentUserServicelines();
+
 			$data = $this->setZoomLevel($data);
 			$servicelines = $this->serviceline->whereIn('id',$this->userServiceLines)
     						->get();
@@ -150,7 +150,7 @@ class GeoCodingController extends BaseController {
 	 
 	public function getGeoListData($data ) {
 		$company = isset($data['company']) ? $data['company'] : NULL;
-		$this->userServiceLines = $this->serviceline->currentUserServicelines();;
+
 		
 		switch ($data['type']) {
 			

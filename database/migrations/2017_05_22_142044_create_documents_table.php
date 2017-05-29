@@ -22,6 +22,7 @@ class CreateDocumentsTable extends Migration
             $table->date('datefrom');
             $table->date('dateto');
             $table->string('location')->nullable();
+            $table->string('filename')->nullable();
             $table->string('doctype');
             $table->integer('user_id');
             $table->timestamps();

@@ -5,7 +5,7 @@ use App\Company;
 use Illuminate\Http\Request;
 class ServicelinesController extends BaseController {
 	public $serviceline;
-	public $userServiceLines;
+
 	/**
 	 * Display a listing of servicelines
 	 *
@@ -13,7 +13,7 @@ class ServicelinesController extends BaseController {
 	 */
 	public function __construct(Serviceline $serviceline) {
 		$this->serviceline = $serviceline;
-		$this->userServiceLines = \Session::get('user.servicelines');
+		parent::__construct($serviceline);
 	}
 	
 	public function index()

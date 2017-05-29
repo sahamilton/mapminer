@@ -49,7 +49,7 @@
                 </td>
                 
  
-                <td><a href="{{$document->location}}" target="_new">{{$document->location}}</a></td>
+                <td><a href="{{$document->location}}" target="_new">View Source</a>{{$document->doctype}}</td>
                 <td> 
                  @if(count($document->rank) > 0 && count($document->score)> 0 && count($document->rankings) >0)
                   {{$document->rank[0]->rank}}

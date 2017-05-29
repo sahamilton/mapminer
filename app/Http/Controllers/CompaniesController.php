@@ -14,7 +14,7 @@ class CompaniesController extends BaseController {
 	public $company;
 	public $locations;
 	public $searchfilter;
-	public $userServiceLines;
+
 
 	public function __construct(Company $company, Location $location, SearchFilter $searchfilter,User $user) {
 		
@@ -22,7 +22,7 @@ class CompaniesController extends BaseController {
 		$this->locations = $location;
 		$this->searchfilter = $searchfilter;
 		$this->user = $user;
-		parent::__construct();
+		parent::__construct($this->company);
 
 		
 
@@ -37,9 +37,7 @@ class CompaniesController extends BaseController {
 	 
 	public function index()
 	{
-		$this->userServiceLines = $this->company->currentUserServiceLines();
 
-		//dd($this->userServiceLines);
 		$filtered = $this->company->isFiltered(['companies'],['vertical']);
 
 		$companies = $this->getAllCompanies($filtered);
@@ -92,7 +90,7 @@ class CompaniesController extends BaseController {
 			
 		}else{
 			
-			
+
 			$companies = $this->company
 			->with('managedBy','managedBy.userdetails','industryVertical','countlocations')
 			->whereHas('serviceline', function($q) {
@@ -114,6 +112,7 @@ class CompaniesController extends BaseController {
 	 */
 	public function create()
 	{
+		//this should be removed
 		$roles = ['4'];
 		$managers = $this->getManagers($roles);
 		$searchFilters = $this->searchfilter;
@@ -169,10 +168,10 @@ class CompaniesController extends BaseController {
 	{
 		// Is the user permitted to see this company based on servicelines?
 	
-		$this->userServiceLines = $this->company->currentUserServicelines();
+
 		if (! $this->company->checkCompanyServiceLine($company->id,$this->userServiceLines))
 		{
-			return \Redirect::route('company.index');
+			return redirect()->route('company.index');
 		}
 
 		$mywatchlist = array();
@@ -311,7 +310,6 @@ class CompaniesController extends BaseController {
 	 */
 	public function vertical($vertical)
 	{
-		$this->userServiceLines = $this->company->currentUserServiceLines();
 		
 		$filtered = FALSE;
 		$verticalname = SearchFilter::where('id','=',$vertical)->pluck('filter');
@@ -360,7 +358,7 @@ class CompaniesController extends BaseController {
 	{
 		// check if user can view company (id) 
 		// based on serviceline	association
-		$this->userServiceLines = $this->company->currentUserServicelines();
+
 		if (! $this->company->checkCompanyServiceLine($id,$this->userServiceLines))
 		{
 			return \Redirect::route('company.index');
@@ -401,7 +399,7 @@ class CompaniesController extends BaseController {
 	{
 		// Check if user can view company based on user serviceline
 		// association.
-		$this->userServiceLines = $this->company->currentUserServiceLines();
+
 		if (! $this->company->checkCompanyServiceLine($id,$this->userServiceLines))
 		{
 			return \Redirect::route('company.index');
@@ -443,17 +441,17 @@ class CompaniesController extends BaseController {
 	 */
 	 
 	 
-	public function stateselect()
+	public function stateselect(Request $requser)
 	{
-		$this->userServiceLines = $this->company->currentUserServiceLines();
-		$id = \Input::get('id');
+
+		$id = $request->get('id');
 		// Check if user can view company based on user serviceline
 		// association.
 		if (! $this->company->checkCompanyServiceLine($id,$this->userServiceLines))
 		{
-			return \Redirect::route('company.index');
+			return redirect()->route('company.index');
 		}
-		$state = trim(\Input::get('state'));
+		$state = trim($request->get('state'));
 		
 		$locations = $this->getStateLocations($id,$state);
 
@@ -472,7 +470,7 @@ class CompaniesController extends BaseController {
 						'Watching'=>'watch');
 		$mywatchlist = $this->getWatchList();
 
-		if (\Auth::user()->hasRole('Admin')) {
+		if (auth()->user()->hasRole('Admin')) {
 			$fields['Actions']='actions';
 		}
 

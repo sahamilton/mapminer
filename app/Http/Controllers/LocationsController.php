@@ -29,13 +29,13 @@ class LocationsController extends BaseController {
 		$this->watch = $watch;
 		$this->company = $company;
 		$this->branch = $branch;
-		parent::__construct();
+		parent::__construct($location);
 	}
 	
 	
 	public function index()
 	{
-		$this->userServiceLines = $this->location->getUserServiceLines();
+		
 		$companies = $this->company->orderBy('companyname')->pluck('companyname','id');
 		
 		return response()->view('locations.index',compact('companies'));
@@ -366,7 +366,7 @@ class LocationsController extends BaseController {
 	private function getNearbyLocations($lat=NULL,$lng=NULL,$distance=NULL,$company_id = null,$vertical=null)
 	
 	{
-		$this->userServiceLines = '';
+		
 		
 		if (\Input::get('d')) {
 			$distance = \Input::get('d');

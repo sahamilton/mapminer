@@ -2,6 +2,8 @@
 namespace App\Http\Controllers;
 use App\User;
 use App\State;
+use App\Company;
+use App\Model;
 use Illuminate\Http\Request;
 class BaseController extends Controller {
 	
@@ -13,9 +15,14 @@ class BaseController extends Controller {
      * @access   public
      * @return BaseController
      */
-    public function __construct()
+    public function __construct(Model $model)
     {
-       
+       $this->middleware(function ($request, $next) use($model){
+
+               $this->userServiceLines = session()->has('user.servicelines') ? session()->get( 'user.servicelines' ) : $model->getUserServiceLines();
+
+                return $next($request);
+        });
      
       
         

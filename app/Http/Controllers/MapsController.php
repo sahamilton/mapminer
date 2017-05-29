@@ -17,7 +17,7 @@ class MapsController extends BaseController {
 			$this->branch = $branch;
 			$this->user = $user;
 			$this->location = $location;
-			parent::__construct();
+			parent::__construct($location);
 	}
 	
 	/**
@@ -26,9 +26,9 @@ class MapsController extends BaseController {
 	 */
 	public function findMe()
 	{
-			$this->userServiceLines = $this->branch->currentUserServiceLines();
+		
 			
-			$user = $this->user->findOrFail(\Auth::id());
+			$user = $this->user->findOrFail(auth()->id());
 			$nonews = $user->nonews;
 			$now = date('Y-m-d h:i:s');
 			
@@ -67,7 +67,7 @@ class MapsController extends BaseController {
 	public function findLocalBranches($distance=NULL,$latlng = NULL) {
 		
 		$location =explode(":",$latlng);
-		$this->userServiceLines = $this->branch->currentUserServiceLines();
+	
 		$result = $this->branch->findNearbyBranches($location[0],$location[1],$distance,$number=5,$this->userServiceLines);
 		echo $this->branch->makeNearbyBranchXML($result);
 		
@@ -75,8 +75,7 @@ class MapsController extends BaseController {
 	
 	public function findLocalAccounts($distance=NULL,$latlng = NULL,$company = NULL) {
 		
-		$this->userServiceLines = $this->branch->currentUserServiceLines();
-		$this->userServiceLines = $this->branch->currentUserServiceLines();
+		
 		$geo =explode(":",$latlng);
 
 		

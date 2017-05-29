@@ -10,11 +10,9 @@ class Document extends Model
 
     public $dates =['datefrom','dateto'];
 
-    protected $dateFormat = "m/d/Y";
+    public $fillable=['title','summary','description','plaintext','location','doctype','user_id','datefrom','dateto'];
 
-    public $fillable=['title','summary','description','plaintext','location','doctype','user_id','dateto','datefrom'];
-
-    public $doctypes =['docx'=>'word','pptx'=>'powerpoint','pdf'=>'pdf','xlsx'=>'excel','html'=>'webpage'];
+    public $doctypes =['docx'=>'word','pdf'=>'pdf','html'=>'webpage'];
 
     public function author(){
     	return $this->belongsTo(User::class, 'user_id','id')->with('person');

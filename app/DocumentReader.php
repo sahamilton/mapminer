@@ -6,7 +6,6 @@ use App\User;
 
 use Goutte\Client;
 use Carbon\Carbon;
-
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 
@@ -17,83 +16,46 @@ use Illuminate\Http\Request;
 class DocumentReader extends Model
 {
     
-    public function plaintext(Request $request)
+    public function readDocument(Request $request)
     {
+        $data = $request->all(); 
+      
+        if ($request->hasFile('file')) {
             
-            
-           
-            if ($request->hasFile('file')) {
+          $file= $request->file('file');
+          $data['extension'] = $file->getClientOriginalExtension();
+          $file = $request->file('file')->store('public/library');
+          $data['location'] = asset(Storage::url($file));
+          $data['basepath'] = base_path()."/public".Storage::url($file);
+          $data['filename'] = basename($file);
+          $data['doctype'] = $this->getDocumentType(Storage::mimeType($file)); 
+          $data = $this->getFileContents($data);  
+
+        }else{
+          $data['location'] = $request->get('location');
+          $data['doctype'] ='html';
+          $document =  new HtmlReader(); 
+          $data['plaintext']=$document->read($data['location']);
+          $data= $this->cleanse($data);
+        }
+        $data = $this->convertDates($data) ;  
+      
                 
-             /*   $data['location'] =  
-                $this->uploadStoreDocument($request->file('file'));*/
+        return $data;
 
-               $data['filename'] = $request->file('file')->store('public/library');
-
-               $data['location'] = asset(Storage::url($data['filename']));
-               dd($data);
-                
-        
-            }
-            
-            
-
-            if($request->has('plaintext') && $request->get('plaintext') != '')
-            {
-                $plaintext['text'] = $request->get('plaintext');
-                $plaintext['doctype'] = 'store';
-
-            }else{
-                // turn off ssl verification if local
-            if (env('APP_ENV')=='local') {
-                            
-                    stream_context_set_default(array(
-                        "ssl"=>array(
-                            "verify_peer"=>false,
-                            "verify_peer_name"=>false,
-                        ),
-                     ));  
-                }
-                $type =  get_headers($data['location'], 1)["Content-Type"];
-               
-                //set type here and pass array back;
-                // if application then get file content
-
-                if(strpos($type, 'application')!== false)
-                    {
-                        $plaintext = $this->getFileContents($data['location']);
-
-                    }else{
-                       
-                       // $plaintext['text'] = $this->scrapeWebPage($location);
-                        $plaintext['doctype'] ='html';
-                        $document =  new HtmlReader(); 
-                        $plaintext['text']= $this->cleanse($document->read($data['location']));
-                    }
-            }
-        return $plaintext;
-       
-     
-
-       //$filepath = $document->location;
-
-       //$text = new DocxConversion($document->location);
-       //echo $text->convertToText();
     }
 
-    private function getFileContents($location)
+    private function getFileContents($data)
     {
 
-            $storage = public_path()."/library";
 
-            $filename = $storage . "/". basename ( $location);
 
-            $fileArray = pathinfo($filename);
-            $file_ext  = $fileArray['extension'];
-            $class = "App\\". ucwords($file_ext).'Reader';
-            $document = new $class($filename);   
-            $plaintext['doctype'] =$file_ext;
-            $plaintext['text'] = $document->read($filename);
-            return $plaintext;
+            $class = "App\\". ucwords($data['extension']).'Reader';
+
+            $document = new $class();   
+
+            $data['plaintexttext'] = $document->read($data);
+            return $data;
     }
 
 
@@ -102,11 +64,11 @@ class DocumentReader extends Model
     private function cleanse($data)
     {
 
-            $data['text'] = trim( preg_replace('/\r\n?/', " ", $data['text']));
-            $data['text'] = trim(str_replace("  "," ",$data['text']));
-            $data['text'] = trim(preg_replace('/\t+/', ' ',$data['text']));
-            $data['text'] = trim( preg_replace("/\\n/", " ", $data['text']));
-            $data['text'] = trim( strip_tags($data['text']));
+            $data['plaintext'] = trim( preg_replace('/\r\n?/', " ", $data['plaintext']));
+            $data['plaintext'] = trim(str_replace("  "," ",$data['plaintext']));
+            $data['plaintext'] = trim(preg_replace('/\t+/', ' ',$data['plaintext']));
+            $data['plaintext'] = trim( preg_replace("/\\n/", " ", $data['plaintext']));
+            $data['plaintext'] = trim( strip_tags($data['plaintext']));
             return $data;
     }
 
@@ -123,5 +85,26 @@ class DocumentReader extends Model
           return $fileName;
     
     }
-   
+   private function getDocumentType($type){
+
+    $types = [
+    'xls'=>'application/vnd.ms-excel',
+    'xlsx'=>'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    'ppt'=>'application/vnd.ms-powerpoint',
+
+    'pptx'=>'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+
+    'doc'=>'application/msword',
+
+    'docx'=>'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    'pdf'=>'application/pdf'];
+    return $docType = array_search($type,$types);
+   }
+
+   private function convertDates($data){
+    $data['datefrom'] = Carbon::createFromFormat('m/d/Y', $data['datefrom']);
+    $data['dateto'] = Carbon::createFromFormat('m/d/Y', $data['dateto']);
+ 
+    return $data;
+   }
 }

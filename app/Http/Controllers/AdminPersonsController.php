@@ -9,11 +9,11 @@ protected $person;
 protected $permission;
  public function __construct(Person $person, Permission $permission)
     {
-        parent::__construct();
+        
         $this->person = $person;
        
         $this->permission = $permission;
-        parent::__construct();
+        parent::__construct($person);
     }
 	
 	/**

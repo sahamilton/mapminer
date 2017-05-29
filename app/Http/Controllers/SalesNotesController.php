@@ -15,7 +15,7 @@ class SalesNotesController extends BaseController {
 		$this->company = $company;
 		$this->salesnote = $salesnote;
 		$this->attachmentField = \DB::table('howtofields')->where('type','=','attachment')->pluck('id');
-		parent::__construct();
+		parent::__construct($salesnote);
 		
 
 
@@ -76,9 +76,6 @@ class SalesNotesController extends BaseController {
 	{
 		
 		
-		$this->userServiceLines = $this->company->getUserServiceLines();
-	
-		
 		if (! $this->company->checkCompanyServiceLine($id,$this->userServiceLines))
 		{
 			return \Redirect::route('company.index');
@@ -134,7 +131,7 @@ class SalesNotesController extends BaseController {
 	{
 		Salesnote::destroy($id);
 
-		return \Redirect::route('salesnotes.index');
+		return redirect()->route('salesnotes.index');
 	}
 
 	public function fileDelete($file)
@@ -176,18 +173,18 @@ class SalesNotesController extends BaseController {
 	 * @param  integer $id Company Id
 	 * @return [type]     [description]
 	 */
-	public function createSalesNotes($id=NULL) {
-		if(! isset($id)) {
-				$id = \Input::get('companyId');
+	public function createSalesNotes(Request $request, $id=NULL) {
+		if(! $request->has($id)) {
+				$id = $request->get('companyId');
 
 		}
-		$this->userServiceLines = $this->company->getUserServiceLines();
+	
 		// Check that user can view company 
 		// based on user service line associations.
 		
 		if (! $this->company->checkCompanyServiceLine($id,$this->userServiceLines))
 		{
-			return \Redirect::route('company.index');
+			return redirect()->route('company.index');
 		}
 		$data = $this->company
 		->with('managedBy')
@@ -243,7 +240,7 @@ class SalesNotesController extends BaseController {
 		$data = $request->all();
 
 
-
+		// ALL THIS CAN BE SIMPLIFIED
 		if ($request->hasFile('attachment'))
 		{
 			
@@ -303,7 +300,7 @@ class SalesNotesController extends BaseController {
 
 	private function processAttachments($data)
 	{
-		
+		// PUT THIS INTO A FORM REQUEST
 			
 			$validator = Validator::make(
 			    array($data),
@@ -384,4 +381,3 @@ class SalesNotesController extends BaseController {
 	}
 	
 }
-?>

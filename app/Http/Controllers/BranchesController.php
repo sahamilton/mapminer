@@ -19,6 +19,7 @@ class BranchesController extends BaseController {
 	protected $serviceline;
 	protected $person;
 	protected $state;
+
 	
 	
 	public function __construct(Branch $branch, Serviceline $serviceline,Person $person, State $state) {
@@ -26,7 +27,7 @@ class BranchesController extends BaseController {
 			$this->serviceline = $serviceline;
 			$this->person = $person;
 			$this->state = $state;
-			parent::__construct();
+			parent::__construct($this->branch);
 	}
 	
 	/**
@@ -35,11 +36,11 @@ class BranchesController extends BaseController {
 	 */
 	public function index()
 	{
-		$userServicelines = $this->branch->getUserServiceLines();
+		$userServiceLines = $this->userServiceLines;
 		$branches = $this->branch
 			->with('region','manager','servicedBy')
-			->whereHas('servicelines', function($q) use($userServicelines){
-					    $q->whereIn('serviceline_id',$userServicelines);
+			->whereHas('servicelines', function($q) use($userServiceLines) {
+					    $q->whereIn('serviceline_id',$userServiceLines);
 
 					})
 			->orderBy('branchnumber')
@@ -54,7 +55,7 @@ class BranchesController extends BaseController {
 						'Region'=>'region',
 						'Manager'=>'manager',
 						'Serviced'=>'servicedBy');
-		if (\Auth::user()->hasRole('Admin')) {
+		if (auth()->user()->hasRole('Admin')) {
 			$fields['Actions']='actions';
 		}
 		
@@ -164,8 +165,6 @@ class BranchesController extends BaseController {
 	public function show($branch)
 	{
 		
-		
-		$this->userServiceLines = $this->branch->getUserServiceLines();
 		$servicelines = $this->serviceline->whereIn('id',$this->userServiceLines)->get();
 		$data['branch'] = $this->branch
 		->whereHas('servicelines', function($q){
@@ -205,18 +204,16 @@ class BranchesController extends BaseController {
 	 * @return View
 	 */
 	
-	public function showNearbyBranches($id)
+	public function showNearbyBranches(Request $request, $id)
 	{
 		
-		if (\Input::get('d')) {
-			$data['distance'] = \Input::get('d');
+		if ($request->has('d')) {
+			$data['distance'] = $request->get('d');
 		}else{
 			$data['distance'] = '50';
 		}
 		
 		$data['branches'] = $this->branch->findOrFail($id);
-
-		
 
 		return response()->view('branches.nearby', compact('data'));
 	}
@@ -229,7 +226,7 @@ class BranchesController extends BaseController {
 	{
 		
 		$locations = Location::where('branch_id','=',$id)->get();
-		return Response::json(array('error'=>false,'locations' =>$locations->toArray()),200)->setCallback(\Input::get('callback'));
+		return response()->json(array('error'=>false,'locations' =>$locations->toArray()),200)->setCallback(\Input::get('callback'));
 		
 	}
 
@@ -242,8 +239,6 @@ class BranchesController extends BaseController {
 	public function edit($branch)
 	{
 		
-		$this->userServiceLines = $this->branch->getUserServiceLines();
-
 		$data = $branch->where('id','=',$branch->id)->with('servicelines')->get();
 		$branch = $data[0];
 		$servicelines = $this->serviceline->whereIn('id',$this->userServiceLines )->get();
@@ -261,8 +256,6 @@ class BranchesController extends BaseController {
 	 */
 	public function update(BranchFormRequest $request,$branch)
 	{
-
-	
 		$this->branch = $branch->with('servicelines')->findOrFail($branch->id);
 		$this->branch->update($request->all());
 		$serviceline = $request->get('serviceline');
@@ -384,7 +377,7 @@ class BranchesController extends BaseController {
 	 */
 	public function statemap($state=NULL)
 	{
-		$this->userServiceLines = $this->branch->getUserServiceLines();
+		
 		$servicelines = $this->serviceline->whereIn('id',$this->userServiceLines)->get();
 
 		if(!isset($state)){
@@ -430,13 +423,12 @@ class BranchesController extends BaseController {
 	}
 	
 	public function retrieveStateBranches($state){
-		$this->userServiceLines = $this->branch->getUserServiceLines();
+		
 		$branches =  $this->branch
 		->where('state','=',$state)
 		->with('servicelines','servicedBy')
-		->whereHas('servicelines', function($q){
-					    $q->whereIn('serviceline_id',$this->userServiceLines);
-
+		->whereHas('servicelines', function($q) {
+					    $q->whereIn('serviceline_id',$this->userservicelines);
 					})
 		->orderBy('city')
 		->get();
@@ -479,19 +471,17 @@ class BranchesController extends BaseController {
 	
 	
 	public function state($statecode=NULL) {
-		if(! $this->userServiceLines){
-			$this->userServiceLines = $this->branch->getUserServiceLines();
-		}
+		
 
-		if(!$statecode){
+		if(! $statecode){
 			$statecode = \Input::get('state');
 		}
 		
 		$branches = $this->branch
 			->with('region')
 			->with('manager')
-			->whereHas('servicelines', function($q){
-					    $q->whereIn('serviceline_id',$this->userServiceLines);
+			->whereHas('servicelines', function($q) {
+					    $q->whereIn('serviceline_id',$this->userservicelines);
 
 					})
 			->where('state','=',$statecode)

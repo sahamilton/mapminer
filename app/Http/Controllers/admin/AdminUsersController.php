@@ -67,7 +67,7 @@ class AdminUsersController extends BaseController {
         $this->track = $track;
         $this->branch = $branch;
         $this->serviceline = $serviceline;
-                
+        parent::__construct($this->company);        
     }
 
     /**
@@ -77,37 +77,26 @@ class AdminUsersController extends BaseController {
      */
     public function index($id=NULL)
     {
-       $this->userServiceLines = $this->branch->getUserServiceLines();
-
-        $title = 'People / User Management';
-
+     
         if(! $id)
         // Grab all the users
 	       {
-	       		$users = $this->user
-	       	       ->with('roles','usage','person','serviceline')
-	       	       ->whereHas('serviceline', function($q)  {
-					    $q->whereIn('serviceline_id',$this->userServiceLines);
+                $servicelines = $this->userServiceLine;
+                $serviceline = 'All';
+                $title = 'People / User Management';
+            }else{
 
-					})
-	       	       ->get();
-	       	       $serviceline = 'All';
-	       	}else{
-				
                 $servicelines = $this->serviceline->find($id);
-				
-				$users = $this->user
-	       	       ->with('roles','usage','person')
-	       	       ->whereHas('serviceline', function($q) use ($servicelines) {
-					    $q->whereIn('serviceline_id',[$servicelines->id]);
-
-					})
-	       	       ->get();
-              
-	       	       $serviceline = $servicelines->ServiceLine;
-                   $title = $serviceline ." users";
+                $serviceline = $servicelines->ServiceLine;
+                $title = $serviceline ." users";
 	       	}
-		
+	      $users = $this->user
+           ->with('roles','usage','person','serviceline')
+           ->whereHas('serviceline', function($q) use($servicelines) {
+                $q->whereIn('serviceline_id',$serviceLines);
+
+            })
+           ->get();
 	       	
         // Show the page
         return response()->view('admin/users/index', compact('users', 'title','serviceline'));
@@ -209,7 +198,7 @@ class AdminUsersController extends BaseController {
      */
     public function edit($userid)
     {
-        $servicelines = $this->person->getUserServiceLines();
+        
         $user = $this->user
           ->with('serviceline','person','person.branchesServiced','roles')
           ->find($userid->id);
@@ -428,7 +417,7 @@ class AdminUsersController extends BaseController {
     	if ($validator->fails())
 		{
 			
-			return Redirect::back()
+			return redirect()->back()
 			->withErrors($validator);
 		}
 
