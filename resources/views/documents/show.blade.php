@@ -8,8 +8,8 @@
 <p><strong>Available Until:</strong> {{$document->dateto->format('Y-m-d')}}</p>
 <p><strong>Description:</strong> {{$document->description}}</p>
 <p><strong>Summary:</strong> {{$document->summary}}</p>
-<p><strong>Type:{{$document->doctype}}</strong></p>
-<p><strong>Location:</strong> <a href="{{$document->location}}" target="_blank" >{{$document->doctype}}</a></p>
+<p><strong>Type:</strong>{{$document->doctype}}</strong></p>
+<p><strong>Location:</strong> <a href="{{$document->location}}" target="_blank" >{{$document->location}}</a></p>
 
 @if(isset($document->rank) && count($document->rank) > 0 && count($document->score) > 0 && count($document->rankings) >0 )
    <?php $rank = round($document->rank[0]->rank,2)?>
