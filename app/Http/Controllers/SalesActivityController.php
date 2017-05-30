@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use Mail;
 use App\Salesactivity;
 use App\SearchFilter;
 use App\SalesProcess;
 use App\Document;
 use App\Location;
+use App\Mail\SendCampaignMail;
+use App\Mail\SendManagersCampaignMail;
+use App\Mail\SendSenderCampaignMail;
 use App\SalesOrg;
 use App\Person;
 
@@ -68,7 +72,7 @@ class SalesActivityController extends BaseController
      */
     public function store(Request $request)
     {
-        $data = $this->getDates($request->all());
+        $data = $this->setDates($request->all());
 
         $activity = $this->activity->create($data);
         foreach ($request->get('salesprocess') as $process){
@@ -81,8 +85,7 @@ class SalesActivityController extends BaseController
     }
 
     public function mycampaigns()
-    {
-     
+    { 
         
         $activities = $this->activity->with('salesprocess','vertical')
          ->when(count($this->userVerticals)>0,function($q) {
@@ -90,7 +93,6 @@ class SalesActivityController extends BaseController
                 $q1->whereIn('vertical_id',$this->userVerticals);
             });
         })
-        
         ->where('datefrom','<=',date('Y-m-d'))
         ->where('dateto','>=',date('Y-m-d'))
         ->get();
@@ -106,14 +108,15 @@ class SalesActivityController extends BaseController
      */
     public function show($id)
     {
-        $userServiceLines = $this->location->getUserServiceLines();
        
+     
         $activity = $this->activity->with('salesprocess','vertical')->findOrFail($id);
         $lat = auth()->user()->person->lat;
         $lng = auth()->user()->person->lng;
         $verticals = array_unique ($activity->vertical->pluck('id')->toArray()); 
-        $locations = $this->location->findNearbyLocations($lat,$lng,25,$number=null,$company=NULL,$userServiceLines, $limit=null, $verticals);
-        
+
+        $locations = $this->location->findNearbyLocations($lat,$lng,25,$number=null,$company=NULL,$this->userServiceLines, $limit=null, $verticals);
+         
 
         return response()->view('salesactivity.show',compact('activity','locations'));
     }
@@ -143,7 +146,7 @@ class SalesActivityController extends BaseController
     public function update(SalesActivityFormRequest $request, $id)
     {
         $activity = $this->activity->findOrFail($id);
-        $data = $this->getDates($request->all());
+        $data = $this->setDates($request->all());
         $activity->update($data);
         $activity->salesprocess()->detach();
 
@@ -173,14 +176,81 @@ class SalesActivityController extends BaseController
 
         $activity = $this->activity->with('vertical')->findOrFail($id);
         $verticals = array_unique($activity->vertical->pluck('id')->toArray());
-        $sales = $this->filterSalesReps($verticals);
-        dd('sales team',$sales);
+        $salesteam = $this->filterSalesReps($verticals);
+        $verticals = array_unique($activity->vertical->pluck('filter')->toArray());
+        $message = $this->constructMessage($activity,$verticals);
+        return response()->view('salesactivity.salesteam',compact('salesteam','activity','message'));
+    }
 
-        return response()->view('salesactivity.salesteam',compact('sales'));
+
+    public function email(Request $request, $id){
+
+        $data['activity'] = $this->activity->with('vertical','salesprocess')->findOrFail($id);
+        $data['verticals'] = array_unique($data['activity']->vertical->pluck('id')->toArray());
+        $data['salesteam'] = $this->filterSalesReps($data['verticals']);
+
+        $data['message'] = $request->get('message');;
+     
+      /* $this->notifySalesTeam($data);
+
+        $this->notifyManagers($data);*/
+        $this->notifySender($data);
+        return response()->view('salesactivity.sendercampaign',compact('data'));
+
+    }
+    private function notifySalesTeam($data){
+        foreach ($data['salesteam'] as $data['sales']){
+
+            Mail::queue(new SendCampaignMail($data));
+            
+        }
+    }
+
+    private function notifySender($data){
+        $data['sender'] = auth()->user()->email;
+        Mail::queue(new SendSenderCampaignMail($data));
+
+    }
+
+    private function notifyManagers($data){
+        $managers = array();
+        foreach ($data['salesteam'] as $salesrep){
+            if($salesrep->reportsTo){
+                $data['managers'][$salesrep->reportsTo->id]['team'][]=$salesrep->firstname ." ". $salesrep->lastname;
+                $data['managers'][$salesrep->reportsTo->id]['email']=$salesrep->reportsTo->userdetails->email;
+                $data['managers'][$salesrep->reportsTo->id]['firstname']=$salesrep->reportsTo->firstname;
+                $data['managers'][$salesrep->reportsTo->id]['lastname']= $salesrep->reportsTo->lastname;
+            }
+        }
+        foreach ($data['managers'] as $manager){
+            Mail::queue(new SendManagersCampaignMail($data,$manager));
+        }
+
+    }
+    private function constructMessage($activity,$verticals){
+
+        $message = 
+        $activity->title .  " campaign runs from " . $activity->datefrom->format('M j, Y'). " until " . $activity->dateto->format('M j, Y').
+        ". ".$activity->description."</p>";
+        $message.="This campaign focuses on: <ul>";
+       
+        $message.= "<li>" . implode("</li><li>",$activity->salesprocess->pluck('step')->toArray()). "</li>";
+        
+        $message .='</ul> for the following sales verticals:';
+        $message .='<ul>';
+ 
+        
+            $message.= "<li>" . implode("</li><li>",$verticals). "</li>";
+        
+        $message.="</ul></p>";
+        $message.="<p>Check out <strong><a href=\"".route('salesactivity.show',$activity->id)."\">MapMiner</a></strong> for resources, including nearby locations, to help you with this campaign.</p>";
+
+        return $message;
     }
 
     private function filterSalesReps( $verticals){
-        return  Person::with('userdetails')
+
+        return Person::with('userdetails','reportsTo','reportsTo.userdetails')
         ->whereHas('userdetails.roles',function ($q){
             $q->where('role_id','=',5);
         })
@@ -190,35 +260,13 @@ class SalesActivityController extends BaseController
             })
             ->orHas('industryfocus','<',1);
         })
-       
+        ->whereNotNull('lat')
+        ->whereNotNull('lng')
         ->get();
        
     }
 
-    public function getSalesActivity($id){
-
-        $activity = $this->activity->with('salesprocess','vertical')->findOrFail($id);
-        $data['salesprocess'] = array();
-        $data['verticals']= array();
-        foreach($activity->salesprocess as $process)
-        {
-            if(! in_array($process->id, $data['salesprocess'])){
-
-            $data['salesprocess'][]=$process->id;
-            }
-            if(! in_array($process->pivot->vertical_id,$data['verticals'])){
-                 $data['verticals'][]=$process->pivot->vertical_id;
-            }
-           
-            
-        }
-       
-         $documents = $this->document->getDocumentsWithVerticalProcess($data);
-
-        return response()->view('documents.index',compact('documents','data'));
-    }
-
-    private function getDates($data){
+     private function setDates($data){
         $data['datefrom'] = \Carbon\Carbon::createFromFormat('m/d/Y', $data['datefrom']);
         $data['dateto'] = \Carbon\Carbon::createFromFormat('m/d/Y', $data['dateto']);
         return $data;

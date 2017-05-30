@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\User;
 use App\Document;
+use Carbon\Carbon;
 use App\DocumentReader;
 use App\SalesProcess;
 use App\SearchFilter;
@@ -58,7 +59,7 @@ class DocumentsController extends Controller
         
         $text = new DocumentReader;
         $data = $text->readDocument($request);
-
+       
         $document = $this->document->create($data);
 
         $document->vertical()->attach($request->get('vertical'));
@@ -101,12 +102,13 @@ class DocumentsController extends Controller
      */
     public function update(DocumentFormRequest $request, $id)
     {
-   
-         $document = $this->document->findOrFail($id);
-         $document->update($request->all());
-         $document->vertical()->sync($request->get('vertical'));
-         $document->process()->sync($request->get('salesprocess'));
-         return redirect()->route('documents.index');
+        $text = new DocumentReader;
+        $data = $text->readDocument($request);
+        $document = $this->document->findOrFail($id);
+        $document->update($data);
+        $document->vertical()->sync($request->get('vertical'));
+        $document->process()->sync($request->get('salesprocess'));
+        return redirect()->route('documents.index');
     }
 
     /**
@@ -168,6 +170,12 @@ class DocumentsController extends Controller
         $document = $this->document->with('rankings','owner','owner.person')->find($id);
         return response()->view('documents.watchedby',compact('document'));
     }
-
+    
+    private function setDates($data){
+        dd($data);
+        $data['datefrom'] = Carbon::createFromFormat('m/d/Y', $data['datefrom']);
+        $data['dateto'] = Carbon::createFromFormat('m/d/Y', $data['dateto']);
+        return $data;
+    }
     
 }

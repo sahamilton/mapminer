@@ -2,10 +2,11 @@
 @section('content')
 
 <h1>{{$document->title}}</h1>
+
 <p><strong>Editor:</strong> {{$document->author->person->fullName()}}</p>
-<p><strong>Published:</strong> {{$document->created_at->format('Y-m-d')}}</p>
-<p><strong>Available From:</strong> {{$document->datefrom->format('Y-m-d')}}</p>
-<p><strong>Available Until:</strong> {{$document->dateto->format('Y-m-d')}}</p>
+<p><strong>Published:</strong> {{$document->created_at}}</p>
+<p><strong>Available From:</strong> {{$document->datefrom}}</p>
+<p><strong>Available Until:</strong> {{$document->dateto}}</p>
 <p><strong>Description:</strong> {{$document->description}}</p>
 <p><strong>Summary:</strong> {{$document->summary}}</p>
 <p><strong>Type:</strong>{{$document->doctype}}</strong></p>

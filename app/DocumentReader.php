@@ -54,7 +54,7 @@ class DocumentReader extends Model
 
             $document = new $class();   
 
-            $data['plaintexttext'] = $document->read($data);
+            $data['plaintext'] = $document->read($data);
             return $data;
     }
 

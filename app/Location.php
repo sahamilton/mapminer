@@ -96,8 +96,9 @@ class Location extends Model {
 			}
 		}else{
 			$keyset = ['vertical','segment','businesstype'];
-			$searchKeys = $verticals;
+			$searchKeys['vertical']['keys'] = implode("','",$verticals);
 		}
+		
 		$params = array(":loclat"=>$lat,":loclng"=>$lng,":distance"=>$distance);
 		
 		// Get the users serviceline associations
@@ -148,7 +149,7 @@ class Location extends Model {
 						
 						if(isset($searchKeys[$key]['keys'])){
 							$query .= " AND (".$key." in ('".$searchKeys[$key]['keys']."')";
-						
+							
 							if(isset($searchKeys[$key]['null'] ) && $searchKeys[$key]['null']=='Yes') {
 								$query.=" OR ". $key . " IS NULL";
 							}
@@ -166,7 +167,7 @@ class Location extends Model {
 			 {
 			 		$query.=" limit " . $limit;
 			 }
-			
+		
 			 $result = \DB::select($query);
 
 		return $result;

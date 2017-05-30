@@ -25,8 +25,9 @@ class SalesActivityFormRequest extends FormRequest
     {
         return [
             'title'=>'required',
-            'datefrom'=>'required',
-            'dateto'=>'required',
+            'datefrom'=>'required|date_format:m/d/Y',
+            'dateto'=>'required|date_format:m/d/Y',
+            'description'=>'required',
         ];
     }
 }

@@ -1,11 +1,14 @@
 @extends ('site.layouts.default')
-<link type="css" >
+
 @section('content')
+
 <div class="container">
 <h1>{{$activity->title}}</h1>
+<h4>From {{$activity->datefrom->format('M j Y')}} to {{$activity->dateto->format('M j Y')}}</h4>
 <a href="{{route('salescampaigns')}}">
 <span class='glyphicon glyphicon-calendar'></span>
 Back to all campaigns</a>
+
 <ul class="nav nav-tabs">
   <li class="active"><a data-toggle="tab" href="#home">Campaign</a></li>
   <li><a data-toggle="tab" href="#menu1">Resources</a></li>
@@ -19,9 +22,12 @@ Back to all campaigns</a>
 
 
 
-<h4>From {{$activity->datefrom->format('M d Y')}} to {{$activity->dateto->format('M d Y')}}</h4>
+
 	<div class="row">
+	<h2>Campaign Description</h2>
+		<p>{{$activity->description}}</p>
 		<div class="col-md-3">
+
 			<h4>Verticals:</h4>
 			<?php $verticals = array();?>
 			@foreach ($activity->vertical as $vertical)
@@ -45,25 +51,30 @@ Back to all campaigns</a>
 	</div>
 </div>
   <div id="menu1" class="tab-pane fade">
-    
+  
 <div class="row">
 	<h2> Sales Resources</h2>
 	@foreach ($activity->relatedDocuments() as $document)
+
 		<h4><a href="{{route('documents.show',$document->id)}}" title="See {{$document->title}} document details">{{$document->title}}</a></h4>
 		<p>{{$document->summary}}</p>
 		@if(count($document->rankings) >0)
-			<?php $rank = round($document->score[0]->score/count($document->rankings));?>
+			<?php $rank = round($document->score[0]->score/count($document->rankings));
+			$count = count($document->rankings);
+			$avg = round($document->score[0]->score/count($document->rankings),2)?>
 		@else
-			<?php $rank = null;?>
+			<?php $rank = null;
+			$count=0;
+			$avg = 0;?>
 		@endif
 		<div id="{{$document->id}}" data-rating="{{$rank}}" class="starrr" >
-         <span id="count-existing"> {{count($document->rankings)}} ratings averaging {{round($document->score[0]->score/count($document->rankings),2)}} </span></div>
+         <span id="count-existing"> {{$count}} ratings averaging {{$avg}} </span></div>
 		
 		@if($document->myranking())
 		Your Ranking: {{$document->myranking()->pivot->rank}}
 		@endif
 	
-		<p><a href="{{$document->location}}" target="_blank">{{$document->location}}</a></p>
+		<p><a href="{{$document->location}}" target="_blank">View document</a></p>
 		<hr />
 
 	@endforeach

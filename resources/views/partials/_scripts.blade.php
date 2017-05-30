@@ -1,9 +1,7 @@
 <script>
 $(document).ready(function() 
     { 
-      $(function() {
-        $('#cp2').colorpicker();
-    });
+      
     
     $("#selectall").change(function(){
       $(".watchItem").prop('checked', $(this).prop('checked')).change();
@@ -14,7 +12,10 @@ $(document).ready(function()
 	}, function(){
 	    $(this).text("more..").siblings(".complete").hide();    
 	});
-    
+    $("button").click(function(){
+    	event.preventDefault();
+	    $("#message").toggle();
+	});
 	$(document).on('show.bs.modal','#confirm-delete', function(e) {
     	$(this).find('.danger').attr('href', $(e.relatedTarget).data('href'));
 		$(this).find('#title').html($(e.relatedTarget).data('title'));

@@ -1,7 +1,16 @@
+<!-- Campaign Title -->
 <div class="form-group{{ $errors->has('title') ? ' has-error' : '' }}">
 <label for="title">Title</label>
 <input type="text" required class='form-control' name="title" value="{{isset($activity->title) ? $activity->title :'' }}" />
 {!! $errors->first('title', '<p class="help-block">:message</p>') !!}
+</div>
+
+<!-- Description -->
+
+<div class="form-group{{ $errors->has('description') ? ' has-error' : '' }}">
+<label for="description">Campaign Description</label>
+<textarea required class='form-control' data-error="Please provide some description of this campaign" name="description">{{old('description') ? old('description') : isset($activity->description) ? $activity->description :''  }}</textarea>
+{!! $errors->first('description', '<p class="help-block">:message</p>') !!}
 </div>
 
 <!--- Date From -->

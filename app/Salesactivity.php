@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Salesactivity extends Model implements \MaddHatter\LaravelFullcalendar\IdentifiableEvent
 {
     public $table='salesactivity';
-    public $fillable=['datefrom','dateto','title'];
+    public $fillable=['datefrom','dateto','title','description'];
     public $dates = ['datefrom','dateto'];
 // Methods for Calendar
 // 

@@ -287,6 +287,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function()
 			Route::get('campaigndocs/{id}',['as'=>'salesdocuments.index','uses'=>'SalesActivityController@getSalesActivity']);
 
 			Route::get('campaign/{id}/announce',['as'=>'campaign.announce','uses'=>'SalesActivityController@announce']);
+
+			Route::post('campaign/{id}/message',['as'=>'sendcampaign.message','uses'=>'SalesActivityController@email']);
 			
 
 

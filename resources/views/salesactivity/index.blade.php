@@ -1,4 +1,4 @@
-@extends ('site.layouts.default')
+@extends ('admin.layouts.default')
 @section('content')
 <div class="container">
 <h2>Sales Campaigns</h2>
@@ -63,6 +63,7 @@
                     <ul class="dropdown-menu" role="menu">
 
                     <li><a href="{{route('salesactivity.edit',$activity->id)}}"><i class="glyphicon glyphicon-pencil"></i> Edit {{$activity->title}} campaign</a></li>
+                     <li><a href="{{route('campaign.announce',$activity->id)}}"><i class="glyphicon glyphicon-envelope"></i> Email campaign team</a></li>
                     <li><a href = "{{route('salesdocuments.index',$activity->id)}}"><i class="glyphicon glyphicon-book"></i> {{$activity->title}} campaign Documents</a></li>
                     <li><a data-href="{{route('salesactivity.purge',$activity->id)}}" 
                     data-toggle="modal" 

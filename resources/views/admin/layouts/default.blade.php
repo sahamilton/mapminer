@@ -35,8 +35,8 @@
  <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
  <script src="{{asset('bootstrap/js/bootstrap.min.js')}}"></script>
 <!-- DataTables -->
-
-<script src="{{asset('assets/js/summernote.min.js')}}"></script>
+<link href="//cdnjs.cloudflare.com/ajax/libs/summernote/0.8.3/summernote.css" rel="stylesheet">
+<script src="//cdnjs.cloudflare.com/ajax/libs/summernote/0.8.3/summernote.js"></script>
  
 
 
