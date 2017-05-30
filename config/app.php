@@ -173,7 +173,7 @@ return [
         Geocoder\Laravel\Providers\GeocoderService::class,
         Collective\Html\HtmlServiceProvider::class,
         MaddHatter\LaravelFullcalendar\ServiceProvider::class,
-
+        Dionera\BeanstalkdUI\BeanstalkdUIServiceProvider::class,
         /*
          * Application Service Providers...
          */
