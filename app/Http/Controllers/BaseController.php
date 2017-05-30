@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 class BaseController extends Controller {
 	
 	public $userServiceLines;
+	public $userVerticals;
 
     /**
      * Initializer.
@@ -20,7 +21,7 @@ class BaseController extends Controller {
        $this->middleware(function ($request, $next) use($model){
 
                $this->userServiceLines = session()->has('user.servicelines') ? session()->get( 'user.servicelines' ) : $model->getUserServiceLines();
-
+               $this->userVerticals = session()->has('userverticals') ? session()->get('user.verticals') : $model->getUserVerticals();
                 return $next($request);
         });
      

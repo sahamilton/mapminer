@@ -16,8 +16,8 @@ class CreateSalesactivityTable extends Migration
         Schema::create('salesactivity', function (Blueprint $table) {
             $table->increments('id');
             $table->string('title');
-            $table->date('from');
-            $table->date('to');
+            $table->date('datefrom');
+            $table->date('dateto');
             $table->timestamps();
            
             

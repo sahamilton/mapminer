@@ -380,25 +380,26 @@ public function _import_csv($filename, $table,$fields)
 	public function getUserServiceLines()
 	{
 		
-		if (\Session::has('user.servicelines')){
+		if (session()->has('user.servicelines')){
 			
-			return \Session::get('user.servicelines');
+			return session()->get('user.servicelines');
 		}
 
 		return $this->currentUserServicelines();
 	}
 
 	public function currentUserServicelines(){
-       $user = \Auth::user()->with('serviceline')->first();
+       $user = auth()->user()->with('serviceline')->first();
        $userServicelines= $user->serviceline->pluck('id')->toArray();
-       \Session::put('user.servicelines',$userServicelines) ;
-      
-        return $userServicelines;
+       session()->put('user.servicelines',$userServicelines) ;
+       return $userServicelines;
     }
 
     public function getUserVerticals(){
-        $user = \Auth::user()->with('person')->firstOrFail();
-        return $user->person->industryfocus()->pluck('search_filter_id');
+        $user = auth()->user()->with('person')->firstOrFail();
+        $userVerticals= $user->person->industryfocus()->pluck('search_filter_id')->toArray();
+        session()->put('user.verticals',$userVerticals) ;
+        return $userVerticals;
         
     }
 

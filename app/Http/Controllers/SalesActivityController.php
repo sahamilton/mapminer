@@ -12,7 +12,7 @@ use App\SalesOrg;
 use App\Http\Requests\SalesActivityFormRequest;
 use Illuminate\Http\Request;
 
-class SalesActivityController extends Controller
+class SalesActivityController extends BaseController
 {
    
     public $activity;
@@ -22,6 +22,7 @@ class SalesActivityController extends Controller
     public $location;
     public $salesorg;
 
+
     public function __construct(Salesactivity $activity, SearchFilter $vertical, SalesProcess $process, Document $document,Location $location, SalesOrg $salesorg){
 
         $this->activity = $activity;
@@ -30,6 +31,7 @@ class SalesActivityController extends Controller
         $this->document = $document;
         $this->location = $location;
         $this->salesorg = $salesorg;
+        parent::__construct($location);
     }
 
     /**
@@ -80,11 +82,11 @@ class SalesActivityController extends Controller
     public function mycampaigns()
     {
      
-        $userVerticals = $this->activity->getUserVerticals();
+        
         $activities = $this->activity->with('salesprocess','vertical')
-         ->when(count($userVerticals)>0,function($q) use ($userVerticals){
-            $q->whereHas('vertical',function($q1) use($userVerticals){
-                $q1->whereIn('vertical_id',$userVerticals);
+         ->when(count($this->userVerticals)>0,function($q) {
+            $q->whereHas('vertical',function($q1) {
+                $q1->whereIn('vertical_id',$this->userVerticals);
             });
         })
         
