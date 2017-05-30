@@ -87,4 +87,9 @@ class Salesactivity extends Model implements \MaddHatter\LaravelFullcalendar\Ide
         })->get();
 
     }
+    public function currentActivities(){
+
+        return $this->where('datefrom','<=',date('Y-m-d'))
+        ->where('dateto','>=',date('Y-m-d'));
+    }
 }

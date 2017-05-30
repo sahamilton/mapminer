@@ -176,9 +176,7 @@ class SalesActivityController extends BaseController
         $sales = $this->filterSalesReps($verticals);
         dd('sales team',$sales);
 
-        //find all persons who have role sales reps 
-        //in these verticals or who have no vertical
-        //industryfocus
+        return response()->view('salesactivity.salesteam',compact('sales'));
     }
 
     private function filterSalesReps( $verticals){
