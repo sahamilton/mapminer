@@ -11,11 +11,11 @@
 <p><strong>Type:{{$document->doctype}}</strong></p>
 <p><strong>Location:</strong> <a href="{{$document->location}}" target="_blank" >{{$document->doctype}}</a></p>
 
-@if(isset($document->rank) && count($document->rank) > 0 && count($document->score) > 0 && count($document->rankings) >0)
-   <?php $rank = round($document->rank[0]->rank,2);?>
+@if(isset($document->rank) && count($document->rank) > 0 && count($document->score) > 0 && count($document->rankings) >0 )
+   <?php $rank = round($document->rank[0]->rank,2)?>
 
 
- <div id="{{$document->id}}" data-rating="{{intval(isset($rank)}}" class="starrr" ></div>
+ <div id="{{$document->id}}" data-rating="{{intval(isset($rank))}}" class="starrr" ></div>
             <span id="count-existing">{{$rank}}</span>
 @endif
 @endsection
