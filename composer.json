@@ -15,6 +15,7 @@
         "laravel/scout": "^3.0",
         "laravel/tinker": "~1.0",
         "pda/pheanstalk": "^3.1",
+        "dionera/laravel-beanstalkd-ui": "^0.3.3",
         "laravelcollective/html": "^5.3.0",
         "maddhatter/laravel-fullcalendar": "^1.2",
         "smalot/pdfparser": "^0.10.0",

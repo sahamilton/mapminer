@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "7691ccc840fefbc01596ed3fff3f27db",
-    "content-hash": "9c80f9205cbcd4dcbcdc6a6e83f249d7",
+    "hash": "3bb5b7b9844f9c79a2c8c42217398e50",
+    "content-hash": "319b5e44bfd99a269bd10901d1f0f950",
     "packages": [
         {
             "name": "barryvdh/laravel-debugbar",
@@ -348,6 +348,46 @@
                 "tls"
             ],
             "time": "2017-03-06 11:59:08"
+        },
+        {
+            "name": "dionera/laravel-beanstalkd-ui",
+            "version": "0.3.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Dionera/laravel-beanstalkd-admin-ui.git",
+                "reference": "0b47b50da302e6dd0f5e9e1585a6734ad94ac356"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Dionera/laravel-beanstalkd-admin-ui/zipball/0b47b50da302e6dd0f5e9e1585a6734ad94ac356",
+                "reference": "0b47b50da302e6dd0f5e9e1585a6734ad94ac356",
+                "shasum": ""
+            },
+            "require": {
+                "laravel/framework": "^5.1",
+                "pda/pheanstalk": "~3.0"
+            },
+            "require-dev": {
+                "phpspec/phpspec": "^3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Dionera\\BeanstalkdUI\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Kai Sassnowski",
+                    "email": "ksassnowski@gmail.com"
+                }
+            ],
+            "description": "An Admin UI for Beanstalkd and Laravel",
+            "time": "2017-04-23 20:46:21"
         },
         {
             "name": "dnoegel/php-xdg-base-dir",
