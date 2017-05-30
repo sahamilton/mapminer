@@ -8,6 +8,7 @@ use App\SalesProcess;
 use App\Document;
 use App\Location;
 use App\SalesOrg;
+use App\Person;
 
 use App\Http\Requests\SalesActivityFormRequest;
 use Illuminate\Http\Request;
@@ -108,8 +109,8 @@ class SalesActivityController extends BaseController
         $userServiceLines = $this->location->getUserServiceLines();
        
         $activity = $this->activity->with('salesprocess','vertical')->findOrFail($id);
-        $lat = \Auth::user()->person->lat;
-        $lng = \Auth::user()->person->lng;
+        $lat = auth()->user()->person->lat;
+        $lng = auth()->user()->person->lng;
         $verticals = array_unique ($activity->vertical->pluck('id')->toArray()); 
         $locations = $this->location->findNearbyLocations($lat,$lng,25,$number=null,$company=NULL,$userServiceLines, $limit=null, $verticals);
         
@@ -167,29 +168,33 @@ class SalesActivityController extends BaseController
         $this->activity->destroy($id);
         return redirect()->route('salesactivity.index');
     }
+
     public function announce($id){
+
         $activity = $this->activity->with('vertical')->findOrFail($id);
         $verticals = array_unique($activity->vertical->pluck('id')->toArray());
-        
-        $salesorg = $this->salesorg->getSalesOrg();
-        $salesorg = $this->filterSalesReps($salesorg,$verticals);
-        dd($salesorg);
+        $sales = $this->filterSalesReps($verticals);
+        dd('sales team',$sales);
+
         //find all persons who have role sales reps 
         //in these verticals or who have no vertical
         //industryfocus
     }
 
-    private function filterSalesReps($salesorg, $verticals){
-        $data = array();
-        foreach($salesorg as $sales){
-            foreach ($sales->industryfocus as $focus){
-                if(in_array($focus->id,$verticals)){
-                    $data[] = $sales->id;
-                    break;
-                }
-            }
-        }
-        return $data;
+    private function filterSalesReps( $verticals){
+        return  Person::with('userdetails')
+        ->whereHas('userdetails.roles',function ($q){
+            $q->where('role_id','=',5);
+        })
+        ->where(function($query) use($verticals){
+            $query->whereHas('industryfocus',function ($q) use($verticals){
+                $q->whereIn('search_filter_id',$verticals);
+            })
+            ->orHas('industryfocus','<',1);
+        })
+       
+        ->get();
+       
     }
 
     public function getSalesActivity($id){
