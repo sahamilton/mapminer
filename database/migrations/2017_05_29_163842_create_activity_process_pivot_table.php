@@ -16,8 +16,8 @@ class CreateActivityProcessPivotTable extends Migration
             $table->integer('activity_id')->unsigned()->index();
             $table->foreign('activity_id')->references('id')->on('salesactivity')->onDelete('cascade');
             
-            $table->integer('process_id')->unsigned()->index();
-            $table->foreign('process_id')->references('id')->on('salesprocess')->onDelete('cascade');
+            $table->integer('salesprocess_id')->unsigned()->index();
+            $table->foreign('salesprocess_id')->references('id')->on('salesprocess')->onDelete('cascade');
 
             $table->integer('vertical_id')->unsigned()->index();
             $table->foreign('vertical_id')->references('id')->on('searchfilters')->onDelete('cascade');
@@ -32,6 +32,6 @@ class CreateActivityProcessPivotTable extends Migration
      */
     public function down()
     {
-        Schema::drop('activity_process');
+        Schema::drop('activity_process_vertical');
     }
 }
