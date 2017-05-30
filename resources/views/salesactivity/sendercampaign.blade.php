@@ -5,7 +5,7 @@
 <h2>{{$data['activity']->title}}</h2>
 
 
-<p>The following message has been sent to {{count($data['salesteam'])}} members of the sales organization and their managers:</p>
+<p>The following message has been sent to {{$data['count']}} members of the sales organization and their managers:</p>
 
 <div class="panel panel-default">
 <div class="panel-body"><p>{!! $data['message'] !!}</p>

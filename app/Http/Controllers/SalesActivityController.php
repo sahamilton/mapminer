@@ -187,19 +187,19 @@ class SalesActivityController extends BaseController
 
         $data['activity'] = $this->activity->with('vertical','salesprocess')->findOrFail($id);
         $data['verticals'] = array_unique($data['activity']->vertical->pluck('id')->toArray());
-        $data['salesteam'] = $this->filterSalesReps($data['verticals']);
+        $salesteam = $this->filterSalesReps($data['verticals']);
 
         $data['message'] = $request->get('message');;
-     
-      /* $this->notifySalesTeam($data);
+        $data['count'] = count($salesteam);
+        $this->notifySalesTeam($data,$salesteam);
 
-        $this->notifyManagers($data);*/
+        $this->notifyManagers($data,$salesteam);
         $this->notifySender($data);
         return response()->view('salesactivity.sendercampaign',compact('data'));
 
     }
-    private function notifySalesTeam($data){
-        foreach ($data['salesteam'] as $data['sales']){
+    private function notifySalesTeam($data,$salesteam){
+        foreach ($salesteam as $data['sales']){
 
             Mail::queue(new SendCampaignMail($data));
             
@@ -212,9 +212,9 @@ class SalesActivityController extends BaseController
 
     }
 
-    private function notifyManagers($data){
+    private function notifyManagers($data,$salesteam){
         $managers = array();
-        foreach ($data['salesteam'] as $salesrep){
+        foreach ($salesteam as $salesrep){
             if($salesrep->reportsTo){
                 $data['managers'][$salesrep->reportsTo->id]['team'][]=$salesrep->firstname ." ". $salesrep->lastname;
                 $data['managers'][$salesrep->reportsTo->id]['email']=$salesrep->reportsTo->userdetails->email;

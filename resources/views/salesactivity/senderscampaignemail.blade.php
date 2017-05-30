@@ -3,7 +3,7 @@
 ## {{$data['activity']->title}}
 
 
-The following message has been sent to {{count($data['salesteam'])}} members of the sales organization:
+The following message has been sent to {{$data['count']}} members of the sales organization:
 
 @component('mail::panel')
 {!! $data['message'] !!}
