@@ -27,10 +27,12 @@
             @foreach ($activities as $activity)
 
                 <tr> 
-                <td>{{$activity->title}}</td>
-                <td>{{$activity->datefrom->format('Y-m-d') }}</td>
-               <td>{{$activity->dateto->format('Y-m-d') }}</td>
+                <td><a href="{{route('salesactivity.show',$activity->id)}}">
+                {{$activity->title}}</a></td>
+                <td>{{$activity->datefrom->format('M j, Y') }}</td>
+               <td>{{$activity->dateto->format('M j, Y') }}</td>
                 <td>
+                <ul>
                 <?php $filter =array();?>
                 @foreach ($activity->vertical as $vertical)
                     @if(! in_array($vertical->filter,$filter))
@@ -38,15 +40,18 @@
                     <?php $filter[]=$vertical->filter;?>
                     @endif
                 @endforeach
+                </ul>
                 </td>
                  <td>
                 <?php $filter =array();?>
+                <ul>
                 @foreach ($activity->salesprocess as $process)
                     @if(! in_array($process->step,$filter))
                     <li>{{$process->step}} </li>
                     <?php $filter[]=$process->step;?>
                     @endif
                 @endforeach
+                </ul>
                 </td>
                 <td>
 {{count($activity->relatedDocuments())}}

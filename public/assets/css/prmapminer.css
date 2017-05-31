@@ -99,6 +99,9 @@ body {
 #sorttable thead tr th.headerSortDown span {
 
 }
+#sorttable  ul{
+	list-style-type: none;
+}
 .odd {
    background: #ccc;
 }

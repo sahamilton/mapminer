@@ -85,6 +85,10 @@ body {
 #sorttable thead tr th.headerSortDown span {
 
 }
+
+#sorttable tbody tr td ul{
+	list-style-type: none;
+}
 .odd {
    background: #ccc;
 }
