@@ -3,7 +3,7 @@
 
 <h2> {{$salesteam[0]->firstname}} {{$salesteam[0]->lastname}}'s Sales Team</h2>
 
-@if(isset ($salesteam[0]->userdetails) )
+@if(isset ($salesteam[0]->userdetails) && $salesteam[0]->userdetails->email !='' )
 
     @if (count($salesteam[0]->userdetails->roles)==1)
     <h4> {{$salesteam[0]->userdetails->roles[0]->name}}</h4>
@@ -12,7 +12,7 @@
     <a href="mailto:{{$salesteam[0]->userdetails->email}}" title="Email {{$salesteam[0]->firstname}} {{$salesteam[0]->lastname}}">{{$salesteam[0]->userdetails->email}}</a> </p>
 @endif
 
-@if (isset($salesteam[0]->reportsTo) && count($salesteam[0]->reportsTo->userdetails) ==1)
+@if (isset($salesteam[0]->reportsTo) && count($salesteam[0]->reportsTo->userdetails) == 1)
 <p>Reports to: <a href = "{{route('salesorg.list',$salesteam[0]->reportsTo->id)}}" 
 title= "See {{$salesteam[0]->reportsTo->firstname}} {{$salesteam[0]->reportsTo->lastname}}'s sales team"> {{$salesteam[0]->reportsTo->firstname}} {{$salesteam[0]->reportsTo->lastname}}  {{count($salesteam[0]->reportsTo->userdetails->roles) !=0 ? ' - ' . $salesteam[0]->reportsTo->userdetails->roles[0]->name : ''}}</a>
 @endif
@@ -96,5 +96,5 @@ title= "See {{$salesteam[0]->reportsTo->firstname}} {{$salesteam[0]->reportsTo->
 
 
 
-@include('partials/_scripts')
+@include('partials._scripts')
 @stop

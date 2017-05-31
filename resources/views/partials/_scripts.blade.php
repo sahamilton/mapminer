@@ -39,6 +39,13 @@ $(document).ready(function()
 	$('#sorttable5').DataTable();
 		
 	$('#sorttable6').DataTable();
+
+	$('#sorttablenosort').DataTable(
+		{
+			"bSort":false,
+			"bPaginate": false,
+		}
+		);
 	
 	$('.starrr').on('starrr:change', function(e, value){
   

@@ -4,16 +4,19 @@ use App\User;
 use App\Person;
 use App\Branch;
 use App\Company;
+use Excel;
 
 class PersonsController extends BaseController {
 
 	public $branch;
 	public $persons;
+	public $company;
 	public $managerID;
 	public $validroles = [3,4,5];
-	public function __construct(User $user, Person $person, Branch $branch) {
+	public function __construct(User $user, Person $person, Branch $branch, Company $company) {
 		
 		$this->persons = $person;
+		$this->company = $company;
 		$this->user = $user;
 		$this->branch = $branch;
 		//$this->persons->rebuild();
@@ -238,7 +241,7 @@ class PersonsController extends BaseController {
 	 */
 	public function showmap($id)
 	{
-			
+		
 		$data['people'] = $this->persons->with('manages')->findorFail($id);
 		
 		/// We need to calculate the persons 'center point' based on their branches.
@@ -347,10 +350,15 @@ class PersonsController extends BaseController {
 	public function export()
 	{
 		$data = $this->persons->all();
-		$fields =['id','firstname','lastname','mgrtype'];
 		
-		$results = $this->persons->export ($fields,$data,'Managers');
-		return Response::make(rtrim($results['output'], "\n"), 200, $results['headers']);
+		Excel::create('All People',function($excel) use ($data){
+			$excel->sheet('All People',function($sheet) use ($data) {
+				
+				$sheet->loadview('persons.export',compact('data'));
+			});
+		})->download('csv');
+
+		return response()->return();
 		
 		
 	}
@@ -442,26 +450,30 @@ class PersonsController extends BaseController {
 
 			return  redirect()->to(route('managers.view'));
 		}
-		
-		
-		
+
 		return $this->manager($accountstring);
 	}
 	
 	
-/**
- * [exportManagerNotes description]
- * @param  [type] $companyID [description]
- * @return [type]            [description]
- */
+	/**
+	 * [exportManagerNotes description]
+	 * @param  [type] $companyID [description]
+	 * @return [type]            [description]
+	 */
 	public function exportManagerNotes($companyID)
 	{
+		$company = $this->company->findOrFail($companyID);
 		$this->checkManager($companyID);
-		$notes = $this->getManagerNotes($companyID);
-		$fields =['companyid','companyname','locationid','businessname','date','note','userid','person'];
-		$results = $this->persons->exportArray ($fields,$notes,$name='Export');
 		
-		return Response::make(rtrim($results['output'], "\n"), 200, $results['headers']);
+		Excel::create($company->companyname . ' Notes',function($excel) use ($companyID){
+			$excel->sheet('Notes',function($sheet) use ($companyID) {
+				$notes = $this->getManagerNotes($companyID);
+				$fields =['companyid','companyname','locationid','businessname','date','note','userid','person'];
+				$sheet->loadview('persons.exportnotes',compact('notes','fields'));
+			});
+		})->download('csv');
+
+		return response()->return();
 		
 	}
 	
@@ -620,12 +632,17 @@ class PersonsController extends BaseController {
 	 * @return [type] [description]
 	 */
 	public function companywatchexport(){
-		$accountstring = urldecode(\Input::get('id'));
-		$result = $this->getAllAccountWatchers($accountstring);
-		$fields =['companyid','companyname','locationid','businessname','date','userid','person'];
-		$results = $this->persons->exportArray ($fields,$result,$name='Export');
-		return Response::make(rtrim($results['output'], "\n"), 200, $results['headers']);
+		$id = urldecode(\Input::get('id'));
 		
+		Excel::create('Watch List',function($excel) use ($id){
+			$excel->sheet('Watching',function($sheet) use ($id) {
+				$result = $this->getAllAccountWatchers($id);
+				$sheet->loadview('companies.export',compact('result'));
+			});
+		})->download('csv');
+
+		return response()->return();
+
 	}
 	
 

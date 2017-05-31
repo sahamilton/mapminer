@@ -19,7 +19,7 @@
   @endif
 
   </h4>
-  @if(isset ($salesteam[0]->userdetails) )
+  @if(isset ($salesteam[0]->userdetails) && $salesteam[0]->userdetails->email != '')
   <p><span class="glyphicon glyphicon-envelope"></span> <a href="mailto:{{$salesteam[0]->userdetails->email}}" title="Email {{$salesteam[0]->firstname}} {{$salesteam[0]->lastname}}">{{$salesteam[0]->userdetails->email}}</a> </p>
   @endif
   <p><a href="{{route('salesorg.list',$salesteam[0]->id)}}"
@@ -59,6 +59,8 @@
     <script>
      
       // First, create an object containing LatLng and details for each branch.
+      
+
       var branchmap = {
         
       @foreach ($salesteam[0]->getLeaves() as $reports)
@@ -80,6 +82,7 @@
       };
 
       function initMap() {
+        var Geo={};
         // Create the map.
         var map = new google.maps.Map(document.getElementById('map'), {
           zoom: {{! $salesteam[0]->lat ? '4' : '9'}},
@@ -122,7 +125,56 @@
 
         }
       }
+        navigator.geolocation.getCurrentPosition(function(position) {
+          
+        var geolocate = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+        var address = getAddress(geolocate);
         
+        Geo.lat = position.coords.latitude;
+        Geo.lng = position.coords.longitude;
+      
+        populateHeader(Geo.lat, Geo.lng,address,'');
+        var marker = new google.maps.Marker({
+          position: geolocate,
+          map: map,
+          title: 'You are here!'
+        });
+
+   function getAddress(latLng) {
+      
+      var geocoder = new google.maps.Geocoder();
+      if (geocoder) {
+        geocoder.geocode({ 'latLng': latLng}, function (results, status) {
+           if (status == google.maps.GeocoderStatus.OK) {
+          var address = results[0].formatted_address; 
+          $('#address').val(address);
+           }
+           else {
+          $('#address').val(latLng);;
+          
+           }
+        })
+          } 
+      return address;
+    }
+  function populateHeader(lat, lng, address, distance){
+         $('#lat:first').val(lat);
+     $('#lng:first').val(lng);
+    $("#address").val(address);
+    if(distance == '100') {
+     $("#distance").val(distance);
+    }else{
+      
+     $("#distance").val('25');
+    }
+        }
+  }); 
+    
+  $("#address").change(function() {
+    $('#lat:first').val('');
+    $('#lng:first').val('');
+  }); 
+    
 
       google.maps.event.addDomListener(window, 'load', initMap);
     </script>

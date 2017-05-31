@@ -1,4 +1,4 @@
-@extends('site/layouts/default')
+@extends('site.layouts.default')
 @section('content')
 <h2>{{$data['title']}}</h2>
 <p>
@@ -52,7 +52,7 @@
     
     </tbody>
     </table>
-@include('partials/_scripts')
+@include('partials._scripts')
 
 
 @stop

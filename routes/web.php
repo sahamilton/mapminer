@@ -131,7 +131,7 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('watchexport',['as'=>'watchexport', 'uses'=>'WatchController@export']);
 		
 		Route::get('watchmap',['as'=>'watchmap','uses'=>'WatchController@showwatchmap']);
-		Route::get('company/watchexport',['as'=>'company.watchexport', 'uses'=>'PersonsController@companywatchexport']);
+		Route::get('watchexport',['as'=>'company.watchexport', 'uses'=>'PersonsController@companywatchexport']);
 
 	# Sales organization
 		Route::get('salesorg/{person?}',['as'=>'salesorg','uses'=>'SalesOrgController@getSalesBranches']);
@@ -294,7 +294,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function()
 
 
 	#Watchlists
-		Route::get('watchlist/{userid}', ['as'=>'watch.watchexport', 'uses'=>'WatchController@export']);
+		Route::get('watchlist/{userid}', ['as'=>'watch.mywatchexport', 'uses'=>'WatchController@export']);
 	
 	# Admin Dashboard
 		Route::get('watching/{userid}', ['as'=>'watch.watching', 'uses'=>'WatchController@watching']);

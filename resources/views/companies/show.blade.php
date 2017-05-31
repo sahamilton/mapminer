@@ -39,7 +39,7 @@
 				<a href="{{{ URL::to('location/create/'.$account) }}}" title="Create a new {{$company->companyname}} location" class="btn btn-small btn-info iframe"><span class="glyphicon glyphicon-plus-sign"></span> Create New Location</a>
 			</div>
            @endif
-         
+
 <p><a href="{{route('salesnotes',$company->id)}}" title="Read notes on selling to {{$company->companyname}}"><i class="glyphicon glyphicon-search"></i>  Read 'How to Sell to {{$company->companyname}}'</a>
 <a href="/watch" title="Review my watch list"><i class="glyphicon glyphicon-th-list"></i> View My Watch List</a>
 <a href="/watchexport" title="Download my watch list as a CSV / Excel file"><i class="glyphicon glyphicon-cloud-download"></i> Download My Watch List</a>
@@ -49,7 +49,7 @@
  
 @include('companies/partials/_state')
 @include('maps.partials._form')
-
+ 
     <table id ='sorttable'  class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
      @foreach($fields as $title=>$field)
@@ -71,7 +71,7 @@
 	switch ($key) {
 		case 'Business Name':
 			$title = "See details of the ".$location->$field." location";
-			echo "<td><a href=\"/location/".$location->id."\"";
+			echo "<td><a href=\"".route('location.show',$location->id)."\"";
 			echo " title=\"".$title."\">".$location->$field."</a></td>";
 		break;
 		
@@ -96,7 +96,11 @@
 		
 		case 'Segment':
 		
-			echo  empty($location->segment) ?  "<td>Not Specified</td>": "<td><a href=\"/company/".$company->id."/segment/".$location->segment."\">". $filters[$location->segment] . "</a></td>";
+			if( empty($location->segment) or ! in_array($location->segment,$filters->toArray())){
+				echo  "<td>Not Specified</td>";
+				}else{
+				echo "<td><a href=\"/company/".$company->id."/segment/".$location->segment."\">". $filters[$location->segment] . "</a></td>";
+				} 
 		
 		break;
 		

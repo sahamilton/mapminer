@@ -7,6 +7,7 @@ use App\Company;
 use App\Location;
 use App\Pagination;
 use App\SearchFilter;
+use Illuminate\Http\Request;
 use App\Http\Requests\CompanyFormRequest;
 class CompaniesController extends BaseController {
 
@@ -441,7 +442,7 @@ class CompaniesController extends BaseController {
 	 */
 	 
 	 
-	public function stateselect(Request $requser)
+	public function stateselect(Request $request)
 	{
 
 		$id = $request->get('id');
@@ -693,25 +694,19 @@ class CompaniesController extends BaseController {
 	
 	public function exportAccounts()
 	{
-		$data = $this->company
+		
+		Excel::create('AllCompanies',function($excel){
+			$excel->sheet('Companies',function($sheet) {
+				$companies = $this->company
 				->with(['industryVertical','managedBy'])
 				->whereHas('serviceline', function($q){
 							    $q->whereIn('serviceline_id', $this->userServiceLines);
 
 							})
 				->get();
-		
-		$fields =['id','companyname', 'vertical',['industryVertical'=>'filter'],'person_id',['managedBy'=>'lastname']];
-		
-		$filename = 'accounts';
-		$path = public_path() . "/downloads/";
-		
-		$results = $this->company->export ($fields,$data,$filename);
-		
-		return Response::make(rtrim($results['output'], "\n"), 200, $results['headers']);
-		
-		
-		
+				$sheet->loadview('companies.exportcompanies',compact('companies'));
+			});
+		})->download('csv');
 		
 	}
 	
@@ -726,17 +721,25 @@ class CompaniesController extends BaseController {
 		return response()->view('locations.export',compact('companies'));
 	}
 	
-	public function locationsexport() {
+	public function locationsexport(Request $request) {
 		
-		$id = \Input::get('company');
-		$company = 	$this->company
+		$id = $request->get('company');
+		$company = $this->company->findOrFail($id);
+		Excel::create($company->companyname. " locations",function($excel) use($id){
+			$excel->sheet('Watching',function($sheet) use($id) {
+				$company = 	$this->company
 					->whereHas('serviceline', function($q){
 							    $q->whereIn('serviceline_id', $this->userServiceLines);
 
 							})
-					->where('id','=',$id)->get();
-		$results = $this->exportfile($company);
-		return Response::make(rtrim($results['output'], "\n"), 200, $results['headers']);
+					
+					->with('locations')
+					->findOrFail($id);
+				$sheet->loadview('locations.exportlocations',compact('company'));
+			});
+		})->download('csv');
+		
+		
 		
 	}
 	/*
@@ -748,7 +751,7 @@ class CompaniesController extends BaseController {
 	 * @return response file csv
 	 */
 	
-	private function exportfile($company)
+	/*private function exportfile($company)
 	{
 		//Check that user can view company 
 		// based on user service line associations.
@@ -766,7 +769,7 @@ class CompaniesController extends BaseController {
 		$results = $this->company->export ($fields,$data,$filename);
 		return $results;
 		
-	}
+	}*/
 	/**
 	 * Return all people who have manager role
 	 * @param  Array $roles 

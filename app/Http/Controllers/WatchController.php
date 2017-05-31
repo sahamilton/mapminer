@@ -3,7 +3,7 @@ namespace App\Http\Controllers;
 use App\Watch;
 use App\User;
 use App\Document;
-
+use Excel;
 class WatchController extends BaseController {
 	protected $watch;
 	public $document;
@@ -20,26 +20,12 @@ class WatchController extends BaseController {
 	}
 	
 	
-	
-	
-	
-	
 	public function index()
 	{
 	
-		$watch = $this->getMyWatchList(\Auth::id());
-		$fields = array('Business Name'=>'businessname',
-					 'National Acct'=>'companyname',
-					 'Address'=>'street',
-					 'City'=>'city',
-					 'State'=>'state',
-					 'ZIP'=>'zip',
-					 'Contact'=>'contact',
-					 'Phone'=>'phone',
-					 'My Notes'=>'notes',
-					 'Watch'=>'watch_list'); 
+		$watch = $this->getMyWatchList(auth()->user()->id);
  
-		return response()->view('watch.index', compact('fields','watch'));
+		return response()->view('watch.index', compact('watch'));
 
 	}
 
@@ -155,19 +141,17 @@ class WatchController extends BaseController {
 	 */
 	
 	public function export ($id=NULL) {
-		if(!$id){
-			$id = \Auth::id();
+		if(! $id){
+			$id = auth()->id();
 		}
 		$user = User::find($id);
-		$filename = "attachment; filename=\"Watch_List_for_".$user->username .".csv\"";
-		$watchList = $this->getMyWatchList($id);
-		$fields = array('businessname','lat','lng',array('company'=>'companyname'),'street','address','city','state','zip','contact','phone',array('notes'=>'watchnotes'));
-		$output = $this->watch->exportWatchList($fields,$watchList);
-		$headers = array(
-			  'Content-Type' => 'text/csv',
-			  'Content-Disposition' => $filename ,
-		  );
- 	 	return response()->make(rtrim($output, "\n"), 200, $headers);
+	
+		Excel::create('Watch_List_for_'.$user->username,function($excel) use($id){
+			$excel->sheet('Watching',function($sheet) use($id) {
+				$result = $this->getMyWatchList($id);
+				$sheet->loadview('watch.export',compact('result'));
+			});
+		})->download('csv');
 	}
 	
 	
@@ -200,7 +184,7 @@ class WatchController extends BaseController {
 	
 	
 	protected function makewatchmap($result) {
-	
+		//Refactor: Simplyfy xml creation
 		
 		$dom = new \DOMDocument("1.0");
 		$node = $dom->createElement("markers");
@@ -224,6 +208,7 @@ class WatchController extends BaseController {
 	}
 	
 	public function watchupdate() {
+		//Refactor: Add request
 		$input = \Input::all();	
 
 		switch ($input['action']) {
@@ -246,7 +231,7 @@ class WatchController extends BaseController {
 
 	public function getCompaniesWatched()
 	{
-		$watch = $this->getMyWatchList(\Auth::id());
+		$watch = $this->getMyWatchList(auth()->user()->id());
 		$data['verticals'] = $this->watch->getUserVerticals();
 		if(count($data['verticals']=0)){
 			$data['verticals'] = null;

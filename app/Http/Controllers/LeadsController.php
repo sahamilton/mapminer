@@ -21,9 +21,9 @@ class LeadsController extends BaseController
     }
 
     public function find(LeadAddressFormRequest $request){
-
+           // dd($request->all());
     		$geoCode = app('geocoder')->geocode($request->get('address'))->get();
-	
+	 
 			if(! $geoCode)
 			{
 				dd('bummer');
@@ -34,8 +34,8 @@ class LeadsController extends BaseController
             }else{
                 $people = $this->person->findNearByPeople($geoCode->first()->getLatitude(),$geoCode->first()->getLongitude(),$request->get('distance'),$request->get('number'),'Sales');
             }
-			
-			return response()->view('leads.address',compact('people'));
+		  $data = $request->all();
+			return response()->view('leads.address',compact('people','data'));
 			
     }
 }

@@ -155,13 +155,13 @@ class CommentsController extends BaseController {
 	public function download()
 	{
 		
-		$filename = "attachment; filename=\"feedback.csv\"";
-		$comments = $this->comment->orderBy('created_at','ASC')->get();
-		$fields = array('id','created_at','subject','title','comment','comment_status','user');
-		
-		$results = $this->comment->export($fields,$comments,'Feedback');
-		
- 	 	return Response::make(rtrim($results['output'], "\n"), 200, $results['headers']);
+		Excel::create('Watch_List_for_'.$user->username,function($excel){
+			$excel->sheet('Watching',function($sheet) {
+				$comments = $this->comment->orderBy('created_at','ASC')->get();
+				$sheet->loadview('comments.export',compact('comments'));
+			});
+		})->download('csv');
+
 	}
 	
 	

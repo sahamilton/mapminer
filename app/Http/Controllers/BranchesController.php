@@ -5,6 +5,7 @@ use App\Serviceline;
 use App\User;
 use App\State;
 use App\Person;
+use Excel;
 use App\Http\Requests\BranchFormRequest;
 
 class BranchesController extends BaseController {
@@ -674,14 +675,17 @@ class BranchesController extends BaseController {
 	}
 	public function export() 
 	{
-	$data= $this->branch->all();
 	
 	
+	Excel::create('Branches',function($excel){
+			$excel->sheet('Watching',function($sheet) {
+				$result = $this->branch->all();;
+				$sheet->loadview('branches.export',compact('result'));
+			});
+		})->download('csv');
+
+		return response()->return();
 	
-	
-	$fields=['id','branchnumber','branchname','street','address2','city','state','zip','phone','lat','lng'];
-	$results = $this->branch->export($fields,$data,'Branches');
-	return response()->make(rtrim($results['output'], "\n"), 200, $results['headers']);
 	
 }
 
