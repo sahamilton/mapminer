@@ -1,4 +1,4 @@
-@extends ('site.layouts.default')
+@extends ('admin.layouts.default')
 @section('content')
 <div class="container">
 <h2>Create Sales Campaign</h2>

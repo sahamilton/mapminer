@@ -1,4 +1,4 @@
-@extends ('site.layouts.default')
+@extends ('admin.layouts.default')
 @section('content')
 <div class="container">
 <h2>Edit Sales Document</h2>

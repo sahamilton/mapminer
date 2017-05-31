@@ -12,7 +12,7 @@ $(document).ready(function()
 	}, function(){
 	    $(this).text("more..").siblings(".complete").hide();    
 	});
-    $("button").click(function(){
+    $("button.disabled").click(function(){
     	event.preventDefault();
 	    $("#message").toggle();
 	});

@@ -17,7 +17,7 @@
   <div>{!! $message !!}</div>
   <form id="campaignmessage" action="{{route('sendcampaign.message',$activity->id)}}" method="post">
   {{csrf_field()}}
-  <button>Edit Text</button>
+  <button class='disabled'>Edit Text</button>
 	<div id='message' style="display:none" class="form-group{{ $errors->has('description') ? ' has-error' : '' }}">
 	<label for="description">Campaign Message</label>
 

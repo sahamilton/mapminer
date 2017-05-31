@@ -106,7 +106,7 @@ Back to all campaigns</a>
 			<td>{{$location->vertical}}</td>
 			<td>{{$location->businessname}}</td>
 			
-			<td>{!! $location->street . "<br /> " .$location->city. " "   . $location->state !!}</td>
+			<td><a href="{{route('locations.show',$location->id)}}" title="Review this location">{!! $location->street . "<br /> " .$location->city. " "   . $location->state !!}</a></td>
 			<td>{{$location->contact }}</td> 
 			<td>{{$location->phone }}</td>
 
