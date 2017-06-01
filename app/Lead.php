@@ -4,6 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
+
+use Geocoder\Laravel\Facades\Geocoder;
+
 class Lead extends Model
 {
     
@@ -47,4 +50,24 @@ class Lead extends Model
     	return $this->belongsToMany(SearchFilter::class,'lead_searchfilter','lead_id','searchfilter_id');
 
     }
+
+    public function geoCodeAddress($request)
+	{
+			$address = $request->get('address')." "$request->get('city') ." " .$request->get('state') ." " .$request->get('zip');
+
+			$geoCode = app('geocoder')->geocode($address)->get();
+	
+			if(! $geoCode OR strtolower($geoCode->first()->getLocality() != $this->city ) )
+			{
+				return  false;
+				
+			}
+			$this->lat = $geoCode->first()->getLatitude();
+			$this->lng = $geoCode->first()->getLongitude();
+			$this->geostatus = TRUE;
+			return $this->save();
+	
+			
+			
+	}
 }

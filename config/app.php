@@ -170,7 +170,7 @@ return [
         Laravel\Tinker\TinkerServiceProvider::class,
         Barryvdh\Debugbar\ServiceProvider::class,
         Baum\Providers\BaumServiceProvider::class,
-        Geocoder\Laravel\Providers\GeocoderService::class,
+
         Collective\Html\HtmlServiceProvider::class,
         MaddHatter\LaravelFullcalendar\ServiceProvider::class,
         Dionera\BeanstalkdUI\BeanstalkdUIServiceProvider::class,
