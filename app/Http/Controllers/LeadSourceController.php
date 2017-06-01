@@ -81,7 +81,7 @@ class LeadSourceController extends Controller
     public function update(LeadSourceFormRequest $request, $id)
     {
         $leadsource= $this->leadsource->findOrFail($id);
-        $leadsource->update($request->all());
+        $leadsource->update($request->except('_method', '_token'));
         return redirect()->route('leadsource.index');
     }
 

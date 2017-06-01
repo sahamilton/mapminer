@@ -265,12 +265,15 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function()
 	#Leads
 		Route::get('lead/address',['as'=>'lead.address','uses'=>'LeadsController@address']);
 		Route::post('lead/find',['as'=>'lead.find','uses'=>'LeadsController@find']);
+		Route::get('leads/{id}/purge',['as'=>'leads.destro','uses'=>'LeadsController@destroy']);
 		Route::resource('leads','LeadsController');
 	
 	#LeadSource
+		Route::get('leadsource/{id}/purge',['as'=>'leadsource.purge','uses'=>'LeadSourceController@destroy']);
 		Route::resource('leadsource','LeadSourceController');
 
 	# Lead Status
+		Route::get('leadstatus/{id}/purge',['as'=>'leadstatus.purge','uses'=>'LeadStatusController@destroy']);
 	 	Route::resource('leadstatus','LeadStatusController');	
 
 	#Salesnotes

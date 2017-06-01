@@ -53,7 +53,7 @@ class LeadsController extends BaseController
     public function store(LeadFormRequest $request)
     {
         $this->lead->create($request->all());
-        return redirect()-route('leads.index');
+        return redirect()->route('leads.index')->with(['message','New Lead Created']);
     }
 
     /**
@@ -77,7 +77,8 @@ class LeadsController extends BaseController
     public function edit($id)
     {
         $lead = $this->lead->findOrFail($id);
-        $sources = $this->leadsources->pluck('source','id');
+        $sources = $this->leadsource->pluck('source','id');
+  
         return response()->view('leads.edit',compact('lead','sources'));
     }
 
@@ -90,7 +91,7 @@ class LeadsController extends BaseController
      */
     public function update(LeadFormRequest $request, $id)
     {
-        $this->lead->whereId($id)->update($request->all());
+        $this->lead->whereId($id)->update($request->except('_method', '_token'));
         return redirect()->route('leads.index');
     }
 

@@ -54,7 +54,7 @@ class LeadStatusController extends Controller
     public function show($id)
     {
         $leadstatus = $this->leadstatus->with('leads')->findOrFail($id);
-        return reponse()->view('leadstatus.show',compact('leadstatus'));
+        return response()->view('leadstatus.show',compact('leadstatus'));
     }
 
     /**
@@ -66,7 +66,7 @@ class LeadStatusController extends Controller
     public function edit($id)
     {
         $leadstatus = $this->leadstatus->findOrFail($id);
-        return reponse()->view('leadstatus.edit');
+        return response()->view('leadstatus.edit',compact('leadstatus'));
     }
 
     /**
@@ -78,8 +78,8 @@ class LeadStatusController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->leadstatus->where('id','=',$id)->update($request->all());
-        return redirect()->route('leadsource.index');
+        $this->leadstatus->where('id','=',$id)->update($request->except('_method', '_token'));
+        return redirect()->route('leadstatus.index');
     }
 
     /**
@@ -91,6 +91,6 @@ class LeadStatusController extends Controller
     public function destroy($id)
     {
         $thisleadstatus->destroy($id);
-        return redirect()->route('leadsource.index');
+        return redirect()->route('leadstatus.index');
     }
 }

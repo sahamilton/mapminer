@@ -30,11 +30,11 @@
    	
    	
     <tr>  
-    <td>{{$lead->company}}</td>
+    <td>{{$lead->companyname}}</td>
     <td>{{$lead->businessname}}</td>
     <td>{{$lead->city}}</td>
     <td>{{$lead->state}}</td>
-    <td>{{$lead->datecreated->format('M j, Y')}}</td>
+    <td>{{$lead->created_at->format('M j, Y')}}</td>
     <td>{{$lead->status}}</td>
 	@if (Auth::user()->hasRole('Admin'))
     <td>
@@ -48,7 +48,7 @@
 			  <ul class="dropdown-menu" role="menu">
 				
 				<li><a href="{{route('leads.edit',$lead->id)}}"><i class="glyphicon glyphicon-pencil"></i> Edit this lead</a></li>
-				<li><a data-href="{{'lead.destroy',$lead->id}}" data-toggle="modal" data-target="#confirm-delete" data-title = " this lead and all its history" href="#"><i class="glyphicon glyphicon-trash"></i> Delete this lead</a></li>
+				<li><a data-href="{{route('leads.destroy',$lead->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = " this lead and all its history" href="#"><i class="glyphicon glyphicon-trash"></i> Delete this lead</a></li>
 			  </ul>
 			</div>
 		

@@ -17,7 +17,7 @@ class CreateLeadSourcesTable extends Migration
             $table->increments('id');
             $table->string('source');
             $table->text('description');
-            $table->string('reference');
+            $table->string('reference')->nullable();
             $table->timestamps();
         });
     }

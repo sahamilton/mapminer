@@ -17,7 +17,7 @@
                 </textarea>
               
                     <span class="help-block">
-                    <strong>{{$errors->has('description' ? $errors->first('description')  : ''}}</strong>
+                    <strong>{{$errors->has('description') ? $errors->first('description')  : ''}}</strong>
                     </span>
     
             </div>

@@ -3,12 +3,13 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-
+use Carbon\Carbon;
 class Lead extends Model
 {
     
 	public $dates=['datefrom','dateto'];
 
+	
 	public $fillable = ['companyname',
 						'businessname',
 						'address',
@@ -30,6 +31,16 @@ class Lead extends Model
     }
 
     public function salesteam(){
-    	return $this->belongsToMany(Person::class)->withPivot('status_id');
+    	return $this->belongsToMany(Person::class, 'lead_person_status')->withPivot('status_id');
     }
+
+    public function setDatefromAttribute($value)
+   {
+       $this->attributes['datefrom'] = Carbon::createFromFormat('m/d/Y', $value);
+   }
+   public function setDatetoAttribute($value)
+   {
+       $this->attributes['dateto'] = Carbon::createFromFormat('m/d/Y', $value);
+   }
+
 }

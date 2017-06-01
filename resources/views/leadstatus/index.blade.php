@@ -1,22 +1,21 @@
 @extends('admin.layouts.default')
 @section('content')
 
-<h1>Leads</h1>
+<h1>Lead Statuses</h1>
 
 
 @if (Auth::user()->hasRole('Admin'))
 
 <div class="pull-right">
-        <a href="{{{ route('leadstatus.create') }}}" class="btn btn-small btn-info iframe"><span class="glyphicon glyphicon-plus-sign"></span> Create New Lead Status</a>
+        <a href="{{ route('leadstatus.create') }}" class="btn btn-small btn-info iframe"><span class="glyphicon glyphicon-plus-sign"></span> Create New Lead Status</a>
       </div>
 @endif
 
     <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
      
-    <th>
-   
-    </th>
+    <th>Status</th>
+    <th>Sequence</th>
     @if (Auth::user()->hasRole('Admin'))
     <th>Actions</th>
     @endif
@@ -28,6 +27,8 @@
     
     
     <tr>  
+    <td>{{$status->status}}</td>
+    <td>{{$status->sequence}}</td>
   @if (Auth::user()->hasRole('Admin'))
     <td>
             @include('partials._modal')
@@ -39,8 +40,8 @@
         </button>
         <ul class="dropdown-menu" role="menu">
         
-        <li><a href="{{route('leadstatus.edit',$status->id}}"><i class="glyphicon glyphicon-pencil"></i> Edit this lead status</a></li>
-        <li><a data-href="{{'leadstatus.destroy',$source->id}}" data-toggle="modal" data-target="#confirm-delete" data-title = " this lead status " href="#"><i class="glyphicon glyphicon-trash"></i> Delete this lead status</a></li>
+        <li><a href="{{route('leadstatus.edit',$status->id)}}"><i class="glyphicon glyphicon-pencil"></i> Edit this lead status</a></li>
+        <li><a data-href="{{route('leadstatus.purge',$status->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = " this lead status " href="#"><i class="glyphicon glyphicon-trash"></i> Delete this lead status</a></li>
         </ul>
       </div>
     
