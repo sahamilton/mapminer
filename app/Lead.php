@@ -42,5 +42,9 @@ class Lead extends Model
    {
        $this->attributes['dateto'] = Carbon::createFromFormat('m/d/Y', $value);
    }
+   
+	public function vertical(){
+    	return $this->belongsToMany(SearchFilter::class,'lead_searchfilter','lead_id','searchfilter_id');
 
+    }
 }

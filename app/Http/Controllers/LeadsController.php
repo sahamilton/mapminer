@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Person;
 use App\Lead;
 use App\LeadSource;
+use App\SearchFilter;
 use App\Http\Requests\LeadAddressFormRequest;
 use App\Http\Requests\LeadFormRequest;
 
@@ -15,10 +16,12 @@ class LeadsController extends BaseController
     public $person;
     public $lead;
     public $leadsource;
+    public $vertical;
 
-    public function __construct(Person $person, Lead $lead,LeadSource $leadsource){
+    public function __construct(Person $person, Lead $lead,LeadSource $leadsource,SearchFilter $vertical){
 
     	$this->person = $person;
+        $this->vertical = $vertical;
         $this->lead = $lead;
         $this->leadsource = $leadsource;
     }
@@ -40,8 +43,10 @@ class LeadsController extends BaseController
      */
     public function create()
     {
+        $verticals = $this->vertical->vertical();
+
         $sources = $this->leadsource->pluck('source','id');
-        return response()->view('leads.create',compact('sources'));
+        return response()->view('leads.create',compact('sources','verticals'));
     }
 
     /**
@@ -52,7 +57,9 @@ class LeadsController extends BaseController
      */
     public function store(LeadFormRequest $request)
     {
-        $this->lead->create($request->all());
+        $lead = $this->lead->create($request->all());
+        dd($this->geoCodeLead($request));
+        $lead->vertical()->attach($request->get('vertical'));
         return redirect()->route('leads.index')->with(['message','New Lead Created']);
     }
 
@@ -76,10 +83,11 @@ class LeadsController extends BaseController
      */
     public function edit($id)
     {
-        $lead = $this->lead->findOrFail($id);
+        $lead = $this->lead->with('vertical')->findOrFail($id);
+        $verticals = $this->vertical->vertical();
         $sources = $this->leadsource->pluck('source','id');
   
-        return response()->view('leads.edit',compact('lead','sources'));
+        return response()->view('leads.edit',compact('lead','sources','verticals'));
     }
 
     /**
@@ -91,7 +99,8 @@ class LeadsController extends BaseController
      */
     public function update(LeadFormRequest $request, $id)
     {
-        $this->lead->whereId($id)->update($request->except('_method', '_token'));
+       $lead = $this->lead->whereId($id)->update($request->except('_method', '_token'));
+       $lead->vertical()->sync($request->get('vertical'));
         return redirect()->route('leads.index');
     }
 
@@ -131,5 +140,25 @@ class LeadsController extends BaseController
 		  $data = $request->all();
 			return response()->view('leads.address',compact('people','data'));
 			
+    }
+
+    private function geoCodeLead($request){
+        $address = $request->get('address') . ", ". $request->get('city') . " ". $request->get('state') . " " . $request->get('zip');
+
+        $geocode = \Geocoder::geocode($address)->get();
+        
+            if(! $geocode){
+
+                return redirect()->back()->withInput()->with('message', 'Unable to Geocode that address');
+            }
+            
+
+                $data['lat']=$geocode[0]['latitude'];
+                $data['lng'] =$geocode[0]['longitude'];
+
+            return $data;
+    
+            
+      
     }
 }

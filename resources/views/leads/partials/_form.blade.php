@@ -60,6 +60,9 @@
 	           </span>
 	   </div>
 	</div>
+	<legend>Relates To:</legend>
+@include('leads.partials.selectors')
+
 <!-- Dates from / to -->
 <legend>Available From / To</legend>
 <div class="form-group{{ $errors->has('from)') ? ' has-error' : '' }}">
@@ -122,14 +125,14 @@ value="{{  old('dateto', isset($lead) ?  $lead->dateto->format('m/d/Y') : date('
  
          </div>
      </div>
-              
+         
 		<div class="form-group{{ $errors->has('slead_source_idource') ? ' has-error' : '' }}">
         <label class="col-md-4 control-label">Lead Source</label>
         <div class="input-group input-group-lg ">
             <select class="form-control" name='lead_source_id'>
 
             @foreach ($sources as $key=>$value)
-            	<option {{($lead->lead_source_id == $key) ? 'selected' : '' }} value="{{$key}}">{{$value}}</option>
+            	<option {{isset($lead) && ($lead->lead_source_id == $key) ? 'selected' : '' }} value="{{$key}}">{{$value}}</option>
 
             @endforeach
 
