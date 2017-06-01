@@ -1,4 +1,4 @@
-<?php
+php artisan<?php
 
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
@@ -18,6 +18,9 @@ class CreateLeadSourcesTable extends Migration
             $table->string('source');
             $table->text('description');
             $table->string('reference')->nullable();
+            $table->date('datefrom');
+            $table->date('dateto');
+            $table->integer('user_id');
             $table->timestamps();
         });
     }

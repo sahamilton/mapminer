@@ -20,15 +20,17 @@
     <th>State</th>
     <th>Date Created</th>
     <th>Status</th>
+    <th>Source</th>
  @if (Auth::user()->hasRole('Admin'))
  <th>Actions</th>
  @endif  
        
     </thead>
     <tbody>
-   @foreach($leads as $lead)
+
+ @foreach($leads as $lead)
    	
-   	
+ 
     <tr>  
     <td>{{$lead->companyname}}</td>
     <td>{{$lead->businessname}}</td>
@@ -36,6 +38,7 @@
     <td>{{$lead->state}}</td>
     <td>{{$lead->created_at->format('M j, Y')}}</td>
     <td>{{$lead->status}}</td>
+    <td><a href = "{{route('leadsource.show',$lead->lead_source_id)}}">{{$sources[$lead->lead_source_id]}}</a></td>
 	@if (Auth::user()->hasRole('Admin'))
     <td>
             @include('partials/_modal')
@@ -48,12 +51,13 @@
 			  <ul class="dropdown-menu" role="menu">
 				
 				<li><a href="{{route('leads.edit',$lead->id)}}"><i class="glyphicon glyphicon-pencil"></i> Edit this lead</a></li>
-				<li><a data-href="{{route('leads.destroy',$lead->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = " this lead and all its history" href="#"><i class="glyphicon glyphicon-trash"></i> Delete this lead</a></li>
+				<li><a data-href="{{route('leads.purge',$lead->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = " this lead and all its history" href="#"><i class="glyphicon glyphicon-trash"></i> Delete this lead</a></li>
 			  </ul>
 			</div>
 		
 		
     </td>
+
    @endif 
     
     

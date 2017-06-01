@@ -1,7 +1,7 @@
 @extends('admin/layouts/default')
 @section('content')
 
-<h1>Leads</h1>
+<h1>Lead Sources</h1>
 
 
 @if (Auth::user()->hasRole('Admin'))
@@ -18,7 +18,8 @@
     <th>Description</th>
     <th>Reference</th>
     <th>Leads</th>
-    </th>
+    <th>Available From / To</th>
+
     @if (Auth::user()->hasRole('Admin'))
     <th>Actions</th>
     @endif
@@ -32,7 +33,15 @@
     <td>{{$source->description}}</td>
     <td>{{$source->reference}}</td>
     <td>{{count($source->leads)}}</td>
-   	
+   	<td>
+    @if($source->dateto < Carbon\Carbon::now())
+    Expired {{$source->datefrom->format('M j,Y')}}
+    @elseif ($source->datefrom > Carbon\Carbon::now())
+        Commences {{$source->datefrom->format('M j,Y')}}
+    @else
+        {{$source->datefrom->format('M j,Y')}} - {{$source->dateto->format('M j,Y')}}
+    @endif
+    </td>
     
 	@if (Auth::user()->hasRole('Admin'))
     <td>

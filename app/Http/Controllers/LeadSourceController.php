@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\LeadSource;
 use App\Http\Requests\LeadSourceFormRequest;
-
+use Carbon\Carbon;
 class LeadSourceController extends Controller
 {
     public $leadsource;
@@ -43,7 +43,14 @@ class LeadSourceController extends Controller
      */
     public function store(LeadSourceFormRequest $request)
     {
-        $this->leadsource->create($request->all());
+        $request->merge(['user_id'=>auth()->user()->id]);
+        $leadsource = $this->leadsource->create($request->except(['datefrom','dateto']));
+        $leadsource->update([
+            'datefrom'=>Carbon::createFromFormat('m/d/Y',$request->get('datefrom')),
+            'dateto'=>Carbon::createFromFormat('m/d/Y',$request->get('dateto')),
+            'user_id'=>auth()->user()->id
+            ]);
+
         return redirect()->route('leadsource.index');
     }
 
@@ -55,7 +62,7 @@ class LeadSourceController extends Controller
      */
     public function show($id)
     {
-        $leadsource = $this->leadsource->with('leads')->findOrFail($id);
+        $leadsource = $this->leadsource->with('leads','leads.salesteam','author')->findOrFail($id);
         return response()->view('leadsource.show',compact('leadsource'));
     }
 
@@ -81,7 +88,10 @@ class LeadSourceController extends Controller
     public function update(LeadSourceFormRequest $request, $id)
     {
         $leadsource= $this->leadsource->findOrFail($id);
-        $leadsource->update($request->except('_method', '_token'));
+        $leadsource->update($request->except('_method', '_token','datefrom','dateto'));
+        $leadsource->update([
+            'datefrom'=>Carbon::createFromFormat('m/d/Y',$request->get('datefrom')),
+            'dateto'=>Carbon::createFromFormat('m/d/Y',$request->get('dateto'))]);
         return redirect()->route('leadsource.index');
     }
 

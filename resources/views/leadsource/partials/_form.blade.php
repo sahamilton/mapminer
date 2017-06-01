@@ -32,4 +32,28 @@
                      </span>
              </div>
      </div>
-      
+   <!-- Dates from / to -->
+<legend>Available From / To</legend>
+<div class="form-group{{ $errors->has('from)') ? ' has-error' : '' }}">
+    <label class="col-md-4 control-label" for="datefrom">Available From</label>
+    <div class="input-group input-group-lg">
+    <input class="form-control" type="text" name="datefrom"  id="fromdatepicker" 
+value="{{  old('datefrom', isset($lead->datefrom) ? $lead->datefrom->format('m/d/Y'): date('m/d/Y')) }}"/>
+
+                <span class="help-block">
+                <strong>{{$errors->has('datefrom') ? $errors->first('datefrom')  : ''}}</strong>
+                </span>
+</div>
+</div>
+
+<div class="form-group{{ $errors->has('dateto') ? ' has-error' : '' }}">
+<label class="col-md-4 control-label" for="dateto">Available To</label>
+<div class="input-group input-group-lg ">
+<input class="form-control" type="text" name="dateto"  id="todatepicker" 
+value="{{  old('dateto', isset($lead) ?  $lead->dateto->format('m/d/Y') : date('m/d/Y',strtotime('+1 years'))) }}"/>
+
+        <span class="help-block">
+        <strong>{{$errors->has('dateto') ? $errors->first('dateto')  : ''}}</strong>
+        </span>
+</div>
+</div>   

@@ -125,11 +125,11 @@ value="{{  old('dateto', isset($lead) ?  $lead->dateto->format('m/d/Y') : date('
  
          </div>
      </div>
-         
-		<div class="form-group{{ $errors->has('slead_source_idource') ? ' has-error' : '' }}">
+<legend>Select or Create new Lead Source</legend>   
+		<div class="form-group{{ $errors->has('lead_source_id') ? ' has-error' : '' }}">
         <label class="col-md-4 control-label">Lead Source</label>
         <div class="input-group input-group-lg ">
-            <select class="form-control" name='lead_source_id'>
+            <select id="leadsource" class="form-control" name='lead_source_id'>
 
             @foreach ($sources as $key=>$value)
             	<option {{isset($lead) && ($lead->lead_source_id == $key) ? 'selected' : '' }} value="{{$key}}">{{$value}}</option>
@@ -138,6 +138,7 @@ value="{{  old('dateto', isset($lead) ?  $lead->dateto->format('m/d/Y') : date('
 
 
             </select>
+            <input type="text" id="addElement" name="addElement" placeholder= "Add Item"/><button type="button" onclick="addOption()">Insert new source</button>
             <span class="help-block">
                 <strong>{{ $errors->has('lead_source_id') ? $errors->first('lead_source_id') : ''}}</strong>
                 </span>
@@ -145,6 +146,15 @@ value="{{  old('dateto', isset($lead) ?  $lead->dateto->format('m/d/Y') : date('
     </div>
 
 
-
+<script>
+function addOption() {
+    var x = document.getElementById("leadsource");
+    var option = document.createElement("option");
+    var add = document.getElementById("addElement");
+    option.text = add.value;
+    x.add(option, x[0]);
+    document.getElementById('leadsource').value = add.value;
+}
+</script>
 
     
