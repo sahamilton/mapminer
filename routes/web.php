@@ -265,7 +265,14 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function()
 	#Leads
 		Route::get('lead/address',['as'=>'lead.address','uses'=>'LeadsController@address']);
 		Route::post('lead/find',['as'=>'lead.find','uses'=>'LeadsController@find']);
+		Route::resource('leads','LeadsController');
 	
+	#LeadSource
+		Route::resource('leadsource','LeadSourceController');
+
+	# Lead Status
+	 	Route::resource('leadstatus','LeadStatusController');	
+
 	#Salesnotes
 		
 		Route::resource('salesnotes','SalesNotesController');

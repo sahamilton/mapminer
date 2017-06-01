@@ -20,6 +20,7 @@
 <textarea class='form-control' required name="summary" >{{old('summary', isset($document->summary) ?  $document->summary : '' )}}</textarea>
 <strong>{!! $errors->first('summary', '<p class="help-block">:message</p>') !!}</strong>
 </div></div>
+
 <legend>Available From / To</legend>
 <div class="form-group{{ $errors->has('from)') ? ' has-error' : '' }}">
     <label for="datefrom">Available From</label>
