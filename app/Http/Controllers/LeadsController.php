@@ -3,14 +3,16 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
-use App\Person;
 use App\Lead;
+use App\Person;
+use Excel;
+use Carbon\Carbon;
 use App\LeadSource;
 use App\SearchFilter;
-use Carbon\Carbon;
-use App\Http\Requests\LeadAddressFormRequest;
 use App\Http\Requests\LeadFormRequest;
+use App\Http\Requests\LeadAddressFormRequest;
+use App\Http\Requests\BatchLeadImportFormRequest;
+
 
 class LeadsController extends BaseController
 {
@@ -68,7 +70,7 @@ class LeadsController extends BaseController
         $lead = $this->lead->create($request->all());
         $geoCode = app('geocoder')->geocode($this->getAddress($request))->get();
         $lead->update($this->getGeoCode($geoCode));
-        
+
         $lead->vertical()->attach($request->get('vertical'));
         return redirect()->route('leads.index')->with(['message','New Lead Created']);
     }
@@ -226,5 +228,50 @@ class LeadsController extends BaseController
         $request->merge(['lead_source_id'=>$source->id]);
         return $request;
     }
+
+
+    public function batchImport(){
+
+        $sources = $this->leadsource->pluck('source','id');
+        $verticals = $this->vertical->vertical();
+        return response()->view('leads.batchimport',compact('sources','verticals'));
+    }
+    
+
+    public function leadImport(BatchLeadImportFormRequest $request){
+        if(! is_numeric($request->get('lead_source_id'))){
+            $request = $this->createNewSource($request);
+        }
+        $file= $request->file('file');
+        $validFiles = ['xlsx','xls','csv'];
+        if(!in_array($file->getClientOriginalExtension(),$validFiles)){
+            $validator = \Validator::make($request->all(), [
+                'file' => 'mimes:xls,xlsx,csv',]);
+
+            return redirect()
+            ->back()
+            ->withInput()
+            ->withErrors($validator);
+        }
+        $file->store('public/library');
+
+        $source = $this->leadsource->findOrFail($request->get('lead_source_id'));
+
+        $leads = Excel::load($file,function($reader){
+           
+        })->get();
+        $count = null;
+        foreach ($leads->toArray() as $lead) {
+            $lead['user_id'] = auth()->user()->id;
+            $lead['lead_source_id'] = $request->get('lead_source_id');
+            $lead['datefrom'] = $source->datefrom->format('m/d/Y');
+            $lead['dateto'] = $source->dateto->format('m/d/Y');
+    
+            $this->lead->create($lead);
+            $count++;
+
+        }
+        dd('Imported ' . $count . ' leads');
+     }
     
 }
