@@ -13,9 +13,7 @@ class SalesLead extends Model
 
     
     public function assignedTo(){
-    	return $this->hasMany(Person::class,'lead_person_status')->where('status_id','=',$this->assignedStatus)->where('person.user_id','=',auth()->user()->id);
+    	return $this->hasMany(Person::class,'lead_person_status')->withPivot('status_id');
     }
-    public function ownedBy(){
-    	return $this->hasMany(Person::class,'lead_person_status')->where('status_id','=',$this->ownedStatus)->where('person.user_id','=',auth()->user()->id);
-    }
+    
 }

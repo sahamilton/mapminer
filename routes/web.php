@@ -106,6 +106,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 	# Sales organization 
 		Route::get('saleslead/{id}/accept',['as'=>'saleslead.accept','uses'=>'SalesLeadsController@accept']);
+		Route::get('saleslead/{id}/decline',['as'=>'saleslead.decline','uses'=>'SalesLeadsController@decline']);
 		Route::resource('salesleads','SalesLeadsController');
 	#Notes
 		

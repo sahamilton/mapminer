@@ -20,7 +20,10 @@ $(document).ready(function()
     	$(this).find('.danger').attr('href', $(e.relatedTarget).data('href'));
 		$(this).find('#title').html($(e.relatedTarget).data('title'));
 	});	
-	
+	$(document).on('show.bs.modal','#accept-lead', function(e) {
+    	$(this).find('.warning').attr('href', $(e.relatedTarget).data('href'));
+		$(this).find('#title').html($(e.relatedTarget).data('title'));
+	});	
 	$( "#todatepicker" ).datepicker( {altField : "#todate",
     altFormat: "yyyy-mm-dd"});
 	

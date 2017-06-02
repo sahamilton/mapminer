@@ -1,7 +1,7 @@
 @extends('site/layouts/default')
 @section('content')
 
-<h1>All Managers</h1>
+<h1>Leads Assigned to {{$leads->firstname}} {{$leads->lastname}}</h1>
 
 
 <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
@@ -27,7 +27,10 @@
                 <td>{{$lead->businessname}}</td>
                 <td>{{$lead->city}}</td>
                 <td>{{$lead->state}}</td>
-                <td>{{$lead->pivot->status_id}}
+                <td>
+                {{$statuses[$lead->pivot->status_id]}}
+
+               
                 <td>
                 <ul>
                 @foreach ($lead->vertical as $vertical)
@@ -36,6 +39,7 @@
                 </ul>
                 </td>
 <td>
+           @if(in_array($lead->pivot->status_id,['1',2]))
             @include('partials/_leadsmodal')
     
             <div class="btn-group">
@@ -45,12 +49,23 @@
 			  </button>
 			  <ul class="dropdown-menu" role="menu">
 				
+			  @if($lead->pivot->status_id ==1)
+				<li><a data-href="{{route('saleslead.accept',$lead->id)}}" data-toggle="modal" data-target="#accept-lead" data-title = "Some title" href="#">
+                <i class="glyphicon glyphicon-thumbs-up"></i> Claim Lead </a></li>
+                <li><a href="{{route('saleslead.decline',$lead->id)}}">
+                <i class="glyphicon glyphicon-thumbs-down"></i> Decline Lead </a></li>
 
-				<li><a data-href="{{route('saleslead.accept',$lead->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = "Some title" href="#">
-                <i class="glyphicon glyphicon-view"></i> View </a></li>
+
+               @endif
+
+               @if($lead->pivot->status_id ==2)
+				<li><a href="">
+				<i class="glyphicon glyphicon-hand-right"></i>
+				Work  Lead </a></li>
+               @endif
 			  </ul>
 			</div>
-	
+	@endif
     </td>
 
     </tr>
