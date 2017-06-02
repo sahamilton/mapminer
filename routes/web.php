@@ -104,7 +104,9 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('salesorg/coverage',['as'=>'salescoverage','uses'=>'SalesOrgController@salesCoverageMap']);
 		Route::get('branch/{branchId}/salesteam',array('as' => 'branch.salesteam', 'uses' => 'BranchesController@showSalesTeam'));
 
-
+	# Sales organization 
+		Route::get('saleslead/{id}/accept',['as'=>'saleslead.accept','uses'=>'SalesLeadsController@accept']);
+		Route::resource('salesleads','SalesLeadsController');
 	#Notes
 		
 		Route::get('notes/{noteId}/delete',['as' => 'delete/note', 'uses' => 'NotesController@destroy']);

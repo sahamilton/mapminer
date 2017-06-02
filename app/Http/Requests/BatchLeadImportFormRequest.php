@@ -26,7 +26,6 @@ class BatchLeadImportFormRequest extends FormRequest
         return [
             'vertical'=>'required',
             'file'=>'file|required',
-            
             'datefrom'=>'required|before_or_equal:dateto',
             'dateto'=>'required',
 

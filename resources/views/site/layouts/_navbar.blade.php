@@ -43,6 +43,7 @@
                         @if(Auth::user()->hasRole('Admin') or Auth::user()->hasRole('Sales'))
                         <li><a href="{{route('resources.view')}}">Sales Library</a></li>
                         <li><a href="{{route('salescampaigns')}}">Sales Campaigns</a></li>
+                        <li><a href="{{route('salesleads.index')}}">Sales Leads</a></li>
                         @endif
                         </ul>
 

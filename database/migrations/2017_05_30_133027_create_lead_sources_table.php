@@ -20,6 +20,7 @@ class CreateLeadSourcesTable extends Migration
             $table->string('reference')->nullable();
             $table->date('datefrom');
             $table->date('dateto');
+            $table->string('filename')->nullable();
             $table->integer('user_id');
             $table->timestamps();
         });

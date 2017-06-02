@@ -20,7 +20,7 @@ class CreateLeadPersonStatusPivotTable extends Migration
             $table->foreign('person_id')->references('id')->on('persons')->onDelete('cascade');
             $table->integer('status_id')->unsigned()->index();
             $table->foreign('status_id')->references('id')->on('lead_status')->onDelete('cascade');
-
+            $table->timestamps();
             $table->primary(['lead_id', 'person_id','status_id'],'primary_key');
         });
     }

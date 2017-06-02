@@ -88,7 +88,11 @@
 		</div>
 		<!-- ./ container -->
 </div>
-		<!-- the following div is needed to make a sticky footer -->
+@if (config('app.debug'))
+    @include('sudosu::user-selector')
+@endif
+<!-- the following div is needed to make a sticky footer -->
+
 		<div id="push"></div>
 
 		<!-- ./wrap -->

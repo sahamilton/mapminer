@@ -223,8 +223,9 @@ class LeadsController extends BaseController
         $source = $this->leadsource->create(['source'=>$request->get('lead_source_id'),
             'datefrom'=>Carbon::createFromFormat('m/d/Y',$request->get('datefrom')),
             'dateto'=>Carbon::createFromFormat('m/d/Y',$request->get('dateto')),
-            'user_id'=>auth()->user()->id]);
- 
+            'user_id'=>auth()->user()->id,
+            'filename'=>$request->get('filename')]);
+    
         $request->merge(['lead_source_id'=>$source->id]);
         return $request;
     }
@@ -239,9 +240,7 @@ class LeadsController extends BaseController
     
 
     public function leadImport(BatchLeadImportFormRequest $request){
-        if(! is_numeric($request->get('lead_source_id'))){
-            $request = $this->createNewSource($request);
-        }
+        
         $file= $request->file('file');
         $validFiles = ['xlsx','xls','csv'];
         if(!in_array($file->getClientOriginalExtension(),$validFiles)){
@@ -253,7 +252,14 @@ class LeadsController extends BaseController
             ->withInput()
             ->withErrors($validator);
         }
+
         $file->store('public/library');
+
+        if(! is_numeric($request->get('lead_source_id'))){
+                    
+                    $request->merge(['filename'=>basename($file)]); 
+                    $request = $this->createNewSource($request);
+                }
 
         $source = $this->leadsource->findOrFail($request->get('lead_source_id'));
 
@@ -263,11 +269,13 @@ class LeadsController extends BaseController
         $count = null;
         foreach ($leads->toArray() as $lead) {
             $lead['user_id'] = auth()->user()->id;
-            $lead['lead_source_id'] = $request->get('lead_source_id');
+            
             $lead['datefrom'] = $source->datefrom->format('m/d/Y');
             $lead['dateto'] = $source->dateto->format('m/d/Y');
-    
-            $this->lead->create($lead);
+            $lead['lead_source_id'] = $request->get('lead_source_id');
+            $newLead = $this->lead->create($lead);
+            $newLead->vertical()->attach($request->get('vertical'));
+            
             $count++;
 
         }

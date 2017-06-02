@@ -91,7 +91,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 			<!-- ./ content -->
 		</div>
 		<!-- ./ container -->
-
+@if (config('app.debug'))
+    @include('sudosu::user-selector')
+@endif
 		<!-- the following div is needed to make a sticky footer -->
 		<div id="push"></div>
 		</div>
