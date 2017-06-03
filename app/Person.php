@@ -146,7 +146,7 @@ class Person extends NodeModel {
 			 }
 			$query = str_replace("\r\n",' ',$query);
 		$query = str_replace("\t",'',$query);
-		
+	
 			 $result = \DB::select($query);
 
 		return $result;

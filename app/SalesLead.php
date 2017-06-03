@@ -16,4 +16,5 @@ class SalesLead extends Model
     	return $this->hasMany(Person::class,'lead_person_status')->withPivot('status_id');
     }
     
+    
 }

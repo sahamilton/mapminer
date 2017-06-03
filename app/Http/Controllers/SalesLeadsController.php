@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 
 class SalesLeadsController extends Controller
 {
-    public $saleslead;
+    public $salesleads;
     public $person;
     public $leadstatus;
     public function __construct(Lead $saleslead, Person $person, LeadStatus $status){
@@ -27,7 +27,6 @@ class SalesLeadsController extends Controller
     {
         $statuses = $this->leadstatus->pluck('status','id')->toArray();
         $leads = $this->person->with('salesleads','salesleads.vertical','salesleads.salesteam')
-        
         ->where('user_id','=',auth()->user()->id)
         ->firstOrFail();
         return response()->view('salesleads.index',compact('leads','statuses'));
@@ -62,7 +61,11 @@ class SalesLeadsController extends Controller
      */
     public function show($id)
     {
-        //
+     ;
+        $sources = $this->leadstatus->pluck('status','id')->toArray();
+        $lead = $this->salesleads->with('leadsource','vertical','relatedNotes')
+        ->findOrFail($id);
+        return response()->view('salesleads.show',compact('lead','sources'));
     }
 
     /**

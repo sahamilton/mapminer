@@ -30,14 +30,16 @@
 
  @foreach($leads as $lead)
    	
- 
     <tr>  
-    <td>{{$lead->companyname}}</td>
+    <td><a href="{{route('leads.show',$lead->id)}}">{{$lead->companyname}}</a></td>
     <td>{{$lead->businessname}}</td>
     <td>{{$lead->city}}</td>
     <td>{{$lead->state}}</td>
     <td>{{$lead->created_at->format('M j, Y')}}</td>
-    <td>{{$lead->status}}</td>
+    <td>
+    @if(count($lead->salesteam) > 0)
+        Assigned
+    @endif</td>
     <td><a href = "{{route('leadsource.show',$lead->lead_source_id)}}">{{$sources[$lead->lead_source_id]}}</a></td>
 	@if (Auth::user()->hasRole('Admin'))
     <td>

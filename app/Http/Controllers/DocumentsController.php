@@ -172,7 +172,7 @@ class DocumentsController extends Controller
     }
     
     private function setDates($data){
-        dd($data);
+
         $data['datefrom'] = Carbon::createFromFormat('m/d/Y', $data['datefrom']);
         $data['dateto'] = Carbon::createFromFormat('m/d/Y', $data['dateto']);
         return $data;

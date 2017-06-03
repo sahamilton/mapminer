@@ -24,13 +24,20 @@
                 <tr> 
                 
                 <td>{{$lead->companyname }}</td>
-                <td>{{$lead->businessname}}</td>
+                <td>
+				@if(isset($lead->pivot) && $lead->pivot->status_id == 2)
+					<a href="{{route('salesleads.show',$lead->id)}}" />
+					{{$lead->businessname}}</td>
+				@else
+                {{$lead->businessname}}
+                @endif
+                </td>
                 <td>{{$lead->city}}</td>
                 <td>{{$lead->state}}</td>
                 <td>
                 {{$statuses[$lead->pivot->status_id]}}
 
-               
+               {{$lead->pivot->status_id}}
                 <td>
                 <ul>
                 @foreach ($lead->vertical as $vertical)

@@ -8,6 +8,7 @@ use App\Person;
 use Excel;
 use Carbon\Carbon;
 use App\LeadSource;
+use App\LeadStatus;
 use App\SearchFilter;
 use App\Http\Requests\LeadFormRequest;
 use App\Http\Requests\LeadAddressFormRequest;
@@ -20,13 +21,15 @@ class LeadsController extends BaseController
     public $lead;
     public $leadsource;
     public $vertical;
+    public $leadstatus;
 
-    public function __construct(Person $person, Lead $lead,LeadSource $leadsource,SearchFilter $vertical){
+    public function __construct(Person $person, Lead $lead,LeadSource $leadsource,SearchFilter $vertical,LeadStatus $status){
 
     	$this->person = $person;
         $this->vertical = $vertical;
         $this->lead = $lead;
         $this->leadsource = $leadsource;
+        $this->leadstatus = $status;
     }
     /**
      * Display a listing of the resource.
@@ -101,8 +104,10 @@ class LeadsController extends BaseController
 
     public function show($id)
     {
-        $lead = $this->lead->with('salesteam','leadsource')->findOrFail($id);
-        return response()->view('leads.show',compact('lead'));
+        $sources = $this->leadstatus->pluck('status','id')->toArray();
+        $lead = $this->lead->with('salesteam','leadsource','vertical')
+        ->findOrFail($id);
+        return response()->view('leads.show',compact('lead','sources'));
     }
 
     /**
@@ -279,7 +284,27 @@ class LeadsController extends BaseController
             $count++;
 
         }
-        dd('Imported ' . $count . ' leads');
+        return redirect()->route('leads.index')->withMessage('Imported ' . $count . ' leads');
      }
     
+    public function assignLeads(){
+        $leads = $this->lead->whereDoesntHave('salesteam')
+        ->where('datefrom','<=',date('Y-m-d'))
+        ->where('dateto','>=',date('Y-m-d'))
+        ->get();
+        $count = null;
+        foreach ($leads as $lead) {
+           $data['lat']=$lead->lat;
+           $data['lng']=$lead->lng;
+           if($people = $this->findNearBy($data)){
+            
+            $count++;
+                foreach ($people as $person){
+                    $lead->salesteam()->attach($person->id,['status_id'=>1]);
+                }
+           }
+           
+        }
+        return redirect()->route('leads.index')->with('status',$count . ' leads assigned');
+    }
 }

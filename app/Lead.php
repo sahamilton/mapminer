@@ -49,5 +49,11 @@ class Lead extends Model
 
     }
 
-    
+    public function fullAddress(){
+    	return $this->address . "," . $this->city. " " . $this->state . " " . $this->zip;
+    	
+    }
+    public function relatedNotes() {
+		return $this->hasMany(Note::class)->with('writtenBy');
+	}
 }

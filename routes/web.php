@@ -271,6 +271,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function()
 		Route::get('leads/batch',['as'=>'batchimport','uses'=>'LeadsController@batchImport']);
 		Route::post('leads/batch',['as'=>'leads.batch','uses'=>'LeadsController@leadImport']);
 		Route::get('leads/{id}/purge',['as'=>'leads.purge','uses'=>'LeadsController@destroy']);
+		Route::get('leads/assign',['as'=>'leads.assign','uses'=>'LeadsController@assignLeads']);
 		Route::resource('leads','LeadsController');
 	
 	#LeadSource
