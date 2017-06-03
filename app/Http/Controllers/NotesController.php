@@ -3,7 +3,8 @@ namespace App\Http\Controllers;
 use App\Note;
 use App\User;
 use App\Location;
-use App\Html\Requests\NoteFormRequest;
+use App\Http\Requests\NoteFormRequest;
+use Illuminate\Http\Request;
 class NotesController extends BaseController {
 
 	
@@ -47,15 +48,15 @@ class NotesController extends BaseController {
 	 */
 	public function store(NoteFormRequest $request)
 	{
-		$request->merge('user_id',auth()->user()->id);
+		$request->merge(['user_id'=>auth()->user()->id]);
 
 		
 		$this->notes->create($request->all());
 		if($request->has('lead_id')){
-			return redirect()->route('lead.show',$request->get('location_id'));
+			return redirect()->route('salesleads.show',$request->get('lead_id'));
 		}
 
-		return \Redirect::route('location.show',$data['location_id']);
+		return redirect()->route('location.show',$request->get('location_id'));
 	}
 
 	/**
@@ -93,14 +94,13 @@ class NotesController extends BaseController {
 	public function update(NoteFormRequest $request,$id)
 	{
 		
-		$note = $this->notes->findOrFail($id);
-
-		
-		$note->update($request->all());
+		$this->notes->findOrFail($id)->update($request->all());
 		//$this->notify($data);
+		if($request->has('lead_id')){
+			return redirect()->route('salesleads.show',$request->get('lead_id'));
+		}
 		
-		
-		return redirect()->route('location.show',$data['location_id']);
+		return redirect()->route('location.show',$request->get('location_id'));
 	}
 
 	/**
@@ -109,14 +109,16 @@ class NotesController extends BaseController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id)
+	public function destroy($id, Request $request)
 	{
 		
-		$note = $this->notes->findOrFail($id);
-		$note->destroy($id);
-
-		return redirect()->route('location.show',$note['location_id']);
+		$this->notes->destroy($id);
+		if($request->has('lead')){
+			return redirect()->route('salesleads.show',$request->get('lead'));
+		}
+		return redirect()->route('location.show',$request->get('location'));
 	}
+
 	private function notify($data){
 		
 		// refactor mailables

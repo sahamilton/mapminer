@@ -8,6 +8,7 @@
 
 <div class="pull-right">
 				<a href="{{ route('leads.create')}}" class="btn btn-small btn-info iframe"><span class="glyphicon glyphicon-plus-sign"></span> Create New Lead</a>
+                <a href="{{ route('batchimport')}}" class="btn btn-small btn-info iframe"><span class="glyphicon glyphicon-open-file"></span> Import Leads</a>
 			</div>
 @endif
 

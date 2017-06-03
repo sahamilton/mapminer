@@ -25,6 +25,6 @@ class NoteFormRequest extends FormRequest
     {
         return [
             'note' => 'required',
-            ]
+            ];
     }
 }

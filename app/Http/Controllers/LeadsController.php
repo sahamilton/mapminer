@@ -107,6 +107,7 @@ class LeadsController extends BaseController
         $sources = $this->leadstatus->pluck('status','id')->toArray();
         $lead = $this->lead->with('salesteam','leadsource','vertical')
         ->findOrFail($id);
+      
         return response()->view('leads.show',compact('lead','sources'));
     }
 

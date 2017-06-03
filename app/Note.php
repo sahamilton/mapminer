@@ -22,6 +22,6 @@ protected $table ='notes';
 		}
 	public function relatesToLead() 
 		{
-			return $this->belongsTo(Location::class,'lead_id');
+			return $this->belongsTo(Lead::class,'lead_id');
 		}
 }

@@ -41,7 +41,7 @@ class AdminDashboardController extends BaseController {
 		
 		$data['nogeocode'] =$this->getNoGeocodedLocations();
 		$data['recentLocationNotes'] = $this->recentLocationNotes();
-		
+		$data['recentLeadNotes'] = $this->recentLeadNotes();
 		
 		return response()->view('admin.dashboard',compact('data'));
 		
@@ -351,10 +351,26 @@ class AdminDashboardController extends BaseController {
 	private function recentLocationNotes()
 	
 	{
-		return Note::where('created_at', '>=', \Carbon\Carbon::now()->subWeek())->with(['writtenBy','relatesTo','relatesTo.company','writtenBy.person'])->get();
+		return Note::where('created_at', '>=', \Carbon\Carbon::now()->subWeek())
+		->whereHas('relatesTo')
+		->whereNotNull('location_id')
+		->with(['writtenBy','relatesTo','relatesTo.company','writtenBy.person'])
+		->get();
 		
 		
 	}
 	
+
+	private function recentLeadNotes()
+	
+	{
+		return Note::where('created_at', '>=', \Carbon\Carbon::now()->subWeek())
+		->whereHas('relatesToLead')
+		->whereNotNull('lead_id')
+		->with(['writtenBy','relatesToLead','writtenBy.person'])
+		->get();
+		
+		
+	}
 	
 }

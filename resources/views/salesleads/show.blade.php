@@ -24,8 +24,8 @@
 <p>{{date_format($note->created_at,'m-d-Y')}}...<em>{{$note->note}}</em><br />
  -- {{$note->writtenBy->person->firstname}} {{$note->writtenBy->person->lastname}}</p>
 @if($note->user_id == Auth::user()->id  or Auth::user()->hasRole('Admin'))
-<br /><a href="{{route('notes.edit',$note->id)}}" title="Edit this note"><i class="glyphicon glyphicon-pencil"></i></a> | 
-<a href="{{route('delete/note',$note->id)}}" onclick="if(!confirm('Are you sure to delete this note?')){return false;};" title="Delete this note"><i class="glyphicon glyphicon-trash"></i></a>
+<br /><a href="{{route('notes.edit',$note->id)}}?lead={{$lead->id}}" title="Edit this note"><i class="glyphicon glyphicon-pencil"></i></a> | 
+<a href="{{route('delete/note',$note->id)}}?lead={{$lead->id}}" onclick="if(!confirm('Are you sure to delete this note?')){return false;};" title="Delete this note"><i class="glyphicon glyphicon-trash"></i></a>
 <hr />
 @endif
 

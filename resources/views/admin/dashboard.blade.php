@@ -62,7 +62,7 @@ $datastring = substr($datastring,0,-1);
       <h3>Account Activity</h3>
     @include('admin.partials.watchers')
  	@include('admin.partials.newNotes')
-     
+    @include('admin.partials.newLeadNotes')  
     </div>
     <div id="menu2" class="tab-pane fade">
       <h3>Account Health</h3>

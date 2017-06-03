@@ -62,10 +62,9 @@ class LeadSourceController extends Controller
      */
     public function show($id)
     {
-        $leadsource = $this->leadsource->with('leads','leads.salesteam','author')
+        $leadsource = $this->leadsource
+        ->with('leads','leads.salesteam','author')
        ->findOrFail($id);
-
-
         return response()->view('leadsource.show',compact('leadsource'));
     }
 

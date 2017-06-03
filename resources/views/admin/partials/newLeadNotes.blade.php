@@ -1,5 +1,5 @@
 <div style="border:1px solid #000;width:600px;margin:20px;padding:20px;float:left">
-<h4>Location Notes in past week</h4>
+<h4>Lead Notes in past week</h4>
 <!-- 'writtenBy','relatesTo','relatesTo.company','writtenBy.person' -->
 <table id ='sorttable6' class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
@@ -24,31 +24,29 @@
          
     </thead>
     <tbody>
-   @foreach($data['recentLocationNotes'] as $newNote)
+
+   @foreach($data['recentLeadNotes'] as $newNote)
 
 <tr>
 
 <td>
+{{$newNote->relatesToLead->companyname}}
 
-{{$newNote->relatesTo->company->companyname}}
 </td>
 <td>
-<a href = "{{route('location.show',$newNote->relatesTo->id)}}" title="Review {{$newNote->relatesTo->businessname}} location" >{{$newNote->relatesTo->businessname}}</a>
+<a href = "{{route('leads.show',$newNote->relatesToLead->id)}}" title="Review {{$newNote->relatesToLead->businessname}} lead" >{{$newNote->relatesToLead->businessname}}</a>
 </td>
 <td>
-{{$newNote->relatesTo->locationAddress()}}
+{{$newNote->relatesToLead->fullAddress()}}
 </td>
 <td>
 {{$newNote->note}}
 </td>
 <td>
-<?php $date = new DateTime($newNote->created_at);
-
-echo $date->format('jS M g:i A');
-?>
+{{$newNote->created_at->format('jS M g:i A')}}
 </td>
 <td>
-{{$newNote->writtenBy->person->firstname}} {{$newNote->writtenBy->person->lastname}}
+{{$newNote->writtenBy->person->postName()}}
 </td>
 
 
