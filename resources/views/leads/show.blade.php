@@ -1,6 +1,6 @@
 @extends ('admin.layouts.default')
 @section('content')
-
+<h1>Lead</h1>
 <h2>{{$lead->businessname}}</h2>
 <h4>A location of {{$lead->companyname}}</h4>
 
@@ -12,6 +12,8 @@
 		<p><strong>Available Until:</strong> {{$lead->dateto->format('M j, Y')}}</p>
 		<p><strong>Description:</strong> {{$lead->description}}</p>
 		<p><strong>Assigned:</strong>{{count($lead->salesteam)}}</p>
+		<p><strong>Lead Source:</strong><a href="{{route('leadsource.show',$lead->leadsource->id)}}">{{$lead->leadsource->source}}</a></p>
+
 		<p><strong>Industry Vertical:</strong></p>
 		<ul>
 		@foreach($lead->vertical as $vertical)
@@ -42,6 +44,12 @@
 	</table>
 </div>
 @endif
+<h4>Notes</h4>
+@foreach ($lead->relatedNotes as $note)
+<p>{{$note->created_at->format('M j,Y')}}...<em>{{$note->note}}</em><br />
+ -- {{$note->writtenBy->person->firstname}} {{$note->writtenBy->person->lastname}}</p>
+
+@endforeach
 </div>
 <div id="map" style="height:300px;width:500px;border:red solid 1px"/>
 </div>

@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 use App\Note;
 use App\User;
 use App\Location;
+use App\Html\Requests\NoteFormRequest;
 class NotesController extends BaseController {
 
 	
@@ -44,20 +45,16 @@ class NotesController extends BaseController {
 	 *
 	 * @return Response
 	 */
-	public function store()
+	public function store(NoteFormRequest $request)
 	{
-		$data = \Input::all();
-		$data['user_id'] = 	\Auth::user()->id;
+		$request->merge('user_id',auth()->user()->id);
 
-		$validator = Validator::make($data, Note::$rules);
-
-		if ($validator->fails())
-		{
-			return \Redirect::back()->withErrors($validator)->withInput();
+		
+		$this->notes->create($request->all());
+		if($request->has('lead_id')){
+			return redirect()->route('lead.show',$request->get('location_id'));
 		}
 
-		Note::create($data);
-		//Queue::push($this->notify($data));
 		return \Redirect::route('location.show',$data['location_id']);
 	}
 
@@ -93,23 +90,17 @@ class NotesController extends BaseController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update($id)
+	public function update(NoteFormRequest $request,$id)
 	{
 		
 		$note = $this->notes->findOrFail($id);
 
-		$validator = Validator::make($data = \Input::all(), Note::$rules);
-
-		if ($validator->fails())
-		{
-			return \Redirect::back()->withErrors($validator)->withInput();
-		}
-
-		$note->update($data);
-		$this->notify($data);
+		
+		$note->update($request->all());
+		//$this->notify($data);
 		
 		
-		return \Redirect::route('location.show',$data['location_id']);
+		return redirect()->route('location.show',$data['location_id']);
 	}
 
 	/**
@@ -124,9 +115,11 @@ class NotesController extends BaseController {
 		$note = $this->notes->findOrFail($id);
 		$note->destroy($id);
 
-		return \Redirect::route('location.show',$note['location_id']);
+		return redirect()->route('location.show',$note['location_id']);
 	}
 	private function notify($data){
+		
+		// refactor mailables
 		// Only notify if there is national account manager
 		if(isset($data['company'][0]->company['managedBy']->email)){
 			$data['user'] = $this->user->findOrFail($data['user_id']);
@@ -149,7 +142,7 @@ class NotesController extends BaseController {
 	 */
 	public function mynotes()
 	{
-		$user = \Auth::user();
+		$user = auth()->user();
 		
 		$notes = $this->notes->where('user_id','=',$user->id)->with('relatesTo')->get();
 		$fields= ['Created'=>'created_at','Business Name'=>'businessname','Note'=>'note'];

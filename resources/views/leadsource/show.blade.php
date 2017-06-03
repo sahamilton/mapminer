@@ -1,7 +1,7 @@
 @extends ('admin.layouts.default')
 @section('content')
-
-<h1>{{$leadsource->source}}</h1>
+<h2>Lead Source</h2>
+<h4>{{$leadsource->source}}</h4>
 
 <p><strong>Editor:</strong> {{$leadsource->author->person->postName()}}</p>
 <p><strong>Created:</strong> {{$leadsource->created_at->format('M j, Y')}}</p>

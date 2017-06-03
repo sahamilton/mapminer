@@ -34,6 +34,10 @@ class Lead extends Model
     public function salesteam(){
     	return $this->belongsToMany(Person::class, 'lead_person_status')->withPivot('status_id');
     }
+    
+    public function relatedNotes() {
+      return $this->hasMany(Note::class)->with('writtenBy');
+    }
 
     public function setDatefromAttribute($value)
    {
@@ -53,7 +57,5 @@ class Lead extends Model
     	return $this->address . "," . $this->city. " " . $this->state . " " . $this->zip;
     	
     }
-    public function relatedNotes() {
-		return $this->hasMany(Note::class)->with('writtenBy');
-	}
+   
 }

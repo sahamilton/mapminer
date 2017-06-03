@@ -8,7 +8,7 @@ class Note extends Model {
 	];
 
 	// Don't forget to fill this array
-	protected $fillable = ['note','location_id','user_id','created_at','updated_at'];
+	protected $fillable = ['note','location_id','lead_id','user_id','created_at','updated_at'];
 protected $table ='notes';
 
 	public function writtenBy() 
@@ -20,5 +20,8 @@ protected $table ='notes';
 		{
 			return $this->belongsTo(Location::class,'location_id');
 		}
-	
+	public function relatesToLead() 
+		{
+			return $this->belongsTo(Location::class,'lead_id');
+		}
 }
