@@ -22,6 +22,7 @@
     <th>Date Created</th>
     <th>Status</th>
     <th>Source</th>
+    <th>Rating</th>
  @if (Auth::user()->hasRole('Admin'))
  <th>Actions</th>
  @endif  
@@ -42,6 +43,9 @@
         Assigned
     @endif</td>
     <td><a href = "{{route('leadsource.show',$lead->lead_source_id)}}">{{$sources[$lead->lead_source_id]}}</a></td>
+    <td>
+    {{$lead->rankLead($lead->salesteam)}}
+    </td>
 	@if (Auth::user()->hasRole('Admin'))
     <td>
             @include('partials/_modal')

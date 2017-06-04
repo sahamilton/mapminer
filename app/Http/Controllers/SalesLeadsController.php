@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Person;
+use App\User;
 use App\Lead;
 use App\LeadStatus;
 use Illuminate\Http\Request;
@@ -63,9 +64,10 @@ class SalesLeadsController extends Controller
     {
      ;
         $sources = $this->leadstatus->pluck('status','id')->toArray();
-        $lead = $this->salesleads->with('leadsource','vertical','relatedNotes')
+        $lead = $this->salesleads->with('leadsource','vertical','relatedNotes','salesteam')
         ->findOrFail($id);
-        return response()->view('salesleads.show',compact('lead','sources'));
+        $rank = $this->salesleads->rankMyLead($lead->salesteam);
+        return response()->view('salesleads.show',compact('lead','sources','rank'));
     }
 
     /**
@@ -125,5 +127,21 @@ class SalesLeadsController extends Controller
       $lead->salesteam()->updateExistingPivot(auth()->user()->person->id,['status_id'=>4]);
 
        return redirect()->route('salesleads.index');
+    }
+
+    public function rank(Request $request)
+    {
+
+       $user = User::where('api_token','=',$request->get('api_token'))
+       ->with('person')->first();
+     ;
+       if($user->person->salesleads()->sync([$request->get('id') => ['person_id'=>$user->person->id,'rating' => $request->get('value')]],false))
+            {
+                dd($request->get('value'));
+                return 'success';
+            }
+        return 'error';
+    
+       
     }
 }

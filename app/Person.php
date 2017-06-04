@@ -79,7 +79,7 @@ class Person extends NodeModel {
 	public function salesleads(){
 		return $this->belongsToMany(Lead::class, 'lead_person_status')
 		->withTimestamps()
-		->withPivot('status_id');
+		->withPivot('status_id','ratings');
 	}
 
 	public function findPersonsRole($people)

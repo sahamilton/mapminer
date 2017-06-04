@@ -66,7 +66,7 @@ $(document).ready(function()
 		          cache: false,
 		       
 		          
-		          url: '{{route('api.rank')}}?api_token={{\Auth::user()->api_token}}',
+		          url: '{{route('api.rank')}}?api_token={{auth()->user()->api_token}}',
 		          data: {id: id,value: value},
 		          
 		          dataType: "xml",

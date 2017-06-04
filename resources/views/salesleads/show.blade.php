@@ -3,7 +3,8 @@
 
 <h2>{{$lead->businessname}}</h2>
 <h4>A location of {{$lead->companyname}}</h4>
-
+<div id="{{$lead->id}}" data-rating="{{intval(isset($rank) ? $rank : 0)}}" class="starrr" >
+           <strong> Your Rating: </strong></div>
       <div id="map-container">
         <div style="float:left;width:300px">
     <p><strong>Address:</strong> {{$lead->fullAddress()}}</p>
@@ -14,8 +15,8 @@
     <p><strong>Assigned:</strong>{{count($lead->salesteam)}}</p>
     <p><strong>Industry Vertical:</strong></p>
 
-<p><strong>Primary Contact:</strong>{{$lead->contact}}</p>
-<p><strong>Phone:</strong>{{$lead->phone}}</p>
+    <p><strong>Primary Contact:</strong>{{$lead->contact}}</p>
+    <p><strong>Phone:</strong>{{$lead->phone}}</p>
 
 <hr />
 <h2>Notes</h2>
@@ -54,7 +55,7 @@
 
 
 </div>
-
+@include('salesleads.partials._scripts')
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={{config('maps.api_key')}}"></script>
 
 <script type="text/javascript">

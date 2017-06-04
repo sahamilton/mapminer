@@ -104,9 +104,10 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('salesorg/coverage',['as'=>'salescoverage','uses'=>'SalesOrgController@salesCoverageMap']);
 		Route::get('branch/{branchId}/salesteam',array('as' => 'branch.salesteam', 'uses' => 'BranchesController@showSalesTeam'));
 
-	# Sales organization 
+	# Sales leads 
 		Route::get('saleslead/{id}/accept',['as'=>'saleslead.accept','uses'=>'SalesLeadsController@accept']);
 		Route::get('saleslead/{id}/decline',['as'=>'saleslead.decline','uses'=>'SalesLeadsController@decline']);
+		Route::get('leadrank',['as'=>'api.leadrank','uses'=>'SalesLeadsController@rank']);
 		Route::resource('salesleads','SalesLeadsController');
 	#Notes
 		
@@ -185,7 +186,7 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::post('api/advancedsearch',['as'=>'setSearch','uses'=>'SearchFiltersController@setSessionSearch']);	
 		Route::get('documents/select',['as'=>'documents.select','uses'=>'DocumentsController@select']);
 		Route::post('documents/select',['as'=>'documents.select','uses'=>'DocumentsController@getDocuments']);
-		Route::get('/rank',['as'=>'api.rank','uses'=>'DocumentsController@rank']);
+		Route::get('rank',['as'=>'api.rank','uses'=>'DocumentsController@rank']);
     	Route::get('watchedby/{id}',['as'=>'watchedby','uses'=>'DocumentsController@watchedby']);
     	Route::get('documents/{id}',['as'=>'documents.show','uses'=>'DocumentsController@show']);
 });

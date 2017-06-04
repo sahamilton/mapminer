@@ -4,6 +4,8 @@
 <h2>{{$lead->businessname}}</h2>
 <h4>A location of {{$lead->companyname}}</h4>
 
+ <div id="{{$lead->id}}" data-rating="{{intval(isset($rank) ? $rank : 0)}}" class="starrr" >
+            Rated: </div>
 <div id="map-container">
 	<div style="float:left;width:300px">
 		<p><strong>Address:</strong> {{$lead->fullAddress()}}</p>
@@ -23,7 +25,7 @@
 		</ul>
 	</div>
 
-@if (count($lead->salesteam)>0)
+@if (count($lead->salesteam) > 0)
 <div class="col-md-6 col-md-offset-1">
 	<table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
 		<thead>
@@ -53,6 +55,13 @@
 </div>
 <div id="map" style="height:300px;width:500px;border:red solid 1px"/>
 </div>
+ <script type="text/javascript" src="{{asset('assets/js/starrr.js')}}"></script>
+
+<script>
+$('.starrr').starrr({
+	readOnly: true;
+});
+</script>
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={{config('maps.api_key')}}"></script>
 
 <script type="text/javascript">
@@ -83,8 +92,7 @@ function bindInfoWindow(marker, map, infoWindow, html) {
       });
     }
 google.maps.event.addDomListener(window, 'load', initialize);
-
-    </script>
+</script>
 
 
 

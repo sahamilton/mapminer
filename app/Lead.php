@@ -32,7 +32,7 @@ class Lead extends Model
     }
 
     public function salesteam(){
-    	return $this->belongsToMany(Person::class, 'lead_person_status')->withPivot('status_id');
+    	return $this->belongsToMany(Person::class, 'lead_person_status')->withPivot('status_id','rating');
     }
     
     public function relatedNotes() {
@@ -57,5 +57,23 @@ class Lead extends Model
     	return $this->address . "," . $this->city. " " . $this->state . " " . $this->zip;
     	
     }
-   
+
+    public function rankLead($salesteam){
+     
+      foreach ($salesteam as $team){
+         
+          if($team->pivot->rating){
+            return $team->pivot->rating;
+          }
+        }
+    }
+    public function rankMyLead($salesteam){
+
+    foreach ($salesteam as $team){
+         
+          if($team->id == auth()->user()->person->id){
+            return $team->pivot->rating;
+          }
+        }
+    }
 }
