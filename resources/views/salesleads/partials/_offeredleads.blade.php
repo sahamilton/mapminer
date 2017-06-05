@@ -1,5 +1,5 @@
 
-<div id="menu1" class="tab-pane fade">
+
   
 <div class="row">
    @if(isset($owned))
@@ -88,4 +88,4 @@
     </table>
     @endif
 </div>
-</div>
+

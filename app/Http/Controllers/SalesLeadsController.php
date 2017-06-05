@@ -121,7 +121,7 @@ class SalesLeadsController extends Controller
     }
 
     public function accept($id){
-     // refactor add in logic to refuse if already owned
+     
       $lead = $this->salesleads->with('salesteam')->find($id);
       if($sales = $this->owned($lead->salesteam)){
         return redirect()->route('salesleads.index')->with('warning','This lead has already claimed been by ' . $sales->postName());

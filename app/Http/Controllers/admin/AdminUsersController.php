@@ -3,6 +3,7 @@ namespace App\Http\Controllers\Admin;
 use App\User;
 use App\Role;
 use App\Person;
+use App\Company;
 use App\Permission;
 use App\Http\Requests\UserFormRequest;
 use App\Branch;
@@ -48,6 +49,8 @@ class AdminUsersController extends BaseController {
     public $branch;
     public $serviceline;
 
+    public $company;
+
     /**
      * Inject the models.
      * @param User $user
@@ -57,10 +60,11 @@ class AdminUsersController extends BaseController {
      * @param Track $track
      * 
      */
-    public function __construct(User $user, Role $role, Person $person, Permission $permission, Branch $branch, Track $track,Serviceline $serviceline)
+    public function __construct(User $user, Role $role, Person $person, Permission $permission, Branch $branch, Track $track,Serviceline $serviceline,Company $company)
     {
         
         $this->user = $user;
+        $this->company = $company;
         $this->role = $role;
         $this->permission = $permission;
         $this->person = $person;
@@ -81,7 +85,7 @@ class AdminUsersController extends BaseController {
         if(! $id)
         // Grab all the users
 	       {
-                $servicelines = $this->userServiceLine;
+                $servicelines = $this->company->getUserServiceLines();
                 $serviceline = 'All';
                 $title = 'People / User Management';
             }else{
@@ -93,11 +97,11 @@ class AdminUsersController extends BaseController {
 	      $users = $this->user
            ->with('roles','usage','person','serviceline')
            ->whereHas('serviceline', function($q) use($servicelines) {
-                $q->whereIn('serviceline_id',$serviceLines);
+                $q->whereIn('serviceline_id',$servicelines);
 
             })
            ->get();
-	       	
+	      
         // Show the page
         return response()->view('admin/users/index', compact('users', 'title','serviceline'));
     }

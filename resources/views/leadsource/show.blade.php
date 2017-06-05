@@ -9,5 +9,6 @@
 <p><strong>Available Until:</strong> {{$leadsource->dateto->format('M j, Y')}}</p>
 <p><strong>Description:</strong> {{$leadsource->description}}</p>
 <p><strong>Number of Leads:</strong>{{count($leadsource->leads)}}</p>
+@include('leadsource.partials.leads')
 @include('partials._scripts')
 @endsection

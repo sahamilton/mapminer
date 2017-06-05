@@ -4,13 +4,16 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\LeadSource;
+use App\LeadStatus;
 use App\Http\Requests\LeadSourceFormRequest;
 use Carbon\Carbon;
 class LeadSourceController extends Controller
 {
     public $leadsource;
-    public function __construct(LeadSource $leadsource){
+    public $leadstatus;
+    public function __construct(LeadSource $leadsource, LeadStatus $status){
         $this->leadsource = $leadsource;
+        $this->leadstatus = $status;
 
     }
 
@@ -62,10 +65,11 @@ class LeadSourceController extends Controller
      */
     public function show($id)
     {
+        $statuses = $this->leadstatus->pluck('status','id')->toArray();
         $leadsource = $this->leadsource
         ->with('leads','leads.salesteam','author')
        ->findOrFail($id);
-        return response()->view('leadsource.show',compact('leadsource'));
+        return response()->view('leadsource.show',compact('leadsource','statuses'));
     }
 
     /**

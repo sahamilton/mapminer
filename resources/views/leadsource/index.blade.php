@@ -29,7 +29,7 @@
     <tbody>
    @foreach($leadsources as $source)
     <tr> 
-   	<td>{{$source->source}}</td>
+   	<td><a href="{{route('leadsource.show',$source->id)}}">{{$source->source}}</a></td>
     <td>{{$source->description}}</td>
     <td>{{$source->reference}}</td>
     <td>{{count($source->leads)}}</td>

@@ -13,7 +13,7 @@ protected $table ='notes';
 
 	public function writtenBy() 
 		{
-			return $this->belongsTo(User::class,'user_id');
+			return $this->belongsTo(User::class,'user_id')->with('person');
 		}
 		
 	public function relatesTo() 

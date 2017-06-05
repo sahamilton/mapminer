@@ -40,6 +40,7 @@ class LeadsController extends BaseController
     {   
         $leads = $this->lead->with('salesteam','leadsource')->get();
         $sources = $this->leadsource->pluck('source','id');
+
        
         return response()->view('leads.index',compact('leads','sources'));
     }
@@ -105,12 +106,12 @@ class LeadsController extends BaseController
     public function show($id)
     {
         $sources = $this->leadstatus->pluck('status','id')->toArray();
-        $lead = $this->lead->with('salesteam','leadsource','vertical')
+        $lead = $this->lead->with('salesteam','leadsource','vertical','relatedNotes')
         ->findOrFail($id);
 
         $rank = $this->lead->rankLead($lead->salesteam);
 
-        return response()->view('leads.show',compact('lead','sources','rank'));
+        return response()->view('leads.show',compact('lead','sources','rank','history'));
     }
 
     /**
@@ -170,7 +171,11 @@ class LeadsController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-
+    public function getPersonsLeads($id){
+        $statuses = $this->leadstatus->pluck('status','id')->toArray();
+        $leads = $this->person->with('salesleads','salesleads.vertical')->findOrFail($id);
+        return response()->view('leads.person',compact('leads','statuses'));
+    }
     public function find(LeadAddressFormRequest $request){
             $data = $request->all();
     		$geoCode = app('geocoder')->geocode($request->get('address'))->get();

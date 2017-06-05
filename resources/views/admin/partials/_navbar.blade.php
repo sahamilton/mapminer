@@ -120,6 +120,7 @@
                 <ul class="dropdown-menu">
 					<li{{ (Request::is('admin/news*') ? ' class="active"' : '') }}><a href="{{{ route('news.index') }}}">
                     <span class="glyphicon glyphicon-folder-open"></span> News</a></li>
+                    <li class="divider">Campaigns</li>
                     <li{{ (Request::is('admin/documents*') ? ' class="active"' : '') }}><a href="{{{ route('documents.index') }}}">
                     <span class="glyphicon glyphicon-book"></span> Sales Library</a></li>
                     <li {{ (Request::is('admin/process*') ? ' class="active"' : '') }}><a href="{{{ route('process.index') }}}">
@@ -127,26 +128,17 @@
                     <li {{ (Request::is('admin/salesactivity*') ? ' class="active"' : '') }}><a href="{{{ route('salesactivity.index') }}}">
                     <span class="glyphicon glyphicon-briefcase"></span> 
                     Sales Campaigns</a></li>
-                </ul>
-			</li>
-                        
-                   <!-- Manage Leads  -->      
-            <li class="dropdown{{ (Request::is('admin/lead*') ? ' active' : '') }}">
-                <a class="dropdown" data-toggle="dropdown" href="">
-                    <span class="glyphicon glyphicon-wrench"></span> 
-                    Lead Management 
-                    <span class="caret"></span>
-                </a>
-                <ul class="dropdown-menu">
+                    <li class="divider">Leads</li>
                     <li{{ (Request::is('admin/leads') ? ' class="active"' : '') }}><a href="{{{ route('leads.index') }}}">
                     <span class="glyphicon glyphicon-folder-open"></span> Leads</a></li>
                     <li{{ (Request::is('admin/leadsource*') ? ' class="active"' : '') }}><a href="{{{ route('leadsource.index') }}}">
                     <span class="glyphicon glyphicon-book"></span> Lead Sources</a></li>
                     <li {{ (Request::is('admin/leadstatus*') ? ' class="active"' : '') }}><a href="{{{ route('leadstatus.index') }}}">
                     <span class="glyphicon glyphicon-tower"></span> Lead Statuses</a></li>
-                    
                 </ul>
-            </li>               
+			</li>
+                        
+          
     </ul>
     <ul class="nav navbar-nav pull-right">
     					
