@@ -79,7 +79,7 @@ class Person extends NodeModel {
 	public function salesleads(){
 		return $this->belongsToMany(Lead::class, 'lead_person_status')
 		->withTimestamps()
-		->withPivot('status_id','ratings');
+		->withPivot('status_id','rating');
 	}
 
 	public function findPersonsRole($people)
@@ -145,11 +145,28 @@ class Person extends NodeModel {
 			 		$query.=" limit " . $limit;
 			 }
 			$query = str_replace("\r\n",' ',$query);
-		$query = str_replace("\t",'',$query);
-	
-			 $result = \DB::select($query);
+			$query = str_replace("\t",'',$query);
+
+			$result = \DB::select($query);
 
 		return $result;
 	}
+	
+	public function ownedLeads(){
+		return $this->belongsToMany(Lead::class, 'lead_person_status')
+		->withTimestamps()
+		->withPivot('status_id','rating')
+		->whereIn('status_id',[2]);
+	}
 
+	public function offeredLeads(){
+
+		return $this->belongsToMany(Lead::class, 'lead_person_status')
+		->withTimestamps()
+		->withPivot('status_id','rating')
+		->whereIn('status_id',[1]);
+        
+        
+       
+    }
 }

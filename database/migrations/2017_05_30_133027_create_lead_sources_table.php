@@ -22,7 +22,9 @@ class CreateLeadSourcesTable extends Migration
             $table->date('dateto');
             $table->string('filename')->nullable();
             $table->integer('user_id');
+            $table->integer('leadstatus');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

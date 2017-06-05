@@ -8,8 +8,14 @@
         </ul>
     </div>
 @endif
-@if(Session::has('message'))
-    <div class="alert alert-info">
-        {{Session::get('message')}}
+@if (session('status'))
+    <div class="alert alert-success">
+        {{ session('status') }}
+    </div>
+@endif
+
+@if (session('warning'))
+    <div class="alert alert-danger">
+        {{ session('warning') }}
     </div>
 @endif

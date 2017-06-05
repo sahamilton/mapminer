@@ -2,9 +2,11 @@
 @section('content')
 
 <h2>{{$lead->businessname}}</h2>
+
 <h4>A location of {{$lead->companyname}}</h4>
 <div id="{{$lead->id}}" data-rating="{{intval(isset($rank) ? $rank : 0)}}" class="starrr" >
            <strong> Your Rating: </strong></div>
+ <div class="row"><button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Close Lead</button></div>
       <div id="map-container">
         <div style="float:left;width:300px">
     <p><strong>Address:</strong> {{$lead->fullAddress()}}</p>
@@ -12,7 +14,7 @@
     <p><strong>Available From:</strong> {{$lead->datefrom->format('M j, Y')}}</p>
     <p><strong>Available Until:</strong> {{$lead->dateto->format('M j, Y')}}</p>
     <p><strong>Description:</strong> {{$lead->description}}</p>
-    <p><strong>Assigned:</strong>{{count($lead->salesteam)}}</p>
+   
     <p><strong>Industry Vertical:</strong></p>
 
     <p><strong>Primary Contact:</strong>{{$lead->contact}}</p>
@@ -55,6 +57,9 @@
 
 
 </div>
+
+
+@include ('salesleads.partials._closeleadform')
 @include('salesleads.partials._scripts')
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={{config('maps.api_key')}}"></script>
 

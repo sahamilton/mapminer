@@ -12,6 +12,7 @@ class SalesLeadsController extends Controller
     public $salesleads;
     public $person;
     public $leadstatus;
+    public $ownedLimit = 5;
     public function __construct(Lead $saleslead, Person $person, LeadStatus $status){
 
         $this->salesleads = $saleslead;
@@ -26,11 +27,19 @@ class SalesLeadsController extends Controller
      */
     public function index()
     {
+        // limit to active verticals
+
         $statuses = $this->leadstatus->pluck('status','id')->toArray();
-        $leads = $this->person->with('salesleads','salesleads.vertical','salesleads.salesteam')
-        ->where('user_id','=',auth()->user()->id)
-        ->firstOrFail();
-        return response()->view('salesleads.index',compact('leads','statuses'));
+
+        $title = ' Leads Assigned to ';
+        $leads = $this->person->where('user_id','=',auth()->user()->id)
+        ->with('ownedLeads','offeredLeads','ownedLeads.vertical','offeredLeads.vertical')->firstOrFail();
+        if(count($leads->ownedLeads) >= $this->ownedLimit) { 
+            $owned = $this->ownedLimit;      
+            return response()->view('salesleads.index',compact('leads','statuses','title','owned'));
+        }
+
+        return response()->view('salesleads.index',compact('leads','statuses','title'));
     }
 
     /**
@@ -55,18 +64,25 @@ class SalesLeadsController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display the owned lead.
      *
      * @param  int  $id
+     * @query( select logged in users owned lead by id)
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
-     ;
+     
         $sources = $this->leadstatus->pluck('status','id')->toArray();
-        $lead = $this->salesleads->with('leadsource','vertical','relatedNotes','salesteam')
-        ->findOrFail($id);
-        $rank = $this->salesleads->rankMyLead($lead->salesteam);
+
+        $lead = $this->salesleads
+            ->whereHas('salesteam',function ($q) use ($sources){
+                $q->where('person_id','=',auth()->user()->person->id)
+                ->where('status_id','=',array_search('Owned',$sources));
+            })->with('leadsource','vertical','relatedNotes','salesteam')
+            ->findOrFail($id);
+        $rank = $this->salesleads->rankMyLead($lead->salesteam); 
+
         return response()->view('salesleads.show',compact('lead','sources','rank'));
     }
 
@@ -105,10 +121,13 @@ class SalesLeadsController extends Controller
     }
 
     public function accept($id){
-     
+     // refactor add in logic to refuse if already owned
       $lead = $this->salesleads->with('salesteam')->find($id);
-   
+      if($sales = $this->owned($lead->salesteam)){
+        return redirect()->route('salesleads.index')->with('warning','This lead has already claimed been by ' . $sales->postName());
+      }
       $salesteam = $lead->salesteam->pluck('id');
+      
       foreach ($salesteam as $id){
         if($id == auth()->user()->person->id){
             $lead->salesteam()->updateExistingPivot($id,['status_id'=>2]);
@@ -119,7 +138,14 @@ class SalesLeadsController extends Controller
       
        return redirect()->route('salesleads.index');
     }
-
+    private function owned($salesteam){
+        foreach ($salesteam as $sales) {
+            if($sales->pivot->status_id == 2){
+               return $sales;
+            }
+        }
+        return false;
+    }
     public function decline($id){
      
       $lead = $this->salesleads->with('salesteam')->find($id);
@@ -144,4 +170,26 @@ class SalesLeadsController extends Controller
     
        
     }
+
+    private function filterLeadsByStatus($leads, Array $statuses){
+     
+        foreach ($leads->salesleads as $lead) {
+            
+            if(! in_array($lead->pivot->status_id,$statuses)){
+             
+                $leads->salesleads->forget($lead->id);
+        
+            }
+        }
+        return $leads;
+    }
+
+    public function close(Request $request, $id){
+     
+      $lead = $this->salesleads->with('salesteam')->findOrFail($id);
+     // $lead->update(['leadstatus'=>$request->get('status_id')]);
+      $lead->salesteam()
+        ->updateExistingPivot(auth()->user()->person->id,['status_id'=>$request->get('status_id')]);
+    return redirect()->route('salesleads.index')->with('message', 'Lead closed');
+  }
 }

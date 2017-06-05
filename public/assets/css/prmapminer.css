@@ -75,31 +75,31 @@ body {
 }
 
 
-#sorttable thead {
+[id^=sorttable] thead {
   cursor: pointer;
   background-color:#E77C22;
   color:#fff;
  
 
 }
-#sorttable thead tr th { 
+[id^=sorttable] thead tr th { 
  
 }
-#sorttable thead tr th span { 
+[id^=sorttable] thead tr th span { 
   
 }
 
-#sorttable thead tr th.headerSortUp, #sorttable thead tr th.headerSortDown {
+[id^=sorttable] thead tr th.headerSortUp, #sorttable thead tr th.headerSortDown {
  
 }
 
-#sorttable thead tr th.headerSortUp span {
+[id^=sorttable] thead tr th.headerSortUp span {
   
 }
-#sorttable thead tr th.headerSortDown span {
+[id^=sorttable] thead tr th.headerSortDown span {
 
 }
-#sorttable  ul{
+[id^=sorttable]  ul{
 	list-style-type: none;
 }
 .odd {

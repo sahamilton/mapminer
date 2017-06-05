@@ -5,11 +5,11 @@ namespace App;
 use Carbon\Carbon;
 
 use Geocoder\Laravel\Facades\Geocoder;
-
+use Illuminate\Database\Eloquent\SoftDeletes;
 class Lead extends Model
 {
-    
-	public $dates = ['created_at','updated_at','datefrom','dateto'];
+  use SoftDeletes;
+	public $dates = ['created_at','updated_at','deleted_at','datefrom','dateto'];
 
 	public $fillable = ['companyname',
 						'businessname',
