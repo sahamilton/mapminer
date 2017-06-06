@@ -59,5 +59,3 @@ if($type =='branch'){
         });
     </script>
 @stop
-
-@stop

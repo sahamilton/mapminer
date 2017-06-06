@@ -1,4 +1,4 @@
-@extends('site.layouts.default')
+@extends('site.layouts.maps')
 @section('content')
 
 <h1>{{$title }} {{$leads->firstname}} {{$leads->lastname}}</h1>
