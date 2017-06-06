@@ -58,7 +58,20 @@ class Lead extends Model
     	return $this->address . "," . $this->city. " " . $this->state . " " . $this->zip;
     	
     }
+    public function leadOwner($id){
+      $ownStatuses = [2,5,6];
+       if($lead = $this->with('salesteam')->whereHas('salesteam',function($q) use($ownStatuses) {
+          $q->whereIn('status_id',$ownStatuses);
+      })->find($id)) {
 
+       foreach ($lead->salesteam as $team){
+          if(in_array($team->pivot->status_id, $ownStatuses)){
+            return $team;
+          }
+       }
+     }
+       return null;
+    }
     public function rankLead($salesteam){
       $ratings = array();
       foreach ($salesteam as $team){

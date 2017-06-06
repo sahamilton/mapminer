@@ -38,11 +38,12 @@ class LeadsController extends BaseController
      */
     public function index()
     {   
+        $statuses = $this->leadstatus->pluck('status','id')->toArray();
         $leads = $this->lead->with('salesteam','leadsource')->get();
         $sources = $this->leadsource->pluck('source','id');
 
        
-        return response()->view('leads.index',compact('leads','sources'));
+        return response()->view('leads.index',compact('leads','sources','statuses'));
     }
 
     /**

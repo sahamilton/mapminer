@@ -109,8 +109,9 @@ class SalesActivityController extends BaseController
     public function show($id)
     {
        
-     
+
         $activity = $this->activity->with('salesprocess','vertical')->findOrFail($id);
+
         $lat = auth()->user()->person->lat;
         $lng = auth()->user()->person->lng;
         $verticals = array_unique ($activity->vertical->pluck('id')->toArray()); 
