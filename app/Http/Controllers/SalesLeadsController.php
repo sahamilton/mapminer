@@ -119,7 +119,27 @@ class SalesLeadsController extends Controller
     {
         //
     }
+    public function mapleads($pid){
 
+        $leads = $this->person->with('salesleads')->findOrFail($pid);
+        $dom = new \DOMDocument("1.0");
+        $node = $dom->createElement("markers");
+        $parnode = $dom->appendChild($node);
+        foreach($leads->salesleads as $lead){
+          // ADD TO XML DOCUMENT NODE
+         
+          $node = $dom->createElement("marker");
+          $newnode = $parnode->appendChild($node);
+          $newnode->setAttribute("name",$lead->companyname);
+          $newnode->setAttribute("address", $lead->fullAddress());
+          $newnode->setAttribute("lat", $lead->lat);
+          $newnode->setAttribute("lng", $lead->lng);
+         
+        }
+        
+        echo $dom->saveXML();
+        //return response()->make($markers->salesleads, '200')->header('Content-Type', 'text/xml');
+    }
     public function accept($id){
      
       $lead = $this->salesleads->with('salesteam')->find($id);
