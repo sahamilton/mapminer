@@ -12,7 +12,7 @@ class SalesLeadsController extends Controller
     public $salesleads;
     public $person;
     public $leadstatus;
-    public $ownedLimit = 5;
+
     public function __construct(Lead $saleslead, Person $person, LeadStatus $status){
 
         $this->salesleads = $saleslead;
@@ -28,13 +28,11 @@ class SalesLeadsController extends Controller
     public function index()
     {
         // limit to active verticals
-
         $statuses = $this->leadstatus->pluck('status','id')->toArray();
-
         $title = ' Leads Assigned to ';
         $leads = $this->person->where('user_id','=',auth()->user()->id)
         ->with('ownedLeads','offeredLeads','ownedLeads.vertical','offeredLeads.vertical')->firstOrFail();
-        if(count($leads->ownedLeads) >= $this->ownedLimit) { 
+        if(count($leads->ownedLeads) >= \Config::get('leads.owned_limit')) { 
             $owned = $this->ownedLimit;      
             return response()->view('salesleads.index',compact('leads','statuses','title','owned'));
         }
@@ -121,16 +119,21 @@ class SalesLeadsController extends Controller
     }
     public function mapleads($pid){
 
-        $leads = $this->person->with('salesleads')->findOrFail($pid);
+        $leads = $this->person->with('salesleads','ownedLeads')->findOrFail($pid);
+        if(count($leads->ownedLeads) >= $this->ownedLimit){
+            $mapleads = $leads->ownedleads;
+        }else{
+            $mapleads = $leads->salesleads;
+        }
         $dom = new \DOMDocument("1.0");
         $node = $dom->createElement("markers");
         $parnode = $dom->appendChild($node);
-        foreach($leads->salesleads as $lead){
+        foreach($mapleads as $lead){
           // ADD TO XML DOCUMENT NODE
          
           $node = $dom->createElement("marker");
           $newnode = $parnode->appendChild($node);
-          $newnode->setAttribute("name",$lead->companyname);
+          $newnode->setAttribute("name",$lead->businessname);
           $newnode->setAttribute("address", $lead->fullAddress());
           $newnode->setAttribute("lat", $lead->lat);
           $newnode->setAttribute("lng", $lead->lng);

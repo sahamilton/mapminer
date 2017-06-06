@@ -1,16 +1,30 @@
 	<div id="map" style="border:solid 1px red"></div>
+
     <script>
      
       // First, create an object containing LatLng and details for each branch.
       var leadmap = {
-        
+      @if(isset($owned))
+      	<?php $leads->salesleads = $leads->ownedLeads;?>
+      @endif
       @foreach ($leads->salesleads as $lead)
+      
+      <?php $owner = $lead->leadOwner($lead->id);?>
+      @if(isset($owner->id) && $owner->id != $leads->id)
+      	<?php $contentString ="<a href=\\".route('saleslead.accept',$lead->id)."\">".$lead->businessname."</a>";
+      	?>
+      	@else
+      		<?php $contentString = $lead->businessname;  	?>
+        
+        @endif
+
             '{{$lead->businessname}}' : {
               center : {lat: {{$lead->lat}}, lng: {{$lead->lng}}},
               
               name : '{{$lead->businessname}}',
+
               contentString: 
-                  '{{$lead->info}}',
+                  '{{$contentString}}',
             },
       @endforeach
         
