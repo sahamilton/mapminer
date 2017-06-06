@@ -8,8 +8,12 @@
               if(! in_array($lead->pivot->status_id,[1,2])){
                 continue;
               }
-             if ($lead->pivot->status_id  == 2){    
-                  $content="<a href=\"".route('leads.show',$lead->id)."\" title=\"See details of owned lead\">".$lead->businessname."</a>";
+             if ($lead->pivot->status_id  == 2){ 
+                    if($manager){
+                      $content="<a href=\"".route('salesleads.showrepdetail',[$lead->id,$leads->id])."\" title=\"See details of owned lead\">".$lead->businessname."</a>";;
+                    }else{
+                    $content="<a href=\"".route('salesleads.show',$lead->id)."\" title=\"See details of owned lead\">".$lead->businessname."</a>";
+                    }   
                     $color ='green';
                     $type='owned';
              }elseif ($lead->pivot->status_id  == 1){
@@ -17,8 +21,11 @@
                     $content="<a href=\"".route('saleslead.accept',$lead->id)."\" title=\"Accept lead\">Accept ".$lead->businessname." lead</a>";
                     $color ='blue';
                     $type='offered';
+                    if($manager){
+                      $content = $lead->businessname;
+                    }
              }
-             
+
               echo "'".$lead->businessname."':{";
               echo "center: {lat: ". $lead->lat .", lng:". $lead->lng."},";
               echo "name : '" . $lead->businessname."',";

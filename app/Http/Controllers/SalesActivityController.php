@@ -108,18 +108,25 @@ class SalesActivityController extends BaseController
      */
     public function show($id)
     {
-       
-
-        $activity = $this->activity->with('salesprocess','vertical')->findOrFail($id);
-
-        $lat = auth()->user()->person->lat;
-        $lng = auth()->user()->person->lng;
-        $verticals = array_unique ($activity->vertical->pluck('id')->toArray()); 
-
-        $locations = $this->location->findNearbyLocations($lat,$lng,25,$number=null,$company=NULL,$this->userServiceLines, $limit=null, $verticals);
-         
-
-        return response()->view('salesactivity.show',compact('activity','locations'));
+       $activity = $this->activity->with('salesprocess','vertical')->findOrFail($id);
+        if(Person::findOrFail(auth()->user()->person->id)->isLeaf()){
+            if(auth()->user()->person->lat){
+                $lat = auth()->user()->person->lat;
+                $lng = auth()->user()->person->lng;
+                $verticals = array_unique ($activity->vertical->pluck('id')->toArray()); 
+                $locations = $this->location->findNearbyLocations($lat,$lng,25,$number=null,$company=NULL,$this->userServiceLines, $limit=null, $verticals);
+           }else{
+                $locations = array();
+           }
+           $leads = array();
+           return response()->view('salesactivity.show',compact('activity','locations','leads'));
+        }
+        $locations = array();
+        $leads = array();
+        
+        return response()->view('salesactivity.show',compact('activity','locations','leads'));
+        
+        
     }
 
     /**

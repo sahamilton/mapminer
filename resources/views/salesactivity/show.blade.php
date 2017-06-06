@@ -10,27 +10,39 @@
 	Back to all campaigns</a>
 
 	<ul class="nav nav-tabs">
-		<li class="active"><a data-toggle="tab" href="#home">Campaign</a></li>
-		<li><a data-toggle="tab" href="#menu1">Resources</a></li>
-		<li><a data-toggle="tab" href="#menu2">Locations List ({{count($locations)}})</a></li>
-
+		<li class="active"><a data-toggle="tab" href="#campaign">Campaign</a></li>
+		<li><a data-toggle="tab" href="#resources">Resources</a></li>
+		@if(count($locations)>0)
+		<li><a data-toggle="tab" href="#locations">Locations List ({{count($locations)}})</a></li>
+		@endif
+		@if(count($leads)>0)
+		<li><a data-toggle="tab" href="#leads">Leads List ({{count($leads)}})</a></li>
+		@endif
 	</ul>
 
 	<div class="tab-content">
-		<div id="home" class="tab-pane fade in active">
+		<div id="campaign" class="tab-pane fade in active">
 
 			@include('salesactivity.partials._tabcampaign')
 
 		</div>
 
 
-		<div id="menu1" class="tab-pane fade">
+		<div id="resources" class="tab-pane fade">
 
 			@include('salesactivity.partials._tabresources')
 		</div>
-		<div id="menu2" class="tab-pane fade">
+		@if(count($locations) > 0)
+		<div id="locations" class="tab-pane fade">
 			@include('salesactivity.partials._tablocations')
 		</div>
+		@endif
+
+		@if(count($leads) > 0)
+		<div id="leads" class="tab-pane fade">
+			@include('salesactivity.partials._tableads')
+		</div>
+		@endif
 	</div>
 </div>
 @include('partials._scripts')

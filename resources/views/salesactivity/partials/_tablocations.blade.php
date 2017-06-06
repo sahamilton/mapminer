@@ -15,8 +15,9 @@
 
 		</thead>
 		<tbody>
-		@foreach ($locations as $location)
 
+		@foreach ($locations as $location)
+{{dd($location)}}
 			<tr>
 				<td>{{$location->companyname}}</td> 
 				<td>{{$location->vertical}}</td>
