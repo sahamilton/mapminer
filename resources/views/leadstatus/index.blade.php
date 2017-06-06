@@ -16,6 +16,7 @@
      
     <th>Status</th>
     <th>Sequence</th>
+    <th>Number</th>
     @if (Auth::user()->hasRole('Admin'))
     <th>Actions</th>
     @endif
@@ -29,6 +30,7 @@
     <tr>  
     <td>{{$status->status}}</td>
     <td>{{$status->sequence}}</td>
+    <td>{{count($status->leads)}}
   @if (Auth::user()->hasRole('Admin'))
     <td>
             @include('partials._modal')

@@ -93,7 +93,19 @@ class Person extends NodeModel {
 		return $result;
 		
 	}
-
+	public function salesLeadsByStatus($id){
+		$leads = $this->with('salesleads')->whereHas('salesleads')->find($id);
+		
+		foreach ($leads->salesleads as $lead){
+			if(! isset($statuses[$lead->pivot->status_id])){
+				$statuses[$lead->pivot->status_id]['status']=$lead->pivot->status_id;
+				$statuses[$lead->pivot->status_id]['count']=0;
+			}
+			$statuses[$lead->pivot->status_id]['count']+=1;
+			
+		}
+		return $statuses;
+	}
 	
 	private function getPersonsServiceLines(){
 

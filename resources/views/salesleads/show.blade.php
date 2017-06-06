@@ -4,9 +4,13 @@
 <h2>{{$lead->businessname}}</h2>
 
 <h4>A location of {{$lead->companyname}}</h4>
+@if(! $manager)
 <div id="{{$lead->id}}" data-rating="{{intval(isset($rank) ? $rank : 0)}}" class="starrr" >
            <strong> Your Rating: </strong></div>
  <div class="row"><button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Close Lead</button></div>
+ @else
+ <p><a href="{{route('salesleads.index')}}">Return to sales team</a></p>
+ @endif
       <div id="map-container">
         <div style="float:left;width:300px">
     <p><strong>Address:</strong> {{$lead->fullAddress()}}</p>

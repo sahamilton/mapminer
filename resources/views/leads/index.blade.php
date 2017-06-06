@@ -38,11 +38,16 @@
     <td>{{$lead->city}}</td>
     <td>{{$lead->state}}</td>
     <td>{{$lead->created_at->format('M j, Y')}}</td>
-    <td>    
+    <td> 
+
     @if(count($lead->salesteam) > 0)
-         
-        @if(null!==$lead->leadOwner($lead->id)) 
+
+        
+
+        @if(null !== $lead->leadOwner($lead->id))
+
            {{$statuses[$lead->leadOwner($lead->id)->pivot->status_id]}}  by {{$lead->leadOwner($lead->id)->postName()}}
+
         @else
             Offered {{count($lead->salesteam)}}
         @endif

@@ -2,7 +2,8 @@
 @section('content')
 <div class="container" style="margin-top:40px">
 <h1>Closest Sales Reps </h1>
-<h4>Maximum of {{$data['number']}} within {{$data['distance']}} of {{$data['address']}}</h4>
+
+<h4>Maximum of {{$data['number']}} within {{$data['distance']}} miles of {{$data['address']}}</h4>
 @include('leads.partials.search')
 @if(count($people)>0)
 <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>

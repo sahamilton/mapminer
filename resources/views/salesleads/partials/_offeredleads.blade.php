@@ -20,7 +20,9 @@
                 <th>State</th>
                 <th>Status</th>
                 <th>Industry Vertical</th>
-                <th>Actions</th>
+                @if(! $manager)
+                    <th>Actions</th>
+                @endif
                 
             </thead>
             <tbody>
@@ -51,8 +53,9 @@
                 @endforeach
                 </ul>
                 </td>
+                @if(! $manager)
 <td>
-           @if(in_array($lead->pivot->status_id,[1]))
+           @if(in_array($lead->pivot->status_id,[1]) )
             @include('partials/_leadsmodal')
     
             <div class="btn-group">
@@ -80,7 +83,7 @@
 			</div>
 	@endif
     </td>
-
+@endif
     </tr>
    @endforeach
     

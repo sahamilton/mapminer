@@ -107,6 +107,8 @@ Route::group(['middleware' => 'auth'], function () {
 	# Sales leads 
 		Route::get('saleslead/{id}/accept',['as'=>'saleslead.accept','uses'=>'SalesLeadsController@accept']);
 		Route::get('saleslead/{id}/decline',['as'=>'saleslead.decline','uses'=>'SalesLeadsController@decline']);
+		Route::get('salesleads/{pid}/showrep',['as'=>'salesleads.showrep','uses'=>'SalesLeadsController@showrep']);
+		Route::get('salesleads/{id}/showrepdetail/{pid}',['as'=>'salesleads.showrepdetail','uses'=>'SalesLeadsController@showrepdetail']);
 		Route::get('leadrank',['as'=>'api.leadrank','uses'=>'SalesLeadsController@rank']);
 		Route::post('saleslead/{id}/close',['as'=>'saleslead.close','uses'=>'SalesLeadsController@close']);
 		Route::get('saleslead/{pid}/leads',['as'=>'saleslead.mapleads','uses'=>'SalesLeadsController@mapleads']);
@@ -199,7 +201,7 @@ Route::group(['middleware' => 'auth'], function () {
  */ 
 
 
-Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function()
+Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 {
 
      

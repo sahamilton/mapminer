@@ -40,7 +40,7 @@
                             </a>
                             <ul class="dropdown-menu">
                         <li><a href="{{route('salesorg')}}">Sales Organization</a></li>
-                        @if(Auth::user()->hasRole('Admin') or Auth::user()->hasRole('Sales'))
+                        @if(Auth::user()->hasRole('Admin') or Auth::user()->hasRole('Sales') or  Auth::user()->hasRole('Sales Manager'))
                         <li><a href="{{route('resources.view')}}">Sales Library</a></li>
                         <li><a href="{{route('salescampaigns')}}">Sales Campaigns</a></li>
                         <li><a href="{{route('salesleads.index')}}">Sales Leads</a></li>

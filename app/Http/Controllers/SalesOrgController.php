@@ -69,7 +69,7 @@ class SalesOrgController extends BaseController {
 	public function salesCoverageMap()
 	{
 		$this->salesCoverageData();
-		return View::make('salesorg.coveragemap');
+		return response()->make('salesorg.coveragemap');
 	}
 
 	
@@ -137,6 +137,8 @@ class SalesOrgController extends BaseController {
 	 */
 	public function store()
 	{
+		// refactor to forms request
+
 		$validator = Validator::make($data = Input::all(), Salesorg::$rules);
 
 		if ($validator->fails())
@@ -146,7 +148,7 @@ class SalesOrgController extends BaseController {
 
 		Salesorg::create($data);
 
-		return Redirect::route('salesorg.index');
+		return redirect()->route('salesorg.index');
 	}
 
 	/**
@@ -159,7 +161,7 @@ class SalesOrgController extends BaseController {
 	{
 		$salesorg = Salesorg::findOrFail($id);
 
-		return View::make('salesorg.show', compact('salesorg'));
+		return response()->make('salesorg.show', compact('salesorg'));
 	}
 
 	/**
@@ -183,6 +185,8 @@ class SalesOrgController extends BaseController {
 	 */
 	public function update($id)
 	{
+		
+		// refactor to form request
 		$salesorg = Salesorg::findOrFail($id);
 
 		$validator = Validator::make($data = Input::all(), Salesorg::$rules);
@@ -194,7 +198,7 @@ class SalesOrgController extends BaseController {
 
 		$salesorg->update($data);
 
-		return Redirect::route('salesorg.index');
+		return redirect()->route('salesorg.index');
 	}
 
 	/**
@@ -207,11 +211,13 @@ class SalesOrgController extends BaseController {
 	{
 		Salesorg::destroy($id);
 
-		return Redirect::route('salesorg.index');
+		return redirect()->route('salesorg.index');
 	}
 
 	private function getSalesLeaders()
 	{
+		
+		//refactor to remove hard coding
 		/*return (Person::where('depth','=',0)
 			->whereNull('reports_to')
 			->whereRaw('lft+1 != rgt')

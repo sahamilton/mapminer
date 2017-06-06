@@ -179,17 +179,22 @@ class LeadsController extends BaseController
     }
     public function find(LeadAddressFormRequest $request){
             $data = $request->all();
+            
     		$geoCode = app('geocoder')->geocode($request->get('address'))->get();
-	 
+	           
 			if(! $geoCode)
 			{
 				dd('bummer');
 				
 			}else{
-                $data[] = $this->getGeoCode($geoCode);
+                $locationdata = $this->getGeoCode($geoCode);
+
+                $data['lat']= $locationdata['lat'];
+                $data['lng']= $locationdata['lng'];
             }
-            $people = $this-findNearBy($data);
-            
+
+            $people = $this->findNearBy($locationdata);
+
 			return response()->view('leads.address',compact('people','data'));
 			
     }
@@ -204,12 +209,16 @@ class LeadsController extends BaseController
     private function getGeoCode($geoCode){
 
         if(is_array($geoCode)){
+           
                 $data['lat'] = $geoCode[0]['latitude'];
-                $data['lng'] = $geoCode[0]['longitude'];
+                $data['lng'] = $geoCode[0]['longitude']; 
+
             }elseif(is_object($geoCode)){
+               
                 $data['lat'] = $geoCode->first()->getLatitude();
                 $data['lng'] = $geoCode->first()->getLongitude();
             }else{
+              
                 $data['lat'] = null;
                 $data['lng'] = null;
             }

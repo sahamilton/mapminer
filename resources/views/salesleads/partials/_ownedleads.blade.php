@@ -20,11 +20,15 @@
                 <tr>
                     <td>{{$lead->companyname }}</td>
                     <td>
-                    @if(isset($lead->pivot) && $lead->pivot->status_id == 2)
-                        <a href="{{route('salesleads.show',$lead->id)}}" />
-                        {{$lead->businessname}}</td>
+                    @if(isset($lead->pivot) && $lead->ownsLead($lead->id))
+                    @if($manager)!!
+                        <a href="{{route('salesleads.showrepdetail',[$lead->id,$leads->id])}}" />
                     @else
-                        {{$lead->businessname}}
+                        <a href="{{route('salesleads.show',$lead->id)}}" />
+                    @endif
+                        {{$lead->businessname}}</a></td>
+                    @else
+                        {{$lead->businessname}} 
                     @endif
                     </td>
                     <td>{{$lead->city}}</td>

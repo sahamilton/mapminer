@@ -30,16 +30,36 @@ class SalesLeadsController extends Controller
         // limit to active verticals
         $statuses = $this->leadstatus->pluck('status','id')->toArray();
         $title = ' Leads Assigned to ';
-        $leads = $this->person->where('user_id','=',auth()->user()->id)
-        ->with('ownedLeads','offeredLeads','ownedLeads.vertical','offeredLeads.vertical')->firstOrFail();
-        if(count($leads->ownedLeads) >= \Config::get('leads.owned_limit')) { 
-            $owned = $this->ownedLimit;      
-            return response()->view('salesleads.index',compact('leads','statuses','title','owned'));
+       
+        if($this->person->where('user_id','=',auth()->user()->id)->first()->isLeaf()){
+            $manager=false;
+            $leads = $this->person->where('user_id','=',auth()->user()->id)
+            ->with('ownedLeads','offeredLeads','ownedLeads.vertical','offeredLeads.vertical')->firstOrFail();
+            if(count($leads->ownedLeads) >= \Config::get('leads.owned_limit')) { 
+                $owned = $this->ownedLimit;      
+                return response()->view('salesleads.index',compact('leads','statuses','title','owned','manager'));
+            }
+            return response()->view('salesleads.index',compact('leads','statuses','title','manager'));
+        }else{
+            $leads = $this->person->where('user_id','=',auth()->user()->id)
+            ->with('directReports','directReports.salesleads')->firstOrFail();
+             return response()->view('salesleads.managers',compact('leads','statuses'));
         }
+        
 
-        return response()->view('salesleads.index',compact('leads','statuses','title'));
+        
     }
 
+
+    public function showrep($pid){
+        $leads = $this->person
+            ->with('ownedLeads','offeredLeads','ownedLeads.vertical','offeredLeads.vertical')->findOrFail($pid);
+        $statuses = $this->leadstatus->pluck('status','id')->toArray();
+        $title = ' Leads Assigned to ';
+        $manager=true;
+        return response()->view('salesleads.index',compact('leads','statuses','title','manager'));
+    
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -72,17 +92,36 @@ class SalesLeadsController extends Controller
     {
      
         $sources = $this->leadstatus->pluck('status','id')->toArray();
-
         $lead = $this->salesleads
-            ->whereHas('salesteam',function ($q) use ($sources){
+            ->whereHas('salesteam',function ($q) use ($sources,$pid){
                 $q->where('person_id','=',auth()->user()->person->id)
                 ->where('status_id','=',array_search('Owned',$sources));
             })->with('leadsource','vertical','relatedNotes','salesteam')
             ->findOrFail($id);
         $rank = $this->salesleads->rankMyLead($lead->salesteam); 
-
-        return response()->view('salesleads.show',compact('lead','sources','rank'));
+        $manager=false;
+        return response()->view('salesleads.show',compact('lead','sources','rank','manager'));
     }
+     /*
+     * @param  int  $id
+     * @query( select logged in users owned lead by id)
+     * @return \Illuminate\Http\Response
+     */
+    public function showrepdetail($id,$pid)
+    {
+     
+        $sources = $this->leadstatus->pluck('status','id')->toArray();
+        $lead = $this->salesleads
+            ->whereHas('salesteam',function ($q) use ($sources,$pid){
+                $q->where('person_id','=',$pid)
+                ->where('status_id','=',array_search('Owned',$sources));
+            })->with('leadsource','vertical','relatedNotes','salesteam')
+            ->findOrFail($id);
+        $rank = $this->salesleads->rankMyLead($lead->salesteam); 
+        $manager=true;
+        return response()->view('salesleads.show',compact('lead','sources','rank','manager'));
+    }
+
 
     /**
      * Show the form for editing the specified resource.

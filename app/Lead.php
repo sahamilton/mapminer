@@ -59,10 +59,28 @@ class Lead extends Model
     	
     }
     public function leadOwner($id){
+
+      $ownStatuses = [2,5,6];
+      $lead = $this->with('salesteam')->whereHas('salesteam',function($q) use($ownStatuses,$id) {
+        $q->whereIn('status_id',$ownStatuses);
+      })
+      ->find($id); 
+      if(isset($lead)){
+        foreach($lead->salesteam as $team){
+
+          if(in_array($team->pivot->status_id,$ownStatuses)){
+            return $team;
+          }
+        return null;
+        }
+      }
+    }
+
+    public function ownsLead($id){
       $ownStatuses = [2,5,6];
        if($lead = $this->with('salesteam')->whereHas('salesteam',function($q) use($ownStatuses) {
           $q->whereIn('status_id',$ownStatuses);
-      })->find($id)) {
+        })->find($id)) {
 
        foreach ($lead->salesteam as $team){
           if(in_array($team->pivot->status_id, $ownStatuses)){
@@ -70,7 +88,20 @@ class Lead extends Model
           }
        }
      }
-       return null;
+     return null;
+    }
+
+
+    
+
+
+    public function leadsByStatus($id){
+      return $this->whereHas('salesteam',function($q) use($id) {
+          $q->whereIn('status_id',[$id]);
+      })
+      ->get();
+
+
     }
     public function rankLead($salesteam){
       $ratings = array();
@@ -86,15 +117,15 @@ class Lead extends Model
         return null;
     }
     public function rankMyLead($salesteam,$id=null){
-    if(! isset($id)){
-      $id = auth()->user()->person->id;
-    }
-    foreach ($salesteam as $team){
-         
-          if($team->id == $id){
-            return $team->pivot->rating;
+      if(! isset($id)){
+        $id = auth()->user()->person->id;
+      }
+      foreach ($salesteam as $team){
+           
+            if($team->id == $id){
+              return $team->pivot->rating;
+            }
           }
-        }
     }
 
     public function history($id=null){
