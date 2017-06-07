@@ -33,7 +33,7 @@ class Person extends NodeModel {
 	{
 		return $this->belongsToMany(Branch::class);
 	}
-
+	
 
 	public function manages() {
 		
@@ -54,7 +54,7 @@ class Person extends NodeModel {
 	 {
 		  return $this->belongsTo(User::class,'user_id','id');
 	 }
-	
+
 	public function authored () {
 		
 		return $this->hasMany(News::class);

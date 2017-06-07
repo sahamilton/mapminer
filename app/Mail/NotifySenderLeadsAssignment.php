@@ -1,27 +1,24 @@
 <?php
 
 namespace App\Mail;
-use App\Person;
+
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class NotifyLeadsAssignment extends Mailable
+class NotifySenderLeadsAssignment extends Mailable
 {
     use Queueable, SerializesModels;
     public $data;
-    public $team;
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($data,$team)
+    public function __construct($data)
     {
         $this->data = $data;
-        $this->team = $team;
-        
     }
 
     /**
@@ -31,8 +28,9 @@ class NotifyLeadsAssignment extends Mailable
      */
     public function build()
     {
-        
-        return $this->markdown('emails.leadsnotify')->to($this->team->userdetails->email, $this->team->postName())->subject('New Leads');
+        return $this->markdown('emails.sendersleads')
+          ->subject('Sales Teams Notified')
+         ->to($this->data['sender']);
     }
-
 }
+

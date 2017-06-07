@@ -2,18 +2,25 @@
 
 namespace App\Http\Controllers;
 
+use Mail;
 use Illuminate\Http\Request;
 use App\LeadSource;
+use App\Person;
 use App\LeadStatus;
+use App\Mail\NotifyLeadsAssignment;
+use App\Mail\NotifyManagersLeadsAssignment;
+use App\Mail\NotifySenderLeadsAssignment;
 use App\Http\Requests\LeadSourceFormRequest;
 use Carbon\Carbon;
 class LeadSourceController extends Controller
 {
     public $leadsource;
     public $leadstatus;
-    public function __construct(LeadSource $leadsource, LeadStatus $status){
+    public $person;
+    public function __construct(LeadSource $leadsource, LeadStatus $status, Person $person){
         $this->leadsource = $leadsource;
         $this->leadstatus = $status;
+        $this->person = $person;
 
     }
 
@@ -112,4 +119,130 @@ class LeadSourceController extends Controller
         $this->leadsource->destroy($id);
         return redirect()->route('leadsource.index');
     }
+
+    public function announce($id){
+
+        $source = $this->leadsource->with('leads','leads.salesteam','leads.vertical')->findOrFail($id);
+        
+        $salesteam = $this->salesteam($source->leads);
+        
+        $verticals = $this->verticals($source->leads);
+        $message = $this->createMessage($source,$verticals);
+        return response()->view('leadsource.salesteam',compact('source','salesteam','message'));
+    }
+
+
+    private function salesteam($leads){
+        $salesreps = array();
+        
+        foreach ($leads as $lead){
+            if(count($lead->salesteam)>0){
+                $reps = $lead->salesteam->pluck('id')->toArray();
+                foreach ($reps as $rep){
+                    if(! in_array($rep,$salesreps)){
+                        $salesreps[] = $rep;
+                    }
+                }          
+            }
+        }
+       return $this->person->with('userdetails')->whereIn('id',$salesreps)->get();
+      
+       
+    }
+
+    private function verticals($leads){
+        $verticals = array();
+        
+        foreach ($leads as $lead){
+            if(count($lead->vertical)>0){
+                $filters = $lead->vertical->pluck('filter','id')->toArray();
+               
+                foreach ($filters as $vertical){
+                    if(! in_array($vertical,$verticals)){
+                        $verticals[] = $vertical;
+                    }
+                }          
+            }
+        }
+      
+       return $verticals;
+      
+       
+    }
+    private function createMessage($source,$verticals){
+        $message = "You have new leads offered to you in the " . $source->source." campaign. ";
+        $message .= $source->description;
+        $message .= "<p>These leads are available from ".$source->datefrom->format('M j, Y') . " until "  .$source->dateto->format('M j, Y')."</p>";
+        $message .= "Leads in this campaign are for the following sales verticals:";
+        $message .="<ul>";
+        foreach ($verticals as $key=>$filter){
+            $message .= "<li>".$filter."</li>";
+        }
+        $message .= "</ul>";
+        $message .="Check out <strong><a href=\"".route('salesleads.index'). "\">MapMiner</a></strong> to accept these leads and for other resources to help you with these leads.";
+        return $message;
+}
+
+    public function email(Request $request, $id){
+
+
+        $data['source'] = $this->leadsource->with('leads','leads.salesteam')->findOrFail($id);
+        $salesteam = $this->salesteam($data['source']->leads);
+        
+        $data['message'] = $request->get('message');;
+        $data['count'] = count($salesteam);
+        //$this->notifySalesTeam($data,$salesteam);
+       // $this->notifyManagers($data,$salesteam);
+        $this->notifySender($data);
+        return response()->view('leadsource.senderleads',compact('data'));
+
+    }
+    private function notifySalesTeam($data,$salesteam){
+        /*foreach ($salesteam as $team){
+
+            Mail::queue(new NotifyLeadsAssignment($data,$team));
+            
+        }*/
+    }
+
+    private function notifySender($data){
+        $data['sender'] = auth()->user()->email;
+        Mail::queue(new NotifySenderLeadsAssignment($data));
+
+    }
+
+    private function notifyManagers($data,$salesteam){
+        $managers = array();
+        foreach ($salesteam as $salesrep){
+            if($salesrep->reportsTo){
+                $data['managers'][$salesrep->reportsTo->id]['team'][]=$salesrep->firstname ." ". $salesrep->lastname;
+                $data['managers'][$salesrep->reportsTo->id]['email']=$salesrep->reportsTo->userdetails->email;
+                $data['managers'][$salesrep->reportsTo->id]['firstname']=$salesrep->reportsTo->firstname;
+                $data['managers'][$salesrep->reportsTo->id]['lastname']= $salesrep->reportsTo->lastname;
+            }
+        }
+        
+        foreach ($data['managers'] as $manager){
+            Mail::queue(new NotifyManagersLeadsAssignment($data,$manager));
+        }
+
+    }
+    private function constructMessage($leadsource,$verticals){
+
+        $message = 
+        $leadsource->title .  " These leads are available from  " . $leadsource->datefrom->format('M j, Y'). " until " . $leadsource->dateto->format('M j, Y').
+        ". ".$leadsource->description."</p>";
+        $message.="These leads are for the following sales verticals:";
+        $message .='<ul>';
+ 
+        
+            $message.= "<li>" . implode("</li><li>",$verticals). "</li>";
+        
+        $message.="</ul></p>";
+        $message.="<p>Check out <strong><a href=\"".route('saleslead.index')."\">MapMiner</a></strong> to accept these leads and for resources  to help you with close new business.</p>";
+
+        return $message;
+    }
+
+    
 }

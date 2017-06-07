@@ -1,6 +1,7 @@
 @extends ('admin.layouts.default')
 @section('content')
 <h2>Lead Source</h2>
+<p><a href="{{route('leadsource.index')}}">Return to all Leads sources</a></p>
 <h4>{{$leadsource->source}}</h4>
 
 <p><strong>Editor:</strong> {{$leadsource->author->person->postName()}}</p>

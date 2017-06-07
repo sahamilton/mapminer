@@ -282,6 +282,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 	
 	#LeadSource
 		Route::get('leadsource/{id}/purge',['as'=>'leadsource.purge','uses'=>'LeadSourceController@destroy']);
+		Route::get('leadsource/{id}/announce',['as'=>'leadsource.announce','uses'=>'LeadSourceController@announce']);
+		Route::post('leadsource/{id}/email',['as'=>'sendleadsource.message','uses'=>'LeadSourceController@email']);
+		
 		Route::resource('leadsource','LeadSourceController');
 
 	# Lead Status
