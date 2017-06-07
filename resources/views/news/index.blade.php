@@ -36,10 +36,14 @@
 		<div class="row">
 			<div class="col-md-8">
 				<p></p>
-				<p>
-
-					<span class="glyphicon glyphicon-user"></span> by <span class="muted">{{{$post->author->person->firstname}}} {{{$post->author->person->lastname}}}</span>
-					| <span class="glyphicon glyphicon-calendar"></span> <!--Sept 16th, 2012-->{{{date('M jS,Y',strtotime($post->startdate))}}}
+				<p><span class="glyphicon glyphicon-user"></span> by <span class="muted">
+				@if(isset($post->author))
+					{{{$post->author->person->firstname}}} {{{$post->author->person->lastname}}}
+				@else
+					No Longer with the company
+				@endif
+				| </span>
+					<span class="glyphicon glyphicon-calendar"></span> <!--Sept 16th, 2012-->{{{date('M jS,Y',strtotime($post->startdate))}}}
 					| <span class="glyphicon glyphicon-comment"></span> <a href="/news/{{{ $post->slug}}}#comments"> {{{$post->comments->count()}}}</a>
 				</p>
 			</div>
@@ -51,7 +55,7 @@
 <hr />
 @endforeach
 
-{{ $news->links() }}
+
 
 
 

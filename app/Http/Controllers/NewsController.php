@@ -21,7 +21,7 @@ class NewsController extends BaseController {
 	 */
 	public function index()
 	{
-	
+		
 		$now = date('Y-m-d h:i:s');
 		$news = $this->news
 		->whereHas('serviceline', function($q) {
@@ -30,7 +30,7 @@ class NewsController extends BaseController {
 					})
 
 		->with('author','author.person','serviceline','comments')
-		->orderBy('startdate', 'DESC')->paginate(10);
+		->orderBy('startdate', 'DESC')->get();
 
 		return response()->view('news.index', compact('news'));
 	}

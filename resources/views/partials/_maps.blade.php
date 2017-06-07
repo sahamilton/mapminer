@@ -20,7 +20,7 @@ $(document).ready(function() {
 				navigationControlOptions: {
 					style: google.maps.NavigationControlStyle.DEFAULT
 				},
-				mapTypeId: google.maps.MapTypeId.ROADMAP,
+				mapTypeId: google.maps.MapTypeId.TERRAIN,
 				backgroundColor: 'white'
 			};
 			map = new google.maps.Map(document.getElementById('map_canvas'), settings);
