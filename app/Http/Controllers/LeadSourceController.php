@@ -73,10 +73,12 @@ class LeadSourceController extends Controller
     public function show($id)
     {
         $statuses = $this->leadstatus->pluck('status','id')->toArray();
+
         $leadsource = $this->leadsource
-        ->with('leads','leads.salesteam','author')
-       ->findOrFail($id);
-        return response()->view('leadsource.show',compact('leadsource','statuses'));
+                ->with('leads','leads.salesteam','author')
+               ->findOrFail($id);
+        $salesteams = $this->salesteam($leadsource->leads);
+        return response()->view('leadsource.show',compact('leadsource','statuses','salesteams'));
     }
 
     /**
@@ -145,7 +147,7 @@ class LeadSourceController extends Controller
                 }          
             }
         }
-       return $this->person->with('userdetails')->whereIn('id',$salesreps)->get();
+       return $this->person->with('userdetails','reportsTo')->whereIn('id',$salesreps)->get();
       
        
     }
@@ -191,18 +193,18 @@ class LeadSourceController extends Controller
         
         $data['message'] = $request->get('message');;
         $data['count'] = count($salesteam);
-        //$this->notifySalesTeam($data,$salesteam);
-       // $this->notifyManagers($data,$salesteam);
+        $this->notifySalesTeam($data,$salesteam);
+        $this->notifyManagers($data,$salesteam);
         $this->notifySender($data);
         return response()->view('leadsource.senderleads',compact('data'));
 
     }
     private function notifySalesTeam($data,$salesteam){
-        /*foreach ($salesteam as $team){
+        foreach ($salesteam as $team){
 
             Mail::queue(new NotifyLeadsAssignment($data,$team));
             
-        }*/
+        }
     }
 
     private function notifySender($data){
