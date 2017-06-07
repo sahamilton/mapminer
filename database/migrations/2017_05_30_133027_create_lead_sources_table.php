@@ -13,7 +13,7 @@ class CreateLeadSourcesTable extends Migration
      */
     public function up()
     {
-        Schema::create('lead_sources', function (Blueprint $table) {
+        Schema::create('leadsources', function (Blueprint $table) {
             $table->increments('id');
             $table->string('source');
             $table->text('description');
@@ -35,6 +35,6 @@ class CreateLeadSourcesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('lead_sources');
+        Schema::dropIfExists('leadsources');
     }
 }

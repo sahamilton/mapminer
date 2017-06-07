@@ -231,7 +231,7 @@ class WatchController extends BaseController {
 
 	public function getCompaniesWatched()
 	{
-		$watch = $this->getMyWatchList(auth()->user()->id());
+		$watch = $this->getMyWatchList(auth()->user()->id);
 		$data['verticals'] = $this->watch->getUserVerticals();
 		if(count($data['verticals']=0)){
 			$data['verticals'] = null;
