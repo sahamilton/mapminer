@@ -30,7 +30,7 @@
     <td><a href="{{route('leads.show',$lead->id)}}">{{$lead->businessname}}</a></td>
     <td>{{$lead->city}}</td>
     <td>{{$lead->state}}</td>
-    <td>{{$lead->created_at->format('M j, Y')}}</td>
+    <td>{{$lead->created_at}}</td>
 
     <td>{{$lead->rankMyLead($lead->salesteam, $leads->id)}}</td>
     <td>
@@ -42,7 +42,7 @@
         @foreach ($history[$lead->id]['status'] as $state)
 
             @if($state['owner'] == $leads->id)
-            <li>{{ $statuses[$state['status']]}}  {{$state['activitydate']->format('M j,Y')}}</li>
+            <li>{{ $statuses[$state['status']]}}  {{$state['activitydate']}}</li>
             @endif
         @endforeach
         </li>

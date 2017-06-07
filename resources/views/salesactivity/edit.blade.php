@@ -15,6 +15,6 @@
 </div>
 
 </div>
-
+@include('salesactivity.partials._scripts')
 
 @endsection
