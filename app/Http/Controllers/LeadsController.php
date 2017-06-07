@@ -39,7 +39,7 @@ class LeadsController extends BaseController
     public function index()
     {   
         $statuses = $this->leadstatus->pluck('status','id')->toArray();
-        $leads = $this->lead->with('salesteam','leadsource')->get();
+        $leads = $this->lead->with('salesteam','leadsource','vertical')->get();
         $sources = $this->leadsource->pluck('source','id');
 
        

@@ -26,7 +26,7 @@
 @include('leads.partials._tabmapleads')
 </div>
 <div id="list" class="tab-pane fade in">
-@include('leads.partials.list')
+@include('leads.partials._tablist')
 </div>
 </div>
    

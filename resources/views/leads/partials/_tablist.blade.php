@@ -8,6 +8,7 @@
     <th>Date Created</th>
     <th>Status</th>
     <th>Source</th>
+    <th>Vertical</th>
     <th>Rating</th>
  @if (Auth::user()->hasRole('Admin'))
  <th>Actions</th>
@@ -40,6 +41,13 @@
     
     @endif</td>
     <td><a href = "{{route('leadsource.show',$lead->lead_source_id)}}">{{$sources[$lead->lead_source_id]}}</a></td>
+    <td>
+    <ul>
+    @foreach ($lead->vertical as $vertical)
+        <li>{{$vertical->filter}}</li>
+
+    @endforeach 
+    </ul>
     <td>    {{$lead->rankLead($lead->salesteam)}}
 
     </td>
