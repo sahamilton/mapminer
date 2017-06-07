@@ -13,7 +13,7 @@ class News extends Model {
 
 	// Don't forget to fill this array
 	protected $fillable = ['title','news','startdate','enddate','slug','user_id'];
-
+	public $dates =  ['created_at','updated_at','startdate','enddate'];
 
 	public function author()
 	{

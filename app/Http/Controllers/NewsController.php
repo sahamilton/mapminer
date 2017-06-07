@@ -109,8 +109,7 @@ class NewsController extends BaseController {
 
 					})
 
-		->with('author','author.person','comments','comments.postedBy.person')->get();
-
+		->with('author','author.person','comments','comments.postedBy.person')->firstOrFail();
 
 		return response()->view('news.show', compact('news'));
 	}
