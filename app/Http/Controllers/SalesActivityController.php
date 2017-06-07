@@ -11,7 +11,8 @@ use App\Location;
 use App\Mail\SendCampaignMail;
 use App\Mail\SendManagersCampaignMail;
 use App\Mail\SendSenderCampaignMail;
-use App\SalesOrg;
+use App\Lead;
+use App\LeadStatus;
 use App\Person;
 
 use App\Http\Requests\SalesActivityFormRequest;
@@ -28,14 +29,15 @@ class SalesActivityController extends BaseController
     public $salesorg;
 
 
-    public function __construct(Salesactivity $activity, SearchFilter $vertical, SalesProcess $process, Document $document,Location $location, SalesOrg $salesorg){
+    public function __construct(Salesactivity $activity, SearchFilter $vertical, SalesProcess $process, Document $document,Location $location, Lead $lead){
 
         $this->activity = $activity;
         $this->vertical = $vertical; 
         $this->process = $process;
         $this->document = $document;
         $this->location = $location;
-        $this->salesorg = $salesorg;
+       
+        $this->lead = $lead;
         parent::__construct($location);
     }
 
@@ -108,23 +110,28 @@ class SalesActivityController extends BaseController
      */
     public function show($id)
     {
+
        $activity = $this->activity->with('salesprocess','vertical')->findOrFail($id);
-        if(Person::findOrFail(auth()->user()->person->id)->isLeaf()){
-            if(auth()->user()->person->lat){
+        $statuses = LeadStatus::pluck('status','id')->toArray();
+        $person = Person::findOrFail(auth()->user()->person->id);
+            if($person->isLeaf()){
+                if(auth()->user()->person->lat){
                 $lat = auth()->user()->person->lat;
                 $lng = auth()->user()->person->lng;
                 $verticals = array_unique ($activity->vertical->pluck('id')->toArray()); 
+
                 $locations = $this->location->findNearbyLocations($lat,$lng,25,$number=null,$company=NULL,$this->userServiceLines, $limit=null, $verticals);
            }else{
                 $locations = array();
            }
-           $leads = array();
-           return response()->view('salesactivity.show',compact('activity','locations','leads'));
+           // find all lead locations for the logged in user in these verticals
+           $leads = $this->lead->myLeads($verticals)->get();
+          
+           return response()->view('salesactivity.show',compact('activity','locations','leads','statuses'));
         }
         $locations = array();
-        $leads = array();
         
-        return response()->view('salesactivity.show',compact('activity','locations','leads'));
+        return response()->view('salesactivity.show',compact('activity','locations','leads','statuses'));
         
         
     }

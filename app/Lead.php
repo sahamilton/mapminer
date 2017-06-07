@@ -91,8 +91,26 @@ class Lead extends Model
      return null;
     }
 
+    public function myLeads($verticals=null){
+      
+      return $this->whereHas('salesteam',function ($q){
+          $q->where('person_id','=',auth()->user()->person->id);
+        
+        })
+        ->whereHas('vertical',function($q) use($verticals){
+          if(isset($verticals)){
+            $q->whereIn('id',$verticals);
+          }
+        });
 
-    
+
+    }
+    public function myLeadStatus(){
+      
+      return $this->salesteam()->wherePivot('person_id','=',auth()->user()->person->id)->first(['status_id']);
+
+
+    }
 
 
     public function leadsByStatus($id){

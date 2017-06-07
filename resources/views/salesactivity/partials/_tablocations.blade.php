@@ -1,11 +1,12 @@
 <div class="row">
 	<h2>Locations Nearby in these verticals</h2>
-	<div class="col-md-10 col-md-offset-1">
+	
 		<table class="table" id = "sorttable">
 		<thead>
 			<th>Company</th>
-			<th>Vertical</th>
 			<th>Location</th>
+			<th>Vertical</th>
+			
 			
 			<th>Address</th>
 
@@ -17,13 +18,13 @@
 		<tbody>
 
 		@foreach ($locations as $location)
-{{dd($location)}}
+
 			<tr>
 				<td>{{$location->companyname}}</td> 
-				<td>{{$location->vertical}}</td>
-				<td>{{$location->businessname}}</td>
 				
-				<td><a href="{{route('locations.show',$location->id)}}" title="Review this location">{!! $location->street . "<br /> " .$location->city. " "   . $location->state !!}</a></td>
+				<td><a href="{{route('location.show',$location->id)}}" title="Review this location">{{$location->businessname}}</a></td>
+				<td>{{$location->vertical}}</td>
+				<td>{!! $location->street . "<br /> " .$location->city. " "   . $location->state !!}</a></td>
 				<td>{{$location->contact }}</td> 
 				<td>{{$location->phone }}</td>
 
@@ -35,6 +36,6 @@
 
 		</table>
 	</div>
-</div>
+
 
 

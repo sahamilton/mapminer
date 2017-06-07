@@ -93,11 +93,12 @@ class SalesLeadsController extends Controller
      
         $sources = $this->leadstatus->pluck('status','id')->toArray();
         $lead = $this->salesleads
-            ->whereHas('salesteam',function ($q) use ($sources,$pid){
+            ->whereHas('salesteam',function ($q) use ($sources){
                 $q->where('person_id','=',auth()->user()->person->id)
                 ->where('status_id','=',array_search('Owned',$sources));
             })->with('leadsource','vertical','relatedNotes','salesteam')
             ->findOrFail($id);
+        
         $rank = $this->salesleads->rankMyLead($lead->salesteam); 
         $manager=false;
         return response()->view('salesleads.show',compact('lead','sources','rank','manager'));
