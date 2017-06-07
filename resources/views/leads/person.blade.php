@@ -5,55 +5,35 @@
 
 <h3>Leads assigned to {{$leads->postName()}}</h3>
 
+@if(! isset($source))
+<p><a href="{{route('leadsource.index')}}">From All Sources</a></p>
 
+@else
 
+<p>From <a href="{{route('leadsource.show',$source->id)}}">{{$source->source}}</a> source</p>
+<p><a href="{{route('leads.person',$leads->id)}}">See all {{$leads->firstname}}'s leads</a></p>
+@endif
 
-    <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
-    <thead>
-     
-    <th>Company</th>
-    <th>Business Name</th>
-    <th>City</th>
-    <th>State</th>
-    <th>Date Created</th>
-    <th>Rating</th>
-    <th>Status</th>
+<ul class="nav nav-tabs">
+  <li class="active"><a data-toggle="tab" href="#map"><strong>Map View</strong></a></li>
  
-       
-    </thead>
-    <tbody>
+  <li><a data-toggle="tab" href="#leads"><strong>Leads</strong></a></li>
+  <li><a data-toggle="tab" href="#stats"><strong>Stats</strong></a></li>
 
- @foreach($leads->salesleads as $lead)
+  
 
-    <tr>  
-    <td>{{$lead->companyname}}</a></td>
-    <td><a href="{{route('leads.show',$lead->id)}}">{{$lead->businessname}}</a></td>
-    <td>{{$lead->city}}</td>
-    <td>{{$lead->state}}</td>
-    <td>{{$lead->created_at}}</td>
+</ul>
 
-    <td>{{$lead->rankMyLead($lead->salesteam, $leads->id)}}</td>
-    <td>
-    <?php $history = $lead->history($leads->id);?>
+<div class="tab-content">
+<div id="map" class="tab-pane fade in active">
+@include('leads.partials._tabpersonsmap')
+</div>
+<div id="leads" class="tab-pane fade in ">
+@include('leads.partials._tabpersonsleads')
+</div>
+<div id="stats" class="tab-pane fade in ">
 
-    @if(isset($history[$lead->id]['status']))
-        <ul>
-
-        @foreach ($history[$lead->id]['status'] as $state)
-
-            @if($state['owner'] == $leads->id)
-            <li>{{ $statuses[$state['status']]}}  {{$state['activitydate']}}</li>
-            @endif
-        @endforeach
-        </li>
-    @endif
-    </td>
-	    
-    
-    </tr>
-   @endforeach
-    
-    </tbody>
-    </table>
+</div>
+</div>
 @include('partials._scripts')
 @endsection

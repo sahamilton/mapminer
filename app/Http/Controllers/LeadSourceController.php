@@ -147,7 +147,12 @@ class LeadSourceController extends Controller
                 }          
             }
         }
-       return $this->person->with('userdetails','reportsTo')->whereIn('id',$salesreps)->get();
+
+       return $this->person->with('userdetails','reportsTo','salesleads')
+       ->whereIn('id',$salesreps)
+       ->whereHas('salesleads',function ($q) use($leads){
+            $q->whereIn('lead_id',$leads->pluck('id')->toArray());
+       })->get();
       
        
     }

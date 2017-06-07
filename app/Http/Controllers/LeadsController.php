@@ -174,9 +174,24 @@ class LeadsController extends BaseController
      */
     public function getPersonsLeads($id){
         $statuses = $this->leadstatus->pluck('status','id')->toArray();
-        $leads = $this->person->with('salesleads','salesleads.vertical')->findOrFail($id);
+        $leads = $this->person->with('salesleads','salesleads.vertical','salesleads.leadsource')->findOrFail($id);
+       
         return response()->view('leads.person',compact('leads','statuses'));
     }
+
+    public function getPersonSourceLeads($pid,$sid){
+        $statuses = $this->leadstatus->pluck('status','id')->toArray();
+        $leads = $this->person->with('salesleads','salesleads.vertical')
+        ->whereHas('salesleads', function ($q) use($sid){
+            $q->where('lead_source_id','=',$sid);
+        })
+        ->findOrFail($pid);
+        $source=$this->leadsource->findOrFail($sid);
+        return response()->view('leads.person',compact('leads','statuses','source'));
+    }
+
+
+
     public function find(LeadAddressFormRequest $request){
             $data = $request->all();
             
