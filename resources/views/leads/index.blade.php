@@ -17,7 +17,7 @@
 
   <li><a data-toggle="tab" href="#list"><strong>List</strong></a></li>
 
-  
+    <li><a data-toggle="tab" href="#team"><strong>Sales Team</strong></a></li>
 
 </ul>
 
@@ -27,6 +27,9 @@
 </div>
 <div id="list" class="tab-pane fade in">
 @include('leads.partials._tablist')
+</div>
+<div id="team" class="tab-pane fade in">
+@include('leads.partials._tabteam')
 </div>
 </div>
    

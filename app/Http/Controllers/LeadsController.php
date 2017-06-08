@@ -41,11 +41,22 @@ class LeadsController extends BaseController
         $statuses = $this->leadstatus->pluck('status','id')->toArray();
         $leads = $this->lead->with('salesteam','leadsource','vertical')->get();
         $sources = $this->leadsource->pluck('source','id');
-
+        $salesteams = $this->getSalesTeam($leads);
        
-        return response()->view('leads.index',compact('leads','sources','statuses'));
+        return response()->view('leads.index',compact('leads','sources','statuses','salesteams'));
     }
-
+    private function getSalesTeam($leads){
+        $salesreps = array();
+        foreach($leads as $lead){
+            $leadreps = $lead->salesteam->pluck('id')->toArray();
+            $salesreps = array_unique(array_merge($salesreps,$leadreps));
+        }
+        return $this->person->with('userdetails','reportsTo','salesleads')
+       ->whereIn('id',$salesreps)
+       ->whereHas('salesleads',function ($q) use($leads){
+            $q->whereIn('lead_id',$leads->pluck('id')->toArray());
+       })->get();
+    }
     /**
      * Show the form for creating a new resource.
      *

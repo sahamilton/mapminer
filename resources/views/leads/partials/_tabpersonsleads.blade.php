@@ -34,7 +34,7 @@
         @foreach ($history[$lead->id]['status'] as $state)
 
             @if($state['owner'] == $leads->id)
-            <li>{{ $statuses[$state['status']]}}  {{$state['activitydate']->format('m/d/Y')}}</li>
+            <li>{{ $statuses[$state['status']]}}  {{$state['activitydate']}}</li>
             @endif
         @endforeach
         </li>

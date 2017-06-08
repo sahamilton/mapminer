@@ -7,6 +7,7 @@
   <li><a data-toggle="tab" href="#details"><strong>Details</strong></a></li>
   <li><a data-toggle="tab" href="#leads"><strong>Leads</strong></a></li>
   <li><a data-toggle="tab" href="#team"><strong>Team</strong></a></li>
+    <li><a data-toggle="tab" href="#stats"><strong>Stats</strong></a></li>
 
   
 
@@ -24,6 +25,9 @@
 </div>
 <div id="team" class="tab-pane fade in ">
 @include('leadsource.partials._tabteam')
+</div>
+<div id="stats" class="tab-pane fade in ">
+@include('leadsource.partials._tabstats')
 </div>
 </div>
 @include('partials._scripts')

@@ -35,7 +35,7 @@
 
         @foreach ($history[$lead->id]['status'] as $state)
 
-            <li>{{ $statuses[$state['status']]}}  {{$state['activitydate']->format('M j,Y')}}</li>
+            <li>{{ $statuses[$state['status']]}}  {{$state['activitydate']}}</li>
         @endforeach
         </li>
     @endif
