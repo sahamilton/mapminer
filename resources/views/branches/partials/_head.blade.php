@@ -2,7 +2,7 @@
 	 <p><a href="{{ route('branches.index') }}">Show all branches</a></p>	
 		</div>
         <h1>{{$data['title']}}</h1>
-       {{$filtered ? "<h4 class='filtered'>Filtered</h4>" : ''}}
+       {!!$filtered ? "<h4 class='filtered'>Filtered</h4>" : ''!!}
        <h4> within 10 miles of the {{ucwords(strtolower($data['branch']->branchname))}} branch # {{$data['branch']->branchnumber}} </h4>
         <h4>Address:</h4>
         <p>{{$data['branch']->street}}{{$data['branch']->address2}}<br/>

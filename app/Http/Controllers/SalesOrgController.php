@@ -23,7 +23,7 @@ class SalesOrgController extends BaseController {
 	public function getSalesOrgList($salesperson)
 	{
 				
-			$salesteam = $salesperson->descendantsAndSelf()->with('reportsTo','userdetails','userdetails.roles')->orderBy('lft')->get();
+			$salesteam = $salesperson->descendantsAndSelf()->with('reportsTo','userdetails','userdetails.roles','industryfocus')->orderBy('lft')->get();
 			return response()->view('salesorg.salesmanagerlist', compact('salesteam'));
 
 

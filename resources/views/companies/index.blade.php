@@ -2,7 +2,7 @@
 @section('content')
 
 <h1>{{$title}}</h1>
-{{$filtered ? "<h4 class='filtered'>Filtered</h4>" : ''}}
+{!!$filtered ? "<h4 class='filtered'>Filtered</h4>" : ''!!}
 
 @include('partials/_showsearchoptions')
 @include('partials/advancedsearch')

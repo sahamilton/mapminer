@@ -17,23 +17,32 @@
             <tbody>
 
                 @foreach ($leads->directReports as $report)
-                <?php $leadstatuses = $report->salesLeadsByStatus($report->id);?>
+                
                
                 <tr>
                     <td><a href="{{route('salesleads.showrep',$report->id)}}">{{$report->postName() }}</a></td>
-                    <td>{{count($report->salesleads)}}</td>
-                    @foreach($statuses as $key=>$value)
-                    @if($value !='Claimed')
-                        <td>
-                       
-                         @if (array_key_exists($key,$leadstatuses))
-                            {{$leadstatuses[$key]['count']}}
-                         @endif 
+                    @if(count($report->salesleads)>0)
+                        <td>{{count($report->salesleads)}}</td>
+                        <?php $leadstatuses =  $report->salesLeadsByStatus($report->id);?>
+                        @foreach($statuses as $key=>$value)
+                        @if($value !='Claimed')
+                            <td>
+                           
+                             @if (array_key_exists($key,$leadstatuses))
+                                {{$leadstatuses[$key]['count']}}
+                             @endif 
 
-                        </td>
+                            </td>
+                        @endif
+                        @endforeach
+                    @else
+                    <td></td>
+                     <td></td>
+                      <td></td>
+                       <td></td>
+                        <td></td>
+                        <td></td>
                     @endif
-                    @endforeach
-                    
                 </tr>
                 @endforeach
 

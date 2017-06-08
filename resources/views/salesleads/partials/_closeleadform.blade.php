@@ -6,7 +6,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Close Lead</h4>
+        <h4 class="modal-title">Close Lead {{$rank}} ! {{$lead->id}}</h4>
       </div>
       <div class="modal-body">
         <p>Please complete this form to close lead</p>
@@ -15,6 +15,7 @@
         {{csrf_field()}}
             <div class="form-group{{ $errors->has('rating)') ? ' has-error' : '' }}">
                 <label class="col-md-4 control-label">Your Rating</label>
+                Rank is {{$lead->pivot->rating}} id ={{$lead->id}}
                 <div class="col-md-6">
                     <select required class="form-control" name='rating[]'>
         
@@ -38,7 +39,7 @@
                 <div class="col-md-6">
                     <select class="form-control" name='status_id'>
         
-                    @foreach ($sources as $key=>$value)
+                    @foreach ($statuses as $key=>$value)
 
                       @if($key > 4)
                       <option value="{{$key}}">{{$value}}</option>
@@ -66,11 +67,13 @@
         
                 </div>
             </div>
-            <input type="submit" value="Close Lead" class="btn btn-danger" />
+            <div class="pull-right">
+           <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button> <input type="submit" value="Close Lead" class="btn btn-danger" />
+            </div>
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        
         
       </div>
     </div>

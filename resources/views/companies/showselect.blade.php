@@ -12,7 +12,7 @@ $data['companyname']=$company->companyname;
 <div>
 <h3>Locations for {{$company->companyname}}</h3>
 
-{{$filtered ? "<h4 class='filtered'>Filtered</h4>" : ''}}
+{!!$filtered ? "<h4 class='filtered'>Filtered</h4>" : ''!!}
 @if (isset($company->industryVertical->filter))
 <p>{{$company->industryVertical->filter}} Vertical</p>
 @endif

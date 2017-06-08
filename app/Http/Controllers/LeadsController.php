@@ -206,7 +206,7 @@ class LeadsController extends BaseController
 
     public function find(LeadAddressFormRequest $request){
             $data = $request->all();
-            
+           
     		$geoCode = app('geocoder')->geocode($request->get('address'))->get();
 	           
 			if(! $geoCode)
@@ -220,7 +220,7 @@ class LeadsController extends BaseController
                 $data['lng']= $locationdata['lng'];
             }
 
-            $people = $this->findNearBy($locationdata);
+            $people = $this->findNearBy($data);
 
 			return response()->view('leads.address',compact('people','data'));
 			
@@ -260,12 +260,14 @@ class LeadsController extends BaseController
      */
 
     private function findNearBy($data){
+        
         if (! isset($data['number'])){
             $data['number'] = null;
         }
         if(! isset($data['distance'])){
-            $data['distance']=50;
+            $data['distance']=\Config::get('leads.search_radius');
         }
+
         return $this->person->findNearByPeople($data['lat'],$data['lng'],$data['distance'],$data['number'],'Sales');
     }
 
@@ -332,7 +334,26 @@ class LeadsController extends BaseController
         return redirect()->route('leads.index')->withMessage('Imported ' . $count . ' leads');
      }
     
-    public function assignLeads(){
+    public function assignLeads($id=null){
+
+        if(! $id){
+            return $this->geoAssignLeads();
+        }else{
+            
+            return $this->manuallyAssignLead($id);
+        }
+    }
+    private function manuallyAssignLead($id){
+
+            $lead = $this->lead->findOrFail($id);
+            $people = $this->person->findNearByPeople($lead->lat,$lead->lng,'5000',5,'Sales');
+            $branch = new \App\Branch;
+            $branches = $branch->findNearbyBranches($lead->lat,$lead->lng,500,5,[4,5]);
+         
+            return response()->view('leads.assign',compact('lead','people','branches'));
+
+    }
+    private function geoAssignLeads(){
         $leads = $this->lead->whereDoesntHave('salesteam')
         ->where('datefrom','<=',date('Y-m-d'))
         ->where('dateto','>=',date('Y-m-d'))

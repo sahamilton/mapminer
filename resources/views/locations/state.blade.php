@@ -9,7 +9,7 @@
 	
 		</div>
         <h1>National Accounts</h1>
-       {{$filtered ? "<h4 class='filtered'>Filtered</h4>" : ''}}
+       {!!$filtered ? "<h4 class='filtered'>Filtered</h4>" : ''!!}
         <h4> closest to the branch</h4>        
 		</div>
         <?php $data['address'] = "Lat:" .number_format($data['lat'],3) . "  Lng:" .number_format($data['lng'],3) ;

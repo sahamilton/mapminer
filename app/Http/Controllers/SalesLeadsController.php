@@ -5,6 +5,7 @@ use App\Person;
 use App\User;
 use App\Lead;
 use App\LeadStatus;
+
 use Illuminate\Http\Request;
 
 class SalesLeadsController extends Controller
@@ -18,6 +19,8 @@ class SalesLeadsController extends Controller
         $this->salesleads = $saleslead;
         $this-> person = $person;
         $this->leadstatus = $status;
+        
+        $this->ownedLimit =\Config::get('leads.owned_limit');
     }
 
     /**
@@ -35,7 +38,8 @@ class SalesLeadsController extends Controller
             $manager=false;
             $leads = $this->person->where('user_id','=',auth()->user()->id)
             ->with('ownedLeads','offeredLeads','ownedLeads.vertical','offeredLeads.vertical')->firstOrFail();
-            if(count($leads->ownedLeads) >= \Config::get('leads.owned_limit')) { 
+          
+            if(count($leads->ownedLeads) >= $this->ownedLimit) { 
                 $owned = $this->ownedLimit;      
                 return response()->view('salesleads.index',compact('leads','statuses','title','owned','manager'));
             }
@@ -91,17 +95,18 @@ class SalesLeadsController extends Controller
     public function show($id)
     {
      
-        $sources = $this->leadstatus->pluck('status','id')->toArray();
+        $statuses = $this->leadstatus->pluck('status','id')->toArray();
+        // refactor ... clumsy way to get owned
         $lead = $this->salesleads
-            ->whereHas('salesteam',function ($q) use ($sources){
+            ->whereHas('salesteam',function ($q) use ($statuses){
                 $q->where('person_id','=',auth()->user()->person->id)
-                ->where('status_id','=',array_search('Owned',$sources));
+                ->where('status_id','=',array_search('Owned',$statuses));
             })->with('leadsource','vertical','relatedNotes','salesteam')
             ->findOrFail($id);
         
         $rank = $this->salesleads->rankMyLead($lead->salesteam); 
         $manager=false;
-        return response()->view('salesleads.show',compact('lead','sources','rank','manager'));
+        return response()->view('salesleads.show',compact('lead','statuses','rank','manager'));
     }
      /*
      * @param  int  $id

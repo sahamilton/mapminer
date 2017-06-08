@@ -81,7 +81,7 @@ class Person extends NodeModel {
 		->withTimestamps()
 		->withPivot('status_id','rating');
 	}
-
+	
 	public function findPersonsRole($people)
 	{
 		
@@ -169,6 +169,15 @@ class Person extends NodeModel {
 		->withTimestamps()
 		->withPivot('status_id','rating')
 		->whereIn('status_id',[2]);
+	}
+
+
+	public function myOwnedLeads(){
+		return $this->belongsToMany(Lead::class, 'lead_person_status')
+		->withTimestamps()
+		->withPivot('status_id','rating')
+		->whereIn('status_id',[2])
+		->where('person_id','=',auth()->user()->person->id);
 	}
 
 	public function offeredLeads(){

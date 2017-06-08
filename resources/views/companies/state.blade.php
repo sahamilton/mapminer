@@ -8,7 +8,7 @@ $data['companyname']=$company->companyname;
 ?>
 
 <h2>All {{$company->companyname}} Locations in {{$data['state']}}</h2>
-{{$filtered ? "<h4 class='filtered'>Filtered</h4>" : ''}}
+{!!$filtered ? "<h4 class='filtered'>Filtered</h4>" : ''!!}
 
 @include('companies/partials/segment')
 <p><a href="{{ URL::to('company/'. $company->id) }}" title='Show all {{$company->companyname}} Locations'>All {{$company->companyname}} Locations</a></p>

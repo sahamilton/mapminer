@@ -25,9 +25,9 @@
 		@endforeach
 		</ul>
 	</div>
-
-@if (count($lead->salesteam) > 0)
 <div class="col-md-6 col-md-offset-1">
+@if (count($lead->salesteam) > 0)
+
 	<table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
 		<thead>
 			<th>Sales Rep</th>
@@ -45,8 +45,11 @@
 			@endforeach
 		</tbody>
 	</table>
-</div>
+
+@else
+<a href="{{route('leads.assign',$lead->id)}}"><button class=' btn btn-info'>Assign Lead</button></a>
 @endif
+</div>
 <h4><strong>Notes</strong></h4>
 
 @foreach ($lead->relatedNotes as $leadnote)

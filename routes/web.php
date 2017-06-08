@@ -102,6 +102,7 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('salesorg/{person?}',['as'=>'salesorg','uses'=>'SalesOrgController@getSalesBranches']);
 		Route::get('salesorg/{person}/list',['as'=>'salesorg.list','uses'=>'SalesOrgController@getSalesOrgList']);
 		Route::get('salesorg/coverage',['as'=>'salescoverage','uses'=>'SalesOrgController@salesCoverageMap']);
+		Route::post('leads/find',['as'=>'lead.find','uses'=>'LeadsController@find']);
 		Route::get('branch/{branchId}/salesteam',array('as' => 'branch.salesteam', 'uses' => 'BranchesController@showSalesTeam'));
 
 	# Sales leads 
@@ -187,7 +188,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 		Route::get('api/watchmap',['as'=>'api.watchmap','uses'=>'WatchController@watchmap']);
 
-		Route::post('api/advancedsearch',['as'=>'setSearch','uses'=>'SearchFiltersController@setSessionSearch']);	
+		Route::match(['post','get'],'api/advancedsearch',['as'=>'setSearch','uses'=>'SearchFiltersController@setSessionSearch']);	
 		Route::get('documents/select',['as'=>'documents.select','uses'=>'DocumentsController@select']);
 		Route::post('documents/select',['as'=>'documents.select','uses'=>'DocumentsController@getDocuments']);
 		Route::get('rank',['as'=>'api.rank','uses'=>'DocumentsController@rank']);
@@ -271,12 +272,13 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 		Route::get('serviceline/{servicelineId}/delete', ['as'=>'serviceline.delete', 'uses'=>'ServicelinesController@destroy']);
 		Route::resource('serviceline','ServicelinesController');
 	#Leads
-		Route::get('lead/address',['as'=>'lead.address','uses'=>'LeadsController@address']);
-		Route::post('lead/find',['as'=>'lead.find','uses'=>'LeadsController@find']);
+		Route::get('leads/address',['as'=>'lead.address','uses'=>'LeadsController@address']);
+		
 		Route::get('leads/batch',['as'=>'batchimport','uses'=>'LeadsController@batchImport']);
 		Route::post('leads/batch',['as'=>'leads.batch','uses'=>'LeadsController@leadImport']);
 		Route::get('leads/{id}/purge',['as'=>'leads.purge','uses'=>'LeadsController@destroy']);
-		Route::get('leads/assign',['as'=>'leads.assign','uses'=>'LeadsController@assignLeads']);
+		Route::get('leads/assign/{id?}',['as'=>'leads.assign','uses'=>'LeadsController@assignLeads']);
+		
 		Route::get('leads/{id}/person',['as'=>'leads.person','uses'=>'LeadsController@getPersonsLeads']);
 		Route::get('leads/{id}/person/{sid}/source',['as'=>'leads.personsource','uses'=>'LeadsController@getPersonSourceLeads']);
 		Route::resource('leads','LeadsController');

@@ -1,7 +1,7 @@
 @extends('site/layouts/maps')
 @section('content')
 <h2>Sales Team Members</h2>
-{{isset($filtered )? "<h4 class='filtered'>Filtered</h4>" : ''}}
+{!!isset($filtered )? "<h4 class='filtered'>Filtered</h4>" : ''!!}
 @include('partials/_showsearchoptions')
 @include('partials/advancedsearch')
 @include('maps/partials/_industry_keys')

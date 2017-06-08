@@ -16,7 +16,7 @@
 
 <h1>{{$data['title']}}</h1>
 
-{{$filtered ? "<h4 class='filtered'>Filtered</h4>" : ''}}
+{!!$filtered ? "<h4 class='filtered'>Filtered</h4>" : ''!!}
 @include('partials.advancedsearch')
 
 @include('maps.partials._form')

@@ -32,6 +32,7 @@ title= "See {{$salesteam[0]->reportsTo->firstname}} {{$salesteam[0]->reportsTo->
     <th> Reports to </th>
     <th>City</th>
     <th>State</th>
+    <th>Verticals</th>
    
    
     </thead>
@@ -41,6 +42,7 @@ title= "See {{$salesteam[0]->reportsTo->firstname}} {{$salesteam[0]->reportsTo->
 
     ?>
    @foreach($salesteam as $reports)
+
    @if($reports->id != $salesteam[0]->id)
 
     <tr>  
@@ -82,7 +84,13 @@ title= "See {{$salesteam[0]->reportsTo->firstname}} {{$salesteam[0]->reportsTo->
     <td></td><td></td>  
    @endif
   
-   
+   <td>
+   <ul>
+     @foreach ($reports->industryfocus as $vertical)
+     <li>{{$vertical->filter}}</li>
+     @endforeach
+     </ul>
+   </td>
     
    
     </tr>

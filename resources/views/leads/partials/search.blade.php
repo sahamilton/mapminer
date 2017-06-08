@@ -1,6 +1,6 @@
 <?php 
   $values = Config::get('app.search_radius');
-  $default = 25;
+  $default = 100;
   $number = [5,10,25,100];
   $count='5';
   ?>

@@ -114,7 +114,7 @@ class Lead extends Model
     }
     public function myLeadStatus(){
       
-      return $this->salesteam()->wherePivot('person_id','=',auth()->user()->person->id)->first(['status_id']);
+      return $this->salesteam()->wherePivot('person_id','=',auth()->user()->person->id)->first(['status_id','rating']);
 
 
     }
@@ -141,6 +141,9 @@ class Lead extends Model
         }
         return null;
     }
+
+    
+
     public function rankMyLead($salesteam,$id=null){
       if(! isset($id)){
         $id = auth()->user()->person->id;
