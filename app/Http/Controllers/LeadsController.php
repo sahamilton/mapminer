@@ -39,7 +39,12 @@ class LeadsController extends BaseController
     public function index()
     {   
         $statuses = $this->leadstatus->pluck('status','id')->toArray();
-        $leads = $this->lead->with('salesteam','leadsource','vertical','ownedBy')->get();
+        $leads = $this->lead->with('salesteam','leadsource','vertical','ownedBy')
+        ->whereHas('salesteam',function ($q){
+            $q->where('datefrom','<=',date('Y-m-d'))
+             ->where('dateto','>=',date('Y-m-d'));
+        })
+        ->get();
    
         $sources = $this->leadsource->pluck('source','id');
         $salesteams = $this->getSalesTeam($leads);
@@ -55,7 +60,10 @@ class LeadsController extends BaseController
         return $this->person->with('userdetails','reportsTo','salesleads')
        ->whereIn('id',$salesreps)
        ->whereHas('salesleads',function ($q) use($leads){
-            $q->whereIn('lead_id',$leads->pluck('id')->toArray());
+            $q->whereIn('lead_id',$leads->pluck('id')->toArray())
+                ->where('datefrom','<=',date('Y-m-d'))
+                ->where('dateto','>=',date('Y-m-d'));
+        });
        })->get();
     }
     /**
@@ -124,6 +132,12 @@ class LeadsController extends BaseController
     {
         $sources = $this->leadstatus->pluck('status','id')->toArray();
         $lead = $this->lead->with('salesteam','leadsource','vertical','relatedNotes')
+        ->whereHas('salesteam',function ($q){
+
+            $q->where('datefrom','<=',date('Y-m-d'))
+             ->where('dateto','>=',date('Y-m-d'));
+       
+        })
         ->findOrFail($id);
 
         $rank = $this->lead->rankLead($lead->salesteam);
@@ -190,7 +204,12 @@ class LeadsController extends BaseController
      */
     public function getPersonsLeads($id){
         $statuses = $this->leadstatus->pluck('status','id')->toArray();
-        $leads = $this->person->with('salesleads','salesleads.vertical','salesleads.leadsource')->findOrFail($id);
+        $leads = $this->person->with('salesleads','salesleads.vertical','salesleads.leadsource')
+        ->whereHas('salesleads',function ($q){
+            $q->where('datefrom','<=',date('Y-m-d'))
+             ->where('dateto','>=',date('Y-m-d'));
+        })
+        ->findOrFail($id);
        
         return response()->view('leads.person',compact('leads','statuses'));
     }
@@ -199,7 +218,9 @@ class LeadsController extends BaseController
         $statuses = $this->leadstatus->pluck('status','id')->toArray();
         $leads = $this->person->with('salesleads','salesleads.vertical')
         ->whereHas('salesleads', function ($q) use($sid){
-            $q->where('lead_source_id','=',$sid);
+            $q->where('lead_source_id','=',$sid)
+            ->where('datefrom','<=',date('Y-m-d'))
+             ->where('dateto','>=',date('Y-m-d'));
         })
         ->findOrFail($pid);
         $source=$this->leadsource->findOrFail($sid);

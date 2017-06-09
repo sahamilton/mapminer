@@ -33,6 +33,7 @@ class Lead extends Model
 
     public function salesteam(){
     	return $this->belongsToMany(Person::class, 'lead_person_status')
+    
       ->withPivot('created_at','updated_at','status_id','rating');
     }
     

@@ -79,6 +79,11 @@ class LeadSourceController extends Controller
 
         $leadsource = $this->leadsource
                 ->with('leads','leads.salesteam','author')
+                ->whereHas('salesteam',function($q){
+                    $q->where('datefrom','<=',date('Y-m-d'))
+                        ->where('dateto','>=',date('Y-m-d'));
+                })
+                
                ->findOrFail($id);
         $salesteams = $this->salesteam($leadsource->leads);
         return response()->view('leadsource.show',compact('leadsource','statuses','salesteams'));
@@ -127,7 +132,13 @@ class LeadSourceController extends Controller
 
     public function announce($id){
 
-        $source = $this->leadsource->with('leads','leads.salesteam','leads.vertical')->findOrFail($id);
+        $source = $this->leadsource->with('leads','leads.salesteam','leads.vertical')
+            ->whereHas('salesteam',function($q){
+                    $q->where('datefrom','<=',date('Y-m-d'))
+                        ->where('dateto','>=',date('Y-m-d'));
+                })
+
+        ->findOrFail($id);
         
         $salesteam = $this->salesteam($source->leads);
         
@@ -154,7 +165,10 @@ class LeadSourceController extends Controller
        return $this->person->with('userdetails','reportsTo','salesleads')
        ->whereIn('id',$salesreps)
        ->whereHas('salesleads',function ($q) use($leads){
-            $q->whereIn('lead_id',$leads->pluck('id')->toArray());
+            $q->whereIn('lead_id',$leads->pluck('id')->toArray())
+            ->where('datefrom','<=',date('Y-m-d'))
+             ->where('dateto','>=',date('Y-m-d'));
+                })
        })->get();
       
        
@@ -196,7 +210,11 @@ class LeadSourceController extends Controller
     public function email(Request $request, $id){
 
 
-        $data['source'] = $this->leadsource->with('leads','leads.salesteam')->findOrFail($id);
+        $data['source'] = $this->leadsource->with('leads','leads.salesteam')
+        ->whereHas('leads.salesteam',function($q){
+                    $q->where('datefrom','<=',date('Y-m-d'))
+                        ->where('dateto','>=',date('Y-m-d'));
+                })->findOrFail($id);
         $salesteam = $this->salesteam($data['source']->leads);
         
         $data['message'] = $request->get('message');;
