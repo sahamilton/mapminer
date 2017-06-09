@@ -267,7 +267,8 @@ class LeadSourceController extends Controller
         ->whereNotNull('lng')
         ->has('salesteam', '<', 1)
         ->get();
-        $data = $this->findClosestRep($leads);
+        $data['reps'] = $this->findClosestRep($leads);
+        $data['branches'] = $this->findClosestBranches($leads);
         return response()->view('leadsource.leadsassign',compact('leads','data'));
     }
     
@@ -280,6 +281,20 @@ class LeadSourceController extends Controller
             $data['distance'] = 1000;
             $data['number'] = 1;
             $leadinfo[$lead->id]=$this->person->findNearByPeople($data['lat'],$data['lng'],$data['distance'],$data['number'],'Sales');
+
+        }
+        return $leadinfo;
+    }
+
+     private function findClosestBranches($leads){
+
+        foreach ($leads as $lead){
+            $data['lat'] = $lead->lat;
+            $data['lng'] = $lead->lng;
+            $data['distance'] = 1000;
+            $data['number'] = 1;
+            $branch = new \App\Branch;
+            $leadinfo[$lead->id]=$branch->findNearByBranches($data['lat'],$data['lng'],$data['distance'],$data['number'],[5]);
 
         }
         return $leadinfo;

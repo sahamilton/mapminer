@@ -10,6 +10,7 @@
     <th>Location</th>
 
     <th>Closest Reps</th>
+    <th>Closest Branches</th>
 
   
        
@@ -22,8 +23,8 @@
     <td><a href="{{route('leads.show',$lead->id)}}">{{$lead->companyname}}</a></td>
     <td>{{$lead->businessname}}</td>
     <td>{{$lead->city}} {{$lead->state}}</td>
-    <td>{{number_format($data[$lead->id][0]->distance_in_mi,0)}} miles</td>
-    
+    <td>{{number_format($data['reps'][$lead->id][0]->distance_in_mi,0)}} miles</td>
+    <td>{{number_format($data['branches'][$lead->id][0]->distance_in_mi,0)}} miles</td>
     </tr>
    @endforeach
     
