@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Mail;
 use Illuminate\Http\Request;
 use App\LeadSource;
+use App\Lead;
 use App\Person;
 use App\LeadStatus;
 use App\Mail\NotifyLeadsAssignment;
@@ -17,10 +18,12 @@ class LeadSourceController extends Controller
     public $leadsource;
     public $leadstatus;
     public $person;
-    public function __construct(LeadSource $leadsource, LeadStatus $status, Person $person){
+    public $lead;
+    public function __construct(LeadSource $leadsource, LeadStatus $status, Lead $lead, Person $person){
         $this->leadsource = $leadsource;
         $this->leadstatus = $status;
         $this->person = $person;
+        $this->lead = $lead;
 
     }
 
@@ -251,5 +254,29 @@ class LeadSourceController extends Controller
         return $message;
     }
 
+    public function assignLeads($id){
+
+        $leads = $this->lead->where('lead_source_id','=',$id)
+        ->with('leadsource')
+        ->whereNotNull('lat')
+        ->whereNotNull('lng')
+        ->has('salesteam', '<', 1)
+        ->get();
+        $data = $this->findClosestRep($leads);
+        return response()->view('leadsource.leadsassign',compact('leads','data'));
+    }
     
+
+    private function findClosestRep($leads){
+
+        foreach ($leads as $lead){
+            $data['lat'] = $lead->lat;
+            $data['lng'] = $lead->lng;
+            $data['distance'] = 1000;
+            $data['number'] = 1;
+            $leadinfo[$lead->id]=$this->person->findNearByPeople($data['lat'],$data['lng'],$data['distance'],$data['number'],'Sales');
+
+        }
+        return $leadinfo;
+    }
 }

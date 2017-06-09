@@ -55,6 +55,7 @@
 			  <ul class="dropdown-menu" role="menu">
 				  <li><a href="{{route('leadsource.announce',$source->id)}}"><i class="glyphicon glyphicon-envelope"></i> Notify Saleteam</a></li>
 				<li><a href="{{route('leadsource.edit',$source->id)}}"><i class="glyphicon glyphicon-pencil"></i> Edit this lead source</a></li>
+                <li><a href="{{route('leadsource.assign',$source->id)}}"><i class="glyphicon glyphicon-pencil"></i> Assign lead source leads</a></li>
 				<li><a data-href="{{route('leadsource.purge',$source->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = " this lead source and all its leads" href="#"><i class="glyphicon glyphicon-trash"></i> Delete this lead source</a></li>
 			  </ul>
 			</div>
