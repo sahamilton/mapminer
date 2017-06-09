@@ -47,7 +47,7 @@
 	</table>
 
 @else
-<a href="{{route('leads.assign',$lead->id)}}"><button class=' btn btn-info'>Assign Lead</button></a>
+<a href="{{route('leads.leadassign',$lead->id)}}"><button class=' btn btn-info'>Assign Lead</button></a>
 @endif
 </div>
 <h4><strong>Notes</strong></h4>
