@@ -24,7 +24,7 @@ class LeadFormRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'lead_source_id'=>'required',
         ];
     }
 }

@@ -85,11 +85,15 @@ class LeadsController extends BaseController
         }
         
         $lead = $this->lead->create($request->all());
+ 
         $geoCode = app('geocoder')->geocode($this->getAddress($request))->get();
         $lead->update($this->getGeoCode($geoCode));
 
         $lead->vertical()->attach($request->get('vertical'));
-        return redirect()->route('leads.index')->with(['message','New Lead Created']);
+        // Assign lead
+
+        // notify sale team
+        return redirect()->route('leads.show',$lead->id)->with(['message','New Lead Created']);
     }
 
     /**

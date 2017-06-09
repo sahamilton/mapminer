@@ -129,7 +129,7 @@ value="{{  old('dateto', isset($lead) ?  $lead->dateto->format('m/d/Y') : date('
 		<div class="form-group{{ $errors->has('lead_source_id') ? ' has-error' : '' }}">
         <label class="col-md-4 control-label">Lead Source</label>
         <div class="input-group input-group-lg ">
-            <select id="leadsource" class="form-control" name='lead_source_id'>
+            <select id="leadsource" required class="form-control" name='lead_source_id'>
 
             @foreach ($sources as $key=>$value)
             	<option {{isset($lead) && ($lead->lead_source_id == $key) ? 'selected' : '' }} value="{{$key}}">{{$value}}</option>
