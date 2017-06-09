@@ -351,8 +351,18 @@ class LeadsController extends BaseController
             $branches = $branch->findNearbyBranches($lead->lat,$lead->lng,500,5,[4,5]);
          
             return response()->view('leads.assign',compact('lead','people','branches'));
-
+        }
+    public function postAssignLeads(Request $request){
+        
+        $lead= $this->lead->findOrFail($request->get('lead_id'));
+        foreach ($request->get('assign') as $person_id){
+            $lead->salesteam()->attach($person_id,['status_id'=>1]);
+        }
+        
+        
+        return redirect()->route('leads.index')->with('status','Lead assigned to ' .count($request->get('assign')) . ' people');
     }
+
     private function geoAssignLeads(){
         $leads = $this->lead->whereDoesntHave('salesteam')
         ->where('datefrom','<=',date('Y-m-d'))
