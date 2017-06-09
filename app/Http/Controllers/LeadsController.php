@@ -354,16 +354,11 @@ class LeadsController extends BaseController
         return redirect()->route('leads.index')->withMessage('Imported ' . $count . ' leads');
      }
     
-    public function assignLeads($id=null){
+    
+
+    public function assignLeads($id = null){
       
-        if(! $id){
-            return $this->geoAssignLeads();
-        }else{
-            
-            return $this->manuallyAssignLead($id);
-        }
-    }
-    private function manuallyAssignLead($id){
+        
 
             $lead = $this->lead->findOrFail($id);
             $people = $this->person->findNearByPeople($lead->lat,$lead->lng,'5000',5,'Sales');
@@ -383,8 +378,9 @@ class LeadsController extends BaseController
         return redirect()->route('leads.index')->with('status','Lead assigned to ' .count($request->get('assign')) . ' people');
     }
 
-    private function geoAssignLeads(){
+    public function geoAssignLeads($sid){
         $leads = $this->lead->whereDoesntHave('salesteam')
+        ->where('lead_source_id','=',$sid)
         ->where('datefrom','<=',date('Y-m-d'))
         ->where('dateto','>=',date('Y-m-d'))
         ->get();
@@ -401,6 +397,6 @@ class LeadsController extends BaseController
            }
            
         }
-        return redirect()->route('leads.index')->with('status',$count . ' leads assigned');
+        return redirect()->route('leadsource.show',$sid)->with('status',$count . ' leads assigned');
     }
 }

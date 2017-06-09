@@ -26,6 +26,9 @@ $statuses[0] = 'Unassigned';?>
 @foreach ($stats as $key=>$value)
 <li>{{$statuses[$key]}} - {{$value}}</li>
 @endforeach
-<?php $avg =number_format($stats[1] / (count($leadsource->leads) - $stats[0]),2);?>
+<?php $avg = null;?>
+	@if($stats[0] > 0 && $stats[1] >0)
+	<?php $avg =number_format($stats[1] / (count($leadsource->leads) - $stats[0]),2);?>
+	@endif
 <li>Average Offer - {{$avg}}</li>
 <li>Offered to {{count($salesteams)}}</li>

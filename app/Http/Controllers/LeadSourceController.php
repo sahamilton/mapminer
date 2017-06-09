@@ -75,11 +75,13 @@ class LeadSourceController extends Controller
      */
     public function show($id)
     {
+        
+      
         $statuses = $this->leadstatus->pluck('status','id')->toArray();
 
         $leadsource = $this->leadsource
                 ->with('leads','leads.salesteam','author')
-                ->whereHas('leads.salesteam',function($q){
+                ->whereHas('leads',function($q){
                     $q->where('datefrom','<=',date('Y-m-d'))
                         ->where('dateto','>=',date('Y-m-d'));
                 })

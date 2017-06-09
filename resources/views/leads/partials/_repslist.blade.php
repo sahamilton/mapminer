@@ -1,5 +1,5 @@
 <h1>Closest Sales Reps </h1>
-
+{{dd($leadsource))}}
 @if(count($people)>0)
 <form action = "{{route('leads.assign')}}" name="assignlead" method="post">
 {{csrf_field()}}
