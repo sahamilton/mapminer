@@ -37,7 +37,7 @@ class LeadsController extends BaseController
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {   );
+    {   
         $statuses = $this->leadstatus->pluck('status','id')->toArray();
         $leads = $this->lead->with('salesteam','leadsource','vertical','ownedBy')
                 ->where('datefrom','<=',date('Y-m-d'))
