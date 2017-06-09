@@ -6,7 +6,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Close Lead {{$rank}} ! {{$lead->id}}</h4>
+        <h4 class="modal-title">Close {!!$lead->businessname!!} Lead  </h4>
       </div>
       <div class="modal-body">
         <p>Please complete this form to close lead</p>
@@ -15,7 +15,7 @@
         {{csrf_field()}}
             <div class="form-group{{ $errors->has('rating)') ? ' has-error' : '' }}">
                 <label class="col-md-4 control-label">Your Rating</label>
-                Rank is {{$lead->pivot->rating}} id ={{$lead->id}}
+               
                 <div class="col-md-6">
                     <select required class="form-control" name='rating[]'>
         

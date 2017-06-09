@@ -180,7 +180,7 @@ class LeadSourceController extends Controller
        
     }
     private function createMessage($source,$verticals){
-        $message = "You have new leads offered to you in the " . $source->source." campaign. ";
+        $message = "You have new leads offered to you in the " . $source->source." lead campaign. ";
         $message .= $source->description;
         $message .= "<p>These leads are available from ".$source->datefrom->format('M j, Y') . " until "  .$source->dateto->format('M j, Y')."</p>";
         $message .= "Leads in this campaign are for the following sales verticals:";
@@ -208,9 +208,11 @@ class LeadSourceController extends Controller
 
     }
     private function notifySalesTeam($data,$salesteam){
+        
         foreach ($salesteam as $team){
-
-            Mail::queue(new NotifyLeadsAssignment($data,$team));
+            
+            
+                Mail::queue(new NotifyLeadsAssignment($data,$team));
             
         }
     }
@@ -233,7 +235,10 @@ class LeadSourceController extends Controller
         }
         
         foreach ($data['managers'] as $manager){
-            Mail::queue(new NotifyManagersLeadsAssignment($data,$manager));
+           
+                Mail::queue(new NotifyManagersLeadsAssignment($data,$manager));
+          
+            
         }
 
     }
