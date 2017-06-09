@@ -23,7 +23,7 @@ class BranchesController extends BaseController {
 	protected $serviceline;
 	protected $person;
 	protected $state;
-
+	public $userServiceLines;
 	
 	
 	public function __construct(Branch $branch, Serviceline $serviceline,Person $person, State $state) {
@@ -32,6 +32,7 @@ class BranchesController extends BaseController {
 			$this->person = $person;
 			$this->state = $state;
 			parent::__construct($this->branch);
+			
 	}
 	
 	/**
@@ -41,8 +42,9 @@ class BranchesController extends BaseController {
 	public function index()
 	{
 		$userServiceLines = $this->userServiceLines;
+
 		$branches = $this->branch
-			->with('region','manager','servicedBy')
+			->with('region','manager','servicedBy','servicelines')
 			->whereHas('servicelines', function($q) use($userServiceLines) {
 					    $q->whereIn('serviceline_id',$userServiceLines);
 
@@ -366,10 +368,7 @@ class BranchesController extends BaseController {
 		$loclat = $branch->lat;
 		$loclng = $branch->lng;
 		$branches = collect($branch->findNearbyBranches($loclat,$loclng,$distance,$number=1,$this->userServiceLines));
-		
-		$content = view('branches.xml', compact('branches'));
-        return response($content, 200)
-            ->header('Content-Type', 'text/xml');
+        return response()->view('branches.xml', compact('branches'))->header('Content-Type', 'text/xml');
 
 		
 	}
@@ -440,14 +439,10 @@ class BranchesController extends BaseController {
 		return $branches;
 	}
 	public function getMyBranches($id)
-	{
-		
-
-		
-		$people = $this->person->with('manages')->findOrFail($id)->toArray();
-		
-
-		$this->makeMyBranchXML($people);
+	{	
+		$people = $this->person->with('manages')->findOrFail($id);
+		$branches = $people->manages;
+		return response()->view('branches.xml', compact('branches'))->header('Content-Type', 'text/xml');
 	}
 	
 	
@@ -465,7 +460,7 @@ class BranchesController extends BaseController {
 			$newnode->setAttribute("address", $row['street']." ". $row['city']." ". $row['state']);
 			$newnode->setAttribute("lat", $row['lat']);
 			$newnode->setAttribute("lng", $row['lng']);
-			$newnode->setAttribute("locationweb",route('branch.show' , $row['id']) );
+			$newnode->setAttribute("locationweb",route('branches.show' , $row['id']) );
 			$newnode->setAttribute("id", $row['id']);	
 			$newnode->setAttribute("type", 'branch');	
 		}
@@ -476,6 +471,7 @@ class BranchesController extends BaseController {
 	
 	public function state(Request $request, $statecode=NULL) {
 		
+				
 
 		if(! $statecode){
 			$statecode = $request->get('state');
@@ -485,7 +481,7 @@ class BranchesController extends BaseController {
 			->with('region')
 			->with('manager')
 			->whereHas('servicelines', function($q) {
-					    $q->whereIn('serviceline_id',$this->userservicelines);
+					    $q->whereIn('serviceline_id',$this->userServiceLines);
 
 					})
 			->where('state','=',$statecode)

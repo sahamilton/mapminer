@@ -74,6 +74,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" id='reset'>Reset</button>
                 <input type="hidden" id='search' name= 'search' value='search' />
+                <input type="hidden" id='api_token' name= 'api_token' value='{{auth()->user()->api_token}}' />
                 <button type='button' id='searchsave' type="button" value='Save' class="btn btn-primary" data-dismiss="modal" >Save</button>
         </div>   </form> </div>
         </div></div>

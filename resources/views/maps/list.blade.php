@@ -26,84 +26,8 @@
 @if($data['type']=='branch')
 	@include('maps.branchlist')
 @else
-        <table id='sorttable' class ='table table-bordered table-striped table-hover dataTable'><thead>
-		 @foreach($fields as $key=>$value)
-			<th><span>{{$key}}</span>
-			<!-- @if ($key == 'Watch')
-			more research needed!
-			<input type="checkbox" id="selecctall"/> Select All</li>
-
-			@endif -->
-			</th>
-			
-		@endforeach
-		</thead>
-        @foreach($data['result'] as $row)
-       
-			<?php reset ($fields);?>
-			<tr>
-			 @foreach($fields as $key=>$field)
-            @if($field == 'watch_list')
-           	 <td style ="text-align: center; vertical-align: middle;">
-           @else
-            	<td>
-            @endif
-				<?php switch ($field) {
-					
-					case 'businessname':
-				
-					echo "<a href=\"/location/";
-					echo  $row->id."\">" . $row->$field ."</a>";
-					break;
-					
-					case 'companyname':
-				
-					echo "<a href=\"/company/";
-					echo $row->company_id."\">" . $row->$field  ."</a>";
-					break;
-					
-					case 'branchname':
-				
-						echo "<a href=\"/branch/" . $row->id."\">";
-						echo $row->$field ."</a>";
-					break;
-					
-					
-					
-					case 'distance_in_mi':
-						echo  number_format($row->$field ,2) ;	
-					break;
-					
-					case 'watch_list':
-						
-						if(isset($watchlist) && in_array($row->id,$watchlist)) {
-							echo "<input checked ";
-							
-							
-						}else{
-							
-							echo "<input ";
-							
-							
-						}
-						echo "id=\"".$row->id."\" ";
-						echo " type='checkbox' name='watchList' ";
-						echo "class='watchItem' value='".$row->id."' >";
-			
-			
-					break;
-					
-					default:
-				
-						echo  $row->$field ;
-					break;
-				};?>
-                </td>
-			@endforeach
-			</tr>
-		@endforeach
-        @endif
-</table>
+    @include('maps.accountlist')
+@endif    
 @include('partials/_scripts')
 
 @stop

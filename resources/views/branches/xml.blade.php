@@ -1,4 +1,4 @@
-<marker>
+<markers>
 
 @foreach ($branches as $branch)
 
@@ -20,4 +20,4 @@ color="{{$branch->servicelines[0]->color}}"
 @endforeach
 
 
-</marker>
+</markers>

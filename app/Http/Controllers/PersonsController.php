@@ -161,20 +161,19 @@ class PersonsController extends BaseController {
 	 */
 	public function show($person)
 	{
-		
+
 //note remove manages & manages.servicedby
 		$people = $this->persons
 			->with('directReports',
 				'directReports.userdetails.roles',
 				'directReports.branchesServiced',
 				'reportsTo',
-				
 				'managesAccount',
 				'userdetails',
 				'userdetails.roles',
 				'branchesServiced',
-		
-				'directReports.branchesServiced')
+				'branchesServiced.servicedBy'
+						)
 			
 			->find($person->id);
 	
@@ -193,17 +192,7 @@ class PersonsController extends BaseController {
 			
 		}elseif(in_array('Market manager',$roles)){
 		
-			
-			$branches = $people->manages;
-
-			$fields = array('Branch'=>'branchname',
-						'Number'=>'branchnumber',
-						'Service Line'=>'brand',
-						'Branch Address'=>'street',
-						'City'=>'city',
-						'State'=>'state',
-						'Sales Team'=>'servedBy');
-			return response()->view('persons.showlist', compact('people','branches','fields'));
+			return response()->view('persons.showlist', compact('people'));
 			
 		}else{
 			

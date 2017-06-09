@@ -2,7 +2,7 @@
 @section('content')
 
  <div id="store-locator-container">
- hey Im here
+
       <div id="page-header">
 	  <?php 
 

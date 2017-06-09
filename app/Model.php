@@ -381,7 +381,7 @@ public function _import_csv($filename, $table,$fields)
 	{
 		
 		if (session()->has('user.servicelines')){
-			$this->userserviceLines = session()->get('user.servicelines');
+			$this->userServiceLines = session()->get('user.servicelines');
 			return session()->get('user.servicelines');
 		}
 
@@ -392,7 +392,7 @@ public function _import_csv($filename, $table,$fields)
        $user = auth()->user()->with('serviceline')->first();
        $userServicelines= $user->serviceline->pluck('id')->toArray();
        session()->put('user.servicelines',$userServicelines) ;
-       $this->userserviceLines = session()->get('user.servicelines');
+       $this->userServiceLines = session()->get('user.servicelines');
        return $userServicelines;
     }
 

@@ -58,11 +58,14 @@
 
 	</td>
 	<td>
+	@if(isset($branch->manager))
 		<a href="{{route('person.show',$branch->manager->id)}}" 
-		title="See all branches managed by {{$branch->manager->firstname}} {{ $branch->manager->lastname }}" >
-		{{$branch->manager->firstname}} {{ $branch->manager->lastname }}
+		title="See all branches managed by {{isset($branch->manager->firstname) ? $branch->manager->firstname : '' }} 
+		{{isset( $branch->manager->lastname) ? $branch->manager->lastname : '' }}" >
+		{{isset($branch->manager->firstname) ? $branch->manager->firstname : ''}} 
+		{{ isset ($branch->manager->lastname) ? $branch->manager->lastname : '' }}
 		</a>
-
+	@endif
 	</td>
 	<td>
 		<a href="{{route('branches.show',$branch->id)}}" 

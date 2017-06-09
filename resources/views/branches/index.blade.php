@@ -1,6 +1,6 @@
 @extends('site/layouts/default')
 @section('content')
-@if (Auth::user()->hasRole('Admin'))
+@if (auth()->user()->hasRole('Admin'))
 <div class="pull-right">
 <a href="{{{ route('branches.create') }}}" class="btn btn-small btn-info iframe"><span class="glyphicon glyphicon-plus-sign"></span> Create New Branch</a>	</div>
 @endif
@@ -48,14 +48,14 @@
 	</td>
 
 	<td>
-	@if(!is_null($branch->servicelines))
-				@foreach($branch->servicelines as $serviceline)
-					
-					<a href="{{route('serviceline.show',$serviceline->id)}}" 
-					title="See all {{$serviceline->ServiceLine}} branches">
-						{{$serviceline->ServiceLine}}
-					</a>
-				@endforeach
+	@if(count($branch->servicelines)>0)
+		@foreach($branch->servicelines as $serviceline)
+			
+			<a href="{{route('serviceline.show',$serviceline->id)}}" 
+			title="See all {{$serviceline->ServiceLine}} branches">
+				{{$serviceline->ServiceLine}}
+			</a>
+		@endforeach
 	@endif
 	</td>
 

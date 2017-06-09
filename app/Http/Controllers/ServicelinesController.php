@@ -2,7 +2,9 @@
 namespace App\Http\Controllers;
 use App\Serviceline;
 use App\Company;
+use App\Branch;
 use Illuminate\Http\Request;
+use App\Http\Requests\ServiceLineFormRequest;
 class ServicelinesController extends BaseController {
 	public $serviceline;
 
@@ -42,19 +44,12 @@ class ServicelinesController extends BaseController {
 	 *
 	 * @return Response
 	 */
-	public function store()
+	public function store(ServiceLineFormRequest $request)
 	{
-		$validator = \Validator::make($data = \Input::all(), Serviceline::$rules);
 
-		if ($validator->fails())
-		{
-			
-			return \Redirect::back()->withErrors($validator)->withInput();
-		}
+		$this->serviceline->create($this->request->all());
 
-		$this->serviceline->create($data);
-
-		return \Redirect::route('admin.serviceline.index');
+		return \redirect()->route('serviceline.index');
 	}
 
 	/**
@@ -66,15 +61,13 @@ class ServicelinesController extends BaseController {
 	
 	public function show($id, $type=NULL)
 	{
-
-		// Can the user see this service line?
-		$userServiceLines = \Session::get('user.servicelines');
 		
-		if (! in_array($id,$userServiceLines))
+		// Can the user see this service line?
+				
+		if (! in_array($id,$this->userServiceLines))
 		{
 			
-
-			return \Redirect::route('serviceline.index');
+			return redirect()->route('serviceline.index');
 		}
 		$serviceline = $this->serviceline->findOrFail($id);
 		if(! $type) {
@@ -115,7 +108,7 @@ class ServicelinesController extends BaseController {
 					'Segment'=>'segment',
 					'Business Type'=>'businesstype');
 		
-		if (\Auth::user()->hasRole('Admin')) {
+		if (auth()->user()->hasRole('Admin')) {
 			$fields['Actions']='actions';
 		}
 		$fields = array('Company'=>'companyname','Manager'=>'manager','Email'=>'email','Vertical'=>'vertical','Service Lines'=>'serviceline');
@@ -146,19 +139,13 @@ class ServicelinesController extends BaseController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update(Request $request, $id)
+	public function update(ServiceLineFormRequest $request, $id)
 	{
 		$serviceline = $this->serviceline->find($id);
-		$validator = \Validator::make($request->all(), Serviceline::$rules);
-
-		if ($validator->fails())
-		{
-			return \Redirect::back()->withErrors($validator)->withInput();
-		}
-
+		
 		$serviceline->update($request->all());
 
-		return \Redirect::route('serviceline.index');
+		return redirect()->route('serviceline.index');
 	}
 
 	/**
@@ -171,7 +158,7 @@ class ServicelinesController extends BaseController {
 	{
 		$this->serviceline->destroy($id);
 
-		return \Redirect::route('serviceline.index');
+		return redirect()->route('serviceline.index');
 	}
 	
 	
