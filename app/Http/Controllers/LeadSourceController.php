@@ -79,7 +79,7 @@ class LeadSourceController extends Controller
 
         $leadsource = $this->leadsource
                 ->with('leads','leads.salesteam','author')
-                ->whereHas('salesteam',function($q){
+                ->whereHas('leads.salesteam',function($q){
                     $q->where('datefrom','<=',date('Y-m-d'))
                         ->where('dateto','>=',date('Y-m-d'));
                 })
@@ -163,13 +163,13 @@ class LeadSourceController extends Controller
         }
 
        return $this->person->with('userdetails','reportsTo','salesleads')
-       ->whereIn('id',$salesreps)
-       ->whereHas('salesleads',function ($q) use($leads){
-            $q->whereIn('lead_id',$leads->pluck('id')->toArray())
-            ->where('datefrom','<=',date('Y-m-d'))
-             ->where('dateto','>=',date('Y-m-d'));
-                })
-       })->get();
+               ->whereIn('id',$salesreps)
+               ->whereHas('salesleads',function ($q) use($leads){
+                    $q->whereIn('lead_id',$leads->pluck('id')->toArray())
+                    ->where('datefrom','<=',date('Y-m-d'))
+                     ->where('dateto','>=',date('Y-m-d'));
+
+               })->get();
       
        
     }

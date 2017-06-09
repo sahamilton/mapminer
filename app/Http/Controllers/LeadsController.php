@@ -40,11 +40,10 @@ class LeadsController extends BaseController
     {   
         $statuses = $this->leadstatus->pluck('status','id')->toArray();
         $leads = $this->lead->with('salesteam','leadsource','vertical','ownedBy')
-        ->whereHas('salesteam',function ($q){
-            $q->where('datefrom','<=',date('Y-m-d'))
-             ->where('dateto','>=',date('Y-m-d'));
-        })
-        ->get();
+                ->where('datefrom','<=',date('Y-m-d'))
+                ->where('dateto','>=',date('Y-m-d'))
+
+                ->get();
    
         $sources = $this->leadsource->pluck('source','id');
         $salesteams = $this->getSalesTeam($leads);
@@ -58,13 +57,13 @@ class LeadsController extends BaseController
             $salesreps = array_unique(array_merge($salesreps,$leadreps));
         }
         return $this->person->with('userdetails','reportsTo','salesleads')
-       ->whereIn('id',$salesreps)
-       ->whereHas('salesleads',function ($q) use($leads){
-            $q->whereIn('lead_id',$leads->pluck('id')->toArray())
-                ->where('datefrom','<=',date('Y-m-d'))
-                ->where('dateto','>=',date('Y-m-d'));
-        });
-       })->get();
+           ->whereIn('id',$salesreps)
+           ->whereHas('salesleads',function ($q) use($leads){
+                $q->whereIn('lead_id',$leads->pluck('id')->toArray())
+                    ->where('datefrom','<=',date('Y-m-d'))
+                    ->where('dateto','>=',date('Y-m-d'));
+            })
+       ->get();
     }
     /**
      * Show the form for creating a new resource.
@@ -132,13 +131,9 @@ class LeadsController extends BaseController
     {
         $sources = $this->leadstatus->pluck('status','id')->toArray();
         $lead = $this->lead->with('salesteam','leadsource','vertical','relatedNotes')
-        ->whereHas('salesteam',function ($q){
-
-            $q->where('datefrom','<=',date('Y-m-d'))
-             ->where('dateto','>=',date('Y-m-d'));
-       
-        })
-        ->findOrFail($id);
+            ->where('datefrom','<=',date('Y-m-d'))
+            ->where('dateto','>=',date('Y-m-d'))
+            ->findOrFail($id);
 
         $rank = $this->lead->rankLead($lead->salesteam);
 

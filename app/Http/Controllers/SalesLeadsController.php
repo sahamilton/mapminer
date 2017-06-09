@@ -101,7 +101,10 @@ class SalesLeadsController extends Controller
             ->whereHas('salesteam',function ($q) use ($statuses){
                 $q->where('person_id','=',auth()->user()->person->id)
                 ->where('status_id','=',array_search('Owned',$statuses));
-            })->with('leadsource','vertical','relatedNotes','salesteam')
+            })
+            ->where('datefrom','<=',date('Y-m-d'))
+            ->where('dateto','>=',date('Y-m-d'))
+            ->with('leadsource','vertical','relatedNotes','salesteam')
             ->findOrFail($id);
         
         $rank = $this->salesleads->rankMyLead($lead->salesteam); 
@@ -121,7 +124,10 @@ class SalesLeadsController extends Controller
             ->whereHas('salesteam',function ($q) use ($sources,$pid){
                 $q->where('person_id','=',$pid)
                 ->where('status_id','=',array_search('Owned',$sources));
-            })->with('leadsource','vertical','relatedNotes','salesteam')
+            })
+            ->where('datefrom','<=',date('Y-m-d'))
+            ->where('dateto','>=',date('Y-m-d'))
+            ->with('leadsource','vertical','relatedNotes','salesteam')
             ->findOrFail($id);
         $rank = $this->salesleads->rankMyLead($lead->salesteam); 
         $manager=true;

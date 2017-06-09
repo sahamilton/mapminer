@@ -5,6 +5,7 @@ use App\State;
 use App\Company;
 use App\Model;
 use Illuminate\Http\Request;
+
 class BaseController extends Controller {
 	
 	public $userServiceLines;

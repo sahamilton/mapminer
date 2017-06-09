@@ -5,6 +5,7 @@ use App\Location;
 use App\Company;
 use App\Branch;
 use App\Watch;
+use App\Http\Requests\FindMeFormRequest;
 
 class GeoCodingController extends BaseController {
 	
@@ -24,27 +25,19 @@ class GeoCodingController extends BaseController {
 	/**
 	 * @return [type]
 	 */
-	public function findMe() {
+	public function findMe(FindMeFormRequest $request) {
 	
-		$data = \Input::all();
-
-		$rules = array('address'=>array('required'));
-
-		$validation = \Validator::make($data,$rules);
-		if($validation->fails()){
-			return \Redirect::back()->withErrors($validation)->withInput();
-		}
+		$data = $request->all();
 		
-		
+				
 		//$data['address'] = NULL;
 		if(isset($data['address'])) {
 			$address = urlencode($data['address']);
 			
 		}
 		if(! $data['lat']){
+			$geocode = app('geocoder')->geocode($request->get('address'))->get();
 
-			$geocode = \Geocoder::geocode($address)->get();
-		
 			if(! $geocode){
 
 				return redirect()->back()->withInput()->with('message', 'Unable to Geocode that address');
@@ -65,7 +58,7 @@ class GeoCodingController extends BaseController {
 		$watchlist = array();
 		$data['vertical'] = NULL;
 		$data = $this->getViewData($data);
-		
+
 		$filtered = $this->location->isFiltered(['companies','locations'],['vertical','business','segment'],NULL);
 
 		if($data['view'] == 'list') {
@@ -156,13 +149,13 @@ class GeoCodingController extends BaseController {
 			
 			case 'location':
 			
-			return $result = $this->location->findNearbyLocations($data['lat'],$data['lng'],$data['distance'],$number=1,$company,$this->userServiceLines);
+			return $result = $this->location->findNearbyLocations($data['lat'],$data['lng'],$data['distance'],$number=null,$company,$this->userServiceLines);
 			
 			break;
 			
 			case 'branch':
 
-			return $result = $this->branch->findNearbyBranches($data['lat'],$data['lng'],$data['distance'],$number=1,$this->userServiceLines);
+			return $result = $this->branch->findNearbyBranches($data['lat'],$data['lng'],$data['distance'],$number=null,$this->userServiceLines);
 			
 			
 			break;

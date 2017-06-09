@@ -30,7 +30,12 @@ body {
 		border-top:4px solid #E77C22;
 		color:#04AFEF;
       }
-    
+    .message{
+
+    	border:solid grey 1px;
+    	padding:10px;
+    	margin-bottom:10px;
+    }
 	.navbar,
 	.navbar-default,
 	.navbar-inverse,

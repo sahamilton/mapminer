@@ -7,24 +7,24 @@
 <!---- Tab message -->
 <ul class="nav nav-tabs">
   <li class="active"><a data-toggle="tab" href="#home">Message</a></li>
-  <li><a data-toggle="tab" href="#menu1">Sales Team ({{count($salesteam)}}</a></li>
+  <li><a data-toggle="tab" href="#menu1">Sales Team ({{count($salesteam)}})</a></li>
   
 
 </ul>
 
 <div class="tab-content">
   <div id="home" class="tab-pane fade in active">
-  <div>{!! $message !!}</div>
+  <div class="message">{!! $message !!}</div>
   <form id="campaignmessage" action="{{route('sendcampaign.message',$activity->id)}}" method="post">
   {{csrf_field()}}
-  <button class='disabled'>Edit Text</button>
+  <button class='disabled' >Edit Text</button>
 	<div id='message' style="display:none" class="form-group{{ $errors->has('description') ? ' has-error' : '' }}">
 	<label for="description">Campaign Message</label>
 
 	<textarea required class='summernote' data-error="Please provide some description of this campaign" name="message">{!!old('message') ? old('message') : $message !!}</textarea>
 	{!! $errors->first('message', '<p class="help-block">:message</p>') !!}
 	</div>
-  <input type="submit" value="Send message to team" />
+  <input class="btn btn-warning" type="submit" value="Send message to team" />
   </form>
 </div>
   <div id="menu1" class="tab-pane fade">

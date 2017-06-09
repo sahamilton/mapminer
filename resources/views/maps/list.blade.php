@@ -22,7 +22,11 @@
 
 @include('maps/partials/_form')
 @include('partials.advancedsearch')
-<table id='sorttable' class ='table table-bordered table-striped table-hover dataTable'><thead>
+
+@if($data['type']=='branch')
+	@include('maps.branchlist')
+@else
+        <table id='sorttable' class ='table table-bordered table-striped table-hover dataTable'><thead>
 		 @foreach($fields as $key=>$value)
 			<th><span>{{$key}}</span>
 			<!-- @if ($key == 'Watch')
@@ -34,8 +38,8 @@
 			
 		@endforeach
 		</thead>
-
         @foreach($data['result'] as $row)
+       
 			<?php reset ($fields);?>
 			<tr>
 			 @foreach($fields as $key=>$field)
@@ -98,7 +102,7 @@
 			@endforeach
 			</tr>
 		@endforeach
-        
+        @endif
 </table>
 @include('partials/_scripts')
 

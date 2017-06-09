@@ -15,7 +15,7 @@ class SearchFilter extends NodeModel {
 
 
 
-public $tables = ['companies','locations'];
+  public $tables = ['companies','locations'];
   //////////////////////////////////////////////////////////////////////////////
 
   //

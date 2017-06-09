@@ -1,6 +1,9 @@
 <?php
 namespace App\Http\Controllers;
 use App\SearchFilter;
+use Illuminate\Http\Request;
+use App\Http\Requests\SearchFiltersFormRequest;
+
 class SearchFiltersController extends BaseController {
 
 	public $filter;
@@ -33,7 +36,7 @@ class SearchFiltersController extends BaseController {
 	public function create()
 	{
 		//$parents = $this->filter->orderBy('lft')->get(array('id', 'filter','depth'));
-		$parents = SearchFilter::getNestedList('filter','id','    .');
+		$parents = $this->filter->getNestedList('filter','id','    .');
 		//$parents = $this->filter->select('filter', 'id','depth')->orderBy('lft')->get();
 
 		return response()->view('filters.create',compact('parents'));
@@ -44,9 +47,9 @@ class SearchFiltersController extends BaseController {
 	 *
 	 * @return Response
 	 */
-	public function store()
+	public function store(SearchFiltersFormRequest $request)
 	{
-		$data = \Input::all();
+		$data = $request->all();;
 		$data['color'] = str_replace("#",'',$data['color']);
 		if(isset($data['filterOption']))
 		{
@@ -56,17 +59,12 @@ class SearchFiltersController extends BaseController {
 			$data['searchcolumn'] = $fields[1];
 			
 		}
-		$validator = Validator::make($data, $this->filter->rules);
-
-		if ($validator->fails())
-		{
-			return \Redirect::back()->withErrors($validator)->withInput();
-		}
 		
+	
 		$child2 = $this->filter->create($data);
 		$child2->makeChildOf($data['parent']);
 		
-		return \Redirect::route('admin.searchfilters.index');
+		return redirect()->route('searchfilters.index');
 	}
 
 	/**
@@ -88,12 +86,12 @@ class SearchFiltersController extends BaseController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function edit($filter)
+	public function edit($id)
 	{
 
-		
+		$filter = $this->filter->find($id);
 		$parents = SearchFilter::getNestedList('filter','id','    .');
-		
+	
 		return response()->view('filters.edit', compact('filter','parents'));
 	}
 
@@ -103,10 +101,10 @@ class SearchFiltersController extends BaseController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update($filter)
+	public function update(SearchFiltersFormRequest $request, $id)
 	{
-		
-		$data = \Input::all();
+		$filter=$this->filter->findOrFail($id);
+		$data = $request->all();
 		$data['color'] = str_replace("#",'',$data['color']);
 		if(isset($data['filterOption']))
 		{
@@ -116,16 +114,11 @@ class SearchFiltersController extends BaseController {
 			$data['searchcolumn'] = $fields[1];
 			
 		}
-		$validator = Validator::make($data, $this->filter->rules);
-
-		if ($validator->fails())
-		{
-			return \Redirect::back()->withErrors($validator)->withInput();
-		}
+		
 		$filter->update($data);
 		$filter->makeChildOf($data['parent']);
 
-		return \Redirect::route('admin.searchfilters.index');
+		return redirect()->route('searchfilters.index');
 	}
 
 	/**
@@ -139,7 +132,7 @@ class SearchFiltersController extends BaseController {
 		$this->filter = $this->filter->findOrFail($id);
 		$this->filter->delete();
 
-		return \Redirect::route('admin.searchfilters.index');
+		return redirect()->route('searchfilters.index');
 	}
 	
 	public function filterForm()
@@ -156,7 +149,7 @@ class SearchFiltersController extends BaseController {
 	{
 		$filter = $this->filter->findOrFail($id);
 		$filter->moveLeft(); 
-		return \Redirect::route('admin.searchfilters.index');
+		return redirect()->route('searchfilters.index');
 	}
 
 
@@ -165,12 +158,12 @@ class SearchFiltersController extends BaseController {
 	{
 		$filter = $this->filter->findOrFail($id);
 		$filter->moveRight(); 
-		return \Redirect::route('admin.searchfilters.index');
+		return redirect()->route('searchfilters.index');
 	}
 	
-	public function setSessionSearch()
+	public function setSessionSearch(Request $request)
 	{
-		$data = \Input::all();
+		$data = $request->all();
 		\Session::forget('Search');
 		$this->setSearch($data);
 	}
@@ -183,10 +176,10 @@ class SearchFiltersController extends BaseController {
 	
 	}
 	
-	public function getAccountSegments()
+	public function getAccountSegments(Request $request)
 	{
-		$company = \Input::all();
-		$vertical = Company::where('id','=',$company['id'])->pluck('vertical');
+		$company = $request->all();
+		$vertical = \App\Company::where('id','=',$company['id'])->pluck('vertical');
 		$segments = $this->filter->where('parent_id','=',$vertical)->orderBy('filter')->pluck('filter','id');
 
 		//$i=0;

@@ -49,8 +49,9 @@ class SalesActivityController extends BaseController
     public function index()
     {
         $activities = $this->activity->with('salesprocess','vertical')->get();
-        
-        return response()->view('salesactivity.index',compact('activities'));
+        $calendar = \Calendar::addEvents($activities);
+
+        return response()->view('salesactivity.index',compact('activities','calendar'));
     }
 
     /**
@@ -264,7 +265,11 @@ class SalesActivityController extends BaseController
     }
 
     private function filterSalesReps( $verticals){
-
+        // find sales reps (user role = 5)
+        // 
+        // The filter by vertical if they have a vertical
+        // or include them if they don't
+        //  This doesnt include the not specified
         return Person::with('userdetails','reportsTo','reportsTo.userdetails')
         ->whereHas('userdetails.roles',function ($q){
             $q->where('role_id','=',5);

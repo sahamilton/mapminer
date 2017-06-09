@@ -1,7 +1,10 @@
 <?php
 namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
 use App\Branch;
 use App\Serviceline;
+use App\Location;
 use App\User;
 use App\State;
 use App\Person;
@@ -223,11 +226,11 @@ class BranchesController extends BaseController {
 	 *
 	 * @return Response json
 	 */
-	public function map($id)
+	public function map(Request $request, $id)
 	{
 		
 		$locations = Location::where('branch_id','=',$id)->get();
-		return response()->json(array('error'=>false,'locations' =>$locations->toArray()),200)->setCallback(\Input::get('callback'));
+		return response()->json(array('error'=>false,'locations' =>$locations->toArray()),200)->setCallback($request->get('callback'));
 		
 	}
 
@@ -329,7 +332,7 @@ class BranchesController extends BaseController {
 	 * @param  int $id
 	 * @return Response XML
 	 */
-	public function getLocationsServed($id)
+	public function getLocationsServed(Request $request, $id)
 	{
 		// No longer used.  Based on hard assignment of branch to location
 		
@@ -337,7 +340,7 @@ class BranchesController extends BaseController {
 		->with('locations','locations.company')
 		->findOrFail($id);
 
-		if($co = \Input::get('co'))
+		if($co = $request->get('co'))
 			{
 				$result = $result->where('locations.company.companyname', 'like',$co)->get();
 			}
@@ -350,11 +353,11 @@ class BranchesController extends BaseController {
 	 *
 	 * @param  int $id
 	 * @return Response XML
-	 */	public function getNearbyBranches($id)
+	 */	public function getNearbyBranches(Request $request, $id)
 	
 	{
-		if (\Input::get('d')) {
-			$distance = \Input::get('d');
+		if ($request->has('d')) {
+			$distance = $request->get('d');
 		}else{
 			$distance = '50';
 		}
@@ -376,13 +379,13 @@ class BranchesController extends BaseController {
 	 * @param  int $state
 	 * @return Response XML
 	 */
-	public function statemap($state=NULL)
+	public function statemap(Request $request, $state=NULL)
 	{
 		
 		$servicelines = $this->serviceline->whereIn('id',$this->userServiceLines)->get();
 
-		if(!isset($state)){
-			$state=\Input::get('state');
+		if(! isset($state)){
+			$state=$request->get('state');
 			
 		}
 		
@@ -471,11 +474,11 @@ class BranchesController extends BaseController {
 	
 	
 	
-	public function state($statecode=NULL) {
+	public function state(Request $request, $statecode=NULL) {
 		
 
 		if(! $statecode){
-			$statecode = \Input::get('state');
+			$statecode = $request->get('state');
 		}
 		
 		$branches = $this->branch
@@ -514,13 +517,15 @@ class BranchesController extends BaseController {
 		
 	}
 	
-	public function import()
+	public function import(Request $request)
 	{
 
 		$servicelines = $this->serviceline->whereIn('id',$this->userServiceLines)
 				->pluck('ServiceLine','id');
 		return response()->view('branches.import', compact('servicelines'));
 	}
+
+	 
 	public function branchImport() {
 
 

@@ -153,7 +153,8 @@ class AdminUsersController extends BaseController {
     {
         
         $user = $this->user->create($request->all());
-	        $user->confirmation_code = md5(uniqid(mt_rand(), true));
+        $user->seeder();
+        $user->confirmation_code = md5(uniqid(mt_rand(), true));
         $user->password = \Hash::make(\Input::get('password'));
         if ($request->has('confirm')) {
             $user->confirmed = $request->get('confirm');

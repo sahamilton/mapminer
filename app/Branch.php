@@ -152,9 +152,12 @@ class Branch extends Model {
 				  AND longpoint + (r / (69 * COS(RADIANS(latpoint))))
 			  ) d
 			 WHERE distance_in_mi <= r
-			 ORDER BY distance_in_mi
+			 ORDER BY distance_in_mi";
+			 if($number){
+			 	$query ="limit " . $number; 
+			 }
 
-		limit " . $number; 
+		
 		$query = str_replace("\r\n",' ',$query);
 
 		$result = \DB::select($query);	

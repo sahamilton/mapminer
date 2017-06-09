@@ -67,9 +67,10 @@ class MapsController extends BaseController {
 	public function findLocalBranches($distance=NULL,$latlng = NULL) {
 		
 		$location =explode(":",$latlng);
-	
-		$result = $this->branch->findNearbyBranches($location[0],$location[1],$distance,$number=5,$this->userServiceLines);
-		echo $this->branch->makeNearbyBranchXML($result);
+		
+		$branches = $this->branch->findNearbyBranches($location[0],$location[1],$distance,$number=null,$this->userServiceLines);
+
+		return response()->view('maps.partials.branchxml', compact('branches'))->header('Content-Type', 'text/xml');
 		
 	}
 	
@@ -78,12 +79,9 @@ class MapsController extends BaseController {
 		
 		$geo =explode(":",$latlng);
 
-		
-		$result = $this->location->findNearbyLocations($geo[0],$geo[1],$distance,$number=1,$company,$this->userServiceLines);
-		$content = view('locations.xml', compact('result'));
+		$result = $this->location->findNearbyLocations($geo[0],$geo[1],$distance,$number=null,$company,$this->userServiceLines);
+		return response()->view('locations.xml', compact('result'))->header('Content-Type', 'text/xml');
 
-        return response($content, 200)
-            ->header('Content-Type', 'text/xml');
 		//$this->location->makeNearbyLocationsXML($result);
 		
 	}

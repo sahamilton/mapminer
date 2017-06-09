@@ -1,4 +1,4 @@
-@extends('site/layouts/default')
+@extends('admin/layouts/default')
 @section('content')
 <h1>Add New Filter</h1>
 	@if (count($errors)>0)

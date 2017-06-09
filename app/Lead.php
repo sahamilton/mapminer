@@ -69,10 +69,13 @@ class Lead extends Model
     public function leadOwner($id){
 
       $ownStatuses = [2,5,6];
-      $lead = $this->with('salesteam')->whereHas('salesteam',function($q) use($ownStatuses,$id) {
-        $q->whereIn('status_id',$ownStatuses);
-      })
-      ->find($id); 
+      $lead = $this->with('salesteam')
+          ->where('datefrom','<=',date('Y-m-d'))
+          ->where('dateto','>=',date('Y-m-d'))
+          ->whereHas('salesteam',function($q) use($ownStatuses,$id) {
+            $q->whereIn('status_id',$ownStatuses);
+          })
+          ->find($id); 
       if(isset($lead)){
         foreach($lead->salesteam as $team){
 
@@ -86,15 +89,19 @@ class Lead extends Model
 
     public function ownsLead($id){
       $ownStatuses = [2,5,6];
-       if($lead = $this->with('salesteam')->whereHas('salesteam',function($q) use($ownStatuses) {
-          $q->whereIn('status_id',$ownStatuses);
-        })->find($id)) {
+      if($lead = $this->with('salesteam')
+          ->where('datefrom','<=',date('Y-m-d'))
+          ->where('dateto','>=',date('Y-m-d'))
+          ->whereHas('salesteam',function($q) use($ownStatuses) {
+              $q->whereIn('status_id',$ownStatuses);
+            })
+          ->find($id)) {
 
-       foreach ($lead->salesteam as $team){
-          if(in_array($team->pivot->status_id, $ownStatuses)){
-            return $team;
-          }
-       }
+           foreach ($lead->salesteam as $team){
+              if(in_array($team->pivot->status_id, $ownStatuses)){
+                return $team;
+              }
+           }
      }
      return null;
     }
@@ -105,6 +112,8 @@ class Lead extends Model
           $q->where('person_id','=',auth()->user()->person->id);
         
         })
+        ->where('datefrom','<=',date('Y-m-d'))
+        ->where('dateto','>=',date('Y-m-d'))
         ->whereHas('vertical',function($q) use($verticals){
           if(isset($verticals)){
             $q->whereIn('id',$verticals);
@@ -122,7 +131,9 @@ class Lead extends Model
 
 
     public function leadsByStatus($id){
-      return $this->whereHas('salesteam',function($q) use($id) {
+      return $this->where('datefrom','<=',date('Y-m-d'))
+            ->where('dateto','>=',date('Y-m-d'))
+            ->whereHas('salesteam',function($q) use($id) {
           $q->whereIn('status_id',[$id]);
       })
       ->get();
