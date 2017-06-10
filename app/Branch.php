@@ -127,6 +127,8 @@ class Branch extends Model {
 		dd($query);
 
 		*/
+	
+
 				$query = "select  branchid,branchnumber,branchname,street,address2,city,state,zip,lat,lng, distance_in_mi,Serviceline as servicelines,
 			  CONCAT_WS(' / ',branchname,branchnumber) AS name FROM (
 			SELECT branches.id as branchid, branchnumber, branchname,street,address2,city,state,zip,lat,lng,r,
@@ -154,11 +156,12 @@ class Branch extends Model {
 			 WHERE distance_in_mi <= r
 			 ORDER BY distance_in_mi";
 			 if($number){
-			 	$query ="limit " . $number; 
+			 	$query.=" limit " . $number; 
 			 }
 
 		
 		$query = str_replace("\r\n",' ',$query);
+		$query = str_replace("\t",' ',$query);
 
 		$result = \DB::select($query);	
 

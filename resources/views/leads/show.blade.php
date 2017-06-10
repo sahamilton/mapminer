@@ -25,9 +25,10 @@
 		@endforeach
 		</ul>
 	</div>
-<div class="col-md-6 col-md-offset-1">
-@if (count($lead->salesteam) > 0)
 
+@if (count($lead->salesteam) > 0)
+<p><strong>Closest Branch:</strong><a href= "{{route('branches.show',$branches[0]->branchid)}}">{{$branches[0]->branchname}}</a></p>
+<div>
 	<table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
 		<thead>
 			<th>Sales Rep</th>
@@ -40,16 +41,13 @@
 			<td><a href="{{route('leads.person',$team->id)}}" title="See all leads associated with {{$team->postName()}}">{{$team->postName()}}</a></td>
 			<td>{{$sources[$team->pivot->status_id]}}</td>
 
+
+			
 			</tr>
 
 			@endforeach
 		</tbody>
 	</table>
-
-@else
-<a href="{{route('leads.leadassign',$lead->id)}}"><button class=' btn btn-info'>Assign Lead</button></a>
-@endif
-</div>
 <h4><strong>Notes</strong></h4>
 
 @foreach ($lead->relatedNotes as $leadnote)
@@ -58,6 +56,65 @@
  --  {{$leadnote->writtenBy->person->postName()}}</p>
 
 @endforeach
+</div>
+@else
+<div>
+<form method="post" name="assignlead" action ="{{route('leads.assignbatch')}}" >
+{{csrf_field()}}
+<h4>Closest Sales Reps</h4>
+	<table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
+		<thead>
+			<th>Sales Rep</th>
+			<th>Distance (in miles)</th>
+			<th>Assign</th>
+
+		</thead>
+		<tbody>
+			@foreach ($people as $team)
+			<tr>
+			<td>
+				<a href="{{route('leads.person',$team->id)}}" title="See all leads associated with
+				{{$team->firstname . " " . $team->lastname}}"">
+				{{$team->firstname . " " . $team->lastname}}</a>
+			</td>
+
+			<td>{{number_format($team->distance_in_mi,0)}}</td>
+			<td><input type = "checkbox" name="salesrep[]" value="{{$team->id}}" /></td>
+			</tr>
+
+			@endforeach
+		</tbody>
+	</table>
+	<hr />
+	<h4>Closest Branches</h4>
+	<table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
+		<thead>
+			<th>Branch</th>
+			<th>Distance (in miles)</th>
+			<th>Assign</th>
+
+		</thead>
+		<tbody>
+			@foreach ($branches as $branch)
+			<tr>
+			<td>
+				<a href="{{route('branches.show',$branch->branchid)}}" title="See details of {{$branch->branchname}}">
+				{{$branch->branchname}}</a>
+			</td>
+
+			<td>{{number_format($branch->distance_in_mi,0)}}</td>
+			<td><input type = "radio" name="branch[]" value="{{$branch->branchid}}" /></td>
+			</tr>
+
+			@endforeach
+		</tbody>
+	</table>
+</div>
+<input type = 'submit' class=' btn btn-info' value ='Assign Lead' />
+</form>
+@endif
+
+
 </div>
 <div id="map" style="height:300px;width:500px;border:red solid 1px"/>
 </div>

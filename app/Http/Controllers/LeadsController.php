@@ -136,8 +136,16 @@ class LeadsController extends BaseController
             ->findOrFail($id);
 
         $rank = $this->lead->rankLead($lead->salesteam);
-
-        return response()->view('leads.show',compact('lead','sources','rank','history'));
+        $branch = new \App\Branch;
+            $branches = $branch->findNearbyBranches($lead->lat,$lead->lng,500,5,[5]);
+        if(count($lead->salesteam)==0){
+            $people = $this->person->findNearByPeople($lead->lat,$lead->lng,'5000',5,'Sales');
+    
+          
+        }
+        return response()->view('leads.show',compact('lead','sources','rank','people','branches'));
+        
+        
     }
 
     /**
@@ -356,7 +364,7 @@ class LeadsController extends BaseController
     
     
 
-    public function assignLeads($id = null){
+    public function assignLeads($id ){
       
         
 
@@ -398,5 +406,9 @@ class LeadsController extends BaseController
            
         }
         return redirect()->route('leadsource.show',$sid)->with('status',$count . ' leads assigned');
+    }
+
+    public function batchAssignLeads(Request $request){
+        dd($request->all());
     }
 }
