@@ -110,6 +110,8 @@
 		</tbody>
 	</table>
 </div>
+<input type="hidden" name="lead_id" value="{{$lead->id}}" />
+
 <input type = 'submit' class=' btn btn-info' value ='Assign Lead' />
 </form>
 @endif
