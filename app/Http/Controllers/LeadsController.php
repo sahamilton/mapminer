@@ -409,6 +409,14 @@ class LeadsController extends BaseController
     }
 
     public function batchAssignLeads(Request $request){
-        dd($request->all());
+        
+        $lead = $this->lead->findOrFail($request->get('lead_id'));
+        if($request->has('salesrep')){
+            foreach($request->get('salesrep') as $key=>$value){
+                $lead->salesteam()->attach($value,['status_id']=>1]);
+            }
+        }
+
+        return redirect()->route('lead.show',$request->get('lead_id'));
     }
 }
