@@ -417,6 +417,6 @@ class LeadsController extends BaseController
             }
         }
 
-        return redirect()->route('lead.show',$request->get('lead_id'));
+        return redirect()->route('leads.show',$request->get('lead_id'));
     }
 }
