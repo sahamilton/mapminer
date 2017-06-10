@@ -91,7 +91,8 @@
 		<thead>
 			<th>Branch</th>
 			<th>Distance (in miles)</th>
-			<th>Assign</th>
+			<th>Assign
+			<input type = "radio" name="branch[]" value="" /></th>
 
 		</thead>
 		<tbody>
