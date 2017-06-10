@@ -14,7 +14,8 @@
 		</div>
         <?php $data['address'] = "Lat:" .number_format($data['lat'],3) . "  Lng:" .number_format($data['lng'],3) ;
 $data['distance'] = '100';?>
-        @include('maps/partials/_form')
+@include('maps/partials/_form')
+@include('partials/advancedsearch')
          <div id="form-container">
         <form id="user-location" method="post" action="#">
             <div id="form-input">

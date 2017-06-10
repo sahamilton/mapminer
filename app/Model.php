@@ -234,31 +234,34 @@ public function _import_csv($filename, $table,$fields)
 	
 	public function getSearchKeys($searchtable, $searchcolumn)
 	{
+
 		if(! \Session::has('Search')){
 			
 			return $keys = FALSE;
 		}
-		
+
 		$filtered= $this->isFiltered(['companies','locations'],['vertical','segment','businesstype']);
 		if(! $filtered){
 			
 			return $keys = FALSE;
 		}
 		// get the selected session keys
+		
 		$searchKeys = array_flatten(\Session::get('Search'));
-		
-		
+		if(empty($searchKeys)){
+			return $keys =FALSE;
+		}
 		
 
 		// get all the keys for the selected table and columns
 		if(is_array($searchcolumn) ) {
 			$tableKeys = SearchFilter::whereIn('searchtable',$searchtable)
 						->whereIn('searchcolumn',$searchcolumn)
-						->pluck('id');
+						->pluck('id')->toArray();
 			
 		}else{
 			$tableKeys = SearchFilter::whereIn('searchtable',$searchtable)
-						->pluck('id');
+						->pluck('id')->toArray();
 		}
 		
 		$tableKeys = array_intersect($tableKeys,$searchKeys);
@@ -282,7 +285,9 @@ public function _import_csv($filename, $table,$fields)
 		
 		
 		$searchFilters= array_flatten(\Session::get('Search'));
-
+		if(empty($searchFilters)){
+			return $filtered;
+		}
 		// first get the group filters
 		if(! isset($vertical)){
 			
@@ -365,7 +370,7 @@ public function _import_csv($filename, $table,$fields)
 				
 			}
 		}else{
-			$nullFilters = SearchFilter::where('canbenull','=',1)->pluck('id');
+			$nullFilters = SearchFilter::where('canbenull','=',1)->pluck('id')->toArray();
 			if(is_array($searchKeys) && count(array_intersect($searchKeys, $nullFilters)) >0 ){
 			
 				$nullable = TRUE;

@@ -17,7 +17,8 @@
             </div>
             <div id='form' class="modal-body">
                
-                <form id ='filterForm' >
+                <form id ='filterForm' action = 'post' method="{{route('setSearch')}}" >
+                {{csrf_field()}}
 
 @foreach($tree->getDescendants() as $descendant)
 

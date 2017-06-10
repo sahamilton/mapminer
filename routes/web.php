@@ -188,7 +188,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 		Route::get('api/watchmap',['as'=>'api.watchmap','uses'=>'WatchController@watchmap']);
 
-		Route::match(['post','get'],'api/advancedsearch',['as'=>'setSearch','uses'=>'SearchFiltersController@setSessionSearch']);	
+		Route::match(['get','post'],'api/advancedsearch',['as'=>'setSearch','uses'=>'SearchFiltersController@setSessionSearch']);	
 		Route::get('documents/select',['as'=>'documents.select','uses'=>'DocumentsController@select']);
 		Route::post('documents/select',['as'=>'documents.select','uses'=>'DocumentsController@getDocuments']);
 		Route::get('rank',['as'=>'api.rank','uses'=>'DocumentsController@rank']);

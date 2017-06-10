@@ -12,10 +12,7 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::group(['middleware' => 'auth'], function () {
-	Route::get('api//user', function (Request $request) {
-	    return $request->user();
-	});
-
-	
-});
+Route::get('/user', function (Request $request) {
+    return $request->user();
+})->middleware('auth:api');
+//Route::post('advancedsearch',['as'=>'setSearch','uses'=>'SearchFiltersController@setSessionSearch'])->middleware('auth:api');

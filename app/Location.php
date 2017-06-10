@@ -294,9 +294,9 @@ class Location extends Model {
 	{
 			$keys = array();
 			$searchKeys = array();
-						
+					
 			$keys['vertical'] = $this->getSearchKeys(['companies'],['vertical']);
-			
+		
 			if(count($keys['vertical']) > 0){
 				
 				$searchKeys['vertical']['keys'] = implode("','",$keys['vertical']);
