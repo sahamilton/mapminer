@@ -413,7 +413,7 @@ class LeadsController extends BaseController
         $lead = $this->lead->findOrFail($request->get('lead_id'));
         if($request->has('salesrep')){
             foreach($request->get('salesrep') as $key=>$value){
-                $lead->salesteam()->attach($value,['status_id']=>1]);
+                $lead->salesteam()->attach($value,['status_id'=>1]);
             }
         }
 
