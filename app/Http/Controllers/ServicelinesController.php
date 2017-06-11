@@ -90,8 +90,8 @@ class ServicelinesController extends BaseController {
 			return response()->view('servicelines.show', compact('serviceline','branches','fields'));
 		}else{
 			
-dd('were here');
-			$companies = Company::with('industryVertical','managedBy')
+
+			$companies = Company::with('managedBy','managedBy.userdetails','industryVertical','serviceline','countlocations')
 					->whereHas('serviceline', function($q) use ($id)
 				{
 					$q->where('serviceline_id', '=',$id)
@@ -99,23 +99,12 @@ dd('were here');
 				
 				})
 			->get();
+			$locationFilter = 'both';
 			
-			$fields = array('Business Name'=>'businessname',
-					'Street'=>'street',
-					'City'=>'city',
-					'State'=>'state',
-					'ZIP'=>'zip',
-					'Segment'=>'segment',
-					'Business Type'=>'businesstype');
-		
-		if (auth()->user()->hasRole('Admin')) {
-			$fields['Actions']='actions';
-		}
-		$fields = array('Company'=>'companyname','Manager'=>'manager','Email'=>'email','Vertical'=>'vertical','Service Lines'=>'serviceline');
 		$filtered=NULL;
 		$title = 'All ' .$serviceline->ServiceLine .' Accounts';
 		
-		return response()->view('companies.index', compact('companies','fields','title','filtered'));
+		return response()->view('companies.index', compact('companies','fields','title','filtered','locationFilter'));
 		}
 	}
 
