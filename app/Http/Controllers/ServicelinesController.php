@@ -90,7 +90,7 @@ class ServicelinesController extends BaseController {
 			return response()->view('servicelines.show', compact('serviceline','branches','fields'));
 		}else{
 			
-
+dd('were here');
 			$companies = Company::with('industryVertical','managedBy')
 					->whereHas('serviceline', function($q) use ($id)
 				{

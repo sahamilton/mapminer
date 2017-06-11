@@ -7,6 +7,7 @@ use App\Company;
 use App\Location;
 use App\Pagination;
 use App\SearchFilter;
+use App\Serviceline;
 use Illuminate\Http\Request;
 use App\Http\Requests\CompanyFormRequest;
 class CompaniesController extends BaseController {
@@ -51,7 +52,7 @@ class CompaniesController extends BaseController {
 		
 
 	
-		return response()->view('companies.index', compact('companies','fields','title','filtered','locationFilter'));
+		return response()->view('companies.index', compact('companies','title','filtered','locationFilter'));
 	}
 	
 
@@ -70,7 +71,7 @@ class CompaniesController extends BaseController {
 				{
 					$query->whereNull('vertical');
 				})
-				->with('managedBy','industryVertical')
+				->with('managedBy','managedBy.userdetails','industryVertical','serviceline')
 				->whereHas('serviceline', function($q){
 					    $q->whereIn('serviceline_id',$this->userServiceLines);
 
@@ -80,7 +81,7 @@ class CompaniesController extends BaseController {
 			}else{
 				$companies = $this->company
 				->whereIn('vertical',$keys)
-				->with('managedBy','managedBy.userdetails','industryVertical')
+				->with('managedBy','managedBy.userdetails','industryVertical','serviceline')
 				->whereHas('serviceline', function($q){
 					    $q->whereIn('serviceline_id', $this->userServiceLines);
 
@@ -93,7 +94,7 @@ class CompaniesController extends BaseController {
 			
 
 			$companies = $this->company
-			->with('managedBy','managedBy.userdetails','industryVertical','countlocations')
+			->with('managedBy','managedBy.userdetails','industryVertical','countlocations','serviceline')
 			->whereHas('serviceline', function($q) {
 					    $q->whereIn('serviceline_id', $this->userServiceLines);
 
