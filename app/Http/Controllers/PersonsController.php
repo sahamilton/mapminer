@@ -169,6 +169,8 @@ class PersonsController extends BaseController {
 				'directReports.branchesServiced',
 				'reportsTo',
 				'managesAccount',
+				'managesAccount.countlocations',
+				'managesAccount.industryVertical',
 				'userdetails',
 				'userdetails.roles',
 				'branchesServiced',
