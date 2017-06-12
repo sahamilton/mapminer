@@ -134,6 +134,7 @@ class Person extends NodeModel {
 										 * SIN(RADIANS(lat)))) AS distance_in_mi
 					 FROM 
 					 	persons,users,role_user,roles
+
 					 JOIN (
 							SELECT  ".$lat."  AS latpoint,  ".$lng." AS longpoint, ".$distance." AS r
 					   ) AS p
@@ -161,7 +162,7 @@ class Person extends NodeModel {
 			 }
 			$query = str_replace("\r\n",' ',$query);
 			$query = str_replace("\t",'',$query);
-	
+
 			$result = \DB::select($query);
 
 		return $result;
