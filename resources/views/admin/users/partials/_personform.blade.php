@@ -94,15 +94,48 @@
             <!---./ Managers ---->
             
             <!--- Branches ---->
-            <div class="form-group {!! $errors->has('branches') ? 'has-error' : '' !!}">
-	                <label class="col-md-2 control-label" for="roles">Branch Association</label>
-	                <div class="col-md-6">
+
+
+<div class="form-group {!! $errors->has('branches') ? 'has-error' : '' !!}">
+	<label class="col-md-2 control-label" for="roles">Branch Association</label>
+	<div class="col-md-6">
+
+		<div class="form-group{{ $errors->has('branches)') ? ' has-error' : '' }}">
+		<label class="col-md-4 control-label">Branch Association</label>
+			<div class="col-md-6">
+				<select multiple class="form-control" name='branches[]'>
+
+					@foreach ($branches as $key=>$value))
+						@if(isset($branchesServiced) && in_array($key,$branchesServiced))
+							<option selected value="{{$key}}">{{$value}}</option>
+						@else
+							<option value="{{$key}}">{{$value}}</option>
+						@endif
+					@endforeach
+				</select>
+				<span class="help-block">
+				<strong>{{ $errors->has('branches') ? $errors->first('branches') : ''}}</strong>
+				</span>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+
+
+
+
+
+
+<!--
 		                {{Form::select('branches[]',$branches, isset($branchesServiced) ? $branchesServiced : '' ,array('class'=>"form-control",'multiple'=>true))}}
                      <span class="help-block">
 							Select the branches associated with this user.
 						</span>
 	            	</div>
-				</div> 
+				</div> -->
 				<!---- or entr comma separated string -->  
 				<div class="form-group {!! $errors->has('branchstring') ? 'has-error' : '' !!}">
 					<label class="col-md-2 control-label" for="branchstring">Branches</label>

@@ -8,29 +8,30 @@
 @if(count($people)>0)
 <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
-    <th>Employee Id</th>
-    <th>First Name</th>
-	<th>Last Name</th>
-	<th>Role</th>
-	<th>Email</th>
-	<th>Distance</th>
+        <th>Employee Id</th>
+        <th>Sales Rep</th>
+        <th>Role</th>
+        <th>Email</th>
+        <th>Location</th>
+        <th>Distance</th>
     </th>
 
     </thead>
     <tbody>
-   @foreach($people  as $person)
-   
-    <tr> 
-    <td>{{$person->employee_id}}</td>
-			  
-    <td><a href="{{route('salesorg',$person->id)}}">{{$person->firstname}}</a></td>
-    <td>{{$person->lastname}}</td> 
-    <td>{{$person->role}}</td>
-     <td>{{$person->email}}</td> 
-     <td>{{number_format($person->distance_in_mi,2)}}</td> 
-     </tr>
- @endforeach
-</tbody>
+        @foreach($people  as $person)
+
+            <tr> 
+                <td>{{$person->employee_id}}</td>
+
+                <td><a href="{{route('salesorg',$person->id)}}"
+                title = "See {{$person->firstname}}'s sales coverage area">{{$person->firstname}} {{$person->lastname}}</a></td> 
+                <td>{{$person->role}}</td>
+                <td><a href="mailto:{{$person->email}}" title = "Email {{$person->firstname}} {{$person->lastname}}">{{$person->email}}</a></td> 
+                <td>{{$person->city}},{{$person->state}}</td>
+                <td>{{number_format($person->distance_in_mi,2)}}</td> 
+            </tr>
+        @endforeach
+    </tbody>
 </table>
 @endif
 </div>

@@ -219,7 +219,7 @@ class AdminUsersController extends BaseController {
         	$mode = 'edit';
 			$managerlist = $this->getManagerList();
 			
-			$branchesServiced = $user->person->branchesServiced->pluck('id');
+			$branchesServiced = $user->person->branchesServiced->pluck('id','branchnumber')->toArray();
 			
 			// Ether get close branches 
 			
@@ -228,8 +228,8 @@ class AdminUsersController extends BaseController {
 			$verticals = SearchFilter::where('searchcolumn','=','vertical')
 			->where('type','!=','group')			
 			->pluck('filter','id');
-        
-             $verticals = ['0' => 'none'] + $verticals->toArray();
+            $servicelines = $this->person->getUserServiceLines();
+            $verticals = ['0' => 'none'] + $verticals->toArray();
         	return response()->view('admin.users.edit', compact('user', 'roles', 'permissions', 'verticals','title', 'mode','managerlist','servicelines','branches','branchesServiced'));
         }
         else
@@ -354,11 +354,11 @@ class AdminUsersController extends BaseController {
 				$branches[0] = 'none';
 				foreach($nearbyBranches as $nearbyBranch){
 
-					$branches[$nearbyBranch->branchid ]= $nearbyBranch->branchname;
+					$branches[$nearbyBranch->branchid ]= $nearbyBranch->branchname . "/" . $nearbyBranch->branchnumber;
 				}
 			// or all branches	
 			}else{
-				$branches = Branch::select(\DB::raw("CONCAT_WS(' / ',branchname,branchnumber) AS name"),'id')->pluck('name','id');
+				$branches = Branch::select(\DB::raw("CONCAT_WS(' / ',branchname,branchnumber) AS name"),'id')->pluck('name','id')->toArray();
 			}
             
 			return $branches;
