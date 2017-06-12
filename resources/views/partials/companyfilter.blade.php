@@ -1,7 +1,7 @@
 <form method = 'post' action ="{{route('company.filter')}}">
 <?php $selectors=['locations'=>'with Locations','nolocations'=>'without Locations','both'=>'Both'];
 ?>
-<input type="hidden" name="_token" value="<?php echo csrf_token(); ?>">
+{{csrf_field()}}
 
 <div class="form-group">
 {{Form::label($locationFilter,'Select Companies:',array('class'=>'control-label col-sm-2'))}}
