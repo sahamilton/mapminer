@@ -140,7 +140,7 @@ class CompaniesController extends BaseController {
 		
 		$this->company = $this->company->create($input);
 		$this->company->serviceline()->attach(\Input::get('serviceline'));
-		return \Redirect::route('company.index');
+		return redirect()->route('company.index');
 	}
 
 
@@ -155,7 +155,7 @@ class CompaniesController extends BaseController {
 	{
 		$this->company->destroy($id);
 
-		return \Redirect::route('company.index');
+		return redirect()->route('company.index');
 	}
 	
 	
@@ -216,7 +216,7 @@ class CompaniesController extends BaseController {
 		
 		$fields = array('Business Name'=>'businessname','Street'=>'street','City'=>'city','State'=>'state','ZIP'=>'zip','Segment'=>'segment','Business Type'=>'businesstype');
 		
-		if (\Auth::user()->hasRole('Admin')) {
+		if (auth()->user()->hasRole('Admin')) {
 			$fields['Actions']='actions';
 		}
 		
@@ -271,7 +271,7 @@ class CompaniesController extends BaseController {
 		
 		if (! $this->company->checkCompanyServiceLine($id,$this->userServiceLines))
 		{
-			return \Redirect::route('company.index');
+			return redirect()->route('company.index');
 		}
 		// this needs to be filtered
 		$states=array();
@@ -362,7 +362,7 @@ class CompaniesController extends BaseController {
 
 		if (! $this->company->checkCompanyServiceLine($id,$this->userServiceLines))
 		{
-			return \Redirect::route('company.index');
+			return redirect()->route('company.index');
 		}
 		$filtered = $this->locations->isFiltered(['locations'],['segment','businesstype']);
 		$keys = $this->locations->getSearchKeys(['locations'],['segment','businesstype']);
@@ -379,7 +379,7 @@ class CompaniesController extends BaseController {
 						'Phone'=>'phone',
 						'Watching'=>'watch');
 		$mywatchlist = $this->getWatchList();
-		if (\Auth::user()->hasRole('Admin')) {
+		if (auth()->user()->hasRole('Admin')) {
 			$fields['Actions']='actions';
 		}
 		
@@ -403,7 +403,7 @@ class CompaniesController extends BaseController {
 
 		if (! $this->company->checkCompanyServiceLine($id,$this->userServiceLines))
 		{
-			return \Redirect::route('company.index');
+			return redirect()->route('company.index');
 		}
 		
 		$filtered = $this->locations->isFiltered(['locations'],['segment','businesstype']);
@@ -424,7 +424,7 @@ class CompaniesController extends BaseController {
 						'Phone'=>'phone',
 						'Watching'=>'watch');
 		$mywatchlist = $this->getWatchList();
-		if (\Auth::user()->hasRole('Admin')) {
+		if (auth()->user()->hasRole('Admin')) {
 			$fields['Actions']='actions';
 		}
 		
@@ -605,7 +605,7 @@ class CompaniesController extends BaseController {
 		
 		if (! $this->company->checkCompanyServiceLine($id,$this->userServiceLines))
 		{
-			return \Redirect::route('company.index');
+			return redirect()->route('company.index');
 		}
 		$data = $this->getStateCompanyInfo($id,$state);
 
@@ -649,7 +649,7 @@ class CompaniesController extends BaseController {
 		$input['person_id'] = $this->getPersonID($input['user_id']);
 		$this->company->update($input);
 		$this->company->serviceline()->sync( $input['serviceline']);
-		return \Redirect::route('company.index');
+		return redirect()->route('company.index');
 	}
 
 	/**
@@ -668,7 +668,7 @@ class CompaniesController extends BaseController {
 		
 		$this->company->destroy($company);
 
-		return \Redirect::route('company.index');
+		return redirect()->route('company.index');
 	}
 	
 	
@@ -758,7 +758,7 @@ class CompaniesController extends BaseController {
 		
 		if (! $this->company->checkCompanyServiceLine($company[0]['id'],$this->userServiceLines))
 		{
-			return \Redirect::route('company.index');
+			return redirect()->route('company.index');
 		}
 		$data = $this->locations->where('company_id','=',$company[0]['id'])->get();
 		$fields =['id','businessname','street','suite','city','state','zip','company_id','lob','phone','contact','segment'];
