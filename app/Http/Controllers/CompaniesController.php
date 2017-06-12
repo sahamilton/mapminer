@@ -71,7 +71,7 @@ class CompaniesController extends BaseController {
 				{
 					$query->whereNull('vertical');
 				})
-				->with('managedBy','managedBy.userdetails','industryVertical','serviceline','countlocations',)
+				->with('managedBy','managedBy.userdetails','industryVertical','serviceline','countlocations')
 				->whereHas('serviceline', function($q){
 					    $q->whereIn('serviceline_id',$this->userServiceLines);
 
@@ -81,7 +81,7 @@ class CompaniesController extends BaseController {
 			}else{
 				$companies = $this->company
 				->whereIn('vertical',$keys)
-				->with('managedBy','managedBy.userdetails','industryVertical','serviceline','countlocations',)
+				->with('managedBy','managedBy.userdetails','industryVertical','serviceline','countlocations')
 				->whereHas('serviceline', function($q){
 					    $q->whereIn('serviceline_id', $this->userServiceLines);
 

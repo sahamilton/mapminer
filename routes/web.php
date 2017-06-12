@@ -62,18 +62,17 @@ Route::group(['middleware' => 'auth'], function () {
 			
 		
 	#Branches
-		
+		Route::get('/branches/state/{state?}', ['as'=>'branches.state','uses'=>'BranchesController@state']);
 		Route::post('/branches/state', ['as'=>'branches.state','uses'=>'BranchesController@state']);
+		Route::get('/branches/statemap/{state?}', ['as'=>'branches.statemap','uses'=>'BranchesController@statemap']);
 		Route::post('/branches/statemap', ['as'=>'branches.statemap','uses'=>'BranchesController@statemap']);
-		Route::get('/branches/state/{state?}', 'BranchesController@state');
-		Route::get('/branches/statemap/{state?}', 'BranchesController@statemap');
+		
+		Route::get('/branch/{branchId}/map', ['as'=>'branch.map','uses'=>'BranchesController@map']);
 		Route::get('/branches/map', ['as'=>'branches.map', 'uses'=>'BranchesController@mapall']);
 		Route::resource('branches','BranchesController',['only' => ['index', 'show']]);
 		
-		Route::get('/branch/{branchId}/map', 'BranchesController@map');
-		/*Route::get('api/location/branchnearby/{locationId}',function(){
-			dd('wtf');
-		});*/
+		
+		
 		
 		Route::get('branches/{branchId}/shownearby',['as' => 'shownearby.branch', 'uses' => 'BranchesController@showNearbyBranches']);
 		Route::get('branches/{state}/showstate', ['as' => 'showstate.branch','uses' => 'BranchesController@getStateBranches']);
@@ -256,6 +255,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 		Route::post('branches/bulkimport', ['as'=>'admin.branches.bulkimport', 'uses'=>'BranchesController@branchImport']);
 		Route::get('geocode', ['as'=>'admin.branches.geocode', 'uses'=>'BranchesController@geoCodeBranches']);
 		Route::get('branchmap', ['as'=>'admin.branches.genmap', 'uses'=>'BranchesController@rebuildBranchMap']);
+		Route::get('branch/destroy',['as'=>'branch.delete','uses'=>'BranchesController@destroy']);
 		Route::resource('branches','BranchesController',['except'=>['index','show']]);
 		
 		
