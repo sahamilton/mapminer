@@ -5,6 +5,7 @@ use App\Person;
 use App\Branch;
 use App\Company;
 use Excel;
+use Illuminate\Http\Request;
 
 class PersonsController extends BaseController {
 
