@@ -183,7 +183,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 		Route::get('api/geo',['as'=>'geo','uses'=>'GeoCodingController@index']);
 
-		Route::get('api/watchupdate',['as'=>'api.watchupdate', 'uses'=>'WatchController@watchupdate']);
+		
 
 		Route::get('api/watchmap',['as'=>'api.watchmap','uses'=>'WatchController@watchmap']);
 

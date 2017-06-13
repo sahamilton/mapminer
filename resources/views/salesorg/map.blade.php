@@ -1,6 +1,12 @@
 @extends('site.layouts.maps')
 @section('content')
-  <h1>{{$salesorg->firstname}} {{$salesorg->lastname}}</h1>
+  <h1>{{$salesorg->postName()}}</h1>
+<h4>{{$salesorg->userdetails->roles[0]->name}}</h4>
+<p><strong><span class="glyphicon glyphicon-phone-alt"> </span> Phone:</strong> {{$salesorg->phone}}</p>
+<p><strong><span class="glyphicon glyphicon-envelope"></span> Email:</strong> 
+<a href="mailto:{{$salesorg->userdetails->email}}" 
+title="Email {{$salesorg->postName()}}">
+{{$salesorg->userdetails->email}}</a></p>
   
   @if(count($salesorg->reportsTo)==1 && isset($salesorg->reportsTo->id))
   <h4>Reports to:<a href="{{route('salesorg',$salesorg->reportsTo->id)}}" 

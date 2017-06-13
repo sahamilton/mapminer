@@ -249,6 +249,7 @@ class LeadsController extends BaseController
             }
 
             $people = $this->findNearBy($data);
+            $people = $this->getIndustryAssociation($people);
 
 			return response()->view('leads.address',compact('people','data'));
 			
@@ -318,6 +319,14 @@ class LeadsController extends BaseController
         return response()->view('leads.batchimport',compact('sources','verticals'));
     }
     
+    public function getIndustryAssociation($people){
+        foreach ($people as $key=>$person){
+            $rep = Person::with('industryfocus')->find($person->id);
+            $people[$key]->industry = $rep->industryfocus->pluck('filter','id')->toArray();
+        }
+       
+        return $people;
+    }
 
     public function leadImport(BatchLeadImportFormRequest $request){
         

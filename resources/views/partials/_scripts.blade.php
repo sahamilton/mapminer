@@ -120,7 +120,7 @@ $(document).ready(function()
 				cache: false,
 				
 				url: '{{route('api.watchupdate')}}',
-				data: {id: id,action: action},
+				data: {id: id,action: action,api_token:'{{auth()->user()->api_token}}'},
 				
 				dataType: "xml",
 				

@@ -123,10 +123,10 @@ class Person extends NodeModel {
 	
 	
 	public function findNearByPeople($lat,$lng,$distance,$limit=null, $role=null){
-		$query = "SELECT id,firstname,lastname,lat,lng, email,distance_in_mi,employee_id,role
+		$query = "SELECT id,firstname,lastname,lat,lng, email,distance_in_mi,employee_id,role,city,state
 			  FROM (
 					SELECT DISTINCT persons.id as id, 
-						firstname,lastname,lat,lng,users.email as email, users.employee_id as employee_id, roles.name as role,r,
+						firstname,lastname,lat,lng,city,state,users.email as email, users.employee_id as employee_id, roles.name as role,r,
 							   69.0 * DEGREES(ACOS(COS(RADIANS(latpoint))
 										 * COS(RADIANS(lat))
 										 * COS(RADIANS(longpoint) - RADIANS(lng))
@@ -134,6 +134,7 @@ class Person extends NodeModel {
 										 * SIN(RADIANS(lat)))) AS distance_in_mi
 					 FROM 
 					 	persons,users,role_user,roles
+
 					 JOIN (
 							SELECT  ".$lat."  AS latpoint,  ".$lng." AS longpoint, ".$distance." AS r
 					   ) AS p
@@ -161,7 +162,7 @@ class Person extends NodeModel {
 			 }
 			$query = str_replace("\r\n",' ',$query);
 			$query = str_replace("\t",'',$query);
-	
+
 			$result = \DB::select($query);
 
 		return $result;

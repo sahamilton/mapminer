@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 use App\Watch;
 use App\User;
 use App\Document;
+use Illuminate\Http\Request;
 use Excel;
 class WatchController extends BaseController {
 	protected $watch;
@@ -207,20 +208,29 @@ class WatchController extends BaseController {
 		
 	}
 	
-	public function watchupdate() {
+	public function watchupdate(Request $request) {
 		//Refactor: Add request
-		$input = \Input::all();	
-
-		switch ($input['action']) {
+		
+		dd($request->all());
+		switch ($request->get('action')) {
 			case 'add':
-			$this->add($input['id']);
+			if($this->add($request->get('id'))){
+				return response()->json(['data'=>'success']);
+			}else{
+				return response()->json(['error']);
+			}
+			 
 			break;
 			
 			case 'remove':
 		
-				$watch = $this->watch->where("location_id","=",$input['id'])->where("user_id","=",\Auth::id())->firstOrFail();
+				$watch = $this->watch->where("location_id","=",$request->get('id'))->where("user_id","=",auth()->id())->firstOrFail();
 
-				$watch->destroy($watch->id);
+				if($watch->destroy($watch->id)){
+					return response()->json(['data'=>'success']);
+				}else{
+					return response()->json(['error']);
+				}
 
 			break;	
 			
