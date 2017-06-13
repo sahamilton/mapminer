@@ -4,6 +4,7 @@
 <h2>{{$lead->businessname}}</h2>
 
 <h4>A location of {{$lead->companyname}}</h4>
+<p><strong>Lead Ref:</strong>000{{$lead->id}}</p>
 <p><a href="{{route('salesleads.index')}}">Return to all leads</a></p>
 @if(! $manager)
 <div id="{{$lead->id}}" data-rating="{{intval(isset($rank) ? $rank : 0)}}" class="starrr" >
@@ -20,7 +21,11 @@
     <p><strong>Available Until:</strong> {{$lead->dateto->format('M j, Y')}}</p>
     <p><strong>Description:</strong> {{$lead->description}}</p>
    
-    <p><strong>Industry Vertical:</strong></p>
+    <p><strong>Industry Vertical:</strong><ul>
+    @foreach ($lead->vertical as $vertical)
+    <li>{{$vertical->filter}}</li>
+    @endforeach
+    </ul></p>
 
     <p><strong>Primary Contact:</strong>{{$lead->contact}}</p>
     <p><strong>Phone:</strong>{{$lead->phone}}</p>

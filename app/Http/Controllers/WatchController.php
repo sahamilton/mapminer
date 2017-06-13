@@ -215,10 +215,10 @@ class WatchController extends BaseController {
 		switch ($request->get('action')) {
 			case 'add':
 			if($this->add($request->get('id'))){
-				return response()->json(['success'=>true]);
-			}else{
-				return response()->json(['error'=>true]);
-			}
+					return 'success';;
+				}else{
+					return 'error';
+				}
 				
 			 
 			break;
@@ -228,9 +228,9 @@ class WatchController extends BaseController {
 				$watch = $this->watch->where("location_id","=",$request->get('id'))->where("user_id","=",auth()->id())->firstOrFail();
 
 				if ($watch->destroy($watch->id)){
-					return response()->json(['success'=>true]);
+					return 'success';;
 				}else{
-					return response()->json(['error'=>true]);
+					return 'error';
 				}
 			break;	
 			

@@ -44,7 +44,7 @@
                     </td>
                     <td>
 
-                    <div id="{{$lead->id}}" data-rating="{{intval(isset($rank) ? $rank : 0)}}" class="starrr" >
+                    <div id="{{$lead->id}}" data-rating="{{intval(isset($rank) ? $rank : 0)}}" class="starrr lead" >
                     
            </div>
                     </td>

@@ -29,7 +29,7 @@ class PersonsController extends BaseController {
 	 *
 	 * @return Response
 	 */
-	public function index()
+	public function index($vertical = null)
 	{
 		//$persons = $this->persons->all();
 		//// This should be changed to define the actual role name vs its id

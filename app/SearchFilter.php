@@ -204,5 +204,39 @@ class SearchFilter extends NodeModel {
         ->pluck('filter','id');
 
   }
+
+  public function companies(){
+    return $this->hasMany(Company::class,'vertical','id');
+  }
+
+  public function leads(){
+    return $this->belongsToMany(Lead::class,'lead_searchfilter','searchfilter_id')
+      ->where('datefrom','<=',date('Y-m-d'))
+      ->where('dateto','>=',date('Y-m-d'));
+  }
+  public function people(){
+    return $this->belongsToMany(Person::class, 'person_search_filter','search_filter_id')
+    ->withTimestamps();
+  }
+
+  public function campaigns(){
+    return $this->belongsToMany(Salesactivity::class,'activity_process_vertical','vertical_id','activity_id')
+    ->groupBy(['vertical_id','activity_id'])
+    ->where('datefrom','<=',date('Y-m-d'))
+    ->where('dateto','>=',date('Y-m-d'))
+    ->withPivot('salesprocess_id');
+  }
+
+  public function locations(){
+    $count = 0; 
+    $companies = Company::where('vertical','=',$this->id)->get();
+    
+
+        foreach ($companies as $company){
+          $count = $count + $company->locations()->count();
+        }
+
+    return $count;
+  }
 	
 }

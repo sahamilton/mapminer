@@ -61,7 +61,9 @@ class Lead extends Model
     }
 
     public function ownedBy(){
-      return $this->belongsToMany(Person::class,'lead_person_status')->wherePivotIn('status_id',[2,5,6])->withPivot('created_at','updated_at','status_id','rating');;
+      return $this->belongsToMany(Person::class,'lead_person_status')
+      ->wherePivotIn('status_id',[2,5,6])
+      ->withPivot('created_at','updated_at','status_id','rating');;
     }
 
 

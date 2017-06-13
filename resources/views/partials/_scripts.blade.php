@@ -52,11 +52,19 @@ $(document).ready(function()
 	
 	$('.starrr').on('starrr:change', function(e, value){
   
+		  
 		    var id = e.target.id;
-		    var returnVal = ranked(id,parseInt(value));
-
-		  function ranked(id,value)
+			var type = e.target.className.replace("starrr ", '');
+			
+		    var returnVal = ranked(id,parseInt(value),type);
+		    
+		  	function ranked(id,value,type)
 		       {
+		         if (type && type=='lead') {
+		         	var url = '{{route('api.lead.rank')}}?api_token={{auth()->user()->api_token}}';
+		         }else{
+		         	var url = '{{route('api.rank')}}?api_token={{auth()->user()->api_token}}';
+		         }
 		         var myajax = $.ajax(
 		      
 		          {
@@ -66,12 +74,12 @@ $(document).ready(function()
 		          cache: false,
 		       
 		          
-		          url: '{{route('api.rank')}}?api_token={{auth()->user()->api_token}}',
-		          data: {id: id,value: value},
+		          url: url,
+		          data: {id: id,value: value,type: type},
 		          
-		          dataType: "xml",
+		          dataType: "json",
 		          
-		          contentType: "text/html",
+		          contentType: "json",
 		          
 		         
 		          
