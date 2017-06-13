@@ -14,5 +14,6 @@ use Illuminate\Http\Request;
 */
 Route::get('/user', function (Request $request) {
     return $request->user();
-})->middleware('auth:api');
+});
+Route::get('watchupdate',['as'=>'api.watchupdate', 'uses'=>'WatchController@watchupdate'])->middleware('auth:api');
 //Route::post('advancedsearch',['as'=>'setSearch','uses'=>'SearchFiltersController@setSessionSearch'])->middleware('auth:api');
