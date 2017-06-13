@@ -93,19 +93,18 @@ $(document).ready(function()
 		});
 
 	
-    $('#sorttable, #store-locator-container').on('change','.watchItem',function() {
-		var value = $(this).val();
-		<!--var id = event.target.id;  Changed to accomodate Firefox -->
-		var id =$(this).attr('id');
+        $('#sorttable, #store-locator-container').on('change','.watchItem',function() {
+		var id = $(this).val();
         if($(this).is(":checked")) {
 			var action = 'add';
 			var msg =  id + " to List";
             var returnVal = changed(msg,action,id);
             $(this).attr("checked", returnVal);
+            
         }else{
 			var action = 'remove';
 			var msg = id + " from List";
-			var returnVal = changed(msg,action,value);
+			var returnVal = changed(msg,action,id);
             $(this).attr("checked",false, returnVal);
 		}
        
@@ -119,16 +118,15 @@ $(document).ready(function()
 				
 				cache: false,
 				
-				url: '{{route('api.watchupdate')}}',
-				data: {id: id,action: action,api_token:'{{auth()->user()->api_token}}'},
+				url: '{{route("api.watchupdate")}}',
+
+				data: {id: id,action: action,api_token:"{{auth()->user()->api_token}}"},
 				
 				dataType: "xml",
 				
-				contentType: "text/html",
+				contentType: "json",
 				
-				success: processData,
-				
-				error: errorAlert
+				success: processData
 				
 				}); //end of $.ajax
 		   
