@@ -140,6 +140,10 @@
                     <span class="glyphicon glyphicon-book"></span> Lead Sources</a></li>
                     <li {{ (Request::is('admin/leadstatus*') ? ' class="active"' : '') }}><a href="{{{ route('leadstatus.index') }}}">
                     <span class="glyphicon glyphicon-tower"></span> Lead Statuses</a></li>
+                    <li class="divider">Industries</li>
+                    <li {{ (Request::is('admin/searchfilter*') ? ' class="active"' : '') }}><a href="{{{ route('vertical.analysis') }}}">
+                    <span class="glyphicon glyphicon-tower"></span> Industries</a></li>
+
                 </ul>
 			</li>
                         
