@@ -30,6 +30,7 @@ class SalesLeadsController extends Controller
      */
     public function index()
     {
+        
         // limit to active verticals
         $statuses = $this->leadstatus->pluck('status','id')->toArray();
         $title = ' Leads Assigned to ';
@@ -47,6 +48,7 @@ class SalesLeadsController extends Controller
         }else{
             $leads = $this->person->where('user_id','=',auth()->user()->id)
             ->with('directReports','directReports.salesleads')->firstOrFail();
+            
              return response()->view('salesleads.managers',compact('leads','statuses'));
         }
         
