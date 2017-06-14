@@ -2,7 +2,7 @@
 @section('content')
 @if(isset($industry))
 	<h1>{{$industry->filter}} Industry Sales Team</h1>
-	<p><a href="{{route('person.index')}}">Back to all sales org</a></p>
+	<p><a href="{{ url()->previous() }}">Back to all sales org</a></p>
 @else
 	<h1>All Sales</h1>
 @endif
