@@ -20,7 +20,16 @@
 
     <tr>  
     <td>{{$vertical->filter}}</td>
-    <td>{{count($vertical->people)}}</td>
+    <td>
+        @if(count($vertical->people)>0)
+        <a href="{{route('person.vertical',$vertical->id)}}"
+        title= "See all people assigned to {{$vertical->filter}} industry">
+            {{count($vertical->people)}}
+            </a>
+        @else
+            0
+        @endif
+    </td>
     <td>
         @if(count($vertical->leads)>0)
             <a href="{{route('lead.vertical',$vertical->id)}}"

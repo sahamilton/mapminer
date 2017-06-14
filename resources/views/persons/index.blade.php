@@ -1,120 +1,71 @@
 @extends('site/layouts/default')
 @section('content')
-
-<h1>All Managers</h1>
+@if(isset($industry))
+	<h1>{{$industry->filter}} Industry Sales Team</h1>
+	<p><a href="{{route('person.index')}}">Back to all sales org</a></p>
+@else
+	<h1>All Sales</h1>
+@endif
 @include('partials/_showsearchoptions')
 @include('partials/advancedsearch')
 
- <p><a href="{{URL::to('people/map')}}"><i class="glyphicon glyphicon-flag"> </i>Map View</a>
+<p><a href="{{URL::to('people/map')}}"><i class="glyphicon glyphicon-flag"> </i>Map View</a>
 
-@if (Auth::user()->hasRole('Admin'))
-<div class="pull-right">
-				<a href="{{{ URL::to('admin/users/create') }}}" class="btn btn-small btn-info iframe"><span class="glyphicon glyphicon-plus-sign"></span> Create New Person</a>
-			</div>
+@if (auth()->user()->hasRole('Admin'))
+	<div class="pull-right">
+		<a href="{{{ URL::to('admin/users/create') }}}" class="btn btn-small btn-info iframe">
+		<span class="glyphicon glyphicon-plus-sign"> </span> 
+		Create New Person</a>
+	</div>
 @endif
 <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
-    <thead>
-    
-     @foreach($fields as $key=>$field)
-    <th>
-    {{$key}}
-    </th>
-    @endforeach
-       
-    </thead>
-    <tbody>
-   @foreach($persons as $person)
+	<thead>
+		<th>Name</th>
+		<th>Role</th>
+		<th>Email</th>
+		<th>Industry</th>
+	</thead>
+	<tbody>
+		@foreach($persons as $person)
+			<tr>  
+				<td>
+					<a href="{{route('person.show',$person->id)}}">
+					{{$person->postName()}}
+					</a>
+				</td>
+				<td>
+					<ul>
+						@foreach ($person->userdetails->roles as $role)
+							{!! $role->name != 'User' ? "<li>" . $role->name ."</li>" : '' !!}
 
-    <tr>  
-	<?php reset($fields);?>
-    @foreach($fields as $key=>$field)
-    <td>
-	<?php 
-	$name = $person->firstname . " " . $person->lastname;
-	switch ($key) {
-				
-		case 'Name':
-			
-			
-			echo "<a href=\"".route('person.show',$person->id)."\">";
-			echo $name;
-			echo "</a>";
-		break;
-		
-		case 'Email':
-			
-			$title="Send email to ".$name;
-			echo "<a href=\"mailto:".$person->userdetails->email."\" title=\"".$title."\">".$person->userdetails->email."</a>";
-		break;
-		
-		case 'Role':
-			foreach ($person->userdetails->roles as $role){
-			echo ($role->name != 'User') ? $role->name ."<br />":'';
-
-			}
-		break;
-		
-		case 'Industry':
-			
-			foreach ($person->industryfocus as $industry)
-			{
-				if(strtolower($industry->filter) == 'not specified')
-				{
-				echo "<li>General</li>";
-
-				}else{
-					echo "<li>" . $industry->filter . "</li>";
-				}
-
-				
-			}
-
-		break;
-	
-		
-		case 'Actions':
-
-			?>
-            @include('partials/_modal')
-    
-            <div class="btn-group">
-			   <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
-				<span class="caret"></span>
-				<span class="sr-only">Toggle Dropdown</span>
-			  </button>
-			  <ul class="dropdown-menu" role="menu">
-				
-				<li><a href="/person/{{$person->id}}/edit/"><i class="glyphicon glyphicon-pencil"></i> Edit {{$name}} Branch</a></li>
-				<li><a data-href="{{route('users.purge',$person->userdetails->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = "{{$name}}" href="#">
-                <i class="glyphicon glyphicon-trash"></i> Delete {{$name}} branch</a></li>
-			  </ul>
-			</div>
-		
-		<?php
-
-		break;	
-		
-		
-		default:
-			echo $person->$field;
-		break;
-		
-	};?>
-	
-    </td>
-    @endforeach
-    </tr>
-   @endforeach
-    
-    </tbody>
-    </table>
+						@endforeach
+					</ul>
+				</td>
+				<td>
+					<a href="mailto:{{$person->userdetails->email}}" 
+					title="Email {{$person->postName()}}">
+						{{$person->userdetails->email}}
+					</a>
+				</td>
+				<td>
+					<ul>
+					@foreach ($person->industryfocus as $industry)
+						@if(strtolower($industry->filter) == 'not specified')
+							<li><a href="{{route('person.vertical',$industry->id)}}">General</a></li>
+						@else
+							<li><a href="{{route('person.vertical',$industry->id)}}">{{$industry->filter}}</a></li>
+						@endif
 
 
+					@endforeach
 
-
+					</ul>
+				</td>
+			</tr>
+		@endforeach
+	</tbody>
+</table>
 
 @include('partials/_scripts')
 
-
-
-@stop
+@endsection

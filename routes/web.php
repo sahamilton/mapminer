@@ -93,6 +93,7 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('people/map', ['as'=>'person.map', 'uses'=>'PersonsController@map']);
 		
 		Route::get('geocode/people',['as'=>'person.geocode','uses'=>'PersonsController@geoCodePersons']);
+		Route::get('person/{vertical}/vertical',['as'=>'person.vertical','uses'=>'PersonsController@vertical']);
 		Route::resource('person','PersonsController',['only' => ['index', 'show']]);
 	#Comments
 		Route::resource('comment','CommentsController');

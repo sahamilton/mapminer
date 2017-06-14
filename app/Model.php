@@ -343,8 +343,8 @@ public function _import_csv($filename, $table,$fields)
 		
 		if(count(array_intersect($searchFilters, $allFilters->toArray())) != count($allFilters->toArray())){
 			
-			$filtered = TRUE;
-			return $filtered;
+			return TRUE;
+			
 		}
 		
 		
