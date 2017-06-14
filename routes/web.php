@@ -241,7 +241,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 		Route::get('companies/download', ['as'=>'companies.download','uses'=>'CompaniesController@exportAccounts']);
 		Route::get('company/{companyId}/export',['as'=>'company.export','uses'=>'WatchController@companyexport']);
 		Route::post('company/filter',['as'=>'company.filter','uses'=>'CompaniesController@filter']);
-		Route::resource('company','COmpaniesController');
+		Route::resource('company','CompaniesController');
 
 		/* deprecated
 			Used to assign locations to branches
@@ -275,7 +275,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 		Route::resource('serviceline','ServicelinesController');
 	#Leads
 		Route::get('leads/address',['as'=>'lead.address','uses'=>'LeadsController@address']);
-		
+		Route::get('leads/{vertical}/vertical',['as'=>'lead.vertical','uses'=>'LeadsController@index']);
 		Route::get('leads/batch',['as'=>'batchimport','uses'=>'LeadsController@batchImport']);
 		Route::post('leads/batch',['as'=>'leads.batch','uses'=>'LeadsController@leadImport']);
 		Route::get('leads/{id}/purge',['as'=>'leads.purge','uses'=>'LeadsController@destroy']);
@@ -308,22 +308,21 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 		
 		Route::get('salesnotes/filedelete/{file}', ['as'=>'salesnotes.filedelete', 'uses'=>'SalesNotesController@filedelete']);
 	
-		# Sales Process
-			Route::get('process/{process}/purge',['as'=>'process.purge','uses'=>'SalesProcessController@destroy']);
-			Route::resource('process','SalesProcessController');
+	# Sales Process
+		Route::get('process/{process}/purge',['as'=>'process.purge','uses'=>'SalesProcessController@destroy']);
+		Route::resource('process','SalesProcessController');
 
-		# Sales Activity
-			Route::get('salesactivity/{activity}/purge',['as'=>'salesactivity.purge','uses'=>'SalesActivityController@destroy']);
-			Route::resource('salesactivity','SalesActivityController',['except' => ['show']]);
+	# Sales Activity
+		Route::get('salesactivity/{activity}/purge',['as'=>'salesactivity.purge','uses'=>'SalesActivityController@destroy']);
+		Route::get('salesactivity/{vertical}/vertical',['as'=>'salesactivity.vertical','uses'=>'SalesActivityController@index']);
+		Route::resource('salesactivity','SalesActivityController',['except' => ['show']]);
 
-			Route::get('campaigndocs/{id}',['as'=>'salesdocuments.index','uses'=>'SalesActivityController@getSalesActivity']);
+		Route::get('campaigndocs/{id}',['as'=>'salesdocuments.index','uses'=>'SalesActivityController@getSalesActivity']);
 
-			Route::get('campaign/{id}/announce',['as'=>'campaign.announce','uses'=>'SalesActivityController@announce']);
+		Route::get('campaign/{id}/announce',['as'=>'campaign.announce','uses'=>'SalesActivityController@announce']);
 
-			Route::post('campaign/{id}/message',['as'=>'sendcampaign.message','uses'=>'SalesActivityController@email']);
+		Route::post('campaign/{id}/message',['as'=>'sendcampaign.message','uses'=>'SalesActivityController@email']);
 			
-
-
 
 	#Watchlists
 		Route::get('watchlist/{userid}', ['as'=>'watch.mywatchexport', 'uses'=>'WatchController@export']);
@@ -343,13 +342,16 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 		Route::post('news/{newsId}', ['as'=>'admin.news.update', 'uses'=>'NewsController@update']);
 	
 	#Search Filters
-		Route::resource('searchfilters','SearchFiltersController');
+		
+		Route::get('searchfilters/analysis/{id?}',['as'=>'vertical.analysis','uses'=>'SearchFiltersController@filterAnalysis']);
 		Route::get('searchfilters/promote/{filterid}',['as'=>'admin.searchfilter.promote','uses'=>'SearchFiltersController@promote']);
 		Route::get('searchfilters/demote/{filterid}',['as'=>'admin.searchfilter.demote','uses'=>'SearchFiltersController@demote']);
 		Route::get('filterform','SearchFiltersController@filterForm');
 		Route::get('searchfilters/{id}/delete',['as'=>'admin.searchfilter.delete','uses'=>'SearchFiltersController@destroy']);
 		Route::get('api/searchfilters/getAccounts',['as'=>'getAccountSegments','uses'=>'SearchFiltersController@getAccountSegments']);
 		Route::post('api/searchfilters/postAccounts',['as'=>'postAccountSegments','uses'=>'SearchFiltersController@getAccountSegments']);
+		Route::resource('searchfilters','SearchFiltersController');
+
 		Route::get('about',function(){
 
 			return response()->view('site.about');

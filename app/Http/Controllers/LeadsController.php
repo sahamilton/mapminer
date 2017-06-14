@@ -36,20 +36,29 @@ class LeadsController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($vertical = null)
     {   
+       
         $statuses = $this->leadstatus->pluck('status','id')->toArray();
-        $leads = $this->lead->with('salesteam','leadsource','vertical','ownedBy')
-                ->where('datefrom','<=',date('Y-m-d'))
-                ->where('dateto','>=',date('Y-m-d'))
+        $query = Lead::query();
 
-                ->get();
-   
+        $query = $query->with('salesteam','leadsource','vertical','ownedBy')
+                ->where('datefrom','<=',date('Y-m-d'))
+                ->where('dateto','>=',date('Y-m-d'));
+        if($vertical){
+          $query = $query->whereHas('vertical',function ($q) use($vertical){
+              $q->whereIn('searchfilter_id',[$vertical]);
+          });
+        }
+        $leads = $query->get();
+
         $sources = $this->leadsource->pluck('source','id');
         $salesteams = $this->getSalesTeam($leads);
        
         return response()->view('leads.index',compact('leads','sources','statuses','salesteams'));
     }
+
+
     private function getSalesTeam($leads){
         $salesreps = array();
         foreach($leads as $lead){
@@ -194,6 +203,22 @@ class LeadsController extends BaseController
         return redirect()->route('leads.index');
     }
 
+    public function leadrank(Request $request){
+      $person = $this->person->whereHas('userdetails',function($q) use($request){
+        $q->where('api_token','=',$request->get('api_token'));
+      })->firstOrFail();
+
+      if($person->salesleads()->sync([$request->get('id') => ['rating' => $request->get('value')]],false))
+        {
+            return 'success';
+        }
+      return 'error';
+
+
+    }
+
+
+
     /*public function address(){
     	$people=array();
     	return response()->view('leads.address',compact('people'));
@@ -281,6 +306,10 @@ class LeadsController extends BaseController
 
           return $data;
     }
+
+   
+
+
     /**
      * Find nearby sales people.
      *

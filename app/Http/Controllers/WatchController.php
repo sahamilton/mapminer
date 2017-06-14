@@ -62,7 +62,7 @@ class WatchController extends BaseController {
 		$watch->user_id =  	$user_id;
 		$watch->location_id = $id;
 
-		$watch->save();
+		return $watch->save();
 		
 	}
 	
@@ -211,14 +211,15 @@ class WatchController extends BaseController {
 	public function watchupdate(Request $request) {
 		//Refactor: Add request
 		
-		dd($request->all());
+
 		switch ($request->get('action')) {
 			case 'add':
 			if($this->add($request->get('id'))){
-				return response()->json(['data'=>'success']);
-			}else{
-				return response()->json(['error']);
-			}
+					return 'success';;
+				}else{
+					return 'error';
+				}
+				
 			 
 			break;
 			
@@ -226,12 +227,11 @@ class WatchController extends BaseController {
 		
 				$watch = $this->watch->where("location_id","=",$request->get('id'))->where("user_id","=",auth()->id())->firstOrFail();
 
-				if($watch->destroy($watch->id)){
-					return response()->json(['data'=>'success']);
+				if ($watch->destroy($watch->id)){
+					return 'success';;
 				}else{
-					return response()->json(['error']);
+					return 'error';
 				}
-
 			break;	
 			
 		}

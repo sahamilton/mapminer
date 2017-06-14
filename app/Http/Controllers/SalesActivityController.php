@@ -46,9 +46,16 @@ class SalesActivityController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($vertical = null)
     {
-        $activities = $this->activity->with('salesprocess','vertical')->get();
+        
+        $query = $this->activity->with('salesprocess','vertical');
+        if($vertical){
+          $query = $query->whereHas('vertical',function ($q) use($vertical){
+              $q->whereIn('vertical_id',[$vertical]);
+          });
+        }
+        $activities = $query->get();
         $calendar = \Calendar::addEvents($activities);
 
         return response()->view('salesactivity.index',compact('activities','calendar'));

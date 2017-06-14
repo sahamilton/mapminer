@@ -5,6 +5,7 @@ use App\Person;
 use App\Branch;
 use App\Company;
 use Excel;
+use Illuminate\Http\Request;
 
 class PersonsController extends BaseController {
 
@@ -28,7 +29,7 @@ class PersonsController extends BaseController {
 	 *
 	 * @return Response
 	 */
-	public function index()
+	public function index($vertical = null)
 	{
 		//$persons = $this->persons->all();
 		//// This should be changed to define the actual role name vs its id

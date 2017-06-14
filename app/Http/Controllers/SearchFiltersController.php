@@ -135,6 +135,13 @@ class SearchFiltersController extends BaseController {
 		return redirect()->route('searchfilters.index');
 	}
 	
+	public function filterAnalysis($id =null){
+		$verticals = $this->filter->with('leads','people','companies','campaigns')->get();
+		return response()->view('filters.analysis',compact('verticals'));
+
+
+	}
+
 	public function filterForm()
 	{
 		$filters = $this->filter->all();
