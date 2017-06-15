@@ -8,21 +8,20 @@
 {{-- Content --}}
 @section('content')
 	<div class="page-header">
-		<h3>
-			Role Management
+		<h3>Role Management</h3>
 
 			<div class="pull-right">
 				<a href="{{{ route('roles.create') }}}" class="btn btn-small btn-info iframe"><span class="glyphicon glyphicon-plus-sign"></span> Create New Role</a>
 			</div>
-		</h3>
+		
 	</div>
 
 	<table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
 		<thead>
 			<tr>
-				<th class="col-md-6">{{{ Lang::get('admin/roles/table.name') }}}</th>
+				<th class="col-md-6">Role</th>
 				<th class="col-md-2">Permissions</th>
-				<th class="col-md-2">{{{ Lang::get('admin/roles/table.users') }}}</th>
+				<th class="col-md-2">Count</th>
 
                 <th class="col-md-2">Actions</th>
 				
@@ -33,9 +32,11 @@
         <tr>
         <td><a href="{{route('roles.show',$role->id)}}" >{{$role->name}}</td>
         <td>
+        <ul>
         @foreach($role->permissions as $permission)
         	<li>{{ucwords($permission->display_name)}}</li>
         @endforeach
+        </ul>
         </td>
         <td>{{$role->assignedRoles->count()}}
         <td>

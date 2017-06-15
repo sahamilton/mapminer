@@ -12,7 +12,7 @@
    
         
 <div class="col-md-10 col-md-offset-1">
-        <table class="table" id = "sorttable">
+        <div id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
             <thead>
 
                 <th>Name</th>
@@ -29,9 +29,11 @@
                 <td>{!! $permission->name !!}</td>
                
                 <td>
-                @foreach ($permission->roles as $role)
-                    <li>{{$role->name}}</li>
-                @endforeach
+                    <ul>
+                    @foreach ($permission->roles as $role)
+                        <li>{{$role->name}}</li>
+                    @endforeach
+                    </ul>
                 </td>
                 
                  <td class="col-md-2">

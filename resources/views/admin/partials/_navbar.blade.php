@@ -96,7 +96,8 @@
 
 
                              
-                         <!-- Manage Users  -->    
+                         <!-- Manage Users  -->  
+                         @can('manage_users')  
                         <li class="dropdown-submenu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Users</a>
                             <ul class="dropdown-menu">
@@ -112,11 +113,12 @@
                                 <li{{ (Request::is('admin/users/export') ? ' class="active"' : '') }}><a href="{{{ route('person.export') }}}"><span class="glyphicon glyphicon-export"></span> Export Users</a></li>
                             </ul>
                         </li>
+                        @endcan
                         </ul>
                         </li>
 
           <!-- Manage Resources  -->      
-            <li class="dropdown{{ (Request::is('admin/users*','admin/roles*','admin/document*') ? ' active' : '') }}">
+            <li class="dropdown{{ (Request::is('admin/lead*','admin/document*','admin/search*') ? ' active' : '') }}">
                 <a class="dropdown" data-toggle="dropdown" href="{{{ route('users.index') }}}">
                     <span class="glyphicon glyphicon-wrench"></span> 
                      Resources 
@@ -125,23 +127,30 @@
                 <ul class="dropdown-menu">
 					<li{{ (Request::is('admin/news*') ? ' class="active"' : '') }}><a href="{{{ route('news.index') }}}">
                     <span class="glyphicon glyphicon-folder-open"></span> News</a></li>
-                    <li class="divider">Campaigns</li>
-                    <li{{ (Request::is('admin/documents*') ? ' class="active"' : '') }}><a href="{{{ route('documents.index') }}}">
-                    <span class="glyphicon glyphicon-book"></span> Sales Library</a></li>
-                    <li {{ (Request::is('admin/process*') ? ' class="active"' : '') }}><a href="{{{ route('process.index') }}}">
-                    <span class="glyphicon glyphicon-tower"></span> Sales Process</a></li>
-                    <li {{ (Request::is('admin/salesactivity*') ? ' class="active"' : '') }}><a href="{{{ route('salesactivity.index') }}}">
-                    <span class="glyphicon glyphicon-briefcase"></span> 
-                    Sales Campaigns</a></li>
-                    <li class="divider">Leads</li>
-                    <li{{ (Request::is('admin/leads') ? ' class="active"' : '') }}><a href="{{{ route('leads.index') }}}">
-                    <span class="glyphicon glyphicon-folder-open"></span> Leads</a></li>
-                    <li{{ (Request::is('admin/leadsource*') ? ' class="active"' : '') }}><a href="{{{ route('leadsource.index') }}}">
-                    <span class="glyphicon glyphicon-book"></span> Lead Sources</a></li>
-                    <li {{ (Request::is('admin/leadstatus*') ? ' class="active"' : '') }}><a href="{{{ route('leadstatus.index') }}}">
-                    <span class="glyphicon glyphicon-tower"></span> Lead Statuses</a></li>
-                    <li class="divider">Industries</li>
-                    <li {{ (Request::is('admin/searchfilter*') ? ' class="active"' : '') }}><a href="{{{ route('vertical.analysis') }}}">
+                    @can('manage_sales_campaigns')
+                        <li class="divider">Campaigns</li>
+                        <li{{ (Request::is('admin/documents*') ? ' class="active"' : '') }}><a href="{{{ route('documents.index') }}}">
+                        <span class="glyphicon glyphicon-book"></span>
+                         Sales Library</a></li>
+                        <li {{ (Request::is('admin/process*') ? ' class="active"' : '') }}><a href="{{{ route('process.index') }}}">
+                        <span class="glyphicon glyphicon-tower"></span>
+                         Sales Process</a></li>
+                        <li {{ (Request::is('admin/salesactivity*') ? ' class="active"' : '') }}><a href="{{{ route('salesactivity.index') }}}">
+                        <span class="glyphicon glyphicon-briefcase"></span> 
+                         Sales Campaigns</a></li>
+                    @endcan
+                    @can('manage_leads')
+                        <li class="divider">Leads</li>
+                        <li{{ (Request::is('admin/leads') ? ' class="active"' : '') }}><a href="{{{ route('leads.index') }}}">
+                        <span class="glyphicon glyphicon-folder-open"></span> Leads</a></li>
+                        <li{{ (Request::is('admin/leadsource*') ? ' class="active"' : '') }}><a href="{{{ route('leadsource.index') }}}">
+                        <span class="glyphicon glyphicon-book"></span> Lead Sources</a></li>
+                        <li {{ (Request::is('admin/leadstatus*') ? ' class="active"' : '') }}><a href="{{{ route('leadstatus.index') }}}">
+                        <span class="glyphicon glyphicon-tower"></span> Lead Statuses</a></li>
+                        <li class="divider">Industries</li>
+                    @endcan
+                    <li {{ (Request::is('admin/search*') ? ' class="active"' : '') }}><a href="{{{ route('vertical.analysis') }}}">
+                    
                     <span class="glyphicon glyphicon-tower"></span> Industries</a></li>
 
                 </ul>

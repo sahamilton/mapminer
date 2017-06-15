@@ -47,4 +47,12 @@ trait HasRoles
     {
         return $this->hasRole($permission->roles);
     }
+
+    /**
+     * Determine if the user may perform the given permission.
+     *
+     * @param  Permission $permission
+     * @return boolean
+     */
+   
 }

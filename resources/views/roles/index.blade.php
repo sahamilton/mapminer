@@ -19,6 +19,7 @@
                 <th>Name</th>
                 
                 <th>Permissions</th>
+                <th>Count</th>
                 <th>Actions</th>
                 
             </thead>
@@ -30,10 +31,11 @@
                 <td>{!! $role->name !!}</td>
                 
                 <td>
+                <ul>
                     @foreach ($role->permissions as $permission)
                         <li>{{$permission->name}}</li>
                     @endforeach
-
+                </ul>
                 </td>
                 
                 

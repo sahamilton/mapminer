@@ -1,11 +1,11 @@
 {{-- Create Role Form --}}
 
 		<!-- Name -->
-				<div class="form-group {{{ $errors->has('name') ? 'error' : '' }}}">
+				<div class="form-group {{{ $errors->has('name') ? 'has-error' : '' }}}">
 					<label class="col-md-2 control-label" for="name">Name</label>
                     <div class="col-md-10">
     					<input class="form-control" type="text" name="name" id="name" value="{{{ Input::old('name') ? Input::old('name') : $role->name }}}" />
-    					{{ $errors->first('name', '<span class="help-inline">:message</span>') }}
+    					{!! $errors->first('name', '<span class="help-inline has-error">:message</span>') !!}
                     </div>
 				</div>
 				<!-- ./ name -->
@@ -19,7 +19,7 @@
                     <label class="col-md-2 control-label" for="{{$permission['display_name']}}">
                          {{{ ucwords($permission['display_name']) }}}</label>
                     <input class="col-md-2" type="checkbox" name="permissions[]" value="{{ $permission['id'] }}"  
-                    {!! in_array($permission['id'],$currentPermissions) ? 'checked' :'' !!}
+                    {!! isset($currentPermissions) && in_array($permission['id'],$currentPermissions) ? 'checked' :'' !!}
 
                     />
                         

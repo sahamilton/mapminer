@@ -22,12 +22,12 @@ class AuthServiceProvider extends ServiceProvider
     public function boot(GateContract $gate)
     {
         parent::registerPolicies($gate);
-        /* Dynamically register permissions with Laravel's Gate.
+        
         foreach ($this->getPermissions() as $permission) {
             $gate->define($permission->name, function ($user) use ($permission) {
                 return $user->hasPermission($permission);
             });
-        }*/
+        }
     }
     /**
      * Fetch the collection of site permissions.

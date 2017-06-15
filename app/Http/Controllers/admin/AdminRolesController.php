@@ -5,7 +5,7 @@ use App\User;
 use App\Role;
 use App\Permission;
 use App\Http\Controllers\BaseController;
-
+use App\Http\Requests\RoleFormRequest;
 class AdminRolesController extends BaseController {
 
 
@@ -65,12 +65,11 @@ class AdminRolesController extends BaseController {
      */
     public function create()
     {
+        
         // Get all the available permissions
         $permissions = $this->permission->all();
 
-        // Selected permissions
-        $currentPermissions  = \Input::old('permissions', array());
-
+        $currentPermissions = null;      
         // Title
         $title = 'Create New Role';
 
@@ -85,47 +84,22 @@ class AdminRolesController extends BaseController {
      *
      * @return Response
      */
-    public function store()
-    {
-
-        // Declare the rules for the form validation
-        $rules = array(
-            'name' => 'required'
-        );
-
-        // Validate the inputs
-        $validator = \Validator::make(\Input::all(), $rules);
-        // Check if the form validates with success
-        if ($validator->passes())
-        {
-  	    // Get the inputs, with some exceptions
-            $inputs = \Input::except('csrf_token');
-
-            $role = Role::create($inputs);
-            $role= new Role;
-            $role->name = $inputs['name'];
-            $role->save();
-
-          
-           
-            // Was the role created?
-            if ($role->id)
-            {
+    public function store(RoleFormRequest $request)
+    {   
+       
+            
+            if(! $role = Role::create($request->all())){
+                return redirect()->to('admin/roles/create')->with('error', 'Unable to create role');
+            }
+         
+            if($request->has('permissions')){
                 // Save permissions
-                $role->permissions()->sync($inputs['permissions']);
+                $role->permissions()->sync($request->permissions);
                 // Redirect to the new role page
-                return redirect()->to(route('roles.index'))->with('success', 'Role created succesfully');
+               
             }
 
-            // Redirect to the new role page
-            return redirect()->to('admin/roles/create')->with('error', 'Unable to create role');
-
-            // Redirect to the role create page
-            return redirect()->to(route('admin/roles/create'))->withInput()->with('error', 'Unable to create role - ' . $error);
-        }
-
-        // Form validation failed
-        return redirect()->to('admin/roles/create')->withInput()->withErrors($validator);
+            return redirect()->to(route('roles.index'))->with('success', 'Role created succesfully');
     }
 
     /**
