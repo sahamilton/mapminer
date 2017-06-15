@@ -397,7 +397,7 @@ class LeadsController extends BaseController
             $count++;
 
         }
-        return redirect()->route('leads.index')->withMessage('Imported ' . $count . ' leads');
+        return redirect()->route('leadsource.show',$request->get('lead_source_id'))->withMessage(['status'=>'Imported ' . $count . ' leads']);
      }
     
     
