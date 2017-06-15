@@ -87,7 +87,12 @@ title= "See {{$salesteam[0]->reportsTo->firstname}} {{$salesteam[0]->reportsTo->
    <td>
    <ul>
      @foreach ($reports->industryfocus as $vertical)
-     <li>{{$vertical->filter}}</li>
+       <li>
+         <a href="{{route('person.vertical',$vertical->id)}}"
+         title="See all {{$vertical->filter}} industry sales team">
+          {{$vertical->filter}}
+         </a>
+       </li>
      @endforeach
      </ul>
    </td>

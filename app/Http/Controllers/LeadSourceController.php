@@ -87,7 +87,8 @@ class LeadSourceController extends Controller
                 })
                 
                ->findOrFail($id);
-        $salesteams = $this->salesteam($leadsource->leads);
+
+        $salesteams = $this->salesteam($leadsource->leads,$id);
         return response()->view('leadsource.show',compact('leadsource','statuses','salesteams'));
     }
 
@@ -135,7 +136,7 @@ class LeadSourceController extends Controller
     public function announce($id){
 
         $source = $this->leadsource->with('leads','leads.salesteam','leads.vertical')
-            ->whereHas('salesteam',function($q){
+            ->whereHas('leads',function($q){
                     $q->where('datefrom','<=',date('Y-m-d'))
                         ->where('dateto','>=',date('Y-m-d'));
                 })
@@ -152,26 +153,42 @@ class LeadSourceController extends Controller
 
     private function salesteam($leads){
         $salesreps = array();
-        
+ 
         foreach ($leads as $lead){
             if(count($lead->salesteam)>0){
                 $reps = $lead->salesteam->pluck('id')->toArray();
+                
                 foreach ($reps as $rep){
-                    if(! in_array($rep,$salesreps)){
-                        $salesreps[] = $rep;
+
+                    $salesrep = $lead->salesteam->where('id',$rep)->first();
+                    
+                    if(! array_key_exists($rep,$salesreps)){
+                        
+                        $salesreps[$rep]['details'] = $salesrep;
+                        $salesreps[$rep]['count'] = 0;
+                        $salesreps[$rep]['status'][1] = 0;
+                        $salesreps[$rep]['status'][2] = 0;
+                        $salesreps[$rep]['status'][3] = 0;
+                        $salesreps[$rep]['status'][4] = 0;
+                        $salesreps[$rep]['status'][5] = 0;
+                        $salesreps[$rep]['status'][6] = 0;
+                       
                     }
+                    $salesreps[$rep]['count'] = $salesreps[$rep]['count'] + 1;
+                    $salesreps[$rep]['status'][$salesrep->pivot->status_id] ++;
+                    
                 }          
             }
         }
+       
+        return $salesreps;
+        /*$this->person->whereIn('id',$salesreps)->with('salesleads')
+        ->whereHas('salesleads',function($q) use($id,$leads){
+                $q->where('lead_source_id','=',$id);
+        })
+        ->get();*/
+       
 
-       return $this->person->with('userdetails','reportsTo','salesleads')
-               ->whereIn('id',$salesreps)
-               ->whereHas('salesleads',function ($q) use($leads){
-                    $q->whereIn('lead_id',$leads->pluck('id')->toArray())
-                    ->where('datefrom','<=',date('Y-m-d'))
-                     ->where('dateto','>=',date('Y-m-d'));
-
-               })->get();
       
        
     }
@@ -212,7 +229,7 @@ class LeadSourceController extends Controller
     public function email(Request $request, $id){
 
 
-        $data['source'] = $this->leadsource->with('leads','leads.salesteam')
+        $data['source'] = $this->leadsource->with('leads','leads.salesteam','leads.salesteam.reportsTo')
         ->whereHas('leads.salesteam',function($q){
                     $q->where('datefrom','<=',date('Y-m-d'))
                         ->where('dateto','>=',date('Y-m-d'));
@@ -244,13 +261,15 @@ class LeadSourceController extends Controller
     }
 
     private function notifyManagers($data,$salesteam){
+
         $managers = array();
         foreach ($salesteam as $salesrep){
-            if($salesrep->reportsTo){
-                $data['managers'][$salesrep->reportsTo->id]['team'][]=$salesrep->firstname ." ". $salesrep->lastname;
-                $data['managers'][$salesrep->reportsTo->id]['email']=$salesrep->reportsTo->userdetails->email;
-                $data['managers'][$salesrep->reportsTo->id]['firstname']=$salesrep->reportsTo->firstname;
-                $data['managers'][$salesrep->reportsTo->id]['lastname']= $salesrep->reportsTo->lastname;
+           
+            if($salesrep['details']->reportsTo){
+                $data['managers'][$salesrep['details']->reportsTo->id]['team'][]=$salesrep['details']->postName();
+                $data['managers'][$salesrep['details']->reportsTo->id]['email']=$salesrep['details']->reportsTo->userdetails->email;
+                $data['managers'][$salesrep['details']->reportsTo->id]['firstname']=$salesrep['details']->reportsTo->firstname;
+                $data['managers'][$salesrep['details']->reportsTo->id]['lastname']= $salesrep['details']->reportsTo->lastname;
             }
         }
         

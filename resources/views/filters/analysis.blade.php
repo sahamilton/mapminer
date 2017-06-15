@@ -7,10 +7,10 @@
      
     <th>Vertical</th>
     <th>People</th>
-    <th>Leads</th>
+    <th>Current Leads</th>
     <th>Companies</th>
     <th>Locations</th>
-    <th>Campaigns</th>
+    <th>Current Campaigns</th>
       
        
     </thead>
@@ -18,10 +18,19 @@
 
  @foreach($verticals as $vertical)
 
-    <tr>  
-    <td>{{$vertical->filter}}</td>
-    <td>{{count($vertical->people)}}</td>
-    <td>
+    <tr>
+    <td class="text-left">{{$vertical->filter}}</td>
+    <td class="text-right">
+        @if(count($vertical->people)>0)
+        <a href="{{route('person.vertical',$vertical->id)}}"
+        title= "See all people assigned to {{$vertical->filter}} industry">
+            {{count($vertical->people)}}
+            </a>
+        @else
+            0
+        @endif
+    </td>
+    <td class="text-right">
         @if(count($vertical->leads)>0)
             <a href="{{route('lead.vertical',$vertical->id)}}"
             title="See all {{$vertical->filter}} leads">
@@ -32,7 +41,7 @@
            0
         @endif
 </td>
-    <td>
+    <td class="text-right">
     @if(count($vertical->companies) > 0)
             <a href="{{route('company.vertical',$vertical->id)}}"
             title="See all {{$vertical->filter}} companies">
@@ -45,8 +54,8 @@
    
 
     </td>
-    <td>{{$vertical->locations()}}</td>
-    <td>
+    <td class="text-right">{{$vertical->locations()}}</td>
+    <td class="text-right">
         
         @if(count($vertical->campaigns) > 0)
             <a href="{{route('salesactivity.vertical',$vertical->id)}}"

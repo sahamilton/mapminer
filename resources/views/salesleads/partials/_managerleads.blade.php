@@ -11,7 +11,7 @@
                         <th>{{$value}}</th>
                     @endif
                 @endforeach
-                
+           
 
             </thead>
             <tbody>

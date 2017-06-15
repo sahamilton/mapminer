@@ -4,6 +4,7 @@ use App\User;
 use App\Person;
 use App\Branch;
 use App\Company;
+use App\SearchFilter;
 use Excel;
 use Illuminate\Http\Request;
 
@@ -29,23 +30,36 @@ class PersonsController extends BaseController {
 	 *
 	 * @return Response
 	 */
-	public function index($vertical = null)
+	public function index()
 	{
-		//$persons = $this->persons->all();
-		//// This should be changed to define the actual role name vs its id
-		
+				
 		$filtered = $this->persons->isFiltered(['companies'],['vertical']);
 		
 		
 		$persons = $this->getAllPeople($filtered);
 
-		$fields=array('Name'=>'name','Role'=>'mgrtype','Email'=>'email','Industry'=>'industry');
 		
 		
-		return response()->view('persons.index', compact('persons','fields'));
+		
+		return response()->view('persons.index', compact('persons'));
 	}
 
+	public function vertical($vertical = null){
 
+		if(! $vertical){
+			return redirect()->route('person.index');
+		}
+		$persons = $this->persons
+			->whereHas('industryfocus', function($q) use ($vertical){
+					    $q->whereIn('search_filter_id',[$vertical])
+					    	->orWhereNull('search_filter_id');
+
+					})
+			->with('userdetails','reportsTo','industryfocus','userdetails.roles')
+			->get();
+		$industry = SearchFilter::findOrFail($vertical);
+		return response()->view('persons.index', compact('persons','industry'));
+	}
 
 	public function map()
 	{

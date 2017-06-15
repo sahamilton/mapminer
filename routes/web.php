@@ -69,9 +69,6 @@ Route::group(['middleware' => 'auth'], function () {
 		
 		Route::get('/branch/{branchId}/map', ['as'=>'branch.map','uses'=>'BranchesController@map']);
 		Route::get('/branches/map', ['as'=>'branches.map', 'uses'=>'BranchesController@mapall']);
-		Route::resource('branches','BranchesController',['only' => ['index', 'show']]);
-		
-		
 		
 		
 		Route::get('branches/{branchId}/shownearby',['as' => 'shownearby.branch', 'uses' => 'BranchesController@showNearbyBranches']);
@@ -81,6 +78,7 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('branches/{branchId}/showlist',['as' => 'showlist.locations', 'uses' => 'LocationsController@listNearbyLocations']);
 		Route::get('branches/{branchId}/salesteam',['as' => 'showlist.salesteam', 'uses' => 'BranchesController@showSalesTeam']);
 		Route::get('branches/managed/{mgrId}',['as'=>'managed.branch', 'uses'=>'BranchesController@getMyBranches']);
+		Route::resource('branches','BranchesController',['only' => ['index', 'show']]);
 	
 	#Regions
 		Route::resource('region','RegionsController',['only' => ['index', 'show']]);
@@ -93,9 +91,12 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('people/map', ['as'=>'person.map', 'uses'=>'PersonsController@map']);
 		
 		Route::get('geocode/people',['as'=>'person.geocode','uses'=>'PersonsController@geoCodePersons']);
+		Route::get('person/{vertical}/vertical',['as'=>'person.vertical','uses'=>'PersonsController@vertical']);
 		Route::resource('person','PersonsController',['only' => ['index', 'show']]);
+	
 	#Comments
 		Route::resource('comment','CommentsController');
+	
 	
 	# Sales organization
 		Route::get('salesorg/{person?}',['as'=>'salesorg','uses'=>'SalesOrgController@getSalesBranches']);
@@ -104,6 +105,7 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::post('leads/find',['as'=>'lead.find','uses'=>'LeadsController@find']);
 		Route::get('branch/{branchId}/salesteam',array('as' => 'branch.salesteam', 'uses' => 'BranchesController@showSalesTeam'));
 
+	
 	# Sales leads 
 		Route::get('saleslead/{id}/accept',['as'=>'saleslead.accept','uses'=>'SalesLeadsController@accept']);
 		Route::get('saleslead/{id}/decline',['as'=>'saleslead.decline','uses'=>'SalesLeadsController@decline']);
@@ -113,6 +115,7 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::post('saleslead/{id}/close',['as'=>'saleslead.close','uses'=>'SalesLeadsController@close']);
 		Route::get('saleslead/{pid}/leads',['as'=>'saleslead.mapleads','uses'=>'SalesLeadsController@mapleads']);
 		Route::resource('salesleads','SalesLeadsController');
+	
 	#Notes
 		
 		Route::get('notes/{noteId}/delete',['as' => 'delete/note', 'uses' => 'NotesController@destroy']);
@@ -151,13 +154,16 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('locationnotes/{companyID}',['as'=>'locationnotes.show','uses'=>'PersonsController@showManagerNotes']);
 	## Sales Resources
 		Route::get('resources',['as'=>'resources.view','uses'=>'WatchController@getCompaniesWatched']);
-		#Sales Campaigns
+	## Documents
+		Route::resource('docs','DocumentsController',['only' => ['index', 'show']]);
+	#Sales Campaigns
 		
 		Route::get('campaigns',['as'=>'salescampaigns','uses'=>'SalesActivityController@mycampaigns']);
 		Route::resource('salesactivity','SalesActivityController',
 			['only' => ['show']]);
 	
 	#AJAX Links
+	#// Move these to api routes
 		Route::get('api/company/{companyId}/statemap/{state}', ['as'=>'company.statemap','uses'=>'LocationsController@getStateLocations']);
 
 		Route::get('api/news/nonews','NewsController@noNews');
@@ -184,9 +190,7 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('api/geo',['as'=>'geo','uses'=>'GeoCodingController@index']);
 
 		
-
 		Route::get('api/watchmap',['as'=>'api.watchmap','uses'=>'WatchController@watchmap']);
-
 		Route::match(['get','post'],'api/advancedsearch',['as'=>'setSearch','uses'=>'SearchFiltersController@setSessionSearch']);	
 		Route::get('documents/select',['as'=>'documents.select','uses'=>'DocumentsController@select']);
 		Route::post('documents/select',['as'=>'documents.select','uses'=>'DocumentsController@getDocuments']);

@@ -3,13 +3,13 @@
 <div class="container">
 <h2>Document Library</h2>
 <div class="container">
-
+@if(auth()->user()->hasRole('Admin'))
 <div class="pull-right">
         <a href ="{{route('documents.create')}}"><button class="btn btn-success" >Add Document
         </button></a>
     </div>    
     
-        
+ @endif       
 <div class="col-md-10 col-md-offset-1">
         <table class='table table-striped' id='sorttable'>
             <thead>
@@ -20,18 +20,19 @@
                 <th>Sales Process</th>
                 <th>Vertical</th>
 
-                <td>location</td>
-                <td>Rank</td>
-                <td>Rated By</td>
+                <th>Location</th>
+                <th>Rank</th>
+                <th>Rated By</th>
+                @if(auth()->user()->hasRole('Admin'))
                 <th>Actions</th>
-                
+                @endif
             </thead>
             <tbody >
             @foreach ($documents as $document)
               
                 <tr> 
                 
-                <td><a href="{{route('documents.show',$document->id)}}">{{$document->title }}</a></td>
+                <td><a href="{{route('docs.show',$document->id)}}">{{$document->title }}</a></td>
                <td>
                     <span class="teaser">{{substr($document->description,0,100)}}</span>
 
@@ -39,17 +40,23 @@
 
                     <span class="more">more...</span>
                 </td>
-                <td>@foreach ($document->process as $process)
+                <td>
+                <ul>
+                @foreach ($document->process as $process)
                     <li>{{$process->step}}</li>
                     @endforeach
+                    </ul>
                 </td>
-                <td>@foreach ($document->vertical as $vertical)
+                <td>
+                <ul>@foreach ($document->vertical as $vertical)
                     <li>{{$vertical->filter}}</li>
                     @endforeach
+                    </ul>
                 </td>
                 
  
-                <td><a href="{{$document->location}}" target="_new">View Source</a>{{$document->doctype}}</td>
+                <td><a href="{{$document->location}}" target="_new" 
+                title ="View this {{$document->doctype}} document">View Source <img src="{{asset('assets/icons/'.$document->doctype.'.png')}}" ></a></td>
                 <td> 
                  @if(count($document->rank) > 0 && count($document->score)> 0 && count($document->rankings) >0)
                   {{$document->rank[0]->rank}}
@@ -64,6 +71,8 @@
                   @else
                   {{count($document->rankings)}}
                   @endif
+                  </td>
+                   @if(auth()->user()->hasRole('Admin'))
                  <td class="col-md-2">
                 @include('partials/modal')
 
@@ -86,17 +95,12 @@
 
 
                     </ul>
+
                 </div>
                
                </td> 
+               @endif
 
-
-                            
-                  
-
-             
-                
-               
                 </tr>  
             
             @endforeach

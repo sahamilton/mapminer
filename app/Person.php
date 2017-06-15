@@ -95,9 +95,11 @@ class Person extends NodeModel {
 	}
 	public function salesLeadsByStatus($id){
 		$leads = $this->with('salesleads')
-			->where('datefrom','<=',date('Y-m-d'))
-			->where('dateto','>=',date('Y-m-d'))
-			->has('salesleads')->find($id);
+			->whereHas('salesleads',function($q){
+				$q->where('datefrom','<=',date('Y-m-d'))
+				->where('dateto','>=',date('Y-m-d'));
+			})
+			->find($id);
 		
 		foreach ($leads->salesleads as $lead){
 			if(! isset($statuses[$lead->pivot->status_id])){

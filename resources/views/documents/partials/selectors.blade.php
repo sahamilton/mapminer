@@ -17,7 +17,7 @@
 </div></div>
 
 
-<div class="form-group{{ $errors->has('vertical') ? ' has-error' : '' }}">
+<div class="form-group{{ $errors->has('salesprocess') ? ' has-error' : '' }}">
 <label for="salesprocess">Sales Process Step</label>
 <div class="input-group input-group-lg ">
 
