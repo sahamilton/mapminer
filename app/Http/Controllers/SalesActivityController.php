@@ -134,7 +134,7 @@ class SalesActivityController extends BaseController
            }
            // find all lead locations for the logged in user in these verticals
            $leads = $this->lead->myLeads($verticals)->get();
-          
+        
            return response()->view('salesactivity.show',compact('activity','locations','leads','statuses'));
         }
         $locations = array();

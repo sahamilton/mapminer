@@ -109,9 +109,10 @@ class Lead extends Model
     }
 
     public function myLeads($verticals=null){
-      
-      return $this->whereHas('salesteam',function ($q){
-          $q->where('person_id','=',auth()->user()->person->id);
+      $statuses = [1,2];
+      return $this->whereHas('salesteam',function ($q) use ($statuses){
+          $q->where('person_id','=',auth()->user()->person->id)
+          ->whereIn('status_id',$statuses);
         
         })
         ->where('datefrom','<=',date('Y-m-d'))
