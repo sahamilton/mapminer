@@ -17,9 +17,10 @@
                         <li class="dropdown{{ (Request::is('admin/company*','admin/locations*') ? ' class="active"' : '') }}">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="{{{ route('company.index') }}}">
 							<span class="glyphicon glyphicon-wrench"></span> Data Management<span class="caret"></span>
-						</a>
+						</a> 
+                        
 						<ul class="dropdown-menu multi-level">
-                        <!-- Manage accounts -->
+                         @can('manage_accounts') <!-- Manage accounts -->
                             <li class="dropdown-submenu">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Accounts</a>
                                 <ul class="dropdown-menu">
@@ -50,7 +51,7 @@
                                     <a href="{{{ route('searchfilters.index') }}}">
                                     <span class="glyphicon glyphicon-filter"></span> Manage Filters</a>
                                     </li> 
-                                    
+                                   
                                     <li class="divider"></li>
                                     
                                     <li{{ (Request::is('admin/salesnote*') ? ' class="active"' : '') }}>
@@ -62,12 +63,14 @@
                                     <span class="glyphicon glyphicon-import"></span> Review / Manage Location Notes</a>
                                     </li>
                                     
+                                 </ul>
+                                 </li>  
                                     
                                     
-                                    
-                                
-                                </ul>
-                           
+                            @endcan     
+                              
+                            
+                           @can('manage_branches')
                             <!-- Manage Branches  -->   
 
 						    <li class="dropdown-submenu">
@@ -93,7 +96,7 @@
 
                             </ul>
                          </li>
-
+                         @endcan
 
                              
                          <!-- Manage Users  -->  
@@ -114,8 +117,8 @@
                             </ul>
                         </li>
                         @endcan
-                        </ul>
-                        </li>
+              
+                      </ul>
 
           <!-- Manage Resources  -->      
             <li class="dropdown{{ (Request::is('admin/lead*','admin/document*','admin/search*') ? ' active' : '') }}">

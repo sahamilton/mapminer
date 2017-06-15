@@ -3,7 +3,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\BaseController;
 use App\User;
 use App\Role;
-use Illuminate\Http\Request;
+use App\Http\Requests\PermissionFormRequest;
 use App\Permission;
 class AdminPermissionsController extends BaseController {
 
@@ -87,12 +87,9 @@ class AdminPermissionsController extends BaseController {
 	 *
 	 * @return Response
 	 */
-	public function store(Request $request)
+	public function store(PermissionFormRequest $request)
 	{
-		$validator = \Validator::make(\Input::all(), ['name' => 'required']);
-        // Check if the form validates with success
-        if ($validator->passes())
-        {
+		
   	    // Get the inputs, with some exceptions
             $inputs = $request->except('_token');
 			$inputs['display_name'] = ucwords($inputs['name']);
@@ -110,7 +107,7 @@ class AdminPermissionsController extends BaseController {
 
             // Redirect to the new role page
             return redirect()->to(route('permissions.index'))->with('error', 'Unable to create permission');
-		}
+		
             // Redirect to the role create page
             return redirect()->to(route('permissions.create'))->withInput()->with('error', 'Unable to create permission');
         
@@ -162,30 +159,28 @@ class AdminPermissionsController extends BaseController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update(Permission $permission, Request $request)
+	public function update(Permission $permission, PermissionFormRequest $request)
 	{
 		
-		$validator = \Validator::make($request->all(), ['name' => 'required']);
-        // Check if the form validates with success
-        if ($validator->passes())
-        {
+		
   	    // Get the inputs, with some exceptions
             $inputs = $request->except(['csrf_token']);
             $inputs['display_name'] = ucwords($inputs['name']);
-            $inputs['name'] = str_replace(' ','_',$inputs['name']);
+            $inputs['name'] = strtolower(str_replace(' ','_',$inputs['name']));
             if ($permission->update($inputs))
             {
-                
-                $permission->roles()->sync($inputs['roles']);
+                if($request->has('roles')){
+                	$permission->roles()->sync($inputs['roles']);
+                }else{
+                	$permission->roles()->detach();
+                }
                 // Redirect to the new role page
                 return redirect()->to(route('permissions.index'))->with('success', 'Permission updated succesfully');
             }
 
             // Redirect to the new role page
             return redirect()->to(route('permissions.index'))->withInput()->with('error', 'Unable to update permission');
-		}
-            // Redirect to the role create page
-        return redirect()->to(route('permissions.edit'))->withInput()->with('error', 'Unable to update permission');
+      
         
 	}
 		
