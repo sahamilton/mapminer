@@ -136,7 +136,7 @@ class LeadSourceController extends Controller
     public function announce($id){
 
         $source = $this->leadsource->with('leads','leads.salesteam','leads.vertical')
-            ->whereHas('salesteam',function($q){
+            ->whereHas('leads',function($q){
                     $q->where('datefrom','<=',date('Y-m-d'))
                         ->where('dateto','>=',date('Y-m-d'));
                 })
@@ -151,7 +151,7 @@ class LeadSourceController extends Controller
     }
 
 
-    private function salesteam($leads,$id = null){
+    private function salesteam($leads){
         $salesreps = array();
  
         foreach ($leads as $lead){
@@ -229,7 +229,7 @@ class LeadSourceController extends Controller
     public function email(Request $request, $id){
 
 
-        $data['source'] = $this->leadsource->with('leads','leads.salesteam')
+        $data['source'] = $this->leadsource->with('leads','leads.salesteam','leads.salesteam.reportsTo')
         ->whereHas('leads.salesteam',function($q){
                     $q->where('datefrom','<=',date('Y-m-d'))
                         ->where('dateto','>=',date('Y-m-d'));
@@ -261,13 +261,15 @@ class LeadSourceController extends Controller
     }
 
     private function notifyManagers($data,$salesteam){
+
         $managers = array();
         foreach ($salesteam as $salesrep){
-            if($salesrep->reportsTo){
-                $data['managers'][$salesrep->reportsTo->id]['team'][]=$salesrep->firstname ." ". $salesrep->lastname;
-                $data['managers'][$salesrep->reportsTo->id]['email']=$salesrep->reportsTo->userdetails->email;
-                $data['managers'][$salesrep->reportsTo->id]['firstname']=$salesrep->reportsTo->firstname;
-                $data['managers'][$salesrep->reportsTo->id]['lastname']= $salesrep->reportsTo->lastname;
+           
+            if($salesrep['details']->reportsTo){
+                $data['managers'][$salesrep['details']->reportsTo->id]['team'][]=$salesrep['details']->postName();
+                $data['managers'][$salesrep['details']->reportsTo->id]['email']=$salesrep['details']->reportsTo->userdetails->email;
+                $data['managers'][$salesrep['details']->reportsTo->id]['firstname']=$salesrep['details']->reportsTo->firstname;
+                $data['managers'][$salesrep['details']->reportsTo->id]['lastname']= $salesrep['details']->reportsTo->lastname;
             }
         }
         

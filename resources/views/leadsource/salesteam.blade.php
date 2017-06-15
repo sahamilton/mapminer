@@ -48,14 +48,14 @@
 <tbody>
 @foreach ($salesteam as $team)
 <tr>
-<td>{{$team->fullName()}}</td>
+<td>{{$team['details']->fullName()}}</td>
 <td>
-@if(count($team->reportsTo) > 0)
-	{{$team->reportsTo->fullName()}}
+@if(count($team['details']->reportsTo) > 0)
+	{{$team['details']->reportsTo->fullName()}}
 @endif
 </td>
-<td>{{$team->city}}, {{$team->state}}</td>
-<td>{{$team->userdetails->email}}</td>
+<td>{{$team['details']->city}}, {{$team['details']->state}}</td>
+<td>{{$team['details']->userdetails->email}}</td>
 
 </tr>
 @endforeach

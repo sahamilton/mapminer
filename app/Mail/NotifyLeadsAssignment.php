@@ -20,7 +20,8 @@ class NotifyLeadsAssignment extends Mailable
     public function __construct($data,$team)
     {
         $this->data = $data;
-        $this->team = $team;
+        $this->team = $team['details'];
+       
         
     }
 
