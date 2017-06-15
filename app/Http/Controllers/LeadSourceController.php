@@ -174,7 +174,7 @@ class LeadSourceController extends Controller
                         $salesreps[$rep]['status'][6] = 0;
                        
                     }
-                    $salesreps[$rep]['count'] = $salesreps[$rep]['count'] + 1;
+                    $salesreps[$rep]['count'] = $salesreps[$rep]['count'] ++;
                     $salesreps[$rep]['status'][$salesrep->pivot->status_id] ++;
                     
                 }          
