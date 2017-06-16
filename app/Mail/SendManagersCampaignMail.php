@@ -30,7 +30,8 @@ class SendManagersCampaignMail extends Mailable
      */
     public function build()
     {
-         return $this->markdown('email.managerleads')
+         return $this->markdown('emails.managercampaign')
+          ->subject('New Sales Campaign for your team')
          ->to($this->manager['email'],$this->manager['firstname'] . " " . $this->manager['lastname']);
     }
 }

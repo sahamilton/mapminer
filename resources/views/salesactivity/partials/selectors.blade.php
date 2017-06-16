@@ -1,5 +1,5 @@
 <div class="form-group{{ $errors->has('vertical') ? ' has-error' : '' }}">
-<label for="vertical">Vertical</label>
+<label for="vertical">Vertical!!</label>
 <div class="input-group input-group-lg ">
 
 
@@ -30,5 +30,5 @@
 
 @endforeach
 
-{!! $errors->first('salesprocess', '<p class="help-block">:message</p>') !!}
+{!! $errors->first('salesprocess', '<p class="help-block has-error">:message</p>') !!}
 </div></div>

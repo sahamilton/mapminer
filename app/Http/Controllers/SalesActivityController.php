@@ -69,6 +69,7 @@ class SalesActivityController extends BaseController
     public function create()
     {
         $verticals = $this->vertical->vertical();
+  
         $process = $this->process->pluck('step','id');
 
         return response()->view('salesactivity.create',compact('verticals','process'));
@@ -195,103 +196,7 @@ class SalesActivityController extends BaseController
         return redirect()->route('salesactivity.index');
     }
 
-    public function announce($id){
-
-        $activity = $this->activity->with('vertical')->findOrFail($id);
-        $verticals = array_unique($activity->vertical->pluck('id')->toArray());
-        $salesteam = $this->filterSalesReps($verticals);
-        $verticals = array_unique($activity->vertical->pluck('filter')->toArray());
-        $message = $this->constructMessage($activity,$verticals);
-        return response()->view('salesactivity.salesteam',compact('salesteam','activity','message'));
-    }
-
-
-    public function email(Request $request, $id){
-
-        $data['activity'] = $this->activity->with('vertical','salesprocess')->findOrFail($id);
-        $data['verticals'] = array_unique($data['activity']->vertical->pluck('id')->toArray());
-        $salesteam = $this->filterSalesReps($data['verticals']);
-
-        $data['message'] = $request->get('message');;
-        $data['count'] = count($salesteam);
-        $this->notifySalesTeam($data,$salesteam);
-
-        $this->notifyManagers($data,$salesteam);
-        $this->notifySender($data);
-        return response()->view('salesactivity.sendercampaign',compact('data'));
-
-    }
-    private function notifySalesTeam($data,$salesteam){
-        foreach ($salesteam as $data['sales']){
-
-            Mail::queue(new SendCampaignMail($data));
-            
-        }
-    }
-
-    private function notifySender($data){
-        $data['sender'] = auth()->user()->email;
-        Mail::queue(new SendSenderCampaignMail($data));
-
-    }
-
-    private function notifyManagers($data,$salesteam){
-        $managers = array();
-        foreach ($salesteam as $salesrep){
-            if($salesrep->reportsTo){
-                $data['managers'][$salesrep->reportsTo->id]['team'][]=$salesrep->firstname ." ". $salesrep->lastname;
-                $data['managers'][$salesrep->reportsTo->id]['email']=$salesrep->reportsTo->userdetails->email;
-                $data['managers'][$salesrep->reportsTo->id]['firstname']=$salesrep->reportsTo->firstname;
-                $data['managers'][$salesrep->reportsTo->id]['lastname']= $salesrep->reportsTo->lastname;
-            }
-        }
-        foreach ($data['managers'] as $manager){
-            Mail::queue(new SendManagersCampaignMail($data,$manager));
-        }
-
-    }
-    private function constructMessage($activity,$verticals){
-
-        $message = 
-        $activity->title .  " campaign runs from " . $activity->datefrom->format('M j, Y'). " until " . $activity->dateto->format('M j, Y').
-        ". ".$activity->description."</p>";
-        $message.="This campaign focuses on: <ul>";
-       
-        $message.= "<li>" . implode("</li><li>",$activity->salesprocess->pluck('step')->toArray()). "</li>";
-        
-        $message .='</ul> for the following sales verticals:';
-        $message .='<ul>';
- 
-        
-            $message.= "<li>" . implode("</li><li>",$verticals). "</li>";
-        
-        $message.="</ul></p>";
-        $message.="<p>Check out <strong><a href=\"".route('salesactivity.show',$activity->id)."\">MapMiner</a></strong> for resources, including nearby locations, to help you with this campaign.</p>";
-
-        return $message;
-    }
-
-    private function filterSalesReps( $verticals){
-        // find sales reps (user role = 5)
-        // 
-        // The filter by vertical if they have a vertical
-        // or include them if they don't
-        //  This doesnt include the not specified
-        return Person::with('userdetails','reportsTo','reportsTo.userdetails')
-        ->whereHas('userdetails.roles',function ($q){
-            $q->where('role_id','=',5);
-        })
-        ->where(function($query) use($verticals){
-            $query->whereHas('industryfocus',function ($q) use($verticals){
-                $q->whereIn('search_filter_id',$verticals);
-            })
-            ->orHas('industryfocus','<',1);
-        })
-        ->whereNotNull('lat')
-        ->whereNotNull('lng')
-        ->get();
-       
-    }
+   
 
      private function setDates($data){
         $data['datefrom'] = \Carbon\Carbon::createFromFormat('m/d/Y', $data['datefrom']);

@@ -1,6 +1,6 @@
 @component('mail::message')
 
-## New Leads Assigned to your team
+## New Sales Campaign for your team
 
 {{$manager['firstname']}};
 

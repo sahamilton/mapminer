@@ -323,9 +323,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 
 		Route::get('campaigndocs/{id}',['as'=>'salesdocuments.index','uses'=>'SalesActivityController@getSalesActivity']);
 
-		Route::get('campaign/{id}/announce',['as'=>'campaign.announce','uses'=>'SalesActivityController@announce']);
+		Route::get('campaign/{id}/announce',['as'=>'campaign.announce','uses'=>'CampaignEmailController@announceCampaign']);
 
-		Route::post('campaign/{id}/message',['as'=>'sendcampaign.message','uses'=>'SalesActivityController@email']);
+		Route::post('campaign/{id}/message',['as'=>'sendcampaign.message','uses'=>'CampaignEmailController@email']);
 			
 
 	#Watchlists
