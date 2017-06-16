@@ -124,7 +124,7 @@ class Person extends NodeModel {
 
 	
 	
-	public function findNearByPeople($lat,$lng,$distance,$limit=null, $role=null){
+	public function findNearByPeople($lat,$lng,$distance,$limit=null, $role=null,$verticals=null){
 		$query = "SELECT id,firstname,lastname,lat,lng, email,distance_in_mi,employee_id,role,city,state
 			  FROM (
 					SELECT DISTINCT persons.id as id, 
@@ -135,9 +135,12 @@ class Person extends NodeModel {
 										 + SIN(RADIANS(latpoint))
 										 * SIN(RADIANS(lat)))) AS distance_in_mi
 					 FROM 
-					 	persons,users,role_user,roles
+					 	persons,users,role_user,roles";
+					 if($verticals){
+					 	$query.=", person_search_filter ";
+					 }
 
-					 JOIN (
+					 $query .= "JOIN (
 							SELECT  ".$lat."  AS latpoint,  ".$lng." AS longpoint, ".$distance." AS r
 					   ) AS p
 					 WHERE 
@@ -152,6 +155,11 @@ class Person extends NodeModel {
 						 AND role_user.role_id = roles.id";
 						 if(isset($role)){
 						 	$query.=" and roles.name ='". $role."'";
+						 }
+						 if($verticals){
+						 	$query.=" and persons.id = person_search_filter.person_id
+						 			and person_search_filter.search_filter_id in ('" .
+						 			implode("','",$verticals) ."')";
 						 }
 						$query.=" ) d
 			 

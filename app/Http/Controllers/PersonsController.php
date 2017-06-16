@@ -176,8 +176,8 @@ class PersonsController extends BaseController {
 	 */
 	public function show($person)
 	{
-
-//note remove manages & manages.servicedby
+		
+		//note remove manages & manages.servicedby
 		$people = $this->persons
 			->with('directReports',
 				'directReports.userdetails.roles',
@@ -187,6 +187,7 @@ class PersonsController extends BaseController {
 				'managesAccount.countlocations',
 				'managesAccount.industryVertical',
 				'userdetails',
+				'industryfocus',
 				'userdetails.roles',
 				'branchesServiced',
 				'branchesServiced.servicedBy'

@@ -10,6 +10,7 @@
         <th>Sales Rep</th>
         <td>Manager</td>
         <td>Location</td>
+        <td>Industry Focus</td>
         <td>Leads</td>
 
 
@@ -26,6 +27,15 @@
                 @endif
             </td>
             <td>{{$team['details']->city}} {{$team['details']->state}}</td>
+            <td>
+                <ul>
+                @foreach ($team['details']->industryfocus as $vertical)
+                   
+                    <li>{{$vertical->filter}}</li>
+       
+                @endforeach
+                </ul>
+            </td>
             <td>
                 <ul>
                 @foreach ($team['status'] as $key=>$value)

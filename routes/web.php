@@ -280,8 +280,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 	#Leads
 		Route::get('leads/address',['as'=>'lead.address','uses'=>'LeadsController@address']);
 		Route::get('leads/{vertical}/vertical',['as'=>'lead.vertical','uses'=>'LeadsController@index']);
-		Route::get('leads/batch',['as'=>'batchimport','uses'=>'LeadsController@batchImport']);
-		Route::post('leads/batch',['as'=>'leads.batch','uses'=>'LeadsController@leadImport']);
+		//Route::get('leads/batch',['as'=>'batchimport','uses'=>'LeadsController@batchImport']);
+		//Route::post('leads/batch',['as'=>'leads.batch','uses'=>'LeadsController@leadAdd']);
 		Route::get('leads/{id}/purge',['as'=>'leads.purge','uses'=>'LeadsController@destroy']);
 		Route::get('leads/assign/{sid}/source',['as'=>'leads.geoassign','uses'=>'LeadsController@geoAssignLeads']);
 		Route::get('leads/{id}/assign',['as'=>'leads.leadassign','uses'=>'LeadsController@assignLeads']);
@@ -293,9 +293,11 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 	
 	#LeadSource
 		Route::get('leadsource/{id}/purge',['as'=>'leadsource.purge','uses'=>'LeadSourceController@destroy']);
-		Route::get('leadsource/{id}/announce',['as'=>'leadsource.announce','uses'=>'LeadSourceController@announce']);
-		Route::post('leadsource/{id}/email',['as'=>'sendleadsource.message','uses'=>'LeadSourceController@email']);
+		Route::get('leadsource/{id}/announce',['as'=>'leadsource.announce','uses'=>'LeadsEmailController@announceLeads']);
+		Route::post('leadsource/{id}/email',['as'=>'sendleadsource.message','uses'=>'LeadsEmailController@email']);
 		Route::get('leadsource/{id}/assign',['as'=>'leadsource.assign','uses'=>'LeadSourceController@assignLeads']);
+		Route::get('leadsource/{id}/add',['as'=>'leadsource.addleads','uses'=>'LeadSourceController@addLeads']);
+		Route::post('leadsource/{id}/add',['as'=>'leadsource.addleads','uses'=>'LeadSourceController@importLeads']);
 		Route::resource('leadsource','LeadSourceController');
 
 	# Lead Status

@@ -9,6 +9,7 @@
 
         <th>Sales Rep</th>
         <td>Manager</td>
+        <td>Industry Focus</td>
         <td>Location</td>
         <td>Leads</td>
 
@@ -25,6 +26,11 @@
                     {{$team->reportsTo->postName()}}
                 @endif
             </td>
+            <td>
+            <ul>
+            @foreach($team->industryfocus as $vertical)
+                <li>{{$vertical->filter}}</li>
+            @endforeach
             <td>{{$team->city}} {{$team->state}}</td>
             <td>{{count($team->salesleads)}}</td>
         </tr>

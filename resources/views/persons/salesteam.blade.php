@@ -1,11 +1,17 @@
 @extends('site/layouts/default')
 @section('content')
 
-<h2> {{$people->firstname}} {{$people->lastname}}</h2>
+<h2> {{$people->postName()}}</h2>
+<p><strong>Industry Focus:</strong>
+<ul>
+@foreach ($people->industryfocus as $vertical)
+<li>{{$vertical->filter}}</li>
+@endforeach
+</ul></p>
 <p>Reports to: 
 <a href="{{route('person.show',$people->reportsTo->id)}}">
 		
-		
+
 {{$people->reportsTo->firstname}} {{$people->reportsTo->lastname}}</a>
 <p><a href="mailto:{{$people->email}}" title="Email {{$people->firstname}} {{$people->lastname}}">{{$people->email}}</a> </p>
 <h4>Branches serviced by {{$people->firstname}} {{$people->lastname}}</h4>

@@ -24,7 +24,11 @@ class LeadSourceFormRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'source'=>'required',
+            'description'=>'required',
+            'datefrom'=>'required|date',
+            'dateto'=>'required|date|after:datefrom',
+            'vertical'=>'required',
         ];
     }
 }

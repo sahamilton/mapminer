@@ -5,11 +5,13 @@
 <ul class="nav nav-tabs">
 	<li class="active"><a data-toggle="tab" href="#map"><strong>Map View</strong></a></li>
 	<li><a data-toggle="tab" href="#details"><strong>Details</strong></a></li>
-	<li><a data-toggle="tab" href="#leads"><strong>Leads</strong></a></li>
+	<li><a data-toggle="tab" href="#leads"><strong>Assigned Leads</strong></a></li>
+	<li><a data-toggle="tab" href="#unassigned"><strong>Unassigned Leads</strong></a></li>
 	<li><a data-toggle="tab" href="#team"><strong>Team</strong></a></li>
 	<li><a data-toggle="tab" href="#stats"><strong>Stats</strong></a></li>
+	
 </ul>
-
+<?php $unassigned = array();?>
 <div class="tab-content">
 	<div id="map" class="tab-pane fade in active">
 	@include('leadsource.partials._tabmap')
@@ -25,6 +27,10 @@
 	</div>
 	<div id="stats" class="tab-pane fade in ">
 	@include('leadsource.partials._tabstats')
+	</div>
+	<div id="unassigned" class="tab-pane fade in ">
+
+	@include('leadsource.partials._tabunassignedleads')
 	</div>
 </div>
 @include('partials._scripts')

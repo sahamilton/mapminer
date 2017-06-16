@@ -1,4 +1,4 @@
-<h4>Leads</h4>
+<h4>Assigned Leads</h4>
 
 
 
@@ -18,32 +18,37 @@
        
     </thead>
     <tbody>
-
+<?php $unassigned= array();?>
  @foreach($leadsource->leads as $lead)
-   	
-    <tr>  
-    <td><a href="{{route('leads.show',$lead->id)}}">{{$lead->companyname}}</a></td>
-    <td>{{$lead->businessname}}</td>
-    <td>{{$lead->city}}</td>
-    <td>{{$lead->state}}</td>
-    <td>{{$lead->created_at->format('M j, Y')}}</td>
-    <td>{{$lead->rankLead($lead->salesteam)}}</td>
-    <td>
+
+
+   
+    @if(count($lead->salesteam)>0)
     <?php $history = $lead->history();?>
-    @if(isset($history[$lead->id]['status']))
-        <ul>
+    <tr>  
+        <td><a href="{{route('leads.show',$lead->id)}}">{{$lead->companyname}}</a></td>
+        <td>{{$lead->businessname}}</td>
+        <td>{{$lead->city}}</td>
+        <td>{{$lead->state}}</td>
+        <td>{{$lead->created_at->format('M j, Y')}}</td>
+        <td>{{$lead->rankLead($lead->salesteam)}}</td>
+        <td>
+       
+            <ul>
 
-        @foreach ($history[$lead->id]['status'] as $state)
+            @foreach ($history[$lead->id]['status'] as $state)
 
-            <li>{{ $statuses[$state['status']]}}  {{$state['activitydate']}}</li>
-        @endforeach
-        </li>
-    @endif
-    </td>
+                <li>{{ $statuses[$state['status']]}}  {{$state['activitydate']}}</li>
+            @endforeach
+            </li>
+           
+        </td>
 	    
-    
     </tr>
+    
+    @endif
    @endforeach
     
     </tbody>
     </table>
+

@@ -42,20 +42,24 @@ class LeadsController extends BaseController
         $statuses = $this->leadstatus->pluck('status','id')->toArray();
         $query = Lead::query();
 
-        $query = $query->with('salesteam','leadsource','vertical','ownedBy')
-                ->where('datefrom','<=',date('Y-m-d'))
+        $query = $query->with('salesteam','leadsource','ownedBy')
+        ->wherehas('leadsource',function($q){
+            $q->where('datefrom','<=',date('Y-m-d'))
                 ->where('dateto','>=',date('Y-m-d'));
+        });
+           // I dont think this works now     
         if($vertical){
-          $query = $query->whereHas('vertical',function ($q) use($vertical){
+          $query = $query->whereHas('leadsource.verticals',function ($q) use($vertical){
               $q->whereIn('searchfilter_id',[$vertical]);
           });
         }
         $leads = $query->get();
 
-        $sources = $this->leadsource->pluck('source','id');
+        $sources = $this->leadsource->pluck('source','id')->toArray();
+       
         $salesteams = $this->getSalesTeam($leads);
        
-        return response()->view('leads.index',compact('leads','sources','statuses','salesteams'));
+        return response()->view('leads.index',compact('leads','statuses','sources','salesteams'));
     }
 
 
@@ -65,12 +69,11 @@ class LeadsController extends BaseController
             $leadreps = $lead->salesteam->pluck('id')->toArray();
             $salesreps = array_unique(array_merge($salesreps,$leadreps));
         }
-        return $this->person->with('userdetails','reportsTo','salesleads')
+        return $this->person->with('userdetails','industryfocus','reportsTo','salesleads')
            ->whereIn('id',$salesreps)
            ->whereHas('salesleads',function ($q) use($leads){
-                $q->whereIn('lead_id',$leads->pluck('id')->toArray())
-                    ->where('datefrom','<=',date('Y-m-d'))
-                    ->where('dateto','>=',date('Y-m-d'));
+                $q->whereIn('lead_id',$leads->pluck('id')->toArray());
+                   
             })
        ->get();
     }
@@ -138,17 +141,21 @@ class LeadsController extends BaseController
 
     public function show($id)
     {
-        $sources = $this->leadstatus->pluck('status','id')->toArray();
-        $lead = $this->lead->with('salesteam','leadsource','vertical','relatedNotes')
-            ->where('datefrom','<=',date('Y-m-d'))
-            ->where('dateto','>=',date('Y-m-d'))
-            ->findOrFail($id);
 
+        $sources = $this->leadstatus->pluck('status','id')->toArray();
+        $lead = $this->lead->with('salesteam','leadsource','leadsource.verticals','relatedNotes')
+        ->whereHas('leadsource',function($q){
+          $q->where('datefrom','<=',date('Y-m-d'))
+              ->where('dateto','>=',date('Y-m-d'));
+        })
+        ->findOrFail($id);
+        $verticals = $lead->leadsource->verticals->pluck('id')->toArray();
+    
         $rank = $this->lead->rankLead($lead->salesteam);
         $branch = new \App\Branch;
-            $branches = $branch->findNearbyBranches($lead->lat,$lead->lng,500,5,[5]);
+        $branches = $branch->findNearbyBranches($lead->lat,$lead->lng,500,5,[5]);
         if(count($lead->salesteam)==0){
-            $people = $this->person->findNearByPeople($lead->lat,$lead->lng,'5000',5,'Sales');
+            $people = $this->person->findNearByPeople($lead->lat,$lead->lng,'5000',5,'Sales',$verticals);
     
           
         }
@@ -233,7 +240,7 @@ class LeadsController extends BaseController
     public function getPersonsLeads($id){
         $statuses = $this->leadstatus->pluck('status','id')->toArray();
         $leads = $this->person->with('salesleads','salesleads.vertical','salesleads.leadsource')
-        ->whereHas('salesleads',function ($q){
+        ->whereHas('salesleads.leadsource',function ($q){
             $q->where('datefrom','<=',date('Y-m-d'))
              ->where('dateto','>=',date('Y-m-d'));
         })
@@ -244,9 +251,9 @@ class LeadsController extends BaseController
 
     public function getPersonSourceLeads($pid,$sid){
         $statuses = $this->leadstatus->pluck('status','id')->toArray();
-        $leads = $this->person->with('salesleads','salesleads.vertical')
-        ->whereHas('salesleads', function ($q) use($sid){
-            $q->where('lead_source_id','=',$sid)
+        $leads = $this->person->with('salesleads','salesleads.leadsource','salesleads.vertical')
+        ->whereHas('salesleads.leadsource', function ($q) use($sid){
+            $q->whereId($sid)
             ->where('datefrom','<=',date('Y-m-d'))
              ->where('dateto','>=',date('Y-m-d'));
         })
@@ -326,7 +333,7 @@ class LeadsController extends BaseController
             $data['distance']=\Config::get('leads.search_radius');
         }
 
-        return $this->person->findNearByPeople($data['lat'],$data['lng'],$data['distance'],$data['number'],'Sales');
+        return $this->person->findNearByPeople($data['lat'],$data['lng'],$data['distance'],$data['number'],'Sales',$data['verticals']);
     }
 
     private function createNewSource($request){
@@ -357,48 +364,7 @@ class LeadsController extends BaseController
         return $people;
     }
 
-    public function leadImport(BatchLeadImportFormRequest $request){
-        
-        $file= $request->file('file');
-        $validFiles = ['xlsx','xls','csv'];
-        if(!in_array($file->getClientOriginalExtension(),$validFiles)){
-            $validator = \Validator::make($request->all(), [
-                'file' => 'mimes:xls,xlsx,csv',]);
-
-            return redirect()
-            ->back()
-            ->withInput()
-            ->withErrors($validator);
-        }
-
-        $file->store('public/library');
-
-        if(! is_numeric($request->get('lead_source_id'))){
-                    
-                    $request->merge(['filename'=>basename($file)]); 
-                    $request = $this->createNewSource($request);
-                }
-
-        $source = $this->leadsource->findOrFail($request->get('lead_source_id'));
-
-        $leads = Excel::load($file,function($reader){
-           
-        })->get();
-        $count = null;
-        foreach ($leads->toArray() as $lead) {
-            $lead['user_id'] = auth()->user()->id;
-            
-            $lead['datefrom'] = $source->datefrom->format('m/d/Y');
-            $lead['dateto'] = $source->dateto->format('m/d/Y');
-            $lead['lead_source_id'] = $request->get('lead_source_id');
-            $newLead = $this->lead->create($lead);
-            $newLead->vertical()->attach($request->get('vertical'));
-            
-            $count++;
-
-        }
-        return redirect()->route('leadsource.show',$request->get('lead_source_id'))->withMessage(['status'=>'Imported ' . $count . ' leads']);
-     }
+    
     
     
 
@@ -413,6 +379,7 @@ class LeadsController extends BaseController
          
             return response()->view('leads.assign',compact('lead','people','branches'));
         }
+    
     public function postAssignLeads(Request $request){
         
         $lead= $this->lead->findOrFail($request->get('lead_id'));
@@ -425,10 +392,18 @@ class LeadsController extends BaseController
     }
 
     public function geoAssignLeads($sid){
+
+        $leadsource = $this->leadsource->with('verticals')->findOrFail($sid);
+       
+        $data['verticals'] = $leadsource->verticals->pluck('id')->toArray();
+       
         $leads = $this->lead->whereDoesntHave('salesteam')
         ->where('lead_source_id','=',$sid)
-        ->where('datefrom','<=',date('Y-m-d'))
-        ->where('dateto','>=',date('Y-m-d'))
+        ->whereHas('leadsource', function ($q){
+          $q->where('datefrom','<=',date('Y-m-d'))
+          ->where('dateto','>=',date('Y-m-d'));
+        })
+        
         ->get();
         $count = null;
         foreach ($leads as $lead) {

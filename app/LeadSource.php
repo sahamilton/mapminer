@@ -9,6 +9,9 @@ class LeadSource extends Model
 	public $table='leadsources';
 	public $dates = ['created_at','updated_at','datefrom','dateto'];
 	
+    public function verticals (){
+        return $this->belongsToMany(SearchFilter::class,'leadsource_searchfilter','leadsource_id','searchfilter_id');
+    }
 
     public function leads(){
     	return $this->hasMany(Lead::class, 'lead_source_id');

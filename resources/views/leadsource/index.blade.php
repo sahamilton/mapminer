@@ -18,8 +18,9 @@
     <th>Description</th>
     <th>Reference</th>
     <th>Leads</th>
+    
     <th>Available From / To</th>
-
+    <th>Verticals</th>
     @if (Auth::user()->hasRole('Admin'))
     <th>Actions</th>
     @endif
@@ -34,32 +35,56 @@
     <td>{{$source->reference}}</td>
     <td>{{count($source->leads)}}</td>
    	<td>
-    @if($source->dateto < Carbon\Carbon::now())
-    Expired {{$source->datefrom->format('M j,Y')}}
-    @elseif ($source->datefrom > Carbon\Carbon::now())
-        Commences {{$source->datefrom->format('M j,Y')}}
-    @else
-        {{$source->datefrom->format('M j,Y')}} - {{$source->dateto->format('M j,Y')}}
-    @endif
+        @if($source->dateto < Carbon\Carbon::now())
+            Expired {{$source->datefrom->format('M j,Y')}}
+        @elseif ($source->datefrom > Carbon\Carbon::now())
+            Commences {{$source->datefrom->format('M j,Y')}}
+        @else
+            {{$source->datefrom->format('M j,Y')}} - {{$source->dateto->format('M j,Y')}}
+        @endif
     </td>
-    
+    <td>
+    <ul>
+    @foreach($source->verticals as $vertical)
+        <li>{{$vertical->filter}}</li>
+    @endforeach
+    </ul>
+    </td>
 	@if (Auth::user()->hasRole('Admin'))
     <td>
-            @include('partials/_modal')
+     @include('partials/_modal')
     
-         <div class="btn-group">
-			  <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
-				<span class="caret"></span>
-				<span class="sr-only">Toggle Dropdown</span>
-			  </button>
-			  <ul class="dropdown-menu" role="menu">
-				  <li><a href="{{route('leadsource.announce',$source->id)}}"><i class="glyphicon glyphicon-envelope"></i> Notify Saleteam</a></li>
-				<li><a href="{{route('leadsource.edit',$source->id)}}"><i class="glyphicon glyphicon-pencil"></i> Edit this lead source</a></li>
-                <li><a href="{{route('leadsource.assign',$source->id)}}"><i class="glyphicon glyphicon-pencil"></i> Assign lead source leads</a></li>
-				<li><a data-href="{{route('leadsource.purge',$source->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = " this lead source and all its leads" href="#"><i class="glyphicon glyphicon-trash"></i> Delete this lead source</a></li>
-			  </ul>
-			</div>
-		
+        <div class="btn-group">
+            <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
+                Actions <span class="caret"> </span>
+                <span class="sr-only">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+                
+                <li>
+                <a href="{{route('leadsource.edit',$source->id)}}">
+                <i class="glyphicon glyphicon-pencil"></i>
+                 Edit this lead source
+                 </a>
+                 </li>
+
+                <li>
+
+                <li>
+                <a href="{{route('leadsource.addleads',$source->id)}}">
+                <i class="glyphicon glyphicon-plus"></i>
+                 Add leads to this source
+                 </a>
+                 </li>
+
+                <li>
+                <a data-href="{{route('leadsource.purge',$source->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = " this lead source and all its leads" href="#">
+                <i class="glyphicon glyphicon-trash"></i>
+                 Delete this lead source</a>
+                 </li>
+            </ul>
+        </div>
+
 		
     </td>
    @endif
