@@ -22,7 +22,7 @@ class LeadsController extends BaseController
     public $leadsource;
     public $vertical;
     public $leadstatus;
-    public $assignTo = Config::'leads.lead_distribution_roles';
+    public $assignTo = Config::get('leads.lead_distribution_roles');
 
     public function __construct(Person $person, Lead $lead,LeadSource $leadsource,SearchFilter $vertical,LeadStatus $status){
 
@@ -83,7 +83,11 @@ class LeadsController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+   /*
+
+   Moved to Lead Source Controller
+
+   public function create()
     {
         $verticals = $this->vertical->vertical();
 
@@ -97,6 +101,8 @@ class LeadsController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+   /*
+    Moved to Leads Source Controller
     public function store(LeadFormRequest $request)
     {
         
@@ -123,6 +129,9 @@ class LeadsController extends BaseController
     * @param  \Illuminate\Http\Request  $request
     * @return string address
     **/
+
+    /* 
+    Moved to Leads Source Controller
 
     private function getAddress($request){
         // if its a one line address return that
@@ -238,6 +247,7 @@ class LeadsController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+   
     public function getPersonsLeads($id){
         $statuses = $this->leadstatus->pluck('status','id')->toArray();
         $leads = $this->person->with('salesleads','salesleads.vertical','salesleads.leadsource')
@@ -249,6 +259,8 @@ class LeadsController extends BaseController
        
         return response()->view('leads.person',compact('leads','statuses'));
     }
+
+    
 
     public function getPersonSourceLeads($pid,$sid){
         $statuses = $this->leadstatus->pluck('status','id')->toArray();
@@ -287,6 +299,7 @@ class LeadsController extends BaseController
 			return response()->view('leads.address',compact('people','data'));
 			
     }
+    
     /**
      * Process GeoCode either array or object.
      *
@@ -347,7 +360,9 @@ class LeadsController extends BaseController
         $request->merge(['lead_source_id'=>$source->id]);
         return $request;
     }
+/*
 
+    Moved to Lead Source Controller
 
     public function batchImport(){
 

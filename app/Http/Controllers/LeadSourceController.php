@@ -294,6 +294,10 @@ class LeadSourceController extends Controller
         foreach ($leads->toArray() as $lead) {
             $lead['user_id'] = auth()->user()->id;
             $lead['lead_source_id'] = $source_id;
+            if(! $lead['lat'] or ! $lead['lng']){
+                $geoCode = app('geocoder')->geocode($this->getAddress($request))->get();
+                $lead[] = $this->getGeoCode($geoCode);
+            }
             $newLead = $this->lead->create($lead);
 
             
