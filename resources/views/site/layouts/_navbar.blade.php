@@ -41,10 +41,14 @@
                             <ul class="dropdown-menu">
                         <li><a href="{{route('salesorg')}}">Sales Organization</a></li>
                         @if(Auth::user()->hasRole('Admin') or Auth::user()->hasRole('Sales') or  Auth::user()->hasRole('Sales Manager'))
-                        <li class="divider"></li>
-                        <li><a href="{{route('resources.view')}}">Sales Library</a></li>
-                        <li><a href="{{route('salescampaigns')}}">Sales Campaigns</a></li>
-                        <li><a href="{{route('salesleads.index')}}">Sales Leads</a></li>
+                            <li class="divider"></li>
+                            <li><a href="{{route('resources.view')}}">Sales Library</a></li>
+                            <li><a href="{{route('salescampaigns')}}">Sales Campaigns</a></li>
+
+                        @endif 
+                         
+                        @if(Auth::user()->hasRole('Admin') or auth()->user()->hasRole('Branch Manager'))
+                            <li><a href="{{route('salesleads.index')}}">Sales Leads</a></li>
                         @endif
                         @if (Auth::user()->hasRole('Admin') or Auth::user()->hasRole('National Account Manager'))
                         <li class="divider"></li>

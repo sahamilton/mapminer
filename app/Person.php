@@ -154,7 +154,7 @@ class Person extends NodeModel {
 						 AND users.id=role_user.user_id
 						 AND role_user.role_id = roles.id";
 						 if(isset($role)){
-						 	$query.=" and roles.name ='". $role."'";
+						 	$query.=" and roles.name =in '". implode("','",$role) ."')";
 						 }
 						 if($verticals){
 						 	$query.=" and persons.id = person_search_filter.person_id

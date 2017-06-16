@@ -22,6 +22,7 @@ class LeadsController extends BaseController
     public $leadsource;
     public $vertical;
     public $leadstatus;
+    public $assignTo = Config::'leads.lead_distribution_roles';
 
     public function __construct(Person $person, Lead $lead,LeadSource $leadsource,SearchFilter $vertical,LeadStatus $status){
 
@@ -155,7 +156,7 @@ class LeadsController extends BaseController
         $branch = new \App\Branch;
         $branches = $branch->findNearbyBranches($lead->lat,$lead->lng,500,5,[5]);
         if(count($lead->salesteam)==0){
-            $people = $this->person->findNearByPeople($lead->lat,$lead->lng,'5000',5,'Sales',$verticals);
+            $people = $this->person->findNearByPeople($lead->lat,$lead->lng,'5000',5,$this->assignTo,$verticals);
     
           
         }
@@ -369,11 +370,10 @@ class LeadsController extends BaseController
     
 
     public function assignLeads($id ){
-      
-        
 
-            $lead = $this->lead->findOrFail($id);
-            $people = $this->person->findNearByPeople($lead->lat,$lead->lng,'5000',5,'Sales');
+            $lead = $this->lead->with('verticals')->findOrFail($id);
+            $verticals = $lead->verticals->pluck('id')->toArray();
+            $people = $this->person->findNearByPeople($lead->lat,$lead->lng,'5000',5,$this->assignTo.$verticals);
             $branch = new \App\Branch;
             $branches = $branch->findNearbyBranches($lead->lat,$lead->lng,500,5,[4,5]);
          
