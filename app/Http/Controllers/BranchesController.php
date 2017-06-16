@@ -438,13 +438,18 @@ class BranchesController extends BaseController {
 
 		return $branches;
 	}
-	public function getMyBranches($id)
+	public function mapMyBranches($id)
 	{	
 		$people = $this->person->with('manages')->findOrFail($id);
 		$branches = $people->manages;
 		return response()->view('branches.xml', compact('branches'))->header('Content-Type', 'text/xml');
 	}
-	
+	public function getMyBranches($id)
+	{	
+		$people = $this->person->with('manages')->findOrFail($id);
+		
+		return response()->view('persons.showmap', compact('people'));
+	}
 	
 	public function makeMyBranchXML($result) {
 		
@@ -680,8 +685,10 @@ class BranchesController extends BaseController {
 	
 	Excel::create('Branches',function($excel){
 			$excel->sheet('Watching',function($sheet) {
-				$result = $this->branch->all();;
-				$sheet->loadview('branches.export',compact('result'));
+				$result = $this->branch->with('manager')->get();
+				
+			
+				$sheet->loadView('branches.export',compact('result'));
 			});
 		})->download('csv');
 

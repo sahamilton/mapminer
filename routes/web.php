@@ -78,6 +78,7 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('branches/{branchId}/showlist',['as' => 'showlist.locations', 'uses' => 'LocationsController@listNearbyLocations']);
 		Route::get('branches/{branchId}/salesteam',['as' => 'showlist.salesteam', 'uses' => 'BranchesController@showSalesTeam']);
 		Route::get('branches/managed/{mgrId}',['as'=>'managed.branch', 'uses'=>'BranchesController@getMyBranches']);
+		Route::get('branches/managedmap/{mgrId}',['as'=>'managed.branchmap', 'uses'=>'BranchesController@mapMyBranches']);
 		Route::resource('branches','BranchesController',['only' => ['index', 'show']]);
 	
 	#Regions
