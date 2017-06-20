@@ -198,6 +198,11 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('rank',['as'=>'api.rank','uses'=>'DocumentsController@rank']);
     	Route::get('watchedby/{id}',['as'=>'watchedby','uses'=>'DocumentsController@watchedby']);
     	Route::get('documents/{id}',['as'=>'documents.show','uses'=>'DocumentsController@show']);
+
+
+    	Route::get('search',function(){
+    		return response()->view('search.vuesearch');
+    	});
 });
 
 /** ------------------------------------------
@@ -235,10 +240,11 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 
 
 	#Locations
-		Route::resource('locations','LocationsController');
+		
 		Route::post('locations/bulkimport', ['as'=>'locations.import', 'uses'=>'LocationsController@bulkImport']);
 		Route::get('locationnotes',['as'=>'locations.notes', 'uses'=>'LocationsController@locationnotes']);
 		Route::get('api/geocode',['as'=>'api.geocode','uses'=>'LocationsController@bulkGeoCodeLocations']);
+		Route::resource('locations','LocationsController');
 	
 	#Companies
 		Route::get('companies/export', ['as'=>'companies.export', 'uses'=>'CompaniesController@export']);

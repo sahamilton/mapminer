@@ -72,20 +72,15 @@ protected $permission;
 			$people = Person::with('manages')->findorFail($id->id);
 			$branches= $people->manages;
 
-			$fields = array('Branch'=>'branchname',
-						'Number'=>'branchnumber',
-						'Service Line'=>'brand',
-						'Branch Address'=>'street',
-						'City'=>'city',
-						'State'=>'state');
-			return response()->view('persons.showlist', compact('people','branches','fields'));
+			
+			return response()->view('persons.showlist', compact('people','branches'));
 			
 		}else{
 			$people = Person::with('managesAccount')->findorFail($id->id);
 			$accounts = $people->managesAccount;
-			$fields = array('Account'=>'account');
 			
-			return response()->view('persons.showaccount', compact('people','accounts','fields'));
+			
+			return response()->view('persons.showaccount', compact('people','accounts'));
 		}
 		
 	}

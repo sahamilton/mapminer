@@ -6,6 +6,8 @@ use App\Company;
 use App\User;
 use App\Location;
 use App\Serviceline;
+use Illuminate\Http\Request;
+use App\Http\Requests\LocationFormRequest;
 
 
 class LocationsController extends BaseController {
@@ -66,24 +68,16 @@ class LocationsController extends BaseController {
 	 *
 	 * @return Response
 	 */
-	public function store()
+	public function store(LocationFormRequest $request)
 	{
-	
-		if(! $this->location->isValid($input = \Input::all())){
-			var_dump(\Input::all());
-			dd($this->location->errors);
-			return \Redirect::back()->withInput()->withErrors($this->location->errors);
-		}
 		
-		
-		$this->location = $this->location->create($input);
-				
+		$this->location = $this->location->create($request->all());		
 		// add lat lng to location
 		
-		$address = $input['street'] . ",". $input['city'] .",". $input['state']." ". $input['zip'];
+		$address = $request->get('street') . ",". $request->get('city') .",". $request->get('state')." ". $request->get('zip');
 		$this->geoCodeAddress($address);
 		
-		return \Redirect::route('location.show',$this->location->id);
+		return redirect()->route('location.show',$this->location->id);
 	}
 
 	/**
@@ -197,16 +191,13 @@ class LocationsController extends BaseController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update($location)
+	public function update(LocationFormRequest $request, $location)
 	{
 		$this->location = $location;
 		
 		
-		$input = \Input::only('businessname','street','city','state','zip','company_id','id','phone','contact','segment','businesstype');
+		$input = $request->only('businessname','street','city','state','zip','company_id','id','phone','contact','segment','businesstype');
 		
-		if(! $this->location->isValid($input)){
-			return redirect()->back()->withInput()->withErrors($this->location->errors);
-		}
 // geocode location
 
 		$this->location->update($input);
@@ -230,7 +221,7 @@ class LocationsController extends BaseController {
 		$companyid = $this->location->company_id;
 		$this->location->destroy($location);
 
-		return \Redirect::route('company.show',$companyid);
+		return redirect()->route('company.show',$companyid);
 	}
 
 	
@@ -269,11 +260,11 @@ class LocationsController extends BaseController {
 	 * @param  [type] $id [description]
 	 * @return [type]     [description]
 	 */
-	public function getClosestBranch($id,$n=5)
+	public function getClosestBranch(Request $request,$id,$n=5)
 	
 	{
-		if (\Input::get('d')) {
-			$this->distance = \Input::get('d');
+		if ($request->has('d')) {
+			$this->distance = $request->get('d');
 		}
 		$this->location = $this->location->with('company','company.serviceline')->findOrFail($id);
 
@@ -287,10 +278,10 @@ class LocationsController extends BaseController {
 		
 	}
 
-	public function showLocationsNearbyBranches($id)
+	public function showLocationsNearbyBranches(Request $request,$id)
 	{	
-		if (\Input::get('d')) {
-			$this->distance = \Input::get('d');
+		if ($request->has('d')) {
+			$this->distance = $request->get('d');
 		}
 		$this->location = $this->location->with('company','company.serviceline')->findOrFail($id);
 		$this->getCompanyServiceLines();
@@ -314,11 +305,11 @@ class LocationsController extends BaseController {
 	}
 
 
-	public function showNearbyLocations()
+	public function showNearbyLocations(Request $request)
 	{
 		
-		if (\Input::get('d')) {
-			$data['distance'] = \Input::get('d');
+		if ($request->has('d')) {
+			$data['distance'] = $request->get('d');
 		}else{
 			$data['distance'] = '50';
 		}
@@ -358,25 +349,24 @@ class LocationsController extends BaseController {
 			}
 		}
 
-		$fields = array('Business Name'=>'businessname','Street'=>'street','City'=>'city','State'=>'state','ZIP'=>'zip','Watching'=>'watch');
-		return response()->view('branches.showlist', compact('data','locations','mywatchlist','fields','filtered'));
+		return response()->view('branches.showlist', compact('data','locations','mywatchlist','filtered'));
 	}
 		
 	
-	private function getNearbyLocations($lat=NULL,$lng=NULL,$distance=NULL,$company_id = null,$vertical=null)
+	private function getNearbyLocations(Request $request, $lat=NULL,$lng=NULL,$distance=NULL,$company_id = null,$vertical=null)
 	
 	{
 		
 		
-		if (\Input::get('d')) {
-			$distance = \Input::get('d');
+		if ($request->has('d')) {
+			$distance = $reqquest->get('d');
 		}else{
 			$distance = '10';
 		}
 		
-		if(\Input::get('lat')){
-			$loclat = \Input::get('lat');
-			$loclng = \Input::get('lng');
+		if($request->has('lat')){
+			$loclat = $request->get('lat');
+			$loclng = $request->get('lng');
 			
 		}elseif (isset($lat) && isset($lng)){
 			$loclat = $lat;
@@ -421,39 +411,21 @@ class LocationsController extends BaseController {
 	}	
 	
 	
-	public function bulkImport() {
-		
-		// Check that we have a file
-		
-		$rules= ['upload' => 'required', 'company'=>'required','segment'=>'required'];
-
+	public function bulkImport(LocationImportFormRequest $request) {
 		
 
-		$validator = Validator::make(\Input::all(), $rules);
-
-    	if ($validator->fails())
+		if($request->has('segment'))
 		{
-			
-			return \Redirect::back()->withErrors($validator);
-		} 
-		
-		$segment = \Input::get('segment');
-		if($segment == 0)
-		{
+			$request->get('segment');
+		}else{
 			$segment = NULL;
 		}	
 		
-		$company_id = \Input::get('company');
+		$company_id = $request->get('company');
 
 		
 		// Make sure its a CSV file
-		$file = $this->location->checkImportFileType($rules);
-		
-		if(!is_object($file)) {
-		
-			return \Redirect::back()->withErrors(['Invalid file format.  It needs to be a csv. file']);
-			
-		}
+		$file = $request->file('upload');
 		
 		// Rename and Move file to correct server location  
 		$name = $file->getClientOriginalName();
@@ -475,7 +447,7 @@ class LocationsController extends BaseController {
 
 		if($data !== $this->location->fillable){
 
-			return \Redirect::back()->withErrors(['Invalid file format.  Check the fields:<br />', array_diff($this->location->fillable,$data)]);
+			return redirect()->back()->withErrors(['Invalid file format.  Check the fields:<br />', array_diff($this->location->fillable,$data)]);
 		}
 		$table ='locations';
 		

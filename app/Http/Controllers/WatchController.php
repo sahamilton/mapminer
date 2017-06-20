@@ -104,14 +104,9 @@ class WatchController extends BaseController {
 	public function watching($user_id){
 		$user = User::findOrFail($user_id);
 		$watch = $this->getMyWatchList($user_id);
-		$fields = ['Business Name'=>'businessname',
-			 'National Acct'=>'companyname',
-			 'Address'=>'street',
-			 'City'=>'city',
-			 'State'=>'state',
-			 'ZIP'=>'zip']; 
 		
-		return response()->view('watch.show', compact('watch','fields','user'));
+		
+		return response()->view('watch.show', compact('watch','user'));
 		
 		
 	}

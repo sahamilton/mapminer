@@ -1,18 +1,7 @@
 @extends('site.layouts.default')
 
 
-@if ($data['type'] == 'branch')
-	<?php $fields = array('Branch Name'=>'branchname','Service Line'=>'servicelines','Address'=>'street','City'=>'city','State'=>'state','ZIP'=>'zip','Miles'=>'distance_in_mi'); 
-?>
-@else
-<?php $fields = array('Business Name'=>'businessname','National Acct'=>'companyname','Address'=>'street','City'=>'city','State'=>'state','ZIP'=>'zip','Miles'=>'distance_in_mi','Watch'=>'watch_list'); 
-?>
-
-@endif
 @section('content')
-
-
- 
 
 <h1>{{$data['title']}}</h1>
 

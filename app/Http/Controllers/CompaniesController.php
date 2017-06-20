@@ -48,9 +48,7 @@ class CompaniesController extends BaseController {
 
 		$locationFilter = 'both';
 
-		$fields = array('Company'=>'companyname','Manager'=>'manager','Email'=>'email','Vertical'=>'vertical','Service Lines'=>'serviceline','Has Locations'=>'locationcount');
 		
-
 	
 		return response()->view('companies.index', compact('companies','title','filtered','locationFilter'));
 	}
@@ -214,7 +212,7 @@ class CompaniesController extends BaseController {
 		
 		// fields to display in the view
 		
-		$fields = array('Business Name'=>'businessname','Street'=>'street','City'=>'city','State'=>'state','ZIP'=>'zip','Segment'=>'segment','Business Type'=>'businesstype');
+		
 		
 		if (auth()->user()->hasRole('Admin')) {
 			$fields['Actions']='actions';
@@ -246,7 +244,7 @@ class CompaniesController extends BaseController {
 		}	
 
 		$mywatchlist = $this->getWatchList();
-		return response()->view('companies.show', compact('company','locations','mywatchlist','fields','states','filtered','filters','segments'));
+		return response()->view('companies.show', compact('company','locations','mywatchlist','states','filtered','filters','segments'));
 	}
 	
 	private function getStatesInArray($locations)
@@ -416,20 +414,11 @@ class CompaniesController extends BaseController {
 		
 		$segments = $this->getCompanySegments($id);
 
-		$fields = array('Business Name'=>'businessname',
-						'Street'=>'street',
-						'City'=>'city',
-						'ZIP'=>'zip',
-						'Contact'=>'contact',
-						'Phone'=>'phone',
-						'Watching'=>'watch');
+		
 		$mywatchlist = $this->getWatchList();
-		if (auth()->user()->hasRole('Admin')) {
-			$fields['Actions']='actions';
-		}
 		
 	
-		return response()->view('companies.segment', compact('data','locations','mywatchlist','fields','states','filtered','segments'));
+		return response()->view('companies.segment', compact('data','locations','mywatchlist','states','filtered','segments'));
 	}
 	
 	
@@ -460,15 +449,7 @@ class CompaniesController extends BaseController {
 
 		$segments=$this->getCompanySegments($id);
 
-		$fields = array('Business Name'=>'businessname',
-						'Street'=>'street',
-						'City'=>'city',
-						'ZIP'=>'zip',
-						'Contact'=>'contact',
-						'Phone'=>'phone',
-						'Segment'=>'segment',
-						'Business Type'=>'businesstype',
-						'Watching'=>'watch');
+
 		$mywatchlist = $this->getWatchList();
 
 		if (auth()->user()->hasRole('Admin')) {
@@ -480,7 +461,7 @@ class CompaniesController extends BaseController {
 		$keys = $this->locations->getSearchKeys(['locations'],['segment','businesstype']);
 		$states= $this->getCompanyStates($id,$filtered,$keys);
 		$filters= SearchFilter::all()->pluck('filter','id');
-		return response()->view('companies.state', compact('data','locations','mywatchlist','fields','states','filtered','filters','segments'));
+		return response()->view('companies.state', compact('data','locations','mywatchlist','states','filtered','filters','segments'));
 	}
 	
 	/**

@@ -23,17 +23,10 @@ $data['companyname']=$company->companyname;
 @endforeach
 </ul>
 
-
-
 @include('companies/partials/segment')
 
-
-
-
-
-
 @if(isset($company->managedBy->firstname))
-<p>Account managed by <a href="{{route('person.show',$company->managedBy->id)}}" title="See all accounts managed by {{$company->managedBy->firstname.' '.$company->managedBy->lastname}}">{{$company->managedBy->firstname.' '.$company->managedBy->lastname}}</a></p>
+<p>Account managed by <a href="{{route('person.show',$company->managedBy->id)}}" title="See all accounts managed by {{$company->managedBy->postName()}}">{{$company->managedBy->postName()}}</a></p>
 @endif
 @if (Auth::user()->hasRole('Admin'))
 
@@ -42,11 +35,7 @@ $data['companyname']=$company->companyname;
 			</div>
            @endif
          
-<p><a href="{{route('salesnotes',$company->id)}}" title="Read notes on selling to {{$company->companyname}}"><i class="glyphicon glyphicon-search"></i>  Read 'How to Sell to {{$company->companyname}}'</a>
-<a href="/watch" title="Review my watch list"><i class="glyphicon glyphicon-th-list"></i> View My Watch List</a>
-<a href="/watchexport" title="Download my watch list as a CSV / Excel file"><i class="glyphicon glyphicon-cloud-download"></i> Download My Watch List</a>
-<a href="{{route('exportlocationnotes',$company->id)}}" title="Download my {{$company->companyname}} location notes as a CSV / Excel file"><i class="glyphicon glyphicon-cloud-download"></i> Download my {{$company->companyname}} location notes</a> </p>
-<p><a href="{{ URL::to('company') }}" title='show all accounts'><i class="glyphicon glyphicon-th-list"></i> All Accounts</a></p>
+@include('companies.partials._companyheader')
 @include('partials/advancedsearch')
  
 @include('companies/partials/_state')
@@ -56,93 +45,85 @@ $data['companyname']=$company->companyname;
    <p style="background-color:yellow">Here are the 500 closest to your location</p>
 <table id ='sorttable'  class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
-     @foreach($fields as $title=>$field)
-    <th>
-    {{$title}}
-    </th>
-    @endforeach
-       
+    <th>Watch</th>
+		<th>Business Name</th>
+		<th>Street</th>
+		<th>City</th>
+		<th>State</th>
+		<th>ZIP</th>
+		<th>Segment</th>
+		<th>Business Type</th>
+   		@if(auth()->user()->hasRole('Admin'))
+			<th>Actions</th>
+   		@endif
     </thead>
     <tbody>
    @foreach($locations as $location)
 
-    <tr>  
-	<?php reset($fields);?>
-    @foreach($fields as $title=>$field)
-    <?php 
-	
-	switch ($title) {
-		case 'Business Name':
-			$title = "See details of the ".$location->$field." location";
-			echo "<td><a href=\"/location/".$location->id."\"";
-			echo " title=\"".$title."\">".$location->$field."</a></td>";
-		break;
-		
-		case 'State':
-			echo "<td><a href =\"".route('company.state', array('companyId'=>$company->id,'state'=>$location->$field))."\">". $location->$field."</a></td>";
-		
-		break;
-		
-		case 'Watching':
-			echo "<td style =\"text-align: center; vertical-align: middle;\">";
-			
-			if(in_array($location->id,$mywatchlist)){
-				echo "<input checked";
-				
-			}else{
-				echo "<input ";
-			}
-			echo " id=\"".$location->id."\" ";
-			echo " type='checkbox' name='watchList' class='watchItem' ";
-			echo " value='".$location->id."' ></td>";
-		break;
-		
-		case 'Segment':
-		
-			echo  empty($location->segment) ?  "<td>Not Specified</td>": "<td><a href=\"/company/".$company->id."/segment/".$location->segment."\">". $filters[$location->segment] . "</a></td>";
-		
-		break;
-		
-		case 'Business Type':
-			echo empty($location->businesstype) ?  "<td>Not Specified</td>" : "<td>". $filters[$location->businesstype] . "</td>";
-		
-		break;
-		
-		
-		
-		case 'Actions':
-			echo "<td>";
-			?>
-            @include('partials/_modal')
-    
+    <tr> 
+    @include(companies.partials._watch') 
+	<td>
+		<a title= "See details of {{$location->businessname}} location."
+		href={{route('location.show',$location->id)}}>
+		{{$location->businessname}}</a>
+	</td>
+	<td>{{$location->street}}</td>
+	<td>{{$location->city}}</td>
+	<td>
+		<a href= "{{route('company.state', ['companyId'=>$company->id,'state'=>$location->$field])}}"
+		title="See all {{$location->state}} locations for $company->companyname">
+		{{$location->state}}</a>
+	</td>
+	<td>{{$location->zip}}</td>
+	<td>
+		@if (!isset($location->segment) 
+			Not Specified
+		@else
+			<a href="route('company.segment',[$copmany->id,$location->segment])}}">
+			$filters[$location->segment]</a>
+		@endif
+	</td>
+	<td>
+		@if(! isset($location->businesstype)) 
+			Not Specified
+		@else
+			{{$filters[$location->businesstype]}}
+		@endif
+	</td>
+	@if(auth()->user()->hasRole('Admin'))
+		<td>
+		@include('partials/_modal')
+	    
             <div class="btn-group">
-			  <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
-				<span class="caret"></span>
-				<span class="sr-only">Toggle Dropdown</span>
-			  </button>
-			  <ul class="dropdown-menu" role="menu">
-				
-				<li><a href="/location/{{$location->id}}/edit/"><i class="glyphicon glyphicon-pencil"></i> Edit {{$location->businessname}}</a></li>
-				<li><a data-href="/location/{{$location->id}}/delete" data-toggle="modal" data-target="#confirm-delete" data-title = "{{$location->businessname}} and all associated notes" href="#"><i class="glyphicon glyphicon-trash"></i> Delete {{$location->businessname}}</a></li>
-			  </ul>
+				<button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
+					<span class="caret"></span>
+					<span class="sr-only">Toggle Dropdown</span>
+				</button>
+				<ul class="dropdown-menu" role="menu">
+					<li>
+						<a href="/location/{{$location->id}}/edit/">
+							<i class="glyphicon glyphicon-pencil"></i> 
+							Edit {{$location->businessname}}
+						</a>
+					</li>
+					<li>
+						<a data-href="/location/{{$location->id}}/delete" data-toggle="modal" data-target="#confirm-delete" data-title = "{{$location->businessname}} and all associated notes" 
+						href="#">
+						<i class="glyphicon glyphicon-trash"></i> 
+						Delete {{$location->businessname}}
+						</a>
+					</li>
+				</ul>
 			</div>
-		
-		<?php
-			echo "</td>";
-		break;	
-		
-		default:
-			echo "<td>".$location->$field."</td>";
-		break;
-		
-	};?>
+		</td>
+	@endif
 	
 
-    @endforeach
     </tr>
    @endforeach
     
     </tbody>
-    </table>@include('partials/_scripts')
+</table>
+@include('partials/_scripts')
 @stop
 

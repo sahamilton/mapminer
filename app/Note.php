@@ -6,7 +6,7 @@ class Note extends Model {
 	public static $rules = [
 		'note' => 'required'
 	];
-
+	public $dates = ['date'];
 	// Don't forget to fill this array
 	protected $fillable = ['note','location_id','lead_id','user_id','created_at','updated_at'];
 protected $table ='notes';

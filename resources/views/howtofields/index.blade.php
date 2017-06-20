@@ -1,10 +1,10 @@
-@extends('admin/layouts/default')
+@extends('admin.layouts.default')
 @section('content')
 
 <h1>All How To Fields</h1>
 
 <div class="pull-right">
-				<a href="{{{ URL::to('admin/howtofields/create') }}}" class="btn btn-small btn-info iframe"><span class="glyphicon glyphicon-plus-sign"></span> Create New Field</a>
+				<a href="{{{ route('howtofields.create') }}}" class="btn btn-small btn-info iframe"><span class="glyphicon glyphicon-plus-sign"></span> Create New Field</a>
 			</div>
     
     <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>

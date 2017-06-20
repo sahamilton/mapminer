@@ -1,26 +1,15 @@
 @extends('site/layouts/default')
 @section('content')
-<?php		$fields = array('Business Name'=>'businessname',
-					 'National Acct'=>'companyname',
-					 'Address'=>'street',
-					 'City'=>'city',
-					 'State'=>'state',
-					 'ZIP'=>'zip',
-					 'Contact'=>'contact',
-					 'Phone'=>'phone',
-					 'My Notes'=>'notes',
-					 'Watch'=>'watch_list');?>
 
-<h1>My Watch List</h1>
+
+<h1>My Watch List!!</h1>
 
 <p><a href="/watchmap" title="Review my watch list"><i class="glyphicon glyphicon-flag"></i> View My Watch Map</a> 
 
 <a href="{{route('watch.mywatchexport',auth()->user()->id)}}" title="Download my watch list as a CSV / Excel file"><i class="glyphicon glyphicon-cloud-download"></i> Download My Watch List</a></p>
 
-
-
-<table id='sorttable' class ='table table-bordered table-striped table-hover dataTable'>
-<thead>
+<table id='sorttable' class ='table table-bordered table-striped table-hover dataTable'><thead>
+	<thead>
 		<th>Business Name</th>
 		<th>National Acct</th>
 		<th>Address</th>
@@ -32,11 +21,9 @@
 		<th>My Notes</th>
 		<th>Watch</th>
 	</thead>
-<tbody>
-
- @foreach($watch as $row)
-
-<tr>
+	<tbody>
+	@foreach($watch as $row)
+		<tr>
 		<td>
 			<a href="{{route('location.show',$row['watching'][0]->id)}}">
 			{{$row['watching'][0]->businessname}}</a>
@@ -77,9 +64,9 @@
 		</td>
 
 		</tr>
-@endforeach
+	@endforeach
 
-       </table>
+</table>
 @include('partials/_scripts')
 
 <script>

@@ -1,38 +1,68 @@
-@extends('admin/layouts/default')
+@extends('admin.layouts.default')
 @section('content')
 
 <h1>Service Lines</h1>
-
-@if (Auth::user()->hasRole('Admin'))
-<?php $fields['Actions']='actions';?>
+ @if (Auth::user()->hasRole('Admin'))
 <div class="pull-right">
 				<p><a href="{{{ route('serviceline.create') }}}" class="btn btn-small btn-info iframe"><span class="glyphicon glyphicon-plus-sign"></span> Create New Service Line</a></p>
 			</div>
-    @endif
+ @endif  
 
     <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
-     @foreach($fields as $key=>$field)
-    <th>
-    {{$key}}
-    </th>
-    @endforeach
+     <th>ServiceLine</th>
+     <th>Companies</th>
+     <th>Branches</th>
+     <th>Users</th>
+     @if (Auth::user()->hasRole('Admin'))
+     <th>Actions</th>
+     @endif
        
     </thead>
     <tbody>
    @foreach($servicelines as $serviceline)
 
     <tr>  
-	<?php reset($fields);?>
-    @foreach($fields as $key=>$field)
-    <td><?php 
+	<td>{{$serviceline->ServiceLine}}</td>
+	<td>
+		@if(isset($serviceline->companyCount[0]))
+				<a href ="{{route('serviceline.accounts',[$serviceline->id,'co'])}}"
+				title = 'See all {{$serviceline->ServiceLine}} Companies '>
+				{{$serviceline->companyCount[0]['aggregate']}}</a>
+				
+		@else
+			0
+		@endif
+	</td>
+
+	<td>
+		@if(isset($serviceline->branchCount[0]))
+			<a href ="{{route('serviceline.accounts',$serviceline->id)}}"
+			title = 'See all {{$serviceline->ServiceLine}}  Branches '>
+			{{$serviceline->branchCount[0]['aggregate']}}
+			</a>
+
+		@else
+			0
+		@endif
+	</td>
+
+	<td>
+		@if(isset($serviceline->userCount[0]))
+				<a href="{{route('serviceline.user',$serviceline->id)}}"
+				 title = 'See all {{$serviceline->ServiceLine}}  users '>
+				 {{$serviceline->userCount[0]['aggregate']}}</a>
+		@else
+			0
+		@endif
+
+
+	</td>
+
 	
-		
-	switch ($key) {
-		
-		case 'Actions':
-		
-			?>
+	@if(auth()->user()->hasRole('Admin'))
+	<td>
+
             @include('partials/_modal')
     
             <div class="btn-group">
@@ -48,62 +78,10 @@
 			  </ul>
 			</div>
 		
-		<?php
-		
-		
-		break;
-
-		case 'Branches':
-			if(isset($serviceline->branchCount[0])){
-				echo "<a href ='/serviceline/". $serviceline->id."'";
-				echo " title = 'See all ". $serviceline->ServiceLine ." Branches '>";
-				echo $serviceline->branchCount[0]['aggregate']. "</a>";
-				
-			}else{
-				echo '0';
-			}
-			
-		break;
-		
-		case 'Companies':
-			if(isset($serviceline->companyCount[0])){
-				echo "<a href ='/serviceline/". $serviceline->id."/co' ";
-				echo " title = 'See all ". $serviceline->ServiceLine ." Companies '>";
-				echo $serviceline->companyCount[0]['aggregate']. "</a>";
-				
-			}else{
-				echo '0';
-			}
-			
-		break;
-
-		case 'Users':
-			if(isset($serviceline->userCount[0])){
-				echo "<a href='". route('serviceline.user',$serviceline->id). "'";
-				echo " title = 'See all ". $serviceline->ServiceLine ." users '>";
-				echo  $serviceline->userCount[0]['aggregate']. "</a>";
-			}else{
-				echo '0';
-			}
-			
-		break;
-		
-		
-
-
-		default:
-		
-			
-			echo "<img src='https://maps.google.com/mapfiles/ms/icons/". $serviceline->color."-dot.png' /> ";
-			echo $serviceline->$field;
-		break;
-		
-	};?>
 	
     </td>
-    @endforeach
-    
-    
+    @endif
+      
     
     </tr>
    @endforeach

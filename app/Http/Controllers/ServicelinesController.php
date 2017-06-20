@@ -24,8 +24,8 @@ class ServicelinesController extends BaseController {
 		->with('companyCount','userCount')
     	->get();
 		
-		$fields = ['ServiceLine'=>'ServiceLine','Companies'=>'companyCount', 'Branches'=>'branchCount', 'Users'=>'userCount'];
-		return response()->view('servicelines.index', compact('servicelines','fields'));
+		
+		return response()->view('servicelines.index', compact('servicelines'));
 	}
 
 	/**

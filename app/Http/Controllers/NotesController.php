@@ -147,9 +147,9 @@ class NotesController extends BaseController {
 		$user = auth()->user();
 		
 		$notes = $this->notes->where('user_id','=',$user->id)->with('relatesTo')->get();
-		$fields= ['Created'=>'created_at','Business Name'=>'businessname','Note'=>'note'];
+		
 
-		return response()->view('notes.show', compact('notes','fields'));
+		return response()->view('notes.show', compact('notes'));
 		
 	}
 }

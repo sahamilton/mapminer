@@ -19,57 +19,42 @@
   <p><a href="{{route('showmap.person',$people->id)}}"><i class="glyphicon glyphicon-flag"></i> Map View</a></p>	
 <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
-     @foreach($fields as $key=>$field)
-    <th>
-    {{$key}}
-    </th>
-    @endforeach
-       
+	    <th>Branch</th>
+	    <th>Number</th>
+	    <th>Service Line</th>
+	    <th>Branch Address</th>
+	    <th>City</th>
+	    <th>State</th>
     </thead>
     <tbody>
    @foreach($people->branchesServiced as $branch)
     <tr>  
-	<?php reset($fields);?>
-   @foreach($fields as $key=>$field)
-    <td>
-	<?php 
+	<td>
+		<a title="See details of branch {{$branch->branchname}}"
+		href="{{route('branch.show',$branch->id)}}" >
+			{{$branch->branchname}}
+		</a>
+	</td>
 	
-	switch ($key) {
-		case 'Branch':
-			$title = "See details of branch ".$branch->$field;
-			echo "<a href=\"/branch/".$branch->id."\" title=\"".$title."\">".$branch->$field."</a>";
-		break;
-		
-		
-		
-		case 'Service Line':
-			foreach($branch->servicelines as $serviceline){
-				$title="See all ".$serviceline->ServiceLine ." branches";
-				echo "<a href=\"/serviceline/".$serviceline->id."\" title=\"".$title."\">".$serviceline->ServiceLine."</a>";
-			}
-		break;
-		
-		case 'Branch Address':
-			echo $branch->street ." " .$branch->address2;
-		
-		break;
-		
-		case 'State':
-				$title="See all ".$branch->state." branches";
-				echo "<a href=\"/branch/state/".$branch->state."\" title=\"".$title."\">".$branch->state."</a>";
-
-		break;
-		
-		
-		
-		default:
-			echo $branch->$field;
-		break;
-		
-	};?>
-	
-    </td>
-    @endforeach
+	<td>{{$branch->branchnumber}}</td>
+	<td>{{$branch->brand}}</td>
+	<td>
+		<ul>
+			@foreach($branch->servicelines as $serviceline){
+				<li><a href="route('serviceline.account',$serviceline->id)}}" 
+				title="See all {{$serviceline->ServiceLine}} branches">
+					{{$serviceline->ServiceLine}}
+				</a></li>
+			@endforeach
+		</ul>
+	</td>
+	<td>{{$branch->street}} {{$branch->address2}}</td>
+	<td>{{$branch->city}}</td>
+	<td>
+		<a href="route(branch/statemap,$branch->state)" title="See all {{$branch->state}} branches">
+			{{$branch->state}}
+		</a>
+	</td>
     </tr>
    @endforeach
     

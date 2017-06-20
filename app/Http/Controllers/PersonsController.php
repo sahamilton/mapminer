@@ -217,19 +217,13 @@ class PersonsController extends BaseController {
 			if($people->isLeaf())
 			{
 				// Show branches serviced by sales rep
-				$fields = ['Branch'=>'branchname',
-						'Number'=>'branchnumber',
-						'Service Line'=>'brand',
-						'Branch Address'=>'street',
-						'City'=>'city',
-						'State'=>'state'];
 			
-				return response()->view('persons.salesteam', compact('people','fields'));
+				return response()->view('persons.salesteam', compact('people'));
 			}else{
 			
 				
-				$fields = ['Name'=>'name','Role'=>'role','Branches Serviced'=>'branches'];
-				return response()->view('persons.salesmanager', compact('people','fields'));
+				
+				return response()->view('persons.salesmanager', compact('people'));
 			}
 			
 			
@@ -494,10 +488,10 @@ class PersonsController extends BaseController {
 	{
 		$this->checkManager($companyID);
 		$notes = $this->getManagerNotes($companyID);
-
-		$data['title'] = $notes[0]['companyname'] . ' Location Notes';
-		$fields = ['Location Name'=>'businessname', 'Note'=>'note','Posted By'=>'person','Posted'=>'date'];
-		return response()->view('persons.managernotes', compact('data','notes','fields','companyID'));
+		
+		$data['title'] = $notes[0]->companyname . ' Location Notes';
+		
+		return response()->view('persons.managernotes', compact('data','notes','companyID'));
 		
 		
 	}

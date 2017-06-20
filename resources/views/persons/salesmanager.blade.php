@@ -15,17 +15,14 @@
 
 <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
-    @foreach($fields as $key=>$field)
-    <th>
-    {{$key}}
-    </th>
-    @endforeach
+   <th>Name</th>
+   <th>Role</th>
+   <th>Branches Serviced</th>
+  
        
     </thead>
     <tbody>
-    <?php
-
-    ?>
+   
    @foreach($people->directReports as $reports)
     <tr>  
 

@@ -4,51 +4,34 @@
 
 <p><a href="/watch" title="Review my watch list"><i class="glyphicon glyphicon-th-list"></i> View My Watch List</a></p>
 
- <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
-    <thead>
-     
-     @foreach($fields as $title=>$field)
-    <th>
-    {{$title}}
-    </th>
-    @endforeach
-       
-    </thead>
-    <tbody>
-   @foreach($notes as $note)
-    <tr>  
-	<?php reset($fields);?>
-  @foreach($fields as $title=>$field)
-    <td>
-    <?php 
-	
-	switch ($title) {
-		case 'Business Name':
-			$title = "See details of the ".$note->relatesTo[$field]." location";
-			echo "<a href=\"/location/".$note->relatesTo['id']."\"";
-			echo "\">".$note->relatesTo[$field]."</a>";
-		break;
-		
-		case 'Created':
-			
-			echo date('d/m/Y',strtotime($note[$field]));
-		break;
-			
-		
-		default:
-			echo $note[$field];
-		break;
-		
-	};?>
-	</td>
+<table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
+	<thead>
+		<th>Created</th>
+		<th>Business Name</th>
+		<th>Note</th>
+	</thead>
+	<tbody>
+		@foreach($notes as $note)
+		<tr>  
+			<td>		
+				{{date('d/m/Y',strtotime($note[$created_at]))}}
+			</td>	
 
-    @endforeach
-    </tr>
-   @endforeach
-    
-    </tbody>
-    </table>
+			<td>
+			$title = "See details of the ".$note->relatesTo['businessname']." location";
+				<a 
+				title="See details of the {{$note->relatesTo['businessname']}} location" 
+				href="{{route('locationshow',$note->relatesTo['id'])}}">
+					{{$note->relatesTo['businessname']}}
+				</a>
+			</td>
+
+			<td>
+				{{$note['note']}}
+			</td>
+		</tr>
+		@endforeach
+	</tbody>
+</table>
 @include('partials/_scripts')
-
-
-@stop
+@endsection

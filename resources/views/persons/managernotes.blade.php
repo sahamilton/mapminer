@@ -8,45 +8,27 @@
  <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
      
-     @foreach($fields as $title=>$field)
-    <th>
-    {{$title}}
-    </th>
-    @endforeach
+     <th>Location Name</th>
+     <th>Note</th>
+     <th>Posted By</th>
+     <th>Posted</th>
        
     </thead>
     <tbody>
    @foreach($notes as $note)
     <tr>  
-	<?php reset($fields);?>
-   
-    @foreach($fields as $key=>$field)
-    <td>
-    <?php 
 	
-	switch ($key) {
-		case 'Location Name':
-			echo "<a href=\"".route('location.show',$note['locationid'])."\">";
-			echo $note[$field]."</a>";
-		
-		
-		break;
-		
-		
-		case 'Posted':
-			
-			echo date('d/m/Y',strtotime($note[$field]));
-		break;
-			
-		
-		default:
-			echo $note[$field];
-		break;
-		
-	};?>
+    <td>
+	    <a href="{{route('location.show',$note->locationid)}}">
+			{{$note->businessname}}
+		</a>
 	</td>
 
-    @endforeach
+	<td>{{$note->note}}</td>
+
+	<td>{{$note->person}}</td>
+	<td>{{date('M j, Y',strtotime($note->date))}}</td>
+
     </tr>
    @endforeach
     
