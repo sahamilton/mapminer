@@ -43,7 +43,7 @@
 		<script src="{{asset('assets/js/summernote.min.js')}}"></script>
 		<script src="{{asset('assets/js/starrr.js')}}"></script>
 		<script src="{{asset('assets/js/bootstrap-colorpicker.min.js')}}"></script>
-
+		<script src="//cdn.jsdelivr.net/algoliasearch/3/algoliasearch.min.js"></script>
 
 
 
