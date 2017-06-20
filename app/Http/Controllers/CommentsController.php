@@ -23,20 +23,9 @@ class CommentsController extends BaseController {
 	
 	public function index()
 	{
-		$comments = Comments::with('postedBy')->orderBy('created_at','ASC')->get();
+		$comments = $this->comment->with('postedBy')->orderBy('created_at','ASC')->get();
 
 
-		$fields = array('Date'=>'created_at',
-				'Subject'=>'subject',
-				'Title'=>'title',
-				'Feedback'=>'comment',
-				'Status'=>'comment_status',
-				'Posted By'=>'user_id');
-				
-	if (\Auth::user()->hasRole('Admin')) {
-			$fields['Actions']='actions';
-		}
-		
 		return response()->view('comments.index', compact('comments','fields'));
 	}
 
@@ -60,13 +49,9 @@ class CommentsController extends BaseController {
 		$data = $request->all();
 	
 		$data['title'] = $request->get('slug');
-		$data['user_id'] = \Auth::user()->id;
-		$data = Comments::create($data);
-		if (\App::environment() == 'production') 
-		{
-			$this->notify($data);
-		}
-		
+		$data['user_id'] = auth()->user()->id;
+		$data = $this->comment->create($data);
+		$this->notify($data);
 		return redirect()->route('news.index');
 	}
 
@@ -79,7 +64,7 @@ class CommentsController extends BaseController {
 	public function show($id)
 	{
 		
-		$people = Comments::with('manages')->findorFail($id->id);
+		$people = $this->comment->with('manages')->findorFail($id->id);
 		return response()->view('comments.showlist', compact('people'));
 	}
 	
@@ -123,19 +108,12 @@ class CommentsController extends BaseController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update($comment)
+	public function update(CommentFormRequest $request,$comment)
 	{
 		
-		$validator = Validator::make($data = \Input::all(), $this->comment->rules);
-
-		if ($validator->fails())
-		{
-			return \Redirect::back()->withErrors($validator)->withInput();
-		}
-
 		$comment->update($data);
 
-		return \Redirect::route('comment.index');
+		return redirect()->route('comment.index');
 	}
 
 	/**
@@ -146,17 +124,17 @@ class CommentsController extends BaseController {
 	 */
 	public function destroy($id)
 	{
-		Comments::destroy($id);
+		$this->commment->destroy($id);
 
-		return \Redirect::route('comment.index');
+		return redirect()->route('comment.index');
 	}
 
 
 	public function download()
 	{
 		
-		Excel::create('Watch_List_for_'.$user->username,function($excel){
-			$excel->sheet('Watching',function($sheet) {
+		Excel::create('Comments',function($excel){
+			$excel->sheet('Comments',function($sheet) {
 				$comments = $this->comment->orderBy('created_at','ASC')->get();
 				$sheet->loadview('comments.export',compact('comments'));
 			});

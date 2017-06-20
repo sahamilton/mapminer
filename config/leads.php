@@ -32,6 +32,6 @@ return [
     |
     */
 
-	'lead_distribution_roles'=>(['Branch Manager','Sales']);
+	'lead_distribution_roles'=>(['Branch Manager','Sales']),
 
 ];

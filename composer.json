@@ -10,6 +10,7 @@
         "baum/baum": "~1.1",
         "bugsnag/bugsnag-laravel": "^2.0",
         "dionera/laravel-beanstalkd-ui": "^0.3.3",
+        "elasticsearch/elasticsearch": "^5.2",
         "fabpot/goutte": "^3.1",
         "laravel/dusk": "^1.0",
         "laravel/framework": "5.4.*",
@@ -20,6 +21,7 @@
         "maddhatter/laravel-fullcalendar": "^1.2",
         "pda/pheanstalk": "^3.1",
         "smalot/pdfparser": "^0.10.0",
+        "tamayo/laravel-scout-elastic": "^3.0",
         "toin0u/geocoder-laravel": "@stable",
         "viacreative/sudo-su": "^1.1"
     },

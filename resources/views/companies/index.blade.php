@@ -7,100 +7,106 @@
 @include('partials/_showsearchoptions')
 @include('partials/advancedsearch')
 @include('partials.companyfilter')
-<?php $fields = array('Company'=>'companyname','Manager'=>'manager','Email'=>'email','Vertical'=>'vertical','Service Lines'=>'serviceline','Has Locations'=>'locationcount');?>
+
 @if (Auth::user()->hasRole('Admin'))
-<?php $fields['Actions']='actions';?>
+
 
 <div class="pull-right">
-				<a href="{{{ URL::to('company/create') }}}" class="btn btn-small btn-info iframe"><span class="glyphicon glyphicon-plus-sign"></span> Create New Account</a>
-			</div>
-    @endif
+<a href="{{{ URL::to('company/create') }}}" class="btn btn-small btn-info iframe"><span class="glyphicon glyphicon-plus-sign"></span> Create New Account</a>
+</div>
+@endif
 
-    <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
-	    <thead>
-		    <th>Company</th>
-		    <th>Manager</th>
-		    <th>Email</th>
-		    <th>Vertical</th>
-		    <th>Service Lines</th>
-		  
-		    @if (auth()->user()->hasRole('Admin'))
-		    	<th>Actions</th>
-	   		@endif    
-	    </thead>
-	    <tbody>
-		   @foreach($companies as $company)
-			
-		    <tr>  
-			    
-				    <td>
-						@if(isset( $company->countlocations->first()->count) &&  $company->countlocations->first()->count > 0)
-					
-						    <a href="{{route('company.show',$company->id)}}"
-						    title = 'See all {{$company->companyname}} locations'>{{$company->companyname}}</a>
-					    @else
-							<span title="{{$company->companyname}} has no locations">{{$company->companyname}}</span>
-						@endif
-				    </td>
-				    <td>
-						@if(isset($company->managedBy))
-							<a href="{{route('person.show',$company->managedBy->id)}}" 
-							title="See all companies managed by {{$company->managedBy->postName()}}" >
-							{{$company->managedBy->postName()}}
-							</a>
-						@endif
-					</td>
-				    <td>
-					    @if(isset($company->managedBy->userdetails))
-					    	<a href="mailto:{{$company->managedBy->userdetails->email}}"
-							title="Email {{$company->managedBy->postName()}}" >
-							{{$company->managedBy->userdetails->email}}
-							</a>
+	<table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
+		<thead>
+			<th>Company</th>
+			<th>Manager</th>
+			<th>Email</th>
+			<th>Vertical</th>
+			<th>Service Lines</th>
 
-					    @endif
-				    </td>
-				    <td>
-						@if(isset($company->industryVertical))
-							<a href="{{route('company.vertical',$company->industryVertical->id)}}" 
-							title ="See all {{$company->industryVertical->filter}} companies">
-								{{$company->industryVertical->filter}}
-							</a>
-						@endif
-	   
-				    </td>
-				    <td>
-						<ul>
-							@foreach ($company->serviceline as $serviceline)
+			@if (auth()->user()->hasRole('Admin'))
+			<th>Actions</th>
+			@endif    
+		</thead>
+	<tbody>
+	@foreach($companies as $company)
 
-								<li><a href="{{route('serviceline.accounts',[$serviceline->id,'co'])}}"
-								title="See all {{$serviceline->ServiceLine}} companies" >
-									{{$serviceline->ServiceLine}}
-								</a></li>
-							@endforeach
+		<tr>  
+
+			<td>
+			@if(isset( $company->countlocations->first()->count) &&  $company->countlocations->first()->count > 0)
+
+			<a href="{{route('company.show',$company->id)}}"
+			title = 'See all {{$company->companyname}} locations'>{{$company->companyname}}</a>
+			@else
+			<span title="{{$company->companyname}} has no locations">{{$company->companyname}}</span>
+			@endif
+			</td>
+			<td>
+			@if(isset($company->managedBy))
+			<a href="{{route('person.show',$company->managedBy->id)}}" 
+			title="See all companies managed by {{$company->managedBy->postName()}}" >
+			{{$company->managedBy->postName()}}
+			</a>
+			@endif
+			</td>
+			<td>
+			@if(isset($company->managedBy->userdetails))
+			<a href="mailto:{{$company->managedBy->userdetails->email}}"
+			title="Email {{$company->managedBy->postName()}}" >
+			{{$company->managedBy->userdetails->email}}
+			</a>
+
+			@endif
+			</td>
+			<td>
+			@if(isset($company->industryVertical))
+			<a href="{{route('company.vertical',$company->industryVertical->id)}}" 
+			title ="See all {{$company->industryVertical->filter}} companies">
+			{{$company->industryVertical->filter}}
+			</a>
+			@endif
+
+			</td>
+			<td>
+			<ul>
+				@foreach ($company->serviceline as $serviceline)
+
+				<li><a href="{{route('serviceline.accounts',[$serviceline->id,'co'])}}"
+				title="See all {{$serviceline->ServiceLine}} companies" >
+				{{$serviceline->ServiceLine}}
+				</a></li>
+				@endforeach
+				</ul>
+			</td>
+			@if (auth()->user()->hasRole('Admin'))
+				<td>
+					@include('partials/_modal')
+
+					<div class="btn-group">
+						<button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
+						<span class="caret"></span>
+						<span class="sr-only">Toggle Dropdown</span>
+						</button>
+						<ul class="dropdown-menu" role="menu">
+
+						<li>
+						<a href="{{route('company.edit',$company->id)}}">
+						<i class="glyphicon glyphicon-pencil"></i> 
+						Edit {{$company->companyname}}</a></li>
+						<li>
+						<a data-href="/company/{{$company->id}}/delete" data-toggle="modal" data-target="#confirm-delete" data-title = "{{$company->companyname}} and all its locations" href="#">
+						<i class="glyphicon glyphicon-trash"></i> 
+						Delete {{$company->companyname}}</a></li>
 						</ul>
-				    </td>
-				    @if (auth()->user()->hasRole('Admin'))
-					<td>
-				@include('partials/_modal')
-    
-            <div class="btn-group">
-			  <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
-				<span class="caret"></span>
-				<span class="sr-only">Toggle Dropdown</span>
-			  </button>
-			  <ul class="dropdown-menu" role="menu">
-				
-				<li><a href="{{route('company.edit',$company->id)}}"><i class="glyphicon glyphicon-pencil"></i> Edit {{$company->companyname}}</a></li>
-				<li><a data-href="/company/{{$company->id}}/delete" data-toggle="modal" data-target="#confirm-delete" data-title = "{{$company->companyname}} and all its locations" href="#"><i class="glyphicon glyphicon-trash"></i> Delete {{$company->companyname}}</a></li>
-			  </ul>
-			</div>
-					</td>
-					@endif	
-				</tr>
+					</div>
+				</td>
+			@endif	
+		</tr>
 
-		   @endforeach
-	    
-	    </tbody>
+	@endforeach
+
+	</tbody>
 	</table>
 @include('partials/_scripts')
 @stop

@@ -25,9 +25,8 @@ protected $permission;
 	{
 		
 		$persons = Person::all();
-		$fields=array('Name'=>'name','Role'=>'mgrtype','Email'=>'email');
-
-		return response()->view('admin.persons.index', compact('persons','fields'));
+		
+		return response()->view('admin.persons.index', compact('persons'));
 	}
 
 	/**

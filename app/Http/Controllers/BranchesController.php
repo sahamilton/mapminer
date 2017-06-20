@@ -52,19 +52,6 @@ class BranchesController extends BaseController {
 			->orderBy('branchnumber')
 			->get();
 
-		$fields = array('Branch'=>'branchname',
-						'Number'=>'branchnumber',
-						'Service Line'=>'brand',
-						'Branch Address'=>'street',
-						'City'=>'city',
-						'State'=>'state',
-						'Region'=>'region',
-						'Manager'=>'manager',
-						'Serviced'=>'servicedBy');
-		if (auth()->user()->hasRole('Admin')) {
-			$fields['Actions']='actions';
-		}
-		
 		
 		
 		return response()->view('branches.index', compact('branches','fields'));
@@ -412,9 +399,7 @@ class BranchesController extends BaseController {
 	{
 		$branches= $this->retrieveStateBranches($state);
 		
-		if (\Auth::user()->hasRole('Admin')) {
-			$fields['Actions']='actions';
-		}
+		
 	
 		$fullState = $this->state->getStates();
 		$data['fullstate'] = $fullState[$state];
@@ -502,18 +487,7 @@ class BranchesController extends BaseController {
 			$data['lng'] = $state->lng;
 		}
 		
-		$fields = array('Branch'=>'branchname',
-						'Number'=>'branchnumber',
-						'Service Line'=>'brand',
-						'Branch Address'=>'street',
-						'City'=>'city',
-						'State'=>'state',
-						'Region'=>'region',
-						'Manager'=>'manager');
-		if (\Auth::user()->hasRole('Admin')) {
-			$fields['Actions']='actions';
-		}			
-						
+				
 		return response()->view('branches.state', compact('branches','data','fields'));
 		
 	}
