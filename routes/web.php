@@ -357,6 +357,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 	#Search Filters
 		
 		Route::get('searchfilters/analysis/{id?}',['as'=>'vertical.analysis','uses'=>'SearchFiltersController@filterAnalysis']);
+		Route::get('searchfilters/export/{id?}',['as'=>'vertical.export','uses'=>'SearchFiltersController@export']);
 		Route::get('searchfilters/promote/{filterid}',['as'=>'admin.searchfilter.promote','uses'=>'SearchFiltersController@promote']);
 		Route::get('searchfilters/demote/{filterid}',['as'=>'admin.searchfilter.demote','uses'=>'SearchFiltersController@demote']);
 		Route::get('filterform','SearchFiltersController@filterForm');

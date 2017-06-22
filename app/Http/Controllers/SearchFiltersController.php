@@ -3,7 +3,7 @@ namespace App\Http\Controllers;
 use App\SearchFilter;
 use Illuminate\Http\Request;
 use App\Http\Requests\SearchFiltersFormRequest;
-
+use Excel;
 class SearchFiltersController extends BaseController {
 
 	public $filter;
@@ -135,13 +135,35 @@ class SearchFiltersController extends BaseController {
 		return redirect()->route('searchfilters.index');
 	}
 	
-	public function filterAnalysis($id =null){
-		$verticals = $this->filter->with('leads','people','companies','campaigns')->get();
+	public function filterAnalysis($id = null){
+		$verticals = $this->getVerticalAnalysis($id);
 		return response()->view('filters.analysis',compact('verticals'));
 
 
 	}
 
+	public function export($id=null){
+		$verticals = $this->getVerticalAnalysis();
+		Excel::create('Verticals',function($excel){
+			$excel->sheet('Industries',function($sheet) {
+				$verticals = $this->getVerticalAnalysis();
+				
+			
+				$sheet->loadView('filters.export',compact('verticals'));
+			});
+		})->download('csv');
+
+		return response()->return();
+
+	}
+	private function getVerticalAnalysis($id=null){
+		return $this->filter
+		->with('leads','people','companies','campaigns')
+		->whereNotNull('type')
+		->where('type','!=','group')
+		->where('inactive','=',0)
+		->get();
+	}
 	public function filterForm()
 	{
 		$filters = $this->filter->all();

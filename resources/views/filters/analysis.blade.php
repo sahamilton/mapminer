@@ -2,9 +2,13 @@
 @section('content')
 <div class="container">
 <h2>Industry Vertical Analysis</h2>
+<p><a href =" {{{ route('vertical.export') }}}">
+<span class="glyphicon glyphicon-export"></span> Export Table to Excel</a></p>
 <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
      
+    
+    <th>Parent</th>
     <th>Vertical</th>
     <th>People</th>
     <th>Current Leads</th>
@@ -16,60 +20,7 @@
     </thead>
     <tbody>
 
- @foreach($verticals as $vertical)
-
-    <tr>
-    <td class="text-left">{{$vertical->filter}}</td>
-    <td class="text-right">
-        @if(count($vertical->people)>0)
-        <a href="{{route('person.vertical',$vertical->id)}}"
-        title= "See all people assigned to {{$vertical->filter}} industry">
-            {{count($vertical->people)}}
-            </a>
-        @else
-            0
-        @endif
-    </td>
-    <td class="text-right">
-        @if(count($vertical->leads)>0)
-            <a href="{{route('lead.vertical',$vertical->id)}}"
-            title="See all {{$vertical->filter}} leads">
-            {{count($vertical->leads)}}
-            </a>
-
-        @else
-           0
-        @endif
-</td>
-    <td class="text-right">
-    @if(count($vertical->companies) > 0)
-            <a href="{{route('company.vertical',$vertical->id)}}"
-            title="See all {{$vertical->filter}} companies">
-            {{count($vertical->companies)}}
-            </a>
-    @else
-        0
-    @endif
-
-   
-
-    </td>
-    <td class="text-right">{{$vertical->locations()}}</td>
-    <td class="text-right">
-        
-        @if(count($vertical->campaigns) > 0)
-            <a href="{{route('salesactivity.vertical',$vertical->id)}}"
-            title="See all {{$vertical->filter}} campaigns">
-            {{count($vertical->campaigns)}}
-            </a>
-        @else
-            0
-        @endif
-    
-    </td>
-
-    </tr>
-   @endforeach
+ @include('filters.partials._table')
     
     </tbody>
 </table>
