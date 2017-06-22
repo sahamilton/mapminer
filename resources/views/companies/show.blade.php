@@ -85,7 +85,7 @@
 			Not Specified
 		@else
 			<a href="route('company.segment',[$copmany->id,$location->segment])}}">
-			$filters[$location->segment]</a>
+			{{$filters[$location->segment]}}</a>
 		@endif
 	</td>
 	<td>
