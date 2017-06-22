@@ -327,10 +327,10 @@ class CompaniesController extends BaseController {
 		->get();
 		
 
-		$fields = array('Company'=>'companyname','Manager'=>'manager','Email'=>'email','Vertical'=>'vertical');
+		//$fields = array('Company'=>'companyname','Manager'=>'manager','Email'=>'email','Vertical'=>'vertical');
 		
 
-		return response()->view('companies.index', compact('companies','fields','title','filtered','locationFilter'));
+		return response()->view('companies.index', compact('companies','title','filtered','locationFilter'));
 		
 	}
 	

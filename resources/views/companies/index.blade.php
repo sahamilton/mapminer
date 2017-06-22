@@ -2,6 +2,10 @@
 @section('content')
 
 <h1>{{$title}}</h1>
+@if($title != 'All Accounts')
+<p><a href="{{route('company.index')}}" title="See all accounts">See all accounts</a></p>
+@endif
+
 {!!$filtered ? "<h4 class='filtered'>Filtered</h4>" : ''!!}
 
 @include('partials/_showsearchoptions')
