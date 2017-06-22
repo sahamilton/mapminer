@@ -86,7 +86,7 @@ class LeadSourceController extends Controller
         $leads = $this->getLeads($id);
        
         $salesteams = $this->salesteam($leads,$id);
-
+;
         return response()->view('leadsource.show',compact('leadsource','statuses','salesteams'));
     }
 

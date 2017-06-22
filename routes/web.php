@@ -290,7 +290,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 		//Route::get('leads/batch',['as'=>'batchimport','uses'=>'LeadsController@batchImport']);
 		//Route::post('leads/batch',['as'=>'leads.batch','uses'=>'LeadsController@leadAdd']);
 		Route::get('leads/{id}/purge',['as'=>'leads.purge','uses'=>'LeadsController@destroy']);
-		Route::get('leads/assign/{sid}/source',['as'=>'leads.geoassign','uses'=>'LeadsController@geoAssignLeads']);
+		Route::get('leads/assign/{sid}/source',['as'=>'leads.geoassign','uses'=>'LeadsAssignController@geoAssignLeads']);
 		Route::get('leads/{id}/assign',['as'=>'leads.leadassign','uses'=>'LeadsController@assignLeads']);
 		Route::post('leads/batchassign',['as'=>'leads.assignbatch','uses'=>'LeadsController@batchAssignLeads']);
 		Route::post('leads/assign',['as'=>'leads.assign','uses'=>'LeadsController@postAssignLeads']);
