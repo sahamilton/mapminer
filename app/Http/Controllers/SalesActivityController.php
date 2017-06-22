@@ -84,7 +84,7 @@ class SalesActivityController extends BaseController
     public function store(Request $request)
     {
         $data = $this->setDates($request->all());
-
+        dd($request->all());
         $activity = $this->activity->create($data);
         foreach ($request->get('salesprocess') as $process){
             foreach ($request->get('vertical') as $vertical){
