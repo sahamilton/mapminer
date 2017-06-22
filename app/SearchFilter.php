@@ -2,7 +2,7 @@
 
 namespace App;
 /**
-* Searchfilter
+* SearchFilter
 */
 class SearchFilter extends NodeModel {
 

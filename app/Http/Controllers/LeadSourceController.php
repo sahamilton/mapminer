@@ -7,7 +7,7 @@ use App\LeadSource;
 use App\Lead;
 use Excel;
 use App\Person;
-use App\Searchfilter;
+use App\SearchFilter;
 use App\LeadStatus;
 use App\Http\Requests\LeadSourceFormRequest;
 use App\Http\Requests\LeadSourceAddLeadsFormRequest;
@@ -19,7 +19,7 @@ class LeadSourceController extends Controller
     public $person;
     public $vertical;
     public $lead;
-    public function __construct(LeadSource $leadsource, LeadStatus $status, Searchfilter $vertical, Lead $lead, Person $person){
+    public function __construct(LeadSource $leadsource, LeadStatus $status, SearchFilter $vertical, Lead $lead, Person $person){
         $this->leadsource = $leadsource;
         $this->leadstatus = $status;
         $this->person = $person;
