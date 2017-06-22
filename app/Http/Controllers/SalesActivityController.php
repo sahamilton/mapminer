@@ -68,7 +68,11 @@ class SalesActivityController extends BaseController
      */
     public function create()
     {
-        $verticals = $this->vertical->vertical();
+        $filters = $this->vertical->first();
+
+        $verticals = $filters->getDescendants()
+        ->where('searchtable','=','companies')->where('inactive','=',0);
+
   
         $process = $this->process->pluck('step','id');
 
@@ -84,7 +88,7 @@ class SalesActivityController extends BaseController
     public function store(Request $request)
     {
         $data = $this->setDates($request->all());
-        dd($request->all());
+
         $activity = $this->activity->create($data);
         foreach ($request->get('salesprocess') as $process){
             foreach ($request->get('vertical') as $vertical){
@@ -155,9 +159,11 @@ class SalesActivityController extends BaseController
     {
        
         $activity = $this->activity->with('salesprocess','vertical')->findOrFail($id);
-        $verticals = $this->vertical->vertical();
+        $filters = $this->vertical->first();
+      $verticals = $filters->getDescendants()
+        ->where('searchtable','=','companies')->where('inactive','=',0);
         $process = $this->process->pluck('step','id');
-        return response()->view('salesactivity.edit',compact('activity','verticals','process'));
+        return response()->view('salesactivity.edit',compact('activity','process','verticals'));
     }
 
     /**

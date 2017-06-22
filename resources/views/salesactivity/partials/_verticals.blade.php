@@ -8,7 +8,7 @@
 <label for="vertical">Vertical</label>
 <div class="input-group input-group-lg ">
 
-@foreach($tree->getDescendants()->where('searchtable','=','companies')->where('inactive','=',0) as $descendant)
+@foreach($verticals as $descendant)
 
 	@if($descendant->type == 'group')
         </fieldset><fieldset><legend>{{{$descendant->filter}}}</legend>         <?php 
@@ -31,7 +31,7 @@
 		@endif
 		
 		@if($descendant->isLeaf())
-			<li><input type="checkbox"  name="vertical[]" value="{{{$descendant->id}}}"/>
+			<li><input type="checkbox"  {{in_array($descendant->id, $activity->vertical->pluck('id')->toArray()) ? 'checked': ''}} name="vertical[]" value="{{{$descendant->id}}}"/>
 			{{{trim($descendant->filter)}}}
 		@else
 			<li><input type="checkbox"  name="parent[]" value="{{{$descendant->id}}}"/>
