@@ -58,6 +58,7 @@ class LeadSourceController extends Controller
      */
     public function store(LeadSourceFormRequest $request)
     {
+   
         $request->merge(['user_id'=>auth()->user()->id]);
         $leadsource = $this->leadsource->create($request->except(['datefrom','dateto']));
         $leadsource->update([
@@ -130,6 +131,7 @@ class LeadSourceController extends Controller
         $leadsource->update([
             'datefrom'=>Carbon::createFromFormat('m/d/Y',$request->get('datefrom')),
             'dateto'=>Carbon::createFromFormat('m/d/Y',$request->get('dateto'))]);
+        $leadsource->verticals()->sync($request->get('vertical'));
         return redirect()->route('leadsource.index');
     }
 

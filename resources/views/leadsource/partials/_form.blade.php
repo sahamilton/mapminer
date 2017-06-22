@@ -56,7 +56,7 @@
         </div>
     </div>
 
-@include('salesactivity.partials._verticals')  
+@include('leadsource.partials._verticals')  
 
   <script>
 $(function () {
