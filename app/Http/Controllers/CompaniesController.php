@@ -115,8 +115,7 @@ class CompaniesController extends BaseController {
 		//this should be removed
 		$roles = ['4'];
 		$managers = $this->getManagers($roles);
-		$searchFilters = $this->searchfilter;
-		$filters = $searchFilters->where('searchtable','=','companies')->pluck('filter', 'id');
+		$filters = $this->getFilters();
 		$servicelines = Serviceline::whereIn('id',$this->userServiceLines)
 			->pluck('ServiceLine','id');
 
@@ -611,11 +610,17 @@ class CompaniesController extends BaseController {
 					->with('serviceline')
 					->get();
 		$servicelines = Serviceline::pluck('ServiceLine','id');
-		$filters = SearchFilter::where('searchtable','=','companies')->pluck('filter', 'id');
 		
+		$filters = $this->getFilters();
+
 		return response()->view('companies.edit', compact('company','managers','filters','servicelines'));
 	}
-
+	private function getFilters(){
+		$verticals = SearchFilter::where('type','=','group')
+		->where('searchtable','=','companies')
+		->first();
+		return $verticals->getLeaves()->where('searchcolumn','=','vertical');
+	}
 	/**
 	 * Update the specified resource in storage.
 	 *

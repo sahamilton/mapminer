@@ -31,11 +31,11 @@ class GeoCodingController extends BaseController {
 		
 				
 		//$data['address'] = NULL;
-		if(isset($data['address'])) {
-			$address = urlencode($data['address']);
+		if($request->has('address')) {
+			$address = urlencode($request->get('address'));
 			
 		}
-		if(! $data['lat']){
+		if(! $request->has('lat')){
 			$geocode = app('geocoder')->geocode($request->get('address'))->get();
 
 			if(! $geocode){
@@ -43,14 +43,14 @@ class GeoCodingController extends BaseController {
 				return redirect()->back()->withInput()->with('message', 'Unable to Geocode that address');
 			}
 			
-
-				$data['lat']=$geocode[0]['latitude'];
-				$data['lng'] =$geocode[0]['longitude'];
-
+			$geoCoded = $this->getGeoCode($geocode);
+			$data['lat'] = $geoCoded['lat'];
+			$data['lng'] = $geoCoded['lng'];
 			
-	
+
 			
 		}
+
 		$data['latlng'] = $data['lat'].":".$data['lng'];
 
 		\Session::put('geo', $data);
@@ -234,4 +234,25 @@ class GeoCodingController extends BaseController {
 		}
 		
 	}
+
+	 private function getGeoCode($geoCode){
+
+        if(is_array($geoCode)){
+           
+                $data['lat'] = $geoCode[0]['latitude'];
+                $data['lng'] = $geoCode[0]['longitude']; 
+
+            }elseif(is_object($geoCode)){
+               
+                $data['lat'] = $geoCode->first()->getLatitude();
+                $data['lng'] = $geoCode->first()->getLongitude();
+            }else{
+              
+                $data['lat'] = null;
+                $data['lng'] = null;
+            }
+
+          return $data;
+    }
+
 }

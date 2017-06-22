@@ -4,7 +4,7 @@
 
 @foreach ($segments as $segment)
 	
-    <a href="/company/{{$company->id}}/segment/{{$segment->id}}" >
+    <a href="{{route('company.segment',[$company->id,$segment->id])}}" >
     <input type='checkbox' name='{{$segment->id}}'  />
     {{$segment->filter}}</a>
     

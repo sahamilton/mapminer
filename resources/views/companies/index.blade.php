@@ -61,9 +61,10 @@
 			</td>
 			<td>
 			@if(isset($company->industryVertical))
+
 			<a href="{{route('company.vertical',$company->industryVertical->id)}}" 
 			title ="See all {{$company->industryVertical->filter}} companies">
-			{{$company->industryVertical->filter}}
+			{{$company->industryVertical->filter}} 
 			</a>
 			@endif
 

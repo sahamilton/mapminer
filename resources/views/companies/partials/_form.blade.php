@@ -14,12 +14,32 @@
  @if ($errors->has('user_id')) <p class="help-block">{{ $errors->first('user_id') }}</p> @endif
 </div>
 
-<div class="form-group @if ($errors->has('vertical')) has-error @endif">
-{{Form::label('Filter','Industry:')}}
-{{Form::select('vertical',$filters,isset($company[0]->vertical) ? $company[0]->vertical : '',array('class'=>'form-control'))}}
 
-@if ($errors->has('vertical')) <p class="help-block">{{ $errors->first('vertical') }}</p> @endif
-</div>
+<?php $parents=array();?>
+		<div class="form-group{{ $errors->has('vertical)') ? ' has-error' : '' }}">
+        <label class="col-md-4 control-label">Industry</label>
+
+            <select class="form-control" name='vertical'>
+
+            @foreach ($filters as $vertical))
+            	<?php $parent = $vertical->getAncestors()->last();?>
+	            	@if(! in_array($parent->id,$parents))
+	            	<?php $parents[]=$parent->id;?>
+	            	<option disabled value="{{$vertical->id}}">--------{{$parent->filter}}----------</option>
+	            	@endif
+            		<option value="{{$vertical->id}}">{{$vertical->filter}}</option>
+
+	            	
+
+            @endforeach
+
+
+            </select>
+            <span class="help-block">
+                <strong>{{ $errors->has('vertical') ? $errors->first('vertical') : ''}}</strong>
+                </span>
+
+    </div>
 
 
 <div class="form-group @if ($errors->has('serviceline')) has-error @endif">

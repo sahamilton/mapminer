@@ -13,6 +13,7 @@
 <div>
 <h4>Key</h4>
 <p><span class="glyphicon glyphicon-trash"></span> = Delete | <span class="glyphicon glyphicon-ban-circle"></span> = Inactive | <span class="glyphicon glyphicon-home"></span> = Applies to Accounts  | <span class="glyphicon glyphicon-flag"></span> = Applies to locations  | <span class="glyphicon glyphicon-arrow-up"></span> <span class="glyphicon glyphicon-arrow-down"></span>= Resequence</p>
+<p>@include('partials.advancedsearch')</p>
 	@if (Auth::user()->hasRole('Admin'))
         <div class="pull-right">
             <a href="{{{ route('searchfilters.create') }}}" 

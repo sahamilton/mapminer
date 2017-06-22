@@ -20,7 +20,7 @@
                 <form id ='filterForm' action = 'post' method="{{route('setSearch')}}" >
                 {{csrf_field()}}
 
-@foreach($tree->getDescendants() as $descendant)
+@foreach($tree->getDescendants()->where('searchtable','=','companies') as $descendant)
 
 	@if($descendant->type == 'group')
         </fieldset><fieldset><legend>{{{$descendant->filter}}}</legend>         <?php 
