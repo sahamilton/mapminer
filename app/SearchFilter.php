@@ -195,6 +195,8 @@ class SearchFilter extends NodeModel {
 		
 	}
 	
+
+
   public function vertical(){
 
     return $this->where('searchColumn','=','vertical')
@@ -226,6 +228,13 @@ class SearchFilter extends NodeModel {
     ->where('dateto','>=',date('Y-m-d'))
     ->withPivot('salesprocess_id');
   }
+
+  public function segment(){
+      return $this->hasMany(Location::class,'segment')->count();
+
+
+  }
+
 
   public function locations(){
     $count = 0; 

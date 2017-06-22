@@ -13,8 +13,17 @@
 	<tbody>
 		@foreach ($data['result'] as $account)
 			<tr>
-				<td>{{$account->businessname}}</td>
-				<td>{{$account->companyname}}</td>
+				<td>
+				<a href="{{route('location.show',$account->id)}}"
+				title = "See details of the {{$account->businessname}} location">
+				{{$account->businessname}}
+				</a></td>
+				<td>
+				<a href="{{route('company.show',$account->company_id)}}"
+				title="See all {{$account->companyname}} locations">
+					{{$account->companyname}}
+				</a>
+				</td>
 				<td>{{$account->street}}</td>
 				<td>{{$account->city}}</td>
 				<td>{{$account->state}}</td>

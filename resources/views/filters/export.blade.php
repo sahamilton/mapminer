@@ -7,6 +7,7 @@
         <td>Current Leads</td>
         <td>Companies</td>
         <td>Locations</td>
+        <td>Segment Locations</td>
         <td>Current Campaigns</td>
     </tr>
 
@@ -14,4 +15,5 @@
     
     </tbody>
 </table>
+
 

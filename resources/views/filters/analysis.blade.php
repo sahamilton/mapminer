@@ -14,6 +14,7 @@
     <th>Current Leads</th>
     <th>Companies</th>
     <th>Locations</th>
+    <th>Segment Locations</th>
     <th>Current Campaigns</th>
       
        

@@ -50,7 +50,7 @@ $data['companyname']=$company->companyname;
 	<td>{{$location->zip}}</td>
 	<td>{{$location->contact}}</td>
 	<td>{{$location->phone}}</td>
-	<td>
+
 	<td style ="text-align: center; vertical-align: middle;">
 			
 		<input {{in_array($location->id,$mywatchlist) ? 'checked' : ''}}

@@ -58,10 +58,11 @@ $data['companyname']=$company->companyname;
    		@endif
     </thead>
     <tbody>
+
    @foreach($locations as $location)
 
     <tr> 
-    @include(companies.partials._watch') 
+    @include('companies.partials._watch') 
 	<td>
 		<a title= "See details of {{$location->businessname}} location."
 		href={{route('location.show',$location->id)}}>
@@ -70,16 +71,17 @@ $data['companyname']=$company->companyname;
 	<td>{{$location->street}}</td>
 	<td>{{$location->city}}</td>
 	<td>
-		<a href= "{{route('company.state', ['companyId'=>$company->id,'state'=>$location->$field])}}"
+
+		<a href= "{{route('company.state', ['companyId'=>$company->id,'state'=>$location->state])}}"
 		title="See all {{$location->state}} locations for $company->companyname">
 		{{$location->state}}</a>
 	</td>
 	<td>{{$location->zip}}</td>
 	<td>
-		@if (!isset($location->segment) 
+		@if (! isset($location->segment)) 
 			Not Specified
 		@else
-			<a href="route('company.segment',[$copmany->id,$location->segment])}}">
+			<a href="{{route('company.segment',[$company->id,$location->segment])}}">
 			{{$filters[$location->segment]}}</a>
 		@endif
 	</td>

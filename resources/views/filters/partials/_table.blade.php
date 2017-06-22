@@ -45,6 +45,7 @@
 
     </td>
     <td class="text-right">{{$vertical->locations()}}</td>
+    <td class="text-right">{{$vertical->segment()}}</td>
     <td class="text-right">
         
         @if(count($vertical->campaigns) > 0)

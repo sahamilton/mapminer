@@ -52,18 +52,22 @@ $newTZ = new DateTimeZone('America/Los_Angeles');
 	<td class="col-md-2">{{ $user->username }}</td>
     <td class="col-md-2">{{ $user->email }}</td>
     <td class="col-md-2">
+    <ul>
     @foreach($user->roles as $role)
     
     <li><a title="Show all {{$role->name}} users" href="{{route('roles.show',$role->id)}}">{{ $role->name }}</a></li>
    
     @endforeach
+    </ul>
     </td>
     <td class="col-md-2">
+    <ul>
     @foreach($user->serviceline as $serviceline)
     
     <li><a href="{{route('serviceline.show',$serviceline->id)}}"> {{$serviceline->ServiceLine }}</a></li>
    
     @endforeach
+    </ul>
     </td>
     <td class="col-md-2">{{ $user->confirmed == '1' ? "yes" :  "no"}}</td>
 

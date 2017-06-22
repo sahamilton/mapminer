@@ -31,9 +31,11 @@
         <tr>
         <td><a href="{{route('permissions.show',$permission->id)}}" >{{$permission->display_name}}</td>
         <td>
+        <ul>
         @foreach ($permission->roles as $role)
         <li>{{$role->name}}</li>
         @endforeach
+        </ul>
         <td>
         @include('partials/_modal')
     
