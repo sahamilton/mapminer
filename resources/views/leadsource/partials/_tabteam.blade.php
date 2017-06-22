@@ -1,5 +1,6 @@
 <h4>Team</h4>
-
+<p><a  href="{{route('leadsource.announce',$leadsource->id)}}">
+<button class="btn btn-info">Notify Sales Team</button></a></p>
 
 <p>Leads have been offered to the following sales reps;</p>
 

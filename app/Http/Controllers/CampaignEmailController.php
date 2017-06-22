@@ -27,6 +27,7 @@ class CampaignEmailController extends Controller
 
         $activity = $this->activity->with('vertical')->findOrFail($id);
         $verticals = array_unique($activity->vertical->pluck('id')->toArray());
+
         $salesteam = $this->filterSalesReps($verticals);
         $verticals = array_unique($activity->vertical->pluck('filter')->toArray());
         $message = $this->constructMessage($activity,$verticals);
@@ -54,7 +55,7 @@ class CampaignEmailController extends Controller
     private function notifySalesTeam($data,$salesteam){
         foreach ($salesteam as $data['sales']){
 
-            Mail::queue(new SendCampaignMail($data));
+            //Mail::queue(new SendCampaignMail($data));
             
         }
     }
@@ -66,16 +67,19 @@ class CampaignEmailController extends Controller
     }
 
     private function notifyManagers($data,$salesteam){
-        $managers = array();
+       
         foreach ($salesteam as $salesrep){
             if($salesrep->reportsTo){
                 $data['managers'][$salesrep->reportsTo->id]['team'][] = $salesrep->postName();
                 $data['managers'][$salesrep->reportsTo->id]['email'] = $salesrep->reportsTo->userdetails->email;
- 				$data['managers'][$salesrep->reportsTo->id]['name'] = $salesrep->reportsTo->firstname;
-                Mail::queue(new SendManagersCampaignMail($data,$manager));
+ 				$data['managers'][$salesrep->reportsTo->id]['firstname'] = $salesrep->reportsTo->firstname;
+                $data['managers'][$salesrep->reportsTo->id]['lastname'] = $salesrep->reportsTo->lastname;
+               
             }
         }
-
+        foreach ($data['managers'] as $manager){
+                Mail::queue(new SendManagersCampaignMail($data,$manager));
+            }
     }
     private function constructMessage($activity,$verticals){
 
@@ -83,7 +87,7 @@ class CampaignEmailController extends Controller
         $activity->title .  " campaign runs from " . $activity->datefrom->format('M j, Y'). " until " . $activity->dateto->format('M j, Y').
         ". ".$activity->description."</p>";
         $message.="This campaign focuses on: <ul>";
-		$message.= "<li>" . implode("</li><li>",$activity->salesprocess->pluck('step')->toArray()). "</li>";
+		$message.= "<li>" . implode("</li><li>",array_unique($activity->salesprocess->pluck('step')->toArray())). "</li>";
 		$message .='</ul> for the following sales verticals:';
         $message .='<ul>';
         $message.= "<li>" . implode("</li><li>",$verticals). "</li>";

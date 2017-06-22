@@ -18,6 +18,7 @@
     <th>Description</th>
     <th>Reference</th>
     <th>Leads</th>
+    <th>Assigned to</th>
     
     <th>Available From / To</th>
     <th>Verticals</th>
@@ -34,6 +35,7 @@
     <td>{{$source->description}}</td>
     <td>{{$source->reference}}</td>
     <td>{{count($source->leads)}}</td>
+    <td>{{$source->assignedTo()}}</td>
    	<td>
         @if($source->dateto < Carbon\Carbon::now())
             Expired {{$source->datefrom->format('M j,Y')}}
@@ -76,7 +78,12 @@
                  Add leads to this source
                  </a>
                  </li>
-
+                <li>
+                <a href="{{route('leadsource.announce',$source->id)}}">
+                <i class="glyphicon glyphicon-envelope"></i> 
+                Email sales team
+                </a>
+                </li>
                 <li>
                 <a data-href="{{route('leadsource.purge',$source->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = " this lead source and all its leads" href="#">
                 <i class="glyphicon glyphicon-trash"></i>

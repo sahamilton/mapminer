@@ -23,19 +23,16 @@ class LeadsEmailController extends Controller
     }
 
     public function announceLeads($id){
-
-        $source = $this->leadsource->with('leads','leads.salesteam','leads.vertical')
-            ->whereHas('leads',function($q){
-                    $q->where('datefrom','<=',date('Y-m-d'))
-                        ->where('dateto','>=',date('Y-m-d'));
-                })
-
+        
+        $source = $this->leadsource->with('leads','leads.salesteam','verticals')
+           ->where('datefrom','<=',date('Y-m-d'))
+           ->where('dateto','>=',date('Y-m-d'))
         ->findOrFail($id);
         
         $salesteam = $this->salesteam($source->leads);
         
-        $verticals = $this->verticals($source->leads);
-        $message = $this->createMessage($source,$verticals);
+        
+        $message = $this->createMessage($source);
         return response()->view('leadsource.salesteam',compact('source','salesteam','message'));
     }
 
@@ -82,33 +79,18 @@ class LeadsEmailController extends Controller
        
     }
 
-    private function verticals($leads){
-        $verticals = array();
-        
-        foreach ($leads as $lead){
-            if(count($lead->vertical)>0){
-                $filters = $lead->vertical->pluck('filter','id')->toArray();
-               
-                foreach ($filters as $vertical){
-                    if(! in_array($vertical,$verticals)){
-                        $verticals[] = $vertical;
-                    }
-                }          
-            }
-        }
-      
-       return $verticals;
-      
-       
-    }
-    private function createMessage($source,$verticals){
+    
+    private function createMessage($source){
         $message = "You have new leads offered to you in the " . $source->source." lead campaign. ";
         $message .= $source->description;
         $message .= "<p>These leads are available from ".$source->datefrom->format('M j, Y') . " until "  .$source->dateto->format('M j, Y')."</p>";
         $message .= "Leads in this campaign are for the following sales verticals:";
         $message .="<ul>";
-        foreach ($verticals as $key=>$filter){
-            $message .= "<li>".$filter."</li>";
+        foreach ($source->verticals as $vertical){
+            if($vertical->isLeaf()){
+                $message .= "<li>".$vertical->filter."</li>";
+            }
+            
         }
         $message .= "</ul>";
         $message .="Check out <strong><a href=\"".route('salesleads.index'). "\">MapMiner</a></strong> to accept these leads and for other resources to help you with these leads.";
@@ -119,10 +101,9 @@ class LeadsEmailController extends Controller
 
 
         $data['source'] = $this->leadsource->with('leads','leads.salesteam','leads.salesteam.reportsTo')
-        ->whereHas('leads.salesteam',function($q){
-                    $q->where('datefrom','<=',date('Y-m-d'))
-                        ->where('dateto','>=',date('Y-m-d'));
-                })->findOrFail($id);
+        ->where('datefrom','<=',date('Y-m-d'))
+        ->where('dateto','>=',date('Y-m-d'))
+        ->findOrFail($id);
         $salesteam = $this->salesteam($data['source']->leads);
         
         $data['message'] = $request->get('message');;
@@ -170,20 +151,5 @@ class LeadsEmailController extends Controller
         }
 
     }
-    private function constructMessage($leadsource,$verticals){
-
-        $message = 
-        $leadsource->title .  " These leads are available from  " . $leadsource->datefrom->format('M j, Y'). " until " . $leadsource->dateto->format('M j, Y').
-        ". ".$leadsource->description."</p>";
-        $message.="These leads are for the following sales verticals:";
-        $message .='<ul>';
- 
-        
-            $message.= "<li>" . implode("</li><li>",$verticals). "</li>";
-        
-        $message.="</ul></p>";
-        $message.="<p>Check out <strong><a href=\"".route('saleslead.index')."\">MapMiner</a></strong> to accept these leads and for resources  to help you with close new business.</p>";
-
-        return $message;
-    }
+    
 }

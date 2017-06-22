@@ -326,7 +326,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 		Route::resource('process','SalesProcessController');
 
 	# Sales Activity
-		Route::get('salesactivity/{activity}/purge',['as'=>'salesactivity.purge','uses'=>'SalesActivityController@destroy']);
+		Route::get('an/{activity}/purge',['as'=>'salesactivity.purge','uses'=>'SalesActivityController@destroy']);
 		Route::get('salesactivity/{vertical}/vertical',['as'=>'salesactivity.vertical','uses'=>'SalesActivityController@index']);
 		Route::resource('salesactivity','SalesActivityController',['except' => ['show']]);
 

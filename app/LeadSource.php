@@ -24,7 +24,15 @@ class LeadSource extends Model
        
     }
 
-     
+     public function assignedTo(){
+        $leads = $this->leads()->with('salesteam')->has('salesteam')->get();
+        $salesreps = array();
+        foreach ($leads as $lead){
+            $reps = $lead->salesteam->pluck('id')->toArray();
+            $salesreps = array_unique(array_merge($reps, $salesreps));
+        }
+        return count($salesreps);
+     }
 
      
 }
