@@ -46,7 +46,7 @@ class LeadSourceController extends Controller
      */
     public function create()
     {
-         $verticals = $this->vertical->vertical();
+         $verticals = $this->vertical->industrysegments();
          return response()->view('leadsource.create',compact('verticals'));
     }
 
@@ -112,7 +112,7 @@ class LeadSourceController extends Controller
     {
         $leadsource = $this->leadsource->with('leads','verticals')->findOrFail($id);
 
-        $verticals = $this->vertical->vertical();
+        $verticals = $this->vertical->industrysegments();
         return response()->view('leadsource.edit',compact('leadsource','verticals'));
     }
 

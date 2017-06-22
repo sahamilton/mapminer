@@ -68,11 +68,7 @@ class SalesActivityController extends BaseController
      */
     public function create()
     {
-        $filters = $this->vertical->first();
-
-        $verticals = $filters->getDescendants()
-        ->where('searchtable','=','companies')->where('inactive','=',0);
-
+        $verticals = $this->vertical->industrysegments();
   
         $process = $this->process->pluck('step','id');
 
@@ -159,9 +155,8 @@ class SalesActivityController extends BaseController
     {
        
         $activity = $this->activity->with('salesprocess','vertical')->findOrFail($id);
-        $filters = $this->vertical->first();
-      $verticals = $filters->getDescendants()
-        ->where('searchtable','=','companies')->where('inactive','=',0);
+        $verticals = $this->vertical->industrysegments();
+      
         $process = $this->process->pluck('step','id');
         return response()->view('salesactivity.edit',compact('activity','process','verticals'));
     }

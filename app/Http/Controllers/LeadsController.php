@@ -22,7 +22,7 @@ class LeadsController extends BaseController
     public $leadsource;
     public $vertical;
     public $leadstatus;
-    public $assignTo = Config::get('leads.lead_distribution_roles');
+    public $assignTo; 
 
     public function __construct(Person $person, Lead $lead,LeadSource $leadsource,SearchFilter $vertical,LeadStatus $status){
 
@@ -31,6 +31,7 @@ class LeadsController extends BaseController
         $this->lead = $lead;
         $this->leadsource = $leadsource;
         $this->leadstatus = $status;
+        $assignTo = \Config::get('leads.lead_distribution_roles');
     }
     /**
      * Display a listing of the resource.
@@ -360,6 +361,7 @@ class LeadsController extends BaseController
         $request->merge(['lead_source_id'=>$source->id]);
         return $request;
     }
+}
 /*
 
     Moved to Lead Source Controller

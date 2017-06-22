@@ -207,6 +207,14 @@ class SearchFilter extends NodeModel {
 
   }
 
+  public function industrysegments(){
+
+    $filters = $this->first();
+    return $filters->getDescendants()
+    ->where('searchtable','=','companies')->where('inactive','=',0);
+
+  }
+
   public function companies(){
     return $this->hasMany(Company::class,'vertical','id');
   }

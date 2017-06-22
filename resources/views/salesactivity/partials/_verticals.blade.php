@@ -1,12 +1,4 @@
-<?php 
-	$filters = new App\SearchFilter();
-	
-	$tree = $filters->first();
-?>
 
-<div class="form-group{{ $errors->has('vertical') ? ' has-error' : '' }}">
-<label for="vertical">Vertical</label>
-<div class="input-group input-group-lg ">
 
 @foreach($verticals as $descendant)
 
@@ -31,7 +23,7 @@
 		@endif
 		
 		@if($descendant->isLeaf())
-			<li><input type="checkbox"  {{in_array($descendant->id, $activity->vertical->pluck('id')->toArray()) ? 'checked': ''}} name="vertical[]" value="{{{$descendant->id}}}"/>
+			<li><input type="checkbox"  {{isset($activity) && in_array($descendant->id, $activity->vertical->pluck('id')->toArray()) ? 'checked': ''}} name="vertical[]" value="{{{$descendant->id}}}"/>
 			{{{trim($descendant->filter)}}}
 		@else
 			<li><input type="checkbox"  name="parent[]" value="{{{$descendant->id}}}"/>
@@ -46,5 +38,5 @@
  </li></ul></fieldset>
 
 {!! $errors->first('vertical', '<p class="help-block">:message</p>') !!}
-</div></div>
+
 
