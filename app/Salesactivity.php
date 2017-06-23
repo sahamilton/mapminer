@@ -61,7 +61,7 @@ class Salesactivity extends Model implements \MaddHatter\LaravelFullcalendar\Ide
         return $this->dateto;
     }
     public function salesprocess(){
-    	return $this->belongsToMany(Salesprocess::class,'activity_process_vertical','activity_id','salesprocess_id')->withPivot('vertical_id');
+    	return $this->belongsToMany(SalesProcess::class,'activity_process_vertical','activity_id','salesprocess_id')->withPivot('vertical_id');
     }
 
     public function vertical(){
