@@ -132,7 +132,7 @@ class LeadsEmailController extends Controller
 
     private function notifyManagers($data,$salesteam){
 
-        $managers = array();
+       $data['managers']=array();
         foreach ($salesteam as $salesrep){
            
             if($salesrep['details']->reportsTo){
