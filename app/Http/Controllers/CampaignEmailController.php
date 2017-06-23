@@ -55,7 +55,7 @@ class CampaignEmailController extends Controller
     private function notifySalesTeam($data,$salesteam){
         foreach ($salesteam as $data['sales']){
 
-            //Mail::queue(new SendCampaignMail($data));
+            Mail::queue(new SendCampaignMail($data));
             
         }
     }

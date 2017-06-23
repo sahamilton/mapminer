@@ -2,15 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Mail;
+
 use App\Salesactivity;
 use App\SearchFilter;
 use App\SalesProcess;
 use App\Document;
 use App\Location;
-use App\Mail\SendCampaignMail;
-use App\Mail\SendManagersCampaignMail;
-use App\Mail\SendSenderCampaignMail;
+
 use App\Lead;
 use App\LeadStatus;
 use App\Person;
