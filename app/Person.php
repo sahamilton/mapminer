@@ -140,7 +140,7 @@ class Person extends NodeModel {
 					 	$query.=", person_search_filter ";
 					 }
 
-					 $query .= "JOIN (
+					 $query .= " JOIN (
 							SELECT  ".$lat."  AS latpoint,  ".$lng." AS longpoint, ".$distance." AS r
 					   ) AS p
 					 WHERE 
@@ -156,7 +156,7 @@ class Person extends NodeModel {
 						 if(isset($role)){
 						 	$query.=" and roles.name in ('". implode("','",$role) ."')";
 						 }
-						 if($verticals){
+						 if($verticals && count($verticals)>0){
 						 	$query.=" and persons.id = person_search_filter.person_id
 						 			and person_search_filter.search_filter_id in ('" .
 						 			implode("','",$verticals) ."')";

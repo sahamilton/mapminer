@@ -14,7 +14,7 @@
 	@endif
 @endforeach
 <h4>Sales Campaign documents based on your industry vertical focus</h4>
-
+@include('search.search')
 <div class="col-md-10 col-md-offset-1">
         <table class='table table-striped' id='sorttable'>
             <thead>
@@ -23,7 +23,7 @@
                 <th>Description</th>
                 
                 <th>Sales Process</th>
-                <th>Vertical</th>
+             
 
                 <td>Link</td>
                 <td>Rank</td>
@@ -51,14 +51,7 @@
                     @endforeach
                     </ul>
                 </td>
-                <td>
-                <ul style="list-style: none;">
-                @foreach ($document->vertical as $vertical)
-
-                    <li>{{$vertical->filter}}</li>
-                    @endforeach
-                    </ul>
-                </td>
+                
                 
  
                 <td><a href="{{$document->link}}" target="_new">{{$document->link}}</a></td>
@@ -97,4 +90,5 @@
 
 {{-- Scripts --}}
 @include('partials._scripts')
+@include('partials._search')
 @stop

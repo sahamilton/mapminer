@@ -347,8 +347,12 @@ class LeadsController extends BaseController
         if(! isset($data['distance'])){
             $data['distance']=\Config::get('leads.search_radius');
         }
+        if(! isset($data['verticals'])){
+            $data['verticals'] = null;
+        }
+        
 
-        return $this->person->findNearByPeople($data['lat'],$data['lng'],$data['distance'],$data['number'],'Sales',$data['verticals']);
+        return $this->person->findNearByPeople($data['lat'],$data['lng'],$data['distance'],$data['number'],['Sales'],$data['verticals']);
     }
 
     private function createNewSource($request){
@@ -361,7 +365,7 @@ class LeadsController extends BaseController
         $request->merge(['lead_source_id'=>$source->id]);
         return $request;
     }
-}
+
 /*
 
     Moved to Lead Source Controller
@@ -372,7 +376,7 @@ class LeadsController extends BaseController
         $verticals = $this->vertical->vertical();
         return response()->view('leads.batchimport',compact('sources','verticals'));
     }
-    
+ */   
     public function getIndustryAssociation($people){
         foreach ($people as $key=>$person){
             $rep = Person::with('industryfocus')->find($person->id);
@@ -381,8 +385,8 @@ class LeadsController extends BaseController
        
         return $people;
     }
-
-    
+}
+ /*   
     
     
 
