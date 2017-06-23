@@ -1,17 +1,25 @@
-@extends('site.layouts.search')
-@section('content')
+
+<script src="//cdn.jsdelivr.net/algoliasearch/3/algoliasearch.min.js"></script>
+<script src="//cdn.jsdelivr.net/autocomplete.js/0/autocomplete.min.js"></script>
+<link href="{{asset('css/search.css')}}" rel='stylesheet' />
+<form novalidate="novalidate" onsubmit="return false;" class="searchbox">
+    <div role="search" class="searchbox__wrapper">
+      <input id="search-input" type="search" name="search" placeholder="Search Sales Library" autocomplete="off" required="required" class="searchbox__input">
+      <button type="submit" title="Submit your search query." class="searchbox__submit" >
+      <svg role="img" aria-label="Search">
+        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#sbx-icon-search-13"></use>
+          </svg>
+        </button>
+      <button type="reset" title="Clear the search query." class="searchbox__reset hide">
+      <svg role="img" aria-label="Reset">
+        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#sbx-icon-clear-3"></use>
+        </svg>
+      </button>
+    </div>
+</form>
 
 
 
 
-<div v-if="shows.length == 0" class="mdl-shadow--4dp intro">
- <h3>Sales Document Search</h3>
- <h4>Search is a fully featured full text search engine</h4>
- <p>It is designed to show the powerfull search capabilities of the engine.
- You can try to search for any sales document you can think of.... </p>
 
- 
-</div>
 
-@include('search.results')
-@endsection

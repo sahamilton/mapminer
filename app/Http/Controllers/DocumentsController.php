@@ -42,7 +42,7 @@ class DocumentsController extends Controller
      */
     public function create()
     {
-        $verticals = $this->vertical->vertical();
+       $verticals = $this->vertical->industrysegments();
 
         $process = $this->process->pluck('step','id');
         return response()->view('documents.create',compact('verticals','process'));
@@ -87,7 +87,7 @@ class DocumentsController extends Controller
      */
     public function edit($id)
     {
-        $verticals = $this->vertical->vertical();
+        $verticals = $this->vertical->industrysegments();
         $process = $this->process->pluck('step','id');
         $document = $this->document->findOrFail($id);
         return response()->view('documents.edit',compact('document','verticals','process'));

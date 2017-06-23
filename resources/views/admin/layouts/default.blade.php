@@ -90,7 +90,7 @@
 		</div>
 		<!-- ./ container -->
 </div>
- @if (config('app.debug') && auth()->check() && config('app.env')=='local') )
+ @if (config('app.debug') && auth()->check() && config('app.env')=='local') 
     @include('sudosu::user-selector')
 @endif
 <!-- the following div is needed to make a sticky footer -->
@@ -111,10 +111,7 @@
     src="//d2s6cp23z9c3gz.cloudfront.net/js/embed.widget.min.js"
     data-domain="trueblue.besnappy.com"
     data-lang="en"
-	data-name="{{ isset(Auth::user()->firstname) ? Auth::user()->firstname ." ". Auth::user()->lastname  : Auth::user()->username  }}"
-    data-email="{{ isset(Auth::user()->email) ? Auth::user()->email : '' }}"
-    >
-</script>
+	data-name="{{ isset(Auth::user()->firstname) ? Auth::user()->firstname ." ". Auth::user()->lastname  : Auth::user()->username  }}"  data-email="{{ isset(Auth::user()->email) ? Auth::user()->email : '' }}"  ></script>
         
 
         @yield('scripts')

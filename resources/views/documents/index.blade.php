@@ -2,6 +2,7 @@
 @section('content')
 <div class="container">
 <h2>Document Library</h2>
+@include('search.search')
 <div class="container">
 @if(auth()->user()->hasRole('Admin'))
 <div class="pull-right">
@@ -112,5 +113,6 @@
         </div>
     </div>
 </div>
+@include('partials._search')
 @include('partials._scripts')
 @endsection

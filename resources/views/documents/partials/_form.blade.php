@@ -48,7 +48,8 @@ value="{{  old('dateto', isset($document) ? date('m/d/Y',strtotime($document->da
 
 
 <legend>Relates To:</legend>
-@include('documents.partials.selectors')
+@include('documents.partials._verticals')
+@include('documents.partials._salesprocess')
 <div class="form-group">
 <legend>Source of Document (choose one)</Legend>
 <div class="form-group{{ $errors->has('location') ? ' has-error' : '' }}">
@@ -72,4 +73,4 @@ value="{{  old('dateto', isset($document) ? date('m/d/Y',strtotime($document->da
 
 
 <input type="hidden" value= "{{\Auth::user()->id}}" name="user_id" />
-   
+@include('partials._verticalsscript')   
