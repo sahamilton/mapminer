@@ -10,7 +10,8 @@
 
         var urlRef = '{{ route("documents.show", ":id") }}';
         urlRef = urlRef.replace(':id', suggestion.id);
-        var sugTemplate =  "<a href=" + urlRef + "><span>"+ suggestion._highlightResult.title.value +"</span></a>";
+        var sugTemplate =  "<a href=" + urlRef + "><span>"+ suggestion._highlightResult.title.value +
+        " / ("+ suggestion._highlightResult.doctype.value +")</span></a>";
           return sugTemplate;
         }
       }
