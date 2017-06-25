@@ -154,7 +154,7 @@ class WatchController extends BaseController {
 	
 	public function showwatchmap() {
 		$data = NULL;
-		$result = $this->getMyWatchList(\Auth::id());
+		$result = $this->getMyWatchList(auth()->user()->id);
 		if(count($result) >0){
 		foreach ($result as $row) {
 			
@@ -171,9 +171,12 @@ class WatchController extends BaseController {
 	
 	
 	public function watchmap(){
-		$result = $this->getMyWatchList(\Auth::id());
+		$locations = $this->getMyWatchList(auth()->user()->id);
 		
-		echo $this->makewatchmap($result);
+		$content = view('watch.watchlistxml', compact('locations'));
+        return response($content, 200)
+            ->header('Content-Type', 'text/xml');	
+		//echo $this->makewatchmap($result);
 		
 		
 	}
