@@ -194,7 +194,7 @@ class Location extends Model {
 
         return response($content, 200)
             ->header('Content-Type', 'text/xml');
-		$dom = new \DOMDocument("1.0");
+		/*$dom = new \DOMDocument("1.0");
 		$node = $dom->createElement("markers");
 		$parnode = $dom->appendChild($node);
 		
@@ -213,7 +213,7 @@ class Location extends Model {
 			$newnode->setAttribute("id", $row->id);
 			$newnode->setAttribute("vertical", $row->vertical);	
 		}
-		return trim($dom->saveXML());
+		return trim($dom->saveXML());*/
 
 		/*
 		if(count($participant['watched'])==1) {

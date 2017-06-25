@@ -176,35 +176,11 @@ class WatchController extends BaseController {
 		$content = view('watch.watchlistxml', compact('locations'));
         return response($content, 200)
             ->header('Content-Type', 'text/xml');	
-		//echo $this->makewatchmap($result);
+
 		
 		
 	}
 	
-	
-	protected function makewatchmap($result) {
-		//Refactor: Simplyfy xml creation
-		
-		$dom = new \DOMDocument("1.0");
-		$node = $dom->createElement("markers");
-		$parnode = $dom->appendChild($node);
-		
-		foreach($result as $row){
-		  // ADD TO XML DOCUMENT NODE
-			$node = $dom->createElement("marker");
-			$newnode = $parnode->appendChild($node);
-			$newnode->setAttribute("locationweb",route('location.show' , $row['location_id']) );
-			$newnode->setAttribute("name",trim($row->watching[0]->businessname));
-			$newnode->setAttribute("account",trim($row->watching[0]->company->companyname));
-			$newnode->setAttribute("accountweb",route('company.show' , $row->watching[0]->company->id,array('title'=>'see all locations') ));
-			$newnode->setAttribute("address", $row->watching[0]->street." ".$row->watching[0]->city." ". $row->watching[0]->state);
-			$newnode->setAttribute("lat", $row->watching[0]->lat);
-			$newnode->setAttribute("lng", $row->watching[0]->lng);
-			$newnode->setAttribute("id",  $row['location_id']);	
-		}
-		return $dom->saveXML();
-		
-	}
 	
 	public function watchupdate(Request $request) {
 		//Refactor: Add request

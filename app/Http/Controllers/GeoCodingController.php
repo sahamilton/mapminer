@@ -6,7 +6,7 @@ use App\Company;
 use App\Branch;
 use App\Watch;
 use App\Http\Requests\FindMeFormRequest;
-
+use Illuminate\Http\Request;
 class GeoCodingController extends BaseController {
 	
 	
@@ -170,49 +170,18 @@ class GeoCodingController extends BaseController {
 		
 	}
 	
-	/**
-	 * Generate branches XML based on results
-	 * @param  array  $result
-	 * @return XML $dom
-	 */
-	
-	/*
-	
-	 private function makeMapXML($result) {
-		if (App::environment() == 'local'){
-			\Debugbar::disable();
-		}
-		$dom = new \DOMDocument("1.0");
-		$node = $dom->createElement("markers");
-		$parnode = $dom->appendChild($node);
-		
-		foreach($result['manages'] as $row){
-		  // ADD TO XML DOCUMENT NODE
-			$node = $dom->createElement("marker");
-			$newnode = $parnode->appendChild($node);
-			$newnode->setAttribute("name",trim($row['branchname']));
-			$newnode->setAttribute("address", $row['street']." ". $row['city']." ". $row['state']);
-			$newnode->setAttribute("lat", $row['lat']);
-			$newnode->setAttribute("lng", $row['lng']);
-			$newnode->setAttribute("locationweb",route('branch.show' , $row['id']) );
-			$newnode->setAttribute("id", $row['id']);	
-			$newnode->setAttribute("type", 'branch');	
-		}
-		return $dom->saveXML();
-	}
-	*/
 	
 	/**
 	 * Generate branches XML based on results
 	 * @param  array  $result
 	 * @return view	 */
 	 
-	public function getMyLocation() {
+	public function getMyLocation(Request $request) {
 		$filtered = $this->location->isFiltered(['locations'],['business','segment'],NULL);
 
-		if(\Input::get('lat') && \Input::get('lng')) {
+		if($request->has('lat') && $request->has('lng')) {
 			
-			$data = \Input::all();
+			$data = $request->all();
 			$data['latlng'] = $data['lat'].":".$data['lng'];
 			if($data['type'] == 'list') {
 				$data['result'] = $this->getGeoListData($data);

@@ -331,18 +331,20 @@ class LocationsController extends BaseController {
 	
 	public function listNearbyLocations($id){
 		
+		
 		$filtered = $this->location->isFiltered(['companies'],['vertical']);
 		
 		$mywatchlist= array();
 		$locations = NULL;
 		$branches = $this->branch->with('manager')->findOrFail($id);
-		
-		$data['manager'] = !isset($data['manager']) ? array() : Person::find($data['branch']->person_id);
+
+		// I dont understand this!
+		//$data['manager'] = ! isset($branches->manager) ? array() : Person::find($data['branch']->person_id);
 
 		$data['branch'] = $branches;
 		$data['title']='National Accounts';
 		$locations  = $this->getNearbyLocations($branches->lat,$branches->lng);
-		$watchlist = User::where('id','=',\Auth::id())->with('watching')->get();
+		$watchlist = User::where('id','=',auth()->user()->id)->with('watching')->get();
 		foreach($watchlist as $watching) {
 			foreach($watching->watching as $watched) {
 				$mywatchlist[]=$watched->id;
@@ -353,22 +355,15 @@ class LocationsController extends BaseController {
 	}
 		
 	
-	private function getNearbyLocations(Request $request, $lat=NULL,$lng=NULL,$distance=NULL,$company_id = null,$vertical=null)
+	private function getNearbyLocations($lat=NULL,$lng=NULL,$distance=NULL,$company_id = null,$vertical=null)
 	
 	{
 		
-		
-		if ($request->has('d')) {
-			$distance = $reqquest->get('d');
-		}else{
-			$distance = '10';
+		if(! $distance){
+			$distance ='10';
 		}
 		
-		if($request->has('lat')){
-			$loclat = $request->get('lat');
-			$loclng = $request->get('lng');
-			
-		}elseif (isset($lat) && isset($lng)){
+		if (isset($lat) && isset($lng)){
 			$loclat = $lat;
 			$loclng = $lng;
 		}else{
