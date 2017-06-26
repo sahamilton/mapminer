@@ -141,7 +141,7 @@ class AdminPermissionsController extends BaseController {
 
 	        // Selected permissions
 
-	        $currentRoles = $permission->roles->pluck('id')->toArray();
+	        $currentRoles = $permission->roles()->pluck('roles.id')->toArray();
 	        
 	        // Title
 	        $title = 'Edit Permission';

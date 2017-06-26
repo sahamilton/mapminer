@@ -22,9 +22,9 @@ class LeadsAssignController extends Controller
 
      public function geoAssignLeads($sid){
 
-        $leadsource = $this->leadsource->with('verticals')->findOrFail($sid);
+        $leadsource = $this->leadsource->findOrFail($sid);
        
-        $data['verticals'] = $leadsource->verticals->pluck('id')->toArray();
+        $data['verticals'] = $leadsource->verticals()->pluck('searchfilters.id')->toArray();
        
         $leads = $this->lead->whereDoesntHave('salesteam')
         ->where('lead_source_id','=',$sid)

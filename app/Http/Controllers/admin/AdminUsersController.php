@@ -219,7 +219,7 @@ class AdminUsersController extends BaseController {
         	$mode = 'edit';
 			$managerlist = $this->getManagerList();
 			
-			$branchesServiced = $user->person->branchesServiced->pluck('id','branchnumber')->toArray();
+			$branchesServiced = $user->person->branchesServiced()->pluck('branches.id','branchnumber')->toArray();
 			
 			// Ether get close branches 
 			
@@ -347,7 +347,7 @@ class AdminUsersController extends BaseController {
     private function getUsersBranches($user){
 			if(isset($user->person->lat) && $user->person->lat !=0){
 
-				$userServiceLines= $user->serviceline->pluck('id')->toArray();
+				$userServiceLines= $user->serviceline()->pluck('servicelines.id')->toArray();
              
 				$nearbyBranches = $this->branch->findNearbyBranches($user->person->lat,$user->person->lng,100,100,$userServiceLines);
 

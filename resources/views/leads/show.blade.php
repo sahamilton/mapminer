@@ -19,7 +19,8 @@
 
 		<p><strong>Industry Vertical:</strong></p>
 		<ul>
-		@foreach($lead->vertical as $vertical)
+		
+		@foreach($lead->leadsource->verticals()->get() as $vertical)
 
 		<li>{{$vertical->filter}}</li>
 		@endforeach

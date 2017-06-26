@@ -68,14 +68,7 @@ class LeadsEmailController extends Controller
         }
        
         return $salesreps;
-        /*$this->person->whereIn('id',$salesreps)->with('salesleads')
-        ->whereHas('salesleads',function($q) use($id,$leads){
-                $q->where('lead_source_id','=',$id);
-        })
-        ->get();*/
        
-
-      
        
     }
 

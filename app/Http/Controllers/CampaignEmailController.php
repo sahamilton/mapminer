@@ -25,11 +25,11 @@ class CampaignEmailController extends Controller
 
         public function announceCampaign($id){
 
-        $activity = $this->activity->with('vertical')->findOrFail($id);
-        $verticals = array_unique($activity->vertical->pluck('id')->toArray());
+        $activity = $this->activity->findOrFail($id);
+        $verticals = array_unique($activity->vertical()->pluck('searchfilters.id')->toArray());
 
         $salesteam = $this->filterSalesReps($verticals);
-        $verticals = array_unique($activity->vertical->pluck('filter')->toArray());
+        $verticals = array_unique($activity->vertical()->pluck('filter')->toArray());
         $message = $this->constructMessage($activity,$verticals);
         return response()->view('salesactivity.salesteam',compact('salesteam','activity','message'));
     }
@@ -87,7 +87,7 @@ class CampaignEmailController extends Controller
         $activity->title .  " campaign runs from " . $activity->datefrom->format('M j, Y'). " until " . $activity->dateto->format('M j, Y').
         ". ".$activity->description."</p>";
         $message.="This campaign focuses on: <ul>";
-		$message.= "<li>" . implode("</li><li>",array_unique($activity->salesprocess->pluck('step')->toArray())). "</li>";
+		$message.= "<li>" . implode("</li><li>",array_unique($activity->salesprocess()->pluck('step')->toArray())). "</li>";
 		$message .='</ul> for the following sales verticals:';
         $message .='<ul>';
         $message.= "<li>" . implode("</li><li>",$verticals). "</li>";

@@ -154,14 +154,15 @@ class LeadsController extends BaseController
     {
 
         $sources = $this->leadstatus->pluck('status','id')->toArray();
-        $lead = $this->lead->with('salesteam','leadsource','leadsource.verticals','relatedNotes')
+        $lead = $this->lead->with('salesteam','leadsource','relatedNotes')
         ->whereHas('leadsource',function($q){
           $q->where('datefrom','<=',date('Y-m-d'))
               ->where('dateto','>=',date('Y-m-d'));
         })
         ->findOrFail($id);
-        $verticals = $lead->leadsource->verticals->pluck('id')->toArray();
-    
+
+        $verticals = $lead->leadsource->verticals()->pluck('searchfilters.id')->toArray();
+
         $rank = $this->lead->rankLead($lead->salesteam);
         $branch = new \App\Branch;
         $branches = $branch->findNearbyBranches($lead->lat,$lead->lng,500,5,[5]);
@@ -366,91 +367,13 @@ class LeadsController extends BaseController
         return $request;
     }
 
-/*
 
-    Moved to Lead Source Controller
-
-    public function batchImport(){
-
-        $sources = $this->leadsource->pluck('source','id');
-        $verticals = $this->vertical->vertical();
-        return response()->view('leads.batchimport',compact('sources','verticals'));
-    }
- */   
     public function getIndustryAssociation($people){
         foreach ($people as $key=>$person){
-            $rep = Person::with('industryfocus')->find($person->id);
-            $people[$key]->industry = $rep->industryfocus->pluck('filter','id')->toArray();
+            $rep = Person::find($person->id);
+            $people[$key]->industry = $rep->industryfocus()->pluck('filter','id')->toArray();
         }
        
         return $people;
-    }
-}
- /*   
-    
-    
-
-    public function assignLeads($id ){
-
-            $lead = $this->lead->with('verticals')->findOrFail($id);
-            $verticals = $lead->verticals->pluck('id')->toArray();
-            $people = $this->person->findNearByPeople($lead->lat,$lead->lng,'5000',5,$this->assignTo.$verticals);
-            $branch = new \App\Branch;
-            $branches = $branch->findNearbyBranches($lead->lat,$lead->lng,500,5,[4,5]);
-         
-            return response()->view('leads.assign',compact('lead','people','branches'));
-        }
-    
-    public function postAssignLeads(Request $request){
-        
-        $lead= $this->lead->findOrFail($request->get('lead_id'));
-        foreach ($request->get('assign') as $person_id){
-            $lead->salesteam()->attach($person_id,['status_id'=>1]);
-        }
-        
-        
-        return redirect()->route('leads.index')->with('status','Lead assigned to ' .count($request->get('assign')) . ' people');
-    }
-
-    public function geoAssignLeads($sid){
-
-        $leadsource = $this->leadsource->with('verticals')->findOrFail($sid);
-       
-        $data['verticals'] = $leadsource->verticals->pluck('id')->toArray();
-       
-        $leads = $this->lead->whereDoesntHave('salesteam')
-        ->where('lead_source_id','=',$sid)
-        ->whereHas('leadsource', function ($q){
-          $q->where('datefrom','<=',date('Y-m-d'))
-          ->where('dateto','>=',date('Y-m-d'));
-        })
-        
-        ->get();
-        $count = null;
-        foreach ($leads as $lead) {
-           $data['lat']=$lead->lat;
-           $data['lng']=$lead->lng;
-           if($people = $this->findNearBy($data)){
-            
-            $count++;
-                foreach ($people as $person){
-                    $lead->salesteam()->attach($person->id,['status_id'=>1]);
-                }
-           }
-           
-        }
-        return redirect()->route('leadsource.show',$sid)->with('status',$count . ' leads assigned');
-    }
-
-    public function batchAssignLeads(Request $request){
-        
-        $lead = $this->lead->findOrFail($request->get('lead_id'));
-        if($request->has('salesrep')){
-            foreach($request->get('salesrep') as $key=>$value){
-                $lead->salesteam()->attach($value,['status_id'=>1]);
-            }
-        }
-
-        return redirect()->route('leads.show',$request->get('lead_id'));
     }
 }
