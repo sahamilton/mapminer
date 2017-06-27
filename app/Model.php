@@ -395,7 +395,7 @@ public function _import_csv($filename, $table,$fields)
 
 	public function currentUserServicelines(){
        $user = auth()->user()->first();
-       $userServicelines= $user->serviceline()->pluck('searchfilters.id')->toArray();
+       $userServicelines= $user->serviceline()->pluck('servicelines.id')->toArray();
        session()->put('user.servicelines',$userServicelines) ;
        $this->userServiceLines = session()->get('user.servicelines');
        return $userServicelines;

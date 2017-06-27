@@ -163,7 +163,7 @@ Check all:{{Form::checkbox('checkAll', 'yes', true,array('id'=>'checkAllAccounts
    @foreach($data['nosalesnotes'] as $company)
     @if (isset($company->notes))
     <tr class="success"> 
-    <td><a href="/salesnotes/{{$company->id}}">{{$company->companyname}}</a>  </td>
+    <td><a href="route('salesnotes',$company->id)}}">{{$company->companyname}}</a>  </td>
     <td><span style="color:green" class="glyphicon glyphicon-ok"> </span></td>
 	@else
     <tr class='danger'>

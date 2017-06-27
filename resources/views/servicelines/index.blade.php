@@ -74,7 +74,7 @@
 				
 				<li><a href="{{route('serviceline.edit',$serviceline->id)}}/"><i class="glyphicon glyphicon-pencil"></i> 
 				Edit {{$serviceline->ServiceLine}}</a></li>
-				<li><a data-href="/admin/serviceline/{{$serviceline->id}}/delete" data-toggle="modal" data-target="#confirm-delete" data-title = "{{$serviceline->ServiceLine}} and all its associations" href="#"><i class="glyphicon glyphicon-trash"></i> Delete {{$serviceline->ServiceLine}}</a></li>
+				<li><a data-href="{{route('serviceline.destroy',$serviceline->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = "{{$serviceline->ServiceLine}} and all its associations" href="#"><i class="glyphicon glyphicon-trash"></i> Delete {{$serviceline->ServiceLine}}</a></li>
 			  </ul>
 			</div>
 		

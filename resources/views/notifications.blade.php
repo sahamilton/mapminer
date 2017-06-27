@@ -3,6 +3,10 @@
 	<button type="button" class="close" data-dismiss="alert">&times;</button>
 	<h4>Error</h4>
 	Please check the form below for errors
+    @foreach($errors->all() as $error)
+       <li> {{$error}}</li>
+
+    @endforeach
 </div>
 @endif
 

@@ -19,7 +19,9 @@
     <tr>  
 	
     <td>
-	    <a href="{{route('location.show',$note->locationid)}}">
+	    <a href="{{route(
+'locations.show'
+,$note->locationid)}}">
 			{{$note->businessname}}
 		</a>
 	</td>

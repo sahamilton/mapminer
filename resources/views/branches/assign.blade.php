@@ -8,7 +8,7 @@
 <p>The closest branches that can serve the 
 
 
-<a href="{{route('location.show',$data['location']['id'])}}">{{$data['location']['businessname']}} </a>
+<a href="{{route('locations.show',$data['location']['id'])}}">{{$data['location']['businessname']}} </a>
 
 location in {{$data['location']['city']}} are:<p>
 <p><a href='{{route("nearby.location",$data['location']['id'])}}'>

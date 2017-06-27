@@ -85,7 +85,7 @@
                 </a>
                 </li>
                 <li>
-                <a data-href="{{route('leadsource.purge',$source->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = " this lead source and all its leads" href="#">
+                <a data-href="{{route('leadsource.destroy',$source->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = " this lead source and all its leads" href="#">
                 <i class="glyphicon glyphicon-trash"></i>
                  Delete this lead source</a>
                  </li>

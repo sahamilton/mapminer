@@ -40,7 +40,7 @@ $data['companyname']=$company->companyname;
    @foreach($locations as $location)
     <tr>  
 	<td>
-		<a href="{{route('location.show',$location->id)}}"
+		<a href="{{route('locations.show',$location->id)}}"
 		 title="See details of the {{$location->businessname}} location."\">
 		 {{$location->businessname}}
 	 	</a>
@@ -69,10 +69,10 @@ $data['companyname']=$company->companyname;
 				</button>
 				<ul class="dropdown-menu" role="menu">
 
-					<li><a href="/location/{{$location->id}}/edit/">
+					<li><a href="{{route('locations.edit',$location->id)}}">
 					<i class="glyphicon glyphicon-pencil"></i> 
 					Edit {{$location->businessname}}</a></li>
-					<li><a data-href="/location/{{$location->id}}/delete" data-toggle="modal" data-target="#confirm-delete" data-title = "{{$location->businessname}} and all associated notes" href="#"><i class="glyphicon glyphicon-trash"></i> 
+					<li><a data-href="{{route('locations.destroy',$location->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = "{{$location->businessname}} and all associated notes" href="#"><i class="glyphicon glyphicon-trash"></i> 
 					Delete {{$location->businessname}}</a></li>
 				</ul>
 			</div>

@@ -31,7 +31,7 @@
                             <li {{ (Request::is('person*') ? ' class="active"' : '') }}><a href="{{{ route('person.index') }}}">People</a></li>
                             </ul>
                             </li>
-                        <li {{ (Request::is('watch') ? ' class="active"' : '') }}><a href="{{{ route('watch') }}}">
+                        <li {{ (Request::is('watch') ? ' class="active"' : '') }}><a href="{{{ route('watch.index') }}}">
                         <span class ="glyphicon glyphicon-eye-open"></span> Watch List</a></li>
                         
                         <li class="dropdown{{ (Request::is('salesorg*','resources*') ? ' active' : '') }}">

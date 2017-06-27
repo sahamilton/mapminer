@@ -29,20 +29,19 @@
 
 <td> {{$salesnote['salesnotes']}}</td>
 <td>
-<div class="btn-group">
-			 
-				 <a href="/admin/salesnotes/create/{{$salesnote['id']}}"
-             
-             title=" 
-                @if($salesnote['salesnotes']=='Yes')
-                Edit {{trim($salesnote['name'])}}'s Sales Notes
-                 @else
-                Create {{trim($salesnote['name'])}}'s Sales Notes
-                @endif
-                "><button type="button" class="btn btn-success" ><i class="glyphicon glyphicon-pencil" ></i></button>   
-                </a>
-	          
-			</div>
+  <div class="btn-group">
+      @if($salesnote['salesnotes']=='Yes')
+        <a href="{{route('salesnotes.edit',$salesnote['id'])}}"
+        title=" Edit {{trim($salesnote['name'])}}'s Sales Notes">
+      @else
+        <a href="{{route('salesnotes.create')}}"
+        title=" Create {{trim($salesnote['name'])}}'s Sales Notes">
+      @endif
+      <button type="button" class="btn btn-success" >
+      <i class="glyphicon glyphicon-pencil" ></i></button>   
+      </a>
+  	          
+  </div>
 </td>
 @endforeach
 </tbody>

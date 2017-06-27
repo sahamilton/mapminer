@@ -42,9 +42,11 @@
 @endforeach
 
 @if (isset($user->nonews))
-<p><strong>No News before:</strong>{{date("d M Y",strtotime($user->nonews))}}</p><p>  Uncheck to reset:<input checked type='checkbox' id='nonews' name='noNews' /></p>
+<p><strong>No News before:</strong>{{$user->nonews->format("d M Y")}}</p><p>  Uncheck to reset:<input checked type='checkbox' id='nonews' name='noNews' /></p>
 @endif
-<a href="/user"><button type="button" class="btn btn-success" ><i class="glyphicon glyphicon-pencil" ></i> Update</button></a>
+<a href="/user">
+<button type="button" class="btn btn-success" >
+<i class="glyphicon glyphicon-pencil" ></i> Update</button></a>
 
 
 

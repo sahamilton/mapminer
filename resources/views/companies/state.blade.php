@@ -20,7 +20,7 @@ $data['distance'] = Config::get('default_radius');?>
 @include('partials/advancedsearch')
 @if(auth()->user()->hasRole('Admin'))
 <div class="pull-right">
-				<a href="{{{ route('location.create')?co=$company->id) }}}" class="btn btn-small btn-info iframe"><span class="glyphicon glyphicon-plus-sign"></span> Create</a>
+				<a href="{{{ route('locations.create')?co=$company->id) }}}" class="btn btn-small btn-info iframe"><span class="glyphicon glyphicon-plus-sign"></span> Create</a>
 			</div>
 @endif
 <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
@@ -40,7 +40,9 @@ $data['distance'] = Config::get('default_radius');?>
    @foreach($locations as $location)
     <tr>  
 	<td>
-		<a href="{{route('location.show',$location->id)}}"
+		<a href="{{route(
+'locations.show'
+,$location->id)}}"
 		 title="See details of the {{$location->businessname}} location."\">
 		 {{$location->businessname}}
 	 	</a>
@@ -69,10 +71,10 @@ $data['distance'] = Config::get('default_radius');?>
 				</button>
 				<ul class="dropdown-menu" role="menu">
 
-					<li><a href="/location/{{$location->id}}/edit/">
+					<li><a href="{{'location.edit',$location->id)}}//">
 					<i class="glyphicon glyphicon-pencil"></i> 
 					Edit {{$location->businessname}}</a></li>
-					<li><a data-href="/location/{{$location->id}}/delete" data-toggle="modal" data-target="#confirm-delete" data-title = "{{$location->businessname}} and all associated notes" href="#"><i class="glyphicon glyphicon-trash"></i> 
+					<li><a data-href="{{route('locations.destroy',$location->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = "{{$location->businessname}} and all associated notes" href="#"><i class="glyphicon glyphicon-trash"></i> 
 					Delete {{$location->businessname}}</a></li>
 				</ul>
 			</div>

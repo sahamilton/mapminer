@@ -17,8 +17,8 @@ $(document).ready(function()
 	    $("#message").toggle();
 	});
 	$(document).on('show.bs.modal','#confirm-delete', function(e) {
-    	$(this).find('.danger').attr('href', $(e.relatedTarget).data('href'));
-		$(this).find('#title').html($(e.relatedTarget).data('title'));
+    	$(this).find('#title').html($(e.relatedTarget).data('title'));
+		$(this).find('#action-form').attr('action',$(e.relatedTarget).data('href'));
 	});	
 	$(document).on('show.bs.modal','#accept-lead', function(e) {
     	$(this).find('.warning').attr('href', $(e.relatedTarget).data('href'));

@@ -11,15 +11,15 @@ $newTZ = new DateTimeZone('America/Los_Angeles');
 	<div class="page-header">
 		<h4>Users who have logged in {{$views[$view]}}</h4>
 		
-        @while (list($key,$value) = each($views))
+        @foreach ( $views as $key=>$value)))
         	@if($view != $key)
-        		<a href="/admin/userlogin/{{$key}}">{{$value}}</a> | 
+        		<a href="{{route('admin.showlogins',$key)}}">{{$value}}</a> | 
        	 	@else
         		{{$value}} |
             @endif
         @endwhile
     
-         <a href="/admin/users">All Users</a>
+         <a href="{{route('users.index')}}">All Users</a>
         }
         }
 	</div>

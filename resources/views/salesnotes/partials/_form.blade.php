@@ -6,16 +6,16 @@
 	<?php $group = $field['group'];?>
     @endif
 
+<div class="form-group{{ $errors->has($field['id']) ? ' has-error' : '' }}">
+<label class="col-md-4 control-label">{{$field['fieldname']}}</label>
 
-<div class="controls">
-{{Form::label($field['id'],$field['fieldname'])}}
-<div>
+<div class="input-group input-group-lg ">
 <?php 
 
 switch ($field['type']) {
 	
 	case ('text'):
-	echo Form::text($field['id'],$field['value']);
+	echo Form::text($field['id'],$field['value'] );
 	
 	break;
 	
@@ -94,28 +94,28 @@ switch ($field['type']) {
 			}
 		}
 		
-	}
-	
-
-	
-	
-		echo "<fieldset><legend>Add New Attachments</legend>";
-
-		
-		echo "<div class=\"form-group \">"; 
-		
-		
-		
-		echo Form::label('attachmentname','Name') ;
-		echo Form::text('attachmentname','',array('class'=>'form-control has-error'));
-		echo "</div>";
-		echo "<div class=\"form-group\" >";
-		echo Form::label('description','Description') ;
-		echo Form::textarea('attachmentdescription','',array('class'=>'form-control')) ;
-		echo "</div>";?>
-		<div class="form-group" >
-		<input class ='form-control' type='file' name='attachment' />
+	}?>
+		<fieldset><legend>Add New Attachments</legend>	
+		<div class="form-group{{ $errors->has('attachmentname') ? ' has-error' : '' }}">
+		{{Form::label('attachmentname','Name')}}
+		{{Form::text('attachmentname','',['class'=>'form-control has-error'])}}
+		<span class="help-block">
+		        <strong>{{ $errors->has('attachmentname') ? $errors->first('attachmentname') : ''}}</strong>
+		        </span>
 		</div>
+
+		<div class="form-group" >
+		{{Form::label('description','Description') }}
+		{{Form::textarea('attachmentdescription','',['class'=>'form-control']) }}
+		</div>
+		<div class="form-group{{ $errors->has('attachment') ? ' has-error' : '' }}">
+		<input class ='form-control' type='file' name='attachment' />
+		<span class="help-block {{ $errors->has('attachment') ? ' has-error' : ''}}">
+		        <strong>{{ $errors->has('attachment') ? $errors->first('attachment') : ''}}</strong>
+		        </span>
+		        
+		</div>
+
 		</fieldset>
 
 	<?php
@@ -127,15 +127,13 @@ switch ($field['type']) {
 		$field['type'];
 	break;	
 }?>
-    {{ $errors->first($field['id']) }}
-    </div></div>
+    <span class="help-block">
+		        <strong>{{ $errors->has($field['id']) ? $errors->first($field['id']) : ''}}</strong>
+		        </span>
+		</div>
+</div>
 
     
 @endforeach
 <!-- Form Actions -->
-	</div><div style="margin-top:20px">
-		<div class="controls">
-
-			<button type="submit" class="btn btn-success">Edit Notes</button>
-		</div>
-	</div>
+	

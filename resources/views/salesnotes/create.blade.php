@@ -35,6 +35,12 @@ foreach ($groups as $tab) {
 <?php $data = $fields;?>
 @include('salesnotes.partials._form')
  {{Form::hidden('companyId',$company->id)}}
+ </div><div style="margin-top:20px">
+    <div class="controls">
+
+      <button type="submit" class="btn btn-success">Create Notes</button>
+    </div>
+  </div>
 {{Form::close()}}
 </div>
  <script>

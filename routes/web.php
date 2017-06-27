@@ -119,7 +119,7 @@ Route::group(['middleware' => 'auth'], function () {
 	
 	#Notes
 		
-		Route::get('notes/{noteId}/delete',['as' => 'delete/note', 'uses' => 'NotesController@destroy']);
+		
 		Route::get('mynotes',['as'=>'mynotes','uses'=>'NotesController@mynotes']);
 		
 		Route::get('exportlocationnotes/{companyID}', ['as'=>'exportlocationnotes','uses'=>'PersonsController@exportManagerNotes']);
@@ -136,14 +136,12 @@ Route::group(['middleware' => 'auth'], function () {
 	
 	
 	# Watch List	
-		Route::get('watch',['as'=>'watch', 'uses'=>'WatchController@index']);
-		
+		Route::get('watch',['as'=>'watch.index', 'uses'=>'WatchController@index']);
+		Route::get('watch/export',['as'=>'watch.export', 'uses'=>'WatchController@export']);
 		Route::get('watch/add/{locationId}',['as'=>'watch.add', 'uses'=>'WatchController@create']);
 		Route::get('watch/delete/{locationID}',['as'=>'watch.delete', 'uses'=>'WatchController@destroy']);
-		Route::get('watchexport',['as'=>'watchexport', 'uses'=>'WatchController@export']);
-		
-		Route::get('watchmap',['as'=>'watchmap','uses'=>'WatchController@showwatchmap']);
-		Route::get('watchexport',['as'=>'company.watchexport', 'uses'=>'PersonsController@companywatchexport']);
+		Route::get('watch/map',['as'=>'watch.map','uses'=>'WatchController@showwatchmap']);
+		Route::get('cowatch/export',['as'=>'company.watchexport', 'uses'=>'PersonsController@companywatchexport']);
 
 	# Sales organization
 		Route::get('salesorg/{person?}',['as'=>'salesorg','uses'=>'SalesOrgController@getSalesBranches']);
@@ -220,23 +218,22 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 		Route::get('cleanse',['as'=>'users.cleanse','uses'=>'Admin\AdminUsersController@cleanse']);
 		Route::get('users/import',['as'=>'admin.users.import', 'uses'=>'Admin\AdminUsersController@import']);
 		Route::post('users/bulkimport',['as'=>'admin.users.bulkimport', 'uses'=>'Admin\AdminUsersController@bulkImport']);
-		Route::get('users/{user}/purge',['as'=>'users.purge','uses'=> 'Admin\AdminUsersController@destroy']);
 		Route::get('users/serviceline/{servicelineId}', ['as'=>'serviceline.user','uses'=>'Admin\AdminUsersController@index']);
 
 		Route::resource('users', 'Admin\AdminUsersController');  
 
 
 	  # User Role Management
-		Route::get('roles/{role}/purge',['as'=>'roles.purge','uses'=>'Admin\AdminRolesController@purge']);
+		
 		Route::resource('roles','Admin\AdminRolesController');
 	    #  Permissions 
-		Route::get('permissions/{permission}/purge',['as'=>'permissions.purge','uses'=>'Admin\AdminPermissionsController@purge']);
+		
 		Route::resource('permissions','Admin\AdminPermissionsController');
      
 
     # Documents
     	Route::resource('documents','DocumentsController');
-    	Route::get('documents/{document}/purge',['as'=>'documents.purge','uses'=>'DocumentsController@destroy']);
+    	
 
 
 	#Locations
@@ -253,26 +250,20 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 		Route::get('company/{companyId}/export',['as'=>'company.export','uses'=>'WatchController@companyexport']);
 		Route::post('company/filter',['as'=>'company.filter','uses'=>'CompaniesController@filter']);
 		Route::resource('company','CompaniesController');
-
-		/* deprecated
-			Used to assign locations to branches
-		 Route::get('location/{locationId}/assign', ['as' => 'assign.location', 'uses' => 'LocationsController@getClosestBranch']);
-		*/
-	
 	
 	#Branches
 		Route::get('branches/import', ['as'=>'branches.import', 'uses'=>'BranchesController@import']);
 		Route::get('branches/export', ['as'=>'branches.export', 'uses'=>'BranchesController@export']);
-		Route::post('branches/bulkimport', ['as'=>'admin.branches.bulkimport', 'uses'=>'BranchesController@branchImport']);
-		Route::get('geocode', ['as'=>'admin.branches.geocode', 'uses'=>'BranchesController@geoCodeBranches']);
-		Route::get('branchmap', ['as'=>'admin.branches.genmap', 'uses'=>'BranchesController@rebuildBranchMap']);
-		Route::get('branch/destroy',['as'=>'branch.delete','uses'=>'BranchesController@destroy']);
+		Route::post('branches/bulkimport', ['as'=>'branches.bulkimport', 'uses'=>'BranchesController@branchImport']);
+		Route::get('geocode', ['as'=>'branches.geocode', 'uses'=>'BranchesController@geoCodeBranches']);
+		Route::get('branchmap', ['as'=>'branches.genmap', 'uses'=>'BranchesController@rebuildBranchMap']);
+		
 		Route::resource('branches','BranchesController',['except'=>['index','show']]);
 		
 		
 	#Howtofields	
 		Route::resource('howtofields','HowtofieldsController');
-		Route::get('howtofields/{fieldId}/delete', ['as'=>'howtofield.delete', 'uses'=>'HowtofieldsController@destroy']);
+		
 	
 	#People
 		Route::get('person/import',['as'=>'person.bulkimport', 'uses'=>'PersonsController@import']);
@@ -282,14 +273,11 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 	
 	#ServiceLines
 	
-		Route::get('serviceline/{servicelineId}/delete', ['as'=>'serviceline.delete', 'uses'=>'ServicelinesController@destroy']);
+		
 		Route::resource('serviceline','ServicelinesController');
 	#Leads
 		Route::get('leads/address',['as'=>'lead.address','uses'=>'LeadsController@address']);
-		Route::get('leads/{vertical}/vertical',['as'=>'lead.vertical','uses'=>'LeadsController@index']);
-		//Route::get('leads/batch',['as'=>'batchimport','uses'=>'LeadsController@batchImport']);
-		//Route::post('leads/batch',['as'=>'leads.batch','uses'=>'LeadsController@leadAdd']);
-		Route::get('leads/{id}/purge',['as'=>'leads.purge','uses'=>'LeadsController@destroy']);
+		Route::get('leads/{vertical}/vertical',['as'=>'lead.vertical','uses'=>'LeadsController@index']);		
 		Route::get('leads/assign/{sid}/source',['as'=>'leads.geoassign','uses'=>'LeadsAssignController@geoAssignLeads']);
 		Route::get('leads/{id}/assign',['as'=>'leads.leadassign','uses'=>'LeadsController@assignLeads']);
 		Route::post('leads/batchassign',['as'=>'leads.assignbatch','uses'=>'LeadsController@batchAssignLeads']);
@@ -299,7 +287,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 		Route::resource('leads','LeadsController');
 	
 	#LeadSource
-		Route::get('leadsource/{id}/purge',['as'=>'leadsource.purge','uses'=>'LeadSourceController@destroy']);
+		
 		Route::get('leadsource/{id}/announce',['as'=>'leadsource.announce','uses'=>'LeadsEmailController@announceLeads']);
 		Route::post('leadsource/{id}/email',['as'=>'sendleadsource.message','uses'=>'LeadsEmailController@email']);
 		Route::get('leadsource/{id}/assign',['as'=>'leadsource.assign','uses'=>'LeadSourceController@assignLeads']);
@@ -308,25 +296,22 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 		Route::resource('leadsource','LeadSourceController');
 
 	# Lead Status
-		Route::get('leadstatus/{id}/purge',['as'=>'leadstatus.purge','uses'=>'LeadStatusController@destroy']);
+		
 	 	Route::resource('leadstatus','LeadStatusController');	
 
 	#Salesnotes
-		
-		Route::resource('salesnotes','SalesNotesController');
-		//Route::post('salesnotes/create',['as'=>'salesnotes.postcreate','uses'=>'CompaniesController@createSalesNotes']);
-		Route::get('salesnotes/create/{companyId}',['as'=>'salesnotes.create','uses'=>'SalesNotesController@createSalesNotes']);
-		//Route::post('salesnotes/store/{companyID}',['as'=>'salesnotes.store','uses'=>'CompaniesController@storeSalesNotes']);
-		
-		
 		Route::get('salesnotes/filedelete/{file}', ['as'=>'salesnotes.filedelete', 'uses'=>'SalesNotesController@filedelete']);
+		Route::get('salesnotes/create/{companyId}',['as'=>'salesnotes.cocreate','uses'=>'SalesNotesController@createSalesNotes']);
+		Route::resource('salesnotes','SalesNotesController');
+				
+		
 	
 	# Sales Process
-		Route::get('process/{process}/purge',['as'=>'process.purge','uses'=>'SalesProcessController@destroy']);
+		
 		Route::resource('process','SalesProcessController');
 
 	# Sales Activity
-		Route::get('an/{activity}/purge',['as'=>'salesactivity.purge','uses'=>'SalesActivityController@destroy']);
+		
 		Route::get('salesactivity/{vertical}/vertical',['as'=>'salesactivity.vertical','uses'=>'SalesActivityController@index']);
 		Route::resource('salesactivity','SalesActivityController',['except' => ['show']]);
 
@@ -343,7 +328,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 	# Admin Dashboard
 		Route::get('watching/{userid}', ['as'=>'watch.watching', 'uses'=>'WatchController@watching']);
 		Route::get('userlogin/{view?}',['as'=>'admin.showlogins', 'uses'=>'Admin\AdminDashboardController@logins']);
-		Route::get('/', ['uses'=>'Admin\AdminDashboardController@dashboard']);
+		Route::get('/', ['as'=>'dashboard','uses'=>'Admin\AdminDashboardController@dashboard']);
 	
 	#Comments
 		Route::get('comment/download', ['as'=>'comment.download', 'uses'=>'CommentsController@download']);
@@ -351,7 +336,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 	#News
 		Route::resource('news', 'NewsController');
 		Route::get('news',['uses'=>'NewsController@admin']);
-		Route::get('news/{newsId}/delete', ['as'=>'admin.news.delete', 'uses'=>'NewsController@destroy']);
+		
 		Route::post('news/{newsId}', ['as'=>'admin.news.update', 'uses'=>'NewsController@update']);
 	
 	#Search Filters
@@ -361,7 +346,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 		Route::get('searchfilters/promote/{filterid}',['as'=>'admin.searchfilter.promote','uses'=>'SearchFiltersController@promote']);
 		Route::get('searchfilters/demote/{filterid}',['as'=>'admin.searchfilter.demote','uses'=>'SearchFiltersController@demote']);
 		Route::get('filterform','SearchFiltersController@filterForm');
-		Route::get('searchfilters/{id}/delete',['as'=>'admin.searchfilter.delete','uses'=>'SearchFiltersController@destroy']);
+		
 		Route::get('api/searchfilters/getAccounts',['as'=>'getAccountSegments','uses'=>'SearchFiltersController@getAccountSegments']);
 		Route::post('api/searchfilters/postAccounts',['as'=>'postAccountSegments','uses'=>'SearchFiltersController@getAccountSegments']);
 		Route::resource('searchfilters','SearchFiltersController');

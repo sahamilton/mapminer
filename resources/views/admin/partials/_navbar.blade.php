@@ -12,7 +12,7 @@
                 <div class="collapse navbar-collapse navbar-ex1-collapse">
                     <ul class="nav navbar-nav">
                  			
-                    	<li><a href="/admin">Dashboard</a></li>
+                    	<li><a href="{{route('dashboard')}}">Dashboard</a></li>
 
                         <li class="dropdown{{ (Request::is('admin/company*','admin/locations*') ? ' class="active"' : '') }}">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="{{{ route('company.index') }}}">

@@ -50,7 +50,7 @@
 			  <ul class="dropdown-menu" role="menu">
 				
 				<li><a href="{{route('roles.edit',$role->id)}}"><i class="glyphicon glyphicon-pencil"></i> Edit {{$role->name}}</a></li>
-				<li><a data-href="{{route('roles.purge',$role->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = "{{$role->name}}" href="#"><i class="glyphicon glyphicon-trash"></i> Delete {{$role->name}}</a></li>
+				<li><a data-href="{{route('roles.destroy',$role->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = "{{$role->name}}" href="#"><i class="glyphicon glyphicon-trash"></i> Delete {{$role->name}}</a></li>
 			  </ul>
 			</div>
         

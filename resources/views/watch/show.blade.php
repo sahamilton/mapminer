@@ -1,10 +1,10 @@
 @extends('site/layouts/default')
 @section('content')
 
-<h1>{{$user->person->firstname}} {{$user->person->lastname}}'s Watch List</h1>
-<p><a href="/admin/watchlist/{{$user->id}}" 
-title="Download {{$user->person->firstname}} {{$user->person->lastname}}'s Watch List as a CSV / Excel file">
-<i class="glyphicon glyphicon-cloud-download"></i> Download {{$user->person->firstname}} {{$user->person->lastname}}'s Watch List</a> </p>
+<h1>{{$user->person->postName()}}'s Watch List</h1>
+<p><a href="{{route('watch.mywatchexport',$user->id)}}" 
+title="Download {{$user->person->postName()}}'s Watch List as a CSV / Excel file">
+<i class="glyphicon glyphicon-cloud-download"></i> Download {{$user->person->postName()}}'s Watch List</a> </p>
 
 <table id='sorttable' class ='table table-bordered table-striped table-hover dataTable'><thead>
 
@@ -20,21 +20,23 @@ title="Download {{$user->person->firstname}} {{$user->person->lastname}}'s Watch
         
 		</thead>
 <tbody>
-
  @foreach($watch as $row)
 
 			<tr>
-			<td>{{$row['watching'][0]->businessname}}</td>
-			<td>{{$row['watching'][0]->companyname}}</td>
+			<td><a href="{{route(
+'locations.show'
+,$row['watching'][0]->id)}}">
+			{{$row['watching'][0]->businessname}}</a></td>
+			<td>{{$row['watching'][0]->company->companyname}}</td>
 			<td>{{$row['watching'][0]->street}}</td>
 			<td>{{$row['watching'][0]->city}}</td>
 			<td>{{$row['watching'][0]->state}}</td>
-			<td>{{$row['watching'][0]->zip']}}</td>
+			<td>{{$row['watching'][0]->zip}}</td>
 				
 			</tr>
 @endforeach
 </tbody>
-       </table>
+</table>
 @include('partials/_scripts')
 
 @stop

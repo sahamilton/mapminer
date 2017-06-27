@@ -15,7 +15,19 @@
                 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                    <a href="#" class="btn btn-danger danger">Delete</a>
+                    <a href="#" class="btn btn-danger danger"
+                        onclick="event.preventDefault();
+                        document.getElementById('action-form').submit();"
+                        class="btn btn-danger danger">Delete</a>
+                                        
+                        <form id="action-form" 
+                            action="" 
+                            method="POST" 
+
+                            style="display: none;">
+                            <input type="hidden" name="_method" value="delete">
+                            {{ csrf_field() }}
+                        </form>
                 </div>
             </div>
         </div>

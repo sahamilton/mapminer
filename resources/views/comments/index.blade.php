@@ -38,9 +38,9 @@
 						<span class="sr-only">Toggle Dropdown</span>
 						</button>
 						<ul class="dropdown-menu" role="menu">
-							<li><a href="/comment/{{$comment->id}}/edit/">
+							<li><a href="{{route('comment.edit',$comment->id)}}">
 							<i class="glyphicon glyphicon-pencil"></i> Edit this comment</a></li>
-							<li><a data-href="/comment/{{$comment->id}}/delete" data-toggle="modal" data-target="#confirm-delete" data-title = "this comment" href="#">
+							<li><a data-href="{{route('comment.destroy',$comment->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = "this comment" href="#">
 							<i class="glyphicon glyphicon-trash"></i> Delete this comment</a></li>
 						</ul>
 					</div>

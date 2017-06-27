@@ -43,7 +43,7 @@
 
                     <li><a href="{{route('process.edit',$step->id)}}"><i class="glyphicon glyphicon-pencil"></i> Edit Sales Step</a></li>
 
-                    <li><a data-href="{{route('process.purge',$step->id)}}" 
+                    <li><a data-href="{{route('process.destroy',$step->id)}}" 
                     data-toggle="modal" 
                     data-target="#confirm-delete" 
                     data-title = "location" 

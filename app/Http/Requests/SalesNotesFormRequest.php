@@ -24,8 +24,8 @@ class SalesNotesFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'attachmentname' => 'required_with:attachment|min:5',
-            'attachment'=>'file',
+            'attachmentname' => 'required_with:attachment',
+            'attachment'=>'file|required_with:attachmentname|mimetypes:application/pdf',
         ];
     }
 }

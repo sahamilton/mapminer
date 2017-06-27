@@ -68,7 +68,7 @@
     @include('companies.partials._watch')
 	<td>
 		<a title= "See details of {{$location->businessname}} location."
-		href={{route('location.show',$location->id)}}>
+		href={{route('locations.show',$location->id)}}>
 		{{$location->businessname}}</a>
 	</td>
 	<td>{{$location->street}}</td>
@@ -106,13 +106,13 @@
 				</button>
 				<ul class="dropdown-menu" role="menu">
 					<li>
-						<a href="/location/{{$location->id}}/edit/">
+						<a href="{{route('locations.edit',$location->id)}}">
 							<i class="glyphicon glyphicon-pencil"></i> 
 							Edit {{$location->businessname}}
 						</a>
 					</li>
 					<li>
-						<a data-href="/location/{{$location->id}}/delete" data-toggle="modal" data-target="#confirm-delete" data-title = "{{$location->businessname}} and all associated notes" 
+						<a data-href="{{route('locations.destroy',$location->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = "{{$location->businessname}} and all associated notes" 
 						href="#">
 						<i class="glyphicon glyphicon-trash"></i> 
 						Delete {{$location->businessname}}

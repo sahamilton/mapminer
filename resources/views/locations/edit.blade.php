@@ -8,7 +8,7 @@ $companyid = $location->company->id;
 $ultimateDUNS = $location->company->DUNS;
 
 ?>
-{{Form::model($location, ['method'=>'PATCH','route'=>['location.update', $location->id]]) }}
+{{Form::model($location, ['method'=>'PATCH','route'=>['locations.update', $location->id]]) }}
 @include('locations/partials/_form')
 {{Form::close()}}
 </div>

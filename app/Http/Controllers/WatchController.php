@@ -120,12 +120,10 @@ class WatchController extends BaseController {
 	
 	protected function getMyWatchList($id) {
 		
-		$watchList = $this->watch->with('watching','watching.company')
-		->with('watchnotes')
+		 return $this->watch->with('watching','watching.company','watchnotes')
 		->where("user_id","=", $id)
 		->get();
-	
-		return $watchList;
+
 		
 	}
 	

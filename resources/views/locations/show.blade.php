@@ -21,10 +21,10 @@ Account managed by <a href="{{route('person.show',$location->company->managedBy-
 <p><b>Phone:</b>{{$location->phone}}</p>
 @if(isset($watch->location_id))
 
-<p><a href="/watch/delete/{{$watch->id}}" title="Remove this location to my watch list"><i class="glyphicon glyphicon-floppy-remove"></i> Remove from My Watch List</a>
+<p><a href="{{route('watch.delete',$watch->id)}}" title="Remove this location to my watch list"><i class="glyphicon glyphicon-floppy-remove"></i> Remove from My Watch List</a>
 
 @else
-<p><a href="/watch/add/{{$location->id}}" title="Add this location to my watch list"><i class="glyphicon glyphicon-floppy-disk"></i> Add to My Watch List</a></i>
+<p><a href="{{route('watch.add',$location->id)}}" title="Add this location to my watch list"><i class="glyphicon glyphicon-floppy-disk"></i> Add to My Watch List</a></i>
 @endif
 
 <?php if(isset($branch[0]->branchid)){?>
@@ -34,7 +34,7 @@ Account managed by <a href="{{route('person.show',$location->company->managedBy-
 
 <?php } ?>
 <p> <a href="{{ route('assign.location', $location->id) }}" title='See nearby branches'>Other Nearby Branches</a></p>
-<a href="/location/{{$location->id}}/edit" title="Edit this location"><i class="glyphicon glyphicon-pencil"></i>Edit location</a>
+<a href="{{route('locations.edit',$location->id)}}" title="Edit this location"><i class="glyphicon glyphicon-pencil"></i>Edit location</a>
 <hr />
 <h2>Notes</h2>
 

@@ -22,7 +22,9 @@
 			<tr>
 				<td>{{$location->companyname}}</td> 
 				
-				<td><a href="{{route('location.show',$location->id)}}" title="Review this location">{{$location->businessname}}</a></td>
+				<td><a href="{{route(
+'locations.show'
+,$location->id)}}" title="Review this location">{{$location->businessname}}</a></td>
 				<td>{{$location->vertical}}</td>
 				<td>{!! $location->street . "<br /> " .$location->city. " "   . $location->state !!}</a></td>
 				<td>{{$location->contact }}</td> 

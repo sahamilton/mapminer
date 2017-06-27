@@ -97,7 +97,7 @@ $newTZ = new DateTimeZone('America/Los_Angeles');
 				
 				<li><a href="{{route('users.edit',$user->id)}}"><i class="glyphicon glyphicon-pencil"></i> Edit {{$user->person->firstname}} {{$user->person->lastname}}</a></li>
 
-				<li><a data-href="{{route('users.purge',$user->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = "{{$user->person->firstname}} {{$user->person->lastname}}" href="#"><i class="glyphicon glyphicon-trash"></i> Delete {{$user->person->firstname}} {{$user->person->lastname}}</a></li></a></li>
+				<li><a data-href="{{route('users.destroy',$user->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = "{{$user->person->firstname}} {{$user->person->lastname}}" href="#"><i class="glyphicon glyphicon-trash"></i> Delete {{$user->person->firstname}} {{$user->person->lastname}}</a></li></a></li>
 
 			  </ul>
 			</div>

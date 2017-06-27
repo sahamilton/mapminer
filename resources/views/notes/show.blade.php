@@ -2,7 +2,7 @@
 @section('content')
 <h2>My Location Notes</h2>
 
-<p><a href="/watch" title="Review my watch list"><i class="glyphicon glyphicon-th-list"></i> View My Watch List</a></p>
+<p><a href="{{route('watch.index')}}" title="Review my watch list"><i class="glyphicon glyphicon-th-list"></i> View My Watch List</a></p>
 
 <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
 	<thead>

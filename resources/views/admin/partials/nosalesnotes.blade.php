@@ -14,7 +14,7 @@
     <tr class="danger">  
 	
     
-    <td><a href="/admin/salesnotes/create/{{$company->id}}">{{$company->companyname}}</a>
+    <td><a href="{{route('salesnotes.cocreate',$company->id)}}">{{$company->companyname}}</a>
 		
 	
     </td>

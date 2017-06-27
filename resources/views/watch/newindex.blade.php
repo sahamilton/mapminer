@@ -4,7 +4,7 @@
 
 <h1>My Watch List!!</h1>
 
-<p><a href="/watchmap" title="Review my watch list"><i class="glyphicon glyphicon-flag"></i> View My Watch Map</a> 
+<p><a href="{{route('watch.map')}}" title="Review my watch list"><i class="glyphicon glyphicon-flag"></i> View My Watch Map</a> 
 
 <a href="{{route('watch.mywatchexport',auth()->user()->id)}}" title="Download my watch list as a CSV / Excel file"><i class="glyphicon glyphicon-cloud-download"></i> Download My Watch List</a></p>
 
@@ -25,7 +25,9 @@
 	@foreach($watch as $row)
 		<tr>
 		<td>
-			<a href="{{route('location.show',$row['watching'][0]->id)}}">
+			<a href="{{route(
+'locations.show'
+,$row['watching'][0]->id)}}">
 			{{$row['watching'][0]->businessname}}</a>
 		</td>
 		<td>

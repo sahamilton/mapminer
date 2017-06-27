@@ -8,7 +8,7 @@
 
 @if (Auth::user()->hasRole('Admin'))
 <div class="pull-right">
-	<a href="" class="btn btn-small btn-info iframe"><span class="glyphicon glyphicon-plus-sign"></span> Create / Edit</a>
+	<a href="{{route('salesnotes.cocreate',$company->id)}}" class="btn btn-small btn-info iframe"><span class="glyphicon glyphicon-plus-sign"></span> Create / Edit</a>
 </div>
 
 @endif
@@ -19,7 +19,8 @@
 	foreach ($dirs as $dir) {
 	$filename = "documents".DIRECTORY_SEPARATOR.$dir.DIRECTORY_SEPARATOR.str_replace(" ","_",$company->companyname).".pdf";
 	if(file_exists(public_path($filename))){
-	echo "<p><a target=\"_blank\" href=\"".url($filename)."\" /><img src=\"".asset('assets/images/pdf.png')."\">Download ".$dir." document</a></p>";
+	echo "<p><a target=\"_blank\" href=\"".url($filename)."\" />
+	<img src=\"".asset('assets/images/pdf.png')."\">Download ".$dir." document</a></p>";
 	}
 }?>
 </div>

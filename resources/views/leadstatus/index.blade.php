@@ -43,7 +43,7 @@
         <ul class="dropdown-menu" role="menu">
         
         <li><a href="{{route('leadstatus.edit',$status->id)}}"><i class="glyphicon glyphicon-pencil"></i> Edit this lead status</a></li>
-        <li><a data-href="{{route('leadstatus.purge',$status->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = " this lead status " href="#"><i class="glyphicon glyphicon-trash"></i> Delete this lead status</a></li>
+        <li><a data-href="{{route('leadstatus.destroy',$status->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = " this lead status " href="#"><i class="glyphicon glyphicon-trash"></i> Delete this lead status</a></li>
         </ul>
       </div>
     

@@ -22,7 +22,7 @@
    @foreach($data['nocontact'] as $nocontact)
 <tr>
 <td>
-<a href="/company/{{$nocontact->company_id}}" >{{$nocontact->companyname}}</a>
+<a href="{{route('company.show',$nocontact->company_id)}}" >{{$nocontact->companyname}}</a>
 </td>
 <td>
 {{$nocontact->locations}}

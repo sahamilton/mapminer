@@ -1,26 +1,27 @@
 <?php 
 
 // get segment and business type options
-	
+$state = new App\State;
+   $states = $state->getStates();
 
 if(isset($location->company->vertical)){
-$segments = SearchFilter::where('parent_id','=',$location->company->vertical)
+$segments = App\SearchFilter::where('parent_id','=',$location->company->vertical)
 			->orWhere(function($query){ 
 					$query->where('searchcolumn','=','segment')
 					->where('canbenull','=',1);})
 			->pluck('filter','id');
 }
-$nullSegment = SearchFilter::where('searchtable','=','locations')
+$nullSegment = App\SearchFilter::where('searchtable','=','locations')
 			->where('searchcolumn','=','segment')
 			->where('canbenull','=',1)
 			->pluck('id');
 
-$businesstypes = SearchFilter::where('searchtable','=','locations')
+$businesstypes = App\SearchFilter::where('searchtable','=','locations')
 			->where('searchcolumn','=','businesstype')
 			->where('type','!=','group')
 			->pluck('filter','id');
 			
-$nullBusinesstype = SearchFilter::where('searchtable','=','locations')
+$nullBusinesstype = App\SearchFilter::where('searchtable','=','locations')
 			->where('searchcolumn','=','businesstype')
 			->where('canbenull','=',1)
 			->pluck('id');
@@ -66,7 +67,7 @@ $nullBusinesstype = SearchFilter::where('searchtable','=','locations')
 <!--- State -->
 <div class="form-group @if ($errors->has('state')) has-error @endif">
 {{Form::label('state','State:',array('class'=>'control-label col-sm-2'))}}
-{{Form::select('state',Form::states())}}
+{{Form::select('state',$states)}}
 @if ($errors->has('state')) <p class="help-block">{{ $errors->first('state') }}</p> @endif
 </div>
 

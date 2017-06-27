@@ -100,7 +100,7 @@
 						<i class="glyphicon glyphicon-pencil"></i> 
 						Edit {{$company->companyname}}</a></li>
 						<li>
-						<a data-href="/company/{{$company->id}}/delete" data-toggle="modal" data-target="#confirm-delete" data-title = "{{$company->companyname}} and all its locations" href="#">
+						<a data-href="{{route('company.destroy',$company->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = "{{$company->companyname}} and all its locations" href="#">
 						<i class="glyphicon glyphicon-trash"></i> 
 						Delete {{$company->companyname}}</a></li>
 						</ul>

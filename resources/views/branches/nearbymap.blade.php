@@ -5,7 +5,7 @@
 <p>The closest branches that can serve the 
 
 
-<a href="{{route('location.show',$location->id)}}">{{$location->businessname}} </a>
+<a href="{{route('locations.show',$location->id)}}">{{$location->businessname}} </a>
 
 location in {{$location->city}}<p>
 <p><a href='{{route("assign.location",$location->id)}}'>

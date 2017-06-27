@@ -31,7 +31,7 @@ $data['companyname']=$company->companyname;
 @if (Auth::user()->hasRole('Admin'))
 
 <div class="pull-right" style="margin-bottom:20px">
-				<a href="{{{ URL::to('location/create/'.$account) }}}" title="Create a new {{$company->companyname}} location" class="btn btn-small btn-info iframe"><span class="glyphicon glyphicon-plus-sign"></span> Create New Location</a>
+				<a href="{{route('locations.create,$account) }}}" title="Create a new {{$company->companyname}} location" class="btn btn-small btn-info iframe"><span class="glyphicon glyphicon-plus-sign"></span> Create New Location</a>
 			</div>
            @endif
          
@@ -65,7 +65,9 @@ $data['companyname']=$company->companyname;
     @include('companies.partials._watch') 
 	<td>
 		<a title= "See details of {{$location->businessname}} location."
-		href={{route('location.show',$location->id)}}>
+		href={{route(
+'locations.show'
+,$location->id)}}>
 		{{$location->businessname}}</a>
 	</td>
 	<td>{{$location->street}}</td>
@@ -103,13 +105,15 @@ $data['companyname']=$company->companyname;
 				</button>
 				<ul class="dropdown-menu" role="menu">
 					<li>
-						<a href="/location/{{$location->id}}/edit/">
+						<a href="{{route(
+'locations.edit'
+,$location->id)}}">
 							<i class="glyphicon glyphicon-pencil"></i> 
 							Edit {{$location->businessname}}
 						</a>
 					</li>
 					<li>
-						<a data-href="/location/{{$location->id}}/delete" data-toggle="modal" data-target="#confirm-delete" data-title = "{{$location->businessname}} and all associated notes" 
+						<a data-href="{{route('locations.destroy',$location->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = "{{$location->businessname}} and all associated notes" 
 						href="#">
 						<i class="glyphicon glyphicon-trash"></i> 
 						Delete {{$location->businessname}}

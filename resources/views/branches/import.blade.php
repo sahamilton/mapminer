@@ -27,7 +27,7 @@
 
 </ol>
 <div>
-{{ Form::open(array('route'=>'admin.branches.bulkimport', 'files' => true)) }}
+{{ Form::open(array('route'=>'branches.bulkimport', 'files' => true)) }}
 <div class='row'>
 <div class="col-md-4">
 <!-- Service Lines -->

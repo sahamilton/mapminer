@@ -14,7 +14,9 @@
 		@foreach ($data['result'] as $account)
 			<tr>
 				<td>
-				<a href="{{route('location.show',$account->id)}}"
+				<a href="{{route(
+'locations.show'
+,$account->id)}}"
 				title = "See details of the {{$account->businessname}} location">
 				{{$account->businessname}}
 				</a></td>

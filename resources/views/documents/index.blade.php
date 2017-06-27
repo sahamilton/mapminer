@@ -86,7 +86,7 @@
 
                     <li><a href="{{route('documents.edit',$document->id)}}"><i class="glyphicon glyphicon-pencil"></i> Edit Sales document</a></li>
 
-                    <li><a data-href="{{route('documents.purge',$document->id)}}" 
+                    <li><a data-href="{{route('documents.destroy',$document->id)}}" 
                     data-toggle="modal" 
                     data-target="#confirm-delete" 
                     data-title = "location" 

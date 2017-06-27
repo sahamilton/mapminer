@@ -4,6 +4,8 @@ use App\Company;
 use App\Salesnote;
 use App\Howtofield;
 use App\Http\Requests\SalesNotesFormRequest;
+use Illuminate\Http\Request;
+
 class SalesNotesController extends BaseController {
 	public $salesnote;
 		
@@ -45,7 +47,7 @@ class SalesNotesController extends BaseController {
 		}
 		
 		if(isset($companyid)) {
-			return redirect()->to('salesnotes/'.$companyid);
+			return redirect()->route('salesnotes',$companyid);
 		}else{
 			$companies = $this->company->orderBy('companyname')->pluck('companyname','id');
 			return response()->view('salesnotes.index',compact('companies','salesnotes'));
@@ -78,7 +80,7 @@ class SalesNotesController extends BaseController {
 		
 		if (! $this->company->checkCompanyServiceLine($id,$this->userServiceLines))
 		{
-			return \Redirect::route('company.index');
+			return \redirect()->route('company.index');
 		}
 			
 		$company = $this->company->with('managedBy')
@@ -101,10 +103,9 @@ class SalesNotesController extends BaseController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function edit($salesnote)
+	public function edit(SalesNotesFormRequest $request, $salesnote)
 	{
-		
-		return response()->view('salesnote.edit', compact('salesnote'));
+		return $this->createSalesNotes($request, $salesnote);
 	}
 
 	/**
@@ -118,7 +119,7 @@ class SalesNotesController extends BaseController {
 		
 		$howtofield->update($request->all());
 
-		return \Redirect::route('salesnotes.index');
+		return redirect()->route('salesnotes.index');
 	}
 
 	/**
@@ -129,7 +130,7 @@ class SalesNotesController extends BaseController {
 	 */
 	public function destroy($id)
 	{
-		Salesnote::destroy($id);
+		$this->salesnote->destroy($id);
 
 		return redirect()->route('salesnotes.index');
 	}
@@ -137,27 +138,28 @@ class SalesNotesController extends BaseController {
 	public function fileDelete($file)
 	{
 		$company_id = substr($file,0,strpos($file,"_"));
-
+	
 		$attachments = $this->salesnote
 			->whereIn('howtofield_id',$this->attachmentField)
 			->where('company_id','=',$company_id)
 			->firstorFail();
-		
+	
 		if(count($attachments) != 0 )
 		{
 			$data = unserialize(urldecode($attachments->value));
-		
-			// remove file from database
-			if(($key = array_search($file, $data)) !== false) {
-	    		unset($data[$key]);
-	    	}
+			
+			foreach($data as $key=>$value){
+				if($value['filename'] == $file){
+					unset($data[$key]);
+				}
+			}
 	    	$value = urlencode(serialize($data));	
 			$attachments->value = $value;
 			$attachments->save();
     		// unset file from directory;
     		$path = (public_path('documents/attachments/'.$company_id."/"));
 
-    		File::delete($path . $file);
+    		\File::delete($path . $file);
 
 		}
 
@@ -173,17 +175,19 @@ class SalesNotesController extends BaseController {
 	 * @param  integer $id Company Id
 	 * @return [type]     [description]
 	 */
-	public function createSalesNotes(Request $request, $id=NULL) {
-		if(! $request->has($id)) {
-				$id = $request->get('companyId');
-
+	public function createSalesNotes(SalesNotesFormRequest $request, $companyId=NULL) {
+		if(! $request->has('id')){
+			$id= $companyId;
+		}else{
+			$id= $request->get('id');
 		}
-	
+		
 		// Check that user can view company 
 		// based on user service line associations.
 		
 		if (! $this->company->checkCompanyServiceLine($id,$this->userServiceLines))
 		{
+			
 			return redirect()->route('company.index');
 		}
 		$data = $this->company
@@ -194,7 +198,7 @@ class SalesNotesController extends BaseController {
 		
 		$salesnote = Salesnote::where('company_id','=',$id)->with('fields')->get();
 		$groups = Howtofield::select('group')->distinct()->get();
-		if(count($salesnote)!=0) {
+		if(count($salesnote)>0) {
 			$data = array();
 			// Fields that need to be convereted to an array
 			
@@ -254,7 +258,7 @@ class SalesNotesController extends BaseController {
 					dd('sorry couldnt do that');
 				}
 			}
-			
+
 			$file->move(public_path().'/documents/attachments/'.$data['companyId'],  $attachment);
 			$oldAttachments= $files = unserialize(urldecode($data[$this->attachmentField[0]]));
 			$newAttachment=[$data['attachmentname']=>['attachmentname'=>$data['attachmentname'],'filename'=>$attachment,'description'=>$data['attachmentdescription']]];

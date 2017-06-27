@@ -48,7 +48,7 @@
 
                     <li><a href="{{route('permission.edit',$permission->id)}}"><i class="glyphicon glyphicon-pencil"></i> Edit permission</a></li>
 
-                    <li><a data-href="{{route('permission.purge',$permission->id)}}" 
+                    <li><a data-href="{{route('permissions.destroy',$permission->id)}}" 
                     data-toggle="modal" 
                     data-target="#confirm-delete" 
                     data-title = "location" 

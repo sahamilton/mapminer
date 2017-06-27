@@ -38,13 +38,15 @@
 				<p></p>
 				<p><span class="glyphicon glyphicon-user"></span> by <span class="muted">
 				@if(isset($post->author))
-					{{{$post->author->person->firstname}}} {{{$post->author->person->lastname}}}
+					{{{$post->author->person->postName()}}}
 				@else
 					No Longer with the company
 				@endif
 				| </span>
-					<span class="glyphicon glyphicon-calendar"></span> <!--Sept 16th, 2012-->{{{date('M jS,Y',strtotime($post->startdate))}}}
-					| <span class="glyphicon glyphicon-comment"></span> <a href="/news/{{{ $post->slug}}}#comments"> {{{$post->comments->count()}}}</a>
+					<span class="glyphicon glyphicon-calendar"></span> <!--Sept 16th, 2012-->
+					{{$post->startdate->format('M jS,Y')}}
+					| <span class="glyphicon glyphicon-comment"></span> 
+					<a href="{{route('news.show', $post->slug}}#comments"> {{{$post->comments->count()}}}</a>
 				</p>
 			</div>
 		</div>

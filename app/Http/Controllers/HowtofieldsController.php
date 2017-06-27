@@ -17,9 +17,9 @@ class HowtofieldsController extends BaseController {
 	public function index()
 	{
 		$howtofields = $this->howtofield->get();
-		$fields= array('Field'=>'fieldname','Reqd'=>'required','Type'=>'type','Values'=>'values','Group'=>'group','Actions'=>'actions');
 		
-		return response()->view('howtofields.index',compact('howtofields','fields'));
+		
+		return response()->view('howtofields.index',compact('howtofields'));
 	}
 
 	/**

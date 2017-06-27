@@ -25,7 +25,7 @@
     @foreach($tree->getDescendants() as $descendant)
 		
         @if($descendant->depth == 1)
-            </fieldset><fieldset><legend><a data-href="{{route('admin.searchfilter.delete',$descendant->id)}}" style="color:red"  data-toggle="modal" data-target="#confirm-delete" data-title = "{{$descendant->filter}} filter group and all its 'children'" href="#"title="Remove {{$descendant->filter}} filter group"><span class="glyphicon glyphicon-trash"> </span></a>  
+            </fieldset><fieldset><legend><a data-href="{{route('searchfilters.destroy',$descendant->id)}}" style="color:red"  data-toggle="modal" data-target="#confirm-delete" data-title = "{{$descendant->filter}} filter group and all its 'children'" href="#"title="Remove {{$descendant->filter}} filter group"><span class="glyphicon glyphicon-trash"> </span></a>  
             
             <a href="{{route('searchfilters.edit',$descendant->id)}}"
             title="Edit {{$descendant->filter}} filter">{{{$descendant->filter}}}</a>
@@ -41,7 +41,7 @@
            @else
             <span class="glyphicon glyphicon-flag"></span>
            @endif
-            <a data-href="{{route('admin.searchfilter.delete',$descendant->id)}}" style="color:red" data-toggle="modal" data-target="#confirm-delete" data-title = "{{$descendant->filter}} filter and all its 'children'" href="#" title="Remove {{$descendant->filter}} filter"><span class="glyphicon glyphicon-trash"> </span></a>
+            <a data-href="{{route('searchfilters.destroy',$descendant->id)}}" style="color:red" data-toggle="modal" data-target="#confirm-delete" data-title = "{{$descendant->filter}} filter and all its 'children'" href="#" title="Remove {{$descendant->filter}} filter"><span class="glyphicon glyphicon-trash"> </span></a>
             <a href="{{route('searchfilters.edit',$descendant->id)}}"
             title="Edit {{$descendant->filter}} filter">{{{$descendant->filter}}}</a>
             ( {{$descendant->id}})

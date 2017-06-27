@@ -33,7 +33,7 @@
 {{$newNote->relatesTo->company->companyname}}
 </td>
 <td>
-<a href = "{{route('location.show',$newNote->relatesTo->id)}}" title="Review {{$newNote->relatesTo->businessname}} location" >{{$newNote->relatesTo->businessname}}</a>
+<a href = "{{route('locations.show',$newNote->relatesTo->id)}}" title="Review {{$newNote->relatesTo->businessname}} location" >{{$newNote->relatesTo->businessname}}</a>
 </td>
 <td>
 {{$newNote->relatesTo->locationAddress()}}
