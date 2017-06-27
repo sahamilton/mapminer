@@ -6,6 +6,7 @@ use App\Person;
 use App\Company;
 use App\Permission;
 use App\Http\Requests\UserFormRequest;
+use App\Http\Requests\UserBulkImportForm;
 use App\Branch;
 use App\Track;
 use App\Serviceline;
@@ -412,28 +413,10 @@ class AdminUsersController extends BaseController {
 		
 	}
 
-   public function bulkImport()
+   public function bulkImport(UserBulkImportForm $request)
 	{
-		$rules= ['upload' => 'required'];
-   		
-		// Make sure we have a file
-		$validator = Validator::make(\Input::all(), $rules);
-
-    	if ($validator->fails())
-		{
-			
-			return redirect()->back()
-			->withErrors($validator);
-		}
-
-		// Make sure its a CSV file - test #1
-		$mimes = array('application/vnd.ms-excel','text/plain','text/csv','text/tsv');
-		if(!in_array($_FILES['upload']['type'],$mimes)){
-			
-		 	return Redirect::back()->withErrors(['Only CSV files are allowed']);
-		}
-
-		$file = \Input::file('upload');
+		
+		$file = $request->file('upload');
 		$name = time() . '-' . $file->getClientOriginalName();
 
 

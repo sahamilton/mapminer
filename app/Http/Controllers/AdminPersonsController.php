@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 use App\Person;
 use App\Permission;
+use App\Http\Requests\PersonFormRequest;
 class AdminPersonsController extends BaseController {
 
 
@@ -24,7 +25,7 @@ protected $permission;
 	public function index()
 	{
 		
-		$persons = Person::all();
+		$persons = $this->person->all();
 		
 		return response()->view('admin.persons.index', compact('persons'));
 	}
@@ -44,18 +45,12 @@ protected $permission;
 	 *
 	 * @return Response
 	 */
-	public function store()
+	public function store(PersonFormRequest $request)
 	{
-		$validator = Validator::make($data = \Input::all(), Person::$rules);
+		
+		$this->person->create($request->all());
 
-		if ($validator->fails())
-		{
-			return \Redirect::back()->withErrors($validator)->withInput();
-		}
-
-		Person::create($data);
-
-		return \Redirect::route('person.index');
+		return redirect()->route('person.index');
 	}
 
 	/**
@@ -69,14 +64,14 @@ protected $permission;
 		
 		
 		if($id->mgrtype == 'branch') {
-			$people = Person::with('manages')->findorFail($id->id);
+			$people = $this->person->with('manages')->findorFail($id->id);
 			$branches= $people->manages;
 
 			
 			return response()->view('persons.showlist', compact('people','branches'));
 			
 		}else{
-			$people = Person::with('managesAccount')->findorFail($id->id);
+			$people = $this->person->with('managesAccount')->findorFail($id->id);
 			$accounts = $people->managesAccount;
 			
 			
@@ -88,7 +83,7 @@ protected $permission;
 	public function showmap($id)
 	{
 		
-		$data['people'] = Person::with('manages')->findorFail($id);
+		$data['people'] = $this->person->with('manages')->findorFail($id);
 		
 		/// We need to calculate the persons 'center point' based on their branches.
 		// This should be moved to the model and maybe to a Maps model and made more generic.
@@ -142,20 +137,14 @@ protected $permission;
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update($person)
+	public function update(PersonFormRequest $request, $person)
 	{
 		//$Person = Person::findOrFail($id);
 
-		$validator = Validator::make($data = \Input::all(), Person::$rules);
+		
+		$person->update($request->all());
 
-		if ($validator->fails())
-		{
-			return \Redirect::back()->withErrors($validator)->withInput();
-		}
-
-		$person->update($data);
-
-		return \Redirect::route('person.index');
+		return redirect()->route('person.index');
 	}
 
 	/**
@@ -166,9 +155,9 @@ protected $permission;
 	 */
 	public function destroy($id)
 	{
-		Person::destroy($id);
+		$this->person->destroy($id);
 
-		return \Redirect::route('person.index');
+		return redirect()->route('person.index');
 	}
 
 

@@ -154,43 +154,32 @@ class AdminRolesController extends BaseController {
      * @param $role
      * @return Response
      */
-    public function update($role)
+    public function update(RoleFormRequest $request,$role)
     {
         // Declare the rules for the form validation
-        $rules = array(
-            'name' => 'required'
-        );
+        
         $permissions = array();
-        if(\Input::has('permissions')){
-           $permissions =\Input::get('permissions');
+        if($request->has('permissions')){
+           $permissions =$request->get('permissions');
         }
 
 
-        // Validate the inputs
-        $validator = \Validator::make(\Input::all(), $rules);
+        $role->name = $request->get('name');
+        $role->permissions()->sync($permissions);
 
-        // Check if the form validates with success
-        if ($validator->passes())
+        // Was the role updated?
+        if ($role->save())
         {
-            // Update the role data
-            $role->name = \Input::get('name');
-            $role->permissions()->sync($permissions);
-
-            // Was the role updated?
-            if ($role->save())
-            {
-                // Redirect to the role page
-                return redirect()->to(route('roles.index'))->with('success', 'Role updated succesfully');
-            }
-            else
-            {
-                // Redirect to the role page
-                return redirect()->to(route('roles.edit',$role->id))->with('error', 'Unable to update role');
-            }
+            // Redirect to the role page
+            return redirect()->to(route('roles.index'))->with('success', 'Role updated succesfully');
+        }
+        else
+        {
+            // Redirect to the role page
+            return redirect()->to(route('roles.edit',$role->id))->with('error', 'Unable to update role');
         }
 
-        // Form validation failed
-        return redirect()->to(route('roles.edit',$role->id))->withInput()->withErrors($validator);
+
     }
 
 
