@@ -287,32 +287,11 @@ class PersonsController extends BaseController {
 	 * [processimport description]
 	 * @return [type] [description]
 	 */
-	public function processimport() {
-		$rules= array(
-                'upload' => 'required'
-    	);
-		// Make sure we have a file
-		$validator = Validator::make(\Input::all(), $rules);
-
-    	if ($validator->fails())
-		{
-			
-			return \Redirect::back()->withErrors($validator);
-		}
-		
-		// Make sure its a CSV file - test #1
-		$mimes = array('application/vnd.ms-excel','text/plain','text/csv','text/tsv');
-		if(!in_array($_FILES['upload']['type'],$mimes)){
-		 	return \Redirect::back()->withErrors(['Only CSV files are allowed']);
-		}
-		
-		
-		
-		$file = \Input::file('upload');
+	public function processimport(PersonUploadFormRequest $request) {
+				
+		$file = $request->file('upload');
 		$name = time() . '-' . $file->getClientOriginalName();
 
-		
-		
 		$path = Config::get('app.mysql_data_loc');
 
 		// Moves file to  mysql data folder on server
@@ -327,7 +306,7 @@ class PersonsController extends BaseController {
 		$fields = implode(",",$data);
 		if($data !== $this->persons->fillable){
 			
-			return \Redirect::back()->withErrors(['Invalid file format.  Check the fields'.$fields]);
+			return redirect()->back()->withErrors(['Invalid file format.  Check the fields'.$fields]);
 		}
 	
 		
@@ -337,7 +316,7 @@ class PersonsController extends BaseController {
 		$data = $this->persons->_import_csv($name,'persons',$fields);
 		$persons = $this->persons->all();
 		$fields=array('Name'=>'name','Role'=>'mgrtype','Email'=>'email');
-		if (\Auth::user()->hasRole('Admin')) {
+		if (auth()->user()->hasRole('Admin')) {
 			$fields['Actions']='actions';
 		}
 

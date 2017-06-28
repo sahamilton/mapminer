@@ -10,6 +10,7 @@ use App\State;
 use App\Person;
 use Excel;
 use App\Http\Requests\BranchFormRequest;
+use App\Http\Requests\BranchImportFormRequest;
 
 class BranchesController extends BaseController {
 
@@ -501,29 +502,12 @@ class BranchesController extends BaseController {
 	}
 
 	 
-	public function branchImport() {
+	public function branchImport(BranchImportFormRequest $request) {
 
 
-		$rules= ['upload' => 'required'];
 		
-   
-		// Make sure we have a file
-		$validator = Validator::make(\Input::all(), $rules);
-
-    	if ($validator->fails())
-		{
-			
-			return redirect()->back()->withErrors($validator);
-		}
-
-		// Make sure its a CSV file - test #1
-		$mimes = array('application/vnd.ms-excel','text/plain','text/csv','text/tsv');
-		if(!in_array($_FILES['upload']['type'],$mimes)){
-			
-		 	return redirect()->back()->withErrors(['Only CSV files are allowed']);
-		}
 	
-		$file = \Input::file('upload');
+		$file = $request->file('upload');
 		$name = time() . '-' . $file->getClientOriginalName();
 
 

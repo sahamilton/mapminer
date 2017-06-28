@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 use App\Region;
+use App\Http\Requests\RegionFormRequest;
 class RegionsController extends BaseController {
 
 	protected $region;
@@ -37,19 +38,12 @@ class RegionsController extends BaseController {
 	 *
 	 * @return Response
 	 */
-	public function store()
+	public function store(RegionsFormRequest $request)
 	{
-		$validator = Validator::make($data = \Input::all(), $this->region->$rules);
+		
+		$this->region->create($request->all());
 
-		if ($validator->fails())
-		{
-			return \Redirect::back()
-			->withErrors($validator)->withInput();
-		}
-
-		$this->region->create($data);
-
-		return \Redirect::route('regions.index');
+		return redirect()->route('regions.index');
 	}
 
 	/**
@@ -94,20 +88,13 @@ class RegionsController extends BaseController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update($id)
+	public function update(RegionsFormRequest $request,$id)
 	{
 		$region = $this->region->findOrFail($id);
 
-		$validator = Validator::make($data = \Input::all(), $this->region->$rules);
+		$region->update($request->all());
 
-		if ($validator->fails())
-		{
-			return \Redirect::back()->withErrors($validator)->withInput();
-		}
-
-		$region->update($data);
-
-		return \Redirect::route('regions.index');
+		return \redirect()->route('regions.index');
 	}
 
 	/**
@@ -120,7 +107,7 @@ class RegionsController extends BaseController {
 	{
 		$this->region->destroy($id);
 
-		return \Redirect::route('regions.index');
+		return redirect()->route('regions.index');
 	}
 
 

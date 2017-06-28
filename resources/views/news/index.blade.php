@@ -5,7 +5,9 @@
 
 <div class="pull-right">
     <a href="{{{ route('news.create') }}}" class="btn btn-small btn-info iframe">
-        <span class="glyphicon glyphicon-plus-sign"></span> Add New Updates</a>
+        <span class="glyphicon glyphicon-plus-sign"> </span> 
+        Add New Updates
+    </a>
 </div>
 @foreach ($news as $post)
 <div class="row">
@@ -13,7 +15,13 @@
 		<!-- Post Title -->
 		<div class="row">
 			<div class="col-md-8">
-				<h4><strong><a href="{{route('news.show', trim($post->slug))}}">{{ $post->title }}</a></strong></h4>
+				<h4>
+				<strong>
+				<a href="{{route('news.show', trim($post->slug))}}">
+				{{ $post->title }}
+				</a>
+				</strong>
+				</h4>
 			</div>
 		</div>
 		<!-- ./ post title -->

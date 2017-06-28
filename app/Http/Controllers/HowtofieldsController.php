@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 use App\Howtofield;
+use App\Http\Requests\HowtofieldsFormRequest;
 class HowtofieldsController extends BaseController {
 	public $howtofield;
 	/**
@@ -37,21 +38,17 @@ class HowtofieldsController extends BaseController {
 	 *
 	 * @return Response
 	 */
-	public function store()
+	public function store(HowtofieldsFormRequest $request)
 	{
-		$validator = Validator::make($data = \Input::all(), Howtofield::$rules);
-
-		if ($validator->fails())
-		{
-			return \Redirect::back()->withErrors($validator)->withInput();
-		}
-		if(isset($data['addGroup']) && $data['addGroup']!= '') {
-			$data['group']=$data['addGroup'];
+		
+		if($request->has('addGroup') && $request->get('addGroup') != '') {
+			$request->request->add(['group' => $request->get('addGroup')]);
+			
 		}
 
-		Howtofield::create($data);
+		$this->howtofield->create($request->all());
 
-		return \Redirect::route('admin.howtofields.index');
+		return redirect()->route('howtofields.index');
 	}
 
 	/**
@@ -85,24 +82,17 @@ class HowtofieldsController extends BaseController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update($howtofield)
+	public function update(HowtofieldsFormRequest $request, $howtofield)
 	{
 		
-		//$howtofield = Howtofield::findOrFail($id);
-
-		$validator = Validator::make($data = \Input::all(), Howtofield::$rules);
-
-		if ($validator->fails())
-		{
-			return \Redirect::back()->withErrors($validator)->withInput();
-		}
-		if(isset($data['addGroup']) && $data['addGroup']!= '') {
-			$data['group']=$data['addGroup'];
+		if($request->has('addGroup') && $request->get('addGroup') != '') {
+			$request->request->add(['group' => $request->get('addGroup')]);
+			
 		}
 
-		$howtofield->update($data);
+		$howtofield->update($request->all());
 
-		return \Redirect::route('admin.howtofields.index');
+		return redirect()->route('admin.howtofields.index');
 	}
 
 	/**
@@ -113,9 +103,9 @@ class HowtofieldsController extends BaseController {
 	 */
 	public function destroy($id)
 	{
-		Howtofield::destroy($id);
+		$this->howtofield->destroy($id);
 
-		return \Redirect::route('admin.howtofields.index');
+		return redirect()->route('admin.howtofields.index');
 	}
 	public function getDatatable() {
 		$data = $this->howtofield->orderBy('group')->orderBy('sequence')->get();

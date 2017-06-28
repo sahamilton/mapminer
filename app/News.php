@@ -10,7 +10,7 @@ class News extends Model {
          'enddate' => 'required',
 		 'slug' =>  array('unique:news','min:5')
 	);
-	
+
 	// Don't forget to fill this array
 	protected $fillable = ['title','news','startdate','enddate','slug','user_id'];
 	public $dates =  ['created_at','updated_at','startdate','enddate'];

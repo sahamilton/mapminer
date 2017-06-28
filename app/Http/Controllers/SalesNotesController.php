@@ -80,13 +80,14 @@ class SalesNotesController extends BaseController {
 		
 		if (! $this->company->checkCompanyServiceLine($id,$this->userServiceLines))
 		{
-			return \redirect()->route('company.index');
+			return redirect()->route('company.index');
 		}
 			
 		$company = $this->company->with('managedBy')
 			->findOrFail($id);
 
-		$data = $this->getSalesNotes($id);
+		$data = $this->salesnote->where('company_id','=',$id)
+				->with('fields')->get();;
 
 		return response()->view('salesnotes.shownote', compact('data','company'));
 		
@@ -302,59 +303,7 @@ class SalesNotesController extends BaseController {
 	}
 	
 
-	private function processAttachments($data)
-	{
-		// PUT THIS INTO A FORM REQUEST
-			
-			$validator = Validator::make(
-			    array($data),
-			    array('attachmentname' => 'required|min:5')
-			);
-			
-			if ($validator->fails())
-			{
-				
-				return redirect()->to('admin/salesnotes/create/'.$data['companyId'])->withErrors($validator);
-			}
-
-			$file = \Input::file('attachment');
-			$attachment = $data['companyId'] ."_". $file->getClientOriginalName();
-			// check that company attachments directory exists and create if neccessary
-			if(!File::exists(public_path().'/documents/attachments/'.$data['companyId']))
-			{ 
-				if(! File::makeDirectory(public_path().'/documents/attachments/'.$data['companyId'], 0775, true)) 
-				{
-					dd('sorry couldnt do that');
-				}
-			}
-			
-			$file->move(public_path().'/documents/attachments/'.$data['companyId'],  $attachment);
-			$oldAttachments= $files = unserialize(urldecode($data[$this->attachmentField[0]]));
-			$newAttachment=[$data['attachmentname']=>$attachment,$data['attachmentdescription']];
-			if(is_array($oldAttachments)){
-				$data[$this->attachmentField[0]] = array_merge ($oldAttachments,$newAttachment);
-			}else{
-				$data[$this->attachmentField[0]] = $newAttachment;
-			}
-			
-		return $data;
-	}
-	/*
-	 * Function getSalesNotes
-	 *
-	 * Select Sales Notes from db
-	 *
-	 * @param integer $id company id
-	 * @return Salesnote collection
-	 */
-	 private function getSalesNotes($id){
-		
-
-		$data = Salesnote::where('company_id','=',$id)
-				->with('fields')->get();
-		
-		return $data;	
-	}
+	
 	
 	
 	
