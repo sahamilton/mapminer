@@ -241,7 +241,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 		Route::get('locationnotes',['as'=>'locations.notes', 'uses'=>'LocationsController@locationnotes']);
 		Route::get('api/geocode',['as'=>'api.geocode','uses'=>'LocationsController@bulkGeoCodeLocations']);
 		Route::get('locations/{accountID}/create',['as'=>'company.location.create','uses'=>'LocationsController@create']);
-		Route::resource('locations','LocationsController')-except(['show']);
+		Route::resource('locations','LocationsController',['except'=>['show']]);
 	
 	#Companies
 		Route::get('companies/export', ['as'=>'companies.export', 'uses'=>'CompaniesController@export']);
