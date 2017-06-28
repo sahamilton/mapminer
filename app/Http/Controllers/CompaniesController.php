@@ -16,14 +16,16 @@ class CompaniesController extends BaseController {
 	public $company;
 	public $locations;
 	public $searchfilter;
+	public $person;
 
 
-	public function __construct(Company $company, Location $location, SearchFilter $searchfilter,User $user) {
+	public function __construct(Company $company, Location $location, SearchFilter $searchfilter,User $user,Person $person) {
 		
 		$this->company = $company;
 		$this->locations = $location;
 		$this->searchfilter = $searchfilter;
 		$this->user = $user;
+		$this->person = $person;
 		parent::__construct($this->company);
 
 		
@@ -130,13 +132,9 @@ class CompaniesController extends BaseController {
 	
 	public function store(CompanyFormRequest $request)
 	{
-		
-		$input = $request->all();
-				
-		$input['person_id'] = $this->getPersonId($input['user_id']);
-		
-		$this->company = $this->company->create($input);
-		$this->company->serviceline()->attach(\Input::get('serviceline'));
+
+		$this->company = $this->company->create($request->all());
+		$this->company->serviceline()->attach($request->get('serviceline'));
 		return redirect()->route('company.index');
 	}
 
@@ -148,9 +146,9 @@ class CompaniesController extends BaseController {
 	 * @return Response
 	 */
 	
-	public function destroy($id)
+	public function destroy($company)
 	{
-		$this->company->destroy($id);
+		$this->company->destroy($company->id);
 
 		return redirect()->route('company.index');
 	}
@@ -604,17 +602,22 @@ class CompaniesController extends BaseController {
 	{
 		$roles = ['4'];
 		$managers = $this->getManagers($roles);
+
 		$company = $company
 					->where('id','=',$company->id)
 					->with('managedBy')
 					->with('serviceline')
-					->get();
+					->firstOrFail();
+
 		$servicelines = Serviceline::pluck('ServiceLine','id');
 		
 		$filters = $this->getFilters();
 
 		return response()->view('companies.edit', compact('company','managers','filters','servicelines'));
 	}
+	
+
+
 	private function getFilters(){
 		$verticals = SearchFilter::where('type','=','group')
 		->where('searchtable','=','companies')
@@ -630,11 +633,10 @@ class CompaniesController extends BaseController {
 	public function update(CompanyFormRequest $request,$company)
 	{
 		
+
 		$this->company = $company;
-		$input = $request->all();
-		$input['person_id'] = $this->getPersonID($input['user_id']);
-		$this->company->update($input);
-		$this->company->serviceline()->sync( $input['serviceline']);
+		$this->company->update( $request->all());
+		$this->company->serviceline()->sync( $request->get('serviceline'));
 		return redirect()->route('company.index');
 	}
 
@@ -647,15 +649,7 @@ class CompaniesController extends BaseController {
 	 
 	
 
-	public function delete($company)
-	{
-		
-		$this->company = $this->company->findOrFail($company);
-		
-		$this->company->destroy($company);
-
-		return redirect()->route('company.index');
-	}
+	
 	
 	
 	
@@ -764,13 +758,13 @@ class CompaniesController extends BaseController {
 	public function getManagers($roles)
 	{
 		
-		$managers = Person::select(\DB::raw('concat(firstname," ",lastname) as name,user_id as id'))
+		 return Person::select(\DB::raw('concat(firstname," ",lastname) as name,id'))
 			->whereHas('userdetails.roles', 
 			function($q) use($roles){
 			$q->whereIn('role_id',$roles);
 			})->orderBy('lastname')->pluck('name','id');
 
-		return $managers;
+
 	}
 	
 	/**

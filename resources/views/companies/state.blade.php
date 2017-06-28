@@ -19,9 +19,7 @@ $data['distance'] = Config::get('default_radius');?>
 @include('companies/partials/_state')
 @include('partials/advancedsearch')
 @if(auth()->user()->hasRole('Admin'))
-<div class="pull-right">
-				<a href="{{{ route('locations.create')?co=$company->id) }}}" class="btn btn-small btn-info iframe"><span class="glyphicon glyphicon-plus-sign"></span> Create</a>
-			</div>
+
 @endif
 <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
@@ -52,7 +50,6 @@ $data['distance'] = Config::get('default_radius');?>
 	<td>{{$location->zip}}</td>
 	<td>{{$location->contact}}</td>
 	<td>{{$location->phone}}</td>
-	<td>
 	<td style ="text-align: center; vertical-align: middle;">
 			
 		<input {{in_array($location->id,$mywatchlist) ? 'checked' : ''}}
@@ -71,7 +68,7 @@ $data['distance'] = Config::get('default_radius');?>
 				</button>
 				<ul class="dropdown-menu" role="menu">
 
-					<li><a href="{{'location.edit',$location->id)}}//">
+					<li><a href="{{route('locations.edit',$location->id)}}">
 					<i class="glyphicon glyphicon-pencil"></i> 
 					Edit {{$location->businessname}}</a></li>
 					<li><a data-href="{{route('locations.destroy',$location->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = "{{$location->businessname}} and all associated notes" href="#"><i class="glyphicon glyphicon-trash"></i> 

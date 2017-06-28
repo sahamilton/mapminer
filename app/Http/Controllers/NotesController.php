@@ -111,12 +111,14 @@ class NotesController extends BaseController {
 	 */
 	public function destroy($id, Request $request)
 	{
-		
+		$note = $this->notes->findOrFail($id);
+		$lead = $note->lead_id;
+		$location = $note->location_id;
 		$this->notes->destroy($id);
-		if($request->has('lead')){
-			return redirect()->route('salesleads.show',$request->get('lead'));
+		if($note->lead_id){
+			return redirect()->route('salesleads.show',$lead);
 		}
-		return redirect()->route('location.show',$request->get('location'));
+		return redirect()->route('location.show',$location);
 	}
 
 	private function notify($data){

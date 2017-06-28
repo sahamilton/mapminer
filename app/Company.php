@@ -10,7 +10,7 @@ class Company extends Model {
 	];
 
 	// Don't forget to fill this array
-	protected $fillable = array('companyname', 'vertical','person_id','user_id');
+	protected $fillable = array('companyname', 'vertical','person_id');
 	
 	public function type() 
 	{

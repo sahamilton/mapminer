@@ -42,7 +42,7 @@ class LeadsController extends BaseController
     {   
        
         $statuses = $this->leadstatus->pluck('status','id')->toArray();
-        $query = Lead::query();
+        $query = $this->lead->query();
 
         $query = $query->with('salesteam','leadsource','ownedBy')
         ->wherehas('leadsource',function($q){
@@ -79,76 +79,7 @@ class LeadsController extends BaseController
             })
        ->get();
     }
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-   /*
-
-   Moved to Lead Source Controller
-
-   public function create()
-    {
-        $verticals = $this->vertical->vertical();
-
-        $sources = $this->leadsource->pluck('source','id');
-        return response()->view('leads.create',compact('sources','verticals'));
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-   /*
-    Moved to Leads Source Controller
-    public function store(LeadFormRequest $request)
-    {
-        
-        if(! is_numeric($request->get('lead_source_id'))){
-            $request = $this->createNewSource($request);
-        }
-        
-        $lead = $this->lead->create($request->all());
- 
-        $geoCode = app('geocoder')->geocode($this->getAddress($request))->get();
-        $lead->update($this->getGeoCode($geoCode));
-
-        $lead->vertical()->attach($request->get('vertical'));
-        // Assign lead
-
-        // notify sale team
-        return redirect()->route('leads.show',$lead->id)->with(['message','New Lead Created']);
-    }
-
-    /**
-    *   Return address for geocoding
-    *   if its a one line address return that
-    *   else concatenate full address
-    * @param  \Illuminate\Http\Request  $request
-    * @return string address
-    **/
-
-    /* 
-    Moved to Leads Source Controller
-
-    private function getAddress($request){
-        // if its a one line address return that
-        if(! $request->has('city')){
-            return $address = $request->get('address') ;
-        }
-        // else build the full address
-        return $address = $request->get('address') . " " . $request->get('city') . " " . $request->get('state') . " " . $request->get('zip');
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+   
 
     public function show($id)
     {
@@ -236,7 +167,14 @@ class LeadsController extends BaseController
 
     }
 
-
+    private function getAddress($request){
+        // if its a one line address return that
+        if(! $request->has('city')){
+            return $address = $request->get('address') ;
+        }
+        // else build the full address
+        return $address = $request->get('address') . " " . $request->get('city') . " " . $request->get('state') . " " . $request->get('zip');
+    }
 
     /*public function address(){
     	$people=array();
@@ -371,7 +309,7 @@ class LeadsController extends BaseController
     public function getIndustryAssociation($people){
         foreach ($people as $key=>$person){
             $rep = Person::find($person->id);
-            $people[$key]->industry = $rep->industryfocus()->pluck('filter','id')->toArray();
+            $people[$key]->industry = $rep->industryfocus()->pluck('filter','searchfilters.id')->toArray();
         }
        
         return $people;

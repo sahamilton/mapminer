@@ -36,7 +36,7 @@
 @if (Auth::user()->hasRole('Admin'))
 
 <div class="pull-right" style="margin-bottom:20px">
-				<a href="{{{ URL::to('location/create/'.$account) }}}" title="Create a new {{$company->companyname}} location" class="btn btn-small btn-info iframe"><span class="glyphicon glyphicon-plus-sign"></span> Create New Location</a>
+				<a href="{{{ route('company.location.create',$company->id) }}}" title="Create a new {{$company->companyname}} location" class="btn btn-small btn-info iframe"><span class="glyphicon glyphicon-plus-sign"></span> Create New Location</a>
 			</div>
            @endif
 
@@ -65,7 +65,12 @@
    @foreach($locations as $location)
 
     <tr>  
-    @include('companies.partials._watch')
+	<td style ="text-align: center; vertical-align: middle;">
+		<input {{in_array($location->id,$mywatchlist) ? checked : ''}}
+		id="{{$location->id}}" 
+		type='checkbox' name='watchList' class='watchItem' 
+		value="{{$location->id}}" >
+	</td>
 	<td>
 		<a title= "See details of {{$location->businessname}} location."
 		href={{route('locations.show',$location->id)}}>
@@ -97,7 +102,7 @@
 	</td>
 	@if(auth()->user()->hasRole('Admin'))
 		<td>
-		@include('partials/_modal')
+		
 	    
             <div class="btn-group">
 				<button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
@@ -131,6 +136,7 @@
 </table>
    
     </div>
+@include('partials/_modal')
 @include('partials/_scripts')
 @stop
 

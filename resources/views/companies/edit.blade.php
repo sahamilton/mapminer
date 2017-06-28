@@ -22,7 +22,7 @@ Edit National Account
 
 <?php $buttonLabel = 'Edit Company';
 ?>
-{{Form::model($company, ['method'=>'PATCH','route'=>['company.update', $company[0]->id]]) }}
+{{Form::model($company, ['method'=>'PATCH','route'=>['company.update', $company->id]]) }}
 	@include('companies/partials/_form')
 {{Form::close()}}
 </div>

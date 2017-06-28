@@ -43,7 +43,16 @@ Account managed by <a href="{{route('person.show',$location->company->managedBy-
  -- {{$note->writtenBy->person->firstname}} {{$note->writtenBy->person->lastname}}</p>
 @if($note->user_id == Auth::user()->id  or Auth::user()->hasRole('Admin'))
 <br /><a href="{{route('notes.edit',$note->id)}}" title="Edit this note"><i class="glyphicon glyphicon-pencil"></i></a> | 
-<a href="{{route('delete/note',$note->id)}}?location={{$location->id}}" onclick="if(!confirm('Are you sure to delete this note?')){return false;};" title="Delete this note"><i class="glyphicon glyphicon-trash"></i></a>
+<a data-href="{{route('notes.destroy',$note->id)}}" 
+            data-toggle="modal" 
+            data-target="#confirm-delete" 
+            data-title = "note"  
+            title="Delete this note"
+            href="#">
+            <i class="glyphicon glyphicon-trash"></i> </a>
+           
+
+
 <hr />
 @endif
 
@@ -106,5 +115,6 @@ google.maps.event.addDomListener(window, 'load', initialize);
 
     </script>
 
-
+@include('partials._modal')
+@include('partials._scripts');
 @stop

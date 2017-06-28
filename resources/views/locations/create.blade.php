@@ -8,7 +8,7 @@
 $buttonLabel ='Create Location';
 $companyid = $location->id;
 $ultimateDUNS = $location->DUNS;?>
-{{Form::open(['route'=>'location.store'])}}
+{{Form::open(['route'=>'locations.store'])}}
 @include('locations/partials/_form')
 {{Form::close()}}
 </div>

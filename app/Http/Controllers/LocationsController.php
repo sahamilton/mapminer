@@ -50,6 +50,7 @@ class LocationsController extends BaseController {
 	 */
 	public function create($accountID)
 	{
+		
 		$segments = \DB::table('searchfilters')
 				->select ('searchfilters.id as id','filter')
 				->join('locations','locations.segment','=','searchfilters.id')
@@ -71,13 +72,13 @@ class LocationsController extends BaseController {
 	public function store(LocationFormRequest $request)
 	{
 		
-		$this->location = $this->location->create($request->all());		
-		// add lat lng to location
-		
+		$location = $this->location->create($request->all());				
 		$address = $request->get('street') . ",". $request->get('city') .",". $request->get('state')." ". $request->get('zip');
-		$this->geoCodeAddress($address);
+		$geoCode = app('geocoder')->geocode($address)->get();
+		$data = $this->getGeoCode($geoCode);
+		$location->update($data);
 		
-		return redirect()->route('location.show',$this->location->id);
+		return redirect()->route('locations.show',$location->id);
 	}
 
 	/**
@@ -193,19 +194,17 @@ class LocationsController extends BaseController {
 	 */
 	public function update(LocationFormRequest $request, $location)
 	{
-		$this->location = $location;
 		
-		
-		$input = $request->only('businessname','street','city','state','zip','company_id','id','phone','contact','segment','businesstype');
-		
-// geocode location
 
-		$this->location->update($input);
+		$input = $request->only('businessname','street','city','state','zip','company_id','id','phone','contact','segment','businesstype');
+
+		$location->update($request->all());
 		$address = $input['street'] . ",". $input['city'] .",". $input['state']." ". $input['zip'];
-		$this->geoCodeAddress($address);
-		$company_id = $input['company_id'];
+		$geoCode = app('geocoder')->geocode($address)->get();
+		$data = $this->getGeoCode($geoCode);
+		$location->update($data);
 		
-		return redirect()->route('location.show',$this->location->id );
+		return redirect()->route('locations.show',$location->id );
 	}
 
 	/**
@@ -216,11 +215,10 @@ class LocationsController extends BaseController {
 	 */
 	public function destroy($location)
 	{
-
-		$this->location = $this->location->findOrFail($location);
-		$companyid = $this->location->company_id;
-		$this->location->destroy($location);
-
+				
+		$companyid = $location->company_id;
+		$this->location->destroy($location->id);
+		
 		return redirect()->route('company.show',$companyid);
 	}
 
@@ -486,11 +484,14 @@ class LocationsController extends BaseController {
 	
 	public function bulkGeoCodeLocations()
 	{
-		$locations = Location::where(['lat'=>NULL,'geostatus'=>TRUE])->orWhere(['lat'=>'0','geostatus'=>TRUE])->get();
+		$locations = $this->location
+		->where(['lat'=>NULL,'geostatus'=>TRUE])
+		->orWhere(['lat'=>'0','geostatus'=>TRUE])
+		->get();
 		
 		$n =0;
 		foreach ($locations as $location) {
-			$this->location = Location::find($location->id);
+			
 			if($n > $this->limit)
 			{
 				sleep($this->waitSeconds);	
@@ -498,64 +499,35 @@ class LocationsController extends BaseController {
 			}
 			$n++;
 			$address = $location->street . ",". $location->city .",". $location->state." ". $location->zip;
-			$this->geoCodeAddress($address);
+			$geoCode = app('geocoder')->geocode($address)->get();
+			$data = $this->getGeoCode($geoCode);
+			$location->update($data);
 			
 		}
 	
 		echo "All done!";
 	}
 	
-	
-	private function geoCodeAddress($address)
-	{
-		
+	private function getGeoCode($geoCode){
 
-		$geoCode = $this->getLatLng($address);
-			
-			if(! $geoCode)
-			{
-				$this->badAddress($geoCode);
-				
-			}else{
-				$this->updateLatLng($geoCode);
-				$this->updateLatLng($geoCode);
-				
-				
-			}
-			
-	}
-	
-	private function getLatLng($address)
-	{
-		try {
-			
-		$geocode = Geocoder::geocode($address)->get();
-		// The GoogleMapsProvider will return a result
-		return $geocode;
-		
-		} catch (\Exception $e) {
-			// No exception will be thrown here
-			//echo $e->getMessage();
-		}
-		
-	}
-	
-	private function updateLatLng($geoCode)
-	{
-		
-		
-		$this->location->lat = $geoCode['latitude'];
-		$this->location->lng = $geoCode['longitude'];
-		$this->location->geostatus = TRUE;
-		$this->location->save();
-		
-	}
-	
-	private function badAddress($address)
-	{
-		
-		$this->location->geostatus = FALSE;
-		$this->location->save();
-		
-	}
+        if(is_array($geoCode)){
+           
+                $data['lat'] = $geoCode[0]['latitude'];
+                $data['lng'] = $geoCode[0]['longitude'];
+                $data['geostatus'] = TRUE; 
+
+            }elseif(is_object($geoCode)){
+              
+                $data['lat'] = $geoCode->first()->getLatitude();
+                $data['lng'] = $geoCode->first()->getLongitude();
+                $data['geostatus'] = TRUE; 
+            }else{
+              
+                $data['lat'] = null;
+                $data['lng'] = null;
+                $data['geostatus'] = FALSE;
+            }
+
+          return $data;
+    }
 }

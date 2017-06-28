@@ -119,7 +119,6 @@ Route::group(['middleware' => 'auth'], function () {
 	
 	#Notes
 		
-		
 		Route::get('mynotes',['as'=>'mynotes','uses'=>'NotesController@mynotes']);
 		
 		Route::get('exportlocationnotes/{companyID}', ['as'=>'exportlocationnotes','uses'=>'PersonsController@exportManagerNotes']);
@@ -241,6 +240,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 		Route::post('locations/bulkimport', ['as'=>'locations.import', 'uses'=>'LocationsController@bulkImport']);
 		Route::get('locationnotes',['as'=>'locations.notes', 'uses'=>'LocationsController@locationnotes']);
 		Route::get('api/geocode',['as'=>'api.geocode','uses'=>'LocationsController@bulkGeoCodeLocations']);
+		Route::get('locations/{accountID}/create',['as'=>'company.location.create','uses'=>'LocationsController@create']);
 		Route::resource('locations','LocationsController');
 	
 	#Companies

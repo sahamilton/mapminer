@@ -1,18 +1,30 @@
-<?php isset($company[0]->managedBy->id) ? $managedBy = $company[0]->managedBy->id : $managedBy = "";?>
 <div class="form-group @if ($errors->has('type')) has-error @endif">
 {{Form::label('companyname','Company Name:')}}
 
-{{Form::text('companyname',isset($company[0]->companyname) ? $company[0]->companyname :'',array('class'=>'form-control'))}}
+{{Form::text('companyname',isset($company
+->companyname) ? $company
+->companyname :'',array('class'=>'form-control'))}}
  @if ($errors->has('companyname')) <p class="help-block">{{ $errors->first('companyname') }}</p> @endif
 </div>
 
+		<div class="form-group{{ $errors->has('person_id') ? ' has-error' : '' }}">
+        <label class="col-md-4 control-label">National Account Manager</label>
+        <div class="col-md-6">
+            <select multiple class="form-control" name='person_id'>
 
-<div class="form-group @if ($errors->has('user_id')) has-error @endif">
-{{Form::label('Manager','National Account Manager:')}}
-<div class="controls">
-{{Form::select('user_id',$managers,$managedBy,array('class'=>'form-control'))}}
- @if ($errors->has('user_id')) <p class="help-block">{{ $errors->first('user_id') }}</p> @endif
-</div>
+            @foreach ($managers as $key=>$manager)
+            	<option 
+            	{{(isset($company) && $company->person_id == $key) ? 'selected' : ''}} value="{{$key}}">{{$manager}}</option>
+
+            @endforeach
+
+
+            </select>
+            <span class="help-block">
+                <strong>{{ $errors->has('person_id') ? $errors->first('person_id') : ''}}</strong>
+                </span>
+        </div>
+    </div>
 
 
 <?php $parents=array();?>
@@ -35,7 +47,7 @@
 
 
             </select>
-            <span class="help-block">
+            <span class="help-block{{ $errors->has('vertical)') ? ' has-error' : '' }}">
                 <strong>{{ $errors->has('vertical') ? $errors->first('vertical') : ''}}</strong>
                 </span>
 
@@ -46,7 +58,9 @@
 {{Form::label('ServiceLine','Service Lines:')}}
 
 
-{{Form::select('serviceline[]',$servicelines,isset($company[0]) ? $company[0]->serviceline->pluck('id') : '',array('class'=>'form-control','multiple'=>true))}}
+{{Form::select('serviceline[]',$servicelines,isset($company
+) ? $company
+->serviceline->pluck('id') : '',array('class'=>'form-control','multiple'=>true))}}
 
 @if ($errors->has('serviceline')) <p class="help-block">{{ $errors->first('serviceline') }}</p> @endif
 </div>
