@@ -40,7 +40,7 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('/company/{companyId}/segment/{segment}', ['as'=>'company/vert','uses'=>'CompaniesController@segment']);
 		Route::post('company/filter',['as'=>'company.filter','uses'=>'CompaniesController@filter']);
 	#Locations
-		Route::resource('location','LocationsController',['only' => ['index', 'show']]);
+		Route::resource('locations','LocationsController',['only' => ['show']]);
 		Route::get('location/{locationId}/branches', ['as' => 'assign.location', 'uses' => 'LocationsController@getClosestBranch']);
 		
 		Route::get('location/{locationId}/branchmap', ['as' => 'nearby.location', 'uses' => 'LocationsController@getClosestBranchMap']);
@@ -118,7 +118,7 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::resource('salesleads','SalesLeadsController');
 	
 	#Notes
-		
+
 		Route::get('mynotes',['as'=>'mynotes','uses'=>'NotesController@mynotes']);
 		
 		Route::get('exportlocationnotes/{companyID}', ['as'=>'exportlocationnotes','uses'=>'PersonsController@exportManagerNotes']);
@@ -241,7 +241,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 		Route::get('locationnotes',['as'=>'locations.notes', 'uses'=>'LocationsController@locationnotes']);
 		Route::get('api/geocode',['as'=>'api.geocode','uses'=>'LocationsController@bulkGeoCodeLocations']);
 		Route::get('locations/{accountID}/create',['as'=>'company.location.create','uses'=>'LocationsController@create']);
-		Route::resource('locations','LocationsController');
+		Route::resource('locations','LocationsController')-except(['show']);
 	
 	#Companies
 		Route::get('companies/export', ['as'=>'companies.export', 'uses'=>'CompaniesController@export']);

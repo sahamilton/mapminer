@@ -301,7 +301,7 @@ class BranchesController extends BaseController {
 			if($row['locationid'] != "") { 
 				$node = $dom->createElement("marker");
 				$newnode = $parnode->appendChild($node);
-				$newnode->setAttribute("locationweb",route('location.show' , $row['locationid']) );
+				$newnode->setAttribute("locationweb",route('locations.show' , $row['locationid']) );
 				$newnode->setAttribute("accountweb",route('company.show' , $row['companyid']) );
 				$newnode->setAttribute("name",$row['businessname']);
 				$newnode->setAttribute("address", $row['street']. " ". $row['city'] ." ". $row['state']." ". $row['zip']);

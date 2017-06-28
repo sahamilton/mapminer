@@ -56,7 +56,7 @@ class NotesController extends BaseController {
 			return redirect()->route('salesleads.show',$request->get('lead_id'));
 		}
 
-		return redirect()->route('location.show',$request->get('location_id'));
+		return redirect()->route('locations.show',$request->get('location_id'));
 	}
 
 	/**
@@ -100,7 +100,7 @@ class NotesController extends BaseController {
 			return redirect()->route('salesleads.show',$request->get('lead_id'));
 		}
 		
-		return redirect()->route('location.show',$request->get('location_id'));
+		return redirect()->route('locations.show',$request->get('location_id'));
 	}
 
 	/**
@@ -118,7 +118,7 @@ class NotesController extends BaseController {
 		if($note->lead_id){
 			return redirect()->route('salesleads.show',$lead);
 		}
-		return redirect()->route('location.show',$location);
+		return redirect()->route('locations.show',$location);
 	}
 
 	private function notify($data){
