@@ -107,30 +107,30 @@ class LocationsController extends BaseController {
 	public function show($id)
 	{
 
-		$this->location = $this->location
+		$location = $this->location
 			->with('company','company.industryVertical','company.serviceline','relatedNotes','clienttype','verticalsegment')
 			->findOrFail($id->id);
 		
 
-		$this->getCompanyServiceLines();
+		//$this->getCompanyServiceLines($location);
 	
-		$branch = $this->findBranch(1);
+		$branch = $this->findBranch(1,$location);
 
-		$watch = $this->watch->where("location_id","=",$id->id)->where('user_id',"=",\Auth::id())->first();
-		$location = $this->location;
+		$watch = $this->watch->where("location_id","=",$id->id)->where('user_id',"=",auth()->user()->id)->first();
+		
 	
 		return response()->view('locations.show', compact('location','branch','watch'));
 	}
 	
-	private function getCompanyServiceLines(){
+	/*private function getCompanyServiceLines($location){
 
-		foreach($this->location->company->serviceline as $serviceline){
+		foreach($location->company->serviceline as $serviceline){
 
 			$servicelines[]=$serviceline->id;
 		}
 		$this->companyServicelines = implode("','",$servicelines);
 		
-	}
+	}*/
 
 
 
@@ -232,23 +232,13 @@ class LocationsController extends BaseController {
 	 * @param  integer $limit number of branches to return
 	 * @return object         [description]
 	 */
-	private function findBranch($limit = 5) {
-			
-		if(! is_array($this->companyServicelines))
-		{
-			$userservicelines = explode("','",$this->companyServicelines);
-		}else{
-
-			$userservicelines = $this->companyServicelines;
+	private function findBranch($limit = 5,$location) {
+		foreach($location->company->serviceline as $serviceline){
+			$userservicelines[] = $serviceline->id;
 		}
-		
-		$branch = $this->branch;
-		$branches = $branch->findNearbyBranches($this->location->lat,$this->location->lng,50,$limit,$userservicelines);
-		
 
-
-		return $branches;
-		
+		return $this->branch->findNearbyBranches($location->lat,$location->lng,100,$limit,$userservicelines);
+	
 	}
 	
 	
@@ -259,16 +249,16 @@ class LocationsController extends BaseController {
 	 * @return [type]     [description]
 	 */
 	public function getClosestBranch(Request $request,$id,$n=5)
-	
 	{
+		
 		if ($request->has('d')) {
 			$this->distance = $request->get('d');
 		}
-		$this->location = $this->location->with('company','company.serviceline')->findOrFail($id);
+		$data['location'] = $this->location->with('company','company.serviceline')->findOrFail($id);
 
-		$this->getCompanyServiceLines();
-		$data['location']= $this->location;
-		$data['branch'] = $this->findBranch($n);
+		//$this->getCompanyServiceLines();
+	
+		$data['branch'] = $this->findBranch($n,$data['location']);
 		
 
 		return response()->view('branches.assign', compact('data'));
@@ -281,12 +271,10 @@ class LocationsController extends BaseController {
 		if ($request->has('d')) {
 			$this->distance = $request->get('d');
 		}
-		$this->location = $this->location->with('company','company.serviceline')->findOrFail($id);
-		$this->getCompanyServiceLines();
-		$data['location']= $this->location;
-		$branches= $this->findBranch(5);
-		$branch = $this->branch;
-		echo $branch->makeNearbyBranchXML($branches);
+		$data['location'] = $this->location->with('company','company.serviceline')->findOrFail($id);
+		//$this->getCompanyServiceLines();
+		$branches= $this->findBranch(5,$data['location']);
+		echo $this->branch->makeNearbyBranchXML($branches);
 
 	}
 

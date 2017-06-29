@@ -131,7 +131,7 @@ class Branch extends Model {
 
 				$query = "select  branchid,branchnumber,branchname,street,address2,city,state,zip,lat,lng, distance_in_mi,Serviceline as servicelines,
 			  CONCAT_WS(' / ',branchname,branchnumber) AS name FROM (
-			SELECT branches.id as branchid, branchnumber, branchname,street,address2,city,state,zip,lat,lng,r,
+			SELECT distinct branches.id as branchid, branchnumber, branchname,street,address2,city,state,zip,lat,lng,r,
 				   69.0 * DEGREES(ACOS(COS(RADIANS(latpoint))
 							 * COS(RADIANS(lat))
 							 * COS(RADIANS(longpoint) - RADIANS(lng))
@@ -144,8 +144,7 @@ class Branch extends Model {
 			   ) AS p
 			 WHERE 
 			 	branches.id = branch_serviceline.branch_id
-    			and branch_serviceline.serviceline_id = servicelines.id
-    			AND branch_serviceline.serviceline_id in ('".implode("','",$userServiceLines)."')
+    			and branch_serviceline.serviceline_id in ('".implode("','",$userServiceLines)."')
     			and lat
 			  BETWEEN latpoint  - (r / 69)
 				  AND latpoint  + (r / 69)
@@ -163,9 +162,8 @@ class Branch extends Model {
 		$query = str_replace("\r\n",' ',$query);
 		$query = str_replace("\t",' ',$query);
 
-		$result = \DB::select($query);	
+		return \DB::select($query);	
 
-		return $result;
 	}
 	
 	/* 

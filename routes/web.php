@@ -41,7 +41,7 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::post('company/filter',['as'=>'company.filter','uses'=>'CompaniesController@filter']);
 	#Locations
 		Route::resource('locations','LocationsController',['only' => ['show']]);
-		Route::get('location/{locationId}/branches', ['as' => 'assign.location', 'uses' => 'LocationsController@getClosestBranch']);
+		Route::get('location/{id}/branches', ['as' => 'assign.location', 'uses' => 'LocationsController@getClosestBranch']);
 		
 		Route::get('location/{locationId}/branchmap', ['as' => 'nearby.location', 'uses' => 'LocationsController@getClosestBranchMap']);
 		Route::get('location/shownearby', ['as' => 'shownearby.location', 'uses' => 'LocationsController@showNearbyLocations']);
