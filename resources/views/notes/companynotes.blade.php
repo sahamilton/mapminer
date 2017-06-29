@@ -1,11 +1,12 @@
 @extends('site.layouts.default')
 @section('content')
 <div>
-<h1>All Location Notes</h1>
+<h1>All {{$company->companyname}} Location Notes</h1>
+<p><a href="{{route('notes.index')}}">See all notes</a></p>
     <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
     
-    <th>Company</th>
+   
     <th>Location Name</th>
     <th>Note</th>
     <th>Posted By</th>
@@ -17,12 +18,7 @@
    @foreach($notes as $note)
 
     <tr>  
-	<td>
-     @if(isset($note->relatesTo->company))
-        {{$note->relatesTo->company->companyname}}
-     @endif
-
-    </td>
+	
     <td>
         <a href="{{route('locations.show',$note->relatesTo->id)}}"
         title ="Review all notes at this  location" >
@@ -31,10 +27,10 @@
     </td>
     <td>{{$note->note}}</td>
     <td>
-    @if(isset($note->writtenBy->person))
+    @if(isset($note->writtenBy) && null!== $note->writtenBy->person)
         {{$note->writtenBy->person->postName()}}
     @else
-        {{$note->writtenBy}}
+        No Longer with Company
     @endif
     </td>
     <td>{{$note->created_at->format('M j, Y')}}</td>

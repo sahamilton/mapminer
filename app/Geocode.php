@@ -2,7 +2,7 @@
 namespace App;
 trait Geocode
 {
-   private function getGeoCode($geoCode){
+   public function getGeoCode($geoCode){
 
         if(is_array($geoCode)){
            

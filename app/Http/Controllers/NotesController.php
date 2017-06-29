@@ -26,7 +26,7 @@ class NotesController extends BaseController {
 	public function index()
 	{
 		
-		$notes = $this->notes->all();
+		$notes = $this->notes->with('relatesTo','relatesTo.company','relatesToLead','writtenBy')->get();
 
 		return response()->view('notes.index', compact('notes'));
 	}
@@ -138,6 +138,19 @@ class NotesController extends BaseController {
 		}
 	}
 	
+
+	public function companynotes($companyid)
+	{
+		$company =\App\Company::findOrFail($companyid);
+		$notes = $this->notes
+			->with('relatesTo','relatesTo.company','relatesToLead','writtenBy')
+			->whereHas('relatesTo',function($q) use($companyid){
+				$q->where('company_id','=',$companyid);
+			})
+			->get();
+
+		return response()->view('notes.companynotes', compact('notes','company'));
+	}
 	/**
 	 * Show notes of user.
 	 *

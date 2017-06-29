@@ -203,7 +203,7 @@ class CompaniesController extends BaseController {
 		//$locations = Paginator::make($locations, count($locations), '25');
 		
 		
-		$filters = SearchFilter::pluck('filter','id');
+		$filters = $this->searchfilter->vertical();
 		
 		
 		

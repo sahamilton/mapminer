@@ -40,7 +40,13 @@ Account managed by <a href="{{route('person.show',$location->company->managedBy-
 
 @foreach ($location->relatedNotes as $note)
 <p>{{date_format($note->created_at,'m-d-Y')}}...<em>{{$note->note}}</em><br />
- -- {{$note->writtenBy->person->firstname}} {{$note->writtenBy->person->lastname}}</p>
+ -- 
+ @if(isset($note->writtenBy->person))
+ {{$note->writtenBy->person->postName()}}
+ @else
+ No longer with company
+ @endif
+ </p>
 @if($note->user_id == Auth::user()->id  or Auth::user()->hasRole('Admin'))
 <br /><a href="{{route('notes.edit',$note->id)}}" title="Edit this note"><i class="glyphicon glyphicon-pencil"></i></a> | 
 <a data-href="{{route('notes.destroy',$note->id)}}" 

@@ -37,7 +37,7 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('/company/{companyId}/statemap/{state}', ['as'=>'company.statemap','uses'=>'CompaniesController@statemap']);
 		
 		Route::get('/company/vertical/{vertical}', ['as'=>'company.vertical','uses'=>'CompaniesController@vertical']);
-		Route::get('/company/{companyId}/segment/{segment}', ['as'=>'company/vert','uses'=>'CompaniesController@segment']);
+		Route::get('/company/{companyId}/segment/{segment}', ['as'=>'company.segment','uses'=>'CompaniesController@segment']);
 		Route::post('company/filter',['as'=>'company.filter','uses'=>'CompaniesController@filter']);
 	#Locations
 		Route::resource('locations','LocationsController',['only' => ['show']]);
@@ -122,7 +122,7 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('mynotes',['as'=>'mynotes','uses'=>'NotesController@mynotes']);
 		
 		Route::get('exportlocationnotes/{companyID}', ['as'=>'exportlocationnotes','uses'=>'PersonsController@exportManagerNotes']);
-		Route::resource('notes','NotesController');	
+		Route::resource('notes','NotesController',['only' => ['show']]);	
 	#Geocoding
 		
 		Route::post('findme',['as'=>'findme','uses'=>'GeoCodingController@findMe']);
@@ -240,7 +240,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 		Route::post('locations/bulkimport', ['as'=>'locations.import', 'uses'=>'LocationsController@bulkImport']);
 		Route::get('locationnotes',['as'=>'locations.notes', 'uses'=>'LocationsController@locationnotes']);
 		Route::get('api/geocode',['as'=>'api.geocode','uses'=>'LocationsController@bulkGeoCodeLocations']);
-		Route::get('locations/{accountID}/create',['as'=>'company.location.create','uses'=>'LocationsController@create']);
+		Route::get('locations/{companyID}/create',['as'=>'company.location.create','uses'=>'LocationsController@create']);
 		Route::resource('locations','LocationsController',['except'=>['show']]);
 	
 	#Companies
@@ -339,6 +339,12 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 		
 		Route::post('news/{newsId}', ['as'=>'admin.news.update', 'uses'=>'NewsController@update']);
 	
+	#NoOtes
+		Route::get('notes/{companyid}/co',['as'=>'notes.company','uses'=>'NotesController@companynotes']);
+
+		Route::resource('notes','NotesController');
+
+
 	#Search Filters
 		
 		Route::get('searchfilters/analysis/{id?}',['as'=>'vertical.analysis','uses'=>'SearchFiltersController@filterAnalysis']);

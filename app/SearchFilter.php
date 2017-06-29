@@ -195,6 +195,16 @@ class SearchFilter extends NodeModel {
 		
 	}
 	
+public function segments(){
+
+    return $this->where('searchColumn','=','segment')
+        ->where('canbenull','=',0)
+        ->where('type','!=','group')
+        ->orderBy('filter')
+        ->pluck('filter','id')
+        ->toArray();
+
+  }
 
 
   public function vertical(){
@@ -203,7 +213,8 @@ class SearchFilter extends NodeModel {
         ->where('canbenull','=',0)
         ->where('type','!=','group')
         ->orderBy('filter')
-        ->pluck('filter','id');
+        ->pluck('filter','id')
+        ->toArray();
 
   }
 
@@ -211,7 +222,9 @@ class SearchFilter extends NodeModel {
 
     $filters = $this->first();
     return $filters->getDescendants()
-    ->where('searchtable','=','companies')->where('inactive','=',0);
+    ->where('searchtable','=','companies')
+    ->where('type','!=','group')
+    ->where('inactive','=',0);
 
   }
 

@@ -183,9 +183,6 @@ class Location extends Model {
 		       
 		Passed to function:                                                   
 		@ results                             
-
-            
-		
 		@return xml
 	
 	*/	
@@ -195,43 +192,14 @@ class Location extends Model {
 
         return response($content, 200)
             ->header('Content-Type', 'text/xml');
-		/*$dom = new \DOMDocument("1.0");
-		$node = $dom->createElement("markers");
-		$parnode = $dom->appendChild($node);
 		
-		foreach($result as $row){
-			
-		  // ADD TO XML DOCUMENT NODE
-			$node = $dom->createElement("marker");
-			$newnode = $parnode->appendChild($node);
-			$newnode->setAttribute("locationweb",route('location.show' , $row->id) );
-			$newnode->setAttribute("name",trim($row->businessname));
-			$newnode->setAttribute("account",trim($row->companyname));
-			$newnode->setAttribute("accountweb",route('company.show' , $row->company_id,array('title'=>'see all locations') ));
-			$newnode->setAttribute("address", $row->street." ". $row->city." ". $row->state);
-			$newnode->setAttribute("lat", $row->lat);
-			$newnode->setAttribute("lng", $row->lng);
-			$newnode->setAttribute("id", $row->id);
-			$newnode->setAttribute("vertical", $row->vertical);	
-		}
-		return trim($dom->saveXML());*/
-
-		/*
-		if(count($participant['watched'])==1) {
-				$newnode->setAttribute("watch",true);
-				$newnode->setAttribute("category",'Watched');
-			}else{
-				$newnode->setAttribute("watch",false);
-			}
-
-		 */
 	}
-	
+	/*
 	public function makeNearbyLocationsXMLObject($result) {
 		
 
 		if (App::environment() == 'local'){
-			/*\Debugbar::disable();*/
+			/*\Debugbar::disable();
 		}
 		$dom = new \DOMDocument("1.0");
 		$node = $dom->createElement("markers");
@@ -255,7 +223,7 @@ class Location extends Model {
 		}
 		return $dom->saveXML();
 	}
-
+*/
 
 	/*
 		 * Calculate the distance between two lat/ lng pairs

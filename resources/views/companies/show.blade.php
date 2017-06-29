@@ -33,6 +33,7 @@
 @if(isset($company->managedBy->firstname))
 <p>Account managed by <a href="{{route('person.show',$company->managedBy->id)}}" title="See all accounts managed by {{$company->managedBy->firstname.' '.$company->managedBy->lastname}}">{{$company->managedBy->firstname.' '.$company->managedBy->lastname}}</a></p>
 @endif
+
 @if (Auth::user()->hasRole('Admin'))
 
 <div class="pull-right" style="margin-bottom:20px">
@@ -86,15 +87,15 @@
 	</td>
 	<td>{{$location->zip}}</td>
 	<td>
-		@if (!isset($location->segment) )
+		@if (! isset($location->segment) or ! in_array($location->segment,$segments))
 			Not Specified
 		@else
-			<a href="route('company.segment',[$copmany->id,$location->segment])}}">
-			{{$filters[$location->segment]}}</a>
+			<a href="route('company.segment',[$company->id,$location->segment])}}">
+			{{$segments[$location->segment]}}</a>
 		@endif
 	</td>
 	<td>
-		@if(! isset($location->businesstype)) 
+		@if(! isset($location->businesstype) or ! in_array($location->businesstype,$filters)) 
 			Not Specified
 		@else
 			{{$filters[$location->businesstype]}}
@@ -102,7 +103,7 @@
 	</td>
 	@if(auth()->user()->hasRole('Admin'))
 		<td>
-		
+
 	    
             <div class="btn-group">
 				<button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">

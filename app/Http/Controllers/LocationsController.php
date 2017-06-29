@@ -5,6 +5,7 @@ use App\Branch;
 use App\Company;
 use App\User;
 use App\Location;
+use App\SearchFilter;
 use App\Serviceline;
 use Illuminate\Http\Request;
 use App\Http\Requests\LocationFormRequest;
@@ -24,13 +25,15 @@ class LocationsController extends BaseController {
 	public $companyServicelines;
 	public $serviceline;
 	public $userServiceLines;
+	public $searchfilter;
 
 	protected $branch;
-	public function __construct(Location $location, Branch $branch, Company $company, Watch $watch){
+	public function __construct(Location $location, Branch $branch, Company $company, Watch $watch, SearchFilter $filters){
 		$this->location = $location;
 		$this->watch = $watch;
 		$this->company = $company;
 		$this->branch = $branch;
+		$this->searchfilter = $filters;
 		parent::__construct($location);
 	}
 	
@@ -51,16 +54,10 @@ class LocationsController extends BaseController {
 	public function create($accountID)
 	{
 		
-		$segments = \DB::table('searchfilters')
-				->select ('searchfilters.id as id','filter')
-				->join('locations','locations.segment','=','searchfilters.id')
-				->where('locations.company_id','=',$accountID)
-				->distinct()
-				->pluck('filter','id');
-		$segments['Not Specified']=NULL;
-
 		$location = $this->company->findOrFail($accountID);
-		
+		//refactor Add company / segment relationship
+		$segments = $this->searchfilter->segments();	
+		$segments[null]='Not Specified';
 		return response()->view('locations.create',compact('location', 'segments'));
 	}
 
@@ -71,14 +68,12 @@ class LocationsController extends BaseController {
 	 */
 	public function store(LocationFormRequest $request)
 	{
-		
-		$location = $this->location->create($request->all());				
+				
 		$address = $request->get('street') . ",". $request->get('city') .",". $request->get('state')." ". $request->get('zip');
-		$geoCode = app('geocoder')->geocode($address)->get();
-		$data = $this->location->getGeoCode($geoCode);
-		$location->update($data);
-		
-		return redirect()->route('locations.show',$location->id);
+		$data = $this->location->getGeoCode(app('geocoder')->geocode($address)->get());
+		$request->merge($data);
+		$location = $this->location->create($request->all());
+		return redirect()->route('locations.show',$location->id)->with('message', 'Location Added');
 	}
 
 	/**
@@ -150,6 +145,7 @@ class LocationsController extends BaseController {
 			
 		}
 	}
+	/*
 	public function map($id)
 	{
 		if (App::environment() == 'local'){
@@ -174,6 +170,7 @@ class LocationsController extends BaseController {
 		
 		echo $dom->saveXML();
 	}
+	*/
 	/**
 	 * Show the form for editing the specified location.
 	 *
@@ -182,7 +179,7 @@ class LocationsController extends BaseController {
 	 */
 	public function edit($location)
 	{
-		
+	
 		return response()->view('locations.edit', compact('location'));
 	}
 
@@ -194,17 +191,12 @@ class LocationsController extends BaseController {
 	 */
 	public function update(LocationFormRequest $request, $location)
 	{
-		
-
-		$input = $request->only('businessname','street','city','state','zip','company_id','id','phone','contact','segment','businesstype');
-
+		$address = $request->get('street') . ",". $request->get('city') .",". $request->get('state')." ". $request->get('zip');
+		$data = $this->location->getGeoCode(app('geocoder')->geocode($address)->get());
+		$request->merge($data);
 		$location->update($request->all());
-		$address = $input['street'] . ",". $input['city'] .",". $input['state']." ". $input['zip'];
-		$geoCode = app('geocoder')->geocode($address)->get();
-		$data = $this->location->getGeoCode($geoCode);
-		$location->update($data);
-		
-		return redirect()->route('locations.show',$location->id );
+
+		return redirect()->route('locations.show',$location->id )->with('message','Location updated');
 	}
 
 	/**
@@ -215,16 +207,14 @@ class LocationsController extends BaseController {
 	 */
 	public function destroy($location)
 	{
-				
+		
 		$companyid = $location->company_id;
+		
 		$this->location->destroy($location->id);
 		
-		return redirect()->route('company.show',$companyid);
+		return redirect()->route('company.show',$companyid)->with('message','Location deleted');
 	}
 
-	
-	
-	
 	
 	
 	/**
@@ -265,7 +255,7 @@ class LocationsController extends BaseController {
 
 		
 	}
-
+/*
 	public function showLocationsNearbyBranches(Request $request,$id)
 	{	
 		if ($request->has('d')) {
@@ -278,12 +268,11 @@ class LocationsController extends BaseController {
 
 	}
 
-
+*/
 	public function getClosestBranchMap($id,$n=5)
 	{
 		
 		$location = $this->location->with('company','company.serviceline')->findOrFail($id);
-
 
 		$servicelines = Serviceline::all();
 		return response()->view('branches.nearbymap', compact('location','servicelines'));
@@ -314,7 +303,7 @@ class LocationsController extends BaseController {
 		echo $this->location->makeNearbyLocationsXML($result);
 	}
 	
-	
+	// Why is this in locations? Should be in branches
 	public function listNearbyLocations($id){
 		
 		
@@ -371,7 +360,7 @@ class LocationsController extends BaseController {
 	 */
 	public function locationnotes()
 	{
-		$query = "select 
+		/*$query = "select 
 			companyname, 
 			companies.id as companyid, 
 			locations.id as locationid, 
@@ -382,13 +371,12 @@ class LocationsController extends BaseController {
 		where notes.location_id = locations.id 
 		and locations.company_id = companies.id 
 		and notes.user_id = users.id 
-		and persons.user_id = users.id 
-		
-		
+		and persons.user_id = users.id 		
 		order by companyname,notes.created_at";
-		$notes = \DB::select(\DB::raw($query));
-		$fields=['Company'=>'companyname','Location Name'=>'businessname','Note'=>'note','Posted By'=>'posted_by','Date'=>'dateposted'];
-		return response()->view('locations.notes',compact('notes','fields'));
+		$notes = \DB::select(\DB::raw($query));*/
+		$notes = \App\Note::with('relatesTo','relatesTo.company','writtenBy')->get();
+
+		return response()->view('locations.notes',compact('notes'));
 	}	
 	
 	

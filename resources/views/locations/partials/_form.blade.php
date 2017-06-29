@@ -102,23 +102,18 @@ $nullBusinesstype = App\SearchFilter::where('searchtable','=','locations')
 
 <!--- Segment -->
 
-
+@if(count($segments)>1)
 <div class="form-group @if ($errors->has('segment')) has-error @endif">
 {{Form::label('segment','Segment:',array('class'=>'control-label col-sm-2'))}}
-@if(count($segments)>1)
+
 
 {{Form::select('segment',$segments,isset($location->segment) ? $location->segment : $nullSegment)}}
-@else
-{{Form::select('segment',$segments,$nullSegment)}}
-@endif
+
 @if ($errors->has('segment')) <p class="help-block">{{ $errors->first('segment') }}</p>
-
-
 @endif
-
 
 </div>
-
+@endif
 
 
 <!--- Business Type -->

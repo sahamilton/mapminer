@@ -30,7 +30,6 @@ class LocationFormRequest extends FormRequest
         'state' => 'required',
         'zip' => 'required',
         'company_id' => 'required',
-        'segment' => 'required',
         'businesstype' => 'required'
         ];
     }
