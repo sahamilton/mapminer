@@ -29,9 +29,12 @@ Route::group(['middleware' => 'auth'], function () {
    
 	#User settings
 		Route::get('/user/settings',['as'=>'profile','uses'=>'UsersController@settings']);
-
+		// legacy login address
+		Route::get('user/login',function(){
+			redirect()->route('login');
+		});
 	#Companies
-		Route::resource('company', 'CompaniesController',['only' => ['index', 'show']]);
+		
 		Route::get('/company/{companyId}/state/{state?}', ['as'=>'company.state','uses'=>'CompaniesController@state']);
 		Route::post('/company/stateselect', ['as'=>'company.stateselect','uses'=>'CompaniesController@stateselect']);	
 		Route::get('/company/{companyId}/statemap/{state}', ['as'=>'company.statemap','uses'=>'CompaniesController@statemap']);
@@ -39,14 +42,15 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('/company/vertical/{vertical}', ['as'=>'company.vertical','uses'=>'CompaniesController@vertical']);
 		Route::get('/company/{companyId}/segment/{segment}', ['as'=>'company.segment','uses'=>'CompaniesController@segment']);
 		Route::post('company/filter',['as'=>'company.filter','uses'=>'CompaniesController@filter']);
+		Route::resource('company', 'CompaniesController',['only' => ['index', 'show']]);
 	#Locations
-		Route::resource('locations','LocationsController',['only' => ['show']]);
+		
 		Route::get('location/{id}/branches', ['as' => 'assign.location', 'uses' => 'LocationsController@getClosestBranch']);
 		
 		Route::get('location/{locationId}/branchmap', ['as' => 'nearby.location', 'uses' => 'LocationsController@getClosestBranchMap']);
 		Route::get('location/shownearby', ['as' => 'shownearby.location', 'uses' => 'LocationsController@showNearbyLocations']);
 		Route::get('location/nearby', ['as' => 'nearby/location', 'uses' => 'LocationsController@mapNearbyLocations']);
-	
+		Route::resource('locations','LocationsController',['only' => ['show']]);
 	#AccountTypes
 		Route::resource('accounttype','AccounttypesController',	['only' => ['index', 'show']]);
 		
@@ -66,11 +70,8 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::post('/branches/state', ['as'=>'branches.state','uses'=>'BranchesController@state']);
 		Route::get('/branches/statemap/{state?}', ['as'=>'branches.statemap','uses'=>'BranchesController@statemap']);
 		Route::post('/branches/statemap', ['as'=>'branches.statemap','uses'=>'BranchesController@statemap']);
-		
 		Route::get('/branch/{branchId}/map', ['as'=>'branch.map','uses'=>'BranchesController@map']);
-		Route::get('/branches/map', ['as'=>'branches.map', 'uses'=>'BranchesController@mapall']);
-		
-		
+		Route::get('/branches/map', ['as'=>'branches.map', 'uses'=>'BranchesController@mapall']);		
 		Route::get('branches/{branchId}/shownearby',['as' => 'shownearby.branch', 'uses' => 'BranchesController@showNearbyBranches']);
 		Route::get('branches/{state}/showstate', ['as' => 'showstate.branch','uses' => 'BranchesController@getStateBranches']);
 		Route::get('branches/{branchId}/nearby',['as' => 'nearby.branch', 'uses' => 'BranchesController@getNearbyBranches']);
@@ -90,7 +91,6 @@ Route::group(['middleware' => 'auth'], function () {
 		
 		Route::get('person/{personId}/showmap', ['as'=>'showmap.person', 'uses'=>'PersonsController@showmap']);
 		Route::get('people/map', ['as'=>'person.map', 'uses'=>'PersonsController@map']);
-		
 		Route::get('geocode/people',['as'=>'person.geocode','uses'=>'PersonsController@geoCodePersons']);
 		Route::get('person/{vertical}/vertical',['as'=>'person.vertical','uses'=>'PersonsController@vertical']);
 		Route::resource('person','PersonsController',['only' => ['index', 'show']]);
