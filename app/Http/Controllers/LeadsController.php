@@ -135,7 +135,7 @@ class LeadsController extends BaseController
     {
        $lead = $this->lead->whereId($id)->update($request->except('_method', '_token'));
        $geoCode = app('geocoder')->geocode($this->getAddress($request))->get();
-       $lead->update($this->leads->getGeoCode($geoCode));
+       $lead->update($this->lead->getGeoCode($geoCode));
        $lead->vertical()->sync($request->get('vertical'));
         return redirect()->route('leads.index');
     }
