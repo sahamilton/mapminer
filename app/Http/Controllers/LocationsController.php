@@ -75,7 +75,7 @@ class LocationsController extends BaseController {
 		$location = $this->location->create($request->all());				
 		$address = $request->get('street') . ",". $request->get('city') .",". $request->get('state')." ". $request->get('zip');
 		$geoCode = app('geocoder')->geocode($address)->get();
-		$data = $this->getGeoCode($geoCode);
+		$data = $this->location->getGeoCode($geoCode);
 		$location->update($data);
 		
 		return redirect()->route('locations.show',$location->id);
@@ -201,7 +201,7 @@ class LocationsController extends BaseController {
 		$location->update($request->all());
 		$address = $input['street'] . ",". $input['city'] .",". $input['state']." ". $input['zip'];
 		$geoCode = app('geocoder')->geocode($address)->get();
-		$data = $this->getGeoCode($geoCode);
+		$data = $this->location->getGeoCode($geoCode);
 		$location->update($data);
 		
 		return redirect()->route('locations.show',$location->id );
@@ -488,7 +488,7 @@ class LocationsController extends BaseController {
 			$n++;
 			$address = $location->street . ",". $location->city .",". $location->state." ". $location->zip;
 			$geoCode = app('geocoder')->geocode($address)->get();
-			$data = $this->getGeoCode($geoCode);
+			$data = $this->location->getGeoCode($geoCode);
 			$location->update($data);
 			
 		}
@@ -496,26 +496,5 @@ class LocationsController extends BaseController {
 		echo "All done!";
 	}
 	
-	private function getGeoCode($geoCode){
-
-        if(is_array($geoCode)){
-           
-                $data['lat'] = $geoCode[0]['latitude'];
-                $data['lng'] = $geoCode[0]['longitude'];
-                $data['geostatus'] = TRUE; 
-
-            }elseif(is_object($geoCode)){
-              
-                $data['lat'] = $geoCode->first()->getLatitude();
-                $data['lng'] = $geoCode->first()->getLongitude();
-                $data['geostatus'] = TRUE; 
-            }else{
-              
-                $data['lat'] = null;
-                $data['lng'] = null;
-                $data['geostatus'] = FALSE;
-            }
-
-          return $data;
-    }
+	
 }

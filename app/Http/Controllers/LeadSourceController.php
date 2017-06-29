@@ -202,26 +202,7 @@ class LeadSourceController extends Controller
         return $address = $request->get('address') . " " . $request->get('city') . " " . $request->get('state') . " " . $request->get('zip');
     }
 
-    private function getGeoCode($geoCode){
-
-        if(is_array($geoCode)){
-           
-                $data['lat'] = $geoCode[0]['latitude'];
-                $data['lng'] = $geoCode[0]['longitude']; 
-
-            }elseif(is_object($geoCode)){
-               
-                $data['lat'] = $geoCode->first()->getLatitude();
-                $data['lng'] = $geoCode->first()->getLongitude();
-            }else{
-              
-                $data['lat'] = null;
-                $data['lng'] = null;
-            }
-
-          return $data;
-    }
-
+    
 
     private function findClosestRep($leads){
         $leadinfo = null;
@@ -298,7 +279,7 @@ class LeadSourceController extends Controller
             $lead['lead_source_id'] = $source_id;
             if(! $lead['lat'] or ! $lead['lng']){
                 $geoCode = app('geocoder')->geocode($this->getAddress($request))->get();
-                $lead[] = $this->getGeoCode($geoCode);
+                $lead[] = $this->lead->getGeoCode($geoCode);
             }
             $newLead = $this->lead->create($lead);
 

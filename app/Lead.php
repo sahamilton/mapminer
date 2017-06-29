@@ -8,7 +8,7 @@ use Geocoder\Laravel\Facades\Geocoder;
 use Illuminate\Database\Eloquent\SoftDeletes;
 class Lead extends Model
 {
-  use SoftDeletes;
+  use SoftDeletes, Geocode;
 	public $dates = ['created_at','updated_at','deleted_at','datefrom','dateto'];
 
 	public $fillable = ['companyname',

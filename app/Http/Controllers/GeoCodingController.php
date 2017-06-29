@@ -43,9 +43,8 @@ class GeoCodingController extends BaseController {
 				return redirect()->back()->withInput()->with('message', 'Unable to Geocode that address');
 			}
 			
-			$geoCoded = $this->getGeoCode($geocode);
-			$data['lat'] = $geoCoded['lat'];
-			$data['lng'] = $geoCoded['lng'];
+			$data = $this->location->getGeoCode($geocode);
+			
 			
 
 			
@@ -204,24 +203,5 @@ class GeoCodingController extends BaseController {
 		
 	}
 
-	 private function getGeoCode($geoCode){
-
-        if(is_array($geoCode)){
-           
-                $data['lat'] = $geoCode[0]['latitude'];
-                $data['lng'] = $geoCode[0]['longitude']; 
-
-            }elseif(is_object($geoCode)){
-               
-                $data['lat'] = $geoCode->first()->getLatitude();
-                $data['lng'] = $geoCode->first()->getLongitude();
-            }else{
-              
-                $data['lat'] = null;
-                $data['lng'] = null;
-            }
-
-          return $data;
-    }
-
+	 
 }

@@ -135,7 +135,7 @@ class LeadsController extends BaseController
     {
        $lead = $this->lead->whereId($id)->update($request->except('_method', '_token'));
        $geoCode = app('geocoder')->geocode($this->getAddress($request))->get();
-       $lead->update($this->getGeoCode($geoCode));
+       $lead->update($this->leads->getGeoCode($geoCode));
        $lead->vertical()->sync($request->get('vertical'));
         return redirect()->route('leads.index');
     }
@@ -227,7 +227,7 @@ class LeadsController extends BaseController
 				dd('bummer');
 				
 			}else{
-                $locationdata = $this->getGeoCode($geoCode);
+                $locationdata = $this->lead->getGeoCode($geoCode);
 
                 $data['lat']= $locationdata['lat'];
                 $data['lng']= $locationdata['lng'];
@@ -240,37 +240,6 @@ class LeadsController extends BaseController
 			
     }
     
-    /**
-     * Process GeoCode either array or object.
-     *
-     * @param  \Geocoder\Laravel\Facades\Geocoder
-     * @return array $data
-     */
-
-
-    private function getGeoCode($geoCode){
-
-        if(is_array($geoCode)){
-           
-                $data['lat'] = $geoCode[0]['latitude'];
-                $data['lng'] = $geoCode[0]['longitude']; 
-
-            }elseif(is_object($geoCode)){
-               
-                $data['lat'] = $geoCode->first()->getLatitude();
-                $data['lng'] = $geoCode->first()->getLongitude();
-            }else{
-              
-                $data['lat'] = null;
-                $data['lng'] = null;
-            }
-
-          return $data;
-    }
-
-   
-
-
     /**
      * Find nearby sales people.
      *

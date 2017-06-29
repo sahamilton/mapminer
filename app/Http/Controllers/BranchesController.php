@@ -684,8 +684,9 @@ protected function getBranchGeoCode($address)
 	
 
 	try {
+			$geoCode = app('geocoder')->geocode($address)->get();
+			$data = $this->branch->getGeoCode($geoCode);
 			
-			$geocode = Geocoder::geocode($address)->get();
 			// The GoogleMapsProvider will return a result
 			
 			} catch (\Exception $e) {

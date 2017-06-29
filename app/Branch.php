@@ -2,6 +2,7 @@
 namespace App;
 
 class Branch extends Model {
+	use Geocode;
 
 	// Add your validation rules here
 	public static $rules = [
