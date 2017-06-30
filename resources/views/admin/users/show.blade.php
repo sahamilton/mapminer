@@ -17,7 +17,7 @@ $newTZ = new DateTimeZone('America/Los_Angeles');
        	 	@else
         		{{$value}} |
             @endif
-        @endwhile
+        @endforeach
     
          <a href="{{route('users.index')}}">All Users</a>
         }
