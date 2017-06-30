@@ -14,7 +14,10 @@ trait Geocode
                
                 $data['lat'] = $geoCode->first()->getLatitude();
                 $data['lng'] = $geoCode->first()->getLongitude();
-                $data['geostatus']=TRUE; 
+                $data['geostatus']=TRUE;
+                $data['city'] =  $geoCode->first()->getLocality();
+                $adminLevels = $geoCode->first()->getadminLevels();
+                $data['state'] =  $adminLevels->first()->getCode();
 
 
             }else{

@@ -10,10 +10,9 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-	Route::get('/', function () {
+	Route::get('/', ['as'=>'welcome',function () {
 	    return view('welcome');
-	});
+	}]);
 
 //Route::auth();  
 	Route::get('/error',function(){
@@ -31,7 +30,11 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('/user/settings',['as'=>'profile','uses'=>'UsersController@settings']);
 		// legacy login address
 		Route::get('user/login',function(){
-			redirect()->route('login');
+			if(auth()->check()){
+				
+				return redirect()->route('welcome');
+			}
+			redirect()->intended('login');
 		});
 	#Companies
 		

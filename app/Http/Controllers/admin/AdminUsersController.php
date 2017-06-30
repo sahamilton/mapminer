@@ -140,9 +140,9 @@ class AdminUsersController extends BaseController {
 		->where('type','!=','group')			
 		->pluck('filter','id');
 		
-		$managerlist = $this->getManagerList();
+		$managers = $this->getManagerList();
 		// Show the page
-		return response()->view('admin/users/create', compact('roles', 'permissions', 'verticals','selectedRoles', 'selectedPermissions', 'title', 'mode','managerlist','servicelines','branches'));
+		return response()->view('admin/users/create', compact('roles', 'permissions', 'verticals','selectedRoles', 'selectedPermissions', 'title', 'mode','managers','servicelines','branches'));
     }
 
     /**
@@ -218,7 +218,7 @@ class AdminUsersController extends BaseController {
         	$title = 'Update user';
         	// mode
         	$mode = 'edit';
-			$managerlist = $this->getManagerList();
+			$managers = $this->getManagerList();
 			
 			$branchesServiced = $user->person->branchesServiced()->pluck('branches.id','branchnumber')->toArray();
 			
@@ -231,7 +231,7 @@ class AdminUsersController extends BaseController {
 			->pluck('filter','id');
             $servicelines = $this->person->getUserServiceLines();
             $verticals = ['0' => 'none'] + $verticals->toArray();
-        	return response()->view('admin.users.edit', compact('user', 'roles', 'permissions', 'verticals','title', 'mode','managerlist','servicelines','branches','branchesServiced'));
+        	return response()->view('admin.users.edit', compact('user', 'roles', 'permissions', 'verticals','title', 'mode','managers','servicelines','branches','branchesServiced'));
         }
         else
         {
@@ -251,7 +251,7 @@ class AdminUsersController extends BaseController {
         $oldUser = clone($user);
       
 		if($user->update($request->all())){
-            $person = $this->updateAssociatedPerson($user,$request->all());
+            $person = $this->updateAssociatedPerson($user->person,$request->all());
             $person = $this->associateBranchesWithPerson($person,$request->all());
       
            if($request->has('serviceline')){
@@ -306,42 +306,22 @@ class AdminUsersController extends BaseController {
     }
 
     private function updateAssociatedPerson($person,$data){
+       
+       if(isset($data['address'])){
+           
+            $data = $this->getLatLng($data['address']) + $data;
 
+       }
         $person->update($data);
-        $person->reports_to  = $data['manager'];
-        
+       
         if(isset($data['vertical'])){
             $person->industryfocus()->sync($data['vertical']);
         }
         if(isset($data['branches'])){
             $person->branchesServiced()->sync($data['branches']);
         }
-        if(isset($data['address'])){
 
-            $person->address = $data['address'];
-            $latLng = $this->getLatLng($person->address);
-           
-           
-            $person->lat = $latLng[0]['latitude'];
-            $person->lng = $latLng[0]['longitude'];
-            if(isset($data['city'])){
-                $person->city = $data['city'];
-            }else{
-                 $person->city = $latLng[0]['locality'];
-            }
-            
-           if(isset($data['state'])){
-                $user->person->state =$data['state'];
-            }else{
-                 $user->person->state = $latLng[0]['adminLevels'][1]['code'];
-            }
-       }else{
-            $person->lat = null;
-            $person->lng = null;
-            $person->city = null;
-            $person->state = null;
-        }
-        $person->save();
+        $person->rebuild();
         return $person;
     }
 
@@ -580,33 +560,26 @@ class AdminUsersController extends BaseController {
 	
 	private function getManagerList()
 	{
-		$managerroles=['2','3','4','5','6','7','8'];
-		$managers = $this->user->whereHas('roles', 
-			function($q) use($managerroles){
-			$q->whereIn('role_id',$managerroles);
-			})->with('person')->get();
-		$managerlist= array();
-		foreach($managers as $manager){
-			$managerlist[$manager->person->id] = $manager->person->lastname . ",". $manager->person->firstname;
-		}
-		asort($managerlist);
-		return $managerlist;	
+		$managerroles=['3','4','6','7','8'];
+
+        return $this->person
+        ->select(
+            \DB::raw("CONCAT(lastname ,', ',firstname) as fullname"),'id')
+            ->with('userdetails')
+            ->whereHas('userdetails.roles',function($q) use ($managerroles){
+                $q->whereIn('role_id',$managerroles);
+            })
+            ->orderBy('fullname')
+        ->pluck('fullname','id')
+        ->toArray();
 	}
 
 
 	
 	private function getLatLng($address)
 	{
-		try {
-			
-		$geocode = \Geocoder::geocode($address)->get();
-		// The GoogleMapsProvider will return a result
-		return $geocode;
-		
-		} catch (\Exception $e) {
-			// No exception will be thrown here
-			//echo $e->getMessage();
-		}
+		$geoCode = app('geocoder')->geocode($address)->get();
+        return $this->user->getGeoCode($geoCode);
 		
 	}
 	

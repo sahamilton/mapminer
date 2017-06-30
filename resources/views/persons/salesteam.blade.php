@@ -12,9 +12,9 @@
 <a href="{{route('person.show',$people->reportsTo->id)}}">
 		
 
-{{$people->reportsTo->firstname}} {{$people->reportsTo->lastname}}</a>
+{{$people->reportsTo->postName()}}</a>
 <p><a href="mailto:{{$people->email}}" title="Email {{$people->firstname}} {{$people->lastname}}">{{$people->email}}</a> </p>
-<h4>Branches serviced by {{$people->firstname}} {{$people->lastname}}</h4>
+<h4>Branches serviced by {{$people->postName()}}</h4>
 
   <p><a href="{{route('showmap.person',$people->id)}}"><i class="glyphicon glyphicon-flag"></i> Map View</a></p>	
 <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
@@ -31,16 +31,15 @@
     <tr>  
 	<td>
 		<a title="See details of branch {{$branch->branchname}}"
-		href="{{route('branch.show',$branch->id)}}" >
+		href="{{route('branches.show',$branch->id)}}" >
 			{{$branch->branchname}}
 		</a>
 	</td>
 	
 	<td>{{$branch->branchnumber}}</td>
-	<td>{{$branch->brand}}</td>
 	<td>
 		<ul>
-			@foreach($branch->servicelines as $serviceline){
+			@foreach($branch->servicelines as $serviceline)
 				<li><a href="route('serviceline.account',$serviceline->id)}}" 
 				title="See all {{$serviceline->ServiceLine}} branches">
 					{{$serviceline->ServiceLine}}

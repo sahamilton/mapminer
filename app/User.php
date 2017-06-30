@@ -7,12 +7,12 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
-    use Notifiable,HasRoles;
+    use Notifiable,HasRoles, Geocode;
 	
 
 
 
-public $fillable = ['username','email','lastlogin','confirmed','confirmation_code'];
+public $fillable = ['username','email','lastlogin','confirmed','confirmation_code','employee_id'];
     /**
      * Get user by username
      * @param $username
