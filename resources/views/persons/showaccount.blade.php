@@ -1,4 +1,4 @@
-@extends('site/layouts/default')
+@extends('site.layouts.default')
 @section('content')
 <h3>Accounts managed by {{$people->postName()}}</h3>
 <p><a href="mailto:{{$people->email}}" title="Email {{$people->postName()}}">{{$people->email}}</a></p>
@@ -17,7 +17,7 @@
 					{{$account->companyname}}
 					</a>
 				@else
-					<a title="{{$account->companyname}} has no locations.">{{$account->companyname}}</a>
+					{{$account->companyname}}
 				@endif
 				</td>			
 				
@@ -25,7 +25,7 @@
 				@if(isset($account->industryVertical->filter))	
 					<a href="{{route('company.vertical',$account->industryVertical->id)}}" 
 					title="See all {{$account->industryVertical->filter}} accounts">
-					{{$account->industryVertical->filter$vertical}}</a>
+					{{$account->industryVertical->filter}}</a>
 				@else	
 					Not Assigned
 				@endif
