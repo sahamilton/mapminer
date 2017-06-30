@@ -2,7 +2,7 @@
 @section('content')
 <div class="container">
     <h2>Campaign Documents</h2>
-    <p><a href="{{route('admin.salesactivity',$activity->id)}}">Return to campaign</a></p>
+    <p><a href="{{route('salesactivity.index')}}">Return to campaigns</a></p>
     <div class="pull-right">
         <a href ="{{route('salesactivity.create')}}">
             <button class="btn btn-success" ><i class="fa fa-briefcase" aria-hidden="true"></i> Add Sales Campaign</button>
