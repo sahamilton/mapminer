@@ -563,7 +563,7 @@ class PersonsController extends BaseController {
 			
 			$data['accounts'] = Company::orderBy('companyname')
 			->pluck('companyname','id')
-			->toArray();;
+			->toArray();
 			$data['title'] = "All Managers Accounts";
 			
 		}
@@ -824,21 +824,12 @@ class PersonsController extends BaseController {
 
 		foreach ($persons as $person)
 		{
-			try {
-			
-				$geocode = Geocoder::geocode($person->address )->get();
-				// The GoogleMapsProvider will return a result
-				
-				} catch (\Exception $e) {
-					// No exception will be thrown here
-					echo $e->getMessage();
-				}
-			$person->lat = $geocode['latitude'];
-			$person->lng = $geocode['longitude'];
-			$person->save();
+			$geoCode = app('geocoder')->geocode($address)->get();
+            $data = $this->user->getGeoCode($geoCode);
+			$person->update($data);
 
 		}
 
-		return  Redirect::route('person.map');
+		return  redirect()->route('person.map');
 	}
 }
