@@ -9,11 +9,11 @@
 <div class="page-header">
 <div class="pull-right">
 
-	 <p><a href="{{{ URL::to('branch') }}}">Show all branches</a></p>	
+	 <p><a href="{{{ route('branches.index') }}}">Show all branches</a></p>	
 		</div>
         <h1>Nearby Locations</h1>
         <h4> within {{$data['distance']}} miles of your location </h4> 
-        <form action="{{URL::to('location/shownearby')}}" method="get">
+        <form action="{{route('shownearby.location')}}" method="get">
        <label>Show locations within
       
        <?php $values = $values = Config::get('app.search_radius');?>
@@ -61,7 +61,7 @@
 	  function successFunction(position) {
 			var lat = position.coords.latitude;
     		var lng = position.coords.longitude;
-          $('#map-container').storeLocator({'slideMap' : false, 'defaultLoc': true, 'defaultLat': lat, 'defaultLng' : lng, 'dataLocation' : "{{URL::to('location/nearby')}}?d={{$data['distance']}}&lat='+lat+'&lng='+lng+'", 'infowindowTemplatePath' : '{{asset('maps/templates/infowindow-description.html')}}','listTemplatePath' : '{{asset('maps/templates/location-list-description.html')}}'} );
+          $('#map-container').storeLocator({'slideMap' : false, 'defaultLoc': true, 'defaultLat': lat, 'defaultLng' : lng, 'dataLocation' : "{{route('nearby.location')?d=$data['distance']}}&lat='+lat+'&lng='+lng+'", 'infowindowTemplatePath' : '{{asset('maps/templates/infowindow-description.html')}}','listTemplatePath' : '{{asset('maps/templates/location-list-description.html')}}'} );
         };
     </script>
 @stop

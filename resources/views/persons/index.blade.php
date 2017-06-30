@@ -9,11 +9,11 @@
 @include('partials/_showsearchoptions')
 @include('partials/advancedsearch')
 
-<p><a href="{{URL::to('people/map')}}"><i class="glyphicon glyphicon-flag"> </i>Map View</a>
+<p><a href="{{route('person.map')}}"><i class="glyphicon glyphicon-flag"> </i>Map View</a>
 
 @if (auth()->user()->hasRole('Admin'))
 	<div class="pull-right">
-		<a href="{{{ URL::to('admin/users/create') }}}" class="btn btn-small btn-info iframe">
+		<a href="{{{ route('users.create') }}}" class="btn btn-small btn-info iframe">
 		<span class="glyphicon glyphicon-plus-sign"> </span> 
 		Create New Person</a>
 	</div>

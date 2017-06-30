@@ -16,7 +16,7 @@
 
 
 <div class="pull-right">
-<a href="{{{ URL::to('company/create') }}}" class="btn btn-small btn-info iframe"><span class="glyphicon glyphicon-plus-sign"></span> Create New Account</a>
+<a href="{{ route('company.create') }}" class="btn btn-small btn-info iframe"><span class="glyphicon glyphicon-plus-sign"></span> Create New Account</a>
 </div>
 @endif
 

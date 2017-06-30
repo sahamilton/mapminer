@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
+use App\Http\Requests\UserProfileFormRequest;
 class UsersController extends Controller
 {
     /**
@@ -11,85 +12,36 @@ class UsersController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(User $user)
-    {
-        
-        $users = $user->with('roles')->get();
-        return view ('users.index', compact('users'));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
 
     public function settings()
     {
-        $user = User::whereId(\Auth::user()->id)->with('person','serviceline','manager','roles')->first();
+       $user = auth()->user()->with('person','serviceline','manager','roles')->first();
        return response()->view('site.user.profile',compact('user'));
 
     }
+    public function updateprofile(){
+       $user = auth()->user()->with('person')->first();
+       return response()->view('site.user.update',compact('user'));
+
+    }
+
+    public function saveprofile(UserProfileFormRequest $request){
+    
+       $user = auth()->user()->with('person')->first();
+       if($request->has('password')){
+            $user->password = \Hash::make($request->get('password'));
+            $user->save();
+       }
+       $user->person()->update($request->only(['firstname','lastname','address','phone']));
+       if($request->has('address') && $user->person->address != $request->get('address')){
+            $data = $user->getGeoCode(app('geocoder')->geocode($request->get('address'))->get());
+            $user->person()->update($data);
+       }
+       
+       return redirect()->route('profile');
+
+    }
+
 
     public function seeder(){
         $users = User::whereNull('api_token')->get();

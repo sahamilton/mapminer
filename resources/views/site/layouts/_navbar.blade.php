@@ -2,7 +2,7 @@
 		<div class="navbar navbar-default navbar-inverse navbar-fixed-top">
         <div class="logo" >
         
-        <a href="{{ URL::to('/findme') }}"><img src="{{ asset('assets/img/PRlogo.png')}}"  width ='164'/></a>
+        <a href="{{ route('findme') }}"><img src="{{ asset('assets/img/PRlogo.png')}}"  width ='164'/></a>
         </div>
 			 <div class="container">
                 <div class="navbar-header">
@@ -16,12 +16,12 @@
                 <div class="collapse navbar-collapse navbar-ex1-collapse">
                     <ul class="nav navbar-nav">
                      @if (!Auth::check())
-						<li {{ (Request::is('/') ? ' class="active"' : '') }}><a href="{{{ URL::to('/') }}}">Welcome</a>
+						<li {{ (Request::is('/') ? ' class="active"' : '') }}><a href="{{{ route('welcome') }}}">Welcome</a>
                        
                        </li>
                         @else
                         <li class="dropdown{{ (Request::is('company*','branch*' ,'person*','findme') ? ' active' : '') }}">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="{{{ URL::to('findme') }}}">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="{{{ route('findme') }}}">
     							<span class="glyphicon glyphicon-search"></span> Search<span class="caret"></span>
     						</a>
     						<ul class="dropdown-menu">
@@ -66,7 +66,7 @@
  						
                         @if (Auth::user()->hasRole('Admin'))
                          <li>
-    						<a href="{{{ URL::to('admin') }}}">
+    						<a href="{{{ route('dashboard') }}}">
     							<span class="glyphicon glyphicon-wrench"></span> Admin </a>
     						
     					</li>
@@ -77,7 +77,7 @@
     								<span class="glyphicon glyphicon-user"></span> {{{ Auth::user()->firstname }}}	<span class="caret"></span>
     							</a>
     							<ul class="dropdown-menu">
-    								<li><a href="{{{ url::to('user/settings') }}}"><span class="glyphicon glyphicon-wrench"></span> Profile</a></li>
+    								<li><a href="{{{ route('profile') }}}"><span class="glyphicon glyphicon-wrench"></span> Profile</a></li>
                                     @if(Auth::user()->hasRole('Admin'))
 
                                      <a href="{{route('about')}}">
@@ -86,7 +86,7 @@
                                     @endif
     								<li class="divider"></li>
     								<li>
-                                        <a href="{{ url('logout') }}" 
+                                        <a href="{{ route('logout') }}" 
                                              onclick="event.preventDefault();
                                              document.getElementById('logout-form').submit();">
                                               Logout

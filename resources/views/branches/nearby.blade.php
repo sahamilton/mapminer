@@ -9,7 +9,7 @@
 <div class="page-header">
 <div class="pull-right">
 
-	 <p><a href="{{{ URL::to('branch') }}}">Show all branches</a></p>	
+	 <p><a href="{{route('branches.index')}}">Show all branches</a></p>	
 		</div>
         <h1>Nearby Branches</h1>
         <h4> within {{$data['distance']}} miles of the 
@@ -44,7 +44,7 @@
     <script src="{{asset('maps/js/jquery.storelocator.js')}}"></script>
     <script>
 	  $(function() {
-          $('#map-container').storeLocator({'slideMap' : false, 'defaultLoc': true, 'defaultLat': '{{$data['branches']->lat}}', 'defaultLng' : '{{$data['branches']->lng}}', 'dataLocation' : '{{ URL::to("branch/". $data['branches']->id."/nearby?d=".$data['distance'])}}', 'infowindowTemplatePath' : '{{asset('maps/templates/infowindow-description.html')}}','listTemplatePath' : '{{asset('maps/templates/location-list-description.html')}}'} );
+          $('#map-container').storeLocator({'slideMap' : false, 'defaultLoc': true, 'defaultLat': '{{$data['branches']->lat}}', 'defaultLng' : '{{$data['branches']->lng}}', 'dataLocation' : '{{ route("nearby.branch", $data['branches']->id)?d=".$data['distance'])}}', 'infowindowTemplatePath' : '{{asset('maps/templates/infowindow-description.html')}}','listTemplatePath' : '{{asset('maps/templates/location-list-description.html')}}'} );
         });
     </script>
 @stop

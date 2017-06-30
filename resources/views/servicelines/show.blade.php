@@ -2,7 +2,7 @@
 @section('content')
 @if (Auth::user()->hasRole('Admin'))
 	<div class="pull-right">
-		<a href="{{{ URL::to('branch/create') }}}" class="btn btn-small btn-info iframe">
+		<a href="{{{ route('branches.create') }}}" class="btn btn-small btn-info iframe">
 		<span class="glyphicon glyphicon-plus-sign"></span> Create New Branch!!</a>	
 	</div>
 @endif

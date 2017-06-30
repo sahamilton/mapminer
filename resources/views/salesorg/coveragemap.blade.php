@@ -2,7 +2,7 @@
 @section('content')
 <h2>Branch Sales Coverage</h2>
 
-<p><a href='{{URL::to("branch")}}'><i class="glyphicon glyphicon-th-list"></i> List view</a></p>
+<p><a href='{{route("branches.index")}}'><i class="glyphicon glyphicon-th-list"></i> List view</a></p>
 
 @include('salesorg/_keys')
 

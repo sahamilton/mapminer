@@ -50,7 +50,7 @@ class CompaniesController extends BaseController {
 
 		$locationFilter = 'both';
 
-		
+		;
 	
 		return response()->view('companies.index', compact('companies','title','filtered','locationFilter'));
 	}
@@ -115,6 +115,7 @@ class CompaniesController extends BaseController {
 	public function create()
 	{
 		//this should be removed
+	
 		$roles = ['4'];
 		$managers = $this->getManagers($roles);
 		$filters = $this->getFilters();
@@ -133,12 +134,51 @@ class CompaniesController extends BaseController {
 	public function store(CompanyFormRequest $request)
 	{
 
-		$this->company = $this->company->create($request->all());
-		$this->company->serviceline()->attach($request->get('serviceline'));
+		$company = $this->company->create($request->all());
+		$company->serviceline()->sync($request->get('serviceline'));
+
 		return redirect()->route('company.index');
 	}
+	/**
+	 * Show the form for editing the specified company.
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function edit($company)
+	{
+		$roles = ['4'];
+		$managers = $this->getManagers($roles);
 
+		$company = $company
+					->where('id','=',$company->id)
+					->with('managedBy')
+					->with('serviceline')
+					->firstOrFail();
 
+		$servicelines = Serviceline::whereIn('id',$this->userServiceLines)
+			->pluck('ServiceLine','id');
+		
+		$filters = $this->getFilters();
+
+		return response()->view('companies.edit', compact('company','managers','filters','servicelines'));
+	}
+
+	/**
+	 * Update the specified resource in storage.
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function update(CompanyFormRequest $request,$company)
+	{
+		
+
+		$this->company = $company;
+		$this->company->update( $request->all());
+		$this->company->serviceline()->sync( $request->get('serviceline'));
+		return redirect()->route('company.index');
+	}
 	/**
 	 * Remove the specified resource from storage.
 	 *
@@ -568,29 +608,7 @@ class CompaniesController extends BaseController {
 	
 	
 	
-	/**
-	 * Show the form for editing the specified company.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($company)
-	{
-		$roles = ['4'];
-		$managers = $this->getManagers($roles);
-
-		$company = $company
-					->where('id','=',$company->id)
-					->with('managedBy')
-					->with('serviceline')
-					->firstOrFail();
-
-		$servicelines = Serviceline::pluck('ServiceLine','id');
-		
-		$filters = $this->getFilters();
-
-		return response()->view('companies.edit', compact('company','managers','filters','servicelines'));
-	}
+	
 	
 
 
@@ -600,21 +618,7 @@ class CompaniesController extends BaseController {
 		->first();
 		return $verticals->getLeaves()->where('searchcolumn','=','vertical');
 	}
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function update(CompanyFormRequest $request,$company)
-	{
-		
-
-		$this->company = $company;
-		$this->company->update( $request->all());
-		$this->company->serviceline()->sync( $request->get('serviceline'));
-		return redirect()->route('company.index');
-	}
+	
 
 	/**
 	 * Remove the specified resource from storage.
@@ -711,7 +715,9 @@ class CompaniesController extends BaseController {
 			->whereHas('userdetails.roles', 
 			function($q) use($roles){
 			$q->whereIn('role_id',$roles);
-			})->orderBy('lastname')->pluck('name','id');
+			})
+			->orderBy('lastname')
+			->pluck('name','id');
 
 
 	}

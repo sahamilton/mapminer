@@ -1,24 +1,23 @@
-<div class="form-group @if ($errors->has('type')) has-error @endif">
-{{Form::label('companyname','Company Name:')}}
+<!-- company -->
+    <div class="form-group{{ $errors->has('companyname') ? ' has-error' : '' }}">
+        <label class="col-md-2 control-label">Company Name:</label>
+           <div class="input-group input-group-lg ">
+                <input required type="text" class="form-control" name='companyname' description="company" value="{{ old('companyname') ?  old('companyname') : isset($company) ? $company->companyname : "" }}" placeholder="companyname">
+                <span class="help-block">
+                    <strong>{{ $errors->has('companyname') ? $errors->first('companyname') : ''}}</strong>
+                    </span>
+            </div>
+    </div>
 
-{{Form::text('companyname',isset($company
-->companyname) ? $company
-->companyname :'',array('class'=>'form-control'))}}
- @if ($errors->has('companyname')) <p class="help-block">{{ $errors->first('companyname') }}</p> @endif
-</div>
-
-		<div class="form-group{{ $errors->has('person_id') ? ' has-error' : '' }}">
-        <label class="col-md-4 control-label">National Account Manager</label>
-        <div class="col-md-6">
-            <select multiple class="form-control" name='person_id'>
-
+<!-- national account manager -->
+        <div class="form-group{{ $errors->has('person_id)') ? ' has-error' : '' }}">
+        <label class="col-md-2 control-label">National Account Manager:</label>
+           <div class="input-group input-group-lg ">
+            <select  required class="form-control" name='person_id'>
             @foreach ($managers as $key=>$manager)
-            	<option 
-            	{{(isset($company) && $company->person_id == $key) ? 'selected' : ''}} value="{{$key}}">{{$manager}}</option>
-
+                <option @if(isset($company) && $company->person_id == $key) selected @endif
+                value="{{$key}}">{{$manager}}</option>
             @endforeach
-
-
             </select>
             <span class="help-block">
                 <strong>{{ $errors->has('person_id') ? $errors->first('person_id') : ''}}</strong>
@@ -27,11 +26,12 @@
     </div>
 
 
+
 <?php $parents=array();?>
 		<div class="form-group{{ $errors->has('vertical)') ? ' has-error' : '' }}">
-        <label class="col-md-4 control-label">Industry</label>
-
-            <select class="form-control" name='vertical'>
+        <label class="col-md-2 control-label">Industry:</label>
+         <div class="input-group input-group-lg ">
+            <select required class="form-control" name='vertical'>
 
             @foreach ($filters as $vertical))
             	<?php $parent = $vertical->getAncestors()->last();?>
@@ -39,7 +39,7 @@
 	            	<?php $parents[]=$parent->id;?>
 	            	<option disabled value="{{$vertical->id}}">--------{{$parent->filter}}----------</option>
 	            	@endif
-            		<option value="{{$vertical->id}}">{{$vertical->filter}}</option>
+            		<option @if(isset($company) && $company->vertical == $vertical->id) selected @endif value="{{$vertical->id}}">{{$vertical->filter}}</option>
 
 	            	
 
@@ -50,26 +50,24 @@
             <span class="help-block{{ $errors->has('vertical)') ? ' has-error' : '' }}">
                 <strong>{{ $errors->has('vertical') ? $errors->first('vertical') : ''}}</strong>
                 </span>
-
+                </div>
     </div>
+<!-- Serviceline -->
+
+        <div class="form-group{{ $errors->has('serviceline)') ? ' has-error' : '' }}">
+        <label class="col-md-2 control-label">Service Lines:</label>
+        <div class="input-group input-group-lg ">
+            <select multiple class="form-control" name='serviceline[]'>
+
+            @foreach ($servicelines as $key=>$serviceline))
+                <option  @if(isset($company) && in_array($key,$company->serviceline->pluck('id')->toArray())) selected @endif value="{{$key}}">{{$serviceline}}</option>
+
+            @endforeach
 
 
-<div class="form-group @if ($errors->has('serviceline')) has-error @endif">
-{{Form::label('ServiceLine','Service Lines:')}}
-
-
-{{Form::select('serviceline[]',$servicelines,isset($company
-) ? $company
-->serviceline->pluck('id') : '',array('class'=>'form-control','multiple'=>true))}}
-
-@if ($errors->has('serviceline')) <p class="help-block">{{ $errors->first('serviceline') }}</p> @endif
-</div>
-
-
-<!-- Form Actions -->
-	<div style="margin-top:20px">
-		<div class="controls">
-			<a class="btn btn-link" href="{{ route('company.index') }}">Cancel</a>
-			<button type="submit" class="btn btn-success">{{$buttonLabel}}</button>
-		</div>
-	</div>
+            </select>
+            <span class="help-block">
+                <strong>{{ $errors->has('serviceline') ? $errors->first('serviceline') : ''}}</strong>
+                </span>
+        </div>
+    </div>

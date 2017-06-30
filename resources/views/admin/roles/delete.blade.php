@@ -9,7 +9,7 @@
         </ul>
     <!-- ./ tabs -->
     {{-- Delete Post Form --}}
-    <form id="deleteForm" class="form-horizontal" method="post" action="@if (isset($role)){{ URL::to('admin/roles/' . $role->id . '/delete') }}@endif" autocomplete="off">
+    <form id="deleteForm" class="form-horizontal" method="post" action="@if (isset($role)){{ route(('roles.destroy', $role->id ) }}@endif" autocomplete="off">
         
         <!-- CSRF Token -->
         <input type="hidden" name="_token" value="{{{ csrf_token() }}}" />

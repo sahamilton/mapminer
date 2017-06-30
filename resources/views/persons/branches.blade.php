@@ -10,8 +10,6 @@
 
         <h1>Branches Serviced by {{$people->firstname}}</h1>
        
-        
-       {{dd('stop')}}
         <?php $data['address'] = $data['branch']->street ." ".$data['branch']->city ." ".$data['branch']->state;?>
         @include('maps/partials/_form')
         @include('partials.advancedsearch')
@@ -38,7 +36,7 @@
     <script src="{{asset('maps/js/jquery.storelocator.js')}}"></script>
     <script>
 	  $(function() {
-          $('#map-container').storeLocator({'slideMap' : false, 'defaultLoc': true, 'defaultLat': '{{$people->lat}}', 'defaultLng' : '{{$people->lng}}', 'dataLocation' : '{{ URL::to("branch/". $branches']->id."/nearby?d=25)}}', 'infowindowTemplatePath' : '{{asset('maps/templates/infowindow-description.html')}}','listTemplatePath' : '{{asset('maps/templates/location-list-description.html')}}'} );
+          $('#map-container').storeLocator({'slideMap' : false, 'defaultLoc': true, 'defaultLat': '{{$people->lat}}', 'defaultLng' : '{{$people->lng}}', 'dataLocation' : '{{ route("nearby.branch", $data['branch']->id)"?d=25)}}', 'infowindowTemplatePath' : '{{asset('maps/templates/infowindow-description.html')}}','listTemplatePath' : '{{asset('maps/templates/location-list-description.html')}}'} );
         });
     </script>
 @stop

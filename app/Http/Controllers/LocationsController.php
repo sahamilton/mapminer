@@ -9,6 +9,7 @@ use App\SearchFilter;
 use App\Serviceline;
 use Illuminate\Http\Request;
 use App\Http\Requests\LocationFormRequest;
+use App\Http\Requests\LocationImportFormRequest;
 
 
 class LocationsController extends BaseController {
@@ -375,7 +376,7 @@ class LocationsController extends BaseController {
 		// Rename and Move file to correct server location  
 		$name = $file->getClientOriginalName();
 		$newname = time() . '-' . $name;
-		$path = Config::get('app.mysql_data_loc');
+		$path = \Config::get('app.mysql_data_loc');
 		
 		
 		// Moves file to  mysql data folder on server
@@ -411,7 +412,7 @@ class LocationsController extends BaseController {
 		$this->executeQuery("update ".$temptable." set company_id ='".$company_id."'");
 		
 		
-		if ($segment){
+		if (isset($segment)){
 			$this->executeQuery("update ".$temptable." set segment ='".$segment."'");
 		}
 		

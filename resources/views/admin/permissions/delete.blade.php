@@ -9,7 +9,9 @@
         </ul>
     <!-- ./ tabs -->
     {{-- Delete Post Form --}}
-    <form id="deleteForm" class="form-horizontal" method="post" action="@if (isset($permission)){{ URL::to('admin/permissions/' . $permission->id . '/delete') }}@endif" autocomplete="off">
+    <form id="deleteForm" class="form-horizontal" method="post" 
+    action="@if (isset($permission)){{ route('permissions.destroy',$permission->id) }}@endif" 
+    autocomplete="off">
         
         <!-- CSRF Token -->
         <input type="hidden" name="_token" value="{{{ csrf_token() }}}" />

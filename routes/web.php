@@ -28,6 +28,9 @@ Route::group(['middleware' => 'auth'], function () {
    
 	#User settings
 		Route::get('/user/settings',['as'=>'profile','uses'=>'UsersController@settings']);
+
+		Route::get('user/update',['as'=>'update.profile','uses'=>'UsersController@updateprofile']);
+		Route::post('user/update',['as'=>'update.profile','uses'=>'UsersController@saveprofile']);
 		// legacy login address
 		Route::get('user/login',function(){
 			if(auth()->check()){
@@ -247,6 +250,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 		Route::resource('locations','LocationsController',['except'=>['show']]);
 	
 	#Companies
+		
 		Route::get('companies/export', ['as'=>'companies.export', 'uses'=>'CompaniesController@export']);
 		Route::post('companies/export', ['as'=>'companies.locationsexport', 'uses'=>'CompaniesController@locationsExport']);
 		Route::get('companies/download', ['as'=>'companies.download','uses'=>'CompaniesController@exportAccounts']);

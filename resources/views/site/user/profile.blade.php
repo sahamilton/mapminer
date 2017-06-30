@@ -1,55 +1,37 @@
 @extends('site/layouts/default')
 @section('content')
-<?php $roles ='';
-   $fields = ['First Name'=>'firstname',
-				'Last Name'=>'lastname',
-				'Phone'=>'phone',
-				'Address'=>'address',
-				'User Name'=>'username',
-				'Latitude'=>'lat',
-				'Longitude'=>'lng',
-				'Roles'=>'role->role'];?>
-
-
-{{-- Content --}}
-@section('content')
 <div class="page-header">
 	<h1>Your Profile</h1>
+
 </div>
+<p><strong>First Name:</strong> {{$user->person->firstname}}</p>
+<p><strong>Last Name:</strong> {{$user->person->lastname}}</p>
+<p><strong>Phone:</strong> {{$user->person->phone}}</p>
+<p><strong>Address:</strong>  {{$user->person->address}}</p>
+<p><strong>User Name:</strong>  {{$user->username}}</p>
+<p><strong>Latitude:</strong>  {{$user->person->lat}}</p>
+<p><strong>Longitude:</strong>  {{$user->person->lng}}</p>
+<p><strong>ServiceLines:</strong> 
+@foreach($user->serviceline as $serviceline)
 
-
-@foreach($fields as $key=>$value)
-
-<p><strong>{{$key}}:</strong>
-@if($value == 'username')
- {{$user->$value}}</p>
- 
-	
-@elseif ($key == 'Roles')
-@foreach($user->roles as $role)
-    
-    <?php $roles.=$role->name ." | ";?>
-   
-    @endforeach
-    <?php $roles = substr($roles,0,-2);?>
-    {{$roles}} </p>
- @else
-{{$user->person->$value}}</p>
-@endif
-
-
-
+ {{$serviceline->ServiceLine }}
+@if(! $loop->last) | @endif
 @endforeach
-
+</p>
+<p><strong>Roles:</strong> 
+@foreach($user->roles as $role)
+ {{$role->name }}
+ @if(! $loop->last) | @endif
+@endforeach
+</p>
 @if (isset($user->nonews))
-<p><strong>No News before:</strong>{{$user->nonews->format("d M Y")}}</p><p>  Uncheck to reset:<input checked type='checkbox' id='nonews' name='noNews' /></p>
+<p><strong>No News before::</strong> 
+{{$user->nonews->format("d M Y")}}</p>
+<p>  Uncheck to reset:<input checked type='checkbox' id='nonews' name='noNews' /></p>
 @endif
-<a href="/user">
+<a href="{{route('update.profile')}}">
 <button type="button" class="btn btn-success" >
 <i class="glyphicon glyphicon-pencil" ></i> Update</button></a>
-
-
-
 
 <script>
 $(document).ready(function() {

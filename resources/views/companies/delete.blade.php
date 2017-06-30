@@ -1,4 +1,4 @@
-@extends('site/layouts/default')
+@extends('site.layouts.default')
 {{-- Content --}}
 @section('content')
     <!-- Tabs -->
@@ -6,7 +6,7 @@
     <!-- ./ tabs -->
 
     {{-- Delete Account Form --}}
-    <form id="deleteForm" class="form-horizontal" method="post" action="@if (isset($company)){{ URL::to('company/' . $company->id . '/delete') }}@endif" autocomplete="off">
+    <form id="deleteForm" class="form-horizontal" method="post" action="@if (isset($company)){{ route('company.destroy' , $company->id) }}@endif" autocomplete="off">
         <!-- CSRF Token -->
         <input type="hidden" name="_token" value="{{{ csrf_token() }}}" />
         <input type="hidden" name="id" value="{{ $company->id }}" />
