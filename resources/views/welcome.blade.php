@@ -13,7 +13,7 @@
 
 </div>
 <div id="mapbtn" style="text-align:left; padding-left:10%;padding-top:110px">
-<a href='{{route('findme')}}' class='btn btn-lg btn-warning' title='Explore map views'>Map Views</a>
+<a href='{{route('findme')}}' class='btn btn-lg btn-info' title='Explore map views'>Map Views</a>
 
 
 </div>
