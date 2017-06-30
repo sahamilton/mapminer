@@ -60,6 +60,17 @@
 
 				<fieldset><legend>Update Your Password</legend>
 				<!-- password -->
+				    <div class="form-group{{ $errors->has('oldpassword') ? ' has-error' : '' }}">
+				        <label class="col-md-2 control-label">Current Password</label>
+				            <div class="input-group input-group-lg ">
+
+				                <input type="password" class="form-control" name='oldpassword' description="oldpassword" value="">
+				                <span class="help-block">
+				                    <strong>{{ $errors->has('oldpassword') ? $errors->first('oldpassword') : ''}}</strong>
+				                    </span>
+				            </div>
+				    </div>
+				<!-- password -->
 				    <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
 				        <label class="col-md-2 control-label">New Password</label>
 				            <div class="input-group input-group-lg ">

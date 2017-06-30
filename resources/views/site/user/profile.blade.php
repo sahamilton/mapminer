@@ -11,6 +11,14 @@
 <p><strong>User Name:</strong>  {{$user->username}}</p>
 <p><strong>Latitude:</strong>  {{$user->person->lat}}</p>
 <p><strong>Longitude:</strong>  {{$user->person->lng}}</p>
+@if(count($user->person->industryfocus()->get()) > 0)
+<p><strong>Industry Focus:</strong> 
+
+@foreach ($user->person->industryfocus()->get() as $industry)
+	<li>{{$industry->filter}}</li>
+@endforeach
+</p>
+@endif
 <p><strong>ServiceLines:</strong> 
 @foreach($user->serviceline as $serviceline)
 
