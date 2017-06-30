@@ -117,28 +117,25 @@ class SalesActivityController extends BaseController
      */
     public function show($id)
     {
-
-       $activity = $this->activity->with('salesprocess')->findOrFail($id);
+        
+        $activity = $this->activity->with('salesprocess')->findOrFail($id);
         $statuses = LeadStatus::pluck('status','id')->toArray();
         $person = Person::findOrFail(auth()->user()->person->id);
-            if($person->isLeaf()){
-                if(auth()->user()->person->lat){
-                $lat = auth()->user()->person->lat;
-                $lng = auth()->user()->person->lng;
-                $verticals = array_unique ($activity->vertical()->pluck('searchfilters.id')->toArray()); 
+        if($person->isLeaf()){
+            if(auth()->user()->person->lat){
+            $lat = auth()->user()->person->lat;
+            $lng = auth()->user()->person->lng;
+            $verticals = array_unique ($activity->vertical()->pluck('searchfilters.id')->toArray()); 
 
-                $locations = $this->location->findNearbyLocations($lat,$lng,25,$number=null,$company=NULL,$this->userServiceLines, $limit=null, $verticals);
-           }else{
-                $locations = array();
-           }
-           // find all lead locations for the logged in user in these verticals
-           $leads = $this->lead->myLeads($verticals)->get();
-        
-           return response()->view('salesactivity.show',compact('activity','locations','leads','statuses'));
+            $locations = $this->location->findNearbyLocations($lat,$lng,25,$number=null,$company=NULL,$this->userServiceLines, $limit=null, $verticals);
+        }else{
+            $locations = array();
         }
-        $locations = array();
-        
+        // find all lead locations for the logged in user in these verticals
+        $leads = $this->lead->myLeads($verticals)->get();
+
         return response()->view('salesactivity.show',compact('activity','locations','leads','statuses'));
+        }
         
         
     }
@@ -195,7 +192,14 @@ class SalesActivityController extends BaseController
         return redirect()->route('salesactivity.index');
     }
 
-   
+   public function campaignDocuments($id){
+        $activity = $this->activity->findOrFail($id);
+        $documents = $activity->relatedDocuments();
+        return response()->view('salesactivity.campaigndocuments',compact('activity','documents'));
+
+
+
+   }
 
      private function setDates($data){
         $data['datefrom'] = \Carbon\Carbon::createFromFormat('m/d/Y', $data['datefrom']);

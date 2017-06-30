@@ -322,7 +322,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 		Route::get('salesactivity/{vertical}/vertical',['as'=>'salesactivity.vertical','uses'=>'SalesActivityController@index']);
 		Route::resource('salesactivity','SalesActivityController',['except' => ['show']]);
 
-		Route::get('campaigndocs/{id}',['as'=>'salesdocuments.index','uses'=>'SalesActivityController@getSalesActivity']);
+		Route::get('campaigndocs/{id}',['as'=>'salesdocuments.index','uses'=>'SalesActivityController@campaignDocuments']);
 
 		Route::get('campaign/{id}/announce',['as'=>'campaign.announce','uses'=>'CampaignEmailController@announceCampaign']);
 
