@@ -74,9 +74,8 @@ class GeoCodingController extends BaseController {
 			catch (Exception $e) {
 				$watchlist = NULL;
 			}
-			$fields = ['Business Name'=>'businessname','Street'=>'street','City'=>'city','State'=>'state','ZIP'=>'zip','Watching'=>'watch'];
 			
-			return response()->view('maps.list', compact('data','watchlist','fields','filtered'));
+			return response()->view('maps.list', compact('data','watchlist','filtered'));
 		}else{
 
 			$data = $this->setZoomLevel($data);

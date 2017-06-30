@@ -78,16 +78,8 @@ class ServicelinesController extends BaseController {
 				
 				})
 				->get();
-			$fields = array('Branch'=>'branchname',
-							'Number'=>'branchnumber',
-							'Branch Address'=>'street',
-							'City'=>'city',
-							'State'=>'state',
-							'Manager'=>'firstname',
-							'Region'=>'region_id',
-							'Actions'=>'action');
-
-			return response()->view('servicelines.show', compact('serviceline','branches','fields'));
+			
+			return response()->view('servicelines.show', compact('serviceline','branches'));
 		}else{
 			
 

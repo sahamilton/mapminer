@@ -178,23 +178,7 @@ class SalesLeadsController extends Controller
         }else{
             $mapleads = $leads->salesleads;
         }
-        $dom = new \DOMDocument("1.0");
-        $node = $dom->createElement("markers");
-        $parnode = $dom->appendChild($node);
-        foreach($mapleads as $lead){
-          // ADD TO XML DOCUMENT NODE
-         
-          $node = $dom->createElement("marker");
-          $newnode = $parnode->appendChild($node);
-          $newnode->setAttribute("name",$lead->businessname);
-          $newnode->setAttribute("address", $lead->fullAddress());
-          $newnode->setAttribute("lat", $lead->lat);
-          $newnode->setAttribute("lng", $lead->lng);
-         
-        }
-        
-        echo $dom->saveXML();
-        //return response()->make($markers->salesleads, '200')->header('Content-Type', 'text/xml');
+    return response()->view('salesleads.leadsxml', compact('mapleads'))->header('Content-Type', 'text/xml');
     }
     public function accept($id){
      

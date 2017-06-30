@@ -204,9 +204,9 @@ class PersonsController extends BaseController {
 			
 			$accounts = $people->managesAccount;
 			
-			$fields = array('Account'=>'account','Vertical'=>'vertical');
 			
-			return response()->view('persons.showaccount', compact('people','accounts','fields'));
+			
+			return response()->view('persons.showaccount', compact('people','accounts'));
 			
 		}elseif(in_array('Market manager',$roles)){
 		
@@ -315,12 +315,9 @@ class PersonsController extends BaseController {
 		// import
 		$data = $this->persons->_import_csv($name,'persons',$fields);
 		$persons = $this->persons->all();
-		$fields=array('Name'=>'name','Role'=>'mgrtype','Email'=>'email');
-		if (auth()->user()->hasRole('Admin')) {
-			$fields['Actions']='actions';
-		}
+		
 
-		return response()->view('persons.index', compact('persons','fields'));
+		return response()->view('persons.index', compact('persons'));
 	}
 	
 	/**

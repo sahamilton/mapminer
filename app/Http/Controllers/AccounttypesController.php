@@ -4,6 +4,11 @@ use App\AccountType;
 use App\Http\Requests\AccountTypeRequest;
 class AccounttypesController extends BaseController {
 
+	public $accounttype;
+	public function __construct(Accounttype $accounttype){
+		$this->accounttype = $accounttype;
+	}
+
 	/**
 	 * Display a listing of accounttypes
 	 *
@@ -11,7 +16,7 @@ class AccounttypesController extends BaseController {
 	 */
 	public function index()
 	{
-		$accounttypes = Accounttype::all();
+		$accounttypes = $this->accounttype->all();
 		
 		return response()->view('accounttypes.index', compact('accounttypes'));
 	}
@@ -34,7 +39,7 @@ class AccounttypesController extends BaseController {
 	public function store(AccountTypeRequest $request)
 	{
 		
-		Accounttype::create($request->all());
+		$this->accounttype->create($request->all());
 
 		return redirect()->route('accounttypes.index');
 	}
@@ -49,7 +54,7 @@ class AccounttypesController extends BaseController {
 	{
 		//$accounttype = Accounttype::where('id','=',$id)->get();
 		//$accounttype->load('companies');
-		$accounttype = Accounttype::where('id','=',$id)->get();
+		$accounttype = $this->accounttype->where('id','=',$id)->get();
 		
 		return response()->view('accounttypes.show', compact('accounttype'));
 	}
@@ -62,7 +67,7 @@ class AccounttypesController extends BaseController {
 	 */
 	public function edit($id)
 	{
-		$accounttype = Accounttype::find($id);
+		$accounttype = $this->accounttype->find($id);
 
 		return response()->view('accounttypes.edit', compact('accounttype'));
 	}
@@ -75,7 +80,7 @@ class AccounttypesController extends BaseController {
 	 */
 	public function update($id,AccountTypeRequest $request)
 	{
-		$accounttype = Accounttype::findOrFail($id)->update($request->all());
+		$accounttype = $this->accoun->ttype->findOrFail($id)->update($request->all());
 
 		return redirect()->route('accounttypes.index');
 	}
@@ -88,7 +93,7 @@ class AccounttypesController extends BaseController {
 	 */
 	public function destroy($id)
 	{
-		Accounttype::destroy($id);
+		$this->accounttype->destroy($id);
 
 		return redirect()->route('accounttypes.index');
 	}

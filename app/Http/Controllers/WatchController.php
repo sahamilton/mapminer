@@ -41,14 +41,8 @@ class WatchController extends BaseController {
 		
 		$this->add($id);
 		$watch = $this->getMyWatchList(\Auth::id());
-		$fields = ['Business Name'=>'businessname',
-					 'National Acct'=>'companyname',
-					 'Address'=>'street',
-					 'City'=>'city',
-					 'State'=>'state',
-					 'ZIP'=>'zip',
-					 'Watch'=>'watch_list']; 
-		return response()->view('watch.index', compact('watch','fields'));
+		
+		return response()->view('watch.index', compact('watch'));
 	}
 	
 	/**

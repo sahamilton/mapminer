@@ -207,14 +207,6 @@ class CompaniesController extends BaseController {
 		
 		
 		
-		// fields to display in the view
-		
-		
-		
-		if (auth()->user()->hasRole('Admin')) {
-			$fields['Actions']='actions';
-		}
-		
 		$company = $this->company->where('id','=',$company->id)
 		->with('industryVertical','serviceline')
 		->with('managedBy')
@@ -324,10 +316,6 @@ class CompaniesController extends BaseController {
 		->orderBy('companyname')
 		->get();
 		
-
-		//$fields = array('Company'=>'companyname','Manager'=>'manager','Email'=>'email','Vertical'=>'vertical');
-		
-
 		return response()->view('companies.index', compact('companies','title','filtered','locationFilter'));
 		
 	}
@@ -338,8 +326,8 @@ class CompaniesController extends BaseController {
 			$locationFilter= \Input::get('locationFilter');
 			$companies = $this->getAllCompanies();
 			$title = 'All Accounts';
-			$fields = array('Company'=>'companyname','Manager'=>'manager','Email'=>'email','Vertical'=>'vertical','Service Lines'=>'serviceline','Has Locations'=>'locationcount',);
-			return response()->view('companies.index', compact('companies','fields','title','filtered','locationFilter'));
+			
+			return response()->view('companies.index', compact('companies','title','filtered','locationFilter'));
 
 	}
 	
@@ -366,20 +354,11 @@ class CompaniesController extends BaseController {
 		$segments = $this->getCompanySegments($id);
 		$states= $this->getCompanyStates($id,$filtered,$keys);
 		$data = $this->getStateCompanyInfo($id,$state);
-		$fields = array('Business Name'=>'businessname',
-						'Street'=>'street',
-						'City'=>'city',
-						'ZIP'=>'zip',
-						'Contact'=>'contact',
-						'Phone'=>'phone',
-						'Watching'=>'watch');
+		
 		$mywatchlist = $this->getWatchList();
-		if (auth()->user()->hasRole('Admin')) {
-			$fields['Actions']='actions';
-		}
 		
 	
-		return response()->view('companies.state', compact('data','locations','mywatchlist','fields','states','filtered','segments'));
+		return response()->view('companies.state', compact('data','locations','mywatchlist','states','filtered','segments'));
 	}
 	
 	
@@ -449,10 +428,7 @@ class CompaniesController extends BaseController {
 
 		$mywatchlist = $this->getWatchList();
 
-		if (auth()->user()->hasRole('Admin')) {
-			$fields['Actions']='actions';
-		}
-
+		
 		$filtered = $this->locations->isFiltered(['locations'],['segment','businesstype'],$data['company']['vertical']);
 
 		$keys = $this->locations->getSearchKeys(['locations'],['segment','businesstype']);
@@ -722,34 +698,7 @@ class CompaniesController extends BaseController {
 		
 		
 	}
-	/*
-	 * Function exportfile
-	 *
-	 * Create array of locations of logged in users watchlist
-	 *
-	 * @param $company collection
-	 * @return response file csv
-	 */
 	
-	/*private function exportfile($company)
-	{
-		//Check that user can view company 
-		// based on user service line associations.
-		
-		if (! $this->company->checkCompanyServiceLine($company[0]['id'],$this->userServiceLines))
-		{
-			return redirect()->route('company.index');
-		}
-		$data = $this->locations->where('company_id','=',$company[0]['id'])->get();
-		$fields =['id','businessname','street','suite','city','state','zip','company_id','lob','phone','contact','segment'];
-		$selectfields = implode(",",$fields);
-		$filename = $company[0]['companyname'] .'_locations.csv';
-		$path = public_path() . "/downloads/";
-		
-		$results = $this->company->export ($fields,$data,$filename);
-		return $results;
-		
-	}*/
 	/**
 	 * Return all people who have manager role
 	 * @param  Array $roles 

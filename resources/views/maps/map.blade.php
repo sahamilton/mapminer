@@ -1,16 +1,4 @@
 @extends('site.layouts.maps')
-
-
-@if ($data['type'] == 'branch')
-	<?php $fields = array('Branch Name'=>'branchname','Address'=>'street','City'=>'city','State'=>'state','ZIP'=>'zip','Miles'=>'distance_in_mi');?>
-	
-
-
-@else
-<?php $fields = array('Business Name'=>'businessname','National Acct'=>'companyname','Address'=>'street','City'=>'city','State'=>'state','ZIP'=>'zip','Miles'=>'distance_in_mi'); 
-?>
-
-@endif
 @section('content')
 
 

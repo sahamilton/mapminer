@@ -116,7 +116,7 @@ class BranchesController extends BaseController {
 
 		$branch = $this->branch->create($input);
 		// get the service lines that have been selected and reduce to the simple array
-		$serviceline = $reuqest->get('serviceline');
+		$serviceline = $request->get('serviceline');
 		foreach($serviceline['serviceline'] as $key=>$value)
 		{
 			$lines[] = $key;	
@@ -159,7 +159,9 @@ class BranchesController extends BaseController {
 	public function show($branch)
 	{
 		
-		$servicelines = $this->serviceline->whereIn('id',$this->userServiceLines)->get();
+		$servicelines = $this->serviceline
+		->whereIn('id',$this->userServiceLines)->get();
+		
 		$data['branch'] = $this->branch
 		->whereHas('servicelines', function($q){
 					    $q->whereIn('serviceline_id',$this->userServiceLines);
@@ -250,8 +252,10 @@ class BranchesController extends BaseController {
 	 */
 	public function update(BranchFormRequest $request,$branch)
 	{
-		$this->branch = $branch->with('servicelines')->findOrFail($branch->id);
-		$this->branch->update($request->all());
+		$branch->with('servicelines')
+		->findOrFail($branch->id)
+		->update($request->all());
+
 		$serviceline = $request->get('serviceline');
 		$lines=array();
 		foreach($serviceline as $key=>$value)
@@ -260,9 +264,9 @@ class BranchesController extends BaseController {
 			$lines[] = $key;	
 		}
 		
-		$this->branch->servicelines()->sync($lines);
+		$branch->servicelines()->sync($lines);
 		$this->rebuildXMLfile();
-		return redirect()->route('branches.show',$this->branch->id );
+		return redirect()->route('branches.show',$branch->id );
 
 		
 	}
@@ -279,43 +283,7 @@ class BranchesController extends BaseController {
 		$this->rebuildXMLfile();
 		return redirect()->route('branch.index');
 	}
-	/**
-	 * Generate XML of location served by branch query.
-	 *
-	 * @param  query resource  $result
-	 * @return Response XML
-	 */
-	public function MakeLocationsServedXML($result)
-	{
-		// this can be replaced by xml creation
-		$dom = new \DOMDocument("1.0");
-		$node = $dom->createElement("markers");
-		//$parnode = $dom->appendChild($node);
-		
-		foreach($result as $row){
-
-		  // ADD TO XML DOCUMENT NODE
-		 	
-		  
-
-			if($row['locationid'] != "") { 
-				$node = $dom->createElement("marker");
-				$newnode = $parnode->appendChild($node);
-				$newnode->setAttribute("locationweb",route('locations.show' , $row['locationid']) );
-				$newnode->setAttribute("accountweb",route('company.show' , $row['companyid']) );
-				$newnode->setAttribute("name",$row['businessname']);
-				$newnode->setAttribute("address", $row['street']. " ". $row['city'] ." ". $row['state']." ". $row['zip']);
-				$newnode->setAttribute("lat", $row['lat']);
-				$newnode->setAttribute("lng", $row['lng']);
-				$newnode->setAttribute("type", 'national');
-				$newnode->setAttribute("account", $row['companyname']);
-				$newnode->setAttribute("locationid", $row['locationid']);
-			  
-			}
-		}
-		return $dom->saveXML();
-		
-	}
+	
 	/**
 	 * Generate location served by branch as XML.
 	 *
@@ -335,8 +303,8 @@ class BranchesController extends BaseController {
 				$result = $result->where('locations.company.companyname', 'like',$co)->get();
 			}
 
-				
-		echo $this->MakeLocationsServedXML($result);
+		return response()->view('branches.locationsxml', compact('result'))->header('Content-Type', 'text/xml');		
+
 	}
 	/**
 	 * Generate location served by branch as XML.
@@ -435,27 +403,6 @@ class BranchesController extends BaseController {
 		$people = $this->person->with('manages')->findOrFail($id);
 		
 		return response()->view('persons.showmap', compact('people'));
-	}
-	
-	public function makeMyBranchXML($result) {
-		
-		$dom = new \DOMDocument("1.0");
-		$node = $dom->createElement("markers");
-		$parnode = $dom->appendChild($node);
-		
-		foreach($result['manages'] as $row){
-		  // ADD TO XML DOCUMENT NODE
-			$node = $dom->createElement("marker");
-			$newnode = $parnode->appendChild($node);
-			$newnode->setAttribute("name",trim($row['branchname']));
-			$newnode->setAttribute("address", $row['street']." ". $row['city']." ". $row['state']);
-			$newnode->setAttribute("lat", $row['lat']);
-			$newnode->setAttribute("lng", $row['lng']);
-			$newnode->setAttribute("locationweb",route('branches.show' , $row['id']) );
-			$newnode->setAttribute("id", $row['id']);	
-			$newnode->setAttribute("type", 'branch');	
-		}
-		echo $dom->saveXML();
 	}
 	
 	

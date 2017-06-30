@@ -145,32 +145,8 @@ class LocationsController extends BaseController {
 			
 		}
 	}
-	/*
-	public function map($id)
-	{
-		if (App::environment() == 'local'){
-			\Debugbar::disable();
-		}
-		$location = $this->location->with('company')->findOrFail($id);
+	
 
-		$dom = new \DOMDocument("1.0");
-		$node = $dom->createElement("markers");
-		$parnode = $dom->appendChild($node);
-		
-		  // ADD TO XML DOCUMENT NODE
-		 
-		  $node = $dom->createElement("marker");
-		  $newnode = $parnode->appendChild($node);
-		  $newnode->setAttribute("name",$location['branchname']);
-		  $newnode->setAttribute("address", $location['street']. " ". $location['city'] ." ". $location['state']." ". $location['zip']);
-		  $newnode->setAttribute("lat", $location['lat']);
-		  $newnode->setAttribute("lng", $location['lng']);
-		  $newnode->setAttribute("type", $location['type']);
-		
-		
-		echo $dom->saveXML();
-	}
-	*/
 	/**
 	 * Show the form for editing the specified location.
 	 *
