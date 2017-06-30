@@ -11,7 +11,7 @@ $newTZ = new DateTimeZone('America/Los_Angeles');
 	<div class="page-header">
 		<h4>Users who have logged in {{$views[$view]}}</h4>
 		
-        @foreach ( $views as $key=>$value)))
+        @foreach ( $views as $key=>$value)
         	@if($view != $key)
         		<a href="{{route('admin.showlogins',$key)}}">{{$value}}</a> | 
        	 	@else
