@@ -12,7 +12,8 @@
                 <div class="collapse navbar-collapse navbar-ex1-collapse">
                     <ul class="nav navbar-nav">
                  			
-                    	<li><a href="{{route('dashboard')}}">Dashboard</a></li>
+                    	<li><a href="{{route('dashboard')}}">
+                        <i class="fa fa-tachometer" aria-hidden="true"></i> Dashboard</a></li>
 
                         <li class="dropdown{{ (Request::is('admin/company*','admin/locations*') ? ' class="active"' : '') }}">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="{{{ route('company.index') }}}">
@@ -65,7 +66,7 @@
                                     </li>
                                     
                                  </ul> 
-                              
+
                                  </li>  
                                     
                                   @endcan       
@@ -131,32 +132,29 @@
                 </a>
                 <ul class="dropdown-menu">
 					<li{{ (Request::is('admin/news*') ? ' class="active"' : '') }}><a href="{{{ route('news.index') }}}">
-                    <span class="glyphicon glyphicon-folder-open"></span> News</a></li>
+                    <i class="fa fa-newspaper-o" aria-hidden="true"></i> News</a></li>
                     @can('manage_sales_campaigns')
                         <li class="divider">Campaigns</li>
                         <li{{ (Request::is('admin/documents*') ? ' class="active"' : '') }}><a href="{{{ route('documents.index') }}}">
-                        <span class="glyphicon glyphicon-book"></span>
-                         Sales Library</a></li>
+                        <i class="fa fa-book" aria-hidden="true"></i> Sales Library</a></li>
                         <li {{ (Request::is('admin/process*') ? ' class="active"' : '') }}><a href="{{{ route('process.index') }}}">
-                        <span class="glyphicon glyphicon-tower"></span>
-                         Sales Process</a></li>
+                        <i class="fa fa-step-forward" aria-hidden="true"></i> Sales Process</a></li>
                         <li {{ (Request::is('admin/salesactivity*') ? ' class="active"' : '') }}><a href="{{{ route('salesactivity.index') }}}">
-                        <span class="glyphicon glyphicon-briefcase"></span> 
-                         Sales Campaigns</a></li>
+                        <i class="fa fa-calendar-check-o" aria-hidden="true"></i> Sales Campaigns</a></li>
                     @endcan
                     @can('manage_leads')
                         <li class="divider">Leads</li>
                         <li{{ (Request::is('admin/leads') ? ' class="active"' : '') }}><a href="{{{ route('leads.index') }}}">
-                        <span class="glyphicon glyphicon-folder-open"></span> Leads</a></li>
+                        <i class="fa fa-envelope-open-o" aria-hidden="true"></i> Sales Leads</a></li>
                         <li{{ (Request::is('admin/leadsource*') ? ' class="active"' : '') }}><a href="{{{ route('leadsource.index') }}}">
-                        <span class="glyphicon glyphicon-book"></span> Lead Sources</a></li>
+                        <i class="fa fa-diamond" aria-hidden="true"></i> Lead Sources</a></li>
                         <li {{ (Request::is('admin/leadstatus*') ? ' class="active"' : '') }}><a href="{{{ route('leadstatus.index') }}}">
-                        <span class="glyphicon glyphicon-tower"></span> Lead Statuses</a></li>
+                        <i class="fa fa-star-o" aria-hidden="true"></i> Lead Statuses</a></li>
                         <li class="divider">Industries</li>
                     @endcan
                     <li {{ (Request::is('admin/search*') ? ' class="active"' : '') }}><a href="{{{ route('vertical.analysis') }}}">
                     
-                    <span class="glyphicon glyphicon-tower"></span> Industries</a></li>
+                    <i class="fa fa-building-o" aria-hidden="true"></i> Industries</a></li>
 
                 </ul>
 			</li>
@@ -164,34 +162,39 @@
           
     </ul>
     <ul class="nav navbar-nav pull-right">
-    					
-		<li class="dropdown">
-				<a class="dropdown-toggle" data-toggle="dropdown" href="#">
-					<span class="glyphicon glyphicon-user"></span> {{{ Auth::user()->username }}}	<span class="caret"></span>
-				</a>
-				<ul class="dropdown-menu">
-					<li>
-                    <a href="{{{ route('profile') }}}">
-                    <span class="glyphicon glyphicon-wrench"></span> 
-                    Profile</a>
-                    </li>
-                    <li>
-                    <a href="{{route('about')}}">About</a></li>
-					<li class="divider"></li>
-					<li>
-                        <a href="{{ url('/logout') }}"
-                            onclick="event.preventDefault();
-                                     document.getElementById('logout-form').submit();">
-                            Logout
-                        </a>
+                        
+                        
+                        <li class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                    <span class="glyphicon glyphicon-user"></span> {{{ Auth::user()->username }}}  <span class="caret"></span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="{{{ route('profile') }}}">
+                                    <i class="fa fa-user" aria-hidden="true"></i> Profile</a></li>
+                                    @if(Auth::user()->hasRole('Admin'))
 
-                        <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
-                            {{ csrf_field() }}
-                        </form>
-                    </li>
-				</ul>
-		</li>
-	</ul>
+                                     <a href="{{route('about')}}">
+                                    <li><i class="fa fa-info-circle" aria-hidden="true"></i>
+                                    About Mapminer</a></li>
+                                    @endif
+                                    <li class="divider"></li>
+                                    <li>
+                                        <a href="{{ route('logout') }}" 
+                                             onclick="event.preventDefault();
+                                             document.getElementById('logout-form').submit();">
+                                              <i class="fa fa-sign-out" aria-hidden="true"></i>
+                                              Logout
+                                        </a>
+                                         <form id="logout-form" 
+                                                action="{{ route('logout') }}" 
+                                            method="POST" 
+                                            style="display: none;">
+                                                        {{ csrf_field() }}
+                                          </form>
+                                    </li>
+                                </ul>
+                        </li>
+                    </ul>
 
 					<!-- ./ nav-collapse -->
 				</div>

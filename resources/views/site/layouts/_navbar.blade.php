@@ -25,10 +25,14 @@
     							<span class="glyphicon glyphicon-search"></span> Search<span class="caret"></span>
     						</a>
     						<ul class="dropdown-menu">
-                            <li {{ (Request::is('findme') ? ' class="active"' : '') }}><a href="{{{ route('findme') }}}">Maps</a></li>
-                            <li {{ (Request::is('company*') ? ' class="active"' : '') }}><a href="{{{ route('company.index') }}}">Accounts</a></li>
-                            <li {{ (Request::is('branch*') ? ' class="active"' : '') }}><a href="{{{ route('branches.map') }}}">Branches</a></li>
-                            <li {{ (Request::is('person*') ? ' class="active"' : '') }}><a href="{{{ route('person.index') }}}">People</a></li>
+                            <li {{ (Request::is('findme') ? ' class="active"' : '') }}><a href="{{{ route('findme') }}}">
+                            <i class="fa fa-map-o" aria-hidden="true"></i> Maps</a></li>
+                            <li {{ (Request::is('company*') ? ' class="active"' : '') }}><a href="{{{ route('company.index') }}}">
+                            <i class="fa fa-building-o" aria-hidden="true"></i> Accounts</a></li>
+                            <li {{ (Request::is('branch*') ? ' class="active"' : '') }}><a href="{{{ route('branches.map') }}}">
+                            <i class="fa fa-shopping-bag" aria-hidden="true"></i> Branches</a></li>
+                            <li {{ (Request::is('person*') ? ' class="active"' : '') }}><a href="{{{ route('person.index') }}}">
+                            <i class="fa fa-users" aria-hidden="true"></i> People</a></li>
                             </ul>
                             </li>
                         <li {{ (Request::is('watch') ? ' class="active"' : '') }}><a href="{{{ route('watch.index') }}}">
@@ -39,20 +43,27 @@
                          Sales Resources<span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu">
-                        <li><a href="{{route('salesorg')}}">Sales Organization</a></li>
+                        <li><a href="{{route('salesorg')}}">
+                        <i class="fa fa-sitemap" aria-hidden="true"></i>
+                        Sales Organization</a></li>
                         @if(Auth::user()->hasRole('Admin') or Auth::user()->hasRole('Sales') or  Auth::user()->hasRole('Sales Manager'))
                             <li class="divider"></li>
-                            <li><a href="{{route('resources.view')}}">Sales Library</a></li>
-                            <li><a href="{{route('salescampaigns')}}">Sales Campaigns</a></li>
+                            <li><a href="{{route('resources.view')}}">
+                            <i class="fa fa-book" aria-hidden="true"></i>
+                             Sales Library</a></li>
+                            <li><a href="{{route('salescampaigns')}}">
+                            <i class="fa fa-calendar-check-o" aria-hidden="true"></i> Sales Campaigns</a></li>
 
                         @endif 
                          
-                        @if(Auth::user()->hasRole('Admin') or auth()->user()->hasRole('Branch Manager'))
-                            <li><a href="{{route('salesleads.index')}}">Sales Leads</a></li>
+                        @if(auth()->user()->hasRole('Admin') or auth()->user()->hasRole('Branch Manager'))
+                            <li><a href="{{route('salesleads.index')}}">
+                            <i class="fa fa-envelope-open-o" aria-hidden="true"></i> Sales Leads</a></li>
                         @endif
-                        @if (Auth::user()->hasRole('Admin') or Auth::user()->hasRole('National Account Manager'))
+                        @if (auth()->user()->hasRole('Admin') or Auth::user()->hasRole('National Account Manager'))
                         <li class="divider"></li>
-                         <li><a href="{{route('managers.view')}}">Account Managers View</a></li>
+                         <li><a href="{{route('managers.view')}}">
+                         <i class="fa fa-eye" aria-hidden="true"></i> Account Managers View</a></li>
                         
                         
                         @endif
@@ -67,7 +78,7 @@
                         @if (Auth::user()->hasRole('Admin'))
                          <li>
     						<a href="{{{ route('dashboard') }}}">
-    							<span class="glyphicon glyphicon-wrench"></span> Admin </a>
+                           <i class="fa fa-tachometer" aria-hidden="true"></i> Admin </a>
     						
     					</li>
                         @endif
@@ -77,11 +88,12 @@
     								<span class="glyphicon glyphicon-user"></span> {{{ Auth::user()->firstname }}}	<span class="caret"></span>
     							</a>
     							<ul class="dropdown-menu">
-    								<li><a href="{{{ route('profile') }}}"><span class="glyphicon glyphicon-wrench"></span> Profile</a></li>
+    								<li><a href="{{{ route('profile') }}}">
+                                    <i class="fa fa-user" aria-hidden="true"></i> Profile</a></li>
                                     @if(Auth::user()->hasRole('Admin'))
 
                                      <a href="{{route('about')}}">
-                                    <li><span class="glyphicon glyphicon-copyright-mark"></span>
+                                    <li><i class="fa fa-info-circle" aria-hidden="true"></i>
                                     About Mapminer</a></li>
                                     @endif
     								<li class="divider"></li>
@@ -89,6 +101,7 @@
                                         <a href="{{ route('logout') }}" 
                                              onclick="event.preventDefault();
                                              document.getElementById('logout-form').submit();">
+                                              <i class="fa fa-sign-out" aria-hidden="true"></i>
                                               Logout
                                         </a>
                                          <form id="logout-form" 
