@@ -75,7 +75,7 @@
                   </td>
                    @if(auth()->user()->hasRole('Admin'))
                  <td class="col-md-2">
-                @include('partials/modal')
+               
 
                 <div class="btn-group">
                     <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
@@ -89,7 +89,7 @@
                     <li><a data-href="{{route('documents.destroy',$document->id)}}" 
                     data-toggle="modal" 
                     data-target="#confirm-delete" 
-                    data-title = "location" 
+                    data-title = "document" 
                     href="#"><i class="glyphicon glyphicon-trash"></i> Delete Sales document</a>
                     </li>
 
@@ -112,7 +112,8 @@
         </table>
         </div>
     </div>
-</div>
+</div> 
+@include('partials._modal')
 @include('partials._search')
 @include('partials._scripts')
 @endsection

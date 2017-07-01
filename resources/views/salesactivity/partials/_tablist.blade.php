@@ -87,4 +87,4 @@
 
         </table>
         </div>
-                @include('partials/modal')
+                @include('partials._modal')

@@ -37,8 +37,7 @@
                 </td>
                 
                  <td class="col-md-2">
-                @include('partials/modal')
-
+               
                 <div class="btn-group">
                     <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
                     <span class="caret"></span>
@@ -80,4 +79,6 @@
         </div>
     </div>
 </div>
+ @include('partials._modal')
+
 @endsection
