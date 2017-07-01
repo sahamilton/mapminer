@@ -12,12 +12,14 @@ class User extends Authenticatable
 
 
 
-public $fillable = ['username','email','lastlogin','confirmed','confirmation_code','employee_id'];
+	public $fillable = ['username','email','lastlogin','confirmed','confirmation_code','employee_id'];
     /**
      * Get user by username
      * @param $username
      * @return mixed
      */
+
+    public $dates=['lastlogin','created_at','updated_at'];
 	 public function person()
 	 {
 		  return $this->hasOne(Person::class,'user_id')->orderBy('lastname','firstname');

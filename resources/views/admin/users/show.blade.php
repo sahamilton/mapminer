@@ -20,8 +20,7 @@ $newTZ = new DateTimeZone('America/Los_Angeles');
         @endforeach
     
          <a href="{{route('users.index')}}">All Users</a>
-        }
-        }
+        
 	</div>
 
 	<table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
@@ -45,21 +44,14 @@ $newTZ = new DateTimeZone('America/Los_Angeles');
         <td class="col-md-2">{{ $user->lastname }}</td>
         <td class="col-md-2">{{ $user->username }}</td>
         <td class="col-md-2">{{ $user->email }}</td>
-        
-
- <?php 
-if(! isset($user->lastlogin) or  $user->lastlogin == '0000-00-00 00:00:00'  ){
-		$field = NULL;
-	}else{
-		$date = new DateTime( $user->lastlogin, $UTC );
-		$date->setTimezone( $newTZ );
-		$field =$date->format('Y-m-d h:i a');
-	}
-	
-	echo " <td class=\"col-md-2\">".$field."</td>";
-
-	?>
-   
+        <td class="col-md-2">
+			@if(isset($user->lastlogin) &&  $user->lastlogin != '0000-00-00 00:00:00'  )
+                <?php
+                $date = new DateTime( $user->lastlogin, $UTC );
+                $date->setTimezone( $newTZ );?>
+                {{$date->format('M j, Y h:i a')}}
+			@endif
+	</td>
 </tr>
 @endforeach
 		</tbody>
