@@ -29,9 +29,19 @@
 <p><strong>Roles:</strong> 
 @foreach($user->roles as $role)
  {{$role->name }}
+ <?php $permissions[] = $role->permissions()->pluck('display_name')->toArray();?>
  @if(! $loop->last) | @endif
 @endforeach
 </p>
+
+<p><strong>Permissions:</strong>
+@foreach($permissions[0] as $key=>$name)
+ {{$name}}
+ @if(! $loop->last) | @endif
+@endforeach
+</p>
+
+
 @if (isset($user->nonews))
 <p><strong>No News before::</strong> 
 {{$user->nonews->format("d M Y")}}</p>

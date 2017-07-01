@@ -1,4 +1,3 @@
-
 @foreach($verticals as $descendant)
 
 	@if($descendant->type == 'group'  )
@@ -6,7 +5,7 @@
         	</fieldset>
         @endif
         <fieldset>
-	        <legend>{{{$descendant->filter}}}</legend>         
+	                
 	        <?php 		 $levelName = $descendant->filter;
 			 $n=1;?>
       	 @if(! $loop->first)
