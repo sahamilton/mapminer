@@ -20,8 +20,9 @@
 						</a> 
                         
 						<ul class="dropdown-menu multi-level">
-                         @can('manage_accounts') <!-- Manage accounts -->
+                          <!-- Manage accounts -->
                             <li class="dropdown-submenu">
+                            @can('manage_accounts')
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Accounts</a>
                                 <ul class="dropdown-menu">
         							<li{{ (Request::is('company*') ? ' class="active"' : '') }}>
@@ -63,11 +64,12 @@
                                     <span class="glyphicon glyphicon-import"></span> Review / Manage Location Notes</a>
                                     </li>
                                     
-                                 </ul>
+                                 </ul> 
+                              
                                  </li>  
                                     
-                                    
-                            @endcan     
+                                  @endcan       
+                              
                               
                             
                            @can('manage_branches')
