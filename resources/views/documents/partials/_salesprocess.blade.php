@@ -1,7 +1,3 @@
-<div class="form-group{{ $errors->has('salesprocess') ? ' has-error' : '' }}">
-<label for="salesprocess">Sales Process Step</label>
-<div class="input-group input-group-lg ">
-
 @foreach ($process as $key=>$value)
 
 	@if((isset($document->process) && $document->process->contains('step',$value))
@@ -13,5 +9,3 @@
 
 @endforeach
 
-<strong>{!! $errors->first('salesprocess', '<p class="help-block">:message</p>') !!}</strong>
-</div></div>

@@ -223,7 +223,7 @@ public function segments(){
     $filters = $this->first();
     return $filters->getDescendants()
     ->where('searchtable','=','companies')
-    ->where('type','!=','group')
+    
     ->where('inactive','=',0);
 
   }

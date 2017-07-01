@@ -53,9 +53,9 @@ class DocumentFormRequest extends FormRequest
     public function messages()
     {
         return [
-        'file.required_without_all'=>'You need to uploadss a file or enter a valid url link but not both',
+        'file.required_without_all'=>'You need to upload a file or enter a valid url link but not both',
         'file.file'=>'You need to specify a file',
-        'location.required_without_all'=>'You need to upload a file or enter a valid url link but not both',
+        'location.required_without_all'=>'You need to enter a valid url link or upload a file but not both',
         'location.url'=>'Please enter a valid URL e.g. http://mydomain.com',
         'file.mimetypes'=>"Only PDF or Word (.doc or .docx) files permitted",
         ];

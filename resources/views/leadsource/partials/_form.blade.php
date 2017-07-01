@@ -47,7 +47,7 @@
     <div class="form-group{{ $errors->has('dateto') ? ' has-error' : '' }}">
         <label class="col-md-4 control-label" for="dateto">Available To</label>
         <div class="input-group input-group-lg ">
-            <input requried class="form-control" type="text" name="dateto"  id="todatepicker" 
+            <input required class="form-control" type="text" name="dateto"  id="todatepicker" 
             value="{{  old('dateto', isset($leadsource) ?  $leadsource->dateto->format('m/d/Y') : date('m/d/Y',strtotime('+3 months'))) }}"/>
 
             <span class="help-block">
@@ -55,7 +55,15 @@
             </span>
         </div>
     </div>
-
+    <legend>Industry Verticals</legend>
+    <div class="form-group{{ $errors->has('vertical') ? ' has-error' : '' }}">
+        <label class="col-md-4 control-label" for="vertical">Industry Verticals</label>
+        <div class="input-group input-group-lg ">
 @include('leadsource.partials._verticals')  
+<span class="help-block{{ $errors->has('vertical') ? ' has-error' : '' }}">
 
+                <strong>{{$errors->has('vertical') ? $errors->first('vertical')  : ''}}</strong>
+            </span>
+        </div>
+    </div>
 @include('partials._verticalsscript')
