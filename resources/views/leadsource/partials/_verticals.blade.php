@@ -13,13 +13,11 @@
          	</li></ul>
          @endif
          <ul style="list-style-type: none"> 
-      
-           
-                    <li><input type="checkbox" name="parent[]" id="checkAll" value="{{{$descendant->id}}}">Check All {{{$descendant->filter}}}
-  		
+      		<li>
+      		<input type="checkbox" name="parent[]" id="checkAll" value="{{{$descendant->id}}}">
+      		Check All {{{$descendant->filter}}}  		
 	@else
 		@if(isset($n) && $n > $descendant->depth && !$loop->first)
-
 			</li></ul>
 		@elseif(isset($n) and $n < $descendant->depth)
 			<ul style="list-style-type: none">

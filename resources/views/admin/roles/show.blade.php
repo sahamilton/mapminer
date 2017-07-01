@@ -12,7 +12,7 @@ $newTZ = new DateTimeZone('America/Los_Angeles');
 <h2>{{$title}}</h2>
 	<div class="page-header">
 		
-         <a href="{{route('admin.users.index')}}">All Users</a>
+         <a href="{{route('users.index')}}">All Users</a>
 	</div>
 
 	<table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>

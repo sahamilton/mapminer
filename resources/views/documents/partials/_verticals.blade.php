@@ -40,6 +40,4 @@
 @endforeach
  </li></ul></fieldset>
 
-{!! $errors->first('vertical', '<p class="help-block">:message</p>') !!}
-
 

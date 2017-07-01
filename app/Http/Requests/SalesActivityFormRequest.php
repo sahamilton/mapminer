@@ -28,6 +28,8 @@ class SalesActivityFormRequest extends FormRequest
             'datefrom'=>'required|date|date_format:m/d/Y',
             'dateto'=>'required|date|date_format:m/d/Y|after:datefrom',
             'description'=>'required',
+            'vertical'=>'required',
+            'salesprocess'=>'required',
         ];
     }
 }

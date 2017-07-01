@@ -108,14 +108,17 @@ class AdminRolesController extends BaseController {
      * @param $id
      * @return Response
      */
-    public function show($id)
+    public function show($role)
     {
-        $role= $this->role->find($id);
+
+
     	$users = $this->user->whereHas('roles', 
     			function($q) use($role){
     			$q->where('role_id', $role->id);
-    			})->with('roles','usage','person','serviceline')->get();
-    			$title =$role->name .' users';
+    			})
+        ->with('roles','usage','person','serviceline')
+        ->get();
+    	$title =$role->name .' users';
 		//$users = $this->role->findOrFail($role->id)->with('assignedRoles')->get();
 		return response()->view('admin/roles/show', compact('users','role','title'));
 		// redirect to the frontend

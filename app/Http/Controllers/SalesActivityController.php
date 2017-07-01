@@ -79,7 +79,7 @@ class SalesActivityController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(SalesActivityFormRequest $request)
     {
         $data = $this->setDates($request->all());
 

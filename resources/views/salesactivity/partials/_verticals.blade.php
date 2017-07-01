@@ -1,42 +1,41 @@
-
-
 @foreach($verticals as $descendant)
 
-	@if($descendant->type == 'group')
-        </fieldset><fieldset><legend>{{{$descendant->filter}}}</legend>         <?php 
-		 $levelName = $descendant->filter;
-		 $n=1;?>
-       
-         </li></ul>
+	@if($descendant->type == 'group'  )
+		@if(! $loop->first)
+        	</fieldset>
+        @endif
+        <fieldset>
+	                
+	        <?php 		 $levelName = $descendant->filter;
+			 $n=1;?>
+      	 @if(! $loop->first)
+         	</li></ul>
+         @endif
          <ul style="list-style-type: none"> 
-      
-           
-                    <li><input type="checkbox" name="parent[]" id="checkAll" value="{{{$descendant->id}}}">Check All {{{$descendant->filter}}}
-            
-  		
+      		<li>
+      		<input type="checkbox" name="parent[]" id="checkAll" value="{{{$descendant->id}}}">
+      		Check All {{{$descendant->filter}}}  		
 	@else
-		@if(isset($n) and $n > $descendant->depth)
+		@if(isset($n) && $n > $descendant->depth && ! $loop->first)
 
 			</li></ul>
 		@elseif(isset($n) and $n < $descendant->depth)
 			<ul style="list-style-type: none">
 		@endif
-		
-		@if($descendant->isLeaf())
-			<li><input type="checkbox"  {{isset($activity) && in_array($descendant->id, $activity->vertical->pluck('id')->toArray()) ? 'checked': ''}} name="vertical[]" value="{{{$descendant->id}}}"/>
-			{{{trim($descendant->filter)}}}
+		<li>
+		@if((is_array(old('vertical')) && in_array($descendant->id,old('vertical'))) or (isset($activity) && in_array($descendant->id, $activity->verticals->pluck('id')->toArray())))
+			<input type="checkbox"  checked name="vertical[]" value="{{{$descendant->id}}}"/>
 		@else
-			<li><input type="checkbox"  name="parent[]" value="{{{$descendant->id}}}"/>
-			{{{trim($descendant->filter)}}}
+			<input type="checkbox"  name="vertical[]" value="{{{$descendant->id}}}"/>
 		@endif
+			
+			{{{trim($descendant->filter)}}}
+		
 
-@endif
+	@endif
      
-<?php  $n = $descendant->depth;?>
+	<?php  $n = $descendant->depth;?>
 
 @endforeach
  </li></ul></fieldset>
-
-{!! $errors->first('vertical', '<p class="help-block">:message</p>') !!}
-
-
+		
