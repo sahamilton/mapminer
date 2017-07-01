@@ -40,8 +40,13 @@
  @if(! $loop->last) | @endif
 @endforeach
 </p>
-
-
+<p>
+@can('manage_accounts')
+Can manage accounts
+@else
+Cannot manage accounts
+@endcan
+</p>
 @if (isset($user->nonews))
 <p><strong>No News before::</strong> 
 {{$user->nonews->format("d M Y")}}</p>
