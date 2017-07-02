@@ -2,8 +2,7 @@
 @section('content')
 
 <h1>Latest News and Comments</h1>
-<p><input type='checkbox' id='nonews' name='noNews' />
-            Check if you don't want to see any more old news!</p>
+
 @if(auth()->user()->hasRole('Admin'))
 <div class="pull-right">
     <a href="{{{ route('news.create') }}}" class="btn btn-small btn-info iframe">
@@ -80,7 +79,7 @@
 
 <hr />
 @endforeach
-@include('partials._newsscript')
+
 
 
 
