@@ -1,6 +1,8 @@
 @extends('site.layouts.default')
 @section('content')
-
+@if(! $news->isEmpty())
+	@include('news.newsmodal')
+@endif
 <div class="jumbotron">
   <div class="container" style="position:relative;text-align:center">
     <h4 ">Welcome to the PeopleReady&reg; National Account Locator</h4>
@@ -39,5 +41,5 @@
 </div>
   </div>
 </div>
-
+@include('partials._newsscript')
 @stop
