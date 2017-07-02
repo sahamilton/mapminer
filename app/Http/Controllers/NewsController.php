@@ -78,9 +78,7 @@ class NewsController extends BaseController {
 	{
 		
 		$data = $request->all();
-
 		$data = $this->setDates($data);
-
 		if($news = $this->news->create($data)){
 			$news->serviceline()->attach($request->get('serviceline'));
 			if($request->has('vertical')){
