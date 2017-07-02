@@ -39,7 +39,7 @@ class News extends Model {
 			$nonews = Carbon::now('America/Vancouver')->subYear()->toDateTimeString();
 				 
 		}
-
+;
 		return $this->where('datefrom','>=',$nonews)
 			->where('dateto','>=',$now)
 			->whereHas('serviceline', function($q) {

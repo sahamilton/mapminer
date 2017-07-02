@@ -67,6 +67,7 @@ Route::group(['middleware' => 'auth'], function () {
 	
 	#News
 		//Route::resource('news', 'NewsController',  ['only' => ['index', 'show')));
+		Route::get('currentnews',['as'=>'currentnews','uses'=>'NewsController@currentNews']);
 		Route::get('news', ['as'=>'news.index', 'uses'=>'NewsController@index']);
 		Route::get('news/{slug}', ['as'=>'news.show', 'uses'=>'NewsController@show']);		
 			

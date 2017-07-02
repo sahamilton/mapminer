@@ -2,6 +2,7 @@
 
 {{-- Content --}}
 @section('content')
+
 <div class='col-md-8'>
 <h3>{{ $news->title }}</h3>
 <p><a href="{{route('news.index')}}">Return to all news</a></p>

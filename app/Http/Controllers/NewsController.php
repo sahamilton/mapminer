@@ -91,7 +91,11 @@ class NewsController extends BaseController {
 		
 		return redirect()->route('news.index');
 	}
+	public function currentNews(){
+		$news = $this->news->currentNews();
+		return response()->view('news.index', compact('news'));
 
+	}
 	/**
 	 * Display the specified news.
 	 *
