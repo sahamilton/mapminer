@@ -9,11 +9,12 @@
 	}
 	</style>
 <h1>Edit Update</h1>
-{{Form::open(array('route'=>array('admin.news.update',$news->id)))}}
+
+{{Form::open(array('route'=>array('news.update',$news->id)))}}
 @include('news.partials.newsform')
 {{Form::submit('Edit',array('class'=>"btn btn-success"))}}
 </div>
-
+<input type="hidden" name="id" value={{$news->id}} />
 {{Form::close()}}
 
 

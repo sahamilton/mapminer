@@ -54,7 +54,20 @@
 					<span class="glyphicon glyphicon-calendar"></span> <!--Sept 16th, 2012-->
 					{{$post->startdate->format('M jS,Y')}}
 					| <span class="glyphicon glyphicon-comment"></span> 
-					<a href="{{route('news.show', $post->slug}}#comments"> {{{$post->comments->count()}}}</a>
+					<a href="{{route('news.show', $post->slug)}}#comments"> {{{$post->comments->count()}}}</a>
+
+					@if($post->user_id == auth()->user()->id  or auth()->user()->hasRole('Admin'))
+<a href="{{route('news.edit',$post->id)}}" title="Edit this news item"><i class="glyphicon glyphicon-pencil"></i></a> | 
+<a data-href="{{route('news.destroy',$post->id)}}" 
+            data-toggle="modal" 
+            data-target="#confirm-delete" 
+            data-title = "news item"  
+            title="Delete this news item"
+            href="#">
+            <i class="glyphicon glyphicon-trash"></i> </a>
+           
+
+				@endif
 				</p>
 			</div>
 		</div>
@@ -73,5 +86,6 @@
 
 
 {{-- Scripts --}}
+@include('partials._modal')
 @include('partials._scripts')
 @stop

@@ -4,7 +4,7 @@
 @section('content')
 <div class='col-md-8'>
 <h3>{{ $news->title }}</h3>
-
+<p><a href="{{route('news.index')}}">Return to all news</a></p>
 {!! $news->news !!}</div>
 <div class='col-md-12'>
 <p><strong>Posted by:</strong>{{ isset($news->author) ? $news->author->person->postName() : 'No longer with the company'}}</p>
@@ -35,6 +35,17 @@
 				
 	            <span class="glyphicon glyphicon-user"></span> by <span class="muted">{{ isset($comment->postedBy) ?  
 	            $comment->postedBy->person->postName() :'Anonymous' }}</span>
+
+	            @if($comment->user_id == auth()->user()->id  or auth()->user()->hasRole('Admin'))
+				<a href="{{route('comment.edit',$comment->id)}}" title="Edit this comment"><i class="glyphicon glyphicon-pencil"></i></a> | 
+				<a data-href="{{route('comment.destroy',$comment->id)}}" 
+		            data-toggle="modal" 
+		            data-target="#confirm-delete" 
+		            data-title = "comment"  
+		            title="Delete this comment"
+		            href="#">
+            <i class="glyphicon glyphicon-trash"></i> </a>
+           @endif
 					
 				</div>
 			</div>
@@ -49,5 +60,6 @@
 <div class="col-md-8">
 @include('news.partials.comment_form')
 </div>
-
+@include('partials._modal')
+@include('partials._scripts')
 @stop

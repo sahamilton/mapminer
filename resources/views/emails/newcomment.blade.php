@@ -1,24 +1,26 @@
-<!DOCTYPE html>
-<html lang="en-US">
-	<head>
-		<meta charset="utf-8">
-	</head>
-	<body>
-    
-		<h2>New feedback has been added</h2>
-		<div>
+@component('mail::message')
 
-        <p>Support</p>
-       
-		<p>{{$user->firstname}} {{$user->lastname}} has added some feedback.</p>
-        <h4>{{$comments->subject}} / {{$comments->title}}</h4>
-        <p><em>{{$comments->comment}}</em></p>
-        <hr />
+## New Comment on News
+
+{{$data['user']->person->postName()}} has added a comment to the <a href="{{route('news.show',$data['comments']->title)}}">{{$data['comments']->subject}}</a> news item.
+
+{{$data['user']->person->firstname}} said:
+
+@component('mail::panel')
+{{$data['comments']->comment}}
+
+@endcomponent
+
+You can review and or edit {{$data['user']->person->firstname}}'s comment with this link:
+
+@component('mail::button', ['url' => route('comment.edit',$data['comments']->id), 'color' => 'blue'])
+        Review / Edit Comment.
+@endcomponent
+
+<em> If you’re having trouble clicking the  button, copy and paste the URL below
+into your web browser: [{{ route('comment.edit',$data['comments']->id)}}]({{ route('comment.edit',$data['comments']->id)}}) </em>
+
+Sincerely
         
-         You can edit the feedback at <a href="{{route('comment.edit',$comments->id)}}" >this link</a></p>
-       <p> Sincerely</p>
-        
-        <p>PeopleReady National Account Mapping Support</p>
-		</div>
-	</body>
-</html>
+{{env('APP_NAME')}}
+@endcomponent

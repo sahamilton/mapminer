@@ -50,4 +50,6 @@ class Serviceline extends Model {
 	{
 		return $this->belongsToMany(News::class);
 	}
+
+	
 }

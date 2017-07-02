@@ -9,7 +9,7 @@
 	}
 	</style>
 <h1>Create An Update</h1>
-{{Form::open(array('route'=>'admin.news.store'))}}
+{{Form::open(array('route'=>'news.store'))}}
 @include('news.partials.newsform')
 {{Form::submit('Create',array('class'=>"btn btn-success"))}}
 </div>

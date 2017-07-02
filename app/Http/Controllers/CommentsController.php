@@ -2,7 +2,9 @@
 namespace App\Http\Controllers;
 use App\Comments;
 use App\Http\Requests\CommentFormRequest;
-
+use Mail;
+use App\User;
+use App\Mail\NotifyCommentsAdded;
 
 class CommentsController extends BaseController {
 
@@ -47,7 +49,7 @@ class CommentsController extends BaseController {
 	public function store(CommentFormRequest $request)
 	{
 		$data = $request->all();
-	
+		$data['subject'] = $request->get('title');
 		$data['title'] = $request->get('slug');
 		$data['user_id'] = auth()->user()->id;
 		$data = $this->comment->create($data);
@@ -64,8 +66,9 @@ class CommentsController extends BaseController {
 	public function show($id)
 	{
 		
+	
 		$people = $this->comment->with('manages')->findorFail($id->id);
-		return response()->view('comments.showlist', compact('people'));
+		return response()->view('comments.showlist', compact('comment'));
 	}
 	
 	/**
@@ -97,8 +100,10 @@ class CommentsController extends BaseController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function edit($comment)
+	public function edit($id)
 	{
+			
+			$comment = $this->comment->with('relatesTo','postedBy')->findOrFail($id);
 			return response()->view('comments.edit', compact('comment'));
 	}
 
@@ -108,12 +113,12 @@ class CommentsController extends BaseController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update(CommentFormRequest $request,$comment)
+	public function update(CommentFormRequest $request,$id)
 	{
-		
-		$comment->update($data);
+		$comment = $this->comment->findOrFail($id);
+		$comment->update($request->all());
 
-		return redirect()->route('comment.index');
+		return redirect()->route('news.show',$request->get('slug'));
 	}
 
 	/**
@@ -124,9 +129,10 @@ class CommentsController extends BaseController {
 	 */
 	public function destroy($id)
 	{
-		$this->commment->destroy($id);
+		$comment = $this->comment->with('relatesTo')->findOrFail($id);
+		$this->comment->destroy($id);
 
-		return redirect()->route('comment.index');
+		return redirect()->route('news.show',$comment->relatesTo->slug);
 	}
 
 
@@ -147,15 +153,10 @@ class CommentsController extends BaseController {
 	private function notify($comments){
 		$data = array();
 		$data['comments'] =  $comments;
-		$data['user'] = User::findOrFail($comments['user_id']);
+
+		$data['user'] = User::with('person')->findOrFail($comments['user_id']);
 		
-		
-		Mail::send('emails.newcomment',$data, function($message)
-		{
-			$message->to('tbsupport@crescentcreative.com')->subject('New Comment Added');
-			
-		});
-		
+		Mail::queue(new NotifyCommentsAdded($data));
 	}
 	
 }

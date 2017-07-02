@@ -17,6 +17,11 @@ class Comments extends Model {
 		return $this->belongsTo(User::class,'user_id');
 
 	}
+
+	public function relatesTo(){
+		return $this->belongsTo(News::class,'news_id');
+	}
+
 	public function close($id) 
 	{
 		$comment = $this->model->findOrFail($id);

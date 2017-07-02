@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 use App\News;
+use Carbon\Carbon;
 use App\Http\Requests\NewsFormRequest;
 class NewsController extends BaseController {
 
@@ -58,7 +59,8 @@ class NewsController extends BaseController {
 	public function create()
 	{
 		
-		$servicelines = $this->news->getUserServiceLines();
+		$servicelines = \App\Serviceline::whereIn('id',$this->news->getUserServiceLines())->pluck('serviceline','id')->toArray();
+		
 		return response()->view('news.create', compact('servicelines'));
 	}
 
@@ -70,8 +72,14 @@ class NewsController extends BaseController {
 	public function store(NewsFormRequest $request)
 	{
 		
-		$this->news = $this->news->create($reuest->all());
-		$this->news->serviceline()->attach($request->get('serviceline'));
+		
+		$data = $request->all();
+		$data = $this->setDates($data);
+
+		if($news = $this->news->create($data)){
+			$news->serviceline()->attach($request->get('serviceline'));
+		}
+		
 		return redirect()->route('news.index');
 	}
 
@@ -102,10 +110,19 @@ class NewsController extends BaseController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function edit($news)
+	public function edit($id)
 	{
-		
-		$servicelines = $this->news->getUserServiceLines();
+		$news = $this->news
+		->whereHas('serviceline', function($q) {
+					    $q->whereIn('serviceline_id', $this->userServiceLines);
+
+					})
+
+		->with('author','author.person','serviceline')
+		->findOrFail($id);
+
+
+		$servicelines = \App\Serviceline::whereIn('id',$this->news->getUserServiceLines())->pluck('serviceline','id')->toArray();
 		return response()->view('news.edit', compact('news','servicelines'));
 	}
 
@@ -118,8 +135,10 @@ class NewsController extends BaseController {
 	public function update(NewsFormRequest $request,$id)
 	{
 		$news = $this->news->findOrFail($id);
+		$data = $request->all();
+		$data = $this->setDates($data);
 
-		if($news->update($request->all())) {
+		if($news->update($data)) {
 			
 			$news->serviceline()->sync($request->get('serviceline'));
 		}
@@ -166,7 +185,11 @@ class NewsController extends BaseController {
 		return $person->id;
 	}
 	
-	
+	private function setDates($data){
+        $data['startdate'] = Carbon::createFromFormat('m/d/Y', $data['startdate']);
+        $data['enddate'] = Carbon::createFromFormat('m/d/Y', $data['enddate']);
+         return$data;
+    }
 	
 	
 }

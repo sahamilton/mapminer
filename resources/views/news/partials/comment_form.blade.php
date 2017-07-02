@@ -3,7 +3,7 @@
     {{csrf_field()}}
     <input type="hidden" name="news_id" value="{{{ $news->id }}}" />
     <input type="hidden" name="slug" value="{!! $news->slug !!}" />
-
+<input type="hidden" name="title" value="{!! $news->title !!}" />
     <textarea class="col-md-12 input-block-level" rows="4" name="comment" id="comment">{!! Request::old('comment') !!}</textarea>
 
     <div class="form-group">

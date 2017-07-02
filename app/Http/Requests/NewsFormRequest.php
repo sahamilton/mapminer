@@ -6,9 +6,11 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class NewsFormRequest extends FormRequest
 {
-    public function __construct(Request $request){
+    public function __construct( ){
 
-        $request->request->add(['slug' => strtolower(str_replace(" ","_",$request->get('title')))]);
+
+
+        \Input::merge(['slug' => strtolower(str_replace(" ","_",\Input::get('title')))]);
     }
 
     /**
@@ -34,7 +36,7 @@ class NewsFormRequest extends FormRequest
          'startdate' => 'required|date' ,
          'enddate' => 'required|date|after:startdate',
          'serviceline'=> 'required',
-         'slug'=>'required|alpha_dash|unique:news,slug,'. $this->id,
+         'slug'=>'required|alpha_dash|unique:news,slug,'. $this->get('id'),
         ];
     }
 }
