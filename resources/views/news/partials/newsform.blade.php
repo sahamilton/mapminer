@@ -1,58 +1,112 @@
 
 <!--- Title -->
-<div class="form-group @if ($errors->has('title')) has-error @endif">
-{{Form::label('title','Title:',array('class'=>'control-label col-sm-2'))}}
 
-{{Form::text('title',isset($news->title) ? $news->title :'')}}
+    <div class="form-group{{ $errors->has('title') ? ' has-error' : '' }}">
+        <label class="col-md-2 control-label">Title</label>
+              <div class="input-group input-group-lg ">
+            <input type="text" required 
+            class="form-control" 
+            name='title' 
+            description="title" 
+            value="{{ old('title' , isset($news) ? $news->title : "" ) }}" 
+            placeholder="title">
+            <span class="help-block">
+                <strong>{{ $errors->has('title') ? $errors->first('title') : ''}}</strong>
+                </span>
+        </div>
+    </div>
 
-@if ($errors->has('title')) <p class="help-block">{{ $errors->first('title') }}</p> @endif
-</div>
-
-<!--- Article -->
-<div class="form-group @if ($errors->has('news')) has-error @endif">
-{{Form::label('news','News Article:',array('class'=>'control-label col-sm-2'))}}
-<div class="input-group date col-sm-4">
-{{Form::textarea('news',isset($news->news) ? $news->news :'',array('class'=>'summernote'))}}
-
-@if ($errors->has('news')) <p class="help-block">{{ $errors->first('news') }}</p> @endif
-</div></div>
+<!-- News -->
+	 <div class="form-group{{ $errors->has('news') ? ' has-error' : '' }}">
+         <label class="col-md-2 control-label">Article</label>
+          <div class="input-group input-group-lg ">
+             <textarea class="form-control summernote" 
+             name='news' 
+             title="news">
+             {!! old('news', isset($news) ? $news->news : '') !!}
+             </textarea>
+                 <span class="help-block">
+                 <strong>{{$errors->has('news') ? $errors->first('news')  : ''}}</strong>
+                 </span>
  
-<!--- Date From -->
+         </div>
+     </div> 
 
-<div id="datepicker" class="form-group @if ($errors->has('startdate')) has-error @endif">
-<label class="control-label col-sm-2" for="startdate">Date From:</label>
-   <div class="input-group date col-sm-4">       
-  <input type="text" name='startdate' name='startdate' class="form-control" readonly value="{{isset($news->startdate) ? date('m/d/Y',strtotime( 
-  $news->startdate)) : date('m/d/Y')}}" />
-  <span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
- </div> 
- @if ($errors->has('startdate')) <p class="help-block">{{ $errors->first('startdate') }}</p> @endif
+<legend>Available From / To</legend>\
+
+<!-- Date From -->
+<div class="form-group{{ $errors->has('from)') ? ' has-error' : '' }}">
+    <label class="col-md-2 control-label" for="datefrom">Available From</label>
+    <div class="input-group input-group-lg">
+    <input class="form-control" 
+        type="text" 
+        name="datefrom"  
+        id="fromdatepicker" 
+        value="{{  old('datefrom', isset($news) ? date('m/d/Y',strtotime($news->datefrom)): date('m/d/Y'))}}"/>
+    <span class="help-block">
+        <strong>{{$errors->has('datefrom') ? $errors->first('datefrom')  : ''}}</strong>
+    </span>
+    </div>
 </div>
- 
-<!--- Date To -->
+<!-- /Date From -->
+<!-- Date To -->
+<div class="form-group{{ $errors->has('dateto') ? ' has-error' : '' }}">
+    <label class="col-md-2 control-label" for="dateto">Available To</label>
+    <div class="input-group input-group-lg ">
+        <input class="form-control" 
+            type="text" 
+            name="dateto"  
+            id="todatepicker" 
+            value="{{  old('dateto', isset($news) ? date('m/d/Y',strtotime($news->dateto)) : date('m/d/Y',strtotime('+1 years'))) }}"/>
 
-<div id="datepicker1" class="form-group @if ($errors->has('enddate')) has-error @endif">
-<label class="control-label col-sm-2" for="edndate">DateTo:</label>
-          <div class="input-group date col-sm-4">
-  <input type="text" name='enddate' name ='enddate' class="form-control" readonly value="{{isset($news->enddate) ? date('m/d/Y',strtotime( 
-  $news->enddate)): date('m/d/Y', strtotime("+3 months",strtotime(date('m/d/Y'))))}}" />
-  <span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
-</div>   
-@if ($errors->has('enddate')) <p class="help-block">{{ $errors->first('enddate') }}</p> @endif
-
+        <span class="help-block">
+            <strong>{{$errors->has('dateto') ? $errors->first('dateto')  : ''}}</strong>
+        </span>
+    </div>
 </div>
+<!-- /Date to -->
+<!-- /Available from to -->
 
 <!--- Service Line -->
-
-<div class="form-group @if ($errors->has('serviceline')) has-error @endif">
-{{Form::label('ServiceLine','Service Lines:', array('class'=>'control-label col-sm-2'))}}
-
-<div class="input-group date col-sm-4">
-{{Form::select('serviceline[]',$servicelines,isset($news) ? $news->serviceline->pluck('id') : '',array('class'=>'form-control','multiple'=>true))}}
-
-@if ($errors->has('serviceline')) <p class="help-block">{{ $errors->first('serviceline') }}</p> @endif
-</div>
-
-<div>
-
+		<div class="form-group{{ $errors->has('serviceline)') ? ' has-error' : '' }}">
+        <label class="col-md-2 control-label">Servicelines</label>
+               <div class="input-group input-group-lg ">
+            <select multiple class="form-control" name='serviceline[]'>
+            @foreach ($servicelines as $key=>$serviceline)
+                @if(isset($news) && in_array($key,$news->serviceline->pluck('id')->toArray()))
+            	<option selected value="{{$key}}">{{$serviceline}}</option>
+                @else
+                <option value="{{$key}}">{{$serviceline}}</option>
+                @endif
+            @endforeach
+            </select>
+            <span class="help-block">
+                <strong>{{ $errors->has('serviceline') ? $errors->first('serviceline') : ''}}</strong>
+                </span>
+        </div>
+    </div>
+<!-- Industry verticals -->
+<legend>Industry Verticals</legend>
+    <div class="form-group{{ $errors->has('vertical') ? ' has-error' : '' }}">
+        <label class="col-md-2 control-label" for="vertical">Industry Verticals</label>
+        <div class="input-group input-group-lg ">
+            @include('news.partials._verticals')  
+            <span class="help-block{{ $errors->has('vertical') ? ' has-error' : '' }}">
+                <strong>{{$errors->has('vertical') ? $errors->first('vertical')  : ''}}</strong>
+            </span>
+        </div>
+    </div>
+<!-- / Industry verticals -->
+<!-- Roles -->
+<legend>Roles</legend>
+    <div class="form-group{{ $errors->has('roles') ? ' has-error' : '' }}">
+        <label class="col-md-2 control-label" for="role">User Roles</label>
+        <div class="input-group input-group-lg ">
+            @include('news.partials._roles') 
+            <span class="help-block{{ $errors->has('roles') ? ' has-error' : '' }}">
+                <strong>{{$errors->has('roles') ? $errors->first('roles')  : ''}}</strong>
+            </span>
+        </div>
+    </div>
+<!-- / Sales process steps -->
 <input type="hidden" name="user_id" value="{{auth()->user()->id}}" />

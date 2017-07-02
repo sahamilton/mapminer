@@ -5,6 +5,15 @@
 <div class='col-md-8'>
 <h3>{{ $news->title }}</h3>
 <p><a href="{{route('news.index')}}">Return to all news</a></p>
+@if(auth()->user()->hasRole('Admin'))
+<div class="pull-right">
+<a href="{{route('news.edit',$news->id)}}">
+<button class="btn btn-info">
+<i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+ Edit News</button></a>
+</div>
+
+@endif
 {!! $news->news !!}</div>
 <div class='col-md-12'>
 <p><strong>Posted by:</strong>{{ isset($news->author) ? $news->author->person->postName() : 'No longer with the company'}}</p>

@@ -33,8 +33,8 @@ class NewsFormRequest extends FormRequest
         return [
          'title' => 'required|min:5',
          'news' => 'required',
-         'startdate' => 'required|date' ,
-         'enddate' => 'required|date|after:startdate',
+         'datefrom' => 'required|date' ,
+         'dateto' => 'required|date|after:startdate',
          'serviceline'=> 'required',
          'slug'=>'required|alpha_dash|unique:news,slug,'. $this->get('id'),
         ];

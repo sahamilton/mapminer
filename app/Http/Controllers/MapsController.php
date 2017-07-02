@@ -8,14 +8,16 @@ use Carbon\Carbon;
 class MapsController extends BaseController {
 	public $branch;
 	public $location;
+	public $news;
 	/**
 	 * Display a listing of regions
 	 *
 	 * @return Response
 	 */
-	public function __construct(Branch $branch, Location $location,User $user){
+	public function __construct(Branch $branch, Location $location,User $user,News $news){
 			$this->branch = $branch;
 			$this->user = $user;
+			$this->news = $news;
 			$this->location = $location;
 			parent::__construct($location);
 	}
@@ -38,15 +40,7 @@ class MapsController extends BaseController {
 				
 				 
 			}
-			$news=News::where('startdate','>=',$nonews)
-			->where('startdate','<=',$now)
-			->where('enddate','>=',$now)
-			->whereHas('serviceline', function($q) {
-					    $q->whereIn('serviceline_id', $this->userServiceLines);
-
-					})
-			->get();
-			
+			$news = $this->news->currentNews();
 			
 			return view()->make('maps.showme',compact('news'));
 

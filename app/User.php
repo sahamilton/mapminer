@@ -19,7 +19,7 @@ class User extends Authenticatable
      * @return mixed
      */
 
-    public $dates=['lastlogin','created_at','updated_at'];
+    public $dates=['lastlogin','created_at','updated_at','nonews'];
 
 	 public function person()
 	 {

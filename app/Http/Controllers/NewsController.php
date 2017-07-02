@@ -2,6 +2,10 @@
 namespace App\Http\Controllers;
 use App\News;
 use Carbon\Carbon;
+use App\User;
+use App\Serviceline;
+use App\Person;
+use App\SearchFilter;
 use App\Http\Requests\NewsFormRequest;
 class NewsController extends BaseController {
 
@@ -27,12 +31,12 @@ class NewsController extends BaseController {
 		$now = date('Y-m-d h:i:s');
 		$news = $this->news
 		->whereHas('serviceline', function($q) {
-					    $q->whereIn('serviceline_id', $this->userServiceLines);
+			$q->whereIn('serviceline_id', $this->userServiceLines);
 
-					})
+		})
 
 		->with('author','author.person','serviceline','comments')
-		->orderBy('startdate', 'DESC')->get();
+		->orderBy('datefrom', 'DESC')->get();
 
 		return response()->view('news.index', compact('news'));
 	}
@@ -46,7 +50,7 @@ class NewsController extends BaseController {
 
 					})
 		->with('comments')
-		->orderBy('startdate', 'DESC')->get();
+		->orderBy('datefrom', 'DESC')->get();
 		
 		return response()->view('news.index', compact('news'));
 		
@@ -58,10 +62,11 @@ class NewsController extends BaseController {
 	 */
 	public function create()
 	{
+		$filters = new SearchFilter;
+		$verticals = $filters->industrysegments();
+		$servicelines = Serviceline::whereIn('id',$this->news->getUserServiceLines())->pluck('serviceline','id')->toArray();
 		
-		$servicelines = \App\Serviceline::whereIn('id',$this->news->getUserServiceLines())->pluck('serviceline','id')->toArray();
-		
-		return response()->view('news.create', compact('servicelines'));
+		return response()->view('news.create', compact('servicelines','verticals'));
 	}
 
 	/**
@@ -72,12 +77,18 @@ class NewsController extends BaseController {
 	public function store(NewsFormRequest $request)
 	{
 		
-		
 		$data = $request->all();
+
 		$data = $this->setDates($data);
 
 		if($news = $this->news->create($data)){
 			$news->serviceline()->attach($request->get('serviceline'));
+			if($request->has('vertical')){
+				$news->relatedIndustries()->attach($request->get('vertical'));
+			}
+			if($request->has('role')){
+				$news->relatedRoles()->attach($request->get('role'));
+			}
 		}
 		
 		return redirect()->route('news.index');
@@ -112,18 +123,21 @@ class NewsController extends BaseController {
 	 */
 	public function edit($id)
 	{
+		$filters = new \App\SearchFilter;
+		$verticals = $filters->industrysegments();
+
 		$news = $this->news
 		->whereHas('serviceline', function($q) {
 					    $q->whereIn('serviceline_id', $this->userServiceLines);
 
 					})
 
-		->with('author','author.person','serviceline')
+		->with('author','author.person','serviceline','relatedRoles','relatedIndustries')
 		->findOrFail($id);
 
 
-		$servicelines = \App\Serviceline::whereIn('id',$this->news->getUserServiceLines())->pluck('serviceline','id')->toArray();
-		return response()->view('news.edit', compact('news','servicelines'));
+		$servicelines = Serviceline::whereIn('id',$this->userServiceLines)->pluck('serviceline','id')->toArray();
+		return response()->view('news.edit', compact('news','servicelines','verticals'));
 	}
 
 	/**
@@ -141,6 +155,12 @@ class NewsController extends BaseController {
 		if($news->update($data)) {
 			
 			$news->serviceline()->sync($request->get('serviceline'));
+			if($request->has('vertical')){
+				$news->relatedIndustries()->sync($request->get('vertical'));
+			}
+			if($request->has('role')){
+				$news->relatedRoles()->sync($request->get('role'));
+			}
 		}
 		return redirect()->route('news.index');
 	}
@@ -155,7 +175,7 @@ class NewsController extends BaseController {
 	{
 		$this->news->destroy($id);
 
-		return \Redirect::route('news.index');
+		return redirect()->route('news.index');
 	}
 	
 	
@@ -186,8 +206,8 @@ class NewsController extends BaseController {
 	}
 	
 	private function setDates($data){
-        $data['startdate'] = Carbon::createFromFormat('m/d/Y', $data['startdate']);
-        $data['enddate'] = Carbon::createFromFormat('m/d/Y', $data['enddate']);
+        $data['datefrom'] = Carbon::createFromFormat('m/d/Y', $data['datefrom']);
+        $data['dateto'] = Carbon::createFromFormat('m/d/Y', $data['dateto']);
          return$data;
     }
 	

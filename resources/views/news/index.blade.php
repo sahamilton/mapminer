@@ -52,7 +52,7 @@
 				@endif
 				| </span>
 					<span class="glyphicon glyphicon-calendar"></span> <!--Sept 16th, 2012-->
-					{{$post->startdate->format('M jS,Y')}}
+					{{$post->datefrom->format('M jS,Y')}}
 					| <span class="glyphicon glyphicon-comment"></span> 
 					<a href="{{route('news.show', $post->slug)}}#comments"> {{{$post->comments->count()}}}</a>
 

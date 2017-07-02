@@ -23,7 +23,7 @@
 	$now = date('Y-m-d h:i:s');
      foreach($fields as $key=>$field){
 
-	if($item->startdate > $now or $item->enddate < $now) {
+	if($item->datefrom > $now or $item->dateto < $now) {
 		echo "<td class='danger'>";
 	}else{
 		echo "<td class='success'>";

@@ -1,4 +1,4 @@
-@extends('site/layouts/default')
+@extends('admin.layouts.default')
 
 
 @section('content')
@@ -8,24 +8,19 @@
 		display: none;
 	}
 	</style>
-<h1>Create An Update</h1>
-{{Form::open(array('route'=>'news.store'))}}
+<h1>Create A News Item</h1>
+
+<form name="createnews" method="post" action ="{{route('news.store')}}">
+{{csrf_field()}}
 @include('news.partials.newsform')
-{{Form::submit('Create',array('class'=>"btn btn-success"))}}
+<input type="submit" name ="submit" class="btn btn-success" value="Create News Item" />
 </div>
 
-{{Form::close()}}
+</form>
+@include('partials._verticalsscript') 
+@include('partials._scripts')
 
 
-
-
-
-
-
-
-
-<script type="text/javascript" src="{{asset('/assets/js/bootstrap-datepicker.js')}}"></script>
-<link rel="stylesheet" type="text/css" href="{{asset('assets/css/datepicker3.css')}}"/>
 <script>
 
 $('.summernote').summernote({
@@ -47,11 +42,6 @@ $('.summernote').summernote({
   ]
 });
  
-$('#datepicker .input-group.date').datepicker({
-});
-
-$('#datepicker1 .input-group.date').datepicker({
-});
 
 </script>
 

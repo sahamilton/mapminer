@@ -10,22 +10,22 @@
 	</style>
 <h1>Edit Update</h1>
 
-{{Form::open(array('route'=>array('news.update',$news->id)))}}
+
+
+<form name="editnews" method="post" action = "{{route('news.update',$news->id)}}" >
+{{csrf_field()}}
+<input type="hidden" name="_method" value="patch" />
 @include('news.partials.newsform')
-{{Form::submit('Edit',array('class'=>"btn btn-success"))}}
-</div>
+<input type="submit" name ="submit" class="btn btn-success" value="Edit News Item" />
 <input type="hidden" name="id" value={{$news->id}} />
-{{Form::close()}}
+</form>
 
 
+</form>
+@include('partials._verticalsscript') 
+@include('partials._scripts')
 
 
-
-
-
-
-<script type="text/javascript" src="{{asset('/assets/js/bootstrap-datepicker.js')}}"></script>
-<link rel="stylesheet" type="text/css" href="{{asset('assets/css/datepicker3.css')}}"/>
 <script>
 
 $('.summernote').summernote({
@@ -47,11 +47,6 @@ $('.summernote').summernote({
   ]
 });
  
-$('#datepicker .input-group.date').datepicker({
-});
-
-$('#datepicker1 .input-group.date').datepicker({
-});
 
 </script>
 
