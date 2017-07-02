@@ -331,32 +331,6 @@ class LocationsController extends BaseController {
 	}
 	
 	
-	/**
-	 * [locationnotes description]
-	 * @return [type] [description]
-	 */
-	public function locationnotes()
-	{
-		/*$query = "select 
-			companyname, 
-			companies.id as companyid, 
-			locations.id as locationid, 
-			businessname, note, 
-			concat(firstname,' ',lastname) as posted_by, 
-			notes.created_at as dateposted 
-		from companies, locations,notes, users, persons 
-		where notes.location_id = locations.id 
-		and locations.company_id = companies.id 
-		and notes.user_id = users.id 
-		and persons.user_id = users.id 		
-		order by companyname,notes.created_at";
-		$notes = \DB::select(\DB::raw($query));*/
-		$notes = \App\Note::with('relatesTo','relatesTo.company','writtenBy')->get();
-
-		return response()->view('locations.notes',compact('notes'));
-	}	
-	
-	
 	public function bulkImport(LocationImportFormRequest $request) {
 		
 

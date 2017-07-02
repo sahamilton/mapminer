@@ -85,7 +85,7 @@
     					<li class="divider-vertical"></li>
     					<li class="dropdown">
     							<a class="dropdown-toggle" data-toggle="dropdown" href="#">
-    								<span class="glyphicon glyphicon-user"></span> {{{ Auth::user()->firstname }}}	<span class="caret"></span>
+    								<span class="glyphicon glyphicon-user"></span> {{ucfirst(strtolower( Auth::user()->username ))}}	<span class="caret"></span>
     							</a>
     							<ul class="dropdown-menu">
     								<li><a href="{{{ route('profile') }}}">

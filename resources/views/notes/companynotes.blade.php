@@ -8,6 +8,7 @@
     
    
     <th>Location Name</th>
+    <th>Address</th>
     <th>Note</th>
     <th>Posted By</th>
     <th>Date</th>
@@ -24,6 +25,9 @@
         title ="Review all notes at this  location" >
             {{$note->relatesTo->businessname}}
         </a>
+    </td>
+    <td>
+    {{ucfirst(strtolower($note->relatesTo->city))}}, {{strtoupper($note->relatesTo->state)}}
     </td>
     <td>{{$note->note}}</td>
     <td>

@@ -244,7 +244,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 	#Locations
 		
 		Route::post('locations/bulkimport', ['as'=>'locations.import', 'uses'=>'LocationsController@bulkImport']);
-		Route::get('locationnotes',['as'=>'locations.notes', 'uses'=>'LocationsController@locationnotes']);
 		Route::get('api/geocode',['as'=>'api.geocode','uses'=>'LocationsController@bulkGeoCodeLocations']);
 		Route::get('locations/{companyID}/create',['as'=>'company.location.create','uses'=>'LocationsController@create']);
 		Route::resource('locations','LocationsController',['except'=>['show']]);
@@ -309,6 +308,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 	#Salesnotes
 		Route::get('salesnotes/filedelete/{file}', ['as'=>'salesnotes.filedelete', 'uses'=>'SalesNotesController@filedelete']);
 		Route::get('salesnotes/create/{companyId}',['as'=>'salesnotes.cocreate','uses'=>'SalesNotesController@createSalesNotes']);
+		
 		Route::resource('salesnotes','SalesNotesController');
 				
 		
@@ -346,9 +346,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 		
 		Route::post('news/{newsId}', ['as'=>'admin.news.update', 'uses'=>'NewsController@update']);
 	
-	#NoOtes
+	#Notes
 		Route::get('notes/{companyid}/co',['as'=>'notes.company','uses'=>'NotesController@companynotes']);
-
+		Route::get('locationnotes',['as'=>'locations.notes', 'uses'=>'NotesController@index']);
 		Route::resource('notes','NotesController');
 
 
