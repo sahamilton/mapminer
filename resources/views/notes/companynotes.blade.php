@@ -1,4 +1,4 @@
-@extends('site.layouts.default')
+@extends('admin.layouts.default')
 @section('content')
 <div>
 <h1>All {{$company->companyname}} Location Notes</h1>
@@ -27,7 +27,7 @@
         </a>
     </td>
     <td>
-    {{ucfirst(strtolower($note->relatesTo->city))}}, {{strtoupper($note->relatesTo->state)}}
+    {{ucwords(strtolower($note->relatesTo->city))}}, {{strtoupper($note->relatesTo->state)}}
     </td>
     <td>{{$note->note}}</td>
     <td>

@@ -445,8 +445,8 @@ class PersonsController extends BaseController {
 		Excel::create($company->companyname . ' Notes',function($excel) use ($companyID){
 			$excel->sheet('Notes',function($sheet) use ($companyID) {
 				$notes = $this->getManagerNotes($companyID);
-				$fields =['companyid','companyname','locationid','businessname','date','note','userid','person'];
-				$sheet->loadview('persons.exportnotes',compact('notes','fields'));
+				
+				$sheet->loadview('persons.exportnotes',compact('notes'));
 			});
 		})->download('csv');
 
@@ -464,8 +464,7 @@ class PersonsController extends BaseController {
 	{
 		$this->checkManager($companyID);
 		$notes = $this->getManagerNotes($companyID);
-		
-		$data['title'] = $notes[0]->companyname . ' Location Notes';
+		$data['title'] = $notes[0]->relatesTo->company->companyname . ' Location Notes';
 		
 		return response()->view('persons.managernotes', compact('data','notes','companyID'));
 		
@@ -498,7 +497,15 @@ class PersonsController extends BaseController {
 	 */
 	private function getManagerNotes($companyID)
 	{
-			$query = "select note,notes.created_at as date, businessname,locations.id as locationid, 
+			// refactor
+		return \App\Note::with('relatesTo','relatesTo.company','writtenBy')
+		->whereHas('relatesTo',function($q) use($companyID){
+			$q->where('company_id','=',$companyID);
+		})
+		
+		->get();
+
+			/*$query = "select note,notes.created_at as date, businessname,locations.id as locationid, 
 					concat(firstname,' ',lastname) as person, users.id as userid, companyname,companies.id as companyid 
 					from notes,locations,companies,persons,users 
 					where notes.location_id = locations.id 
@@ -519,7 +526,7 @@ class PersonsController extends BaseController {
 			$query.= " order by businessname";
 	
 		$notes = \DB::select(\DB::raw($query));
-		return $notes;	
+		return $notes;	*/
 	}
 	
 	/**

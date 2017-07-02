@@ -1,45 +1,37 @@
+
+
 <table>
  <tbody>
      <tr>
-     @foreach($fields as $title=>$field)
-    <td>
-    {{$field}}
-    </td>
-    @endforeach
-       
+     <td>companyid</td>
+     <td>companyname</td>
+     <td>locationid</td>
+     <td>businessname</td>
+     <td>date</td>
+     <td>note</td>
+
+     <td>person</td>
+    
     </tr>
  
    @foreach($notes as $note)
     <tr>  
-	<?php reset($fields);?>
-   
-    @foreach($fields as $key=>$field)
-    <td>
-    <?php 
 	
-	switch ($key) {
-		case 'Location Name':
-			
-			echo $note->$field."</a>";
-		
-		
-		break;
-		
-		
-		case 'Posted':
-			
-			echo date('d/m/Y',strtotime($note->$field));
-		break;
-			
-		
-		default:
-			echo $note->$field;
-		break;
-		
-	};?>
-	</td>
+    <td>{{$note->relatesTo->company_id}}</td>
+    <td>{{$note->relatesTo->company->companyname}}</td>
+    <td>{{$note->location_id}}</td>
+    <td>{{$note->relatesTo->businessname}}</td>
+    <td>{{$note->created_at}}</td>
+    <td>{{$note->note}}</td>
 
-    @endforeach
+    <td>
+    @if(isset($note->writtenBy))
+
+    {{$note->writtenBy->fullname()}}
+    @else
+    No longer in system
+     @endif
+     </td>
     </tr>
    @endforeach
     

@@ -20,12 +20,15 @@ class User extends Authenticatable
      */
 
     public $dates=['lastlogin','created_at','updated_at'];
+
 	 public function person()
 	 {
 		  return $this->hasOne(Person::class,'user_id')->orderBy('lastname','firstname');
 	 }
 	 
-	 
+	 public function fullName(){
+	 	return $this->person->postName();
+	 }
 	 public function usage()
 	 {
 		  return $this->hasOne(Track::class,'user_id');
