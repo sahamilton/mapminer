@@ -28,16 +28,13 @@ class NewsController extends BaseController {
 	public function index()
 	{
 		
-		
 		$news = $this->news
 		->whereHas('serviceline', function($q) {
 			$q->whereIn('serviceline_id', $this->userServiceLines);
 
 		})
-
 		->with('author','author.person','serviceline','comments')
 		->orderBy('datefrom', 'DESC')->get();
-
 		return response()->view('news.index', compact('news'));
 	}
 
@@ -105,15 +102,11 @@ class NewsController extends BaseController {
 	public function show($slug)
 	{
 		
-		$news = $this->news
-		->where('slug','=',$slug)
-		->whereHas('serviceline', function($q) {
-					    $q->whereIn('serviceline_id', $this->userServiceLines);
-
-					})
-
-		->with('author','author.person','comments','comments.postedBy.person')->firstOrFail();
-
+		$news = $this->news->currentNews($slug);
+		
+		if(! $news){
+			return redirect()->route('currentnews')->with('message',"No news found");
+		}
 		return response()->view('news.show', compact('news'));
 	}
 

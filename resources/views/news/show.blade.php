@@ -5,7 +5,7 @@
 
 <div class='col-md-8'>
 <h3>{{ $news->title }}</h3>
-<p><a href="{{route('news.index')}}">Return to all news</a></p>
+<p><a href="{{route('currentnews')}}">Return to all news</a></p>
 @if(auth()->user()->hasRole('Admin'))
 <div class="pull-right">
 <a href="{{route('news.edit',$news->id)}}">

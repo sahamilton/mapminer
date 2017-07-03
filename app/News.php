@@ -32,7 +32,7 @@ class News extends Model {
 		return $this->belongsToMany(SearchFilter::class,'news_searchfilter','news_id','searchfilter_id');
 	}
 
-	public function currentNews(){
+	public function currentNews($slug =  null){
 		$nonews = auth()->user()->nonews;
 		$now = Carbon::now('America/Vancouver')->toDateTimeString();
 		if(! isset($nonews)){
@@ -40,7 +40,7 @@ class News extends Model {
 				 
 		}
 
-		return $this->where('datefrom','>=',$nonews)
+		$news = $this->where('datefrom','>=',$nonews)
 			->where('dateto','>=',$now)
 			->whereHas('serviceline', function($q) {
 					    $q->whereIn('serviceline_id', $this->getUserServiceLines());
@@ -61,10 +61,17 @@ class News extends Model {
 				->orWhere(function ($q){
 					$q->doesntHave('relatedRoles');
 				});
-			})
-			->get();
+			});
+			if($slug){
+				
+				return $news->where('slug','=',$slug)->first();
+			}else{
+				return $news->get();
+			}
+			
 			
 
 
 	}
+	
 }

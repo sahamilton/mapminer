@@ -4,9 +4,11 @@ use App\Watch;
 use App\Branch;
 use App\Company;
 use App\User;
+use Excel;
 use App\Location;
 use App\SearchFilter;
 use App\Serviceline;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use App\Http\Requests\LocationFormRequest;
 use App\Http\Requests\LocationImportFormRequest;
@@ -118,19 +120,7 @@ class LocationsController extends BaseController {
 		return response()->view('locations.show', compact('location','branch','watch'));
 	}
 	
-	/*private function getCompanyServiceLines($location){
-
-		foreach($location->company->serviceline as $serviceline){
-
-			$servicelines[]=$serviceline->id;
-		}
-		$this->companyServicelines = implode("','",$servicelines);
-		
-	}*/
-
-
-
-
+	
 
 	public function summaryLocations($id)
 	{
@@ -232,20 +222,7 @@ class LocationsController extends BaseController {
 
 		
 	}
-/*
-	public function showLocationsNearbyBranches(Request $request,$id)
-	{	
-		if ($request->has('d')) {
-			$this->distance = $request->get('d');
-		}
-		$data['location'] = $this->location->with('company','company.serviceline')->findOrFail($id);
-		//$this->getCompanyServiceLines();
-		$branches= $this->findBranch(5,$data['location']);
-		echo $this->branch->makeNearbyBranchXML($branches);
 
-	}
-
-*/
 	public function getClosestBranchMap($id,$n=5)
 	{
 		
@@ -336,78 +313,33 @@ class LocationsController extends BaseController {
 
 		if($request->has('segment'))
 		{
-			$request->get('segment');
+			$data['segment'] = $request->get('segment');
 		}else{
-			$segment = NULL;
+			$data['segment'] = NULL;
 		}	
-		
-		$company_id = $request->get('company');
+		$data['company_id'] = $request->get('company');
+		$file = $request->file('upload')->store('public/uploads');  
+		$data['location'] = asset(Storage::url($file));
+        $data['basepath'] = base_path()."/public".Storage::url($file);
+        // read first line headers of import file
+        $locations = Excel::load($data['basepath'],function($reader){
+           
+        })->first();
 
-		
-		// Make sure its a CSV file
-		$file = $request->file('upload');
-		
-		// Rename and Move file to correct server location  
-		$name = $file->getClientOriginalName();
-		$newname = time() . '-' . $name;
-		$path = \Config::get('app.mysql_data_loc');
-		
-		
-		// Moves file to  mysql data folder on server
-		$file->move($path, $newname);
-		
-		
-		// Make sure that the file data is correct
-		$filename =  $path.$newname; 
+    	if( $this->location->fillable !== array_keys($locations->toArray())){
 
-		$data = $this->location->checkImportFileStructure($filename);
-		
-		$fields = implode(",",$data);
+    		return redirect()->back()
+    		->withInput($request->all())
+    		->withErrors(['Invalid file format.  Check the fields:', array_diff($this->location->fillable,array_keys($locations->toArray())), array_diff(array_keys($locations->toArray()),$this->location->fillable)]);
+    	}
 
-
-		if($data !== $this->location->fillable){
-
-			return redirect()->back()->withErrors(['Invalid file format.  Check the fields:<br />', array_diff($this->location->fillable,$data)]);
-		}
-		$table ='locations';
-		
-		$temptable = $table .'_import';		
-		
-		$this->executeQuery("CREATE TEMPORARY TABLE ".$temptable." AS SELECT * FROM ". $table." LIMIT 0");
-				
-		
-		$data = $this->location->_import_csv($filename,$temptable,$fields);
-		// make sure we bring the created at field across
-		$fields.=",created_at";
-		$now = date("Y-m-d H:m:s");
-		$this->executeQuery("update ".$temptable." set company_id ='".$company_id."', created_at ='".$now."'");
-		
-		
-		$this->executeQuery("update ".$temptable." set company_id ='".$company_id."'");
-		
-		
-		if (isset($segment)){
-			$this->executeQuery("update ".$temptable." set segment ='".$segment."'");
-		}
-		
-		
-		
-		$this->executeQuery("INSERT INTO `locations` (".$fields.") SELECT ".$fields." FROM `".$temptable."`");
-		// seems that when copying temp table null values get changed to 0
-		$this->executeQuery("UPDATE `locations` set segment = NULL where segment = 0");
-		$this->executeQuery("UPDATE `locations` set businesstype = NULL where businesstype = 0");
-		
-		$this->executeQuery("DROP TABLE ".$temptable);
-		
-
-		return redirect()->to('/company/'.$company_id);
+		$data['table'] ='locations';
+		$data['fields'] = implode(",",array_keys($locations->toArray()));
+		$this->location->importQuery($data);
+		return redirect()->route('company.show',$data['company_id']);
 	}
 	
-	private function executeQuery($query)
-	{
-		
-		$results = \DB::statement($query);
-	}
+	
 	
 	public function bulkGeoCodeLocations()
 	{

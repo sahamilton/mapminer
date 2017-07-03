@@ -195,53 +195,7 @@ class Location extends Model {
             ->header('Content-Type', 'text/xml');
 		
 	}
-	/*
-	public function makeNearbyLocationsXMLObject($result) {
-		
 
-		if (App::environment() == 'local'){
-			/*\Debugbar::disable();
-		}
-		$dom = new \DOMDocument("1.0");
-		$node = $dom->createElement("markers");
-		$parnode = $dom->appendChild($node);
-		
-		foreach($result as $row){
-
-			
-		  // ADD TO XML DOCUMENT NODE
-			$node = $dom->createElement("marker");
-			$newnode = $parnode->appendChild($node);
-			$newnode->setAttribute("locationweb",route('location.show' , $row->id) );
-			$newnode->setAttribute("name",trim($row->businessname));
-			$newnode->setAttribute("account",trim($row->companyname));
-			$newnode->setAttribute("accountweb",route('company.show' , $row->company_id,array('title'=>'see all locations') ));
-			$newnode->setAttribute("address", $row->street." ". $row->city." ". $row->state);
-			$newnode->setAttribute("lat", $row->lat);
-			$newnode->setAttribute("lng", $row->lng);
-			$newnode->setAttribute("id", $row->id);	
-			
-		}
-		return $dom->saveXML();
-	}
-*/
-
-	/*
-		 * Calculate the distance between two lat/ lng pairs
-			Definitions:                                                           
-			South latitudes are negative, east longitudes are positive           
-		
-		 * @param  integer $lat1 Origin Latitude (in decimal degrees)  
-		 * @param  integer $lon1 Origin Longitude (in decimal degrees)  
-		 * @param  integer $lat2 Destination Latitude (in decimal degrees)  
-		 * @param  integer $lon2 Destination Longitude (in decimal degrees)  
-		 * @param  alpha   $unit the unit you desire for results 
-		 *                        where: 'blank' is statute miles                                  
-					                  'K' is kilometers (default)                          
-					                  'N' is nautical miles   
-		 * @return integer       Distance
-		 *
-	*/	
 	public function distanceBetween($lat1, $lon1, $lat2, $lon2, $unit) {
 		
 		$theta = $lon1 - $lon2;
@@ -293,5 +247,38 @@ class Location extends Model {
 			
 			return $searchKeys;	
 	}
-	
+	public function importQuery($data){
+		$data['temptable'] = $data['table'] .'_import';	
+		$this->executeQuery("CREATE TEMPORARY TABLE ".$data['temptable']." AS SELECT * FROM ". $data['table']." LIMIT 0");
+				
+		
+		$data['import'] = $this->_import_csv($data['basepath'],$data['temptable'],$data['fields']);
+		// make sure we bring the created at field across
+		$data['fields'].=",created_at";
+		
+		$this->executeQuery("update ".$data['temptable']." set company_id ='".$data['company_id']."', created_at ='".date("Y-m-d H:m:s")."'");
+		
+		
+		$this->executeQuery("update ".$data['temptable']." set company_id ='".$data['company_id']."'");
+		
+		
+		if (isset($data['segment'])){
+			$this->executeQuery("update ".$data['temptable']." set segment ='".$data['segment']."'");
+		}
+		
+		
+		
+		$this->executeQuery("INSERT INTO `".$data['table']."` (".$data['fields'].") SELECT ".$data['fields']." FROM `".$data['temptable']."`");
+		// seems that when copying temp table null values get changed to 0
+		$this->executeQuery("UPDATE `".$data['table']."` set segment = NULL where segment = 0");
+		$this->executeQuery("UPDATE `".$data['table']."` set businesstype = NULL where businesstype = 0");
+		
+		$this->executeQuery("DROP TABLE ".$data['temptable']);
+	}
+
+	private function executeQuery($query)
+	{
+		
+		$results = \DB::statement($query);
+	}
 }

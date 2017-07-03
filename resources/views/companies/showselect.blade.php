@@ -31,7 +31,9 @@ $data['companyname']=$company->companyname;
 @if (Auth::user()->hasRole('Admin'))
 
 <div class="pull-right" style="margin-bottom:20px">
-				<a href="{{route('locations.create,$account) }}}" title="Create a new {{$company->companyname}} location" class="btn btn-small btn-info iframe"><span class="glyphicon glyphicon-plus-sign"></span> Create New Location</a>
+				<a href="{{route('locations.create',$account) }}}" title="Create a new {{$company->companyname}} location" class="btn btn-small btn-info iframe">
+				<span class="glyphicon glyphicon-plus-sign"></span>
+				 Create New Location</a>
 			</div>
            @endif
          

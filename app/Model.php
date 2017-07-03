@@ -43,11 +43,9 @@ public function _import_csv($filename, $table,$fields)
 
 	$query = sprintf("LOAD DATA INFILE '".$filename."' INTO TABLE ". $table." FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '\"' ESCAPED BY '\"' LINES TERMINATED BY '\\n'  IGNORE 1 LINES (".$fields.");", $filename);
 	
-	echo $query ."<br />";
 	
 	try {
-		$result = \DB::connection()->getpdo()->exec($query);
-		return $result;
+		return  \DB::connection()->getpdo()->exec($query);
 	}
 	catch (Exception $e)
 		{
