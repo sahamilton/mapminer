@@ -73,7 +73,9 @@
                <div class="input-group input-group-lg ">
             <select multiple class="form-control" name='serviceline[]'>
             @foreach ($servicelines as $key=>$serviceline)
-                @if(isset($news) && in_array($key,$news->serviceline->pluck('id')->toArray()))
+                @if((isset($news) && $news->serviceline->contains($key))
+                or (is_array(old('serviceline')) && in_array($key,old('serviceline'))))
+                or (is_array(old('serviceline')) &&! isset($news)))
             	<option selected value="{{$key}}">{{$serviceline}}</option>
                 @else
                 <option value="{{$key}}">{{$serviceline}}</option>

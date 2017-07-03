@@ -11,9 +11,9 @@
 |
 */
 	Route::get('/', ['as'=>'welcome',function () {
-		$newstand = new \App\News;
-		$news = $newstand->currentNews();
-	    return view('welcome',compact('news'));
+		
+		    return view('welcome',compact('news'));
+		
 	}]);
 
 //Route::auth();  
