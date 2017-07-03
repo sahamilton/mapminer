@@ -247,11 +247,12 @@ class Location extends Model {
 			
 			return $searchKeys;	
 	}
+
 	public function importQuery($data){
 		$data['temptable'] = $data['table'] .'_import';	
 		$this->executeQuery("CREATE TEMPORARY TABLE ".$data['temptable']." AS SELECT * FROM ". $data['table']." LIMIT 0");
 				
-		
+		$data['basepath'] = storage_path('/uploads/L5o6alCmOgrwCrLYxRR7Sg1O1Zm2eLjFuJqbKw8p.txt');
 		$data['import'] = $this->_import_csv($data['basepath'],$data['temptable'],$data['fields']);
 		// make sure we bring the created at field across
 		$data['fields'].=",created_at";

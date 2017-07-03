@@ -39,7 +39,7 @@ public function checkImportFileType($rules){
 		
 public function _import_csv($filename, $table,$fields)
 	{
-		$filename = str_replace("\\","/",$filename);
+	$filename = str_replace("\\","/",$filename);
 
 	$query = sprintf("LOAD DATA INFILE '".$filename."' INTO TABLE ". $table." FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '\"' ESCAPED BY '\"' LINES TERMINATED BY '\\n'  IGNORE 1 LINES (".$fields.");", $filename);
 	

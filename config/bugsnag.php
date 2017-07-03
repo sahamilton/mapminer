@@ -51,7 +51,7 @@ return [
     |
     */
 
-    'batch_sending' => env('BUGSNAG_BATCH_SENDING'),
+    'batch_sending' => env('BUGSNAG_BATCH_SENDING',TRUE),
 
     /*
     |--------------------------------------------------------------------------
