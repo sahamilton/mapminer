@@ -27,10 +27,7 @@ class GeoCodingController extends BaseController {
 	 */
 	public function findMe(FindMeFormRequest $request) {
 	
-		$data = $request->all();
-		
-				
-		//$data['address'] = NULL;
+
 		if($request->has('address')) {
 			$address = urlencode($request->get('address'));
 			
@@ -43,15 +40,13 @@ class GeoCodingController extends BaseController {
 				return redirect()->back()->withInput()->with('message', 'Unable to Geocode that address');
 			}
 			
-			$data = $this->location->getGeoCode($geocode);
+				$request->merge($this->location->getGeoCode($geocode));
 			
-			
-
-			
+		
 		}
-
+		$data = $request->all();
 		$data['latlng'] = $data['lat'].":".$data['lng'];
-
+		
 		\Session::put('geo', $data);
 
 		$watchlist = array();
