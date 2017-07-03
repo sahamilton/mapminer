@@ -3,7 +3,8 @@ namespace App;
 
 class Location extends Model {
 	
-
+	use Geocode;
+	
 	// Add your validation rules here
 	public static $rules = [
 		'businessname' => 'required',
