@@ -90,6 +90,7 @@ $(document).ready(function()
 			dataType: "json",
 			success:function(response){
 				$("#segment").empty();
+                $("<option/>",{'','No Segment Data'}).appendTo("#segment");
 			$.each( response, function( index, item ) {
            		$("<option/>",{value:index,text:item}).appendTo("#segment");
 

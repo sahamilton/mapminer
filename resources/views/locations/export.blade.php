@@ -2,10 +2,7 @@
 @section('content')
 <div class="container">
 	<h2>Export locations for a national account</h2>
-	<ol>
-	<li>Select the company that locations belong to from the list</li>
-
-	</ol>
+	
 	<form method="post" name="exportlocations" action ="{{route('companies.export')}}" >
 	{{csrf_field()}}
 		<div class="form-group{{ $errors->has('company)') ? ' has-error' : '' }}">
@@ -23,7 +20,8 @@
 			</div>
 
 	
-
+			</div>
+	<div class="form-group" >
 		<input type="submit" class="btn btn-success" name="submit" value="Export Locations">
 	</div>
 	</form>
