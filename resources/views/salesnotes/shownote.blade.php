@@ -12,7 +12,7 @@
 </div>
 
 @endif
-<p><a href ="{{{ route('salesnotes/print/',$company->id) }}}" target = "_blank"  ><img src="{{asset('assets/images/printer.jpg')}}">Printable view</a></p>
+<p><a href ="{{{ route('salesnotes.print',$company->id) }}}" target = "_blank"  ><img src="{{asset('assets/images/printer.jpg')}}">Printable view</a></p>
 <?php
 	$attachmentsPath ='documents/attachments/'.$company->id."/";
 	$dirs = array('howtowork','compliance');

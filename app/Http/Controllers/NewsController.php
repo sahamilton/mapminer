@@ -28,7 +28,7 @@ class NewsController extends BaseController {
 	public function index()
 	{
 		
-		$now = date('Y-m-d h:i:s');
+		
 		$news = $this->news
 		->whereHas('serviceline', function($q) {
 			$q->whereIn('serviceline_id', $this->userServiceLines);

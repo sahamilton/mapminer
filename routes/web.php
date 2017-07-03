@@ -12,7 +12,7 @@
 */
 	Route::get('/', ['as'=>'welcome',function () {
 		
-		    return view('welcome',compact('news'));
+		    return view('welcome');
 		
 	}]);
 
@@ -70,7 +70,7 @@ Route::group(['middleware' => 'auth'], function () {
 	#News
 		//Route::resource('news', 'NewsController',  ['only' => ['index', 'show')));
 		Route::get('currentnews',['as'=>'currentnews','uses'=>'NewsController@currentNews']);
-		Route::get('news', ['as'=>'news.index', 'uses'=>'NewsController@index']);
+		//Route::get('news', ['as'=>'news.index', 'uses'=>'NewsController@index']);
 		Route::get('news/{slug}', ['as'=>'news.show', 'uses'=>'NewsController@show']);		
 			
 		
@@ -139,7 +139,7 @@ Route::group(['middleware' => 'auth'], function () {
 		
 	# Sales Notes
 		Route::get('salesnotes/{companyId}',['as'=>'salesnotes','uses'=>'SalesNotesController@show']);
-		Route::get('salesnotes/print/{companyId}',['as'=>'salesnotes/print','uses'=>'SalesNotesController@printSalesNotes']);
+		Route::get('salesnotes/print/{companyId}',['as'=>'salesnotes.print','uses'=>'SalesNotesController@printSalesNotes']);
 
 	
 	
@@ -345,9 +345,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 	
 	#News
 		Route::resource('news', 'NewsController');
-		Route::get('news',['uses'=>'NewsController@admin']);
 		
-		Route::post('news/{newsId}', ['as'=>'admin.news.update', 'uses'=>'NewsController@update']);
 	
 	#Notes
 		Route::get('notes/{companyid}/co',['as'=>'notes.company','uses'=>'NotesController@companynotes']);
