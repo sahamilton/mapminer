@@ -137,7 +137,7 @@ class LeadsController extends BaseController
        $geoCode = app('geocoder')->geocode($this->getAddress($request))->get();
        $lead->update($this->lead->getGeoCode($geoCode));
        $lead->vertical()->sync($request->get('vertical'));
-        return redirect()->route('leads.index');
+       return redirect()->route('leads.index');
     }
 
     /**
@@ -218,25 +218,21 @@ class LeadsController extends BaseController
 
 
     public function find(LeadAddressFormRequest $request){
-            $data = $request->all();
-           
-    		$geoCode = app('geocoder')->geocode($request->get('address'))->get();
-	           
-			if(! $geoCode)
-			{
-				dd('bummer');
-				
-			}else{
-                $locationdata = $this->lead->getGeoCode($geoCode);
+      $geoCode = app('geocoder')->geocode($request->get('address'))->get();
+  
+      if(! $geoCode)
+      {
+        return redirect()->back()->withInput()->with('message', 'Unable to Geocode that address');
 
-                $data['lat']= $locationdata['lat'];
-                $data['lng']= $locationdata['lng'];
-            }
+      }else{
+        $request->merge($this->lead->getGeoCode($geoCode));
+      }
 
-            $people = $this->findNearBy($data);
-            $people = $this->getIndustryAssociation($people);
+      $data = $request->all();
+      $people = $this->findNearBy($data);
+      $people = $this->getIndustryAssociation($people);
 
-			return response()->view('leads.address',compact('people','data'));
+      return response()->view('leads.address',compact('people','data'));
 			
     }
     
