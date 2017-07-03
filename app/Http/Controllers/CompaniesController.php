@@ -673,12 +673,13 @@ class CompaniesController extends BaseController {
 	
 	
 	public function export(){
-		$companies = 	$this->company
+		$companies = $this->company
 						->whereHas('serviceline', function($q){
 							    $q->whereIn('serviceline_id', $this->userServiceLines);
 
 							})
 						->orderBy('companyname')->pluck('companyname','id');
+
 		return response()->view('locations.export',compact('companies'));
 	}
 	
