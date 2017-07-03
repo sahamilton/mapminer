@@ -330,7 +330,7 @@ class LocationsController extends BaseController {
 
     		return redirect()->back()
     		->withInput($request->all())
-    		->withErrors(['Invalid file format.  Check the fields:', array_diff($this->location->fillable,array_keys($locations->toArray())), array_diff(array_keys($locations->toArray()),$this->location->fillable)]);
+    		->withErrors(['upload'=>['Invalid file format.  Check the fields:', array_diff($this->location->fillable,array_keys($locations->toArray())), array_diff(array_keys($locations->toArray()),$this->location->fillable)]]);
     	}
 
 		$data['table'] ='locations';

@@ -208,8 +208,8 @@ class SearchFiltersController extends BaseController {
 	
 	public function getAccountSegments(Request $request)
 	{
-		$company = $request->all();
-		$vertical = \App\Company::where('id','=',$company['id'])->pluck('vertical');
+		$vertical = \App\Company::where('id','=',$request->get('id'))->pluck('vertical');
+		
 		$segments = $this->filter->where('parent_id','=',$vertical)->orderBy('filter')->pluck('filter','id');
 
 		//$i=0;

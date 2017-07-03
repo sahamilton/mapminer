@@ -5,6 +5,7 @@ use App\State;
 use App\Person;
 use App\Company;
 use App\Location;
+use Excel;
 use App\Pagination;
 use App\SearchFilter;
 use App\Serviceline;
