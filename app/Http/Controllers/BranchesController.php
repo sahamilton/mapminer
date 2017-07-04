@@ -450,38 +450,28 @@ class BranchesController extends BaseController {
 
 	 
 	public function branchImport(BranchImportFormRequest $request) {
-
-
-		
 	
-		$file = $request->file('upload');
-		$name = time() . '-' . $file->getClientOriginalName();
 
+		$file = $request->file('upload')->store('public/uploads');  
+		$data['branches'] = asset(Storage::url($file));
+        $data['basepath'] = base_path()."/public".Storage::url($file);
+        // read first line headers of import file
+        $branches = Excel::load($data['basepath'],function($reader){
+           
+        })->first();
 
-		//$path = storage_path() .'/uploads/';
-		$path = Config::get('app.mysql_data_loc');
-		// Moves file to  mysql data folder on server
-		$file->move($path, $name);
-		$filename = $path . $name;	
-		
-		
-		// map the file to the fields
-		$file = fopen($filename, 'r');
+    	if( $this->branch->fillable !== array_keys($branches->toArray())){
 
-		$data = fgetcsv($file);
-		$fields = implode(",",$data);
+    		return redirect()->back()
+    		->withInput($request->all())
+    		->withErrors(['upload'=>['Invalid file format.  Check the fields:', array_diff($this->branch->fillable,array_keys($branches->toArray())), array_diff(array_keys($branches->toArray()),$this->branch->fillable)]]);
+    	}
 
-		if($data !== $this->branch->fillable){
-			var_dump($data);
-			var_dump($this->branch->fillable);
-			dd(array_diff($this->branch->fillable,$data));
-			return redirect()->back()->withErrors(['Invalid file format.  Check the fields' . $fields]);
-		}
-		
-		
+		$data['table'] ='branches';
+		$data['fields'] = implode(",",array_keys($branches->toArray()));
+		$this->branch->importQuery($data);
+		return redirect()->route('branches.index');
 
-		$table ='branches';
-		$temptable = $table .'import';	
 		
 		$fields.=",created_at";
 		$aliasfields = "p." . str_replace(",",",p.",$fields);
