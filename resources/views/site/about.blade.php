@@ -4,9 +4,9 @@
 <h2>About Mapminer</h2>
 <p><strong>Environment: </strong>
 {{App::environment()}} </p>
-<p><strong>Laravel Version:</strong> <?php  $laravel = app(); echo $laravel::VERSION;?></p>
-<p><strong>Mapminer Version:</strong> v 2.5 </p>
-<p><strong>PHP Version</strong>{{ phpversion()}} </p> 
+<p><strong>Laravel Version:</strong>  {{App::version()}}</p>
+<p><strong>Mapminer Version:</strong> {{config('app.version')}} </p>
+<p><strong>PHP Version:</strong> {{ phpversion()}} </p> 
 <p><strong>Server Address:</strong>
 {{$_SERVER['SERVER_ADDR']}}</p>
 <p><strong>Server Name:</strong> {{gethostname()}}</p>
