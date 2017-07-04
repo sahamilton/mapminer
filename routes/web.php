@@ -258,7 +258,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 		Route::get('companies/download', ['as'=>'companies.download','uses'=>'CompaniesController@exportAccounts']);
 		Route::get('company/{companyId}/export',['as'=>'company.export','uses'=>'WatchController@companyexport']);
 		Route::post('company/filter',['as'=>'company.filter','uses'=>'CompaniesController@filter']);
-		Route::resource('company','CompaniesController');
+		Route::resource('company','CompaniesController',['except' => ['index', 'show']]);
 	
 	#Branches
 		Route::get('branches/import', ['as'=>'branches.import', 'uses'=>'BranchesController@import']);
