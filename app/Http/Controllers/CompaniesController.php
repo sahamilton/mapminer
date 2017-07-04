@@ -28,9 +28,6 @@ class CompaniesController extends BaseController {
 		$this->user = $user;
 		$this->person = $person;
 		parent::__construct($this->company);
-
-		
-
 	}
 	
 	
