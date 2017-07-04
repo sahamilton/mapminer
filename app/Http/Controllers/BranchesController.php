@@ -471,7 +471,8 @@ class BranchesController extends BaseController {
 		$data['fields'] = implode(",",array_keys($branches->toArray()));
 		$this->branch->importQuery($data);
 		return redirect()->route('branches.index');
-
+// old method
+		/*
 		
 		$fields.=",created_at";
 		$aliasfields = "p." . str_replace(",",",p.",$fields);
@@ -571,7 +572,7 @@ class BranchesController extends BaseController {
 		$this->branch->rawQuery($query,$error,$type);
 		redirect()->to(route('branches.index'));
 			
-		
+		*/
 		
 	}
 	public function export() 
