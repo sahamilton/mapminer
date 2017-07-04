@@ -9,6 +9,7 @@
 <p><strong>PHP Version</strong>{{ phpversion()}} </p> 
 <p><strong>Server Address:</strong>
 {{$_SERVER['SERVER_ADDR']}}</p>
+<p><strong>Server Name:</strong> {{gethostname()}}</p>
 
 
 </div>
