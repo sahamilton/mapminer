@@ -289,35 +289,25 @@ class PersonsController extends BaseController {
 	 */
 	public function processimport(PersonUploadFormRequest $request) {
 				
-		$file = $request->file('upload');
-		$name = time() . '-' . $file->getClientOriginalName();
+		
+		$file = $request->file('upload')->store('public/uploads');  
+		$data['people'] = asset(Storage::url($file));
+        $data['basepath'] = base_path()."/public".Storage::url($file);
+        // read first line headers of import file
+        $people = Excel::load($data['basepath'],function(){
+           
+        })->first();
 
-		$path = Config::get('app.mysql_data_loc');
+    	if( $this->persons->fillable !== array_keys($people->toArray())){
 
-		// Moves file to  mysql data folder on server
-		$file->move($path, $name);
-		$filename = $path . $name;	
+    		return redirect()->back()
+    		->withInput($request->all())
+    		->withErrors(['upload'=>['Invalid file format.  Check the fields:', array_diff($this->persons->fillable,array_keys($people->toArray())), array_diff(array_keys($people->toArray()),$this->persons->fillable)]]);
+    	}
 		
-		
-		// map the file to the fields
-		$file = fopen($filename, 'r');
-
-		$data = fgetcsv($file);
-		$fields = implode(",",$data);
-		if($data !== $this->persons->fillable){
-			
-			return redirect()->back()->withErrors(['Invalid file format.  Check the fields'.$fields]);
-		}
-	
-		
-		// check for duplicates
-		
-		// import
-		$data = $this->persons->_import_csv($name,'persons',$fields);
-		$persons = $this->persons->all();
-		
-
-		return response()->view('persons.index', compact('persons'));
+		$fields = implode(",",array_keys($people->toArray()));
+		$data = $this->persons->_import_csv($data['basepath'],'persons',$fields);
+		return redirect()->route('persons.index');
 	}
 	
 	/**

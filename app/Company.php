@@ -29,7 +29,7 @@ class Company extends Model {
 
 	{
 
-		return $this->hasMany(Location::class)->selectRaw('company_id,count(*) as count')->groupBy('company_id');
+		return $this->hasMany(Location::class)->selectRaw('company_id,count(*) as count')->groupBy('company_id')->first();
 
 	}
 
