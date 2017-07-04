@@ -6,12 +6,15 @@
 			<td>Vertical</td>
 			<td>Managed By</td>
 		</tr>
-		@foreach($result as $company)
+		@foreach($companies as $company)
+
 			<tr>  
-				<td>{{$company->companyid}}</td>
+				<td>{{$company->id}}</td>
 				<td>{{$company->companyname}}</td>
 				<td>{{$company->industryVertical->filter}}</td>
-				<td>{{$company->managedBy->firstname . " " . $company->managedBy->lastname}}
+				<td>@if($company->managedBy)
+					{{$company->managedBy->postName()}}
+					@endif
 				</td>
 			</tr>
 		@endforeach

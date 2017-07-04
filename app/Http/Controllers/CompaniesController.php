@@ -659,12 +659,13 @@ class CompaniesController extends BaseController {
 		Excel::create('AllCompanies',function($excel){
 			$excel->sheet('Companies',function($sheet) {
 				$companies = $this->company
-				->with(['industryVertical','managedBy'])
+				->with('industryVertical','managedBy')
 				->whereHas('serviceline', function($q){
 							    $q->whereIn('serviceline_id', $this->userServiceLines);
 
 							})
 				->get();
+		
 				$sheet->loadview('companies.exportcompanies',compact('companies'));
 			});
 		})->download('csv');
