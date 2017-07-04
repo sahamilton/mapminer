@@ -40,17 +40,11 @@
  @if(! $loop->last) | @endif
 @endforeach
 </p>
-<p>
-@can('manage_accounts')
-Can manage accounts
-@else
-Cannot manage accounts
-@endcan
-</p>
+
 @if (isset($user->nonews))
 <p><strong>No News before::</strong> 
-{{$user->nonews->format("d M Y")}}</p>
-<p>  Uncheck to reset:<input checked type='checkbox' id='nonews' name='noNews' /></p>
+{{$user->nonews->format("d M Y")}}
+ Uncheck to reset:<input checked type='checkbox' id='nonews' name='noNews' /></p>
 @endif
 <a href="{{route('update.profile')}}">
 <button type="button" class="btn btn-success" >
