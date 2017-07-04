@@ -659,11 +659,9 @@ class CompaniesController extends BaseController {
 		Excel::create('AllCompanies',function($excel){
 			$excel->sheet('Companies',function($sheet) {
 				$companies = $this->company
-<<<<<<< HEAD
-				->with('industryVertical','managedBy')
-=======
+
 				->with('industryVertical','managedBy','serviceline')
->>>>>>> dev
+
 				->whereHas('serviceline', function($q){
 							    $q->whereIn('serviceline_id', $this->userServiceLines);
 

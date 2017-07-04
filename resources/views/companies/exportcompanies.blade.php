@@ -16,7 +16,10 @@
 				<td>{{$company->companyname}}</td>
 				<td>
 				@foreach($company->serviceline as $serviceline)
-					{{$serviceline->ServiceLine}}<br />
+					{{$serviceline->ServiceLine}}
+					@if (! $loop->last)
+					|
+					@endif
 				@endforeach
 				</td>
 				<td>{{$company->industryVertical->filter}}</td>
