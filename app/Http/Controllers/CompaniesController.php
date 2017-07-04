@@ -53,6 +53,7 @@ class CompaniesController extends BaseController {
 
 		;
 	
+		
 		return response()->view('companies.index', compact('companies','title','filtered','locationFilter'));
 	}
 	
@@ -103,7 +104,7 @@ class CompaniesController extends BaseController {
 			->orderBy('companyname')
 			->get();
 		}
-		
+
 		return $companies;
 
 
