@@ -24,7 +24,7 @@
 				    <div class="form-group{{ $errors->has('employee_id') ? ' has-error' : '' }}">
 				        <label class="col-md-2 control-label">Employee Id</label>
 				            <div class="col-md-10">
-				                <input type="text" class="form-control" name='employee_id' description="employee_id" value="{{ old('employee_id') ? old('employee_id') : isset($user->employee_id) ? $user->employee_id : '' }}" placeholder="employee_id">
+				                <input type="text" class="form-control" name='employee_id' description="employee_id" value="{{ old('employee_id') ? old('employee_id') : isset($user) ? $user->employee_id : '' }}" placeholder="employee_id">
 				                <span class="help-block{{ $errors->has('employee_id') ? ' has-error' : '' }}">
 				                    <strong>{{ $errors->has('employee_id') ? $errors->first('employee_id') : ''}}</strong>
 				                    </span>
@@ -55,7 +55,7 @@
 				<div class="form-group {!! $errors->has('confirmed') ? 'has-error' : '' !!}">
 					<label class="col-md-2 control-label" for="password_confirmation">Active</label>
 					<div class="col-md-10">
-						<input class="form-control" type="checkbox" name="confirmed" id="confirmed" value="1" {{isset($user->confirmed) ? 'checked' : ''}}/>
+						<input class="form-control" type="checkbox" name="confirmed" id="confirmed" value="1" {{isset($user) && $user->confirmed==1 ? 'checked' : ''}}/>
 						{!! $errors->first('confirmed', '<span class="help-inline">:message</span>') !!}
 					</div>
 				</div>
