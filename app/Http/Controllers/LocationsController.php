@@ -27,7 +27,6 @@ class LocationsController extends BaseController {
 	public $waitSeconds =5;
 	public $companyServicelines;
 	public $serviceline;
-	public $userServiceLines;
 	public $searchfilter;
 
 	protected $branch;
