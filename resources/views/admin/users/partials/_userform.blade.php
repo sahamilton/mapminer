@@ -14,7 +14,7 @@
 				<div class="form-group {!! $errors->has('email') ? 'has-error' : '' !!}">
 					<label class="col-md-2 control-label" for="email">Email</label>
 					<div class="col-md-10">
-						<input class="form-control" type="text" name="email" id="email" value="{{ old('email', isset($user) ? $user->email : '') }}}" 
+						<input class="form-control" type="text" name="email" id="email" value="{{ old('email', isset($user) ? $user->email : '') }}" 
 						placeholder="email@peopleready.com"/>
 						{!! $errors->first('email', '<span class="help-inline">:message</span>') !!}
 					</div>
