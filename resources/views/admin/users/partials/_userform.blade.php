@@ -50,6 +50,16 @@
 					</div>
 				</div>
 				<!-- ./ password confirm -->
+
+				<!-- confirmed -->
+				<div class="form-group {!! $errors->has('confirmed') ? 'has-error' : '' !!}">
+					<label class="col-md-2 control-label" for="password_confirmation">Active</label>
+					<div class="col-md-10">
+						<input class="form-control" type="checkbox" name="confirmed" id="confirmed" value="1" />
+						{!! $errors->first('confirmed', '<span class="help-inline">:message</span>') !!}
+					</div>
+				</div>
+				<!-- ./ confirmed -->
 				
 				<!-- Groups -->
 				<div class="form-group {!! $errors->has('roles') ? 'has-error' : '' !!}">
