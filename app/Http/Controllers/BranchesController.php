@@ -385,7 +385,7 @@ class BranchesController extends BaseController {
 		->where('state','=',$state)
 		->with('servicelines','servicedBy')
 		->whereHas('servicelines', function($q) {
-					    $q->whereIn('serviceline_id',$this->userservicelines);
+					    $q->whereIn('serviceline_id',$this->userServiceLines);
 					})
 		->orderBy('city')
 		->get();
