@@ -84,13 +84,13 @@
                     </button>
                     <ul class="dropdown-menu" role="menu">
 
-                    <li><a href="{{route('documents.edit',$document->id)}}"><i class="glyphicon glyphicon-pencil"></i> Edit Sales document</a></li>
+                    <li><a href="{{route('documents.edit',$document->id)}}"><i class="fa fa-pencil" aria-hidden="true"></i>Edit Sales document</a></li>
 
                     <li><a data-href="{{route('documents.destroy',$document->id)}}" 
                     data-toggle="modal" 
                     data-target="#confirm-delete" 
                     data-title = "document" 
-                    href="#"><i class="glyphicon glyphicon-trash"></i> Delete Sales document</a>
+                    href="#"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete Sales document</a>
                     </li>
 
 

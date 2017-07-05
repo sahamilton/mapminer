@@ -110,14 +110,14 @@ $data['companyname']=$company->companyname;
 						<a href="{{route(
 'locations.edit'
 ,$location->id)}}">
-							<i class="glyphicon glyphicon-pencil"></i> 
+							<i class="fa fa-pencil" aria-hidden="true"></i>
 							Edit {{$location->businessname}}
 						</a>
 					</li>
 					<li>
 						<a data-href="{{route('locations.destroy',$location->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = "{{$location->businessname}} and all associated notes" 
 						href="#">
-						<i class="glyphicon glyphicon-trash"></i> 
+						<i class="fa fa-trash-o" aria-hidden="true"></i> 
 						Delete {{$location->businessname}}
 						</a>
 					</li>
