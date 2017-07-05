@@ -19,6 +19,8 @@ title="Email {{$salesorg->postName()}}">
     - {{$salesorg->reportsTo->userdetails->roles[0]->name}}
   @endif
 </h4>
+<div class ="container">
+<div class="col-md-4">
   <h4>Branches served:</h4>
   @foreach ($salesorg->branchesServiced as $branch)
 
@@ -26,7 +28,10 @@ title="Email {{$salesorg->postName()}}">
 
 
   @endforeach
+  </div>
+  <div class="col-md-8">
     <div id="map" style="border:solid 1px red"></div>
+  </div></div>
     <script>
      
       // First, create an object containing LatLng and details for each branch.
