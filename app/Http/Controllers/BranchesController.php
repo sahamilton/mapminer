@@ -24,7 +24,7 @@ class BranchesController extends BaseController {
 	protected $serviceline;
 	protected $person;
 	protected $state;
-	public $userServiceLines;
+
 	
 	
 	public function __construct(Branch $branch, Serviceline $serviceline,Person $person, State $state) {
@@ -33,6 +33,7 @@ class BranchesController extends BaseController {
 			$this->person = $person;
 			$this->state = $state;
 			parent::__construct($this->branch);
+
 			
 	}
 	

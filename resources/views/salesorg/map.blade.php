@@ -30,6 +30,7 @@ title="Email {{$salesorg->postName()}}">
   @endforeach
   </div>
   <div class="col-md-8">
+ 
     <div id="map" style="border:solid 1px red"></div>
   </div></div>
     <script>
