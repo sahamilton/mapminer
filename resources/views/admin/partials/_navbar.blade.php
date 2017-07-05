@@ -87,13 +87,13 @@
                                     </a>
                                  </li>
 
-
+<!--
                                 <li{{ (Request::is('admin/branch*') ? ' class="active"' : '') }}>
                                 <a href="{{{ route('branches.import') }}}">
                                <i class="fa fa-upload" aria-hidden="true"></i> 
                                 Import Branches
                                 </a>
-                                </li>
+                                </li>-->
                                 <li{{ (Request::is('admin/branches/export') ? ' class="active"' : '') }}><a href="{{{ route('branches.export') }}}">
                                 <i class="fa fa-download" aria-hidden="true"></i> Export Branches</a></li>
 
@@ -117,9 +117,10 @@
                                 <li{{ (Request::is('admin/permissions*') ? ' class="active"' : '') }}><a href="{{{ route('permissions.index') }}}"><span class="glyphicon glyphicon-check"></span> Permissions</a></li>
 
 
-
+<!--
                                 <li{{ (Request::is('admin/companies*') ? ' class="active"' : '') }}><a href="{{{ route('admin.users.import') }}}">
                                 <i class="fa fa-upload" aria-hidden="true"></i> Import Users</a></li>
+                                -->
                                 <li{{ (Request::is('admin/users/export') ? ' class="active"' : '') }}><a href="{{{ route('person.export') }}}">
                                 <i class="fa fa-download" aria-hidden="true"></i> Export Users</a></li>
                             </ul>
