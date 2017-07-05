@@ -171,11 +171,11 @@
                         
                         <li class="dropdown">
                                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                    <span class="glyphicon glyphicon-user"></span> {{ucfirst(strtolower( Auth::user()->username ))}}  <span class="caret"></span>
+                                    <span class="glyphicon glyphicon-user"></span> {{ucfirst(strtolower( Auth::user()->person->firstname ))}}  <span class="caret"></span>
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li><a href="{{{ route('profile') }}}">
-                                    <i class="fa fa-user" aria-hidden="true"></i> Profile</a></li>
+                                    <i class="fa fa-user" aria-hidden="true"></i> Your Profile</a></li>
                                     @if(Auth::user()->hasRole('Admin'))
 
                                      <a href="{{route('about')}}">

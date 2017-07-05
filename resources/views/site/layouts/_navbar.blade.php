@@ -97,7 +97,7 @@
     							</a>
     							<ul class="dropdown-menu">
     								<li><a href="{{{ route('profile') }}}">
-                                    <i class="fa fa-user" aria-hidden="true"></i> Profile</a></li>
+                                    <i class="fa fa-user" aria-hidden="true"></i> Your Profile</a></li>
                                     @if(Auth::user()->hasRole('Admin'))
 
                                      <a href="{{route('about')}}">
