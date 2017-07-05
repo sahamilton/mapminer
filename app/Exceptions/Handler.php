@@ -54,7 +54,7 @@ class Handler extends ExceptionHandler
                 break;
 
                 // internal error
-                case '500':
+                case 500:
                 return redirect()->guest('home');
                 break;
 
