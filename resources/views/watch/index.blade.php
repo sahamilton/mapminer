@@ -35,7 +35,7 @@
 		</td>
 		<td>
 			<a href="{{route('company.show',$row['watching'][0]->company->id)}}">
-			{{$row['watching'][0]->companyname}}</a>
+			{{$row['watching'][0]->company->companyname}}</a>
 		</td>
 		<td>{{$row['watching'][0]->street}}</td>
 		<td>{{$row['watching'][0]->city}}</td>
