@@ -24,7 +24,7 @@
 				    <div class="form-group{{ $errors->has('employee_id') ? ' has-error' : '' }}">
 				        <label class="col-md-2 control-label">Employee Id</label>
 				            <div class="col-md-10">
-				                <input type="text" class="form-control" name='employee_id' description="employee_id" value="{{ old('employee_id') ? old('employee_id') : isset($user) ? $user->employee_id : '' }}" placeholder="employee_id">
+				                <input type="text" class="form-control" name='employee_id' description="employee_id" value="{{ old('employee_id',isset($user) ? $user->employee_id : '') }}" placeholder="employee_id">
 				                <span class="help-block{{ $errors->has('employee_id') ? ' has-error' : '' }}">
 				                    <strong>{{ $errors->has('employee_id') ? $errors->first('employee_id') : ''}}</strong>
 				                    </span>
