@@ -43,12 +43,11 @@ class BranchesController extends BaseController {
 	 */
 	public function index()
 	{
-		$userServiceLines = $this->userServiceLines;
-
+		
 		$branches = $this->branch
 			->with('region','manager','servicedBy','servicelines')
-			->whereHas('servicelines', function($q) use($userServiceLines) {
-					    $q->whereIn('serviceline_id',$userServiceLines);
+			->whereHas('servicelines', function($q) {
+					    $q->whereIn('serviceline_id',$this->userServiceLines);
 
 					})
 			->orderBy('branchnumber')
@@ -410,12 +409,12 @@ class BranchesController extends BaseController {
 	
 	public function state(Request $request, $statecode=NULL) {
 		
-				
+
 
 		if(! $statecode){
 			$statecode = $request->get('state');
 		}
-		
+
 		$branches = $this->branch
 			->with('region')
 			->with('manager')
@@ -426,7 +425,7 @@ class BranchesController extends BaseController {
 			->where('state','=',$statecode)
 			->orderBy('branchnumber')
 			->get();
-
+			
 		
 		$states= State::where('statecode','=',$statecode)->get();
 		foreach($states as $state) {
