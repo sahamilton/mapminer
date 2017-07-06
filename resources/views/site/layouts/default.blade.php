@@ -20,9 +20,7 @@
 		<!-- CSS
 		================================================== -->
         
-        <link rel="stylesheet" href="{{asset('bootstrap/css/bootstrap.min.css')}}">
-        <link rel="stylesheet" href="{{asset('bootstrap/css/bootstrap-theme.min.css')}}">
-        <link  rel="stylesheet" href="{{asset('bootstrap/css/bootstrap.icon-large.min.css')}}">
+        <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 		<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.2/css/jquery.dataTables.css">
         <link rel="stylesheet" type="text/css" href="//code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css" />    
         <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet">
@@ -50,7 +48,7 @@
 
 		<style>
         body {
-            padding: 60px 0;
+            padding: 0  0;
         }
 		@section('styles')
 		@show

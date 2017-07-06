@@ -40,7 +40,7 @@ class CompaniesController extends BaseController {
 	 
 	public function index()
 	{
-
+		
 		$filtered = $this->company->isFiltered(['companies'],['vertical']);
 
 		$companies = $this->getAllCompanies($filtered);

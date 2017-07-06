@@ -37,7 +37,7 @@
 
 		<style>
         body {
-            padding: 60px 0;
+            padding: 0  0;
         }
 		@section('styles')
 		@show
