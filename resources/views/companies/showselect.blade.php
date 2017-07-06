@@ -84,7 +84,7 @@ $data['companyname']=$company->companyname;
 	<td>
 		@if (! isset($location->segment)) 
 			Not Specified
-		@else
+		@elseif(in_array($location->segment,$filters))
 			<a href="{{route('company.segment',[$company->id,$location->segment])}}">
 			{{$filters[$location->segment]}}</a>
 		@endif
