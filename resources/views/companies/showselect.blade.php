@@ -92,7 +92,7 @@ $data['companyname']=$company->companyname;
 	<td>
 		@if(! isset($location->businesstype)) 
 			Not Specified
-		@else
+		@elseif(in_array($location->businesstype,$filters))
 			{{$filters[$location->businesstype]}}
 		@endif
 	</td>
