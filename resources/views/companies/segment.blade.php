@@ -1,4 +1,4 @@
-@extends('site/layouts/default')
+@extends('site.layouts.default')
 @section('content')
 <?php $company = $data ['company'];
 $data['type']='company';
@@ -7,17 +7,19 @@ $data['companyname']=$company->companyname;
 ?>
 
 <h2>All {{$company->companyname}} {{$data['segment']}} Locations </h2>
-
-@include('companies/partials/segment')
+@if($limited)
+	@include('companies.partials._limited')
+@endif
+@include('companies.partials._segment')
 
 {!!$filtered ? "<h4 class='filtered'>Filtered</h4>" : ''!!}
 
 <p><a href="{{ route('company.show', $company->id) }}" title='Show all {{$company->companyname}} Locations'>All {{$company->companyname}} Locations</a></p>
 
 
-@include('maps/partials/_form')
-@include('companies/partials/_state')
-@include('partials/advancedsearch')
+@include('maps.partials._form')
+@include('companies.partials._state')
+@include('partials.advancedsearch')
 @if(auth()->user()->hasRole('Admin'))
 <div class="pull-right">
 				<a href="{{{ route('locations.create') }}}" class="btn btn-small btn-info iframe"><span class="glyphicon glyphicon-plus-sign"></span> Create</a>

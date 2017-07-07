@@ -18,6 +18,7 @@ class CompaniesController extends BaseController {
 	public $locations;
 	public $searchfilter;
 	public $person;
+	public $limit = 500;
 
 
 	public function __construct(Company $company, Location $location, SearchFilter $searchfilter,User $user,Person $person) {
@@ -202,24 +203,40 @@ class CompaniesController extends BaseController {
 	 * @return View
 	 */
 	 
-	public function show($company)
+	public function show($id,$segment=null)
 	{
-		// Is the user permitted to see this company based on servicelines?
-	
+		
+		if(is_object($id)){
+			$id = $id->id;
 
-		if (! $this->company->checkCompanyServiceLine($company->id,$this->userServiceLines))
+		}
+		
+		if (! $this->company->checkCompanyServiceLine($id,$this->userServiceLines))
 		{
 			return redirect()->route('company.index');
 		}
+		$data = $this->getSegmentCompanyInfo($id,$segment);
+
+		$company = $this->company->with('managedBy','industryvertical')->findOrFail($id);
+
+		$locations = $this->locations->where('company_id','=',$company->id);
+		if($segment){
+				
+
+				$locations = $locations->where('segment','=',$segment);
+		}
+		$locations = $locations->get();
+	
 
 		$mywatchlist = array();
-		
+		// This doesnt make sens as long as companies belong to one vertical
+
 		$filtered = $company->isFiltered(['locations'],['segment','businesstype'],$company->vertical);
 		$keys = $this->company->getSearchKeys(['locations'],['segment','businesstype']);
 
 		if($filtered) {	
 			
-			 $locations = \DB::table('locations')
+			 $locations = $this->locations
 				 ->where('company_id','=',$company->id)
 				 ->whereIn('segment', $keys)
 				 ->orWhereIn('businesstype', $keys)
@@ -229,32 +246,21 @@ class CompaniesController extends BaseController {
 			
 			
 			
-		}else{
-			
-			$locations = \DB::table('locations')
-				 ->where('company_id','=',$company->id)
-				 ->orderBy('state')
-				 ->get();
-			
-			
 		}
-		
 		$states = $this->getStatesInArray($locations);
 		$segments = $this->getCompanySegments($company->id);
+
 		//$locations = Paginator::make($locations, count($locations), '25');
 		
 		
 		$filters = $this->searchfilter->vertical();
-		
-		
-		
-		$company = $this->company->where('id','=',$company->id)
-		->with('industryVertical','serviceline')
-		->with('managedBy')
-		->first();
 
-		if(count($locations) > 500)
+		$limited = null;
+		$count = count($locations);
+
+		if( $count > $this->limit)
 		{
+			$limited=$this->limit;
 			if (\Session::has('geo'))
 				{
 					$geo = \Session::get('geo');
@@ -266,15 +272,15 @@ class CompaniesController extends BaseController {
 					$lng = '-122.44';
 
 				}
-			$count = count($locations);
-			$locations = $this->locations->findNearbyLocations($lat,$lng,'1000',$number=null,$company->id,$this->userServiceLines, $limit = 500);
+			
+			$locations = $this->locations->findNearbyLocations($lat,$lng,'1000',$number=null,$company->id,$this->userServiceLines, $limit = $this->limit);
 			
 			
-			return response()->view('companies.showselect',compact('count','company','locations','mywatchlist','fields','states','filtered','filters','segments'));
 		}	
 
+		$data['type']='company';
 		$mywatchlist = $this->getWatchList();
-		return response()->view('companies.show', compact('company','locations','mywatchlist','states','filtered','filters','segments'));
+		return response()->view('companies.show', compact('data','company','locations','count','limited','mywatchlist','states','filtered','filters','segments'));
 	}
 	
 	private function getStatesInArray($locations)
@@ -423,10 +429,20 @@ class CompaniesController extends BaseController {
 		
 		$filtered = $this->locations->isFiltered(['locations'],['segment','businesstype']);
 		$keys = $this->locations->getSearchKeys(['locations'],['segment','businesstype']);
+		$limited = false;
+		$locations = Location::where('segment','=',$segment)
+		->where('company_id', $id)
+		->limit('500')
+		->get();
 		
-		$locations = Location::where('segment', $segment)->where('company_id', $id)->get();
+		if(count($locations) == $this->limit){
+			$limited =$this->limit;
+			$count = Location::where('segment','=', $segment)->where('company_id', $id)->count();
+
+		}
 		$states= $this->getCompanyStates($id,$filtered,$keys);
 
+		
 		$data = $this->getSegmentCompanyInfo($id,$segment);
 		
 		$segments = $this->getCompanySegments($id);
@@ -435,7 +451,7 @@ class CompaniesController extends BaseController {
 		$mywatchlist = $this->getWatchList();
 		
 	
-		return response()->view('companies.segment', compact('data','locations','mywatchlist','states','filtered','segments'));
+		return response()->view('companies.segment', compact('data','count','locations','mywatchlist','states','filtered','segments','limited'));
 	}
 	
 	
@@ -550,15 +566,11 @@ class CompaniesController extends BaseController {
 	 */
 	private function getCompanySegments($company)
 	{
-		$segments = \DB::select(\DB::raw("SELECT 
-		distinct searchfilters.id, filter 
-		FROM `searchfilters`,locations 
-		WHERE company_id = ". $company. " 
-			and searchcolumn = 'segment' 
-			and segment = searchfilters.id
-		ORDER BY filter"));
+		
+
+		$segments = \App\Location::where('company_id','=',$company)->select('segment')->distinct()->pluck('segment')->toArray();
 			
-	return $segments;	
+	   return $this->searchfilter->whereIn('id',$segments)->pluck('filter','id')->toArray();
 	}
 	
 	/**
@@ -570,16 +582,14 @@ class CompaniesController extends BaseController {
 	private function getSegmentCompanyInfo($id,$segment) 
 	{
 
-		$data['company'] = $this->company->findOrFail($id);
-		
-		$segmentdata = SearchFilter::where('id','=',$segment)->get();
+	
 
-		$data['id'] =$id;
-		foreach ($segmentdata as $segment) {
-			$data['segment']  = $segment->filter;
-			
-			
+		if(! $segment){
+			$data['segment']='All';
+		}else{
+			$data['segment']  = $this->searchfilter->select('filter')->findOrFail($segment)->filter;
 		}
+		
 		return $data;
 		
 	}

@@ -3,14 +3,14 @@
 
 <?php $account = Request::segment(2);
 $data['type']='company';
-
+$data['segment']='All';
 $data['company'] = $company->id;
 $data['companyname']=$company->companyname;
 ?>
 <div id='results'></div>
 
 <div>
-<h3>Locations for {{$company->companyname}}</h3>
+<h2> {{$company->companyname}} {{$data['segment']}} Locations </h2>
 
 {!!$filtered ? "<h4 class='filtered'>Filtered</h4>" : ''!!}
 @if (isset($company->industryVertical->filter))
@@ -23,7 +23,7 @@ $data['companyname']=$company->companyname;
 @endforeach
 </ul>
 
-@include('companies/partials/segment')
+@include('companies.partials._segment')
 
 @if(isset($company->managedBy->firstname))
 <p>Account managed by <a href="{{route('person.show',$company->managedBy->id)}}" title="See all accounts managed by {{$company->managedBy->postName()}}">{{$company->managedBy->postName()}}</a></p>
@@ -42,9 +42,8 @@ $data['companyname']=$company->companyname;
  
 @include('companies/partials/_state')
 @include('maps.partials._form')
-
-   <p style="background-color:yellow">There are <strong>{{$count}}</strong> locations for  {{$company->companyname}}. Please select a state to narrow your search</p>
-   <p style="background-color:yellow">Here are the 500 closest to your location</p>
+@include('companies.partials._limited')
+   
 <table id ='sorttable'  class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
     <th>Watch</th>
@@ -54,7 +53,7 @@ $data['companyname']=$company->companyname;
 		<th>State</th>
 		<th>ZIP</th>
 		<th>Segment</th>
-		<th>Business Type</th>
+
    		@if(auth()->user()->hasRole('Admin'))
 			<th>Actions</th>
    		@endif
@@ -82,20 +81,17 @@ $data['companyname']=$company->companyname;
 	</td>
 	<td>{{$location->zip}}</td>
 	<td>
+		
 		@if (! isset($location->segment)) 
 			Not Specified
-		@else
-			<a href="{{route('company.segment',[$company->id,$location->segment])}}">
-			{{$filters[$location->segment]}}</a>
+
+		@elseif (array_key_exists($location->segment,$segments))
+			@if($data['segment']=='All')
+			<a href="{{route('company.segment',[$company->id,$location->segment])}}">{{$segments[$location->segment]}}</a>
+			@endif
 		@endif
 	</td>
-	<td>
-		@if(! isset($location->businesstype)) 
-			Not Specified
-		@else
-			{{$filters[$location->businesstype]}}
-		@endif
-	</td>
+	
 	@if(auth()->user()->hasRole('Admin'))
 		<td>
 		@include('partials/_modal')
@@ -107,9 +103,7 @@ $data['companyname']=$company->companyname;
 				</button>
 				<ul class="dropdown-menu" role="menu">
 					<li>
-						<a href="{{route(
-'locations.edit'
-,$location->id)}}">
+						<a href="{{route('locations.edit',$location->id)}}">
 							<i class="glyphicon glyphicon-pencil"></i> 
 							Edit {{$location->businessname}}
 						</a>

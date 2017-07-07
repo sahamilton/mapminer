@@ -27,7 +27,6 @@ class GeoCodingController extends BaseController {
 	 */
 	public function findMe(FindMeFormRequest $request) {
 	
-
 		if($request->has('address')) {
 			$address = urlencode($request->get('address'));
 			
@@ -141,6 +140,7 @@ class GeoCodingController extends BaseController {
 		switch ($data['type']) {
 			
 			case 'location':
+			case 'company':
 			
 			return $result = $this->location->findNearbyLocations($data['lat'],$data['lng'],$data['distance'],$number=null,$company,$this->userServiceLines);
 			
@@ -152,6 +152,8 @@ class GeoCodingController extends BaseController {
 			
 			
 			break;
+
+
 			
 			default:
 			return $result = $this->location->findNearbyLocations($data['lat'],$data['lng'],$data['distance'],$number=1,$company,$this->userServiceLines);
