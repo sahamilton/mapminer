@@ -76,7 +76,7 @@ class Location extends Model {
 	
 	*/	
 	
-	public function findNearbyLocations($lat,$lng,$distance,$number,$company=NULL,$userServiceLines, $limit=null, $verticals=null)
+	public function findNearbyLocations($lat,$lng,$distance,$number,$company=NULL,$userServiceLines, $limit=null, $verticals=null,$segments=null)
 	
 	{
 		
@@ -145,6 +145,9 @@ class Location extends Model {
 						
 					if ($company!=NULL){
 						$query.=" and companies.id = '".$company."' ";
+					}
+					if($segments !=NULL && is_array($segments)){
+						$query.=" and locations.segment in ('".explode(',',$segments) . "')";
 					}
 					foreach ($keyset as $key)
 					{

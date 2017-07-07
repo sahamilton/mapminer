@@ -218,6 +218,8 @@ public function segments(){
 
   }
 
+  
+
   public function industrysegments(){
 
     $filters = $this->first();

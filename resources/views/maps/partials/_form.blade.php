@@ -14,15 +14,15 @@ foreach($session as $key=>$value)
 }
 
 $types = array('location'=>'all accounts','branch'=>'branches');
-if($data['type'] == 'company'){
-	$types['company'] = $data['companyname'] .' locations';
+if($data['type'] == 'company' && isset($company)){
+	$types['company'] = $company->companyname .' locations';
 }
 $views = array('map'=>'map','list'=>'list');
 $values = Config::get('app.search_radius');
 
 ?>
-
-{{Form::open(array('route'=>'findme','class'=>'form', 'id'=>'selectForm'))}}
+<form action="{{route('findme')}}" method = 'post' name="mapselector">
+{{csrf_field()}}
 {{Form::label('type','Show a')}}
 <?php ?>
        <select name='view' class="btn btn-mini" onchange='this.form.submit()'>
@@ -42,12 +42,12 @@ $values = Config::get('app.search_radius');
        <select name='type' class="btn btn-mini"  onchange='this.form.submit()'>
           
             @foreach($types as $key=>$value)
-				@if($key === $data['type'])
-                <option selected value="{{$key}}">{{$value}}</option>
-                @else
-            
-           		<option value="{{$key}}">{{$value}}</option>
-				@endif
+        				@if($key === $data['type'])
+                        <option selected value="{{$key}}">{{$value}}</option>
+                        @else
+                    
+                   		<option value="{{$key}}">{{$value}}</option>
+        				@endif
            @endforeach
         </select>
       
@@ -77,8 +77,8 @@ $values = Config::get('app.search_radius');
       
          <button type="submit"  class= "btn btn-default btn-xs"><span class="glyphicon glyphicon-search"></span> Search!</button>
 {{Form::hidden('lat',$data['lat'],$attributes = array( 'id'=>'lat'))}}
-{{Form::hidden('company', isset($data['company']) ? $data['company'] : '' )}}
-{{Form::hidden('companyname',isset($data['companyname']) ? $data['companyname'] : '')}}
+{{Form::hidden('company', isset($company) ? $company->id : '' )}}
+{{Form::hidden('companyname',isset($company) ? $company->companyname : '')}}
 
 {{Form::hidden('lng',$data['lng'],$attributes = array( 'id'=>'lng'))}} 
 

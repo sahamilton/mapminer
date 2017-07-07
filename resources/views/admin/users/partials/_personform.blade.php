@@ -128,7 +128,7 @@
 
 	<div class="col-md-6">
 		<select multiple class="form-control" name='branches[]'>
-
+	
 			@foreach ($branches as $key=>$value))
 				@if(isset($branchesServiced) && in_array($key,$branchesServiced))
 					<option selected value="{{$key}}">{{$value}}</option>

@@ -20,9 +20,9 @@
 		<!-- CSS
 		================================================== -->
         <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="{{asset('bootstrap/css/bootstrap.min.css')}}">
-        <link rel="stylesheet" href="{{asset('bootstrap/css/bootstrap-theme.min.css')}}">
-        <link  rel="stylesheet" href="{{asset('bootstrap/css/bootstrap.icon-large.min.css')}}">
+		<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" 
+		integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" 
+		crossorigin="anonymous">
 		<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.2/css/jquery.dataTables.css">
        <link rel="stylesheet" href="{{asset('assets/css/responsive-tables.css')}}">
        
@@ -31,9 +31,10 @@
         <link rel="stylesheet" type="text/css" href="{{asset('maps/css/map.css')}}">
 <!-- jQuery -->
 
-		<script type="text/javascript" src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+		<script  src="https://code.jquery.com/jquery-3.2.1.min.js" 
+		integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="  crossorigin="anonymous"></script>
 		<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-		<script src="{{asset('bootstrap/js/bootstrap.min.js')}}"></script>
+		<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <!-- DataTables -->
 		<link href="//cdnjs.cloudflare.com/ajax/libs/summernote/0.8.3/summernote.css" rel="stylesheet">
 		<script src="//cdnjs.cloudflare.com/ajax/libs/summernote/0.8.3/summernote.js"></script>

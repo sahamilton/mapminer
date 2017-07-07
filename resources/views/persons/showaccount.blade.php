@@ -11,7 +11,7 @@
 		@foreach($accounts as $account)
 			<tr>  
 				<td>
-				@if(isset( $account->countlocations->first()->count) &&  $account->countlocations->first()->count > 0)
+				@if(isset( $account->locationcount->first()->count) &&  $account->locationcount->first()->count > 0)
 					<a title="See all {{$account->companyname}} locations" 
 					href="{{route('company.show',$account->id)}}">
 					{{$account->companyname}}

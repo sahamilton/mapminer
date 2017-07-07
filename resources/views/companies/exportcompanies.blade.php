@@ -25,8 +25,9 @@
 				<td>{{$company->industryVertical->filter}}</td>
 				<td>
 
-				@if ($company->countlocations()->first() !== null)
-				{{$company->countlocations()->first()->count}}</td>
+				@if($company->locationcount() !== null)
+					{{$company->locationcount()->count}}
+
 				@endif
 				
 				<td>@if($company->managedBy)
