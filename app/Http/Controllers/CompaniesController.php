@@ -94,9 +94,9 @@ class CompaniesController extends BaseController {
 			
 		}else{
 			
-
+			
 			$companies = $this->company
-			->with('managedBy','managedBy.userdetails','industryVertical','countlocations','serviceline')
+			->with('managedBy','managedBy.userdetails','industryVertical','serviceline','countlocations')
 			->whereHas('serviceline', function($q) {
 					    $q->whereIn('serviceline_id', $this->userServiceLines);
 
@@ -104,8 +104,8 @@ class CompaniesController extends BaseController {
 			->orderBy('companyname')
 			->get();
 		}
-		
 		return $companies;
+
 
 
 	}
@@ -307,31 +307,21 @@ class CompaniesController extends BaseController {
 		{
 			return redirect()->route('company.index');
 		}
-		// this needs to be filtered
-		$states=array();
-		if($filtered){
-			
-			$states =  \DB::table('locations')
-				->select('state')
-				->where('company_id','=',$id)
-				->whereIn('segment', $keys)
-				->orWhereIn('businesstype', $keys)
-				->distinct()
-				->orderBy('state')
-				->pluck('state');
+		$company = $this->company->with('managedBy','industryvertical')->findOrFail($id);
+		$filtered = $company->isFiltered(['locations'],['segment','businesstype'],$company->vertical);
+		$keys = $this->company->getSearchKeys(['locations'],['segment','businesstype']);
 
-			
-			
-			
-		}else{
-			$states = \DB::table('locations')
-				->select('state')
-				->where('company_id','=',$id)
-				->distinct()
+		$states = $this->locations->select('state')
+				->where('company_id','=',$id);
+				
+				if($filtered){
+					
+					$states=$states->whereIn('segment', $keys)
+					->orWhereIn('businesstype', $keys);
+				}	
+				$states=$states->distinct()
 				->orderBy('state')
 				->pluck('state');
-			
-		}
 		
 		return $states;
 		
@@ -394,6 +384,8 @@ class CompaniesController extends BaseController {
 		{
 			return redirect()->route('company.index');
 		}
+		$company = $this->company->with('managedBy','industryvertical')->findOrFail($id);
+
 		$filtered = $this->locations->isFiltered(['locations'],['segment','businesstype']);
 		$keys = $this->locations->getSearchKeys(['locations'],['segment','businesstype']);
 		
@@ -409,50 +401,6 @@ class CompaniesController extends BaseController {
 	}
 	
 	
-	
-	 /**
-	 * Display list of the locations of specified company in specified segment.
-	 *
-	 * @param  int  $id Company id
-	 * @param text $state
-	 * @return View
-	 */
-	public function segment($id,$segment)
-	{
-		// Check if user can view company based on user serviceline
-		// association.
-
-		if (! $this->company->checkCompanyServiceLine($id,$this->userServiceLines))
-		{
-			return redirect()->route('company.index');
-		}
-		
-		$filtered = $this->locations->isFiltered(['locations'],['segment','businesstype']);
-		$keys = $this->locations->getSearchKeys(['locations'],['segment','businesstype']);
-		$limited = false;
-		$locations = Location::where('segment','=',$segment)
-		->where('company_id', $id)
-		->limit('500')
-		->get();
-		
-		if(count($locations) == $this->limit){
-			$limited =$this->limit;
-			$count = Location::where('segment','=', $segment)->where('company_id', $id)->count();
-
-		}
-		$states= $this->getCompanyStates($id,$filtered,$keys);
-
-		
-		$data = $this->getSegmentCompanyInfo($id,$segment);
-		
-		$segments = $this->getCompanySegments($id);
-
-		
-		$mywatchlist = $this->getWatchList();
-		
-	
-		return response()->view('companies.segment', compact('data','count','locations','mywatchlist','states','filtered','segments','limited'));
-	}
 	
 	
 	/**

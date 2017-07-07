@@ -282,25 +282,22 @@ class AdminUsersController extends BaseController {
     }
     private function associateBranchesWithPerson($person, $data)
     {
-         if(isset($data['branchstring']) or isset($data['branches'])){
-            
-            if(isset($data['branchstring'])){
-              $branches = $this->branch->getBranchIdFromBranchNumber($data['branchstring']);
-            }else{
-                $branches = $data['branches'];
-            }
-            
-            if(count($branches)>0)
-            {
-                $syncData=array();
-            }else{
-                foreach ($branches as $branch){
-                    $syncData[$branch]=['role_id'=>5];
-                }
-            }
-            $person->branchesServiced()->sync($syncData);
+        $syncData=array();
+        if(isset($data['branchstring'])){
+            $data['branches'] = $this->branch->getBranchIdFromBranchNumber($data['branchstring']);
         }
 
+        if(isset($data['branches']) && count($data['branches'])>0 && $data['branches'][0]!=0){
+            foreach ($data['branches'] as $branch){
+                if($data['roles']){
+                    foreach ($data['roles'] as $role){
+                        $syncData[$branch]=['role_id'=>$role];
+                    }
+                }
+            }
+        }
+
+        $person->branchesServiced()->sync($syncData);
         $person->rebuild();
         return $person;
     }
@@ -314,13 +311,10 @@ class AdminUsersController extends BaseController {
        }
         $person->update($data);
        
-        if(isset($data['vertical'])){
+        if(isset($data['vertical'])&& $data['vertical'][0]!=0){
             $person->industryfocus()->sync($data['vertical']);
         }
-        if(isset($data['branches'])){
-            $person->branchesServiced()->sync($data['branches']);
-        }
-
+        
         $person->rebuild();
         return $person;
     }

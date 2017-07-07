@@ -38,7 +38,7 @@
 		<tr>  
 
 			<td>
-			@if(isset( $company->countlocations->first()->count) &&  $company->countlocations->first()->count > 0)
+			@if(count($company->countlocations)>0)
 
 			<a href="{{route('company.show',$company->id)}}"
 			title = 'See all {{$company->companyname}} locations'>{{$company->companyname}}</a>

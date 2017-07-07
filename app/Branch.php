@@ -269,4 +269,10 @@ class Branch extends Model {
 		}
 		return $managers;
 	}
+
+	public function getBranchIdFromBranchNumber($data){
+		$branches = explode(",",$data);
+		return $this->whereIn('branchnumber',$branches)->pluck('id')->toArray();
+
+	}
 }

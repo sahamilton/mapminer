@@ -1,49 +1,3 @@
-@extends('site/layouts/default')
-@section('content')
-
-<?php $account = Request::segment(2);
-$data['type']='company';
-$data['segment']='All';
-$data['company'] = $company->id;
-$data['companyname']=$company->companyname;
-?>
-<div id='results'></div>
-
-<div>
-<h2> {{$company->companyname}} {{$data['segment']}} Locations </h2>
-
-{!!$filtered ? "<h4 class='filtered'>Filtered</h4>" : ''!!}
-@if (isset($company->industryVertical->filter))
-<p>{{$company->industryVertical->filter}} Vertical</p>
-@endif
-<h4>ServiceLines:</h4>
-<ul>
-@foreach($company->serviceline as $serviceline)
-<li>{{$serviceline->ServiceLine}} </li>
-@endforeach
-</ul>
-
-@include('companies.partials._segment')
-
-@if(isset($company->managedBy->firstname))
-<p>Account managed by <a href="{{route('person.show',$company->managedBy->id)}}" title="See all accounts managed by {{$company->managedBy->postName()}}">{{$company->managedBy->postName()}}</a></p>
-@endif
-@if (Auth::user()->hasRole('Admin'))
-
-<div class="pull-right" style="margin-bottom:20px">
-				<a href="{{route('locations.create',$account) }}}" title="Create a new {{$company->companyname}} location" class="btn btn-small btn-info iframe">
-				<span class="glyphicon glyphicon-plus-sign"></span>
-				 Create New Location</a>
-			</div>
-           @endif
-         
-@include('companies.partials._companyheader')
-@include('partials/advancedsearch')
- 
-@include('companies/partials/_state')
-@include('maps.partials._form')
-@include('companies.partials._limited')
-   
 <table id ='sorttable'  class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
     <th>Watch</th>
@@ -62,8 +16,10 @@ $data['companyname']=$company->companyname;
 
    @foreach($locations as $location)
 
+
     <tr> 
     @include('companies.partials._watch') 
+
 	<td>
 		<a title= "See details of {{$location->businessname}} location."
 		href={{route(
@@ -81,20 +37,19 @@ $data['companyname']=$company->companyname;
 	</td>
 	<td>{{$location->zip}}</td>
 	<td>
-		
-		@if (! isset($location->segment)) 
-			Not Specified
 
+		@if (! isset($location->segment) or $location->segment == '') 
+			Not Specified
 		@elseif (array_key_exists($location->segment,$segments))
-			@if($data['segment']=='All')
-			<a href="{{route('company.segment',[$company->id,$location->segment])}}">{{$segments[$location->segment]}}</a>
+			@if(isset($data['segment']) && $data['segment']=='All')
+				<a href="{{route('company.segment',[$company->id,$location->segment])}}">{{$segments[$location->segment]}}</a>
 			@endif
 		@endif
 	</td>
 	
 	@if(auth()->user()->hasRole('Admin'))
 		<td>
-		@include('partials/_modal')
+
 	    
             <div class="btn-group">
 				<button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
@@ -103,8 +58,10 @@ $data['companyname']=$company->companyname;
 				</button>
 				<ul class="dropdown-menu" role="menu">
 					<li>
+
 						<a href="{{route('locations.edit',$location->id)}}">
-							<i class="glyphicon glyphicon-pencil"></i> 
+							<i class="fa fa-pencil" aria-hidden="true"></i>
+
 							Edit {{$location->businessname}}
 						</a>
 					</li>
@@ -126,6 +83,3 @@ $data['companyname']=$company->companyname;
     
     </tbody>
 </table>
-@include('partials/_scripts')
-@stop
-
