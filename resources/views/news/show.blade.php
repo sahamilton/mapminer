@@ -10,7 +10,7 @@
 <div class="pull-right">
 <a href="{{route('news.edit',$news->id)}}">
 <button class="btn btn-info">
-<i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+<i class="fa fa-pencil-square-o" aria-hidden="true"> </i>
  Edit News</button></a>
 </div>
 
@@ -54,7 +54,7 @@
 		            data-title = "comment"  
 		            title="Delete this comment"
 		            href="#">
-            <i class="fa fa-trash-o" aria-hidden="true"></i> </a>
+            <i class="fa fa-trash-o" aria-hidden="true"> </i> </a>
            @endif
 					
 				</div>

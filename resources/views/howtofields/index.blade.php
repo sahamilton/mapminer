@@ -51,7 +51,7 @@
 						data-target="#confirm-delete" 
 						data-title = "location" 
 						href="#">
-						<i class="fa fa-trash-o" aria-hidden="true"></i> 
+						<i class="fa fa-trash-o" aria-hidden="true"> </i> 
 						Delete {{$howtofield->fieldname}}
 						</a>
 					</li>

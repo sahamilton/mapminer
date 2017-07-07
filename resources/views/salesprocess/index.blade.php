@@ -41,13 +41,13 @@
                     </button>
                     <ul class="dropdown-menu" role="menu">
 
-                    <li><a href="{{route('process.edit',$step->id)}}"><i class="fa fa-pencil" aria-hidden="true"></i>Edit Sales Step</a></li>
+                    <li><a href="{{route('process.edit',$step->id)}}"><i class="fa fa-pencil" aria-hidden="true"> </i>Edit Sales Step</a></li>
 
                     <li><a data-href="{{route('process.destroy',$step->id)}}" 
                     data-toggle="modal" 
                     data-target="#confirm-delete" 
                     data-title = "location" 
-                    href="#"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete Sales Step</a>
+                    href="#"><i class="fa fa-trash-o" aria-hidden="true"> </i> Delete Sales Step</a>
                     </li>
 
 

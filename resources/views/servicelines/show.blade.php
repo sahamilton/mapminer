@@ -69,11 +69,11 @@
 						<ul class="dropdown-menu" role="menu">
 
 							<li><a href="{{route('branches.edit',$branch->id)}}">
-							<i class="fa fa-pencil" aria-hidden="true"></i>
+							<i class="fa fa-pencil" aria-hidden="true"> </i>
 							Edit {{$branch->branchname}} Branch</a></li>
 
 							<li><a data-href="{{route('branches.destroy',$branch->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = "{{$branch->branchname}} branch" href="#">
-							<i class="fa fa-trash-o" aria-hidden="true"></i> 
+							<i class="fa fa-trash-o" aria-hidden="true"> </i> 
 							Delete {{$branch->branchname}} branch</a></li>
 						</ul>
 					</div>

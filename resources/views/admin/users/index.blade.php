@@ -97,13 +97,13 @@ $newTZ = new DateTimeZone('America/Los_Angeles');
 			  </button>
 			  <ul class="dropdown-menu" role="menu">
 				
-				<li><a href="{{route('users.edit',$user->id)}}"><i class="fa fa-pencil" aria-hidden="true"></i>Edit {{$user->person->firstname}}  {{$user->person->lastname}}</a></li>
+				<li><a href="{{route('users.edit',$user->id)}}"><i class="fa fa-pencil" aria-hidden="true"> </i>Edit {{$user->person->firstname}}  {{$user->person->lastname}}</a></li>
 
 				<li><a data-href="{{route('users.destroy',$user->id)}}" 
 				data-toggle="modal" 
 				data-target="#confirm-delete" 
 				data-title = "{{$user->person->firstname}}  {{$user->person->lastname}}" href="#">
-				<i class="fa fa-trash-o" aria-hidden="true"></i> 
+				<i class="fa fa-trash-o" aria-hidden="true"> </i> 
 				Delete {{$user->person->firstname}}  {{$user->person->lastname}}</a></li></a></li>
 
 			  </ul>

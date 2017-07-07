@@ -66,7 +66,7 @@
             data-title = "news item"  
             title="Delete this news item"
             href="#">
-            <i class="fa fa-trash-o" aria-hidden="true"></i> </a>
+            <i class="fa fa-trash-o" aria-hidden="true"> </i> </a>
            
 
 				@endif

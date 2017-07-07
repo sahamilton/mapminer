@@ -39,9 +39,9 @@
 						</button>
 						<ul class="dropdown-menu" role="menu">
 							<li><a href="{{route('comment.edit',$comment->id)}}">
-							<i class="fa fa-pencil" aria-hidden="true"></i>Edit this comment</a></li>
+							<i class="fa fa-pencil" aria-hidden="true"> </i>Edit this comment</a></li>
 							<li><a data-href="{{route('comment.destroy',$comment->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = "this comment" href="#">
-							<i class="fa fa-trash-o" aria-hidden="true"></i> Delete this comment</a></li>
+							<i class="fa fa-trash-o" aria-hidden="true"> </i> Delete this comment</a></li>
 						</ul>
 					</div>
 
