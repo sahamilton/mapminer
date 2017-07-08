@@ -19,6 +19,7 @@ class CompaniesController extends BaseController {
 	public $searchfilter;
 	public $person;
 	public $limit = 500;
+	public $NAMRole ='4';
 
 
 	public function __construct(Company $company, Location $location, SearchFilter $searchfilter,User $user,Person $person) {
@@ -70,13 +71,13 @@ class CompaniesController extends BaseController {
 		$companies=$this->getAllCompanies($filtered);
 		
 		if($request->get('locationFilter') == 'nolocations'){
-			$companies = $companies->whereDoesntHave('locations')
-			->get();
+			$companies = $companies->whereDoesntHave('locations')->get();
+			
 			$title = 'Accounts without Locations';	
 		
 		}else{
-			$companies = $companies->whereHas('locations')
-			->get();
+			$companies = $companies->whereHas('locations')->get();
+			
 			$title = 'Accounts with Locations';
 		
 		}
@@ -125,10 +126,8 @@ class CompaniesController extends BaseController {
 	 */
 	public function create()
 	{
-		//this should be removed
-	
-		$roles = ['4'];
-		$managers = $this->person->getPersonsWithRole($roles);
+				
+		$managers = $this->person->getPersonsWithRole($this->$NAMRole);
 		$filters = $this->getFilters();
 		$servicelines = Serviceline::whereIn('id',$this->userServiceLines)
 			->pluck('ServiceLine','id');
@@ -158,8 +157,8 @@ class CompaniesController extends BaseController {
 	 */
 	public function edit($company)
 	{
-		$roles = ['4'];
-		$managers = $this->person->getPersonsWithRole($roles);
+		
+		$managers = $this->person->getPersonsWithRole($this->$NAMRole);
 
 		$company = $company
 					->where('id','=',$company->id)
