@@ -43,62 +43,79 @@ class CompaniesController extends BaseController {
 	{
 		
 		$filtered = $this->company->isFiltered(['companies'],['vertical']);
-		$companies = $this->getAllCompanies($filtered);
+		$companies = $this->getAllCompanies($filtered)->get();
 		$title = 'All Accounts';
 		$locationFilter = 'both';
 
 		return response()->view('companies.index', compact('companies','title','filtered','locationFilter'));
 	}
 	
+	/*
+	Function filter
+	
+	 * Returns list of companies based on selection: with or without locations
+	 *
+	 * @return Response
+	 */
+	
 
+	public function filter(Request $request){
+		
+		
+		if($request->get('locationFilter')=='both'){
+
+			return redirect()->route('company.index');
+		}
+		$filtered = $this->company->isFiltered(['companies'],['vertical']);
+		$companies=$this->getAllCompanies($filtered);
+		
+		if($request->get('locationFilter') == 'nolocations'){
+			$companies = $companies->whereDoesntHave('locations')
+			->get();
+			$title = 'Accounts without Locations';	
+		
+		}else{
+			$companies = $companies->whereHas('locations')
+			->get();
+			$title = 'Accounts with Locations';
+		
+		}
+		
+		$locationFilter = $request->get('locationFilter');
+		return response()->view('companies.index', compact('companies','title','filtered','locationFilter'));
+
+	}
 
 	public function getAllCompanies($filtered=null)
 	{
 		
 		$keys=array();
-		if($filtered) {
-			$keys = $this->company->getSearchKeys(['companies'],['vertical']);
-			$isNullable = $this->company->isNullable($keys,NULL);
-			if($isNullable == 'Yes')
-			{
-				$companies = $this->company
-				->whereIn('vertical',$keys)
-				->orWhere(function($query) use($keys)
-				{
-					$query->whereNull('vertical');
-				})
-				->with('managedBy','managedBy.userdetails','industryVertical','serviceline','countlocations')
-				->whereHas('serviceline', function($q){
-					    $q->whereIn('serviceline_id',$this->userServiceLines);
 
-					})
-				->orderBy('companyname')
-				->get();
-			}else{
-				$companies = $this->company
-				->whereIn('vertical',$keys)
-				->with('managedBy','managedBy.userdetails','industryVertical','serviceline','countlocations')
-				->whereHas('serviceline', function($q){
-					    $q->whereIn('serviceline_id', $this->userServiceLines);
-
-					})
-				->orderBy('companyname')
-				->get();
-			}
-			
-		}else{
-			
-			$companies = $this->company
+		$companies = $this->company
 			->with('managedBy','managedBy.userdetails','industryVertical','serviceline','countlocations')
 			->whereHas('serviceline', function($q) {
 					    $q->whereIn('serviceline_id', $this->userServiceLines);
 
-					})
-			->orderBy('companyname')
-			->get();
+			});
+			
+		if($filtered) {
+			$keys = $this->company->getSearchKeys(['companies'],['vertical']);
+			$isNullable = $this->company->isNullable($keys,NULL);
+			$companies = $companies->whereIn('vertical',$keys);
+			
+			if($isNullable == 'Yes')
+			{
+				
+					$companies = $companies->orWhere(function($query) use($keys)
+					{
+						$query->whereNull('vertical');
+					});
+				
+			}
+			
 		}
 
-		return $companies;
+		return $companies->orderBy('companyname');
 
 	}
 	/**
