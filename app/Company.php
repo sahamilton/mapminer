@@ -116,13 +116,11 @@ class Company extends Model {
 	public function checkCompanyServiceLine($company_id,$userServiceLines)
 	{
 		
-		$checkCompany = $this->whereHas('serviceline', function($q) use ($userServiceLines) {
+		return $this->whereHas('serviceline', function($q) use ($userServiceLines) {
 						    $q->whereIn('serviceline_id', $userServiceLines);
 
-						})
-
+						})->with('industryVertical')
 						->find($company_id);
-		return $checkCompany;
 	}
 	
 }

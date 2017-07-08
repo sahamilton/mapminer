@@ -77,6 +77,16 @@ class Person extends NodeModel {
 		return $this->belongsToMany(SearchFilter::class)->withTimestamps(); 
 	}
 
+
+	public function getPersonsWithRole($roles){
+		return $this->select(\DB::raw("CONCAT(lastname,' ' ,firstname) AS fullname, id"))
+			->whereHas('userdetails.roles', 
+				function($q) use($roles){
+					$q->whereIn('role_id',$roles);
+				})
+			->orderBy('lastname')->get();
+			
+	}
 	public function salesleads(){
 		return $this->belongsToMany(Lead::class, 'lead_person_status')
 		->withTimestamps()

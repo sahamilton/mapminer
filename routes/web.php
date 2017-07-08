@@ -43,7 +43,7 @@ Route::group(['middleware' => 'auth'], function () {
 		});
 	#Companies
 		
-		Route::get('/company/{companyId}/state/{state?}', ['as'=>'company.state','uses'=>'CompaniesController@state']);
+		Route::get('/company/{companyId}/state/{state?}', ['as'=>'company.state','uses'=>'CompaniesController@stateselect']);
 		Route::post('/company/stateselect', ['as'=>'company.stateselect','uses'=>'CompaniesController@stateselect']);	
 		Route::get('/company/{companyId}/statemap/{state}', ['as'=>'company.statemap','uses'=>'CompaniesController@statemap']);
 		

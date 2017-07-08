@@ -93,8 +93,7 @@ class Location extends Model {
 			{
 				
 				$searchKeys = $this->getQuerySearchKeys();
-				
-				
+
 			}
 		}else{
 			$keyset = ['vertical','segment','businesstype'];
@@ -215,8 +214,6 @@ class Location extends Model {
 			return $miles;
 		}
 	}
-	
-	
 	private function getQuerySearchKeys()
 	{
 			$keys = array();

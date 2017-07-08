@@ -14,9 +14,9 @@
         <label class="col-md-2 control-label">National Account Manager:</label>
            <div class="input-group input-group-lg ">
             <select  required class="form-control" name='person_id'>
-            @foreach ($managers as $key=>$manager)
-                <option @if(isset($company) && $company->person_id == $key) selected @endif
-                value="{{$key}}">{{$manager}}</option>
+            @foreach ($managers as $manager)
+                <option @if(isset($company) && $company->person_id == $manager->id) selected @endif
+                value="{{$manager->id}}">{{$manager->fullname}}</option>
             @endforeach
             </select>
             <span class="help-block">
