@@ -45,7 +45,7 @@ class AdminUsersController extends BaseController {
      * Servicelines array
      * @var userServiceLines
      */
-    public $userServiceLines;
+
 
     public $branch;
     public $serviceline;
@@ -86,7 +86,7 @@ class AdminUsersController extends BaseController {
         if(! $id)
         // Grab all the users
 	       {
-                $servicelines = $this->company->getUserServiceLines();
+                $servicelines = $this->userServiceLines;
                 $serviceline = 'All';
                 $title = 'People / User Management';
             }else{
@@ -97,14 +97,14 @@ class AdminUsersController extends BaseController {
 	       	}
 	      $users = $this->user
            ->with('roles','usage','person','serviceline')
-           ->whereHas('serviceline', function($q) use($servicelines) {
-                $q->whereIn('serviceline_id',$servicelines);
+           ->whereHas('serviceline', function($q)  {
+                $q->whereIn('serviceline_id',$this->userServiceLines);
 
             })
            ->get();
-	      
+	     
         // Show the page
-        return response()->view('admin/users/index', compact('users', 'title','serviceline'));
+        return response()->view('admin.users.index', compact('users', 'title','serviceline'));
     }
 
     /**
@@ -282,6 +282,7 @@ class AdminUsersController extends BaseController {
     }
     private function associateBranchesWithPerson($person, $data)
     {
+
         $syncData=array();
         if(isset($data['branchstring'])){
             $data['branches'] = $this->branch->getBranchIdFromBranchNumber($data['branchstring']);
@@ -295,6 +296,7 @@ class AdminUsersController extends BaseController {
                     }
                 }
             }
+
         }
 
         $person->branchesServiced()->sync($syncData);

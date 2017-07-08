@@ -335,3 +335,10 @@ body {
     -moz-border-radius: 6px 0 6px 6px;
     border-radius: 6px 0 6px 6px;
 }
+
+.navbar-fixed-bottom, .navbar-fixed-top {
+    right: 0px;
+    left: 0px;
+    z-index: 1030;
+    position:relative;
+}

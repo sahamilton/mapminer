@@ -54,14 +54,14 @@
                     </button>
                     <ul class="dropdown-menu" role="menu">
 
-                    <li><a href="{{route('salesactivity.edit',$activity->id)}}"><i class="glyphicon glyphicon-pencil"></i> Edit {{$activity->title}} campaign</a></li>
+                    <li><a href="{{route('salesactivity.edit',$activity->id)}}"><i class="fa fa-pencil" aria-hidden="true"> </i>Edit {{$activity->title}} campaign</a></li>
                      <li><a href="{{route('campaign.announce',$activity->id)}}"><i class="glyphicon glyphicon-envelope"></i> Email campaign team</a></li>
                     <li><a href = "{{route('salesdocuments.index',$activity->id)}}"><i class="glyphicon glyphicon-book"></i> {{$activity->title}} campaign Documents</a></li>
                     <li><a data-href="{{route('salesactivity.destroy',$activity->id)}}" 
                     data-toggle="modal" 
                     data-target="#confirm-delete" 
                     data-title = "location" 
-                    href="#"><i class="glyphicon glyphicon-trash"></i> Delete {{$activity->title}} campaign</a>
+                    href="#"><i class="fa fa-trash-o" aria-hidden="true"> </i> Delete {{$activity->title}} campaign</a>
                     </li>
 
 

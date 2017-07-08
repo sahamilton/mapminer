@@ -11,7 +11,7 @@ class NewsController extends BaseController {
 
 	
 	public $news;
-	public $userServiceLines;
+
 	
 	public function __construct(News $news)
 	{

@@ -97,11 +97,11 @@
 
 						<li>
 						<a href="{{route('company.edit',$company->id)}}">
-						<i class="glyphicon glyphicon-pencil"></i> 
+						<i class="fa fa-pencil" aria-hidden="true"> </i>
 						Edit {{$company->companyname}}</a></li>
 						<li>
 						<a data-href="{{route('company.destroy',$company->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = "{{$company->companyname}} and all its locations" href="#">
-						<i class="glyphicon glyphicon-trash"></i> 
+						<i class="fa fa-trash-o" aria-hidden="true"> </i> 
 						Delete {{$company->companyname}}</a></li>
 						</ul>
 					</div>

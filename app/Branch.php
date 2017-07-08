@@ -189,7 +189,10 @@ class Branch extends Model {
 		return $coordinates;
 	}
 	
-	
+	public function getBranchIdFromBranchNumber($branchstring){
+		return $this->whereIn('branchnumber',explode(',',$branchstring))
+		->pluck('id')->toArray();
+	}
 		
 	/*
 		Generate Mapping xml file from branches results
@@ -270,9 +273,5 @@ class Branch extends Model {
 		return $managers;
 	}
 
-	public function getBranchIdFromBranchNumber($data){
-		$branches = explode(",",$data);
-		return $this->whereIn('branchnumber',$branches)->pluck('id')->toArray();
-
-	}
+	
 }

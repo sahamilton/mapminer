@@ -66,9 +66,9 @@
 			  </button>
 			  <ul class="dropdown-menu" role="menu">
 				
-				<li><a href="{{route(news.destroy',$item->id)}}"><i class="glyphicon glyphicon-pencil"></i> Edit this news item</a></li>
+				<li><a href="{{route(news.destroy',$item->id)}}"><i class="fa fa-pencil" aria-hidden="true"> </i>Edit this news item</a></li>
 				<li><a data-href="{{route('admin.news.delete',$item->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = " this news item and all its comments" href="#">
-                <i class="glyphicon glyphicon-trash"></i> Delete this news item</a></li>
+                <i class="fa fa-trash-o" aria-hidden="true"> </i> Delete this news item</a></li>
 			  </ul>
 			</div>
 		

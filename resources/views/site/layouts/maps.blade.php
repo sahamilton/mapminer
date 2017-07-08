@@ -39,7 +39,7 @@
 
 		<style>
         body {
-            padding: 60px 0;
+            padding: 0  0;
         }
 		@section('styles')
 		@show
@@ -59,7 +59,7 @@
 		<link rel="shortcut icon" href="{{{ asset('assets/ico/favicon.png') }}}">
 	</head>
 
-	<body>
+	<body onLoad="load()">
      <script>
        dataLayer = [{ 
            'userId' : '{{{Auth::id()}}}'
@@ -108,7 +108,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     src="https://d2s6cp23z9c3gz.cloudfront.net/js/embed.widget.min.js"
     data-domain="trueblue.besnappy.com"
     data-lang="en"
-	data-name="{{ isset(Auth::user()->firstname) ? Auth::user()->firstname ." ". Auth::user()->lastname  : Auth::user()->username  }}"
+	data-name="{{ isset(Auth::user()->person->firstname) ? Auth::user()->person->firstname ." ". Auth::user()->person->lastname  : Auth::user()->username  }}"
     data-email="{{ isset(Auth::user()->email) ? Auth::user()->email : '' }}"
     >
 </script>

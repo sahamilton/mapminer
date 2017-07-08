@@ -13,7 +13,7 @@
                     <ul class="nav navbar-nav">
                  			
                     	<li><a href="{{route('dashboard')}}">
-                        <i class="fa fa-tachometer" aria-hidden="true"></i> Dashboard</a></li>
+                        <i class="fa fa-tachometer" aria-hidden="true"> </i> Dashboard</a></li>
 
                         <li class="dropdown{{ (Request::is('admin/company*','admin/locations*') ? ' class="active"' : '') }}">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="{{{ route('company.index') }}}">
@@ -32,12 +32,12 @@
                                     </li>
                                     <li{{ (Request::is('admin/locations*') ? ' class="active"' : '') }}>
                                     <a href="{{{ route('locations.index') }}}">
-                                    <i class="fa fa-upload" aria-hidden="true"></i> Import Locations</a>
+                                    <i class="fa fa-upload" aria-hidden="true"> </i> Import Locations</a>
                                     </li>
                                     
                                     <li{{ (Request::is('admin/companies/download') ? ' class = "active"' : '') }}>
                                     <a href =" {{{ route('companies.download') }}}">                                
-                                    <i class="fa fa-download" aria-hidden="true"></i> Export Companies</a></li>
+                                    <i class="fa fa-download" aria-hidden="true"> </i> Export Companies</a></li>
                                     
                                      <li{{ (Request::is('admin/companies/export') ? ' class="active"' : '') }}>
                                      <a href="{{{ route('companies.locationsexport') }}}">
@@ -87,15 +87,15 @@
                                     </a>
                                  </li>
 
-
+<!--
                                 <li{{ (Request::is('admin/branch*') ? ' class="active"' : '') }}>
                                 <a href="{{{ route('branches.import') }}}">
-                               <i class="fa fa-upload" aria-hidden="true"></i> 
+                               <i class="fa fa-upload" aria-hidden="true"> </i> 
                                 Import Branches
                                 </a>
-                                </li>
+                                </li>-->
                                 <li{{ (Request::is('admin/branches/export') ? ' class="active"' : '') }}><a href="{{{ route('branches.export') }}}">
-                                <i class="fa fa-download" aria-hidden="true"></i> Export Branches</a></li>
+                                <i class="fa fa-download" aria-hidden="true"> </i> Export Branches</a></li>
 
 
                             </ul>
@@ -117,11 +117,12 @@
                                 <li{{ (Request::is('admin/permissions*') ? ' class="active"' : '') }}><a href="{{{ route('permissions.index') }}}"><span class="glyphicon glyphicon-check"></span> Permissions</a></li>
 
 
-
+<!--
                                 <li{{ (Request::is('admin/companies*') ? ' class="active"' : '') }}><a href="{{{ route('admin.users.import') }}}">
-                                <i class="fa fa-upload" aria-hidden="true"></i> Import Users</a></li>
+                                <i class="fa fa-upload" aria-hidden="true"> </i> Import Users</a></li>
+                                -->
                                 <li{{ (Request::is('admin/users/export') ? ' class="active"' : '') }}><a href="{{{ route('person.export') }}}">
-                                <i class="fa fa-download" aria-hidden="true"></i> Export Users</a></li>
+                                <i class="fa fa-download" aria-hidden="true"> </i> Export Users</a></li>
                             </ul>
                         </li>
                         @endcan
@@ -137,29 +138,29 @@
                 </a>
                 <ul class="dropdown-menu">
 					<li{{ (Request::is('admin/news*') ? ' class="active"' : '') }}><a href="{{{ route('news.index') }}}">
-                    <i class="fa fa-newspaper-o" aria-hidden="true"></i> News</a></li>
+                    <i class="fa fa-newspaper-o" aria-hidden="true"> </i> News</a></li>
                     @can('manage_sales_campaigns')
                         <li class="divider">Campaigns</li>
                         <li{{ (Request::is('admin/documents*') ? ' class="active"' : '') }}><a href="{{{ route('documents.index') }}}">
-                        <i class="fa fa-book" aria-hidden="true"></i> Sales Library</a></li>
+                        <i class="fa fa-book" aria-hidden="true"> </i> Sales Library</a></li>
                         <li {{ (Request::is('admin/process*') ? ' class="active"' : '') }}><a href="{{{ route('process.index') }}}">
-                        <i class="fa fa-step-forward" aria-hidden="true"></i> Sales Process</a></li>
+                        <i class="fa fa-step-forward" aria-hidden="true"> </i> Sales Process</a></li>
                         <li {{ (Request::is('admin/salesactivity*') ? ' class="active"' : '') }}><a href="{{{ route('salesactivity.index') }}}">
-                        <i class="fa fa-calendar-check-o" aria-hidden="true"></i> Sales Campaigns</a></li>
+                        <i class="fa fa-calendar-check-o" aria-hidden="true"> </i> Sales Campaigns</a></li>
                     @endcan
                     @can('manage_leads')
                         <li class="divider">Leads</li>
                         <li{{ (Request::is('admin/leads') ? ' class="active"' : '') }}><a href="{{{ route('leads.index') }}}">
-                        <i class="fa fa-envelope-open-o" aria-hidden="true"></i> Sales Leads</a></li>
+                        <i class="fa fa-envelope-open-o" aria-hidden="true"> </i> Sales Leads</a></li>
                         <li{{ (Request::is('admin/leadsource*') ? ' class="active"' : '') }}><a href="{{{ route('leadsource.index') }}}">
-                        <i class="fa fa-diamond" aria-hidden="true"></i> Lead Sources</a></li>
+                        <i class="fa fa-diamond" aria-hidden="true"> </i> Lead Sources</a></li>
                         <li {{ (Request::is('admin/leadstatus*') ? ' class="active"' : '') }}><a href="{{{ route('leadstatus.index') }}}">
-                        <i class="fa fa-star-o" aria-hidden="true"></i> Lead Statuses</a></li>
+                        <i class="fa fa-star-o" aria-hidden="true"> </i> Lead Statuses</a></li>
                         <li class="divider">Industries</li>
                     @endcan
                     <li {{ (Request::is('admin/search*') ? ' class="active"' : '') }}><a href="{{{ route('vertical.analysis') }}}">
                     
-                    <i class="fa fa-building-o" aria-hidden="true"></i> Industries</a></li>
+                    <i class="fa fa-building-o" aria-hidden="true"> </i> Industries</a></li>
 
                 </ul>
 			</li>
@@ -171,15 +172,15 @@
                         
                         <li class="dropdown">
                                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                    <span class="glyphicon glyphicon-user"></span> {{ucfirst(strtolower( Auth::user()->username ))}}  <span class="caret"></span>
+                                    <span class="glyphicon glyphicon-user"></span> {{ucfirst(strtolower( Auth::user()->person->firstname ))}}  <span class="caret"></span>
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li><a href="{{{ route('profile') }}}">
-                                    <i class="fa fa-user" aria-hidden="true"></i> Profile</a></li>
+                                    <i class="fa fa-user" aria-hidden="true"> </i> Your Profile</a></li>
                                     @if(Auth::user()->hasRole('Admin'))
 
                                      <a href="{{route('about')}}">
-                                    <li><i class="fa fa-info-circle" aria-hidden="true"></i>
+                                    <li><i class="fa fa-info-circle" aria-hidden="true"> </i>
                                     About Mapminer</a></li>
                                     @endif
                                     <li class="divider"></li>
@@ -187,7 +188,7 @@
                                         <a href="{{ route('logout') }}" 
                                              onclick="event.preventDefault();
                                              document.getElementById('logout-form').submit();">
-                                              <i class="fa fa-sign-out" aria-hidden="true"></i>
+                                              <i class="fa fa-sign-out" aria-hidden="true"> </i>
                                               Logout
                                         </a>
                                          <form id="logout-form" 

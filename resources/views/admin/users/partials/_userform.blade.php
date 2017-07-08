@@ -3,7 +3,7 @@
 				<div class="form-group {!! $errors->has('username') ? 'has-error' : ''!!}">
 					<label class="col-md-2 control-label" for="username">Username</label>
 					<div class="col-md-10">
-						<input class="form-control" type="text" name="username" id="username" value="{{{ Input::old('username', isset($user) ? $user->username : null) }}}" 
+						<input class="form-control" type="text" name="username" id="username" value="{{{ old('username', isset($user) ? $user->username : '') }}}" 
 						placeholder="user name"/>
 						{!! $errors->first('username', '<span class="help-inline">:message</span>') !!}
 					</div>
@@ -14,7 +14,7 @@
 				<div class="form-group {!! $errors->has('email') ? 'has-error' : '' !!}">
 					<label class="col-md-2 control-label" for="email">Email</label>
 					<div class="col-md-10">
-						<input class="form-control" type="text" name="email" id="email" value="{{{ Input::old('email', isset($user) ? $user->email : null) }}}" 
+						<input class="form-control" type="text" name="email" id="email" value="{{ old('email', isset($user) ? $user->email : '') }}" 
 						placeholder="email@peopleready.com"/>
 						{!! $errors->first('email', '<span class="help-inline">:message</span>') !!}
 					</div>
@@ -24,7 +24,7 @@
 				    <div class="form-group{{ $errors->has('employee_id') ? ' has-error' : '' }}">
 				        <label class="col-md-2 control-label">Employee Id</label>
 				            <div class="col-md-10">
-				                <input type="text" class="form-control" name='employee_id' description="employee_id" value="{{ old('employee_id') ? old('employee_id') : isset($data->employee_id) ? $data->employee_id : "" }}" placeholder="employee_id">
+				                <input type="text" class="form-control" name='employee_id' description="employee_id" value="{{ old('employee_id',isset($user) ? $user->employee_id : '') }}" placeholder="employee_id">
 				                <span class="help-block{{ $errors->has('employee_id') ? ' has-error' : '' }}">
 				                    <strong>{{ $errors->has('employee_id') ? $errors->first('employee_id') : ''}}</strong>
 				                    </span>
@@ -50,6 +50,16 @@
 					</div>
 				</div>
 				<!-- ./ password confirm -->
+
+				<!-- confirmed -->
+				<div class="form-group {!! $errors->has('confirmed') ? 'has-error' : '' !!}">
+					<label class="col-md-2 control-label" for="password_confirmation">Active</label>
+					<div class="col-md-10">
+						<input class="form-control" type="checkbox" name="confirmed" id="confirmed" value="1" {{isset($user) && $user->confirmed==1 ? 'checked' : ''}}/>
+						{!! $errors->first('confirmed', '<span class="help-inline">:message</span>') !!}
+					</div>
+				</div>
+				<!-- ./ confirmed -->
 				
 				<!-- Groups -->
 				<div class="form-group {!! $errors->has('roles') ? 'has-error' : '' !!}">

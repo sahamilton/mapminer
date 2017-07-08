@@ -30,8 +30,6 @@ class CompaniesController extends BaseController {
 		$this->person = $person;
 		parent::__construct($this->company);
 
-		
-
 	}
 	
 	
@@ -43,11 +41,12 @@ class CompaniesController extends BaseController {
 	 
 	public function index()
 	{
-
+		
 		$filtered = $this->company->isFiltered(['companies'],['vertical']);
 		$companies = $this->getAllCompanies($filtered);
 		$title = 'All Accounts';
 		$locationFilter = 'both';
+
 		return response()->view('companies.index', compact('companies','title','filtered','locationFilter'));
 	}
 	
@@ -98,6 +97,7 @@ class CompaniesController extends BaseController {
 			->orderBy('companyname')
 			->get();
 		}
+
 		return $companies;
 
 	}
@@ -321,21 +321,7 @@ class CompaniesController extends BaseController {
 		->get();	
 		return response()->view('companies.index', compact('companies','title','filtered','locationFilter'));	
 	}
-	/*
 	
-	seems to be redundant
-	
-	 public function locationFilter()
-	{
-			$filtered = $this->company->isFiltered(['companies'],['vertical']);
-			$locationFilter= \Input::get('locationFilter');
-			$companies = $this->getAllCompanies();
-			$title = 'All Accounts';
-			
-			return response()->view('companies.index', compact('companies','title','filtered','locationFilter'));
-
-	}
-	*/
 	
 	/**
 	 * Display list of the locations of specified company in specified state.
@@ -368,7 +354,9 @@ class CompaniesController extends BaseController {
 		}
 		$locations = $this->getStateLocations($data['company'],$state,$data);
 		$mywatchlist = $this->getWatchList();
+
 		$states= $this->getCompanyStates($data['company'],$data);
+
 		$filters= SearchFilter::all()->pluck('filter','id');
 		return response()->view('companies.state', compact('data','locations','mywatchlist','states','filtered','filters','segments'));
 	}
@@ -471,6 +459,7 @@ class CompaniesController extends BaseController {
 		return $verticals->getLeaves()->where('searchcolumn','=','vertical');
 	}
 	
+
 	/*
 	 * Function getWatchList
 	 *

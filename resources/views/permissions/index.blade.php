@@ -45,13 +45,13 @@
                     </button>
                     <ul class="dropdown-menu" role="menu">
 
-                    <li><a href="{{route('permission.edit',$permission->id)}}"><i class="glyphicon glyphicon-pencil"></i> Edit permission</a></li>
+                    <li><a href="{{route('permission.edit',$permission->id)}}"><i class="fa fa-pencil" aria-hidden="true"> </i>Edit permission</a></li>
 
                     <li><a data-href="{{route('permissions.destroy',$permission->id)}}" 
                     data-toggle="modal" 
                     data-target="#confirm-delete" 
                     data-title = "location" 
-                    href="#"><i class="glyphicon glyphicon-trash"></i> Delete permission</a>
+                    href="#"><i class="fa fa-trash-o" aria-hidden="true"> </i> Delete permission</a>
                     </li>
 
 

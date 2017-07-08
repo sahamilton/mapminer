@@ -60,7 +60,7 @@
 					<li>
 
 						<a href="{{route('locations.edit',$location->id)}}">
-							<i class="fa fa-pencil" aria-hidden="true"></i>
+							<i class="fa fa-pencil" aria-hidden="true"> </i>
 
 							Edit {{$location->businessname}}
 						</a>

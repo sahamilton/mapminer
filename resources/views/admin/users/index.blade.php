@@ -62,11 +62,13 @@ $newTZ = new DateTimeZone('America/Los_Angeles');
     </td>
     <td class="col-md-2">
     <ul>
+    @if(isset($user->serviceline))
     @foreach($user->serviceline as $serviceline)
     
     <li><a href="{{route('serviceline.show',$serviceline->id)}}"> {{$serviceline->ServiceLine }}</a></li>
    
     @endforeach
+    @endif
     </ul>
     </td>
     <td class="col-md-2">{{ $user->confirmed == '1' ? "yes" :  "no"}}</td>
@@ -95,9 +97,14 @@ $newTZ = new DateTimeZone('America/Los_Angeles');
 			  </button>
 			  <ul class="dropdown-menu" role="menu">
 				
-				<li><a href="{{route('users.edit',$user->id)}}"><i class="glyphicon glyphicon-pencil"></i> Edit {{$user->person->firstname}} {{$user->person->lastname}}</a></li>
+				<li><a href="{{route('users.edit',$user->id)}}"><i class="fa fa-pencil" aria-hidden="true"> </i>Edit {{$user->person->firstname}}  {{$user->person->lastname}}</a></li>
 
-				<li><a data-href="{{route('users.destroy',$user->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = "{{$user->person->firstname}} {{$user->person->lastname}}" href="#"><i class="glyphicon glyphicon-trash"></i> Delete {{$user->person->firstname}} {{$user->person->lastname}}</a></li></a></li>
+				<li><a data-href="{{route('users.destroy',$user->id)}}" 
+				data-toggle="modal" 
+				data-target="#confirm-delete" 
+				data-title = "{{$user->person->firstname}}  {{$user->person->lastname}}" href="#">
+				<i class="fa fa-trash-o" aria-hidden="true"> </i> 
+				Delete {{$user->person->firstname}}  {{$user->person->lastname}}</a></li></a></li>
 
 			  </ul>
 			</div>

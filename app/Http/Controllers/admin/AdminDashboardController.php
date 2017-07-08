@@ -31,7 +31,7 @@ class AdminDashboardController extends BaseController {
 		$data['status'] = $this->getNoLogins();
 		$data['watchlists'] = $this->getWatchListCount();
 		$data['nosalesnotes'] = $this->getNoSalesNotes();
-		//$data['locations'] = $this->countLocations();
+		//$data['locations'] = $this->countLocations()->count;
 		
 		$data['duplicates'] =$this->getDuplicateAddresses();
 		$data['nocontact'] =$this->getLocationsWoContacts();

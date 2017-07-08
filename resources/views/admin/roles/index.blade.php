@@ -49,8 +49,8 @@
 			  </button>
 			  <ul class="dropdown-menu" role="menu">
 				
-				<li><a href="{{route('roles.edit',$role->id)}}"><i class="glyphicon glyphicon-pencil"></i> Edit {{$role->name}}</a></li>
-				<li><a data-href="{{route('roles.destroy',$role->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = "{{$role->name}}" href="#"><i class="glyphicon glyphicon-trash"></i> Delete {{$role->name}}</a></li>
+				<li><a href="{{route('roles.edit',$role->id)}}"><i class="fa fa-pencil" aria-hidden="true"> </i>Edit {{$role->name}}</a></li>
+				<li><a data-href="{{route('roles.destroy',$role->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = "{{$role->name}}" href="#"><i class="fa fa-trash-o" aria-hidden="true"> </i> Delete {{$role->name}}</a></li>
 			  </ul>
 			</div>
         

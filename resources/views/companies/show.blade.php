@@ -33,11 +33,9 @@
          
 @include('companies.partials._companyheader')
 @include('partials/advancedsearch')
-
 @include('companies/partials/_state')
 @include('maps.partials._form')
-@include('companies.partials._limited')
-   
+@include('companies.partials._limited') 
 @include('companies.partials._table')
 @include('partials/_modal')
 @include('partials/_scripts')

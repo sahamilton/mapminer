@@ -21,7 +21,9 @@ $data['distance'] = Config::get('default_radius');?>
 @if(auth()->user()->hasRole('Admin'))
 
 @endif
+
 @include('companies.partials._table')
+
     </div>
 @include('partials/_scripts')
 @stop
