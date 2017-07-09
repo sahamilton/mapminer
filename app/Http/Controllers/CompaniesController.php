@@ -229,29 +229,33 @@ class CompaniesController extends BaseController {
 		$company = $this->company->with('managedBy','industryvertical')->findOrFail($id);
 
 		$locations = $this->locations->where('company_id','=',$company->id);
+
 		if($segment){
 
 				$locations = $locations->where('segment','=',$segment);
 		}
-		$locations = $locations->get();
+		
+
 	
 
 		$mywatchlist = array();
-		// This doesnt make sens as long as companies belong to one vertical
+		// This doesnt make sense as long as companies belong to one vertical
 
 		$filtered = $company->isFiltered(['locations'],['segment','businesstype'],$company->vertical);
 		$keys = $this->company->getSearchKeys(['locations'],['segment','businesstype']);
+		$locations = $locations->orderBy('state')->get();
+		
 
 		if($filtered) {	
 			
-			 $locations = $this->locations
-				 ->where('company_id','=',$company->id)
+			 $locations = $locations
 				 ->whereIn('segment', $keys)
-				 ->orWhereIn('businesstype', $keys)
-				 ->orderBy('state')
-				 ->get();
+				 ->orWhereIn('businesstype', $keys);
+				 
 			
 		}
+		
+
 		$states = $this->getStatesInArray($locations);
 		$segments = $this->getCompanySegments($company);
 		$filters = $this->searchfilter->vertical();

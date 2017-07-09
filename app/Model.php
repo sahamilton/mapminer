@@ -297,8 +297,9 @@ public function _import_csv($filename, $table,$fields)
 		//}elseif (isset($vertical)){
 		}else{
 			// If vertical is set see if all the segments of that vertical are set.	
-			
+
 			$allFilters = 	SearchFilter::where('parent_id','=',$vertical)
+			->orWhere('id','=',$vertical)
 			->orWhere(function($query) use($searchtable,$searchcolumn)
 				{
 					$query->whereIn('searchtable',$searchtable)
@@ -325,7 +326,7 @@ public function _import_csv($filename, $table,$fields)
 				
 			})
 				->pluck('id');
-	
+		
 			if(count($allFilters) == 0) {
 				return $filtered;
 			}
