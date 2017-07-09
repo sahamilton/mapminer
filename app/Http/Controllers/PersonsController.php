@@ -32,7 +32,7 @@ class PersonsController extends BaseController {
 	 */
 	public function index()
 	{
-				
+			
 		$filtered = $this->persons->isFiltered(['companies'],['vertical']);
 		
 		
@@ -176,6 +176,7 @@ class PersonsController extends BaseController {
 	 */
 	public function show($person)
 	{
+
 		
 		//note remove manages & manages.servicedby
 		$people = $this->persons
@@ -194,7 +195,7 @@ class PersonsController extends BaseController {
 						)
 			
 			->find($person->id);
-	
+
 		$roles = $this->persons->findPersonsRole($people);
 
 		// Note that we will have to extend this to show Sales people
@@ -203,7 +204,7 @@ class PersonsController extends BaseController {
 		{
 			
 			$accounts = $people->managesAccount;
-			
+
 			
 			
 			return response()->view('persons.showaccount', compact('people','accounts'));

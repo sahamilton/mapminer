@@ -1,5 +1,6 @@
 @extends('site.layouts.default')
 @section('content')
+
 <h3>Accounts managed by {{$people->postName()}}</h3>
 <p><a href="mailto:{{$people->email}}" title="Email {{$people->postName()}}">{{$people->email}}</a></p>
 <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
@@ -8,10 +9,12 @@
 		<th>Vertical</th>
 	</thead>
 	<tbody>
+	
 		@foreach($accounts as $account)
+
 			<tr>  
 				<td>
-				@if(isset( $account->locationcount->first()->count) &&  $account->locationcount->first()->count > 0)
+				@if(count($account->countlocations)> 0)
 					<a title="See all {{$account->companyname}} locations" 
 					href="{{route('company.show',$account->id)}}">
 					{{$account->companyname}}
