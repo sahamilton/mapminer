@@ -15,27 +15,35 @@ Account managed by <a href="{{route('person.show',$location->company->managedBy-
 
 </i></p>
 @endif
-<p><a href="{{route('locations.vcard',$location->id)}}">
-Download vcard <i class="fa fa-address-card-o" aria-hidden="true"></i></a></p>
-<a href="{{route('salesnotes',$location->company->id)}}" title="Read notes on selling to {{$location->company->companyname}}"><i class="glyphicon glyphicon-search"></i>  Read 'How to Sell to {{$location->company->companyname}}' </a>
-<p><b>Address:</b><br/>{{$location->street}}<br />  {{$location->city}}  {{$location->state}} {{$location->zip}}</p>
-<p><b>Primary Contact:</b>{{$location->contact}}</p>
-<p><b>Phone:</b>{{$location->phone}}</p>
+<i class="fa fa-search" aria-hidden="true"></i>
+<a href="{{route('salesnotes',$location->company->id)}}" title="Read notes on selling to {{$location->company->companyname}}"> Read 'How to Sell to {{$location->company->companyname}}' </a>
+<fieldset style="border:solid 1px grey;width:90%;padding:5px">
+<p><i class="fa fa-user" aria-hidden="true"></i>
+ <b>Primary Contact:</b> {{$location->contact}}</p>
+<p><i class="fa fa-map-marker" aria-hidden="true"></i>
+ <b>Address:</b><br/>{{$location->street}}<br />  {{$location->city}}  {{$location->state}} {{$location->zip}}</p>
+
+<p><b><i class="fa fa-phone" aria-hidden="true"></i> Phone:</b>{{$location->phone}}</p>
+<p><i class="fa fa-address-card-o" aria-hidden="true"></i><a href="{{route('locations.vcard',$location->id)}}">
+ Download vcard </a></p>
+ </fieldset>
+ <p><i class="fa fa-eye" aria-hidden="true"></i>
 @if(isset($watch->location_id))
 
-<p><a href="{{route('watch.delete',$watch->id)}}" title="Remove this location to my watch list"><i class="glyphicon glyphicon-floppy-remove"></i> Remove from My Watch List</a>
+<a href="{{route('watch.delete',$watch->id)}}" title="Remove this location to my watch list"> Remove from My Watch List</a>
 
 @else
-<p><a href="{{route('watch.add',$location->id)}}" title="Add this location to my watch list"><i class="glyphicon glyphicon-floppy-disk"></i> Add to My Watch List</a></i>
+<a href="{{route('watch.add',$location->id)}}" title="Add this location to my watch list"> Add to My Watch List</a></i>
 @endif
-
+</p>
 <?php if(isset($branch[0]->branchid)){?>
-<p>Closest Branch: <a href="{{ route('branches.show', $branch[0]->branchid) }}" title='show all {{trim($branch[0]->branchname)}} national accounts'>{{$branch[0]->branchnumber}}:{{$branch[0]->branchname}} </a></p>
+<p><i class="fa fa-location-arrow" aria-hidden="true"></i>
+ <b>Closest Branch: </b><a href="{{ route('branches.show', $branch[0]->branchid) }}" title='show all {{trim($branch[0]->branchname)}} national accounts'>{{$branch[0]->branchnumber}}:{{$branch[0]->branchname}} </a></p>
 <?php }else{?>
 <p>Closest Branch: <a href="{{ route('assign.location', $location->id) }}" title=''>Closest Branch</a></p>
 
 <?php } ?>
-<p> <a href="{{ route('assign.location', $location->id) }}" title='See nearby branches'>Other Nearby Branches</a></p>
+<p> <i class="fa fa-map-signs" aria-hidden="true"></i> <a href="{{ route('assign.location', $location->id) }}" title='See nearby branches'>Other Nearby Branches</a></p>
 <a href="{{route('locations.edit',$location->id)}}" title="Edit this location"><i class="glyphicon glyphicon-pencil"></i>Edit location</a>
 <hr />
 <h2>Notes</h2>
@@ -50,7 +58,7 @@ Download vcard <i class="fa fa-address-card-o" aria-hidden="true"></i></a></p>
  @endif
  </p>
 @if($note->user_id == Auth::user()->id  or Auth::user()->hasRole('Admin'))
-<br /><a href="{{route('notes.edit',$note->id)}}" title="Edit this note"><i class="glyphicon glyphicon-pencil"></i></a> | 
+<br /><i class="glyphicon glyphicon-pencil"></i> <a href="{{route('notes.edit',$note->id)}}" title="Edit this note"></a> | 
 <a data-href="{{route('notes.destroy',$note->id)}}" 
             data-toggle="modal" 
             data-target="#confirm-delete" 
