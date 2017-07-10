@@ -15,6 +15,8 @@ Account managed by <a href="{{route('person.show',$location->company->managedBy-
 
 </i></p>
 @endif
+<p><a href="{{route('locations.vcard',$location->id)}}">
+Download vcard <i class="fa fa-address-card-o" aria-hidden="true"></i></a></p>
 <a href="{{route('salesnotes',$location->company->id)}}" title="Read notes on selling to {{$location->company->companyname}}"><i class="glyphicon glyphicon-search"></i>  Read 'How to Sell to {{$location->company->companyname}}' </a>
 <p><b>Address:</b><br/>{{$location->street}}<br />  {{$location->city}}  {{$location->state}} {{$location->zip}}</p>
 <p><b>Primary Contact:</b>{{$location->contact}}</p>

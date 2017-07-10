@@ -54,7 +54,7 @@ Route::group(['middleware' => 'auth'], function () {
 	#Locations
 		
 		Route::get('location/{id}/branches', ['as' => 'assign.location', 'uses' => 'LocationsController@getClosestBranch']);
-		
+		Route::get('locations/{id}/vcard',['as'=>'locations.vcard','uses'=>'LocationsController@vcard']);
 		Route::get('location/{locationId}/branchmap', ['as' => 'nearby.location', 'uses' => 'LocationsController@getClosestBranchMap']);
 		Route::get('location/shownearby', ['as' => 'shownearby.location', 'uses' => 'LocationsController@showNearbyLocations']);
 		Route::get('location/nearby', ['as' => 'nearby/location', 'uses' => 'LocationsController@mapNearbyLocations']);
