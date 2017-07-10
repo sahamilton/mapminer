@@ -3,7 +3,7 @@
 
 <h2>{{$data['fullstate']}} State Branches</h2>
 <h4> <a href="{{route('branches.index')}}" title="Show all branches" />Show all branches</a></h4>
-<?php $route='branch.statemap';?>
+<?php $route='branches.statemap';?>
 @include('branches/partials/_state')
 <p><a href='{{route("branches.state",$data['state'])}}'><i class="glyphicon glyphicon-th-list"></i> List view</a></p>
   
