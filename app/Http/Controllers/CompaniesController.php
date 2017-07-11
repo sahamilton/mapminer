@@ -225,39 +225,44 @@ class CompaniesController extends BaseController {
 		}
 
 		$data = $this->getSegmentCompanyInfo($company,$segment);
+		$company = $this->company->with('managedBy','industryvertical')->find($id);;
+		if($filtered = $company->isFiltered(['companies'],['vertical'],$company->vertical))
+				{
+					$keys = $this->company->getSearchKeys(['companies'],['vertical']);
 
-		$company = $this->company->with('managedBy','industryvertical')->findOrFail($id);
+						$company = $this->company->with('managedBy','industryvertical')
+						->whereHas('industryvertical',function($q) use($keys){
+							$q->whereIn('id',$keys);
+						})
+						->find($id);
+						if(count($company)!=1){
+								return redirect()->route('company.index');
+						}
 
-		$locations = $this->locations->where('company_id','=',$company->id);
-
+				}
+		$locations = $this->locations->where('company_id','=',$company->id);		
 		if($segment){
 
 				$locations = $locations->where('segment','=',$segment);
 		}
+		$filtered = $company->isFiltered(['locations'],['segment','businesstype'],$company->vertical);
+		$keys = $this->company->getSearchKeys(['locations'],['segment','businesstype']);
+		if($filtered && count($keys)>0){
+			
+			$locations = $locations
+						 ->whereIn('segment', $keys)
+						 ->orWhere(function($query) use($keys){
+						
+							$query->whereIn('businesstype', $keys);
+						});
+				}
 		
 
-	
+		$locations = $locations->orderBy('state')->get();
 
 		$mywatchlist = array();
 		// This doesnt make sense as long as companies belong to one vertical
-
-		$filtered = $company->isFiltered(['locations'],['segment','businesstype'],$company->vertical);
-		$keys = $this->company->getSearchKeys(['locations'],['segment','businesstype']);
-		$locations = $locations->orderBy('state');
 		
-
-		if($filtered && count($keys)>0) {	
-			
-			 $locations = $locations
-				 ->whereIn('segment', $keys)
-				 ->orWhere(function($query) use($data){
-				
-					$query->whereIn('businesstype', $data['keys']);
-				});
-				
-		}
-		
-		$locations = $locations->get();
 		$states = $this->getStatesInArray($locations);
 		$segments = $this->getCompanySegments($company);
 		$filters = $this->searchfilter->vertical();
