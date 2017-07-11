@@ -396,18 +396,24 @@ class CompaniesController extends BaseController {
 	 */
 	
 	private function getStateLocations($company,$state,$data){
-		
-			$locations = $company->locations
-				 ->where('state','=',$state);
-			if($data['filtered']){
-				$locations = $locations->whereIn('segment', $data['keys'])
-				->orWhere(function($query) use($data){
-				
-					$query->whereIn('businesstype', $data['keys']);
+			
+			$company= $this->company->with('locations')
+			->where('id','=',$company->id)
+			->whereHas('locations',function($q) use($state){
+				$q->where('state','=',$state);
+			});
+
+			if($data['filtered'] && count($data['keys']) >0){
+				$company = $company
+				->whereHas('locations',function($q) use($data,$state){
+					$q->whereIn('segment', $data['keys'])
+					->orWhereIn('businesstype', $data['keys']);
 				});
+			}	
+			
+			return $company->first()->locations;			
 				
-			}
-			return $locations->get();
+
 	}
 	
 	/**

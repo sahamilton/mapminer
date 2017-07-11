@@ -6,7 +6,6 @@
 <p><a href="{{route('company.index')}}" title="See all accounts">See all accounts</a></p>
 @endif
 
-{!!$filtered ? "<h4 class='filtered'>Filtered</h4>" : ''!!}
 
 @include('partials/_showsearchoptions')
 @include('partials/advancedsearch')
