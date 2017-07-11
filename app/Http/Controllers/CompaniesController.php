@@ -250,9 +250,11 @@ class CompaniesController extends BaseController {
 			
 			 $locations = $locations
 				 ->whereIn('segment', $keys)
-				 ->orWhereIn('businesstype', $keys);
-				 
-			
+				 ->orWhere(function($query) use($data){
+				
+					$query->whereIn('businesstype', $data['keys']);
+				});
+				
 		}
 		
 
@@ -308,7 +310,11 @@ class CompaniesController extends BaseController {
 				if($data['filtered']){
 					
 					$states=$states->whereIn('segment', $data['keys'])
-					->orWhereIn('businesstype', $data['keys']);
+					->orWhere(function($query) use($data){
+				
+					$query->whereIn('businesstype', $data['keys']);
+					});
+					
 				}	
 		return $states->orderBy('state')
 				->pluck('state');
@@ -395,7 +401,11 @@ class CompaniesController extends BaseController {
 				 ->where('state','=',$state);
 			if($data['filtered']){
 				$locations = $locations->whereIn('segment', $data['keys'])
-				->orWhereIn('businesstype', $data['keys']);
+				->orWhere(function($query) use($data){
+				
+					$query->whereIn('businesstype', $data['keys']);
+				});
+				
 			}
 			return $locations;
 	}
