@@ -229,29 +229,35 @@ class CompaniesController extends BaseController {
 		$company = $this->company->with('managedBy','industryvertical')->findOrFail($id);
 
 		$locations = $this->locations->where('company_id','=',$company->id);
+
 		if($segment){
 
 				$locations = $locations->where('segment','=',$segment);
 		}
-		$locations = $locations->get();
+		
+
 	
 
 		$mywatchlist = array();
-		// This doesnt make sens as long as companies belong to one vertical
+		// This doesnt make sense as long as companies belong to one vertical
 
 		$filtered = $company->isFiltered(['locations'],['segment','businesstype'],$company->vertical);
 		$keys = $this->company->getSearchKeys(['locations'],['segment','businesstype']);
+		$locations = $locations->orderBy('state');
+		
 
-		if($filtered) {	
+		if($filtered && count($keys)>0) {	
 			
-			 $locations = $this->locations
-				 ->where('company_id','=',$company->id)
+			 $locations = $locations
 				 ->whereIn('segment', $keys)
-				 ->orWhereIn('businesstype', $keys)
-				 ->orderBy('state')
-				 ->get();
-			
+				 ->orWhere(function($query) use($data){
+				
+					$query->whereIn('businesstype', $data['keys']);
+				});
+				
 		}
+		
+		$locations = $locations->get();
 		$states = $this->getStatesInArray($locations);
 		$segments = $this->getCompanySegments($company);
 		$filters = $this->searchfilter->vertical();
@@ -304,7 +310,11 @@ class CompaniesController extends BaseController {
 				if($data['filtered']){
 					
 					$states=$states->whereIn('segment', $data['keys'])
-					->orWhereIn('businesstype', $data['keys']);
+					->orWhere(function($query) use($data){
+				
+					$query->whereIn('businesstype', $data['keys']);
+					});
+					
 				}	
 		return $states->orderBy('state')
 				->pluck('state');
@@ -391,9 +401,13 @@ class CompaniesController extends BaseController {
 				 ->where('state','=',$state);
 			if($data['filtered']){
 				$locations = $locations->whereIn('segment', $data['keys'])
-				->orWhereIn('businesstype', $data['keys']);
+				->orWhere(function($query) use($data){
+				
+					$query->whereIn('businesstype', $data['keys']);
+				});
+				
 			}
-			return $locations;
+			return $locations->get();
 	}
 	
 	/**

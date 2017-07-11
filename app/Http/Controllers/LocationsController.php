@@ -8,6 +8,7 @@ use Excel;
 use App\Location;
 use App\SearchFilter;
 use App\Serviceline;
+use JeroenDesloovere\VCard\VCard;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use App\Http\Requests\LocationFormRequest;
@@ -366,5 +367,22 @@ class LocationsController extends BaseController {
 		echo "All done!";
 	}
 	
+	public function vcard($id){
+			$vcard = new VCard;
+			$location = $this->location
+			->with('company')
+			->findOrFail($id);
+			
+			$vcard->addName($location->contact,null,null,null,null);
+
+			// add work data
+			$vcard->addCompany($location->businessname);
+			$vcard->addPhoneNumber($location->phone, 'PREF;WORK');
+			$vcard->addAddress(null,$location->suite, $location->street, $location->city, null, $location->zip, null);
+			$vcard->addURL(route('locations.show',$location->id));
+
+			$vcard->download();
+
+	}
 	
 }
