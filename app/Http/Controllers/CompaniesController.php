@@ -243,10 +243,10 @@ class CompaniesController extends BaseController {
 
 		$filtered = $company->isFiltered(['locations'],['segment','businesstype'],$company->vertical);
 		$keys = $this->company->getSearchKeys(['locations'],['segment','businesstype']);
-		$locations = $locations->orderBy('state')->get();
+		$locations = $locations->orderBy('state');
 		
 
-		if($filtered) {	
+		if($filtered && count($keys)>0) {	
 			
 			 $locations = $locations
 				 ->whereIn('segment', $keys)
@@ -257,7 +257,7 @@ class CompaniesController extends BaseController {
 				
 		}
 		
-
+		$locations = $locations->get();
 		$states = $this->getStatesInArray($locations);
 		$segments = $this->getCompanySegments($company);
 		$filters = $this->searchfilter->vertical();
@@ -407,7 +407,7 @@ class CompaniesController extends BaseController {
 				});
 				
 			}
-			return $locations;
+			return $locations->get();
 	}
 	
 	/**
