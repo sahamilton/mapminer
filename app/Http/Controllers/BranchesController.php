@@ -413,7 +413,7 @@ class BranchesController extends BaseController {
 	
 	
 	
-	public function state(Request $request, $statecode) {
+	public function state(Request $request, $statecode=null) {
 		
 
 
