@@ -282,9 +282,10 @@ public function _import_csv($filename, $table,$fields)
 			
    				return $filtered;
 		}
-	
+
 		
 		$searchFilters= array_flatten(\Session::get('Search'));
+
 		if(empty($searchFilters)){
 			
 			return $filtered;
@@ -330,7 +331,7 @@ public function _import_csv($filename, $table,$fields)
 				
 			})
 				->pluck('id');
-	
+			
 			if(count($allFilters) == 0) {
 				return $filtered;
 			}
@@ -344,7 +345,7 @@ public function _import_csv($filename, $table,$fields)
 		
 		// if all the group filters are not set in the session search filters
 		// then the results are filtered
-		
+	
 		if(count(array_intersect($searchFilters, $allFilters->toArray())) != count($allFilters->toArray())){
 			
 			return TRUE;

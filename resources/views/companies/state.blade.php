@@ -15,6 +15,7 @@ $data['companyname']=$company->companyname;
 <?php $data['address'] = "Lat:" .number_format($data['lat'],3) . "  Lng:" .number_format($data['lng'],3) ;
 $data['distance'] = Config::get('default_radius');?>
 @include('maps/partials/_form')
+
 @include('companies/partials/_state')
 @include('partials/advancedsearch')
 @if(auth()->user()->hasRole('Admin'))

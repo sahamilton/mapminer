@@ -303,12 +303,12 @@ class CompaniesController extends BaseController {
 	// Get all states that the company has locations in
 	 */
 	
-	private function getCompanyStates($company,$data) {
+	private function getCompanyStates($company,$data,$filtered) {
 		
 		$states = $this->locations->select('state')->distinct()
 				->where('company_id','=',$company->id);
 				
-				if($data['filtered']){
+				if($filtered && count($data['keys'])>0){
 					
 					$states=$states->whereIn('segment', $data['keys'])
 					->orWhere(function($query) use($data){
@@ -372,20 +372,21 @@ class CompaniesController extends BaseController {
 		{
 			return redirect()->route('company.index');
 		}
-
+		
 		$data = $this->getStateCompanyInfo($data,$state);
 		$segments=$this->getCompanySegments($data['company']);
-		$data['filtered'] = $this->locations->isFiltered(['locations'],['segment','businesstype'],$data['company']->industryVertical);
-		if($data['filtered']){
+		$filtered = $this->company->isFiltered(['companies'],['vertical']);
+	
+		if($filtered){
 			$data['keys'] = $this->locations->getSearchKeys(['locations'],['segment','businesstype']);
 		}
-		$locations = $this->getStateLocations($data['company'],$state,$data);
+		$locations = $this->getStateLocations($data['company'],$state,$data,$filtered);
 		$mywatchlist = $this->getWatchList();
 
-		$states= $this->getCompanyStates($data['company'],$data);
+		$states= $this->getCompanyStates($data['company'],$data,$filtered);
 
 		$filters= SearchFilter::all()->pluck('filter','id');
-		return response()->view('companies.state', compact('data','locations','mywatchlist','states','filtered','filters','segments'));
+		return response()->view('companies.state', compact('data','filtered','locations','mywatchlist','states','filtered','filters','segments'));
 	}
 	
 	/**
@@ -396,23 +397,19 @@ class CompaniesController extends BaseController {
 	 * @return array $locations
 	 */
 	
-	private function getStateLocations($company,$state,$data){
+	private function getStateLocations($company,$state,$data,$filtered){
 			
-			$company= $this->company->with('locations')
-			->where('id','=',$company->id)
-			->whereHas('locations',function($q) use($state){
-				$q->where('state','=',$state);
-			});
+			$locations= $this->locations
+			->where('state','=',$state)
+			->where('company_id','=',$company->id);
+			
 
-			if($data['filtered'] && count($data['keys']) >0){
-				$company = $company
-				->whereHas('locations',function($q) use($data,$state){
-					$q->whereIn('segment', $data['keys'])
-					->orWhereIn('businesstype', $data['keys']);
-				});
+			if($filtered && count($data['keys']) >0){
+				$locations = $locations->whereIn('segment', $data['keys'])
+						->orWhereIn('businesstype', $data['keys']);
 			}	
 			
-			return $company->first()->locations;			
+			return $locations->get();			
 				
 
 	}

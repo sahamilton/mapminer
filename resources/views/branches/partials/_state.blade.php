@@ -6,7 +6,9 @@ $statelist = App\Branch::distinct()->orderBy('state')->get(array('state'));
 		}
 ?>
 
-{{Form::open(array('route'=>$route,'class'=>'form', 'id'=>'selectForm'))}}
+<form method="post" id="selectForm" action ="{{route($route)}}" >
+{{csrf_field()}}
+
 
 <label>Search for branches in </label>
        <select name='state' class="btn btn-mini" onchange='this.form.submit()'>
@@ -29,3 +31,4 @@ $statelist = App\Branch::distinct()->orderBy('state')->get(array('state'));
 
 
 </script>
+</form>
