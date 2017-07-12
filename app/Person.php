@@ -14,7 +14,7 @@ class Person extends NodeModel {
 
 
 	// Don't forget to fill this array
-	public $fillable = ['firstname','lastname','phone','address','lat','lng','reports_to','city','state','geostatus'];
+	public $fillable = ['firstname','lastname','phone','address','lat','lng','reports_to','city','state','geostatus','user_id'];
 
 	public function reportsTo()
     {
