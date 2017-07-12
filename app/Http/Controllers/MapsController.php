@@ -41,8 +41,8 @@ class MapsController extends BaseController {
 				 
 			}
 			$news = $this->news->currentNews();
-			
-			return view()->make('maps.showme',compact('news'));
+			$filtered = $this->location->isFiltered(['companies'],['vertical']);
+			return view()->make('maps.showme',compact('news','filtered'));
 
 	}
 	
