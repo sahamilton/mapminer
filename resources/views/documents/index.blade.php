@@ -19,8 +19,7 @@
                 <th>Description</th>
                 
                 <th>Sales Process</th>
-                <th>Vertical</th>
-
+                
                 <th>Location</th>
                 <th>Rank</th>
                 <th>Rated By</th>
@@ -45,12 +44,6 @@
                 <ul>
                 @foreach ($document->process as $process)
                     <li>{{$process->step}}</li>
-                    @endforeach
-                    </ul>
-                </td>
-                <td>
-                <ul>@foreach ($document->vertical as $vertical)
-                    <li>{{$vertical->filter}}</li>
                     @endforeach
                     </ul>
                 </td>
