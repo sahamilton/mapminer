@@ -413,7 +413,7 @@ class BranchesController extends BaseController {
 	
 	
 	
-	public function state(Request $request, $statecode=NULL) {
+	public function state(Request $request, $statecode) {
 		
 
 
@@ -431,7 +431,7 @@ class BranchesController extends BaseController {
 			->where('state','=',$statecode)
 			->orderBy('branchnumber')
 			->get();
-			
+
 		
 		$states= State::where('statecode','=',$statecode)->get();
 		foreach($states as $state) {

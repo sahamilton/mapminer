@@ -75,7 +75,7 @@ Route::group(['middleware' => 'auth'], function () {
 			
 		
 	#Branches
-		Route::get('/branches/state/{state?}', ['as'=>'branches.state','uses'=>'BranchesController@state']);
+		Route::get('/branches/{state}/state/', ['as'=>'branches.statelist','uses'=>'BranchesController@state']);
 		Route::post('/branches/state', ['as'=>'branches.state','uses'=>'BranchesController@state']);
 		Route::get('/branches/{state}/statemap', ['as'=>'branches.showstatemap','uses'=>'BranchesController@statemap']);
 		Route::post('/branches/statemap', ['as'=>'branches.statemap','uses'=>'BranchesController@statemap']);
