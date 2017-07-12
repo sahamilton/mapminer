@@ -151,8 +151,9 @@ class SalesActivityController extends BaseController
        
         $activity = $this->activity->with('salesprocess','vertical')->findOrFail($id);
         $verticals = $this->vertical->industrysegments();
-      
+    
         $process = $this->process->pluck('step','id');
+        
         return response()->view('salesactivity.edit',compact('activity','process','verticals'));
     }
 
