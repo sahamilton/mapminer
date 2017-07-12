@@ -1,6 +1,6 @@
 @foreach ($process as $key=>$value)
 
-	@if((isset($activity->process) && $activity->process->contains('step',$value))
+	@if((isset($activity->salesprocess) && $activity->salesprocess->contains('step',$value))
 	or is_array(old('salesprocess')) && in_array($key,old('salesprocess')))
 	<input type="checkbox" name="salesprocess[]" checked value="{{$key}}">{{$value}}
 	@else
