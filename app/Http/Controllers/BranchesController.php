@@ -343,17 +343,18 @@ class BranchesController extends BaseController {
 			$state=$request->get('state');
 			
 		}
+		$data = \App\State::where('statecode','=',$state)->firstOrFail()->toArray();
+		/*$branches = $this->retrieveStateBranches($state);
 		
-		$branch = $this->retrieveStateBranches($state);
-
-		foreach ($branch as $data) 
+		foreach ($branches as $branch) 
 		{
-			$data['lat'] = $data->instate->lat;
-			$data['lng'] = $data->instate->lng;
-			$data['fullstate'] = $data->instate->fullstate;
-			$data['state'] = $data->instate->statecode;
+			$data['lat'] = $branch->instate->lat;
+			$data['lng'] = $branch->instate->lng;
+			$data['fullstate'] = $branch->instate->fullstate;
+			$data['state'] = $branch->instate->statecode;
 			break;
-		}
+		}*/
+
 		return response()->view('branches.statemap', compact('data','servicelines'));	
 		
 	}
@@ -379,18 +380,23 @@ class BranchesController extends BaseController {
 		
 	}
 	
+	public function makeStateMap($state){
+		$branches = $this->branch->with('servicelines')->where('state','=',$state)->get();
+		
+		return response()->view('branches.xml', compact('branches'));
+	}
 	public function retrieveStateBranches($state){
 		
-		$branches =  $this->branch
+		return $this->branch
 		->where('state','=',$state)
 		->with('servicelines','servicedBy')
 		->whereHas('servicelines', function($q) {
-					    $q->whereIn('serviceline_id',$this->userServiceLines);
+			$q->whereIn('serviceline_id',$this->userServiceLines);
 					})
 		->orderBy('city')
 		->get();
 
-		return $branches;
+		
 	}
 	public function mapMyBranches($id)
 	{	

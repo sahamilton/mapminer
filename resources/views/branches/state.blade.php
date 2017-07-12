@@ -4,7 +4,8 @@
 <h4> <a href="{{route('branches.index')}}" title="Show all branches" />Show all branches</a></h4>
 <?php $route='branches.state';?>
 @include('branches.partials._state')
-<p><a href="{{route('branches.statemap',$data['state'])}}""><i class="glyphicon glyphicon-flag"></i> Map view</a></p>
+<p><a href="{{route('branches.showstatemap',$data['state'])}}">
+<i class="glyphicon glyphicon-flag"></i> Map view</a></p>
 <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
 	<thead>
 		<th>Branch</th>
