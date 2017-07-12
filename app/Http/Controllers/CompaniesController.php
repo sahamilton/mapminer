@@ -44,10 +44,11 @@ class CompaniesController extends BaseController {
 	{
 		
 		$filtered = $this->company->isFiltered(['companies'],['vertical']);
+
 		$companies = $this->getAllCompanies($filtered)->get();
 		$title = 'All Accounts';
 		$locationFilter = 'both';
-
+	
 		return response()->view('companies.index', compact('companies','title','filtered','locationFilter'));
 	}
 	
@@ -98,7 +99,7 @@ class CompaniesController extends BaseController {
 					    $q->whereIn('serviceline_id', $this->userServiceLines);
 
 			});
-			
+		
 		if($filtered) {
 			$keys = $this->company->getSearchKeys(['companies'],['vertical']);
 			$isNullable = $this->company->isNullable($keys,NULL);

@@ -1,6 +1,6 @@
  <a href="#" data-toggle="modal"
    data-target="#advancedSearch">Advanced Search Options
-   @if(isset($filtered)) : <span class="filtered">Filtered </span>@endif</a>
+   @if($filtered) : <span class="filtered">Filtered </span>@endif</a>
 <?php 
 	$filters = new App\SearchFilter();
 	if (! Session::has('Search')){

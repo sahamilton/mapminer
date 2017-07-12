@@ -273,20 +273,24 @@ public function _import_csv($filename, $table,$fields)
 	public function isFiltered(array $searchtable = NULL, array $searchcolumn = NULL, $vertical = NULL)
 	{
 
-		$filtered=FALSE;
+
+		$filtered = FALSE;
+
 		// Get the current session filters
 		if (! \Session::get('Search'))
 		{
 			
    				return $filtered;
 		}
-		
+	
 		
 		$searchFilters= array_flatten(\Session::get('Search'));
 		if(empty($searchFilters)){
+			
 			return $filtered;
 		}
 		// first get the group filters
+	
 		if(! isset($vertical)){
 			
 			$allFilters = SearchFilter::whereIn('searchtable',$searchtable)
@@ -326,7 +330,7 @@ public function _import_csv($filename, $table,$fields)
 				
 			})
 				->pluck('id');
-		
+	
 			if(count($allFilters) == 0) {
 				return $filtered;
 			}
@@ -336,6 +340,7 @@ public function _import_csv($filename, $table,$fields)
 			$allFilters = SearchFilter::where('type','=','group')->pluck('id');
 			*/
 		}
+
 		
 		// if all the group filters are not set in the session search filters
 		// then the results are filtered
@@ -345,7 +350,7 @@ public function _import_csv($filename, $table,$fields)
 			return TRUE;
 			
 		}
-		
+		return $filtered;
 		
 	}
 	
