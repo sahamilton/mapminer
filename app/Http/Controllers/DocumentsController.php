@@ -64,7 +64,10 @@ class DocumentsController extends Controller
 
         $document->vertical()->attach($request->get('vertical'));
         $document->process()->attach($request->get('salesprocess'));
-        return redirect()->route('documents.index');
+        if ($data['plaintext']==''){
+            return redirect()->route('documents.index')->with('warning','Document added but not in full text search');
+        }
+        return redirect()->route('documents.index')->with('success','Document added but not in full text search');;
     }
 
     /**
