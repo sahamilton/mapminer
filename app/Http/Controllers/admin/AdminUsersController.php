@@ -264,7 +264,7 @@ class AdminUsersController extends BaseController {
 
                 $user->serviceline()->sync($request->get('serviceline'));
         	}
-
+            $user->saveRoles($request->get( 'roles' ));
         	if($request->has('vertical')){
                 $verticals = $request->get('vertical');
                     if($verticals[0]==0){
