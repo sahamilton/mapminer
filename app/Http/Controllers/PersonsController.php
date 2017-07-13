@@ -41,7 +41,7 @@ class PersonsController extends BaseController {
 		
 		
 		
-		return response()->view('persons.index', compact('persons'));
+		return response()->view('persons.index', compact('persons','filtered'));
 	}
 
 	public function vertical($vertical = null){
