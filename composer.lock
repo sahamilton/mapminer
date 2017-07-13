@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "65c1db024bc43734e7372830b88769e8",
-    "content-hash": "eeac483f27e977eb7aeaf9a86af612bc",
+    "hash": "02a308643d2e4e6abf4ff315dca52a66",
+    "content-hash": "ae9a3c09b3f474a252566c62325867b7",
     "packages": [
         {
             "name": "algolia/algoliasearch-client-php",
@@ -174,6 +174,50 @@
                 "nested set"
             ],
             "time": "2015-03-04 12:07:54"
+        },
+        {
+            "name": "behat/transliterator",
+            "version": "v1.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Behat/Transliterator.git",
+                "reference": "826ce7e9c2a6664c0d1f381cbb38b1fb80a7ee2c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Behat/Transliterator/zipball/826ce7e9c2a6664c0d1f381cbb38b1fb80a7ee2c",
+                "reference": "826ce7e9c2a6664c0d1f381cbb38b1fb80a7ee2c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "require-dev": {
+                "chuyskywalker/rolling-curl": "^3.1",
+                "php-yaoi/php-yaoi": "^1.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.2-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Behat\\Transliterator": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Artistic-1.0"
+            ],
+            "description": "String transliterator",
+            "keywords": [
+                "i18n",
+                "slug",
+                "transliterator"
+            ],
+            "time": "2017-04-04 11:38:05"
         },
         {
             "name": "bugsnag/bugsnag",
@@ -1296,6 +1340,55 @@
                 "tokenizer"
             ],
             "time": "2016-12-07 09:37:55"
+        },
+        {
+            "name": "jeroendesloovere/vcard",
+            "version": "1.5.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jeroendesloovere/vcard.git",
+                "reference": "1cb08400b0743cc91fd8a2e63212b5277acca48e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jeroendesloovere/vcard/zipball/1cb08400b0743cc91fd8a2e63212b5277acca48e",
+                "reference": "1cb08400b0743cc91fd8a2e63212b5277acca48e",
+                "shasum": ""
+            },
+            "require": {
+                "behat/transliterator": "~1.0",
+                "php": ">=5.3.3"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.6.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "JeroenDesloovere\\VCard\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jeroen Desloovere",
+                    "email": "info@jeroendesloovere.be",
+                    "homepage": "http://jeroendesloovere.be",
+                    "role": "Developer"
+                }
+            ],
+            "description": "This VCard PHP class can generate a vCard with some data. When using an iOS device it will export as a .ics file because iOS devices don't support the default .vcf files.",
+            "homepage": "https://github.com/jeroendesloovere/vcard",
+            "keywords": [
+                ".vcf",
+                "generator",
+                "php",
+                "vCard"
+            ],
+            "time": "2017-06-27 12:23:41"
         },
         {
             "name": "laravel/dusk",

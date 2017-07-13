@@ -34,17 +34,24 @@
             <select required class="form-control" name='vertical'>
 
             @foreach ($filters as $vertical))
-            	<?php $parent = $vertical->getAncestors()->last();?>
-	            	@if(! in_array($parent->id,$parents))
-	            	<?php $parents[]=$parent->id;?>
-	            	<option disabled value="{{$vertical->id}}">--------{{$parent->filter}}----------</option>
+            	
+	            	@if(! in_array($vertical->parent_id,$parents) && null!==$filters->get($vertical->parent_id))
+                    <?php $parents[]=$vertical->parent_id;
+                    $parent = $filters->get($vertical->parent_id);?>
+                    
+                    @if(! $loop->first)
+                        </optgroup>
+                    @endif
+	            	<optgroup label= "{{$parent->filter}}" 
+
 	            	@endif
+
             		<option @if(isset($company) && $company->vertical == $vertical->id) selected @endif value="{{$vertical->id}}">{{$vertical->filter}}</option>
 
 	            	
 
             @endforeach
-
+            </optgroup>
 
             </select>
             <span class="help-block{{ $errors->has('vertical)') ? ' has-error' : '' }}">

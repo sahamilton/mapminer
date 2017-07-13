@@ -41,7 +41,7 @@ class PersonsController extends BaseController {
 		
 		
 		
-		return response()->view('persons.index', compact('persons'));
+		return response()->view('persons.index', compact('persons','filtered'));
 	}
 
 	public function vertical($vertical = null){
@@ -57,15 +57,16 @@ class PersonsController extends BaseController {
 					})
 			->with('userdetails','reportsTo','industryfocus','userdetails.roles')
 			->get();
+		$filtered=null;
 		$industry = SearchFilter::findOrFail($vertical);
-		return response()->view('persons.index', compact('persons','industry'));
+		return response()->view('persons.index', compact('persons','industry','filtered'));
 	}
 
 	public function map()
 	{
 
 		$filtered = $this->persons->isFiltered(['companies'],['vertical']);
-		$keys = $this->persons->getSearchKeys(['companies'],['vertical']);
+
 		if (\Session::has('geo'))
 		{
 			$latLng = \Session::get('geo');
@@ -103,7 +104,7 @@ class PersonsController extends BaseController {
 
 	public function getMapLocations()
 	{
-	
+
 		$filtered = $this->persons->isFiltered(['companies'],['vertical']);
 		$this->validroles=['5'];
 		$persons = $this->getAllPeople($filtered);	
@@ -118,7 +119,9 @@ class PersonsController extends BaseController {
 	{
 		$keys=array();
 		if($filtered) {
+
 			$keys = $this->persons->getSearchKeys(['companies'],['vertical']);
+
 			$isNullable = $this->persons->isNullable($keys,NULL);
 			if($isNullable == 'Yes')
 			{

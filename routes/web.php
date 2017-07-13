@@ -75,9 +75,9 @@ Route::group(['middleware' => 'auth'], function () {
 			
 		
 	#Branches
-		Route::get('/branches/state/{state?}', ['as'=>'branches.state','uses'=>'BranchesController@state']);
+		Route::get('/branches/{state}/state/', ['as'=>'branches.statelist','uses'=>'BranchesController@state']);
 		Route::post('/branches/state', ['as'=>'branches.state','uses'=>'BranchesController@state']);
-		Route::get('/branches/statemap/{state?}', ['as'=>'branches.statemap','uses'=>'BranchesController@statemap']);
+		Route::get('/branches/{state}/statemap', ['as'=>'branches.showstatemap','uses'=>'BranchesController@statemap']);
 		Route::post('/branches/statemap', ['as'=>'branches.statemap','uses'=>'BranchesController@statemap']);
 		Route::get('/branch/{branchId}/map', ['as'=>'branch.map','uses'=>'BranchesController@map']);
 		Route::get('/branches/map', ['as'=>'branches.map', 'uses'=>'BranchesController@mapall']);		
@@ -177,7 +177,7 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('api/news/setnews','NewsController@setNews'); 
 
 		Route::get('api/branch/map', ['as'=>'branch/map', 'uses'=>'BranchesController@getAllbranchmap']);
-		Route::get('api/branch/statemap/{state?}', ['as'=>'branch/statemap', 'uses'=>'BranchesController@getStateBranches']);
+		Route::get('api/branch/statemap/{state?}', ['as'=>'branch.statemap', 'uses'=>'BranchesController@makeStateMap']);
 		Route::get('api/location/{locationId}/branchnearby',['as'=>'shownearby.branchlocation','uses' => 'MapsController@getLocationsPosition']);
 
 	#Maps		

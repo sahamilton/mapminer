@@ -119,21 +119,19 @@ class SalesActivityController extends BaseController
     {
         
         $activity = $this->activity->with('salesprocess')->findOrFail($id);
+        $verticals = array_unique ($activity->vertical()->pluck('searchfilters.id')->toArray()); 
         $statuses = LeadStatus::pluck('status','id')->toArray();
         $person = Person::findOrFail(auth()->user()->person->id);
         if($person->isLeaf()){
             if(auth()->user()->person->lat){
             $lat = auth()->user()->person->lat;
             $lng = auth()->user()->person->lng;
-            $verticals = array_unique ($activity->vertical()->pluck('searchfilters.id')->toArray()); 
-
             $locations = $this->location->findNearbyLocations($lat,$lng,25,$number=null,$company=NULL,$this->userServiceLines, $limit=null, $verticals);
         }else{
             $locations = array();
         }
         // find all lead locations for the logged in user in these verticals
         $leads = $this->lead->myLeads($verticals)->get();
-
         return response()->view('salesactivity.show',compact('activity','locations','leads','statuses'));
         }
         
@@ -151,8 +149,9 @@ class SalesActivityController extends BaseController
        
         $activity = $this->activity->with('salesprocess','vertical')->findOrFail($id);
         $verticals = $this->vertical->industrysegments();
-      
+    
         $process = $this->process->pluck('step','id');
+        
         return response()->view('salesactivity.edit',compact('activity','process','verticals'));
     }
 

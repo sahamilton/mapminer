@@ -1,10 +1,9 @@
 <?php
 namespace App;
-use \Baum\Node;
 
-class NodeModel extends Node {
-	
-
+class Model extends \Eloquent {
+	use Filters;
+public $userServiceLines;
 
 public function isValid($data)
 	{
@@ -19,7 +18,7 @@ public function isValid($data)
 public function checkImportFileType($rules){
 	// Make sure we have a file
 
-		$file = \Input::file('upload');
+		$file = Input::file('upload');
 		// Make sure its a CSV file - test #1
 		$mimes = array('application/vnd.ms-excel','text/plain','text/csv','text/tsv','text/x-c');
 		if(!in_array($file->getMimeType(),$mimes)){
@@ -40,15 +39,13 @@ public function checkImportFileType($rules){
 		
 public function _import_csv($filename, $table,$fields)
 	{
-		$filename = str_replace("\\","/",$filename);
+	$filename = str_replace("\\","/",$filename);
 
-	$query = sprintf("LOAD DATA INFILE '".$filename."' INTO TABLE ". $table." FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '\"' ESCAPED BY '\"' LINES TERMINATED BY '\\n'  IGNORE 1 LINES (".$fields.");", $filename);
+	$query = sprintf("LOAD DATA LOCAL INFILE '".$filename."' INTO TABLE ". $table." FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '\"' ESCAPED BY '\"' LINES TERMINATED BY '\\n'  IGNORE 1 LINES (".$fields.");", $filename);
 	
-	echo $query ."<br />";
 	
 	try {
-		$result = DB::connection()->getpdo()->exec($query);
-		return $result;
+		return  \DB::connection()->getpdo()->exec($query);
 	}
 	catch (Exception $e)
 		{
@@ -65,20 +62,20 @@ public function _import_csv($filename, $table,$fields)
 		try{
 			switch ($type) {
 				case 'insert':
-					$result = DB::insert( DB::raw($query ) );
+					$result = \DB::insert( \DB::raw($query ) );
 					break;
 				case 'select':
-					$result = DB::select( DB::raw($query ) );
+					$result = \DB::select( \DB::raw($query ) );
 				break;
 				
 				case 'update':
-					$result = DB::select( DB::raw($query ) );
+					$result = \DB::select( \DB::raw($query ) );
 				break;
 
 				
 			
 				default:
-					$result = DB::select( DB::raw($query ) );
+					$result = \DB::select( \DB::raw($query ) );
 				break;
 			}
 			echo $query . ";<br />";		
@@ -233,12 +230,33 @@ public function _import_csv($filename, $table,$fields)
 	}
 	
 	
-	
 
+	
 	public function getUserServiceLines()
 	{
-		return $userServiceLines = Serviceline::whereIn('id',\Session::get('user.servicelines'))
-		->pluck('ServiceLine','id')
-		->toArray();
+		
+		if (session()->has('user.servicelines')){
+			$this->userServiceLines = session()->get('user.servicelines');
+			return session()->get('user.servicelines');
+		}
+
+		return $this->currentUserServicelines();
 	}
+
+	public function currentUserServicelines(){
+       $user = auth()->user();
+       $userServicelines= $user->serviceline()->pluck('servicelines.id')->toArray();
+       session()->put('user.servicelines',$userServicelines) ;
+       $this->userServiceLines = session()->get('user.servicelines');
+       return $userServicelines;
+    }
+
+    public function getUserVerticals(){
+        $user = auth()->user()->with('person')->firstOrFail();
+        $userVerticals= $user->person->industryfocus()->pluck('search_filter_id')->toArray();
+        session()->put('user.verticals',$userVerticals) ;
+        return $userVerticals;
+        
+    }
+
 }

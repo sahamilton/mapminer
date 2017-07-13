@@ -13,6 +13,7 @@
         "dionera/laravel-beanstalkd-ui": "^0.3.3",
         "elasticsearch/elasticsearch": "^5.2",
         "fabpot/goutte": "^3.1",
+        "jeroendesloovere/vcard": "^1.5",
         "laravel/dusk": "^1.0",
         "laravel/framework": "5.4.*",
         "laravel/scout": "^3.0",

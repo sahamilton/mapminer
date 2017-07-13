@@ -3,7 +3,7 @@
 namespace App;
 
 use Smalot\PdfParser\Parser;
-
+use Smalot\PdfParser\Document;
 
 class PdfReader implements TextInterface
 {
@@ -11,7 +11,14 @@ class PdfReader implements TextInterface
    {
 
 	$parser = new Parser();
-	$pdf    = $parser->parseFile($data['basepath']);
+	try{
+		$pdf    = $parser->parseFile($data['basepath']);
+		
+	}
+	catch(\Exception $e){
+
+		return '';
+	}
 
 	 return $pdf->getText();
 

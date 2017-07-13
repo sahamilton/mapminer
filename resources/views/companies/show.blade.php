@@ -6,7 +6,6 @@
 <div>
 <h2> {{$company->companyname}} {{$data['segment']}} Locations </h2>
 
-{!!$filtered ? "<h4 class='filtered'>Filtered</h4>" : ''!!}
 @if (isset($company->industryVertical->filter))
 <p>{{$company->industryVertical->filter}} Vertical</p>
 @endif

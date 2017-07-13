@@ -137,12 +137,14 @@ class AdminUsersController extends BaseController {
 		
 		$branches = $this->getUsersBranches($this->user);
 		$verticals = SearchFilter::where('searchcolumn','=','vertical')
-		->where('type','!=','group')			
-		->pluck('filter','id');
+		->where('type','!=','group')
+        ->where('searchtable','=','companies')
+        ->get();			
+		
 		
 		$managers = $this->getManagerList();
 		// Show the page
-		return response()->view('admin/users/create', compact('roles', 'permissions', 'verticals','selectedRoles', 'selectedPermissions', 'title', 'mode','managers','servicelines','branches'));
+		return response()->view('admin.users.create', compact('roles', 'permissions', 'verticals','selectedRoles', 'selectedPermissions', 'title', 'mode','managers','servicelines','branches'));
     }
 
     /**
@@ -152,7 +154,7 @@ class AdminUsersController extends BaseController {
      */
     public function store(UserFormRequest $request)
     {
-        
+  
         $user = $this->user->create($request->all());
         $user->seeder();
         $user->confirmation_code = md5(uniqid(mt_rand(), true));
@@ -164,10 +166,16 @@ class AdminUsersController extends BaseController {
         
 
         if ( $user->save() ) {
-            
+         
 			$person = new Person;
-			$person = $this->updateAssociatedPerson($person,$request->all());        
+            $person->user_id = $user->id;
+            $person->firstname = $request->get('firstname');
+            $person->lastname = $request->get('lastname');
+            $person->save();
+           	$person = $this->updateAssociatedPerson($person,$request->all());
+            $person = $this->associateBranchesWithPerson($person,$request->all());    
 			$user->person()->save($person);
+            $person->rebuild();
             $track=Track::create(['user_id'=>$user->id]);		
             $user->saveRoles($request->get( 'roles' ));
             $user->serviceline()->attach($request->get('serviceline'));
@@ -258,7 +266,7 @@ class AdminUsersController extends BaseController {
 
                 $user->serviceline()->sync($request->get('serviceline'));
         	}
-
+            $user->saveRoles($request->get( 'roles' ));
         	if($request->has('vertical')){
                 $verticals = $request->get('vertical');
                     if($verticals[0]==0){
@@ -270,7 +278,7 @@ class AdminUsersController extends BaseController {
         	}else{
                 $person->industryfocus()->sync([]);
             }
-
+            $person->rebuild();
 
             return redirect()->to(route('users.index'))->with('success', 'User updated succesfully');
         }else{
@@ -300,7 +308,7 @@ class AdminUsersController extends BaseController {
         }
 
         $person->branchesServiced()->sync($syncData);
-        $person->rebuild();
+
         return $person;
     }
 
@@ -311,13 +319,14 @@ class AdminUsersController extends BaseController {
             $data = $this->getLatLng($data['address']) + $data;
 
        }
+   
         $person->update($data);
        
         if(isset($data['vertical'])&& $data['vertical'][0]!=0){
             $person->industryfocus()->sync($data['vertical']);
         }
         
-        $person->rebuild();
+
         return $person;
     }
 
