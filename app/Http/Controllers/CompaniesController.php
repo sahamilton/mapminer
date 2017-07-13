@@ -19,7 +19,7 @@ class CompaniesController extends BaseController {
 	public $searchfilter;
 	public $person;
 	public $limit = 500;
-	public $NAMRole ='4';
+	public $NAMRole =['4'];
 
 
 	public function __construct(Company $company, Location $location, SearchFilter $searchfilter,User $user,Person $person) {
