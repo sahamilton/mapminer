@@ -57,8 +57,9 @@ class PersonsController extends BaseController {
 					})
 			->with('userdetails','reportsTo','industryfocus','userdetails.roles')
 			->get();
+		$filtered=null;
 		$industry = SearchFilter::findOrFail($vertical);
-		return response()->view('persons.index', compact('persons','industry'));
+		return response()->view('persons.index', compact('persons','industry','filtered'));
 	}
 
 	public function map()

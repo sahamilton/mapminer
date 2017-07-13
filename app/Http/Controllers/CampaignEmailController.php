@@ -27,7 +27,6 @@ class CampaignEmailController extends Controller
 
         $activity = $this->activity->findOrFail($id);
         $verticals = array_unique($activity->vertical()->pluck('searchfilters.id')->toArray());
-
         $salesteam = $this->filterSalesReps($verticals);
         $verticals = array_unique($activity->vertical()->pluck('filter')->toArray());
         $message = $this->constructMessage($activity,$verticals);
