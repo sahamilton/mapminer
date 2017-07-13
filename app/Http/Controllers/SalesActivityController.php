@@ -119,14 +119,13 @@ class SalesActivityController extends BaseController
     {
         
         $activity = $this->activity->with('salesprocess')->findOrFail($id);
+        $verticals = array_unique ($activity->vertical()->pluck('searchfilters.id')->toArray()); 
         $statuses = LeadStatus::pluck('status','id')->toArray();
         $person = Person::findOrFail(auth()->user()->person->id);
         if($person->isLeaf()){
             if(auth()->user()->person->lat){
             $lat = auth()->user()->person->lat;
             $lng = auth()->user()->person->lng;
-            $verticals = array_unique ($activity->vertical()->pluck('searchfilters.id')->toArray()); 
-
             $locations = $this->location->findNearbyLocations($lat,$lng,25,$number=null,$company=NULL,$this->userServiceLines, $limit=null, $verticals);
         }else{
             $locations = array();
