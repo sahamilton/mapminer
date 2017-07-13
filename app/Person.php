@@ -1,7 +1,7 @@
 <?php
 namespace App;
 class Person extends NodeModel {
-	use Geocode;
+	use Geocode,Filters;
 
 	// Add your validation rules here
 	public static $rules = [

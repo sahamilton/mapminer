@@ -66,7 +66,7 @@ class PersonsController extends BaseController {
 	{
 
 		$filtered = $this->persons->isFiltered(['companies'],['vertical']);
-		$keys = $this->persons->getSearchKeys(['companies'],['vertical']);
+
 		if (\Session::has('geo'))
 		{
 			$latLng = \Session::get('geo');
@@ -104,7 +104,7 @@ class PersonsController extends BaseController {
 
 	public function getMapLocations()
 	{
-	
+
 		$filtered = $this->persons->isFiltered(['companies'],['vertical']);
 		$this->validroles=['5'];
 		$persons = $this->getAllPeople($filtered);	
@@ -119,7 +119,9 @@ class PersonsController extends BaseController {
 	{
 		$keys=array();
 		if($filtered) {
+
 			$keys = $this->persons->getSearchKeys(['companies'],['vertical']);
+
 			$isNullable = $this->persons->isNullable($keys,NULL);
 			if($isNullable == 'Yes')
 			{
