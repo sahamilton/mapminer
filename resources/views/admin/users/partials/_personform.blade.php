@@ -75,7 +75,7 @@
 				</div>
 				<!-- ./ phone -->
 		
-@include('companies.partials._verticalselector')
+
 			<!--- Managers ---->
 			<div class="form-group{{ $errors->has('reports_to)') ? ' has-error' : '' }}">
                         <label class="col-md-2 control-label">Managers</label>

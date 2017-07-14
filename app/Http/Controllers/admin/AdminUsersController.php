@@ -49,7 +49,7 @@ class AdminUsersController extends BaseController {
 
     public $branch;
     public $serviceline;
-
+    public $searchfilter;
     public $company;
 
     /**
@@ -61,7 +61,7 @@ class AdminUsersController extends BaseController {
      * @param Track $track
      * 
      */
-    public function __construct(User $user, Role $role, Person $person, Permission $permission, Branch $branch, Track $track,Serviceline $serviceline,Company $company)
+    public function __construct(User $user, Role $role, Person $person, Permission $permission, Branch $branch, Track $track,Serviceline $serviceline,Company $company, SearchFilter $searchfilter)
     {
         
         $this->user = $user;
@@ -72,6 +72,7 @@ class AdminUsersController extends BaseController {
         $this->track = $track;
         $this->branch = $branch;
         $this->serviceline = $serviceline;
+        $this->searchfilter = $searchfilter;
         parent::__construct($this->company);        
     }
 
@@ -136,11 +137,11 @@ class AdminUsersController extends BaseController {
 		$servicelines = $this->person->getUserServiceLines();
 		
 		$branches = $this->getUsersBranches($this->user);
-		$filters = $this->getFilters();
+		$verticals = $this->searchfilter->industrysegments();
 		
 		$managers = $this->getManagerList();
 		// Show the page
-		return response()->view('admin.users.create', compact('roles', 'permissions', 'filters','selectedRoles', 'selectedPermissions', 'title', 'mode','managers','servicelines','branches'));
+		return response()->view('admin.users.create', compact('roles', 'permissions', 'verticals','selectedRoles', 'selectedPermissions', 'title', 'mode','managers','servicelines','branches'));
     }
 
     /**
@@ -210,8 +211,9 @@ class AdminUsersController extends BaseController {
     {
         
         $user = $this->user
-          ->with('serviceline','person','person.branchesServiced','roles')
+          ->with('serviceline','person','person.branchesServiced','person.industryfocus','roles')
           ->find($userid->id);
+
 
 	    if ( $user )
         {
@@ -230,10 +232,10 @@ class AdminUsersController extends BaseController {
 			
 			$branches = $this->getUsersBranches($user);
 		
-			$filters = $this->getFilters();
+			$verticals = $this->searchfilter->industrysegments();
             $servicelines = $this->person->getUserServiceLines();
-            $verticals = ['0' => 'none'] + $verticals->toArray();
-        	return response()->view('admin.users.edit', compact('user', 'roles', 'permissions', 'filters','title', 'mode','managers','servicelines','branches','branchesServiced'));
+           
+        	return response()->view('admin.users.edit', compact('user', 'roles', 'permissions', 'verticals','title', 'mode','managers','servicelines','branches','branchesServiced'));
         }
         else
         {
