@@ -129,11 +129,12 @@ class CompaniesController extends BaseController {
 	{
 				
 		$managers = $this->person->getPersonsWithRole($this->NAMRole);
-		$verticals = $this->searchfilter->industrysegments();
+		//$verticals = $this->searchfilter->industrysegments();
+		$filters = $this->getFilters();
 		$servicelines = Serviceline::whereIn('id',$this->userServiceLines)
 			->pluck('ServiceLine','id');
 
-		return response()->view('companies.create',compact('managers','verticals','servicelines'));
+		return response()->view('companies.create',compact('managers','filters','servicelines'));
 	}
 
 	/**
@@ -170,9 +171,9 @@ class CompaniesController extends BaseController {
 		$servicelines = Serviceline::whereIn('id',$this->userServiceLines)
 			->pluck('ServiceLine','id');
 		
-		//$filters = $this->getFilters();
-		$verticals = $this->searchfilter->industrysegments();
-		return response()->view('companies.edit', compact('company','managers','verticals','servicelines'));
+		$filters = $this->getFilters();
+		//$verticals = $this->searchfilter->industrysegments();
+		return response()->view('companies.edit', compact('company','managers','filters','servicelines'));
 	}
 
 	/**
