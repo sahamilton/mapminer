@@ -136,13 +136,11 @@ class AdminUsersController extends BaseController {
 		$servicelines = $this->person->getUserServiceLines();
 		
 		$branches = $this->getUsersBranches($this->user);
-		$verticals = SearchFilter::where('searchcolumn','=','vertical')
-		->where('type','!=','group')			
-		->pluck('filter','id');
+		$filters = $this->getFilters();
 		
 		$managers = $this->getManagerList();
 		// Show the page
-		return response()->view('admin/users/create', compact('roles', 'permissions', 'verticals','selectedRoles', 'selectedPermissions', 'title', 'mode','managers','servicelines','branches'));
+		return response()->view('admin.users.create', compact('roles', 'permissions', 'filters','selectedRoles', 'selectedPermissions', 'title', 'mode','managers','servicelines','branches'));
     }
 
     /**
@@ -232,17 +230,22 @@ class AdminUsersController extends BaseController {
 			
 			$branches = $this->getUsersBranches($user);
 		
-			$verticals = SearchFilter::where('searchcolumn','=','vertical')
-			->where('type','!=','group')			
-			->pluck('filter','id');
+			$filters = $this->getFilters();
             $servicelines = $this->person->getUserServiceLines();
             $verticals = ['0' => 'none'] + $verticals->toArray();
-        	return response()->view('admin.users.edit', compact('user', 'roles', 'permissions', 'verticals','title', 'mode','managers','servicelines','branches','branchesServiced'));
+        	return response()->view('admin.users.edit', compact('user', 'roles', 'permissions', 'filters','title', 'mode','managers','servicelines','branches','branchesServiced'));
         }
         else
         {
             return redirect()->to(route('users.index'))->with('error', 'User does not exist');
         }
+    }
+    private function getFilters(){
+
+        $verticals = SearchFilter::where('type','=','group')
+        ->where('searchtable','=','companies')
+        ->first();
+        return $verticals->getLeaves()->where('searchcolumn','=','vertical');
     }
 
     /**

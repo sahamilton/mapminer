@@ -75,18 +75,7 @@
 				</div>
 				<!-- ./ phone -->
 		
-
-				<!-- Verticals -->
-				<div class="form-group @if ($errors->has('vertical')) has-error @endif">
-					{{Form::label('Industry Focus','Industry Focus:', array('class'=>"col-md-2 control-label"))}}
-
-					<div class="col-md-6">
-						{{Form::select('vertical[]',$verticals,isset($user) ? $user->person->industryfocus->pluck('id')->toArray() :'',array('class'=>'form-control','multiple'=>true))}}
-
-						@if ($errors->has('vertical')) <p class="help-block">{!! $errors->first('vertical') !!}</p> @endif
-					</div>
-				</div>
-				<!-- ./ verticals -->
+@include('companies.partials._verticalselector')
 			<!--- Managers ---->
 			<div class="form-group{{ $errors->has('reports_to)') ? ' has-error' : '' }}">
                         <label class="col-md-2 control-label">Managers</label>

@@ -487,10 +487,12 @@ class CompaniesController extends BaseController {
 	}
 	
 	private function getFilters(){
-		$verticals = SearchFilter::where('type','=','group')
+		return SearchFilter::where('type','!=','group')
 		->where('searchtable','=','companies')
-		->first();
-		return $verticals->getLeaves()->where('searchcolumn','=','vertical');
+		->where('searchcolumn','=','vertical')
+		->orderBy('lft')
+		->get();
+		//$verticals->getLeaves()->where('searchcolumn','=','vertical');
 	}
 	
 
