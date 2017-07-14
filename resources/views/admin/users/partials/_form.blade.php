@@ -25,3 +25,4 @@
      
     </div>
     </div>
+    @include('partials._scripts')

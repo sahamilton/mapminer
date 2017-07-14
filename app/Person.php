@@ -12,9 +12,9 @@ class Person extends NodeModel {
 
 	protected $parentColumn = 'reports_to';
 
-
+	protected $dates =['created_at','updated_at','active_from'];
 	// Don't forget to fill this array
-	public $fillable = ['firstname','lastname','phone','address','lat','lng','reports_to','city','state','geostatus','user_id'];
+	public $fillable = ['firstname','lastname','phone','address','lat','lng','reports_to','city','state','geostatus','user_id','active_from'];
 
 	public function reportsTo()
     {

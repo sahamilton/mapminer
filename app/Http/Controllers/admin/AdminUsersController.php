@@ -9,6 +9,7 @@ use App\Http\Requests\UserFormRequest;
 use App\Http\Requests\UserBulkImportForm;
 use App\Branch;
 use App\Track;
+use Carbon\Carbon;
 use App\Serviceline;
 use App\SearchFilter;
 use App\Http\Controllers\BaseController;
@@ -168,6 +169,7 @@ class AdminUsersController extends BaseController {
             $person->user_id = $user->id;
             $person->firstname = $request->get('firstname');
             $person->lastname = $request->get('lastname');
+
             $person->save();
            	$person = $this->updateAssociatedPerson($person,$request->all());
             $person = $this->associateBranchesWithPerson($person,$request->all());    
@@ -316,7 +318,10 @@ class AdminUsersController extends BaseController {
     }
 
     private function updateAssociatedPerson($person,$data){
-       
+        if(isset($data['active_from'])){
+            $data['active_from'] = Carbon::createFromFormat('m/d/Y', $data['active_from']);
+        }
+        
        if(isset($data['address'])){
            
             $data = $this->getLatLng($data['address']) + $data;
@@ -590,5 +595,10 @@ class AdminUsersController extends BaseController {
         return $this->user->getGeoCode($geoCode);
 		
 	}
-	
+    private function setDates($data){
+
+           $data['active_from'] = Carbon::createFromFormat('m/d/Y', $data['active_from']);
+           return $data;
+         
+	}
 }

@@ -1,7 +1,7 @@
 			<!-- firstname -->
 				<div class="form-group {!! $errors->has('firstname') ? 'has-error' : '' !!}">
 					<label class="col-md-2 control-label" for="firstname">First Name</label>
-					<div class="col-md-6">
+					<div class="input-group input-group-lg">
 						<input class="form-control" type="text" name="firstname" id="firstname" value="{{old('firstname', isset($user) && isset($user->person)  ? $user->person->firstname : '') }}" 
 						placeholder="first name"/>
 						{!! $errors->first('firstname', '<span class="help-inline">:message</span>') !!}
@@ -12,7 +12,7 @@
                 <!-- lastname -->
 				<div class="form-group {!! $errors->has('lastname') ? 'has-error' : '' !!}">
 					<label class="col-md-2 control-label" for="lastname">Last Name</label>
-					<div class="col-md-6">
+					<div class="input-group input-group-lg">
 						<input class="form-control" type="text" name="lastname" id="lastname" value="{{ old('lastname', isset($user) && isset($user->person) ? $user->person->lastname : '') }}" 
 						placeholder="last name"/>
 						{!! $errors->first('lastname', '<span class="help-inline">:message</span>') !!}
@@ -24,7 +24,7 @@
 				<!-- Address -->
 				<div class="form-group {!! $errors->has('address') ? 'has-error' : '' !!}">
 					<label class="col-md-2 control-label" for="address">Full Address</label>
-					<div class="col-md-6">
+					<div class="input-group input-group-lg">
 						<input class="form-control" type="text" 
 						placeholder="Full address with city & state"
 						name="address" id="address" value="{{old('address', isset($user) && isset($user->person) ? $user->person->address : '') }}" 
@@ -37,7 +37,7 @@
 				<!-- City -->
 				<div class="form-group {!! $errors->has('city') ? 'has-error' : '' !!}">
 					<label class="col-md-2 control-label" for="city">City</label>
-					<div class="col-md-6">
+					<div class="input-group input-group-lg">
 						<input class="form-control" type="text" 
 						placeholder="Leave blank unless you want to override geocode"
 						name="city" id="city" value="{{old('city', isset($user) && isset($user->person) ? $user->person->city : '') }}" />
@@ -50,7 +50,7 @@
 				<!-- State -->
 				<div class="form-group {!! $errors->has('state') ? 'has-error' : '' !!}">
 					<label class="col-md-2 control-label" for="state">State</label>
-					<div class="col-md-6">
+					<div class="input-group input-group-lg">
 						<input class="form-control" type="text" 
 						placeholder="Leave blank unless you want to override geocode"
 						name="state" id="state" value="{{old('state', isset($user) ? $user->person->state : null) }}" />
@@ -63,7 +63,7 @@
 				<!-- Phone -->
 				<div class="form-group {!! $errors->has('phone') ? 'has-error' : '' !!}">
 					<label class="col-md-2 control-label" for="address">Phone</label>
-					<div class="col-md-6">
+					<div class="input-group input-group-lg">
 						<input class="form-control" 
 						type="text" 
 						name="phone" 
@@ -75,7 +75,17 @@
 				</div>
 				<!-- ./ phone -->
 		
+<div class="form-group{{ $errors->has('from)') ? ' has-error' : '' }}">
+    <label class="col-md-2 control-label" for="datefrom">Fully Active From</label>
+    <div class="input-group input-group-lg">
+	<input class="form-control" type="text" name="active_from"  id="fromdatepicker" 
+	value="{{  old('datefrom', isset($user) && isset($user->person->active_from) ? $user->person->active_from->format('m/d/Y'): '') }}"/>
 
+                <span class="help-block">
+                <strong>{{$errors->has('datefrom') ? $errors->first('datefrom')  : ''}}</strong>
+                </span>
+</div>
+</div>
 			<!--- Managers ---->
 			<div class="form-group{{ $errors->has('reports_to)') ? ' has-error' : '' }}">
                         <label class="col-md-2 control-label">Managers</label>
@@ -115,7 +125,7 @@
 <div class="form-group {!! $errors->has('branches') ? 'has-error' : '' !!}">
 	<label class="col-md-2 control-label" for="roles">Branch Association</label>
 
-	<div class="col-md-6">
+    <div class="input-group input-group-lg">
 		<select multiple class="form-control" name='branches[]'>
 	
 			@foreach ($branches as $key=>$value))
@@ -140,7 +150,7 @@
 				<!---- or enter comma separated string -->  
 				<div class="form-group {!! $errors->has('branchstring') ? 'has-error' : '' !!}">
 					<label class="col-md-2 control-label" for="branchstring">Branches</label>
-					<div class="col-md-6">
+    <div class="input-group input-group-lg">
 						<input class="form-control" type="text" name="branchstring" id="branchstring"  />
 						{!! $errors->first('branchstring', '<span class="help-inline">:message</span>') !!}
 					
