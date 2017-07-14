@@ -45,7 +45,10 @@
 		<!-- Post Footer -->
 		<div class="row">
 			<div class="col-md-8">
-				<p></p>
+			@if(auth()->user()->hasRole('Admin'))
+				<p>Visible to <a href="{{route('news.audience',$post->id)}}"
+				title="See all users who can see the {{$post->title}} news item">{{count($post->audience())}} users.</a></p>
+				@endif
 				<p><span class="glyphicon glyphicon-user"></span> by <span class="muted">
 				@if(isset($post->author))
 					{{{$post->author->person->postName()}}}

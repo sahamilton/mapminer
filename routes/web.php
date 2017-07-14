@@ -344,6 +344,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 		Route::get('comment/download', ['as'=>'comment.download', 'uses'=>'CommentsController@download']);
 	
 	#News
+		Route::get('news/{id}/audience',['as'=>'news.audience','uses'=>'NewsController@audience']);
 		Route::resource('news', 'NewsController');
 		
 	

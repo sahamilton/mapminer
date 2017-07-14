@@ -150,12 +150,15 @@ class NewsController extends BaseController {
 		if($news->update($data)) {
 			
 			$news->serviceline()->sync($request->get('serviceline'));
-			if($request->has('vertical')){
-				$news->relatedIndustries()->sync($request->get('vertical'));
-			}
-			if($request->has('role')){
-				$news->relatedRoles()->sync($request->get('role'));
-			}
+
+			$vertical = [];
+			$vertical = $request->get('vertical');
+			$news->relatedIndustries()->sync($vertical);
+			
+			$role = [];
+			$role = $request->get('role');
+			$news->relatedRoles()->sync($role);
+			
 		}
 		return redirect()->route('news.index');
 	}
@@ -173,7 +176,13 @@ class NewsController extends BaseController {
 		return redirect()->route('news.index');
 	}
 	
-	
+	public function audience($id){
+		$news = $this->news->findOrFail($id);
+		$people = $news->audience();
+		$audience = User::whereIn('id',$people)->with('person','person.industryfocus','roles')->get();
+		return response()->view('news.audience', compact('news','audience'));
+
+	}
 	
 	public function noNews()
 	{
