@@ -2,7 +2,7 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+
 
 class Salesactivity extends Model implements \MaddHatter\LaravelFullcalendar\IdentifiableEvent
 {

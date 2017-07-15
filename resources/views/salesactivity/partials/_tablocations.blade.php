@@ -3,6 +3,7 @@
 	
 		<table class="table" id = "sorttable">
 		<thead>
+		<th>WatchList</th>
 			<th>Company</th>
 			<th>Location</th>
 			<th>Vertical</th>
@@ -20,6 +21,7 @@
 		@foreach ($locations as $location)
 
 			<tr>
+				@include('companies.partials._watch') 
 				<td>{{$location->companyname}}</td> 
 				
 				<td><a href="{{route(

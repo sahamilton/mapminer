@@ -126,6 +126,7 @@ class SalesActivityController extends BaseController
     {
        
         $activity = $this->activity->with('salesprocess','vertical')->findOrFail($id);
+        $verticals = array_unique($activity->vertical->pluck('id')->toArray());
         $statuses = LeadStatus::pluck('status','id')->toArray();
         $person = Person::findOrFail(auth()->user()->person->id);
         if($person->isLeaf()){
@@ -136,9 +137,11 @@ class SalesActivityController extends BaseController
         }else{
             $locations = array();
         }
+        //my watch list
+        $mywatchlist = $this->activity->getWatchList();
         // find all lead locations for the logged in user in these verticals
         $leads = $this->lead->myLeads($verticals)->get();
-        return response()->view('salesactivity.show',compact('activity','locations','leads','statuses'));
+        return response()->view('salesactivity.show',compact('activity','locations','leads','statuses','mywatchlist'));
         }
         
         

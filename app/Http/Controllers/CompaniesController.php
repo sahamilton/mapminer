@@ -283,7 +283,7 @@ class CompaniesController extends BaseController {
 		}	
 
 		$data['type']='company';
-		$mywatchlist = $this->getWatchList();
+		$mywatchlist = $this->locations->getWatchList();
 		return response()->view('companies.show', compact('data','company','locations','count','limited','mywatchlist','states','filtered','filters','segments'));
 	}
 	
@@ -382,7 +382,7 @@ class CompaniesController extends BaseController {
 			$data['keys'] = $this->locations->getSearchKeys(['locations'],['segment','businesstype']);
 		}
 		$locations = $this->getStateLocations($data['company'],$state,$data,$filtered);
-		$mywatchlist = $this->getWatchList();
+		$mywatchlist = $this->locations->getWatchList();
 
 		$states= $this->getCompanyStates($data['company'],$data,$filtered);
 
