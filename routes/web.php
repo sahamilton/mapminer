@@ -323,6 +323,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 	# Sales Activity
 		
 		Route::get('salesactivity/{vertical}/vertical',['as'=>'salesactivity.vertical','uses'=>'SalesActivityController@index']);
+		
+		Route::post('salesactivity/updateteam',['as'=>'salesactivity.modifyteam','uses'=>'SalesActivityController@updateteam']);
+
 		Route::resource('salesactivity','SalesActivityController',['except' => ['show']]);
 
 		Route::get('campaigndocs/{id}',['as'=>'salesdocuments.index','uses'=>'SalesActivityController@campaignDocuments']);

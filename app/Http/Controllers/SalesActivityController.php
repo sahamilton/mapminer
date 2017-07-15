@@ -25,15 +25,17 @@ class SalesActivityController extends BaseController
     public $document;
     public $location;
     public $salesorg;
+    public $person;
 
 
-    public function __construct(Salesactivity $activity, SearchFilter $vertical, SalesProcess $process, Document $document,Location $location, Lead $lead){
+    public function __construct(Salesactivity $activity, SearchFilter $vertical, SalesProcess $process, Document $document,Location $location, Person $person,Lead $lead){
 
         $this->activity = $activity;
         $this->vertical = $vertical; 
         $this->process = $process;
         $this->document = $document;
         $this->location = $location;
+        $this->person = $person;
        
         $this->lead = $lead;
         parent::__construct($location);
@@ -90,6 +92,11 @@ class SalesActivityController extends BaseController
             }
 
         }
+
+        $reps = $activity->campaignSalesReps();
+        $activity->campaignparticipants()->attach($reps);
+
+
         return redirect()->route('salesactivity.index');
     }
 
@@ -117,9 +124,8 @@ class SalesActivityController extends BaseController
      */
     public function show($id)
     {
-        
-        $activity = $this->activity->with('salesprocess')->findOrFail($id);
-        $verticals = array_unique ($activity->vertical()->pluck('searchfilters.id')->toArray()); 
+       
+        $activity = $this->activity->with('salesprocess','vertical')->findOrFail($id);
         $statuses = LeadStatus::pluck('status','id')->toArray();
         $person = Person::findOrFail(auth()->user()->person->id);
         if($person->isLeaf()){
@@ -175,7 +181,8 @@ class SalesActivityController extends BaseController
             }
 
         }
-
+        $reps = $activity->campaignSalesReps();
+        $activity->campaignparticipants()->sync($reps);
         return redirect()->route('salesactivity.index');
     }
 
@@ -198,6 +205,21 @@ class SalesActivityController extends BaseController
 
 
 
+   }
+
+   public function updateteam(Request $request){
+
+        $activity = $this->activity->findOrFail($request->get('campaign_id'));
+       // need to get all the sales reps in these verticals
+       
+
+        $vertical = $request->get('vertical');
+        $reps = $this->person->whereHas('industryfocus', function($q) use($vertical){
+                $q->whereIn('search_filter_id',$vertical);
+        })->pluck('id')->toArray();
+
+        $activity->campaignparticipants()->sync($reps);
+        return redirect()->route('campaign.announce',$request->get('campaign_id'));
    }
 
      private function setDates($data){

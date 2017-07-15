@@ -219,7 +219,9 @@ class Person extends NodeModel {
        
     }
 
-    
+    public function campaigns(){
+    	return $this->belongsToMany(Salesactivity::class);
+    }
 
     
 }

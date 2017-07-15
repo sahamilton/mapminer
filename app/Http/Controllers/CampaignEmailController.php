@@ -12,25 +12,26 @@ use Illuminate\Http\Request;
 use App\Mail\SendCampaignMail;
 use App\Mail\SendManagersCampaignMail;
 use App\Mail\SendSenderCampaignMail;
-
+use App\SearchFilter;
 
 class CampaignEmailController extends Controller
 {
-        
+        public $searchfilter;
 		public $activity;
-        public function __construct(Salesactivity $activity){
+        public function __construct(Salesactivity $activity,SearchFilter $searchfilter){
         	$this->activity = $activity;
+            $this->searchfilter = $searchfilter;
         }
 
 
         public function announceCampaign($id){
 
-        $activity = $this->activity->findOrFail($id);
-        $verticals = array_unique($activity->vertical()->pluck('searchfilters.id')->toArray());
-        $salesteam = $this->filterSalesReps($verticals);
-        $verticals = array_unique($activity->vertical()->pluck('filter')->toArray());
-        $message = $this->constructMessage($activity,$verticals);
-        return response()->view('salesactivity.salesteam',compact('salesteam','activity','message'));
+        $activity = $this->activity->with('campaignparticipants')->findOrFail($id);
+        $verticals = $this->searchfilter->industrysegments();
+        $salesteam = $activity->campaignparticipants;
+        $campaignverticals = array_unique($activity->vertical()->pluck('filter')->toArray());
+        $message = $this->constructMessage($activity,$campaignverticals);
+        return response()->view('salesactivity.salesteam',compact('salesteam','activity','message','verticals'));
     }
 
 
