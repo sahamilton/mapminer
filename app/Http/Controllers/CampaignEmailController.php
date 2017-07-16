@@ -56,7 +56,7 @@ class CampaignEmailController extends Controller
         foreach ($salesteam as $data['sales']){
 
             Mail::queue(new SendCampaignMail($data));
-            
+            sleep(1);
         }
     }
 
@@ -79,6 +79,7 @@ class CampaignEmailController extends Controller
         }
         foreach ($data['managers'] as $manager){
                 Mail::queue(new SendManagersCampaignMail($data,$manager));
+                sleep(1);
             }
     }
     private function constructMessage($activity,$verticals){
