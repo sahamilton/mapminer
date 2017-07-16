@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "02a308643d2e4e6abf4ff315dca52a66",
-    "content-hash": "ae9a3c09b3f474a252566c62325867b7",
+    "hash": "80ef402861bc670766cee35704083ef4",
+    "content-hash": "ed8a3f9da660e9255dd49e8931f22a28",
     "packages": [
         {
             "name": "algolia/algoliasearch-client-php",
@@ -767,6 +767,63 @@
                 "parser"
             ],
             "time": "2017-05-14 14:47:48"
+        },
+        {
+            "name": "eyewitness/eye",
+            "version": "v1.6.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/eyewitness/eye.git",
+                "reference": "cb896e2a64c8e0488f58ad4f4f02d2da1ebb25ed"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/eyewitness/eye/zipball/cb896e2a64c8e0488f58ad4f4f02d2da1ebb25ed",
+                "reference": "cb896e2a64c8e0488f58ad4f4f02d2da1ebb25ed",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "5.*|6.*",
+                "laravel/framework": "~5.0.14|~5.1"
+            },
+            "require-dev": {
+                "mockery/mockery": "^0.9.4",
+                "orchestra/testbench": "~3.4",
+                "phpunit/phpunit": "~5.7"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Eyewitness\\Eye\\EyeServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Eyewitness\\Eye\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Laurence",
+                    "email": "laurence@eyewitness.io"
+                }
+            ],
+            "description": "Eyewitness.io client for Laravel 5 applications",
+            "homepage": "https://github.com/eyewitness/eye",
+            "keywords": [
+                "cron",
+                "eyewitness",
+                "laravel 5",
+                "monitor",
+                "queue"
+            ],
+            "time": "2017-07-15 22:17:51"
         },
         {
             "name": "fabpot/goutte",

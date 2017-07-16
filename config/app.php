@@ -190,6 +190,7 @@ return [
 
         Laravel\Scout\ScoutServiceProvider::class,
         ScoutEngines\Elasticsearch\ElasticsearchProvider::class,
+        Eyewitness\Eye\EyeServiceProvider::class,
 
 
     ],
