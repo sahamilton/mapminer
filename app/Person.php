@@ -223,5 +223,17 @@ class Person extends NodeModel {
     	return $this->belongsToMany(Salesactivity::class);
     }
 
-    
+    public function campaignparticipants($vertical){
+    	return $this->whereHas('industryfocus', function($q) use($vertical){
+                        $q->whereIn('search_filter_id',$vertical);
+                })
+                ->whereHas('userdetails',function ($q){
+                    $q->where('confirmed','=',1);
+                })
+                ->where(function($q){
+                    $q->whereNull('active_from')
+                    ->orWhere('active_from','<=',date('Y-m-d'));
+                });
+
+    }
 }

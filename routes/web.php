@@ -333,7 +333,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 		Route::get('campaign/{id}/announce',['as'=>'campaign.announce','uses'=>'CampaignEmailController@announceCampaign']);
 
 		Route::post('campaign/{id}/message',['as'=>'sendcampaign.message','uses'=>'CampaignEmailController@email']);
-			
+		
+		Route::get('salesteam',['as'=>'teamupdate','uses'=>'SalesActivityController@changeTeam']);
 
 	#Watchlists
 		Route::get('watchlist/{userid}', ['as'=>'watch.mywatchexport', 'uses'=>'WatchController@export']);

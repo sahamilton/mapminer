@@ -103,6 +103,9 @@ class Salesactivity extends Model implements \MaddHatter\LaravelFullcalendar\Ide
             ->whereHas('userdetails.roles',function ($q){
                 $q->where('role_id','=',5);
             })
+            ->whereHas('userdetails',function($q){
+                $q->where('confirmed','=',1);
+            })
             ->where(function($query) use($verticals){
                 $query->whereHas('industryfocus',function ($q) use($verticals){
                     $q->whereIn('search_filter_id',$verticals);

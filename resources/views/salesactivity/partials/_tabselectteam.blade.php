@@ -1,4 +1,5 @@
 <h2>Update the sales team to participate in this program</h2>
+(<i>Note this does not change the focus of the sales campaign</i>)
 <form method="post" name="updateam" action="{{route('salesactivity.modifyteam')}}" >
 {{csrf_field()}}
 @include('salesactivity.partials._verticals')

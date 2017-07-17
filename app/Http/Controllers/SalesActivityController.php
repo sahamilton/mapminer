@@ -113,6 +113,7 @@ class SalesActivityController extends BaseController
         ->where('dateto','>=',date('Y-m-d'))
         ->get();
         $calendar = \Calendar::addEvents($activities);
+
         return response()->view('salesactivity.calendar',compact('calendar'));
     }
 
@@ -173,6 +174,7 @@ class SalesActivityController extends BaseController
      */
     public function update(SalesActivityFormRequest $request, $id)
     {
+        
         $activity = $this->activity->findOrFail($id);
         $data = $this->setDates($request->all());
         $activity->update($data);
@@ -209,7 +211,33 @@ class SalesActivityController extends BaseController
 
 
    }
+   public function changeteam(Request $request){
 
+        $activity = $this->activity->findOrFail($request->get('campaign_id'));
+        $team = $request->get('id');
+        switch ($request->get('action')) {
+            case 'add':
+                if($activity->campaignparticipants()->attach($team)){
+                    return 'success';;
+                }else{
+                    return 'error';
+                }
+            break;
+            
+            case 'remove':
+
+                if($activity->campaignparticipants()->detach($team)){
+                    return 'success';;
+                }else{
+                    return 'error';
+                }
+
+                
+            break;  
+            
+        }
+
+   }
    public function updateteam(Request $request){
 
         $activity = $this->activity->findOrFail($request->get('campaign_id'));
@@ -217,9 +245,8 @@ class SalesActivityController extends BaseController
        
 
         $vertical = $request->get('vertical');
-        $reps = $this->person->whereHas('industryfocus', function($q) use($vertical){
-                $q->whereIn('search_filter_id',$vertical);
-        })->pluck('id')->toArray();
+        $reps = $this->person->campaignparticipants($vertical)
+                ->pluck('id')->toArray();
 
         $activity->campaignparticipants()->sync($reps);
         return redirect()->route('campaign.announce',$request->get('campaign_id'));

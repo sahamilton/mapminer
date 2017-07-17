@@ -15,7 +15,7 @@
 <tbody>
 @foreach ($salesteam as $team)
 <tr>
-<td><input type="checkbox" checked name="rep[]" value="{{$team->id}}"></td>
+<td><input type="checkbox" class='teamMember' checked name="rep[]" value="{{$team->id}}"></td>
 <td>{{$team->fullName()}}</td>
 <td>
 <ul>

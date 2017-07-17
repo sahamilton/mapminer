@@ -150,5 +150,58 @@ $(document).ready(function()
 	   }
     });
     } 
-); 
+)
+
+
+  $('#sorttable').on('change','.teamMember',function() {
+      var value = $(this).val();
+      <!--var id = event.target.id;  Changed to accomodate Firefox -->
+      var id =$(this).attr('id');
+          if($(this).is(":checked")) {
+        var action = 'add';
+        var msg =  id + " to List";
+              var returnVal = changed(msg,action,id);
+              $(this).attr("checked", returnVal);
+          }else{
+        var action = 'remove';
+        var msg = id + " from List";
+        var returnVal = changed(msg,action,value);
+              $(this).attr("checked",false, returnVal);
+      }
+         
+       function changed(msg,action,id)
+       {
+         
+
+         $.ajax(
+      
+          {
+          headers: { 'csrftoken' : '{{ csrf_token() }}' },
+          type: "GET",
+          
+          cache: false,
+          
+          url: '{{route('teamupdate')}}',
+          data: {id: id,action: action,campaign_id: {{$activity->id}}},
+          
+          dataType: "xml",
+          
+          contentType: "text/html",
+          
+          success: processData,
+          
+          error: errorAlert
+          
+          }); //end of $.ajax
+      }
+      function processData(){
+         //alert("I did it!");
+       }
+       
+       function errorAlert() {
+         //alert("Whoops that didnt work");
+       }
+    });
+
+
 </script>

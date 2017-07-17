@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "80ef402861bc670766cee35704083ef4",
-    "content-hash": "ed8a3f9da660e9255dd49e8931f22a28",
+    "hash": "58bddfa28f8829f5e0729adc8a442a5d",
+    "content-hash": "d86c5e02456c85ec6bc9e786a7829139",
     "packages": [
         {
             "name": "algolia/algoliasearch-client-php",
@@ -770,16 +770,16 @@
         },
         {
             "name": "eyewitness/eye",
-            "version": "v1.6.1",
+            "version": "v1.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/eyewitness/eye.git",
-                "reference": "cb896e2a64c8e0488f58ad4f4f02d2da1ebb25ed"
+                "reference": "64b85b2a65a4bd0378b375ff79fe49180ef8ba0e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eyewitness/eye/zipball/cb896e2a64c8e0488f58ad4f4f02d2da1ebb25ed",
-                "reference": "cb896e2a64c8e0488f58ad4f4f02d2da1ebb25ed",
+                "url": "https://api.github.com/repos/eyewitness/eye/zipball/64b85b2a65a4bd0378b375ff79fe49180ef8ba0e",
+                "reference": "64b85b2a65a4bd0378b375ff79fe49180ef8ba0e",
                 "shasum": ""
             },
             "require": {
@@ -823,7 +823,7 @@
                 "monitor",
                 "queue"
             ],
-            "time": "2017-07-15 22:17:51"
+            "time": "2017-07-16 22:24:22"
         },
         {
             "name": "fabpot/goutte",
@@ -1634,16 +1634,16 @@
         },
         {
             "name": "laravel/scout",
-            "version": "v3.0.5",
+            "version": "v3.0.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/scout.git",
-                "reference": "547ff55530a16e31b3b1142dd4dfdb654ad2bae0"
+                "reference": "b899432186096dacc90700d5320d95cc3db1efe1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/scout/zipball/547ff55530a16e31b3b1142dd4dfdb654ad2bae0",
-                "reference": "547ff55530a16e31b3b1142dd4dfdb654ad2bae0",
+                "url": "https://api.github.com/repos/laravel/scout/zipball/b899432186096dacc90700d5320d95cc3db1efe1",
+                "reference": "b899432186096dacc90700d5320d95cc3db1efe1",
                 "shasum": ""
             },
             "require": {
@@ -1667,6 +1667,11 @@
             "extra": {
                 "branch-alias": {
                     "dev-master": "3.0-dev"
+                },
+                "laravel": {
+                    "providers": [
+                        "Laravel\\Scout\\ScoutServiceProvider"
+                    ]
                 }
             },
             "autoload": {
@@ -1690,7 +1695,7 @@
                 "laravel",
                 "search"
             ],
-            "time": "2017-06-01 13:21:09"
+            "time": "2017-07-12 18:42:43"
         },
         {
             "name": "laravel/tinker",
@@ -3863,16 +3868,16 @@
         },
         {
             "name": "tecnickcom/tcpdf",
-            "version": "6.2.12",
+            "version": "6.2.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tecnickcom/TCPDF.git",
-                "reference": "2f732eaa91b5665274689b1d40b285a7bacdc37f"
+                "reference": "95c5938aafe4b20df1454dbddb3e5005c0b26f64"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tecnickcom/TCPDF/zipball/2f732eaa91b5665274689b1d40b285a7bacdc37f",
-                "reference": "2f732eaa91b5665274689b1d40b285a7bacdc37f",
+                "url": "https://api.github.com/repos/tecnickcom/TCPDF/zipball/95c5938aafe4b20df1454dbddb3e5005c0b26f64",
+                "reference": "95c5938aafe4b20df1454dbddb3e5005c0b26f64",
                 "shasum": ""
             },
             "require": {
@@ -3881,7 +3886,6 @@
             "type": "library",
             "autoload": {
                 "classmap": [
-                    "fonts",
                     "config",
                     "include",
                     "tcpdf.php",
@@ -3922,7 +3926,7 @@
                 "pdf417",
                 "qrcode"
             ],
-            "time": "2015-09-12 10:08:34"
+            "time": "2017-04-26 08:14:48"
         },
         {
             "name": "tijsverkoyen/css-to-inline-styles",
@@ -3973,16 +3977,16 @@
         },
         {
             "name": "toin0u/geocoder-laravel",
-            "version": "1.1.1",
+            "version": "1.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/geocoder-php/GeocoderLaravel.git",
-                "reference": "9f9df7fd941e6fb0a20588dd3fadb30abe8b1df2"
+                "reference": "a322da316717eda1fb38afdc3db1b5bfc7d29ef6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/geocoder-php/GeocoderLaravel/zipball/9f9df7fd941e6fb0a20588dd3fadb30abe8b1df2",
-                "reference": "9f9df7fd941e6fb0a20588dd3fadb30abe8b1df2",
+                "url": "https://api.github.com/repos/geocoder-php/GeocoderLaravel/zipball/a322da316717eda1fb38afdc3db1b5bfc7d29ef6",
+                "reference": "a322da316717eda1fb38afdc3db1b5bfc7d29ef6",
                 "shasum": ""
             },
             "require": {
@@ -4001,6 +4005,7 @@
                 "phploc/phploc": "^3.0",
                 "phpmd/phpmd": "^2.4",
                 "phpunit/phpunit": "~5.0",
+                "satooshi/php-coveralls": "dev-master@dev",
                 "sebastian/phpcpd": "^2.0",
                 "squizlabs/php_codesniffer": "^2.7",
                 "symfony/css-selector": "3.1.*",
@@ -4042,7 +4047,7 @@
                 "geocoding",
                 "laravel"
             ],
-            "time": "2017-06-22 14:44:26"
+            "time": "2017-07-13 01:25:36"
         },
         {
             "name": "viacreative/sudo-su",
