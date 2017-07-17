@@ -4,7 +4,8 @@
 				<div class="form-group {{{ $errors->has('name') ? 'has-error' : '' }}}">
 					<label class="col-md-2 control-label" for="name">Name</label>
                     <div class="col-md-10">
-    					<input required class="form-control" type="text" name="name" id="name" value="{{old('name', isset($role) ?  $role->name : ''}}}" />
+    					<input required class="form-control" type="text" name="name" id="name" 
+                        value="{{old('name', isset($role) ?  $role->name : '')}}" />
     					{!! $errors->first('name', '<span class="help-inline has-error">:message</span>') !!}
                     </div>
 				</div>

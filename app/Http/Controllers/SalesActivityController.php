@@ -102,13 +102,16 @@ class SalesActivityController extends BaseController
 
     public function mycampaigns()
     { 
-        
+       
         $activities = $this->activity->with('salesprocess','vertical')
-         ->when(count($this->userVerticals)>0,function($q) {
+         /*
+         removed so all sales reps see all campaigns
+
+          ->when(count($this->userVerticals)>0,function($q) {
             $q->whereHas('vertical',function($q1) {
                 $q1->whereIn('vertical_id',$this->userVerticals);
             });
-        })
+        })*/
         ->where('datefrom','<=',date('Y-m-d'))
         ->where('dateto','>=',date('Y-m-d'))
         ->get();

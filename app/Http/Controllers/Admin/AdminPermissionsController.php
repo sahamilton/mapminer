@@ -5,6 +5,8 @@ use App\User;
 use App\Role;
 use App\Http\Requests\PermissionFormRequest;
 use App\Permission;
+use Illuminate\Http\Request;
+
 class AdminPermissionsController extends BaseController {
 
     /**
@@ -67,18 +69,18 @@ class AdminPermissionsController extends BaseController {
 	 *
 	 * @return Response
 	 */
-	public function create()
+	public function create(Request $request)
 	{
 		$roles = $this->role->all();
 
         // Selected permissions
         $currentRoles = \Input::old('roles', array());
 
-        $permission = new Permission;
+        $permission = $this->permission;
         $title = 'Create New Permission';
 
         // Show the page
-        return response()->view('admin/permissions/create', compact('roles', 'permission','currentRoles', 'title'));
+        return response()->view('admin.permissions.create', compact('roles', 'permission','currentRoles', 'title'));
 	}
 
 	/**
@@ -120,9 +122,10 @@ class AdminPermissionsController extends BaseController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function show($id)
+	public function show($permission)
 	{
-		dd($id);
+		
+		return response()->view('permissions.show',compact('permission'));
 	}
 
 	/**

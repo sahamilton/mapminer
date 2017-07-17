@@ -1,4 +1,4 @@
-
+<p><a href="{{route('campaign.announce',$activity->id)}}">Refresh list</a></p>
 <!---- Tab team -->
 <table id="sorttable" class="table table-striped">
 <thead>
