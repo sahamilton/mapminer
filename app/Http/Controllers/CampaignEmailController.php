@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Mail;
 
 use App\Salesactivity;
@@ -18,6 +19,7 @@ class CampaignEmailController extends Controller
 {
         public $searchfilter;
 		public $activity;
+        
         public function __construct(Salesactivity $activity,SearchFilter $searchfilter){
         	$this->activity = $activity;
             $this->searchfilter = $searchfilter;
@@ -56,7 +58,7 @@ class CampaignEmailController extends Controller
         foreach ($salesteam as $data['sales']){
 
             Mail::queue(new SendCampaignMail($data));
-            sleep(1);
+           
         }
     }
 

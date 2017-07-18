@@ -241,7 +241,10 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 
     # Documents
     	Route::resource('documents','DocumentsController');
-    	
+    # Emails
+    	Route::post('emails/selectrecipients',['as'=>'emails.updatelist','uses'=>'EmailsController@addRecipients']);
+    	Route::post('emails/send',['as'=>'emails.send','uses'=>'EmailsController@sendEmail']);
+    	Route::resource('emails','EmailsController');
 
 
 	#Locations
