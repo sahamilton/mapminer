@@ -36,7 +36,6 @@ class SendEmail extends Mailable
         
         return $this->markdown('emails.email')->subject($this->data->subject)
         ->from('info@tbmapminer.com','MapMiner')
-        ->to($this->recipient->userdetails->email, $this->recipient->postName())
-        ->cc(auth()->user()->email, auth()->user()->person->postName());
+        ->to($this->recipient->userdetails->email, $this->recipient->postName());
     }
 }
