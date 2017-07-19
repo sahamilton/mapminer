@@ -9,8 +9,10 @@
 
 <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
 	<thead>
+		
 		<th>Created</th>
 		<th>Sent</th>
+		<th>Subject</th>
 		<th>Body</th>
 		<th>Recipients</th>
 		<th>Actions</th>
@@ -25,6 +27,7 @@
 		{{$email->sent->format('M j, Y')}}
 		@endif
 		</td>
+		<td>{{$email->subject}}</td>
 		
 		<td>{{substr(strip_tags($email->message),0,200)}}</td>
 		<td>{{$email->recipientCount()}}</td>
@@ -36,17 +39,24 @@
 					<span class="sr-only">Toggle Dropdown</span>
 				</button>
 				<ul class="dropdown-menu" role="menu">
-
+				<li>
+				@if(! $email->sent)
+					<a href="{{route('emails.edit',$email->id)}}" title="Edit this email">
+					<i class="glyphicon glyphicon-pencil"></i>
+					Edit this email</a>
+				@else
+					<a href="{{route('emails.clone',$email->id)}}" title="Clone this email"><i class="glyphicon glyphicon-refresh"></i>
+					Clone this email</a>
+				@endif
+				</li>
 					
 					<li>
 						<a data-href="{{route('emails.destroy',$email->id)}}" 
 						data-toggle="modal" 
 						data-target="#confirm-delete" 
-						data-title = "location" 
+						data-title = "email" 
 						href="#">
-						<i class="fa fa-trash-o" aria-hidden="true"> </i> 
-						Delete Email
-						</a>
+						<i class="fa fa-trash-o" aria-hidden="true"> </i> Delete Email</a>
 					</li>
 
 				</ul>
@@ -58,5 +68,5 @@
 	</tbody>
 </table>
 @include('partials._modal')
-@include('partials/_scripts')
+@include('partials._scripts')
 @stop

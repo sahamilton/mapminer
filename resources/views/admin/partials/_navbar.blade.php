@@ -139,6 +139,8 @@
                 <ul class="dropdown-menu">
 					<li{{ (Request::is('admin/news*') ? ' class="active"' : '') }}><a href="{{{ route('news.index') }}}">
                     <i class="fa fa-newspaper-o" aria-hidden="true"> </i> News</a></li>
+                    <li{{ (Request::is('admin/emails*') ? ' class="active"' : '') }}><a href="{{{ route('emails.index') }}}">
+                    <i class="fa fa-envelope-o" aria-hidden="true"> </i> Emails</a></li>
                     @can('manage_sales_campaigns')
                         <li class="divider">Campaigns</li>
                         <li{{ (Request::is('admin/documents*') ? ' class="active"' : '') }}><a href="{{{ route('documents.index') }}}">

@@ -1,10 +1,10 @@
-<p></p>
+<p><a href="{{route('emails.show',$email->id)}}">Refresh list</a></p>
 <!---- Tab team -->
 <table id="sorttable" class="table table-striped">
 <thead>
 <tr>
 <th></th>
-<th>Recipiennt</th>
+<th>Recipient</th>
 <th>Verticals</th>
 <th>Roles</th>
 <th>Email</th>
@@ -14,7 +14,7 @@
 <tbody>
 @foreach ($email->recipients as $team)
 <tr>
-<td><input type="checkbox" class='teamMember' checked name="rep[]" value="{{$team->id}}"></td>
+<td><input type="checkbox" class='recipient' checked name="rep[]" value="{{$team->id}}"></td>
 <td>{{$team->fullName()}}</td>
 <td>
 <ul>
@@ -39,5 +39,6 @@
 <form method="post" name="sendEmail" action="{{route('emails.send')}}" >
 {{csrf_field()}}
 <input type="hidden" name="id" value="{{$email->id}}" />
+<p>Send a test: <input type="checkbox" checked name="test" value='1' /></p>
 <input type="submit" name="Send" value="Send Email" class="btn btn-danger">
 </form>

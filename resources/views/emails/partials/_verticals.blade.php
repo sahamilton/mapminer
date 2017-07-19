@@ -1,3 +1,5 @@
+<fieldset>
+	<legend>Industry Verticals</legend>
 @foreach($verticals as $descendant)
 
 	@if($descendant->type == 'group'  )
@@ -37,5 +39,5 @@
 	<?php  $n = $descendant->depth;?>
 
 @endforeach
- </li></ul></fieldset>
+ </li></ul></fieldset></fieldset>
 		

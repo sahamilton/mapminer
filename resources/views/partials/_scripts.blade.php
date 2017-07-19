@@ -182,7 +182,7 @@ $(document).ready(function()
           cache: false,
           
           url: '{{route('teamupdate')}}',
-          data: {id: id,action: action,campaign_id: {{isset($activity) ? $activity->id : ''}}},
+          data: {id: id,action: action, campaign_id: {{isset($activity) ? $activity->id : 0}}},
           
           dataType: "xml",
           

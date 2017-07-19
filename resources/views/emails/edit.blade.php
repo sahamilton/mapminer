@@ -1,7 +1,7 @@
 @extends ('admin.layouts.default')
 @section('content')
 <div class="container">
-  <h2>Create an Email</h2>
+  <h2>Edit Email</h2>
 
   <!---- Tab message -->
   <ul class="nav nav-tabs">
@@ -24,5 +24,5 @@
   </div>
 </div>
 @include('emails.partials._scripts')
-
+@include('partials._scripts')
 @endsection

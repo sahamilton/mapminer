@@ -8,7 +8,7 @@
                 </div>
             
                 <div class="modal-body">
-                    <p>You are about to delete <span id='title'>this element</span>.  Note this procedure is irreversible.</p>
+                    <p>You are about to delete <span id='title'>this item</span>.  Note this procedure is irreversible.</p>
                     <p>Do you want to proceed?</p>
                     <p class="debug-url"></p>
                 </div>
@@ -22,7 +22,7 @@
                                         
                         <form id="action-form" 
                             action="" 
-                            method="POST" 
+                            method="post" 
 
                             style="display: none;">
                             <input type="hidden" name="_method" value="delete">

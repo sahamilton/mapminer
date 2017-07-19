@@ -15,12 +15,7 @@
 		    return view('welcome');
 		
 	}]);
-Route::get('send_test_email', function(){
-	Mail::raw('Sending emails with Mailgun and Laravel is easy!', function($message)
-	{
-		$message->to('stephen@crescentcreative.com');
-	});
-});
+
 //Route::auth();  
 	Route::get('/error',function(){
 		Bugsnag::notifyError('ErrorType', 'Test Error');
@@ -248,6 +243,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
     	Route::resource('documents','DocumentsController');
     # Emails
     	Route::post('emails/selectrecipients',['as'=>'emails.updatelist','uses'=>'EmailsController@addRecipients']);
+    	Route::get('emails/update',['as'=>'emails.updaterecipients','uses'=>'EmailsController@changelist']);
+    	Route::get('emails/{id}/clone',['as'=>'emails.clone','uses'=>'EmailsController@clone']);
     	Route::post('emails/send',['as'=>'emails.send','uses'=>'EmailsController@sendEmail']);
     	Route::resource('emails','EmailsController');
 

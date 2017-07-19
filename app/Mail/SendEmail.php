@@ -23,6 +23,7 @@ class SendEmail extends Mailable
         $this->data = $email;
         $this->recipient = $recipient;
         
+        
 
     }
 
@@ -34,7 +35,7 @@ class SendEmail extends Mailable
     public function build()
     {
         
-        return $this->markdown('emails.email')->subject($this->data->subject)
+        return $this->markdown('emails.email')->subject($this->data['subject'])
         ->from('info@tbmapminer.com','MapMiner')
         ->to($this->recipient->userdetails->email, $this->recipient->postName());
     }
