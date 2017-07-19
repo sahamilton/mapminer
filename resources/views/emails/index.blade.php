@@ -31,7 +31,8 @@
 		
 		<td>{{substr(strip_tags($email->message),0,200)}}</td>
 		<td>
-		<a href="{{route('emails.recipients',$email->id)}}">{{$email->recipientCount()}}</a></td>
+		<a href="{{route('emails.recipients',$email->id)}}"
+		title="See the recipients list for this email">{{$email->recipientCount()}}</a></td>
 		
 		<td>
 			<div class="btn-group">

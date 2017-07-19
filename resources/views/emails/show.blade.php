@@ -11,8 +11,9 @@
 <fieldset><legend>Email Message</legend>
 <blockquote>{!!$email->message!!}</blockquote>
 </fieldset>
-<h4>Recipients</h4>
+<fieldset><legend>Recipients</legend>
 @include('emails.partials._tabteam')
+</fieldset>
 </div>
 
 @include('partials._scripts')
