@@ -50,7 +50,7 @@ $('#sorttable').on('change','.recipient',function() {
           cache: false,
           
           url: '{{route('emails.updaterecipients')}}',
-          data: {id: id,action: action, email_id: {{$email->id}}},
+          data: {id: id,action: action, email_id: {{isset($email->id) ? $email->id : 0}}},
           
           dataType: "xml",
           

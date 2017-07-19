@@ -216,9 +216,11 @@ class EmailsController extends Controller
 
    }
 
-   private function sendEmails($email)
+   public function recipients($id)
     {
-
+       
+        $email = $this->email->with('recipients','recipients.userdetails')->findOrFail($id);
+        return response()->view('emails.show',compact('email'));
 
     }
 
@@ -248,7 +250,7 @@ class EmailsController extends Controller
            
             return $data;
         }
-    
+   
 
 
     public function confirmed(Request $request)

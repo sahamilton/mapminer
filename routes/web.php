@@ -245,6 +245,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
     	Route::post('emails/selectrecipients',['as'=>'emails.updatelist','uses'=>'EmailsController@addRecipients']);
     	Route::get('emails/update',['as'=>'emails.updaterecipients','uses'=>'EmailsController@changelist']);
     	Route::get('emails/{id}/clone',['as'=>'emails.clone','uses'=>'EmailsController@clone']);
+    	Route::get('emails/{id}/recipients',['as'=>'emails.recipients','uses'=>'EmailsController@recipients']);
     	Route::post('emails/send',['as'=>'emails.send','uses'=>'EmailsController@sendEmail']);
     	Route::resource('emails','EmailsController');
 

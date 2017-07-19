@@ -1,4 +1,7 @@
+@if(! $email->sent)
 <p><a href="{{route('emails.show',$email->id)}}">Refresh list</a></p>
+@endif
+
 <!---- Tab team -->
 <table id="sorttable" class="table table-striped">
 <thead>
@@ -36,9 +39,11 @@
 @endforeach
 </tbody>
 </table>
+@if(! $email->sent)
 <form method="post" name="sendEmail" action="{{route('emails.send')}}" >
 {{csrf_field()}}
 <input type="hidden" name="id" value="{{$email->id}}" />
 <p>Send a test: <input type="checkbox" checked name="test" value='1' /></p>
 <input type="submit" name="Send" value="Send Email" class="btn btn-danger">
 </form>
+@endif
