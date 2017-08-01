@@ -196,9 +196,9 @@ class User extends Authenticatable
 	
 	
 	public function export ($data) {
-		
+
 		$filename = "attachment; filename=\"". time() . '-' ."users.csv\"";
-		$fields=['id',['person'=>'firstname'],['person'=>'lastname'],'email','lastlogin',['serviceline'=>'ServiceLine']];
+		$fields=['id',['person'=>'firstname'],['person'=>'lastname'],'email','lastlogin','employee_id',['serviceline'=>'ServiceLine'],['person'=>'reports_to']];
 
 		//$data = $this->user->with('person')->get();
 		
