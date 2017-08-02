@@ -406,9 +406,10 @@ class BranchesController extends BaseController {
 	}
 	public function getMyBranches($id)
 	{	
-		$people = $this->person->with('manages')->findOrFail($id);
 		
-		return response()->view('persons.showmap', compact('people'));
+		$people = $this->person->with('manages','userdetails')->findOrFail($id);
+	
+		return response()->view('persons.showmap', compact('people','centerpos'));
 	}
 	
 	

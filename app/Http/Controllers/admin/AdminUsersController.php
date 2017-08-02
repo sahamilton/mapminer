@@ -197,9 +197,11 @@ class AdminUsersController extends BaseController {
      * @param $user
      * @return Response
      */
-    public function show($id)
+    public function show($user)
     {
-        $user = $this->user->findOrFail($id);
+        
+        $user = $this->user->with('person','serviceline','roles')->findOrFail($user->id);
+        return response()->view('admin.users.showdetail', compact('user'));
 
     }
 
