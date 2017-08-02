@@ -12,9 +12,9 @@ class Person extends NodeModel {
 
 	protected $parentColumn = 'reports_to';
 
-
+	protected $dates =['created_at','updated_at','active_from'];
 	// Don't forget to fill this array
-	public $fillable = ['firstname','lastname','phone','address','lat','lng','reports_to','city','state','geostatus','user_id'];
+	public $fillable = ['firstname','lastname','phone','address','lat','lng','reports_to','city','state','geostatus','user_id','active_from'];
 
 	public function reportsTo()
     {
@@ -136,10 +136,10 @@ class Person extends NodeModel {
 	
 	
 	public function findNearByPeople($lat,$lng,$distance,$limit=null, $role=null,$verticals=null){
-		$query = "SELECT id,firstname,lastname,lat,lng, email,distance_in_mi,employee_id,role,city,state
+		$query = "SELECT id,firstname,lastname,lat,lng, email,distance_in_mi,employee_id,role,city,state,active_from
 			  FROM (
 					SELECT DISTINCT persons.id as id, 
-						firstname,lastname,lat,lng,city,state,users.email as email, users.employee_id as employee_id, roles.name as role,r,
+						firstname,lastname,lat,lng,city,state,users.email as email, users.employee_id as employee_id, roles.name as role,r,active_from,
 							   69.0 * DEGREES(ACOS(COS(RADIANS(latpoint))
 										 * COS(RADIANS(lat))
 										 * COS(RADIANS(longpoint) - RADIANS(lng))
@@ -175,6 +175,7 @@ class Person extends NodeModel {
 						$query.=" ) d
 			 
 			 WHERE distance_in_mi <= r 
+			 AND (active_from is null or active_from < date('Y-m-d'))
 			 ORDER BY distance_in_mi";
 
 			if(isset($limit))
@@ -218,7 +219,21 @@ class Person extends NodeModel {
        
     }
 
-    
+    public function campaigns(){
+    	return $this->belongsToMany(Salesactivity::class);
+    }
 
-    
+    public function campaignparticipants($vertical){
+    	return $this->whereHas('industryfocus', function($q) use($vertical){
+                        $q->whereIn('search_filter_id',$vertical);
+                })
+                ->whereHas('userdetails',function ($q){
+                    $q->where('confirmed','=',1);
+                })
+                ->where(function($q){
+                    $q->whereNull('active_from')
+                    ->orWhere('active_from','<=',date('Y-m-d'));
+                });
+
+    }
 }

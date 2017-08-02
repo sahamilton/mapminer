@@ -73,5 +73,38 @@ class News extends Model {
 
 
 	}
+
+	public function audience(){
+
+		// find all people by role
+			$audience = array();
+			$people = $this->with('relatedRoles','relatedRoles.assignedRoles','relatedIndustries','relatedIndustries.people')->first();
+
+			// Get roles
+			foreach ($people->relatedRoles as $role){
+				$roleaudience[] = $role->assignedRoles->pluck('id')->toArray();
+			}
+			if(isset($roleaudience)){
+						foreach ($roleaudience as $group){
+							$audience = array_merge($group,$audience);
+						}
+					}
+			// Get industry verticals
+			foreach ($people->relatedIndustries as $vertical){
+				$industryaudience[] = $vertical->people->pluck('user_id')->toArray();
+			}
+
+			if(isset($industryaudience)){
+						foreach ($industryaudience as $group){
+							$audience = array_merge($group,$audience);
+						}
+					}
+
+			return $audience;
+			
+		// find all people by vertical
+		// 
+		// get unique number
+	}
 	
 }

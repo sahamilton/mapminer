@@ -129,6 +129,7 @@ class CompaniesController extends BaseController {
 	{
 				
 		$managers = $this->person->getPersonsWithRole($this->NAMRole);
+
 		$filters = $this->getFilters();
 		$servicelines = Serviceline::whereIn('id',$this->userServiceLines)
 			->pluck('ServiceLine','id');
@@ -159,7 +160,7 @@ class CompaniesController extends BaseController {
 	public function edit($company)
 	{
 		
-		$managers = $this->person->getPersonsWithRole($this->$NAMRole);
+		$managers = $this->person->getPersonsWithRole($this->NAMRole);
 
 		$company = $company
 					->where('id','=',$company->id)
@@ -171,7 +172,7 @@ class CompaniesController extends BaseController {
 			->pluck('ServiceLine','id');
 		
 		$filters = $this->getFilters();
-
+		//$verticals = $this->searchfilter->industrysegments();
 		return response()->view('companies.edit', compact('company','managers','filters','servicelines'));
 	}
 
@@ -267,7 +268,7 @@ class CompaniesController extends BaseController {
 		}	
 
 		$data['type']='company';
-		$mywatchlist = $this->getWatchList();
+		$mywatchlist = $this->locations->getWatchList();
 		return response()->view('companies.show', compact('data','company','locations','count','limited','mywatchlist','states','filtered','filters','segments'));
 	}
 
@@ -400,7 +401,7 @@ class CompaniesController extends BaseController {
 			$data['keys'] = $this->locations->getSearchKeys(['locations'],['segment','businesstype']);
 		}
 		$locations = $this->getStateLocations($data['company'],$state,$data,$filtered);
-		$mywatchlist = $this->getWatchList();
+		$mywatchlist = $this->locations->getWatchList();
 
 		$states= $this->getCompanyStates($data['company'],$data,$filtered);
 
@@ -507,16 +508,14 @@ class CompaniesController extends BaseController {
 	}
 	
 	private function getFilters(){
-		/*$verticals = SearchFilter::where('type','=','group')
-		->where('searchtable','=','companies')
-		->first();
-		return $verticals->getLeaves()->where('searchcolumn','=','vertical');
-		*/
-		return  SearchFilter::where('type','=','multiple')
+
+		return SearchFilter::where('type','!=','group')
 		->where('searchtable','=','companies')
 		->where('searchcolumn','=','vertical')
-
+		->orderBy('lft')
 		->get();
+		//$verticals->getLeaves()->where('searchcolumn','=','vertical');
+
 	}
 	
 

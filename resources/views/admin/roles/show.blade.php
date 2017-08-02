@@ -36,7 +36,7 @@ $newTZ = new DateTimeZone('America/Los_Angeles');
         <td class="col-md-2">{{ $user->person->firstname }}</td>
         <td class="col-md-2">{{ $user->person->lastname }}</td>
        	
-        <td class="col-md-2">{{ $user->username }}</td>
+        <td class="col-md-2"><a href="{{route('users.show',$user->id)}}">{{ $user->username }}</a></td>
         <td class="col-md-2">{{ $user->email }}</td>
         <td class="col-md-2"> @foreach($user->serviceline as $serviceline)
     

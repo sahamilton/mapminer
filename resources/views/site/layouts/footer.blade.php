@@ -1,3 +1,4 @@
+
 <div id="footer" >
 	<div class="container">
 		<div class="muted credit col-sm-6 " style="color:#000000">

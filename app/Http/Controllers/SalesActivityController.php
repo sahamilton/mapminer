@@ -25,15 +25,17 @@ class SalesActivityController extends BaseController
     public $document;
     public $location;
     public $salesorg;
+    public $person;
 
 
-    public function __construct(Salesactivity $activity, SearchFilter $vertical, SalesProcess $process, Document $document,Location $location, Lead $lead){
+    public function __construct(Salesactivity $activity, SearchFilter $vertical, SalesProcess $process, Document $document,Location $location, Person $person,Lead $lead){
 
         $this->activity = $activity;
         $this->vertical = $vertical; 
         $this->process = $process;
         $this->document = $document;
         $this->location = $location;
+        $this->person = $person;
        
         $this->lead = $lead;
         parent::__construct($location);
@@ -90,22 +92,31 @@ class SalesActivityController extends BaseController
             }
 
         }
+
+        $reps = $activity->campaignSalesReps();
+        $activity->campaignparticipants()->attach($reps);
+
+
         return redirect()->route('salesactivity.index');
     }
 
     public function mycampaigns()
     { 
-        
+       
         $activities = $this->activity->with('salesprocess','vertical')
-         ->when(count($this->userVerticals)>0,function($q) {
+         /*
+         removed so all sales reps see all campaigns
+
+          ->when(count($this->userVerticals)>0,function($q) {
             $q->whereHas('vertical',function($q1) {
                 $q1->whereIn('vertical_id',$this->userVerticals);
             });
-        })
+        })*/
         ->where('datefrom','<=',date('Y-m-d'))
         ->where('dateto','>=',date('Y-m-d'))
         ->get();
         $calendar = \Calendar::addEvents($activities);
+
         return response()->view('salesactivity.calendar',compact('calendar'));
     }
 
@@ -117,9 +128,9 @@ class SalesActivityController extends BaseController
      */
     public function show($id)
     {
-        
-        $activity = $this->activity->with('salesprocess')->findOrFail($id);
-        $verticals = array_unique ($activity->vertical()->pluck('searchfilters.id')->toArray()); 
+       
+        $activity = $this->activity->with('salesprocess','vertical')->findOrFail($id);
+        $verticals = array_unique($activity->vertical->pluck('id')->toArray());
         $statuses = LeadStatus::pluck('status','id')->toArray();
         $person = Person::findOrFail(auth()->user()->person->id);
         if($person->isLeaf()){
@@ -130,9 +141,11 @@ class SalesActivityController extends BaseController
         }else{
             $locations = array();
         }
+        //my watch list
+        $mywatchlist = $this->activity->getWatchList();
         // find all lead locations for the logged in user in these verticals
         $leads = $this->lead->myLeads($verticals)->get();
-        return response()->view('salesactivity.show',compact('activity','locations','leads','statuses'));
+        return response()->view('salesactivity.show',compact('activity','locations','leads','statuses','mywatchlist'));
         }
         
         
@@ -164,6 +177,7 @@ class SalesActivityController extends BaseController
      */
     public function update(SalesActivityFormRequest $request, $id)
     {
+        
         $activity = $this->activity->findOrFail($id);
         $data = $this->setDates($request->all());
         $activity->update($data);
@@ -175,7 +189,8 @@ class SalesActivityController extends BaseController
             }
 
         }
-
+        $reps = $activity->campaignSalesReps();
+        $activity->campaignparticipants()->sync($reps);
         return redirect()->route('salesactivity.index');
     }
 
@@ -198,6 +213,46 @@ class SalesActivityController extends BaseController
 
 
 
+   }
+   public function changeteam(Request $request){
+
+        $activity = $this->activity->findOrFail($request->get('campaign_id'));
+        $team = $request->get('id');
+        switch ($request->get('action')) {
+            case 'add':
+                if($activity->campaignparticipants()->attach($team)){
+                    return 'success';;
+                }else{
+                    return 'error';
+                }
+            break;
+            
+            case 'remove':
+
+                if($activity->campaignparticipants()->detach($team)){
+                    return 'success';;
+                }else{
+                    return 'error';
+                }
+
+                
+            break;  
+            
+        }
+
+   }
+   public function updateteam(Request $request){
+
+        $activity = $this->activity->findOrFail($request->get('campaign_id'));
+       // need to get all the sales reps in these verticals
+       
+
+        $vertical = $request->get('vertical');
+        $reps = $this->person->campaignparticipants($vertical)
+                ->pluck('id')->toArray();
+
+        $activity->campaignparticipants()->sync($reps);
+        return redirect()->route('campaign.announce',$request->get('campaign_id'));
    }
 
      private function setDates($data){

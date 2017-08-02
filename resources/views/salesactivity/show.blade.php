@@ -3,6 +3,7 @@
 @section('content')<div class="container">
 	<h1>{{$activity->title}}</h1>
 	<h4>From {{$activity->datefrom->format('M j Y')}} to {{$activity->dateto->format('M j Y')}}</h4>
+
 	<a href="{{route('salescampaigns')}}">
 	<span class='glyphicon glyphicon-calendar'></span>
 	Back to all campaigns</a>

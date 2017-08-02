@@ -9,6 +9,7 @@ use App\Http\Requests\UserFormRequest;
 use App\Http\Requests\UserBulkImportForm;
 use App\Branch;
 use App\Track;
+use Carbon\Carbon;
 use App\Serviceline;
 use App\SearchFilter;
 use App\Http\Controllers\BaseController;
@@ -49,7 +50,7 @@ class AdminUsersController extends BaseController {
 
     public $branch;
     public $serviceline;
-
+    public $searchfilter;
     public $company;
 
     /**
@@ -61,7 +62,7 @@ class AdminUsersController extends BaseController {
      * @param Track $track
      * 
      */
-    public function __construct(User $user, Role $role, Person $person, Permission $permission, Branch $branch, Track $track,Serviceline $serviceline,Company $company)
+    public function __construct(User $user, Role $role, Person $person, Permission $permission, Branch $branch, Track $track,Serviceline $serviceline,Company $company, SearchFilter $searchfilter)
     {
         
         $this->user = $user;
@@ -72,6 +73,7 @@ class AdminUsersController extends BaseController {
         $this->track = $track;
         $this->branch = $branch;
         $this->serviceline = $serviceline;
+        $this->searchfilter = $searchfilter;
         parent::__construct($this->company);        
     }
 
@@ -136,11 +138,9 @@ class AdminUsersController extends BaseController {
 		$servicelines = $this->person->getUserServiceLines();
 		
 		$branches = $this->getUsersBranches($this->user);
-		$verticals = SearchFilter::where('searchcolumn','=','vertical')
-		->where('type','!=','group')
-        ->where('searchtable','=','companies')
-        ->get();			
-		
+
+		$verticals = $this->searchfilter->industrysegments();
+
 		
 		$managers = $this->getManagerList();
 		// Show the page
@@ -171,6 +171,7 @@ class AdminUsersController extends BaseController {
             $person->user_id = $user->id;
             $person->firstname = $request->get('firstname');
             $person->lastname = $request->get('lastname');
+
             $person->save();
            	$person = $this->updateAssociatedPerson($person,$request->all());
             $person = $this->associateBranchesWithPerson($person,$request->all());    
@@ -198,9 +199,11 @@ class AdminUsersController extends BaseController {
      * @param $user
      * @return Response
      */
-    public function show($id)
+    public function show($user)
     {
-        $user = $this->user->findOrFail($id);
+        
+        $user = $this->user->with('person','serviceline','roles')->findOrFail($user->id);
+        return response()->view('admin.users.showdetail', compact('user'));
 
     }
 
@@ -214,8 +217,9 @@ class AdminUsersController extends BaseController {
     {
         
         $user = $this->user
-          ->with('serviceline','person','person.branchesServiced','roles')
+          ->with('serviceline','person','person.branchesServiced','person.industryfocus','roles')
           ->find($userid->id);
+
 
 	    if ( $user )
         {
@@ -234,17 +238,22 @@ class AdminUsersController extends BaseController {
 			
 			$branches = $this->getUsersBranches($user);
 		
-			$verticals = SearchFilter::where('searchcolumn','=','vertical')
-			->where('type','!=','group')			
-			->pluck('filter','id');
+			$verticals = $this->searchfilter->industrysegments();
             $servicelines = $this->person->getUserServiceLines();
-            $verticals = ['0' => 'none'] + $verticals->toArray();
+           
         	return response()->view('admin.users.edit', compact('user', 'roles', 'permissions', 'verticals','title', 'mode','managers','servicelines','branches','branchesServiced'));
         }
         else
         {
             return redirect()->to(route('users.index'))->with('error', 'User does not exist');
         }
+    }
+    private function getFilters(){
+
+        $verticals = SearchFilter::where('type','=','group')
+        ->where('searchtable','=','companies')
+        ->first();
+        return $verticals->getLeaves()->where('searchcolumn','=','vertical');
     }
 
     /**
@@ -313,7 +322,10 @@ class AdminUsersController extends BaseController {
     }
 
     private function updateAssociatedPerson($person,$data){
-       
+        if(isset($data['active_from'])){
+            $data['active_from'] = Carbon::createFromFormat('m/d/Y', $data['active_from']);
+        }
+        
        if(isset($data['address'])){
            
             $data = $this->getLatLng($data['address']) + $data;
@@ -587,5 +599,10 @@ class AdminUsersController extends BaseController {
         return $this->user->getGeoCode($geoCode);
 		
 	}
-	
+    private function setDates($data){
+
+           $data['active_from'] = Carbon::createFromFormat('m/d/Y', $data['active_from']);
+           return $data;
+         
+	}
 }

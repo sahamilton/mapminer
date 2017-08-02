@@ -258,5 +258,23 @@ public function _import_csv($filename, $table,$fields)
         return $userVerticals;
         
     }
+/*
+	 * Function getWatchList
+	 *
+	 * Create array of locations of logged in users watchlist
+	 *
+	 * @param () none
+	 * @return (array) mywatchlist
+	 */
+	public function getWatchList() {
 
+		$watchlist = User::where('id','=',auth()->user()->id)->with('watching')->first();
+		return $watchlist->watching->pluck('id')->toArray();
+		/*foreach($watchlist as $watching) {
+			foreach($watching->watching as $watched) {
+				$mywatchlist[]=$watched->id;
+			}
+		}
+		return $mywatchlist;*/
+	}
 }

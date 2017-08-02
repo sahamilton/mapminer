@@ -44,7 +44,7 @@ return [
         'beanstalkd' => [
             'driver' => 'beanstalkd',
             'host' => 'localhost',
-            'queue' => 'staging',
+            'queue' => 'mapminer',
             'retry_after' => 90,
         ],
 

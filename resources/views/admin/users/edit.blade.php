@@ -6,6 +6,7 @@
 
     </div>
 
+
 	{{-- Edit User Form --}}
 
 	<form class="form-horizontal" method="post" action="{{ route('users.update' , $user->id ) }}" autocomplete="off">

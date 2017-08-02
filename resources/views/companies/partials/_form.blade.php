@@ -25,40 +25,9 @@
         </div>
     </div>
 
+             @include('companies.partials._verticalselector')
 
 
-<?php $parents=array();?>
-		<div class="form-group{{ $errors->has('vertical)') ? ' has-error' : '' }}">
-        <label class="col-md-2 control-label">Industry:</label>
-         <div class="input-group input-group-lg ">
-            <select required class="form-control" name='vertical'>
-
-            @foreach ($filters as $vertical))
-            	
-	            	@if(! in_array($vertical->parent_id,$parents) && null!==$filters->get($vertical->parent_id))
-                    <?php $parents[]=$vertical->parent_id;
-                    $parent = $filters->get($vertical->parent_id);?>
-                    
-                    @if(! $loop->first)
-                        </optgroup>
-                    @endif
-	            	<optgroup label= "{{$parent->filter}}" 
-
-	            	@endif
-
-            		<option @if(isset($company) && $company->vertical == $vertical->id) selected @endif value="{{$vertical->id}}">{{$vertical->filter}}</option>
-
-	            	
-
-            @endforeach
-            </optgroup>
-
-            </select>
-            <span class="help-block{{ $errors->has('vertical)') ? ' has-error' : '' }}">
-                <strong>{{ $errors->has('vertical') ? $errors->first('vertical') : ''}}</strong>
-                </span>
-                </div>
-    </div>
 <!-- Serviceline -->
 
         <div class="form-group{{ $errors->has('serviceline)') ? ' has-error' : '' }}">
@@ -78,3 +47,4 @@
                 </span>
         </div>
     </div>
+    @include('partials._verticalsscript') 

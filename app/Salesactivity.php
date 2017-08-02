@@ -2,7 +2,7 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+
 
 class Salesactivity extends Model implements \MaddHatter\LaravelFullcalendar\IdentifiableEvent
 {
@@ -92,4 +92,28 @@ class Salesactivity extends Model implements \MaddHatter\LaravelFullcalendar\Ide
         return $this->where('datefrom','<=',date('Y-m-d'))
         ->where('dateto','>=',date('Y-m-d'));
     }
+    
+    public function campaignparticipants(){
+        return $this->belongsToMany(Person::class);
+    }
+
+    public function campaignSalesReps(){
+        $verticals = $this->vertical->pluck('id')->toArray();
+        return Person::with('userdetails','reportsTo','reportsTo.userdetails')
+            ->whereHas('userdetails.roles',function ($q){
+                $q->where('role_id','=',5);
+            })
+            ->whereHas('userdetails',function($q){
+                $q->where('confirmed','=',1);
+            })
+            ->where(function($query) use($verticals){
+                $query->whereHas('industryfocus',function ($q) use($verticals){
+                    $q->whereIn('search_filter_id',$verticals);
+                });
+                
+            })
+            ->whereNotNull('lat')
+            ->whereNotNull('lng')
+            ->get();
+        }
 }

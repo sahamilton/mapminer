@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Mail;
 
 use App\Salesactivity;
@@ -12,25 +13,27 @@ use Illuminate\Http\Request;
 use App\Mail\SendCampaignMail;
 use App\Mail\SendManagersCampaignMail;
 use App\Mail\SendSenderCampaignMail;
-
+use App\SearchFilter;
 
 class CampaignEmailController extends Controller
 {
-        
+        public $searchfilter;
 		public $activity;
-        public function __construct(Salesactivity $activity){
+        
+        public function __construct(Salesactivity $activity,SearchFilter $searchfilter){
         	$this->activity = $activity;
+            $this->searchfilter = $searchfilter;
         }
 
 
         public function announceCampaign($id){
 
-        $activity = $this->activity->findOrFail($id);
-        $verticals = array_unique($activity->vertical()->pluck('searchfilters.id')->toArray());
-        $salesteam = $this->filterSalesReps($verticals);
-        $verticals = array_unique($activity->vertical()->pluck('filter')->toArray());
-        $message = $this->constructMessage($activity,$verticals);
-        return response()->view('salesactivity.salesteam',compact('salesteam','activity','message'));
+        $activity = $this->activity->with('campaignparticipants')->findOrFail($id);
+        $verticals = $this->searchfilter->industrysegments();
+        $salesteam = $activity->campaignparticipants;
+        $campaignverticals = array_unique($activity->vertical()->pluck('filter')->toArray());
+        $message = $this->constructMessage($activity,$campaignverticals);
+        return response()->view('salesactivity.salesteam',compact('salesteam','activity','message','verticals'));
     }
 
 
@@ -38,8 +41,8 @@ class CampaignEmailController extends Controller
 
         $data['activity'] = $this->activity->findOrFail($id);
         $data['verticals'] = array_unique($data['activity']->vertical()->pluck('id','filter')->toArray());
-        $salesteam = $this->filterSalesReps($data['verticals']);
-        $data['message'] = $request->get('message');;
+        $salesteam = $data['activity']->campaignparticipants;
+        $data['message'] = $request->get('message');
         $data['count'] = count($salesteam);
       
         $this->notifySalesTeam($data,$salesteam);
@@ -55,7 +58,7 @@ class CampaignEmailController extends Controller
         foreach ($salesteam as $data['sales']){
 
             Mail::queue(new SendCampaignMail($data));
-            
+           
         }
     }
 
@@ -78,6 +81,7 @@ class CampaignEmailController extends Controller
         }
         foreach ($data['managers'] as $manager){
                 Mail::queue(new SendManagersCampaignMail($data,$manager));
+                sleep(1);
             }
     }
     private function constructMessage($activity,$verticals){

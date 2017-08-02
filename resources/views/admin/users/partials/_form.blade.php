@@ -5,6 +5,7 @@
     <ul class="nav nav-tabs">
     <li class="active"><a data-toggle="tab" href="#home">UserDetails</a></li>
     <li><a data-toggle="tab" href="#menu1">Personal Details</a></li>
+     <li><a data-toggle="tab" href="#menu2">Industry Verticals</a></li>
     </ul>
 
 		<div class="tab-content">
@@ -18,4 +19,10 @@
     	@include ('admin.users.partials._personform')
      
     </div>
+    <div id="menu2" class="tab-pane fade">
+      <h3>Industry Verticals</h3>
+      @include ('admin.users.partials._verticalform')
+     
     </div>
+    </div>
+    @include('partials._scripts')
