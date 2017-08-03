@@ -1,11 +1,17 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\ProjectCompany;
 use Illuminate\Http\Request;
 
 class ProjectCompanyController extends Controller
 {
+    public $projectcompany;
+
+    public function __construct(ProjectCompany $projectcompany){
+        $this->projectcompany = $projectcompany;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -45,7 +51,11 @@ class ProjectCompanyController extends Controller
      */
     public function show($id)
     {
-        //
+        $projectcompany = $this->projectcompany
+        ->with('projects')
+        ->findOrFail($id);
+        dd($projectcompany);
+        return response()->view('projectcompany.show',compact('projectcompany'));
     }
 
     /**

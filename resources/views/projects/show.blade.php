@@ -53,7 +53,9 @@
 @foreach ($project->companies as $company)
 <tr>
 			<td>{{$company->pivot->type}}</td>
-            <td>{{$company->firm}}</td>
+            <td><a href="{{route('projectcompany.show',$company->id)}}"
+            title="See all {{$company->firm}} construction projects">
+            {{$company->firm}}</a></td>
             <td>{{$company->contact}}</td>
             <td>{{$company->title}}</td>
             <td>{{$company->addr1}}</td>
