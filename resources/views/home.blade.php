@@ -24,7 +24,11 @@
 
 
 	</div>
+	<div id="projectbtn" style="text-align:left; padding-left:70%;padding-top:100px">
+	<a href="" class="btn btn-lg btn-primary" title='Search for specific construction projects'>Construction Project Views</a>
 
+
+	</div>
 @else
 	<div id="loginbtn" style="padding-left:0px;padding-top:200px">
 	<a href='login'class='btn btn-lg btn-success'>Login</a>

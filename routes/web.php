@@ -103,7 +103,11 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('geocode/people',['as'=>'person.geocode','uses'=>'PersonsController@geoCodePersons']);
 		Route::get('person/{vertical}/vertical',['as'=>'person.vertical','uses'=>'PersonsController@vertical']);
 		Route::resource('person','PersonsController',['only' => ['index', 'show']]);
-	
+	# Projects
+	# 
+		Route::get('projects/nearby/{distance}/{latLng}',['as'=>'projects.nearby','uses'=>'ProjectsController@findNearbyProjects']);
+		Route::get('projects/map',['as'=>'projects.map','uses'=>'ProjectsController@mapProjects']);
+		Route::resource('projects', 'ProjectsController',['only' => ['index', 'show']]);
 	#Comments
 		Route::resource('comment','CommentsController');
 	
@@ -161,6 +165,8 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('locationnotes/{companyID}',['as'=>'locationnotes.show','uses'=>'PersonsController@showManagerNotes']);
 	## Sales Resources
 		Route::get('resources',['as'=>'resources.view','uses'=>'WatchController@getCompaniesWatched']);
+	
+
 	## Documents
 		Route::resource('docs','DocumentsController',['only' => ['index', 'show']]);
 	#Sales Campaigns
@@ -285,6 +291,11 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 		Route::post('person/import',['as'=>'person.import', 'uses'=>'PersonsController@processimport']);
 		Route::get('person/export', ['as'=>'person.export', 'uses'=>'PersonsController@export']);
 
+	# Projects
+	    Route::get('projects/import',['as'=>'projects.import','uses'=>'ImportProjectsController@import']);
+		Route::post('projects/import',['as'=>'projects.bulkimport','uses'=>'ImportProjectsController@bulkImport']);
+	   
+		Route::resource('projects', 'ProjectsController',['except' => ['index', 'show']]);
 	
 	#ServiceLines
 	
