@@ -161,7 +161,9 @@ class LeadSourceController extends Controller
             $data = $this->cleanseData( $request->all());
             $lead = $this->lead->create($data);
             $geoCode = app('geocoder')->geocode($this->getAddress($request))->get();
-            $lead->update($this->PDF_add_weblink(pdfdoc, lowerleftx, lowerlefty, upperrightx, upperrighty, url)($geoCode));
+            $data = $this->lead->getGeoCode($geoCode);
+           
+            $lead->update($data);
             
         }
         return redirect()->route('leadsource.index');

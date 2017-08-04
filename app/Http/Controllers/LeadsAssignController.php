@@ -51,4 +51,17 @@ class LeadsAssignController extends Controller
         }
         return redirect()->route('leadsource.show',$sid)->with('status',$count . ' leads assigned');
     }
+
+    public function assignLead(Request $request){
+      
+     $count=0;
+      $lead = $this->lead->findOrFail($request->get('lead_id'));
+
+      foreach($request->get('salesrep') as $key=>$value){
+        $lead->salesteam()->attach($value,['status_id'=>1]);
+        $count++;
+
+      }
+      return redirect()->route('leadsource.index')->with(['status'=>'Lead assigned to ' .$count . 'reps']);
+    }
 }
