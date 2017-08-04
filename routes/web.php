@@ -110,7 +110,7 @@ Route::group(['middleware' => 'auth'], function () {
 		
 		Route::resource('projects', 'ProjectsController',['only' => ['index', 'show']]);
 
-		Route::resource('projectcompany', 'ProjectCompanyController',['only' => ['index', 'show']]);
+		Route::resource('projectcompany', 'ProjectCompanyController',['only' => ['show']]);
 	#Comments
 		Route::resource('comment','CommentsController');
 	
