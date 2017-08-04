@@ -32,32 +32,16 @@ class Project extends Model
            'project_value',
            'total_project_value',
            'value_range',
-           'ow_factor_type',
-           'ow_firm',
-           'ow_contact',
-           'ow_title',
-           'ow_addr1',
-           'ow_addr2',
-           'ow_city',
-           'ow_state',
-           'ow_zipcode',
-           'ow_county',
-           'ow_phone',
-           'gc_factor_type',
-           'gc_firm',
-           'gc_contact',
-           'gc_contact_title',
-           'gc_addr1',
-           'gc_addr2',
-           'gc_city',
-           'gc_state',
-           'gc_zipcode',
-           'gc_county',
-           'gc_phone',
+           
            ];
 
+   public function contacts(){
+
+    return $this->belongsToMany(ProjectContact::class,'project_company_contact','contact_id','project_id')->withPivot('type','company_id')
+   }
+
     public function companies(){
-    	return $this->belongsToMany(ProjectCompany::class,'project_projectcompany','project_id','projectcompany_id')->withPivot('type');
+    	return $this->belongsToMany(ProjectCompany::class,'project_company_contact','project_id','projectcompany_id')->withPivot('type','contact_id');
     }
 
 
