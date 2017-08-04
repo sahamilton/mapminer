@@ -13,7 +13,7 @@ foreach($session as $key=>$value)
 	}
 }
 
-$types = array('location'=>'all accounts','branch'=>'branches');
+$types = array('location'=>'All accounts','branch'=>'Branches','projects'=>'Construction projects');
 if($data['type'] == 'company' && isset($company)){
 	$types['company'] = $company->companyname .' locations';
 }

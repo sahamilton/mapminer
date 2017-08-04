@@ -3,19 +3,21 @@ namespace App\Http\Controllers;
 use App\Serviceline;
 use App\Location;
 use App\Company;
+use App\Project;
 use App\Branch;
 use App\Watch;
 use App\Http\Requests\FindMeFormRequest;
 use Illuminate\Http\Request;
 class GeoCodingController extends BaseController {
 	
-	
+	public $project;
 	public $location;
 	public $branch;
 	public $serviceline;
 
-	public function __construct(Location $location, Branch $branch, Serviceline $serviceline) {
+	public function __construct(Location $location, Project $project, Branch $branch, Serviceline $serviceline) {
 		$this->location = $location;
+		$this->project = $project;
 		$this->serviceline = $serviceline;	
 		$this->branch = $branch;
 		parent::__construct($location);	
@@ -27,6 +29,7 @@ class GeoCodingController extends BaseController {
 	 */
 	public function findMe(FindMeFormRequest $request) {
 	
+
 		if($request->has('address')) {
 			$address = urlencode($request->get('address'));
 			
@@ -99,7 +102,9 @@ class GeoCodingController extends BaseController {
 				$data['urllocation'] ="api/mylocalaccounts";
 				$data['title'] = (isset($data['companyname']) ? $data['companyname'] : 'Company') ." Locations";
 				$data['vertical'] = Company::where('id','=',$data['company'])->pluck('vertical');
-				
+			}elseif ($data['type'] == 'projects'){
+				$data['urllocation'] ="api/mylocalprojects";
+				$data['title'] = "Project Locations";
 			}else{
 				$data['urllocation'] ="api/mylocalaccounts";
 				$data['title'] ='National Account Locations';
@@ -136,7 +141,7 @@ class GeoCodingController extends BaseController {
 	public function getGeoListData($data ) {
 		$company = isset($data['company']) ? $data['company'] : NULL;
 
-		
+	
 		switch ($data['type']) {
 			
 			case 'location':
@@ -148,12 +153,16 @@ class GeoCodingController extends BaseController {
 			
 			case 'branch':
 
-			return $result = $this->branch->findNearbyBranches($data['lat'],$data['lng'],$data['distance'],$number=null,$this->userServiceLines);
+			return $this->branch->findNearbyBranches($data['lat'],$data['lng'],$data['distance'],$number=null,$this->userServiceLines);
 			
 			
 			break;
 
+			case 'projects':
+				return $this->project->findNearbyProjects($data['lat'],$data['lng'],$data['distance'],$number=null);
 
+			
+			break;
 			
 			default:
 			return $result = $this->location->findNearbyLocations($data['lat'],$data['lng'],$data['distance'],$number=1,$company,$this->userServiceLines);

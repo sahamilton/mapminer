@@ -54,8 +54,7 @@ class ProjectCompanyController extends Controller
         $projectcompany = $this->projectcompany
         ->with('projects')
         ->findOrFail($id);
-        dd($projectcompany);
-        return response()->view('projectcompany.show',compact('projectcompany'));
+       return response()->view('projectcompanies.show',compact('projectcompany'));
     }
 
     /**

@@ -37,11 +37,11 @@ class Project extends Model
 
    public function contacts(){
 
-    return $this->belongsToMany(ProjectContact::class,'project_company_contact','contact_id','project_id')->withPivot('type','company_id')
+    return $this->belongsToMany(ProjectContact::class,'project_company_contact','contact_id','project_id')->withPivot('type','company_id');
    }
 
     public function companies(){
-    	return $this->belongsToMany(ProjectCompany::class,'project_company_contact','project_id','projectcompany_id')->withPivot('type','contact_id');
+    	return $this->belongsToMany(ProjectCompany::class,'project_company_contact','project_id','company_id')->withPivot('type','contact_id');
     }
 
 
@@ -73,7 +73,7 @@ class Project extends Model
     // Get the users serviceline associations
     // 
           
-    $query = "SELECT id,project_title,street,city,state,zip,project_lat,project_lng, distance_in_mi
+    $query = "SELECT *
         FROM (
           SELECT projects.id as id, 
             project_title,
@@ -83,6 +83,11 @@ class Project extends Model
             project_zipcode as zip,
             project_lat,
             project_lng,
+            project_type,
+            ownership,
+            total_project_value,
+            stage,
+            structure_header,
             r,
                  69.0 * DEGREES(ACOS(COS(RADIANS(latpoint))
                      * COS(RADIANS(project_lat))

@@ -21,7 +21,10 @@ class ProjectsController extends Controller
      */
     public function index()
     {
-        $projects = $this->project->get();
+       if(\Session::has('geo')){
+        
+        return redirect()->route('findme');
+       }
         return response()->view('projects.index',compact('projects'));
     }
 

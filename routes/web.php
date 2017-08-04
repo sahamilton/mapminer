@@ -105,8 +105,9 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::resource('person','PersonsController',['only' => ['index', 'show']]);
 	# Projects
 	# 
-		Route::get('projects/nearby/{distance}/{latLng}',['as'=>'projects.nearby','uses'=>'ProjectsController@findNearbyProjects']);
-		Route::get('projects/map',['as'=>'projects.map','uses'=>'ProjectsController@mapProjects']);
+
+		Route::get('api/mylocalprojects/{distance}/{latLng}', ['as' => 'map.myprohjects', 'uses' => 'ProjectsController@findNearbyProjects']);
+		
 		Route::resource('projects', 'ProjectsController',['only' => ['index', 'show']]);
 
 		Route::resource('projectcompany', 'ProjectCompanyController',['only' => ['index', 'show']]);

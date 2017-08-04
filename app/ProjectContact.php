@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ProjectContact extends Model
 {
-   public $table='projectcontact';
+   public $table='projectcontacts';
 
     public function projects(){
     	return $this->belongsToMany(Project::class,'project_company_contact','projectcontact_id','project_id')->withPivot('type','projectcompany_id');

@@ -33,41 +33,7 @@
 <blockquote>{{$project->project_addr1}} /{{$project->project_addr2}}<br />{{$project->project_city}}, {{$project->project_state}} 
 {{$project->project_zipcode}}</blockquote>
 </div>
-<table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
-	<thead>
-		
-		<th>type</th>
-            <th>firm</th>
-            <th>contact</th>
-            <th>title</th>
-            <th>addr1</th>
-            <th>addr2</th>
-            <th>city</th>
-            <th>state</th>
-            <th>zipcode</th>
-            <th>county</th>
-            <th>phone</th>
-
-	</thead>
-	<tbody>
-@foreach ($project->companies as $company)
-<tr>
-			<td>{{$company->pivot->type}}</td>
-            <td><a href="{{route('projectcompany.show',$company->id)}}"
-            title="See all {{$company->firm}} construction projects">
-            {{$company->firm}}</a></td>
-            <td>{{$company->contact}}</td>
-            <td>{{$company->title}}</td>
-            <td>{{$company->addr1}}</td>
-            <td>{{$company->addr2}}</td>
-            <td>{{$company->city}}</td>
-            <td>{{$company->state}}</td>
-            <td>{{$company->zipcode}}</td>
-            <td>{{$company->county}}</td>
-            <td>{{$company->phone}}</td>
-</tr>
-@endforeach
-</table>
+@include('projects.partials._companylist')
 </div>
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={{config('maps.api_key')}}"></script>
 @if(isset($project->project_lat))
