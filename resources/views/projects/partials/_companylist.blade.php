@@ -20,8 +20,15 @@
             <td><a href="{{route('projectcompany.show',$company->id)}}"
             title="See all {{$company->firm}} construction projects">
             {{$company->firm}}</a></td>
-            <td>{{$company->employee()->contact}}</td>
-            <td>{{$company->employee()->title}}</td>
+            <td>
+            @if(null !== $company->employee())
+                  {{$company->employee()->first()->contact}}
+                  </td>
+                  <td>{{$company->employee()->first()->title}}
+            @else
+                   </td><td>
+            @endif
+            </td>
             <td>{{$company->addr1}}</td>
             <td>{{$company->addr2}}</td>
             <td>{{$company->city}}</td>

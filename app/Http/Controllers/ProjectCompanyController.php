@@ -52,7 +52,7 @@ class ProjectCompanyController extends Controller
     public function show($id)
     {
         $projectcompany = $this->projectcompany
-        ->with('projects')
+        ->with('projects','employee')
         ->findOrFail($id);
        return response()->view('projectcompanies.show',compact('projectcompany'));
     }

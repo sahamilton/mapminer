@@ -26,7 +26,7 @@ class ProjectCompany extends Model
     }
 
     public function employee(){
-    	return $this->hasMany(ProjectContact::class,'projectcompany_id','id')->first();
+    	return $this->hasMany(ProjectContact::class,'projectcompany_id','id');
     }
     
 
