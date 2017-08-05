@@ -106,8 +106,9 @@ Route::group(['middleware' => 'auth'], function () {
 	# Projects
 	# 
 
-		Route::get('api/mylocalprojects/{distance}/{latLng}', ['as' => 'map.myprohjects', 'uses' => 'ProjectsController@findNearbyProjects']);
-		
+		Route::get('api/mylocalprojects/{distance}/{latLng}', ['as' => 'map.myprojects', 'uses' => 'ProjectsController@findNearbyProjects']);
+		Route::get('projects/{id}/claim',['as'=>'projects.claim','uses'=>'ProjectsController@claimProject']);
+		Route::post('projects/status',['as'=>'projects.changestatus','uses'=>'ProjectsController@changeStatus']);
 		Route::resource('projects', 'ProjectsController',['only' => ['index', 'show']]);
 
 		Route::resource('projectcompany', 'ProjectCompanyController',['only' => ['show']]);
@@ -298,7 +299,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 	    Route::get('projects/import',['as'=>'projects.import','uses'=>'ImportProjectsController@import']);
 		Route::post('projects/import',['as'=>'projects.bulkimport','uses'=>'ImportProjectsController@bulkImport']);
 	   
-		Route::resource('projects', 'ProjectsController',['except' => ['index', 'show']]);
+		Route::resource('projects', 'ProjectsController',['except' => ['index','show']]);
 	
 	#ServiceLines
 	

@@ -10,6 +10,7 @@
 		<th>Type</th>
 		<th>Ownership</th>
 		<th>Stage</th>
+		<th>PR Status</th>
 		
 		<th>Total Value ($k)</th>
 
@@ -26,6 +27,17 @@
 		<td>{{$project->structure_header}} / {{$project->project_type}}</td>
 		<td>{{$project->ownership}}</td>
 		<td>{{$project->stage}}</td>
+		<td>
+		
+		@if($project->prstatus)
+    		{{$project->prstatus}} </p>
+  		@else
+  			@can ('manage_projects')
+  			Open <a href="{{route('projects.claim',$project->id)}}">Claim this project </a>
+  			@endcan
+		@endif
+		
+		</td>
 		<td style="text-align:right">{{$project->total_project_value}}</td>
 		</tr>
 	@endforeach

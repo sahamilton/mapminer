@@ -21,11 +21,14 @@ class ProjectsController extends Controller
      */
     public function index()
     {
+       \Session::put('type','projects');
+
        if(\Session::has('geo')){
         
         return redirect()->route('findme');
        }
-        return response()->view('projects.index',compact('projects'));
+
+      return response()->view('projects.index',compact('projects'));
     }
 
     /**
@@ -57,8 +60,9 @@ class ProjectsController extends Controller
      */
     public function show($id)
     {
-        $project = $this->project->with('companies')->findOrFail($id);
-        return response()->view('projects.show',compact("project"));
+        $statuses = $this->project->statuses;
+        $project = $this->project->with('companies','owner')->findOrFail($id);
+        return response()->view('projects.show',compact('project','statuses'));
     }
 
     /**
@@ -131,5 +135,22 @@ class ProjectsController extends Controller
         return response($content, 200)
             ->header('Content-Type', 'text/xml');
         
+    }
+
+    public function claimProject($id){
+        $project = $this->project->findOrFail($id);
+        $project->owner()->attach(auth()->user()->person()->first()->id,['status'=>'Claimed']);
+        return redirect()->route('projects.show',$id);
+
+    }
+    public function changeStatus (Request $request){
+       $project = $this->project->findOrFail($request->get('project_id'));
+       if (! $request->has('status')){
+            $project->owner()->detach(auth()->user()->person()->first()->id);
+       }else{
+        
+        $project->owner()->updateExistingPivot(auth()->user()->person()->first()->id,['status'=>$request->get('status')]);
+        }
+        return redirect()->route('projects.show',$request->get('project_id'));
     }
 }

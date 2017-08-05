@@ -4,8 +4,23 @@
 <h2>Construction Project</h2>
 <p><a href="{{route('projects.index')}}">Return to all projects</a></p>
 <h4><p>{{$project->project_title}}</h4>
+<p><strong>Address:</strong>
+<blockquote>{{$project->project_addr1}} /{{$project->project_addr2}}<br />{{$project->project_city}}, {{$project->project_state}} 
+{{$project->project_zipcode}}
+</blockquote>
+<p><strong>People Ready Status:</strong>
+@can('manage_projects')
+  @include('projects.partials._manageprojects')
+@else
+@if(count($project->owner)>0)
+    {{$project->owner[0]->pivot->status}} by {{$project->owner[0]->postName()}}</p>
+  @else
+    Open</p>
+@endif
+@endcan
 <div id="map-container">
 <div style="float:left;width:300px">
+
 <p><strong>Type:</strong>
 
 <p><strong>Dodge ref #:</strong>{{$project->dodge_repnum}}</p>
@@ -29,9 +44,8 @@
      	Unable to geocode this address
      @endif
 
-</div>     <p><strong>Address:</strong>
-<blockquote>{{$project->project_addr1}} /{{$project->project_addr2}}<br />{{$project->project_city}}, {{$project->project_state}} 
-{{$project->project_zipcode}}</blockquote>
+</div>     <p>(Map accuracy: {{$project->accuracy}})</p>
+
 </div>
 @include('projects.partials._companylist')
 </div>
@@ -69,4 +83,5 @@ google.maps.event.addDomListener(window, 'load', initialize);
     </script>
     @endif
 @include('partials/_scripts')
+
 @stop

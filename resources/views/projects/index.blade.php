@@ -1,9 +1,24 @@
-@extends('admin.layouts.default')
+@extends('site.layouts.maps')
 @section('content')
 
 <h2>Search for Construction Projects</h2>
 
-@include('maps.partials._form')
+<div id="message" style="color:#F00">{{\Session::get('message')}}</div>
+    <style>
+      #map_canvas {
+        width: 800px;
+        height: 600px;
+      }
+    </style><div style="margin-top:20px">
+    @include('maps.partials._form')
 
-@include('partials._scripts')
+   @include('partials.advancedsearch')
+  
+    <div id="map_canvas"></div>
+</div>
+
+
+@include('partials._maps')
+@include('partials._newsscript')
+
 @stop

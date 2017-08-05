@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Project extends Model
 {
     public $table="projects";
-
+    public $statuses = ['','Claimed','Contacted','Closed:Cold', 'Closed:Won'];
     public $fillable=[ 
            'dodge_repnum',
            'project_title',
@@ -47,6 +47,12 @@ class Project extends Model
     public function owner(){
       return $this->belongsToMany(Person::class)->withPivot('status');
     }
+    public function owned(){
+      return $this->belongsToMany(Person::class)
+      ->withPivot('status')
+      ->where('person_id','=',auth()->user()->person()->first()->id)->first();
+    }
+
     public function _import_csv($filename, $table,$fields)
 	{
 	$filename = str_replace("\\","/",$filename);
@@ -89,6 +95,7 @@ class Project extends Model
             ownership,
             total_project_value,
             stage,
+            person_project.status as prstatus,
             structure_header,
             r,
                  69.0 * DEGREES(ACOS(COS(RADIANS(latpoint))
@@ -101,8 +108,12 @@ class Project extends Model
            JOIN (
               SELECT  ".$lat."  AS latpoint,  ".$lng." AS longpoint, ".$distance." AS r
              ) AS p
+          
+          left join person_project on 
+          projects.id = person_project.project_id
+          
            WHERE 
-            project_lat
+           project_lat
                 BETWEEN latpoint  - (r / 69)
                 AND latpoint  + (r / 69)
                AND project_lng
