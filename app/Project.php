@@ -44,7 +44,9 @@ class Project extends Model
     	return $this->belongsToMany(ProjectCompany::class,'project_company_contact','project_id','company_id')->withPivot('type','contact_id');
     }
 
-
+    public function owner(){
+      return $this->belongsToMany(Person::class)->withPivot('status');
+    }
     public function _import_csv($filename, $table,$fields)
 	{
 	$filename = str_replace("\\","/",$filename);
