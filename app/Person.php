@@ -55,7 +55,8 @@ class Person extends NodeModel {
 	public function projects(){
       return $this->belongsToMany(Project::class)->withPivot('status');
     }
-	 public function userdetails()
+    
+	public function userdetails()
 	 {
 		  return $this->belongsTo(User::class,'user_id','id');
 	 }
