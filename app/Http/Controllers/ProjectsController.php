@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Excel;
 use App\Project;
 use Illuminate\Http\Request;
 
@@ -152,5 +153,31 @@ class ProjectsController extends Controller
         $project->owner()->updateExistingPivot(auth()->user()->person()->first()->id,['status'=>$request->get('status')]);
         }
         return redirect()->route('projects.show',$request->get('project_id'));
+    }
+
+    public function myProjects(){
+
+        $projects = $this->getMyProjects();
+        return response()->view('projects.myprojects',compact('projects'));
+    }
+
+    public function exportMyProjects(){
+            Excel::create('Projects',function($excel){
+            $excel->sheet('Watching',function($sheet) {
+                $projects = $this->getMyProjects();           
+                $sheet->loadView('projects.export',compact('projects'));
+            });
+        })->download('csv');
+
+        return response()->return();
+
+
+    }
+
+    private function getMyProjects(){
+       return $this->project->with('owner','companies')
+        ->whereHas('owner',function($q){
+            $q->where('person_id','=',auth()->user()->person()->first()->id);
+        })->get();
     }
 }

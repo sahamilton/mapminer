@@ -32,14 +32,17 @@
 
 
 				</div>
+				@can('view_projects')
 					<div id="projectbtn" style="text-align:left; padding-left:70%;padding-top:10px">
 	<a href="{{route('projects.index')}}" class="btn btn-lg btn-primary" title='Search for specific construction projects'>Construction Project Views</a>
 			</div>
+			@endcan
 				<div id="branchbtn" style="text-align:left; padding-left:70%;padding-top:50px">
 					<a href='{{route('branches.index')}}' class='btn btn-lg btn-warning' title='Explore Branches and their national account locations'>Branch Views</a>
 
 
 				</div>
+
 				<div id="peoplebtn" style="text-align:left; padding-left:50%;padding-top:100px">
 					<a href='{{route('person.index')}}' class='btn btn-lg btn-success' title='Search for people'>People Views</a>
 

@@ -19,7 +19,7 @@
 						<li {{ (Request::is('/') ? ' class="active"' : '') }}><a href="{{{ route('welcome') }}}">Welcome</a>
                        
                        </li>
-                        @else
+                     @else
                         <li class="dropdown{{ (Request::is('company*','branch*' ,'person*','findme') ? ' active' : '') }}">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="{{{ route('findme') }}}">
     							<span class="glyphicon glyphicon-search"></span> Search<span class="caret"></span>
@@ -33,6 +33,10 @@
                             <i class="fa fa-shopping-bag" aria-hidden="true"> </i> Branches</a></li>
                             <li {{ (Request::is('person*') ? ' class="active"' : '') }}><a href="{{{ route('person.index') }}}">
                             <i class="fa fa-users" aria-hidden="true"> </i> People</a></li>
+                            @can('view_projects')
+                                <li {{ (Request::is('project*') ? ' class="active"' : '') }}><a href="{{{ route('projects.index') }}}">
+                                <i class="fa fa-flag" aria-hidden="true"> </i> Projects</a></li>
+                            @endcan
                             </ul>
                             </li>
                         <li {{ (Request::is('watch') ? ' class="active"' : '') }}><a href="{{{ route('watch.index') }}}">

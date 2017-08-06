@@ -3,6 +3,7 @@
 <div class="container">
 <h2>Construction Project</h2>
 <p><a href="{{route('projects.index')}}">Return to all projects</a></p>
+<p><a href="{{route('projects.myprojects')}}">Return to my projects</a></p>
 <h4><p>{{$project->project_title}}</h4>
 <p><strong>Address:</strong>
 <blockquote>{{$project->project_addr1}} /{{$project->project_addr2}}<br />{{$project->project_city}}, {{$project->project_state}} 

@@ -106,10 +106,14 @@ Route::group(['middleware' => 'auth'], function () {
 	# Projects
 	# 
 
-		Route::get('api/mylocalprojects/{distance}/{latLng}', ['as' => 'map.myprojects', 'uses' => 'ProjectsController@findNearbyProjects']);
-		Route::get('projects/{id}/claim',['as'=>'projects.claim','uses'=>'ProjectsController@claimProject']);
-		Route::post('projects/status',['as'=>'projects.changestatus','uses'=>'ProjectsController@changeStatus']);
-		Route::resource('projects', 'ProjectsController',['only' => ['index', 'show']]);
+	Route::get('api/mylocalprojects/{distance}/{latLng}', ['as' => 'map.myprojects', 'uses' => 'ProjectsController@findNearbyProjects']);
+	Route::get('projects/{id}/claim',['as'=>'projects.claim','uses'=>'ProjectsController@claimProject']);
+	Route::post('projects/status',['as'=>'projects.changestatus','uses'=>'ProjectsController@changeStatus']);
+	Route::get('projects/myprojects',['as'=>'projects.myprojects','uses'=>'ProjectsController@myProjects']);
+	Route::get('projects/download',['as'=>'projects.export','uses'=>'ProjectsController@exportMyProjects']);
+
+	
+	Route::resource('projects', 'ProjectsController',['only' => ['index', 'show']]);
 
 		Route::resource('projectcompany', 'ProjectCompanyController',['only' => ['show']]);
 	#Comments

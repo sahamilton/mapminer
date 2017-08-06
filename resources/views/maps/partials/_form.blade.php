@@ -11,8 +11,11 @@ foreach($session as $key=>$value)
 		$data[$key] = $value;
 	}
 }
+$types = ['location'=>'All accounts','branch'=>'Branches'];
+if(auth()->user()->can('view_projects')){
+  $types['projects']='Construction projects';
+}
 
-$types = array('location'=>'All accounts','branch'=>'Branches','projects'=>'Construction projects');
 if($data['type'] == 'company' && isset($company)){
 	$types['company'] = $company->companyname .' locations';
 }
