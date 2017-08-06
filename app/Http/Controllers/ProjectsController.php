@@ -174,10 +174,36 @@ class ProjectsController extends Controller
 
     }
 
+    public function exportowned(){
+            Excel::create('Projects',function($excel){
+            $excel->sheet('Watching',function($sheet) {
+                $projects = $this->getOwnedProjects();           
+                $sheet->loadView('projects.exportowned',compact('projects'));
+            });
+        })->download('csv');
+
+        return response()->return();
+
+
+    }
+    public function statuses(){
+            $projects = $this->getOwnedProjects();
+
+            return response()->view('projects.owned',compact('projects'));
+    }
+
+    private function getOwnedProjects(){
+        return $this->project->with('owner')
+            ->whereHas('owner')->get();
+    }
     private function getMyProjects(){
        return $this->project->with('owner','companies')
         ->whereHas('owner',function($q){
             $q->where('person_id','=',auth()->user()->person()->first()->id);
         })->get();
     }
+
+    
+
+
 }

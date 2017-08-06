@@ -163,7 +163,12 @@
                     <li {{ (Request::is('admin/search*') ? ' class="active"' : '') }}><a href="{{{ route('vertical.analysis') }}}">
                     
                     <i class="fa fa-building-o" aria-hidden="true"> </i> Industries</a></li>
-
+                    @can('view_projects')
+                    <li {{ (Request::is('admin/projects*') ? ' class="active"' : '') }}>
+                    <a href="{{{ route('projects.status') }}}">
+                    
+                    <i class="fa fa-flag" aria-hidden="true"> </i> Projects</a></li>
+                    @endcan
                 </ul>
 			</li>
                         
