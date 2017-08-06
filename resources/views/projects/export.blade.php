@@ -2,6 +2,7 @@
 <table>
 	<tbody>
 		<tr>
+			<td>Project Name</td>
 			<td>Street</td>
 			<td>Address</td>
 			<td>City</td>
@@ -31,7 +32,8 @@
 			<td>Phone</td>
 		</tr>
 		@foreach($projects as $project)
-			<tr>  
+			<tr> 
+			<td>{{$project->project_title}}</td>
 			<td>{{$project->project_addr1}}</td>
 			<td>{{$project->project_addr2}}</td>
 			<td>{{$project->project_city}}</td>

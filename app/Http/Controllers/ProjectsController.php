@@ -25,7 +25,7 @@ class ProjectsController extends Controller
        \Session::put('type','projects');
 
        if(\Session::has('geo')){
-        
+      
         return redirect()->route('findme');
        }
 

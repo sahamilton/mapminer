@@ -478,7 +478,8 @@ $.fn.storeLocator = function(options) {
                   'salesorg': $(this).attr('salesorg'),
         				  'account': $(this).attr('account'),
         				  'locid': $(this).attr('locationid'),
-        				  'link':$(this).attr('link')
+        				  'link':$(this).attr('link'),
+                  'status':$(this).attr('status'),
                 };
 
                 if(locationData['web']) locationData['web'] = locationData['web'].replace("http://",""); // Remove scheme (todo: should NOT be done)
@@ -764,7 +765,9 @@ $.fn.storeLocator = function(options) {
                     }else {	
                       var pinColor = "FDF569";
                     }
-
+              }else if (type === 'project'){
+                   
+                      var pinColor = "59AB3D";
                }else if (type === 'industry'){
                    
 
@@ -786,8 +789,8 @@ $.fn.storeLocator = function(options) {
 					if(type === 'branch'){
 						var pinColorOverride = "6991fd";
 						}
-						else{
-						var pinColorOverride = "fe7569";
+						else {
+						  var pinColorOverride = "fe7569";
 						}
                   var marker = new google.maps.Marker({
                     position: point, 
