@@ -58,7 +58,7 @@
 <button type="submit" class="btn btn-success">Add New Note</button>
 {{Form::close()}}
 </div>
-     <div id="map" style="height:300px;width:500px;border:red solid 1px"/>
+     <div id="map" style="height:300px;width:500px;border:red solid 1px">
 </div>
 </div>
 

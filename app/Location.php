@@ -28,7 +28,7 @@ class Location extends Model {
 	protected $hidden =  array('created_at','updated_at','id');
 	
 	public function relatedNotes() {
-		return $this->hasMany(Note::class)->with('writtenBy');
+		return $this->belongsToMany(Note::class)->with('writtenBy');
 	}
 	
 	public function company() {

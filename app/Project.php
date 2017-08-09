@@ -53,6 +53,10 @@ class Project extends Model
       ->where('person_id','=',auth()->user()->person()->first()->id)->first();
     }
 
+    public function relatedNotes() {
+     return $this->belongsToMany(Note::class)->with('writtenBy');
+    }
+
     public function _import_csv($filename, $table,$fields)
 	{
 	$filename = str_replace("\\","/",$filename);

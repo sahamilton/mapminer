@@ -48,15 +48,22 @@ class NotesController extends BaseController {
 	 */
 	public function store(NoteFormRequest $request)
 	{
-		$request->merge(['user_id'=>auth()->user()->id]);
-
 		
-		$this->notes->create($request->all());
+		$request->merge(['user_id'=>auth()->user()->id]);
+		$note = $this->notes->create($request->all());
 		if($request->has('lead_id')){
+			$note->update(['type'=>'lead']);
+			$note->relatesToLead()->attach($request->get('lead_id'));
 			return redirect()->route('salesleads.show',$request->get('lead_id'));
+		}elseif($request->has('project_id')){
+			$note->update(['type'=>'project']);
+			$note->relatesToProject()->attach($request->get('project_id'));
+			return redirect()->route('projects.show',$request->get('project_id'));
+		}else{
+			$note->update(['type'=>'location']);
+			$note->relatesTo()->attach($request->get('location_id'));
+			return redirect()->route('locations.show',$request->get('location_id'));
 		}
-
-		return redirect()->route('locations.show',$request->get('location_id'));
 	}
 
 	/**
@@ -93,14 +100,20 @@ class NotesController extends BaseController {
 	 */
 	public function update(NoteFormRequest $request,$id)
 	{
+		dd('Im here');
+		$note =$this->notes->findOrFail($id);
+		$note->update(['note'=>$request->get('note')]);
+	
+		if($note->type == 'lead'){
+			
+			return redirect()->route('salesleads.show',$note->relatesToLead()->first()->id);
+		}elseif($note->type== 'project'){
+			
+			return redirect()->route('projects.show',$note->relatesToProject()->first()->id);
+		}else{
 		
-		$this->notes->findOrFail($id)->update($request->all());
-		//$this->notify($data);
-		if($request->has('lead_id')){
-			return redirect()->route('salesleads.show',$request->get('lead_id'));
+			return redirect()->route('locations.show',$note->relatesTo()->first()->id);
 		}
-		
-		return redirect()->route('locations.show',$request->get('location_id'));
 	}
 
 	/**
@@ -111,14 +124,25 @@ class NotesController extends BaseController {
 	 */
 	public function destroy($id, Request $request)
 	{
+		
 		$note = $this->notes->findOrFail($id);
-		$lead = $note->lead_id;
-		$location = $note->location_id;
-		$this->notes->destroy($id);
-		if($note->lead_id){
-			return redirect()->route('salesleads.show',$lead);
+
+		if($note->type=="lead"){
+			$lead_id=$note->relatesToLead()->first()->id;
+			$note->delete();
+			return redirect()->route('salesleads.show',$lead_id);
+		}elseif($note->type=="project"){
+			$project_id=$note->relatesToProject()->first()->id;
+			$note->delete();
+			return redirect()->route('projects.show',$project_id);
+		}else{
+
+			$location_id = $note->relatesTo()->first()->id;
+			$note->delete();
+			return redirect()->route('locations.show',$location_id);
+
 		}
-		return redirect()->route('locations.show',$location);
+		
 	}
 
 	private function notify($data){
