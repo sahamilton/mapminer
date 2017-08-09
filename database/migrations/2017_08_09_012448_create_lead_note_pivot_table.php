@@ -17,7 +17,7 @@ class CreateLeadNotePivotTable extends Migration
             $table->foreign('note_id')->references('id')->on('notes')->onDelete('cascade');
             $table->integer('lead_id')->unsigned()->index();
             $table->foreign('lead_id')->references('id')->on('leads')->onDelete('cascade');
-            $table->primary(['note_id', 'project_id']);
+            $table->primary(['note_id', 'lead_id']);
         });
     }
 
