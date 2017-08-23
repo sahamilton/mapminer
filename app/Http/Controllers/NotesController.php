@@ -49,6 +49,7 @@ class NotesController extends BaseController {
 	public function store(NoteFormRequest $request)
 	{
 
+
 		$request->merge(['user_id'=>auth()->user()->id]);
 		$note = $this->notes->create($request->all());
 
@@ -67,6 +68,7 @@ class NotesController extends BaseController {
 			break;
 		}
 		
+
 	}
 
 	/**
@@ -103,10 +105,11 @@ class NotesController extends BaseController {
 	 */
 	public function update(NoteFormRequest $request,$id)
 	{
-		
-		$note = $this->notes->findOrFail($id);
-		$note->update($request->all());
 
+		$note =$this->notes->findOrFail($id);
+		$note->update(['note'=>$request->get('note')]);
+	
+		
 		switch ($note->type) {
 			case 'location':
 				
@@ -123,6 +126,7 @@ class NotesController extends BaseController {
 			
 		}
 		
+
 	}
 
 	/**
@@ -134,6 +138,7 @@ class NotesController extends BaseController {
 	public function destroy($id, Request $request)
 	{
 		
+
 		$note = $this->notes->findOrFail($id);		
 		$this->notes->destroy($id);
 		switch ($note->type) {
@@ -150,6 +155,7 @@ class NotesController extends BaseController {
 				return redirect()->route('projects.show',$note->related_id);
 			break;
 			
+
 		}
 		
 	}

@@ -1,5 +1,6 @@
 @extends('site.layouts.default')
 @section('content')
+
 <div class="container">
 
 <h2>Construction Project</h2>
@@ -51,5 +52,6 @@
 </div>
 @include('partials._modal')
 @include('partials/_scripts')
+
 
 @stop

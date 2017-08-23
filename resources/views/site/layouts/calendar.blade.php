@@ -39,7 +39,7 @@
 		<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 		<script src="{{asset('bootstrap/js/bootstrap.min.js')}}"></script>
 		<!-- DataTables -->
-		<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.0-rc.1/js/jquery.dataTables.min.js" /></script>
+		<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.0-rc.1/js/jquery.dataTables.min.js" ></script>>
 		<script src="{{asset('assets/js/summernote.min.js')}}"></script>
 		<script src="{{asset('assets/js/bootstrap-colorpicker.min.js')}}"></script>
 <!-- Calendar Io -->

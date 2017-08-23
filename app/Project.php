@@ -57,7 +57,9 @@ class Project extends Model
     }
 
     public function relatedNotes() {
+
       return $this->hasMany(Note::class,'related_id')->with('writtenBy');
+
     }
 
     public function _import_csv($filename, $table,$fields)

@@ -6,10 +6,11 @@ class Note extends Model {
 	public static $rules = [
 		'note' => 'required'
 	];
-	public $dates = ['date'];
 	// Don't forget to fill this array
+
 	protected $fillable = ['note','user_id','related_id','created_at','updated_at','type'];
 	protected $table ='notes';
+
 
 	public function writtenBy() 
 		{
@@ -18,6 +19,7 @@ class Note extends Model {
 		
 	public function relatesToLocation() 
 		{
+
 			return $this->belongsTo(Location::class,'related_id');
 		}
 	public function relatesToLead() 
@@ -27,5 +29,7 @@ class Note extends Model {
 	public function relatesToProject() 
 		{
 			return $this->belongsTo(Project::class,'related_id');
+
 		}
+	
 }

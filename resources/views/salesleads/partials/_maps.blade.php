@@ -1,3 +1,4 @@
+
     <script src="https://maps.google.com/maps/api/js?key={{config('maps.api_key')}}"></script>
     <script>
      

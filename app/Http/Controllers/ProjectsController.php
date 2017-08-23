@@ -62,7 +62,7 @@ class ProjectsController extends Controller
     public function show($id)
     {
         $statuses = $this->project->statuses;
-        $project = $this->project->with('companies','owner')->findOrFail($id);
+        $project = $this->project->with('companies','owner','relatedNotes')->findOrFail($id);
         return response()->view('projects.show',compact('project','statuses'));
     }
 
