@@ -6,13 +6,14 @@ use Excel;
 use App\Project;
 use Illuminate\Http\Request;
 
-class ProjectsController extends Controller
+class ProjectsController extends BaseController
 {
     public $project;
 
     public function __construct(Project $projects){
 
         $this->project = $projects;
+        parent::__construct($projects);
     }
 
     /**
@@ -22,6 +23,7 @@ class ProjectsController extends Controller
      */
     public function index()
     {
+       
        \Session::put('type','projects');
 
        if(\Session::has('geo')){
@@ -112,7 +114,7 @@ class ProjectsController extends Controller
         $lng=$geo[1];
 
         $limit=100;
-        $result = $this->project->findNearbyProjects($lat,$lng,$distance,$limit);
+        $result = $this->project->findNearbyProjects($lat,$lng,$distance,$limit,$this->userServiceLines);
        return  $this->makeNearbyProjectsXML($result);
         
     }

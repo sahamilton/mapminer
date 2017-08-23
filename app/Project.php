@@ -2,7 +2,6 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
 
 class Project extends Model
 {
@@ -94,10 +93,10 @@ class Project extends Model
     	}
 
 
-  public function findNearbyProjects($lat,$lng,$distance,$limit)
+  public function findNearbyProjects($lat,$lng,$distance,$limit,$servicelines)
   
   {
-    
+   
     $params = array(":loclat"=>$lat,":loclng"=>$lng,":distance"=>$distance);
     
     // Get the users serviceline associations
@@ -112,6 +111,7 @@ class Project extends Model
             project_state as state,
             project_zipcode as zip,
             project_lat,
+            serviceline_id,
             project_lng,
             project_type,
             ownership,
@@ -143,7 +143,8 @@ class Project extends Model
                 AND longpoint + (r / (69 * COS(RADIANS(latpoint))))
              ) d
        
-       WHERE distance_in_mi <= r ";
+       WHERE distance_in_mi <= r 
+       AND serviceline_id in ('".implode("','",$servicelines)."')";
        
        $query.="  ORDER BY distance_in_mi";
 //dd(str_replace("\n","",$query));
