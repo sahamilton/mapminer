@@ -50,35 +50,48 @@ class Project extends Model
     public function owner(){
       return $this->belongsToMany(Person::class)->withPivot('status');
     }
+   
     public function owned(){
       return $this->belongsToMany(Person::class)
       ->withPivot('status')
       ->where('person_id','=',auth()->user()->person()->first()->id)->first();
     }
 
+    public function ownersProjects($id){
+
+       return $this->belongsToMany(Person::class)->withPivot('status')
+      ->where('person_id','=',$id)->get();
+
+    }
     public function relatedNotes() {
 
       return $this->hasMany(Note::class,'related_id')->with('writtenBy');
 
     }
 
-    public function _import_csv($filename, $table,$fields)
-	{
-	$filename = str_replace("\\","/",$filename);
+    public function projectStats(){
+      $query = "select firstname, lastname, persons.id as id ,status, count(status) as count from `persons` inner join `person_project` on `persons`.`id` = `person_project`.`person_id` group by  `person_id`,`status`";
+      return \DB::select($query);
 
-	$query = sprintf("LOAD DATA LOCAL INFILE '".$filename."' INTO TABLE ". $table." FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '\"' ESCAPED BY '\"' LINES TERMINATED BY '\\n'  IGNORE 1 LINES (".$fields.");", $filename);
-	
-	
-	try {
-		return  \DB::connection()->getpdo()->exec($query);
-	}
-	catch (Exception $e)
-		{
-		 throw new Exception( 'Something really has gone wrong with the import:\r\n<br />'.$query, 0, $e);
-		
-		}
-	
-	}
+    }
+
+    public function _import_csv($filename, $table,$fields)
+    	{
+    	$filename = str_replace("\\","/",$filename);
+
+    	$query = sprintf("LOAD DATA LOCAL INFILE '".$filename."' INTO TABLE ". $table." FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '\"' ESCAPED BY '\"' LINES TERMINATED BY '\\n'  IGNORE 1 LINES (".$fields.");", $filename);
+    	
+    	
+    	try {
+    		return  \DB::connection()->getpdo()->exec($query);
+    	}
+    	catch (Exception $e)
+    		{
+    		 throw new Exception( 'Something really has gone wrong with the import:\r\n<br />'.$query, 0, $e);
+    		
+    		}
+    	
+    	}
 
 
   public function findNearbyProjects($lat,$lng,$distance,$limit)

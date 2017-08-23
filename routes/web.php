@@ -302,7 +302,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 	# Projects
 	    Route::get('projects/import',['as'=>'projects.import','uses'=>'ImportProjectsController@import']);
 		Route::post('projects/import',['as'=>'projects.bulkimport','uses'=>'ImportProjectsController@bulkImport']);
-	   
+	    Route::get('projects/stats',['as'=>'project.stats','uses'=>'ProjectsController@projectStats']);
+	    Route::get('projects/{id}/owner',['as'=>'project.owner','uses'=>'ProjectsController@ownedProjects']);
 		Route::resource('projects', 'ProjectsController',['except' => ['index','show']]);
 	
 	#ServiceLines

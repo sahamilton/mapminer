@@ -173,11 +173,47 @@ class ProjectsController extends Controller
 
 
     }
+    public function ownedProjects($id){
+        $projects = $this->project->whereHas('owner',function ($q) use($id) {
+            $q->where('id','=',$id);
+        })->with('owner')->get();;
+        return response()->view('projects.ownedBy',compact('projects'));
+    }
+    public function projectStats(){
 
+        $projects = $this->project->projectStats();
+
+        $projects = $this->createStats($projects); 
+        $statuses = $this->project->statuses;
+        return response()->view('projects.stats',compact('projects','statuses'));
+
+    }
+
+
+    private function createStats($projects){
+        $person = null;
+        foreach ($this->project->statuses as $status){
+            $personProject['total']['status'][$status] = 0;
+        }
+        
+        foreach ($projects as $project){
+            if($project->id != $person){
+                $person = $project->id;
+                $personProject[$project->id]['name'] = $project->firstname . " " . $project->lastname;
+                $personProject[$project->id]['id'] = $project->id;
+            }
+            $personProject[$project->id]['status'][$project->status] = $project->count;
+            $personProject['total']['status'][$project->status] =$personProject['total']['status'][$project->status] + $project->count;
+        }
+
+        return $personProject;
+    }
     private function getMyProjects(){
        return $this->project->with('owner','companies')
         ->whereHas('owner',function($q){
             $q->where('person_id','=',auth()->user()->person()->first()->id);
         })->get();
     }
+
+
 }
