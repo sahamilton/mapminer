@@ -130,7 +130,7 @@
                       </ul>
 
           <!-- Manage Resources  -->      
-            <li class="dropdown{{ (Request::is('admin/lead*','admin/document*','admin/search*') ? ' active' : '') }}">
+            <li class="dropdown{{ (Request::is('admin/lead*','admin/document*','admin/search*','admin/projects*') ? ' active' : '') }}">
                 <a class="dropdown" data-toggle="dropdown" href="{{{ route('users.index') }}}">
                     <span class="glyphicon glyphicon-wrench"></span> 
                      Resources 
@@ -158,10 +158,18 @@
                         <i class="fa fa-diamond" aria-hidden="true"> </i> Lead Sources</a></li>
                         <li {{ (Request::is('admin/leadstatus*') ? ' class="active"' : '') }}><a href="{{{ route('leadstatus.index') }}}">
                         <i class="fa fa-star-o" aria-hidden="true"> </i> Lead Statuses</a></li>
-                        <li class="divider">Industries</li>
+                        
                     @endcan
-                    <li {{ (Request::is('admin/search*') ? ' class="active"' : '') }}><a href="{{{ route('vertical.analysis') }}}">
                     
+                    @can('manage_projects')
+                    <li class="divider">Leads</li>
+                       <li {{ (Request::is('admin/projects*') ? ' class="active"' : '') }}><a href="{{{ route('project.stats') }}}">
+                       <i class="fa fa-binoculars" aria-hidden="true"></i> Projects 
+                       </a>
+                       </li> 
+                    @endcan
+                    <li class="divider">Industries</li>
+                    <li {{ (Request::is('admin/search*') ? ' class="active"' : '') }}><a href="{{{ route('vertical.analysis') }}}">
                     <i class="fa fa-building-o" aria-hidden="true"> </i> Industries</a></li>
 
                 </ul>

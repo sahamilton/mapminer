@@ -1,4 +1,4 @@
-@extends('site.layouts.default')
+@extends('admin.layouts.default')
 @section('content')
 
 <div class="container">
@@ -15,10 +15,12 @@
     <th>{{$status}}</th>
     @endif
     @endforeach
-
+<th>Total</th>
   </thead>
   <tbody>
+  <?php $grandTotal =0;?>
   @foreach ($projects as $project)
+  <?php $total = 0;?>
   @if(isset($project['name']))
     <tr>
     <td><a href="{{route('project.owner',$project['id'])}}">{{$project['name']}}</a></td>
@@ -27,11 +29,13 @@
             <td style="text-align: right">
               @if(isset($project['status'][$status]))
                 {{$project['status'][$status]}}
-
+                <?php $total = $total + $project['status'][$status];?>
               @endif
             </td>
             @endif
     @endforeach
+    <td  style="text-align: right">{{$total}}</td>
+    <?php $grandTotal = $total + $grandTotal;?>
     </tr>
   @endif
   @endforeach
@@ -50,8 +54,9 @@
 
             @endif
     @endforeach
-
+<th style="text-align: right">{{$grandTotal}}</th>
   </tfoot>
+
 </table>
 
 
