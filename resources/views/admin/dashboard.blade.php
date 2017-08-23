@@ -61,8 +61,9 @@ $datastring = substr($datastring,0,-1);
     <div id="menu1" class="tab-pane fade">
       <h3>Account Activity</h3>
     @include('admin.partials.watchers')
- 	@include('admin.partials.newNotes')
+ 	  @include('admin.partials.newNotes')
     @include('admin.partials.newLeadNotes')  
+    @include('admin.partials.newProjectNotes') 
     </div>
     <div id="menu2" class="tab-pane fade">
       <h3>Account Health</h3>

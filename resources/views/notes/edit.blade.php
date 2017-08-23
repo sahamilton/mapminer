@@ -1,19 +1,19 @@
 @extends('site/layouts/default')
 @section('content')
-<h4> Edit Note !!</h4>
-
-{{Form::model($note, ['method'=>'PATCH','route'=>['notes.update', $note->id]]) }}
+<h4> Edit Note</h4>
+<form method="post" action = "{{route('notes.update', $note->id)}}" >
+{{csrf_field()}}
+<input type= 'hidden' name="_method" value="patch" >
 
 <div>
 {{Form::label('note','Notes:')}}
 <div>
-{{Form::textarea('note')}}
+<textarea name="note">{{$note->note}}</textarea>
 {{ $errors->first('note') }}
 </div></div>
-{{Form::hidden('location_id',$note->location_id)}}
-{{Form::hidden('lead_id',$note->lead_id)}}
+
 <button type="submit" class="btn btn-success">Edit Note</button>
-{{Form::close()}}
+</form>
 </div>
 </div>
 @stop

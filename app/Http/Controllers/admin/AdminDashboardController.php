@@ -42,6 +42,7 @@ class AdminDashboardController extends BaseController {
 		$data['nogeocode'] =$this->getNoGeocodedLocations();
 		$data['recentLocationNotes'] = $this->recentLocationNotes();
 		$data['recentLeadNotes'] = $this->recentLeadNotes();
+		$data['recentProjectNotes'] = $this->recentProjectNotes();
 		
 		return response()->view('admin.dashboard',compact('data'));
 		
@@ -352,9 +353,9 @@ class AdminDashboardController extends BaseController {
 	
 	{
 		return Note::where('created_at', '>=', \Carbon\Carbon::now()->subWeek())
-		->whereHas('relatesTo')
-		->whereNotNull('location_id')
-		->with(['writtenBy','relatesTo','relatesTo.company','writtenBy.person'])
+		->whereHas('relatesToLocation')
+		->whereNotNull('related_id')
+		->with(['writtenBy','relatesToLocation','relatesToLocation.company','writtenBy.person'])
 		->get();
 		
 		
@@ -366,8 +367,20 @@ class AdminDashboardController extends BaseController {
 	{
 		return Note::where('created_at', '>=', \Carbon\Carbon::now()->subWeek())
 		->whereHas('relatesToLead')
-		->whereNotNull('lead_id')
+		->whereNotNull('related_id')
 		->with(['writtenBy','relatesToLead','writtenBy.person'])
+		->get();
+		
+		
+	}
+
+	private function recentProjectNotes()
+	
+	{
+		return Note::where('created_at', '>=', \Carbon\Carbon::now()->subWeek())
+		->whereHas('relatesToProject')
+		->whereNotNull('related_id')
+		->with(['writtenBy','relatesToProject','writtenBy.person'])
 		->get();
 		
 		

@@ -143,7 +143,7 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('mynotes',['as'=>'mynotes','uses'=>'NotesController@mynotes']);
 		
 		Route::get('exportlocationnotes/{companyID}', ['as'=>'exportlocationnotes','uses'=>'PersonsController@exportManagerNotes']);
-		Route::resource('notes','NotesController',['only' => ['show']]);	
+		Route::resource('notes','NotesController');	
 	#Geocoding
 		
 		Route::post('findme',['as'=>'findme','uses'=>'GeoCodingController@findMe']);
@@ -380,7 +380,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 	#Notes
 		Route::get('notes/{companyid}/co',['as'=>'notes.company','uses'=>'NotesController@companynotes']);
 		Route::get('locationnotes',['as'=>'locations.notes', 'uses'=>'NotesController@index']);
-		Route::resource('notes','NotesController');
+
 
 
 	#Search Filters

@@ -57,8 +57,9 @@ Account managed by <a href="{{route('person.show',$location->company->managedBy-
  No longer with company
  @endif
  </p>
+
 @if($note->user_id == Auth::user()->id  or Auth::user()->hasRole('Admin'))
-<br /><i class="glyphicon glyphicon-pencil"></i> <a href="{{route('notes.edit',$note->id)}}" title="Edit this note"></a> | 
+<br /><a href="{{route('notes.edit',$note->id)}}" title="Edit this note"><i class="glyphicon glyphicon-pencil"></i> </a> | 
 <a data-href="{{route('notes.destroy',$note->id)}}" 
             data-toggle="modal" 
             data-target="#confirm-delete" 
@@ -76,17 +77,9 @@ Account managed by <a href="{{route('person.show',$location->company->managedBy-
 </p>
 
 @endforeach
-
-{{Form::open(['route'=>'notes.store'])}}
-<div>
-{{Form::label('note','Add a Note:')}}
-<div>
-{{Form::textarea('note')}}
-{{ $errors->first('note') }}
-</div></div>
-{{Form::hidden('location_id',$location->id)}}
-<button type="submit" class="btn btn-success">Add New Note</button>
-{{Form::close()}}
+<?php $type="location";
+$id= $location->id;?>
+@include('notes.partials._form')
 </div>
      <div id="map" style="height:300px;width:500px;border:red solid 1px"/>
 </div>

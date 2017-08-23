@@ -30,13 +30,13 @@
 
 <td>
 
-{{$newNote->relatesTo->company->companyname}}
+{{$newNote->relatesToLocation->company->companyname}}
 </td>
 <td>
-<a href = "{{route('locations.show',$newNote->relatesTo->id)}}" title="Review {{$newNote->relatesTo->businessname}} location" >{{$newNote->relatesTo->businessname}}</a>
+<a href = "{{route('locations.show',$newNote->relatesToLocation->id)}}" title="Review {{$newNote->relatesToLocation->businessname}} location" >{{$newNote->relatesToLocation->businessname}}</a>
 </td>
 <td>
-{{$newNote->relatesTo->locationAddress()}}
+{{$newNote->relatesToLocation->locationAddress()}}
 </td>
 <td>
 {{$newNote->note}}

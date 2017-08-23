@@ -43,7 +43,10 @@ class Project extends Model
     public function companies(){
     	return $this->belongsToMany(ProjectCompany::class,'project_company_contact','project_id','company_id')->withPivot('type','contact_id');
     }
+    public function fullAddress(){
+      return $this->project_addr1 . "," . $this->project_city. " " . $this->project_state . " " . $this->project_zipcode;
 
+    }
     public function owner(){
       return $this->belongsToMany(Person::class)->withPivot('status');
     }
@@ -51,6 +54,10 @@ class Project extends Model
       return $this->belongsToMany(Person::class)
       ->withPivot('status')
       ->where('person_id','=',auth()->user()->person()->first()->id)->first();
+    }
+
+    public function relatedNotes() {
+      return $this->hasMany(Note::class,'related_id')->with('writtenBy');
     }
 
     public function _import_csv($filename, $table,$fields)
