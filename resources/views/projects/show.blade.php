@@ -26,8 +26,8 @@
 <ul class="nav nav-tabs">
   <li class="active"><a data-toggle="tab" href="#showmap"><strong>Project Location</strong></a></li>
 <li><a data-toggle="tab" href="#details"><strong>Project Details</strong></a></li>
-  <li><a data-toggle="tab" href="#contacts"><strong>Project Contacts</strong></a></li>
-  <li><a data-toggle="tab" href="#notes"><strong>Project Notes</strong></a></li>
+  <li><a data-toggle="tab" href="#contacts"><strong>Project Contacts @if(count($project->companies)>0)({{count($project->companies)}}) @endif</strong></a></li>
+  <li><a data-toggle="tab" href="#notes"><strong>Project Notes @if(count($project->relatedNotes)>0) ({{count($project->relatedNotes)}}) @endif</strong></a></li>
   
 
 </ul>
