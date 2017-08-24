@@ -105,8 +105,7 @@
                                     @if(Auth::user()->hasRole('Admin'))
 
                                     
-                                    <li><i class="fa fa-info-circle" aria-hidden="true"> </i>
-                                    <a href="{{route('about')}}"> About Mapminer</a></li>
+                                    <li><a href="{{route('about')}}"><i class="fa fa-info-circle" aria-hidden="true"> </i>  About Mapminer</a></li>
                                     @endif
     								<li class="divider"></li>
     								<li>
