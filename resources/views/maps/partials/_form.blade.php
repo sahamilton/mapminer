@@ -12,7 +12,8 @@ foreach($session as $key=>$value)
 	}
 }
 $types = ['location'=>'All accounts','branch'=>'Branches'];
-if(auth()->user()->can('view_projects')){
+// added to filter out CEnterline
+if(auth()->user()->can('view_projects') && in_array(5, Session::get('user.servicelines'))){
   $types['projects']='Construction projects';
 }
 
@@ -25,7 +26,7 @@ $values = Config::get('app.search_radius');
 ?>
 <form action="{{route('findme')}}" method = 'post' name="mapselector">
 {{csrf_field()}}
-{{Form::label('type','Show a')}}
+<label>Show a</label>
 <?php ?>
        <select name='view' class="btn btn-mini" onchange='this.form.submit()'>
           
@@ -38,7 +39,7 @@ $values = Config::get('app.search_radius');
 				@endif
            @endforeach
         </select>
-  {{Form::label('view','of')}} 
+<label>of</label>
       
 
        <select name='type' class="btn btn-mini"  onchange='this.form.submit()'>
@@ -53,7 +54,7 @@ $values = Config::get('app.search_radius');
            @endforeach
         </select>
       
-      {{Form::label('distance','within')}}
+<label>within</label>
       
       
        <select name='distance' class="btn btn-mini"  onchange='this.form.submit()'>
@@ -66,26 +67,15 @@ $values = Config::get('app.search_radius');
            @endforeach
         </select> of 
         
-{{Form::text('address',str_replace("+", " ", $data['address']),$attributes = array( 'id'=>'address','style'=>'width:300px'))}}
-        
-       
-        </label>
-        
+<input type="text" name="address" value="{{str_replace('+',' ', $data['address'])}}"  id="address" style='width:300px' />
+<button type="submit"  class= "btn btn-default btn-xs"><span class="glyphicon glyphicon-search"></span> Search!</button>
 
-       
-       
-
-      
-      
-         <button type="submit"  class= "btn btn-default btn-xs"><span class="glyphicon glyphicon-search"></span> Search!</button>
-{{Form::hidden('lat',$data['lat'],$attributes = array( 'id'=>'lat'))}}
 {{Form::hidden('company', isset($company) ? $company->id : '' )}}
 {{Form::hidden('companyname',isset($company) ? $company->companyname : '')}}
+<input type="hidden" name="lng" id ="lng" value="{{$data['lng']}}" />
+<input type="hidden" name="lat" id ="lat" value="{{$data['lat']}}" />
 
-{{Form::hidden('lng',$data['lng'],$attributes = array( 'id'=>'lng'))}} 
-
-
-        {{Form::close()}}
+</form>
 	
 		<script>
 
