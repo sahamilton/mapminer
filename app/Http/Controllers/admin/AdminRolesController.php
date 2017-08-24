@@ -208,7 +208,7 @@ class AdminRolesController extends BaseController {
      * @internal param $id
      * @return Response
      */
-    public function purge($role)
+    public function destroy($role)
     {
            
             // Was the role deleted?
