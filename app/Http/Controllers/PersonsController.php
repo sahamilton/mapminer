@@ -540,6 +540,7 @@ class PersonsController extends BaseController {
 			$data['title'] = 'Your Accounts';
 		}elseif(isset($this->managerID) and $this->managerID[0] !='All'){
 			
+			
 			// Did we change the manager
 			
 			if(null !== \Session::get('manager') and $this->managerID != \Session::get('manager')){
@@ -553,11 +554,12 @@ class PersonsController extends BaseController {
 			->pluck('companyname','id')
 			->toArray();
 
-			$managerTemp = $this->getManagers($this->managerID);
-			$data['manager'] = array('id' => current(array_keys($managerTemp)),'name'=>array_values($managerTemp)[0]);
+			$data['manager'] = $this->getManagers($this->managerID);
+			
+			
+			//$data['manager'] = array('id' => current(array_keys($managerTemp)),'name'=>array_values($managerTemp)[0]);
 			$data['title'] = trim($data['manager']['name']) . "'s Accounts";
-			
-			
+						
 		}else{
 			
 			$data['accounts'] = Company::orderBy('companyname')
@@ -590,7 +592,8 @@ class PersonsController extends BaseController {
 				locations,
 				companies 
 			where 
-				notes.location_id = locations.id 
+				notes.related_id = locations.id 
+				and notes.type = 'location'
 				and locations.company_id = companies.id 
 				and companies.id in ('".$accountstring."') 
 			group by 
@@ -734,32 +737,34 @@ class PersonsController extends BaseController {
 	 * @param  [type] $id [description]
 	 * @return [type]     [description]
 	 */
+	
 	private function getManagers($id=NULL)
 	{
 		if(isset($id))
 		{
-			$managerList = array();
-			$managers = $this->user->where('id','=',$id)->with('person')->get();
+			$managers = $this->persons->where('user_id','=',$id)
+			->select(\DB::raw("CONCAT(firstname,' ',lastname) AS name"),'user_id')
+			->first()->toArray();
 			
 			
 		}else{
-			$managerList = array('All'=>'All');
-			$managers = $this->user->whereHas(
-    			'roles', function($q){
-        			$q->where('name', 'National Account Manager');
-    			}
-				)->with('person')->get();
-
+		// This can be refactored.  Send a pluck array with just user id & persons postName
+			
+			$managers = $this->persons->with('userdetails')
+			->whereHas('userdetails.roles',function($q){
+				$q->where('roles.name','=','National Account Manager');
+			})
+			->select(\DB::raw("CONCAT(firstname,' ',lastname) AS name"),'user_id')
+			->pluck('name','user_id')->toArray();
+			$managers =  ['All'=>'All'] + $managers;
+			
+		
 
 		}
 		
-		foreach($managers as $manager)
-			{
-				$managerList[$manager->id] =$manager->person->firstname ." " . $manager->person->lastname;
-				
-			}
+		
 
-		return $managerList;	
+		return $managers;	
 		
 	}
 	
