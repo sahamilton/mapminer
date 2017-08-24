@@ -120,7 +120,7 @@
 
 
 </div>
-<div id="map" style="height:300px;width:500px;border:red solid 1px"/>
+<div id="map" style="height:300px;width:500px;border:red solid 1px">
 </div>
  <script type="text/javascript" src="{{asset('assets/js/starrr.js')}}"></script>
 

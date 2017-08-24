@@ -327,7 +327,8 @@ class LocationsController extends BaseController {
         })->first();
 
     	if( $this->location->fillable !== array_keys($locations->toArray())){
-
+    		dd($this->location->fillable,array_keys($locations->toArray()));
+    		
     		return redirect()->back()
     		->withInput($request->all())
     		->withErrors(['upload'=>['Invalid file format.  Check the fields:', array_diff($this->location->fillable,array_keys($locations->toArray())), array_diff(array_keys($locations->toArray()),$this->location->fillable)]]);

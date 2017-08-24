@@ -14,28 +14,29 @@
 
 	</thead>
 	<tbody>
-@foreach ($project->companies as $company)
-<tr>
-      <td>{{$company->pivot->type}}</td>
-      <td><a href="{{route('projectcompany.show',$company->id)}}"
-      title="See all {{$company->firm}} construction projects">
-      {{$company->firm}}</a></td>
-      <td>
+            @foreach ($project->companies as $company)
+                  <tr>
+                        <td>{{$company->pivot->type}}</td>
+                        <td><a href="{{route('projectcompany.show',$company->id)}}"
+                        title="See all {{$company->firm}} construction projects">
+                        {{$company->firm}}</a></td>
+                        <td>
 
-      @if(! null==$company->employee()->first())
-            {{$company->employee()->first()->contact}}
-            </td>
-            <td>{{$company->employee()->first()->title}}
-      @else
-            </td><td>
-      @endif
-      </td>
-      <td>{{$company->addr1}}</td>
-      <td>{{$company->addr2}}</td>
-      <td>{{$company->city}}</td>
-      <td>{{$company->state}}</td>
-      <td>{{$company->zipcode}}</td>
-      <td>{{$company->phone}}</td>
-</tr>
-@endforeach
+                        @if(! null==$company->employee()->first())
+                              {{$company->employee()->first()->contact}}
+                              </td>
+                              <td>{{$company->employee()->first()->title}}
+                        @else
+                              </td><td>
+                        @endif
+                        </td>
+                        <td>{{$company->addr1}}</td>
+                        <td>{{$company->addr2}}</td>
+                        <td>{{$company->city}}</td>
+                        <td>{{$company->state}}</td>
+                        <td>{{$company->zipcode}}</td>
+                        <td>{{$company->phone}}</td>
+                  </tr>
+            @endforeach
+      </tbody>
 </table>

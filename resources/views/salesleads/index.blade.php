@@ -15,20 +15,20 @@
 </ul>
 
 <div class="tab-content">
-<div id="map" class="tab-pane fade in active">
-	@include('salesleads.partials._tabmapleads')
+	<div id="map" class="tab-pane fade in active">
+		@include('salesleads.partials._tabmapleads')
 
-</div>
-<div id="offered" class="tab-pane fade">
-	@include('salesleads.partials._offeredleads')
+	</div>
+	<div id="offered" class="tab-pane fade">
+		@include('salesleads.partials._offeredleads')
 
-</div>
+	</div>
 
-<div id="owned" class="tab-pane fade">
-	@include('salesleads.partials._ownedleads')
+	<div id="owned" class="tab-pane fade">
+		@include('salesleads.partials._ownedleads')
+	</div>
 </div>
-</div>
-    @include('salesleads.partials._maps')
+@include('salesleads.partials._maps')
 
 
 

@@ -2,7 +2,6 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
 
 class Project extends Model
 {
@@ -43,39 +42,61 @@ class Project extends Model
     public function companies(){
     	return $this->belongsToMany(ProjectCompany::class,'project_company_contact','project_id','company_id')->withPivot('type','contact_id');
     }
+    public function fullAddress(){
+      return $this->project_addr1 . "," . $this->project_city. " " . $this->project_state . " " . $this->project_zipcode;
 
+    }
     public function owner(){
       return $this->belongsToMany(Person::class)->withPivot('status');
     }
+   
     public function owned(){
       return $this->belongsToMany(Person::class)
       ->withPivot('status')
       ->where('person_id','=',auth()->user()->person()->first()->id)->first();
     }
 
+    public function ownersProjects($id){
+
+       return $this->belongsToMany(Person::class)->withPivot('status')
+      ->where('person_id','=',$id)->get();
+
+    }
+    public function relatedNotes() {
+
+      return $this->hasMany(Note::class,'related_id')->with('writtenBy');
+
+    }
+
+    public function projectStats(){
+      $query = "select firstname, lastname, persons.id as id ,status, count(status) as count from `persons` inner join `person_project` on `persons`.`id` = `person_project`.`person_id` group by  `person_id`,`status`";
+      return \DB::select($query);
+
+    }
+
     public function _import_csv($filename, $table,$fields)
-	{
-	$filename = str_replace("\\","/",$filename);
+    	{
+    	$filename = str_replace("\\","/",$filename);
 
-	$query = sprintf("LOAD DATA LOCAL INFILE '".$filename."' INTO TABLE ". $table." FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '\"' ESCAPED BY '\"' LINES TERMINATED BY '\\n'  IGNORE 1 LINES (".$fields.");", $filename);
-	
-	
-	try {
-		return  \DB::connection()->getpdo()->exec($query);
-	}
-	catch (Exception $e)
-		{
-		 throw new Exception( 'Something really has gone wrong with the import:\r\n<br />'.$query, 0, $e);
-		
-		}
-	
-	}
+    	$query = sprintf("LOAD DATA LOCAL INFILE '".$filename."' INTO TABLE ". $table." FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '\"' ESCAPED BY '\"' LINES TERMINATED BY '\\n'  IGNORE 1 LINES (".$fields.");", $filename);
+    	
+    	
+    	try {
+    		return  \DB::connection()->getpdo()->exec($query);
+    	}
+    	catch (Exception $e)
+    		{
+    		 throw new Exception( 'Something really has gone wrong with the import:\r\n<br />'.$query, 0, $e);
+    		
+    		}
+    	
+    	}
 
 
-  public function findNearbyProjects($lat,$lng,$distance,$limit)
+  public function findNearbyProjects($lat,$lng,$distance,$limit,$servicelines)
   
   {
-    
+   
     $params = array(":loclat"=>$lat,":loclng"=>$lng,":distance"=>$distance);
     
     // Get the users serviceline associations
@@ -90,6 +111,7 @@ class Project extends Model
             project_state as state,
             project_zipcode as zip,
             project_lat,
+            serviceline_id,
             project_lng,
             project_type,
             ownership,
@@ -121,7 +143,8 @@ class Project extends Model
                 AND longpoint + (r / (69 * COS(RADIANS(latpoint))))
              ) d
        
-       WHERE distance_in_mi <= r ";
+       WHERE distance_in_mi <= r 
+       AND serviceline_id in ('".implode("','",$servicelines)."')";
        
        $query.="  ORDER BY distance_in_mi";
 //dd(str_replace("\n","",$query));

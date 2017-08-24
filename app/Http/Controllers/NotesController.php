@@ -48,15 +48,27 @@ class NotesController extends BaseController {
 	 */
 	public function store(NoteFormRequest $request)
 	{
+
+
 		$request->merge(['user_id'=>auth()->user()->id]);
+		$note = $this->notes->create($request->all());
 
-		
-		$this->notes->create($request->all());
-		if($request->has('lead_id')){
-			return redirect()->route('salesleads.show',$request->get('lead_id'));
+		switch ($request->get('type')) {
+			case 'location':
+				
+				return redirect()->route('locations.show',$note->related_id);
+			break;
+			case 'lead':
+				
+				return redirect()->route('salesleads.show',$note->related_id);
+			break;
+			case 'project':
+				
+				return redirect()->route('projects.show',$note->related_id);
+			break;
 		}
+		
 
-		return redirect()->route('locations.show',$request->get('location_id'));
 	}
 
 	/**
@@ -93,14 +105,28 @@ class NotesController extends BaseController {
 	 */
 	public function update(NoteFormRequest $request,$id)
 	{
+
+		$note =$this->notes->findOrFail($id);
+		$note->update(['note'=>$request->get('note')]);
+	
 		
-		$this->notes->findOrFail($id)->update($request->all());
-		//$this->notify($data);
-		if($request->has('lead_id')){
-			return redirect()->route('salesleads.show',$request->get('lead_id'));
+		switch ($note->type) {
+			case 'location':
+				
+				return redirect()->route('locations.show',$note->related_id);
+			break;
+			case 'lead':
+				
+				return redirect()->route('leads.show',$note->related_id);
+			break;
+			case 'project':
+				
+				return redirect()->route('projects.show',$note->related_id);
+			break;
+			
 		}
 		
-		return redirect()->route('locations.show',$request->get('location_id'));
+
 	}
 
 	/**
@@ -111,14 +137,27 @@ class NotesController extends BaseController {
 	 */
 	public function destroy($id, Request $request)
 	{
-		$note = $this->notes->findOrFail($id);
-		$lead = $note->lead_id;
-		$location = $note->location_id;
+		
+
+		$note = $this->notes->findOrFail($id);		
 		$this->notes->destroy($id);
-		if($note->lead_id){
-			return redirect()->route('salesleads.show',$lead);
+		switch ($note->type) {
+			case 'location':
+				
+				return redirect()->route('locations.show',$note->related_id);
+			break;
+			case 'lead':
+				
+				return redirect()->route('leads.show',$note->related_id);
+			break;
+			case 'project':
+				
+				return redirect()->route('projects.show',$note->related_id);
+			break;
+			
+
 		}
-		return redirect()->route('locations.show',$location);
+		
 	}
 
 	private function notify($data){

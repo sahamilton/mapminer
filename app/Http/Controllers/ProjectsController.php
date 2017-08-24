@@ -6,13 +6,14 @@ use Excel;
 use App\Project;
 use Illuminate\Http\Request;
 
-class ProjectsController extends Controller
+class ProjectsController extends BaseController
 {
     public $project;
 
     public function __construct(Project $projects){
 
         $this->project = $projects;
+        parent::__construct($projects);
     }
 
     /**
@@ -22,6 +23,7 @@ class ProjectsController extends Controller
      */
     public function index()
     {
+       
        \Session::put('type','projects');
 
        if(\Session::has('geo')){
@@ -62,7 +64,7 @@ class ProjectsController extends Controller
     public function show($id)
     {
         $statuses = $this->project->statuses;
-        $project = $this->project->with('companies','owner')->findOrFail($id);
+        $project = $this->project->with('companies','owner','relatedNotes')->findOrFail($id);
         return response()->view('projects.show',compact('project','statuses'));
     }
 
@@ -112,7 +114,7 @@ class ProjectsController extends Controller
         $lng=$geo[1];
 
         $limit=100;
-        $result = $this->project->findNearbyProjects($lat,$lng,$distance,$limit);
+        $result = $this->project->findNearbyProjects($lat,$lng,$distance,$limit,$this->userServiceLines);
        return  $this->makeNearbyProjectsXML($result);
         
     }
@@ -173,6 +175,21 @@ class ProjectsController extends Controller
 
 
     }
+    public function ownedProjects($id){
+        $projects = $this->project->whereHas('owner',function ($q) use($id) {
+            $q->where('id','=',$id);
+        })->with('owner')->get();;
+        return response()->view('projects.ownedBy',compact('projects'));
+    }
+    public function projectStats(){
+
+        $projects = $this->project->projectStats();
+
+        $projects = $this->createStats($projects); 
+        $statuses = $this->project->statuses;
+        return response()->view('projects.stats',compact('projects','statuses'));
+
+    }
 
     public function exportowned(){
             Excel::create('Projects',function($excel){
@@ -192,9 +209,25 @@ class ProjectsController extends Controller
             return response()->view('projects.owned',compact('projects'));
     }
 
-    private function getOwnedProjects(){
-        return $this->project->with('owner')
-            ->whereHas('owner')->get();
+    
+    private function createStats($projects){
+        $person = null;
+        foreach ($this->project->statuses as $status){
+            $personProject['total']['status'][$status] = 0;
+        }
+        
+        foreach ($projects as $project){
+            if($project->id != $person){
+                $person = $project->id;
+                $personProject[$project->id]['name'] = $project->firstname . " " . $project->lastname;
+                $personProject[$project->id]['id'] = $project->id;
+            }
+            $personProject[$project->id]['status'][$project->status] = $project->count;
+            $personProject['total']['status'][$project->status] =$personProject['total']['status'][$project->status] + $project->count;
+        }
+
+        return $personProject;
+
     }
     private function getMyProjects(){
        return $this->project->with('owner','companies')
@@ -203,7 +236,6 @@ class ProjectsController extends Controller
         })->get();
     }
 
-    
 
 
 }

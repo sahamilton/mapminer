@@ -143,7 +143,7 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('mynotes',['as'=>'mynotes','uses'=>'NotesController@mynotes']);
 		
 		Route::get('exportlocationnotes/{companyID}', ['as'=>'exportlocationnotes','uses'=>'PersonsController@exportManagerNotes']);
-		Route::resource('notes','NotesController',['only' => ['show']]);	
+		Route::resource('notes','NotesController');	
 	#Geocoding
 		
 		Route::post('findme',['as'=>'findme','uses'=>'GeoCodingController@findMe']);
@@ -302,8 +302,13 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 	# Projects
 	    Route::get('projects/import',['as'=>'projects.import','uses'=>'ImportProjectsController@import']);
 		Route::post('projects/import',['as'=>'projects.bulkimport','uses'=>'ImportProjectsController@bulkImport']);
+<<<<<<< HEAD
 		Route::get('projects/export',['as'=>'projects.exportowned','uses'=>'ProjectsController@exportowned']);
 	   Route::get('projects/status',['as'=>'projects.status','uses'=>'ProjectsController@statuses']);
+=======
+	    Route::get('projects/stats',['as'=>'project.stats','uses'=>'ProjectsController@projectStats']);
+	    Route::get('projects/{id}/owner',['as'=>'project.owner','uses'=>'ProjectsController@ownedProjects']);
+>>>>>>> dev
 		Route::resource('projects', 'ProjectsController',['except' => ['index','show']]);
 	
 	#ServiceLines
@@ -381,7 +386,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 	#Notes
 		Route::get('notes/{companyid}/co',['as'=>'notes.company','uses'=>'NotesController@companynotes']);
 		Route::get('locationnotes',['as'=>'locations.notes', 'uses'=>'NotesController@index']);
-		Route::resource('notes','NotesController');
+
 
 
 	#Search Filters
