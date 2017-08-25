@@ -186,12 +186,12 @@ class ProjectsController extends BaseController
     public function projectStats(){
 
         $projects = $this->project->projectStats();
-        $total = \DB::select('select count(`id`) as total from projects');
-       
+        $total = $this->project->projectcount();      
+        $owned = count($this->getOwnedProjects());
 
         $projects = $this->createStats($projects); 
         $statuses = $this->project->statuses;
-        return response()->view('projects.stats',compact('projects','statuses','total'));
+        return response()->view('projects.stats',compact('projects','statuses','total','owned'));
 
     }
 

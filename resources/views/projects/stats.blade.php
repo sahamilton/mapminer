@@ -7,6 +7,7 @@
 <p><a href="{{route('projects.status')}}">See all owned projects</a></p>
 <?php $person = null;?>
 <p><strong>Total Projects:</strong>{{number_format($total[0]->total,0)}}</p>
+<p><strong>Claimed / Worked Projects:</strong>{{$owned}}</p>
 <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
   <thead>
     

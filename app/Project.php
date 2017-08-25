@@ -68,6 +68,10 @@ class Project extends Model
 
     }
 
+    public function projectcount(){
+      return \DB::select('select count(`id`) as total from projects');
+    }
+
     public function projectStats(){
       $query = "select firstname, lastname, persons.id as id ,status, count(status) as count from `persons` inner join `person_project` on `persons`.`id` = `person_project`.`person_id` group by  `person_id`,`status`";
       return \DB::select($query);
