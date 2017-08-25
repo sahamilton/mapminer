@@ -42,7 +42,7 @@
   </div>
 </div>
 
-
+</div>
 @include('partials/_scripts')
 <script language="javascript">
 $(function () {
