@@ -797,6 +797,7 @@ class PersonsController extends BaseController {
 	 */
 	private function getSegmentDetails($id)
 	{
+			
 			$ids = explode("'",$id);
 			/*
 			$result = Location::
@@ -807,17 +808,19 @@ class PersonsController extends BaseController {
 						->get();*/
 			
 			$query = "SELECT
-						companyname, 
-						filter, 
+						companyname,
+				
+						f.filter as industry,
+						s.filter as segment , 
 						count(locations.id) as count 
-			FROM companies, locations
-			LEFT JOIN searchfilters on  searchfilters.id = locations.segment 
-			WHERE locations.company_id in ('". $id."') 
-			and companies.id = locations.company_id  
+						FROM companies, searchfilters f, locations
+						LEFT JOIN searchfilters s on  s.id = locations.segment 
+						WHERE locations.company_id in ('".$id."')
+						and f.id = vertical
+						and companies.id = locations.company_id  
+						group by companyname,f.filter,s.filter";
 			
-			group by companyname,filter";
-			
-			//dd($query);
+
 			$result = \DB::select(\DB::raw($query));
 			
 		return $result;
