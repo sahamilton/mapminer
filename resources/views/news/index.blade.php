@@ -5,7 +5,7 @@
 
 @if(auth()->user()->hasRole('Admin'))
 <div class="pull-right">
-    <a href="{{{ route('news.create') }}}" class="btn btn-small btn-info iframe">
+    <a href="{{ route('news.create') }}" class="btn btn-small btn-info iframe">
         <span class="glyphicon glyphicon-plus-sign"> </span> 
         Add New Updates
     </a>
@@ -51,7 +51,7 @@
 				@endif
 				<p><span class="glyphicon glyphicon-user"></span> by <span class="muted">
 				@if(isset($post->author))
-					{{{$post->author->person->postName()}}}
+					{{$post->author->person->postName()}}
 				@else
 					No Longer with the company
 				@endif
@@ -59,7 +59,7 @@
 					<span class="glyphicon glyphicon-calendar"></span> <!--Sept 16th, 2012-->
 					{{$post->datefrom->format('M jS,Y')}}
 					| <span class="glyphicon glyphicon-comment"></span> 
-					<a href="{{route('news.show', $post->slug)}}#comments"> {{{$post->comments->count()}}}</a>
+					<a href="{{route('news.show', $post->slug)}}#comments"> {{$post->comments->count()}}</a>
 
 					@if($post->user_id == auth()->user()->id  or auth()->user()->hasRole('Admin'))
 <a href="{{route('news.edit',$post->id)}}" title="Edit this news item"><i class="glyphicon glyphicon-pencil"></i></a> | 
