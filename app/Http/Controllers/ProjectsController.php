@@ -181,13 +181,17 @@ class ProjectsController extends BaseController
         })->with('owner')->get();;
         return response()->view('projects.ownedBy',compact('projects'));
     }
+   
+
     public function projectStats(){
 
         $projects = $this->project->projectStats();
+        $total = $this->project->projectcount();      
+        $owned = count($this->getOwnedProjects());
 
         $projects = $this->createStats($projects); 
         $statuses = $this->project->statuses;
-        return response()->view('projects.stats',compact('projects','statuses'));
+        return response()->view('projects.stats',compact('projects','statuses','total','owned'));
 
     }
 
@@ -236,6 +240,10 @@ class ProjectsController extends BaseController
         })->get();
     }
 
+    private function getOwnedProjects(){
 
+        return $this->project->has('owner')->get();
+        
+    }
 
 }
