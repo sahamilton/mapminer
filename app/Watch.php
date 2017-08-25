@@ -22,7 +22,7 @@ class Watch extends Model {
 	
 	public function watchnotes() 
 	{
-		return $this->hasMany(Note::class,'related_id','location_id');	
+		return $this->hasMany(Note::class,'related_id','location_id')->where('type','=','location');	
 	}
 	
 	public function exportWatchList($fields,$watchList){

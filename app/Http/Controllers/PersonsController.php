@@ -378,7 +378,7 @@ class PersonsController extends BaseController {
 		$data['nocontact'] = $this->getLocationsWoContacts($data['accountstring']);
 		$data['nosalesnotes'] = $this->getNoSalesNotes($data['accountstring']);
 		$data['segments'] = $this->getSegmentDetails($data['accountstring']);
-		return response()->view('persons.manageaccounts', compact('data'));
+		return response()->view('managers.manageaccounts', compact('data'));
 	}
 	
 
