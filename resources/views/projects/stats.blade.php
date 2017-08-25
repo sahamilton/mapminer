@@ -6,7 +6,7 @@
 <h2>Construction Projects Summary</h2>
 <p><a href="{{route('projects.status')}}">See all owned projects</a></p>
 <?php $person = null;?>
-
+<p><strong>Total Projects:</strong>{{number_format($total[0]->total,0)}}</p>
 <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
   <thead>
     
