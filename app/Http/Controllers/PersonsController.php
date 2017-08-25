@@ -754,6 +754,7 @@ class PersonsController extends BaseController {
 			->whereHas('userdetails.roles',function($q){
 				$q->where('roles.name','=','National Account Manager');
 			})
+			
 			->select(\DB::raw("CONCAT(firstname,' ',lastname) AS name"),'user_id')
 			->pluck('name','user_id')->toArray();
 			$managers =  ['All'=>'All'] + $managers;
