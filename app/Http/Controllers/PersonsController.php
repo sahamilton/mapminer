@@ -378,7 +378,8 @@ class PersonsController extends BaseController {
 		$data['nocontact'] = $this->getLocationsWoContacts($data['accountstring']);
 		$data['nosalesnotes'] = $this->getNoSalesNotes($data['accountstring']);
 		$data['segments'] = $this->getSegmentDetails($data['accountstring']);
-		return response()->view('managers.manageaccounts', compact('data'));
+		return $data;
+		
 	}
 	
 
@@ -396,7 +397,7 @@ class PersonsController extends BaseController {
 			$this->managerID = $request->get('manager');
 			
 		}
-		
+
 		if($this->managerID != \Session::get('manager')){
 				
 				
@@ -412,18 +413,20 @@ class PersonsController extends BaseController {
 			
 		}
 		\Session::flash('manager', $this->managerID);
-		if($this->managerID[0] == 'All' and !isset($data['accounts']))
+		if($this->managerID[0] == 'All' and ! isset($data['accounts']))
 		{
 			
 			return  redirect()->to(route('managers.view'));
 		}
+		
 		if(! is_array($data['accounts']))
 		{
 
 			return  redirect()->to(route('managers.view'));
 		}
 
-		return $this->manager($accountstring);
+		$data =  $this->manager($accountstring);
+		return response()->view('managers.manageaccounts', compact('data'));
 	}
 	
 	
@@ -500,28 +503,6 @@ class PersonsController extends BaseController {
 		
 		->get();
 
-			/*$query = "select note,notes.created_at as date, businessname,locations.id as locationid, 
-					concat(firstname,' ',lastname) as person, users.id as userid, companyname,companies.id as companyid 
-					from notes,locations,companies,persons,users 
-					where notes.location_id = locations.id 
-						and locations.company_id = companies.id 
-						and companies.id in ('".$companyID."')
-						and notes.user_id = users.id
-						and users.id = persons.user_id ";
-			if(\Auth::user()->hasRole('National Account Manager') or \Auth::user()->hasRole('Admin'))			
-			{
-				// do nothing extra
-				
-			}else{
-				// limit to my location notes
-				$query.= " and users.id = " . \Auth::id();
-				
-			}
-						
-			$query.= " order by businessname";
-	
-		$notes = \DB::select(\DB::raw($query));
-		return $notes;	*/
 	}
 	
 	/**

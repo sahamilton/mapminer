@@ -3,16 +3,19 @@
 namespace App\Http\Controllers;
 
 use Excel;
+use App\Branch;
 use App\Project;
 use Illuminate\Http\Request;
 
 class ProjectsController extends BaseController
 {
     public $project;
+    public $branch;
 
-    public function __construct(Project $projects){
+    public function __construct(Project $projects, Branch $branch){
 
         $this->project = $projects;
+        $this->branch = $branch;
         parent::__construct($projects);
     }
 
@@ -65,7 +68,10 @@ class ProjectsController extends BaseController
     {
         $statuses = $this->project->statuses;
         $project = $this->project->with('companies','owner','relatedNotes')->findOrFail($id);
-        return response()->view('projects.show',compact('project','statuses'));
+     
+        $branches = $this->branch->findNearbyBranches($project->project_lat,$project->project_lng,100,$limit=5,$this->userServiceLines);
+        
+        return response()->view('projects.show',compact('project','statuses','branches'));
     }
 
     /**

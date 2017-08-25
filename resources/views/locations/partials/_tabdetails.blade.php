@@ -42,7 +42,7 @@
 		@endif
 		</p>
 		<p>
-		@isset($branch[0]->branchid))
+		@isset($branch[0]->branchid)
 			<i class="fa fa-location-arrow" aria-hidden="true"></i>
 			<b>Closest Branch: </b>
 			<a href="{{ route('branches.show', $branch[0]->branchid) }}" 

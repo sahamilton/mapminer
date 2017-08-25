@@ -33,10 +33,6 @@
 
 		<hr />
 	@endif
-
-
-	</p>
-
 @endforeach
 @if($project->owned())
 	<form method='post' action={{route('notes.store')}} name="noteForm">

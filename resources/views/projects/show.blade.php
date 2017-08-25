@@ -22,33 +22,39 @@
     Open</p>
 @endif
 @endcan
-</div>
+
 <ul class="nav nav-tabs">
   <li class="active"><a data-toggle="tab" href="#showmap"><strong>Project Location</strong></a></li>
-<li><a data-toggle="tab" href="#details"><strong>Project Details</strong></a></li>
+  <li><a data-toggle="tab" href="#details"><strong>Project Details</strong></a></li>
   <li><a data-toggle="tab" href="#contacts"><strong>Project Contacts @if(count($project->companies)>0)({{count($project->companies)}}) @endif</strong></a></li>
+  <li><a data-toggle="tab" href="#branches"><strong>Nearby Branches</strong></a></li>
   <li><a data-toggle="tab" href="#notes"><strong>Project Notes @if(count($project->relatedNotes)>0) ({{count($project->relatedNotes)}}) @endif</strong></a></li>
-  
 
 </ul>
 
-<div class="tab-content">
-  <div id="showmap" class="tab-pane fade in active">
-   @include('projects.partials._projectmap')  
+  <div class="tab-content">
+    <div id="showmap" class="tab-pane fade in active">
+      @include('projects.partials._projectmap')  
+    </div>
+
+    <div id="details" class="tab-pane fade">
+      @include('projects.partials._projectdetails')   
+    </div>
+
+    <div id="contacts" class="tab-pane fade">
+      @include('projects.partials._companylist')
+    </div>
+
+    <div id="branches" class="tab-pane fade">
+      @include('projects.partials._branches')
+    </div>
+
+    <div id="notes" class="tab-pane fade">
+      @include('projects.partials._projectnotes')
+    </div>
+
+
   </div>
-
-<div id="details" class="tab-pane fade">
-  @include('projects.partials._projectdetails')   
-</div>
-<div id="contacts" class="tab-pane fade">
-  @include('projects.partials._companylist')
-
-</div>
-
-<div id="notes" class="tab-pane fade">
-  @include('projects.partials._projectnotes')
-</div>
-</div>
 </div>
 @include('partials._modal')
 @include('partials/_scripts')
