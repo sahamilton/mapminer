@@ -236,6 +236,10 @@ class ProjectsController extends BaseController
         })->get();
     }
 
+    private function getOwnedProjects(){
 
+        return $this->project->has('owner')->get();
+        
+    }
 
 }

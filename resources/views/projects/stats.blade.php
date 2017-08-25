@@ -4,6 +4,7 @@
 <div class="container">
 
 <h2>Construction Projects Summary</h2>
+<p><a href="{{route('projects.status')}}">See all owned projects</a></p>
 <?php $person = null;?>
 
 <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
