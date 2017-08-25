@@ -74,14 +74,14 @@ class News extends Model {
 
 	}
 
-	public function audience(){
+	public function audience($id){
 
 		// find all people by role
 			$audience = array();
-			$people = $this->with('relatedRoles','relatedRoles.assignedRoles','relatedIndustries','relatedIndustries.people')->first();
+			$news = $this->with('relatedRoles','relatedRoles.assignedRoles','relatedIndustries','relatedIndustries.people')->find($id);
 
 			// Get roles
-			foreach ($people->relatedRoles as $role){
+			foreach ($news->relatedRoles as $role){
 				$roleaudience[] = $role->assignedRoles->pluck('id')->toArray();
 			}
 			if(isset($roleaudience)){
@@ -90,7 +90,7 @@ class News extends Model {
 						}
 					}
 			// Get industry verticals
-			foreach ($people->relatedIndustries as $vertical){
+			foreach ($news->relatedIndustries as $vertical){
 				$industryaudience[] = $vertical->people->pluck('user_id')->toArray();
 			}
 

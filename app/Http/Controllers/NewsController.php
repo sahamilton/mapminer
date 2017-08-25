@@ -178,7 +178,7 @@ class NewsController extends BaseController {
 	
 	public function audience($id){
 		$news = $this->news->findOrFail($id);
-		$people = $news->audience();
+		$people = $news->audience($id);
 		$audience = User::whereIn('id',$people)->with('person','person.industryfocus','roles')->get();
 		return response()->view('news.audience', compact('news','audience'));
 

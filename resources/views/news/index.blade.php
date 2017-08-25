@@ -47,7 +47,7 @@
 			<div class="col-md-8">
 			@if(auth()->user()->hasRole('Admin'))
 				<p>Visible to <a href="{{route('news.audience',$post->id)}}"
-				title="See all users who can see the {{$post->title}} news item">{{count($post->audience())}} users.</a></p>
+				title="See all users who can see the {{$post->title}} news item">{{count($post->audience($post->id))}} users.</a></p>
 				@endif
 				<p><span class="glyphicon glyphicon-user"></span> by <span class="muted">
 				@if(isset($post->author))
