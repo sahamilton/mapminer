@@ -161,14 +161,7 @@
                         
                     @endcan
                     
-                    @can('manage_projects')
-                    <li class="divider">Leads</li>
-                       <li {{ (Request::is('admin/projects*') ? ' class="active"' : '') }}><a href="{{ route('project.stats') }}">
-                       <i class="fa fa-binoculars" aria-hidden="true"></i> Projects 
-                       </a>
-                       </li> 
-                    @endcan
-                    <li class="divider">Industes</li>
+                    <li class="divider">Industries</li>
                     <li {{ (Request::is('admin/search*') ? ' class="active"' : '') }}><a href="{{ route('vertical.analysis') }}">
                     <i class="fa fa-building-o" aria-hidden="true"> </i> Industries</a></li>
                     @can('view_projects')
