@@ -3,7 +3,7 @@ namespace App;
 trait Geocode
 {
    public function getGeoCode($geoCode){
-
+        
         if(is_array($geoCode)){
            
                 $data['lat'] = $geoCode[0]['latitude'];
@@ -12,8 +12,8 @@ trait Geocode
 
             }elseif(is_object($geoCode)){
                
-                $data['lat'] = $geoCode->first()->getLatitude();
-                $data['lng'] = $geoCode->first()->getLongitude();
+                $data['lat'] = $geoCode->first()->getCoordinates()->getLatitude();
+                $data['lng'] = $geoCode->first()->getCoordinates()->getLongitude();
                 $data['geostatus']=TRUE;
                 $data['city'] =  $geoCode->first()->getLocality();
                 $adminLevels = $geoCode->first()->getadminLevels();

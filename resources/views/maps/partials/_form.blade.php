@@ -1,5 +1,6 @@
 <?php 
 // Default values
+// 
 
 $session = Session::get('geo');
 if(! isset($session)) {
