@@ -168,9 +168,9 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('salesorg/coverage',['as'=>'salescoverage','uses'=>'SalesOrgController@salesCoverageMap']);
 		
 	##Managers
-		Route::get('manage/account',['as'=>'managers.view','uses'=>'PersonsController@manager']);
-		Route::post('manage/account',['as'=>'managers.changeview','uses'=>'PersonsController@selectaccounts']);
-		Route::get('locationnotes/{companyID}',['as'=>'locationnotes.show','uses'=>'PersonsController@showManagerNotes']);
+		Route::get('manage/account',['as'=>'managers.view','uses'=>'ManagersController@manager']);
+		Route::post('manage/account',['as'=>'managers.changeview','uses'=>'ManagersController@selectaccounts']);
+		Route::get('locationnotes/{companyID}',['as'=>'locationnotes.show','uses'=>'ManagersController@showManagerNotes']);
 	## Sales Resources
 		Route::get('resources',['as'=>'resources.view','uses'=>'WatchController@getCompaniesWatched']);
 	

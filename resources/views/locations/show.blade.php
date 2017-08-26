@@ -7,7 +7,7 @@
 <ul class="nav nav-tabs">
     <li class="active"><a data-toggle="tab" href="#project"><strong>Location Details</strong></a></li>
 
-    <li><a data-toggle="tab" href="#notes"><strong>Location  Notes</strong></a></li>
+    <li><a data-toggle="tab" href="#notes"><strong>Location  Notes @if(count($location->relatedNotes)>0) ({{count($location->relatedNotes)}}) @endif</strong></a></li>
 
 
 

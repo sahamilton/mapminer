@@ -44,7 +44,8 @@
 				{{ $errors->first('note') }}
 			</div>
 		</div>
-		<input type='hidden' name='project_id' value="{{$project->id}}" />
+		<input type="hidden" name="type" value="project" />
+		<input type='hidden' name='related_id' value="{{$project->id}}" />
 		<button type="submit" class="btn btn-success">Add New Note</button>
 	</form>
 

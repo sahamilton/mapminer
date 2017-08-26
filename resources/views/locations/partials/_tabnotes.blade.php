@@ -41,7 +41,8 @@
 				{{ $errors->first('note') }}
 			</div>
 		</div>
-		<input type='hidden' name='location_id' value="{{$location->id}}" />
+		<input type='hidden' name='related_id' value="{{$location->id}}" />
+		<input type="hidden" name="type" value="location" />
 		<button type="submit" class="btn btn-success">Add New Note</button>
 	</form>
 
