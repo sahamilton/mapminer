@@ -1,12 +1,13 @@
 @extends('site/layouts/default')
 @section('content')
 <div class="container">
-<h1>{{$data['title']}}</h1>
-@if (Auth::user()->hasRole('National Account Manager'))
-<h3>Your Accounts</h3>
-@endif
-@include('managers.partials._form')
 
+<h1>{{$data['title']}}</h1>
+
+<div style="margin-bottom: 20px" >
+@include('managers.partials._form')
+</div>
+<hr />
 <ul class="nav nav-tabs">
   <li class="active"><a data-toggle="tab" href="#watchers"><strong>Activity</strong></a></li>
 <li><a data-toggle="tab" href="#health"><strong>Data Quality</strong></a></li>
@@ -21,6 +22,7 @@
     <div style="border:1px solid #000;width:300px;margin:20px;padding:20px;float:left">
     @include('managers.partials._activewatchers')
     </div>
+    
     <div style="border:1px solid #000;width:300px;margin:20px;padding:20px;float:left">
     @include('managers.partials._locationnotes')
     </div>
@@ -35,8 +37,10 @@
   </div>
   <div id="summary" class="tab-pane fade in">
     @if(isset($data['segments']))
+
     <div style="border:1px solid #000;width:450px;margin:20px;padding:20px;float:left">
     @include('managers.partials._segments')
+
     </div>
     @endif
   </div>

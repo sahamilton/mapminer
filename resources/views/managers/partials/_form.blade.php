@@ -1,4 +1,4 @@
-<form method="post" action="{{route('managers.view')}}" class="form" id="selectAccount">
+<form method="post" action="{{route('managers.changeview')}}" class="form" id="selectAccount">
 <!-- {{Form::open(array('route'=>'managers.view','class'=>'form', 'id'=>'selectAccount'))}}-->
 {{csrf_field()}}
 @if (Auth::user()->hasRole('Admin')) 
@@ -53,5 +53,5 @@
 </div>
 
 
-<input type="submit" name="btnsubmit" value="Select" />
+<input type="submit" class="btn btn-success" name="btnsubmit" value="Select" />
 </form>

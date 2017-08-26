@@ -341,44 +341,12 @@ class PersonsController extends BaseController {
 	 * @param  [type] $accountstring [description]
 	 * @return [type]                [description]
 	 */
-	public function manager($accountstring = NULL)
+	public function manager()
 	{
-		$data = array();
-		$data['accountstring'] = $accountstring;
+		$data = $this->getManagersData();
 		
-		if(null !==(\Input::get('manager')))
-		{
-			$this->managerID = \Input::get('manager');
-			
-		}
-	
-		$data = $this->getMyAccounts($data);
+		return response()->view('managers.manageaccounts', compact('data'));
 		
-		$data['managerList'] = $this->getManagers();
-		
-				
-		
-		// Get selected accounts if set
-		if($data['accountstring'] == NULL)
-		{
-			
-			$data['selectedAccounts'] = array();
-			foreach ($data['accounts'] as $keys=>$value)
-			{
-				$data['selectedAccounts'][] = $keys;
-			}
-			$data['accountstring'] = implode("','",$data['selectedAccounts']);
-		}else{
-			
-			$data['selectedAccounts'] = explode("','",$data['accountstring']);	
-		}
-
-		$data['notes'] = $this->getMyNotes($data['accountstring']);
-		$data['watching'] = $this->getManagersWatchers($data['accountstring']);
-		$data['nocontact'] = $this->getLocationsWoContacts($data['accountstring']);
-		$data['nosalesnotes'] = $this->getNoSalesNotes($data['accountstring']);
-		$data['segments'] = $this->getSegmentDetails($data['accountstring']);
-		return $data;
 		
 	}
 	
@@ -389,29 +357,32 @@ class PersonsController extends BaseController {
 	 */
 	public function selectAccounts(Request $request)
 	{
+		
+
 		if(! $request->has('manager')){
-			$managerArray = $this->getManagers(\Auth::id());
-			$managerId = array_keys($managerArray);
-			$this->managerID = $managerId[0];
+
+			$managerArray = $this->getManagers(auth()->id());
+			if(isset($managerArray['user_id'])){
+				$this->managerID = $managerArray['user_id'];
+			}else{
+				$this->managerID = 'All';
+			}
+			
 		}else{
 			$this->managerID = $request->get('manager');
 			
 		}
-
-		if($this->managerID != \Session::get('manager')){
+		// if there is a change of manager
+		if($this->managerID != \Session::get('manager') && ! $request->has('accounts')){
 				
-				
-				$data =array();
-				$data =  $this->getMyAccounts($data);
+				$data =  $this->getMyAccounts();
 
-				$accountstring = implode("','",array_keys($data['accounts']));
 				
 		}else{
-			$data['accounts'] = $request->get('accounts');
-			
-			$accountstring = implode("','",$data['accounts']);
+			$data['selectedAccounts'] = $request->get('accounts');
 			
 		}
+		
 		\Session::flash('manager', $this->managerID);
 		if($this->managerID[0] == 'All' and ! isset($data['accounts']))
 		{
@@ -419,17 +390,45 @@ class PersonsController extends BaseController {
 			return  redirect()->to(route('managers.view'));
 		}
 		
+		$data =  $this->getManagersData($data);
+
 		if(! is_array($data['accounts']))
 		{
 
 			return  redirect()->to(route('managers.view'));
 		}
-
-		$data =  $this->manager($accountstring);
+		
 		return response()->view('managers.manageaccounts', compact('data'));
 	}
 	
-	
+	private function getManagersData($data=null){
+		
+		if(! isset($data['accounts'])){
+			$data = $this->getMyAccounts($data);
+		}
+
+		if(! isset($data['title'])){
+			$data['title'] = 'Title';
+		}
+		$data['managerList'] = $this->getAllManagers();
+
+		if(! isset($data['selectedAccounts'])){
+			$data['selectedAccounts'] = array();
+			foreach ($data['accounts'] as $keys=>$value)
+			{
+				$data['selectedAccounts'][] = $keys;
+			}
+		}
+		
+		$data['accountstring'] = implode("','",$data['selectedAccounts']);
+		$data['notes'] = $this->getMyNotes($data['accountstring']);
+		$data['watching'] = $this->getManagersWatchers($data['accountstring']);
+		$data['nocontact'] = $this->getLocationsWoContacts($data['accountstring']);
+		$data['nosalesnotes'] = $this->getNoSalesNotes($data['accountstring']);
+		$data['segments'] = $this->getSegmentDetails($data['accountstring']);
+
+		return $data;
+	}
 	/**
 	 * [exportManagerNotes description]
 	 * @param  [type] $companyID [description]
@@ -477,8 +476,8 @@ class PersonsController extends BaseController {
 	 */
 	private function checkManager($companyID)
 	{
-		$data = array();
-		$data = $this->getMyaccounts($data);
+		
+		$data = $this->getMyaccounts();
 		
 		if (! $key = array_search ((int)$companyID, array_keys($data['accounts']))) {
     		return  Redirect::route('managers.view');
@@ -510,16 +509,16 @@ class PersonsController extends BaseController {
 	 * @param  array  $data [description]
 	 * @return [type]       [description]
 	 */
-	private function getMyAccounts(array $data)
+	private function getMyAccounts($data=null)
 	{
-		if(\Auth::user()->hasRole('National Account Manager'))
+		if(auth()->user()->hasRole('National Account Manager'))
 		{
 			$data['accounts'] = Company::where('user_id',"=",\Auth::id())
 			->orderBy('companyname')
 			->pluck('companyname','id')
 			->toArray();;
 			$data['title'] = 'Your Accounts';
-		}elseif(isset($this->managerID) and $this->managerID[0] !='All'){
+		}elseif(isset($this->managerID) and $this->managerID !='All'){
 			
 			
 			// Did we change the manager
@@ -719,16 +718,21 @@ class PersonsController extends BaseController {
 	 * @return [type]     [description]
 	 */
 	
-	private function getManagers($id=NULL)
+	private function getManagers($id)
 	{
-		if(isset($id))
-		{
+		
 			$managers = $this->persons->where('user_id','=',$id)
+			->has('managesAccount')
 			->select(\DB::raw("CONCAT(firstname,' ',lastname) AS name"),'user_id')
-			->first()->toArray();
-			
-			
-		}else{
+			->first();
+			if($managers){
+				return $managers->toArray();
+			}
+			return $this->getAllManagers();
+	}	
+	private function getAllManagers(){
+
+
 		// This can be refactored.  Send a pluck array with just user id & persons postName
 			
 			$managers = $this->persons->with('userdetails')
@@ -738,17 +742,12 @@ class PersonsController extends BaseController {
 			
 			->select(\DB::raw("CONCAT(firstname,' ',lastname) AS name"),'user_id')
 			->pluck('name','user_id')->toArray();
-			$managers =  ['All'=>'All'] + $managers;
+			 return ['All'=>'All'] + $managers;
+		}
 			
 		
-
-		}
-		
 		
 
-		return $managers;	
-		
-	}
 	
 	
 /**

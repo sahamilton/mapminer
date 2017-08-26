@@ -169,7 +169,7 @@ Route::group(['middleware' => 'auth'], function () {
 		
 	##Managers
 		Route::get('manage/account',['as'=>'managers.view','uses'=>'PersonsController@manager']);
-		Route::post('manage/account',['as'=>'managers.view','uses'=>'PersonsController@selectaccounts']);
+		Route::post('manage/account',['as'=>'managers.changeview','uses'=>'PersonsController@selectaccounts']);
 		Route::get('locationnotes/{companyID}',['as'=>'locationnotes.show','uses'=>'PersonsController@showManagerNotes']);
 	## Sales Resources
 		Route::get('resources',['as'=>'resources.view','uses'=>'WatchController@getCompaniesWatched']);
