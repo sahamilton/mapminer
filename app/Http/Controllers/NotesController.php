@@ -26,7 +26,7 @@ class NotesController extends BaseController {
 	public function index()
 	{
 		
-		$notes = $this->notes->with('relatesTo','relatesTo.company','relatesToLead','writtenBy')->get();
+		$notes = $this->notes->with('relatesToLocation','relatesToLocation.company','relatesToLead','writtenBy')->get();
 
 		return response()->view('notes.index', compact('notes'));
 	}
@@ -182,8 +182,8 @@ class NotesController extends BaseController {
 	{
 		$company =\App\Company::findOrFail($companyid);
 		$notes = $this->notes
-			->with('relatesTo','relatesTo.company','relatesToLead','writtenBy')
-			->whereHas('relatesTo',function($q) use($companyid){
+			->with('relatesToLocation','relatesToLocation.company','relatesToLead','writtenBy')
+			->whereHas('relatesToLocation',function($q) use($companyid){
 				$q->where('company_id','=',$companyid);
 			})
 			->get();
@@ -200,7 +200,7 @@ class NotesController extends BaseController {
 	{
 		$user = auth()->user();
 		
-		$notes = $this->notes->where('user_id','=',$user->id)->with('relatesTo')->get();
+		$notes = $this->notes->where('user_id','=',$user->id)->with('relatesToLocation')->get();
 		
 
 		return response()->view('notes.show', compact('notes'));

@@ -4,23 +4,12 @@
 <table id ='sorttable6' class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
     
-    <th>
-   Company
-    </th>
-   <th>
-   Business
-   </th>
-   <th>Address
-   </th>
-    <th>
-  Note
-   </th>
-    <th>
-  Date
-   </th>
-       <th>
- By
-   </th>
+    <th>Company</th>
+   <th>Business</th>
+   <th>Address</th>
+    <th>Note</th>
+    <th>Date</th>
+    <th>By</th>
          
     </thead>
     <tbody>
@@ -29,25 +18,14 @@
 
 <tr>
 
-<td>
-{{$newNote->relatesToLead->companyname}}
-
-</td>
+<td>{{$newNote->relatesToLead->companyname}}</td>
 <td>
 <a href = "{{route('leads.show',$newNote->relatesToLead->id)}}" title="Review {{$newNote->relatesToLead->businessname}} lead" >{{$newNote->relatesToLead->businessname}}</a>
 </td>
-<td>
-{{$newNote->relatesToLead->fullAddress()}}
-</td>
-<td>
-{{$newNote->note}}
-</td>
-<td>
-{{$newNote->created_at->format('jS M g:i A')}}
-</td>
-<td>
-{{$newNote->writtenBy->person->postName()}}
-</td>
+<td>{{$newNote->relatesToLead->fullAddress()}}</td>
+<td>{{$newNote->note}}</td>
+<td>{{$newNote->created_at->format('jS M g:i A')}}</td>
+<td>{{$newNote->writtenBy->person->postName()}}</td>
 
 
  </tr>

@@ -4,23 +4,12 @@
 <table id ='sorttable6' class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
     
-    <th>
-   Company
-    </th>
-   <th>
-   Business
-   </th>
-   <th>Address
-   </th>
-    <th>
-  Note
-   </th>
-    <th>
-  Date
-   </th>
-       <th>
- By
-   </th>
+    <th>Company</th>
+   <th>Business</th>
+   <th>Address</th>
+    <th>Note</th>
+    <th>Date</th>
+    <th>By</th>
          
     </thead>
     <tbody>
@@ -28,28 +17,19 @@
 
 <tr>
 
-<td>
-
-{{$newNote->relatesToLocation->company->companyname}}
-</td>
+<td>{{$newNote->relatesToLocation->company->companyname}}</td>
 <td>
 <a href = "{{route('locations.show',$newNote->relatesToLocation->id)}}" title="Review {{$newNote->relatesToLocation->businessname}} location" >{{$newNote->relatesToLocation->businessname}}</a>
 </td>
-<td>
-{{$newNote->relatesToLocation->locationAddress()}}
-</td>
-<td>
-{{$newNote->note}}
-</td>
+<td>{{$newNote->relatesToLocation->locationAddress()}}</td>
+<td>{{$newNote->note}}</td>
 <td>
 <?php $date = new DateTime($newNote->created_at);
 
 echo $date->format('jS M g:i A');
 ?>
 </td>
-<td>
-{{$newNote->writtenBy->person->firstname}} {{$newNote->writtenBy->person->lastname}}
-</td>
+<td>{{$newNote->writtenBy->person->firstname}} {{$newNote->writtenBy->person->lastname}}</td>
 
 
  </tr>

@@ -129,7 +129,7 @@ class CommentsController extends BaseController {
 	 */
 	public function destroy($id)
 	{
-		$comment = $this->comment->with('relatesTo')->findOrFail($id);
+		$comment = $this->comment->findOrFail($id);
 		$this->comment->destroy($id);
 
 		return redirect()->route('news.show',$comment->relatesTo->slug);
