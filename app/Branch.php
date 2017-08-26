@@ -130,15 +130,14 @@ class Branch extends Model {
 		*/
 	
 
-				$query = "select distinct branchid,branchnumber,branchname,street,address2,city,state,zip,lat,lng, distance_in_mi,Serviceline as servicelines,
+				$query = "select distinct branchid,branchnumber,branchname,street,address2,city,state,zip,lat,lng, distance_in_mi,
 			  CONCAT_WS(' / ',branchname,branchnumber) AS name FROM (
 			SELECT distinct branches.id as branchid, branchnumber, branchname,street,address2,city,state,zip,lat,lng,r,
 				   69.0 * DEGREES(ACOS(COS(RADIANS(latpoint))
 							 * COS(RADIANS(lat))
 							 * COS(RADIANS(longpoint) - RADIANS(lng))
 							 + SIN(RADIANS(latpoint))
-							 * SIN(RADIANS(lat)))) AS distance_in_mi,
-    			Serviceline
+							 * SIN(RADIANS(lat)))) AS distance_in_mi
 			 FROM branches,branch_serviceline,servicelines 
 			 JOIN (
 					SELECT  ".$lat."  AS latpoint,  ".$lng." AS longpoint, ".$distance." AS r
