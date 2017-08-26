@@ -22,7 +22,7 @@
     Open</p>
 @endif
 @endcan
-
+</div>
 <ul class="nav nav-tabs">
   <li class="active"><a data-toggle="tab" href="#showmap"><strong>Project Location</strong></a></li>
   <li><a data-toggle="tab" href="#details"><strong>Project Details</strong></a></li>
