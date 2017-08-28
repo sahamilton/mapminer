@@ -218,9 +218,11 @@ class LeadsController extends BaseController
 
 
     public function find(LeadAddressFormRequest $request){
+
+      
       $geoCode = app('geocoder')->geocode($request->get('address'))->get();
-  
-      if(! $geoCode or count($geocode)==0)
+
+      if(! $geoCode or count($geoCode)==0)
       {
         return redirect()->back()->withInput()->with('error','Unable to Geocode address:'.$request->get('address') );
 
