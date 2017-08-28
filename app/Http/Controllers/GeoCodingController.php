@@ -159,7 +159,7 @@ class GeoCodingController extends BaseController {
 			break;
 
 			case 'projects':
-				return $this->project->findNearbyProjects($data['lat'],$data['lng'],$data['distance'],$number=null);
+				return $this->project->findNearbyProjects($data['lat'],$data['lng'],$data['distance'],$number=null,$this->userServiceLines);
 
 			
 			break;
