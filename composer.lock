@@ -9,16 +9,16 @@
     "packages": [
         {
             "name": "algolia/algoliasearch-client-php",
-            "version": "1.18.0",
+            "version": "1.19.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/algolia/algoliasearch-client-php.git",
-                "reference": "77aeb5f3856c1460432e2ccb9df5634c37c0b9f3"
+                "reference": "96b9cfcd1cd9e922d6e42832214759b7fbae7f0c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/algolia/algoliasearch-client-php/zipball/77aeb5f3856c1460432e2ccb9df5634c37c0b9f3",
-                "reference": "77aeb5f3856c1460432e2ccb9df5634c37c0b9f3",
+                "url": "https://api.github.com/repos/algolia/algoliasearch-client-php/zipball/96b9cfcd1cd9e922d6e42832214759b7fbae7f0c",
+                "reference": "96b9cfcd1cd9e922d6e42832214759b7fbae7f0c",
                 "shasum": ""
             },
             "require": {
@@ -56,7 +56,7 @@
             ],
             "description": "Algolia Search API Client for PHP",
             "homepage": "https://github.com/algolia/algoliasearch-client-php",
-            "time": "2017-05-22 14:50:28"
+            "time": "2017-08-28 08:33:10"
         },
         {
             "name": "barryvdh/laravel-debugbar",
