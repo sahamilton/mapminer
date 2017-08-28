@@ -1,9 +1,4 @@
 @extends('admin.layouts.default')
-<?php
- $UTC = new DateTimeZone("UTC");
-$newTZ = new DateTimeZone('America/Los_Angeles');
-
-?>
 
 
 {{-- Content --}}
@@ -46,10 +41,8 @@ $newTZ = new DateTimeZone('America/Los_Angeles');
         <td class="col-md-2">{{ $user->email }}</td>
         <td class="col-md-2">
 			@if(isset($user->lastlogin) &&  $user->lastlogin != '0000-00-00 00:00:00'  )
-                <?php
-                $date = new DateTime( $user->lastlogin, $UTC );
-                $date->setTimezone( $newTZ );?>
-                {{$date->format('M j, Y h:i a')}}
+                <?php  $lastlogin = Carbon\Carbon::parse($user->lastlogin);?>
+                {{$lastlogin->format('M j, Y h:i a')}}
 			@endif
 	</td>
 </tr>
