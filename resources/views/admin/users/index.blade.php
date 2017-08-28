@@ -47,8 +47,16 @@ $newTZ = new DateTimeZone('America/Los_Angeles');
 
         <tr>
         <td class="col-md-2">{{ $user->id }}</td>
-        <td class="col-md-2"><?php echo isset($user->person->firstname) ? $user->person->firstname : '';?></td>
-        <td class="col-md-2"><?php echo isset($user->person->lastname) ?  $user->person->lastname : '';?></td>
+        <td class="col-md-2">
+        @if(isset($user->person->firstname))
+        <a href="{{route('users.show',$user->id)}}">{{$user->person->firstname}}</a>
+        @endif
+        </td>
+        <td class="col-md-2">
+        @if(isset($user->person->lastname))
+        <a href="{{route('users.show',$user->id)}}">{{$user->person->lastname}}</a>
+        @endif
+        </td>
 	<td class="col-md-2">{{ $user->username }}</td>
     <td class="col-md-2">{{ $user->email }}</td>
     <td class="col-md-2">
