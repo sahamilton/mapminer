@@ -56,7 +56,7 @@
             <h4>Branches Serviced:</h4>
             @foreach ($user->person->manages()->get() as $branch)
 
-                <li>{{$branch->branchname}} {{$roles[$branch->pivot->role_id]}}</li>
+                <li><a href="{{route('branches.show',$branch->id)}}">{{$branch->branchname}}</a> {{$roles[$branch->pivot->role_id]}}</li>
             @endforeach
         </div>
 
