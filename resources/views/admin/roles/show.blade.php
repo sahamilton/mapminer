@@ -1,11 +1,4 @@
 @extends('admin.layouts.default')
-<?php
- $UTC = new DateTimeZone("UTC");
-$newTZ = new DateTimeZone('America/Los_Angeles');
-
-?>
-
-
 {{-- Content --}}
 @section('content')
 
@@ -19,13 +12,13 @@ $newTZ = new DateTimeZone('America/Los_Angeles');
 		<thead> 
 			<tr>
            
-            <th class="col-md-2">First Name</th>
-            <th class="col-md-2">Last Name</th>
-            <th class="col-md-2">User Name</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>User Name</th>
             
-            <th class="col-md-2">EMail</th>
-            <th class="col-md-2">Serviceline</th>
-            <th class="col-md-2">Last Activity</th>
+            <th>EMail</th>
+            <th>Serviceline</th>
+            <th>Last Activity</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -33,31 +26,23 @@ $newTZ = new DateTimeZone('America/Los_Angeles');
 
         <tr>
         
-        <td class="col-md-2">{{ $user->person->firstname }}</td>
-        <td class="col-md-2">{{ $user->person->lastname }}</td>
+        <td><a href="{{route('users.show',$user->id)}}">{{ $user->person->firstname }}</a></td>
+        <td><a href="{{route('users.show',$user->id)}}">{{ $user->person->lastname }}</td>
        	
-        <td class="col-md-2"><a href="{{route('users.show',$user->id)}}">{{ $user->username }}</a></td>
-        <td class="col-md-2">{{ $user->email }}</td>
-        <td class="col-md-2"> @foreach($user->serviceline as $serviceline)
+        <td><a href="{{route('users.show',$user->id)}}">{{ $user->username }}</a></td>
+        <td>{{ $user->email }}</td>
+        <td> @foreach($user->serviceline as $serviceline)
     
 		    <li>{{ $serviceline->ServiceLine }}</li>
 		   
 		    @endforeach
     	</td>
-   
- <?php 
-	if(! isset($user->usage->lastactivity) or  $user->usage->lastactivity == '0000-00-00 00:00:00'  ){
-		$field = NULL;
-	}else{
-		$date = new DateTime( $user->usage->lastactivity, $UTC );
-		$date->setTimezone( $newTZ );
-		$field =$date->format('Y-m-d h:i a');
-	}
-	
-	echo " <td class=\"col-md-2\">".$field."</td>";
+    	   		<td>
+   		@if($user->lastlogin)
+   		{{$user->lastlogin->format('Y-m-d h:i a')}}
+   		@endif
+   		</td>
 
-	?>
-   
 </tr>
 @endforeach
 		</tbody>

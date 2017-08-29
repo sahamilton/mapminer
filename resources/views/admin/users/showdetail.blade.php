@@ -4,6 +4,7 @@
     <p><a href="{{route('users.index')}}">Return to all users</a></p>
     <h2>{{$user->person->postName()}}</h2>
     <p><strong>User Name:</strong> {{$user->username}}</p>
+    <p><strong>Email:</strong> {{$user->email}}</p>
     <p><strong>Last Login:</strong>
     @if($user->lastlogin)
     {{$user->lastlogin->format('d/m/Y')}}
@@ -14,7 +15,7 @@
     <ul class="nav nav-tabs">
     <li class="active"><a data-toggle="tab" href="#showmap"><strong>Location</strong></a></li>
     <li><a data-toggle="tab" href="#details"><strong>Details</strong></a></li>
-    @if(count($user->directReports)>0 or isset($user->person->reportsTo))
+    @if(count($user->person->directReports()->get())>0 or count($user->person->reportsTo()->get()>0))
     <li><a data-toggle="tab" href="#team"><strong>Reporting Structure</strong></a></li>
     @endif
     @if(count($user->person->manages()->get())>0)
@@ -53,7 +54,8 @@
         <div id="branches" class="tab-pane fade in">
             <h4>Branches Serviced:</h4>
             @foreach ($user->person->manages()->get() as $branch)
-                <li>{{$branch->branchname}}</li>
+
+                <li>{{$branch->branchname}} {{$roles[$branch->pivot->role_id]}}</li>
             @endforeach
         </div>
 

@@ -8,6 +8,7 @@ use App\Branch;
 use App\Watch;
 use App\Http\Requests\FindMeFormRequest;
 use Illuminate\Http\Request;
+
 class GeoCodingController extends BaseController {
 	
 	public $project;
@@ -29,7 +30,7 @@ class GeoCodingController extends BaseController {
 	 */
 	public function findMe(FindMeFormRequest $request) {
 	
-
+	
 		if($request->has('address')) {
 			$address = urlencode($request->get('address'));
 			

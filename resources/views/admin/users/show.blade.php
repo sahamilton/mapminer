@@ -35,9 +35,9 @@
 
         <tr>
         
-        <td class="col-md-2">{{ $user->firstname }}</td>
-        <td class="col-md-2">{{ $user->lastname }}</td>
-        <td class="col-md-2">{{ $user->username }}</td>
+        <td class="col-md-2"><a href="{{route('users.show',$user->id)}}">{{ $user->firstname }}</a></td>
+        <td class="col-md-2"><a href="{{route('users.show',$user->id)}}">{{ $user->lastname }}</a></td>
+        <td class="col-md-2"><a href="{{route('users.show',$user->id)}}">{{ $user->username }}</a></td>
         <td class="col-md-2">{{ $user->email }}</td>
         <td class="col-md-2">
 			@if(isset($user->lastlogin) &&  $user->lastlogin != '0000-00-00 00:00:00'  )

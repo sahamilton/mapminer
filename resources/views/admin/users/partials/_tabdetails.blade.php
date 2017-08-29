@@ -1,4 +1,6 @@
-	
+	<p><strong>User id:</strong>{{$user->id}}</p>
+	<p><strong>Person id:</strong>{{$user->person->id}}</p>
+	<p><strong>Employee id:</strong>{{$user->employee_id}}</p>
 
 
 	<h4>Servicelines:</h4>

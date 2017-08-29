@@ -32,13 +32,13 @@ class Person extends NodeModel {
 	
 	public function branchesServiced()
 	{
-		return $this->belongsToMany(Branch::class);
+		return $this->belongsToMany(Branch::class)->withPivot('role_id');
 	}
 	
 
 	public function manages() {
 		
-		return $this->hasMany(Branch::class);
+		return $this->belongsToMany(Branch::class)->withPivot('role_id');
 
 	}
 	public function comments () {

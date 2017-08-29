@@ -1,9 +1,4 @@
 @extends('admin.layouts.default')
-<?php
-$UTC = new DateTimeZone("UTC");
-$newTZ = new DateTimeZone('America/Los_Angeles');
-
-?>
 {{-- Web site Title --}}
 @section('title')
 	{{{ $title }}} :: @parent
@@ -80,21 +75,14 @@ $newTZ = new DateTimeZone('America/Los_Angeles');
     </ul>
     </td>
     <td class="col-md-2">{{ $user->confirmed == '1' ? "yes" :  "no"}}</td>
-
- <?php 
-
-	if(! isset($user->usage->lastactivity) or  $user->usage->lastactivity == '0000-00-00 00:00:00'  ){
-		$field = NULL;
-	}else{
-		$date = new DateTime( $user->usage->lastactivity, $UTC );
-		$date->setTimezone( $newTZ );
-		$field =$date->format('Y-m-d h:i a');
-	}
+    <td>
+ 
+		@if(isset($user->lastlogin) &&  $user->lastlogin != '0000-00-00 00:00:00'  )
+                <?php  $lastlogin = Carbon\Carbon::parse($user->lastlogin);?>
+                {{$lastlogin->format('M j, Y h:i a')}}
+			@endif
 	
-
-	echo " <td class=\"col-md-2\">".$field."</td>";
-
-	?>
+	</td>
     <td class="col-md-2">
     
 
