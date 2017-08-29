@@ -7,7 +7,7 @@
 	    lng="{{$branch->lng}}" 
 	    locationweb="{{route('branches.show',$branch->branchid)}}"
 	    type="branch" 
-	    brand="{{$branch->servicelines}}"
+	
 	  />
 @endforeach
 </markers>
