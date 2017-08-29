@@ -1,3 +1,5 @@
+@if(auth()->user()->hasRole('Admin') or $project->owned())
+
 <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
 	<thead>
 		
@@ -40,3 +42,14 @@
             @endforeach
       </tbody>
 </table>
+@else
+
+<div class="alert alert-danger">
+@if($project->owner())
+<p>Project has been {{$project->owner[0]->pivot->status}} by {{$project->owner[0]->postName()}}</p>
+
+@else
+<p >You need to claim this project before you can see the project contacts</p>
+@endif
+</div>
+@endif
