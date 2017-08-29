@@ -15,7 +15,8 @@
     <ul class="nav nav-tabs">
     <li class="active"><a data-toggle="tab" href="#showmap"><strong>Location</strong></a></li>
     <li><a data-toggle="tab" href="#details"><strong>Details</strong></a></li>
-    @if(count($user->person->directReports()->get())>0 or count($user->person->reportsTo()->get()>0))
+    {{dd($user->person->directReports()->get())}}
+    @if(count($user->person->directReports()->get())>0 or count($user->person->reportsTo()->get())>0)
     <li><a data-toggle="tab" href="#team"><strong>Reporting Structure</strong></a></li>
     @endif
     @if(count($user->person->manages()->get())>0)
