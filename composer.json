@@ -11,6 +11,7 @@
         "baum/baum": "~1.1",
         "bugsnag/bugsnag-laravel": "^2.0",
         "dionera/laravel-beanstalkd-ui": "^0.3.3",
+        "doctrine/dbal": "^2.5",
         "elasticsearch/elasticsearch": "^5.2",
         "fabpot/goutte": "^3.1",
         "guzzlehttp/guzzle": "~5.3|~6.0",

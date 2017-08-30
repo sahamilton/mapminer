@@ -67,7 +67,7 @@ class ProjectsController extends BaseController
     public function show($id)
     {
         $statuses = $this->project->statuses;
-        $project = $this->project->with('companies','owner','relatedNotes')->findOrFail($id);
+        $project = $this->project->with('companies','owner','relatedNotes','source')->findOrFail($id);
      
         $branches = $this->branch->findNearbyBranches($project->project_lat,$project->project_lng,100,$limit=5,$this->userServiceLines);
         

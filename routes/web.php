@@ -308,8 +308,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 
 	    Route::get('projects/stats',['as'=>'project.stats','uses'=>'ProjectsController@projectStats']);
 	    Route::get('projects/{id}/owner',['as'=>'project.owner','uses'=>'ProjectsController@ownedProjects']);
-
-	
+	    #Project Source
+		Route::resource('projectsource','ProjectSourceController');
 	#ServiceLines
 	
 		

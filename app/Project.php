@@ -50,6 +50,10 @@ class Project extends Model
       return $this->belongsToMany(Person::class)->withPivot('status');
     }
    
+    public function source(){
+      return $this->belongsTo(ProjectSource::class,'project_source_id');
+    }
+
     public function owned(){
       return $this->belongsToMany(Person::class)
       ->withPivot('status')

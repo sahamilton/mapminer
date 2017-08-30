@@ -1,6 +1,8 @@
 <p><strong>Type:</strong>
 
-<p><strong>Dodge ref #:</strong>{{$project->dodge_repnum}}</p>
+
+<p><strong>Source:</strong>{{$project->source->source}}</p>
+<p><strong>Source ref #:</strong>{{$project->source_ref}}</p>
 
 <p><strong>Category:</strong>
 {{$project->structure_header}} / {{$project->project_type}}</p>
