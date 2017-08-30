@@ -18,14 +18,11 @@
             <div style="font-size:150%" data-rating="{{$rank}}" id="rank" class='starrr col-md-6'></div>
             <input type="hidden" name="ranking" id="ranking" value="{{$rank}}" />
             
-            <select readonly  id="ranklist" name="ranklist">
-            <option value='1'>Project data is completely inaccurate. No project or project completed.</option>
-
-            
-<option value="2">Project data is incomplete and / or not useful.</option>
-<option value="3">Project data is accurate but there is no sales / service opportunity.</option>
-<option value='4'>Project data is accurate and there is a possibility of sales / service.</option>
-<option value='5'>Project data is accurate and there is a definite opportunity for sales / service</option>
+            <select  id="ranklist">
+              @foreach ($statuses as $key=>$value)
+              <option 
+              @if($key == $rank) selected @endif value="{{$key}}">{{$value}}</option>
+              @endforeach
 </select>
 </div>
 
