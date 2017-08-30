@@ -76,7 +76,8 @@ class ProjectSourceController extends Controller
      */
     public function edit($id)
     {
-        //
+        $projectsource = $this->projectsource->with('projects')->findOrFail($id);
+        return response()->view('projectsource.edit',compact('projectsource'));
     }
 
     /**
@@ -88,7 +89,16 @@ class ProjectSourceController extends Controller
      */
     public function update(ProjectSourceRequest $request, $id)
     {
-        //
+        $data = $request->all();
+        $data['datefrom'] = Carbon::createFromFormat('m/d/Y', $request->get('datefrom'));
+        $data['dateto'] = Carbon::createFromFormat('m/d/Y', $request->get('dateto'));
+        $projectsource = $this->projectsource->with('projects')->findOrFail($id);
+        if($projectsource->update($data)){
+            return redirect()->route('projectsource.index')
+            ->with('sucess','Project Source Updated');
+        }
+        return redirect()->route('projectsource.index')
+            ->with('error','Project Source Not Updated');
     }
 
     /**
@@ -99,6 +109,11 @@ class ProjectSourceController extends Controller
      */
     public function destroy($id)
     {
-        //
+        if($this->projectsource->destroy($id)){
+             return redirect()->route('projectsource.index')
+            ->with('success','Project Source deleted');
+        }
+         return redirect()->route('projectsource.index')
+            ->with('error','Unable to delete Project Source');
     }
 }
