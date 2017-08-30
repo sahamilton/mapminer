@@ -64,12 +64,4 @@
 
  @endif
  </div>
- <script>
- $(document).ready(function() {
-    $('#{{$note->id}}').editable({
-    url: '{{route('notes.edit',$note->id)}}',
-    
-    });
-});
-
-</script>
+ 
