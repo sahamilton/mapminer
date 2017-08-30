@@ -71,6 +71,12 @@
                         
                         
                         @endif
+                        @can('manage_projects')
+                            <li class="divider"></li>
+                         <li><a href="{{route('projects.myprojects')}}">
+                         <i class="fa fa-flag" aria-hidden="true"> </i> My Construction projects</a></li>
+
+                        @endcan
                         </ul>
 
                          

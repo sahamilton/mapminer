@@ -109,14 +109,14 @@ class ProjectsController extends BaseController
     }
 
     public function closeproject(Request $request,$id){
-
+      
         // find project
          $project = $this->project->findOrFail($id);
         // update status in project
         $project->pr_status = 'closed';
         $project->save();
         // upate status in person_project
-        $project->owner()->updateExistingPivot(auth()->user()->person()->first()->id,['status'=>$request->get('status_id'),'ranking'=>$request->get('ranking')]);
+        $project->owner()->updateExistingPivot(auth()->user()->person()->first()->id,['status'=>'Closed','ranking'=>$request->get('ranking')]);
         // add comment in project_note
         $this->addClosingNote($request);
         return redirect()->route('projects.show',$id);
@@ -130,7 +130,7 @@ class ProjectsController extends BaseController
 
     private function addClosingNote($request){
         $note = new Note;
-        $note->note = "Project ". $request->get('status_id') .":" .$request->get('comments');
+        $note->note = "Project Closed:" .$request->get('comments');
         $note->type = 'project';
         $note->related_id = $request->get('project_id');
         $note->user_id = auth()->user()->id;
@@ -258,7 +258,7 @@ class ProjectsController extends BaseController
                 $person = $project->id;
                 $personProject[$project->id]['name'] = $project->firstname . " " . $project->lastname;
                 $personProject[$project->id]['id'] = $project->id;
-            
+
             }
           
             if($project->status){

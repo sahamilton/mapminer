@@ -7,12 +7,12 @@
 @else
 @if($project->pr_status == 'closed')
 You closed this project on {{$project->updated_at->format('M d, Y')}}
-<div id="rating" data-rating="{{$project->owner[0]->pivot->ranking}}" class="starrr" >
-      </div>
+<p><strong>Rating:</strong><div id="rating" data-rating="{{$project->owner[0]->pivot->ranking}}" class="starrr" >
+      </div></p>
 @else
 You own this project
 
- <div class="row"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Close Project</button></div>
+ <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Close Project</button>
       
          @include ('projects.partials._closeprojectform')
 @endif

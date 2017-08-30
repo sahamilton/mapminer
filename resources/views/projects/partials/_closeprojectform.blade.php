@@ -13,33 +13,22 @@
         <?php $ratings = [1,2,3,4,5];?>
         <form method="post" action="{{route('projects.close',$project->id)}}">
         {{csrf_field()}}
-
+<div class="form-group">
             <label class="col-md-4 control-label">Project Rating:</label>
             <div style="font-size:150%" data-rating="{{$rank}}" id="rank" class='starrr col-md-6'></div>
             <input type="hidden" name="ranking" id="ranking" value="{{$rank}}" />
-           
-            <div class="form-group{{ $errors->has('status_id)') ? ' has-error' : '' }}">
-                <label class="col-md-4 control-label">Closing Status</label>
-                <div class="col-md-6">
-                    <select required class="form-control" name='status_id'>
-        
-                    @foreach ($statuses as $status)
+            
+            <select readonly  id="ranklist" name="ranklist">
+            <option value='1'>Project data is completely inaccurate. No project or project completed.</option>
 
-                      
-                      <option value="{{$status}}">{{$status}}</option>
-                     
-                    @endforeach
-        
-        
-                    </select>
-                    <span class="help-block">
-                        <strong>{{ $errors->has('status_id') ? $errors->first('status_id') : ''}}</strong>
-                        </span>
-                </div>
-            </div>
-        
+            
+<option value="2">Project data is incomplete and / or not useful.</option>
+<option value="3">Project data is accurate but there is no sales / service opportunity.</option>
+<option value='4'>Project data is accurate and there is a possibility of sales / service.</option>
+<option value='5'>Project data is accurate and there is a definite opportunity for sales / service</option>
+</select>
+</div>
 
-        
          <div class="form-group{{ $errors->has('comments') ? ' has-error' : '' }}">
                 <label class="col-md-4 control-label">Comments</label>
                 <div class="col-md-6">
@@ -67,9 +56,15 @@
   </div>
 </div>
 <script>
-$('#rank').on('starrr:change', function(e, value){
-  
-  $("#ranking").val(value);
-})
+  $('#rank').on('starrr:change', function(e, value){
+    
+    $("#ranking").val(value),
+    $('#ranklist').val(value);
+  });
+$('#ranklist').change (function(){
+
+  $("#rank").val(this.value),
+  $('#ranking').val(this.value);
+});
 
 </script>

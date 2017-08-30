@@ -144,7 +144,8 @@ class Project extends Model
           projects.id = person_project.project_id
           
            WHERE 
-           project_lat
+           pr_status is null 
+           and project_lat
                 BETWEEN latpoint  - (r / 69)
                 AND latpoint  + (r / 69)
                AND project_lng
