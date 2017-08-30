@@ -46,17 +46,20 @@
 </p>
 
 @endforeach
+<form method="post" action="{{route('notes.store')}}" name="notesform" >
+{{csrf_field()}}
 
-{{Form::open(['route'=>'notes.store'])}}
 <div>
-{{Form::label('note','Add a Note:')}}
+<label for 'note'>Add a Note:</label>
 <div>
 {{Form::textarea('note')}}
 {{ $errors->first('note') }}
 </div></div>
-{{Form::hidden('lead_id',$lead->id)}}
+<input type="hidden" name="type" value="lead" />
+<input type="hidden" name="related_id" value="{{$lead->id}}" />
+
 <button type="submit" class="btn btn-success">Add New Note</button>
-{{Form::close()}}
+</form>
 </div>
      <div id="map" style="height:300px;width:500px;border:red solid 1px">
 </div>
