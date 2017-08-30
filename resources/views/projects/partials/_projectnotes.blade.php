@@ -1,5 +1,6 @@
 <div class="col-md-8">
-<h1>Project Notes</h1>
+<h4>Project Notes</h4>
+@if(count($project->realtedNotes)>0)
 <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
 <thead>
 <th>Date</th>
@@ -10,6 +11,7 @@
 <tbody>
 
 @foreach ($project->relatedNotes as $note)
+<tr>
 	<td>{{$note->created_at->format('m-d-Y')}}</td>
 	<td>@if($project->owned()  or auth()->user()->hasRole('Admin'))
 		<a href="#" class="note"  id='{{$note->id}}' data-type="textarea" data-pk="1">
@@ -44,9 +46,13 @@
 		
 	@endif
 	</td>
+	</tr>
+	@endforeach
+
+	</tbody>
 	</tbody>
 	</table>
-@endforeach
+@endif
 @if($project->owned())
 	<form method='post' action={{route('notes.store')}} name="noteForm">
 		{{csrf_field()}}
@@ -61,7 +67,7 @@
 		<input type='hidden' name='related_id' value="{{$project->id}}" />
 		<button type="submit" class="btn btn-success">Add New Note</button>
 	</form>
-
+@else
+<div class="alert alert-warning">You need to own this project to add notes</div>
  @endif
  </div>
- 
