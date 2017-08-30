@@ -47,7 +47,7 @@ class Project extends Model
 
     }
     public function owner(){
-      return $this->belongsToMany(Person::class)->withPivot('status');
+      return $this->belongsToMany(Person::class)->withPivot('status','ranking');
     }
    
     public function source(){
@@ -56,7 +56,7 @@ class Project extends Model
 
     public function owned(){
       return $this->belongsToMany(Person::class)
-      ->withPivot('status')
+      ->withPivot('status','ranking')
       ->where('person_id','=',auth()->user()->person()->first()->id)->first();
     }
 

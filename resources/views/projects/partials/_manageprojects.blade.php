@@ -31,4 +31,7 @@ You own this project</p>
           </div>
       </div>
   </form>
+
+      <div id="{{$project->id}}" data-rating="{{$project->owner[0]->pivot->ranking}}" class="starrr" >
+         <span id="count-existing"> {{$project->owner[0]->pivot->ranking}} </span></div>
 @endif
