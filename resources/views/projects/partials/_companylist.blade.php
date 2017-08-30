@@ -45,7 +45,8 @@
 @else
 
 <div class="alert alert-danger">
-@if($project->owner())
+@if(count($project->owner)>0)
+
 <p>Project has been {{$project->owner[0]->pivot->status}} by {{$project->owner[0]->postName()}}</p>
 
 @else
