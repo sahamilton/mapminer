@@ -110,11 +110,12 @@ class ProjectsController extends BaseController
 
     public function closeproject(Request $request,$id){
         // find project
-         $project = $this->project->findOrFail($id)
+         $project = $this->project->findOrFail($id);
         // update status in project
-
+        $project->pr_status = 'closed';
+        $project->save();
         // upate status in person_project
-
+        //$project->person->update();
         // add comment in project_note
 
         return redirect()->route('projects.show',$id);
