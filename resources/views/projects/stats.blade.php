@@ -3,6 +3,7 @@
 
 <div class="container">
 
+
 <h2>Construction Projects Summary</h2>
 <p><a href="{{route('projects.status')}}">See all owned projects</a></p>
 <?php $person = null;?>
@@ -12,12 +13,14 @@
   <thead>
     
     <th>Owner</th>
+    
     @foreach ($statuses as $status)
     @if($status != '')
     <th>{{$status}}</th>
     @endif
     @endforeach
 <th>Total</th>
+<th>Rating</th>
   </thead>
   <tbody>
   <?php $grandTotal =0;?>
@@ -37,6 +40,7 @@
             @endif
     @endforeach
     <td  style="text-align: right">{{$total}}</td>
+    <td  style="text-align: right">{{number_format($project['rating'],1)}}</td>
     <?php $grandTotal = $total + $grandTotal;?>
     </tr>
   @endif
@@ -46,7 +50,7 @@
   <td>Total</td>
    
     @foreach ($statuses as $status)
-            @if($status != '')
+           
             <th style="text-align: right">
             @if(isset($projects['total']['status'][$status]))
             {{$projects['total']['status'][$status]}}
@@ -54,9 +58,10 @@
              </th>
            
 
-            @endif
+        
     @endforeach
 <th style="text-align: right">{{$grandTotal}}</th>
+<th></th>
   </tfoot>
 
 </table>

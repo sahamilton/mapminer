@@ -19,6 +19,7 @@
     <th>PR Status</th>
     
     <th>Total Value ($k)</th>
+    <th>Rating</th>
 
   </thead>
   <tbody>
@@ -39,6 +40,11 @@
     
     </td>
     <td style="text-align:right">{{$project->total_project_value}}</td>
+    <td style="text-align:right">
+    
+    {{number_format($project->owner[0]->pivot->ranking,1)}}
+    
+    </td>
     </tr>
   @endforeach
 

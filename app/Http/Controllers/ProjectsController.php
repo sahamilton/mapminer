@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Excel;
 use App\Branch;
 use App\Project;
+use App\Note;
 use Illuminate\Http\Request;
 
 class ProjectsController extends BaseController
@@ -68,7 +69,6 @@ class ProjectsController extends BaseController
     {
         $statuses = $this->project->statuses;
         $project = $this->project->with('companies','owner','relatedNotes','source')->findOrFail($id);
-     
         $branches = $this->branch->findNearbyBranches($project->project_lat,$project->project_lng,100,$limit=5,$this->userServiceLines);
         
         return response()->view('projects.show',compact('project','statuses','branches'));
@@ -109,23 +109,33 @@ class ProjectsController extends BaseController
     }
 
     public function closeproject(Request $request,$id){
+
         // find project
          $project = $this->project->findOrFail($id);
         // update status in project
         $project->pr_status = 'closed';
         $project->save();
         // upate status in person_project
-        //$project->person->update();
+        $project->owner()->updateExistingPivot(auth()->user()->person()->first()->id,['status'=>$request->get('status_id'),'ranking'=>$request->get('ranking')]);
         // add comment in project_note
-
+        $this->addClosingNote($request);
         return redirect()->route('projects.show',$id);
     }
 
-    public function geocodeProjeccts(){
+    public function geocodeProjects(){
 
 
     }
 
+
+    private function addClosingNote($request){
+        $note = new Note;
+        $note->note = "Project ". $request->get('status_id') .":" .$request->get('comments');
+        $note->type = 'project';
+        $note->related_id = $request->get('project_id');
+        $note->user_id = auth()->user()->id;
+        $note->save();
+    }
     public function findNearbyProjects($distance,$latlng){
 
         $geo =explode(":",$latlng);
@@ -205,6 +215,7 @@ class ProjectsController extends BaseController
     public function projectStats(){
 
         $projects = $this->project->projectStats();
+
         $total = $this->project->projectcount();      
         $owned = count($this->getOwnedProjects());
 
@@ -234,19 +245,29 @@ class ProjectsController extends BaseController
 
     
     private function createStats($projects){
+      
         $person = null;
+
         foreach ($this->project->statuses as $status){
             $personProject['total']['status'][$status] = 0;
         }
         
         foreach ($projects as $project){
+           
             if($project->id != $person){
                 $person = $project->id;
                 $personProject[$project->id]['name'] = $project->firstname . " " . $project->lastname;
                 $personProject[$project->id]['id'] = $project->id;
+            
             }
-            $personProject[$project->id]['status'][$project->status] = $project->count;
-            $personProject['total']['status'][$project->status] =$personProject['total']['status'][$project->status] + $project->count;
+          
+            if($project->status){
+                $personProject[$project->id]['status'][$project->status] = $project->count;
+                $personProject[$project->id]['rating']= $project->rating;
+                $personProject['total']['status'][$project->status] =$personProject['total']['status'][$project->status] + $project->count;
+            }
+           
+            
         }
 
         return $personProject;

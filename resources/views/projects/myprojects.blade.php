@@ -16,6 +16,7 @@
 		<th>PR Status</th>
 		
 		<th>Total Value ($k)</th>
+		<th>Rating</th>
 
 	</thead>
 	<tbody>
@@ -36,10 +37,17 @@
 		@endforeach
 		</td>
 		<td style="text-align:right">{{$project->total_project_value}}</td>
+		<td>
+		@foreach ($project->owner as $owner)
+		{{$owner->pivot->ranking}}
+		
+		@endforeach
+		</td>
 		</tr>
 	@endforeach
 
 	</tbody>
 </table>
 @include('partials._scripts')
+
 @endsection

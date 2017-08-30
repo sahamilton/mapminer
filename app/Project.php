@@ -6,7 +6,7 @@ namespace App;
 class Project extends Model
 {
     public $table="projects";
-    public $statuses = ['','Claimed','Contacted','Closed:Cold', 'Closed:Won'];
+    public $statuses = ['Claimed','Closed:Cold', 'Closed:Won'];
     public $fillable=[ 
            'dodge_repnum',
            'project_title',
@@ -77,7 +77,8 @@ class Project extends Model
     }
 
     public function projectStats(){
-      $query = "select firstname, lastname, persons.id as id ,status, count(status) as count from `persons` inner join `person_project` on `persons`.`id` = `person_project`.`person_id` group by  `person_id`,`status`";
+      $query = "select firstname, lastname, persons.id as id ,status, count(status) as count,avg(ranking) as rating from `persons` inner join `person_project` on `persons`.`id` = `person_project`.`person_id` group by  `person_id`,`status`";
+
       return \DB::select($query);
 
     }

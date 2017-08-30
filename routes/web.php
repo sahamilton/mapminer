@@ -108,11 +108,11 @@ Route::group(['middleware' => 'auth'], function () {
 
 	Route::get('api/mylocalprojects/{distance}/{latLng}', ['as' => 'map.myprojects', 'uses' => 'ProjectsController@findNearbyProjects']);
 	Route::get('projects/{id}/claim',['as'=>'projects.claim','uses'=>'ProjectsController@claimProject']);
-	Route::post('projects/status',['as'=>'projects.changestatus','uses'=>'ProjectsController@changeStatus']);
+	Route::post('project/{id}/close',['as'=>'projects.close','uses'=>'ProjectsController@closeproject']);
 	Route::get('projects/myprojects',['as'=>'projects.myprojects','uses'=>'ProjectsController@myProjects']);
 	Route::get('projects/download',['as'=>'projects.export','uses'=>'ProjectsController@exportMyProjects']);
 
-	Route::post('project/{id}/close',['as'=>'closeproject','uses'=>'ProjectsController@closeproject']);
+	
 	Route::resource('projects', 'ProjectsController',['only' => ['index', 'show']]);
 
 		Route::resource('projectcompany', 'ProjectCompanyController',['only' => ['show']]);
@@ -308,6 +308,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 
 	    Route::get('projects/stats',['as'=>'project.stats','uses'=>'ProjectsController@projectStats']);
 	    Route::get('projects/{id}/owner',['as'=>'project.owner','uses'=>'ProjectsController@ownedProjects']);
+
+	    
 	    #Project Source
 		Route::resource('projectsource','ProjectSourceController');
 	#ServiceLines

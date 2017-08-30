@@ -1,23 +1,32 @@
 <h1>Project Notes</h1>
+<table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
+<thead>
+<th>Date</th>
+<th>Note</th>
+<th>Author</th>
+<th>Actions</th>
+</thead>
+<tbody>
 
 @foreach ($project->relatedNotes as $note)
-	<p>{{$note->created_at->format('m-d-Y')}}...<em>
-	@if($project->owned()  or auth()->user()->hasRole('Admin'))
+	<td>{{$note->created_at->format('m-d-Y')}}</td>
+	<td>@if($project->owned()  or auth()->user()->hasRole('Admin'))
 		<a href="#" class="note"  id='{{$note->id}}' data-type="textarea" data-pk="1">
 		{{$note->note}}</a>
 	@else
 		{{$note->note}}
 	@endif
-</em><br />
-	 -- 
+</td>
+	 <td>
 	 @if(null !==$note->writtenBy->person())
 		 {{$note->writtenBy->person->postName()}}
 	 @else
 		 No longer with company
 	 @endif
-	 </p>
+	 </td>
+	 <td>
 	@if($project->owned()  or auth()->user()->hasRole('Admin'))
-		<br />
+		
 		<a href="{{route('notes.edit',$note->id)}}" title="Edit this note">
 			<i class="glyphicon glyphicon-pencil"></i>
 		</a> | 
@@ -31,16 +40,19 @@
 		           
 
 
-		<hr />
+		
 	@endif
+	</td>
+	</tbody>
+	</table>
 @endforeach
 @if($project->owned())
 	<form method='post' action={{route('notes.store')}} name="noteForm">
 		{{csrf_field()}}
 		<div>
-			{{Form::label('note','Add a Note:')}}
+			<label for ='note'>Add a Note:</label>
 			<div>
-				{{Form::textarea('note')}}
+				<textarea name='note'></textarea>
 				{{ $errors->first('note') }}
 			</div>
 		</div>
@@ -50,3 +62,7 @@
 	</form>
 
  @endif
+ <script>
+ $(document).ready(function() {
+    $('#{{$note->id}}').editable();
+});

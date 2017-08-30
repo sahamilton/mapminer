@@ -1,38 +1,20 @@
 @if(! $project->owned())
   @if(count($project->owner)>0)
-    {{$project->owner[0]->pivot->status}} by {{$project->owner[0]->postName()}}</p>
+    {{$project->owner[0]->pivot->status}} by {{$project->owner[0]->postName()}}
   @else
-  <a href="{{route('projects.claim',$project->id)}}">Claim this project </a>
+  <a href="{{route('projects.claim',$project->id)}}"><button type="button" class="btn btn-primary">Claim this Project</button></a>
 @endif
 @else
-You own this project</p>
-  <form method='post' action="{{route('projects.changestatus')}}">
-  <input type="hidden" name="project_id" value="{{$project->id}}" />
-  {{csrf_field()}}
-      <div class="form-group{{ $errors->has('status)') ? ' has-error' : '' }}">
-          <label class="col-md-2 control-label">Change Status</label>
-          <div class="col-md-2">
-              <select onchange="this.form.submit()" class="form-control" name='status'>
-  
-              @foreach ($statuses as $status))
-                <option 
-                @if($project->owner[0]->pivot->status == $status)
-                selected
-                @endif
-                value="{{$status}}">{{$status}}</option>
-  
-              @endforeach
-  
-  
-              </select>
-              <span class="help-block">
-                  <strong>{{ $errors->has('status') ? $errors->first('status') : ''}}</strong>
-                  </span>
-          </div>
+@if($project->pr_status == 'closed')
+You closed this project on {{$project->updated_at->format('M d, Y')}}
+<div id="rating" data-rating="{{$project->owner[0]->pivot->ranking}}" class="starrr" >
       </div>
-  </form>
- <div class="row"><button type="button" class="btn btn-info " data-toggle="modal" data-target="#myModal">Close Project</button></div>
-      <div id="{{$project->id}}" data-rating="{{$project->owner[0]->pivot->ranking}}" class="starrr" >
-         <span id="count-existing"> {{$project->owner[0]->pivot->ranking}} </span></div>
+@else
+You own this project
+
+ <div class="row"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Close Project</button></div>
+      
          @include ('projects.partials._closeprojectform')
 @endif
+@endif
+</p>
