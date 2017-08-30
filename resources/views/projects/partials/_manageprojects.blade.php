@@ -31,7 +31,8 @@ You own this project</p>
           </div>
       </div>
   </form>
-
+ <div class="row"><button type="button" class="btn btn-info " data-toggle="modal" data-target="#myModal">Close Project</button></div>
       <div id="{{$project->id}}" data-rating="{{$project->owner[0]->pivot->ranking}}" class="starrr" >
          <span id="count-existing"> {{$project->owner[0]->pivot->ranking}} </span></div>
+         @include ('projects.partials._closeprojectform')
 @endif
