@@ -3,7 +3,7 @@
 
 <div class="container">
 
-<h2>{{$projects[0]->owner[0]->postName()}}'s Construction Projects </h2>
+<h2>{{$owner->postName()}}'s Construction Projects </h2>
 
 <p><a href="{{route('project.stats')}}">Return to Projects Summary</a></p>
   <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
@@ -20,6 +20,7 @@
     
     <th>Total Value ($k)</th>
     <th>Rating</th>
+    <td>Actions</td>
 
   </thead>
   <tbody>
@@ -45,6 +46,7 @@
     {{number_format($project->owner[0]->pivot->ranking,1)}}
     
     </td>
+    <td><a href="{{route('project.release',$project->id)}}">Release</a></td>
     </tr>
   @endforeach
 

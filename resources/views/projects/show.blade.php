@@ -13,7 +13,9 @@
 </blockquote>
 <div class="row">
 <p><strong>People Ready Status:</strong>
+
 @can('manage_projects')
+
   @include('projects.partials._manageprojects')
 @else
 @if(count($project->owner)>0)

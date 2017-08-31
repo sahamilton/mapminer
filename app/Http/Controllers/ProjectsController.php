@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Excel;
 use App\Branch;
 use App\Project;
+use App\Person;
 use App\Note;
 use Illuminate\Http\Request;
 
@@ -12,11 +13,13 @@ class ProjectsController extends BaseController
 {
     public $project;
     public $branch;
+    public $person;
 
-    public function __construct(Project $projects, Branch $branch){
+    public function __construct(Project $projects, Branch $branch, Person $person){
 
         $this->project = $projects;
         $this->branch = $branch;
+        $this->person = $person;
         parent::__construct($projects);
     }
 
@@ -171,6 +174,7 @@ class ProjectsController extends BaseController
     }
 
     public function claimProject($id){
+
         $project = $this->project->findOrFail($id);
         $project->owner()->attach(auth()->user()->person()->first()->id,['status'=>'Claimed']);
         return redirect()->route('projects.show',$id);
@@ -206,10 +210,13 @@ class ProjectsController extends BaseController
 
     }
     public function ownedProjects($id){
-        $projects = $this->project->whereHas('owner',function ($q) use($id) {
+        $projects = $this->project
+        ->whereHas('owner',function ($q) use($id) {
             $q->where('id','=',$id);
-        })->with('owner')->get();;
-        return response()->view('projects.ownedBy',compact('projects'));
+        })->with('owner')->get();
+        $owner=$this->person->findOrFail($id);
+        
+        return response()->view('projects.ownedBy',compact('projects','owner'));
     }
    
 
@@ -226,6 +233,15 @@ class ProjectsController extends BaseController
 
     }
 
+
+    public function release($id){
+        $project = $this->project->with('owner')->findOrFail($id);
+        $owner = $project->owner[0]->id;
+        $project->owner()->detach();
+        $project->pr_status = null;
+        $project->save();
+        return redirect()->route('project.owner',$owner);
+    }
     public function exportowned(){
             Excel::create('Projects',function($excel){
             $excel->sheet('Watching',function($sheet) {

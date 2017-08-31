@@ -300,14 +300,15 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 		Route::get('person/export', ['as'=>'person.export', 'uses'=>'PersonsController@export']);
 
 	# Projects
-	    Route::get('projects/import',['as'=>'projects.import','uses'=>'ImportProjectsController@import']);
+		Route::get('projects/import',['as'=>'projects.import','uses'=>'ImportProjectsController@import']);
 		Route::post('projects/import',['as'=>'projects.bulkimport','uses'=>'ImportProjectsController@bulkImport']);
 
 		Route::get('projects/export',['as'=>'projects.exportowned','uses'=>'ProjectsController@exportowned']);
-	   Route::get('projects/status',['as'=>'projects.status','uses'=>'ProjectsController@statuses']);
+		Route::get('projects/status',['as'=>'projects.status','uses'=>'ProjectsController@statuses']);
 
-	    Route::get('projects/stats',['as'=>'project.stats','uses'=>'ProjectsController@projectStats']);
-	    Route::get('projects/{id}/owner',['as'=>'project.owner','uses'=>'ProjectsController@ownedProjects']);
+		Route::get('projects/stats',['as'=>'project.stats','uses'=>'ProjectsController@projectStats']);
+		Route::get('projects/{id}/owner',['as'=>'project.owner','uses'=>'ProjectsController@ownedProjects']);
+		Route::get('projects/{id}/release',['as'=>'project.release','uses'=>'ProjectsController@release']);
 
 	    
 	    #Project Source

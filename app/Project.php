@@ -6,7 +6,7 @@ namespace App;
 class Project extends Model
 {
     public $table="projects";
-    public $statuses = ['Claimed','Closed:Cold', 'Closed:Won'];
+    public $statuses = ['Claimed','Closed'];
     public $fillable=[ 
            'dodge_repnum',
            'project_title',
