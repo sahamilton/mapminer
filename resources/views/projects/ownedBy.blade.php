@@ -46,7 +46,12 @@
     {{number_format($project->owner[0]->pivot->ranking,1)}}
     
     </td>
-    <td><a href="{{route('project.release',$project->id)}}">Release</a></td>
+    <td><a data-href="{{route('projects.release',$project->id)}}" 
+        data-toggle="modal" 
+        data-target="#confirm-delete" 
+        data-title = "{{$project->project_title}}" href="#">
+        <i class="fa fa-trash-o" aria-hidden="true"> </i> 
+        Release Project</a></a></td>
     </tr>
   @endforeach
 
@@ -55,5 +60,6 @@
   
 
 </div>
+@include('projects.partials._release')
 @include('partials._scripts')
 @stop

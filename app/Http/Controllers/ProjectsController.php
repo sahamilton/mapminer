@@ -72,7 +72,10 @@ class ProjectsController extends BaseController
     {
         $statuses = $this->project->getStatusOptions;
 
-        $project = $this->project->with('companies','owner','relatedNotes','source')->findOrFail($id);
+        $project = $this->project
+        ->with('companies','owner','relatedNotes','source')
+        ->whereNull('pr_status')
+        ->findOrFail($id);
         $branches = $this->branch->findNearbyBranches($project->project_lat,$project->project_lng,100,$limit=5,$this->userServiceLines);
         
         return response()->view('projects.show',compact('project','statuses','branches'));
@@ -115,7 +118,7 @@ class ProjectsController extends BaseController
     public function closeproject(Request $request,$id){
 
         // find project
-         $project = $this->project->findOrFail($id);
+        $project = $this->project->findOrFail($id);
         // update status in project
         $project->pr_status = 'closed';
         $project->save();
@@ -240,6 +243,7 @@ class ProjectsController extends BaseController
         $project->owner()->detach();
         $project->pr_status = null;
         $project->save();
+ 
         return redirect()->route('project.owner',$owner);
     }
     public function exportowned(){

@@ -31,6 +31,7 @@ class Project extends Model
            'project_value',
            'total_project_value',
            'value_range',
+           'pr_status',
            
            ];
      public $getStatusOptions =  [1=>'Project data is completely inaccurate. No project or project completed.',

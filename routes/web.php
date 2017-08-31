@@ -308,7 +308,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 
 		Route::get('projects/stats',['as'=>'project.stats','uses'=>'ProjectsController@projectStats']);
 		Route::get('projects/{id}/owner',['as'=>'project.owner','uses'=>'ProjectsController@ownedProjects']);
-		Route::get('projects/{id}/release',['as'=>'project.release','uses'=>'ProjectsController@release']);
+		Route::post('projects/{id}/release',['as'=>'projects.release','uses'=>'ProjectsController@release']);
 
 	    
 	    #Project Source
