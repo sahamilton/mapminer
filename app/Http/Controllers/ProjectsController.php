@@ -243,7 +243,6 @@ class ProjectsController extends BaseController
         $project->owner()->detach();
         $project->pr_status = null;
         $project->save();
- 
         return redirect()->route('project.owner',$owner);
     }
     public function exportowned(){
