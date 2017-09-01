@@ -16,11 +16,11 @@
  
    @foreach($notes as $note)
     <tr>  
-	
-    <td>{{$note->relatesTo->company_id}}</td>
-    <td>{{$note->relatesTo->company->companyname}}</td>
+
+    <td>{{$note->relatesToLocation->company_id}}</td>
+    <td>{{$note->relatesToLocation->company->companyname}}</td>
     <td>{{$note->location_id}}</td>
-    <td>{{$note->relatesTo->businessname}}</td>
+    <td>{{$note->relatesToLocation->businessname}}</td>
     <td>{{$note->created_at}}</td>
     <td>{{$note->note}}</td>
 
