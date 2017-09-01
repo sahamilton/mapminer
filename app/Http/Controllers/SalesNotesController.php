@@ -60,10 +60,14 @@ class SalesNotesController extends BaseController {
 	 *
 	 * @return Response
 	 */
-	public function create()
+	public function create(Request $request)
 	{
-		
-		return response()->view('salesnotes.create');
+		$fields = Howtofield::orderBy('group')->get();
+		$groups = Howtofield::select('group')->distinct()->get();
+		if($request->has('company')){
+			$company = $this->company->findOrFail($request->get('company'));
+		}
+		return response()->view('salesnotes.create',compact('company','groups','fields'));
 	}
 
 	
