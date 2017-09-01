@@ -7,29 +7,40 @@
   <thead>
     <th>Company</th>
     <th>Sales Notes</th>
+    <th>Servicelines</th>
     <th>Action</th>
   </thead>
   <tbody>
 
-@foreach ($salesnotes as $salesnote)
+@foreach ($companies as $company)
 
- @if($salesnote['salesnotes']=='Yes')
+ @if(count($company->salesnotes)>0)
                 <tr class='success'>
                  @else
                <tr class='danger'>
                 @endif
 
-<td> {{$salesnote['name']}} </td>
+<td> <a href="{{route('company.show',$company->id)}}">{{$company->companyname}}</a> </td>
 
-<td> {{$salesnote['salesnotes']}}</td>
+<td>  @if(count($company->salesnotes)>0)
+Yes
+@else
+No
+@endif
+</td>
+<td>
+@foreach ($company->serviceline as $serviceline)
+<li>{{$serviceline->ServiceLine}}</li>
+@endforeach
+</td>
 <td>
   <div class="btn-group">
-      @if($salesnote['salesnotes']=='Yes')
-        <a href="{{route('salesnotes.edit',$salesnote['id'])}}"
-        title=" Edit {{trim($salesnote['name'])}}'s Sales Notes">
+       @if(count($company->salesnotes)>0)
+        <a href="{{route('salesnotes.edit',$company->id)}}"
+        title=" Edit {{trim($company->companyname)}}'s Sales Notes">
       @else
-        <a href="{{route('salesnotes.create','company='.$salesnote['id'])}}"
-        title=" Create {{trim($salesnote['name'])}}'s Sales Notes">
+        <a href="{{route('salesnotes.create','company='.$company->id)}}"
+        title=" Create {{trim($company->name)}}'s Sales Notes">
       @endif
       <button type="button" class="btn btn-success" >
       <i class="glyphicon glyphicon-pencil" ></i></button>   

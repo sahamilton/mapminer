@@ -30,29 +30,14 @@ class SalesNotesController extends BaseController {
 	 
 	public function index($companyid = NULL)
 	{
-		
-		$data = $this->company->with('salesNotes')->get();
-		$n=0;
-		foreach($data as $company){
-			$salesnotes[$n]['name']= $company->companyname;
-			$salesnotes[$n]['id']= $company->id;
-			if(isset($company->salesNotes[0])){
-				$salesnotes[$n]['salesnotes']= 'Yes';
-				
-			}else{
-				$salesnotes[$n]['salesnotes']= 'No';
-			}
-			$n++;
-			
-		}
-		
 		if(isset($companyid)) {
 			return redirect()->route('salesnotes',$companyid);
-		}else{
-			$companies = $this->company->orderBy('companyname')->pluck('companyname','id');
-			return response()->view('salesnotes.index',compact('companies','salesnotes'));
-			
 		}
+		$companies = $this->company->with('salesNotes','serviceline')
+		->orderBy('companyname')->get();
+		return response()->view('salesnotes.index',compact('companies'));
+			
+
 	}
 
 	/**
