@@ -142,7 +142,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 		Route::get('mynotes',['as'=>'mynotes','uses'=>'NotesController@mynotes']);
 		
-		Route::get('exportlocationnotes/{companyID}', ['as'=>'exportlocationnotes','uses'=>'PersonsController@exportManagerNotes']);
+		Route::get('exportlocationnotes/{companyID}', ['as'=>'exportlocationnotes','uses'=>'ManagersController@exportManagerNotes']);
 		Route::resource('notes','NotesController');	
 	#Geocoding
 		

@@ -20,7 +20,9 @@
                <tr class='danger'>
                 @endif
 
-<td> <a href="{{route('company.show',$company->id)}}">{{$company->companyname}}</a> </td>
+<td> 
+<a href="{{route('company.show',$company->id)}}">{{$company->companyname}}</a>
+</td>
 
 <td>  @if(count($company->salesnotes)>0)
 Yes
