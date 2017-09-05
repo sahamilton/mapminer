@@ -72,7 +72,7 @@ class WatchController extends BaseController {
 		$this->delete($id);
 		
 
-		return redirect()->route('watch');
+		return redirect()->route('watch.index');
 	}
 	
 	/**
@@ -83,9 +83,13 @@ class WatchController extends BaseController {
 	 */
 	
 	public function delete($id) {
-		$watch = $this->watch->findOrFail($id);
-		$watch->destroy($id);
-		return redirect()->route('watch');
+		
+		$watch = $this->watch->find($id);
+		
+		if($watch && $watch->destroy($id)){
+			return redirect()->route('watch.index')->with('success','Watch item deleted');
+		}
+		return redirect()->route('watch.index')->with('error','Unable to delete that item');
 	}
 	/**
 	 * Show watch list for user.
