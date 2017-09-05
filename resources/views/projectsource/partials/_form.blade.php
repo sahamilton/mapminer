@@ -12,7 +12,7 @@
 <!-- Description -->
 <div class="form-horizontal{{ $errors->has('description') ? ' has-error' : '' }}">
     <label class="col-md-2 control-label">Description</label>
-    <div class="input-group input-group-lg " style="margin-bottom:10px;">
+    <div class="input-group input-group-lg" style="margin-bottom:10px;">
         <textarea required class="form-control" name='description' title="description">{{ old('description', isset($projectsource) ? $projectsource->description : '')}}</textarea>
 
         <span class="help-block">

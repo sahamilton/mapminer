@@ -1,10 +1,10 @@
 @extends('site/layouts/maps')
 @section('content')
 
-<h4>Branches managed by {{$people->postName()}}</h4>
-<p>{{$people->userdetails->email}}</p>
+<h4>Branches managed by {{$data['people']->postName()}}</h4>
+<p>{{$data['people']->userdetails->email}}</p>
 <p>
-<a href="{{route('person.show',$people->id)}}">
+<a href="{{route('person.show',$data['people']->id)}}">
 <i class="glyphicon glyphicon-th-list"></i> List View</a>
 </p>	
  <div id="store-locator-container">
@@ -23,7 +23,7 @@
   
     <script>
 	  $(function() {
-          $('#map-container').storeLocator({'slideMap' : false, 'defaultLoc': true,'defaultLat': '{{$people->manages[0]->lat}}', 'defaultLng' : '{{$people->manages[0]->lng}}', 'dataLocation' : "{{route('managed.branchmap',$people->id)}}",'zoomLevel': 7, 'infowindowTemplatePath' : '{{asset('maps/templates/infowindow-branch.html')}}','listTemplatePath' : '{{asset('maps/templates/info-list-description.html')}}'} );
+          $('#map-container').storeLocator({'slideMap' : false, 'defaultLoc': true,'defaultLat': '{{$data['people']->manages[0]->lat}}', 'defaultLng' : '{{$data['people']->manages[0]->lng}}', 'dataLocation' : "{{route('managed.branchmap',$data['people']->id)}}",'zoomLevel': 7, 'infowindowTemplatePath' : '{{asset('maps/templates/infowindow-branch.html')}}','listTemplatePath' : '{{asset('maps/templates/info-list-description.html')}}'} );
         });
     </script>
 @stop
