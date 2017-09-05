@@ -54,6 +54,7 @@ class GeoCodingController extends BaseController {
 
 		$watchlist = array();
 		$data['vertical'] = NULL;
+		
 		$data = $this->getViewData($data);
 
 		$filtered = $this->location->isFiltered(['companies','locations'],['vertical','business','segment'],NULL);
@@ -182,6 +183,7 @@ class GeoCodingController extends BaseController {
 	 * @return view	 */
 	 
 	public function getMyLocation(Request $request) {
+
 		$filtered = $this->location->isFiltered(['locations'],['business','segment'],NULL);
 
 		if($request->has('lat') && $request->has('lng')) {

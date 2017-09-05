@@ -10,10 +10,11 @@
 	</thead>
 	<tbody>
 		@foreach($data['result'] as $row)
+		
 			<tr>  
 
 				<td><a href="{{route('branches.show',$row->branchid)}}">{{$row->branchname}}</a></td>
-				<td>{{$row->servicelines}}</td>
+				<td><!--serviceline--></td>
 				<td>{{$row->street}}</td>
 				<td>{{$row->city}}</td>
 				<td>{{$row->state}}</td>
