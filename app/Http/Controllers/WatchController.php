@@ -168,7 +168,7 @@ class WatchController extends BaseController {
 	
 	public function watchmap(){
 		$locations = $this->getMyWatchList(auth()->user()->id);
-		
+
 		$content = view('watch.watchlistxml', compact('locations'));
         return response($content, 200)
             ->header('Content-Type', 'text/xml');	
