@@ -21,7 +21,8 @@
 	@include('projects.projectlist')
 @else
     @include('maps.accountlist')
-@endif    
+@endif 
+   
 @include('partials/_scripts')
 
 @stop

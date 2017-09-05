@@ -1,4 +1,5 @@
-<table id='sorttable' class ='table table-bordered table-striped table-hover dataTable'><thead>
+<table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
+
 	<thead>
 		<th>Branch Name</th>
 		<th>Service Line</th>
@@ -10,11 +11,11 @@
 	</thead>
 	<tbody>
 		@foreach($data['result'] as $row)
-		
+
 			<tr>  
 
 				<td><a href="{{route('branches.show',$row->branchid)}}">{{$row->branchname}}</a></td>
-				<td><!--serviceline--></td>
+				<td>{{$row->servicelines}}</td>
 				<td>{{$row->street}}</td>
 				<td>{{$row->city}}</td>
 				<td>{{$row->state}}</td>
