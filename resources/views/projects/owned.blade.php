@@ -16,6 +16,7 @@
 		<th>Stage</th>
 		<th>PR Status</th>
 		<th>Owned By</th>
+		<th>Ranking</th>
 		<th>Total Value ($k)</th>
 
 	</thead>
@@ -37,6 +38,8 @@
 		{{$owner->pivot->status}}
 		</td><td>
 		{{$owner->postName()}}
+		</td><td>
+		{{$owner->pivot->ranking}}
 		@endforeach
 		</td>
 		<td style="text-align:right">{{$project->total_project_value}}</td>
