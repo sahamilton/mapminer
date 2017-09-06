@@ -27,7 +27,7 @@
 
 @foreach ($sources as $source)
 <tr>
- <td><a href = "{{route('project.stats',$source->id)}}">{{$source->source}}</a></td>
+ <td><a href = "{{route('project.stats')."?id=".$source->id}}">{{$source->source}}</a></td>
  <td>{{$source->reference}}</td>
  <td>{{$source->description}}</td>
  <td>{{$source->datefrom->format('m/d/Y')}}</td>

@@ -267,8 +267,8 @@ class ProjectsController extends BaseController
 
 
     }
-    public function statuses(){
-            $projects = $this->getOwnedProjects();
+    public function statuses($id=null){
+            $projects = $this->getOwnedProjects($id);
 
             return response()->view('projects.owned',compact('projects'));
     }
@@ -310,9 +310,12 @@ class ProjectsController extends BaseController
         })->get();
     }
 
-    private function getOwnedProjects(){
-
-        return $this->project->has('owner')->get();
+    private function getOwnedProjects($id=null){
+        if($id){
+            return $this->project->where('project_source_id','=',$id)
+            ->with('source')->has('owner')->get();
+        }
+        return $this->project->has('owner')->with('source')->get();
         
     }
 

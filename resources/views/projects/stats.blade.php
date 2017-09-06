@@ -18,6 +18,7 @@
 
 
 <p><a href="{{route('projects.status')}}">See all owned projects</a></p>
+<p><a href="{{route('projectsource.index')}}">See all project sources</a></p>
 <?php $person = null;?>
 <p><strong>Total Projects:</strong>{{number_format($total[0]->total,0)}}</p>
 <p><strong>Claimed / Worked Projects:</strong>{{$owned}}</p>
