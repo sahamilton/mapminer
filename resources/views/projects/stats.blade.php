@@ -3,17 +3,27 @@
 
 <div class="container">
 
-
 <h2>Construction Projects Summary</h2>
+
+<form method="get" action ="{{route('project.stats')}}" >
+
+<select name="id" onchange="this.form.submit()">
+<option @if(! isset($source)) selected @endif value="">All Sources</option>
+@foreach ($sources as $key=>$projectsource)
+<option value='{{$key}}' @if(isset($source) && $projectsource==$source) selected @endif >{{$projectsource}}</option>
+
+@endforeach
+</select>
+</form>
+
+
 <p><a href="{{route('projects.status')}}">See all owned projects</a></p>
 <?php $person = null;?>
 <p><strong>Total Projects:</strong>{{number_format($total[0]->total,0)}}</p>
 <p><strong>Claimed / Worked Projects:</strong>{{$owned}}</p>
 <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
   <thead>
-    
     <th>Owner</th>
-    
     @foreach ($statuses as $status)
     @if($status != '')
     <th>{{$status}}</th>

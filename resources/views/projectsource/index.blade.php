@@ -18,19 +18,25 @@
       <th>Date To</th>
       <th>Status</th>
       <th>Count</th>
+      <th>Claimed</th>
+      <th>Closed</th>
+      <th>Avg Ranking</th>
       <th>Action</th>
     </thead>
     <tbody>
 
 @foreach ($sources as $source)
 <tr>
- <td>{{$source->source}}</td>
+ <td><a href = "{{route('project.stats',$source->id)}}">{{$source->source}}</a></td>
  <td>{{$source->reference}}</td>
  <td>{{$source->description}}</td>
  <td>{{$source->datefrom->format('m/d/Y')}}</td>
  <td>{{$source->dateto->format('m/d/Y')}}</td>
  <td>{{$source->status}}</td>
- <td>{{number_format(count($source->projects),0)}}</td>
+ <td>{{number_format($stats[$source->id]['count'],0)}}</td>
+ <td>{{$stats[$source->id]['statuses']['Claimed']}}</td>
+ <td>{{$stats[$source->id]['statuses']['Closed']}}</td>
+ <td>{{$stats[$source->id]['ranking']}}</td>
  <td class="col-md-2">
     
 

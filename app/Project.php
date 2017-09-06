@@ -84,9 +84,23 @@ class Project extends Model
       return \DB::select('select count(`id`) as total from projects');
     }
 
-    public function projectStats(){
-      $query = "select firstname, lastname, persons.id as id ,status, count(status) as count,avg(ranking) as rating from `persons` inner join `person_project` on `persons`.`id` = `person_project`.`person_id` group by  `person_id`,`status`";
+    public function projectStats($id=null){
+     
+      if($id){
+        $query="select source,firstname, lastname, persons.id as id ,person_project.status as pstatus, count(person_project.status) as count,avg(ranking) as rating 
+        from `persons` ,`person_project`, `projects`, `projectsource` 
+        where `persons`.`id` = `person_project`.`person_id` 
+        and `person_project`.`project_id` = `projects`.`id` 
+        and `projects`.`project_source_id` = `projectsource`.`id` 
+        and `projectsource`.`id` = 1 
+        group by `person_id`,`pstatus`";
+      }else{
+         $query="select firstname, lastname, persons.id as id ,person_project.status as pstatus, count(person_project.status) as count,avg(ranking) as rating 
+         from `persons` ,`person_project`
+         where `persons`.`id` = `person_project`.`person_id` 
+         group by `person_id`,`pstatus`";
 
+      }
       return \DB::select($query);
 
     }

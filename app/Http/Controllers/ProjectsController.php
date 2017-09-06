@@ -6,6 +6,7 @@ use Excel;
 use App\Branch;
 use App\Project;
 use App\Person;
+use App\Projectsource;
 use App\Note;
 use Illuminate\Http\Request;
 
@@ -14,12 +15,14 @@ class ProjectsController extends BaseController
     public $project;
     public $branch;
     public $person;
+    public $sources;
 
-    public function __construct(Project $projects, Branch $branch, Person $person){
+    public function __construct(Project $projects,Branch $branch, Person $person, Projectsource $sources){
 
         $this->project = $projects;
         $this->branch = $branch;
         $this->person = $person;
+        $this->sources = $sources;
         parent::__construct($projects);
     }
 
@@ -223,16 +226,23 @@ class ProjectsController extends BaseController
     }
    
 
-    public function projectStats(){
-
-        $projects = $this->project->projectStats();
-
+    public function projectStats(Request $request){
+        if($request->has('id')){
+            $id = $request->get('id');
+        }else{
+            $id = null;
+        }
+        $projects = $this->project->projectStats($id);
+        if($id){
+           $source = $projects[0]->source; 
+        }
         $total = $this->project->projectcount();      
         $owned = count($this->getOwnedProjects());
-
+        $sources = $this->sources->pluck('source','id');
+        
         $projects = $this->createStats($projects); 
         $statuses = $this->project->statuses;
-        return response()->view('projects.stats',compact('projects','statuses','total','owned'));
+        return response()->view('projects.stats',compact('projects','statuses','total','owned','source','sources'));
 
     }
 
@@ -281,10 +291,10 @@ class ProjectsController extends BaseController
 
             }
           
-            if($project->status){
-                $personProject[$project->id]['status'][$project->status] = $project->count;
+            if($project->pstatus){
+                $personProject[$project->id]['status'][$project->pstatus] = $project->count;
                 $personProject[$project->id]['rating']= $project->rating;
-                $personProject['total']['status'][$project->status] =$personProject['total']['status'][$project->status] + $project->count;
+                $personProject['total']['status'][$project->pstatus] =$personProject['total']['status'][$project->pstatus] + $project->count;
             }
            
             

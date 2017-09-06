@@ -5,13 +5,15 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\ProjectSource;
 use Carbon\Carbon;
-
+use App\Project;
 use App\Http\Requests\ProjectSourceRequest;
 class ProjectSourceController extends Controller
 {
     public $projectsource;
-    public function __construct(ProjectSource $projectsource){
+    public $project;
+    public function __construct(ProjectSource $projectsource,Project $project){
         $this->projectsource = $projectsource;
+        $this->project = $project;
     }
 
     /**
@@ -22,8 +24,11 @@ class ProjectSourceController extends Controller
     public function index()
     {
        
-        $sources = $this->projectsource->with('projects')->get();
-        return response()->view('projectsource.index',compact('sources'));
+        $sources = $this->projectsource->get();
+
+        $stats = $this->getStats($sources);
+
+        return response()->view('projectsource.index',compact('sources','stats'));
     }
 
     /**
@@ -115,5 +120,45 @@ class ProjectSourceController extends Controller
         }
          return redirect()->route('projectsource.index')
             ->with('error','Unable to delete Project Source');
+    }
+
+    private function getStats($sources){
+        foreach ($sources as $source){
+            $stats[$source->id]['count'] = $source->projects()->count();
+            $owned = $source->projects()->has('owner')->with('owner')->get();
+            $stats[$source->id]['statuses']= $this->getStatuses($owned);
+            $stats[$source->id]['ranking']= $this->getRanking($owned);
+            $stats[$source->id]['owned'] = $owned->count();
+
+        }
+    return $stats;
+        
+    }
+    private function getRanking($owned){
+        $data['ranking']=0;
+        $count=0;
+        foreach ($owned as $project){
+            if(isset($project->owner->first()->pivot->ranking)){
+                $count++;
+                $data['ranking']= $data['ranking'] + $project->owner->first()->pivot->ranking;
+            }
+        }
+        if($count>0){
+            return $data['ranking'] / $count;
+        }
+        return $data['ranking'];
+        
+    }
+
+    private function getStatuses($owned){
+        foreach ($this->project->statuses as $status){
+            $data[$status] = 0;
+        }
+        
+        foreach ($owned as $project){
+
+            $data[$project->owner->first()->pivot->status]++;
+        }
+        return $data;
     }
 }
