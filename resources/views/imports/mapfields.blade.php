@@ -2,7 +2,7 @@
 @section('content')
 
 <div class="container">
-
+<h2>@if(isset($title)) {{$title}} @endif</h2>
 <form method="post" 
 	action ="{{route('imports.mapfields')}}" 
 	name = "mapfields">
@@ -14,15 +14,16 @@
 <th colspan='3'>Example Data</th>
 </thead>
 <tbody>
-        @foreach ($fields[0] as $key=>$field) 
 
+        @foreach ($fields[0] as $key=>$field) 
+            @if(! in_array($field,$skip))
         <tr>
             <td>
             {{$field}}
             </td>
             <td>
             
-            <select name="field[{{$field}}]">
+            <select name="fields[{{$field}}]">
                 <option value="@ignore">ignore</option>
                @foreach ($columns as $column) 
                    @if(! in_array($column->Field,$skip))
@@ -50,19 +51,19 @@
             </td>
 
         </tr>
+        @endif
         @endforeach 
+
 </tbody>
 </table>
 <!-- / File location -->
 <input type="submit" class="btn btn-success" value="Map Fields" />
-<input type="hidden" name="filename" value="{{$data['file']}}" />
+<input type="hidden" name="filename" value="{{$data['filename']}}" />
 <input type="hidden" name="table" value="{{$data['table']}}" />
-@if(isset($source))
-<input type="hidden" name="projectsource" value="{{$source}}" />
-@endif
-@if(isset($company_id))
-<input type="hidden" name="company_id" value="{{$company_id}}" />
-@endif
+@foreach ($data['additionaldata'] as $key=>$value)
+<input type="hidden" name="additionaldata[{{$key}}]" value="{{$value}}" />
+@endforeach
+<input type="hidden" name="type" value="{{$data['type']}}" />
 </form>
 </div>
 

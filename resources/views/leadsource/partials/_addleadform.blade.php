@@ -1,11 +1,11 @@
 <!-- Import file -->
 <legend>Either Batch Import from Spreadsheet:</legend>
-<div class="form-group{{ $errors->has('file') ? ' has-error' : '' }}">
+<div class="form-group{{ $errors->has('upload') ? ' has-error' : '' }}">
      <label for="location" >Upload File Location</label>
      
-         <input  type="file" class="form-control" name='file' id='file' description="file" 
-         value="{{ old('file')}}">
-         <strong>{!! $errors->first('file', '<p class="help-block">:message</p>') !!}</strong>
+         <input  type="file" class="form-control" name='upload' id='upload' description="upload" 
+         value="{{ old('upload')}}">
+         <strong>{!! $errors->first('upload', '<p class="help-block">:message</p>') !!}</strong>
      </div>
  </div>
 <legend>Or Enter Individual Lead:</legend>

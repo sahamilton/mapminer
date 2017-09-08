@@ -29,7 +29,7 @@ class Location extends Model {
 	
 	public function relatedNotes() {
 
-		return $this->hasMany(Note::class,'related_id')->with('writtenBy');
+		return $this->hasMany(Note::class,'related_id')->where('type','=','location')->with('writtenBy');
 
 	}
 	

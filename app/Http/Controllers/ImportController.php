@@ -5,43 +5,31 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Project;
-use App\Import;
+use App\Imports;
+use App\Model;
 use App\Http\Requests\ImportFormRequest;
 
-class ImportController extends Controller
+class ImportController extends BaseController
 {
-
-    public function __construct(){
+    public $userServiceLines;
+    public function __construct(Model $model){
         
-        
+        parent::__construct($model);
     }
 
     
 
-    public function import(ImportFormRequest $request) {
-        
-        $data = $this->uploadProjects($request);
-        $fields = $this->getFileFields($data);
-        
-        $source = $request->get('projectsource');
 
-        $columns = $this->project->getTableColumns($data['table']);
-        $skip = ['id','created_at','updated_at','serviceline_id','project_source_id','pr_status'];
-        return response()->view('imports.mapfields',compact('columns','fields','data','source','skip'));
-    }
-    
-
-    private function uploadfile($request){
-        $file = $request->file('upload')->store('public/uploads'); 
+    protected function uploadfile($file){
+        $file = $file->store('public/uploads'); 
         $data['file'] = $file;
         $data['linkfile'] = asset(\Storage::url($file));
-        $data['basepath'] = base_path()."/public".\Storage::url($file);
-        $data['table'] = $request->get('table');
+        $data['filename'] = base_path()."/public".\Storage::url($file);
         return $data;
     }
 
-    private function getFileFields($data){
-        $content = fopen($data['basepath'], "r");
+    protected function getFileFields($data){
+        $content = fopen($data['filename'], "r");
         $row=1;
         for ($i=0; $i<10; $i++){
             $fields[$i]= fgetcsv($content);
@@ -50,17 +38,41 @@ class ImportController extends Controller
 }
 
     public function mapfields(Request $request){
-        $data = $this->getData($request);
-        
+
+        $data = $this->getData($request);      
+        $import = new Imports($data);
+
+        if($import->import()) {
+            return $this->returnToOrigin($data);
+
+        }
         
     }
+    private function returnToOrigin($data){
+       
+        switch ($data['type']){
+            case 'projects':
+                return redirect()->route('projectsource.index')->with('success','Projects imported');
+            break;
+
+            case 'locations':
+                return redirect()->route('company.show',$data['addtionaldata']['company_id'])->with('success','Locations imported');
+            break;
+
+            case 'branches':
+                return redirect()->route('branches.index')->with('success','Branches imported');
+            break;
+
+            case 'leads':
+                return redirect()->route('leadsource.index')->with('success','Leads imported');
+            break;
+        }
+    }
     private function getData($request){
-        $data['table']=$request->get('table');
-        $data['filename'] = base_path()."/public".\Storage::url($request->get('filename'));
-        $data['linkfile'] = asset(\Storage::url($request->get('filename')));
-        $data['table'] = $request->get('table');
-        $data['source_id'] = $request->get('projectsource');
-        $data['fields'] = implode(",",$request->get('field'));
+        $data = $request->all();
+        $data['fields'] = array_values($request->get('fields'));
+
+
         return $data;
     }
     

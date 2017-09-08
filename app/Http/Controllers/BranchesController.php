@@ -167,24 +167,21 @@ class BranchesController extends BaseController {
 					    $q->whereIn('serviceline_id',$this->userServiceLines);
 
 					})
-		->with('servicedBy')
 		->find($branch->id);
 
 		$filtered = $this->branch->isFiltered(['companies'],['vertical']);
 		
 		// in case of null results of manager search
 	
-		$data['manager'] = !isset($data['branch']->person_id) ? array() : $this->person->find($data['branch']->person_id);
 
 		$data['urllocation'] ="api/mylocalaccounts";
 		$data['title'] ='National Account Locations';
 		$data['company']=NULL;
-		$data['companyname']=NULL;
+		//$data['companyname']=NULL;
 		$data['latlng'] = $data['branch']->lat.":".$data['branch']->lng;
 		$data['distance'] = '10';
-
-
-		return response()->view('branches.show',compact('data','servicelines','filtered'));
+		$roles = \App\Role::pluck('name','id');
+		return response()->view('branches.show',compact('data','servicelines','filtered','roles'));
 	}
 	
 	public function showSalesTeam($id)
@@ -407,9 +404,9 @@ class BranchesController extends BaseController {
 	public function getMyBranches($id)
 	{	
 		
-		$people = $this->person->with('manages','userdetails')->findOrFail($id);
+		$data['people'] = $this->person->with('manages','userdetails')->findOrFail($id);
 	
-		return response()->view('persons.showmap', compact('people','centerpos'));
+		return response()->view('persons.showmap', compact('data','centerpos'));
 	}
 	
 	
@@ -447,13 +444,7 @@ class BranchesController extends BaseController {
 		
 	}
 	
-	public function import(Request $request)
-	{
-
-		$servicelines = $this->serviceline->whereIn('id',$this->userServiceLines)
-				->pluck('ServiceLine','id');
-		return response()->view('branches.import', compact('servicelines'));
-	}
+	
 
 	 
 	public function branchImport(BranchImportFormRequest $request) {

@@ -8,7 +8,13 @@
         <p>{{$data['branch']->street}}{{$data['branch']->address2}}<br/>
         {{$data['branch']->city}},{{$data['branch']->state}} {{$data['branch']->zip}}<br />
         {{$data['branch']->phone}}</p>
-       
+        <h4>Branch Team</h4>
+        @foreach ($data['branch']->relatedPeople()->get() as $people)
+
+        <p><strong>{{$roles[$people->pivot->role_id]}}</strong>: {{$people->postName()}} </p>
+
+        @endforeach
+      <!-- 
         <p>Branch managed by
         @if(isset($data['manager']->id)) 
          <a title = "Email {{$data['manager']->firstname}}" 
@@ -23,6 +29,7 @@
         @endforeach
         </p>
         @endif
+        -->
         <p>Branch service radius: {{$data['branch']->radius}} miles.</p>
         <h4>Service Lines:</h4>
         <ul style="margin-left:40px">

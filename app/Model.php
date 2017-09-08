@@ -5,6 +5,15 @@ class Model extends \Eloquent {
 	use Filters;
 public $userServiceLines;
 
+public function getTableColumns($table=null){
+	
+     		if(! $table){
+     			$table=$this->table;
+     		}
+     
+   			return \DB::select( \DB::raw('SHOW COLUMNS FROM '.$table.''));
+		}
+
 public function isValid($data)
 	{
 		$validation = Validator::make($data, static::$rules);
@@ -37,7 +46,7 @@ public function checkImportFileType($rules){
 		
 	}
 		
-public function _import_csv($filename, $table,$fields)
+/*public function _import_csv($filename, $table,$fields)
 	{
 	$filename = str_replace("\\","/",$filename);
 
@@ -54,7 +63,7 @@ public function _import_csv($filename, $table,$fields)
 		}
 	
 	}
-	
+	*/
 	
 	
 	public function rawQuery($query,$error,$type){

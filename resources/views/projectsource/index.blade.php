@@ -48,7 +48,7 @@
         <ul class="dropdown-menu" role="menu">
         
         <li><a href="{{route('projectsource.edit',$source->id)}}"><i class="fa fa-pencil" aria-hidden="true"> </i>Edit {{$source->source}}</a></li>
-
+     
         <li><a data-href="{{route('projectsource.destroy',$source->id)}}" 
         data-toggle="modal" 
         data-target="#confirm-delete" 

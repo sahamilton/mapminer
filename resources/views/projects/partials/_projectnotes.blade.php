@@ -21,7 +21,7 @@
 	@endif
 </td>
 	 <td>
-	 @if(null !==$note->writtenBy->person())
+	 @if(null !==$note->writtenBy)
 		 {{$note->writtenBy->person->postName()}}
 	 @else
 		 No longer with company

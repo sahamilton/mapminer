@@ -262,11 +262,14 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
     	Route::get('emails/{id}/recipients',['as'=>'emails.recipients','uses'=>'EmailsController@recipients']);
     	Route::post('emails/send',['as'=>'emails.send','uses'=>'EmailsController@sendEmail']);
     	Route::resource('emails','EmailsController');
-
+    # Imports 
+    	Route::post('/import/mapfields',['as'=>'imports.mapfields','uses'=>'ImportController@mapfields']);
 
 	#Locations
-		
-		Route::post('locations/bulkimport', ['as'=>'locations.import', 'uses'=>'LocationsController@bulkImport']);
+		Route::get('locations/import', ['as'=>'locations.importfile', 'uses'=>'LocationsImportController@getfile']);
+		Route::post('locations/bulkimport', ['as'=>'locations.import', 'uses'=>'LocationsImportController@import']);
+
+
 		Route::get('api/geocode',['as'=>'api.geocode','uses'=>'LocationsController@bulkGeoCodeLocations']);
 		Route::get('locations/{companyID}/create',['as'=>'company.location.create','uses'=>'LocationsController@create']);
 		Route::resource('locations','LocationsController',['except'=>['show']]);
@@ -281,12 +284,11 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 		Route::resource('company','CompaniesController',['except' => ['index', 'show']]);
 	
 	#Branches
-		Route::get('branches/import', ['as'=>'branches.import', 'uses'=>'BranchesController@import']);
-		Route::get('branches/export', ['as'=>'branches.export', 'uses'=>'BranchesController@export']);
-		Route::post('branches/bulkimport', ['as'=>'branches.bulkimport', 'uses'=>'BranchesController@branchImport']);
+		Route::get('branches/import', ['as'=>'branches.importfile', 'uses'=>'BranchesImportController@getFile']);
+		Route::post('branches/bulkimport', ['as'=>'branches.import', 'uses'=>'BranchesImportController@import']);
 		Route::get('geocode', ['as'=>'branches.geocode', 'uses'=>'BranchesController@geoCodeBranches']);
 		Route::get('branchmap', ['as'=>'branches.genmap', 'uses'=>'BranchesController@rebuildBranchMap']);
-		
+		Route::get('branches/export', ['as'=>'branches.export', 'uses'=>'BranchesController@export']);
 		Route::resource('branches','BranchesController',['except'=>['index','show']]);
 		
 		
@@ -300,8 +302,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 		Route::get('person/export', ['as'=>'person.export', 'uses'=>'PersonsController@export']);
 
 	# Projects
-		Route::get('projects/import',['as'=>'projects.import','uses'=>'ImportProjectsController@import']);
-		Route::post('projects/import',['as'=>'projects.bulkimport','uses'=>'ImportProjectsController@bulkImport']);
+		Route::get('projects/import',['as'=>'projects.import','uses'=>'ProjectsImportController@getFile']);
+		Route::post('projects/import',['as'=>'projects.bulkimport','uses'=>'ProjectsImportController@import']);
 
 		Route::get('projects/export',['as'=>'projects.exportowned','uses'=>'ProjectsController@exportowned']);
 		Route::get('projects/status',['as'=>'projects.status','uses'=>'ProjectsController@statuses']);
@@ -334,7 +336,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 		Route::post('leadsource/{id}/email',['as'=>'sendleadsource.message','uses'=>'LeadsEmailController@email']);
 		Route::get('leadsource/{id}/assign',['as'=>'leadsource.assign','uses'=>'LeadSourceController@assignLeads']);
 		Route::get('leadsource/{id}/add',['as'=>'leadsource.addleads','uses'=>'LeadSourceController@addLeads']);
-		Route::post('leadsource/{id}/add',['as'=>'leadsource.addleads','uses'=>'LeadSourceController@importLeads']);
+		Route::post('leadsource/{id}/add',['as'=>'leadsource.addleads','uses'=>'LeadImportController@import']);
+		Route::get('leadsource/{id}/flush',['as'=>'leadsource.flushleads','uses'=>'LeadSourceController@flushLeads']);
 		Route::resource('leadsource','LeadSourceController');
 
 	# Lead Status

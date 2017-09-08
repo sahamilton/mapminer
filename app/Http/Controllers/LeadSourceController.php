@@ -147,6 +147,11 @@ class LeadSourceController extends Controller
         return redirect()->route('leadsource.index');
     }
 
+    public function flushLeads($id){
+        $this->lead->where('lead_source_id','=',$id)->delete();
+        return redirect()->route('leadsource.index');
+    }
+
     public function addLeads($id){
         $leadsource = $this->leadsource->findOrFail($id);
         return response()->view('leadsource.addleads',compact('leadsource'));
@@ -155,7 +160,7 @@ class LeadSourceController extends Controller
     public function importLeads(LeadSourceAddLeadsFormRequest $request,$id){
         $leadsource = $this->leadsource->findOrFail($id);
         if($request->hasFile('file')){
-            $this->leadImport($request,$id);
+            return $this->leadImport($request,$id);
         }else{
             $request->merge(['lead_source_id'=>$id]);
             $data = $this->cleanseData( $request->all());
@@ -164,12 +169,12 @@ class LeadSourceController extends Controller
             $data = $this->lead->getGeoCode($geoCode);
            
             $lead->update($data);
-            
+            return redirect()->route('leadsource.index');
         }
-        return redirect()->route('leadsource.index');
+        
 
     }
-    // Method to reove commas from fields that cause problem with maps
+    // Method to remove commas from fields that cause problem with maps
     private function cleanseData($data){
         $fields = ['companyname','businessname'];
         foreach ($fields as $field){
@@ -273,9 +278,21 @@ class LeadSourceController extends Controller
         $file->store('public/library');
 
         $leads = Excel::load($file,function($reader){
-           
+         
         })->get();
-        $count = null;
+       /* $data['file'] = $file;
+        $data['table']= 'leads';
+        $data['type'] = 'Leads';
+        $columns = $this->lead->getTableColumns($data['table']);
+        $fields = $leads;
+
+        $title= 'Map import leads file fields';
+        $skip=['id','created_at','deleted_at','updated_at','lead_source_id'];
+
+        return response()->view('imports.mapfields',compact('fields','columns','title','skip','data'));
+       */
+       
+         $count = null;
         foreach ($leads->toArray() as $lead) {
             $lead['user_id'] = auth()->user()->id;
             $lead['lead_source_id'] = $source_id;
@@ -289,7 +306,7 @@ class LeadSourceController extends Controller
             $count++;
 
         }
-        return redirect()->route('leadsource.show',$source_id)->withMessage(['status'=>'Imported ' . $count . ' leads']);
+        return redirect()->route('leadsource.show',$source_id)->with(['success','Imported ' . $count . ' leads']);
      }
 
      

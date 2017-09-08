@@ -10,7 +10,7 @@ class Lead extends Model
 {
   use SoftDeletes, Geocode;
 	public $dates = ['created_at','updated_at','deleted_at','datefrom','dateto'];
-
+  public $table= 'leads';
 	public $fillable = ['companyname',
 						'businessname',
 						'address',
@@ -38,7 +38,7 @@ class Lead extends Model
     }
     
     public function relatedNotes() {
-      return $this->hasMany(Note::class)->with('writtenBy');
+      return $this->hasMany(Note::class,'related_id')->where('type','=','lead')->with('writtenBy');
     }
 
     public function setDatefromAttribute($value)

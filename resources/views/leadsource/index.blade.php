@@ -79,6 +79,12 @@
                  </a>
                  </li>
                 <li>
+                <a href="{{route('leadsource.flushleads',$source->id)}}">
+                <i class="glyphicon glyphicon-minus"></i>
+                 Flush all leads from this source
+                 </a>
+                 </li>
+                <li>
                 <a href="{{route('leadsource.announce',$source->id)}}">
                 <i class="glyphicon glyphicon-envelope"></i> 
                 Email sales team

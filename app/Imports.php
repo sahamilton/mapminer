@@ -10,32 +10,34 @@ class Imports extends Model
     	public $temptable;
     	public $fields;
     	public $importfilename;
-    	public $source_id;
-    	public $company_id;
+    	public $additionaldata;
 
     	public function __construct($data){
-    		dd($data);
+
     		if(isset($data['table'])){
 	    		$this->table = $data['table'];
 	    		$this->temptable = $this->table .'_import';
-	    		$this->fields = $data['fields'];
-	    		$this->source_id = $data['source_id'];
-	    		$this->company_id = $data['company_id'];
+	    		$this->fields = implode(",",$data['fields']);
+	    		$this->additionaldata = $data['additionaldata'];
+	    		
 	       		$this->importfilename = str_replace("\\","/",$data['filename']);
-	       		
        		}
     		
-
     	}
 
     	public function import(){
 
     		$this->createTemporaryImportTable();
+
     		$this->_import_csv();
-    		$this->addCreateAtField();
+
+    		$this->addCreateAtField();	
+
 			$this->updateAdditionalFields();
+
     		$this->copyTempToBaseTable();
     		$this->dropTempTable();
+
     		return true;
     	}
 
@@ -58,22 +60,18 @@ class Imports extends Model
 
 		private function updateAdditionalFields(){
 		//Add the project source id
-		switch($this->table){
-			case 'projects':
-				$this->fields.= ",project_source_id";
-				return $this->executeQuery("update ".$this->temptable." set project_source_id ='".$this->source_id."'");
-			break;
-			case 'locations':
-				$this->fields.= ",company_id";
-				dd($this->fields);
-				return $this->executeQuery("update ".$this->temptable." set company_id ='".$this->company_id."'");
+		//foreach ($this->additonaldata as)
+		foreach ($this->additionaldata as $field=>$value){
+				
+				$this->fields.= ",".$field;
+				return $this->executeQuery("update ".$this->temptable." set ". $field. " ='".$value."'");
 			}
-			return true;
 		}
 		
 		private function copyTempToBaseTable(){
 			$this->fields = str_replace('@ignore,','',$this->fields);
 			// COpy over to base table
+			
 			return $this->executeQuery("INSERT INTO `".$this->table."` (".$this->fields.") SELECT ".$this->fields." FROM `".$this->temptable."`");
 		}
 		// Drop the temp table

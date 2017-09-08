@@ -26,7 +26,8 @@ class ProjectsImportFormRequest extends FormRequest
     public function rules()
     {
         return [
-           'file' => 'required|file|mimetypes:'.implode(",",$this->mimetypes), 
+           'upload' => 'required|file|mimetypes:'.implode(",",$this->mimetypes), 
+           'source'=>'required',
         ];
     }
 }
