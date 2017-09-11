@@ -87,11 +87,13 @@
 
 	</td>
 	<td>			
-			@if(!is_null($branch->manager))
+			@if(count($branch->manager)>0)
 				
-				<a href="{{route('managed.branch',$branch->manager->id)}}"
-				title="See all branchesmanaged by {{$branch->manager->firstname }} {{$branch->manager->lastname}}">
-				{{$branch->manager->firstname }} {{$branch->manager->lastname}}</a>
+				@foreach ($branch->manager as $manager)
+				<a href="{{route('managed.branch',$manager->id)}}"
+				title="See all branchesmanaged by {{$manager->postName()}}">
+				{{$manager->postName()}}</a>
+				@endforeach
 			@endif
 	</td>
 	

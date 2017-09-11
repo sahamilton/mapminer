@@ -45,7 +45,7 @@ class BranchesController extends BaseController {
 	{
 		
 		$branches = $this->branch
-			->with('region','manager','servicedBy','servicelines')
+			->with('region','manager','relatedPeople','servicelines')
 			->whereHas('servicelines', function($q) {
 					    $q->whereIn('serviceline_id',$this->userServiceLines);
 
@@ -54,8 +54,8 @@ class BranchesController extends BaseController {
 			->get();
 
 		
-		
-		return response()->view('branches.index', compact('branches','fields'));
+
+		return response()->view('branches.index', compact('branches'));
 	}
 	
 	/**
@@ -186,8 +186,9 @@ class BranchesController extends BaseController {
 	
 	public function showSalesTeam($id)
 	{
-		$salesteam = $this->branch->with('servicedBy','manager','servicelines')->find($id);
-		return response()->view('branches.showteam',compact('salesteam'));
+		$salesteam = $this->branch->with('relatedPeople','servicelines')->find($id);
+		$roles = \App\Role::pluck('name','id');
+		return response()->view('branches.showteam',compact('salesteam','roles'));
 	}
 	
 	/**

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Branch;
+use App\Imports;
 use App\ServiceLine;
 use App\Http\Requests\BranchImportFormRequest;
 
@@ -32,16 +33,26 @@ class BranchesImportController extends ImportController
 	public function import(BranchImportFormRequest $request) {
         
         $title="Map the branches import file fields";
-        $data = $this->uploadfile($request);
+        $data = $this->uploadfile($request->file('upload'));
         $data['table']='branchesimport';
         $data['type'] = 'branches';
+        $data['additionaldata'] = array();
+        $data['route']= 'branches.mapfields';
         $company_id = $request->get('company');
         $fields = $this->getFileFields($data);      
         $columns = $this->branch->getTableColumns($data['table']);
         $skip = ['id','created_at','updated_at','region_id'];
         return response()->view('imports.mapfields',compact('columns','fields','data','company_id','skip','title'));
     }
-	
-	
-	
+	public function mapfields(Request $request){
+
+        $data = $this->getData($request);      
+        $import = new Imports($data);
+
+        if($import->import()) {
+            return redirect()->route('branches.index')->with('success','Branches imported');
+        }
+        
+    }
+    
 }

@@ -11,10 +11,13 @@
         {{$salesteam->city}},{{$salesteam->state}} {{$salesteam->zip}}<br />
         {{$salesteam->phone}}</p>
        
-        <h4>Branch managed by:</h4>
-        @if(isset($salesteam->manager->id)) 
-         <p><a href = "{{route('person.show',$salesteam->manager->id)}}">{{$salesteam->manager->firstname}} {{$salesteam->manager->lastname}}</a></p>
-        @endif
+        <h4>Branch Team</h4>
+        @foreach ($salesteam->relatedPeople()->get() as $people)
+
+        <p><strong>{{$roles[$people->pivot->role_id]}}</strong>: 
+        <a href = "{{route('salesorg',$people->id)}}" > {{$people->postName()}}</a> </p>
+
+        @endforeach
         </p>
         <h4>Service Lines:</h4>
         <ul >
@@ -22,12 +25,8 @@
                <li>  {{$serviceline->ServiceLine}} </li>
             @endforeach
 </ul>           
- <h4>Assigned Sales Reps:</h4>
- <ul>
-@foreach ($salesteam->servicedBy as $team)
-	<li><a href = "{{route('salesorg',$team->id)}}" >{{$team->firstname}} {{$team->lastname}} </a></li>
-@endforeach
-</ul>
+
+
 </div>
 <div class="col-sm-4" id="map" style="height:300px;width:500px;border:red solid 1px"/>
 </div>

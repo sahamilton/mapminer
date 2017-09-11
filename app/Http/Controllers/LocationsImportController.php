@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Company;
 use App\Location;
+use App\LocationImport;
 use App\Http\Requests\LocationImportFormRequest;
 use Excel;
 
@@ -28,13 +29,24 @@ class LocationsImportController extends ImportController
         $data = $this->uploadfile($request->file('upload'));
         $data['table']='locations';
         $data['type'] = 'locations';
-        $data['additionaldata']['company_id'] = $request->get('company_id');
+        $data['route'] = 'locations.mapfields';
+        $data['additionaldata']['company_id'] = $request->get('company');
         $fields = $this->getFileFields($data);      
         $columns = $this->location->getTableColumns($data['table']);
         $skip = ['id','created_at','updated_at','serviceline_id','company_id'];
         return response()->view('imports.mapfields',compact('columns','fields','data','company_id','skip','title'));
     }
-	
-	
+    
+	public function mapfields(Request $request){
+
+        $data = $this->getData($request);      
+        $import = new LocationImport($data);
+
+        if($import->import()) {
+             return redirect()->route('company.show',$data['additionaldata']['company_id'])->with('success','Locations imported');
+
+        }
+        
+    }
 	
 }

@@ -71,7 +71,7 @@
 			</div>
 		</div>
 		<input type="submit" class="btn btn-success" value="Import Branches" />
-
+		<input type="hidden" name="additionaldata[]" @if(isset($data)) value = "{{$data['additionaldata']}} @endif"
 		</form>
 
 </div>

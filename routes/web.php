@@ -233,12 +233,53 @@ Route::group(['middleware' => 'auth'], function () {
 
 Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 {
+	#Branches
+		Route::get('branches/import', ['as'=>'branches.importfile', 'uses'=>'BranchesImportController@getFile']);
+		Route::post('branches/bulkimport', ['as'=>'branches.import', 'uses'=>'BranchesImportController@import']);
+		Route::get('geocode', ['as'=>'branches.geocode', 'uses'=>'BranchesController@geoCodeBranches']);
+		Route::get('branchmap', ['as'=>'branches.genmap', 'uses'=>'BranchesController@rebuildBranchMap']);
+		Route::get('branches/export', ['as'=>'branches.export', 'uses'=>'BranchesController@export']);
+		Route::resource('branches','BranchesController',['except'=>['index','show']]);
+		
+	#Companies
+		
+		Route::get('companies/export', ['as'=>'companies.export', 'uses'=>'CompaniesController@export']);
+		Route::post('companies/export', ['as'=>'companies.locationsexport', 'uses'=>'CompaniesController@locationsExport']);
+		Route::get('companies/download', ['as'=>'companies.download','uses'=>'CompaniesController@exportAccounts']);
+		Route::get('company/{companyId}/export',['as'=>'company.export','uses'=>'WatchController@companyexport']);
+		Route::post('company/filter',['as'=>'company.filter','uses'=>'CompaniesController@filter']);
+		Route::resource('company','CompaniesController',['except' => ['index', 'show']]);
+    # Documents
+    	Route::resource('documents','DocumentsController');
+    # Emails
+    	Route::post('emails/selectrecipients',['as'=>'emails.updatelist','uses'=>'EmailsController@addRecipients']);
+    	Route::get('emails/update',['as'=>'emails.updaterecipients','uses'=>'EmailsController@changelist']);
+    	Route::get('emails/{id}/clone',['as'=>'emails.clone','uses'=>'EmailsController@clone']);
+    	Route::get('emails/{id}/recipients',['as'=>'emails.recipients','uses'=>'EmailsController@recipients']);
+    	Route::post('emails/send',['as'=>'emails.send','uses'=>'EmailsController@sendEmail']);
+    	Route::resource('emails','EmailsController');
+    # Imports 
+    	Route::get('imports',['as'=>'imports.index','uses'=>'ImportController@index']);
+    	Route::post('/importleads/mapfields',['as'=>'leads.mapfields','uses'=>'LeadImportController@mapfields']);
+    	Route::post('/importlocations/mapfields',['as'=>'locations.mapfields','uses'=>'LocationsImportController@mapfields']);
+    	Route::post('/importprojects/mapfields',['as'=>'projects.mapfields','uses'=>'ProjectsImportController@mapfields']);
+    	Route::post('/importbranches/mapfields',['as'=>'branches.mapfields','uses'=>'BranchesImportController@mapfields']);
+    	
+	#Locations
+		Route::get('locations/import', ['as'=>'locations.importfile', 'uses'=>'LocationsImportController@getfile']);
+		Route::post('locations/bulkimport', ['as'=>'locations.import', 'uses'=>'LocationsImportController@import']);
 
+
+		Route::get('api/geocode',['as'=>'api.geocode','uses'=>'LocationsController@bulkGeoCodeLocations']);
+		Route::get('locations/{companyID}/create',['as'=>'company.location.create','uses'=>'LocationsController@create']);
+		Route::resource('locations','LocationsController',['except'=>['show']]);
+
+	
      
     # # User Management
 		
 		Route::get('cleanse',['as'=>'users.cleanse','uses'=>'Admin\AdminUsersController@cleanse']);
-		Route::get('users/import',['as'=>'admin.users.import', 'uses'=>'Admin\AdminUsersController@import']);
+		Route::get('users/import',['as'=>'users.importfile', 'uses'=>'Admin\AdminUsersController@import']);
 		Route::post('users/bulkimport',['as'=>'admin.users.bulkimport', 'uses'=>'Admin\AdminUsersController@bulkImport']);
 		Route::get('users/serviceline/{servicelineId}', ['as'=>'serviceline.user','uses'=>'Admin\AdminUsersController@index']);
 
@@ -252,45 +293,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 		
 		Route::resource('permissions','Admin\AdminPermissionsController');
      
-
-    # Documents
-    	Route::resource('documents','DocumentsController');
-    # Emails
-    	Route::post('emails/selectrecipients',['as'=>'emails.updatelist','uses'=>'EmailsController@addRecipients']);
-    	Route::get('emails/update',['as'=>'emails.updaterecipients','uses'=>'EmailsController@changelist']);
-    	Route::get('emails/{id}/clone',['as'=>'emails.clone','uses'=>'EmailsController@clone']);
-    	Route::get('emails/{id}/recipients',['as'=>'emails.recipients','uses'=>'EmailsController@recipients']);
-    	Route::post('emails/send',['as'=>'emails.send','uses'=>'EmailsController@sendEmail']);
-    	Route::resource('emails','EmailsController');
-    # Imports 
-    	Route::post('/import/mapfields',['as'=>'imports.mapfields','uses'=>'ImportController@mapfields']);
-
-	#Locations
-		Route::get('locations/import', ['as'=>'locations.importfile', 'uses'=>'LocationsImportController@getfile']);
-		Route::post('locations/bulkimport', ['as'=>'locations.import', 'uses'=>'LocationsImportController@import']);
-
-
-		Route::get('api/geocode',['as'=>'api.geocode','uses'=>'LocationsController@bulkGeoCodeLocations']);
-		Route::get('locations/{companyID}/create',['as'=>'company.location.create','uses'=>'LocationsController@create']);
-		Route::resource('locations','LocationsController',['except'=>['show']]);
 	
-	#Companies
-		
-		Route::get('companies/export', ['as'=>'companies.export', 'uses'=>'CompaniesController@export']);
-		Route::post('companies/export', ['as'=>'companies.locationsexport', 'uses'=>'CompaniesController@locationsExport']);
-		Route::get('companies/download', ['as'=>'companies.download','uses'=>'CompaniesController@exportAccounts']);
-		Route::get('company/{companyId}/export',['as'=>'company.export','uses'=>'WatchController@companyexport']);
-		Route::post('company/filter',['as'=>'company.filter','uses'=>'CompaniesController@filter']);
-		Route::resource('company','CompaniesController',['except' => ['index', 'show']]);
 	
-	#Branches
-		Route::get('branches/import', ['as'=>'branches.importfile', 'uses'=>'BranchesImportController@getFile']);
-		Route::post('branches/bulkimport', ['as'=>'branches.import', 'uses'=>'BranchesImportController@import']);
-		Route::get('geocode', ['as'=>'branches.geocode', 'uses'=>'BranchesController@geoCodeBranches']);
-		Route::get('branchmap', ['as'=>'branches.genmap', 'uses'=>'BranchesController@rebuildBranchMap']);
-		Route::get('branches/export', ['as'=>'branches.export', 'uses'=>'BranchesController@export']);
-		Route::resource('branches','BranchesController',['except'=>['index','show']]);
-		
 		
 	#Howtofields	
 		Route::resource('howtofields','HowtofieldsController');
@@ -302,7 +306,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 		Route::get('person/export', ['as'=>'person.export', 'uses'=>'PersonsController@export']);
 
 	# Projects
-		Route::get('projects/import',['as'=>'projects.import','uses'=>'ProjectsImportController@getFile']);
+		Route::get('projects/import',['as'=>'projects.importfile','uses'=>'ProjectsImportController@getFile']);
 		Route::post('projects/import',['as'=>'projects.bulkimport','uses'=>'ProjectsImportController@import']);
 
 		Route::get('projects/export',['as'=>'projects.exportowned','uses'=>'ProjectsController@exportowned']);
@@ -321,7 +325,10 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 		Route::resource('serviceline','ServicelinesController');
 	#Leads
 		Route::get('leads/address',['as'=>'lead.address','uses'=>'LeadsController@address']);
-		Route::get('leads/{vertical}/vertical',['as'=>'lead.vertical','uses'=>'LeadsController@index']);		
+		Route::get('leads/{vertical}/vertical',['as'=>'lead.vertical','uses'=>'LeadsController@index']);
+		Route::get('leadsource/{id}/addleads',['as'=>'leadsource.addleads','uses'=>'LeadImportController@getFile']);		
+		Route::get('leads/import',['as'=>'leads.importfile','uses'=>'LeadImportController@getFile']);
+		Route::post('leads/import',['as'=>'leads.import','uses'=>'LeadImportController@import']);
 		Route::get('leads/assign/{sid}/source',['as'=>'leads.geoassign','uses'=>'LeadsAssignController@geoAssignLeads']);
 		Route::get('leads/{id}/assign',['as'=>'leads.leadassign','uses'=>'LeadsController@assignLeads']);
 		Route::post('leads/batchassign',['as'=>'leads.assignbatch','uses'=>'LeadsAssignController@assignLead']);
@@ -335,8 +342,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 		Route::get('leadsource/{id}/announce',['as'=>'leadsource.announce','uses'=>'LeadsEmailController@announceLeads']);
 		Route::post('leadsource/{id}/email',['as'=>'sendleadsource.message','uses'=>'LeadsEmailController@email']);
 		Route::get('leadsource/{id}/assign',['as'=>'leadsource.assign','uses'=>'LeadSourceController@assignLeads']);
-		Route::get('leadsource/{id}/add',['as'=>'leadsource.addleads','uses'=>'LeadSourceController@addLeads']);
-		Route::post('leadsource/{id}/add',['as'=>'leadsource.addleads','uses'=>'LeadImportController@import']);
+
+		
+		
 		Route::get('leadsource/{id}/flush',['as'=>'leadsource.flushleads','uses'=>'LeadSourceController@flushLeads']);
 		Route::resource('leadsource','LeadSourceController');
 

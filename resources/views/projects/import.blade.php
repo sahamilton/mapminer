@@ -2,7 +2,7 @@
 @section('content')
 <div class="container">
 <h2>Import Projects</h2>
-
+<p>This is a two step process.  First import the projects, then import the projectcompanies.</p>
 <form name="projectimport" method="post" action="{{route('projects.bulkimport')}}" 
 enctype="multipart/form-data">
 {{csrf_field()}}
@@ -34,6 +34,25 @@ enctype="multipart/form-data">
                 </span>
         </div>
     </div>
+    <?php $tables = ['projects','projectcompanies'];?>
+        <div class="form-group{{ $errors->has('table)') ? ' has-error' : '' }}">
+        <label class="col-md-4 control-label">Tables</label>
+        <div class="col-md-6">
+            <select  class="form-control" name='table'>
+
+            @foreach ($tables as $table))
+                <option value="{{$table}}">{{$table}}</option>
+
+            @endforeach
+
+
+            </select>
+            <span class="help-block">
+                <strong>{{ $errors->has('table') ? $errors->first('table') : ''}}</strong>
+                </span>
+        </div>
+    </div>
+
 
  <input type="submit" name="submit" class="btn btn-info" value="Import">
  <input type="hidden" name="type" value="projects"/>

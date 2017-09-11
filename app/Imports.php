@@ -18,8 +18,12 @@ class Imports extends Model
 	    		$this->table = $data['table'];
 	    		$this->temptable = $this->table .'_import';
 	    		$this->fields = implode(",",$data['fields']);
-	    		$this->additionaldata = $data['additionaldata'];
-	    		
+	   			if(isset($data['additionaldata'])){
+
+	    			$this->additionaldata = $data['additionaldata'];
+	    		}else{
+	    			$this->additionaldata = [];
+	    		}
 	       		$this->importfilename = str_replace("\\","/",$data['filename']);
        		}
     		

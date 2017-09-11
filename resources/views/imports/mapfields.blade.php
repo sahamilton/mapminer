@@ -1,10 +1,12 @@
 @extends('admin.layouts.default')
 @section('content')
-
+@if(! isset($data['route']))
+<?php $data['route'] = 'imports.mapfields';?>
+@endif
 <div class="container">
 <h2>@if(isset($title)) {{$title}} @endif</h2>
 <form method="post" 
-	action ="{{route('imports.mapfields')}}" 
+	action ="{{route($data['route'])}}" 
 	name = "mapfields">
 {{csrf_field()}}
 <table class="table">

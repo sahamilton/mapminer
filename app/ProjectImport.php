@@ -31,6 +31,7 @@ class ProjectImport extends Imports
 	
 	"Update projectcompanyimport set company_hash = md5(concat(firm,addr1));",//Update company hash in projectcompanyimport
 	
+	// Replace this with two queries 1) update existing 2) insert new
 	"insert ignore into projectcompanies 
 	(company_hash,firm,addr1,addr2,city,state,zipcode,county,phone)
 	SELECT company_hash,firm,addr1,addr2,city,state,zip,county,phone

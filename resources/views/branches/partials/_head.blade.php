@@ -4,7 +4,7 @@
         <h1>{{$data['title']}}</h1>
 
        <h4> within 10 miles of the {{ucwords(strtolower($data['branch']->branchname))}} branch # {{$data['branch']->branchnumber}} </h4>
-        <h4>Address:</h4>
+        <h4>Address:</h4> 
         <p>{{$data['branch']->street}}{{$data['branch']->address2}}<br/>
         {{$data['branch']->city}},{{$data['branch']->state}} {{$data['branch']->zip}}<br />
         {{$data['branch']->phone}}</p>
@@ -14,22 +14,7 @@
         <p><strong>{{$roles[$people->pivot->role_id]}}</strong>: {{$people->postName()}} </p>
 
         @endforeach
-      <!-- 
-        <p>Branch managed by
-        @if(isset($data['manager']->id)) 
-         <a title = "Email {{$data['manager']->firstname}}" 
-         href = "{{route('person.show',$data['manager']->id)}}">{{$data['manager']->firstname}} {{$data['manager']->lastname}}</a>
-        @endif
-        </p>
-        @if(count($data['branch']['servicedBy'])>0)
-        <p>Branch serviced by: 
-        @foreach ($data['branch']['servicedBy'] as $salesreps)
-            <li><a href="{{route('salesorg',$salesreps->id)}}">
-            {{$salesreps->firstname }} {{$salesreps->lastname}}</a></li>
-        @endforeach
-        </p>
-        @endif
-        -->
+
         <p>Branch service radius: {{$data['branch']->radius}} miles.</p>
         <h4>Service Lines:</h4>
         <ul style="margin-left:40px">

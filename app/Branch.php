@@ -15,7 +15,7 @@ class Branch extends Model {
 		'person_id'=>'required',
 		'region_id'=>'required'
 	];
-
+	public $branchManagerRole = 9;
 	// Don't forget to fill this array
 	public $fillable = [
 		'lat',
@@ -63,7 +63,7 @@ class Branch extends Model {
 	
 	public function manager() 
 	{
-		return $this->belongsTo(Person::class,'person_id');
+		return $this->relatedPeople($this->branchManagerRole);
 		
 	}
 	

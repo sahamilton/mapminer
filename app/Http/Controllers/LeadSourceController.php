@@ -272,7 +272,7 @@ class LeadSourceController extends Controller
         return $salesreps;
     }
 
-    private function leadImport(Request $request,$source_id){
+   /* private function leadImport(Request $request,$source_id){
         
         $file= $request->file('file');
         $file->store('public/library');
@@ -290,7 +290,7 @@ class LeadSourceController extends Controller
         $skip=['id','created_at','deleted_at','updated_at','lead_source_id'];
 
         return response()->view('imports.mapfields',compact('fields','columns','title','skip','data'));
-       */
+      
        
          $count = null;
         foreach ($leads->toArray() as $lead) {
@@ -308,6 +308,6 @@ class LeadSourceController extends Controller
         }
         return redirect()->route('leadsource.show',$source_id)->with(['success','Imported ' . $count . ' leads']);
      }
-
+ */
      
 }
