@@ -77,7 +77,7 @@ class ProjectsController extends BaseController
 
         $project = $this->project
         ->with('companies','owner','relatedNotes','source')
-        ->whereNull('pr_status')
+       
         ->findOrFail($id);
         $branches = $this->branch->findNearbyBranches($project->project_lat,$project->project_lng,100,$limit=5,$this->userServiceLines);
         
