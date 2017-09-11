@@ -4,27 +4,44 @@ $state = new App\State;
 $states = $state->getStates();
 
 ?>
+
+<!-- branchnumber -->
+ <div class="form-group{{ $errors->has('branchnumber') ? ' has-error' : '' }}">
+        <label class="col-md-4 control-label">Branch Number:</label>
+            <div class="col-md-6">
+                <input type="text" class="form-control" name='branchnumber' description="branchnumber" value="{{ old('branchnumber') ? old('branchnumber') : isset($data->branchnumber) ? $data->branchnumber : "" }}" placeholder="branchnumber">
+                <span class="help-block">
+                    <strong>{{ $errors->has('branchnumber') ? $errors->first('branchnumber') : ''}}</strong>
+                    </span>
+            </div>
+    </div>
+    
 <div>
-{{Form::label('branchnumber','Branch Number:')}}
-<div>
-{{Form::text('branchnumber')}}
-{{ $errors->first('branchnumber') }}
-</div></div>
+<!-- branchname -->
+    <div class="form-group{{ $errors->has('branchname') ? ' has-error' : '' }}">
+        <label class="col-md-4 control-label">Branch Name</label>
+            <div class="col-md-6">
+                <input type="text" class="form-control" name='branchname' description="branchname" value="{{ old('branchname') ? old('branchname') : isset($data->branchname) ? $data->branchname : "" }}" placeholder="branchname">
+                <span class="help-block">
+                    <strong>{{ $errors->has('branchname') ? $errors->first('branchname') : ''}}</strong>
+                    </span>
+            </div>
+    </div>
+    
+<!-- street -->
+    <div class="form-group{{ $errors->has('street') ? ' has-error' : '' }}">
+        <label class="col-md-4 control-label">Address:</label>
+            <div class="col-md-6">
+                <input type="text" class="form-control" name='street' description="street" value="{{ old('street') ? old('street') : isset($data->street) ? $data->street : "" }}" placeholder="street">
+                <span class="help-block">
+                    <strong>{{ $errors->has('street') ? $errors->first('street') : ''}}</strong>
+                    </span>
+            </div>
+    </div>
+    
 
 <div>
-{{Form::label('branchname','Branch Name:')}}
-<div>
-{{Form::text('branchname')}}
-{{ $errors->first('branchname') }}
-</div></div>
 
-
-<div>
-{{Form::label('street','Street:')}}
-<div class="controls">
-{{Form::text('street')}}
-{{ $errors->first('stree') }}
-</div></div>
 
 <div>
 {{Form::label('address2','Address:')}}

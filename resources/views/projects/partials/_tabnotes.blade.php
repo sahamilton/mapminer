@@ -7,7 +7,7 @@
 <th>Actions</th>
 </thead>
 <tbody>
-
+{{dd($project->relatedNotes)}}
 @foreach ($project->relatedNotes as $note)
 	<td>{{$note->created_at->format('m-d-Y')}}</td>
 	<td>@if($project->owned()  or auth()->user()->hasRole('Admin'))

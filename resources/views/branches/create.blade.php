@@ -13,7 +13,7 @@ Create a New Branch
 		Create a New Branch
 
 		<div class="pull-right">
-			<a href="{{ route('branch.index') }}" class="btn btn-small btn-inverse"><i class="icon-circle-arrow-left icon-white"></i> Back</a>
+			<a href="{{ route('branches.index') }}" class="btn btn-small btn-inverse"><i class="icon-circle-arrow-left icon-white"></i> Back</a>
 		</div>
 	</h3>
 </div>
@@ -21,7 +21,9 @@ Create a New Branch
 <!-- Tabs -->
 
 <?php $buttonLabel = 'Create Branch';?>
-{{Form::open(['route'=>'branch.store'])}}
+<form method="post" name="createbranch" action ="{{route('branches.store')}}" >
+{{csrf_field()}}
 	@include('branches/partials/_form')
-{{Form::close()}}
+
+</form>
 @stop
