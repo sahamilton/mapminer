@@ -30,8 +30,7 @@ class BranchFormRequest extends FormRequest
         'state'=>'required',
         'zip'=>'required',
         'region_id'=>'required',
-        'person_id'=>'required',
-        'radius'
+        'radius'=>'required',
             //
         ];
     }

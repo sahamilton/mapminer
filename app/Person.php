@@ -119,6 +119,18 @@ class Person extends NodeModel {
 		return $result;
 		
 	}
+	public function findRole()
+	{
+		
+		foreach ($this->userdetails->roles as $role)
+		{
+			$result[] = $role->id;
+		}
+	
+		return $result;
+		
+	}
+
 	public function salesLeadsByStatus($id){
 		$leads = $this->with('salesleads')
 			->whereHas('salesleads',function($q){

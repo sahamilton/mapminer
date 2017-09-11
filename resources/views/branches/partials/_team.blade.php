@@ -4,9 +4,13 @@
 		<div class="form-group{{ $errors->has('role[$key]') ? ' has-error' : '' }}">
         <label class="col-md-4 control-label">{{$role}}:</label>
         <div class="col-md-6">
-            <select multiple class="form-control" name=role[{{$key}}][]'>
-            <option "value"=''>None Assigned</option>
-
+            <select multiple class="form-control" name=roles[{{$key}}][]'>
+            <option value=''>None Assigned</option>
+            	@foreach ($team as $person){
+            		@if(in_array($key,$person->findRole()))
+            			<option value="{{$person->id}}">{{$person->fullName()}}</option>
+            		@endif
+            	@endforeach
 
             </select>
             <span class="help-block">

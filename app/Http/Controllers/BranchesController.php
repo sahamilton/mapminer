@@ -108,23 +108,36 @@ class BranchesController extends BaseController {
 
 		// Attempt to geo code the new branch address	
 		$address = $input['street'] . ",". $input['city'] . ",". $input['state'] . ",". $input['zip'];	
-		$latlng = $this->getBranchGeoCode($address);
+
+		$geoCode = app('geocoder')->geocode($address)->get();
+
+		$latlng = ($this->branch->getGeoCode($geoCode));
 		$input['lat']= $latlng['lat'];
 		$input['lng']= $latlng['lng'];
 		// add lat lng to location
 
 		$branch = $this->branch->create($input);
+
+		foreach ($input['roles'] as $key=>$role){
+				foreach ($role as $person){
+				
+					$branch->relatedPeople()->attach($person,['role_id'=>$key]);
+				}
+				
+			}
+
+
 		// get the service lines that have been selected and reduce to the simple array
-		$serviceline = $request->get('serviceline');
-		foreach($serviceline['serviceline'] as $key=>$value)
+	
+		foreach($input['serviceline'] as $line)
 		{
-			$lines[] = $key;	
+			$lines[] = $line;	
 		}
-		
+
 		$branch->servicelines()->sync($lines);
 		$this->rebuildXMLfile();
 
-		return redirect()->route('branch.index');
+		return redirect()->route('branches.show',$branch->id);
 	}
 
 	public function rebuildBranchMap()
@@ -231,14 +244,13 @@ class BranchesController extends BaseController {
 	 */
 	public function edit($branch)
 	{
-		
-		$data = $branch->where('id','=',$branch->id)->with('servicelines')->get();
-		$branch = $data[0];
+		$branchRoles = \App\Role::whereIn('id',$this->branch->branchRoles)->pluck('name','id');
+		$team = $this->person->personroles($this->branch->branchRoles);
+		$branch = $this->branch->with('servicelines','relatedPeople')->find($branch->id);
 		$servicelines = $this->serviceline->whereIn('id',$this->userServiceLines )->get();
-		$managers = $this->branch->getbranchManagers();
+	
 
-
-		return response()->view('branches.edit', compact('branch','servicelines','managers'));
+		return response()->view('branches.edit', compact('branch','servicelines','branchRoles','team'));
 	}
 
 	/**
@@ -278,7 +290,7 @@ class BranchesController extends BaseController {
 	{
 		$this->branch->destroy($id);
 		$this->rebuildXMLfile();
-		return redirect()->route('branch.index');
+		return redirect()->route('branches.index');
 	}
 	
 	/**
@@ -445,134 +457,8 @@ class BranchesController extends BaseController {
 	}
 	
 	
-
 	 
-	public function branchImport(BranchImportFormRequest $request) {
 	
-
-		$file = $request->file('upload')->store('public/uploads');  
-		$data['branches'] = asset(Storage::url($file));
-        $data['basepath'] = base_path()."/public".Storage::url($file);
-        // read first line headers of import file
-        $branches = Excel::load($data['basepath'],function($reader){
-           
-        })->first();
-
-    	if( $this->branch->fillable !== array_keys($branches->toArray())){
-
-    		return redirect()->back()
-    		->withInput($request->all())
-    		->withErrors(['upload'=>['Invalid file format.  Check the fields:', array_diff($this->branch->fillable,array_keys($branches->toArray())), array_diff(array_keys($branches->toArray()),$this->branch->fillable)]]);
-    	}
-
-		$data['table'] ='branches';
-		$data['fields'] = implode(",",array_keys($branches->toArray()));
-		$this->branch->importQuery($data);
-		return redirect()->route('branches.index');
-// old method
-		/*
-		
-		$fields.=",created_at";
-		$aliasfields = "p." . str_replace(",",",p.",$fields);
-		
-		
-		$query = "DROP TABLE IF EXISTS ".$temptable;
-		$error = "Can't drop table";
-		$type='update';
-		$result = $this->branch->rawQuery($query,$error,$type);
-		
-		
-		$type='update';
-		$query= "CREATE  TABLE ".$temptable." AS SELECT * FROM ". $table." LIMIT 0";
-		$error = "Can't create table" . $temptable;
-		
-		$result = $this->branch->rawQuery($query,$error,$type);
-		
-		$type='update';
-		$query= "ALTER  TABLE ".$temptable." MODIFY COLUMN id INT auto_increment primary key";
-		$error = "Can't add autoincrement " . $temptable;
-		
-		$result = $this->branch->rawQuery($query,$error,$type);
-		
-		
-		$result = $this->branch->_import_csv($filename, $temptable,$fields);
-		
-		$now = date("Y-m-d H:m:s");
-		$query = "update " . $temptable ." set created_at = '". $now."'";
-		$error = "I couldnt update the temp table!<br />";
-		$type='update';
-		$result = $this->branch->rawQuery($query,$error,$type);
-		
-		// Remove duplicates from import file
-		$uniquefields =['branchnumber'];
-		foreach($uniquefields as $field) {
-			$query ="delete from ".$temptable." 
-			where ". $field." in 
-			(SELECT ". $field." FROM (SELECT ". $field.",count(*) no_of_records 
-			FROM ".$temptable."  as s GROUP BY ". $field." HAVING count(*) > 1) as t)";
-			$type='update';
-			$error = "Can't delete the duplicates";
-			$result = $this->branch->rawQuery($query,$error,$type);
-		}
-		
-		// Add new users
-		if(\Input::get('type') == 'Replace'){
-			$query = "DROP TABLE IF EXISTS ".$table;
-			$error = "Can't drop table";
-			$type='update';
-			$result = $this->branch->rawQuery($query,$error,$type);
-			$query = "RENAME TABLE ".$temptable." TO ".$table;
-			$error = "Can't copy temp table over";
-			$type='update';
-			$result = $this->branch->rawQuery($query,$error,$type);
-		}else{
-			// copy new items over
-		
-		// delete old copies of the new branches (if any)
-
-
-		$query = " DELETE from ". $table . " where id in ( select * from ( select id from ".$temptable."  ) as p );";
-
-		$error = "I couldnt delete the new branches from the old table !<br />";
-		$type='update';
-		$this->branch->rawQuery($query,$error,$type);
-		}
-		$query = "INSERT INTO `".$table."` (".$fields.") 
-		SELECT ". $aliasfields." FROM ".$temptable." p WHERE NOT EXISTS ( 
-				SELECT s.branchnumber FROM ". $table." s WHERE s.branchnumber = p.branchnumber)";
-		$error = "I couldnt copy over to the permanent table!<br />";
-		$type='insert';
-		$this->branch->rawQuery($query,$error,$type);
-		// get the new branches that have been added
-		// 
-		$newBranches = \DB::table($temptable)->pluck('branchnumber');
-		
-		// now attach them to the service line 
-		if (null!==(\Input::get('serviceline'))){
-
-			$servicelines = \Input::get('serviceline');
-			$branches = $this->branch->whereIn('branchnumber',$newBranches)->get();
-			
-			foreach ($branches as $branch){
-				$update = $this->branch->findOrFail($branch->id);
-				$update->servicelines()->attach($servicelines);
-			}
-
-			
-			// here we have to sync to the user service line pivot.
-		}
-		
-
-
-		$query ="DROP TABLE IF EXISTS " .$temptable;
-		$type='update';
-		$error="Can't delete temporay table " . $temptable;
-		$this->branch->rawQuery($query,$error,$type);
-		redirect()->to(route('branches.index'));
-			
-		*/
-		
-	}
 	public function export() 
 	{
 	
@@ -629,9 +515,9 @@ protected function getBranchGeoCode($address)
 				// No exception will be thrown here
 				echo $e->getMessage();
 			}
-		
-		$input['lat'] = $geocode['latitude'];
-		$input['lng'] = $geocode['longitude'];
+		dd($geoCode);
+		$input['lat'] = $geoCode['latitude'];
+		$input['lng'] = $geoCode['longitude'];
 
 
 	return $input;

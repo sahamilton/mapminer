@@ -1,4 +1,4 @@
-@extends('site/layouts/default')
+@extends('site.layouts.default')
 
 {{-- Page title --}}
 @section('title')
@@ -32,7 +32,7 @@ Create a New Branch
     </div>
 	
 </div>	
-
+<input type="submit" class="btn btn-success" value="Add Branch" />
 </form>
 </div>
 @include('partials/_scripts')

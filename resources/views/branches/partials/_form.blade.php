@@ -9,7 +9,9 @@ $states = $state->getStates();
 <div class="form-group{{ $errors->has('branchnumber') ? ' has-error' : '' }}">
 	<label class="col-md-2 control-label">Branch Number:</label>
 	<div class="input-group input-group-lg">
-		<input type="text" class="form-control" name='branchnumber' description="branchnumber" value="{{ old('branchnumber') ? old('branchnumber') : isset($data->branchnumber) ? $data->branchnumber : "" }}" placeholder="branchnumber">
+		<input type="text" class="form-control" name='branchnumber' description="branchnumber" 
+		value="{{ old('branchname', $branch->branchnumber ) }}" 
+		placeholder="branchnumber">
 		<span class="help-block">
 			<strong>{{ $errors->has('branchnumber') ? $errors->first('branchnumber') : ''}}</strong>
 		</span>
@@ -21,7 +23,9 @@ $states = $state->getStates();
 <div class="form-group{{ $errors->has('branchname') ? ' has-error' : '' }}">
 	<label class="col-md-2 control-label">Branch Name</label>
 	<div class="input-group input-group-lg">
-		<input type="text" class="form-control" name='branchname' description="branchname" value="{{ old('branchname') ? old('branchname') : isset($data->branchname) ? $data->branchname : "" }}" placeholder="branchname">
+		<input type="text" class="form-control" name='branchname' description="branchname" 
+		value="{{ old('branchname', isset($branch) && isset($branch->branchname) ? $branch->branchname : '') }}" 
+		placeholder="branchname">
 		<span class="help-block">
 			<strong>{{ $errors->has('branchname') ? $errors->first('branchname') : ''}}</strong>
 		</span>
@@ -32,7 +36,9 @@ $states = $state->getStates();
 <div class="form-group{{ $errors->has('street') ? ' has-error' : '' }}">
 	<label class="col-md-2 control-label">Address:</label>
 	<div class="input-group input-group-lg">
-		<input type="text" class="form-control" name='street' description="street" value="{{ old('street') ? old('street') : isset($data->street) ? $data->street : "" }}" placeholder="street">
+		<input type="text" class="form-control" name='street' description="street" 
+		value="{{ old('street' , isset($branch) && isset($branch->street) ? $branch->street : '') }}" 
+		placeholder="street">
 		<span class="help-block">
 			<strong>{{ $errors->has('street') ? $errors->first('street') : ''}}</strong>
 		</span>
@@ -47,7 +53,9 @@ $states = $state->getStates();
 <div class="form-group{{ $errors->has('address2') ? ' has-error' : '' }}">
 	<label class="col-md-2 control-label">Suite/Unit:</label>
 	<div class="input-group input-group-lg">
-		<input type="text" class="form-control" name='address2' description="address2" value="{{ old('address2') ? old('address2') : isset($data->address2) ? $data->address2 : "" }}" placeholder="address2">
+		<input type="text" class="form-control" name='address2' description="address2" 
+		value="{{ old('address2', isset($branch) && isset($branch->address2) ? $branch->address2 : '' ) }}" 
+		placeholder="address2">
 		<span class="help-block">
 			<strong>{{ $errors->has('address2') ? $errors->first('address2') : ''}}</strong>
 		</span>
@@ -60,7 +68,9 @@ $states = $state->getStates();
 <div class="form-group{{ $errors->has('city') ? ' has-error' : '' }}">
 	<label class="col-md-2 control-label">City:</label>
 	<div class="input-group input-group-lg">
-		<input type="text" class="form-control" name='city' description="city" value="{{ old('city') ? old('city') : isset($data->city) ? $data->city : "" }}" placeholder="city">
+		<input type="text" class="form-control" name='city' description="city" 
+		value="{{ old('city' , isset($branch) && isset($branch->city) ? $branch->city : '') }}" 
+		placeholder="city">
 		<span class="help-block">
 			<strong>{{ $errors->has('city') ? $errors->first('city') : ''}}</strong>
 		</span>
@@ -86,7 +96,9 @@ $states = $state->getStates();
 <div class="form-group{{ $errors->has('zip') ? ' has-error' : '' }}">
 	<label class="col-md-2 control-label">ZIP / Postal Code:</label>
 	<div class="input-group input-group-lg">
-		<input type="text" class="form-control" name='zip' description="zip" value="{{ old('zip') ? old('zip') : isset($data->zip) ? $data->zip : "" }}" placeholder="zip">
+		<input type="text" class="form-control" name='zip' description="zip" 
+		value="{{ old('zip', isset($branch) && isset($branch->zip) ? $branch->zip : '' ) }}" 
+		placeholder="zip">
 		<span class="help-block">
 			<strong>{{ $errors->has('zip') ? $errors->first('zip') : ''}}</strong>
 		</span>
@@ -100,7 +112,9 @@ $states = $state->getStates();
 <div class="form-group{{ $errors->has('radius') ? ' has-error' : '' }}">
 	<label class="col-md-2 control-label">Service Radius in miles:</label>
 	<div class="input-group input-group-lg">
-		<input type="text" class="form-control" name='radius' description="radius" value="{{ old('radius') ? old('radius') : isset($data->radius) ? $data->radius : "25" }}" placeholder="service radius">
+		<input type="text" class="form-control" name='radius' description="radius" 
+		value="{{ old('radius' , isset($branch) && isset($branch->radius) ? $branch->radius : "25" )}}" 
+		placeholder="service radius">
 		<span class="help-block">
 			<strong>{{ $errors->has('radius') ? $errors->first('radius') : ''}}</strong>
 		</span>
@@ -123,16 +137,17 @@ $states = $state->getStates();
 
 <?php $regions = [ '1'=>'Western' ,'2'=>'CLP','3'=>'Eastern','4'=>'Mid-America & Canada
 '];?>
-<div class="form-group{{ $errors->has('region)') ? ' has-error' : '' }}">
+<div class="form-group{{ $errors->has('region_id)') ? ' has-error' : '' }}">
 	<label class="col-md-2 control-label">Region:</label>
 	<div class="input-group input-group-lg">
-		<select  class="form-control" name='region'>
-			@foreach ($regions as $region))
-				<option value="{{$region}}">{{$region}}</option>
+		<select  class="form-control" name='region_id'>
+			@foreach ($regions as $key=>$region))
+
+				<option @if(isset($branch) && $branch->region_id == $key) selected @endif value="{{$key}}">{{$region}}</option>
 			@endforeach
 		</select>
 		<span class="help-block">
-			<strong>{{ $errors->has('region') ? $errors->first('region') : ''}}</strong>
+			<strong>{{ $errors->has('region_id') ? $errors->first('region_id') : ''}}</strong>
 		</span>
 	</div>
 </div>
