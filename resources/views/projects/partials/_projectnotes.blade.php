@@ -14,14 +14,8 @@
 @foreach ($project->relatedNotes as $note)
 <tr>
 	<td>{{$note->created_at->format('m-d-Y')}}</td>
-	<td>@if($project->owned()  or auth()->user()->hasRole('Admin'))
-		<a href="#" class="note"  id='{{$note->id}}' data-type="textarea" data-pk="1">
-		{{$note->note}}</a>
-	@else
-		{{$note->note}}
-	@endif
-</td>
-	 <td>
+	<td>{{$note->note}}</td>
+	<td>
 	 @if(null !==$note->writtenBy)
 		 {{$note->writtenBy->person->postName()}}
 	 @else
