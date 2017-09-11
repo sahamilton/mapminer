@@ -90,12 +90,11 @@ class BranchesController extends BaseController {
 	 */
 	public function create()
 	{
-		
-		$managers = $this->branch->getbranchManagers();
-			
+		$branchRoles = \App\Role::whereIn('id',$this->branch->branchRoles)->pluck('name','id');
+		$team = $this->person->personroles($this->branch->branchRoles);
 		$servicelines = $this->serviceline->whereIn('id',$this->userServiceLines)->get();
     
-		return response()->view('branches.create',compact('servicelines','managers'));
+		return response()->view('branches.create',compact('servicelines','team','branchRoles'));
 	}
 
 	/**

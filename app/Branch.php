@@ -4,6 +4,8 @@ namespace App;
 class Branch extends Model {
 	use Geocode;
 
+	public $branchRoles = [5,9,11];
+
 	// Add your validation rules here
 	public static $rules = [
 		'branchname'=>'required',
