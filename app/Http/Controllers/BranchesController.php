@@ -150,8 +150,8 @@ class BranchesController extends BaseController {
 	 */
 	private function rebuildXMLfile(){
 		$branches = $this->branch->with('servicelines')->get();
-		
-		$xml = return response()->view('branches.xml', compact('branches'));
+		dd($branches);
+		return response()->view('branches.xml', compact('branches'));
 		$file = file_put_contents(public_path(). '/uploads/branches.xml', $xml);
 		
 		
