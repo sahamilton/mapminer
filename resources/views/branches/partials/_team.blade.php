@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" style="margin-top:40px">
 
 @foreach ($branchRoles as $key=>$role)
 		<div class="form-group{{ $errors->has('role[$key]') ? ' has-error' : '' }}">
@@ -8,7 +8,8 @@
             <option value=''>None Assigned</option>
             	@foreach ($team as $person){
             		@if(in_array($key,$person->findRole()))
-            			<option value="{{$person->id}}">{{$person->fullName()}}</option>
+            			<option @if(in_array($person->id,$branchteam)) selected @endif value="{{$person->id}}">{{$person->fullName()}}
+            			</option>
             		@endif
             	@endforeach
 

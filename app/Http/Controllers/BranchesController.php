@@ -121,7 +121,7 @@ class BranchesController extends BaseController {
 		foreach ($input['roles'] as $key=>$role){
 				foreach ($role as $person){
 				
-					$branch->relatedPeople()->attach($person,['role_id'=>$key]);
+					$branch->relatedPeople()->sync($person,['role_id'=>$key]);
 				}
 				
 			}
@@ -129,12 +129,8 @@ class BranchesController extends BaseController {
 
 		// get the service lines that have been selected and reduce to the simple array
 	
-		foreach($input['serviceline'] as $line)
-		{
-			$lines[] = $line;	
-		}
-
-		$branch->servicelines()->sync($lines);
+		
+		$branch->servicelines()->sync($input['serviceline']);
 		$this->rebuildXMLfile();
 
 		return redirect()->route('branches.show',$branch->id);
@@ -246,11 +242,14 @@ class BranchesController extends BaseController {
 	{
 		$branchRoles = \App\Role::whereIn('id',$this->branch->branchRoles)->pluck('name','id');
 		$team = $this->person->personroles($this->branch->branchRoles);
-		$branch = $this->branch->with('servicelines','relatedPeople')->find($branch->id);
-		$servicelines = $this->serviceline->whereIn('id',$this->userServiceLines )->get();
-	
 
-		return response()->view('branches.edit', compact('branch','servicelines','branchRoles','team'));
+		$branch = $this->branch->find($branch->id);
+		$branchteam = $branch->relatedPeople()->pluck('persons.id')->toArray();;
+		
+		$servicelines = $this->serviceline->whereIn('id',$this->userServiceLines )->get();
+		$branchservicelines = $branch->servicelines()->pluck('servicelines.id')->toArray();
+
+		return response()->view('branches.edit', compact('branch','servicelines','branchRoles','team','branchteam','branchservicelines'));
 	}
 
 	/**
@@ -261,19 +260,19 @@ class BranchesController extends BaseController {
 	 */
 	public function update(BranchFormRequest $request,$branch)
 	{
-		$branch->with('servicelines')
-		->findOrFail($branch->id)
+		
+		$branch->findOrFail($branch->id)
 		->update($request->all());
+		foreach ($request->get('roles') as $key=>$role){
+				foreach ($role as $person){
+				
+					$branch->relatedPeople()->sync($person,['role_id'=>$key]);
+				}
+				
+			}
 
-		$serviceline = $request->get('serviceline');
-		$lines=array();
-		foreach($serviceline as $key=>$value)
-		{
 		
-			$lines[] = $key;	
-		}
-		
-		$branch->servicelines()->sync($lines);
+		$branch->servicelines()->sync($request->get('serviceline'));
 		$this->rebuildXMLfile();
 		return redirect()->route('branches.show',$branch->id );
 

@@ -4,7 +4,7 @@ $state = new App\State;
 $states = $state->getStates();
 
 ?>
-
+<div class="container" style="margin-top:40px">
 <!-- branchnumber -->
 <div class="form-group{{ $errors->has('branchnumber') ? ' has-error' : '' }}">
 	<label class="col-md-2 control-label">Branch Number:</label>
@@ -83,7 +83,7 @@ $states = $state->getStates();
 	<div class="input-group input-group-lg">
 		<select  class="form-control" name='state'>
 		@foreach ($states as $state))
-			<option value="{{$state}}">{{$state}}</option>
+			<option @if (isset($branch) && $branch->state == $state) selected @endif value="{{$state}}">{{$state}}</option>
 		@endforeach
 		</select>
 		<span class="help-block">
@@ -126,7 +126,7 @@ $states = $state->getStates();
 	<div class="input-group input-group-lg">
 		<select multiple class="form-control" name='serviceline[]'>
 			@foreach ($servicelines as $serviceline))
-				<option value="{{$serviceline->id}}">{{$serviceline->ServiceLine}}</option>
+				<option @if(isset($branch) && in_array($serviceline->id,$branchservicelines)) selected @endif value="{{$serviceline->id}}">{{$serviceline->ServiceLine}}</option>
 			@endforeach
 		</select>
 		<span class="help-block">
@@ -152,7 +152,7 @@ $states = $state->getStates();
 	</div>
 </div>
 
-
+</div>
 
 
 
