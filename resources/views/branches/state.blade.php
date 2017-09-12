@@ -54,20 +54,17 @@
 	</td>
 	<td>
 		<a href="{{route('region.show',$branch->region->id)}}" 
-		title="See all {{$branch->region->region}} branches">
+		title="See all {{$branch->region->region}} region branches">
 		{{$branch->region->region}}
 		</a>
 
 	</td>
 	<td>
-	@if(isset($branch->manager))
-		<a href="{{route('person.show',$branch->manager->id)}}" 
-		title="See all branches managed by {{isset($branch->manager->firstname) ? $branch->manager->firstname : '' }} 
-		{{isset( $branch->manager->lastname) ? $branch->manager->lastname : '' }}" >
-		{{isset($branch->manager->firstname) ? $branch->manager->firstname : ''}} 
-		{{ isset ($branch->manager->lastname) ? $branch->manager->lastname : '' }}
-		</a>
-	@endif
+
+	@foreach ($branch->relatedPeople(9)->get() as $person)
+		{{$person->postName()}}<br />
+
+	@endforeach
 	</td>
 	<td>
 		<a href="{{route('branches.show',$branch->id)}}" 

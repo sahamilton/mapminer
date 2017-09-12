@@ -429,8 +429,8 @@ class BranchesController extends BaseController {
 		}
 
 		$branches = $this->branch
-			->with('region')
-			->with('manager')
+			->with('region','servicelines')
+	
 			->whereHas('servicelines', function($q) {
 					    $q->whereIn('serviceline_id',$this->userServiceLines);
 

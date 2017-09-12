@@ -49,6 +49,7 @@ class Branch extends Model {
 	
 	public function relatedPeople($role=null){
 		if($role){
+			
 			return $this->belongsToMany(Person::class)
 			->wherePivot('role_id','=',$role);
 		}else{

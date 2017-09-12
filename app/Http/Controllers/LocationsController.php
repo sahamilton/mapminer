@@ -262,7 +262,7 @@ class LocationsController extends BaseController {
 		
 		
 		$filtered = $this->location->isFiltered(['companies'],['vertical']);
-		
+		$roles = \App\Role::pluck('name','id');
 		$mywatchlist= array();
 		$locations = NULL;
 		$branches = $this->branch->with('manager')->findOrFail($id);
@@ -280,7 +280,7 @@ class LocationsController extends BaseController {
 			}
 		}
 
-		return response()->view('branches.showlist', compact('data','locations','mywatchlist','filtered'));
+		return response()->view('branches.showlist', compact('data','locations','mywatchlist','filtered','roles'));
 	}
 		
 	
