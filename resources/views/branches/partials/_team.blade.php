@@ -8,7 +8,7 @@
             <option value=''>None Assigned</option>
             	@foreach ($team as $person){
             		@if(in_array($key,$person->findRole()))
-            			<option @if(in_array($person->id,$branchteam)) selected @endif value="{{$person->id}}">{{$person->fullName()}}
+            			<option @if(isset($branchteam) && in_array($person->id,$branchteam)) selected @endif value="{{$person->id}}">{{$person->fullName()}}
             			</option>
             		@endif
             	@endforeach

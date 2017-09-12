@@ -24,7 +24,7 @@ class BranchFormRequest extends FormRequest
     public function rules()
     {
         return ['branchname'=>'required',
-        'branchnumber'=>'required',
+        'branchnumber'=>'required|unique:branches,branchnumber,'. $this->request->get('branchnumber'),
         'street'=>'required',
         'city'=>'required',
         'state'=>'required',

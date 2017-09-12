@@ -10,7 +10,7 @@ $states = $state->getStates();
 	<label class="col-md-2 control-label">Branch Number:</label>
 	<div class="input-group input-group-lg">
 		<input type="text" class="form-control" name='branchnumber' description="branchnumber" 
-		value="{{ old('branchname', $branch->branchnumber ) }}" 
+		value="{{ old('branchnumber', isset($branch) ? $branch->branchnumber :'' ) }}" 
 		placeholder="branchnumber">
 		<span class="help-block">
 			<strong>{{ $errors->has('branchnumber') ? $errors->first('branchnumber') : ''}}</strong>
