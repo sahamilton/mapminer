@@ -43,7 +43,7 @@ class BranchesController extends BaseController {
 	 */
 	public function index()
 	{
-		
+
 		$branches = $this->branch
 			->with('region','manager','relatedPeople','servicelines')
 			->whereHas('servicelines', function($q) {
@@ -150,11 +150,9 @@ class BranchesController extends BaseController {
 	 */
 	private function rebuildXMLfile(){
 		$branches = $this->branch->with('servicelines')->get();
-		dd($branches);
-		return response()->view('branches.xml', compact('branches'));
+		$xml = response()->view('branches.xml', compact('branches'))->header('Content-Type','text/xml');
 		$file = file_put_contents(public_path(). '/uploads/branches.xml', $xml);
-		
-		
+		return true;
 	}
 
 	
