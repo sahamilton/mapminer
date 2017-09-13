@@ -25,7 +25,7 @@
 	
 
 		<td><a href="{{route('branches.show',$branch->id)}}">{{$branch->branchname}}</a></td>
-		<td>{{$branch->branchnumber}}</td>
+		<td>{{$branch->id}}</td>
 		<td>{{$branch->brand}}</td>
 		<td>{{$branch->street}}</td>
 		<td>{{$branch->city}}</td>

@@ -32,7 +32,7 @@
 		</a>
 	</td>
 	<td>
-		{{$branch->branchnumber}}
+		{{$branch->id}}
 	</td>
 	<td>
 		@foreach($branch->servicelines as $serviceline)

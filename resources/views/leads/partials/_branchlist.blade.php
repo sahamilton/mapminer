@@ -24,7 +24,7 @@
 	</td>
 	
 	<td>
-	{{$branch->branchnumber}}
+	{{$branch->id}}
 	</td>
 
 	<td>

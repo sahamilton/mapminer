@@ -9,7 +9,7 @@ class Branch extends Model {
 	// Add your validation rules here
 	public static $rules = [
 		'branchname'=>'required',
-		'branchnumber'=>'required',
+		'id'=>'required',
 		'street' => 'required',
 		'city' => 'required',
 		'state'=>'required',
@@ -23,7 +23,7 @@ class Branch extends Model {
 		'lat',
 		'lng',
 		'branchname',
-		'branchnumber',
+		'id',
 		'street',
 		'address2',
 		'city',
@@ -49,7 +49,7 @@ class Branch extends Model {
 	
 	public function relatedPeople($role=null){
 		if($role){
-			
+
 			return $this->belongsToMany(Person::class)
 			->wherePivot('role_id','=',$role);
 		}else{
@@ -96,56 +96,12 @@ class Branch extends Model {
 		}
 		$coordinates = $this->getPositionCoordinates($lat,$lng,$distance, $number);
 	
-		/*$result = $this->branches
-		->select(\DB::raw("haversine(x(position), y(position), ".$coordinates['lat'].",".$coordinates['lon'].") as 
-				distance_in_mi
-				where st_within (position, 
-					envelope(
-								linestring(
-									point(".$coordinates['rlat1'].",".$coordinates['rlon1']."), 
-									point(".$coordinates['rlat2'].",".$coordinates['rlon2'].")
-								)
-							)
-					)" ))
-		->with('ServiceLines')
-		->orderBy('distance_in_mi')
-		->limit($number)
-		->get();*/
 		
-
-
-		/*$query = "select haversine(x(position), y(position), ".$coordinates['lat'].",".$coordinates['lon'].") as distance_in_mi, 
-
-		branches.id as branchid,branchnumber,branchname,street,address2,city,state,zip,lat,lng,Serviceline as servicelines,color
-
-		$query = "select haversine(x(position), y(position), ".$coordinates['lat'].",".$coordinates['lon'].") as 
-		distance_in_mi, 
-		branches.id as branchid,branches.id as id, branchnumber,branchname,street,address2,city,state,zip,lat,lng,Serviceline as servicelines,color
-
-		from branches,branch_serviceline,servicelines
-		where st_within (position, 
-			envelope(
-						linestring(
-							point(".$coordinates['rlat1'].",".$coordinates['rlon1']."), 
-							point(".$coordinates['rlat2'].",".$coordinates['rlon2'].")
-						)
-					)
-			)
-			and branches.id = branch_serviceline.branch_id
-		    			and branch_serviceline.serviceline_id = servicelines.id
-		    			AND branch_serviceline.serviceline_id in ('".implode("','",$userServiceLines)."')
-		order by distance_in_mi
-
-		limit " . $number;
-
-		dd($query);
-
-		*/
 	
 
-				$query = "select distinct branchid,branchnumber,branchname,street,address2,city,state,zip,lat,lng, distance_in_mi,
-			  CONCAT_WS(' / ',branchname,branchnumber) AS name, servicelines FROM (
-			SELECT distinct branches.id as branchid, branchnumber, branchname,street,address2,city,state,zip,lat,lng,r,
+				$query = "select distinct branchid,branchname,street,address2,city,state,zip,lat,lng, distance_in_mi,
+			  CONCAT_WS(' / ',branchname,branchid) AS name, servicelines FROM (
+			SELECT distinct branches.id as branchid, branchname,street,address2,city,state,zip,lat,lng,r,
 			Serviceline as servicelines,
 				   69.0 * DEGREES(ACOS(COS(RADIANS(latpoint))
 							 * COS(RADIANS(lat))
@@ -203,8 +159,8 @@ class Branch extends Model {
 		return $coordinates;
 	}
 	
-	public function getBranchIdFromBranchNumber($branchstring){
-		return $this->whereIn('branchnumber',explode(',',$branchstring))
+	public function getBranchIdFromid($branchstring){
+		return $this->whereIn('id',explode(',',$branchstring))
 		->pluck('id')->toArray();
 	}
 		

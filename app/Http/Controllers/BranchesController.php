@@ -50,7 +50,7 @@ class BranchesController extends BaseController {
 					    $q->whereIn('serviceline_id',$this->userServiceLines);
 
 					})
-			->orderBy('branchnumber')
+			->orderBy('id')
 			->get();
 
 		
@@ -436,7 +436,7 @@ class BranchesController extends BaseController {
 
 					})
 			->where('state','=',$statecode)
-			->orderBy('branchnumber')
+			->orderBy('id')
 			->get();
 
 		

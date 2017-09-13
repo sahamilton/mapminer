@@ -233,7 +233,7 @@ class AdminUsersController extends BaseController {
         	$mode = 'edit';
 			$managers = $this->getManagerList();
 			
-			$branchesServiced = $user->person->branchesServiced()->pluck('branches.id','branchnumber')->toArray();
+			$branchesServiced = $user->person->branchesServiced()->pluck('branches.id','id')->toArray();
 			
 			// Ether get close branches 
 			
@@ -303,7 +303,7 @@ class AdminUsersController extends BaseController {
 
         $syncData=array();
         if(isset($data['branchstring'])){
-            $data['branches'] = $this->branch->getBranchIdFromBranchNumber($data['branchstring']);
+            $data['branches'] = $this->branch->getBranchIdFromid($data['branchstring']);
         }
 
         if(isset($data['branches']) && count($data['branches'])>0 && $data['branches'][0]!=0){
@@ -353,11 +353,11 @@ class AdminUsersController extends BaseController {
 				$branches[0] = 'none';
 				foreach($nearbyBranches as $nearbyBranch){
 
-					$branches[$nearbyBranch->branchid ]= $nearbyBranch->branchname . "/" . $nearbyBranch->branchnumber;
+					$branches[$nearbyBranch->branchid ]= $nearbyBranch->branchname . "/" . $nearbyBranch->id;
 				}
 			// or all branches	
 			}else{
-				$branches = Branch::select(\DB::raw("CONCAT_WS(' / ',branchname,branchnumber) AS name"),'id')->pluck('name','id')->toArray();
+				$branches = Branch::select(\DB::raw("CONCAT_WS(' / ',branchname,id) AS name"),'id')->pluck('name','id')->toArray();
 			}
             
 			return $branches;

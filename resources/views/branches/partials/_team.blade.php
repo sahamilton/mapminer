@@ -5,7 +5,7 @@
         <label class="col-md-4 control-label">{{$role}}:</label>
         <div class="col-md-6">
             <select multiple class="form-control" name=roles[{{$key}}][]'>
-            <option value=''>None Assigned</option>
+            <option @if(! isset($branchteam)) selected @endif value=''>None Assigned</option>
             	@foreach ($team as $person){
             		@if(in_array($key,$person->findRole()))
             			<option @if(isset($branchteam) && in_array($person->id,$branchteam)) selected @endif value="{{$person->id}}">{{$person->fullName()}}

@@ -5,15 +5,15 @@ $states = $state->getStates();
 
 ?>
 <div class="container" style="margin-top:40px">
-<!-- branchnumber -->
-<div class="form-group{{ $errors->has('branchnumber') ? ' has-error' : '' }}">
+<!-- id -->
+<div class="form-group{{ $errors->has('id') ? ' has-error' : '' }}">
 	<label class="col-md-2 control-label">Branch Number:</label>
 	<div class="input-group input-group-lg">
-		<input type="text" class="form-control" name='branchnumber' description="branchnumber" 
-		value="{{ old('branchnumber', isset($branch) ? $branch->branchnumber :'' ) }}" 
-		placeholder="branchnumber">
+		<input type="text" class="form-control" name='id' description="id" 
+		value="{{ old('id', isset($branch) ? $branch->id :'' ) }}" 
+		placeholder="id">
 		<span class="help-block">
-			<strong>{{ $errors->has('branchnumber') ? $errors->first('branchnumber') : ''}}</strong>
+			<strong>{{ $errors->has('id') ? $errors->first('id') : ''}}</strong>
 		</span>
 	</div>
 </div>

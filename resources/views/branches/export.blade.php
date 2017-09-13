@@ -3,7 +3,7 @@
 	<tbody>
 		<tr>
 			<td>id</td>
-			<td>branchnumber</td>
+			<td>id</td>
 			<td>branchname</td>
 			<td>street</td>
 			<td>address2</td>
@@ -20,7 +20,7 @@
 		@foreach($result as $branch)
 			<tr>  
 				<td>{{$branch->id}}</td>
-				<td>{{$branch->branchnumber}}</td>
+				<td>{{$branch->id}}</td>
 				<td>{{$branch->branchname}}</td>
 				<td>{{$branch->street}}</td>
 				<td>{{$branch->address2}}</td>

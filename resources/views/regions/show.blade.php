@@ -29,7 +29,7 @@
 		</a>
 	</td>
 	<td>
-		{{$branch->branchnumber}}
+		{{$branch->id}}
 	</td>
 	<td>
 	@if(count($branch->servicelines) > 0)

@@ -36,7 +36,7 @@
 		</a>
 	</td>
 	
-	<td>{{$branch->branchnumber}}</td>
+	<td>{{$branch->id}}</td>
 	<td>
 		<ul>
 			@foreach($branch->servicelines as $serviceline)

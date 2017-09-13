@@ -26,9 +26,9 @@ location in {{$data['location']['city']}} are:<p>
 
 @foreach($data['branch'] as $branch)
 <tr>
-	
+
     <td><a href="{{route('branches.show',$branch->branchid)}}" title="Review {{trim($branch->branchname)}} branch">{{$branch->branchname}}</a></td>
-    <td>{{$branch->branchnumber}}</td>
+    <td>{{$branch->branchid}}</td>
    
     <td>{{$branch->street}}</td>
     <td>{{$branch->city}}</td>

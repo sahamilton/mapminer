@@ -4,7 +4,7 @@
 <h2>{{$salesteam->branchname}}</h2>
 <div class="row">
 <div class="col-sm-3" >
-<h4>Branch Number {{$salesteam->branchnumber}}</h4>
+<h4>Branch Number {{$salesteam->id}}</h4>
        
         <h4>Address:</h4>
         <p>{{$salesteam->street}}{{$salesteam->address2}}<br/>
