@@ -46,7 +46,13 @@ $(document).ready(function()
 
 	$('#sorttablenosort').DataTable(
 		{
-			"bSort":false,
+
+			"bPaginate": false,
+		}
+		);
+	$('#sorttablenosort1').DataTable(
+		{
+
 			"bPaginate": false,
 		}
 		);

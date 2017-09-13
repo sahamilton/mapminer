@@ -18,7 +18,7 @@ Review Branch Changes
 
 </ul>
 
-{{dd($data)}}
+
 <form method="post" name="changebranches" action ="{{route('branches.change')}}" >
 {{csrf_field()}}
 <div class="tab-content">
@@ -34,4 +34,30 @@ Review Branch Changes
 </form>
 </div>
 @include('partials/_scripts')
+
+<script>
+  var table = $('#sorttable').DataTable({
+   
+});
+  $('changebranches').on('submit', function(e){
+   var $form = $(this);
+
+   // Iterate over all checkboxes in the table
+   table.$('input[type="checkbox"]').each(function(){
+      // If checkbox doesn't exist in DOM
+      if(!$.contains(document, this)){
+         // If checkbox is checked
+         if(this.checked){
+            // Create a hidden element 
+            $form.append(
+               $('<input>')
+                  .attr('type', 'hidden')
+                  .attr('name', this.name)
+                  .val(this.value)
+            );
+         }
+      } 
+   });          
+});
+</script>
 @stop
