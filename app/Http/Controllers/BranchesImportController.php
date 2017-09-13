@@ -15,6 +15,7 @@ class BranchesImportController extends ImportController
     public $branch;
     protected $serviceline;
     public $userServiceLines;
+    public $importtable = 'branchesimport';
 	public function __construct(Branch $branch, ServiceLine $serviceline){
 		$this->branch = $branch;
         $this->serviceline = $serviceline;
@@ -34,14 +35,14 @@ class BranchesImportController extends ImportController
         
         $title="Map the branches import file fields";
         $data = $this->uploadfile($request->file('upload'));
-        $data['table']='branchesimport';
+        $data['table']=$this->importtable;
         $data['type'] = 'branches';
         $data['additionaldata'] = array();
         $data['route']= 'branches.mapfields';
         $company_id = $request->get('company');
         $fields = $this->getFileFields($data);      
         $columns = $this->branch->getTableColumns($data['table']);
-        $skip = ['id','created_at','updated_at','region_id'];
+        $skip = ['created_at','updated_at','region_id'];
         return response()->view('imports.mapfields',compact('columns','fields','data','company_id','skip','title'));
     }
 	public function mapfields(Request $request){
@@ -50,9 +51,27 @@ class BranchesImportController extends ImportController
         $import = new Imports($data);
 
         if($import->import()) {
-            return redirect()->route('branches.index')->with('success','Branches imported');
+            $data= $this->showChanges();
+            return response()->view('branches.changes',compact('data'));
         }
         
     }
-    
+    private function showChanges(){
+        $data = array();
+        //get the adds
+        $data['adds'] = \DB::table($this->importtable)
+        ->leftJoin('branches',function($join){
+            $join->on('branchesimport.id','=','branches.id');
+        })
+        ->where('branches.id','=',null)
+        ->get();
+
+        dd($data['adds']);
+        //get the deletes
+        $deleteQuery = 'SELECT * FROM `branches` left join branchesimport on branches.id = branchesimport.id where branchesimport.id is null';
+        $data['deletes'] =  \DB::select(\DB::raw($deleteQuery));
+        //
+        //
+        return $data;
+    }
 }

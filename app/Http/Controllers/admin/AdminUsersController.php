@@ -352,8 +352,8 @@ class AdminUsersController extends BaseController {
 
 				$branches[0] = 'none';
 				foreach($nearbyBranches as $nearbyBranch){
-
-					$branches[$nearbyBranch->branchid ]= $nearbyBranch->branchname . "/" . $nearbyBranch->id;
+        
+					$branches[$nearbyBranch->branchid ]= $nearbyBranch->branchname . "/" . $nearbyBranch->branchid;
 				}
 			// or all branches	
 			}else{

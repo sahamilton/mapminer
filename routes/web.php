@@ -235,6 +235,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 {
 	#Branches
 		Route::get('branches/import', ['as'=>'branches.importfile', 'uses'=>'BranchesImportController@getFile']);
+		Route::post('branches/change',['as'=>'branches.change','uses'=>'BranchesImportController@update']);
 		Route::post('branches/bulkimport', ['as'=>'branches.import', 'uses'=>'BranchesImportController@import']);
 		Route::get('geocode', ['as'=>'branches.geocode', 'uses'=>'BranchesController@geoCodeBranches']);
 		Route::get('branchmap', ['as'=>'branches.genmap', 'uses'=>'BranchesController@rebuildBranchMap']);
