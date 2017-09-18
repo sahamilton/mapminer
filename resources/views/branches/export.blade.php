@@ -2,8 +2,8 @@
 <table>
 	<tbody>
 		<tr>
-			<td>id</td>
-			<td>id</td>
+			<td>branchnumber</td>
+
 			<td>branchname</td>
 			<td>street</td>
 			<td>address2</td>
@@ -14,12 +14,11 @@
 			<td>lat</td>
 			<td>lng</td>
 			<td>Manager</td>
-			<td>Person ID</td>
-			<td>User Id</td>
+			
 		</tr>
 		@foreach($result as $branch)
 			<tr>  
-				<td>{{$branch->id}}</td>
+
 				<td>{{$branch->id}}</td>
 				<td>{{$branch->branchname}}</td>
 				<td>{{$branch->street}}</td>
@@ -30,11 +29,11 @@
 				<td>{{$branch->phone}}</td>
 				<td>{{$branch->lat}}</td>
 				<td>{{$branch->lng}}</td>
-				@if(isset($branch->manager))
-				<td>{{$branch->manager->postName()}}</td>
-				<td>{{$branch->manager->id}}</td>
-				<td>{{$branch->manager->user_id}}</td>
-				@endif
+				<td>@foreach($branch->manager as $manager)
+				{{$manager->postName()}} ( pid= {{$manager->id}},uid = {{$manager->user_id}} )
+				@if( ! $loop->last) | @endif
+				@endforeach
+			</td>
 				
 				
 

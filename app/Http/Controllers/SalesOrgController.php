@@ -38,13 +38,15 @@ class SalesOrgController extends BaseController {
 			
 			if (! $salesPerson){
 				$salesLeader = $this->getSalesLeaders();
+
 				$salesperson = Person::whereIn('id',$salesLeader)->first();
+
 			}else{
 				$salesperson = Person::whereId($salesPerson->id)->first();
 			}
 			
 			// if leaf
-		
+
 			
 			if( $salesperson->isLeaf())
 			{

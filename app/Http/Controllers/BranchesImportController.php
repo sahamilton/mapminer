@@ -16,10 +16,12 @@ class BranchesImportController extends ImportController
     public $branch;
     protected $serviceline;
     public $userServiceLines;
+    public $branchimport;
     public $importtable = 'branchesimport';
-	public function __construct(Branch $branch, ServiceLine $serviceline){
+	public function __construct(Branch $branch, ServiceLine $serviceline,BranchImport $branchimport){
 		$this->branch = $branch;
         $this->serviceline = $serviceline;
+        $this->branchimport = $branchimport;
 
         parent::__construct($this->branch);
 	}
@@ -41,6 +43,7 @@ class BranchesImportController extends ImportController
         $data['type'] = 'branches';
         $data['additionaldata'] = array();
         $data['route']= 'branches.mapfields';
+        $data['serviceline'] = $request->get('serviceline');
         $company_id = $request->get('company');
         $fields = $this->getFileFields($data);      
         $columns = $this->branch->getTableColumns($data['table']);
@@ -53,16 +56,16 @@ class BranchesImportController extends ImportController
         $import = new Imports($data);
 
         if($import->import()) {
-            $data= $this->showChanges();
+            $data= $this->showChanges($data);
             return response()->view('branches.changes',compact('data'));
         }
         
     }
-    private function showChanges(){
-        $data = array();
-        $branchesimport = new BranchImport($data);
+    private function showChanges($data){
+        
+        $serviceline = $data['serviceline'];
         //get the adds
-        $data['adds'] = $branchesimport
+        $data['adds'] = $this->branchimport
         ->distinct()
         ->select('branchesimport.id','branchesimport.branchname', 'branchesimport.street','branchesimport.address2','branchesimport.city','branchesimport.state','branchesimport.zip')
         ->leftJoin('branches',function($join){
@@ -74,6 +77,9 @@ class BranchesImportController extends ImportController
 
       
         $data['deletes'] =  $this->branch
+        ->whereHas('servicelines',function($q) use($serviceline){
+            $q->where('id','=',$serviceline);
+         })
         ->select('branches.id','branches.branchname', 'branches.street','branches.address2','branches.city','branches.state','branches.zip')
         ->leftJoin('branchesimport',function($join){
             $join->on('branches.id','=','branchesimport.id');
@@ -87,19 +93,29 @@ class BranchesImportController extends ImportController
     }
 
     public function update(Request $request){
-       $this->branch->delete($request->get('delete'));
-       $deletes = count($request->get('delete'));
+
        $adds = count($request->get('add'));
-       $data=array();
-       $branchimport = new BranchImport;
-       $branchesToImport = $branchimport->whereIn('id',$request->get('add'))->with('servicelines')->get();
+       $branchesToImport = $this->branchimport
+        ->whereIn('id',$request->get('add'))
+        ->get();
        foreach ($branchesToImport as $add){
-        $branch = $this->branch->insert($add);
-        $branch->servicelines()->sync($add->servicelines);
-
-
+        $branch = Branch::create($add->toArray());
+        $branch->id = $add['id'];
+        $branch->save();
+        $branch->servicelines()->sync([$request->get('serviceline')]);
        }
-       return redirect()->route('branches.index')->with('success','Added ' . $adds .' and deleted '. $deletes);
+       $branchesToUpdate = $this->branchimport
+       ->whereNotIn('id',$request->get('add'))
+       ->whereNotIn('id',$request->get('delete'))->get();
+       $updates = count($branchesToUpdate);
+        foreach ($branchesToUpdate as $update){
+            $branch = $this->branch->find($update->id)->update($update->toArray());
+       }
+       $this->branch->destroy($request->get('delete'));
+       $this->branchimport->destroy($request->get('delete'));
+       $deletes = count($request->get('delete'));
+       $this->branchimport->truncate();
+       return redirect()->route('branches.index')->with('success','Added ' . $adds .' deleted '. $deletes . ' and updated '.$updates);
 
     }
 }

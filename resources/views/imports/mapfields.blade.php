@@ -65,6 +65,9 @@
 @foreach ($data['additionaldata'] as $key=>$value)
 <input type="hidden" name="additionaldata[{{$key}}]" value="{{$value}}" />
 @endforeach
+@if(isset($data['serviceline']))
+<input type="hidden" name="serviceline" value="{{$data['serviceline']}}" />
+@endif
 <input type="hidden" name="type" value="{{$data['type']}}" />
 </form>
 </div>

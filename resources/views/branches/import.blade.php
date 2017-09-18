@@ -34,7 +34,7 @@
 			<label class="col-md-2 control-label">Servicelines:</label>
 			<div class="input-group input-group-lg ">
 
-				<select name="serviceline[]'" multiple >
+				<select name="serviceline" >
 					@foreach ($servicelines as $key=>$serviceline)
 					<option value="{{$key}}">{{$serviceline}}</option>
 					@endforeach
@@ -62,15 +62,9 @@
 			</div>
 
 		</div>
-		<div class="form-group{{ $errors->has('type') ? ' has-error' : '' }}">
-			<label class="col-md-2 control-label" for="type" >Import Type</label>
-			<div class="input-group input-group-lg ">
-				@foreach ($actions as $action)
-				<input type ='radio' name ="importtype" value='{{$action}}'/>{{ $action}}
-				@endforeach
-			</div>
-		</div>
+		
 		<input type="submit" class="btn btn-success" value="Import Branches" />
+
 		<input type="hidden" name="additionaldata[]" @if(isset($data)) value = "{{$data['additionaldata']}} @endif"
 		</form>
 

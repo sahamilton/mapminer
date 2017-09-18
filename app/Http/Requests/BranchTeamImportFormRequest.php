@@ -4,8 +4,9 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class BranchFormRequest extends FormRequest
+class BranchTeamImportFormRequest extends FormRequest
 {
+    public $mimetypes = ['application/vnd.ms-excel','text/plain','text/csv','text/tsv','text/x-c'];
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -23,15 +24,8 @@ class BranchFormRequest extends FormRequest
      */
     public function rules()
     {
-        return ['branchname'=>'required',
-        'id'=>'required|unique|integer:branches,id,'. $this->request->get('id'),
-        'street'=>'required',
-        'city'=>'required',
-        'state'=>'required',
-        'zip'=>'required',
-        'region_id'=>'required',
-        'radius'=>'required',
-            //
+        return [
+            'upload' => 'file|required|mimetypes:'.implode(",",$this->mimetypes), 
         ];
     }
 }

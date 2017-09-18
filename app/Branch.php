@@ -5,7 +5,7 @@ class Branch extends Model {
 	use Geocode;
 
 	public $branchRoles = [5,9,11];
-
+	public $branchmanagerrole = 9;
 	// Add your validation rules here
 	public static $rules = [
 		'branchname'=>'required',
@@ -14,25 +14,23 @@ class Branch extends Model {
 		'city' => 'required',
 		'state'=>'required',
 		'zip'=>'required',
-		'person_id'=>'required',
-		'region_id'=>'required'
+
 	];
 	public $branchManagerRole = 9;
 	// Don't forget to fill this array
 	public $fillable = [
+		'id',
 		'lat',
 		'lng',
 		'branchname',
-		'id',
 		'street',
 		'address2',
 		'city',
 		'state',
 		'zip',
 		'phone',
-		'person_id',
 		'region_id'];
-	
+	protected $guarded = [];
 	public $errors;
 	
 	public function locations() 
@@ -66,7 +64,7 @@ class Branch extends Model {
 	
 	public function manager() 
 	{
-		return $this->relatedPeople($this->branchManagerRole);
+		return $this->relatedPeople($this->branchManagerRole)->wherePivot('role_id','=',$this->branchmanagerrole);;
 		
 	}
 	

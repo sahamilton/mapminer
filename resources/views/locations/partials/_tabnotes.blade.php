@@ -2,14 +2,14 @@
 
 @foreach ($location->relatedNotes as $note)
 	<p>{{$note->created_at->format('m-d-Y')}}...<em>{{$note->note}}</em><br />
-	 -- 
-	 @if(null !==$note->writtenBy->person())
+
+	 @if(null !==$note->writtenBy && null!==$note->writtenBy->person())
 		 {{$note->writtenBy->person->postName()}}
 	 @else
 		 No longer with company
 	 @endif
 	 </p>
-	@if($note->writtenBy->id == auth()->user()->id  or auth()->user()->hasRole('Admin'))
+	@if(null !==$note->writtenBy && $note->writtenBy->id == auth()->user()->id  or auth()->user()->hasRole('Admin'))
 		<br />
 		<a href="{{route('notes.edit',$note->id)}}" title="Edit this note">
 			<i class="glyphicon glyphicon-pencil"></i>

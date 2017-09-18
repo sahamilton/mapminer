@@ -463,7 +463,7 @@ class BranchesController extends BaseController {
 	Excel::create('Branches',function($excel){
 			$excel->sheet('Watching',function($sheet) {
 				$result = $this->branch->with('manager')->get();
-				
+			
 			
 				$sheet->loadView('branches.export',compact('result'));
 			});

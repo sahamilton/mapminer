@@ -4,10 +4,12 @@
 			<td>id</td>
 			<td>firstname</td>
 			<td>lastname</td>
+			<td>Full Name</td>
 			<td>Username</td>
 			<td>Employee Number</td>
 			<td>Reports To</td>
 			<td>Manager id</td>
+			<td>User Id</td>
 			<td>Email</td>
 			<td>Created</td>
 			<td>Serviceline</td>
@@ -18,6 +20,7 @@
 			<td>{{$person->id}}</td>
 			<td>{{$person->firstname}}</td>
 			<td>{{$person->lastname}}</td>
+			<td>{{$person->firstname }} {{$person->lastname}}</td>
 			<td>{{$person->userdetails->username}}</td>
 			<td>{{$person->userdetails->employee_id}}</td>
 			
@@ -31,7 +34,7 @@
 			@endif
 			
 			
-			
+			<td>{{$person->userdetails->id}}</td>
 			<td>{{$person->userdetails->email}}</td>
 			<td>{{$person->userdetails->created_at->format('m/d/Y')}}</td>
 			<td>

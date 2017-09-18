@@ -260,11 +260,14 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
     	Route::post('emails/send',['as'=>'emails.send','uses'=>'EmailsController@sendEmail']);
     	Route::resource('emails','EmailsController');
     # Imports 
+   		Route::get('branch/teams',['as'=>'branch_team.importfile','uses'=>'BranchTeamImportController@getFile']);
+   		Route::post('branch/teams',['as'=>'branches.teamimport','uses'=>'BranchTeamImportController@import']);
     	Route::get('imports',['as'=>'imports.index','uses'=>'ImportController@index']);
     	Route::post('/importleads/mapfields',['as'=>'leads.mapfields','uses'=>'LeadImportController@mapfields']);
     	Route::post('/importlocations/mapfields',['as'=>'locations.mapfields','uses'=>'LocationsImportController@mapfields']);
     	Route::post('/importprojects/mapfields',['as'=>'projects.mapfields','uses'=>'ProjectsImportController@mapfields']);
     	Route::post('/importbranches/mapfields',['as'=>'branches.mapfields','uses'=>'BranchesImportController@mapfields']);
+    	Route::post('/importbranchteams/mapfields',['as'=>'branchteam.mapfields','uses'=>'BranchTeamImportController@mapfields']);
     	
 	#Locations
 		Route::get('locations/import', ['as'=>'locations.importfile', 'uses'=>'LocationsImportController@getfile']);
