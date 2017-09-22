@@ -36,8 +36,8 @@ enctype="multipart/form-data">
     </div>
     <?php $tables = ['projects','projectcompanies'];?>
         <div class="form-group{{ $errors->has('table)') ? ' has-error' : '' }}">
-        <label class="col-md-4 control-label">Tables</label>
-        <div class="col-md-6">
+        <label class="col-md-2 control-label">Tables</label>
+        <div class="input-group input-group-lg ">
             <select  class="form-control" name='table'>
 
             @foreach ($tables as $table))

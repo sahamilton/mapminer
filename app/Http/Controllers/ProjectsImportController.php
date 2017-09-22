@@ -45,6 +45,8 @@ class ProjectsImportController extends ImportController
                             'serviceline_id',
                             'project_source_id',
                             'created_at'];
+    public $projectcompanieyfields =['firm', 'addr1','addr2','city','state','zipcode','county','phone'];
+
     public function __construct(Project $project, ProjectSource $source){
         $this->project = $project;
         $this->sources = $source;
@@ -53,7 +55,7 @@ class ProjectsImportController extends ImportController
     }
 
     public function getFile(Request $request){
-       dd($this->updateProjects());
+       
         $source= $request->get('source');
         $sources= $this->sources->all()->pluck('source','id');
         $tables= ['projects','projectcompanies'];
@@ -62,28 +64,38 @@ class ProjectsImportController extends ImportController
 
 
     public function import(ProjectsImportFormRequest $request) {
-        
+      
         $data = $this->uploadfile($request->file('upload'));
         $data['table']=$request->get('table');
         if($data['table']=='projects'){
             $data['step'] = 1;
+            $data['table']= 'projectsimport';
+        }else{
+            $data['step']=2;
+            $data['table']='projectcompanyimport';
         }
-        
+     
         $data['type']=$request->get('type');
         $data['additionaldata']['project_source_id'] = $request->get('source');
         $data['route'] = 'projects.mapfields';
-        $fields = $this->getFileFields($data);
+        $fields = $this->getFileFields($data); 
+
         $columns = $this->project->getTableColumns($data['table']); 
-        $skip = ['id','created_at','updated_at','lead_source_id','pr_status'];
+
+        $skip = ['id','created_at','updated_at','project_source_id','company_id','pr_status','serviceline_id'];
         return response()->view('imports.mapfields',compact('columns','fields','data','skip'));
     }
     
     public function mapfields(Request $request){
+        
+        $data = $this->getData($request);  
 
-        $data = $this->getData($request);      
-        $import = new Imports($data);
+unset ($data['additionaldata'] );
+        $import = new ProjectImport($data);
 
         if($import->import()) {
+            $this->import = $import;
+
            return $this->postImport($data);
 
 
@@ -92,15 +104,17 @@ class ProjectsImportController extends ImportController
     }
     
     private function postImport($data){
+       
         switch($data['step']){
             case 1:
-                $this->import->copyNewProject();
+                $this->copyNewProject();
                 //$this->deleteOldProjects();
-                $this->import->updateProjects();
+                $this->updateProjects();
+                return redirect()->route('projects.importfile')->with('success','Projects imported; Now import the related companies');
             break;
             case 2:
-                $this->import->copyNewProjectCompanies();
-                $this->import->updateProjectsCompanies();
+                $this->copyNewProjectCompanies();
+                $this->updateProjectsCompanies();
                 $data=array();
                 $import = new ProjectImport($data);
                 $import->cleanse();
@@ -110,7 +124,8 @@ class ProjectsImportController extends ImportController
             
         }
     private function copyNewProject(){
-        $query = "insert into projects (" . implode(",",$this->projectfields) . ") select t.". implode(",t.",$this->projectfields). " FROM `projectsimport` t
+        
+         $query = "insert into projects (" . implode(",",$this->projectfields) . ") select t.". implode(",t.",$this->projectfields). " FROM `projectsimport` t
             left join projects on t.source_ref = projects.source_ref 
             WHERE projects.source_ref is null";
         if (\DB::select(\DB::raw($query))){
@@ -137,8 +152,7 @@ class ProjectsImportController extends ImportController
     $query=substr($query, 0, -1);
 
    if (\DB::select(\DB::raw($query))){
-           
-            return true;
+            return \DB::statement("TRUNCATE TABLE `projectsimport`");
         }
     }
     
@@ -153,6 +167,7 @@ class ProjectsImportController extends ImportController
    }
   public function updateProjectsCompanies(){
 
-                }
+  
+  }
     
 }

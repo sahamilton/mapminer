@@ -48,7 +48,6 @@ class Imports extends Model
 
     	private function createTemporaryImportTable(){
 
-				
 			//Create the temporary table
 			return $this->executeQuery("CREATE TEMPORARY TABLE ".$this->temptable." AS SELECT * FROM ". $this->table." LIMIT 0");
 			
@@ -104,7 +103,7 @@ class Imports extends Model
    public function _import_csv()
 	{
 
-	
+
 
 	$query = sprintf("LOAD DATA LOCAL INFILE '".$this->importfilename."' INTO TABLE ". $this->temptable." FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '\"' ESCAPED BY '\"' LINES TERMINATED BY '\\n'  IGNORE 1 LINES (".$this->fields.");", $this->importfilename);
 	

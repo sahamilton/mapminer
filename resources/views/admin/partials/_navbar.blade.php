@@ -121,6 +121,10 @@
                                 <i class="fa fa-download" aria-hidden="true"> </i> Export Users</a></li>
                             </ul>
                         </li>
+                        <li{{ (Request::is('admin/import*') ? ' class="active"' : '') }}>
+                        <a href="{{ route('imports.index') }}">
+                            <i class="fa fa-level-up"></i>Import / Export</li>
+                        </a></li>
                         @endcan
               
                       </ul>

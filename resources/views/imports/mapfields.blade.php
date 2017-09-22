@@ -68,6 +68,9 @@
 @if(isset($data['serviceline']))
 <input type="hidden" name="serviceline" value="{{$data['serviceline']}}" />
 @endif
+@if(isset($data['step']))
+<input type = "hidden" name="step" value="{{$data['step']}}" />
+@endif
 <input type="hidden" name="type" value="{{$data['type']}}" />
 </form>
 </div>
