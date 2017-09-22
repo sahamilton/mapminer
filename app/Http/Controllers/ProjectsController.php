@@ -246,7 +246,19 @@ class ProjectsController extends BaseController
 
     }
 
+    public function exportProjectStats(){
+        Excel::create('Projects',function($excel){
+            $excel->sheet('Stats',function($sheet) {
+                $projects = $this->project->projectStats($id=null);
+                $projects = $this->createStats($projects); 
+                $statuses = $this->project->statuses;
+                $sheet->loadView('projects.exportstats',compact('projects','statuses'));
+            });
+        })->download('csv');
 
+        return response()->return();
+
+    }
     public function release($id){
         $project = $this->project->with('owner')->findOrFail($id);
         $owner = $project->owner[0]->id;
@@ -275,7 +287,7 @@ class ProjectsController extends BaseController
 
     
     private function createStats($projects){
-      
+        
         $person = null;
 
         foreach ($this->project->statuses as $status){
@@ -283,11 +295,12 @@ class ProjectsController extends BaseController
         }
         
         foreach ($projects as $project){
-           
+   
             if($project->id != $person){
                 $person = $project->id;
                 $personProject[$project->id]['name'] = $project->firstname . " " . $project->lastname;
                 $personProject[$project->id]['id'] = $project->id;
+                
 
             }
           
@@ -299,7 +312,7 @@ class ProjectsController extends BaseController
            
             
         }
-
+     
         return $personProject;
 
     }

@@ -45,7 +45,7 @@ class ProjectsImportController extends ImportController
                             'serviceline_id',
                             'project_source_id',
                             'created_at'];
-    public $projectcompanieyfields =['firm', 'addr1','addr2','city','state','zipcode','county','phone'];
+    public $projectcompanyfields =['firm', 'addr1','addr2','city','state','zipcode','county','phone'];
 
     public function __construct(Project $project, ProjectSource $source){
         $this->project = $project;
@@ -70,13 +70,15 @@ class ProjectsImportController extends ImportController
         if($data['table']=='projects'){
             $data['step'] = 1;
             $data['table']= 'projectsimport';
+            $data['additionaldata']['project_source_id'] = $request->get('source');
         }else{
             $data['step']=2;
             $data['table']='projectcompanyimport';
+            $data['additionaldata'] = array();
         }
      
         $data['type']=$request->get('type');
-        $data['additionaldata']['project_source_id'] = $request->get('source');
+        
         $data['route'] = 'projects.mapfields';
         $fields = $this->getFileFields($data); 
 
@@ -90,7 +92,7 @@ class ProjectsImportController extends ImportController
         
         $data = $this->getData($request);  
 
-unset ($data['additionaldata'] );
+
         $import = new ProjectImport($data);
 
         if($import->import()) {
@@ -104,7 +106,7 @@ unset ($data['additionaldata'] );
     }
     
     private function postImport($data){
-       
+      
         switch($data['step']){
             case 1:
                 $this->copyNewProject();
@@ -113,9 +115,11 @@ unset ($data['additionaldata'] );
                 return redirect()->route('projects.importfile')->with('success','Projects imported; Now import the related companies');
             break;
             case 2:
+                $this->createHash();
                 $this->copyNewProjectCompanies();
                 $this->updateProjectsCompanies();
                 $data=array();
+
                 $import = new ProjectImport($data);
                 $import->cleanse();
                 return redirect()->route('projectsource.index')->with('success','Projects Cleansed');
@@ -123,9 +127,18 @@ unset ($data['additionaldata'] );
             }
             
         }
+    private function createHash(){
+        $query = "Update projectcompanyimport set company_hash = md5(concat(firm,addr1))";
+        if (\DB::select(\DB::raw($query))){
+           
+            return true;
+        }
+    }
+
+
     private function copyNewProject(){
         
-         $query = "insert into projects (" . implode(",",$this->projectfields) . ") select t.". implode(",t.",$this->projectfields). " FROM `projectsimport` t
+         $query = "insert ignore into projects (" . implode(",",$this->projectfields) . ") select t.". implode(",t.",$this->projectfields). " FROM `projectsimport` t
             left join projects on t.source_ref = projects.source_ref 
             WHERE projects.source_ref is null";
         if (\DB::select(\DB::raw($query))){
@@ -157,7 +170,7 @@ unset ($data['additionaldata'] );
     }
     
    public function copyNewProjectCompanies(){
-        $query = "insert into projectcompanies (" . implode(",",$this->projectcompanyfields) . ") select t.". implode(",t.",$this->projectcompanyfields). " FROM `projectcompanyimport` t
+        $query = "insert ignore into projectcompanies (" . implode(",",$this->projectcompanyfields) . ") select t.". implode(",t.",$this->projectcompanyfields). " FROM `projectcompanyimport` t
             left join projectcompanies on t.company_hash = projectcompanies.company_hash 
             WHERE projectcompanies.company_hash is null";
         if (\DB::select(\DB::raw($query))){

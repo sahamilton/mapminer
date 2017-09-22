@@ -317,6 +317,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 		Route::get('projects/status',['as'=>'projects.status','uses'=>'ProjectsController@statuses']);
 
 		Route::get('projects/stats',['as'=>'project.stats','uses'=>'ProjectsController@projectStats']);
+		Route::get('projects/exportstats',['as'=>'project.exportstats','uses'=>'ProjectsController@exportProjectStats']);
 		Route::get('projects/{id}/owner',['as'=>'project.owner','uses'=>'ProjectsController@ownedProjects']);
 		Route::post('projects/{id}/release',['as'=>'projects.release','uses'=>'ProjectsController@release']);
 
