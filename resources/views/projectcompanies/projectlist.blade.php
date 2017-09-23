@@ -4,6 +4,7 @@
 	<thead>
 		
 		<th>Project</th>
+		<th>Role</th>
 		<th>Address</th>
 		<th>City</th>
 		<th>State</th>
@@ -20,6 +21,7 @@
 		<tr>  
 		<td><a href="{{route('projects.show',$project->id)}}"
 		title="See details of this project">{{$project->project_title}}</a></td>
+		<td>{{$project->pivot->type}}</td>
 		<td>{{$project->project_addr1}}</td>
 		<td>{{$project->project_city}}</td>
 		<td>{{$project->project_state}},{{$project->project_zip}}</td>

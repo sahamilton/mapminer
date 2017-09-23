@@ -75,7 +75,7 @@ class Imports extends Model
 			$this->fields = str_replace('@ignore,','',$this->fields);
 			// COpy over to base table
 			
-			return $this->executeQuery("INSERT INTO `".$this->table."` (".$this->fields.") SELECT ".$this->fields." FROM `".$this->temptable."`");
+			return $this->executeQuery("INSERT IGNORE INTO `".$this->table."` (".$this->fields.") SELECT ".$this->fields." FROM `".$this->temptable."`");
 		}
 		// Drop the temp table
 		// 

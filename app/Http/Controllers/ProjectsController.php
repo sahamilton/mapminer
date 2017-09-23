@@ -73,6 +73,7 @@ class ProjectsController extends BaseController
      */
     public function show($id)
     {
+      
         $statuses = $this->project->getStatusOptions;
 
         $project = $this->project
@@ -80,7 +81,7 @@ class ProjectsController extends BaseController
        
         ->findOrFail($id);
         $branches = $this->branch->findNearbyBranches($project->project_lat,$project->project_lng,100,$limit=5,$this->userServiceLines);
-        
+
         return response()->view('projects.show',compact('project','statuses','branches'));
     }
 

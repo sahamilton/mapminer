@@ -6,6 +6,7 @@ namespace App;
 class Project extends Model
 {
     public $table="projects";
+    public $incrementing = false;
     public $statuses = ['Claimed','Closed'];
     public $fillable=[ 
            'source_ref',

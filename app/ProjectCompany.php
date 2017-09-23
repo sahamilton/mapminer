@@ -8,6 +8,7 @@ class ProjectCompany extends Model
 {
     
 	public $table ="projectcompanies";
+  public $incrementing = false;
 	public $fillable =['factor_type',
            'firm',
            'contact',

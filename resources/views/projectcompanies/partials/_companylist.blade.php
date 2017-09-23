@@ -15,6 +15,7 @@
 	</thead>
 	<tbody>
 @foreach ($project->companies as $company)
+
 <tr>
 		<td>{{$company->pivot->type}}</td>
             <td><a href="{{route('projectcompany.show',$company->id)}}"

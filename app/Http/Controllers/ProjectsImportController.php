@@ -15,7 +15,7 @@ class ProjectsImportController extends ImportController
     public $project;
     public $sources;
     public $import;
-    public $projectfields =['source_ref',
+    public $projectfields =['id',
                             'project_title',
                             'project_addr1',
                             'project_addr2',
@@ -45,7 +45,7 @@ class ProjectsImportController extends ImportController
                             'serviceline_id',
                             'project_source_id',
                             'created_at'];
-    public $projectcompanyfields =['firm', 'addr1','addr2','city','state','zipcode','county','phone'];
+    public $projectcompanyfields =['id','firm', 'addr1','addr2','city','state','zipcode','county','phone'];
 
     public function __construct(Project $project, ProjectSource $source){
         $this->project = $project;
@@ -84,7 +84,7 @@ class ProjectsImportController extends ImportController
 
         $columns = $this->project->getTableColumns($data['table']); 
 
-        $skip = ['id','created_at','updated_at','project_source_id','company_id','pr_status','serviceline_id'];
+        $skip = ['created_at','updated_at','project_source_id','company_id','pr_status','serviceline_id'];
         return response()->view('imports.mapfields',compact('columns','fields','data','skip'));
     }
     
@@ -111,24 +111,21 @@ class ProjectsImportController extends ImportController
             case 1:
                 $this->copyNewProject();
                 //$this->deleteOldProjects();
-                $this->updateProjects();
+                //$this->updateProjects();
                 return redirect()->route('projects.importfile')->with('success','Projects imported; Now import the related companies');
             break;
             case 2:
                 $this->createHash();
                 $this->copyNewProjectCompanies();
                 $this->updateProjectsCompanies();
-                $data=array();
-
-                $import = new ProjectImport($data);
-                $import->cleanse();
+                $this->updatePivotTable();
                 return redirect()->route('projectsource.index')->with('success','Projects Cleansed');
             break;
             }
             
         }
     private function createHash(){
-        $query = "Update projectcompanyimport set company_hash = md5(concat(firm,addr1))";
+        $query = "Update projectcompanyimport set company_id = md5(lcase(trim(replace(concat(firm,addr1),' ',''))))";
         if (\DB::select(\DB::raw($query))){
            
             return true;
@@ -138,31 +135,17 @@ class ProjectsImportController extends ImportController
 
     private function copyNewProject(){
         
-         $query = "insert ignore into projects (" . implode(",",$this->projectfields) . ") select t.". implode(",t.",$this->projectfields). " FROM `projectsimport` t
-            left join projects on t.source_ref = projects.source_ref 
-            WHERE projects.source_ref is null";
+         $query = "insert ignore into projects (" . implode(",",$this->projectfields) . ") select t.". implode(",t.",$this->projectfields). " FROM `projectsimport` t";
         if (\DB::select(\DB::raw($query))){
            
             return true;
         }
     }
-    private function deleteOldProjects(){
-        // not sure we want to do this
-        return true;
-    }
-     private function updateProjects(){
-        $query = "UPDATE  projects a
-        INNER JOIN
-        (
-            SELECT  *     
-            FROM    projectsimport
-            GROUP   BY source_ref
-        ) b ON  b.source_ref = a.source_ref
-    SET     ";
-    foreach ($this->projectfields as $field){
-        $query.="a.".$field." = b." .$field.",";
-        }
-    $query=substr($query, 0, -1);
+    
+     private function updatePivotTable(){
+     $query =  "Insert ignore into project_company_contact (project_id,company_id,type,contact_id) 
+    Select project_id,company_id,type,contact_id from projectcompanyimport;";
+    
 
    if (\DB::select(\DB::raw($query))){
             return \DB::statement("TRUNCATE TABLE `projectsimport`");
@@ -171,8 +154,7 @@ class ProjectsImportController extends ImportController
     
    public function copyNewProjectCompanies(){
         $query = "insert ignore into projectcompanies (" . implode(",",$this->projectcompanyfields) . ") select t.". implode(",t.",$this->projectcompanyfields). " FROM `projectcompanyimport` t
-            left join projectcompanies on t.company_hash = projectcompanies.company_hash 
-            WHERE projectcompanies.company_hash is null";
+            ";
         if (\DB::select(\DB::raw($query))){
            
             return true;
