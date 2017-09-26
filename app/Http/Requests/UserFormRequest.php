@@ -28,14 +28,13 @@ class UserFormRequest extends FormRequest
         
        
         return [
-        'username'=>'required|alpha_num',
-         Rule::unique('users')->ignore($request->get('id')),
+        'username'=>'required|alpha_num|unique:users,username' . $this->id,
         'firstname'=>'required',
         'lastname'=>'required',
-        'email' => 'required|email',
-        Rule::unique('users')->ignore($user->id),
+        'email' => 'required|email|unique:users,email' . $this->id,
         'password'=>'confirmed',
         'serviceline'=>'required',
+        'employee_id'=>'required|unique:users,employee_id' . $this->id,
 
         ];
     }
