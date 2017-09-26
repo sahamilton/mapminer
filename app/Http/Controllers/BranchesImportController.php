@@ -93,29 +93,44 @@ class BranchesImportController extends ImportController
     }
 
     public function update(Request $request){
+        if($request->has('add')){
+            $adds = count($request->get('add'));
 
-       $adds = count($request->get('add'));
-       $branchesToImport = $this->branchimport
-        ->whereIn('id',$request->get('add'))
-        ->get();
-       foreach ($branchesToImport as $add){
-        $branch = Branch::create($add->toArray());
-        $branch->id = $add['id'];
-        $branch->save();
-        $branch->servicelines()->sync([$request->get('serviceline')]);
-       }
-       $branchesToUpdate = $this->branchimport
-       ->whereNotIn('id',$request->get('add'))
-       ->whereNotIn('id',$request->get('delete'))->get();
-       $updates = count($branchesToUpdate);
-        foreach ($branchesToUpdate as $update){
-            $branch = $this->branch->find($update->id)->update($update->toArray());
-       }
-       $this->branch->destroy($request->get('delete'));
-       $this->branchimport->destroy($request->get('delete'));
-       $deletes = count($request->get('delete'));
-       $this->branchimport->truncate();
-       return redirect()->route('branches.index')->with('success','Added ' . $adds .' deleted '. $deletes . ' and updated '.$updates);
+            $branchesToImport = $this->branchimport
+            ->whereIn('id',$request->get('add'))
+            ->get();
+            foreach ($branchesToImport as $add){
+                $branch = Branch::create($add->toArray());
+                $branch->id = $add['id'];
+                $branch->save();
+                $branch->servicelines()->sync([$request->get('serviceline')]);
+            }
+            $branchesToUpdate = $this->branchimport
+                ->whereNotIn('id',$request->get('add'))
+                ->whereNotIn('id',$request->get('delete'))->get();
+            $updates = count($branchesToUpdate);
+            if($updates !=0){
+                foreach ($branchesToUpdate as $update){
+                    $branch = $this->branch->find($update->id)->update($update->toArray());
+                }
+            }
+            $this->branch->destroy($request->get('delete'));
+            $this->branchimport->destroy($request->get('delete'));
+            $deletes = count($request->get('delete'));
+        }else{
+            $adds = 0;
+            $deletes=0;
+            $branchesToUpdate = $this->branchimport->get();
+            $updates = count($branchesToUpdate);
+            if($updates !=0){
+                foreach ($branchesToUpdate as $update){
+                    $branch = $this->branch->find($update->id)->update($update->toArray());
+                }
+            }
+
+        }
+        $this->branchimport->truncate();
+        return redirect()->route('branches.index')->with('success','Added ' . $adds .' deleted '. $deletes . ' and updated '.$updates);
 
     }
 }
