@@ -35,6 +35,14 @@ class Imports extends Model
     	public function validateImport($fields){
     		return array_diff($this->requiredFields,array_values($fields));
     	}
+
+    	public function detectDuplicateSelections($fields){
+    		$realFields = array_diff(array_values($fields), array("@ignore"));
+    		if(count(array_unique($realFields)) < count($realFields)){
+    			return array_unique(array_diff_key( $realFields , array_unique( $realFields ) ));
+    		}
+    		return false;
+    	}
     	public function setFields($data){
     		$this->fields = implode(",",$data['fields']);
     		$this->importfilename = str_replace("\\","/",$data['filename']);

@@ -61,6 +61,10 @@ class UsersImportController extends ImportController
        
        $data = $this->getData($request);  
        $this->import->setFields($data);
+       if($multiple = $this->import->detectDuplicateSelections($request->get('fields'))){
+            return redirect()->route('users.importfile')->withError(['You have to mapped a field more than once.  Field: '. implode(' , ',$multiple)]);
+        }
+        
        if($missing = $this->import->validateImport($request->get('fields'))){
              
             return redirect()->route('users.importfile')->withError(['You have to map all required fields.  Missing: '. implode(' , ',$missing)]);

@@ -48,9 +48,10 @@ class ProjectsImportController extends ImportController
     public $projectcompanyfields =['id','firm', 'addr1','addr2','city','state','zipcode','county','phone'];
     public $projectcontactfields = ['id','contact','title','company_id','contactphone'];
 
-    public function __construct(Project $project, ProjectSource $source){
+    public function __construct(Project $project, ProjectSource $source,ProjectImport $import){
         $this->project = $project;
         $this->sources = $source;
+        $this->import = $import;
         parent::__construct($this->project);
         
     }
@@ -91,19 +92,25 @@ class ProjectsImportController extends ImportController
 
         $columns = $this->project->getTableColumns($data['table']); 
 
-        
-        return response()->view('imports.mapfields',compact('columns','fields','data','skip'));
+        $requiredFields = $this->import->requiredFields;
+        return response()->view('imports.mapfields',compact('columns','fields','data','skip','requiredFields'));
     }
     
     public function mapfields(Request $request){
         
         $data = $this->getData($request);  
+        if($multiple = $this->import->detectDuplicateSelections($request->get('fields'))){
+            return redirect()->route('projects.importfile')->withError(['You have to mapped a field more than once.  Field: '. implode(' , ',$multiple)]);
+        }
+        if($missing = $this->import->validateImport($request->get('fields'))){
+             
+            return redirect()->route('users.importfile')->withError(['You have to map all required fields.  Missing: '. implode(' , ',$missing)]);
+       }
+        $this->import->setFields($data);
 
 
-        $import = new ProjectImport($data);
+        if($this->import->import()) {
 
-        if($import->import()) {
-            $this->import = $import;
 
            return $this->postImport($data);
 

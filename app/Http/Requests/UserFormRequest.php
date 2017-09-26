@@ -30,11 +30,10 @@ class UserFormRequest extends FormRequest
         return [
         'username'=>'required|alpha_num',
          Rule::unique('users')->ignore($request->get('id')),
-
         'firstname'=>'required',
         'lastname'=>'required',
         'email' => 'required|email',
-         Rule::unique('users')->ignore($request->get('id')),
+        Rule::unique('users')->ignore($user->id),
         'password'=>'confirmed',
         'serviceline'=>'required',
 

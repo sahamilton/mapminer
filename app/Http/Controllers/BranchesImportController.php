@@ -51,14 +51,11 @@ class BranchesImportController extends ImportController
         $skip = ['created_at','updated_at','region_id'];
         return response()->view('imports.mapfields',compact('columns','fields','data','company_id','skip','title','requiredFields'));
     }
+
 	public function mapfields(Request $request){
 
-        $data = $this->getData($request); 
-        if($missing = $this->import->validateImport($request->get('fields'))){
-             
-            return redirect()->route('branches.importfile')->withError(['You have to map all required fields.  Missing: '. implode(' , ',$missing)]);
-       }     
-        
+        $data = $this->getData($request);
+        $this->validateInput($request);
         $this->import->setFields($data);
         if($this->import->import()) {
             $data= $this->showChanges($data);
