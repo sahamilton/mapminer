@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Branch;
 use App\Imports;
 use App\BranchImport;
-use App\ServiceLine;
+use App\Serviceline;
 use App\Http\Requests\BranchImportFormRequest;
 
 
@@ -18,7 +18,7 @@ class BranchesImportController extends ImportController
     public $userServiceLines;
     public $branchimport;
     public $importtable = 'branchesimport';
-	public function __construct(Branch $branch, ServiceLine $serviceline,BranchImport $branchimport){
+	public function __construct(Branch $branch, Serviceline $serviceline,BranchImport $branchimport){
 		$this->branch = $branch;
         $this->serviceline = $serviceline;
         $this->branchimport = $branchimport;
@@ -54,7 +54,7 @@ class BranchesImportController extends ImportController
 
         $data = $this->getData($request);      
         $import = new Imports($data);
-
+        $import->setFields($data);
         if($import->import()) {
             $data= $this->showChanges($data);
             return response()->view('branches.changes',compact('data'));

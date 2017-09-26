@@ -41,7 +41,7 @@ class LocationsImportController extends ImportController
 
         $data = $this->getData($request);      
         $import = new LocationImport($data);
-
+        $import->setFields($data);
         if($import->import()) {
              return redirect()->route('company.show',$data['additionaldata']['company_id'])->with('success','Locations imported');
 
