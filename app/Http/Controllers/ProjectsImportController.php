@@ -46,6 +46,7 @@ class ProjectsImportController extends ImportController
                             'project_source_id',
                             'created_at'];
     public $projectcompanyfields =['id','firm', 'addr1','addr2','city','state','zipcode','county','phone'];
+    public $projectcontactfields = ['id','contact','title','company_id','contactphone'];
 
     public function __construct(Project $project, ProjectSource $source){
         $this->project = $project;
@@ -58,7 +59,7 @@ class ProjectsImportController extends ImportController
        
         $source= $request->get('source');
         $sources= $this->sources->all()->pluck('source','id');
-        $tables= ['projects','projectcompanies'];
+        $tables= ['projects','projectcompanies','projectcontacts'];
         return response()->view('projects.import',compact ('sources','source','tables'));
     }
 
@@ -67,15 +68,21 @@ class ProjectsImportController extends ImportController
       
         $data = $this->uploadfile($request->file('upload'));
         $data['table']=$request->get('table');
-        if($data['table']=='projects'){
-            $data['step'] = 1;
-            $data['table']= 'projectsimport';
-            $data['additionaldata']['project_source_id'] = $request->get('source');
-        }else{
-            $data['step']=2;
-            $data['table']='projectcompanyimport';
-            $data['additionaldata'] = array();
-        }
+        switch ($data['table']){
+                case 'projects';
+                    $data['step'] = 1;
+                    $data['table']= 'projectsimport';
+                    $data['additionaldata']['project_source_id'] = $request->get('source');
+                    $skip = ['created_at','updated_at','project_source_id','company_id','pr_status','serviceline_id'];
+                    break;
+               case 'projectcompanies':
+                    $data['step']=2;
+                    $data['table']='projectcompanyimport';
+                    $data['additionaldata'] = array();
+                    $skip = ['created_at','updated_at','project_source_id','company_id','pr_status','serviceline_id'];
+                    break;
+              
+           }
      
         $data['type']=$request->get('type');
         
@@ -84,7 +91,7 @@ class ProjectsImportController extends ImportController
 
         $columns = $this->project->getTableColumns($data['table']); 
 
-        $skip = ['created_at','updated_at','project_source_id','company_id','pr_status','serviceline_id'];
+        
         return response()->view('imports.mapfields',compact('columns','fields','data','skip'));
     }
     
@@ -109,33 +116,60 @@ class ProjectsImportController extends ImportController
       
         switch($data['step']){
             case 1:
-                $this->copyNewProject();
-                //$this->deleteOldProjects();
-                //$this->updateProjects();
+                $this->copyProjects();
                 return redirect()->route('projects.importfile')->with('success','Projects imported; Now import the related companies');
             break;
+
             case 2:
-                $this->createHash();
-                $this->copyNewProjectCompanies();
-                $this->updateProjectsCompanies();
-                $this->updatePivotTable();
-                return redirect()->route('projectsource.index')->with('success','Projects Cleansed');
+                $this->createCompanyHash('projectcompanyimport');
+                $this->updateContacts();
+                $this->createContactHash();
+                $this->copyProjectCompanies();
+                $this->copyProjectContacts();
+                $this->updatePivot();
+                
+                return redirect()->route('projectsource.index')->with('success','Projects, Companies & Contacts Linked');
             break;
+
+
             }
             
         }
-    private function createHash(){
-        $query = "Update projectcompanyimport set company_id = md5(lcase(trim(replace(concat(firm,addr1),' ',''))))";
+    private function createCompanyHash($table){
+        $query = "Update ". $table ."  set company_id = md5(lcase(trim(replace(concat(firm,addr1),' ',''))))";
         if (\DB::select(\DB::raw($query))){
            
             return true;
         }
     }
 
+    private function createContactHash(){
+        $query = "Update projectcompanyimport set contact_id = md5(lcase(trim(replace(concat(contact,company_id),' ',''))))";
+        if (\DB::select(\DB::raw($query))){
+           
+            return true;
+        }
+    }
 
-    private function copyNewProject(){
+    private function copyProjects(){
         
          $query = "insert ignore into projects (" . implode(",",$this->projectfields) . ") select t.". implode(",t.",$this->projectfields). " FROM `projectsimport` t";
+        if (\DB::select(\DB::raw($query))){
+           
+            return true;
+        }
+    }
+    private function updateContacts(){
+            $query = "update projectcompanyimport set contact = concat(firstname,lastname) where contact is null";
+            if (\DB::select(\DB::raw($query))){
+           
+            return true;
+        }
+
+    }
+    private function copyProjectContacts(){
+
+         $query = "insert ignore into projectcontacts (" . implode(",",$this->projectcontactfields) . ") select t.". implode(",t.",$this->projectcontactfields). " FROM `projectscompanyimport` t where t.contact is not null";
         if (\DB::select(\DB::raw($query))){
            
             return true;
@@ -152,7 +186,7 @@ class ProjectsImportController extends ImportController
         }
     }
     
-   public function copyNewProjectCompanies(){
+   public function copyProjectCompanies(){
         $query = "insert ignore into projectcompanies (" . implode(",",$this->projectcompanyfields) . ") select t.". implode(",t.",$this->projectcompanyfields). " FROM `projectcompanyimport` t
             ";
         if (\DB::select(\DB::raw($query))){
@@ -160,9 +194,6 @@ class ProjectsImportController extends ImportController
             return true;
         }
    }
-  public function updateProjectsCompanies(){
-
-  
-  }
+ 
     
 }

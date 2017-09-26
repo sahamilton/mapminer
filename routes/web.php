@@ -262,6 +262,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
     # Imports 
    		Route::get('branch/teams',['as'=>'branch_team.importfile','uses'=>'BranchTeamImportController@getFile']);
    		Route::post('branch/teams',['as'=>'branches.teamimport','uses'=>'BranchTeamImportController@import']);
+
     	Route::get('imports',['as'=>'imports.index','uses'=>'ImportController@index']);
     	Route::post('/importleads/mapfields',['as'=>'leads.mapfields','uses'=>'LeadImportController@mapfields']);
     	Route::post('/importlocations/mapfields',['as'=>'locations.mapfields','uses'=>'LocationsImportController@mapfields']);
@@ -283,8 +284,10 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
     # # User Management
 		
 		Route::get('cleanse',['as'=>'users.cleanse','uses'=>'Admin\AdminUsersController@cleanse']);
-		Route::get('users/import',['as'=>'users.importfile', 'uses'=>'Admin\AdminUsersController@import']);
-		Route::post('users/bulkimport',['as'=>'admin.users.bulkimport', 'uses'=>'Admin\AdminUsersController@bulkImport']);
+		Route::get('users/import',['as'=>'users.importfile', 'uses'=>'UsersImportController@getFile']);
+		Route::post('users/bulkimport',['as'=>'admin.users.bulkimport', 'uses'=>'UsersImportController@import']);
+		Route::post('users/import',['as'=>'users.mapfields','uses'=>'UsersImportController@mapfields']);
+		Route::post('user/importerrors',['as'=>'fixuserinputerrors','uses'=>'UsersImportController@fixerrors']);
 		Route::get('users/serviceline/{servicelineId}', ['as'=>'serviceline.user','uses'=>'Admin\AdminUsersController@index']);
 
 		Route::resource('users', 'Admin\AdminUsersController');  

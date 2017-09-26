@@ -13,6 +13,6 @@ class ProjectContact extends Model
     }
 
     public function employer(){
-    	return $this->belongsTo(ProjectCompany::class,'projectcompany_id','id');
+    	return $this->belongsTo(ProjectCompany::class,'company_id','id');
     }
 }

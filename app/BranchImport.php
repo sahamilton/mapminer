@@ -12,8 +12,5 @@ class BranchImport extends Model
     	return $this->belongsToMany(ServiceLine::class,'branch_serviceline','branch_id');
     }
 
-    public function refreshteam(){
-    	return $this->executeQuery("insert ignore into branch_person select * from branchteamimport");
-    	
-    }
+    
 }

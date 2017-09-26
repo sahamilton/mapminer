@@ -2,7 +2,7 @@
 @section('content')
 <div class="container">
 <h2>Import Projects</h2>
-<p>This is a two step process.  First import the projects, then import the projectcompanies.</p>
+<p>This is a three step process.  First import the projects, then import the projectcompanies and finally the project contacts.</p>
 <form name="projectimport" method="post" action="{{route('projects.bulkimport')}}" 
 enctype="multipart/form-data">
 {{csrf_field()}}

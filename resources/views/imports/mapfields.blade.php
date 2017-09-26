@@ -17,7 +17,8 @@
 </thead>
 <tbody>
 
-        @foreach ($fields[0] as $key=>$field) 
+        @foreach ($fields[0] as $key=>$field)
+
             @if(! in_array($field,$skip))
         <tr>
             <td>
@@ -28,6 +29,7 @@
             <select name="fields[{{$field}}]">
                 <option value="@ignore">ignore</option>
                @foreach ($columns as $column) 
+         
                    @if(! in_array($column->Field,$skip))
 
                     <option value = '{{$column->Field}}'

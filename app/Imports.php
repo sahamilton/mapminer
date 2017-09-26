@@ -17,18 +17,31 @@ class Imports extends Model
     		if(isset($data['table'])){
 	    		$this->table = $data['table'];
 	    		$this->temptable = $this->table .'_import';
-	    		$this->fields = implode(",",$data['fields']);
+	    		
 	   			if(isset($data['additionaldata'])){
 
 	    			$this->additionaldata = $data['additionaldata'];
 	    		}else{
 	    			$this->additionaldata = [];
 	    		}
-	       		$this->importfilename = str_replace("\\","/",$data['filename']);
+	    		if(isset($data['filename'])){
+	    			$this->importfilename = str_replace("\\","/",$data['filename']);
+	    		}
+	       		
        		}
     		
     	}
+    	public function setFields($data){
+    		$this->fields = implode(",",$data['fields']);
+    		$this->importfilename = str_replace("\\","/",$data['filename']);
+    		if(isset($data['additionaldata'])){
 
+	    			$this->additionaldata = $data['additionaldata'];
+	    		}else{
+	    			$this->additionaldata = [];
+	    		}
+    	}
+    	
     	public function import(){
 
     		$this->createTemporaryImportTable();
@@ -119,6 +132,17 @@ class Imports extends Model
 	
 	}
 
+	public function truncateImport($table){
 
+		$query = 'truncate ' . $table;
+		try {
+			return  \DB::connection()->getpdo()->exec($query);
+		}
+		catch (Exception $e)
+		{
+		 throw new Exception( 'Something really has gone wrong with the import:\r\n<br />'.$query, 0, $e);
+		
+		}
+	}
 
 }

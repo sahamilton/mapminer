@@ -10,7 +10,8 @@ class BranchTeamImportController extends ImportController
 {
 	public $branch;
 	public $person;
-    public $importtable = 'branchteamimport';
+  public $branchteamfields = ['branch_id','role_id','person_id'];
+  public $importtable = 'branchteamimport';
 	public function __construct(Branch $branch,Person $person){
 		$this->branch = $branch;
 		$this->person = $person;
@@ -42,8 +43,8 @@ class BranchTeamImportController extends ImportController
 
         
 	        $missingPeople = $this->missingPeople($import); 
-            $missingBranches = $this->missingBranches($import);
-            $missingRoles = $this->missingRoles($import);
+          $missingBranches = $this->missingBranches($import);
+          $missingRoles = $this->missingRoles($import);
 
             if(count($missingPeople)>0)
 	        {
@@ -67,7 +68,8 @@ class BranchTeamImportController extends ImportController
 
            	     	
 	        }else{
-	        	$this->import->refreshteam();
+	        	$this->refreshteam();
+            $import->truncateImport($this->importtable);
 	        	return redirect()->route('branches.index')->with('success','Branch teams added');
 	        }
 
@@ -77,6 +79,14 @@ class BranchTeamImportController extends ImportController
         
     }
 
+    private function refreshteam(){
+       $query = "insert into branch_person (" . implode(",",$this->branchteamfields) . ") select t.". implode(",t.",$this->branchteamfields). " FROM `branchteamimport` t";
+        if (\DB::select(\DB::raw($query))){
+           
+            return true;
+        }
+
+    }
     private function missingPeople($import){
     	return  $import
 	        ->select('person_id')
