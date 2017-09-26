@@ -7,29 +7,21 @@ use Illuminate\Database\Eloquent\Model;
 class UserImport extends Imports
 {
    	public $uniqueFields= ['username','email','employee_id'];
-
-
-
    	public $table = 'usersimport';
-
+   	public $requiredFields = ['email','employee_id','firstname','lastname','role_id'];
    	public function __construct(){
    		$data['table'] = $this->table;
    		parent::__construct($data);
    	}
 
 	public function checkUniqueFields(){
-    	
     	foreach ($this->uniqueFields as $field){
-         	
-
-         		return $importerrors = $this->checkFields($field);
-         			 
-         		
-         	}
+         	  return $importerrors = $this->checkFields($field);
+         }
          return false;
     }
 
-
+   
 	private function checkFields($field){
 		$query ="SELECT ". $this->table."." . $field ." from ". $this->table." 
 			left join users on ". $this->table."." . $field ." = users." . $field ."

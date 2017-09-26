@@ -52,15 +52,20 @@ class UsersImportController extends ImportController
         $addColumns->Field = 'role_id';
         $addColumn[] = $addColumns;
    		$columns = array_merge($this->company->getTableColumns('users'),$this->company->getTableColumns('persons'),$addColumn);
-
+        $requiredFields = $this->import->requiredFields;
         $skip = ['id','password','confirmation_code','remember_token','created_at','updated_at','nonews','lastlogin','api_token','user_id','lft','rgt','depth','geostatus'];
-        return response()->view('imports.mapfields',compact('columns','fields','data','skip'));
+        return response()->view('imports.mapfields',compact('columns','fields','data','skip','requiredFields'));
     }
     
     public function mapfields(Request $request){
        
        $data = $this->getData($request);  
        $this->import->setFields($data);
+       if($missing = $this->import->validateImport($request->get('fields'))){
+             
+            return redirect()->route('users.importfile')->withError(['You have to map all required fields.  Missing: '. implode(' , ',$missing)]);
+       }
+      
        if($this->import->import()) {
          	$this->import->createUserNames();
          	if($importerrors = $this->import->checkUniqueFields()){

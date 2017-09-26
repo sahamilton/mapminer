@@ -31,6 +31,10 @@ class Imports extends Model
        		}
     		
     	}
+
+    	public function validateImport($fields){
+    		return array_diff($this->requiredFields,array_values($fields));
+    	}
     	public function setFields($data){
     		$this->fields = implode(",",$data['fields']);
     		$this->importfilename = str_replace("\\","/",$data['filename']);

@@ -32,7 +32,7 @@
          
                    @if(! in_array($column->Field,$skip))
 
-                    <option value = '{{$column->Field}}'
+                    <option @if(in_array($column->Field,$requiredFields)) style="color:red" @endif value = '{{$column->Field}}'
                                         
                     @if($field == $column->Field or strtolower(str_replace(" ","_",$field)) == $column->Field) 
                         selected 
