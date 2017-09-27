@@ -28,13 +28,13 @@ class UserFormRequest extends FormRequest
         
        
         return [
-        'username'=>'required|alpha_num|unique:users,username' . $this->id,
+        'username'=>'required|alpha_num|unique:users,id,' . $request->segment(3),
         'firstname'=>'required',
         'lastname'=>'required',
-        'email' => 'required|email|unique:users,email' . $this->id,
+        'email' => 'required|email|unique:users,id,' . $request->segment(3),
         'password'=>'confirmed',
         'serviceline'=>'required',
-        'employee_id'=>'required|unique:users,employee_id' . $this->id,
+        'employee_id'=>'required|unique:users,id,' . $request->segment(3),
 
         ];
     }

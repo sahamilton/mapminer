@@ -38,7 +38,7 @@ class ImportController extends BaseController
             $fields[$i]= fgetcsv($content);
         }
         return $fields;
-}
+    }
 
     
     protected function getData($request){
@@ -47,5 +47,17 @@ class ImportController extends BaseController
         return $data;
     }
     
-    
+    protected function validateInput(Request $request){
+
+
+       
+        if($multiple = $this->import->detectDuplicateSelections($request->get('fields'))){
+            return redirect()->route('branches.importfile')->withError(['You have to mapped a field more than once.  Field: '. implode(' , ',$multiple)]);
+        }
+        if($missing = $this->import->validateImport($request->get('fields'))){
+             
+            return redirect()->route('branches.importfile')->withError(['You have to map all required fields.  Missing: '. implode(' , ',$missing)]);
+       }     
+       return false;
+    }   
 }
