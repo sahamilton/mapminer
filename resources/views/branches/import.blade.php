@@ -15,12 +15,16 @@
 
 	<h2>Steps to import branches</h2>
 	<ol>
-		<li>First create your csv file of branches from the template.  Do not change, add or delete any field / column</li>
+		<li>First create your csv file of branches from the template.  Your import file must contain at least these fields:
+			<ol>
+			@foreach ($requiredFields as $field)
+				<li style="color:red">{{$field}}</li>
+			@endforeach
+		</ol>
+		</li>
 		<li>Save the CSV file locally on your computer.</li>
-		<li>Determine if you want to completely erase and reimport the list or just make adds & edit from the import list</li>
-		<ul><li>Purge will delete all branches and reimport from theh spreadsheet</li>
-		<li>Edits will delete the branch based on branch muber and reimport all the data for that one branch</li>
-		<li>To delete a single branch use the regular branch listing and the green actions button</li></ul>
+		
+		<li>To add / update/ delete a single branch use the <a href="{{route('branches.index')}}">regular branch listing</a> and the green actions button</li></ul>
 
 		<li>Select the file and import</li>
 

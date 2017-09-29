@@ -30,7 +30,7 @@ class LeadsEmailController extends Controller
         ->findOrFail($id);
         
         $salesteam = $this->salesteam($source->leads);
-        
+      
         
         $message = $this->createMessage($source);
         return response()->view('leadsource.salesteam',compact('source','salesteam','message'));
@@ -39,11 +39,12 @@ class LeadsEmailController extends Controller
 
     private function salesteam($leads){
         $salesreps = array();
- 
+  
         foreach ($leads as $lead){
+       
             if(count($lead->salesteam)>0){
                 $reps = $lead->salesteam->pluck('id')->toArray();
-                
+             
                 foreach ($reps as $rep){
 
                     $salesrep = $lead->salesteam->where('id',$rep)->first();

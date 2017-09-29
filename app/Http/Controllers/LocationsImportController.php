@@ -13,14 +13,17 @@ class LocationsImportController extends ImportController
 {
     public $location;
     public $company;
-	public function __construct(Location $location, Company $company){
+    public $import;
+	public function __construct(Location $location, Company $company,LocationImport $import){
 		$this->location = $location;
 		$this->company = $company;
+        $this->import = $import;
 	}
 
 	public function getFile(){
+        $requiredFields = $this->import->requiredFields;
 		$companies = $this->company->orderBy('companyname')->pluck('companyname','id');
-		return response()->view('locations.import',compact('companies'));
+		return response()->view('locations.import',compact('companies','requiredFields'));
 	}
 
 
@@ -34,15 +37,16 @@ class LocationsImportController extends ImportController
         $fields = $this->getFileFields($data);      
         $columns = $this->location->getTableColumns($data['table']);
         $skip = ['id','created_at','updated_at','serviceline_id','company_id'];
-        return response()->view('imports.mapfields',compact('columns','fields','data','company_id','skip','title'));
+        $requiredFields = $this->import->requiredFields;
+        return response()->view('imports.mapfields',compact('columns','fields','data','company_id','skip','title','requiredFields'));
     }
     
 	public function mapfields(Request $request){
 
         $data = $this->getData($request);      
-        $import = new LocationImport($data);
-        $import->setFields($data);
-        if($import->import()) {
+
+        $this->import->setFields($data);
+        if($this->import->import()) {
              return redirect()->route('company.show',$data['additionaldata']['company_id'])->with('success','Locations imported');
 
         }

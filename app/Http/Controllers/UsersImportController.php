@@ -19,20 +19,19 @@ class UsersImportController extends ImportController
     public $userfields =[];
     public $personfields =[];
 
-    public function __construct(Person $person, User $user,Company $company,UserImport $import){
+    public function __construct(Person $person, User $user,UserImport $import){
         $this->person = $person;
         $this->user = $user;
         $this->import = $import;
-        $this->company = $company;
-        parent::__construct($this->company);  
+
+
         
     }
 
     public function getFile(Request $request){
-       
-       $servicelines = Serviceline::whereIn('id',$this->userServiceLines)
-				->pluck('ServiceLine','id');
-		return response()->view('admin/users/import',compact('servicelines'));
+       $requiredFields = $this->import->requiredFields;
+       $servicelines = Serviceline::pluck('ServiceLine','id');
+		return response()->view('admin/users/import',compact('servicelines','requiredFields'));
         
     }
 

@@ -12,7 +12,7 @@ class Imports extends Model
     	public $importfilename;
     	public $additionaldata;
 
-    	public function __construct($data){
+    	/*public function __construct($data){
 
     		if(isset($data['table'])){
 	    		$this->table = $data['table'];
@@ -30,8 +30,19 @@ class Imports extends Model
 	       		
        		}
     		
-    	}
+    	}*/
+		public function setFields($data){
+		    		$this->fields = implode(",",$data['fields']);
+		    		$this->table = $data['table'];
+		    		$this->temptable = $this->table . "_import";
+		    		$this->importfilename = str_replace("\\","/",$data['filename']);
+		    		if(isset($data['additionaldata'])){
 
+			    			$this->additionaldata = $data['additionaldata'];
+			    		}else{
+			    			$this->additionaldata = [];
+			    		}
+		    	}
     	public function validateImport($fields){
     		return array_diff($this->requiredFields,array_values($fields));
     	}
@@ -43,16 +54,7 @@ class Imports extends Model
     		}
     		return false;
     	}
-    	public function setFields($data){
-    		$this->fields = implode(",",$data['fields']);
-    		$this->importfilename = str_replace("\\","/",$data['filename']);
-    		if(isset($data['additionaldata'])){
-
-	    			$this->additionaldata = $data['additionaldata'];
-	    		}else{
-	    			$this->additionaldata = [];
-	    		}
-    	}
+    	
     	
     	public function import(){
 

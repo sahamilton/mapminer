@@ -4,7 +4,14 @@
 <div class="container">
 <h2>Steps to import locations for  accounts:</h2>
 <ol>
-<li>First create your csv file from the template.  Do not change, add or delete any field / column</li>
+<li>
+First create your csv file of projects from the template.  Your import file must contain at least {{count($requiredFields)}} columns that can be mapped to:
+            <ol>
+            @foreach ($requiredFields as $field)
+                <li style="color:red">{{$field}}</li>
+            @endforeach
+        </ol>
+    </li>
 <li>Save the CSV file locally on your computer.</li>
 <li>Select the company that locations belong to from the list</li>
 <li>Select the file and import</li>

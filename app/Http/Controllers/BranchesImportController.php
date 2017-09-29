@@ -22,16 +22,14 @@ class BranchesImportController extends ImportController
 		$this->branch = $branch;
         $this->serviceline = $serviceline;
         $this->import = $branchimport;
-
-        parent::__construct($this->branch);
 	}
 
 	public function getFile(){
 		
+      $requiredFields =   $this->import->requiredFields;
 
-	  $servicelines = $this->serviceline
-        ->whereIn('id',$this->userServiceLines)->pluck('ServiceLine','id');
-		return response()->view('branches.import',compact('servicelines'));
+	  $servicelines = $this->serviceline->pluck('ServiceLine','id');
+		return response()->view('branches.import',compact('servicelines','requiredFields'));
 	}
 
 

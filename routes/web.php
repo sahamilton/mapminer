@@ -267,6 +267,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
     	Route::post('/importleads/mapfields',['as'=>'leads.mapfields','uses'=>'LeadImportController@mapfields']);
     	Route::post('/importlocations/mapfields',['as'=>'locations.mapfields','uses'=>'LocationsImportController@mapfields']);
     	Route::post('/importprojects/mapfields',['as'=>'projects.mapfields','uses'=>'ProjectsImportController@mapfields']);
+    	Route::post('/importprojectcompany/mapfields',['as'=>'projectcompany.mapfields','uses'=>'ProjectsCompanyImportController@mapfields']);
     	Route::post('/importbranches/mapfields',['as'=>'branches.mapfields','uses'=>'BranchesImportController@mapfields']);
     	Route::post('/importbranchteams/mapfields',['as'=>'branchteam.mapfields','uses'=>'BranchTeamImportController@mapfields']);
     	
@@ -314,7 +315,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 
 	# Projects
 		Route::get('projects/import',['as'=>'projects.importfile','uses'=>'ProjectsImportController@getFile']);
+		Route::get('projects/importcompany',['as'=>'project_company.importfile','uses'=>'ProjectsCompanyImportController@getFile']);
 		Route::post('projects/import',['as'=>'projects.bulkimport','uses'=>'ProjectsImportController@import']);
+		Route::post('projects/importcompany',['as'=>'projects.companyimport','uses'=>'ProjectsCompanyImportController@import']);
 
 		Route::get('projects/export',['as'=>'projects.exportowned','uses'=>'ProjectsController@exportowned']);
 		Route::get('projects/status',['as'=>'projects.status','uses'=>'ProjectsController@statuses']);

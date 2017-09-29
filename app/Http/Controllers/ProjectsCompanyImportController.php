@@ -5,50 +5,21 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Project;
-use App\ProjectImport;
+use App\ProjectCompanyImport;
 use App\ProjectSource;
 use App\Http\Requests\ProjectsImportFormRequest;
 
 
-class ProjectsImportController extends ImportController
+class ProjectsCompanyImportController extends ImportController
 {
     public $project;
     public $sources;
     public $import;
-    public $projectfields =['id',
-                            'project_title',
-                            'project_addr1',
-                            'project_addr2',
-                            'project_city',
-                            'project_state',
-                            'project_zipcode',
-                            'project_county_name',
-                            'project_county_code',
-                            'project_lat',
-                            'project_lng',
-                            'accuracy',
-                            'structure_header',
-                            'project_type',
-                            'stage',
-                            'ownership',
-                            'bid_date',
-                            'start_year',
-                            'start_yearmo',
-                            'target_start_date',
-                            'target_comp_date',
-                            'work_type',
-                            'status',
-                            'project_value',
-                            'total_project_value',
-                            'value_range',
-                            'pr_status',
-                            'serviceline_id',
-                            'project_source_id',
-                            'created_at'];
+    
     public $projectcompanyfields =['id','firm', 'addr1','addr2','city','state','zipcode','county','phone'];
     public $projectcontactfields = ['id','contact','title','company_id','contactphone'];
 
-    public function __construct(Project $project, ProjectSource $source,ProjectImport $import){
+    public function __construct(Project $project, ProjectSource $source,ProjectCompanyImport $import){
         $this->project = $project;
         $this->sources = $source;
         $this->import = $import;
@@ -59,39 +30,28 @@ class ProjectsImportController extends ImportController
         $requiredFields = $this->import->requiredFields;
         $source= $request->get('source');
         $sources= $this->sources->all()->pluck('source','id');
-        $tables = ['projects','projectcompanies','projectcontacts'];
-        return response()->view('projects.import',compact ('sources','source','tables','requiredFields'));
+        $tables = ['projectcompanies','projectcontacts'];
+        return response()->view('projects.importcompany',compact ('sources','source','tables','requiredFields'));
     }
 
 
     public function import(ProjectsImportFormRequest $request) {
       
         $data = $this->uploadfile($request->file('upload'));
-        $data['table']=$request->get('table');
-        switch ($data['table']){
-                case 'projects';
-                    $data['step'] = 1;
-                    $data['table']= 'projectsimport';
-                    $data['additionaldata']['project_source_id'] = $request->get('source');
-                    $skip = ['created_at','updated_at','project_source_id','company_id','pr_status','serviceline_id'];
-                    break;
-               case 'projectcompanies':
-                    $data['step']=2;
-                    $data['table']='projectcompanyimport';
-                    $data['additionaldata'] = array();
-                    $skip = ['created_at','updated_at','project_source_id','company_id','pr_status','serviceline_id'];
-                    break;
-              
-           }
-     
+    
+        $data['table']='projectcompanyimport';
+        $data['additionaldata'] = array();
+        $skip = ['created_at','updated_at','project_source_id','company_id','pr_status','serviceline_id'];
+        $requiredFields = $this->import->requiredFields;
+
         $data['type']=$request->get('type');
         
-        $data['route'] = 'projects.mapfields';
+        $data['route'] = 'projectcompany.mapfields';
         $fields = $this->getFileFields($data); 
 
         $columns = $this->project->getTableColumns($data['table']); 
 
-        $requiredFields = $this->import->requiredFields;
+        
         return response()->view('imports.mapfields',compact('columns','fields','data','skip','requiredFields'));
     }
     
@@ -120,26 +80,17 @@ class ProjectsImportController extends ImportController
     
     private function postImport($data){
       
-        switch($data['step']){
-            case 1:
-                $this->copyProjects();
-                return redirect()->route('projects.importfile')->with('success','Projects imported; Now import the related companies');
-            break;
 
-            case 2:
                 $this->createCompanyHash('projectcompanyimport');
+                exit;
                 $this->updateContacts();
                 $this->createContactHash();
                 $this->copyProjectCompanies();
                 $this->copyProjectContacts();
-                $this->updatePivot();
+                $this->updatePivotTable();
                 
                 return redirect()->route('projectsource.index')->with('success','Projects, Companies & Contacts Linked');
-            break;
 
-
-            }
-            
         }
     private function createCompanyHash($table){
         $query = "Update ". $table ."  set company_id = md5(lcase(trim(replace(concat(firm,addr1),' ',''))))";
@@ -166,7 +117,8 @@ class ProjectsImportController extends ImportController
         }
     }
     private function updateContacts(){
-            $query = "update projectcompanyimport set contact = concat(firstname,lastname) where contact is null";
+        // update projectcompanyimport set contact= null, firstname = null, lastname = null where firstname ='' and lastname='' and contact ='';
+            $query = "update projectcompanyimport set contact = concat(firstname,' ',lastname) where contact is null";
             if (\DB::select(\DB::raw($query))){
            
             return true;
@@ -175,7 +127,7 @@ class ProjectsImportController extends ImportController
     }
     private function copyProjectContacts(){
 
-         $query = "insert ignore into projectcontacts (" . implode(",",$this->projectcontactfields) . ") select t.". implode(",t.",$this->projectcontactfields). " FROM `projectscompanyimport` t where t.contact is not null";
+         $query = "insert ignore into projectcontacts (" . implode(",",$this->projectcontactfields) . ") select t.". implode(",t.",$this->projectcontactfields). " FROM `projectcompanyimport` t where t.contact is not null";
         if (\DB::select(\DB::raw($query))){
            
             return true;

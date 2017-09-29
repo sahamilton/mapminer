@@ -11,8 +11,7 @@ class BranchImport extends Imports
     public $requiredFields = ['id','branchname'];
 
     public function __construct(){
-    	$data['table'] = $this->table;
-    	parent::__construct($data);
+    	
     }
     public function servicelines(){
     	return $this->belongsToMany(ServiceLine::class,'branch_serviceline','branch_id');

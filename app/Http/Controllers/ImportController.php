@@ -12,13 +12,10 @@ use App\Http\Requests\ImportFormRequest;
 class ImportController extends BaseController
 {
     public $userServiceLines;
-    public function __construct(Model $model){
-        
-        parent::__construct($model);
-    }
+    
 
     public function index(){
-        $imports = ['branches','branch_team','leads','locations','projects','users'];
+        $imports = ['branches','branch_team','leads','locations','projects','project_company','users'];
         return response()->view('imports.index',compact('imports'));
     }
 

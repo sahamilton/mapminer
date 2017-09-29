@@ -27,20 +27,8 @@ class ProjectCompany extends Model
     }
 
     public function employee(){
-    	return $this->hasMany(ProjectContact::class,'projectcompany_id','id');
+    	return $this->hasMany(ProjectContact::class,'company_id','id');
     }
     
 
-    public function projectemployee($project_id = '16694',$company_id='32539'){
-     /* $contact = $this->projects()->with('contacts','companies')
-        ->whereHas('companies',function($q) use($company_id){
-          $q->where('projectcompanies.id','=',$company_id);
-        })
-        ->whereHas('contacts',function($q) use ($company_id){
-            $q->where('projectcompany_id','=',$company_id);
-        })
-
-        ->wherePivot('company_id','=',$company_id)->find($project_id) ;
-        dd($contact);*/
-    }
 }

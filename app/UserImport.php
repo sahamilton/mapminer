@@ -10,8 +10,7 @@ class UserImport extends Imports
    	public $table = 'usersimport';
    	public $requiredFields = ['email','employee_id','firstname','lastname','role_id'];
    	public function __construct(){
-   		$data['table'] = $this->table;
-   		parent::__construct($data);
+   		
    	}
 
 	public function checkUniqueFields(){
