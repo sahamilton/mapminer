@@ -82,7 +82,7 @@ class ProjectsCompanyImportController extends ImportController
       
 
                 $this->createCompanyHash('projectcompanyimport');
-                exit;
+                $this->cleanseContacts();
                 $this->updateContacts();
                 $this->createContactHash();
                 $this->copyProjectCompanies();
@@ -111,6 +111,14 @@ class ProjectsCompanyImportController extends ImportController
     private function copyProjects(){
         
          $query = "insert ignore into projects (" . implode(",",$this->projectfields) . ") select t.". implode(",t.",$this->projectfields). " FROM `projectsimport` t";
+        if (\DB::select(\DB::raw($query))){
+           
+            return true;
+        }
+    }
+
+    private function cleanseContacts(){
+        $query = "update projectcompanyimport set contact= null, firstname = null, lastname = null where firstname ='' and lastname='' and contact ='';";
         if (\DB::select(\DB::raw($query))){
            
             return true;
