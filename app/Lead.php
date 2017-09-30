@@ -11,6 +11,8 @@ class Lead extends Model
   use SoftDeletes, Geocode;
 	public $dates = ['created_at','updated_at','deleted_at','datefrom','dateto'];
   public $table= 'leads';
+  
+            
 	public $fillable = ['companyname',
 						'businessname',
 						'address',
