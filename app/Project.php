@@ -142,9 +142,9 @@ class Project extends Model
             project_city as city,
             project_state as state,
             project_zipcode as zip,
-            project_lat,
+            lat,
             serviceline_id,
-            project_lng,
+            lng,
             project_type,
             ownership,
             total_project_value,
@@ -153,10 +153,10 @@ class Project extends Model
             structure_header,
             r,
                  69.0 * DEGREES(ACOS(COS(RADIANS(latpoint))
-                     * COS(RADIANS(project_lat))
-                     * COS(RADIANS(longpoint) - RADIANS(project_lng))
+                     * COS(RADIANS(lat))
+                     * COS(RADIANS(longpoint) - RADIANS(lng))
                      + SIN(RADIANS(latpoint))
-                     * SIN(RADIANS(project_lat)))) AS distance_in_mi
+                     * SIN(RADIANS(lat)))) AS distance_in_mi
            FROM 
             projects
            JOIN (
@@ -168,10 +168,10 @@ class Project extends Model
           
            WHERE 
            pr_status is null 
-           and project_lat
+           and lat
                 BETWEEN latpoint  - (r / 69)
                 AND latpoint  + (r / 69)
-               AND project_lng
+               AND lng
                 BETWEEN longpoint - (r / (69 * COS(RADIANS(latpoint))))
                 AND longpoint + (r / (69 * COS(RADIANS(latpoint))))
              ) d

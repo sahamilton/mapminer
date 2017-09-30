@@ -5,8 +5,8 @@
 	locationweb="{{route('projects.show',$row->id)}}" 
 	name="{{trim($row->project_title)}}"
 	address="{{ trim($row->street)}} {{trim($row->city)}} {{ trim($row->state)}}"
-	lat="{{ $row->project_lat}}"
-	lng="{{ $row->project_lng}}"
+	lat="{{ $row->lat}}"
+	lng="{{ $row->lng}}"
 	id="{{ $row->id}}"
 
 />

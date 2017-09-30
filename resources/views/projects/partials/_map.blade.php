@@ -1,9 +1,9 @@
-@if(isset($project->project_lat))
+@if(isset($project->lat))
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={{config('maps.api_key')}}"></script>
 
 <script type="text/javascript">
 function initialize() {
-  var myLatlng = new google.maps.LatLng({{$project->project_lat}},{{$project->project_lng}});
+  var myLatlng = new google.maps.LatLng({{$project->lat}},{{$project->lng}});
   var mapOptions = {
     zoom: 14,
     center: myLatlng

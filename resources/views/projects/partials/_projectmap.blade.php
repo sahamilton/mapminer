@@ -1,4 +1,4 @@
-@if(! $project->project_lat)
+@if(! $project->lat)
 Unable to geocode this address
 @else
 <div id="map" style="height:300px;width:500px;border:red solid 1px"/>
@@ -9,10 +9,10 @@ Unable to geocode this address
 </div>     <p>(Map accuracy: {{$project->accuracy}})</p>  
 @endif
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={{config('maps.api_key')}}"></script>
-@if(isset($project->project_lat))
+@if(isset($project->lat))
 <script type="text/javascript">
 function initialize() {
-  var myLatlng = new google.maps.LatLng({{$project->project_lat}},{{$project->project_lng}});
+  var myLatlng = new google.maps.LatLng({{$project->lat}},{{$project->lng}});
   var mapOptions = {
     zoom: 14,
     center: myLatlng

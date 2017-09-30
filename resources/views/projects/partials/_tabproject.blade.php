@@ -36,7 +36,7 @@
 </div>
 
 <div id="map" style="height:300px;width:500px;border:red solid 1px">
-@if(! $project->project_lat)
+@if(! $project->lat)
      	Unable to geocode this address
      @endif
 

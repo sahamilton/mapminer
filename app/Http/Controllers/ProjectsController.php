@@ -80,7 +80,7 @@ class ProjectsController extends BaseController
         ->with('companies','owner','relatedNotes','source')
        
         ->findOrFail($id);
-        $branches = $this->branch->findNearbyBranches($project->project_lat,$project->project_lng,100,$limit=5,$this->userServiceLines);
+        $branches = $this->branch->findNearbyBranches($project->lat,$project->lng,100,$limit=5,$this->userServiceLines);
 
         return response()->view('projects.show',compact('project','statuses','branches'));
     }
