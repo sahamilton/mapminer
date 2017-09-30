@@ -45,7 +45,7 @@ class LeadsAssignController extends Controller
         foreach ($leads as $lead) {
           $data['lat']=$lead->lat;
           $data['lng']=$lead->lng;
-          dd($data);
+
           $people = $this->person->nearby($lead,$this->distance)
           ->with('userdetails')
           ->whereHas('userdetails.roles',function($q) {
