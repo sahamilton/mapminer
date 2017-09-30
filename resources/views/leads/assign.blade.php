@@ -1,8 +1,8 @@
 @extends('admin.layouts.default')
 @section('content')
 
-	<h2>Assign {{$lead->businessname}} Lead</h2>
-	<p><a href="{{route('leads.show',$lead->id)}}">Return to leads</a></p>
+	<h2>Assign {{$lead->businessname}} Prospect</h2>
+	<p><a href="{{route('leads.show',$lead->id)}}">Return to prospects</a></p>
 	<ul class="nav nav-tabs">
 		<li class="active"><a data-toggle="tab" href="#team"><strong>Sales Team</strong></a></li>
 

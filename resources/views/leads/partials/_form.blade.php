@@ -125,9 +125,9 @@ value="{{  old('dateto', isset($lead) ?  $lead->dateto->format('m/d/Y') : date('
  
          </div>
      </div>
-<legend>Select or Create new Lead Source</legend>   
+<legend>Select or Create new Prospect Source</legend>   
 		<div class="form-group{{ $errors->has('lead_source_id') ? ' has-error' : '' }}">
-        <label class="col-md-4 control-label">Lead Source</label>
+        <label class="col-md-4 control-label">Prospect Source</label>
         <div class="input-group input-group-lg ">
             <select id="leadsource" required class="form-control" name='lead_source_id'>
 

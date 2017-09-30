@@ -1,7 +1,7 @@
 @extends('admin.layouts.default')
 @section('content')
 
-<h1>Leads</h1>
+<h1>Propsects</h1>
 
 
 

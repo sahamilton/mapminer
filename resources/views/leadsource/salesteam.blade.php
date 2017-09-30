@@ -1,7 +1,7 @@
 @extends ('admin.layouts.default')
 @section('content')
 <div class="container">
-<h2>Lead Source Sales Team</h2>
+<h2>Prospect Source Sales Team</h2>
 <h3>for the {{$source->title}} leads</h3>
 <h4>from {{$source->datefrom->format('M j, Y')}} to {{$source->dateto->format('M j, Y')}}</h4>
 <!---- Tab message -->

@@ -1,7 +1,7 @@
 @extends ('admin.layouts.default')
 @section('content')
 <div class="container">
-<h2>Add Leads to the @if(isset($leadsource)) {{$leadsource->source}} @endif List</h2>
+<h2>Add Propsects to the @if(isset($leadsource)) {{$leadsource->source}} @endif List</h2>
 
 <form method="post" name="createLead" action="{{route('leads.import')}}" enctype="multipart/form-data">
 {{csrf_field()}}
@@ -26,7 +26,7 @@
 		
 
 <div class="form-group">
-<input type="submit" class="btn btn-success" value="Add Leads" />
+<input type="submit" class="btn btn-success" value="Add Prospects" />
 
 <input type="hidden" name="type" value="leads" />
 

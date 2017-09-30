@@ -1,7 +1,7 @@
 <h4>Team</h4>
 
 
-<p>Leads have been offered to the following sales reps;</p>
+<p>Prospects have been offered to the following Mapminer users;</p>
 
 <table id ='sorttable1' class='table table-striped table-bordered table-condensed table-hover'>
     <thead>

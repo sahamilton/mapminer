@@ -2,7 +2,7 @@
 <p><a  href="{{route('leadsource.announce',$leadsource->id)}}">
 <button class="btn btn-info">Notify Sales Team</button></a></p>
 
-<p>Leads have been offered to the following sales reps;</p>
+<p>Prospects have been offered to the following sales reps;</p>
 
 <table id ='sorttable1' class='table table-striped table-bordered table-condensed table-hover'>
     <thead>

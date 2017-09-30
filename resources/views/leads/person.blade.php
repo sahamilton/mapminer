@@ -3,7 +3,7 @@
 
 
 
-<h3>Leads assigned to {{$leads->postName()}}</h3>
+<h3>Prospects assigned to {{$leads->postName()}}</h3>
 
 @if(! isset($source))
 <p><a href="{{route('leadsource.index')}}">From All Sources</a></p>
@@ -11,13 +11,13 @@
 @else
 
 <p>From <a href="{{route('leadsource.show',$source->id)}}">{{$source->source}}</a> source</p>
-<p><a href="{{route('leads.person',$leads->id)}}">See all {{$leads->firstname}}'s leads</a></p>
+<p><a href="{{route('leads.person',$leads->id)}}">See all {{$leads->firstname}}'s prospects</a></p>
 @endif
 
 <ul class="nav nav-tabs">
   <li class="active"><a data-toggle="tab" href="#map"><strong>Map View</strong></a></li>
  
-  <li><a data-toggle="tab" href="#leads"><strong>Leads</strong></a></li>
+  <li><a data-toggle="tab" href="#leads"><strong>Prospects</strong></a></li>
   <li><a data-toggle="tab" href="#stats"><strong>Stats</strong></a></li>
 
   

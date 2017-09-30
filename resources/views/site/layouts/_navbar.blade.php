@@ -50,7 +50,7 @@
                         <li><a href="{{route('salesorg')}}">
                         <i class="fa fa-sitemap" aria-hidden="true"> </i>
                         Sales Organization</a></li>
-                        @if(Auth::user()->hasRole('Admin') or Auth::user()->hasRole('Sales') or  Auth::user()->hasRole('Sales Manager'))
+                        @if(auth()->user()->hasRole('Admin') or Auth::user()->hasRole('Sales') or  Auth::user()->hasRole('Sales Manager'))
                             <li class="divider"></li>
                             <li><a href="{{route('resources.view')}}">
                             <i class="fa fa-book" aria-hidden="true"> </i>
@@ -60,9 +60,9 @@
 
                         @endif 
                          
-                        @if(auth()->user()->hasRole('Admin') or auth()->user()->hasRole('Branch Manager'))
+                        @if(auth()->user()->hasRole('Admin')  or auth()->user()->can('accept_prospects'))
                             <li><a href="{{route('salesleads.index')}}">
-                            <i class="fa fa-envelope-open-o" aria-hidden="true"> </i> Sales Leads</a></li>
+                            <i class="fa fa-envelope-open-o" aria-hidden="true"> </i> Sales Prospects</a></li>
                         @endif
                         @if (auth()->user()->hasRole('Admin') or Auth::user()->hasRole('National Account Manager'))
                         <li class="divider"></li>

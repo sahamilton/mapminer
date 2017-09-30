@@ -1,6 +1,6 @@
 @extends ('admin.layouts.default')
 @section('content')
-<h1>Lead</h1>
+<h1>Propsect</h1>
 
 <h2>{{$lead->businessname}}</h2>
 <h4>A location of {{$lead->companyname}}</h4>
@@ -19,11 +19,11 @@
 
 		<p><strong>Industry Vertical:</strong></p>
 		<ul>
-		
-		@foreach($lead->leadsource->verticals()->get() as $vertical)
+		All
+		<!-- @foreach($lead->leadsource->verticals()->get() as $vertical)
 
 		<li>{{$vertical->filter}}</li>
-		@endforeach
+		@endforeach-->
 		</ul>
 	</div>
 

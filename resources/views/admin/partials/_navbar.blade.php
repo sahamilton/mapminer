@@ -150,16 +150,16 @@
                         <li {{ (Request::is('admin/salesactivity*') ? ' class="active"' : '') }}><a href="{{ route('salesactivity.index') }}">
                         <i class="fa fa-calendar-check-o" aria-hidden="true"> </i> Sales Campaigns</a></li>
                     @endcan
-                    @can('manage_leads')
-                        <li class="divider">Leads</li>
+                    @can('manage_prospects')
+                        <li class="divider">Prospects</li>
                         <li{{ (Request::is('admin/leads') ? ' class="active"' : '') }}><a href="{{ route('leads.index') }}">
-                        <i class="fa fa-envelope-open-o" aria-hidden="true"> </i> Sales Leads</a></li>
+                        <i class="fa fa-envelope-open-o" aria-hidden="true"> </i> Sales Prospects</a></li>
                         <li{{ (Request::is('admin/leadsource*') ? ' class="active"' : '') }}><a href="{{ route('leadsource.index') }}">
-                        <i class="fa fa-diamond" aria-hidden="true"> </i> Lead Sources</a></li>
+                        <i class="fa fa-diamond" aria-hidden="true"> </i> Prospect Sources</a></li>
                         <li {{ (Request::is('admin/leadstatus*') ? ' class="active"' : '') }}><a href="{{ route('leadstatus.index') }}">
-                        <i class="fa fa-star-o" aria-hidden="true"> </i> Lead Statuses</a></li>
-                        
-                    @endcan
+                        <i class="fa fa-star-o" aria-hidden="true"> </i> Prospect Statuses</a></li>
+                     @endcan   
+                   
                     
                     <li class="divider">Industries</li>
                     <li {{ (Request::is('admin/search*') ? ' class="active"' : '') }}><a href="{{ route('vertical.analysis') }}">

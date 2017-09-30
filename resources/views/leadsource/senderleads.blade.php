@@ -11,7 +11,7 @@
 <div class="panel-body"><p>{!! $data['message'] !!}</p>
 
 <button type="button" a href="{{route('salesleads.index')}}" class="btn btn-primary">
-        Check out the {{$data['source']->source}} leads and resources.
+        Check out the {{$data['source']->source}} prospects and resources.
 </button>
 
 <p><em> If you’re having trouble clicking the  button, copy and paste the URL below

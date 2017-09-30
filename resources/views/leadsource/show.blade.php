@@ -1,12 +1,12 @@
 @extends ('admin.layouts.default')
 @section('content')
-<h2>Lead Source - {{$leadsource->source}}</h2>
-<p><a href="{{route('leadsource.index')}}">Return to all Leads sources</a></p>
+<h2>Propsect Source - {{$leadsource->source}}</h2>
+<p><a href="{{route('leadsource.index')}}">Return to all Prospect sources</a></p>
 <ul class="nav nav-tabs">
 	<li class="active"><a data-toggle="tab" href="#map"><strong>Map View</strong></a></li>
 	<li><a data-toggle="tab" href="#details"><strong>Details</strong></a></li>
-	<li><a data-toggle="tab" href="#leads"><strong>Assigned Leads</strong></a></li>
-	<li><a data-toggle="tab" href="#unassigned"><strong>Unassigned Leads</strong></a></li>
+	<li><a data-toggle="tab" href="#leads"><strong>Assigned Prospects</strong></a></li>
+	<li><a data-toggle="tab" href="#unassigned"><strong>Unassigned Prospects</strong></a></li>
 	<li><a data-toggle="tab" href="#team"><strong>Team</strong></a></li>
 	<li><a data-toggle="tab" href="#stats"><strong>Stats</strong></a></li>
 	

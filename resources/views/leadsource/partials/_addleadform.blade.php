@@ -8,7 +8,7 @@
          <strong>{!! $errors->first('upload', '<p class="help-block">:message</p>') !!}</strong>
      </div>
  </div>
-<legend>Or Enter Individual Lead:</legend>
+<legend>Or Enter Individual Prospect:</legend>
 <!-- Company Name -->
 <div class="form-group{{ $errors->has('companyname') ? ' has-error' : '' }}">
 	<label class="col-md-4 control-label">Company</label>

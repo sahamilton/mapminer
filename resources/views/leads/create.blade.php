@@ -1,7 +1,7 @@
 @extends ('admin.layouts.default')
 @section('content')
 <div class="container">
-<h2>Create a Single Lead</h2>
+<h2>Create a Single Prospect</h2>
 
 <form method="post" name="createLead" action="{{route('leads.store')}}" >
 {{csrf_field()}}

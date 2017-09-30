@@ -20,7 +20,7 @@ class LeadImportController extends ImportController
         $this->lead = $lead;
         $this->import = $import;
         $this->leadsources = $leadsource;
-       parent::__construct($lead);
+
         
     }
 

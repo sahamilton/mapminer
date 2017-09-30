@@ -1,7 +1,7 @@
 @extends ('admin.layouts.default')
 @section('content')
 <div class="container">
-<h2>Edit Lead Source</h2>
+<h2>Edit Prospect Source</h2>
 <div class="form-group">
 <form method="post" name="editLeadSource" action="{{route('leadsource.update',$leadsource->id)}}" >
 {{csrf_field()}}

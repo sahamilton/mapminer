@@ -1,20 +1,20 @@
 @extends('admin/layouts/default')
 @section('content')
 
-<h1>Lead Sources</h1>
+<h1>Prospect Sources</h1>
 
 
 @if (Auth::user()->hasRole('Admin'))
 
 <div class="pull-right">
-				<a href="{{{ route('leadsource.create') }}}" class="btn btn-small btn-info iframe"><span class="glyphicon glyphicon-plus-sign"></span> Create New Lead Source</a>
+				<a href="{{{ route('leadsource.create') }}}" class="btn btn-small btn-info iframe"><span class="glyphicon glyphicon-plus-sign"></span> Create New Prospect Source</a>
 			</div>
 @endif
 
     <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
      
-    <th>Lead Source</th>
+    <th>Prospect Source</th>
     <th>Description</th>
     <th>Reference</th>
     <th>Leads</th>
@@ -66,7 +66,7 @@
                 <li>
                 <a href="{{route('leadsource.edit',$source->id)}}">
                 <i class="glyphicon glyphicon-pencil"></i>
-                 Edit this lead source
+                 Edit this prospect source
                  </a>
                  </li>
 
@@ -75,13 +75,13 @@
                 <li>
                 <a href="{{route('leadsource.addleads',$source->id)}}">
                 <i class="glyphicon glyphicon-plus"></i>
-                 Add leads to this source
+                 Add prospects to this source
                  </a>
                  </li>
                 <li>
                 <a href="{{route('leadsource.flushleads',$source->id)}}">
                 <i class="glyphicon glyphicon-minus"></i>
-                 Flush all leads from this source
+                 Flush all prospects from this source
                  </a>
                  </li>
                 <li>
@@ -93,7 +93,7 @@
                 <li>
                 <a data-href="{{route('leadsource.destroy',$source->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = " this lead source and all its leads" href="#">
                 <i class="fa fa-trash-o" aria-hidden="true"> </i>
-                 Delete this lead source</a>
+                 Delete this prospect source</a>
                  </li>
             </ul>
         </div>
