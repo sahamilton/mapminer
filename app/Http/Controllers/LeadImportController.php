@@ -51,7 +51,7 @@ class LeadImportController extends ImportController
         $fields = $this->getFileFields($data);      
         $columns = $this->lead->getTableColumns($data['table']);
         $requiredFields = $this->import->requiredFields;
-         $skip = ['id','created_at','updated_at','lead_source_id','pr_status'];
+        $skip = ['id','created_at','updated_at','lead_source_id','pr_status'];
         return response()->view('imports.mapfields',compact('columns','fields','data','company_id','skip','title','requiredFields'));
 
     }

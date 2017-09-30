@@ -30,5 +30,18 @@ trait Geocode
 
           return $data;
     }
-   
+   public function scopeNearby($query, $location, $radius = 5) {
+    
+     $haversine = "(3956 * acos(cos(radians($location->lat)) 
+                     * cos(radians($this->table.lat)) 
+                     * cos(radians($this->table.lng) 
+                     - radians($location->lng)) 
+                     + sin(radians($location->lat)) 
+                     * sin(radians($this->table.lat))))";
+     return $query
+        ->select() //pick the columns you want here.
+        ->selectRaw("{$haversine} AS distance")
+        ->whereRaw("{$haversine} < ?", [$radius])
+        ->orderBy('distance','ASC');
+    }
 }

@@ -79,7 +79,7 @@
 				{{$team->firstname . " " . $team->lastname}}</a>
 			</td>
 
-			<td>{{number_format($team->distance_in_mi,0)}}</td>
+			<td>{{number_format($team->distance,0)}}</td>
 			<td><input type = "checkbox" name="salesrep[]" value="{{$team->id}}" /></td>
 			</tr>
 
@@ -104,7 +104,7 @@
 				{{$branch->branchname}}</a>
 			</td>
 
-			<td>{{number_format($branch->distance_in_mi,0)}}</td>
+			<td>{{number_format($branch->distance,0)}}</td>
 			<td><input type = "radio" name="branch[]" value="{{$branch->branchid}}" /></td>
 			</tr>
 

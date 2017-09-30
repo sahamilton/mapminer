@@ -161,7 +161,7 @@ class Person extends NodeModel {
 	}
 
 	
-	
+	// Migrating this to Geocode scopeFindNearby
 	public function findNearByPeople($lat,$lng,$distance,$limit=null, $role=null,$verticals=null){
 		$query = "SELECT id,firstname,lastname,lat,lng, email,distance_in_mi,employee_id,role,city,state,active_from
 			  FROM (

@@ -29,7 +29,7 @@ class LeadsAssignController extends Controller
      public function geoAssignLeads($sid){
 
         $leadsource = $this->leadsource->findOrFail($sid);
-       
+        //$leadroles = $this->leadroles;
         $data['verticals'] = $leadsource->verticals()->pluck('searchfilters.id')->toArray();
        
         $leads = $this->lead->whereDoesntHave('salesteam')
@@ -40,20 +40,23 @@ class LeadsAssignController extends Controller
           })
         
         ->get();
+
         $count = null;
         foreach ($leads as $lead) {
-           $data['lat']=$lead->lat;
-           $data['lng']=$lead->lng;
-          $people = $this->person->findNearByPeople($lead->lat,$lead->lng,$this->distance,$this->limit, $this->leadroles,$data['verticals']);
-          
-            
-            
+          $data['lat']=$lead->lat;
+          $data['lng']=$lead->lng;
+          $people = $this->person->nearby($lead,$this->distance)
+          ->with('userdetails')
+          ->whereHas('userdetails.roles',function($q) {
+            $q->whereIn('name',$this->leadroles);
+
+          })
+          ->limit($this->limit)
+          ->get();
                 foreach ($people as $person){
                 	$count++;
                     $lead->salesteam()->attach($person->id,['status_id'=>1]);
                 }
-           
-           
         }
         return redirect()->route('leadsource.show',$sid)->with('status',$count . ' leads assigned');
     }

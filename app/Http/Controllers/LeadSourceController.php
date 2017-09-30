@@ -218,7 +218,14 @@ class LeadSourceController extends Controller
             $data['lng'] = $lead->lng;
             $data['distance'] = 1000;
             $data['number'] = 1;
-            $leadinfo[$lead->id] = $this->person->findNearByPeople($data['lat'],$data['lng'],$data['distance'],$data['number'],'Sales');
+            $leadinfo[$lead->id] = $this->person->nearby($lead,$data['distance'])
+            ->whereHas('userdetails.roles',function($q) {
+            $q->whereIn('name','Sales');
+
+          })
+          ->limit(1)
+          ->get();
+            //$leadinfo[$lead->id] = $this->person->findNearByPeople($data['lat'],$data['lng'],$data['distance'],$data['number'],'Sales');
 
         }
         return $leadinfo;

@@ -31,7 +31,7 @@ class LeadsController extends BaseController
         $this->lead = $lead;
         $this->leadsource = $leadsource;
         $this->leadstatus = $status;
-        $assignTo = \Config::get('leads.lead_distribution_roles');
+        $this->assignTo = \Config::get('leads.lead_distribution_roles');
     }
     /**
      * Display a listing of the resource.
@@ -91,17 +91,27 @@ class LeadsController extends BaseController
               ->where('dateto','>=',date('Y-m-d'));
         })
         ->findOrFail($id);
-
         $verticals = $lead->leadsource->verticals()->pluck('searchfilters.id')->toArray();
-
         $rank = $this->lead->rankLead($lead->salesteam);
         $branch = new \App\Branch;
-        $branches = $branch->findNearbyBranches($lead->lat,$lead->lng,500,5,[5]);
+        //$branches = $branch->findNearbyBranches($lead->lat,$lead->lng,500,5,[5]);
+        $branches = $branch->nearby($lead,500)->limit(5)->get();
+
         if(count($lead->salesteam)==0){
-            $people = $this->person->findNearByPeople($lead->lat,$lead->lng,'5000',5,$this->assignTo,$verticals);
-    
+            //$people = $this->person->findNearByPeople($lead->lat,$lead->lng,'5000',5,$this->assignTo,$verticals);
+            $people = $this->person->nearby($lead,'1000')->with('userdetails')
+                    ->whereHas('userdetails.roles',function($q) {
+                      $q->whereIn('name',$this->assignTo);
+
+              })
+              ->whereHas('industryfocus',function ($q) use ($verticals){
+                  $q->whereIn('searchfilters.id',$verticals);
+              })
+              ->limit(5)
+              ->get();
           
         }
+
         return response()->view('leads.show',compact('lead','sources','rank','people','branches'));
         
         
@@ -247,18 +257,23 @@ class LeadsController extends BaseController
 
     private function findNearBy($data){
         
-        if (! isset($data['number'])){
-            $data['number'] = null;
-        }
+        $location = new \stdClass;
+        $location->lat = $data['lat'];
+        $location->lng = $data['lng'];
         if(! isset($data['distance'])){
             $data['distance']=\Config::get('leads.search_radius');
         }
-        if(! isset($data['verticals'])){
-            $data['verticals'] = null;
+        $persons = $this->person->nearby($location,$data['distance']);
+        if(isset($data['verticals'])){
+            $persons->whereHas('industryfocus',function ($q) use ($verticals){
+                  $q->whereIn('searchfilters.id',$verticals);
+              });
         }
-        
-
-        return $this->person->findNearByPeople($data['lat'],$data['lng'],$data['distance'],$data['number'],['Sales'],$data['verticals']);
+        if (isset($data['number'])){
+            $persons->limit($data['number']);
+        }
+      return $persons->get();
+     //   return $this->person->findNearByPeople($data['lat'],$data['lng'],$data['distance'],$data['number'],['Sales'],$data['verticals']);
     }
 
     private function createNewSource($request){

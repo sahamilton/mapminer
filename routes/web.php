@@ -338,7 +338,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 		Route::get('leads/address',['as'=>'lead.address','uses'=>'LeadsController@address']);
 		Route::get('leads/{vertical}/vertical',['as'=>'lead.vertical','uses'=>'LeadsController@index']);
 		Route::get('leadsource/{id}/addleads',['as'=>'leadsource.addleads','uses'=>'LeadImportController@getFile']);		
-		Route::get('leads/import',['as'=>'leads.importfile','uses'=>'LeadImportController@getFile']);
+		Route::get('leads/import',['as'=>'prospects.importfile','uses'=>'LeadImportController@getFile']);
 		Route::post('leads/import',['as'=>'leads.import','uses'=>'LeadImportController@import']);
 		Route::get('leads/assign/{sid}/source',['as'=>'leads.geoassign','uses'=>'LeadsAssignController@geoAssignLeads']);
 		Route::get('leads/{id}/assign',['as'=>'leads.leadassign','uses'=>'LeadsController@assignLeads']);
