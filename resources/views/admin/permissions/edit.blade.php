@@ -11,6 +11,7 @@
 		<!-- CSRF Token -->
 		<input type="hidden" name="_token" value="{{{ csrf_token() }}}" />
 		<input type="hidden" name="_method" value="put" />
+		<input type="hidden" name ="id" value="{{$permission->id}}" />
 		<inputtype="hidden" name="permission_id" value="{{$permission->id}}" />
 		<!-- ./ csrf token -->
 				@include('admin.permissions.partials._form')
