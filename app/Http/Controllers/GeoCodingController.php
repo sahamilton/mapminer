@@ -100,13 +100,16 @@ class GeoCodingController extends BaseController {
 				$data['company']=NULL;
 				$data['companyname']=NULL;
 				
+			
 			}elseif ($data['type']=='company'){
 				$data['urllocation'] ="api/mylocalaccounts";
 				$data['title'] = (isset($data['companyname']) ? $data['companyname'] : 'Company') ." Locations";
 				$data['vertical'] = Company::where('id','=',$data['company'])->pluck('vertical');
+			
 			}elseif ($data['type'] == 'projects'){
 				$data['urllocation'] ="api/mylocalprojects";
 				$data['title'] = "Project Locations";
+			
 			}else{
 				$data['urllocation'] ="api/mylocalaccounts";
 				$data['title'] ='National Account Locations';
@@ -142,7 +145,9 @@ class GeoCodingController extends BaseController {
 	 
 	public function getGeoListData($data ) {
 		$company = isset($data['company']) ? $data['company'] : NULL;
-
+		$location = new \stdClass;
+		$location->lat = $data['lat'];
+		$location->lng = $data['lng'];
 	
 		switch ($data['type']) {
 			
@@ -155,14 +160,19 @@ class GeoCodingController extends BaseController {
 			
 			case 'branch':
 
-			return $this->branch->findNearbyBranches($data['lat'],$data['lng'],$data['distance'],$number=null,$this->userServiceLines);
-			
+			//return $this->branch->findNearbyBranches($data['lat'],$data['lng'],$data['distance'],$number=null,$this->userServiceLines);
+			return $this->branch->nearby($location,$data['distance'])
+			->whereHas('servicelines', function ($q) {
+				$q->whereIn('servicelines.id',$this->userServiceLines);
+			})
+			->get();
 			
 			break;
 
 			case 'projects':
-				return $this->project->findNearbyProjects($data['lat'],$data['lng'],$data['distance'],$number=null,$this->userServiceLines);
-
+				//return $this->project->findNearbyProjects($data['lat'],$data['lng'],$data['distance'],$number=null,$this->userServiceLines);
+				
+				return $this->project->nearby($location,$data['distance'])->get();
 			
 			break;
 			

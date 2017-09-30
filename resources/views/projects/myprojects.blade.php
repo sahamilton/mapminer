@@ -25,9 +25,9 @@
 		<tr>  
 		<td><a href="{{route('projects.show',$project->id)}}"
 		title="See details of this project">{{$project->project_title}}</a></td>
-		<td>{{$project->project_addr1}}</td>
-		<td>{{$project->project_city}}</td>
-		<td>{{$project->project_state}},{{$project->project_zipcode}}</td>
+		<td>{{$project->street}}</td>
+		<td>{{$project->city}}</td>
+		<td>{{$project->state}},{{$project->zipcode}}</td>
 		<td>{{$project->structure_header}} / {{$project->project_type}}</td>
 		<td>{{$project->ownership}}</td>
 		<td>{{$project->stage}}</td>

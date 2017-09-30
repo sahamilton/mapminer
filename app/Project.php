@@ -5,17 +5,19 @@ namespace App;
 
 class Project extends Model
 {
+    
+use Geocode;
     public $table="projects";
     public $incrementing = false;
     public $statuses = ['Claimed','Closed'];
     public $fillable=[ 
            'source_ref',
            'project_title',
-           'project_addr1',
-           'project_addr2',
-           'project_city',
-           'project_state',
-           'project_zipcode',
+           'street',
+           'addr2',
+           'city',
+           'state',
+           'zipcode',
            'project_county_name',
            'project_county_code',
            'structure_header',
@@ -51,7 +53,7 @@ class Project extends Model
     	return $this->belongsToMany(ProjectCompany::class,'project_company_contact','project_id','company_id')->withPivot('type','contact_id');
     }
     public function fullAddress(){
-      return $this->project_addr1 . "," . $this->project_city. " " . $this->project_state . " " . $this->project_zipcode;
+      return $this->street . "," . $this->city. " " . $this->state . " " . $this->zipcode;
 
     }
     public function owner(){
@@ -124,7 +126,7 @@ class Project extends Model
     	
     	}
 
-
+// moving to geocode scopefindnearby
   public function findNearbyProjects($lat,$lng,$distance,$limit,$servicelines)
   
   {
@@ -138,10 +140,10 @@ class Project extends Model
         FROM (
           SELECT projects.id as id, 
             project_title,
-            project_addr1 as street,
-            project_city as city,
-            project_state as state,
-            project_zipcode as zip,
+            street as street,
+            city as city,
+            state as state,
+            zipcode as zip,
             lat,
             serviceline_id,
             lng,

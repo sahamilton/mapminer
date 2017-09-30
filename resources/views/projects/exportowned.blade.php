@@ -26,11 +26,11 @@
 		@foreach($projects as $project)
 			<tr> 
 			<td>{{$project->project_title}}</td>
-			<td>{{$project->project_addr1}}</td>
-			<td>{{$project->project_addr2}}</td>
-			<td>{{$project->project_city}}</td>
-			<td>{{$project->project_state}}</td>
-			<td>{{$project->project_zipcode}}</td>
+			<td>{{$project->street}}</td>
+			<td>{{$project->addr2}}</td>
+			<td>{{$project->city}}</td>
+			<td>{{$project->state}}</td>
+			<td>{{$project->zipcode}}</td>
 			<td>{{$project->dodge_repnum}}</td>
 			<td>{{$project->structure_header}}</td>
 			<td>{{$project->project_type}}</td>
