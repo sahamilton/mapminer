@@ -194,7 +194,13 @@ class LocationsController extends BaseController {
 			$userservicelines[] = $serviceline->id;
 		}
 
-		return $this->branch->findNearbyBranches($location->lat,$location->lng,100,$limit,$userservicelines);
+		//return $this->branch->findNearbyBranches($location->lat,$location->lng,100,$limit,$userservicelines);
+		return $this->branch->nearby($location,'100')
+			->whereHas('servicelines', function ($q) {
+				$q->whereIn('servicelines.id',$this->userServiceLines);
+			})
+			->limit($limit)
+			->get();
 	
 	}
 	
@@ -291,17 +297,30 @@ class LocationsController extends BaseController {
 		if(! $distance){
 			$distance ='10';
 		}
-		
+		$location=new \stdClass;
+
 		if (isset($lat) && isset($lng)){
-			$loclat = $lat;
-			$loclng = $lng;
+			$location->lat = $lat;
+			$location->lng = $lng;
 		}else{
-			$loclat = '47.25';
-			$loclng = '-122.44';
+			$locations->lat = '47.25';
+			$locaction->lng = '-122.44';
 		}
 		
-		$result = $this->location->findNearbyLocations($loclat,$loclng,$distance,$number=1,$company_id,$this->userServiceLines,$vertical);
-		return $result;		
+		//$result = $this->location->findNearbyLocations($loclat,$loclng,$distance,$number=1,$company_id,$this->userServiceLines,$vertical);
+		$locations =  $this->location->nearby($location,$distance);	
+		if($company_id){
+			$locations->where('company_id','=',$company_id);
+		}
+		if($vertical){
+			$locations->whereHas('company.industryVertical',function($q) use($vertical){
+				$q->whereIn('searchfilter.id',$vertical);
+			});
+		}
+		return $locations->whereHas('company.serviceline',function ($q) {
+			$q->whereIn('servicelines.id',$this->userServiceline);
+
+		})->get();
 		
 
 		

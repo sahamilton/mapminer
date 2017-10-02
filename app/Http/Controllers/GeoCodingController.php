@@ -60,7 +60,7 @@ class GeoCodingController extends BaseController {
 		$filtered = $this->location->isFiltered(['companies','locations'],['vertical','business','segment'],NULL);
 
 		if($data['view'] == 'list') {
-			
+		
 			$data['result'] = $this->getGeoListData($data);
 
 			try {
@@ -153,8 +153,15 @@ class GeoCodingController extends BaseController {
 			
 			case 'location':
 			case 'company':
+			if($company){
+				return $this->location->nearby($location,$data['distance'])->where('company_id','=',$company)->get();
+			}else{
+				return $this->location->nearby($location,$data['distance'])->get();
+			}
 			
-			return $result = $this->location->findNearbyLocations($data['lat'],$data['lng'],$data['distance'],$number=null,$company,$this->userServiceLines);
+			//->where('company_id','=',$company)
+			
+			//return $result = $this->location->findNearbyLocations($data['lat'],$data['lng'],$data['distance'],$number=null,$company,$this->userServiceLines);
 			
 			break;
 			
@@ -177,7 +184,12 @@ class GeoCodingController extends BaseController {
 			break;
 			
 			default:
-			return $result = $this->location->findNearbyLocations($data['lat'],$data['lng'],$data['distance'],$number=1,$company,$this->userServiceLines);
+			if($company){
+				return $this->location->nearby($location,$data['distance'])->where('company_id','=',$company)->get();
+			}else{
+				return $this->location->nearby($location,$data['distance'])->get();
+			}
+			//return $result = $this->location->findNearbyLocations($data['lat'],$data['lng'],$data['distance'],$number=1,$company,$this->userServiceLines);
 			
 			
 			

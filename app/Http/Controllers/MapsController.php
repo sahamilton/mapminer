@@ -60,21 +60,28 @@ class MapsController extends BaseController {
 
 	public function findLocalBranches($distance=NULL,$latlng = NULL) {
 		
-		$location =explode(":",$latlng);
-		
-		$branches = $this->branch->findNearbyBranches($location[0],$location[1],$distance,$number=null,$this->userServiceLines);
-
+		$location = getLocationLatLng($latlng);
+		//$branches = $this->branch->findNearbyBranches($location[0],$location[1],$distance,$number=null,$this->userServiceLines);
+		$branches = $this->branch->nearby($location,$distance)->whereHas('servicelines',function ($q){
+			$q->whereIn('servicelines.id',$this->userServiceLines);
+		})->get();
 		return response()->view('maps.partials.branchxml', compact('branches'))->header('Content-Type', 'text/xml');
 		
 	}
 	
 	public function findLocalAccounts($distance=NULL,$latlng = NULL,$company = NULL) {
 		
+		$location = getLocationLatLng($latlng);
 		
-		$geo =explode(":",$latlng);
-
-		$result = $this->location->findNearbyLocations($geo[0],$geo[1],$distance,$number=null,$company,$this->userServiceLines);
-		return response()->view('locations.xml', compact('result'))->header('Content-Type', 'text/xml');
+		$locations = $this->location->nearby($location,$distance);
+		if($company){
+			$locations->where('company_id','=',$company);
+		}
+		$locations->whereHas('company.servicelines',function ($q){
+			$q->whereIn('servicelines.id',$this->userServiceLines);
+		})->get();
+		//$result = $this->location->findNearbyLocations($geo[0],$geo[1],$distance,$number=null,$company,$this->userServiceLines);
+		return response()->view('locations.xml', compact('locations'))->header('Content-Type', 'text/xml');
 
 
 		
@@ -84,5 +91,13 @@ class MapsController extends BaseController {
 	
 	{
 		return $centerPoint;	
+	}
+
+	private function getLocationLatLng($latlng){
+		$position =explode(":",$latlng);
+		$location = new \stdClass;
+		$location->lat = $position[0];
+		$location->lng = $position[1];
+		return $location;
 	}
 }

@@ -128,24 +128,35 @@ class SalesActivityController extends BaseController
      */
     public function show($id)
     {
-       
         $activity = $this->activity->with('salesprocess','vertical')->findOrFail($id);
         $verticals = array_unique($activity->vertical->pluck('id')->toArray());
         $statuses = LeadStatus::pluck('status','id')->toArray();
         $person = Person::findOrFail(auth()->user()->person->id);
         if($person->isLeaf()){
             if(auth()->user()->person->lat){
-            $lat = auth()->user()->person->lat;
-            $lng = auth()->user()->person->lng;
-            $locations = $this->location->findNearbyLocations($lat,$lng,25,$number=null,$company=NULL,$this->userServiceLines, $limit=null, $verticals);
-        }else{
-            $locations = array();
-        }
+                $location = new \stdClass;
+
+                $location->lat = auth()->user()->person->lat;
+                $location->lng = auth()->user()->person->lng;
+                $locations = $this->location->nearby($location,25)
+                    ->wherehas('company.servicelines',function ($q){
+                        $q->whereIn('servicelines.id',$this->userServiceLines);
+                    });
+                if(count($verticals)>0){
+                    $locations->whereHas('company.industryverticals',function ($q) use($verticals){
+                        $q->whereIn('searchfilters.id',$verticals);
+                    });
+                }
+                $locations->get();
+                //$locations = $this->location->findNearbyLocations($lat,$lng,25,$number=null,$company=NULL,$this->userServiceLines, $limit=null, $verticals);
+            }else{
+                $locations = array();
+            }
         //my watch list
-        $mywatchlist = $this->activity->getWatchList();
-        // find all lead locations for the logged in user in these verticals
-        $leads = $this->lead->myLeads($verticals)->get();
-        return response()->view('salesactivity.show',compact('activity','locations','leads','statuses','mywatchlist'));
+            $mywatchlist = $this->activity->getWatchList();
+            // find all lead locations for the logged in user in these verticals
+            $leads = $this->lead->myLeads($verticals)->get();
+            return response()->view('salesactivity.show',compact('activity','locations','leads','statuses','mywatchlist'));
         }
         
         

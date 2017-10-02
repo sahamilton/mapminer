@@ -14,23 +14,21 @@
 		@foreach ($data['result'] as $account)
 			<tr>
 				<td>
-				<a href="{{route(
-'locations.show'
-,$account->id)}}"
+				<a href="{{route('locations.show',$account->id)}}"
 				title = "See details of the {{$account->businessname}} location">
 				{{$account->businessname}}
 				</a></td>
 				<td>
-				<a href="{{route('company.show',$account->company_id)}}"
-				title="See all {{$account->companyname}} locations">
-					{{$account->companyname}}
-				</a>
+					<a href="{{route('company.show',$account->company_id)}}"
+					title="See all {{$account->company->companyname}} locations">
+						{{$account->company->companyname}}
+					</a>
 				</td>
 				<td>{{$account->street}}</td>
 				<td>{{$account->city}}</td>
 				<td>{{$account->state}}</td>
 				<td>{{$account->zip}}</td>
-				<td>{{$account->distance_in_mi}}</td>
+				<td>{{number_format($account->distance,1)}}</td>
 				<td>
 
 					@if(isset($watchlist) && in_array($account->id,$watchlist))

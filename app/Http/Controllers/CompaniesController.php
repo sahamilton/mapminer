@@ -215,7 +215,7 @@ class CompaniesController extends BaseController {
 	 
 	public function show($id,$segment=null)
 	{
-		
+	
 		if(is_object($id)){
 			$id = $id->id;
 
@@ -250,21 +250,27 @@ class CompaniesController extends BaseController {
 		$filters = $this->searchfilter->vertical();
 		$limited = null;
 		$count = count($locations);
+		// used when there are too many locations to show in list
 		if( $count > $this->limit)
 		{
+			$location = new \stdClass;
 			$limited=$this->limit;
 			if (\Session::has('geo'))
 				{
 					$geo = \Session::get('geo');
-					$lat = $geo['lat'];
-					$lng = $geo['lng'];
+					$location->lat = $geo['lat'];
+					$location->lng = $geo['lng'];
 				}else{
 					// use center of the country as default lat lng
-					$lat = '47.25';
-					$lng = '-122.44';
+					$location->lat =  '47.25';
+					$location->lng =  '-122.44';
 
 				}
-		$locations = $this->locations->findNearbyLocations($lat,$lng,'1000',$number=null,$company->id,$this->userServiceLines, $limit = $this->limit);
+		
+		
+		$locations = $this->locations->nearby($location,'1000')->where('company_id','=',$company->id)->limit($this->limit)->get();
+		
+		//$locations = $this->locations->findNearbyLocations($location->lat,$location->lng,'1000',$number=null,$company->id,$this->userServiceLines, $limit = $this->limit);
 		}	
 
 		$data['type']='company';

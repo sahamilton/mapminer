@@ -9,8 +9,8 @@
 		<th>Ownership</th>
 		<th>Stage</th>
 		<th>PR Status</th>
-		
 		<th>Total Value ($k)</th>
+		<th>Distance</th>
 
 	</thead>
 	<tbody>
@@ -37,6 +37,7 @@
 		
 		</td>
 		<td style="text-align:right">{{$project->total_project_value}}</td>
+		<td>{{number_format($project->distance,1)}}</td>
 		</tr>
 	@endforeach
 

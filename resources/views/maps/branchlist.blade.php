@@ -14,13 +14,17 @@
 
 			<tr>  
 
-				<td><a href="{{route('branches.show',$row->branchid)}}">{{$row->branchname}}</a></td>
-				<td>{{$row->servicelines}}</td>
+				<td><a href="{{route('branches.show',$row->id)}}">{{$row->branchname}}</a></td>
+				<td>
+				@foreach ($row->servicelines as $serviceline)
+					{{$serviceline->ServiceLine}}
+				@endforeach
+				</td>
 				<td>{{$row->street}}</td>
 				<td>{{$row->city}}</td>
 				<td>{{$row->state}}</td>
 				<td>{{$row->zip}}</td>
-				<td>{{$row->distance_in_mi}}</td>
+				<td>{{number_format($row->distance,1)}}</td>
 			</tr>
 		@endforeach
 	</tbody>

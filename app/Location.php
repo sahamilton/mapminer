@@ -17,7 +17,7 @@ class Location extends Model {
 		'businesstype' => 'required'
 		
 	];
-
+	public $table = 'locations';
 	// Don't forget to fill this array
 	// Note this array is used to check the imports as well.  
 	// If you change this you will have to change the location import template.
@@ -77,7 +77,7 @@ class Location extends Model {
 		@return result
 	
 	*/	
-	
+	// moving to geocode scope findNearby
 	public function findNearbyLocations($lat,$lng,$distance,$number,$company=NULL,$userServiceLines, $limit=null, $verticals=null,$segments=null)
 	
 	{
