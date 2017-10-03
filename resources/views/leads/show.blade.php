@@ -1,6 +1,6 @@
 @extends ('admin.layouts.default')
 @section('content')
-<h1>Propsect</h1>
+<h1>Prospect</h1>
 
 <h2>{{$lead->businessname}}</h2>
 <h4>A location of {{$lead->companyname}}</h4>

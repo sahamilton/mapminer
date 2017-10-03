@@ -1,7 +1,7 @@
 @extends ('admin.layouts.default')
 @section('content')
 <div class="container">
-<h2>Add Propsects to the @if(isset($leadsource)) {{$leadsource->source}} @endif List</h2>
+<h2>Add Prospects to the @if(isset($leadsource)) {{$leadsource->source}} @endif List</h2>
 <h4>Steps to import prospects</h4>
     <ol>
         <li>First create your csv file of prospects from the template.  Your import file must contain at least {{count($requiredFields)}} columns that can be mapped to these fields:

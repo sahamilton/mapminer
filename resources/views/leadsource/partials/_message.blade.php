@@ -1,8 +1,8 @@
-You have new propsects offered to you in the {{$source->title}} campaign. 
+You have new Prospects offered to you in the {{$source->title}} campaign. 
 
 {{$source->description}}
 
-These propsects are available from  {{$source->datefrom->format('M j, Y')}}  until   {{$source->dateto->format('M j, Y')}}.
+These Prospects are available from  {{$source->datefrom->format('M j, Y')}}  until   {{$source->dateto->format('M j, Y')}}.
 
 These prospects are for the following sales verticals:
 <ul>
