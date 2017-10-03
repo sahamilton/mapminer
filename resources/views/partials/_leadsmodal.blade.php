@@ -4,12 +4,14 @@
             
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title" id="myModalLabel">Lead Details</h4>
+                    <h4 class="modal-title" id="myModalLabel">Prospect Details</h4>
                 </div>
             
                 <div class="modal-body">
 				<legend>Contact Details</legend>
 				<p>{{$lead->contact}}</p>
+                <p>{{$lead->contacttitle}}</p>
+                <p>{{$lead->contactemail}}</p>
 				<p>{{$lead->phone}}
 				<legend>Address</legend>
 				<p>{{$lead->address}}</p>
@@ -19,7 +21,7 @@
                 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                    <a href="#" class="btn btn-warning warning">Accept Lead</a>
+                    <a href="#" class="btn btn-warning warning">Accept Prospect</a>
                 </div>
             </div>
         </div>

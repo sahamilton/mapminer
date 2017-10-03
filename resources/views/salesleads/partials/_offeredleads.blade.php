@@ -56,9 +56,10 @@
                 @if(! $manager)
 <td>
            @if(in_array($lead->pivot->status_id,[1]) )
-            @include('partials/_leadsmodal')
+
     
-            <div class="btn-group">
+         @include('partials/_leadsmodal')     
+         <div class="btn-group">
 			   <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
 				<span class="caret"></span>
 				<span class="sr-only">Toggle Dropdown</span>
@@ -67,9 +68,9 @@
 				
 			  @if($lead->pivot->status_id ==1)
 				<li><a data-href="{{route('saleslead.accept',$lead->id)}}" data-toggle="modal" data-target="#accept-lead" data-title = "Some title" href="#">
-                <i class="glyphicon glyphicon-thumbs-up"></i> Claim Lead </a></li>
+                <i class="glyphicon glyphicon-thumbs-up"></i> Claim Prospect </a></li>
                 <li><a href="{{route('saleslead.decline',$lead->id)}}">
-                <i class="glyphicon glyphicon-thumbs-down"></i> Decline Lead </a></li>
+                <i class="glyphicon glyphicon-thumbs-down"></i> Decline Prospect </a></li>
 
 
                @endif
@@ -77,7 +78,7 @@
                @if($lead->pivot->status_id ==2)
 				<li><a href="">
 				<i class="glyphicon glyphicon-hand-right"></i>
-				Work  Lead </a></li>
+				Work  Prospect </a></li>
                @endif
 			  </ul>
 			</div>
@@ -86,7 +87,7 @@
 @endif
     </tr>
    @endforeach
-    
+  
     </tbody>
     </table>
     @endif

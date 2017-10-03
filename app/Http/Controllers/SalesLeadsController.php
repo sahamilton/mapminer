@@ -39,7 +39,7 @@ class SalesLeadsController extends Controller
             $manager=false;
             $leads = $this->person->where('user_id','=',auth()->user()->id)
             ->with('ownedLeads','offeredLeads','ownedLeads.vertical','offeredLeads.vertical')->firstOrFail();
-          
+        
             if(count($leads->ownedLeads) >= $this->ownedLimit) { 
                 $owned = $this->ownedLimit;      
                 return response()->view('salesleads.index',compact('leads','statuses','title','owned','manager'));

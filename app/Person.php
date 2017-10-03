@@ -220,8 +220,11 @@ class Person extends NodeModel {
 	public function ownedLeads(){
 		return $this->belongsToMany(Lead::class, 'lead_person_status')
 		->withTimestamps()
-		->where('datefrom','<=',date('Y-m-d'))
-		->where('dateto','>=',date('Y-m-d'))
+		->whereHas('leadsource',function($q){
+			$q->where('datefrom','<=',date('Y-m-d'))
+			->where('dateto','>=',date('Y-m-d'));
+		})
+
 		->withPivot('status_id','rating')
 		->whereIn('status_id',[2]);
 	}
