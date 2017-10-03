@@ -60,7 +60,7 @@ class MapsController extends BaseController {
 
 	public function findLocalBranches($distance=NULL,$latlng = NULL) {
 		
-		$location = getLocationLatLng($latlng);
+		$location = $this->getLocationLatLng($latlng);
 		//$branches = $this->branch->findNearbyBranches($location[0],$location[1],$distance,$number=null,$this->userServiceLines);
 		$branches = $this->branch->nearby($location,$distance)->whereHas('servicelines',function ($q){
 			$q->whereIn('servicelines.id',$this->userServiceLines);

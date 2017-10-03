@@ -46,11 +46,11 @@ class SalesLeadsController extends Controller
             }
             return response()->view('salesleads.index',compact('leads','statuses','title','manager'));
         }else{
-            $manager=false;
+            $manager=true;
             $leads = $this->person->where('user_id','=',auth()->user()->id)
             ->with('ownedLeads','offeredLeads','ownedLeads.vertical','offeredLeads.vertical','directReports','directReports.salesleads')->firstOrFail();
             
-             return response()->view('salesleads.managers',compact('leads','statuses','manager'));
+             return response()->view('salesleads.managers',compact('leads','statuses','manager','title'));
         }
         
 
