@@ -62,7 +62,7 @@ class SalesLeadsController extends Controller
         $leads = $this->person
             ->with('ownedLeads','offeredLeads','ownedLeads.vertical','offeredLeads.vertical')->findOrFail($pid);
         $statuses = $this->leadstatus->pluck('status','id')->toArray();
-        $title = ' Leads Assigned to ';
+        $title = ' Prospects Assigned to ';
         $manager=true;
         return response()->view('salesleads.index',compact('leads','statuses','title','manager'));
     
