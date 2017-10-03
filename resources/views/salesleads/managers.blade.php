@@ -14,7 +14,7 @@
 		@include('salesleads.partials._managerleads')
 	</div>
 	<div id="list" class="tab-pane fade in">
-
+@include('salesleads.partials._offeredleads')
 	</div>
 
 </div>
