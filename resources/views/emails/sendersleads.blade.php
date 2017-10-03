@@ -1,6 +1,6 @@
 @component('mail::message')
 
-## New Leads Notification Sent
+## New Prospects Notification Sent
 
 
 The following message has been sent to {{$data['count']}} members of the sales organization:

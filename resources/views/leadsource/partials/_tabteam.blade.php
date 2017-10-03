@@ -12,7 +12,7 @@
         <td>Manager</td>
         <td>Location</td>
         <td>Industry Focus</td>
-        <td>Leads</td>
+        <td>Prospects</td>
 
 
     </thead>

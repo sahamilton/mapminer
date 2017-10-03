@@ -39,7 +39,7 @@
 		<tbody>
 			@foreach ($lead->salesteam as $team)
 			<tr>
-			<td><a href="{{route('leads.person',$team->id)}}" title="See all leads associated with {{$team->postName()}}">{{$team->postName()}}</a></td>
+			<td><a href="{{route('leads.person',$team->id)}}" title="See all prospects associated with {{$team->postName()}}">{{$team->postName()}}</a></td>
 			<td>{{$sources[$team->pivot->status_id]}}</td>
 
 

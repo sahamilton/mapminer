@@ -33,8 +33,8 @@ class SalesLeadsController extends Controller
         
         // limit to active verticals
         $statuses = $this->leadstatus->pluck('status','id')->toArray();
-        $title = ' Leads Assigned to ';
-       
+        $title = ' Prospects Assigned to ';
+      // dd($this->person->where('user_id','=',auth()->user()->id)->first()->isLeaf());
         if($this->person->where('user_id','=',auth()->user()->id)->first()->isLeaf()){
             $manager=false;
             $leads = $this->person->where('user_id','=',auth()->user()->id)
@@ -47,7 +47,7 @@ class SalesLeadsController extends Controller
             return response()->view('salesleads.index',compact('leads','statuses','title','manager'));
         }else{
             $leads = $this->person->where('user_id','=',auth()->user()->id)
-            ->with('directReports','directReports.salesleads')->firstOrFail();
+            ->with('ownedLeads','offeredLeads','ownedLeads.vertical','offeredLeads.vertical','directReports','directReports.salesleads')->firstOrFail();
             
              return response()->view('salesleads.managers',compact('leads','statuses'));
         }

@@ -133,12 +133,12 @@ class Person extends NodeModel {
 
 	public function salesLeadsByStatus($id){
 		$leads = $this->with('salesleads')
-			->whereHas('salesleads',function($q){
+			->whereHas('salesleads.leadsource',function($q){
 				$q->where('datefrom','<=',date('Y-m-d'))
 				->where('dateto','>=',date('Y-m-d'));
 			})
 			->find($id);
-		
+
 		foreach ($leads->salesleads as $lead){
 			if(! isset($statuses[$lead->pivot->status_id])){
 				$statuses[$lead->pivot->status_id]['status']=$lead->pivot->status_id;

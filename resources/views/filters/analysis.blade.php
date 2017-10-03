@@ -11,7 +11,7 @@
     <th>Parent</th>
     <th>Vertical</th>
     <th>People</th>
-    <th>Current Leads</th>
+    <th>Current Prospects</th>
     <th>Companies</th>
     <th>Locations</th>
     <th>Segment Locations</th>

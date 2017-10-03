@@ -1,13 +1,13 @@
 @component('mail::message')
 
-## New Leads 
+## New Prospects 
 
 {{$team->firstname}}, 
 
 {!! $data['message'] !!}
 
 @component('mail::button', ['url' => route('salesleads.index'), 'color' => 'blue'])
-        Check out your {{$data['source']->title}} sales leads and resources.
+        Check out your {{$data['source']->title}} sales prospects and resources.
 @endcomponent
 
 <em> If you’re having trouble clicking the  button, copy and paste the URL below

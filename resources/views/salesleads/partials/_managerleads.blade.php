@@ -1,11 +1,12 @@
 
+<h2>Prospects for direct reports of {{$leads->postName()}}</h2>
 
     <div class="row">
         <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
             <thead>
 
                 <th>Sales Rep</th>
-                <th>Total Leads</th>
+                <th>Total Prospects</th>
                 @foreach($statuses as $key=>$value)
                     @if($value !='Claimed')
                         <th>{{$value}}</th>
@@ -27,7 +28,7 @@
                         @foreach($statuses as $key=>$value)
                         @if($value !='Claimed')
                             <td>
-                           
+                    
                              @if (array_key_exists($key,$leadstatuses))
                                 {{$leadstatuses[$key]['count']}}
                              @endif 

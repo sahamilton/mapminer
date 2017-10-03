@@ -9,7 +9,7 @@
 
 @include('leadsource.partials._form')
 
-<input type="submit" class="btn btn-success" value="Edit Lead Source" />
+<input type="submit" class="btn btn-success" value="Edit Prospect Source" />
 </form>
 
 </div>

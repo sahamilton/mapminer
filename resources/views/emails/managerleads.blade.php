@@ -1,6 +1,6 @@
 @component('mail::message')
 
-## New Leads Assigned to your team
+## New Prospects Assigned to your team
 
 {{$manager['firstname']}};
 
@@ -16,7 +16,7 @@ based on their industry vertical alignment.
 {!! $data['message'] !!}
 
 @component('mail::button', ['url' => route('salesleads.index'), 'color' => 'blue'])
-        Check out your teams leads.
+        Check out your teams prospects.
 @endcomponent
 
 <em> If you’re having trouble clicking the  button, copy and paste the URL below

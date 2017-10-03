@@ -17,7 +17,7 @@
     <th>Prospect Source</th>
     <th>Description</th>
     <th>Reference</th>
-    <th>Leads</th>
+    <th>Prospects</th>
     <th>Assigned to</th>
     
     <th>Available From / To</th>
