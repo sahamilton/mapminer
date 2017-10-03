@@ -78,10 +78,10 @@ class NewsController extends BaseController {
 		$data = $this->setDates($data);
 		if($news = $this->news->create($data)){
 			$news->serviceline()->attach($request->get('serviceline'));
-			if($request->has('vertical')){
+			if($request->filled('vertical')){
 				$news->relatedIndustries()->attach($request->get('vertical'));
 			}
-			if($request->has('role')){
+			if($request->filled('role')){
 				$news->relatedRoles()->attach($request->get('role'));
 			}
 		}

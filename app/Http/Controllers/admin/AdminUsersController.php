@@ -159,7 +159,7 @@ class AdminUsersController extends BaseController {
         $user->seeder();
         $user->confirmation_code = md5(uniqid(mt_rand(), true));
         $user->password = \Hash::make(\Input::get('password'));
-        if ($request->has('confirm')) {
+        if ($request->filled('confirm')) {
             $user->confirmed = $request->get('confirm');
         }
 
@@ -272,12 +272,12 @@ class AdminUsersController extends BaseController {
             $person = $this->updateAssociatedPerson($user->person,$request->all());
             $person = $this->associateBranchesWithPerson($person,$request->all());
       
-           if($request->has('serviceline')){
+           if($request->filled('serviceline')){
 
                 $user->serviceline()->sync($request->get('serviceline'));
         	}
             $user->saveRoles($request->get( 'roles' ));
-        	if($request->has('vertical')){
+        	if($request->filled('vertical')){
                 $verticals = $request->get('vertical');
                     if($verticals[0]==0){
                       $person->industryfocus()->sync([]);

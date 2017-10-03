@@ -49,7 +49,7 @@ class SalesNotesController extends BaseController {
 	{
 		$fields = Howtofield::orderBy('group')->get();
 		$groups = Howtofield::select('group')->distinct()->get();
-		if($request->has('company')){
+		if($request->filled('company')){
 			$company = $this->company->findOrFail($request->get('company'));
 		}
 		return response()->view('salesnotes.create',compact('company','groups','fields'));
@@ -166,7 +166,7 @@ class SalesNotesController extends BaseController {
 	 * @return [type]     [description]
 	 */
 	public function createSalesNotes(SalesNotesFormRequest $request, $companyId=NULL) {
-		if(! $request->has('id')){
+		if(! $request->filled('id')){
 			$id= $companyId;
 		}else{
 			$id= $request->get('id');

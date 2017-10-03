@@ -32,16 +32,16 @@ class UsersController extends Controller
     public function saveprofile(UserProfileFormRequest $request){
         
        $user = $this->user->with('person')->findOrFail(auth()->user()->id);
-       if($request->has('oldpassword') && ! \Hash::check($request->get('oldpassword'),auth()->user()->password)){
+       if($request->filled('oldpassword') && ! \Hash::check($request->get('oldpassword'),auth()->user()->password)){
             
           return  back()->withInput()->withErrors(['oldpassword'=>'Your current password is incorrect']);
         }
-       if($request->has('password')){
+       if($request->filled('password')){
             $user->password = \Hash::make($request->get('password'));
             $user->save();
        }
        $user->person()->update($request->only(['firstname','lastname','address','phone']));
-       if($request->has('address') && $user->person->address != $request->get('address')){
+       if($request->filled('address') && $user->person->address != $request->get('address')){
             $data = $user->getGeoCode(app('geocoder')->geocode($request->get('address'))->get());
             $user->person()->update($data);
        }

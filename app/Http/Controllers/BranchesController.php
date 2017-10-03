@@ -207,7 +207,7 @@ class BranchesController extends BaseController {
 	public function showNearbyBranches(Request $request, $id)
 	{
 		
-		if ($request->has('d')) {
+		if ($request->filled('d')) {
 			$data['distance'] = $request->get('d');
 		}else{
 			$data['distance'] = '50';
@@ -320,7 +320,7 @@ class BranchesController extends BaseController {
 	 */	public function getNearbyBranches(Request $request, $id)
 	
 	{
-		if ($request->has('d')) {
+		if ($request->filled('d')) {
 			$distance = $request->get('d');
 		}else{
 			$distance = '50';

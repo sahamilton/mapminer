@@ -93,7 +93,7 @@ class BranchesImportController extends ImportController
     }
 
     public function update(Request $request){
-        if($request->has('add')){
+        if($request->filled('add')){
             $adds = count($request->get('add'));
             $branchesToImport = $this->import
             ->whereIn('id',$request->get('add'))

@@ -121,10 +121,10 @@ class EmailsController extends Controller
     public function addRecipients(Request $request){
         $recipients = array();
         $email = $this->email->findOrFail($request->id);
-        if($request->has('vertical')){
+        if($request->filled('vertical')){
             $recipients = $this->getIndustryVerticalRecipients($request->get('vertical'));
         }
-        if($request->has('role')){
+        if($request->filled('role')){
             $recipients = $this->getRoleRecipients($request->get('role'));
         }
 
@@ -135,7 +135,7 @@ class EmailsController extends Controller
     public function sendEmail(Request $request){
 
         $email = $this->email->with('recipients','recipients.userdetails')->findOrFail($request->get('id'));
-        if($request->has('test')){
+        if($request->filled('test')){
             $data['test'] = TRUE;
         }
         

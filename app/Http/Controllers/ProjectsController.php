@@ -196,7 +196,7 @@ class ProjectsController extends BaseController
     }
     public function changeStatus (Request $request){
        $project = $this->project->findOrFail($request->get('project_id'));
-       if (! $request->has('status')){
+       if (! $request->filled('status')){
             $project->owner()->detach(auth()->user()->person()->first()->id);
        }else{
         
@@ -235,7 +235,7 @@ class ProjectsController extends BaseController
    
 
     public function projectStats(Request $request){
-        if($request->has('id')){
+        if($request->filled('id')){
             $id = $request->get('id');
         }else{
             $id = null;

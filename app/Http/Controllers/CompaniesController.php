@@ -388,7 +388,7 @@ class CompaniesController extends BaseController {
 	public function stateselect(Request $request,$id=null,$state=null)
 	{
 		// The method can be used by either post or get routes
-		if($request->has('id') && $request->has('state')){
+		if($request->filled('id') && $request->filled('state')){
 					$id = $request->get('id');
 					$state = trim($request->get('state'));
 		}

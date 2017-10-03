@@ -71,17 +71,17 @@ class MapsController extends BaseController {
 	
 	public function findLocalAccounts($distance=NULL,$latlng = NULL,$company = NULL) {
 		
-		$location = getLocationLatLng($latlng);
+		$location = $this->getLocationLatLng($latlng);
 		
 		$locations = $this->location->nearby($location,$distance);
 		if($company){
 			$locations->where('company_id','=',$company);
 		}
-		$locations->whereHas('company.servicelines',function ($q){
+		$result = $locations->whereHas('company.serviceline',function ($q){
 			$q->whereIn('servicelines.id',$this->userServiceLines);
 		})->get();
 		//$result = $this->location->findNearbyLocations($geo[0],$geo[1],$distance,$number=null,$company,$this->userServiceLines);
-		return response()->view('locations.xml', compact('locations'))->header('Content-Type', 'text/xml');
+		return response()->view('locations.xml', compact('result'))->header('Content-Type', 'text/xml');
 
 
 		

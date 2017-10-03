@@ -49,7 +49,7 @@ class ManagersController extends BaseController {
 	{
 		
 
-		if(! $request->has('manager')){
+		if(! $request->filled('manager')){
 
 			$managerArray = $this->getManagers(auth()->id());
 			if(isset($managerArray['user_id'])){
@@ -63,7 +63,7 @@ class ManagersController extends BaseController {
 			
 		}
 		// if there is a change of manager
-		if($this->managerID != \Session::get('manager') && ! $request->has('accounts')){
+		if($this->managerID != \Session::get('manager') && ! $request->filled('accounts')){
 				
 				$data =  $this->getMyAccounts();
 

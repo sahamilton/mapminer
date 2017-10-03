@@ -34,8 +34,9 @@ class LeadImportController extends ImportController
             
             $leadsource = $this->leadsources->find($id);
         }
-        
-        return response()->view('leads.import',compact ('sources','leadsource'));
+        $requiredFields = $this->lead->requiredfields;
+       
+        return response()->view('leads.import',compact ('sources','leadsource','requiredFields'));
     }
 
 

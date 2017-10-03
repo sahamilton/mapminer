@@ -9,7 +9,7 @@
 @include('leadsource.partials._addleadform')
 
 <div class="form-group">
-<input type="submit" class="btn btn-success" value="Add Leads" />
+<input type="submit" class="btn btn-success" value="Add Prospects" />
 <input type="hidden" name="additionaldata[lead_source_id]" value="{{$leadsource->id}}" />
 
 <input type="hidden" name="type" value="leads" />

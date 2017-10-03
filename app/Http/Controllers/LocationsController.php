@@ -214,7 +214,7 @@ class LocationsController extends BaseController {
 	public function getClosestBranch(Request $request,$id,$n=5)
 	{
 		
-		if ($request->has('d')) {
+		if ($request->filled('d')) {
 			$this->distance = $request->get('d');
 		}
 		$data['location'] = $this->location->with('company','company.serviceline')->findOrFail($id);
@@ -243,7 +243,7 @@ class LocationsController extends BaseController {
 	public function showNearbyLocations(Request $request)
 	{
 		
-		if ($request->has('d')) {
+		if ($request->filled('d')) {
 			$data['distance'] = $request->get('d');
 		}else{
 			$data['distance'] = '50';
@@ -330,7 +330,7 @@ class LocationsController extends BaseController {
 	public function bulkImport(LocationImportFormRequest $request) {
 		
 
-		if($request->has('segment'))
+		if($request->filled('segment'))
 		{
 			$data['segment'] = $request->get('segment');
 		}else{

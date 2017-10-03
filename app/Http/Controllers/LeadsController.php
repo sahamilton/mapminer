@@ -179,7 +179,7 @@ class LeadsController extends BaseController
 
     private function getAddress($request){
         // if its a one line address return that
-        if(! $request->has('city')){
+        if(! $request->filled('city')){
             return $address = $request->get('address') ;
         }
         // else build the full address

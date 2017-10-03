@@ -31,11 +31,11 @@ class GeoCodingController extends BaseController {
 	public function findMe(FindMeFormRequest $request) {
 	
 	
-		if($request->has('address')) {
+		if($request->filled('address')) {
 			$address = urlencode($request->get('address'));
 			
 		}
-		if(! $request->has('lat')){
+		if(! $request->filled('lat')){
 			$geocode = app('geocoder')->geocode($request->get('address'))->get();
 
 			if(! $geocode or count($geocode)==0){
@@ -208,7 +208,7 @@ class GeoCodingController extends BaseController {
 
 		$filtered = $this->location->isFiltered(['locations'],['business','segment'],NULL);
 
-		if($request->has('lat') && $request->has('lng')) {
+		if($request->filled('lat') && $request->filled('lng')) {
 			
 			$data = $request->all();
 			$data['latlng'] = $data['lat'].":".$data['lng'];

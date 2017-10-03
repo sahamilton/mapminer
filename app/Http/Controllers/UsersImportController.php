@@ -85,8 +85,8 @@ class UsersImportController extends ImportController
 	}
     public function fixerrors(Request $request){
 
-    	if($request->has('fixInput')){
-    		if($request->has('skip')){
+    	if($request->filled('fixInput')){
+    		if($request->filled('skip')){
     			$this->import->destroy($request->get('skip'));
     		}
     		$field = $request->get('field');
