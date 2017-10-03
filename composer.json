@@ -16,7 +16,7 @@
         "fabpot/goutte": "^3.1",
         "guzzlehttp/guzzle": "~5.3|~6.0",
         "jeroendesloovere/vcard": "^1.5",
-        "laravel/dusk": "2.0.*",
+        
         "laravel/framework": "5.5.*",
         "laravel/scout": "^3.0",
         "laravel/tinker": "~1.0",
@@ -32,7 +32,8 @@
     "require-dev": {
         "fzaninotto/faker": "~1.4",
         "laracasts/generators": "dev-master",
-        "mockery/mockery": "0.9.*"
+        "mockery/mockery": "0.9.*",
+        "laravel/dusk": "2.0.*"
     },
     "autoload": {
         "classmap": [
