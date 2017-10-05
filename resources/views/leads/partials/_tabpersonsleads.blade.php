@@ -24,21 +24,9 @@
     <td><a href="{{route('leads.personsource',[$leads->id,$lead->leadsource->id])}}">{{$lead->leadsource->source}}</a> </td>
     <td>{{$lead->created_at->format('m/d/Y')}}</td>
 
-    <td>{{$lead->rankMyLead($lead->salesteam, $leads->id)}}</td>
+    <td>{{$lead->pivot->rating}}</td>
     <td>
-    <?php $history = $lead->history($leads->id);?>
-
-    @if(isset($history[$lead->id]['status']))
-        <ul>
-
-        @foreach ($history[$lead->id]['status'] as $state)
-
-            @if($state['owner'] == $leads->id)
-            <li>{{ $statuses[$state['status']]}}  {{$state['activitydate']}}</li>
-            @endif
-        @endforeach
-        </li>
-    @endif
+        {{$statuses[$lead->pivot->status_id]}}
     </td>
 	    
     

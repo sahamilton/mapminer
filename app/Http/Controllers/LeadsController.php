@@ -196,6 +196,7 @@ class LeadsController extends BaseController
      */
    
     public function getPersonsLeads($id){
+
         $statuses = $this->leadstatus->pluck('status','id')->toArray();
         $leads = $this->person->with('salesleads','salesleads.vertical','salesleads.leadsource')
         ->whereHas('salesleads.leadsource',function ($q){
@@ -203,7 +204,7 @@ class LeadsController extends BaseController
              ->where('dateto','>=',date('Y-m-d'));
         })
         ->findOrFail($id);
-       
+
         return response()->view('leads.person',compact('leads','statuses'));
     }
 
