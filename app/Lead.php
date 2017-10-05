@@ -48,7 +48,7 @@ class Lead extends Model
     }
 
     public function salesteam(){
-    	return $this->belongsToMany(Person::class, 'lead_person_status','related_id','person_id')
+    	return $this->belongsToMany(Person::class, 'lead_person_status','person_id','related_id')
     
       ->withPivot('created_at','updated_at','status_id','rating');
     }
@@ -77,7 +77,7 @@ class Lead extends Model
     }
 
     public function ownedBy(){
-      return $this->belongsToMany(Person::class,'lead_person_status','related_id','person_id')
+      return $this->belongsToMany(Person::class,'lead_person_status','person_id','related_id')
       ->wherePivotIn('status_id',[2,5,6])
       ->wherePivot('type','=','project')
       ->withPivot('created_at','updated_at','status_id','rating','type');;

@@ -40,7 +40,7 @@ class LeadsController extends BaseController
      */
     public function index($vertical = null)
     {   
-       
+
         $statuses = $this->leadstatus->pluck('status','id')->toArray();
         $query = $this->lead->query();
 
@@ -49,7 +49,7 @@ class LeadsController extends BaseController
             $q->where('datefrom','<=',date('Y-m-d'))
                 ->where('dateto','>=',date('Y-m-d'));
         });
-           // I dont think this works now     
+            // I dont think this works now     
         if($vertical){
           $query = $query->whereHas('leadsource.verticals',function ($q) use($vertical){
               $q->whereIn('searchfilter_id',[$vertical]);
@@ -58,9 +58,9 @@ class LeadsController extends BaseController
         $leads = $query->get();
 
         $sources = $this->leadsource->pluck('source','id')->toArray();
-       
+     
         $salesteams = $this->getSalesTeam($leads);
-       
+
         return response()->view('leads.index',compact('leads','statuses','sources','salesteams'));
     }
 
@@ -71,10 +71,11 @@ class LeadsController extends BaseController
             $leadreps = $lead->salesteam->pluck('id')->toArray();
             $salesreps = array_unique(array_merge($salesreps,$leadreps));
         }
-        return $this->person->with('userdetails','industryfocus','reportsTo','salesleads')
+
+        return $this->person->with('userdetails','industryfocus','reportsTo')
            ->whereIn('id',$salesreps)
            ->whereHas('salesleads',function ($q) use($leads){
-                $q->whereIn('lead_id',$leads->pluck('id')->toArray());
+                $q->whereIn('related_id',$leads->pluck('id')->toArray());
                    
             })
        ->get();
