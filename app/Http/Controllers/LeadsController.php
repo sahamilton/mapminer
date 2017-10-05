@@ -42,7 +42,7 @@ class LeadsController extends BaseController
     {   
 
         $statuses = $this->leadstatus->pluck('status','id')->toArray();
-        $query = $this->lead->query();
+      $query = $this->lead->query();
 
         $query = $query->with('salesteam','leadsource','ownedBy')
         ->wherehas('leadsource',function($q){
@@ -56,10 +56,9 @@ class LeadsController extends BaseController
           });
         }
         $leads = $query->get();
-
         $sources = $this->leadsource->pluck('source','id')->toArray();
      
-        $salesteams = $this->getSalesTeam($leads);
+        $salesteams = $this->person->whereHas('salesleads')->with('salesleads')->get();
 
         return response()->view('leads.index',compact('leads','statuses','sources','salesteams'));
     }
@@ -71,13 +70,10 @@ class LeadsController extends BaseController
             $leadreps = $lead->salesteam->pluck('id')->toArray();
             $salesreps = array_unique(array_merge($salesreps,$leadreps));
         }
-
-        return $this->person->with('userdetails','industryfocus','reportsTo')
+        dd($salesreps);
+        return $this->person->with('userdetails','industryfocus','reportsTo','salesleads')
            ->whereIn('id',$salesreps)
-           ->whereHas('salesleads',function ($q) use($leads){
-                $q->whereIn('related_id',$leads->pluck('id')->toArray());
-                   
-            })
+           
        ->get();
     }
    
