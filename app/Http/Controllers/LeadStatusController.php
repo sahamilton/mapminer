@@ -20,7 +20,7 @@ class LeadStatusController extends Controller
     public function index()
     {
         $leadstatuses = $this->leadstatus->with('leads')->get();
-        
+ 
         return response()->view('leadstatus.index',compact('leadstatuses'));
     }
 

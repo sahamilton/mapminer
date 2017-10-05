@@ -194,7 +194,7 @@ class SalesLeadsController extends Controller
         if($id == auth()->user()->person->id){
             $lead->salesteam()->updateExistingPivot($id,['status_id'=>2]);
         }else{
-            $lead->salesteam()->updateExistingPivot($id,['status_id'=>3]);
+            $lead->salesteam()->detach($id);
         }
       }
       
@@ -212,7 +212,7 @@ class SalesLeadsController extends Controller
      
       $lead = $this->salesleads->with('salesteam')->find($id);
 
-      $lead->salesteam()->updateExistingPivot(auth()->user()->person->id,['status_id'=>4]);
+      $lead->salesteam()->detach(auth()->user()->person->id);
 
        return redirect()->route('salesleads.index');
     }
