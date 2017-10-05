@@ -20,7 +20,7 @@
                     <input type="hidden" name="ranking" id="ranking" value="{{$rank}}" />
                     
                     <select  id="ranklist">
-                      @foreach ($statuses as $key=>$value)
+                      @foreach ($rankingstatus as $key=>$value)
                       <option 
                       @if($key == $rank) selected @endif value="{{$key}}">{{$value}}</option>
                       @endforeach

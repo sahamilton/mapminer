@@ -1,11 +1,13 @@
 
     <script src="https://maps.google.com/maps/api/js?key={{config('maps.api_key')}}"></script>
     <script>
-     
+    
       // First, create an object containing LatLng and details for each branch.
       var leadmap = {
-      <?php
+      <?php 
+   
       foreach($leads->salesleads as $lead){
+
               if(! in_array($lead->pivot->status_id,[1,2])){
                 continue;
               }

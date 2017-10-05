@@ -7,13 +7,9 @@
 
                 <th>Sales Rep</th>
                 <th>Total Prospects</th>
-                @foreach($statuses as $key=>$value)<th>
-                    @if($value !='Claimed')
-                        {{$value}}
-                    @endif
-                </th>
+                @foreach($statuses as $key=>$value)<th>{{$value}}</th>
                 @endforeach
-           
+                <th>Average Rating</th>
 
             </thead>
             <tbody>
@@ -28,25 +24,25 @@
                         <?php $leadstatuses =  $report->salesLeadsByStatus($report->id);?>
                         @foreach($statuses as $key=>$value)
                         <td>
-                            @if($value !='Claimed')
-                                
-                        
-                                 @if (array_key_exists($key,$leadstatuses))
-                                    {{$leadstatuses[$key]['count']}}
+                           
+                                 @if (array_key_exists($key+1,$leadstatuses))
+                                    {{$leadstatuses[$key+1]['count']}}
                                  @endif 
 
-                                
-                            @endif
                         </td>
                         @endforeach
+                        <td>
+                            @if(count($report->leadratings)>0)
+                            {{$report->leadratings->sum('pivot.rating') / count($report->leadratings)}}
+                            @endif
+                        </td>
                     @else
                         <td></td>
                         <td></td>
                         <td></td>
                         <td></td>
                         <td></td>
-                        <td></td>
-                        <td></td>
+                        
                     @endif
                 </tr>
                 @endforeach

@@ -21,7 +21,7 @@ class SalesLead extends Model
       ];
 
     public function assignedTo(){
-    	return $this->hasMany(Person::class,'lead_person_status')->withPivot('status_id');
+    	return $this->hasMany(Person::class,'lead_person_status','related_id','person_id')->withPivot('status_id');
     }
     public function leadsource(){
     	return $this->belongsTo(LeadSource::class, 'lead_source_id');
@@ -29,7 +29,7 @@ class SalesLead extends Model
     }
 
     public function owned(){
-     dd('here');
+
       return $this->belongsToMany(Person::class,'lead_person_status','related_id','person_id')
             ->withPivot('status','ranking','type')
             ->wherePivot('type','=','project')
@@ -48,7 +48,7 @@ class SalesLead extends Model
           }
     }
  public function salesteam(){
-    	return $this->belongsToMany(Person::class, 'lead_person_status','related_id')
+    	return $this->belongsToMany(Person::class, 'lead_person_status','related_id','person_id')
     
       ->withPivot('created_at','updated_at','status_id','rating');
     }

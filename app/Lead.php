@@ -34,7 +34,7 @@ class Lead extends Model
 						'lat',
 						'lng',
 						'lead_source_id'];
-    public $statuses = ['','Offered','Claimed','Closed'];
+    public $statuses = ['Offered','Claimed','Closed'];
     public $getStatusOptions =  [
         1=>'Prospect data is completely inaccurate. No project or project completed.',
         2=>'Prospect data is incomplete and / or not useful.',
@@ -48,7 +48,7 @@ class Lead extends Model
     }
 
     public function salesteam(){
-    	return $this->belongsToMany(Person::class, 'lead_person_status','related_id')
+    	return $this->belongsToMany(Person::class, 'lead_person_status','related_id','person_id')
     
       ->withPivot('created_at','updated_at','status_id','rating');
     }
@@ -77,7 +77,7 @@ class Lead extends Model
     }
 
     public function ownedBy(){
-      return $this->belongsToMany(Person::class,'lead_person_status','related_id')
+      return $this->belongsToMany(Person::class,'lead_person_status','related_id','person_id')
       ->wherePivotIn('status_id',[2,5,6])
       ->wherePivot('type','=','project')
       ->withPivot('created_at','updated_at','status_id','rating','type');;
@@ -86,26 +86,26 @@ class Lead extends Model
 
 
     public function leadOwner($id){
-$ownStatuses = [2,5,6];
-      $lead = $this->with('salesteam')
-          ->whereHas('leadsource', function ($q) {
-            $q->where('datefrom','<=',date('Y-m-d'))
-              ->where('dateto','>=',date('Y-m-d'));
-        })
-          ->whereHas('salesteam',function($q) use($ownStatuses,$id) {
-            $q->whereIn('status_id',$ownStatuses);
-          })
-          ->find($id); 
-      if(isset($lead)){
-        foreach($lead->salesteam as $team){
+      $ownStatuses = [2,5,6];
+            $lead = $this->with('salesteam')
+                ->whereHas('leadsource', function ($q) {
+                  $q->where('datefrom','<=',date('Y-m-d'))
+                    ->where('dateto','>=',date('Y-m-d'));
+              })
+                ->whereHas('salesteam',function($q) use($ownStatuses,$id) {
+                  $q->whereIn('status_id',$ownStatuses);
+                })
+                ->find($id); 
+            if(isset($lead)){
+              foreach($lead->salesteam as $team){
 
-          if(in_array($team->pivot->status_id,$ownStatuses)){
-            return $team;
+                if(in_array($team->pivot->status_id,$ownStatuses)){
+                  return $team;
+                }
+              return null;
+              }
+            }
           }
-        return null;
-        }
-      }
-    }
 
     public function ownsLead($id){
 
@@ -155,7 +155,7 @@ $ownStatuses = [2,5,6];
 
 
     }
-
+    
 
     public function leadsByStatus($id){
       return $this->whereHas('leadsource', function ($q) {

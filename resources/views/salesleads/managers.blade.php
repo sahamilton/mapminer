@@ -1,6 +1,6 @@
 @extends('site.layouts.default')
 @section('content')
-<h2>{{$title }} {{$leads->firstname}} {{$leads->lastname}}
+<h2>{{$title }} {{$leads->postName()}}
 @if($manager)
 and Team
 @endif
