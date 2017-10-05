@@ -2,15 +2,16 @@
 <h2>Prospects for direct reports of {{$leads->postName()}}</h2>
 
     <div class="row">
-        <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
+        <table id ='sorttable1' class='table table-striped table-bordered table-condensed table-hover'>
             <thead>
 
                 <th>Sales Rep</th>
                 <th>Total Prospects</th>
-                @foreach($statuses as $key=>$value)
+                @foreach($statuses as $key=>$value)<th>
                     @if($value !='Claimed')
-                        <th>{{$value}}</th>
+                        {{$value}}
                     @endif
+                </th>
                 @endforeach
            
 
@@ -26,21 +27,24 @@
                         <td>{{count($report->salesleads)}}</td>
                         <?php $leadstatuses =  $report->salesLeadsByStatus($report->id);?>
                         @foreach($statuses as $key=>$value)
-                        @if($value !='Claimed')
-                            <td>
-                    
-                             @if (array_key_exists($key,$leadstatuses))
-                                {{$leadstatuses[$key]['count']}}
-                             @endif 
+                        <td>
+                            @if($value !='Claimed')
+                                
+                        
+                                 @if (array_key_exists($key,$leadstatuses))
+                                    {{$leadstatuses[$key]['count']}}
+                                 @endif 
 
-                            </td>
-                        @endif
+                                
+                            @endif
+                        </td>
                         @endforeach
                     @else
-                    <td></td>
-                     <td></td>
-                      <td></td>
-                       <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
                         <td></td>
                         <td></td>
                     @endif

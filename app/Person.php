@@ -103,7 +103,7 @@ class Person extends NodeModel {
 			
 	}
 	public function salesleads(){
-		return $this->belongsToMany(Lead::class, 'lead_person_status')
+		return $this->belongsToMany(Lead::class, 'lead_person_status','related_id')
 		->withTimestamps()
 		->withPivot('status_id','rating');
 	}
@@ -218,20 +218,12 @@ class Person extends NodeModel {
 	}
 	
 	public function ownedLeads(){
-		return $this->belongsToMany(Lead::class, 'lead_person_status')
-		->withTimestamps()
-		->whereHas('leadsource',function($q){
-			$q->where('datefrom','<=',date('Y-m-d'))
-			->where('dateto','>=',date('Y-m-d'));
-		})
-
-		->withPivot('status_id','rating')
-		->whereIn('status_id',[2]);
+		return $this->belongsToMany(Lead::class, 'lead_person_status','related_id','person_id');
 	}
 
 
 	public function myOwnedLeads(){
-		return $this->belongsToMany(Lead::class, 'lead_person_status')
+		return $this->belongsToMany(Lead::class, 'lead_person_status','related_id')
 		->withTimestamps()
 		->withPivot('status_id','rating')
 		->whereIn('status_id',[2])
@@ -240,7 +232,7 @@ class Person extends NodeModel {
 
 	public function offeredLeads(){
 
-		return $this->belongsToMany(Lead::class, 'lead_person_status')
+		return $this->belongsToMany(Lead::class, 'lead_person_status','related_id','person_id')
 		->withTimestamps()
 		->withPivot('status_id','rating')
 		->whereIn('status_id',[1]);

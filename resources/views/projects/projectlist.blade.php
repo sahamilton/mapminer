@@ -11,6 +11,7 @@
 		<th>PR Status</th>
 		<th>Total Value ($k)</th>
 		<th>Distance</th>
+		
 
 	</thead>
 	<tbody>
@@ -27,17 +28,20 @@
 		<td>{{$project->stage}}</td>
 		<td>
 		
-		@if($project->prstatus)
-    		{{$project->prstatus}} </p>
-  		@else
+		@if(count($project->owner)>0 && $project->owner[0]->id != auth()->user()->person()->first()->id)
+			Project {{$project->owner[0]->pivot->status}} by {{$project->owner[0]->postName()}}
+		@elseif(count($project->owner)>0 && $project->owner[0]->id == auth()->user()->person()->first()->id)
+			You have {{$project->owner[0]->pivot->status}} this project
+		@else
   			@can ('manage_projects')
-  			Open <a href="{{route('projects.claim',$project->id)}}">Claim this project </a>
+  				Open <a href="{{route('projects.claim',$project->id)}}">Claim this project </a>
   			@endcan
 		@endif
 		
 		</td>
 		<td style="text-align:right">{{$project->total_project_value}}</td>
 		<td>{{number_format($project->distance,1)}}</td>
+		
 		</tr>
 	@endforeach
 

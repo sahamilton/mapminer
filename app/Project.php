@@ -57,7 +57,7 @@ use Geocode;
 
     }
     public function owner(){
-      return $this->belongsToMany(Person::class)->withPivot('status','ranking');
+      return $this->belongsToMany(Person::class,'person_project','related_id')->withPivot('status','ranking');
     }
    
     public function source(){
@@ -65,14 +65,20 @@ use Geocode;
     }
 
     public function owned(){
-      return $this->belongsToMany(Person::class)
-      ->withPivot('status','ranking')
-      ->where('person_id','=',auth()->user()->person()->first()->id)->first();
+     
+      return $this->belongsToMany(Person::class,'person_project','related_id')
+            ->withPivot('status','ranking','type')
+            ->wherePivot('type','=','project')
+            ->where('person_id','=',auth()->user()->person->id)
+            ->first();
     }
+
+    
 
     public function ownersProjects($id){
 
-       return $this->belongsToMany(Person::class)->withPivot('status')
+       return $this->belongsToMany(Person::class,'person_project','related_id')
+       ->withPivot('status')
       ->where('person_id','=',$id)->get();
 
     }
@@ -93,7 +99,8 @@ use Geocode;
         $query="select source,firstname, lastname, persons.id as id ,person_project.status as pstatus, count(person_project.status) as count,avg(ranking) as rating 
         from `persons` ,`person_project`, `projects`, `projectsource` 
         where `persons`.`id` = `person_project`.`person_id` 
-        and `person_project`.`project_id` = `projects`.`id` 
+        and `person_project`.`related_id` = `projects`.`id` 
+        and `person_project`.`type`='project'
         and `projects`.`project_source_id` = `projectsource`.`id` 
         and `projectsource`.`id` = 1 
         group by `person_id`,`pstatus`";

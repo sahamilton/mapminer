@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Person;
 use App\User;
 use App\Lead;
+use App\SalesLead;
 use App\LeadStatus;
 
 use Illuminate\Http\Request;
@@ -14,7 +15,7 @@ class SalesLeadsController extends Controller
     public $person;
     public $leadstatus;
 
-    public function __construct(Lead $saleslead, Person $person, LeadStatus $status){
+    public function __construct(SalesLead $saleslead, Person $person, LeadStatus $status){
 
         $this->salesleads = $saleslead;
         $this-> person = $person;
@@ -32,11 +33,14 @@ class SalesLeadsController extends Controller
     {
         
         // limit to active verticals
-        $statuses = $this->leadstatus->pluck('status','id')->toArray();
+        $statuses = $this->salesleads->statuses;
         $title = ' Prospects Assigned to ';
       // dd($this->person->where('user_id','=',auth()->user()->id)->first()->isLeaf());
+
+
         if($this->person->where('user_id','=',auth()->user()->id)->first()->isLeaf()){
             $manager=false;
+       
             $leads = $this->person->where('user_id','=',auth()->user()->id)
             ->with('ownedLeads','offeredLeads','ownedLeads.vertical','offeredLeads.vertical')->firstOrFail();
         
@@ -47,9 +51,10 @@ class SalesLeadsController extends Controller
             return response()->view('salesleads.index',compact('leads','statuses','title','manager'));
         }else{
             $manager=true;
+
             $leads = $this->person->where('user_id','=',auth()->user()->id)
-            ->with('ownedLeads','offeredLeads','ownedLeads.vertical','offeredLeads.vertical','directReports','directReports.salesleads')->firstOrFail();
-            
+            ->with('ownedLeads','offeredLeads','ownedLeads.vertical','offeredLeads.vertical')->firstOrFail();
+
              return response()->view('salesleads.managers',compact('leads','statuses','manager','title'));
         }
         
@@ -97,21 +102,15 @@ class SalesLeadsController extends Controller
      */
     public function show($id)
     {
-     
-        $statuses = $this->leadstatus->pluck('status','id')->toArray();
-        // refactor ... clumsy way to get owned
-        $lead = $this->salesleads
-            ->whereHas('salesteam',function ($q) use ($statuses){
-                $q->where('person_id','=',auth()->user()->person->id)
-                ->where('status_id','=',array_search('Owned',$statuses));
-            })
-            ->where('datefrom','<=',date('Y-m-d'))
-            ->where('dateto','>=',date('Y-m-d'))
-            ->with('leadsource','vertical','relatedNotes','salesteam')
-            ->findOrFail($id);
+
         
+        // refactor ... clumsy way to get owned
+        $lead = $this->salesleads->with('leadsource','vertical','relatedNotes','salesteam')->findOrFail($id);
+     
+        $statuses = $this->salesleads->getStatusOptions;
         $rank = $this->salesleads->rankMyLead($lead->salesteam); 
         $manager=false;
+
         return response()->view('salesleads.show',compact('lead','statuses','rank','manager'));
     }
      /*
@@ -134,6 +133,7 @@ class SalesLeadsController extends Controller
             ->findOrFail($id);
         $rank = $this->salesleads->rankMyLead($lead->salesteam); 
         $manager=true;
+
         return response()->view('salesleads.show',compact('lead','sources','rank','manager'));
     }
 
@@ -246,11 +246,11 @@ class SalesLeadsController extends Controller
     }
 
     public function close(Request $request, $id){
-     
+   dd($request->all,$id);
       $lead = $this->salesleads->with('salesteam')->findOrFail($id);
      // $lead->update(['leadstatus'=>$request->get('status_id')]);
       $lead->salesteam()
-        ->updateExistingPivot(auth()->user()->person->id,['status_id'=>$request->get('status_id')]);
-    return redirect()->route('salesleads.index')->with('message', 'Lead closed');
+        ->updateExistingPivot(auth()->user()->person->id,['status_id'=>$request->get('ranking')]);
+    return redirect()->route('salesleads.index')->with('message', 'Prospect closed');
   }
 }

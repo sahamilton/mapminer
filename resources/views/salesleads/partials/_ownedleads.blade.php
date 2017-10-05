@@ -17,20 +17,19 @@
             <tbody>
 
                 @foreach ($leads->ownedLeads as $lead)
+
                     <?php $rank = $lead->pivot->rating;?>
+               
                 <tr>
                     <td>{{$lead->companyname }}</td>
                     <td>
-                    @if(isset($lead->pivot) && $lead->ownsLead($lead->id))
-                    @if($manager)
-                        <a href="{{route('salesleads.showrepdetail',[$lead->id,$leads->id])}}" />
-                    @else
+                   
+                   
                         <a href="{{route('salesleads.show',$lead->id)}}" />
-                    @endif
+                  
                         {{$lead->businessname}}</a></td>
-                    @else
-                        {{$lead->businessname}} 
-                    @endif
+                   
+                   
                     </td>
                     <td>{{$lead->city}}</td>
                     <td>{{$lead->state}}</td>
@@ -49,7 +48,7 @@
            </div>
                     </td>
                     <td>
-                    @include ('salesleads.partials._closeleadform')
+                    @include ('leads.partials._closeleadform')
                     <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#myModal">Close Lead</button>
                     </td>
 

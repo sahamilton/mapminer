@@ -179,7 +179,7 @@ class GeoCodingController extends BaseController {
 			case 'projects':
 				//return $this->project->findNearbyProjects($data['lat'],$data['lng'],$data['distance'],$number=null,$this->userServiceLines);
 				
-				return $this->project->nearby($location,$data['distance'])->get();
+				return $this->project->nearby($location,$data['distance'])->with('owner')->get();
 			
 			break;
 			

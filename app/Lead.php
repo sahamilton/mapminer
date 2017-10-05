@@ -34,14 +34,21 @@ class Lead extends Model
 						'lat',
 						'lng',
 						'lead_source_id'];
-
+    public $statuses = ['','Offered','Claimed','Closed'];
+    public $getStatusOptions =  [
+        1=>'Prospect data is completely inaccurate. No project or project completed.',
+        2=>'Prospect data is incomplete and / or not useful.',
+        3=>'Prospect data is accurate but there is no sales / service opportunity.',
+        4=>'Prospect data is accurate and there is a possibility of sales / service.',
+        5=>'Prospect data is accurate and there is a definite opportunity for sales / service'
+      ];
     public function leadsource(){
     	return $this->belongsTo(LeadSource::class, 'lead_source_id');
 
     }
 
     public function salesteam(){
-    	return $this->belongsToMany(Person::class, 'lead_person_status')
+    	return $this->belongsToMany(Person::class, 'lead_person_status','related_id')
     
       ->withPivot('created_at','updated_at','status_id','rating');
     }
@@ -70,19 +77,21 @@ class Lead extends Model
     }
 
     public function ownedBy(){
-      return $this->belongsToMany(Person::class,'lead_person_status')
+      return $this->belongsToMany(Person::class,'lead_person_status','related_id')
       ->wherePivotIn('status_id',[2,5,6])
-      ->withPivot('created_at','updated_at','status_id','rating');;
+      ->wherePivot('type','=','project')
+      ->withPivot('created_at','updated_at','status_id','rating','type');;
     }
 
 
 
     public function leadOwner($id){
-
-      $ownStatuses = [2,5,6];
+$ownStatuses = [2,5,6];
       $lead = $this->with('salesteam')
-          ->where('datefrom','<=',date('Y-m-d'))
-          ->where('dateto','>=',date('Y-m-d'))
+          ->whereHas('leadsource', function ($q) {
+            $q->where('datefrom','<=',date('Y-m-d'))
+              ->where('dateto','>=',date('Y-m-d'));
+        })
           ->whereHas('salesteam',function($q) use($ownStatuses,$id) {
             $q->whereIn('status_id',$ownStatuses);
           })
@@ -99,10 +108,13 @@ class Lead extends Model
     }
 
     public function ownsLead($id){
+
       $ownStatuses = [2,5,6];
       if($lead = $this->with('salesteam')
-          ->where('datefrom','<=',date('Y-m-d'))
-          ->where('dateto','>=',date('Y-m-d'))
+        ->whereHas('leadsource', function ($q) {
+            $q->where('datefrom','<=',date('Y-m-d'))
+              ->where('dateto','>=',date('Y-m-d'));
+        })
           ->whereHas('salesteam',function($q) use($ownStatuses) {
               $q->whereIn('status_id',$ownStatuses);
             })
@@ -118,14 +130,17 @@ class Lead extends Model
     }
 
     public function myLeads($verticals=null){
+
       $statuses = [1,2];
       return $this->whereHas('salesteam',function ($q) use ($statuses){
           $q->where('person_id','=',auth()->user()->person->id)
           ->whereIn('status_id',$statuses);
         
         })
-        ->where('datefrom','<=',date('Y-m-d'))
-        ->where('dateto','>=',date('Y-m-d'))
+        ->whereHas('leadsource', function ($q) {
+            $q->where('datefrom','<=',date('Y-m-d'))
+              ->where('dateto','>=',date('Y-m-d'));
+        })
         ->whereHas('vertical',function($q) use($verticals){
           if(isset($verticals)){
             $q->whereIn('id',$verticals);
@@ -143,8 +158,10 @@ class Lead extends Model
 
 
     public function leadsByStatus($id){
-      return $this->where('datefrom','<=',date('Y-m-d'))
-            ->where('dateto','>=',date('Y-m-d'))
+      return $this->whereHas('leadsource', function ($q) {
+            $q->where('datefrom','<=',date('Y-m-d'))
+              ->where('dateto','>=',date('Y-m-d'));
+        })
             ->whereHas('salesteam',function($q) use($id) {
           $q->whereIn('status_id',[$id]);
       })

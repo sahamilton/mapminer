@@ -15,7 +15,6 @@
 <p><strong>People Ready Status:</strong>
 
 @can('manage_projects')
-
   @include('projects.partials._manageprojects')
 @else
 @if(count($project->owner)>0)
@@ -58,7 +57,7 @@
 
   </div>
 </div>
-@include('partials._modal')
+
 @include('partials/_scripts')
 
 

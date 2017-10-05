@@ -1,13 +1,13 @@
 @extends('admin.layouts.default')
 @section('content')
 
-<h1>Lead Statuses</h1>
+<h1>Prospect Statuses</h1>
 
 
 @if (Auth::user()->hasRole('Admin'))
 
 <div class="pull-right">
-        <a href="{{ route('leadstatus.create') }}" class="btn btn-small btn-info iframe"><span class="glyphicon glyphicon-plus-sign"></span> Create New Lead Status</a>
+        <a href="{{ route('leadstatus.create') }}" class="btn btn-small btn-info iframe"><span class="glyphicon glyphicon-plus-sign"></span> Create New Prospect Status</a>
       </div>
 @endif
 

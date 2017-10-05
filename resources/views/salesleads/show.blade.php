@@ -72,7 +72,7 @@
 </div>
 
 
-@include ('salesleads.partials._closeleadform')
+@include ('leads.partials._closeleadform')
 @include('salesleads.partials._scripts')
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={{config('maps.api_key')}}"></script>
 
