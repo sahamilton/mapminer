@@ -18,7 +18,7 @@
   <li class="active"><a data-toggle="tab" href="#map"><strong>Map View</strong></a></li>
  
   <li><a data-toggle="tab" href="#leads"><strong>Prospects</strong></a></li>
-  <li><a data-toggle="tab" href="#stats"><strong>Stats</strong></a></li>
+
 
   
 
@@ -31,9 +31,7 @@
 <div id="leads" class="tab-pane fade in ">
 @include('leads.partials._tabpersonsleads')
 </div>
-<div id="stats" class="tab-pane fade in ">
 
-</div>
 </div>
 @include('partials._scripts')
 @endsection
