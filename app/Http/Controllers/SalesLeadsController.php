@@ -183,13 +183,14 @@ class SalesLeadsController extends Controller
     return response()->view('salesleads.leadsxml', compact('mapleads'))->header('Content-Type', 'text/xml');
     }
     public function accept($id){
-     
+
       $lead = $this->salesleads->with('salesteam')->find($id);
+
       if($sales = $this->owned($lead->salesteam)){
         return redirect()->route('salesleads.index')->with('warning','This lead has already claimed been by ' . $sales->postName());
       }
       $salesteam = $lead->salesteam->pluck('id');
-      
+
       foreach ($salesteam as $id){
         if($id == auth()->user()->person->id){
             $lead->salesteam()->updateExistingPivot($id,['status_id'=>2]);
