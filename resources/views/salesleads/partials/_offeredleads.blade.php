@@ -2,10 +2,10 @@
 
   
 <div class="row">
-   @if(isset($owned))
+   @if(count($leads->ownedLeads) >=$limit)
     <div class="alert alert-danger">
-        <p><strong>You must close or convert some of your {{count($leads->ownedLeads)}} owned leads before accessing any of the 
-        {{count($leads->offeredLeads)}} additional leads available.</strong></p>
+        <p><strong>You must close some of your {{count($leads->ownedLeads)}} owned prospects before accessing any of the 
+        {{count($leads->offeredLeads)}} additional prospects available.</strong></p>
     </div>
 
    @else
@@ -30,14 +30,7 @@
                 <tr> 
                 
                 <td>{{$lead->companyname}}</td>
-                <td>
-				@if(isset($lead->pivot) && $lead->pivot->status_id == 2)
-					<a href="{{route('salesleads.show',$lead->id)}}" />
-					{{$lead->businessname}}</td>
-				@else
-                {{$lead->businessname}}
-                @endif
-                </td>
+                <td>{{$lead->businessname}}</td>
                 <td>{{$lead->city}}</td>
                 <td>{{$lead->state}}</td>
                 

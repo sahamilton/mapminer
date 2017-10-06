@@ -31,34 +31,21 @@ class SalesLeadsController extends Controller
      */
     public function index()
     {
-        
+      
         // limit to active verticals
         $statuses = $this->salesleads->statuses;
         $title = ' Prospects Assigned to ';
         $rankingstatus = $this->salesleads->getStatusOptions;
-      // dd($this->person->where('user_id','=',auth()->user()->id)->first()->isLeaf());
-
-
+        $limit = $this->ownedLimit;
+        $leads = $this->person->where('user_id','=',auth()->user()->id)
+            ->with('ownedLeads','offeredLeads','ownedLeads.vertical','offeredLeads.vertical')->firstOrFail();
         if($this->person->where('user_id','=',auth()->user()->id)->first()->isLeaf()){
             $manager=false;
-
-            $leads = $this->person->where('user_id','=',auth()->user()->id)
-            ->with('ownedLeads','offeredLeads','ownedLeads.vertical','offeredLeads.vertical')->firstOrFail();
-       
-            if(count($leads->ownedLeads) >= $this->ownedLimit) { 
-                $owned = $this->ownedLimit;      
-                return response()->view('salesleads.index',compact('leads','statuses','title','owned','manager','rankingstatus'));
-            }
-            return response()->view('salesleads.index',compact('leads','statuses','title','manager'));
+            return response()->view('salesleads.index',compact('leads','statuses','manager','title','rankingstatus','limit'));
         }else{
-            $manager=true;
-
-            $leads = $this->person->where('user_id','=',auth()->user()->id)
-            ->with('ownedLeads','offeredLeads','ownedLeads.vertical','offeredLeads.vertical')->firstOrFail();
-
-             return response()->view('salesleads.managers',compact('leads','statuses','manager','title','rankingstatus'));
+            $manager = true;
+            return response()->view('salesleads.managers',compact('leads','statuses','manager','title','rankingstatus','limit'));
         }
-        
 
         
     }
