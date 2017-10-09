@@ -11,10 +11,12 @@
                 </div>
                 <div class="collapse navbar-collapse navbar-ex1-collapse">
                     <ul class="nav navbar-nav">
-                 			
+                      
+                 		@if(auth()->user()->hasRole('Admin'))
                     	<li><a href="{{route('dashboard')}}">
-                        <i class="fa fa-tachometer" aria-hidden="true"> </i> Dashboard</a></li>
 
+                        <i class="fa fa-tachometer" aria-hidden="true"> </i> Dashboard</a></li>
+                        @endif
                         <li class="dropdown{{ (Request::is('admin/company*','admin/locations*') ? ' class="active"' : '') }}">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="{{ route('company.index') }}">
 							<span class="glyphicon glyphicon-wrench"></span> Data Management<span class="caret"></span>

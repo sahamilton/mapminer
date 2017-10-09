@@ -82,7 +82,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <!-- End Google Tag Manager -->
 		<!-- To make sticky footer need to wrap in a div -->
 		<div id="wrap">
-		@include ('ops.partials._navbar')
+		@include ('admin.partials._navbar')
 
 		<!-- Container -->
 		<div class="container">
