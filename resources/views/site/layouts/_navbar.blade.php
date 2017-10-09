@@ -72,10 +72,14 @@
                         
                         @endif
                         @can('manage_projects')
-                            <li class="divider"></li>
+                         <li class="divider"></li>
                          <li><a href="{{route('projects.myprojects')}}">
                          <i class="fa fa-flag" aria-hidden="true"> </i> My Construction projects</a></li>
 
+                        @endcan
+                        @can('manage_prospects')
+                            <li class="divider"></li>
+                            
                         @endcan
                         </ul>
 
@@ -99,6 +103,14 @@
                            <i class="fa fa-tachometer" aria-hidden="true"> </i> Admin </a>
     						
     					</li>
+                        @endif
+
+                         @if (Auth::user()->hasRole('Sales Operations'))
+                         <li>
+                            <a href="{{{ route('ops') }}}">
+                           <i class="fa fa-tachometer" aria-hidden="true"> </i> Ops </a>
+                            
+                        </li>
                         @endif
     					<li class="divider-vertical"></li>
     					<li class="dropdown">

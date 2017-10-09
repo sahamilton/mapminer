@@ -195,7 +195,7 @@ class AdminPermissionsController extends BaseController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function purge($permission)
+	public function destroy($permission)
 	{
 
 		 if($permission && $permission->delete()) {
