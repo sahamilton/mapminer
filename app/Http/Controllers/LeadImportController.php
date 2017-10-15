@@ -41,11 +41,11 @@ class LeadImportController extends ImportController
 
 
     public function import(LeadImportFormRequest $request) {
-
+        dd($request->get('type'));
         $data = $this->uploadfile($request->file('upload'));
         $title="Map the leads import file fields";
-       
-        $data['table']=$this->lead->table;
+        
+        $data['table']='leadimport';
         $data['type']=$request->get('type');
         $data['additionaldata'] = $request->get('additionaldata');
         $data['route'] = 'leads.mapfields';
@@ -63,6 +63,9 @@ class LeadImportController extends ImportController
         $this->validateInput($request);
         $this->import->setFields($data);
         if($this->import->import()) {
+            
+                $this->postimport();
+
         
             return redirect()->route('leadsource.index')->with('success','Leads imported'); 
 
@@ -70,6 +73,19 @@ class LeadImportController extends ImportController
         
     }
     
+    private function postimport(){
+        //copy to leads
+
+        if($request->has('assigned')){
+
+        // insert into lead_person_status (lead_id,person_id,status)
+        // SELECT leads.id, leadsimport.pid,'2' from leads,leadsimport
+        // where MD5(lower(replace(concat(`leads.companyname`,`leads.businessname`,`leads.address`,`leads.city`,`leads.state`,`leads.zip`),' ',''))) = MD5(lower(replace(concat(`leadsimport.companyname`,`leadsimport.businessname`,`leadsimport.address`,`leadsimport.city`,`leadsimport.state`,`leadsimport.zip`),' ','')))
+        //and leads.leads_source_id = leadsimport.lead_source_id;
+        }
+
+        //truncate leadimport table;
+    }
     
-    
+   
 }
