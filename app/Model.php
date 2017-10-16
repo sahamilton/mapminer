@@ -10,7 +10,7 @@ public function getTableColumns($table=null){
      		if(! $table){
      			$table=$this->table;
      		}
-     
+     		
    			return \DB::select( \DB::raw('SHOW COLUMNS FROM '.$table.''));
 		}
 

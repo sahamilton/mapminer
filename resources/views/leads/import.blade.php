@@ -66,7 +66,7 @@
 <div class="form-group">
 <input type="submit" class="btn btn-success" value="Add Prospects" />
 
-<input type="hidden" name="type" value="leads" />
+<input type="hidden" name="type" value="@if(! isset($type)) leads @else {{$type}} @endif" />
 
 </div>
 </form>

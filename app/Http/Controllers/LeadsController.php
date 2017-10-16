@@ -199,11 +199,9 @@ class LeadsController extends BaseController
 
         $statuses = $this->leadstatus->pluck('status','id')->toArray();
         $leads = $this->person->with('salesleads','salesleads.vertical','salesleads.leadsource')
-        ->whereHas('salesleads.leadsource',function ($q){
-            $q->where('datefrom','<=',date('Y-m-d'))
-             ->where('dateto','>=',date('Y-m-d'));
-        })
-        ->findOrFail($id);
+       
+        ->find($id);
+      
 
         return response()->view('leads.person',compact('leads','statuses'));
     }
