@@ -105,11 +105,11 @@ class LeadImportController extends ImportController
     }
     
     private function postimport(){
- 
+
         $this->addAssignedPID();
         $this->copyLeads();
         $this->updateLeadPivot();
-        //$this->truncateTable();
+        $this->truncateTable();
       
     
         /*$query = "insert into lead_person_status (lead_id,person_id,status)
@@ -122,7 +122,7 @@ class LeadImportController extends ImportController
     }
 
     private function addAssignedPID(){
-        $query ="UPDATE leadimport dest, (SELECT leadimport.id as id, persons.id as pid from persons,leadimport,users where leadimport.employee_id like concat('%',users.employee_id,'%') and persons.user_id = users.id) src SET dest.pid = src.pid where dest.id = src.id;";
+        $query ="UPDATE leadimport dest, (SELECT leadimport.id as id, persons.id as pid from persons,leadimport,users where REPLACE(leadimport.employee_id, '\r', '')=users.employee_id and persons.user_id = users.id) src set dest.pid = src.pid where dest.id = src.id";
         if (\DB::select(\DB::raw($query))){
            
             return true;
