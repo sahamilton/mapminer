@@ -22,6 +22,7 @@ class Lead extends Model
             
 	public $fillable = ['companyname',
 						'businessname',
+            'customer_number',
 						'address',
 						'city',
 						'state',

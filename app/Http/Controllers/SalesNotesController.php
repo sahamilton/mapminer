@@ -120,8 +120,9 @@ class SalesNotesController extends BaseController {
 	 */
 	public function destroy($id)
 	{
-		$this->salesnote->destroy($id);
 		
+		$this->salesnote->destroy($id);
+
 		return redirect()->back();
 	}
 

@@ -1,6 +1,12 @@
 <script type="text/javascript" src="{{asset('assets/js/starrr.js')}}"></script>
 
 <script>
+	$(document).ready(function() 
+    { 
+	$(document).on('show.bs.modal','#confirm-delete', function(e) {
+    	$(this).find('#title').html($(e.relatedTarget).data('title'));
+		$(this).find('#action-form').attr('action',$(e.relatedTarget).data('href'));
+	});	
 
 $('.starrr').on('starrr:change', function(e, value){
   
@@ -43,4 +49,5 @@ $('.starrr').on('starrr:change', function(e, value){
 		       }
 
 		});
+});
 </script>

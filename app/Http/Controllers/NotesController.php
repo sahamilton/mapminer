@@ -59,7 +59,7 @@ class NotesController extends BaseController {
 				return redirect()->route('locations.show',$note->related_id);
 			break;
 			case 'lead':
-				dd($note->related_id);
+				
 				return redirect()->route('salesleads.show',$note->related_id);
 			break;
 			case 'project':
@@ -138,17 +138,15 @@ class NotesController extends BaseController {
 	public function destroy($id, Request $request)
 	{
 		
-
-		$note = $this->notes->findOrFail($id);		
 		$this->notes->destroy($id);
-		switch ($note->type) {
+		/*switch ($note->type) {
 			case 'location':
 				
 				return redirect()->route('locations.show',$note->related_id);
 			break;
 			case 'lead':
 				
-				return redirect()->route('leads.show',$note->related_id);
+				return redirect()->route('salesleads.show',$note->related_id);
 			break;
 			case 'project':
 				
@@ -156,7 +154,8 @@ class NotesController extends BaseController {
 			break;
 			
 
-		}
+		}*/
+		return redirect()->back();
 		
 	}
 

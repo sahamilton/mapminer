@@ -17,9 +17,10 @@
         <div style="float:left;width:300px">
     <p><strong>Address:</strong> {{$lead->fullAddress()}}</p>
     <p><strong>Created:</strong> {{$lead->created_at->format('M j, Y')}}</p>
-    <p><strong>Available From:</strong> {{$lead->datefrom->format('M j, Y')}}</p>
-    <p><strong>Available Until:</strong> {{$lead->dateto->format('M j, Y')}}</p>
+    <p><strong>Available From:</strong> {{$lead->leadsource->datefrom->format('M j, Y')}}</p>
+    <p><strong>Available Until:</strong> {{$lead->leadsource->dateto->format('M j, Y')}}</p>
     <p><strong>Description:</strong> {{$lead->description}}</p>
+    <p><strong>PR Customer Number:</strong>{{$lead->cutomer_id}}</p> 
    
     <p><strong>Industry Vertical:</strong><ul>
     @foreach ($lead->vertical as $vertical)
@@ -37,8 +38,10 @@
 <p>{{date_format($note->created_at,'m-d-Y')}}...<em>{{$note->note}}</em><br />
  -- @if(isset($note->writtenBy->person)) {{$note->writtenBy->person->postName()}} @endif</p>
 @if($note->user_id == Auth::user()->id  or Auth::user()->hasRole('Admin'))
-<br /><a href="{{route('notes.edit',$note->id)}}?lead={{$lead->id}}" title="Edit this note"><i class="glyphicon glyphicon-pencil"></i></a> | 
-<a href="{{route('salesnotes.destroy',$note->id)}}" onclick="if(!confirm('Are you sure to delete this note?')){return false;};" title="Delete this note"><i class="fa fa-trash-o" aria-hidden="true"> </i></a>
+<br /><a href="{{route('notes.edit',$note->id)}}" title="Edit this note"><i class="glyphicon glyphicon-pencil"></i></a> | 
+
+<a data-href="{{route('notes.destroy',$note->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = " this prospect note" href="#">
+  <i class="fa fa-trash-o" aria-hidden="true"> </i></a>
 <hr />
 @endif
 
@@ -52,7 +55,16 @@
 <div>
 <label for 'note'>Add a Note:</label>
 <div>
-{{Form::textarea('note')}}
+<!-- note -->
+
+
+                <input type="text" required class="form-control" name='note' description="note" value="{{ old('note') ? old('note') : isset($data->note) ? $data->note : "" }}" placeholder="note">
+                <span class="help-block">
+                    <strong>{{ $errors->has('note') ? $errors->first('note') : ''}}</strong>
+                    </span>
+
+
+    
 {{ $errors->first('note') }}
 </div></div>
 <input type="hidden" name="type" value="lead" />
@@ -71,7 +83,7 @@
 
 </div>
 
-
+@include('partials._modal')
 @include ('leads.partials._closeleadform')
 @include('salesleads.partials._scripts')
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={{config('maps.api_key')}}"></script>
