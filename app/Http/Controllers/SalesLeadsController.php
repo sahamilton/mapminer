@@ -208,13 +208,13 @@ class SalesLeadsController extends Controller
 
     public function rank(Request $request)
     {
-dd($request->all());
+
        $user = User::where('api_token','=',$request->get('api_token'))
        ->with('person')->first();
      ;
        if($user->person->salesleads()->sync([$request->get('id') => ['person_id'=>$user->person->id,'rating' => $request->get('value')]],false))
             {
-                dd($request->get('value'));
+                
                 return 'success';
             }
         return 'error';
