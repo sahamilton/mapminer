@@ -208,7 +208,7 @@ class SalesLeadsController extends Controller
 
     public function rank(Request $request)
     {
-
+dd($request->all());
        $user = User::where('api_token','=',$request->get('api_token'))
        ->with('person')->first();
      ;

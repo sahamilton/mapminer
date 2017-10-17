@@ -40,7 +40,7 @@
             <div class="pull-right">
            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button> <input type="submit" value="Close Project" class="btn btn-danger" />
             </div>
-            <input type="hidden" name="project_id" value="{{$project->id}}" />
+            <input type="hidden" name="id" value="{{$lead->id}}" />
         </form><div class="modal-footer">
         
         
