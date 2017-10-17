@@ -57,7 +57,8 @@ class SalesLeadsController extends Controller
         $statuses = $this->leadstatus->pluck('status','id')->toArray();
         $title = ' Prospects Assigned to ';
         $manager=true;
-        return response()->view('salesleads.index',compact('leads','statuses','title','manager'));
+        $limit = $this->ownedLimit;
+        return response()->view('salesleads.index',compact('leads','statuses','title','manager','limit'));
     
     }
     /**

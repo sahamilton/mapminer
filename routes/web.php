@@ -157,6 +157,7 @@ Route::group(['middleware' => 'auth'], function () {
 	# Sales Notes
 		Route::get('salesnotes/{companyId}',['as'=>'salesnotes','uses'=>'SalesNotesController@show']);
 		Route::get('salesnotes/print/{companyId}',['as'=>'salesnotes.print','uses'=>'SalesNotesController@printSalesNotes']);
+		Route::resource('salesnotes','SalesNotesController');
 	
 	# Sales Resources
 		Route::get('resources',['as'=>'resources.view','uses'=>'WatchController@getCompaniesWatched']);
@@ -318,7 +319,7 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
 	#Salesnotes
 		Route::get('salesnotes/filedelete/{file}', ['as'=>'salesnotes.filedelete', 'uses'=>'SalesNotesController@filedelete']);
 		Route::get('salesnotes/create/{companyId}',['as'=>'salesnotes.cocreate','uses'=>'SalesNotesController@createSalesNotes']);
-		Route::resource('salesnotes','SalesNotesController');
+	
 	
 	# Sales Activity
 		

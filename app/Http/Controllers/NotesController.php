@@ -52,14 +52,14 @@ class NotesController extends BaseController {
 
 		$request->merge(['user_id'=>auth()->user()->id]);
 		$note = $this->notes->create($request->all());
-
+ 
 		switch ($request->get('type')) {
 			case 'location':
 				
 				return redirect()->route('locations.show',$note->related_id);
 			break;
 			case 'lead':
-				
+				dd($note->related_id);
 				return redirect()->route('salesleads.show',$note->related_id);
 			break;
 			case 'project':
@@ -98,7 +98,7 @@ class NotesController extends BaseController {
 	}
 
 	/**
-	 * Update the specified note in storage.
+
 	 *
 	 * @param  int  $id
 	 * @return Response
@@ -108,7 +108,7 @@ class NotesController extends BaseController {
 
 		$note =$this->notes->findOrFail($id);
 		$note->update(['note'=>$request->get('note')]);
-	
+
 		
 		switch ($note->type) {
 			case 'location':
@@ -116,8 +116,8 @@ class NotesController extends BaseController {
 				return redirect()->route('locations.show',$note->related_id);
 			break;
 			case 'lead':
-				
-				return redirect()->route('leads.show',$note->related_id);
+
+				return redirect()->route('salesleads.show',$note->related_id);
 			break;
 			case 'project':
 				

@@ -121,8 +121,8 @@ class SalesNotesController extends BaseController {
 	public function destroy($id)
 	{
 		$this->salesnote->destroy($id);
-
-		return redirect()->route('salesnotes.index');
+		
+		return redirect()->back();
 	}
 
 	public function fileDelete($file)
