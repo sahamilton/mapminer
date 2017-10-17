@@ -74,7 +74,7 @@ class Lead extends Model
     }
 
     public function fullAddress(){
-    	return $this->address . ",\r<br />" . $this->city. " " . $this->state . " " . $this->zip;
+    	return $this->address . ",<br />" . $this->city. " " . $this->state . " " . $this->zip;
     	
     }
 
