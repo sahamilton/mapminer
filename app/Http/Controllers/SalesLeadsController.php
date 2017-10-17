@@ -94,12 +94,12 @@ class SalesLeadsController extends Controller
         
         // refactor ... clumsy way to get owned
         $lead = $this->salesleads->with('leadsource','vertical','relatedNotes','salesteam')->findOrFail($id);
-     
+        $rankingstatus = $this->salesleads->getStatusOptions;
         $statuses = $this->salesleads->getStatusOptions;
         $rank = $this->salesleads->rankMyLead($lead->salesteam); 
         $manager=false;
 
-        return response()->view('salesleads.show',compact('lead','statuses','rank','manager'));
+        return response()->view('salesleads.show',compact('lead','statuses','rankingstatus','rank','manager'));
     }
      /*
      * @param  int  $id
