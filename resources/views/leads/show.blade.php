@@ -9,10 +9,10 @@
             Rated: </div>
 <div id="map-container">
 	<div style="float:left;width:300px">
-		<p><strong>Address:</strong> {{$lead->fullAddress()}}</p>
+		<p><strong>Address:</strong> {!! $lead->fullAddress() !!}</p>
 		<p><strong>Created:</strong> {{$lead->created_at->format('M j, Y')}}</p>
-		<p><strong>Available From:</strong> {{$lead->datefrom->format('M j, Y')}}</p>
-		<p><strong>Available Until:</strong> {{$lead->dateto->format('M j, Y')}}</p>
+		<p><strong>Available From:</strong> {{$lead->leadsource->datefrom->format('M j, Y')}}</p>
+		<p><strong>Available Until:</strong> {{$lead->leadsource->dateto->format('M j, Y')}}</p>
 		<p><strong>Description:</strong> {{$lead->description}}</p>
 		<p><strong>Assigned:</strong>{{count($lead->salesteam)}}</p>
 		<p><strong>Lead Source:</strong><a href="{{route('leadsource.show',$lead->leadsource->id)}}">{{$lead->leadsource->source}}</a></p>
@@ -126,7 +126,7 @@
 
 <script>
 $('.starrr').starrr({
-	readOnly: true;
+	readOnly: true
 });
 </script>
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={{config('maps.api_key')}}"></script>
