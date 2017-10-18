@@ -15,7 +15,7 @@
  @endif
       <div id="map-container">
         <div style="float:left;width:300px">
-    <p><strong>Address:</strong> {!!$lead->fullAddress()!!}</p>
+    <p><strong>Address:</strong> {!! $lead->fullAddress() !!}</p>
     <p><strong>Created:</strong> {{$lead->created_at->format('M j, Y')}}</p>
     <p><strong>Available From:</strong> {{$lead->leadsource->datefrom->format('M j, Y')}}</p>
     <p><strong>Available Until:</strong> {{$lead->leadsource->dateto->format('M j, Y')}}</p>
