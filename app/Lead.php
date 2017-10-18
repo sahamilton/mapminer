@@ -56,7 +56,7 @@ class Lead extends Model
     }
     
     public function relatedNotes() {
-      return $this->hasMany(Note::class,'related_id')->where('type','=','lead')->with('writtenBy');
+      return $this->hasMany(Note::class,'related_id')->where('type','=','prospect')->with('writtenBy');
     }
 
     public function setDatefromAttribute($value)
@@ -82,7 +82,7 @@ class Lead extends Model
 
       return $this->belongsToMany(Person::class,'lead_person_status','related_id','person_id')
       ->wherePivotIn('status_id',[2,5,6])
-      ->wherePivot('type','=','lead')
+      ->wherePivot('type','=','prospect')
       ->withPivot('created_at','updated_at','status_id','rating','type');;
     }
 
