@@ -9,7 +9,7 @@
 	});	
 
 $('.starrr').on('starrr:change', function(e, value){
-  
+
 		    var id = e.target.id;
 		    var returnVal = ranked(id,parseInt(value));
 
@@ -19,19 +19,14 @@ $('.starrr').on('starrr:change', function(e, value){
 		      
 		          {
 		          
-		          type: "GET",
-		          
+		          type: "GET",	          
 		          cache: false,
-		       
-		          
 		          url: '{{route('api.leadrank')}}?api_token={{auth()->user()->api_token}}',
 		          data: {id: id,value: value},
 		          
 		          dataType: "xml",
 		          
 		          contentType: "text/html",
-		          
-		         
 		          
 		          }); 
 		          return myajax.responseText;
@@ -41,11 +36,11 @@ $('.starrr').on('starrr:change', function(e, value){
 		       }
 
 		        function processData(){
-		         //alert("I did it!");
+		        return success;
 		       }
 		       
 		       function errorAlert() {
-		         alert("Whoops that didnt work");
+		        return error;
 		       }
 
 		});
