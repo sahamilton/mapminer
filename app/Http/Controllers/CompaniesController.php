@@ -227,12 +227,12 @@ class CompaniesController extends BaseController {
 		}
 
 		$data = $this->getSegmentCompanyInfo($company,$segment);
-		$company = $this->company->with('managedBy','industryvertical');
+		$company = $this->company->with('managedBy','industryVertical');
 		if($filtered = $this->company->isFiltered(['companies'],['vertical'])){
 				$keys = $this->company->getSearchKeys(['companies'],['vertical']);
 
 					$company = $company
-					->whereHas('industryvertical',function($q) use($keys){
+					->whereHas('industryVertical',function($q) use($keys){
 						$q->whereIn('id',$keys);
 					});
 					

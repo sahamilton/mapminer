@@ -143,12 +143,13 @@ class SalesActivityController extends BaseController
                         $q->whereIn('servicelines.id',$this->userServiceLines);
                     });
                 if(count($verticals)>0){
-                    $locations->whereHas('company.industryVertical',function ($q) use($verticals){
+
+                    $locations = $locations->whereHas('company.industryVertical',function ($q) use($verticals){
                         $q->whereIn('searchfilters.id',$verticals);
                     });
                 }
-                $locations->get();
-                //$locations = $this->location->findNearbyLocations($lat,$lng,25,$number=null,$company=NULL,$this->userServiceLines, $limit=null, $verticals);
+              $locations = $locations->get();
+              
             }else{
                 $locations = array();
             }
