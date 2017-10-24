@@ -18,7 +18,7 @@ class SalesLeadsController extends Controller
     public function __construct(Lead $saleslead, Person $person, LeadStatus $status){
 
         $this->salesleads = $saleslead;
-        $this-> person = $person;
+        $this->person = $person;
         $this->leadstatus = $status;
         
         $this->ownedLimit =\Config::get('leads.owned_limit');
@@ -268,11 +268,13 @@ class SalesLeadsController extends Controller
     }
     
     Excel::create('Prospects'.time(),function($excel) {
-            $excel->sheet('Members',function($sheet) {
+            $excel->sheet('Prospects',function($sheet) {
                 $leads = $this->person->where('user_id','=',auth()->user()->id)
                 ->with('ownedLeads','ownedLeads.relatedNotes')->firstOrFail();
-                $sheet->loadView('salesleads.export',compact('leads'));
+               $statuses = $this->leadstatus->all()->pluck('status','id')->toArray();
+  
+                $sheet->loadView('salesleads.export',compact('leads','statuses'));
             });
-        })->download($type);
+        })->download('csv');
     }
 }

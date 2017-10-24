@@ -24,4 +24,3 @@ class PdfReader implements TextInterface
 
    }
 }
-

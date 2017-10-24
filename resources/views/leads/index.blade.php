@@ -4,7 +4,6 @@
 <h1>Prospects</h1>
 
 
-<a href="">Download all owned & closed prospects</a>
 
 <ul class="nav nav-tabs">
 	<li class="active"><a data-toggle="tab" href="#map"><strong>Map View</strong></a></li>

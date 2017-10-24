@@ -1,22 +1,34 @@
 <table>
 <tr>
-<td>Owned and Closed Prospects of {{auth()->user()->person->fullName()}}</td>
-
+<td>Owned and Closed Prospects of {{auth()->user()->person->postName()}}</td>
 </tr>
-<tr><td><strong>Owned Prospects</strong></td></tr>
-@foreach ($leads->owned as $lead)
+<tr><td>Prospect</td>
+	<td>Address</td>
+	<td>Owned By</td>
+	<td>Status</td>
+	<td>Rating</td>
+	<td>Notes</td>
+</tr>
+@foreach ($leads->ownedLeads as $lead)
 <tr>
+<td>{{$lead->companyname}}</td>
+<td>{!! $lead->fullAddress() !!}</td>
+<td>{{$lead->ownedBy[0]->postName()}}</td>
+<td>{{$statuses[$lead->ownedBy[0]->pivot->status_id]}}</td>
+<td>{{$lead->ownedBy[0]->pivot->rating}}</td>
 
-
+@foreach ($lead->relatedNotes as $note)
+@if($loop->first)
+<td>
+	@else
+<tr>
+	<td></td><td></td><td></td><td></td>
+	<td></td>
+	<td>
+@endif
+{{$note->note}} - {{$note->created_at->format('M d, Y')}}</td>
 </tr>
-
 @endforeach
-<tr><td><strong>Closed Prospects</strong></td></tr>
-@foreach ($leads->closed as $lead)
-<tr>
-
-
 </tr>
-
 @endforeach
 </table>

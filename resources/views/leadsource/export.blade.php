@@ -1,6 +1,6 @@
 <table>
 
-<tr><td><strong>Owned Prospects</strong></td></tr>
+<tr><td><strong>Owned Prospects - {{$leadsource->source}}</strong></td></tr>
 <tr><td>Prospect</td>
 	<td>Address</td>
 	<td>Owned By</td>

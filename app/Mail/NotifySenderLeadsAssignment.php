@@ -33,4 +33,3 @@ class NotifySenderLeadsAssignment extends Mailable
          ->to($this->data['sender']);
     }
 }
-

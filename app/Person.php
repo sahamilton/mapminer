@@ -232,7 +232,7 @@ class Person extends NodeModel {
 		return $this->belongsToMany(Lead::class, 'lead_person_status','person_id','related_id')
 		->withTimestamps()
 		->withPivot('status_id','rating')
-		->whereIn('status_id',[2]);
+		->whereIn('status_id',[2,3]);
 	}
 
 
