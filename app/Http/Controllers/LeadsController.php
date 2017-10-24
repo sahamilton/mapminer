@@ -297,5 +297,21 @@ class LeadsController extends BaseController
         return $people;
     }
 
+    public function exportLeads(Request $request){
+       if($request->has('type')){
+        $type = $request->get('type');
+    }else{
+        $type = 'xlsx';
+    }
+    
+    Excel::create('Prospects'.time(),function($excel) {
+            $excel->sheet('Prospects',function($sheet) {
+                $leads = $this->person->where('user_id','=',auth()->user()->id)
+                ->with('ownedLeads','ownedLeads.relatedNotes')->firstOrFail();
+                $sheet->loadView('salesleads.export',compact('leads'));
+            });
+        })->download($type);
+    }
+
     
 }

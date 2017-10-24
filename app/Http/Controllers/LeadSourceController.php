@@ -278,43 +278,25 @@ class LeadSourceController extends Controller
        
         return $salesreps;
     }
+    
+    /**
 
-   /* private function leadImport(Request $request,$source_id){
-        
-        $file= $request->file('file');
-        $file->store('public/library');
 
-        $leads = Excel::load($file,function($reader){
-         
-        })->get();
-       /* $data['file'] = $file;
-        $data['table']= 'leads';
-        $data['type'] = 'Leads';
-        $columns = $this->lead->getTableColumns($data['table']);
-        $fields = $leads;
-
-        $title= 'Map import leads file fields';
-        $skip=['id','created_at','deleted_at','updated_at','lead_source_id'];
-
-        return response()->view('imports.mapfields',compact('fields','columns','title','skip','data'));
-      
-       
-         $count = null;
-        foreach ($leads->toArray() as $lead) {
-            $lead['user_id'] = auth()->user()->id;
-            $lead['lead_source_id'] = $source_id;
-            if(! $lead['lat'] or ! $lead['lng']){
-                $geoCode = app('geocoder')->geocode($this->getAddress($request))->get();
-                $lead[] = $this->lead->getGeoCode($geoCode);
-            }
-            $newLead = $this->lead->create($lead);
-
-            
-            $count++;
-
-        }
-        return redirect()->route('leadsource.show',$source_id)->with(['success','Imported ' . $count . ' leads']);
-     }
- */
+    **/
+    public function export(Requet $request){
+         if($request->has('type')){
+        $type = $request->get('type');
+    }else{
+        $type = 'xlsx';
+    }
+    
+    Excel::create('Prospects'.time(),function($excel) {
+            $excel->sheet('Prospects',function($sheet) {
+                $leads = $this->person->where('user_id','=',auth()->user()->id)
+                ->with('ownedLeads','ownedLeads.relatedNotes')->firstOrFail();
+                $sheet->loadView('salesleads.export',compact('leads'));
+            });
+        })->download($type);
+    }
      
 }

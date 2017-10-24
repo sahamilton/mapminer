@@ -3,7 +3,7 @@
 
 <h2>{{$title }} {{$leads->firstname}} {{$leads->lastname}}</h2>
 
-<p><a href=""><i class="glyphicon glyphicon-cloud-download"></i> Download all owned and closed prospects</a></p>
+<p><a href="{{route('salesleads.download')}}"><i class="glyphicon glyphicon-cloud-download"></i> Download all owned and closed prospects</a></p>
 @if($manager)
 	<p><a href="{{route('salesleads.index')}}">Return to sales team</a></p>
 @endif

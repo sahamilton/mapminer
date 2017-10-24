@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 use App\Person;
 use App\User;
@@ -271,7 +270,7 @@ class SalesLeadsController extends Controller
     Excel::create('Prospects'.time(),function($excel) {
             $excel->sheet('Members',function($sheet) {
                 $leads = $this->person->where('user_id','=',auth()->user()->id)
-                ->with('ownedLeads','closed','relatedNotes')->firstOrFail();
+                ->with('ownedLeads','ownedLeads.relatedNotes')->firstOrFail();
                 $sheet->loadView('salesleads.export',compact('leads'));
             });
         })->download($type);
