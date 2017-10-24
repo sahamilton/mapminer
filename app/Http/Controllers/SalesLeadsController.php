@@ -6,6 +6,7 @@ use App\User;
 use App\Lead;
 use App\Note;
 use App\LeadStatus;
+use Excel;
 
 use Illuminate\Http\Request;
 
@@ -233,7 +234,12 @@ class SalesLeadsController extends Controller
         }
         return $leads;
     }
-
+    /**
+     * Close prospect
+     * @param  Request $request post contents
+     * @param  int  $id      prospect (lead) id
+     * @return [type]           [description]
+     */
     public function close(Request $request, $id){
     
       $lead = $this->salesleads->with('salesteam')->findOrFail($id);
@@ -241,8 +247,10 @@ class SalesLeadsController extends Controller
       $lead->salesteam()
         ->updateExistingPivot(auth()->user()->person->id,['rating'=>$request->get('ranking'),'status_id'=>3]);
         $this->addClosingNote($request,$id);
-    return redirect()->route('salesleads.index')->with('message', 'Prospect closed');
+        return redirect()->route('salesleads.index')->with('message', 'Prospect closed');
      }
+    
+
     private function addClosingNote($request){
         $note = new Note;
         $note->note = "Prospect Closed:" .$request->get('comments');
@@ -250,5 +258,22 @@ class SalesLeadsController extends Controller
         $note->related_id = $request->get('lead_id');
         $note->user_id = auth()->user()->id;
         $note->save();
+    }
+
+    public function download(Request $request){
+         
+     if($request->has('type')){
+        $type = $request->get('type');
+    }else{
+        $type = 'xlsx';
+    }
+    
+    Excel::create('Prospects'.time(),function($excel) {
+            $excel->sheet('Members',function($sheet) {
+                $leads = $this->person->where('user_id','=',auth()->user()->id)
+                ->with('ownedLeads','closed','relatedNotes')->firstOrFail();
+                $sheet->loadView('salesleads.export',compact('leads'));
+            });
+        })->download($type);
     }
 }

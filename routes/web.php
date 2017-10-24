@@ -148,6 +148,7 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('prospect/{id}/accept',['as'=>'saleslead.accept','uses'=>'SalesLeadsController@accept']);
 		Route::get('prospect/{id}/decline',['as'=>'saleslead.decline','uses'=>'SalesLeadsController@decline']);
 		Route::get('prospects/{pid}/showrep',['as'=>'salesleads.showrep','uses'=>'SalesLeadsController@showrep']);
+		Route::get('prospects/download',['as'=>'salesleads.download','uses'=>'SalesLeadsController@download']);
 		Route::get('prospects/{id}/showrepdetail/{pid}',['as'=>'salesleads.showrepdetail','uses'=>'SalesLeadsController@showrepdetail']);
 		Route::get('leadrank',['as'=>'api.leadrank','uses'=>'SalesLeadsController@rank']);
 		Route::post('prospect/{id}/close',['as'=>'saleslead.close','uses'=>'SalesLeadsController@close']);

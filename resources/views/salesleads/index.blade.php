@@ -2,14 +2,16 @@
 @section('content')
 
 <h2>{{$title }} {{$leads->firstname}} {{$leads->lastname}}</h2>
+
+<p><a href=""><i class="glyphicon glyphicon-cloud-download"></i> Download all owned and closed prospects</a></p>
 @if($manager)
 	<p><a href="{{route('salesleads.index')}}">Return to sales team</a></p>
 @endif
 <ul class="nav nav-tabs">
   <li class="active"><a data-toggle="tab" href="#map"><strong>Map View</strong></a></li>
 
-  <li><a data-toggle="tab" href="#offered"><strong>Offered Leads</strong></a></li>
-  <li><a data-toggle="tab" href="#owned"><strong>Owned Leads</strong></a></li>
+  <li><a data-toggle="tab" href="#offered"><strong>Offered Prospects</strong></a></li>
+  <li><a data-toggle="tab" href="#owned"><strong>Owned Prospects</strong></a></li>
   
 
 </ul>

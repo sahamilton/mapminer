@@ -33,9 +33,20 @@ class SalesLead extends Model
       return $this->belongsToMany(Person::class,'lead_person_status','related_id','person_id')
             ->withPivot('status','ranking','type')
             ->wherePivot('type','=','project')
+                        ->where('person_id','=',auth()->user()->person->id)
+            ->first();
+    }
+     public function closed(){
+
+      return $this->belongsToMany(Person::class,'lead_person_status','related_id','person_id')
+            ->withPivot('status','ranking','type')
+            ->wherePivot('type','=','project')
+            ->wherePivot('status_id','=',3)
             ->where('person_id','=',auth()->user()->person->id)
             ->first();
     }
+
+
     public function rankMyLead($salesteam,$id=null){
       if(! isset($id)){
         $id = auth()->user()->person->id;
