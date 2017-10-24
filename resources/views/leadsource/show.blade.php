@@ -1,6 +1,7 @@
 @extends ('admin.layouts.default')
 @section('content')
 <h2>Prospect Source - {{$leadsource->source}}</h2>
+<p><a href="{{route('leadsource.export',$leadsource->id)}}"> Export owned and closed leads</a></p>
 <p><a href="{{route('leadsource.index')}}">Return to all Prospect sources</a></p>
 <ul class="nav nav-tabs">
 	<li class="active"><a data-toggle="tab" href="#map"><strong>Map View</strong></a></li>

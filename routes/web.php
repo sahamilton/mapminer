@@ -304,6 +304,7 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
 		Route::post('leads/assign',['as'=>'leads.assign','uses'=>'LeadsController@postAssignLeads']);
 		Route::get('leads/{id}/person',['as'=>'leads.person','uses'=>'LeadsController@getPersonsLeads']);
 		Route::get('leads/{id}/person/{sid}/source',['as'=>'leads.personsource','uses'=>'LeadsController@getPersonSourceLeads']);
+		Route::get('leadsource/{id}/export',['as'=>'leadsource.export','uses'=>'LeadSourceController@export']);
 		Route::resource('leads','LeadsController');
 	
 	# Prospect Source / LeadSource 

@@ -283,18 +283,22 @@ class LeadSourceController extends Controller
 
 
     **/
-    public function export(Requet $request){
+    public function export(Request $request,$id){
          if($request->has('type')){
         $type = $request->get('type');
     }else{
         $type = 'xlsx';
     }
     
-    Excel::create('Prospects'.time(),function($excel) {
-            $excel->sheet('Prospects',function($sheet) {
-                $leads = $this->person->where('user_id','=',auth()->user()->id)
-                ->with('ownedLeads','ownedLeads.relatedNotes')->firstOrFail();
-                $sheet->loadView('salesleads.export',compact('leads'));
+    Excel::create('Prospects'.time(),function($excel) use($id){
+            $excel->sheet('Prospects',function($sheet )use($id) {
+                $leads = $this->leadsource
+                ->with('leads','leads.relatedNotes')
+                ->has('leads.ownedBy')
+                ->with('leads.ownedBy')
+                ->findOrFail($id);
+            
+                $sheet->loadView('leadsource.export',compact('leads'));
             });
         })->download($type);
     }
