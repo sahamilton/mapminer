@@ -3,9 +3,8 @@
  	$stats[0]=0;
       $stats[1]=0;
       $stats[2]=0;
-      $stats[4]=0;
-      $stats[5]=0;
-      $stats[6]=0;
+      $stats[3]=0;
+      
 
 foreach($leadsource->leads as $lead){
 	if(count($lead->salesteam)>0){
