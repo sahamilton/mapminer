@@ -264,9 +264,9 @@ class LeadSourceController extends Controller
                         $salesreps[$rep->id]['status'][1] = 0;
                         $salesreps[$rep->id]['status'][2] = 0;
                         $salesreps[$rep->id]['status'][3] = 0;
-                        $salesreps[$rep->id]['status'][4] = 0;
+                       /* $salesreps[$rep->id]['status'][4] = 0;
                         $salesreps[$rep->id]['status'][5] = 0;
-                        $salesreps[$rep->id]['status'][6] = 0;
+                        $salesreps[$rep->id]['status'][6] = 0;*/
                        
                     }
                     $salesreps[$rep->id]['count'] = $salesreps[$rep->id]['count'] ++;
@@ -292,15 +292,16 @@ class LeadSourceController extends Controller
     
     Excel::create('Prospects'.time(),function($excel) use($id){
             $excel->sheet('Prospects',function($sheet )use($id) {
-                $leads = $this->leadsource
+                $statuses = $this->lead->statuses;
+                $leadsource = $this->leadsource
                 ->with('leads','leads.relatedNotes')
                 ->has('leads.ownedBy')
                 ->with('leads.ownedBy')
                 ->findOrFail($id);
             
-                $sheet->loadView('leadsource.export',compact('leads'));
+                $sheet->loadView('leadsource.export',compact('leadsource','statuses'));
             });
-        })->download($type);
+        })->download('csv');
     }
      
 }

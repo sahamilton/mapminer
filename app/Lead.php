@@ -35,7 +35,7 @@ class Lead extends Model
 						'lat',
 						'lng',
 						'lead_source_id'];
-    public $statuses = ['Offered','Claimed','Closed'];
+    public $statuses = [1=>'Offered',2=>'Claimed',3=>'Closed'];
     public $getStatusOptions =  [
         1=>'Prospect data is completely inaccurate. No project or project completed.',
         2=>'Prospect data is incomplete and / or not useful.',
