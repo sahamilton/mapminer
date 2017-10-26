@@ -19,9 +19,9 @@
         </thead>
         <tbody>
             @foreach($people  as $person)
-                
+               
                 <tr> 
-                    <td>{{$person->employee_id}}</td>
+                    <td>{{$person->userdetails->employee_id}} </td>
 
                     <td><a href="{{route('salesorg',$person->id)}}"
                     title = "See {{$person->firstname}}'s sales coverage area">{{$person->firstname}} {{$person->lastname}}</a></td> 
@@ -38,7 +38,7 @@
                     </td>
                     <td><a href="mailto:{{$person->email}}" title = "Email {{$person->firstname}} {{$person->lastname}}">{{$person->email}}</a></td> 
                     <td>{{$person->city}},{{$person->state}}</td>
-                    <td>{{number_format($person->distance_in_mi,2)}}</td> 
+                    <td>{{number_format($person->distance,2)}}</td> 
                 </tr>
             @endforeach
         </tbody>

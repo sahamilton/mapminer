@@ -18,10 +18,15 @@
 <td>{{$lead->ownedBy[0]->pivot->rating}}</td>
 
 @foreach ($lead->relatedNotes as $note)
+@if($loop->first)
+<td>
+	@else
 <tr>
 	<td></td><td></td><td></td><td></td>
 	<td></td>
-	<td>{{$note->note}} - {{$note->created_at->format('M d, Y')}}</td>
+	<td>
+@endif
+{{$note->note}} - {{$note->created_at->format('M d, Y')}}</td>
 </tr>
 @endforeach
 </tr>
