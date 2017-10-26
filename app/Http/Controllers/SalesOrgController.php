@@ -41,6 +41,7 @@ class SalesOrgController extends BaseController {
 	 */
 		public function getSalesBranches($salesPerson=null)
 	{
+			
 			// if not id then find root salesorg id
 			
 			if (! $salesPerson){
@@ -58,13 +59,16 @@ class SalesOrgController extends BaseController {
 			if( $salesperson->isLeaf())
 			{
 				
-				$salesorg = Person::whereId($salesPerson->id)->with('userdetails.roles','reportsTo','reportsTo.userdetails.roles','branchesServiced')->first();
+				$salesorg = Person::whereId($salesPerson->id)
+				->with('userdetails.roles','reportsTo','reportsTo.userdetails.roles','branchesServiced')->first();
 
 				return response()->view('salesorg.map', compact('salesorg'));
 				
 			}else{
+				$salesroles = $this->salesroles;
 				$salesteam = $salesperson->descendantsAndSelf()
 				->with('userdetails.roles','directReports.userdetails','directReports.userdetails.roles','reportsTo.userdetails.roles')
+				
 				->orderBy('lft')
 				->get();
 							

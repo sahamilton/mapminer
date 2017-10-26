@@ -23,7 +23,7 @@ class LeadsController extends BaseController
     public $vertical;
     public $leadstatus;
     public $assignTo; 
-
+    public $salesroles = [5,6,7,8];
     public function __construct(Person $person, Lead $lead,LeadSource $leadsource,SearchFilter $vertical,LeadStatus $status){
 
     	$this->person = $person;
@@ -269,6 +269,10 @@ class LeadsController extends BaseController
                   $q->whereIn('searchfilters.id',$verticals);
               });
         }
+        $salesroles = $this->salesroles;
+        $persons->whereHas('userdetails.roles',function ($q) use($salesroles){
+          $q->whereIn('roles.id',$salesroles);
+        });
         if (isset($data['number'])){
             $persons->limit($data['number']);
         }

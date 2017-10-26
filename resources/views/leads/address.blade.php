@@ -10,6 +10,7 @@
         <thead>
             <th>Employee Id</th>
             <th>Sales Rep</th>
+            <th>Role</th>
             <th>Industry</th>
             <th>Email</th>
             <th>Location</th>
@@ -25,6 +26,7 @@
 
                     <td><a href="{{route('salesorg',$person->id)}}"
                     title = "See {{$person->firstname}}'s sales coverage area">{{$person->firstname}} {{$person->lastname}}</a></td> 
+                    <td>{{$person->userdetails->roles[0]->name}}</td>
                     <td>
                         @if(isset($person->industry))
                             <ul>
