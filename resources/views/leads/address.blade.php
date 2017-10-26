@@ -36,7 +36,7 @@
                             </ul>
                         @endif
                     </td>
-                    <td><a href="mailto:{{$person->email}}" title = "Email {{$person->firstname}} {{$person->lastname}}">{{$person->email}}</a></td> 
+                    <td><a href="mailto:{{$person->email}}" title = "Email {{$person->firstname}} {{$person->lastname}}">{{$person->userdetails->email}}</a></td> 
                     <td>{{$person->city}},{{$person->state}}</td>
                     <td>{{number_format($person->distance,2)}}</td> 
                 </tr>
