@@ -8,6 +8,7 @@ class SalesOrgController extends BaseController {
 	public $limit = 5;
 	public $branch;
 	public $person;
+	public $salesroles = [5,6,7,8];
 	
 
 
@@ -22,8 +23,14 @@ class SalesOrgController extends BaseController {
 	
 	public function getSalesOrgList($salesperson)
 	{
-				
-			$salesteam = $salesperson->descendantsAndSelf()->with('reportsTo','userdetails','userdetails.roles','industryfocus')->orderBy('lft')->get();
+			$salesroles = $this->salesroles;	
+			$salesteam = $salesperson->descendantsAndSelf()
+			->with('reportsTo','userdetails','userdetails.roles','industryfocus')
+			->whereHas('userdetails.roles', function ($q) use($salesroles){
+				$q->whereIn('roles.id',$salesroles);
+			})
+			->orderBy('lft')
+			->get();
 			return response()->view('salesorg.salesmanagerlist', compact('salesteam'));
 
 
