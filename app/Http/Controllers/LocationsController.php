@@ -318,7 +318,7 @@ class LocationsController extends BaseController {
 			});
 		}
 		return $locations->whereHas('company.serviceline',function ($q) {
-			$q->whereIn('servicelines.id',$this->userServiceline);
+			$q->whereIn('servicelines.id',$this->userServiceLines);
 
 		})->get();
 		
