@@ -9,7 +9,10 @@
 @section('content')
 	<div class="page-header">
 		<h3>{{ $title }}</h3>
-			
+			<p>
+                 <a href="{{route('nomanager.export')}}">
+                 <i class="glyphicon glyphicon-cloud-download"></i> Export to Excel</a>
+            </p>
 	</div>
 
 	<table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>

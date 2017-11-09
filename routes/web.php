@@ -358,6 +358,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 		Route::post('user/importerrors',['as'=>'fixuserinputerrors','uses'=>'UsersImportController@fixerrors']);
 		Route::get('users/serviceline/{servicelineId}', ['as'=>'serviceline.user','uses'=>'Admin\AdminUsersController@index']);
 		Route::get('users/nomanager', ['as'=>'nomanager','uses'=>'SalesOrgController@noManager']);
+		Route::get('users/nomanager/export', ['as'=>'nomanager.export','uses'=>'SalesOrgController@noManagerExport']);
 		Route::resource('users', 'Admin\AdminUsersController');  
 
 

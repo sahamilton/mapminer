@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 use App\Branch;
 use App\Person;
+use Excel;
 
 class SalesOrgController extends BaseController {
 	public $distance = 20;
@@ -145,11 +146,25 @@ class SalesOrgController extends BaseController {
 
 	public function noManager(){
 		$people = $this->person->whereNull('reports_to')
-		->with('userdetails')->with('userdetails.roles')
+		->with('userdetails','userdetails.roles')
 		->get();
 		$title="Users with no manager";
 
 
 		return response()->view('admin.users.nomanager',compact('people','title'));
 	}
+
+	public function noManagerExport(){
+		
+
+		Excel::create('NoManagers'.time(),function($excel) {
+            $excel->sheet('No Managers',function($sheet) {
+                $people = $this->person->whereNull('reports_to')
+				->with('userdetails','userdetails.roles')
+				->get();
+                $sheet->loadView('admin.users.nmexport',compact('people'));
+            });
+        })->download('csv');
+    }
+
 }
