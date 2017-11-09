@@ -117,7 +117,9 @@
                                 <li{{ (Request::is('admin/roles*') ? ' class="active"' : '') }}><a href="{{ route('roles.index') }}">
                                 <span class="glyphicon glyphicon-wrench"></span> Roles</a></li>
                                 <li{{ (Request::is('admin/permissions*') ? ' class="active"' : '') }}><a href="{{ route('permissions.index') }}"><span class="glyphicon glyphicon-check"></span> Permissions</a></li>
-
+                                <li{{ (Request::is('admin/users/nomanager') ? ' class="active"' : '') }}>
+                                <a href="{{ route('nomanager') }}">
+                                <i class="fa fa-minus-circle" aria-hidden="true"></i> Without Manager</a></li>
 
                                 <li{{ (Request::is('admin/users/export') ? ' class="active"' : '') }}><a href="{{ route('person.export') }}">
                                 <i class="fa fa-download" aria-hidden="true"> </i> Export Users</a></li>
