@@ -141,4 +141,15 @@ class SalesOrgController extends BaseController {
 			->pluck('id'));*/
 		return $person = ['1767'];
 	}
+
+
+	public function noManager(){
+		$people = $this->person->whereNull('reports_to')
+		->with('userdetails')->with('userdetails.roles')
+		->get();
+		$title="Users with no manager";
+
+
+		return response()->view('admin.users.nomanager',compact('people','title'));
+	}
 }
