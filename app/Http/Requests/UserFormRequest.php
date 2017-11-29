@@ -25,13 +25,14 @@ class UserFormRequest extends FormRequest
      */
     public function rules(Request $request)
     {
-        
+       
        
         return [
         'username'=>'required|alpha_num|unique:users,id,' . $request->segment(3),
         'firstname'=>'required',
         'lastname'=>'required',
-        'email' => 'required|email|unique:users,id,' . $request->segment(3),
+        'email' => 'required|email|unique:users,email,' . $request->segment(3),
+        'employee_id' => 'required|unique:users,employee_id,' . $request->segment(3),
         'password'=>'confirmed',
         'serviceline'=>'required',
         'employee_id'=>'required|unique:users,id,' . $request->segment(3),
