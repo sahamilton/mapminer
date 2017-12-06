@@ -50,7 +50,8 @@ class UsersImportController extends ImportController
         $addColumns = new \stdClass;
         $addColumns->Field = 'role_id';
         $addColumn[] = $addColumns;
-   		$columns = array_merge($this->company->getTableColumns('users'),$this->company->getTableColumns('persons'),$addColumn);
+       
+   		$columns = array_merge($this->import->getTableColumns('users'),$this->import->getTableColumns('persons'),$addColumn);
         $requiredFields = $this->import->requiredFields;
         $skip = ['id','password','confirmation_code','remember_token','created_at','updated_at','nonews','lastlogin','api_token','user_id','lft','rgt','depth','geostatus'];
         return response()->view('imports.mapfields',compact('columns','fields','data','skip','requiredFields'));
