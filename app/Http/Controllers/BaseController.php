@@ -24,7 +24,7 @@ class BaseController extends Controller {
              
                $this->userServiceLines = session()->has('user.servicelines') ? session()->get( 'user.servicelines' ) : $model->getUserServiceLines();
               
-               $this->userVerticals = session()->has('userverticals') ? session()->get('user.verticals') : $model->getUserVerticals();
+               $this->userVerticals = session()->has('user.verticals') ? session()->get('user.verticals') : $model->getUserVerticals();
                 return $next($request);
 
         });
