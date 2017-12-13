@@ -31,7 +31,7 @@ class BranchFormRequest extends FormRequest
         'zip'=>'required',
         'region_id'=>'required',
         'radius'=>'required',
-            //
+        'serviceline'=>'required',
         ];
     }
 }
