@@ -4,6 +4,12 @@ namespace App;
 class Branch extends Model {
 	use Geocode;
 	public $table ='branches';
+
+	protected $primaryKey = 'id'; // or null
+
+    public $incrementing = false;
+
+
 	public $branchRoles = [5,9,11];
 	public $branchmanagerrole = 9;
 	// Add your validation rules here

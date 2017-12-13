@@ -126,10 +126,6 @@ class BranchesController extends BaseController {
 				
 			}
 
-
-		// get the service lines that have been selected and reduce to the simple array
-	
-		
 		$branch->servicelines()->sync($input['serviceline']);
 		$this->rebuildXMLfile();
 

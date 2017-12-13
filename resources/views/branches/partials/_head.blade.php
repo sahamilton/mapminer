@@ -5,7 +5,7 @@
 
        <h4> within 10 miles of the {{ucwords(strtolower($data['branch']->branchname))}} branch # {{$data['branch']->id}} </h4>
         <h4>Address:</h4> 
-        <p>{{$data['branch']->street}}{{$data['branch']->address2}}<br/>
+        <p>{{$data['branch']->street}} {{$data['branch']->address2}}<br/>
         {{$data['branch']->city}},{{$data['branch']->state}} {{$data['branch']->zip}}<br />
         {{$data['branch']->phone}}</p>
         <h4>Branch Team</h4>
