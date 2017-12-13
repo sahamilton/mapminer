@@ -1,5 +1,6 @@
 <markers>
 @foreach ($branches as $branch)
+
 <marker 
 name = "{{$branch->branchname}}" 
 address="{{trim($branch->street)}} {{trim($branch->address2)}}, {{trim($branch->city)}} {{trim($branch->state)}}" 
