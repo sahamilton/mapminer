@@ -1,7 +1,19 @@
 @extends('site.layouts.default')
 @section('content')
 
-	
+<style>
+img.santa {
+  position: absolute;
+  animation: moveImage 15s linear infinite;
+  left: -350px;
+}
+
+@keyframes moveImage {
+    100% {
+      transform: translateX(calc(100vw + 350px));
+    }
+}
+</style>	
     
 
 @if(!Auth::check()) 
@@ -10,6 +22,7 @@
 			<h4 ">Welcome to the PeopleReady&reg; National Account Locator</h4>
 			<div id="welcome">
 				<div id="loginbtn" style="padding-left:0px;padding-top:200px">
+					<img class="santa" src="{{asset('assets/img/santa.png')}}"" width="200px">
 				<a href='login'class='btn btn-lg btn-success'>Login</a>
 
 
