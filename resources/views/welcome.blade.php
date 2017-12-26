@@ -8,7 +8,7 @@
 			<h4 ">Welcome to the PeopleReady&reg; National Account Locator</h4>
 			<div id="welcome">
 				<div id="loginbtn" style="padding-left:0px;padding-top:200px">
-					<img class="santa" src="{{asset('assets/img/santa.png')}}"" width="200px">
+				
 				<a href='login'class='btn btn-lg btn-success'>Login</a>
 
 
