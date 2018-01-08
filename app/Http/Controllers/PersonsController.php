@@ -179,8 +179,8 @@ class PersonsController extends BaseController {
 	 */
 	public function show($person)
 	{
-
-		
+		$roles = $this->persons->findPersonsRole($person);
+	
 		//note remove manages & manages.servicedby
 		$people = $this->persons
 			->with('directReports',
@@ -199,13 +199,13 @@ class PersonsController extends BaseController {
 			
 			->find($person->id);
 
-		$roles = $this->persons->findPersonsRole($people);
-
+		
+	
 		// Note that we will have to extend this to show Sales people
 		
 		if(in_array('National Account Manager',$roles))
 		{
-			
+	
 			$accounts = $people->managesAccount;
 
 			
@@ -216,10 +216,12 @@ class PersonsController extends BaseController {
 		
 			return response()->view('persons.showlist', compact('people'));
 			
+		
 		}else{
 			
 			if($people->isLeaf())
 			{
+			
 				// Show branches serviced by sales rep
 			
 				return response()->view('persons.salesteam', compact('people'));

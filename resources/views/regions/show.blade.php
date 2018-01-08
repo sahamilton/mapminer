@@ -65,7 +65,7 @@
 
 	@if(count($branch->manager)>0)
 		@foreach ($branch->manager as $manager)
-		<a href="{{route('person.show',$manager->id)}}" 
+		<a href="{{route('managed.branch',$manager->id)}}"" 
 		title="See all branches managed by {{$manager->fullName() }}" >
 		{{$manager->fullName() }}
 		</a>
