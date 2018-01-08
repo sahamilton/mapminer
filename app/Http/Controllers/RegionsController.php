@@ -55,18 +55,20 @@ class RegionsController extends BaseController {
 	public function show($id)
 	{
 		$region = $this->region->findOrFail($id);
-		$data['region'] = $region;
+
+
 		
 		$branches = $region->branches()
 				->with('servicelines','manager','region','servicedBy')
+				->where('region_id','=',$region->id)
 				->orderBy('state','ASC')
 				->orderBy('city','ASC')
 				->get();
-		
+	
 		
 
 						
-		return response()->view('regions.show', compact('data','branches'));
+		return response()->view('regions.show', compact('region','branches'));
 	}
 
 	/**

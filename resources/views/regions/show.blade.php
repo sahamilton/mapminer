@@ -1,6 +1,6 @@
 @extends('site/layouts/default')
 @section('content')
-<h1>{{$data['region']->region}} Region Branches</h1>
+<h1>{{$region->region}} Region Branches</h1>
 
 <h4> <a href="{{ route('branches.index') }}">Show all branches</a></h4>	
 <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
@@ -53,19 +53,25 @@
 	</td>
 	<td>
 
-		<a href="{{route('region.show',$branch->region->id)}}" 
+
+		<a href="{{route('region.show',$branch->region_id)}}" 
 		title="See all {{$branch->region->region}} branches">
 		{{$branch->region->region}}
 		</a>
 
 	</td>
+
 	<td>
-	@if(null!==$branch->manager)
-		<a href="{{route('person.show',$branch->manager->id)}}" 
-		title="See all branches managed by {{$branch->manager->firstname}} {{ $branch->manager->lastname }}" >
-		{{$branch->manager->firstname}} {{ $branch->manager->lastname }}
+
+	@if(count($branch->manager)>0)
+		@foreach ($branch->manager as $manager)
+		<a href="{{route('person.show',$manager->id)}}" 
+		title="See all branches managed by {{$manager->fullName() }}" >
+		{{$manager->fullName() }}
 		</a>
-		@endif
+		@endforeach
+	@endif
+		
 	</td>
 	<td>
 	@if(null!==$branch->servicedBy)
