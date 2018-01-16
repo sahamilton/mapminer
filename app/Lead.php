@@ -86,7 +86,20 @@ class Lead extends Model
       ->withPivot('created_at','updated_at','status_id','rating','type');;
     }
 
-
+    public function leadRank(){
+      $teams = $this->salesteam()->get();
+    
+      $rank=null;
+      $count=null;
+      foreach ($teams as $team) {
+        $rank = $rank + $team->pivot->sum('rating');
+        $count = $count + $team->pivot->count('rating');
+      }
+      if($count >0){
+        return $rank / $count;
+      }
+      return null;
+    }
 
     public function leadOwner($id){
       $ownStatuses = [2,5,6];

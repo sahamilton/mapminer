@@ -35,7 +35,7 @@ class LeadSourceController extends Controller
      */
     public function index()
     {
-        $leadsources = $this->leadsource->with('leads','verticals')->get();
+        $leadsources = $this->leadsource->with('leads','leads.salesteam','verticals')->get();
         return response()->view('leadsource.index', compact('leadsources'));
     }
 

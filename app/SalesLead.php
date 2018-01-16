@@ -22,7 +22,7 @@ class SalesLead extends Model
       ];
 
     public function assignedTo(){
-    	return $this->hasMany(Person::class,'lead_person_status','related_id','person_id')->withPivot('status_id');
+    	return $this->hasMany(Person::class,'lead_person_status','related_id','person_id')->withPivot('status_id','rating'.'type');
     }
     public function leadsource(){
     	return $this->belongsTo(LeadSource::class, 'lead_source_id');

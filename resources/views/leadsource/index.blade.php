@@ -19,7 +19,7 @@
     <th>Reference</th>
     <th>Prospects</th>
     <th>Assigned to</th>
-    
+    <th>Average Ranking</th>
     <th>Available From / To</th>
     <th>Verticals</th>
     @if (Auth::user()->hasRole('Admin'))
@@ -36,6 +36,15 @@
     <td>{{$source->reference}}</td>
     <td>{{count($source->leads)}}</td>
     <td>{{$source->assignedTo()}}</td>
+    <td>
+        @if(count($source->leads)>0)
+       
+    
+            {{number_format($source->leads[0]->leadRank(),2)}}
+        
+
+        @endif
+    </td>
    	<td>
         @if($source->dateto < Carbon\Carbon::now())
             Expired {{$source->datefrom->format('M j,Y')}}
