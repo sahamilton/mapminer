@@ -15,7 +15,7 @@
     <thead>
      
     <th>Status</th>
-    <th>Sequence</th>
+    <th>Average Ranking</th>
     <th>Number</th>
     @if (Auth::user()->hasRole('Admin'))
     <th>Actions</th>
@@ -28,8 +28,16 @@
     
     
     <tr>  
-    <td>{{$status->status}}</td>
-    <td>{{$status->sequence}}</td>
+    <td>
+        <a href= "{{route('leadstatus.show',$status->id)}}">
+        {{$status->sequence}}-{{$status->status}}
+        </a>
+    </td>
+    <td>
+        @if(count($status->leads)>0)
+        {{number_format($status->leads->sum('pivot.rating') / count($status->leads),2)}}
+        @endif
+    </td>
     <td>{{count($status->leads)}}
   @if (Auth::user()->hasRole('Admin'))
     <td>

@@ -54,7 +54,9 @@ class LeadStatusController extends Controller
      */
     public function show($id)
     {
-        $leadstatus = $this->leadstatus->with('leads')->findOrFail($id);
+        $leadstatus = $this->leadstatus->with('leads','leads.leadsource','leads.ownedBy')->findOrFail($id);
+  
+
         return response()->view('leadstatus.show',compact('leadstatus'));
     }
 

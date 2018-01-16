@@ -1,7 +1,7 @@
 <?php
 
 namespace App;
-class Accounttype extends Model {
+class AccountType extends Model {
 
 	// Add your validation rules here
 	public static $rules = [

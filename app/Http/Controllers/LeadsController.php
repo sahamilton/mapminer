@@ -197,6 +197,7 @@ class LeadsController extends BaseController
    
     public function getPersonsLeads($id){
 
+      
         $statuses = $this->leadstatus->pluck('status','id')->toArray();
         $leads = $this->person->with('salesleads','salesleads.vertical','salesleads.leadsource')
         
