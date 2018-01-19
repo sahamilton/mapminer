@@ -38,11 +38,7 @@
     <td>{{$source->assignedTo()}}</td>
     <td>
         @if(count($source->leads)>0)
-       
-    
             {{number_format($source->leads[0]->leadRank(),2)}}
-        
-
         @endif
     </td>
    	<td>
