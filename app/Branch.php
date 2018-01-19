@@ -100,10 +100,7 @@ class Branch extends Model {
 		}
 		$coordinates = $this->getPositionCoordinates($lat,$lng,$distance, $number);
 	
-		
-	
-
-				$query = "select distinct branchid,branchname,street,address2,city,state,zip,lat,lng, distance_in_mi,
+		$query = "select distinct branchid,branchname,street,address2,city,state,zip,lat,lng, distance_in_mi,
 			  CONCAT_WS(' / ',branchname,branchid) AS name, servicelines FROM (
 			SELECT distinct branches.id as branchid, branchname,street,address2,city,state,zip,lat,lng,r,
 			Serviceline as servicelines,

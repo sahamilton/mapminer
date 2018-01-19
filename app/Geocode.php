@@ -30,7 +30,7 @@ trait Geocode
 
           return $data;
     }
-   public function scopeNearby($query, $location, $radius = 5) {
+   public function scopeNearby($query, $location, $radius = 250) {
     
      $haversine = "(3956 * acos(cos(radians($location->lat)) 
                      * cos(radians($this->table.lat)) 

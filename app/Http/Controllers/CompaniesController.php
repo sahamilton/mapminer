@@ -215,6 +215,7 @@ class CompaniesController extends BaseController {
 	 
 	public function show($id,$segment=null)
 	{
+
 	
 		if(is_object($id)){
 			$id = $id->id;
@@ -266,9 +267,12 @@ class CompaniesController extends BaseController {
 					$location->lng =  '-122.44';
 
 				}
+	
 		
-		
-		$locations = $this->locations->nearby($location,'1000')->where('company_id','=',$company->id)->limit($this->limit)->get();
+		$locations = $this->locations->nearby($location,'1000')
+		->where('company_id','=',$company->id)
+		->limit($this->limit)
+		->get();
 		
 		//$locations = $this->locations->findNearbyLocations($location->lat,$location->lng,'1000',$number=null,$company->id,$this->userServiceLines, $limit = $this->limit);
 		}	
@@ -296,6 +300,7 @@ class CompaniesController extends BaseController {
 		if($filtered && count($keys)>0) {	
 			
 			 $locations = $locations
+			 
 				 ->whereIn('segment', $keys)
 				 ->orWhere(function($query) use($data){
 				

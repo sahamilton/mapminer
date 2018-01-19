@@ -17,7 +17,10 @@ class Location extends Model {
 		'businesstype' => 'required'
 		
 	];
+
+
 	public $table = 'locations';
+	public $branch;
 	// Don't forget to fill this array
 	// Note this array is used to check the imports as well.  
 	// If you change this you will have to change the location import template.
@@ -59,7 +62,9 @@ class Location extends Model {
 		
 		return $this->hasOne(SearchFilter::class,'id','businesstype');
 	}
-	
+	public function nearbyBranches(){
+		return Branch::nearby($this,'100')->limit(5);
+	}
 	
 	/*
 		Find company locations from db as a function of lat, lng, distance and limit 
