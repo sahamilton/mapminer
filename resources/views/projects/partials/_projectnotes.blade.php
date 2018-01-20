@@ -64,6 +64,6 @@
 	</form>
 @else
 <div class="alert alert-warning">You need to own this project to add notes</div>
-{{dd($project, $project->owned())}}
+
  @endif
  </div>
