@@ -57,7 +57,7 @@
 
   </div>
 </div>
-
+@include('partials._modal')
 @include('partials/_scripts')
 
 
