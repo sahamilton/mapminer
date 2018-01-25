@@ -25,6 +25,12 @@ $(document).ready(function()
 		$(this).find('#title').html($(e.relatedTarget).data('title'));
 	});	
 
+	$(document).on('show.bs.modal','#add-contact', function(e) {
+    	$(this).find('#title').html($(e.relatedTarget).data('title'));
+		$(this).find('input#company_id').val($(e.relatedTarget).data('pk'));
+		
+	});
+
 	$( "#todatepicker" ).datepicker( {altField : "#todate",
     altFormat: "yyyy-mm-dd"});
 	

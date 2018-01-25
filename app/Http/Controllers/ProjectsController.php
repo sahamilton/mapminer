@@ -152,6 +152,15 @@ class ProjectsController extends BaseController
         $note->user_id = auth()->user()->id;
         $note->save();
     }
+
+    public function addCompanyContact(Request $request){
+        $contact = App\ProjectContact::create($request->all());
+        return redirect()->back();
+
+
+    }
+
+
     public function findNearbyProjects($distance,$latlng){
 
         $geo =explode(":",$latlng);

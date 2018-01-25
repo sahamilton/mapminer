@@ -17,12 +17,16 @@
 	</thead>
 	<tbody>
             @foreach ($project->companies as $company)
+            {{dd($company)}}
                   <tr>
                         <td>{{$company->pivot->type}}</td>
                         <td><a href="{{route('projectcompany.show',$company->id)}}"
-                        title="See all {{$company->firm}} construction projects">
-                        {{$company->firm}}</a></td>
+                        title="See all  construction projects">
+                        Hmm
                         <td>
+                     
+                              @include('projects.partials._addcontacts')
+
 
                         @if(! null==$company->employee()->first())
                               {{$company->employee()->first()->contact}}
@@ -42,6 +46,7 @@
             @endforeach
       </tbody>
 </table>
+@include('partials._contactmodal')
 @else
 
 <div class="alert alert-danger">
