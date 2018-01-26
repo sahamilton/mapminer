@@ -58,13 +58,13 @@
                          
                             {{ csrf_field() }}
                        
-
+                             <input type="hidden" name ="company_id" id = "company_id" value="" />
                     <p class="debug-url"></p>
                 </div>
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                 
+                   
                     <input type="submit" name="submit" value="Add" 
                         class="btn btn-success success">
                         

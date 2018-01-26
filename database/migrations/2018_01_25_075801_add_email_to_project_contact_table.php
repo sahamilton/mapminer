@@ -15,6 +15,7 @@ class AddEmailToProjectContactTable extends Migration
     {
         Schema::table('projectcontacts', function (Blueprint $table) {
             $table->string('email',100)->nullable();
+            $table->timestamps();
         });
     }
 

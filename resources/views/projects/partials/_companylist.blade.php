@@ -6,7 +6,7 @@
 		<th>type</th>
             <th>firm</th>
             <th>contact</th>
-            <th>title</th>
+
             <th>addr1</th>
             <th>addr2</th>
             <th>city</th>
@@ -17,24 +17,28 @@
 	</thead>
 	<tbody>
             @foreach ($project->companies as $company)
-            {{dd($company)}}
                   <tr>
                         <td>{{$company->pivot->type}}</td>
                         <td><a href="{{route('projectcompany.show',$company->id)}}"
-                        title="See all  construction projects">
-                        Hmm
-                        <td>
-                     
-                              @include('projects.partials._addcontacts')
+                        title="See all {{$company->firm}} construction projects">
+                        {{$company->firm}}</a></td>
+                         <td>
+                        <p>@include('projects.partials._addcontacts')</p>
+                              @if(count($company->employee)>0)
+                                    <table class="table table-bordered table-condensed">
 
-
-                        @if(! null==$company->employee()->first())
-                              {{$company->employee()->first()->contact}}
-                              </td>
-                              <td>{{$company->employee()->first()->title}}
-                        @else
-                              </td><td>
-                        @endif
+                                          <tbody>
+                                          @foreach ($company->employee as $employee)
+                                                <tr>
+                                                      <td> {{$employee->contact}}</td>
+                                                      <td>{{$employee->title}}</td>
+                                                      <td>{{$employee->phone}}</td>
+                                                      <td>{{$employee->email}}</td>
+                                                </tr>
+                                          @endforeach
+                                    </tbody>
+                                    </table>
+                              @endif
                         </td>
                         <td>{{$company->addr1}}</td>
                         <td>{{$company->addr2}}</td>
