@@ -54,6 +54,7 @@ Route::group(['middleware' => 'auth'], function () {
 		
 		Route::get('/company/{companyId}/state/{state?}', ['as'=>'company.state','uses'=>'CompaniesController@stateselect']);
 		Route::post('/company/stateselect', ['as'=>'company.stateselect','uses'=>'CompaniesController@stateselect']);	
+		Route::get('/company/{id}/service',['as'=>'company.service','uses'=>'CompaniesController@serviceDetails']);
 		Route::get('/company/{companyId}/statemap/{state}', ['as'=>'company.statemap','uses'=>'CompaniesController@statemap']);
 		Route::get('/company/vertical/{vertical}', ['as'=>'company.vertical','uses'=>'CompaniesController@vertical']);
 		Route::get('/company/{companyId}/segment/{segment}', ['as'=>'company.segment','uses'=>'CompaniesController@show']);

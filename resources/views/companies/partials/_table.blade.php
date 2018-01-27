@@ -6,8 +6,6 @@
 		<th>City</th>
 		<th>State</th>
 		<th>ZIP</th>
-		<th>Branches</th>
-		<th>Reps</th>
 		<th>Segment</th>
 
    		@if(auth()->user()->hasRole('Admin'))
@@ -35,25 +33,9 @@
 		title="See all {{$location->state}} locations for $company->companyname">
 		{{$location->state}}</a>
 	</td>
-	<td>{{$location->zip}}</td>
 	<td>
-		<ul>
-		@foreach($location->nearbyBranches()->get() as $branch)
-			<li>{{$branch->branchname}} {{number_format($branch->distance,0)}} miles 
-			</li>
-		@endforeach
-		</ul>
-	</td>
-	<td>
-		<ul>
-			@if(isset($team[$location->id]))
-			@foreach($team[$location->id] as $team)
-				<li>
-					{{$team->postName()}}  {{number_format($team->distance,1)}} miles
-				</li>
-				@endforeach
-			@endif
-	</ul>
+		{{$location->zip}}
+
 	</td>
 
 	<td>

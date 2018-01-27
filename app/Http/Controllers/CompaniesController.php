@@ -281,14 +281,37 @@ class CompaniesController extends BaseController {
 
 		$data['type']='company';
 		$mywatchlist = $this->locations->getWatchList();
-		foreach ($locations as $location){
-			$team[$location->id]=$location->nearbySalesRep()->get();
-			
-			//$salesrep[$locations->id=>$location->nearbySalesRep()->pluck('fistname'.' '.'lastname','id')->toArray());
-		}
-		return response()->view('companies.show', compact('data','company','locations','count','limited','mywatchlist','states','filtered','filters','segments','team'));
-	}
+		
 
+		return response()->view('companies.show', compact('data','company','locations','count','limited','mywatchlist','states','filtered','filters','segments'));
+	}
+	public function serviceDetails($id){
+		if(is_object($id)){
+			$id = $id->id;
+
+		}
+		
+		if (! $company = $this->company->checkCompanyServiceLine($id,$this->userServiceLines))
+		{
+			return redirect()->route('company.index');
+		}
+
+		if (! $company = $company->with('locations','managedBy','industryVertical')->find($id)){
+				return redirect()->route('company.index');
+		}
+		$data = $this->getSegmentCompanyInfo($company,null);
+		
+
+
+
+		foreach ($company->locations as $location){
+			$salesteam[$location->id]=$location->nearbySalesRep()->get();
+			$branches[$location->id]=$location->nearbyBranches()->get();
+
+		}
+
+		return response()->view('companies.service',compact('data','company','branches','salesteam'));
+	}
 
 	private function getCompanyLocations($id,$segment,$company){
 		$locations = $this->locations->where('company_id','=',$id);
