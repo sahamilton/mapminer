@@ -27,7 +27,7 @@
 			<p><b><i class="fa fa-phone" aria-hidden="true"></i> Phone:</b>{{$location->phone}}</p>
 			<p><i class="fa fa-address-card-o" aria-hidden="true"></i><a href="{{route('locations.vcard',$location->id)}}">
 			 Download vcard </a></p>
-			 <p>Lat: {{$location->lat}}; Lng: {{$location->lng}}</p>
+			 <p>Lat: {{number_format($location->lat,4)}};<br /> Lng: {{number_format($location->lng,4)}}</p>
 		 </fieldset>
 		 <p><i class="fa fa-eye" aria-hidden="true"></i>
 		@if(isset($watch->location_id))
