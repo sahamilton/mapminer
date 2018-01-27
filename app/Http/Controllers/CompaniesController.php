@@ -246,11 +246,7 @@ class CompaniesController extends BaseController {
 		// get company locations
 		
 		$locations = $this->getCompanyLocations($id,$segment,$company);
-		foreach ($locations as $location){
-			$team[$location->id]=$location->nearbySalesRep()->get();
-			
-			//$salesrep[$locations->id=>$location->nearbySalesRep()->pluck('fistname'.' '.'lastname','id')->toArray());
-		}
+		
 		
 		$states = $this->getStatesInArray($locations);
 		$segments = $this->getCompanySegments($company);
@@ -285,6 +281,11 @@ class CompaniesController extends BaseController {
 
 		$data['type']='company';
 		$mywatchlist = $this->locations->getWatchList();
+		foreach ($locations as $location){
+			$team[$location->id]=$location->nearbySalesRep()->get();
+			
+			//$salesrep[$locations->id=>$location->nearbySalesRep()->pluck('fistname'.' '.'lastname','id')->toArray());
+		}
 		return response()->view('companies.show', compact('data','company','locations','count','limited','mywatchlist','states','filtered','filters','segments','team'));
 	}
 
