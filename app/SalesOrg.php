@@ -3,6 +3,8 @@ namespace App;
 
 class SalesOrg extends \Eloquent {
 
+	use Geocode;
+
 	// Add your validation rules here
 	public static $rules = [
 		'title' => 'required'

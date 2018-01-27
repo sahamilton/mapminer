@@ -161,6 +161,12 @@ class ProjectsController extends BaseController
 
     }
 
+    public function addProjectCompany(Request $request){
+        
+        $firm = \App\ProjectCompany::create($request->all());
+        $firm->project()->attach($request->get('project_id'));
+        return redirect()->back();
+    }
 
     public function findNearbyProjects($distance,$latlng){
 

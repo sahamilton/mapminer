@@ -7,6 +7,7 @@
 		<th>State</th>
 		<th>ZIP</th>
 		<th>Branches</th>
+		<th>Reps</th>
 		<th>Segment</th>
 
    		@if(auth()->user()->hasRole('Admin'))
@@ -38,12 +39,23 @@
 	<td>
 		<ul>
 		@foreach($location->nearbyBranches()->get() as $branch)
-		
-			<li>{{$branch->branchname}} {{number_format($branch->distance,0)}} miles</li>
-	
-
+			<li>{{$branch->branchname}} {{number_format($branch->distance,0)}} miles 
+			</li>
 		@endforeach
+		</ul>
+	</td>
+	<td>
+		<ul>
+			@if(isset($team[$location->id]))
+			@foreach($team[$location->id] as $team)
+				<li>
+					{{$team->postName()}}  {{number_format($team->distance,1)}} miles
+				</li>
+				@endforeach
+			@endif
 	</ul>
+	</td>
+
 	<td>
 
 		@if (! isset($location->segment) or $location->segment == '') 
