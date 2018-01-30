@@ -265,6 +265,7 @@ class AdminUsersController extends BaseController {
      */
     public function update(UserFormRequest $request,$user)
     {
+       
         $user = $this->user->with('person')->find($user->id);
         $oldUser = clone($user);
       
@@ -305,7 +306,7 @@ class AdminUsersController extends BaseController {
         if(isset($data['branchstring'])){
             $data['branches'] = $this->branch->getBranchIdFromid($data['branchstring']);
         }
-
+        
         if(isset($data['branches']) && count($data['branches'])>0 && $data['branches'][0]!=0){
             foreach ($data['branches'] as $branch){
                 if($data['roles']){

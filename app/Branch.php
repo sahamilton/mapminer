@@ -161,6 +161,7 @@ class Branch extends Model {
 	}
 	
 	public function getBranchIdFromid($branchstring){
+		$branchstring = str_replace(" ","", $branchstring);
 		return $this->whereIn('id',explode(',',$branchstring))
 		->pluck('id')->toArray();
 	}
