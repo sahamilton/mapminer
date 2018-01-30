@@ -23,16 +23,32 @@ class BranchFormRequest extends FormRequest
      */
     public function rules()
     {
-        
-        return ['branchname'=>'required',
-        'id'=>'required|unique:branches,id,'. $this->request->get('id'),
-        'street'=>'required',
-        'city'=>'required',
-        'state'=>'required',
-        'zip'=>'required',
-        'region_id'=>'required',
-        'radius'=>'required',
-        'serviceline'=>'required',
-        ];
+       
+      if($this->method()== 'POST'){
+
+            return ['branchname'=>'required',
+            'id'=>'required|unique:branches,id',
+            'street'=>'required',
+            'city'=>'required',
+            'state'=>'required',
+            'zip'=>'required',
+            'region_id'=>'required',
+            'radius'=>'required',
+            'serviceline'=>'required',
+            'roles'=>'required',  
+            ];
+    }else{
+            
+            return ['branchname'=>'required',
+            'id'=>'required|unique:branches,id,'.$this->id,
+            'street'=>'required',
+            'city'=>'required',
+            'state'=>'required',
+            'zip'=>'required',
+            'region_id'=>'required',
+            'radius'=>'required',
+            'serviceline'=>'required',
+            'roles'=>'required',            ];
+        }
     }
 }
