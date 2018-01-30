@@ -206,7 +206,7 @@ class ProjectsController extends BaseController
     public function claimProject($id){
 
         $project = $this->project->findOrFail($id);
-        $project->owner()->attach(auth()->user()->person()->first()->id,['status'=>'Claimed']);
+        $project->owner()->attach(auth()->user()->person()->first()->id,['status'=>'Claimed','type'=>'project']);
         return redirect()->route('projects.show',$id);
 
     }

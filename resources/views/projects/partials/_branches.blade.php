@@ -24,7 +24,7 @@
 			<td>{{$branch->street}}</td>
 			<td>{{$branch->city}}</td>
 			<td>{{$branch->state}}</td>
-			<td>{{number_format($branch->distance_in_mi,2)}} miles away.</td>
+			<td>{{number_format($branch->distance,2)}} miles away.</td>
 
 		</tr>
 	 	@endforeach
