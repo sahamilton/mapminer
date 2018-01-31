@@ -47,7 +47,9 @@ class Location extends Model {
 		return $this->belongsTo(Branch::class);
 
 	}
-	
+	public function contacts(){
+		return $this->hasMany(Contacts::class);
+	}
 	public function instate () {
 		
 		return $this->belongsTo(State::class,'state','statecode');
