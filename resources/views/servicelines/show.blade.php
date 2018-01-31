@@ -25,7 +25,7 @@
 			<tr>  
 
 				<td>
-					<a href="{{route('branches.sho',$branch->id)}}">
+					<a href="{{route('branches.show',$branch->id)}}">
 					{{$branch->branchname}}
 					</a>
 				</td>
