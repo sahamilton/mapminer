@@ -30,6 +30,11 @@ $(document).ready(function()
 		$(this).find('input#company_id').val($(e.relatedTarget).data('pk'));
 		
 	});
+	$(document).on('show.bs.modal','#add-locationcontact', function(e) {
+    	$(this).find('#title').html($(e.relatedTarget).data('title'));
+		$(this).find('input#location_id').val($(e.relatedTarget).data('pk'));
+		
+	});
 
 	$( "#todatepicker" ).datepicker( {altField : "#todate",
     altFormat: "yyyy-mm-dd"});

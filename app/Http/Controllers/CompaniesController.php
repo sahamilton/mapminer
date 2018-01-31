@@ -288,7 +288,6 @@ class CompaniesController extends BaseController {
 	public function serviceDetails($id){
 		if(is_object($id)){
 			$id = $id->id;
-
 		}
 		
 		if (! $company = $this->company->checkCompanyServiceLine($id,$this->userServiceLines))
@@ -300,18 +299,39 @@ class CompaniesController extends BaseController {
 				return redirect()->route('company.index');
 		}
 		$data = $this->getSegmentCompanyInfo($company,null);
-		
+		$data = $this->getCompanyServiceDetails($company,$data);
+		return response()->view('companies.service',compact('data','company'));
+	}
 
+	public function exportServiceDetails($id){
 
+		$company = 	$this->company
+					->whereHas('serviceline', function($q){
+							    $q->whereIn('serviceline_id', $this->userServiceLines);
 
+							})
+					
+					->with('locations')
+					->findOrFail($id);	
+		Excel::create($company->companyname. " service locations",function($excel) use($company){
+			$excel->sheet('Service',function($sheet) use($company) {
+				
+				$data = $this->getCompanyServiceDetails($company,null);
+				$sheet->loadview('companies.exportservicelocations',compact('company','data'));
+			});
+		})->download('csv');
+
+	}
+
+	private function getCompanyServiceDetails(Company $company,$data){
 		foreach ($company->locations as $location){
-			$salesteam[$location->id]=$location->nearbySalesRep()->get();
-			$branches[$location->id]=$location->nearbyBranches()->get();
+			$data['salesteam'][$location->id]=$location->nearbySalesRep()->get();
+			$data['branches'][$location->id]=$location->nearbyBranches()->get();
 
 		}
-
-		return response()->view('companies.service',compact('data','company','branches','salesteam'));
+		return $data;
 	}
+
 
 	private function getCompanyLocations($id,$segment,$company){
 		$locations = $this->locations->where('company_id','=',$id);

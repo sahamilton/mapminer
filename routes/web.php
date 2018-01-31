@@ -59,7 +59,15 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('/company/vertical/{vertical}', ['as'=>'company.vertical','uses'=>'CompaniesController@vertical']);
 		Route::get('/company/{companyId}/segment/{segment}', ['as'=>'company.segment','uses'=>'CompaniesController@show']);
 		Route::post('company/filter',['as'=>'company.filter','uses'=>'CompaniesController@filter']);
+
+		ROute::get('company/{id}/serviceexport',['as'=>'company.service.export','uses'=>'CompaniesController@exportServiceDetails']);
+
+
 		Route::resource('company', 'CompaniesController',['only' => ['index', 'show']]);
+
+	# Contacts 
+		Route::get('contacts/{id}/vcard',['as'=>'contacts.vcard','uses'=>'LocationContactController@vcard']);
+		Route::resource('contacts','LocationContactController');
 
    	# Documents
 		Route::resource('docs','DocumentsController',['only' => ['index', 'show']]);
@@ -76,6 +84,8 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('location/{locationId}/branchmap', ['as' => 'nearby.location', 'uses' => 'LocationsController@getClosestBranchMap']);
 		Route::get('location/shownearby', ['as' => 'shownearby.location', 'uses' => 'LocationsController@showNearbyLocations']);
 		Route::get('location/nearby', ['as' => 'nearby/location', 'uses' => 'LocationsController@mapNearbyLocations']);
+		Route::post('location/contact',['as'=>'location.addcontact','uses'=>'LocationContactController@store']);
+
 		Route::resource('locations','LocationsController',['only' => ['show']]);
 	
 	#Managers

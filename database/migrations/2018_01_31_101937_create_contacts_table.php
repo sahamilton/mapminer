@@ -21,10 +21,15 @@ class CreateContactsTable extends Migration
             $table->string('email')->nullable();
             $table->string('phone')->nullable();
             $table->integer('location_id')->index()->unsigned();
+            $table->integer('user_id')->nullable()->index()->unsigned();
+
             $table->text('comments');
             $table->foreign('location_id')
                   ->references('id')->on('locations')
                   ->onDelete('cascade');
+            $table->foreign('user_id')
+                  ->references('id')->on('users')
+                  ->onDelete('set null');
             $table->timestamps();
         });
     }

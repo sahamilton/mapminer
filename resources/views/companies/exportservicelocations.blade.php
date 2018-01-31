@@ -1,4 +1,4 @@
-<table id ='sorttable'  class='table table-striped table-bordered table-condensed table-hover'>
+<table>
     <thead>
 
 		<th>Business Name</th>
@@ -18,19 +18,10 @@
     <tr> 
     
 
-	<td>
-		<a title= "See details of {{$location->businessname}} location."
-		href={{route('locations.show',$location->id)}}>
-		{{$location->businessname}}</a>
-	</td>
+	<td>{{$location->businessname}}</td>
 	<td>{{$location->street}}</td>
 	<td>{{$location->city}}</td>
-	<td>
-
-		<a href= "{{route('company.state', ['companyId'=>$company->id,'state'=>$location->state])}}"
-		title="See all {{$location->state}} locations for $company->companyname">
-		{{$location->state}}</a>
-	</td>
+	<td>{{$location->state}}</td>
 	<td>{{$location->zip}}</td>
 	<td>
 		
@@ -43,20 +34,13 @@
 		
 	</td>
 	<td>
-		
-	
 			@if(isset($data['salesteam'][$location->id]))
-			
 				@foreach($data['salesteam'][$location->id] as $team)
-				
 					{{$team->postName()}}  {{number_format($team->distance,1)}} miles
 				<br/>
 				@endforeach
 			@endif
-	
 	</td>
-
-	
     </tr>
    @endforeach
     

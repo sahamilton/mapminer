@@ -1,4 +1,4 @@
-<div class="modal fade" id="add-contact" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="add-locationcontact" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
             
@@ -11,15 +11,25 @@
                  
                     <form id="add-form" 
                             role="form"
-                            action="{{route('projects.addcontact')}}" 
+                            action="{{route('location.addcontact')}}" 
                             method="post">
-                            <!-- contact -->
-                                <div class="form-group{{ $errors->has('contact') ? ' has-error' : '' }}">
-                                    <label class="col-md-4 control-label">Name:</label>
+                            <!-- firstname -->
+                                <div class="form-group{{ $errors->has('firstname') ? ' has-error' : '' }}">
+                                    <label class="col-md-4 control-label">First Name:</label>
                                         
-                                            <input type="text" class="form-control" name='contact' description="contact" placeholder="name">
+                                            <input type="text" class="form-control" name='firstname' description="contact" placeholder="first name">
                                             <span class="help-block">
-                                                <strong>{{ $errors->has('contact') ? $errors->first('name') : ''}}</strong>
+                                                <strong>{{ $errors->has('firstname') ? $errors->first('firstname') : ''}}</strong>
+                                                </span>
+                                       
+                                </div>
+                            <!-- lastname -->
+                                <div class="form-group{{ $errors->has('lastname') ? ' has-error' : '' }}">
+                                    <label class="col-md-4 control-label">Last Name:</label>
+                                        
+                                            <input type="text" class="form-control" name='lastname' description="contact" placeholder="last name">
+                                            <span class="help-block">
+                                                <strong>{{ $errors->has('lastname') ? $errors->first('lastname') : ''}}</strong>
                                                 </span>
                                        
                                 </div>
@@ -57,8 +67,8 @@
                                            </div>                    
                          
                             {{ csrf_field() }}
-                            <input type="hidden" name="location_id" id="location_id" />
-                             <input type="hidden" name ="company_id" id = "company_id" value="" />
+                            <input type="hidden" name="location_id" id="location_id" value="" />
+                             
                     <p class="debug-url"></p>
                 </div>
 
