@@ -39,22 +39,20 @@
 					</a>
 				</td>
 				<td>
-					@if(!is_null($branch->manager))
-						<a href="{{'managed.branch',$branch->manager->id.}}" 
-						title="See all branches managed by" {{$branch->manager->postName()}} ">
-						{{$branch->manager->postName()}}
-						</a>";
+					@if(count($branch->manager)>0)
+						
+						@foreach ($branch->manager as $manager)
+						<a href="{{'managed.branch',$manager->id}}" 
+						title="See all branches managed by" {{$manager->postName()}} ">
+						{{$manager->postName()}}
+						@endforeach
+						</a>
 					@endif
 				</td>
 				<td>
-					@if(! is_null($branch->region))
-					
-						<a href="{{route('region.show',$branch->region->id)}}"
-						title="See all {{$branch->region->region}} branches">
+					@if(count($branch->region)>0)
 						{{$branch->region->region}}
-						</a>";
 					@endif
-
 
 				</td>
 				@if (auth()->user()->hasRole('Admin'))
