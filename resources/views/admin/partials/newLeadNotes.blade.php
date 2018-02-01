@@ -15,14 +15,18 @@
     <tbody>
 
    @foreach($data['recentLeadNotes'] as $newNote)
-
 <tr>
 
-<td>{{$newNote->relatesToLead->companyname}}</td>
-<td>
-<a href = "{{route('leads.show',$newNote->relatesToLead->id)}}" title="Review {{$newNote->relatesToLead->businessname}} lead" >{{$newNote->relatesToLead->businessname}}</a>
-</td>
-<td>{{$newNote->relatesToLead->fullAddress()}}</td>
+
+@if(count($newNote->relatesToLead)>0)
+ <td> {{$newNote->relatesToLead->companyname}}</td>
+    <td>
+    <a href = "{{route('leads.show',$newNote->relatesToLead->id)}}" title="Review {{$newNote->relatesToLead->businessname}} lead" >{{$newNote->relatesToLead->businessname}}</a>
+    </td>
+    <td>{{$newNote->relatesToLead->fullAddress()}}</td>
+@else
+<td></td><td></td><td>
+@endif
 <td>{{$newNote->note}}</td>
 <td>{{$newNote->created_at->format('jS M g:i A')}}</td>
 <td>{{$newNote->writtenBy->person->postName()}}</td>
