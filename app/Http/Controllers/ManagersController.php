@@ -171,7 +171,7 @@ class ManagersController extends BaseController {
 		$data = $this->getMyaccounts();
 		
 		if (! $key = array_search ((int)$companyID, array_keys($data['accounts']))) {
-    		return  Redirect::route('managers.view');
+    		return  redirect()->route('managers.view');
 		}
 		
 		

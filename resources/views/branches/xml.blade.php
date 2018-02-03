@@ -9,8 +9,13 @@ lng="{{$branch->lng}}"
 locationweb="{{route('branches.show',$branch->id)}}" 
 id="{{$branch->id}}" 
 type="branch" 
+@if(count($branch->servicelines)>0)
 brand="{{$branch->servicelines[0]->ServiceLine}}" 
 color="{{$branch->servicelines[0]->color}}"
+@else
+brand="undefined"
+color="blue"
+@endif
 />
 @endforeach
 

@@ -437,7 +437,7 @@ class AdminUsersController extends BaseController {
 
 		if($data !== $requiredFields['users']){
 			
-			return Redirect::back()->withErrors(['Invalid file format.  Check the fields: ']);
+			return redirect()->back()->withErrors(['Invalid file format.  Check the fields: ']);
 		}
 
 		
