@@ -1,4 +1,4 @@
-<a href="" style="color:green"
+<!-- <a href="" style="color:green"
     data-href="{{route('projects.addfirm')}}"
     data-toggle="modal" 
     data-target="#add-firm" 
@@ -8,4 +8,4 @@
     href="#" 
     title="Add a new firm to {{$project->name}}">
     <i class="fa fa-plus-circle" aria-hidden="true"></i> 
-Add</a>
+Add</a>-->

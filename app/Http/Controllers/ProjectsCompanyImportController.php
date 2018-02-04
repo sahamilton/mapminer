@@ -17,7 +17,9 @@ class ProjectsCompanyImportController extends ImportController
     public $import;
     
     public $projectcompanyfields =['id','firm', 'addr1','addr2','city','state','zipcode','county','phone'];
+    public $projectcompanyimportfields=['company_id','firm', 'addr1','addr2','city','state','zipcode','county','phone'];
     public $projectcontactfields = ['id','contact','title','company_id','contactphone'];
+    public $projectcontactimportfields = ['contact_id','contact','title','company_id','contactphone'];
 
     public function __construct(Project $project, ProjectSource $source,ProjectCompanyImport $import){
         $this->project = $project;
@@ -81,10 +83,10 @@ class ProjectsCompanyImportController extends ImportController
     private function postImport($data){
       
 
-                $this->createCompanyHash('projectcompanyimport');
+                $this->createCompanyId();
                 $this->cleanseContacts();
                 $this->updateContacts();
-                $this->createContactHash();
+                $this->createContactId();
                 $this->copyProjectCompanies();
                 $this->copyProjectContacts();
                 $this->updatePivotTable();
@@ -92,15 +94,15 @@ class ProjectsCompanyImportController extends ImportController
                 return redirect()->route('projectsource.index')->with('success','Projects, Companies & Contacts Linked');
 
         }
-    private function createCompanyHash($table){
-        $query = "Update ". $table ."  set company_id = md5(lcase(trim(replace(concat(firm,addr1),' ',''))))";
+    private function createCompanyId(){
+        $query = "Update projectcompanyimport set company_id = md5(lcase(trim(replace(concat(firm,addr1),' ',''))))";
         if (\DB::select(\DB::raw($query))){
            
             return true;
         }
     }
 
-    private function createContactHash(){
+    private function createContactId(){
         $query = "Update projectcompanyimport set contact_id = md5(lcase(trim(replace(concat(contact,company_id),' ',''))))";
         if (\DB::select(\DB::raw($query))){
            
@@ -135,7 +137,8 @@ class ProjectsCompanyImportController extends ImportController
     }
     private function copyProjectContacts(){
 
-         $query = "insert ignore into projectcontacts (" . implode(",",$this->projectcontactfields) . ") select t.". implode(",t.",$this->projectcontactfields). " FROM `projectcompanyimport` t where t.contact is not null";
+         $query = "insert ignore into projectcontacts (" . implode(",",$this->projectcontactfields) . ") select distinct t.". implode(",t.",$this->projectcontactimportfields). " FROM `projectcompanyimport` t where t.contact is not null";
+   
         if (\DB::select(\DB::raw($query))){
            
             return true;
@@ -153,8 +156,9 @@ class ProjectsCompanyImportController extends ImportController
     }
     
    public function copyProjectCompanies(){
-        $query = "insert ignore into projectcompanies (" . implode(",",$this->projectcompanyfields) . ") select t.". implode(",t.",$this->projectcompanyfields). " FROM `projectcompanyimport` t
+        $query = "insert ignore into projectcompanies (" . implode(",",$this->projectcompanyfields) . ") select distinct t.". implode(",t.",$this->projectcompanyimportfields). " FROM `projectcompanyimport` t
             ";
+        
         if (\DB::select(\DB::raw($query))){
            
             return true;
