@@ -6,10 +6,7 @@
 		</div>
 <h2>Nearby Branches</h2>
 <p>The closest branches that can serve the 
-
-
 <a href="{{route('locations.show',$data['location']['id'])}}">{{$data['location']['businessname']}} </a>
-
 location in {{$data['location']['city']}} are:<p>
 <p><a href='{{route("nearby.location",$data['location']['id'])}}'>
   <i class="glyphicon glyphicon-flag"></i> Map view</a></p>
@@ -27,13 +24,12 @@ location in {{$data['location']['city']}} are:<p>
 @foreach($data['branch'] as $branch)
 <tr>
 
-    <td><a href="{{route('branches.show',$branch->branchid)}}" title="Review {{trim($branch->branchname)}} branch">{{$branch->branchname}}</a></td>
-    <td>{{$branch->branchid}}</td>
-   
+    <td><a href="{{route('branches.show',$branch->id)}}" title="Review {{trim($branch->branchname)}} branch">{{$branch->branchname}}</a></td>
+    <td>{{$branch->id}}</td>
     <td>{{$branch->street}}</td>
     <td>{{$branch->city}}</td>
     <td>{{$branch->state}}</td>
-    <td>{{number_format($branch->distance_in_mi,2)}} miles away.</td>
+    <td>{{number_format($branch->distance,2)}} miles away.</td>
 
    </tr>
  @endforeach

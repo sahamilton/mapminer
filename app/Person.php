@@ -16,9 +16,10 @@ class Person extends NodeModel {
 	// Don't forget to fill this array
 	public $fillable = ['firstname','lastname','phone','address','lat','lng','reports_to','city','state','geostatus','user_id','active_from'];
 
+	
 	public function reportsTo()
     {
-        return $this->belongsTo(Person::class, 'reports_to');
+        return $this->belongsTo(Person::class, 'reports_to','id');
     }
 
     public function directReports()

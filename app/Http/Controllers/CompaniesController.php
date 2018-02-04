@@ -324,8 +324,11 @@ class CompaniesController extends BaseController {
 	}
 
 	private function getCompanyServiceDetails(Company $company,$data){
+		$servicelines = $company->serviceline->pluck('id')->toArray();
+	
+
 		foreach ($company->locations as $location){
-			$data['salesteam'][$location->id]=$location->nearbySalesRep()->get();
+			$data['salesteam'][$location->id]=$location->nearbySalesRep($servicelines)->get();
 			$data['branches'][$location->id]=$location->nearbyBranches()->get();
 
 		}

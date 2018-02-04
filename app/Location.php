@@ -68,10 +68,13 @@ class Location extends Model {
 		return Branch::nearby($this,'100')->limit(5);
 	}
 
-	public function nearbySalesRep(){
+	public function nearbySalesRep($serviceline=null){
 
 		return Person::nearby($this,'100')
 		->with('userdetails.roles')
+		->whereHas('userdetails.serviceline',function ($q) use ($serviceline){
+			$q->whereIn('servicelines.id',$serviceline);
+		})
 		->whereHas('userdetails.roles',function ($q){
 			$q->where('roles.name','=','Sales');
 		})
