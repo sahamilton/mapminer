@@ -161,6 +161,12 @@ class ProjectsController extends BaseController
 
     }
 
+    public function addProjectCompany(Request $request){
+        
+        $firm = \App\ProjectCompany::create($request->all());
+        $firm->project()->attach($request->get('project_id'));
+        return redirect()->back();
+    }
 
     public function findNearbyProjects($distance,$latlng){
 
@@ -200,7 +206,7 @@ class ProjectsController extends BaseController
     public function claimProject($id){
 
         $project = $this->project->findOrFail($id);
-        $project->owner()->attach(auth()->user()->person()->first()->id,['status'=>'Claimed']);
+        $project->owner()->attach(auth()->user()->person()->first()->id,['status'=>'Claimed','type'=>'project']);
         return redirect()->route('projects.show',$id);
 
     }

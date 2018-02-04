@@ -47,7 +47,9 @@ class Location extends Model {
 		return $this->belongsTo(Branch::class);
 
 	}
-	
+	public function contacts(){
+		return $this->hasMany(Contacts::class);
+	}
 	public function instate () {
 		
 		return $this->belongsTo(State::class,'state','statecode');
@@ -65,6 +67,20 @@ class Location extends Model {
 	public function nearbyBranches(){
 		return Branch::nearby($this,'100')->limit(5);
 	}
+
+	public function nearbySalesRep(){
+
+		return Person::nearby($this,'100')
+		->with('userdetails.roles')
+		->whereHas('userdetails.roles',function ($q){
+			$q->where('roles.name','=','Sales');
+		})
+            
+        ->limit(5);
+
+		//return Branch::nearby($this,'100')->limit(5);
+	}
+	
 	
 	/*
 		Find company locations from db as a function of lat, lng, distance and limit 

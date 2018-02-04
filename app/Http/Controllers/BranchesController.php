@@ -45,7 +45,7 @@ class BranchesController extends BaseController {
 	{
 
 		$branches = $this->branch
-			->with('region','manager','relatedPeople','servicelines')
+			->with('region','manager','relatedPeople','servicelines','servicedBy')
 			->whereHas('servicelines', function($q) {
 					    $q->whereIn('serviceline_id',$this->userServiceLines);
 
@@ -279,9 +279,10 @@ class BranchesController extends BaseController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id)
+	public function destroy($branch)
 	{
-		$this->branch->destroy($id);
+		
+		$branch->delete();
 		$this->rebuildXMLfile();
 		return redirect()->route('branches.index');
 	}

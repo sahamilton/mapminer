@@ -5,6 +5,7 @@
 
 <div>
 <h2> {{$company->companyname}} {{$data['segment']}} Locations </h2>
+<p><a href= "{{route('company.service',$company->id)}}">Show Service Details</a></p>
 
 @if (isset($company->industryVertical->filter))
 <p>{{$company->industryVertical->filter}} Vertical</p>

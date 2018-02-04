@@ -5,9 +5,25 @@
 
 
 <ul class="nav nav-tabs">
-    <li class="active"><a data-toggle="tab" href="#project"><strong>Location Details</strong></a></li>
+    <li class="active">
+      <a data-toggle="tab" href="#project">
+        <strong>Location Details</strong>
+      </a>
+    </li>
 
-    <li><a data-toggle="tab" href="#notes"><strong>Location  Notes @if(count($location->relatedNotes)>0) ({{count($location->relatedNotes)}}) @endif</strong></a></li>
+    <li>
+      <a data-toggle="tab" href="#notes">
+        <strong>Location  Notes @if(count($location->relatedNotes)>0) ({{count($location->relatedNotes)}}) @endif
+        </strong>
+      </a>
+    </li>
+    
+    <li>
+      <a data-toggle="tab" href="#contacts">
+        <strong>Location  Contacts @if(count($location->contacts)>0) ({{count($location->contacts)}}) @endif
+        </strong>
+      </a>
+    </li>
 
 
 
@@ -20,6 +36,9 @@ $id= $location->id;?>
     </div>
     <div id="notes" class="tab-pane fade in">
       @include('locations.partials._tabnotes')
+    </div>
+    <div id="contacts" class="tab-pane fade in">
+      @include('locations.partials._tabcontacts')
     </div>
    
   </div>
@@ -42,5 +61,6 @@ $id= $location->id;?>
 
 
 @include('partials._modal')
+@include('partials._locationcontactmodal')
 @include('partials._scripts');
 @stop

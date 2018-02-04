@@ -246,6 +246,8 @@ class CompaniesController extends BaseController {
 		// get company locations
 		
 		$locations = $this->getCompanyLocations($id,$segment,$company);
+		
+		
 		$states = $this->getStatesInArray($locations);
 		$segments = $this->getCompanySegments($company);
 		$filters = $this->searchfilter->vertical();
@@ -279,7 +281,55 @@ class CompaniesController extends BaseController {
 
 		$data['type']='company';
 		$mywatchlist = $this->locations->getWatchList();
+		
+
 		return response()->view('companies.show', compact('data','company','locations','count','limited','mywatchlist','states','filtered','filters','segments'));
+	}
+	public function serviceDetails($id){
+		if(is_object($id)){
+			$id = $id->id;
+		}
+		
+		if (! $company = $this->company->checkCompanyServiceLine($id,$this->userServiceLines))
+		{
+			return redirect()->route('company.index');
+		}
+
+		if (! $company = $company->with('locations','managedBy','industryVertical')->find($id)){
+				return redirect()->route('company.index');
+		}
+		$data = $this->getSegmentCompanyInfo($company,null);
+		$data = $this->getCompanyServiceDetails($company,$data);
+		return response()->view('companies.service',compact('data','company'));
+	}
+
+	public function exportServiceDetails($id){
+
+		$company = 	$this->company
+					->whereHas('serviceline', function($q){
+							    $q->whereIn('serviceline_id', $this->userServiceLines);
+
+							})
+					
+					->with('locations')
+					->findOrFail($id);	
+		Excel::create($company->companyname. " service locations",function($excel) use($company){
+			$excel->sheet('Service',function($sheet) use($company) {
+				
+				$data = $this->getCompanyServiceDetails($company,null);
+				$sheet->loadview('companies.exportservicelocations',compact('company','data'));
+			});
+		})->download('csv');
+
+	}
+
+	private function getCompanyServiceDetails(Company $company,$data){
+		foreach ($company->locations as $location){
+			$data['salesteam'][$location->id]=$location->nearbySalesRep()->get();
+			$data['branches'][$location->id]=$location->nearbyBranches()->get();
+
+		}
+		return $data;
 	}
 
 

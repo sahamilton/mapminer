@@ -6,7 +6,6 @@
 		<th>City</th>
 		<th>State</th>
 		<th>ZIP</th>
-		<th>Branches</th>
 		<th>Segment</th>
 
    		@if(auth()->user()->hasRole('Admin'))
@@ -34,16 +33,11 @@
 		title="See all {{$location->state}} locations for $company->companyname">
 		{{$location->state}}</a>
 	</td>
-	<td>{{$location->zip}}</td>
 	<td>
-		<ul>
-		@foreach($location->nearbyBranches()->get() as $branch)
-		
-			<li>{{$branch->branchname}} {{number_format($branch->distance,0)}} miles</li>
-	
+		{{$location->zip}}
 
-		@endforeach
-	</ul>
+	</td>
+
 	<td>
 
 		@if (! isset($location->segment) or $location->segment == '') 

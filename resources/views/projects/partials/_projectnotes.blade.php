@@ -64,5 +64,6 @@
 	</form>
 @else
 <div class="alert alert-warning">You need to own this project to add notes</div>
+
  @endif
  </div>

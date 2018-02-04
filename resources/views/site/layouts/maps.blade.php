@@ -91,7 +91,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 			<!-- ./ content -->
 		</div>
 		<!-- ./ container -->
- @if (config('app.debug') && auth()->check() && config('app.env')=='local')
+ @if (config('app.debug') && auth()->check() && config('app.env')!='production')
     @include('sudosu::user-selector')
 @endif
 		<!-- the following div is needed to make a sticky footer -->
