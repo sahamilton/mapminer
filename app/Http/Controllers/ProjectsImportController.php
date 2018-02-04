@@ -45,6 +45,7 @@ class ProjectsImportController extends ImportController
                             'serviceline_id',
                             'project_source_id',
                             'created_at'];
+
     public $projectcompanyfields =['id','firm', 'addr1','addr2','city','state','zipcode','county','phone'];
     public $projectcontactfields = ['id','contact','title','company_id','contactphone'];
 
@@ -92,6 +93,7 @@ class ProjectsImportController extends ImportController
         $columns = $this->project->getTableColumns($data['table']); 
 
         $requiredFields = $this->import->requiredFields;
+       
         return response()->view('imports.mapfields',compact('columns','fields','data','skip','requiredFields'));
     }
     
@@ -99,7 +101,7 @@ class ProjectsImportController extends ImportController
         
         $data = $this->getData($request);  
         if($multiple = $this->import->detectDuplicateSelections($request->get('fields'))){
-            return redirect()->route('projects.importfile')->withError(['You have to mapped a field more than once.  Field: '. implode(' , ',$multiple)]);
+            return redirect()->route('projects.importfile')->withError(['You have mapped a field more than once.  Field: '. implode(' , ',$multiple)]);
         }
         if($missing = $this->import->validateImport($request->get('fields'))){
              

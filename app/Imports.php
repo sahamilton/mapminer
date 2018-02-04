@@ -44,7 +44,8 @@ class Imports extends Model
 			    		}
 		    	}
     	public function validateImport($fields){
-    		return array_diff($this->requiredFields,array_values($fields));
+    		
+	   		return array_diff($this->requiredFields,array_values($fields));
     	}
 
     	public function detectDuplicateSelections($fields){

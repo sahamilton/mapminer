@@ -35,6 +35,8 @@ use Geocode;
            'total_project_value',
            'value_range',
            'pr_status',
+           'lat',
+           'lng',
            
            ];
      public $getStatusOptions =  [
@@ -137,7 +139,7 @@ use Geocode;
   public function findNearbyProjects($lat,$lng,$distance,$limit,$servicelines)
   
   {
-   
+   // this can be refactored
     $params = array(":loclat"=>$lat,":loclng"=>$lng,":distance"=>$distance);
     
     // Get the users serviceline associations

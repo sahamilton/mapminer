@@ -251,7 +251,7 @@ class ProjectsController extends BaseController
             $id = null;
         }
         $projects = $this->project->projectStats($id);
-        if($id){
+        if($id && count($projects)>0){
            $source = $projects[0]->source; 
         }
         $total = $this->project->projectcount();      
