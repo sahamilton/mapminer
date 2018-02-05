@@ -38,7 +38,7 @@ class CompaniesServiceController extends BaseController
 				return redirect()->route('company.index');
 		}
 		$locations = $this->getCompanyLocations($company,$state);
-		$states = $company->locations()->pluck('state')->unique()->toArray();
+		$states = $company->locations()->orderBy('state')->pluck('state')->unique()->toArray();
 		$limited = false;
 		$count = count($locations);
 		if($count>$this->limit){
