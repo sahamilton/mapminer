@@ -12,6 +12,8 @@
 		@endfor
 		@for($i=1;$i<$limit+1;$i++)
 		<td>Reps {{$i}}</td>
+		<td>Reps {{$i}} Phone</td>
+		<td>Reps {{$i}} Email</td>
 		@endfor
 		<td>Manager</td>
    		
@@ -19,11 +21,7 @@
 </tr>
 
    @foreach($company->locations as $location)
-
-
     <tr> 
-    
-
 	<td>{{$location->businessname}}</td>
 	<td>{{$location->street}}</td>
 	<td>{{$location->city}}</td>
@@ -46,10 +44,12 @@
 				@foreach($data['salesteam'][$location->id] as $team)
 				<?php $teamcount++;?>
 					<td>{{$team->postName()}}  {{number_format($team->distance,1)}} miles</td>
+					<td>{{$team->phone}}</td>
+					<td>{{$team->userdetails->email}}</td>
 				@endforeach
 		@endif
 		@for($i=0;$i<$limit-$teamcount;$i++)
-			<td></td>
+			<td></td><td></td><td></td>
 		@endfor
 	</td>
 	
