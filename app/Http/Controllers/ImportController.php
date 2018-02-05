@@ -24,7 +24,8 @@ class ImportController extends BaseController
         $file = $file->store('public/uploads'); 
         $data['file'] = $file;
         $data['linkfile'] = asset(\Storage::url($file));
-        $data['filename'] = base_path()."/public".\Storage::url($file);
+       
+        $data['filename'] = storage_path()."/app/".$file;
         return $data;
     }
 
