@@ -56,7 +56,7 @@ class LocationsController extends BaseController {
 	 */
 	public function create($accountID)
 	{
-		
+	
 		$location = $this->company->findOrFail($accountID);
 		//refactor Add company / segment relationship
 		$segments = $this->searchfilter->segments();	

@@ -66,8 +66,20 @@ $nullBusinesstype = App\SearchFilter::where('searchtable','=','locations')
 
 <!--- State -->
 <div class="form-group @if ($errors->has('state')) has-error @endif">
-{{Form::label('state','State:',array('class'=>'control-label col-sm-2'))}}
-{{Form::select('state',$states)}}
+	<label class="control-label col-md-2">State:</label>
+	<select name="state" >
+		@foreach ($states as $key=>$state)
+		
+		<option 
+		@if($location && $location->state == $key)
+			selected
+		@endif
+
+		value="{{$key}}">{{$state}}</option>
+		@endforeach
+
+	</select>
+
 @if ($errors->has('state')) <p class="help-block">{{ $errors->first('state') }}</p> @endif
 </div>
 

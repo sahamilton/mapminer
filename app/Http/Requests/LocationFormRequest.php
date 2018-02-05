@@ -27,7 +27,7 @@ class LocationFormRequest extends FormRequest
             'businessname' => 'required',
         'street' => 'required',
         'city' => 'required',
-        'state' => 'required',
+        'state' => 'required|exists:states,statecode',
         'zip' => 'required',
         'company_id' => 'required',
         'businesstype' => 'required'

@@ -25,7 +25,7 @@
 @if (Auth::user()->hasRole('Admin'))
 
 <div class="pull-right" style="margin-bottom:20px">
-				<a href="{{route('locations.create',$company->id) }}}" title="Create a new {{$company->companyname}} location" class="btn btn-small btn-info iframe">
+				<a href="{{route('company.location.create',$company->id)}}" title="Create a new {{$company->companyname}} location" class="btn btn-small btn-info iframe">
 				<span class="glyphicon glyphicon-plus-sign"></span>
 				 Create New Location</a>
 			</div>

@@ -28,7 +28,7 @@ class LeadSourceAddLeadsFormRequest extends FormRequest
                 'businessname'=>'required_without:file',
                 'address'=>'required_without:file',
                 'city'=>'required_without:file',
-                'state'=>'required_without:file',
+                'state'=>'required_without:file|exists:state,statecode',
                 'zip'=>'required_without:file',
                 'phone'=>'required_without:file',
                 'contact'=>'required_without:file',

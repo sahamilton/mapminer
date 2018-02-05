@@ -82,8 +82,8 @@ $states = $state->getStates();
 	<label class="col-md-2 control-label">States:</label>
 	<div class="input-group input-group-lg">
 		<select  class="form-control" name='state'>
-		@foreach ($states as $state))
-			<option @if (isset($branch) && $branch->state == $state) selected @endif value="{{$state}}">{{$state}}</option>
+		@foreach ($states as $key=>$state))
+			<option @if (isset($branch) && $branch->state == $key) selected @endif value="{{$key}}">{{$state}}</option>
 		@endforeach
 		</select>
 		<span class="help-block">
