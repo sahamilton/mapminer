@@ -74,6 +74,9 @@ class CompaniesServiceController extends BaseController
 			$title.=" ".strtoupper($state);
 		}
 		$title.=" service locations";
+		if($limited){
+			$title.=" (limited to ".$limited ." closest)";
+		}
 		Excel::create($title,function($excel) use($company,$locations){
 			$excel->sheet('Service',function($sheet) use($company,$locations) {
 				
