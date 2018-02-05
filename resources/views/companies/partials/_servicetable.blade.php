@@ -12,7 +12,7 @@
     </thead>
     <tbody>
 
-   @foreach($company->locations as $location)
+   @foreach($locations as $location)
 
 
     <tr> 

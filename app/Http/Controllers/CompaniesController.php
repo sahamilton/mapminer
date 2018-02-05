@@ -11,6 +11,7 @@ use App\SearchFilter;
 use App\Serviceline;
 use Illuminate\Http\Request;
 use App\Http\Requests\CompanyFormRequest;
+
 class CompaniesController extends BaseController {
 
 	public $user;
@@ -285,56 +286,7 @@ class CompaniesController extends BaseController {
 
 		return response()->view('companies.show', compact('data','company','locations','count','limited','mywatchlist','states','filtered','filters','segments'));
 	}
-	public function serviceDetails($id){
-		if(is_object($id)){
-			$id = $id->id;
-		}
-		
-		if (! $company = $this->company->checkCompanyServiceLine($id,$this->userServiceLines))
-		{
-			return redirect()->route('company.index');
-		}
-
-		if (! $company = $company->with('locations','managedBy','industryVertical')->find($id)){
-				return redirect()->route('company.index');
-		}
-		$data = $this->getSegmentCompanyInfo($company,null);
-		$data = $this->getCompanyServiceDetails($company,$data);
-		return response()->view('companies.service',compact('data','company'));
-	}
-
-	public function exportServiceDetails($id){
-
-		$company = 	$this->company
-					->whereHas('serviceline', function($q){
-							    $q->whereIn('serviceline_id', $this->userServiceLines);
-
-							})
-					
-					->with('locations')
-					->findOrFail($id);	
-		Excel::create($company->companyname. " service locations",function($excel) use($company){
-			$excel->sheet('Service',function($sheet) use($company) {
-				
-				$data = $this->getCompanyServiceDetails($company,null);
-				$sheet->loadview('companies.exportservicelocations',compact('company','data'));
-			});
-		})->download('csv');
-
-	}
-
-	private function getCompanyServiceDetails(Company $company,$data){
-		$servicelines = $company->serviceline->pluck('id')->toArray();
 	
-
-		foreach ($company->locations as $location){
-			$data['salesteam'][$location->id]=$location->nearbySalesRep($servicelines)->get();
-			$data['branches'][$location->id]=$location->nearbyBranches()->get();
-
-		}
-		return $data;
-	}
-
 
 	private function getCompanyLocations($id,$segment,$company){
 		$locations = $this->locations->where('company_id','=',$id);
@@ -347,7 +299,7 @@ class CompaniesController extends BaseController {
 		$keys = $this->company->getSearchKeys(['locations'],['segment','businesstype']);
 
 		
-		// This doesnt make sense as long as companies belong to one vertical
+		// This doesnt make sense as long as companies belong to only one vertical
 
 
 		if($filtered && count($keys)>0) {	

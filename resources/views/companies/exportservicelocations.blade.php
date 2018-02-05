@@ -20,7 +20,7 @@
     
 </tr>
 
-   @foreach($company->locations as $location)
+   @foreach($locations as $location)
     <tr> 
 	<td>{{$location->businessname}}</td>
 	<td>{{$location->street}}</td>
