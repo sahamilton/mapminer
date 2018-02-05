@@ -10,7 +10,7 @@ class CompaniesServiceController extends BaseController
 {
     protected $company;
     protected $location;
-    protected $limit = 400;
+    protected $limit = 500;
 
 	public function __construct (Company $company,Location $location){
 		$this->company = $company;
@@ -62,6 +62,13 @@ class CompaniesServiceController extends BaseController
 							})					
 					->findOrFail($id);
 		$locations = $this->getCompanyLocations($company,$state);
+		$limited = false;
+		$count = count($locations);
+		if($count>$this->limit){
+			$locations = $this->limitLocations($company);
+			$limited = $this->limit;
+		}
+
 		$title =$company->companyname;
 		if($state){
 			$title.=" ".strtoupper($state);
