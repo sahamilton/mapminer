@@ -10,11 +10,12 @@ class CompaniesServiceController extends BaseController
 {
     protected $company;
     protected $location;
-    protected $limit = 500;
+    protected $limit =100;
 
 	public function __construct (Company $company,Location $location){
 		$this->company = $company;
 		$this->location = $location;
+		$this->limit = config('app.location_limit');
 		parent::__construct($this->company);
 	}
 	public function selectServiceDetails(Request $request){
@@ -62,6 +63,7 @@ class CompaniesServiceController extends BaseController
 							})					
 					->findOrFail($id);
 		$locations = $this->getCompanyLocations($company,$state);
+		
 		$limited = false;
 		$count = count($locations);
 		if($count>$this->limit){
@@ -102,10 +104,11 @@ class CompaniesServiceController extends BaseController
 	private function getCompanyLocations(Company $company, $state=null){
 		$locations = $this->location->where('company_id','=',$company->id);
 
+
 		if($state){
 			$locations = $locations->where('state','=',$state);
 		}	
-
+		
 		return $locations->get();
 	}
 	private function limitLocations(Company $company){

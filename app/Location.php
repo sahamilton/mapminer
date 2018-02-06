@@ -68,6 +68,7 @@ class Location extends Model {
 		return Branch::nearby($this,'100')->limit(5);
 	}
 
+	
 	public function nearbySalesRep($serviceline=null){
 
 		return Person::nearby($this,'100')
