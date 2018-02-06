@@ -43,6 +43,7 @@ class CompaniesServiceController extends BaseController
 		$limited = false;
 		$count = count($locations);
 		if($count>$this->limit){
+
 			$locations = $this->limitLocations($company);
 			$limited = $this->limit;
 		}
@@ -67,10 +68,20 @@ class CompaniesServiceController extends BaseController
 		$limited = false;
 		$count = count($locations);
 		if($count>$this->limit){
-			$locations = $this->limitLocations($company);
-			$limited = $this->limit;
+			$this->chunkLocations($company,$locations);
+			
+		}else{
+
+
+		$title = $this->getTitle($company,$limited,$state,$loop=null);
+
+		$this->writeExcel($title,$company,$locations);
+		return redirect()->back();
 		}
 
+	}
+	
+	private function getTitle($company,$limited,$state,$loop){
 		$title =$company->companyname;
 		if($state){
 			$title.=" ".strtoupper($state);
@@ -79,16 +90,138 @@ class CompaniesServiceController extends BaseController
 		if($limited){
 			$title.=" (limited to ".$limited ." closest)";
 		}
-		Excel::create($title,function($excel) use($company,$locations){
+		if($loop){
+			$title.=$loop;
+		}
+		return $title;
+	}
+
+
+	private function chunkLocations($company,$locations){
+		
+		$title = $this->getTitle($company,$this->limit,$state=null,$loop=null); 
+
+ 		$output = fopen(storage_path('app/public/exports/'.$company->companyname.".csv"), 'w');
+
+		// output the column headings
+		fputcsv($output, $this->getColumns());
+
+		// fetch the data
+		$allLocations = $locations->chunk(200);
+		foreach($allLocations as $locations){
+			$data = $this->getCompanyServiceDetails($locations,$company,null);
+		
+			// loop over the locations, outputting them
+			foreach ($locations  as $location){
+				$row = $this->getContent($location,$data);
+				fputcsv($output, $row);
+			} 
+
+		}
+		
+		return redirect()->back();
+		
+	}
+	private function getColumns(){
+		 return['Business Name',
+				'Street',
+				'City',
+				'State',
+				'ZIP',
+				'Branch 1',
+				'Branch 1 Address',
+				'Branch 1 Proximity (miles)',
+				'Branch 2',
+				'Branch 2 Address',
+				'Branch 2 Proximity (miles)',
+				'Branch 3',
+				'Branch 3 Address',
+				'Branch 3 Proximity (miles)',
+				'Branch 4',
+				'Branch 4 Address',
+				'Branch 4 Proximity (miles)',
+				'Branch 5',
+				'Branch 5 Address',
+				'Branch 5 Proximity (miles)',
+				'Reps 1',
+				'Reps 1 Phone',
+				'Reps 1 Email',
+				'Reps 2',
+				'Reps 2 Phone',
+				'Reps 2 Email',
+				'Reps 3',
+				'Reps 3 Phone',
+				'Reps 3 Email',
+				'Reps 4',
+				'Reps 4 Phone',
+				'Reps 4 Email',		
+				'Reps 5',
+				'Reps 5 Phone',
+				'Reps 5 Email',
+				'Manager'];
+   		
+
+	}
+
+	private function getContent($location,$data){
+		$limit =5;
+		$content = array();
+   
+			$content[]=	$location->businessname;
+			$content[]=	$location->street;
+			$content[]=	$location->city;
+			$content[]=	$location->state;
+			$content[]=	$location->zip;
+			
+			$branchcount =null;
+				if(isset($data['branches'][$location->id])){
+					foreach($data['branches'][$location->id] as $branch){
+					 $branchcount++;
+						$content[]="Branch". $branch->id;
+						$content[]=trim($branch->street)." ". trim($branch->address2)." ". trim($branch->city)." ".  trim($branch->state)." ".  trim($branch->zip);
+						$content[]=number_format($branch->distance,0);
+					
+					}
+				}
+				for($i=0;$i<$limit-$branchcount;$i++){
+					$content[]=" ";
+						
+				}
+				$teamcount =null;
+				if(isset($data['salesteam'][$location->id])){
+						foreach($data['salesteam'][$location->id] as $team){
+						$teamcount++;
+							$content[]=$team->postName() ." : ". number_format($team->distance,1)." miles";
+							$content[]=$team->phone;
+							$content[]=$team->userdetails->email;
+						}
+				}
+				for($i=0;$i<$limit-$teamcount;$i++){
+						$content[]=" ";
+						}
+			$manager=null;
+			if(count($data['salesteam'][$location->id])>0){
+					
+					foreach($data['salesteam'][$location->id][0]->getAncestors()->reverse() as $managers){
+						if($managers->reports_to){
+							$manager.=$managers->postName();
+						}
+					
+					}
+			}
+			$content[]=$manager;
+			return $content;
+
+	}
+	private function writeExcel($title,$company,$locations){
+		return 	Excel::create($title,function($excel) use($company,$locations){
 			$excel->sheet('Service',function($sheet) use($company,$locations) {
 				
 				$data = $this->getCompanyServiceDetails($locations,$company,null);
 				$sheet->loadview('companies.exportservicelocations',compact('data','locations'));
 			});
-		})->download('csv');
-
+		});
 	}
-
 	private function getCompanyServiceDetails($locations,Company $company){
 		$servicelines = $company->serviceline->pluck('id')->toArray();
 	
