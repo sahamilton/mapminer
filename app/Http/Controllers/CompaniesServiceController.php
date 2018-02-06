@@ -100,25 +100,20 @@ class CompaniesServiceController extends BaseController
 	private function chunkLocations($company,$locations){
 		
 		$title = $this->getTitle($company,$this->limit,$state=null,$loop=null); 
-
  		$output = fopen(storage_path('app/public/exports/'.$company->companyname.".csv"), 'w');
-
 		// output the column headings
 		fputcsv($output, $this->getColumns());
-
 		// fetch the data
 		//$allLocations = $locations->chunk(200);
 		//foreach($allLocations as $locations){
 			$data = $this->getCompanyServiceDetails($locations,$company,null);
-		
 			// loop over the locations, outputting them
 			foreach ($locations  as $location){
 				$row = $this->getContent($location,$data);
 				fputcsv($output, $row);
 			} 
-
 		//}
-		
+		fclose($output);
 		return redirect()->back();
 		
 	}
@@ -185,6 +180,8 @@ class CompaniesServiceController extends BaseController
 				}
 				for($i=0;$i<$limit-$branchcount;$i++){
 					$content[]=" ";
+					$content[]=" ";
+					$content[]=" ";
 						
 				}
 				$teamcount =null;
@@ -197,6 +194,8 @@ class CompaniesServiceController extends BaseController
 						}
 				}
 				for($i=0;$i<$limit-$teamcount;$i++){
+						$content[]=" ";
+						$content[]=" ";
 						$content[]=" ";
 						}
 			$manager=null;
