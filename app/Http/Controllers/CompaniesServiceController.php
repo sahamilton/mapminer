@@ -100,23 +100,32 @@ class CompaniesServiceController extends BaseController
 	private function chunkLocations($company,$locations){
 		
 		$title = $this->getTitle($company,$this->limit,$state=null,$loop=null); 
- 		$output = fopen(storage_path('app/public/exports/'.$company->companyname.".csv"), 'w');
+		$companyname =strtolower(str_replace("'","",str_replace(" ", "_", $company->companyname)));
+		$servicelines = $company->serviceline->pluck('id')->toArray();
+ 		$output = fopen(storage_path('app/public/exports/'.$companyname.".csv"), 'w');
 		// output the column headings
 		fputcsv($output, $this->getColumns());
 		// fetch the data
-		//$allLocations = $locations->chunk(200);
-		//foreach($allLocations as $locations){
-			$data = $this->getCompanyServiceDetails($locations,$company,null);
+		$allLocations = $locations->chunk(400);
+		 foreach($allLocations as $locations){
+			//$data = $this->getCompanyServiceDetails($locations,$company,null);
 			// loop over the locations, outputting them
+	
 			foreach ($locations  as $location){
+				$data['salesteam'][$location->id]=$location->nearbySalesRep($servicelines)->get();
+				$data['branches'][$location->id]=$location->nearbyBranches()->get();
 				$row = $this->getContent($location,$data);
+
 				fputcsv($output, $row);
 			} 
-		//}
+			exit;
+		}
 		fclose($output);
 		return redirect()->back();
 		
 	}
+
+
 	private function getColumns(){
 		 return['Business Name',
 				'Street',
@@ -227,6 +236,7 @@ class CompaniesServiceController extends BaseController
 		$servicelines = $company->serviceline->pluck('id')->toArray();
 	
 		$data = array();
+		
 		foreach ($locations as $location){
 			$data['salesteam'][$location->id]=$location->nearbySalesRep($servicelines)->get();
 			$data['branches'][$location->id]=$location->nearbyBranches()->get();
