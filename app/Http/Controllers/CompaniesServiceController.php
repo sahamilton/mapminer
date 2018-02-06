@@ -220,8 +220,9 @@ class CompaniesServiceController extends BaseController
 				$data = $this->getCompanyServiceDetails($locations,$company,null);
 				$sheet->loadview('companies.exportservicelocations',compact('data','locations'));
 			});
-		});
+		})->download('csv');
 	}
+
 	private function getCompanyServiceDetails($locations,Company $company){
 		$servicelines = $company->serviceline->pluck('id')->toArray();
 	
