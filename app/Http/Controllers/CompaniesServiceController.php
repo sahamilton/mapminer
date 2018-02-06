@@ -127,7 +127,7 @@ class CompaniesServiceController extends BaseController
 
 				}
 	
-		return $this->location->nearby($location,'1000')
+		return $this->location->nearby($location,'2000')
 		->where('company_id','=',$company->id)
 		->limit($this->limit)
 		->get();

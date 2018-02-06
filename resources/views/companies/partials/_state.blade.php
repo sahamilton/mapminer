@@ -1,7 +1,7 @@
 @if(! isset($route))
 <?php $route = 'company.stateselect';?>
 @endif
-{{$route}}
+
 <form method="post" name="selectForm" action ="{{route($route)}}" >
 {{csrf_field()}}
 <label>Search for {{$company->companyname}} in </label>
