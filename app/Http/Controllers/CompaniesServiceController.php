@@ -68,7 +68,7 @@ class CompaniesServiceController extends BaseController
 		$limited = false;
 		$count = count($locations);
 		if($count>$this->limit){
-			$this->chunkLocations($company,$locations);
+			return $this->chunkLocations($company,$locations);
 			
 		}else{
 
@@ -107,8 +107,8 @@ class CompaniesServiceController extends BaseController
 		fputcsv($output, $this->getColumns());
 
 		// fetch the data
-		$allLocations = $locations->chunk(200);
-		foreach($allLocations as $locations){
+		//$allLocations = $locations->chunk(200);
+		//foreach($allLocations as $locations){
 			$data = $this->getCompanyServiceDetails($locations,$company,null);
 		
 			// loop over the locations, outputting them
@@ -117,7 +117,7 @@ class CompaniesServiceController extends BaseController
 				fputcsv($output, $row);
 			} 
 
-		}
+		//}
 		
 		return redirect()->back();
 		
