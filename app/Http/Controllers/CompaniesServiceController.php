@@ -68,7 +68,8 @@ class CompaniesServiceController extends BaseController
 		$limited = false;
 		$count = count($locations);
 		if($count>$this->limit){
-			return $this->chunkLocations($company,$locations);
+			$companyname =  $this->chunkLocations($company,$locations);
+			return redirect()->back()->with('success','File Created');
 			
 		}else{
 
@@ -121,7 +122,7 @@ class CompaniesServiceController extends BaseController
 			exit;
 		}
 		fclose($output);
-		return redirect()->back();
+		return $companyname;
 		
 	}
 

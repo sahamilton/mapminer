@@ -144,7 +144,9 @@ use Geocode;
     
     // Get the users serviceline associations
     // 
-          
+    // Nearby($query, $location, $radius = 250)
+    
+
     $query = "SELECT *
         FROM (
           SELECT projects.id as id, 
