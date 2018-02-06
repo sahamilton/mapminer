@@ -9,6 +9,9 @@
 		<td>ZIP</td>
 		@for($i=1;$i<$limit+1;$i++)
 		<td>Branch {{$i}}</td>
+		<td>Branch {{$i}} Address</td>
+		<td>Branch {{$i}} Proximity (miles)</td>
+
 		@endfor
 		@for($i=1;$i<$limit+1;$i++)
 		<td>Reps {{$i}}</td>
@@ -32,7 +35,9 @@
 		@if(isset($data['branches'][$location->id]))
 			@foreach($data['branches'][$location->id] as $branch)
 			<?php $branchcount++;?>
-				<td>Branch {{$branch->id}} : {{number_format($branch->distance,0)}} miles </td>
+				<td>Branch {{$branch->id}} </td>
+				<td>{{$branch->street}} {{$branch->address2}} {{$branch->city}} {{$branch->state}} {{$branch->zip}}</td>
+				<td> {{number_format($branch->distance,0)}} </td>
 			
 			@endforeach
 		@endif
