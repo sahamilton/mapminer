@@ -13,12 +13,14 @@ Locations Serviced By
 
 <p><a href="{{route('company.service',$company->id)}}">
 	Return to all locations of {{$company->companyname}}</a></p>
-	
+	<p>
 @if(file_exists(storage_path('app/public/exports/'.$company->companyname.".csv")))
  <a href="{{asset('/storage/exports/'.$company->companyname.'.csv')}}" target="_blank" title="Open service list as a CSV / Excel file"><i class="glyphicon glyphicon-cloud-download"></i> Open Service List</a>
+  <a href="{{route('company.service.export',[$company->id,$data['statecode']])}}" title="Reload service list as a CSV / Excel file"><i class="glyphicon glyphicon-refresh"></i></a>
 @else
  <a href="{{route('company.service.export',[$company->id,$data['statecode']])}}" title="Download service list as a CSV / Excel file"><i class="glyphicon glyphicon-cloud-download"></i> Export this Service List</a>
 @endif
+</p>
 @if(isset($company->managedBy->firstname))
 <p>Account managed by <a href="{{route('person.show',$company->managedBy->id)}}" title="See all accounts managed by {{$company->managedBy->postName()}}">{{$company->managedBy->postName()}}</a></p>
 @endif
