@@ -204,10 +204,11 @@ class CompaniesServiceController extends BaseController
 					
 					foreach($data['salesteam'][$location->id][0]->getAncestors()->reverse() as $managers){
 						if($managers->reports_to){
-							$manager.=$managers->postName();
+							$manager.=$managers->postName().",";
 						}
 					
 					}
+					$manager = rtrim($manager,',');
 			}
 			$content[]=$manager;
 			return $content;
