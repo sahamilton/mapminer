@@ -42,7 +42,7 @@
 			@endforeach
 		@endif
 		@for($i=0;$i<$limit-$branchcount;$i++)
-			<td></td>
+			<td></td><td></td><td></td>
 		@endfor
 		<?php $teamcount =null;?>
 		@if(isset($data['salesteam'][$location->id]))

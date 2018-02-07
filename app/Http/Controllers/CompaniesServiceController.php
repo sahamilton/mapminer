@@ -107,8 +107,10 @@ class CompaniesServiceController extends BaseController
 		// output the column headings
 		fputcsv($output, $this->getColumns());
 		// fetch the data
-		$allLocations = $locations->chunk(400);
+		$allLocations = $locations->chunk(200);
 		 foreach($allLocations as $locations){
+		 	fclose($output);
+		 	$output = fopen(storage_path('app/public/exports/'.$companyname.".csv"), 'a');
 			//$data = $this->getCompanyServiceDetails($locations,$company,null);
 			// loop over the locations, outputting them
 	
@@ -119,7 +121,8 @@ class CompaniesServiceController extends BaseController
 
 				fputcsv($output, $row);
 			} 
-			exit;
+			
+
 		}
 		fclose($output);
 		return $companyname;
@@ -189,9 +192,9 @@ class CompaniesServiceController extends BaseController
 					}
 				}
 				for($i=0;$i<$limit-$branchcount;$i++){
-					$content[]=" ";
-					$content[]=" ";
-					$content[]=" ";
+					$content[]=null;
+					$content[]=null;
+					$content[]=null;
 						
 				}
 				$teamcount =null;
@@ -204,9 +207,9 @@ class CompaniesServiceController extends BaseController
 						}
 				}
 				for($i=0;$i<$limit-$teamcount;$i++){
-						$content[]=" ";
-						$content[]=" ";
-						$content[]=" ";
+						$content[]=null;
+						$content[]=null;
+						$content[]=null;
 						}
 			$manager=null;
 			if(count($data['salesteam'][$location->id])>0){
