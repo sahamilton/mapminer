@@ -45,19 +45,20 @@
                                                    
                                            </div>
                                 <!-- phone -->
-                                           <div class="form-group{{ $errors->has('phone') ? ' has-error' : '' }}">
+                                           <div class="form-group{{ $errors->has('contactphone') ? ' has-error' : '' }}">
                                                <label class="col-md-4 control-label">Phone:</label>
                                                  
-                                                       <input type="text" class="form-control" name='phone' description="phone" 
+                                                       <input type="text" class="form-control" name='contactphone' description="contactphone" 
                                                        placeholder="phone">
                                                        <span class="help-block">
-                                                           <strong>{{ $errors->has('phone') ? $errors->first('phone') : ''}}</strong>
+                                                           <strong>{{ $errors->has('contactphone') ? $errors->first('contactphone') : ''}}</strong>
                                                            </span>
                                                    
                                            </div>                    
                          
                             {{ csrf_field() }}
-                            <input type="hidden" name="location_id" id="location_id" />
+                            <input type="hidden" name="id" id="id"n value='{{$project->id}}' />
+
                              <input type="hidden" name ="company_id" id = "company_id" value="" />
                     <p class="debug-url"></p>
                 </div>

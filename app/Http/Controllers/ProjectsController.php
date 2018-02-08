@@ -154,7 +154,7 @@ class ProjectsController extends BaseController
     }
 
     public function addCompanyContact(Request $request){
-     
+       
         $contact = \App\ProjectContact::create($request->all());
         return redirect()->back();
 

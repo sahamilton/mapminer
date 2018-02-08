@@ -30,7 +30,7 @@
                                                 <tr>
                                                       <td> {{$employee->contact}}</td>
                                                       <td>{{$employee->title}}</td>
-                                                      <td>{{$employee->phone}}</td>
+                                                      <td>{{$employee->contactphone}}</td>
                                                       <td>{{$employee->email}}</td>
                                                 </tr>
                                           @endforeach
