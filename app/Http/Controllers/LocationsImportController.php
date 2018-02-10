@@ -40,29 +40,24 @@ class LocationsImportController extends ImportController
         $columns = $this->location->getTableColumns($data['table']);
         $skip = ['id','created_at','updated_at','serviceline_id'];
         $requiredFields = $this->import->requiredFields;
- 
+
         return response()->view('imports.mapfields',compact('columns','fields','data','company_id','skip','title','requiredFields'));
     }
     
 	public function mapfields(Request $request){
-        $data = $this->getData($request);      
-        
-        
-        if($multiple = $this->import->detectDuplicateSelections($request->get('fields'))){
-            return redirect()->route('locations.importfile')->withError(['You have mapped a field more than once.  Field: '. implode(' , ',$multiple)]);
-        }
-        if($missing = $this->import->validateImport($request->get('fields'))){
-             
-            return redirect()->route('locations.importfile')->withError(['You have to map all required fields.  Missing: '. implode(' , ',$missing)]);
-       }
-       
 
+        $data = $this->getData($request);  
+          
+        if($error = $this->validateInput($request)){
+            return redirect()->route('locations.importfile')->withError($error)->withInput($data);
+            
+        }
         $this->import->setFields($data);
         if($this->import->import()) {
              return redirect()->route('company.show',$data['additionaldata']['company_id'])->with('success','Locations imported');
 
         }
-        
+    
     }
 	
 }

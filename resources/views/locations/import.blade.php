@@ -30,7 +30,9 @@ First create your csv file of projects from the template.  Your import file must
             <select  id ="company" class="form-control" name='company'>
 
             @foreach ($companies as $key=>$company))
-            	<option value="{{$key}}">{{$company}}</option>
+            	<option 
+                old('company_id') == $key ? 'selected' : ''
+                value="{{$key}}">{{$company}}</option>
 
             @endforeach
 

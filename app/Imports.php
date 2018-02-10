@@ -32,17 +32,20 @@ class Imports extends Model
     		
     	}*/
 		public function setFields($data){
-		    		$this->fields = implode(",",$data['fields']);
-		    		$this->table = $data['table'];
-		    		$this->temptable = $this->table . "_import";
-		    		$this->importfilename = str_replace("\\","/",$data['filename']);
-		    		if(isset($data['additionaldata'])){
+			if(isset($data['additionaldata'])){
 
-			    			$this->additionaldata = $data['additionaldata'];
-			    		}else{
-			    			$this->additionaldata = [];
-			    		}
-		    	}
+	    			$this->additionaldata = $data['additionaldata'];
+	    		}else{
+	    			$this->additionaldata = [];
+	    		}
+	    	// remove any additional data fields from input fields
+			$data['fields'][key(array_intersect($data['fields'],array_keys($data['additionaldata'])))]='@ignore';	
+    		$this->fields = implode(",",$data['fields']);
+    		$this->table = $data['table'];
+    		$this->temptable = $this->table . "_import";
+    		$this->importfilename = str_replace("\\","/",$data['filename']);
+    		
+    	}
     	public function validateImport($fields){
     		
 	   		return array_diff($this->requiredFields,array_values($fields));
@@ -50,7 +53,9 @@ class Imports extends Model
 
     	public function detectDuplicateSelections($fields){
     		$realFields = array_diff(array_values($fields), array("@ignore"));
+
     		if(count(array_unique($realFields)) < count($realFields)){
+
     			return array_unique(array_diff_key( $realFields , array_unique( $realFields ) ));
     		}
     		return false;
@@ -78,7 +83,7 @@ class Imports extends Model
     	private function createTemporaryImportTable(){
 
 			//Create the temporary table
-			return $this->executeQuery("CREATE TABLE ".$this->temptable." AS SELECT * FROM ". $this->table." LIMIT 0");
+			return $this->executeQuery("CREATE TEMPORARY TABLE ".$this->temptable." AS SELECT * FROM ". $this->table." LIMIT 0");
 			
 		}
 

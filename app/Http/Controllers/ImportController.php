@@ -46,12 +46,15 @@ class ImportController extends BaseController
     
     protected function validateInput(Request $request){
 
-        if($multiple = $this->import->detectDuplicateSelections($request->get('fields'))){
-            return redirect()->back()->withError(['You have to mapped a field more than once.  Field: '. implode(' , ',$multiple)]);
+        if($fields = $this->import->detectDuplicateSelections($request->get('fields'))){
+          
+           return $error = ['You have to mapped a field more than once.  Field: '. implode(' , ',$fields)];
+            
         }
-        if($missing = $this->import->validateImport($request->get('fields'))){
+  
+        if($fields = $this->import->validateImport($request->get('fields'))){
              
-            return redirect()->back()->withError(['You have to map all required fields.  Missing: '. implode(' , ',$missing)]);
+            return $error = ['You have to map all required fields.  Missing: '. implode(' , ',$fields)];
        }     
        return false;
     }   
