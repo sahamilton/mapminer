@@ -68,7 +68,8 @@ class Imports extends Model
 			$this->updateAdditionalFields();
 
     		$this->copyTempToBaseTable();
-    		$this->dropTempTable();
+    		
+    		//$this->dropTempTable();
 
     		return true;
     	}
@@ -77,7 +78,7 @@ class Imports extends Model
     	private function createTemporaryImportTable(){
 
 			//Create the temporary table
-			return $this->executeQuery("CREATE TEMPORARY TABLE ".$this->temptable." AS SELECT * FROM ". $this->table." LIMIT 0");
+			return $this->executeQuery("CREATE TABLE ".$this->temptable." AS SELECT * FROM ". $this->table." LIMIT 0");
 			
 		}
 

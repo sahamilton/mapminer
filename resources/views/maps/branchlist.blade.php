@@ -14,7 +14,7 @@
 
 			<tr>  
 
-				<td><a href="{{route('branches.show',$row->id)}}">{{$row->branchname}}</a></td>
+				<td><a href="{{route('branches.show',$row->id)}}">{{$row->id}} {{$row->branchname}}</a></td>
 				<td>
 				@foreach ($row->servicelines as $serviceline)
 					{{$serviceline->ServiceLine}}

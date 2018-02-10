@@ -28,22 +28,34 @@ class LocationsImportController extends ImportController
 
 
 	public function import(LocationImportFormRequest $request) {
+
         $title="Map the locations import file fields";
         $data = $this->uploadfile($request->file('upload'));
+      
         $data['table']='locations';
         $data['type'] = 'locations';
         $data['route'] = 'locations.mapfields';
         $data['additionaldata']['company_id'] = $request->get('company');
-        $fields = $this->getFileFields($data);      
+        $fields = $this->getFileFields($data);    
         $columns = $this->location->getTableColumns($data['table']);
-        $skip = ['id','created_at','updated_at','serviceline_id','company_id'];
+        $skip = ['id','created_at','updated_at','serviceline_id'];
         $requiredFields = $this->import->requiredFields;
+ 
         return response()->view('imports.mapfields',compact('columns','fields','data','company_id','skip','title','requiredFields'));
     }
     
 	public function mapfields(Request $request){
-
         $data = $this->getData($request);      
+        
+        
+        if($multiple = $this->import->detectDuplicateSelections($request->get('fields'))){
+            return redirect()->route('locations.importfile')->withError(['You have mapped a field more than once.  Field: '. implode(' , ',$multiple)]);
+        }
+        if($missing = $this->import->validateImport($request->get('fields'))){
+             
+            return redirect()->route('locations.importfile')->withError(['You have to map all required fields.  Missing: '. implode(' , ',$missing)]);
+       }
+       
 
         $this->import->setFields($data);
         if($this->import->import()) {

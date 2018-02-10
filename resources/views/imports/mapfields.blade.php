@@ -29,7 +29,7 @@
             <select name="fields[{{$field}}]">
                 <option value="@ignore">ignore</option>
                @foreach ($columns as $column) 
-         
+        
                    @if(! in_array($column->Field,$skip))
 
                     <option @if(in_array($column->Field,$requiredFields)) style="color:red" @endif value = '{{$column->Field}}'
@@ -38,7 +38,7 @@
                         selected 
                     @endif 
                     >
-                    {{$column->Field}}
+                    {{$column->Field}}@if(in_array($column->Field,$requiredFields)) *@endif
                     </option>
                     @endif
             @endforeach
