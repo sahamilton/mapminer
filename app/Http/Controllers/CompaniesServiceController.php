@@ -138,18 +138,23 @@ class CompaniesServiceController extends BaseController
 				'ZIP',
 				'Branch 1',
 				'Branch 1 Address',
+				'Branch 1 Phone',
 				'Branch 1 Proximity (miles)',
 				'Branch 2',
 				'Branch 2 Address',
+				'Branch 2 Phone',
 				'Branch 2 Proximity (miles)',
 				'Branch 3',
 				'Branch 3 Address',
+				'Branch 3 Phone',
 				'Branch 3 Proximity (miles)',
 				'Branch 4',
 				'Branch 4 Address',
+				'Branch 4 Phones',
 				'Branch 4 Proximity (miles)',
 				'Branch 5',
 				'Branch 5 Address',
+				'Branch 5 Phone',
 				'Branch 5 Proximity (miles)',
 				'Reps 1',
 				'Reps 1 Phone',
@@ -187,11 +192,13 @@ class CompaniesServiceController extends BaseController
 					 $branchcount++;
 						$content[]="Branch". $branch->id;
 						$content[]=trim($branch->street)." ". trim($branch->address2)." ". trim($branch->city)." ".  trim($branch->state)." ".  trim($branch->zip);
+						$content[]=$branch->phone;
 						$content[]=number_format($branch->distance,0);
 					
 					}
 				}
 				for($i=0;$i<$limit-$branchcount;$i++){
+					$content[]=null;
 					$content[]=null;
 					$content[]=null;
 					$content[]=null;
