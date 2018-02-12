@@ -10,6 +10,7 @@
 		@for($i=1;$i<$limit+1;$i++)
 		<td>Branch {{$i}}</td>
 		<td>Branch {{$i}} Address</td>
+		<td>Branch {{$i}} Phone</td>
 		<td>Branch {{$i}} Proximity (miles)</td>
 
 		@endfor
@@ -37,12 +38,14 @@
 			<?php $branchcount++;?>
 				<td>Branch {{$branch->id}} </td>
 				<td>{{$branch->street}} {{$branch->address2}} {{$branch->city}} {{$branch->state}} {{$branch->zip}}</td>
+				<td>{{$branch->phone}}</td>
 				<td> {{number_format($branch->distance,0)}} </td>
 			
 			@endforeach
 		@endif
 		@for($i=0;$i<$limit-$branchcount;$i++)
 			<td></td><td></td><td></td>
+			<td></td>
 		@endfor
 		<?php $teamcount =null;?>
 		@if(isset($data['salesteam'][$location->id]))
