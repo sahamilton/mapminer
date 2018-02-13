@@ -23,7 +23,13 @@ class CompaniesServiceController extends BaseController
 
 		return $this->serviceDetails($request->get('id'),$request->get('state'));
 	}
+	public function getServiceDetails($id){
+		$company = $this->company
+		->with('locations')->findOrFail($id);
+		dd($company->locations->nearbyBranches()->get());
 
+
+	}
     public function serviceDetails($id,$state=null){
 		if(is_object($id)){
 			$id = $id->id;

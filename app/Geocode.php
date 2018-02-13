@@ -38,10 +38,12 @@ trait Geocode
                      - radians($location->lng)) 
                      + sin(radians($location->lat)) 
                      * sin(radians($this->table.lat))))";
-     return $query
+    return $query
         ->select() //pick the columns you want here.
         ->selectRaw("{$haversine} AS distance")
         ->whereRaw("{$haversine} < ?", [$radius])
         ->orderBy('distance','ASC');
+     
+        
     }
 }

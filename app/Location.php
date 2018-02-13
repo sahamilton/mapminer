@@ -64,7 +64,16 @@ class Location extends Model {
 		
 		return $this->hasOne(SearchFilter::class,'id','businesstype');
 	}
+	
+
+	public function scopeNearbyBranches(){
+
+
+	}
+
+
 	public function nearbyBranches(){
+
 		return Branch::nearby($this,'100')->limit(5);
 	}
 

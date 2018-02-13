@@ -62,12 +62,7 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::resource('company', 'CompaniesController',['only' => ['index', 'show']]);
 
 
-	#CompanyService
-		Route::get('/company/{id}/service/{state?}',['as'=>'company.service','uses'=>'CompaniesServiceController@serviceDetails']);
-		Route::post('/company/service',['as'=>'company.service.select','uses'=>'CompaniesServiceController@selectServiceDetails']);
-		
-		Route::get('company/{id}/serviceexport/{state?}',['as'=>'company.service.export','uses'=>'CompaniesServiceController@exportServiceDetails']);
-
+	
 
 
 		
@@ -352,6 +347,14 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
 		Route::post('campaign/{id}/message',['as'=>'sendcampaign.message','uses'=>'CampaignEmailController@email']);
 		
 		Route::get('salesteam',['as'=>'teamupdate','uses'=>'SalesActivityController@changeTeam']);
+
+	#CompanyService
+		Route::get('/company/{id}/service/{state?}',['as'=>'company.service','uses'=>'CompaniesServiceController@serviceDetails']);
+		Route::get('/company/{id}/newservice/{state?}',['as'=>'company.service','uses'=>'CompaniesServiceController@getServiceDetails']);
+		Route::post('/company/service',['as'=>'company.service.select','uses'=>'CompaniesServiceController@selectServiceDetails']);
+		
+		Route::get('company/{id}/serviceexport/{state?}',['as'=>'company.service.export','uses'=>'CompaniesServiceController@exportServiceDetails']);
+
 
 	#Watchlists
 		Route::get('watchlist/{userid}', ['as'=>'watch.mywatchexport', 'uses'=>'WatchController@export']);			
