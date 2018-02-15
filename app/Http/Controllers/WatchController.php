@@ -209,6 +209,25 @@ class WatchController extends BaseController {
 		
 	}
 
+	public function companywatchexport(Request $request){
+		if($request->has('id')){
+			$accounts = explode(",",str_replace("'","",$request->get('id')));
+			
+			
+			Excel::create('Watch_List_for_',function($excel) use($accounts){
+			$excel->sheet('Watching',function($sheet) use($accounts) {
+			$result = \App\Location::whereIn('company_id',$accounts)->has('watchedBy')
+			->with('relatedNotes','relatedNotes.writtenBy','company','watchedBy','watchedBy.person')
+			->get();
+				$sheet->loadview('watch.companyexport',compact('result'));
+			});
+		})->download('csv');
+		}
+		
+	}
+
+
+
 	public function getCompaniesWatched()
 	{
 		$watch = $this->getMyWatchList(auth()->user()->id);

@@ -12,7 +12,7 @@ class Watch extends Model {
 	
 	public function watchedBy() 
 	{
-		return $this->belongsToMany(User::class,'user_id');	
+		return $this->hasMany(User::class,'id','user_id');	
 	}
 	
 	public function watching() 
