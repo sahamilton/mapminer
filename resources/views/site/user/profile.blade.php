@@ -9,6 +9,7 @@
 <p><strong>Phone:</strong> {{$user->person->phone}}</p>
 <p><strong>Address:</strong>  {{$user->person->address}}</p>
 <p><strong>User Name:</strong>  {{$user->username}}</p>
+<p><strong>Email:</strong>  {{$user->email}}</p>
 <p><strong>Latitude:</strong>  {{$user->person->lat}}</p>
 <p><strong>Longitude:</strong>  {{$user->person->lng}}</p>
 @if(count($user->person->industryfocus()->get()) > 0)
