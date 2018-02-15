@@ -202,9 +202,10 @@ class ManagersController extends BaseController {
 	 */
 	private function getMyAccounts($data=null)
 	{
+		
 		if(auth()->user()->hasRole('National Account Manager'))
 		{
-			$data['accounts'] = Company::where('user_id',"=",\Auth::id())
+			$data['accounts'] = Company::where('person_id',"=",auth()->user()->person()->first()->id)
 			->orderBy('companyname')
 			->pluck('companyname','id')
 			->toArray();;
