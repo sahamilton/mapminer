@@ -306,6 +306,10 @@ class ManagersController extends BaseController {
 	 */
 	private function getAllAccountWatchers($accountstring)
 	{
+		// refactor to eloquent
+		// locations wherein company_id accountstring
+		// with watchedBy, company
+
 		$query =
 		"select 
 			persons.user_id as userid,
