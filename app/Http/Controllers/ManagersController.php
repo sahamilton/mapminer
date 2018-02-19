@@ -47,7 +47,7 @@ class ManagersController extends BaseController {
 	 */
 	public function selectAccounts(Request $request)
 	{
-		
+		//dd($request->all());
 
 		if(! $request->filled('manager')){
 
@@ -201,39 +201,40 @@ class ManagersController extends BaseController {
 	 * @return [type]       [description]
 	 */
 	private function getMyAccounts($data=null)
-	{
+	{	
+	
 		if(auth()->user()->hasRole('National Account Manager'))
 		{
-			
-			$data['accounts'] = Company::where('user_id',"=",\Auth::id())
+
+			$data['accounts'] = Company::where('person_id',"=",auth()->user()->person()->first()->id)
+
 			->orderBy('companyname')
 			->pluck('companyname','id')
 			->toArray();;
 			$data['title'] = 'Your Accounts';
 		}elseif(isset($this->managerID) and $this->managerID !='All'){
 			
-		
 			// Did we change the manager
-			
+
 			if(null !== \Session::get('manager') and $this->managerID != \Session::get('manager')){
 				$data['accountstring'] = NULL;
 				
 			}
 			\Session::flash('manager', $this->managerID);
 			
-			$data['accounts'] = Company::whereIn('user_id',$this->managerID)
+			$data['accounts'] = Company::whereIn('person_id',$this->managerID)
 			->orderBy('companyname')
 			->pluck('companyname','id')
 			->toArray();
 
 			$data['manager'] = $this->getManagers($this->managerID);
-			
+		
 			
 			//$data['manager'] = array('id' => current(array_keys($managerTemp)),'name'=>array_values($managerTemp)[0]);
 			$data['title'] = trim($data['manager']['name']) . "'s Accounts";
 						
 		}else{
-			
+		
 			$data['accounts'] = Company::orderBy('companyname')
 			->pluck('companyname','id')
 			->toArray();
@@ -307,6 +308,10 @@ class ManagersController extends BaseController {
 	 */
 	private function getAllAccountWatchers($accountstring)
 	{
+		// refactor to eloquent
+		// locations wherein company_id accountstring
+		// with watchedBy, company
+
 		$query =
 		"select 
 			persons.user_id as userid,
@@ -413,10 +418,11 @@ class ManagersController extends BaseController {
 	private function getManagers($id)
 	{
 		
-			$managers = $this->persons->where('user_id','=',$id)
+			$managers = $this->persons
 			->has('managesAccount')
-			->select(\DB::raw("CONCAT(firstname,' ',lastname) AS name"),'user_id')
-			->first();
+			->select(\DB::raw("CONCAT(firstname,' ',lastname) AS name"),'id')
+			->firstOrFail($id);
+
 			if($managers){
 				return $managers->toArray();
 			}
@@ -432,8 +438,8 @@ class ManagersController extends BaseController {
 				$q->where('roles.name','=','National Account Manager');
 			})
 			
-			->select(\DB::raw("CONCAT(firstname,' ',lastname) AS name"),'user_id')
-			->pluck('name','user_id')->toArray();
+			->select(\DB::raw("CONCAT(firstname,' ',lastname) AS name"),'id')
+			->pluck('name','id')->toArray();
 			 return ['All'=>'All'] + $managers;
 		}
 			

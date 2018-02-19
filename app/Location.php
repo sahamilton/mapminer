@@ -71,6 +71,10 @@ class Location extends Model {
 
 	}
 
+	public function watchedBy(){
+
+		return $this->belongsToMany(User::class,'location_user','location_id','user_id');
+	}
 
 	public function nearbyBranches(){
 

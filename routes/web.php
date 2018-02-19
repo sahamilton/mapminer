@@ -183,7 +183,7 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('watch/add/{locationId}',['as'=>'watch.add', 'uses'=>'WatchController@create']);
 		Route::get('watch/delete/{locationID}',['as'=>'watch.delete', 'uses'=>'WatchController@destroy']);
 		Route::get('watch/map',['as'=>'watch.map','uses'=>'WatchController@showwatchmap']);
-		Route::get('cowatch/export',['as'=>'company.watchexport', 'uses'=>'PersonsController@companywatchexport']);
+		Route::get('cowatch/export',['as'=>'company.watchexport', 'uses'=>'WatchController@companywatchexport']);
 
 	
 	#AJAX Links
@@ -350,7 +350,7 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
 
 	#CompanyService
 		Route::get('/company/{id}/service/{state?}',['as'=>'company.service','uses'=>'CompaniesServiceController@serviceDetails']);
-		Route::get('/company/{id}/newservice/{state?}',['as'=>'company.service','uses'=>'CompaniesServiceController@getServiceDetails']);
+		//Route::get('/company/{id}/newservice/{state?}',['as'=>'company.service','uses'=>'CompaniesServiceController@getServiceDetails']);
 		Route::post('/company/service',['as'=>'company.service.select','uses'=>'CompaniesServiceController@selectServiceDetails']);
 		
 		Route::get('company/{id}/serviceexport/{state?}',['as'=>'company.service.export','uses'=>'CompaniesServiceController@exportServiceDetails']);
