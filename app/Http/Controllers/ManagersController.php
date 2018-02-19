@@ -204,6 +204,7 @@ class ManagersController extends BaseController {
 	{
 		if(auth()->user()->hasRole('National Account Manager'))
 		{
+			
 			$data['accounts'] = Company::where('user_id',"=",\Auth::id())
 			->orderBy('companyname')
 			->pluck('companyname','id')
@@ -211,7 +212,7 @@ class ManagersController extends BaseController {
 			$data['title'] = 'Your Accounts';
 		}elseif(isset($this->managerID) and $this->managerID !='All'){
 			
-			
+		
 			// Did we change the manager
 			
 			if(null !== \Session::get('manager') and $this->managerID != \Session::get('manager')){

@@ -251,6 +251,7 @@ class AdminDashboardController extends BaseController {
 				where companies.id = locations.company_id
 				group by companyname 
 				order by percent DESC,locations DESC";
+	
 		$result = \DB::select(\DB::raw($query));
 		return $result;	
 		/**/

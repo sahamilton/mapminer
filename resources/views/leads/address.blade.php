@@ -45,6 +45,10 @@
             @endforeach
         </tbody>
     </table>
+    @else
+    <div class="alert alert-warning">
+  <strong>Warning!</strong> No results withing this range. Try enlarging your search.
+</div>
     @endif
 </div>
 @include('partials._scripts')
