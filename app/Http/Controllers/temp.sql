@@ -27,3 +27,4 @@ FROM tbl_product ta
 JOIN (SELECT * FROM tbl_product tz WHERE tz.product_id = ta.product_id LIMIT 10) tc
 LEFT JOIN (SELECT tx.transaction_date FROM tbl_transaction tx 
     WHERE tx.product_id=ta.product_id LIMIT 5) tb
+

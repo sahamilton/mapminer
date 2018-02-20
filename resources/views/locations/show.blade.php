@@ -24,6 +24,14 @@
         </strong>
       </a>
     </li>
+    @if(count($location->watchedBy)>0)
+    <li>
+      <a data-toggle="tab" href="#watchers">
+        <strong>Watched By {{count($location->watchedBy)}}
+        </strong>
+      </a>
+    </li>
+    @endif
 
 
 
@@ -40,7 +48,13 @@ $id= $location->id;?>
     <div id="contacts" class="tab-pane fade in">
       @include('locations.partials._tabcontacts')
     </div>
+    @if(count($location->watchedBy)>0)
+    <div id="watchers" class="tab-pane fade in">
+      @include('locations.partials._tabwatchers')
+    </div>
+    @endif
    
+
   </div>
 
 

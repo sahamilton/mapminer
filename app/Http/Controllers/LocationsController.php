@@ -106,7 +106,7 @@ class LocationsController extends BaseController {
 	{
 
 		$location = $this->location
-			->with('company','company.industryVertical','company.serviceline','relatedNotes','clienttype','verticalsegment','contacts')
+			->with('company','company.industryVertical','company.serviceline','relatedNotes','clienttype','verticalsegment','contacts','watchedBy')
 			->findOrFail($id->id);
 		
 
