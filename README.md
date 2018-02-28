@@ -5,6 +5,8 @@ longitude.
 
 ## Prerequisites
 <ul>
+<li>PHP 7.0</li>
+<li>Laravel 5.5</li>
 <li>After cloning this repository, go to the root folder, run the following command/s,
 <pre>
     composer install
