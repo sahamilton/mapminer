@@ -172,7 +172,7 @@ class GeoLocation {
    * array element.</li>
    * </ul>
    */
-	public function boundingCoordinates($distance, $unit_of_measurement) {
+	public function boundingCoordinates($distance, $unit_of_measurement='mi') {
 		$radius = $this->getEarthsRadius($unit_of_measurement);
 
 		if ($radius < 0 || $distance < 0) throw new \Exception('Arguments must be greater than 0.');
@@ -225,7 +225,7 @@ class GeoLocation {
 	 *	@return \stdClass
 	 */
 	public static function getGeocodeFromGoogle($location) {
-		$url = 'http://maps.googleapis.com/maps/api/geocode/json?address='.urlencode($location).'&sensor=false';
+		$url = 'https://maps.googleapis.com/maps/api/geocode/json?address='.urlencode($location).'&sensor=false&key=AIzaSyBtoJDOdhDa2HyIwlEihEIJUhfzd-6SNBE';
 		$ch = curl_init();
 	    curl_setopt($ch, CURLOPT_URL,$url);
 	    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

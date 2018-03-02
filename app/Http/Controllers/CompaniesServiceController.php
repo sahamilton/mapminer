@@ -10,7 +10,7 @@ class CompaniesServiceController extends BaseController
 {
     protected $company;
     protected $location;
-    protected $limit =100;
+    protected $limit =500;
 
 	public function __construct (Company $company,Location $location){
 		$this->company = $company;
@@ -24,12 +24,16 @@ class CompaniesServiceController extends BaseController
 		return $this->serviceDetails($request->get('id'),$request->get('state'));
 	}
 	public function getServiceDetails($id){
-		$company = $this->company
-		->with('locations')->findOrFail($id);
-		dd($company->locations->nearbyBranches()->get());
+		$company = $this->company->with('managedBy')->findOrFail($id);
+		$locations = $this->location->locationsNearbyBranches($company);
+
+		return response()->view('companies.newservice',compact('company','locations'));
 
 
+	
 	}
+
+
     public function serviceDetails($id,$state=null){
 		if(is_object($id)){
 			$id = $id->id;
@@ -48,6 +52,7 @@ class CompaniesServiceController extends BaseController
 		$states = $company->locations()->orderBy('state')->pluck('state')->unique()->toArray();
 		$limited = false;
 		$count = count($locations);
+	
 		if($count>$this->limit){
 
 			$locations = $this->limitLocations($company);
@@ -274,7 +279,7 @@ class CompaniesServiceController extends BaseController
 	}
 	private function limitLocations(Company $company){
 				
-			$location = new \stdClass;
+			$location = new Location;
 			$limited=$this->limit;
 			if (\Session::has('geo'))
 				{
@@ -293,4 +298,8 @@ class CompaniesServiceController extends BaseController
 		->limit($this->limit)
 		->get();
 	}
+
+
+
+
 }

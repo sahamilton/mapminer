@@ -12,6 +12,7 @@
 	</thead>
 	<tbody>
 		@foreach ($data['result'] as $account)
+	
 			<tr>
 				<td>
 				<a href="{{route('locations.show',$account->id)}}"

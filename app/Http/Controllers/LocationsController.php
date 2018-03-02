@@ -193,12 +193,12 @@ class LocationsController extends BaseController {
 		foreach($location->company->serviceline as $serviceline){
 			$userservicelines[] = $serviceline->id;
 		}
-
-		//return $this->branch->findNearbyBranches($location->lat,$location->lng,100,$limit,$userservicelines);
-		return $this->branch->nearby($location,'100')
-			->whereHas('servicelines', function ($q) {
-				$q->whereIn('servicelines.id',$this->userServiceLines);
-			})
+		//dd($this->userServiceLines);
+		return $this->branch->with('servicelines')
+			/*->whereHas('servicelines', function ($q) use($userservicelines){
+				$q->whereIn('id',$userservicelines);
+			})*/
+			->nearby($location,'100')
 			->limit($limit)
 			->get();
 	

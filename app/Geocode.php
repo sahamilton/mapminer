@@ -33,7 +33,7 @@ trait Geocode
 
 
 
-   public function scopeNearby($query, $location, $radius = 250) {
+   public function scopeBoundedNearby($query, $location, $radius = 250) {
     
      $haversine = "(3956 * acos(cos(radians($location->lat)) 
                      * cos(radians($this->table.lat)) 
@@ -53,59 +53,102 @@ trait Geocode
 
 
 
-    public function scopeBoundedNearby($query,$location,$radius=100){
+    public function scopeNearby($query,$location,$radius=100){
 
-    $R = 3956;  // earth's mean radius, miles
-    //$R = 6371;  // earth's mean radius, km
+    $geocode = Geolocation::fromDegrees($location->lat,$location->lng);
+    
+    $bounding = $geocode->boundingCoordinates($radius,'mi');
+  
+   /* $haversine = "(3956 * acos(cos(radians($location->lat)) 
+                     * cos(radians($this->table.lat)) 
+                     * cos(radians($this->table.lng) 
+                     - radians($location->lng)) 
+                     + sin(radians($location->lat)) 
+                     * sin(radians($this->table.lat))))";*/
 
-    // first-cut bounding box (in degrees)
-    $maxLat = $location->lat + rad2deg($radius/$R);
-    $minLat = $location->lat - rad2deg($radius/$R);
-    $maxLng = $location->lng + rad2deg(asin($radius/$R) / cos(deg2rad($location->lat)));
-    $minLng = $location->lng - rad2deg(asin($radius/$R) / cos(deg2rad($location->lat)));
+    $sub = $this->selectSub('id','lat','lng')
+                ->whereBetween('lat',[$bounding['min']->degLat,$bounding['max']->degLat])
+                ->whereBetween('lng',[$bounding['min']->degLon,$bounding['max']->degLon]);
 
-     $haversine = "(3956 * acos(cos(radians($location->lat)) 
+    return $query
+        ->select()//pick the columns you want here.
+        ->selectRaw("{$this->haversine($location)} AS distance")
+        ->mergeBindings($sub->getQuery())
+        ->whereRaw("{$this->haversine($location)} < $radius ")
+        ->orderBy('distance','ASC');
+    }
+
+    public function locationsNearbyBranches(Company $company,$radius=25){
+
+     return \DB::select('select 
+                locations.id as locid,
+                locations.businessname,
+                locations.street as locstreet, 
+                locations.city as loccity, 
+                locations.state as locstate,
+                locations.zip as loczip,
+                branches.id as branchid, 
+                branchname,
+                branches.city as branchcity,
+                branches.state as branchstate,
+            (3956 * acos(cos(radians(locations.lat)) 
+                                 * cos(radians(branches.lat)) 
+                                 * cos(radians(branches.lng) 
+                                 - radians(locations.lng)) 
+                                 + sin(radians(locations.lat)) 
+                                 * sin(radians(branches.lat)))) as branchdistance
+            from locations
+            left join branches on 
+                
+                               3956 * acos(cos(radians(locations.lat)) 
+                                 * cos(radians(branches.lat)) 
+                                 * cos(radians(branches.lng) 
+                                 - radians(locations.lng)) 
+                                 + sin(radians(locations.lat)) 
+                                 * sin(radians(branches.lat)))
+                                 < 25
+                               
+                              
+            where locations.company_id = ?
+            order by locid, branchdistance',[$company->id]);
+
+}
+
+
+
+    public function scopeAllNearby($query,$company,$radius){
+      /*return $query->select()
+      ->selectRaw('
+            (3956 * acos(cos(radians(locations.lat)) 
+                                 * cos(radians(branches.lat)) 
+                                 * cos(radians(branches.lng) 
+                                 - radians(locations.lng)) 
+                                 + sin(radians(locations.lat)) 
+                                 * sin(radians(branches.lat)))) as branchdistance')
+       ->from('locations')
+        ->join('branches on 
+                               (3956 * acos(cos(radians(locations.lat)) 
+                                 * cos(radians(branches.lat)) 
+                                 * cos(radians(branches.lng) 
+                                 - radians(locations.lng)) 
+                                 + sin(radians(locations.lat)) 
+                                 * sin(radians(branches.lat)))) < $radius)')
+        
+        ->orderBy('locations.id')
+        ->orderBy('branchdistance');*/
+
+
+
+
+
+    }
+
+    private function haversine($location){
+        return "(3956 * acos(cos(radians($location->lat)) 
                      * cos(radians($this->table.lat)) 
                      * cos(radians($this->table.lng) 
                      - radians($location->lng)) 
                      + sin(radians($location->lat)) 
                      * sin(radians($this->table.lat))))";
-
-    $sub = $this->selectSub('id','lat','lng')
-                ->whereBetween('lat',[$minLat,$maxLat])
-                ->whereBetween('lng',[$minLng,$maxLng]);
-    return $query
-         //pick the columns you want here.
-        ->selectRaw("{$haversine} AS distance")
-        ->mergeBindings($sub->getQuery())
-        ->whereRaw("{$haversine} < ?", [$radius])
-        ->orderBy('distance','ASC');
-        
-
-
-    /*$sql = "Select id,lat,lng,
-                   acos(sin($lat)
-                   *sin(radians(lat)) 
-                   +cos($lat)
-                   *cos(radians(lat))
-                   *cos(radians(lng)-$lng)) 
-                   * $R As D
-            From (
-                Select id,lat,lng
-                From $table
-                Where lat Between $minLat And $maxLat
-                  And Lon Between $minLon And $maxLon
-            ) As FirstCut
-            Where acos(sin($lat)
-                *sin(radians(lat)) 
-                + cos($lat)
-                *cos(radians(lat))
-                *cos(radians(lng)-$lng)) 
-                * $R < $rad
-            Order by D
-            limit $limit";
-
-    }
-    return $sql;*/
     }
 }

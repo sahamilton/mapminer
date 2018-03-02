@@ -6,6 +6,7 @@ use App\Company;
 use App\Project;
 use App\Branch;
 use App\Watch;
+use App\Person;
 use App\Http\Requests\FindMeFormRequest;
 use Illuminate\Http\Request;
 
@@ -145,7 +146,7 @@ class GeoCodingController extends BaseController {
 	 
 	public function getGeoListData($data ) {
 		$company = isset($data['company']) ? $data['company'] : NULL;
-		$location = new \stdClass;
+		$location = new Person;
 		$location->lat = $data['lat'];
 		$location->lng = $data['lng'];
 	
@@ -154,40 +155,54 @@ class GeoCodingController extends BaseController {
 			case 'location':
 			case 'company':
 			if($company){
-				return $this->location->nearby($location,$data['distance'])->where('company_id','=',$company)->get();
+				
+				return $this->location
+				->where('company_id','=',$company)
+				->nearby($location,$data['distance'])
+				->with('company')
+				->get();
 			}else{
-				return $this->location->nearby($location,$data['distance'])->get();
+
+				return $this->location
+				->nearby($location,$data['distance'])
+				->with('company')
+				->get();
 			}
 			
-			//->where('company_id','=',$company)
 			
-			//return $result = $this->location->findNearbyLocations($data['lat'],$data['lng'],$data['distance'],$number=null,$company,$this->userServiceLines);
 			
 			break;
 			
 			case 'branch':
 
-			//return $this->branch->findNearbyBranches($data['lat'],$data['lng'],$data['distance'],$number=null,$this->userServiceLines);
-			return $this->branch->nearby($location,$data['distance'])
+			return $this->branch
 			->whereHas('servicelines', function ($q) {
 				$q->whereIn('servicelines.id',$this->userServiceLines);
 			})
+			->nearby($location,$data['distance'])
 			->get();
 			
 			break;
 
 			case 'projects':
-				//return $this->project->findNearbyProjects($data['lat'],$data['lng'],$data['distance'],$number=null,$this->userServiceLines);
 				
-				return $this->project->nearby($location,$data['distance'])->with('owner')->get();
+				return $this->project
+				->nearby($location,$data['distance'])
+				->with('owner')
+				->get();
 			
 			break;
 			
 			default:
 			if($company){
-				return $this->location->nearby($location,$data['distance'])->where('company_id','=',$company)->get();
+				return $this->location
+				->where('company_id','=',$company)
+				->nearby($location,$data['distance'])
+				->get();
 			}else{
-				return $this->location->nearby($location,$data['distance'])->get();
+				return $this->location
+				->nearby($location,$data['distance'])
+				->get();
 			}
 			//return $result = $this->location->findNearbyLocations($data['lat'],$data['lng'],$data['distance'],$number=1,$company,$this->userServiceLines);
 			

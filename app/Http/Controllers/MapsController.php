@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 use App\News;
 use App\Branch;
 use App\User;
+use App\Person;
 use App\Location;
 use Carbon\Carbon;
 class MapsController extends BaseController {
@@ -62,24 +63,34 @@ class MapsController extends BaseController {
 		
 		$location = $this->getLocationLatLng($latlng);
 		//$branches = $this->branch->findNearbyBranches($location[0],$location[1],$distance,$number=null,$this->userServiceLines);
-		$branches = $this->branch->nearby($location,$distance)->whereHas('servicelines',function ($q){
+		$branches = $this->branch
+		->whereHas('servicelines',function ($q){
 			$q->whereIn('servicelines.id',$this->userServiceLines);
-		})->get();
+		})
+		->nearby($location,$distance)
+		->get();
 		return response()->view('maps.partials.branchxml', compact('branches'))->header('Content-Type', 'text/xml');
 		
 	}
 	
 	public function findLocalAccounts($distance=NULL,$latlng = NULL,$company = NULL) {
 		
-		$location = $this->getLocationLatLng($latlng);
 		
-		$locations = $this->location->nearby($location,$distance);
+		$location = $this->getLocationLatLng($latlng);
+
+		
+		$locations = $this->location->nearby($location,$distance)->with('company');
+		
 		if($company){
 			$locations->where('company_id','=',$company);
 		}
-		$result = $locations->whereHas('company.serviceline',function ($q){
+		/*$locations->whereHas('company.serviceline',function ($q){
 			$q->whereIn('servicelines.id',$this->userServiceLines);
-		})->get();
+		});*/
+		$result = $locations->get();
+
+
+
 		//$result = $this->location->findNearbyLocations($geo[0],$geo[1],$distance,$number=null,$company,$this->userServiceLines);
 		return response()->view('locations.xml', compact('result'))->header('Content-Type', 'text/xml');
 
@@ -95,7 +106,7 @@ class MapsController extends BaseController {
 
 	private function getLocationLatLng($latlng){
 		$position =explode(":",$latlng);
-		$location = new \stdClass;
+		$location = new Person;
 		$location->lat = $position[0];
 		$location->lng = $position[1];
 		return $location;
