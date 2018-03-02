@@ -7,6 +7,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\User;
 use App\Track;
+use Carbon\Carbon;
 class UpdateLastLoggedInAt
 {
     /**
@@ -29,7 +30,9 @@ class UpdateLastLoggedInAt
     {
         $track = new Track;
         $track->user_id = $event->user->id;
-        $track->lastactivity = \Carbon\Carbon::now();
+        $track->lastactivity = Carbon::now();
         $track->save();
+        $event->user->lastlogin = Carbon::now();
+        $event->user->save();
     }
 }

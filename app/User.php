@@ -264,4 +264,11 @@ class User extends Authenticatable
 		$this->api_token =\Hash::make(str_random(60));
 		$this->save();
 	}
+
+	public function scopeLastLogin($query,$interval=null){
+		if($interval){
+				return $query->whereBetween('lastlogin',$interval);
+			}
+			return $query->whereNull('lastlogin');
+	}
 }
