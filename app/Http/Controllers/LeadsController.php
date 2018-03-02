@@ -242,6 +242,7 @@ class LeadsController extends BaseController
       }
 
       $data = $request->all();
+
       $people = $this->findNearBy($data);
       $people = $this->getIndustryAssociation($people);
 
@@ -258,25 +259,31 @@ class LeadsController extends BaseController
 
     private function findNearBy($data){
         
-        $location = new \stdClass;
+        $location = new Person;;
         $location->lat = $data['lat'];
         $location->lng = $data['lng'];
         if(! isset($data['distance'])){
             $data['distance']=\Config::get('leads.search_radius');
         }
-        $persons = $this->person->nearby($location,$data['distance']);
+        $salesroles = $this->salesroles;
+       $persons =  $this->person->whereHas('userdetails.roles',function ($q) use($salesroles){
+          $q->whereIn('roles.id',$salesroles);
+        });
+        $persons = $persons->nearby($location,$data['distance']);
+
+
         if(isset($data['verticals'])){
             $persons->whereHas('industryfocus',function ($q) use ($verticals){
                   $q->whereIn('searchfilters.id',$verticals);
               });
         }
-        $salesroles = $this->salesroles;
-        $persons->whereHas('userdetails.roles',function ($q) use($salesroles){
-          $q->whereIn('roles.id',$salesroles);
-        });
-        if (isset($data['number'])){
+
+        
+
+       if (isset($data['number'])){
             $persons->limit($data['number']);
         }
+
       return $persons->get();
      //   return $this->person->findNearByPeople($data['lat'],$data['lng'],$data['distance'],$data['number'],['Sales'],$data['verticals']);
     }

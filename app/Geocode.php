@@ -91,12 +91,7 @@ trait Geocode
                 branchname,
                 branches.city as branchcity,
                 branches.state as branchstate,
-            (3956 * acos(cos(radians(locations.lat)) 
-                                 * cos(radians(branches.lat)) 
-                                 * cos(radians(branches.lng) 
-                                 - radians(locations.lng)) 
-                                 + sin(radians(locations.lat)) 
-                                 * sin(radians(branches.lat)))) as branchdistance
+            tbl1.distance
             from locations
             left join branches on 
                 
@@ -105,12 +100,12 @@ trait Geocode
                                  * cos(radians(branches.lng) 
                                  - radians(locations.lng)) 
                                  + sin(radians(locations.lat)) 
-                                 * sin(radians(branches.lat)))
+                                 * sin(radians(branches.lat)) as distance) 
                                  < 25
                                
                               
             where locations.company_id = ?
-            order by locid, branchdistance',[$company->id]);
+            order by locid, tbl1.distance',[$company->id]);
 
 }
 

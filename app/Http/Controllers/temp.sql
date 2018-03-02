@@ -1,22 +1,22 @@
 use mapminer;
 select locations.id,locations.street, locations.city, locations.state,branches.id, branchname,branches.city,branches.state,
-(3956 * acos(cos(radians(locations.lat)) 
-                     * cos(radians(branches.lat)) 
-                     * cos(radians(branches.lng) 
-                     - radians(locations.lng)) 
-                     + sin(radians(locations.lat)) 
-                     * sin(radians(branches.lat)))) as branchdistance
+distance
 from locations
-left join branches on 
+left join branches 
+select( 
     
                    3956 * acos(cos(radians(locations.lat)) 
                      * cos(radians(branches.lat)) 
                      * cos(radians(branches.lng) 
                      - radians(locations.lng)) 
                      + sin(radians(locations.lat)) 
-                     * sin(radians(branches.lat)))
-                     < 25
+                     * sin(radians(branches.lat))) as distance
+                  where locations.company_id = 290
+                  )
+                 
+         on
+         distance < 25
                    
                   
-where locations.company_id = 388
-order by locations.id, branchdistance
+where locations.company_id = 290
+order by locations.id, distance
