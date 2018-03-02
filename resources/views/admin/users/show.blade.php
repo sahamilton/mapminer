@@ -39,6 +39,7 @@
         <td class="col-md-2"><a href="{{route('users.show',$user->id)}}">{{ $user->lastname }}</a></td>
         <td class="col-md-2"><a href="{{route('users.show',$user->id)}}">{{ $user->username }}</a></td>
         <td class="col-md-2">{{ $user->email }}</td>
+        
         <td class="col-md-2">
 			@if(isset($user->lastlogin) &&  $user->lastlogin != '0000-00-00 00:00:00'  )
                 <?php  $lastlogin = Carbon\Carbon::parse($user->lastlogin);?>

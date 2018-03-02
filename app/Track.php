@@ -11,6 +11,13 @@ class Track extends \Eloquent {
 	public $errors;
 	
 	
-	
+	public function lastLogin($interval){
+
+		return $this;
+	}
+
+	public function user(){
+		return $this->belongsTO(User::class);
+	}
 	
 }

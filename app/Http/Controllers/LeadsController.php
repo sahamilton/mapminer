@@ -266,10 +266,10 @@ class LeadsController extends BaseController
             $data['distance']=\Config::get('leads.search_radius');
         }
         $salesroles = $this->salesroles;
-       $persons =  $this->person->whereHas('userdetails.roles',function ($q) use($salesroles){
+        $persons =  $this->person->whereHas('userdetails.roles',function ($q) use($salesroles){
           $q->whereIn('roles.id',$salesroles);
         });
-        $persons = $persons->nearby($location,$data['distance']);
+        
 
 
         if(isset($data['verticals'])){
@@ -277,7 +277,7 @@ class LeadsController extends BaseController
                   $q->whereIn('searchfilters.id',$verticals);
               });
         }
-
+        $persons->nearby($location,$data['distance']);
         
 
        if (isset($data['number'])){
