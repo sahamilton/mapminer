@@ -121,7 +121,7 @@ class AdminDashboardController extends BaseController {
 		}
 		$query.=") and confirmed = 1";
 	   $query.= " group by id ";
-	   dd(str_replace("\n","",str_replace("\t","",$query)));
+	   
 		$result = \DB::select(\DB::raw($query));
 		return $result;	
 		
