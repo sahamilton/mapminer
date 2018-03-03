@@ -63,7 +63,7 @@ class AdminDashboardController extends BaseController {
 		$users = $this->getUsersByLoginDate($view);
 		$views = ['0'=>'Today','1'=>'Last 24 hrs','2'=>'Last Week','3'=>'Last Month','4'=>'Earlier','5'=>'Never'];
 
-		return response()->view('admin.users.show',compact('users','views','view'));
+		return response()->view('admin.users.newshow',compact('users','views','view'));
 	
 	}
 	
@@ -74,12 +74,12 @@ class AdminDashboardController extends BaseController {
 		switch ($n){
 			case 0:
 			//today
-			$interval = [Carbon::now()->subDay(),Carbon::now()];
+			$interval = [Carbon::today(),Carbon::today()->addHours('24')];
 			break;
 
 			case 1:
 			// last 24 hours
-			$interval = [Carbon::now()->subDay(),Carbon::now()];
+			$interval = [Carbon::now()->subHours('24'),Carbon::now()];
 			break;
 
 			case 2:
@@ -94,7 +94,7 @@ class AdminDashboardController extends BaseController {
 
 			case 4:
 			//more than a month ago
-			$interval =[];
+			$interval =[Carbon::now()->subYear(4),Carbon::now()->subMonth()];
 			break;
 
 			case 5:
@@ -111,7 +111,7 @@ class AdminDashboardController extends BaseController {
 		}
 
 
-		dd($this->user->lastLogin($interval)->with('person','roles')->get());	
+		return $this->user->lastLogin($interval)->with('person','roles')->get();	
 
 		
 		
@@ -179,13 +179,13 @@ $count = DB::table( DB::raw("({$sub->toSql()}) as sub") )
 
 		$query = "SELECT 
 		
-		IF(date_add(lastlogin, INTERVAL ". $this->offset." SECOND) like '".$this->today."%' , '1. Today', 
-		IF(date_add(lastlogin, INTERVAL ". $this->offset." SECOND) 
-		>= DATE_SUB(date_add(NOW(),INTERVAL ". $this->offset." SECOND), INTERVAL 1 DAY), '2. Last 24 hours', 
-		IF(date_add(lastlogin, INTERVAL ". $this->offset." SECOND) 
-		>= DATE_SUB(date_add(NOW(),INTERVAL ". $this->offset." SECOND), INTERVAL 1 week), '3. Last week', 
-		IF(date_add(lastlogin, INTERVAL ". $this->offset." SECOND) 
-		>= DATE_SUB(date_add(NOW(),INTERVAL ". $this->offset." SECOND), INTERVAL 1 month), '4. Last Month', 
+		IF(date(lastlogin) = '".Carbon::today()."' , '1. Today', 
+		IF(date(lastlogin) 
+		>= '".Carbon::today()->subHours('24')."', '2. Last 24 hours', 
+		IF(date(lastlogin)
+		>= '".Carbon::today()->subWeek()."', '3. Last week', 
+		IF(date(lastlogin) 
+		>= '".Carbon::today()->subMonth()."', '4. Last Month', 
 		IF((lastlogin IS NULL or lastlogin like '0000%'),'6. No Login', '5. Earlier')) ))) 
 		as status, 
 		COUNT(*) as count 
