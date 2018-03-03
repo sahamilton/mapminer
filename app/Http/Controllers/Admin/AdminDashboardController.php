@@ -2,6 +2,9 @@
 namespace App\Http\Controllers\Admin;
 use App\Location;
 use App\Note;
+use App\Track;
+use App\User;
+use Carbon\Carbon;
 use App\Http\Controllers\BaseController;
 
 class AdminDashboardController extends BaseController {
@@ -11,11 +14,15 @@ class AdminDashboardController extends BaseController {
 	private $today;
 	private $trackingField = 'track.lastactivity';
 	private $trackingtable ='track';
+	private $track;
+	private $user;
 	
 	
 	
-	public function __construct() {
+	public function __construct(Track $track,User $user) {
 		$this->calculateTimeOffset();
+		$this->track = $track;
+		$this->user = $user;
 		
 	}
 	
@@ -56,7 +63,7 @@ class AdminDashboardController extends BaseController {
 		$users = $this->getUsersByLoginDate($view);
 		$views = ['0'=>'Today','1'=>'Last 24 hrs','2'=>'Last Week','3'=>'Last Month','4'=>'Earlier','5'=>'Never'];
 
-		return response()->view('admin.users.show',compact('users','views','view'));
+		return response()->view('admin.users.newshow',compact('users','views','view'));
 	
 	}
 	
@@ -64,66 +71,48 @@ class AdminDashboardController extends BaseController {
 	
 	public function getUsersByLoginDate($n){
 
-		$fields =" users.id as id, 
-				confirmed,". $this->trackingtable.".user_id,
-				max(".$this->trackingField.") as lastlogin,
-				username,
-				firstname,lastname,
-				users.email";
-		$query = "SELECT". $fields." from ". $this->trackingtable." ,users,persons 
-		where ". $this->trackingtable.".user_id = users.id and persons.user_id = users.id
-		and (date_add(".$this->trackingField.", INTERVAL ". $this->offset." SECOND) ";
-		switch ($n) {
+		switch ($n){
 			case 0:
-			// today
-				$query.=" like '".$this->today."%'" ;
+			//today
+			$interval = [Carbon::today(),Carbon::today()->addHours('24')];
 			break;
-			
+
 			case 1:
-			//last 24 hours 
-				$query.=" >= DATE_SUB(date_add(NOW(),INTERVAL ". $this->offset." SECOND), INTERVAL 1 DAY)
-					and date_add(".$this->trackingField.", INTERVAL ". $this->offset." SECOND) NOT like '".$this->today."%'" ;
+			// last 24 hours
+			$interval = [Carbon::now()->subHours('24'),Carbon::now()];
 			break;
-			
+
 			case 2:
 			//last week
-				$query.=" >= DATE_SUB(date_add(NOW(),INTERVAL ". $this->offset." SECOND), INTERVAL 1 WEEK)
-						AND  date_add(".$this->trackingField.", INTERVAL ". $this->offset." SECOND) 
-						< DATE_SUB(date_add(NOW(),INTERVAL ". $this->offset." SECOND), INTERVAL 1 DAY)" ;
+			$interval =[Carbon::now()->subWeek(),Carbon::now()->subDay()];
 			break;
-			
+
 			case 3:
 			//last month
-				$query.=" >= DATE_SUB(date_add(NOW(),INTERVAL ". $this->offset." SECOND), INTERVAL 1 MONTH)
-				 		and date_add(".$this->trackingField.", INTERVAL ". $this->offset." SECOND) 
-						< DATE_SUB(date_add(NOW(),INTERVAL ". $this->offset." SECOND), INTERVAL 1 WEEK)" ;
+			$interval =[Carbon::now()->subMonth(),Carbon::now()->subWeek()];
 			break;
-			
+
 			case 4:
-				// more than one month ago	
-				$query.=" < DATE_SUB(date_add(NOW(),INTERVAL ". $this->offset." SECOND), INTERVAL 1 MONTH)";
-							//or ".$this->trackingField." like '0000-00-00%'
+			//more than a month ago
+			$interval =[Carbon::now()->subYear(4),Carbon::now()->subMonth()];
 			break;
-			
+
 			case 5:
-			
-			/// Never logged in 
-				$query = " SELECT". $fields." from ". $this->trackingtable." ,users ,persons
-							where (".$this->trackingField." IS NULL and ".$this->trackingtable.".user_id = users.id and users.id = persons.user_id ";
-						
+			// never
+			$interval =null;
 			break;
-			
+
 			default:
-				$query.=" like '".$this->today."%'" ;
+
+			$interval =[];
 			break;
-			
-			
+
+
 		}
-		$query.=") and confirmed = 1";
-	   $query.= " group by id ";
-	   
-		$result = \DB::select(\DB::raw($query));
-		return $result;	
+
+
+		return $this->user->lastLogin($interval)->with('person','roles')->get();	
+
 		
 		
 		
@@ -137,7 +126,27 @@ class AdminDashboardController extends BaseController {
 	private function getLogins()
 	{
 		// Set first time of login to exclude 0000 non logins
+/*select count(`user_id`),first.firstlogin from ( select `user_id`,min(DATE(`lastactivity`)) as `firstlogin` from `track` group by `user_id`) first where first.firstlogin is not null group by `first`.`firstlogin` ORDER BY count(`user_id`) DESC
+
+$sub = Abc::where(..)->groupBy(..); // Eloquent Builder instance
+$count = DB::table( DB::raw("({$sub->toSql()}) as sub") )
+    ->mergeBindings($sub->getQuery()) // you need to get underlying Query Builder
+    ->count();
+
 		
+		$sub = $this->track->selectRaw('`user_id`,min(DATE(`lastactivity`)) as `firstlogin`')
+		->whereNotNull('lastactivity')
+		->groupBy('user_id');
+	// this should be a join
+		dd( \DB::table(\DB::raw('select count(`user_id`),`first.firstlogin`')
+			\DB::raw("({$sub->toSql()}) as first"))
+			->mergeBindings($sub->getQuery())
+    		->groupBy('first.firstlogin')->toSql());
+    		
+    		//return $lastlogin->whereNull('max.laslogin');	
+*/
+
+
 		$query = "select 
 					count(user_id) as logins,
 					day_first_logged 
@@ -154,7 +163,7 @@ class AdminDashboardController extends BaseController {
 				WHERE 
 					day_first_logged is not null 
 				GROUP BY day_first_logged ";
-			
+			//dd(str_replace("\t","",str_replace("\n","",$query)));
 		 $result = \DB::select(\DB::raw($query));
 		return $result;	
 	}
@@ -170,13 +179,13 @@ class AdminDashboardController extends BaseController {
 
 		$query = "SELECT 
 		
-		IF(date_add(lastlogin, INTERVAL ". $this->offset." SECOND) like '".$this->today."%' , '1. Today', 
-		IF(date_add(lastlogin, INTERVAL ". $this->offset." SECOND) 
-		>= DATE_SUB(date_add(NOW(),INTERVAL ". $this->offset." SECOND), INTERVAL 1 DAY), '2. Last 24 hours', 
-		IF(date_add(lastlogin, INTERVAL ". $this->offset." SECOND) 
-		>= DATE_SUB(date_add(NOW(),INTERVAL ". $this->offset." SECOND), INTERVAL 1 week), '3. Last week', 
-		IF(date_add(lastlogin, INTERVAL ". $this->offset." SECOND) 
-		>= DATE_SUB(date_add(NOW(),INTERVAL ". $this->offset." SECOND), INTERVAL 1 month), '4. Last Month', 
+		IF(date(lastlogin) = '".Carbon::today()."' , '1. Today', 
+		IF(date(lastlogin) 
+		>= '".Carbon::today()->subHours('24')."', '2. Last 24 hours', 
+		IF(date(lastlogin)
+		>= '".Carbon::today()->subWeek()."', '3. Last week', 
+		IF(date(lastlogin) 
+		>= '".Carbon::today()->subMonth()."', '4. Last Month', 
 		IF((lastlogin IS NULL or lastlogin like '0000%'),'6. No Login', '5. Earlier')) ))) 
 		as status, 
 		COUNT(*) as count 

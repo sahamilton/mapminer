@@ -3,7 +3,7 @@
 
 
 <div>
-<h4> {{$company->companyname}}Locations Serviced By</h4>
+<h4> {{$company->companyname}} Locations Serviced By</h4>
 
 <p><a href="{{route('company.service',$company->id)}}">
 	Return to all locations of {{$company->companyname}}</a></p>

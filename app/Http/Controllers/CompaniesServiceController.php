@@ -23,10 +23,17 @@ class CompaniesServiceController extends BaseController
 
 		return $this->serviceDetails($request->get('id'),$request->get('state'));
 	}
-	public function getServiceDetails($id){
-		$company = $this->company->with('managedBy')->findOrFail($id);
+
+	public function getServiceDetails($id,$state=null){
+		$company = $this->company->with('managedBy','locations')->findOrFail($id);
+		$count = count($company->locations);
+		if($count > $this->limit){
+			dd('too many!');
+		}
+
 		$locations = $this->location->locationsNearbyBranches($company);
 
+		//filter if too many locations
 		return response()->view('companies.newservice',compact('company','locations'));
 
 

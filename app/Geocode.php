@@ -78,9 +78,8 @@ trait Geocode
         ->orderBy('distance','ASC');
     }
 
-    public function locationsNearbyBranches(Company $company,$radius=25){
-
-     return \DB::select('select 
+    public function locationsNearbyBranches(Company $company,$radius=25,$limit=null){
+        $query ="select 
                 locations.id as locid,
                 locations.businessname,
                 locations.street as locstreet, 
@@ -91,21 +90,25 @@ trait Geocode
                 branchname,
                 branches.city as branchcity,
                 branches.state as branchstate,
-            tbl1.distance
+                3956 * acos(cos(radians(locations.lat)) 
+                     * cos(radians(branches.lat)) 
+                     * cos(radians(branches.lng) 
+                     - radians(locations.lng)) 
+                     + sin(radians(locations.lat)) 
+                     * sin(radians(branches.lat))) as branchdistance
             from locations
-            left join branches on 
-                
-                               3956 * acos(cos(radians(locations.lat)) 
-                                 * cos(radians(branches.lat)) 
-                                 * cos(radians(branches.lng) 
-                                 - radians(locations.lng)) 
-                                 + sin(radians(locations.lat)) 
-                                 * sin(radians(branches.lat)) as distance) 
-                                 < 25
-                               
-                              
+            left join branches on (
+                3956 * acos(cos(radians(locations.lat)) 
+                     * cos(radians(branches.lat)) 
+                     * cos(radians(branches.lng) 
+                     - radians(locations.lng)) 
+                     + sin(radians(locations.lat)) 
+                     * sin(radians(branches.lat))) 
+                     < 25
+                 )  
             where locations.company_id = ?
-            order by locid, tbl1.distance',[$company->id]);
+            order by locid,branchdistance";
+          return \DB::select($query,[$company->id]);
 
 }
 
