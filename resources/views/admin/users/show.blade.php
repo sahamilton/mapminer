@@ -4,6 +4,7 @@
 {{-- Content --}}
 @section('content')
 	<div class="page-header">
+        <h2>Mapminer Activity</h2>
 		<h4>Users who have logged in {{$views[$view]}}</h4>
 		
         @foreach ( $views as $key=>$value)

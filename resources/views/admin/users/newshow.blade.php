@@ -4,8 +4,13 @@
 {{-- Content --}}
 @section('content')
 	<div class="page-header">
+        <h2>Mapminer Activity</h2>
 		<h4>Users who have logged in {{$views[$view]}}</h4>
-		
+		<p><a href="{{route('admin.downloadlogins',$view)}}" 
+            title="Download these user details as a CSV / Excel file">
+            <i class="glyphicon glyphicon-cloud-download"></i> 
+            Download these user details</a> 
+        </p>
         @foreach ( $views as $key=>$value)
         	@if($view != $key)
         		<a href="{{route('admin.showlogins',$key)}}">{{$value}}</a> | 
@@ -27,6 +32,8 @@
             <th class="col-md-2">User Name</th>
             <th class="col-md-2">EMail</th>
             <th class="col-md-2">Roles</th>
+            <th class="col-md-2">ServiceLine</th>
+
             <th class="col-md-2">Last Activity</th>
 			</tr>
 		</thead>
@@ -43,6 +50,11 @@
         <td class="col-md-2">
             @foreach ($user->roles as $role)
                 {{ $role->name }}<br />
+            @endforeach
+        </td>
+        <td class="col-md-2">
+            @foreach ($user->serviceline as $serviceline)
+                {{ $serviceline->ServiceLine }}<br />
             @endforeach
         </td>
         <td class="col-md-2">

@@ -59,13 +59,6 @@ trait Geocode
     
     $bounding = $geocode->boundingCoordinates($radius,'mi');
   
-   /* $haversine = "(3956 * acos(cos(radians($location->lat)) 
-                     * cos(radians($this->table.lat)) 
-                     * cos(radians($this->table.lng) 
-                     - radians($location->lng)) 
-                     + sin(radians($location->lat)) 
-                     * sin(radians($this->table.lat))))";*/
-
     $sub = $this->selectSub('id','lat','lng')
                 ->whereBetween('lat',[$bounding['min']->degLat,$bounding['max']->degLat])
                 ->whereBetween('lng',[$bounding['min']->degLon,$bounding['max']->degLon]);
@@ -79,6 +72,7 @@ trait Geocode
     }
 
     public function locationsNearbyBranches(Company $company,$radius=25,$limit=null){
+        //add pagination
         $query ="select 
                 locations.id as locid,
                 locations.businessname,
@@ -104,42 +98,13 @@ trait Geocode
                      - radians(locations.lng)) 
                      + sin(radians(locations.lat)) 
                      * sin(radians(branches.lat))) 
-                     < 25
+                     < branches.radius
                  )  
             where locations.company_id = ?
             order by locid,branchdistance";
           return \DB::select($query,[$company->id]);
 
 }
-
-
-
-    public function scopeAllNearby($query,$company,$radius){
-      /*return $query->select()
-      ->selectRaw('
-            (3956 * acos(cos(radians(locations.lat)) 
-                                 * cos(radians(branches.lat)) 
-                                 * cos(radians(branches.lng) 
-                                 - radians(locations.lng)) 
-                                 + sin(radians(locations.lat)) 
-                                 * sin(radians(branches.lat)))) as branchdistance')
-       ->from('locations')
-        ->join('branches on 
-                               (3956 * acos(cos(radians(locations.lat)) 
-                                 * cos(radians(branches.lat)) 
-                                 * cos(radians(branches.lng) 
-                                 - radians(locations.lng)) 
-                                 + sin(radians(locations.lat)) 
-                                 * sin(radians(branches.lat)))) < $radius)')
-        
-        ->orderBy('locations.id')
-        ->orderBy('branchdistance');*/
-
-
-
-
-
-    }
 
     private function haversine($location){
         return "(3956 * acos(cos(radians($location->lat)) 

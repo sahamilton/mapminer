@@ -4,6 +4,7 @@ use App\Location;
 use App\Note;
 use App\Track;
 use App\User;
+use Excel;
 use Carbon\Carbon;
 use App\Http\Controllers\BaseController;
 
@@ -71,51 +72,55 @@ class AdminDashboardController extends BaseController {
 	
 	public function getUsersByLoginDate($n){
 
+		$interval = $this->getDateIntervals($n);
+
+
+		return $this->user->lastLogin($interval)->with('person','roles','serviceline')->get();	
+
+		
+		
+		
+	}
+
+	private function getDateIntervals($n){
 		switch ($n){
 			case 0:
 			//today
-			$interval = [Carbon::today(),Carbon::today()->addHours('24')];
+			return [Carbon::today(),Carbon::now()];
 			break;
 
 			case 1:
 			// last 24 hours
-			$interval = [Carbon::now()->subHours('24'),Carbon::now()];
+			return [Carbon::now()->subHours('24'),Carbon::now()];
 			break;
 
 			case 2:
 			//last week
-			$interval =[Carbon::now()->subWeek(),Carbon::now()->subDay()];
+			return [Carbon::now()->subWeek(),Carbon::now()->subDay()];
 			break;
 
 			case 3:
 			//last month
-			$interval =[Carbon::now()->subMonth(),Carbon::now()->subWeek()];
+			return [Carbon::now()->subMonth(),Carbon::now()->subWeek()];
 			break;
 
 			case 4:
 			//more than a month ago
-			$interval =[Carbon::now()->subYear(4),Carbon::now()->subMonth()];
+			return [Carbon::now()->subYear(4),Carbon::now()->subMonth()];
 			break;
 
 			case 5:
 			// never
-			$interval =null;
+			return null;
 			break;
 
 			default:
 
-			$interval =[];
+			return [Carbon::today(),Carbon::now()];
 			break;
 
 
 		}
-
-
-		return $this->user->lastLogin($interval)->with('person','roles')->get();	
-
-		
-		
-		
 	}
 	/**
 	 * Return array of logins by day.
@@ -125,29 +130,7 @@ class AdminDashboardController extends BaseController {
 	 */
 	private function getLogins()
 	{
-		// Set first time of login to exclude 0000 non logins
-/*select count(`user_id`),first.firstlogin from ( select `user_id`,min(DATE(`lastactivity`)) as `firstlogin` from `track` group by `user_id`) first where first.firstlogin is not null group by `first`.`firstlogin` ORDER BY count(`user_id`) DESC
-
-$sub = Abc::where(..)->groupBy(..); // Eloquent Builder instance
-$count = DB::table( DB::raw("({$sub->toSql()}) as sub") )
-    ->mergeBindings($sub->getQuery()) // you need to get underlying Query Builder
-    ->count();
-
-		
-		$sub = $this->track->selectRaw('`user_id`,min(DATE(`lastactivity`)) as `firstlogin`')
-		->whereNotNull('lastactivity')
-		->groupBy('user_id');
-	// this should be a join
-		dd( \DB::table(\DB::raw('select count(`user_id`),`first.firstlogin`')
-			\DB::raw("({$sub->toSql()}) as first"))
-			->mergeBindings($sub->getQuery())
-    		->groupBy('first.firstlogin')->toSql());
-    		
-    		//return $lastlogin->whereNull('max.laslogin');	
-*/
-
-
-		$query = "select 
+				$query = "select 
 					count(user_id) as logins,
 					day_first_logged 
 				from 
@@ -394,6 +377,22 @@ $count = DB::table( DB::raw("({$sub->toSql()}) as sub") )
 		->get();
 		
 		
+	}
+
+	public function downloadlogins($id=null){
+		
+		
+
+		Excel::create('Users',function($excel) use($id){
+			$excel->sheet('LastLogin',function($sheet) use($id){
+				$users = $this->getUsersByLoginDate($id);
+			
+			
+				$sheet->loadView('admin.users.export',compact('users'));
+			});
+		})->download('csv');
+
+		return response()->return();
 	}
 	
 }
