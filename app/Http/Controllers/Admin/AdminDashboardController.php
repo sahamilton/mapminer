@@ -62,61 +62,82 @@ class AdminDashboardController extends BaseController {
 		
 
 		$users = $this->getUsersByLoginDate($view);
-		$views = ['0'=>'Today','1'=>'Last 24 hrs','2'=>'Last Week','3'=>'Last Month','4'=>'Earlier','5'=>'Never'];
+		$views = $this->getViews();
 
 		return response()->view('admin.users.newshow',compact('users','views','view'));
 	
 	}
 	
+	public function downloadlogins($id=null){
+		$views = $this->getViews();
+		$title = str_replace(" ", "-", 'Last Login '. $views[$id]);
+
+		Excel::create($title,function($excel) use($id,$title){
+			$excel->sheet($title,function($sheet) use($id){
+				$users = $this->getUsersByLoginDate($id);
+				$sheet->loadView('admin.users.export',compact('users'));
+			});
+		})->download('csv');
+
+		return response()->return();
+	}
+
+	private function getViews(){
+		return  ['0'=>'Today',
+		'1'=>'Last 24 hrs',
+		'2'=>'Last Week',
+		'3'=>'Last Month',
+		'4'=>'Earlier',
+		'5'=>'Never'];
+	}
 	
-	
-	public function getUsersByLoginDate($n){
+	private function getUsersByLoginDate($n){
 
 		$interval = $this->getDateIntervals($n);
-
-
 		return $this->user->lastLogin($interval)->with('person','roles','serviceline')->get();	
-
-		
-		
 		
 	}
 
+	/**
+	 * $n integer time period 
+	 *
+	 * return array
+	 */
 	private function getDateIntervals($n){
 		switch ($n){
 			case 0:
 			//today
-			return [Carbon::today(),Carbon::now()];
+			    return [Carbon::today(),Carbon::now()];
 			break;
 
 			case 1:
 			// last 24 hours
-			return [Carbon::now()->subHours('24'),Carbon::now()];
+			    return [Carbon::now()->subHours('24'),Carbon::now()];
 			break;
 
 			case 2:
 			//last week
-			return [Carbon::now()->subWeek(),Carbon::now()->subDay()];
+			    return [Carbon::now()->subWeek(),Carbon::now()->subDay()];
 			break;
 
 			case 3:
 			//last month
-			return [Carbon::now()->subMonth(),Carbon::now()->subWeek()];
+			    return [Carbon::now()->subMonth(),Carbon::now()->subWeek()];
 			break;
 
 			case 4:
 			//more than a month ago
-			return [Carbon::now()->subYear(4),Carbon::now()->subMonth()];
+			    return [Carbon::now()->subYear(4),Carbon::now()->subMonth()];
 			break;
 
 			case 5:
 			// never
-			return null;
+			    return null;
 			break;
 
 			default:
 
-			return [Carbon::today(),Carbon::now()];
+			    return [Carbon::today(),Carbon::now()];
 			break;
 
 
@@ -130,22 +151,22 @@ class AdminDashboardController extends BaseController {
 	 */
 	private function getLogins()
 	{
-				$query = "select 
-					count(user_id) as logins,
-					day_first_logged 
-				from 
-					(SELECT 
-						distinct user_id, 
-						min(DATE(date_add(`". $this->trackingtable."`.`updated_at`, INTERVAL ". $this->offset." SECOND))) as day_first_logged 
-					FROM ". $this->trackingtable.", users
-					WHERE 	
-						users.id = user_id
-						AND users.confirmed is TRUE
-					GROUP BY user_id) 
-				ITEMS 
-				WHERE 
-					day_first_logged is not null 
-				GROUP BY day_first_logged ";
+			$query = "select 
+				count(user_id) as logins,
+				day_first_logged 
+			from 
+				(SELECT 
+					distinct user_id, 
+					min(DATE(date_add(`". $this->trackingtable."`.`updated_at`, INTERVAL ". $this->offset." SECOND))) as day_first_logged 
+				FROM ". $this->trackingtable.", users
+				WHERE 	
+					users.id = user_id
+					AND users.confirmed is TRUE
+				GROUP BY user_id) 
+			ITEMS 
+			WHERE 
+				day_first_logged is not null 
+			GROUP BY day_first_logged ";
 			//dd(str_replace("\t","",str_replace("\n","",$query)));
 		 $result = \DB::select(\DB::raw($query));
 		return $result;	
@@ -379,20 +400,6 @@ class AdminDashboardController extends BaseController {
 		
 	}
 
-	public function downloadlogins($id=null){
-		
-		
-
-		Excel::create('Users',function($excel) use($id){
-			$excel->sheet('LastLogin',function($sheet) use($id){
-				$users = $this->getUsersByLoginDate($id);
-			
-			
-				$sheet->loadView('admin.users.export',compact('users'));
-			});
-		})->download('csv');
-
-		return response()->return();
-	}
+	
 	
 }
