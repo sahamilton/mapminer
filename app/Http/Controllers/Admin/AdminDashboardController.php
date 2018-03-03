@@ -132,7 +132,7 @@ $sub = Abc::where(..)->groupBy(..); // Eloquent Builder instance
 $count = DB::table( DB::raw("({$sub->toSql()}) as sub") )
     ->mergeBindings($sub->getQuery()) // you need to get underlying Query Builder
     ->count();
-*/
+
 		
 		$sub = $this->track->selectRaw('`user_id`,min(DATE(`lastactivity`)) as `firstlogin`')
 		->whereNotNull('lastactivity')
@@ -144,7 +144,7 @@ $count = DB::table( DB::raw("({$sub->toSql()}) as sub") )
     		->groupBy('first.firstlogin')->toSql());
     		
     		//return $lastlogin->whereNull('max.laslogin');	
-
+*/
 
 
 		$query = "select 
@@ -163,7 +163,7 @@ $count = DB::table( DB::raw("({$sub->toSql()}) as sub") )
 				WHERE 
 					day_first_logged is not null 
 				GROUP BY day_first_logged ";
-			dd(str_replace("\t","",str_replace("\n","",$query)));
+			//dd(str_replace("\t","",str_replace("\n","",$query)));
 		 $result = \DB::select(\DB::raw($query));
 		return $result;	
 	}
