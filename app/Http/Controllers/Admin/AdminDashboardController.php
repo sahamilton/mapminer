@@ -4,6 +4,7 @@ use App\Location;
 use App\Note;
 use App\Track;
 use App\User;
+use App\Company;
 use Excel;
 use Carbon\Carbon;
 use App\Http\Controllers\BaseController;
@@ -17,13 +18,14 @@ class AdminDashboardController extends BaseController {
 	private $trackingtable ='track';
 	private $track;
 	private $user;
+	private $company;
 	
 	
-	
-	public function __construct(Track $track,User $user) {
+	public function __construct(Company $company,Track $track,User $user) {
 		$this->calculateTimeOffset();
 		$this->track = $track;
 		$this->user = $user;
+		$this->company = $company;
 		
 	}
 	
@@ -212,13 +214,10 @@ class AdminDashboardController extends BaseController {
 	 */
 	private function getNoSalesNotes()
 	{
-		$query = "SELECT companyname,companies.id 
-		FROM `companies` 
-		left join company_howtofield on companies.id = company_id 
-		where company_id is null";
 		
-		$result = \DB::select(\DB::raw($query));
-		return $result;
+		return $this->company->whereDoesntHave('salesNotes')->get();
+		
+	
 	}
 		
 	/**
