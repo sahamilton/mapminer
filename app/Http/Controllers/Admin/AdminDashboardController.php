@@ -4,6 +4,7 @@ use App\Location;
 use App\Note;
 use App\Track;
 use App\User;
+use App\Person;
 use App\Company;
 use Excel;
 use Carbon\Carbon;
@@ -19,13 +20,15 @@ class AdminDashboardController extends BaseController {
 	private $track;
 	private $user;
 	private $company;
+	private $person;
 	
 	
-	public function __construct(Company $company,Track $track,User $user) {
+	public function __construct(Company $company,Track $track,User $user,Person $person) {
 		$this->calculateTimeOffset();
 		$this->track = $track;
 		$this->user = $user;
 		$this->company = $company;
+		$this->person = $person;
 		
 	}
 	
@@ -40,6 +43,7 @@ class AdminDashboardController extends BaseController {
 		$data['logins'] = $this->getLogins();
 		$data['status'] = $this->getNoLogins();
 		$data['watchlists'] = $this->getWatchListCount();
+		//dd($data['watchlists']->first());
 		$data['nosalesnotes'] = $this->getNoSalesNotes();
 		//$data['locations'] = $this->countLocations()->count;
 		
@@ -162,20 +166,12 @@ class AdminDashboardController extends BaseController {
 	private function getNoLogins()
 	{
  		
-		$query = "SELECT ";
-		$query= $this->buildSelectQuery($query);
-		$query.="as status, 
-		COUNT(*) as count 
-		from (
-			select distinct user_id as id,max(A.lastactivity) 
-			as lastlogin 
-			from ". $this->trackingtable." as A,
-			users as C where C.id = user_id 
-			and confirmed = 1 group by id
-		) as B 
-		GROUP BY status 
-		Order By Status";
-		return  \DB::select(\DB::raw($query));
+ 		return $this->user->active()
+ 		->selectRaw($this->buildSelectQuery())
+ 		->groupBy('status')
+ 		->orderBy('status')
+ 		->get();
+ 		
 		
 	}
 
@@ -183,7 +179,7 @@ class AdminDashboardController extends BaseController {
 
 
 	**/
-	private function buildSelectQuery($query){
+	private function buildSelectQuery($query=null){
 		$views = $this->getViews();
 		foreach ($views as $view){
 			$seq = $view['value'] +1 . ". ";
@@ -204,6 +200,7 @@ class AdminDashboardController extends BaseController {
 			 }
 		}
 		$query.=str_repeat(")", count($views));
+		$query.=" as status, COUNT(*) as count ";
 		return $query;
 	}
 
@@ -229,16 +226,13 @@ class AdminDashboardController extends BaseController {
 	 */
 	private function getWatchListCount()
 	{
-		
-		$query ="select persons.user_id as user_id, count(persons.user_id) as watching,concat(firstname,' ',lastname) as name 
-				from location_user,users,persons
-				where location_user.user_id = users.id 
-				and persons.user_id = users.id
-				group by name,user_id 
-				order by watching DESC";
-		$result = \DB::select(\DB::raw($query));
-		return $result;	
-	
+		return $this->user
+		->whereHas('watching')
+		->with('person')
+		->withCount('watching')
+		->orderBy('watching_count', 'DESC')
+		->get();
+
 	}
 	/**
 	 * Return array of #locations, #locations without phone number and % by company.
@@ -248,25 +242,10 @@ class AdminDashboardController extends BaseController {
 	 */
 	private function getLocationsWoContacts()
 	{
-		$query ="select companyname, 
-				company_id , 
-				count(locations.id) as locations, 
-				((nocontacts / count(locations.id)) * 100) as percent, 
-				nocontacts 
-				from locations,companies  
-				left join ( 
-					select companies.id as coid, count(locations.id) as nocontacts 
-					from locations,companies 
-					where locations.company_id = companies.id and locations.phone = '' 
-					group by coid 
-				) st2 
-				on st2.coid =  companies.id 
-				where companies.id = locations.company_id
-				group by companyname 
-				order by percent DESC,locations DESC";
+		$query ="select companyname, companies.id, count(locations.id) as locations, (count(locations.id)-withcontacts) as without, (((count(locations.id)-withcontacts) / count(locations.id)) * 100) as percent from locations,companies left join ( select companies.id as coid, count(locations.id) as withcontacts from companies,locations,contacts where companies.id = locations.company_id and locations.id = contacts.location_id group by coid ) st2 on st2.coid = companies.id where companies.id = locations.company_id group by companyname having percent >0 ORDER BY `percent` ASC";
 	
-		$result = \DB::select(\DB::raw($query));
-		return $result;	
+		return \DB::select(\DB::raw($query));
+
 		/**/
 		
 		

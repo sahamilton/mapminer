@@ -49,7 +49,9 @@ class User extends Authenticatable
 		return $this->belongsToMany(Role::class);
 	}
 
-	
+	public function active(){
+		return $this->where('confirmed','=',1);
+	}
 	  
 	  public function manager() {
 		  
