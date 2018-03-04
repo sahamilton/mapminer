@@ -63,14 +63,13 @@ class AdminDashboardController extends BaseController {
 
 		$users = $this->getUsersByLoginDate($view);
 		$views = $this->getViews();
-
 		return response()->view('admin.users.newshow',compact('users','views','view'));
 	
 	}
 	
 	public function downloadlogins($id=null){
 		$views = $this->getViews();
-		$title = str_replace(" ", "-", 'Last Login '. $views[$id]);
+		$title = str_replace(" ", "-", 'Last Login '. $views[$id]['label']);
 
 		Excel::create($title,function($excel) use($id,$title){
 			$excel->sheet($title,function($sheet) use($id){
@@ -83,17 +82,37 @@ class AdminDashboardController extends BaseController {
 	}
 
 	private function getViews(){
-		return  ['0'=>'Today',
-		'1'=>'Last 24 hrs',
-		'2'=>'Last Week',
-		'3'=>'Last Month',
-		'4'=>'Earlier',
-		'5'=>'Never'];
+		return  [
+			['label'=>'Today',
+			'value'=>0,
+			'interval'=>['from'=>Carbon::today(),
+			                 'to'=>Carbon::now()]],
+			['label'=>'Last 24 hrs',
+			'value'=>1,
+			 'interval'=>['from'=>Carbon::now()->subHours('24'),
+			                  'to'=>Carbon::now()]],
+			['label'=>'Last Week',
+			'value'=>2,
+			'interval'=>['from'=>Carbon::now()->subWeek(),
+					         'to'=>Carbon::now()->subDay()]],
+			['label'=>'Last Month',
+			'value'=>3,
+			'interval'=>['from'=>Carbon::now()->subMonth(),
+			                     'to'=>Carbon::now()->subWeek()]],
+			['label'=>'Earlier',
+			'value'=>4,
+			'interval'=>['from'=>Carbon::now()->subYear(5),
+			                     'to'=>Carbon::now()->subMonth()]],
+			['label'=>'Never',
+			'value'=>5,
+			'interval'=> null],                   	
+			
+		];
 	}
 	
 	private function getUsersByLoginDate($n){
-
-		$interval = $this->getDateIntervals($n);
+		$periods = $this->getViews();
+		$interval = $periods[$n]['interval'];
 		return $this->user->lastLogin($interval)->with('person','roles','serviceline')->get();	
 		
 	}
@@ -103,46 +122,7 @@ class AdminDashboardController extends BaseController {
 	 *
 	 * return array
 	 */
-	private function getDateIntervals($n){
-		switch ($n){
-			case 0:
-			//today
-			    return [Carbon::today(),Carbon::now()];
-			break;
-
-			case 1:
-			// last 24 hours
-			    return [Carbon::now()->subHours('24'),Carbon::now()];
-			break;
-
-			case 2:
-			//last week
-			    return [Carbon::now()->subWeek(),Carbon::now()->subDay()];
-			break;
-
-			case 3:
-			//last month
-			    return [Carbon::now()->subMonth(),Carbon::now()->subWeek()];
-			break;
-
-			case 4:
-			//more than a month ago
-			    return [Carbon::now()->subYear(4),Carbon::now()->subMonth()];
-			break;
-
-			case 5:
-			// never
-			    return null;
-			break;
-
-			default:
-
-			    return [Carbon::today(),Carbon::now()];
-			break;
-
-
-		}
-	}
+	
 	/**
 	 * Return array of logins by day.
 	 *	Exclude non-logins
@@ -180,30 +160,50 @@ class AdminDashboardController extends BaseController {
 	private function getNoLogins()
 	{
  		
-
-		$query = "SELECT 
-		
-		IF(date(lastlogin) = '".Carbon::today()."' , '1. Today', 
-		IF(date(lastlogin) 
-		>= '".Carbon::today()->subHours('24')."', '2. Last 24 hours', 
-		IF(date(lastlogin)
-		>= '".Carbon::today()->subWeek()."', '3. Last week', 
-		IF(date(lastlogin) 
-		>= '".Carbon::today()->subMonth()."', '4. Last Month', 
-		IF((lastlogin IS NULL or lastlogin like '0000%'),'6. No Login', '5. Earlier')) ))) 
-		as status, 
+		$query = "SELECT ";
+		$query= $this->buildSelectQuery($query);
+		$query.="as status, 
 		COUNT(*) as count 
 		from (
-			select distinct user_id as id,max(A.updated_at) as lastlogin from ". $this->trackingtable." as A,
+			select distinct user_id as id,max(A.lastactivity) 
+			as lastlogin 
+			from ". $this->trackingtable." as A,
 			users as C where C.id = user_id 
 			and confirmed = 1 group by id
 		) as B 
 		GROUP BY status 
 		Order By Status";
-
-		$result = \DB::select(\DB::raw($query));
-		return $result;	
+		return  \DB::select(\DB::raw($query));
+		
 	}
+
+	/**
+
+
+	**/
+	private function buildSelectQuery($query){
+		$views = $this->getViews();
+		foreach ($views as $view){
+			if($view['interval']){
+				$query.=" if(date(lastlogin)>='".
+			          $view['interval']['from'].
+			          "','".
+			          $view['value'].
+			          " ".
+			          $view['label'].
+			          "',";
+			 }else{
+			 	$query.=" if(date(lastlogin) is NULL ,'".
+			          $view['value'].
+			          " ".
+			          $view['label'].
+			          "','Nothing'";
+			 }
+		}
+		$query.=str_repeat(")", count($views));
+		return $query;
+	}
+
 	/**
 	 * Return array of companies that have no sales notes
 	 *	

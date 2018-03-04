@@ -4,18 +4,21 @@
 {{-- Content --}}
 @section('content')
 	<div class="page-header">
+
         <h2>Mapminer Activity</h2>
-		<h4>Users who have logged in {{$views[$view]}}</h4>
+
+		<h4>Users who last logged in {{$views[$view]['label']}}</h4>
 		<p><a href="{{route('admin.downloadlogins',$view)}}" 
             title="Download these user details as a CSV / Excel file">
             <i class="glyphicon glyphicon-cloud-download"></i> 
             Download these user details</a> 
         </p>
-        @foreach ( $views as $key=>$value)
-        	@if($view != $key)
-        		<a href="{{route('admin.showlogins',$key)}}">{{$value}}</a> | 
+
+        @foreach ( $views as $selectview)
+        	@if($selectview['value'] != $view)
+        		<a href="{{route('admin.showlogins',$selectview['value'])}}">{{$selectview['label']}}</a> | 
        	 	@else
-        		{{$value}} |
+        		{{$selectview['label']}} |
             @endif
         @endforeach
     
