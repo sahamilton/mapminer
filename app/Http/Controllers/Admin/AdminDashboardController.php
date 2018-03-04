@@ -186,17 +186,18 @@ class AdminDashboardController extends BaseController {
 	private function buildSelectQuery($query){
 		$views = $this->getViews();
 		foreach ($views as $view){
+			$seq = $view['value'] +1 . ". ";
 			if($view['interval']){
 				$query.=" if(date(lastlogin)>='".
 			          $view['interval']['from'].
 			          "','".
-			          $view['value'].
+			          $seq  .
 			          " ".
 			          $view['label'].
 			          "',";
 			 }else{
 			 	$query.=" if(date(lastlogin) is NULL ,'".
-			          $view['value'].
+			          $seq .
 			          " ".
 			          $view['label'].
 			          "','Nothing'";
