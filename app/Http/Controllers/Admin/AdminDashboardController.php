@@ -137,25 +137,32 @@ class AdminDashboardController extends BaseController {
 	 */
 	private function getLogins()
 	{
-			$query = "select 
-				count(user_id) as logins,
-				day_first_logged 
-			from 
-				(SELECT 
-					distinct user_id, 
-					min(DATE(date_add(`". $this->trackingtable."`.`updated_at`, INTERVAL ". $this->offset." SECOND))) as day_first_logged 
-				FROM ". $this->trackingtable.", users
-				WHERE 	
-					users.id = user_id
-					AND users.confirmed is TRUE
-				GROUP BY user_id) 
-			ITEMS 
-			WHERE 
-				day_first_logged is not null 
-			GROUP BY day_first_logged ";
-			//dd(str_replace("\t","",str_replace("\n","",$query)));
-		 $result = \DB::select(\DB::raw($query));
-		return $result;	
+			
+  
+  		$subQuery =(
+		$this->track
+		->whereHas('user',function ($q){
+			$q->where('confirmed','=',1);
+		})
+		    ->selectRaw('count(user_id) as logins, 
+		    	date(min(`lastactivity`)) as datelabel,
+		    	DATE_FORMAT(min(`lastactivity`),"%Y-%m") as firstlogin')
+			->whereNotNull('lastactivity')
+
+			->groupBy('user_id'));
+
+
+
+		return  \DB::
+		table(\DB::raw('('.$subQuery->toSql().') as ol'))
+		->selectRaw('count(logins) as logins,firstlogin')
+		->mergeBindings($subQuery->getQuery())
+	
+		->groupBy('firstlogin')
+		->orderBy('firstlogin', 'ASC')
+	    ->get();
+
+			
 	}
 	/**
 	 * Return array of logins by grouped intervals.

@@ -34,6 +34,12 @@ class User extends Authenticatable
 		  return $this->hasOne(Track::class,'user_id');
 	 }
 	 
+
+	 public function firstLogin(){
+	 	return $this->hasOne(Track::class,'user_id')->min('lastactivity');
+	 }
+
+
 	 public function watching () {
 			return $this->belongsToMany(Location::class); 
 		 

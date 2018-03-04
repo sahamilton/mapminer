@@ -1,26 +1,23 @@
 @extends('admin.layouts.default')
 
 <?php $labels = $values = $n = $skip =NULL;
-$cumulative = array();
+$cumulative = array();?>
 
-foreach ($data['logins'] as $element) {
-	if($skip > 10){
- 		$labels.= "'" .$element->day_first_logged. "',";
- 		$skip=0;
-	}else{
-		$labels.= "'',";
-	}
-	$skip++;
-	// $values.= $element['logins'].",";
-	 if($n > 0){
-		 $cumulative[]=$element->logins + $cumulative[$n-1];
-	 }else{
-		 $cumulative[]=$element->logins;
-	 }
- $n++;
-}
-
-$labels = substr($labels,0,-1);
+@foreach ($data['logins'] as $element)
+  @if($loop->first || $loop->index % 3 === 0)
+	
+ 	<?php 	$labels.= "'" .$element->firstlogin. "',";?>
+	@else
+<?php   $labels.= "'',";?>
+  @endif
+	 @if(! $loop->first)
+   		 <?php $cumulative[]=$element->logins + $cumulative[$loop->index -1];?>
+   
+	 @else
+		 <?php $cumulative[]=$element->logins;?>
+    @endif
+@endforeach
+<?php $labels = substr($labels,0,-1);
 //$values = substr($values,0,-1);
 
 $total = implode(",",$cumulative);
@@ -54,7 +51,7 @@ $datastring = substr($datastring,0,-1);
       <h3>Usage</h3>
       	@include ('admin.partials.firstlogged')
 
-		@include ('admin.partials.lastlogged')
+		    @include ('admin.partials.lastlogged')
 
     
     </div>
