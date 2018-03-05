@@ -1,6 +1,7 @@
 @extends('admin.layouts.default')
 
-<?php $labels = $values = $n = $skip =NULL;
+<?php 
+$labels =null;
 $cumulative = array();?>
 
 @foreach ($data['logins'] as $element)
