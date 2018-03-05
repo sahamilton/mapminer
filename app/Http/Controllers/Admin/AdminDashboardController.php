@@ -52,7 +52,7 @@ class AdminDashboardController extends BaseController {
 		$data['nocontact'] =$this->getLocationsWoContacts();
 		$data['locationnotes'] =$this->getLocationsNotes();
 		
-		$data['incorrectSegments'] = $this->incorrectSegments();
+		//$data['incorrectSegments'] = $this->incorrectSegments();
 		
 		$data['nogeocode'] =$this->getNoGeocodedLocations();
 		$data['recentLocationNotes'] = $this->recentLocationNotes();
@@ -165,18 +165,15 @@ class AdminDashboardController extends BaseController {
 			
   
   		$subQuery =(
-		$this->track
-		->whereHas('user',function ($q){
-			$q->where('confirmed','=',1);
-		})
-		    ->selectRaw('count(user_id) as logins, 
-		    	date(min(`lastactivity`)) as datelabel,
-		    	DATE_FORMAT(min(`lastactivity`),"%Y-%m") as firstlogin')
-			->whereNotNull('lastactivity')
-
-			->groupBy('user_id'));
-
-
+		   $this->track
+				->whereHas('user',function ($q){
+						$q->where('confirmed','=',1);
+					})
+			    ->selectRaw('count(user_id) as logins, 
+			    	date(min(`lastactivity`)) as datelabel,
+			    	DATE_FORMAT(min(`lastactivity`),"%Y-%m") as firstlogin')
+				->whereNotNull('lastactivity')
+				->groupBy('user_id'));
 
 		return  \DB::
 				table(\DB::raw('('.$subQuery->toSql().') as ol'))
@@ -184,9 +181,7 @@ class AdminDashboardController extends BaseController {
 				->mergeBindings($subQuery->getQuery())
 				->groupBy('firstlogin')
 				->orderBy('firstlogin', 'ASC')
-			    ->get();
-
-			
+			    ->get();	
 	}
 	/**
 	 * Return array of logins by grouped intervals.
@@ -202,7 +197,6 @@ class AdminDashboardController extends BaseController {
 		 		->groupBy('status')
 		 		->orderBy('status')
 		 		->get();
- 		
 		
 	}
 
@@ -273,7 +267,8 @@ class AdminDashboardController extends BaseController {
 	 */
 	private function getLocationsWoContacts()
 	{
-/*		$subQuery =(
+		/*		
+		$subQuery =(
 			$this->company->
 			->selectRaw('id,count(locations.id) as withcontacts')
 			->with('locations','locations.contacts')
@@ -365,8 +360,18 @@ class AdminDashboardController extends BaseController {
 
 	}
 	
-	function incorrectSegments()
+	private function incorrectSegments()
 	{
+		
+		/*return $this->location->with('company','verticalsegment')
+			->selectRaw('*, 
+					count(locations.id) as incorrect')
+			->whereNotIn('segment',function($query){
+               $query->select('vertical')->from('companies')->find();
+            })
+         ->groupBy('company_id')
+         ->get();
+         */
 		$query ="
 		SELECT 
 			companies.companyname as account, 
@@ -388,9 +393,9 @@ class AdminDashboardController extends BaseController {
 				where parent_id = companies.vertical) 
 		group by 
 		companies.companyname
-		Order By companies.companyname";
-		$result = \DB::select(\DB::raw($query));
-		return $result;	
+		order By companies.companyname";
+		return \DB::select(\DB::raw($query));
+		
 	}
 	
 	private function getNoGeocodedLocations()

@@ -51,10 +51,7 @@ $datastring = substr($datastring,0,-1);
     <div id="home" class="tab-pane fade in active">
       <h3>Usage</h3>
       	@include ('admin.partials.firstlogged')
-
 		    @include ('admin.partials.lastlogged')
-
-    
     </div>
     <div id="menu1" class="tab-pane fade">
       <h3>Account Activity</h3>

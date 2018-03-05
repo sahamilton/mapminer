@@ -99,126 +99,7 @@ class Location extends Model {
 	}
 	
 	
-	/*
-		Find company locations from db as a function of lat, lng, distance and limit 
-		
-		Definitions:                                                           
-			South latitudes are negative, east longitudes are positive           
-		
-		Passed to function:                                                   
-			lat, lon = Latitude and Longitude of reference position  
-    		distance in miles (note could add kilometers as another function)
-			number is the limit
-
-		Added filter on users service lines
-				
-		@return result
-	
-	*/	
-	// moving to geocode scope findNearby
-	public function findNearbyLocations($lat,$lng,$distance,$number,$company=NULL,$userServiceLines, $limit=null, $verticals=null,$segments=null)
-	
-	{
-		
-
-		if(null=== $userServiceLines){
-					$userServiceLines = $this->getUserServiceLines();
-		}
-		if(! $verticals){
-			$keyset = ['vertical','segment','businesstype'];
-			$searchKeys = array();
-			$filtered = $this->isFiltered(['companies','locations'],['vertical','segment','business']);
-			
-			if($filtered)
-			{
-				
-				$searchKeys = $this->getQuerySearchKeys();
-
-			}
-		}else{
-			$keyset = ['vertical','segment','businesstype'];
-			$searchKeys['vertical']['keys'] = implode("','",$verticals);
-		}
-		
-		$params = array(":loclat"=>$lat,":loclng"=>$lng,":distance"=>$distance);
-		
-		// Get the users serviceline associations
-		// 
-		
-		
-			
-		$query = "SELECT id,businessname,phone,contact,companyname,company_id,street,city,state,zip,lat,lng, distance_in_mi,segment,businesstype,vertical
-			  FROM (
-					SELECT DISTINCT locations.id as id, 
-						businessname,
-						phone,
-						contact,
-						searchfilters.filter as vertical,
-						locations.segment as segment, 
-						locations.businesstype as businesstype,
-						companyname,
-						locations.company_id,
-						street,	city,state,zip,
-						lat,lng,r,
-							   69.0 * DEGREES(ACOS(COS(RADIANS(latpoint))
-										 * COS(RADIANS(lat))
-										 * COS(RADIANS(longpoint) - RADIANS(lng))
-										 + SIN(RADIANS(latpoint))
-										 * SIN(RADIANS(lat)))) AS distance_in_mi
-					 FROM 
-					 	locations,companies,searchfilters,company_serviceline
-					 JOIN (
-							SELECT  ".$lat."  AS latpoint,  ".$lng." AS longpoint, ".$distance." AS r
-					   ) AS p
-					 WHERE 
-					 	lat
-					  		BETWEEN latpoint  - (r / 69)
-						  	AND latpoint  + (r / 69)
-					  	 AND lng
-					  		BETWEEN longpoint - (r / (69 * COS(RADIANS(latpoint))))
-						  	AND longpoint + (r / (69 * COS(RADIANS(latpoint))))
-						AND companies.id = company_serviceline.company_id
-						AND company_serviceline.serviceline_id in ('".implode("','",$userServiceLines)."')
-						AND locations.company_id = companies.id
-						AND companies.vertical = searchfilters.id ";
-						
-					if ($company!=NULL){
-						$query.=" and companies.id = '".$company."' ";
-					}
-					if($segments !=NULL && is_array($segments)){
-						$query.=" and locations.segment in ('".explode(',',$segments) . "')";
-					}
-					foreach ($keyset as $key)
-					{
-						
-						if(isset($searchKeys[$key]['keys'])){
-							$query .= " AND (".$key." in ('".$searchKeys[$key]['keys']."')";
-							
-							if(isset($searchKeys[$key]['null'] ) && $searchKeys[$key]['null']=='Yes') {
-								$query.=" OR ". $key . " IS NULL";
-							}
-						$query.=")";
-						}
-					}
-
-					 $query.=" ) d
-			 
-			 WHERE distance_in_mi <= r ";
-			 
-			 $query.="  ORDER BY distance_in_mi";
-
-			if(isset($limit))
-			 {
-			 		$query.=" limit " . $limit;
-			 }
-		
-			 $result = \DB::select($query);
-
-		return $result;
-	}
-	
-	public function locationAddress()
-	{
+	public function locationAddress(){
 		return ($this->street . " " . $this->address2 . " " .$this->city . " " . $this->state);
 	}
 	/*
@@ -238,24 +119,8 @@ class Location extends Model {
 		
 	}
 
-	public function distanceBetween($lat1, $lon1, $lat2, $lon2, $unit) {
-		
-		$theta = $lon1 - $lon2;
-		$dist = sin(deg2rad($lat1)) * sin(deg2rad($lat2)) +  cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * cos(deg2rad($theta));
-		$dist = acos($dist);
-		$dist = rad2deg($dist);
-		$miles = $dist * 60 * 1.1515;
-		$unit = strtoupper($unit);
-		if ($unit == "K") {
-			return ($miles * 1.609344);
-		} else if ($unit == "N") {
-			return ($miles * 0.8684);
-		} else {
-			return $miles;
-		}
-	}
-	private function getQuerySearchKeys()
-	{
+	
+	private function getQuerySearchKeys(){
 			$keys = array();
 			$searchKeys = array();
 					
