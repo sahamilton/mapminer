@@ -21,15 +21,16 @@ class AdminDashboardController extends BaseController {
 	private $user;
 	private $company;
 	private $person;
+	private $location;
 	
 	
-	public function __construct(Company $company,Track $track,User $user,Person $person) {
+	public function __construct(Company $company,Location $location, Track $track,User $user,Person $person) {
 		$this->calculateTimeOffset();
 		$this->track = $track;
 		$this->user = $user;
 		$this->company = $company;
 		$this->person = $person;
-		
+		$this->location = $location;
 	}
 	
 	/**
@@ -41,7 +42,7 @@ class AdminDashboardController extends BaseController {
 		
 
 		$data['logins'] = $this->getLogins();
-		$data['status'] = $this->getNoLogins();
+		$data['status'] = $this->getLastLogins();
 		$data['watchlists'] = $this->getWatchListCount();
 		//dd($data['watchlists']->first());
 		$data['nosalesnotes'] = $this->getNoSalesNotes();
@@ -144,6 +145,7 @@ class AdminDashboardController extends BaseController {
 		
 		return array_column($this->getViews(),'color','value');
 	}
+
 	private function getUsersByLoginDate($n){
 		$periods = $this->getViews();
 		$interval = $periods[$n]['interval'];
@@ -177,12 +179,12 @@ class AdminDashboardController extends BaseController {
 
 
 		return  \DB::
-		table(\DB::raw('('.$subQuery->toSql().') as ol'))
-		->selectRaw('count(logins) as logins,firstlogin')
-		->mergeBindings($subQuery->getQuery())
-		->groupBy('firstlogin')
-		->orderBy('firstlogin', 'ASC')
-	    ->get();
+				table(\DB::raw('('.$subQuery->toSql().') as ol'))
+				->selectRaw('count(logins) as logins,firstlogin')
+				->mergeBindings($subQuery->getQuery())
+				->groupBy('firstlogin')
+				->orderBy('firstlogin', 'ASC')
+			    ->get();
 
 			
 	}
@@ -192,14 +194,14 @@ class AdminDashboardController extends BaseController {
 	 * 
 	 * @return Result array
 	 */
-	private function getNoLogins()
+	private function getLastLogins()
 	{
  		
  		return $this->user->active()
- 		->selectRaw($this->buildSelectQuery())
- 		->groupBy('status')
- 		->orderBy('status')
- 		->get();
+		 		->selectRaw($this->buildSelectQuery())
+		 		->groupBy('status')
+		 		->orderBy('status')
+		 		->get();
  		
 		
 	}
@@ -256,11 +258,11 @@ class AdminDashboardController extends BaseController {
 	private function getWatchListCount()
 	{
 		return $this->user
-		->whereHas('watching')
-		->with('person')
-		->withCount('watching')
-		->orderBy('watching_count', 'DESC')
-		->get();
+				->whereHas('watching')
+				->with('person')
+				->withCount('watching')
+				->orderBy('watching_count', 'DESC')
+				->get();
 
 	}
 	/**
@@ -351,28 +353,16 @@ class AdminDashboardController extends BaseController {
 	private function getDuplicateAddresses()
 	{
 		//Query to get duplicate addresses
+		return $this->location
+					->with('company')
+					->selectRaw("company_id,
+								concat_ws(' ',`businessname`,`street`,`city`,`state`) as fulladdress, 
+								count(concat_ws(' ',`businessname`,`street`,`city`,`state`)) as total,
+								state")
+					->groupBy('company_id','fulladdress','state')
+					->havingRaw("total > 1")
+					->get();
 
-		
-		$query ="select 
-					company_id,
-					companyname, 
-					concat_ws(' ',`businessname`,`street`,`city`,`state`) as fulladdress, 
-					count(concat_ws(' ',`businessname`,`street`,`city`,`state`)) as total,
-					state 
-				FROM
-					locations,companies 
-				WHERE 
-					locations.company_id = companies.id 
-				GROUP BY
-					company_id,companyname, fulladdress,state 
-				HAVING
-					total > 2 
-				ORDER BY
-					total desc";
-					
-		$result = \DB::select(\DB::raw($query));
-		return $result;	
-		
 	}
 	
 	function incorrectSegments()
