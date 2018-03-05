@@ -23,7 +23,7 @@ $cumulative = array();?>
 
 $total = implode(",",$cumulative);
 
-$color=["#2c9c69","#00FF00","#FFFF99","#FF9933","#CC3300","#FF0000"];
+
 $n=0;
 $datastring=NULL;
 

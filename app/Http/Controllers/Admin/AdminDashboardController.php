@@ -57,8 +57,8 @@ class AdminDashboardController extends BaseController {
 		$data['recentLocationNotes'] = $this->recentLocationNotes();
 		$data['recentLeadNotes'] = $this->recentLeadNotes();
 		$data['recentProjectNotes'] = $this->recentProjectNotes();
-		
-		return response()->view('admin.dashboard',compact('data'));
+		$color = $this->getChartColors();
+		return response()->view('admin.dashboard',compact('data','color'));
 		
 	}
 	
@@ -88,34 +88,56 @@ class AdminDashboardController extends BaseController {
 	}
 
 	private function getViews(){
+		
+
 		return  [
 			['label'=>'Today',
 			'value'=>0,
 			'interval'=>['from'=>Carbon::today(),
-			                 'to'=>Carbon::now()]],
+			                 'to'=>Carbon::now()],
+			 'color'=>"#2c9c69",],
+
 			['label'=>'Last 24 hrs',
 			'value'=>1,
-			 'interval'=>['from'=>Carbon::now()->subHours('24'),
-			                  'to'=>Carbon::now()]],
+			 'interval'=>['from'=>Carbon::now()->subDay(),
+			                  'to'=>Carbon::now()],
+			 'color'=>"#00FF00",],
 			['label'=>'Last Week',
 			'value'=>2,
 			'interval'=>['from'=>Carbon::now()->subWeek(),
-					         'to'=>Carbon::now()->subDay()]],
+					         'to'=>Carbon::now()->subDay()],
+			'color'=>"#FFFF99",],
+			
 			['label'=>'Last Month',
 			'value'=>3,
 			'interval'=>['from'=>Carbon::now()->subMonth(),
-			                     'to'=>Carbon::now()->subWeek()]],
-			['label'=>'Earlier',
+					         'to'=>Carbon::now()->subDay()],
+			'color'=>"#CC3300",],
+			
+			['label'=>'Last Year',
 			'value'=>4,
-			'interval'=>['from'=>Carbon::now()->subYear(5),
-			                     'to'=>Carbon::now()->subMonth()]],
-			['label'=>'Never',
+			'interval'=>['from'=>Carbon::now()->subYear(),
+			               'to'=>Carbon::now()->subMonth()],
+			 'color'=>"#FF0000",], 
+			                                         
+			
+			['label'=>'Earlier',
 			'value'=>5,
-			'interval'=> null],                   	
+			'interval'=>['from'=>Carbon::now()->subYear(5),
+			              'to'=>Carbon::now()->subMonth()],
+			 'color'=>"#FF0099",],
+
+			['label'=>'Never',
+			'value'=>6,
+			'interval'=> null,
+			'color'=>'#00FF99',],                   	
 			
 		];
 	}
-	
+	private function getChartColors(){
+		
+		return array_column($this->getViews(),'color','value');
+	}
 	private function getUsersByLoginDate($n){
 		$periods = $this->getViews();
 		$interval = $periods[$n]['interval'];
@@ -123,17 +145,12 @@ class AdminDashboardController extends BaseController {
 		
 	}
 
-	/**
-	 * $n integer time period 
-	 *
-	 * return array
-	 */
-	
+		
 	/**
 	 * Return array of logins by day.
 	 *	Exclude non-logins
 	 * 
-	 * @return Result array
+	 * @return Result collection
 	 */
 	private function getLogins()
 	{
@@ -157,7 +174,6 @@ class AdminDashboardController extends BaseController {
 		table(\DB::raw('('.$subQuery->toSql().') as ol'))
 		->selectRaw('count(logins) as logins,firstlogin')
 		->mergeBindings($subQuery->getQuery())
-	
 		->groupBy('firstlogin')
 		->orderBy('firstlogin', 'ASC')
 	    ->get();
@@ -249,7 +265,47 @@ class AdminDashboardController extends BaseController {
 	 */
 	private function getLocationsWoContacts()
 	{
-		$query ="select companyname, companies.id, count(locations.id) as locations, (count(locations.id)-withcontacts) as without, (((count(locations.id)-withcontacts) / count(locations.id)) * 100) as percent from locations,companies left join ( select companies.id as coid, count(locations.id) as withcontacts from companies,locations,contacts where companies.id = locations.company_id and locations.id = contacts.location_id group by coid ) st2 on st2.coid = companies.id where companies.id = locations.company_id group by companyname having percent >0 ORDER BY `percent` ASC";
+/*		$subQuery =(
+			$this->company->
+			->selectRaw('id,count(locations.id) as withcontacts')
+			->with('locations','locations.contacts')
+			->groupBy('companies.id');
+		)
+
+		return 
+		\DB::
+		table(\DB::raw('('.$subQuery->toSql().') as ol'))
+		->selectRaw('companyname,
+				companies.id,
+				count(locations.id) as locations,
+				(count(locations.id)-withcontacts) as without,
+				(((count(locations.id)-withcontacts) / count(locations.id)) * 100) as percent')
+		->mergeBindings($subQuery->getQuery())
+		*/
+		$query ="
+		    select 
+				companyname,
+				companies.id,
+				count(locations.id) as locations,
+				(count(locations.id)-withcontacts) as without,
+				(((count(locations.id)-withcontacts) / count(locations.id)) * 100) as percent 
+			from locations,companies 
+			left join 
+				( select 
+					companies.id as coid, 
+					count(locations.id) as withcontacts 
+					from companies,
+					locations,
+					contacts 
+					where companies.id = locations.company_id 
+					and locations.id = contacts.location_id 
+					group by coid 
+				) st2 
+			on st2.coid = companies.id 
+			where companies.id = locations.company_id 
+			group by companyname 
+			having percent >0 
+			ORDER BY `percent` ASC";
 	
 		return \DB::select(\DB::raw($query));
 
@@ -289,6 +345,7 @@ class AdminDashboardController extends BaseController {
 	private function getDuplicateAddresses()
 	{
 		//Query to get duplicate addresses
+
 		
 		$query ="select 
 					company_id,
