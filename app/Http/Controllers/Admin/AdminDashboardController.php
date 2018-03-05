@@ -136,7 +136,7 @@ class AdminDashboardController extends BaseController {
 			['label'=>'Never',
 			'value'=>7,
 			'interval'=> null,
-			'color'=>'#00FF99',],                   	
+			'color'=>'#00CC99',],                   	
 			
 		];
 	}

@@ -102,7 +102,7 @@ var data = {
         
 		{
             label: "Cumulative Logins",
-           fillColor: "rgba(44, 156, 105,0.5)",
+            fillColor: "rgba(44, 156, 105,0.5)",
             strokeColor: "rgba(151,187,205,0.8)",
             highlightFill: "rgba(151,187,205,0.75)",
             highlightStroke: "rgba(151,187,205,1)",

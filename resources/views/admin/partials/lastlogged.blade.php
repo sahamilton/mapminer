@@ -16,7 +16,7 @@ style = "width:400;float:left;border:1px solid #000;margin:20px;padding:20px;">
 	@foreach ($data['status'] as $status)
 		<tr>
 			<td>
-				<span style="background-color:{{$color[$n]}}">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+				<span style="background-color:{{$color[$n]}};border:1px solid black">&nbsp;&nbsp;&nbsp;&nbsp;</span>
 			</td>
 			<td>
 				<a href="{{route('admin.showlogins',substr($status->status,0,1) - 1)}}" 
