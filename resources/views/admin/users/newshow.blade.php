@@ -7,7 +7,10 @@
 
         <h2>Mapminer Activity</h2>
 
-		<h4>Users who last logged in {{$views[$view]['label']}}</h4>
+		<h4>Users who last logged in between 
+            {{$views[$view]['interval']['from']->format('M jS Y')}}
+        and {{$views[$view]['interval']['to']->format('M jS Y')}}
+    </h4>
 		<p><a href="{{route('admin.downloadlogins',$view)}}" 
             title="Download these user details as a CSV / Excel file">
             <i class="glyphicon glyphicon-cloud-download"></i> 
