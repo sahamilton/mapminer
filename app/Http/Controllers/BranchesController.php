@@ -324,9 +324,14 @@ class BranchesController extends BaseController {
 		}
 		$branch = $this->branch->findOrFail($id);
 
-		$loclat = $branch->lat;
-		$loclng = $branch->lng;
-		$branches = collect($branch->findNearbyBranches($loclat,$loclng,$distance,$number=1,$this->userServiceLines));
+		$servicelines = $this->userServiceLines;
+	
+		$branches = $this->branch->whereHas('servicelines',function ($q) use ($servicelines){
+			$q->whereIn('id',$servicelines);
+		})
+		->nearby($branch,$distance)
+		->get();
+		
         return response()->view('branches.xml', compact('branches'))->header('Content-Type', 'text/xml');
 
 		
@@ -347,17 +352,7 @@ class BranchesController extends BaseController {
 			
 		}
 		$data = \App\State::where('statecode','=',$state)->firstOrFail()->toArray();
-		/*$branches = $this->retrieveStateBranches($state);
 		
-		foreach ($branches as $branch) 
-		{
-			$data['lat'] = $branch->instate->lat;
-			$data['lng'] = $branch->instate->lng;
-			$data['fullstate'] = $branch->instate->fullstate;
-			$data['state'] = $branch->instate->statecode;
-			break;
-		}*/
-
 		return response()->view('branches.statemap', compact('data','servicelines'));	
 		
 	}
@@ -378,7 +373,7 @@ class BranchesController extends BaseController {
 		$data['fullstate'] = $fullState[$state];
 		$data['state'] = $state;
 		return response()->view('branches.state', compact('data','branches'));
-		//echo $this->branch->makeNearbyBranchXML($branch);
+		
 
 		
 	}
@@ -509,7 +504,7 @@ protected function getBranchGeoCode($address)
 				// No exception will be thrown here
 				echo $e->getMessage();
 			}
-		dd($geoCode);
+		
 		$input['lat'] = $geoCode['latitude'];
 		$input['lng'] = $geoCode['longitude'];
 
