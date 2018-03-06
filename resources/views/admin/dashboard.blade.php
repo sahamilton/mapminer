@@ -23,16 +23,9 @@ $cumulative = array();?>
 
 $total = implode(",",$cumulative);
 
+$labelstring =implode(",",array_keys($data['status']->keyBy('count')->toArray()));
 
-$n=0;
-$datastring=NULL;
-
-foreach ($data['status'] as $status){
-	$datastring.="{ value:". $status->count .",label:'". $status->status ."', color:\"".$color[$n]."\"},";
-	$n++;
-}
-$datastring = substr($datastring,0,-1);
-
+$datastring =implode(",",array_keys($data['status']->keyBy('count')->toArray()));
 ?>
 
 {{-- Content --}}
@@ -51,7 +44,10 @@ $datastring = substr($datastring,0,-1);
     <div id="home" class="tab-pane fade in active">
       <h3>Usage</h3>
       	@include ('admin.partials.firstlogged')
+
 		    @include ('admin.partials.lastlogged')
+
+    
     </div>
     <div id="menu1" class="tab-pane fade">
       <h3>Account Activity</h3>
@@ -76,49 +72,57 @@ $datastring = substr($datastring,0,-1);
 
 
 
-
-
-
-
-
-
-
-
-
-
-<script type="text/javascript" src="{{asset('assets/js/Chart.min.js')}}"></script>
+<script type="text/javascript" 
+src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
 <script>
 var ctx = document.getElementById("barChart").getContext("2d");
 
+var barChart = new Chart(ctx, 
+{
+    type: 'line',
+    data:{
+      labels: [{!! $labels !!}],
 
-var data = {
+      datasets: [
+          
+          {
+              label: "Cumulative Logins",
+              backgroundColor: ["#3e95cd"],
+              data:[{!!$total!!}],
+              borderWidth: 1,
+              fill:true,
+          }
+      ]
+    },
+},options = {
+    scales: {
+        xAxes: [{
+            gridLines: {
+                offsetGridLines: true
+            }
+        }]
+    }
+});
 
-    labels: [{!! $labels !!}],
-
-    datasets: [
-        
-		{
-            label: "Cumulative Logins",
-            fillColor: "rgba(44, 156, 105,0.5)",
-            strokeColor: "rgba(151,187,205,0.8)",
-            highlightFill: "rgba(151,187,205,0.75)",
-            highlightStroke: "rgba(151,187,205,1)",
-			
-    		
-            data: [{!!$total!!}]
+new Chart(document.getElementById("pieChart"), {
+    type: 'doughnut',
+    data: {
+     
+      datasets: [
+        {
+          label: "Number of Users",
+          backgroundColor: ["{!! implode('","',$color)!!}"],
+          data: [{!! $datastring !!}]
         }
-    ]
-};
-
-new Chart(ctx).Bar(data);
-
-var data = [
-    {!!$datastring!!}
-
-];
-var canvas = document.getElementById("pieChart");
-var ctx = canvas.getContext("2d");
-new Chart(ctx).Doughnut(data);
+      ]
+    },
+    options: {
+      title: {
+        display: false,
+        text: 'Number of users by date of last login'
+      }
+    }
+});
 </script>
 @include('partials/_scripts')
 @stop
