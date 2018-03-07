@@ -120,7 +120,7 @@ class LocationsController extends BaseController {
 		return response()->view('locations.show', compact('location','branch','watch'));
 	}
 	
-	
+	/*
 
 	public function summaryLocations($id)
 	{
@@ -136,7 +136,7 @@ class LocationsController extends BaseController {
 			
 		}
 	}
-	
+	*/
 
 	/**
 	 * Show the form for editing the specified location.
@@ -307,7 +307,7 @@ class LocationsController extends BaseController {
 			$locaction->lng = '-122.44';
 		}
 		
-		$locations =  $this->location->nearby($location,$distance);	
+		$locations =  $this->location;	
 		if($company_id){
 			$locations->where('company_id','=',$company_id);
 		}
@@ -319,7 +319,8 @@ class LocationsController extends BaseController {
 		return $locations->whereHas('company.serviceline',function ($q) {
 			$q->whereIn('servicelines.id',$this->userServiceLines);
 
-		})->get();
+		})->nearby($location,$distance)
+		->get();
 		
 
 		

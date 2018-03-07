@@ -66,10 +66,6 @@ class Location extends Model {
 	}
 	
 
-	public function scopeNearbyBranches(){
-
-
-	}
 
 	public function watchedBy(){
 

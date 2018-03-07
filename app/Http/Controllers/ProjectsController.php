@@ -80,10 +80,11 @@ class ProjectsController extends BaseController
         ->with('companies','owner','relatedNotes','source')
         ->findOrFail($id);
         
-        $branches = $this->branch->nearby($project,'100')
+        $branches = $this->branch
             ->whereHas('servicelines', function ($q) {
                 $q->whereIn('servicelines.id',$this->userServiceLines);
             })
+            ->nearby($project,'100')
             ->limit(5)
             ->get();
         return response()->view('projects.show',compact('project','statuses','branches'));
