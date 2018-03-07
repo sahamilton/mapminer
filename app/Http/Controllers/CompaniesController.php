@@ -216,7 +216,6 @@ class CompaniesController extends BaseController {
 	 
 	public function show($id,$segment=null)
 	{
-
 	
 		if(is_object($id)){
 			$id = $id->id;
@@ -277,7 +276,7 @@ class CompaniesController extends BaseController {
 		->limit($this->limit)
 		->get();
 		
-		//$locations = $this->locations->findNearbyLocations($location->lat,$location->lng,'1000',$number=null,$company->id,$this->userServiceLines, $limit = $this->limit);
+		
 		}	
 
 		$data['type']='company';
@@ -323,16 +322,8 @@ class CompaniesController extends BaseController {
 
 	private function getStatesInArray($locations)
 	{
-		$states= array();
+		 return $locations->pluck('state')->toArray();
 		
-		foreach ($locations as $location)
-		{
-			if(! in_array($location->state,$states))
-			{
-				$states[]=$location->state;
-			}
-		}
-		return $states;
 	}
 	/*
 	// Get all states that the company has locations in

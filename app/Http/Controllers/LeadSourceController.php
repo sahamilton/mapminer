@@ -9,6 +9,7 @@ use Excel;
 use App\Person;
 use App\SearchFilter;
 use App\LeadStatus;
+use App\Branch;
 use App\Http\Requests\LeadSourceFormRequest;
 use App\Http\Requests\LeadSourceAddLeadsFormRequest;
 use Carbon\Carbon;
@@ -19,12 +20,19 @@ class LeadSourceController extends Controller
     public $person;
     public $vertical;
     public $lead;
-    public function __construct(LeadSource $leadsource, LeadStatus $status, SearchFilter $vertical, Lead $lead, Person $person){
+    public $branch;
+    public function __construct(LeadSource $leadsource, 
+                            LeadStatus $status, 
+                            SearchFilter $vertical, 
+                            Lead $lead, 
+                            Person $person,
+                            Branch $branch){
         $this->leadsource = $leadsource;
         $this->leadstatus = $status;
         $this->person = $person;
         $this->vertical=$vertical;
         $this->lead = $lead;
+        $this->branch = $branch;
 
     }
 
@@ -212,21 +220,15 @@ class LeadSourceController extends Controller
     
 
     private function findClosestRep($leads){
-        $leadinfo = null;
+        $leadinfo = array();
         foreach ($leads as $lead){
-            $data['lat'] = $lead->lat;
-            $data['lng'] = $lead->lng;
-            $data['distance'] = 1000;
-            $data['number'] = 1;
-            $leadinfo[$lead->id] = $this->person->nearby($lead,$data['distance'])
+            $leadinfo[$lead->id] = $this->person->nearby($lead,1000)
             ->whereHas('userdetails.roles',function($q) {
-            $q->whereIn('name','Sales');
+                $q->whereIn('name','Sales');
 
-          })
-          ->limit(1)
-          ->get();
-            //$leadinfo[$lead->id] = $this->person->findNearByPeople($data['lat'],$data['lng'],$data['distance'],$data['number'],'Sales');
-
+            })
+            ->limit(1)
+            ->get();
         }
         return $leadinfo;
     }
@@ -234,12 +236,14 @@ class LeadSourceController extends Controller
      private function findClosestBranches($leads){
         $leadinfo = null;
         foreach ($leads as $lead){
-            $data['lat'] = $lead->lat;
-            $data['lng'] = $lead->lng;
-            $data['distance'] = 1000;
-            $data['number'] = 1;
-            $branch = new \App\Branch;
-            $leadinfo[$lead->id]=$branch->findNearByBranches($data['lat'],$data['lng'],$data['distance'],$data['number'],[5]);
+            
+            $leadinfo[$lead->id] = $this->branch->whereHas('servicelines',function ($q) use ($userservicelines){
+                $q->whereIn('servicelines.id',$userservicelines);
+
+            })
+            ->nearby($lead,1000)
+            ->limit(1)
+            ->get()
 
         }
         return $leadinfo;

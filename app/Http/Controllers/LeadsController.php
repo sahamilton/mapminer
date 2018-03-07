@@ -24,9 +24,13 @@ class LeadsController extends BaseController
     public $leadstatus;
     public $assignTo; 
     public $salesroles = [5,6,7,8];
-    public function __construct(Person $person, Lead $lead,LeadSource $leadsource,SearchFilter $vertical,LeadStatus $status){
+    public function __construct(Person $person, 
+                                Lead $lead,
+                                LeadSource $leadsource,
+                                SearchFilter $vertical,
+                                LeadStatus $status){
 
-    	$this->person = $person;
+    	  $this->person = $person;
         $this->vertical = $vertical;
         $this->lead = $lead;
         $this->leadsource = $leadsource;
@@ -42,7 +46,7 @@ class LeadsController extends BaseController
     {   
 
         $statuses = $this->leadstatus->pluck('status','id')->toArray();
-      $query = $this->lead->query();
+        $query = $this->lead->query();
 
         $query = $query->with('salesteam','leadsource','ownedBy')
         ->wherehas('leadsource',function($q){
@@ -91,12 +95,10 @@ class LeadsController extends BaseController
         $verticals = $lead->leadsource->verticals()->pluck('searchfilters.id')->toArray();
         $rank = $this->lead->rankLead($lead->salesteam);
         $branch = new \App\Branch;
-        //$branches = $branch->findNearbyBranches($lead->lat,$lead->lng,500,5,[5]);
         $branches = $branch->nearby($lead,500)->limit(5)->get();
 
         if(count($lead->salesteam)==0){
-            //$people = $this->person->findNearByPeople($lead->lat,$lead->lng,'5000',5,$this->assignTo,$verticals);
-            $people = $this->person->nearby($lead,'1000')->with('userdetails')
+             $people = $this->person->nearby($lead,'1000')->with('userdetails')
                     ->whereHas('userdetails.roles',function($q) {
                       $q->whereIn('name',$this->assignTo);
 
@@ -285,7 +287,7 @@ class LeadsController extends BaseController
         }
 
       return $persons->get();
-     //   return $this->person->findNearByPeople($data['lat'],$data['lng'],$data['distance'],$data['number'],['Sales'],$data['verticals']);
+    
     }
 
     private function createNewSource($request){

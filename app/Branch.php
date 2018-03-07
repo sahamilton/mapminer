@@ -85,59 +85,6 @@ class Branch extends Model {
 	}
 	
 	
-	
-	public function findNearbyBranches($lat,$lng,$distance,$number,$userServiceLines)
-	{
-	
-
-		if (! $userServiceLines)
-		{
-			$userServiceLines = $this->getUserServiceLines();
-			
-		}
-		if (is_a($userServiceLines,'Illuminate\Support\Collection')) {
-			$userServiceLines = $userServiceLines->toArray();
-		}
-		$coordinates = $this->getPositionCoordinates($lat,$lng,$distance, $number);
-	
-		$query = "select distinct branchid,branchname,street,address2,city,state,zip,lat,lng, distance_in_mi,
-			  CONCAT_WS(' / ',branchname,branchid) AS name, servicelines FROM (
-			SELECT distinct branches.id as branchid, branchname,street,address2,city,state,zip,lat,lng,r,
-			Serviceline as servicelines,
-				   69.0 * DEGREES(ACOS(COS(RADIANS(latpoint))
-							 * COS(RADIANS(lat))
-							 * COS(RADIANS(longpoint) - RADIANS(lng))
-							 + SIN(RADIANS(latpoint))
-							 * SIN(RADIANS(lat)))) AS distance_in_mi
-			 FROM branches,branch_serviceline,servicelines 
-			 JOIN (
-					SELECT  ".$lat."  AS latpoint,  ".$lng." AS longpoint, ".$distance." AS r
-			   ) AS p
-			 WHERE 
-			 	branches.id = branch_serviceline.branch_id
-			 	and branch_serviceline.serviceline_id = servicelines.id
-    			and branch_serviceline.serviceline_id in ('".implode("','",$userServiceLines)."')
-    			and lat
-			  BETWEEN latpoint  - (r / 69)
-				  AND latpoint  + (r / 69)
-			   AND lng
-			  BETWEEN longpoint - (r / (69 * COS(RADIANS(latpoint))))
-				  AND longpoint + (r / (69 * COS(RADIANS(latpoint))))
-			  ) d
-			 WHERE distance_in_mi <= r
-			 ORDER BY distance_in_mi";
-			 if($number){
-			 	$query.=" limit " . $number; 
-			 }
-
-		
-		$query = str_replace("\r\n",' ',$query);
-		$query = str_replace("\t",' ',$query);
-
-		return \DB::select($query);	
-
-	}
-	
 	/* 
 		Calculate bounding box coordinates
 

@@ -204,10 +204,7 @@ class GeoCodingController extends BaseController {
 				->nearby($location,$data['distance'])
 				->get();
 			}
-			//return $result = $this->location->findNearbyLocations($data['lat'],$data['lng'],$data['distance'],$number=1,$company,$this->userServiceLines);
-			
-			
-			
+		
 			break;
 		}
 		

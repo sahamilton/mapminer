@@ -62,7 +62,6 @@ class MapsController extends BaseController {
 	public function findLocalBranches($distance=NULL,$latlng = NULL) {
 		
 		$location = $this->getLocationLatLng($latlng);
-		//$branches = $this->branch->findNearbyBranches($location[0],$location[1],$distance,$number=null,$this->userServiceLines);
 		$branches = $this->branch
 		->whereHas('servicelines',function ($q){
 			$q->whereIn('servicelines.id',$this->userServiceLines);
@@ -75,27 +74,17 @@ class MapsController extends BaseController {
 	
 	public function findLocalAccounts($distance=NULL,$latlng = NULL,$company = NULL) {
 		
-		
 		$location = $this->getLocationLatLng($latlng);
-
-		
-		$locations = $this->location->nearby($location,$distance)->with('company');
-		
+		$locations = $this->location
+		->whereHas('company.serviceline',function ($q){
+			$q->whereIn('servicelines.id',$this->userServiceLines);
+		});
 		if($company){
 			$locations->where('company_id','=',$company);
 		}
-		/*$locations->whereHas('company.serviceline',function ($q){
-			$q->whereIn('servicelines.id',$this->userServiceLines);
-		});*/
-		$result = $locations->get();
-
-
-
-		//$result = $this->location->findNearbyLocations($geo[0],$geo[1],$distance,$number=null,$company,$this->userServiceLines);
+		$result = $locations->nearby($location,$distance)->with('company')->get();
 		return response()->view('locations.xml', compact('result'))->header('Content-Type', 'text/xml');
-
-
-		
+	
 	}
 	// hmmmmm I dont think this works~
 	public function getCenterPoint()
@@ -106,7 +95,7 @@ class MapsController extends BaseController {
 
 	private function getLocationLatLng($latlng){
 		$position =explode(":",$latlng);
-		$location = new Person;
+		$location = new Location;
 		$location->lat = $position[0];
 		$location->lng = $position[1];
 		return $location;

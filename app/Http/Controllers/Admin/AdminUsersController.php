@@ -349,8 +349,12 @@ class AdminUsersController extends BaseController {
 
 				$userServiceLines= $user->serviceline()->pluck('servicelines.id')->toArray();
              
-				$nearbyBranches = $this->branch->findNearbyBranches($user->person->lat,$user->person->lng,100,100,$userServiceLines);
-
+                 $nearbyBranches = $this->branch->whereHas('serviceline' function($q) use($userServiceLines){
+                    $q->whereIn('servicelines.id',$userServiceLines);
+                 })
+                 ->nearby($user->person,100)
+                 ->limit(20);
+				
 				$branches[0] = 'none';
 				foreach($nearbyBranches as $nearbyBranch){
         

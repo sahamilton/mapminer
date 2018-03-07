@@ -78,9 +78,8 @@ class ProjectsController extends BaseController
 
         $project = $this->project
         ->with('companies','owner','relatedNotes','source')
-       
         ->findOrFail($id);
-        //$branches = $this->branch->findNearbyBranches($project->lat,$project->lng,100,$limit=5,$this->userServiceLines);
+        
         $branches = $this->branch->nearby($project,'100')
             ->whereHas('servicelines', function ($q) {
                 $q->whereIn('servicelines.id',$this->userServiceLines);
@@ -172,14 +171,13 @@ class ProjectsController extends BaseController
     public function findNearbyProjects($distance,$latlng){
 
         $geo =explode(":",$latlng);
-        $location = new \stdClass;
+        $location = new Project;
         $location->lat=$geo[0];
         $location->lng=$geo[1];
 
         $limit=100;
         $result = $this->project->nearby($location,$distance)->limit(100)->get();
-       // $result = $this->project->findNearbyProjects($lat,$lng,$distance,$limit,$this->userServiceLines);
-       return  $this->makeNearbyProjectsXML($result);
+        return  $this->makeNearbyProjectsXML($result);
         
     }
 

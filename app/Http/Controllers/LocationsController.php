@@ -307,7 +307,6 @@ class LocationsController extends BaseController {
 			$locaction->lng = '-122.44';
 		}
 		
-		//$result = $this->location->findNearbyLocations($loclat,$loclng,$distance,$number=1,$company_id,$this->userServiceLines,$vertical);
 		$locations =  $this->location->nearby($location,$distance);	
 		if($company_id){
 			$locations->where('company_id','=',$company_id);
