@@ -60,11 +60,11 @@ class AdminUsersController extends BaseController {
      * @param Permission $permission
      * @param Person $person
      * @param Track $track
-     * 
+     *
      */
     public function __construct(User $user, Role $role, Person $person, Permission $permission, Branch $branch, Track $track,Serviceline $serviceline,Company $company, SearchFilter $searchfilter)
     {
-        
+
         $this->user = $user;
         $this->company = $company;
         $this->role = $role;
@@ -74,7 +74,7 @@ class AdminUsersController extends BaseController {
         $this->branch = $branch;
         $this->serviceline = $serviceline;
         $this->searchfilter = $searchfilter;
-        parent::__construct($this->company);        
+        parent::__construct($this->company);
     }
 
     /**
@@ -84,7 +84,7 @@ class AdminUsersController extends BaseController {
      */
     public function index($id=NULL)
     {
-     
+
         if(! $id)
         // Grab all the users
 	       {
@@ -104,7 +104,7 @@ class AdminUsersController extends BaseController {
 
             })
            ->get();
-	     
+
         // Show the page
         return response()->view('admin.users.index', compact('users', 'title','serviceline'));
     }
@@ -136,12 +136,12 @@ class AdminUsersController extends BaseController {
 
 		// Service lines
 		$servicelines = $this->person->getUserServiceLines();
-		
+
 		$branches = $this->getUsersBranches($this->user);
 
 		$verticals = $this->searchfilter->industrysegments();
 
-		
+
 		$managers = $this->getManagerList();
 		// Show the page
 		return response()->view('admin.users.create', compact('roles', 'permissions', 'verticals','selectedRoles', 'selectedPermissions', 'title', 'mode','managers','servicelines','branches'));
@@ -154,7 +154,7 @@ class AdminUsersController extends BaseController {
      */
     public function store(UserFormRequest $request)
     {
-  
+
         $user = $this->user->create($request->all());
         $user->seeder();
         $user->confirmation_code = md5(uniqid(mt_rand(), true));
@@ -163,10 +163,10 @@ class AdminUsersController extends BaseController {
             $user->confirmed = $request->get('confirm');
         }
 
-        
+
 
         if ( $user->save() ) {
-         
+
 			$person = new Person;
             $person->user_id = $user->id;
             $person->firstname = $request->get('firstname');
@@ -174,10 +174,10 @@ class AdminUsersController extends BaseController {
 
             $person->save();
            	$person = $this->updateAssociatedPerson($person,$request->all());
-            $person = $this->associateBranchesWithPerson($person,$request->all());    
+            $person = $this->associateBranchesWithPerson($person,$request->all());
 			$user->person()->save($person);
             $person->rebuild();
-            $track=Track::create(['user_id'=>$user->id]);		
+            $track=Track::create(['user_id'=>$user->id]);
             $user->saveRoles($request->get( 'roles' ));
             $user->serviceline()->attach($request->get('serviceline'));
 	        $person->rebuild();
@@ -185,14 +185,14 @@ class AdminUsersController extends BaseController {
                 ->with('success', 'User created succesfully');
 
         } else {
-           
+
             return redirect()->to('admin/users/create')
                 ->withInput($request->except('password'))
                 ->with( 'error', 'Unable to create user' );
         }
     }
 
-   
+
     /**
      * Display the specified resource.
      *
@@ -202,7 +202,7 @@ class AdminUsersController extends BaseController {
     public function show($user)
     {
         $roles= \App\Role::all()->pluck('name','id')->toArray();
-        
+
         $user = $this->user->with('person','serviceline','roles')->findOrFail($user->id);
         return response()->view('admin.users.showdetail', compact('user','roles'));
 
@@ -216,7 +216,7 @@ class AdminUsersController extends BaseController {
      */
     public function edit($userid)
     {
-        
+
         $user = $this->user
           ->with('serviceline','person','person.branchesServiced','person.industryfocus','roles')
           ->find($userid->id);
@@ -232,16 +232,16 @@ class AdminUsersController extends BaseController {
         	// mode
         	$mode = 'edit';
 			$managers = $this->getManagerList();
-			
+
 			$branchesServiced = $user->person->branchesServiced()->pluck('branches.id','id')->toArray();
-			
-			// Ether get close branches 
-			
+
+			// Ether get close branches
+
 			$branches = $this->getUsersBranches($user);
-		
+
 			$verticals = $this->searchfilter->industrysegments();
             $servicelines = $this->person->getUserServiceLines();
-           
+
         	return response()->view('admin.users.edit', compact('user', 'roles', 'permissions', 'verticals','title', 'mode','managers','servicelines','branches','branchesServiced'));
         }
         else
@@ -265,14 +265,14 @@ class AdminUsersController extends BaseController {
      */
     public function update(UserFormRequest $request,$user)
     {
-       
+
         $user = $this->user->with('person')->find($user->id);
         $oldUser = clone($user);
-      
+
 		if($user->update($request->all())){
             $person = $this->updateAssociatedPerson($user->person,$request->all());
             $person = $this->associateBranchesWithPerson($person,$request->all());
-      
+
            if($request->filled('serviceline')){
 
                 $user->serviceline()->sync($request->get('serviceline'));
@@ -283,7 +283,7 @@ class AdminUsersController extends BaseController {
                     if($verticals[0]==0){
                       $person->industryfocus()->sync([]);
                     }else{
-                       
+
             		  $person->industryfocus()->sync($request->get('vertical'));
                     }
         	}else{
@@ -293,7 +293,7 @@ class AdminUsersController extends BaseController {
 
             return redirect()->to(route('users.index'))->with('success', 'User updated succesfully');
         }else{
-            
+
             return redirect()->to('admin/users/' . $user->id . '/edit')
                 ->with('error', 'Unable to update user');
         }
@@ -306,7 +306,7 @@ class AdminUsersController extends BaseController {
         if(isset($data['branchstring'])){
             $data['branches'] = $this->branch->getBranchIdFromid($data['branchstring']);
         }
-        
+
         if(isset($data['branches']) && count($data['branches'])>0 && $data['branches'][0]!=0){
             foreach ($data['branches'] as $branch){
                 if($data['roles']){
@@ -327,19 +327,19 @@ class AdminUsersController extends BaseController {
         if(isset($data['active_from'])){
             $data['active_from'] = Carbon::createFromFormat('m/d/Y', $data['active_from']);
         }
-        
+
        if(isset($data['address'])){
-           
+
             $data = $this->getLatLng($data['address']) + $data;
 
        }
-   
+
         $person->update($data);
-       
+
         if(isset($data['vertical'])&& $data['vertical'][0]!=0){
             $person->industryfocus()->sync($data['vertical']);
         }
-        
+
 
         return $person;
     }
@@ -348,25 +348,26 @@ class AdminUsersController extends BaseController {
 			if(isset($user->person->lat) && $user->person->lat !=0){
 
 				$userServiceLines= $user->serviceline()->pluck('servicelines.id')->toArray();
-             
-                 $nearbyBranches = $this->branch->whereHas('serviceline' function($q) use($userServiceLines){
+
+                 $nearbyBranches = $this->branch
+                 ->whereHas('serviceline', function($q) use($userServiceLines){
                     $q->whereIn('servicelines.id',$userServiceLines);
                  })
                  ->nearby($user->person,100)
                  ->limit(20);
-				
+
 				$branches[0] = 'none';
 				foreach($nearbyBranches as $nearbyBranch){
-        
+
 					$branches[$nearbyBranch->branchid ]= $nearbyBranch->branchname . "/" . $nearbyBranch->branchid;
 				}
-			// or all branches	
+			// or all branches
 			}else{
 				$branches = Branch::select(\DB::raw("CONCAT_WS(' / ',branchname,id) AS name"),'id')->pluck('name','id')->toArray();
 			}
-            
+
 			return $branches;
-		}	
+		}
     /**
      * Remove user page.
      *
@@ -390,7 +391,7 @@ class AdminUsersController extends BaseController {
      */
     public function destroy($user)
     {
-        
+
 		//$user = $this->user->find($id);
         //dd($user);
 		// Check if we are not trying to delete ourselves
@@ -400,25 +401,25 @@ class AdminUsersController extends BaseController {
             return redirect()->to('admin/users')
             ->with('error', 'You cannot delete yourself');
         }
-  
+
         $user->delete();
 		return redirect()->to('admin/users')
 		->with('success', 'User deleted succesfully');
-       
+
     }
-	
-	
+
+
 	public function import()
 	{
 		$servicelines = Serviceline::whereIn('id',$this->userServiceLines)
 				->pluck('ServiceLine','id');
 		return response()->view('admin/users/import',compact('servicelines'));
-		
+
 	}
 
    public function bulkImport(UserBulkImportForm $request)
 	{
-		
+
 		$file = $request->file('upload');
 		$name = time() . '-' . $file->getClientOriginalName();
 
@@ -427,9 +428,9 @@ class AdminUsersController extends BaseController {
 		$path = Config::get('app.mysql_data_loc');
 		// Moves file to  mysql data folder on server
 		$file->move($path, $name);
-		$filename = $path . $name;	
-		
-		
+		$filename = $path . $name;
+
+
 		// map the file to the fields
 		$file = fopen($filename, 'r');
 
@@ -440,88 +441,88 @@ class AdminUsersController extends BaseController {
 		$requiredFields = ['persons'=>['firstname','lastname'],'users'=>['username','email','lastlogin','mgrid']];
 
 		if($data !== $requiredFields['users']){
-			
+
 			return redirect()->back()->withErrors(['Invalid file format.  Check the fields: ']);
 		}
 
-		
-		$temptable = $table . 'import';		
+
+		$temptable = $table . 'import';
 		$requiredFields[$table].=",created_at,confirmed";
 		$aliasfields = "p." . str_replace(",",",p.",$requiredFields[$table]);
-		
-		
+
+
 		$query = "DROP TABLE IF EXISTS ".$temptable;
 		$error = "Can't drop table";
 		$type='update';
 		$result = $this->rawQuery($query,$error,$type);
-		
-		
+
+
 		$type='update';
 		$query= "CREATE TABLE ".$temptable." AS SELECT * FROM ". $table." LIMIT 0";
 		$error = "Can't create table" . $temptable;
-		
+
 		$result = $this->rawQuery($query,$error,$type);
-		
+
 		$query = "ALTER TABLE ".$temptable." CHANGE id  id INT(10)AUTO_INCREMENT PRIMARY KEY;";
 		$error = "Can't change table";
 		$result = $this->executeQuery($query);
-		
-	
-		
+
+
+
 
 	// Load the data file
-	
+
 		$this->user->_import_csv($filename, $temptable,$requiredFields[$table]);
-	
-		
+
+
 		$this->executeQuery("update ".$temptable." set  confirmed ='1', created_at =now()");
-	
+
 		$this->executeQuery("INSERT INTO `users` (".$fields.") SELECT ".$fields." FROM `".$temptable."`");
-		
-		
-		
-		
-		
+
+
+
+
+
 		// Remove duplicates from import file
 		$uniquefields =['email','username'];
 		foreach($uniquefields as $field) {
-			$query ="delete from ".$temptable." 
-			where ". $field." in 
-			(SELECT ". $field." FROM (SELECT ". $field.",count(*) no_of_records 
+			$query ="delete from ".$temptable."
+			where ". $field." in
+			(SELECT ". $field." FROM (SELECT ". $field.",count(*) no_of_records
 			FROM ".$temptable."  as s GROUP BY ". $field." HAVING count(*) > 1) as t)";
 			$type='update';
 			$error = "Can't delete the duplicates";
 			$result = $this->rawQuery($query,$error,$type);
 		}
-		
+
 		// Add new users
-		
+
 		$query = "INSERT INTO `".$table."` (".$fields.")  (SELECT ". $aliasfields." FROM ".$temptable." p WHERE NOT EXISTS ( SELECT s.username FROM users s WHERE s.username = p.username or s.email = p.email))";
 		$error = "I couldnt copy over to the permanent table!<br />";
 		$type='insert';
 		$this->rawQuery($query,$error,$type);
-		
+
 
 		// get the user ids of the newly added users.  we should be able to use the username
 		 $query = "select username from ". $temptable;
 		 $type = 'select';
 		 $error ='Couldnt get the users';
 		 $newUsers = $this->rawQuery($query,$error,$type);
-		 
-		
-			
+
+
+
 		$query ="DROP TABLE " .$temptable;
 		$type='update';
 		$error="Can't delete temporay table " . $temptable;
 		$this->rawQuery($query,$error,$type);
 		// we have to assign the users to the servicelines
 		// and role user
-		// 
+		//
 		$roleid = Role::where('name','=','User')->pluck('id');
-	
+
 		if (null!==(\Input::get('serviceline'))){
 			$servicelines = \Input::get('serviceline');
-			
+
 			$users = $this->user->whereIn('username',$newUsers)->get();
 
 			foreach ($users as $user){
@@ -531,17 +532,17 @@ class AdminUsersController extends BaseController {
 				$update->roles()->attach($roleid[0]);
 			}
 
-			
+
 			// here we have to sync to the user service line pivot.
 		}
 
 		return redirect()->to('/admin/users');
-		
+
 	}
-	
+
 	private function executeQuery($query)
 	{
-		
+
 		$results = DB::statement($query);
 		echo $query . ";<br />";
 	}
@@ -555,16 +556,16 @@ class AdminUsersController extends BaseController {
 				case 'select':
 					$result = DB::select( DB::raw($query ) );
 				break;
-				
+
 				case 'update':
 					$result = DB::select( DB::raw($query ) );
 				break;
-			
+
 				default:
 					$result = DB::select( DB::raw($query ) );
 				break;
 			}
-			echo $query . ";<br />";		
+			echo $query . ";<br />";
 		}
 		catch (\Exception $e){
 			echo $error . "<br />". $query;
@@ -572,15 +573,15 @@ class AdminUsersController extends BaseController {
 		}
 		return $result;
 	}
-	
+
 	public function export(){
 		$data = $this->user->with('person')->get();
-		$export = $this->user->export($data);	
+		$export = $this->user->export($data);
 		return \Response::make(rtrim($export['output'], "\n"), 200, $export['headers']);
 	}
-	
-	
-	
+
+
+
 	private function getManagerList()
 	{
 		$managerroles=['3','4','6','7','8','9','11'];
@@ -598,17 +599,17 @@ class AdminUsersController extends BaseController {
 	}
 
 
-	
+
 	private function getLatLng($address)
 	{
 		$geoCode = app('geocoder')->geocode($address)->get();
         return $this->user->getGeoCode($geoCode);
-		
+
 	}
     private function setDates($data){
 
            $data['active_from'] = Carbon::createFromFormat('m/d/Y', $data['active_from']);
            return $data;
-         
+
 	}
 }
