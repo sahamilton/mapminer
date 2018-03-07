@@ -33,11 +33,11 @@ class ProjectsController extends BaseController
      */
     public function index()
     {
-       
+
        \Session::put('type','projects');
 
        if(\Session::has('geo')){
-      
+
         return redirect()->route('findme');
        }
 
@@ -73,13 +73,13 @@ class ProjectsController extends BaseController
      */
     public function show($id)
     {
-      
+
         $statuses = $this->project->getStatusOptions;
 
         $project = $this->project
         ->with('companies','owner','relatedNotes','source')
         ->findOrFail($id);
-        
+
         $branches = $this->branch
             ->whereHas('servicelines', function ($q) {
                 $q->whereIn('servicelines.id',$this->userServiceLines);
@@ -123,7 +123,12 @@ class ProjectsController extends BaseController
     {
         //
     }
-
+/**
+ * closeProject user closes project
+ * @param  Request $request [description]
+ * @param  int  $id      project id
+ * @return redirect to users projects list
+ */
     public function closeproject(Request $request,$id){
 
         // find project
@@ -137,14 +142,11 @@ class ProjectsController extends BaseController
         $this->addClosingNote($request);
         return redirect()->route('projects.show',$id);
     }
-
-    public function geocodeProjects(){
-
-
-    }
-
-
-    private function addClosingNote($request){
+/**
+ * add closing note - user must enter notes on closed project
+ * @param Request $request
+ */
+    private function addClosingNote(Request $request){
         $note = new Note;
         $note->note = "Project Closed:" .$request->get('comments');
         $note->type = 'project';
@@ -152,23 +154,34 @@ class ProjectsController extends BaseController
         $note->user_id = auth()->user()->id;
         $note->save();
     }
-
+/**
+ * addCompanyContact add Contact Details to project company
+ * @param Request $request [description]
+ */
     public function addCompanyContact(Request $request){
         $request->request->add(['user_id',auth()->user()->id]);
-       
+
         $contact = \App\ProjectContact::create($request->all());
         return redirect()->back();
 
 
     }
-
+/**
+ * [addProjectCompany add New Company to project (probably not user)]
+ * @param Request $request [description]
+ */
     public function addProjectCompany(Request $request){
-        
+
         $firm = \App\ProjectCompany::create($request->all());
         $firm->project()->attach($request->get('project_id'));
         return redirect()->back();
     }
-
+/**
+ * [findNearbyProjects description]
+ * @param  int $distance
+ * @param  string  $latlng  lat:lng of search from point
+ * @return xml        nearby projects
+ */
     public function findNearbyProjects($distance,$latlng){
 
         $geo =explode(":",$latlng);
@@ -179,30 +192,38 @@ class ProjectsController extends BaseController
         $limit=100;
         $result = $this->project->nearby($location,$distance)->limit(100)->get();
         return  $this->makeNearbyProjectsXML($result);
-        
+
     }
 
     public function mapProjects(){
 
         $data['lat'] = '40.1492';
         $data['lng'] = '-86.2595';
-        
+
         $data['distance']= 20;
         $data['latlng'] = $data['lat'] . ":".$data['lng'] ;
         $data['zoomLevel'] = 9;
         $data['urllocation']  = route('projects.nearby',['distance'=>$data['distance'],'latlng'=>$data['latlng']]);
-  
+
         return response()->view('projects.map',compact('data'));
     }
-
-    public function makeNearbyProjectsXML($result) {
+/**
+ * makeNearbyProjectsXML Generate XML of nearby projects
+ * @param  Collection $result nearbyProjects
+ * @return XML       [description]
+ */
+    private function makeNearbyProjectsXML($result) {
         $content = view('projects.xml', compact('result'));
 
         return response($content, 200)
             ->header('Content-Type', 'text/xml');
-        
-    }
 
+    }
+    /**
+     * [claimProject user claim project]
+     * @param  int $id project id
+     * @return redirect     Redirect to users projects
+     */
     public function claimProject($id){
 
         $project = $this->project->findOrFail($id);
@@ -215,7 +236,7 @@ class ProjectsController extends BaseController
        if (! $request->filled('status')){
             $project->owner()->detach(auth()->user()->person()->first()->id);
        }else{
-        
+
         $project->owner()->updateExistingPivot(auth()->user()->person()->first()->id,['status'=>$request->get('status')]);
         }
         return redirect()->route('projects.show',$request->get('project_id'));
@@ -230,7 +251,7 @@ class ProjectsController extends BaseController
     public function exportMyProjects(){
             Excel::create('Projects',function($excel){
             $excel->sheet('Watching',function($sheet) {
-                $projects = $this->getMyProjects();           
+                $projects = $this->getMyProjects();
                 $sheet->loadView('projects.export',compact('projects'));
             });
         })->download('csv');
@@ -245,10 +266,10 @@ class ProjectsController extends BaseController
             $q->where('id','=',$id);
         })->with('owner')->get();
         $owner=$this->person->findOrFail($id);
-        
+
         return response()->view('projects.ownedBy',compact('projects','owner'));
     }
-   
+
 
     public function projectStats(Request $request){
         if($request->filled('id')){
@@ -258,13 +279,13 @@ class ProjectsController extends BaseController
         }
         $projects = $this->project->projectStats($id);
         if($id && count($projects)>0){
-           $source = $projects[0]->source; 
+           $source = $projects[0]->source;
         }
-        $total = $this->project->projectcount();      
+        $total = $this->project->projectcount();
         $owned = count($this->getOwnedProjects());
         $sources = $this->sources->pluck('source','id');
-        
-        $projects = $this->createStats($projects); 
+
+        $projects = $this->createStats($projects);
         $statuses = $this->project->statuses;
         return response()->view('projects.stats',compact('projects','statuses','total','owned','source','sources'));
 
@@ -274,7 +295,7 @@ class ProjectsController extends BaseController
         Excel::create('Projects',function($excel){
             $excel->sheet('Stats',function($sheet) {
                 $projects = $this->project->projectStats($id=null);
-                $projects = $this->createStats($projects); 
+                $projects = $this->createStats($projects);
                 $statuses = $this->project->statuses;
                 $sheet->loadView('projects.exportstats',compact('projects','statuses'));
             });
@@ -294,7 +315,7 @@ class ProjectsController extends BaseController
     public function exportowned(){
             Excel::create('Projects',function($excel){
             $excel->sheet('Watching',function($sheet) {
-                $projects = $this->getOwnedProjects();           
+                $projects = $this->getOwnedProjects();
                 $sheet->loadView('projects.exportowned',compact('projects'));
             });
         })->download('csv');
@@ -309,34 +330,34 @@ class ProjectsController extends BaseController
             return response()->view('projects.owned',compact('projects'));
     }
 
-    
+
     private function createStats($projects){
-        
+
         $person = null;
 
         foreach ($this->project->statuses as $status){
             $personProject['total']['status'][$status] = 0;
         }
-        
+
         foreach ($projects as $project){
-   
+
             if($project->id != $person){
                 $person = $project->id;
                 $personProject[$project->id]['name'] = $project->firstname . " " . $project->lastname;
                 $personProject[$project->id]['id'] = $project->id;
-                
+
 
             }
-          
+
             if($project->pstatus){
                 $personProject[$project->id]['status'][$project->pstatus] = $project->count;
                 $personProject[$project->id]['rating']= $project->rating;
                 $personProject['total']['status'][$project->pstatus] =$personProject['total']['status'][$project->pstatus] + $project->count;
             }
-           
-            
+
+
         }
-     
+
         return $personProject;
 
     }
@@ -353,7 +374,7 @@ class ProjectsController extends BaseController
             ->with('source')->has('owner')->get();
         }
         return $this->project->has('owner')->with('source')->get();
-        
+
     }
 
 }

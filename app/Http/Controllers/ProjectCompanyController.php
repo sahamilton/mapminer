@@ -44,7 +44,7 @@ class ProjectCompanyController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Project Companies projects.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response

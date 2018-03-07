@@ -44,7 +44,11 @@ class PersonsController extends BaseController {
 
 		return response()->view('persons.index', compact('persons','filtered'));
 	}
-
+/**
+ * Return list of people by chosen vertical
+ * @param  int $vertical [description]
+ * @return reponse view      list of users by vertical
+ */
 	public function vertical($vertical = null){
 
 		if(! $vertical){
