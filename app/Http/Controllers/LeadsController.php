@@ -261,7 +261,7 @@ class LeadsController extends BaseController
 
     private function findNearBy($data){
         
-        $location = new Location;
+        $location = new Lead;
         $location->lat = $data['lat'];
         $location->lng = $data['lng'];
         if(! isset($data['distance'])){
