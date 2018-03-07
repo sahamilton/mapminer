@@ -243,7 +243,7 @@ class LeadSourceController extends Controller
             })
             ->nearby($lead,1000)
             ->limit(1)
-            ->get()
+            ->get();
 
         }
         return $leadinfo;
