@@ -8,6 +8,7 @@ use App\SearchFilter;
 use Excel;
 use Illuminate\Http\Request;
 
+
 class PersonsController extends BaseController {
 
 	public $branch;
@@ -16,15 +17,15 @@ class PersonsController extends BaseController {
 	public $managerID;
 	public $validroles = [3,4,5];
 	public function __construct(User $user, Person $person, Branch $branch, Company $company) {
-		
+
 		$this->persons = $person;
 		$this->company = $company;
 		$this->user = $user;
 		$this->branch = $branch;
 		//$this->persons->rebuild();
 	}
-	
-	
+
+
 	/**
 	 * Display a listing of People
 	 *
@@ -32,15 +33,15 @@ class PersonsController extends BaseController {
 	 */
 	public function index()
 	{
-			
+
 		$filtered = $this->persons->isFiltered(['companies'],['vertical']);
-		
-		
+
+
 		$persons = $this->getAllPeople($filtered);
 
-		
-		
-		
+
+
+
 		return response()->view('persons.index', compact('persons','filtered'));
 	}
 
@@ -107,7 +108,7 @@ class PersonsController extends BaseController {
 
 		$filtered = $this->persons->isFiltered(['companies'],['vertical']);
 		$this->validroles=['5'];
-		$persons = $this->getAllPeople($filtered);	
+		$persons = $this->getAllPeople($filtered);
 		$content = view('persons.xml', compact('persons'));
         return response($content, 200)
             ->header('Content-Type', 'text/xml');
@@ -125,7 +126,7 @@ class PersonsController extends BaseController {
 			$isNullable = $this->persons->isNullable($keys,NULL);
 			if($isNullable == 'Yes')
 			{
-				
+
 				$persons = $this->persons
 				->whereHas('industryfocus', function($q) use ($keys){
 					    $q->whereIn('search_filter_id',$keys)
@@ -136,7 +137,7 @@ class PersonsController extends BaseController {
 					->get();
 
 			}else{
-				
+
 
 				$persons = $this->persons
 				->whereHas('industryfocus', function($q) use ($keys){
@@ -150,12 +151,12 @@ class PersonsController extends BaseController {
 				->with('userdetails','industryfocus','userdetails.roles')
 				->get();
 				}
-			
+
 		}else{
-			
-			
+
+
 			$persons = $this->persons
-					
+
 					->whereHas('userdetails.roles', function($q) {
 					    $q->whereIn('role_id',$this->validroles);
 
@@ -170,7 +171,7 @@ class PersonsController extends BaseController {
 	}
 
 
-	
+
 	/**
 	 * Display the specified Person.
 	 *
@@ -180,7 +181,7 @@ class PersonsController extends BaseController {
 	public function show($person)
 	{
 		$roles = $this->persons->findPersonsRole($person);
-	
+
 		//note remove manages & manages.servicedby
 		$people = $this->persons
 			->with('directReports',
@@ -196,51 +197,51 @@ class PersonsController extends BaseController {
 				'branchesServiced',
 				'branchesServiced.servicedBy'
 						)
-			
+
 			->find($person->id);
 
-		
-	
+
+
 		// Note that we will have to extend this to show Sales people
-		
+
 		if(in_array('National Account Manager',$roles))
 		{
-	
+
 			$accounts = $people->managesAccount;
 
-			
-			
+
+
 			return response()->view('persons.showaccount', compact('people','accounts'));
-			
+
 		}elseif(in_array('Market manager',$roles)){
-		
+
 			return response()->view('persons.showlist', compact('people'));
-			
-		
+
+
 		}else{
-			
+
 			if($people->isLeaf())
 			{
-			
+
 				// Show branches serviced by sales rep
-			
+
 				return response()->view('persons.salesteam', compact('people'));
 			}else{
-			
-				
-				
+
+
+
 				return response()->view('persons.salesmanager', compact('people'));
 			}
-			
-			
-		}
-			
-			
-		}
-		
 
-	
-	
+
+		}
+
+
+		}
+
+
+
+
 	/**
 	 * Shows a map of managers branches
 	 * @param  [type] $id [description]
@@ -248,60 +249,60 @@ class PersonsController extends BaseController {
 	 */
 	public function showmap($id)
 	{
-		
+
 		$data['people'] = $this->persons->with('manages')->findorFail($id);
-		
+
 		/// We need to calculate the persons 'center point' based on their branches.
 		// This should be moved to the model and maybe to a Maps model and made more generic.
 		// or we could have a 'home' location as a field on every persons i.e. their lat / lng.
-	
+
 		if($data['people']->lat) {
 			$data['lat'] = $data['people']->lat;
-			$data['lng'] = $data['people']->lng;	
-		}else{	
+			$data['lng'] = $data['people']->lng;
+		}else{
 			$latSum = $lngSum = $n = '';
 			foreach($data['people']->manages as $branch)
 			{
 				$n++;
 				$latSum = $latSum + $branch->lat;
 				$lngSum = $lngSum + $branch->lng;
-				
+
 			}
 			$avgLat = $latSum / $n;
 			$avgLng = $lngSum / $n;
 			$data['lat'] = $avgLat;
 			$data['lng'] = $avgLng;
-		
-			
+
+
 		}
 
 		return response()->view('persons.showmap', compact('data'));
 	}
 
-	
+
 	/**
 	 * [import description]
 	 * @return [type] [description]
 	 */
 	public function import() {
 		return response()->view('persons.import');
-		
+
 	}
-	
+
 
 	/**
 	 * [processimport description]
 	 * @return [type] [description]
 	 */
 	public function processimport(PersonUploadFormRequest $request) {
-				
-		
-		$file = $request->file('upload')->store('public/uploads');  
+
+
+		$file = $request->file('upload')->store('public/uploads');
 		$data['people'] = asset(Storage::url($file));
         $data['basepath'] = base_path()."/public".Storage::url($file);
         // read first line headers of import file
         $people = Excel::load($data['basepath'],function(){
-           
+
         })->first();
 
     	if( $this->persons->fillable !== array_keys($people->toArray())){
@@ -310,33 +311,33 @@ class PersonsController extends BaseController {
     		->withInput($request->all())
     		->withErrors(['upload'=>['Invalid file format.  Check the fields:', array_diff($this->persons->fillable,array_keys($people->toArray())), array_diff(array_keys($people->toArray()),$this->persons->fillable)]]);
     	}
-		
+
 		$fields = implode(",",array_keys($people->toArray()));
 		$data = $this->persons->_import_csv($data['basepath'],'persons',$fields);
 		return redirect()->route('persons.index');
 	}
-	
+
 	/**
 	 * [export description]
 	 * @return [type] [description]
 	 */
 	public function export()
 	{
-		
+
 		$data = $this->persons->with('userdetails','userdetails.roles','userdetails.serviceline','reportsTo','reportsTo.userdetails')->get();
-		
+
 		Excel::create('All People',function($excel) use ($data){
 			$excel->sheet('All People',function($sheet) use ($data) {
-				
+
 				$sheet->loadview('persons.export',compact('data'));
 			});
 		})->download('csv');
 
 		return response()->return();
-		
-		
+
+
 	}
-	
+
 
 	public function geoCodePersons()
 	{

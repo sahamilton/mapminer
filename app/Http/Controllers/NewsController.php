@@ -118,7 +118,7 @@ class NewsController extends BaseController {
 	 */
 	public function edit($id)
 	{
-		$filters = new \App\SearchFilter;
+		$filters = new SearchFilter;
 		$verticals = $filters->industrysegments();
 
 		$news = $this->news

@@ -139,22 +139,7 @@ class NotesController extends BaseController {
 	{
 		
 		$this->notes->destroy($id);
-		/*switch ($note->type) {
-			case 'location':
-				
-				return redirect()->route('locations.show',$note->related_id);
-			break;
-			case 'lead':
-				
-				return redirect()->route('salesleads.show',$note->related_id);
-			break;
-			case 'project':
-				
-				return redirect()->route('projects.show',$note->related_id);
-			break;
-			
-
-		}*/
+		
 		return redirect()->back();
 		
 	}

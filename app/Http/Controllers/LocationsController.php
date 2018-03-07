@@ -120,24 +120,6 @@ class LocationsController extends BaseController {
 		return response()->view('locations.show', compact('location','branch','watch'));
 	}
 	
-	/*
-
-	public function summaryLocations($id)
-	{
-
-		$locations =\DB::table('locations')
-                 ->select('state', \DB::raw('count(*) as total'))
-				 ->where('company_id','=',$id)
-                 ->groupBy('state')
-                 ->get();
-		
-		foreach ($locations as $state) {
-			echo $state['state'] . "     ". $state['total']."<br />";
-			
-		}
-	}
-	*/
-
 	/**
 	 * Show the form for editing the specified location.
 	 *
@@ -169,10 +151,10 @@ class LocationsController extends BaseController {
 	/**
 	 * Remove the specified resource from storage.
 	 *
-	 * @param  int  $id
-	 * @return Response
+	 * @param  int  $loction Object
+	 * @return redirect
 	 */
-	public function destroy($location)
+	public function destroy(Location $location)
 	{
 		
 		$companyid = $location->company_id;
@@ -249,10 +231,6 @@ class LocationsController extends BaseController {
 			$data['distance'] = '50';
 		}
 		
-		//$data['branches'] = $this->branch->findOrFail($id);
-
-		
-
 		return response()->view('locations.nearby', compact('data'));
 	}
 

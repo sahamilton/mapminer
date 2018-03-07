@@ -99,7 +99,7 @@ class HowtofieldsController extends BaseController {
 	 * Remove the specified howtofield from storage.
 	 *
 	 * @param  int  $id
-	 * @return Response
+	 * @return Redirect
 	 */
 	public function destroy($id)
 	{
@@ -107,9 +107,5 @@ class HowtofieldsController extends BaseController {
 
 		return redirect()->route('admin.howtofields.index');
 	}
-	public function getDatatable() {
-		$data = $this->howtofield->orderBy('group')->orderBy('sequence')->get();
-		return $this->howtofield->getDatatable($data);
-		
-	}
+
 }
