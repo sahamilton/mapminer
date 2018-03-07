@@ -216,7 +216,6 @@ class LeadSourceController extends Controller
         // else build the full address
         return $address = $request->get('address') . " " . $request->get('city') . " " . $request->get('state') . " " . $request->get('zip');
     }
-
     
 
     private function findClosestRep($leads){
