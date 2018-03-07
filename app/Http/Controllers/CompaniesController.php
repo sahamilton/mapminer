@@ -256,7 +256,7 @@ class CompaniesController extends BaseController {
 		// used when there are too many locations to show in list
 		if( $count > $this->limit)
 		{
-			$location = new \stdClass;
+			$location = new Location;
 			$limited=$this->limit;
 			if (\Session::has('geo'))
 				{

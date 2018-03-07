@@ -17,6 +17,7 @@ class GeoCodingController extends BaseController {
 	public $branch;
 	public $serviceline;
 
+
 	public function __construct(Location $location, Project $project, Branch $branch, Serviceline $serviceline) {
 		$this->location = $location;
 		$this->project = $project;
@@ -146,7 +147,7 @@ class GeoCodingController extends BaseController {
 	 
 	public function getGeoListData($data ) {
 		$company = isset($data['company']) ? $data['company'] : NULL;
-		$location = new Person;
+		$location = new Location;
 		$location->lat = $data['lat'];
 		$location->lng = $data['lng'];
 	

@@ -297,7 +297,7 @@ class LocationsController extends BaseController {
 		if(! $distance){
 			$distance ='10';
 		}
-		$location=new \stdClass;
+		$location=new Location;
 
 		if (isset($lat) && isset($lng)){
 			$location->lat = $lat;

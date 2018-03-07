@@ -98,7 +98,8 @@ class Location extends Model {
 		//return Branch::nearby($this,'100')->limit(5);
 	}
 	
-	
+
+
 	public function locationAddress(){
 		return ($this->street . " " . $this->address2 . " " .$this->city . " " . $this->state);
 	}

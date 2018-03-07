@@ -134,11 +134,11 @@ class SalesActivityController extends BaseController
         $person = Person::findOrFail(auth()->user()->person->id);
         if($person->isLeaf()){
             if(auth()->user()->person->lat){
-                $location = new \stdClass;
+                $location = new Location;
 
                 $location->lat = auth()->user()->person->lat;
                 $location->lng = auth()->user()->person->lng;
-                $locations = $this->location->nearby($location,25)
+                $locations = $this->locations
                     ->wherehas('company.serviceline',function ($q){
                         $q->whereIn('servicelines.id',$this->userServiceLines);
                     });
@@ -148,7 +148,7 @@ class SalesActivityController extends BaseController
                         $q->whereIn('searchfilters.id',$verticals);
                     });
                 }
-              $locations = $locations->get();
+              $locations = $locations->nearby($location,25)->get();
               
             }else{
                 $locations = array();
