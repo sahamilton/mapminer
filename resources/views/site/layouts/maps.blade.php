@@ -91,16 +91,19 @@ window['_fs_namespace'] = 'FS';
     g.clearUserCookie=function(){};
 })(window,document,window['_fs_namespace'],'script','user');
 </script>
+@if(auth()->check())
 <script>
+
 	// This is an example script - don't forget to change it!
 FS.identify('{{auth()->user()->id}}', {
-  displayName: 'Daniel Falko',
-  email: 'danielfalko@example.com',
+  displayName: '{{auth()->user()->fullName()}}',
+  email: '{{auth()->user()->email}}',
   // TODO: Add your own custom user variables here, details at
   // http://help.fullstory.com/develop-js/setuservars.
   reviewsWritten_int: 14,
 });
 </script>
+@endif
 <!-- End FUll story -->
 
 		<!-- To make sticky footer need to wrap in a div -->

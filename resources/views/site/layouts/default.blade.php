@@ -97,7 +97,9 @@ window['_fs_namespace'] = 'FS';
     g.clearUserCookie=function(){};
 })(window,document,window['_fs_namespace'],'script','user');
 </script>
+@if(auth()->check())
 <script>
+
 	// This is an example script - don't forget to change it!
 FS.identify('{{auth()->user()->id}}', {
   displayName: '{{auth()->user()->fullName()}}',
@@ -107,6 +109,7 @@ FS.identify('{{auth()->user()->id}}', {
   reviewsWritten_int: 14,
 });
 </script>
+@endif
 <!-- End FUll story -->
 		<!-- To make sticky footer need to wrap in a div -->
 		<div id="wrap">
