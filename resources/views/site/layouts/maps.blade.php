@@ -73,6 +73,8 @@ new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
 j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 '//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
 })(window,document,'script','dataLayer','GTM-PZM3WV');</script>
+<!-- End Google Tag Manager -->
+<!-- Add Full story -->
 <script>
 window['_fs_debug'] = false;
 window['_fs_host'] = 'fullstory.com';
@@ -89,8 +91,18 @@ window['_fs_namespace'] = 'FS';
     g.clearUserCookie=function(){};
 })(window,document,window['_fs_namespace'],'script','user');
 </script>
+<script>
+	// This is an example script - don't forget to change it!
+FS.identify('{{auth()->user()->id}}', {
+  displayName: 'Daniel Falko',
+  email: 'danielfalko@example.com',
+  // TODO: Add your own custom user variables here, details at
+  // http://help.fullstory.com/develop-js/setuservars.
+  reviewsWritten_int: 14,
+});
+</script>
+<!-- End FUll story -->
 
-<!-- End Google Tag Manager -->
 		<!-- To make sticky footer need to wrap in a div -->
 		<div id="wrap">
 		@include ('site.layouts._navbar')
