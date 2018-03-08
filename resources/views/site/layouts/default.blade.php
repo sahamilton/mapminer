@@ -113,17 +113,7 @@ window['_fs_namespace'] = 'FS';
     g.clearUserCookie=function(){};
 })(window,document,window['_fs_namespace'],'script','user');
 </script>
-@if(auth()->check() && config('app.env')=='production' ))
-// This is an example script - don't forget to change it!
-<script>
-FS.identify({{$auth()->user()->id}}, {
-  displayName: '{{auth()->user()->person()->postName()}}',
-  email: '{{auth()->user()->email}}',
 
-  reviewsWritten_int: 14,
-});
-</script>
-@endif
 @if (config('app.debug') && auth()->check() && config('app.env')!='production' )
     @include('sudosu::user-selector')
 @endif
