@@ -165,115 +165,16 @@ class User extends Authenticatable
     {
         return $this->email;
     }
-
-	/**
-     * Bulk import csv file of users.
-     * @param $path
-     * @param $filename
-	 * @param $table
-	 * @param $fields
-     * @return string
-     */
-
-	public function _import_csv($filename, $table,$fields)
-	{
-		$filename = str_replace("\\","/",$filename);
-
-	$query = sprintf("LOAD DATA INFILE '".$filename."' INTO TABLE ". $table." FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '\"' ESCAPED BY '\"' LINES TERMINATED BY '\\n'  IGNORE 1 LINES (".$fields.")", $filename);
-
-
-
-	try {
-		$result = \DB::connection()->getpdo()->exec($query);
-		return $result;
-	}
-	catch (\Exception $e)
-		{
-		 throw new \Exception( 'Something really has gone wrong with the import:\r\n<br />'.$query, 0, $e);
-
-		}
-
-	}
-	/**
-     * Bulk export csv file of users.
-	 * @param $fields
-	 * @param $data
-     * @return string
-     */
-
-
-
-	public function export ($data) {
-
-		$filename = "attachment; filename=\"". time() . '-' ."users.csv\"";
-		$fields=['id',['person'=>'firstname'],['person'=>'lastname'],'email','lastlogin','employee_id',['serviceline'=>'ServiceLine'],['person'=>'reports_to']];
-
-		//$data = $this->user->with('person')->get();
-
-	$output="";
-
-		foreach ($fields as $field) {
-
-			if(! is_array($field)){
-			 $output.=$field.",";
-			}else{
-
-				$output.= $field[key($field)].",";
-			}
-
-		}
-		 $output.="\n";
-		  foreach ($data as $row) {
-
-			  reset ($fields);
-			  foreach ($fields as $field) {
-				if(! is_array($field)){
-					if(! $row->$field) {
-						$output.=",";
-					}else{
-
-				  		$output.=str_replace(","," ",strip_tags($row->$field)).",";
-
-					}
-				}else{
-					$key = key($field);
-					$element = $field[key($field)];
-
-					if(! isset($row->$key->$element)) {
-						$output.=",";
-					}else{
-				  		$output.=str_replace(","," ",strip_tags($row->$key->$element)).",";
-
-					}
-
-
-				}
-
-
-			  }
-			  $output.="\n";
-
-
-		  }
-			$export['output'] = $output;
-		  $export['headers'] = array(
-			  'Content-Type' => 'text/csv',
-			  'Content-Disposition' => $filename ,
-		  );
-
-	return $export;
-
- 	 //return Response::make(rtrim($output, "\n"), 200, $headers);
-
-
-	}
-
+/**
+ * [seeder Seed api_token for all users. Not used]
+ * @return [type] [description]
+ */
 	public function seeder(){
 		$this->api_token =\Hash::make(str_random(60));
 		$this->save();
 	}
 /**
- * [scopeWithRole Select User by role
+ * scopeWithRole Select User by role
  * @param  QueryBuilder $query [description]
  * @param  int $role  Role id
  * @return QueryBuilder        [description]
@@ -284,7 +185,7 @@ class User extends Authenticatable
     });
   }
   /**
-   * [scopeLastLogin Select last login of user]
+   * scopeLastLogin Select last login of user]
    * @param  QueryBuilder $query    [description]
    * @param  Array $interval intervale['from','to']
    * @return QueryBuilder          [description]

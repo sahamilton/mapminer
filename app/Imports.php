@@ -17,7 +17,7 @@ class Imports extends Model
     		if(isset($data['table'])){
 	    		$this->table = $data['table'];
 	    		$this->temptable = $this->table .'_import';
-	    		
+
 	   			if(isset($data['additionaldata'])){
 
 	    			$this->additionaldata = $data['additionaldata'];
@@ -27,9 +27,9 @@ class Imports extends Model
 	    		if(isset($data['filename'])){
 	    			$this->importfilename = str_replace("\\","/",$data['filename']);
 	    		}
-	       		
+
        		}
-    		
+
     	}*/
 		public function setFields($data){
 			if(isset($data['additionaldata'])){
@@ -39,15 +39,15 @@ class Imports extends Model
 	    			$this->additionaldata = [];
 	    		}
 	    	// remove any additional data fields from input fields
-			$data['fields'][key(array_intersect($data['fields'],array_keys($data['additionaldata'])))]='@ignore';	
+			$data['fields'][key(array_intersect($data['fields'],array_keys($data['additionaldata'])))]='@ignore';
     		$this->fields = implode(",",$data['fields']);
     		$this->table = $data['table'];
     		$this->temptable = $this->table . "_import";
     		$this->importfilename = str_replace("\\","/",$data['filename']);
-    		
+
     	}
     	public function validateImport($fields){
-    		
+
 	   		return array_diff($this->requiredFields,array_values($fields));
     	}
 
@@ -60,20 +60,20 @@ class Imports extends Model
     		}
     		return false;
     	}
-    	
-    	
+
+
     	public function import(){
 
-    		$this->createTemporaryImportTable();
+      $this->createTemporaryImportTable();
 
-    		$this->_import_csv();
+      $this->_import_csv();
 
-    		$this->addCreateAtField();	
+      $this->addCreateAtField();
 
-			$this->updateAdditionalFields();
+      $this->updateAdditionalFields();
 
-    		$this->copyTempToBaseTable();
-    		
+      $this->copyTempToBaseTable();
+
     		//$this->dropTempTable();
 
     		return true;
@@ -84,12 +84,12 @@ class Imports extends Model
 
 			//Create the temporary table
 			return $this->executeQuery("CREATE TEMPORARY TABLE ".$this->temptable." AS SELECT * FROM ". $this->table." LIMIT 0");
-			
+
 		}
 
-		private function addCreateAtField(){	
+		private function addCreateAtField(){
 			// Import from the CSV file
-			
+
 			// make sure we bring the created at field across
 			$this->fields.=",created_at";
 			return $this->executeQuery("update ".$this->temptable." set created_at ='".Carbon::now()->toDateTimeString()."'");
@@ -99,24 +99,24 @@ class Imports extends Model
 		//Add the project source id
 		//foreach ($this->additonaldata as)
 		foreach ($this->additionaldata as $field=>$value){
-				
+
 				$this->fields.= ",".$field;
 				return $this->executeQuery("update ".$this->temptable." set ". $field. " ='".$value."'");
 			}
 		}
-		
+
 		private function copyTempToBaseTable(){
 			$this->fields = str_replace('@ignore,','',$this->fields);
 			// COpy over to base table
-			
+
 			return $this->executeQuery("INSERT IGNORE INTO `".$this->table."` (".$this->fields.") SELECT ".$this->fields." FROM `".$this->temptable."`");
 		}
 		// Drop the temp table
-		// 
+		//
 		private function dropTempTable(){
 			return $this->executeQuery("DROP TABLE ".$this->temptable);
 		 }
-		
+
 
 
 	public function executeQuery($query)
@@ -127,9 +127,9 @@ class Imports extends Model
 		catch (Exception $e)
 		{
 		 throw new Exception( 'Something really has gone wrong with the import:\r\n<br />'.$query, 0, $e);
-		
+
 		}
-	
+
 	}
 
 
@@ -140,7 +140,7 @@ class Imports extends Model
 
 
 	$query = sprintf("LOAD DATA LOCAL INFILE '".$this->importfilename."' INTO TABLE ". $this->temptable." FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '\"' ESCAPED BY '\"' LINES TERMINATED BY '\\n'  IGNORE 1 LINES (".$this->fields.");", $this->importfilename);
-	
+
 
 	try {
 		return  \DB::connection()->getpdo()->exec($query);
@@ -148,9 +148,9 @@ class Imports extends Model
 	catch (Exception $e)
 		{
 		 throw new Exception( 'Something really has gone wrong with the import:\r\n<br />'.$query, 0, $e);
-		
+
 		}
-	
+
 	}
 
 	public function truncateImport($table){
@@ -162,7 +162,7 @@ class Imports extends Model
 		catch (Exception $e)
 		{
 		 throw new Exception( 'Something really has gone wrong with the import:\r\n<br />'.$query, 0, $e);
-		
+
 		}
 	}
 
