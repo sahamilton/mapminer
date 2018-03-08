@@ -8,7 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class User extends Authenticatable
 {
     use Notifiable,HasRoles, Geocode;
-	
+
 
 
 
@@ -25,7 +25,7 @@ class User extends Authenticatable
 	 {
 		  return $this->hasOne(Person::class,'user_id')->orderBy('lastname','firstname');
 	 }
-	 
+
 	 public function fullName(){
 	 	return $this->person->postName();
 	 }
@@ -33,7 +33,7 @@ class User extends Authenticatable
 	 {
 		  return $this->hasOne(Track::class,'user_id');
 	 }
-	 
+
 
 	 public function firstLogin(){
 	 	return $this->hasOne(Track::class,'user_id')->min('lastactivity');
@@ -41,13 +41,13 @@ class User extends Authenticatable
 
 
 	 public function watching () {
-			return $this->belongsToMany(Location::class); 
-		 
+			return $this->belongsToMany(Location::class);
+
 	 }
 
 	 public function serviceline () {
-			return $this->belongsToMany(Serviceline::class)->withTimestamps(); 
-		 
+			return $this->belongsToMany(Serviceline::class)->withTimestamps();
+
 	 }
 
    public function roles()
@@ -58,17 +58,17 @@ class User extends Authenticatable
 	public function active(){
 		return $this->where('confirmed','=',1);
 	}
-	  
+
 	  public function manager() {
-		  
+
 		  return $this->belongsTo(User::class,'mgrid','id');
 	  }
-	  
+
 	  public function reports() {
-		  
+
 		   return $this->hasMany(User::class,'id','mgrid');
 	  }
-   
+
     public function getUserByUsername( $username )
     {
         return $this->where('username', '=', $username)->first();
@@ -165,7 +165,7 @@ class User extends Authenticatable
     {
         return $this->email;
     }
-	
+
 	/**
      * Bulk import csv file of users.
      * @param $path
@@ -180,9 +180,9 @@ class User extends Authenticatable
 		$filename = str_replace("\\","/",$filename);
 
 	$query = sprintf("LOAD DATA INFILE '".$filename."' INTO TABLE ". $table." FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '\"' ESCAPED BY '\"' LINES TERMINATED BY '\\n'  IGNORE 1 LINES (".$fields.")", $filename);
-	
-	
-	
+
+
+
 	try {
 		$result = \DB::connection()->getpdo()->exec($query);
 		return $result;
@@ -190,9 +190,9 @@ class User extends Authenticatable
 	catch (\Exception $e)
 		{
 		 throw new \Exception( 'Something really has gone wrong with the import:\r\n<br />'.$query, 0, $e);
-		
+
 		}
-	
+
 	}
 	/**
      * Bulk export csv file of users.
@@ -200,81 +200,98 @@ class User extends Authenticatable
 	 * @param $data
      * @return string
      */
-	
-	
-	
+
+
+
 	public function export ($data) {
 
 		$filename = "attachment; filename=\"". time() . '-' ."users.csv\"";
 		$fields=['id',['person'=>'firstname'],['person'=>'lastname'],'email','lastlogin','employee_id',['serviceline'=>'ServiceLine'],['person'=>'reports_to']];
 
 		//$data = $this->user->with('person')->get();
-		
+
 	$output="";
-		
+
 		foreach ($fields as $field) {
-			
+
 			if(! is_array($field)){
 			 $output.=$field.",";
 			}else{
-				
-				$output.= $field[key($field)].",";	
+
+				$output.= $field[key($field)].",";
 			}
-				
+
 		}
 		 $output.="\n";
 		  foreach ($data as $row) {
-			  
+
 			  reset ($fields);
 			  foreach ($fields as $field) {
 				if(! is_array($field)){
 					if(! $row->$field) {
 						$output.=",";
 					}else{
-						
+
 				  		$output.=str_replace(","," ",strip_tags($row->$field)).",";
-						
+
 					}
 				}else{
 					$key = key($field);
 					$element = $field[key($field)];
-					
+
 					if(! isset($row->$key->$element)) {
 						$output.=",";
 					}else{
 				  		$output.=str_replace(","," ",strip_tags($row->$key->$element)).",";
-						
+
 					}
-					
-					
+
+
 				}
 
-				  
+
 			  }
 			  $output.="\n";
-			  
-			  
+
+
 		  }
 			$export['output'] = $output;
 		  $export['headers'] = array(
 			  'Content-Type' => 'text/csv',
 			  'Content-Disposition' => $filename ,
 		  );
-	
+
 	return $export;
 
  	 //return Response::make(rtrim($output, "\n"), 200, $headers);
-	
-	
+
+
 	}
 
 	public function seeder(){
 		$this->api_token =\Hash::make(str_random(60));
 		$this->save();
 	}
+/**
+ * [scopeWithRole Select User by role
+ * @param  QueryBuilder $query [description]
+ * @param  int $role  Role id
+ * @return QueryBuilder        [description]
+ */
+  public function scopeWithRole($query,$role){
+    return $query->whereHas('roles',function ($q) use ($role){
+      $q->where('roles.id','=',$role);
+    });
+  }
+  /**
+   * [scopeLastLogin Select last login of user]
+   * @param  QueryBuilder $query    [description]
+   * @param  Array $interval intervale['from','to']
+   * @return QueryBuilder          [description]
+   */
 
-	public function scopeLastLogin($query,$interval=null){
-		
+  public function scopeLastLogin($query,$interval=null){
+
 		if($interval){
 				return $query->whereBetween('lastlogin',[$interval['from'],$interval['to']]);
 			}

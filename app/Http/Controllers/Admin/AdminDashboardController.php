@@ -11,7 +11,7 @@ use Carbon\Carbon;
 use App\Http\Controllers\BaseController;
 
 class AdminDashboardController extends BaseController {
-	
+
 	private $offset; // time offset in seconds from server time and local time
 	private $localTimeZone = 'America/Los_Angeles';
 	private $today;
@@ -22,8 +22,8 @@ class AdminDashboardController extends BaseController {
 	private $company;
 	private $person;
 	private $location;
-	
-	
+
+
 	public function __construct(Company $company,Location $location, Track $track,User $user,Person $person) {
 		$this->calculateTimeOffset();
 		$this->track = $track;
@@ -32,14 +32,14 @@ class AdminDashboardController extends BaseController {
 		$this->person = $person;
 		$this->location = $location;
 	}
-	
+
 	/**
 	 * Admin dashboard
 	 *
 	 */
-	
-	public function dashboard() {
-		
+
+	public function dashboard($filter=null) {
+
 
 		$data['logins'] = $this->getLogins();
 		$data['status'] = $this->getLastLogins();
@@ -47,33 +47,33 @@ class AdminDashboardController extends BaseController {
 		//dd($data['watchlists']->first());
 		$data['nosalesnotes'] = $this->getNoSalesNotes();
 		//$data['locations'] = $this->countLocations()->count;
-		
+
 		$data['duplicates'] =$this->getDuplicateAddresses();
 		$data['nocontact'] =$this->getLocationsWoContacts();
 		$data['locationnotes'] =$this->getLocationsNotes();
-		
+
 		//$data['incorrectSegments'] = $this->incorrectSegments();
-		
+
 		$data['nogeocode'] =$this->getNoGeocodedLocations();
 		$data['recentLocationNotes'] = $this->recentLocationNotes();
 		$data['recentLeadNotes'] = $this->recentLeadNotes();
 		$data['recentProjectNotes'] = $this->recentProjectNotes();
 		$color = $this->getChartColors();
 		return response()->view('admin.dashboard',compact('data','color'));
-		
+
 	}
-	
-	
-	
+
+
+
 	public function logins($view=NULL) {
-		
+
 
 		$users = $this->getUsersByLoginDate($view);
 		$views = $this->getViews();
 		return response()->view('admin.users.newshow',compact('users','views','view'));
-	
+
 	}
-	
+
 	public function downloadlogins($id=null){
 		$views = $this->getViews();
 		$title = str_replace(" ", "-", 'Last Login '. $views[$id]['label']);
@@ -89,7 +89,7 @@ class AdminDashboardController extends BaseController {
 	}
 
 	private function getViews(){
-		
+
 
 		return  [
 			['label'=>'Today',
@@ -108,13 +108,13 @@ class AdminDashboardController extends BaseController {
 			'interval'=>['from'=>Carbon::today()->subWeek(),
 					         'to'=>Carbon::today()->subDay(2)],
 			'color'=>"#FFFF99",],
-			
+
 			['label'=>'Last Month',
 			'value'=>3,
 			'interval'=>['from'=>Carbon::today()->subMonth(),
 					         'to'=>Carbon::today()->subWeek()],
 			'color'=>"#CC3300",],
-			
+
 			['label'=>'This Quarter',
 			'value'=>4,
 			'interval'=>['from'=>Carbon::today()->subQuarter(),
@@ -126,8 +126,8 @@ class AdminDashboardController extends BaseController {
 			'interval'=>['from'=>Carbon::today()->subQuarter(2),
 					         'to'=>Carbon::today()->subQuarter()],
 			'color'=>"#0000ff",],
-			                  
-			
+
+
 			['label'=>'Earlier',
 			'value'=>6,
 			'interval'=>['from'=>Carbon::today()->subYear(10),
@@ -137,39 +137,39 @@ class AdminDashboardController extends BaseController {
 			['label'=>'Never',
 			'value'=>7,
 			'interval'=> null,
-			'color'=>'#00CC99',],                   	
-			
+			'color'=>'#00CC99',],
+
 		];
 	}
 	private function getChartColors(){
-		
+
 		return array_column($this->getViews(),'color','value');
 	}
 
 	private function getUsersByLoginDate($n){
 		$periods = $this->getViews();
 		$interval = $periods[$n]['interval'];
-		return $this->user->lastLogin($interval)->with('person','roles','serviceline')->get();	
-		
+		return $this->user->lastLogin($interval)->with('person','roles','serviceline')->get();
+
 	}
 
-		
+
 	/**
 	 * Return array of logins by day.
 	 *	Exclude non-logins
-	 * 
+	 *
 	 * @return Result collection
 	 */
 	private function getLogins()
 	{
-			
-  
+
+
   		$subQuery =(
 		   $this->track
 				->whereHas('user',function ($q){
 						$q->where('confirmed','=',1);
 					})
-			    ->selectRaw('count(user_id) as logins, 
+			    ->selectRaw('count(user_id) as logins,
 			    	date(min(`lastactivity`)) as datelabel,
 			    	DATE_FORMAT(min(`lastactivity`),"%Y-%m") as firstlogin')
 				->whereNotNull('lastactivity')
@@ -181,23 +181,23 @@ class AdminDashboardController extends BaseController {
 				->mergeBindings($subQuery->getQuery())
 				->groupBy('firstlogin')
 				->orderBy('firstlogin', 'ASC')
-			    ->get();	
+			    ->get();
 	}
 	/**
 	 * Return array of logins by grouped intervals.
-	 *	
-	 * 
+	 *
+	 *
 	 * @return Result array
 	 */
 	private function getLastLogins()
 	{
- 		
+
  		return $this->user->active()
 		 		->selectRaw($this->buildSelectQuery())
 		 		->groupBy('status')
 		 		->orderBy('status')
 		 		->get();
-		
+
 	}
 
 	/**
@@ -231,22 +231,22 @@ class AdminDashboardController extends BaseController {
 
 	/**
 	 * Return array of companies that have no sales notes
-	 *	
-	 * 
+	 *
+	 *
 	 * @return Result array
 	 */
 	private function getNoSalesNotes()
 	{
-		
+
 		return $this->company->whereDoesntHave('salesNotes')->get();
-		
-	
+
+
 	}
-		
+
 	/**
 	 * Return array of watchlist count by user.
-	 *	
-	 * 
+	 *
+	 *
 	 * @return Result array
 	 */
 	private function getWatchListCount()
@@ -261,13 +261,13 @@ class AdminDashboardController extends BaseController {
 	}
 	/**
 	 * Return array of #locations, #locations without phone number and % by company.
-	 *	
-	 * 
+	 *
+	 *
 	 * @return Result array
 	 */
 	private function getLocationsWoContacts()
 	{
-		/*		
+		/*
 		$subQuery =(
 			$this->company->
 			->selectRaw('id,count(locations.id) as withcontacts')
@@ -275,7 +275,7 @@ class AdminDashboardController extends BaseController {
 			->groupBy('companies.id');
 		)
 
-		return 
+		return
 		\DB::
 		table(\DB::raw('('.$subQuery->toSql().') as ol'))
 		->selectRaw('companyname,
@@ -286,45 +286,45 @@ class AdminDashboardController extends BaseController {
 		->mergeBindings($subQuery->getQuery())
 		*/
 		$query ="
-		    select 
+		    select
 				companyname,
 				companies.id,
 				count(locations.id) as locations,
 				(count(locations.id)-withcontacts) as without,
-				(((count(locations.id)-withcontacts) / count(locations.id)) * 100) as percent 
-			from locations,companies 
-			left join 
-				( select 
-					companies.id as coid, 
-					count(locations.id) as withcontacts 
+				(((count(locations.id)-withcontacts) / count(locations.id)) * 100) as percent
+			from locations,companies
+			left join
+				( select
+					companies.id as coid,
+					count(locations.id) as withcontacts
 					from companies,
 					locations,
-					contacts 
-					where companies.id = locations.company_id 
-					and locations.id = contacts.location_id 
-					group by coid 
-				) st2 
-			on st2.coid = companies.id 
-			where companies.id = locations.company_id 
-			group by companyname 
-			having percent >0 
+					contacts
+					where companies.id = locations.company_id
+					and locations.id = contacts.location_id
+					group by coid
+				) st2
+			on st2.coid = companies.id
+			where companies.id = locations.company_id
+			group by companyname
+			having percent >0
 			ORDER BY `percent` ASC";
-	
+
 		return \DB::select(\DB::raw($query));
 
 		/**/
-		
-		
-		
+
+
+
 	}
 	/**
 	 * Calculate current date time and server vs local timezone offset.
-	 * 
-	 * 
+	 *
+	 *
 	 */
-	
+
 	private function calculateTimeOffset() {
-		
+
 		$server_tz = date_default_timezone_get();
 		$local_dtz = new \DateTimeZone($this->localTimeZone);
 		$server_dtz = new \DateTimeZone($server_tz);
@@ -332,26 +332,26 @@ class AdminDashboardController extends BaseController {
 		$local_dt = new \DateTime("now", $local_dtz);
 		$this->offset = $local_dtz->getOffset($local_dt)-$server_dtz->getOffset($server_dt);
 		$this->today =date_format($local_dt,'Y-m-d');
-	
-		
-		
+
+
+
 	}
-	
-	
+
+
 	private function getLocationsNotes() {
-		
-	
-		
+
+
+
 	}
-	
-	
+
+
 	private function getDuplicateAddresses()
 	{
 		//Query to get duplicate addresses
 		return $this->location
 					->with('company')
 					->selectRaw("company_id,
-								concat_ws(' ',`businessname`,`street`,`city`,`state`) as fulladdress, 
+								concat_ws(' ',`businessname`,`street`,`city`,`state`) as fulladdress,
 								count(concat_ws(' ',`businessname`,`street`,`city`,`state`)) as total,
 								state")
 					->groupBy('company_id','fulladdress','state')
@@ -359,12 +359,12 @@ class AdminDashboardController extends BaseController {
 					->get();
 
 	}
-	
+
 	private function incorrectSegments()
 	{
-		
+
 		/*return $this->location->with('company','verticalsegment')
-			->selectRaw('*, 
+			->selectRaw('*,
 					count(locations.id) as incorrect')
 			->whereNotIn('segment',function($query){
                $query->select('vertical')->from('companies')->find();
@@ -373,77 +373,77 @@ class AdminDashboardController extends BaseController {
          ->get();
          */
 		$query ="
-		SELECT 
-			companies.companyname as account, 
-			count(locations.id) as incorrect, 
-			filter as segment 
-		from 
+		SELECT
+			companies.companyname as account,
+			count(locations.id) as incorrect,
+			filter as segment
+		from
 			companies,
 			locations,
-			searchfilters 
-		where 
-			companies.id = locations.company_id and 
-			segment = searchfilters.id and 
-			segment is not null and 
-			segment not in 
-				(select 
-				searchfilters.id 
+			searchfilters
+		where
+			companies.id = locations.company_id and
+			segment = searchfilters.id and
+			segment is not null and
+			segment not in
+				(select
+				searchfilters.id
 				from searchfilters,
-				companies 
-				where parent_id = companies.vertical) 
-		group by 
+				companies
+				where parent_id = companies.vertical)
+		group by
 		companies.companyname
 		order By companies.companyname";
 		return \DB::select(\DB::raw($query));
-		
+
 	}
-	
+
 	private function getNoGeocodedLocations()
 	{
-		
+
 		return Location::where('geostatus','=',FALSE)->with('company')->get();
-		 
-		
-		
+
+
+
 	}
-	
+
 	private function recentLocationNotes()
-	
+
 	{
 		return Note::where('created_at', '>=', \Carbon\Carbon::now()->subWeek())
 		->whereHas('relatesToLocation')
 		->whereNotNull('related_id')
 		->with(['writtenBy','relatesToLocation','relatesToLocation.company','writtenBy.person'])
 		->get();
-		
-		
+
+
 	}
-	
+
 
 	private function recentLeadNotes()
-	
+
 	{
 		return Note::where('created_at', '>=', \Carbon\Carbon::now()->subWeek())
 		->whereHas('relatesToLead')
 		->whereNotNull('related_id')
 		->with(['writtenBy','relatesToLead','writtenBy.person'])
 		->get();
-		
-		
+
+
 	}
 
 	private function recentProjectNotes()
-	
+
 	{
 		return Note::where('created_at', '>=', \Carbon\Carbon::now()->subWeek())
 		->whereHas('relatesToProject')
 		->whereNotNull('related_id')
 		->with(['writtenBy','relatesToProject','writtenBy.person'])
 		->get();
-		
-		
+
+
 	}
 
-	
-	
+
+
 }
