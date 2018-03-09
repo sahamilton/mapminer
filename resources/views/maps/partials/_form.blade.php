@@ -76,7 +76,11 @@ $values = Config::get('app.search_radius');
            @endforeach
         </select> of 
         
-<input type="text" name="address" value="{{str_replace('+',' ', $data['address'])}}"  id="address" style='width:300px' />
+<input type="text" name="address" 
+value="{{str_replace('+',' ', $data['address'])}}"  
+id="address" 
+style='width:300px'
+placeholder='Enter address or check Help Support for auto geocoding' />
 <button type="submit"  style="background-color: #4CAF50;"
 class= "btn btn-success btn-xs"><span class="glyphicon glyphicon-search"></span> Search!</button>
 
