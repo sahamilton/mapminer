@@ -47,7 +47,7 @@
     </table>
     @else
     <div class="alert alert-danger">
-  <strong>Warning!</strong> No results withing this range. Try enlarging your search.
+  <strong>Warning!</strong> No results within this range. Try enlarging your search.
 </div>
     @endif
 </div>
