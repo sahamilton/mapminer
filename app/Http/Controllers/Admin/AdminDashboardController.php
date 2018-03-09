@@ -22,6 +22,7 @@ class AdminDashboardController extends BaseController {
 	private $company;
 	private $person;
 	private $location;
+	private $begingingOfTime;
 
 
 	public function __construct(Company $company,Location $location, Track $track,User $user,Person $person) {
@@ -31,6 +32,7 @@ class AdminDashboardController extends BaseController {
 		$this->company = $company;
 		$this->person = $person;
 		$this->location = $location;
+		$this->begingingOfTime = Carbon::parse('2014-07-01');
 	}
 
 	/**
@@ -130,8 +132,8 @@ class AdminDashboardController extends BaseController {
 
 			['label'=>'Earlier',
 			'value'=>6,
-			'interval'=>['from'=>Carbon::today()->subYear(10),
-			              'to'=>Carbon::today()->subYear()],
+			'interval'=>['from'=>$this->begingingOfTime,
+			              'to'=>Carbon::today()->subQuarter(2)],
 			 'color'=>"#FF0099",],
 
 			['label'=>'Never',
