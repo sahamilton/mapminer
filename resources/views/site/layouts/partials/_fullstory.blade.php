@@ -1,4 +1,5 @@
 <!-- Add Full story -->
+@if(!(auth()->check() || auth()->user()->id !=1)
 <script>
 window['_fs_debug'] = false;
 window['_fs_host'] = 'fullstory.com';
@@ -27,5 +28,6 @@ FS.identify('{{auth()->user()->id}}', {
   reviewsWritten_int: 14,
 });
 </script>
+@endif
 @endif
 <!-- End FUll story -->
