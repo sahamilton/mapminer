@@ -1,5 +1,5 @@
 <!-- Add Full story -->
-@if(!(auth()->check() || auth()->user()->id !=1)
+@if(! auth()->check() || auth()->user()->id != 1)
 <script>
 window['_fs_debug'] = false;
 window['_fs_host'] = 'fullstory.com';
