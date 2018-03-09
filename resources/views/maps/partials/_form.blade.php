@@ -77,7 +77,8 @@ $values = Config::get('app.search_radius');
         </select> of 
         
 <input type="text" name="address" value="{{str_replace('+',' ', $data['address'])}}"  id="address" style='width:300px' />
-<button type="submit"  class= "btn btn-default btn-xs"><span class="glyphicon glyphicon-search"></span> Search!</button>
+<button type="submit"  style="background-color: #4CAF50;"
+class= "btn btn-success btn-xs"><span class="glyphicon glyphicon-search"></span> Search!</button>
 
 {{Form::hidden('company', isset($company) ? $company->id : '' )}}
 {{Form::hidden('companyname',isset($company) ? $company->companyname : '')}}
