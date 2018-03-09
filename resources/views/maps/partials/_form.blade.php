@@ -77,7 +77,7 @@ $values = Config::get('app.search_radius');
         </select> of 
         
 <input type="text" name="address" 
-value="{{str_replace('+',' ', $data['address'])}}"  
+value="{{str_replace('+','', str_replace('  ',' ',$data['address']))}}"  
 id="address" 
 style='width:300px'
 placeholder='Enter address or check Help Support for auto geocoding' />

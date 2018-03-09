@@ -182,6 +182,7 @@ class BranchesController extends BaseController {
 		//$data['companyname']=NULL;
 		$data['latlng'] = $data['branch']->lat.":".$data['branch']->lng;
 		$data['distance'] = '10';
+
 		$roles = \App\Role::pluck('name','id');
 		return response()->view('branches.show',compact('data','servicelines','filtered','roles'));
 	}

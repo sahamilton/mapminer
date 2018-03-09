@@ -10,18 +10,34 @@
         {{$data['branch']->phone}}</p>
         <h4>Branch Team</h4>
         @foreach ($data['branch']->relatedPeople()->get() as $people)
-
-        <p><strong>{{$roles[$people->pivot->role_id]}}</strong>: {{$people->postName()}} </p>
-
+            <p>
+                <strong>
+                    {{$roles[$people->pivot->role_id]}}:
+                    <a href="{{route('person.show',$people->id)}}"
+                        title = "See {{$people->firstname}}'s organizational details">
+                        {{$people->postName()}}  
+                    </a> 
+                </strong>
+                @if($people->phone != "")
+                    <i class="glyphicon glyphicon-phone-alt"> </i>
+                    {{$people->phone}} 
+                @endif
+                @if($people->has('userdetails'))
+                    <i class="glyphicon glyphicon-envelope"> </i>
+                    <a href="mailto:{{$people->userdetails()->first()->email}}"
+                        title="Email {{$people->firstname}}">
+                    {{$people->userdetails()->first()->email}}
+                    </a> 
+                @endif
+            </p>
         @endforeach
-
         <p>Branch service radius: {{$data['branch']->radius}} miles.</p>
         <h4>Service Lines:</h4>
         <ul style="margin-left:40px">
             @foreach($data['branch']->servicelines as $serviceline)
                <li>  {{$serviceline->ServiceLine}} </li>
             @endforeach
-</ul>            
+        </ul>            
 <?php $data['address'] = $data['branch']->street ." ".$data['branch']->city ." ".$data['branch']->state;
 $data['lat'] = $data['branch']->lat;
 $data['lng'] = $data['branch']->lng;

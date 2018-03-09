@@ -29,7 +29,7 @@
 <input type="text" id="address" name="address" value="{{isset($data['address']) ? $data['address'] : ''}}"/>
 <input type="hidden" name="lat" id="lat" value=""/>
 <input type="hidden" name="lng" id="lat" value=""/>
-         <button type="submit"  class= "btn btn-default btn-xs"><span class="glyphicon glyphicon-search"></span> Search!</button>
+         <button type="submit"  class= "btn btn-success btn-xs"><span class="glyphicon glyphicon-search"></span> Search!</button>
 
 </form>
 
