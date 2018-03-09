@@ -60,51 +60,11 @@
 	</head>
 
 	<body onLoad="load()">
-     <script>
-       dataLayer = [{ 
-           'userId' : '{{{Auth::id()}}}'
-	   }];
-	   </script>
-    <!-- Google Tag Manager -->
-<noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-PZM3WV"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-PZM3WV');</script>
-<!-- End Google Tag Manager -->
-<!-- Add Full story -->
-<script>
-window['_fs_debug'] = false;
-window['_fs_host'] = 'fullstory.com';
-window['_fs_org'] = 'AY8QW';
-window['_fs_namespace'] = 'FS';
-(function(m,n,e,t,l,o,g,y){
-    if (e in m) {if(m.console && m.console.log) { m.console.log('FullStory namespace conflict. Please set window["_fs_namespace"].');} return;}
-    g=m[e]=function(a,b){g.q?g.q.push([a,b]):g._api(a,b);};g.q=[];
-    o=n.createElement(t);o.async=1;o.src='https://'+_fs_host+'/s/fs.js';
-    y=n.getElementsByTagName(t)[0];y.parentNode.insertBefore(o,y);
-    g.identify=function(i,v){g(l,{uid:i});if(v)g(l,v)};g.setUserVars=function(v){g(l,v)};
-    y="rec";g.shutdown=function(i,v){g(y,!1)};g.restart=function(i,v){g(y,!0)};
-    g.identifyAccount=function(i,v){o='account';v=v||{};v.acctId=i;g(o,v)};
-    g.clearUserCookie=function(){};
-})(window,document,window['_fs_namespace'],'script','user');
-</script>
-@if(auth()->check())
-<script>
-
-	// This is an example script - don't forget to change it!
-FS.identify('{{auth()->user()->id}}', {
-  displayName: '{{auth()->user()->fullName()}}',
-  email: '{{auth()->user()->email}}',
-  // TODO: Add your own custom user variables here, details at
-  // http://help.fullstory.com/develop-js/setuservars.
-  reviewsWritten_int: 14,
-});
-</script>
+@include('site.layouts.partials._googletagmanager')
+@if(config('app.env')=='production')
+	@include('site.layouts.partials._fullstory')
 @endif
-<!-- End FUll story -->
+
 
 		<!-- To make sticky footer need to wrap in a div -->
 		<div id="wrap">
