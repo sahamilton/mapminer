@@ -33,11 +33,8 @@ class CompaniesServiceController extends BaseController
 
 		$locations = $this->location->locationsNearbyBranches($company);
 
-		//filter if too many locations
 		return response()->view('companies.newservice',compact('company','locations'));
 
-
-	
 	}
 
 

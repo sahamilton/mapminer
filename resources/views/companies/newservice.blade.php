@@ -22,6 +22,7 @@
 		<th>State</th>
 		<th>ZIP</th>
 		<th>Branches</th>
+		<th>Sales Reps</th>
 	
    		
     </thead>
