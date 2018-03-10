@@ -115,7 +115,11 @@ class Location extends Model {
             ->header('Content-Type', 'text/xml');
 		
 	}
-
+	public function getStateSummary($id){
+		return $this->where('company_id','=',$id)->select('state', \DB::raw('count(*) as total'))
+             ->groupBy('state')
+             ->pluck('total','state');
+	}
 	
 	private function getQuerySearchKeys(){
 			$keys = array();

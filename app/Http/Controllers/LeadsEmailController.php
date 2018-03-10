@@ -72,7 +72,7 @@ class LeadsEmailController extends Controller
        
        
     }
-
+    // This should be in a mailable.
     
     private function createMessage($source){
         $message = "You have new leads offered to you in the " . $source->source." lead campaign. ";

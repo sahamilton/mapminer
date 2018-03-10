@@ -122,5 +122,7 @@ class Company extends Model {
 						})->with('industryVertical')
 						->find($company_id);
 	}
+
+	
 	
 }

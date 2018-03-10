@@ -112,13 +112,7 @@ class LeadImportController extends ImportController
         $this->truncateTable();
       
     
-        /*$query = "insert into lead_person_status (lead_id,person_id,status)
-        SELECT leads.id, leadimport.pid,'2' from leads,leadimport
-        where MD5(lower(replace(concat(`leads.companyname`,`leads.businessname`,`leads.address`,`leads.city`,`leads.state`,`leads.zip`),' ',''))) = MD5(lower(replace(concat(`leadimport.companyname`,`leadimport.businessname`,`leadimport.address`,`leadimport.city`,`leadimport.state`,`leadimport.zip`),' ','')))
-        and leads.leads_source_id = leadimport.lead_source_id;
-        
-
-        //truncate leadimport table;*/
+  
     }
 
     private function addAssignedPID(){

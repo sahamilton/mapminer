@@ -61,78 +61,82 @@ trait Geocode
     public function locationsNearbyBranches(Company $company,$radius=25,$limit=null){
         //add pagination
         $query ="select 
-locs.businessname,
-locs.street as locstreet, 
-locs.city as loccity, 
-locs.state as locstate,
-locs.zip as loczip,
-branch.branchname,
-branch.id as branch_id,
-branch.city,
-branch.state,
-branchfilter.branchdistance,
-people.id as pid,
-people.firstname,
-people.lastname,
-people.city,
-peepsfilter.peepsdistance
-from locations locs, branches branch,persons people,
-(select 
-                blocs.id as blocid,
-                branches.id as branchid,
-                branches.city ,
+                locs.id,
+                locs.businessname,
+                locs.street as locstreet, 
+                locs.city as loccity, 
+                locs.state as locstate,
+                locs.zip as loczip,
+                branch.branchname,
+                branch.id as branch_id,
+                branch.city,
+                branch.state,
+                branchfilter.branchdistance,
+                people.id as pid,
+                concat_ws(' ',people.firstname,people.lastname) as repname,
+                peepsfilter.peepsdistance,
+                concat_ws(' ',manager.firstname,manager.lastname) as manager,
+                manager.id as mgrid
+            from locations locs, 
+                branches branch,
+                persons people,
+                persons manager,
+                (select 
+                        blocs.id as blocid,
+                        branches.id as branchid,
+                        branches.city ,
+                        3956 * acos(cos(radians(blocs.lat)) 
+                        * cos(radians(branches.lat)) 
+                        * cos(radians(branches.lng) 
+                        - radians(blocs.lng)) 
+                        + sin(radians(blocs.lat)) 
+                        * sin(radians(branches.lat))) as branchdistance
 
-                3956 * acos(cos(radians(blocs.lat)) 
-                     * cos(radians(branches.lat)) 
-                     * cos(radians(branches.lng) 
-                     - radians(blocs.lng)) 
-                     + sin(radians(blocs.lat)) 
-                     * sin(radians(branches.lat))) as branchdistance
-                       
-            from locations blocs
-            left join branches on (
-                3956 * acos(cos(radians(blocs.lat)) 
-                     * cos(radians(branches.lat)) 
-                     * cos(radians(branches.lng) 
-                     - radians(blocs.lng)) 
-                     + sin(radians(blocs.lat)) 
-                     * sin(radians(branches.lat))) 
-                     < branches.radius
-                 )  
-            
-            where blocs.company_id = 151
-            
-            order by blocid,branchdistance)  branchfilter,
-(select 
-                plocs.id as plocid,
-                peeps.id as peepid,
+                    from locations blocs
+                    left join branches on (
+                        3956 * acos(cos(radians(blocs.lat)) 
+                        * cos(radians(branches.lat)) 
+                        * cos(radians(branches.lng) 
+                        - radians(blocs.lng)) 
+                        + sin(radians(blocs.lat)) 
+                        * sin(radians(branches.lat))) 
+                        < branches.radius
+                        ) 
 
-                  3956 * acos(cos(radians(plocs.lat)) 
-                     * cos(radians(peeps.lat)) 
-                     * cos(radians(peeps.lng) 
-                     - radians(plocs.lng)) 
-                     + sin(radians(plocs.lat)) 
-                     * sin(radians(peeps.lat))) as peepsdistance            
-            from locations plocs
-             left join (select persons.* from persons,role_user,roles
-                       where persons.user_id = role_user.user_id and role_user.role_id = roles.id and roles.name = 'Sales') peeps
-                on (
-                3956 * acos(cos(radians(plocs.lat)) 
-                     * cos(radians(peeps.lat)) 
-                     * cos(radians(peeps.lng) 
-                     - radians(plocs.lng)) 
-                     + sin(radians(plocs.lat)) 
-                     * sin(radians(peeps.lat))) 
-                     < 100
-                 ) 
-            where plocs.company_id = 151
-            
-            order by plocid,peepsdistance)  peepsfilter
+                    where blocs.company_id = " . $company->id . "
+                    order by blocid,branchdistance) branchfilter,
 
-           where peepsfilter.plocid = branchfilter.blocid
-           and locs.id = branchfilter.blocid
-           and people.id = peepsfilter.peepid
-           and branch.id = branchfilter.branchid";
+                (select 
+                        plocs.id as plocid,
+                        peeps.id as peepid,
+                        3956 * acos(cos(radians(plocs.lat)) 
+                        * cos(radians(peeps.lat)) 
+                        * cos(radians(peeps.lng) 
+                        - radians(plocs.lng)) 
+                        + sin(radians(plocs.lat)) 
+                        * sin(radians(peeps.lat))) as peepsdistance 
+                    from locations plocs
+                    left join 
+                    (select persons.* from persons,role_user,roles
+                        where persons.user_id = role_user.user_id 
+                        and role_user.role_id = roles.id 
+                        and roles.name = 'Sales') peeps
+                    on (
+                        3956 * acos(cos(radians(plocs.lat)) 
+                        * cos(radians(peeps.lat)) 
+                        * cos(radians(peeps.lng) 
+                        - radians(plocs.lng)) 
+                        + sin(radians(plocs.lat)) 
+                        * sin(radians(peeps.lat))) 
+                        < 100
+                    ) 
+                    where plocs.company_id = ". $company->id ."
+                    order by plocid,peepsdistance) peepsfilter
+            where peepsfilter.plocid = branchfilter.blocid
+            and locs.id = branchfilter.blocid
+            and people.id = peepsfilter.peepid
+            and branch.id = branchfilter.branchid
+            and people.reports_to = manager.id";
           return \DB::select($query);
 
     }

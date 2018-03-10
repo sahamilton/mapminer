@@ -22,49 +22,40 @@
 		<th>State</th>
 		<th>ZIP</th>
 		<th>Branches</th>
-		<th>Sales Reps</th>
+		<th>Sales Reps <em>(Manager)</em></th>
 	
    		
     </thead>
     <tbody>
-    	<?php $locid=null;?>
-   @foreach($locations as $location)
+    	@foreach ($locations as $location)
 
-   @if($location->locid != $locid )
-   <?php $locid = $location->locid;
-   $branchcount=0;?>
+    	 	<tr> 
+		    	<td>
+					<a title= "See details of {{$location['location']['businessname']}} location."
+					href={{route('locations.show',$location['location']['id'])}}>
+					{{$location['location']['businessname']}}</a>
+				</td>
+				<td>{{$location['location']['street']}}</td>
+				<td>{{$location['location']['city']}}</td>
+				<td>{{$location['location']['state']}}</td>
+				<td>{{$location['location']['zip']}}</td>
+				<td>
+					<?php usort($location['branch'], function ($a, $b) { return $a['distance'] - $b['distance']; });?>
+					@foreach ($location['branch'] as $branch)
 
-	</td>
-	</tr>
-    <tr> 
-    
-
-	<td>
-		<a title= "See details of {{$location->businessname}} location."
-		href={{route('locations.show',$location->locid)}}>
-		{{$location->businessname}}</a>
-	</td>
-	<td>{{$location->locstreet}}</td>
-	<td>{{$location->loccity}}</td>
-	<td>
-
-		
-		{{$location->locstate}}
-	</td>
-	<td>{{$location->loczip}}</td>
-
-	<td>
-	
-	@endif
-	<?php $branchcount++;?>
-	@if($branchcount <6)
-		{{$location->branchid}} {{$location->branchname}} : {{number_format($location->branchdistance,1)}} mi<br />
-	@endif	
-		
-
-	
-	
-
+					<a href="{{route('branches.show',$branch['branch_id'])}}">
+						{{$branch['branchname']}}</a>: {{number_format($branch['distance'],2)}} mi<br />
+					@endforeach
+				</td>
+				<td>
+					<?php usort($location['rep'], function ($a, $b) { return $a['distance'] - $b['distance']; });?>
+					@foreach ($location['rep'] as $rep)
+					<a href="{{route('person.show',$rep['pid'])}}">
+						{{$rep['repname']}}</a> : {{number_format($rep['distance'],2)}} mi 
+						(<em>{{$rep['manager']}}</em>)<br />
+					@endforeach
+				</td>
+    	
    @endforeach
     
     </tbody>

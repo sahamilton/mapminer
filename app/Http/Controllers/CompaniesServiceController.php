@@ -28,15 +28,45 @@ class CompaniesServiceController extends BaseController
 		$company = $this->company->with('managedBy','locations')->findOrFail($id);
 		$count = count($company->locations);
 		if($count > $this->limit){
-			dd('too many!');
+			dd($count,$this->location->getStateSummary($company->id));
 		}
 
 		$locations = $this->location->locationsNearbyBranches($company);
-
+		$locations = $this->createServiceDetails($locations);
 		return response()->view('companies.newservice',compact('company','locations'));
 
 	}
+	public function createServiceDetails($locations,$limit=5){
+		$service = array();
+		$loc = null;
 
+		foreach ($locations as $location){
+
+			if(! isset($service[$location->id])){
+				$service[$location->id] = array();
+			}
+			$service[$location->id]['location']['id']= $location->id;
+			$service[$location->id]['location']['businessname']= $location->businessname;
+			$service[$location->id]['location']['street']= $location->locstreet;
+			$service[$location->id]['location']['city']= $location->loccity;
+			$service[$location->id]['location']['state']= $location->locstate;
+			$service[$location->id]['location']['zip']= $location->loczip;
+			if(! isset($service[$location->id]['branch']) || count($service[$location->id]['branch'])<$limit){
+				$service[$location->id]['branch'][$location->branch_id]['branch_id']=$location->branch_id;
+				$service[$location->id]['branch'][$location->branch_id]['branchname']=$location->branchname;
+				$service[$location->id]['branch'][$location->branch_id]['branchcity']=$location->city;
+				$service[$location->id]['branch'][$location->branch_id]['branchstate']=$location->state;
+				$service[$location->id]['branch'][$location->branch_id]['distance']=$location->branchdistance;
+				}
+			
+			if(! isset($service[$location->id]['rep']) || count($service[$location->id]['rep'])<$limit){
+				$service[$location->id]['rep'][$location->pid]['pid']=$location->pid;
+				$service[$location->id]['rep'][$location->pid]['repname']=$location->repname;
+				$service[$location->id]['rep'][$location->pid]['manager']=$location->manager;
+				$service[$location->id]['rep'][$location->pid]['distance']=$location->peepsdistance;			}
+		}
+		return  $service;
+	}
 
     public function serviceDetails($id,$state=null){
 		if(is_object($id)){
