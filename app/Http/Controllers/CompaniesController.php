@@ -216,7 +216,7 @@ class CompaniesController extends BaseController {
 	 
 	public function show($id,$segment=null)
 	{
-	
+
 		if(is_object($id)){
 			$id = $id->id;
 
@@ -256,6 +256,7 @@ class CompaniesController extends BaseController {
 		// used when there are too many locations to show in list
 		if( $count > $this->limit)
 		{
+			
 			$location = new Location;
 			$limited=$this->limit;
 			if (\Session::has('geo'))
@@ -271,8 +272,9 @@ class CompaniesController extends BaseController {
 				}
 	
 		
-		$locations = $this->locations->nearby($location,'1000')
+		$locations = $this->locations
 		->where('company_id','=',$company->id)
+		->nearby($location,'1000')
 		->limit($this->limit)
 		->get();
 		
