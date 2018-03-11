@@ -5,7 +5,7 @@
 <div>
 <h4> {{$company->companyname}} Locations Serviced By</h4>
 
-<p><a href="{{route('company.service',$company->id)}}">
+<p><a href="{{route('company.show',$company->id)}}">
 	Return to all locations of {{$company->companyname}}</a></p>
 	
 @if(isset($company->managedBy->firstname))
