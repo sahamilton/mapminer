@@ -11,7 +11,7 @@
 @if(isset($company->managedBy->firstname))
 <p>Account managed by <a href="{{route('person.show',$company->managedBy->id)}}" title="See all accounts managed by {{$company->managedBy->postName()}}">{{$company->managedBy->postName()}}</a></p>
 @endif
-
+ <a href="{{route('company.service.export',[$company->id])}}" title="Download service list as a CSV / Excel file"><i class="glyphicon glyphicon-cloud-download"></i> Export this Service List</a>
 <?php $route = 'company.service.select';?>
 <table id ='sorttable'  class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
@@ -22,7 +22,7 @@
 		<th>State</th>
 		<th>ZIP</th>
 		<th>Branches</th>
-		<th>Sales Reps <em>(Manager)</em></th>
+		<th>Sales Reps</th>
 	
    		
     </thead>
@@ -52,7 +52,7 @@
 					@foreach ($location['rep'] as $rep)
 					<a href="{{route('person.show',$rep['pid'])}}">
 						{{$rep['repname']}}</a> : {{number_format($rep['distance'],2)}} mi 
-						(<em>{{$rep['manager']}}</em>)<br />
+						<br />
 					@endforeach
 				</td>
     	

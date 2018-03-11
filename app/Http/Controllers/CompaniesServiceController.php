@@ -33,7 +33,7 @@ class CompaniesServiceController extends BaseController
 
 		$locations = $this->location->locationsNearbyBranches($company);
 		$locations = $this->createServiceDetails($locations);
-dd($locations);
+
 		return response()->view('companies.newservice',compact('company','locations'));
 
 	}
@@ -55,16 +55,17 @@ dd($locations);
 			if(! isset($service[$location->id]['branch']) || count($service[$location->id]['branch'])<$limit){
 				$service[$location->id]['branch'][$location->branch_id]['branch_id']=$location->branch_id;
 				$service[$location->id]['branch'][$location->branch_id]['branchname']=$location->branchname;
-				$service[$location->id]['branch'][$location->branch_id]['branchcity']=$location->city;
-				$service[$location->id]['branch'][$location->branch_id]['branchstate']=$location->state;
+				$service[$location->id]['branch'][$location->branch_id]['address']=$location->city . " " .$location->state ;
+				$service[$location->id]['branch'][$location->branch_id]['phone']=$location->branch_phone;
 				$service[$location->id]['branch'][$location->branch_id]['distance']=$location->branchdistance;
 				}
 			
 			if(! isset($service[$location->id]['rep']) || count($service[$location->id]['rep'])<$limit){
 				$service[$location->id]['rep'][$location->pid]['pid']=$location->pid;
 				$service[$location->id]['rep'][$location->pid]['repname']=$location->repname;
+				$service[$location->id]['rep'][$location->pid]['phone']=$location->phone;
 				$service[$location->id]['rep'][$location->pid]['distance']=$location->peepsdistance;
-				$service[$location->id]['rep'][$location->pid]['manager'][$location->depth] = $location->manager;	
+				//$service[$location->id]['rep'][$location->pid]['manager'][$location->depth] = $location->manager;	
 			   }
 
 		}
@@ -111,7 +112,7 @@ dd($locations);
 
 							})					
 					->findOrFail($id);
-		$locations = $this->getCompanyLocations($company,$state);
+		/*$locations = $this->getCompanyLocations($company,$state);
 		
 		$limited = false;
 		$count = count($locations);
@@ -126,7 +127,17 @@ dd($locations);
 
 		$this->writeExcel($title,$company,$locations);
 		return redirect()->back();
-		}
+
+
+		}*/
+		
+		return 	Excel::create('Service',function($excel) use($company){
+			$excel->sheet('Service',function($sheet) use($company) {
+				$locations = $this->location->locationsNearbyBranches($company);
+				$locations = $this->createServiceDetails($locations);
+				$sheet->loadview('companies.exportnewservicelocations',compact('locations'));
+			});
+		})->download('csv');
 
 	}
 	

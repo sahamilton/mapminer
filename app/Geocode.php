@@ -71,17 +71,15 @@ trait Geocode
                 branch.id as branch_id,
                 branch.city,
                 branch.state,
+                branch.phone as branch_phone,
                 branchfilter.branchdistance,
                 people.id as pid,
                 concat_ws(' ',people.firstname,people.lastname) as repname,
                 peepsfilter.peepsdistance,
-                concat_ws(' ',manager.firstname,manager.lastname) as manager,
-                manager.id as mgrid,
-                manager.depth
+                people.phone
             from locations locs, 
                 branches branch,
                 persons people,
-                persons manager,
                 (select 
                         blocs.id as blocid,
                         branches.id as branchid,
@@ -137,8 +135,6 @@ trait Geocode
             and locs.id = branchfilter.blocid
             and people.id = peepsfilter.peepid
             and branch.id = branchfilter.branchid
-            and people.lft > manager.lft
-            and people.rgt < manager.rgt
             order by locs.id";
           return \DB::select($query);
 
