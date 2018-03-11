@@ -33,6 +33,7 @@ class CompaniesServiceController extends BaseController
 
 		$locations = $this->location->locationsNearbyBranches($company);
 		$locations = $this->createServiceDetails($locations);
+dd($locations);
 		return response()->view('companies.newservice',compact('company','locations'));
 
 	}
@@ -41,7 +42,7 @@ class CompaniesServiceController extends BaseController
 		$loc = null;
 
 		foreach ($locations as $location){
-
+			
 			if(! isset($service[$location->id])){
 				$service[$location->id] = array();
 			}
@@ -62,8 +63,10 @@ class CompaniesServiceController extends BaseController
 			if(! isset($service[$location->id]['rep']) || count($service[$location->id]['rep'])<$limit){
 				$service[$location->id]['rep'][$location->pid]['pid']=$location->pid;
 				$service[$location->id]['rep'][$location->pid]['repname']=$location->repname;
-				$service[$location->id]['rep'][$location->pid]['manager']=$location->manager;
-				$service[$location->id]['rep'][$location->pid]['distance']=$location->peepsdistance;			}
+				$service[$location->id]['rep'][$location->pid]['distance']=$location->peepsdistance;
+				$service[$location->id]['rep'][$location->pid]['manager'][$location->depth] = $location->manager;	
+			   }
+
 		}
 		return  $service;
 	}
