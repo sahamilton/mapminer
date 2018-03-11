@@ -25,16 +25,17 @@
 			<th>Manager</th>
 			<th>Email</th>
 			<th>Vertical</th>
+			<th>Locations</th>
 			<th>Service Lines</th>
 
 			@if (auth()->user()->hasRole('Admin'))
 			<th>Actions</th>
-			@endif    
+			@endif
 		</thead>
 	<tbody>
 	@foreach($companies as $company)
 
-		<tr>  
+		<tr>
 
 			<td>
 			@if(count($company->countlocations)>0)
@@ -47,7 +48,7 @@
 			</td>
 			<td>
 			@if(isset($company->managedBy))
-			<a href="{{route('person.show',$company->managedBy->id)}}" 
+			<a href="{{route('person.show',$company->managedBy->id)}}"
 			title="See all companies managed by {{$company->managedBy->postName()}}" >
 			{{$company->managedBy->postName()}}
 			</a>
@@ -56,22 +57,28 @@
 			<td>
 			@if(isset($company->managedBy->userdetails))
 			<a href="mailto:{{$company->managedBy->userdetails->email}}"
-			title="Email {{$company->managedBy->postName()}}" >
-			{{$company->managedBy->userdetails->email}}
+				title="Email {{$company->managedBy->postName()}}" >
+				{{$company->managedBy->userdetails->email}}
 			</a>
-
 			@endif
 			</td>
 			<td>
 			@if(isset($company->industryVertical))
 
-			<a href="{{route('company.vertical',$company->industryVertical->id)}}" 
+			<a href="{{route('company.vertical',$company->industryVertical->id)}}"
 			title ="See all {{$company->industryVertical->filter}} companies">
-			{{$company->industryVertical->filter}} 
+			{{$company->industryVertical->filter}}
 			</a>
 			@endif
-
 			</td>
+			<td>
+				@if(count($company->countlocations)>0)
+				<a href="{{route('company.show',$company->id)}}"
+				title = 'See all {{$company->companyname}} locations'>
+					{{number_format($company->countlocations->first()->count,0)}}
+				</a>
+				@endif
+		</td>
 			<td>
 			<ul>
 				@foreach ($company->serviceline as $serviceline)
@@ -85,7 +92,7 @@
 			</td>
 			@if (auth()->user()->hasRole('Admin'))
 				<td>
-					
+
 
 					<div class="btn-group">
 						<button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
@@ -100,12 +107,12 @@
 						Edit {{$company->companyname}}</a></li>
 						<li>
 						<a data-href="{{route('company.destroy',$company->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = "{{$company->companyname}} and all its locations" href="#">
-						<i class="fa fa-trash-o" aria-hidden="true"> </i> 
+						<i class="fa fa-trash-o" aria-hidden="true"> </i>
 						Delete {{$company->companyname}}</a></li>
 						</ul>
 					</div>
 				</td>
-			@endif	
+			@endif
 		</tr>
 
 	@endforeach
