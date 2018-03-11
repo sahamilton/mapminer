@@ -38,7 +38,7 @@ class CompaniesServiceController extends BaseController
 		$count = count($company->locations);
 		if($count > $this->limit){
 			dd($count,$this->location->getStateSummary($company->id));
-      // sho view with states and number;
+      // show view with states and number;
       // select states limited to number_format
       //
 		}
@@ -92,8 +92,8 @@ class CompaniesServiceController extends BaseController
 
 /**
  * [exportServiceDetails description]
- * @param  [type] $id    [description]
- * @param  [type] $state [description]
+ * @param  int $id    Company id
+ * @param  string $state [description]
  * @return CSV download file
  */
 	public function exportServiceDetails($id,$state=null){
@@ -113,14 +113,13 @@ class CompaniesServiceController extends BaseController
 
 	}
 	/**
-   * [getTitle description]
-   * @param  [type] $company [description]
-   * @param  [type] $limited [description]
-   * @param  [type] $state   [description]
-   * @param  [type] $loop    [description]
-   * @return [type]          [description]
+   * Create Excel workbook title for export / saving
+   * removed non-words,spaces, limit length add
+   * service locations
+   * @param  Eloquent Model $company
+   * @return string  .
    */
-	private function getTitle($company){
+	private function getTitle(Company $company){
 		 return
      str_replace(" ","_",
      mb_ereg_replace("([^\w\s\d\-_~,;\[\]\(\).])", '',
