@@ -137,29 +137,26 @@ class SearchFilter extends NodeModel {
 		$searchFilter = array();		
 		$searchFilters = array();
 		// Initialize the search session
-		if(! isset($search)) {
-			$search = \Session::get('Search');
-			
-			if(count($search) < 2)
-			{
-				// If session isn't set then get all filters
-				$keys = $this->whereNotNull('type')->orderBy('searchtable','searchcolumn','lft')->pluck('id');
-				
-			}else{
-				//get filters from session
-				$keys = array_keys($search);
-				
-			}
-		}else{
-			$keys = array_keys($search);
-			
+    //if search is set
+    //    then get search 
+    //else if session is set
+    //    then get session
+    //else session is not set && search is blank
+    //    then get all 
+		if(isset($search)) {
+        $keys = array_keys($search);
+			}else{ 
+        if(\Session::has('Search')){
+			     $keys = array_keys($search);
+         }else{
+          // If session isn't set and none requested then get all filters
+           $keys = $this->whereNotNull('type')->orderBy('searchtable','searchcolumn','lft')->pluck('id');
+         }	
 		}
 
 		$filters = $this->whereIn('id',$keys)->whereNotNull('type')->orderBy('lft')->get();
-
 		foreach ($filters as $filter)
 		{				
-				
 				// we need to set the vertical parent to checked if depth > 2
 				if ($filter->isLeaf() && $filter->depth > 2 && $filter->inactive == 0){
 					// set the parent to the be checked
@@ -187,12 +184,8 @@ class SearchFilter extends NodeModel {
 			}
 		}*/
 		
-		
-
 		\Session::forget('Search');
-
 		\Session::put('Search', array($searchFilter));
-		
 	}
 	
 public function segments(){
