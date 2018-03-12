@@ -49,8 +49,8 @@ class CompaniesServiceController extends BaseController
 
 	}
 /**
- * [createServiceDetails Create multidimensional array from query result]
- * @param  array  $locations [result of getServiceDetails query]
+ * createServiceDetails Create multidimensional array from query result
+ * @param  array  $locations result of getServiceDetails query
  * @param  integer $limit     Limit branch and reps returned if greater than limit
  * @return array           [description]
  */
