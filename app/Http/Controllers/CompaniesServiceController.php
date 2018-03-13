@@ -49,7 +49,7 @@ class CompaniesServiceController extends BaseController
 		$loc = null;
 
 		foreach ($locations as $location){
-			
+
 			if(! isset($service[$location->id])){
 				$service[$location->id] = array();
 			}
@@ -71,7 +71,7 @@ class CompaniesServiceController extends BaseController
 				$service[$location->id]['rep'][$location->pid]['pid']=$location->pid;
 				$service[$location->id]['rep'][$location->pid]['repname']=$location->repname;
 				$service[$location->id]['rep'][$location->pid]['distance']=$location->peepsdistance;
-				$service[$location->id]['rep'][$location->pid]['manager'][$location->depth] = $location->manager;	
+				//$service[$location->id]['rep'][$location->pid]['manager'][$location->depth] = $location->manager;	
 			   }
 
 		}
@@ -200,7 +200,7 @@ class CompaniesServiceController extends BaseController
 		return $companyname;
 		
 	}
-
+/*
 
 	private function getColumns(){
 		 return['Business Name',
@@ -305,6 +305,7 @@ class CompaniesServiceController extends BaseController
 			return $content;
 
 	}
+	*/
 	private function writeExcel($title,$company,$locations){
 		return 	Excel::create($title,function($excel) use($company,$locations){
 			$excel->sheet('Service',function($sheet) use($company,$locations) {

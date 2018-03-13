@@ -74,6 +74,7 @@ trait Geocode
                 branch.phone as branch_phone,
                 branchfilter.branchdistance,
                 people.id as pid,
+                people.depth as depth,
                 concat_ws(' ',people.firstname,people.lastname) as repname,
                 peepsfilter.peepsdistance,
                 people.phone
