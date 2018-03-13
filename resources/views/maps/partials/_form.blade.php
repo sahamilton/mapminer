@@ -31,7 +31,7 @@ $values = Config::get('app.search_radius');
 <form class="form-inline" action="{{route('findme')}}" method = 'post' name="mapselector">
 {{csrf_field()}}
 <label>Show a</label>
-<select name='view' class="btn btn-mini" id="selectview">    
+<select name='view' class="btn btn-mini" id="selectview" title="Select map or list views">    
     @foreach($views as $key=>$field)
       @if($key === $data['view'])
         <option selected value="{{$key}}">{{$key}}</option>
@@ -41,7 +41,7 @@ $values = Config::get('app.search_radius');
     @endforeach
 </select>
 <label>of</label>
-       <select name='type' class="btn btn-mini" id="selecttype">
+       <select name='type' class="btn btn-mini" id="selecttype" title="Select accounts, projects or branches">
             @foreach($types as $key=>$value)
         				@if($key === $data['type'])
                         <option selected value="{{$key}}">{{$value}}</option>
@@ -52,7 +52,7 @@ $values = Config::get('app.search_radius');
            @endforeach
         </select>
 <label>within</label>  
-   <select name='distance' class="btn btn-mini" id="selectdistance">
+   <select name='distance' class="btn btn-mini" id="selectdistance" title="Change the search distance">
        @foreach($values as $value)
        	@if($value === $data['distance'])
         	<option selected value="{{$value}}">{{$value}} miles</option>
@@ -67,6 +67,7 @@ $values = Config::get('app.search_radius');
         class="form-control{{ $errors->has('address') ? ' has-error' : ''}}" 
         type="text" 
         name="address" 
+        title="Enter an address, zip code, or state code to search from"
         value="{{str_replace('+','', str_replace('  ',' ',$data['address']))}}"
         id="address" 
         required
@@ -93,11 +94,9 @@ $("#address").change(function() {
 
 $("select[id^='select']").change(function() {
   if($.trim($('#address').val()) == ''){
-    $( "#noaddress" ).dialog();
-    return true;
+    $( "#noaddress" ).modal('show');
     
   }else{
-     
     
     this.form.submit();
 }
