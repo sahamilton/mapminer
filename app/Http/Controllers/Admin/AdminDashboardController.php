@@ -92,54 +92,55 @@ class AdminDashboardController extends BaseController {
 
 	private function getViews(){
 
-
+		$colors = $this->createColors(8);
+	
 		return  [
 			['label'=>'Today',
 			'value'=>0,
 			'interval'=>['from'=>Carbon::today(),
 			                 'to'=>Carbon::now()],
-			 'color'=>"#2c9c69",],
+			 'color'=>$colors[0],],
 
 			['label'=>'Yesterday',
 			'value'=>1,
 			 'interval'=>['from'=>Carbon::today()->subDay(2),
 			                  'to'=>Carbon::today()->subDay()],
-			 'color'=>"#00FF00",],
+			  'color'=>$colors[1],],
 			['label'=>'Last Week',
 			'value'=>2,
 			'interval'=>['from'=>Carbon::today()->subWeek(),
 					         'to'=>Carbon::today()->subDay(2)],
-			'color'=>"#FFFF99",],
+			 'color'=>$colors[2],],
 
 			['label'=>'Last Month',
 			'value'=>3,
 			'interval'=>['from'=>Carbon::today()->subMonth(),
 					         'to'=>Carbon::today()->subWeek()],
-			'color'=>"#CC3300",],
+			 'color'=>$colors[3],],
 
 			['label'=>'This Quarter',
 			'value'=>4,
 			'interval'=>['from'=>Carbon::today()->subQuarter(),
 					         'to'=>Carbon::today()->subMonth()],
-			'color'=>"#ff0000",],
+			 'color'=>$colors[4],],
 
 			['label'=>'Last Quarter',
 			'value'=>5,
 			'interval'=>['from'=>Carbon::today()->subQuarter(2),
 					         'to'=>Carbon::today()->subQuarter()],
-			'color'=>"#0000ff",],
+			 'color'=>$colors[5],],
 
 
 			['label'=>'Earlier',
 			'value'=>6,
 			'interval'=>['from'=>$this->begingingOfTime,
 			              'to'=>Carbon::today()->subQuarter(2)],
-			 'color'=>"#FF0099",],
+			 'color'=>$colors[6],],
 
 			['label'=>'Never',
 			'value'=>7,
 			'interval'=> null,
-			'color'=>'#00CC99',],
+			 'color'=>$colors[7],],
 
 		];
 	}
@@ -155,7 +156,36 @@ class AdminDashboardController extends BaseController {
 
 	}
 
+	private function createColors($num){
+		$colors=array();
+		$int = 0;
+		// value must be between [0, 510]
+		for ($int; $int<$num; $int++){
+			$i = 1/$num + ($int*(1/$num));
+			$value = min(max(0,$i), 1) * 508;
+			if ($value < 255) {
+				$greenValue = 255;
+				$redValue = sqrt($value) * 16;
+				$redValue = round($redValue);
+			} else {
+				$redValue = 255;
+				$value = $value - 255;
+				$greenValue = 256 - ($value * $value / 255);
+				$greenValue = round($greenValue);
+			}
+			
+			$colors[$int]= "#" .  $this->decToHex($redValue). $this->decToHex($greenValue) . "00";
+		}
+		return $colors;
+	}
+	private function decToHex($value){
+		if(strlen(dechex($value))<2){
+			return "0".dechex($value);
+		}else{
+			return dechex($value);
+		}
 
+}
 	/**
 	 * Return array of logins by day.
 	 *	Exclude non-logins
