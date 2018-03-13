@@ -61,7 +61,7 @@ class GeoCodingController extends BaseController {
 
 		$filtered = $this->location->isFiltered(['companies','locations'],['vertical','business','segment'],NULL);
 
-		if($data['view'] == 'list') {
+		if(isset($data['view']) && $data['view'] == 'list') {
 		
 			$data['result'] = $this->getGeoListData($data);
 
@@ -133,8 +133,10 @@ class GeoCodingController extends BaseController {
 		
 		$levels = \Config::get('app.zoom_levels');
 		$data['zoomLevel']='10';
-		if(array_key_exists($data['distance'],$levels)) {
+		if(isset($data['distance']) && array_key_exists($data['distance'],$levels)) {
 			$data['zoomLevel']= $levels[$data['distance']];
+		}else{
+			$data['distance'] = '10';
 		}
 		return $data;
 	}

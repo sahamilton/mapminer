@@ -21,7 +21,7 @@ if(auth()->user()->can('view_projects') && in_array(5, Session::get('user.servic
   $types['projects']='Construction projects';
 }
 
-if($data['type'] == 'company' && isset($company)){
+if(isset($data['type']) && $data['type'] == 'company' && isset($company)){
 	$types['company'] = $company->companyname .' locations';
 }
 $views = array('map'=>'map','list'=>'list');
@@ -33,7 +33,7 @@ $values = Config::get('app.search_radius');
 <label>Show a</label>
 <select name='view' class="btn btn-mini" id="selectview" title="Select map or list views">    
     @foreach($views as $key=>$field)
-      @if($key === $data['view'])
+      @if(isset($data['view']) && $key === $data['view'])
         <option selected value="{{$key}}">{{$key}}</option>
       @else
     		<option value="{{$key}}">{{$key}}</option>
@@ -43,7 +43,7 @@ $values = Config::get('app.search_radius');
 <label>of</label>
        <select name='type' class="btn btn-mini" id="selecttype" title="Select accounts, projects or branches">
             @foreach($types as $key=>$value)
-        				@if($key === $data['type'])
+        				@if(isset($data['type']) && $key === $data['type'])
                         <option selected value="{{$key}}">{{$value}}</option>
                         @else
                     
@@ -54,7 +54,7 @@ $values = Config::get('app.search_radius');
 <label>within</label>  
    <select name='distance' class="btn btn-mini" id="selectdistance" title="Change the search distance">
        @foreach($values as $value)
-       	@if($value === $data['distance'])
+       	@if(isset($data['distance']) && $value === $data['distance'])
         	<option selected value="{{$value}}">{{$value}} miles</option>
             @else
        		<option value="{{$value}}">{{$value}} miles</option>
@@ -83,6 +83,7 @@ class= "btn btn-success btn-xs">
 <input type="hidden" name="lng" id ="lng" value="{{$data['lng']}}" />
 <input type="hidden" name="lat" id ="lat" value="{{$data['lat']}}" />
 </form>
+<?php $action = 'findme';?>
 @include('partials._noaddressmodal')
 <script>
 
