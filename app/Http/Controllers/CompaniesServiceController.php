@@ -37,7 +37,6 @@ class CompaniesServiceController extends BaseController
 		return response()->view('companies.newservice',compact('company','locations'));
 
 	}
-<<<<<<< Updated upstream
 /**
  * createServiceDetails Create multidimensional array from query result
  * @param  array  $locations result of getServiceDetails query
@@ -45,9 +44,7 @@ class CompaniesServiceController extends BaseController
  * @return array           [description]
  */
   private function createServiceDetails($locations,$limit=5){
-=======
-	public function createServiceDetails($locations,$limit=5){
->>>>>>> Stashed changes
+
 		$service = array();
 		$loc = null;
 
