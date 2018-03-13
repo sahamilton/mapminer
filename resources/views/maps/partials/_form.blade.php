@@ -1,17 +1,12 @@
 <?php 
 // Default values
-// 
-
 $session = Session::get('geo');
 if(! isset($session)) {
   if(Session::has('type')){
-
   $session = array('type'=>Session::get('type'),'distance'=>'10','address'=>NULL,'view'=>'maps','lat'=>'39.8282','lng'=>'-98.5795');
   }else{
-
     $session = array('type'=>'accounts','distance'=>'10','address'=>NULL,'view'=>'maps','lat'=>'39.8282','lng'=>'-98.5795');
   }
-	
 }
 
 foreach($session as $key=>$value)
@@ -36,23 +31,17 @@ $values = Config::get('app.search_radius');
 <form class="form-inline" action="{{route('findme')}}" method = 'post' name="mapselector">
 {{csrf_field()}}
 <label>Show a</label>
-<?php ?>
-       <select name='view' class="btn btn-mini" onchange='this.form.submit()'>
-          
-           @foreach($views as $key=>$field)
-				@if($key === $data['view'])
-                <option selected value="{{$key}}">{{$key}}</option>
-                @else
-            
-           		<option value="{{$key}}">{{$key}}</option>
-				@endif
-           @endforeach
-        </select>
+<select name='view' class="btn btn-mini" id="selectview">    
+    @foreach($views as $key=>$field)
+      @if($key === $data['view'])
+        <option selected value="{{$key}}">{{$key}}</option>
+      @else
+    		<option value="{{$key}}">{{$key}}</option>
+      @endif
+    @endforeach
+</select>
 <label>of</label>
-      
-
-       <select name='type' class="btn btn-mini"  onchange='this.form.submit()'>
-          
+       <select name='type' class="btn btn-mini" id="selecttype">
             @foreach($types as $key=>$value)
         				@if($key === $data['type'])
                         <option selected value="{{$key}}">{{$value}}</option>
@@ -62,22 +51,20 @@ $values = Config::get('app.search_radius');
         				@endif
            @endforeach
         </select>
-      
-<label>within</label>
-      
-      
-       <select name='distance' class="btn btn-mini"  onchange='this.form.submit()'>
-           @foreach($values as $value)
-           	@if($value === $data['distance'])
-            	<option selected value="{{$value}}">{{$value}} miles</option>
-                @else
-           		<option value="{{$value}}">{{$value}} miles</option>
-                @endif
-           @endforeach
-        </select> of 
+<label>within</label>  
+   <select name='distance' class="btn btn-mini" id="selectdistance">
+       @foreach($values as $value)
+       	@if($value === $data['distance'])
+        	<option selected value="{{$value}}">{{$value}} miles</option>
+            @else
+       		<option value="{{$value}}">{{$value}} miles</option>
+            @endif
+       @endforeach
+    </select> of 
     <div class="form-group{{ $errors->has('address') ? ' has-error' : '' }}">
         <label for= "address">address</label> 
-        <input class="form-control" 
+        <input 
+        class="form-control{{ $errors->has('address') ? ' has-error' : ''}}" 
         type="text" 
         name="address" 
         value="{{str_replace('+','', str_replace('  ',' ',$data['address']))}}"
@@ -86,16 +73,14 @@ $values = Config::get('app.search_radius');
         style='width:300px'
         placeholder='Enter address or check Help Support for auto geocoding' />
        {!! $errors->first('address', '<p class="help-block">:message</p>') !!}
-    </div>    
-
+    </div>
 <button type="submit"  style="background-color: #4CAF50;"
-class= "btn btn-success btn-xs"><span class="glyphicon glyphicon-search"></span> Search!</button>
-
-{{Form::hidden('company', isset($company) ? $company->id : '' )}}
-{{Form::hidden('companyname',isset($company) ? $company->companyname : '')}}
+class= "btn btn-success btn-xs">
+<span class="glyphicon glyphicon-search"></span> Search!</button>
+<input type="hidden" name ='company' value="{{isset($company) ? $company->id : ''}}" />
+<input type="hidden" name ='companyname' value="{{isset($company) ? $company->companyname : ''}}" />
 <input type="hidden" name="lng" id ="lng" value="{{$data['lng']}}" />
 <input type="hidden" name="lat" id ="lat" value="{{$data['lat']}}" />
-
 </form>
 	
 <script>
@@ -104,4 +89,14 @@ $("#address").change(function() {
   $('#lat:first').val('');
   $('#lng:first').val('');
 });
+
+
+$("select[id^='select']").change(function() {
+  if($.trim($('#address').val()) == ''){
+    alert('Address can not be left blank');
+  }else{
+    this.form.submit();
+}
+});
+
 </script>
