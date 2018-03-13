@@ -5,19 +5,20 @@
   $count='5';
   ?>
 
-<form method ="post"  action ="{{route('lead.find')}}" name="leadaddress">
+<form class="form-inline" method ="post"  action ="{{route('lead.find')}}" name="leadaddress">
 {{csrf_field()}}
-<select name='number' class="btn btn-mini" >
+<select id="selectnumber" name='number' class="btn btn-mini" >
            @foreach($number as $value)
               @if($value == $count)
-              <option selected value="{{$value}}">{{$value}} closest within</option>
+              <option selected value="{{$value}}">{{$value}} </option>
               @else
-              <option value="{{$value}}">{{$value}} closest within</option>
+              <option value="{{$value}}">{{$value}} </option>
               @endif
            @endforeach
         </select> 
- within 
- <select name='distance' class="btn btn-mini" >
+ <label>closest within </label>
+ 
+ <select id="selectdistance" name='distance' class="btn btn-mini" >
            @foreach($values as $value)
               @if($value == $default)
               <option selected value="{{$value}}">{{$value}} miles</option>
@@ -25,11 +26,37 @@
               <option value="{{$value}}">{{$value}} miles</option>
               @endif
            @endforeach
-        </select> <label> of address</label>
-<input type="text" id="address" name="address" value="{{isset($data['address']) ? $data['address'] : ''}}"/>
+        </select> 
+        <label> of address</label>
+<div class="form-group{{ $errors->has('address') ? ' has-error' : '' }}">
+<input
+class="form-control{{ $errors->has('address') ? ' has-error' : ''}}"  
+type="text" 
+id="address" 
+name="address" 
+value="{{isset($data['address']) ? $data['address'] : ''}}"
+required
+/>
+{!! $errors->first('address', '<p class="help-block">:message</p>') !!}
+</div>
 <input type="hidden" name="lat" id="lat" value=""/>
 <input type="hidden" name="lng" id="lat" value=""/>
          <button type="submit"  class= "btn btn-success btn-xs"><span class="glyphicon glyphicon-search"></span> Search!</button>
 
 </form>
 
+@include('partials._noaddressmodal')
+<script>
+
+
+$("select[id^='select']").change(function() {
+  if($.trim($('#address').val()) == ''){
+    $( "#noaddress" ).modal('show');
+    
+  }else{
+    
+    this.form.submit();
+}
+});
+
+</script>

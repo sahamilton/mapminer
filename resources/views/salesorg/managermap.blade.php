@@ -51,7 +51,7 @@
   @endforeach
 
   </div>
-  <div class="container">
+  <div class="container" style="float:right;width:700px;">
   @include('leads.partials.search')
  
     <div id="map" style="border:solid 1px red;margin-bottom:40px;"></div> 

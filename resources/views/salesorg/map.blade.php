@@ -1,6 +1,6 @@
 @extends('site.layouts.maps')
 @section('content')
-  <h1>{{$salesorg->postName()}}</h1>
+<h1>{{$salesorg->postName()}}</h1>
 <h4>{{$salesorg->userdetails->roles[0]->name}}</h4>
 <p><strong><span class="glyphicon glyphicon-phone-alt"> </span> Phone:</strong> {{$salesorg->phone}}</p>
 <p><strong><span class="glyphicon glyphicon-envelope"></span> Email:</strong> 
