@@ -44,7 +44,7 @@ required
          <button type="submit"  class= "btn btn-success btn-xs"><span class="glyphicon glyphicon-search"></span> Search!</button>
 
 </form>
-
+<?php $action = 'lead.find';?>
 @include('partials._noaddressmodal')
 <script>
 

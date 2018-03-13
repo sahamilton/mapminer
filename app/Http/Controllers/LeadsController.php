@@ -230,9 +230,9 @@ class LeadsController extends BaseController
 
 
 
-    public function find(LeadAddressFormRequest $request){
+    public function find(Request $request){
 
-    
+    dd('here');
       $geoCode = app('geocoder')->geocode($request->get('address'))->get();
  
       if(! $geoCode or count($geoCode)==0)

@@ -10,14 +10,12 @@
         <form method="post" action="{{$action}}" >
           {{csrf_field()}}
           <input type="text" id="address" name="address" />
-          <input type="submit" name="submit" value="Use this address" />
+          <input type="submit" class="btn btn-info  btn-xs" name="submit" value="Use this address" />
 
           <input type="hidden" name="type" value="map" />
         </form>
 			</div>
-			<div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Dismiss</button>
-            </div>
+			
 		</div>
 	</div>
 </div>
