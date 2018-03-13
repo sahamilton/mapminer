@@ -21,7 +21,7 @@ foreach($session as $key=>$value)
 	}
 }
 $types = ['location'=>'All accounts','branch'=>'Branches'];
-// added to filter out CEnterline
+// added to filter out Centerline
 if(auth()->user()->can('view_projects') && in_array(5, Session::get('user.servicelines'))){
   $types['projects']='Construction projects';
 }
@@ -33,7 +33,7 @@ $views = array('map'=>'map','list'=>'list');
 $values = Config::get('app.search_radius');
 
 ?>
-<form action="{{route('findme')}}" method = 'post' name="mapselector">
+<form class="form-inline" action="{{route('findme')}}" method = 'post' name="mapselector">
 {{csrf_field()}}
 <label>Show a</label>
 <?php ?>
@@ -75,12 +75,19 @@ $values = Config::get('app.search_radius');
                 @endif
            @endforeach
         </select> of 
-        
-<input type="text" name="address" 
-value="{{str_replace('+','', str_replace('  ',' ',$data['address']))}}"  
-id="address" 
-style='width:300px'
-placeholder='Enter address or check Help Support for auto geocoding' />
+    <div class="form-group{{ $errors->has('address') ? ' has-error' : '' }}">
+        <label for= "address">address</label> 
+        <input class="form-control" 
+        type="text" 
+        name="address" 
+        value="{{str_replace('+','', str_replace('  ',' ',$data['address']))}}"
+        id="address" 
+        required
+        style='width:300px'
+        placeholder='Enter address or check Help Support for auto geocoding' />
+       {!! $errors->first('address', '<p class="help-block">:message</p>') !!}
+    </div>    
+
 <button type="submit"  style="background-color: #4CAF50;"
 class= "btn btn-success btn-xs"><span class="glyphicon glyphicon-search"></span> Search!</button>
 
@@ -91,7 +98,7 @@ class= "btn btn-success btn-xs"><span class="glyphicon glyphicon-search"></span>
 
 </form>
 	
-		<script>
+<script>
 
 $("#address").change(function() {
   $('#lat:first').val('');
