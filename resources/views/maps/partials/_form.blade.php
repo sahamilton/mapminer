@@ -93,7 +93,7 @@ $("#address").change(function() {
 
 $("select[id^='select']").change(function() {
   if($.trim($('#address').val()) == ''){
-    alert('Address can not be left blank');
+    alert('Address field can not be left blank');
   }else{
     this.form.submit();
 }

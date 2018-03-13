@@ -16,6 +16,12 @@
 @include('maps/partials/_form')
 @include('partials.advancedsearch')
 
+@if(count($data['result'])==0)
+<div class="alert alert-warning">
+        <strong>No results found.</strong> Consider increasing the search distance.
+</div>
+@endif
+
 @if($data['type']=='branch')
 	@include('maps.branchlist')
 @elseif($data['type'] =='projects')
