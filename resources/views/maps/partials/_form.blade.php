@@ -68,7 +68,7 @@ $values = Config::get('app.search_radius');
         type="text" 
         name="address" 
         title="Enter an address, zip code, or state code to search from"
-        value="{{str_replace('+','', str_replace('  ',' ',$data['address']))}}"
+        value="{{isset($data['address']) ? str_replace('+','', str_replace('  ',' ',$data['address'])):''}}"
         id="address" 
         required
         style='width:300px'

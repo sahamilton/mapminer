@@ -1,7 +1,7 @@
 @extends('site.layouts.default')
 @section('content')
 
-<h2> {{$salesteam[0]->firstname}} {{$salesteam[0]->lastname}}'s Sales Team!!</h2>
+<h2> {{$salesteam[0]->firstname}} {{$salesteam[0]->lastname}}'s Sales Team</h2>
 
 @if(isset ($salesteam[0]->userdetails) && $salesteam[0]->userdetails->email !='' )
 

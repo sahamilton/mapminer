@@ -25,10 +25,7 @@
         <link rel="stylesheet" type="text/css" href="//code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css" />    
         <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet" />
         <link href="{{asset('assets/css/summernote.css')}}" rel="stylesheet" />
-        <link rel="stylesheet" href="{{asset('assets/css/bootstrap-colorpicker.min.css')}}" rel="stylesheet" />
-
-
-    
+        <link rel="stylesheet" href="{{asset('assets/css/bootstrap-colorpicker.min.css')}}" rel="stylesheet" />  
         <link rel="stylesheet" href="{{asset('assets/css/prmapminer.css')}}" />
         <link rel="stylesheet" type="text/css" href="{{asset('maps/css/map.css')}}" />
         <link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>
