@@ -2,8 +2,8 @@
 // Default values
 $session = Session::get('geo');
 if(! isset($session)) {
-  if(Session::has('type')){
-  $session = array('type'=>Session::get('type'),'distance'=>'10','address'=>NULL,'view'=>'maps','lat'=>'39.8282','lng'=>'-98.5795');
+  if(Session::has('geo.type')){
+  $session = array('type'=>'accounts','distance'=>'10','address'=>NULL,'view'=>'maps','lat'=>'39.8282','lng'=>'-98.5795');
   }else{
     $session = array('type'=>'accounts','distance'=>'10','address'=>NULL,'view'=>'maps','lat'=>'39.8282','lng'=>'-98.5795');
   }
@@ -68,7 +68,7 @@ $values = Config::get('app.search_radius');
         type="text" 
         name="address" 
         title="Enter an address, zip code, or state code to search from"
-        value="{{isset($data['address']) ? str_replace('+','', str_replace('  ',' ',$data['address'])):''}}"
+        value="{{isset($data['address']) ? str_replace('+','', str_replace('  ',' ',$data['address'])) : ''}}"
         id="address" 
         required
         style='width:300px'
@@ -80,8 +80,8 @@ class= "btn btn-success btn-xs">
 <span class="glyphicon glyphicon-search"></span> Search!</button>
 <input type="hidden" name ='company' value="{{isset($company) ? $company->id : ''}}" />
 <input type="hidden" name ='companyname' value="{{isset($company) ? $company->companyname : ''}}" />
-<input type="hidden" name="lng" id ="lng" value="{{$data['lng']}}" />
-<input type="hidden" name="lat" id ="lat" value="{{$data['lat']}}" />
+<input type="hidden" name="lng" id ="lng" value="{{isset($data['lng']) ? $data['lng'] : '-98.5795'}}" />
+<input type="hidden" name="lat" id ="lat" value="{{isset($data['lat']) ? $data['lat'] : '39.8282'}}" />
 </form>
 <?php $action = 'findme';?>
 @include('partials._noaddressmodal')
