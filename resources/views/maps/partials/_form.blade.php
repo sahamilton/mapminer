@@ -76,7 +76,7 @@ $values = Config::get('app.search_radius');
        {!! $errors->first('address', '<p class="help-block">:message</p>') !!}
     </div>
 <button type="submit"  style="background-color: #4CAF50;"
-class= "btn btn-success btn-xs">
+class= "btn btn-success ">
 <span class="glyphicon glyphicon-search"></span> Search!</button>
 <input type="hidden" name ='company' value="{{isset($company) ? $company->id : ''}}" />
 <input type="hidden" name ='companyname' value="{{isset($company) ? $company->companyname : ''}}" />
