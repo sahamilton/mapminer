@@ -4,7 +4,7 @@
 @if(! $news->isEmpty())
 @include('news.newsmodal')
 @endif
-
+<h2>Use the Search Options</h2>
 <div id="message" style="color:#F00">{{\Session::get('message')}}</div>
     <style>
       #map_canvas {
@@ -12,7 +12,7 @@
         height: 600px;
       }
     </style><div style="margin-top:20px">
-    @include('maps.partials._form')
+   @include('maps.partials._form')
 
    @include('partials.advancedsearch')
   

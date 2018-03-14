@@ -34,9 +34,13 @@ class ProjectsController extends BaseController
     public function index()
     {
 
-       \Session::put('type','projects');
+       \Session::put('geo.type','projects');
 
        if(\Session::has('geo')){
+        //Kludge for missing session geo data searsch
+            if(! \Session::has('geo.number')){
+                \Session::put('geo.number',5);
+            }
 
         return redirect()->route('findme');
        }

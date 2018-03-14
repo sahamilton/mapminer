@@ -43,6 +43,7 @@ class SalesOrgController extends BaseController {
 		public function getSalesBranches($salesPerson=null)
 	{
 			
+			
 			// if not id then find root salesorg id
 			
 			if (! $salesPerson){

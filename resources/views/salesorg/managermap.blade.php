@@ -126,13 +126,10 @@
         }
       }
         navigator.geolocation.getCurrentPosition(function(position) {
-          
         var geolocate = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
         var address = getAddress(geolocate);
-        
         Geo.lat = position.coords.latitude;
         Geo.lng = position.coords.longitude;
-      
         populateHeader(Geo.lat, Geo.lng,address,'');
         var marker = new google.maps.Marker({
           position: geolocate,
@@ -158,23 +155,24 @@
       return address;
     }
   function populateHeader(lat, lng, address, distance){
-         $('#lat:first').val(lat);
-     $('#lng:first').val(lng);
+    $('#lat:first').val(lat);
+    $('#lng:first').val(lng);
     $("#address").val(address);
-    if(distance == '100') {
-     $("#distance").val(distance);
-    }else{
-      
-     $("#distance").val('25');
-    }
-        }
-  }); 
     
-  $("#address").change(function() {
+    if(distance == '100') {
+      $("#distance").val(distance);
+    }else{
+
+      $("#distance").val('25');
+    }
+    }
+    }); 
+
+    $("#address").change(function() {
     $('#lat:first').val('');
     $('#lng:first').val('');
-  }); 
-    
+    }); 
+
 
       google.maps.event.addDomListener(window, 'load', initMap);
     </script>

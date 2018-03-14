@@ -4,6 +4,9 @@
   $number = [5,10,25,100];
   $count='5';
   $session = \Session::get('geo');
+  if($session && ! isset($session['number'])){
+    $session['number']=5;
+  }
   ?>
 
 <form class="form-inline" method ="post"  action ="{{route('lead.find')}}" name="leadaddress">

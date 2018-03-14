@@ -244,6 +244,10 @@ class LeadsController extends BaseController
       }
 
       $data = $request->all();
+      // Kludge to address the issue of different data in Session::geo
+      if(! $request->has('number')){
+        $data['number']=5;
+      }
       \Session::put('geo', $data);
       $people = $this->findNearBy($data);
       $people = $this->getIndustryAssociation($people);

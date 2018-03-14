@@ -51,7 +51,10 @@ class GeoCodingController extends BaseController {
 		}
 		$data = $request->all();
 		$data['latlng'] = $data['lat'].":".$data['lng'];
-		
+		// Kludge to address the issue of different data in Session::geo
+		if(! $request->has('number')){
+			$data['number']=5;
+		}
 		\Session::put('geo', $data);
 
 		$watchlist = array();
