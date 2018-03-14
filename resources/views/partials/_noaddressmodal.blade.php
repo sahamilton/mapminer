@@ -13,6 +13,8 @@
           <input type="submit" class="btn btn-info  btn-xs" name="submit" value="Use this address" />
 
           <input type="hidden" name="type" value="map" />
+          <input type="hidden" name="distance" value="25" />
+          <input type="hidden" name="number" value="5" />
         </form>
 			</div>
 			

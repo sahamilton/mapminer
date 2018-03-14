@@ -244,7 +244,7 @@ class LeadsController extends BaseController
       }
 
       $data = $request->all();
-
+      \Session::put('geo', $data);
       $people = $this->findNearBy($data);
       $people = $this->getIndustryAssociation($people);
 

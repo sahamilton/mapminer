@@ -3,16 +3,17 @@
   $default = 100;
   $number = [5,10,25,100];
   $count='5';
+  $session = \Session::get('geo');
   ?>
 
 <form class="form-inline" method ="post"  action ="{{route('lead.find')}}" name="leadaddress">
 {{csrf_field()}}
 <select id="selectnumber" name='number' class="btn btn-mini" >
            @foreach($number as $value)
-              @if($value == $count)
-              <option selected value="{{$value}}">{{$value}} </option>
+              @if(\Session::has('geo') && $session['number'] == $value)
+              <option selected value="{{$value}}">{{$value}}</option>
               @else
-              <option value="{{$value}}">{{$value}} </option>
+              <option value="{{$value}}">{{$value}}</option>
               @endif
            @endforeach
         </select> 
@@ -20,7 +21,7 @@
  
  <select id="selectdistance" name='distance' class="btn btn-mini" >
            @foreach($values as $value)
-              @if($value == $default)
+               @if(\Session::has('geo') && $session['distance'] == $value)
               <option selected value="{{$value}}">{{$value}} miles</option>
               @else
               <option value="{{$value}}">{{$value}} miles</option>
@@ -34,7 +35,7 @@ class="form-control{{ $errors->has('address') ? ' has-error' : ''}}"
 type="text" 
 id="address" 
 name="address" 
-value="{{isset($data['address']) ? $data['address'] : ''}}"
+value="{{isset($session['address']) ? $session['address'] : ''}}"
 required
 />
 {!! $errors->first('address', '<p class="help-block">:message</p>') !!}

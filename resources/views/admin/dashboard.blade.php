@@ -23,7 +23,7 @@ $cumulative = array();?>
 
 $total = implode(",",$cumulative);
 
-$labelstring =implode(",",array_keys($data['status']->keyBy('count')->toArray()));
+$labelstring ="'" .implode("','",array_keys($data['status']->keyBy('status')->toArray()))."'";
 
 $datastring =implode(",",array_keys($data['status']->keyBy('count')->toArray()));
 ?>
@@ -114,12 +114,16 @@ new Chart(document.getElementById("pieChart"), {
           backgroundColor: ["{!! implode('","',$color)!!}"],
           data: [{!! $datastring !!}]
         }
-      ]
+      ],
+      labels: [{!! $labelstring !!}]
     },
     options: {
       title: {
         display: false,
         text: 'Number of users by date of last login'
+      },
+      legend:{
+        display:false,
       }
     }
 });
