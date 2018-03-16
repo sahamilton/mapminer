@@ -19,10 +19,21 @@ trait Geocode
                 $data['lat'] = $geoCode->first()->getCoordinates()->getLatitude();
                 $data['lng'] = $geoCode->first()->getCoordinates()->getLongitude();
                 $data['geostatus']=TRUE;
-                $data['city'] =  $geoCode->first()->getLocality();
-                $adminLevels = $geoCode->first()->getadminLevels();
-                $data['state'] =  $adminLevels->first()->getCode();
 
+                $data['city'] =  $geoCode->first()->getLocality();
+                if(count($geoCode->first()->getadminLevels())>0){
+                    //dd('it does');
+                    $data['state'] = $geoCode->first()
+                                    ->getadminLevels()
+                                    ->first()
+                                    ->getCode();
+                }else{
+                   $data['state']=null;
+                   //dd('it doesnt');
+                }
+
+              
+              
 
             }else{
               

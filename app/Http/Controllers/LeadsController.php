@@ -234,7 +234,7 @@ class LeadsController extends BaseController
 
     
       $geoCode = app('geocoder')->geocode($request->get('address'))->get();
- 
+
       if(! $geoCode or count($geoCode)==0)
       {
         return redirect()->back()->withInput()->with('error','Unable to Geocode address:'.$request->get('address') );
@@ -242,7 +242,7 @@ class LeadsController extends BaseController
       }else{
         $request->merge($this->lead->getGeoCode($geoCode));
       }
-
+      
       $data = $request->all();
       // Kludge to address the issue of different data in Session::geo
       if(! $request->has('number')){
