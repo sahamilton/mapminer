@@ -59,7 +59,7 @@
 		<link rel="shortcut icon" href="{{{ asset('assets/ico/favicon.png') }}}">
 	</head>
 
-	<body>
+	<body onLoad="load()"> 
 @include('site.layouts.partials._googletagmanager')
 @if(config('app.env')=='production')
 	@include('site.layouts.partials._fullstory')
