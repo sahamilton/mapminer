@@ -47,7 +47,7 @@ $datastring =implode(",",array_keys($data['status']->keyBy('count')->toArray()))
 
 		    @include ('admin.partials.lastlogged')
 
-    
+        @include('admin.partials.firsttimers')
     </div>
     <div id="menu1" class="tab-pane fade">
       <h3>Account Activity</h3>
