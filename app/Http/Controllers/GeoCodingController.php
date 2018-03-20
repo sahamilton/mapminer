@@ -78,7 +78,7 @@ class GeoCodingController extends BaseController {
 			catch (Exception $e) {
 				$watchlist = NULL;
 			}
-			
+		
 			return response()->view('maps.list', compact('data','watchlist','filtered'));
 		}else{
 

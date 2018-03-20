@@ -13,7 +13,8 @@
 <p><a href="{{route('watch.index')}}" title="Review my watch list"><i class="glyphicon glyphicon-th-list"></i> View My Watch List</a></p>
 <p><a href="{{route('watch.export')}}" title="Download my watch list as a CSV / Excel file"><i class="glyphicon glyphicon-cloud-download"></i> Download My Watch List</a> </p>
 @endif
-@include('maps/partials/_form')
+
+@include('maps.partials._form')
 @include('partials.advancedsearch')
 
 @if(count($data['result'])==0)
