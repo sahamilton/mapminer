@@ -2,6 +2,9 @@
 @section('content')
 
   <h2>{{$salesteam[0]->firstname}} {{$salesteam[0]->lastname}}'s Sales Team</h2>
+  @foreach ($salesteam[0]->userdetails->roles as $role)
+    {{$role->name}}
+  @endforeach
   @if(isset($salesteam[0]->usersdetails->roles))
   <h3>
   {{$salesteam[0]->usersdetails->roles[0]->name}}
