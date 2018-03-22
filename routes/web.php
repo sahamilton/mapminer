@@ -450,10 +450,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 		Route::post('api/searchfilters/postAccounts',['as'=>'postAccountSegments','uses'=>'SearchFiltersController@getAccountSegments']);
 		Route::resource('searchfilters','SearchFiltersController');
 
-		Route::get('about',function(){
-
-			return response()->view('site.about');
-		})->name('about');
+		Route::get('about',['as'=>'about','uses'=>'AdminAboutController@getInfo']);
 
 	# Seeder for relationships with servicelines
 		Route::get('seeder',['as'=>'seeder','uses'=>'CompaniesController@seeder']);
