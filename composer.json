@@ -7,7 +7,6 @@
     "require": {
         "php": ">=5.6.4",
         "algolia/algoliasearch-client-php": "^1.18",
-        "barryvdh/laravel-debugbar": "^2.3",
         "baum/baum": "~1.1",
         "bugsnag/bugsnag-laravel": "^2.0",
         "dionera/laravel-beanstalkd-ui": "^0.3.3",
@@ -16,7 +15,7 @@
         "fabpot/goutte": "^3.1",
         "guzzlehttp/guzzle": "~5.3|~6.0",
         "jeroendesloovere/vcard": "^1.5",
-        "laravel/framework": "5.5.*",
+        "laravel/framework": "5.6.*",
         "laravel/scout": "^3.0",
         "laravel/tinker": "~1.0",
         "laravelcollective/html": "^5.3.0",
@@ -52,12 +51,12 @@
             "php artisan key:generate"
         ],
         "post-install-cmd": [
-            "Illuminate\\Foundation\\ComposerScripts::postInstall",
-            "php artisan optimize"
+            "Illuminate\\Foundation\\ComposerScripts::postInstall"
+            
         ],
         "post-update-cmd": [
-            "Illuminate\\Foundation\\ComposerScripts::postUpdate",
-            "php artisan optimize"
+            "Illuminate\\Foundation\\ComposerScripts::postUpdate"
+           
         ]
     },
     "config": {

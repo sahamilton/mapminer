@@ -168,7 +168,7 @@ return [
          * Package Service Providers...
          */
         Laravel\Tinker\TinkerServiceProvider::class,
-        Barryvdh\Debugbar\ServiceProvider::class,
+      
         Baum\Providers\BaumServiceProvider::class,
 
         Collective\Html\HtmlServiceProvider::class,
