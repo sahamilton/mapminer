@@ -16,9 +16,9 @@ class GitVersion extends Model
         $commitHash = trim(exec('git log --pretty="%h" -n1 HEAD'));
 
         $commitDate = new \DateTime(trim(exec('git log -n1 --pretty=%ci HEAD')));
-        $commitDate->setTimezone(new \DateTimeZone('UTC'));
+        $commitDate->setTimezone(new \DateTimeZone('America/Los_Angeles'));
 
-        return sprintf('v%s.%s.%s-dev.%s (%s)', self::MAJOR, self::MINOR, self::PATCH, $commitHash, $commitDate->format('Y-m-d H:m:s'));
+        return sprintf('v%s.%s.%s-maj.%s (%s)', self::MAJOR, self::MINOR, self::PATCH, $commitHash, $commitDate->format('Y-m-d H:m:s'));
     }
 
 }
