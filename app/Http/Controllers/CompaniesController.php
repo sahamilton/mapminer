@@ -265,9 +265,10 @@ class CompaniesController extends BaseController {
 					$location->lat = $geo['lat'];
 					$location->lng = $geo['lng'];
 				}else{
-					// use center of the country as default lat lng
-					$location->lat =  '47.25';
-					$location->lng =  '-122.44';
+					$postion = explode(",",auth()->user()->position());
+					$location->lat =  $position[0];
+					$location->lng =  $position[1];
+					
 
 				}
 	

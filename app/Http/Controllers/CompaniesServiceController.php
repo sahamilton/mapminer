@@ -348,6 +348,9 @@ class CompaniesServiceController extends BaseController
 					$geo = \Session::get('geo');
 					$location->lat = $geo['lat'];
 					$location->lng = $geo['lng'];
+				}elseif($position = auth()->user()->position()){
+					$location->lat =  $position->lat;
+					$location->lng =  $position->lng;
 				}else{
 					// use center of the country as default lat lng
 					$location->lat =  '47.25';

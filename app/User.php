@@ -74,6 +74,17 @@ class User extends Authenticatable
         return $this->where('username', '=', $username)->first();
     }
 
+    public function position(){
+        $position = $this->person()
+                ->select('lat','lng')
+                ->whereNotNull('lat')
+                ->first();
+        if($position){
+                return implode(",",$position->toArray());
+        }
+        return "39.50,98.35";
+    }
+
     /**
      * Get the date the user was created.
      *

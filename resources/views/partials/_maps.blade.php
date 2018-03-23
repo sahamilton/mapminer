@@ -5,8 +5,8 @@ $(document).ready(function() {
 		var markersArray = [];
 		var map = null;
 		var Geo={};
-		var latlng = new google.maps.LatLng(39.50, -98.35);
-		if (!!navigator.geolocation) {
+		var latlng = new google.maps.LatLng({{auth()->user()->position()}});
+		if (navigator.geolocation) {
 				
 			var settings = {
 				zoom: 10,
