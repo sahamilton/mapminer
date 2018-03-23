@@ -280,6 +280,9 @@ class LocationsController extends BaseController {
 		if (isset($lat) && isset($lng)){
 			$location->lat = $lat;
 			$location->lng = $lng;
+		}elseif($position = auth()->user()->position()){
+			$locations->lat = $position->lat;
+			$locaction->lng = $position->lng;
 		}else{
 			$locations->lat = '47.25';
 			$locaction->lng = '-122.44';

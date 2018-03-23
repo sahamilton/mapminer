@@ -21,9 +21,10 @@ if(auth()->user()->can('view_projects') && in_array(5, Session::get('user.servic
   $types['projects']='Construction projects';
 }
 
-if(isset($data['type']) && $data['type'] == 'company' && isset($company)){
-	$types['company'] = $company->companyname .' locations';
+if(isset($data['type']) && $data['type'] == 'company' && isset($data['company'])){
+	$types['company'] = $data['companyname'] .' locations';
 }
+
 $views = array('map'=>'map','list'=>'list');
 $values = Config::get('app.search_radius');
 

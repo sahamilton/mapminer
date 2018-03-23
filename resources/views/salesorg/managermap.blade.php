@@ -7,7 +7,9 @@
   @endforeach
   @if(isset($salesteam[0]->usersdetails->roles))
   <h3>
-  {{$salesteam[0]->usersdetails->roles[0]->name}}
+  @foreach ( $salesteam[0]->usersdetails->roles as $role)
+  {{$role->name}}
+  @endforeach
   </h3>
   @endif
   @if(count($salesteam[0]->reportsTo)==1 && isset($salesteam[0]->reportsTo->id))
