@@ -12,10 +12,6 @@ class GitVersion extends Model
     const MINOR = 5;
     const PATCH = 17;
 
-    const MAJOR = 3;
-    const MINOR = 0;
-    const PATCH = 2;
-
 
     public static function get()
     {
