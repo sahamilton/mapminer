@@ -16,7 +16,7 @@
 		<tr>
 
 			<td>
-			<a href="{{route('branches.show',$branch->branchid)}}" 
+			<a href="{{route('branches.show',$branch->id)}}" 
 			title="Review {{trim($branch->branchname)}} branch">
 			{{$branch->branchname}}</a>
 			</td>
