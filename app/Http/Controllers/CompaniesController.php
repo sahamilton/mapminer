@@ -264,12 +264,14 @@ class CompaniesController extends BaseController {
 					$geo = \Session::get('geo');
 					$location->lat = $geo['lat'];
 					$location->lng = $geo['lng'];
-				}else{
+				}elseif($position = auth()->user()->position()){){
 					$postion = explode(",",auth()->user()->position());
 					$location->lat =  $position[0];
 					$location->lng =  $position[1];
-					
-
+				}else{	
+					// use center of the country as default lat lng
+					$location->lat =  '47.25';
+					$location->lng =  '-122.44';
 				}
 	
 		
