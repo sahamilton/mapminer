@@ -5,6 +5,11 @@
     <h2>{{$user->person->postName()}}</h2>
     <p><strong>User Name:</strong> {{$user->username}}</p>
     <p><strong>Email:</strong> {{$user->email}}</p>
+    <p><strong>Roles:</strong>
+        @foreach($user->roles as $role)
+            <li>{{$role->name}}</li>
+        @endforeach
+    </p>
     <p><strong>Last Login:</strong>
     @if($user->lastlogin)
     {{$user->lastlogin->format('d/m/Y')}}
