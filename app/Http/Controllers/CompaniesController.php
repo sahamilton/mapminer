@@ -247,10 +247,7 @@ class CompaniesController extends BaseController {
 
 		$locations = $this->getCompanyLocations($id,$segment,$company);
 
-<<<<<<< HEAD
-=======
 
->>>>>>> master
 		$states = $this->getStatesInArray($locations);
 		$segments = $this->getCompanySegments($company);
 		$filters = $this->searchfilter->vertical();
