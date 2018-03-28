@@ -1,113 +1,26 @@
 @extends('admin/layouts/default')
 @section('content')
 
-<h1>Prospect Sources</h1>
+<h1>Version History</h1>
 
 
-@if (Auth::user()->hasRole('Admin'))
-
-<div class="pull-right">
-				<a href="{{{ route('leadsource.create') }}}" class="btn btn-small btn-info iframe"><span class="glyphicon glyphicon-plus-sign"></span> Create New Prospect Source</a>
-			</div>
-@endif
 
     <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
-     
-    <th>Prospect Source</th>
-    <th>Description</th>
-    <th>Reference</th>
-    <th>Prospects</th>
-    <th>Assigned to</th>
-    <th>Average Ranking</th>
-    <th>Available From / To</th>
-    <th>Verticals</th>
-    @if (Auth::user()->hasRole('Admin'))
-    <th>Actions</th>
-    @endif
+     <th>Commit Date</th>
+     <th>Message</th>
+     <th>Author</th>
+    
    
        
     </thead>
     <tbody>
-   @foreach($leadsources as $source)
+   @foreach($versions as $version)
     <tr> 
-   	<td><a href="{{route('leadsource.show',$source->id)}}">{{$source->source}}</a></td>
-    <td>{{$source->description}}</td>
-    <td>{{$source->reference}}</td>
-    <td>{{count($source->leads)}}</td>
-    <td>{{$source->assignedTo()}}</td>
-    <td>
-        @if(count($source->leads)>0)
-            {{number_format($source->leads[0]->leadRank(),2)}}
-        @endif
-    </td>
-   	<td>
-        @if($source->dateto < Carbon\Carbon::now())
-            Expired {{$source->datefrom->format('M j,Y')}}
-        @elseif ($source->datefrom > Carbon\Carbon::now())
-            Commences {{$source->datefrom->format('M j,Y')}}
-        @else
-            {{$source->datefrom->format('M j,Y')}} - {{$source->dateto->format('M j,Y')}}
-        @endif
-    </td>
-    <td>
-    <ul>
-    @foreach($source->verticals as $vertical)
-        <li>{{$vertical->filter}}</li>
-    @endforeach
-    </ul>
-    </td>
-	@if (Auth::user()->hasRole('Admin'))
-    <td>
-     @include('partials/_modal')
-    
-        <div class="btn-group">
-            <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
-                Actions <span class="caret"> </span>
-                <span class="sr-only">Toggle Dropdown</span>
-            </button>
-            <ul class="dropdown-menu" role="menu">
-                
-                <li>
-                <a href="{{route('leadsource.edit',$source->id)}}">
-                <i class="glyphicon glyphicon-pencil"></i>
-                 Edit this prospect source
-                 </a>
-                 </li>
-
-                <li>
-
-                <li>
-                <a href="{{route('leadsource.addleads',$source->id)}}">
-                <i class="glyphicon glyphicon-plus"></i>
-                 Add prospects to this source
-                 </a>
-                 </li>
-                <li>
-                <a href="{{route('leadsource.flushleads',$source->id)}}">
-                <i class="glyphicon glyphicon-minus"></i>
-                 Flush all prospects from this source
-                 </a>
-                 </li>
-                <li>
-                <a href="{{route('leadsource.announce',$source->id)}}">
-                <i class="glyphicon glyphicon-envelope"></i> 
-                Email sales team
-                </a>
-                </li>
-                <li>
-                <a data-href="{{route('leadsource.destroy',$source->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = " this lead source and all its leads" href="#">
-                <i class="fa fa-trash-o" aria-hidden="true"> </i>
-                 Delete this prospect source</a>
-                 </li>
-            </ul>
-        </div>
-
-		
-    </td>
-   @endif
-    
-    
+   	<td>{{$version->commitdate->format('Y-m-d h:i')}}</td>
+    <td>{{$version->message}}</td>
+    <td>{{$version->author}}
+   
     </tr>
    @endforeach
     

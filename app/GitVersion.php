@@ -37,6 +37,7 @@ class GitVersion extends Model
         exec("git log",$output);
         $history = array();
         foreach($output as $line){
+            echo $line . "\r\n";
             if(strpos($line, 'commit')===0){
                 if(!empty($commit)){
                     array_push($history, $commit);  
@@ -51,7 +52,7 @@ class GitVersion extends Model
                 $commit['commitdate']   = substr($line, strlen('Date:'));
             }
             if(isset($commit['message'])){
-                            $commit['message'] .= $line;
+                $commit['message'] .= $line;
             }
             else{
                 $commit['message'] = $line;
@@ -60,7 +61,7 @@ class GitVersion extends Model
         if(!empty($commit)) {
             array_push($history, $commit);
         }
-        $this->insert($history);
+       // $this->insert($history);
     }
 
     public function insert($history){

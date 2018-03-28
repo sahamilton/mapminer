@@ -19,8 +19,9 @@ class GitController extends Controller
      */
     public function index()
     {
+       
         $versions = $this->git->all();
-        return response()->view('git.index',compact($versions));
+        return response()->view('git.index',compact('versions'));
     }
 
     /**
@@ -87,5 +88,17 @@ class GitController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+
+    public function replaceMessage($versions){
+        foreach ($versions as $version){
+           if(strpos($version->message," -0700 ")){
+
+
+            $version->update(['message'=>preg_replace('\A\N* -0[7,8]00 ', '', $version->message)]);
+            }
+        }
+        return true;
     }
 }
