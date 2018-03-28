@@ -19,13 +19,12 @@ class GitVersion extends Model
     public static function get()
     {
         $commitHash = trim(exec('git log --pretty="%h" -n1 HEAD'));
-
+        $version = trim(exec('git tag'));
         $branch = str_replace("(HEAD -> ","" ,exec('git log -n1 -s --pretty=%d HEAD')). " branch";
         $branch = str_replace(")","",$branch);
         $commitDate = new \DateTime(trim(exec('git log -n1 --pretty=%ci HEAD')));
         $commitDate->setTimezone(new \DateTimeZone('America/Los_Angeles'));
-
-        return sprintf('v%s.%s.%s.%s (%s),commited %s', self::MAJOR, self::MINOR, self::PATCH,$branch, $commitHash, $commitDate->format('M jS Y @ g:m a'));        
+        return sprintf('%s (%s),commited %s', $branch, $commitHash, $commitDate->format('M jS Y @ g:m a'));        
     }
     
     public function history(){
@@ -65,7 +64,7 @@ class GitVersion extends Model
     
 
     public function insert($history){
-        
+ 
         foreach ($history as $commit){
             if(! $this->where('hash','=',$commit['hash'])->first()){
                 $commit['commitdate'] = Carbon::parse($commit['commitdate']);
