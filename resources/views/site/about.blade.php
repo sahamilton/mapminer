@@ -5,7 +5,14 @@
 <p><strong>Environment: </strong>
 {{App::environment()}} </p>
 <p><strong>Laravel Version:</strong>  {{App::version()}}</p>
-<p><strong>Mapminer Version:</strong> {{$version}} </p>
+
+<p><strong>
+@if(auth()->user()->hasRole('Admin'))
+	<a href="{{route('versions.index')}}" title="See all versions">Mapminer Version:</a>
+@else
+	Mapminer Version:
+@endif
+</strong> {{$version}} </p>
 <p><strong>PHP Version:</strong> {{ phpversion()}} </p> 
 <p><strong>Server Address:</strong>{{$_SERVER['SERVER_ADDR']}}</p>
 <p><strong>Server Name:</strong> {{gethostname()}}</p>

@@ -37,8 +37,6 @@ class GitVersion extends Model
         exec($command,$output);
         $history = array();
         foreach($output as $line){
-
-            echo $line . "\r\n";
             if(strpos($line, 'commit')===0){
                 if(!empty($commit)){
                     array_push($history, $commit);  
@@ -64,47 +62,17 @@ class GitVersion extends Model
         }
       $this->insert($history);
     }
-    public function history(){
-
-        $dir = app_path();
-        $output = array();
-        chdir($dir);
-        exec("git log",$output);
-        $history = array();
-        foreach($output as $line){
-            echo $line . "\r\n";
-            if(strpos($line, 'commit')===0){
-                if(!empty($commit)){
-                    array_push($history, $commit);  
-                    unset($commit);
-                }
-                $commit['hash']   = substr($line, strlen('commit'));
-            }
-            else if(strpos($line, 'Author')===0){
-                $commit['author'] = substr($line, strlen('Author:'));
-            }
-            else if(strpos($line, 'Date')===0){
-                $commit['commitdate']   = substr($line, strlen('Date:'));
-            }
-            if(isset($commit['message'])){
-                $commit['message'] .= $line;
-            }
-            else{
-                $commit['message'] = $line;
-            }
-        }
-        if(!empty($commit)) {
-            array_push($history, $commit);
-        }
-       // $this->insert($history);
-    }
+    
 
     public function insert($history){
-
+        
         foreach ($history as $commit){
-            $commit['commitdate'] = Carbon::parse($commit['commitdate']);
-    
-            $this->create($commit);
+            if(! $this->where('hash','=',$commit['hash'])->first()){
+                $commit['commitdate'] = Carbon::parse($commit['commitdate']);
+                $commit['message'] = preg_replace("#(\A\N* -0[7,8]00 )#", "", $commit['message']);
+                $commit['author'] = preg_replace("#( <\N*>)#", "", $commit['author']);
+                $this->create($commit);
+            }
         
         }
 
