@@ -3,10 +3,13 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-
+use Carbon\Carbon;
 class GitVersion extends Model
 {
 
+    protected $table='gittracking';
+    protected $dates =['commitdate'];
+    protected $fillable = ['hash','author','message','commitdate'];
 
     const MAJOR = 2;
     const MINOR = 5;
@@ -26,5 +29,47 @@ class GitVersion extends Model
 
         
     }
+    public function history(){
 
+        $dir = app_path();
+        $output = array();
+        chdir($dir);
+        exec("git log",$output);
+        $history = array();
+        foreach($output as $line){
+            if(strpos($line, 'commit')===0){
+                if(!empty($commit)){
+                    array_push($history, $commit);  
+                    unset($commit);
+                }
+                $commit['hash']   = substr($line, strlen('commit'));
+            }
+            else if(strpos($line, 'Author')===0){
+                $commit['author'] = substr($line, strlen('Author:'));
+            }
+            else if(strpos($line, 'Date')===0){
+                $commit['commitdate']   = substr($line, strlen('Date:'));
+            }
+            if(isset($commit['message'])){
+                            $commit['message'] .= $line;
+            }
+            else{
+                $commit['message'] = $line;
+            }
+        }
+        if(!empty($commit)) {
+            array_push($history, $commit);
+        }
+        $this->insert($history);
+    }
+
+    public function insert($history){
+
+        foreach ($history as $commit){
+            $commit['commitdate'] = Carbon::parse($commit['commitdate']);
+    
+            $this->create($commit);
+        
+        }
+    }
 }
