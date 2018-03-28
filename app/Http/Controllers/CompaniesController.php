@@ -24,7 +24,7 @@ class CompaniesController extends BaseController {
 
 
 	public function __construct(Company $company, Location $location, SearchFilter $searchfilter,User $user,Person $person) {
-		
+
 		$this->company = $company;
 		$this->locations = $location;
 		$this->searchfilter = $searchfilter;
@@ -33,57 +33,57 @@ class CompaniesController extends BaseController {
 		parent::__construct($this->company);
 
 	}
-	
-	
+
+
 	/**
 	 * Display a listing of companies
 	 *
 	 * @return View
 	 */
-	 
+
 	public function index()
 	{
-		
+
 		$filtered = $this->company->isFiltered(['companies'],['vertical']);
 
 		$companies = $this->getAllCompanies($filtered)->get();
 		$title = 'All Accounts';
 		$locationFilter = 'both';
-	
+
 		return response()->view('companies.index', compact('companies','title','filtered','locationFilter'));
 	}
-	
+
 	/*
 	Function filter
-	
+
 	 * Returns list of companies based on selection: with or without locations
 	 *
 	 * @return Response
 	 */
-	
+
 
 	public function filter(Request $request){
-		
-		
+
+
 		if($request->get('locationFilter')=='both'){
 
 			return redirect()->route('company.index');
 		}
 		$filtered = $this->company->isFiltered(['companies'],['vertical']);
 		$companies=$this->getAllCompanies($filtered);
-		
+
 		if($request->get('locationFilter') == 'nolocations'){
 			$companies = $companies->whereDoesntHave('locations')->get();
-			
-			$title = 'Accounts without Locations';	
-		
+
+			$title = 'Accounts without Locations';
+
 		}else{
 			$companies = $companies->whereHas('locations')->get();
-			
+
 			$title = 'Accounts with Locations';
-		
+
 		}
-		
+
 		$locationFilter = $request->get('locationFilter');
 		return response()->view('companies.index', compact('companies','title','filtered','locationFilter'));
 
@@ -91,7 +91,7 @@ class CompaniesController extends BaseController {
 
 	public function getAllCompanies($filtered=null)
 	{
-		
+
 		$keys=array();
 
 		$companies = $this->company
@@ -100,22 +100,22 @@ class CompaniesController extends BaseController {
 					    $q->whereIn('serviceline_id', $this->userServiceLines);
 
 			});
-		
+
 		if($filtered) {
 			$keys = $this->company->getSearchKeys(['companies'],['vertical']);
 			$isNullable = $this->company->isNullable($keys,NULL);
 			$companies = $companies->whereIn('vertical',$keys);
-			
+
 			if($isNullable == 'Yes')
 			{
-				
+
 					$companies = $companies->orWhere(function($query) use($keys)
 					{
 						$query->whereNull('vertical');
 					});
-				
+
 			}
-			
+
 		}
 
 		return $companies->orderBy('companyname');
@@ -128,7 +128,7 @@ class CompaniesController extends BaseController {
 	 */
 	public function create()
 	{
-				
+
 		$managers = $this->person->getPersonsWithRole($this->NAMRole);
 
 		$filters = $this->getFilters();
@@ -143,7 +143,7 @@ class CompaniesController extends BaseController {
 	 *
 	 * @return Response
 	 */
-	
+
 	public function store(CompanyFormRequest $request)
 	{
 
@@ -160,7 +160,7 @@ class CompaniesController extends BaseController {
 	 */
 	public function edit($company)
 	{
-		
+
 		$managers = $this->person->getPersonsWithRole($this->NAMRole);
 
 		$company = $company
@@ -171,7 +171,7 @@ class CompaniesController extends BaseController {
 
 		$servicelines = Serviceline::whereIn('id',$this->userServiceLines)
 			->pluck('ServiceLine','id');
-		
+
 		$filters = $this->getFilters();
 		//$verticals = $this->searchfilter->industrysegments();
 		return response()->view('companies.edit', compact('company','managers','filters','servicelines'));
@@ -185,7 +185,7 @@ class CompaniesController extends BaseController {
 	 */
 	public function update(CompanyFormRequest $request,$company)
 	{
-		
+
 
 		$this->company = $company;
 		$this->company->update( $request->all());
@@ -198,22 +198,22 @@ class CompaniesController extends BaseController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	
+
 	public function destroy($company)
 	{
 		$this->company->destroy($company->id);
 
 		return redirect()->route('company.index');
 	}
-	
-	
+
+
 	/**
 	 * Display list of the locations of specified company.
 	 *
 	 * @param  int  $id
 	 * @return View
 	 */
-	 
+
 	public function show($id,$segment=null)
 	{
 
@@ -221,7 +221,7 @@ class CompaniesController extends BaseController {
 			$id = $id->id;
 
 		}
-		
+
 		if (! $company = $this->company->checkCompanyServiceLine($id,$this->userServiceLines))
 		{
 			return redirect()->route('company.index');
@@ -236,7 +236,7 @@ class CompaniesController extends BaseController {
 					->whereHas('industryVertical',function($q) use($keys){
 						$q->whereIn('id',$keys);
 					});
-					
+
 				}
 
 		$company = $company->find($id);
@@ -244,9 +244,13 @@ class CompaniesController extends BaseController {
 				return redirect()->route('company.index');
 		}
 		// get company locations
-		
+
 		$locations = $this->getCompanyLocations($id,$segment,$company);
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
 		$states = $this->getStatesInArray($locations);
 		$segments = $this->getCompanySegments($company);
 		$filters = $this->searchfilter->vertical();
@@ -255,7 +259,7 @@ class CompaniesController extends BaseController {
 		// used when there are too many locations to show in list
 		if( $count > $this->limit)
 		{
-			
+
 			$location = new Location;
 			$limited=$this->limit;
 			if (\Session::has('geo'))
@@ -263,22 +267,25 @@ class CompaniesController extends BaseController {
 					$geo = \Session::get('geo');
 					$location->lat = $geo['lat'];
 					$location->lng = $geo['lng'];
+				}elseif(auth()->user()->position()){
+					$postion = explode(",",auth()->user()->position());
+					$location->lat =  $position[0];
+					$location->lng =  $position[1];
 				}else{
-					// use center of the country as default lat lng
+					//else use corporate hq
 					$location->lat =  '47.25';
 					$location->lng =  '-122.44';
-
 				}
-	
-		
+
+
 		$locations = $this->locations
 		->where('company_id','=',$company->id)
 		->nearby($location,'1000')
 		->limit($this->limit)
 		->get();
-		
-		
-		}	
+
+
+		}
 
 		$data['type']='company';
 		$mywatchlist = $this->locations->getWatchList();
@@ -286,7 +293,7 @@ class CompaniesController extends BaseController {
 
 		return response()->view('companies.show', compact('data','company','locations','count','limited','mywatchlist','states','filtered','filters','segments'));
 	}
-	
+
 
 	private function getCompanyLocations($id,$segment,$company){
 		$locations = $this->locations->where('company_id','=',$id);
@@ -298,22 +305,22 @@ class CompaniesController extends BaseController {
 		$filtered = $company->isFiltered(['locations'],['segment','businesstype'],$company->vertical);
 		$keys = $this->company->getSearchKeys(['locations'],['segment','businesstype']);
 
-		
+
 		// This doesnt make sense as long as companies belong to only one vertical
 
 
-		if($filtered && count($keys)>0) {	
-			
+		if($filtered && count($keys)>0) {
+
 			 $locations = $locations
-			 
+
 				 ->whereIn('segment', $keys)
 				 ->orWhere(function($query) use($data){
-				
+
 					$query->whereIn('businesstype', $data['keys']);
 				});
-				
+
 		}
-		
+
 		 return $locations->orderBy('state')->get();
 
 	}
@@ -324,26 +331,26 @@ class CompaniesController extends BaseController {
 	private function getStatesInArray($locations)
 	{
 		 return $locations->pluck('state')->toArray();
-		
+
 	}
 	/*
 	// Get all states that the company has locations in
 	 */
-	
+
 	private function getCompanyStates($company,$data,$filtered) {
-		
+
 		$states = $this->locations->select('state')->distinct()
 				->where('company_id','=',$company->id);
-				
+
 				if($filtered && count($data['keys'])>0){
-					
+
 					$states=$states->whereIn('segment', $data['keys'])
 					->orWhere(function($query) use($data){
-				
+
 					$query->whereIn('businesstype', $data['keys']);
 					});
-					
-				}	
+
+				}
 		return $states->orderBy('state')
 				->pluck('state');
 
@@ -351,7 +358,7 @@ class CompaniesController extends BaseController {
 	}
 
 	/**
-	 * Display list of the companies in specified vertical 
+	 * Display list of the companies in specified vertical
 	 *
 	 *
 	 * @param text $vertical
@@ -359,7 +366,7 @@ class CompaniesController extends BaseController {
 	 */
 	public function vertical($vertical)
 	{
-		
+
 		$filtered = $this->company->isFiltered(['companies'],['vertical']);
 
 		$verticalname = SearchFilter::where('id','=',$vertical)->pluck('filter');
@@ -373,11 +380,11 @@ class CompaniesController extends BaseController {
 					})
 		->where('vertical','=',$vertical)
 		->orderBy('companyname')
-		->get();	
-		return response()->view('companies.index', compact('companies','title','filtered','locationFilter'));	
+		->get();
+		return response()->view('companies.index', compact('companies','title','filtered','locationFilter'));
 	}
-	
-	
+
+
 	/**
 	 * Display list of the locations of specified company in specified state.
 	 *
@@ -385,8 +392,8 @@ class CompaniesController extends BaseController {
 	 * @param text $state
 	 * @return View
 	 */
-	 
-	 
+
+
 	public function stateselect(Request $request,$id=null,$state=null)
 	{
 		// The method can be used by either post or get routes
@@ -400,11 +407,11 @@ class CompaniesController extends BaseController {
 		{
 			return redirect()->route('company.index');
 		}
-		
+
 		$data = $this->getStateCompanyInfo($data,$state);
 		$segments=$this->getCompanySegments($data['company']);
 		$filtered = $this->company->isFiltered(['companies'],['vertical']);
-	
+
 		if($filtered){
 			$data['keys'] = $this->locations->getSearchKeys(['locations'],['segment','businesstype']);
 		}
@@ -416,7 +423,7 @@ class CompaniesController extends BaseController {
 		$filters= SearchFilter::all()->pluck('filter','id');
 		return response()->view('companies.state', compact('data','filtered','locations','mywatchlist','states','filtered','filters','segments'));
 	}
-	
+
 	/**
 	 * Get locations of company in state information.
 	 *
@@ -424,34 +431,34 @@ class CompaniesController extends BaseController {
 	 * @param text $state
 	 * @return array $locations
 	 */
-	
+
 	private function getStateLocations($company,$state,$data,$filtered){
-			
+
 			$locations= $this->locations
 			->where('state','=',$state)
 			->where('company_id','=',$company->id);
-			
+
 
 			if($filtered && count($data['keys']) >0){
 				$locations = $locations->whereIn('segment', $data['keys'])
 
 						->orWhereIn('businesstype', $data['keys']);
-			}	
-			
-			return $locations->get();			
-				
+			}
+
+			return $locations->get();
+
 
 	}
-	
+
 	/**
-	* Get Company && State Meta information 
+	* Get Company && State Meta information
 	 * @param  int  $id
 	 * @param text $state
 	 * @return array $data
 	*/
-	private function getStateCompanyInfo($data,$state) 
+	private function getStateCompanyInfo($data,$state)
 	{
-	
+
 		$statedata = State::where('statecode','=',$state)->first();
 		$data['state']  = $statedata->fullstate;
 		$data['statecode'] = $statedata->statecode;
@@ -459,7 +466,7 @@ class CompaniesController extends BaseController {
 		$data['lng'] = $statedata->lng;
 		return $data;
 	}
-	
+
 	/**
 	 * Get company segments (location filters)
 	 * @param  Integer $company Company ID
@@ -467,19 +474,19 @@ class CompaniesController extends BaseController {
 	 */
 	private function getCompanySegments($company)
 	{
-		
+
 		$segments = array_keys($company->locations->groupBy('segment')->toArray());
-			
+
 	   return $this->searchfilter->whereIn('id',$segments)->pluck('filter','id')->toArray();
 	}
-	
+
 	/**
-	* Get State Meta information 
+	* Get State Meta information
 	 * @param  int  $id
 	 * @param text $state
 	 * @return array $data
 	*/
-	private function getSegmentCompanyInfo($company,$segment) 
+	private function getSegmentCompanyInfo($company,$segment)
 	{
 
 		if(! $segment){
@@ -487,12 +494,12 @@ class CompaniesController extends BaseController {
 		}else{
 			$data['segment']  = $this->searchfilter->select('filter')->findOrFail($segment)->filter;
 		}
-		
+
 		return $data;
-		
+
 	}
-	
-	
+
+
 	/**
 	 * Display map of the locations of specified company in specified state.
 	 *
@@ -502,10 +509,10 @@ class CompaniesController extends BaseController {
 	 */
 	public function statemap($id,$state)
 	{
-		
-		// Check that user can view company 
+
+		// Check that user can view company
 		// based on user serviceline association
-		
+
 		if (! $company = $this->company->checkCompanyServiceLine($id,$this->userServiceLines))
 		{
 			return redirect()->route('company.index');
@@ -514,7 +521,7 @@ class CompaniesController extends BaseController {
 
 		return response()->view('companies.statemap', compact('data'));
 	}
-	
+
 	private function getFilters(){
 
 		return SearchFilter::where('type','!=','group')
@@ -525,7 +532,7 @@ class CompaniesController extends BaseController {
 		//$verticals->getLeaves()->where('searchcolumn','=','vertical');
 
 	}
-	
+
 
 	/*
 	 * Function getWatchList
@@ -552,7 +559,7 @@ class CompaniesController extends BaseController {
 	 */
 	public function exportAccounts()
 	{
-		
+
 		Excel::create('AllCompanies',function($excel){
 			$excel->sheet('Companies',function($sheet) {
 				$companies = $this->company
@@ -564,16 +571,16 @@ class CompaniesController extends BaseController {
 
 							})
 				->get();
-		
+
 				$sheet->loadview('companies.exportcompanies',compact('companies'));
 			});
 		})->download('csv');
-		
+
 	}
 	/*
 	Generate the form to choose companies to download locations
 	 */
-	
+
 	public function export(){
 		$companies = $this->company
 						->whereHas('serviceline', function($q){
@@ -584,7 +591,7 @@ class CompaniesController extends BaseController {
 
 		return response()->view('locations.export',compact('companies'));
 	}
-	
+
 	/*
 	 * Function locationsexport
 	 *
@@ -594,7 +601,7 @@ class CompaniesController extends BaseController {
 	 * @return (array) mywatchlist
 	 */
 	public function locationsexport(Request $request) {
-		
+
 		$id = $request->get('company');
 		$company = $this->company->findOrFail($id);
 		Excel::create($company->companyname. " locations",function($excel) use($id){
@@ -604,17 +611,17 @@ class CompaniesController extends BaseController {
 							    $q->whereIn('serviceline_id', $this->userServiceLines);
 
 							})
-					
+
 					->with('locations')
 					->findOrFail($id);
 				$sheet->loadview('locations.exportlocations',compact('company'));
 			});
 		})->download('csv');
-		
-		
-		
+
+
+
 	}
-	
-	
-	
+
+
+
 }

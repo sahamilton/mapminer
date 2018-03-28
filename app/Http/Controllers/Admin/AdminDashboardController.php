@@ -45,6 +45,8 @@ class AdminDashboardController extends BaseController {
 
 		$data['logins'] = $this->getLogins();
 		$data['status'] = $this->getLastLogins();
+		$data['firsttimers'] = $this->getFirstTimers();
+		
 		$data['watchlists'] = $this->getWatchListCount();
 		//dd($data['watchlists']->first());
 		$data['nosalesnotes'] = $this->getNoSalesNotes();
@@ -215,6 +217,25 @@ class AdminDashboardController extends BaseController {
 				->orderBy('firstlogin', 'ASC')
 			    ->get();
 	}
+	
+	private function getFirstTimers(){
+	
+		   
+		$from = Carbon::today()->subMonth()->toDateString();
+		$query = "select *
+				from (
+				    select users.id as uid, concat_ws(' ',persons.firstname,persons.lastname) as fullname, roles.name as role, min(`lastactivity`) as lastactivity 
+					from track,users,persons,role_user,roles
+				    where track.user_id = users.id
+				    and users.id = persons.user_id
+				    and role_user.user_id = users.id
+				    and role_user.role_id = roles.id
+				group by users.id) a
+				where lastactivity > '".$from ."'";
+
+		return \DB::select( \DB::raw($query));
+	}
+
 	/**
 	 * Return array of logins by grouped intervals.
 	 *

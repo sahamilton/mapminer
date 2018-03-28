@@ -167,14 +167,13 @@ return [
         /*
          * Package Service Providers...
          */
-        Laravel\Tinker\TinkerServiceProvider::class,
-        Barryvdh\Debugbar\ServiceProvider::class,
+
         Baum\Providers\BaumServiceProvider::class,
 
-        Collective\Html\HtmlServiceProvider::class,
-        MaddHatter\LaravelFullcalendar\ServiceProvider::class,
+       // Collective\Html\HtmlServiceProvider::class,
+      //  MaddHatter\LaravelFullcalendar\ServiceProvider::class,
         Dionera\BeanstalkdUI\BeanstalkdUIServiceProvider::class,
-        Maatwebsite\Excel\ExcelServiceProvider::class,
+       // Maatwebsite\Excel\ExcelServiceProvider::class,
         /*
          * Application Service Providers...
          */
@@ -185,7 +184,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        Geocoder\Laravel\Providers\GeocoderService::class,
+       // Geocoder\Laravel\Providers\GeocoderService::class,
         
 
         Laravel\Scout\ScoutServiceProvider::class,

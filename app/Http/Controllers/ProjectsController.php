@@ -78,6 +78,7 @@ class ProjectsController extends BaseController
     public function show($id)
     {
 
+
         $statuses = $this->project->getStatusOptions;
 
         $project = $this->project
@@ -91,6 +92,7 @@ class ProjectsController extends BaseController
             ->nearby($project,'100')
             ->limit(5)
             ->get();
+ 
         return response()->view('projects.show',compact('project','statuses','branches'));
     }
 
