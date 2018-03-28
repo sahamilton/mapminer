@@ -50,6 +50,7 @@ class GeoCodingController extends BaseController {
 		
 		}
 		$data = $request->all();
+
 		$data['latlng'] = $data['lat'].":".$data['lng'];
 		// Kludge to address the issue of different data in Session::geo
 		if(! $request->has('number')){
@@ -85,8 +86,12 @@ class GeoCodingController extends BaseController {
 			$data = $this->setZoomLevel($data);
 			$servicelines = $this->serviceline->whereIn('id',$this->userServiceLines)
     						->get();
-    						
-			return response()->view('maps.map', compact('data','filtered','servicelines'));
+    	if(isset($data['company'])){
+    		$company = $data['company'];
+    	}else{
+    		$company=null;
+    	}			
+			return response()->view('maps.map', compact('data','filtered','servicelines','company'));
 		}
 		
 	}
@@ -109,8 +114,10 @@ class GeoCodingController extends BaseController {
 			}elseif ($data['type']=='company'){
 				$data['urllocation'] ="api/mylocalaccounts";
 				$data['title'] = (isset($data['companyname']) ? $data['companyname'] : 'Company') ." Locations";
-				$data['vertical'] = Company::where('id','=',$data['company'])->pluck('vertical');
-			
+				
+				$data['company'] = Company::where('id','=',$data['company'])->first();
+				$data['vertical'] = $data['company']->vertical;
+
 			}elseif ($data['type'] == 'projects'){
 				$data['urllocation'] ="api/mylocalprojects";
 				$data['title'] = "Project Locations";

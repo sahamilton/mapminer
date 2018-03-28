@@ -28,7 +28,11 @@
     </div>
 <script>
 	  $(function() {
-          $('#map-container').storeLocator({'slideMap' : false, 'defaultLoc': true, 'defaultLat': '{{$data['lat']}}', 'defaultLng' : '{{$data['lng']}}', 'dataLocation' : '{{URL::to($data['urllocation'] . '/'. $data['distance'].'/'.$data['latlng'].'/'.$data['company'])}}','zoomLevel':{{$data['zoomLevel']}}, 'infowindowTemplatePath' : '{{asset('maps/templates/infowindow-description.html')}}','listTemplatePath' : '{{asset('maps/templates/location-list-description.html')}}'} );
+          $('#map-container').storeLocator({'slideMap' : false, 
+            'defaultLoc': true, 
+            'defaultLat': '{{$data['lat']}}', 
+            'defaultLng' : '{{$data['lng']}}', 
+            'dataLocation' : '{{URL::to($data['urllocation'] . '/'. $data['distance'].'/'.$data['latlng'].'/'.$company->id)}}','zoomLevel':{{$data['zoomLevel']}}, 'infowindowTemplatePath' : '{{asset('maps/templates/infowindow-description.html')}}','listTemplatePath' : '{{asset('maps/templates/location-list-description.html')}}'} );
 		  $(function() {
         $('#cp2').colorpicker();
       });

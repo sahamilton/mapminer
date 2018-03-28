@@ -31,7 +31,7 @@ $(document).ready(function() {
 				
 				Geo.lat = position.coords.latitude;
             	Geo.lng = position.coords.longitude;
-			
+				
 				populateHeader(Geo.lat, Geo.lng,address,'');
 				var marker = new google.maps.Marker({
 				  position: geolocate,

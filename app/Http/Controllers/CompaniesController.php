@@ -246,8 +246,11 @@ class CompaniesController extends BaseController {
 		// get company locations
 		
 		$locations = $this->getCompanyLocations($id,$segment,$company);
+<<<<<<< Updated upstream
 		
 		
+=======
+>>>>>>> Stashed changes
 		$states = $this->getStatesInArray($locations);
 		$segments = $this->getCompanySegments($company);
 		$filters = $this->searchfilter->vertical();
@@ -283,7 +286,7 @@ class CompaniesController extends BaseController {
 
 		$data['type']='company';
 		$mywatchlist = $this->locations->getWatchList();
-		
+
 
 		return response()->view('companies.show', compact('data','company','locations','count','limited','mywatchlist','states','filtered','filters','segments'));
 	}

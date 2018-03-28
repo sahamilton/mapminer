@@ -1520,16 +1520,16 @@
         },
         {
             "name": "guzzlehttp/guzzle",
-            "version": "6.3.0",
+            "version": "6.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "f4db5a78a5ea468d4831de7f0bf9d9415e348699"
+                "reference": "68d0ea14d5a3f42a20e87632a5f84931e2709c90"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/f4db5a78a5ea468d4831de7f0bf9d9415e348699",
-                "reference": "f4db5a78a5ea468d4831de7f0bf9d9415e348699",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/68d0ea14d5a3f42a20e87632a5f84931e2709c90",
+                "reference": "68d0ea14d5a3f42a20e87632a5f84931e2709c90",
                 "shasum": ""
             },
             "require": {
@@ -1539,7 +1539,7 @@
             },
             "require-dev": {
                 "ext-curl": "*",
-                "phpunit/phpunit": "^4.0 || ^5.0",
+                "phpunit/phpunit": "^4.8.35 || ^5.7 || ^6.4",
                 "psr/log": "^1.0"
             },
             "suggest": {
@@ -1548,7 +1548,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "6.2-dev"
+                    "dev-master": "6.3-dev"
                 }
             },
             "autoload": {
@@ -1581,7 +1581,7 @@
                 "rest",
                 "web service"
             ],
-            "time": "2017-06-22T18:50:49+00:00"
+            "time": "2018-03-26T16:33:04+00:00"
         },
         {
             "name": "guzzlehttp/promises",
@@ -2086,6 +2086,7 @@
         },
         {
             "name": "laravel/framework",
+<<<<<<< Updated upstream
             "version": "v5.5.32",
             "source": {
                 "type": "git",
@@ -2096,6 +2097,18 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/laravel/framework/zipball/254e4c3e133f5bc8d6068cdf28ea062abc10adf2",
                 "reference": "254e4c3e133f5bc8d6068cdf28ea062abc10adf2",
+=======
+            "version": "v5.6.14",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laravel/framework.git",
+                "reference": "fba33e59fd43661933e9cecb84dfb0a64c5323ce"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/fba33e59fd43661933e9cecb84dfb0a64c5323ce",
+                "reference": "fba33e59fd43661933e9cecb84dfb0a64c5323ce",
+>>>>>>> Stashed changes
                 "shasum": ""
             },
             "require": {
@@ -2216,7 +2229,11 @@
                 "framework",
                 "laravel"
             ],
+<<<<<<< Updated upstream
             "time": "2018-01-18T13:27:23+00:00"
+=======
+            "time": "2018-03-28T14:17:03+00:00"
+>>>>>>> Stashed changes
         },
         {
             "name": "laravel/scout",
@@ -2348,6 +2365,7 @@
         },
         {
             "name": "laravelcollective/html",
+<<<<<<< Updated upstream
             "version": "v5.5.1",
             "source": {
                 "type": "git",
@@ -2358,6 +2376,18 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/LaravelCollective/html/zipball/2f6dc39ab3655724a615fe8a652d8b7f04fc9ac6",
                 "reference": "2f6dc39ab3655724a615fe8a652d8b7f04fc9ac6",
+=======
+            "version": "v5.6.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/LaravelCollective/html.git",
+                "reference": "623a150c91e2d3f92eeee9f9eda58a841e3cb548"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/LaravelCollective/html/zipball/623a150c91e2d3f92eeee9f9eda58a841e3cb548",
+                "reference": "623a150c91e2d3f92eeee9f9eda58a841e3cb548",
+>>>>>>> Stashed changes
                 "shasum": ""
             },
             "require": {
@@ -2408,8 +2438,13 @@
                 }
             ],
             "description": "HTML and Form Builders for the Laravel Framework",
+<<<<<<< Updated upstream
             "homepage": "http://laravelcollective.com",
             "time": "2017-08-31T14:46:03+00:00"
+=======
+            "homepage": "https://laravelcollective.com",
+            "time": "2018-03-16T16:57:31+00:00"
+>>>>>>> Stashed changes
         },
         {
             "name": "league/flysystem",
@@ -3041,16 +3076,16 @@
         },
         {
             "name": "php-http/curl-client",
-            "version": "v1.7.0",
+            "version": "v1.7.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-http/curl-client.git",
-                "reference": "0972ad0d7d37032a52077a5cbe27cf370f2007d8"
+                "reference": "6341a93d00e5d953fc868a3928b5167e6513f2b6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-http/curl-client/zipball/0972ad0d7d37032a52077a5cbe27cf370f2007d8",
-                "reference": "0972ad0d7d37032a52077a5cbe27cf370f2007d8",
+                "url": "https://api.github.com/repos/php-http/curl-client/zipball/6341a93d00e5d953fc868a3928b5167e6513f2b6",
+                "reference": "6341a93d00e5d953fc868a3928b5167e6513f2b6",
                 "shasum": ""
             },
             "require": {
@@ -3067,7 +3102,7 @@
             },
             "require-dev": {
                 "guzzlehttp/psr7": "^1.0",
-                "php-http/client-integration-tests": "^0.5.1",
+                "php-http/client-integration-tests": "^0.6",
                 "phpunit/phpunit": "^4.8.27",
                 "zendframework/zend-diactoros": "^1.0"
             },
@@ -3093,7 +3128,7 @@
                 "curl",
                 "http"
             ],
-            "time": "2017-02-09T15:18:33+00:00"
+            "time": "2018-03-26T19:21:48+00:00"
         },
         {
             "name": "php-http/discovery",
@@ -5133,6 +5168,7 @@
         },
         {
             "name": "toin0u/geocoder-laravel",
+<<<<<<< Updated upstream
             "version": "4.0.5",
             "source": {
                 "type": "git",
@@ -5143,6 +5179,18 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/geocoder-php/GeocoderLaravel/zipball/1da707448510dbcfea30c41c1d521b28271cb72c",
                 "reference": "1da707448510dbcfea30c41c1d521b28271cb72c",
+=======
+            "version": "4.0.8",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/geocoder-php/GeocoderLaravel.git",
+                "reference": "9b899cf4b9bb9e2873dfb65441dec8edfd0e9f3f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/geocoder-php/GeocoderLaravel/zipball/9b899cf4b9bb9e2873dfb65441dec8edfd0e9f3f",
+                "reference": "9b899cf4b9bb9e2873dfb65441dec8edfd0e9f3f",
+>>>>>>> Stashed changes
                 "shasum": ""
             },
             "require": {
@@ -5150,9 +5198,15 @@
                 "geocoder-php/geo-plugin-provider": "^4.0",
                 "geocoder-php/google-maps-provider": "^4.0",
                 "guzzlehttp/psr7": "*",
+<<<<<<< Updated upstream
                 "illuminate/cache": "5.0 - 5.5",
                 "illuminate/support": "5.0 - 5.5",
                 "php": "^7.0",
+=======
+                "illuminate/cache": "5.0 - 5.6",
+                "illuminate/support": "5.0 - 5.6",
+                "php": ">=7.1.3",
+>>>>>>> Stashed changes
                 "php-http/curl-client": "^1.7",
                 "willdurand/geocoder": "^4.0"
             },
@@ -5165,10 +5219,17 @@
                 "geocoder-php/maxmind-binary-provider": "^4.0",
                 "laravel/laravel": "5.5.*",
                 "mockery/mockery": "0.9.*",
+<<<<<<< Updated upstream
                 "orchestra/database": "^3.5",
                 "orchestra/testbench": "^3.5",
                 "orchestra/testbench-browser-kit": "^3.5",
                 "orchestra/testbench-dusk": "3.5.x-dev@dev",
+=======
+                "orchestra/database": "3.6.*",
+                "orchestra/testbench": "3.6.*",
+                "orchestra/testbench-browser-kit": "3.6.*",
+                "orchestra/testbench-dusk": "3.6.x-dev@dev",
+>>>>>>> Stashed changes
                 "php-coveralls/php-coveralls": "*",
                 "phpunit/phpunit": "*",
                 "sebastian/phpcpd": "*"
@@ -5211,7 +5272,11 @@
                 "geocoding",
                 "laravel"
             ],
+<<<<<<< Updated upstream
             "time": "2018-01-14T22:27:45+00:00"
+=======
+            "time": "2018-03-25T23:24:38+00:00"
+>>>>>>> Stashed changes
         },
         {
             "name": "viacreative/sudo-su",
