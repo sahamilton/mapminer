@@ -455,7 +455,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 	# Seeder for relationships with servicelines
 		Route::get('seeder',['as'=>'seeder','uses'=>'CompaniesController@seeder']);
 		Route::get('apiseeder',['as'=>'apiseeder','uses'=>'UsersController@seeder']);
-	#Version
-		Route::resource('versions','GitController');
+
+	# Versions
+	 	Route::resource('versions','GitController');
 
 });

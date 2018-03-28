@@ -28,15 +28,17 @@
         "dompdf/dompdf": "~0.6.1",
         "h4cc/wkhtmltopdf-amd64": "0.12.x"
     },
+
+    "require-dev": {
+        "barryvdh/laravel-debugbar": "^3.1",
         "fzaninotto/faker": "~1.4",
         "mockery/mockery": "0.9.*",
         "phpunit/phpunit": "~6.0",
         "symfony/css-selector": "3.1.*",
         "symfony/dom-crawler": "3.1.*",
         "laracasts/generators": "^1.1",
-        "filp/whoops": "~2.0",
-        "barryvdh/laravel-debugbar": "^2.3",
-
+        "filp/whoops": "~2.0"
+    },
         
     "autoload": {
         "classmap": [
@@ -47,7 +49,7 @@
             "Tests\\": "tests/"
         }
     },
-    "scripts": {
+        "scripts": {
         "post-root-package-install": [
             "php -r \"file_exists('.env') || copy('.env.example', '.env');\""
         ],
@@ -55,20 +57,19 @@
             "php artisan key:generate"
         ],
         "post-install-cmd": [
-            "Illuminate\\Foundation\\ComposerScripts::postInstall"
             
+           
+        ],
+        "post-update-cmd": [
+            
+        
         ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover"
-        ],
-        "post-update-cmd": [
-            "Illuminate\\Foundation\\ComposerScripts::postUpdate"
-           
         ]
     },
     "config": {
-        "preferred-install": "dist",
-        "sort-packages": true
+        "preferred-install": "dist"
     }
 }

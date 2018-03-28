@@ -19,7 +19,9 @@ class GitController extends Controller
      */
     public function index()
     {
+
         $this->git->history();
+
         $versions = $this->git->all();
         return response()->view('git.index',compact('versions'));
     }

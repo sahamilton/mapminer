@@ -50,6 +50,7 @@ class GeoCodingController extends BaseController {
 		
 		}
 		$data = $request->all();
+
 		$data['latlng'] = $data['lat'].":".$data['lng'];
 		// Kludge to address the issue of different data in Session::geo
 		if(! $request->has('number')){
@@ -63,7 +64,11 @@ class GeoCodingController extends BaseController {
 		$data = $this->getViewData($data);
 
 		$filtered = $this->location->isFiltered(['companies','locations'],['vertical','business','segment'],NULL);
-
+		if(isset($data['company'])){
+    		$company = $data['company'];
+    	}else{
+    		$company=null;
+    	}
 		if(isset($data['view']) && $data['view'] == 'list') {
 		
 			$data['result'] = $this->getGeoListData($data);
@@ -79,14 +84,14 @@ class GeoCodingController extends BaseController {
 				$watchlist = NULL;
 			}
 		
-			return response()->view('maps.list', compact('data','watchlist','filtered'));
+			return response()->view('maps.list', compact('data','watchlist','filtered','company'));
 		}else{
 
 			$data = $this->setZoomLevel($data);
 			$servicelines = $this->serviceline->whereIn('id',$this->userServiceLines)
     						->get();
-    						
-			return response()->view('maps.map', compact('data','filtered','servicelines'));
+    				
+			return response()->view('maps.map', compact('data','filtered','servicelines','company'));
 		}
 		
 	}
@@ -109,8 +114,9 @@ class GeoCodingController extends BaseController {
 			}elseif ($data['type']=='company'){
 				$data['urllocation'] ="api/mylocalaccounts";
 				$data['title'] = (isset($data['companyname']) ? $data['companyname'] : 'Company') ." Locations";
-				$data['vertical'] = Company::where('id','=',$data['company'])->pluck('vertical');
-			
+				$data['company'] = Company::where('id','=',$data['company'])->first();
+				$data['vertical'] = $data['company']->vertical;
+
 			}elseif ($data['type'] == 'projects'){
 				$data['urllocation'] ="api/mylocalprojects";
 				$data['title'] = "Project Locations";
@@ -121,8 +127,11 @@ class GeoCodingController extends BaseController {
 				$data['company']=NULL;
 				$data['companyname']=NULL;
 			}
-			
-			
+			$data['datalocation']=$data['urllocation'] . '/'. $data['distance'].'/'.$data['latlng'];
+			if($data['company']){
+				$data['datalocation'].="/".$data['company']->id;
+			}
+
 			return $data;
 	}
 	
@@ -163,7 +172,7 @@ class GeoCodingController extends BaseController {
 			if($company){
 				
 				return $this->location
-				->where('company_id','=',$company)
+				->where('company_id','=',$company->id)
 				->nearby($location,$data['distance'])
 				->with('company')
 				->get();
