@@ -246,11 +246,7 @@ class CompaniesController extends BaseController {
 		// get company locations
 		
 		$locations = $this->getCompanyLocations($id,$segment,$company);
-<<<<<<< Updated upstream
-		
-		
-=======
->>>>>>> Stashed changes
+
 		$states = $this->getStatesInArray($locations);
 		$segments = $this->getCompanySegments($company);
 		$filters = $this->searchfilter->vertical();

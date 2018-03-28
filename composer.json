@@ -7,7 +7,6 @@
     "require": {
         "php": ">=5.6.4",
         "algolia/algoliasearch-client-php": "^1.18",
-        "barryvdh/laravel-debugbar": "^2.3",
         "baum/baum": "~1.1",
         "bugsnag/bugsnag-laravel": "^2.0",
         "dionera/laravel-beanstalkd-ui": "^0.3.3",
@@ -16,7 +15,7 @@
         "fabpot/goutte": "^3.1",
         "guzzlehttp/guzzle": "~5.3|~6.0",
         "jeroendesloovere/vcard": "^1.5",
-        "laravel/framework": "5.5.*",
+        "laravel/framework": "5.6.*",
         "laravel/scout": "^3.0",
         "laravel/tinker": "~1.0",
         "laravelcollective/html": "^5.3.0",
@@ -31,6 +30,7 @@
         "h4cc/wkhtmltopdf-amd64": "0.12.x"
     },
     "require-dev": {
+        "barryvdh/laravel-debugbar": "^3.1",
         "fzaninotto/faker": "~1.4",
         "laracasts/generators": "dev-master",
         "mockery/mockery": "0.9.*"

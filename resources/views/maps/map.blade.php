@@ -32,7 +32,9 @@
             'defaultLoc': true, 
             'defaultLat': '{{$data['lat']}}', 
             'defaultLng' : '{{$data['lng']}}', 
-            'dataLocation' : '{{URL::to($data['urllocation'] . '/'. $data['distance'].'/'.$data['latlng'].'/'.$company->id)}}','zoomLevel':{{$data['zoomLevel']}}, 'infowindowTemplatePath' : '{{asset('maps/templates/infowindow-description.html')}}','listTemplatePath' : '{{asset('maps/templates/location-list-description.html')}}'} );
+            'dataLocation' : '{{URL::to($data['datalocation'])}}',
+            'zoomLevel':{{$data['zoomLevel']}}, 
+            'infowindowTemplatePath' : '{{asset('maps/templates/infowindow-description.html')}}','listTemplatePath' : '{{asset('maps/templates/location-list-description.html')}}'} );
 		  $(function() {
         $('#cp2').colorpicker();
       });
