@@ -118,13 +118,17 @@
     								<span class="glyphicon glyphicon-user"></span> {{ucfirst(strtolower( Auth::user()->person->firstname ))}}	<span class="caret"></span>
     							</a>
     							<ul class="dropdown-menu">
-    								<li><a href="{{{ route('profile') }}}">
-                                    <i class="fa fa-user" aria-hidden="true"> </i> Your Profile</a></li>
-                                    @if(Auth::user()->hasRole('Admin'))
-
-                                    
-                                    <li><a href="{{route('about')}}"><i class="fa fa-info-circle" aria-hidden="true"> </i>  About Mapminer</a></li>
-                                    @endif
+    								<li>
+                                        <a href="{{{ route('profile') }}}">
+                                            <i class="fa fa-user" aria-hidden="true"> </i> Your Profile
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{route('about')}}">
+                                            <i class="fa fa-info-circle" aria-hidden="true"> </i>  About Mapminer
+                                        </a>
+                                    </li>
+                                
     								<li class="divider"></li>
     								<li>
                                         <a href="{{ route('logout') }}" 
