@@ -271,7 +271,7 @@ class CompaniesController extends BaseController {
 					$location->lng =  $position[1];
 					
 				}else{
-					//else use corporate hq
+					//else use corporate hq Tacoma
 					$location->lat =  '47.25';
 					$location->lng =  '-122.44';
 				}

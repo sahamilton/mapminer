@@ -353,7 +353,7 @@ class CompaniesServiceController extends BaseController
 					$location->lat =  $position[0];
 					$location->lng =  $position[1];
 				}else{
-					// Corporate HQ as center
+					// Corporate HQ as center Tacoma
 					$location->lat =  '47.25';
 					$location->lng =  '-122.44';
 

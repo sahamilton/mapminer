@@ -73,14 +73,20 @@ class PersonsController extends BaseController {
 		$filtered = $this->persons->isFiltered(['companies'],['vertical']);
 
 		if (\Session::has('geo'))
+			// user has set their location
 		{
 			$latLng = \Session::get('geo');
-
 			$mylocation['lat']= $latLng['lat'];
 			$mylocation['lng']= $latLng['lng'];
+		}elseif(auth()->user()->position()){
+			// user has a default location
+			$position = explode(",",auth()->user()->position());
+			$mylocation['lat'] =  $position[0];
+			$mylocation['lng'] =  $position[1];
 		}else{
-			$mylocation['lat']= 37;
-			$mylocation['lng']= -100;
+			// default to center of the US
+			$mylocation['lat']= 39.8282;
+			$mylocation['lng']= -98.5696;
 
 		}
 		$colors = $this->getColors($filtered);
