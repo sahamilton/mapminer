@@ -265,22 +265,24 @@ class CompaniesController extends BaseController {
 					$location->lat = $geo['lat'];
 					$location->lng = $geo['lng'];
 				}elseif(auth()->user()->position()){
-					$postion = explode(",",auth()->user()->position());
+					$position = explode(",",auth()->user()->position());
+					
 					$location->lat =  $position[0];
 					$location->lng =  $position[1];
+					
 				}else{
 					//else use corporate hq
 					$location->lat =  '47.25';
 					$location->lng =  '-122.44';
 				}
 
-
+				//dd($location);
 		$locations = $this->locations
 		->where('company_id','=',$company->id)
 		->nearby($location,'1000')
 		->limit($this->limit)
 		->get();
-
+		
 
 		}
 

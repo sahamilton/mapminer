@@ -85,6 +85,7 @@ class User extends Authenticatable
                 ->select('lat','lng')
                 ->whereNotNull('lat')
                 ->first();
+        
         if($position){
                 return implode(",",$position->toArray());
         }
