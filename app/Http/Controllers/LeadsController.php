@@ -22,9 +22,9 @@ class LeadsController extends BaseController
     public $leadsource;
     public $vertical;
     public $leadstatus;
-    public $assignTo; 
+    public $assignTo;
     public $salesroles = [5,6,7,8];
-    public function __construct(Person $person, 
+    public function __construct(Person $person,
                                 Lead $lead,
                                 LeadSource $leadsource,
                                 SearchFilter $vertical,
@@ -43,25 +43,21 @@ class LeadsController extends BaseController
      * @return \Illuminate\Http\Response
      */
     public function index($vertical = null)
-    {   
+    {
 
         $statuses = $this->leadstatus->pluck('status','id')->toArray();
         $query = $this->lead->query();
 
-        $query = $query->with('salesteam','leadsource','ownedBy')
-        ->wherehas('leadsource',function($q){
-            $q->where('datefrom','<=',date('Y-m-d'))
-                ->where('dateto','>=',date('Y-m-d'));
-        });
-            // I dont think this works now     
+        $query = $query->with('salesteam','leadsource','ownedBy');
+            // I dont think this works now
         if($vertical){
           $query = $query->whereHas('leadsource.verticals',function ($q) use($vertical){
               $q->whereIn('searchfilter_id',[$vertical]);
           });
         }
         $leads = $query->get();
+
         $sources = $this->leadsource->pluck('source','id')->toArray();
-     
         $salesteams = $this->person->whereHas('salesleads')->with('salesleads')->get();
 
         return response()->view('leads.index',compact('leads','statuses','sources','salesteams'));
@@ -77,10 +73,10 @@ class LeadsController extends BaseController
         dd($salesreps);
         return $this->person->with('userdetails','industryfocus','reportsTo','salesleads')
            ->whereIn('id',$salesreps)
-           
+
        ->get();
     }
-   
+
 
     public function show($id)
     {
@@ -108,12 +104,12 @@ class LeadsController extends BaseController
               })
               ->limit(5)
               ->get();
-          
+
         }
 
         return response()->view('leads.show',compact('lead','sources','rank','people','branches'));
-        
-        
+
+
     }
 
     /**
@@ -128,7 +124,7 @@ class LeadsController extends BaseController
         $lead = $this->lead->with('vertical')->findOrFail($id);
         $verticals = $this->vertical->vertical();
         $sources = $this->leadsource->pluck('source','id');
-  
+
         return response()->view('leads.edit',compact('lead','sources','verticals'));
     }
 
@@ -196,24 +192,24 @@ class LeadsController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-   
+
     public function getPersonsLeads($id){
 
-      
+
         $statuses = $this->leadstatus->pluck('status','id')->toArray();
         $leads = $this->person->with('salesleads','salesleads.vertical','salesleads.leadsource')
-        
+
         ->whereHas('salesleads.leadsource', function ($q) {
             $q->where('datefrom','<=',date('Y-m-d'))
              ->where('dateto','>=',date('Y-m-d'));
         })
         ->findOrFail($id);
-      
+
 
         return response()->view('leads.person',compact('leads','statuses'));
     }
 
-    
+
 
     public function getPersonSourceLeads($pid,$sid){
         $statuses = $this->leadstatus->pluck('status','id')->toArray();
@@ -232,7 +228,7 @@ class LeadsController extends BaseController
 
     public function find(LeadAddressFormRequest $request){
 
-    
+
       $geoCode = app('geocoder')->geocode($request->get('address'))->get();
 
       if(! $geoCode or count($geoCode)==0)
@@ -242,7 +238,7 @@ class LeadsController extends BaseController
       }else{
         $request->merge($this->lead->getGeoCode($geoCode));
       }
-      
+
       $data = $request->all();
       // Kludge to address the issue of different data in Session::geo
       if(! $request->has('number')){
@@ -253,9 +249,9 @@ class LeadsController extends BaseController
       $people = $this->getIndustryAssociation($people);
 
       return response()->view('leads.address',compact('people','data'));
-			
+
     }
-    
+
     /**
      * Find nearby sales people.
      *
@@ -264,7 +260,7 @@ class LeadsController extends BaseController
      */
 
     private function findNearBy($data){
-        
+
         $location = new Lead;
         $location->lat = $data['lat'];
         $location->lng = $data['lng'];
@@ -275,7 +271,7 @@ class LeadsController extends BaseController
         $persons =  $this->person->whereHas('userdetails.roles',function ($q) use($salesroles){
           $q->whereIn('roles.id',$salesroles);
         });
-        
+
 
 
         if(isset($data['verticals'])){
@@ -284,14 +280,14 @@ class LeadsController extends BaseController
               });
         }
         $persons->nearby($location,$data['distance']);
-        
+
 
        if (isset($data['number'])){
             $persons->limit($data['number']);
         }
 
       return $persons->get();
-    
+
     }
 
     private function createNewSource($request){
@@ -300,7 +296,7 @@ class LeadsController extends BaseController
             'dateto'=>Carbon::createFromFormat('m/d/Y',$request->get('dateto')),
             'user_id'=>auth()->user()->id,
             'filename'=>$request->get('filename')]);
-    
+
         $request->merge(['lead_source_id'=>$source->id]);
         return $request;
     }
@@ -311,7 +307,7 @@ class LeadsController extends BaseController
             $rep = Person::find($person->id);
             $people[$key]->industry = $rep->industryfocus()->pluck('filter','searchfilters.id')->toArray();
         }
-       
+
         return $people;
     }
 
@@ -321,7 +317,7 @@ class LeadsController extends BaseController
     }else{
         $type = 'xlsx';
     }
-    
+
     Excel::create('Prospects'.time(),function($excel) {
             $excel->sheet('Prospects',function($sheet) {
                 $leads = $this->person->where('user_id','=',auth()->user()->id)
@@ -331,5 +327,5 @@ class LeadsController extends BaseController
         })->download($type);
     }
 
-    
+
 }
