@@ -42,11 +42,11 @@ $(document).ready(function()
     $( "#fromdatepicker" ).datepicker({ altField : "#fromdate",
     altFormat: "yyyy-mm-dd"});
    
-	$([id^=sorttable]).DataTable();
+	$("[id^=sorttable]").DataTable();
 	
 	
 
-	$([id^=sorttablenosort]).DataTable(
+	$("[id^=nosorttable]").DataTable(
 		{
 
 			"bPaginate": false,
