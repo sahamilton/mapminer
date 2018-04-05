@@ -134,7 +134,7 @@ class CompaniesController extends BaseController {
 		$filters = $this->getFilters();
 		$servicelines = Serviceline::whereIn('id',$this->userServiceLines)
 			->pluck('ServiceLine','id');
-
+			
 		return response()->view('companies.create',compact('managers','filters','servicelines'));
 	}
 

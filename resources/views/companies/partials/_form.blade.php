@@ -30,7 +30,7 @@
 
 
 <!-- Serviceline -->
-
+@if(count($servicelines)>1)
         <div class="form-group{{ $errors->has('serviceline)') ? ' has-error' : '' }}">
         <label class="col-md-2 control-label">Service Lines:</label>
         <div class="input-group input-group-lg ">
@@ -48,4 +48,8 @@
                 </span>
         </div>
     </div>
+@else
+<input type="hidden" name="serviceline[]" value="{{key($servicelines->toArray())}}" />
+
+@endif
     @include('partials._verticalsscript') 
