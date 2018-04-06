@@ -309,7 +309,7 @@ class CompaniesController extends BaseController {
 
 
 		if($filtered && count($keys)>0) {
-
+			
 			 $locations = $locations
 
 				 ->whereIn('segment', $keys)
@@ -319,7 +319,7 @@ class CompaniesController extends BaseController {
 				});
 
 		}
-
+		
 		 return $locations->orderBy('state')->get();
 
 	}

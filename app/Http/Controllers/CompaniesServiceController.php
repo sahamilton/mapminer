@@ -322,7 +322,10 @@ class CompaniesServiceController extends BaseController
 		$data = array();
 		
 		foreach ($locations as $location){
+
 			$data['salesteam'][$location->id]=$location->nearbySalesRep($servicelines)->get();
+			
+
 			$data['branches'][$location->id]=$location->nearbyBranches()->get();
 
 		}
