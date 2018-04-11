@@ -66,10 +66,6 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::resource('company', 'CompaniesController',['only' => ['index', 'show']]);
 
 
-
-
-
-
 	# Contacts
 		Route::get('contacts/{id}/vcard',['as'=>'contacts.vcard','uses'=>'LocationContactController@vcard']);
 		Route::resource('contacts','LocationContactController');
