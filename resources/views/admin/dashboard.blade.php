@@ -1,32 +1,34 @@
 @extends('admin.layouts.default')
 
-<?php 
+@php
 $labels =null;
-$cumulative = array();?>
+$cumulative = array();
+@endphp
 
 @foreach ($data['logins'] as $element)
   @if($loop->first || $loop->index % 3 === 0)
 	
  	<?php 	$labels.= "'" .$element->firstlogin. "',";?>
 	@else
-<?php   $labels.= "'',";?>
+@php   $labels.= "'',";@endphp
   @endif
 	 @if(! $loop->first)
    		 <?php $cumulative[]=$element->logins + $cumulative[$loop->index -1];?>
    
 	 @else
-		 <?php $cumulative[]=$element->logins;?>
+		 @php
+     $cumulative[]=$element->logins;
+     @endphp
     @endif
 @endforeach
-<?php $labels = substr($labels,0,-1);
+@php
+$labels = substr($labels,0,-1);
 //$values = substr($values,0,-1);
 
 $total = implode(",",$cumulative);
-
-$labelstring ="'" .implode("','",array_keys($data['status']->keyBy('status')->toArray()))."'";
-
-$datastring =implode(",",array_keys($data['status']->keyBy('count')->toArray()));
-?>
+$datastring =implode(",",$data['status']->pluck('count')->toArray());
+$labelstring ="'".implode(",",$data['status']->pluck('status')->toArray())."'";
+@endphp
 
 {{-- Content --}}
 

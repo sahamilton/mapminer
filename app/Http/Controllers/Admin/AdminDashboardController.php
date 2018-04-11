@@ -105,13 +105,13 @@ class AdminDashboardController extends BaseController {
 
 			['label'=>'Yesterday',
 			'value'=>1,
-			 'interval'=>['from'=>Carbon::today()->subDay(2),
-			                  'to'=>Carbon::today()->subDay()],
+			 'interval'=>['from'=>Carbon::today()->subDay(),
+			                  'to'=>Carbon::today()],
 			  'color'=>$colors[1],],
 			['label'=>'Last Week',
 			'value'=>2,
 			'interval'=>['from'=>Carbon::today()->subWeek(),
-					         'to'=>Carbon::today()->subDay(2)],
+					         'to'=>Carbon::today()->subDay()],
 			 'color'=>$colors[2],],
 
 			['label'=>'Last Month',
