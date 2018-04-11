@@ -8,26 +8,29 @@ $cumulative = array();
 @foreach ($data['logins'] as $element)
   @if($loop->first || $loop->index % 3 === 0)
 	
- 	<?php 	$labels.= "'" .$element->firstlogin. "',";?>
+ 	@php	
+    $labels.= "'" .$element->firstlogin. "',";
+  @endphp
+
 	@else
-@php   $labels.= "'',";@endphp
+    @php   $labels.= "'',";@endphp
   @endif
 	 @if(! $loop->first)
    		 <?php $cumulative[]=$element->logins + $cumulative[$loop->index -1];?>
    
 	 @else
 		 @php
-     $cumulative[]=$element->logins;
+      $cumulative[]=$element->logins;
      @endphp
     @endif
 @endforeach
 @php
-$labels = substr($labels,0,-1);
+  $labels = substr($labels,0,-1);
 //$values = substr($values,0,-1);
 
-$total = implode(",",$cumulative);
-$datastring =implode(",",$data['status']->pluck('count')->toArray());
-$labelstring ="'".implode("','",$data['status']->pluck('status')->toArray())."'";
+  $total = implode(",",$cumulative);
+  $datastring =implode(",",$data['status']->pluck('count')->toArray());
+  $labelstring ="'".implode("','",$data['status']->pluck('status')->toArray())."'";
 @endphp
 
 {{-- Content --}}

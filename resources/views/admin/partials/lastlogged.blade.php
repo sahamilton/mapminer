@@ -24,8 +24,10 @@ style = "width:400;float:left;border:1px solid #000;margin:20px;padding:20px;">
 				</a> 
 			</td>
 			<td style="text-align:right">{{$status->count}}</td>
-				<?php $cum = $cum + $status->count;
-			$n++;?>
+				@php
+					$cum = $cum + $status->count;
+					$n++;
+				@endphp
 			<td style="text-align:right">{{$cum}}</td>
 		</tr>
 	@endforeach
