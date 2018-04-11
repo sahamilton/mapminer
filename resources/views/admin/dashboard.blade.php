@@ -27,7 +27,7 @@ $labels = substr($labels,0,-1);
 
 $total = implode(",",$cumulative);
 $datastring =implode(",",$data['status']->pluck('count')->toArray());
-$labelstring ="'".implode(",",$data['status']->pluck('status')->toArray())."'";
+$labelstring ="'".implode("','",$data['status']->pluck('status')->toArray())."'";
 @endphp
 
 {{-- Content --}}
