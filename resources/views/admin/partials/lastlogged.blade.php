@@ -20,7 +20,7 @@ style = "width:400;float:left;border:1px solid #000;margin:20px;padding:20px;">
 			</td>
 			<td>
 				<a href="{{route('admin.showlogins',substr($status->status,0,1) - 1)}}" 
-					title="list these users">{{$status->status}}
+					title="List {{trim(strtolower(substr($status->status,3)))}}'s users">{{$status->status}}
 				</a> 
 			</td>
 			<td style="text-align:right">{{$status->count}}</td>
