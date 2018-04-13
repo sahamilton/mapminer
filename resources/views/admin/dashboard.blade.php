@@ -7,31 +7,35 @@ $cumulative = array();
 
 @foreach ($data['logins'] as $element)
   @if($loop->first || $loop->index % 3 === 0)
-	
- 	@php	
+  
+  @php  
     $labels.= "'" .$element->firstlogin. "',";
   @endphp
 
-	@else
+  @else
     @php   $labels.= "'',";@endphp
   @endif
-	 @if(! $loop->first)
-   		 <?php $cumulative[]=$element->logins + $cumulative[$loop->index -1];?>
+   @if(! $loop->first)
+      @php 
+        $cumulative[]=$element->logins + $cumulative[$loop->index -1];
+      @endphp
    
-	 @else
-		 @php
+   @else
+     @php
       $cumulative[]=$element->logins;
      @endphp
     @endif
 @endforeach
 @php
   $labels = substr($labels,0,-1);
-//$values = substr($values,0,-1);
-
   $total = implode(",",$cumulative);
   $datastring =implode(",",$data['status']->pluck('count')->toArray());
   $labelstring ="'".implode("','",$data['status']->pluck('status')->toArray())."'";
+  $weekdata =implode(",",$data['weekcount']->pluck('login')->toArray());
+  $weeklabels ="'".implode("','",$data['weekcount']->pluck('week')->toArray())."'";
+  
 @endphp
+
 
 {{-- Content --}}
 
@@ -51,7 +55,7 @@ $cumulative = array();
       	@include ('admin.partials.firstlogged')
 
 		    @include ('admin.partials.lastlogged')
-
+        @include('admin.partials.weeklylogins')
         @include('admin.partials.firsttimers')
     </div>
     <div id="menu1" class="tab-pane fade">
@@ -108,6 +112,38 @@ var barChart = new Chart(ctx,
         }]
     }
 });
+
+
+var ctx = document.getElementById("weekChart").getContext("2d");
+
+var weekChart = new Chart(ctx, 
+{
+    type: 'bar',
+    data:{
+      labels: [{!! $weeklabels !!}],
+
+      datasets: [
+          
+          {
+              label: "Weekly Logins",
+
+              backgroundColor: ["#ff0000"],
+              data:[{!!$weekdata!!}],
+              borderWidth: 1,
+              fill:true,
+          }
+      ]
+    },
+},options = {
+    scales: {
+        xAxes: [{
+            gridLines: {
+                offsetGridLines: true
+            }
+        }]
+    }
+});
+
 
 new Chart(document.getElementById("pieChart"), {
     type: 'doughnut',

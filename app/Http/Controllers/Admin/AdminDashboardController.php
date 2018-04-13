@@ -46,6 +46,8 @@ class AdminDashboardController extends BaseController {
 		$data['logins'] = $this->getLogins();
 		$data['status'] = $this->getLastLogins();
 		$data['firsttimers'] = $this->getFirstTimers();
+		$data['weekcount'] = $this->getWeekLoginCount();
+	
 		
 		$data['watchlists'] = $this->getWatchListCount();
 		//dd($data['watchlists']->first());
@@ -234,6 +236,20 @@ class AdminDashboardController extends BaseController {
 				where lastactivity > '".$from ."'";
 
 		return \DB::select( \DB::raw($query));
+	}
+
+	private function getWeekLoginCount(){
+		return $this->track
+			->select (
+	         \DB::raw("count(user_id) as login,
+	         	CONCAT_WS('/',YEAR(lastactivity), 
+	         	WEEK(lastactivity)) as week"))
+			->whereNotNull('lastactivity')
+			->where('lastactivity','>','2017-01-01')
+	       ->groupBy('week')
+			->orderBy('week')
+			->get();
+    
 	}
 
 	/**
