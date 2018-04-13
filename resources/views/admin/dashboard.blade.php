@@ -126,8 +126,7 @@ var weekChart = new Chart(ctx,
           
           {
               label: "Weekly Logins",
-
-              backgroundColor: ["#ff0000"],
+              backgroundColor: ["#3e95cd"],
               data:[{!!$weekdata!!}],
               borderWidth: 1,
               fill:true,

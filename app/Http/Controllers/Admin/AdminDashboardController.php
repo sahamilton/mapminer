@@ -246,6 +246,8 @@ class AdminDashboardController extends BaseController {
 	         	WEEK(lastactivity)) as week"))
 			->whereNotNull('lastactivity')
 			->where('lastactivity','>','2017-01-01')
+			->whereRaw("CONCAT_WS('/',YEAR(lastactivity), 
+				         	WEEK(lastactivity)) != '2017/26'")
 	       ->groupBy('week')
 			->orderBy('week')
 			->get();
