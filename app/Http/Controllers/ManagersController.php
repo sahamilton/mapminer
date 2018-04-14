@@ -152,7 +152,7 @@ class ManagersController extends BaseController {
 		$this->checkManager($companyID);
 		$notes = $this->getManagerNotes($companyID);
 
-		$data['title'] = $notes[0]->relatesTo->company->companyname . ' Location Notes';
+		$data['title'] = $notes[0]->relatesToLocation->company->companyname . ' Location Notes';
 
 		return response()->view('managers.managernotes', compact('data','notes','companyID'));
 		
@@ -188,10 +188,10 @@ class ManagersController extends BaseController {
 			// refactor
 		return \App\Note::where('type','=','location')
 		
-		->whereHas('relatesTo',function($q) use($companyID){
+		->whereHas('relatesToLocation',function($q) use($companyID){
 			$q->where('company_id','=',$companyID);
 		})
-		->with('relatesTo','relatesTo.company','writtenBy')
+		->with('relatesToLocation','relatesToLocation.company','writtenBy')
 		->get();
 
 	}

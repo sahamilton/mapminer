@@ -16,7 +16,7 @@
                        
                         <li class="dropdown{{ (Request::is('admin/company*','admin/locations*') ? ' class="active"' : '') }}">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="{{ route('company.index') }}">
-							<span class="glyphicon glyphicon-wrench"></span> Data Management<span class="caret"></span>
+							<i class="fa fa-wrench" aria-hidden="true"></i> Data Management<span class="caret"></span>
 						</a> 
                         
 						<ul class="dropdown-menu multi-level">
@@ -27,7 +27,7 @@
                                 <ul class="dropdown-menu">
         							<li{{ (Request::is('company*') ? ' class="active"' : '') }}>
                                     <a href="{{ route('company.index') }}">
-                                    <span class="glyphicon glyphicon-wrench"></span>  Manage Accounts</a>
+                                    <i class="fa fa-wrench" aria-hidden="true"></i>  Manage Accounts</a>
                                     </li>
                                     <li{{ (Request::is('admin/locations*') ? ' class="active"' : '') }}>
                                     <a href="{{ route('locations.index') }}">
@@ -40,28 +40,28 @@
                                     
                                      <li{{ (Request::is('admin/companies/export') ? ' class="active"' : '') }}>
                                      <a href="{{ route('companies.locationsexport') }}">
-                                     <span class="glyphicon glyphicon-export"></span> Export Locations</a></li>
+                                     <i class="fa fa-cloud-download" aria-hidden="true"></i> Export Locations</a></li>
                                     
                                     <li class="divider"></li>
                                     
                                     <li{{ (Request::is('serviceline*') ? ' class="active"' : '') }}>
                                     <a href="{{ route('serviceline.index') }}">
-                                    <span class="glyphicon glyphicon-wrench"></span>  Manage Service Lines</a>
+                                    <i class="fa fa-wrench" aria-hidden="true"></i>  Manage Service Lines</a>
                                     </li>
                                     <li{{ (Request::is('admin/searchfilters*') ? ' class="active"' : '') }}>
                                     <a href="{{ route('searchfilters.index') }}">
-                                    <span class="glyphicon glyphicon-filter"></span> Manage Filters</a>
+                                    <i class="fa fa-filter" aria-hidden="true"></i> Manage Filters</a>
                                     </li> 
                                    
                                     <li class="divider"></li>
                                     
                                     <li{{ (Request::is('admin/salesnote*') ? ' class="active"' : '') }}>
                                     <a href="{{ route('salesnotes.index') }}">
-                                    <span class="glyphicon glyphicon-wrench"></span>  Manage Salesnotes</a>
+                                    <i class="fa fa-wrench" aria-hidden="true"></i>  Manage Salesnotes</a>
                                     </li>
                                      <li{{ (Request::is('admin/locationnotes*') ? ' class="active"' : '') }}>
                                     <a href="{{ route('locations.notes') }}">
-                                    <span class="glyphicon glyphicon-import"></span> Review / Manage Location Notes</a>
+                                    <i class="fa fa-upload" aria-hidden="true"></i> Review / Manage Location Notes</a>
                                     </li>
                                     
                                  </ul> 
@@ -82,7 +82,7 @@
 
                                 <li{{ (Request::is('branches*') ? ' class="active"' : '') }}>
                                     <a href="{{ route('branches.index') }}">
-                                    <span class="glyphicon glyphicon-wrench"></span>  Manage Branches
+                                    <i class="fa fa-wrench" aria-hidden="true"></i>  Manage Branches
                                     </a>
                                  </li>
 
@@ -108,10 +108,10 @@
 
 
                                 <li{{ (Request::is('admin/users*') ? ' class="active"' : '') }}><a href="{{ route('users.index') }}">
-                                <span class="glyphicon glyphicon-user"></span> Users</a></li>
+                                <i class="fa fa-user" aria-hidden="true"></i> Users</a></li>
                                 <li{{ (Request::is('admin/roles*') ? ' class="active"' : '') }}><a href="{{ route('roles.index') }}">
-                                <span class="glyphicon glyphicon-wrench"></span> Roles</a></li>
-                                <li{{ (Request::is('admin/permissions*') ? ' class="active"' : '') }}><a href="{{ route('permissions.index') }}"><span class="glyphicon glyphicon-check"></span> Permissions</a></li>
+                                <i class="fa fa-wrench" aria-hidden="true"></i> Roles</a></li>
+                                <li{{ (Request::is('admin/permissions*') ? ' class="active"' : '') }}><a href="{{ route('permissions.index') }}"><i class="fa fa-check" aria-hidden="true"></i> Permissions</a></li>
 
 
                                 <li{{ (Request::is('admin/users/export') ? ' class="active"' : '') }}><a href="{{ route('person.export') }}">
@@ -131,7 +131,7 @@
           <!-- Manage Resources  -->      
             <li class="dropdown{{ (Request::is('admin/lead*','admin/document*','admin/search*','admin/projects*') ? ' active' : '') }}">
                 <a class="dropdown" data-toggle="dropdown" href="{{ route('users.index') }}">
-                    <span class="glyphicon glyphicon-wrench"></span> 
+                    <i class="fa fa-wrench" aria-hidden="true"></i> 
                      Resources 
                     <span class="caret"></span>
                 </a>
@@ -179,7 +179,7 @@
                         
                         <li class="dropdown">
                                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                    <span class="glyphicon glyphicon-user"></span> {{ucfirst(strtolower( auth()->user()->person->firstname ))}}  <span class="caret"></span>
+                                    <i class="fa fa-user" aria-hidden="true"></i> {{ucfirst(strtolower( auth()->user()->person->firstname ))}}  <span class="caret"></span>
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li>

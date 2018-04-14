@@ -61,7 +61,7 @@
 		title='See nearby branches'>Other Nearby Branches</a></p>
 		<a href="{{route('locations.edit',$location->id)}}" 
 		title="Edit this location">
-		<i class="glyphicon glyphicon-pencil"></i>Edit location</a>
+		<i class="fa fa-pencil" aria-hidden="true"></i>Edit location</a>
 		<hr />
 	</div>
 	 <div id="map" style="height:300px;width:500px;border:red solid 1px">

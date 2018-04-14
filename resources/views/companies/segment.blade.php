@@ -21,7 +21,9 @@ $data['companyname']=$company->companyname;
 @include('partials.advancedsearch')
 @if(auth()->user()->hasRole('Admin'))
 <div class="pull-right">
-				<a href="{{{ route('locations.create') }}}" class="btn btn-small btn-info iframe"><span class="glyphicon glyphicon-plus-sign"></span> Create</a>
+				<a href="{{{ route('locations.create') }}}" class="btn btn-small btn-info iframe">
+<i class="fa fa-plus-circle text-success" aria-hidden="true"></i>
+ Create</a>
 			</div>
 			@endif
 <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>

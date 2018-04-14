@@ -67,23 +67,23 @@
                         @if (Auth::user()->hasRole('Admin'))
                          <li class="dropdown{{ (Request::is('admin/users*|admin/roles*') ? ' active' : '') }}">
     						<a class="dropdown-toggle" data-toggle="dropdown" href="{{{ URL::to('admin/users') }}}">
-    							<span class="glyphicon glyphicon-user"></span> Users <span class="caret"></span>
+    							<i class="fa fa-user" aria-hidden="true"></i> Users <span class="caret"></span>
     						</a>
     						<ul class="dropdown-menu">
-    							<li{{ (Request::is('admin/users*') ? ' class="active"' : '') }}><a href="{{{ URL::to('admin/users') }}}"><span class="glyphicon glyphicon-user"></span> Users</a></li>
-    							<li{{ (Request::is('admin/roles*') ? ' class="active"' : '') }}><a href="{{{ URL::to('admin/roles') }}}"><span class="glyphicon glyphicon-user"></span> Roles</a></li>
+    							<li{{ (Request::is('admin/users*') ? ' class="active"' : '') }}><a href="{{{ URL::to('admin/users') }}}"><i class="fa fa-user" aria-hidden="true"></i> Users</a></li>
+    							<li{{ (Request::is('admin/roles*') ? ' class="active"' : '') }}><a href="{{{ URL::to('admin/roles') }}}"><i class="fa fa-user" aria-hidden="true"></i> Roles</a></li>
     						</ul>
     					</li>
                         @endif
     					<li class="divider-vertical"></li>
     					<li class="dropdown">
     							<a class="dropdown-toggle" data-toggle="dropdown" href="#">
-    								<span class="glyphicon glyphicon-user"></span> {{{ Auth::user()->username }}}	<span class="caret"></span>
+    								<i class="fa fa-user" aria-hidden="true"></i> {{{ Auth::user()->username }}}	<span class="caret"></span>
     							</a>
     							<ul class="dropdown-menu">
-    								<li><a href="{{{ URL::to('user/settings') }}}"><span class="glyphicon glyphicon-wrench"></span> Profile</a></li>
+    								<li><a href="{{{ URL::to('user/settings') }}}"><i class="fa fa-wrench" aria-hidden="true"></i> Profile</a></li>
     								<li class="divider"></li>
-    								<li><a href="{{{ URL::to('user/logout') }}}"><span class="glyphicon glyphicon-share"></span> Logout</a></li>
+    								<li><a href="{{{ URL::to('user/logout') }}}"><i class="fa fa-share" aria-hidden="true"></i> Logout</a></li>
     							</ul>
     					</li>
     				</ul>

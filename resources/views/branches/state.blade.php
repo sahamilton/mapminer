@@ -6,7 +6,7 @@
 <?php $route='branches.state';?>
 @include('branches.partials._state')
 <p><a href="{{route('branches.showstatemap',$data['state'])}}">
-<i class="glyphicon glyphicon-flag"></i> Map view</a></p>
+<i class="fa fa-flag" aria-hidden="true"></i> Map view</a></p>
 <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
 	<thead>
 		<th>Branch</th>

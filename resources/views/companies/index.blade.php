@@ -15,7 +15,9 @@
 
 
 <div class="pull-right">
-<a href="{{ route('company.create') }}" class="btn btn-small btn-info iframe"><span class="glyphicon glyphicon-plus-sign"></span> Create New Account</a>
+<a href="{{ route('company.create') }}" class="btn btn-small btn-info iframe">
+<i class="fa fa-plus-circle text-success" aria-hidden="true"></i>
+ Create New Account</a>
 </div>
 @endif
 

@@ -7,7 +7,9 @@
 @if (Auth::user()->hasRole('Admin'))
 
 <div class="pull-right">
-				<a href="{{{ route('leadsource.create') }}}" class="btn btn-small btn-info iframe"><span class="glyphicon glyphicon-plus-sign"></span> Create New Prospect Source</a>
+				<a href="{{{ route('leadsource.create') }}}" class="btn btn-small btn-info iframe">
+<i class="fa fa-plus-circle text-success" aria-hidden="true"></i>
+ Create New Prospect Source</a>
 			</div>
 @endif
 
@@ -70,7 +72,7 @@
                 
                 <li>
                 <a href="{{route('leadsource.edit',$source->id)}}">
-                <i class="glyphicon glyphicon-pencil"></i>
+                <i class="fa fa-pencil" aria-hidden="true"></i>
                  Edit this prospect source
                  </a>
                  </li>
@@ -79,19 +81,19 @@
 
                 <li>
                 <a href="{{route('leadsource.addleads',$source->id)}}">
-                <i class="glyphicon glyphicon-plus"></i>
+                <i class="fa fa-plus text-success" aria-hidden="true"></i>
                  Add prospects to this source
                  </a>
                  </li>
                 <li>
                 <a href="{{route('leadsource.flushleads',$source->id)}}">
-                <i class="glyphicon glyphicon-minus"></i>
+                <i class="fa fa-minus-circle text-danger" aria-hidden="true"></i>
                  Flush all prospects from this source
                  </a>
                  </li>
                 <li>
                 <a href="{{route('leadsource.announce',$source->id)}}">
-                <i class="glyphicon glyphicon-envelope"></i> 
+                <i class="fa fa-envelope" aria-hidden="true"></i> 
                 Email sales team
                 </a>
                 </li>

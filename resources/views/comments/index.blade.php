@@ -4,7 +4,9 @@
 <h2>Feedback</h2>
 <div class="pull-right">
 <a href="{{{ Route('comment.create') }}}" class="btn btn-small btn-info iframe">
-<span class="glyphicon glyphicon-plus-sign"></span>Add Feedback</a>
+
+<i class="fa fa-plus-circle text-success" aria-hidden="true"></i>
+Add Feedback</a>
 </div>
 @if (Auth::user()->hasRole('Admin'))
 	<a href="{{route('comment.download')}}">Download feedback to Excel</a>

@@ -15,10 +15,10 @@ Locations Serviced By
 	Return to all locations of {{$company->companyname}}</a></p>
 	<p>
 @if(file_exists(storage_path('app/public/exports/'.strtolower(str_replace("'","",str_replace(" ", "_", $company->companyname))).".csv")))
- <a href="{{asset('/storage/exports/'.$company->companyname.'.csv')}}" target="_blank" title="Open service list as a CSV / Excel file"><i class="glyphicon glyphicon-cloud-download"></i> Open Service List</a>
-  <a href="{{route('company.service.export',[$company->id,$data['statecode']])}}" title="Reload service list as a CSV / Excel file"><i class="glyphicon glyphicon-refresh"></i></a>
+ <a href="{{asset('/storage/exports/'.$company->companyname.'.csv')}}" target="_blank" title="Open service list as a CSV / Excel file"><i class="fa fa-cloud-download" aria-hidden="true"></i></i> Open Service List</a>
+  <a href="{{route('company.service.export',[$company->id,$data['statecode']])}}" title="Reload service list as a CSV / Excel file"><i class="fa fa-refresh" aria-hidden="true"></i></a>
 @else
- <a href="{{route('company.service.export',[$company->id,$data['statecode']])}}" title="Download service list as a CSV / Excel file"><i class="glyphicon glyphicon-cloud-download"></i> Export this Service List</a>
+ <a href="{{route('company.service.export',[$company->id,$data['statecode']])}}" title="Download service list as a CSV / Excel file"><i class="fa fa-cloud-download" aria-hidden="true"></i></i> Export this Service List</a>
 @endif
 </p>
 @if(isset($company->managedBy->firstname))

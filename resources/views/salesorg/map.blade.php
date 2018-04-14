@@ -2,8 +2,8 @@
 @section('content')
 <h1>{{$salesorg->postName()}}</h1>
 <h4>{{$salesorg->userdetails->roles[0]->name}}</h4>
-<p><strong><span class="glyphicon glyphicon-phone-alt"> </span> Phone:</strong> {{$salesorg->phone}}</p>
-<p><strong><span class="glyphicon glyphicon-envelope"></span> Email:</strong> 
+<p><strong><i class="fa fa-phone" aria-hidden="true"></i> Phone:</strong> {{$salesorg->phone}}</p>
+<p><strong><i class="fa fa-envelope" aria-hidden="true"></i> Email:</strong> 
 <a href="mailto:{{$salesorg->userdetails->email}}" 
 title="Email {{$salesorg->postName()}}">
 {{$salesorg->userdetails->email}}</a></p>

@@ -7,5 +7,5 @@
     data-title="Add a new contact to {{$location->businessname}}" 
     href="#" 
     title="Add a new contact to {{$location->businessname}}">
-    <i class="fa fa-plus-circle" aria-hidden="true"></i> 
+     
 Add</a>

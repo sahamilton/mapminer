@@ -9,11 +9,12 @@
             @if (isset($company->notes))
             <tr class="success"> 
                 <td><a href="route('salesnotes',$company->id)}}">{{$company->companyname}}</a>  </td>
-                <td><span style="color:green" class="glyphicon glyphicon-ok"> </span></td></tr>
+                <td><i class="fa fa-check-circle text-success" aria-hidden="true"></i>
+</td></tr>
             @else
             <tr class='danger'>
                 <td>{{$company->companyname}}</td>
-                <td><span style="color:red" class="glyphicon glyphicon-remove"> </span>No 'How to Sell' Notes</td>
+                <td><i class="fa fa-minus-circle text-danger" aria-hidden="true"></i>No 'How to Sell' Notes</td>
             </tr>
             @endif
         @endforeach

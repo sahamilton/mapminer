@@ -22,7 +22,7 @@
                      @else
                         <li class="dropdown{{ (Request::is('company*','branch*' ,'person*','findme') ? ' active' : '') }}">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="{{{ route('findme') }}}">
-    							<span class="glyphicon glyphicon-search"></span> Search<span class="caret"></span>
+    							<i class="fa fa-search" aria-hidden="true"></i> Search<span class="caret"></span>
     						</a>
     						<ul class="dropdown-menu">
                             <li {{ (Request::is('findme') ? ' class="active"' : '') }}><a href="{{{ route('findme') }}}">
@@ -126,7 +126,7 @@
     					<li class="divider-vertical"></li>
     					<li class="dropdown">
     							<a class="dropdown-toggle" data-toggle="dropdown" href="#">
-    								<span class="glyphicon glyphicon-user"></span> {{ucfirst(strtolower( Auth::user()->person->firstname ))}}	<span class="caret"></span>
+    								<i class="fa fa-user" aria-hidden="true"></i> {{ucfirst(strtolower( Auth::user()->person->firstname ))}}	<span class="caret"></span>
     							</a>
     							<ul class="dropdown-menu">
     								<li>

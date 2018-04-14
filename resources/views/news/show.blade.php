@@ -41,13 +41,13 @@
 					
 					<p>{{ $comment->comment }}</p>
 
-				 <span class="glyphicon glyphicon-calendar"></span> <!--Sept 16th, 2012-->{{$comment->updated_at->format('M jS,Y')}}
+				 <i class="fa fa-calendar" aria-hidden="true"></i> <!--Sept 16th, 2012-->{{$comment->updated_at->format('M jS,Y')}}
 				
-	            <span class="glyphicon glyphicon-user"></span> by <span class="muted">{{ isset($comment->postedBy) ?  
+	            <i class="fa fa-user" aria-hidden="true"></i> by <span class="muted">{{ isset($comment->postedBy) ?  
 	            $comment->postedBy->person->postName() :'Anonymous' }}</span>
 
 	            @if($comment->user_id == auth()->user()->id  or auth()->user()->hasRole('Admin'))
-				<a href="{{route('comment.edit',$comment->id)}}" title="Edit this comment"><i class="glyphicon glyphicon-pencil"></i></a> | 
+				<a href="{{route('comment.edit',$comment->id)}}" title="Edit this comment"><i class="fa fa-pencil" aria-hidden="true"></i></a> | 
 				<a data-href="{{route('comment.destroy',$comment->id)}}" 
 		            data-toggle="modal" 
 		            data-target="#confirm-delete" 

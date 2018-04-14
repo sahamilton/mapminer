@@ -70,7 +70,7 @@
 					<li>
 						<a data-href="{{route('locations.destroy',$location->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = "{{$location->businessname}} and all associated notes" 
 						href="#">
-						<i class="glyphicon glyphicon-trash"></i> 
+						<i class="fa fa-trash" aria-hidden="true"></i>
 						Delete {{$location->businessname}}
 						</a>
 					</li>

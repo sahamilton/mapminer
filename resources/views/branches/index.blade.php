@@ -2,14 +2,16 @@
 @section('content')
 @if (auth()->user()->hasRole('Admin'))
 <div class="pull-right">
-<a href="{{{ route('branches.create') }}}" class="btn btn-small btn-info iframe"><span class="glyphicon glyphicon-plus-sign"></span> Create New Branch</a>	</div>
+<a href="{{{ route('branches.create') }}}" class="btn btn-small btn-info iframe">
+<i class="fa fa-plus-circle text-success" aria-hidden="true"></i>
+ Create New Branch</a>	</div>
 @endif
 
 <h1>All Branches</h1>
 
 
 <?php $route ='branches.state';?>
-<p><a href="{{route('branches.map')}}"><i class="glyphicon glyphicon-flag"> </i>Map View</a>
+<p><a href="{{route('branches.map')}}"><i class="fa fa-flag" aria-hidden="true"></i>Map View</a>
 @include('branches.partials._state')
 @include('maps.partials._form')
 <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>

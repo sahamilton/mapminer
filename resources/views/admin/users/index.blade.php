@@ -16,7 +16,9 @@
 			<div class="pull-right">
 
 				<a href="{{{ route('users.create') }}}" class="btn btn-small btn-info iframe">
-				<span class="glyphicon glyphicon-plus-sign"></span> Create</a>
+				
+<i class="fa fa-plus-circle text-success" aria-hidden="true"></i>
+ Create</a>
 
 			</div>
 		

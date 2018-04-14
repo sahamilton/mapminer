@@ -4,7 +4,9 @@
 <h2>All Emails</h2>
 
 <div class="pull-right">
-<a href="{{{ route('emails.create') }}}" class="btn btn-small btn-info iframe"><span class="glyphicon glyphicon-plus-sign"></span> Create New Email</a>
+<a href="{{{ route('emails.create') }}}" class="btn btn-small btn-info iframe">
+<i class="fa fa-plus-circle text-success" aria-hidden="true"></i>
+ Create New Email</a>
 </div>
 
 <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
@@ -44,10 +46,10 @@
 				<li>
 				@if(! $email->sent)
 					<a href="{{route('emails.edit',$email->id)}}" title="Edit this email">
-					<i class="glyphicon glyphicon-pencil"></i>
+					<i class="fa fa-pencil" aria-hidden="true"></i>
 					Edit this email</a>
 				@else
-					<a href="{{route('emails.clone',$email->id)}}" title="Clone this email"><i class="glyphicon glyphicon-refresh"></i>
+					<a href="{{route('emails.clone',$email->id)}}" title="Clone this email"><i class="fa fa-refresh" aria-hidden="true"></i>
 					Clone this email</a>
 				@endif
 				</li>

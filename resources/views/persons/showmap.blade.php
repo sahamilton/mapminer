@@ -5,7 +5,7 @@
 <p>{{$data['people']->userdetails->email}}</p>
 <p>
 <a href="{{route('person.show',$data['people']->id)}}">
-<i class="glyphicon glyphicon-th-list"></i> List View</a>
+<i class="fa fa-th-list" aria-hidden="true"></i> List View</a>
 </p>	
  <div id="store-locator-container">
 	<div id="map-container">

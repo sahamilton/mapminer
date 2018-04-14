@@ -3,7 +3,9 @@
 @if (Auth::user()->hasRole('Admin'))
 	<div class="pull-right">
 		<a href="{{{ route('branches.create') }}}" class="btn btn-small btn-info iframe">
-		<span class="glyphicon glyphicon-plus-sign"></span> Create New Branch!!</a>	
+		
+<i class="fa fa-plus-circle text-success" aria-hidden="true"></i>
+ Create New Branch!!</a>	
 	</div>
 @endif
 <h1>All {{$serviceline->ServiceLine}} Branches</h1>

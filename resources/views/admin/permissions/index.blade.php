@@ -12,7 +12,9 @@
 			Permission Management
 
 			<div class="pull-right">
-				<a href="{{{ route('permissions.create') }}}" class="btn btn-small btn-info iframe"><span class="glyphicon glyphicon-plus-sign"></span> Create New Permission</a>
+				<a href="{{{ route('permissions.create') }}}" class="btn btn-small btn-info iframe">
+<i class="fa fa-plus-circle text-success" aria-hidden="true"></i>
+ Create New Permission</a>
 			</div>
 		</h3>
 	</div>
