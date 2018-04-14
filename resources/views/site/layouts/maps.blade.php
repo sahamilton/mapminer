@@ -25,6 +25,7 @@
         <link rel="stylesheet" href="{{asset('assets/css/prmapminer.css')}}">
         <link rel="stylesheet" type="text/css" href="{{asset('maps/css/map.css')}}">
 	<link rel="stylesheet" href="{{asset('assets/css/bootstrap-colorpicker.min.css')}}">
+	 <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-1.10.1.min.js"></script>
     <script src="{{asset('maps/js/handlebars-1.0.0.min.js')}}"></script>
     <script src="https://maps.google.com/maps/api/js?key={{config('maps.api_key')}}"></script>
