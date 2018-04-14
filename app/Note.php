@@ -26,6 +26,10 @@ class Note extends Model {
 		{
 			return $this->belongsTo(Lead::class,'related_id');
 		}
+	public function relatesToProspect() 
+		{
+			return $this->belongsTo(Lead::class,'related_id');
+		}
 	public function relatesToProject() 
 		{
 			return $this->belongsTo(Project::class,'related_id');

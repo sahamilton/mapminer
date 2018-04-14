@@ -483,9 +483,10 @@ class AdminDashboardController extends BaseController {
 
 	{
 		return Note::where('created_at', '>=', \Carbon\Carbon::now()->subMonth())
-		->whereHas('relatesToLocation')
+		->where('type','=','location')
+		->whereHas('relatesTo')
 		->whereNotNull('related_id')
-		->with(['writtenBy','relatesToLocation','relatesToLocation.company','writtenBy.person'])
+		->with(['writtenBy','relatesTo','relatesTo.company','writtenBy.person'])
 		->get();
 
 
@@ -496,6 +497,7 @@ class AdminDashboardController extends BaseController {
 
 	{
 		return Note::where('created_at', '>=', \Carbon\Carbon::now()->subMonth())
+		->whereIn('type',['lead','prospect'])
 		->whereHas('relatesToLead')
 		->whereNotNull('related_id')
 		->with(['writtenBy','relatesToLead','writtenBy.person'])
@@ -508,6 +510,7 @@ class AdminDashboardController extends BaseController {
 
 	{
 		return Note::where('created_at', '>=', \Carbon\Carbon::now()->subMonth())
+		->where('type','=','project')
 		->whereHas('relatesToProject')
 		->whereNotNull('related_id')
 		->with(['writtenBy','relatesToProject','writtenBy.person'])

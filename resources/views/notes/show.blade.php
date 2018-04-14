@@ -1,37 +1,61 @@
 @extends('site/layouts/default')
 @section('content')
-<h2>My Location Notes</h2>
 
 <p><a href="{{route('watch.index')}}" title="Review my watch list"><i class="glyphicon glyphicon-th-list"></i> View My Watch List</a></p>
+@foreach ($types as $key=>$type)
+<div class="row">
+	<div class="col-md-8 col-md-offset-2">
+<h2>My {{ucwords($type)}} Notes</h2>
 
-<table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
+
+
+<table id ='sorttable{{$key}}' class='table table-striped table-bordered table-condensed table-hover'>
 	<thead>
 		<th>Created</th>
 		<th>Business Name</th>
 		<th>Note</th>
 	</thead>
 	<tbody>
-		@foreach($notes as $note)
+
+		@foreach($notes[$type] as $note)
+	
 		<tr>  
 			<td>		
-				{{date('d/m/Y',strtotime($note[$created_at]))}}
+				{{$note->created_at->format('Y-m-d')}}
 			</td>	
 
 			<td>
-			$title = "See details of the ".$note->relatesTo['businessname']." location";
-				<a 
-				title="See details of the {{$note->relatesTo['businessname']}} location" 
-				href="{{route('locationshow',$note->relatesTo['id'])}}">
-					{{$note->relatesTo['businessname']}}
+			
+				@if($type=='location' && count($note->relatesToLocation)>0)
+					<a href="{{route('locations.show',$note->relatesToLocation->id)}}"
+					title="See details of location">
+					{{$note->relatesToLocation->businessname}}
 				</a>
+				@elseif($type=='lead' && count($note->relatesToProspect)>0)
+					<a href="{{route('projects.show',$note->relatesToProspect->id)}}"
+					title="See details of prospect">
+					{{$note->relatesToProspect->businessname}}
+				</a>
+				@elseif($type=='project' && count($note->relatesToProject)>0)
+					<a href="{{route('projects.show',$note->relatesToProject->id)}}"
+					title="See details of project">
+					{{$note->relatesToProject->project_title}}
+
+					</a>
+				@endif
+		
 			</td>
 
 			<td>
-				{{$note['note']}}
+				{{$note->note}}
 			</td>
 		</tr>
 		@endforeach
 	</tbody>
 </table>
+</div>
+</div>
+
+@endforeach
 @include('partials/_scripts')
 @endsection
