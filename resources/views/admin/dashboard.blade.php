@@ -53,9 +53,9 @@ $cumulative = array();
     <div id="home" class="tab-pane fade in active">
       <h3>Usage</h3>
         @include ('admin.partials.firstlogged')
-
-        @include ('admin.partials.lastlogged')
         @include('admin.partials.weeklylogins')
+        @include ('admin.partials.lastlogged')
+
         @include('admin.partials.roleweekly')
         @include('admin.partials.firsttimers')
 
