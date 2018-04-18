@@ -47,7 +47,7 @@ class AdminDashboardController extends BaseController {
 		$data['status'] = $this->getLastLogins();
 		$data['firsttimers'] = $this->getFirstTimers();
 		$data['weekcount'] = $this->getWeekLoginCount();
-	
+		$data['roleweekcount'] = $this->getRoleWeekLoginCount();
 		
 		$data['watchlists'] = $this->getWatchListCount();
 		//dd($data['watchlists']->first());
@@ -242,17 +242,103 @@ class AdminDashboardController extends BaseController {
 		return $this->track
 			->select (
 	         \DB::raw("count(user_id) as login,
-	         	CONCAT_WS('/',YEAR(lastactivity), 
-	         	WEEK(lastactivity)) as week"))
+	         	DATE_FORMAT(lastactivity,'%Y%U') as week"))
 			->whereNotNull('lastactivity')
 			->where('lastactivity','>','2017-01-01')
-			->whereRaw("CONCAT_WS('/',YEAR(lastactivity), 
-				         	WEEK(lastactivity)) != '2017/26'")
+			->whereRaw("DATE_FORMAT(lastactivity,'%Y%U') != '201726'")
 	       ->groupBy('week')
 			->orderBy('week')
 			->get();
     
 	}
+
+
+	private function getRoleWeekLoginCount(){
+		$roleweek = $this->track
+
+		->join('role_user', 'track.user_id', '=', 'role_user.user_id')
+		->join('roles', 'role_user.role_id', '=', 'roles.id')
+			->select ('name',
+	         \DB::raw("count(track.user_id) as login,
+	         	DATE_FORMAT(lastactivity,'%Y%U') as week"))
+			->whereNotNull('lastactivity')
+			->where('lastactivity','>','2017-01-01')
+				       
+	       ->groupBy('name')
+	       ->groupBy('week')
+	       ->orderBy('week')
+		   ->get();
+
+			return $this->formatRoleWeekData($roleweek);
+
+    
+	}
+	private function formatRoleWeekData($roleweek){
+		$data=array();
+		foreach (array_keys($roleweek->groupBy('name')->toArray()) as $role){
+			$data[$role]=array();
+			foreach (array_keys($roleweek->groupBy('week')->toArray()) as $date){
+			  $data[$role][$date]=0;
+			}
+		}
+		foreach ($roleweek as $value){
+			
+			$data[$value->name][$value->week]=$value->login;
+		}
+		$chartdata=array();
+		$exclude = ['Admin','Sales Operations'];
+		$colors = $this->createColors(count($data)-count($exclude));
+		$n=0;
+		foreach ($data as $key=>$value){
+			if(! in_array($key ,$exclude)){
+				$chartdata[$key]['color'] = $this->hex2rgba($colors[$n]);
+				$n++;			
+				$chartdata[$key]['labels']=implode("','",array_keys($value));
+				$chartdata[$key]['data']=implode(",",array_values($value));
+			}
+		}
+
+		return $chartdata;
+	}
+
+	private function hex2rgba($color, $opacity = false) {
+ 
+	$default = 'rgb(0,0,0)';
+ 
+	//Return default if no color provided
+	if(empty($color))
+          return $default; 
+ 
+	//Sanitize $color if "#" is provided 
+        if ($color[0] == '#' ) {
+        	$color = substr( $color, 1 );
+        }
+ 
+        //Check if color has 6 or 3 characters and get values
+        if (strlen($color) == 6) {
+                $hex = array( $color[0] . $color[1], $color[2] . $color[3], $color[4] . $color[5] );
+        } elseif ( strlen( $color ) == 3 ) {
+                $hex = array( $color[0] . $color[0], $color[1] . $color[1], $color[2] . $color[2] );
+        } else {
+                return $default;
+        }
+ 
+        //Convert hexadec to rgb
+        $rgb =  array_map('hexdec', $hex);
+ 
+        //Check if opacity is set(rgba or rgb)
+        if($opacity){
+        	if(abs($opacity) > 1)
+        		$opacity = 1.0;
+        	$output = 'rgba('.implode(",",$rgb).','.$opacity.')';
+        } else {
+        	$output = 'rgb('.implode(",",$rgb).')';
+        }
+ 
+        //Return rgb(a) color string
+        return $output;
+}
+
 
 	/**
 	 * Return array of logins by grouped intervals.
