@@ -182,6 +182,8 @@ class AdminDashboardController extends BaseController {
 		}
 		return $colors;
 	}
+
+
 	private function decToHex($value){
 		if(strlen(dechex($value))<2){
 			return "0".dechex($value);
@@ -239,40 +241,51 @@ class AdminDashboardController extends BaseController {
 	}
 
 	private function getWeekLoginCount(){
-		return $this->track
-			->select (
-	         \DB::raw("count(user_id) as login,
-	         	DATE_FORMAT(lastactivity,'%Y%U') as week"))
-			->whereNotNull('lastactivity')
-			->where('lastactivity','>','2017-01-01')
-			->whereRaw("DATE_FORMAT(lastactivity,'%Y%U') != '201726'")
-	       ->groupBy('week')
-			->orderBy('week')
-			->get();
+		$subQuery = $this->track
+					->selectRaw ("distinct user_id as user,
+			         	DATE_FORMAT(lastactivity,'%Y%U') as week")
+					->whereNotNull('lastactivity')
+					->where('lastactivity','>','2017-01-01');
+
+		return  \DB::
+				table(\DB::raw('('.$subQuery->toSql().') as ol'))
+				->selectRaw('count(user) as login,week')
+				->mergeBindings($subQuery->getQuery())
+				->groupBy('week')
+				->orderBy('week')
+				->get();
     
 	}
 
 
 	private function getRoleWeekLoginCount(){
-		$roleweek = $this->track
+		
+		$subQuery = $this->track
+					->join('role_user', 'track.user_id', '=', 'role_user.user_id')
+					->join('roles', 'role_user.role_id', '=', 'roles.id')
+					->selectRaw ("distinct name,track.user_id as user,
+			         	DATE_FORMAT(lastactivity,'%Y%U') as week")
+					->whereNotNull('lastactivity')
+					->where('lastactivity','>','2017-01-01');
 
-		->join('role_user', 'track.user_id', '=', 'role_user.user_id')
-		->join('roles', 'role_user.role_id', '=', 'roles.id')
-			->select ('name',
-	         \DB::raw("count(track.user_id) as login,
-	         	DATE_FORMAT(lastactivity,'%Y%U') as week"))
-			->whereNotNull('lastactivity')
-			->where('lastactivity','>','2017-01-01')
-				       
-	       ->groupBy('name')
-	       ->groupBy('week')
-	       ->orderBy('week')
-		   ->get();
+					
 
+		$roleweek = \DB::
+				table(\DB::raw('('.$subQuery->toSql().') as ol'))
+				->selectRaw('count(user) as login,name,week')
+				->mergeBindings($subQuery->getQuery())
+				->groupBy('name')
+				->groupBy('week')
+				->orderBy('week')
+				->get();
+		
 			return $this->formatRoleWeekData($roleweek);
 
     
 	}
+	
+
+
 	private function formatRoleWeekData($roleweek){
 		$data=array();
 		foreach (array_keys($roleweek->groupBy('name')->toArray()) as $role){
@@ -291,7 +304,7 @@ class AdminDashboardController extends BaseController {
 		$n=0;
 		foreach ($data as $key=>$value){
 			if(! in_array($key ,$exclude)){
-				$chartdata[$key]['color'] = $this->hex2rgba($colors[$n]);
+				$chartdata[$key]['color'] = $colors[$n];
 				$n++;			
 				$chartdata[$key]['labels']=implode("','",array_keys($value));
 				$chartdata[$key]['data']=implode(",",array_values($value));
@@ -301,44 +314,7 @@ class AdminDashboardController extends BaseController {
 		return $chartdata;
 	}
 
-	private function hex2rgba($color, $opacity = false) {
- 
-	$default = 'rgb(0,0,0)';
- 
-	//Return default if no color provided
-	if(empty($color))
-          return $default; 
- 
-	//Sanitize $color if "#" is provided 
-        if ($color[0] == '#' ) {
-        	$color = substr( $color, 1 );
-        }
- 
-        //Check if color has 6 or 3 characters and get values
-        if (strlen($color) == 6) {
-                $hex = array( $color[0] . $color[1], $color[2] . $color[3], $color[4] . $color[5] );
-        } elseif ( strlen( $color ) == 3 ) {
-                $hex = array( $color[0] . $color[0], $color[1] . $color[1], $color[2] . $color[2] );
-        } else {
-                return $default;
-        }
- 
-        //Convert hexadec to rgb
-        $rgb =  array_map('hexdec', $hex);
- 
-        //Check if opacity is set(rgba or rgb)
-        if($opacity){
-        	if(abs($opacity) > 1)
-        		$opacity = 1.0;
-        	$output = 'rgba('.implode(",",$rgb).','.$opacity.')';
-        } else {
-        	$output = 'rgb('.implode(",",$rgb).')';
-        }
- 
-        //Return rgb(a) color string
-        return $output;
-}
-
+	
 
 	/**
 	 * Return array of logins by grouped intervals.
