@@ -60,11 +60,14 @@
 
 	</td>
 	<td>
-
-	@foreach ($branch->relatedPeople(9)->get() as $person)
-		{{$person->postName()}}<br />
-
-	@endforeach
+@if(count($branch->manager)>0)
+				
+				@foreach ($branch->manager as $manager)
+				<a href="{{route('managed.branch',$manager->id)}}"
+				title="See all branchesmanaged by {{$manager->postName()}}">
+				{{$manager->postName()}}</a>
+				@endforeach
+			@endif
 	</td>
 	<td>
 		<a href="{{route('branches.show',$branch->id)}}" 
