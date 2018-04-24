@@ -4,7 +4,9 @@
 <h1>All Updates</h1>
 
 <div class="pull-right">
-				<a href="{{{ route('admin.news.create') }}}" class="btn btn-small btn-info iframe"><span class="glyphicon glyphicon-plus-sign"></span> Create New Updates</a>
+				<a href="{{{ route('admin.news.create') }}}" class="btn btn-small btn-info iframe">
+<i class="fa fa-plus-circle text-success" aria-hidden="true"></i>
+ Create New Updates</a>
 			</div>
 
 <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>

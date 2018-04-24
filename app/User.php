@@ -33,10 +33,16 @@ class User extends Authenticatable
 	 {
 		  return $this->hasOne(Track::class,'user_id');
 	 }
+     public function scopeFirstLogin($query, Carbon $date){
+    
 
+    return $query->whereHas('usage',function ($q) use ($date){
+        $q->where('roles.id','=',$role);
+        });
+     }
 
 	 public function firstLogin(){
-	 	return $this->hasOne(Track::class,'user_id')->min('lastactivity');
+	 	return $this->hasMany(Track::class,'user_id');
 	 }
 
 
@@ -79,6 +85,7 @@ class User extends Authenticatable
                 ->select('lat','lng')
                 ->whereNotNull('lat')
                 ->first();
+        
         if($position){
                 return implode(",",$position->toArray());
         }
@@ -207,6 +214,6 @@ class User extends Authenticatable
 		if($interval){
 				return $query->whereBetween('lastlogin',[$interval['from'],$interval['to']]);
 			}
-			return $query->whereNull('lastlogin');
+		return $query->whereNull('lastlogin');
 	}
 }

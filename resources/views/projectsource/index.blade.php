@@ -6,7 +6,9 @@
 <h2>Project Sources</h2>
 @can('manage_projects')
 <div class="pull-right">
-        <a href="{{{ route('projectsource.create') }}}" class="btn btn-small btn-info iframe"><span class="glyphicon glyphicon-plus-sign"></span> Create New Project Source</a>
+        <a href="{{{ route('projectsource.create') }}}" class="btn btn-small btn-info iframe">
+<i class="fa fa-plus-circle text-success" aria-hidden="true"></i>
+ Create New Project Source</a>
       </div>
 @endcan
  <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>

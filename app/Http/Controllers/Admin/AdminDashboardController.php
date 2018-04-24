@@ -45,6 +45,10 @@ class AdminDashboardController extends BaseController {
 
 		$data['logins'] = $this->getLogins();
 		$data['status'] = $this->getLastLogins();
+		$data['firsttimers'] = $this->getFirstTimers();
+		$data['weekcount'] = $this->getWeekLoginCount();
+		$data['roleweekcount'] = $this->getRoleWeekLoginCount();
+		
 		$data['watchlists'] = $this->getWatchListCount();
 		//dd($data['watchlists']->first());
 		$data['nosalesnotes'] = $this->getNoSalesNotes();
@@ -103,13 +107,13 @@ class AdminDashboardController extends BaseController {
 
 			['label'=>'Yesterday',
 			'value'=>1,
-			 'interval'=>['from'=>Carbon::today()->subDay(2),
-			                  'to'=>Carbon::today()->subDay()],
+			 'interval'=>['from'=>Carbon::today()->subDay(),
+			                  'to'=>Carbon::today()],
 			  'color'=>$colors[1],],
 			['label'=>'Last Week',
 			'value'=>2,
 			'interval'=>['from'=>Carbon::today()->subWeek(),
-					         'to'=>Carbon::today()->subDay(2)],
+					         'to'=>Carbon::today()->subDay()],
 			 'color'=>$colors[2],],
 
 			['label'=>'Last Month',
@@ -178,6 +182,8 @@ class AdminDashboardController extends BaseController {
 		}
 		return $colors;
 	}
+
+
 	private function decToHex($value){
 		if(strlen(dechex($value))<2){
 			return "0".dechex($value);
@@ -215,6 +221,101 @@ class AdminDashboardController extends BaseController {
 				->orderBy('firstlogin', 'ASC')
 			    ->get();
 	}
+	
+	private function getFirstTimers(){
+	
+		   
+		$from = Carbon::today()->subMonth()->toDateString();
+		$query = "select *
+				from (
+				    select users.id as uid, concat_ws(' ',persons.firstname,persons.lastname) as fullname, roles.name as role, min(`lastactivity`) as lastactivity 
+					from track,users,persons,role_user,roles
+				    where track.user_id = users.id
+				    and users.id = persons.user_id
+				    and role_user.user_id = users.id
+				    and role_user.role_id = roles.id
+				group by users.id) a
+				where lastactivity > '".$from ."'";
+
+		return \DB::select( \DB::raw($query));
+	}
+
+	private function getWeekLoginCount(){
+		$subQuery = $this->track
+					->selectRaw ("distinct user_id as user,
+			         	DATE_FORMAT(lastactivity,'%Y%U') as week")
+					->whereNotNull('lastactivity')
+					->where('lastactivity','>','2017-01-01');
+
+		return  \DB::
+				table(\DB::raw('('.$subQuery->toSql().') as ol'))
+				->selectRaw('count(user) as login,week')
+				->mergeBindings($subQuery->getQuery())
+				->groupBy('week')
+				->orderBy('week')
+				->get();
+    
+	}
+
+
+	private function getRoleWeekLoginCount(){
+		
+		$subQuery = $this->track
+					->join('role_user', 'track.user_id', '=', 'role_user.user_id')
+					->join('roles', 'role_user.role_id', '=', 'roles.id')
+					->selectRaw ("distinct name,track.user_id as user,
+			         	DATE_FORMAT(lastactivity,'%Y%U') as week")
+					->whereNotNull('lastactivity')
+					->where('lastactivity','>','2017-01-01');
+
+					
+
+		$roleweek = \DB::
+				table(\DB::raw('('.$subQuery->toSql().') as ol'))
+				->selectRaw('count(user) as login,name,week')
+				->mergeBindings($subQuery->getQuery())
+				->groupBy('name')
+				->groupBy('week')
+				->orderBy('week')
+				->get();
+		
+			return $this->formatRoleWeekData($roleweek);
+
+    
+	}
+	
+
+
+	private function formatRoleWeekData($roleweek){
+		$data=array();
+		foreach (array_keys($roleweek->groupBy('name')->toArray()) as $role){
+			$data[$role]=array();
+			foreach (array_keys($roleweek->groupBy('week')->toArray()) as $date){
+			  $data[$role][$date]=0;
+			}
+		}
+		foreach ($roleweek as $value){
+			
+			$data[$value->name][$value->week]=$value->login;
+		}
+		$chartdata=array();
+		$exclude = ['Admin','Sales Operations'];
+		$colors = $this->createColors(count($data)-count($exclude));
+		$n=0;
+		foreach ($data as $key=>$value){
+			if(! in_array($key ,$exclude)){
+				$chartdata[$key]['color'] = $colors[$n];
+				$n++;			
+				$chartdata[$key]['labels']=implode("','",array_keys($value));
+				$chartdata[$key]['data']=implode(",",array_values($value));
+			}
+		}
+
+		return $chartdata;
+	}
+
+	
+
 	/**
 	 * Return array of logins by grouped intervals.
 	 *
@@ -287,6 +388,7 @@ class AdminDashboardController extends BaseController {
 				->whereHas('watching')
 				->with('person')
 				->withCount('watching')
+				->where('created_at','>',\Carbon\Carbon::now()->subMonth(3))
 				->orderBy('watching_count', 'DESC')
 				->get();
 
@@ -442,7 +544,8 @@ class AdminDashboardController extends BaseController {
 	private function recentLocationNotes()
 
 	{
-		return Note::where('created_at', '>=', \Carbon\Carbon::now()->subWeek())
+		return Note::where('created_at', '>=', \Carbon\Carbon::now()->subMonth())
+		->where('type','=','location')
 		->whereHas('relatesToLocation')
 		->whereNotNull('related_id')
 		->with(['writtenBy','relatesToLocation','relatesToLocation.company','writtenBy.person'])
@@ -455,7 +558,8 @@ class AdminDashboardController extends BaseController {
 	private function recentLeadNotes()
 
 	{
-		return Note::where('created_at', '>=', \Carbon\Carbon::now()->subWeek())
+		return Note::where('created_at', '>=', \Carbon\Carbon::now()->subMonth())
+		->whereIn('type',['lead','prospect'])
 		->whereHas('relatesToLead')
 		->whereNotNull('related_id')
 		->with(['writtenBy','relatesToLead','writtenBy.person'])
@@ -467,7 +571,8 @@ class AdminDashboardController extends BaseController {
 	private function recentProjectNotes()
 
 	{
-		return Note::where('created_at', '>=', \Carbon\Carbon::now()->subWeek())
+		return Note::where('created_at', '>=', \Carbon\Carbon::now()->subMonth())
+		->where('type','=','project')
 		->whereHas('relatesToProject')
 		->whereNotNull('related_id')
 		->with(['writtenBy','relatesToProject','writtenBy.person'])

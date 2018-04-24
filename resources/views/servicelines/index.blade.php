@@ -4,7 +4,9 @@
 <h1>Service Lines</h1>
  @if (Auth::user()->hasRole('Admin'))
 <div class="pull-right">
-				<p><a href="{{{ route('serviceline.create') }}}" class="btn btn-small btn-info iframe"><span class="glyphicon glyphicon-plus-sign"></span> Create New Service Line</a></p>
+				<p><a href="{{{ route('serviceline.create') }}}" class="btn btn-small btn-info iframe">
+<i class="fa fa-plus-circle text-success" aria-hidden="true"></i>
+ Create New Service Line</a></p>
 			</div>
  @endif  
 

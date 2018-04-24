@@ -49,7 +49,7 @@
 @endif
 <a href="{{route('update.profile')}}">
 <button type="button" class="btn btn-success" >
-<i class="glyphicon glyphicon-pencil" ></i> Update</button></a>
+<i class="fa fa-pencil" aria-hidden="true"></i> Update</button></a>
 
 <script>
 $(document).ready(function() {

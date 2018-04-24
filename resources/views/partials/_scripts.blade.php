@@ -41,32 +41,18 @@ $(document).ready(function()
 	
     $( "#fromdatepicker" ).datepicker({ altField : "#fromdate",
     altFormat: "yyyy-mm-dd"});
-	$('#sorttable').DataTable();
+   
+	$("[id^=sorttable]").DataTable();
 	
-	$('#sorttable1').DataTable();
 	
-	$('#sorttable2').DataTable();
-	
-	$('#sorttable3').DataTable();
-	
-	$('#sorttable4').DataTable();
-	
-	$('#sorttable5').DataTable();
-		
-	$('#sorttable6').DataTable();
 
-	$('#sorttablenosort').DataTable(
+	$("[id^=nosorttable]").DataTable(
 		{
 
 			"bPaginate": false,
 		}
 		);
-	$('#sorttablenosort1').DataTable(
-		{
-
-			"bPaginate": false,
-		}
-		);
+	
 	
 	$('.starrr').on('starrr:change', function(e, value){
   

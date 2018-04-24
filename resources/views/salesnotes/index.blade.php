@@ -45,7 +45,7 @@ No
         title=" Create {{trim($company->name)}}'s Sales Notes">
       @endif
       <button type="button" class="btn btn-success" >
-      <i class="glyphicon glyphicon-pencil" ></i></button>   
+      <i class="fa fa-pencil" aria-hidden="true"></i>   
       </a>
   	          
   </div>

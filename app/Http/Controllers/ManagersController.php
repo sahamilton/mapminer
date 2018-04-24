@@ -186,11 +186,12 @@ class ManagersController extends BaseController {
 	private function getManagerNotes($companyID)
 	{
 			// refactor
-		return \App\Note::with('relatesToLocation','relatesToLocation.company','writtenBy')
+		return \App\Note::where('type','=','location')
+		
 		->whereHas('relatesToLocation',function($q) use($companyID){
 			$q->where('company_id','=',$companyID);
 		})
-		
+		->with('relatesToLocation','relatesToLocation.company','writtenBy')
 		->get();
 
 	}

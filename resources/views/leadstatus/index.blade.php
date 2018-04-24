@@ -7,7 +7,9 @@
 @if (Auth::user()->hasRole('Admin'))
 
 <div class="pull-right">
-        <a href="{{ route('leadstatus.create') }}" class="btn btn-small btn-info iframe"><span class="glyphicon glyphicon-plus-sign"></span> Create New Prospect Status</a>
+        <a href="{{ route('leadstatus.create') }}" class="btn btn-small btn-info iframe">
+<i class="fa fa-plus-circle text-success" aria-hidden="true"></i>
+ Create New Prospect Status</a>
       </div>
 @endif
 

@@ -27,6 +27,10 @@ Route::auth();
 Route::get('/home', 'HomeController@index');
 
 Route::group(['middleware' => 'auth'], function () {
+   	
+	#About
+		Route::get('about',['as'=>'about','uses'=>'AdminAboutController@getInfo']);
+
    	#AccountTypes
 		Route::resource('accounttype','AccounttypesController',	['only' => ['index', 'show']]);
 
@@ -51,19 +55,15 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::resource('comment','CommentsController');
 
 	#Companies
-
+		Route::post('company/filter',['as'=>'company.filter','uses'=>'CompaniesController@filter']);
 		Route::get('/company/{companyId}/state/{state?}', ['as'=>'company.state','uses'=>'CompaniesController@stateselect']);
 		Route::post('/company/stateselect', ['as'=>'company.stateselect','uses'=>'CompaniesController@stateselect']);
 
 		Route::get('/company/{companyId}/statemap/{state}', ['as'=>'company.statemap','uses'=>'CompaniesController@statemap']);
 		Route::get('/company/vertical/{vertical}', ['as'=>'company.vertical','uses'=>'CompaniesController@vertical']);
 		Route::get('/company/{companyId}/segment/{segment}', ['as'=>'company.segment','uses'=>'CompaniesController@show']);
-		Route::post('company/filter',['as'=>'company.filter','uses'=>'CompaniesController@filter']);
+		
 		Route::resource('company', 'CompaniesController',['only' => ['index', 'show']]);
-
-
-
-
 
 
 	# Contacts
@@ -251,7 +251,7 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
 		Route::post('companies/export', ['as'=>'companies.locationsexport', 'uses'=>'CompaniesController@locationsExport']);
 		Route::get('companies/download', ['as'=>'companies.download','uses'=>'CompaniesController@exportAccounts']);
 		Route::get('company/{companyId}/export',['as'=>'company.export','uses'=>'WatchController@companyexport']);
-		Route::post('company/filter',['as'=>'company.filter','uses'=>'CompaniesController@filter']);
+		//Route::post('company/filter',['as'=>'company.filter','uses'=>'CompaniesController@filter']);
 		Route::resource('company','CompaniesController',['except' => ['index', 'show']]);
 
     # Documents
@@ -450,10 +450,13 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 		Route::post('api/searchfilters/postAccounts',['as'=>'postAccountSegments','uses'=>'SearchFiltersController@getAccountSegments']);
 		Route::resource('searchfilters','SearchFiltersController');
 
-		Route::get('about',['as'=>'about','uses'=>'AdminAboutController@getInfo']);
+		
 
 	# Seeder for relationships with servicelines
 		Route::get('seeder',['as'=>'seeder','uses'=>'CompaniesController@seeder']);
 		Route::get('apiseeder',['as'=>'apiseeder','uses'=>'UsersController@seeder']);
+
+	# Versions
+	 	Route::resource('versions','GitController');
 
 });

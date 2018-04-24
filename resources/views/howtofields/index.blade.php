@@ -4,7 +4,9 @@
 <h1>All How To Fields</h1>
 
 <div class="pull-right">
-<a href="{{{ route('howtofields.create') }}}" class="btn btn-small btn-info iframe"><span class="glyphicon glyphicon-plus-sign"></span> Create New Field</a>
+<a href="{{{ route('howtofields.create') }}}" class="btn btn-small btn-info iframe">
+<i class="fa fa-plus-circle text-success" aria-hidden="true"></i>
+ Create New Field</a>
 </div>
 
 <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
@@ -41,7 +43,7 @@
 
 					<li>
 						<a href="{{route('howtofields.edit', $howtofield->id)}}">
-						<i class="glyphicon glyphicon-pencil"></i>
+						<i class="fa fa-pencil" aria-hidden="true"></i>
 						Edit  {{$howtofield->fieldname}}
 						</a>
 					</li>

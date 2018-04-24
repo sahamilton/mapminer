@@ -46,7 +46,7 @@ required
 <input type="hidden" name="lat" id="lat" value=""/>
 <input type="hidden" name="lng" id="lat" value=""/>
     <button type="submit"  class= "btn btn-success btn-xs">
-      <span class="glyphicon glyphicon-search"></span>
+      <i class="fa fa-search" aria-hidden="true"></i>
        Search!</button>
 </form>
 <?php $action = route('lead.find');?>

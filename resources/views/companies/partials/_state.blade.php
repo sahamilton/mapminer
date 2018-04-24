@@ -16,7 +16,7 @@
            @endforeach
         </select>
  
-         <button type="submit"  class= "btn btn-default btn-xs"><span class="glyphicon glyphicon-search"></span> Search!</button>
+         <button type="submit"  class= "btn btn-default btn-xs"><i class="fa fa-search" aria-hidden="true"></i> Search!</button>
 <input type="hidden" name='id' value="{{ isset($company->id) ? $company->id : $company[0]->id }}" />
 </form>
 		

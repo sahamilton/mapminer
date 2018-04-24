@@ -21,8 +21,8 @@ if(auth()->user()->can('view_projects') && in_array(5, Session::get('user.servic
   $types['projects']='Construction projects';
 }
 
-if(isset($data['type']) && $data['type'] == 'company' && isset($data['company'])){
-	$types['company'] = $data['companyname'] .' locations';
+if(isset($data['type']) && $data['type'] == 'company' && isset($company)){
+	$types['company'] = $company->companyname .' locations';
 }
 
 $views = array('map'=>'map','list'=>'list');
@@ -78,7 +78,7 @@ $values = Config::get('app.search_radius');
     </div>
 <button type="submit"  style="background-color: #4CAF50;"
 class= "btn btn-success ">
-<span class="glyphicon glyphicon-search"></span> Search!</button>
+<i class="fa fa-search" aria-hidden="true"></i> Search!</button>
 <input type="hidden" name ='company' value="{{isset($company) ? $company->id : ''}}" />
 <input type="hidden" name ='companyname' value="{{isset($company) ? $company->companyname : ''}}" />
 <input type="hidden" name="lng" id ="lng" value="{{isset($data['lng']) ? $data['lng'] : '-98.5795'}}" />

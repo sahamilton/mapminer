@@ -11,7 +11,7 @@
 		<h3>{{ $title }}</h3>
 			<p>
                  <a href="{{route('nomanager.export')}}">
-                 <i class="glyphicon glyphicon-cloud-download"></i> Export to Excel</a>
+                 <i class="fa fa-cloud-download" aria-hidden="true"></i></i> Export to Excel</a>
             </p>
 	</div>
 

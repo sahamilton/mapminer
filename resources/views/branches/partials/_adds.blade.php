@@ -1,5 +1,5 @@
 <h2>Branches to be Added</h2>
-<table id ='sorttablenosort' class='table table-striped table-bordered table-condensed table-hover'>
+<table id ='nosorttable' class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
     <th></th>
     <th>Branch</th>

@@ -88,7 +88,8 @@ switch ($field['type']) {
 			if(file_exists(public_path()."/documents/attachments/".$company->id."/".$file['filename']))
 			{
 				echo "<li>
-				<a href= \"".route('salesnotes.filedelete',$file['filename'])."\"><i class=\"glyphicon glyphicon-trash\"></i>
+				<a href= \"".route('salesnotes.filedelete',$file['filename'])."\"><i class=\"fa fa-trash\" aria-hidden=\"true\"></i>
+
 
 				<a href =\"".asset("/documents/attachments/".$company->id."/".$file['filename'])."\">".$file['attachmentname']."</a></li>";
 			}

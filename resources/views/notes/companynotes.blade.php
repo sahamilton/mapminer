@@ -21,13 +21,13 @@
     <tr>  
 	
     <td>
-        <a href="{{route('locations.show',$note->relatesTo->id)}}"
+        <a href="{{route('locations.show',$note->relatesToLocation->id)}}"
         title ="Review all notes at this  location" >
-            {{$note->relatesTo->businessname}}
+            {{$note->relatesToLocation->businessname}}
         </a>
     </td>
     <td>
-    {{ucwords(strtolower($note->relatesTo->city))}}, {{strtoupper($note->relatesTo->state)}}
+    {{ucwords(strtolower($note->relatesToLocation->city))}}, {{strtoupper($note->relatesToLocation->state)}}
     </td>
     <td>{{$note->note}}</td>
     <td>

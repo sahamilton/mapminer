@@ -11,7 +11,9 @@
 		<h3>Role Management</h3>
 
 			<div class="pull-right">
-				<a href="{{{ route('roles.create') }}}" class="btn btn-small btn-info iframe"><span class="glyphicon glyphicon-plus-sign"></span> Create New Role</a>
+				<a href="{{{ route('roles.create') }}}" class="btn btn-small btn-info iframe">
+<i class="fa fa-plus-circle text-success" aria-hidden="true"></i>
+ Create New Role</a>
 			</div>
 		
 	</div>

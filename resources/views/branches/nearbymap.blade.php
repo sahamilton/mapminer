@@ -9,7 +9,7 @@
 
 location in {{$location->city}}<p>
 <p><a href='{{route("assign.location",$location->id)}}'>
-  <i class="glyphicon glyphicon-th-list"></i> List view</a></p>
+  <i class="fa fa-th-list" aria-hidden="true"></i> List view</a></p>
   @include('maps.partials._keys')
 <div id="store-locator-container">
 	<div id="map-container">

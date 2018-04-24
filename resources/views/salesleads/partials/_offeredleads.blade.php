@@ -56,16 +56,16 @@
 				
 			  @if($lead->pivot->status_id ==1)
 				<li><a data-href="{{route('saleslead.accept',$lead->id)}}" data-toggle="modal" data-target="#accept-lead" data-title = "Some title" href="#">
-                <i class="glyphicon glyphicon-thumbs-up"></i> Claim Prospect </a></li>
+                <i class="fa fa-thumbs-up" aria-hidden="true"></i> Claim Prospect </a></li>
                 <li><a href="{{route('saleslead.decline',$lead->id)}}">
-                <i class="glyphicon glyphicon-thumbs-down"></i> Decline Prospect </a></li>
+                <i class="fa fa-thumbs-down" aria-hidden="true"></i> Decline Prospect </a></li>
 
 
                @endif
 
                @if($lead->pivot->status_id ==2)
 				<li><a href="">
-				<i class="glyphicon glyphicon-hand-right"></i>
+				<i class="fa fa-hand-o-right" aria-hidden="true"></i>
 				Work  Prospect </a></li>
                @endif
 			  </ul>

@@ -19,11 +19,11 @@
                     </a> 
                 </strong>
                 @if($people->phone != "")
-                    <i class="glyphicon glyphicon-phone-alt"> </i>
+                   <i class="fa fa-phone" aria-hidden="true"></i>
                     {{$people->phone}} 
                 @endif
                 @if($people->has('userdetails'))
-                    <i class="glyphicon glyphicon-envelope"> </i>
+                    <i class="fa fa-envelope" aria-hidden="true"></i>
                     <a href="mailto:{{$people->userdetails()->first()->email}}"
                         title="Email {{$people->firstname}}">
                     {{$people->userdetails()->first()->email}}
@@ -46,9 +46,9 @@ $data['lng'] = $data['branch']->lng;
 ?>
 
 @if($type=='map')
-<p><a href="{{route('showlist.locations',$data['branch']->id)}}"><i class="glyphicon glyphicon-th-list"></i> List view</a></p>
+<p><a href="{{route('showlist.locations',$data['branch']->id)}}"><i class="fa fa-th-list" aria-hidden="true"></i> List view</a></p>
 @else
-<p><a href="{{route('branches.show',$data['branch']->id)}}"><i class="glyphicon glyphicon-flag"> </i>Map View</a></p>
+<p><a href="{{route('branches.show',$data['branch']->id)}}"><i class="fa fa-flag" aria-hidden="true"></i>Map View</a></p>
 @endif
 <div>
 @include('partials/advancedsearch')

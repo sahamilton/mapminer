@@ -21,10 +21,10 @@ class LeadSourceController extends Controller
     public $vertical;
     public $lead;
     public $branch;
-    public function __construct(LeadSource $leadsource, 
-                            LeadStatus $status, 
-                            SearchFilter $vertical, 
-                            Lead $lead, 
+    public function __construct(LeadSource $leadsource,
+                            LeadStatus $status,
+                            SearchFilter $vertical,
+                            Lead $lead,
                             Person $person,
                             Branch $branch){
         $this->leadsource = $leadsource;
@@ -66,7 +66,7 @@ class LeadSourceController extends Controller
      */
     public function store(LeadSourceFormRequest $request)
     {
-   
+
         $request->merge(['user_id'=>auth()->user()->id]);
         $leadsource = $this->leadsource->create($request->except(['datefrom','dateto']));
         $leadsource->update([
@@ -85,16 +85,15 @@ class LeadSourceController extends Controller
      */
     public function show($id)
     {
-        
+
         $statuses = $this->leadstatus->pluck('status','id')->toArray();
         $leadsource = $this->leadsource
                 ->with('author')
                ->findOrFail($id);
-        
+
         $leads = $this->getLeads($id);
-       
+
         $salesteams = $this->salesteam($leads,$id);
-;
         return response()->view('leadsource.show',compact('leadsource','statuses','salesteams'));
     }
 
@@ -102,11 +101,11 @@ class LeadSourceController extends Controller
     private function getLeads($id){
 
         return $this->lead->where('lead_source_id','=',$id)
-        ->wherehas('leadsource',function($q){
+        /*->wherehas('leadsource',function($q){
             $q->where('datefrom','<=',date('Y-m-d'))
                 ->where('dateto','>=',date('Y-m-d'));
             })
-
+*/
         ->with('salesteam','salesteam.industryfocus')
         ->get();
     }
@@ -175,11 +174,11 @@ class LeadSourceController extends Controller
             $lead = $this->lead->create($data);
             $geoCode = app('geocoder')->geocode($this->getAddress($request))->get();
             $data = $this->lead->getGeoCode($geoCode);
-           
+
             $lead->update($data);
             return redirect()->route('leadsource.index');
         }
-        
+
 
     }
     // Method to remove commas from fields that cause problem with maps
@@ -207,7 +206,7 @@ class LeadSourceController extends Controller
         $data['branches'] = $this->findClosestBranches($leads);
         return response()->view('leadsource.leadsassign',compact('leads','data'));
     }
-    
+
     private function getAddress($request){
         // if its a one line address return that
         if(! $request->has('city')){
@@ -216,7 +215,7 @@ class LeadSourceController extends Controller
         // else build the full address
         return $address = $request->get('address') . " " . $request->get('city') . " " . $request->get('state') . " " . $request->get('zip');
     }
-    
+
 
     private function findClosestRep($leads){
         $leadinfo = array();
@@ -235,7 +234,7 @@ class LeadSourceController extends Controller
      private function findClosestBranches($leads){
         $leadinfo = null;
         foreach ($leads as $lead){
-            
+
             $leadinfo[$lead->id] = $this->branch->whereHas('servicelines',function ($q) use ($userservicelines){
                 $q->whereIn('servicelines.id',$userservicelines);
 
@@ -250,18 +249,18 @@ class LeadSourceController extends Controller
 
      private function salesteam($leads){
         $salesreps = array();
- 
+
         foreach ($leads as $lead){
             if(count($lead->salesteam)>0){
-                
-                
+
+
                 foreach ($lead->salesteam as $rep){
-            
+
                     $salesrep = $lead->salesteam->where('id',$rep->id)->first();
 
-                    
+
                     if(! array_key_exists($rep->id,$salesreps)){
-                        
+
                         $salesreps[$rep->id]['details'] = $salesrep;
                         $salesreps[$rep->id]['count'] = 0;
                         $salesreps[$rep->id]['status'][1] = 0;
@@ -270,18 +269,18 @@ class LeadSourceController extends Controller
                        /* $salesreps[$rep->id]['status'][4] = 0;
                         $salesreps[$rep->id]['status'][5] = 0;
                         $salesreps[$rep->id]['status'][6] = 0;*/
-                       
+
                     }
                     $salesreps[$rep->id]['count'] = $salesreps[$rep->id]['count'] ++;
                     $salesreps[$rep->id]['status'][$salesrep->pivot->status_id] ++;
-                    
-                }          
+
+                }
             }
         }
-       
+
         return $salesreps;
     }
-    
+
     /**
 
 
@@ -292,7 +291,7 @@ class LeadSourceController extends Controller
     }else{
         $type = 'xlsx';
     }
-    
+
     Excel::create('Prospects'.time(),function($excel) use($id){
             $excel->sheet('Prospects',function($sheet )use($id) {
                 $statuses = $this->lead->statuses;
@@ -301,10 +300,10 @@ class LeadSourceController extends Controller
                 ->has('leads.ownedBy')
                 ->with('leads.ownedBy')
                 ->findOrFail($id);
-            
+
                 $sheet->loadView('leadsource.export',compact('leadsource','statuses'));
             });
         })->download('csv');
     }
-     
+
 }

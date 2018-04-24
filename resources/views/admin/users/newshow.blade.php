@@ -6,14 +6,17 @@
 	<div class="page-header">
 
         <h2>Mapminer Activity</h2>
-
+@if($views[$view]['interval'])
 		<h4>Users who last logged in between 
             {{$views[$view]['interval']['from']->format('M jS Y')}}
         and {{$views[$view]['interval']['to']->format('M jS Y')}}
     </h4>
+    @else
+<h4>Users who have never logged in</h4> 
+    @endif
 		<p><a href="{{route('admin.downloadlogins',$view)}}" 
             title="Download these user details as a CSV / Excel file">
-            <i class="glyphicon glyphicon-cloud-download"></i> 
+            <i class="fa fa-cloud-download" aria-hidden="true"></i></i> 
             Download these user details</a> 
         </p>
 

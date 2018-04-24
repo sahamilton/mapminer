@@ -322,7 +322,10 @@ class CompaniesServiceController extends BaseController
 		$data = array();
 		
 		foreach ($locations as $location){
+
 			$data['salesteam'][$location->id]=$location->nearbySalesRep($servicelines)->get();
+			
+
 			$data['branches'][$location->id]=$location->nearbyBranches()->get();
 
 		}
@@ -348,11 +351,12 @@ class CompaniesServiceController extends BaseController
 					$geo = \Session::get('geo');
 					$location->lat = $geo['lat'];
 					$location->lng = $geo['lng'];
-				}elseif($position = auth()->user()->position()){
-					$location->lat =  $position->lat;
-					$location->lng =  $position->lng;
+				}elseif(auth()->user()->position()){
+					$position = explode(",",auth()->user()->position());
+					$location->lat =  $position[0];
+					$location->lng =  $position[1];
 				}else{
-					// use center of the country as default lat lng
+					// Corporate HQ as center Tacoma
 					$location->lat =  '47.25';
 					$location->lng =  '-122.44';
 

@@ -1,5 +1,5 @@
 <div style="border:1px solid #000;width:600px;margin:20px;padding:20px;float:left">
-<h4>Location Notes in past week</h4>
+<h4>Location Notes in past month</h4>
 <!-- 'writtenBy','relatesTo','relatesTo.company','writtenBy.person' -->
 <table id ='sorttable6' class='table table-striped table-bordered table-condensed table-hover'>
     <thead>

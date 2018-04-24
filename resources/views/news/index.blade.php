@@ -6,7 +6,7 @@
 @if(auth()->user()->hasRole('Admin'))
 <div class="pull-right">
     <a href="{{ route('news.create') }}" class="btn btn-small btn-info iframe">
-        <span class="glyphicon glyphicon-plus-sign"> </span> 
+        <i class="fa fa-plus text-success" aria-hidden="true"></i>
         Add New Updates
     </a>
 </div>
@@ -49,20 +49,20 @@
 				<p>Visible to <a href="{{route('news.audience',$post->id)}}"
 				title="See all users who can see the {{$post->title}} news item">{{count($post->audience($post->id))}} users.</a></p>
 				@endif
-				<p><span class="glyphicon glyphicon-user"></span> by <span class="muted">
+				<p><i class="fa fa-user" aria-hidden="true"></i> by <span class="muted">
 				@if(isset($post->author))
 					{{$post->author->person->postName()}}
 				@else
 					No Longer with the company
 				@endif
 				| </span>
-					<span class="glyphicon glyphicon-calendar"></span> <!--Sept 16th, 2012-->
+					<i class="fa fa-calendar" aria-hidden="true"></i> <!--Sept 16th, 2012-->
 					{{$post->datefrom->format('M jS,Y')}}
-					| <span class="glyphicon glyphicon-comment"></span> 
+					| <i class="fa fa-comment-o" aria-hidden="true"></i> 
 					<a href="{{route('news.show', $post->slug)}}#comments"> {{$post->comments->count()}}</a>
 
 					@if($post->user_id == auth()->user()->id  or auth()->user()->hasRole('Admin'))
-<a href="{{route('news.edit',$post->id)}}" title="Edit this news item"><i class="glyphicon glyphicon-pencil"></i></a> | 
+<a href="{{route('news.edit',$post->id)}}" title="Edit this news item"><i class="fa fa-pencil" aria-hidden="true"></i></a> | 
 <a data-href="{{route('news.destroy',$post->id)}}" 
             data-toggle="modal" 
             data-target="#confirm-delete" 

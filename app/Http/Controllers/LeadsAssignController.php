@@ -21,24 +21,24 @@ class LeadsAssignController extends Controller
 		$this->lead = $lead;
 		$this->person = $person;
     $this->leadroles = $this->setLeadRoles();
-    
+
 
 	}
 
 
      public function geoAssignLeads($sid){
-
+       dd('here');
         $leadsource = $this->leadsource->findOrFail($sid);
         //$leadroles = $this->leadroles;
         $data['verticals'] = $leadsource->verticals()->pluck('searchfilters.id')->toArray();
-       
+
         $leads = $this->lead->whereDoesntHave('salesteam')
           ->where('lead_source_id','=',$sid)
           ->whereHas('leadsource', function ($q){
             $q->where('datefrom','<=',date('Y-m-d'))
             ->where('dateto','>=',date('Y-m-d'));
           })
-        
+
         ->get();
 
         $count = null;
@@ -63,7 +63,7 @@ class LeadsAssignController extends Controller
     }
 
     public function assignLead(Request $request){
-      
+
      $count=0;
       $lead = $this->lead->findOrFail($request->get('lead_id'));
 
@@ -79,7 +79,7 @@ class LeadsAssignController extends Controller
 
       $roles = Permission::where('name','=','accept_prospects')->with('roles')->first();
       return  $roles->roles->pluck('name')->toArray();
-      
- 
+
+
     }
 }

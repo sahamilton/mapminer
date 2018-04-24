@@ -2,7 +2,7 @@
 @section('content')
 <h2>My Projects</h2>
 <p><a href="{{route('projects.index')}}">Return to all projects</a></p>
-<p><a href="{{route('projects.export')}}" title="Download my claimed projects as a CSV / Excel file"><i class="glyphicon glyphicon-cloud-download"></i> Download My Projects</a>
+<p><a href="{{route('projects.export')}}" title="Download my claimed projects as a CSV / Excel file"><i class="fa fa-cloud-download" aria-hidden="true"></i></i> Download My Projects</a>
 <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
 	<thead>
 		

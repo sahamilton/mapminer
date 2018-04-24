@@ -9,7 +9,7 @@
 <a href="{{route('locations.show',$data['location']['id'])}}">{{$data['location']['businessname']}} </a>
 location in {{$data['location']['city']}} are:<p>
 <p><a href='{{route("nearby.location",$data['location']['id'])}}'>
-  <i class="glyphicon glyphicon-flag"></i> Map view</a></p>
+  <i class="fa fa-flag" aria-hidden="true"></i> Map view</a></p>
 <table class="table table-striped table-bordered table-condensed">
 <thead>
 <th>Branch</th>

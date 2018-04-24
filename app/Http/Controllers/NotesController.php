@@ -26,7 +26,10 @@ class NotesController extends BaseController {
 	public function index()
 	{
 		
-		$notes = $this->notes->with('relatesToLocation','relatesToLocation.company','relatesToLead','writtenBy')->get();
+		$notes = $this->notes
+		->where('type','=','location')
+		->with('relatesTo','relatesTo.company','relatesTo','writtenBy')
+		->get();
 
 		return response()->view('notes.index', compact('notes'));
 	}
@@ -166,8 +169,9 @@ class NotesController extends BaseController {
 	{
 		$company =\App\Company::findOrFail($companyid);
 		$notes = $this->notes
-			->with('relatesToLocation','relatesToLocation.company','relatesToLead','writtenBy')
-			->whereHas('relatesToLocation',function($q) use($companyid){
+			->where('type','=','location')
+			->with('relatesTo','relatesTo.company','writtenBy')
+			->whereHas('relatesTo',function($q) use($companyid){
 				$q->where('company_id','=',$companyid);
 			})
 			->get();
@@ -183,11 +187,15 @@ class NotesController extends BaseController {
 	public function mynotes()
 	{
 		$user = auth()->user();
-		
-		$notes = $this->notes->where('user_id','=',$user->id)->with('relatesToLocation')->get();
-		
+		$types=['location','prospect','project'];
+		foreach ($types as $type){ 
+			$notes[$type] = $this->notes
+				->where('user_id','=',$user->id)
+				->where('type','=',$type)
+				->with('relatesTo'.(ucwords($type)))->get();
+		}
 
-		return response()->view('notes.show', compact('notes'));
+		return response()->view('notes.show', compact('notes','types'));
 		
 	}
 }

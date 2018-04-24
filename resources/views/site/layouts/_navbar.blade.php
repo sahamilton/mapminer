@@ -22,7 +22,7 @@
                      @else
                         <li class="dropdown{{ (Request::is('company*','branch*' ,'person*','findme') ? ' active' : '') }}">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="{{{ route('findme') }}}">
-    							<span class="glyphicon glyphicon-search"></span> Search<span class="caret"></span>
+    							<i class="fa fa-search" aria-hidden="true"></i> Search<span class="caret"></span>
     						</a>
     						<ul class="dropdown-menu">
                             <li {{ (Request::is('findme') ? ' class="active"' : '') }}><a href="{{{ route('findme') }}}">
@@ -39,9 +39,20 @@
                             @endcan
                             </ul>
                             </li>
+                        <li class="dropdown{{ (Request::is('watch*','mynote*') ? ' active' : '') }}">
+                            <a class="dropdown-toggle" data-toggle="dropdown" >
+                         My Activity<span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
                         <li {{ (Request::is('watch') ? ' class="active"' : '') }}><a href="{{{ route('watch.index') }}}">
-                        <span class ="glyphicon glyphicon-eye-open"></span> Watch List</a></li>
-                        
+                        <i class ="fa fa-eye"></i> My Watch List</a></li>
+                         <li {{ (Request::is('mynotes') ? ' class="active"' : '') }}><a href="{{{ route('mynotes') }}}">
+                        <i class="fa fa-folder-open-o" aria-hidden="true"></i>
+                         My Notes</a>
+                     </li>
+                        </li>
+                    </ul>
+                </li>
                         <li class="dropdown{{ (Request::is('salesorg*','resources*') ? ' active' : '') }}">
                         <a class="dropdown-toggle" data-toggle="dropdown" >
                          Sales Resources<span class="caret"></span>
@@ -115,16 +126,20 @@
     					<li class="divider-vertical"></li>
     					<li class="dropdown">
     							<a class="dropdown-toggle" data-toggle="dropdown" href="#">
-    								<span class="glyphicon glyphicon-user"></span> {{ucfirst(strtolower( Auth::user()->person->firstname ))}}	<span class="caret"></span>
+    								<i class="fa fa-user" aria-hidden="true"></i> {{ucfirst(strtolower( Auth::user()->person->firstname ))}}	<span class="caret"></span>
     							</a>
     							<ul class="dropdown-menu">
-    								<li><a href="{{{ route('profile') }}}">
-                                    <i class="fa fa-user" aria-hidden="true"> </i> Your Profile</a></li>
-                                    @if(Auth::user()->hasRole('Admin'))
-
-                                    
-                                    <li><a href="{{route('about')}}"><i class="fa fa-info-circle" aria-hidden="true"> </i>  About Mapminer</a></li>
-                                    @endif
+    								<li>
+                                        <a href="{{{ route('profile') }}}">
+                                            <i class="fa fa-user" aria-hidden="true"> </i> Your Profile
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{route('about')}}">
+                                            <i class="fa fa-info-circle" aria-hidden="true"> </i>  About Mapminer
+                                        </a>
+                                    </li>
+                                
     								<li class="divider"></li>
     								<li>
                                         <a href="{{ route('logout') }}" 

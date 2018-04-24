@@ -28,7 +28,7 @@
 	@if($project->owned()  or auth()->user()->hasRole('Admin'))
 		
 		<a href="{{route('notes.edit',$note->id)}}" title="Edit this note">
-			<i class="glyphicon glyphicon-pencil"></i>
+			<i class="fa fa-pencil" aria-hidden="true"></i>
 		</a> | 
 		<a data-href="{{route('notes.destroy',$note->id)}}" 
 		            data-toggle="modal" 

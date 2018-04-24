@@ -7,5 +7,5 @@
     data-title="Add a new firm to {{$project->name}}" 
     href="#" 
     title="Add a new firm to {{$project->name}}">
-    <i class="fa fa-plus-circle" aria-hidden="true"></i> 
+     
 Add</a>-->

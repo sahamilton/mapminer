@@ -8,7 +8,9 @@
 
 @if (Auth::user()->hasRole('Admin'))
 <div class="pull-right">
-	<a href="{{route('salesnotes.cocreate',$company->id)}}" class="btn btn-small btn-info iframe"><span class="glyphicon glyphicon-plus-sign"></span> Create / Edit</a>
+	<a href="{{route('salesnotes.cocreate',$company->id)}}" class="btn btn-small btn-info iframe">
+<i class="fa fa-plus-circle text-success" aria-hidden="true"></i>
+ Create / Edit</a>
 </div>
 
 @endif
@@ -99,7 +101,7 @@ $group = $groups[0]->fieldname;
 									target=\"_blank\"
 
 									title=\"Download ".$file['attachmentname'] ."\">
-									<i class=\"glyphicon glyphicon-cloud-download\"> </i>
+									<i class=\"fa fa-cloud-download\" aria-hidden=\"true\"></i>
 									".$file['attachmentname']."</a></h4>";
 									echo "<p>". $file['description'] ."</p>";
 									
