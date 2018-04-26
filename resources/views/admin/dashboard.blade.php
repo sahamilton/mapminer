@@ -41,7 +41,7 @@ $cumulative = array();
 
 @section('content')
 <div class="container">
-  <h2>Admin Dashboard</h2>
+  <h2>{{auth()->user()->roles()->first()->name}} Dashboard</h2>
   <ul class="nav nav-tabs">
     <li class="active"><a data-toggle="tab" href="#home">Usage</a></li>
     <li><a data-toggle="tab" href="#menu1">Activity</a></li>

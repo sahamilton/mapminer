@@ -118,7 +118,7 @@
 
                          @if (Auth::user()->hasRole('Sales Operations'))
                          <li>
-                            <a href="{{{ route('ops') }}}">
+                            <a href="{{{ route('dashboard') }}}">
                            <i class="fa fa-tachometer" aria-hidden="true"> </i> Ops </a>
                             
                         </li>

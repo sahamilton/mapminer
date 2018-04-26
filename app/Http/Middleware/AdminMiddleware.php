@@ -16,7 +16,7 @@ class AdminMiddleware
     public function handle($request, Closure $next)
     {
      
-        if (! $request->user() or ! $request->user()->hasRole('Admin') ) 
+        if (! $request->user() or ! ($request->user()->hasRole('Admin') or $request->user()->hasRole('Sales Operations')) ) 
         {
             return redirect('home');
         }
