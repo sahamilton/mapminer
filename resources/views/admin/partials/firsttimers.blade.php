@@ -4,6 +4,7 @@
     <thead>
       <th>First Time Users</th>
       <th>Role</th>
+      <th>Days Since</th>
     </thead>
     <tbody>
       @foreach($data['firsttimers'] as $first)
@@ -15,6 +16,9 @@
             </a>
           </td>
           <td>{{$first->role}}</td>
+          @php $created = \Carbon\Carbon::parse($first->lastactivity);
+          $now = \Carbon\Carbon::now();@endphp
+          <td>{{$now->diffInDays($created)}}</td>
         </tr>
       @endforeach
     </tbody>

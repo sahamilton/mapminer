@@ -228,7 +228,11 @@ class AdminDashboardController extends BaseController {
 		$from = Carbon::today()->subMonth()->toDateString();
 		$query = "select *
 				from (
-				    select users.id as uid, concat_ws(' ',persons.firstname,persons.lastname) as fullname, roles.name as role, min(`lastactivity`) as lastactivity 
+				    select users.id as uid, 
+				    concat_ws(' ',persons.firstname,persons.lastname) as fullname, 
+				    roles.name as role, 
+				    min(`lastactivity`) as lastactivity,
+				    users.created_at as created
 					from track,users,persons,role_user,roles
 				    where track.user_id = users.id
 				    and users.id = persons.user_id
