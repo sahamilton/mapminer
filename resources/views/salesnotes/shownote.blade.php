@@ -14,6 +14,16 @@
 </div>
 
 @endif
+
+@if(count($data) ==0)
+	<p>There are no sales notes for {{$company->companyname}}. 
+		@if($company->has('managedBy'))
+			Contact account manager <strong>{{$company->managedBy->postName()}}</strong> 
+			<a href="mailto:{{$company->managedBy->userdetails->email}}">{{$company->managedBy->userdetails->email}}</a> 
+			for information.
+		@endif
+</p>
+@else
 <p><a href ="{{{ route('salesnotes.print',$company->id) }}}" target = "_blank"  ><img src="{{asset('assets/images/printer.jpg')}}">Printable view</a></p>
 <?php
 	$attachmentsPath ='documents/attachments/'.$company->id."/";
@@ -109,20 +119,18 @@ $group = $groups[0]->fieldname;
 							}
 							
 						}
-
-
-
 				break;
-				
 				default:
 					echo "<strong>".$element->fields->fieldname ."</strong>: ". $element->value. "<br />";
 				break;
-				
 			}
 	echo "</p>";
 			
 }?>
-		</div></div></div>
+		</div>
+		@endif
+	</div>
+</div>
         <script>
 
 $(function() {

@@ -72,8 +72,9 @@ class SalesNotesController extends BaseController {
 			return redirect()->route('company.index');
 		}
 			
-		$company = $this->company->with('managedBy')
+		$company = $this->company->with('managedBy','managedBy.userdetails')
 			->findOrFail($id);
+	
 
 		$data = $this->salesnote->where('company_id','=',$id)
 				->with('fields')->get();;
