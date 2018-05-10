@@ -41,7 +41,7 @@
 	<td>
 		<a href="{{route('branches.show',$branch->id)}}" 
 		 title="See details of branch {{$branch->branchname}}">
-		{{$branch->id}} {{$branch->branchname}}
+		{{$branch->branchname}}
 		</a>
 	</td>
 	

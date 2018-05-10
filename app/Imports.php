@@ -39,7 +39,9 @@ class Imports extends Model
 	    			$this->additionaldata = [];
 	    		}
 	    	// remove any additional data fields from input fields
-			$data['fields'][key(array_intersect($data['fields'],array_keys($data['additionaldata'])))]='@ignore';
+	    	
+	    	$data['fields'][key(array_intersect($data['fields'],array_keys($this->additionaldata)))]='@ignore';
+	    	
     		$this->fields = implode(",",$data['fields']);
     		$this->table = $data['table'];
     		$this->temptable = $this->table . "_import";
