@@ -9,7 +9,9 @@ $states = $state->getStates();
 <div class="form-group{{ $errors->has('id') ? ' has-error' : '' }}">
 	<label class="col-md-2 control-label">Branch Number:</label>
 	<div class="input-group input-group-lg">
-		<input type="text" class="form-control" name='id' description="id" 
+		<input 
+		@if(isset($branch)) readonly @endif
+		type="text" class="form-control" name='id' description="id" 
 		value="{{ old('id', isset($branch) ? $branch->id :'' ) }}" 
 		placeholder="id">
 		<span class="help-block">
