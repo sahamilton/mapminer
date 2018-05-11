@@ -32,7 +32,7 @@ class GeoCodingController extends BaseController {
 	 */
 	public function findMe(FindMeFormRequest $request) {
 
-	
+
 		if($request->filled('address')) {
 			$address = urlencode($request->get('address'));
 			
@@ -103,7 +103,7 @@ class GeoCodingController extends BaseController {
 	 */
 	
 	private function getViewData($data) {
-		
+
 		if($data['type'] =='branch'){
 				$data['urllocation'] = "api/mylocalbranches";
 				$data['title'] ='Branch Locations';
@@ -112,6 +112,7 @@ class GeoCodingController extends BaseController {
 				
 			
 			}elseif ($data['type']=='company'){
+				
 				$data['urllocation'] ="api/mylocalaccounts";
 				$data['title'] = (isset($data['companyname']) ? $data['companyname'] : 'Company') ." Locations";
 				$data['company'] = Company::where('id','=',$data['company'])->first();
@@ -122,6 +123,7 @@ class GeoCodingController extends BaseController {
 				$data['title'] = "Project Locations";
 			
 			}else{
+
 				$data['urllocation'] ="api/mylocalaccounts";
 				$data['title'] ='National Account Locations';
 				$data['company']=NULL;
@@ -164,7 +166,7 @@ class GeoCodingController extends BaseController {
 		$location = new Location;
 		$location->lat = $data['lat'];
 		$location->lng = $data['lng'];
-	
+
 		switch ($data['type']) {
 			
 			case 'location':
@@ -177,9 +179,11 @@ class GeoCodingController extends BaseController {
 				->with('company')
 				->get();
 			}else{
-
+			
 				return $this->location
-				->nearby($location,$data['distance'])
+				->whereHas('company.serviceline', function ($q) {
+						$q->whereIn('servicelines.id',$this->userServiceLines);
+				})->nearby($location,$data['distance'])
 				->with('company')
 				->get();
 			}
