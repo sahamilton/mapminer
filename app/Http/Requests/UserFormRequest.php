@@ -28,7 +28,7 @@ class UserFormRequest extends FormRequest
        
        
         return [
-        'username'=>'required|alpha_num|unique:users,id,' . $request->segment(3),
+        'username'=>'required|alpha_num|unique:users,username,' . $request->segment(3),
         'firstname'=>'required',
         'lastname'=>'required',
         'email' => 'required|email|unique:users,email,' . $request->segment(3),
