@@ -265,9 +265,14 @@ class AdminUsersController extends BaseController {
      */
     public function update(UserFormRequest $request,$user)
     {
-
+     
         $user = $this->user->with('person')->find($user->id);
         $oldUser = clone($user);
+        if($request->filled('password')){
+          
+            $user->password = \Hash::make($request->get('password'));
+            $user->save();
+        }
 
 		if($user->update($request->all())){
             $person = $this->updateAssociatedPerson($user->person,$request->all());
