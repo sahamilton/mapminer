@@ -256,5 +256,5 @@ return [
     'default_radius'=>array('10'=>'10'),
     'mysql_data_loc'=>app_path() .'/storage/uploads/',
     'api_key' => env('GOOGLE_MAPS_API_KEY','thekeyshouldgohere'),
-    'location_limit'=>env('LOCATION_LIMIT',500),
+    'location_limit'=>env('LOCATION_LIMIT',2000),
 ];

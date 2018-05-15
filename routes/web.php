@@ -16,11 +16,12 @@
 
 	}]);
 
-//Route::auth();
+/*
+	
 	Route::get('/error',function(){
 		Bugsnag::notifyError('ErrorType', 'Test Error');
 	});
-
+*/
 
 Route::auth();
 

@@ -10,7 +10,7 @@ class CompaniesServiceController extends BaseController
 {
     protected $company;
     protected $location;
-    protected $limit =500;
+    protected $limit =2000;
 
 	public function __construct (Company $company,Location $location){
 		$this->company = $company;
@@ -28,6 +28,7 @@ class CompaniesServiceController extends BaseController
 		$company = $this->company->with('managedBy','locations')->findOrFail($id);
 		$count = count($company->locations);
 		if($count > $this->limit){
+
 			dd($count,$this->location->getStateSummary($company->id));
 		}
 
@@ -140,11 +141,12 @@ class CompaniesServiceController extends BaseController
 		$limited = false;
 		$count = count($locations);
 		if($count>$this->limit){
+			dd('limited');
 			$companyname =  $this->chunkLocations($company,$locations);
 			return redirect()->back()->with('success','File Created');
 			
 		}else{
-
+		
 
 		$title = $this->getTitle($company,$limited,$state,$loop=null);
 

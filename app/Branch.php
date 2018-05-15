@@ -192,5 +192,11 @@ class Branch extends Model {
 		return $managers;
 	}
 
+	public function getBranchTeam(){
+		return User::whereHas('roles', 
+			function($q) {
+			$q->whereIn('role_id',$this->branchRoles);
+			})->with('Person')->get();
+	}
 	
 }
