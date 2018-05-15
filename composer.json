@@ -26,7 +26,8 @@
         "toin0u/geocoder-laravel": "^4.0",
         "viacreative/sudo-su": "^1.1",
         "dompdf/dompdf": "~0.6.1",
-        "h4cc/wkhtmltopdf-amd64": "0.12.x"
+        "h4cc/wkhtmltopdf-amd64": "0.12.x",
+        "mccool/laravel-auto-presenter": "^7.0"
     },
 
     "require-dev": {

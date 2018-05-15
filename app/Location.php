@@ -1,7 +1,8 @@
 <?php
 namespace App;
-
-class Location extends Model {
+use\App\Presenters\LocationPresenter;
+use McCool\LaravelAutoPresenter\HasPresenter;
+class Location extends Model implements HasPresenter {
 
 	use Geocode;
 
@@ -99,6 +100,12 @@ class Location extends Model {
 
 		return $this->belongsToMany(User::class,'location_user','location_id','user_id')->withPivot('created_at','updated_at');
 	}
+
+	public function getPresenterClass()
+    {
+        return LocationPresenter::class;
+    }
+
 /**
  * [nearbyBranches description]
  * @return [type] [description]

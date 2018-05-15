@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "a774f853602d61ac2fbc788be6e5bdb1",
+    "content-hash": "9601568e4eab8da86c8d564458ffeb48",
     "packages": [
         {
             "name": "algolia/algoliasearch-client-php",
@@ -2279,6 +2279,74 @@
             ],
             "description": "Laravel helper for FullCalendar.io",
             "time": "2017-09-18T17:54:18+00:00"
+        },
+        {
+            "name": "mccool/laravel-auto-presenter",
+            "version": "7.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laravel-auto-presenter/laravel-auto-presenter.git",
+                "reference": "79ba1e223c26d7a32b4378b46c79af05d8fbcca7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laravel-auto-presenter/laravel-auto-presenter/zipball/79ba1e223c26d7a32b4378b46c79af05d8fbcca7",
+                "reference": "79ba1e223c26d7a32b4378b46c79af05d8fbcca7",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/container": "5.5.*|5.6.*",
+                "illuminate/contracts": "5.5.*|5.6.*",
+                "illuminate/events": "5.5.*|5.6.*",
+                "illuminate/pagination": "5.5.*|5.6.*",
+                "illuminate/support": "5.5.*|5.6.*",
+                "illuminate/view": "5.5.*|5.6.*",
+                "php": "^7.1.3"
+            },
+            "require-dev": {
+                "graham-campbell/analyzer": "^2.0",
+                "graham-campbell/testbench": "^5.0",
+                "mockery/mockery": "^1.0",
+                "phpunit/phpunit": "^6.5|^7.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "7.0-dev"
+                },
+                "laravel": {
+                    "providers": [
+                        "McCool\\LaravelAutoPresenter\\AutoPresenterServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "McCool\\LaravelAutoPresenter\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Shawn McCool",
+                    "email": "shawn@heybigname.com"
+                },
+                {
+                    "name": "Graham Campbell",
+                    "email": "graham@alt-three.com"
+                }
+            ],
+            "description": "A system for auto-decorating models with presenter objects.",
+            "keywords": [
+                "eloquent",
+                "laravel",
+                "lpm",
+                "presenter"
+            ],
+            "time": "2018-04-22T17:07:24+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -5239,6 +5307,52 @@
                 "laravel"
             ],
             "time": "2017-11-14T20:43:22+00:00"
+        },
+        {
+            "name": "laracasts/presenter",
+            "version": "0.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laracasts/Presenter.git",
+                "reference": "b284f3137f990efd6e95df49d254f1ccc4541e92"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laracasts/Presenter/zipball/b284f3137f990efd6e95df49d254f1ccc4541e92",
+                "reference": "b284f3137f990efd6e95df49d254f1ccc4541e92",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "~5.0",
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "~0.9",
+                "phpspec/phpspec": "~2.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Laracasts\\Presenter": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jeffrey Way",
+                    "email": "jeffrey@laracasts.com"
+                }
+            ],
+            "description": "Simple view presenters",
+            "keywords": [
+                "laravel",
+                "presenter",
+                "view"
+            ],
+            "time": "2014-09-13T13:18:07+00:00"
         },
         {
             "name": "maximebf/debugbar",

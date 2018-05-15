@@ -1,6 +1,8 @@
 <?php
 namespace App;
-class Person extends NodeModel {
+use\App\Presenters\LocationPresenter;
+use McCool\LaravelAutoPresenter\HasPresenter;
+class Person extends NodeModel implements HasPresenter {
 	use Geocode,Filters;
 
 	// Add your validation rules here
@@ -82,7 +84,10 @@ class Person extends NodeModel {
 	{
 		return $this->belongsToMany(SearchFilter::class)->withTimestamps(); 
 	}
-
+	public function getPresenterClass()
+    {
+        return LocationPresenter::class;
+    }
 	public function personroles($roles){
 
 

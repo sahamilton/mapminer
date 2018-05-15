@@ -1,7 +1,9 @@
 <?php
 namespace App;
+use\App\Presenters\LocationPresenter;
+use McCool\LaravelAutoPresenter\HasPresenter;
 
-class Branch extends Model {
+class Branch extends Model implements HasPresenter {
 	use Geocode;
 	public $table ='branches';
 
@@ -84,7 +86,11 @@ class Branch extends Model {
 		return $this->belongsToMany(Person::class);
 	}
 	
-	
+
+	public function getPresenterClass()
+    {
+        return LocationPresenter::class;
+    }
 	/* 
 		Calculate bounding box coordinates
 

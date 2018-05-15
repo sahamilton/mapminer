@@ -3,11 +3,11 @@
 namespace App;
 
 use Carbon\Carbon;
-
+use\App\Presenters\LocationPresenter;
+use McCool\LaravelAutoPresenter\HasPresenter;
 use Geocoder\Laravel\Facades\Geocoder;
 use Illuminate\Database\Eloquent\SoftDeletes;
-class Lead extends Model
-{
+class Lead extends Model implements HasPresenter {
   use SoftDeletes, Geocode;
 	public $dates = ['created_at','updated_at','deleted_at','datefrom','dateto'];
   public $table= 'leads';
@@ -58,7 +58,11 @@ class Lead extends Model
     public function relatedNotes() {
       return $this->hasMany(Note::class,'related_id')->where('type','=','prospect')->with('writtenBy');
     }
-
+    
+    public function getPresenterClass()
+    {
+        return LocationPresenter::class;
+    }
     public function setDatefromAttribute($value)
    {
        $this->attributes['datefrom'] = Carbon::createFromFormat('m/d/Y', $value);
