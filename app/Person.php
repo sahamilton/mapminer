@@ -14,9 +14,9 @@ class Person extends NodeModel implements HasPresenter {
 
 	protected $parentColumn = 'reports_to';
 
-	protected $dates =['created_at','updated_at','active_from'];
+	protected $dates =['created_at','updated_at'];
 	// Don't forget to fill this array
-	public $fillable = ['firstname','lastname','phone','address','lat','lng','reports_to','city','state','geostatus','user_id','active_from'];
+	public $fillable = ['firstname','lastname','phone','address','lat','lng','reports_to','city','state','geostatus','user_id'];
 
 	
 	public function reportsTo()
