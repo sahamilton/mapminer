@@ -205,4 +205,11 @@ class Branch extends Model implements HasPresenter {
 			})->with('Person')->get();
 	}
 	
+
+	public function getServiceLineBranchesAttribute($servicelines){
+		return $this->wherehas('serviceline',function ($q) use($servicelines){
+            $q->whereIn('servicelines.id',$userServiceLines);
+        })
+        ->get();
+	}
 }

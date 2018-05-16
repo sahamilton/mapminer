@@ -136,9 +136,14 @@ class AdminUsersController extends BaseController {
 
 		// Service lines
 		$servicelines = $this->person->getUserServiceLines();
-
-		$branches = $this->getUsersBranches($this->user);
-
+        // get all branches of this serviceline
+  
+		$branches =$this->branch->wherehas('servicelines',function ($q) use($servicelines){
+            $q->whereIn('servicelines.id',array_keys($servicelines));
+        })
+        ->pluck('branchname','id')->toArray();
+       $branches[0] = 'none';
+            ksort($branches);
 		$verticals = $this->searchfilter->industrysegments();
 
 
@@ -222,8 +227,7 @@ class AdminUsersController extends BaseController {
           ->find($userid->id);
 
 
-	    if ( $user )
-        {
+	    if ( $user ){
             $roles = $this->role->all();
             $permissions = $this->permission->all();
 
@@ -347,13 +351,12 @@ class AdminUsersController extends BaseController {
         return $person;
     }
 
-    private function getUsersBranches($user,$branchesServiced=null){
-
-			if(isset($user->person->lat) && $user->person->lat !=0){
+    private function getUsersBranches(User $user,$branchesServiced=null){
+            $userServiceLines = $user->serviceline->pluck('id','serviceline')->toArray();
+           if(isset($user->person->lat) && $user->person->lat !=0){
                
-				$userServiceLines= $user->serviceline()->pluck('servicelines.id')->toArray();
+				
                  $branches = $this->branch
-                 
                  ->whereHas('servicelines', function($q) use($userServiceLines){
                     $q->whereIn('servicelines.id',$userServiceLines);
                  })
@@ -364,9 +367,11 @@ class AdminUsersController extends BaseController {
 			$branches = array_unique($branchesServiced+$branches);
 			}else{
                 
-				$branches = $this->branch ->whereHas('servicelines', function($q) use($userServiceLines){
+				$branches = $this->branch
+                ->whereHas('servicelines', function($q) use($userServiceLines){
                     $q->whereIn('servicelines.id',$userServiceLines);
                  })->pluck('branchname','id')->toArray();
+                dd($branches,$userServiceLines);
 			}
 
             $branches[0] = 'none';
