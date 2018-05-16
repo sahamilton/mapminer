@@ -233,11 +233,9 @@ class AdminUsersController extends BaseController {
         	$mode = 'edit';
 			$managers = $this->getManagerList();
 
-			$branchesServiced = $user->person->branchesServiced()->pluck('branches.id','id')->toArray();
-
-			// Ether get close branches
-
-			$branches = $this->getUsersBranches($user);
+			$branchesServiced = $user->person->branchesServiced()->pluck('branchname','id')->toArray();
+           
+			$branches = $this->getUsersBranches($user,$branchesServiced);
 
 			$verticals = $this->searchfilter->industrysegments();
             $servicelines = $this->person->getUserServiceLines();
@@ -306,7 +304,7 @@ class AdminUsersController extends BaseController {
     }
     private function associateBranchesWithPerson($person, $data)
     {
-
+  
         $syncData=array();
         if(isset($data['branchstring'])){
             $data['branches'] = $this->branch->getBranchIdFromid($data['branchstring']);
@@ -349,27 +347,30 @@ class AdminUsersController extends BaseController {
         return $person;
     }
 
-    private function getUsersBranches($user){
+    private function getUsersBranches($user,$branchesServiced=null){
+
 			if(isset($user->person->lat) && $user->person->lat !=0){
-
+               
 				$userServiceLines= $user->serviceline()->pluck('servicelines.id')->toArray();
-
-                 $nearbyBranches = $this->branch
+                 $branches = $this->branch
+                 
                  ->whereHas('servicelines', function($q) use($userServiceLines){
                     $q->whereIn('servicelines.id',$userServiceLines);
                  })
-                 ->nearby($user->person,100)
-                 ->limit(20);
-
-				$branches[0] = 'none';
-				foreach($nearbyBranches as $nearbyBranch){
-
-					$branches[$nearbyBranch->branchid ]= $nearbyBranch->branchname . "/" . $nearbyBranch->branchid;
-				}
-			// or all branches
+                ->nearby($user->person,200)
+                ->limit(20)
+                ->pluck('branchname','id')->toArray();
+            
+			$branches = array_unique($branchesServiced+$branches);
 			}else{
-				$branches = Branch::select(\DB::raw("CONCAT_WS(' / ',branchname,id) AS name"),'id')->pluck('name','id')->toArray();
+                
+				$branches = $this->branch ->whereHas('servicelines', function($q) use($userServiceLines){
+                    $q->whereIn('servicelines.id',$userServiceLines);
+                 })->pluck('branchname','id')->toArray();
 			}
+
+            $branches[0] = 'none';
+            ksort($branches);
 
 			return $branches;
 		}
