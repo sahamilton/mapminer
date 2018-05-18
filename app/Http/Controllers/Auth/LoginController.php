@@ -37,13 +37,5 @@ class LoginController extends Controller
         $this->middleware('guest', ['except' => 'logout']);
     }
 
-    protected function authenticated()
-    {
-        $user = auth()->user();
-
-        $user->lastlogin = Carbon::now(); 
-        
-        $user->save();
-
-    }
+    
 }
