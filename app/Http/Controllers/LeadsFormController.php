@@ -25,7 +25,7 @@ class LeadsFormController extends Controller
     			$data[str_replace(" ","_",strtolower($field[0]))]=$field[1];
     		}
     	}
-
+       
     	dd($data);
     }
 }

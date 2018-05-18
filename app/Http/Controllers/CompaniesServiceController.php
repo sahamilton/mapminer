@@ -28,8 +28,8 @@ class CompaniesServiceController extends BaseController
 		$company = $this->company->with('managedBy','locations')->findOrFail($id);
 		$count = count($company->locations);
 		if($count > $this->limit){
-
-			dd($count,$this->location->getStateSummary($company->id));
+			dd("Contact Support - Companies Service Controller - 31 ",$count,$this->location->getStateSummary($company->id));
+			//dd($count,$this->location->getStateSummary($company->id));
 		}
 
 		$locations = $this->location->locationsNearbyBranches($company);

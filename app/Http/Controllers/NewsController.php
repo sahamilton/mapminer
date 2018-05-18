@@ -200,6 +200,7 @@ class NewsController extends BaseController {
 	private function updateNewsDate($noNewsDate){
 		$user = auth()->user();
 		$user->nonews = $noNewsDate;
+		// dont want to update the user last updated at fields
 		$user->timestamps = false;
 		$user->save();
 		$user->timestamps = true;

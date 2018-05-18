@@ -131,7 +131,7 @@ class ProjectsImportController extends ImportController
             break;
 
             case 2:
-                dd('we are here');
+               
                 $this->createCompanyId();
                 $this->updateContacts();
                 $this->createContactId();
