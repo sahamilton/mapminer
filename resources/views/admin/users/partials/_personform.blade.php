@@ -73,18 +73,7 @@
 						{!! $errors->first('phone', '<span class="help-inline">:message</span>') !!}
 					</div>
 				</div>
-				<!--
-					<div class="form-group{{ $errors->has('from)') ? ' has-error' : '' }}">
-					    <label class="col-md-2 control-label" for="datefrom"></label>
-					    <div class="input-group input-group-lg">
-						<input class="form-control" type="text" name="active_from"  id="fromdatepicker" 
-						value="{{  old('datefrom', isset($user) && isset($user->person->active_from) ? $user->person->active_from->format('m/d/Y'): '') }}"/>
-
-					                <span class="help-block">
-					                <strong>{{$errors->has('datefrom') ? $errors->first('datefrom')  : ''}}</strong>
-					                </span>
-					</div>
-					</div>-->
+				
 			<!--- Managers ---->
 			<div class="form-group{{ $errors->has('reports_to)') ? ' has-error' : '' }}">
                         <label class="col-md-2 control-label">Managers</label>
