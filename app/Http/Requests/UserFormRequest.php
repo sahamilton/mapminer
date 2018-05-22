@@ -35,7 +35,7 @@ class UserFormRequest extends FormRequest
         'employee_id' => 'required|unique:users,employee_id,' . $request->segment(3),
         'password'=>'confirmed',
         'serviceline'=>'required',
-        'employee_id'=>'required|unique:users,id,' . $request->segment(3),
+        'employee_id'=>'required|unique:users,employee_id,' . $request->segment(3),
 
         ];
     }

@@ -299,6 +299,7 @@ class AdminUsersController extends BaseController {
         	}else{
                 $person->industryfocus()->sync([]);
             }
+            // i want this to be queued
             $person->rebuild();
 
             return redirect()->to(route('users.index'))->with('success', 'User updated succesfully');
