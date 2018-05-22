@@ -15,7 +15,9 @@
 		    return view('welcome');
 
 	}]);
-
+Route::get('testerror', function () {
+    throw new Exception('Example exception!');
+});
 /*
 	
 	Route::get('/error',function(){
