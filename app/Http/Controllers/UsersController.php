@@ -40,7 +40,7 @@ class UsersController extends Controller
             $user->password = \Hash::make($request->get('password'));
             $user->timestamps = false;
             $user->save();
-             $user->timestamps = true;
+            $user->timestamps = true;
        }
        $user->person()->update($request->only(['firstname','lastname','address','phone']));
        if($request->filled('address') && $user->person->address != $request->get('address')){

@@ -117,6 +117,7 @@ class AdminUsersController extends BaseController {
     public function create()
     {
         // All roles
+        
         $roles = $this->role->all();
 
         // Get all the available permissions
@@ -135,6 +136,7 @@ class AdminUsersController extends BaseController {
 		$mode = 'create';
 
 		// Service lines
+  ; 
 		$servicelines = $this->person->getUserServiceLines();
         // get all branches of this serviceline
   
@@ -142,6 +144,7 @@ class AdminUsersController extends BaseController {
             $q->whereIn('servicelines.id',array_keys($servicelines));
         })
         ->pluck('branchname','id')->toArray();
+
        $branches[0] = 'none';
             ksort($branches);
 		$verticals = $this->searchfilter->industrysegments();
@@ -149,6 +152,7 @@ class AdminUsersController extends BaseController {
 
 		$managers = $this->getManagerList();
 		// Show the page
+       
 		return response()->view('admin.users.create', compact('roles', 'permissions', 'verticals','selectedRoles', 'selectedPermissions', 'title', 'mode','managers','servicelines','branches'));
     }
 
@@ -167,8 +171,6 @@ class AdminUsersController extends BaseController {
         if ($request->filled('confirm')) {
             $user->confirmed = $request->get('confirm');
         }
-
-
 
         if ( $user->save() ) {
 
@@ -243,7 +245,7 @@ class AdminUsersController extends BaseController {
 
 			$verticals = $this->searchfilter->industrysegments();
             $servicelines = $this->person->getUserServiceLines();
-
+            // looks like git got out of sync here
         	return response()->view('admin.users.edit', compact('user', 'roles', 'permissions', 'verticals','title', 'mode','managers','servicelines','branches','branchesServiced'));
         }
         else
