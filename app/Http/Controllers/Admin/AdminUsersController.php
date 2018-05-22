@@ -245,7 +245,7 @@ class AdminUsersController extends BaseController {
 
 			$verticals = $this->searchfilter->industrysegments();
             $servicelines = $this->person->getUserServiceLines();
-            // looks like git got out of sync here
+         
         	return response()->view('admin.users.edit', compact('user', 'roles', 'permissions', 'verticals','title', 'mode','managers','servicelines','branches','branchesServiced'));
         }
         else
@@ -354,6 +354,7 @@ class AdminUsersController extends BaseController {
     }
 
     private function getUsersBranches(User $user,$branchesServiced=null){
+
             $userServiceLines = $user->serviceline->pluck('id','serviceline')->toArray();
            if(isset($user->person->lat) && $user->person->lat !=0){
                
@@ -366,16 +367,16 @@ class AdminUsersController extends BaseController {
                 ->limit(20)
                 ->pluck('branchname','id')->toArray();
             
-			$branches = array_unique($branchesServiced+$branches);
+			
 			}else{
-                
+          
 				$branches = $this->branch
                 ->whereHas('servicelines', function($q) use($userServiceLines){
                     $q->whereIn('servicelines.id',$userServiceLines);
                  })->pluck('branchname','id')->toArray();
-                dd($branches,$userServiceLines);
+               
 			}
-
+            $branches = array_unique($branchesServiced+$branches);
             $branches[0] = 'none';
             ksort($branches);
 
