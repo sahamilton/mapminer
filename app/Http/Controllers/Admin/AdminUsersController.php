@@ -279,9 +279,10 @@ class AdminUsersController extends BaseController {
         }
 
 		if($user->update($request->all())){
+
             $person = $this->updateAssociatedPerson($user->person,$request->all());
             $person = $this->associateBranchesWithPerson($person,$request->all());
-
+            dd($user,$person);
            if($request->filled('serviceline')){
 
                 $user->serviceline()->sync($request->get('serviceline'));
@@ -299,7 +300,7 @@ class AdminUsersController extends BaseController {
                 $person->industryfocus()->sync([]);
             }
             $person->rebuild();
-
+            dd($user);
             return redirect()->to(route('users.index'))->with('success', 'User updated succesfully');
         }else{
 

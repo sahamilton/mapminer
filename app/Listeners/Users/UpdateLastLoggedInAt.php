@@ -29,7 +29,7 @@ class UpdateLastLoggedInAt
     public function handle(Login $event)
     {
        $this->updateTrackTable($event);
-        $this->updateUserTable();
+       $this->updateUserTable();
         
     }
 
