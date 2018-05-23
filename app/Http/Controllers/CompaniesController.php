@@ -265,7 +265,7 @@ class CompaniesController extends BaseController {
 					$location->lat = $geo['lat'];
 					$location->lng = $geo['lng'];
 
-				}elseif($position = auth()->user()->position()){){
+				}elseif($position = auth()->user()->position()){
 					$postion = explode(",",auth()->user()->position());
 					$location->lat =  $position[0];
 					$location->lng =  $position[1];
