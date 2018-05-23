@@ -264,14 +264,13 @@ class CompaniesController extends BaseController {
 					$geo = \Session::get('geo');
 					$location->lat = $geo['lat'];
 					$location->lng = $geo['lng'];
-				}elseif(auth()->user()->position()){
-					$position = explode(",",auth()->user()->position());
-					
+
+				}elseif($position = auth()->user()->position()){){
+					$postion = explode(",",auth()->user()->position());
 					$location->lat =  $position[0];
 					$location->lng =  $position[1];
-					
 				}else{
-					//else use corporate hq Tacoma
+					
 					$location->lat =  '47.25';
 					$location->lng =  '-122.44';
 				}
