@@ -262,16 +262,16 @@ class CompaniesController extends BaseController {
 			//$limited=$this->limit;
 			if (\Session::has('geo'))
 				{
-					dd('has geo');
+					
 					$geo = \Session::get('geo');
 					$location->lat = $geo['lat'];
 					$location->lng = $geo['lng'];
 
-				/*}elseif($position = auth()->user()->position()){
-					dd('has position');
+				}elseif($position = auth()->user()->position()){
+					
 					$postion = explode(",",auth()->user()->position());
 					$location->lat =  $position[0];
-					$location->lng =  $position[1];*/
+					$location->lng =  $position[1];
 				}else{
 					
 					$location->lat =  '47.25';
