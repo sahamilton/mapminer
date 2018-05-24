@@ -57,12 +57,14 @@ trait Geocode
                 ->whereBetween('lat',[$bounding['min']->degLat,$bounding['max']->degLat])
                 ->whereBetween('lng',[$bounding['min']->degLon,$bounding['max']->degLon]);
 
-    return $query
+    $query = $query
         ->select()//pick the columns you want here.
         ->selectRaw("{$this->haversine($location)} AS distance")
         ->mergeBindings($sub->getQuery())
         ->whereRaw("{$this->haversine($location)} < $radius ")
         ->orderBy('distance','ASC');
+        
+        return $query;
     }
    
    /**  

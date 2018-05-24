@@ -253,22 +253,25 @@ class CompaniesController extends BaseController {
 		$filters = $this->searchfilter->vertical();
 		$limited = null;
 		$count = count($locations);
+
 		// used when there are too many locations to show in list
 		if( $count > $this->limit)
 		{
 
 			$location = new Location;
-			$limited=$this->limit;
+			//$limited=$this->limit;
 			if (\Session::has('geo'))
 				{
+					dd('has geo');
 					$geo = \Session::get('geo');
 					$location->lat = $geo['lat'];
 					$location->lng = $geo['lng'];
 
-				}elseif($position = auth()->user()->position()){
+				/*}elseif($position = auth()->user()->position()){
+					dd('has position');
 					$postion = explode(",",auth()->user()->position());
 					$location->lat =  $position[0];
-					$location->lng =  $position[1];
+					$location->lng =  $position[1];*/
 				}else{
 					
 					$location->lat =  '47.25';
@@ -278,13 +281,13 @@ class CompaniesController extends BaseController {
 				//dd($location);
 		$locations = $this->locations
 		->where('company_id','=',$company->id)
-		->nearby($location,'1000')
+		->nearby($location,'1000','10')
 		->limit($this->limit)
 		->get();
-		
+		$limited = count($locations);
 
 		}
-
+		
 		$data['type']='company';
 		$mywatchlist = $this->locations->getWatchList();
 
@@ -328,7 +331,7 @@ class CompaniesController extends BaseController {
 
 	private function getStatesInArray($locations)
 	{
-		 return $locations->pluck('state')->toArray();
+		 return$locations->unique('state')->pluck('state')->toArray();
 
 	}
 	/*
