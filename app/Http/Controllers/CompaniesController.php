@@ -252,6 +252,7 @@ class CompaniesController extends BaseController {
 		$segments = $this->getCompanySegments($company);
 		$filters = $this->searchfilter->vertical();
 		$limited = null;
+		$distance = null;
 		$count = count($locations);
 
 		// used when there are too many locations to show in list
@@ -262,37 +263,38 @@ class CompaniesController extends BaseController {
 			//$limited=$this->limit;
 			if (\Session::has('geo'))
 				{
-					
+				
 					$geo = \Session::get('geo');
 					$location->lat = $geo['lat'];
 					$location->lng = $geo['lng'];
 
 				}elseif($position = auth()->user()->position()){
 					
-					$postion = explode(",",auth()->user()->position());
+					$position = explode(",",auth()->user()->position());
 					$location->lat =  $position[0];
 					$location->lng =  $position[1];
+
 				}else{
 					
 					$location->lat =  '47.25';
 					$location->lng =  '-122.44';
 				}
-
-				//dd($location);
+		$distance = 1000;
 		$locations = $this->locations
-		->where('company_id','=',$company->id)
-		->nearby($location,'1000','10')
-		->limit($this->limit)
-		->get();
-		$limited = count($locations);
+			->where('company_id','=',$company->id)
+			->nearby($location,$distance,'10')
+			->limit($this->limit)
+			->get();
+			$limited = count($locations);
 
+		
 		}
 		
 		$data['type']='company';
 		$mywatchlist = $this->locations->getWatchList();
 
 
-		return response()->view('companies.show', compact('data','company','locations','count','limited','mywatchlist','states','filtered','filters','segments'));
+		return response()->view('companies.show', compact('data','company','locations','count','limited','mywatchlist','states','filtered','filters','segments','distance'));
 	}
 
 
