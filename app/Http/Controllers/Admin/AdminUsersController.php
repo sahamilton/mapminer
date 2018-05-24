@@ -300,6 +300,7 @@ class AdminUsersController extends BaseController {
                 $person->industryfocus()->sync([]);
             }
             // i want this to be queued
+            // // also it is only neccessary if there have been chnges to the person model.
             $person->rebuild();
 
             return redirect()->to(route('users.index'))->with('success', 'User updated succesfully');
@@ -335,9 +336,7 @@ class AdminUsersController extends BaseController {
     }
 
     private function updateAssociatedPerson($person,$data){
-        if(isset($data['active_from'])){
-            $data['active_from'] = Carbon::createFromFormat('m/d/Y', $data['active_from']);
-        }
+        
 
        if(isset($data['address'])){
 

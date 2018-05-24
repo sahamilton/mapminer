@@ -27,11 +27,11 @@
     <tr>  
 
     <td>
-    
-    
-        <a href="{{route('person.show',$reports['id'])}}">
+
+         <a href="{{route('person.show',$reports->id)}}">
         {{$reports->firstname . " " . $reports->lastname}}
         </a>
+   
 
    </td>
    <td>
