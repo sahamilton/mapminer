@@ -16,6 +16,8 @@ class LeadAssignedImportController extends ImportController
     public $lead;
     public $leadsources;
     public $import;
+
+    
     public function __construct(Lead $lead, LeadSource $leadsource,LeadImport $import){
         $this->lead = $lead;
         $this->import = $import;
