@@ -49,12 +49,12 @@
 					<ul style="list-style-type: none;">
 					@if($people->reportsTo)
 						<li><strong>Reports To:</strong>
-						<a href="{{route('person.show',$people->reportsTo->id)}}">{{$people->reportsTo->postName()}}</a></li>
+						<a href="{{route('person.details',$people->reportsTo->id)}}">{{$people->reportsTo->postName()}}</a></li>
 					@endif
 					@if(count($people->directReports)>0)
 						<li><strong>Team:</strong></li>
 						@foreach ($people->directReports as $reports)
-							<li><a href="{{route('person.show',$reports->id)}}">{{$reports->fullName()}}</a></li>
+							<li><a href="{{route('person.details',$reports->id)}}">{{$reports->fullName()}}</a></li>
 						@endforeach
 					@endif
 
