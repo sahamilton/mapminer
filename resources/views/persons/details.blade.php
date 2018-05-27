@@ -4,7 +4,7 @@
 	<div class="panel panel-default">
 		<div class="panel-heading clearfix">
 			<h2 class="panel-title pull-left">{{$people->postName()}}</h2>
-			<a class="btn btn-primary pull-right" href="#">
+			<a class="btn btn-primary pull-right" href="{{route('users.edit',$people->user_id)}}">
 				<i class="fa fa-pencil"></i>
 				Edit
 			</a>
@@ -63,13 +63,14 @@
 			@endif
 			
 			@if(count($people->branchesServiced)>0)
+
 				<div class="list-group-item"><p class="list-group-item-text">Branches Serviced</p>
 					<ul style="list-style-type: none;">
 					
 				
 						
 						@foreach ($people->branchesServiced as $branch)
-							<li><a href="">{{$branch->branchname}}</a></li>
+							<li><a href="{{route('branches.show',$branch->id)}}">{{$branch->branchname}}</a></li>
 						@endforeach
 					
 
@@ -82,7 +83,7 @@
 				<div class="list-group-item"><p class="list-group-item-text">Accounts Managed</p>
 					<ul style="list-style-type: none;">
 						@foreach($people->managesAccount as $account)
-							<li><a href="">{{$account->companyname}}</a></li>
+							<li><a href="{{route('company.show',$account->id)}}">{{$account->companyname}}</a></li>
 						@endforeach
 					</ul>
 				</div>
@@ -96,7 +97,7 @@
 				</div>
 
 			<div class="panel-footer">
-				<small>Built with Bootcards - Base Card</small>
+				
 			</div>
 		</div>
 	</div>

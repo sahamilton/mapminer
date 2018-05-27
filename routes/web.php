@@ -365,8 +365,8 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
 		Route::get('watchlist/{userid}', ['as'=>'watch.mywatchexport', 'uses'=>'WatchController@export']);
 
 		## Search
-		Route::get('/user/find', ['as'=>'searchperson','SearchController@searchUsers']);
-		Route::get('/person/{person}/find',['as'=>'person.details','uses'=>"PersonSearchController@find"]);
+		Route::get('/user/find', 'SearchController@searchUsers');
+		Route::get('/person/{person}/find',['as'=>'person.details','uses'=>'PersonSearchController@find']);
 });
 /** ------------------------------------------
  *  Admin Routes

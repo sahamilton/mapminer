@@ -25,7 +25,9 @@ class PersonSearchController extends Controller
     {
        
       $track = $this->track
-      ->where('user_id','=',$person->user_id)->orderBy('created_at','desc')->get();
+      ->where('user_id','=',$person->user_id)
+      ->orderBy('created_at','desc')
+      ->get();
 
 
         //note remove manages & manages.servicedby

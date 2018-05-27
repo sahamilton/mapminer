@@ -125,7 +125,7 @@
                 datumTokenizer: Bloodhound.tokenizers.whitespace,
                 queryTokenizer: Bloodhound.tokenizers.whitespace,
                 remote: {
-                    url: "{{route('searchperson')}}?q=%QUERY%",
+                    url: '/ops/user/find?q=%QUERY%',
                     wildcard: '%QUERY%'
                 },
             });
