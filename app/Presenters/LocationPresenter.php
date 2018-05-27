@@ -19,4 +19,8 @@ class LocationPresenter extends BasePresenter
         }
        
     }
+
+    public function fullAddress(){
+        return $this->wrappedObject->address . ' '. $this->wrappedObject->city .'' . $this->wrappedObject->state . ' '  . $this->wrappedObject->zipi;
+    }
 }

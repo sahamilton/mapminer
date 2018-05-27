@@ -176,9 +176,12 @@
                     @endcan
                 </ul>
 			</li>
-                        
+                       
           
     </ul>
+    <div style="margin-top:10px">
+                        <input  type="text" id="search" placeholder="Type to search users" autocomplete="off" ><i class="fa fa-search"></i>
+                    </div> 
     <ul class="nav navbar-nav pull-right">
                         
                         

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "0bb02b684ee20115afe91aac0f4f50a1",
+    "content-hash": "220caca0f4cfa89c7a7e128fa530316a",
     "packages": [
         {
             "name": "algolia/algoliasearch-client-php",
@@ -2481,6 +2481,52 @@
             "time": "2018-03-19T15:50:49+00:00"
         },
         {
+            "name": "nicolaslopezj/searchable",
+            "version": "1.9.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nicolaslopezj/searchable.git",
+                "reference": "c067f11a993c274c9da0d4a2e70ca07614bb92da"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/nicolaslopezj/searchable/zipball/c067f11a993c274c9da0d4a2e70ca07614bb92da",
+                "reference": "c067f11a993c274c9da0d4a2e70ca07614bb92da",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "illuminate/database": "4.2.x|~5.0",
+                "php": ">=5.4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Nicolaslopezj\\Searchable\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicolas Lopez",
+                    "email": "nicolaslopezj@me.com"
+                }
+            ],
+            "description": "Eloquent model search trait.",
+            "keywords": [
+                "database",
+                "eloquent",
+                "laravel",
+                "model",
+                "search",
+                "searchable"
+            ],
+            "time": "2017-08-09T04:37:57+00:00"
+        },
+        {
             "name": "nikic/php-parser",
             "version": "v4.0.1",
             "source": {
@@ -3564,7 +3610,7 @@
         },
         {
             "name": "symfony/browser-kit",
-            "version": "v3.4.10",
+            "version": "v3.4.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/browser-kit.git",
@@ -3621,7 +3667,7 @@
         },
         {
             "name": "symfony/console",
-            "version": "v4.0.10",
+            "version": "v4.0.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
@@ -3742,7 +3788,7 @@
         },
         {
             "name": "symfony/debug",
-            "version": "v4.0.10",
+            "version": "v4.0.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/debug.git",
@@ -3854,7 +3900,7 @@
         },
         {
             "name": "symfony/event-dispatcher",
-            "version": "v4.0.10",
+            "version": "v4.0.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/event-dispatcher.git",
@@ -3917,7 +3963,7 @@
         },
         {
             "name": "symfony/finder",
-            "version": "v4.0.10",
+            "version": "v4.0.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/finder.git",
@@ -3966,16 +4012,16 @@
         },
         {
             "name": "symfony/http-foundation",
-            "version": "v4.0.10",
+            "version": "v4.0.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-foundation.git",
-                "reference": "39f2b7c681fa6c323e43b8e30ccb6e714e7d2f00"
+                "reference": "277b757a2d3960170d99d372e171a8a18916467a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/39f2b7c681fa6c323e43b8e30ccb6e714e7d2f00",
-                "reference": "39f2b7c681fa6c323e43b8e30ccb6e714e7d2f00",
+                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/277b757a2d3960170d99d372e171a8a18916467a",
+                "reference": "277b757a2d3960170d99d372e171a8a18916467a",
                 "shasum": ""
             },
             "require": {
@@ -4015,20 +4061,20 @@
             ],
             "description": "Symfony HttpFoundation Component",
             "homepage": "https://symfony.com",
-            "time": "2018-05-16T09:05:32+00:00"
+            "time": "2018-05-25T11:08:56+00:00"
         },
         {
             "name": "symfony/http-kernel",
-            "version": "v4.0.10",
+            "version": "v4.0.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-kernel.git",
-                "reference": "aeae9c66976daf8a33c7be7c5e6314b39092b1b0"
+                "reference": "450a1bda817f2dce25a9e13f0f011336743f2a48"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-kernel/zipball/aeae9c66976daf8a33c7be7c5e6314b39092b1b0",
-                "reference": "aeae9c66976daf8a33c7be7c5e6314b39092b1b0",
+                "url": "https://api.github.com/repos/symfony/http-kernel/zipball/450a1bda817f2dce25a9e13f0f011336743f2a48",
+                "reference": "450a1bda817f2dce25a9e13f0f011336743f2a48",
                 "shasum": ""
             },
             "require": {
@@ -4102,7 +4148,7 @@
             ],
             "description": "Symfony HttpKernel Component",
             "homepage": "https://symfony.com",
-            "time": "2018-05-21T14:02:31+00:00"
+            "time": "2018-05-25T13:32:52+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -4383,7 +4429,7 @@
         },
         {
             "name": "symfony/process",
-            "version": "v4.0.10",
+            "version": "v4.0.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
@@ -4432,7 +4478,7 @@
         },
         {
             "name": "symfony/routing",
-            "version": "v4.0.10",
+            "version": "v4.0.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/routing.git",
@@ -4510,7 +4556,7 @@
         },
         {
             "name": "symfony/translation",
-            "version": "v4.0.10",
+            "version": "v4.0.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/translation.git",
@@ -4578,7 +4624,7 @@
         },
         {
             "name": "symfony/var-dumper",
-            "version": "v4.0.10",
+            "version": "v4.0.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/var-dumper.git",
@@ -5038,16 +5084,16 @@
     "packages-dev": [
         {
             "name": "barryvdh/laravel-debugbar",
-            "version": "v3.1.4",
+            "version": "v3.1.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/barryvdh/laravel-debugbar.git",
-                "reference": "7a91480cc6e597caed5117a3c5d685f06d35c5a1"
+                "reference": "d3cdca2ad6cc6e67735b4a63e7551c690a497f5f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/barryvdh/laravel-debugbar/zipball/7a91480cc6e597caed5117a3c5d685f06d35c5a1",
-                "reference": "7a91480cc6e597caed5117a3c5d685f06d35c5a1",
+                "url": "https://api.github.com/repos/barryvdh/laravel-debugbar/zipball/d3cdca2ad6cc6e67735b4a63e7551c690a497f5f",
+                "reference": "d3cdca2ad6cc6e67735b4a63e7551c690a497f5f",
                 "shasum": ""
             },
             "require": {
@@ -5102,7 +5148,7 @@
                 "profiler",
                 "webprofiler"
             ],
-            "time": "2018-03-06T08:35:31+00:00"
+            "time": "2018-05-03T18:27:04+00:00"
         },
         {
             "name": "doctrine/instantiator",
