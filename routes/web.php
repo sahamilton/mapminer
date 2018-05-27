@@ -229,16 +229,16 @@ Route::group(['middleware' => 'auth'], function () {
 });
 
 /** ------------------------------------------
- *  Admin / Sales Ops Routes
+ *  Admin / Sales  Routes
  *  ------------------------------------------
  */
 Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
 {
-
+Route::get('/',['as'=>'ops','uses'=>'Admin\AdminDashboardController@dashboard']);
 	#Ops Main Page
-		Route::get('/',function(){
-			return response()->view('ops.index');
-		})->name('ops');
+	#	Route::get('/',function(){
+	#		return response()->view('ops.index');
+	#	})->name('ops');
 	#Branches
 		Route::get('branches/import', ['as'=>'branches.importfile', 'uses'=>'BranchesImportController@getFile']);
 		Route::post('branches/change',['as'=>'branches.change','uses'=>'BranchesImportController@update']);
