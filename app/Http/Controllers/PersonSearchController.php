@@ -26,6 +26,7 @@ class PersonSearchController extends Controller
        
       $track = $this->track
       ->where('user_id','=',$person->user_id)
+      ->whereNotNull('lastactivity')
       ->orderBy('created_at','desc')
       ->get();
 

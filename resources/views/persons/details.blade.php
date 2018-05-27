@@ -54,7 +54,9 @@
 					@if(count($people->directReports)>0)
 						<li><strong>Team:</strong></li>
 						@foreach ($people->directReports as $reports)
+					
 							<li><a href="{{route('person.details',$reports->id)}}">{{$reports->fullName()}}</a></li>
+						
 						@endforeach
 					@endif
 
@@ -91,7 +93,11 @@
 			<div class="list-group-item"><p class="list-group-item-text">Activity</p>
 					<ul style="list-style-type: none;">
 						<li><strong>Total Logins:</strong> {{count($track)}}</li>
-						<li><strong>Last Login:</strong> {{$track->first()->lastactivity->format('Y-m-d')}}</li>
+						<li><strong>Last Login:</strong> 
+							@if(count($track)>0)
+							{{$track->first()->lastactivity->format('Y-m-d')}}
+						@endif
+					</li>
 							
 					</ul>
 				</div>
