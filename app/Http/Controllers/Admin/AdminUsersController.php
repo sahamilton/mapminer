@@ -136,7 +136,7 @@ class AdminUsersController extends BaseController {
 		$mode = 'create';
 
 		// Service lines
-  ; 
+
 		$servicelines = $this->person->getUserServiceLines();
         // get all branches of this serviceline
   

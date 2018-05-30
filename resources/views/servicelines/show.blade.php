@@ -2,7 +2,7 @@
 @section('content')
 @if (Auth::user()->hasRole('Admin'))
 	<div class="pull-right">
-		<a href="{{{ route('branches.create') }}}" class="btn btn-small btn-info iframe">
+		<a href="{{{ route('webleads.create') }}}" class="btn btn-small btn-info iframe">
 		
 <i class="fa fa-plus-circle text-success" aria-hidden="true"></i>
  Create New Branch!!</a>	

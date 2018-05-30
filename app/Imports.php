@@ -64,7 +64,7 @@ class Imports extends Model
     	}
 
 
-    	public function import(){
+    public function import(){
 
       $this->createTemporaryImportTable();
 

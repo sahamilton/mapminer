@@ -16,12 +16,12 @@
         <tbody>
         @foreach($people  as $person)
             <tr> 
-                <td>{{$person->employee_id}}</td>
+                <td>{{$person->userdetails->employee_id}}</td>
                 <td><a href="{{route('salesorg',$person->id)}}">{{$person->firstname}}</a></td>
                 <td>{{$person->lastname}}</td> 
-                <td>{{$person->role}}</td>
-                <td>{{$person->email}}</td> 
-                <td>{{number_format($person->distance_in_mi,2)}}</td> 
+                <td>{{$person->userdetails->roles->first()->name}}</td>
+                <td>{{$person->userdetails->email}}</td> 
+                <td>{{number_format($person->distance,2)}}</td> 
                 <td><input type="checkbox" name="assign[]" value="{{$person->id}}" /></td>
             </tr>
         @endforeach

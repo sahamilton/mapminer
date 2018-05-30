@@ -9,7 +9,7 @@
         "algolia/algoliasearch-client-php": "^1.18",
         "baum/baum": "~1.1",
         "bugsnag/bugsnag-laravel": "^2.4",
-        "dionera/laravel-beanstalkd-ui": "^0.3.3",
+        "dionera/laravel-beanstalkd-ui": "^1.2",
         "elasticsearch/elasticsearch": "^5.2",
         "fabpot/goutte": "^3.1",
         "guzzlehttp/guzzle": "~5.3|~6.0",

@@ -9,7 +9,7 @@ use Nicolaslopezj\Searchable\SearchableTrait;
 
 class User extends Authenticatable
 {
-    use Notifiable,HasRoles, Geocode, SearchableTrait;
+ use Notifiable,HasRoles, Geocode, SearchableTrait;
 
  protected $searchable = [
         /**

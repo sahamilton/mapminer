@@ -6,13 +6,14 @@
 		<th>Service Line</th>
 		<th>Branch Address</th>
 		<th>City</th>
+		<th>Manager</th>
 		<th>Distance</th>
     </thead>
     <tbody>
 	   @foreach($branches as $branch)
 	    <tr>  
 			<td>
-				<a href="{{route('branches.show',$branch->branchid)}}" 
+				<a href="{{route('branches.show',$branch->id)}}" 
 				 title="See details of branch {{$branch->branchname}}">
 				{{$branch->branchname}}
 				</a>
@@ -25,6 +26,10 @@
 			</td>
 			<td>{{$branch->street}} {{$branch->address2}}</td>
 			<td>{{$branch->city}}</td>
+			<td>@if(count($branch->manager)>0)
+				{{$branch->manager->first()->fullName()}}
+				@endif
+			</td>
 			<td>{{number_format($branch->distance,0)}}</td>
 		</tr>
 		@endforeach
