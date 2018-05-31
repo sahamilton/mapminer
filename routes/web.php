@@ -378,7 +378,8 @@ Route::get('/',['as'=>'ops','uses'=>'Admin\AdminDashboardController@dashboard'])
 
 Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 {
-
+	# Branch managemnet
+		Route::get('branch/manage',['as'=>'branch.management','uses'=>'Admin\BranchManagementController@index']);
 
     # User Management
 

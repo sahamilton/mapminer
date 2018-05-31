@@ -84,7 +84,7 @@
                                 
 
                                 <li{{ (Request::is('branches*') ? ' class="active"' : '') }}>
-                                    <a href="{{ route('branches.index') }}">
+                                    <a href="{{ route('branch.management') }}">
                                     <i class="fa fa-wrench" aria-hidden="true"></i>  Manage Branches
                                     </a>
                                  </li>

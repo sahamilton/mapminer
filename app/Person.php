@@ -2,6 +2,7 @@
 namespace App;
 use\App\Presenters\LocationPresenter;
 use McCool\LaravelAutoPresenter\HasPresenter;
+
 class Person extends NodeModel implements HasPresenter {
 	use Geocode,Filters;
 
@@ -69,7 +70,12 @@ class Person extends NodeModel implements HasPresenter {
 		return $this->hasMany(News::class);
 
 	}
-	
+	public function scopeManages($query,$roles){
+		return $query->wherehas('userdetails.roles', function($q) use($roles){
+					$q->whereIn('role_id',$roles);
+				});
+
+	}
 	public function fullName()
 	{
 		return $this->attributes['lastname'] . ',' . $this->attributes['firstname'];
