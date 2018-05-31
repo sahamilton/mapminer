@@ -18,7 +18,7 @@ class BranchManagementController extends Controller
     }
 
     public function index(){
-    	$branches = $this->branch->has('manager')->get();
+    	$branches = $this->branch->doesntHave('manager')->with('servicelines')->get();
 		$people = $this->person->with('userdetails.roles','reportsTo')->doesntHave('manages')->manages([9])
 		->get();
 		return response()->view('admin.branches.manage',compact('branches','people'));
