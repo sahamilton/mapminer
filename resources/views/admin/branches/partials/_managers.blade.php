@@ -5,7 +5,6 @@
 	<th>Employee Id</th>
 	<th>Email</th>
 	<th>Reports To</th>
-	
 </thead>
 	<tbody>
 		@foreach ($people as $manager)
@@ -20,13 +19,11 @@
 					</ul>
 
 				@endif
-		</td>
-		<td>{{$manager->userdetails->employee_id}}</td>
+			</td>
+			<td>{{$manager->userdetails->employee_id}}</td>
 			<td>{{$manager->userdetails->email}}</td>
 			<td>@if(count($manager->reportsTo)>0){{$manager->reportsTo->fullName()}}@endif</td>
-			
 		</tr>
 		@endforeach
 	</tbody>
-
 </table>
