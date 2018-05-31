@@ -11,7 +11,9 @@
 	@foreach($branches as $branch)
 
 		<tr>
-			<td><a href="{{route('branches.edit',$branch->id)}}">{{$branch->id}}</a></td>
+			<td><a href="{{route('branches.edit',$branch->id)}}" title="Edit {{$branch->branchname}} branch details"><i class="fa fa-pencil" aria-hidden="true"> </i>{{$branch->id}}</a>
+				<a href="{{route('branches.show',$branch->id)}}" target="_blank" title="Review {{$branch->branchname}} branch details"><i class="fa fa-eye" aria-hidden="true"></i></a>
+			</td>
 			<td>{{$branch->branchname}}</td>
 			<td>
 				<ul style=" list-style-type: none;">
