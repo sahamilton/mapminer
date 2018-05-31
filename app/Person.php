@@ -106,7 +106,7 @@ class Person extends NodeModel implements HasPresenter {
 	}
 
 	public function getPersonsWithRole($roles){
-		return $this->select(\DB::raw("CONCAT(lastname,' ' ,firstname) AS fullname, id"))
+		return $this->select(\DB::raw("*, CONCAT(lastname,' ' ,firstname) AS fullname, id"))
 			->whereHas('userdetails.roles', 
 				function($q) use($roles){
 					$q->whereIn('role_id',$roles);

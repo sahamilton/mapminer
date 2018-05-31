@@ -1,3 +1,5 @@
+
+
 <!-- company -->
     <div class="form-group{{ $errors->has('companyname') ? ' has-error' : '' }}">
         <label class="col-md-2 control-label">Company Name:</label>
@@ -17,7 +19,7 @@
             <select  required class="form-control" name='person_id'>
             @foreach ($managers as $manager)
                 <option @if(isset($company) && $company->person_id == $manager->id) selected @endif
-                value="{{$manager->id}}">{{$manager->fullname}}</option>
+                value="{{$manager->id}}">{{$manager->fullName()}}</option>
             @endforeach
             </select>
             <span class="help-block">

@@ -162,7 +162,7 @@ class CompaniesController extends BaseController {
 	{
 
 		$managers = $this->person->getPersonsWithRole($this->NAMRole);
-
+		
 		$company = $company
 					->where('id','=',$company->id)
 					->with('managedBy')
@@ -173,6 +173,7 @@ class CompaniesController extends BaseController {
 			->pluck('ServiceLine','id');
 
 		$filters = $this->getFilters();
+
 		//$verticals = $this->searchfilter->industrysegments();
 		return response()->view('companies.edit', compact('company','managers','filters','servicelines'));
 	}
