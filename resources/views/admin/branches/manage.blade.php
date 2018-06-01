@@ -7,7 +7,7 @@
 
     <ul class="nav nav-tabs">
     <li class="active"><a data-toggle="tab" href="#showmap"><strong>Branches Without Managers</strong></a></li>
-    <li><a data-toggle="tab" href="#details"><strong>Branch Managers Without Branches</strong></a></li>
+    <li><a data-toggle="tab" href="#details"><strong>Managers* Without Branches</strong></a></li>
     
 
     </ul>

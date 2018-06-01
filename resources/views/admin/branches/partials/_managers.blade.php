@@ -1,3 +1,13 @@
+<p>* Includes the following roles:
+
+		@foreach ( $roles as $role)
+			{{$role->name}}
+			 @if (! $loop->last)
+			 ,
+			 @endif
+		@endforeach
+
+</p>
 <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
 <thead>
 	<th>Manager</th>
