@@ -1,4 +1,4 @@
-<p>* Includes the following roles:
+<p><span style="color:red">*</span> Includes the following roles:
 
 		@foreach ( $roles as $role)
 			{{$role->name}}
