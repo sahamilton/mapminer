@@ -9,6 +9,7 @@ class AccounttypesController extends BaseController {
 		$this->accounttype = $accounttype;
 	}
 
+
 	/**
 	 * Display a listing of accounttypes
 	 *
