@@ -11,7 +11,7 @@
 @include('partials/advancedsearch')
 @include('partials.companyfilter')
 
-@if (Auth::user()->hasRole('Admin'))
+@if (Auth::user()->hasRole('Admin') or Auth::user()->hasRole('Sales Operations'))
 
 
 <div class="pull-right">
@@ -30,7 +30,7 @@
 			<th>Locations</th>
 			<th>Service Lines</th>
 
-			@if (auth()->user()->hasRole('Admin'))
+			@if (Auth::user()->hasRole('Admin') or Auth::user()->hasRole('Sales Operations'))
 			<th>Actions</th>
 			@endif
 		</thead>
@@ -92,7 +92,7 @@
 				@endforeach
 				</ul>
 			</td>
-			@if (auth()->user()->hasRole('Admin'))
+			@if (Auth::user()->hasRole('Admin') or Auth::user()->hasRole('Sales Operations'))
 				<td>
 
 
