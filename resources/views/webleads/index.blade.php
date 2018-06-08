@@ -2,7 +2,7 @@
 @section('content')
 
 <h1>Web Leads</h1>
- @if (Auth::user()->hasRole('Admin'))
+ @if (Auth::user()->hasRole('Admin') or Auth::user()->hasRole('Sales Operations'))
 <div class="pull-right">
 				<p><a href="{{{ route('webleads.create') }}}" class="btn btn-small btn-info iframe">
 <i class="fa fa-plus-circle text-success" aria-hidden="true"></i>
@@ -14,10 +14,9 @@
     <thead>
     <th>Date Added</th>
      <th>Company</th>
-     <th>Contact</th>
-     <th>Phone</th>
-     <th>Email</th>
+     <th>Address</th>
      <th>Rating</th>
+     <th>Status</th>
      <th>Industry</th>
      <th>Actions</th>
    
@@ -29,10 +28,16 @@
     <tr> 
     <td>{{$lead->created_at->format('Y-m-d')}}</td> 
 	<td><a href="{{route('webleads.show',$lead->id)}}">{{$lead->company_name}}</a></td>
-	<td>{{$lead->first_name}} {{$lead->last_name}}</td>
-	<td>{{$lead->phone_number}}</td>
-	<td>{{$lead->email_address}}</td>
+	<td>{{$lead->address}}</td>
+	
 	<td>{{$lead->rating}}</td>
+	<td>
+		@if(count($lead->salesteam)>0)
+			Assigned to{{$lead->salesteam->first()->postName()}} on 
+						{{$lead->salesteam->first()->pivot->created_at->format('j M, Y')}}
+		@else
+			Open
+		@endif
 	<td>{{$lead->industry}}</td>
 	
 

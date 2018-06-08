@@ -6,7 +6,7 @@ use McCool\LaravelAutoPresenter\HasPresenter;
 class Branch extends Model implements HasPresenter {
 	use Geocode;
 	public $table ='branches';
-
+protected $hidden = ['created_at','updated_at'];
 	protected $primaryKey = 'id'; // or null
 
     public $incrementing = false;

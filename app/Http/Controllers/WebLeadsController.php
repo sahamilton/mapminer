@@ -38,9 +38,13 @@ class WebLeadsController  extends ImportController
 
     public function show($lead){
         $lead = $this->lead->with('salesteam')->findOrFail($lead);
-        $people = $this->findNearbySales($lead);
-        $branches = $this->findNearByBranches($lead);       
-        return response()->view('webleads.show',compact('lead','branches','people'));
+        
+        $branches = $this->findNearByBranches($lead);
+
+        $people = $this->findNearbySales($branches,$lead); 
+        $salesrepmarkers = $this->jsonify($people);
+        $branchmarkers=$branches->toJson();
+        return response()->view('webleads.show',compact('lead','branches','people','salesrepmarkers','branchmarkers'));
 
     }
 
@@ -98,7 +102,7 @@ class WebLeadsController  extends ImportController
         }
 
         // geocode lead
-         $geocode = $this->getLatLng($newdata['city'] .", " . $newdata['state']);
+        $geocode = $this->getLatLng($newdata['city'] .", " . $newdata['state']);
         // 
         $newdata['lat'] = $geocode['lat'];
         $newdata['lng'] = $geocode['lng'];
@@ -127,7 +131,13 @@ class WebLeadsController  extends ImportController
 
     }
     public function assignLeads(Request $request){
-        dd($request->all());
+
+       $assign = $request->get('assign');
+        $lead = $this->lead->find($request->get('lead_id'))->firstOrFail();
+        //$salesteam = $this->person->whereIn('id',$assign)->get();
+        $lead->salesteam()->attach($assign, ['status_id' => 2,'type'=>'web']);
+        // send email to assignees
+        return redirect()->route('webleads.index');
     }
     /**
      * Find nearby sales people.
@@ -136,14 +146,18 @@ class WebLeadsController  extends ImportController
      * @return People object
      */
 
-    private function findNearBySales($lead){
+    private function findNearBySales($branches,$lead){
+        $branch_ids = $branches->pluck('id')->toArray(); 
         $data['distance']=\Config::get('leads.search_radius');
         $salesroles = $this->salesroles;
         $persons =  $this->person->whereHas('userdetails.roles',function ($q) use($salesroles){
           $q->whereIn('roles.id',$salesroles);
         })
-        ->with('userdetails','userdetails.roles');
-        return $persons->nearby($lead,$data['distance'])->limit(5)->get();
+        ->whereHas('branchesServiced',function ($q) use ($branch_ids){
+            $q->whereIn('branches.id',$branch_ids);
+        })
+        ->with('userdetails','userdetails.roles','industryfocus','branchesServiced');
+        return $persons->nearby($lead,$data['distance'])->limit(10)->get();
       
 
     }
@@ -151,10 +165,22 @@ class WebLeadsController  extends ImportController
      private function findNearByBranches($lead){
         $data['distance']=\Config::get('leads.search_radius');
        
-       return  $this->branch->with('manager')->nearby($lead,$data['distance'])->limit(5)->get();
+       return  $this->branch->with('manager')->nearby($lead,$data['distance'])->limit(10)->get();
 
 
     }
-
+    public function jsonify($people) {
+        $key=0;
+        foreach ($people as $person){
+            $salesrepmarkers[$key]['id']=$person->id;
+            $salesrepmarkers[$key]['lat']=$person->lat;
+            $salesrepmarkers[$key]['lng']=$person->lng;
+            
+            $salesrepmarkers[$key]['name']=$person->fullName();
+            $key++;
+        }
+      
+      return collect($salesrepmarkers)->toJson();
+}
 }
 

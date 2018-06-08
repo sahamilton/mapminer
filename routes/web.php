@@ -321,7 +321,7 @@ Route::get('/',['as'=>'ops','uses'=>'Admin\AdminDashboardController@dashboard'])
 		## Web leads
 		Route::resource('/webleads','WebLeadsController');
 		Route::post('/webleads/form',['as'=>'leads.webleadsinsert','uses'=>'WebLeadsController@getLeadFormData']);
-
+		Route::post('/webleads/assign',['as'=>'webleads.assign','uses'=>'WebLeadsController@assignLeads']);
 		
 		Route::get('leads/{id}/person',['as'=>'leads.person','uses'=>'LeadsController@getPersonsLeads']);
 		Route::get('leads/{id}/person/{sid}/source',['as'=>'leads.personsource','uses'=>'LeadsController@getPersonSourceLeads']);

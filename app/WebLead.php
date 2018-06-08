@@ -57,12 +57,12 @@ class WebLead extends Model implements HasPresenter {
     public function salesteam(){
 
     	return $this->belongsToMany(Person::class, 'lead_person_status','related_id','person_id')
-      ->withPivot('created_at','updated_at','status_id','rating','type')
-      ->wherePivot('type','=','web');
+            ->withPivot('created_at','updated_at','status_id','rating','type')
+            ->wherePivot('type','=','web');
     }
     
     public function relatedNotes() {
-      return $this->hasMany(Note::class,'related_id')->where('type','=','prospect')->with('writtenBy');
+      return $this->hasMany(Note::class,'related_id')->where('type','=','web')->with('writtenBy');
     }
     
     public function getPresenterClass()
@@ -88,9 +88,9 @@ class WebLead extends Model implements HasPresenter {
     public function ownedBy(){
 
       return $this->belongsToMany(Person::class,'lead_person_status','related_id','person_id')
-      ->wherePivotIn('status_id',[2,3])
-      ->wherePivot('type','=','prospect')
-      ->withPivot('created_at','updated_at','status_id','rating','type');;
+        ->wherePivotIn('status_id',[2,3])
+        ->wherePivot('type','=','web')
+        ->withPivot('created_at','updated_at','status_id','rating','type');
     }
 
     public function leadRank(){
