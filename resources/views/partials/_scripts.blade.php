@@ -30,6 +30,10 @@ $(document).ready(function()
 		$(this).find('input#company_id').val($(e.relatedTarget).data('pk'));
 		
 	});
+	$(document).on('show.bs.modal','#unassign-lead', function(e) {
+    	$(this).find('#title').html($(e.relatedTarget).data('title'));
+		$(this).find('#action-form').attr('action',$(e.relatedTarget).data('href'));
+	});	
 	$(document).on('show.bs.modal','#add-locationcontact', function(e) {
     	$(this).find('#title').html($(e.relatedTarget).data('title'));
 		$(this).find('input#location_id').val($(e.relatedTarget).data('pk'));

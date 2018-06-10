@@ -322,7 +322,8 @@ Route::get('/',['as'=>'ops','uses'=>'Admin\AdminDashboardController@dashboard'])
 		Route::resource('/webleads','WebLeadsController');
 		Route::post('/webleads/form',['as'=>'leads.webleadsinsert','uses'=>'WebLeadsController@getLeadFormData']);
 		Route::post('/webleads/assign',['as'=>'webleads.assign','uses'=>'WebLeadsController@assignLeads']);
-		
+		Route::delete('/webleads/{id}/unassign',['as'=>'webleads.unassign','uses'=>'WebLeadsController@unAssignLeads']);
+
 		Route::get('leads/{id}/person',['as'=>'leads.person','uses'=>'LeadsController@getPersonsLeads']);
 		Route::get('leads/{id}/person/{sid}/source',['as'=>'leads.personsource','uses'=>'LeadsController@getPersonSourceLeads']);
 		Route::get('leadsource/{id}/export',['as'=>'leadsource.export','uses'=>'LeadSourceController@export']);

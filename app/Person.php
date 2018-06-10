@@ -120,6 +120,13 @@ class Person extends NodeModel implements HasPresenter {
 		->wherePivot('type','=','prospect')
 		->withPivot('status_id','rating','type');
 	}
+
+	public function webleads(){
+		return $this->belongsToMany(WebLead::class, 'lead_person_status','person_id','related_id')
+			->withTimestamps()
+			->wherePivot('type','=','web')
+			->withPivot('status_id','rating','type');
+	}
 	
 	public function leadratings(){
       	return  $this->belongsToMany(Lead::class, 'lead_person_status','person_id','related_id')

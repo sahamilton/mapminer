@@ -139,6 +139,16 @@ class WebLeadsController  extends ImportController
         // send email to assignees
         return redirect()->route('webleads.index');
     }
+
+    public function unAssignLeads(Request $request){
+    dd($request->all());
+       
+       $lead = $this->lead->find($request->get('lead_id'))->firstOrFail();
+        //$salesteam = $this->person->whereIn('id',$assign)->get();
+        $lead->salesteam()->deattach($assign, ['status_id' => 2,'type'=>'web']);
+        // send email to assignees
+        return redirect()->route('webleads.index');
+    }
     /**
      * Find nearby sales people.
      *
