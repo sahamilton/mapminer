@@ -26,6 +26,7 @@ class UserFormRequest extends FormRequest
     public function rules(Request $request)
     {
         $salesrules=array();
+        $branchrules=array();
 
        if (count(array_intersect($request->get('roles'), [5,6,7,8]))>0){
             $salesrules = ['reports_to'=>'required'];
