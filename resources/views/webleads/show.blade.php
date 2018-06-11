@@ -1,5 +1,6 @@
-@extends('site/layouts/default')
+@extends ('admin.layouts.default')
 @section('content')
+
 <div class="col-sm-5">
 	<div class="panel panel-default">
 		<div class="panel-heading clearfix">
@@ -40,12 +41,11 @@
 						<li><strong>Lead Assigned to:</strong>{{$lead->salesteam->first()->postName()}}</li>
 						<li><strong>Lead Assigned on:</strong>{{$lead->salesteam->first()->pivot->created_at->format('j M, Y')}}</li>
 						<p class="pull-right text-danger">
-							<a 	data-href="{{route('webleads.unassign',$lead->id)}}"
-					            data-toggle="modal" 
-					            data-target="#confirm-delete" 
-					            data-title = "lead assignment"
-					            title="Unassign this lead"
-					            href="#">
+							<a data-href="{{route('webleads.unassign',$lead->id)}}" 
+			                    data-toggle="modal" 
+			                    data-target="#unassign-weblead"
+			                    data-title = "unassign this weblead" 
+			                    href="#">
 							<i class="fa fa-unlink"></i> Un-assign lead</a></p>
 						
 				</ul>
@@ -64,6 +64,8 @@
 		<div class="col-sm-12">
 		@include('leads.partials._repslist')
 		</div>
+@else
+	@include('partials._unassignleadmodal')		
 @endif
 </div>
 	<!--
@@ -75,7 +77,7 @@
 		Closest sales reps
 	-->
 @include('webleads.partials.map')
-@include('partials._unassignleadmodal')	
+
 @include('partials/_scripts')
 @stop
 

@@ -1,4 +1,4 @@
-<div class="modal fade" id="unassign-lead" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="unassign-weblead" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
             
@@ -8,7 +8,7 @@
                 </div>
             
                 <div class="modal-body">
-                    <p>You are about to delete <span id='title'>this item</span>.  Note this procedure is irreversible.</p>
+                    <p>You are about to unassign this lead.  Note this procedure is irreversible.</p>
                     <p>Do you want to proceed?</p>
                     <p class="debug-url"></p>
                 </div>
@@ -21,11 +21,14 @@
                         class="btn btn-danger danger">Delete</a>
                                         
                         <form id="action-form" 
-                            action="" 
+                            action="{{route('webleads.unassign',$lead->id)}}" 
                             method="post" 
 
                             style="display: none;">
                             <input type="hidden" name="_method" value="delete">
+                            <input type="hidden" name="rep" value="{{$lead->salesteam->first()->id}}"><<input type="hidden" name="lead" value="{{$lead->id}}">
+
+
                             {{ csrf_field() }}
                         </form>
                 </div>

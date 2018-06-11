@@ -27,7 +27,8 @@ class WebLeadsController  extends ImportController
     }
     public function index(){
 
-        $webleads = $this->lead->all();
+        $webleads = WebLead::all();
+  
         return response()->view('webleads.index',compact('webleads'));
     }
      
@@ -120,6 +121,7 @@ class WebLeadsController  extends ImportController
     }
 
     public function destroy($lead){
+        dd($lead);
         $this->lead->destroy($lead);
         return redirect()->route('webleads.index');
     }
@@ -141,11 +143,11 @@ class WebLeadsController  extends ImportController
     }
 
     public function unAssignLeads(Request $request){
-    dd($request->all());
+        
        
-       $lead = $this->lead->find($request->get('lead_id'))->firstOrFail();
+       $lead = $this->lead->find($request->get('lead'))->firstOrFail();
         //$salesteam = $this->person->whereIn('id',$assign)->get();
-        $lead->salesteam()->deattach($assign, ['status_id' => 2,'type'=>'web']);
+        $lead->salesteam()->detach($request->get('rep'));
         // send email to assignees
         return redirect()->route('webleads.index');
     }
