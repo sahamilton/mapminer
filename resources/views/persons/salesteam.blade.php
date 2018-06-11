@@ -9,10 +9,12 @@
 @endforeach
 </ul></p>
 <p>Reports to: 
+	@if(count($people->reportsTo)!=0)
 <a href="{{route('person.show',$people->reportsTo->id)}}">
 		
 
 {{$people->reportsTo->postName()}}</a>
+@endif
 <p><a href="mailto:{{$people->email}}" title="Email {{$people->firstname}} {{$people->lastname}}">{{$people->email}}</a> </p>
 <h4>Branches serviced by {{$people->postName()}}</h4>
 
