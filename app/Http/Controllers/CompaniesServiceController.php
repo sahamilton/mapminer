@@ -331,6 +331,7 @@ class CompaniesServiceController extends BaseController
 			$data['branches'][$location->id]=$location->nearbyBranches()->get();
 
 		}
+
 		return $data;
 	}
 
