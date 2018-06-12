@@ -178,22 +178,20 @@ class AdminUsersController extends BaseController {
             $person->user_id = $user->id;
             $person->firstname = $request->get('firstname');
             $person->lastname = $request->get('lastname');
-
             $person->save();
            	$person = $this->updateAssociatedPerson($person,$request->all());
             $person = $this->associateBranchesWithPerson($person,$request->all());
 			$user->person()->save($person);
-            $person->rebuild();
             $track=Track::create(['user_id'=>$user->id]);
             $user->saveRoles($request->get( 'roles' ));
             $user->serviceline()->attach($request->get('serviceline'));
 	        $person->rebuild();
-            return redirect()->to('admin/users/')
+            return redirect()->route('users.index')
                 ->with('success', 'User created succesfully');
 
         } else {
 
-            return redirect()->to('admin/users/create')
+            return redirect()->route('users.create')
                 ->withInput($request->except('password'))
                 ->with( 'error', 'Unable to create user' );
         }
