@@ -8,6 +8,7 @@
 
             <th>First Name</th>
             <th>Last Name</th>
+            <th>Industry Focus</th>
             <th>Branches</th>
 
             <th>Distance</th>
@@ -19,6 +20,12 @@
 
                 <td><a href="{{route('salesorg',$person->id)}}">{{$person->firstname}}</a></td>
                 <td>{{$person->lastname}}</td>
+                <td>
+                    @foreach($person->industryfocus as $industry)
+                        <li>{{$industry->filter}}</li>
+                    @endforeach
+
+                </td> 
                 <td>
                     @foreach($person->branchesServiced as $branch)
                         <li>{{$branch->branchname}}</li>

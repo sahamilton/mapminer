@@ -33,7 +33,7 @@ class UserObserver
    public function created(User $user )
     {
        
-        Mail::queue(new UserNotification($user));
+       // Mail::queue(new UserNotification($user));
     }
 
     

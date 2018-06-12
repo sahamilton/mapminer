@@ -165,6 +165,7 @@ class WebLeadsController  extends ImportController
         $persons =  $this->person->whereHas('userdetails.roles',function ($q) use($salesroles){
           $q->whereIn('roles.id',$salesroles);
         })
+       
         ->whereHas('branchesServiced',function ($q) use ($branch_ids){
             $q->whereIn('branches.id',$branch_ids);
         })
