@@ -110,10 +110,11 @@
                         <li class="dropdown-submenu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Users</a>
                             <ul class="dropdown-menu">
-
+                                <li{{ (Request::is('admin/users/create') ? ' class="active"' : '') }}><a href="{{ route('users.create') }}">
+                                <i class="fa fa-user-plus" aria-hidden="true"></i> Create User</a></li>
 
                                 <li{{ (Request::is('admin/users*') ? ' class="active"' : '') }}><a href="{{ route('users.index') }}">
-                                <i class="fa fa-user" aria-hidden="true"></i> Users</a></li>
+                                <i class="fa fa-user" aria-hidden="true"></i> All Users</a></li>
                                 <li{{ (Request::is('admin/roles*') ? ' class="active"' : '') }}><a href="{{ route('roles.index') }}">
                                 <i class="fa fa-wrench" aria-hidden="true"></i> Roles</a></li>
                                 <li{{ (Request::is('admin/permissions*') ? ' class="active"' : '') }}><a href="{{ route('permissions.index') }}"><i class="fa fa-check" aria-hidden="true"></i> Permissions</a></li>
