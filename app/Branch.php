@@ -11,9 +11,10 @@ protected $hidden = ['created_at','updated_at'];
 
     public $incrementing = false;
 
-
-	public $branchRoles = [5,9,11];
-	public $branchmanagerrole = 9;
+    public $branchManagerRole = 9;
+	public $branchRoles = [3,5,9,11];
+	public $businessManagerRole = 11;
+	public $marketManagerRole = 3;
 	// Add your validation rules here
 	public static $rules = [
 		'branchname'=>'required',
@@ -24,7 +25,7 @@ protected $hidden = ['created_at','updated_at'];
 		'zip'=>'required',
 
 	];
-	public $branchManagerRole = 9;
+	
 	// Don't forget to fill this array
 	public $fillable = [
 		'id',
@@ -72,8 +73,18 @@ protected $hidden = ['created_at','updated_at'];
 	
 	public function manager() 
 	{
-		return $this->relatedPeople($this->branchManagerRole)->wherePivot('role_id','=',$this->branchmanagerrole);;
+		return $this->relatedPeople($this->branchManagerRole);
 		
+	}
+
+	public function businessmanager()
+	{
+		return $this->relatedPeople($this->businessManagerRole);
+	}
+
+	public function marketmanager()
+	{
+		return $this->relatedPeople($this->marketManagerRole);
 	}
 	
 	public function servicelines()

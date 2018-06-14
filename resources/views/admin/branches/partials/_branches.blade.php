@@ -6,6 +6,10 @@
 	<th>Address</th>
 	<th>City</th>
 	<th>State</th>
+	<th>Branch Manager</th>
+	<th>Business Manager</th>
+	<th>Market Manager</th>
+
 </thead>
 <tbody>
 	@foreach($branches as $branch)
@@ -24,6 +28,18 @@
 			<td>{{$branch->street}} {{$branch->address2}}</td>
 			<td>{{$branch->city}}</td>
 			<td>{{$branch->state}}</td>
+			<td>@if(count($branch->manager)>0)
+				{{$branch->manager->first()->postName()}}
+				@endif
+			</td>
+			<td>@if(count($branch->businessmanager)>0) 
+				{{$branch->businessmanager->first()->postName()}}
+				@endif
+			</td>
+			<td>@if(count($branch->marketmanager)>0)
+				{{$branch->marketmanager->first()->postName()}}
+				@endif
+			</td>
 
 		</tr>
 	@endforeach

@@ -23,10 +23,23 @@ class BranchManagementController extends Controller
     public function index(){
         $roles = $this->role->whereIn('id',$this->branchRoles)->get();
  
-    	$branches = $this->branch->doesntHave('manager')->with('servicelines')->get();
-		$people = $this->person->with('userdetails.roles','reportsTo','userdetails.serviceline')->doesntHave('manages')->manages($this->branchRoles)
-		->get();
+    	$branches = $this->branch
+        ->doesntHave('manager')
+        ->orWhere(function ($q){
+            $q->orDoesntHave('businessmanager')
+            ->orDoesntHave('marketmanager');
+        })
+        
 
+        ->with('servicelines','manager','marketmanager','businessmanager')
+        ->get();
+		
+
+        $people = $this->person
+        ->with('userdetails.roles','reportsTo','userdetails.serviceline')
+        ->doesntHave('manages')
+            ->manages($this->branchRoles)
+        ->get();
 		return response()->view('admin.branches.manage',compact('branches','people','roles'));
 
     }

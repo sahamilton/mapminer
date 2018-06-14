@@ -1,17 +1,14 @@
 @component('mail::message')
 
-## New Prospects 
+## New Web Lead 
 
 {{$team->firstname}}, 
 
-{!! $data['message'] !!}
+You have been assigned a new lead that came through the people ready website.  The details are below:
 
-@component('mail::button', ['url' => route('salesleads.index'), 'color' => 'blue'])
-        Check out your {{$data['source']->title}} sales prospects and resources.
-@endcomponent
 
-<em> If you’re having trouble clicking the  button, copy and paste the URL below
-into your web browser: [{{ route('salesleads.index')}}]({{ route('salesleads.index')}}) </em>
+
+Note that the nearest branch is
 
 Sincerely
         
