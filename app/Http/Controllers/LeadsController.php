@@ -70,7 +70,7 @@ class LeadsController extends BaseController
             $leadreps = $lead->salesteam->pluck('id')->toArray();
             $salesreps = array_unique(array_merge($salesreps,$leadreps));
         }
-        dd($salesreps);
+
         return $this->person->with('userdetails','industryfocus','reportsTo','salesleads')
            ->whereIn('id',$salesreps)
 

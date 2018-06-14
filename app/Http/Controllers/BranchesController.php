@@ -235,12 +235,11 @@ class BranchesController extends BaseController {
 	 */
 	public function edit($branch)
 	{
+		
 		$branchRoles = \App\Role::whereIn('id',$this->branch->branchRoles)->pluck('name','id');
 		$team = $this->person->personroles($this->branch->branchRoles);
-
-		$branch = $this->branch->find($branch->id);
-		$branchteam = $branch->relatedPeople()->pluck('persons.id')->toArray();;
-		
+		$branch = $this->branch->find($branch->id);	
+		$branchteam = $branch->relatedPeople()->pluck('persons.id')->toArray();
 		$servicelines = $this->serviceline->whereIn('id',$this->userServiceLines )->get();
 		$branchservicelines = $branch->servicelines()->pluck('servicelines.id')->toArray();
 

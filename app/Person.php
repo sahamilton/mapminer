@@ -1,20 +1,23 @@
 <?php
 namespace App;
-class Person extends NodeModel {
+use\App\Presenters\LocationPresenter;
+use McCool\LaravelAutoPresenter\HasPresenter;
+
+class Person extends NodeModel implements HasPresenter {
 	use Geocode,Filters;
 
 	// Add your validation rules here
 	public static $rules = [
-	'email'=>'required',
-	'mgrtype' => 'required'
+		'email'=>'required',
+		'mgrtype' => 'required',
 	];
 	protected $table ='persons';
-
+	protected $hidden = ['created_at','updated_at'];
 	protected $parentColumn = 'reports_to';
 
-	protected $dates =['created_at','updated_at','active_from'];
+	
 	// Don't forget to fill this array
-	public $fillable = ['firstname','lastname','phone','address','lat','lng','reports_to','city','state','geostatus','user_id','active_from'];
+	public $fillable = ['firstname','lastname','phone','address','lat','lng','reports_to','city','state','geostatus','user_id'];
 
 	
 	public function reportsTo()
@@ -67,7 +70,12 @@ class Person extends NodeModel {
 		return $this->hasMany(News::class);
 
 	}
-	
+	public function scopeManages($query,$roles){
+		return $query->wherehas('userdetails.roles', function($q) use($roles){
+					$q->whereIn('role_id',$roles);
+				});
+
+	}
 	public function fullName()
 	{
 		return $this->attributes['lastname'] . ',' . $this->attributes['firstname'];
@@ -82,7 +90,10 @@ class Person extends NodeModel {
 	{
 		return $this->belongsToMany(SearchFilter::class)->withTimestamps(); 
 	}
-
+	public function getPresenterClass()
+    {
+        return LocationPresenter::class;
+    }
 	public function personroles($roles){
 
 
@@ -95,7 +106,7 @@ class Person extends NodeModel {
 	}
 
 	public function getPersonsWithRole($roles){
-		return $this->select(\DB::raw("CONCAT(lastname,' ' ,firstname) AS fullname, id"))
+		return $this->select(\DB::raw("*, CONCAT(lastname,' ' ,firstname) AS fullname, id"))
 			->whereHas('userdetails.roles', 
 				function($q) use($roles){
 					$q->whereIn('role_id',$roles);
@@ -108,6 +119,13 @@ class Person extends NodeModel {
 		->withTimestamps()
 		->wherePivot('type','=','prospect')
 		->withPivot('status_id','rating','type');
+	}
+
+	public function webleads(){
+		return $this->belongsToMany(WebLead::class, 'lead_person_status','person_id','related_id')
+			->withTimestamps()
+			->wherePivot('type','=','web')
+			->withPivot('status_id','rating','type');
 	}
 	
 	public function leadratings(){

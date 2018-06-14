@@ -36,6 +36,7 @@
             <th class="col-md-2">Service Lines</th>
             <th class="col-md-2">Activated</th>
             <th class="col-md-2">LastLogin</th>
+            <th class="col-md-2">LastUpdate</th>
             <th class="col-md-2">Actions</th>
 			</tr>
 		</thead>
@@ -80,11 +81,12 @@
     <td>
  
 		@if(isset($user->lastlogin) &&  $user->lastlogin != '0000-00-00 00:00:00'  )
-                <?php  $lastlogin = Carbon\Carbon::parse($user->lastlogin);?>
-                {{$lastlogin->format('M j, Y h:i a')}}
+               
+                {{$user->lastlogin->format('M j, Y h:i a')}}
 			@endif
 	
 	</td>
+    <td>{{$user->updated_at->format('M j, Y h:i a')}}</td>
     <td class="col-md-2">
     
 

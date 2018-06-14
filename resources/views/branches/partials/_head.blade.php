@@ -8,16 +8,20 @@
         <p>{{$data['branch']->street}} {{$data['branch']->address2}}<br/>
         {{$data['branch']->city}},{{$data['branch']->state}} {{$data['branch']->zip}}<br />
         {{$data['branch']->phone}}</p>
+
         <h4>Branch Team</h4>
         @foreach ($data['branch']->relatedPeople()->get() as $people)
+
             <p>
                 <strong>
+                    @if($people->pivot->role_id)
                     {{$roles[$people->pivot->role_id]}}:
+                    @endif
                     <a href="{{route('person.show',$people->id)}}"
                         title = "See {{$people->firstname}}'s organizational details">
                         {{$people->postName()}}  
                     </a> 
-                </strong>
+                </strong>  
                 @if($people->phone != "")
                    <i class="fa fa-phone" aria-hidden="true"></i>
                     {{$people->phone}} 

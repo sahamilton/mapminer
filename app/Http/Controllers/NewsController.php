@@ -186,20 +186,24 @@ class NewsController extends BaseController {
 	
 	public function noNews()
 	{
-
-		$noNewsDate = date('Y-m-d h:i:s');
-		$user = User::findOrFail(auth()->user()->id);
-		$user->nonews = $noNewsDate;
-		$user->save();
+		$noNewsDate = Carbon::now();
+		$this->updateNewsDate($noNewsDate);
 	}
 	
 	public function setNews()
 	{
 
 		$noNewsDate = NULL;
-		$user = User::findOrFail(auth()->user()->id);
+		$this->updateNewsDate($noNewsDate);
+	}
+
+	private function updateNewsDate($noNewsDate){
+		$user = auth()->user();
 		$user->nonews = $noNewsDate;
+		// dont want to update the user last updated at fields
+		$user->timestamps = false;
 		$user->save();
+		$user->timestamps = true;
 	}
 	
 	private function getPersonId()

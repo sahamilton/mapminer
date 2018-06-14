@@ -1,4 +1,4 @@
-@extends('ops.layouts.default')
+@extends('admin.layouts.default')
 @section('content')
 
 

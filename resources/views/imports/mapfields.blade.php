@@ -45,13 +45,13 @@
             </select>
             </td>
             <td>
-            {{$fields[1][$key]}}
+            @if(isset($fields[1])) <input type="text" readonly name="{{$field}}" value="{{$fields[1][$key]}}" /> @endif
             </td>
             <td>
-            {{$fields[5][$key]}}
+            @if(isset($fields[5]))  {{$fields[5][$key]}} @endif
             </td>
             <td>
-            {{$fields[9][$key]}}
+             @if(isset($fields[9]))  {{$fields[9][$key]}} @endif
             </td>
 
         </tr>

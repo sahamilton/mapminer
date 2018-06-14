@@ -84,7 +84,7 @@
                                 
 
                                 <li{{ (Request::is('branches*') ? ' class="active"' : '') }}>
-                                    <a href="{{ route('branches.index') }}">
+                                    <a href="{{ route('branch.management') }}">
                                     <i class="fa fa-wrench" aria-hidden="true"></i>  Manage Branches
                                     </a>
                                  </li>
@@ -110,10 +110,11 @@
                         <li class="dropdown-submenu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Users</a>
                             <ul class="dropdown-menu">
-
+                                <li{{ (Request::is('admin/users/create') ? ' class="active"' : '') }}><a href="{{ route('users.create') }}">
+                                <i class="fa fa-user-plus" aria-hidden="true"></i> Create User</a></li>
 
                                 <li{{ (Request::is('admin/users*') ? ' class="active"' : '') }}><a href="{{ route('users.index') }}">
-                                <i class="fa fa-user" aria-hidden="true"></i> Users</a></li>
+                                <i class="fa fa-user" aria-hidden="true"></i> All Users</a></li>
                                 <li{{ (Request::is('admin/roles*') ? ' class="active"' : '') }}><a href="{{ route('roles.index') }}">
                                 <i class="fa fa-wrench" aria-hidden="true"></i> Roles</a></li>
                                 <li{{ (Request::is('admin/permissions*') ? ' class="active"' : '') }}><a href="{{ route('permissions.index') }}"><i class="fa fa-check" aria-hidden="true"></i> Permissions</a></li>
@@ -176,9 +177,12 @@
                     @endcan
                 </ul>
 			</li>
-                        
+                       
           
     </ul>
+    <div style="margin-top:10px">
+                        <input  type="text" id="search" placeholder="Type to search users" autocomplete="off" ><i class="fa fa-search"></i>
+                    </div> 
     <ul class="nav navbar-nav pull-right">
                         
                         

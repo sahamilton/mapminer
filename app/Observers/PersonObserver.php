@@ -32,7 +32,7 @@ class PersonObserver
    public function created(Person $person )
     {
        
-       return Mail::queue(new PersonNotification($person));
+      // return Mail::queue(new PersonNotification($person));
     }
 
     

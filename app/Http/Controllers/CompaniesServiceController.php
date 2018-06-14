@@ -10,7 +10,7 @@ class CompaniesServiceController extends BaseController
 {
     protected $company;
     protected $location;
-    protected $limit =500;
+    protected $limit =2000;
 
 	public function __construct (Company $company,Location $location){
 		$this->company = $company;
@@ -28,7 +28,8 @@ class CompaniesServiceController extends BaseController
 		$company = $this->company->with('managedBy','locations')->findOrFail($id);
 		$count = count($company->locations);
 		if($count > $this->limit){
-			dd($count,$this->location->getStateSummary($company->id));
+			dd("Contact Support - Companies Service Controller - 31 ",$count,$this->location->getStateSummary($company->id));
+			//dd($count,$this->location->getStateSummary($company->id));
 		}
 
 		$locations = $this->location->locationsNearbyBranches($company);
@@ -140,11 +141,12 @@ class CompaniesServiceController extends BaseController
 		$limited = false;
 		$count = count($locations);
 		if($count>$this->limit){
+			dd('limited');
 			$companyname =  $this->chunkLocations($company,$locations);
 			return redirect()->back()->with('success','File Created');
 			
 		}else{
-
+		
 
 		$title = $this->getTitle($company,$limited,$state,$loop=null);
 
@@ -200,112 +202,7 @@ class CompaniesServiceController extends BaseController
 		return $companyname;
 		
 	}
-/*
 
-	private function getColumns(){
-		 return['Business Name',
-				'Street',
-				'City',
-				'State',
-				'ZIP',
-				'Branch 1',
-				'Branch 1 Address',
-				'Branch 1 Phone',
-				'Branch 1 Proximity (miles)',
-				'Branch 2',
-				'Branch 2 Address',
-				'Branch 2 Phone',
-				'Branch 2 Proximity (miles)',
-				'Branch 3',
-				'Branch 3 Address',
-				'Branch 3 Phone',
-				'Branch 3 Proximity (miles)',
-				'Branch 4',
-				'Branch 4 Address',
-				'Branch 4 Phones',
-				'Branch 4 Proximity (miles)',
-				'Branch 5',
-				'Branch 5 Address',
-				'Branch 5 Phone',
-				'Branch 5 Proximity (miles)',
-				'Reps 1',
-				'Reps 1 Phone',
-				'Reps 1 Email',
-				'Reps 2',
-				'Reps 2 Phone',
-				'Reps 2 Email',
-				'Reps 3',
-				'Reps 3 Phone',
-				'Reps 3 Email',
-				'Reps 4',
-				'Reps 4 Phone',
-				'Reps 4 Email',		
-				'Reps 5',
-				'Reps 5 Phone',
-				'Reps 5 Email',
-				'Manager'];
-   		
-
-	}
-
-	private function getContent($location,$data){
-		$limit =5;
-		$content = array();
-   
-			$content[]=	$location->businessname;
-			$content[]=	$location->street;
-			$content[]=	$location->city;
-			$content[]=	$location->state;
-			$content[]=	$location->zip;
-			
-			$branchcount =null;
-				if(isset($data['branches'][$location->id])){
-					foreach($data['branches'][$location->id] as $branch){
-					 $branchcount++;
-						$content[]="Branch". $branch->id;
-						$content[]=trim($branch->street)." ". trim($branch->address2)." ". trim($branch->city)." ".  trim($branch->state)." ".  trim($branch->zip);
-						$content[]=$branch->phone;
-						$content[]=number_format($branch->distance,0);
-					
-					}
-				}
-				for($i=0;$i<$limit-$branchcount;$i++){
-					$content[]=null;
-					$content[]=null;
-					$content[]=null;
-					$content[]=null;
-						
-				}
-				$teamcount =null;
-				if(isset($data['salesteam'][$location->id])){
-						foreach($data['salesteam'][$location->id] as $team){
-						$teamcount++;
-							$content[]=$team->postName() ." : ". number_format($team->distance,1)." miles";
-							$content[]=$team->phone;
-							$content[]=$team->userdetails->email;
-						}
-				}
-				for($i=0;$i<$limit-$teamcount;$i++){
-						$content[]=null;
-						$content[]=null;
-						$content[]=null;
-						}
-			$manager=null;
-			if(count($data['salesteam'][$location->id])>0){
-					
-					foreach($data['salesteam'][$location->id][0]->getAncestors()->reverse() as $managers){
-						if($managers->reports_to){
-							$manager.=$managers->postName().",";
-						}
-					
-					}
-					$manager = rtrim($manager,',');
-			}
-			$content[]=$manager;
-			return $content;
-
-	}
-	*/
 	private function writeExcel($title,$company,$locations){
 		return 	Excel::create($title,function($excel) use($company,$locations){
 			$excel->sheet('Service',function($sheet) use($company,$locations) {
@@ -329,6 +226,7 @@ class CompaniesServiceController extends BaseController
 			$data['branches'][$location->id]=$location->nearbyBranches()->get();
 
 		}
+
 		return $data;
 	}
 

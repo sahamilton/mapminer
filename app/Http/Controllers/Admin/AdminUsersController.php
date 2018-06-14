@@ -117,6 +117,7 @@ class AdminUsersController extends BaseController {
     public function create()
     {
         // All roles
+        
         $roles = $this->role->all();
 
         // Get all the available permissions
@@ -135,15 +136,23 @@ class AdminUsersController extends BaseController {
 		$mode = 'create';
 
 		// Service lines
+
 		$servicelines = $this->person->getUserServiceLines();
+        // get all branches of this serviceline
+  
+		$branches =$this->branch->wherehas('servicelines',function ($q) use($servicelines){
+            $q->whereIn('servicelines.id',array_keys($servicelines));
+        })
+        ->pluck('branchname','id')->toArray();
 
-		$branches = $this->getUsersBranches($this->user);
-
+       $branches[0] = 'none';
+            ksort($branches);
 		$verticals = $this->searchfilter->industrysegments();
 
 
 		$managers = $this->getManagerList();
 		// Show the page
+       
 		return response()->view('admin.users.create', compact('roles', 'permissions', 'verticals','selectedRoles', 'selectedPermissions', 'title', 'mode','managers','servicelines','branches'));
     }
 
@@ -163,30 +172,26 @@ class AdminUsersController extends BaseController {
             $user->confirmed = $request->get('confirm');
         }
 
-
-
         if ( $user->save() ) {
 
 			$person = new Person;
             $person->user_id = $user->id;
             $person->firstname = $request->get('firstname');
             $person->lastname = $request->get('lastname');
-
             $person->save();
            	$person = $this->updateAssociatedPerson($person,$request->all());
             $person = $this->associateBranchesWithPerson($person,$request->all());
 			$user->person()->save($person);
-            $person->rebuild();
             $track=Track::create(['user_id'=>$user->id]);
             $user->saveRoles($request->get( 'roles' ));
             $user->serviceline()->attach($request->get('serviceline'));
 	        $person->rebuild();
-            return redirect()->to('admin/users/')
+            return redirect()->route('person.details',$person->id)
                 ->with('success', 'User created succesfully');
 
         } else {
 
-            return redirect()->to('admin/users/create')
+            return redirect()->route('users.create')
                 ->withInput($request->except('password'))
                 ->with( 'error', 'Unable to create user' );
         }
@@ -222,8 +227,7 @@ class AdminUsersController extends BaseController {
           ->find($userid->id);
 
 
-	    if ( $user )
-        {
+	    if ( $user ){
             $roles = $this->role->all();
             $permissions = $this->permission->all();
 
@@ -233,15 +237,13 @@ class AdminUsersController extends BaseController {
         	$mode = 'edit';
 			$managers = $this->getManagerList();
 
-			$branchesServiced = $user->person->branchesServiced()->pluck('branches.id','id')->toArray();
-
-			// Ether get close branches
-
-			$branches = $this->getUsersBranches($user);
+			$branchesServiced = $user->person->branchesServiced()->pluck('branchname','id')->toArray();
+           
+			$branches = $this->getUsersBranches($user,$branchesServiced);
 
 			$verticals = $this->searchfilter->industrysegments();
             $servicelines = $this->person->getUserServiceLines();
-
+         
         	return response()->view('admin.users.edit', compact('user', 'roles', 'permissions', 'verticals','title', 'mode','managers','servicelines','branches','branchesServiced'));
         }
         else
@@ -265,11 +267,17 @@ class AdminUsersController extends BaseController {
      */
     public function update(UserFormRequest $request,$user)
     {
-
+     
         $user = $this->user->with('person')->find($user->id);
         $oldUser = clone($user);
+        if($request->filled('password')){
+          
+            $user->password = \Hash::make($request->get('password'));
+            $user->save();
+        }
 
 		if($user->update($request->all())){
+
             $person = $this->updateAssociatedPerson($user->person,$request->all());
             $person = $this->associateBranchesWithPerson($person,$request->all());
 
@@ -289,6 +297,8 @@ class AdminUsersController extends BaseController {
         	}else{
                 $person->industryfocus()->sync([]);
             }
+            // i want this to be queued
+            // // also it is only neccessary if there have been chnges to the person model.
             $person->rebuild();
 
             return redirect()->to(route('users.index'))->with('success', 'User updated succesfully');
@@ -301,7 +311,7 @@ class AdminUsersController extends BaseController {
     }
     private function associateBranchesWithPerson($person, $data)
     {
-
+  
         $syncData=array();
         if(isset($data['branchstring'])){
             $data['branches'] = $this->branch->getBranchIdFromid($data['branchstring']);
@@ -324,9 +334,7 @@ class AdminUsersController extends BaseController {
     }
 
     private function updateAssociatedPerson($person,$data){
-        if(isset($data['active_from'])){
-            $data['active_from'] = Carbon::createFromFormat('m/d/Y', $data['active_from']);
-        }
+        
 
        if(isset($data['address'])){
 
@@ -344,27 +352,32 @@ class AdminUsersController extends BaseController {
         return $person;
     }
 
-    private function getUsersBranches($user){
-			if(isset($user->person->lat) && $user->person->lat !=0){
+    private function getUsersBranches(User $user,$branchesServiced=null){
 
-				$userServiceLines= $user->serviceline()->pluck('servicelines.id')->toArray();
-
-                 $nearbyBranches = $this->branch
+            $userServiceLines = $user->serviceline->pluck('id','serviceline')->toArray();
+           if(isset($user->person->lat) && $user->person->lat !=0){
+               
+				
+                 $branches = $this->branch
                  ->whereHas('servicelines', function($q) use($userServiceLines){
                     $q->whereIn('servicelines.id',$userServiceLines);
                  })
-                 ->nearby($user->person,100)
-                 ->limit(20);
-
-				$branches[0] = 'none';
-				foreach($nearbyBranches as $nearbyBranch){
-
-					$branches[$nearbyBranch->branchid ]= $nearbyBranch->branchname . "/" . $nearbyBranch->branchid;
-				}
-			// or all branches
+                ->nearby($user->person,200)
+                ->limit(20)
+                ->pluck('branchname','id')->toArray();
+            
+			
 			}else{
-				$branches = Branch::select(\DB::raw("CONCAT_WS(' / ',branchname,id) AS name"),'id')->pluck('name','id')->toArray();
+          
+				$branches = $this->branch
+                ->whereHas('servicelines', function($q) use($userServiceLines){
+                    $q->whereIn('servicelines.id',$userServiceLines);
+                 })->pluck('branchname','id')->toArray();
+               
 			}
+            $branches = array_unique($branchesServiced+$branches);
+            $branches[0] = 'none';
+            ksort($branches);
 
 			return $branches;
 		}

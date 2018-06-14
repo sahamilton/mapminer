@@ -28,11 +28,23 @@ class UpdateLastLoggedInAt
      */
     public function handle(Login $event)
     {
-        $track = new Track;
-        $track->user_id = $event->user->id;
-        $track->lastactivity = Carbon::now();
-        $track->save();
-        $event->user->lastlogin = Carbon::now();
-        $event->user->save();
+       $this->updateTrackTable($event);
+       $this->updateUserTable();
+        
+    }
+
+    private function updateTrackTable($event){
+        $data['user_id'] = $event->user->id;
+        $data['lastactivity'] = Carbon::now();
+        Track::create($data);
+    }
+
+    private function updateUserTable(){
+        // update the user record for last login
+        // we don't want to update the updated_at field for logins. Its redundant.
+        $user = auth()->user();
+        $user->timestamps =false;
+        $user->update(['lastlogin' => Carbon::now()]);
+        $user->timestamps =true;
     }
 }

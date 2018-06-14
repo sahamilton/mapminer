@@ -15,12 +15,15 @@
 		    return view('welcome');
 
 	}]);
-
-//Route::auth();
+Route::get('/testerror', function () {
+    throw new Exception('Example exception!');
+});
+/*
+	
 	Route::get('/error',function(){
 		Bugsnag::notifyError('ErrorType', 'Test Error');
 	});
-
+*/
 
 Route::auth();
 
@@ -95,7 +98,7 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('locationnotes/{companyID}',['as'=>'locationnotes.show','uses'=>'ManagersController@showManagerNotes']);
 
 	#Maps
-		Route::get('api/mylocalbranches/{distance}/{latLng}', ['as' => 'map.mybranches', 'uses' => 'MapsController@findLocalBranches']);
+		Route::get('api/mylocalbranches/{distance}/{latLng}/{limit?}', ['as' => 'map.mybranches', 'uses' => 'MapsController@findLocalBranches']);
 		Route::get('api/myAccountsList/{distance}/{latLng}', ['as' => 'list.myaccounts', 'uses' => 'MapsController@findLocalAccounts']);
 		Route::get('api/mylocalaccounts/{distance}/{latLng}/{companyId?}', ['as' => 'map.mylocations', 'uses' => 'MapsController@findLocalAccounts']);
 		Route::get('api/mybranchList/{distance}/{latLng}', ['as' => 'list.mybranches', 'uses' => 'MapsController@findLocalBranches']);
@@ -226,16 +229,16 @@ Route::group(['middleware' => 'auth'], function () {
 });
 
 /** ------------------------------------------
- *  Admin / Sales Ops Routes
+ *  Admin / Sales  Routes
  *  ------------------------------------------
  */
 Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
 {
-
+Route::get('/',['as'=>'ops','uses'=>'Admin\AdminDashboardController@dashboard']);
 	#Ops Main Page
-		Route::get('/',function(){
-			return response()->view('ops.index');
-		})->name('ops');
+	#	Route::get('/',function(){
+	#		return response()->view('ops.index');
+	#	})->name('ops');
 	#Branches
 		Route::get('branches/import', ['as'=>'branches.importfile', 'uses'=>'BranchesImportController@getFile']);
 		Route::post('branches/change',['as'=>'branches.change','uses'=>'BranchesImportController@update']);
@@ -315,9 +318,12 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
 		Route::get('leads/{id}/assign',['as'=>'leads.leadassign','uses'=>'LeadsController@assignLeads']);
 		Route::post('leads/batchassign',['as'=>'leads.assignbatch','uses'=>'LeadsAssignController@assignLead']);
 		Route::post('leads/assign',['as'=>'leads.assign','uses'=>'LeadsController@postAssignLeads']);
+		## Web leads
+		Route::resource('/webleads','WebLeadsController');
+		Route::post('/webleads/form',['as'=>'leads.webleadsinsert','uses'=>'WebLeadsController@getLeadFormData']);
+		Route::post('/webleads/assign',['as'=>'webleads.assign','uses'=>'WebLeadsController@assignLeads']);
+		Route::delete('/webleads/{id}/unassign',['as'=>'webleads.unassign','uses'=>'WebLeadsController@unAssignLeads']);
 
-		Route::get('/webleads',['as'=>'leads.webleads','uses'=>'LeadsFormController@index']);
-		Route::post('/webleads',['as'=>'leads.webleadsinsert','uses'=>'LeadsFormController@getLeadFormData']);
 		Route::get('leads/{id}/person',['as'=>'leads.person','uses'=>'LeadsController@getPersonsLeads']);
 		Route::get('leads/{id}/person/{sid}/source',['as'=>'leads.personsource','uses'=>'LeadsController@getPersonSourceLeads']);
 		Route::get('leadsource/{id}/export',['as'=>'leadsource.export','uses'=>'LeadSourceController@export']);
@@ -361,8 +367,9 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
 	#Watchlists
 		Route::get('watchlist/{userid}', ['as'=>'watch.mywatchexport', 'uses'=>'WatchController@export']);
 
-
-
+		## Search
+		Route::get('/user/find', 'SearchController@searchUsers');
+		Route::get('/person/{person}/find',['as'=>'person.details','uses'=>'PersonSearchController@find']);
 });
 /** ------------------------------------------
  *  Admin Routes
@@ -372,7 +379,8 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
 
 Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 {
-
+	# Branch managemnet
+		Route::get('branch/manage',['as'=>'branch.management','uses'=>'Admin\BranchManagementController@index']);
 
     # User Management
 

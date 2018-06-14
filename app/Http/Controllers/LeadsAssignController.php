@@ -27,7 +27,7 @@ class LeadsAssignController extends Controller
 
 
      public function geoAssignLeads($sid){
-       dd('here');
+
         $leadsource = $this->leadsource->findOrFail($sid);
         //$leadroles = $this->leadroles;
         $data['verticals'] = $leadsource->verticals()->pluck('searchfilters.id')->toArray();

@@ -53,10 +53,12 @@
 		{{$branch->state}}
 	</td>
 	<td>
+		@if(count($branch->region)>0)
 		<a href="{{route('region.show',$branch->region->id)}}" 
 		title="See all {{$branch->region->region}} region branches">
 		{{$branch->region->region}}
 		</a>
+		@endif
 
 	</td>
 	<td>

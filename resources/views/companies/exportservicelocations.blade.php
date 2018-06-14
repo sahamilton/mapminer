@@ -16,6 +16,8 @@
 		@endfor
 		@for($i=1;$i<$limit+1;$i++)
 		<td>Reps {{$i}}</td>
+		<td>Reps {{$i}} distance</td>
+		<td>Rep Role {{$i}}</td>
 		<td>Reps {{$i}} Phone</td>
 		<td>Reps {{$i}} Email</td>
 		@endfor
@@ -50,22 +52,33 @@
 		<?php $teamcount =null;?>
 		@if(isset($data['salesteam'][$location->id]))
 				@foreach($data['salesteam'][$location->id] as $team)
+		
 				<?php $teamcount++;?>
-					<td>{{$team->postName()}}  {{number_format($team->distance,1)}} miles</td>
+					<td>{{$team->postName()}}</td>
+					<td>  {{number_format($team->distance,1)}} miles</td>
+					<td> @foreach ($team->userdetails->roles as $role)
+							{{$role->name}}
+						@endforeach
+					</td>
 					<td>{{$team->phone}}</td>
 					<td>{{$team->userdetails->email}}</td>
 				@endforeach
 		@endif
 		@for($i=0;$i<$limit-$teamcount;$i++)
-			<td></td><td></td><td></td>
+			<td></td><td></td><td></td><td></td><td></td>
 		@endfor
 	</td>
 	
 		@if(count($data['salesteam'][$location->id])>0)
 		
 			@foreach($data['salesteam'][$location->id][0]->getAncestors()->reverse() as $managers)
+			@if ($loop->first)
+				@if($managers->depth != 3)
+					<td></td>
+				@endif
+			@endif
 			@if($managers->reports_to)
-				<td>{{$managers->postName()}}</td>
+				<td>{{$managers->postName()}}  {{$managers->depth}}</td>
 				@endif
 			@endforeach
 		@endif

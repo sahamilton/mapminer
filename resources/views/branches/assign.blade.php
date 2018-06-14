@@ -6,9 +6,10 @@
 		</div>
 <h2>Nearby Branches</h2>
 <p>The closest branches that can serve the 
-<a href="{{route('locations.show',$data['location']['id'])}}">{{$data['location']['businessname']}} </a>
-location in {{$data['location']['city']}} are:<p>
-<p><a href='{{route("nearby.location",$data['location']['id'])}}'>
+
+<a href="{{route('locations.show',$data['location']->id)}}">{{$data['location']->businessname}} </a>
+location in {{$data['location']->city}}, {{$data['location']->state}} are:<p>
+<p><a href='{{route("nearby.location",$data['location']->id)}}'>
   <i class="fa fa-flag" aria-hidden="true"></i> Map view</a></p>
 <table class="table table-striped table-bordered table-condensed">
 <thead>

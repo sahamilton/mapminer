@@ -4,11 +4,34 @@ namespace App;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Nicolaslopezj\Searchable\SearchableTrait;
+
 
 class User extends Authenticatable
 {
-    use Notifiable,HasRoles, Geocode;
+ use Notifiable,HasRoles, Geocode, SearchableTrait;
 
+ protected $searchable = [
+        /**
+         * Columns and their priority in search results.
+         * Columns with higher values are more important.
+         * Columns with equal values have equal importance.
+         *
+         * @var array
+         */
+        'columns' => [
+            'users.username' => 10,
+            'persons.lastname' => 10,
+            'persons.firstname' => 10,
+            'users.email' => 10,
+            'users.employee_id'=>5,
+           
+          
+        ],
+        'joins' => [
+            'persons' => ['users.id','persons.user_id'],
+        ],
+    ];
 
 
 

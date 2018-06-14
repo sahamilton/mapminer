@@ -162,7 +162,7 @@ class CompaniesController extends BaseController {
 	{
 
 		$managers = $this->person->getPersonsWithRole($this->NAMRole);
-
+		
 		$company = $company
 					->where('id','=',$company->id)
 					->with('managedBy')
@@ -173,6 +173,7 @@ class CompaniesController extends BaseController {
 			->pluck('ServiceLine','id');
 
 		$filters = $this->getFilters();
+
 		//$verticals = $this->searchfilter->industrysegments();
 		return response()->view('companies.edit', compact('company','managers','filters','servicelines'));
 	}
@@ -252,44 +253,49 @@ class CompaniesController extends BaseController {
 		$segments = $this->getCompanySegments($company);
 		$filters = $this->searchfilter->vertical();
 		$limited = null;
+		$distance = null;
 		$count = count($locations);
+
 		// used when there are too many locations to show in list
 		if( $count > $this->limit)
 		{
 
 			$location = new Location;
-			$limited=$this->limit;
+			//$limited=$this->limit;
 			if (\Session::has('geo'))
 				{
+				
 					$geo = \Session::get('geo');
 					$location->lat = $geo['lat'];
 					$location->lng = $geo['lng'];
 
-				}elseif($position = auth()->user()->position()){){
-					$postion = explode(",",auth()->user()->position());
+				}elseif($position = auth()->user()->position()){
+					
+					$position = explode(",",auth()->user()->position());
 					$location->lat =  $position[0];
 					$location->lng =  $position[1];
+
 				}else{
 					
 					$location->lat =  '47.25';
 					$location->lng =  '-122.44';
 				}
-
-				//dd($location);
+		$distance = 1000;
 		$locations = $this->locations
-		->where('company_id','=',$company->id)
-		->nearby($location,'1000')
-		->limit($this->limit)
-		->get();
+			->where('company_id','=',$company->id)
+			->nearby($location,$distance,'10')
+			->limit($this->limit)
+			->get();
+			$limited = count($locations);
+
 		
-
 		}
-
+		
 		$data['type']='company';
 		$mywatchlist = $this->locations->getWatchList();
 
 
-		return response()->view('companies.show', compact('data','company','locations','count','limited','mywatchlist','states','filtered','filters','segments'));
+		return response()->view('companies.show', compact('data','company','locations','count','limited','mywatchlist','states','filtered','filters','segments','distance'));
 	}
 
 
@@ -328,7 +334,7 @@ class CompaniesController extends BaseController {
 
 	private function getStatesInArray($locations)
 	{
-		 return $locations->pluck('state')->toArray();
+		 return$locations->unique('state')->pluck('state')->toArray();
 
 	}
 	/*
