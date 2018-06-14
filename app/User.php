@@ -24,6 +24,7 @@ class User extends Authenticatable
             'persons.lastname' => 10,
             'persons.firstname' => 10,
             'users.email' => 10,
+            'users.employee_id'=>5,
            
           
         ],
