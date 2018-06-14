@@ -56,16 +56,18 @@ class MapsController extends BaseController {
 	}
 
 
-	public function findLocalBranches($distance=NULL,$latlng = NULL) {
+	public function findLocalBranches($distance=NULL,$latlng = NULL,$limit=null) {
 		
 		$location = $this->getLocationLatLng($latlng);
-		$branches = $this->branch
-		->whereHas('servicelines',function ($q){
-			$q->whereIn('servicelines.id',$this->userServiceLines);
-		})
-		->nearby($location,$distance)
-		->get();
-		return response()->view('maps.partials.branchxml', compact('branches'))->header('Content-Type', 'text/xml');
+	
+		$branches =  $this->branch
+			->whereHas('servicelines',function ($q){
+				$q->whereIn('servicelines.id',$this->userServiceLines);
+			})
+			->nearby($location,$distance,$limit)
+			->get();
+		
+		return response()->view('branches.xml', compact('branches'))->header('Content-Type', 'text/xml');
 		
 	}
 	

@@ -214,9 +214,9 @@ class LocationsController extends BaseController {
 	{
 		
 		$location = $this->location->with('company','company.serviceline')->findOrFail($id);
-
+		$data['datalocation']='api/mylocalbranches/50/'.$location->lat.":".$location->lng."/".$n;
 		$servicelines = Serviceline::all();
-		return response()->view('branches.nearbymap', compact('location','servicelines'));
+		return response()->view('branches.nearbymap', compact('location','data','servicelines'));
 
 	}
 

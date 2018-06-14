@@ -88,9 +88,10 @@ class GeoCodingController extends BaseController {
 		}else{
 
 			$data = $this->setZoomLevel($data);
+
 			$servicelines = $this->serviceline->whereIn('id',$this->userServiceLines)
     						->get();
-    				
+    			
 			return response()->view('maps.map', compact('data','filtered','servicelines','company'));
 		}
 		
@@ -105,6 +106,7 @@ class GeoCodingController extends BaseController {
 	private function getViewData($data) {
 
 		if($data['type'] =='branch'){
+
 				$data['urllocation'] = "api/mylocalbranches";
 				$data['title'] ='Branch Locations';
 				$data['company']=NULL;

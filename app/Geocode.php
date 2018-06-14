@@ -47,7 +47,7 @@ trait Geocode
     }
 
 
-    public function scopeNearby($query,$location,$radius=100){
+    public function scopeNearby($query,$location,$radius=100,$limit=null){
 
     $geocode = Geolocation::fromDegrees($location->lat,$location->lng);
     
@@ -63,7 +63,9 @@ trait Geocode
         ->mergeBindings($sub->getQuery())
         ->whereRaw("{$this->haversine($location)} < $radius ")
         ->orderBy('distance','ASC');
-        
+        if($limit){
+            $query = $query->limit($limit);
+        }
         return $query;
     }
    

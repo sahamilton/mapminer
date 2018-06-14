@@ -186,7 +186,7 @@ class AdminUsersController extends BaseController {
             $user->saveRoles($request->get( 'roles' ));
             $user->serviceline()->attach($request->get('serviceline'));
 	        $person->rebuild();
-            return redirect()->route('users.index')
+            return redirect()->route('person.details',$person->id)
                 ->with('success', 'User created succesfully');
 
         } else {

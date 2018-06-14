@@ -8,6 +8,7 @@
 @include('partials.advancedsearch')
 
 @include('maps.partials._form')
+
 @if ($data['type'] == 'branch')
 @include('maps.partials._keys')
 @endif
@@ -15,9 +16,8 @@
 
   
    </div>
+
 <div id="store-locator-container">
-
-
 	<div id="map-container">
         <div id="loc-list"><p></p>
 
