@@ -1,3 +1,4 @@
+<p><span style="color:red">*</span> Either do not have a branch manager or do not have either a business manager or business manager</p>
 <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
 <thead>
 	<th>Branch Id</th>

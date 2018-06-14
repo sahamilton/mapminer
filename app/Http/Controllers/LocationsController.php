@@ -204,8 +204,7 @@ class LocationsController extends BaseController {
 		//$this->getCompanyServiceLines();
 	
 		$data['branch'] = $this->findBranch($n,$data['location']);
-		
-
+	
 		return response()->view('branches.assign', compact('data'));
 
 		
