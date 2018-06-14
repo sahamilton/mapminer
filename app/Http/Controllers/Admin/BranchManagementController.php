@@ -26,8 +26,8 @@ class BranchManagementController extends Controller
     	$branches = $this->branch
         ->doesntHave('manager')
         ->orWhere(function ($q){
-            $q->orDoesntHave('businessmanager')
-            ->orDoesntHave('marketmanager');
+            $q->doesntHave('businessmanager')
+            ->doesntHave('marketmanager');
         })
         
 
