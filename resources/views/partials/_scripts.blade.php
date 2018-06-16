@@ -69,7 +69,7 @@ $(document).ready(function()
 		  	function ranked(id,value,type)
 		       {
 		         if (type && type=='lead') {
-		         	var url = '{{route('api.lead.rank')}}?api_token={{auth()->user()->api_token}}';
+		         	var url = '{{route('api.newlead.rank')}}?api_token={{auth()->user()->api_token}}';
 		         }else{
 		         	var url = '{{route('api.rank')}}?api_token={{auth()->user()->api_token}}';
 		         }

@@ -5,8 +5,8 @@
 <h2>{{$lead->businessname}}</h2>
 <h4>A location of {{$lead->companyname}}</h4>
 
- <div id="{{$lead->id}}" data-rating="{{intval(isset($rank) ? $rank : 0)}}" class="starrr" >
-            Rated: </div>
+
+
 <div id="map-container">
 	<div style="float:left;width:300px">
 		<p><strong>Address:</strong> {!! $lead->fullAddress() !!}</p>
