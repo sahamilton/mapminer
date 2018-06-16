@@ -41,4 +41,12 @@ class TempLead extends Model
     public function relatedNotes(){
     	 return $this->hasMany(Note::class,'related_id')->where('type','=','lead')->with('writtenBy');
     }
+
+    public function summaryLeads(){
+    	return $this->belongsToMany(Person::class, 'templead_person_status','related_id','person_id')
+      	->selectRaw('templeads.*, sum(templead_person_status.id) as pivot_count')
+		->groupBy('templead_person_status.status_id')
+        ->groupBy('templead_person_status.person_id');
+
+    }
 }

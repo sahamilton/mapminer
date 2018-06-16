@@ -19,7 +19,7 @@
                     <td>{{$lead->Primary_State}}</td>
                     <td>
                         @foreach ($lead->relatedNotes as $note)
-                        {{$note->note}}<hr />
+                            {{$note->note}}<hr />
                         @endforeach
                     </td>
                     <td>

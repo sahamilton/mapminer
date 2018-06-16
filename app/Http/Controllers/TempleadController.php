@@ -27,7 +27,10 @@ class TempleadController extends Controller
     {
 
     
-        $reps = $this->person->whereHas('templeads')->withCount('templeads')->with('reportsTo','reportsTo.userdetails.roles')->get();
+        $reps = $this->person->whereHas('templeads')
+        ->withCount('templeads')
+        ->with('reportsTo','reportsTo.userdetails.roles')
+        ->get();
 
         return response()->view('templeads.index',compact('reps'));
     }
@@ -46,7 +49,7 @@ class TempleadController extends Controller
             $q->where('person_id','=',$person->id);
 
         })
-        
+        ->limit('200')
         ->get();
 
         $closedleads = $this->templead->whereHas('closedleads',function ($q) use ($person){
@@ -54,7 +57,7 @@ class TempleadController extends Controller
 
         })
         ->with('relatedNotes')
-        
+        ->limit('200')
         ->get();
       
         return response()->view('templeads.show',compact('openleads','closedleads','person'));
@@ -79,7 +82,7 @@ class TempleadController extends Controller
         $leads = $this->templead->whereHas('salesrep', function ($q) use($pid){
             $q->where('person_id','=',$pid);
         })
-     
+        ->limit('200')
         ->get();
      
         $leads = $this->templead->where('sr_id','=',$person->id)->get();

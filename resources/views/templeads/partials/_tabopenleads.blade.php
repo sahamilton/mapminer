@@ -1,3 +1,9 @@
+@if(count($openleads)==200)
+<div class="alert alert-danger" role="alert">
+  You have more than 200 open leads.  Close some leads to view more.
+</div>
+
+@endif
 <table class="table" id = "sorttable">
             <thead>
 
