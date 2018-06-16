@@ -86,6 +86,10 @@ class Person extends NodeModel implements HasPresenter {
 		return $this->attributes['firstname'] . ' ' . $this->attributes['lastname'];
 	}
 	
+
+	public function templeads(){
+		return $this->hasMany(Templead::class,'sr_id');
+	}
 	public function industryfocus()
 	{
 		return $this->belongsToMany(SearchFilter::class)->withTimestamps(); 

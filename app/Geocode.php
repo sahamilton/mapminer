@@ -52,7 +52,7 @@ trait Geocode
     $geocode = Geolocation::fromDegrees($location->lat,$location->lng);
     
     $bounding = $geocode->boundingCoordinates($radius,'mi');
-  
+   
     $sub = $this->selectSub('id','lat','lng')
                 ->whereBetween('lat',[$bounding['min']->degLat,$bounding['max']->degLat])
                 ->whereBetween('lng',[$bounding['min']->degLon,$bounding['max']->degLon]);
@@ -66,6 +66,7 @@ trait Geocode
         if($limit){
             $query = $query->limit($limit);
         }
+       
         return $query;
     }
    

@@ -187,7 +187,13 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('watch/delete/{locationID}',['as'=>'watch.delete', 'uses'=>'WatchController@destroy']);
 		Route::get('watch/map',['as'=>'watch.map','uses'=>'WatchController@showwatchmap']);
 		Route::get('cowatch/export',['as'=>'company.watchexport', 'uses'=>'WatchController@companywatchexport']);
-
+	#	Temp Leads
+		Route::get('/newleads/{pid?}',['as'=>'salesrep.newleads','uses'=>'TempLeadController@salesLeads']);
+		Route::get('/newleads/{id}/show',['as'=>'salesrep.newleads.show','uses'=>'TempLeadController@salesLeadsDetail']);
+		Route::get('/newleads/{pid?}/map',['as'=>'salesrep.newleads.map','uses'=>'TempLeadController@salesLeadsMap']);
+		Route::get('api/newleads/{pid}/map',['as'=>'salesrep.newleads.mapdata','uses'=>'TempLeadController@getMapData']);
+		Route::get('newleadrank',['as'=>'api.newlead.rank','uses'=>'TempLeadController@rank']);
+		Route::post('newlead/{id}/close',['as'=>'templead.close','uses'=>'TempLeadController@close']);
 
 	#AJAX Links
 	#// Move these to api routes
@@ -457,7 +463,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 		Route::get('api/searchfilters/getAccounts',['as'=>'getAccountSegments','uses'=>'SearchFiltersController@getAccountSegments']);
 		Route::post('api/searchfilters/postAccounts',['as'=>'postAccountSegments','uses'=>'SearchFiltersController@getAccountSegments']);
 		Route::resource('searchfilters','SearchFiltersController');
-
+	#TempLeads
+	    Route::get('templeads/team',['as'=>'templeads.team','uses'=>'TempleadController@salesteam']);
+		Route::resource('templeads','TempleadController');
 		
 
 	# Seeder for relationships with servicelines
