@@ -11,6 +11,7 @@ class Person extends NodeModel implements HasPresenter {
 		'email'=>'required',
 		'mgrtype' => 'required',
 	];
+	
 	protected $table ='persons';
 	protected $hidden = ['created_at','updated_at'];
 	protected $parentColumn = 'reports_to';

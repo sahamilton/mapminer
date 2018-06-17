@@ -71,8 +71,8 @@
 
                         @endif 
                          
-                        @if(auth()->user()->hasRole('Admin')  or auth()->user()->can('accept_prospects'))
-                            <li><a href="{{route('salesleads.index')}}">
+                        @if(auth()->user()->can('accept_prospects'))
+                            <li><a href="{{route('salesrep.newleads.show',auth()->user()->person->id)}}">
                             <i class="fa fa-envelope-open-o" aria-hidden="true"> </i> Sales Prospects</a></li>
                         @endif
                         @if (auth()->user()->hasRole('Admin') or Auth::user()->hasRole('National Account Manager'))

@@ -188,13 +188,15 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('watch/map',['as'=>'watch.map','uses'=>'WatchController@showwatchmap']);
 		Route::get('cowatch/export',['as'=>'company.watchexport', 'uses'=>'WatchController@companywatchexport']);
 	#	Temp Leads
-		Route::get('/newleads/{pid?}',['as'=>'salesrep.newleads','uses'=>'TempLeadController@salesLeads']);
-		Route::get('/newleads/{id}/show',['as'=>'salesrep.newleads.show','uses'=>'TempLeadController@salesLeadsDetail']);
-		Route::get('/newleads/{pid?}/map',['as'=>'salesrep.newleads.map','uses'=>'TempLeadController@salesLeadsMap']);
-		Route::get('api/newleads/{pid}/map',['as'=>'salesrep.newleads.mapdata','uses'=>'TempLeadController@getMapData']);
-		Route::get('newleadrank',['as'=>'api.newlead.rank','uses'=>'TempLeadController@rank']);
-		Route::get('/newleads/{pid}/export',['as'=>'newleads.export','uses'=>'TempLeadController@export']);
-		Route::post('newleads/{id}/close',['as'=>'templead.close','uses'=>'TempLeadController@close']);
+
+
+		Route::get('/newleads/{pid?}',['as'=>'salesrep.newleads','uses'=>'TempleadController@salesLeads']);
+		Route::get('/newleads/{id}/show',['as'=>'salesrep.newleads.show','uses'=>'TempleadController@salesLeadsDetail']);
+		Route::get('/newleads/{pid?}/map',['as'=>'salesrep.newleads.map','uses'=>'TempleadController@salesLeadsMap']);
+		Route::get('api/newleads/{pid}/map',['as'=>'salesrep.newleads.mapdata','uses'=>'TempleadController@getMapData']);
+		Route::get('newleadrank',['as'=>'api.newlead.rank','uses'=>'TempleadController@rank']);
+		Route::post('newlead/{id}/close',['as'=>'templead.close','uses'=>'TempleadController@close']);
+
 
 	#AJAX Links
 	#// Move these to api routes
