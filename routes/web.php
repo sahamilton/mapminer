@@ -195,8 +195,9 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('/newleads/{pid?}/map',['as'=>'salesrep.newleads.map','uses'=>'TempleadController@salesLeadsMap']);
 		Route::get('api/newleads/{pid}/map',['as'=>'salesrep.newleads.mapdata','uses'=>'TempleadController@getMapData']);
 		Route::get('newleadrank',['as'=>'api.newlead.rank','uses'=>'TempleadController@rank']);
-		Route::post('newlead/{id}/close',['as'=>'templead.close','uses'=>'TempleadController@close']);
 
+		Route::get('newlead/{pid}/export',['as'=>'newleads.export','uses'=>'TempleadController@export']);
+		Route::post('newlead/{id}/close',['as'=>'templead.close','uses'=>'TempleadController@close']);
 
 	#AJAX Links
 	#// Move these to api routes

@@ -7,6 +7,7 @@
 			<td>State</td>
 			<td>Zip</td>
 			<td>Contact</td>
+			<td>Contact Title</td>
 			<td>Phone</td>
 			<td>Status</td>
 			<td>Rating</td>

@@ -176,7 +176,7 @@ class TempleadController extends Controller
     private function addClosingNote($request,$id){
         $note = new Note;
         $note->note = "Lead Closed:" .$request->get('comments');
-        $note->type = 'lead';
+        $note->type = 'newlead';
         $note->related_id = $id;
         $note->user_id = auth()->user()->id;
         $note->save();
