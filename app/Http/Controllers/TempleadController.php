@@ -29,7 +29,7 @@ class TempleadController extends Controller
 
     
         $reps = $this->person->whereHas('templeads')
-        ->withCount('templeads')
+        ->withCount(['templeads','openleads','closedleads'])
         ->with('reportsTo','reportsTo.userdetails.roles')
         ->get();
 

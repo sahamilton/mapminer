@@ -13,7 +13,9 @@
                 
                 <th>Manager</th>
                 <th>Manager Role</th>
-                <th>Leads</th>
+                <th>All Leads</th>
+                <th>Open Leads</th>
+                <th>Closed Leads</th>
 
             </thead>
             <tbody>
@@ -28,6 +30,8 @@
                         <td></td><td></td>
                     @endif
                      <td>{{$rep->templeads_count}}</td>
+                     <td>{{$rep->openleads_count}}</td>
+                     <td>{{$rep->closedleads_count}}</td>
                 </tr>  
 
                 @endforeach
