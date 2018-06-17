@@ -2,7 +2,7 @@
 @section('content')
 <div class="container">
     <h2>{{$person->postName()}}'s Team Leads Overview</h2>
-    
+    <h4>Reports To:<a href="{{route('salesrep.newleads',$person->reportsTO->id)}}">{{$person->reportsTo->postName()}}</a></h4>
 
 
     <div class="col-md-10 col-md-offset-1">
@@ -16,6 +16,7 @@
                 <th>All Leads</th>
                 <th>Open Leads</th>
                 <th>Closed Leads</th>
+                <th>Ratings</th>
 
             </thead>
             <tbody>
@@ -32,6 +33,11 @@
                      <td>{{$rep->templeads_count}}</td>
                      <td>{{$rep->openleads_count}}</td>
                      <td>{{$rep->closedleads_count}}</td>
+                     <td>
+                        @if(isset($rankings[$rep->id]))
+                            {{$rankings[$rep->id]}}
+                        @endif
+                    </td>
                 </tr>  
 
                 @endforeach

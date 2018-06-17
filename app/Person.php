@@ -97,7 +97,7 @@ class Person extends NodeModel implements HasPresenter {
     	return $this->belongsToMany(Templead::class, 'templead_person_status','person_id','related_id')      ->wherePivot('status_id',2);
     }
     public function closedleads(){
-    	return $this->belongsToMany(Templead::class, 'templead_person_status','person_id','related_id')      ->wherePivot('status_id',3);
+    	return $this->belongsToMany(Templead::class, 'templead_person_status','person_id','related_id')      ->wherePivot('status_id',3)->withPivot('created_at','updated_at','status_id','rating');
     }
 
 	public function industryfocus()

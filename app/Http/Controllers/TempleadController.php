@@ -5,7 +5,7 @@ use Excel;
 use App\Person;
 use App\Note;
 use App\Branch;
-use App\TempLead;
+use App\Templead;
 use App\LeadStatus;
 use Illuminate\Http\Request;
 
@@ -14,7 +14,7 @@ class TempleadController extends Controller
     protected $templead;
     protected $person;
 
-    public function __construct(TempLead $lead, Person $person){
+    public function __construct(Templead $lead, Person $person){
         $this->templead = $lead;
         $this->person = $person;
     }
@@ -30,7 +30,7 @@ class TempleadController extends Controller
     
         $reps = $this->person->whereHas('templeads')
         ->withCount(['templeads','openleads','closedleads'])
-        ->with('reportsTo','reportsTo.userdetails.roles')
+        ->with('reportsTo','reportsTo.userdetails.roles','closedleads')
         ->get();
 
         return response()->view('templeads.index',compact('reps'));
@@ -81,10 +81,11 @@ class TempleadController extends Controller
         $reports = $person->descendantsAndSelf()->pluck('id')->toArray();
         $reps = $this->person->whereHas('templeads')
         ->withCount(['templeads','openleads','closedleads'])
-        ->with('reportsTo','reportsTo.userdetails.roles')
+        ->with('reportsTo','reportsTo.userdetails.roles','closedleads')
         ->whereIn('id',$reports)
         ->get();
-        return response()->view('templeads.team',compact('reps','person'));
+        $rankings = $this->templead->rankLead($reps);
+        return response()->view('templeads.team',compact('reps','person','rankings'));
     }
 
     public function salesLeadsMap($pid=null){
@@ -123,13 +124,22 @@ class TempleadController extends Controller
 
     private function getSalesRep($pid=null){
         if(! $pid){
-             $pid = auth()->user()->person->id;
+            return $this->person->findOrFail(auth()->user()->person->id);
         }
-        if(! (auth()->user()->hasRole('Admin') or auth()->user()->hasRole('Sales Operations'))){
+
+        $person = $this->person->findOrFail($pid);
+
+        if(auth()->user()->hasRole('Admin') or auth()->user()->hasRole('Sales Operations')){
            
-            $pid = auth()->user()->person->id;
+           return $person;
+
         }
-        return $this->person->findOrFail($pid);
+        $peeps = $person->descendantsAndSelf()->pluck('id')->toArray();
+        if(in_array($pid,$peeps)){
+            return $person;
+        }
+        
+        return $this->person->findOrFail(auth()->user()->person->id);
         
 
         

@@ -3,6 +3,7 @@
 <div class="container">
   <div class="col-md-10 col-md-offset-1">
     <h2>{{$person->postName()}} Leads</h2>
+    <h4>Reports To:<a href="{{route('salesrep.newleads',$person->reportsTO->id)}}">{{$person->reportsTo->postName()}}</a></h4>
 
 <p><a href='{{route("salesrep.newleads.map",$person->id)}}'>
  <i class="fa fa-flag" aria-hidden="true"></i> Map view</a></p>
