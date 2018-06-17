@@ -46,22 +46,42 @@ class TempleadController extends Controller
     
     public function salesLeads($pid=null){
         $person = $this->getSalesRep($pid);
-        $openleads = $this->templead->whereHas('openleads',function ($q) use ($person){
-            $q->where('person_id','=',$person->id);
+       // dd($person->findPersonsRole($person));
+        // depending on role either return list of team and their leads
+        // or the leads
+        if(in_array('Sales',$person->findPersonsRole($person))){
+            return $this->showSalesLeads($person);
+        }else{
+            return $this->showSalesTeamLeads($person);
+        }
 
-        })
-        ->limit('200')
-        ->get();
+    }
 
-        $closedleads = $this->templead->whereHas('closedleads',function ($q) use ($person){
-            $q->where('person_id','=',$person->id);
 
-        })
-        ->with('relatedNotes')
-        ->limit('200')
-        ->get();
+    private function showSalesLeads($person){
+        $openleads = $this->getLeadsByTYpe('openleads',$person);
+        $openleads =$openleads->limit('200')
+                    ->get();
+        
+
+        $closedleads = $this->getLeadsByTYpe('closedleads',$person);
+        $closedleads = $closedleads->with('relatedNotes')
+                    ->limit('200')
+                    ->get();
       
         return response()->view('templeads.show',compact('openleads','closedleads','person'));
+    }
+
+
+    private function showSalesTeamLeads($person){
+        //dd($person);
+        $reports = $person->descendantsAndSelf()->pluck('id')->toArray();
+        $reps = $this->person->whereHas('templeads')
+        ->withCount(['templeads','openleads','closedleads'])
+        ->with('reportsTo','reportsTo.userdetails.roles')
+        ->whereIn('id',$reports)
+        ->get();
+        return response()->view('templeads.team',compact('reps','person'));
     }
 
     public function salesLeadsMap($pid=null){
@@ -110,6 +130,13 @@ class TempleadController extends Controller
         
 
         
+
+    }
+
+    private function getLeadsByTYpe($type,$person){
+        return $this->templead->whereHas($type, function ($q) use($person){
+            $q->where('person_id','=',$person->id);
+        });
 
     }
 

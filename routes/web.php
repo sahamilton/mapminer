@@ -468,8 +468,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 		Route::post('api/searchfilters/postAccounts',['as'=>'postAccountSegments','uses'=>'SearchFiltersController@getAccountSegments']);
 		Route::resource('searchfilters','SearchFiltersController');
 	#TempLeads
-	    Route::get('templeads/team',['as'=>'templeads.team','uses'=>'TempleadController@salesteam']);
-		Route::resource('templeads','TempleadController');
+	    Route::get('newleads/team',['as'=>'templeads.team','uses'=>'TempleadController@salesteam']);
+		Route::resource('newleads','TempleadController');
 		
 
 	# Seeder for relationships with servicelines
