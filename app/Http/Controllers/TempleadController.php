@@ -49,8 +49,11 @@ class TempleadController extends Controller
        // dd($person->findPersonsRole($person));
         // depending on role either return list of team and their leads
         // or the leads
-        if(in_array('Sales',$person->findPersonsRole($person))){
+        if($person->userdetails->can('accept_leads')){
+        
             return $this->showSalesLeads($person);
+        }elseif($person->userdetails->hasRole('Admin') or $person->userdetails->hasRole('Sales Operations')){
+                return redirect()->route('newleads.index');
         }else{
             return $this->showSalesTeamLeads($person);
         }

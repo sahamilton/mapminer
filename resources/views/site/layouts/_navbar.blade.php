@@ -71,7 +71,7 @@
 
                         @endif 
                          
-                        @if(auth()->user()->can('accept_prospects'))
+                        @if(auth()->user()->can('accept_leads') or auth()->user()->can('manage_leads'))
                             <li><a href="{{route('salesrep.newleads',auth()->user()->person->id)}}">
                             <i class="fa fa-envelope-open-o" aria-hidden="true"> </i> Sales Prospects</a></li>
                         @endif

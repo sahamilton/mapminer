@@ -24,7 +24,7 @@
                 <tr> 
                     <td><a href="{{route('salesrep.newleads',$rep->id)}}">{{$rep->postName()}}</a></td>
                     @if($rep->reportsTo)
-                        <td>{{$rep->reportsTo->postName()}}</td>
+                        <td><a href="{{route('salesrep.newleads',$rep->reportsTo->id)}}">{{$rep->reportsTo->postName()}}</a></td>
                         <td>{{$rep->reportsTo->userdetails->roles->first()->name}}</td>
                         @else
                         <td></td><td></td>
