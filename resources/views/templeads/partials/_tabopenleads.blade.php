@@ -1,7 +1,6 @@
 @if(count($openleads)==200)
-<div class="alert alert-danger" role="alert">
-  You have more than 200 open leads.  Close some leads to view more.
-</div>
+@php $data['title'] = $person->postName() @endphp
+@include('templeads.partials._limited')
 
 @endif
 <table class="table" id = "sorttable">

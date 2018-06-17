@@ -1,8 +1,12 @@
 @extends('site/layouts/maps')
 @section('content')
 
-<h2>{{$data['title']}}</h2>
+<h2>{{$data['title']}} Leads</h2>
 
+@if($data['count']>=200)
+@include('templeads.partials._limited')
+
+@endif
 <p><a href="{{$data['listviewref']}}"><i class="fa fa-th-list" aria-hidden="true"></i> List view</a></p>
   
 <div id="store-locator-container"> 

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use Excel;
 use App\Person;
 use App\Note;
 use App\Branch;
@@ -65,27 +66,34 @@ class TempleadController extends Controller
 
     public function salesLeadsMap($pid=null){
         $person = $this->getSalesRep($pid);
-        $data['title']= $person->postName() . " Leads";
+        $data['title']= $person->postName();
         $data['datalocation'] = "/api/newleads/".$person->id ."/map";
         $data['lat'] = $person->lat;
         $data['lng'] = $person->lng;
         $data['listviewref'] = route('salesrep.newleads',$pid);
         $data['zoomLevel'] =10;
         $data['type'] ='leads';
+        $leads = $this->templead->whereHas('openleads', function ($q) use($pid){
+            $q->where('person_id','=',$pid);
+        })
+        ->limit('200')
+        
+        ->get();
 
+        $data['count']=count($leads);
         return response()->view('templeads.showmap',compact('data'));
     }
 
     public function getMapData($pid){
         $person = $this->getSalesRep($pid);
    
-        $leads = $this->templead->whereHas('salesrep', function ($q) use($pid){
-            $q->where('person_id','=',$pid);
+        $leads = $this->templead->whereHas('openleads', function ($q) use($person){
+            $q->where('person_id','=',$person->id);
         })
         ->limit('200')
         ->get();
      
-        $leads = $this->templead->where('sr_id','=',$person->id)->get();
+      //  $leads = $this->templead->where('sr_id','=',$person->id)->get();
         return response()->view('templeads.xml',compact('leads'));
 
     }
@@ -94,7 +102,7 @@ class TempleadController extends Controller
         if(! $pid){
              $pid = auth()->user()->person->id;
         }
-        if(! (auth()->user()->hasRole('Admin') or auth()->user()->hasRole('sales Operations'))){
+        if(! (auth()->user()->hasRole('Admin') or auth()->user()->hasRole('Sales Operations'))){
            
             $pid = auth()->user()->person->id;
         }
@@ -172,5 +180,21 @@ class TempleadController extends Controller
         $note->related_id = $id;
         $note->user_id = auth()->user()->id;
         $note->save();
+    }
+
+    public function export ($pid){
+        $person = $this->getSalesRep($pid);
+        
+
+        Excel::create('Leads for '.$person->postName(),function($excel) use($person){
+            $excel->sheet('Leads',function($sheet) use($person) {
+                $leads = $this->templead->whereHas('salesrep', function ($q) use($person){
+                    $q->where('person_id','=',$person->id);
+                    })
+                ->get();
+                $statuses = LeadStatus::pluck('status','id')->toArray();
+                $sheet->loadview('templeads.export',compact('leads','statuses'));
+            });
+        })->download('csv');
     }
 }

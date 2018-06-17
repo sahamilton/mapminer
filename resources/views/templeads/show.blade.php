@@ -1,13 +1,15 @@
 @extends ('site.layouts.default')
 @section('content')
 <div class="container">
+  <div class="col-md-10 col-md-offset-1">
     <h2>{{$person->postName()}} Leads</h2>
-    
+
 <p><a href='{{route("salesrep.newleads.map",$person->id)}}'>
  <i class="fa fa-flag" aria-hidden="true"></i> Map view</a></p>
-
-    <div class="col-md-10 col-md-offset-1">
-        <ul class="nav nav-tabs">
+<p><a href="{{route('newleads.export', $person->id)}}"><i class="fa fa-file-excel-o" aria-hidden="true"></i> Export to Excel </a>
+</p>
+  
+   <ul class="nav nav-tabs">
       <li class="active">
         <a data-toggle="tab" href="#open">
           <strong>Open Leads ({{count($openleads)}})</strong>

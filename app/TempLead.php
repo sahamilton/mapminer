@@ -39,7 +39,7 @@ class TempLead extends Model
     }
 
     public function relatedNotes(){
-    	 return $this->hasMany(Note::class,'related_id')->where('type','=','lead')->with('writtenBy');
+    	 return $this->hasMany(Note::class,'related_id')->where('type','=','newlead')->with('writtenBy');
     }
 
     public function summaryLeads(){
