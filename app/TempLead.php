@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Geocoder\Laravel\Facades\Geocoder;
-class TempLead extends Model
+class Templead extends Model
 {
     use Geocode;
     protected $table = 'templeads';

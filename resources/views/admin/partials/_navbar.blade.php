@@ -14,7 +14,6 @@
                       
                  		@if(auth()->user()->hasRole('Admin'))
                     	<li><a href="{{route('dashboard')}}">
-
                         <i class="fa fa-tachometer" aria-hidden="true"> </i> Dashboard</a></li>
                         @endif
                         <li class="dropdown{{ (Request::is('admin/company*','admin/locations*') ? ' class="active"' : '') }}">
@@ -157,7 +156,7 @@
                     @endcan
                     @can('manage_prospects')
                         <li class="divider">Prospects</li>
-                        <li{{ (Request::is('admin/leads') ? ' class="active"' : '') }}><a href="{{ route('leads.index') }}">
+                        <li{{ (Request::is('admin/newleads') ? ' class="active"' : '') }}><a href="{{ route('templeads.index') }}">
                         <i class="fa fa-envelope-open-o" aria-hidden="true"> </i> Sales Prospects</a></li>
                         <li{{ (Request::is('admin/leadsource*') ? ' class="active"' : '') }}><a href="{{ route('leadsource.index') }}">
                         <i class="fa fa-diamond" aria-hidden="true"> </i> Prospect Sources</a></li>
