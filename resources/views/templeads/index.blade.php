@@ -3,7 +3,7 @@
 <div class="container">
     <h2>Leads Overview</h2>
     
-    <h4><a href="">See Leads by Branches</a></h4>
+    <h4><a href="{{route('templeads.branch')}}">See Leads by Branches</a></h4>
 
     <div class="col-md-10 col-md-offset-1">
         <table class="table" id = "sorttable">

@@ -3,7 +3,7 @@
 <div class="container">
     <h2>Leads By Branches</h2>
    
-
+<h4><a href="{{route('newleads.index')}}">See Leads by Reps</a></h4>
     <div class="col-md-10 col-md-offset-1">
         <table class="table" id = "sorttable">
             <thead>
@@ -20,10 +20,10 @@
                 @foreach ($branches as $branch)
                
                 <tr> 
-                    <td><a href="{{route('templeads.branch',$branch->id)}}">{{$branch->branchname}}, {{$branch->city}} {{$branch->state}}</a></td>
+                    <td><a href="{{route('templeads.branchid',$branch->id)}}">{{$branch->branchname}}, {{$branch->city}} {{$branch->state}}</a></td>
                    @if(count($branch->manager)>0)
 
-                        <td>{{$branch->manager->first()->postName()}}</td>
+                        <td><a href="{{route('branchmgr.newleads',$branch->manager->first()->id)}}">{{$branch->manager->first()->postName()}}</a></td>
                        
                         <td> @if(count($branch->manager->first()->reportsTo)>0)
                             {{$branch->manager->first()->reportsTo->postName()}}
