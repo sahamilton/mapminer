@@ -194,8 +194,10 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('/newleads/{id}/show',['as'=>'salesrep.newleads.show','uses'=>'TempleadController@salesLeadsDetail']);
 		Route::get('/newleads/{pid?}/map',['as'=>'salesrep.newleads.map','uses'=>'TempleadController@salesLeadsMap']);
 		Route::get('api/newleads/{pid}/map',['as'=>'salesrep.newleads.mapdata','uses'=>'TempleadController@getMapData']);
+		Route::get('/branch/leads',['as'=>'branchmanager.newleads','uses'=>'TempleadController@getAssociatedBranches']);
 		Route::get('newleadrank',['as'=>'api.newlead.rank','uses'=>'TempleadController@rank']);
-
+		Route::get('/newleads/branch/{bid}/map',['as'=>'newleads.branch.map','uses'=>'TempleadController@branchLeadsMap']);
+		Route::get('api/newleads/branch/{id}/map',['as'=>'newleads.branch.mapdata','uses'=>'TempLeadController@getBranchMapData']);
 		Route::get('newlead/{pid}/export',['as'=>'newleads.export','uses'=>'TempleadController@export']);
 		Route::post('newlead/{id}/close',['as'=>'templead.close','uses'=>'TempleadController@close']);
 
@@ -377,9 +379,15 @@ Route::get('/',['as'=>'ops','uses'=>'Admin\AdminDashboardController@dashboard'])
 	#Watchlists
 		Route::get('watchlist/{userid}', ['as'=>'watch.mywatchexport', 'uses'=>'WatchController@export']);
 
-		## Search
+	## Search
 		Route::get('/user/find', 'SearchController@searchUsers');
 		Route::get('/person/{person}/find',['as'=>'person.details','uses'=>'PersonSearchController@find']);
+
+	#TempLeads
+	   // Route::get('newleads/team',['as'=>'templeads.team','uses'=>'TempleadController@salesteam']);
+	    Route::get('newleads/branch/{id?}',['as'=>'templeads.branch','uses'=>'TempleadController@branches']);
+		Route::resource('newleads','TempleadController');
+		//Route::get('newleads/branch',['as'=>'branch.newleads','uses'=>'TempleadController@getAssociatedBranches']);;
 });
 /** ------------------------------------------
  *  Admin Routes
@@ -467,9 +475,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 		Route::get('api/searchfilters/getAccounts',['as'=>'getAccountSegments','uses'=>'SearchFiltersController@getAccountSegments']);
 		Route::post('api/searchfilters/postAccounts',['as'=>'postAccountSegments','uses'=>'SearchFiltersController@getAccountSegments']);
 		Route::resource('searchfilters','SearchFiltersController');
-	#TempLeads
-	    Route::get('newleads/team',['as'=>'templeads.team','uses'=>'TempleadController@salesteam']);
-		Route::resource('newleads','TempleadController');
+
 		
 
 	# Seeder for relationships with servicelines

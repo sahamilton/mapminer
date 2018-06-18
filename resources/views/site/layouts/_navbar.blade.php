@@ -75,6 +75,10 @@
                             <li><a href="{{route('salesrep.newleads',auth()->user()->person->id)}}">
                             <i class="fa fa-envelope-open-o" aria-hidden="true"> </i> Sales Prospects</a></li>
                         @endif
+                        @if(auth()->user()->hasRole('Branch Manager'))
+                            <li><a href="{{route('branchmanager.newleads')}}">
+                            <i class="fa fa-envelope-open-o" aria-hidden="true"> </i> Branch Prospects</a></li>
+                        @endif
                         @if (auth()->user()->hasRole('Admin') or Auth::user()->hasRole('National Account Manager'))
                         <li class="divider"></li>
                          <li><a href="{{route('managers.view')}}">

@@ -3,7 +3,7 @@
 <div class="container">
     <h2>Leads Overview</h2>
     
-
+    <h4><a href="">See Leads by Branches</a></h4>
 
     <div class="col-md-10 col-md-offset-1">
         <table class="table" id = "sorttable">
@@ -25,7 +25,7 @@
                 <tr> 
                     <td><a href="{{route('salesrep.newleads',$rep->id)}}">{{$rep->postName()}}</a></td>
                     @if($rep->reportsTo)
-                        <td>{{$rep->reportsTo->postName()}}</td>
+                        <td><a href="{{route('salesrep.newleads',$rep->reportsTo->id)}}">{{$rep->reportsTo->postName()}}</a></td>
                         <td>{{$rep->reportsTo->userdetails->roles->first()->name}}</td>
                         @else
                         <td></td><td></td>

@@ -49,7 +49,10 @@ class Templead extends Model
         ->groupBy('templead_person_status.person_id');
 
     }
-
+    public function branches(){
+      return $this->belongsTo(Branch::class,'Branch','id');
+    }
+    
     public function rankLead($salesteam){
       $ranking = array();
 

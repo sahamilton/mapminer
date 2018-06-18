@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 use Excel;
-use App\Person;
+use App\User;
 use App\Note;
+use App\Person;
 use App\Branch;
 use App\Templead;
 use App\LeadStatus;
@@ -37,12 +38,52 @@ class TempleadController extends Controller
     }
 
     
-    /*public function salesteam(){
-        $reps = $this->templead->select('sr_id')->where('sr_id','!=',0)->groupBy('sr_id')->pluck('sr_id');
-        $salesteam = $this->person->with('userdetails','userdetails.roles')->whereIn('id',$reps)->get();
-        return response()->view('templeads.salesteam',compact('salesteam'));
+    public function getAssociatedBranches(){
+        if(auth()->user()->hasRole('Branch Manager')){
+            $branchmgr = $this->person
+                            ->where('user_id','=',auth()->user()->id)
+                            ->with('manages')
+                            ->first();
+                        
+            $branchlist = $branchmgr->manages->pluck('id')->toArray();
+            $branchleads = $this->getBranchData($branchlist);
+            $leadStatuses = LeadStatus::pluck('status','id')->toArray();
+            return response()->view('templeads.branchmgrleads',compact('branchleads','branchmgr','leadStatuses'));
+        }
+        
+    }
+    public function branches($id=null){
+        if($id){
+             $id = [$id];
+         }
+        $branches = $this->getBranchData($id);
+        if(! $id){
+           
+            return response()->view('templeads.branchsummary',compact('branches'));
+        }
+        $leadStatuses = LeadStatus::pluck('status','id')->toArray();
+       
+        return response()->view('templeads.branchleads',compact('branches','leadStatuses'));
+        
 
-    }*/
+    }
+    private function getBranchData($id=null){
+
+        if($id){
+            if(!is_array($id)){
+                $id = [$id];
+            }
+            return $this->templead->whereIn('Branch',$id)
+                ->with('salesrep','branches','branches.manager')
+                ->orderBy('Branch')
+                ->get();
+        }else{
+            return Branch::has('templeads')->with('manager','manager.reportsTo','templeads')->get();
+        }
+        
+
+
+    }
     
     public function salesLeads($pid=null){
         $person = $this->getSalesRep($pid);
@@ -77,7 +118,7 @@ class TempleadController extends Controller
 
 
     private function showSalesTeamLeads($person){
-        //dd($person);
+        
         $reports = $person->descendantsAndSelf()->pluck('id')->toArray();
         $reps = $this->person->whereHas('templeads')
         ->withCount(['templeads','openleads','closedleads'])
@@ -121,7 +162,35 @@ class TempleadController extends Controller
         return response()->view('templeads.xml',compact('leads'));
 
     }
+    public function branchLeadsMap($bid){
+        $branch = Branch::findOrFail($bid);
+        $data['title']= $branch->branchname . " Branch";
+        $data['datalocation'] = route('newleads.branch.mapdata',$branch->id);
+        $data['lat'] = $branch->lat;
+        $data['lng'] = $branch->lng;
+        $data['listviewref'] = route('templeads.branch',$branch->id);
+        $data['zoomLevel'] =10;
+        $data['type'] ='leads';
+        $leads = $this->templead->whereHas('branches', function ($q) use($bid){
+            $q->where('id','=',$bid);
+        })
+        ->limit('200')
+        
+        ->get();
 
+        $data['count']=count($leads);
+        return response()->view('templeads.branchmap',compact('data'));
+    }
+
+    public function getBranchMapData($bid){
+        
+        $leads = $this->getBranchData($bid);
+        
+        
+      //  $leads = $this->templead->where('sr_id','=',$person->id)->get();
+        return response()->view('templeads.xml',compact('leads'));
+
+    }
     private function getSalesRep($pid=null){
         if(! $pid){
             return $this->person->findOrFail(auth()->user()->person->id);
@@ -167,7 +236,7 @@ class TempleadController extends Controller
     }
 
     private function getSalesReps($leads){
-
+        // used for assigned leads initially
 
         foreach ($leads as $lead){
 
