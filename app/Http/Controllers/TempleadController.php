@@ -39,7 +39,7 @@ class TempleadController extends Controller
 
     
     public function getAssociatedBranches($pid=null){
-        
+
         if(auth()->user()->hasRole('Branch Manager')){
             $branchmgr = $this->person
                             ->where('user_id','=',auth()->user()->id)
@@ -91,6 +91,7 @@ class TempleadController extends Controller
     }
     
     public function salesLeads($pid=null){
+       
         $person = $this->getSalesRep($pid);
        // dd($person->findPersonsRole($person));
         // depending on role either return list of team and their leads
