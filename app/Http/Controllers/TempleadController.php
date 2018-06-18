@@ -32,8 +32,8 @@ class TempleadController extends Controller
         ->withCount(['templeads','openleads','closedleads'])
         ->with('reportsTo','reportsTo.userdetails.roles','closedleads')
         ->get();
-
-        return response()->view('templeads.index',compact('reps'));
+        $rankings = $this->templead->rankLead($reps);
+        return response()->view('templeads.index',compact('reps','rankings'));
     }
 
     

@@ -16,6 +16,7 @@
                 <th>All Leads</th>
                 <th>Open Leads</th>
                 <th>Closed Leads</th>
+                <th>Rating</th>
 
             </thead>
             <tbody>
@@ -32,6 +33,11 @@
                      <td>{{$rep->templeads_count}}</td>
                      <td>{{$rep->openleads_count}}</td>
                      <td>{{$rep->closedleads_count}}</td>
+                     <td>
+                        @if(isset($rankings[$rep->id]))
+                            {{$rankings[$rep->id]}}
+                        @endif
+                    </td>
                 </tr>  
 
                 @endforeach
