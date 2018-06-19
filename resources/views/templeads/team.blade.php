@@ -1,10 +1,12 @@
 @extends ('admin.layouts.default')
 @section('content')
 <div class="container">
+    
     <h2>{{$person->postName()}}'s Team Leads Overview</h2>
-    <h4>Reports To:<a href="{{route('salesrep.newleads',$person->reportsTO->id)}}">{{$person->reportsTo->postName()}}</a></h4>
+    @if($person->reportsTo)
+    <h4>Reports To:<a href="{{route('salesrep.newleads',$person->reportsTo->id)}}">{{$person->reportsTo->postName()}}</a></h4>
 
-
+    @endif
     <div class="col-md-10 col-md-offset-1">
         <table class="table" id = "sorttable">
             <thead>
