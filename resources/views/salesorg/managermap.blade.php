@@ -108,6 +108,7 @@ Sales Team  = <img src='//maps.google.com/mapfiles/ms/icons/red-dot.png' /></p>
           zoom: {{! $salesteam[0]->lat ? '4' : '9'}},
           center: {lat: {{! $salesteam[0]->lat ? '39.8282' : $salesteam[0]->lat }}, 
                   lng: {{! $salesteam[0]->lng ? '-98.5795' : $salesteam[0]->lng}} },
+         
           mapTypeId: 'terrain'
         });
       var infowindow = new google.maps.InfoWindow();
@@ -122,6 +123,7 @@ Sales Team  = <img src='//maps.google.com/mapfiles/ms/icons/red-dot.png' /></p>
               fillColor: '#00FF00',
               fillOpacity: 0.35,
               map: map,
+
               center: branchmap[branch].center,
               radius: branchmap[branch].radius * 1600,
             });
@@ -133,14 +135,14 @@ Sales Team  = <img src='//maps.google.com/mapfiles/ms/icons/red-dot.png' /></p>
           });
 
           var icon = getMarker(branchmap[branch].type);
-          function getMarker(type){
-          if(type == 'branch'){
-                return '//maps.google.com/mapfiles/ms/icons/blue-dot.png';
-              }else{
-                return '//maps.google.com/mapfiles/ms/icons/red-dot.png';
-               };
+            function getMarker(type){
+            if(type == 'branch'){
+                  return '//maps.google.com/mapfiles/ms/icons/blue-dot.png';
+                }else{
+                  return '//maps.google.com/mapfiles/ms/icons/red-dot.png';
+                 };
 
-        }
+          }
           var content = branchmap[branch].contentString;
          
            google.maps.event.addListener(marker,'click', (function(marker,content,infowindow){ 
@@ -164,6 +166,7 @@ Sales Team  = <img src='//maps.google.com/mapfiles/ms/icons/red-dot.png' /></p>
         var marker = new google.maps.Marker({
           position: geolocate,
           map: map,
+          icon: '//maps.google.com/mapfiles/ms/icons/yellow-dot.png',
           title: 'You are here!'
         });
         
