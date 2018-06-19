@@ -1,6 +1,6 @@
 @extends ('admin.layouts.default')
 @section('content')
-
+<script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
 <div class="col-sm-5">
 	<div class="panel panel-default">
 		<div class="panel-heading clearfix">
@@ -59,6 +59,7 @@
 		
 @endif
 </div>		<div id="map" class="col-sm-7 pull-right" style="border:solid 1px red"></div>
+@include('webleads.partials.select')
 @if(count($lead->salesteam)==0)
 		<div class="row">
 		<div class="col-sm-12">
@@ -68,14 +69,7 @@
 	@include('partials._unassignleadmodal')		
 @endif
 </div>
-	<!--
-
-		map
-
-		Closets Branches
-
-		Closest sales reps
-	-->
+	
 @include('webleads.partials.map')
 
 @include('partials/_scripts')
