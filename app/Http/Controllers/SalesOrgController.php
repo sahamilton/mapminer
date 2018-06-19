@@ -121,8 +121,8 @@ class SalesOrgController extends BaseController {
 		$branches = $this->branch->whereHas('servicelines',function ($q) use($userServiceLines){
 			$q->whereIn('serviceline.id',$userServiceLines);
 		})
-		->nearby($salesrep,$this->distance)
-		->limit($this->limit)
+		->nearby($salesrep,$this->distance,$this->limit)
+		
 		->get();
 		$branchIds = array();
 		foreach($branches as $branch)

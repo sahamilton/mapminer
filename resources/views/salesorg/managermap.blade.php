@@ -57,7 +57,8 @@
   </div>
   <div class="container" style="float:right;width:700px;">
   @include('leads.partials.search')
- 
+<p>Branches = <img src='//maps.google.com/mapfiles/ms/icons/blue-dot.png' />
+Sales Team  = <img src='//maps.google.com/mapfiles/ms/icons/red-dot.png' /></p>
     <div id="map" style="border:solid 1px red;margin-bottom:40px;"></div> 
   </div> </div>
     <script>

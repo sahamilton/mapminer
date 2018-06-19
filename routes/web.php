@@ -156,7 +156,7 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('salesorg/{person?}',['as'=>'salesorg','uses'=>'SalesOrgController@getSalesBranches']);
 		Route::get('salesorg/{person}/list',['as'=>'salesorg.list','uses'=>'SalesOrgController@getSalesOrgList']);
 		Route::get('salesorg/coverage',['as'=>'salescoverage','uses'=>'SalesOrgController@salesCoverageMap']);
-		Route::post('leads/find',['as'=>'lead.find','uses'=>'LeadsController@find']);
+		Route::post('salesorg/find',['as'=>'lead.find','uses'=>'LeadsController@find']);
 		Route::get('branch/{branchId}/salesteam',array('as' => 'branch.salesteam', 'uses' => 'BranchesController@showSalesTeam'));
 
 
@@ -486,5 +486,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 
 	# Versions
 	 	Route::resource('versions','GitController');
+
+	 	Route::get('test',['as'=>'test','uses'=>'TestController@form']);
+	 	Route::post('test/state',['as'=>'test.state','uses'=>'TestController@select']);
+	 	Route::post('test/send',['as'=>'test.send','uses'=>'TestController@send']);
 
 });

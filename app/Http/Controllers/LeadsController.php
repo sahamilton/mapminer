@@ -35,7 +35,8 @@ class LeadsController extends BaseController
         $this->lead = $lead;
         $this->leadsource = $leadsource;
         $this->leadstatus = $status;
-        $this->assignTo = \Config::get('leads.lead_distribution_roles');
+        $this->assignTo = \Config::get('leads.lead_distribution_roles'); 
+        parent::__construct($this->lead);
     }
     /**
      * Display a listing of the resource.
@@ -238,17 +239,18 @@ class LeadsController extends BaseController
       }else{
         $request->merge($this->lead->getGeoCode($geoCode));
       }
-
       $data = $request->all();
-      // Kludge to address the issue of different data in Session::geo
       if(! $request->has('number')){
-        $data['number']=5;
-      }
-      \Session::put('geo', $data);
-      $people = $this->findNearBy($data);
-      $people = $this->getIndustryAssociation($people);
-
-      return response()->view('leads.address',compact('people','data'));
+          $data['number']=5;
+        }
+        \Session::put('geo', $data);
+      if($request->type =='branch'){
+          $branches = $this->findNearByBranches($data);
+          return response()->view('salesorg.nearbybranches',compact('data','branches'));
+        }else{
+          $people= $this->findNearByPeople($data);
+          return response()->view('salesorg.nearbypeople',compact('data','people'));
+        }
 
     }
 
@@ -259,36 +261,34 @@ class LeadsController extends BaseController
      * @return People object
      */
 
-    private function findNearBy($data){
-
-        $location = new Lead;
+    private function findNearByBranches($data){
+        $location = new \stdClass;
         $location->lat = $data['lat'];
         $location->lng = $data['lng'];
-        if(! isset($data['distance'])){
-            $data['distance']=\Config::get('leads.search_radius');
-        }
-        $salesroles = $this->salesroles;
-        $persons =  $this->person->whereHas('userdetails.roles',function ($q) use($salesroles){
-          $q->whereIn('roles.id',$salesroles);
-        });
-
-
-
-        if(isset($data['verticals'])){
-            $persons->whereHas('industryfocus',function ($q) use ($verticals){
-                  $q->whereIn('searchfilters.id',$verticals);
-              });
-        }
-        $persons->nearby($location,$data['distance']);
-
-
-       if (isset($data['number'])){
-            $persons->limit($data['number']);
-        }
-
-      return $persons->get();
+        return \App\Branch::whereHas('servicelines',function ($q){
+              $q->whereIn('servicelines.id',$this->userServiceLines );
+          })->nearby($location,$data['distance'],$data['number'])
+          
+          ->get();
 
     }
+
+     private function findNearByPeople($data){
+        $location = new \stdClass;
+        $location->lat = $data['lat'];
+        $location->lng = $data['lng'];
+
+        return Person::whereHas('userdetails.serviceline', function ($q) {
+              $q->whereIn('servicelines.id',$this->userServiceLines);
+          })
+          ->whereHas('userdetails.roles', function ($q) {
+              $q->whereIn('roles.id',$this->salesroles);
+          })
+          ->with('userdetails','reportsTo','userdetails.roles')
+          ->nearby($location,$data['distance'],$data['number'])
+          
+          ->get();
+      }
 
     private function createNewSource($request){
         $source = $this->leadsource->create(['source'=>$request->get('lead_source_id'),
