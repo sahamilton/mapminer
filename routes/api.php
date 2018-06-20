@@ -17,4 +17,5 @@ Route::get('/user', function (Request $request) {
 });
 Route::get('watchupdate',['as'=>'api.watchupdate', 'uses'=>'WatchController@watchupdate'])->middleware('auth:api');
 Route::get('leadrank',['as'=>'api.lead.rank', 'uses'=>'LeadsController@leadrank'])->middleware('auth:api');
+Route::post('test/state',['as'=>'test.state','uses'=>'TestController@select'])->middleware('auth:api');
 //Route::post('advancedsearch',['as'=>'setSearch','uses'=>'SearchFiltersController@setSessionSearch'])->middleware('auth:api');

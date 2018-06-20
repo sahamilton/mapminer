@@ -11,8 +11,19 @@ $('select[name="country"]').on('change', function() {
                     //remove disabled from province and change the options
                     $('select[name="province"]').prop("disabled", false);
                     $('select[name="province"]').html(data.response);
-        }
-    });
+
+
+           var options=$('<select/>');
+            $.each(data, function(id, ob){
+            options.append($('<option>',    
+                      {value:ob.value,
+                        text:ob.text}));
+        });
+
+     $('#province').html(options.html());
+            }
+        });
+
 });
 
 

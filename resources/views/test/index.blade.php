@@ -10,7 +10,7 @@
     </div>
     <div class="form-group col-lg-2">
         <label>province</label>
-        <select name="province" class="form-control" disabled>
+        <select id="province" name="province" class="form-control" disabled>
             <option value="1">a province</option>
         </select>
     </div>

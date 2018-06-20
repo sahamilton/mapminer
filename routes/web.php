@@ -488,7 +488,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 	 	Route::resource('versions','GitController');
 
 	 	Route::get('test',['as'=>'test','uses'=>'TestController@form']);
-	 	Route::post('test/state',['as'=>'test.state','uses'=>'TestController@select']);
+	 	
 	 	Route::post('test/send',['as'=>'test.send','uses'=>'TestController@send']);
 
 });
