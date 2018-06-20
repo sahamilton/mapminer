@@ -1,43 +1,68 @@
-<div id="app">
+<form id="myForm">
+    <div class="form-group col-lg-2">
+        <label>Branch</label>
+        <select id="branch" name="branch" class="form-control">
+            <option selected value="">Select a Branch</option>
+            @foreach ($branches as $branch)
+            <option value="{{$branch->id}}">{{$branch->branchname}}</option>
+            @endforeach
+        </select>
+    </div>
+    <div class="form-group col-lg-2">
+        <label>Sales Rep</label>
+        <select id ="salesrep" name="salesrep" class="form-control" disabled>
+            <option value="1"><-- Choose Sales Rep --></option>
+        </select>
+    </div>
 
-  <h2>Select Date</h2>
-  
-  <select v-model="selectedOption" @change="loadData">
-    <option v-for="option in options">{{ option }}</option>
-  </select>
-
-  <div v-if="selectedOption && !items.length"><i>Loading</i></div>
-  <select v-if="items.length">
-    <option v-for="item in items">{{ item.label }}</option>
-  </select>
-  
-</div>
+   
+</form>
 
 <script>
-	const app = new Vue({
-  el:'#app',
-  data:{
-    options:["films","people","starships","vehicles","species","planets"],
-    items:null,
-    selectedOption:''
-  },
-  methods:{
-    loadData:function() {
-      this.items = null;
-      let key = 'name';
-      if(this.selectedOption === 'films') key = 'title';
-      
-      fetch('https://swapi.co/api/'+this.selectedOption)
-      .then(res=>res.json())
-      .then(res => {
-        // "fix" the data to set a label for all types
-        this.items = res.results.map((item) =>{
-              item.label = item[key];
-              return item;
+//Select country first
+$('select[name="branch"]').on('change', function() {
+    var branchId = $(this).val();
+
+    $.ajax({
+        type: "POST",
+        url: "{{route('api.branch.people')}}",
+        data: {branch : branchId, api_token:"{{auth()->user()->api_token}}"},
+        success: function (data) {
+
+                    //remove disabled from salesrep and change the options
+                    $('select[name="salesrep"]').prop("disabled", false);
+                    var selectbox = $('#salesrep');
+                    selectbox.empty();
+                    var options ='';
+                    //$('select[name="salesrep"]').html(data.response);
+                    for (var j = 0; j < data.length; j++){
+                        options += "<option value='" +data[j].id+ "'>"+ data[j].firstname + ' ' + data[j].lastname + "</option>";
+                    }
+                    /*var options=$('<select/>');
+                    $.each(data, function(id, ob){
+                    options.append($('<option>',    
+                              {value:ob.id,
+                                text:ob.firstname + ' ' + ob.lastname}));
+                    });*/
+
+            selectbox.html(options);
+            }
         });
-       
-      });
-    }
-  }
+
 });
+
+
+
+//once all field are set, submit
+$('#myForm').submit(function () { 
+    $.ajax({
+        type: "POST",
+        url: "{{route('test.send')}}",
+        data: $('#myForm').serialize(),
+        success: function (data) {
+                //success
+        }
+      });
+    });
+
 </script>

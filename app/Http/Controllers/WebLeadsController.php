@@ -194,6 +194,21 @@ class WebLeadsController  extends ImportController
         }
       
       return collect($salesrepmarkers)->toJson();
-}
+    }
+
+
+    public function getSalesPeopleofBranch(Request $request){
+        $bid = $request->get('branch');
+
+        $salesreps = $this->person->whereHas('branchesServiced', function($q) use($bid){
+            $q->where('branches.id','=',$bid);
+        })
+        
+        ->select('firstname','lastname','id')
+        ->get();
+        return response()->json($salesreps);
+
+
+    }
 }
 

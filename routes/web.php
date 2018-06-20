@@ -490,5 +490,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 	 	Route::get('test',['as'=>'test','uses'=>'TestController@form']);
 	 	
 	 	Route::post('test/send',['as'=>'test.send','uses'=>'TestController@send']);
+	 	Route::get('branch/{bid}/people',['as'=>'test.branch.people', 'uses'=>'WebLeadsController@getSalesPeopleofBranch']);
 
 });
