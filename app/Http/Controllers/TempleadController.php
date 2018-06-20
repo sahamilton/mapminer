@@ -7,7 +7,7 @@ use App\Note;
 use App\Person;
 use App\Branch;
 use App\Templead;
-use App\Weblead;
+use App\WebLead;
 use App\LeadStatus;
 use Illuminate\Http\Request;
 
@@ -17,7 +17,7 @@ class TempleadController extends Controller
     protected $person;
     protected $weblead;
 
-    public function __construct(Templead $lead, Person $person, Weblead $weblead){
+    public function __construct(Templead $lead, Person $person, WebLead $weblead){
         $this->templead = $lead;
         $this->person = $person;
         $this->weblead = $weblead;
