@@ -21,7 +21,7 @@
             </thead>
             <tbody>
                 @foreach ($branchleads as $lead)
-              
+              {{dd($lead)}};
                 <tr> 
                     <td>{{$lead->branches->branchname}}</td>
                      <td><a href="{{route('salesrep.newleads.show',$lead->id)}}">{{$lead->Company_Name}}</a></td>

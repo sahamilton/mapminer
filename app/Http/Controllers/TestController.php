@@ -7,19 +7,7 @@ use Illuminate\Http\Request;
 class TestController extends Controller
 {
     
-    public  $states =
-            [
-                "CA"=> [
-                  ['value'=>"BC" ,'text'=> "British Columbia"],
-                  ['value'=>"ONC" ,'text'=> "Ontario"],
-                  
-                ],
-                "US"=> [
-                    ['value'=>'AL','text'=>'ALABAMA'],
-                    ['value'=>'AK','text'=>'ALASKA'],
-                    ['value'=>'AS','text'=>'AMERICAN SAMOA'],
-                ],
-            ];
+
 
     /**
      * Display a listing of the resource.
