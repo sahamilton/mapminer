@@ -24,8 +24,8 @@ class NotifyWebLeadsBranchAssignment extends Mailable
     {
         $this->lead = $lead;
         $this->branch = $branch;
-        $this->emails;        
-       
+        $this->emails = $emails; 
+   
        
     }
 
@@ -39,7 +39,7 @@ class NotifyWebLeadsBranchAssignment extends Mailable
         if(\Config::get('leads.test')){
             return $this->markdown('emails.webleadsbranchnotify')->to(auth()->user()->email, auth()->user()->person->postName())->subject('New Web Lead');
         }else{
-             return $this->markdown('emails.webleadsbranchnotify')->to($this->person->userdetails->email, $this->person->postName())->subject('New Web Lead');
+             return $this->markdown('emails.webleadsbranchnotify')->to($this->emails['email'], $this->emails['name'])->subject('New Web Lead');
         }
            
 

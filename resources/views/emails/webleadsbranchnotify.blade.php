@@ -2,9 +2,9 @@
 
 ## New Web Lead 
 
-{{$person->firstname}}, 
+{{$emails['name']}}, 
 
-You have been assigned a new lead that came through the People Ready website.  The details are below:
+A new lead that came through the People Ready website has been assigned to {{$lead->salesteam->first()->postName()}} and {{$branch->branchname}}.  The details of this lead are below:
 
 @component('mail::panel')
 
@@ -36,9 +36,6 @@ Industry:{{$lead->industry}}
         Check out your sales prospects and resources.
 @endcomponent
 
-
-
-Note that the nearest branch to this lead is {{$branch->branchname}}.
 
 Sincerely
         

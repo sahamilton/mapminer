@@ -155,14 +155,13 @@ class WebLeadsController  extends ImportController
         if($request->get('notifymgr')){
 
             $branchemails = $this->getBranchEmails($branch);
+            
             foreach ($branchemails as $email){
                 
-                Mail::queue(new NotifyWebLeadsBranchAssignment($lead,$branch,$rep));
+                Mail::queue(new NotifyWebLeadsBranchAssignment($lead,$branch,$email));
             }
        
-        }  // branch manager
-
-
+        }  
         return redirect()->route('webleads.index');
     }
     private function getBranchEmails($branch){
