@@ -32,11 +32,9 @@ Industry:{{$lead->industry}}
 
 @endcomponent
 
-@component('mail::button', ['url' => route('salesleads.index'), 'color' => 'blue'])
+@component('mail::button', ['url' => route('my.leads'), 'color' => 'blue'])
         Check out your sales prospects and resources.
 @endcomponent
-
-
 
 Note that the nearest branch to this lead is {{$branch->branchname}}.
 

@@ -245,4 +245,24 @@ class WebLead extends Model implements HasPresenter {
 
       return $history;
     }
+
+    public function geoCodeAddress($data){
+        $addressFields = ['address','city','state','zip'];
+        $address ='';
+        foreach ($addressFields as $field){
+          if(isset($data[$field])){
+            $address.=$data[$field] . ' ';
+          }
+        }
+        $geocode = $this->getLatLng($address);
+        $data['lat'] = $geocode['lat'];
+        $data['lng'] = $geocode['lng'];
+        return $data;
+    }
+   public function getLatLng($address)
+    {
+        $geoCode = app('geocoder')->geocode($address)->get();
+        return $this->getGeoCode($geoCode);
+
+    }
 }

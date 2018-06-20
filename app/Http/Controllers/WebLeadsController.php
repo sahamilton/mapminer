@@ -37,24 +37,20 @@ class WebLeadsController  extends ImportController
         
     }
      
-    public function create(){
+    
 
-    	return response()->view('webleads.leadform');
-    }
-
-    public function show($weblead){
-        
-
-        $lead = $weblead->with('salesteam')->first();
-      
+    public function show($lead){
+       
         $branches = $this->findNearByBranches($lead);
-        
         $people = $this->findNearbySales($branches,$lead); 
         $salesrepmarkers = $this->jsonify($people);
         $branchmarkers=$branches->toJson();
         return response()->view('webleads.show',compact('lead','branches','people','salesrepmarkers','branchmarkers'));
 
     }
+    
+
+
     public function saleslist(){
 
             $webleads = $this->lead->whereHas('salesteam',function ($q){
@@ -72,64 +68,7 @@ class WebLeadsController  extends ImportController
         $leadstatuses = \App\LeadStatus::pluck('status','id')->toArray(); 
         return response()->view('webleads.saleshow',compact('lead','person','rankingstatuses','leadstatuses'));
     }
-    public function getLeadFormData(WebLeadFormRequest $request){
-    	// first get the rows of data
-		
-       $input = $this->parseInputData($request);
-       $data = $input;
-       $title="Map the leads import file fields";
-       $requiredFields = $this->import->requiredFields;
-
-        $data['type']=$request->get('type');
-        if($data['type']== 'assigned'){
-            $data['table']='leadimport';
-            $requiredFields[]='employee_id';
-        }else{
-            $data['table']='webleads';
-        }
-       
-        $data['filename'] = null;
-        $data['additionaldata'] = array();
-        $data['route'] = 'leads.mapfields';
-        $fields[0] = array_keys($input);      
-        $fields[1] = array_values($input); 
-        $data['route'] = 'webleads.store';
-        $columns = $this->lead->getTableColumns($data['table']);
-        
-        $skip = ['id','deleted_at','created_at','updated_at','lead_source_id','pr_status'];
-        return response()->view('imports.mapfields',compact('columns','fields','data','company_id','skip','title','requiredFields'));
-    	
-    }
-
-    private function parseInputData($request){
-        $rows = explode(PHP_EOL,$request->get('weblead'));
-        // then create the
-        foreach ($rows as $row){
-            $field = explode("\t",$row);
-            if(is_array($field) && count($field)==2){
-                $input[str_replace(" ","_",strtolower($field[0]))]=$field[1];
-            }
-        }
-        return $input;
-    }
-    public function store(Request $request){
-        $data = $request->except('fields');
-        $fields = $request->get('fields');
-        foreach ($fields as $key=>$value){
-            if (($key = array_search('@ignore', $fields)) !== false) {
-                unset($fields[$key]);
-            }
-        }
-        foreach ($fields as $key=>$value){
-            $newdata[$value]= $data[$key];
-        }
-        $newdata = $this->geoCodeAddress($newdata);
-        // geocode lead
-        
-        $lead = $this->lead->create($newdata);
-
-        return redirect()->route('webleads.show',$lead->id);
-}
+    
 
     public function edit($weblead){
         return response()->view('webleads.edit',compact('weblead'));
@@ -138,7 +77,7 @@ class WebLeadsController  extends ImportController
     public function update(Request $request,$weblead){
         
         $address = $request->get('address') . " " . $request->get('city') . " " . $request->get('state'). " " . $request->get('zip');
-        $geocode = $this->getLatLng($address);
+        $geocode = $this->lead->getLatLng($address);
         $data = $request->all();
         $data['lat']=$geocode['lat'];
         $data['lng']=$geocode['lng'];
@@ -149,21 +88,10 @@ class WebLeadsController  extends ImportController
 
     public function destroy($lead){
     
-        $this->lead->destroy($lead);
+        $lead->delete();
         return redirect()->route('webleads.index');
     }
-    private function geoCodeAddress($data){
-        $geocode = $this->getLatLng($data['address'] ." " .$data['city'] .", " . $data['state']);
-        $data['lat'] = $geocode['lat'];
-        $data['lng'] = $geocode['lng'];
-        return $data;
-    }
-   private function getLatLng($address)
-    {
-        $geoCode = app('geocoder')->geocode($address)->get();
-        return $this->lead->getGeoCode($geoCode);
-
-    }
+    
     public function assignLeads(Request $request){
 
         $lead = $this->lead->findOrFail($request->get('lead_id'));
