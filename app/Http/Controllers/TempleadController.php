@@ -7,7 +7,7 @@ use App\Note;
 use App\Person;
 use App\Branch;
 use App\Templead;
-use App\WEblead;
+use App\Weblead;
 use App\LeadStatus;
 use Illuminate\Http\Request;
 
