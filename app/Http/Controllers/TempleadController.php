@@ -7,6 +7,7 @@ use App\Note;
 use App\Person;
 use App\Branch;
 use App\Templead;
+use App\WEblead;
 use App\LeadStatus;
 use Illuminate\Http\Request;
 
@@ -14,10 +15,12 @@ class TempleadController extends Controller
 {
     protected $templead;
     protected $person;
+    protected $weblead;
 
-    public function __construct(Templead $lead, Person $person){
+    public function __construct(Templead $lead, Person $person, Weblead $weblead){
         $this->templead = $lead;
         $this->person = $person;
+        $this->weblead = $weblead;
     }
 
     /**
@@ -77,7 +80,7 @@ class TempleadController extends Controller
 
     }
     private function getBranchData($id=null){
-        dd($id);
+
         if($id){
             if(!is_array($id)){
                 $id = [$id];
@@ -101,7 +104,7 @@ class TempleadController extends Controller
         // depending on role either return list of team and their leads
         // or the leads
         if($person->userdetails->can('accept_leads')){
-        
+            
             return $this->showSalesLeads($person);
         }elseif($person->userdetails->hasRole('Admin') or $person->userdetails->hasRole('Sales Operations')){
                 return redirect()->route('newleads.index');
@@ -113,12 +116,13 @@ class TempleadController extends Controller
 
 
     private function showSalesLeads($person){
-        $openleads = $this->getLeadsByTYpe('openleads',$person);
+        
+        $openleads = $this->getLeadsByType('openleads',$person);
         $openleads =$openleads->limit('200')
                     ->get();
         
 
-        $closedleads = $this->getLeadsByTYpe('closedleads',$person);
+        $closedleads = $this->getLeadsByType('closedleads',$person);
         $closedleads = $closedleads->with('relatedNotes')
                     ->limit('200')
                     ->get();
@@ -225,7 +229,7 @@ class TempleadController extends Controller
 
     }
 
-    private function getLeadsByTYpe($type,$person){
+    private function getLeadsByType($type,$person){
         return $this->templead->whereHas($type, function ($q) use($person){
             $q->where('person_id','=',$person->id);
         });

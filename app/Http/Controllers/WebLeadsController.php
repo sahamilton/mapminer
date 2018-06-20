@@ -6,6 +6,7 @@ use Mail;
 use App\WebLead;
 use App\WebLeadImport;
 use App\LeadSource;
+use App\Note;
 use App\Branch;
 use App\Person;
 use App\Mail\NotifyWebLeadsAssignment;
@@ -18,6 +19,7 @@ class WebLeadsController  extends ImportController
     public $salesroles = [5,6,7,8];
     protected $person;
     protected $branch;
+    protected $lead;
     public function __construct(WebLead $lead, LeadSource $leadsource,WebLeadImport $import, Person $person, Branch $branch){
         $this->lead = $lead;
         $this->import = $import;
@@ -28,10 +30,11 @@ class WebLeadsController  extends ImportController
         
     }
     public function index(){
-
-        $webleads = WebLead::all();
-  
-        return response()->view('webleads.index',compact('webleads'));
+       
+            $webleads = $this->lead->all();
+            return response()->view('webleads.index',compact('webleads'));
+       
+        
     }
      
     public function create(){
@@ -39,19 +42,36 @@ class WebLeadsController  extends ImportController
     	return response()->view('webleads.leadform');
     }
 
-    public function show($lead){
-        $lead = $this->lead->with('salesteam')->findOrFail($lead);
+    public function show($weblead){
         
-        $branches = $this->findNearByBranches($lead);
 
+        $lead = $weblead->with('salesteam')->first();
+      
+        $branches = $this->findNearByBranches($lead);
+        
         $people = $this->findNearbySales($branches,$lead); 
         $salesrepmarkers = $this->jsonify($people);
         $branchmarkers=$branches->toJson();
         return response()->view('webleads.show',compact('lead','branches','people','salesrepmarkers','branchmarkers'));
 
     }
+    public function saleslist(){
 
-
+            $webleads = $this->lead->whereHas('salesteam',function ($q){
+                $q->where('persons.id','=',auth()->user()->person->id);
+            })->get();
+            $leadstatuses = \App\LeadStatus::pluck('status','id')->toArray();          
+            $person = $this->person->findOrFail(auth()->user()->person->id);
+            return response()->view('webleads.salesrep',compact('webleads','person','leadstatuses'));
+     
+    }
+    public function salesshow($lead){
+        $lead = $lead->with('relatedNotes')->firstOrFail();
+        $person = $this->person->findOrFail(auth()->user()->person->id);
+        $rankingstatuses = $lead->getStatusOptions;
+        $leadstatuses = \App\LeadStatus::pluck('status','id')->toArray(); 
+        return response()->view('webleads.saleshow',compact('lead','person','rankingstatuses','leadstatuses'));
+    }
     public function getLeadFormData(WebLeadFormRequest $request){
     	// first get the rows of data
 		
@@ -103,23 +123,28 @@ class WebLeadsController  extends ImportController
         foreach ($fields as $key=>$value){
             $newdata[$value]= $data[$key];
         }
-
+        $newdata = $this->geoCodeAddress($newdata);
         // geocode lead
-        $geocode = $this->getLatLng($newdata['city'] .", " . $newdata['state']);
-        // 
-        $newdata['lat'] = $geocode['lat'];
-        $newdata['lng'] = $geocode['lng'];
+        
         $lead = $this->lead->create($newdata);
 
         return redirect()->route('webleads.show',$lead->id);
 }
 
-    public function edit($id){
-
+    public function edit($weblead){
+        return response()->view('webleads.edit',compact('weblead'));
     }
 
-    public function update(Request $request){
-
+    public function update(Request $request,$weblead){
+        
+        $address = $request->get('address') . " " . $request->get('city') . " " . $request->get('state'). " " . $request->get('zip');
+        $geocode = $this->getLatLng($address);
+        $data = $request->all();
+        $data['lat']=$geocode['lat'];
+        $data['lng']=$geocode['lng'];
+        
+        $weblead->update($data);
+        return redirect()->route('webleads.show',$weblead->id);
     }
 
     public function destroy($lead){
@@ -127,8 +152,13 @@ class WebLeadsController  extends ImportController
         $this->lead->destroy($lead);
         return redirect()->route('webleads.index');
     }
-
-        private function getLatLng($address)
+    private function geoCodeAddress($data){
+        $geocode = $this->getLatLng($data['address'] ." " .$data['city'] .", " . $data['state']);
+        $data['lat'] = $geocode['lat'];
+        $data['lng'] = $geocode['lng'];
+        return $data;
+    }
+   private function getLatLng($address)
     {
         $geoCode = app('geocoder')->geocode($address)->get();
         return $this->lead->getGeoCode($geoCode);
@@ -240,6 +270,60 @@ class WebLeadsController  extends ImportController
         ->get();
         return response()->json($salesreps);
 
+
+    }
+
+    /**
+     * Close prospect
+     * @param  Request $request post contents
+     * @param  int  $id      prospect (lead) id
+     * @return [type]           [description]
+     */
+    public function close(Request $request, $lead){
+    
+      $lead->salesteam()
+        ->updateExistingPivot(auth()->user()->person->id,['rating'=>$request->get('ranking'),'status_id'=>3]);
+        $this->addClosingNote($request,$lead->id);
+        return redirect()->route('my.webleads')->with('message', 'Lead closed');
+     }
+
+     private function addClosingNote($request,$id){
+        $note = new Note;
+        $note->note = "Lead Closed:" .$request->get('comments');
+        $note->type = 'weblead';
+        $note->related_id = $id;
+        $note->user_id = auth()->user()->id;
+        $note->save();
+    }
+
+    public function salesLeadsMap(){
+        $person = $this->person->findOrFail(auth()->user()->person->id);
+        $data['title']= $person->postName();
+        $data['datalocation'] = route('api.webleads.map');
+        $data['lat'] = $person->lat;
+        $data['lng'] = $person->lng;
+        $data['listviewref'] = route('my.webleads');
+        $data['zoomLevel'] =10;
+        $data['type'] ='leads';
+
+        $leads = $this->lead->whereHas('salesteam', function ($q) {
+            $q->where('person_id','=',auth()->user()->person->id);
+        })
+        ->limit('200')
+        ->get();
+        $data['count']=count($leads);
+     
+        return response()->view('webleads.showmap',compact('data'));
+    }
+
+    public function getMapData(){
+        
+        $webleads = $this->lead->whereHas('salesteam',function ($q){
+                $q->where('persons.id','=',auth()->user()->person->id);
+            })
+        ->limit('200')
+        ->get();
+        return response()->view('webleads.xml',compact('webleads'));
 
     }
 }

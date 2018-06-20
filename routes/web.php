@@ -200,7 +200,12 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('api/newleads/branch/{id}/map',['as'=>'newleads.branch.mapdata','uses'=>'TempleadController@getBranchMapData']);
 		Route::get('newlead/{pid}/export',['as'=>'newleads.export','uses'=>'TempleadController@export']);
 		Route::post('newlead/{id}/close',['as'=>'templead.close','uses'=>'TempleadController@close']);
-
+	## Webleads
+		Route::get('/mywebleads', ['as'=>'my.webleads','uses'=>'WebLeadsController@saleslist']);
+		Route::get('/webleads/{weblead}/salesshow',['as'=>'webleads.salesshow','uses'=>'WebLeadsController@salesshow']);
+		Route::get('/webleads/map',['as'=>'webleads.map','uses'=>'WebLeadsController@salesLeadsMap']);
+		Route::get('/webleads/mapdata',['as'=>'api.webleads.map','uses'=>'WebLeadsController@getMapData']);
+		Route::post('/weblead/{weblead}/close',['as'=>'weblead.close','uses'=>'WebLeadsController@close']);
 	#AJAX Links
 	#// Move these to api routes
 		Route::get('api/company/{companyId}/statemap/{state}', ['as'=>'company.statemap','uses'=>'LocationsController@getStateLocations']);
@@ -331,11 +336,11 @@ Route::get('/',['as'=>'ops','uses'=>'Admin\AdminDashboardController@dashboard'])
 		Route::post('leads/batchassign',['as'=>'leads.assignbatch','uses'=>'LeadsAssignController@assignLead']);
 		Route::post('leads/assign',['as'=>'leads.assign','uses'=>'LeadsController@postAssignLeads']);
 		## Web leads
-		Route::resource('/webleads','WebLeadsController');
+		
 		Route::post('/webleads/form',['as'=>'leads.webleadsinsert','uses'=>'WebLeadsController@getLeadFormData']);
 		Route::post('/webleads/assign',['as'=>'webleads.assign','uses'=>'WebLeadsController@assignLeads']);
-		
 		Route::delete('/webleads/{id}/unassign',['as'=>'webleads.unassign','uses'=>'WebLeadsController@unAssignLeads']);
+		Route::resource('/webleads','WebLeadsController');
 
 		Route::get('leads/{id}/person',['as'=>'leads.person','uses'=>'LeadsController@getPersonsLeads']);
 		Route::get('leads/{id}/person/{sid}/source',['as'=>'leads.personsource','uses'=>'LeadsController@getPersonSourceLeads']);

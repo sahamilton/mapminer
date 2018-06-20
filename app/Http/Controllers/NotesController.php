@@ -69,6 +69,11 @@ class NotesController extends BaseController {
 				
 				return redirect()->route('projects.show',$note->related_id);
 			break;
+
+			case 'weblead':
+				
+				return redirect()->route('webleads.salesshow',$note->related_id);
+			break;
 		}
 		
 

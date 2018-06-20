@@ -15,8 +15,10 @@ class WebLead extends Model implements HasPresenter {
   public $table= 'webleads';
   public $requiredfields = [
             'company_name',
+            
             'city',
             'state',
+        
             'first_name',
             'last_name',
             'phone_number',
@@ -28,8 +30,10 @@ class WebLead extends Model implements HasPresenter {
             
 	public $fillable = [
     'company_name',
+    'address',
             'city',
             'state',
+            'zip',
             'first_name',
             'last_name',
              'phone_number',
@@ -62,7 +66,7 @@ class WebLead extends Model implements HasPresenter {
     }
     
     public function relatedNotes() {
-      return $this->hasMany(Note::class,'related_id')->where('type','=','web')->with('writtenBy');
+      return $this->hasMany(Note::class,'related_id')->where('type','=','weblead')->with('writtenBy');
     }
     
     public function getPresenterClass()

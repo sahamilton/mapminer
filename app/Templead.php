@@ -26,7 +26,6 @@ class Templead extends Model
     }
     public function openleads(){
     	return $this->belongsToMany(Person::class, 'templead_person_status','related_id','person_id')
-    
       ->wherePivot('status_id',2);
     }
     public function closedleads(){

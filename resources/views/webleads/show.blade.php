@@ -1,6 +1,6 @@
 @extends ('admin.layouts.default')
 @section('content')
-<script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+
 <div class="col-sm-5">
 	<div class="panel panel-default">
 		<div class="panel-heading clearfix">
@@ -10,28 +10,7 @@
 				Edit
 			</a>
 		</div>
-		<div class="list-group-item">
-			<p class="list-group-item-text">Lead Details</p>
-			<ul style="list-style-type: none;">
-				<li><strong>Address:</strong>{{$lead->city}}, {{$lead->state}}</li>
-				<li><strong>Contact:</strong>{{$lead->first_name}} {{$lead->last_name}}</li>
-				<li><strong>Phone:</strong>{{$lead->phone_number}}</li>
-				<li><strong>Email:</strong>{{$lead->email_address}}</li>
-				
-			
-			</ul>
-		</div>
-
-		<div class="list-group">
-			<div class="list-group-item">
-				<p class="list-group-item-text">Job Requirements</p>
-				<ul style="list-style-type: none;">
-						<li><strong>Time Frame:</strong>{{$lead->time_frame}}</li>
-						<li><strong>Jobs:</strong>{{$lead->jobs}}</li>
-						<li><strong>Industry:</strong>{{$lead->industry}}</li>
-				</ul>
-			</div>
-		</div>
+		@include('webleads.partials._detail')
 
 		@if(count($lead->salesteam)>0)
 		<div class="list-group">
@@ -61,7 +40,9 @@
 </div>		
 <div class="col-sm-7 pull-right">
 <div id="map"  style="border:solid 1px red"></div>
+@if(count($lead->salesteam)==0)
 @include('webleads.partials.select')
+@endif
 </div>
 
 @if(count($lead->salesteam)==0)
