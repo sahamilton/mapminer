@@ -9,22 +9,22 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class NotifyWebLeadsAssignment extends Mailable
+class NotifyWebLeadsBranchAssignment extends Mailable
 {
     use Queueable, SerializesModels;
     public $lead;
     public $branch;
-    public $person;
+    public $emails;
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(Weblead $lead, Branch $branch,Person $person)
+    public function __construct(Weblead $lead, Branch $branch, $emails)
     {
         $this->lead = $lead;
         $this->branch = $branch;
-        $this->person = $person;        
+        $this->emails;        
        
        
     }
@@ -37,7 +37,7 @@ class NotifyWebLeadsAssignment extends Mailable
     public function build()
     {
         
-            return $this->markdown('emails.webleadsnotify')->to($this->person->userdetails->email, $this->person->postName())->subject('New Web Lead');
+            return $this->markdown('emails.webleadsbranchnotify')->to($this->person->userdetails->email, $this->person->postName())->subject('New Web Lead');
 
     }
 

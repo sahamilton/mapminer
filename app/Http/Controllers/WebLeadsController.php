@@ -2,12 +2,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use Mail;
 use App\WebLead;
 use App\WebLeadImport;
 use App\LeadSource;
 use App\Branch;
 use App\Person;
+use App\Mail\NotifyWebLeadsAssignment;
+use App\Mail\NotifyWebLeadsBranchAssignment;
 use App\Http\Requests\WebLeadFormRequest;
 
 
@@ -121,7 +123,7 @@ class WebLeadsController  extends ImportController
     }
 
     public function destroy($lead){
-        dd($lead);
+    
         $this->lead->destroy($lead);
         return redirect()->route('webleads.index');
     }
@@ -134,14 +136,45 @@ class WebLeadsController  extends ImportController
     }
     public function assignLeads(Request $request){
 
-       $assign = $request->get('assign');
-        $lead = $this->lead->find($request->get('lead_id'))->firstOrFail();
-        //$salesteam = $this->person->whereIn('id',$assign)->get();
-        $lead->salesteam()->attach($assign, ['status_id' => 2,'type'=>'web']);
-        // send email to assignees
+        $lead = $this->lead->findOrFail($request->get('lead_id'));
+        $branch = $this->branch->with('manager','manager.userdetails')->findOrFail($request->get('branch'));
+
+        if($request->get('salesrep')!=''){
+            $rep = $this->person->findOrFail($request->get('salesrep'));
+            $lead->salesteam()->attach($request->get('salesrep'), ['status_id' => 2,'type'=>'web']);
+            Mail::queue(new NotifyWebLeadsAssignment($lead,$branch,$rep));
+        }else{
+            
+            foreach($branch->manager as $manager){
+                $lead->salesteam()->attach($manager->id, ['status_id' => 2,'type'=>'web']);
+                //notify branch managers
+            }
+
+
+        }
+        if($request->get('notifymgr')){
+
+            $branchemails = $this->getBranchEmails($branch);
+            foreach ($branchemails as $email){
+                
+                Mail::queue(new NotifyWebLeadsBranchAssignment($lead,$branch,$rep));
+            }
+       
+        }  // branch manager
+
+
         return redirect()->route('webleads.index');
     }
-
+    private function getBranchEmails($branch){
+        $emails = array();
+        foreach($branch->manager as $manager){
+            $emails[$manager->id]['name'] = $manager->postName();
+            $emails[$manager->id]['email'] = $manager->userdetails->email;
+        }
+        $emails['B' . $branch->id]['email'] = $branch->branchemail();
+        $emails['B' . $branch->id]['name'] = 'Branch Manager';
+        return $emails;
+    }
     public function unAssignLeads(Request $request){
         
        

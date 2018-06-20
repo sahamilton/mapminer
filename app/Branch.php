@@ -105,6 +105,10 @@ protected $hidden = ['created_at','updated_at'];
     {
         return LocationPresenter::class;
     }
+
+    public function branchemail(){
+    	return $this->id ."br@peopleready.com";
+    }
 	/* 
 		Calculate bounding box coordinates
 

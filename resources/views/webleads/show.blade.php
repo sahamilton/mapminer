@@ -58,8 +58,12 @@
 			
 		
 @endif
-</div>		<div id="map" class="col-sm-7 pull-right" style="border:solid 1px red"></div>
+</div>		
+<div class="col-sm-7 pull-right">
+<div id="map"  style="border:solid 1px red"></div>
 @include('webleads.partials.select')
+</div>
+
 @if(count($lead->salesteam)==0)
 		<div class="row">
 		<div class="col-sm-12">
