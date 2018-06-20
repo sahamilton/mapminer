@@ -45,8 +45,7 @@ class WebleadsImportController extends Controller
 		        $data['filename'] = null;
 		        $data['additionaldata'] = array();
 		        $data['route'] = 'leads.mapfields';
-		        $fields[0] = array_keys($input);      
-		        $fields[1] = array_values($input); 
+		        $fields = $this->renameFields($input);
 		        $data['route'] = 'webleads.import.store';
 		        $columns = $this->lead->getTableColumns($data['table']);
         
@@ -60,13 +59,26 @@ class WebleadsImportController extends Controller
 
     	}
     }
-    private function validateFields($input){
-    	$validFields = $this->fields->whereType('weblead')->whereNotNull('fieldname')->get();
-    	$valid = $validFields->reduce(function ($validFields,$validField){
-    		$validFields[$validField->aliasname] = $validField->fieldname;
-    		return $validFields;
 
-    	});
+    private function renameFields($input){
+    			 
+		        
+		        $valid = $this->getValidFields();
+		
+		        foreach (array_keys($input) as $key=>$value){
+		        	if(isset($valid[$value])){
+		        		$fields[0][$key]=$valid[$value];
+		        	}else{
+		        		$fields[0][$key]=$value;
+		        	}
+		        	
+		        }
+		        $fields[1] = array_values($input);
+		        
+		        return $fields; 
+    }
+    private function validateFields($input){
+    	$valid = $this->getValidFields();
     	foreach ($input as $key=>$value){
     		if(array_key_exists($key,$valid)){
     			$data[$valid[$key]] = $value;
@@ -81,7 +93,19 @@ class WebleadsImportController extends Controller
     	return $data;
 
     }
+
+    private function getValidFields(){
+    	$validFields = $this->fields->whereType('weblead')->whereNotNull('fieldname')->get();
+    	return $validFields->reduce(function ($validFields,$validField){
+    		$validFields[$validField->aliasname] = $validField->fieldname;
+    		return $validFields;
+
+    	});
+    }
+
+   
     private function parseInputData($request){
+
         $rows = explode(PHP_EOL,$request->get('weblead'));
         // then create the individual elements
         foreach ($rows as $row){
@@ -97,6 +121,7 @@ class WebleadsImportController extends Controller
 	}
 
     public function store(Request $request){
+    	$this->getDefaultFields($request);
         $data = $request->except('fields');
         $fields = $request->get('fields');
         foreach ($fields as $key=>$value){
@@ -111,5 +136,17 @@ class WebleadsImportController extends Controller
         $lead = $this->lead->create($newdata);
 
         return redirect()->route('webleads.show',$lead->id);
+	}
+
+	private function getDefaultFields($request){
+		$data=array();
+		if ($request->has('default')){
+			foreach ($request->get('default') as $key=>$value){
+						$data['aliasname'] =$key;
+						$data['fieldname']=$request->fields[$key];
+						$data['type']='weblead';
+						$this->fields->create($data);
+			}
+		}
 	}
 }

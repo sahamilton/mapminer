@@ -44,6 +44,7 @@
             @endforeach
             </select>
             </td>
+            <td>Default<input type="checkbox" name="default[{{$field}}]"></td>
             <td>
             @if(isset($fields[1])) <input type="text" readonly name="{{$field}}" value="{{$fields[1][$key]}}" /> @endif
             </td>
