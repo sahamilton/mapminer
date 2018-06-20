@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Mail;
 use App\WebLead;
-use App\WebLeadImport;
+
 use App\LeadSource;
 use App\Note;
 use App\Branch;
@@ -20,9 +20,8 @@ class WebLeadsController  extends ImportController
     protected $person;
     protected $branch;
     protected $lead;
-    public function __construct(WebLead $lead, LeadSource $leadsource,WebLeadImport $import, Person $person, Branch $branch){
+    public function __construct(WebLead $lead, LeadSource $leadsource, Person $person, Branch $branch){
         $this->lead = $lead;
-        $this->import = $import;
         $this->leadsources = $leadsource;
         $this->person = $person;
         $this->branch = $branch;

@@ -32,7 +32,7 @@ Industry:{{$lead->industry}}
 
 @endcomponent
 
-@component('mail::button', ['url' => route('my.leads'), 'color' => 'blue'])
+@component('mail::button', ['url' => route('my.webleads'), 'color' => 'blue'])
         Check out your sales prospects and resources.
 @endcomponent
 
