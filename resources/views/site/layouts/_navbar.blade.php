@@ -71,9 +71,13 @@
 
                         @endif 
                          
-                        @if(auth()->user()->can('accept_prospects'))
+                        @if(auth()->user()->can('accept_leads') or auth()->user()->can('manage_leads'))
                             <li><a href="{{route('salesrep.newleads',auth()->user()->person->id)}}">
                             <i class="fa fa-envelope-open-o" aria-hidden="true"> </i> Sales Prospects</a></li>
+                        @endif
+                        @if(auth()->user()->hasRole('Branch Manager'))
+                            <li><a href="{{route('branchmanager.newleads')}}">
+                            <i class="fa fa-envelope-open-o" aria-hidden="true"> </i> Branch Prospects</a></li>
                         @endif
                         @if (auth()->user()->hasRole('Admin') or Auth::user()->hasRole('National Account Manager'))
                         <li class="divider"></li>

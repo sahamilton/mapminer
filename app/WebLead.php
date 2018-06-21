@@ -15,8 +15,10 @@ class WebLead extends Model implements HasPresenter {
   public $table= 'webleads';
   public $requiredfields = [
             'company_name',
+            
             'city',
             'state',
+        
             'first_name',
             'last_name',
             'phone_number',
@@ -28,8 +30,10 @@ class WebLead extends Model implements HasPresenter {
             
 	public $fillable = [
     'company_name',
+    'address',
             'city',
             'state',
+            'zip',
             'first_name',
             'last_name',
              'phone_number',
@@ -62,7 +66,7 @@ class WebLead extends Model implements HasPresenter {
     }
     
     public function relatedNotes() {
-      return $this->hasMany(Note::class,'related_id')->where('type','=','web')->with('writtenBy');
+      return $this->hasMany(Note::class,'related_id')->where('type','=','weblead')->with('writtenBy');
     }
     
     public function getPresenterClass()
@@ -240,5 +244,25 @@ class WebLead extends Model implements HasPresenter {
           }
 
       return $history;
+    }
+
+    public function geoCodeAddress($data){
+        $addressFields = ['address','city','state','zip'];
+        $address ='';
+        foreach ($addressFields as $field){
+          if(isset($data[$field])){
+            $address.=$data[$field] . ' ';
+          }
+        }
+        $geocode = $this->getLatLng($address);
+        $data['lat'] = $geocode['lat'];
+        $data['lng'] = $geocode['lng'];
+        return $data;
+    }
+   public function getLatLng($address)
+    {
+        $geoCode = app('geocoder')->geocode($address)->get();
+        return $this->getGeoCode($geoCode);
+
     }
 }

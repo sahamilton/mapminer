@@ -30,6 +30,9 @@
     @if(count($user->person->managesAccount()->get())>0)
     <li><a data-toggle="tab" href="#accounts"><strong>Accounts Managed</strong></a></li>
     @endif
+        @if(count($user->person->templeads)>0)
+    <li><a data-toggle="tab" href="#leads"><strong>Assigned Leads ({{count($user->person->templeads)}})</strong></a></li>
+    @endif
 
     </ul>
     <div class="tab-content">
@@ -72,7 +75,12 @@
                 <li>{{$account->companyname}}</li>
             @endforeach
         </div>
+         <div id="leads" class="tab-pane fade in">
+            @php $openleads = $user->person->openleads @endphp
+            @include('templeads.partials._tabopenleads')
+        </div>
 
     </div>
 </div>
+@include('partials._scripts')
 @endsection

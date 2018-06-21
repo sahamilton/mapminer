@@ -208,7 +208,8 @@ class AdminUsersController extends BaseController {
     {
         $roles= \App\Role::all()->pluck('name','id')->toArray();
 
-        $user = $this->user->with('person','serviceline','roles')->findOrFail($user->id);
+        $user = $this->user->with('person','serviceline','roles','person.openleads')->findOrFail($user->id);
+
         return response()->view('admin.users.showdetail', compact('user','roles'));
 
     }

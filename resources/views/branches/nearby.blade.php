@@ -13,10 +13,7 @@
 		</div>
         <h1>Nearby Branches</h1>
         <h4> within {{$data['distance']}} miles of the 
-        
-       <a href="{{{ route('branch.show',$data['branches']->id) }}}"> {{$data['branches']->branchname}} </a>
-        
-        
+          <a href="{{{ route('branch.show',$data['branches']->id) }}}"> {{$data['branches']->branchname}} </a>
         branch  </h4> 
         <?php $data['address'] = $data['branch']->street ." ".$data['branch']->city ." ".$data['branch']->state;?>
         @include('maps/partials/_form')

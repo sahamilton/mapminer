@@ -44,7 +44,7 @@ title="Email {{$salesorg->postName()}}">
               radius : {{$branch->radius}},
               name : '{{$branch->branchname}}',
               contentString: 
-                  '{{$branch->info}}',
+                  '<a href="{{route('branches.show',$branch->id)}}">{{$branch->branchname}}</a>',
             },
       @endforeach
         

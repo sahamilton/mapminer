@@ -1,10 +1,12 @@
 @extends ('admin.layouts.default')
 @section('content')
 <div class="container">
-    <h2>Leads Overview</h2>
     
-    <h4><a href="{{route('templeads.branch')}}">See Leads by Branches</a></h4>
+    <h2>{{$person->postName()}}'s Team Leads Overview</h2>
+    @if($person->reportsTo)
+    <h4>Reports To:<a href="{{route('salesrep.newleads',$person->reportsTo->id)}}">{{$person->reportsTo->postName()}}</a></h4>
 
+    @endif
     <div class="col-md-10 col-md-offset-1">
         <table class="table" id = "sorttable">
             <thead>
@@ -16,7 +18,7 @@
                 <th>All Leads</th>
                 <th>Open Leads</th>
                 <th>Closed Leads</th>
-                <th>Rating</th>
+                <th>Ratings</th>
 
             </thead>
             <tbody>

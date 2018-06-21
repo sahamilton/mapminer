@@ -156,7 +156,7 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('salesorg/{person?}',['as'=>'salesorg','uses'=>'SalesOrgController@getSalesBranches']);
 		Route::get('salesorg/{person}/list',['as'=>'salesorg.list','uses'=>'SalesOrgController@getSalesOrgList']);
 		Route::get('salesorg/coverage',['as'=>'salescoverage','uses'=>'SalesOrgController@salesCoverageMap']);
-		Route::post('leads/find',['as'=>'lead.find','uses'=>'LeadsController@find']);
+		Route::post('salesorg/find',['as'=>'lead.find','uses'=>'LeadsController@find']);
 		Route::get('branch/{branchId}/salesteam',array('as' => 'branch.salesteam', 'uses' => 'BranchesController@showSalesTeam'));
 
 
@@ -194,11 +194,18 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('/newleads/{id}/show',['as'=>'salesrep.newleads.show','uses'=>'TempleadController@salesLeadsDetail']);
 		Route::get('/newleads/{pid?}/map',['as'=>'salesrep.newleads.map','uses'=>'TempleadController@salesLeadsMap']);
 		Route::get('api/newleads/{pid}/map',['as'=>'salesrep.newleads.mapdata','uses'=>'TempleadController@getMapData']);
+		Route::get('/branch/leads',['as'=>'branchmanager.newleads','uses'=>'TempleadController@getAssociatedBranches']);
 		Route::get('newleadrank',['as'=>'api.newlead.rank','uses'=>'TempleadController@rank']);
-
+		Route::get('/newleads/branch/{bid}/map',['as'=>'newleads.branch.map','uses'=>'TempleadController@branchLeadsMap']);
+		Route::get('api/newleads/branch/{id}/map',['as'=>'newleads.branch.mapdata','uses'=>'TempleadController@getBranchMapData']);
 		Route::get('newlead/{pid}/export',['as'=>'newleads.export','uses'=>'TempleadController@export']);
 		Route::post('newlead/{id}/close',['as'=>'templead.close','uses'=>'TempleadController@close']);
-
+	## Webleads
+		Route::get('/mywebleads', ['as'=>'my.webleads','uses'=>'WebLeadsController@saleslist']);
+		Route::get('/webleads/{weblead}/salesshow',['as'=>'webleads.salesshow','uses'=>'WebLeadsController@salesshow']);
+		Route::get('/webleads/map',['as'=>'webleads.map','uses'=>'WebLeadsController@salesLeadsMap']);
+		Route::get('/webleads/mapdata',['as'=>'api.webleads.map','uses'=>'WebLeadsController@getMapData']);
+		Route::post('/weblead/{weblead}/close',['as'=>'weblead.close','uses'=>'WebLeadsController@close']);
 	#AJAX Links
 	#// Move these to api routes
 		Route::get('api/company/{companyId}/statemap/{state}', ['as'=>'company.statemap','uses'=>'LocationsController@getStateLocations']);
@@ -329,10 +336,13 @@ Route::get('/',['as'=>'ops','uses'=>'Admin\AdminDashboardController@dashboard'])
 		Route::post('leads/batchassign',['as'=>'leads.assignbatch','uses'=>'LeadsAssignController@assignLead']);
 		Route::post('leads/assign',['as'=>'leads.assign','uses'=>'LeadsController@postAssignLeads']);
 		## Web leads
-		Route::resource('/webleads','WebLeadsController');
-		Route::post('/webleads/form',['as'=>'leads.webleadsinsert','uses'=>'WebLeadsController@getLeadFormData']);
+		
+		Route::post('/webleads/import/form',['as'=>'leads.webleadsinsert','uses'=>'WebleadsImportController@getLeadFormData']);
 		Route::post('/webleads/assign',['as'=>'webleads.assign','uses'=>'WebLeadsController@assignLeads']);
 		Route::delete('/webleads/{id}/unassign',['as'=>'webleads.unassign','uses'=>'WebLeadsController@unAssignLeads']);
+		Route::get('/webleads/import/create',['as'=>'webleads.import.create','uses'=>'WebleadsImportController@create']);
+		Route::post('/webleads/import/create',['as'=>'webleads.import.store','uses'=>'WebleadsImportController@store']);
+		Route::resource('/webleads','WebLeadsController');
 
 		Route::get('leads/{id}/person',['as'=>'leads.person','uses'=>'LeadsController@getPersonsLeads']);
 		Route::get('leads/{id}/person/{sid}/source',['as'=>'leads.personsource','uses'=>'LeadsController@getPersonSourceLeads']);
@@ -377,9 +387,17 @@ Route::get('/',['as'=>'ops','uses'=>'Admin\AdminDashboardController@dashboard'])
 	#Watchlists
 		Route::get('watchlist/{userid}', ['as'=>'watch.mywatchexport', 'uses'=>'WatchController@export']);
 
-		## Search
+	## Search
 		Route::get('/user/find', 'SearchController@searchUsers');
 		Route::get('/person/{person}/find',['as'=>'person.details','uses'=>'PersonSearchController@find']);
+
+	#TempLeads
+	   // Route::get('newleads/team',['as'=>'templeads.team','uses'=>'TempleadController@salesteam']);
+	    Route::get('/newleads/{pid}/branchmgr',['as'=>'branchmgr.newleads','uses'=>'TempleadController@getAssociatedBranches']);
+	    Route::get('/newleads/branch',['as'=>'templeads.branch','uses'=>'TempleadController@branches']);
+	    Route::get('/newleads/{id}/branch/',['as'=>'templeads.branchid','uses'=>'TempleadController@branches']);
+		Route::resource('newleads','TempleadController');
+		
 });
 /** ------------------------------------------
  *  Admin Routes
@@ -467,9 +485,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 		Route::get('api/searchfilters/getAccounts',['as'=>'getAccountSegments','uses'=>'SearchFiltersController@getAccountSegments']);
 		Route::post('api/searchfilters/postAccounts',['as'=>'postAccountSegments','uses'=>'SearchFiltersController@getAccountSegments']);
 		Route::resource('searchfilters','SearchFiltersController');
-	#TempLeads
-	    Route::get('templeads/team',['as'=>'templeads.team','uses'=>'TempleadController@salesteam']);
-		Route::resource('templeads','TempleadController');
+
 		
 
 	# Seeder for relationships with servicelines
@@ -478,5 +494,10 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 
 	# Versions
 	 	Route::resource('versions','GitController');
+
+	 	Route::get('test',['as'=>'test','uses'=>'TestController@form']);
+	 	
+	 	Route::post('test/send',['as'=>'test.send','uses'=>'TestController@send']);
+	 	Route::get('branch/{bid}/people',['as'=>'test.branch.people', 'uses'=>'WebLeadsController@getSalesPeopleofBranch']);
 
 });

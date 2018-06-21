@@ -2,12 +2,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use Mail;
 use App\WebLead;
-use App\WebLeadImport;
+
 use App\LeadSource;
+use App\Note;
 use App\Branch;
 use App\Person;
+use App\Mail\NotifyWebLeadsAssignment;
+use App\Mail\NotifyWebLeadsBranchAssignment;
 use App\Http\Requests\WebLeadFormRequest;
 
 
@@ -16,9 +19,9 @@ class WebLeadsController  extends ImportController
     public $salesroles = [5,6,7,8];
     protected $person;
     protected $branch;
-    public function __construct(WebLead $lead, LeadSource $leadsource,WebLeadImport $import, Person $person, Branch $branch){
+    protected $lead;
+    public function __construct(WebLead $lead, LeadSource $leadsource, Person $person, Branch $branch){
         $this->lead = $lead;
-        $this->import = $import;
         $this->leadsources = $leadsource;
         $this->person = $person;
         $this->branch = $branch;
@@ -26,122 +29,108 @@ class WebLeadsController  extends ImportController
         
     }
     public function index(){
-
-        $webleads = WebLead::all();
-  
-        return response()->view('webleads.index',compact('webleads'));
+       
+            $webleads = $this->lead->all();
+            return response()->view('webleads.index',compact('webleads'));
+       
+        
     }
      
-    public function create(){
-
-    	return response()->view('webleads.leadform');
-    }
+    
 
     public function show($lead){
-        $lead = $this->lead->with('salesteam')->findOrFail($lead);
-        
+       
         $branches = $this->findNearByBranches($lead);
-
         $people = $this->findNearbySales($branches,$lead); 
         $salesrepmarkers = $this->jsonify($people);
         $branchmarkers=$branches->toJson();
         return response()->view('webleads.show',compact('lead','branches','people','salesrepmarkers','branchmarkers'));
 
     }
+    
 
 
-    public function getLeadFormData(WebLeadFormRequest $request){
-    	// first get the rows of data
-		
-       $input = $this->parseInputData($request);
-       $data = $input;
-       $title="Map the leads import file fields";
-       $requiredFields = $this->import->requiredFields;
+    public function saleslist(){
 
-        $data['type']=$request->get('type');
-        if($data['type']== 'assigned'){
-            $data['table']='leadimport';
-            $requiredFields[]='employee_id';
-        }else{
-            $data['table']='webleads';
-        }
-       
-        $data['filename'] = null;
-        $data['additionaldata'] = array();
-        $data['route'] = 'leads.mapfields';
-        $fields[0] = array_keys($input);      
-        $fields[1] = array_values($input); 
-        $data['route'] = 'webleads.store';
-        $columns = $this->lead->getTableColumns($data['table']);
+            $webleads = $this->lead->whereHas('salesteam',function ($q){
+                $q->where('persons.id','=',auth()->user()->person->id);
+            })->get();
+            $leadstatuses = \App\LeadStatus::pluck('status','id')->toArray();          
+            $person = $this->person->findOrFail(auth()->user()->person->id);
+            return response()->view('webleads.salesrep',compact('webleads','person','leadstatuses'));
+     
+    }
+    public function salesshow($lead){
+        $lead = $lead->with('relatedNotes')->firstOrFail();
+        $person = $this->person->findOrFail(auth()->user()->person->id);
+        $rankingstatuses = $lead->getStatusOptions;
+        $leadstatuses = \App\LeadStatus::pluck('status','id')->toArray(); 
+        return response()->view('webleads.saleshow',compact('lead','person','rankingstatuses','leadstatuses'));
+    }
+    
+
+    public function edit($weblead){
+        return response()->view('webleads.edit',compact('weblead'));
+    }
+
+    public function update(Request $request,$weblead){
         
-        $skip = ['id','deleted_at','created_at','updated_at','lead_source_id','pr_status'];
-        return response()->view('imports.mapfields',compact('columns','fields','data','company_id','skip','title','requiredFields'));
-    	
-    }
-
-    private function parseInputData($request){
-        $rows = explode(PHP_EOL,$request->get('weblead'));
-        // then create the
-        foreach ($rows as $row){
-            $field = explode("\t",$row);
-            if(is_array($field) && count($field)==2){
-                $input[str_replace(" ","_",strtolower($field[0]))]=$field[1];
-            }
-        }
-        return $input;
-    }
-    public function store(Request $request){
-        $data = $request->except('fields');
-        $fields = $request->get('fields');
-        foreach ($fields as $key=>$value){
-            if (($key = array_search('@ignore', $fields)) !== false) {
-                unset($fields[$key]);
-            }
-        }
-        foreach ($fields as $key=>$value){
-            $newdata[$value]= $data[$key];
-        }
-
-        // geocode lead
-        $geocode = $this->getLatLng($newdata['city'] .", " . $newdata['state']);
-        // 
-        $newdata['lat'] = $geocode['lat'];
-        $newdata['lng'] = $geocode['lng'];
-        $lead = $this->lead->create($newdata);
-
-        return redirect()->route('webleads.show',$lead->id);
-}
-
-    public function edit($id){
-
-    }
-
-    public function update(Request $request){
-
+        $address = $request->get('address') . " " . $request->get('city') . " " . $request->get('state'). " " . $request->get('zip');
+        $geocode = $this->lead->getLatLng($address);
+        $data = $request->all();
+        $data['lat']=$geocode['lat'];
+        $data['lng']=$geocode['lng'];
+        
+        $weblead->update($data);
+        return redirect()->route('webleads.show',$weblead->id);
     }
 
     public function destroy($lead){
-        dd($lead);
-        $this->lead->destroy($lead);
+    
+        $lead->delete();
         return redirect()->route('webleads.index');
     }
-
-        private function getLatLng($address)
-    {
-        $geoCode = app('geocoder')->geocode($address)->get();
-        return $this->lead->getGeoCode($geoCode);
-
-    }
+    
     public function assignLeads(Request $request){
 
-       $assign = $request->get('assign');
-        $lead = $this->lead->find($request->get('lead_id'))->firstOrFail();
-        //$salesteam = $this->person->whereIn('id',$assign)->get();
-        $lead->salesteam()->attach($assign, ['status_id' => 2,'type'=>'web']);
-        // send email to assignees
+        $lead = $this->lead->findOrFail($request->get('lead_id'));
+        $branch = $this->branch->with('manager','manager.userdetails')->findOrFail($request->get('branch'));
+
+        if($request->get('salesrep')!=''){
+            $rep = $this->person->findOrFail($request->get('salesrep'));
+            $lead->salesteam()->attach($request->get('salesrep'), ['status_id' => 2,'type'=>'web']);
+            Mail::queue(new NotifyWebLeadsAssignment($lead,$branch,$rep));
+        }else{
+            
+            foreach($branch->manager as $manager){
+                $lead->salesteam()->attach($manager->id, ['status_id' => 2,'type'=>'web']);
+                //notify branch managers
+            }
+
+
+        }
+        if($request->get('notifymgr')){
+
+            $branchemails = $this->getBranchEmails($branch);
+            
+            foreach ($branchemails as $email){
+                
+                Mail::queue(new NotifyWebLeadsBranchAssignment($lead,$branch,$email));
+            }
+       
+        }  
         return redirect()->route('webleads.index');
     }
-
+    private function getBranchEmails($branch){
+        $emails = array();
+        foreach($branch->manager as $manager){
+            $emails[$manager->id]['name'] = $manager->postName();
+            $emails[$manager->id]['email'] = $manager->userdetails->email;
+        }
+        $emails['B' . $branch->id]['email'] = $branch->branchemail();
+        $emails['B' . $branch->id]['name'] = 'Branch Manager';
+        return $emails;
+    }
     public function unAssignLeads(Request $request){
         
        
@@ -194,6 +183,75 @@ class WebLeadsController  extends ImportController
         }
       
       return collect($salesrepmarkers)->toJson();
-}
+    }
+
+
+    public function getSalesPeopleofBranch(Request $request){
+        $bid = $request->get('branch');
+
+        $salesreps = $this->person->whereHas('branchesServiced', function($q) use($bid){
+            $q->where('branches.id','=',$bid);
+        })
+        
+        ->select('firstname','lastname','id')
+        ->get();
+        return response()->json($salesreps);
+
+
+    }
+
+    /**
+     * Close prospect
+     * @param  Request $request post contents
+     * @param  int  $id      prospect (lead) id
+     * @return [type]           [description]
+     */
+    public function close(Request $request, $lead){
+    
+      $lead->salesteam()
+        ->updateExistingPivot(auth()->user()->person->id,['rating'=>$request->get('ranking'),'status_id'=>3]);
+        $this->addClosingNote($request,$lead->id);
+        return redirect()->route('my.webleads')->with('message', 'Lead closed');
+     }
+
+     private function addClosingNote($request,$id){
+        $note = new Note;
+        $note->note = "Lead Closed:" .$request->get('comments');
+        $note->type = 'weblead';
+        $note->related_id = $id;
+        $note->user_id = auth()->user()->id;
+        $note->save();
+    }
+
+    public function salesLeadsMap(){
+        $person = $this->person->findOrFail(auth()->user()->person->id);
+        $data['title']= $person->postName();
+        $data['datalocation'] = route('api.webleads.map');
+        $data['lat'] = $person->lat;
+        $data['lng'] = $person->lng;
+        $data['listviewref'] = route('my.webleads');
+        $data['zoomLevel'] =10;
+        $data['type'] ='leads';
+
+        $leads = $this->lead->whereHas('salesteam', function ($q) {
+            $q->where('person_id','=',auth()->user()->person->id);
+        })
+        ->limit('200')
+        ->get();
+        $data['count']=count($leads);
+     
+        return response()->view('webleads.showmap',compact('data'));
+    }
+
+    public function getMapData(){
+        
+        $webleads = $this->lead->whereHas('salesteam',function ($q){
+                $q->where('persons.id','=',auth()->user()->person->id);
+            })
+        ->limit('200')
+        ->get();
+        return response()->view('webleads.xml',compact('webleads'));
+
+    }
 }
 

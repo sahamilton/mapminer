@@ -1,6 +1,6 @@
 @extends ('admin.layouts.default')
 @section('content')
-
+<p><a href="{{route('webleads.index')}}">Show All WebLeads</a></p>
 <div class="col-sm-5">
 	<div class="panel panel-default">
 		<div class="panel-heading clearfix">
@@ -10,28 +10,7 @@
 				Edit
 			</a>
 		</div>
-		<div class="list-group-item">
-			<p class="list-group-item-text">Lead Details</p>
-			<ul style="list-style-type: none;">
-				<li><strong>Address:</strong>{{$lead->city}}, {{$lead->state}}</li>
-				<li><strong>Contact:</strong>{{$lead->first_name}} {{$lead->last_name}}</li>
-				<li><strong>Phone:</strong>{{$lead->phone_number}}</li>
-				<li><strong>Email:</strong>{{$lead->email_address}}</li>
-				
-			
-			</ul>
-		</div>
-
-		<div class="list-group">
-			<div class="list-group-item">
-				<p class="list-group-item-text">Job Requirements</p>
-				<ul style="list-style-type: none;">
-						<li><strong>Time Frame:</strong>{{$lead->time_frame}}</li>
-						<li><strong>Jobs:</strong>{{$lead->jobs}}</li>
-						<li><strong>Industry:</strong>{{$lead->industry}}</li>
-				</ul>
-			</div>
-		</div>
+		@include('webleads.partials._detail')
 
 		@if(count($lead->salesteam)>0)
 		<div class="list-group">
@@ -58,7 +37,14 @@
 			
 		
 @endif
-</div>		<div id="map" class="col-sm-7 pull-right" style="border:solid 1px red"></div>
+</div>		
+<div class="col-sm-7 pull-right">
+<div id="map"  style="border:solid 1px red"></div>
+@if(count($lead->salesteam)==0)
+@include('webleads.partials.select')
+@endif
+</div>
+
 @if(count($lead->salesteam)==0)
 		<div class="row">
 		<div class="col-sm-12">
@@ -68,14 +54,7 @@
 	@include('partials._unassignleadmodal')		
 @endif
 </div>
-	<!--
-
-		map
-
-		Closets Branches
-
-		Closest sales reps
-	-->
+	
 @include('webleads.partials.map')
 
 @include('partials/_scripts')

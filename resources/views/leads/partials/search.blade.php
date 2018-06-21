@@ -20,7 +20,22 @@
               @endif
            @endforeach
         </select> 
- <label>closest within </label>
+ <label>closest </label>
+ @php $types=['branch','people'] @endphp
+<select id="selecttype" name='type' class="btn btn-mini" >
+           @foreach($types as $value)
+              @if(isset($data['type']) && $data['type']==$value)) 
+              <option selected value="{{$value}}">{{$value}}</option>
+              @else
+              <option value="{{$value}}">{{$value}}</option>
+              @endif
+
+           @endforeach
+        </select> 
+
+
+
+  <label>within </label>
  
  <select id="selectdistance" name='distance' class="btn btn-mini" >
            @foreach($values as $value)

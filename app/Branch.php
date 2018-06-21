@@ -96,11 +96,18 @@ protected $hidden = ['created_at','updated_at'];
 	{
 		return $this->belongsToMany(Person::class);
 	}
+	public function templeads(){
+		return $this->hasMany(Templead::class, 'Branch');
+	}
 	
 
 	public function getPresenterClass()
     {
         return LocationPresenter::class;
+    }
+
+    public function branchemail(){
+    	return $this->id ."br@peopleready.com";
     }
 	/* 
 		Calculate bounding box coordinates

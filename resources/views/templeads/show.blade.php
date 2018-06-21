@@ -3,7 +3,9 @@
 <div class="container">
   <div class="col-md-10 col-md-offset-1">
     <h2>{{$person->postName()}} Leads</h2>
-
+    @if($person->reportsTo)
+    <h4>Reports To:<a href="{{route('salesrep.newleads',$person->reportsTO->id)}}">{{$person->reportsTo->postName()}}</a></h4>
+    @endif
 <p><a href='{{route("salesrep.newleads.map",$person->id)}}'>
  <i class="fa fa-flag" aria-hidden="true"></i> Map view</a></p>
 <p><a href="{{route('newleads.export', $person->id)}}"><i class="fa fa-file-excel-o" aria-hidden="true"></i> Export to Excel </a>

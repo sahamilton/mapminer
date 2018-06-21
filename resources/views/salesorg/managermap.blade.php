@@ -36,20 +36,19 @@
 
   @foreach($salesteam[0]->directReports as $reports)
     @if(isset($reports->userdetails))
-    @if($reports->isLeaf())
-    <a href="{{route('salesorg',$reports->id)}}"
-      title="See {{$reports->firstname}} {{$reports->lastname}}'s sales area">
-        {{$reports->firstname}} {{$reports->lastname}}</a> 
-
-    @else
+      @if($reports->isLeaf())
       <a href="{{route('salesorg',$reports->id)}}"
-      title="See {{$reports->firstname}} {{$reports->lastname}}'s Sales Team">
-        {{$reports->firstname}} {{$reports->lastname}}</a>  
-    @endif
-   
-        @if(count($reports->userdetails->roles)>0)
-          - {{$reports->userdetails->roles[0]->name}}
-        @endif
+        title="See {{$reports->firstname}} {{$reports->lastname}}'s sales area">
+          {{$reports->firstname}} {{$reports->lastname}}</a> 
+      @else
+        <a href="{{route('salesorg',$reports->id)}}"
+        title="See {{$reports->firstname}} {{$reports->lastname}}'s Sales Team">
+          {{$reports->firstname}} {{$reports->lastname}}</a>  
+      @endif
+     
+      @if(count($reports->userdetails->roles)>0)
+        - {{$reports->userdetails->roles[0]->name}}
+      @endif
       <br/>
 
     @endif
@@ -58,7 +57,8 @@
   </div>
   <div class="container" style="float:right;width:700px;">
   @include('leads.partials.search')
- 
+<p>Branches = <img src='//maps.google.com/mapfiles/ms/icons/blue-dot.png' />
+Sales Team  = <img src='//maps.google.com/mapfiles/ms/icons/red-dot.png' /></p>
     <div id="map" style="border:solid 1px red;margin-bottom:40px;"></div> 
   </div> </div>
     <script>
@@ -68,11 +68,13 @@
 
       var branchmap = {
         
-      @foreach ($salesteam[0]->getLeaves() as $reports)
-          
+      @foreach ($salesteam[0]->getDescendantsAndSelf() as $reports)
+         
+
             @foreach ($reports->branchesServiced as $branch)
             
             '{{$branch->branchname}}' : {
+              type: 'branch',
               center : {lat: {{$branch->lat}}, lng: {{$branch->lng}}},
               radius : {{$branch->radius}},
               name : '{{$branch->branchname}}',
@@ -80,6 +82,17 @@
                   '<a href="{{route('branches.show',$branch->id)}}">{{$branch->branchname}}</a>',
             },
             @endforeach
+
+        
+
+            '{{$reports->firstname}} {{$reports->lastname}}' : {
+              type : 'person',
+              center : {lat: {{isset($reports->lat) ? $reports->lat:0}}, lng: {{isset($reports->lng) ? $reports->lng:0}}},
+              radius :25,
+              name : '{{$reports->firstname}} {{$reports->lastname}}',
+              contentString:'<a href="{{route('salesorg',$reports->id)}}">{{$reports->firstname}} {{$reports->lastname}}</a>',
+            },
+         
           
       @endforeach
        
@@ -87,12 +100,15 @@
       };
 
       function initMap() {
-        var Geo={};
+        var Geo={
+
+        };
         // Create the map.
         var map = new google.maps.Map(document.getElementById('map'), {
           zoom: {{! $salesteam[0]->lat ? '4' : '9'}},
           center: {lat: {{! $salesteam[0]->lat ? '39.8282' : $salesteam[0]->lat }}, 
                   lng: {{! $salesteam[0]->lng ? '-98.5795' : $salesteam[0]->lng}} },
+         
           mapTypeId: 'terrain'
         });
       var infowindow = new google.maps.InfoWindow();
@@ -101,21 +117,32 @@
         for (var branch in branchmap) {
           // Add the circle for this city to the map.
           var branchCircle = new google.maps.Circle({
-            strokeColor: '#FF0000',
-            strokeOpacity: 0.8,
-            strokeWeight: 2,
-            fillColor: '#00FF00',
-            fillOpacity: 0.35,
-            map: map,
-            center: branchmap[branch].center,
-            radius: branchmap[branch].radius * 1600,
-          });
+              strokeColor: '#FF0000',
+              strokeOpacity: 0.8,
+              strokeWeight: 2,
+              fillColor: '#00FF00',
+              fillOpacity: 0.35,
+              map: map,
+
+              center: branchmap[branch].center,
+              radius: branchmap[branch].radius * 1600,
+            });
           var marker = new google.maps.Marker({
             map: map,
+            icon: icon,
             position: new google.maps.LatLng(branchmap[branch].center),
             title: branchmap[branch].branchname,
           });
-          
+
+          var icon = getMarker(branchmap[branch].type);
+            function getMarker(type){
+            if(type == 'branch'){
+                  return '//maps.google.com/mapfiles/ms/icons/blue-dot.png';
+                }else{
+                  return '//maps.google.com/mapfiles/ms/icons/red-dot.png';
+                 };
+
+          }
           var content = branchmap[branch].contentString;
          
            google.maps.event.addListener(marker,'click', (function(marker,content,infowindow){ 
@@ -139,9 +166,11 @@
         var marker = new google.maps.Marker({
           position: geolocate,
           map: map,
+          icon: '//maps.google.com/mapfiles/ms/icons/yellow-dot.png',
           title: 'You are here!'
         });
-
+        
+        
    function getAddress(latLng) {
       
       var geocoder = new google.maps.Geocoder();

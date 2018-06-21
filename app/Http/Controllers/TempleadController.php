@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 use Excel;
-use App\Person;
+use App\User;
 use App\Note;
+use App\Person;
 use App\Branch;
-use App\TempLead;
+use App\Templead;
+use App\WebLead;
 use App\LeadStatus;
 use Illuminate\Http\Request;
 
@@ -13,10 +15,12 @@ class TempleadController extends Controller
 {
     protected $templead;
     protected $person;
+    protected $weblead;
 
-    public function __construct(TempLead $lead, Person $person){
+    public function __construct(Templead $lead, Person $person, WebLead $weblead){
         $this->templead = $lead;
         $this->person = $person;
+        $this->weblead = $weblead;
     }
 
     /**
@@ -29,39 +33,114 @@ class TempleadController extends Controller
 
     
         $reps = $this->person->whereHas('templeads')
-        ->withCount('templeads')
-        ->with('reportsTo','reportsTo.userdetails.roles')
+        ->withCount(['templeads','openleads','closedleads'])
+        ->with('reportsTo','reportsTo.userdetails.roles','closedleads')
         ->get();
-
-        return response()->view('templeads.index',compact('reps'));
+        $rankings = $this->templead->rankLead($reps);
+        return response()->view('templeads.index',compact('reps','rankings'));
     }
 
     
-    /*public function salesteam(){
-        $reps = $this->templead->select('sr_id')->where('sr_id','!=',0)->groupBy('sr_id')->pluck('sr_id');
-        $salesteam = $this->person->with('userdetails','userdetails.roles')->whereIn('id',$reps)->get();
-        return response()->view('templeads.salesteam',compact('salesteam'));
+    public function getAssociatedBranches($pid=null){
 
-    }*/
+        if(auth()->user()->hasRole('Branch Manager')){
+
+            $branchmgr = $this->person
+                            ->where('user_id','=',auth()->user()->id)
+                            ->with('manages')
+                            ->first();
+
+         }else{
+             $branchmgr = $this->person     
+                            ->with('manages')
+                            ->findOrFail($pid);
+         }              
+        $branchlist = $branchmgr->manages->pluck('id')->toArray();
+        if($branchlist){
+            $branchleads = $this->getBranchData($branchlist);
+            $leadStatuses = LeadStatus::pluck('status','id')->toArray();
+            return response()->view('templeads.branchmgrleads',compact('branchleads','branchmgr','leadStatuses'));
+        }
+        return redirect()->back()->with('error', 'Sorry '. $branchmgr->postName() .' is not assigned to any branch. Please contact Sales Ops' );
+        
+    }
+    public function branches($id=null){
+        if($id){
+             $id = [$id];
+         }
+        $branches = $this->getBranchData($id);
+        if(! $id){
+           
+            return response()->view('templeads.branchsummary',compact('branches'));
+        }
+        $leadStatuses = LeadStatus::pluck('status','id')->toArray();
+       
+        return response()->view('templeads.branchleads',compact('branches','leadStatuses'));
+        
+
+    }
+    private function getBranchData($id=null){
+
+        if($id){
+            if(!is_array($id)){
+                $id = [$id];
+            }
+            return $this->templead->whereIn('Branch',$id)
+                ->with('salesrep','branches','branches.manager')
+                ->orderBy('Branch')
+                ->get();
+        }else{
+            return Branch::has('templeads')->with('manager','manager.reportsTo','templeads')->get();
+        }
+        
+
+
+    }
     
     public function salesLeads($pid=null){
+       
         $person = $this->getSalesRep($pid);
-        $openleads = $this->templead->whereHas('openleads',function ($q) use ($person){
-            $q->where('person_id','=',$person->id);
+       // dd($person->findPersonsRole($person));
+        // depending on role either return list of team and their leads
+        // or the leads
+        if($person->userdetails->can('accept_leads')){
+            
+            return $this->showSalesLeads($person);
+        }elseif($person->userdetails->hasRole('Admin') or $person->userdetails->hasRole('Sales Operations')){
+                return redirect()->route('newleads.index');
+        }else{
+            return $this->showSalesTeamLeads($person);
+        }
 
-        })
-        ->limit('200')
-        ->get();
+    }
 
-        $closedleads = $this->templead->whereHas('closedleads',function ($q) use ($person){
-            $q->where('person_id','=',$person->id);
 
-        })
-        ->with('relatedNotes')
-        ->limit('200')
-        ->get();
+    private function showSalesLeads($person){
+        
+        $openleads = $this->getLeadsByType('openleads',$person);
+        $openleads =$openleads->limit('200')
+                    ->get();
+        
+
+        $closedleads = $this->getLeadsByType('closedleads',$person);
+        $closedleads = $closedleads->with('relatedNotes')
+                    ->limit('200')
+                    ->get();
       
         return response()->view('templeads.show',compact('openleads','closedleads','person'));
+    }
+
+
+    private function showSalesTeamLeads($person){
+        
+        $reports = $person->descendantsAndSelf()->pluck('id')->toArray();
+        $reps = $this->person->whereHas('templeads')
+        ->withCount(['templeads','openleads','closedleads'])
+        ->with('reportsTo','reportsTo.userdetails.roles','closedleads')
+        ->whereIn('id',$reports)
+        ->get();
+        $rankings = $this->templead->rankLead($reps);
+        return response()->view('templeads.team',compact('reps','person','rankings'));
     }
 
     public function salesLeadsMap($pid=null){
@@ -97,19 +176,63 @@ class TempleadController extends Controller
         return response()->view('templeads.xml',compact('leads'));
 
     }
+    public function branchLeadsMap($bid){
+        $branch = Branch::findOrFail($bid);
+        $data['title']= $branch->branchname . " Branch";
+        $data['datalocation'] = route('newleads.branch.mapdata',$branch->id);
+        $data['lat'] = $branch->lat;
+        $data['lng'] = $branch->lng;
+        $data['listviewref'] = route('templeads.branch',$branch->id);
+        $data['zoomLevel'] =10;
+        $data['type'] ='leads';
+        $leads = $this->templead->whereHas('branches', function ($q) use($bid){
+            $q->where('id','=',$bid);
+        })
+        ->limit('200')
+        
+        ->get();
 
+        $data['count']=count($leads);
+        return response()->view('templeads.branchmap',compact('data'));
+    }
+
+    public function getBranchMapData($bid){
+        
+        $leads = $this->getBranchData($bid);
+        
+        
+      //  $leads = $this->templead->where('sr_id','=',$person->id)->get();
+        return response()->view('templeads.xml',compact('leads'));
+
+    }
     private function getSalesRep($pid=null){
         if(! $pid){
-             $pid = auth()->user()->person->id;
+            return $this->person->findOrFail(auth()->user()->person->id);
         }
-        if(! (auth()->user()->hasRole('Admin') or auth()->user()->hasRole('Sales Operations'))){
+
+        $person = $this->person->findOrFail($pid);
+
+        if(auth()->user()->hasRole('Admin') or auth()->user()->hasRole('Sales Operations')){
            
-            $pid = auth()->user()->person->id;
+           return $person;
+
         }
-        return $this->person->findOrFail($pid);
+        $peeps = $person->descendantsAndSelf()->pluck('id')->toArray();
+        if(in_array($pid,$peeps)){
+            return $person;
+        }
+        
+        return $this->person->findOrFail(auth()->user()->person->id);
         
 
         
+
+    }
+
+    private function getLeadsByType($type,$person){
+        return $this->templead->whereHas($type, function ($q) use($person){
+            $q->where('person_id','=',$person->id);
+        });
 
     }
 
@@ -127,7 +250,7 @@ class TempleadController extends Controller
     }
 
     private function getSalesReps($leads){
-
+        // used for assigned leads initially
 
         foreach ($leads as $lead){
 
