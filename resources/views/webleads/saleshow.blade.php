@@ -5,7 +5,7 @@
 <div class="col-sm-5">
 	<div class="panel panel-default">
 		<div class="panel-heading clearfix">
-			<h2 class="panel-title pull-left">{{$lead->company_name}} - {{$lead->rating}}</h2>
+			<h2 class="panel-title pull-left"><strong>{{$lead->companyname}}</strong> - {{$lead->rating}}</h2>
 			<div class="pull-right">
 				@if($lead->salesteam->first()->pivot->status_id != 3)
 			
@@ -17,7 +17,9 @@
 	      	@else
 	      		<button disabled type="button" class="btn btn-success" >Closed</button>
 	      	@endif
+
 	      </div>
+
 		</div>
 		@include('webleads.partials._detail')
 		@include('webleads.partials._notes')
@@ -30,7 +32,7 @@
 	
 
 @include('webleads.partials.salesmap')
-
+@include('partials._modal')
 @include('partials/_scripts')
 @stop
 

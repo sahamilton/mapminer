@@ -1,6 +1,6 @@
 <h1>Lead Notes</h1>
 
-@foreach ($lead->relatedNotes as $note)
+@foreach ($lead->relatedNotes('weblead')->get() as $note)
 	<p>{{$note->created_at->format('m-d-Y')}}...<em>{{$note->note}}</em><br />
 
 	 @if(null !==$note->writtenBy && null!==$note->writtenBy->person())

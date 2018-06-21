@@ -2,16 +2,16 @@
     <script src="https://maps.google.com/maps/api/js?key={{config('maps.api_key')}}"></script>
     <script>
     
-      // First, create an object containing LatLng and details for each branch.
+      // First, create an object containing LatLng and details for each leads.
       var leadmap = {
       <?php 
-   
-      foreach($leads->salesleads as $lead){
-
-              if(! in_array($lead->pivot->status_id,[1,2])){
+  
+      foreach($leads->ownedleads as $lead){
+        
+              if(! in_array($lead->pivot->status_id,[1,2,3])){
                 continue;
               }
-             if ($lead->pivot->status_id  == 2){ 
+             if (in_array($lead->pivot->status_id,[2])){ 
                     if($manager){
                       $content="<a href=\"".route('salesleads.showrepdetail',[$lead->id,$leads->id])."\" title=\"See details of owned lead\">".$lead->businessname."</a>";;
                     }else{
@@ -27,8 +27,15 @@
                     if($manager){
                       $content = $lead->businessname;
                     }
-             }
-
+             }elseif ($lead->pivot->status_id  == 3){
+               
+                    $content="<a href=\"".route('salesleads.show',$lead->id)."\" title=\"See details of closed lead\">Closed: ".$lead->businessname." lead</a>";
+                    $color ='yellow';
+                    $type='closed';
+                    if($manager){
+                      $content = $lead->businessname;
+                    }
+              }
               echo "'".$lead->businessname."':{";
               echo "center: {lat: ". $lead->lat .", lng:". $lead->lng."},";
               echo "name : '" . $lead->businessname."',";
@@ -49,12 +56,17 @@
       var iconBase = '{{asset("assets/icons/")}}';
       var icons = {
         owned: {
-          icon: iconBase + '/greenflagsm.png'
+          icon: 'https://maps.google.com/mapfiles/ms/icons/red-dot.png' ,
         },
         offered: {
           
-          icon: iconBase + '/orangeflagsm.png'
+          icon: 'https://maps.google.com/mapfiles/ms/icons/yellow-dot.png' ,
+        },
+        closed: {
+          
+          icon: 'https://maps.google.com/mapfiles/ms/icons/green-dot.png' ,
         }
+
       };
 
       var infowindow = new google.maps.InfoWindow();

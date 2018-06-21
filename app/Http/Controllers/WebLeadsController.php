@@ -3,7 +3,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Mail;
-use App\WebLead;
+use App\Lead;
 
 use App\LeadSource;
 use App\Note;
@@ -20,7 +20,7 @@ class WebLeadsController  extends ImportController
     protected $person;
     protected $branch;
     protected $lead;
-    public function __construct(WebLead $lead, LeadSource $leadsource, Person $person, Branch $branch){
+    public function __construct(Lead $lead, LeadSource $leadsource, Person $person, Branch $branch){
         $this->lead = $lead;
         $this->leadsources = $leadsource;
         $this->person = $person;
@@ -52,16 +52,17 @@ class WebLeadsController  extends ImportController
 
     public function saleslist(){
 
-            $webleads = $this->lead->whereHas('salesteam',function ($q){
+            $leads = $this->lead->whereHas('salesteam',function ($q){
                 $q->where('persons.id','=',auth()->user()->person->id);
             })->get();
+
             $leadstatuses = \App\LeadStatus::pluck('status','id')->toArray();          
             $person = $this->person->findOrFail(auth()->user()->person->id);
-            return response()->view('webleads.salesrep',compact('webleads','person','leadstatuses'));
+            return response()->view('webleads.salesrep',compact('leads','person','leadstatuses'));
      
     }
     public function salesshow($lead){
-        $lead = $lead->with('relatedNotes')->firstOrFail();
+    
         $person = $this->person->findOrFail(auth()->user()->person->id);
         $rankingstatuses = $lead->getStatusOptions;
         $leadstatuses = \App\LeadStatus::pluck('status','id')->toArray(); 

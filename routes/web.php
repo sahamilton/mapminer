@@ -201,11 +201,11 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('newlead/{pid}/export',['as'=>'newleads.export','uses'=>'TempleadController@export']);
 		Route::post('newlead/{id}/close',['as'=>'templead.close','uses'=>'TempleadController@close']);
 	## Webleads
-		Route::get('/mywebleads', ['as'=>'my.webleads','uses'=>'WebLeadsController@saleslist']);
-		Route::get('/webleads/{weblead}/salesshow',['as'=>'webleads.salesshow','uses'=>'WebLeadsController@salesshow']);
+		Route::get('/myleads', ['as'=>'my.webleads','uses'=>'WebLeadsController@saleslist']);
+		Route::get('/webleads/{lead}/salesshow',['as'=>'webleads.salesshow','uses'=>'WebLeadsController@salesshow']);
 		Route::get('/webleads/map',['as'=>'webleads.map','uses'=>'WebLeadsController@salesLeadsMap']);
 		Route::get('/webleads/mapdata',['as'=>'api.webleads.map','uses'=>'WebLeadsController@getMapData']);
-		Route::post('/weblead/{weblead}/close',['as'=>'weblead.close','uses'=>'WebLeadsController@close']);
+		Route::post('/weblead/{lead}/close',['as'=>'weblead.close','uses'=>'WebLeadsController@close']);
 	#AJAX Links
 	#// Move these to api routes
 		Route::get('api/company/{companyId}/statemap/{state}', ['as'=>'company.statemap','uses'=>'LocationsController@getStateLocations']);

@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class WebLead extends Model implements HasPresenter {
   use SoftDeletes, Geocode;
 	public $dates = ['created_at','updated_at','deleted_at','datefrom','dateto'];
-  public $table= 'webleads';
+  public $table= 'leads';
   public $requiredfields = [
             'company_name',
             
@@ -60,7 +60,7 @@ class WebLead extends Model implements HasPresenter {
 
     public function salesteam(){
 
-    	return $this->belongsToMany(Person::class, 'lead_person_status','related_id','person_id')
+    	return $this->belongsToMany(Person::class, 'lead_person_status','person_id')
             ->withPivot('created_at','updated_at','status_id','rating','type')
             ->wherePivot('type','=','web');
     }

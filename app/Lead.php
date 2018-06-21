@@ -51,12 +51,14 @@ class Lead extends Model implements HasPresenter {
     public function salesteam(){
 
     	return $this->belongsToMany(Person::class, 'lead_person_status','related_id','person_id')
-    
-      ->withPivot('created_at','updated_at','status_id','rating');
+                  ->withPivot('created_at','updated_at','status_id','rating');
     }
     
-    public function relatedNotes() {
-      return $this->hasMany(Note::class,'related_id')->where('type','=','prospect')->with('writtenBy');
+    public function relatedNotes($type=null) {
+      if(! $type){
+        $type="lead";
+      }
+      return $this->hasMany(Note::class,'related_id')->where('type','=',$type)->with('writtenBy');
     }
     
     public function getPresenterClass()
@@ -83,11 +85,10 @@ class Lead extends Model implements HasPresenter {
     }
 
     public function ownedBy(){
-
       return $this->belongsToMany(Person::class,'lead_person_status','related_id','person_id')
-      ->wherePivotIn('status_id',[2,3])
-      ->wherePivot('type','=','prospect')
-      ->withPivot('created_at','updated_at','status_id','rating','type');;
+            ->withPivot('status_id','rating','type')
+            ->wherePivot('status_id','=',3);
+            
     }
 
     public function leadRank(){

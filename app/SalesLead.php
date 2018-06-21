@@ -33,7 +33,7 @@ class SalesLead extends Model
 
       return $this->belongsToMany(Person::class,'lead_person_status','related_id','person_id')
             ->withPivot('status','ranking','type')
-            ->wherePivot('type','=','project')
+            ->wherePivotIn('status_id',[2,3])
             ->where('person_id','=',auth()->user()->person->id)
             ->first();
     }
