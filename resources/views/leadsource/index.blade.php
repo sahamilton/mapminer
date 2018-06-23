@@ -23,7 +23,7 @@
     <th>Assigned to</th>
     <th>Average Ranking</th>
     <th>Available From / To</th>
-    <th>Verticals</th>
+
     @if (Auth::user()->hasRole('Admin'))
     <th>Actions</th>
     @endif
@@ -52,13 +52,7 @@
             {{$source->datefrom->format('M j,Y')}} - {{$source->dateto->format('M j,Y')}}
         @endif
     </td>
-    <td>
-    <ul>
-    @foreach($source->verticals as $vertical)
-        <li>{{$vertical->filter}}</li>
-    @endforeach
-    </ul>
-    </td>
+
 	@if (Auth::user()->hasRole('Admin'))
     <td>
      @include('partials/_modal')

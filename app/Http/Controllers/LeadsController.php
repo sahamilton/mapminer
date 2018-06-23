@@ -79,7 +79,7 @@ class LeadsController extends BaseController
     }
 
 
-    public function show($id)
+    public function show($lead)
     {
 
         $sources = $this->leadstatus->pluck('status','id')->toArray();
@@ -88,12 +88,12 @@ class LeadsController extends BaseController
           $q->where('datefrom','<=',date('Y-m-d'))
               ->where('dateto','>=',date('Y-m-d'));
         })
-        ->findOrFail($id);
+        ->findOrFail($lead->id);
         $verticals = $lead->leadsource->verticals()->pluck('searchfilters.id')->toArray();
         $rank = $this->lead->rankLead($lead->salesteam);
         $branch = new \App\Branch;
         $branches = $branch->nearby($lead,500)->limit(5)->get();
-
+        
         if(count($lead->salesteam)==0){
              $people = $this->person->nearby($lead,'1000')->with('userdetails')
                     ->whereHas('userdetails.roles',function($q) {

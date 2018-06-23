@@ -7,9 +7,10 @@
       <?php
       
       foreach($leadsource->leads as $lead){
+        
            $status = null;
              if(count($lead->salesteam)>0){
-              
+            
               foreach ($lead->salesteam as $team){
                 if($team->pivot->status_id > $status && in_array($team->pivot->status_id,[1,2,5,6])){
                   $status = $team->pivot->status_id;
@@ -45,14 +46,14 @@
       var iconBase = '{{asset("assets/icons/")}}';
       var icons = {
         'Closed - Cold':{
-      icon: iconBase + '/closed.png'
+      icon: 'https://maps.google.com/mapfiles/ms/icons/green-dot.png'
         },
         'Converted' :{
-           icon: iconBase + '/converted.png'
+           icon: 'https://maps.google.com/mapfiles/ms/icons/green-dot.png'
         },
 
         'Owned': {
-          icon: iconBase + '/greenflagsm.png'
+          icon: 'https://maps.google.com/mapfiles/ms/icons/yellow-dot.png'
         },
         'Offered': {
           
@@ -60,7 +61,7 @@
         },
 
         'Default': {
-          icon: iconBase + '/default.png'
+          icon: 'https://maps.google.com/mapfiles/ms/icons/red-dot.png'
         },
       };
 

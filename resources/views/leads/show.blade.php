@@ -28,7 +28,8 @@
 	</div>
 
 @if (count($lead->salesteam) > 0)
-<p><strong>Closest Branch:</strong><a href= "{{route('branches.show',$branches[0]->branchid)}}">{{$branches[0]->branchname}}</a></p>
+
+<p><strong>Closest Branch:</strong><a href= "{{route('branches.show',$branches->first()->id)}}">{{$branches->first()->branchname}}</a></p>
 <div>
 	<table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
 		<thead>

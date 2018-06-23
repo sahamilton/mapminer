@@ -10,6 +10,7 @@
                 <th>Address</th>
                 <th>City</th>
                 <th>State</th>
+                <th>Lead source</th>
 
             </thead>
             <tbody>
@@ -20,6 +21,7 @@
                     <td>{{$lead->Primary_Address}}</td>
                     <td>{{$lead->Primary_City}}</td>
                     <td>{{$lead->Primary_State}}</td>
+                    <td>{{$lead->leadsource->source}}</td>
                 </tr>  
 
                 @endforeach

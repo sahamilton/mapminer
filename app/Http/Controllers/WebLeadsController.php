@@ -29,8 +29,9 @@ class WebLeadsController  extends ImportController
         
     }
     public function index(){
-       
+           
             $webleads = $this->lead->all();
+        
             return response()->view('webleads.index',compact('webleads'));
        
         

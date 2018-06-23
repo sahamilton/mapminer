@@ -31,11 +31,11 @@ class TempleadController extends Controller
     public function index()
     {
 
-    
+
         $reps = $this->person->whereHas('templeads')
-        ->withCount(['templeads','openleads','closedleads'])
-        ->with('reportsTo','reportsTo.userdetails.roles','closedleads')
-        ->get();
+                ->withCount(['templeads','openleads','closedleads'])
+                ->with('reportsTo','reportsTo.userdetails.roles','closedleads')
+                ->get();
         $rankings = $this->templead->rankLead($reps);
         return response()->view('templeads.index',compact('reps','rankings'));
     }
@@ -98,7 +98,7 @@ class TempleadController extends Controller
     }
     
     public function salesLeads($pid=null){
-       
+ 
         $person = $this->getSalesRep($pid);
        // dd($person->findPersonsRole($person));
         // depending on role either return list of team and their leads
@@ -119,11 +119,12 @@ class TempleadController extends Controller
         
         $openleads = $this->getLeadsByType('openleads',$person);
         $openleads =$openleads->limit('200')
+                    ->with('leadsource')
                     ->get();
         
 
         $closedleads = $this->getLeadsByType('closedleads',$person);
-        $closedleads = $closedleads->with('relatedNotes')
+        $closedleads = $closedleads->with('relatedNotes','leadsource')
                     ->limit('200')
                     ->get();
       
@@ -238,7 +239,7 @@ class TempleadController extends Controller
 
     public function salesLeadsDetail ($id){
 
-        $lead = $this->templead->with('salesrep','contacts','relatedNotes')->findOrFail($id);
+        $lead = $this->templead->with('salesrep','contacts','relatedNotes','leadsource')->findOrFail($id);
 
         $leadStatuses = LeadStatus::pluck('status','id')->toArray();
        

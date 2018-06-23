@@ -88,13 +88,13 @@ class LeadSourceController extends Controller
 
         $statuses = $this->leadstatus->pluck('status','id')->toArray();
         $leadsource = $this->leadsource
-                ->with('author')
+                ->with('author','leads','assignedLeads','unassignedLeads')
                ->findOrFail($id);
 
-        $leads = $this->getLeads($id);
+        $leads = $leadsource->leads;
 
         $salesteams = $this->salesteam($leads,$id);
-        return response()->view('leadsource.show',compact('leadsource','statuses','salesteams'));
+        return response()->view('leadsource.show',compact('leadsource','leads','statuses','salesteams'));
     }
 
 

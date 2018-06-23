@@ -9,14 +9,17 @@ class LocationPresenter extends BasePresenter
     public function phone()
     {
         $phoneNumber = $this->wrappedObject->phone;
-
+        if(! empty($phoneNumber)){
         if(! strpos($phoneNumber,")")){
         	
-        	return "+1 (".substr($phoneNumber, 0, 3).") ".substr($phoneNumber, 3, 3)."-".substr($phoneNumber,6);
+        	return "(".substr($phoneNumber, 0, 3).") ".substr($phoneNumber, 3, 3)."-".substr($phoneNumber,6);
         }else{
         	
-        	return "+1 ".$phoneNumber;
+        	return $phoneNumber;
         }
+    }else{
+        return $phoneNumber;
+    }
        
     }
 

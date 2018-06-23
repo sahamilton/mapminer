@@ -211,7 +211,7 @@ class Lead extends Model implements HasPresenter {
         $id = auth()->user()->person->id;
       }
       foreach ($salesteam as $team){
-           
+          
             if($team->id == $id){
               return $team->pivot->rating;
             }

@@ -34,5 +34,14 @@ class LeadSource extends Model
         return count($salesreps);
      }
 
+     public function unassignedLeads(){
+            return $this->hasMany(Lead::class, 'lead_source_id')->doesntHave('salesteam');
+
+     }
+      public function assignedLeads(){
+            return $this->hasMany(Lead::class, 'lead_source_id')->has('salesteam');
+
+     }
+
      
 }
