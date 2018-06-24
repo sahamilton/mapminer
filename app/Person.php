@@ -88,8 +88,8 @@ class Person extends NodeModel implements HasPresenter {
 	}
 	
 
-	public function templeads(){
-		return $this->belongsToMany(Templead::class, 'lead_person_status','person_id','related_id')
+	public function leads(){
+		return $this->belongsToMany(Lead::class, 'lead_person_status','person_id','related_id')
     
       ->withPivot('created_at','updated_at','status_id','rating');
 	}

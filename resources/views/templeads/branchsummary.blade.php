@@ -10,15 +10,15 @@
                 <th>Branch</th>
                 <th>Branch Manager</th>
                 <th>Reports To</th>
-                <th>Open Leads</th>
-                <th>Closed Leads</th>
+                <th>Leads</th>
+                
 
                 <th>Rating</th>
 
             </thead>
             <tbody>
                 @foreach ($branches as $branch)
-               
+          
                 <tr> 
                     <td><a href="{{route('templeads.branchid',$branch->id)}}">{{$branch->branchname}}, {{$branch->city}} {{$branch->state}}</a></td>
                    @if(count($branch->manager)>0)
@@ -32,8 +32,8 @@
                     @else
                         <td></td><td></td>
                     @endif
-                    <td>{{count($branch->templeads)}}
-                    <td></td>
+                    <td>{{$branch->leads_count}}</td>
+                    
                     <td></td>
 
                 </tr>  

@@ -30,10 +30,10 @@
                    
                 <tr> 
 
-                     <td><a href="{{route('salesrep.newleads.show',$lead->id)}}">{{$lead->Company_Name}}</a></td>
-                    <td>{{$lead->Primary_Address}}</td>
-                    <td>{{$lead->Primary_City}}</td>
-                    <td>{{$lead->Primary_State}}</td>
+                     <td><a href="{{route('salesrep.newleads.show',$lead->id)}}">{{$lead->companyname}}</a></td>
+                    <td>{{$lead->address}}</td>
+                    <td>{{$lead->city}}</td>
+                    <td>{{$lead->state}}</td>
                     @if(count($lead->salesrep)>0)
                         <td><a href="{{route('salesrep.newleads',$lead->salesrep->first()->id)}}">{{$lead->salesrep->first()->postName()}}</a></td>
                         <td>{{$leadStatuses[$lead->salesrep->first()->pivot->status_id]}}</td>

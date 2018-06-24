@@ -11,6 +11,9 @@ class Lead extends Model implements HasPresenter {
   use SoftDeletes, Geocode;
 	public $dates = ['created_at','updated_at','deleted_at','datefrom','dateto'];
   public $table= 'leads';
+
+  public $type='temp';
+
   public $requiredfields = ['companyname',
             'businessname',
             'address',
@@ -27,14 +30,13 @@ class Lead extends Model implements HasPresenter {
 						'city',
 						'state',
 						'zip',
-						'contact',
-						'phone',
+            'phone',
 						'description',
-						'datefrom',
-						'dateto',
 						'lat',
 						'lng',
-						'lead_source_id'];
+						'lead_source_id',
+            'branch_id',
+            'branch_id'];
     public $statuses = [1=>'Offered',2=>'Claimed',3=>'Closed'];
     public $getStatusOptions =  [
         1=>'Prospect data is completely inaccurate. No project or project completed.',
@@ -47,13 +49,19 @@ class Lead extends Model implements HasPresenter {
     	return $this->belongsTo(LeadSource::class, 'lead_source_id');
 
     }
+    public function setType($type){
 
+      $this->type= $type;
+
+    }
     public function salesteam(){
 
     	return $this->belongsToMany(Person::class, 'lead_person_status','related_id','person_id')
                   ->withPivot('created_at','updated_at','status_id','rating');
     }
-    
+     public function branches(){
+      return $this->belongsTo(Branch::class,'branch_id','id');
+    }
     public function relatedNotes($type=null) {
       if(! $type){
         $type="lead";
@@ -65,6 +73,11 @@ class Lead extends Model implements HasPresenter {
     {
         return LocationPresenter::class;
     }
+
+    public function contacts(){
+      return $this->belongsTo(LeadContact::class,'id','lead_id');
+    }
+
     public function setDatefromAttribute($value)
    {
        $this->attributes['datefrom'] = Carbon::createFromFormat('m/d/Y', $value);
@@ -83,7 +96,24 @@ class Lead extends Model implements HasPresenter {
     	return $this->address . ",<br />" . $this->city. " " . $this->state . " " . $this->zip;
     	
     }
+public function rankLead($salesteam){
+      $ranking = array();
 
+      foreach ($salesteam as $team){
+        $ratings[$team->id]=array();
+         foreach ($team->closedleads as $lead){
+
+              if($lead->pivot->rating){
+                $ratings[$team->id][] = $lead->pivot->rating;
+              }
+          }
+     
+        if (count($ratings[$team->id])>0){
+               $ranking[$team->id] = array_sum($ratings[$team->id]) / count($ratings[$team->id]);
+        }
+    }
+        return $ranking;
+    }
     public function ownedBy(){
       return $this->belongsToMany(Person::class,'lead_person_status','related_id','person_id')
             ->withPivot('status_id','rating','type')
@@ -127,7 +157,14 @@ class Lead extends Model implements HasPresenter {
               }
             }
           }
+    
 
+    public function scopeExtraFields($query,$table){
+     
+
+             return $query->join($table .' as ExtraFields','leads.id','=','ExtraFields.id');
+      }
+     
     public function ownsLead($id){
 
       $ownStatuses = [2,5,6];
@@ -190,19 +227,7 @@ class Lead extends Model implements HasPresenter {
 
 
     }
-    public function rankLead($salesteam){
-      $ratings = array();
-      foreach ($salesteam as $team){
-         
-          if($team->pivot->rating){
-            $ratings[] = $team->pivot->rating;
-          }
-        }
-        if (count($ratings)>0){
-          return array_sum($ratings) / count($ratings);
-        }
-        return null;
-    }
+   
 
     
 
@@ -240,5 +265,15 @@ class Lead extends Model implements HasPresenter {
           }
 
       return $history;
+    }
+
+     public function openleads(){
+      return $this->belongsToMany(Person::class, 'lead_person_status','related_id','person_id')
+      ->wherePivot('status_id',2);
+    }
+    public function closedleads(){
+      return $this->belongsToMany(Person::class, 'lead_person_status','related_id','person_id')
+        ->withPivot('created_at','updated_at','status_id','rating')
+        ->wherePivot('status_id',3);
     }
 }

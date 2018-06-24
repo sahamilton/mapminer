@@ -9,12 +9,12 @@ use App\LeadSource;
 use App\Note;
 use App\Branch;
 use App\Person;
-use App\Mail\NotifyWebLeadsAssignment;
-use App\Mail\NotifyWebLeadsBranchAssignment;
-use App\Http\Requests\WebLeadFormRequest;
+use App\Mail\NotifyWebleadsAssignment;
+use App\Mail\NotifyWebleadsBranchAssignment;
+use App\Http\Requests\WebleadFormRequest;
 
 
-class WebLeadsController  extends ImportController
+class WebleadsController  extends ImportController
 {
     public $salesroles = [5,6,7,8];
     protected $person;
@@ -101,7 +101,7 @@ class WebLeadsController  extends ImportController
         if($request->get('salesrep')!=''){
             $rep = $this->person->findOrFail($request->get('salesrep'));
             $lead->salesteam()->attach($request->get('salesrep'), ['status_id' => 2,'type'=>'web']);
-            Mail::queue(new NotifyWebLeadsAssignment($lead,$branch,$rep));
+            Mail::queue(new NotifyWebleadsAssignment($lead,$branch,$rep));
         }else{
             
             foreach($branch->manager as $manager){
@@ -117,7 +117,7 @@ class WebLeadsController  extends ImportController
             
             foreach ($branchemails as $email){
                 
-                Mail::queue(new NotifyWebLeadsBranchAssignment($lead,$branch,$email));
+                Mail::queue(new NotifyWebleadsBranchAssignment($lead,$branch,$email));
             }
        
         }  

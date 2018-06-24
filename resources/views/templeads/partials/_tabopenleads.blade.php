@@ -17,10 +17,10 @@
                 @foreach ($openleads as $lead)
                    
                 <tr> 
-                    <td><a href="{{route('salesrep.newleads.show',$lead->id)}}">{{$lead->Company_Name}}</a></td>
-                    <td>{{$lead->Primary_Address}}</td>
-                    <td>{{$lead->Primary_City}}</td>
-                    <td>{{$lead->Primary_State}}</td>
+                    <td><a href="{{route('salesrep.newleads.show',$lead->id)}}">{{$lead->businessname}}</a></td>
+                    <td>{{$lead->address}}</td>
+                    <td>{{$lead->city}}</td>
+                    <td>{{$lead->state}}</td>
                     <td>{{$lead->leadsource->source}}</td>
                 </tr>  
 

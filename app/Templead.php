@@ -17,7 +17,7 @@ class Templead extends Model
         5=>'Lead data is accurate and there is a definite opportunity for sales / service'
       ];
 
-    public function salesrep(){
+    /*public function salesrep(){
 
     	return $this->belongsToMany(Person::class, 'lead_person_status','related_id','person_id')
     
@@ -74,5 +74,5 @@ class Templead extends Model
         }
     }
         return $ranking;
-    }
+    }*/
 }

@@ -4,7 +4,7 @@
 
 @php 
 
-$rank = ($lead->salesrep->first()->pivot->rating ? $lead->salesrep->first()->pivot->rating: 3);@endphp
+$rank = ($lead->salesteam->first()->pivot->rating ? $lead->salesteam->first()->pivot->rating: 3);@endphp
     <!-- Modal content-->
     <div class="modal-content">
       <div class="modal-header">

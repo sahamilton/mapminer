@@ -1,18 +1,18 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\WebLead;
+use App\Weblead;
 use App\MapFields;
-use App\WebLeadImport;
+use App\WebleadImport;
 use Illuminate\Http\Request;
-use App\Http\Requests\WebLeadFormRequest;
+use App\Http\Requests\WebleadFormRequest;
 class WebleadsImportController extends Controller
 {
     protected $lead;
     protected $fields;
     protected $import;
 
-    public function __construct(WebLead $lead, MapFields $fields,WebLeadImport $import){
+    public function __construct(Weblead $lead, MapFields $fields,WebleadImport $import){
     	$this->lead = $lead;
     	$this->fields = $fields;
     	$this->import = $import;
@@ -23,7 +23,7 @@ class WebleadsImportController extends Controller
     	return response()->view('webleads.leadform');
     }
 
-    public function getLeadFormData(WebLeadFormRequest $request){
+    public function getLeadFormData(WebleadFormRequest $request){
     	// first get the rows of data
 		
     	
