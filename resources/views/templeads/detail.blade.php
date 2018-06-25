@@ -1,7 +1,7 @@
 @extends('site.layouts.default')
 @section('content')
 <div class="container">
-  <h2>{{$lead->Company_Name}}</h2>
+  <h2>{{$lead->businessname}}</h2>
   @if(count($lead->salesteam))
     <h4>Lead assigned to <a href="{{route('salesrep.newleads',$lead->sr_id)}}">{{$lead->salesteam->first()->postName()}}</a></h4>
     <div class="row">
@@ -31,6 +31,14 @@
         </a>
       </li>
 @endif
+
+
+<li>
+        <a data-toggle="tab" href="#resources">
+          <strong>Nearby Resources</strong>
+        </a>
+      </li>
+
       <li>
         <a data-toggle="tab" href="#notes">
           <strong>Lead  Notes @if(count($lead->relatedNotes)>0) ({{count($lead->relatedNotes)}}) @endif
@@ -55,6 +63,15 @@
       @include('templeads.partials._tabextra')
     </div>
     @endif
+    
+    <div id="resources" class="tab-pane fade in">
+      @if($people)
+      @include('templeads.partials._tabresources')    
+      @endif
+      @include('templeads.partials._tabbranches') 
+    </div>
+
+
     <div id="notes" class="tab-pane fade in">
       @include('templeads.partials._tabnotes')
     </div>

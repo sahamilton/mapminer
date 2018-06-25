@@ -79,14 +79,24 @@ class LeadsController extends BaseController
         ->with('leadsource')->findOrFail($id);
 
         $leadsourcetype = $lead->leadsource->type.'leads';
-       
+       $people = null;
         $lead = $this->lead
           //->join($leadsourcetype .' as ExtraFields','leads.id','=','ExtraFields.id')
           ->with('salesteam','contacts','relatedNotes')
           ->ExtraFields($leadsourcetype)
           ->findOrFail($id);
        
-
+          if($lead->doesntHave('salesteam')){
+           
+            $people = $this->person
+            ->whereHas('userdetails.roles',function ($q){
+              $q->whereIn('roles.id',[9,5]);
+            })
+              ->nearby($lead,'1000')
+              ->limit(5)
+              ->get();
+              
+          }
 
         $extrafields = array_diff(array_keys($lead->getAttributes()),$this->lead->fillable);
 
@@ -100,10 +110,11 @@ class LeadsController extends BaseController
         
         $leadStatuses = LeadStatus::pluck('status','id')->toArray();
        
-        $branches = Branch::nearby($lead,100,5)->get();
+        $branches = Branch::with('manager','businessmanager','marketmanager')->nearby($lead,100,5)->get();
+       
         $rankingstatuses = $this->lead->getStatusOptions;
        
-        return response()->view('templeads.detail',compact('lead','branches','leadStatuses','rankingstatuses','extrafields'));
+        return response()->view('templeads.detail',compact('lead','branches','leadStatuses','rankingstatuses','extrafields','people'));
 
     }
 

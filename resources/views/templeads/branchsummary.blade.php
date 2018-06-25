@@ -2,8 +2,10 @@
 @section('content')
 <div class="container">
     <h2>Leads By Branches</h2>
-   
-<h4><a href="{{route('newleads.index')}}">See Leads by Reps</a></h4>
+   @if($leadsource)
+   <h4>From {{$leadsource->source}} lead source</h4>
+   @endif
+<h4><a href="{{route('leadsource.show',$leadsource->id)}}">See {{$leadsource->source}} by Reps</a></h4>
     <div class="col-md-10 col-md-offset-1">
         <table class="table" id = "sorttable">
             <thead>

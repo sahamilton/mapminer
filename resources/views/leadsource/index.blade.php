@@ -20,7 +20,8 @@
     <th>Description</th>
     <th>Reference</th>
     <th>Prospects</th>
-    <th>Assigned to</th>
+    <th>Assigned</th>
+    <th>Unassigned</th>
     <th>Average Ranking</th>
     <th>Available From / To</th>
 
@@ -36,13 +37,10 @@
    	<td><a href="{{route('leadsource.show',$source->id)}}">{{$source->source}}</a></td>
     <td>{{$source->description}}</td>
     <td>{{$source->reference}}</td>
-    <td>{{count($source->leads)}}</td>
-    <td>{{$source->assignedTo()}}</td>
-    <td>
-        @if(count($source->leads)>0)
-            {{number_format($source->leads[0]->leadRank(),2)}}
-        @endif
-    </td>
+    <td>{{$source->leads_count}}</td>
+    <td>{{$source->assigned}}</td>
+    <td><a href="{{route('leadsource.unassigned',$source->id)}}">{{$source->leads_count - $source->assigned}}</a></td>
+    <td></td>
    	<td>
         @if($source->dateto < Carbon\Carbon::now())
             Expired {{$source->datefrom->format('M j,Y')}}

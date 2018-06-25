@@ -42,8 +42,10 @@ class LeadSourceController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        $leadsources = $this->leadsource->with('leads','leads.salesteam','verticals')->get();
+    {   
+     
+        $leadsources = $this->leadsource->assigned()->withCount('leads')->get();
+
         return response()->view('leadsource.index', compact('leadsources'));
     }
 
@@ -85,8 +87,8 @@ class LeadSourceController extends Controller
      */
     public function show($id)
     {
-
-        $statuses = $this->leadstatus->pluck('status','id')->toArray();
+        $leadsource = $this->leadsource->findOrFail($id);
+       /* $statuses = $this->leadstatus->pluck('status','id')->toArray();
         $leadsource = $this->leadsource
                 ->with('author','leads','assignedLeads','unassignedLeads')
                ->findOrFail($id);
@@ -94,9 +96,40 @@ class LeadSourceController extends Controller
         $leads = $leadsource->leads;
 
         $salesteams = $this->salesteam($leads,$id);
-        return response()->view('leadsource.show',compact('leadsource','leads','statuses','salesteams'));
-    }
+        return response()->view('leadsource.show',compact('leadsource','leads','statuses','salesteams'));*/
 
+        $reps = $this->person->whereHas('leads',function ($q) use($id){
+                    $q->where('lead_source_id','=',$id);
+                })
+                ->withCount(['leads','openleads','closedleads'])
+                
+                ->with('reportsTo','reportsTo.userdetails.roles','closedleads')
+                ->get();
+
+        $rankings = $this->lead->rankLead($reps);
+        
+        return response()->view('templeads.index',compact('reps','rankings','leadsource'));
+    }
+    public function branches($id){
+            $leadsource = $this->leadsource->findOrFail($id);
+
+            $branches = $this->lead->where('lead_source_id','=',$id)
+            ->whereHas('branches')
+                ->with('leadsource','branches','branches.manager')
+                ->orderBy('branch_id')
+                ->get();
+         
+            return response()->view('templeads.branchsummary',compact('branches','leadsource'));
+
+        
+
+    }
+    
+    public function unassigned($id){
+        $leadsource = $this->leadsource->findOrFail($id);
+        $leads = $leadsource->unassignedLeads()->get();
+        return response()->view('templeads.unassigned',compact('leads'));
+    }
 
     private function getLeads($id){
 
