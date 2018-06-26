@@ -10,28 +10,28 @@
 			</a>
 		</div>
 		<div class="list-group-item">
-				<p class="list-group-item-text"><strong>Role Details</strong></p>
-				<ul style="list-style-type: none;">
-				@foreach ($people->userdetails->roles as $role)
-					<li>{{$role->name}}</li>
-				@endforeach
-				</ul>
-			</div>
-<div class="list-group">
-			<div class="list-group-item">
-				<p class="list-group-item-text"><strong>User Details</strong></p>
-				<ul style="list-style-type: none;">
-					<li>User id: {{$people->userdetails->id}}</li>
-					<li>Person id: {{$people->id}}</li>
-					<li>Employee id: {{$people->userdetails->employee_id}}</li>
-					<li><strong>Servicelines:</strong><ul>
-						@foreach ($people->userdetails->serviceline as $serviceline)
-							<li>{{$serviceline->ServiceLine}}</li>
-						@endforeach
-					</ul>
-				</li>
+			<p class="list-group-item-text"><strong>Role Details</strong></p>
+			<ul style="list-style-type: none;">
+			@foreach ($people->userdetails->roles as $role)
+				<li>{{$role->name}}</li>
+			@endforeach
 			</ul>
-			</div>
+		</div>
+	<div class="list-group">
+		<div class="list-group-item">
+			<p class="list-group-item-text"><strong>User Details</strong></p>
+			<ul style="list-style-type: none;">
+				<li>User id: {{$people->userdetails->id}}</li>
+				<li>Person id: {{$people->id}}</li>
+				<li>Employee id: {{$people->userdetails->employee_id}}</li>
+				<li><strong>Servicelines:</strong><ul>
+					@foreach ($people->userdetails->serviceline as $serviceline)
+						<li>{{$serviceline->ServiceLine}}</li>
+					@endforeach
+				</ul>
+			</li>
+		</ul>
+		</div>
 		<div class="list-group">
 			<div class="list-group-item">
 				<p class="list-group-item-text"><strong>Contact Details</strong></p>
@@ -41,7 +41,6 @@
 						<a href="mailto:{{$people->userdetails->email}}">{{$people->userdetails->email}}</a>
 					</li>
 					<li>
-						
 						@if(! empty($people->lat))
 							@php
 							   $latLng= "@". $people->lat.",".$people->lng .",14z";
@@ -51,11 +50,8 @@
 								<i class="fas fa-map-marker-alt"></i></a>
 						@endif
 					</li>
-					
 				</ul>
 			</div>
-
-
 			@if($people->reportsTo || count($people->directReports)>0)
 				<div class="list-group-item"><p class="list-group-item-text"><strong>Reporting Structure</strong></p>
 					<ul style="list-style-type: none;">
@@ -75,23 +71,16 @@
 					</ul>
 				</div>
 			@endif
-			
+				
 			@if(count($people->branchesServiced)>0)
 
 				<div class="list-group-item"><p class="list-group-item-text"><strong>Branches Serviced</strong></p>
 					<ul style="list-style-type: none;">
-					
-				
-						
 						@foreach ($people->branchesServiced as $branch)
 							<li><a href="{{route('branches.show',$branch->id)}}">{{$branch->branchname}}</a></li>
 						@endforeach
-					
-
 					</ul>
 				</div>
-
-
 			@endif
 			@if(count($people->managesAccount)>0)
 				<div class="list-group-item"><p class="list-group-item-text">Accounts Managed</p>
@@ -102,7 +91,7 @@
 					</ul>
 				</div>
 			@endif
-			<div class="list-group-item"><p class="list-group-item-text"><strong>Activity</strong></p>
+				<div class="list-group-item"><p class="list-group-item-text"><strong>Activity</strong></p>
 					<ul style="list-style-type: none;">
 						<li>Total Logins: {{count($track)}}</li>
 						<li>Last Login:
@@ -113,8 +102,7 @@
 							
 					</ul>
 				</div>
-
-			
+			</div>
 		</div>
 	</div>
 </div>
