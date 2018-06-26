@@ -2,7 +2,8 @@
 @section('content')
 <div class="container">
  
-   <h2>Unassignd Leads</h2>
+   <h2>{{$leadsource->source}} Unassigned Leads</h2>
+
     <div class="col-md-10 col-md-offset-1">
         <table class="table" id = "sorttable">
             <thead>

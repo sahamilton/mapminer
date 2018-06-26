@@ -404,7 +404,7 @@ class LeadsController extends BaseController
         })->download($type);
     }
  public function salesLeads($pid=null){
- 
+
         $person = $this->getSalesRep($pid);
        // dd($person->findPersonsRole($person));
         // depending on role either return list of team and their leads
@@ -413,7 +413,7 @@ class LeadsController extends BaseController
             
             return $this->showSalesLeads($person);
         }elseif($person->userdetails->hasRole('Admin') or $person->userdetails->hasRole('Sales Operations')){
-                return redirect()->route('newleads.index');
+                return redirect()->route('leadsource.index');
         }else{
             return $this->showSalesTeamLeads($person);
         }

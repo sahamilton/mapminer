@@ -47,11 +47,12 @@ class LeadSource extends Model
         return count($salesreps);
      }
 
-     public function unassignedLeads(){
+     public function unassignedLeads($id){
           return $this->select('leads.*') 
           ->join('leads','leadsources.id','=','leads.lead_source_id')
           ->leftjoin('lead_person_status','leads.id','=','lead_person_status.related_id')
-          ->whereRaw('lead_person_status.related_id is null');
+          ->whereRaw('lead_person_status.related_id is null')
+          ->where('leads.lead_source_id','=',$id);
 
 
 

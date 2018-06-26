@@ -127,8 +127,10 @@ class LeadSourceController extends Controller
     
     public function unassigned($id){
         $leadsource = $this->leadsource->findOrFail($id);
-        $leads = $leadsource->unassignedLeads()->get();
-        return response()->view('templeads.unassigned',compact('leads'));
+
+        $leads = $this->leadsource->unassignedLeads($id)->get();
+      
+        return response()->view('templeads.unassigned',compact('leads','leadsource'));
     }
 
     private function getLeads($id){

@@ -21,7 +21,11 @@
                         @endforeach
                     </ul>
                     </td>
-                    <td>{{$person->reportsTo()->first()->postName()}}</td>
+                    <td>
+                        @if($person->reportsTo)
+                            {{$person->reportsTo()->first()->postName()}}
+                        @endif
+                    </td>
                     <td>{{number_format($person->distance,1)}} miles</td>
                 </tr>  
 
