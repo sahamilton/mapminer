@@ -403,18 +403,21 @@ class LeadsController extends BaseController
             });
         })->download($type);
     }
- public function salesLeads($pid=null){
+ public function salesLeads($pid){
 
         $person = $this->getSalesRep($pid);
+       
+        
+       
        // dd($person->findPersonsRole($person));
         // depending on role either return list of team and their leads
         // or the leads
         if($person->userdetails->can('accept_leads')){
-            
             return $this->showSalesLeads($person);
         }elseif($person->userdetails->hasRole('Admin') or $person->userdetails->hasRole('Sales Operations')){
                 return redirect()->route('leadsource.index');
         }else{
+
             return $this->showSalesTeamLeads($person);
         }
 
@@ -441,31 +444,31 @@ class LeadsController extends BaseController
     private function showSalesTeamLeads($person){
         
         $reports = $person->descendantsAndSelf()->pluck('id')->toArray();
-        $reps = $this->person->whereHas('templeads')
-        ->withCount(['templeads','openleads','closedleads'])
+        $reps = $this->person->whereHas('leads')
+        ->withCount(['leads','openleads','closedleads'])
         ->with('reportsTo','reportsTo.userdetails.roles','closedleads')
         ->whereIn('id',$reports)
         ->get();
-        $rankings = $this->templead->rankLead($reps);
+        $rankings = $this->lead->rankLead($reps);
         return response()->view('templeads.team',compact('reps','person','rankings'));
     }
 
-    public function salesLeadsMap($pid=null){
+    public function salesLeadsMap($pid){
+
         $person = $this->getSalesRep($pid);
         $data['title']= $person->postName();
         $data['datalocation'] = "/api/newleads/".$person->id ."/map";
         $data['lat'] = $person->lat;
         $data['lng'] = $person->lng;
-        $data['listviewref'] = route('salesteam.newleads',$pid);
+        $data['listviewref'] = route('salesrep.newleads',$pid);
         $data['zoomLevel'] =10;
         $data['type'] ='leads';
-        $leads = $this->templead->whereHas('openleads', function ($q) use($pid){
+        $leads = $this->lead->whereHas('openleads', function ($q) use($pid){
             $q->where('person_id','=',$pid);
         })
         ->limit('200')
         
         ->get();
-
         $data['count']=count($leads);
         return response()->view('templeads.showmap',compact('data'));
     }
@@ -473,9 +476,10 @@ class LeadsController extends BaseController
     public function getMapData($pid){
         $person = $this->getSalesRep($pid);
    
-        $leads = $this->templead->whereHas('openleads', function ($q) use($person){
+        $leads = $this->lead->whereHas('openleads', function ($q) use($person){
             $q->where('person_id','=',$person->id);
         })
+        ->with('leadsource')
         ->limit('200')
         ->get();
      
@@ -513,6 +517,7 @@ class LeadsController extends BaseController
 
     }
     private function getSalesRep($pid=null){
+
         if(! $pid){
             return $this->person->findOrFail(auth()->user()->person->id);
         }
@@ -524,7 +529,8 @@ class LeadsController extends BaseController
            return $person;
 
         }
-        $peeps = $person->descendantsAndSelf()->pluck('id')->toArray();
+        $peeps = $person->descendants()->pluck('id')->toArray();
+        
         if(in_array($pid,$peeps)){
             return $person;
         }

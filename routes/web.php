@@ -161,7 +161,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 
 	# Sales leads
-		Route::get('prospect/{id}/accept',['as'=>'saleslead.accept','uses'=>'SalesLeadsController@accept']);
+		/*Route::get('prospect/{id}/accept',['as'=>'saleslead.accept','uses'=>'SalesLeadsController@accept']);
 		Route::get('prospect/{id}/decline',['as'=>'saleslead.decline','uses'=>'SalesLeadsController@decline']);
 		Route::get('prospects/{pid}/showrep',['as'=>'salesleads.showrep','uses'=>'SalesLeadsController@showrep']);
 		Route::get('prospects/download',['as'=>'salesleads.download','uses'=>'SalesLeadsController@download']);
@@ -169,7 +169,7 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('leadrank',['as'=>'api.leadrank','uses'=>'SalesLeadsController@rank']);
 		Route::post('prospect/{id}/close',['as'=>'saleslead.close','uses'=>'SalesLeadsController@close']);
 		Route::get('prospect/{pid}/leads',['as'=>'saleslead.mapleads','uses'=>'SalesLeadsController@mapleads']);
-		Route::resource('salesleads','SalesLeadsController');
+		Route::resource('salesleads','SalesLeadsController');*/
 
 	# Sales Notes
 		Route::get('salesnotes/{companyId}',['as'=>'salesnotes','uses'=>'SalesNotesController@show']);
@@ -190,9 +190,9 @@ Route::group(['middleware' => 'auth'], function () {
 	#	Temp Leads
 
 
-		Route::get('/newleads/{pid?}',['as'=>'salesrep.newleads','uses'=>'LeadsController@salesLeads']);
-		Route::get('/newleads/{id}/show',['as'=>'salesrep.newleads.show','uses'=>'LeadsController@salesLeadsDetail']);
-		Route::get('/newleads/{pid?}/map',['as'=>'salesrep.newleads.map','uses'=>'LeadsController@salesLeadsMap']);
+		Route::get('/newleads/{pid}',['as'=>'salesrep.newleads','uses'=>'LeadsController@salesLeads']);
+		Route::get('/newleads/show/{id}/',['as'=>'salesrep.newleads.show','uses'=>'LeadsController@salesLeadsDetail']);
+		Route::get('/newleads/{pid}/map',['as'=>'salesrep.newleads.map','uses'=>'LeadsController@salesLeadsMap']);
 		Route::get('api/newleads/{pid}/map',['as'=>'salesrep.newleads.mapdata','uses'=>'LeadsController@getMapData']);
 		Route::get('/branch/leads',['as'=>'branchmanager.newleads','uses'=>'LeadsController@getAssociatedBranches']);
 		Route::get('newleadrank',['as'=>'api.newlead.rank','uses'=>'LeadsController@rank']);

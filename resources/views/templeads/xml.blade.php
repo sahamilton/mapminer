@@ -3,8 +3,8 @@
 	
 <marker
 	locationweb="{{route('salesrep.newleads.show',$row->id)}}" 
-	name="{{trim($row->Company_Name)}}"
-	address="{{ trim($row->Primary_Address)}} {{trim($row->Primary_City)}} {{ trim($row->Primary_State)}}"
+	name="{{trim($row->companyname)}}"
+	address="{{ trim($row->address)}} {{trim($row->city)}} {{ trim($row->state)}}"
 	lat="{{ $row->lat}}"
 	lng="{{ $row->lng}}"
 	id="{{ $row->id}}"

@@ -3,7 +3,7 @@
 <div class="container">
   <h2>{{$lead->businessname}}</h2>
   @if(count($lead->salesteam))
-    <h4>Lead assigned to <a href="{{route('salesrep.newleads',$lead->sr_id)}}">{{$lead->salesteam->first()->postName()}}</a></h4>
+    <h4>Lead assigned to <a href="{{route('salesrep.newleads',$lead->salesteam->first()->id)}}">{{$lead->salesteam->first()->postName()}}</a></h4>
     <div class="row">
       <p><strong>Status:</strong>{{$leadStatuses[$lead->salesteam->first()->pivot->status_id]}}
     @if((auth()->user()->person->id == $lead->salesteam->first()->id or auth()->user()->hasRole('Admin')) && $lead->salesteam->first()->pivot->status_id != 3)
