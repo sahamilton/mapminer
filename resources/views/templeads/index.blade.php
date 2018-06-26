@@ -4,7 +4,7 @@
     <h2>{{$leadsource->source}} Overview</h2>
     
     <h4><a href="{{route('leadsource.branches',$leadsource->id)}}">See {{$leadsource->source}} by Branches</a></h4>
-
+    <h4><a href="{{route('leadsource.index')}}">Return to All LeadSources</a></h4>
     <div class="col-md-10 col-md-offset-1">
         <table class="table" id = "sorttable">
             <thead>

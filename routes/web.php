@@ -342,7 +342,7 @@ Route::get('/',['as'=>'ops','uses'=>'Admin\AdminDashboardController@dashboard'])
 		Route::delete('/webleads/{id}/unassign',['as'=>'webleads.unassign','uses'=>'WebLeadsController@unAssignLeads']);
 		Route::get('/webleads/import/create',['as'=>'webleads.import.create','uses'=>'WebleadsImportController@create']);
 		Route::post('/webleads/import/create',['as'=>'webleads.import.store','uses'=>'WebleadsImportController@store']);
-		Route::resource('/webleads','LeadsController');
+		Route::resource('/webleads','WebLeadsImportController');
 
 		Route::get('leads/{id}/person',['as'=>'leads.person','uses'=>'LeadsController@getPersonsLeads']);
 		Route::get('leads/{id}/person/{sid}/source',['as'=>'leads.personsource','uses'=>'LeadsController@getPersonSourceLeads']);
@@ -398,7 +398,7 @@ Route::get('/',['as'=>'ops','uses'=>'Admin\AdminDashboardController@dashboard'])
 	    Route::get('/newleads/{pid}/branchmgr',['as'=>'branchmgr.newleads','uses'=>'LeadsController@getAssociatedBranches']);
 	   Route::get('/newleads/branch',['as'=>'templeads.branch','uses'=>'LeadsController@branches']);
 	    Route::get('/newleads/{id}/branch/',['as'=>'templeads.branchid','uses'=>'LeadsController@branches']);
-		Route::resource('newleads','LeadsController');
+		Route::resource('newleads','LeadSourceController');
 		
 });
 /** ------------------------------------------

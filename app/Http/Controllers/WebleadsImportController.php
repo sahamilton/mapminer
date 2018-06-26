@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Weblead;
+use App\Lead;
 use App\MapFields;
 use App\WebleadImport;
 use Illuminate\Http\Request;
@@ -12,7 +12,7 @@ class WebleadsImportController extends Controller
     protected $fields;
     protected $import;
 
-    public function __construct(Weblead $lead, MapFields $fields,WebleadImport $import){
+    public function __construct(Lead $lead, MapFields $fields,WebleadImport $import){
     	$this->lead = $lead;
     	$this->fields = $fields;
     	$this->import = $import;
@@ -31,7 +31,7 @@ class WebleadsImportController extends Controller
     	
     	// if all columns are known then we can skip all this
     	if(! $this->validateFields($input)){
-
+            
 		       $data = $input; 
 		       $title="Map the leads import file fields";
 		       $requiredFields = $this->import->requiredFields;
@@ -54,6 +54,8 @@ class WebleadsImportController extends Controller
     	}else{
 
     		$newdata = $this->lead->geoCodeAddress($input);
+            $contactFields = $this->fields->whereType('weblead')->whereDestination('contact')->whereNotNull('fieldname')->pluck('fieldname')->toArray();
+            dd($contactFields);
     		$lead = $this->lead->create($newdata);
     		return redirect()->route('webleads.show',$lead->id);
 
@@ -95,7 +97,8 @@ class WebleadsImportController extends Controller
     }
 
     private function getValidFields(){
-    	$validFields = $this->fields->whereType('weblead')->whereNotNull('fieldname')->get();
+    	
+        $validFields = $this->fields->whereType('weblead')->whereNotNull('fieldname')->get();
     	return $validFields->reduce(function ($validFields,$validField){
     		$validFields[$validField->aliasname] = $validField->fieldname;
     		return $validFields;

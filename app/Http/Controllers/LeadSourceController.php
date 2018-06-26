@@ -88,16 +88,7 @@ class LeadSourceController extends Controller
     public function show($id)
     {
         $leadsource = $this->leadsource->findOrFail($id);
-       /* $statuses = $this->leadstatus->pluck('status','id')->toArray();
-        $leadsource = $this->leadsource
-                ->with('author','leads','assignedLeads','unassignedLeads')
-               ->findOrFail($id);
-
-        $leads = $leadsource->leads;
-
-        $salesteams = $this->salesteam($leads,$id);
-        return response()->view('leadsource.show',compact('leadsource','leads','statuses','salesteams'));*/
-
+      
         $reps = $this->person->whereHas('leads',function ($q) use($id){
                     $q->where('lead_source_id','=',$id);
                 })
