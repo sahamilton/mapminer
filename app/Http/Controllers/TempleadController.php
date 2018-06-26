@@ -6,8 +6,8 @@ use App\User;
 use App\Note;
 use App\Person;
 use App\Branch;
-use App\Templead;
-use App\WebLead;
+use App\lead;
+use App\Weblead;
 use App\LeadStatus;
 use Illuminate\Http\Request;
 
@@ -17,7 +17,7 @@ class TempleadController extends Controller
     protected $person;
     protected $weblead;
 
-    public function __construct(Templead $lead, Person $person, WebLead $weblead){
+    public function __construct(lead $lead, Person $person, Weblead $weblead){
         $this->templead = $lead;
         $this->person = $person;
         $this->weblead = $weblead;
@@ -31,11 +31,11 @@ class TempleadController extends Controller
     public function index()
     {
 
-    
+
         $reps = $this->person->whereHas('templeads')
-        ->withCount(['templeads','openleads','closedleads'])
-        ->with('reportsTo','reportsTo.userdetails.roles','closedleads')
-        ->get();
+                ->withCount(['templeads','openleads','closedleads'])
+                ->with('reportsTo','reportsTo.userdetails.roles','closedleads')
+                ->get();
         $rankings = $this->templead->rankLead($reps);
         return response()->view('templeads.index',compact('reps','rankings'));
     }
@@ -86,7 +86,7 @@ class TempleadController extends Controller
                 $id = [$id];
             }
             return $this->templead->whereIn('Branch',$id)
-                ->with('salesrep','branches','branches.manager')
+                ->with('salesteam','branches','branches.manager')
                 ->orderBy('Branch')
                 ->get();
         }else{
@@ -98,7 +98,7 @@ class TempleadController extends Controller
     }
     
     public function salesLeads($pid=null){
-       
+ 
         $person = $this->getSalesRep($pid);
        // dd($person->findPersonsRole($person));
         // depending on role either return list of team and their leads
@@ -119,11 +119,12 @@ class TempleadController extends Controller
         
         $openleads = $this->getLeadsByType('openleads',$person);
         $openleads =$openleads->limit('200')
+                    ->with('leadsource','contacts')
                     ->get();
         
 
         $closedleads = $this->getLeadsByType('closedleads',$person);
-        $closedleads = $closedleads->with('relatedNotes')
+        $closedleads = $closedleads->with('relatedNotes','leadsource','contacts')
                     ->limit('200')
                     ->get();
       
@@ -149,7 +150,7 @@ class TempleadController extends Controller
         $data['datalocation'] = "/api/newleads/".$person->id ."/map";
         $data['lat'] = $person->lat;
         $data['lng'] = $person->lng;
-        $data['listviewref'] = route('salesrep.newleads',$pid);
+        $data['listviewref'] = route('salesteam.newleads',$pid);
         $data['zoomLevel'] =10;
         $data['type'] ='leads';
         $leads = $this->templead->whereHas('openleads', function ($q) use($pid){
@@ -238,7 +239,12 @@ class TempleadController extends Controller
 
     public function salesLeadsDetail ($id){
 
-        $lead = $this->templead->with('salesrep','contacts','relatedNotes')->findOrFail($id);
+        $lead = $this->templead
+        ->with('salesteam','contacts','relatedNotes','leadsource')
+        ->with('extraFields')
+
+        ->findOrFail($id);
+        dd($lead);
 
         $leadStatuses = LeadStatus::pluck('status','id')->toArray();
        
@@ -287,12 +293,12 @@ class TempleadController extends Controller
      */
     public function close(Request $request, $id){
     
-      $lead = $this->templead->with('salesrep')->findOrFail($id);
+      $lead = $this->templead->with('salesteam')->findOrFail($id);
     
-      $lead->salesrep()
+      $lead->salesteam()
         ->updateExistingPivot(auth()->user()->person->id,['rating'=>$request->get('ranking'),'status_id'=>3]);
         $this->addClosingNote($request,$id);
-        return redirect()->route('salesrep.newleads',$lead->salesrep->first()->id)->with('message', 'Lead closed');
+        return redirect()->route('salesteam.newleads',$lead->salesteam->first()->id)->with('message', 'Lead closed');
      }
     
 
@@ -311,7 +317,7 @@ class TempleadController extends Controller
 
         Excel::create('Leads for '.$person->postName(),function($excel) use($person){
             $excel->sheet('Leads',function($sheet) use($person) {
-                $leads = $this->templead->whereHas('salesrep', function ($q) use($person){
+                $leads = $this->templead->whereHas('salesteam', function ($q) use($person){
                     $q->where('person_id','=',$person->id);
                     })
                 ->get();

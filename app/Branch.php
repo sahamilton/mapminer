@@ -96,8 +96,8 @@ protected $hidden = ['created_at','updated_at'];
 	{
 		return $this->belongsToMany(Person::class);
 	}
-	public function templeads(){
-		return $this->hasMany(Templead::class, 'Branch');
+	public function leads(){
+		return $this->hasMany(Lead::class);
 	}
 	
 

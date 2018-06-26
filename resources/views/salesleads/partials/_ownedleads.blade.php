@@ -11,7 +11,8 @@
                 <th>State</th>
                 <th>Industry Vertical</th>
                 <th>Rating</th>
-                <th></th>
+                
+                <th>Status</th>
 
             </thead>
             <tbody>
@@ -47,9 +48,12 @@
                     
            </div>
                     </td>
-                    <td>
+                    <td>@if($lead->pivot->status_id !=3)
                     @include ('leads.partials._closeleadform')
                     <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#myModal">Close Lead</button>
+                        @else
+                        Lead Closed
+                        @endif
                     </td>
 
                 </tr>

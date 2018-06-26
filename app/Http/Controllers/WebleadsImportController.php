@@ -1,18 +1,18 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\WebLead;
+use App\Lead;
 use App\MapFields;
-use App\WebLeadImport;
+use App\WebleadImport;
 use Illuminate\Http\Request;
-use App\Http\Requests\WebLeadFormRequest;
+use App\Http\Requests\WebleadFormRequest;
 class WebleadsImportController extends Controller
 {
     protected $lead;
     protected $fields;
     protected $import;
 
-    public function __construct(WebLead $lead, MapFields $fields,WebLeadImport $import){
+    public function __construct(Lead $lead, MapFields $fields,WebleadImport $import){
     	$this->lead = $lead;
     	$this->fields = $fields;
     	$this->import = $import;
@@ -23,7 +23,7 @@ class WebleadsImportController extends Controller
     	return response()->view('webleads.leadform');
     }
 
-    public function getLeadFormData(WebLeadFormRequest $request){
+    public function getLeadFormData(WebleadFormRequest $request){
     	// first get the rows of data
 		
     	
@@ -31,7 +31,7 @@ class WebleadsImportController extends Controller
     	
     	// if all columns are known then we can skip all this
     	if(! $this->validateFields($input)){
-
+            
 		       $data = $input; 
 		       $title="Map the leads import file fields";
 		       $requiredFields = $this->import->requiredFields;
@@ -54,6 +54,8 @@ class WebleadsImportController extends Controller
     	}else{
 
     		$newdata = $this->lead->geoCodeAddress($input);
+            $contactFields = $this->fields->whereType('weblead')->whereDestination('contact')->whereNotNull('fieldname')->pluck('fieldname')->toArray();
+            dd($contactFields);
     		$lead = $this->lead->create($newdata);
     		return redirect()->route('webleads.show',$lead->id);
 
@@ -95,7 +97,8 @@ class WebleadsImportController extends Controller
     }
 
     private function getValidFields(){
-    	$validFields = $this->fields->whereType('weblead')->whereNotNull('fieldname')->get();
+    	
+        $validFields = $this->fields->whereType('weblead')->whereNotNull('fieldname')->get();
     	return $validFields->reduce(function ($validFields,$validField){
     		$validFields[$validField->aliasname] = $validField->fieldname;
     		return $validFields;

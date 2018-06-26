@@ -9,7 +9,14 @@
 @if(! $manager)
 <div id="{{$lead->id}}" data-rating="{{intval(isset($rank) ? $rank : 0)}}" class="starrr" >
            <strong> Your Rating: </strong></div>
- <div class="row"><button type="button" class="btn btn-info " data-toggle="modal" data-target="#myModal">Close Lead</button></div>
+<div class="row">
+ 
+  @if($lead->ownedBy->first()->pivot->status_id == 3)
+    <button type="button" class="btn btn-success " disabled>Closed</button>
+  @else
+  <button type="button" class="btn btn-info " data-toggle="modal" data-target="#myModal">Close Lead</button>
+  @endif
+</div>
  @else
  <p><a href="{{route('salesleads.index')}}">Return to sales team</a></p>
  @endif

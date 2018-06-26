@@ -3,7 +3,7 @@
 	
 <marker
 	locationweb="{{route('webleads.salesshow',$row->id)}}" 
-	name="{{trim($row->company_name)}}"
+	name="{{trim($row->companyname)}}"
 	address="{{ trim($row->address)}} {{trim($row->city)}} {{ trim($row->state)}}"
 	lat="{{ $row->lat}}"
 	lng="{{ $row->lng}}"

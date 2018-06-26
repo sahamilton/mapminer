@@ -3,7 +3,7 @@
     <table id ='sorttable2' class='table table-striped table-bordered table-condensed table-hover'>
         <thead>
          
-        <th>Company</th>
+        <th>Company!!</th>
         <th>Business Name</th>
         <th>City</th>
         <th>State</th>
@@ -12,9 +12,9 @@
         </thead>
         <tbody>
 
-            @foreach($leadsource->leads as $lead )
+            @foreach($leadsource->unassignedLeads as $lead )
 
-                @if( count($lead->salesteam)==0)
+               
                     <tr>  
                         <td><a href="{{route('leads.show',$lead->id)}}">{{$lead->companyname}}</a></td>
                         <td>{{$lead->businessname}}</td>
@@ -22,9 +22,13 @@
                         <td>{{$lead->state}}</td>
                         <td>{{$lead->created_at->format('M j, Y')}}</td>
                     </tr>
-                @endif
+
             @endforeach
         
         </tbody>
     </table>
+    
+    @if(count($leadsource->unassigned)>0)
     <p><a href="{{route('leads.geoassign',$leadsource->id)}}"><button class="btn btn-info"  > Assign Prospects Geographically</button></a></p>
+    @endif
+

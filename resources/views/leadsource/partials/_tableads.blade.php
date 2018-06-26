@@ -18,11 +18,8 @@
        
     </thead>
     <tbody>
-<?php $unassigned= array();?>
- @foreach($leadsource->leads as $lead)
-
-
-   
+ @foreach($leadsource->assignedLeads as $lead)
+ 
     @if(count($lead->salesteam)>0)
     <?php $history = $lead->history();?>
     <tr>  

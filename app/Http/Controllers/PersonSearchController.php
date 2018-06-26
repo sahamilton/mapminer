@@ -37,6 +37,7 @@ class PersonSearchController extends Controller
                 'directReports.userdetails.roles',
                 'directReports.branchesServiced',
                 'reportsTo',
+                'userdetails.serviceline',
                 'managesAccount',
                 'managesAccount.countlocations',
                 'managesAccount.industryVertical',

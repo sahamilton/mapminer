@@ -3,16 +3,16 @@
 
     var customIcons = {
       'Spartan': {
-        icon: 'https://maps.google.com/mapfiles/ms/icons/green-dot.png'
+        icon: '//maps.google.com/mapfiles/ms/icons/green-dot.png'
       },
       'CLP': {
-        icon: 'https://maps.google.com/mapfiles/ms/icons/yellow-dot.png'
+        icon: '//maps.google.com/mapfiles/ms/icons/yellow-dot.png'
       },
-	  'People Ready':{
-		   icon: 'https://maps.gstatic.com/mapfiles/ridefinder-images/mm_20_orange.png'
+	  'PeopleReady':{
+		   icon: '//maps.google.com/mapfiles/ms/icons/blue-dot.png'
 	  },
     'Centerline':{
-       icon: 'https://maps.gstatic.com/mapfiles/ridefinder-images/mm_20_red.png'
+       icon: '//maps.google.com/mapfiles/ms/icons/red-dot.png'
     }
     };
 

@@ -33,7 +33,7 @@ class RouteServiceProvider extends ServiceProvider
         Route::model('person', \App\Person::class);
         Route::model('role', \App\Role::class);
         Route::model('user', \App\User::class);
-        Route::model('weblead', \App\Weblead::class);
+        Route::model('lead', \App\lead::class);
         
         
     }

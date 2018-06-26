@@ -17,19 +17,24 @@ class Templead extends Model
         5=>'Lead data is accurate and there is a definite opportunity for sales / service'
       ];
 
-    public function salesrep(){
+    /*public function salesrep(){
 
-    	return $this->belongsToMany(Person::class, 'templead_person_status','related_id','person_id')
+    	return $this->belongsToMany(Person::class, 'lead_person_status','related_id','person_id')
     
       ->withPivot('created_at','updated_at','status_id','rating');
 
     }
+
+    public function leadsource(){
+      return $this->belongsTo(LeadSource::class, 'lead_source_id');
+
+    }
     public function openleads(){
-    	return $this->belongsToMany(Person::class, 'templead_person_status','related_id','person_id')
+    	return $this->belongsToMany(Person::class, 'lead_person_status','related_id','person_id')
       ->wherePivot('status_id',2);
     }
     public function closedleads(){
-    	return $this->belongsToMany(Person::class, 'templead_person_status','related_id','person_id')
+    	return $this->belongsToMany(Person::class, 'lead_person_status','related_id','person_id')
         ->withPivot('created_at','updated_at','status_id','rating')
         ->wherePivot('status_id',3);
     }
@@ -42,10 +47,10 @@ class Templead extends Model
     }
 
     public function summaryLeads(){
-    	return $this->belongsToMany(Person::class, 'templead_person_status','related_id','person_id')
-      	->selectRaw('templeads.*, sum(templead_person_status.id) as pivot_count')
-		->groupBy('templead_person_status.status_id')
-        ->groupBy('templead_person_status.person_id');
+    	return $this->belongsToMany(Person::class, 'lead_person_status','related_id','person_id')
+      	->selectRaw('templeads.*, sum(lead_person_status.id) as pivot_count')
+		    ->groupBy('lead_person_status.status_id')
+        ->groupBy('lead_person_status.person_id');
 
     }
     public function branches(){
@@ -69,5 +74,5 @@ class Templead extends Model
         }
     }
         return $ranking;
-    }
+    }*/
 }

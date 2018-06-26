@@ -94,7 +94,12 @@ class SalesLeadsController extends Controller
 
         
         // refactor ... clumsy way to get owned
-        $lead = $this->salesleads->with('leadsource','vertical','relatedNotes','salesteam')->findOrFail($id);
+        $lead = $this->salesleads->with('leadsource','vertical','relatedNotes')
+        ->whereHas('ownedBy',function ($q){
+                $q->where('persons.id','=',auth()->user()->person->id);
+        })
+        ->findOrFail($id);
+     
         $rankingstatus = $this->salesleads->getStatusOptions;
         $statuses = $this->salesleads->getStatusOptions;
         $rank = $this->salesleads->rankMyLead($lead->salesteam); 

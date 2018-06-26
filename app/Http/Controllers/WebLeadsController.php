@@ -3,24 +3,24 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Mail;
-use App\WebLead;
+use App\Lead;
 
 use App\LeadSource;
 use App\Note;
 use App\Branch;
 use App\Person;
-use App\Mail\NotifyWebLeadsAssignment;
-use App\Mail\NotifyWebLeadsBranchAssignment;
-use App\Http\Requests\WebLeadFormRequest;
+use App\Mail\NotifyWebleadsAssignment;
+use App\Mail\NotifyWebleadsBranchAssignment;
+use App\Http\Requests\WebleadFormRequest;
 
 
-class WebLeadsController  extends ImportController
+class WebleadsController  extends ImportController
 {
     public $salesroles = [5,6,7,8];
     protected $person;
     protected $branch;
     protected $lead;
-    public function __construct(WebLead $lead, LeadSource $leadsource, Person $person, Branch $branch){
+    public function __construct(Lead $lead, LeadSource $leadsource, Person $person, Branch $branch){
         $this->lead = $lead;
         $this->leadsources = $leadsource;
         $this->person = $person;
@@ -29,8 +29,9 @@ class WebLeadsController  extends ImportController
         
     }
     public function index(){
-       
+           
             $webleads = $this->lead->all();
+        
             return response()->view('webleads.index',compact('webleads'));
        
         
@@ -52,16 +53,17 @@ class WebLeadsController  extends ImportController
 
     public function saleslist(){
 
-            $webleads = $this->lead->whereHas('salesteam',function ($q){
+            $leads = $this->lead->whereHas('salesteam',function ($q){
                 $q->where('persons.id','=',auth()->user()->person->id);
             })->get();
+
             $leadstatuses = \App\LeadStatus::pluck('status','id')->toArray();          
             $person = $this->person->findOrFail(auth()->user()->person->id);
-            return response()->view('webleads.salesrep',compact('webleads','person','leadstatuses'));
+            return response()->view('webleads.salesrep',compact('leads','person','leadstatuses'));
      
     }
     public function salesshow($lead){
-        $lead = $lead->with('relatedNotes')->firstOrFail();
+    
         $person = $this->person->findOrFail(auth()->user()->person->id);
         $rankingstatuses = $lead->getStatusOptions;
         $leadstatuses = \App\LeadStatus::pluck('status','id')->toArray(); 
@@ -99,7 +101,7 @@ class WebLeadsController  extends ImportController
         if($request->get('salesrep')!=''){
             $rep = $this->person->findOrFail($request->get('salesrep'));
             $lead->salesteam()->attach($request->get('salesrep'), ['status_id' => 2,'type'=>'web']);
-            Mail::queue(new NotifyWebLeadsAssignment($lead,$branch,$rep));
+            Mail::queue(new NotifyWebleadsAssignment($lead,$branch,$rep));
         }else{
             
             foreach($branch->manager as $manager){
@@ -115,7 +117,7 @@ class WebLeadsController  extends ImportController
             
             foreach ($branchemails as $email){
                 
-                Mail::queue(new NotifyWebLeadsBranchAssignment($lead,$branch,$email));
+                Mail::queue(new NotifyWebleadsBranchAssignment($lead,$branch,$email));
             }
        
         }  

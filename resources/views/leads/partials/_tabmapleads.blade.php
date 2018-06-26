@@ -1,4 +1,5 @@
 <div id="map" style="border:solid 1px red"></div>
+
 <script src="https://maps.google.com/maps/api/js?key={{config('maps.api_key')}}"></script>
     <script>
      
@@ -8,9 +9,10 @@
       foreach($leads as $lead){
       		 $status = null;
              if(count($lead->salesteam)>0){
-             	
+             
              	foreach ($lead->salesteam as $team){
-             		if($team->pivot->status_id > $status && in_array($team->pivot->status_id,[1,2,5,6])){
+                
+             		if($team->pivot->status_id > $status && in_array($team->pivot->status_id,[1,2,3])){
              			$status = $team->pivot->status_id;
              		}
              	}
@@ -20,7 +22,7 @@
               echo "center: {lat: ". $lead->lat .", lng:". $lead->lng."},";
               echo "name : '" . $lead->businessname."',";
               echo "contentString: '<a href=\"".route('leads.show',$lead->id)."\">". $lead->businessname ." </a> ',"; 
-              if(isset($status) && in_array($status,[1,2,5,6])){
+              if(isset($status) && in_array($status,[1,2,3])){
               	
               	echo "type:  '".$statuses[$status]."'},";
               }else{
@@ -42,23 +44,20 @@
 
       var iconBase = '{{asset("assets/icons/")}}';
       var icons = {
-        'Closed - Cold':{
- 			icon: iconBase + '/closed.png'
-        },
-        'Converted' :{
-        	 icon: iconBase + '/converted.png'
+        'Closed':{
+ 			    icon: 'https://maps.google.com/mapfiles/ms/icons/green-dot.png'
         },
 
         'Owned': {
-          icon: iconBase + '/greenflagsm.png'
+          icon: 'https://maps.google.com/mapfiles/ms/icons/yellow-dot.png'
         },
         'Offered': {
           
-          icon: iconBase + '/orangeflagsm.png'
+          icon: 'https://maps.google.com/mapfiles/ms/icons/red-dot.png'
         },
 
         'Default': {
-        	icon: iconBase + '/default.png'
+        	icon: 'https://maps.google.com/mapfiles/ms/icons/red-dot.png'
         },
       };
 
