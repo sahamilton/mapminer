@@ -43,7 +43,7 @@ class LeadSourceController extends Controller
      */
     public function index()
     {   
-     
+   
         $leadsources = $this->leadsource->assigned()->withCount('leads')->get();
 
         return response()->view('leadsource.index', compact('leadsources'));

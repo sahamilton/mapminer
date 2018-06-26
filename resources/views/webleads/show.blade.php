@@ -1,11 +1,11 @@
 @extends ('admin.layouts.default')
 @section('content')
-<p><a href="{{route('webleads.index')}}">Show All WebLeads</a></p>
+<p><a href="{{route('leadsource.show',$lead->lead_source_id)}}">Show All WebLeads</a></p>
 <div class="col-sm-5">
 	<div class="panel panel-default">
 		<div class="panel-heading clearfix">
 			<h2 class="panel-title pull-left">{{$lead->company_name}} - {{$lead->rating}}</h2>
-			<a class="btn btn-primary pull-right" href="{{route('webleads.edit',$lead->id)}}">
+			<a class="btn btn-primary pull-right" href="">
 				<i class="fa fa-pencil"></i>
 				Edit
 			</a>

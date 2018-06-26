@@ -40,7 +40,7 @@ class WebleadsController  extends ImportController
     
 
     public function show($lead){
-       
+        
         $branches = $this->findNearByBranches($lead);
         $people = $this->findNearbySales($branches,$lead); 
         $salesrepmarkers = $this->jsonify($people);
@@ -121,7 +121,7 @@ class WebleadsController  extends ImportController
             }
        
         }  
-        return redirect()->route('webleads.index');
+        return redirect()->route('leadsource.show',$lead->lead_source_id);
     }
     private function getBranchEmails($branch){
         $emails = array();

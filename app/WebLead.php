@@ -24,4 +24,10 @@ class Weblead extends Model implements HasPresenter {
    public function relatedLead(){
     return $belongsTo(Lead::class);
    }
+
+   public function getPresenterClass()
+    {
+        return LocationPresenter::class;
+    }
+
 }

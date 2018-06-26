@@ -75,7 +75,7 @@ class Lead extends Model implements HasPresenter {
     }
 
     public function contacts(){
-      return $this->belongsTo(LeadContact::class,'id','lead_id');
+      return $this->hasOne(LeadContact::class);
     }
 
     public function setDatefromAttribute($value)
@@ -158,6 +158,13 @@ public function rankLead($salesteam){
             }
           }
     
+    public function webLead(){
+      return $this->hasOne(Weblead::class);
+    }
+
+    public function tempLead(){
+      return $this->hasOne(Templead::class);
+    }
 
     public function scopeExtraFields($query,$table){
      

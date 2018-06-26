@@ -53,15 +53,55 @@ class WebleadsImportController extends Controller
         return response()->view('imports.mapfields',compact('columns','fields','data','company_id','skip','title','requiredFields'));
     	}else{
 
-    		$newdata = $this->lead->geoCodeAddress($input);
-            $contactFields = $this->fields->whereType('weblead')->whereDestination('contact')->whereNotNull('fieldname')->pluck('fieldname')->toArray();
-            dd($contactFields);
+    		$input = $this->geoCodeAddress($input);
+            $input = $this->renameFields($input);
+            foreach ($input[0] as $key=>$value){
+                $newdata[$value]=$input[1][$key];
+            }
+           
+            $contact = $this->getContactDetails($newdata);
+            $extra = $this->getExtraFieldData($newdata);
+            $newdata['lead_source_id']=2;
     		$lead = $this->lead->create($newdata);
-    		return redirect()->route('webleads.show',$lead->id);
+            $lead->contacts()->create($contact);
+            $lead->webLead()->create($extra);
+
+    		return redirect()->route('salesrep.newleads.show',$lead->id);
 
     	}
     }
-
+    private function getExtraFieldData($newdata){
+        $extraFields = $this->fields->whereType('weblead')->whereDestination('extra')->whereNotNull('fieldname')->pluck('fieldname')->toArray();
+            foreach ($extraFields as $key=>$value){
+                $extra[$value] = $newdata[$value];
+            }
+        return $extra;
+    }
+    private function getContactDetails($newdata){
+        $contactFields = $this->fields->whereType('weblead')->whereDestination('contact')->whereNotNull('fieldname')->pluck('fieldname')->toArray();
+        $contact['contact'] = null;
+            foreach ($contactFields as $key=>$value){
+                if(in_array($value,['first_name','last_name'])){
+                    $contact['contact'] = $contact['contact'] . $newdata[$value]."";
+                }else{
+                    $contact[$value] = $newdata[$value];
+                }
+            }
+            $contact['contact'] = trim($contact['contact']);
+        return $contact;
+    }
+    private function geoCodeAddress($input){
+        $address = null;
+        if(isset($input['address'])){
+            $address = $input['address'];
+        }
+        $address = $address .' ' . $input['city'] . ' ' . $input['state'];
+        $geoCode = app('geocoder')->geocode($address)->get();
+        $location =$this->lead->getGeoCode($geoCode);
+        $input['lat']= $location['lat'];
+        $input['lng']= $location['lng'];
+        return $input;
+    }
     private function renameFields($input){
     			 
 		        
@@ -87,6 +127,7 @@ class WebleadsImportController extends Controller
     		}
     	}
     	$requiredFields = $this->import->requiredFields;
+
     	if($diff = array_diff($requiredFields,array_keys($data))){
     		return false;
     	}
@@ -99,6 +140,7 @@ class WebleadsImportController extends Controller
     private function getValidFields(){
     	
         $validFields = $this->fields->whereType('weblead')->whereNotNull('fieldname')->get();
+      
     	return $validFields->reduce(function ($validFields,$validField){
     		$validFields[$validField->aliasname] = $validField->fieldname;
     		return $validFields;
