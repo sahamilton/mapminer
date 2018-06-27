@@ -334,8 +334,8 @@ class PersonsController extends BaseController {
 	public function export()
 	{
 
-		$data = $this->persons->with('userdetails','userdetails.roles','userdetails.serviceline','reportsTo','reportsTo.userdetails')->get();
-
+		$data = $this->persons->with('userdetails','userdetails.roles','userdetails.serviceline','reportsTo','reportsTo.userdetails','industryfocus')->get();
+	
 		Excel::create('All People',function($excel) use ($data){
 			$excel->sheet('All People',function($sheet) use ($data) {
 

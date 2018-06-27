@@ -14,6 +14,7 @@
 			<td>Created</td>
 			<td>Serviceline</td>
 			<td>Roles</td>
+			<td>Industry Focus</td>
 		</tr>
 		@foreach($data as $person)
 		<tr>  
@@ -48,6 +49,14 @@
 			<td>
 			@foreach ($person->userdetails->roles as $role)
 				{{$role->name}}
+				@if(! $loop->last)
+				|
+				@endif
+			@endforeach
+			</td>
+			<td>
+			@foreach ($person->industryFocus as $industry)
+				{{$industry->filter}}
 				@if(! $loop->last)
 				|
 				@endif
