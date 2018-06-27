@@ -24,6 +24,7 @@
                     </td>
                     <td>
                        {{$lead->closedleads->first()->pivot->rating}}
+                       <span data-rating="{{$lead->salesteam->first()->pivot->rating}}" class="starrr" style="color:#E77C22"></span>
                     </td>
                 </tr>  
 
