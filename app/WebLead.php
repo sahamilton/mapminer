@@ -15,7 +15,6 @@ class Weblead extends Model implements HasPresenter {
   public $table= 'webleads';
               
 	public $fillable = [
-    
             'rating',
             'jobs',
             'time_frame',

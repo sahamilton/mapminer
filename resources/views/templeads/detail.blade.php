@@ -1,7 +1,7 @@
 @extends('site.layouts.default')
 @section('content')
 <div class="container">
-  <h2>{{$lead->businessname}}</h2>
+  <h2>{{$lead->businessname ? $lead->businessname : $lead->companyname}}</h2>
   @if(count($lead->salesteam))
     <h4>Lead assigned to <a href="{{route('salesrep.newleads',$lead->salesteam->first()->id)}}">{{$lead->salesteam->first()->postName()}}</a></h4>
     <div class="row">

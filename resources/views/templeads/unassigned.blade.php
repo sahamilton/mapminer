@@ -20,7 +20,7 @@
                    @foreach ($leads as $lead)
                 <tr> 
 
-                     <td><a href="{{route('salesrep.newleads.show',$lead->id)}}">{{$lead->businessname}}</a></td>
+                     <td><a href="{{route('salesrep.newleads.show',$lead->id)}}">{{isset($lead->companyname) ? $lead->companyname : $lead->businessname}}</a></td>
                     <td>{{$lead->address}}</td>
                     <td>{{$lead->city}}</td>
                     <td>{{$lead->state}}</td>

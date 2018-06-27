@@ -167,7 +167,7 @@ public function rankLead($salesteam){
     }
 
     public function scopeExtraFields($query,$table){
-     
+            
 
              return $query->join($table .' as ExtraFields','leads.id','=','ExtraFields.lead_id');
       }

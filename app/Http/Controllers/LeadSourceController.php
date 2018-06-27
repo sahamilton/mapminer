@@ -105,20 +105,6 @@ class LeadSourceController extends Controller
                 }
          }
 
-        /*dd($leadsource);
-        $ids = $leadsource->leads->pluck('id')->toArray();
-     dd($ids);
-        $reps = $this->person->whereHas('leads',function ($q) use($ids){
-                    $q->whereIn('id','=',$ids);
-
-                })
-                ->withCount('leads')
-       
-                ->with('reportsTo','reportsTo.userdetails.roles')
-                ->get();
-                dd($reps);
-        $rankings = $this->lead->rankLead($reps);
-        dd($reps[1]->openleads->first());*/
         return response()->view('templeads.index',compact('data','leadsource'));
     }
     public function branches($id){
