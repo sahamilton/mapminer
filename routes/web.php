@@ -325,9 +325,9 @@ Route::get('/',['as'=>'ops','uses'=>'Admin\AdminDashboardController@dashboard'])
 		Route::resource('projectsource','ProjectSourceController');
 
 	#Prospects / Leads
-		Route::get('leads/address',['as'=>'lead.address','uses'=>'LeadsController@address']);
+	/*	Route::get('leads/address',['as'=>'lead.address','uses'=>'LeadsController@address']);
 		Route::get('leads/{vertical}/vertical',['as'=>'lead.vertical','uses'=>'LeadsController@index']);
-		Route::get('leadsource/{id}/addleads',['as'=>'leadsource.addleads','uses'=>'LeadImportController@getFile']);
+		
 		Route::get('leads/import/{id?}',['as'=>'prospects.importfile','uses'=>'LeadImportController@getFile']);
 		Route::get('leads/import/assigned/{id?}',['as'=>'assigned_prospects.importfile','uses'=>'LeadAssignedImportController@getFile']);
 		Route::post('leads/import',['as'=>'leads.import','uses'=>'LeadImportController@import']);
@@ -335,7 +335,7 @@ Route::get('/',['as'=>'ops','uses'=>'Admin\AdminDashboardController@dashboard'])
 		Route::get('leads/{id}/assign',['as'=>'leads.leadassign','uses'=>'LeadsController@assignLeads']);
 		Route::post('leads/batchassign',['as'=>'leads.assignbatch','uses'=>'LeadsAssignController@assignLead']);
 		Route::post('leads/assign',['as'=>'leads.assign','uses'=>'LeadsController@postAssignLeads']);
-		
+		*/
 
 		## Web leads
 		
@@ -360,7 +360,7 @@ Route::get('/',['as'=>'ops','uses'=>'Admin\AdminDashboardController@dashboard'])
 		Route::get('leadsource/{id}/assign',['as'=>'leadsource.assign','uses'=>'LeadSourceController@assignLeads']);
 		Route::get('leadsource/{id}/branch',['as'=>'leadsource.branches','uses'=>'LeadSourceController@branches']);
 		Route::get('leadsource/{id}/unassigned',['as'=>'leadsource.unassigned','uses'=>'LeadSourceController@unassigned']);
-
+		Route::get('leadsource/{id}/addleads',['as'=>'leadsource.addleads','uses'=>'LeadImportController@getFile']);
 
 
 		Route::get('leadsource/{id}/flush',['as'=>'leadsource.flushleads','uses'=>'LeadSourceController@flushLeads']);

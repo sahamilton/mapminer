@@ -24,7 +24,8 @@ class WebLeadFormRequest extends FormRequest
     public function rules()
     {
       return [
-         'weblead' => 'required', 
+         'weblead' => 'required',
+         'lead_source_id'=>'required', 
 
       ];
     }

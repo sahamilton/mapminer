@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Lead;
+use App\LeadSource;
 use App\MapFields;
 use App\WebleadImport;
 use Illuminate\Http\Request;
@@ -19,8 +20,9 @@ class WebleadsImportController extends Controller
     }
     //
     public function create(){
-
-    	return response()->view('webleads.leadform');
+        $leadsources = LeadSource::pluck('source','id')->toArray();
+        
+    	return response()->view('webleads.leadform',compact('leadsources'));
     }
 
     public function getLeadFormData(WebleadFormRequest $request){
@@ -58,14 +60,11 @@ class WebleadsImportController extends Controller
             foreach ($input[0] as $key=>$value){
                 $newdata[$value]=$input[1][$key];
             }
-           
             $contact = $this->getContactDetails($newdata);
             $extra = $this->getExtraFieldData($newdata);
-            $newdata['lead_source_id']=2;
     		$lead = $this->lead->create($newdata);
             $lead->contacts()->create($contact);
             $lead->webLead()->create($extra);
-
     		return redirect()->route('salesrep.newleads.show',$lead->id);
 
     	}

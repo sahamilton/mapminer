@@ -29,9 +29,10 @@ class UpdateLastLoggedInAt
      */
     public function handle(Login $event)
     {
-       
-       $this->updateTrackTable($event);
-       $this->updateUserTable();
+       if(\App::environment() != 'local'){
+              $this->updateTrackTable($event);
+              $this->updateUserTable();
+          }
         
     }
 

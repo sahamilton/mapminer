@@ -5,18 +5,22 @@
   @if(count($lead->salesteam))
     <h4>Lead assigned to <a href="{{route('salesrep.newleads',$lead->salesteam->first()->id)}}">{{$lead->salesteam->first()->postName()}}</a></h4>
     <div class="row">
-      <p><strong>Status:</strong>{{$leadStatuses[$lead->salesteam->first()->pivot->status_id]}}
+      <p><strong>Status:</strong>{{$leadStatuses[$lead->salesteam->first()->pivot->status_id]}}</p>
+      
     @if((auth()->user()->person->id == $lead->salesteam->first()->id or auth()->user()->hasRole('Admin')) && $lead->salesteam->first()->pivot->status_id != 3)
 
       <button type="button" class="btn btn-info " data-toggle="modal" data-target="#closelead">
       Close Lead</button>
+    </div>
+    @else
+    <div data-rating="{{$lead->salesteam->first()->pivot->rating}}" class="starrr" style="color:#E77C22"><strong style="color:black">Rating:</strong>
     </div>
     @endif
     @include('templeads.partials._closeleadform')
   @else
   <h4>Unassigned</h4>
   @endif
-</p>
+
 
   <ul class="nav nav-tabs">
       <li class="active">
@@ -78,7 +82,7 @@
    </div>
 
 </div>
-
+</div>
 
 @include('templeads.partials.map')
 

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Lead;
 use App\Person;
 use App\Branch;
+use App\Note;
 use Excel;
 use Carbon\Carbon;
 use App\LeadSource;
@@ -259,10 +260,10 @@ class LeadsController extends BaseController
         return $address = $request->get('address') . " " . $request->get('city') . " " . $request->get('state') . " " . $request->get('zip');
     }
 
-    /*public function address(){
+    public function address(){
     	$people=array();
     	return response()->view('leads.address',compact('people'));
-    }*/
+    }
 
     /**
      * Display people near to address.
@@ -406,7 +407,7 @@ class LeadsController extends BaseController
  public function salesLeads($pid){
 
         $person = $this->getSalesRep($pid);
-       
+      
         
        
        // dd($person->findPersonsRole($person));
@@ -436,7 +437,7 @@ class LeadsController extends BaseController
         $closedleads = $closedleads->with('relatedNotes','leadsource')
                     ->limit('200')
                     ->get();
-      
+        
         return response()->view('templeads.show',compact('openleads','closedleads','person'));
     }
 
@@ -542,10 +543,33 @@ class LeadsController extends BaseController
 
     }
      private function getLeadsByType($type,$person){
+
         return $this->lead->whereHas($type, function ($q) use($person){
             $q->where('person_id','=',$person->id);
-        });
+        })->with($type);
 
     }
-
+ /**
+     * Close prospect
+     * @param  Request $request post contents
+     * @param  int  $id      prospect (lead) id
+     * @return [type]           [description]
+     */
+    public function close(Request $request, $id){
+    
+      $lead = $this->lead->with('salesteam')->findOrFail($id);
+    
+      $lead->salesteam()
+        ->updateExistingPivot(auth()->user()->person->id,['rating'=>$request->get('ranking'),'status_id'=>3]);
+        $this->addClosingNote($request,$id);
+        return redirect()->route('salesteam.newleads',$lead->salesteam->first()->id)->with('message', 'Lead closed');
+     }
+     private function addClosingNote($request,$id){
+        $note = new Note;
+        $note->note = "Lead Closed:" .$request->get('comments');
+        $note->type = 'newlead';
+        $note->related_id = $id;
+        $note->user_id = auth()->user()->id;
+        $note->save();
+    }
 }
