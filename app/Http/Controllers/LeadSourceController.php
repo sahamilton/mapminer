@@ -87,8 +87,25 @@ class LeadSourceController extends Controller
      */
     public function show($id)
     {
-        $leadsource = $this->leadsource->with('leads.ownedBy')->findOrFail($id);
+        $leadsource = $this->leadsource->findOrFail($id);
+        $reps = $this->leadsource->leadStatusSummary($id);
+   
+        foreach ($reps as $rep){
+            if($rep->id){
+                    if($rep->status ==''){
+                        $status = 'Total';
+                    }else{
+                        $status = $rep->status;
+                    }
+                    $data[$rep->id][$status]= $rep->leadcount;
+                    $data[$rep->id]['Name']= $rep->fullName;
+                    $data[$rep->id]['Ranking']= $rep->ranking;
+                    $data[$rep->id]['id']= $rep->id;
 
+                }
+         }
+
+        /*dd($leadsource);
         $ids = $leadsource->leads->pluck('id')->toArray();
      dd($ids);
         $reps = $this->person->whereHas('leads',function ($q) use($ids){
@@ -101,8 +118,8 @@ class LeadSourceController extends Controller
                 ->get();
                 dd($reps);
         $rankings = $this->lead->rankLead($reps);
-        dd($reps[1]->openleads->first());
-        return response()->view('templeads.index',compact('reps','rankings','leadsource'));
+        dd($reps[1]->openleads->first());*/
+        return response()->view('templeads.index',compact('data','leadsource'));
     }
     public function branches($id){
             $leadsource = $this->leadsource->findOrFail($id);

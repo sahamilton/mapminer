@@ -20,23 +20,20 @@
 
             </thead>
             <tbody>
-                @foreach ($reps as $rep)
+                @foreach ($data as $rep)
 
                 <tr> 
-                    <td><a href="{{route('salesrep.newleads',$rep->id)}}">{{$rep->postName()}}</a></td>
-                    @if($rep->reportsTo)
-                        <td><a href="{{route('salesrep.newleads',$rep->reportsTo->id)}}">{{$rep->reportsTo->postName()}}</a></td>
-                        <td>{{$rep->reportsTo->userdetails->roles->first()->name}}</td>
-                        @else
+                    <td><a href="{{route('salesrep.newleads', $rep['id'])}}">{{$rep['Name']}}</a></td>
+                   
                         <td></td><td></td>
-                    @endif
-                     <td>{{$rep->templeads_count}}</td>
-                     <td>{{$rep->openleads_count}}</td>
-                     <td>{{$rep->closedleads_count}}</td>
+                  
+                     <td>{{$rep['Total']}}</td>
+                     <td>{{isset($rep['Owned']) ? $rep['Owned'] :''}}</td>
+                     <td>{{isset($rep['Closed']) ? $rep['Closed'] : ''}}</td>
                      <td>
-                        @if(isset($rankings[$rep->id]))
-                            {{$rankings[$rep->id]}}
-                        @endif
+                        
+                            {{$rep['Ranking']}}
+               
                     </td>
                 </tr>  
 

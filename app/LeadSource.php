@@ -64,5 +64,13 @@ class LeadSource extends Model
 
      }
 
+     public function leadStatusSummary($id){
+      
+
+         $query = "select count(leads.id) as leadcount, avg(lead_person_status.rating) as ranking, lead_status.status,persons.id,concat_ws(' ',persons.firstname,persons.lastname) as fullName from leads, lead_person_status, lead_status, persons where leads.lead_source_id = ". $id ." and leads.id = lead_person_status.related_id and lead_person_status.status_id = lead_status.id and lead_person_status.person_id = persons.id group by persons.id,lead_status.status with rollup ";
+
+      return \DB::select($query);
+    }
+
      
 }
