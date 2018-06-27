@@ -1,17 +1,14 @@
 <table class="table" id = "sorttable">
     <thead>
-
         <th>Company</th>
         <th>Address</th>
         <th>City</th>
         <th>State</th>
         <th>Notes</th>
         <th>Ranking</th>
-
     </thead>
     <tbody>
         @foreach ($closedleads as $lead)
-          
         <tr> 
             <td><a href="{{route('salesrep.newleads.show',$lead->id)}}">{{$lead->companyname}}</a></td>
             <td>{{$lead->address}}</td>

@@ -192,14 +192,14 @@ class NotesController extends BaseController {
 	public function mynotes()
 	{
 		$user = auth()->user();
-		$types=['location','prospect','project'];
+		$types=['location','lead','project'];
 		foreach ($types as $type){ 
 			$notes[$type] = $this->notes
 				->where('user_id','=',$user->id)
 				->where('type','=',$type)
 				->with('relatesTo'.(ucwords($type)))->get();
 		}
-
+		
 		return response()->view('notes.show', compact('notes','types'));
 		
 	}

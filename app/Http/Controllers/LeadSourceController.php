@@ -108,14 +108,15 @@ class LeadSourceController extends Controller
         return response()->view('templeads.index',compact('data','leadsource'));
     }
     public function branches($id){
-            $leadsource = $this->leadsource->findOrFail($id);
-
-            $branches = $this->lead->where('lead_source_id','=',$id)
-            ->whereHas('branches')
-                ->with('leadsource','branches','branches.manager')
-                ->orderBy('branch_id')
+           $leadsource = $this->leadsource->findOrFail($id);
+           $branches = Branch::whereHas('leads',function ($q) use($id){
+                $q->where('lead_source_id','=',$id);
+            })
+           ->withCount('leads')
+                ->with('manager')
+                ->orderBy('id')
                 ->get();
-         
+           
             return response()->view('templeads.branchsummary',compact('branches','leadsource'));
 
         

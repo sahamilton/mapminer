@@ -13,8 +13,7 @@
       Close Lead</button>
     </div>
     @else
-    <div data-rating="{{$lead->salesteam->first()->pivot->rating}}" class="starrr" style="color:#E77C22"><strong style="color:black">Rating:</strong>
-    </div>
+    <div data-rating="{{$lead->salesteam->first()->pivot->rating}}" class="starrr" style="color:#E77C22"><strong style="color:black">Rating:</strong></div>
     @endif
     @include('templeads.partials._closeleadform')
   @else
