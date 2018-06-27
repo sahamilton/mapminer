@@ -77,6 +77,14 @@ class Person extends NodeModel implements HasPresenter {
 				});
 
 	}
+
+	public function scopeLeadsByType($query,$id,$status){
+     
+		return $this->belongsToMany(Lead::class, 'lead_person_status','person_id','related_id')
+				->where('lead_source_id','=',$id)
+				->withPivot('created_at','updated_at','status_id','rating')
+				->wherePivot('status_id',2);
+	}
 	public function fullName()
 	{
 		return $this->attributes['lastname'] . ',' . $this->attributes['firstname'];
@@ -90,15 +98,14 @@ class Person extends NodeModel implements HasPresenter {
 
 	public function leads(){
 		return $this->belongsToMany(Lead::class, 'lead_person_status','person_id','related_id')
-    
-      ->withPivot('created_at','updated_at','status_id','rating');
+		->withPivot('created_at','updated_at','status_id','rating');
 	}
 	public function openleads(){
-    	return $this->belongsToMany(Templead::class, 'lead_person_status','person_id','related_id')
+    	return $this->belongsToMany(Lead::class, 'lead_person_status','person_id','related_id')
     	->wherePivot('status_id',2);
     }
     public function closedleads(){
-    	return $this->belongsToMany(Templead::class, 'lead_person_status','person_id','related_id')
+    	return $this->belongsToMany(Lead::class, 'lead_person_status','person_id','related_id')
     	->wherePivot('status_id',3)->withPivot('created_at','updated_at','status_id','rating');
     }
 

@@ -117,7 +117,7 @@ public function rankLead($salesteam){
     public function ownedBy(){
       return $this->belongsToMany(Person::class,'lead_person_status','related_id','person_id')
             ->withPivot('status_id','rating','type')
-            ->wherePivot('status_id','=',3);
+            ->wherePivotIn('status_id',[2,3]);
             
     }
 
