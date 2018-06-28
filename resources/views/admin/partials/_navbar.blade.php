@@ -87,6 +87,12 @@
                                     <i class="fa fa-wrench" aria-hidden="true"></i>  Manage Branches
                                     </a>
                                  </li>
+                                 <li{{ (Request::is('branches*') ? ' class="active"' : '') }}>
+                                    <a href="{{ route('branch.check') }}">
+                                    <i class="fa fa-stethoscope"></i>  Check Assignments
+                                    </a>
+                                 </li>
+                                 
 
 <!--
                                 <li{{ (Request::is('admin/branch*') ? ' class="active"' : '') }}>

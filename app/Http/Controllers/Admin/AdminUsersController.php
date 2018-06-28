@@ -11,6 +11,7 @@ use App\Branch;
 use App\Track;
 use Carbon\Carbon;
 use App\Serviceline;
+
 use App\SearchFilter;
 use App\Http\Controllers\BaseController;
 
@@ -223,6 +224,7 @@ class AdminUsersController extends BaseController {
     public function edit($userid)
     {
 
+
         $user = $this->user
           ->with('serviceline','person','person.branchesServiced','person.industryfocus','roles')
           ->find($userid->id);
@@ -268,7 +270,7 @@ class AdminUsersController extends BaseController {
      */
     public function update(UserFormRequest $request,$user)
     {
-     
+      
         $user = $this->user->with('person')->find($user->id);
         $oldUser = clone($user);
         if($request->filled('password')){
@@ -316,9 +318,11 @@ class AdminUsersController extends BaseController {
         $syncData=array();
         if(isset($data['branchstring'])){
             $data['branches'] = $this->branch->getBranchIdFromid($data['branchstring']);
+
         }
 
         if(isset($data['branches']) && count($data['branches'])>0 && $data['branches'][0]!=0){
+
             foreach ($data['branches'] as $branch){
                 if($data['roles']){
                     foreach ($data['roles'] as $role){
@@ -328,7 +332,7 @@ class AdminUsersController extends BaseController {
             }
 
         }
-
+        
         $person->branchesServiced()->sync($syncData);
 
         return $person;
@@ -626,4 +630,28 @@ class AdminUsersController extends BaseController {
            return $data;
 
 	}
+
+    public function checkBranchAssignments(){
+        $branchpeople  = $this->person->where('lat','!=','')->has('branchesServiced')->with('branchesServiced')->get();
+        $data = array();
+            foreach ($branchpeople as $person){
+                  $data[$person->id]['id']= $person->id;
+                  $data[$person->id]['name']= $person->postName();
+                  $data[$person->id]['address']= $person->address;
+
+                foreach($person->branchesServiced as $branch){
+                    $distance = $this->person->distanceBetween($person->lat,$person->lng,$branch->lat,$branch->lng);
+                    if($distance >100){
+                        
+                        $data[$person->id]['branches'][$branch->id]['id']= $branch->id;
+                        $data[$person->id]['branches'][$branch->id]['branchname']= $branch->branchname;
+                        $data[$person->id]['branches'][$branch->id]['distance']= $distance;
+                        $data[$person->id]['branches'][$branch->id]['address'] = $branch->fulladdress();
+                    }
+                }
+            }
+    
+        return response()->view('admin.branches.checkbranches',compact('data'));
+
+    }
 }

@@ -239,7 +239,7 @@ class Person extends NodeModel implements HasPresenter {
         
        
     }
-
+    
     public function campaigns(){
     	return $this->belongsToMany(Salesactivity::class);
     }

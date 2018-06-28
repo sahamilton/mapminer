@@ -415,7 +415,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 {
 	# Branch managemnet
 		Route::get('branch/manage',['as'=>'branch.management','uses'=>'Admin\BranchManagementController@index']);
-
+		Route::get('branch/check',['as'=>'branch.check','uses'=>'Admin\AdminUsersController@checkBranchAssignments']);
     # User Management
 
 		Route::get('cleanse',['as'=>'users.cleanse','uses'=>'Admin\AdminUsersController@cleanse']);
