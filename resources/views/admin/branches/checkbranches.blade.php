@@ -7,7 +7,7 @@
             <th>Person</th>
             <th>Address</th>
             <th>Branch</th>
-            <th>Branch Distance</th>
+            <th>Branch Distance (miles)</th>
         </thead>
         <tbody>
             @foreach($data as $person)
@@ -20,7 +20,7 @@
                         <td>{{$person['address']}}</td>
                         
                         <td>{{$branch['branchname']}}</td>
-                        <td>{{number_format($branch['distance'],1)}} miles</td>
+                        <td>{{number_format($branch['distance'],1)}}</td>
                    
                     </tr>
                    @endforeach
