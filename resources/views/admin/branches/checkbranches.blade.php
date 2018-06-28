@@ -20,7 +20,7 @@
                         <td>{{$person['address']}}</td>
                         
                         <td>{{$branch['branchname']}}</td>
-                        <td>{{number_format($branch['distance'],1)}}</td>
+                        <td class="text-right">{{number_format($branch['distance'],1)}}</td>
                    
                     </tr>
                    @endforeach
