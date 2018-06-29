@@ -21,7 +21,7 @@
             </thead>
             <tbody>
                 @foreach ($data as $rep)
-
+                
                 <tr> 
                     <td><a href="{{route('salesrep.newleads', $rep['id'])}}">{{$rep['Name']}}</a></td>
                    

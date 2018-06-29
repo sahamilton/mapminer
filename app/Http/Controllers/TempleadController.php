@@ -31,7 +31,7 @@ class TempleadController extends Controller
     public function index()
     {
 
-
+        
         $reps = $this->person->whereHas('templeads')
                 ->withCount(['templeads','openleads','closedleads'])
                 ->with('reportsTo','reportsTo.userdetails.roles','closedleads')

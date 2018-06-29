@@ -53,7 +53,7 @@ class LeadsController extends BaseController
                 ->withCount(['leads','openleads','closedleads'])
                 ->with('reportsTo','reportsTo.userdetails.roles','closedleads','leads.leadsource')
                 ->get();
-        dd($reps->first()->leads->first()->leadsource);
+       
         $rankings = $this->lead->rankLead($reps);
         
         return response()->view('templeads.index',compact('reps','rankings'));
@@ -394,14 +394,18 @@ class LeadsController extends BaseController
        if($request->has('type')){
         $type = $request->get('type');
     }else{
-        $type = 'xlsx';
+        $type = 'csv';
     }
-
+   /* $leads = $this->person->where('user_id','=',auth()->user()->id)
+                ->with('ownedLeads','ownedLeads.relatedNotes')->firstOrFail();
+                $statuses = LeadStatus::pluck('status','id')->toArray();
+    return response()->view('salesleads.export',compact('leads','statuses'));*/
     Excel::create('Prospects'.time(),function($excel) {
             $excel->sheet('Prospects',function($sheet) {
                 $leads = $this->person->where('user_id','=',auth()->user()->id)
-                ->with('ownedLeads','ownedLeads.relatedNotes')->firstOrFail();
-                $sheet->loadView('salesleads.export',compact('leads'));
+                ->with('ownedLeads','ownedLeads.relatedNotes','ownedLeads.contacts')->firstOrFail();
+                $statuses = LeadStatus::pluck('status','id')->toArray();
+                $sheet->loadView('salesleads.export',compact('leads','statuses'));
             });
         })->download($type);
     }

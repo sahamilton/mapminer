@@ -4,6 +4,9 @@
 </tr>
 <tr><td>Prospect</td>
 	<td>Address</td>
+	<td>Contact</td>
+	<td>Contact Title</td>
+	<td>Contact Phone</td>
 	<td>Owned By</td>
 	<td>Status</td>
 	<td>Rating</td>
@@ -13,6 +16,9 @@
 <tr>
 <td>{{$lead->companyname}}</td>
 <td>{!! $lead->fullAddress() !!}</td>
+<td>{{$lead->contacts->contact}}</td>
+<td> {{$lead->contacts->contacttitle}}</td>
+<td>{{$lead->contacts->contactphone}}</td>
 <td>{{$lead->ownedBy[0]->postName()}}</td>
 <td>{{$statuses[$lead->ownedBy[0]->pivot->status_id]}}</td>
 <td>{{$lead->ownedBy[0]->pivot->rating}}</td>
