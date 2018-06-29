@@ -44,8 +44,7 @@ class LeadSourceController extends Controller
     public function index()
     {   
    
-        $leadsources = $this->leadsource->assigned()->withCount('leads')->get();
-
+        $leadsources = $this->leadsource->leadStatusSummary()->get();
         return response()->view('leadsource.index', compact('leadsources'));
     }
 
@@ -87,9 +86,11 @@ class LeadSourceController extends Controller
      */
     public function show($id)
     {
-        $leadsource = $this->leadsource->findOrFail($id);
-        $reps = $this->leadsource->leadStatusSummary($id);
-   
+        $leadsource = $this->leadsource->leadStatusSummary()       
+        ->findOrFail($id);
+
+       /* $reps = $this->leadsource->leadStatusSummary($id);
+
         foreach ($reps as $rep){
             if($rep->id){
                     if($rep->status ==''){
@@ -103,9 +104,9 @@ class LeadSourceController extends Controller
                     $data[$rep->id]['id']= $rep->id;
 
                 }
-         }
+         }*/
 
-        return response()->view('templeads.index',compact('data','leadsource'));
+        return response()->view('leadsource.show',compact('data','leadsource'));
     }
     public function branches($id){
            $leadsource = $this->leadsource->findOrFail($id);

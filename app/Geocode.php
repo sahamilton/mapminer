@@ -167,7 +167,7 @@ trait Geocode
     }
     
     /*
-    Not sure if this is used
+    
     */
     public function distanceBetween($lat1, $lon1, $lat2, $lon2, $unit=null) {
         

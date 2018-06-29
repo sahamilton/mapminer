@@ -21,7 +21,8 @@
     <th>Reference</th>
     <th>Prospects</th>
     <th>Assigned</th>
-    <th>Unassigned</th>
+    <th>UnAssigned</th>
+    <th>Closed Leads</th>
     <th>Average Ranking</th>
     <th>Available From / To</th>
 
@@ -33,14 +34,17 @@
     </thead>
     <tbody>
    @foreach($leadsources as $source)
+
     <tr> 
    	<td><a href="{{route('leadsource.show',$source->id)}}">{{$source->source}}</a></td>
     <td>{{$source->description}}</td>
     <td>{{$source->reference}}</td>
-    <td>{{$source->leads_count}}</td>
-    <td>{{$source->assigned}}</td>
-    <td><a href="{{route('leadsource.unassigned',$source->id)}}">{{$source->leads_count - $source->assigned}}</a></td>
-    <td></td>
+    <td>{{$source->allleads}}</td>
+    <td>{{$source->ownedleads}}</td>
+    <td><a href="{{route('leadsource.unassigned',$source->id)}}">{{$source->allleads - $source->ownedleads}}</a></td>
+    <td>{{$source->closedleads}}</td>
+    
+    <td>{{number_format($source->ranking,2)}}</td>
    	<td>
         @if($source->dateto < Carbon\Carbon::now())
             Expired {{$source->datefrom->format('M j,Y')}}

@@ -8,7 +8,9 @@ class LeadSource extends Model
 {	
 	public $table='leadsources';
 	public $dates = ['created_at','updated_at','datefrom','dateto'];
-	
+	public $fillable = ['source','description','reference','datefrom','dateto','user_id','filename'];
+
+
     public function verticals (){
         return $this->belongsToMany(SearchFilter::class,'leadsource_searchfilter','leadsource_id','searchfilter_id');
     }
@@ -16,7 +18,8 @@ class LeadSource extends Model
     public function leads(){
     	return $this->hasMany(Lead::class, 'lead_source_id');
     }
-    function assigned (){
+
+    public function assigned (){
       return $this->selectRaw('`leadsources`.*, count(`leads`.`id`) as assigned') 
           ->join('leads','leadsources.id','=','leads.lead_source_id')
           ->join('lead_person_status','leads.id','=','lead_person_status.related_id')
@@ -25,12 +28,8 @@ class LeadSource extends Model
     
 
     }
-
-    function leadranking(){
-
-
-    }
-    public $fillable = ['source','description','reference','datefrom','dateto','user_id','filename'];
+    
+    
 
     public function author(){
     	return $this->belongsTo(User::class, 'user_id','id')->with('person');
@@ -64,12 +63,19 @@ class LeadSource extends Model
 
      }
 
-     public function leadStatusSummary($id){
+     public function leadStatusSummary(){
       
-
-         $query = "select count(leads.id) as leadcount, avg(lead_person_status.rating) as ranking, lead_status.status,persons.id,concat_ws(' ',persons.firstname,persons.lastname) as fullName from leads, lead_person_status, lead_status, persons where leads.lead_source_id = ". $id ." and leads.id = lead_person_status.related_id and lead_person_status.status_id = lead_status.id and lead_person_status.person_id = persons.id group by persons.id,lead_status.status with rollup ";
-
-      return \DB::select($query);
+ return $this->select(array('leadsources.*', 
+              \DB::raw('COUNT(leads.id) as allleads,
+                COUNT(b.related_id) as ownedleads,
+                COUNT(a.related_id) as closedleads,
+                avg(a.rating) as ranking')))
+            ->join('leads', 'leads.lead_source_id', '=', 'leadsources.id')
+            ->leftjoin('lead_person_status as a', function($join){
+                $join->on('leads.id', '=', 'a.related_id')->where('a.status_id','=',3);
+            })
+            ->leftjoin('lead_person_status as b','leads.id', '=', 'b.related_id')
+            ->groupBy('leadsources.id');
     }
 
      

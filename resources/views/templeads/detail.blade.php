@@ -4,6 +4,16 @@
   <h2>{{$lead->businessname ? $lead->businessname : $lead->companyname}}</h2>
   @if(count($lead->salesteam))
     <h4>Lead assigned to <a href="{{route('salesrep.newleads',$lead->salesteam->first()->id)}}">{{$lead->salesteam->first()->postName()}}</a></h4>
+    @if(auth()->user()->hasRole('Admin'))
+<p  text-danger">
+              <a data-href="{{route('webleads.unassign',$lead->id)}}" 
+                          data-toggle="modal" 
+                          data-target="#unassign-weblead"
+                          data-title = "unassign this weblead" 
+                          href="#">
+              <i class="fa fa-unlink"></i> Un-assign lead</a></p>
+@include('partials._unassignleadmodal') 
+    @endif
     <div class="row">
       <p><strong>Status:</strong>{{$leadStatuses[$lead->salesteam->first()->pivot->status_id]}}</p>
       

@@ -49,11 +49,11 @@ class LeadsController extends BaseController
     {
 
 
-        $reps = $this->person->whereHas('leads')
+        $reps = $this->person->has('leads')
                 ->withCount(['leads','openleads','closedleads'])
-                ->with('reportsTo','reportsTo.userdetails.roles','closedleads')
+                ->with('reportsTo','reportsTo.userdetails.roles','closedleads','leads.leadsource')
                 ->get();
-
+        dd($reps->first()->leads->first()->leadsource);
         $rankings = $this->lead->rankLead($reps);
         
         return response()->view('templeads.index',compact('reps','rankings'));
@@ -81,12 +81,13 @@ class LeadsController extends BaseController
 
         $leadsourcetype = $lead->leadsource->type.'leads';
        $people = null;
+   
         $lead = $this->lead
           //->join($leadsourcetype .' as ExtraFields','leads.id','=','ExtraFields.id')
           ->with('salesteam','contacts','relatedNotes')
           ->ExtraFields($leadsourcetype)
           ->findOrFail($id);
-       
+     
           if($lead->doesntHave('salesteam')){
            
             $people = $this->person
@@ -107,7 +108,7 @@ class LeadsController extends BaseController
               unset($extrafields[$key]);
           }
       }
-  
+    
         
         $leadStatuses = LeadStatus::pluck('status','id')->toArray();
        
