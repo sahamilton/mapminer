@@ -1,6 +1,6 @@
 @extends ('admin.layouts.default')
 @section('content')
- <script type="text/javascript" src="{{asset('assets/js/starrr.js')}}"></script>
+<script type="text/javascript" src="{{asset('assets/js/starrr.js')}}"></script>
 <div class="container">
 
 
@@ -29,29 +29,27 @@
                 <th>Assigned</th>
                 <th>Closed</th>
                 <th>Average Rating</th>
-               
-
+ 
             </thead>
             <tbody>
-         
                @foreach ($data as $rep)
                <tr>
-	                  <td><a href="{{route('salesrep.newleads',$rep['id'])}}">{{$rep['name']}}</a></td> 
-	                  <td class="text-right">{{$rep['Claimed']['count']}}</td>
-	                  
-	                   @if(isset($rep['Closed']))
-	                   <td class="text-right">	{{$rep['Closed']['count']}}</td>
-	                   <td class="text-right"><p data-rating="{{round($rep['Closed']['rating'])}}" class="starrr">{{number_format($rep['Closed']['rating'],2)}}</p></td>
-	                    @else
-	                    <td></td><td></td>
-	                   @endif
-
+					<td><a href="{{route('salesrep.newleads',$rep['id'])}}">{{$rep['name']}}</a></td> 
+					<td class="text-right">{{$rep['Claimed']['count']}}</td>
+					@if(isset($rep['Closed']))
+						<td class="text-right">	{{$rep['Closed']['count']}}</td>
+						<td class="text-right">
+							<p data-rating="{{round($rep['Closed']['rating'])}}" class="starrr">
+								{{number_format($rep['Closed']['rating'],2)}}
+							</p>
+						</td>
+					@else
+						<td></td><td></td>
+					@endif
             	</tr>
                 @endforeach
              	</tr>
             </tbody>
-
-
 
         </table>
     </div>

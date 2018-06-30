@@ -567,12 +567,12 @@ class LeadsController extends BaseController
       $lead->salesteam()
         ->updateExistingPivot(auth()->user()->person->id,['rating'=>$request->get('ranking'),'status_id'=>3]);
         $this->addClosingNote($request,$id);
-        return redirect()->route('salesteam.newleads',$lead->salesteam->first()->id)->with('message', 'Lead closed');
+        return redirect()->route('salesrep.newleads',$lead->salesteam->first()->id)->with('message', 'Lead closed');
      }
      private function addClosingNote($request,$id){
         $note = new Note;
         $note->note = "Lead Closed:" .$request->get('comments');
-        $note->type = 'newlead';
+        $note->type = 'lead';
         $note->related_id = $id;
         $note->user_id = auth()->user()->id;
         $note->save();

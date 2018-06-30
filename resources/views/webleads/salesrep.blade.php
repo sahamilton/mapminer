@@ -14,7 +14,7 @@
      <th>Source</th>
      <th>Your Rating</th>
      <th>Status</th>
-     <th>Industry</th>
+
      
    
        
@@ -23,7 +23,7 @@
    @foreach($leads as $lead)
 
     <tr> 
-    <td>{{$lead->created_at->format('Y-m-d')}}</td> 
+    <td>{{$lead->created_at ? $lead->created_at->format('j M, Y') : ''}}</td> 
 	<td><a href="{{route('webleads.salesshow',$lead->id)}}">{{$lead->companyname}}</a></td>
 	<td>{{$lead->address}} {{$lead->city}}, {{$lead->state}} {{$lead->zip}}</td>
 	
@@ -31,7 +31,7 @@
     <td>{{$lead->leadsource()->first()->source}}</td>
     <td class="text-right">{{$lead->salesteam->first()->pivot->rating}}</td>
 	<td>{{$leadstatuses[$lead->salesteam->first()->pivot->status_id]}} </td>
-	<td>{{$lead->industry}}</td>
+
 	
  
     </tr>
