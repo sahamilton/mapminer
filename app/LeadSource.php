@@ -36,14 +36,15 @@ class LeadSource extends Model
        
     }
 
-     public function assignedTo(){
-        $leads = $this->leads()->with('salesteam')->has('salesteam')->get();
+     public function assignedTo($id= null){
+        $leads = $this->with('leads')->findOrFail($id);
+        dd($leads);
         $salesreps = array();
         foreach ($leads as $lead){
             $reps = $lead->salesteam->pluck('id')->toArray();
             $salesreps = array_unique(array_merge($reps, $salesreps));
         }
-        return count($salesreps);
+        return $salesreps;
      }
 
      public function unassignedLeads($id){
@@ -65,17 +66,36 @@ class LeadSource extends Model
 
      public function leadStatusSummary(){
       
- return $this->select(array('leadsources.*', 
-              \DB::raw('COUNT(leads.id) as allleads,
-                COUNT(b.related_id) as ownedleads,
-                COUNT(a.related_id) as closedleads,
-                avg(a.rating) as ranking')))
-            ->join('leads', 'leads.lead_source_id', '=', 'leadsources.id')
-            ->leftjoin('lead_person_status as a', function($join){
-                $join->on('leads.id', '=', 'a.related_id')->where('a.status_id','=',3);
-            })
-            ->leftjoin('lead_person_status as b','leads.id', '=', 'b.related_id')
-            ->groupBy('leadsources.id');
+     return $this->select(array('leadsources.*', 
+                  \DB::raw('COUNT(leads.id) as allleads,
+                    COUNT(b.related_id) as ownedleads,
+                    COUNT(a.related_id) as closedleads,
+                    avg(a.rating) as ranking')))
+                ->join('leads', 'leads.lead_source_id', '=', 'leadsources.id')
+                ->leftjoin('lead_person_status as a', function($join){
+                    $join->on('leads.id', '=', 'a.related_id')->where('a.status_id','=',3);
+                })
+                ->leftjoin('lead_person_status as b','leads.id', '=', 'b.related_id')
+                ->groupBy('leadsources.id');
+    }
+
+    public function leadRepStatusSummary($id){
+      $query ="select persons.id, 
+              persons.firstname,
+              persons.lastname, 
+              count(leads.id) as leadcount, 
+              avg(lead_person_status.rating) as rating, 
+              lead_person_status.status_id as status 
+              from persons,
+              leads,
+              lead_person_status 
+              where persons.id = lead_person_status.person_id 
+              and lead_person_status.related_id = leads.id 
+              and leads.lead_source_id = ".$id." 
+              group by persons.id,status";
+
+return \DB::select($query);
+
     }
 
      

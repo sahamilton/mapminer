@@ -154,8 +154,8 @@ class Person extends NodeModel implements HasPresenter {
 	public function leadratings(){
       	return  $this->belongsToMany(Lead::class, 'lead_person_status','person_id','related_id')
 		->withTimestamps()
-		->wherePivot('type','=','prospect')
-		->withPivot('status_id','rating','type')
+		
+		->withPivot('status_id','rating')
 		->whereNotNull('rating');
 	
     }
@@ -257,4 +257,6 @@ class Person extends NodeModel implements HasPresenter {
                 });
 
     }
+
+    
 }

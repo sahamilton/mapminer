@@ -86,27 +86,28 @@ class LeadSourceController extends Controller
      */
     public function show($id)
     {
-        $leadsource = $this->leadsource->leadStatusSummary()       
-        ->findOrFail($id);
+        $leadsource = $this->leadsource->findOrFail($id);
+        $data = $this->leadsource->leadRepStatusSummary($id);
+        
 
-       /* $reps = $this->leadsource->leadStatusSummary($id);
-
-        foreach ($reps as $rep){
-            if($rep->id){
-                    if($rep->status ==''){
-                        $status = 'Total';
-                    }else{
-                        $status = $rep->status;
-                    }
-                    $data[$rep->id][$status]= $rep->leadcount;
-                    $data[$rep->id]['Name']= $rep->fullName;
-                    $data[$rep->id]['Ranking']= $rep->ranking;
-                    $data[$rep->id]['id']= $rep->id;
-
-                }
-         }*/
-
+        $data = $this->reformatRepsData($data);
+   
         return response()->view('leadsource.show',compact('data','leadsource'));
+    }
+
+    private function reformatRepsData($data){
+        $newdata = array();
+        $statuses = $this->lead->statuses;
+        foreach ($data as $rep){
+            $newdata[$rep->id]['name'] = $rep->firstname . ' '. $rep->lastname;
+            $newdata[$rep->id]['id'] = $rep->id;
+            $newdata[$rep->id][$statuses[$rep->status]]['count'] = $rep->leadcount;
+            $newdata[$rep->id][$statuses[$rep->status]]['rating'] = $rep->rating;
+
+            
+
+        }
+        return $newdata;
     }
     public function branches($id){
            $leadsource = $this->leadsource->findOrFail($id);
