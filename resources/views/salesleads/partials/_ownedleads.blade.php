@@ -50,7 +50,7 @@
                     </td>
                     <td>@if($lead->pivot->status_id !=3)
                     @include ('leads.partials._closeleadform')
-                    <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#myModal">Close Lead</button>
+                    <button type="button" class="btn btn-info btn-xs" data-toggle="modal" data-target="#myModal">Close Lead</button>
                         @else
                         Lead Closed
                         @endif

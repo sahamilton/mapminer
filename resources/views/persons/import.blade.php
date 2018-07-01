@@ -22,7 +22,7 @@
 </div></div>
 <div>
 
-{{Form::submit('Import Managers',['class' => 'btn btn-sm btn-success'])}}
+{{Form::submit('Import Managers',['class' => 'btn btn-xs btn-success'])}}
 </div>
 {{Form::close()}}
 @stop

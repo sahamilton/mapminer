@@ -16,7 +16,7 @@
 			</td>
 			
 			<td>@if(count($branch->manager)>0)
-				{{$branch->manager->first()->fullName()}}
+				{{$branch->manager->first()->postName()}}
 				@endif
 			</td>
 			<td>{{number_format($branch->distance,0)}}</td>

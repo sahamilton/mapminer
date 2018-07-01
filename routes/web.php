@@ -337,7 +337,7 @@ Route::get('/',['as'=>'ops','uses'=>'Admin\AdminDashboardController@dashboard'])
 		Route::post('leads/assign',['as'=>'leads.assign','uses'=>'LeadsController@postAssignLeads']);
 		*/
 
-		## Web leads
+	## Web leads
 		
 		Route::post('/webleads/import/form',['as'=>'leads.webleadsinsert','uses'=>'WebleadsImportController@getLeadFormData']);
 		Route::post('/webleads/assign',['as'=>'webleads.assign','uses'=>'WebLeadsController@assignLeads']);
@@ -351,6 +351,8 @@ Route::get('/',['as'=>'ops','uses'=>'Admin\AdminDashboardController@dashboard'])
 		Route::get('leads/{id}/person',['as'=>'leads.person','uses'=>'LeadsController@getPersonsLeads']);
 		Route::get('leads/{id}/person/{sid}/source',['as'=>'leads.personsource','uses'=>'LeadsController@getPersonSourceLeads']);
 		Route::get('leadsource/{id}/export',['as'=>'leadsource.export','uses'=>'LeadSourceController@export']);
+		Route::post('lead/search',['as'=>'leads.search','uses'=>'LeadsController@search']);
+		Route::get('lead/search',['as'=>'leads.search','uses'=>'LeadsController@searchAddress']);
 		Route::resource('leads','LeadsController');
 
 	# Prospect Source / LeadSource
@@ -397,7 +399,7 @@ Route::get('/',['as'=>'ops','uses'=>'Admin\AdminDashboardController@dashboard'])
 		Route::get('/user/find', 'SearchController@searchUsers');
 		Route::get('/person/{person}/find',['as'=>'person.details','uses'=>'PersonSearchController@find']);
 
-	#TempLeads
+	#NewLeads
 	   // Route::get('newleads/team',['as'=>'templeads.team','uses'=>'TempleadController@salesteam']);
 	    Route::get('/newleads/{pid}/branchmgr',['as'=>'branchmgr.newleads','uses'=>'LeadsController@getAssociatedBranches']);
 	   Route::get('/newleads/branch',['as'=>'templeads.branch','uses'=>'LeadsController@branches']);

@@ -251,7 +251,56 @@ class LeadsController extends BaseController
 
 
     }
+    public function searchAddress(){
 
+      return response()->view('webleads.search');
+    }
+
+
+    public function search(Request $request){
+      $geoCode = app('geocoder')->geocode($request->get('address'))->get();
+      $lead = new Lead;
+      $coords = $this->lead->getGeoCode($geoCode);
+      $lead->lat = $coords['lat'];
+      $lead->lng = $coords['lng'];
+      $lead->lead_source_id = 2;
+      $lead->address = $request->get('address');
+      $branch = new \App\Branch;
+      $branches = $branch->nearby($lead,500)->limit(5)->get();
+     
+      $people = $this->person
+                    ->whereHas('userdetails.roles',function($q) {
+                      $q->whereIn('name',$this->assignTo);
+
+              })->nearby($lead,'1000')->with('userdetails')
+             
+              ->limit(5)
+              ->get();
+
+
+      
+        $salesrepmarkers = $this->jsonify($people);
+        $branchmarkers=$branches->toJson();
+        return response()->view('webleads.showsearch',compact('lead','branches','people','salesrepmarkers','branchmarkers'));
+
+
+
+      //return response()->view('leads.showsearch',compact('lead','sources','rank','people','branches'));
+    }
+
+     private function jsonify($people) {
+        $key=0;
+        foreach ($people as $person){
+            $salesrepmarkers[$key]['id']=$person->id;
+            $salesrepmarkers[$key]['lat']=$person->lat;
+            $salesrepmarkers[$key]['lng']=$person->lng;
+            
+            $salesrepmarkers[$key]['name']=$person->fullName();
+            $key++;
+        }
+      
+      return collect($salesrepmarkers)->toJson();
+    }
     private function getAddress($request){
         // if its a one line address return that
         if(! $request->filled('city')){
@@ -292,6 +341,7 @@ class LeadsController extends BaseController
 
 
     public function getPersonSourceLeads($pid,$sid){
+
         $statuses = $this->leadstatus->pluck('status','id')->toArray();
         $leads = $this->person->with('salesleads','salesleads.leadsource','salesleads.vertical')
         ->whereHas('salesleads.leadsource', function ($q) use($sid){

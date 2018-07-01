@@ -2,67 +2,17 @@
 @section('content')
 <h1>Prospect</h1>
 
-<h2>{{$lead->businessname}}</h2>
-<h4>A location of {{$lead->companyname}}</h4>
-
 
 
 <div id="map-container">
 	<div style="float:left;width:300px">
-		<p><strong>Address:</strong> {!! $lead->fullAddress() !!}</p>
-		<p><strong>Created:</strong> {{$lead->created_at->format('M j, Y')}}</p>
-		<p><strong>Available From:</strong> {{$lead->leadsource->datefrom->format('M j, Y')}}</p>
-		<p><strong>Available Until:</strong> {{$lead->leadsource->dateto->format('M j, Y')}}</p>
-		<p><strong>Description:</strong> {{$lead->description}}</p>
-		<p><strong>Assigned:</strong>{{count($lead->salesteam)}}</p>
-		@if($lead->leadsource)
-		<p><strong>Lead Source:</strong><a href="{{route('leadsource.show',$lead->leadsource->id)}}">{{$lead->leadsource->source}}</a></p>
-		@endif
-		<p><strong>Industry Vertical:</strong></p>
-		<ul>
-		All
-		<!-- @foreach($lead->leadsource->verticals()->get() as $vertical)
-
-		<li>{{$vertical->filter}}</li>
-		@endforeach-->
-		</ul>
+		<p><strong>Address:</strong> {!! $lead->address !!}</p>
+		
 	</div>
 
-@if (count($lead->salesteam) > 0)
 
-<p><strong>Closest Branch:</strong><a href= "{{route('branches.show',$branches->first()->id)}}">{{$branches->first()->branchname}}</a></p>
 <div>
-	<table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
-		<thead>
-			<th>Sales Rep</th>
-			<th>Status</th>
-
-		</thead>
-		<tbody>
-			@foreach ($lead->salesteam as $team)
-			<tr>
-			<td><a href="{{route('leads.person',$team->id)}}" title="See all prospects associated with {{$team->postName()}}">{{$team->postName()}}</a></td>
-			<td>{{$sources[$team->pivot->status_id]}}</td>
-
-
-			
-			</tr>
-
-			@endforeach
-		</tbody>
-	</table>
-<h4><strong>Notes</strong></h4>
-
-@foreach ($lead->relatedNotes as $leadnote)
-
-<p>{{$leadnote->created_at->format('M j,Y')}}...<em>{{$leadnote->note}}</em><br />
- --  {{$leadnote->writtenBy->person->postName()}}</p>
-
-@endforeach
-</div>
-@else
-<div>
-<form method="post" name="assignlead" action ="{{route('leads.assignbatch')}}" >
+<form method="post" name="assignlead" action ="" >
 {{csrf_field()}}
 <h4>Closest Sales Reps</h4>
 	<table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
@@ -102,7 +52,7 @@
 			@foreach ($branches as $branch)
 			<tr>
 			<td>
-				<a href="{{route('branches.show',$branch->branchid)}}" title="See details of {{$branch->branchname}}">
+				<a href="" title="See details of {{$branch->branchname}}">
 				{{$branch->branchname}}</a>
 			</td>
 
@@ -118,7 +68,7 @@
 <input type="hidden" name="type" value="lead" />
 <input type = 'submit' class=' btn btn-info' value ='Assign Lead' />
 </form>
-@endif
+
 
 
 </div>

@@ -11,7 +11,7 @@ function initialize() {
   var map = new google.maps.Map(document.getElementById('map'), mapOptions);
 	var name = "{{$lead->company_name}}";
   var address = "{{$lead->city}}" + " {{$lead->state}}";
-  var html = "<a href='{{route('webleads.show' , $lead->id) }}'>" + name + "</a> <br/>" + address;
+ 
   var salesreps = {!! $salesrepmarkers !!};
   var branches = {!! $branchmarkers !!};
 

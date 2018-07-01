@@ -47,7 +47,7 @@
 					@if ($errors->has('serviceline')) <p class="help-block">{{ $errors->first('serviceline') }}</p> @endif
 					</div></div>
 				<!-- ./ servicelines -->
-{{Form::submit('Import Users',['class' => 'btn btn-sm btn-success'])}}
+{{Form::submit('Import Users',['class' => 'btn btn-xs btn-success'])}}
 </div>
 {{Form::close()}}
 
