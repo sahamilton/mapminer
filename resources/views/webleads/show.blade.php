@@ -1,6 +1,6 @@
 @extends ('admin.layouts.default')
 @section('content')
-<p><a href="{{route('leadsource.show',$lead->lead_source_id)}}">Show All WebLeads</a></p>
+<p><a href="{{route('leadsource.show',$lead->lead_source_id)}}">Show All </a></p>
 <div class="col-sm-5">
 	<div class="panel panel-default">
 		<div class="panel-heading clearfix">

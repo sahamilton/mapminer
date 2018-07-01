@@ -160,34 +160,21 @@ class LeadsController extends BaseController
 
     public function show($lead)
     {
+      $table = $this->leadsource->findOrFail($lead->lead_source_id);
+      $table = $table->type ."leads";
+      $lead = $this->lead
+          ->with('contacts')
+          ->ExtraFields($table)
+          ->findOrFail($lead->id);
 
-        $sources = $this->leadstatus->pluck('status','id')->toArray();
-        $lead = $this->lead->with('salesteam','leadsource','relatedNotes')
-        ->whereHas('leadsource',function($q){
-          $q->where('datefrom','<=',date('Y-m-d'))
-              ->where('dateto','>=',date('Y-m-d'));
-        })
-        ->findOrFail($lead->id);
-        $verticals = $lead->leadsource->verticals()->pluck('searchfilters.id')->toArray();
-        $rank = $this->lead->rankLead($lead->salesteam);
-        $branch = new \App\Branch;
-        $branches = $branch->nearby($lead,500)->limit(5)->get();
-        
-        if(count($lead->salesteam)==0){
-             $people = $this->person->nearby($lead,'1000')->with('userdetails')
-                    ->whereHas('userdetails.roles',function($q) {
-                      $q->whereIn('name',$this->assignTo);
+      $extrafields = $this->getExtraFields($table);
+     
+      $branches = $this->findNearByBranches($lead);
+      $people = $this->findNearbySales($branches,$lead); 
+      $salesrepmarkers = $this->jsonify($people);
+      $branchmarkers=$branches->toJson();
 
-              })
-              ->whereHas('industryfocus',function ($q) use ($verticals){
-                  $q->whereIn('searchfilters.id',$verticals);
-              })
-              ->limit(5)
-              ->get();
-
-        }
-
-        return response()->view('leads.show',compact('lead','sources','rank','people','branches'));
+      return response()->view('leads.show',compact('lead','branchmarkers','salesrepmarkers','people','branches','extrafields'));
 
 
     }
@@ -253,7 +240,7 @@ class LeadsController extends BaseController
     }
     public function searchAddress(){
 
-      return response()->view('webleads.search');
+      return response()->view('leads.search');
     }
 
 
@@ -281,7 +268,7 @@ class LeadsController extends BaseController
       
         $salesrepmarkers = $this->jsonify($people);
         $branchmarkers=$branches->toJson();
-        return response()->view('webleads.showsearch',compact('lead','branches','people','salesrepmarkers','branchmarkers'));
+        return response()->view('leads.showsearch',compact('lead','branches','people','salesrepmarkers','branchmarkers'));
 
 
 
@@ -391,9 +378,16 @@ class LeadsController extends BaseController
      */
 
     private function findNearByBranches($data){
-        $location = new \stdClass;
-        $location->lat = $data['lat'];
-        $location->lng = $data['lng'];
+      if(is_array($data)){
+              $location = new \stdClass;
+              $location->lat = $data['lat'];
+              $location->lng = $data['lng'];
+        }else{
+          $location = $data;
+          $data['distance']=100;
+          $data['number']=5;
+        }
+        
         return \App\Branch::whereHas('servicelines',function ($q){
               $q->whereIn('servicelines.id',$this->userServiceLines );
           })->nearby($location,$data['distance'],$data['number'])
@@ -403,9 +397,16 @@ class LeadsController extends BaseController
     }
 
      private function findNearByPeople($data){
-        $location = new \stdClass;
-        $location->lat = $data['lat'];
-        $location->lng = $data['lng'];
+      if(is_array($data)){
+              $location = new \stdClass;
+              $location->lat = $data['lat'];
+              $location->lng = $data['lng'];
+        }else{
+          $location = $data;
+          $data['distance']=100;
+          $data['number']=5;
+        }
+        
 
         return Person::whereHas('userdetails.serviceline', function ($q) {
               $q->whereIn('servicelines.id',$this->userServiceLines);
@@ -626,5 +627,56 @@ class LeadsController extends BaseController
         $note->related_id = $id;
         $note->user_id = auth()->user()->id;
         $note->save();
+    }
+
+     public function unAssignLeads(Request $request){
+     
+       $lead = $this->lead->findOrFail($request->get('lead'));
+       $lead->salesteam()->detach($request->get('rep'));
+       return redirect()->route('leads.show',$lead->id);
+        
+    }
+
+    /**
+     * Find nearby sales people.
+     *
+     * @param  array $data
+     * @return People object
+     */
+
+    private function findNearBySales($branches,$lead){
+        $branch_ids = $branches->pluck('id')->toArray(); 
+        $data['distance']=\Config::get('leads.search_radius');
+        $salesroles = $this->salesroles;
+        $persons =  $this->person->whereHas('userdetails.roles',function ($q) use($salesroles){
+          $q->whereIn('roles.id',$salesroles);
+        })
+       
+        ->whereHas('branchesServiced',function ($q) use ($branch_ids){
+            $q->whereIn('branches.id',$branch_ids);
+        })
+        ->with('userdetails','userdetails.roles','industryfocus','branchesServiced');
+        return $persons->nearby($lead,$data['distance'])->limit(10)->get();
+      
+
+    }
+    private function getExtraFields($type){
+        return  \App\MapFields::whereType($type)
+                      ->whereDestination('extra')
+                      ->whereNotNull('fieldname')
+                      ->pluck('fieldname')->toArray();
+
+    }
+    private function getExtraFieldData($newdata,$type='webleads'){
+
+        $extraFields = \App\MapFields::whereType($type)
+                      ->whereDestination('extra')
+                      ->whereNotNull('fieldname')
+                      ->pluck('fieldname')->toArray();
+
+            foreach ($extraFields as $key=>$value){
+                $extra[$value] = $newdata[$value];
+            }
+        return $extra;
     }
 }

@@ -14,7 +14,7 @@ class WebLeadImport extends Imports
             'contactphone',
             'first_name',
             'last_name',
-            'timeframe',
+            'time_frame',
             
             ];
 

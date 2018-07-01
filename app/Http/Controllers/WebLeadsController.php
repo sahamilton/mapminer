@@ -28,17 +28,17 @@ class WebleadsController  extends ImportController
 
         
     }
-    public function index(){
+    /*public function index(){
            
             $webleads = $this->lead->all();
         
             return response()->view('webleads.index',compact('webleads'));
        
         
-    }
+    }*/
      
     
-
+/*
     public function show($lead){
         
         $branches = $this->findNearByBranches($lead);
@@ -49,7 +49,7 @@ class WebleadsController  extends ImportController
 
     }
     
-
+*/
 
     public function saleslist(){
 
@@ -138,7 +138,7 @@ class WebleadsController  extends ImportController
        
        $lead = $this->lead->findOrFail($request->get('lead'));
        $lead->salesteam()->detach($request->get('rep'));
-       return redirect()->route('webleads.show',$weblead->id);
+       return redirect()->route('leads.show',$lead->id);
         
     }
     /**

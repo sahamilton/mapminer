@@ -1,118 +1,34 @@
 @extends ('admin.layouts.default')
 @section('content')
-<h1>Prospect</h1>
-
-
-
-<div id="map-container">
-	<div style="float:left;width:300px">
-		<p><strong>Address:</strong> {!! $lead->address !!}</p>
+<p><a href="{{route('leadsource.show',$lead->lead_source_id)}}">Show All WebLeads</a></p>
+<div class="col-sm-5">
+	<div class="panel panel-default">
+		<div class="panel-heading clearfix">
+			<h2 class="panel-title pull-left">{{$lead->address}}</h2>
+		</div>	
 		
 	</div>
-
-
-<div>
-<form method="post" name="assignlead" action ="" >
-{{csrf_field()}}
-<h4>Closest Sales Reps</h4>
-	<table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
-		<thead>
-			<th>Sales Rep</th>
-			<th>Distance (in miles)</th>
-			<th>Assign</th>
-
-		</thead>
-		<tbody>
-			@foreach ($people as $team)
-			<tr>
-			<td>
-				<a href="{{route('leads.person',$team->id)}}" title="See all leads associated with
-				{{$team->firstname . " " . $team->lastname}}"">
-				{{$team->firstname . " " . $team->lastname}}</a>
-			</td>
-
-			<td>{{number_format($team->distance,0)}}</td>
-			<td><input type = "checkbox" name="salesrep[]" value="{{$team->id}}" /></td>
-			</tr>
-
-			@endforeach
-		</tbody>
-	</table>
-	<hr />
-	<h4>Closest Branches</h4>
-	<table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
-		<thead>
-			<th>Branch</th>
-			<th>Distance (in miles)</th>
-			<th>Assign
-			<input type = "radio" name="branch[]" value="" /></th>
-
-		</thead>
-		<tbody>
-			@foreach ($branches as $branch)
-			<tr>
-			<td>
-				<a href="" title="See details of {{$branch->branchname}}">
-				{{$branch->branchname}}</a>
-			</td>
-
-			<td>{{number_format($branch->distance,0)}}</td>
-			<td><input type = "radio" name="branch[]" value="{{$branch->branchid}}" /></td>
-			</tr>
-
-			@endforeach
-		</tbody>
-	</table>
-</div>
-<input type="hidden" name="related_id" value="{{$lead->id}}" />
-<input type="hidden" name="type" value="lead" />
-<input type = 'submit' class=' btn btn-info' value ='Assign Lead' />
-</form>
+	<style>
+	ul{list-style-type: none;}
+</style>
+		@include('leads.partials._branchlist')	
+		@include('leads.partials._repslist')
+</div>		
+<div class="col-sm-7 pull-right">
+	@include('leads.partials._search')
+<div id="map"  style="border:solid 1px red"></div>
 
 
 
 </div>
-<div id="map" style="height:300px;width:500px;border:red solid 1px">
+
+
+		
+
 </div>
- <script type="text/javascript" src="{{asset('assets/js/starrr.js')}}"></script>
+	
+@include('leads.partials.map')
 
-<script>
-$('.starrr').starrr({
-	readOnly: true
-});
-</script>
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={{config('maps.api_key')}}"></script>
+@include('partials/_scripts')
+@stop
 
-<script type="text/javascript">
-function initialize() {
-  var myLatlng = new google.maps.LatLng({{$lead->lat}},{{$lead->lng}});
-  var mapOptions = {
-    zoom: 14,
-    center: myLatlng
-  }
-  var infoWindow = new google.maps.InfoWindow;
-  
-  var map = new google.maps.Map(document.getElementById('map'), mapOptions);
-	var name = "{{$lead->companyname}}";
-    var address = "{{$lead->fullAddress()}}";
-    var html =  name +  "<br/>" + address;
-	var marker = new google.maps.Marker({
-	  position: myLatlng,
-	  map: map,
-	  title: name,
-	  clickable: true
-	});
-	 bindInfoWindow(marker, map, infoWindow, html);
-}
-function bindInfoWindow(marker, map, infoWindow, html) {
-      google.maps.event.addListener(marker, 'click', function() {
-        infoWindow.setContent(html);
-        infoWindow.open(map, marker);
-      });
-    }
-google.maps.event.addDomListener(window, 'load', initialize);
-</script>
-
-
-
-@endsection

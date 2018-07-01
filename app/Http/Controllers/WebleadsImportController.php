@@ -44,6 +44,7 @@ class WebleadsImportController extends Controller
 		        }else{
 		            $data['table']='webleads';
 		        }
+                $data['lead_source_id]'] = $request->get('lead_source_id');
 		        $data['filename'] = null;
 		        $data['additionaldata'] = array();
 		        $data['route'] = 'leads.mapfields';
@@ -54,14 +55,16 @@ class WebleadsImportController extends Controller
         $skip = ['id','deleted_at','created_at','updated_at','lead_source_id','pr_status'];
         return response()->view('imports.mapfields',compact('columns','fields','data','company_id','skip','title','requiredFields'));
     	}else{
-
+            
     		$input = $this->geoCodeAddress($input);
             $input = $this->renameFields($input);
             foreach ($input[0] as $key=>$value){
                 $newdata[$value]=$input[1][$key];
             }
+            $newdata['lead_source_id'] = $request->get('lead_source_id');
             $contact = $this->getContactDetails($newdata);
             $extra = $this->getExtraFieldData($newdata);
+           
     		$lead = $this->lead->create($newdata);
             $lead->contacts()->create($contact);
             $lead->webLead()->create($extra);
@@ -69,19 +72,24 @@ class WebleadsImportController extends Controller
 
     	}
     }
-    private function getExtraFieldData($newdata){
-        $extraFields = $this->fields->whereType('weblead')->whereDestination('extra')->whereNotNull('fieldname')->pluck('fieldname')->toArray();
+    private function getExtraFieldData($newdata,$type='webleads'){
+        $extraFields = $this->fields->whereType($type)
+        ->whereDestination('extra')
+        ->whereNotNull('fieldname')
+        ->pluck('fieldname')->toArray();
             foreach ($extraFields as $key=>$value){
                 $extra[$value] = $newdata[$value];
             }
         return $extra;
     }
     private function getContactDetails($newdata){
-        $contactFields = $this->fields->whereType('weblead')->whereDestination('contact')->whereNotNull('fieldname')->pluck('fieldname')->toArray();
+        $contactFields = $this->fields->whereType('weblead')
+        ->whereDestination('contact')
+        ->whereNotNull('fieldname')->pluck('fieldname')->toArray();
         $contact['contact'] = null;
             foreach ($contactFields as $key=>$value){
                 if(in_array($value,['first_name','last_name'])){
-                    $contact['contact'] = $contact['contact'] . $newdata[$value]."";
+                    $contact['contact'] = $contact['contact'] . $newdata[$value]." ";
                 }else{
                     $contact[$value] = $newdata[$value];
                 }
@@ -160,23 +168,66 @@ class WebleadsImportController extends Controller
         }
         return $input;
     }
+
     private function array_keys_exists(array $keys, array $arr) {
    			return array_diff_key(array_flip($keys), $arr);
 	}
 
     public function store(Request $request){
+        $input = $request->all();
+
+        $input = $this->geoCodeAddress($input);
+        $input = $this->renameFields($input);    
+
+        foreach ($input[0] as $key=>$value){
+            $newdata[$value]=$input[1][$key];
+        }
+
+        $contact = $this->getContactDetails($newdata);
+        $extra = $this->getExtraFieldData($newdata);      
+        
+        $lead = $this->lead->create($newdata);
+        $lead->contacts()->create($contact);
+        $lead->webLead()->create($extra);
+        return redirect()->route('salesrep.newleads.show',$lead->id);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     	$this->getDefaultFields($request);
         $data = $request->except('fields');
+        $data = $this->geoCodeAddress($data);
+        dd($data);
         $fields = $request->get('fields');
+        // create the lead
+        // 
+        // create teh extra fields
+        // 
+        // 
         foreach ($fields as $key=>$value){
             if (($key = array_search('@ignore', $fields)) !== false) {
                 unset($fields[$key]);
             }
         }
+        dd($fields);
         foreach ($fields as $key=>$value){
             $newdata[$value]= $data[$key];
         }
-        $newdata = $this->lead->geoCodeAddress($newdata);
+        dd($data,$newdata);
+        
         $lead = $this->lead->create($newdata);
 
         return redirect()->route('webleads.show',$lead->id);

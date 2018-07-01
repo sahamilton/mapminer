@@ -330,22 +330,26 @@ Route::get('/',['as'=>'ops','uses'=>'Admin\AdminDashboardController@dashboard'])
 		
 		Route::get('leads/import/{id?}',['as'=>'prospects.importfile','uses'=>'LeadImportController@getFile']);
 		Route::get('leads/import/assigned/{id?}',['as'=>'assigned_prospects.importfile','uses'=>'LeadAssignedImportController@getFile']);
+	*/
 		Route::post('leads/import',['as'=>'leads.import','uses'=>'LeadImportController@import']);
+	/*	
 		Route::get('leads/assign/{sid}/source',['as'=>'leads.geoassign','uses'=>'LeadsAssignController@geoAssignLeads']);
-		Route::get('leads/{id}/assign',['as'=>'leads.leadassign','uses'=>'LeadsController@assignLeads']);
+		Route::get('leads/{id}/assign',['as'=>'leads.leadassign','uses'=>'LeadsController@assignLeads']);*/
 		Route::post('leads/batchassign',['as'=>'leads.assignbatch','uses'=>'LeadsAssignController@assignLead']);
 		Route::post('leads/assign',['as'=>'leads.assign','uses'=>'LeadsController@postAssignLeads']);
-		*/
+		
 
 	## Web leads
 		
 		Route::post('/webleads/import/form',['as'=>'leads.webleadsinsert','uses'=>'WebleadsImportController@getLeadFormData']);
-		Route::post('/webleads/assign',['as'=>'webleads.assign','uses'=>'WebLeadsController@assignLeads']);
-		Route::delete('/webleads/{id}/unassign',['as'=>'webleads.unassign','uses'=>'WebLeadsController@unAssignLeads']);
-		Route::get('/webleads/import/create',['as'=>'webleads.import.create','uses'=>'WebleadsImportController@create']);
-		Route::post('/webleads/import/create',['as'=>'webleads.import.store','uses'=>'WebleadsImportController@store']);
 		Route::get('webleads/create',['as'=>'webleads.create','uses'=>'WebleadsImportController@create']);
-		Route::get('webleads/{lead}',['as'=>'webleads.show','uses'=>'WebLeadsController@show']);
+		Route::post('/webleads/import/create',['as'=>'webleads.import.store','uses'=>'WebleadsImportController@store']);
+
+		Route::post('/webleads/assign',['as'=>'webleads.assign','uses'=>'WebLeadsController@assignLeads']);
+		Route::delete('/leads/{id}/unassign',['as'=>'webleads.unassign','uses'=>'LeadsController@unAssignLeads']);
+		
+		
+		//Route::get('webleads/{lead}',['as'=>'webleads.show','uses'=>'WebLeadsController@show']);
 		//Route::resource('webleads','WebLeadsImportController');
 
 		Route::get('leads/{id}/person',['as'=>'leads.person','uses'=>'LeadsController@getPersonsLeads']);
@@ -506,6 +510,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 	 	Route::get('test',['as'=>'test','uses'=>'TestController@form']);
 	 	
 	 	Route::post('test/send',['as'=>'test.send','uses'=>'TestController@send']);
-	 	Route::get('branch/{bid}/people',['as'=>'test.branch.people', 'uses'=>'WebLeadsController@getSalesPeopleofBranch']);
+	 	//Route::get('branch/{bid}/people',['as'=>'test.branch.people', 'uses'=>'WebLeadsController@getSalesPeopleofBranch']);
 
 });

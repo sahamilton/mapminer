@@ -36,7 +36,7 @@ class Lead extends Model implements HasPresenter {
 						'lng',
 						'lead_source_id',
             'branch_id',
-            'branch_id'];
+            'branch_id',];
     public $statuses = [1=>'Offered',2=>'Claimed',3=>'Closed'];
     public $getStatusOptions =  [
         1=>'Prospect data is completely inaccurate. No project or project completed.',
@@ -169,7 +169,7 @@ public function rankLead($salesteam){
     public function scopeExtraFields($query,$table){
             
 
-             return $query->join($table .' as ExtraFields','leads.id','=','ExtraFields.id');
+             return $query->join($table .' as ExtraFields','leads.id','=','ExtraFields.lead_id');
       }
      
     public function ownsLead($id){
