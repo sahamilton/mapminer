@@ -160,13 +160,14 @@ class LeadsController extends BaseController
 
     public function show($lead)
     {
+    
       $table = $this->leadsource->findOrFail($lead->lead_source_id);
+    $id= $lead->id;
       $table = $table->type ."leads";
       $lead = $this->lead
           ->with('contacts')
           ->ExtraFields($table)
-          ->findOrFail($lead->id);
-
+          ->find($id);
       $extrafields = $this->getExtraFields($table);
      
       $branches = $this->findNearByBranches($lead);
