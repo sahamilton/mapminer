@@ -16,8 +16,8 @@ use App\SearchFilter;
 use App\Http\Requests\LeadFormRequest;
 use App\Http\Requests\LeadAddressFormRequest;
 use App\Http\Requests\BatchLeadImportFormRequest;
-use App\Mail\NotifyWebleadsAssignment;
-use App\Mail\NotifyWebleadsBranchAssignment;
+use App\Mail\NotifyWebLeadsAssignment;
+use App\Mail\NotifyWebLeadsBranchAssignment;
 
 
 class LeadsController extends BaseController
@@ -707,7 +707,7 @@ class LeadsController extends BaseController
         if($request->get('salesrep')!=''){
             $rep = $this->person->findOrFail($request->get('salesrep'));
             $lead->salesteam()->attach($request->get('salesrep'), ['status_id' => 2]);
-            Mail::queue(new NotifyWebleadsAssignment($lead,$branch,$rep));
+            Mail::queue(new NotifyWebLeadsAssignment($lead,$branch,$rep));
         }else{
             
             foreach($branch->manager as $manager){
@@ -723,7 +723,7 @@ class LeadsController extends BaseController
             
             foreach ($branchemails as $email){
                 
-                Mail::queue(new NotifyWebleadsBranchAssignment($lead,$branch,$email));
+                Mail::queue(new NotifyWebLeadsBranchAssignment($lead,$branch,$email));
             }
        
         }  
