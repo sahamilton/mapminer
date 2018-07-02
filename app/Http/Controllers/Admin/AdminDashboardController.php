@@ -230,7 +230,7 @@ class AdminDashboardController extends BaseController {
 				from (
 				    select users.id as uid, 
 				    concat_ws(' ',persons.firstname,persons.lastname) as fullname, 
-				    roles.name as role, 
+				    roles.name as role, persons.id as pid,
 				    min(`lastactivity`) as lastactivity,
 				    users.created_at as created
 					from track,users,persons,role_user,roles

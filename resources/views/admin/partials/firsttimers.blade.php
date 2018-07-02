@@ -8,9 +8,10 @@
     </thead>
     <tbody>
       @foreach($data['firsttimers'] as $first)
+
         <tr>
           <td>
-            <a href="{{route('users.show',$first->uid)}}"
+            <a href="{{route('person.details',$first->pid)}}"
               title="Review {{$first->fullname}}'s details">
               {{$first->fullname}}</a>
             </a>
