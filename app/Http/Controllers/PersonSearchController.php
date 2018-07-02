@@ -49,9 +49,16 @@ class PersonSearchController extends Controller
                         )
 
             ->findOrFail($person->id);
-           
-        return response()->view('persons.details',compact('people','track'));
-    }
+          if($people->has('branchesServiced')){
+            $branchmarkers = $people->branchesServiced->toJson();
+          }
+          if($people->has('directReports')){
+            $salesrepmarkers = $this->person->jsonify($people->directReports);
+          }
+
+        return response()->view('persons.details',compact('people','track','branchmarkers','salesrepmarkers'));
+          }
+
 
    
 }

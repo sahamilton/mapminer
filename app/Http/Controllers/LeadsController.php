@@ -171,7 +171,7 @@ class LeadsController extends BaseController
      
       $branches = $this->findNearByBranches($lead);
       $people = $this->findNearbySales($branches,$lead); 
-      $salesrepmarkers = $this->jsonify($people);
+      $salesrepmarkers = $this->person->jsonify($people);
       $branchmarkers=$branches->toJson();
 
       return response()->view('leads.show',compact('lead','branchmarkers','salesrepmarkers','people','branches','extrafields'));
@@ -266,7 +266,7 @@ class LeadsController extends BaseController
 
 
       
-        $salesrepmarkers = $this->jsonify($people);
+        $salesrepmarkers = $this->person->jsonify($people);
         $branchmarkers=$branches->toJson();
         return response()->view('leads.showsearch',compact('lead','branches','people','salesrepmarkers','branchmarkers'));
 
@@ -275,19 +275,7 @@ class LeadsController extends BaseController
       //return response()->view('leads.showsearch',compact('lead','sources','rank','people','branches'));
     }
 
-     private function jsonify($people) {
-        $key=0;
-        foreach ($people as $person){
-            $salesrepmarkers[$key]['id']=$person->id;
-            $salesrepmarkers[$key]['lat']=$person->lat;
-            $salesrepmarkers[$key]['lng']=$person->lng;
-            
-            $salesrepmarkers[$key]['name']=$person->fullName();
-            $key++;
-        }
-      
-      return collect($salesrepmarkers)->toJson();
-    }
+    
     private function getAddress($request){
         // if its a one line address return that
         if(! $request->filled('city')){

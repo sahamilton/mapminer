@@ -34,52 +34,77 @@
 		</div>
 		<div class="list-group">
 			<div class="list-group-item">
-				<p class="list-group-item-text"><strong>Contact Details</strong></p>
-				<ul style="list-style-type: none;">
-					<li>Phone: {{$people->phone}}</li>
-					<li>Email: 
-						<a href="mailto:{{$people->userdetails->email}}">{{$people->userdetails->email}}</a>
-					</li>
-					<li>
-						@if(! empty($people->lat))
-							@php
-							   $latLng= "@". $people->lat.",".$people->lng .",14z";
-							@endphp
-							 @include('persons.partials._map')
-							<a href="https://www.google.com/maps/{{$latLng}}" target="_blank">
-								<i class="fas fa-map-marker-alt"></i></a>
-						@endif
-					</li>
-				</ul>
+				<div class="list-group-item-text col-sm-4">
+					<p><strong>Contact Details</strong></p>
+						<ul style="list-style-type: none;">
+						<li>Address:{{$people->address}}
+						<li>Phone: {{$people->phone}}</li>
+						<li>Email: 
+							<a href="mailto:{{$people->userdetails->email}}">{{$people->userdetails->email}}</a>
+						</li>
+						<li>
+							
+						</li>
+					</ul>
+				</div>
+				<div class="col-sm-8">
+					@if(! empty($people->lat))
+						@php
+						   $latLng= "@". $people->lat.",".$people->lng .",14z";
+						@endphp
+				
+						 @include('persons.partials._map')
+								
+					@else
+					<p class="text-danger"><strong>No address or unable to geocode this address</strong></p>		
+					@endif
+				</div>
+				<div style="clear:both"></div> 
 			</div>
 			@if($people->reportsTo || count($people->directReports)>0)
-				<div class="list-group-item"><p class="list-group-item-text"><strong>Reporting Structure</strong></p>
-					<ul style="list-style-type: none;">
-					@if($people->reportsTo)
-						<li>Reports To:
-						<a href="{{route('person.details',$people->reportsTo->id)}}">{{$people->reportsTo->postName()}}</a></li>
-					@endif
-					@if(count($people->directReports)>0)
-						<li>Team:</li>
-						@foreach ($people->directReports as $reports)
-					
-							<li><a href="{{route('person.details',$reports->id)}}">{{$reports->fullName()}}</a></li>
+				<div class="list-group-item">
+					<div class="list-group-item-text col-sm-4">
+						<p><strong>Reporting Structure</strong></p>
+						<ul style="list-style-type: none;">
+						@if($people->reportsTo)
+							<li>Reports To:
+							<a href="{{route('person.details',$people->reportsTo->id)}}">{{$people->reportsTo->postName()}}</a></li>
+						@endif
+						@if(count($people->directReports)>0)
+							<li>Team:</li>
+							@foreach ($people->directReports as $reports)
 						
-						@endforeach
+								<li><a href="{{route('person.details',$reports->id)}}">{{$reports->fullName()}}</a></li>
+							
+							@endforeach
+						</div>
+							<div class="col-sm-8">
+						@include('persons.partials._teammap')
+					</div>
+
 					@endif
 
 					</ul>
+					<div style="clear:both"></div> 
 				</div>
 			@endif
 				
 			@if(count($people->branchesServiced)>0)
 
-				<div class="list-group-item"><p class="list-group-item-text"><strong>Branches Serviced</strong></p>
+				<div class="list-group-item">
+					<div class="list-group-item-text col-sm-4">
+						<p><strong>Branches Serviced</strong></p>
+
 					<ul style="list-style-type: none;">
 						@foreach ($people->branchesServiced as $branch)
 							<li><a href="{{route('branches.show',$branch->id)}}">{{$branch->branchname}}</a></li>
 						@endforeach
 					</ul>
+				</div>
+				<div class="col-sm-8">
+					@include('persons.partials._branchmap')
+				</div>
+				<div style="clear:both"></div>  
 				</div>
 			@endif
 			@if(count($people->managesAccount)>0)
