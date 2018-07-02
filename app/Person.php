@@ -260,11 +260,11 @@ class Person extends NodeModel implements HasPresenter {
 
     public function jsonify($people) {
         $key=0;
+        $salesrepmarkers= array();
         foreach ($people as $person){
             $salesrepmarkers[$key]['id']=$person->id;
             $salesrepmarkers[$key]['lat']=$person->lat;
             $salesrepmarkers[$key]['lng']=$person->lng;
-            
             $salesrepmarkers[$key]['name']=$person->fullName();
             $key++;
         }

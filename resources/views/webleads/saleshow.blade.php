@@ -1,7 +1,7 @@
 @extends ('site.layouts.default')
 @section('content')
 <h2>Web Lead Assigned to {{$person->postName()}}</h2>
-<h4><a href="{{route('my.webleads')}}">Return to all web leads</a></h4>
+<h4><a href="{{route('salesrep.newleads',$person->id)}}">Return to all web leads</a></h4>
 <div class="col-sm-5">
 	<div class="panel panel-default">
 		<div class="panel-heading clearfix">

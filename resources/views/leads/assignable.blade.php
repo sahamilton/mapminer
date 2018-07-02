@@ -18,8 +18,8 @@
  @foreach($leads as $lead)
     @if(isset($data[$lead->id]))
     <tr>
-    <td><a href="{{route('leads.show',$lead->id)}}">{{$lead->companyname}}</a></td>
-    <td>{{$lead->businessname}}</td>
+    <td><a href="{{route('leads.show',$lead->id)}}">{{$lead->businessname}}</a></td>
+    <td>{{$lead->companyname}}</td>
     <td>{{$lead->city}}</td>
     <td>{{$lead->state}}</td>
     <td>

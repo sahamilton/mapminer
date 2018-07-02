@@ -676,28 +676,32 @@ class LeadsController extends BaseController
     }
 
     public function unassignedleads(){
-      $leads= $this->lead->doesntHave('ownedBy')->limit(1000)->get();
+      $leads= $this->lead->doesntHave('ownedBy')->get();
+
+      $data = array();
       foreach ($leads as $lead){
         $people = $this->person
             ->whereHas('userdetails.roles',function ($q){
               $q->whereIn('roles.id',[5,6,7,8]);
             })
               ->nearby($lead,'100')
-              ->limit(5)
-              ->get();
+              ->limit(1)
+              ->first();
+          
           if(count($people)>0){
+            $lead->salesteam()->attach($people, ['status_id' => 2]);
              $data[$lead->id] = $people;
           }
          
         
       }
-      
+         
       return response()->view('leads.assignable',compact('leads','data'));
     }
 
      public function assignLeads(Request $request){
 
-        $lead = $this->lead->findOrFail($request->get('lead_id'));
+        $lead = $this->lead->with('contacts','leadsource')->findOrFail($request->get('lead_id'));
         $branch = Branch::with('manager','manager.userdetails')->findOrFail($request->get('branch'));
 
         if($request->get('salesrep')!=''){

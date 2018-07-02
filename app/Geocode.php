@@ -62,7 +62,8 @@ trait Geocode
         ->selectRaw("{$this->haversine($location)} AS distance")
         ->mergeBindings($sub->getQuery())
         ->whereRaw("{$this->haversine($location)} < $radius ")
-        ->orderBy('distance','ASC');
+        ->orderBy('distance','ASC')
+        ->inRandomOrder();
         if($limit){
             $query = $query->limit($limit);
         }
