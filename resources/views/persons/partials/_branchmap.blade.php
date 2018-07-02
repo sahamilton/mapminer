@@ -1,5 +1,5 @@
 
-
+@if($people->lat && $people->lng)
 <div id="branchmap" class="pull-right" style="height:400px;width:600px;border:red solid 1px"/></div> 
  
 
@@ -61,3 +61,7 @@ function bindInfoWindow(marker, map, infoWindow, html) {
 google.maps.event.addDomListener(window, 'load', initialize);
 
     </script>
+@else
+<p class="text-danger"><strong>No address or unable to geocode this address</strong></p>
+
+@endif

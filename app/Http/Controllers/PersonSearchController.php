@@ -52,7 +52,8 @@ class PersonSearchController extends Controller
           if($people->has('branchesServiced')){
             $branchmarkers = $people->branchesServiced->toJson();
           }
-          if($people->has('directReports')){
+          if(count($people->directReports)>0){
+           
             $salesrepmarkers = $this->person->jsonify($people->directReports);
           }
 

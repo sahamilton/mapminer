@@ -77,14 +77,18 @@
 								<li><a href="{{route('person.details',$reports->id)}}">{{$reports->fullName()}}</a></li>
 							
 							@endforeach
-						</div>
-							<div class="col-sm-8">
-						@include('persons.partials._teammap')
-					</div>
+						
+						
 
 					@endif
 
 					</ul>
+				</div>
+				<div class="col-sm-8">
+					@if(count($people->directReports)>0)
+						@include('persons.partials._teammap')
+						@endif
+					</div>
 					<div style="clear:both"></div> 
 				</div>
 			@endif

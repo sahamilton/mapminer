@@ -1,8 +1,7 @@
 
-
+@if($people->lat && $people->lng)
 <div id="teammap" class="pull-right" style="height:400px;width:600px;border:red solid 1px"/></div> 
 <div style="clear:both"></div>   
-
 
 
 <script type="text/javascript">
@@ -50,3 +49,6 @@ function bindInfoWindow(marker, map, infoWindow, html) {
 google.maps.event.addDomListener(window, 'load', initialize);
 
     </script>
+    @else
+    <p class="text-danger"><strong>No manager address or unable to geocode managers address</strong></p>
+@endif
