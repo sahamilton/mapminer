@@ -65,7 +65,9 @@
 <input type="submit" class="btn btn-success" value="Map Fields" />
 <input type="hidden" name="filename" value="{{$data['filename']}}" />
 <input type="hidden" name="table" value="{{$data['table']}}" />
+@if(isset($data['lead_source_id']))
 <input type="hidden" name="lead_source_id" value="{{$data['lead_source_id']}}" />
+@endif
 @foreach ($data['additionaldata'] as $key=>$value)
 <input type="hidden" name="additionaldata[{{$key}}]" value="{{$value}}" />
 @endforeach

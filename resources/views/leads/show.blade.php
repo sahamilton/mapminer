@@ -44,7 +44,7 @@
 	@include('webleads.partials._search')
 <div id="map"  style="border:solid 1px red"></div>
 @if(count($lead->salesteam)==0)
-@include('webleads.partials.select')
+@include('leads.partials.select')
 @endif
 </div>
 

@@ -120,7 +120,7 @@ public function rankLead($salesteam){
             ->wherePivotIn('status_id',[2,3]);
             
     }
-
+    
     public function leadRank(){
       $teams = $this->salesteam()->get();
     

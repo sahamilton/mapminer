@@ -8,6 +8,7 @@ use App\Person;
 use App\Branch;
 use App\Note;
 use Excel;
+use Mail;
 use Carbon\Carbon;
 use App\LeadSource;
 use App\LeadStatus;
@@ -15,6 +16,8 @@ use App\SearchFilter;
 use App\Http\Requests\LeadFormRequest;
 use App\Http\Requests\LeadAddressFormRequest;
 use App\Http\Requests\BatchLeadImportFormRequest;
+use App\Mail\NotifyWebleadsAssignment;
+use App\Mail\NotifyWebleadsBranchAssignment;
 
 
 class LeadsController extends BaseController
@@ -162,16 +165,17 @@ class LeadsController extends BaseController
     {
     
       $table = $this->leadsource->findOrFail($lead->lead_source_id);
-    $id= $lead->id;
+      $id= $lead->id;
       $table = $table->type ."leads";
       $lead = $this->lead
-          ->with('contacts')
-          ->ExtraFields($table)
-          ->find($id);
+                  ->with('contacts')
+                  ->ExtraFields($table)
+                  ->find($id);
       $extrafields = $this->getExtraFields($table);
-     
       $branches = $this->findNearByBranches($lead);
-      $people = $this->findNearbySales($branches,$lead); 
+
+      $people = $this->findNearbySales($branches,$lead);
+
       $salesrepmarkers = $this->person->jsonify($people);
       $branchmarkers=$branches->toJson();
 
@@ -636,7 +640,9 @@ class LeadsController extends BaseController
     private function findNearBySales($branches,$lead){
         $branch_ids = $branches->pluck('id')->toArray(); 
         $data['distance']=\Config::get('leads.search_radius');
+
         $salesroles = $this->salesroles;
+ 
         $persons =  $this->person->whereHas('userdetails.roles',function ($q) use($salesroles){
           $q->whereIn('roles.id',$salesroles);
         })
@@ -667,5 +673,56 @@ class LeadsController extends BaseController
                 $extra[$value] = $newdata[$value];
             }
         return $extra;
+    }
+
+    public function unassignedleads(){
+      $leads= $this->lead->doesntHave('ownedBy')->limit(1000)->get();
+      foreach ($leads as $lead){
+        $people = $this->person
+            ->whereHas('userdetails.roles',function ($q){
+              $q->whereIn('roles.id',[5,6,7,8]);
+            })
+              ->nearby($lead,'100')
+              ->limit(5)
+              ->get();
+          if(count($people)>0){
+             $data[$lead->id] = $people;
+          }
+         
+        
+      }
+      
+      return response()->view('leads.assignable',compact('leads','data'));
+    }
+
+     public function assignLeads(Request $request){
+
+        $lead = $this->lead->findOrFail($request->get('lead_id'));
+        $branch = Branch::with('manager','manager.userdetails')->findOrFail($request->get('branch'));
+
+        if($request->get('salesrep')!=''){
+            $rep = $this->person->findOrFail($request->get('salesrep'));
+            $lead->salesteam()->attach($request->get('salesrep'), ['status_id' => 2]);
+            Mail::queue(new NotifyWebleadsAssignment($lead,$branch,$rep));
+        }else{
+            
+            foreach($branch->manager as $manager){
+                $lead->salesteam()->attach($manager->id, ['status_id' => 2]);
+                //notify branch managers
+            }
+
+
+        }
+        if($request->get('notifymgr')){
+
+            $branchemails = $this->getBranchEmails($branch);
+            
+            foreach ($branchemails as $email){
+                
+                Mail::queue(new NotifyWebleadsBranchAssignment($lead,$branch,$email));
+            }
+       
+        }  
+        return redirect()->route('leadsource.show',$lead->lead_source_id);
     }
 }
