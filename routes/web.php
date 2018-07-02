@@ -226,10 +226,10 @@ Route::group(['middleware' => 'auth'], function () {
     	Route::get('documents/{id}',['as'=>'documents.show','uses'=>'DocumentsController@show']);
 
 
-    	Route::get('search',function(){
-    		return response()->view('search.vuesearch');
+    	/*Route::get('search',function(){
+    		return response()->view('search.search');
     	});
-
+*/
     	#User settings
 		Route::get('/user/settings',['as'=>'profile','uses'=>'UsersController@settings']);
 
