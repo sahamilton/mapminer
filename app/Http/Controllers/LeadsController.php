@@ -733,7 +733,7 @@ class LeadsController extends BaseController
    
 
     private function checkIfTest($rep){
-      dd(\Config::get('leads.test'));
+      
       if(\Config::get('leads.test')){
          $rep->userdetails->email = auth()->user()->email;
       }
