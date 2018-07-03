@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use App\Person;
 class TestController extends Controller
 {
     
@@ -97,5 +97,11 @@ class TestController extends Controller
 
     public function send(Request $request){
         dd($request->all());
+    }
+
+    public function test(){
+        $person = Person::with('userdetails')->where('user_id','=',auth()->user()->id)->first();
+        
+        dd($person);
     }
 }

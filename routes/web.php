@@ -507,10 +507,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 	# Versions
 	 	Route::resource('versions','GitController');
 
-	 	Route::get('test',['as'=>'test','uses'=>'TestController@form']);
-	 	
-	 	Route::post('test/send',['as'=>'test.send','uses'=>'TestController@send']);
 	 	Route::get('/leads/unassigned',['as'=>'unassigned.leads','uses'=>'LeadsController@unassignedleads']);
 	 	//Route::get('branch/{bid}/people',['as'=>'test.branch.people', 'uses'=>'WebLeadsController@getSalesPeopleofBranch']);
-
+	 	Route::get('authtest',['as'=>'test','uses'=>'TestController@test']);
 });

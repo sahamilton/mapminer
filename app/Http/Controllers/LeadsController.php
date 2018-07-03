@@ -737,7 +737,8 @@ class LeadsController extends BaseController
     private function checkIfTest($rep){
 
       if(\Config::get('leads.test')){
-         $rep->userdetails->email = auth()->user()->email;
+         $rep =  $this->person->with('userdetails')->where('user_id','=',auth()->user()->id)->first();
+         
       }
       return $rep;
     }
