@@ -20,11 +20,11 @@ class NotifyWebLeadsBranchAssignment extends Mailable
      *
      * @return void
      */
-    public function __construct(Lead $lead, Branch $branch, $emails)
+    public function __construct(Lead $lead, Branch $branch, People $manager)
     {
         $this->lead = $lead;
         $this->branch = $branch;
-        $this->emails = $emails; 
+        $this->manager = $manager; 
    
        
     }
@@ -36,12 +36,9 @@ class NotifyWebLeadsBranchAssignment extends Mailable
      */
     public function build()
     {
-        if(\Config::get('leads.test')){
-            return $this->markdown('emails.webleadsbranchnotify')->to(auth()->user()->email, auth()->user()->person->postName())->subject('New Web Lead');
-        }else{
-             return $this->markdown('emails.webleadsbranchnotify')->to($this->emails['email'], $this->emails['name'])->subject('New Web Lead');
-        }
-           
+       
+             return $this->markdown('emails.webleadsbranchnotify')->to($this->manager->userdetails->email, $this->manager->postName())->subject('New Lead');
+         
 
     }
 

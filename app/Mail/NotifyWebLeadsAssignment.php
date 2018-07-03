@@ -36,11 +36,10 @@ class NotifyWebLeadsAssignment extends Mailable
      */
     public function build()
     {
-        if(\Config::get('leads.test')){
-            return $this->markdown('emails.webleadsnotify')->to(auth()->user()->email, auth()->user()->person->postName())->subject('New Web Lead');
-        }else{
-            return $this->markdown('emails.webleadsnotify')->to($this->person->userdetails->email, $this->person->postName())->subject('New Web Lead');
-        }
+        
+            
+            return $this->markdown('emails.webleadsnotify')->to($this->person->userdetails->email, $this->person->postName())->subject('New Lead');
+        
 
     }
 

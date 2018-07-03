@@ -457,12 +457,9 @@ class LeadsController extends BaseController
 
         $person = $this->getSalesRep($pid);
       
-        
-       
-       // dd($person->findPersonsRole($person));
-        // depending on role either return list of team and their leads
-        // or the leads
+
         if($person->userdetails->can('accept_leads')){
+           
             return $this->showSalesLeads($person);
         }elseif($person->userdetails->hasRole('Admin') or $person->userdetails->hasRole('Sales Operations')){
                 return redirect()->route('leadsource.index');
@@ -519,6 +516,7 @@ class LeadsController extends BaseController
         ->limit('200')
         
         ->get();
+   
         $data['count']=count($leads);
         return response()->view('templeads.showmap',compact('data'));
     }
@@ -706,27 +704,40 @@ class LeadsController extends BaseController
 
         if($request->get('salesrep')!=''){
             $rep = $this->person->findOrFail($request->get('salesrep'));
+            $rep = $this->checkIfTest($rep);
             $lead->salesteam()->attach($request->get('salesrep'), ['status_id' => 2]);
             Mail::queue(new NotifyWebLeadsAssignment($lead,$branch,$rep));
         }else{
             
             foreach($branch->manager as $manager){
                 $lead->salesteam()->attach($manager->id, ['status_id' => 2]);
-                //notify branch managers
+                $manager = $this->checkIfTest($manager);
+                Mail::queue(new NotifyWebLeadsBranchAssignment($lead,$manager));
             }
 
 
         }
         if($request->get('notifymgr')){
 
-            $branchemails = $this->getBranchEmails($branch);
-            
-            foreach ($branchemails as $email){
-                
-                Mail::queue(new NotifyWebLeadsBranchAssignment($lead,$branch,$email));
+            foreach ($branch->manager as $manager){
+
+                $manager = $this->checkIfTest($manager);
+                Mail::queue(new NotifyWebLeadsBranchAssignment($lead,$branch,$manager));
             }
        
         }  
         return redirect()->route('leadsource.show',$lead->lead_source_id);
     }
+
+    private function getBranchEmails($branch){
+        
+    }
+
+    private function checkIfTest($rep){
+      if(\Config::get('leads.test')){
+         $rep->userdetails->email = auth()->user()->email;
+      }
+      return $rep;
+    }
+    
 }
