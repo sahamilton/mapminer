@@ -2,7 +2,8 @@
 
 ## New Web Lead 
 
-{{$emails['name']}}, 
+{{$manager->firstname}}, 
+{{dd('branch',$manager,$lead)}}
 
 A new lead that came through the People Ready website has been assigned to {{$lead->salesteam->first()->postName()}} and branch {{$branch->branchname}}.  The details of this lead are below:
 
