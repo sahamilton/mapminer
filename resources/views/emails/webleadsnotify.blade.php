@@ -3,7 +3,7 @@
 ## New Lead 
 
 {{$person->firstname}}, 
-{{dd('weblead', $lead,$person)}}
+
 You have been assigned a new lead from the {{$lead->leadsource->source}}.  The details are below:
 
 @component('mail::panel')
