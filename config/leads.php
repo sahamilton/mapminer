@@ -43,4 +43,7 @@ return [
 
 	'lead_distribution_roles'=>(['Sales']),
 
+
+    'test'=>env("LEADS_TEST",false),
+
 ];

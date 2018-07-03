@@ -705,7 +705,6 @@ class LeadsController extends BaseController
         if($request->get('salesrep')!=''){
             $rep = $this->person->findOrFail($request->get('salesrep'));
             $rep = $this->checkIfTest($rep);
-        
             $lead->salesteam()->attach($request->get('salesrep'), ['status_id' => 2]);
             Mail::queue(new NotifyWebLeadsAssignment($lead,$branch,$rep));
         }else{
@@ -734,6 +733,7 @@ class LeadsController extends BaseController
    
 
     private function checkIfTest($rep){
+      dd(\Config::get('leads.test'));
       if(\Config::get('leads.test')){
          $rep->userdetails->email = auth()->user()->email;
       }
