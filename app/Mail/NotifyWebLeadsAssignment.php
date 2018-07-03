@@ -25,7 +25,7 @@ class NotifyWebLeadsAssignment extends Mailable
         $this->lead = $lead;
         $this->branch = $branch;
         $this->person = $person;        
-       
+       dd($this->person);
        
     }
 
