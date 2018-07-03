@@ -25,7 +25,7 @@ class NotifyWebLeadsBranchAssignment extends Mailable
         $this->lead = $lead;
         $this->branch = $branch;
         $this->manager = $manager; 
-   
+        dd($this->manager->userdetails->email);
 
     }
 
