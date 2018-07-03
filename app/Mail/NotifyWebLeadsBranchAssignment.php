@@ -37,7 +37,8 @@ class NotifyWebLeadsBranchAssignment extends Mailable
     public function build()
     {
        
-             return $this->markdown('emails.webleadsbranchnotify')->to($this->manager->userdetails->email, $this->manager->postName())->subject('New Lead');
+             return $this->markdown('emails.webleadsbranchnotify')
+             ->to($this->manager->userdetails->email, $this->manager->postName())->subject('New Lead');
          
 
     }
