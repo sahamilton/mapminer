@@ -742,5 +742,30 @@ class LeadsController extends BaseController
       }
       return $rep;
     }
+
+        public function getAssociatedBranches($pid=null){
+
+        if(auth()->user()->hasRole('Branch Manager')){
+
+            $branchmgr = $this->person
+                            ->where('user_id','=',auth()->user()->id)
+                            ->with('manages')
+                            ->first();
+
+         }else{
+             $branchmgr = $this->person     
+                            ->with('manages')
+                            ->findOrFail($pid);
+         } 
+                
+        $branchlist = $branchmgr->manages->pluck('id')->toArray();
+        if($branchlist){
+            $branchleads = $this->getBranchData($branchlist);
+            $leadStatuses = LeadStatus::pluck('status','id')->toArray();
+            return response()->view('templeads.branchmgrleads',compact('branchleads','branchmgr','leadStatuses'));
+        }
+        return redirect()->back()->with('error', 'Sorry '. $branchmgr->postName() .' is not assigned to any branch. Please contact Sales Ops' );
+        
+    }
     
 }
