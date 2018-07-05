@@ -191,7 +191,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 
 		Route::get('/newleads/{pid}',['as'=>'salesrep.newleads','uses'=>'LeadsController@salesLeads']);
-		//Route::get('/newleads/show/{id}/',['as'=>'salesrep.newleads.show','uses'=>'LeadsController@salesLeadsDetail']);
+		Route::get('/newleads/show/{id}/',['as'=>'salesrep.newleads.show','uses'=>'LeadsController@salesLeadsDetail']);
 		Route::get('/newleads/{pid}/map',['as'=>'salesrep.newleads.map','uses'=>'LeadsController@salesLeadsMap']);
 		Route::get('api/newleads/{pid}/map',['as'=>'salesrep.newleads.mapdata','uses'=>'LeadsController@getMapData']);
 		Route::get('/branch/leads',['as'=>'branchmanager.newleads','uses'=>'LeadsController@getAssociatedBranches']);
