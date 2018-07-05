@@ -68,7 +68,7 @@ class WebleadsImportController extends Controller
     		$lead = $this->lead->create($newdata);
             $lead->contacts()->create($contact);
             $lead->webLead()->create($extra);
-    		return redirect()->route('salesrep.newleads.show',$lead->id);
+    		return redirect()->route('leads.show',$lead->id);
 
     	}
     }
@@ -126,8 +126,13 @@ class WebleadsImportController extends Controller
 		        
 		        return $fields; 
     }
+
+
+
+
     private function validateFields($input){
     	$valid = $this->getValidFields();
+
     	foreach ($input as $key=>$value){
     		if(array_key_exists($key,$valid)){
     			$data[$valid[$key]] = $value;
@@ -146,8 +151,8 @@ class WebleadsImportController extends Controller
 
     private function getValidFields(){
     	
-        $validFields = $this->fields->whereType('weblead')->whereNotNull('fieldname')->get();
-      
+        $validFields = $this->fields->whereType('webleads')->whereNotNull('fieldname')->get();
+
     	return $validFields->reduce(function ($validFields,$validField){
     		$validFields[$validField->aliasname] = $validField->fieldname;
     		return $validFields;

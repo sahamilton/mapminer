@@ -86,6 +86,8 @@ class LeadSourceController extends Controller
      */
     public function show($id)
     {
+
+        dd('here');
         $leadsource = $this->leadsource->findOrFail($id);
         $data = $this->leadsource->leadRepStatusSummary($id);
         

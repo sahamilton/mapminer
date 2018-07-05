@@ -2,8 +2,6 @@
 @section('content')
 <script type="text/javascript" src="{{asset('assets/js/starrr.js')}}"></script>
 <div class="container">
-
-
 			<h2>
 				<strong>Prospect Source - {{$leadsource->source}}</strong></h2>
 				<p>{{$leadsource->description}}</p>
@@ -20,6 +18,13 @@
 				
 
 				<p><a href="{{route('leadsource.index')}}">Return to all Prospect sources</a></p>
+ @if (Auth::user()->hasRole('Admin') or Auth::user()->hasRole('Sales Operations'))
+<div class="pull-right">
+                <p><a href="{{{ route('webleads.create') }}}" class="btn btn-small btn-info iframe">
+<i class="fa fa-plus-circle text-success" aria-hidden="true"></i>
+ Import New Web Lead</a></p>
+            </div>
+ @endif  
 
 	 <div class="col-md-10 col-md-offset-1">
         <table class="table" id = "sorttable">
