@@ -556,7 +556,8 @@ class LeadsController extends BaseController
     public function branchLeads($bid){
       $branch = Branch::with('leads','manager','leads.salesteam','leads.ownedBy','leads.vertical')->findOrFail($bid);
       $sources = $this->leadsource->pluck('source','id');
-      return response()->view('leads.branchdetails',compact('branch','sources'));
+      $statuses = $this->leadstatus->pluck('status','id')->toArray();
+      return response()->view('leads.branchdetails',compact('branch','sources','statuses'));
     }
 
 

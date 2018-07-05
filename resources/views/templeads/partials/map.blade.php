@@ -13,10 +13,10 @@ function initialize() {
   var infoWindow = new google.maps.InfoWindow;
   
   var map = new google.maps.Map(document.getElementById('map'), mapOptions);
-	var name = "{{$lead->Company_Name}}";
-    var address = "{{$lead->Primary_Address}}" + " {{$lead->Primary_City}}" + " {{$lead->Primary_State}}" + "{{$lead->Primary_Zip}}";
+	var name = "{{$lead->companyname}}";
+    var address = "{{$lead->companyname}}" + " {{$lead->address}}" + " {{$lead->city}}" + " {{$lead->state}}" + " {{$lead->zip}}";
     var html = address;
-	var marker = new google.maps.Marker({
+	   var marker = new google.maps.Marker({
 	  position: myLatlng,
 	  map: map,
 	  title: name,
