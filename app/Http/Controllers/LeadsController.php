@@ -554,6 +554,7 @@ class LeadsController extends BaseController
     }
 
     public function branchLeads($bid){
+
       $branch = Branch::with('leads','manager','leads.salesteam','leads.ownedBy','leads.vertical')->findOrFail($bid);
       $sources = $this->leadsource->pluck('source','id');
       $statuses = $this->leadstatus->pluck('status','id')->toArray();
@@ -629,6 +630,7 @@ class LeadsController extends BaseController
      public function unAssignLeads(Request $request){
      
        $lead = $this->lead->findOrFail($request->get('lead'));
+       $lead->branches()->dissociate();
        $lead->salesteam()->detach($request->get('rep'));
        return redirect()->route('leads.show',$lead->id);
         
@@ -710,6 +712,8 @@ class LeadsController extends BaseController
         $lead = $this->lead->with('contacts','leadsource')->findOrFail($request->get('lead_id'));
         $branch = Branch::with('manager','manager.userdetails')->findOrFail($request->get('branch'));
 
+        $lead->branches()->associate($branch);
+        $lead->save();
         if($request->get('salesrep')!=''){
 
             $rep = $this->person->findOrFail($request->get('salesrep'));

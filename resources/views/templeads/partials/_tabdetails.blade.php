@@ -15,7 +15,7 @@
 			 <b>Title:</b> {{$lead->contacts->contacttitle}}</p>
 			<p>
 			<i class="fa fa-map-marker" aria-hidden="true"></i>
-			 <b>Address:</b><br/>{{$lead->address}}<br />{{$lead->city}}  {{$lead->state}} {{$lead->Primary_Zip}}</p>
+			 <b>Address:</b><br/>{{$lead->address}}<br />{{$lead->city}}  {{$lead->state}} {{$lead->zip}}</p>
 			<p><b><i class="fa fa-phone" aria-hidden="true"></i> Phone:</b> {{$lead->contacts->contactphone}}</p>
 			@if(! empty($lead->contacts->contactemail))
 			<p><b><i class="fa fa-envelope" aria-hidden="true"></i> Email:</b> <a href="mailto:{{$lead->contacts->contactemail}}">{{$lead->contacts->contactemail}}</a></p>

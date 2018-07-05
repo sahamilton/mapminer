@@ -117,11 +117,12 @@ class LeadSourceController extends Controller
                 $q->where('lead_source_id','=',$id);
             })
            ->withCount('leads')
+                ->with('leads.ownedBy')
                 ->with('manager')
                 ->orderBy('id')
                 ->get();
            
-            return response()->view('templeads.branchsummary',compact('branches','leadsource'));
+            return response()->view('leads.branches',compact('branches','leadsource'));
 
         
 

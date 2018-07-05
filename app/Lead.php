@@ -35,7 +35,6 @@ class Lead extends Model implements HasPresenter {
 						'lat',
 						'lng',
 						'lead_source_id',
-            'branch_id',
             'branch_id',];
     public $statuses = [1=>'Offered',2=>'Claimed',3=>'Closed'];
     public $getStatusOptions =  [

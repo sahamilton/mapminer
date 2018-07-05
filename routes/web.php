@@ -405,7 +405,7 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
 	   // Route::get('newleads/team',['as'=>'templeads.team','uses'=>'TempleadController@salesteam']);
 	    Route::get('/newleads/{pid}/branchmgr',['as'=>'branchmgr.newleads','uses'=>'LeadsController@getAssociatedBranches']);
 	   Route::get('/newleads/branch',['as'=>'templeads.branch','uses'=>'LeadsController@branches']);
-	    Route::get('/newleads/{id}/branch/',['as'=>'templeads.branchid','uses'=>'LeadsController@branches']);
+	    Route::get('/newleads/{id}/branch/',['as'=>'leads.branchid','uses'=>'LeadsController@branchLeads']);
 		Route::resource('newleads','LeadSourceController');
 		
 });
