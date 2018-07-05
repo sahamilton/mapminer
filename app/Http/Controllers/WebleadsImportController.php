@@ -195,47 +195,6 @@ class WebleadsImportController extends Controller
         $lead->contacts()->create($contact);
         $lead->webLead()->create($extra);
         return redirect()->route('salesrep.newleads.show',$lead->id);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    	$this->getDefaultFields($request);
-        $data = $request->except('fields');
-        $data = $this->geoCodeAddress($data);
-        dd($data);
-        $fields = $request->get('fields');
-        // create the lead
-        // 
-        // create teh extra fields
-        // 
-        // 
-        foreach ($fields as $key=>$value){
-            if (($key = array_search('@ignore', $fields)) !== false) {
-                unset($fields[$key]);
-            }
-        }
-        dd($fields);
-        foreach ($fields as $key=>$value){
-            $newdata[$value]= $data[$key];
-        }
-        dd($data,$newdata);
-        
-        $lead = $this->lead->create($newdata);
-
-        return redirect()->route('webleads.show',$lead->id);
 	}
 
 	private function getDefaultFields($request){

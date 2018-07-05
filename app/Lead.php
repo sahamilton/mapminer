@@ -97,8 +97,8 @@ class Lead extends Model implements HasPresenter {
     	
     }
 public function rankLead($salesteam){
-      $ranking = array();
-
+      $ranking = null;
+    
       foreach ($salesteam as $team){
         $ratings[$team->id]=array();
          foreach ($team->closedleads as $lead){
@@ -111,8 +111,8 @@ public function rankLead($salesteam){
         if (count($ratings[$team->id])>0){
                $ranking[$team->id] = array_sum($ratings[$team->id]) / count($ratings[$team->id]);
         }
-    }
-        return $ranking;
+    }  
+    return $ranking;
     }
     public function ownedBy(){
       return $this->belongsToMany(Person::class,'lead_person_status','related_id','person_id')

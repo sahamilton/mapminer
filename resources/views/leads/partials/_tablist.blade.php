@@ -32,7 +32,8 @@
         @else
             Offered {{count($lead->salesteam)}}
         @endif
-
+    @else
+    Unassigned
     @endif</td>
     <td><a href = "{{route('leadsource.show',$lead->lead_source_id)}}">{{$sources[$lead->lead_source_id]}}</a></td>
     <td>
@@ -42,7 +43,9 @@
 
     @endforeach
     </ul>
-    <td>    {{$lead->rankLead($lead->salesteam)}}
+    <td>  @php $rank =   $lead->rankLead($lead->salesteam) @endphp
+
+        {{$rank}}
 
     </td>
 

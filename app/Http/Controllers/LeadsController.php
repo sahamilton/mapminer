@@ -10,6 +10,7 @@ use App\Note;
 use Excel;
 use Mail;
 use Carbon\Carbon;
+use App\MapFields;
 use App\LeadSource;
 use App\LeadStatus;
 use App\SearchFilter;
@@ -61,26 +62,13 @@ class LeadsController extends BaseController
         
         return response()->view('templeads.index',compact('reps','rankings'));
       }
-        
+     
 
-
-    private function getSalesTeam($leads){
-        $salesreps = array();
-        foreach($leads as $lead){
-            $leadreps = $lead->salesteam->pluck('id')->toArray();
-            $salesreps = array_unique(array_merge($salesreps,$leadreps));
-        }
-
-        return $this->person->with('userdetails','industryfocus','reportsTo','salesleads')
-           ->whereIn('id',$salesreps)
-
-       ->get();
-    }
-
- public function salesLeadsDetail ($id){
+    public function salesLeadsDetail ($id){
 
         $lead = $this->lead
-        ->with('leadsource')->findOrFail($id);
+        ->with('leadsource')
+        ->findOrFail($id);
 
         $leadsourcetype = $lead->leadsource->type.'leads';
        $people = null;
@@ -173,9 +161,7 @@ class LeadsController extends BaseController
                   ->find($id);
       $extrafields = $this->getExtraFields($table);
       $branches = $this->findNearByBranches($lead);
-
       $people = $this->findNearbySales($branches,$lead);
-
       $salesrepmarkers = $this->person->jsonify($people);
       $branchmarkers=$branches->toJson();
 
@@ -183,7 +169,22 @@ class LeadsController extends BaseController
 
 
     }
+    public function store(LeadFormRequest $request){
 
+      $input = $request->all();
+      $leadsource = $this->leadsource->findOrFail($input['lead_source_id']);
+      $table = $leadsource->type.'leads';
+      $data = $this->extractLeadTableData($input,$table);
+      $lead = $this->lead->create($data['lead']);
+      $lead->contacts()->create($data['contact']);
+      if($table =='webleads'){
+        $lead->webLead()->create($data['extra']);
+      }else{
+        $lead->tempLead()->create($data['extra']);
+      }
+      
+      return redirect()->route('leads.show',$lead->id);
+    }
     /**
      * Show the form for editing the specified resource.
      *
@@ -191,13 +192,18 @@ class LeadsController extends BaseController
      * @return \Illuminate\Http\Response
      */
 
-    public function edit($id)
+    public function edit($lead)
     {
-        $lead = $this->lead->with('vertical')->findOrFail($id);
-        $verticals = $this->vertical->vertical();
-        $sources = $this->leadsource->pluck('source','id');
+        $lead->load('leadsource');
+        $table = $lead->leadsource->type.'leads';
+        $lead = $this->lead
+                  ->with('contacts','leadsource')
+                  ->extraFields($table)
+                  ->find($lead->id);
 
-        return response()->view('leads.edit',compact('lead','sources','verticals'));
+        $sources = $this->leadsource->pluck('source','id');
+        $extrafields = $this->getExtraFields($table);
+        return response()->view('leads.edit',compact('lead','sources','extrafields'));
     }
 
     /**
@@ -208,15 +214,39 @@ class LeadsController extends BaseController
      * @return \Illuminate\Http\Response
      */
 
-    public function update(LeadFormRequest $request, $id)
+    public function update(LeadFormRequest $request, $lead)
     {
-       $lead = $this->lead->whereId($id)->update($request->except('_method', '_token'));
-       $geoCode = app('geocoder')->geocode($this->getAddress($request))->get();
-       $lead->update($this->lead->getGeoCode($geoCode));
-       $lead->vertical()->sync($request->get('vertical'));
-       return redirect()->route('leads.index');
+      $lead->load('leadsource');
+      $table = $lead->leadsource->type.'leads';
+      $data = $this->extractLeadTableData($input,$table);
+
+      $lead->update($data['lead']);
+      $lead->contacts()->update($data['contact']);
+      if($table=='webleads'){
+        $lead->webLead()->update($data['extra']);
+      }else{
+         $lead->tempLead()->update($data['extra']);
+      }
+      
+      return redirect()->route('leads.show',$lead->id);
+
     }
 
+
+      private function extractLeadTableData($input,$table){
+
+      $input = $this->geoCodeAddress($input);
+      $input = $this->renameFields($input); 
+      foreach ($input[0] as $key=>$value){
+         $data['lead'][$value]=$input[1][$key];
+      }
+      $data['lead']['lead_source_id'] = $request->get('lead_source_id');
+
+      $data['contact'] = $this->getContactDetails($data['lead'],$table);
+      $data['extra'] = $this->getExtraFieldData($data['lead'],$table);
+      return $data;
+
+    }
     /**
      * Remove the specified resource from storage.
      *
@@ -255,11 +285,16 @@ class LeadsController extends BaseController
       $coords = $this->lead->getGeoCode($geoCode);
       $lead->lat = $coords['lat'];
       $lead->lng = $coords['lng'];
+      $lead->address = $coords['address'];
+      $lead->city = $coords['city'];
+      $lead->state = $coords['state'];
+      $lead->zip = $coords['zip'];
       $lead->lead_source_id = 2;
-      $lead->address = $request->get('address');
+      $extrafields = $this->getExtraFields('webleads');
+      $sources = $this->leadsource->pluck('source','id');
+
       $branch = new \App\Branch;
       $branches = $branch->nearby($lead,500)->limit(5)->get();
-     
       $people = $this->person
                     ->whereHas('userdetails.roles',function($q) {
                       $q->whereIn('name',$this->assignTo);
@@ -267,34 +302,18 @@ class LeadsController extends BaseController
               })->nearby($lead,'1000')->with('userdetails')
              
               ->limit(5)
-              ->get();
+              ->get();      
+      $salesrepmarkers = $this->person->jsonify($people);
+      $branchmarkers=$branches->toJson();
 
-
-      
-        $salesrepmarkers = $this->person->jsonify($people);
-        $branchmarkers=$branches->toJson();
-        return response()->view('leads.showsearch',compact('lead','branches','people','salesrepmarkers','branchmarkers'));
+      return response()->view('leads.showsearch',compact('lead','branches','people','salesrepmarkers','branchmarkers','extrafields','sources'));
 
 
 
       //return response()->view('leads.showsearch',compact('lead','sources','rank','people','branches'));
     }
 
-    
-    private function getAddress($request){
-        // if its a one line address return that
-        if(! $request->filled('city')){
-            return $address = $request->get('address') ;
-        }
-        // else build the full address
-        return $address = $request->get('address') . " " . $request->get('city') . " " . $request->get('state') . " " . $request->get('zip');
-    }
-
-    public function address(){
-    	$people=array();
-    	return response()->view('leads.address',compact('people'));
-    }
-
+  
     /**
      * Display people near to address.
      *
@@ -334,7 +353,7 @@ class LeadsController extends BaseController
         return response()->view('leads.person',compact('leads','statuses','source'));
     }
 
-
+    // this really belongs in the sales org controller
 
     public function find(LeadAddressFormRequest $request){
 
@@ -413,37 +432,15 @@ class LeadsController extends BaseController
           ->get();
       }
 
-    private function createNewSource($request){
-        $source = $this->leadsource->create(['source'=>$request->get('lead_source_id'),
-            'datefrom'=>Carbon::createFromFormat('m/d/Y',$request->get('datefrom')),
-            'dateto'=>Carbon::createFromFormat('m/d/Y',$request->get('dateto')),
-            'user_id'=>auth()->user()->id,
-            'filename'=>$request->get('filename')]);
-
-        $request->merge(['lead_source_id'=>$source->id]);
-        return $request;
-    }
-
-
-    public function getIndustryAssociation($people){
-        foreach ($people as $key=>$person){
-            $rep = Person::find($person->id);
-            $people[$key]->industry = $rep->industryfocus()->pluck('filter','searchfilters.id')->toArray();
-        }
-
-        return $people;
-    }
-
+   
+    
     public function exportLeads(Request $request){
        if($request->has('type')){
         $type = $request->get('type');
     }else{
         $type = 'csv';
     }
-   /* $leads = $this->person->where('user_id','=',auth()->user()->id)
-                ->with('ownedLeads','ownedLeads.relatedNotes')->firstOrFail();
-                $statuses = LeadStatus::pluck('status','id')->toArray();
-    return response()->view('salesleads.export',compact('leads','statuses'));*/
+   
     Excel::create('Prospects'.time(),function($excel) {
             $excel->sheet('Prospects',function($sheet) {
                 $leads = $this->person->where('user_id','=',auth()->user()->id)
@@ -453,6 +450,7 @@ class LeadsController extends BaseController
             });
         })->download($type);
     }
+ 
  public function salesLeads($pid){
 
         $person = $this->getSalesRep($pid);
@@ -554,6 +552,13 @@ class LeadsController extends BaseController
         $data['count']=count($leads);
         return response()->view('templeads.branchmap',compact('data'));
     }
+
+    public function branchLeads($bid){
+      $branch = Branch::with('leads','manager','leads.salesteam','leads.ownedBy','leads.vertical')->findOrFail($bid);
+      $sources = $this->leadsource->pluck('source','id');
+      return response()->view('leads.branchdetails',compact('branch','sources'));
+    }
+
 
     public function getBranchMapData($bid){
         
@@ -668,7 +673,9 @@ class LeadsController extends BaseController
                       ->pluck('fieldname')->toArray();
 
             foreach ($extraFields as $key=>$value){
+              if($newdata[$value]){
                 $extra[$value] = $newdata[$value];
+              }
             }
         return $extra;
     }
@@ -743,7 +750,7 @@ class LeadsController extends BaseController
       return $rep;
     }
 
-        public function getAssociatedBranches($pid=null){
+    public function getAssociatedBranches($pid=null){
 
         if(auth()->user()->hasRole('Branch Manager')){
 
@@ -752,7 +759,15 @@ class LeadsController extends BaseController
                             ->with('manages')
                             ->first();
 
-         }else{
+         }elseif(auth()->user()->hasRole('Admin')){
+            $branches = Branch::has('leads')
+            ->withCount('leads')
+            ->with('manager')
+            ->get();
+            return response()->view('leads.branches',compact('branches'));
+        
+
+        }else{
              $branchmgr = $this->person     
                             ->with('manages')
                             ->findOrFail($pid);
@@ -767,5 +782,66 @@ class LeadsController extends BaseController
         return redirect()->back()->with('error', 'Sorry '. $branchmgr->postName() .' is not assigned to any branch. Please contact Sales Ops' );
         
     }
+
+    private function geoCodeAddress($input){
+        $address = null;
+        if(isset($input['address'])){
+            $address = $input['address'];
+        }
+        $address = $address .' ' . $input['city'] . ' ' . $input['state'];
+        $geoCode = app('geocoder')->geocode($address)->get();
+        $location =$this->lead->getGeoCode($geoCode);
+        $input['lat']= $location['lat'];
+        $input['lng']= $location['lng'];
+        return $input;
+    }
+
+    private function renameFields($input){
+           
+            
+            $valid = $this->getValidFields();
     
+            foreach (array_keys($input) as $key=>$value){
+              if(isset($valid[$value])){
+                $fields[0][$key]=$valid[$value];
+              }else{
+                $fields[0][$key]=$value;
+              }
+              
+            }
+            $fields[1] = array_values($input);
+            
+            return $fields; 
+    }
+    private function getValidFields($type='webleads'){
+      
+        $validFields = MapFields::whereType($type)->whereNotNull('fieldname')->get();
+
+      return $validFields->reduce(function ($validFields,$validField){
+        $validFields[$validField->aliasname] = $validField->fieldname;
+        return $validFields;
+
+      });
+    }
+
+
+    private function getContactDetails($newdata,$type='webleads'){
+        $contactFields = MapFields::whereType($type)
+        ->whereDestination('contact')
+        ->whereNotNull('fieldname')->pluck('fieldname')->toArray();
+
+        $contact['contact'] = null;
+            foreach ($contactFields as $field){
+             
+                if(in_array($field,['first_name','last_name'])){
+                    $contact['contact'] = $contact['contact'] . $newdata[$field]." ";
+                }else{
+                    $contact[$field] = $newdata[$field];
+                }
+            }
+
+        return  $contact;
+    
+    }
+
 }

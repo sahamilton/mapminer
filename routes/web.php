@@ -191,7 +191,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 
 		Route::get('/newleads/{pid}',['as'=>'salesrep.newleads','uses'=>'LeadsController@salesLeads']);
-		Route::get('/newleads/show/{id}/',['as'=>'salesrep.newleads.show','uses'=>'LeadsController@salesLeadsDetail']);
+		//Route::get('/newleads/show/{id}/',['as'=>'salesrep.newleads.show','uses'=>'LeadsController@salesLeadsDetail']);
 		Route::get('/newleads/{pid}/map',['as'=>'salesrep.newleads.map','uses'=>'LeadsController@salesLeadsMap']);
 		Route::get('api/newleads/{pid}/map',['as'=>'salesrep.newleads.mapdata','uses'=>'LeadsController@getMapData']);
 		Route::get('/branch/leads',['as'=>'branchmanager.newleads','uses'=>'LeadsController@getAssociatedBranches']);
@@ -251,11 +251,9 @@ Route::group(['middleware' => 'auth'], function () {
  */
 Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
 {
-Route::get('/',['as'=>'ops','uses'=>'Admin\AdminDashboardController@dashboard']);
 	#Ops Main Page
-	#	Route::get('/',function(){
-	#		return response()->view('ops.index');
-	#	})->name('ops');
+		Route::get('/',['as'=>'ops','uses'=>'Admin\AdminDashboardController@dashboard']);
+	
 	#Branches
 		Route::get('branches/import', ['as'=>'branches.importfile', 'uses'=>'BranchesImportController@getFile']);
 		Route::post('branches/change',['as'=>'branches.change','uses'=>'BranchesImportController@update']);
@@ -288,7 +286,6 @@ Route::get('/',['as'=>'ops','uses'=>'Admin\AdminDashboardController@dashboard'])
     # Imports
    		Route::get('branch/teams',['as'=>'branch_team.importfile','uses'=>'BranchTeamImportController@getFile']);
    		Route::post('branch/teams',['as'=>'branches.teamimport','uses'=>'BranchTeamImportController@import']);
-
     	Route::get('imports',['as'=>'imports.index','uses'=>'ImportController@index']);
     	Route::post('/importleads/mapfields',['as'=>'leads.mapfields','uses'=>'LeadImportController@mapfields']);
     	Route::post('/importlocations/mapfields',['as'=>'locations.mapfields','uses'=>'LocationsImportController@mapfields']);
@@ -357,6 +354,7 @@ Route::get('/',['as'=>'ops','uses'=>'Admin\AdminDashboardController@dashboard'])
 		Route::get('leadsource/{id}/export',['as'=>'leadsource.export','uses'=>'LeadSourceController@export']);
 		Route::post('lead/search',['as'=>'leads.search','uses'=>'LeadsController@search']);
 		Route::get('lead/search',['as'=>'leads.search','uses'=>'LeadsController@searchAddress']);
+		Route::get('lead/{bid}/branch',['as'=>'leads.branch','uses'=>'LeadsController@branchLeads']);
 		Route::resource('leads','LeadsController');
 
 	# Prospect Source / LeadSource
