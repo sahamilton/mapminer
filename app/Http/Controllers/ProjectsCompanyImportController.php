@@ -120,11 +120,14 @@ class ProjectsCompanyImportController extends ImportController
     }
 
     private function cleanseContacts(){
-        $query = "update projectcompanyimport set contact= null, firstname = null, lastname = null where firstname ='' and lastname='' and contact ='';";
-        if (\DB::select(\DB::raw($query))){
+        $fields = ['firstname','lastname','contact'];
+        foreach ($fields as $field){
+        $query = "update projectcompanyimport set ". $field ."= null where " . $field . " ='';";
+        \DB::select(\DB::raw($query));
            
-            return true;
-        }
+       
+        }     
+        return true;
     }
     private function updateContacts(){
         // update projectcompanyimport set contact= null, firstname = null, lastname = null where firstname ='' and lastname='' and contact ='';

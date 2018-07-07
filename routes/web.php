@@ -324,10 +324,10 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
 	#Prospects / Leads
 	/*	Route::get('leads/address',['as'=>'lead.address','uses'=>'LeadsController@address']);
 		Route::get('leads/{vertical}/vertical',['as'=>'lead.vertical','uses'=>'LeadsController@index']);
-		
+		*/	
 		Route::get('leads/import/{id?}',['as'=>'prospects.importfile','uses'=>'LeadImportController@getFile']);
 		Route::get('leads/import/assigned/{id?}',['as'=>'assigned_prospects.importfile','uses'=>'LeadAssignedImportController@getFile']);
-	*/
+
 		Route::post('leads/import',['as'=>'leads.import','uses'=>'LeadImportController@import']);
 	/*	
 		Route::get('leads/assign/{sid}/source',['as'=>'leads.geoassign','uses'=>'LeadsAssignController@geoAssignLeads']);

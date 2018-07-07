@@ -123,19 +123,21 @@ class ProjectsImportController extends ImportController
     }
     
     private function postImport($data){
-      
+  
         switch($data['step']){
             case 1:
                 $this->copyProjects();
                 return redirect()->route('project_company.importfile')->with('success','Projects imported; Now import the related companies');
             break;
 
-            case 2:
+            case 2: 
                
                 $this->createCompanyId();
+                $this->cleanseProjectContacts();
                 $this->updateContacts();
                 $this->createContactId();
                 $this->copyProjectCompanies();
+                
                 $this->copyProjectContacts();
                 $this->updatePivot();
                 
@@ -146,6 +148,15 @@ class ProjectsImportController extends ImportController
             }
             
         }
+    private function copyProjects(){
+        
+         $query = "insert ignore into projects (" . implode(",",$this->projectfields) . ") select t.". implode(",t.",$this->projectfields). " FROM `projectsimport` t";
+        if (\DB::select(\DB::raw($query))){
+           
+            return true;
+        }
+    }
+
     private function createCompanyId(){
         $query = "Update projectcompanyimport  set company_id = md5(lcase(trim(replace(concat(firm,addr1),' ',''))))";
         if (\DB::select(\DB::raw($query))){
@@ -162,22 +173,28 @@ class ProjectsImportController extends ImportController
         }
     }
 
-    private function copyProjects(){
-        
-         $query = "insert ignore into projects (" . implode(",",$this->projectfields) . ") select t.". implode(",t.",$this->projectfields). " FROM `projectsimport` t";
-        if (\DB::select(\DB::raw($query))){
-           
-            return true;
+    
+    private function cleanseProjectContacts(){
+        $fields = ['firstname','lastname','contact'];
+        foreach ($fields as $field){
+
+        $query="update `projectscompanyimport` set ' $field .' = null where '. $field. ' ='';";
+            \DB::select(\DB::raw($query));
         }
+       return true; 
+
+
     }
+    
+    
     private function updateContacts(){
             $query = "update projectcompanyimport set contact = concat(firstname,lastname) where contact is null";
             if (\DB::select(\DB::raw($query))){
            
             return true;
         }
-
     }
+
     private function copyProjectContacts(){
 
          $query = "insert ignore into projectcontacts (" . implode(",",$this->projectcontactfields) . ") select t.". implode(",t.",$this->projectcontactfields). " FROM `projectscompanyimport` t where t.contact is not null";
@@ -186,6 +203,11 @@ class ProjectsImportController extends ImportController
             return true;
         }
     }
+
+
+
+    }
+
     
      private function updatePivotTable(){
      $query =  "Insert ignore into project_company_contact (project_id,company_id,type,contact_id) 
