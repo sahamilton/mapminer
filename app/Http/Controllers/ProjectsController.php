@@ -196,7 +196,11 @@ class ProjectsController extends BaseController
         $location->lng=$geo[1];
 
         $limit=100;
-        $result = $this->project->nearby($location,$distance)->limit(100)->get();
+        $result = $this->project->doesntHave('owner')
+        ->whereHas('source', function($q){
+            $q->where('status','=','open');
+        })
+        ->nearby($location,$distance)->limit(100)->get();
         return  $this->makeNearbyProjectsXML($result);
 
     }
@@ -283,6 +287,7 @@ class ProjectsController extends BaseController
         }else{
             $id = null;
         }
+
         $projects = $this->project->projectStats($id);
         if($id && count($projects)>0){
            $source = $projects[0]->source;

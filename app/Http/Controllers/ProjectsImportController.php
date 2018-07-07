@@ -204,10 +204,6 @@ class ProjectsImportController extends ImportController
         }
     }
 
-
-
-    }
-
     
      private function updatePivotTable(){
      $query =  "Insert ignore into project_company_contact (project_id,company_id,type,contact_id) 

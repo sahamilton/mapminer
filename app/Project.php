@@ -104,7 +104,7 @@ use Geocode;
         and `person_project`.`related_id` = `projects`.`id` 
         and `person_project`.`type`='project'
         and `projects`.`project_source_id` = `projectsource`.`id` 
-        and `projectsource`.`id` = 1 
+        and `projectsource`.`id` = " . $id ."
         group by `person_id`,`pstatus`";
       }else{
          $query="select firstname, lastname, persons.id as id ,person_project.status as pstatus, count(person_project.status) as count,avg(ranking) as rating 
@@ -113,6 +113,7 @@ use Geocode;
          group by `person_id`,`pstatus`";
 
       }
+
       return \DB::select($query);
 
     }
