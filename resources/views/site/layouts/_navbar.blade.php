@@ -50,7 +50,7 @@
                         <i class="fa fa-folder-open-o" aria-hidden="true"></i>
                          My Notes</a>
                      </li>
-                        </li>
+
                     </ul>
                 </li>
                         <li class="dropdown{{ (Request::is('salesorg*','resources*') ? ' active' : '') }}">

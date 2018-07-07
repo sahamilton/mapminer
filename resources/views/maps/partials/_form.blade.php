@@ -62,19 +62,19 @@ $values = Config::get('app.search_radius');
             @endif
        @endforeach
     </select> of 
-    <div class="form-group{{ $errors->has('address') ? ' has-error' : '' }}">
+    <div class="form-group{{ $errors->has('search') ? ' has-error' : '' }}">
         <label for= "address">address</label> 
         <input 
-        class="form-control{{ $errors->has('address') ? ' has-error' : ''}}" 
+        class="form-control{{ $errors->has('search') ? ' has-error' : ''}}" 
         type="text" 
-        name="address" 
+        name="search" 
         title="Enter an address, zip code, or state code to search from"
-        value="{{isset($data['address']) ? str_replace('+','', str_replace('  ',' ',$data['address'])) : ''}}"
-        id="address" 
+        value="{{isset($data['search']) ? str_replace('+','', str_replace('  ',' ',$data['search'])) : ''}}"
+        id="search" 
         required
         style='width:300px'
         placeholder='Enter address or check Help Support for auto geocoding' />
-       {!! $errors->first('address', '<p class="help-block">:message</p>') !!}
+       {!! $errors->first('search', '<p class="help-block">:message</p>') !!}
     </div>
 <button type="submit"  style="background-color: #4CAF50;"
 class= "btn btn-success ">
@@ -88,14 +88,14 @@ class= "btn btn-success ">
 @include('partials._noaddressmodal')
 <script>
 
-$("#address").change(function() {
+$("#search").change(function() {
   $('#lat:first').val('');
   $('#lng:first').val('');
 });
 
 
 $("select[id^='select']").change(function() {
-  if($.trim($('#address').val()) == ''){
+  if($.trim($('#search').val()) == ''){
     $( "#noaddress" ).modal('show');
     
   }else{

@@ -81,7 +81,14 @@ class MapsController extends BaseController {
 		if($company){
 			$locations->where('company_id','=',$company);
 		}
+		if($filtered = $this->location->isFiltered(['companies'],['vertical'])){
+			$locations->whereHas('company',function ($q) use($filtered){
+				$q->whereIn('vertical',$filtered);
+			});
+		}
+
 		$result = $locations->nearby($location,$distance)->with('company')->get();
+
 		return response()->view('locations.xml', compact('result'))->header('Content-Type', 'text/xml');
 	
 	}

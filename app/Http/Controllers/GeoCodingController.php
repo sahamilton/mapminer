@@ -32,30 +32,30 @@ class GeoCodingController extends BaseController {
 	 */
 	public function findMe(FindMeFormRequest $request) {
 
-
-		if($request->filled('address')) {
-			$address = urlencode($request->get('address'));
-			
-		}
-		if(! $request->filled('lat')){
-			$geocode = app('geocoder')->geocode($request->get('address'))->get();
-
-			if(! $geocode or count($geocode)==0){
-
-				return redirect()->back()->withInput()->with('error','Unable to Geocode address:'.$request->get('address') );
-			}
-			
-			$request->merge($this->location->getGeoCode($geocode));
-			
 		
-		}
-		$data = $request->all();
+		
+		$geocode = app('geocoder')->geocode($request->get('search'))->get();
 
+		if(! $geocode or count($geocode)==0){
+
+			return redirect()->back()->withInput()->with('error','Unable to Geocode address:'.$request->get('search') );
+		}
+		
+		$request->merge($this->location->getGeoCode($geocode));
+		
+		
+		
+		$data = $request->all();
+	
 		$data['latlng'] = $data['lat'].":".$data['lng'];
 		// Kludge to address the issue of different data in Session::geo
 		if(! $request->has('number')){
 			$data['number']=5;
 		}
+		if(! isset($data['address']) or $data['address']==' '){
+			$data['address'] = $data['search'];
+		}
+	
 		\Session::put('geo', $data);
 
 		$watchlist = array();

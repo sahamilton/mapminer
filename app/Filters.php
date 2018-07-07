@@ -118,10 +118,11 @@ trait Filters
 		
 		// if all the group filters are not set in the session search filters
 		// then the results are filtered
-	
-		if(count(array_intersect($searchFilters, $allFilters->toArray())) != count($allFilters->toArray())){
+		$allFilters = $allFilters->toArray();
+		
+		if(count(array_intersect($searchFilters, $allFilters)) != count($allFilters)){
 			
-			return TRUE;
+			return $searchFilters;
 			
 		}
 		return $filtered;

@@ -20,7 +20,7 @@ trait Geocode
                 $data['lng'] = $geoCode->first()->getCoordinates()->getLongitude();
                 $data['geostatus']=TRUE;
                 $data['address'] =  $geoCode->first()->getStreetNumber()." " . $geoCode->first()->getStreetName();
-
+                
                 $data['city'] =  $geoCode->first()->getLocality();
                 $data['zip'] = $geoCode->first()->getPostalCode();
                 if(count($geoCode->first()->getadminLevels())>0){

@@ -24,7 +24,7 @@ class FindMeFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'address'=>'required',
+            'search'=>'required',
         ];
     }
 }
