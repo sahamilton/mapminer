@@ -1,10 +1,11 @@
 @extends ('admin.layouts.default')
 @section('content')
-<div class="container">
-<h2>Search Nearest Branches and Sales Teams</h2>
+<div class="contianer">
+<h2>Enter Lead to Distribute</h2>
 
-@include('webleads.partials._search')
 
+@include('leads.partials._search')
+<hr />
+@include('leads.partials._cutandpaste')
 </div>
 @stop
-

@@ -15,17 +15,18 @@ class NotifyWebLeadsBranchAssignment extends Mailable
     public $lead;
     public $branch;
     public $emails;
+    public $manager;
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(Lead $lead, Branch $branch, People $manager)
+    public function __construct(Lead $lead, Branch $branch, Person $manager)
     {
         $this->lead = $lead;
         $this->branch = $branch;
         $this->manager = $manager; 
-        dd($this->manager->userdetails->email);
+       
 
     }
 
