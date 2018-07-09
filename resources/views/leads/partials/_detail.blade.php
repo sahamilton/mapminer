@@ -3,7 +3,7 @@
 			<ul style="list-style-type: none;">
 				
 				<li><strong>Lead Source:</strong> {{$lead->leadsource()->first()->source}}</li>
-				<li><strong>Address:</strong>{{$lead->address}}<br /> {{$lead->city}}, {{$lead->state}} {{$lead->zip}}</li>
+				<li><strong>Address:</strong>{{$lead->address->address}}<br /> {{$lead->address->city}}, {{$lead->address->state}} {{$lead->address->zip}}</li>
 				<li><strong>Contact:</strong> {{$lead->contacts->contact}}</li>
 				<li><strong>Phone:</strong> {{$lead->contacts->contactphone}}</li>
 				<li><strong>Email:</strong> {{$lead->contacts->contactemail}}</li>

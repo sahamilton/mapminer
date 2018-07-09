@@ -25,7 +25,7 @@
     <tr> 
     <td>{{$lead->created_at ? $lead->created_at->format('j M, Y') : ''}}</td> 
 	<td><a href="{{route('webleads.salesshow',$lead->id)}}">{{$lead->companyname}}</a></td>
-	<td>{{$lead->address}} {{$lead->city}}, {{$lead->state}} {{$lead->zip}}</td>
+	<td>{{$lead->address->address}} {{$lead->address->city}}, {{$lead->address->state}} {{$lead->address->zip}}</td>
 	
 	<td>{{$lead->rating}}</td>
     <td>{{$lead->leadsource()->first()->source}}</td>

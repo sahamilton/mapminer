@@ -22,9 +22,9 @@
                     
                      <td><a href="{{route('leads.show',$lead->id)}}">@if($lead->businessname !='')  {{$lead->businessname}} @else {{$lead->companyname}} @endif</a></td>
                   
-                    <td>{{$lead->address}}</td>
-                    <td>{{$lead->city}}</td>
-                    <td>{{$lead->state}}</td>
+                    <td>{{$lead->address->address}}</td>
+                    <td>{{$lead->address->city}}</td>
+                    <td>{{$lead->address->state}}</td>
                    
                     
                     

@@ -25,16 +25,16 @@
 		href={{route('locations.show',$location->id)}}>
 		{{$location->businessname}}</a>
 	</td>
-	<td>{{$location->street}}</td>
-	<td>{{$location->city}}</td>
+	<td>{{$location->address->street}}</td>
+	<td>{{$location->address->city}}</td>
 	<td>
 
-		<a href= "{{route('company.state', ['companyId'=>$company->id,'state'=>$location->state])}}"
-		title="See all {{$location->state}} locations for $company->companyname">
-		{{$location->state}}</a>
+		<a href= "{{route('company.state', ['companyId'=>$company->id,'state'=>$location->address->state])}}"
+		title="See all {{$location->address->state}} locations for $company->companyname">
+		{{$location->address->state}}</a>
 	</td>
 	<td>
-		{{$location->zip}}
+		{{$location->address->zip}}
 
 	</td>
 

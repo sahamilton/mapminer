@@ -23,7 +23,7 @@
 			 </p>
 			<p>
 			<i class="fa fa-map-marker" aria-hidden="true"></i>
-			 <b>Address:</b><br/>{{$location->street}}<br />{{$location->city}}  {{$location->state}} {{$location->zip}}</p>
+			 <b>Address:</b><br/>{{$location->address->street}}<br />{{$location->address->city}}  {{$location->address->state}} {{$location->address->zip}}</p>
 			<p><b><i class="fa fa-phone" aria-hidden="true"></i> Phone:</b>{{$location->phone}}</p>
 			<p><i class="fa fa-address-card-o" aria-hidden="true"></i><a href="{{route('locations.vcard',$location->id)}}">
 			 Download vcard </a></p>

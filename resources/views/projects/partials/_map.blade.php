@@ -12,7 +12,7 @@ function initialize() {
   
   var map = new google.maps.Map(document.getElementById('map'), mapOptions);
 	var name = "{{$project->title}}";
-    var address = "{{$project->addr1}}" + " {{$project->city}}" + " {{$project->state}}" + " {{$project->zip}}";
+    var address = "{{$project->addr1}}" + " {{$project->address->city}}" + " {{$project->address->state}}" + " {{$project->address->zip}}";
     var html = address;
 	var marker = new google.maps.Marker({
 	  position: myLatlng,

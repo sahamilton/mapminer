@@ -4,7 +4,7 @@
 <div class="col-sm-5">
 	<div class="panel panel-default">
 		<div class="panel-heading clearfix">
-			<h2 class="panel-title pull-left">{{$lead->address}}</h2>
+			<h2 class="panel-title pull-left">{{$lead->address->address}}</h2>
 		</div>	
 		
 	</div>

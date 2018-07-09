@@ -8,8 +8,8 @@
 <h4><p>{{$project->project_title}}</h4>
 <p><strong>Address:</strong>
 
-<blockquote>{{$project->street}} /{{$project->addr2}}<br />{{$project->city}}, {{$project->state}} 
-{{$project->zipcode}}
+<blockquote>{{$project->address->street}} /{{$project->addr2}}<br />{{$project->address->city}}, {{$project->address->state}} 
+{{$project->address->zipcode}}
 </blockquote>
 <div class="row">
 <p><strong>People Ready Status:</strong>

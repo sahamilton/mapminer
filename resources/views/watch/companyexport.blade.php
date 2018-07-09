@@ -19,10 +19,10 @@
 		<tr>
 			<td>{{$location->company->companyname}}</td>
 			<td>{{$location->businessname}}</td>
-			<td>{{$location->street}} {{$location->suite}}</td>
-			<td>{{$location->city}}</td>
-			<td>{{$location->state}}</td>
-			<td>{{$location->zip}}</td>
+			<td>{{$location->address->street}} {{$location->address->suite}}</td>
+			<td>{{$location->address->city}}</td>
+			<td>{{$location->address->state}}</td>
+			<td>{{$location->address->zip}}</td>
 			<td>{{$location->contact}}</td>
 			<td>{{$location->phone}}</td>
 			<td>

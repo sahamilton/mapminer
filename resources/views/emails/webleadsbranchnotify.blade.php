@@ -13,7 +13,7 @@ A new lead that came through the People Ready website has been assigned to {{$le
 
 Company: {{$lead->company_name}}
 
-Address: {{$lead->address}}{{$lead->city}}, {{$lead->state}}
+Address: {{$lead->address->address}}{{$lead->address->city}}, {{$lead->address->state}}
 
 Contact: {{$lead->first_name}} {{$lead->last_name}}
 

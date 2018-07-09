@@ -48,9 +48,9 @@ $data['companyname']=$company->companyname;
 		 {{$location->businessname}}
 	 	</a>
 	</td>
-	<td>{{$location->street}}</td>
-	<td>{{$location->city}}</td>
-	<td>{{$location->zip}}</td>
+	<td>{{$location->address->street}}</td>
+	<td>{{$location->address->city}}</td>
+	<td>{{$location->address->zip}}</td>
 	<td>{{$location->contact}}</td>
 	<td>{{$location->phone}}</td>
 

@@ -1,6 +1,6 @@
 <p><strong>Address:</strong>
-<blockquote>{{$project->street}} /{{$project->addr2}}<br />{{$project->city}}, {{$project->state}} 
-{{$project->zipcode}}
+<blockquote>{{$project->address->street}} /{{$project->addr2}}<br />{{$project->address->city}}, {{$project->address->state}} 
+{{$project->address->zipcode}}
 <br /><em>(Map accuracy: {{$project->accuracy}})</em>
 </blockquote>
 <p><strong>People Ready Status:</strong>

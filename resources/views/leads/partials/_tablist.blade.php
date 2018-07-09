@@ -20,8 +20,8 @@
     <tr>
     <td><a href="{{route('leads.show',$lead->id)}}">{{ $lead->companyname!='' ? $lead->companyname: $lead->businessname}} </a></td>
     <td>{{$lead->businessname}}</td>
-    <td>{{$lead->city}}</td>
-    <td>{{$lead->state}}</td>
+    <td>{{$lead->address->city}}</td>
+    <td>{{$lead->address->state}}</td>
     <td>{{$lead->created_at->format('M j, Y')}}</td>
     <td>
     @if(count($lead->salesteam)>0)

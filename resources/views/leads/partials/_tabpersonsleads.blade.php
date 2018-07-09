@@ -19,8 +19,8 @@
     <tr>  
     <td>{{$lead->companyname}}</a></td>
     <td><a href="{{route('leads.show',$lead->id)}}">{{$lead->businessname}}</a></td>
-    <td>{{$lead->city}}</td>
-    <td>{{$lead->state}}</td>
+    <td>{{$lead->address->city}}</td>
+    <td>{{$lead->address->state}}</td>
     <td><a href="{{route('leads.personsource',[$leads->id,$lead->leadsource->id])}}">{{$lead->leadsource->source}}</a> </td>
     <td>{{$lead->created_at->format('m/d/Y')}}</td>
 

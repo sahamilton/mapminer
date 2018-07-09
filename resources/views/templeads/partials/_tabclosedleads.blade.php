@@ -11,9 +11,9 @@
         @foreach ($closedleads as $lead)
         <tr> 
             <td><a href="{{route('salesrep.newleads.show',$lead->id)}}">{{$lead->companyname}}</a></td>
-            <td>{{$lead->address}}</td>
-            <td>{{$lead->city}}</td>
-            <td>{{$lead->state}}</td>
+            <td>{{$lead->address->address}}</td>
+            <td>{{$lead->address->city}}</td>
+            <td>{{$lead->address->state}}</td>
             <td>
                 @foreach ($lead->relatedNotes as $note)
                     {{$note->note}}<hr />

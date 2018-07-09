@@ -10,7 +10,7 @@ function initialize() {
   var infoWindow = new google.maps.InfoWindow;
   var map = new google.maps.Map(document.getElementById('map'), mapOptions);
 	var name = "{{$lead->company_name}}";
-  var address = "{{$lead->city}}" + " {{$lead->state}}";
+  var address = "{{$lead->address->city}}" + " {{$lead->address->state}}";
  
   var salesreps = {!! $salesrepmarkers !!};
   var branches = {!! $branchmarkers !!};

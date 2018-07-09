@@ -32,10 +32,10 @@
 		</a>
 	</td>
 	<td>{{$location->vertical}}</td>
-	<td>{{$location->street}}</td>
-	<td>{{$location->city}}</td>
-	<td>{{$location->state}}</td>
-	<td>{{$location->zip}}</td>
+	<td>{{$location->address->street}}</td>
+	<td>{{$location->address->city}}</td>
+	<td>{{$location->address->state}}</td>
+	<td>{{$location->address->zip}}</td>
 
 
 	<td style ="text-align: center; vertical-align: middle;">

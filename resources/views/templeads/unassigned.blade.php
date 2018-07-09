@@ -21,9 +21,9 @@
                 <tr> 
 
                      <td><a href="{{route('webleads.show',$lead->id)}}">{{isset($lead->businessname) ? $lead->businessname : $lead->companyname}}</a></td>
-                    <td>{{$lead->address}}</td>
-                    <td>{{$lead->city}}</td>
-                    <td>{{$lead->state}}</td>
+                    <td>{{$lead->address->address}}</td>
+                    <td>{{$lead->address->city}}</td>
+                    <td>{{$lead->address->state}}</td>
                    
                     
                     

@@ -19,8 +19,8 @@
   @foreach ($leadstatus->leads as $lead)
   <tr>
     <td>{{$lead->companyname}}</td>
-    <td>{{$lead->city}}</td>
-    <td>{{$lead->state}}</td>
+    <td>{{$lead->address->city}}</td>
+    <td>{{$lead->address->state}}</td>
     <td>{{$lead->leadsource->source}}</td>
     <td>{{$lead->pivot->rating}}</td>
     <td>

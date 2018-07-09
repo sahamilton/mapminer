@@ -22,7 +22,7 @@
 @foreach ($data['branches'] as $location)
 
 <tr><td><a href="{{ route('show/branch', $location->id) }}" title='show {{$location->branchname}} locations'>{{$location->branchname}}</a></td>
-<td>{{$location->street}}</td><td>{{$location->city}} {{$location->state}}</td>
+<td>{{$location->address->street}}</td><td>{{$location->address->city}} {{$location->address->state}}</td>
 <?php
 if($maxlat =="") {
 	$maxlat = $minlat = $location->lat;

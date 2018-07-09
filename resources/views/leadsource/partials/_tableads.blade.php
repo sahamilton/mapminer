@@ -25,8 +25,8 @@
     <tr>  
         <td><a href="{{route('leads.show',$lead->id)}}">{{$lead->companyname}}</a></td>
         <td>{{$lead->businessname}}</td>
-        <td>{{$lead->city}}</td>
-        <td>{{$lead->state}}</td>
+        <td>{{$lead->address->city}}</td>
+        <td>{{$lead->address->state}}</td>
         <td>{{$lead->created_at->format('M j, Y')}}</td>
         <td>{{$lead->rankLead($lead->salesteam)}}</td>
         <td>
