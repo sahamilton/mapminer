@@ -4,7 +4,7 @@ use\App\Presenters\LocationPresenter;
 use McCool\LaravelAutoPresenter\HasPresenter;
 
 class Branch extends Model implements HasPresenter {
-	use Geocode;
+	use Geocode, Addressable;
 	public $table ='branches';
 	protected $hidden = ['created_at','updated_at'];
 	protected $primaryKey = 'id'; // or null
@@ -53,9 +53,7 @@ class Branch extends Model implements HasPresenter {
 		return $this->belongsTo(Region::class);
 		
 	}
-	public function address(){
-		return $this->morphOne(Address::class, 'addressable');
-	}
+	
 	public function relatedPeople($role=null){
 		if($role){
 

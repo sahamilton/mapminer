@@ -1,11 +1,3 @@
-<?php
-$statelist = App\Branch::distinct()->orderBy('state')->get(array('state'));
-		foreach ($statelist as $state) {
-			$states[]= $state->state;
-			
-		}
-?>
-
 <form method="post" id="selectForm" action ="{{route($route)}}" >
 {{csrf_field()}}
 

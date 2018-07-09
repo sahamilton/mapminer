@@ -53,9 +53,11 @@ class BranchesController extends BaseController {
 			->orderBy('id')
 			->get();
 
-		
+		$states = $branches->map(function ($branch){
+			return $branch->address->state;
+		})->unique()->sort();
 
-		return response()->view('branches.index', compact('branches'));
+		return response()->view('branches.index', compact('branches','states'));
 	}
 	
 	/**
@@ -384,9 +386,11 @@ class BranchesController extends BaseController {
 		return response()->view('branches.xml', compact('branches'));
 	}
 	public function retrieveStateBranches($state){
-		
+		dd('here');
 		return $this->branch
-		->where('state','=',$state)
+		->whereHas('address',function($q) use ($state){
+			$q->where('state','=',$state);
+		})
 		->with('servicelines','servicedBy')
 		->whereHas('servicelines', function($q) {
 			$q->whereIn('serviceline_id',$this->userServiceLines);
@@ -427,7 +431,9 @@ class BranchesController extends BaseController {
 					    $q->whereIn('serviceline_id',$this->userServiceLines);
 
 					})
-			->where('state','=',$statecode)
+			->whereHas('address',function ($q) use ($statecode){
+				$q->where('state','=',$statecode);
+			})
 			->orderBy('id')
 			->get();
 
@@ -441,7 +447,7 @@ class BranchesController extends BaseController {
 		}
 		
 				
-		return response()->view('branches.state', compact('branches','data','fields'));
+		return response()->view('branches.state', compact('branches','data','fields','states'));
 		
 	}
 	

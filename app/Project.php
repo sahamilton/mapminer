@@ -6,7 +6,7 @@ namespace App;
 class Project extends Model
 {
     
-use Geocode;
+use Geocode, Addressable;
     public $table="projects";
     public $incrementing = false;
     public $statuses = ['Claimed','Closed'];

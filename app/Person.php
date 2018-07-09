@@ -4,7 +4,7 @@ use\App\Presenters\LocationPresenter;
 use McCool\LaravelAutoPresenter\HasPresenter;
 
 class Person extends NodeModel implements HasPresenter {
-	use Geocode,Filters;
+	use Geocode,Filters, Addressable;
 
 	// Add your validation rules here
 	public static $rules = [
@@ -18,7 +18,7 @@ class Person extends NodeModel implements HasPresenter {
 
 	
 	// Don't forget to fill this array
-	public $fillable = ['firstname','lastname','phone','address','lat','lng','reports_to','city','state','geostatus','user_id'];
+	public $fillable = ['firstname','lastname','phone','reports_to','geostatus','user_id'];
 
 	
 	public function reportsTo()
