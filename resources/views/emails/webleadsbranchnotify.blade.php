@@ -15,13 +15,13 @@ Company: {{$lead->company_name}}
 
 Address: {{$lead->address}}{{$lead->city}}, {{$lead->state}}
 
-Contact: {{$lead->first_name}} {{$lead->last_name}}
+Contact: {{$lead->contact}}
 
 Contact Title: {{$lead->contactitle}}
 
-Phone: {{$lead->phone_number}}
+Phone: {{$lead->contactphone}}
 
-Email: {{$lead->email_address}}
+Email: {{$lead->contactemail}}
 
 **Job Requirements**
 
@@ -33,7 +33,7 @@ Industry:{{$lead->industry}}
 
 @endcomponent
 
-@component('mail::button', ['url' => route('salesleads.index'), 'color' => 'blue'])
+@component('mail::button', ['url' => route('salesrep.newleads',$manager->id), 'color' => 'blue'])
         Check out your sales prospects and resources.
 @endcomponent
 

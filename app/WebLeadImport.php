@@ -12,8 +12,8 @@ class WebLeadImport extends Imports
             'state',
             'contactemail',
             'contactphone',
-            'first_name',
-            'last_name',
+            'firstname',
+            'lastname',
             'time_frame',
             
             ];

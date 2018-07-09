@@ -27,7 +27,7 @@ class WebleadsImportController extends Controller
 
     public function getLeadFormData(WebleadFormRequest $request){
     	// first get the rows of data
-		
+
     	
     	$input = $this->parseInputData($request);
     	
@@ -83,19 +83,20 @@ class WebleadsImportController extends Controller
         return $extra;
     }
     private function getContactDetails($newdata){
-        $contactFields = $this->fields->whereType('weblead')
+        $contactFields = $this->fields->whereType('webleads')
         ->whereDestination('contact')
         ->whereNotNull('fieldname')->pluck('fieldname')->toArray();
-        $contact['contact'] = null;
+
+            $contact['contact'] = null;
             foreach ($contactFields as $key=>$value){
-                if(in_array($value,['first_name','last_name'])){
+                if(in_array($value,['firstname','lastname'])){
                     $contact['contact'] = $contact['contact'] . $newdata[$value]." ";
-                }else{
+                }elseif(isset($newdata[$value])){
                     $contact[$value] = $newdata[$value];
                 }
             }
             $contact['contact'] = trim($contact['contact']);
-        return $contact;
+       return $contact;
     }
     private function geoCodeAddress($input){
         $address = null;
@@ -141,7 +142,8 @@ class WebleadsImportController extends Controller
     	$requiredFields = $this->import->requiredFields;
 
     	if($diff = array_diff($requiredFields,array_keys($data))){
-    		return false;
+    		
+            return false;
     	}
     	
     	// this represents the validated cleansed data.

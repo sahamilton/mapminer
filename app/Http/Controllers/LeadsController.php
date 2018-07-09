@@ -216,9 +216,10 @@ class LeadsController extends BaseController
 
     public function update(LeadFormRequest $request, $lead)
     {
+   
       $lead->load('leadsource');
       $table = $lead->leadsource->type.'leads';
-      $data = $this->extractLeadTableData($input,$table);
+      $data = $this->extractLeadTableData($request->all(),$table);
 
       $lead->update($data['lead']);
       $lead->contacts()->update($data['contact']);
@@ -234,13 +235,14 @@ class LeadsController extends BaseController
 
 
       private function extractLeadTableData($input,$table){
-
+      $lead_source_id = $input['lead_source_id'];
       $input = $this->geoCodeAddress($input);
-      $input = $this->renameFields($input); 
+
+      $input = $this->renameFields($input);  
       foreach ($input[0] as $key=>$value){
          $data['lead'][$value]=$input[1][$key];
       }
-      $data['lead']['lead_source_id'] = $request->get('lead_source_id');
+      $data['lead']['lead_source_id'] = $lead_source_id;
 
       $data['contact'] = $this->getContactDetails($data['lead'],$table);
       $data['extra'] = $this->getExtraFieldData($data['lead'],$table);
@@ -274,8 +276,8 @@ class LeadsController extends BaseController
 
     }
     public function searchAddress(){
-
-      return response()->view('leads.search');
+      $leadsources = $this->leadsource->pluck('source','id');
+      return response()->view('leads.search',compact('leadsources'));
     }
 
 
@@ -831,20 +833,18 @@ class LeadsController extends BaseController
 
 
     private function getContactDetails($newdata,$type='webleads'){
+
         $contactFields = MapFields::whereType($type)
         ->whereDestination('contact')
         ->whereNotNull('fieldname')->pluck('fieldname')->toArray();
 
         $contact['contact'] = null;
             foreach ($contactFields as $field){
-             
-                if(in_array($field,['first_name','last_name'])){
-                    $contact['contact'] = $contact['contact'] . $newdata[$field]." ";
-                }else{
-                    $contact[$field] = $newdata[$field];
-                }
-            }
 
+                    $contact[$field] = $newdata[$field];
+ 
+            }
+          dd('leadcontroller',$contact);
         return  $contact;
     
     }
