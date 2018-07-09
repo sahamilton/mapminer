@@ -1,14 +1,17 @@
+
+
 <form method="post" id="selectForm" action ="{{route($route)}}" >
 {{csrf_field()}}
 
 
 <label>Search for branches in </label>
        <select name='state' class="btn btn-mini" onchange='this.form.submit()'>
-           @foreach ($states as $state)
-           @if(isset($data['state']) && $data['state'] == $state)
-				<option selected value="{{$state}}">{{$state}}</option>
+           @foreach ($allstates as $states)
+
+           @if(isset($state) && $state->statecode == $states)
+				<option selected value="{{$states}}">{{$states}}</option>
            @else
-           		<option value="{{$state}}">{{$state}}</option>
+           		<option value="{{$states}}">{{$states}}</option>
            @endif
 				
            @endforeach

@@ -32,12 +32,12 @@
 					</a>
 				</td>
 				<td>{{$branch->id}}</td>
-				<td>{{$branch->street}}</td>
-				<td>{{$branch->city}}</td>
+				<td>{{$branch->address->street}}</td>
+				<td>{{$branch->address->city}}</td>
 				<td>
-					<a href="{{route('showstate.branch',$branch->state)}}"
+					<a href="{{route('showstate.branch',$branch->address->state)}}"
 					title="See all {{$branch->state}} branches">
-					{{$branch->state}}
+					{{$branch->address->state}}
 					</a>
 				</td>
 				<td>

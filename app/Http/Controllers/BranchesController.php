@@ -45,17 +45,15 @@ class BranchesController extends BaseController {
 	{
 
 		$branches = $this->branch
-			->with('region','manager','relatedPeople','servicelines','servicedBy')
+			->with('region','manager','relatedPeople','servicelines','servicedBy','address')
 			->whereHas('servicelines', function($q) {
 					    $q->whereIn('serviceline_id',$this->userServiceLines);
 
 					})
 			->orderBy('id')
 			->get();
-
-		$states = $branches->map(function ($branch){
-			return $branch->address->state;
-		})->unique()->sort();
+		$states = $this->branch->allStates();
+		
 
 		return response()->view('branches.index', compact('branches','states'));
 	}
@@ -374,7 +372,8 @@ class BranchesController extends BaseController {
 		$fullState = $this->state->getStates();
 		$data['fullstate'] = $fullState[$state];
 		$data['state'] = $state;
-		return response()->view('branches.state', compact('data','branches'));
+		$states = $this->branch->allStates();
+		return response()->view('branches.state', compact('data','branches','states'));
 		
 
 		
@@ -386,7 +385,7 @@ class BranchesController extends BaseController {
 		return response()->view('branches.xml', compact('branches'));
 	}
 	public function retrieveStateBranches($state){
-		dd('here');
+		
 		return $this->branch
 		->whereHas('address',function($q) use ($state){
 			$q->where('state','=',$state);
@@ -395,8 +394,8 @@ class BranchesController extends BaseController {
 		->whereHas('servicelines', function($q) {
 			$q->whereIn('serviceline_id',$this->userServiceLines);
 					})
-		->orderBy('city')
-		->get();
+		
+		->get()->sortBy('city');
 
 		
 	}
@@ -425,7 +424,7 @@ class BranchesController extends BaseController {
 		}
 
 		$branches = $this->branch
-			->with('region','servicelines')
+			->with('region','servicelines','manager','relatedPeople','servicedBy')
 	
 			->whereHas('servicelines', function($q) {
 					    $q->whereIn('serviceline_id',$this->userServiceLines);
@@ -438,16 +437,12 @@ class BranchesController extends BaseController {
 			->get();
 
 		
-		$states= State::where('statecode','=',$statecode)->get();
-		foreach($states as $state) {
-			$data['state']= $state->statecode;
-			$data['fullstate']= $state->fullstate;
-			$data['lat'] = $state->lat;
-			$data['lng'] = $state->lng;
-		}
-		
+		$state= State::where('statecode','=',$statecode)->first();
+
+		$allstates = $this->branch->allStates();
+
 				
-		return response()->view('branches.state', compact('branches','data','fields','states'));
+		return response()->view('branches.state', compact('branches','state','fields','allstates'));
 		
 	}
 	

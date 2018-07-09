@@ -1,11 +1,11 @@
 @extends('site/layouts/default')
 @section('content')
 
-<h2>{{$data['fullstate']}} State Branches</h2>
+<h2>{{$state->fullstate}} State Branches</h2>
 <h4> <a href="{{route('branches.index')}}" title="Show all branches" />Show all branches</a></h4>
 <?php $route='branches.state';?>
 @include('branches.partials._state')
-<p><a href="{{route('branches.showstatemap',$data['state'])}}">
+<p><a href="{{route('branches.showstatemap',$state->statecode)}}">
 <i class="fa fa-flag" aria-hidden="true"></i> Map view</a></p>
 <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
 	<thead>
@@ -43,14 +43,14 @@
 		@endforeach
 	</td>
 	<td>
-		{{$branch->street}} {{$branch->address2}}
+		{{$branch->address->street}} {{$branch->address->suite}}
 	</td>
 
 	<td>
-		{{$branch->city}}
+		{{$branch->address->city}}
 	</td>
 	<td>
-		{{$branch->state}}
+		{{$branch->address->state}}
 	</td>
 	<td>
 		@if(count($branch->region)>0)

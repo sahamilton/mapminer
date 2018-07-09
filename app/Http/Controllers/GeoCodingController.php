@@ -46,7 +46,7 @@ class GeoCodingController extends BaseController {
 		
 		
 		$data = $request->all();
-	
+
 		$data['latlng'] = $data['lat'].":".$data['lng'];
 		// Kludge to address the issue of different data in Session::geo
 		if(! $request->has('number')){

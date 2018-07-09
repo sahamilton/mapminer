@@ -63,13 +63,14 @@ trait Geocode
         ->select()//pick the columns you want here.
         ->selectRaw("{$this->haversine($location)} AS distance")
         ->mergeBindings($sub->getQuery())
-        ->whereRaw("{$this->haversine($location)} < $radius ")
+        ->join('addresses', 'id', '=', 'addresses.addressable_id')
+        ->whereRaw("{$this->haversine($location)} < $radius")
         ->orderBy('distance','ASC')
         ->inRandomOrder();
         if($limit){
             $query = $query->limit($limit);
         }
-       
+     
         return $query;
     }
    
@@ -79,6 +80,8 @@ trait Geocode
 
     public function locationsNearbyBranches(Company $company,$radius=25,$limit=null){
         //add pagination
+        //
+        ///// need to update for new address trait
         $query ="select 
                 locs.id,
                 locs.businessname,
@@ -161,12 +164,13 @@ trait Geocode
     }
 
     private function haversine($location){
+
         return "(3956 * acos(cos(radians($location->lat)) 
-                     * cos(radians($this->table.lat)) 
-                     * cos(radians($this->table.lng) 
+                     * cos(radians(addresses.lat)) 
+                     * cos(radians(addresses.lng) 
                      - radians($location->lng)) 
                      + sin(radians($location->lat)) 
-                     * sin(radians($this->table.lat))))";
+                     * sin(radians(addresses.lat))))";
     }
     
     /*

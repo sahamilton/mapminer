@@ -4,7 +4,13 @@ namespace App\Providers;
 use App\Observers\PersonObserver;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use App\Person;
+use App\Branch;
+use App\Location;
+use App\Project;
+use App\Lead;
+
 
 
 class AppServiceProvider extends ServiceProvider
@@ -20,6 +26,13 @@ class AppServiceProvider extends ServiceProvider
 
         Schema::defaultStringLength(191);
         Person::observe(PersonObserver::class);
+        Relation::morphMap([
+            'branch' => Branch::class,
+            'location'  => Location::class,
+            'project' =>Project::class,
+            'lead' => Lead::class,
+            'person'=>Person::class,
+        ]);
 
 
     }
