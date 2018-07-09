@@ -57,7 +57,10 @@ class Location extends Model implements HasPresenter {
 		return $this->belongsTo(Branch::class);
 
 	}
-
+	
+	public function address(){
+		return $this->morphOne(Address::class, 'addressable');
+	}
 /**
  * [contacts description]
  * @return [type] [description]
