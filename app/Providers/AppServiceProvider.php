@@ -27,7 +27,7 @@ class AppServiceProvider extends ServiceProvider
         Schema::defaultStringLength(191);
         Person::observe(PersonObserver::class);
         Relation::morphMap([
-            'branch' => Branch::class,
+            'branch'  => Branch::class,
             'location'  => Location::class,
             'project' =>Project::class,
             'lead' => Lead::class,

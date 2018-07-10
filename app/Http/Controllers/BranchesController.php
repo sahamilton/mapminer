@@ -6,6 +6,7 @@ use App\Branch;
 use App\Serviceline;
 use App\Location;
 use App\User;
+use App\Address;
 use App\State;
 use App\Person;
 use Excel;
@@ -24,14 +25,16 @@ class BranchesController extends BaseController {
 	protected $serviceline;
 	protected $person;
 	protected $state;
+	protected $address;
 
 	
 	
-	public function __construct(Branch $branch, Serviceline $serviceline,Person $person, State $state) {
+	public function __construct(Branch $branch, Serviceline $serviceline,Person $person, State $state, Address $address) {
 			$this->branch = $branch;
 			$this->serviceline = $serviceline;
 			$this->person = $person;
 			$this->state = $state;
+			$this->address = $address;
 			parent::__construct($this->branch);
 
 			
@@ -52,10 +55,10 @@ class BranchesController extends BaseController {
 					})
 			->orderBy('id')
 			->get();
-		$states = $this->branch->allStates();
+		$allstates = $this->branch->allStates();
 		
 
-		return response()->view('branches.index', compact('branches','states'));
+		return response()->view('branches.index', compact('branches','allstates'));
 	}
 	
 	/**
@@ -118,6 +121,11 @@ class BranchesController extends BaseController {
 
 		$branch = $this->branch->create($input);
 
+		$input['addressable_type'] ='branch';
+		$input['addressable_id'] =$branch->id;
+
+		$address = $this->address->create($input);
+
 		foreach ($input['roles'] as $key=>$role){
 				foreach ($role as $person){
 				
@@ -164,7 +172,7 @@ class BranchesController extends BaseController {
 		$servicelines = $this->serviceline
 		->whereIn('id',$this->userServiceLines)->get();
 		
-		$data['branch'] = $this->branch
+		$data['branch'] = $this->branch->with('servicelines')
 		->whereHas('servicelines', function($q){
 					    $q->whereIn('serviceline_id',$this->userServiceLines);
 
@@ -180,7 +188,7 @@ class BranchesController extends BaseController {
 		$data['title'] ='National Account Locations';
 		$data['company']=NULL;
 		//$data['companyname']=NULL;
-		$data['latlng'] = $data['branch']->lat.":".$data['branch']->lng;
+		$data['latlng'] = $data['branch']->address->lat.":".$data['branch']->address->lng;
 		$data['distance'] = '10';
 
 		$roles = \App\Role::pluck('name','id');

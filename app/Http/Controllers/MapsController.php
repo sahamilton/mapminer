@@ -88,7 +88,7 @@ class MapsController extends BaseController {
 			});
 		}
 
-		$result = $locations->nearby($location,$distance)->with('company')->get();
+		$result = $locations->with('address')->nearby($location,$distance)->with('company')->get();
 
 		return response()->view('locations.xml', compact('result'))->header('Content-Type', 'text/xml');
 	

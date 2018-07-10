@@ -23,8 +23,8 @@
 	  $(function() {
           $('#map-container').storeLocator({'slideMap' : false, 
             'defaultLoc': true, 
-            'defaultLat': '{{$data['branch']->lat}}', 
-            'defaultLng' : '{{$data['branch']->lng}}',
+            'defaultLat': '{{$data['branch']->address->lat}}', 
+            'defaultLng' : '{{$data['branch']->address->lng}}',
             'dataLocation' :  '{{URL::to($data['urllocation'].'/'.$data['distance'].'/'.$data['latlng'].'/'.$data['company'])}}', 
             'infowindowTemplatePath' : '{{asset('maps/templates/infowindow-description.html')}}'
             ,'listTemplatePath' : '{{asset('maps/templates/location-list-description.html')}}'} );

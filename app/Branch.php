@@ -29,14 +29,7 @@ class Branch extends Model implements HasPresenter {
 	// Don't forget to fill this array
 	public $fillable = [
 		'id',
-		'lat',
-		'lng',
 		'branchname',
-		'street',
-		'address2',
-		'city',
-		'state',
-		'zip',
 		'phone',
 		'region_id'];
 	protected $guarded = [];

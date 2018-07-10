@@ -255,7 +255,7 @@ class LocationsController extends BaseController {
 
 		$data['branch'] = $branches;
 		$data['title']='National Accounts';
-		$locations  = $this->getNearbyLocations($branches->lat,$branches->lng);
+		$locations  = $this->getNearbyLocations($branches->address->lat,$branches->address->lng);
 		$watchlist = User::where('id','=',auth()->user()->id)->with('watching')->get();
 		foreach($watchlist as $watching) {
 			foreach($watching->watching as $watched) {
@@ -270,6 +270,7 @@ class LocationsController extends BaseController {
 	private function getNearbyLocations($lat=NULL,$lng=NULL,$distance=NULL,$company_id = null,$vertical=null)
 	
 	{
+
 		
 		if(! $distance){
 			$distance ='10';
