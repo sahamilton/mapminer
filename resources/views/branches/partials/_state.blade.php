@@ -6,12 +6,12 @@
 
 <label>Search for branches in </label>
        <select name='state' class="btn btn-mini" onchange='this.form.submit()'>
-           @foreach ($allstates as $states)
+           @foreach ($allstates as $state)
 
-           @if(isset($state) && $state->statecode == $states)
-				<option selected value="{{$states}}">{{$states}}</option>
+           @if(isset($state) && $state->statecode == $state->state)
+				<option selected value="{{$state->state}}">{{$state->state}}</option>
            @else
-           		<option value="{{$states}}">{{$states}}</option>
+           		<option value="{{$state->state}}">{{$state->state}}</option>
            @endif
 				
            @endforeach

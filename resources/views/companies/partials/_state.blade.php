@@ -6,11 +6,11 @@
 {{csrf_field()}}
 <label>Search for {{$company->companyname}} in </label>
        <select name='state' class="btn btn-mini" onchange='this.form.submit()'>
-           @foreach ($states as $state)
-           @if(isset($data['statecode']) && $data['statecode'] == $state)
-				<option selected value="{{$state}}">{{$state}}</option>
+           @foreach ($allstates as $state)
+           @if(isset($data['statecode']) && $data['statecode'] == $state->state)
+				<option selected value="{{$state->state}}">{{$state->state}}</option>
            @else
-           		<option value="{{$state}}">{{$state}}</option>
+           		<option value="{{$state->state}}">{{$state->state}}</option>
            @endif
 				
            @endforeach

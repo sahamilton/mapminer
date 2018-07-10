@@ -300,7 +300,8 @@ class LocationsController extends BaseController {
 		return $locations->whereHas('company.serviceline',function ($q) {
 			$q->whereIn('servicelines.id',$this->userServiceLines);
 
-		})->nearby($location,$distance)
+		})
+		->with('address')->nearby($location,$distance)
 		->get();
 		
 

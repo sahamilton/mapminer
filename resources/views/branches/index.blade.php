@@ -93,7 +93,7 @@
 				
 				@foreach ($branch->manager as $manager)
 				<a href="{{route('managed.branch',$manager->id)}}"
-				title="See all branchesmanaged by {{$manager->postName()}}">
+				title="See all branches managed by {{$manager->postName()}}">
 				{{$manager->postName()}}</a>
 				@endforeach
 			@endif
@@ -101,9 +101,9 @@
 	
 	<td>
 
-		<a title= "See the {{'$branch->branchname'}} branch sales team"
+		<a title= "See the {{$branch->branchname}} branch sales team"
 		href ="{{route('showlist.salesteam',$branch->id)}}">
-		{{count($branch->servicedBy)}}
+		{{count($branch->relatedPeople)}}
 		</a>
 	</td>
 	@can('manage_branches')

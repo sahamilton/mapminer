@@ -40,6 +40,18 @@ class BranchesController extends BaseController {
 			
 	}
 	
+	public function testmorph(){
+		$branches = Branch::with('region','manager','relatedPeople','relatedPeople.userdetails.roles','servicelines','address')
+		->whereHas('servicelines', function($q) {
+					    $q->whereIn('serviceline_id',$this->userServiceLines);
+
+					})
+			->orderBy('id')
+			->get();
+		$allstates = $this->branch->allStates('branch');
+
+		return response()->view('testmorph',compact('branches','allstates'));
+	}
 	/**
 	 * List all branches with region, manager filtered by users serviceline
 	 * @return [type] [description]
@@ -48,14 +60,14 @@ class BranchesController extends BaseController {
 	{
 
 		$branches = $this->branch
-			->with('region','manager','relatedPeople','servicelines','servicedBy','address')
+			->with('region','manager','relatedPeople','relatedPeople.userdetails.roles','servicelines','address')
 			->whereHas('servicelines', function($q) {
 					    $q->whereIn('serviceline_id',$this->userServiceLines);
 
 					})
 			->orderBy('id')
 			->get();
-		$allstates = $this->branch->allStates();
+		$allstates = $this->branch->allStates('branch');
 		
 
 		return response()->view('branches.index', compact('branches','allstates'));
@@ -398,7 +410,7 @@ class BranchesController extends BaseController {
 		->whereHas('address',function($q) use ($state){
 			$q->where('state','=',$state);
 		})
-		->with('servicelines','servicedBy')
+		->with('address','servicelines','servicedBy')
 		->whereHas('servicelines', function($q) {
 			$q->whereIn('serviceline_id',$this->userServiceLines);
 					})
@@ -463,7 +475,7 @@ class BranchesController extends BaseController {
 	
 	Excel::create('Branches',function($excel){
 			$excel->sheet('Watching',function($sheet) {
-				$result = $this->branch->with('manager')->get();
+				$result = $this->branch->with('address','manager')->get();
 			
 			
 				$sheet->loadView('branches.export',compact('result'));

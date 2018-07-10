@@ -2,13 +2,14 @@
 @section('content')
 <h1>Branch Details</h1>
 <h2>{{$salesteam->branchname}}</h2>
+<p><a href="{{route('branches.index')}}">Return to all branches</a></p>
 <div class="row">
 <div class="col-sm-3" >
 <h4>Branch Number {{$salesteam->id}}</h4>
        
         <h4>Address:</h4>
-        <p>{{$salesteam->street}}{{$salesteam->address2}}<br/>
-        {{$salesteam->city}},{{$salesteam->state}} {{$salesteam->zip}}<br />
+        <p>{{$salesteam->address->street}}{{$salesteam->address->suite}}<br/>
+        {{$salesteam->address->city}},{{$salesteam->address->state}} {{$salesteam->address->zip}}<br />
         {{$salesteam->phone}}</p>
        
         <h4>Branch Team</h4>
@@ -35,7 +36,7 @@
 
 <script type="text/javascript">
 function initialize() {
-  var myLatlng = new google.maps.LatLng({{$salesteam->lat}},{{$salesteam->lng}});
+  var myLatlng = new google.maps.LatLng({{$salesteam->address->lat}},{{$salesteam->address->lng}});
   var mapOptions = {
     zoom: 14,
     center: myLatlng

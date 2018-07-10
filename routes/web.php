@@ -508,4 +508,5 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 	 	Route::get('/leads/unassigned',['as'=>'unassigned.leads','uses'=>'LeadsController@unassignedleads']);
 	 	//Route::get('branch/{bid}/people',['as'=>'test.branch.people', 'uses'=>'WebLeadsController@getSalesPeopleofBranch']);
 	 	Route::get('authtest',['as'=>'test','uses'=>'TestController@test']);
+	 	Route::get('testmorph',['as'=>'testmorph','uses'=>'BranchesController@testmorph']);
 });

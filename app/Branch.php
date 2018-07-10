@@ -104,11 +104,7 @@ class Branch extends Model implements HasPresenter {
     }
 
     
-    public function allStates(){
-    	return  $this->all()->map(function ($branch){
-			return $branch->address->state;
-		})->unique()->sort();
-    }
+    
 
 	/* 
 		Calculate bounding box coordinates
