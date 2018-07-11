@@ -18,7 +18,7 @@
         @foreach($people  as $person)
             <tr> 
 
-                <td><a id="{{$person->id}}" href="{{route('salesorg',$person->id)}}">{{$person->postName()}}</a>
+                <td><a id="{{$person->id}}" href="{{route('salesorg',$person->id)}}"  title="See {{$person->postName()}}'s details">{{$person->postName()}}</a>
                     <a class="fa fa-copy"  onclick="myFunction('#{{$person->id}}')" title="Copy {{$person->postName()}}"></a></td>
 
                    

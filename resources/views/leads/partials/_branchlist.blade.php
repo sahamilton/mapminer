@@ -20,8 +20,10 @@
 			
 			<td>
 				@if(count($branch->manager)>0)
-					<span id="{{$branch->manager->first()->id}}">{{$branch->manager->first()->postName()}}</span>
-					<a class="fa fa-copy"  onclick="myFunction('#{{$branch->manager->first()->id}}')" ></a>
+					@foreach ($branch->manager as $person)
+					<span id="{{$person->id}}">{{$person->postName()}}</span>
+					<a class="fa fa-copy"  onclick="myFunction('#{{$person->id}}')" title="Copy {{$person->postName()}}"></a>
+					@endforeach
 				@endif
 			</td>
 			<td>{{number_format($branch->distance,0)}}</td>
