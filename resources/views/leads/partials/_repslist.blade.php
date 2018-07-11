@@ -18,7 +18,11 @@
         @foreach($people  as $person)
             <tr> 
 
-                <td><a href="{{route('salesorg',$person->id)}}">{{$person->postName()}}</td>
+                <td><a id="{{$person->id}}" href="{{route('salesorg',$person->id)}}">{{$person->postName()}}</a>
+                    <a class="fa fa-copy"  onclick="myFunction('#{{$person->id}}')" title="Copy {{$person->postName()}}"></a></td>
+
+                   
+                    </p>
                 <td>
                     <ul style="list-style-type: none;padding-left:0" >
                     @foreach($person->industryfocus as $industry)
