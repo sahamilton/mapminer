@@ -1,5 +1,6 @@
 @extends ('admin.layouts.default')
 @section('content')
+<h2>Assign Leads</h2>
 <p><a href="{{route('leadsource.show',$lead->lead_source_id)}}">Show All WebLeads</a></p>
 <div class="col-sm-5">
 	<div class="panel panel-default">
@@ -17,7 +18,7 @@
 </style>
 
 </div>		
-<div class="col-sm-7 pull-right">
+<div class="col-sm-7 pull-right" >
 	@include('leads.partials._search')
 <div id="map"  style="border:solid 1px red"></div>
 		@include('leads.partials._branchlist')	
@@ -30,7 +31,19 @@
 		
 
 </div>
-	
+<script>
+function myFunction(element) {
+
+  var $temp = $("<input>");
+  $("body").append($temp);
+  $temp.val($(element).text()).select();
+
+  document.execCommand("copy");
+  $temp.remove();
+  
+}
+
+</script>	
 @include('leads.partials.map')
 
 @include('partials/_scripts')
