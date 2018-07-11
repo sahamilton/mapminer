@@ -31,7 +31,7 @@
 		
 
 </div>
-<script>
+<!-- <script>
 function myFunction(element) {
 
   var $temp = $("<input>");
@@ -43,7 +43,7 @@ function myFunction(element) {
   
 }
 
-</script>	
+</script>-->	
 @include('leads.partials.map')
 
 @include('partials/_scripts')

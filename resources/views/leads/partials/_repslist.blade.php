@@ -19,7 +19,8 @@
             <tr> 
 
                 <td><a id="{{$person->id}}" href="{{route('salesorg',$person->id)}}"  title="See {{$person->postName()}}'s details">{{$person->postName()}}</a>
-                    <a class="fa fa-copy"  onclick="myFunction('#{{$person->id}}')" title="Copy {{$person->postName()}}"></a></td>
+                    <span type="button" class="fa fa-copy btn-copy js-tooltip js-copy" data-toggle="tooltip" data-placement="bottom" data-copy="{{$person->postName()}}" title="Copy to clipboard"></span>
+                    <!-- <a class="fa fa-copy"  onclick="myFunction('#{{$person->id}}')" title="Copy {{$person->postName()}}"></a></td>-->
 
                    
                     </p>
