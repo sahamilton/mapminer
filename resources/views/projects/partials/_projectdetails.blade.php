@@ -15,4 +15,8 @@
 <p><strong>Work type:</strong>{{$project->work_type}}</p>
 <p><strong>Project Status:</strong>{{$project->status}}</p>
 
-<p><strong>Total Project Value:</strong>{{$project->total_project_value}}k</p>
+<p><strong>Total Project Value:</strong>
+	@if(isset($project->total_project_value))
+		${{number_format($project->total_project_value/1000,1)}}k
+	@endif
+</p>

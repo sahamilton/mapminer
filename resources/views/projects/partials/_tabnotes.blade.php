@@ -65,4 +65,4 @@
  <script>
  $(document).ready(function() {
     $('#{{$note->id}}').editable();
-});
+});</script>

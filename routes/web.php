@@ -132,7 +132,7 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::post('project/{id}/close',['as'=>'projects.close','uses'=>'ProjectsController@closeproject']);
 		Route::get('projects/myprojects',['as'=>'projects.myprojects','uses'=>'ProjectsController@myProjects']);
 		Route::get('projects/download',['as'=>'projects.export','uses'=>'ProjectsController@exportMyProjects']);
-
+		Route::post('project/{id}/transfer',['as'=>'projects.transfer','uses'=>'ProjectsController@transfer']);
 		Route::post('projects/contact',['as'=>'projects.addcontact','uses'=>'ProjectsController@addCompanyContact']);
 		Route::post('projects/firm',['as'=>'projects.addcontactfirm','uses'=>'ProjectsController@addProjectCompany']);
 		Route::resource('projects', 'ProjectsController',['only' => ['index', 'show']]);
@@ -399,6 +399,7 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
 
 	## Search
 		Route::get('/user/find', 'SearchController@searchUsers');
+		Route::get('/salesteam/find', 'SearchController@searchSalesteam');
 		Route::get('/person/{person}/find',['as'=>'person.details','uses'=>'PersonSearchController@find']);
 
 	#NewLeads
