@@ -5,7 +5,20 @@
 
 <h2>Construction Project</h2>
 <p><a href="{{route('projects.index')}}">Return to all projects</a> | <a href="{{route('projects.myprojects')}}">Return to my projects</a></p>
-<h4><p>{{$project->project_title}}</h4>
+
+@if($project->owned()  or auth()->user()->hasRole('Admin'))
+  <h4><p><strong>Project Title:</strong><a href="#" 
+  id="project_title" 
+  data-type="text" 
+  data-pk="{{$project->id}}" 
+  data-title="Update Project Title" 
+  class="editable editable-click editable-open" 
+  data-original-title="" 
+  title="">{{$project->project_title}}</a></h4>
+@else
+ <h4><p><strong>Project Title:</strong>{{$project->project_title}}</h4>
+@endif
+
 <p><strong>Address:</strong>
 
 <blockquote>{{$project->street}} /{{$project->addr2}}<br />{{$project->city}}, {{$project->state}} 
@@ -59,6 +72,27 @@
 </div>
 @include('partials._modal')
 @include('partials/_scripts')
+<script>
+$(function(){
+    $('#project_title').editable({
+        url: "{{route('api.project.update',$project->id)}}",
 
+        params: function(params) {  //params already contain `name`, `value` and `pk`
+                var data = params;
+                data['api_token'] = '{{auth()->check() ? auth()->user()->api_token : ''}}';
+                window.console.log(data);
+                return data;
+              },
+        
+        ajaxOptions: {
+            type: 'POST',
+            dataType: 'JSON',
+        },
+        success: function( msg ) {
+                $("#ajaxResponse").append("<div>"+msg+"</div>");
+            }
+    });
+});
+</script>
 
 @stop

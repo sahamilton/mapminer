@@ -129,6 +129,22 @@ class ProjectsController extends BaseController
     {
         //
     }
+
+
+    public function updateField(Request $request, $id){
+       
+        $input = $request->except('api_token');
+        $project = $this->project->findOrFail($id);
+        $data = [$input['name']=>$input['value']];
+
+        $project->update($data);
+             $response = array(
+                    'status' => 'success',
+                    'msg' => 'Setting created successfully',
+                ); 
+       
+        return response()->json($response);
+    }
 /**
  * closeProject user closes project
  * @param  Request $request [description]

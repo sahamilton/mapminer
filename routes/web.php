@@ -132,7 +132,7 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::post('project/{id}/close',['as'=>'projects.close','uses'=>'ProjectsController@closeproject']);
 		Route::get('projects/myprojects',['as'=>'projects.myprojects','uses'=>'ProjectsController@myProjects']);
 		Route::get('projects/download',['as'=>'projects.export','uses'=>'ProjectsController@exportMyProjects']);
-
+	
 		Route::post('projects/contact',['as'=>'projects.addcontact','uses'=>'ProjectsController@addCompanyContact']);
 		Route::post('projects/firm',['as'=>'projects.addcontactfirm','uses'=>'ProjectsController@addProjectCompany']);
 		Route::resource('projects', 'ProjectsController',['only' => ['index', 'show']]);

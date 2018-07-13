@@ -20,5 +20,5 @@ Route::get('leadrank',['as'=>'api.lead.rank', 'uses'=>'LeadsController@leadrank'
 Route::post('test/state',['as'=>'test.state','uses'=>'TestController@select'])->middleware('auth:api');
 
 Route::post('branch/people',['as'=>'api.branch.people', 'uses'=>'WebLeadsController@getSalesPeopleofBranch'])->middleware('auth:api');
-
+Route::post('project/{id}',['as'=>'api.project.update','uses'=>'ProjectsController@updateField'])->middleware('auth:api');
 //Route::post('advancedsearch',['as'=>'setSearch','uses'=>'SearchFiltersController@setSessionSearch'])->middleware('auth:api');
