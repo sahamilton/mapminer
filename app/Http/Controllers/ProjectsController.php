@@ -136,10 +136,11 @@ class ProjectsController extends BaseController
         $person = $this->person->whereHas('userdetails',function ($q) use($request){
             $q->where('username','=',$request->get('username'));
         })->first();
+        $transferor = $this->person->where('user_id','=',auth()->user()->id)->first();
         $project->owner()->wherePivot('person_id','=',auth()->user()->person->id)->detach();
         $project->owner()->attach($person,['status'=>'Claimed','type'=>'project']);
         $this->addTransferNote($request);
-        Mail::queue(new NotifyProjectTransfer($project,$person));
+        Mail::queue(new NotifyProjectTransfer($project,$person,$transferor));
         //NotifyProjectTransfer
         return redirect()->route('projects.show',$project->id);
     }

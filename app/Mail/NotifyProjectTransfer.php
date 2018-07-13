@@ -13,15 +13,17 @@ class NotifyProjectTransfer extends Mailable
     use Queueable, SerializesModels;
     public $project;
     public $person;
+    public $transferor;
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(Project $project, Person $person)
+    public function __construct(Project $project, Person $person, Person $transferor)
     {
         $this->project = $project;
         $this->person = $person;
+        $this->transferor = $transferor;
        
         
     }
