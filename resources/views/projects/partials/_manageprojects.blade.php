@@ -11,8 +11,10 @@
 		You own this project
 
 		<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Close Project</button>
+		<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#projectTransfer">Transfer Project</button>
 
 		@include ('projects.partials._closeprojectform')
+		@include ('projects.partials._transferprojectform')
 	@endif 
 
 

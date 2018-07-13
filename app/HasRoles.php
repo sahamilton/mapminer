@@ -54,5 +54,6 @@ trait HasRoles
      * @param  Permission $permission
      * @return boolean
      */
+    
    
 }

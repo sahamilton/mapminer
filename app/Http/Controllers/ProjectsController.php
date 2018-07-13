@@ -8,7 +8,9 @@ use App\Project;
 use App\Person;
 use App\ProjectSource;
 use App\Note;
+use \Mail;
 use Illuminate\Http\Request;
+use App\Mail\NotifyProjectTransfer;
 
 class ProjectsController extends BaseController
 {
@@ -129,7 +131,18 @@ class ProjectsController extends BaseController
     {
         //
     }
-
+    public function transfer(Request $request){
+        $project = $this->project->findOrFail($request->get('project_id'));
+        $person = $this->person->whereHas('userdetails',function ($q) use($request){
+            $q->where('username','=',$request->get('username'));
+        })->first();
+        $project->owner()->wherePivot('person_id','=',auth()->user()->person->id)->detach();
+        $project->owner()->attach($person,['status'=>'Claimed','type'=>'project']);
+        $this->addTransferNote($request);
+        Mail::queue(new NotifyProjectTransfer($project,$person));
+        //NotifyProjectTransfer
+        return redirect()->route('projects.show',$project->id);
+    }
 
     public function updateField(Request $request, $id){
        
@@ -171,6 +184,19 @@ class ProjectsController extends BaseController
     private function addClosingNote(Request $request){
         $note = new Note;
         $note->note = "Project Closed:" .$request->get('comments');
+        $note->type = 'project';
+        $note->related_id = $request->get('project_id');
+        $note->user_id = auth()->user()->id;
+        $note->save();
+    }
+
+    /**
+ * add closing note - user must enter notes on closed project
+ * @param Request $request
+ */
+    private function addTransferNote(Request $request){
+        $note = new Note;
+        $note->note = "Project Transfered:" .$request->get('comments');
         $note->type = 'project';
         $note->related_id = $request->get('project_id');
         $note->user_id = auth()->user()->id;
