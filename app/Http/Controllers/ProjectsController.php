@@ -11,6 +11,7 @@ use App\Note;
 use \Mail;
 use Illuminate\Http\Request;
 use App\Mail\NotifyProjectTransfer;
+use App\Http\Requests\ProjectTransferRequest;
 
 class ProjectsController extends BaseController
 {
@@ -131,7 +132,7 @@ class ProjectsController extends BaseController
     {
         //
     }
-    public function transfer(Request $request){
+    public function transfer(ProjectTransferRequest $request){
         $project = $this->project->findOrFail($request->get('project_id'));
         $person = $this->person->whereHas('userdetails',function ($q) use($request){
             $q->where('username','=',$request->get('username'));

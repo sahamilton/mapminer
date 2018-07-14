@@ -55,7 +55,7 @@
                 datumTokenizer: Bloodhound.tokenizers.whitespace,
                 queryTokenizer: Bloodhound.tokenizers.whitespace,
                 remote: {
-                    url: '/ops/salesteam/find?q=%QUERY%',
+                    url: '/salesteam/find?q=%QUERY%',
                     wildcard: '%QUERY%'
                 },
             });

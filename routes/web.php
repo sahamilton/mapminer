@@ -224,7 +224,8 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('rank',['as'=>'api.rank','uses'=>'DocumentsController@rank']);
     	Route::get('watchedby/{id}',['as'=>'watchedby','uses'=>'DocumentsController@watchedby']);
     	Route::get('documents/{id}',['as'=>'documents.show','uses'=>'DocumentsController@show']);
-
+    	# Search Settings
+    	Route::get('/salesteam/find', 'SearchController@searchSalesteam');
 
     	/*Route::get('search',function(){
     		return response()->view('search.search');
@@ -399,7 +400,7 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
 
 	## Search
 		Route::get('/user/find', 'SearchController@searchUsers');
-		Route::get('/salesteam/find', 'SearchController@searchSalesteam');
+		
 		Route::get('/person/{person}/find',['as'=>'person.details','uses'=>'PersonSearchController@find']);
 
 	#NewLeads
