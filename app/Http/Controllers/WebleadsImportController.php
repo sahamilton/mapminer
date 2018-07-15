@@ -6,7 +6,7 @@ use App\LeadSource;
 use App\MapFields;
 use App\WebLeadImport;
 use Illuminate\Http\Request;
-use App\Http\Requests\WebleadFormRequest;
+use App\Http\Requests\WebLeadFormRequest;
 class WebleadsImportController extends Controller
 {
     protected $lead;
@@ -25,7 +25,7 @@ class WebleadsImportController extends Controller
     	return response()->view('webleads.leadform',compact('leadsources'));
     }
 
-    public function getLeadFormData(WebleadFormRequest $request){
+    public function getLeadFormData(WebLeadFormRequest $request){
     	// first get the rows of data
 
     	
