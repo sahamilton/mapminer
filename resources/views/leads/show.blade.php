@@ -35,11 +35,7 @@
 		</div>
 		@endif
 	</div>
-@if(count($lead->salesteam)==0)
-		@include('leads.partials._branchlist')	
-			
-		
-@endif
+
 </div>		
 <div class="col-sm-7 pull-right">
 	@include('webleads.partials._search')
@@ -47,14 +43,7 @@
 
 </div>
 
-@if(count($lead->salesteam)==0)
-		<div class="row">
-		<div class="col-sm-12">
-		@include('leads.partials._repslist')
-		</div>
-@else
-	@include('partials._unassignleadmodal')		
-@endif
+
 </div>
 	
 @include('webleads.partials.map')
