@@ -2,7 +2,7 @@
 
 <script type="text/javascript">
 function initialize() {
-  var myLatlng = new google.maps.LatLng('{{$lead->lat}}','{{$lead->lng}}');
+  var myLatlng = new google.maps.LatLng({!!$lead->lat!!},{!!$lead->lng!!})
   var mapOptions = {
     zoom: 10,
     center: myLatlng
