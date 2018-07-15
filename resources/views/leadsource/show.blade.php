@@ -20,7 +20,7 @@
 				<p><a href="{{route('leadsource.index')}}">Return to all Prospect sources</a></p>
  @if (Auth::user()->hasRole('Admin') or Auth::user()->hasRole('Sales Operations'))
 <div class="pull-right">
-                <p><a href="{{{ route('webleads.create') }}}" class="btn btn-small btn-info iframe">
+                <p><a href="{{{ route('leads.search') }}}" class="btn btn-small btn-info iframe">
 <i class="fa fa-plus-circle text-success" aria-hidden="true"></i>
  Import New Web Lead</a></p>
             </div>

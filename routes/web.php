@@ -340,7 +340,7 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
 	## Web leads
 		
 		Route::post('/webleads/import/form',['as'=>'leads.webleadsinsert','uses'=>'WebleadsImportController@getLeadFormData']);
-		Route::get('webleads/create',['as'=>'webleads.create','uses'=>'LeadsController@searchAddress']);
+		
 		Route::post('/webleads/import/create',['as'=>'webleads.import.store','uses'=>'WebleadsImportController@store']);
 
 		Route::post('/leads/assign',['as'=>'leads.assign','uses'=>'LeadsController@assignLeads']);
