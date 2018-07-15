@@ -3,6 +3,11 @@
 <h2>Lead Details</h2>
 <p><a href="{{route('leadsource.show',$lead->lead_source_id)}}">Show All </a></p>
 
+	
+<div id="map"  style="border:solid 1px red"></div>
+
+
+	
 @include('webleads.partials.map')
 
 @include('partials/_scripts')
