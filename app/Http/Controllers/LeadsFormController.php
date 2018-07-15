@@ -4,14 +4,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Weblead;
-use App\WebleadImport;
+use App\WebLeadImport;
 use App\LeadSource;
 use App\Http\Requests\WebleadFormRequest;
 
 
 class LeadsFormController  extends ImportController
 {
-    public function __construct(Weblead $lead, LeadSource $leadsource,WebleadImport $import){
+    public function __construct(Weblead $lead, LeadSource $leadsource,WebLeadImport $import){
         $this->lead = $lead;
         $this->import = $import;
         $this->leadsources = $leadsource;

@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 use App\Lead;
 use App\LeadSource;
 use App\MapFields;
-use App\WebleadImport;
+use App\WebLeadImport;
 use Illuminate\Http\Request;
 use App\Http\Requests\WebleadFormRequest;
 class WebleadsImportController extends Controller
@@ -13,7 +13,7 @@ class WebleadsImportController extends Controller
     protected $fields;
     protected $import;
 
-    public function __construct(Lead $lead, MapFields $fields,WebleadImport $import){
+    public function __construct(Lead $lead, MapFields $fields,WebLeadImport $import){
     	$this->lead = $lead;
     	$this->fields = $fields;
     	$this->import = $import;
