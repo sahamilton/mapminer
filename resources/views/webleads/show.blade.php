@@ -4,7 +4,7 @@
 <div class="col-sm-5">
 	<div class="panel panel-default">
 		<div class="panel-heading clearfix">
-			<h2 class="panel-title pull-left">{{$lead->company_name}} - {{$lead->rating}}</h2>
+			<h2 class="panel-title pull-left">{{$lead->company_name}} - !!{{$lead->rating}}</h2>
 			<a class="btn btn-primary pull-right" href="">
 				<i class="fa fa-pencil"></i>
 				Edit

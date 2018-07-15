@@ -2,15 +2,15 @@
 
 <script type="text/javascript">
 function initialize() {
-  var myLatlng = new google.maps.LatLng({!!$lead->lat!!},{!!$lead->lng!!})
+  var myLatlng = new google.maps.LatLng({{ $lead->lat }},{{ $lead->lng }});
   var mapOptions = {
     zoom: 10,
     center: myLatlng
   }
   var infoWindow = new google.maps.InfoWindow;
   var map = new google.maps.Map(document.getElementById('map'), mapOptions);
-	var name = "{{$lead->company_name}}";
-  var address = "{{$lead->city}}" + " {{$lead->state}}";
+	var name = "{!! $lead->companyname!!}";
+  var address = "{{trim($lead->city)}}" + ",{{trim($lead->state)}}";
  
   var salesreps = {!! $salesrepmarkers !!};
   var branches = {!! $branchmarkers !!};
@@ -53,7 +53,7 @@ function initialize() {
 	var leadmarker = new google.maps.Marker({
 	  position: myLatlng,
 	  map: map,
-	  title: name,
+	  title: name + " " + address,
     icon: 'https://maps.google.com/mapfiles/ms/icons/green-dot.png',
 	  clickable: true
 	});
