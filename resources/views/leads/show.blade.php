@@ -1,6 +1,6 @@
 @extends ('admin.layouts.default')
 @section('content')
-<h2>Lead Details</h2>
+<h2>Lead Details!!</h2>
 <p><a href="{{route('leadsource.show',$lead->lead_source_id)}}">Show All </a></p>
 <div class="col-sm-5">
 	<div class="panel panel-default">
@@ -44,9 +44,7 @@
 <div class="col-sm-7 pull-right">
 	@include('webleads.partials._search')
 <div id="map"  style="border:solid 1px red"></div>
-@if(count($lead->salesteam)==0)
-@include('leads.partials.select')
-@endif
+
 </div>
 
 @if(count($lead->salesteam)==0)
