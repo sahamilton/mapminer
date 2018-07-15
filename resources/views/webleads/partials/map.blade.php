@@ -1,8 +1,7 @@
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={{config('maps.api_key')}}"></script>
 
 <script type="text/javascript">
-
-function initialize(){
+function initialize() {
   var myLatlng = new google.maps.LatLng({{ $lead->lat }},{{ $lead->lng }});
   var mapOptions = {
     zoom: 10,
@@ -58,10 +57,10 @@ function initialize(){
     icon: 'https://maps.google.com/mapfiles/ms/icons/green-dot.png',
 	  clickable: true
 	});
-	 bindInfoWindow(leadmarker,  map, infoWindow, html);
-}
+	 bindInfoWindow(leadmarker,  map, infoWindow);
 
-function bindInfoWindow(marker, map, infoWindow, html) {
+}
+function bindInfoWindow(marker, map, infoWindow) {
       google.maps.event.addListener(marker, 'click', function() {
         infoWindow.setContent(html);
         infoWindow.open(map, marker);
