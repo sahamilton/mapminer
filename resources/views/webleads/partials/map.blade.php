@@ -9,7 +9,7 @@ function initialize() {
   }
   var infoWindow = new google.maps.InfoWindow;
   var map = new google.maps.Map(document.getElementById('map'), mapOptions);
-  var name = "{!! $lead->companyname!!}";
+  var name = "{!! trim($lead->companyname)!!}";
   var address = "{{trim($lead->city)}}" + ",{{trim($lead->state)}}";
  
   var salesreps = {!! $salesrepmarkers !!};
