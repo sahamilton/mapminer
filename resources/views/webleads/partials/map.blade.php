@@ -10,7 +10,7 @@ function initialize() {
   var infoWindow = new google.maps.InfoWindow;
   
   var map = new google.maps.Map(document.getElementById('map'), mapOptions);
-  var name = "{{$lead->companyname}}";
+  var name = "{!! $lead->companyname !!}";
     var address = "{{$lead->street}}" + " {{$lead->city}}" + " {{$lead->state}}" + " {{$lead->zip}}";
     var html = "" + address;
   var marker = new google.maps.Marker({
