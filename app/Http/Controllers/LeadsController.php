@@ -16,6 +16,7 @@ use App\LeadStatus;
 use App\SearchFilter;
 use App\Http\Requests\LeadFormRequest;
 use App\Http\Requests\LeadAddressFormRequest;
+use App\Http\Requests\LeadInputAddressFormRequest;
 use App\Http\Requests\BatchLeadImportFormRequest;
 use App\Mail\NotifyWebLeadsAssignment;
 use App\Mail\NotifyWebLeadsBranchAssignment;
@@ -281,7 +282,7 @@ class LeadsController extends BaseController
     }
 
 
-    public function search(Request $request){
+    public function search(LeadInputAddressFormRequest $request){
       $geoCode = app('geocoder')->geocode($request->get('address'))->get();
       $lead = new Lead;
       $coords = $this->lead->getGeoCode($geoCode);
