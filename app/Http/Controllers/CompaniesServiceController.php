@@ -244,9 +244,9 @@ class CompaniesServiceController extends BaseController
 				
 			$location = new Location;
 			$limited=$this->limit;
-			if (\Session::has('geo'))
+			if ($geo = session()->get('geo'))
 				{
-					$geo = \Session::get('geo');
+					
 					$location->lat = $geo['lat'];
 					$location->lng = $geo['lng'];
 				}elseif(auth()->user()->position()){

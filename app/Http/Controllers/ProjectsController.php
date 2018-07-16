@@ -40,7 +40,7 @@ class ProjectsController extends BaseController
        \Session::put('geo.type','projects');
 
        if(\Session::has('geo')){
-        //Kludge for missing session geo data searsch
+        //Kludge for missing session geo data search
             if(! \Session::has('geo.number')){
                 \Session::put('geo.number',5);
             }

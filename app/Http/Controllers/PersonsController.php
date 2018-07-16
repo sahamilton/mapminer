@@ -72,10 +72,10 @@ class PersonsController extends BaseController {
 
 		$filtered = $this->persons->isFiltered(['companies'],['vertical']);
 
-		if (\Session::has('geo'))
+		if ($latLng = session()->get('geo'))
 			// user has set their location
 		{
-			$latLng = \Session::get('geo');
+			
 			$mylocation['lat']= $latLng['lat'];
 			$mylocation['lng']= $latLng['lng'];
 		}elseif(auth()->user()->position()){
