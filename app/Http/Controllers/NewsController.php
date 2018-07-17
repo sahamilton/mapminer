@@ -213,11 +213,7 @@ class NewsController extends BaseController {
 		return $person->id;
 	}
 	
-	private function setDates($data){
-        $data['datefrom'] = Carbon::createFromFormat('m/d/Y', $data['datefrom']);
-        $data['dateto'] = Carbon::createFromFormat('m/d/Y', $data['dateto']);
-         return$data;
-    }
+	
 	
 	
 }

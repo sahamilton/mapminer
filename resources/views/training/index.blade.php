@@ -11,8 +11,8 @@
     </div>    
 
 
-    <div class="col-md-10 col-md-offset-1">
-        <table class="table" id = "sorttable">
+    <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
+ 
             <thead>
 
             
@@ -82,4 +82,5 @@
 </div>
 
 @include('partials._modal')
+@include('partials._scripts')
 @endsection

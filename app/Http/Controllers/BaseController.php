@@ -4,6 +4,7 @@ use App\User;
 use App\State;
 use App\Company;
 use App\Model;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class BaseController extends Controller {
@@ -46,5 +47,9 @@ class BaseController extends Controller {
 			$this->layout = View::make($this->layout);
 		}
 	}
-
+	protected function setDates($data){
+        $data['datefrom'] = Carbon::createFromFormat('m/d/Y', $data['datefrom']);
+        $data['dateto'] = Carbon::createFromFormat('m/d/Y', $data['dateto']);
+         return$data;
+    }
 }

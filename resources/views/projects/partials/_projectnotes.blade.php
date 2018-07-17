@@ -48,7 +48,7 @@
 	</tbody>
 	</table>
 @endif
-@if($project->owned())
+@if($project->owner())
 	<form method='post' action={{route('notes.store')}} name="noteForm">
 		{{csrf_field()}}
 		<div>
@@ -63,7 +63,7 @@
 		<button type="submit" class="btn btn-success">Add New Note</button>
 	</form>
 @else
-<div class="alert alert-warning">You need to own this project to add notes</div>
+<div class="alert alert-warning">Someone needs to own this project to add notes</div>
 
  @endif
  </div>

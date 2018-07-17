@@ -24,6 +24,7 @@
           
                 <tr> 
                     <td><a href="{{route('leads.branch',$branch->id)}}"
+
                         title="See all  {{$branch->branchname}} branch leads" >
                         {{$branch->branchname}}, {{$branch->city}} {{$branch->state}}</a></td>
                    @if(count($branch->manager)>0)

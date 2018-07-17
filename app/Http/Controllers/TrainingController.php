@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Training;
 use Illuminate\Http\Request;
-
-class TrainingController extends Controller
+use App\Role;
+use App\Http\Requests\TrainingFormRequest;
+class TrainingController extends BaseController
 {
     protected $training;
 
@@ -33,7 +34,9 @@ class TrainingController extends Controller
      */
     public function create()
     {
-        //
+        $roles = Role::pluck('name','id')->toArray();
+
+        return response()->view('training.create',compact('roles','servicelines','verticals'));
     }
 
     /**
@@ -42,9 +45,26 @@ class TrainingController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(TrainingFormRequest $request)
     {
-        //
+        $data = $request->all();
+        $data = $this->setDates($data);
+
+        if($request->has('noexpiration')){
+            $data['dateto']=null;
+        }
+        if($training = $this->training->create($data)){
+            //currently not using service line specific training
+           // $training->serviceline()->attach($request->get('serviceline'));
+            if($request->filled('vertical')){
+                $training->relatedIndustries()->attach($request->get('vertical'));
+            }
+            if($request->filled('role')){
+                $training->relatedRoles()->attach($request->get('role'));
+            }
+        }
+        
+        return redirect()->route('training.index');
     }
 
     /**
@@ -76,7 +96,7 @@ class TrainingController extends Controller
      * @param  \App\Training  $training
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Training $training)
+    public function update(TrainingFormRequest $request, Training $training)
     {
         //
     }
