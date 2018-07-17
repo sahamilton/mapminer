@@ -23,7 +23,9 @@
                 @foreach ($branches as $branch)
           
                 <tr> 
-                    <td><a href="{{route('leads.branchid',$branch->id)}}">{{$branch->branchname}}, {{$branch->city}} {{$branch->state}}</a></td>
+                    <td><a href="{{route('leads.branch',$branch->id)}}"
+                        title="See all  {{$branch->branchname}} branch leads" >
+                        {{$branch->branchname}}, {{$branch->city}} {{$branch->state}}</a></td>
                    @if(count($branch->manager)>0)
 
                         <td><a href="{{route('branchmgr.newleads',$branch->manager->first()->id)}}">{{$branch->manager->first()->postName()}}</a></td>

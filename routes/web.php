@@ -355,7 +355,7 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
 		Route::get('leadsource/{id}/export',['as'=>'leadsource.export','uses'=>'LeadSourceController@export']);
 		Route::post('lead/search',['as'=>'leads.search','uses'=>'LeadsController@search']);
 		Route::get('lead/search',['as'=>'leads.search','uses'=>'LeadsController@searchAddress']);
-		Route::get('lead/{bid}/branch',['as'=>'leads.branch','uses'=>'LeadsController@branchLeads']);
+		Route::get('lead/branch/{bid?}',['as'=>'leads.branch','uses'=>'LeadsController@branches']);
 		Route::resource('leads','LeadsController');
 
 	# Prospect Source / LeadSource
@@ -407,7 +407,7 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
 	   // Route::get('newleads/team',['as'=>'templeads.team','uses'=>'TempleadController@salesteam']);
 	    Route::get('/newleads/{pid}/branchmgr',['as'=>'branchmgr.newleads','uses'=>'LeadsController@getAssociatedBranches']);
 	   Route::get('/newleads/branch',['as'=>'templeads.branch','uses'=>'LeadsController@branches']);
-	    Route::get('/newleads/{id}/branch/',['as'=>'leads.branchid','uses'=>'LeadsController@branchLeads']);
+	    //Route::get('/newleads/{id}/branch/',['as'=>'leads.branchid','uses'=>'LeadsController@branchLeads']);
 		Route::resource('newleads','LeadSourceController');
 		
 });

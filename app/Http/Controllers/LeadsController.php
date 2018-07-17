@@ -454,7 +454,7 @@ class LeadsController extends BaseController
         })->download($type);
     }
  
- public function salesLeads($pid){
+  public function salesLeads($pid){
 
         $person = $this->getSalesRep($pid);
       
@@ -845,7 +845,7 @@ class LeadsController extends BaseController
                     $contact[$field] = $newdata[$field];
  
             }
-          dd('leadcontroller',$contact);
+      
         return  $contact;
     
     }

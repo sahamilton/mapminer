@@ -10,7 +10,7 @@
     @endif
     <p><a href='{{route("newleads.branch.map",$branches->first()->branches->id)}}'>
  <i class="fa fa-flag" aria-hidden="true"></i> Map view</a></p>
-     <p><a href='{{route("templeads.branch")}}'>
+     <p><a href='{{route("leads.branch")}}'>
  <i class="fa fa-th-list" aria-hidden="true"></i> See All Branch Leads</a></p>
     <div class="col-md-10 col-md-offset-1">
         <table class="table" id = "sorttable">

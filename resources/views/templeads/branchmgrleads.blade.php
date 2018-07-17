@@ -3,7 +3,7 @@
 <div class="container">
     <h2>Branch Leads Overview</h2>
     <h4>Branches Managed By {{$branchmgr->postName()}}</h4>
-    <p><a hef="{{route('templeads.branch')}}">Return to all branches!!</a></p>
+    <p><a hef="{{route('leads.branch')}}">Return to all branches!!</a></p>
 
     <div class="col-md-10 col-md-offset-1">
         <table class="table" id = "sorttable">
