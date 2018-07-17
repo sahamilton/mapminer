@@ -624,12 +624,7 @@ class AdminUsersController extends BaseController {
         return $this->user->getGeoCode($geoCode);
 
 	}
-    private function setDates($data){
-
-           $data['active_from'] = Carbon::createFromFormat('m/d/Y', $data['active_from']);
-           return $data;
-
-	}
+    
 
     public function checkBranchAssignments(){
         $branchpeople  = $this->person->where('lat','!=','')->has('branchesServiced')->with('branchesServiced')->get();

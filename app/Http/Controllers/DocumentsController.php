@@ -12,7 +12,7 @@ use App\SalesProcess;
 use App\SearchFilter;
 use App\Http\Requests\DocumentFormRequest;
 
-class DocumentsController extends Controller
+class DocumentsController extends BaseController
 {
     public $document;
     public $process;
@@ -174,11 +174,6 @@ class DocumentsController extends Controller
         return response()->view('documents.watchedby',compact('document'));
     }
     
-    private function setDates($data){
-
-        $data['datefrom'] = Carbon::createFromFormat('m/d/Y', $data['datefrom']);
-        $data['dateto'] = Carbon::createFromFormat('m/d/Y', $data['dateto']);
-        return $data;
-    }
+    
     
 }

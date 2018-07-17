@@ -5,13 +5,17 @@ namespace App\Http\Controllers;
 use App\Training;
 use Illuminate\Http\Request;
 use App\Role;
+use App\SearchFilter;
+use App\Serviceline;
 use App\Http\Requests\TrainingFormRequest;
 class TrainingController extends BaseController
 {
     protected $training;
-
+    public $userVerticals;
     public function __construct(Training $training){
         $this->training = $training;
+        parent::__construct($training);
+
     }
 
 
@@ -23,7 +27,7 @@ class TrainingController extends BaseController
      */
     public function index()
     {
-        $trainings = $this->training->all();
+        $trainings = $this->training->with('relatedRoles','relatedIndustries','servicelines')->get();
         return response()->view('training.index',compact('trainings'));
     }
 
@@ -35,6 +39,9 @@ class TrainingController extends BaseController
     public function create()
     {
         $roles = Role::pluck('name','id')->toArray();
+       
+        $verticals = $this->getAllVerticals();
+        $servicelines = $this->getAllServicelines();
 
         return response()->view('training.create',compact('roles','servicelines','verticals'));
     }
@@ -54,8 +61,8 @@ class TrainingController extends BaseController
             $data['dateto']=null;
         }
         if($training = $this->training->create($data)){
-            //currently not using service line specific training
-           // $training->serviceline()->attach($request->get('serviceline'));
+            
+            $training->servicelines()->attach($request->get('serviceline'));
             if($request->filled('vertical')){
                 $training->relatedIndustries()->attach($request->get('vertical'));
             }
@@ -92,7 +99,7 @@ class TrainingController extends BaseController
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Http\Requests\TrainingFormRequest  $request
      * @param  \App\Training  $training
      * @return \Illuminate\Http\Response
      */
@@ -110,5 +117,34 @@ class TrainingController extends BaseController
     public function destroy(Training $training)
     {
         //
+    }
+
+
+    public function mytraining(){
+       // dd($this->userRoles,$this->userServiceLines,$this->userVerticals);
+        $training = $this->training->query();
+        // find users servicelines
+         $training->whereHas('servicelines', function ($q){
+            $q->whereIn('id',$this->userServiceLines);
+         });
+        // find users industries
+        if(count($this->userVerticals)>0){
+                 $training->whereHas('relatedIndustries', function ($q){
+                    $q->whereIn('id',$this->userVerticals);
+                 });
+             }
+        // find users roles
+         $training->whereHas('relatedRoles', function ($q){
+            $q->whereIn('id',$this->userRoles);
+         });
+         $trainings = $training->get();
+dd($this->userVerticals,$this->userRoles, $this->userServiceLines);
+         return response()->view('training.mytrainings',compact('trainings'));
+
+    }
+    public function view($id){
+        $training = $this->training->findOrFail($id);
+        return response()->view('training.view',compact('training'));
+
     }
 }

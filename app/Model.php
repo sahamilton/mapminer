@@ -2,68 +2,70 @@
 namespace App;
 
 class Model extends \Eloquent {
-	use Filters;
-public $userServiceLines;
-
-public function getTableColumns($table=null){
+	use Filters,HasRoles;
+	public $userServiceLines;
+	public $userVerticals;
+	public $userRoles;
 	
-     		if(! $table){
-     			$table=$this->table;
-     		}
-     		
-   			return \DB::select( \DB::raw('SHOW COLUMNS FROM '.$table.''));
-		}
+	public function getTableColumns($table=null){
+		
+	     		if(! $table){
+	     			$table=$this->table;
+	     		}
+	     		
+	   			return \DB::select( \DB::raw('SHOW COLUMNS FROM '.$table.''));
+			}
 
-public function isValid($data)
-	{
-		$validation = Validator::make($data, static::$rules);
-		
-		if($validation->passes()) return true;
-		
-		$this->errors = $validation->messages();
-		return false;
-	}
-	
-public function checkImportFileType($rules){
-	// Make sure we have a file
-
-		$file = Input::file('upload');
-		// Make sure its a CSV file - test #1
-		$mimes = array('application/vnd.ms-excel','text/plain','text/csv','text/tsv','text/x-c');
-		if(!in_array($file->getMimeType(),$mimes)){
-		 	return Redirect::back()->withErrors(['Only CSV files are allowed']);
-		}		
-		return $file;
-
-}
-	public function checkImportFileStructure($filename){
-		// map the file to the fields
-		$datafile = fopen($filename, 'r');
-		
-		$data = fgetcsv($datafile);
-		
-		return $data;
-		
-	}
-		
-/*public function _import_csv($filename, $table,$fields)
-	{
-	$filename = str_replace("\\","/",$filename);
-
-	$query = sprintf("LOAD DATA LOCAL INFILE '".$filename."' INTO TABLE ". $table." FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '\"' ESCAPED BY '\"' LINES TERMINATED BY '\\n'  IGNORE 1 LINES (".$fields.");", $filename);
-	
-	
-	try {
-		return  \DB::connection()->getpdo()->exec($query);
-	}
-	catch (Exception $e)
+	public function isValid($data)
 		{
-		 throw new Exception( 'Something really has gone wrong with the import:\r\n<br />'.$query, 0, $e);
+			$validation = Validator::make($data, static::$rules);
+			
+			if($validation->passes()) return true;
+			
+			$this->errors = $validation->messages();
+			return false;
+		}
+		
+	public function checkImportFileType($rules){
+		// Make sure we have a file
+
+			$file = Input::file('upload');
+			// Make sure its a CSV file - test #1
+			$mimes = array('application/vnd.ms-excel','text/plain','text/csv','text/tsv','text/x-c');
+			if(!in_array($file->getMimeType(),$mimes)){
+			 	return Redirect::back()->withErrors(['Only CSV files are allowed']);
+			}		
+			return $file;
+
+	}
+		public function checkImportFileStructure($filename){
+			// map the file to the fields
+			$datafile = fopen($filename, 'r');
+			
+			$data = fgetcsv($datafile);
+			
+			return $data;
+			
+		}
+			
+	/*public function _import_csv($filename, $table,$fields)
+		{
+		$filename = str_replace("\\","/",$filename);
+
+		$query = sprintf("LOAD DATA LOCAL INFILE '".$filename."' INTO TABLE ". $table." FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '\"' ESCAPED BY '\"' LINES TERMINATED BY '\\n'  IGNORE 1 LINES (".$fields.");", $filename);
+		
+		
+		try {
+			return  \DB::connection()->getpdo()->exec($query);
+		}
+		catch (Exception $e)
+			{
+			 throw new Exception( 'Something really has gone wrong with the import:\r\n<br />'.$query, 0, $e);
+			
+			}
 		
 		}
-	
-	}
-	*/
+		*/
 	
 	
 	public function rawQuery($query,$error,$type){
@@ -238,33 +240,30 @@ public function checkImportFileType($rules){
 	
 	}
 	
-	
 
 	
 	public function getUserServiceLines()
 	{
 		
-		if (session()->has('user.servicelines')){
-			$this->userServiceLines = session()->get('user.servicelines');
-			return session()->get('user.servicelines');
-		}
+		$this->userServicelines= auth()->user()->serviceline()->pluck('servicelines.id')->toArray();
 
-		return $this->currentUserServicelines();
+       session()->put('user.servicelines',$this->userServicelines) ;
+       return $this->userServicelines;
 	}
 
-	public function currentUserServicelines(){
-       $user = auth()->user();
-       $userServicelines= $user->serviceline()->pluck('servicelines.id')->toArray();
-       session()->put('user.servicelines',$userServicelines) ;
-       $this->userServiceLines = session()->get('user.servicelines');
-       return $userServicelines;
-    }
+	
 
     public function getUserVerticals(){
-        $user = auth()->user()->with('person')->firstOrFail();
-        $userVerticals= $user->person->industryfocus()->pluck('search_filter_id')->toArray();
-        session()->put('user.verticals',$userVerticals) ;
-        return $userVerticals;
+        $this->userVerticals= auth()->user()->person->industryfocus()->pluck('search_filter_id')->toArray();
+        session()->put('user.verticals',$this->userVerticals) ;
+        return $this->userVerticals;
+        
+    }
+
+    public function getUserRoles(){
+        $this->userRoles= auth()->user()->roles->pluck('id')->toArray();
+        session()->put('user.roles',$this->userRoles) ;
+        return $this->userRoles;
         
     }
 /*

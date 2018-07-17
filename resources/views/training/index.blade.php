@@ -17,9 +17,12 @@
 
             
                 <th>Title</th>
+                <th>Preview</th>
                 <th>Date From</th>
                 <th>Date To</th>
                 <th>Roles</th>
+                <th>Industries</th>
+                <th>Servicelines</th>
 
                 <th>Actions</th>
 
@@ -30,13 +33,27 @@
                 <tr> 
 
                     <td>{{$training->title }}</td>
-
+                    <td><a href="{{route('training.view',$training->id)}}">View</a></td>
                     <td>{{$training->datefrom}}</td>
                     <td>{{$training->datefrom}}</td>
                     <td>
                         <ul style="list-style-type: none">
-                        @foreach ($training->roles as $role)
+                        @foreach ($training->relatedRoles as $role)
                             <li>{{$role->name}}</li>
+                        @endforeach
+                        </ul>
+                    </td>
+                    <td>
+                        <ul style="list-style-type: none">
+                        @foreach ($training->relatedIndustries as $industry)
+                            <li>{{$industry->filter}}</li>
+                        @endforeach
+                        </ul>
+                    </td>
+                    <td>
+                        <ul style="list-style-type: none">
+                        @foreach ($training->servicelines as $serviceline)
+                            <li>{{$serviceline->ServiceLine}}</li>
                         @endforeach
                         </ul>
                     </td>

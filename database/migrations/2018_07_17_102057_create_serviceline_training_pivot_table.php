@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSearchFilterTrainingPivotTable extends Migration
+class CreateServicelineTrainingPivotTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,12 +12,12 @@ class CreateSearchFilterTrainingPivotTable extends Migration
      */
     public function up()
     {
-        Schema::create('searchfilter_training', function (Blueprint $table) {
+        Schema::create('serviceline_training', function (Blueprint $table) {
+            $table->integer('serviceline_id')->unsigned()->index();
+            $table->foreign('serviceline_id')->references('id')->on('servicelines')->onDelete('cascade');
             $table->integer('training_id')->unsigned()->index();
             $table->foreign('training_id')->references('id')->on('trainings')->onDelete('cascade');
-            $table->integer('searchfilter_id')->unsigned()->index();
-            $table->foreign('searchfilter_id')->references('id')->on('searchfilters')->onDelete('cascade');
-            $table->primary(['training_id', 'searchfilter_id']);
+            $table->primary(['serviceline_id', 'training_id']);
         });
     }
 
@@ -28,6 +28,6 @@ class CreateSearchFilterTrainingPivotTable extends Migration
      */
     public function down()
     {
-        Schema::drop('searchfilter_training');
+        Schema::drop('serviceline_training');
     }
 }

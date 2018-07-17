@@ -230,7 +230,11 @@ Route::group(['middleware' => 'auth'], function () {
     	/*Route::get('search',function(){
     		return response()->view('search.search');
     	});
+
 */
+    	# Training
+		Route::get('mytraining',['as'=>'mytraining','uses'=>'TrainingController@mytraining']);
+
     	#User settings
 		Route::get('/user/settings',['as'=>'profile','uses'=>'UsersController@settings']);
 
@@ -336,7 +340,7 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
 		//Route::post('leads/batchassign',['as'=>'leads.assignbatch','uses'=>'LeadsAssignController@assignLead']);
 		//Route::post('leads/assign',['as'=>'leads.assign','uses'=>'LeadsController@postAssignLeads']);
 		
-
+		
 	## Web leads
 		
 		Route::post('/webleads/import/form',['as'=>'leads.webleadsinsert','uses'=>'WebleadsImportController@getLeadFormData']);
@@ -467,6 +471,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 		Route::resource('process','SalesProcessController');
 
 	# Training
+		Route::get('training/{id}/view',['as'=>'training.view','uses'=>'TrainingController@view']);
 		Route::resource('training','TrainingController');
 
 	# Admin Dashboard

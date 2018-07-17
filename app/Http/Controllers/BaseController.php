@@ -4,6 +4,8 @@ use App\User;
 use App\State;
 use App\Company;
 use App\Model;
+use App\SearchFilter;
+use App\Serviceline;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -11,6 +13,7 @@ class BaseController extends Controller {
 	
 	public $userServiceLines;
 	public $userVerticals;
+    public $userRoles;
 
     /**
      * Initializer.
@@ -23,9 +26,10 @@ class BaseController extends Controller {
        $this->middleware(function ($request, $next) use($model){
 
              
-               $this->userServiceLines = session()->has('user.servicelines') ? session()->get( 'user.servicelines' ) : $model->getUserServiceLines();
+               $this->userServiceLines = session()->has('user.servicelines') && session()->get( 'user.servicelines' ) ? session()->get( 'user.servicelines' ) : $model->getUserServiceLines();
+               $this->userVerticals = session()->has('user.verticals') && session()->get('user.verticals')  ? session()->get('user.verticals') : $model->getUserVerticals();
+               $this->userRoles = session()->has('user.roles') && session()->get('user.roles')  ? session()->get('user.roles') : $model->getUserRoles();
               
-               $this->userVerticals = session()->has('user.verticals') ? session()->get('user.verticals') : $model->getUserVerticals();
                 return $next($request);
 
         });
@@ -52,4 +56,16 @@ class BaseController extends Controller {
         $data['dateto'] = Carbon::createFromFormat('m/d/Y', $data['dateto']);
          return$data;
     }
+
+    protected function getAllVerticals(){
+        $filters = new SearchFilter;
+        return $filters->industrysegments();
+    }
+     
+     protected function getAllServicelines(){
+    
+        return Serviceline::whereIn('id',$this->userServiceLines)->pluck('serviceline','id')->toArray();
+     }       
+        
+        
 }

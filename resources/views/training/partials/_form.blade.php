@@ -21,8 +21,8 @@
          <label class="col-md-2 control-label">Description</label>
           <div class="input-group input-group-lg ">
              <textarea class="form-control" 
-             name='descripition' 
-             title="descripition">
+             name='description' 
+             title="description">
              {!! old('description', isset($training) ? $training->description : '') !!}
              </textarea>
                  <span class="help-block">
@@ -110,3 +110,22 @@
         </div>
     </div>
 <!-- / Roles -->
+<!-- Industries -->
+<legend>Industries</legend>
+@include('training.partials._verticals')
+<!-- / Industries-->
+<div class="form-group{{ $errors->has('serviceline)') ? ' has-error' : '' }}">
+    <label class="col-md-2 control-label">Servicelines</label>
+
+    <div class="input-group input-group-lg">
+        <select multiple class="form-control" name='serviceline[]'>
+            @foreach ($servicelines as $key=>$value))
+                <option @if(isset($training) && in_array($key,$training->servicelines->toArray())) selected @endif value="{{$key}}">{{$value}}</option>
+            @endforeach
+        </select>
+        <span class="help-block">
+            <strong>{{ $errors->has('serviceline') ? $errors->first('serviceline') : ''}}</strong>
+        </span>
+    </div>
+</div>
+@include('partials._verticalsscript') 
