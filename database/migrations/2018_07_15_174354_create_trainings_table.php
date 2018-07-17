@@ -18,6 +18,9 @@ class CreateTrainingsTable extends Migration
             $table->string('title');
             $table->string('type');
             $table->string('reference');
+            $table->text('description');
+            $table->date('datefrom')->nullable();
+            $table->date('dateto')->nullable();
             $table->timestamps();
         });
     }

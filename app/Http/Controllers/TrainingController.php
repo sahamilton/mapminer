@@ -9,7 +9,7 @@ class TrainingController extends Controller
 {
     protected $training;
 
-    public function __construct(Training $trainging){
+    public function __construct(Training $training){
         $this->training = $training;
     }
 
@@ -22,8 +22,8 @@ class TrainingController extends Controller
      */
     public function index()
     {
-        $training = $this->training->all();
-        return response()->view('training.index',compact('training'));
+        $trainings = $this->training->all();
+        return response()->view('training.index',compact('trainings'));
     }
 
     /**
