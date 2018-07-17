@@ -7,6 +7,14 @@ use Illuminate\Http\Request;
 
 class TrainingController extends Controller
 {
+    protected $training;
+
+    public function __construct(Training $trainging){
+        $this->training = $training;
+    }
+
+
+
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +22,8 @@ class TrainingController extends Controller
      */
     public function index()
     {
-        //
+        $training = $this->training->all();
+        return response()->view('training.index',compact('training'));
     }
 
     /**

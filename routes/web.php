@@ -466,7 +466,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 
 		Route::resource('process','SalesProcessController');
 
-
+	# Training
+		Route::resource('training','TrainingController');
 
 	# Admin Dashboard
 		Route::get('watching/{userid}', ['as'=>'watch.watching', 'uses'=>'WatchController@watching']);

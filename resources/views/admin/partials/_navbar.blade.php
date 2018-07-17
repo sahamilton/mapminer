@@ -147,9 +147,16 @@
                     <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu">
-					<li{{ (Request::is('admin/news*') ? ' class="active"' : '') }}><a href="{{ route('news.index') }}">
+					<li{{ (Request::is('admin/news*') ? ' class="active"' : '') }}>
+                    <a href="{{ route('news.index') }}">
                     <i class="fa fa-newspaper-o" aria-hidden="true"> </i> News</a></li>
-                    <li{{ (Request::is('admin/emails*') ? ' class="active"' : '') }}><a href="{{ route('emails.index') }}">
+
+                    <li{{ (Request::is('admin/training*') ? ' class="active"' : '') }}>
+                    <a href="{{ route('training.index') }}">
+                    <i class="fa fa-graduation-cap" aria-hidden="true"> </i> Training</a></li>
+
+                    <li{{ (Request::is('admin/emails*') ? ' class="active"' : '') }}>
+                    <a href="{{ route('emails.index') }}">
                     <i class="fa fa-envelope-o" aria-hidden="true"> </i> Emails</a></li>
                     @can('manage_sales_campaigns')
                         <li class="divider">Campaigns</li>
