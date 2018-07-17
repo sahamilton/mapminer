@@ -138,7 +138,7 @@ class TrainingController extends BaseController
             $q->whereIn('id',$this->userRoles);
          });
          $trainings = $training->get();
-dd($this->userVerticals,$this->userRoles, $this->userServiceLines);
+
          return response()->view('training.mytrainings',compact('trainings'));
 
     }

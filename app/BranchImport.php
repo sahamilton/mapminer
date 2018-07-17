@@ -10,12 +10,12 @@ class BranchImport extends Imports
 
     public $requiredFields = ['id','branchname'];
 
-    public function __construct(){
-    	
-    }
+    
     public function servicelines(){
     	return $this->belongsToMany(ServiceLine::class,'branch_serviceline','branch_id');
     }
 
-    
+    public function branches(){
+    	return hasOne(Branch::class,'id','id');
+    }
 }

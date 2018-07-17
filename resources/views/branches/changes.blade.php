@@ -1,4 +1,4 @@
-@extends('site.layouts.default')
+@extends('admin.layouts.default')
 
 {{-- Page title --}}
 @section('title')
@@ -13,7 +13,8 @@ Review Branch Changes
 
 <ul class="nav nav-tabs">
   <li class="active"><a data-toggle="tab" href="#branch"><strong>Branch Additions</strong></a></li>
-  <li><a data-toggle="tab" href="#team"><strong>Branch Deletions</strong></a></li>
+  <li><a data-toggle="tab" href="#deletes"><strong>Branch Deletions</strong></a></li>
+  <li><a data-toggle="tab" href="#changes"><strong>Branch Changes</strong></a></li>
 
 
 </ul>
@@ -25,8 +26,11 @@ Review Branch Changes
     <div id="branch" class="tab-pane fade in active">
       @include('branches/partials/_adds')
     </div>
-	<div id="team" class="tab-pane fade in">
+	<div id="deletes" class="tab-pane fade in">
       @include('branches/partials/_deletes')
+    </div>
+  <div id="changes" class="tab-pane fade in">
+      @include('branches/partials/_changes')
     </div>
 	
 </div>	
