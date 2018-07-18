@@ -8,7 +8,7 @@ class BranchImport extends Imports
 {
     public $table = 'branchesimport';
 
-    public $requiredFields = ['id','branchname'];
+    public $requiredFields = ['id','branchname','street','city','state','zip','lat','lng'];
 
     
     public function servicelines(){
