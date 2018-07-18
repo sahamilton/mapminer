@@ -27,8 +27,12 @@ class TrainingController extends BaseController
      */
     public function index()
     {
-        $trainings = $this->training->with('relatedRoles','relatedIndustries','servicelines')->get();
-        return response()->view('training.index',compact('trainings'));
+        if(auth()->user()->hasRole('Admin')){
+            $trainings = $this->training->with('relatedRoles','relatedIndustries','servicelines')->get();
+            return response()->view('training.index',compact('trainings'));
+        }else{
+            return redirect()->route('mytraining');
+        }
     }
 
     /**
@@ -80,9 +84,10 @@ class TrainingController extends BaseController
      * @param  \App\Training  $training
      * @return \Illuminate\Http\Response
      */
-    public function show(Training $training)
-    {
-        //
+    public function show($id){
+        $training = $this->training->findOrFail($id);
+        return response()->view('training.view',compact('training'));
+
     }
 
     /**
@@ -121,7 +126,7 @@ class TrainingController extends BaseController
 
 
     public function mytraining(){
-       // dd($this->userRoles,$this->userServiceLines,$this->userVerticals);
+       
         $training = $this->training->query();
         // find users servicelines
          $training->whereHas('servicelines', function ($q){
@@ -142,9 +147,5 @@ class TrainingController extends BaseController
          return response()->view('training.mytrainings',compact('trainings'));
 
     }
-    public function view($id){
-        $training = $this->training->findOrFail($id);
-        return response()->view('training.view',compact('training'));
-
-    }
+    
 }

@@ -1,5 +1,15 @@
 @extends('site/layouts/default')
 @section('content')
+<style>
+a.viewtraining{
+	display: block;
+	width:400px;
+	height:300px;
+	background-image: url("/assets/images/viewimage.png");
+	background-repeat:no-repeat;
+
+}
+</style>
 <div class="container">
     <h2>My Trainings</h2>
    
@@ -8,7 +18,10 @@
 
                     <h4>{{$training->title}}</h4>
                     <p>{{$training->description}}</p>
-<iframe width="400" height="300" frameborder="0" allowfullscreen="true" style="box-sizing: border-box; margin-bottom:5px; max-width: 100%; border: 1px solid rgba(0,0,0,1); background-color: rgba(255,255,255,0); box-shadow: 0px 2px 4px rgba(0,0,0,0.1);" src="{{$training->reference}}"></iframe>
+                    <a class="viewtraining" href="{{route('training.show',$training->id)}}">
+
+                    </a>
+
                   
                 @endforeach
 

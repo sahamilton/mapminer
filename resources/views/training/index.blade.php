@@ -33,9 +33,9 @@
                 <tr> 
 
                     <td>{{$training->title }}</td>
-                    <td><a href="{{route('training.view',$training->id)}}">View</a></td>
+                    <td><a href="{{route('training.show',$training->id)}}">View</a></td>
                     <td>{{$training->datefrom}}</td>
-                    <td>{{$training->datefrom}}</td>
+                    <td>{{$training->dateto}}</td>
                     <td>
                         <ul style="list-style-type: none">
                         @foreach ($training->relatedRoles as $role)
