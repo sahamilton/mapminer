@@ -56,22 +56,28 @@ class BranchesImportController extends ImportController
         $this->validateInput($request);
         $this->import->setFields($data);
         if($this->import->import()) {
+            $this->import->setNullFields('branchesimport');
             $data= $this->showChanges($data);
             return response()->view('branches.changes',compact('data'));
         }
         
     }
+    
+
+
+
     private function showChanges($data){
         
         $serviceline = $data['serviceline'];
         //get the adds
-        $data['adds'] = $this->getAdds();
+        $data['adds'] = $this->import->getAdds();
 
       
-        $data['deletes'] = $this->getDeletes($serviceline);
+        $data['deletes'] = $this->import->getDeletes($serviceline);
         //
-        $data['changes'] = $this->getChanges();
-        
+        $data['changes'] = $this->import->getChanges();
+        //dd( $data['changes'][0],count($data['changes']));
+       
         return $data;
     }
 
@@ -83,7 +89,7 @@ class BranchesImportController extends ImportController
             if($request->filled('add')){
                 $adds = count($request->get('add'));
                 $branchesToImport = $this->import
-                ->whereIn('id',$request->get('add'))
+                ->whereIn('branch_id',$request->get('add'))
                 ->get();
                 foreach ($branchesToImport as $add){
                     $branch = Branch::create($add->toArray());
@@ -117,56 +123,5 @@ class BranchesImportController extends ImportController
 
     }
 
-    private function getAdds(){
-        return  $this->import
-        ->distinct()
-        ->select('branchesimport.id','branchesimport.branchname', 'branchesimport.street','branchesimport.address2','branchesimport.city','branchesimport.state','branchesimport.zip')
-        ->leftJoin('branches',function($join){
-            $join->on('branchesimport.id','=','branches.id');
-        })
-        ->with('servicelines')
-        ->where('branches.id','=',null)
-        ->get();
-    }
-
-    private function getDeletes($serviceline){
-        return $this->branch
-        ->whereHas('servicelines',function($q) use($serviceline){
-            $q->where('id','=',$serviceline);
-         })
-        ->select('branches.id','branches.branchname', 'branches.street','branches.address2','branches.city','branches.state','branches.zip')
-        ->leftJoin('branchesimport',function($join){
-            $join->on('branches.id','=','branchesimport.id');
-        })
-        ->with('servicelines')
-        ->where('branchesimport.id','=',null)
-        ->get();
-
-    }
-
-    private function getChanges(){
-            $query = "select 
-                    branches.id as branchid,
-                    branches.branchname as branchname,
-                    branches.street as orgstreet, 
-                    branchesimport.street as newstreet, 
-                    branches.address2 as orgaddress2, 
-                    branchesimport.address2 as newaddress2, 
-                    branches.city as orgcity, 
-                    branchesimport.city as newcity, 
-                    branches.state as orgstate, 
-                    branchesimport.state as newstate,  
-                    branches.zip as orgzip, 
-                    branchesimport.zip as newzip
-                    from branches , branchesimport
-                    where branches.id = branchesimport.id
-                    and 
-                    (trim(branches.street) != trim(branchesimport.street) 
-                    OR trim(branches.address2) != trim(branchesimport.address2)
-                    OR trim(branches.city) != trim(branchesimport.city) 
-                    OR trim(branches.state) != trim(branchesimport.state) 
-                    OR trim(branches.zip) != trim(branchesimport.zip))";
-        return \DB::select($query);
-
-    }
+    
 }

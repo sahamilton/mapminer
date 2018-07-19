@@ -11,6 +11,7 @@ class Imports extends Model
     	public $fields;
     	public $importfilename;
     	public $additionaldata;
+    	public $nullFields;
 
     	/*public function __construct($data){
 
@@ -38,6 +39,8 @@ class Imports extends Model
 	    		}else{
 	    			$this->additionaldata = [];
 	    		}
+	    	// set null empty fields
+	    	
 	    	// remove any additional data fields from input fields
 	    	
 	    	$data['fields'][key(array_intersect($data['fields'],array_keys($this->additionaldata)))]='@ignore';
@@ -81,7 +84,13 @@ class Imports extends Model
     		return true;
     	}
 
+    public function setNullFields($table){
 
+	    	foreach ($this->nullFields as $field){
+	    		$this->executeQuery("update ".$table." set " . $field . "= null where " . $field ."=''");
+	    	}
+	    	return true;
+    }
     	private function createTemporaryImportTable(){
 
 			//Create the temporary table
@@ -107,9 +116,10 @@ class Imports extends Model
 			}
 		}
 
+
 		private function copyTempToBaseTable(){
 			$this->fields = str_replace('@ignore,','',$this->fields);
-			// COpy over to base table
+			// Copy over to base table
 
 			return $this->executeQuery("INSERT IGNORE INTO `".$this->table."` (".$this->fields.") SELECT ".$this->fields." FROM `".$this->temptable."`");
 		}

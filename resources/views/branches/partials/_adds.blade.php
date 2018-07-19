@@ -18,7 +18,7 @@
  	<td><input type="checkbox" checked name="add[]"	value="{{$branch->id}}" />
 	<td>{{$branch->branchname}}</td>
 
-	<td>{{$branch->id}}	</td>
+	<td>{{$branch->branch_id}}	</td>
 
 	<td>
 		@foreach ($branch->servicelines as $serviceline)
