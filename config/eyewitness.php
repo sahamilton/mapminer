@@ -79,7 +79,7 @@ return [
      |
      */
 
-    'queue_tube_list' => ['sync' => ['default']],
+    'queue_tube_list' => ['sync' => ['mapminer']],
 
 
     /*
@@ -187,7 +187,7 @@ return [
      |
      */
 
-    'email_frequency' => 60,
+    'email_frequency' => 180,
 
 
     /*
