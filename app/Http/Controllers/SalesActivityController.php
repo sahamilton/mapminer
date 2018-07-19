@@ -267,9 +267,5 @@ class SalesActivityController extends BaseController
         return redirect()->route('campaign.announce',$request->get('campaign_id'));
    }
 
-     private function setDates($data){
-        $data['datefrom'] = \Carbon\Carbon::createFromFormat('m/d/Y', $data['datefrom']);
-        $data['dateto'] = \Carbon\Carbon::createFromFormat('m/d/Y', $data['dateto']);
-        return $data;
-    }
+    
 }

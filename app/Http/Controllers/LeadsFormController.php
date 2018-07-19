@@ -4,14 +4,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Weblead;
-use App\WebleadImport;
+use App\WebLeadImport;
 use App\LeadSource;
-use App\Http\Requests\WebleadFormRequest;
+use App\Http\Requests\WebLeadFormRequest;
 
 
 class LeadsFormController  extends ImportController
 {
-    public function __construct(Weblead $lead, LeadSource $leadsource,WebleadImport $import){
+    public function __construct(Weblead $lead, LeadSource $leadsource,WebLeadImport $import){
         $this->lead = $lead;
         $this->import = $import;
         $this->leadsources = $leadsource;
@@ -43,7 +43,7 @@ class LeadsFormController  extends ImportController
     	return response()->view('leads.leadform');
     }
 
-    public function getLeadFormData(WebleadFormRequest $request){
+    public function getLeadFormData(WebLeadFormRequest $request){
     	// first get teh rows of data
 		$rows = explode(PHP_EOL,$request->get('weblead'));
 		// then create the

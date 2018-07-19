@@ -9,13 +9,8 @@ function initialize() {
   }
   var infoWindow = new google.maps.InfoWindow;
   var map = new google.maps.Map(document.getElementById('map'), mapOptions);
-<<<<<<< HEAD
-	var name = "{{$lead->company_name}}";
-  var address = "{{$lead->address->city}}" + " {{$lead->address->state}}";
-=======
-  var name = "{!! trim($lead->companyname)!!}";
+	var name = "{!! $lead->companyname!!}";
   var address = "{{trim($lead->city)}}" + ",{{trim($lead->state)}}";
->>>>>>> master
  
   var salesreps = {!! $salesrepmarkers !!};
   var branches = {!! $branchmarkers !!};
@@ -55,14 +50,14 @@ function initialize() {
 
     });
 
-  var leadmarker = new google.maps.Marker({
-    position: myLatlng,
-    map: map,
-    title: name + " " + address,
+	var leadmarker = new google.maps.Marker({
+	  position: myLatlng,
+	  map: map,
+	  title: name + " " + address,
     icon: 'https://maps.google.com/mapfiles/ms/icons/green-dot.png',
-    clickable: true
-  });
-   bindInfoWindow(leadmarker,  map, infoWindow);
+	  clickable: true
+	});
+	 bindInfoWindow(leadmarker,  map, infoWindow);
 
 }
 function bindInfoWindow(marker, map, infoWindow) {

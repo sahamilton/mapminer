@@ -2,10 +2,11 @@
 @section('content')
 <div class="container">
     <h2>Leads By Branches</h2>
-   @if($leadsource)
+   @if(isset($leadsource))
    <h4>From {{$leadsource->source}} lead source</h4>
-   @endif
-<h4><a href="{{route('leadsource.show',$leadsource->id)}}">See {{$leadsource->source}} by Reps</a></h4>
+
+<h4><a href="{{route('leadsource.show',$leadsource->id)}}">See {{$leadsource->source}} by Reps</a></h4>   
+@endif
     <div class="col-md-10 col-md-offset-1">
         <table class="table" id = "sorttable">
             <thead>
@@ -22,7 +23,10 @@
                 @foreach ($branches as $branch)
           
                 <tr> 
-                    <td><a href="{{route('templeads.branchid',$branch->id)}}">{{$branch->branchname}}, {{$branch->city}} {{$branch->state}}</a></td>
+                    <td><a href="{{route('leads.branch',$branch->id)}}"
+
+                        title="See all  {{$branch->branchname}} branch leads" >
+                        {{$branch->branchname}}, {{$branch->city}} {{$branch->state}}</a></td>
                    @if(count($branch->manager)>0)
 
                         <td><a href="{{route('branchmgr.newleads',$branch->manager->first()->id)}}">{{$branch->manager->first()->postName()}}</a></td>

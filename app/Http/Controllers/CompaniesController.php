@@ -262,10 +262,10 @@ class CompaniesController extends BaseController {
 
 			$location = new Location;
 			//$limited=$this->limit;
-			if (\Session::has('geo'))
+			//we need to test to see if geo is filled
+			if ($geo = session()->get('geo'))
 				{
 				
-					$geo = \Session::get('geo');
 					$location->lat = $geo['lat'];
 					$location->lng = $geo['lng'];
 

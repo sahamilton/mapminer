@@ -16,7 +16,7 @@
         <div class="form-group{{ $errors->has('comments') ? ' has-error' : '' }}">
           <label class="col-md-4 control-label">Project Recipient</label>
            <div class="input-group input-group-lg ">
-            <input  type="text" id="search" name="username" placeholder="Type to search users" autocomplete="off" ><i class="fa fa-search"></i>
+            <input  type="text" required id="search" name="username" placeholder="Type to search users" autocomplete="off" ><i class="fa fa-search"></i>
            
 
            </div>
@@ -55,7 +55,7 @@
                 datumTokenizer: Bloodhound.tokenizers.whitespace,
                 queryTokenizer: Bloodhound.tokenizers.whitespace,
                 remote: {
-                    url: '/ops/salesteam/find?q=%QUERY%',
+                    url: '/salesteam/find?q=%QUERY%',
                     wildcard: '%QUERY%'
                 },
             });

@@ -224,12 +224,17 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('rank',['as'=>'api.rank','uses'=>'DocumentsController@rank']);
     	Route::get('watchedby/{id}',['as'=>'watchedby','uses'=>'DocumentsController@watchedby']);
     	Route::get('documents/{id}',['as'=>'documents.show','uses'=>'DocumentsController@show']);
-
+    	# Search Settings
+    	Route::get('/salesteam/find', 'SearchController@searchSalesteam');
 
     	/*Route::get('search',function(){
     		return response()->view('search.search');
     	});
+
 */
+    	# Training
+		Route::get('mytraining',['as'=>'mytraining','uses'=>'TrainingController@mytraining']);
+
     	#User settings
 		Route::get('/user/settings',['as'=>'profile','uses'=>'UsersController@settings']);
 
@@ -335,11 +340,11 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
 		//Route::post('leads/batchassign',['as'=>'leads.assignbatch','uses'=>'LeadsAssignController@assignLead']);
 		//Route::post('leads/assign',['as'=>'leads.assign','uses'=>'LeadsController@postAssignLeads']);
 		
-
+		
 	## Web leads
 		
 		Route::post('/webleads/import/form',['as'=>'leads.webleadsinsert','uses'=>'WebleadsImportController@getLeadFormData']);
-		Route::get('webleads/create',['as'=>'webleads.create','uses'=>'LeadsController@searchAddress']);
+		
 		Route::post('/webleads/import/create',['as'=>'webleads.import.store','uses'=>'WebleadsImportController@store']);
 
 		Route::post('/leads/assign',['as'=>'leads.assign','uses'=>'LeadsController@assignLeads']);
@@ -354,7 +359,7 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
 		Route::get('leadsource/{id}/export',['as'=>'leadsource.export','uses'=>'LeadSourceController@export']);
 		Route::post('lead/search',['as'=>'leads.search','uses'=>'LeadsController@search']);
 		Route::get('lead/search',['as'=>'leads.search','uses'=>'LeadsController@searchAddress']);
-		Route::get('lead/{bid}/branch',['as'=>'leads.branch','uses'=>'LeadsController@branchLeads']);
+		Route::get('lead/branch/{bid?}',['as'=>'leads.branch','uses'=>'LeadsController@branches']);
 		Route::resource('leads','LeadsController');
 
 	# Prospect Source / LeadSource
@@ -399,14 +404,14 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
 
 	## Search
 		Route::get('/user/find', 'SearchController@searchUsers');
-		Route::get('/salesteam/find', 'SearchController@searchSalesteam');
+		
 		Route::get('/person/{person}/find',['as'=>'person.details','uses'=>'PersonSearchController@find']);
 
 	#NewLeads
 	   // Route::get('newleads/team',['as'=>'templeads.team','uses'=>'TempleadController@salesteam']);
 	    Route::get('/newleads/{pid}/branchmgr',['as'=>'branchmgr.newleads','uses'=>'LeadsController@getAssociatedBranches']);
 	   Route::get('/newleads/branch',['as'=>'templeads.branch','uses'=>'LeadsController@branches']);
-	    Route::get('/newleads/{id}/branch/',['as'=>'leads.branchid','uses'=>'LeadsController@branchLeads']);
+	    //Route::get('/newleads/{id}/branch/',['as'=>'leads.branchid','uses'=>'LeadsController@branchLeads']);
 		Route::resource('newleads','LeadSourceController');
 		
 });
@@ -465,7 +470,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 
 		Route::resource('process','SalesProcessController');
 
-
+	# Training
+		Route::get('training/{id}/view',['as'=>'training.view','uses'=>'TrainingController@view']);
+		Route::resource('training','TrainingController');
 
 	# Admin Dashboard
 		Route::get('watching/{userid}', ['as'=>'watch.watching', 'uses'=>'WatchController@watching']);

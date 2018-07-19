@@ -56,38 +56,27 @@ class BranchesImportController extends ImportController
         $this->validateInput($request);
         $this->import->setFields($data);
         if($this->import->import()) {
+            $this->import->setNullFields('branchesimport');
             $data= $this->showChanges($data);
             return response()->view('branches.changes',compact('data'));
         }
         
     }
+    
+
+
+
     private function showChanges($data){
         
         $serviceline = $data['serviceline'];
         //get the adds
-        $data['adds'] = $this->import
-        ->distinct()
-        ->select('branchesimport.id','branchesimport.branchname', 'branchesimport.street','branchesimport.address2','branchesimport.city','branchesimport.state','branchesimport.zip')
-        ->leftJoin('branches',function($join){
-            $join->on('branchesimport.id','=','branches.id');
-        })
-        ->with('servicelines')
-        ->where('branches.id','=',null)
-        ->get();
+        $data['adds'] = $this->import->getAdds();
 
       
-        $data['deletes'] =  $this->branch
-        ->whereHas('servicelines',function($q) use($serviceline){
-            $q->where('id','=',$serviceline);
-         })
-        ->select('branches.id','branches.branchname', 'branches.street','branches.address2','branches.city','branches.state','branches.zip')
-        ->leftJoin('branchesimport',function($join){
-            $join->on('branches.id','=','branchesimport.id');
-        })
-        ->with('servicelines')
-        ->where('branchesimport.id','=',null)
-        ->get();
+        $data['deletes'] = $this->import->getDeletes($serviceline);
         //
+        $data['changes'] = $this->import->getChanges();
+        //dd( $data['changes'][0],count($data['changes']));
        
         return $data;
     }
@@ -95,11 +84,12 @@ class BranchesImportController extends ImportController
     public function update(Request $request){
         $adds = 0;
         $deletes=0;
-        if($request->filled('add') or $request->filled('delete')){
+        $changes=0;
+        if($request->filled('add') or $request->filled('delete') or $request->filled('change')){
             if($request->filled('add')){
                 $adds = count($request->get('add'));
                 $branchesToImport = $this->import
-                ->whereIn('id',$request->get('add'))
+                ->whereIn('branch_id',$request->get('add'))
                 ->get();
                 foreach ($branchesToImport as $add){
                     $branch = Branch::create($add->toArray());
@@ -107,35 +97,31 @@ class BranchesImportController extends ImportController
                     $branch->save();
                     $branch->servicelines()->sync([$request->get('serviceline')]);
                 }
-                $branchesToUpdate = $this->import
-                    ->whereNotIn('id',$request->get('add'))
-                    ->whereNotIn('id',$request->get('delete'))->get();
-                $updates = count($branchesToUpdate);
-                if($updates !=0){
-                    foreach ($branchesToUpdate as $update){
-                        $branch = $this->branch->find($update->id)->update($update->toArray());
-                    }
-                }
+                
             }
+
             if($request->filled('delete')){
                 $this->branch->destroy($request->get('delete'));
                 $this->import->destroy($request->get('delete'));
                 $deletes = count($request->get('delete'));
             }
-        }else{
 
-            $branchesToUpdate = $this->import->get();
-            
-            $updates = count($branchesToUpdate);
-            if($updates !=0){
+            if($request->filled('change')){
+                
+                $branchesToUpdate = $this->import
+                    ->whereIn('id',$request->get('change'))
+                    ->get();
+  
+                $updates = count($branchesToUpdate);
                 foreach ($branchesToUpdate as $update){
                     $branch = $this->branch->find($update->id)->update($update->toArray());
-                }
+               }
             }
-
         }
         $this->import->truncate();
         return redirect()->route('branches.index')->with('success','Added ' . $adds .' deleted '. $deletes . ' and updated '.$updates);
 
     }
+
+    
 }
