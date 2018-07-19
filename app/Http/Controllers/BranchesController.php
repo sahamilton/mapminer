@@ -444,7 +444,23 @@ class BranchesController extends BaseController {
 		return response()->view('branches.state', compact('branches','data','fields'));
 		
 	}
+	public function exportTeam() 
+	{
 	
+	
+	Excel::create('Branches',function($excel){
+			$excel->sheet('BranchTeam',function($sheet) {
+				$roles = \App\Role::pluck('name','id')->toArray();
+				
+				$result = $this->branch->with('relatedPeople','relatedPeople.userdetails')->get();
+				$sheet->loadView('branches.exportteam',compact('result','roles'));
+			});
+		})->download('csv');
+
+		return response()->return();
+	
+	
+}
 	
 	 
 	

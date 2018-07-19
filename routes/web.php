@@ -266,6 +266,7 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
 		Route::get('geocode', ['as'=>'branches.geocode', 'uses'=>'BranchesController@geoCodeBranches']);
 		Route::get('branchmap', ['as'=>'branches.genmap', 'uses'=>'BranchesController@rebuildBranchMap']);
 		Route::get('branches/export', ['as'=>'branches.export', 'uses'=>'BranchesController@export']);
+		Route::get('branches/team/export', ['as'=>'branches.team.export', 'uses'=>'BranchesController@exportTeam']);
 		Route::resource('branches','BranchesController',['except'=>['index','show']]);
 
 	#Companies
