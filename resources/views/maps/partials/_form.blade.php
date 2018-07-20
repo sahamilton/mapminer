@@ -62,14 +62,14 @@ $values = Config::get('app.search_radius');
             @endif
        @endforeach
     </select> of 
-    <div class="form-group{{ $errors->has('address') ? ' has-error' : '' }}">
+  <div class="form-group{{ $errors->has('address') ? ' has-error' : '' }}">
         <label for= "address">address</label> 
         <input 
         class="form-control{{ $errors->has('address') ? ' has-error' : ''}}" 
         type="text" 
         name="address" 
         title="Enter an address, zip code, or state code to search from"
-        value="{{isset($data['address']) ? str_replace('+','', str_replace('  ',' ',$data['address'])) : ''}}"
+        value="{{isset($data['fulladdress']) ? str_replace('+','', str_replace('  ',' ',$data['fulladdress'])) : ''}}"
         id="address" 
         required
         style='width:300px'

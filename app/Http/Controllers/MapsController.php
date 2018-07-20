@@ -30,11 +30,11 @@ class MapsController extends BaseController {
 	public function findMe()
 	{
 		
-		
+	
 			$user = $this->user->findOrFail(auth()->id());
 			$nonews = $user->nonews;
 			$now = date('Y-m-d h:i:s');
-			
+
 			if(! isset($nonews)){
 				$nonews = Carbon::now('America/Vancouver')->subYear()->toDateTimeString();
 			}
