@@ -25,7 +25,7 @@
 
 <script>
     $(function() {
-          $('#map-container').storeLocator({'slideMap' : false, 'defaultLoc': true, 'defaultLat': {{$mylocation['lat']}}, 'defaultLng' : {{$mylocation['lng']}}, 'dataLocation' : "{{ route('salesmap')}}",'zoomLevel': 4, 'infowindowTemplatePath' : '{{asset('maps/templates/personwindow-description.html')}}','listTemplatePath' : '{{asset('maps/templates/person-list-description.html')}}'} );
+          $('#map-container').storeLocator({'slideMap' : false, 'defaultLoc': true, 'defaultLat': {{$mylocation->lat}}, 'defaultLng' : {{$mylocation->lng}}, 'dataLocation' : "{{ route('salesmap')}}",'zoomLevel': 4, 'infowindowTemplatePath' : '{{asset('maps/templates/personwindow-description.html')}}','listTemplatePath' : '{{asset('maps/templates/person-list-description.html')}}'} );
         });
     </script>
 

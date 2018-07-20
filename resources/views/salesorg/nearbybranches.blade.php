@@ -2,7 +2,7 @@
 @section('content')
 <h2>Closest Branches</h2>
 <p><a href="{{route('salesorg')}}">Return to All Sales Org</a></p>
-<h4>{{$data['number']}} closest branches within {{$data['distance']}} miles of {{$data['address']}}</h4>
+<h4>{{$data['number']}} closest branches within {{$data['distance']}} miles of {{$data['fulladdress']}}</h4>
   @include('leads.partials.search')
 <table id='sorttable' class ='table table-bordered table-striped table-hover dataTable'>
 <thead>

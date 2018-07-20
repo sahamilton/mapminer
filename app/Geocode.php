@@ -188,4 +188,28 @@ trait Geocode
             return $miles;
         }
     }
+
+    public function getMyPosition(){
+        $location = new Location;
+            //$limited=$this->limit;
+            //we need to test to see if geo is filled
+        if ($geo = session()->get('geo') && isset($geo['lat']))
+            {
+            
+                $location->lat = $geo['lat'];
+                $location->lng = $geo['lng'];
+
+            }elseif($position = auth()->user()->position()){
+                
+                $position = explode(",",auth()->user()->position());
+                $location->lat =  $position[0];
+                $location->lng =  $position[1];
+
+            }else{
+                
+                $location->lat =  '47.25';
+                $location->lng =  '-122.44';
+            }
+        return $location;
+    }
 }

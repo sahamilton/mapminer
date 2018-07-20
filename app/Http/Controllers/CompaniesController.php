@@ -259,27 +259,7 @@ class CompaniesController extends BaseController {
 		// used when there are too many locations to show in list
 		if( $count > $this->limit)
 		{
-
-			$location = new Location;
-			//$limited=$this->limit;
-			//we need to test to see if geo is filled
-			if ($geo = session()->get('geo'))
-				{
-				
-					$location->lat = $geo['lat'];
-					$location->lng = $geo['lng'];
-
-				}elseif($position = auth()->user()->position()){
-					
-					$position = explode(",",auth()->user()->position());
-					$location->lat =  $position[0];
-					$location->lng =  $position[1];
-
-				}else{
-					
-					$location->lat =  '47.25';
-					$location->lng =  '-122.44';
-				}
+		$location = $this->locations->getMyPosition();
 		$distance = 1000;
 		$locations = $this->locations
 			->where('company_id','=',$company->id)

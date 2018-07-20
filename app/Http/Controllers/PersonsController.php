@@ -72,23 +72,8 @@ class PersonsController extends BaseController {
 
 		$filtered = $this->persons->isFiltered(['companies'],['vertical']);
 
-		if ($latLng = session()->get('geo'))
-			// user has set their location
-		{
-			
-			$mylocation['lat']= $latLng['lat'];
-			$mylocation['lng']= $latLng['lng'];
-		}elseif(auth()->user()->position()){
-			// user has a default location
-			$position = explode(",",auth()->user()->position());
-			$mylocation['lat'] =  $position[0];
-			$mylocation['lng'] =  $position[1];
-		}else{
-			// default to center of the US
-			$mylocation['lat']= 39.8282;
-			$mylocation['lng']= -98.5696;
+		$mylocation = $this->persons->getMyPosition();
 
-		}
 		$colors = $this->getColors($filtered);
 
 		return response()->view('persons.map',compact('filtered','keys','mylocation','colors'));

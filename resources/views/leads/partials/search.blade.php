@@ -53,7 +53,7 @@ class="form-control{{ $errors->has('address') ? ' has-error' : ''}}"
 type="text" 
 id="address" 
 name="address" 
-value="{{isset($session['address']) ? $session['address'] : ''}}"
+value="{{isset($session['fulladdress']) ? $session['fulladdress'] : ''}}"
 required
 />
 {!! $errors->first('address', '<p class="help-block">:message</p>') !!}

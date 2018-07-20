@@ -371,6 +371,7 @@ class LeadsController extends BaseController
         $request->merge($this->lead->getGeoCode($geoCode));
       }
       $data = $request->all();
+
       if(! $request->has('number')){
           $data['number']=5;
         }

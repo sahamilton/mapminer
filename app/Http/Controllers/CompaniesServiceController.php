@@ -242,31 +242,12 @@ class CompaniesServiceController extends BaseController
 	}
 	private function limitLocations(Company $company){
 				
-			$location = new Location;
-			$limited=$this->limit;
-			if ($geo = session()->get('geo'))
-				{
-					
-					$location->lat = $geo['lat'];
-					$location->lng = $geo['lng'];
-				}elseif(auth()->user()->position()){
-					$position = explode(",",auth()->user()->position());
-					$location->lat =  $position[0];
-					$location->lng =  $position[1];
-				}else{
-					// Corporate HQ as center Tacoma
-					$location->lat =  '47.25';
-					$location->lng =  '-122.44';
-
-				}
-	
+		$location = $this->company->getMyPosition();
+		$limited=$this->limit;
 		return $this->location->nearby($location,'2000')
-		->where('company_id','=',$company->id)
-		->limit($this->limit)
-		->get();
+				->where('company_id','=',$company->id)
+				->limit($this->limit)
+				->get();
 	}
-
-
-
 
 }
