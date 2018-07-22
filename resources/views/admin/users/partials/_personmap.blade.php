@@ -1,4 +1,4 @@
-<p><strong>Address:</strong>{{$user->person->address}}</p>
+<p><strong>Address:</strong>{{$user->person->fullAddress()}}</p>
 @if(! $user->person->lat)
 No address or unable to geocode this address
 @else

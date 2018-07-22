@@ -18,7 +18,7 @@ class Person extends NodeModel implements HasPresenter {
 
 	
 	// Don't forget to fill this array
-	public $fillable = ['firstname','lastname','phone','address','lat','lng','reports_to','city','state','geostatus','user_id'];
+	public $fillable = ['firstname','lastname','phone','address','lat','lng','reports_to','city','state','zip','geostatus','user_id'];
 
 	
 	public function reportsTo()
@@ -39,7 +39,9 @@ class Person extends NodeModel implements HasPresenter {
 	{
 		return $this->belongsToMany(Branch::class)->withPivot('role_id');
 	}
-	
+	public function fullAddress(){
+		return $this->address.' ' . $this->city.' ' . $this->state.' ' . $this->zip;
+	}
 
 	public function manages() {
 		

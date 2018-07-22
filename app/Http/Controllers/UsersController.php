@@ -43,11 +43,19 @@ class UsersController extends Controller
             $user->timestamps = true;
        }
        $user->person()->update($request->only(['firstname','lastname','address','phone']));
-       if($request->filled('address') && $user->person->address != $request->get('address')){
+       if($request->filled('address') ){
             $data = $user->getGeoCode(app('geocoder')->geocode($request->get('address'))->get());
-            $user->person()->update($data);
+            unset ($data['fulladdress']);
+            
+       }else{
+            $data['address']=null;
+            $data['city']=null;
+            $data['state']=null;
+            $dta['zip']=null;
+            $data['lat']=null;
+            $data['lng']=null;
        }
-       
+       $user->person()->update($data);
        return redirect()->route('profile');
 
     }

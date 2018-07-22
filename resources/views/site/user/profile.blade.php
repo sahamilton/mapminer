@@ -7,11 +7,16 @@
 <p><strong>First Name:</strong> {{$user->person->firstname}}</p>
 <p><strong>Last Name:</strong> {{$user->person->lastname}}</p>
 <p><strong>Phone:</strong> {{$user->person->phone}}</p>
-<p><strong>Address:</strong>  {{$user->person->address}}</p>
+
+@if($user->person->lat)
+ <div> @include('admin.users.partials._personmap')</div>
+ <div style="clear:both"> 
+ 	<p><strong>Latitude:</strong>  {{$user->person->lat}} <strong>Longitude:</strong>  {{$user->person->lng}}</p>
+
+@endif
 <p><strong>User Name:</strong>  {{$user->username}}</p>
 <p><strong>Email:</strong>  {{$user->email}}</p>
-<p><strong>Latitude:</strong>  {{$user->person->lat}}</p>
-<p><strong>Longitude:</strong>  {{$user->person->lng}}</p>
+
 @if(count($user->person->industryfocus()->get()) > 0)
 <p><strong>Industry Focus:</strong> 
 
