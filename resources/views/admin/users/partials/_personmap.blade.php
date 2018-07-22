@@ -18,7 +18,7 @@ function initialize() {
   
   var map = new google.maps.Map(document.getElementById('map'), mapOptions);
 	var name = "{{$user->person->postName()}}";
-    var address = "{{$user->person->address}}";
+    var address = "{{$user->person->fullAddress()}}";
     var html = address;
 	var marker = new google.maps.Marker({
 	  position: myLatlng,

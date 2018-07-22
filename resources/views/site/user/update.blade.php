@@ -39,7 +39,7 @@
 
 						<input class="form-control" type="text" 
 						placeholder="Full address with city & state"
-						name="address" id="address" value="{!!Input::old('address', isset($user) ? $user->person->address : null) !!}" 
+						name="address" id="address" value="{!!Input::old('address', isset($user) ? $user->person->fullAddress() : null) !!}" 
 						/>
 						{!! $errors->first('address', '<span class="help-inline">:message</span>') !!}
 					</div>

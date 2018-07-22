@@ -70,7 +70,7 @@ body {
         <div class="form-group {{{ $errors->has('address') ? 'error' : '' }}}">
             <label class="col-md-2 control-label" for="address">Address</label>
             <div class="col-md-10">
-                <input class="form-control" type="text" name="address" id="address" value="{{{ Input::old('address', $user->person->address) }}}" />
+                <input class="form-control" type="text" name="address" id="address" value="{{{ Input::old('address', $user->person->fullAddress()) }}}" />
                 {{ $errors->first('address', '<span class="help-inline">:message</span>') }}
             </div>
         </div>

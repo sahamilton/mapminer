@@ -27,7 +27,7 @@
 					<div class="input-group input-group-lg">
 						<input class="form-control" type="text" 
 						placeholder="Full address with city & state"
-						name="address" id="address" value="{{old('address', isset($user) && isset($user->person) ? $user->person->address : '') }}" 
+						name="address" id="address" value="{{old('address', isset($user) && isset($user->person) ? $user->person->fullAddress() : '') }}" 
 						/>
 						{!! $errors->first('address', '<span class="help-inline">:message</span>') !!}
 					</div>

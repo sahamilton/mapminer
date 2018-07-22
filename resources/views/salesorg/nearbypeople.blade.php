@@ -28,7 +28,7 @@
 			<a href="{{route('salesorg',$person->reportsTo->id)}}">{{$person->reportsTo->postName()}}</a>
 		@endif
 	</td>
-	<td>{{$person->address}}</td>
+	<td>{{$person->fullAddress()}}</td>
 	<td class="text-right">{{number_format($person->distance,1)}}</td>
 
 </tr>

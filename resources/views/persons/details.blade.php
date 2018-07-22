@@ -37,7 +37,7 @@
 				<div class="list-group-item-text col-sm-4">
 					<p><strong>Contact Details</strong></p>
 						<ul style="list-style-type: none;">
-						<li>Address:{{$people->address}}
+						<li>Address:{{$people->fullAddress()}}
 						<li>Phone: {{$people->phone}}</li>
 						<li>Email: 
 							<a href="mailto:{{$people->userdetails->email}}">{{$people->userdetails->email}}</a>
