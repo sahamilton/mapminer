@@ -56,6 +56,7 @@ class GeoCodingController extends BaseController {
 		if(! $request->has('number')){
 			$data['number']=5;
 		}
+		// we have to do this in case the lat / lng was set via the browser
 		if(! isset($data['fulladdress'])){
 			$data['fulladdress'] = $data['address'];
 		}
