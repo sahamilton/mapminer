@@ -636,7 +636,7 @@ class AdminUsersController extends BaseController {
                         $data[$person->id]['branches'][$branch->id]['id']= $branch->id;
                         $data[$person->id]['branches'][$branch->id]['branchname']= $branch->branchname;
                         $data[$person->id]['branches'][$branch->id]['distance']= $distance;
-                        $data[$person->id]['branches'][$branch->id]['address'] = $branch->fulladdress();
+                        $data[$person->id]['branches'][$branch->id]['address'] = $branch->fullAddress();
                     }
                 }
             }

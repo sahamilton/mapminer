@@ -48,24 +48,9 @@ class Model extends \Eloquent {
 			
 		}
 			
-	/*public function _import_csv($filename, $table,$fields)
-		{
-		$filename = str_replace("\\","/",$filename);
-
-		$query = sprintf("LOAD DATA LOCAL INFILE '".$filename."' INTO TABLE ". $table." FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '\"' ESCAPED BY '\"' LINES TERMINATED BY '\\n'  IGNORE 1 LINES (".$fields.");", $filename);
-		
-		
-		try {
-			return  \DB::connection()->getpdo()->exec($query);
-		}
-		catch (Exception $e)
-			{
-			 throw new Exception( 'Something really has gone wrong with the import:\r\n<br />'.$query, 0, $e);
-			
-			}
-		
-		}
-		*/
+	public function fullAddress(){
+		return $this->street.' ' .$this->address2.' ' .$this->city.' ' .$this->state.' ' .$this->zip;
+	}
 	
 	
 	public function rawQuery($query,$error,$type){

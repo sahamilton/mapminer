@@ -1,9 +1,10 @@
 <?php
 
 namespace App;
-use McCool\LaravelAutoPresenter\HasPresenter;
+use\App\Presenters\LocationPresenter;
 
-class Project extends Model implements HasPresenter {
+
+class Project extends Model  {
 
     
 use Geocode;
