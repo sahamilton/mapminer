@@ -56,8 +56,11 @@ class GeoCodingController extends BaseController {
 		if(! $request->has('number')){
 			$data['number']=5;
 		}
+		if(! isset($data['fulladdress'])){
+			$data['fulladdress'] = $data['address'];
+		}
 		\Session::put('geo', $data);
-
+	
 		$watchlist = array();
 		$data['vertical'] = NULL;
 		
