@@ -17,7 +17,7 @@
 <tbody>
 @foreach ($people as $person)
 <tr>
-	<td><a href="{{route('salesorg',$person->id)}}">{{$person->postName()}}</a></td>
+	<td><a href="{{route('salesorg',$person->id)}}">{{$person->fullName()}}</a></td>
 	<td>
 		@foreach ($person->userdetails->roles as $role)
 			{{$role->name}}
@@ -25,7 +25,7 @@
 	</td>
 	<td>
 		@if(count($person->reportsTo)>0)
-			<a href="{{route('salesorg',$person->reportsTo->id)}}">{{$person->reportsTo->postName()}}</a>
+			<a href="{{route('salesorg',$person->reportsTo->id)}}">{{$person->reportsTo->fullName()}}</a>
 		@endif
 	</td>
 	<td>{{$person->address->address}} {{$person->address->city}} {{$person->address->state}} {{$person->address->zip}}</td>

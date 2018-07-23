@@ -1,5 +1,5 @@
 @if(count($openleads)==200)
-@php $data['title'] = $person->postName() @endphp
+@php $data['title'] = $person->fullName() @endphp
 @include('templeads.partials._limited')
 
 @endif

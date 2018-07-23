@@ -17,7 +17,7 @@
 @endif
 {!! $news->news !!}</div>
 <div class='col-md-12'>
-<p><strong>Posted by:</strong>{{ isset($news->author) ? $news->author->person->postName() : 'No longer with the company'}}</p>
+<p><strong>Posted by:</strong>{{ isset($news->author) ? $news->author->person->fullName() : 'No longer with the company'}}</p>
 
 	<span class="badge badge-info">Posted {{$news->created_at->format('M jS,Y')}}</span>
 </div>
@@ -44,7 +44,7 @@
 				 <i class="fa fa-calendar" aria-hidden="true"></i> <!--Sept 16th, 2012-->{{$comment->updated_at->format('M jS,Y')}}
 				
 	            <i class="fa fa-user" aria-hidden="true"></i> by <span class="muted">{{ isset($comment->postedBy) ?  
-	            $comment->postedBy->person->postName() :'Anonymous' }}</span>
+	            $comment->postedBy->person->fullName() :'Anonymous' }}</span>
 
 	            @if($comment->user_id == auth()->user()->id  or auth()->user()->hasRole('Admin'))
 				<a href="{{route('comment.edit',$comment->id)}}" title="Edit this comment"><i class="fa fa-pencil" aria-hidden="true"></i></a> | 

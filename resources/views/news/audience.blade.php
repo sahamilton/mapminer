@@ -16,7 +16,7 @@
 			<tr>  
 				<td>
 					
-					{{$user->person->postName()}}
+					{{$user->person->fullName()}}
 
 				</td>
 				<td>

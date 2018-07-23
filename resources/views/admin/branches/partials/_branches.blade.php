@@ -30,15 +30,15 @@
 			<td>{{$branch->city}}</td>
 			<td>{{$branch->state}}</td>
 			<td>@if(count($branch->manager)>0)
-				{{$branch->manager->first()->postName()}}
+				{{$branch->manager->first()->fullName()}}
 				@endif
 			</td>
 			<td>@if(count($branch->businessmanager)>0) 
-				{{$branch->businessmanager->first()->postName()}}
+				{{$branch->businessmanager->first()->fullName()}}
 				@endif
 			</td>
 			<td>@if(count($branch->marketmanager)>0)
-				{{$branch->marketmanager->first()->postName()}}
+				{{$branch->marketmanager->first()->fullName()}}
 				@endif
 			</td>
 

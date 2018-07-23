@@ -30,7 +30,7 @@
 			<tr>  
 				<td>
 					<a href="{{route('person.show',$person->id)}}">
-					{{$person->postName()}}
+					{{$person->fullName()}}
 					</a>
 				</td>
 				<td>
@@ -43,7 +43,7 @@
 				</td>
 				<td>
 					<a href="mailto:{{$person->userdetails->email}}" 
-					title="Email {{$person->postName()}}">
+					title="Email {{$person->fullName()}}">
 						{{$person->userdetails->email}}
 					</a>
 				</td>

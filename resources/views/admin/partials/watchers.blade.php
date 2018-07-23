@@ -10,7 +10,7 @@
         <tr>
           <td>
             <a href="{{route('watch.watching',$watchers->id)}}" >
-              {{$watchers->person->postName()}}
+              {{$watchers->person->fullName()}}
             </a>
           </td>
           <td>{{$watchers->watching_count}}</td>

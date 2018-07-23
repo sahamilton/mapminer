@@ -19,7 +19,7 @@
 			<div class="list-group-item">
 				<p class="list-group-item-text">Lead Assigned</p>
 				<ul style="list-style-type: none;">
-						<li><strong>Lead Assigned to:</strong>{{$lead->salesteam->first()->postName()}}</li>
+						<li><strong>Lead Assigned to:</strong>{{$lead->salesteam->first()->fullName()}}</li>
 						<li><strong>Lead Assigned on:</strong>{{$lead->salesteam->first()->pivot->created_at->format('j M, Y')}}</li>
 						<li><strong>Branch Assignment:</strong>{{$lead->branches->branchname}}</li>
 						<p class="pull-right text-danger">

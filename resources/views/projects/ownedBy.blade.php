@@ -3,7 +3,7 @@
 
 <div class="container">
 
-<h2>{{$owner->postName()}}'s Construction Projects </h2>
+<h2>{{$owner->fullName()}}'s Construction Projects </h2>
 
 <p><a href="{{route('project.stats')}}">Return to Projects Summary</a></p>
   <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>

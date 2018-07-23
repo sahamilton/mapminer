@@ -5,7 +5,7 @@
 {{$manager->firstname}}, 
 
 
-A new lead that came through the People Ready website has been assigned to {{$lead->salesteam->first()->postName()}} and branch {{$branch->branchname}}.  The details of this lead are below:
+A new lead that came through the People Ready website has been assigned to {{$lead->salesteam->first()->fullName()}} and branch {{$branch->branchname}}.  The details of this lead are below:
 
 @component('mail::panel')
 

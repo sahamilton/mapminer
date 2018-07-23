@@ -3,7 +3,7 @@
 
 
 
-<h3>Prospects assigned to {{$leads->postName()}}</h3>
+<h3>Prospects assigned to {{$leads->fullName()}}</h3>
 
 @if(! isset($source))
 <p><a href="{{route('leadsource.index')}}">From All Sources</a></p>

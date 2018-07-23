@@ -3,7 +3,7 @@
 <div class="container">
   <h2>{{$lead->businessname ? $lead->businessname : $lead->companyname}}</h2>
   @if(count($lead->salesteam))
-    <h4>Lead assigned to <a href="{{route('salesrep.newleads',$lead->salesteam->first()->id)}}">{{$lead->salesteam->first()->postName()}}</a></h4>
+    <h4>Lead assigned to <a href="{{route('salesrep.newleads',$lead->salesteam->first()->id)}}">{{$lead->salesteam->first()->fullName()}}</a></h4>
     @if(auth()->user()->hasRole('Admin'))
 <p  text-danger">
               <a data-href="{{route('webleads.unassign',$lead->id)}}" 

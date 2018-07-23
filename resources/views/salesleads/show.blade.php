@@ -43,7 +43,7 @@
 
 @foreach ($lead->relatedNotes as $note)
 <p>{{date_format($note->created_at,'m-d-Y')}}...<em>{{$note->note}}</em><br />
- -- @if(isset($note->writtenBy->person)) {{$note->writtenBy->person->postName()}} @endif</p>
+ -- @if(isset($note->writtenBy->person)) {{$note->writtenBy->person->fullName()}} @endif</p>
 @if($note->user_id == Auth::user()->id  or Auth::user()->hasRole('Admin'))
 <br /><a href="{{route('notes.edit',$note->id)}}" title="Edit this note"><i class="fa fa-pencil" aria-hidden="true"></i></a> | 
 

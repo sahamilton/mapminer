@@ -85,14 +85,11 @@ class Person extends NodeModel implements HasPresenter {
 				->withPivot('created_at','updated_at','status_id','rating')
 				->wherePivot('status_id',2);
 	}
-	public function fullName()
-	{
-		return $this->attributes['lastname'] . ',' . $this->attributes['firstname'];
-	}
+	
 	
 	public function postName()
 	{
-		return $this->attributes['firstname'] . ' ' . $this->attributes['lastname'];
+		return $this->attributes['lastname'] . ' ' . $this->attributes['firstname'];
 	}
 	
 
@@ -159,7 +156,9 @@ class Person extends NodeModel implements HasPresenter {
 		->whereNotNull('rating');
 	
     }
-
+    public function fullAddress(){
+    	return $this->address . ' '. $this->city . ' ' . $this->state . ' ' . $this->zip;
+    }
 
 	public function findPersonsRole($people)
 	{

@@ -1,7 +1,7 @@
 @extends('site/layouts/default')
 @section('content')
 
-<h2> {{$people->postName()}}</h2>
+<h2> {{$people->fullName()}}</h2>
 <p><strong>Industry Focus:</strong>
 <ul>
 @foreach ($people->industryfocus as $vertical)
@@ -13,10 +13,10 @@
 <a href="{{route('person.show',$people->reportsTo->id)}}">
 		
 
-{{$people->reportsTo->postName()}}</a>
+{{$people->reportsTo->fullName()}}</a>
 @endif
 <p><a href="mailto:{{$people->email}}" title="Email {{$people->firstname}} {{$people->lastname}}">{{$people->email}}</a> </p>
-<h4>Branches serviced by {{$people->postName()}}</h4>
+<h4>Branches serviced by {{$people->fullName()}}</h4>
 
   <p><a href="{{route('showmap.person',$people->id)}}"><i class="fa fa-flag" aria-hidden="true"></i> Map View</a></p>	
 <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>

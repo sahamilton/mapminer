@@ -21,10 +21,10 @@
         @foreach($salesteams as $team)
 
         <tr>  
-            <td><a href="{{route('leads.personsource',[$team['details']->id,$leadsource->id])}}">{{$team['details']->postName()}}</a></td>
+            <td><a href="{{route('leads.personsource',[$team['details']->id,$leadsource->id])}}">{{$team['details']->fullName()}}</a></td>
             <td>
                 @if(count($team['details']->reportsTo)>0)
-                    {{$team['details']->reportsTo->postName()}}
+                    {{$team['details']->reportsTo->fullName()}}
                 @endif
             </td>
             <td>{{$team['details']->city}} {{$team['details']->state}}</td>

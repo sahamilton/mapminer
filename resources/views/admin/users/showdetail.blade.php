@@ -2,7 +2,7 @@
 @section('content')
 <div class="container">
     <p><a href="{{route('users.index')}}">Return to all users</a></p>
-    <h2>{{$user->person->postName()}}</h2>
+    <h2>{{$user->person->fullName()}}</h2>
     <p><strong>User Name:</strong> {{$user->username}}</p>
     <p><strong>Email:</strong> {{$user->email}}</p>
     <p><strong>Roles:</strong>
@@ -48,7 +48,7 @@
             <h4>Reports to:</h4>
             @if(isset($user->person->reportsTo))
             <a href="{{route('users.show',$user->person->reportsTo->user_id)}}">
-            {{$user->person->reportsTo->postName()}}</a>
+            {{$user->person->reportsTo->fullName()}}</a>
             @endif
             <hr />
             <h4>Team:</h4>

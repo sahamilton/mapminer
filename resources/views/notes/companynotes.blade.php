@@ -32,7 +32,7 @@
     <td>{{$note->note}}</td>
     <td>
     @if(isset($note->writtenBy) && null!== $note->writtenBy->person)
-        {{$note->writtenBy->person->postName()}}
+        {{$note->writtenBy->person->fullName()}}
     @else
         No Longer with Company
     @endif

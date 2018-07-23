@@ -29,9 +29,9 @@
     <td>
 
          <a href="{{route('person.show',$reports->id)}}">
-        {{$reports->postName()}}
+        {{$reports->fullName()}}
         </a>
-        <span type="button" class="fa fa-copy btn-copy js-tooltip js-copy" data-toggle="tooltip" data-placement="bottom" data-copy="{{$reports->postName()}}" title="Copy to clipboard"></span>
+        <span type="button" class="fa fa-copy btn-copy js-tooltip js-copy" data-toggle="tooltip" data-placement="bottom" data-copy="{{$reports->fullName()}}" title="Copy to clipboard"></span>
    
 
    </td>

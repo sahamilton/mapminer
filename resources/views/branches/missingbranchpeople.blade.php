@@ -18,7 +18,7 @@
 						<div class="col-md-6">
 							<select  class="form-control" name='person[{{$missing->person_id}}]'>
 								@foreach ($people as $person))
-									<option value="{{$person->id}}">{{$person->postName()}}</option>
+									<option value="{{$person->id}}">{{$person->fullName()}}</option>
 								@endforeach
 							</select>
 						</div>

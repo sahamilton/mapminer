@@ -19,8 +19,8 @@
                     @endif
                     <a href="{{route('person.show',$people->id)}}"
                         title = "See {{$people->firstname}}'s organizational details">
-                        {{$people->postName()}} </a> 
-                        <span type="button" class="fa fa-copy btn-copy js-tooltip js-copy" data-toggle="tooltip" data-placement="bottom" data-copy="{{$people->postName()}}" title="Copy name to clipboard"></span> 
+                        {{$people->fullName()}} </a> 
+                        <span type="button" class="fa fa-copy btn-copy js-tooltip js-copy" data-toggle="tooltip" data-placement="bottom" data-copy="{{$people->fullName()}}" title="Copy name to clipboard"></span> 
                     
                 </strong>  
                 @if($people->phone != "")

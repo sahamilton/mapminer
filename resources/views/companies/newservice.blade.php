@@ -9,7 +9,7 @@
 	Return to all locations of {{$company->companyname}}</a></p>
 	
 @if(isset($company->managedBy->firstname))
-<p>Account managed by <a href="{{route('person.show',$company->managedBy->id)}}" title="See all accounts managed by {{$company->managedBy->postName()}}">{{$company->managedBy->postName()}}</a></p>
+<p>Account managed by <a href="{{route('person.show',$company->managedBy->id)}}" title="See all accounts managed by {{$company->managedBy->fullName()}}">{{$company->managedBy->fullName()}}</a></p>
 @endif
  <a href="{{route('company.service.export',[$company->id])}}" title="Download service list as a CSV / Excel file"><i class="fa fa-cloud-download" aria-hidden="true"></i></i> Export this Service List</a>
 <?php $route = 'company.service.select';?>

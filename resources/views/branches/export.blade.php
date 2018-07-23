@@ -30,7 +30,7 @@
 				<td>{{$branch->lat}}</td>
 				<td>{{$branch->lng}}</td>
 				<td>@foreach($branch->manager as $manager)
-				{{$manager->postName()}} ( pid= {{$manager->id}},uid = {{$manager->user_id}} )
+				{{$manager->fullName()}} ( pid= {{$manager->id}},uid = {{$manager->user_id}} )
 				@if( ! $loop->last) | @endif
 				@endforeach
 			</td>

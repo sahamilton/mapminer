@@ -51,15 +51,15 @@
 			<td>
 			@if(isset($company->managedBy))
 			<a href="{{route('person.show',$company->managedBy->id)}}"
-			title="See all companies managed by {{$company->managedBy->postName()}}" >
-			{{$company->managedBy->postName()}}
+			title="See all companies managed by {{$company->managedBy->fullName()}}" >
+			{{$company->managedBy->fullName()}}
 			</a>
 			@endif
 			</td>
 			<td>
 			@if(isset($company->managedBy->userdetails))
 			<a href="mailto:{{$company->managedBy->userdetails->email}}"
-				title="Email {{$company->managedBy->postName()}}" >
+				title="Email {{$company->managedBy->fullName()}}" >
 				{{$company->managedBy->userdetails->email}}
 			</a>
 			@endif

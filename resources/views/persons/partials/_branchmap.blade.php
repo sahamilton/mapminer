@@ -15,7 +15,7 @@ function initialize() {
   var infoWindow = new google.maps.InfoWindow;
   
   var map = new google.maps.Map(document.getElementById('branchmap'), mapOptions);
-	var name = "{{$people->postName()}}";
+	var name = "{{$people->fullName()}}";
   var address = "{{$people->address}}";
   var html = address;
   @if(isset($branchmarkers))

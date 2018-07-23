@@ -1,5 +1,5 @@
 
-<h2>Prospects for direct reports of {{$leads->postName()}}</h2>
+<h2>Prospects for direct reports of {{$leads->fullName()}}</h2>
 
     <div class="row">
         <table id ='sorttable1' class='table table-striped table-bordered table-condensed table-hover'>
@@ -18,7 +18,7 @@
                 
                
                 <tr>
-                    <td><a href="{{route('salesleads.showrep',$report->id)}}">{{$report->postName() }}</a></td>
+                    <td><a href="{{route('salesleads.showrep',$report->id)}}">{{$report->fullName() }}</a></td>
                     @if(count($report->salesleads)>0)
                         <td>{{count($report->salesleads)}}</td>
                         <?php $leadstatuses =  $report->salesLeadsByStatus($report->id);?>

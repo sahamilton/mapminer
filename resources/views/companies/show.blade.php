@@ -22,7 +22,7 @@
 @include('companies.partials._segment')
 
 @if(isset($company->managedBy->firstname))
-<p>Account managed by <a href="{{route('person.show',$company->managedBy->id)}}" title="See all accounts managed by {{$company->managedBy->postName()}}">{{$company->managedBy->postName()}}</a></p>
+<p>Account managed by <a href="{{route('person.show',$company->managedBy->id)}}" title="See all accounts managed by {{$company->managedBy->fullName()}}">{{$company->managedBy->fullName()}}</a></p>
 @endif
 @if (Auth::user()->hasRole('Admin'))
 

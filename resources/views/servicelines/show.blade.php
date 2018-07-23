@@ -45,8 +45,8 @@
 						
 						@foreach ($branch->manager as $manager)
 						<a href="{{'managed.branch',$manager->id}}" 
-						title="See all branches managed by" {{$manager->postName()}} ">
-						{{$manager->postName()}}
+						title="See all branches managed by" {{$manager->fullName()}} ">
+						{{$manager->fullName()}}
 						@endforeach
 						</a>
 					@endif

@@ -17,8 +17,13 @@ function initialize() {
   var infoWindow = new google.maps.InfoWindow;
   
   var map = new google.maps.Map(document.getElementById('map'), mapOptions);
+<<<<<<< Updated upstream
 	var name = "{{$user->person->postName()}}";
     var address = "{{$user->person->address}}";
+=======
+	var name = "{{$user->person->fullName()}}";
+    var address = "{{$user->person->fullAddress()}}";
+>>>>>>> Stashed changes
     var html = address;
 	var marker = new google.maps.Marker({
 	  position: myLatlng,

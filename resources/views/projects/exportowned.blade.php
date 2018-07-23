@@ -48,7 +48,7 @@
 				
 					{{$owner->pivot->status}}
 				</td><td>
-					{{$owner->postName()}}
+					{{$owner->fullName()}}
 			
 			</td>
 			@endforeach

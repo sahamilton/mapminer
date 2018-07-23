@@ -1,10 +1,10 @@
 @extends('site/layouts/default')
 @section('content')
 
-<h1>{{$user->person->postName()}}'s Watch List</h1>
+<h1>{{$user->person->fullName()}}'s Watch List</h1>
 <p><a href="{{route('watch.mywatchexport',$user->id)}}" 
-title="Download {{$user->person->postName()}}'s Watch List as a CSV / Excel file">
-<i class="fa fa-cloud-download" aria-hidden="true"></i></i> Download {{$user->person->postName()}}'s Watch List</a> </p>
+title="Download {{$user->person->fullName()}}'s Watch List as a CSV / Excel file">
+<i class="fa fa-cloud-download" aria-hidden="true"></i></i> Download {{$user->person->fullName()}}'s Watch List</a> </p>
 
 <table id='sorttable' class ='table table-bordered table-striped table-hover dataTable'><thead>
 

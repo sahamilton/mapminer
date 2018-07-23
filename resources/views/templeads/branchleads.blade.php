@@ -6,7 +6,7 @@
   
     @if(count($branches->first()->branches->manager)>0)
 
-    <h4>Branch Managed By {{$branches->first()->branches->manager->first()->postName()}}</h4>
+    <h4>Branch Managed By {{$branches->first()->branches->manager->first()->fullName()}}</h4>
     @endif
     <p><a href='{{route("newleads.branch.map",$branches->first()->branches->id)}}'>
  <i class="fa fa-flag" aria-hidden="true"></i> Map view</a></p>
@@ -35,7 +35,7 @@
                     <td>{{$lead->address->city}}</td>
                     <td>{{$lead->address->state}}</td>
                     @if(count($lead->salesrep)>0)
-                        <td><a href="{{route('salesrep.newleads',$lead->salesrep->first()->id)}}">{{$lead->salesrep->first()->postName()}}</a></td>
+                        <td><a href="{{route('salesrep.newleads',$lead->salesrep->first()->id)}}">{{$lead->salesrep->first()->fullName()}}</a></td>
                         <td>{{$leadStatuses[$lead->salesrep->first()->pivot->status_id]}}</td>
                         <td>{{$lead->salesrep->first()->pivot->ranking}}</td>
                     @else

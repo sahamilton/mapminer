@@ -27,7 +27,7 @@
     @if(count($lead->salesteam)>0)
         @if(count($lead->ownedBy) > 0)
 
-           {{$statuses[$lead->ownedBy[0]->pivot->status_id]}}  by {{$lead->ownedBy[0]->postname()}}
+           {{$statuses[$lead->ownedBy[0]->pivot->status_id]}}  by {{$lead->ownedBy[0]->fullName()}}
 
         @else
             Offered {{count($lead->salesteam)}}

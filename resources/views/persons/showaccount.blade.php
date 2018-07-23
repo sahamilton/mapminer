@@ -1,8 +1,8 @@
 @extends('site.layouts.default')
 @section('content')
 
-<h3>Accounts managed by {{$people->postName()}}</h3>
-<p><a href="mailto:{{$people->email}}" title="Email {{$people->postName()}}">{{$people->email}}</a></p>
+<h3>Accounts managed by {{$people->fullName()}}</h3>
+<p><a href="mailto:{{$people->email}}" title="Email {{$people->fullName()}}">{{$people->email}}</a></p>
 <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
 	<thead>
 		<th>Account</th>

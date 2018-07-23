@@ -8,7 +8,7 @@
   @include('projects.partials._manageprojects')
 @else
 @if(count($project->owner)>0)
-    {{$project->owner[0]->pivot->status}} by {{$project->owner[0]->postName()}}
+    {{$project->owner[0]->pivot->status}} by {{$project->owner[0]->fullName()}}
   @else
     Open
 @endif

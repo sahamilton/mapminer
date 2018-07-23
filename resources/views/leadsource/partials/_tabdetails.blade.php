@@ -1,5 +1,5 @@
 
-<p><strong>Editor:</strong> {{$leadsource->author->person->postName()}}</p>
+<p><strong>Editor:</strong> {{$leadsource->author->person->fullName()}}</p>
 <p><strong>Created:</strong> {{$leadsource->created_at->format('M j, Y')}}</p>
 <p><strong>Available From:</strong> {{$leadsource->datefrom->format('M j, Y')}}</p>
 <p><strong>Available Until:</strong> {{$leadsource->dateto->format('M j, Y')}}</p>

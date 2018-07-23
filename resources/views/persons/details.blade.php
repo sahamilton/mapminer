@@ -3,7 +3,7 @@
 <div class="container">
 	<div class="panel panel-default">
 		<div class="panel-heading clearfix">
-			<h2 class="panel-title pull-left"><strong>{{$people->postName()}}</strong></h2>
+			<h2 class="panel-title pull-left"><strong>{{$people->fullName()}}</strong></h2>
 			<a class="btn btn-primary pull-right" href="{{route('users.edit',$people->user_id)}}">
 				<i class="fa fa-pencil"></i>
 				Edit
@@ -68,7 +68,7 @@
 						<ul style="list-style-type: none;">
 						@if($people->reportsTo)
 							<li>Reports To:
-							<a href="{{route('person.details',$people->reportsTo->id)}}">{{$people->reportsTo->postName()}}</a></li>
+							<a href="{{route('person.details',$people->reportsTo->id)}}">{{$people->reportsTo->fullName()}}</a></li>
 						@endif
 						@if(count($people->directReports)>0)
 							<li>Team:</li>

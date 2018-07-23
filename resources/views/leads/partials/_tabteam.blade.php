@@ -20,10 +20,10 @@
         @foreach($salesteams as $team)
 
         <tr>  
-            <td><a href="{{route('leads.person',$team->id)}}">{{$team->postName()}}</a></td>
+            <td><a href="{{route('leads.person',$team->id)}}">{{$team->fullName()}}</a></td>
             <td>
                 @if(count($team->reportsTo)>0)
-                    {{$team->reportsTo->postName()}}
+                    {{$team->reportsTo->fullName()}}
                 @endif
             </td>
             <td>

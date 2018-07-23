@@ -49,7 +49,7 @@
 			
 				@foreach($data['salesteam'][$location->id] as $team)
 				
-					{{$team->postName()}}  {{number_format($team->distance,1)}} miles
+					{{$team->fullName()}}  {{number_format($team->distance,1)}} miles
 				<br/>
 				@endforeach
 			@endif

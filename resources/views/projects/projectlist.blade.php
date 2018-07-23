@@ -29,7 +29,7 @@
 		<td>
 		
 		@if(count($project->owner)>0 && $project->owner[0]->id != auth()->user()->person()->first()->id)
-			Project {{$project->owner[0]->pivot->status}} by {{$project->owner[0]->postName()}}
+			Project {{$project->owner[0]->pivot->status}} by {{$project->owner[0]->fullName()}}
 		@elseif(count($project->owner)>0 && $project->owner[0]->id == auth()->user()->person()->first()->id)
 			You have {{$project->owner[0]->pivot->status}} this project
 		@else

@@ -54,7 +54,7 @@
 				@foreach($data['salesteam'][$location->id] as $team)
 		
 				<?php $teamcount++;?>
-					<td>{{$team->postName()}}</td>
+					<td>{{$team->fullName()}}</td>
 					<td>  {{number_format($team->distance,1)}} miles</td>
 					<td> @foreach ($team->userdetails->roles as $role)
 							{{$role->name}}
@@ -78,7 +78,7 @@
 				@endif
 			@endif
 			@if($managers->reports_to)
-				<td>{{$managers->postName()}}  {{$managers->depth}}</td>
+				<td>{{$managers->fullName()}}  {{$managers->depth}}</td>
 				@endif
 			@endforeach
 		@endif

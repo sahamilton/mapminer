@@ -17,17 +17,17 @@
                     <td>{{$branch->branchname}}</td>
                     <td>
                         @foreach ($branch->manager as $manager)
-                        {{$manager->postName()}}
+                        {{$manager->fullName()}}
                         @endforeach
                     </td>
                     <td>
                         @foreach ($branch->marketmanager as $manager)
-                        {{$manager->postName()}}
+                        {{$manager->fullName()}}
                         @endforeach
                     </td>
                     <td>
                         @foreach ($branch->businessmanager as $manager)
-                        {{$manager->postName()}}
+                        {{$manager->fullName()}}
                         @endforeach
                     </td>
                     
