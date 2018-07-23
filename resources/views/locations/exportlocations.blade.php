@@ -18,7 +18,7 @@
 			<td>{{$location->id}}</td>
 			<td>{{$location->businessname}}</td>
 			<td>{{$location->street}}</td>
-			<td>{{$location->suite}}</td>
+			<td>{{$location->address2}}</td>
 			<td>{{$location->city}}</td>
 			<td>{{$location->state}}</td>
 			<td>{{$location->zip}}</td>

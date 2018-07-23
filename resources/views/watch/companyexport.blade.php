@@ -19,7 +19,7 @@
 		<tr>
 			<td>{{$location->company->companyname}}</td>
 			<td>{{$location->businessname}}</td>
-			<td>{{$location->street}} {{$location->suite}}</td>
+			<td>{{$location->street}} {{$location->address2}}</td>
 			<td>{{$location->city}}</td>
 			<td>{{$location->state}}</td>
 			<td>{{$location->zip}}</td>
