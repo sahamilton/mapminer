@@ -27,7 +27,7 @@ class Location extends Model implements HasPresenter {
 	// If you change this you will have to change the location import template.
 
 
-	public $fillable = ['businessname','street','suite','city','state','zip','company_id','phone','contact','lat','lng','segment','businesstype'];
+	public $fillable = ['businessname','street','address2','city','state','zip','company_id','phone','contact','lat','lng','segment','businesstype'];
 
 	protected $hidden =  array('created_at','updated_at','id');
 /**
