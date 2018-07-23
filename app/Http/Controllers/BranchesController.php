@@ -175,7 +175,7 @@ class BranchesController extends BaseController {
 		
 		// in case of null results of manager search
 	
-
+		$data['fulladdress'] = $branch->fullAddress();
 		$data['urllocation'] ="api/mylocalaccounts";
 		$data['title'] ='National Account Locations';
 		$data['company']=NULL;
