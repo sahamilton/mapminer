@@ -9,7 +9,7 @@
             <th>addr2</th>
             <th>city</th>
             <th>state</th>
-            <th>zipcode</th>
+            <th>zip</th>
             <th>phone</th>
 
 	</thead>
@@ -42,7 +42,7 @@
                         <td>{{$company->addr2}}</td>
                         <td>{{$company->city}}</td>
                         <td>{{$company->state}}</td>
-                        <td>{{$company->zipcode}}</td>
+                        <td>{{$company->zip}}</td>
                         <td>{{$company->phone}}</td>
                   </tr>
             @endforeach

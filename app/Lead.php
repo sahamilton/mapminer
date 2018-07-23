@@ -91,10 +91,6 @@ class Lead extends Model implements HasPresenter {
 
     }
 
-    public function fullAddress(){
-    	return $this->address . ",<br />" . $this->city. " " . $this->state . " " . $this->zip;
-    	
-    }
 public function rankLead($salesteam){
       $ranking = null;
     

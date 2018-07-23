@@ -17,7 +17,7 @@ class ProjectCompany extends Model
            'addr2',
            'city',
            'state',
-           'zipcode',
+           'zip',
            'county',
            'phone',
            ];

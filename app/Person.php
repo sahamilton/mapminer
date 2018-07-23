@@ -39,9 +39,7 @@ class Person extends NodeModel implements HasPresenter {
 	{
 		return $this->belongsToMany(Branch::class)->withPivot('role_id');
 	}
-	public function fullAddress(){
-		return $this->address.' ' . $this->city.' ' . $this->state.' ' . $this->zip;
-	}
+	
 
 	public function manages() {
 		
@@ -272,5 +270,21 @@ class Person extends NodeModel implements HasPresenter {
         }
       
       return collect($salesrepmarkers)->toJson();
+    }
+
+    public function updatePersonsAddress($request){
+    	if($request->filled('address') ){
+            $data = $this->getGeoCode(app('geocoder')->geocode($request->get('address'))->get());
+            unset ($data['fulladdress']);
+            
+       }else{
+            $data['address']=null;
+            $data['city']=null;
+            $data['state']=null;
+            $dta['zip']=null;
+            $data['lat']=null;
+            $data['lng']=null;
+       }
+       return $data;
     }
 }

@@ -38,7 +38,7 @@
 			<td>{{$project->addr2}}</td>
 			<td>{{$project->city}}</td>
 			<td>{{$project->state}}</td>
-			<td>{{$project->zipcode}}</td>
+			<td>{{$project->zip}}</td>
 			<td>{{$project->dodge_repnum}}</td>
 			<td>{{$project->structure_header}}</td>
 			<td>{{$project->project_type}}</td>
@@ -72,7 +72,7 @@
       <td>{{$company->addr2}}</td>
       <td>{{$company->city}}</td>
       <td>{{$company->state}}</td>
-      <td>{{$company->zipcode}}</td>
+      <td>{{$company->zip}}</td>
       <td>{{$company->phone}}</td>
 				</tr>
 			@endforeach

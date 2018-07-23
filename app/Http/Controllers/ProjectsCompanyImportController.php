@@ -16,8 +16,8 @@ class ProjectsCompanyImportController extends ImportController
     public $sources;
     public $import;
     
-    public $projectcompanyfields =['id','firm', 'addr1','addr2','city','state','zipcode','county','phone'];
-    public $projectcompanyimportfields=['company_id','firm', 'addr1','addr2','city','state','zipcode','county','phone'];
+    public $projectcompanyfields =['id','firm', 'addr1','addr2','city','state','zip','county','phone'];
+    public $projectcompanyimportfields=['company_id','firm', 'addr1','addr2','city','state','zip','county','phone'];
     public $projectcontactfields = ['id','contact','title','company_id','contactphone'];
     public $projectcontactimportfields = ['contact_id','contact','title','company_id','contactphone'];
 

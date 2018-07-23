@@ -21,7 +21,7 @@ class ProjectsImportController extends ImportController
                             'addr2',
                             'city',
                             'state',
-                            'zipcode',
+                            'zip',
                             'project_county_name',
                             'project_county_code',
                             'lat',
@@ -46,8 +46,8 @@ class ProjectsImportController extends ImportController
                             'project_source_id',
                             'created_at'];
 
-    public $projectcompanyfields =['id','firm', 'addr1','addr2','city','state','zipcode','county','phone'];
-    public $projectcompanyimportfields =['company_id','firm', 'addr1','addr2','city','state','zipcode','county','phone'];
+    public $projectcompanyfields =['id','firm', 'addr1','addr2','city','state','zip','county','phone'];
+    public $projectcompanyimportfields =['company_id','firm', 'addr1','addr2','city','state','zip','county','phone'];
     public $projectcontactfields = ['id','contact','title','company_id','contactphone'];
 
     public function __construct(Project $project, ProjectSource $source,ProjectImport $import){

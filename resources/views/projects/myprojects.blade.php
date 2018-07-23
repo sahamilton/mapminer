@@ -27,7 +27,7 @@
 		title="See details of this project">{{$project->project_title}}</a></td>
 		<td>{{$project->street}}</td>
 		<td>{{$project->city}}</td>
-		<td>{{$project->state}},{{$project->zipcode}}</td>
+		<td>{{$project->state}},{{$project->zip}}</td>
 		<td>{{$project->structure_header}} / {{$project->project_type}}</td>
 		<td>{{$project->ownership}}</td>
 		<td>{{$project->stage}}</td>

@@ -207,11 +207,11 @@ class AdminUsersController extends BaseController {
      */
     public function show($user)
     {
-        $roles= \App\Role::all()->pluck('name','id')->toArray();
+       
+        $person = $user->with('person')->findOrFail($user->id)->person;
+        return redirect()->route('person.details',$person->id);
 
-        $user = $this->user->with('person','serviceline','roles','person.openleads')->findOrFail($user->id);
-
-        return response()->view('admin.users.showdetail', compact('user','roles'));
+        //return response()->view('admin.users.showdetail', compact('user','roles'));
 
     }
 
@@ -281,7 +281,7 @@ class AdminUsersController extends BaseController {
 
 		if($user->update($request->all())){
 
-            $person = $this->updateAssociatedPerson($user->person,$request->all());
+            $person = $this->updateAssociatedPerson($user->person,$request);
             $person = $this->associateBranchesWithPerson($person,$request->all());
 
            if($request->filled('serviceline')){
@@ -338,15 +338,10 @@ class AdminUsersController extends BaseController {
         return $person;
     }
 
-    private function updateAssociatedPerson($person,$data){
-        
-
-       if(isset($data['address'])){
-
-            $data = $this->getLatLng($data['address']) + $data;
-
-       }
-
+    private function updateAssociatedPerson($person,$request){
+        $data = $request->all();
+        $geodata = $person->updatePersonsAddress($request);
+        $data = array_merge ($data,$geodata);
         $person->update($data);
 
         if(isset($data['vertical'])&& $data['vertical'][0]!=0){

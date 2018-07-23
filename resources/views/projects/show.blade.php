@@ -22,7 +22,7 @@
 <p><strong>Address:</strong>
 
 <blockquote>{{$project->street}} /{{$project->addr2}}<br />{{$project->city}}, {{$project->state}} 
-{{$project->zipcode}}
+{{$project->zip}}
 </blockquote>
 <div class="row">
 <p><strong>People Ready Status:</strong>

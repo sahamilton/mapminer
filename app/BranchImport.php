@@ -1,10 +1,10 @@
 <?php
 
 namespace App;
-
+use McCool\LaravelAutoPresenter\HasPresenter;
 use Illuminate\Database\Eloquent\Model;
 
-class BranchImport extends Imports
+class BranchImport extends Imports implements HasPresenter
 {
     public $table = 'branchesimport';
     public $nullFields =['address2','phone','fax'];
@@ -18,9 +18,7 @@ class BranchImport extends Imports
     public function branches(){
     	return $this->belongsTo(Branch::class,'branch_id','id');
     }
-    public function fullAddress(){
-		return $this->street . ' ' . $this->city .' ' . $this->state . ' ' . $this->zip;
-	}
+    
 	public function getAdds(){
         return  $this->distinct()
         ->select('branchesimport.branch_id','branchesimport.branchname', 'branchesimport.street','branchesimport.address2','branchesimport.city','branchesimport.state','branchesimport.zip')

@@ -29,7 +29,7 @@
 		<td><a href="{{route('project.stats'). "?id=". $project->source->id}}">{{$project->source->source}}</a></td>
 		<td>{{$project->street}}</td>
 		<td>{{$project->city}}</td>
-		<td>{{$project->state}},{{$project->zipcode}}</td>
+		<td>{{$project->state}},{{$project->zip}}</td>
 		<td>{{$project->structure_header}} / {{$project->project_type}}</td>
 		<td>{{$project->ownership}}</td>
 		<td>{{$project->stage}}</td>

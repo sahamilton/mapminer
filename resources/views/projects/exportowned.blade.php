@@ -30,7 +30,7 @@
 			<td>{{$project->addr2}}</td>
 			<td>{{$project->city}}</td>
 			<td>{{$project->state}}</td>
-			<td>{{$project->zipcode}}</td>
+			<td>{{$project->zip}}</td>
 			<td>{{$project->dodge_repnum}}</td>
 			<td>{{$project->structure_header}}</td>
 			<td>{{$project->project_type}}</td>
