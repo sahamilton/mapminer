@@ -484,7 +484,7 @@ class LeadsController extends BaseController
         $closedleads = $closedleads->with('relatedNotes','leadsource')
                     ->limit('200')
                     ->get();
-        
+      
         return response()->view('templeads.show',compact('openleads','closedleads','person'));
     }
 

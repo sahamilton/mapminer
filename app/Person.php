@@ -1,6 +1,7 @@
 <?php
 namespace App;
 use\App\Presenters\LocationPresenter;
+
 use McCool\LaravelAutoPresenter\HasPresenter;
 
 class Person extends NodeModel implements HasPresenter {

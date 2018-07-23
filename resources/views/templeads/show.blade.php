@@ -4,7 +4,7 @@
   <div class="col-md-10 col-md-offset-1">
     <h2>{{$person->fullName()}} Leads</h2>
     @if($person->reportsTo)
-    <h4>Reports To:<a href="{{route('salesrep.newleads',$person->reportsTO->id)}}">{{$person->reportsTo->fullName()}}</a></h4>
+    <h4>Reports To:<a href="{{route('salesrep.newleads',$person->reportsTO->id)}}">Something</a></h4>
     @endif
 <p><a href='{{route("salesrep.newleads.map",$person->id)}}'>
  <i class="fa fa-flag" aria-hidden="true"></i> Map view</a></p>
@@ -18,7 +18,8 @@
         </a>
       </li>
 
-      <li>
+      <lish
+
         <a data-toggle="tab" href="#closed">
           <strong>Closed Leads ({{count($closedleads)}})</strong>
         </a>
