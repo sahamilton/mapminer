@@ -27,7 +27,7 @@
 			<tr> 
 			<td>{{$project->project_title}}</td>
 			<td>{{$project->street}}</td>
-			<td>{{$project->addr2}}</td>
+			<td>{{$project->address2}}</td>
 			<td>{{$project->city}}</td>
 			<td>{{$project->state}}</td>
 			<td>{{$project->zip}}</td>

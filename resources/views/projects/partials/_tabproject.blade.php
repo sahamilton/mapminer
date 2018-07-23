@@ -1,5 +1,5 @@
 <p><strong>Address:</strong>
-<blockquote>{{$project->street}} /{{$project->addr2}}<br />{{$project->city}}, {{$project->state}} 
+<blockquote>{{$project->street}} /{{$project->address2}}<br />{{$project->city}}, {{$project->state}} 
 {{$project->zip}}
 <br /><em>(Map accuracy: {{$project->accuracy}})</em>
 </blockquote>

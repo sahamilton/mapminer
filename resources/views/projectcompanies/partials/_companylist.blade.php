@@ -6,7 +6,7 @@
             <th>contact</th>
             <th>title</th>
             <th>addr1</th>
-            <th>addr2</th>
+            <th>address2</th>
             <th>city</th>
             <th>state</th>
             <th>zip</th>
@@ -24,7 +24,7 @@
             <td>{{$company->employee()->contact}}</td>
             <td>{{$company->employee()->title}}</td>
             <td>{{$company->addr1}}</td>
-            <td>{{$company->addr2}}</td>
+            <td>{{$company->address2}}</td>
             <td>{{$company->city}}</td>
             <td>{{$company->state}}</td>
             <td>{{$company->zip}}</td>

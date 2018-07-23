@@ -107,7 +107,7 @@ class LocationContactController extends Controller
             // add work data
             $vcard->addCompany($contact->location->businessname);
             $vcard->addPhoneNumber($contact->phone, 'PREF;WORK');
-            $vcard->addAddress(null,$contact->location->suite, $contact->location->street, $contact->location->city, null, $contact->location->zip, null);
+            $vcard->addAddress(null,$contact->location->address2, $contact->location->street, $contact->location->city, null, $contact->location->zip, null);
             $vcard->addURL(route('locations.show',$contact->location_id));
             $vcard->download();
 

@@ -378,7 +378,7 @@ class LocationsController extends BaseController {
 			// add work data
 			$vcard->addCompany($location->businessname);
 			$vcard->addPhoneNumber($location->phone, 'PREF;WORK');
-			$vcard->addAddress(null,$location->suite, $location->street, $location->city, null, $location->zip, null);
+			$vcard->addAddress(null,$location->address2, $location->street, $location->city, null, $location->zip, null);
 			$vcard->addURL(route('locations.show',$location->id));
 
 			$vcard->download();
