@@ -57,6 +57,10 @@ public function _import_csv($filename, $table,$fields)
 		}
 	
 	}
+			
+	public function fullAddress(){
+		return $this->street.' ' .$this->address2.' ' .$this->city.' ' .$this->state.' ' .$this->zip;
+	}
 	
 	
 	

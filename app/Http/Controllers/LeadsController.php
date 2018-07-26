@@ -284,11 +284,12 @@ class LeadsController extends BaseController
 
     public function search(LeadInputAddressFormRequest $request){
       $geoCode = app('geocoder')->geocode($request->get('address'))->get();
+   
       $lead = new Lead;
       $coords = $this->lead->getGeoCode($geoCode);
       $lead->lat = $coords['lat'];
       $lead->lng = $coords['lng'];
-      $lead->address = $coords['address'];
+      $lead->address = $coords['fulladdress'];
       $lead->city = $coords['city'];
       $lead->state = $coords['state'];
       $lead->zip = $coords['zip'];
