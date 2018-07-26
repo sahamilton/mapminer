@@ -289,7 +289,10 @@ class LeadsController extends BaseController
           $coords = $this->lead->getGeoCode($geoCode);
           $lead->lat = $coords['lat'];
           $lead->lng = $coords['lng'];
-          $lead->address = $coords['fulladdress'];
+          if(isset($coords['address'])){
+            $lead->address = $coords['address'];
+          }
+          
           $lead->city = $coords['city'];
           $lead->state = $coords['state'];
           $lead->zip = $coords['zip'];
