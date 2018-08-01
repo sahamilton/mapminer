@@ -136,6 +136,7 @@ class SearchFiltersController extends BaseController {
 	}
 	
 	public function filterAnalysis($id = null){
+	
 		$verticals = $this->getVerticalAnalysis($id);
 		return response()->view('filters.analysis',compact('verticals'));
 
@@ -158,11 +159,11 @@ class SearchFiltersController extends BaseController {
 	}
 	private function getVerticalAnalysis($id=null){
 		return $this->filter
-		->with('leads','people','companies','campaigns')
-		->whereNotNull('type')
-		->where('type','!=','group')
-		->where('inactive','=',0)
-		->get();
+				->with('leads','people','companies','campaigns')
+				->whereNotNull('type')
+				->where('type','!=','group')
+				->where('inactive','=',0)
+				->get();
 	}
 	public function filterForm()
 	{
