@@ -25,10 +25,10 @@ class NotesController extends BaseController {
 	 */
 	public function index()
 	{
-		
+	
 		$notes = $this->notes
 		->where('type','=','location')
-		->with('relatesTo','relatesTo.company','relatesTo','writtenBy')
+		->with('relatesToLocation','relatesToLocation.company','writtenBy')
 		->get();
 
 		return response()->view('notes.index', compact('notes'));
