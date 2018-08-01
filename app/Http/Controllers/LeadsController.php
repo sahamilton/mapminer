@@ -284,34 +284,41 @@ class LeadsController extends BaseController
 
     public function search(LeadInputAddressFormRequest $request){
       $geoCode = app('geocoder')->geocode($request->get('address'))->get();
-      $lead = new Lead;
-      $coords = $this->lead->getGeoCode($geoCode);
-      $lead->lat = $coords['lat'];
-      $lead->lng = $coords['lng'];
-      $lead->address = $coords['address'];
-      $lead->city = $coords['city'];
-      $lead->state = $coords['state'];
-      $lead->zip = $coords['zip'];
-      $lead->lead_source_id = 2;
-      $extrafields = $this->getExtraFields('webleads');
-      $sources = $this->leadsource->pluck('source','id');
+      if (count($geoCode)>0){
+          $lead = new Lead;
+          $coords = $this->lead->getGeoCode($geoCode);
+          $lead->lat = $coords['lat'];
+          $lead->lng = $coords['lng'];
+          if(isset($coords['address'])){
+            $lead->address = $coords['address'];
+          }
+          
+          $lead->city = $coords['city'];
+          $lead->state = $coords['state'];
+          $lead->zip = $coords['zip'];
+          $lead->lead_source_id = 2;
+          $extrafields = $this->getExtraFields('webleads');
+          $sources = $this->leadsource->pluck('source','id');
 
-      $branch = new \App\Branch;
-      $branches = $branch->nearby($lead,500)->limit(5)->get();
-      $people = $this->person
-                    ->whereHas('userdetails.roles',function($q) {
-                      $q->whereIn('name',$this->assignTo);
+          $branch = new \App\Branch;
+          $branches = $branch->nearby($lead,500)->limit(5)->get();
+          $people = $this->person
+                        ->whereHas('userdetails.roles',function($q) {
+                          $q->whereIn('name',$this->assignTo);
 
-              })->nearby($lead,'1000')->with('userdetails')
-             
-              ->limit(5)
-              ->get();      
-      $salesrepmarkers = $this->person->jsonify($people);
-      $branchmarkers=$branches->toJson();
+                  })->nearby($lead,'1000')->with('userdetails')
+                 
+                  ->limit(5)
+                  ->get();      
+          $salesrepmarkers = $this->person->jsonify($people);
+          $branchmarkers=$branches->toJson();
 
-      return response()->view('leads.showsearch',compact('lead','branches','people','salesrepmarkers','branchmarkers','extrafields','sources'));
+          return response()->view('leads.showsearch',compact('lead','branches','people','salesrepmarkers','branchmarkers','extrafields','sources'));
 
+    }else{
 
+      return back()->withError('Unable to geo code ' . $request->get('address'));
+    }
 
       //return response()->view('leads.showsearch',compact('lead','sources','rank','people','branches'));
     }
