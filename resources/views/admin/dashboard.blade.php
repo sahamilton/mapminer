@@ -33,7 +33,7 @@ $cumulative = array();
   $labelstring ="'".implode("','",$data['status']->pluck('status')->toArray())."'";
   $weekdata =implode(",",$data['weekcount']->pluck('login')->toArray());
   $weeklabels ="'".implode("','",$data['weekcount']->pluck('week')->toArray())."'";
-  
+
 @endphp
 
 

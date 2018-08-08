@@ -95,6 +95,6 @@
 
 @include('templeads.partials.map')
 
-
+@include('partials._modal')
 @include('partials._scripts');
 @stop

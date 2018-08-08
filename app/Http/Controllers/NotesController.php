@@ -55,7 +55,7 @@ class NotesController extends BaseController {
 
 		$request->merge(['user_id'=>auth()->user()->id]);
 		$note = $this->notes->create($request->all());
- 
+ 		
 		switch ($request->get('type')) {
 			case 'location':
 				
@@ -63,7 +63,7 @@ class NotesController extends BaseController {
 			break;
 			case 'lead':
 				
-				return redirect()->route('salesleads.show',$note->related_id);
+				return redirect()->route('salesrep.newleads.show',$note->related_id);
 			break;
 			case 'project':
 				
@@ -72,7 +72,7 @@ class NotesController extends BaseController {
 
 			case 'weblead':
 				
-				return redirect()->route('webleads.salesshow',$note->related_id);
+				return redirect()->route('leads.show',$note->related_id);
 			break;
 		}
 		
