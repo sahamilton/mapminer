@@ -338,9 +338,10 @@ class AdminUsersController extends BaseController {
         return $person;
     }
 
-    private function updateAssociatedPerson($person,$request){
-        $data = $request->all();
-        $geodata = $person->updatePersonsAddress($request);
+    private function updateAssociatedPerson($person,$data){
+       
+    
+        $geodata = $person->updatePersonsAddress($data);
         $data = array_merge ($data,$geodata);
         $person->update($data);
 

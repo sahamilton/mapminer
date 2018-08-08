@@ -272,9 +272,9 @@ class Person extends NodeModel implements HasPresenter {
       return collect($salesrepmarkers)->toJson();
     }
 
-    public function updatePersonsAddress($request){
-    	if($request->filled('address') ){
-            $data = $this->getGeoCode(app('geocoder')->geocode($request->get('address'))->get());
+    public function updatePersonsAddress($data){
+    	if(! empty($data['address']) ){
+            $data = $this->getGeoCode(app('geocoder')->geocode($data['address'])->get());
             unset ($data['fulladdress']);
             
        }else{
