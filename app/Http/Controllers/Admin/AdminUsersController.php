@@ -281,7 +281,7 @@ class AdminUsersController extends BaseController {
 
 		if($user->update($request->all())){
 
-            $person = $this->updateAssociatedPerson($user->person,$request);
+            $person = $this->updateAssociatedPerson($user->person,$request->all());
             $person = $this->associateBranchesWithPerson($person,$request->all());
 
            if($request->filled('serviceline')){
