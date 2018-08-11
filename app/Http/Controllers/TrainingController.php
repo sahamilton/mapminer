@@ -25,7 +25,7 @@ class TrainingController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    /*public function index()
     {
         if(auth()->user()->hasRole('Admin')){
             $trainings = $this->training->with('relatedRoles','relatedIndustries','servicelines')->get();
@@ -33,7 +33,30 @@ class TrainingController extends BaseController
         }else{
             return redirect()->route('mytraining');
         }
-    }
+    }*/
+
+     public function index(){
+       
+        $training = $this->training->query();
+        // find users servicelines
+         $training->whereHas('servicelines', function ($q){
+            $q->whereIn('id',$this->userServiceLines);
+         });
+        // find users industries
+       
+        /*if(count($this->userVerticals)>0){
+                 $training->whereHas('relatedIndustries', function ($q){
+                    $q->whereIn('id',$this->userVerticals);
+                 });
+             }*/
+        // find users roles
+         $training->whereHas('relatedRoles', function ($q){
+            $q->whereIn('id',$this->userRoles);
+         });
+         $trainings = $training->get();
+
+         return response()->view('training.mytrainings',compact('trainings'));
+        }
 
     /**
      * Show the form for creating a new resource.
@@ -43,7 +66,6 @@ class TrainingController extends BaseController
     public function create()
     {
         $roles = Role::pluck('name','id')->toArray();
-       
         $verticals = $this->getAllVerticals();
         $servicelines = $this->getAllServicelines();
 
@@ -85,6 +107,7 @@ class TrainingController extends BaseController
      * @return \Illuminate\Http\Response
      */
     public function show($id){
+       
         $training = $this->training->findOrFail($id);
         return response()->view('training.view',compact('training'));
 
@@ -125,28 +148,7 @@ class TrainingController extends BaseController
     }
 
 
-    public function mytraining(){
-       
-        $training = $this->training->query();
-        // find users servicelines
-         $training->whereHas('servicelines', function ($q){
-            $q->whereIn('id',$this->userServiceLines);
-         });
-        // find users industries
-       
-        /*if(count($this->userVerticals)>0){
-                 $training->whereHas('relatedIndustries', function ($q){
-                    $q->whereIn('id',$this->userVerticals);
-                 });
-             }*/
-        // find users roles
-         $training->whereHas('relatedRoles', function ($q){
-            $q->whereIn('id',$this->userRoles);
-         });
-         $trainings = $training->get();
- 
-         return response()->view('training.mytrainings',compact('trainings'));
+   
 
     }
     
-}

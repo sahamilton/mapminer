@@ -49,7 +49,7 @@
                          <li {{ (Request::is('mynotes') ? ' class="active"' : '') }}><a href="{{{ route('mynotes') }}}">
                         <i class="fa fa-folder-open-o" aria-hidden="true"></i>
                          My Notes</a>
-                         <li {{ (Request::is('mytraining') ? ' class="active"' : '') }}><a href="{{{ route('mytraining') }}}">
+                         <li {{ (Request::is('mytraining') ? ' class="active"' : '') }}><a href="{{{ route('training.index') }}}">
                         <i class="fa fa-graduation-cap" aria-hidden="true"></i>
                          Mapminer Training</a>
                      </li>

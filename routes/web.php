@@ -233,7 +233,9 @@ Route::group(['middleware' => 'auth'], function () {
 
 */
     	# Training
-		Route::get('mytraining',['as'=>'mytraining','uses'=>'TrainingController@mytraining']);
+    	Route::resource('training','TrainingController')->only(['index', 'show']);
+		//Route::get('mytraining',['as'=>'mytraining','uses'=>'TrainingController@mytraining']);
+		//Route::get('training/{id}/view',['as'=>'training.view','uses'=>'TrainingController@view']);
 
     	#User settings
 		Route::get('/user/settings',['as'=>'profile','uses'=>'UsersController@settings']);
@@ -472,8 +474,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 		Route::resource('process','SalesProcessController');
 
 	# Training
-		Route::get('training/{id}/view',['as'=>'training.view','uses'=>'TrainingController@view']);
-		Route::resource('training','TrainingController');
+		
+		Route::resource('training','TrainingController')->except(['index', 'show']);;
 
 	# Admin Dashboard
 		Route::get('watching/{userid}', ['as'=>'watch.watching', 'uses'=>'WatchController@watching']);
