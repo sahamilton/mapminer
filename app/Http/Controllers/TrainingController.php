@@ -133,17 +133,18 @@ class TrainingController extends BaseController
             $q->whereIn('id',$this->userServiceLines);
          });
         // find users industries
-        if(count($this->userVerticals)>0){
+       
+        /*if(count($this->userVerticals)>0){
                  $training->whereHas('relatedIndustries', function ($q){
                     $q->whereIn('id',$this->userVerticals);
                  });
-             }
+             }*/
         // find users roles
          $training->whereHas('relatedRoles', function ($q){
             $q->whereIn('id',$this->userRoles);
          });
          $trainings = $training->get();
-
+ 
          return response()->view('training.mytrainings',compact('trainings'));
 
     }
