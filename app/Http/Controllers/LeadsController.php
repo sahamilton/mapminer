@@ -292,7 +292,6 @@ class LeadsController extends BaseController
           if(isset($coords['address'])){
             $lead->address = $coords['address'];
           }
-          
           $lead->city = $coords['city'];
           $lead->state = $coords['state'];
           $lead->zip = $coords['zip'];

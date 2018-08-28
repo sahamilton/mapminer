@@ -240,11 +240,15 @@ class ProjectsController extends BaseController
         $location->lng=$geo[1];
 
         $limit=100;
-        $result = $this->project->doesntHave('owner')
-        ->whereHas('source', function($q){
-            $q->where('status','=','open');
-        })
-        ->nearby($location,$distance)->limit(100)->get();
+        $result = $this->project
+                ->whereHas('source', function($q){
+                    $q->where('status','=','open');
+                })
+                ->nearby($location,$distance)
+                ->with('owner')
+                ->limit(100)
+                ->get();
+        
         return  $this->makeNearbyProjectsXML($result);
 
     }

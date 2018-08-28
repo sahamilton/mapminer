@@ -67,15 +67,22 @@ class GeoCodingController extends BaseController {
 		
 		$data = $this->getViewData($data);
 
+
 		$filtered = $this->location->isFiltered(['companies','locations'],['vertical','business','segment'],NULL);
 		if(isset($data['company'])){
     		$company = $data['company'];
     	}else{
     		$company=null;
     	}
+    	$data['result'] = $this->getGeoListData($data);
+    	if(count($data['result'])==0){
+			
+			$request->session()->flash('warning','No results found. Consider increasing your search distance');
+
+		}
 		if(isset($data['view']) && $data['view'] == 'list') {
 		
-			$data['result'] = $this->getGeoListData($data);
+			
 
 			try {
 				$watching = Watch::where('user_id',"=",\Auth::id())->get();
@@ -212,6 +219,9 @@ class GeoCodingController extends BaseController {
 			case 'projects':
 				
 				return $this->project
+				->whereHas('source', function($q){
+            		$q->where('status','=','open');
+        		})
 				->nearby($location,$data['distance'])
 				->with('owner')
 				->get();
