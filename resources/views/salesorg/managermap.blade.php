@@ -12,7 +12,8 @@
   @endforeach
   </h3>
   @endif
-  @if(count($salesteam[0]->reportsTo)==1 && isset($salesteam[0]->reportsTo->id))
+
+  @if($salesteam[0]->reportsTo)
   <h4>Reports to:<a href="{{route('salesorg',$salesteam[0]->reportsTo->id)}}" 
   title="See {{$salesteam[0]->reportsTo->firstname}} {{$salesteam[0]->reportsTo->lastname}}'s sales team">
     {{$salesteam[0]->reportsTo->firstname}} {{$salesteam[0]->reportsTo->lastname}}
@@ -113,8 +114,8 @@ Sales Team  = <img src='//maps.google.com/mapfiles/ms/icons/red-dot.png' /></p>
           mapTypeId: 'terrain'
         });
       var infowindow = new google.maps.InfoWindow();
-        // Construct the circle for each value in citymap.
-        // Note: We scale the area of the circle based on the population.
+        // Construct the circle for each value in map.
+        // Note: We scale the area of the circle based on the service radius
         for (var branch in branchmap) {
           // Add the circle for this city to the map.
           var branchCircle = new google.maps.Circle({
