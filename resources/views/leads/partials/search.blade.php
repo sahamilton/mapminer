@@ -1,4 +1,4 @@
-<?php 
+@php
   $values = Config::get('app.search_radius');
   $default = 100;
   $number = [5,10,25,100];
@@ -7,7 +7,7 @@
   if($session && ! isset($session['number'])){
     $session['number']=5;
   }
-  ?>
+@endphp
 
 <form class="form-inline" method ="post"  action ="{{route('lead.find')}}" name="leadaddress">
 {{csrf_field()}}

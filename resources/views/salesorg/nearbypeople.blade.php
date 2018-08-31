@@ -3,6 +3,9 @@
 <h2>Closest Sales Team</h2>
 <p><a href="{{route('salesorg')}}">Return to All Sales Org</a></p>
 <h4>{{$data['number']}} closest sales team members within {{$data['distance']}} miles of {{$data['fulladdress']}}</h4>
+@php
+$data['type'] ='people';
+@endphp
   @include('leads.partials.search')
 <table id='sorttable' class ='table table-bordered table-striped table-hover dataTable'>
 <thead>
@@ -11,6 +14,7 @@
 		<th>Reports To</th>
 		<th>Location</th>
 		<th>Distance (miles)</th>
+		<th>Industry Focus</th>
 		
 
 	</thead>
@@ -30,6 +34,11 @@
 	</td>
 	<td>{{$person->fullAddress()}}</td>
 	<td class="text-right">{{number_format($person->distance,1)}}</td>
+	<td>
+		@foreach ($person->industryfocus as $industry)
+		<li>{{$industry->filter}}</li>
+		@endforeach
+	</td>
 
 </tr>
 @endforeach

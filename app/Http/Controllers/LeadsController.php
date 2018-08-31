@@ -436,7 +436,7 @@ class LeadsController extends BaseController
           ->whereHas('userdetails.roles', function ($q) {
               $q->whereIn('roles.id',$this->salesroles);
           })
-          ->with('userdetails','reportsTo','userdetails.roles')
+          ->with('userdetails','reportsTo','userdetails.roles','industryfocus')
           ->nearby($location,$data['distance'],$data['number'])
           
           ->get();

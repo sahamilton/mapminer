@@ -56,6 +56,7 @@
 
   </div>
   <div class="container" style="float:right;width:700px;">
+    @php  $data['type'] ='people'; @endphp
   @include('leads.partials.search')
 <p>Branches = <img src='//maps.google.com/mapfiles/ms/icons/blue-dot.png' />
 Sales Team  = <img src='//maps.google.com/mapfiles/ms/icons/red-dot.png' /></p>

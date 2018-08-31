@@ -380,10 +380,12 @@ class CompaniesController extends BaseController {
 
 	public function stateselect(Request $request,$id=null,$state=null)
 	{
+
 		// The method can be used by either post or get routes
 		if($request->filled('id') && $request->filled('state')){
 					$id = $request->get('id');
-					$state = trim($request->get('state'));
+					$state = urldecode($request->get('state'));
+
 		}
 		// Check if user can view company based on user serviceline
 		// association.
@@ -443,7 +445,9 @@ class CompaniesController extends BaseController {
 	private function getStateCompanyInfo($data,$state)
 	{
 
+		$state = trim($state);
 		$statedata = State::where('statecode','=',$state)->first();
+
 		$data['state']  = $statedata->fullstate;
 		$data['statecode'] = $statedata->statecode;
 		$data['lat'] = $statedata->lat;
