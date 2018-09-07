@@ -2,7 +2,7 @@
 @section('content')
 @if (Auth::user()->hasRole('Admin'))
 	<div class="pull-right">
-		<a href="{{{ route('webleads.create') }}}" class="btn btn-small btn-info iframe">
+		<a href="{{{ route('branches.create') }}}" class="btn btn-small btn-info iframe">
 		
 <i class="fa fa-plus-circle text-success" aria-hidden="true"></i>
  Create New Branch!!</a>	
@@ -41,7 +41,7 @@
 					</a>
 				</td>
 				<td>
-					@if(count($branch->manager)>0)
+					@if($branch->manager)
 						
 						@foreach ($branch->manager as $manager)
 						<a href="{{'managed.branch',$manager->id}}" 
@@ -52,7 +52,7 @@
 					@endif
 				</td>
 				<td>
-					@if(count($branch->region)>0)
+					@if($branch->region)
 						{{$branch->region->region}}
 					@endif
 

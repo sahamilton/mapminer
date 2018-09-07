@@ -13,7 +13,7 @@
     </thead>
     <tbody>
       @foreach($data['recentLeadNotes'] as $newNote)
-        @if(count($newNote->relatesToLead)>0)
+        @if($newNote->relatesToLead->count()>0)
           <tr>
               <td> {{$newNote->relatesToLead->companyname}}</td>
               <td>

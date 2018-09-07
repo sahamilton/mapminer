@@ -85,11 +85,12 @@ class BranchesImportController extends ImportController
         $adds = 0;
         $deletes=0;
         $changes=0;
+        $updates = 0;
         if($request->filled('add') or $request->filled('delete') or $request->filled('change')){
             if($request->filled('add')){
                 $adds = count($request->get('add'));
                 $branchesToImport = $this->import
-                ->whereIn('branch_id',$request->get('add'))
+                ->whereIn('id',$request->get('add'))
                 ->get();
                 foreach ($branchesToImport as $add){
                     $branch = Branch::create($add->toArray());
@@ -119,6 +120,7 @@ class BranchesImportController extends ImportController
             }
         }
         $this->import->truncate();
+        $this->import->fixId();
         return redirect()->route('branches.index')->with('success','Added ' . $adds .' deleted '. $deletes . ' and updated '.$updates);
 
     }

@@ -4,11 +4,11 @@ namespace App;
 use McCool\LaravelAutoPresenter\HasPresenter;
 use Illuminate\Database\Eloquent\Model;
 
-class BranchImport extends Imports implements HasPresenter
+class BranchImport extends Imports 
 {
     public $table = 'branchesimport';
     public $nullFields =['address2','phone','fax'];
-    public $requiredFields = ['branch_id','branchname','street','city','state','zip','lat','lng'];
+    public $requiredFields = ['id','branchname','street','city','state','zip','lat','lng'];
 
     
     public function servicelines(){
@@ -16,14 +16,14 @@ class BranchImport extends Imports implements HasPresenter
     }
 
     public function branches(){
-    	return $this->belongsTo(Branch::class,'branch_id','id');
+    	return $this->belongsTo(Branch::class);
     }
     
 	public function getAdds(){
         return  $this->distinct()
-        ->select('branchesimport.branch_id','branchesimport.branchname', 'branchesimport.street','branchesimport.address2','branchesimport.city','branchesimport.state','branchesimport.zip')
+        ->select('branchesimport.id','branchesimport.branchname', 'branchesimport.street','branchesimport.address2','branchesimport.city','branchesimport.state','branchesimport.zip')
         ->leftJoin('branches',function($join){
-            $join->on('branchesimport.branch_id','=','branches.id');
+            $join->on('branchesimport.id','=','branches.id');
         })
         ->with('servicelines')
         ->where('branches.id','=',null)
@@ -36,17 +36,17 @@ class BranchImport extends Imports implements HasPresenter
          })
         ->select('branches.id','branches.branchname', 'branches.street','branches.address2','branches.city','branches.state','branches.zip')
         ->leftJoin('branchesimport',function($join){
-            $join->on('branches.id','=','branchesimport.branch_id');
+            $join->on('branches.id','=','branchesimport.id');
         })
         ->with('servicelines')
-        ->where('branchesimport.branch_id','=',null)
+        ->where('branchesimport.id','=',null)
         ->get();
 
     }
 
     public function getChanges(){
        /* return \DB::table('branchesimport')
-        ->join('branches','branches.id','branchesimport.branch_id')
+        ->join('branches','branches.id','branchesimport.id')
         ->where(function($q){
 			$q->where('branches.street', '!=','branchesimport.street')
                    ->orWhere ('branches.address2', '!=', 'branchesimport.address2')
@@ -72,7 +72,7 @@ class BranchImport extends Imports implements HasPresenter
                     branches.phone as orgphone, 
                     branchesimport.phone as newphone
                     from branches , branchesimport
-                    where branches.id = branchesimport.branch_id
+                    where branches.id = branchesimport.id
                     and 
                     (trim(branches.street) != trim(branchesimport.street) 
                     OR trim(branches.address2) != trim(branchesimport.address2)
@@ -83,5 +83,11 @@ class BranchImport extends Imports implements HasPresenter
         return \DB::select($query);
 
 
+    }
+    public function fixId(){
+        $query = "update branches set id = concat(repeat('0',4-char_length(id)),id) 
+                    where char_length(id) < 4;";
+
+    return \DB::select($query);
     }
 }
