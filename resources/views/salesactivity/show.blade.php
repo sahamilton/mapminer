@@ -11,12 +11,12 @@
 	<ul class="nav nav-tabs">
 		<li class="active"><a data-toggle="tab" href="#campaign">Campaign</a></li>
 		<li><a data-toggle="tab" href="#resources">Resources</a></li>
-		@if(count($locations)>0)
-		<li><a data-toggle="tab" href="#locations">Locations List ({{count($locations)}})</a></li>
-		@endif
-		@if(count($leads)>0)
-		<li><a data-toggle="tab" href="#leads">Leads List ({{count($leads)}})</a></li>
-		@endif
+		
+		<li><a data-toggle="tab" href="#locations">Locations List ({{$locations->count())}})</a></li>
+	
+		
+		<li><a data-toggle="tab" href="#leads">Leads List ({{$leads->count()}})</a></li>
+		
 	</ul>
 
 	<div class="tab-content">
@@ -31,13 +31,13 @@
 
 			@include('salesactivity.partials._tabresources')
 		</div>
-		@if(count($locations) > 0)
+		@if($locations->count() > 0)
 		<div id="locations" class="tab-pane fade">
 			@include('salesactivity.partials._tablocations')
 		</div>
 		@endif
 
-		@if(count($leads) > 0)
+		@if($leads->count() > 0)
 		<div id="leads" class="tab-pane fade">
 			@include('salesactivity.partials._tableads')
 		</div>

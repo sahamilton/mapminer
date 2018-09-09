@@ -2,8 +2,8 @@
 <div class="row">
    @if(isset($owned))
     <div class="alert alert-danger">
-        <p><strong>You must close or convert some of your {{count($leads->ownedLeads)}} owned leads before accessing any of the 
-        {{count($leads->offeredLeads)}} additional leads available.</strong></p>
+        <p><strong>You must close or convert some of your {{$leads->ownedLeads->count()}} owned leads before accessing any of the 
+        {{$leads->offeredLeads->count()}} additional leads available.</strong></p>
     </div>
 
    @else

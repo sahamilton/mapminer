@@ -8,7 +8,7 @@
       <?php
       foreach($leads as $lead){
       		 $status = null;
-             if(count($lead->salesteam)>0){
+             if($lead->salesteam->count()>0){
              
              	foreach ($lead->salesteam as $team){
                 

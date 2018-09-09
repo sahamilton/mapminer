@@ -23,7 +23,7 @@
         <tr>  
             <td><a href="{{route('leads.personsource',[$team['details']->id,$leadsource->id])}}">{{$team['details']->postName()}}</a></td>
             <td>
-                @if(count($team['details']->reportsTo)>0)
+                @if($team['details']->reportsTo->count()>0)
                     {{$team['details']->reportsTo->postName()}}
                 @endif
             </td>

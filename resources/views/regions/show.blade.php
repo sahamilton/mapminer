@@ -32,7 +32,7 @@
 		{{$branch->id}}
 	</td>
 	<td>
-	@if(count($branch->servicelines) > 0)
+	@if($branch->servicelines->count() > 0)
 		@foreach($branch->servicelines as $serviceline)
 				<a href = "{{route('serviceline.show',$serviceline->id)}}" 
 				title =" See all {{$serviceline->ServiceLine}} branches">
@@ -63,7 +63,7 @@
 
 	<td>
 
-	@if(count($branch->manager)>0)
+	@if($branch->manager->count()>0)
 		@foreach ($branch->manager as $manager)
 		<a href="{{route('managed.branch',$manager->id)}}"" 
 		title="See all branches managed by {{$manager->fullName() }}" >
@@ -77,7 +77,7 @@
 	@if(null!==$branch->servicedBy)
 		<a href="{{route('branches.show',$branch->id)}}" 
 		title="See details of {{$branch->branchname}} branch">
-		{{count($branch->servicedBy)}}
+		{{$branch->servicedBy->count()}}
 		</a>
 	@endif
 	</td>

@@ -32,7 +32,7 @@
 	
 	<td>{{$lead->rating}}</td>
 	<td>
-		@if(count($lead->salesteam)>0)
+		@if($lead->salesteam->count()>0)
 			Assigned to{{$lead->salesteam->first()->postName()}} on 
 						{{$lead->salesteam->first()->pivot->created_at->format('j M, Y')}}
 		@else

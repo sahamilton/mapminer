@@ -107,7 +107,7 @@
                 
 					<ul class="nav navbar-nav pull-right">
  						<?php $news = new \App\News;?>
-                        @if(count($news->currentNews())>0)
+                        @if($news->currentNews()->count()>0)
                         <li>
                             <a href="{{route('currentnews')}}">
                             <i class="fa fa-bell-o" aria-hidden="true"> </i> News</a>

@@ -12,7 +12,7 @@ a.viewtraining{
 </style>
 <div class="container">
     <h2>My Trainings</h2>
-   @if(count($trainings)==0)
+   @if($trainings->count()==0)
         <p class="alert alert-warning">We are sorry {{auth()->user()->person->firstname}}, that there are no trainings based on your role and industry focus. Please contact sales operations.</p>
    @else
 

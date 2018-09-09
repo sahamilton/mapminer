@@ -61,7 +61,7 @@
 				</div>
 				<div style="clear:both"></div> 
 			</div>
-			@if($people->reportsTo || count($people->directReports)>0)
+			@if($people->reportsTo || $people->directReports->count()>0)
 				<div class="list-group-item">
 					<div class="list-group-item-text col-sm-4">
 						<p><strong>Reporting Structure</strong></p>
@@ -70,7 +70,7 @@
 							<li>Reports To:
 							<a href="{{route('person.details',$people->reportsTo->id)}}">{{$people->reportsTo->postName()}}</a></li>
 						@endif
-						@if(count($people->directReports)>0)
+						@if($people->directReports->count()>0)
 							<li>Team:</li>
 							@foreach ($people->directReports as $reports)
 						
@@ -85,7 +85,7 @@
 					</ul>
 				</div>
 				<div class="col-sm-8">
-					@if(count($people->directReports)>0)
+					@if($people->directReports->count()>0)
 						@include('persons.partials._teammap')
 						@endif
 					</div>
@@ -93,7 +93,7 @@
 				</div>
 			@endif
 				
-			@if(count($people->branchesServiced)>0)
+			@if($people->branchesServiced->count()>0)
 
 				<div class="list-group-item">
 					<div class="list-group-item-text col-sm-4">
@@ -111,7 +111,7 @@
 				<div style="clear:both"></div>  
 				</div>
 			@endif
-			@if(count($people->managesAccount)>0)
+			@if($people->managesAccount->count()>0)
 				<div class="list-group-item"><p class="list-group-item-text">Accounts Managed</p>
 					<ul style="list-style-type: none;">
 						@foreach($people->managesAccount as $account)
@@ -122,9 +122,9 @@
 			@endif
 				<div class="list-group-item"><p class="list-group-item-text"><strong>Activity</strong></p>
 					<ul style="list-style-type: none;">
-						<li>Total Logins: {{count($track)}}</li>
+						<li>Total Logins: {{$track->count()}}</li>
 						<li>Last Login:
-							@if(count($track)>0)
+							@if($track->count()>0)
 							{{$track->first()->lastactivity->format('Y-m-d')}}
 						@endif
 					</li>

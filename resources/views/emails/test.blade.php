@@ -12,7 +12,7 @@
 
 </fieldset>
 
-<p><strong>Recipient Count:</strong> {{count($recipients)}}</p>
+<p><strong>Recipient Count:</strong> {{$recipients->count()}}</p>
 <form method='post' action="{{route('emails.send')}}" >
 {{csrf_field()}}
 <input type="hidden" name="id" value="{{$data['id']}}" />

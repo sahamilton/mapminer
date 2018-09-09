@@ -28,7 +28,7 @@
 		
 			<i class="fa fa-location-arrow" aria-hidden="true"></i>
 			<b>Closest Branch: </b>
-			@if(count($branches)>0)
+			@if($branches->count()>0)
 			<a href="{{ route('branches.show', $branches->first()->id) }}" 
 			title='show  {{trim($branches->first()->branchname)}} details'>
 			{{$branches->first()->id}}:{{$branches->first()->branchname}} </a>

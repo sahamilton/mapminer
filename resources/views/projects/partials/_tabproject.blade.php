@@ -7,7 +7,7 @@
 @can('manage_projects')
   @include('projects.partials._manageprojects')
 @else
-@if(count($project->owner)>0)
+@if($project->owner->count()>0)
     {{$project->owner[0]->pivot->status}} by {{$project->owner[0]->postName()}}
   @else
     Open

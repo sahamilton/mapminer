@@ -1,4 +1,4 @@
-@if(count($segments)>1)
+@if($segments->count()>1)
 <fieldset>
 	<label>Segments</label>
 

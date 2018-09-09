@@ -41,7 +41,7 @@
                 </ul>
                 </td>
                 <td>
-                    {{count($activity->relatedDocuments())}}
+                    {{$activity->relatedDocuments()->count()}}
                 </td>
 
                  <td class="col-md-2">

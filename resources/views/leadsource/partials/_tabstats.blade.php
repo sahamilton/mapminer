@@ -7,7 +7,7 @@
       
 
 foreach($leadsource->leads as $lead){
-	if(count($lead->salesteam)>0){
+	if($lead->salesteam->count()>0){
 
 		foreach ($lead->salesteam as $team){
 			if(in_array($team->pivot->status_id,[1,2,4,5,6])){
@@ -27,7 +27,7 @@ $statuses[0] = 'Unassigned';?>
 @endforeach
 <?php $avg = null;?>
 	@if($stats[0] > 0 && $stats[1] >0)
-	<?php $avg =number_format($stats[1] / (count($leadsource->leads) - $stats[0]),2);?>
+	<?php $avg =number_format($stats[1] / ($leadsource->leads->count() - $stats[0]),2);?>
 	@endif
 <li>Average Offer - {{$avg}}</li>
-<li>Offered to {{count($salesteams)}}</li>
+<li>Offered to {{$salesteams->count()}}</li>

@@ -19,8 +19,8 @@
                
                 <tr>
                     <td><a href="{{route('salesleads.showrep',$report->id)}}">{{$report->postName() }}</a></td>
-                    @if(count($report->salesleads)>0)
-                        <td>{{count($report->salesleads)}}</td>
+                    @if($report->salesleads->count()>0)
+                        <td>{{$report->salesleads->count()}}</td>
                         <?php $leadstatuses =  $report->salesLeadsByStatus($report->id);?>
                         @foreach($statuses as $key=>$value)
                         <td>
@@ -32,8 +32,8 @@
                         </td>
                         @endforeach
                         <td>
-                            @if(count($report->leadratings)>0)
-                            {{$report->leadratings->sum('pivot.rating') / count($report->leadratings)}}
+                            @if($report->leadratings->count()>0)
+                            {{$report->leadratings->sum('pivot.rating') / ($report->leadratings->count()}}
                             @endif
                         </td>
                     @else

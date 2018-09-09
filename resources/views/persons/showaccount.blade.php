@@ -14,7 +14,7 @@
 
 			<tr>  
 				<td>
-				@if(count($account->countlocations)> 0)
+				@if($account->countlocations->count() > 0)
 					<a title="See all {{$account->companyname}} locations" 
 					href="{{route('company.show',$account->id)}}">
 					{{$account->companyname}}

@@ -18,8 +18,8 @@ class ProjectsCompanyImportController extends ImportController
     
     public $projectcompanyfields =['id','firm', 'addr1','addr2','city','state','zip','county','phone'];
     public $projectcompanyimportfields=['company_id','firm', 'addr1','addr2','city','state','zip','county','phone'];
-    public $projectcontactfields = ['id','contact','title','company_id','contactphone'];
-    public $projectcontactimportfields = ['contact_id','contact','title','company_id','contactphone'];
+    public $projectcontactfields = ['contact','title','company_id','contactphone','contactemail'];
+    public $projectcontactimportfields = ['contact','title','company_id','contactphone','contactemail'];
 
     public function __construct(Project $project, ProjectSource $source,ProjectCompanyImport $import){
         $this->project = $project;
@@ -95,7 +95,7 @@ class ProjectsCompanyImportController extends ImportController
 
         }
     private function createCompanyId(){
-        $query = "Update projectcompanyimport set company_id = md5(lcase(trim(replace(concat(firm,addr1),' ',''))))";
+        $query = "Update projectcompanyimport set company_id = md5(lcase(trim(replace(concat(firm,addr1,city,state,zip),' ',''))))";
         if (\DB::select(\DB::raw($query))){
            
             return true;
@@ -118,7 +118,9 @@ class ProjectsCompanyImportController extends ImportController
             return true;
         }
     }
-
+    /*
+    remove contacts where should be null
+    */
     private function cleanseContacts(){
         $fields = ['firstname','lastname','contact'];
         foreach ($fields as $field){
@@ -129,6 +131,10 @@ class ProjectsCompanyImportController extends ImportController
         }     
         return true;
     }
+    /*
+    Set contact to equal firstname + lastname
+    */
+
     private function updateContacts(){
         // update projectcompanyimport set contact= null, firstname = null, lastname = null where firstname ='' and lastname='' and contact ='';
             $query = "update projectcompanyimport set contact = concat(firstname,' ',lastname) where contact is null";

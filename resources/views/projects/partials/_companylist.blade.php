@@ -22,7 +22,7 @@
                         {{$company->firm}}</a></td>
                          <td>
                         <p>@include('projects.partials._addcontacts')</p>
-                              @if(count($company->employee)>0)
+                              @if($company->employee->count()>0)
                                     <table class="table table-bordered table-condensed">
 
                                           <tbody>
@@ -52,7 +52,7 @@
 @else
 
 <div class="alert alert-danger">
-@if(count($project->owner)>0)
+@if($project->owner->count()>0)
 
 <p>Project has been {{$project->owner[0]->pivot->status}} by {{$project->owner[0]->postName()}}</p>
 

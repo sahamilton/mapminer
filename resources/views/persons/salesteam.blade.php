@@ -9,7 +9,7 @@
 @endforeach
 </ul></p>
 <p>Reports to: 
-	@if(count($people->reportsTo)!=0)
+	@if($people->reportsTo->count()>0)
 <a href="{{route('person.show',$people->reportsTo->id)}}">
 		
 

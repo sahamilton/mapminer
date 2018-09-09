@@ -8,7 +8,7 @@
   <!---- Tab message -->
   <ul class="nav nav-tabs">
     <li class="active"><a data-toggle="tab" href="#home">Message</a></li>
-    <li><a data-toggle="tab" href="#menu1">Sales Team ({{count($salesteam)}})</a></li>
+    <li><a data-toggle="tab" href="#menu1">Sales Team ({{$salesteam->count()}})</a></li>
     <li><a data-toggle="tab" href="#menu2">Modify Team</a></li>
 
   </ul>

@@ -20,7 +20,7 @@
     <tbody>
  @foreach($leadsource->assignedLeads as $lead)
  
-    @if(count($lead->salesteam)>0)
+    @if($lead->salesteam->count()>0)
     <?php $history = $lead->history();?>
     <tr>  
         <td><a href="{{route('leads.show',$lead->id)}}">{{$lead->companyname}}</a></td>

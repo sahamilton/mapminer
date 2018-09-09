@@ -29,15 +29,15 @@
 			<td>{{$branch->street}} {{$branch->address2}}</td>
 			<td>{{$branch->city}}</td>
 			<td>{{$branch->state}}</td>
-			<td>@if(count($branch->manager)>0)
+			<td>@if($branch->manager->count()>0)
 				{{$branch->manager->first()->postName()}}
 				@endif
 			</td>
-			<td>@if(count($branch->businessmanager)>0) 
+			<td>@if($branch->businessmanager->count()>0) 
 				{{$branch->businessmanager->first()->postName()}}
 				@endif
 			</td>
-			<td>@if(count($branch->marketmanager)>0)
+			<td>@if($branch->marketmanager->count()>0)
 				{{$branch->marketmanager->first()->postName()}}
 				@endif
 			</td>

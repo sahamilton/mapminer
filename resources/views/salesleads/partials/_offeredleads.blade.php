@@ -2,10 +2,10 @@
 
   
 <div class="row">
-   @if(count($leads->ownedLeads) >=$limit)
+   @if($leads->ownedLeads->count() >=$limit)
     <div class="alert alert-danger">
-        <p><strong>You must close some of your {{count($leads->ownedLeads)}} owned prospects before accessing any of the 
-        {{count($leads->offeredLeads)}} additional prospects available.</strong></p>
+        <p><strong>You must close some of your {{$leads->ownedLeads->count()}} owned prospects before accessing any of the 
+        {{$leads->offeredLeads->count()}} additional prospects available.</strong></p>
     </div>
 
    @else

@@ -5,7 +5,7 @@
 
     <h4>Maximum of {{$data['number']}} within {{$data['distance']}} miles of {{$data['address']}}</h4>
     @include('leads.partials.search')
-    @if(count($people)>0)
+    @if($people->count()>0)
     <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
         <thead>
             <th>Employee Id</th>

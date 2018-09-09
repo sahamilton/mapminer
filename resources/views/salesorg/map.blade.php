@@ -8,7 +8,7 @@
 title="Email {{$salesorg->postName()}}">
 {{$salesorg->userdetails->email}}</a></p>
   
-  @if(count($salesorg->reportsTo)==1 && isset($salesorg->reportsTo->id))
+  @if($salesorg->reportsTo->count()==1 && isset($salesorg->reportsTo->id))
   <h4>Reports to:<a href="{{route('salesorg',$salesorg->reportsTo->id)}}" 
   title="See {{$salesorg->reportsTo->firstname}} {{$salesorg->reportsTo->lastname}}'s sales team">
     {{$salesorg->reportsTo->firstname}} {{$salesorg->reportsTo->lastname}}

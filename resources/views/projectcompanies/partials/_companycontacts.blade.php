@@ -15,7 +15,7 @@
 		<td>{{$contact->contact}}</td>
             <td>{{$contact->title}}</td>
             <td>{{$contact->contactphone}}</td>
-            <td>{{$contact->email}}</td>
+            <td>{{$contact->contactemail}}</td>
 </tr>
 @endforeach
 </table>

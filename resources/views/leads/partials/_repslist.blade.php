@@ -1,6 +1,6 @@
 <h2>Closest Sales Reps </h2>
 
-@if(count($people)>0)
+@if($people->count()>0)
 
 {{csrf_field()}}
     <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>

@@ -14,7 +14,7 @@
 
 @foreach ($companies as $company)
 
- @if(count($company->salesnotes)>0)
+ @if($company->salesnotes->count()>0)
                 <tr class='success'>
                  @else
                <tr class='danger'>
@@ -24,7 +24,7 @@
 <a href="{{route('company.show',$company->id)}}">{{$company->companyname}}</a>
 </td>
 
-<td>  @if(count($company->salesnotes)>0)
+<td>  @if($company->salesnotes->count()>0)
 Yes
 @else
 No
@@ -37,7 +37,7 @@ No
 </td>
 <td>
   <div class="btn-group">
-       @if(count($company->salesnotes)>0)
+       @if($company->salesnotes->count()>0)
         <a href="{{route('salesnotes.edit',$company->id)}}"
         title=" Edit {{trim($company->companyname)}}'s Sales Notes">
       @else

@@ -28,9 +28,9 @@
 		<td>{{$project->stage}}</td>
 		<td>
 		
-		@if(count($project->owner)>0 && $project->owner[0]->id != auth()->user()->person()->first()->id)
+		@if($project->owner->count()>0 && $project->owner[0]->id != auth()->user()->person()->first()->id)
 			Project {{$project->owner[0]->pivot->status}} by {{$project->owner[0]->postName()}}
-		@elseif(count($project->owner)>0 && $project->owner[0]->id == auth()->user()->person()->first()->id)
+		@elseif($project->owner->count()>0 && $project->owner[0]->id == auth()->user()->person()->first()->id)
 			You have {{$project->owner[0]->pivot->status}} this project
 		@else
   			@can ('manage_projects')

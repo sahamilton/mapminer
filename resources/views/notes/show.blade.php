@@ -20,17 +20,17 @@
 					</td>	
 
 					<td>
-						@if($type=='location' && count($note->relatesToLocation)>0)
+						@if($type=='location' && $note->relatesToLocation->count()>0)
 							<a href="{{route('locations.show',$note->relatesToLocation->id)}}"
 							title="See details of location">
 							{{$note->relatesToLocation->businessname}}
 						</a>
-						@elseif($type=='lead' && count($note->relatesToProspect)>0)
+						@elseif($type=='lead' && $note->relatesToProspect->count()>0)
 							<a href="{{route('projects.show',$note->relatesToProspect->id)}}"
 							title="See details of prospect">
 							{{$note->relatesToProspect->businessname}}
 						</a>
-						@elseif($type=='project' && count($note->relatesToProject)>0)
+						@elseif($type=='project' && $note->relatesToProject->count()>0)
 							<a href="{{route('projects.show',$note->relatesToProject->id)}}"
 							title="See details of project">
 							{{$note->relatesToProject->project_title}}

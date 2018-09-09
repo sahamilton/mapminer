@@ -30,7 +30,7 @@
 		<td>{{$branch->street}}</td>
 		<td>{{$branch->city}}</td>
 		<td>{{$branch->state}}</td>
-		<td>{{count($branch->servicedBy)}}</td>
+		<td>{{$branch->servicedBy->count()}}</td>
 
     </tr>
    @endforeach

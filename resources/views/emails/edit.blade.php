@@ -6,7 +6,7 @@
   <!---- Tab message -->
   <ul class="nav nav-tabs">
     <li class="active"><a data-toggle="tab" href="#home">Message</a></li>
-    <li><a data-toggle="tab" href="#menu1">Recipients ({{count($email->recipients)}})</a></li>
+    <li><a data-toggle="tab" href="#menu1">Recipients ({{$email->recipients->count())}})</a></li>
     <li><a data-toggle="tab" href="#menu2">Select Recipients</a></li>
 
   </ul>

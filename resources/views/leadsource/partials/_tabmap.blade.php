@@ -9,7 +9,7 @@
       foreach($leadsource->leads as $lead){
         
            $status = null;
-             if(count($lead->salesteam)>0){
+             if($lead->salesteam->count()>0){
             
               foreach ($lead->salesteam as $team){
                 if($team->pivot->status_id > $status && in_array($team->pivot->status_id,[1,2,5,6])){

@@ -20,7 +20,7 @@
     </a> 
   @endif
 
-@if(isset ($salesteam[0]->reportsTo->userdetails->roles) && count($salesteam[0]->reportsTo->userdetails->roles)>0) 
+@if(isset ($salesteam[0]->reportsTo->userdetails->roles) && $salesteam[0]->reportsTo->userdetails->roles->count()>0) 
     - {{$salesteam[0]->reportsTo->userdetails->roles[0]->name}}
   @endif
 
@@ -47,7 +47,7 @@
           {{$reports->firstname}} {{$reports->lastname}}</a>  
       @endif
      
-      @if(count($reports->userdetails->roles)>0)
+      @if($reports->userdetails->roles->count()>0)
         - {{$reports->userdetails->roles[0]->name}}
       @endif
       <br/>

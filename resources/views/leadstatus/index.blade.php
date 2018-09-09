@@ -36,11 +36,11 @@
         </a>
     </td>
     <td>
-        @if(count($status->leads)>0)
-        {{number_format($status->leads->sum('pivot.rating') / count($status->leads),2)}}
+        @if($status->leads->count()>0)
+        {{number_format($status->leads->sum('pivot.rating') / $status->leads->count(),2)}}
         @endif
     </td>
-    <td>{{count($status->leads)}}
+    <td>{{$status->leads->count()}}
   @if (Auth::user()->hasRole('Admin'))
     <td>
             @include('partials._modal')

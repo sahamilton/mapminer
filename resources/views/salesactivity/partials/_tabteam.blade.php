@@ -25,7 +25,7 @@
 </ul>
 </td>
 <td>
-@if(count($team->reportsTo) > 0)
+@if($team->reportsTo->count() > 0)
 	{{$team->reportsTo->fullName()}}
 @endif
 </td>

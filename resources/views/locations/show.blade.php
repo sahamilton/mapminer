@@ -13,21 +13,21 @@
 
     <li>
       <a data-toggle="tab" href="#notes">
-        <strong>Location  Notes @if(count($location->relatedNotes)>0) ({{count($location->relatedNotes)}}) @endif
+        <strong>Location  Notes ({{$location->relatedNotes->count()}})
         </strong>
       </a>
     </li>
     
     <li>
       <a data-toggle="tab" href="#contacts">
-        <strong>Location  Contacts @if(count($location->contacts)>0) ({{count($location->contacts)}}) @endif
+        <strong>Location  Contacts ({{$location->contacts->count()}})
         </strong>
       </a>
     </li>
-    @if(count($location->watchedBy)>0)
+    
     <li>
       <a data-toggle="tab" href="#watchers">
-        <strong>Watched By {{count($location->watchedBy)}}
+        <strong>Watched By {{$location->watchedBy->count()}}
         </strong>
       </a>
     </li>
@@ -48,7 +48,7 @@ $id= $location->id;?>
     <div id="contacts" class="tab-pane fade in">
       @include('locations.partials._tabcontacts')
     </div>
-    @if(count($location->watchedBy)>0)
+    @if($location->watchedBy->count()>0)
     <div id="watchers" class="tab-pane fade in">
       @include('locations.partials._tabwatchers')
     </div>

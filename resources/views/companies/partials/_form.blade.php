@@ -32,7 +32,7 @@
 
 
 <!-- Serviceline -->
-@if(count($servicelines)>1)
+@if($servicelines->count()>1)
         <div class="form-group{{ $errors->has('serviceline)') ? ' has-error' : '' }}">
         <label class="col-md-2 control-label">Service Lines:</label>
         <div class="input-group input-group-lg ">

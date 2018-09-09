@@ -51,18 +51,18 @@
             <td><a href="{{$document->location}}" target="_new" 
             title ="View this {{$document->doctype}} document">View Source <img src="{{asset('assets/icons/'.$document->doctype.'.png')}}" ></a></td>
             <td> 
-            @if(count($document->rank) > 0 && count($document->score)> 0 && count($document->rankings) >0)
+            @if($document->rank->count() > 0 && $document->score->count()> 0 && $document->rankings->count() >0)
             {{$document->rank[0]->rank}}
 
             @endif
             </td>
             <td>
-            @if(count($document->rankings) >0)
+            @if($document->rankings->count() >0)
             <a href="{{route('watchedby',$document->id)}}">
-            {{count($document->rankings)}}
+            {{$document->rankings->count()}}
             </a>
             @else
-            {{count($document->rankings)}}
+            {{$document->rankings->count()}}
             @endif
             </td>
             @if(auth()->user()->hasRole('Admin'))

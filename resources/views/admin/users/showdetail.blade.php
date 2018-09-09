@@ -21,17 +21,17 @@
     <li class="active"><a data-toggle="tab" href="#showmap"><strong>Location</strong></a></li>
     <li><a data-toggle="tab" href="#details"><strong>Details</strong></a></li>
     
-    @if(count($user->person->directReports()->get())>0 or count($user->person->reportsTo()->get())>0)
+    @if($user->person->directReports()->get()->count()>0 or $user->person->reportsTo()->get()->count()>0)
     <li><a data-toggle="tab" href="#team"><strong>Reporting Structure</strong></a></li>
     @endif
-    @if(count($user->person->manages()->get())>0)
+    @if($user->person->manages()->get()->count()>0)
     <li><a data-toggle="tab" href="#branches"><strong>Branches Serviced</strong></a></li>
     @endif
-    @if(count($user->person->managesAccount()->get())>0)
+    @if($user->person->managesAccount()->get()->count()>0)
     <li><a data-toggle="tab" href="#accounts"><strong>Accounts Managed</strong></a></li>
     @endif
-        @if(count($user->person->templeads)>0)
-    <li><a data-toggle="tab" href="#leads"><strong>Assigned Leads ({{count($user->person->templeads)}})</strong></a></li>
+        @if($user->person->templeads->count()>0)
+    <li><a data-toggle="tab" href="#leads"><strong>Assigned Leads ({{$user->person->templeads->count())}})</strong></a></li>
     @endif
 
     </ul>

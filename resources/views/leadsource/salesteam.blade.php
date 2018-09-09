@@ -7,7 +7,7 @@
 <!---- Tab message -->
 <ul class="nav nav-tabs">
   <li class="active"><a data-toggle="tab" href="#home">Message</a></li>
-  <li><a data-toggle="tab" href="#menu1">Sales Team ({{count($salesteam)}}</a></li>
+  <li><a data-toggle="tab" href="#menu1">Sales Team ({{$salesteam->count()}}</a></li>
   
 
 </ul>
@@ -50,7 +50,7 @@
 <tr>
 <td>{{$team['details']->fullName()}}</td>
 <td>
-@if(count($team['details']->reportsTo) > 0)
+@if($team['details']->reportsTo->count() > 0)
 	{{$team['details']->reportsTo->fullName()}}
 @endif
 </td>

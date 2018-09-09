@@ -17,7 +17,7 @@
 <p><strong>User Name:</strong>  {{$user->username}}</p>
 <p><strong>Email:</strong>  {{$user->email}}</p>
 
-@if(count($user->person->industryfocus()->get()) > 0)
+@if($user->person->industryfocus()->get()->count() > 0)
 <p><strong>Industry Focus:</strong> 
 
 @foreach ($user->person->industryfocus()->get() as $industry)

@@ -12,7 +12,7 @@
 		</div>
 		@include('webleads.partials._detail')
 
-		@if(count($lead->salesteam)>0)
+		@if($lead->salesteam->count()>0)
 		<div class="list-group">
 			<div class="list-group-item">
 				<p class="list-group-item-text">Lead Assigned</p>
@@ -32,7 +32,7 @@
 		</div>
 		@endif
 	</div>
-@if(count($lead->salesteam)==0)
+@if($lead->salesteam->count()==0)
 		@include('leads.partials._branchlist')	
 			
 		
@@ -41,12 +41,12 @@
 <div class="col-sm-7 pull-right">
 	@include('webleads.partials._search')
 <div id="map"  style="border:solid 1px red"></div>
-@if(count($lead->salesteam)==0)
+@if($lead->salesteam->count()==0)
 @include('webleads.partials.select')
 @endif
 </div>
 
-@if(count($lead->salesteam)==0)
+@if($lead->salesteam->count()==0)
 		<div class="row">
 		<div class="col-sm-12">
 		@include('leads.partials._repslist')

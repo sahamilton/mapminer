@@ -14,13 +14,13 @@
    <ul class="nav nav-tabs">
       <li class="active">
         <a data-toggle="tab" href="#open">
-          <strong>Open Leads ({{count($openleads)}})</strong>
+          <strong>Open Leads ({{$openleads->count()}})</strong>
         </a>
       </li>
 
       <li>
         <a data-toggle="tab" href="#closed">
-          <strong>Closed Leads ({{count($closedleads)}})</strong>
+          <strong>Closed Leads ({{$closedleads->count()}})</strong>
         </a>
       </li>
       

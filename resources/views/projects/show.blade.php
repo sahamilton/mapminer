@@ -30,7 +30,7 @@
 @can('manage_projects')
   @include('projects.partials._manageprojects')
 @else
-@if(count($project->owner)>0)
+@if($project->owner->count()>0)
     {{$project->owner[0]->pivot->status}} by {{$project->owner[0]->postName()}}</p>
   @else
     Open</p>
@@ -40,9 +40,9 @@
 <ul class="nav nav-tabs">
   <li class="active"><a data-toggle="tab" href="#showmap"><strong>Project Location</strong></a></li>
   <li><a data-toggle="tab" href="#details"><strong>Project Details</strong></a></li>
-  <li><a data-toggle="tab" href="#contacts"><strong>Project Contacts @if(count($project->companies)>0)({{count($project->companies)}}) @endif</strong></a></li>
+  <li><a data-toggle="tab" href="#contacts"><strong>Project Contacts @if($project->companies->count()>0)({{$project->companies->count()}}) @endif</strong></a></li>
   <li><a data-toggle="tab" href="#branches"><strong>Nearby Branches</strong></a></li>
-  <li><a data-toggle="tab" href="#notes"><strong>Project Notes @if(count($project->relatedNotes)>0) ({{count($project->relatedNotes)}}) @endif</strong></a></li>
+  <li><a data-toggle="tab" href="#notes"><strong>Project Notes @if($project->relatedNotes->count() >0) ({{$project->relatedNotes->count()}}) @endif</strong></a></li>
 
 </ul>
 

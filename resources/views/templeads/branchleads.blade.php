@@ -4,7 +4,7 @@
  
     <h2>Branch {{$branches->first()->branches->branchname}} Leads Overview</h2>
   
-    @if(count($branches->first()->branches->manager)>0)
+    @if($branches->first()->branches->manager->count()>0)
 
     <h4>Branch Managed By {{$branches->first()->branches->manager->first()->postName()}}</h4>
     @endif
@@ -34,7 +34,7 @@
                     <td>{{$lead->address}}</td>
                     <td>{{$lead->city}}</td>
                     <td>{{$lead->state}}</td>
-                    @if(count($lead->salesrep)>0)
+                    @if($lead->salesrep->count()>0)
                         <td><a href="{{route('salesrep.newleads',$lead->salesrep->first()->id)}}">{{$lead->salesrep->first()->postName()}}</a></td>
                         <td>{{$leadStatuses[$lead->salesrep->first()->pivot->status_id]}}</td>
                         <td>{{$lead->salesrep->first()->pivot->ranking}}</td>

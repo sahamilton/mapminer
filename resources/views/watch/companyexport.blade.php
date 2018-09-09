@@ -34,7 +34,7 @@
 			<td>
 				@foreach ($location->relatedNotes as $note)
 					{{$note->note}}-
-					@if(count($note->writtenBy)>0){{$note->writtenBy->person->postName()}} -@endif  {{$note->created_at->format('m-d-Y')}}
+					@if($note->writtenBy->count()>0){{$note->writtenBy->person->postName()}} -@endif  {{$note->created_at->format('m-d-Y')}}
 					@if(! $loop->last)<br />@endif
 				@endforeach
 			</td>

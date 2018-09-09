@@ -1,7 +1,7 @@
 <div class="col-md-8">
 <h4>Project Notes</h4>
 
-@if(count($project->relatedNotes)>0)
+@if($project->relatedNotes->count()>0)
 <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
 <thead>
 <th>Date</th>

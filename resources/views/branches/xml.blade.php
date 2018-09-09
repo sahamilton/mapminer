@@ -9,7 +9,7 @@
 		locationweb="{{route('branches.show',$branch->id)}}" 
 		id="{{$branch->id}}" 
 		type="branch" 
-	@if(count($branch->servicelines)>0)
+	@if($branch->servicelines->count())>0)
 		brand="{{$branch->servicelines->first()->ServiceLine}}" 
 		color="{{$branch->servicelines->first()->color}}"
 	@else
