@@ -84,7 +84,7 @@ class= "btn btn-success ">
 <input type="hidden" name="lng" id ="lng" value="{{isset($data['lng']) ? $data['lng'] : '-98.5795'}}" />
 <input type="hidden" name="lat" id ="lat" value="{{isset($data['lat']) ? $data['lat'] : '39.8282'}}" />
 </form>
-<?php $action = 'findme';?>
+<?php $action = '/findme';?>
 @include('partials._noaddressmodal')
 <script>
 
