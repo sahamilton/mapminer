@@ -4,7 +4,7 @@
 <h2> {{$people->firstname}} {{$people->lastname}}</h2>
 <h4> {{$people->userdetails->roles[0]->name}}</h4>
 
-@if ($people->reportsTo->count() == 1)
+@if ($people->reportsTo)
 <p>Reports to: <a href = "{{route('person.show',$people->reportsTo->id)}}" > {{$people->reportsTo->firstname}} {{$people->reportsTo->lastname}} - {{$people->reportsTo->userdetails->roles[0]->name}}</a>
 @endif
 
@@ -43,7 +43,7 @@
     </td>
     <td>
     @if($reports->isLeaf())
-       {{$reports->branchesServiced->count())}}
+       {{count($reports->branchesServiced)}}
     
     @else
 
