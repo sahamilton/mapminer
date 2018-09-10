@@ -241,9 +241,10 @@ class CompaniesController extends BaseController {
 				}
 
 		$company = $company->find($id);
+		/*dd($company);
 		if(count($company)!=1){
 				return redirect()->route('company.index');
-		}
+		}*/
 		// get company locations
 
 		$locations = $this->getCompanyLocations($id,$segment,$company);
