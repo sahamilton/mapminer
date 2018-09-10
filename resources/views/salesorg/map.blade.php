@@ -8,7 +8,7 @@
 title="Email {{$salesorg->postName()}}">
 {{$salesorg->userdetails->email}}</a></p>
   
-  @if($salesorg->reportsTo->count()==1 && isset($salesorg->reportsTo->id))
+  @if(isset($salesorg->reportsTo->id))
   <h4>Reports to:<a href="{{route('salesorg',$salesorg->reportsTo->id)}}" 
   title="See {{$salesorg->reportsTo->firstname}} {{$salesorg->reportsTo->lastname}}'s sales team">
     {{$salesorg->reportsTo->firstname}} {{$salesorg->reportsTo->lastname}}
@@ -60,7 +60,7 @@ title="Email {{$salesorg->postName()}}">
         });
       var infowindow = new google.maps.InfoWindow();
         // Construct the circle for each value in citymap.
-        // Note: We scale the area of the circle based on the population.
+        // Note: We scale the area of the circle based on the esrvice radius.
         for (var branch in branchmap) {
           // Add the circle for this city to the map.
           var branchCircle = new google.maps.Circle({
