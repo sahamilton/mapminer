@@ -69,7 +69,7 @@ class GeoCodingController extends BaseController {
 
 
 		$filtered = $this->location->isFiltered(['companies','locations'],['vertical','business','segment'],NULL);
-		if(isset($data['company'])){
+		if(isset($data['company']) ){
     		$company = $data['company'];
     	}else{
     		$company=null;
@@ -134,6 +134,8 @@ class GeoCodingController extends BaseController {
 			}elseif ($data['type'] == 'projects'){
 				$data['urllocation'] ="api/mylocalprojects";
 				$data['title'] = "Project Locations";
+				$data['company']=NULL;
+				$data['companyname']=NULL;
 			
 			}else{
 

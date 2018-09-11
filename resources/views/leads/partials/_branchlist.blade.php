@@ -19,7 +19,7 @@
 			</td>
 			
 			<td>
-				@if($branch->manager->count()>0)
+				@if($branch->manager)
 					@foreach ($branch->manager as $person)
 					<a href="{{route('salesorg',$person->id)}}"  title="See {{$person->postName()}}'s details">{{$person->postName()}}</a>
 					<span type="button" class="fa fa-copy btn-copy js-tooltip js-copy" data-toggle="tooltip" data-placement="bottom" data-copy="{{$person->postName()}}" title="Copy to clipboard"></span>

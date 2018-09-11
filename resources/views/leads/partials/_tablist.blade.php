@@ -24,7 +24,7 @@
     <td>{{$lead->state}}</td>
     <td>{{$lead->created_at->format('M j, Y')}}</td>
     <td>
-    @if($lead->salesteam->count()>0)
+    @if($lead->salesteam)
         @if($lead->ownedBy->count() > 0)
 
            {{$statuses[$lead->ownedBy[0]->pivot->status_id]}}  by {{$lead->ownedBy[0]->postname()}}
