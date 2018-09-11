@@ -28,7 +28,7 @@ $data['type'] ='people';
 		@endforeach
 	</td>
 	<td>
-		@if($person->reportsTo->count()>0)
+		@if($person->reportsTo)
 			<a href="{{route('salesorg',$person->reportsTo->id)}}">{{$person->reportsTo->postName()}}</a>
 		@endif
 	</td>
