@@ -28,7 +28,7 @@
                     <td>{{$lead->address}}</td>
                     <td>{{$lead->city}}</td>
                     <td>{{$lead->state}}</td>
-                    @if($lead->salesrep->count()>0)
+                    @if($lead->salesrep)
                         <td><a href="{{route('salesrep.newleads',$lead->salesrep->first()->id)}}">{{$lead->salesrep->first()->postName()}}</a></td>
                         <td>{{$leadStatuses[$lead->salesrep->first()->pivot->status_id]}}</td>
                         <td>{{$lead->salesrep->first()->pivot->ranking}}</td>
