@@ -2,7 +2,7 @@
 @section('content')
 <div class="container">
   <h2>{{$lead->businessname ? $lead->businessname : $lead->companyname}}</h2>
-  @if($lead->salesteam->count())
+  @if($lead->salesteam)
     <h4>Lead assigned to <a href="{{route('salesrep.newleads',$lead->salesteam->first()->id)}}">{{$lead->salesteam->first()->postName()}}</a></h4>
     @if(auth()->user()->hasRole('Admin'))
 <p  text-danger">
@@ -37,7 +37,7 @@
           <strong>Lead Details</strong>
         </a>
       </li>
-@if($extrafields->count()>0)
+@if(count($extrafields)>0)
 <li>
         <a data-toggle="tab" href="#extra">
           <strong>Additional Info</strong>
@@ -54,7 +54,7 @@
 
       <li>
         <a data-toggle="tab" href="#notes">
-          <strong>Lead  Notes @if($lead->relatedNotes->count()>0) ({{$lead->relatedNotes->count()}}) @endif
+          <strong>Lead  Notes @if($lead->relatedNotes) ({{$lead->relatedNotes->count()}}) @endif
           </strong>
         </a>
       </li>
@@ -71,7 +71,7 @@
     <div id="lead" class="tab-pane fade in active">
       @include('templeads.partials._tabdetails')
     </div>
-    @if($extrafields->count()>0)
+    @if(count($extrafields)>0)
     <div id="extra" class="tab-pane fade in">
       @include('templeads.partials._tabextra')
     </div>
