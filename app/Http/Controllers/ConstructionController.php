@@ -55,9 +55,22 @@ class ConstructionController
      * @param  \App\Construction  $construction
      * @return \Illuminate\Http\Response
      */
-    public function show(Construction $construction)
+    public function show($id)
     {
-        //
+
+        $client = new GuzzleHttp\Client();
+        $res = $client->request('get', $this->url .'permits/'.$id, [
+            'auth' => ['hamilton@elaconsultinggroup.com','e7f32326edc8136cf60d34a3cc0674ae'
+            ]
+        ]);
+
+        
+        $collection = collect(json_decode($res->getBody(), true));
+        $data = $collection['hits']['hits'][0]['_source'];
+        $project = Construction::make($data)->resolve();
+        
+        dd($project);
+        return response()->view('construct.show',compact('project'));
     }
 
     /**

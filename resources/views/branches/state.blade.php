@@ -53,7 +53,7 @@
 		{{$branch->state}}
 	</td>
 	<td>
-		@if($branch->region->count()>0)
+		@if($branch->region)
 		<a href="{{route('region.show',$branch->region->id)}}" 
 		title="See all {{$branch->region->region}} region branches">
 		{{$branch->region->region}}
@@ -62,7 +62,7 @@
 
 	</td>
 	<td>
-@if($branch->manager->count())>0)
+@if($branch->manager)
 				
 				@foreach ($branch->manager as $manager)
 				<a href="{{route('managed.branch',$manager->id)}}"
@@ -74,7 +74,7 @@
 	<td>
 		<a href="{{route('branches.show',$branch->id)}}" 
 		title="See details of {{$branch->branchname}} branch">
-		{{$branch->servicedBy->count())}}
+		{{$branch->servicedBy->count()}}
 		</a>
 	</td>
 	@if(Auth::user()->hasRole('Admin'))
