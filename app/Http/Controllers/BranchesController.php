@@ -163,13 +163,15 @@ class BranchesController extends BaseController {
 		
 		$servicelines = $this->serviceline
 		->whereIn('id',$this->userServiceLines)->get();
-		
+		// need a try here 
+		// check to see that this branch can be seen by this user
+		// move to model
 		$data['branch'] = $this->branch
-		->whereHas('servicelines', function($q){
-					    $q->whereIn('serviceline_id',$this->userServiceLines);
+			->whereHas('servicelines', function($q){
+						    $q->whereIn('serviceline_id',$this->userServiceLines);
 
-					})
-		->find($branch->id);
+						})
+			->findOrFail($branch->id);
 
 		$filtered = $this->branch->isFiltered(['companies'],['vertical']);
 		

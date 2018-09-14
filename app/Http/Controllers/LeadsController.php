@@ -300,7 +300,12 @@ class LeadsController extends BaseController
           $sources = $this->leadsource->pluck('source','id');
 
           $branch = new \App\Branch;
-          $branches = $branch->nearby($lead,500)->limit(5)->get();
+          $branches = $branch
+              ->whereHas('servicelines', function($q){
+                $q->whereIn('serviceline_id',$this->userServiceLines);
+
+            })
+              ->nearby($lead,500)->limit(5)->get();
           $people = $this->person
                         ->whereHas('userdetails.roles',function($q) {
                           $q->whereIn('name',$this->assignTo);

@@ -50,7 +50,7 @@
 <tr>
 <td>{{$team['details']->fullName()}}</td>
 <td>
-@if($team['details']->reportsTo->count() > 0)
+@if($team['details']->reportsTo)
 	{{$team['details']->reportsTo->fullName()}}
 @endif
 </td>

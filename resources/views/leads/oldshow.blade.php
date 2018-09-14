@@ -28,7 +28,7 @@
 		</ul>
 	</div>
 
-@if ($lead->salesteam->count() > 0)
+@if ($lead->salesteam)
 
 <p><strong>Closest Branch:</strong><a href= "{{route('branches.show',$branches->first()->id)}}">{{$branches->first()->branchname}}</a></p>
 <div>

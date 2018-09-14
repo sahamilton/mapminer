@@ -31,13 +31,13 @@
 
 			@include('salesactivity.partials._tabresources')
 		</div>
-		@if($locations->count() > 0)
+		@if($locations)
 		<div id="locations" class="tab-pane fade">
 			@include('salesactivity.partials._tablocations')
 		</div>
 		@endif
 
-		@if($leads->count() > 0)
+		@if($leads)
 		<div id="leads" class="tab-pane fade">
 			@include('salesactivity.partials._tableads')
 		</div>

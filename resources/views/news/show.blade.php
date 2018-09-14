@@ -29,7 +29,7 @@
 
 <h4>{{ $news->comments->count() }} {{ \Illuminate\Support\Pluralizer::plural('Comment', $news->comments->count()) }}</h4>
 
-@if ($news->comments->count() > 0)
+@if ($news->comments)
 
 	@foreach ($news->comments as $comment)
 

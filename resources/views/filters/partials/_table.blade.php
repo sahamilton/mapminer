@@ -32,7 +32,7 @@
         @endif
 </td>
     <td class="text-right">
-    @if($vertical->companies->count() > 0)
+    @if($vertical->companies)
             <a href="{{route('company.vertical',$vertical->id)}}"
             title="See all {{$vertical->filter}} companies">
             {{$vertical->companies->count()}}

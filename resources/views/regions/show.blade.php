@@ -32,7 +32,7 @@
 		{{$branch->id}}
 	</td>
 	<td>
-	@if($branch->servicelines->count() > 0)
+	@if($branch->servicelines)
 		@foreach($branch->servicelines as $serviceline)
 				<a href = "{{route('serviceline.show',$serviceline->id)}}" 
 				title =" See all {{$serviceline->ServiceLine}} branches">
