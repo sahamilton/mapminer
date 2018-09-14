@@ -42,7 +42,7 @@ class LeadsController extends BaseController
         $this->lead = $lead;
         $this->leadsource = $leadsource;
         $this->leadstatus = $status;
-        $this->assignTo = \Config::get('leads.lead_distribution_roles'); 
+        $this->assignTo = config('leads.lead_distribution_roles'); 
         parent::__construct($this->lead);
     }
     /**
@@ -285,35 +285,18 @@ class LeadsController extends BaseController
     public function search(LeadInputAddressFormRequest $request){
       $geoCode = app('geocoder')->geocode($request->get('address'))->get();
       if (count($geoCode)>0){
-          $lead = new Lead;
-          $coords = $this->lead->getGeoCode($geoCode);
-          $lead->lat = $coords['lat'];
-          $lead->lng = $coords['lng'];
-          if(isset($coords['address'])){
-            $lead->address = $coords['address'];
-          }
-          $lead->city = $coords['city'];
-          $lead->state = $coords['state'];
-          $lead->zip = $coords['zip'];
+        // create the lead object
+          $lead = $this->lead->createLeadFromGeo($geoCode);
+          
           $lead->lead_source_id = 2;
           $extrafields = $this->getExtraFields('webleads');
           $sources = $this->leadsource->pluck('source','id');
-
-          $branch = new \App\Branch;
-          $branches = $branch
-              ->whereHas('servicelines', function($q){
-                $q->whereIn('serviceline_id',$this->userServiceLines);
-
-            })
-              ->nearby($lead,500)->limit(5)->get();
-          $people = $this->person
-                        ->whereHas('userdetails.roles',function($q) {
-                          $q->whereIn('name',$this->assignTo);
-
-                  })->nearby($lead,'1000')->with('userdetails')
-                 
-                  ->limit(5)
-                  ->get();      
+          // find nearby branches
+          $branches = $this->findNearByBranches($lead,500);
+         
+            // we should also add serviceline filter?
+          $people = $this->findNearByPeople($lead,500);
+    
           $salesrepmarkers = $this->person->jsonify($people);
           $branchmarkers=$branches->toJson();
 
@@ -398,7 +381,7 @@ class LeadsController extends BaseController
     }
 
     /**
-     * Find nearby sales people.
+     * Find nearby branches.
      *
      * @param  array $data
      * @return People object
@@ -439,7 +422,7 @@ class LeadsController extends BaseController
               $q->whereIn('servicelines.id',$this->userServiceLines);
           })
           ->whereHas('userdetails.roles', function ($q) {
-              $q->whereIn('roles.id',$this->salesroles);
+              $q->whereIn('name',$this->assignTo);
           })
           ->with('userdetails','reportsTo','userdetails.roles','industryfocus')
           ->nearby($location,$data['distance'],$data['number'])

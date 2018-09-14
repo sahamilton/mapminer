@@ -91,6 +91,19 @@ class Lead extends Model implements HasPresenter {
 
     }
 
+    public function createLeadFromGeo($geoCode){
+          $coords = $this->getGeoCode($geoCode);
+          $this->lat = $coords['lat'];
+          $this->lng = $coords['lng'];
+          if(isset($coords['address'])){
+            $this->address = $coords['address'];
+          }
+          $this->city = $coords['city'];
+          $this->state = $coords['state'];
+          $this->zip = $coords['zip'];
+          return $this;
+    }
+
 public function rankLead($salesteam){
       $ranking = null;
     
