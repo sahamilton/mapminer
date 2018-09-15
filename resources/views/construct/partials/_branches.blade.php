@@ -1,5 +1,5 @@
 <h2>Nearby Branches</h2>
-<p>The closest branches that can serve the {{$project->project_title}} project:</p>
+<p>The closest branches that can serve the {{$project['siteaddresspartial']}} project:</p>
 
 <table class="table table-striped table-bordered table-condensed">
 	<thead>

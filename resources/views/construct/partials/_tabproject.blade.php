@@ -1,46 +1,15 @@
 <p><strong>Address:</strong>
-<blockquote>{{$project->street}} /{{$project->address2}}<br />{{$project->city}}, {{$project->state}} 
-{{$project->zip}}
-<br /><em>(Map accuracy: {{$project->accuracy}})</em>
+<blockquote>{{$project['siteaddress']}}
+<br /><em>(Map accuracy: {{$project['geo_precision']}})</em>
 </blockquote>
-<p><strong>People Ready Status:</strong>
-@can('manage_projects')
-  @include('projects.partials._manageprojects')
-@else
-@if($project->owner->count()>0)
-    {{$project->owner[0]->pivot->status}} by {{$project->owner[0]->postName()}}
-  @else
-    Open
-@endif
-@endcan
-</p>
-<div id="map-container">
-  <div style="float:left;width:300px">
-
-  <p><strong>Type:</strong>
-
-  <p><strong>Dodge ref #:</strong>{{$project->dodge_repnum}}</p>
-
-  <p><strong>Category:</strong>
-  {{$project->structure_header}} / {{$project->project_type}}</p>
-  <p><strong>Stage:</strong>{{$project->stage}}</p>
-  <p><strong>Ownership:</strong>{{$project->ownership}}</p>
-  <p><strong>Bid Date:</strong>{{$project->bid_date}}</p>
-  <p><strong>Project Start:</strong>{{$project->start_yearmo}}</p>
-  <p><strong>Target Start:</strong>{{$project->target_start_date}}</p>
-  <p><strong>Target Completion:</strong>{{$project->target_comp_date}}</p>
-  <p><strong>Work type:</strong>{{$project->work_type}}</p>
-  <p><strong>Project Status:</strong>{{$project->status}}</p>
-
-  <p><strong>Total Project Value:</strong>{{$project->total_project_value}}k</p>
-</div>
-
-<div id="map" style="height:300px;width:500px;border:red solid 1px">
-@if(! $project->lat)
-     	Unable to geocode this address
-     @endif
-
-</div> 
-</div>
-@include('projects.partials._companylist')
+<p><strong>Source: </strong> Construction Monitor </p>
+<p><strong>Publication Date: </strong> {{$project['publication']['publication_date']}}</p>
+<p><strong>Project Description: </strong>{{$project["description"]}}</p>
+<p><strong>Permit Date:</strong>  {{$project["createdate"]}}</p>
+<p><strong>Permit Status</strong>  {{$project["permitstatus"]}}</p>
+<p><strong>Project Last Updated:</strong>  {{$project["lastupdated"]}}</p>
+<p><strong>Project Value:</strong>  ${{number_format($project["valuation"],0)}}</p>
+<p><strong>Site Address:</strong>  {{$project["siteaddress"]}}</p>
+<p><strong>Construction Type:</strong>  {{$project["construction"]["construction_type"]}}</p>
+<p><strong>Construction Class: </strong>  {{$project["construction"]["construction_class"]}}</p>
 

@@ -29,5 +29,5 @@
     </script>
 
 
-@stop
+@endsection
 

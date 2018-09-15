@@ -7,47 +7,38 @@
 <p><a href="{{route('construction.index')}}">Return to all projects</a></p>
 
 
- <h4><p><strong>Project Title:</strong>{{$project->project_title}}</h4>
+ <h4><p><strong>Project Title:</strong>{{$project['siteaddresspartial']}}</h4>
 
 
 <p><strong>Address:</strong>
 
-<blockquote>{{$project->street}} /{{$project->address2}}<br />{{$project->city}}, {{$project->state}} 
-{{$project->zip}}
+<blockquote>{{$project['siteaddress']}}
 </blockquote>
 <div class="row">
 <p><strong>People Ready Status:</strong>
 
-@can('manage_projects')
-  @include('construct.partials._manageprojects')
-@else
-@if($project->owner)
-    {{$project->owner[0]->pivot->status}} by {{$project->owner[0]->postName()}}</p>
-  @else
-    Open</p>
-@endif
-@endcan
+
 </div>
 <ul class="nav nav-tabs">
   <li class="active"><a data-toggle="tab" href="#showmap"><strong>Project Location</strong></a></li>
   <li><a data-toggle="tab" href="#details"><strong>Project Details</strong></a></li>
-  <li><a data-toggle="tab" href="#contacts"><strong>Project Contacts @if($project->companies)({{$project->companies->count()}}) @endif</strong></a></li>
+  <li><a data-toggle="tab" href="#contacts"><strong>Project Contacts @if($project['companylinks'])({{count($project['companylinks'])}}) @endif</strong></a></li>
   <li><a data-toggle="tab" href="#branches"><strong>Nearby Branches</strong></a></li>
-  <li><a data-toggle="tab" href="#notes"><strong>Project Notes @if($project->relatedNotes) ({{$project->relatedNotes->count()}}) @endif</strong></a></li>
+  <li><a data-toggle="tab" href="#notes"><strong>Project Notes </strong></a></li>
 
 </ul>
 
   <div class="tab-content">
     <div id="showmap" class="tab-pane fade in active">
-      @include('construct.partials._projectmap')  
+      @include('construct.partials._map')  
     </div>
 
     <div id="details" class="tab-pane fade">
-      @include('construct.partials._projectdetails')   
+        @include('construct.partials._projectdetails')
     </div>
 
     <div id="contacts" class="tab-pane fade">
-      @include('construct.partials._companylist')
+       @include('construct.partials._companylist')
     </div>
 
     <div id="branches" class="tab-pane fade">
@@ -55,7 +46,7 @@
     </div>
 
     <div id="notes" class="tab-pane fade">
-      @include('construct.partials._projectnotes')
+     
     </div>
 
 
@@ -66,7 +57,7 @@
 <script>
 $(function(){
     $('#project_title').editable({
-        url: "{{route('api.project.update',$project->id)}}",
+        url: "{{route('api.project.update',$project['id'])}}",
 
         params: function(params) {  //params already contain `name`, `value` and `pk`
                 var data = params;

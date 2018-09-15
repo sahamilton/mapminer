@@ -5,22 +5,26 @@ namespace App\Http\Controllers;
 use App\Construction;
 use Illuminate\Http\Request;
 use GuzzleHttp;
+use App\Branch;
 
 
-class ConstructionController 
+class ConstructionController  extends BaseController
 {
     public $construct;
     protected $url = 'https://api.constructionmonitor.com/v1/';
+    
     public function __construct(Construction $construct){
         $this->construct = $construct;
+        parent::__construct($construct);
     }
+    
     public function index()
     {
         $projects = array();
         return response()->view('construct.index',compact('projects'));
     }
 
-private function getRequestBody($data){
+    private function getRequestBody($data){
 
       return ['filter'=>'{
                 "geo_distance" : {
@@ -37,7 +41,9 @@ private function getRequestBody($data){
 
      
 
-}
+    }
+    
+
     public function search(Request $request){
  
         $data = $request->except('_token');
@@ -84,10 +90,21 @@ private function getRequestBody($data){
         
         $collection = collect(json_decode($res->getBody(), true));
         $project = $collection['hits']['hits'][0]['_source'];
-       
+     
+        $construction = new \StdClass;
+        $construction->lat = $project['location']['lat'];
+        $construction->lng = $project['location']['lon'];
+        $construction->id = $project['id'];
+
+        $branches = Branch::whereHas('servicelines', function ($q) {
+                $q->whereIn('servicelines.id',$this->userServiceLines);
+            })
+            ->nearby($construction,'100')
+            ->limit(5)
+            ->get();
         
-        dd($project);
-        return response()->view('construct.show',compact('project'));
+     //dd($project);
+        return response()->view('construct.show',compact('project','branches'));
     }
 
     private function getProjectData($data){

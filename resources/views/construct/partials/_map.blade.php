@@ -1,9 +1,10 @@
-@if(isset($project->lat))
+@if(isset($project['location']['lat']))
+<div id="map" style="height:300px;width:500px;border:red solid 1px"></div>
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={{config('maps.api_key')}}"></script>
 
 <script type="text/javascript">
 function initialize() {
-  var myLatlng = new google.maps.LatLng({{$project->lat}},{{$project->lng}});
+  var myLatlng = new google.maps.LatLng({{$project['location']['lat']}},{{$project['location']['lon']}});
   var mapOptions = {
     zoom: 14,
     center: myLatlng
@@ -11,8 +12,8 @@ function initialize() {
   var infoWindow = new google.maps.InfoWindow;
   
   var map = new google.maps.Map(document.getElementById('map'), mapOptions);
-	var name = "{{$project->title}}";
-    var address = "{{$project->addr1}}" + " {{$project->city}}" + " {{$project->state}}" + " {{$project->zip}}";
+	var name = "{{$project['siteaddresspartial']}}";
+    var address = "{{$project['siteaddress']}}";
     var html = address;
 	var marker = new google.maps.Marker({
 	  position: myLatlng,
