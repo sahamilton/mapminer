@@ -432,6 +432,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 
 	# Construction
 		Route::resource('/construction','ConstructionController');
+		Route::post('/construction/search',['as'=>'construction.search','uses'=>'ConstructionController@search']);
+		Route::get('/construction/api/{distance}/{latLng}',['as'=>'construction.api','uses'=>'ConstructionController@map']);
     # User Management
 
 		Route::get('cleanse',['as'=>'users.cleanse','uses'=>'Admin\AdminUsersController@cleanse']);
