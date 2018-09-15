@@ -43,11 +43,13 @@ class ConstructionController  extends BaseController
         }
         
     }
-    /*
+    
+
+    /**
     /    Create XML of nearby construction projects for mapping.
     /
     /
-    */
+    **/
     public function map($distance,$latlng){
 
         $data = $this->construction->getMapParameters($distance,$latlng);
@@ -61,7 +63,7 @@ class ConstructionController  extends BaseController
     {
 
         $project = $this->construction->getProject($id);
-     // move to model?
+        // move to model?
         $construction = new Construction;
         $construction->lat = $project['location']['lat'];
         $construction->lng = $project['location']['lon'];
@@ -73,6 +75,7 @@ class ConstructionController  extends BaseController
             ->nearby($construction,'100')
             ->limit(5)
             ->get();
+        
         return response()->view('construct.show',compact('project','branches'));
     }
 

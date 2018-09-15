@@ -7,8 +7,7 @@ class Construction extends Model
 {
     use Geocode;
 
-    protected $guarded = ['id'];
-
+	// setup map paramets for store locator 
 
     public function getMapData($data){
             $data['lat']=$data['location']['lat'];
@@ -74,9 +73,9 @@ class Construction extends Model
                     }
                 }
             }',
-                'must'=>'{"range":{"valuation" :{"gte":250000}}}',
-                'sourceExclude'=>'person*,company*,cbsa,jurisdiction,county,area',
-                'pageLimit'=>100];
+            'must'=>'{"range":{"valuation" :{"gte":250000}}}',
+            'sourceExclude'=>'person*,company*,cbsa,jurisdiction,county,area',
+            'pageLimit'=>100];
 
      
 
