@@ -13,7 +13,7 @@
 	<tbody>
             @foreach ($project['companylinks'] as $company)
                   <tr>
-                        <td>{{$company['companylinktype']}}</td>
+                        <td><a href="{{$company['company']['id']}}">{{$company['companylinktype']}}</td>
                         <td>{{$company['company']['name']}}</a></td>
                          
                         <td>{{$company['company']['address']}}</td>

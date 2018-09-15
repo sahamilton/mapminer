@@ -34,5 +34,13 @@ return [
         'key' => env('STRIPE_KEY'),
         'secret' => env('STRIPE_SECRET'),
     ],
+    /*
+        Construction Monitor
 
+    */
+    'cm'=>[
+        'user'=>env('CM_USER'),
+        'secret'=>env('CM_SECRET'),
+        'url'=>env('CM_URL'),
+     ],   
 ];
