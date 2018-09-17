@@ -206,7 +206,7 @@ trait Geocode
                 $location->lng =  $position[1];
 
             }else{
-                
+                //default to Tacoma
                 $location->lat =  '47.25';
                 $location->lng =  '-122.44';
             }

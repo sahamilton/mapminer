@@ -186,7 +186,7 @@ class NewsController extends BaseController {
 	
 	public function noNews()
 	{
-		$noNewsDate = Carbon::now();
+		$noNewsDate = now();
 		$this->updateNewsDate($noNewsDate);
 	}
 	

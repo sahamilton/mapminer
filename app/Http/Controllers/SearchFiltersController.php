@@ -194,7 +194,7 @@ class SearchFiltersController extends BaseController {
 	public function setSessionSearch(Request $request)
 	{
 				
-		\Session::forget('Search');
+		session()->forget('Search');
 		$this->filter->setSearch($request->all());
 	}
 

@@ -36,7 +36,7 @@ class MapsController extends BaseController {
 			$now = date('Y-m-d h:i:s');
 
 			if(! isset($nonews)){
-				$nonews = Carbon::now('America/Vancouver')->subYear()->toDateTimeString();
+				$nonews = now('America/Vancouver')->subYear()->toDateTimeString();
 			}
 			$news = $this->news->currentNews();
 			$filtered = $this->location->isFiltered(['companies'],['vertical']);

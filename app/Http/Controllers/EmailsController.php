@@ -167,7 +167,7 @@ class EmailsController extends Controller
                
                 $recipients[] = $participant->id;
             } 
-            $email->sent = \Carbon\Carbon::now();
+            $email->sent = now();
             $email->save();
             $this->sendConfirmationEmail($email->recipients, $data);
 

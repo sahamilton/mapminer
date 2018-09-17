@@ -103,7 +103,7 @@ class Imports extends Model
 
 			// make sure we bring the created at field across
 			$this->fields.=",created_at";
-			return $this->executeQuery("update ".$this->temptable." set created_at ='".Carbon::now()->toDateTimeString()."'");
+			return $this->executeQuery("update ".$this->temptable." set created_at ='".now()->toDateTimeString()."'");
 		}
 
 		private function updateAdditionalFields(){

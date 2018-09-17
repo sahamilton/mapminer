@@ -223,10 +223,13 @@ class Branch extends Model implements HasPresenter {
 	}
 	
 
-	public function getServiceLineBranchesAttribute($servicelines){
-		return $this->wherehas('serviceline',function ($q) use($servicelines){
-            $q->whereIn('servicelines.id',$userServiceLines);
+	public function getNearByBranches($servicelines,$location,$distance=100,$limit=5){
+		return $this->wherehas('servicelines',function ($q) use($servicelines){
+            $q->whereIn('servicelines.id',$servicelines);
         })
+        ->nearby($location,$distance)
+        ->limit($limit)
         ->get();
+
 	}
 }

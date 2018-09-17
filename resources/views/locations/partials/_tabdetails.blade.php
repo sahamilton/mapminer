@@ -1,4 +1,4 @@
-<h2>Location Details</h2>
+<h2>Location Details!!</h2>
 <div id="map-container">
 	<div style="float:left;width:300px">
 		<p><strong>Vertical: </strong>{{isset($location->company->industryVertical->filter) ? $location->company->industryVertical->filter : 'Not Specified'}}</p>

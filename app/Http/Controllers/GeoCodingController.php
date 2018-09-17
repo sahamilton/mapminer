@@ -60,7 +60,7 @@ class GeoCodingController extends BaseController {
 		if(! isset($data['fulladdress'])){
 			$data['fulladdress'] = $data['address'];
 		}
-		\Session::put('geo', $data);
+		session(['geo', $data]);
 	
 		$watchlist = array();
 		$data['vertical'] = NULL;
@@ -77,7 +77,7 @@ class GeoCodingController extends BaseController {
     	$data['result'] = $this->getGeoListData($data);
     	if(count($data['result'])==0){
 			
-			$request->session()->flash('warning','No results found. Consider increasing your search distance');
+			session()->flash('warning','No results found. Consider increasing your search distance');
 
 		}
 		if(isset($data['view']) && $data['view'] == 'list') {

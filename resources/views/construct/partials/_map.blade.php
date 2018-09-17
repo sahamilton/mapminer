@@ -1,5 +1,3 @@
-@if(isset($project['location']['lat']))
-<div id="map" style="height:300px;width:500px;border:red solid 1px"></div>
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={{config('maps.api_key')}}"></script>
 
 <script type="text/javascript">
@@ -32,4 +30,3 @@ function bindInfoWindow(marker, map, infoWindow, html) {
 google.maps.event.addDomListener(window, 'load', initialize);
 
     </script>
-@endif

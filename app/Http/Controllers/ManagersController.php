@@ -63,7 +63,7 @@ class ManagersController extends BaseController {
 			
 		}
 		// if there is a change of manager
-		if($this->managerID != \Session::get('manager') && ! $request->filled('accounts')){
+		if($this->managerID != session('manager') && ! $request->filled('accounts')){
 				
 				$data =  $this->getMyAccounts();
 
@@ -73,7 +73,7 @@ class ManagersController extends BaseController {
 			
 		}
 		
-		\Session::flash('manager', $this->managerID);
+		session()->flash('manager', $this->managerID);
 		if($this->managerID[0] == 'All' and ! isset($data['accounts']))
 		{
 			
@@ -217,11 +217,11 @@ class ManagersController extends BaseController {
 			
 			// Did we change the manager
 
-			if(null !== \Session::get('manager') and $this->managerID != \Session::get('manager')){
+			if(null !== session('manager') and $this->managerID != session('manager')){
 				$data['accountstring'] = NULL;
 				
 			}
-			\Session::flash('manager', $this->managerID);
+			session()->flash('manager', $this->managerID);
 			
 			$data['accounts'] = Company::whereIn('person_id',$this->managerID)
 			->orderBy('companyname')

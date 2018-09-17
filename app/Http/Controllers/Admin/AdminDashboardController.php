@@ -102,7 +102,7 @@ class AdminDashboardController extends BaseController {
 			['label'=>'Today',
 			'value'=>0,
 			'interval'=>['from'=>Carbon::today(),
-			                 'to'=>Carbon::now()],
+			                 'to'=>now()],
 			 'color'=>$colors[0],],
 
 			['label'=>'Yesterday',
@@ -218,7 +218,7 @@ class AdminDashboardController extends BaseController {
 				->selectRaw('count(logins) as logins,firstlogin')
 				->mergeBindings($subQuery->getQuery())
 				->groupBy('firstlogin')
-				->orderBy('firstlogin', 'ASC')
+				->oldest('firstlogin')
 			    ->get();
 	}
 	
@@ -256,7 +256,7 @@ class AdminDashboardController extends BaseController {
 				->selectRaw('count(user) as login,week')
 				->mergeBindings($subQuery->getQuery())
 				->groupBy('week')
-				->orderBy('week')
+				->latest('week')
 				->get();
     
 	}
@@ -280,7 +280,7 @@ class AdminDashboardController extends BaseController {
 				->mergeBindings($subQuery->getQuery())
 				->groupBy('name')
 				->groupBy('week')
-				->orderBy('week')
+				->latest('week')
 				->get();
 		
 			return $this->formatRoleWeekData($roleweek);
@@ -392,8 +392,8 @@ class AdminDashboardController extends BaseController {
 				->whereHas('watching')
 				->with('person')
 				->withCount('watching')
-				->where('created_at','>',\Carbon\Carbon::now()->subMonth(3))
-				->orderBy('watching_count', 'DESC')
+				->where('created_at','>',now()->subMonth(3))
+				->latest('watching_count', 'DESC')
 				->get();
 
 	}
@@ -548,7 +548,7 @@ class AdminDashboardController extends BaseController {
 	private function recentLocationNotes()
 
 	{
-		return Note::where('created_at', '>=', \Carbon\Carbon::now()->subMonth())
+		return Note::where('created_at', '>=', now()->subMonth())
 		->where('type','=','location')
 		->whereHas('relatesToLocation')
 		->whereNotNull('related_id')
@@ -562,7 +562,7 @@ class AdminDashboardController extends BaseController {
 	private function recentLeadNotes()
 
 	{
-		return Note::where('created_at', '>=', \Carbon\Carbon::now()->subMonth())
+		return Note::where('created_at', '>=', now()->subMonth())
 		->whereIn('type',['lead','prospect'])
 		->whereHas('relatesToLead')
 		->whereNotNull('related_id')
@@ -575,7 +575,7 @@ class AdminDashboardController extends BaseController {
 	private function recentProjectNotes()
 
 	{
-		return Note::where('created_at', '>=', \Carbon\Carbon::now()->subMonth())
+		return Note::where('created_at', '>=', now()->subMonth())
 		->where('type','=','project')
 		->whereHas('relatesToProject')
 		->whereNotNull('related_id')

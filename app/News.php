@@ -34,9 +34,9 @@ class News extends Model {
 
 	public function currentNews($slug =  null){
 		$nonews = auth()->user()->nonews;
-		$now = Carbon::now('America/Vancouver')->toDateTimeString();
+		$now = now('America/Vancouver');
 		if(! isset($nonews)){
-			$nonews = Carbon::now('America/Vancouver')->subYear()->toDateTimeString();
+			$nonews = now('America/Vancouver')->subYear();
 				 
 		}
 

@@ -11,9 +11,11 @@ use App\Branch;
 class ConstructionController  extends BaseController
 {
     public $construction;
+    public $branch;
     
-    public function __construct(Construction $construction){
+    public function __construct(Construction $construction,Branch $branch){
         $this->construction = $construction;
+        $this->branch = $branch;
         parent::__construct($construction);
     }
     
@@ -32,11 +34,12 @@ class ConstructionController  extends BaseController
 
         $geoCode = app('geocoder')->geocode($data['address'])->get();
         $data['location'] =$this->construction->getGeoCode($geoCode);
-        session()->put('geo',$data['location']);
+        session(['geo',$data['location']]);
         
         if($data['view'] =='list'){
             $projects = $this->construction->getProjectData($data);
             return response()->view('construct.index',compact('projects','data'));
+         
         }else{
             $data = $this->construction->getMapData($data);
             return response()->view('construct.map',compact('data'));
@@ -59,6 +62,9 @@ class ConstructionController  extends BaseController
 
 
     }
+    
+
+
     public function show($id)
     {
 
@@ -68,14 +74,10 @@ class ConstructionController  extends BaseController
         $construction->lat = $project['location']['lat'];
         $construction->lng = $project['location']['lon'];
         $construction->id = $project['id'];
-        // move to Branch model?
-        $branches = Branch::whereHas('servicelines', function ($q) {
-                $q->whereIn('servicelines.id',$this->userServiceLines);
-            })
-            ->nearby($construction,'100')
-            ->limit(5)
-            ->get();
+
+        $branches = $this->branch->getNearByBranches($this->userServiceLines,$construction);
         
+      
         return response()->view('construct.show',compact('project','branches'));
     }
 
