@@ -69,17 +69,23 @@ class ConstructionController  extends BaseController
     {
 
         $project = $this->construction->getProject($id);
-        // move to model?
-        $construction = new Construction;
-        $construction->lat = $project['location']['lat'];
-        $construction->lng = $project['location']['lon'];
-        $construction->id = $project['id'];
-
-        $branches = $this->branch->getNearByBranches($this->userServiceLines,$construction);
-        
       
+        $construction = $this->construction->makeConstruction($project);
+        if(! isset($project['location'])){
+            $project['location']['lat'] = $construction->lat;
+            $project['location']['lon'] = $construction->lng;
+
+        }
+    
+        $branches = $this->branch->getNearByBranches($this->userServiceLines,$construction);
+            
         return response()->view('construct.show',compact('project','branches'));
     }
 
+    public function company($id){
+
+        $company = $this->construction->getCompany($id);
+        return response()->view('construct.companyshow',compact('company'));
+    }
     
 }
