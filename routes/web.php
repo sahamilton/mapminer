@@ -108,10 +108,10 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('api/geo',['as'=>'geo','uses'=>'GeoCodingController@index']);
 
 	#News
-		//Route::resource('news', 'NewsController',  ['only' => ['index', 'show')));
+		Route::resource('news', 'NewsController',  ['only' => ['index', 'show')));
 		Route::get('currentnews',['as'=>'currentnews','uses'=>'NewsController@currentNews']);
 		//Route::get('news', ['as'=>'news.index', 'uses'=>'NewsController@index']);
-		Route::get('news/{slug}', ['as'=>'news.show', 'uses'=>'NewsController@show']);
+		//Route::get('news/{slug}', ['as'=>'news.show', 'uses'=>'NewsController@show']);
 
 	#Notes
 		Route::get('mynotes',['as'=>'mynotes','uses'=>'NotesController@mynotes']);
@@ -498,7 +498,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 
 	#News
 		Route::get('news/{id}/audience',['as'=>'news.audience','uses'=>'NewsController@audience']);
-		Route::resource('news', 'NewsController');
+		Route::resource('news', 'NewsController',  ['except' => ['index', 'show')));
 
 
 	#Notes
