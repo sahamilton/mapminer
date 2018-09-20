@@ -64,9 +64,9 @@ class News extends Model {
 			});
 			if($slug){
 				
-				return $news->where('slug','=',$slug)->first();
+				return $news->where('slug','=',$slug)->orderBy('datefrom','desc')->first();
 			}else{
-				return $news->get();
+				return $news->orderBy('datefrom','desc')->get();
 			}
 			
 			
