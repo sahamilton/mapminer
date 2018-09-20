@@ -498,7 +498,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 
 	#News
 		Route::get('news/{id}/audience',['as'=>'news.audience','uses'=>'NewsController@audience']);
-		Route::resource('news', 'NewsController',  ['except' => ['index', 'show')));
+		Route::resource('news', 'NewsController',  ['except' => ['index', 'show']]);
 
 
 	#Notes
