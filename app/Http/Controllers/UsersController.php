@@ -17,19 +17,34 @@ class UsersController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function settings()
+    public function show($user)
     {
-       $user = $this->user->with('person','serviceline','manager','roles')->findOrFail(auth()->user()->id);
-       return response()->view('site.user.profile',compact('user'));
+      
+       $user = $this->user->with('person',
+        'serviceline',
+        'person.branchesServiced',
+        'person.directReports',
+        'manager',
+        'roles',
+        'usage')->findOrFail(auth()->user()->id);
+        if($user->person->has('branchesServiced')){
+            $branchmarkers = $user->person->branchesServiced->toJson();
+          }
+          if($user->person->has('directReports')){
+           
+            $salesrepmarkers = $user->person->jsonify($user->person->directReports);
+          }
+        
+       return response()->view('site.user.profile',compact('user','branchmarkers','salesrepmarkers'));
 
     }
-    public function updateprofile(){
+    public function edit($user){
        $user = $this->user->with('person')->findOrFail(auth()->user()->id);
        return response()->view('site.user.update',compact('user'));
 
     }
 
-    public function saveprofile(UserProfileFormRequest $request){
+    public function update(UserProfileFormRequest $request){
         
        $user = $this->user->with('person')->findOrFail(auth()->user()->id);
        if($request->filled('oldpassword') && ! \Hash::check($request->get('oldpassword'),auth()->user()->password)){
@@ -61,11 +76,5 @@ class UsersController extends Controller
     }
 
 
-    public function seeder(){
-        $users = User::whereNull('api_token')->get();
-        foreach ($users as $user){
-            $user->seeder();
-        }
-        echo "All done";
-    }
+    
 }

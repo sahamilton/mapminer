@@ -25,45 +25,11 @@ class BranchManagementController extends Controller
         $this->user = $user;
     }
 
-
-    /**
-     * Display a listing of the resource.
-     * Get list of sales people with stale branch assignments
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        if(! auth()->user()->hasRole('Admin')){
-            return redirect()->route('branchmanagement.show',auth()->user()->id);
-        }else{
-            // choose which roles to email
-            // $roles = this->roles-whereIn($this->branchTeamRoles);
-            // return response()->view('branchassignments.select',compact('roles'));
-        }
+    public function index(){
+        $id = auth()->user()->id;
+        return redirect()->route('branchassignments.show',$id);
     }
-    /**
-     * Email the selected roles 
-     *
-     * @param  Request  $request
-     * @return \Illuminate\Http\Response
-     */
 
-    public function emailAssignments(Request $request){
-            $roles = request('roles');
-
-            $branchmanagement = 
-                $this->person
-                    ->staleBranchAssignments($roles)
-                    ->with('userdetails','branchesServiced')
-                    ->inRandomOrder()
-                    ->limit(5)
-                    ->get();
-            
-            foreach ($branchmanagement as $assignment){
-                Mail::to($assignment->userdetails->email)->queue(new NotifyBranchAssignments($assignment));
-            }
-        }
-    }
 
     /**
      * Display the specified resource.
@@ -84,7 +50,7 @@ class BranchManagementController extends Controller
         ->with('branchesServiced')
         ->firstOrFail();
        
-        return response()->view('branchassignments.show',['details'=>$details]);
+        return response()->view('branchmanagement.show',['details'=>$details]);
     }
 
     
@@ -120,12 +86,15 @@ class BranchManagementController extends Controller
     }
 
     public function correct($token){
-        
+      
         if($user = $this->user->getAccess($token)){
-            dd('thats valid');
-            // update branch_user table
-            // login
-            //display thank you
+            $person = $this->user->person()->id;
+            $this->BranchManagement->updateConirmed($person);
+            auth()->login($user);
+            dd('yay!');
+            return redirect()->route('home',$user->id)
+            ->withMessage("Thank You. Your branch associations have been confirmed.");;
+            
         }else{
             //go to home screen
             
@@ -138,9 +107,6 @@ class BranchManagementController extends Controller
         if($user = $this->user->getAccess($token)){
             auth()->login($user);
             return redirect()->route('branchmanagement.show',$user->id);
-            // login
-            //
-            // go to route branchmanagement update with person id
 
         }else{
             return redirect()->route('guest')->withMessage("Invalid or expired token");

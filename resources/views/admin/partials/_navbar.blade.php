@@ -204,7 +204,7 @@
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li>
-                                    <a href="{{ route('profile') }}">
+                                    <a href="{{ route('user.show',auth()->user()->id) }}">
                                     <i class="fa fa-user" aria-hidden="true"> </i> 
                                     Your Profile
                                     </a>

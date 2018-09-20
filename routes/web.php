@@ -15,19 +15,22 @@
 		    return view('welcome');
 
 	}]);
-Route::get('/testerror', function () {
+/*Route::get('/testerror', function () {
     throw new Exception('Example exception!');
-});
+});*/
 /*
 	
 	Route::get('/error',function(){
 		Bugsnag::notifyError('ErrorType', 'Test Error');
 	});
 */
+	// Routes for branch assignment verification
+Route::get('/correction/{token}',['as'=>'branchassociation.confirm','uses'=>'BranchManagementController@confirm']);
+Route::get('/confirmation/{token}',['as'=>'branchassociation.correct','uses'=>'BranchManagementController@correct']);
 
 Route::auth();
 
-Route::get('/home', 'HomeController@index');
+Route::get('/home', ['as'=>'home','uses'=>'HomeController@index']);
 
 Route::group(['middleware' => 'auth'], function () {
    	
@@ -53,6 +56,9 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('branches/managed/{mgrId}',['as'=>'managed.branch', 'uses'=>'BranchesController@getMyBranches']);
 		Route::get('branches/managedmap/{mgrId}',['as'=>'managed.branchmap', 'uses'=>'BranchesController@mapMyBranches']);
 		Route::resource('branches','BranchesController',['only' => ['index', 'show']]);
+
+	#Branch Assignments
+		Route::resource('branchassignments','BranchManagementController',['only'=>['index','show','edit','update']]);
 
 	#Comments
 		Route::resource('comment','CommentsController');
@@ -234,14 +240,10 @@ Route::group(['middleware' => 'auth'], function () {
 */
     	# Training
     	Route::resource('training','TrainingController')->only(['index', 'show']);
-		//Route::get('mytraining',['as'=>'mytraining','uses'=>'TrainingController@mytraining']);
-		//Route::get('training/{id}/view',['as'=>'training.view','uses'=>'TrainingController@view']);
-
-    	#User settings
-		Route::get('/user/settings',['as'=>'profile','uses'=>'UsersController@settings']);
-
-		Route::get('user/update',['as'=>'update.profile','uses'=>'UsersController@updateprofile']);
-		Route::post('user/update',['as'=>'update.profile','uses'=>'UsersController@saveprofile']);
+		
+    	#User (Profile) settings
+    	Route::resource('user','UsersController')->only(['show','edit','update']);
+		
 		// legacy login address
 		Route::get('user/login',function(){
 			if(auth()->check()){

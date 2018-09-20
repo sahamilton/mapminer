@@ -1,78 +1,138 @@
-@extends('site/layouts/default')
+@extends('admin.layouts.default')
 @section('content')
-<div class="page-header">
-	<h1>Your Profile</h1>
-
-</div>
-<p><strong>First Name:</strong> {{$user->person->firstname}}</p>
-<p><strong>Last Name:</strong> {{$user->person->lastname}}</p>
-<p><strong>Phone:</strong> {{$user->person->phone}}</p>
-
-@if($user->person->lat)
- <div> @include('admin.users.partials._personmap')</div>
- <div style="clear:both"> 
- 	<p><strong>Latitude:</strong>  {{$user->person->lat}} <strong>Longitude:</strong>  {{$user->person->lng}}</p>
-
-@endif
-<p><strong>User Name:</strong>  {{$user->username}}</p>
-<p><strong>Email:</strong>  {{$user->email}}</p>
-
-@if($user->person->industryfocus()->get())
-<p><strong>Industry Focus:</strong> 
-
-@foreach ($user->person->industryfocus()->get() as $industry)
-	<li>{{$industry->filter}}</li>
-@endforeach
-</p>
-@endif
-<p><strong>ServiceLines:</strong> 
-@foreach($user->serviceline as $serviceline)
-
- {{$serviceline->ServiceLine }}
-@if(! $loop->last) | @endif
-@endforeach
-</p>
-<p><strong>Roles:</strong> 
-@foreach($user->roles as $role)
- {{$role->name }}
- <?php $permissions[] = $role->permissions()->pluck('name')->toArray();?>
- @if(! $loop->last) | @endif
-@endforeach
-</p>
-
-<p><strong>Permissions:</strong>
-@foreach($permissions[0] as $key=>$name)
- {{$name}}
- @if(! $loop->last) | @endif
-@endforeach
-</p>
-
-@if (isset($user->nonews))
-<p><strong>No News before::</strong> 
-{{$user->nonews->format("d M Y")}}
- Uncheck to reset:<input checked type='checkbox' id='nonews' name='noNews' /></p>
-@endif
-<a href="{{route('update.profile')}}">
-<button type="button" class="btn btn-success" >
-<i class="fa fa-pencil" aria-hidden="true"></i> Update</button></a>
-
-<script>
-$(document).ready(function() {
-			 $("#nonews").change(function(){
-				 if (this.checked) {
-						$.get( '/api/news/nonews', function(response){
-				 /* ajax is complete here, can do something with response if needed*/
-			 		})
+<div class="container">
+	<div class="panel panel-default">
+		<div class="panel-heading clearfix">
+			<h2 class="panel-title pull-left"><strong>{{$user->person->postName()}}</strong></h2>
+			<a class="btn btn-primary pull-right" href="{{route('users.edit',$user->person->user_id)}}">
+				<i class="fa fa-pencil"></i>
+				Edit
+			</a>
+		</div>
+		<div class="list-group-item">
+			<p class="list-group-item-text"><strong>Role Details</strong></p>
+			<ul style="list-style-type: none;">
+			@foreach ($user->person->userdetails->roles as $role)
+				<li>{{$role->name}}</li>
+			@endforeach
+			</ul>
+		</div>
+	<div class="list-group">
+		<div class="list-group-item">
+			<p class="list-group-item-text"><strong>User Details</strong></p>
+			<ul style="list-style-type: none;">
+				<li>User id: {{$user->person->userdetails->id}}</li>
+				<li>Person id: {{$user->person->id}}</li>
+				<li>Employee id: {{$user->person->userdetails->employee_id}}</li>
+				<li><strong>Servicelines:</strong><ul>
+					@foreach ($user->person->userdetails->serviceline as $serviceline)
+						<li>{{$serviceline->ServiceLine}}</li>
+					@endforeach
+				</ul>
+			</li>
+		</ul>
+		</div>
+		<div class="list-group">
+			<div class="list-group-item">
+				<div class="list-group-item-text col-sm-4">
+					<p><strong>Contact Details</strong></p>
+						<ul style="list-style-type: none;">
+						<li>Address:{{$user->person->fullAddress()}}
+						<li>Phone: {{$user->person->phone}}</li>
+						<li>Email: 
+							<a href="mailto:{{$user->person->userdetails->email}}">{{$user->person->userdetails->email}}</a>
+						</li>
+						<li>
+							
+						</li>
+					</ul>
+				</div>
+				<div class="col-sm-8">
+					@if(! empty($user->person->lat))
+						@php
+						   $latLng= "@". $user->person->lat.",".$user->person->lng .",14z";
+						@endphp
+				
+						 @include('site.user._map')
+								
+					@else
+					<p class="text-danger"><strong>No address or unable to geocode this address</strong></p>		
+					@endif
+				</div>
+				<div style="clear:both"></div> 
+			</div>
+			@if($user->person->reportsTo || $user->person->directReports->count()>0)
+				<div class="list-group-item">
+					<div class="list-group-item-text col-sm-4">
+						<p><strong>Reporting Structure</strong></p>
+						<ul style="list-style-type: none;">
+						@if($user->person->reportsTo)
+							<li>Reports To:
+							<a href="{{route('person.details',$user->person->reportsTo->id)}}">{{$user->person->reportsTo->postName()}}</a></li>
+						@endif
+						@if($user->person->directReports->count()>0)
+							<li>Team:</li>
+							@foreach ($user->person->directReports as $reports)
 						
-				}else{
-					$.get( '/api/news/setnews', function(response){
-				 		/* ajax is complete here, can do something with response if needed*/
-			 		})
-					
-				};
-			
-		
-		});
-});
-</script>
-@stop
+								<li><a href="{{route('person.details',$reports->id)}}">{{$reports->fullName()}}</a></li>
+							
+							@endforeach
+						
+						
+
+					@endif
+
+					</ul>
+				</div>
+				<div class="col-sm-8">
+					@if($user->person->directReports->count()>0)
+						@include('site.user._teammap')
+						@endif
+					</div>
+					<div style="clear:both"></div> 
+				</div>
+			@endif
+				
+			@if($user->person->branchesServiced()->exists())
+
+				<div class="list-group-item">
+					<div class="list-group-item-text col-sm-4">
+						<p><strong>Branches Serviced</strong></p>
+
+					<ul style="list-style-type: none;">
+						@foreach ($user->person->branchesServiced as $branch)
+							<li><a href="{{route('branches.show',$branch->id)}}">{{$branch->branchname}}</a></li>
+						@endforeach
+					</ul>
+				</div>
+				<div class="col-sm-8">
+					@include('site.user._branchmap')
+				</div>
+				<div style="clear:both"></div>  
+				</div>
+			@endif
+			@if($user->person->managesAccount()->exists())
+				<div class="list-group-item"><p class="list-group-item-text">Accounts Managed</p>
+					<ul style="list-style-type: none;">
+						@foreach($user->person->managesAccount as $account)
+							<li><a href="{{route('company.show',$account->id)}}">{{$account->companyname}}</a></li>
+						@endforeach
+					</ul>
+				</div>
+			@endif
+				<div class="list-group-item"><p class="list-group-item-text"><strong>Activity</strong></p>
+					<ul style="list-style-type: none;">
+						<li>Total Logins: {{$user->usage->count()}}</li>
+						<li>Last Login:
+							
+							
+						
+					</li>
+							
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+@endsection

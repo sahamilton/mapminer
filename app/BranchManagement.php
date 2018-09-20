@@ -30,4 +30,10 @@ class BranchManagement extends Model
 	{
 			return $this->belongsToMany(Serviceline::class,'branch_serviceline','branch_id','serviceline_id');
 	}
+	
+	public function updateConfirmed($person)
+	{
+		$update = "update branch_person set updated_at = currenttimestamp where person_id='".$person."';";
+	    return \DB::statement($update);
+	}
 }

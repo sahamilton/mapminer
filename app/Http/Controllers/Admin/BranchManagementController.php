@@ -43,5 +43,41 @@ class BranchManagementController extends Controller
 		return response()->view('admin.branches.manage',compact('branches','people','roles'));
 
     }
+
+        /**
+     * Display a listing of the resource.
+     * Get list of sales people with stale branch assignments
+     * @return \Illuminate\Http\Response
+     */
+    public function edit()
+    {
+        
+            $roles = $this->role->whereIn($this->branchTeamRoles);
+            return response()->view('admin.branches.select',compact('roles'));
+
+    }
+    /**
+     * Email the selected roles 
+     *
+     * @param  Request  $request
+     * @return \Illuminate\Http\Response
+     */
+
+    public function emailAssignments(Request $request){
+            $roles = request('roles');
+
+            $branchmanagement = 
+                $this->person
+                    ->staleBranchAssignments($roles)
+                    ->with('userdetails','branchesServiced')
+                    ->inRandomOrder()
+                    ->limit(5)
+                    ->get();
+            
+            foreach ($branchmanagement as $assignment){
+                Mail::to($assignment->userdetails->email)->queue(new NotifyBranchAssignments($assignment));
+            }
+        }
+
     
 }
