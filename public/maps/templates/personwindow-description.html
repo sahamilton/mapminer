@@ -1,0 +1,13 @@
+{{#location}}
+<div class="loc-name">{{{name}}}<br /><em>({{industry}})</em></div>
+ 	<div>{{phone}}</div>
+     <div><a href="mailto:{{email}}" title="Email {{name}}" >{{email}}</a></div>
+      
+      
+      
+	<div class="loc-addr">{{address}}</div> 
+{{#if salesorg}}
+            <div>Reports to <a href="{{salesorg}}">{{reportsto}}</a></div>
+            {{/if}}
+
+{{/location}}

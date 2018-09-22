@@ -1,0 +1,15 @@
+Import projects
+
+
+Import all (note change $ fields to remove (000's))
+mysqlimport  --ignore-lines=1 --fields-terminated-by=, --columns="dodge_repnum,project_title,project_addr1,project_addr2,project_city,project_state,project_zipcode,project_county_name,project_county_code,structure_header,project_type,stage,ownership,bid_date,start_year,start_yearmo,Target_start_date,Target_comp_date,work_type,status,project_value,total_project_value,value_range" --local -u root -p test projects.csv
+
+Import project companies
+mysqlimport  --ignore-lines=1 --fields-terminated-by=, --columns="dodge_repnum,	factor_type,firm,contact,title,addr1,addr2,city,state,zip,county,phone" --local -u root -p test temppivot.csv
+
+dodge_repnum,ow_factor_type,ow_firm,ow_hash,ow_contact,ow_title,ow_addr1,ow_addr2,ow_city,ow_state,ow_zipcode,ow_county,ow_phone
+
+
+
+
+

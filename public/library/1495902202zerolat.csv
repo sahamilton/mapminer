@@ -1,0 +1,8 @@
+id,created_at,updated_at,,company_id,lat,lng,businessname,street,suite,city,state,zip,phone,contact,segment,businesstype,geostatus
+155197,0000-00-00 00:00:00,5/27/2016 14:45,ADM,116,0,0,ADM AGRI INDUSTRIES                               ,888 FARTHQUAT WAY                                           ,                                                            ,VANCOUVER                                                   ,BC                                                ,B8C6G6         ,,,NULL,NULL,0
+158753,0000-00-00 00:00:00,5/27/2016 14:45,Guckenheimer,126,0,0,Guckenheimer,,,,,,650/496-4020,Kim Williams,NULL,NULL,0
+158854,0000-00-00 00:00:00,5/27/2016 14:45,Guckenheimer,126,0,0,Guckenheimer,,,,,,216/566-2400,Frank Borally,NULL,NULL,0
+159190,0000-00-00 00:00:00,5/27/2016 14:45,Guckenheimer,126,0,0,Guckenheimer,,,,,,310/826-0128,Joshua Glaser,NULL,NULL,0
+159214,0000-00-00 00:00:00,5/27/2016 14:45,Guckenheimer,126,0,0,Guckenheimer,,,,,,207/323-7577,Kyle Zdabosz,NULL,NULL,0
+189041,2/22/2016 9:02,5/27/2016 14:45,Ryder,172,0,0,REDCO,7937 GAINSFORD CT.,,COLUMBUS,OH,22013,,,NULL,NULL,0
+,,,,,,,,"(I think this is actually in Bristow, VA)",,,,,,,,,
