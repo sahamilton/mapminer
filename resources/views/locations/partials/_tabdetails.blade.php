@@ -49,7 +49,7 @@
 			<b>Closest Branch: </b>
 			<a href="{{ route('branches.show', $branch[0]->id) }}" 
 			title='show all {{trim($branch[0]->branchname)}} national accounts'>
-			{{$branch[0]->branchid}}:{{$branch[0]->branchname}} </a>
+			{{$branch[0]->id}}:{{$branch[0]->branchname}} </a>
 		 
 		@else
 			<p>Closest Branch: <a href="{{ route('assign.location', $location->id) }}" 

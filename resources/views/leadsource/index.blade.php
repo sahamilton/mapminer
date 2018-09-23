@@ -4,7 +4,7 @@
 <h1>Prospect Sources</h1>
 
 
-@if (Auth::user()->hasRole('Admin'))
+@if (auth()->user()->hasRole('Admin'))
 
 <div class="pull-right">
 				<a href="{{{ route('leadsource.create') }}}" class="btn btn-small btn-info iframe">
@@ -26,7 +26,7 @@
     <th>Average Ranking</th>
     <th>Available From / To</th>
 
-    @if (Auth::user()->hasRole('Admin'))
+    @if (auth()->user()->hasRole('Admin'))
     <th>Actions</th>
     @endif
    
@@ -55,7 +55,7 @@
         @endif
     </td>
 
-	@if (Auth::user()->hasRole('Admin'))
+	@if (auth()->user()->hasRole('Admin'))
     <td>
      @include('partials/_modal')
     

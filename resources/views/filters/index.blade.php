@@ -14,7 +14,7 @@
 <h4>Key</h4>
 <p><i class="fa fa-trash" aria-hidden="true"></i> = Delete | <i class="fa fa-ban" aria-hidden="true"></i> = Inactive | <i class="fa fa-home" aria-hidden="true"></i> = Applies to Accounts  | <i class="fa fa-flag" aria-hidden="true"></i> = Applies to locations  | <i class="fa fa-arrow-up" aria-hidden="true"></i> <i class="fa fa-arrow-down" aria-hidden="true"></i>= Resequence</p>
 <p>@include('partials.advancedsearch')</p>
-	@if (Auth::user()->hasRole('Admin'))
+	@if (auth()->user()->hasRole('Admin'))
         <div class="pull-right">
             <a href="{{{ route('searchfilters.create') }}}" 
             class="btn btn-small btn-info iframe">

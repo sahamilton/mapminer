@@ -2,7 +2,7 @@
 @section('content')
 
 <h1>Service Lines</h1>
- @if (Auth::user()->hasRole('Admin'))
+ @if (auth()->user()->hasRole('Admin'))
 <div class="pull-right">
 				<p><a href="{{{ route('serviceline.create') }}}" class="btn btn-small btn-info iframe">
 <i class="fa fa-plus-circle text-success" aria-hidden="true"></i>
@@ -16,7 +16,7 @@
      <th>Companies</th>
      <th>Branches</th>
      <th>Users</th>
-     @if (Auth::user()->hasRole('Admin'))
+     @if (auth()->user()->hasRole('Admin'))
      <th>Actions</th>
      @endif
        

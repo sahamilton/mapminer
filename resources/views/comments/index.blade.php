@@ -8,7 +8,7 @@
 <i class="fa fa-plus-circle text-success" aria-hidden="true"></i>
 Add Feedback</a>
 </div>
-@if (Auth::user()->hasRole('Admin'))
+@if (auth()->user()->hasRole('Admin'))
 	<a href="{{route('comment.download')}}">Download feedback to Excel</a>
 @endif
 <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>

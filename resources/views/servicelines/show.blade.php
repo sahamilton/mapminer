@@ -1,6 +1,6 @@
 @extends('site/layouts/default')
 @section('content')
-@if (Auth::user()->hasRole('Admin'))
+@if (auth()->user()->hasRole('Admin'))
 	<div class="pull-right">
 		<a href="{{{ route('branches.create') }}}" class="btn btn-small btn-info iframe">
 		

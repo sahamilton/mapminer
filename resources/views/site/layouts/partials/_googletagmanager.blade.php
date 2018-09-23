@@ -1,7 +1,7 @@
 <!-- Google Tag Manager -->
 <script>
 	dataLayer = [{ 
-		'userId' : '{{{Auth::id()}}}'
+		'userId' : '{{{auth()->id()}}}'
 	}];
 </script>
 

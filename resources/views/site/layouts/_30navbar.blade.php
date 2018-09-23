@@ -15,7 +15,7 @@
                 </div>
                 <div class="collapse navbar-collapse navbar-ex1-collapse">
                     <ul class="nav navbar-nav">
-                     @if (!Auth::check())
+                     @if (!auth()->check())
 						<li {{ (Request::is('/') ? ' class="active"' : '') }}><a href="{{{ route('welcome') }}}">Welcome</a>
                        
                        </li>
@@ -64,7 +64,7 @@
                         <li><a href="{{route('salesorg')}}">
                         <i class="fa fa-sitemap" aria-hidden="true"> </i>
                         Sales Organization</a></li>
-                        @if(auth()->user()->hasRole('Admin') or Auth::user()->hasRole('Sales') or  Auth::user()->hasRole('Sales Manager'))
+                        @if(auth()->user()->hasRole('Admin') or auth()->user()->hasRole('Sales') or  auth()->user()->hasRole('Sales Manager'))
                             <li class="divider"></li>
                             <li><a href="{{route('resources.view')}}">
                             <i class="fa fa-book" aria-hidden="true"> </i>
@@ -82,7 +82,7 @@
                             <li><a href="{{route('branchmanager.newleads')}}">
                             <i class="fa fa-envelope-open-o" aria-hidden="true"> </i> Branch Prospects</a></li>
                         @endif
-                        @if (auth()->user()->hasRole('Admin') or Auth::user()->hasRole('National Account Manager'))
+                        @if (auth()->user()->hasRole('Admin') or auth()->user()->hasRole('National Account Manager'))
                         <li class="divider"></li>
                          <li><a href="{{route('managers.view')}}">
                          <i class="fa fa-eye" aria-hidden="true"> </i> Account Managers View</a></li>
@@ -115,7 +115,7 @@
 
                         </li>
                         @endif
-                        @if (Auth::user()->hasRole('Admin'))
+                        @if (auth()->user()->hasRole('Admin'))
                          <li>
     						<a href="{{{ route('dashboard') }}}">
                            <i class="fa fa-tachometer" aria-hidden="true"> </i> Admin </a>
@@ -123,7 +123,7 @@
     					</li>
                         @endif
 
-                         @if (Auth::user()->hasRole('Sales Operations'))
+                         @if (auth()->user()->hasRole('Sales Operations'))
                          <li>
                             <a href="{{{ route('dashboard') }}}">
                            <i class="fa fa-tachometer" aria-hidden="true"> </i> Ops </a>
@@ -133,7 +133,7 @@
     					<li class="divider-vertical"></li>
     					<li class="dropdown">
     							<a class="dropdown-toggle" data-toggle="dropdown" href="#">
-    								<i class="fa fa-user" aria-hidden="true"></i> {{ucfirst(strtolower( Auth::user()->person->firstname ))}}	<span class="caret"></span>
+    								<i class="fa fa-user" aria-hidden="true"></i> {{ucfirst(strtolower( auth()->user()->person->firstname ))}}	<span class="caret"></span>
     							</a>
     							<ul class="dropdown-menu">
     								<li>

@@ -107,7 +107,7 @@
 			</td>
 
 			<td>{{number_format($branch->distance,0)}}</td>
-			<td><input type = "radio" name="branch[]" value="{{$branch->branchid}}" /></td>
+			<td><input type = "radio" name="branch[]" value="{{$branch->id}}" /></td>
 			</tr>
 
 			@endforeach

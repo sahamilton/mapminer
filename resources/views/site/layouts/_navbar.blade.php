@@ -6,7 +6,7 @@
   </button>
   <div class="collapse navbar-collapse" id="navbarNavDropdown">
     <ul class="navbar-nav mr-auto">
-     @if (!Auth::check())
+     @if (! auth()->check())
             <li class="nav-item" >Welcome</li>
                        
                      
@@ -66,7 +66,7 @@
                 <a class="dropdown-item" href="{{route('salesorg')}}">
                 <i class="fa fa-sitemap" aria-hidden="true"> </i>
                   Sales Organization</a>
-                  @if(auth()->user()->hasRole('Admin') or Auth::user()->hasRole('Sales') or  Auth::user()->hasRole('Sales Manager'))
+                  @if(auth()->user()->hasRole('Admin') or auth()->user()->hasRole('Sales') or  auth()->user()->hasRole('Sales Manager'))
                             
                   <a class="dropdown-item" href="{{route('resources.view')}}">
                   <i class="fa fa-book" aria-hidden="true"> </i>
@@ -90,7 +90,7 @@
                     Branch Prospects</a>
                   @endif
 
-                  @if (auth()->user()->hasRole('Admin') or Auth::user()->hasRole('National Account Manager'))
+                  @if (auth()->user()->hasRole('Admin') or auth()->user()->hasRole('National Account Manager'))
                     
                     <a class="dropdown-item" href="{{route('managers.view')}}">
                     <i class="fa fa-eye" aria-hidden="true"> </i> 
@@ -112,7 +112,7 @@
             </li>    
                         
           </ul>
-          @incude('site.layouts.partials._rightnav')
+          @include('site.layouts.partials._rightnav')
                
           <!-- ./ nav-collapse -->
         </div>

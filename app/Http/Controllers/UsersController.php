@@ -4,12 +4,15 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
+use App\Branch;
 use App\Http\Requests\UserProfileFormRequest;
 class UsersController extends Controller
 {
     public $user;
-    public function __construct(User $user){
+    public $branch;
+    public function __construct(User $user, Branch $branch){
       $this->user = $user;
+      $this->branch = $branch;
     }
     /**
      * Display a listing of the resource.
@@ -34,8 +37,11 @@ class UsersController extends Controller
            
             $salesrepmarkers = $user->person->jsonify($user->person->directReports);
           }
-  
-       return response()->view('site.user.profile',compact('user','branchmarkers','salesrepmarkers'));
+        if($user->person->lat && $user->person->lng){
+          $branches = $this->branch->nearby($user->person,100,5)->get();
+          
+        }
+       return response()->view('site.user.profile',compact('user','branchmarkers','salesrepmarkers','branches'));
 
     }
     public function edit($user){

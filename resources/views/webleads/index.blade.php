@@ -2,7 +2,7 @@
 @section('content')
 
 <h1>Web Leads</h1>
- @if (Auth::user()->hasRole('Admin') or Auth::user()->hasRole('Sales Operations'))
+ @if (auth()->user()->hasRole('Admin') or auth()->user()->hasRole('Sales Operations'))
 <div class="pull-right">
 				<p><a href="{{{ route('webleads.import.create') }}}" class="btn btn-small btn-info iframe">
 <i class="fa fa-plus-circle text-success" aria-hidden="true"></i>

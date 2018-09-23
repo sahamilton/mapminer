@@ -4,7 +4,7 @@
 <h1>Prospect Statuses</h1>
 
 
-@if (Auth::user()->hasRole('Admin'))
+@if (auth()->user()->hasRole('Admin'))
 
 <div class="pull-right">
         <a href="{{ route('leadstatus.create') }}" class="btn btn-small btn-info iframe">
@@ -19,7 +19,7 @@
     <th>Status</th>
     <th>Average Ranking</th>
     <th>Number</th>
-    @if (Auth::user()->hasRole('Admin'))
+    @if (auth()->user()->hasRole('Admin'))
     <th>Actions</th>
     @endif
    
@@ -41,7 +41,7 @@
         @endif
     </td>
     <td>{{$status->leads->count()}}
-  @if (Auth::user()->hasRole('Admin'))
+  @if (auth()->user()->hasRole('Admin'))
     <td>
             @include('partials._modal')
     

@@ -95,8 +95,8 @@ body {
     src="https://d2s6cp23z9c3gz.cloudfront.net/js/embed.widget.min.js"
     data-domain="trueblue.besnappy.com"
     data-lang="en"
-	data-name="{{ isset(Auth::user()->person->firstname) ? Auth::user()->person->firstname ." ". Auth::user()->person->lastname  : Auth::user()->username  }}"
-    data-email="{{ isset(Auth::user()->email) ? Auth::user()->email : '' }}"
+	data-name="{{ isset(auth()->user()->person->firstname) ? auth()->user()->person->firstname ." ". auth()->user()->person->lastname  : auth()->user()->username  }}"
+    data-email="{{ isset(auth()->user()->email) ? auth()->user()->email : '' }}"
     >
 </script>
             

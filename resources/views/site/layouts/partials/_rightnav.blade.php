@@ -9,7 +9,7 @@
                 </li>
                 @endif
                 
-                @if (Auth::user()->hasRole('Admin'))
+                @if (auth()->user()->hasRole('Admin'))
 
                 <li class="nav-item">
                   <a  class="nav-link" href="{{{ route('dashboard') }}}">
@@ -17,7 +17,7 @@
                 </li>
                 @endif
 
-                @if (Auth::user()->hasRole('Sales Operations'))
+                @if (auth()->user()->hasRole('Sales Operations'))
 
               <li class="nav-item">
                 <a  class="nav-link" href="{{{ route('dashboard') }}}">
@@ -27,7 +27,7 @@
            
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <i class="fa fa-user" aria-hidden="true"></i> {{ucfirst(strtolower( Auth::user()->person->firstname ))}}<span class="caret"></span></a> 
+            <i class="fa fa-user" aria-hidden="true"></i> {{ucfirst(strtolower( auth()->user()->person->firstname ))}}<span class="caret"></span></a> 
             <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
 
               <a class="dropdown-item" href="{{{ route('user.show',auth()->user()->id) }}}">

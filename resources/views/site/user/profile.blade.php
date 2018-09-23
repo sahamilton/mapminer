@@ -63,7 +63,18 @@
 				</div>
 				
 			</div>
+			@if(isset($branches))
 
+			<div class="list-group-item">
+				<p><strong>Closest Branches to your location</strong></p>
+				<div class="row">
+					<div class="list-group-item-text col-sm-12">
+						@include('branches.partials._nearby')
+					</div>
+				</div>
+			</div>
+
+			@endif
 			@if($user->person->reportsTo || $user->person->directReports->count()>0)
 				<div class="list-group-item">
 					<div class="row">
