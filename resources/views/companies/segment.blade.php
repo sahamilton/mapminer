@@ -92,4 +92,4 @@ $data['companyname']=$company->companyname;
     </div>
 
 @include('partials/_scripts')
-@stop
+@endsection

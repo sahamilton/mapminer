@@ -114,4 +114,4 @@ $(document).ready(function()
 	});
 });
 </script>
-@stop
+@endsection

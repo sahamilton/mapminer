@@ -34,4 +34,4 @@ location in {{$location->city}}, {{$location->state}}<p>
         });
     </script>
     
-@stop
+@endsection

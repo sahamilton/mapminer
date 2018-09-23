@@ -6,4 +6,4 @@
 @include('maps.partials._form')
 
 @include('partials._scripts')
-@stop
+@endsection

@@ -62,4 +62,4 @@
 </div>
 @include('projects.partials._release')
 @include('partials._scripts')
-@stop
+@endsection

@@ -140,4 +140,4 @@ $(function() {
   </script>
 
 
-        @stop
+        @endsection

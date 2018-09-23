@@ -4,7 +4,7 @@
 @section('title')
 Settings ::
 @parent
-@stop
+@endsection
 
 
 @section('styles')
@@ -12,7 +12,7 @@ Settings ::
 body {
 	background: #f2f2f2;
 }
-@stop
+@endsection
 
 {{-- Content --}}
 @section('content')
@@ -119,4 +119,4 @@ body {
     <!-- ./ form actions -->
 </form>
 </form>
-@stop
+@endsection

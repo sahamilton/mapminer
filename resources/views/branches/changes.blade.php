@@ -4,7 +4,7 @@
 @section('title')
 Review Branch Changes
 @parent
-@stop
+@endsection
 
 {{-- Page content --}}
 @section('content')
@@ -65,4 +65,4 @@ Review Branch Changes
    });          
 });
 </script>
-@stop
+@endsection

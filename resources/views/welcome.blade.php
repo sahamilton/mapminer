@@ -60,4 +60,4 @@
 @endif
 
 @include('partials._newsscript')
-@stop
+@endsection

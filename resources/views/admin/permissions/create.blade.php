@@ -27,4 +27,4 @@
 		</div>
 		<!-- ./ form actions -->
 	</form>
-@stop
+@endsection

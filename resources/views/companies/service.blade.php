@@ -30,5 +30,5 @@ Locations Serviced By
 @include('companies.partials._state')
 @include('companies.partials._servicetable')
 @include('partials/_scripts')
-@stop
+@endsection
 

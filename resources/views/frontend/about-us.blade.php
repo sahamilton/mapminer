@@ -4,11 +4,11 @@
 @section('title')
 About us ::
 @parent
-@stop
+@endsection
 
 {{-- Page content --}}
 @section('content')
 
 About us page.
 
-@stop
+@endsection

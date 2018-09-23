@@ -4,7 +4,7 @@
 @section('title')
 Account Sign up ::
 @parent
-@stop
+@endsection
 
 {{-- Page content --}}
 @section('content')
@@ -82,4 +82,4 @@ Account Sign up ::
 		</div>
 	</form>
 </div>
-@stop
+@endsection

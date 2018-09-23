@@ -8,4 +8,4 @@
 <hr />
 @include('leads.partials._cutandpaste')
 </div>
-@stop
+@endsection

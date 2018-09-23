@@ -13,4 +13,4 @@ $ultimateDUNS = $location->DUNS;?>
 {{Form::close()}}
 </div>
 </div>
-@stop
+@endsection

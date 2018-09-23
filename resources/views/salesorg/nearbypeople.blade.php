@@ -49,4 +49,4 @@ $data['type'] ='people';
    
 @include('partials/_scripts')
 
-@stop
+@endsection

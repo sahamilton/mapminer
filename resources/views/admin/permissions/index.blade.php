@@ -3,7 +3,7 @@
 {{-- Web site Title --}}
 @section('title')
 	Permissions :: @parent
-@stop
+@endsection
 
 {{-- Content --}}
 @section('content')
@@ -62,5 +62,5 @@
 	</table>
     
     @include('partials/_scripts')
-@stop
+@endsection
 

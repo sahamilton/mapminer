@@ -95,4 +95,4 @@ $(function(){
 });
 </script>
 
-@stop
+@endsection

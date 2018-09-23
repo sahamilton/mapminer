@@ -37,4 +37,4 @@ $('#add').click(function() {
 });
 </script>
 
-@stop
+@endsection

@@ -58,4 +58,4 @@ if($type =='branch'){
           $('#map-container').storeLocator({'slideMap' : false, 'autoGeocode':true, 'dataLocation' : '{{ URL::to($datalocation) }}/{{$data['distance']}}','zoomLevel': 9, 'infowindowTemplatePath' : '{{asset('maps/templates/infowindow-description.html')}}','listTemplatePath' : '{{asset('maps/templates/location-list-description.html' )}}'} );
         });
     </script>
-@stop
+@endsection

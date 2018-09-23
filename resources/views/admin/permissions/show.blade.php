@@ -64,4 +64,4 @@ $newTZ = new DateTimeZone('America/Los_Angeles');
 	</table>
     
 @include('partials/_scripts')
-@stop
+@endsection

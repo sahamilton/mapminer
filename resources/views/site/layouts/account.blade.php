@@ -15,4 +15,4 @@
 		@yield('account-content')
 	</div>
 </div>
-@stop
+@endsection

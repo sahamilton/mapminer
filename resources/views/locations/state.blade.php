@@ -52,4 +52,4 @@ $data['distance'] = '100';?>
         });
       </script>
 	
-@stop
+@endsection

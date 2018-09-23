@@ -110,4 +110,4 @@ title= "See {{$salesteam[0]->reportsTo->firstname}} {{$salesteam[0]->reportsTo->
 
 
 @include('partials._scripts')
-@stop
+@endsection

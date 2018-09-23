@@ -94,4 +94,4 @@
 {{-- Scripts --}}
 @include('partials._modal')
 @include('partials._scripts')
-@stop
+@endsection

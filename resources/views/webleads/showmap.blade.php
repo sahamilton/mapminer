@@ -37,4 +37,4 @@
         });
     </script>
     
-@stop
+@endsection

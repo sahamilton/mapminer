@@ -4,7 +4,7 @@
 @section('title')
 Create a New Branch
 @parent
-@stop
+@endsection
 
 {{-- Page content --}}
 @section('content')
@@ -36,4 +36,4 @@ Create a New Branch
 </form>
 </div>
 @include('partials/_scripts')
-@stop
+@endsection

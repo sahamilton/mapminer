@@ -24,4 +24,4 @@
 @include('partials._maps')
 @include('partials._newsscript')
 
-@stop
+@endsection

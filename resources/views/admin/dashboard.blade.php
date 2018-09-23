@@ -222,4 +222,4 @@ new Chart(document.getElementById("pieChart"), {
 });
 </script>
 @include('partials/_scripts')
-@stop
+@endsection

@@ -134,4 +134,4 @@
 
 @include('partials/_scripts')
 @include('partials/_modal')
-@stop
+@endsection

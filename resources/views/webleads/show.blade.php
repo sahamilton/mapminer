@@ -59,5 +59,5 @@
 @include('webleads.partials.map')
 
 @include('partials/_scripts')
-@stop
+@endsection
 

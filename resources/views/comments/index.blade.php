@@ -57,4 +57,4 @@ Add Feedback</a>
 	</table>
 </div>
 @include('partials/_scripts')
-@stop
+@endsection

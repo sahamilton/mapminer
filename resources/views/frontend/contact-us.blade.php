@@ -4,7 +4,7 @@
 @section('title')
 Contact us ::
 @parent
-@stop
+@endsection
 
 {{-- Page content --}}
 @section('content')
@@ -37,4 +37,4 @@ Contact us ::
 		<button type="submit" class="btn btn-warning pull-right">Submit</button>
 	</fieldset>
 </form>
-@stop
+@endsection

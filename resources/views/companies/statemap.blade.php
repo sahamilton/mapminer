@@ -24,4 +24,4 @@ $data['distance'] = Config::get('default_radius');?>
         });
     </script>
    
-@stop
+@endsection

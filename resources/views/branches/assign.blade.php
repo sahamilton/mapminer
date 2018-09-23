@@ -38,4 +38,4 @@ location in {{$data['location']->city}}, {{$data['location']->state}} are:<p>
 </p>
 </div>
     
-@stop
+@endsection

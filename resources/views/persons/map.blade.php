@@ -29,4 +29,4 @@
         });
     </script>
 
-@stop
+@endsection

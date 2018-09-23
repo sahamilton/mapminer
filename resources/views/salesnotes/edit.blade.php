@@ -43,4 +43,4 @@ $(function() {
   </script>
 
 
-@stop
+@endsection

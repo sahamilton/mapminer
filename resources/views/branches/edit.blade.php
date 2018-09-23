@@ -4,7 +4,7 @@
 @section('title')
 Edit Branch ::
 @parent
-@stop
+@endsection
 
 {{-- Page content --}}
 @section('content')
@@ -38,4 +38,4 @@ $buttonLabel = 'Edit Branch';?>
 <input type="submit" class="btn btn-success" value="Edit Branch" />
 </form>
 
-@stop
+@endsection

@@ -73,7 +73,7 @@
 		</form>
 
 </div>
-@stop	
+@endsection	
 
 @include('partials/_scripts')
-@stop
+@endsection

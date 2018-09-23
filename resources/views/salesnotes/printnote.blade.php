@@ -63,4 +63,4 @@ $group = "";
 echo "</fieldset>";	?>
 		</div></div>
        
-        @stop
+        @endsection

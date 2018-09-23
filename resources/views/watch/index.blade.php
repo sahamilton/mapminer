@@ -84,4 +84,4 @@ $(document).on("click", ".addLocationId", function () {
 });
 </script>
 @include('watch.partials._note')
-@stop
+@endsection

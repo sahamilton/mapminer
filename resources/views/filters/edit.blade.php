@@ -7,4 +7,4 @@
 @include('filters.partials._filterform')
 {{Form::submit('Edit Filter',array('class'=>'btn btn-primary'))}}
 @include('partials/_scripts')
-@stop
+@endsection

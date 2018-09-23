@@ -23,4 +23,4 @@
         });
     </script>
     
-@stop
+@endsection

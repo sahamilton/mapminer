@@ -78,4 +78,4 @@
 
 
 @include('partials/_scripts')
-@stop
+@endsection
