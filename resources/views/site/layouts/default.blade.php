@@ -60,72 +60,53 @@
 	<link rel="apple-touch-icon-precomposed" href="{{{ asset('assets/ico/apple-touch-icon-57-precomposed.png') }}}">
 	<link rel="shortcut icon" href="{{{ asset('assets/ico/favicon.png') }}}">
 	<style CSS> 
-body {
-  min-height: 100vh; 
-}
-
-
-
-</style>
-	</head>
+		body {
+		min-height: 100vh; 
+		}
+	</style>
+</head>
 	
-
-	<body class="d-flex flex-column">
-
-
-
-
-		@include('site.layouts.partials._googletagmanager')
-		@if(config('app.env')=='production')
-			@include('site.layouts.partials._fullstory')
-		@endif
+<body class="d-flex flex-column">
+	@include('site.layouts.partials._googletagmanager')
+	@if(config('app.env')=='production')
+		@include('site.layouts.partials._fullstory')
+	@endif
 		<!-- To make sticky footer need to wrap in a div -->
 		
-			@include ('site.layouts._navbar')
+	@include ('site.layouts._navbar')
 
 		<!-- Container -->
-		<section class="container-fluid flex-grow-1">
+	<section class="container-fluid flex-grow-1">
     
-<div class="container">
-				
-				<!-- Notifications -->
-				@include('notifications')
-				<!-- ./ notifications -->
-
-				<!-- Content -->
-				@yield('content')
-				<!-- ./ content -->
+		<div class="container">
 			
-		<!-- ./ container -->
-	
+			<!-- Notifications -->
+			@include('notifications')
+			<!-- ./ notifications -->
+
+			<!-- Content -->
+			@yield('content')
+			<!-- ./ content -->
+			
 
 		@if (config('app.debug') && auth()->check() && config('app.env')=='local' )
-		@include('sudosu::user-selector')
+			@include('sudosu::user-selector')
 		@endif
-		<!-- the following div is needed to make a sticky footer -->
+		
 		</div>
 		
-</section>
-		<!-- ./wrap -->
+	</section>
+		
 
-
-		@include('site.layouts.footer')
+	@include('site.layouts.footer')
 
 		<script
 			src="//d2s6cp23z9c3gz.cloudfront.net/js/embed.widget.min.js"
 			data-domain="trueblue.besnappy.com"
 			data-lang="en"
-			data-name="{{ isset(Auth::user()->firstname) ? Auth::user()->firstname ." ". Auth::user()->lastname  : ''  }}"
-			data-email="{{ isset(Auth::user()->email) ? Auth::user()->email : '' }}"
+			
 			>
 		</script>
-
-
-
-		<!-- Javascripts
-		================================================== -->
-
-
 
 		@yield('scripts')
 	</body>

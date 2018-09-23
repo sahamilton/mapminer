@@ -23,9 +23,7 @@
 <!-- jQuery -->
         <link rel="stylesheet" type="text/css" href="//code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css" />         
 <!-- Bootstrap -->
-		<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" 
-		integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" 
-		crossorigin="anonymous">
+		<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 <!-- Datatables -->
 		<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.2/css/jquery.dataTables.css">
        <link rel="stylesheet" href="{{asset('assets/css/responsive-tables.css')}}">
@@ -37,7 +35,7 @@
         <link rel="stylesheet" href="{{asset('assets/css/prmapminer.css')}}">
         <link rel="stylesheet" type="text/css" href="{{asset('maps/css/map.css')}}">
 <!-- FontAwesome -->		
-        <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet">        
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">        
         <!-- Javascript
         =====================================================- -->
 <!-- jQuery -->
@@ -47,7 +45,7 @@
 <!-- GoogleAPIS -->
 		<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 <!-- Bootstrap -->
-		<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 <!-- DataTables -->
 		<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js" ></script>
 <!-- SummerNote -->
@@ -55,6 +53,7 @@
 <!-- Calendar -->
 		<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js"></script>
 		<script src="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.2.7/fullcalendar.min.js"></script>
+		<script src="//twitter.github.io/typeahead.js/releases/latest/typeahead.bundle.js"></script>
 
 
 
@@ -66,7 +65,9 @@
 		<style>
         body {
             padding: 0  0;
+            min-height:100vh;
         }
+
 		@section('styles')
 		@show
 		</style>
@@ -85,91 +86,51 @@
 		<link rel="shortcut icon" href="{{{ asset('assets/ico/favicon.png') }}}">
 	</head>
 
-	<body>
-		<!-- To make sticky footer need to wrap in a div -->
-		<div id="wrap">
-		@include ('admin.partials._navbar')
+<body class="d-flex flex-column">
 
-		<!-- Container -->
+	<!-- To make sticky footer need to wrap in a div -->
+
+	@include ('admin.partials._navbar')
+
+	<!-- Container -->
+	<section class="container-fluid flex-grow-1">
+
 		<div class="container">
-			<!-- Notifications -->
-			@include('notifications')
-			<!-- ./ notifications -->
+		<!-- Notifications -->
+		@include('notifications')
+		<!-- ./ notifications -->
 
-			<!-- Content -->
-			@yield('content')
-			<!-- ./ content -->
-		</div>
-		<!-- ./ container -->
-</div>
+		<!-- Content -->
+		@yield('content')
+		<!-- ./ content -->
 
-@if (config('app.debug') && auth()->check() && config('app.env')=='local') 
 
-    @include('sudosu::user-selector')
-@endif
+		@if (config('app.debug') && auth()->check() && config('app.env')=='local') 
+
+			@include('sudosu::user-selector')
+		@endif		
+	</div>
+	<!-- ./ container -->
+	</section>
 <!-- the following div is needed to make a sticky footer -->
 
-		<div id="push"></div>
-
-		<!-- ./wrap -->
 
 
-	   @include('site.layouts.footer')
+<!-- ./wrap -->
+
+
+@include('site.layouts.footer')
 
             
+@include('admin.partials._scripts')
+   
 
-
-		<!-- Javascripts
-		================================================== -->
+    
 <script
     src="//d2s6cp23z9c3gz.cloudfront.net/js/embed.widget.min.js"
     data-domain="trueblue.besnappy.com"
     data-lang="en"
 	data-name="{{ isset(Auth::user()->firstname) ? Auth::user()->firstname ." ". Auth::user()->lastname  : Auth::user()->username  }}"  data-email="{{ isset(Auth::user()->email) ? Auth::user()->email : '' }}"  ></script>
-   <!-- Import typeahead.js -->
-    <script src="//twitter.github.io/typeahead.js/releases/latest/typeahead.bundle.js"></script>
-
-    <!-- Initialize typeahead.js on the input -->
-    <script>
-        $(document).ready(function() {
-            var bloodhound = new Bloodhound({
-                datumTokenizer: Bloodhound.tokenizers.whitespace,
-                queryTokenizer: Bloodhound.tokenizers.whitespace,
-                remote: {
-                    url: '/ops/user/find?q=%QUERY%',
-                    wildcard: '%QUERY%'
-                },
-            });
-            
-            $('#search').typeahead({
-                hint: true,
-                highlight: true,
-                minLength: 1
-            }, {
-                name: 'users',
-                source: bloodhound,
-                display: function(data) {
-                    return data.username  //Input value to be set when you select a suggestion. 
-                },
-                templates: {
-                    empty: [
-                        '<div class="list-group search-results-dropdown"><div class="list-group-item">Nothing found.</div></div>'
-                    ],
-                    header: [
-                        '<div class="list-group search-results-dropdown">'
-                    ],
-                    suggestion: function(data) {
-                        var url = '{{ route("person.details", ":slug") }}';
-
-                        url = url.replace(':slug', data.person.id);
-                    return '<div style="font-weight:normal; margin-top:-10px ! important;" class="list-group-item"><a href="'+url+'">'
-                         + data.person.firstname + ' ' + data.person.lastname + '</a></div></div>'
-                    }
-                }
-            });
-        });
-    </script>     
-
         @yield('scripts')
 	</body>
 </html>
