@@ -2,15 +2,23 @@
     <a class="dropdown-item dropdown-toggle" href="#">Branches</a>
     <ul class="dropdown-menu">
         <li>
-            <a class="dropdown-item" href="#">Manage Branches</a>
+            <a class="dropdown-item" 
+            href="{{ route('branch.management') }}">
+                <i class="fas fa-wrench"></i> Manage Branches
+            </a>
         </li>
         
         <li>
-            <a class="dropdown-item" href="#">Check Assignments</a>
+            <a class="dropdown-item" 
+            href="{{ route('branch.check') }}">
+            <i class="fas fa-stethoscope"></i> Check Assignments
+        </a>
         </li>
 
         <li>
-            <a class="dropdown-item" href="#">Confirm Assignments</a>
+            <a class="dropdown-item" href="{{route('branchassignment.check')}}">
+                <i class="far fa-envelope"></i> Confirm Assignments
+            </a>
         </li>
     </ul>
 </li>
