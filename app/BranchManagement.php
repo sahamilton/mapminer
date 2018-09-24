@@ -105,8 +105,8 @@ class BranchManagement extends Model
 
 	 private function toAddress($assignment,$test=null){
 	 	if($test or config('app.env'!='production')){
-	 		return 'stephen@crescentcreative.com';
-	 		//return auth()->user()->email;
+	 		//return 'stephen@crescentcreative.com';
+	 		return auth()->user()->email;
 	 	}else{
 	 		return $assignment->userdetails->email;
 	 	}
