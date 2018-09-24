@@ -7,12 +7,12 @@
       <input id="search-input" type="search" name="search" placeholder="Search Sales Library" autocomplete="off" required="required" class="searchbox__input">
       <button type="submit" title="Submit your search query." class="searchbox__submit" >
       <svg role="img" aria-label="Search">
-        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#sbx-icon-search-13"></use>
+        <use xmlns:xlink="//www.w3.org/1999/xlink" xlink:href="#sbx-icon-search-13"></use>
           </svg>
         </button>
       <button type="reset" title="Clear the search query." class="searchbox__reset hide">
       <svg role="img" aria-label="Reset">
-        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#sbx-icon-clear-3"></use>
+        <use xmlns:xlink="//www.w3.org/1999/xlink" xlink:href="#sbx-icon-clear-3"></use>
         </svg>
       </button>
     </div>

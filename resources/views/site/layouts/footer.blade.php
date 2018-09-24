@@ -2,7 +2,7 @@
     <div class="container-fluid py-3">
     <div class="row">.	
 		<div class="col-sm-8">
-		&copy;2014 - <?php echo date("Y");?>  <a href="http://www.elaconsultinggroup.com"
+		&copy;2014 - <?php echo date("Y");?>  <a href="//www.elaconsultinggroup.com"
 		title="Visit the ELA Consulting Group website" target="_blank"> ELA Consulting Group, LLC </a>/ TrueBlue, Inc.
 		</div>
 		 @if(config('app.env')=='local' or config('app.env')=='staging')

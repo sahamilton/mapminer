@@ -3,7 +3,7 @@
 <div class="container">
 <h2>About Mapminer</h2>
 <p><strong>Description: </strong>The People Ready Mapminer system is designed to give the sales teams insight into the locations of the national accounts that we serve. This information should make it easier to find new opportunities to service our largest accounts. In addition Mapminer provides information on the People Ready Branches and Sales Organization.  Addtionally there is information provided from purchased lists of current construction projects through out North America.</p> 
-<p>Mapminer was developed by <a href="http://www.ELAConsultingGroup.com" target="_blank" title="Learn more about ELA">ELA Consulting Group</a> for People Ready</p>
+<p>Mapminer was developed by <a href="//www.ELAConsultingGroup.com" target="_blank" title="Learn more about ELA">ELA Consulting Group</a> for People Ready</p>
 <p>Contact Sales Operations for any training or support issues.</p>
 <fieldset><legend>Technical Details</legend>
 <p><strong>Mapminer Version:</strong> <?php echo trim(exec('git tag'));?></p>

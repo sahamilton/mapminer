@@ -24,7 +24,7 @@ FS.identify('{{auth()->user()->id}}', {
   displayName: '{{auth()->user()->fullName()}}',
   email: '{{auth()->user()->email}}',
   // TODO: Add your own custom user variables here, details at
-  // http://help.fullstory.com/develop-js/setuservars.
+  // //help.fullstory.com/develop-js/setuservars.
   reviewsWritten_int: 14,
 });
 </script>
