@@ -76,10 +76,12 @@ class BranchManagement extends Model
 	}
 
 	public function getRecipients(Request $request){
+		
 		$recipients = $this->person
                     ->staleBranchAssignments(request('roles'))
                     ->with('userdetails','branchesServiced');
-		if (request('test')){
+
+		if (request('test') or config('app.env')!='production'){
 			return $recipients->inRandomOrder()
                     ->limit(5)
                     ->get();
