@@ -19,7 +19,7 @@
 
 @if($details->branchesServiced()->exists())
 <h5 class="card-title alert alert-info"><strong>Update Current Assignments</strong></h5>
-    <p class="card-text">If your branch assignments are incomplete or incorrect, simply uncheck the appropriate branches in the list and add any missing in box below. </p>
+    <p class="card-text">If your branch assignments are incomplete or incorrect, simply uncheck the appropriate branches in the list and / or add any missing in box below. </p>
 <h6>Last Updated: {{$details->branchesServiced[0]->pivot->updated_at}}</h6>
 <table class="table table-striped table-bordered table-condensed">
 <thead>

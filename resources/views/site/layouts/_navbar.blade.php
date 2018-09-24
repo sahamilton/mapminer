@@ -55,6 +55,10 @@
               <i class="fa fa-graduation-cap" aria-hidden="true"></i>
               Mapminer Training</a>
 
+              @can('service_branches')
+              <a class="dropdown-item" href="{{{ route('branchassignments.show',auth()->user()->id) }}}">
+              <i class="fas fa-search-location"></i> My Branch Assignments</a>
+              @endcan
             </div>
           </li>
 

@@ -1,13 +1,15 @@
           <ul class="navbar-nav" style="margin-right:60px">
                 
                 @php $news = new \App\News;@endphp
-                @if($news->currentNews()->count()>0)
-
                 <li class="nav-item">
-                  <a  class="dropdown-item" href="{{route('currentnews')}}">
-                  <i class="fa fa-bell-o" aria-hidden="true"> </i> News</a>
+                  <a  class="nav-link" href="{{route('currentnews')}}">
+                  @if($news->currentNews()->count()>0)
+                    <i class="fas fa-bell" aria-hidden="true" style="color:red"> </i>
+                  @else
+                    <i class="fas fa-bell-o"></i>" aria-hidden="true"> </i>
+                  @endif
+                   News</a>
                 </li>
-                @endif
                 
                 @if (auth()->user()->hasRole('Admin'))
 
