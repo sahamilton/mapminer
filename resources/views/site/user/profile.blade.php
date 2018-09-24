@@ -145,11 +145,12 @@
 				<div class="list-group-item">
 					<p class="list-group-item-text"><strong>Activity</strong></p>
 					<ul style="list-style-type: none;">
-						@if(null!==$user->usage())
+						
 						<li>Total Logins: {{$user->usage()->count()}}</li>
+						@if($user->usage()->oldest()->first()->lastactivity)
 						<li>First Login:{{$user->usage()->oldest()->first()->lastactivity->format('M d, Y')}}</li>
 						<li>Last Login:{{$user->usage()->latest()->first()->lastactivity->format('M d, Y')}}
-						@endif			
+						@endif	
 						
 					</li>
 							
