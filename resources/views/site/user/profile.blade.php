@@ -147,11 +147,19 @@
 					<ul style="list-style-type: none;">
 						<li>Total Logins: {{$user->usage()->count()}}</li>
 						<li>First Login:{{$user->usage()->oldest()->first()->lastactivity->format('M d, Y')}}</li>
-						<li>Last Login:{{$user->usage()->latest()->first()->lastactivity->format('M d, Y')}}</li
-							
-							
+						<li>Last Login:{{$user->usage()->latest()->first()->lastactivity->format('M d, Y')}}				
 						
 					</li>
+							
+					</ul>
+				</div>
+				<div class="alert alert-warning">
+					<p class="list-group-item-text"><strong>Corrections</strong></p>
+					<ul style="list-style-type: none;">
+						<p class="">If any details of your profile are incorrect or incomplete please contact <a href="mailto:salesops@trueblue.com">
+							<i class="fa fa-envelope-open-o" aria-hidden="true"> </i>
+							 salesops@trueblue.com
+						</a>.</p>
 							
 					</ul>
 				</div>
