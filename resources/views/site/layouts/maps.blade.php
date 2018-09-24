@@ -21,11 +21,11 @@
 		================================================== -->
  <meta name="csrf-token" content="{{ csrf_token() }}">
  	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-        <link rel="stylesheet" href="{{asset('bootstrap/css/bootstrap-theme.min.css')}}">
-        <link rel="stylesheet" href="{{asset('assets/css/prmapminer.css')}}">
-        <link rel="stylesheet" type="text/css" href="{{asset('maps/css/map.css')}}">
+    <link rel="stylesheet" href="{{asset('bootstrap/css/bootstrap-theme.min.css')}}">
+    <link rel="stylesheet" href="{{asset('assets/css/prmapminer.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{asset('maps/css/map.css')}}">
 	<link rel="stylesheet" href="{{asset('assets/css/bootstrap-colorpicker.min.css')}}">
-	 <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet">
+	 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-1.10.1.min.js"></script>
     <script src="{{asset('maps/js/handlebars-1.0.0.min.js')}}"></script>
     <script src="https://maps.google.com/maps/api/js?key={{config('maps.api_key')}}"></script>

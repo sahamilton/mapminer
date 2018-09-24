@@ -2,13 +2,15 @@
                 
                 @php $news = new \App\News;@endphp
                 <li class="nav-item">
-                  <a  class="nav-link" href="{{route('currentnews')}}">
+                  
                   @if($news->currentNews()->count()>0)
-                    <i class="fas fa-bell" aria-hidden="true" style="color:red"> </i>
+                  <a  class="nav-link" href="{{route('currentnews')}}">
+                    <i class="fas fa-bell" aria-hidden="true" style="color:red"> </i> News</a>
                   @else
-                    <i class="fas fa-bell-o"></i>" aria-hidden="true"> </i>
+                  <a  class="nav-link" href="{{route('news.index')}}">
+                    <i class="far fa-bell" aria-hidden="true"> </i> News</a>
                   @endif
-                   News</a>
+                   
                 </li>
                 
                 @if (auth()->user()->hasRole('Admin'))
