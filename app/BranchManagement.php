@@ -95,11 +95,11 @@ class BranchManagement extends Model
 
 	public function sendEmails($recipients,Request $request){
 		$emails=0;
-	            foreach ($recipients as $recipient){
+            foreach ($recipients as $recipient){
 
-	                Mail::to($this->toAddress($recipient,request('test')))->queue(new NotifyBranchAssignments($recipient,request('message')));
-	                $emails++;
-	            }
+                Mail::to($this->toAddress($recipient,request('test')))->queue(new NotifyBranchAssignments($recipient,request('message')));
+                $emails++;
+            }
 	     return $emails;
 	 }
 
