@@ -166,7 +166,7 @@ class AdminUsersController extends BaseController {
     {
 
         $user = $this->user->create($request->all());
-        $user->seeder();
+        $user->api_token = md5(uniqid(mt_rand(), true));
         $user->confirmation_code = md5(uniqid(mt_rand(), true));
         $user->password = \Hash::make(\Input::get('password'));
         if ($request->filled('confirm')) {

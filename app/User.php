@@ -225,10 +225,10 @@ class User extends Authenticatable
  * [seeder Seed api_token for all users. Not used]
  * @return [type] [description]
  */
-	public function seeder(){
+	public function setApiToken(){
 
-		$this->api_token = md5(uniqid(mt_rand(), true));
-		$this->save();
+		return $this->api_token = md5(uniqid(mt_rand(), true));
+		
 	}
 /**
  * scopeWithRole Select User by role

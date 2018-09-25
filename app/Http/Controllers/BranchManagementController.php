@@ -97,8 +97,9 @@ class BranchManagementController extends Controller
       
         if($user = $this->user->getAccess($token)){
             $person = $this->user->person()->id;
-            $this->BranchManagement->updateConirmed($person);
+            $this->BranchManagement->updateConfirmed($person);
             auth()->login($user);
+            $user->setApiToken()->save();
             return redirect()->route('home',$user->id)
             ->withMessage("Thank You. Your branch associations have been confirmed.");;
             
@@ -106,7 +107,7 @@ class BranchManagementController extends Controller
         }else{
             //go to home screen
             
-            return redirect()->route('welcome')->withMessage("Invalid or expired token");
+            return redirect()->route('welcome')->withMessage("Invalid or expired token.");
         }
     }
 
@@ -114,6 +115,7 @@ class BranchManagementController extends Controller
      
         if($user = $this->user->getAccess($token)){
             auth()->login($user);
+            $user->setApiToken()->save();
             return redirect()->route('branchassignments.show',$user->id);
 
         }else{
