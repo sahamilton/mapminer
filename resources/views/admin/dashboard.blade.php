@@ -121,6 +121,7 @@ var numberWithCommas = function(x) {
 var roleWeekChart = new Chart(ctx, 
 {
     type: 'bar',
+    resize:true,
     data:{
       labels: ['{!! array_values($data['roleweekcount'])[0]['labels'] !!}'],
       datasets: [
@@ -172,6 +173,7 @@ var ctx = document.getElementById("weekChart").getContext("2d");
 var weekChart = new Chart(ctx, 
 {
     type: 'bar',
+    resize:true,
     data:{
       labels: [{!! $weeklabels !!}],
 
@@ -199,6 +201,7 @@ var weekChart = new Chart(ctx,
 
 new Chart(document.getElementById("pieChart"), {
     type: 'doughnut',
+    resize:true,
     data: {
      
       datasets: [

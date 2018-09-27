@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Mail;
+use Carbon\Carbon;
 use App\Mail\NotifyBranchAssignments;
 
 class BranchManagement extends Model
@@ -41,7 +42,7 @@ class BranchManagement extends Model
 	
 	public function updateConfirmed($person)
 	{
-		$update = "update branch_person set updated_at = currenttimestamp where person_id='".$person."';";
+		$update = "update branch_person set updated_at = '". Carbon::now() . "' where person_id='".$person->id."';";
 	    return \DB::statement($update);
 	}
 	

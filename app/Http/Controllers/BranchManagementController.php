@@ -96,10 +96,11 @@ class BranchManagementController extends Controller
 
       
         if($user = $this->user->getAccess($token)){
-            $person = $this->user->person()->id;
-            $this->BranchManagement->updateConfirmed($person);
+           
+            $person = $user->person()->first();
+            $this->branchmanagement->updateConfirmed($person);
             auth()->login($user);
-            $user->setApiToken()->save();
+            $user->update(['apitoken' => $user->setApiToken()]);
             return redirect()->route('home',$user->id)
             ->withMessage("Thank You. Your branch associations have been confirmed.");;
             
