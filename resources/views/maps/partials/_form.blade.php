@@ -31,7 +31,7 @@ $values = Config::get('app.search_radius');
 ?>
 <form class="form-inline" action="{{route('findme')}}" method = 'post' name="mapselector">
 {{csrf_field()}}
-<label>Show a</label>
+<label>Show a </label>
 <select name='view' class="btn btn-mini" id="selectview" title="Select map or list views">    
     @foreach($views as $key=>$field)
       @if(isset($data['view']) && $key === $data['view'])
@@ -52,7 +52,7 @@ $values = Config::get('app.search_radius');
         				@endif
            @endforeach
         </select>
-<label>within</label>  
+<label>within </label>  
    <select name='distance' class="btn btn-mini" id="selectdistance" title="Change the search distance">
        @foreach($values as $value)
        	@if(isset($data['distance']) && $value === $data['distance'])
@@ -61,9 +61,9 @@ $values = Config::get('app.search_radius');
        		<option value="{{$value}}">{{$value}} miles</option>
             @endif
        @endforeach
-    </select> of 
+    </select> 
   <div class="form-group{{ $errors->has('address') ? ' has-error' : '' }}">
-        <label for= "address">address</label> 
+        <label for= "address"> of address</label> 
         <input 
         class="form-control{{ $errors->has('address') ? ' has-error' : ''}}" 
         type="text" 
