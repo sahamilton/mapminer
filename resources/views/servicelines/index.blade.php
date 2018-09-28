@@ -5,7 +5,7 @@
  @if (auth()->user()->hasRole('Admin'))
 <div class="pull-right">
 				<p><a href="{{{ route('serviceline.create') }}}" class="btn btn-small btn-info iframe">
-<i class="fa fa-plus-circle text-success" aria-hidden="true"></i>
+<i class="fa fa-plus-circle " aria-hidden="true"></i>
  Create New Service Line</a></p>
 			</div>
  @endif  

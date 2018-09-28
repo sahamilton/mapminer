@@ -1,4 +1,6 @@
-          <ul class="navbar-nav" style="margin-right:60px">
+ 
+      <ul class="navbar-nav justify-content-end"> 
+
                 
                 @php $news = new \App\News;@endphp
                 <li class="nav-item">

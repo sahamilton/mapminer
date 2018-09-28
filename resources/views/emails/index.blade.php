@@ -5,7 +5,7 @@
 
 <div class="pull-right">
 <a href="{{{ route('emails.create') }}}" class="btn btn-small btn-info iframe">
-<i class="fa fa-plus-circle text-success" aria-hidden="true"></i>
+<i class="fa fa-plus-circle " aria-hidden="true"></i>
  Create New Email</a>
 </div>
 

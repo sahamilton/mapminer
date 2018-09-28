@@ -19,7 +19,7 @@
             <a href="{{{ route('searchfilters.create') }}}" 
             class="btn btn-small btn-info iframe">
             
-<i class="fa fa-plus-circle text-success" aria-hidden="true"></i>
+<i class="fa fa-plus-circle " aria-hidden="true"></i>
  Create New Filter</a>
         </div>
 	@endif

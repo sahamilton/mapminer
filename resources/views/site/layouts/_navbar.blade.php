@@ -1,18 +1,19 @@
-
-<nav class="navbar navbar-expand-md navbar-light"> 
-   <a href="{{ route('findme') }}"><img src="{{ asset('assets/img/PRlogo.png')}}"  width ='164' class="navbar-brand"></a>
+<nav class="navbar navbar-expand-md navbar-static-top navbar-light">
+  <!--     <nav class="navbar navbar-toggleable-sm navbar-light bg-faded">
+<nav class="navbar navbar-toggleable-sm navbar-light bg-faded"> -->
+   
   <!-- Toggler/collapsibe Button -->
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
-    <span class="navbar-toggler-icon"></span>
-  </button>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar" aria-controls="collapsibleNavbar" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon" style="color:white"></span>
+    </button>
 
+<a href="{{ route('findme') }}" class="navbar-brand"><img src="{{ asset('assets/img/PRlogo.png')}}"  width ='164' ></a> 
   <!-- Navbar links -->
   <div class="collapse navbar-collapse" id="collapsibleNavbar">
-    <ul class="navbar-nav">
+    <ul class="navbar-nav mr-auto"> 
      @if (! auth()->check())
             <li class="nav-item" >Welcome</li>
-                       
-                     
+                                     
     @else
     
       <li class="nav-item dropdown">
@@ -123,8 +124,9 @@
                
           <!-- ./ nav-collapse -->
         </div>
-@endif
+    @endif
       </li>
     </ul>
-  </div>
+
 </nav>
+

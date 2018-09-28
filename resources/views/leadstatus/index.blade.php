@@ -8,7 +8,7 @@
 
 <div class="pull-right">
         <a href="{{ route('leadstatus.create') }}" class="btn btn-small btn-info iframe">
-<i class="fa fa-plus-circle text-success" aria-hidden="true"></i>
+<i class="fa fa-plus-circle " aria-hidden="true"></i>
  Create New Prospect Status</a>
       </div>
 @endif

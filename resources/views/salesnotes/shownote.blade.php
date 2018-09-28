@@ -9,7 +9,7 @@
 @if (auth()->user()->hasRole('Admin'))
 <div class="pull-right">
 	<a href="{{route('salesnotes.cocreate',$company->id)}}" class="btn btn-small btn-info iframe">
-<i class="fa fa-plus-circle text-success" aria-hidden="true"></i>
+<i class="fa fa-plus-circle " aria-hidden="true"></i>
  Create / Edit</a>
 </div>
 

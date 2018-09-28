@@ -76,19 +76,16 @@ class BranchManagementController extends Controller
      */
     public function update(BranchManagementRequest $request, $id)
     {
-    
-       
+           
         if(! auth()->user()->hasRole('Admin')){
             
             $id = auth()->user()->id;
         }
         $person = $this->person->whereUser_id($id)->firstorFail();
-  
+        // this is odd!  Why both role?
         $role = $person->getPrimaryRole($person);
-
-        $role = $this->person->whereUser_id($id)->primaryRole();                  
+        $role = $person->whereUser_id($id)->primaryRole();                  
         $branches = $this->branchmanagement->getBranches($request,$role);
-
         $person->branchesServiced()->sync($branches);
 
         return redirect()->route('user.show',$id)
@@ -99,12 +96,14 @@ class BranchManagementController extends Controller
 
     public function correct($token){
 
-      
+        //validate user from token
         if($user = $this->user->getAccess($token)){
-           
             $person = $user->person()->first();
+            // set updated_at to now
             $this->branchmanagement->updateConfirmed($person);
+            //login user
             auth()->login($user);
+            // update token - single use
             $user->update(['apitoken' => $user->setApiToken()]);
             return redirect()->route('home',$user->id)
             ->withMessage("Thank You. Your branch associations have been confirmed.");;
@@ -118,10 +117,13 @@ class BranchManagementController extends Controller
     }
 
     public function confirm($token){
-     
+        //validate user from token
         if($user = $this->user->getAccess($token)){
+            
+            //login user
             auth()->login($user);
-           // $user->update(['apitoken' => $user->setApiToken()]);
+            // update token - single useauth()->login($user);
+            $user->update(['apitoken' => $user->setApiToken()]);
            
             return redirect()->route('branchassignments.show',$user->id);
 
