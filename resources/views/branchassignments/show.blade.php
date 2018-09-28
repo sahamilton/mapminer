@@ -58,6 +58,14 @@
 <div class="alert alert-warning">
   <p>You currently are not assigned to any branches in Mapminer</p>
 </div>
+<div class="list-group-item">
+        <p><strong>Closest Branches to your location</strong></p>
+        <div class="row">
+          <div class="list-group-item-text col-sm-12">
+            @include('branches.partials._nearby')
+          </div>
+        </div>
+      </div>
 @endif
 <div class="alert alert-info">
   <p>Add missing branches by entering the correct branch numbers <em>(4 characters each)</em>, separated by commas and then click update.</p></div>
@@ -65,7 +73,7 @@
   <label class="col-md-4 control-label"><strong>Add Branches:</strong></label>
   <div class="form-group">
     <textarea class="form-control col-md-8" name="branches"
-    placeholder="branch ids separated by commas">{{ old('branches', isset($branches) ? $branches :'')}}</textarea>
+    placeholder="branch ids separated by commas">{{ old('branches')}}</textarea>
 
     <input type="submit" 
     name="submit" 

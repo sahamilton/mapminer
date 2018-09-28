@@ -1,5 +1,5 @@
 
-<nav class="navbar navbar-expand-md bg-dark navbar-dark"> 
+<nav class="navbar navbar-expand-md navbar-light"> 
    <a href="{{ route('findme') }}"><img src="{{ asset('assets/img/PRlogo.png')}}"  width ='164' class="navbar-brand"></a>
   <!-- Toggler/collapsibe Button -->
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">

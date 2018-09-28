@@ -53,11 +53,16 @@ class BranchManagementController extends Controller
         }
 
         $details = $this->person->whereUser_id($id)
-        ->with('userdetails.roles')
-        ->with('branchesServiced')
-        ->firstOrFail();
-       
-        return response()->view('branchassignments.show',['details'=>$details]);
+            ->with('userdetails.roles')
+            ->with('branchesServiced')
+            ->firstOrFail();
+        $branches = array();
+           
+        if($details->geostatus ==1){
+            $branches = $this->branch->nearby($details,100,5)->get();
+        }
+    
+        return response()->view('branchassignments.show',['details'=>$details,'branches'=>$branches]);
 
     }
 
@@ -116,7 +121,8 @@ class BranchManagementController extends Controller
      
         if($user = $this->user->getAccess($token)){
             auth()->login($user);
-            $user->setApiToken()->save();
+           // $user->update(['apitoken' => $user->setApiToken()]);
+           
             return redirect()->route('branchassignments.show',$user->id);
 
         }else{
