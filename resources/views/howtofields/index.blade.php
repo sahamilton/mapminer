@@ -41,23 +41,21 @@
 				</button>
 				<ul class="dropdown-menu" role="menu">
 
-					<li>
-						<a href="{{route('howtofields.edit', $howtofield->id)}}">
-						<i class="fa fa-pencil" aria-hidden="true"></i>
+						<a class="dropdown-item"
+						href="{{route('howtofields.edit', $howtofield->id)}}">
+						<i class="fa fa-pencil text-info" aria-hidden="true"></i>
 						Edit  {{$howtofield->fieldname}}
 						</a>
-					</li>
-					<li>
-						<a data-href="{{route('howtofields.destroy',$howtofield->id)}}" 
+					
+						<a class="dropdown-item" 
+						data-href="{{route('howtofields.destroy',$howtofield->id)}}" 
 						data-toggle="modal" 
 						data-target="#confirm-delete" 
 						data-title = "location" 
 						href="#">
-						<i class="fa fa-trash-o" aria-hidden="true"> </i> 
+						<i class="fa fa-trash-o text-danger" aria-hidden="true"> </i> 
 						Delete {{$howtofield->fieldname}}
 						</a>
-					</li>
-
 				</ul>
 			</div>	
 		</td>

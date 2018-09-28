@@ -48,8 +48,16 @@
 			  </button>
 			  <ul class="dropdown-menu" permission="menu">
 				
-				<li><a href="{{route('permissions.edit',$permission->id)}}"><i class="fa fa-pencil" aria-hidden="true"> </i>Edit {{$permission->name}}</a></li>
-				<li><a data-href="{{route('permissions.destroy',$permission->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = "{{$permission->name}}" href="#"><i class="fa fa-trash-o" aria-hidden="true"> </i> Delete {{$permission->name}}</a></li>
+				<a class="dropdown-item"
+					href="{{route('permissions.edit',$permission->id)}}">
+						<i class="fa fa-pencil text-info" aria-hidden="true"> </i>Edit {{$permission->name}}
+				</a>
+				<a class="dropdown-item"
+				data-href="{{route('permissions.destroy',$permission->id)}}" data-toggle="modal" 
+				data-target="#confirm-delete" 
+				data-title = "{{$permission->name}}" 
+				href="#">
+				<i class="fa fa-trash-o text-danger" aria-hidden="true"> </i> Delete {{$permission->name}}</a>
 			  </ul>
 			</div>
         

@@ -6,7 +6,7 @@
 		<div class="panel-heading clearfix">
 			<h2 class="panel-title pull-left">{{$lead->company_name}} - {{$lead->rating}}</h2>
 			<a class="btn btn-primary pull-right" href="">
-				<i class="fa fa-pencil"></i>
+				<i class="fa fa-pencil text-info"></i>
 				Edit
 			</a>
 		</div>

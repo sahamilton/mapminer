@@ -66,38 +66,34 @@
             </button>
             <ul class="dropdown-menu" role="menu">
                 
-                <li>
-                <a href="{{route('leadsource.edit',$source->id)}}">
-                <i class="fa fa-pencil" aria-hidden="true"></i>
+                <a class="dropdown-item"
+                href="{{route('leadsource.edit',$source->id)}}">
+                <i class="fa fa-pencil text-info" aria-hidden="true"></i>
                  Edit this prospect source
                  </a>
-                 </li>
-
-                <li>
-
-                <li>
-                <a href="{{route('leadsource.addleads',$source->id)}}">
+                 
+                <a class="dropdown-item"
+                href="{{route('leadsource.addleads',$source->id)}}">
                 <i class="fa fa-plus text-success" aria-hidden="true"></i>
                  Add prospects to this source
                  </a>
-                 </li>
-                <li>
-                <a href="{{route('leadsource.flushleads',$source->id)}}">
+                 
+                <a class="dropdown-item"
+                href="{{route('leadsource.flushleads',$source->id)}}">
                 <i class="fa fa-minus-circle text-danger" aria-hidden="true"></i>
                  Flush all prospects from this source
                  </a>
-                 </li>
-                <li>
-                <a href="{{route('leadsource.announce',$source->id)}}">
+                 
+                <a class="dropdown-item"
+                href="{{route('leadsource.announce',$source->id)}}">
                 <i class="fa fa-envelope" aria-hidden="true"></i> 
                 Email sales team
                 </a>
-                </li>
-                <li>
-                <a data-href="{{route('leadsource.destroy',$source->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = " this lead source and all its leads" href="#">
-                <i class="fa fa-trash-o" aria-hidden="true"> </i>
+                
+                <a class="dropdown-item"
+                data-href="{{route('leadsource.destroy',$source->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = " this lead source and all its leads" href="#">
+                <i class="fa fa-trash-o text-danger" aria-hidden="true"> </i>
                  Delete this prospect source</a>
-                 </li>
             </ul>
         </div>
 

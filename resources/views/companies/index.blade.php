@@ -105,18 +105,21 @@
 
 						
 						
-						<a class="dropdown-item" href="{{route('company.edit',$company->id)}}">
+						<a class="dropdown-item" 
+						  href="{{route('company.edit',$company->id)}}">
 						<i class="fa fa-pencil text-info" aria-hidden="true"> </i>
-						Edit {{$company->companyname}}</a></li>
+						Edit {{$company->companyname}}</a>
 						
 						<a class="dropdown-item"
-						data-href="{{route('company.destroy',$company->id)}}" 
-						data-toggle="modal" 
-						data-target="#confirm-delete" 
-						data-title = "{{$company->companyname}} and all its locations" 
-						href="#">
-						<i class="fa fa-trash-o text-danger" aria-hidden="true"> </i>
-						Delete {{$company->companyname}}</a>
+						  data-href="{{route('company.destroy',$company->id)}}" 
+						  data-toggle="modal" 
+						  data-target="#confirm-delete" 
+						  data-title = "{{$company->companyname}} and all its locations" 
+						  href="#">
+						  <i class="fa fa-trash-o text-danger" 
+						    aria-hidden="true"> </i>
+						   Delete {{$company->companyname}}
+						</a>
 						</ul>
 					</div>
 				</td>

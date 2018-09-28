@@ -43,26 +43,27 @@
 					<span class="sr-only">Toggle Dropdown</span>
 				</button>
 				<ul class="dropdown-menu" role="menu">
-				<li>
+				
 				@if(! $email->sent)
-					<a href="{{route('emails.edit',$email->id)}}" title="Edit this email">
-					<i class="fa fa-pencil" aria-hidden="true"></i>
-					Edit this email</a>
+					<a class="dropdown-item"
+					href="{{route('emails.edit',$email->id)}}" 
+					title="Edit this email">
+					<i class="fa fa-pencil text-info" aria-hidden="true"></i>
+					Edit this email
+				</a>
 				@else
-					<a href="{{route('emails.clone',$email->id)}}" title="Clone this email"><i class="fa fa-refresh" aria-hidden="true"></i>
+					<a class="dropdown-item"
+					 href="{{route('emails.clone',$email->id)}}" title="Clone this email"><i class="fa fa-refresh" aria-hidden="true"></i>
 					Clone this email</a>
 				@endif
-				</li>
-					
-					<li>
-						<a data-href="{{route('emails.destroy',$email->id)}}" 
+				
+					<a class="dropdown-item"
+					 data-href="{{route('emails.destroy',$email->id)}}" 
 						data-toggle="modal" 
 						data-target="#confirm-delete" 
 						data-title = "email" 
 						href="#">
-						<i class="fa fa-trash-o" aria-hidden="true"> </i> Delete Email</a>
-					</li>
-
+						<i class="fa fa-trash-o text-danger" aria-hidden="true"> </i> Delete Email</a>
 				</ul>
 			</div>	
 		</td>

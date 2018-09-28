@@ -47,14 +47,14 @@
 	            $comment->postedBy->person->postName() :'Anonymous' }}</span>
 
 	            @if($comment->user_id == auth()->user()->id  or auth()->user()->hasRole('Admin'))
-				<a href="{{route('comment.edit',$comment->id)}}" title="Edit this comment"><i class="fa fa-pencil" aria-hidden="true"></i></a> | 
+				<a href="{{route('comment.edit',$comment->id)}}" title="Edit this comment"><i class="fa fa-pencil text-info" aria-hidden="true"></i></a> | 
 				<a data-href="{{route('comment.destroy',$comment->id)}}" 
 		            data-toggle="modal" 
 		            data-target="#confirm-delete" 
 		            data-title = "comment"  
 		            title="Delete this comment"
 		            href="#">
-            <i class="fa fa-trash-o" aria-hidden="true"> </i> </a>
+            <i class="fa fa-trash-o text-danger" aria-hidden="true"> </i> </a>
            @endif
 					
 				</div>

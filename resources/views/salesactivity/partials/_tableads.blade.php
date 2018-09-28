@@ -64,12 +64,14 @@
 				<span class="sr-only">Toggle Dropdown</span>
 			  </button>
 			  <ul class="dropdown-menu" role="menu">
-				
-			 
-				<li><a data-href="{{route('saleslead.accept',$lead->id)}}" data-toggle="modal" data-target="#accept-lead" data-title = "Some title" href="#">
-                <i class="fa fa-thumbs-up text-success" aria-hidden="true"></i> Claim Lead </a></li>
-                <li><a href="{{route('saleslead.decline',$lead->id)}}">
-                <i class="fa fa-thumbs-down text-danger" aria-hidden="true"></i> Decline Lead </a></li>
+				<a class="dropdown-item"
+                    data-href="{{route('saleslead.accept',$lead->id)}}" data-toggle="modal" data-target="#accept-lead" data-title = "Some title" href="#">
+                    <i class="fa fa-thumbs-up text-success" aria-hidden="true"></i> Claim Lead 
+                </a>
+                <a class="dropdown-item"
+                     href="{{route('saleslead.decline',$lead->id)}}">
+                    <i class="fa fa-thumbs-down text-danger" aria-hidden="true"></i> Decline Lead 
+                </a>
                
 			  </ul>
 			</div>

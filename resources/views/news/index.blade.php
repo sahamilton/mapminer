@@ -62,14 +62,14 @@
 					<a href="{{route('news.show', $post->slug)}}#comments"> {{$post->comments()->exists()}}</a>
 
 					@if($post->user_id == auth()->user()->id  or auth()->user()->hasRole('Admin'))
-<a href="{{route('news.edit',$post->id)}}" title="Edit this news item"><i class="fa fa-pencil" aria-hidden="true"></i></a> | 
+<a href="{{route('news.edit',$post->id)}}" title="Edit this news item"><i class="fa fa-pencil text-info" aria-hidden="true"></i></a> | 
 <a data-href="{{route('news.destroy',$post->id)}}" 
             data-toggle="modal" 
             data-target="#confirm-delete" 
             data-title = "news item"  
             title="Delete this news item"
             href="#">
-            <i class="fa fa-trash-o" aria-hidden="true"> </i> </a>
+            <i class="fa fa-trash-o text-danger" aria-hidden="true"> </i> </a>
            
 
 				@endif

@@ -44,7 +44,7 @@
 								
 							</ul>
 						<a class="btn btn-primary pull-right" href="">
-						<i class="fa fa-pencil"></i>
+						<i class="fa fa-pencil text-info"></i>
 						Edit</a>				
 					</div>
 					<div class="col-sm-offset-8">
@@ -121,7 +121,7 @@
 						@endforeach
 					</ul>
 					<a class="btn btn-primary pull-right" href="{{route('branchassignments.index')}}">
-						<i class="fa fa-pencil"></i>
+						<i class="fa fa-pencil text-info"></i>
 						Edit</a>
 				</div>
 				<div class="col-sm-8">

@@ -74,9 +74,11 @@
 			  </button>
 			  <ul class="dropdown-menu" role="menu">
 				
-				<li><a href="{{route('serviceline.edit',$serviceline->id)}}/"><i class="fa fa-pencil" aria-hidden="true"> </i>
-				Edit {{$serviceline->ServiceLine}}</a></li>
-				<li><a data-href="{{route('serviceline.destroy',$serviceline->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = "{{$serviceline->ServiceLine}} and all its associations" href="#"><i class="fa fa-trash-o" aria-hidden="true"> </i> Delete {{$serviceline->ServiceLine}}</a></li>
+				<a class="dropdown-item"
+				href="{{route('serviceline.edit',$serviceline->id)}}/"><i class="fa fa-pencil text-info" aria-hidden="true"> </i>
+				Edit {{$serviceline->ServiceLine}}</a>
+				<a class="dropdown-item"
+				 data-href="{{route('serviceline.destroy',$serviceline->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = "{{$serviceline->ServiceLine}} and all its associations" href="#"><i class="fa fa-trash-o text-danger" aria-hidden="true"> </i> Delete {{$serviceline->ServiceLine}}</a>
 			  </ul>
 			</div>
 		
