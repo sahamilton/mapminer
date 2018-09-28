@@ -53,7 +53,7 @@
 				</a>
 				@else
 					<a class="dropdown-item"
-					 href="{{route('emails.clone',$email->id)}}" title="Clone this email"><i class="fa fa-refresh" aria-hidden="true"></i>
+					 href="{{route('emails.clone',$email->id)}}" title="Clone this email"><i class="far fa-copy"></i>" aria-hidden="true"></i>
 					Clone this email</a>
 				@endif
 				
@@ -63,7 +63,7 @@
 						data-target="#confirm-delete" 
 						data-title = "email" 
 						href="#">
-						<i class="fa fa-trash-o text-danger" aria-hidden="true"> </i> Delete Email</a>
+						<i class="far fa-trash-alt"></i> text-danger" aria-hidden="true"> </i> Delete Email</a>
 				</ul>
 			</div>	
 		</td>
