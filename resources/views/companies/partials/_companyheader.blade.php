@@ -1,5 +1,5 @@
 <p><a href="{{route('salesnotes',$company->id)}}" title="Read notes on selling to {{$company->companyname}}">
-<i class="far fa-search" aria-hidden="true"></i>  
+<i class="fas fa-search" aria-hidden="true"></i>  
 Read 'How to Sell to {{$company->companyname}}'</a>
 
 <a href="{{route('watch.index')}}" title="Review my watch list">

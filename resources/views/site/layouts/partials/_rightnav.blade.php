@@ -19,7 +19,7 @@
 
                 <li class="nav-item">
                   <a  class="nav-link" href="{{{ route('dashboard') }}}">
-                  <i class="far fa-tachometer" aria-hidden="true"> </i> Admin </a>
+                  <i class="fas fa-tachometer-alt" aria-hidden="true"> </i> Admin </a>
                 </li>
                 @endif
 
@@ -27,7 +27,7 @@
 
               <li class="nav-item">
                 <a  class="nav-link" href="{{{ route('dashboard') }}}">
-                <i class="far fa-tachometer" aria-hidden="true"> </i> Ops </a>
+                <i class="fas fa-tachometer-alt" aria-hidden="true"> </i> Ops </a>
               </li>
                 @endif
            

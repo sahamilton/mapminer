@@ -15,9 +15,7 @@
 		    return view('welcome');
 
 	}]);
-	Route::get('/testconfig', function () {
-	    dd(config('mail'));
-	});
+
 /*
 	
 	Route::get('/error',function(){

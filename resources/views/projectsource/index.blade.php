@@ -7,7 +7,7 @@
 @can('manage_projects')
 <div class="pull-right">
         <a href="{{{ route('projectsource.create') }}}" class="btn btn-small btn-info iframe">
-<i class="far fa-plus-circle " aria-hidden="true"></i>
+<i class="fas fa-plus-circle " aria-hidden="true"></i>
  Create New Project Source</a>
       </div>
 @endcan

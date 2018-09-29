@@ -5,7 +5,7 @@
  @if (auth()->user()->hasRole('Admin') or auth()->user()->hasRole('Sales Operations'))
 <div class="pull-right">
 				<p><a href="{{{ route('webleads.import.create') }}}" class="btn btn-small btn-info iframe">
-<i class="far fa-plus-circle " aria-hidden="true"></i>
+<i class="fas fa-plus-circle " aria-hidden="true"></i>
  Import New Web Lead</a></p>
 			</div>
  @endif  

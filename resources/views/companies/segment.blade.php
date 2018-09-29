@@ -22,7 +22,7 @@ $data['companyname']=$company->companyname;
 @if(auth()->user()->hasRole('Admin'))
 <div class="pull-right">
 				<a href="{{{ route('locations.create') }}}" class="btn btn-small btn-info iframe">
-<i class="far fa-plus-circle " aria-hidden="true"></i>
+<i class="fas fa-plus-circle " aria-hidden="true"></i>
  Create</a>
 			</div>
 			@endif

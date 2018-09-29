@@ -29,7 +29,7 @@
 <div class="pull-right" style="margin-bottom:20px">
 				<a href="{{route('company.location.create',$company->id)}}" title="Create a new {{$company->companyname}} location" class="btn btn-small btn-info iframe">
 				
-<i class="far fa-plus-circle " aria-hidden="true"></i>
+<i class="fas fa-plus-circle " aria-hidden="true"></i>
 
 				 Create New Location</a>
 			</div>

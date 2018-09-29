@@ -22,7 +22,7 @@
                      @else
                         <li class="dropdown{{ (Request::is('company*','branch*' ,'person*','findme') ? ' active' : '') }}">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="{{{ route('findme') }}}">
-    							<i class="far fa-search" aria-hidden="true"></i> Search<span class="caret"></span>
+    							<i class="fas fa-search" aria-hidden="true"></i> Search<span class="caret"></span>
     						</a>
     						<ul class="dropdown-menu">
                             <li {{ (Request::is('findme') ? ' class="active"' : '') }}><a href="{{{ route('findme') }}}">

@@ -22,7 +22,7 @@ $statelist = App\Branch::distinct()->orderBy('state')->get(array('state'));
            @endforeach
         </select>
  
-         <button type="submit"  class= "btn btn-default btn-xs"><i class="far fa-search" aria-hidden="true"></i> Search!</button>
+         <button type="submit"  class= "btn btn-default btn-xs"><i class="fas fa-search" aria-hidden="true"></i> Search!</button>
 
 
         {{Form::close()}}

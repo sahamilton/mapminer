@@ -12,7 +12,7 @@
 		</i>
 		@endif
 		</p>
-		<i class="far fa-search" aria-hidden="true"></i>
+		<i class="fas fa-search" aria-hidden="true"></i>
 		<a href="{{route('salesnotes',$location->company->id)}}" 
 		title="Read notes on selling to {{$location->company->companyname}}"> 
 		Read 'How to Sell to {{$location->company->companyname}}' </a>
