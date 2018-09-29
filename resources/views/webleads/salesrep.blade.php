@@ -2,7 +2,7 @@
 @section('content')
 
 <h2>{{$person->postName()}}'s Leads</h2>
-<p><a href="{{route('webleads.map')}}"><i class="fa fa-map" aria-hidden="true"></i> Map View</a>
+<p><a href="{{route('webleads.map')}}"><i class="far fa-map" aria-hidden="true"></i> Map View</a>
  
 
     <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>

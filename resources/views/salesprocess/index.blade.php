@@ -40,7 +40,7 @@
 
                                 <a class="dropdown-item"
                                 href="{{route('process.edit',$step->id)}}">
-                                <i class="fa fa-pencil text-info" aria-hidden="true"> </i>
+                                <i class="far fa-edit text-info"" aria-hidden="true"> </i>
                                 Edit Sales Step</a>
                                 <a class="dropdown-item"
                                 data-href="{{route('process.destroy',$step->id)}}" 
@@ -48,7 +48,7 @@
                                     data-target="#confirm-delete" 
                                     data-title = "location" 
                                     href="#">
-                                    <i class="fa fa-trash-o text-danger" aria-hidden="true"> </i> 
+                                    <i class="far fa-trash-o text-danger" aria-hidden="true"> </i> 
                                     Delete Sales Step
                                 </a>
                            </ul>

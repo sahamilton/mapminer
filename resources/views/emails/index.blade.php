@@ -5,7 +5,7 @@
 
 <div class="pull-right">
 <a href="{{{ route('emails.create') }}}" class="btn btn-small btn-info iframe">
-<i class="fa fa-plus-circle " aria-hidden="true"></i>
+<i class="far fa-plus-circle " aria-hidden="true"></i>
  Create New Email</a>
 </div>
 
@@ -48,7 +48,7 @@
 					<a class="dropdown-item"
 					href="{{route('emails.edit',$email->id)}}" 
 					title="Edit this email">
-					<i class="fa fa-pencil text-info" aria-hidden="true"></i>
+					<i class="far fa-edit text-info"" aria-hidden="true"></i>
 					Edit this email
 				</a>
 				@else

@@ -54,13 +54,13 @@
 
                     <a class="dropdown-item"
                         href="{{route('salesactivity.edit',$activity->id)}}">
-                        <i class="fa fa-pencil text-info" aria-hidden="true"> </i>Edit {{$activity->title}} campaign</a>
+                        <i class="far fa-edit text-info"" aria-hidden="true"> </i>Edit {{$activity->title}} campaign</a>
                         <a class="dropdown-item"
-                         href="{{route('campaign.announce',$activity->id)}}"><i class="fa fa-envelope" aria-hidden="true"></i> Email campaign team
+                         href="{{route('campaign.announce',$activity->id)}}"><i class="far fa-envelope" aria-hidden="true"></i> Email campaign team
                      </a>
                      <a class="dropdown-item"
                         href = "{{route('salesdocuments.index',$activity->id)}}">
-                        <i class="fa fa-book" aria-hidden="true"></i> {{$activity->title}} campaign Documents
+                        <i class="far fa-book" aria-hidden="true"></i> {{$activity->title}} campaign Documents
                     </a>
                      <a class="dropdown-item"
                         data-href="{{route('salesactivity.destroy',$activity->id)}}" 
@@ -68,7 +68,7 @@
                         data-target="#confirm-delete" 
                         data-title = "location" 
                         href="#">
-                        <i class="fa fa-trash-o text-danger" aria-hidden="true"> </i> 
+                        <i class="far fa-trash-o text-danger" aria-hidden="true"> </i> 
                         Delete {{$activity->title}} campaign
 
                     </a>    

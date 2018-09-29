@@ -16,7 +16,7 @@
     @endif
 		<p><a href="{{route('admin.downloadlogins',$view)}}" 
             title="Download these user details as a CSV / Excel file">
-            <i class="fa fa-cloud-download" aria-hidden="true"></i></i> 
+            <i class="far fa-cloud-download" aria-hidden="true"></i></i> 
             Download these user details</a> 
         </p>
 

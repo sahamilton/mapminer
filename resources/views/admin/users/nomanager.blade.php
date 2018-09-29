@@ -11,7 +11,7 @@
 		<h3>{{ $title }}</h3>
 			<p>
                  <a href="{{route('nomanager.export')}}">
-                 <i class="fa fa-cloud-download" aria-hidden="true"></i></i> Export to Excel</a>
+                 <i class="far fa-cloud-download" aria-hidden="true"></i></i> Export to Excel</a>
             </p>
 	</div>
 
@@ -87,7 +87,7 @@
 			  <ul class="dropdown-menu" role="menu">
 				
 				<a class="dropdown-item" 
-                    href="{{route('users.edit',$person->userdetails->id)}}"><i class="fa fa-pencil text-info" aria-hidden="true"> </i>Edit {{$person->firstname}}  {{$person->lastname}}
+                    href="{{route('users.edit',$person->userdetails->id)}}"><i class="far fa-edit text-info"" aria-hidden="true"> </i>Edit {{$person->firstname}}  {{$person->lastname}}
                 </a>
 
 				<a class="dropdown-item"
@@ -95,7 +95,7 @@
     				data-toggle="modal" 
     				data-target="#confirm-delete" 
     				data-title = "{{$person->firstname}}  {{$person->lastname}}" href="#">
-    				<i class="fa fa-trash-o text-danger" aria-hidden="true"> </i> 
+    				<i class="far fa-trash-o text-danger" aria-hidden="true"> </i> 
     				Delete {{$person->firstname}}  {{$person->lastname}}
                 </a>
 

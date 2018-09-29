@@ -16,7 +16,7 @@
         <div class="form-group{{ $errors->has('comments') ? ' has-error' : '' }}">
           <label class="col-md-4 control-label">Project Recipient</label>
            <div class="input-group input-group-lg ">
-            <input  type="text" required id="search" name="username" placeholder="Type to search users" autocomplete="off" ><i class="fa fa-search"></i>
+            <input  type="text" required id="search" name="username" placeholder="Type to search users" autocomplete="off" ><i class="far fa-search"></i>
            
 
            </div>

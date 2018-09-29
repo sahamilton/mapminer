@@ -19,7 +19,7 @@
 
                 <li class="nav-item">
                   <a  class="nav-link" href="{{{ route('dashboard') }}}">
-                  <i class="fa fa-tachometer" aria-hidden="true"> </i> Admin </a>
+                  <i class="far fa-tachometer" aria-hidden="true"> </i> Admin </a>
                 </li>
                 @endif
 
@@ -27,25 +27,25 @@
 
               <li class="nav-item">
                 <a  class="nav-link" href="{{{ route('dashboard') }}}">
-                <i class="fa fa-tachometer" aria-hidden="true"> </i> Ops </a>
+                <i class="far fa-tachometer" aria-hidden="true"> </i> Ops </a>
               </li>
                 @endif
            
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <i class="fa fa-user" aria-hidden="true"></i> {{ucfirst(strtolower( auth()->user()->person->firstname ))}}<span class="caret"></span></a> 
+            <i class="far fa-user" aria-hidden="true"></i> {{ucfirst(strtolower( auth()->user()->person->firstname ))}}<span class="caret"></span></a> 
             <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
 
               <a class="dropdown-item" href="{{{ route('user.show',auth()->user()->id) }}}">
-              <i class="fa fa-user" aria-hidden="true"> </i> 
+              <i class="far fa-user" aria-hidden="true"> </i> 
             Your Profile</a>
               <a class="dropdown-item" href="{{route('about')}}">
-              <i class="fa fa-info-circle" aria-hidden="true"> </i>  
+              <i class="far fa-info-circle" aria-hidden="true"> </i>  
             About Mapminer</a>
               <a class="dropdown-item" href="{{ route('logout') }}" 
                  onclick="event.preventDefault();
                  document.getElementById('logout-form').submit();">
-              <i class="fa fa-sign-out" aria-hidden="true"> </i>
+              <i class="far fa-sign-out" aria-hidden="true"> </i>
               Logout</a>
                <form id="logout-form" 
                      action="{{ route('logout') }}" 

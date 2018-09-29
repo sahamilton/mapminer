@@ -58,12 +58,12 @@
                         data-target="#accept-lead" 
                         data-title = "claim prospect" 
                         href="#">
-                        <i class="fa fa-thumbs-up" aria-hidden="true"></i> 
+                        <i class="far fa-thumbs-up" aria-hidden="true"></i> 
                         Claim Prospect 
                     </a>
                     <a class="dropdown-item" 
                         href="{{route('saleslead.decline',$lead->id)}}">
-                        <i class="fa fa-thumbs-down" aria-hidden="true"></i> 
+                        <i class="far fa-thumbs-down" aria-hidden="true"></i> 
                         Decline Prospect 
                     </a>
 
@@ -73,7 +73,7 @@
 
                    @if($lead->pivot->status_id ==2)
     				<a class="dropdown-item" href="">
-    				<i class="fa fa-hand-o-right" aria-hidden="true"></i>
+    				<i class="far fa-hand-o-right" aria-hidden="true"></i>
     				Work  Prospect </a>
                    @endif
     			  </ul>

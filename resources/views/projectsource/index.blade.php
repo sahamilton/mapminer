@@ -7,7 +7,7 @@
 @can('manage_projects')
 <div class="pull-right">
         <a href="{{{ route('projectsource.create') }}}" class="btn btn-small btn-info iframe">
-<i class="fa fa-plus-circle " aria-hidden="true"></i>
+<i class="far fa-plus-circle " aria-hidden="true"></i>
  Create New Project Source</a>
       </div>
 @endcan
@@ -51,7 +51,7 @@
         
         <a class="dropdown-item"
         href="{{route('projectsource.edit',$source->id)}}">
-          <i class="fa fa-pencil text-info" aria-hidden="true"> </i>
+          <i class="far fa-edit text-info"" aria-hidden="true"> </i>
           Edit {{$source->source}}
         </a>
         <a class="dropdown-item"
@@ -59,7 +59,7 @@
           data-toggle="modal" 
           data-target="#confirm-delete" 
           data-title = "{{$source->source}}" href="#">
-          <i class="fa fa-trash-o text-danger" aria-hidden="true"> </i> 
+          <i class="far fa-trash-o text-danger" aria-hidden="true"> </i> 
           Delete {{$source->source}}
         </a>
 

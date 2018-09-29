@@ -3,7 +3,7 @@
 @if (auth()->user()->hasRole('Admin'))
 <div class="pull-right">
 <a href="{{{ route('branches.create') }}}" class="btn btn-small btn-info iframe">
-<i class="fa fa-plus-circle " aria-hidden="true"></i>
+<i class="far fa-plus-circle " aria-hidden="true"></i>
  Create New Branch</a>	</div>
 @endif
 
@@ -11,7 +11,7 @@
 
 
 <?php $route ='branches.state';?>
-<p><a href="{{route('branches.map')}}"><i class="fa fa-flag" aria-hidden="true"></i>Map View</a>
+<p><a href="{{route('branches.map')}}"><i class="far fa-flag" aria-hidden="true"></i>Map View</a>
 @include('branches.partials._state')
 @include('maps.partials._form')
 <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
@@ -119,13 +119,13 @@
 			  <ul class="dropdown-menu" role="menu">
 				
 				<a class="dropdown-item"
-					href="{{route('branches.edit',$branch->id)}}"><i class="fa fa-pencil text-info" aria-hidden="true"> </i>Edit {{$branch->branchname}} Branch
+					href="{{route('branches.edit',$branch->id)}}"><i class="far fa-edit text-info"" aria-hidden="true"> </i>Edit {{$branch->branchname}} Branch
 				</a>
 				<a class="dropdown-item"
 				   data-href="{{route('branches.destroy',$branch->id)}}" data-toggle="modal" 
 				   data-target="#confirm-delete" 
 				   data-title = "{{$branch->branchname}} branch" 
-				   href="#"><i class="fa fa-trash-o text-danger" aria-hidden="true"> </i> Delete {{$branch->branchname}} branch
+				   href="#"><i class="far fa-trash-o text-danger" aria-hidden="true"> </i> Delete {{$branch->branchname}} branch
 				</a>
 			  </ul>
 			</div>

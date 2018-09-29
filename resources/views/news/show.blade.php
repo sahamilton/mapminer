@@ -10,7 +10,7 @@
 <div class="pull-right">
 <a href="{{route('news.edit',$news->id)}}">
 <button class="btn btn-info">
-<i class="fa fa-pencil-square-o" aria-hidden="true"> </i>
+<i class="far fa-pencil-square-o" aria-hidden="true"> </i>
  Edit News</button></a>
 </div>
 
@@ -41,20 +41,20 @@
 					
 					<p>{{ $comment->comment }}</p>
 
-				 <i class="fa fa-calendar" aria-hidden="true"></i> <!--Sept 16th, 2012-->{{$comment->updated_at->format('M jS,Y')}}
+				 <i class="far fa-calendar" aria-hidden="true"></i> <!--Sept 16th, 2012-->{{$comment->updated_at->format('M jS,Y')}}
 				
-	            <i class="fa fa-user" aria-hidden="true"></i> by <span class="muted">{{ isset($comment->postedBy) ?  
+	            <i class="far fa-user" aria-hidden="true"></i> by <span class="muted">{{ isset($comment->postedBy) ?  
 	            $comment->postedBy->person->postName() :'Anonymous' }}</span>
 
 	            @if($comment->user_id == auth()->user()->id  or auth()->user()->hasRole('Admin'))
-				<a href="{{route('comment.edit',$comment->id)}}" title="Edit this comment"><i class="fa fa-pencil text-info" aria-hidden="true"></i></a> | 
+				<a href="{{route('comment.edit',$comment->id)}}" title="Edit this comment"><i class="far fa-edit text-info"" aria-hidden="true"></i></a> | 
 				<a data-href="{{route('comment.destroy',$comment->id)}}" 
 		            data-toggle="modal" 
 		            data-target="#confirm-delete" 
 		            data-title = "comment"  
 		            title="Delete this comment"
 		            href="#">
-            <i class="fa fa-trash-o text-danger" aria-hidden="true"> </i> </a>
+            <i class="far fa-trash-o text-danger" aria-hidden="true"> </i> </a>
            @endif
 					
 				</div>

@@ -11,7 +11,7 @@
                           data-target="#unassign-weblead"
                           data-title = "unassign this weblead" 
                           href="#">
-              <i class="fa fa-unlink"></i> Un-assign lead</a></p>
+              <i class="far fa-unlink"></i> Un-assign lead</a></p>
 @include('partials._unassignleadmodal') 
     @endif
     <div class="row">

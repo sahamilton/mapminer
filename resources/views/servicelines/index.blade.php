@@ -5,7 +5,7 @@
  @if (auth()->user()->hasRole('Admin'))
 <div class="pull-right">
 				<p><a href="{{{ route('serviceline.create') }}}" class="btn btn-small btn-info iframe">
-<i class="fa fa-plus-circle " aria-hidden="true"></i>
+<i class="far fa-plus-circle " aria-hidden="true"></i>
  Create New Service Line</a></p>
 			</div>
  @endif  
@@ -75,10 +75,10 @@
 			  <ul class="dropdown-menu" role="menu">
 				
 				<a class="dropdown-item"
-				href="{{route('serviceline.edit',$serviceline->id)}}/"><i class="fa fa-pencil text-info" aria-hidden="true"> </i>
+				href="{{route('serviceline.edit',$serviceline->id)}}/"><i class="far fa-edit text-info"" aria-hidden="true"> </i>
 				Edit {{$serviceline->ServiceLine}}</a>
 				<a class="dropdown-item"
-				 data-href="{{route('serviceline.destroy',$serviceline->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = "{{$serviceline->ServiceLine}} and all its associations" href="#"><i class="fa fa-trash-o text-danger" aria-hidden="true"> </i> Delete {{$serviceline->ServiceLine}}</a>
+				 data-href="{{route('serviceline.destroy',$serviceline->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = "{{$serviceline->ServiceLine}} and all its associations" href="#"><i class="far fa-trash-o text-danger" aria-hidden="true"> </i> Delete {{$serviceline->ServiceLine}}</a>
 			  </ul>
 			</div>
 		

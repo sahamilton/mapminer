@@ -4,7 +4,7 @@
 <h1>{{$user->person->postName()}}'s Watch List</h1>
 <p><a href="{{route('watch.mywatchexport',$user->id)}}" 
 title="Download {{$user->person->postName()}}'s Watch List as a CSV / Excel file">
-<i class="fa fa-cloud-download" aria-hidden="true"></i></i> Download {{$user->person->postName()}}'s Watch List</a> </p>
+<i class="far fa-cloud-download" aria-hidden="true"></i></i> Download {{$user->person->postName()}}'s Watch List</a> </p>
 
 <table id='sorttable' class ='table table-bordered table-striped table-hover dataTable'><thead>
 

@@ -4,7 +4,7 @@
 
 <h1>{{$data['title']}}</h1>
 @if(isset($data['listviewref']))
-<p><a href="{{$data['listviewref']}}"><i class="fa fa-th-list" aria-hidden="true"></i> List view</a></p>
+<p><a href="{{$data['listviewref']}}"><i class="far fa-th-list" aria-hidden="true"></i> List view</a></p>
 
 @endif
 {!! isset($filtered) && $filtered ? "<h4 class='filtered'>Filtered</h4>" : ''!!}

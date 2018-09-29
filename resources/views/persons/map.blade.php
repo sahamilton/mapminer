@@ -4,7 +4,7 @@
 @include('partials/_showsearchoptions')
 @include('partials/advancedsearch')
 @include('maps/partials/_industry_keys')
-<p><a href='{{route("person.index")}}'><i class="fa fa-th-list" aria-hidden="true"></i> List view</a></p>
+<p><a href='{{route("person.index")}}'><i class="far fa-th-list" aria-hidden="true"></i> List view</a></p>
 
 	
       

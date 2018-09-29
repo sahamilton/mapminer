@@ -47,14 +47,14 @@
   </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                         <a class="dropdown-item" href="{{route('permission.edit',$permission->id)}}">
-                        <i class="fa fa-pencil text-info" aria-hidden="true"> </i>Edit permission</a>
+                        <i class="far fa-edit text-info"" aria-hidden="true"> </i>Edit permission</a>
                         <a class="dropdown-item" 
                         data-href="{{route('permissions.destroy',$permission->id)}}" 
                         data-toggle="modal" 
                         data-target="#confirm-delete" 
                         data-title = "location" 
                         href="#">
-                    <i class="fa fa-trash-o text-danger" aria-hidden="true"> </i> Delete permission</a>
+                    <i class="far fa-trash-o text-danger" aria-hidden="true"> </i> Delete permission</a>
                     </div></div>
 
 

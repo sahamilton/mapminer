@@ -54,7 +54,7 @@
 @endif
 <a href="{{route('user.edit',$user->id)}}">
 <button type="button" class="btn btn-success" >
-<i class="fa fa-pencil text-info" aria-hidden="true"></i> Update</button></a>
+<i class="far fa-edit text-info"" aria-hidden="true"></i> Update</button></a>
 
 <script>
 $(document).ready(function() {

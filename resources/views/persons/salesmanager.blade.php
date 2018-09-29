@@ -11,7 +11,7 @@
 <p><a href="mailto:{{$people->email}}" title="Email {{$people->firstname}} {{$people->lastname}}">{{$people->email}}</a> </p>
 <h4>{{$people->firstname}} {{$people->lastname}}'s Sales Team</h4>
 
-  <p><a href="{{route('showmap.person',$people->id)}}"><i class="fa fa-flag" aria-hidden="true"></i> Map View</a></p>    
+  <p><a href="{{route('showmap.person',$people->id)}}"><i class="far fa-flag" aria-hidden="true"></i> Map View</a></p>    
 
 <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
@@ -31,7 +31,7 @@
          <a href="{{route('person.show',$reports->id)}}">
         {{$reports->postName()}}
         </a>
-        <span type="button" class="fa fa-copy btn-copy js-tooltip js-copy" data-toggle="tooltip" data-placement="bottom" data-copy="{{$reports->postName()}}" title="Copy to clipboard"></span>
+        <span type="button" class="far fa-copy btn-copy js-tooltip js-copy" data-toggle="tooltip" data-placement="bottom" data-copy="{{$reports->postName()}}" title="Copy to clipboard"></span>
    
 
    </td>

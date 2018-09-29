@@ -17,7 +17,7 @@
 
 				<a href="{{{ route('users.create') }}}" class="btn btn-small btn-info iframe">
 				
-<i class="fa fa-plus-circle " aria-hidden="true"></i>
+<i class="far fa-plus-circle " aria-hidden="true"></i>
  Create</a>
 
 			</div>
@@ -99,7 +99,7 @@
 				
 				<a class="dropdown-item"
                 href="{{route('users.edit',$user->id)}}">
-                <i class="fa fa-pencil text-info" 
+                <i class="far fa-edit text-info"" 
                 aria-hidden="true"> </i>Edit {{$user->person->firstname}}  {{$user->person->lastname}}</a>
 
 				<a class="dropdown-item" 
@@ -107,7 +107,7 @@
 				data-toggle="modal" 
 				data-target="#confirm-delete" 
 				data-title = "{{$user->person->firstname}}  {{$user->person->lastname}}" href="#">
-				<i class="fa fa-trash-o text-danger" aria-hidden="true"> </i> 
+				<i class="far fa-trash-o text-danger" aria-hidden="true"> </i> 
 				Delete {{$user->person->firstname}}  {{$user->person->lastname}}</a>
 
 			  </ul>

@@ -4,7 +4,7 @@
     <h2>Sales Campaigns</h2>
     <div class="pull-right">
         <a href ="{{route('salesactivity.create')}}">
-            <button class="btn btn-success" ><i class="fa fa-briefcase" aria-hidden="true"> </i> Add Sales Campaign</button>
+            <button class="btn btn-success" ><i class="far fa-briefcase" aria-hidden="true"> </i> Add Sales Campaign</button>
         </a>
     </div> 
     <ul class="nav nav-tabs">

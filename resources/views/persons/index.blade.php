@@ -9,12 +9,12 @@
 @include('partials/_showsearchoptions')
 @include('partials/advancedsearch')
 
-<p><a href="{{route('person.map')}}"><i class="fa fa-flag" aria-hidden="true"></i>Map View</a>
+<p><a href="{{route('person.map')}}"><i class="far fa-flag" aria-hidden="true"></i>Map View</a>
 
 @if (auth()->user()->hasRole('Admin'))
 	<div class="pull-right">
 		<a href="{{{ route('users.create') }}}" class="btn btn-small btn-info iframe">
-		<i class="fa fa-plus text-success" aria-hidden="true"></i>
+		<i class="far fa-plus text-success" aria-hidden="true"></i>
 		Create New Person</a>
 	</div>
 @endif

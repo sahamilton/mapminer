@@ -67,7 +67,7 @@
 				<ul class="dropdown-menu" role="menu">
 					<a class="dropdown-item"
 						href="{{route('locations.edit',$location->id)}}">
-							<i class="fa fa-pencil text-info" aria-hidden="true"> </i>
+							<i class="far fa-edit text-info"" aria-hidden="true"> </i>
 
 							Edit {{$location->businessname}}
 						</a>
@@ -75,7 +75,7 @@
 						<a class="dropdown-item"
 						data-href="{{route('locations.destroy',$location->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = "{{$location->businessname}} and all associated notes" 
 						href="#">
-						<i class="fa fa-trash" aria-hidden="true"></i>
+						<i class="far fa-trash" aria-hidden="true"></i>
 						Delete {{$location->businessname}}
 						</a>
 									</ul>

@@ -5,7 +5,7 @@
 	<h4>From {{$activity->datefrom->format('M j Y')}} to {{$activity->dateto->format('M j Y')}}</h4>
 
 	<a href="{{route('salescampaigns')}}">
-	<i class="fa fa-calendar" aria-hidden="true"></i>
+	<i class="far fa-calendar" aria-hidden="true"></i>
 	Back to all campaigns</a>
 
 	<ul class="nav nav-tabs">

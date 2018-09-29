@@ -18,7 +18,7 @@
 <p><a href="mailto:{{$people->email}}" title="Email {{$people->firstname}} {{$people->lastname}}">{{$people->email}}</a> </p>
 <h4>Branches serviced by {{$people->postName()}}</h4>
 
-  <p><a href="{{route('showmap.person',$people->id)}}"><i class="fa fa-flag" aria-hidden="true"></i> Map View</a></p>	
+  <p><a href="{{route('showmap.person',$people->id)}}"><i class="far fa-flag" aria-hidden="true"></i> Map View</a></p>	
 <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
 	    <th>Branch</th>

@@ -14,14 +14,14 @@
            Available from {{$leadsource->datefrom->format('M j,Y')}} to {{$leadsource->dateto->format('M j,Y')}}
         @endif
     </p>
-				<p class="row"><a href="{{route('leadsource.export',$leadsource->id)}}"><i class="fa fa-cloud-download" aria-hidden="true"></i></i>  Export owned and closed {{$leadsource->source}} Leads</a></p>
+				<p class="row"><a href="{{route('leadsource.export',$leadsource->id)}}"><i class="far fa-cloud-download" aria-hidden="true"></i></i>  Export owned and closed {{$leadsource->source}} Leads</a></p>
 				
 
 				<p><a href="{{route('leadsource.index')}}">Return to all Prospect sources</a></p>
  @if (auth()->user()->hasRole('Admin') or auth()->user()->hasRole('Sales Operations'))
 <div class="pull-right">
                 <p><a href="{{{ route('leads.search') }}}" class="btn btn-small btn-info iframe">
-<i class="fa fa-plus-circle " aria-hidden="true"></i>
+<i class="far fa-plus-circle " aria-hidden="true"></i>
  Import New Web Lead</a></p>
             </div>
  @endif  

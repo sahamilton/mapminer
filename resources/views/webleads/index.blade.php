@@ -5,7 +5,7 @@
  @if (auth()->user()->hasRole('Admin') or auth()->user()->hasRole('Sales Operations'))
 <div class="pull-right">
 				<p><a href="{{{ route('webleads.import.create') }}}" class="btn btn-small btn-info iframe">
-<i class="fa fa-plus-circle " aria-hidden="true"></i>
+<i class="far fa-plus-circle " aria-hidden="true"></i>
  Import New Web Lead</a></p>
 			</div>
  @endif  
@@ -54,14 +54,14 @@
 				
 				<a class="dropdown-item"
 				href="{{route('webleads.edit',$lead->id)}}/">
-					<i class="fa fa-pencil text-info" aria-hidden="true"> </i>
+					<i class="far fa-edit text-info"" aria-hidden="true"> </i>
 				Edit Web Lead</a>
 				<a class="dropdown-item"
 				 data-href="{{route('webleads.destroy',$lead->id)}}" 
 					data-toggle="modal" 
 					data-target="#confirm-delete" 
 					data-title = "This web lead and all its associations" href="#">
-					<i class="fa fa-trash-o text-danger" aria-hidden="true"> </i> 
+					<i class="far fa-trash-o text-danger" aria-hidden="true"> </i> 
 				Delete Web Lead</a>
 			  </ul>
 			</div>

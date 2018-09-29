@@ -5,7 +5,7 @@
 <div class="pull-right">
 <a href="{{{ Route('comment.create') }}}" class="btn btn-small btn-info iframe">
 
-<i class="fa fa-plus-circle " aria-hidden="true"></i>
+<i class="far fa-plus-circle " aria-hidden="true"></i>
 Add Feedback</a>
 </div>
 @if (auth()->user()->hasRole('Admin'))
@@ -42,10 +42,10 @@ Add Feedback</a>
 						<ul class="dropdown-menu" role="menu">
 							<a class="dropdown-item"
 							href="{{route('comment.edit',$comment->id)}}">
-							<i class="fa fa-pencil text-info" aria-hidden="true"> </i>Edit this comment</a>
+							<i class="far fa-edit text-info"" aria-hidden="true"> </i>Edit this comment</a>
 							<a class="dropdown-item"
 							data-href="{{route('comment.destroy',$comment->id)}}"data-toggle="modal" data-target="#confirm-delete" data-title = "this comment" href="#">
-							<i class="fa fa-trash-o text-danger" aria-hidden="true"> </i> Delete this comment</a>
+							<i class="far fa-trash-o text-danger" aria-hidden="true"> </i> Delete this comment</a>
 						</ul>
 					</div>
 

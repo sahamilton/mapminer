@@ -5,7 +5,7 @@
 
 <div class="pull-right">
 				<a href="{{{ route('admin.news.create') }}}" class="btn btn-small btn-info iframe">
-<i class="fa fa-plus-circle " aria-hidden="true"></i>
+<i class="far fa-plus-circle " aria-hidden="true"></i>
  Create New Updates</a>
 			</div>
 
@@ -70,7 +70,7 @@
 				
 				<a class="dropdown-item" 
 					href="{{route(news.destroy',$item->id)}}">
-					<i class="fa fa-pencil text-info" aria-hidden="true"> </i>Edit this news item
+					<i class="far fa-edit text-info"" aria-hidden="true"> </i>Edit this news item
 				</a>
 				<a class="dropdown-item" 
 					data-href="{{route('admin.news.delete',$item->id)}}" 
@@ -78,7 +78,7 @@
 					data-target="#confirm-delete" 
 					data-title = " this news item and all its comments" 
 					href="#">
-                	<i class="fa fa-trash-o text-danger" aria-hidden="true"> </i> Delete this news item
+                	<i class="far fa-trash-o text-danger" aria-hidden="true"> </i> Delete this news item
                 </a>
 			  </ul>
 			</div>

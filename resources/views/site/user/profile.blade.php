@@ -44,7 +44,7 @@
 								
 							</ul>
 						<a class="btn btn-primary pull-right" href="">
-						<i class="fa fa-pencil text-info"></i>
+						<i class="far fa-edit text-info""></i>
 						Edit</a>				
 					</div>
 					<div class="col-sm-offset-8">
@@ -121,7 +121,7 @@
 						@endforeach
 					</ul>
 					<a class="btn btn-primary pull-right" href="{{route('branchassignments.index')}}">
-						<i class="fa fa-pencil text-info"></i>
+						<i class="far fa-edit text-info""></i>
 						Edit</a>
 				</div>
 				<div class="col-sm-8">
@@ -160,7 +160,7 @@
 					<p class="list-group-item-text"><strong>Corrections</strong></p>
 					<ul style="list-style-type: none;">
 						<p class="">If any details of your profile are incorrect or incomplete please contact <a href="mailto:salesops@trueblue.com">
-							<i class="fa fa-envelope-open-o" aria-hidden="true"> </i>
+							<i class="far fa-envelope-open-o" aria-hidden="true"> </i>
 							 salesops@trueblue.com
 						</a>.</p>
 							

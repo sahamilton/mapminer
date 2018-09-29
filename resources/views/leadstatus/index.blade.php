@@ -8,7 +8,7 @@
 
 <div class="pull-right">
         <a href="{{ route('leadstatus.create') }}" class="btn btn-small btn-info iframe">
-<i class="fa fa-plus-circle " aria-hidden="true"></i>
+<i class="far fa-plus-circle " aria-hidden="true"></i>
  Create New Prospect Status</a>
       </div>
 @endif
@@ -53,9 +53,9 @@
         <ul class="dropdown-menu" role="menu">
         
         <a class="dropdown-item"
-         href="{{route('leadstatus.edit',$status->id)}}"><i class="fa fa-pencil text-info" aria-hidden="true"> </i>Edit this lead status</a>
+         href="{{route('leadstatus.edit',$status->id)}}"><i class="far fa-edit text-info"" aria-hidden="true"> </i>Edit this lead status</a>
          <a class="dropdown-item"
-          data-href="{{route('leadstatus.destroy',$status->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = " this lead status " href="#"><i class="fa fa-trash-o text-danger" aria-hidden="true"> </i> Delete this lead status</a>
+          data-href="{{route('leadstatus.destroy',$status->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = " this lead status " href="#"><i class="far fa-trash-o text-danger" aria-hidden="true"> </i> Delete this lead status</a>
         </ul>
       </div>
     

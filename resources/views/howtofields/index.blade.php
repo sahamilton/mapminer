@@ -5,7 +5,7 @@
 
 <div class="pull-right">
 <a href="{{{ route('howtofields.create') }}}" class="btn btn-small btn-info iframe">
-<i class="fa fa-plus-circle " aria-hidden="true"></i>
+<i class="far fa-plus-circle " aria-hidden="true"></i>
  Create New Field</a>
 </div>
 
@@ -43,7 +43,7 @@
 
 						<a class="dropdown-item"
 						href="{{route('howtofields.edit', $howtofield->id)}}">
-						<i class="fa fa-pencil text-info" aria-hidden="true"></i>
+						<i class="far fa-edit text-info"" aria-hidden="true"></i>
 						Edit  {{$howtofield->fieldname}}
 						</a>
 					
@@ -53,7 +53,7 @@
 						data-target="#confirm-delete" 
 						data-title = "location" 
 						href="#">
-						<i class="fa fa-trash-o text-danger" aria-hidden="true"> </i> 
+						<i class="far fa-trash-o text-danger" aria-hidden="true"> </i> 
 						Delete {{$howtofield->fieldname}}
 						</a>
 				</ul>

@@ -16,7 +16,7 @@
 
 <div class="pull-right">
 <a href="{{ route('company.create') }}" class="btn btn-small btn-info iframe">
-<i class="fa fa-plus-circle " aria-hidden="true"></i>
+<i class="far fa-plus-circle " aria-hidden="true"></i>
  Create New Account</a>
 </div>
 @endif
@@ -107,7 +107,7 @@
 						
 						<a class="dropdown-item" 
 						  href="{{route('company.edit',$company->id)}}">
-						<i class="fa fa-pencil text-info" aria-hidden="true"> </i>
+						<i class="far fa-edit text-info"" aria-hidden="true"> </i>
 						Edit {{$company->companyname}}</a>
 						
 						<a class="dropdown-item"
@@ -116,7 +116,7 @@
 						  data-target="#confirm-delete" 
 						  data-title = "{{$company->companyname}} and all its locations" 
 						  href="#">
-						  <i class="fa fa-trash-o text-danger" 
+						  <i class="far fa-trash-o text-danger" 
 						    aria-hidden="true"> </i>
 						   Delete {{$company->companyname}}
 						</a>
