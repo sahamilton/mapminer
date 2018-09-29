@@ -15,9 +15,9 @@
 		    return view('welcome');
 
 	}]);
-/*Route::get('/testerror', function () {
-    throw new Exception('Example exception!');
-});*/
+	Route::get('/testconfig', function () {
+	    dd(config('mail'));
+	});
 /*
 	
 	Route::get('/error',function(){
