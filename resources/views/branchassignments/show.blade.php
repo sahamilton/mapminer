@@ -34,38 +34,26 @@
 <tbody>
 
 @foreach($details->branchesServiced as $branch)
-<tr>
-
-    <td><a href="{{route('branches.show',$branch->id)}}" title="Review {{trim($branch->branchname)}} branch">{{$branch->branchname}}</a></td>
-    <td>{{$branch->id}}</td>
-    <td>{{$branch->street}}</td>
-    <td>{{$branch->city}}</td>
-    <td>{{$branch->state}}</td>
-    <td>
-
-      <input class="text text-success" type="checkbox" checked name ="branch[]" value="{{$branch->id}}">
-
-
-    </td>
-
-
-   </tr>
-  
+@include('branchassignments.partials._selectbranch')
  @endforeach
 </tbody>
  </table>
 @else
 <div class="alert alert-warning">
-  <p>You currently are not assigned to any branches in Mapminer</p>
+  <p>You currently are not assigned to any branches in Mapminer. Check / uncheck any of the nearby branches to assign yourself.</p>
 </div>
 <div class="list-group-item">
-        <p><strong>Closest Branches to your location</strong></p>
-        <div class="row">
-          <div class="list-group-item-text col-sm-12">
-            @include('branches.partials._nearby')
-          </div>
-        </div>
-      </div>
+  <p><strong>Closest Branches to your location</strong></p>
+  <div class="row">
+    <div class="list-group-item-text col-sm-12">
+      <table class="table">
+      @foreach($branches as $branch)
+        @include('branchassignments.partials._selectbranch')
+      @endforeach
+      </table>
+    </div>
+  </div>
+</div>
 @endif
 <div class="alert alert-info">
   <p>Add missing branches by entering the correct branch numbers <em>(4 characters each)</em>, separated by commas and then click update.</p></div>

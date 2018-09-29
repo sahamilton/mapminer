@@ -55,7 +55,7 @@ class BranchManagement extends Model
 	public function getBranches(Request $request, $role){
 		$branches = explode(",",request('branches'));
 
-		if(! is_array($branches)){
+		if($branches[0]==''){
 			$branches= array();
 		}
 

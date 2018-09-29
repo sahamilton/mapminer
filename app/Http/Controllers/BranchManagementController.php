@@ -76,7 +76,7 @@ class BranchManagementController extends Controller
      */
     public function update(BranchManagementRequest $request, $id)
     {
-           
+        
         if(! auth()->user()->hasRole('Admin')){
             
             $id = auth()->user()->id;
