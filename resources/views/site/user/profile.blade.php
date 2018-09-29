@@ -160,7 +160,7 @@
 					<p class="list-group-item-text"><strong>Corrections</strong></p>
 					<ul style="list-style-type: none;">
 						<p class="">If any details of your profile are incorrect or incomplete please contact <a href="mailto:salesops@trueblue.com">
-							<i class="far fa-envelope-open-o" aria-hidden="true"> </i>
+							<i class="far fa-envelope" aria-hidden="true"> </i>
 							 salesops@trueblue.com
 						</a>.</p>
 							

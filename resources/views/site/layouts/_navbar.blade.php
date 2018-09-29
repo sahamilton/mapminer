@@ -95,7 +95,7 @@
                   
                   @if(auth()->user()->hasRole('Branch Manager'))
                     <a class="dropdown-item"  href="{{route('branchmanager.newleads')}}">
-                    <i class="far fa-envelope-open-o" aria-hidden="true"> </i> 
+                    <i class="far fa-envelope" aria-hidden="true"> </i> 
                     Branch Prospects</a>
                   @endif
 
