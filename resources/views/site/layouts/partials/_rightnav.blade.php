@@ -40,12 +40,14 @@
               <i class="far fa-user" aria-hidden="true"> </i> 
             Your Profile</a>
               <a class="dropdown-item" href="{{route('about')}}">
-              <i class="far fa-info-circle" aria-hidden="true"> </i>  
+              <i class="fas fa-info-circle" aria-hidden="true">
+              </i>  
             About Mapminer</a>
               <a class="dropdown-item" href="{{ route('logout') }}" 
                  onclick="event.preventDefault();
                  document.getElementById('logout-form').submit();">
-              <i class="far fa-sign-out" aria-hidden="true"> </i>
+                 
+              <i class="fas fa-sign-out-alt" aria-hidden="true"> </i>
               Logout</a>
                <form id="logout-form" 
                      action="{{ route('logout') }}" 
