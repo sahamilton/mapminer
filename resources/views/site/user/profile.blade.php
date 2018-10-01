@@ -142,6 +142,22 @@
 					</ul>
 				</div>
 			@endif
+			
+				<div class="list-group-item"><p class="list-group-item-text"><strong>Industry Focus</strong>
+				</p>
+					@if(count($user->person->industryfocus)==0)
+					<div class="alert alert-warning">
+						<p>You are not associated with any particular industy.</p>
+					@else
+					<ul style="list-style-type: none;">
+						@foreach($user->person->industryfocus as $industry)
+							<li>{{$industry->filter}}</a></li>
+						@endforeach
+					</ul>
+					@endif
+					<a href="{{route('industryfocus.index')}}"" class="btn btn-info">Change</a>
+				</div>
+			
 				<div class="list-group-item">
 					<p class="list-group-item-text"><strong>Activity</strong></p>
 					<ul style="list-style-type: none;">

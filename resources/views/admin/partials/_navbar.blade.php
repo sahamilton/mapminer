@@ -31,7 +31,7 @@
                             @include('admin.partials.nav._usersnav')
                         @endcan
                         <li class="nav-item">
-                            <a class="nav-link" href="">
+                            <a class="nav-link" href="{{ route('imports.index') }}">
                                 <i class="fas fa-recycle"></i> Import / Export
                             </a>
                         </li>

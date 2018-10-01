@@ -85,6 +85,9 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::post('findme',['as'=>'findme','uses'=>'GeoCodingController@findMe']);
 		Route::get('findme',['as'=>'findme','uses'=>'MapsController@findme']);
 
+	#Industry Focus
+    	Route::resource('/industryfocus','PersonIndustryController');
+
 	#Locations
 
 		Route::get('location/{id}/branches', ['as' => 'assign.location', 'uses' => 'LocationsController@getClosestBranch']);
@@ -301,6 +304,8 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
     	Route::post('/importprojectcompany/mapfields',['as'=>'projectcompany.mapfields','uses'=>'ProjectsCompanyImportController@mapfields']);
     	Route::post('/importbranches/mapfields',['as'=>'branches.mapfields','uses'=>'BranchesImportController@mapfields']);
     	Route::post('/importbranchteams/mapfields',['as'=>'branchteam.mapfields','uses'=>'BranchTeamImportController@mapfields']);
+
+
 
 	#Locations
 		Route::get('locations/import', ['as'=>'locations.importfile', 'uses'=>'LocationsImportController@getfile']);

@@ -28,6 +28,7 @@ class UsersController extends Controller
         'person.branchesServiced',
         'person.directReports',
         'manager',
+        'person.industryfocus',
         'roles',
         'usage')->findOrFail(auth()->user()->id);
         if($user->person->has('branchesServiced')){
