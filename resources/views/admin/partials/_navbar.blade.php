@@ -1,11 +1,11 @@
 <nav class="navbar navbar-expand-md navbar-light bg-light">
-    <div class="container">
+        
+         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar" aria-controls="collapsibleNavbar" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon" style="color:white"></span>
+    </button>
         <a href="{{ route('findme') }}"><img src="{{ asset('assets/img/PRlogo.png')}}"  width ='164' class="navbar-brand"></a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNavDropdown">
-            <ul class="navbar-nav">
+          <div class="collapse navbar-collapse" id="collapsibleNavbar">
+            <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
                     <a class="nav-link" href="#">
                         <i class="fas fa-tachometer-alt"></i> Dashboard
@@ -31,7 +31,7 @@
                             @include('admin.partials.nav._usersnav')
                         @endcan
                         <li class="nav-item">
-                            <a class="nav-link" href="#">
+                            <a class="nav-link" href="">
                                 <i class="fas fa-recycle"></i> Import / Export
                             </a>
                         </li>
@@ -61,9 +61,9 @@
                 type="search" 
                 aria-label="Search">
 
-            
+            @include('admin.partials.nav._rightnav')
         </div>
-        @include('admin.partials.nav._rightnav')
+        
     </div>
 
 </nav>
