@@ -6,7 +6,7 @@
 @if(auth()->user()->hasRole('Admin'))
 <div class="pull-right">
     <a href="{{ route('news.create') }}" class="btn btn-small btn-info iframe">
-        <i class="far fa-plus text-success" aria-hidden="true"></i>
+        <i class="fas fa-plus text-success" aria-hidden="true"></i>
         Add New Updates
     </a>
 </div>
@@ -58,7 +58,7 @@
 				| </span>
 					<i class="far fa-calendar" aria-hidden="true"></i> <!--Sept 16th, 2012-->
 					{{$post->datefrom->format('M jS,Y')}}
-					| <i class="far fa-comment-o" aria-hidden="true"></i> 
+					| <i class="far fa-comment" aria-hidden="true"></i> 
 					<a href="{{route('news.show', $post->slug)}}#comments"> {{$post->comments()->exists()}}</a>
 
 					@if($post->user_id == auth()->user()->id  or auth()->user()->hasRole('Admin'))
@@ -69,7 +69,7 @@
             data-title = "news item"  
             title="Delete this news item"
             href="#">
-            <i class="far fa-trash-o text-danger" aria-hidden="true"> </i> </a>
+            <i class="far fa-trash-alt text-danger" aria-hidden="true"> </i>  </a>
            
 
 				@endif

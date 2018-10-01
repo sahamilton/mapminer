@@ -95,7 +95,7 @@
                     @can('manage_prospects')
                         <li class="divider">Prospects</li>
                         <li{{ (Request::is('ops/webleads*') ? ' class="active"' : '') }}><a class="nav-link" href="{{ route('leads.search') }}">
-                        <i class="far fa-plus" aria-hidden="true"> </i> Add New Prospect</a></li>
+                        <i class="fas fa-plus" aria-hidden="true"> </i> Add New Prospect</a></li>
                         <li{{ (Request::is('admin/leadsource*') ? ' class="active"' : '') }}><a class="nav-link" href="{{ route('leadsource.index') }}">
                         <i class="far fa-diamond" aria-hidden="true"> </i> Prospect Sources</a></li>
                         <li {{ (Request::is('admin/leadstatus*') ? ' class="active"' : '') }}><a class="nav-link" href="{{ route('leadstatus.index') }}">

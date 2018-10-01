@@ -43,7 +43,7 @@
 {{Form::select('group',$groupsSelect,isset($howtofield->group) ? $howtofield->group : head($groupsSelect),$attributes=['size'=>'3'])}}
 {{ $errors->first('groups') }}
 <p style ="margin-top: 10px">
-<input type='text' id="addGroup" name='addGroup' /><button type="button"  id="add" >  <i class="far fa-plus text-success" aria-hidden="true"></i> Add Group</button></p>
+<input type='text' id="addGroup" name='addGroup' /><button type="button"  id="add" >  <i class="fas fa-plus text-success" aria-hidden="true"></i> Add Group</button></p>
 </div></div>
 
 

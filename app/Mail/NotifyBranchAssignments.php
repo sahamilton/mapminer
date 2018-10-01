@@ -4,6 +4,7 @@ namespace App\Mail;
 
 use App\User;
 use App\Person;
+use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
@@ -16,6 +17,7 @@ class NotifyBranchAssignments extends Mailable
     public $person;
     public $token;
     public $message;
+    public $expiration;
     /**
      * Create a new message instance.
      *
@@ -28,6 +30,7 @@ class NotifyBranchAssignments extends Mailable
         // we have to create a unique new time expire token
         $this->user = User::findOrFail($person->user_id);
         $this->token = $this->user->setAccess();
+        $this->expiration = Carbon::now()->addHours('48');
         
     }
 

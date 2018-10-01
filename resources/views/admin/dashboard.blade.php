@@ -62,23 +62,24 @@ $cumulative = array();
     </div>
     <div id="menu1" class="tab-pane fade">
       <h3>Account Activity</h3>
-    @include('admin.partials.watchers')
-    @include('admin.partials.newNotes')
-    @include('admin.partials.newLeadNotes')  
-    @include('admin.partials.newProjectNotes') 
+        @include('admin.partials.watchers')
+        @include('admin.partials.newNotes')
+        @include('admin.partials.newLeadNotes')  
+        @include('admin.partials.newProjectNotes') 
     </div>
     <div id="menu2" class="tab-pane fade">
       <h3>Account Health</h3>
-   <@include ('admin.partials.nosalesnotes')
-     @include ('admin.partials.duplicate')
+        @include ('admin.partials.nosalesnotes')
+        @include ('admin.partials.duplicate')
     </div>
     <div id="menu3" class="tab-pane fade">
       <h3>Location Health</h3>
-   @include('admin.partials.nocontacts')
-   @include('admin.partials.nogeocode')
+      @include('admin.partials.nocontacts')
+      @include('admin.partials.nogeocode')
     </div>
   </div>
-</div>
+
+
 
 
 
@@ -224,5 +225,6 @@ new Chart(document.getElementById("pieChart"), {
     }
 });
 </script>
+</div>
 @include('partials/_scripts')
 @endsection

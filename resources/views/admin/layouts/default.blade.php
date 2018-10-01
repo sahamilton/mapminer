@@ -86,44 +86,39 @@
 		<link rel="apple-touch-icon-precomposed" sizes="72x72" href="{{{ asset('assets/ico/apple-touch-icon-72-precomposed.png') }}}">
 		<link rel="apple-touch-icon-precomposed" href="{{{ asset('assets/ico/apple-touch-icon-57-precomposed.png') }}}">
 		<link rel="shortcut icon" href="{{{ asset('assets/ico/favicon.png') }}}">
+		<style CSS> 
+		body {
+		min-height: 100vh; 
+		}
+	</style>
 	</head>
 
-<body class="d-flex flex-column">
+<body>
 
 	<!-- To make sticky footer need to wrap in a div -->
-
+<div id="app">
 	@include ('admin.partials._navbar')
 
 	<!-- Container -->
-	<section class="container-fluid flex-grow-1">
+	<div class="container">
+		<main class="py-4" style="min-height: 100vh; ">
+			
+			<!-- Notifications -->
+			@include('notifications')
+			<!-- ./ notifications -->
 
-		<div class="container">
-		<!-- Notifications -->
-		@include('notifications')
-		<!-- ./ notifications -->
+			<!-- Content -->
+			@yield('content')
+			<!-- ./ content -->
+			
 
-		<!-- Content -->
-		@yield('content')
-		<!-- ./ content -->
-
-
-		@if (config('app.debug') && auth()->check() && config('app.env')=='local') 
-
+		@if (config('app.debug') && auth()->check() && config('app.env')=='local' )
 			@include('sudosu::user-selector')
-		@endif		
-	</div>
-	<!-- ./ container -->
-	</section>
-<!-- the following div is needed to make a sticky footer -->
-
-
-
-<!-- ./wrap -->
-
-
-@include('site.layouts.footer')
-
-            
+		@endif
+		
+		</main>	
+       </div>
+       @include('site.layouts.footer')     
 @include('admin.partials._scripts')
    
 

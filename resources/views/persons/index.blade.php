@@ -14,7 +14,7 @@
 @if (auth()->user()->hasRole('Admin'))
 	<div class="pull-right">
 		<a href="{{{ route('users.create') }}}" class="btn btn-small btn-info iframe">
-		<i class="far fa-plus text-success" aria-hidden="true"></i>
+		<i class="fas fa-plus text-success" aria-hidden="true"></i>
 		Create New Person</a>
 	</div>
 @endif

@@ -35,7 +35,7 @@ If they are all correct please use this link to let us know.
         All Correct.
 @endcomponent
 
-
+Note that these links will expire on {{$expiration->format('l jS M Y')}} at {{$expiration->format('g:i a')}}
 
 Sincerely
 

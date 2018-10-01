@@ -55,7 +55,7 @@
 			data-title = "{{$row['watching'][0]->businessname}}"
 			href="#noteform"
 			title="add new note to {{$row['watching'][0]->businessname}} location">
-			<i class="far fa-plus text-success" aria-hidden="true"></i>
+			<i class="fas fa-plus text-success" aria-hidden="true"></i>
 			</a>
 
 		</td>

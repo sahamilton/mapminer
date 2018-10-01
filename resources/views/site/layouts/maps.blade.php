@@ -58,20 +58,21 @@ body {
 	</head>
 	
 
-	<body class="d-flex flex-column" onLoad="load()">
-
+	<body onLoad="load()">
+<div id="app">
 @include('site.layouts.partials._googletagmanager')
 @if(config('app.env')=='production')
 	@include('site.layouts.partials._fullstory')
 @endif
+@include ('site.layouts._navbar')
+<div class="container">
+<main class="py-4">
 
-
-
-		@include ('site.layouts._navbar')
+		
 
 
 		<!-- Container -->
-		<div class="container">
+
 
 			<!-- Notifications -->
 			@include('notifications')
@@ -80,16 +81,15 @@ body {
 			<!-- Content -->
 			@yield('content')
 			<!-- ./ content -->
-		<div class="clear" style="clear:both;margin-bottom:80px"></div>
 		<!-- ./ container -->
  @if (config('app.debug') && auth()->check() && config('app.env')=='local')
     @include('sudosu::user-selector')
 @endif
 
-</div>
+</main>
 	    @include('site.layouts.footer')
-            	    
-
+   </div>        	    
+</div>
 
  <script
     src="https://d2s6cp23z9c3gz.cloudfront.net/js/embed.widget.min.js"

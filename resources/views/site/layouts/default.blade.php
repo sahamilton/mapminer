@@ -72,7 +72,8 @@
 	</style>
 </head>
 	
-<body class="d-flex flex-column">
+<body>
+	<div id="app">
 	@include('site.layouts.partials._googletagmanager')
 	@if(config('app.env')=='production')
 		@include('site.layouts.partials._fullstory')
@@ -82,9 +83,9 @@
 	@include ('site.layouts._navbar')
 
 		<!-- Container -->
-	<section class="container-fluid flex-grow-1">
+	<div class="container">
     
-		<div class="container">
+		<main class="py-4">
 			
 			<!-- Notifications -->
 			@include('notifications')
@@ -93,18 +94,18 @@
 			<!-- Content -->
 			@yield('content')
 			<!-- ./ content -->
+
 			
 
-		@if (config('app.debug') && auth()->check() && config('app.env')=='local' )
-			@include('sudosu::user-selector')
-		@endif
+			@if (config('app.debug') && auth()->check() && config('app.env')=='local' )
+				@include('sudosu::user-selector')
+			@endif
 		
-		</div>
-		
-	</section>
-		
+		</main>		
 
-	@include('site.layouts.footer')
+		</div>
+@include('site.layouts.footer')
+	</div>
 
 		<script
 			src="//d2s6cp23z9c3gz.cloudfront.net/js/embed.widget.min.js"

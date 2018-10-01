@@ -74,7 +74,7 @@
                  
                 <a class="dropdown-item"
                 href="{{route('leadsource.addleads',$source->id)}}">
-                <i class="far fa-plus text-success" aria-hidden="true"></i>
+                <i class="fas fa-plus text-success" aria-hidden="true"></i>
                  Add prospects to this source
                  </a>
                  

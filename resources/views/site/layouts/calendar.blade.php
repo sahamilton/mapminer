@@ -88,11 +88,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <!-- End Google Tag Manager -->
 
 		<!-- To make sticky footer need to wrap in a div -->
-		<div id="wrap">
+		<div id="app">
 		@include ('site.layouts._navbar')
 
 		<!-- Container -->
-		<div class="container">
+		<main class="py-4">
 			<!-- Notifications -->
 			@include('notifications')
 			<!-- ./ notifications -->
@@ -100,16 +100,16 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 			<!-- Content -->
 			@yield('content')
 			<!-- ./ content -->
-		</div>
+			@include('site.layouts.footer')
+		</main>
 		<!-- ./ container -->
 </div>
-		<!-- the following div is needed to make a sticky footer -->
-		<div id="push"></div>
+
 
 		<!-- ./wrap -->
 
 
-	    @include('site.layouts.footer')
+	    
             <script
     src="//d2s6cp23z9c3gz.cloudfront.net/js/embed.widget.min.js"
     data-domain="trueblue.besnappy.com"
