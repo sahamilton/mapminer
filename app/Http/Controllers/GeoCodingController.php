@@ -32,7 +32,6 @@ class GeoCodingController extends BaseController {
 	 */
 	public function findMe(FindMeFormRequest $request) {
 
-
 		if($request->filled('address')) {
 			$address = urlencode($request->get('address'));
 			
@@ -60,7 +59,7 @@ class GeoCodingController extends BaseController {
 		if(! isset($data['fulladdress'])){
 			$data['fulladdress'] = $data['address'];
 		}
-		session(['geo', $data]);
+		session()->put('geo', $data);
 	
 		$watchlist = array();
 		$data['vertical'] = NULL;

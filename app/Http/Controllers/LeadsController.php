@@ -369,7 +369,9 @@ class LeadsController extends BaseController
       if(! $request->has('number')){
           $data['number']=5;
         }
-        session(['geo', $data]);
+
+      session()->put('geo', $data);
+      
       if($request->type =='branch'){
           $branches = $this->findNearByBranches($data);
           return response()->view('salesorg.nearbybranches',compact('data','branches'));

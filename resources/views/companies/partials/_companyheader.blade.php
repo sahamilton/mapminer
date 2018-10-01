@@ -3,7 +3,7 @@
 Read 'How to Sell to {{$company->companyname}}'</a>
 
 <a href="{{route('watch.index')}}" title="Review my watch list">
-<i class="far fa-th-list" aria-hidden="true"></i> 
+<i class="fas fa-th-list" aria-hidden="true"></i> 
 View My Watch List</a>
 
 <a href="{{route('watch.export')}}" title="Download my watch list as a CSV / Excel file">
@@ -14,5 +14,5 @@ Download My Watch List</a>
 <i class="far fa-cloud-download" aria-hidden="true"></i></i> 
 Download my {{$company->companyname}} location notes</a> </p>
 
-<p><a href="{{ route('company.index') }}" title='Show all accounts'><i class="far fa-th-list" aria-hidden="true"></i>
+<p><a href="{{ route('company.index') }}" title='Show all accounts'><i class="fas fa-th-list" aria-hidden="true"></i>
 All Accounts</a></p>

@@ -52,7 +52,7 @@ $data['lng'] = $data['branch']->lng;
 ?>
 
 @if($type=='map')
-<p><a href="{{route('showlist.locations',$data['branch']->id)}}"><i class="far fa-th-list" aria-hidden="true"></i> List view</a></p>
+<p><a href="{{route('showlist.locations',$data['branch']->id)}}"><i class="fas fa-th-list" aria-hidden="true"></i> List view</a></p>
 @else
 <p><a href="{{route('branches.show',$data['branch']->id)}}"><i class="far fa-flag" aria-hidden="true"></i>Map View</a></p>
 @endif

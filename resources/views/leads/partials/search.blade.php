@@ -8,7 +8,6 @@
     $session['number']=5;
   }
 @endphp
-
 <form class="form-inline" method ="post"  action ="{{route('lead.find')}}" name="leadaddress">
 {{csrf_field()}}
 <select id="selectnumber" name='number' class="btn btn-mini" >

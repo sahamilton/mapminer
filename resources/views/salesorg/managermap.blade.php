@@ -30,7 +30,7 @@
   @endif
   <p><a href="{{route('salesorg.list',$salesteam[0]->id)}}"
   title="See list view of {{$salesteam[0]->firstname}} {{$salesteam[0]->lastname}}'s sales team">
-  <i class="far fa-th-list" aria-hidden="true"></i> List view</a></p>
+  <i class="fas fa-th-list" aria-hidden="true"></i> List view</a></p>
       <div id="map-container">
         <div style="float:left;width:300px">
   <h2>Direct Reports:</h2>

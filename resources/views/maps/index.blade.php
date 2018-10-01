@@ -38,7 +38,7 @@ if($type =='branch'){
         <noscript><input type="submit" value="Submit"></noscript>
 </form>
 <p>
-<p><a href = "{{route('lists')}}?t={{$type}}&d={{$data['distance']}}"><i class="far fa-th-list" aria-hidden="true"></i> Show List View</a></p>
+<p><a href = "{{route('lists')}}?t={{$type}}&d={{$data['distance']}}"><i class="fas fa-th-list" aria-hidden="true"></i> Show List View</a></p>
 
 <p>Show nearby <a href="{{route('maps')}}?t={{$switch}}&d={{$data['distance']}}" title="Show {{$switchlabel}} within {{$data['distance']}} miles">{{$switchlabel}}</a></p>
       </div>

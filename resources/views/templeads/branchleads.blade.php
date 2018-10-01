@@ -11,7 +11,7 @@
     <p><a href='{{route("newleads.branch.map",$branches->first()->branches->id)}}'>
  <i class="far fa-flag" aria-hidden="true"></i> Map view</a></p>
      <p><a href='{{route("leads.branch")}}'>
- <i class="far fa-th-list" aria-hidden="true"></i> See All Branch Leads</a></p>
+ <i class="fas fa-th-list" aria-hidden="true"></i> See All Branch Leads</a></p>
     <div class="col-md-10 col-md-offset-1">
         <table class="table" id = "sorttable">
             <thead>

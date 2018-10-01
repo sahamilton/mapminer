@@ -1,5 +1,6 @@
-<nav class="navbar navbar-expand-md navbar-static-top navbar-light">
-  <!--     <nav class="navbar navbar-toggleable-sm navbar-light bg-faded">
+<nav class="navbar navbar-expand-md navbar-light" >
+ <div class="container">
+  <a href="{{ route('findme') }}" class="navbar-brand"><img src="{{ asset('assets/img/PRlogo.png')}}"  width ='164' ></a> <!--     <nav class="navbar navbar-toggleable-sm navbar-light bg-faded">
 <nav class="navbar navbar-toggleable-sm navbar-light bg-faded"> -->
    
   <!-- Toggler/collapsibe Button -->
@@ -7,7 +8,7 @@
     <span class="navbar-toggler-icon" style="color:white"></span>
     </button>
 
-<a href="{{ route('findme') }}" class="navbar-brand"><img src="{{ asset('assets/img/PRlogo.png')}}"  width ='164' ></a> 
+
   <!-- Navbar links -->
   <div class="collapse navbar-collapse" id="collapsibleNavbar">
     <ul class="navbar-nav mr-auto"> 
@@ -128,6 +129,6 @@
     @endif
       </li>
     </ul>
-
+</div>
 </nav>
 

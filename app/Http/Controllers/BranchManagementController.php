@@ -89,7 +89,8 @@ class BranchManagementController extends Controller
         $person->branchesServiced()->sync($branches);
 
         return redirect()->route('user.show',$id)
-        ->withMessage('You have successfully updated your branch assignments');
+            ->withMessage("Thank You. Your branch associations have been updated. Check out the rest of your profile.");
+            
        
 
     }
@@ -105,8 +106,8 @@ class BranchManagementController extends Controller
             auth()->login($user);
             // update token - single use
             $user->update(['apitoken' => $user->setApiToken()]);
-            return redirect()->route('home',$user->id)
-            ->withMessage("Thank You. Your branch associations have been confirmed.");;
+            return redirect()->route('user.show',$user->id)
+            ->withMessage("Thank You. Your branch associations have been confirmed. Check out the rest of your profile.");
             
 
         }else{

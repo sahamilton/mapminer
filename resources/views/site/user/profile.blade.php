@@ -83,7 +83,7 @@
 						<ul style="list-style-type: none;">
 						@if($user->person->reportsTo)
 							<li>Reports To:
-							<a href="{{route('person.details',$user->person->reportsTo->id)}}">{{$user->person->reportsTo->postName()}}</a></li>
+							<a href="{{route('salesorg',$user->person->reportsTo->id)}}">{{$user->person->reportsTo->postName()}}</a></li>
 						@endif
 						@if($user->person->directReports->count()>0)
 							<li>Team:</li>
@@ -121,7 +121,7 @@
 						@endforeach
 					</ul>
 					<a class="btn btn-primary pull-right" href="{{route('branchassignments.index')}}">
-						<i class="far fa-edit text-info""></i>
+						<i class="far fa-edit text-info"></i>
 						Edit</a>
 				</div>
 				<div class="col-sm-8">
@@ -155,7 +155,8 @@
 						@endforeach
 					</ul>
 					@endif
-					<a href="{{route('industryfocus.index')}}"" class="btn btn-info">Change</a>
+					<a href="{{route('industryfocus.index')}}"" class="btn btn-primary">
+						<i class="far fa-edit text-info"></i> Change</a>
 				</div>
 			
 				<div class="list-group-item">

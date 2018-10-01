@@ -34,7 +34,7 @@ class ConstructionController  extends BaseController
 
         $geoCode = app('geocoder')->geocode($data['address'])->get();
         $data['location'] =$this->construction->getGeoCode($geoCode);
-        session(['geo',$data['location']]);
+        session()->put('geo', $data);
         
         if($data['view'] =='list'){
             $projects = $this->construction->getProjectData($data);
