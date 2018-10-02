@@ -99,7 +99,7 @@ class BranchManagement extends Model
 		return $this->person
                     ->whereIn('id',request('id'))
                     ->with('userdetails','branchesServiced','userdetails.roles')
-                    ->first();
+                    ->get();
 	}
 
 
@@ -107,7 +107,7 @@ class BranchManagement extends Model
 		
 		$emails=0;
             foreach ($recipients as $recipient){
-
+            	
                 Mail::to($this->toAddress($recipient,request('test')))->queue(new NotifyBranchAssignments($recipient,request('message')));
                 $emails++;
             }

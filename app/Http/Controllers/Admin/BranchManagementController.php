@@ -88,7 +88,9 @@ class BranchManagementController extends Controller
      */
 
     public function emailAssignments(Request $request){
+
             $emails = 0;
+          
             if(request('id')){
             
             $recipients = $this->branchmanagement->getConfirmedRecipients($request);
