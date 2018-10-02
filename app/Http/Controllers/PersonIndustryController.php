@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Searchfilter;
+use App\SearchFilter;
 use App\PersonIndustry;
 use App\Person;
 use Illuminate\Http\Request;
@@ -13,7 +13,8 @@ class PersonIndustryController extends Controller
     protected $industry;
     protected $searchfilter;
 
-    public function __construct(PersonIndustry $industry, Searchfilter $searchfilter, Person $person){
+    public function __construct(PersonIndustry $industry, SearchFilter $searchfilter, Person $person)
+    {
         $this->industry = $industry;
         $this->searchfilter = $searchfilter;
         $this->person = $person;
