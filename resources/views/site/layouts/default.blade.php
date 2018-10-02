@@ -83,7 +83,7 @@
 	@include ('site.layouts._navbar')
 
 		<!-- Container -->
-	<div class="container">
+	<div class="container" style="margin-bottom:40px">
     
 		<main class="py-4">
 			
