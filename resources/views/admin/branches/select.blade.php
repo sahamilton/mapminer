@@ -8,7 +8,7 @@
 <div class="form-group{{ $errors->has('message') ? ' has-error' : '' }}">
          <label class="control-label">Message text</label>
           <div class="input-group input-group-lg ">
-             <textarea required class="form-control summernote" 
+             <textarea required class=" summernote" 
              name='message' 
              title="message">{!!old('message', isset($message) ? $message : '') !!}</textarea>
                  <span class="help-block">
@@ -36,10 +36,11 @@
     </div>
 </div>
 <div class="form-group row">
-    <div class="form-check">
-      <label class="form-check-label" for="gridCheck">
-        Check if Test:  </label>
-      <input class="form-check-input" type="checkbox" checked id="gridCheck" name="test">
+    <div class=" form-check-inline"">
+      <input class="form-check-input" type="checkbox" checked id="test" name="test">
+      <label class="form-check-label" for="test">
+        Check if Test:</label>
+      
       
     </div>
   </div>
@@ -63,6 +64,7 @@ $('.summernote').summernote({
     //[groupname, [button list]]
      
     ['style', ['bold', 'italic', 'underline', 'clear']],
+    ['link'],
     ['fontsize', ['fontsize']],
     ['color', ['color']],
     ['para', ['ul', 'ol', 'paragraph']],
