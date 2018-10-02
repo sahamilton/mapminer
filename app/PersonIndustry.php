@@ -13,6 +13,6 @@ class PersonIndustry extends Model
     }
 
     public function industry(){
-    	return $this->belongsTo(Searchfilter::class,'search_filter_id','id');
+    	return $this->belongsTo(SearchFilter::class,'search_filter_id','id');
     }
 }
