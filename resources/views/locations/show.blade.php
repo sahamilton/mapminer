@@ -5,28 +5,28 @@
 
 
 <ul class="nav nav-tabs">
-    <li class="active">
-      <a data-toggle="tab" href="#project">
+    <li class="nav-item active">
+      <a class="nav-link active" data-toggle="tab" href="#project">
         <strong>Location Details</strong>
       </a>
     </li>
 
-    <li>
-      <a data-toggle="tab" href="#notes">
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#notes">
         <strong>Location  Notes ({{$location->relatedNotes->count()}})
         </strong>
       </a>
     </li>
     
-    <li>
-      <a data-toggle="tab" href="#contacts">
+    <<li class="nav-item">
+      <a class="nav-link"  data-toggle="tab" href="#contacts">
         <strong>Location  Contacts ({{$location->contacts->count()}})
         </strong>
       </a>
     </li>
     
-    <li>
-      <a data-toggle="tab" href="#watchers">
+    <li class="nav-item">
+      <a class="nav-link"  data-toggle="tab" href="#watchers">
         <strong>Watched By {{$location->watchedBy->count()}}
         </strong>
       </a>

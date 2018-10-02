@@ -8,8 +8,12 @@
         </a>
     </div> 
     <ul class="nav nav-tabs">
-        <li class="active"><a data-toggle="tab" href="#calendar">Calendar</a></li>
-        <li><a data-toggle="tab" href="#list">List</a></li>
+        <li class="nav-item active">
+            <a class="nav-link active"  data-toggle="tab" href="#calendar">Calendar</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#list">List</a>
+        </li>
     </ul>
 
     <div class="tab-content">

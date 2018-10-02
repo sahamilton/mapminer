@@ -18,20 +18,20 @@
     @endif
     </p>
     <ul class="nav nav-tabs">
-    <li class="active"><a data-toggle="tab" href="#showmap"><strong>Location</strong></a></li>
-    <li><a data-toggle="tab" href="#details"><strong>Details</strong></a></li>
+    <li class="nav-item active"><a class="nav-link" data-toggle="tab" href="#showmap"><strong>Location</strong></a></li>
+    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#details"><strong>Details</strong></a></li>
     
     @if($user->person->directReports()->get()->count()>0 or $user->person->reportsTo()->get()->count()>0)
-    <li><a data-toggle="tab" href="#team"><strong>Reporting Structure</strong></a></li>
+    <li class="nav-item"><a class="nav-link"  data-toggle="tab" href="#team"><strong>Reporting Structure</strong></a></li>
     @endif
     @if($user->person->manages()->get()->count()>0)
-    <li><a data-toggle="tab" href="#branches"><strong>Branches Serviced</strong></a></li>
+    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#branches"><strong>Branches Serviced</strong></a></li>
     @endif
     @if($user->person->managesAccount()->get()->count()>0)
-    <li><a data-toggle="tab" href="#accounts"><strong>Accounts Managed</strong></a></li>
+    <li class="nav-item"><a class="nav-link"  data-toggle="tab" href="#accounts"><strong>Accounts Managed</strong></a></li>
     @endif
         @if($user->person->templeads->count()>0)
-    <li><a data-toggle="tab" href="#leads"><strong>Assigned Leads ({{$user->person->templeads->count())}})</strong></a></li>
+    <li class="nav-item"><a class="nav-link"  data-toggle="tab" href="#leads"><strong>Assigned Leads ({{$user->person->templeads->count())}})</strong></a></li>
     @endif
 
     </ul>

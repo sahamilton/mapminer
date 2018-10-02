@@ -4,12 +4,36 @@
 <p><a href="{{route('leadsource.export',$leadsource->id)}}"><i class="far fa-cloud-download" aria-hidden="true"></i></i>  Export owned and closed prospects</a></p>
 <p><a href="{{route('leadsource.index')}}">Return to all Prospect sources</a></p>
 <ul class="nav nav-tabs">
-	<li class="active"><a data-toggle="tab" href="#map"><strong>Map View</strong></a></li>
-	<li><a data-toggle="tab" href="#details"><strong>Details</strong></a></li>
-	<li><a data-toggle="tab" href="#leads"><strong>Assigned Prospects</strong></a></li>
-	<li><a data-toggle="tab" href="#unassigned"><strong>Unassigned Prospects</strong></a></li>
-	<li><a data-toggle="tab" href="#team"><strong>Team</strong></a></li>
-	<li><a data-toggle="tab" href="#stats"><strong>Stats</strong></a></li>
+	<li class="nav-item active">
+		<a class="nav-link active" data-toggle="tab" href="#map">
+			<strong>Map View</strong>
+		</a>
+	</li>
+	<li class="nav-item">
+		<a class="nav-link" data-toggle="tab" href="#details">
+			<strong>Details</strong>
+		</a>
+	</li>
+	<li class="nav-item">
+		<a class="nav-link" data-toggle="tab" href="#leads">
+			<strong>Assigned Prospects</strong>
+		</a>
+	</li>
+	<li class="nav-item">
+		<a class="nav-link"  data-toggle="tab" href="#unassigned">
+			<strong>Unassigned Prospects</strong>
+		</a>
+	</li>
+	<li class="nav-item">
+		<a class="nav-link"  data-toggle="tab" href="#team">
+			<strong>Team</strong>
+		</a>
+	</li>
+	<li class="nav-item">
+		<a class="nav-link"  data-toggle="tab" href="#stats">
+			<strong>Stats</strong>
+		</a>
+	</li>
 	
 </ul>
 <?php $unassigned = array();?>

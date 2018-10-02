@@ -3,9 +3,9 @@
 		<input type="hidden" name="_token" value ="{{{ csrf_token() }}}" />
 		<!-- ./ csrf token -->
     <ul class="nav nav-tabs">
-    <li class="active"><a data-toggle="tab" href="#home">UserDetails</a></li>
-    <li><a data-toggle="tab" href="#menu1">Personal Details</a></li>
-     <li><a data-toggle="tab" href="#menu2">Industry Verticals</a></li>
+    <li class="nav-item active"><a class="nav-link active" data-toggle="tab" href="#home">UserDetails</a></li>
+    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#menu1">Personal Details</a></li>
+    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#menu2">Industry Verticals</a></li>
     </ul>
 
 		<div class="tab-content">

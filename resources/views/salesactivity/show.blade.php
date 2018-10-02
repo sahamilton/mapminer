@@ -9,13 +9,21 @@
 	Back to all campaigns</a>
 
 	<ul class="nav nav-tabs">
-		<li class="active"><a data-toggle="tab" href="#campaign">Campaign</a></li>
-		<li><a data-toggle="tab" href="#resources">Resources</a></li>
+		<li class="nav-item active">
+			<a class="nav-link active" data-toggle="tab" href="#campaign">Campaign</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link"  data-toggle="tab" href="#resources">Resources</a>
+		</li>
 		
-		<li><a data-toggle="tab" href="#locations">Locations List ({{$locations->count())}})</a></li>
+		<li class="nav-item">
+			<a class="nav-link"  data-toggle="tab" href="#locations">Locations List ({{$locations->count())}})</a>
+		</li>
 	
 		
-		<li><a data-toggle="tab" href="#leads">Leads List ({{$leads->count()}})</a></li>
+		<li class="nav-item">
+			<a class="nav-link"  data-toggle="tab" href="#leads">Leads List ({{$leads->count()}})</a>
+		</li>
 		
 	</ul>
 
