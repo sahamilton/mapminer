@@ -39,18 +39,62 @@ $cumulative = array();
 
 {{-- Content --}}
 
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+  <li class="nav-item">
+    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Home</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Profile</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Contact</a>
+  </li>
+</ul>
+<div class="tab-content" id="myTabContent">
+  <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">...</div>
+  <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">...</div>
+  <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
+</div>
+
 @section('content')
 <div class="container">
   <h2>{{auth()->user()->roles()->first()->name}} Dashboard</h2>
-  <ul class="nav nav-tabs">
-    <li class="active"><a data-toggle="tab" href="#home">Usage</a></li>
-    <li><a data-toggle="tab" href="#menu1">Activity</a></li>
-    <li><a data-toggle="tab" href="#menu2">Account Health</a></li>
-    <li><a data-toggle="tab" href="#menu3">Location Health</a></li>
+  <ul class="nav nav-tabs" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" 
+        data-toggle="tab" 
+        href="#home" 
+        aria-controls="home" aria-selected="true">Usage
+    </a>
+    </li>
+     <li class="nav-item">
+      <a class="nav-link" 
+          data-toggle="tab" 
+          href="#menu1" 
+          aria-controls="menu1" 
+          aria-selected="true">Activity
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" 
+          data-toggle="tab" 
+          href="#menu2" 
+          aria-controls="menu2" 
+          aria-selected="true">Account Health
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" 
+          data-toggle="tab" 
+          href="#menu3" 
+          aria-controls="menu3" 
+          aria-selected="true">Location Health
+      </a>
+    </li>
   </ul>
 
   <div class="tab-content">
-    <div id="home" class="tab-pane fade in active">
+    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
       <h3>Usage</h3>
         @include ('admin.partials.firstlogged')
         @include('admin.partials.weeklylogins')
