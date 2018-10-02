@@ -71,6 +71,15 @@ class BranchManagementController extends Controller
             return response()->view('admin.branches.select',compact('roles','message'));
 
     }
+
+    public function confirm(Request $request){
+
+        $recipients = $this->branchmanagement->getRecipients($request);
+        $test = request('test');
+
+        return response()->view('admin.branches.confirm',compact('recipients','test'));
+
+    }
     /**
      * Email the selected roles 
      *
@@ -79,11 +88,13 @@ class BranchManagementController extends Controller
      */
 
     public function emailAssignments(Request $request){
+            $emails = 0;
+            if(request('id')){
             
-            
-            $recipients = $this->branchmanagement->getRecipients($request);
+            $recipients = $this->branchmanagement->getConfirmedRecipients($request);
+
             $emails = $this->branchmanagement->sendEmails($recipients,$request);   
-            
+             }
             return redirect()->route('home')->withMessage($emails . ' emails sent.');
         }
 

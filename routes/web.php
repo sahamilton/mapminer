@@ -434,7 +434,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 	# Branch management
 
 		Route::get('branchassignments/select',['as'=>'branchassignment.check','uses'=>'Admin\BranchManagementController@select']);
-		Route::post('branchassignments/email',['as'=>'branchteam.email','uses'=>'Admin\BranchManagementController@emailAssignments']);	
+		Route::post('branchassignments/email',['as'=>'branchteam.email','uses'=>'Admin\BranchManagementController@confirm']);
+		Route::post('branchassignments/send',['as'=>'branchassignments.send','uses'=>'Admin\BranchManagementController@emailAssignments']);	
 		Route::get('branch/manage',['as'=>'branch.management','uses'=>'Admin\BranchManagementController@index']);
 		Route::get('branch/check',['as'=>'branch.check','uses'=>'Admin\AdminUsersController@checkBranchAssignments']);
 

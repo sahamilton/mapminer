@@ -39,8 +39,20 @@ class Person extends NodeModel implements HasPresenter {
 	public function branchesServiced()
 	{
 		return $this->belongsToMany(Branch::class)
-		->withTimestamps()->withPivot('role_id');
+		->withTimestamps()
+		->withPivot('role_id');
+		
+
 	}
+
+	public function lastUpdatedBranches()
+	{
+		return $this->belongsToMany(Branch::class)
+		->withTimestamps()
+		->addSelect('branch_person.updated_at', \DB::raw("MAX(branch_person.updated_at) AS lastdate"))->get();
+	}
+
+
 	public function scopeStaleBranchAssignments($query,$roles){
 		return $query->whereHas('userdetails.roles',function($q)use($roles){
             $q->whereIn('roles.id',$roles);

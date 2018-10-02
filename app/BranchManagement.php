@@ -80,9 +80,10 @@ class BranchManagement extends Model
 		
 		$recipients = $this->person
                     ->staleBranchAssignments(request('roles'))
-                    ->with('userdetails','branchesServiced');
 
-		if (request('test') or config('app.env')!='production'){
+                    ->with('userdetails','branchesServiced','userdetails.roles');
+
+		if (request('test')){
 			return $recipients->inRandomOrder()
                     ->limit(5)
                     ->get();
@@ -93,8 +94,17 @@ class BranchManagement extends Model
 
 	}
 
+	public function getConfirmedRecipients(Request $request){
+
+		return $this->person
+                    ->whereIn('id',request('id'))
+                    ->with('userdetails','branchesServiced','userdetails.roles')
+                    ->first();
+	}
+
 
 	public function sendEmails($recipients,Request $request){
+		
 		$emails=0;
             foreach ($recipients as $recipient){
 
@@ -105,10 +115,13 @@ class BranchManagement extends Model
 	 }
 
 	 private function toAddress($assignment,$test=null){
-	 	if($test or config('app.env'!='production')){
+	 	
+	 	if($test or config('app.env')!='production'){
+	 		
 	 		//return 'stephen@crescentcreative.com';
 	 		return auth()->user()->email;
 	 	}else{
+	 		
 	 		return $assignment->userdetails->email;
 	 	}
 	 }
