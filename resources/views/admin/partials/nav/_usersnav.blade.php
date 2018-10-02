@@ -1,5 +1,6 @@
 <li>
-    <a class="dropdown-item dropdown-toggle" href="#">Users</a>
+    <a class="dropdown-item dropdown-toggle" href="#">
+        <i class="fas fa-users-cog"></i> Users</a>
     <ul class="dropdown-menu">
         <li>
             <a class="dropdown-item" 

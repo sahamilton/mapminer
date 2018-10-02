@@ -1,5 +1,6 @@
 <li>
-    <a class="dropdown-item dropdown-toggle" href="#">Accounts</a>
+    <a class="dropdown-item dropdown-toggle" href="#">
+        <i class="far fa-building"></i> Accounts</a>
     <ul class="dropdown-menu">
         <li>
             <a class="dropdown-item" 

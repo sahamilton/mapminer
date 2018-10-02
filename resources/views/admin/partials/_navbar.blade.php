@@ -18,7 +18,7 @@
                     data-toggle="dropdown" 
                     aria-haspopup="true" 
                     aria-expanded="false">
-                        Data Management
+                       <i class="fas fa-database"></i> Data Management
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                         @can('manage_accounts')
@@ -30,8 +30,8 @@
                         @can('manage_users')
                             @include('admin.partials.nav._usersnav')
                         @endcan
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('imports.index') }}">
+                        <li>
+                            <a class="dropdown-item" href="{{ route('imports.index') }}">
                                 <i class="fas fa-recycle"></i> Import / Export
                             </a>
                         </li>
@@ -44,6 +44,7 @@
                     data-toggle="dropdown" 
                     aria-haspopup="true" 
                     aria-expanded="false">
+                     <i class="fas fa-cogs"></i> 
                         Resources</a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                        @include('admin.partials.nav._resources')

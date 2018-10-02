@@ -1,5 +1,6 @@
 <li>
-    <a class="dropdown-item dropdown-toggle" href="#">Branches</a>
+    <a class="dropdown-item dropdown-toggle" href="#">
+        <i class="fab fa-pagelines"></i> Branches</a>
     <ul class="dropdown-menu">
         <li>
             <a class="dropdown-item" 
