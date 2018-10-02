@@ -114,15 +114,20 @@
 					<div class="row">
 					<div class="list-group-item-text col-sm-4">
 						<p><strong>Branches Serviced</strong></p>
-
+						@if($user->person->branchesServiced->count()==0)
+						<div class="alert alert-warning">
+							<p>You are not assigned to any branches</p>
+						</div>
+						@else
 					<ul style="list-style-type: none;">
 						@foreach ($user->person->branchesServiced as $branch)
 							<li><a href="{{route('branches.show',$branch->id)}}">{{$branch->branchname}}</a></li>
 						@endforeach
 					</ul>
+					@endif
 					<a class="btn btn-primary pull-right" href="{{route('branchassignments.index')}}">
 						<i class="far fa-edit text-info"></i>
-						Edit</a>
+						Change Assignments</a>
 				</div>
 				<div class="col-sm-8">
 					@include('site.user._branchmap')
