@@ -86,10 +86,8 @@ class SalesActivityController extends BaseController
         $data = $this->setDates(request()->all());
 
         $activity = $this->activity->create($data);
-        foreach (request('
-'salesprocess') as $process){
-            foreach (request('
-'vertical') as $vertical){
+        foreach (request('salesprocess') as $process){
+            foreach (request('vertical') as $vertical){
                 $activity->salesprocess()->attach($process,['vertical_id'=>$vertical]);
             }
 
@@ -230,12 +228,9 @@ class SalesActivityController extends BaseController
    }
    public function changeteam(Request $request){
 
-        $activity = $this->activity->findOrFail(request('
-'campaign_id'));
-        $team = request('
-'id');
-        switch (request('
-'action')) {
+        $activity = $this->activity->findOrFail(request('campaign_id'));
+        $team = request('id');
+        switch (request('action')) {
             case 'add':
                 if($activity->campaignparticipants()->attach($team)){
                     return 'success';;
@@ -260,19 +255,16 @@ class SalesActivityController extends BaseController
    }
    public function updateteam(Request $request){
 
-        $activity = $this->activity->findOrFail(request('
-'campaign_id'));
+        $activity = $this->activity->findOrFail(request('campaign_id'));
        // need to get all the sales reps in these verticals
        
 
-        $vertical = request('
-'vertical');
+        $vertical = request('vertical');
         $reps = $this->person->campaignparticipants($vertical)
                 ->pluck('id')->toArray();
 
         $activity->campaignparticipants()->sync($reps);
-        return redirect()->route('campaign.announce',request('
-'campaign_id'));
+        return redirect()->route('campaign.announce',request('campaign_id'));
    }
 
     

@@ -21,9 +21,7 @@ class CompaniesServiceController extends BaseController
 	public function selectServiceDetails(Request $request){
 		
 
-		return $this->serviceDetails(request('
-'id'),request('
-'state'));
+		return $this->serviceDetails(request('id'),request('state'));
 	}
 
 	public function getServiceDetails($id,$state=null){

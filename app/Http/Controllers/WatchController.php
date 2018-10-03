@@ -182,11 +182,9 @@ class WatchController extends BaseController {
 		//Refactor: Add request
 		
 
-		switch (request('
-'action')) {
+		switch (request('action')) {
 			case 'add':
-			if($this->add(request('
-'id'))){
+			if($this->add(request('id'))){
 					return 'success';;
 				}else{
 					return 'error';
@@ -197,8 +195,7 @@ class WatchController extends BaseController {
 			
 			case 'remove':
 		
-				$watch = $this->watch->where("location_id","=",request('
-'id'))->where("user_id","=",auth()->id())->firstOrFail();
+				$watch = $this->watch->where("location_id","=",request('id'))->where("user_id","=",auth()->id())->firstOrFail();
 
 				if ($watch->destroy($watch->id)){
 					return 'success';;
@@ -214,8 +211,7 @@ class WatchController extends BaseController {
 
 	public function companywatchexport(Request $request){
 		if(request()->has('id')){
-			$accounts = explode(",",str_replace("'","",request('
-'id')));
+			$accounts = explode(",",str_replace("'","",request('id')));
 			
 			
 			Excel::create('Watch_List_for_',function($excel) use($accounts){

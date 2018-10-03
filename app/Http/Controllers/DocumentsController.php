@@ -62,10 +62,8 @@ class DocumentsController extends BaseController
        
         $document = $this->document->create($data);
 
-        $document->vertical()->attach(request('
-'vertical'));
-        $document->process()->attach(request('
-'salesprocess'));
+        $document->vertical()->attach(request('vertical'));
+        $document->process()->attach(request('salesprocess'));
         if ($data['plaintext']==''){
             return redirect()->route('documents.index')->with('warning','Document added but full text is not included in search. Possibly a secured document.');
         }
@@ -111,10 +109,8 @@ class DocumentsController extends BaseController
         $data = $text->readDocument($request);
         $document = $this->document->findOrFail($id);
         $document->update($data);
-        $document->vertical()->sync(request('
-'vertical'));
-        $document->process()->sync(request('
-'salesprocess'));
+        $document->vertical()->sync(request('vertical'));
+        $document->process()->sync(request('salesprocess'));
         return redirect()->route('documents.index');
     }
 
@@ -162,11 +158,8 @@ class DocumentsController extends BaseController
     public function rank(Request $request)
     {
         
-       $user = User::where('api_token','=',request('
-'api_token'))->first();
-       if($user->rankings()->sync([request('
-'id') => ['rank' => request('
-'value')]],false))
+       $user = User::where('api_token','=',request('api_token'))->first();
+       if($user->rankings()->sync([request('id') => ['rank' => request('value')]],false))
         {
             return 'success';
         }

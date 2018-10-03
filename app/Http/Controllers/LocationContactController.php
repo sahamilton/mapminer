@@ -46,8 +46,7 @@ class LocationContactController extends Controller
 
         $data['user_id']= auth()->user()->id;
         $contact = $this->contact->create($data);
-        return redirect()->route('locations.show',request('
-'location_id'));
+        return redirect()->route('locations.show',request('location_id'));
     }
 
     /**

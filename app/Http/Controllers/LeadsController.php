@@ -265,13 +265,10 @@ class LeadsController extends BaseController
 
     public function leadrank(Request $request){
       $person = $this->person->whereHas('userdetails',function($q) use($request){
-        $q->where('api_token','=',request('
-'api_token'));
+        $q->where('api_token','=',request('api_token'));
       })->firstOrFail();
 
-      if($person->salesleads()->sync([request('
-'id') => ['rating' => request('
-'value')]],false))
+      if($person->salesleads()->sync([request('id') => ['rating' => request('value')]],false))
         {
             return 'success';
         }
@@ -286,8 +283,7 @@ class LeadsController extends BaseController
 
 
     public function search(LeadInputAddressFormRequest $request){
-      $geoCode = app('geocoder')->geocode(request('
-'address'))->get();
+      $geoCode = app('geocoder')->geocode(request('address'))->get();
       if (count($geoCode)>0){
         // create the lead object
           $lead = $this->lead->createLeadFromGeo($geoCode);
@@ -308,8 +304,7 @@ class LeadsController extends BaseController
 
     }else{
 
-      return back()->withError('Unable to geo code ' . request('
-'address'));
+      return back()->withError('Unable to geo code ' . request('address'));
     }
 
       //return response()->view('leads.showsearch',compact('lead','sources','rank','people','branches'));
@@ -360,13 +355,11 @@ class LeadsController extends BaseController
     public function find(LeadAddressFormRequest $request){
 
 
-      $geoCode = app('geocoder')->geocode(request('
-'address'))->get();
+      $geoCode = app('geocoder')->geocode(request('address'))->get();
 
       if(! $geoCode or count($geoCode)==0)
       {
-        return redirect()->back()->withInput()->with('error','Unable to Geocode address:'.request('
-'address') );
+        return redirect()->back()->withInput()->with('error','Unable to Geocode address:'.request('address') );
 
       }else{
         request()->merge($this->lead->getGeoCode($geoCode));
@@ -443,8 +436,7 @@ class LeadsController extends BaseController
     
     public function exportLeads(Request $request){
        if(request()->has('type')){
-        $type = request('
-'type');
+        $type = request('type');
     }else{
         $type = 'csv';
     }
@@ -622,15 +614,13 @@ class LeadsController extends BaseController
       $lead = $this->lead->with('salesteam')->findOrFail($id);
     
       $lead->salesteam()
-        ->updateExistingPivot(auth()->user()->person->id,['rating'=>request('
-'ranking'),'status_id'=>3]);
+        ->updateExistingPivot(auth()->user()->person->id,['rating'=>request('ranking'),'status_id'=>3]);
         $this->addClosingNote($request,$id);
         return redirect()->route('salesrep.newleads',$lead->salesteam->first()->id)->with('message', 'Lead closed');
      }
      private function addClosingNote($request,$id){
         $note = new Note;
-        $note->note = "Lead Closed:" .request('
-'comments');
+        $note->note = "Lead Closed:" .request('comments');
         $note->type = 'lead';
         $note->related_id = $id;
         $note->user_id = auth()->user()->id;
@@ -639,11 +629,9 @@ class LeadsController extends BaseController
 
      public function unAssignLeads(Request $request){
      
-       $lead = $this->lead->findOrFail(request('
-'lead'));
+       $lead = $this->lead->findOrFail(request('lead'));
        $lead->branches()->dissociate();
-       $lead->salesteam()->detach(request('
-'rep'));
+       $lead->salesteam()->detach(request('rep'));
        return redirect()->route('leads.show',$lead->id);
         
     }
@@ -721,22 +709,17 @@ class LeadsController extends BaseController
 
      public function assignLeads(Request $request){
 
-        $lead = $this->lead->with('contacts','leadsource')->findOrFail(request('
-'lead_id'));
-        $branch = Branch::with('manager','manager.userdetails')->findOrFail(request('
-'branch'));
+        $lead = $this->lead->with('contacts','leadsource')->findOrFail(request('lead_id'));
+        $branch = Branch::with('manager','manager.userdetails')->findOrFail(request('branch'));
 
         $lead->branches()->associate($branch);
         $lead->save();
-        if(request('
-'salesrep')!=''){
+        if(request('salesrep')!=''){
 
-            $rep = $this->person->findOrFail(request('
-'salesrep'));
+            $rep = $this->person->findOrFail(request('salesrep'));
             $rep = $this->checkIfTest($rep);
           
-            $lead->salesteam()->attach(request('
-'salesrep'), ['status_id' => 2]);
+            $lead->salesteam()->attach(request('salesrep'), ['status_id' => 2]);
             Mail::queue(new NotifyWebLeadsAssignment($lead,$branch,$rep));
         }else{
     
@@ -749,8 +732,7 @@ class LeadsController extends BaseController
 
 
         }
-        if(request('
-'notifymgr')){
+        if(request('notifymgr')){
 
             foreach ($branch->manager as $manager){
 

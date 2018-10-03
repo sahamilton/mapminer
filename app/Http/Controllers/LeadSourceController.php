@@ -71,13 +71,10 @@ class LeadSourceController extends Controller
         request()->merge(['user_id'=>auth()->user()->id]);
         $leadsource = $this->leadsource->create(request()->except((['datefrom','dateto']));
         $leadsource->update([
-            'datefrom'=>Carbon::createFromFormat('m/d/Y',request('
-'datefrom')),
-            'dateto'=>Carbon::createFromFormat('m/d/Y',request('
-'dateto')),
+            'datefrom'=>Carbon::createFromFormat('m/d/Y',request('datefrom')),
+            'dateto'=>Carbon::createFromFormat('m/d/Y',request('dateto')),
             ]);
-        $leadsource->verticals()->sync(request('
-'vertical'));
+        $leadsource->verticals()->sync(request('vertical'));
         return redirect()->route('leadsource.index');
     }
 
@@ -177,12 +174,9 @@ class LeadSourceController extends Controller
         $leadsource= $this->leadsource->findOrFail($id);
         $leadsource->update(request()->except('_method', '_token','datefrom','dateto'));
         $leadsource->update([
-            'datefrom'=>Carbon::createFromFormat('m/d/Y',request('
-'datefrom')),
-            'dateto'=>Carbon::createFromFormat('m/d/Y',request('
-'dateto'))]);
-        $leadsource->verticals()->sync(request('
-'vertical'));
+            'datefrom'=>Carbon::createFromFormat('m/d/Y',request('datefrom')),
+            'dateto'=>Carbon::createFromFormat('m/d/Y',request('dateto'))]);
+        $leadsource->verticals()->sync(request('vertical'));
         return redirect()->route('leadsource.index');
     }
 
@@ -254,15 +248,10 @@ class LeadSourceController extends Controller
     private function getAddress($request){
         // if its a one line address return that
         if(! request()->has('city')){
-            return $address = request('
-'address') ;
+            return $address = request('address') ;
         }
         // else build the full address
-        return $address = request('
-'address') . " " . request('
-'city') . " " . request('
-'state') . " " . request('
-'zip');
+        return $address = request('address') . " " . request('city') . " " . request('state') . " " . request('zip');
     }
 
 
@@ -336,8 +325,7 @@ class LeadSourceController extends Controller
     **/
     public function export(Request $request,$id){
          if(request()->has('type')){
-        $type = request('
-'type');
+        $type = request('type');
     }else{
         $type = 'xlsx';
     }

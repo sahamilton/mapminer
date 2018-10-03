@@ -65,16 +65,14 @@ class CompaniesController extends BaseController {
 	public function filter(Request $request){
 
 
-		if(request('
-'locationFilter')=='both'){
+		if(request('locationFilter')=='both'){
 
 			return redirect()->route('company.index');
 		}
 		$filtered = $this->company->isFiltered(['companies'],['vertical']);
 		$companies=$this->getAllCompanies($filtered);
 
-		if(request('
-'locationFilter') == 'nolocations'){
+		if(request('locationFilter') == 'nolocations'){
 			$companies = $companies->whereDoesntHave('locations')->get();
 
 			$title = 'Accounts without Locations';
@@ -86,8 +84,7 @@ class CompaniesController extends BaseController {
 
 		}
 
-		$locationFilter = request('
-'locationFilter');
+		$locationFilter = request('locationFilter');
 		return response()->view('companies.index', compact('companies','title','filtered','locationFilter'));
 
 	}
@@ -151,8 +148,7 @@ class CompaniesController extends BaseController {
 	{
 
 		$company = $this->company->create(request()->all());
-		$company->serviceline()->sync(request('
-'serviceline'));
+		$company->serviceline()->sync(request('serviceline'));
 
 		return redirect()->route('company.index');
 	}

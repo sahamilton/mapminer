@@ -41,10 +41,8 @@ class HowtofieldsController extends BaseController {
 	public function store(HowtofieldsFormRequest $request)
 	{
 		
-		if(request()->has('addGroup') && request('
-'addGroup') != '') {
-			$request->request->add(['group' => request('
-'addGroup')]);
+		if(request()->has('addGroup') && request('addGroup') != '') {
+			$request->request->add(['group' => request('addGroup')]);
 			
 		}
 
@@ -87,10 +85,8 @@ class HowtofieldsController extends BaseController {
 	public function update(HowtofieldsFormRequest $request, $howtofield)
 	{
 		
-		if(request()->has('addGroup') && request('
-'addGroup') != '') {
-			$request->request->add(['group' => request('
-'addGroup')]);
+		if(request()->has('addGroup') && request('addGroup') != '') {
+			$request->request->add(['group' => request('addGroup')]);
 			
 		}
 

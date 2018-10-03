@@ -133,11 +133,9 @@ class ProjectsController extends BaseController
         //
     }
     public function transfer(ProjectTransferRequest $request){
-        $project = $this->project->findOrFail(request('
-'project_id'));
+        $project = $this->project->findOrFail(request('project_id'));
         $person = $this->person->whereHas('userdetails',function ($q) use($request){
-            $q->where('username','=',request('
-'username'));
+            $q->where('username','=',request('username'));
         })->first();
         $transferor = $this->person->where('user_id','=',auth()->user()->id)->first();
         $project->owner()->wherePivot('person_id','=',auth()->user()->person->id)->detach();
@@ -176,8 +174,7 @@ class ProjectsController extends BaseController
         $project->pr_status = 'closed';
         $project->save();
         // upate status in person_project
-        $project->owner()->updateExistingPivot(auth()->user()->person()->first()->id,['status'=>'Closed','ranking'=>request('
-'ranking')]);
+        $project->owner()->updateExistingPivot(auth()->user()->person()->first()->id,['status'=>'Closed','ranking'=>request('ranking')]);
         // add comment in project_note
         $this->addClosingNote($request);
         return redirect()->route('projects.show',$id);
@@ -188,11 +185,9 @@ class ProjectsController extends BaseController
  */
     private function addClosingNote(Request $request){
         $note = new Note;
-        $note->note = "Project Closed:" .request('
-'comments');
+        $note->note = "Project Closed:" .request('comments');
         $note->type = 'project';
-        $note->related_id = request('
-'project_id');
+        $note->related_id = request('project_id');
         $note->user_id = auth()->user()->id;
         $note->save();
     }
@@ -203,11 +198,9 @@ class ProjectsController extends BaseController
  */
     private function addTransferNote(Request $request){
         $note = new Note;
-        $note->note = "Project Transfered:" .request('
-'comments');
+        $note->note = "Project Transfered:" .request('comments');
         $note->type = 'project';
-        $note->related_id = request('
-'project_id');
+        $note->related_id = request('project_id');
         $note->user_id = auth()->user()->id;
         $note->save();
     }
@@ -230,8 +223,7 @@ class ProjectsController extends BaseController
     public function addProjectCompany(Request $request){
 
         $firm = \App\ProjectCompany::create(request()->all());
-        $firm->project()->attach(request('
-'project_id'));
+        $firm->project()->attach(request('project_id'));
         return redirect()->back();
     }
 /**

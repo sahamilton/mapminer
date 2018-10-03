@@ -123,13 +123,11 @@ class EmailsController extends Controller
         $email = $this->email->findOrFail($request->id);
         if(request()->filled('
 'vertical')){
-            $recipients = $this->getIndustryVerticalRecipients(request('
-'vertical'));
+            $recipients = $this->getIndustryVerticalRecipients(request('vertical'));
         }
         if(request()->filled('
 'role')){
-            $recipients = $this->getRoleRecipients(request('
-'role'));
+            $recipients = $this->getRoleRecipients(request('role'));
         }
 
        $email->recipients()->sync($recipients);
@@ -138,8 +136,7 @@ class EmailsController extends Controller
 
     public function sendEmail(Request $request){
 
-        $email = $this->email->with('recipients','recipients.userdetails')->findOrFail(request('
-'id'));
+        $email = $this->email->with('recipients','recipients.userdetails')->findOrFail(request('id'));
         if(request()->filled('
 'test')){
             $data['test'] = TRUE;
@@ -195,13 +192,10 @@ class EmailsController extends Controller
     }
     public function changelist(Request $request){
 
-        $email = $this->email->findOrFail(request('
-'email_id'));
-        $recipient = request('
-'id');
+        $email = $this->email->findOrFail(request('email_id'));
+        $recipient = request('id');
         
-        switch (request('
-'action')) {
+        switch (request('action')) {
             case 'add':
                 if($email->recipients()->attach($recipient)){
                     return 'success';

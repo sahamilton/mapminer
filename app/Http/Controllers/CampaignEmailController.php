@@ -42,8 +42,7 @@ class CampaignEmailController extends Controller
         $data['activity'] = $this->activity->findOrFail($id);
         $data['verticals'] = array_unique($data['activity']->vertical()->pluck('id','filter')->toArray());
         $salesteam = $data['activity']->campaignparticipants;
-        $data['message'] = request('
-'message');
+        $data['message'] = request('message');
         $data['count'] = count($salesteam);
       
         $this->notifySalesTeam($data,$salesteam);

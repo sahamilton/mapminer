@@ -35,8 +35,7 @@ class LocationsImportController extends ImportController
         $data['table']='locations';
         $data['type'] = 'locations';
         $data['route'] = 'locations.mapfields';
-        $data['additionaldata']['company_id'] = request('
-'company');
+        $data['additionaldata']['company_id'] = request('company');
         $fields = $this->getFileFields($data);    
         $columns = $this->location->getTableColumns($data['table']);
         $skip = ['id','created_at','updated_at','serviceline_id'];

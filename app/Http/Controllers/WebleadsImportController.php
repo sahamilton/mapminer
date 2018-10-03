@@ -37,16 +37,14 @@ class WebleadsImportController extends Controller
 		       $data = $input; 
 		       $title="Map the leads import file fields";
 		       $requiredFields = $this->import->requiredFields;
-		       $data['type']=request('
-'type');
+		       $data['type']=request('type');
 		       if($data['type']== 'assigned'){
 		            $data['table']='leadimport';
 		            $requiredFields[]='employee_id';
 		        }else{
 		            $data['table']='webleads';
 		        }
-                $data['lead_source_id]'] = request('
-'lead_source_id');
+                $data['lead_source_id]'] = request('lead_source_id');
 		        $data['filename'] = null;
 		        $data['additionaldata'] = array();
 		        $data['route'] = 'leads.mapfields';
@@ -63,8 +61,7 @@ class WebleadsImportController extends Controller
             foreach ($input[0] as $key=>$value){
                 $newdata[$value]=$input[1][$key];
             }
-            $newdata['lead_source_id'] = request('
-'lead_source_id');
+            $newdata['lead_source_id'] = request('lead_source_id');
             $contact = $this->getContactDetails($newdata);
             $extra = $this->getExtraFieldData($newdata);
            
@@ -168,8 +165,7 @@ class WebleadsImportController extends Controller
    
     private function parseInputData($request){
 
-        $rows = explode(PHP_EOL,request('
-'weblead'));
+        $rows = explode(PHP_EOL,request('weblead'));
         // then create the individual elements
         foreach ($rows as $row){
             $field = explode("\t",$row);
@@ -206,8 +202,7 @@ class WebleadsImportController extends Controller
 	private function getDefaultFields($request){
 		$data=array();
 		if (request()->has('default')){
-			foreach (request('
-'default') as $key=>$value){
+			foreach (request('default') as $key=>$value){
 						$data['aliasname'] =$key;
 						$data['fieldname']=$request->fields[$key];
 						$data['type']='weblead';

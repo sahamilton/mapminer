@@ -43,16 +43,13 @@ class LeadAssignedImportController extends ImportController
 
 
     public function import(LeadImportFormRequest $request) {
-        dd('leadimportassigned',request('
-'type'));
+        dd('leadimportassigned',request('type'));
         $data = $this->uploadfile(request()->file('upload'));
         $title="Map the leads import file fields";
         
         $data['table']='leadimport';
-        $data['type']=request('
-'type');
-        $data['additionaldata'] = request('
-'additionaldata');
+        $data['type']=request('type');
+        $data['additionaldata'] = request('additionaldata');
         $data['route'] = 'leads.mapfields';
         $fields = $this->getFileFields($data);      
         $columns = $this->lead->getTableColumns($data['table']);

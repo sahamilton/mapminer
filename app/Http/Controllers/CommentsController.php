@@ -49,10 +49,8 @@ class CommentsController extends BaseController {
 	public function store(CommentFormRequest $request)
 	{
 		$data = request()->all();
-		$data['subject'] = request('
-'title');
-		$data['title'] = request('
-'slug');
+		$data['subject'] = request('title');
+		$data['title'] = request('slug');
 		$data['user_id'] = auth()->user()->id;
 		$data = $this->comment->create($data);
 		$this->notify($data);
@@ -120,8 +118,7 @@ class CommentsController extends BaseController {
 		$comment = $this->comment->findOrFail($id);
 		$comment->update(request()->all());
 
-		return redirect()->route('news.show',request('
-'slug'));
+		return redirect()->route('news.show',request('slug'));
 	}
 
 	/**

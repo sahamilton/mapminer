@@ -68,8 +68,7 @@ class LeadImportController extends ImportController
         $title="Map the leads import file fields";
          $requiredFields = $this->import->requiredFields;
 
-        $data['type']=request('
-'type');
+        $data['type']=request('type');
         if($data['type']== 'assigned'){
             $data['table']='leadimport';
             $requiredFields[]='employee_id';
@@ -78,8 +77,7 @@ class LeadImportController extends ImportController
         }
         
        
-        $data['additionaldata'] = request('
-'additionaldata');
+        $data['additionaldata'] = request('additionaldata');
         $data['route'] = 'leads.mapfields';
         $fields = $this->getFileFields($data);      
         $columns = $this->lead->getTableColumns($data['table']);
@@ -95,8 +93,7 @@ class LeadImportController extends ImportController
         $this->validateInput($request);
         $this->import->setFields($data);
         if($this->import->import()) {
-            if(request('
-'type')=='assigned'){
+            if(request('type')=='assigned'){
                 $this->postimport();
             }
 

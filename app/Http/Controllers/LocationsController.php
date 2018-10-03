@@ -72,11 +72,7 @@ class LocationsController extends BaseController {
 	public function store(LocationFormRequest $request)
 	{
 				
-		$address = request('
-'street') . ",". request('
-'city') .",". request('
-'state')." ". request('
-'zip');
+		$address = request('street') . ",". request('city') .",". request('state')." ". request('zip');
 		$data = $this->location->getGeoCode(app('geocoder')->geocode($address)->get());
 		request()->merge($data);
 		$location = $this->location->create(request()->all());
@@ -144,11 +140,7 @@ class LocationsController extends BaseController {
 	 */
 	public function update(LocationFormRequest $request, $location)
 	{
-		$address = request('
-'street') . ",". request('
-'city') .",". request('
-'state')." ". request('
-'zip');
+		$address = request('street') . ",". request('city') .",". request('state')." ". request('zip');
 		$data = $this->location->getGeoCode(app('geocoder')->geocode($address)->get());
 		request()->merge($data);
 		$location->update(request()->all());

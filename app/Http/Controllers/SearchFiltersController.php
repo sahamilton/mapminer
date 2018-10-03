@@ -201,8 +201,7 @@ class SearchFiltersController extends BaseController {
 	
 	public function getAccountSegments(Request $request)
 	{
-		$vertical = \App\Company::where('id','=',request('
-'id'))->pluck('vertical');
+		$vertical = \App\Company::where('id','=',request('id'))->pluck('vertical');
 		
 		$segments = $this->filter->where('parent_id','=',$vertical)->orderBy('filter')->pluck('filter','id');
 

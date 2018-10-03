@@ -77,11 +77,7 @@ class WebleadsController  extends ImportController
 
     public function update(Request $request,$weblead){
         
-        $address = request('
-'address') . " " . request('
-'city') . " " . request('
-'state'). " " . request('
-'zip');
+        $address = request('address') . " " . request('city') . " " . request('state'). " " . request('zip');
         $geocode = $this->lead->getLatLng($address);
         $data = request()->all();
         $data['lat']=$geocode['lat'];
@@ -99,17 +95,12 @@ class WebleadsController  extends ImportController
     
     public function assignLeads(Request $request){
 
-        $lead = $this->lead->findOrFail(request('
-'lead_id'));
-        $branch = $this->branch->with('manager','manager.userdetails')->findOrFail(request('
-'branch'));
+        $lead = $this->lead->findOrFail(request('lead_id'));
+        $branch = $this->branch->with('manager','manager.userdetails')->findOrFail(request('branch'));
 
-        if(request('
-'salesrep')!=''){
-            $rep = $this->person->findOrFail(request('
-'salesrep'));
-            $lead->salesteam()->attach(request('
-'salesrep'), ['status_id' => 2,'type'=>'web']);
+        if(request('salesrep')!=''){
+            $rep = $this->person->findOrFail(request('salesrep'));
+            $lead->salesteam()->attach(request('salesrep'), ['status_id' => 2,'type'=>'web']);
             Mail::queue(new NotifyWebleadsAssignment($lead,$branch,$rep));
         }else{
             
@@ -120,8 +111,7 @@ class WebleadsController  extends ImportController
 
 
         }
-        if(request('
-'notifymgr')){
+        if(request('notifymgr')){
 
             $branchemails = $this->getBranchEmails($branch);
             
@@ -146,10 +136,8 @@ class WebleadsController  extends ImportController
     public function unAssignLeads(Request $request){
      
        
-       $lead = $this->lead->findOrFail(request('
-'lead'));
-       $lead->salesteam()->detach(request('
-'rep'));
+       $lead = $this->lead->findOrFail(request('lead'));
+       $lead->salesteam()->detach(request('rep'));
        return redirect()->route('leads.show',$lead->id);
         
     }
@@ -200,8 +188,7 @@ class WebleadsController  extends ImportController
 
 
     public function getSalesPeopleofBranch(Request $request){
-        $bid = request('
-'branch');
+        $bid = request('branch');
 
         $salesreps = $this->person->whereHas('branchesServiced', function($q) use($bid){
             $q->where('branches.id','=',$bid);
@@ -223,16 +210,14 @@ class WebleadsController  extends ImportController
     public function close(Request $request, $lead){
     
       $lead->salesteam()
-        ->updateExistingPivot(auth()->user()->person->id,['rating'=>request('
-'ranking'),'status_id'=>3]);
+        ->updateExistingPivot(auth()->user()->person->id,['rating'=>request('ranking'),'status_id'=>3]);
         $this->addClosingNote($request,$lead->id);
         return redirect()->route('my.webleads')->with('message', 'Lead closed');
      }
 
      private function addClosingNote($request,$id){
         $note = new Note;
-        $note->note = "Lead Closed:" .request('
-'comments');
+        $note->note = "Lead Closed:" .request('comments');
         $note->type = 'weblead';
         $note->related_id = $id;
         $note->user_id = auth()->user()->id;
