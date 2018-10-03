@@ -178,10 +178,10 @@ class UserImport extends Imports
 		$user = new User;
         return $user->getGeoCode($geoCode);
 
-	
+	}
 
 	private function cleanseImport(){
-		$fields = ['reports_to','branches','address','city','state','zip']
+		$fields = ['reports_to','branches','address','city','state','zip'];
 		foreach ($fields as $field){
 			$queries[] = "update usersimport set ". $field . " = null where". $field." = 0";
 			$queries[] = "update usersimport set ". $field . " = null where". $field." = ''";

@@ -6,10 +6,7 @@
 {{-- Content --}}
 @section('content')
 	<div class="page-header">
-		<h3>
-			Import Users</h3>
-
-			
+		<h3>Import Users</h3>
 	</div>
 
 <h2>Steps to import users</h2>
@@ -38,16 +35,29 @@
 </div></div>
 <div>
 <!-- Service Lines -->
-				<div class="form-group @if ($errors->has('serviceline')) has-error @endif">
-					{{Form::label('ServiceLine','Service Lines:', array('class'=>"col-md-2 control-label"))}}
+				
 
-<div class="col-md-6">
-					{{Form::select('serviceline',$servicelines,isset($user) ? $user->serviceline->lists('id') :'',array('class'=>'form-control'))}}
+<div class="form-group @if ($errors->has('serviceline')) has-error @endif">
+<label class='col-md-2 control-label'>ServiceLines</label>
+	<div class="col-md-6">
+	
+		<div class='input-group input-group-lg'>
+			<select multiple name="serviceline[]" >
+				@foreach($servicelines as $serviceline)
+					<option value="{{$serviceline}}">{{$serviceline}}</option>
 
-					@if ($errors->has('serviceline')) <p class="help-block">{{ $errors->first('serviceline') }}</p> @endif
-					</div></div>
+				@endforeach
+			</select>
+	            <span class="help-block{{ $errors->has('serviceline') ? ' has-error' : '' }}">
+	                <strong>{{$errors->has('serviceline') ? $errors->first('serviceline')  : ''}}</strong>
+	            </span>
+         </div>
+	</div>
+</div>
+<div class="row">
+<input class="btn btn-xs btn-success" type="submit" name="submit" value="Import Users" />
 				<!-- ./ servicelines -->
-{{Form::submit('Import Users',['class' => 'btn btn-xs btn-success'])}}
+</div>
 </div>
 {{Form::close()}}
 

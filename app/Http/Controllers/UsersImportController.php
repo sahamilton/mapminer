@@ -46,7 +46,7 @@ class UsersImportController extends ImportController
         $data['route'] = 'users.mapfields';
         $fields = $this->getFileFields($data); 
 
-        $data['additionaldata'] = ['serviceline'=>implode(",",request('serviceline')];
+        $data['additionaldata'] = ['serviceline'=>implode(",",request('serviceline'))];
         $addColumns = ['branches','role_id'];
         $addColumn = $this->addColumns($addColumns);
 

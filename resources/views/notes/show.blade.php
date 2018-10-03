@@ -20,7 +20,7 @@
 					</td>	
 
 					<td>
-						@if($type=='location' && $note->relatesToLocation->count()>0)
+						@if($type=='location' && $note->relatesToLocation && $note->relatesToLocation->count()>0)
 							<a href="{{route('locations.show',$note->relatesToLocation->id)}}"
 							title="See details of location">
 							{{$note->relatesToLocation->businessname}}
