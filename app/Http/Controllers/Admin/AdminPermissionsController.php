@@ -172,8 +172,7 @@ class AdminPermissionsController extends BaseController {
             $inputs['name'] = strtolower(str_replace(' ','_',$inputs['name']));
             if ($permission->update($inputs))
             {
-                if(request()->filled('
-'roles')){
+                if(request()->filled('roles')){
                 	$permission->roles()->sync($inputs['roles']);
                 }else{
                 	$permission->roles()->detach();

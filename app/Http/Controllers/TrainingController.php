@@ -88,17 +88,12 @@ class TrainingController extends BaseController
         }
         if($training = $this->training->create($data)){
             
-            $training->servicelines()->attach(request('
-'serviceline'));
-            if(request()->filled('
-'vertical')){
-                $training->relatedIndustries()->attach(request('
-'vertical'));
+            $training->servicelines()->attach(request('serviceline'));
+            if(request()->filled('vertical')){
+                $training->relatedIndustries()->attach(request('vertical'));
             }
-            if(request()->filled('
-'role')){
-                $training->relatedRoles()->attach(request('
-'role'));
+            if(request()->filled('role')){
+                $training->relatedRoles()->attach(request('role'));
             }
         }
         

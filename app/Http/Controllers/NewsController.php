@@ -77,17 +77,12 @@ class NewsController extends BaseController {
 		$data = request()->all();
 		$data = $this->setDates($data);
 		if($news = $this->news->create($data)){
-			$news->serviceline()->attach(request('
-'serviceline'));
-			if(request()->filled('
-'vertical')){
-				$news->relatedIndustries()->attach(request('
-'vertical'));
+			$news->serviceline()->attach(request('serviceline'));
+			if(request()->filled('vertical')){
+				$news->relatedIndustries()->attach(request('vertical'));
 			}
-			if(request()->filled('
-'role')){
-				$news->relatedRoles()->attach(request('
-'role'));
+			if(request()->filled('role')){
+				$news->relatedRoles()->attach(request('role'));
 			}
 		}
 		
@@ -154,17 +149,14 @@ class NewsController extends BaseController {
 
 		if($news->update($data)) {
 			
-			$news->serviceline()->sync(request('
-'serviceline'));
+			$news->serviceline()->sync(request('serviceline'));
 
 			$vertical = [];
-			$vertical = request('
-'vertical');
+			$vertical = request('vertical');
 			$news->relatedIndustries()->sync($vertical);
 			
 			$role = [];
-			$role = request('
-'role');
+			$role = request('role');
 			$news->relatedRoles()->sync($role);
 			
 		}

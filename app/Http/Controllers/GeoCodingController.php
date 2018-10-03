@@ -32,21 +32,16 @@ class GeoCodingController extends BaseController {
 	 */
 	public function findMe(FindMeFormRequest $request) {
 
-		if(request()->filled('
-'address')) {
-			$address = urlencode(request('
-'address'));
+		if(request()->filled('address')) {
+			$address = urlencode(request('address'));
 			
 		}
-		if(! request()->filled('
-'lat')){
-			$geocode = app('geocoder')->geocode(request('
-'address'))->get();
+		if(! request()->filled('lat')){
+			$geocode = app('geocoder')->geocode(request('address'))->get();
 
 			if(! $geocode or count($geocode)==0){
 
-				return redirect()->back()->withInput()->with('error','Unable to Geocode address:'.request('
-'address') );
+				return redirect()->back()->withInput()->with('error','Unable to Geocode address:'.request('address') );
 			}
 			
 			request()->merge($this->location->getGeoCode($geocode));
@@ -261,9 +256,7 @@ class GeoCodingController extends BaseController {
 
 		$filtered = $this->location->isFiltered(['locations'],['business','segment'],NULL);
 
-		if(request()->filled('
-'lat') && request()->filled('
-'lng')) {
+		if(request()->filled('lat') && request()->filled('lng')) {
 			
 			$data = request()->all();
 			$data['latlng'] = $data['lat'].":".$data['lng'];

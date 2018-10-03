@@ -54,25 +54,19 @@ class UsersController extends Controller
     public function update(UserProfileFormRequest $request){
         
        $user = $this->user->with('person')->findOrFail(auth()->user()->id);
-       if(request()->filled('
-'oldpassword') && ! \Hash::check(request('
-'oldpassword'),auth()->user()->password)){
+       if(request()->filled('oldpassword') && ! \Hash::check(request('oldpassword'),auth()->user()->password)){
             
           return  back()->withInput()->withErrors(['oldpassword'=>'Your current password is incorrect']);
         }
-       if(request()->filled('
-'password')){
-            $user->password = \Hash::make(request('
-'password'));
+       if(request()->filled('password')){
+            $user->password = \Hash::make(request('password'));
             $user->timestamps = false;
             $user->save();
             $user->timestamps = true;
        }
        $user->person()->update($request->only(['firstname','lastname','address','phone']));
-       if(request()->filled('
-'address') ){
-            $data = $user->getGeoCode(app('geocoder')->geocode(request('
-'address'))->get());
+       if(request()->filled('address') ){
+            $data = $user->getGeoCode(app('geocoder')->geocode(request('address'))->get());
             unset ($data['fulladdress']);
             
        }else{

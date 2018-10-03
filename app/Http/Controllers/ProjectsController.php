@@ -298,18 +298,14 @@ class ProjectsController extends BaseController
 
     }
     public function changeStatus (Request $request){
-       $project = $this->project->findOrFail(request('
-'project_id'));
-       if (! request()->filled('
-'status')){
+       $project = $this->project->findOrFail(request('project_id'));
+       if (! request()->filled('status')){
             $project->owner()->detach(auth()->user()->person()->first()->id);
        }else{
 
-        $project->owner()->updateExistingPivot(auth()->user()->person()->first()->id,['status'=>request('
-'status')]);
+        $project->owner()->updateExistingPivot(auth()->user()->person()->first()->id,['status'=>request('status')]);
         }
-        return redirect()->route('projects.show',request('
-'project_id'));
+        return redirect()->route('projects.show',request('project_id'));
     }
 
     public function myProjects(){
@@ -342,10 +338,8 @@ class ProjectsController extends BaseController
 
 
     public function projectStats(Request $request){
-        if(request()->filled('
-'id')){
-            $id = request('
-'id');
+        if(request()->filled('id')){
+            $id = request('id');
         }else{
             $id = null;
         }

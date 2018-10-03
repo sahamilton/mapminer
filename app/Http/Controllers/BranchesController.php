@@ -206,10 +206,8 @@ class BranchesController extends BaseController {
 	public function showNearbyBranches(Request $request, $id)
 	{
 		
-		if (request()->filled('
-'d')) {
-			$data['distance'] = request('
-'d');
+		if (request()->filled('d')) {
+			$data['distance'] = request('d');
 		}else{
 			$data['distance'] = '50';
 		}
@@ -227,8 +225,7 @@ class BranchesController extends BaseController {
 	{
 		
 		$locations = Location::where('branch_id','=',$id)->get();
-		return response()->json(array('error'=>false,'locations' =>$locations->toArray()),200)->setCallback(request('
-'callback'));
+		return response()->json(array('error'=>false,'locations' =>$locations->toArray()),200)->setCallback(request('callback'));
 		
 	}
 
@@ -262,8 +259,7 @@ class BranchesController extends BaseController {
 		
 		$branch->findOrFail($branch->id)
 		->update(request()->all());
-		foreach (request('
-'roles') as $key=>$role){
+		foreach (request('roles') as $key=>$role){
 				foreach ($role as $person){
 				
 					$branch->relatedPeople()->sync($person,['role_id'=>$key]);
@@ -272,8 +268,7 @@ class BranchesController extends BaseController {
 			}
 
 		
-		$branch->servicelines()->sync(request('
-'serviceline'));
+		$branch->servicelines()->sync(request('serviceline'));
 		$this->rebuildXMLfile();
 		return redirect()->route('branches.show',$branch->id );
 
@@ -308,8 +303,7 @@ class BranchesController extends BaseController {
 		->with('locations','locations.company')
 		->findOrFail($id);
 
-		if($co = request('
-'co'))
+		if($co = request('co'))
 			{
 				$result = $result->where('locations.company.companyname', 'like',$co)->get();
 			}
@@ -325,10 +319,8 @@ class BranchesController extends BaseController {
 	 */	public function getNearbyBranches(Request $request, $id)
 	
 	{
-		if (request()->filled('
-'d')) {
-			$distance = request('
-'d');
+		if (request()->filled('d')) {
+			$distance = request('d');
 		}else{
 			$distance = '50';
 		}
@@ -358,8 +350,7 @@ class BranchesController extends BaseController {
 		$servicelines = $this->serviceline->whereIn('id',$this->userServiceLines)->get();
 
 		if(! isset($state)){
-			$state=request('
-'state');
+			$state=request('state');
 			
 		}
 		$data = \App\State::where('statecode','=',$state)->firstOrFail()->toArray();
@@ -428,8 +419,7 @@ class BranchesController extends BaseController {
 
 
 		if(! $statecode){
-			$statecode = request('
-'state');
+			$statecode = request('state');
 		}
 
 		$branches = $this->branch

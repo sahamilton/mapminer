@@ -49,8 +49,7 @@ class ManagersController extends BaseController {
 	{
 		//dd(request()->all());
 
-		if(! request()->filled('
-'manager')){
+		if(! request()->filled('manager')){
 
 			$managerArray = $this->getManagers(auth()->id());
 			if(isset($managerArray['user_id'])){
@@ -60,20 +59,17 @@ class ManagersController extends BaseController {
 			}
 			
 		}else{
-			$this->managerID = request('
-'manager');
+			$this->managerID = request('manager');
 			
 		}
 		// if there is a change of manager
-		if($this->managerID != session('manager') && ! request()->filled('
-'accounts')){
+		if($this->managerID != session('manager') && ! request()->filled('accounts')){
 				
 				$data =  $this->getMyAccounts();
 
 				
 		}else{
-			$data['selectedAccounts'] = request('
-'accounts');
+			$data['selectedAccounts'] = request('accounts');
 			
 		}
 		

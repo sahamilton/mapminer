@@ -169,28 +169,23 @@ class AdminUsersController extends BaseController {
         $user->api_token = md5(uniqid(mt_rand(), true));
         $user->confirmation_code = md5(uniqid(mt_rand(), true));
         $user->password = \Hash::make(\Input::get('password'));
-        if (request()->filled('
-'confirm')) {
-            $user->confirmed = request('
-'confirm');
+        if (request()->filled('confirm')) {
+            $user->confirmed = request('confirm');
         }
 
         if ( $user->save() ) {
 
 			$person = new Person;
             $person->user_id = $user->id;
-            $person->firstname = request('
-'firstname');
-            $person->lastname = request('
-'lastname');
+            $person->firstname = request('firstname');
+            $person->lastname = request('lastname');
             $person->save();
            	$person = $this->updateAssociatedPerson($person,request()->all());
             $person = $this->associateBranchesWithPerson($person,request()->all());
 			$user->person()->save($person);
             $track=Track::create(['user_id'=>$user->id]);
             $user->saveRoles(request('roles' ));
-            $user->serviceline()->attach(request('
-'serviceline'));
+            $user->serviceline()->attach(request('serviceline'));
 	        $person->rebuild();
             return redirect()->route('person.details',$person->id)
                 ->with('success', 'User created succesfully');
@@ -278,11 +273,9 @@ class AdminUsersController extends BaseController {
       
         $user = $this->user->with('person')->find($user->id);
         $oldUser = clone($user);
-        if(request()->filled('
-'password')){
+        if(request()->filled('password')){
           
-            $user->password = \Hash::make(request('
-'password'));
+            $user->password = \Hash::make(request('password'));
             $user->save();
         }
 
@@ -291,23 +284,18 @@ class AdminUsersController extends BaseController {
             $person = $this->updateAssociatedPerson($user->person,request()->all());
             $person = $this->associateBranchesWithPerson($person,request()->all());
 
-           if(request()->filled('
-'serviceline')){
+           if(request()->filled('serviceline')){
 
-                $user->serviceline()->sync(request('
-'serviceline'));
+                $user->serviceline()->sync(request('serviceline'));
         	}
             $user->saveRoles(request('roles' ));
-        	if(request()->filled('
-'vertical')){
-                $verticals = request('
-'vertical');
+        	if(request()->filled('vertical')){
+                $verticals = request('vertical');
                     if($verticals[0]==0){
                       $person->industryfocus()->sync([]);
                     }else{
 
-            		  $person->industryfocus()->sync(request('
-'vertical'));
+            		  $person->industryfocus()->sync(request('vertical'));
                     }
         	}else{
                 $person->industryfocus()->sync([]);

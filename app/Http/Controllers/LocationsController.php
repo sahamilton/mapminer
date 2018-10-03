@@ -204,10 +204,8 @@ class LocationsController extends BaseController {
 	public function getClosestBranch(Request $request,$id,$n=5)
 	{
 		
-		if (request()->filled('
-'d')) {
-			$this->distance = request('
-'d');
+		if (request()->filled('d')) {
+			$this->distance = request('d');
 		}
 		$data['location'] = $this->location->with('company','company.serviceline')->findOrFail($id);
 
@@ -234,10 +232,8 @@ class LocationsController extends BaseController {
 	public function showNearbyLocations(Request $request)
 	{
 		
-		if (request()->filled('
-'d')) {
-			$data['distance'] = request('
-'d');
+		if (request()->filled('d')) {
+			$data['distance'] = request('d');
 		}else{
 			$data['distance'] = '50';
 		}
@@ -322,16 +318,13 @@ class LocationsController extends BaseController {
 	public function bulkImport(LocationImportFormRequest $request) {
 		
 
-		if(request()->filled('
-'segment'))
+		if(request()->filled('segment'))
 		{
-			$data['segment'] = request('
-'segment');
+			$data['segment'] = request('segment');
 		}else{
 			$data['segment'] = NULL;
 		}	
-		$data['company_id'] = request('
-'company');
+		$data['company_id'] = request('company');
 		$file = request()->file('upload')->store('public/uploads');  
 		$data['location'] = asset(Storage::url($file));
         $data['basepath'] = base_path()."/public".Storage::url($file);

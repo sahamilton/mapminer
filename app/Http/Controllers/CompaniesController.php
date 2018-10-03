@@ -194,8 +194,7 @@ class CompaniesController extends BaseController {
 
 		$this->company = $company;
 		$this->company->update( request()->all());
-		$this->company->serviceline()->sync( request('
-'serviceline'));
+		$this->company->serviceline()->sync( request('serviceline'));
 		return redirect()->route('company.index');
 	}
 	/**
@@ -388,13 +387,9 @@ class CompaniesController extends BaseController {
 	{
 
 		// The method can be used by either post or get routes
-		if(request()->filled('
-'id') && request()->filled('
-'state')){
-					$id = request('
-'id');
-					$state = urldecode(request('
-'state'));
+		if(request()->filled('id') && request()->filled('state')){
+					$id = request('id');
+					$state = urldecode(request('state'));
 
 		}
 		// Check if user can view company based on user serviceline
@@ -600,8 +595,7 @@ class CompaniesController extends BaseController {
 	 */
 	public function locationsexport(Request $request) {
 
-		$id = request('
-'company');
+		$id = request('company');
 		$company = $this->company->findOrFail($id);
 		Excel::create($company->companyname. " locations",function($excel) use($id){
 			$excel->sheet('Watching',function($sheet) use($id) {

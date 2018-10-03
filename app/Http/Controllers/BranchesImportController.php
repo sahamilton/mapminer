@@ -42,8 +42,7 @@ class BranchesImportController extends ImportController
         $data['additionaldata'] = array();
         $data['route']= 'branches.mapfields';
         $data['serviceline'] = implode(",",request('serviceline'));
-        $company_id = request('
-'company');
+        $company_id = request('company');
         $fields = $this->getFileFields($data);      
         $columns = $this->branch->getTableColumns($data['table']);
         $requiredFields = $this->import->requiredFields;
@@ -87,44 +86,31 @@ class BranchesImportController extends ImportController
         $deletes=0;
         $changes=0;
         $updates = 0;
-        if(request()->filled('
-'add') or request()->filled('
-'delete') or request()->filled('
-'change')){
-            if(request()->filled('
-'add')){
-                $adds = count(request('
-'add'));
+        if(request()->filled('add') or request()->filled('delete') or request()->filled('change')){
+            if(request()->filled('add')){
+                $adds = count(request('add'));
                 $branchesToImport = $this->import
-                ->whereIn('id',request('
-'add'))
+                ->whereIn('id',request('add'))
                 ->get();
                 foreach ($branchesToImport as $add){
                     $branch = Branch::create($add->toArray());
                     $branch->id = $add['id'];
                     $branch->save();
-                    $branch->servicelines()->sync([request('
-'serviceline')]);
+                    $branch->servicelines()->sync([request('serviceline')]);
                 }
                 
             }
 
-            if(request()->filled('
-'delete')){
-                $this->branch->destroy(request('
-'delete'));
-                $this->import->destroy(request('
-'delete'));
-                $deletes = count(request('
-'delete'));
+            if(request()->filled('delete')){
+                $this->branch->destroy(request('delete'));
+                $this->import->destroy(request('delete'));
+                $deletes = count(request('delete'));
             }
 
-            if(request()->filled('
-'change')){
+            if(request()->filled('change')){
                 
                 $branchesToUpdate = $this->import
-                    ->whereIn('id',request('
-'change'))
+                    ->whereIn('id',request('change'))
                     ->get();
   
                 $updates = count($branchesToUpdate);
