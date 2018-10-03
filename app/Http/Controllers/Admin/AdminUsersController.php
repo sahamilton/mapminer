@@ -153,7 +153,7 @@ class AdminUsersController extends BaseController {
 
 		$managers = $this->getManagerList();
 		// Show the page
-       
+ 
 		return response()->view('admin.users.create', compact('roles', 'permissions', 'verticals','selectedRoles', 'selectedPermissions', 'title', 'mode','managers','servicelines','branches'));
     }
 
@@ -239,7 +239,7 @@ class AdminUsersController extends BaseController {
         	// mode
         	$mode = 'edit';
 			$managers = $this->getManagerList();
-
+            dd($managers);
 			$branchesServiced = $user->person->branchesServiced()->pluck('branchname','id')->toArray();
            
 			$branches = $this->getUsersBranches($user,$branchesServiced);
@@ -598,16 +598,15 @@ class AdminUsersController extends BaseController {
 
 	private function getManagerList()
 	{
-		$managerroles=['3','4','6','7','8','9','11','13'];
-
+		//$managerroles=['3','4','6','7','8','9','11','13'];
+        
         return $this->person
-        ->select(
-            \DB::raw("CONCAT(lastname ,', ',firstname) as fullname"),'id')
-            ->with('userdetails')
-            ->whereHas('userdetails.roles',function($q) use ($managerroles){
-                $q->whereIn('role_id',$managerroles);
-            })
-            ->orderBy('fullname')
+        
+        ->whereHas('userdetails.roles.permissions',function($q){
+            $q->where('permissions.name','=','manage_people');
+        })
+        ->select(\DB::raw("CONCAT(lastname ,', ',firstname) as fullname"),'id')
+        ->orderBy('fullname')
         ->pluck('fullname','id')
         ->toArray();
 	}
