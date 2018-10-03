@@ -397,6 +397,9 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
 
 		Route::get('salesteam',['as'=>'teamupdate','uses'=>'SalesActivityController@changeTeam']);
 
+	#ServiceLines
+		Route::resource('serviceline','ServicelinesController');
+
 	#CompanyService
 		
 		Route::get('/company/{id}/newservice/{state?}',['as'=>'company.service','uses'=>'CompaniesServiceController@getServiceDetails']);
@@ -472,9 +475,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 		Route::get('person/export', ['as'=>'person.export', 'uses'=>'PersonsController@export']);
 
 
-	#ServiceLines
-		Route::resource('serviceline','ServicelinesController');
-
+	
 
 	# Lead Status
 

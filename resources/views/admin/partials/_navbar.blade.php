@@ -45,18 +45,20 @@
                                      <i class="fa fa-cloud-download" aria-hidden="true"></i> Export Locations</a></li>
                                     
                                     <li class="divider"></li>
-                                    
+                                    @can('manage_servicelines')
                                     <li{{ (Request::is('serviceline*') ? ' class="active"' : '') }}>
                                     <a href="{{ route('serviceline.index') }}">
                                     <i class="fa fa-wrench" aria-hidden="true"></i>  Manage Service Lines</a>
                                     </li>
+                                    @endcan
+                                    @can('manage_industries')
                                     <li{{ (Request::is('admin/searchfilters*') ? ' class="active"' : '') }}>
                                     <a href="{{ route('searchfilters.index') }}">
-                                    <i class="fa fa-filter" aria-hidden="true"></i> Manage Filters</a>
+                                    <i class="fa fa-filter" aria-hidden="true"></i> Manage Industries</a>
                                     </li> 
                                    
                                     <li class="divider"></li>
-                                    
+                                    @endcan
                                     <li{{ (Request::is('admin/salesnote*') ? ' class="active"' : '') }}>
                                     <a href="{{ route('salesnotes.index') }}">
                                     <i class="fa fa-wrench" aria-hidden="true"></i>  Manage Salesnotes</a>
