@@ -94,7 +94,7 @@ class BranchesController extends BaseController {
 		$branchRoles = Role::whereIn('id',$this->branch->branchRoles)->pluck('name','id');
 		$team = $this->person->personroles($this->branch->branchRoles);
 		$servicelines = $this->serviceline->whereIn('id',$this->userServiceLines)->get();
-    	$states = State::all()->pluck('fullstate','statecode')->toarray();
+    	$states = $this->state->all()->pluck('fullstate','statecode')->toarray();
 		return response()->view('branches.create',compact('servicelines','team','branchRoles','states'));
 	}
 
@@ -245,7 +245,7 @@ class BranchesController extends BaseController {
 		$branchteam = $branch->relatedPeople()->pluck('persons.id')->toArray();
 		$servicelines = $this->serviceline->whereIn('id',$this->userServiceLines )->get();
 		$branchservicelines = $branch->servicelines()->pluck('servicelines.id')->toArray();
-		$states = State::all()->pluck('fullstate','statecode')->toarray();
+		$states = $this->state->all()->pluck('fullstate','statecode')->toarray();
 		return response()->view('branches.edit', compact('branch','servicelines','branchRoles','team','branchteam','branchservicelines','states'));
 	}
 
@@ -354,7 +354,7 @@ class BranchesController extends BaseController {
 			$state=$request->get('state');
 			
 		}
-		$data = State::where('statecode','=',$state)->firstOrFail()->toArray();
+		$data = $this->state->where('statecode','=',$state)->firstOrFail()->toArray();
 		
 		return response()->view('branches.statemap', compact('data','servicelines'));	
 		
@@ -372,9 +372,9 @@ class BranchesController extends BaseController {
 		
 		
 	
-		$fullState = $this->state->getStates();
-		$data['fullstate'] = $fullState[$state];
-		$data['state'] = $state;
+		$fullState = $this->state->whereStatecode($state)->firstOrFail();
+		$data['fullstate'] = $fullState->fullstate;
+		$data['state'] = $fullstate->statecode;
 		return response()->view('branches.state', compact('data','branches'));
 		
 
@@ -435,7 +435,7 @@ class BranchesController extends BaseController {
 			->get();
 
 		
-		$states= State::where('statecode','=',$statecode)->get();
+		$states= $this->state->where('statecode','=',$statecode)->get();
 		foreach($states as $state) {
 			$data['state']= $state->statecode;
 			$data['fullstate']= $state->fullstate;
