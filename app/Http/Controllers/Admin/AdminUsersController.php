@@ -599,7 +599,14 @@ class AdminUsersController extends BaseController {
 	private function getManagerList()
 	{
 		$managerroles=['3','4','6','7','8','9','11'];
-
+        // change this to $this->person
+        //->select(raw("CONCAT(lastname ,', ',firstname) as fullname"),'id')
+        //->whereHas('userdetails',function($q){
+        //  $q->hasPermission('manage_people');
+        //})
+        //->orderBy('fullname')
+        //->pluck('fullname','id')
+        //->toArray();
         return $this->person
         ->select(
             \DB::raw("CONCAT(lastname ,', ',firstname) as fullname"),'id')
