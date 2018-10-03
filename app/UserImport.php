@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class UserImport extends Imports
 {
-   	public $uniqueFields= ['username','email','employee_id'];
+   	public $uniqueFields= ['employee_id'];
    	public $table = 'usersimport';
-   	public $requiredFields = ['email','employee_id','firstname','lastname','role_id'];
+   	public $requiredFields = ['employee_id','firstname','lastname','role_id'];
    	public $user;
 
    	
@@ -66,7 +66,19 @@ class UserImport extends Imports
  	public function postImport(){
  		// clean up null values in import db
 		$this->cleanseImport();
+		dd('here');
+		// Check all employee#s are valid
+		// add user id
+		// add people id
+		// update all that have user ids & people ids
+			// role
+			// user
+			// person
+			// branch
+		// delete ones updated
 
+
+		// for all new ones
 		// create the user
  		$this->createUser();
 		
@@ -183,8 +195,8 @@ class UserImport extends Imports
 	private function cleanseImport(){
 		$fields = ['reports_to','branches','address','city','state','zip'];
 		foreach ($fields as $field){
-			$queries[] = "update usersimport set ". $field . " = null where". $field." = 0";
-			$queries[] = "update usersimport set ". $field . " = null where". $field." = ''";
+			$queries[] = "update usersimport set ". $field . " = null where ". $field." = 0";
+			$queries[] = "update usersimport set ". $field . " = null where ". $field." = ''";
 		
 		}
 		return $this->executeImportQueries($queries);
@@ -217,5 +229,10 @@ class UserImport extends Imports
 					set
 					    a.person_id = b.id";
 	    return $this->executeImportQueries($queries);
+	}
+
+	private function checkValidEmployeeId()
+	{
+
 	}
 }

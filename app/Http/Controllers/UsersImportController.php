@@ -47,11 +47,11 @@ class UsersImportController extends ImportController
         $fields = $this->getFileFields($data); 
 
         $data['additionaldata'] = ['serviceline'=>implode(",",request('serviceline'))];
-        $addColumns = ['branches','role_id'];
+        $addColumns = ['branches','role_id','mgr_emp_id','manager','reports_to','industry'];
         $addColumn = $this->addColumns($addColumns);
 
    		$columns = array_merge($this->import->getTableColumns('users'),$this->import->getTableColumns('persons'),$addColumn);
-       
+      
         $requiredFields = $this->import->requiredFields;
         $skip = ['id','password','confirmation_code','remember_token','created_at','updated_at','nonews','lastlogin','api_token','user_id','lft','rgt','depth','geostatus'];
         return response()->view('imports.mapfields',compact('columns','fields','data','skip','requiredFields'));
@@ -71,13 +71,13 @@ class UsersImportController extends ImportController
        }
       
        if($this->import->import()) {
-         	$this->import->createUserNames();
+         	/*$this->import->createUserNames();
          	if($importerrors = $this->import->checkUniqueFields()){
  					$field = end($importerrors)->Field;
  					array_pop($importerrors); 
  	         		return response()->view('admin.users.importerrors',compact('field','importerrors'));
  	         	
-         	}
+         	}*/
          	$this->import->postImport();
            return redirect()->route('users.index')->with('success','Users imported');
 
