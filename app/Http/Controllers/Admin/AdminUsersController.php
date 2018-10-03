@@ -239,7 +239,7 @@ class AdminUsersController extends BaseController {
         	// mode
         	$mode = 'edit';
 			$managers = $this->getManagerList();
-            dd($managers);
+          
 			$branchesServiced = $user->person->branchesServiced()->pluck('branchname','id')->toArray();
            
 			$branches = $this->getUsersBranches($user,$branchesServiced);
