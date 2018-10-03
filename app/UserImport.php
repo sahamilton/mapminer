@@ -85,7 +85,7 @@ class UserImport extends Imports
  		
 	    
 	    // select branches from usersimport where branches is not null;
-	    $this->associateBranches();
+	    
 
 		// set the role id for the new user
 		$this->insertRoles();
@@ -93,7 +93,7 @@ class UserImport extends Imports
 		// set the serviceline
 	    $this->insertServiceLines();
 	    
-	    
+	    $this->associateBranches();
 
 	    // clean up the import table
 	    $queries[] = 'truncate table ' . $this->table;
