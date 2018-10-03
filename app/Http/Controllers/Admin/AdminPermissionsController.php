@@ -93,7 +93,7 @@ class AdminPermissionsController extends BaseController {
 	{
 		
   	    // Get the inputs, with some exceptions
-            $inputs = $request->except('_token');
+            $inputs = request()->except('_token');
 			$inputs['display_name'] = ucwords($inputs['name']);
             $inputs['name'] = strtolower(str_replace(' ','_',$inputs['name']));
 			
@@ -167,12 +167,13 @@ class AdminPermissionsController extends BaseController {
 		
 		
   	    // Get the inputs, with some exceptions
-            $inputs = $request->except(['csrf_token']);
+            $inputs = request()->except((['csrf_token']);
             $inputs['display_name'] = ucwords($inputs['name']);
             $inputs['name'] = strtolower(str_replace(' ','_',$inputs['name']));
             if ($permission->update($inputs))
             {
-                if($request->filled('roles')){
+                if(request()->filled('
+'roles')){
                 	$permission->roles()->sync($inputs['roles']);
                 }else{
                 	$permission->roles()->detach();

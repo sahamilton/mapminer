@@ -49,9 +49,11 @@ class ProjectSourceController extends Controller
      */
     public function store(ProjectSourceRequest $request)
     {
-        $data = $request->all();
-        $data['datefrom'] = Carbon::createFromFormat('d/m/Y', $request->get('datefrom'));
-        $data['dateto'] = Carbon::createFromFormat('d/m/Y', $request->get('dateto'));
+        $data = request()->all();
+        $data['datefrom'] = Carbon::createFromFormat('d/m/Y', request('
+'datefrom'));
+        $data['dateto'] = Carbon::createFromFormat('d/m/Y', request('
+'dateto'));
 
         if($this->projectsource->create($data)){
             return redirect()->route('projectsource.index')
@@ -94,9 +96,11 @@ class ProjectSourceController extends Controller
      */
     public function update(ProjectSourceRequest $request, $id)
     {
-        $data = $request->all();
-        $data['datefrom'] = Carbon::createFromFormat('m/d/Y', $request->get('datefrom'));
-        $data['dateto'] = Carbon::createFromFormat('m/d/Y', $request->get('dateto'));
+        $data = request()->all();
+        $data['datefrom'] = Carbon::createFromFormat('m/d/Y', request('
+'datefrom'));
+        $data['dateto'] = Carbon::createFromFormat('m/d/Y', request('
+'dateto'));
         $projectsource = $this->projectsource->with('projects')->findOrFail($id);
         if($projectsource->update($data)){
             return redirect()->route('projectsource.index')

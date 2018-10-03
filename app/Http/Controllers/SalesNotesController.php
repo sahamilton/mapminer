@@ -49,8 +49,10 @@ class SalesNotesController extends BaseController {
 	{
 		$fields = Howtofield::orderBy('group')->get();
 		$groups = Howtofield::select('group')->distinct()->get();
-		if($request->filled('company')){
-			$company = $this->company->findOrFail($request->get('company'));
+		if(request()->filled('
+'company')){
+			$company = $this->company->findOrFail(request('
+'company'));
 		}
 		return response()->view('salesnotes.create',compact('company','groups','fields'));
 	}
@@ -108,7 +110,7 @@ class SalesNotesController extends BaseController {
 	public function update(SalesNotesFormRequest $request, $salesnote)
 	{
 		
-		$howtofield->update($request->all());
+		$howtofield->update(request()->all());
 
 		return redirect()->route('salesnotes.index');
 	}
@@ -168,10 +170,12 @@ class SalesNotesController extends BaseController {
 	 * @return [type]     [description]
 	 */
 	public function createSalesNotes(SalesNotesFormRequest $request, $companyId=NULL) {
-		if(! $request->filled('id')){
+		if(! request()->filled('
+'id')){
 			$id= $companyId;
 		}else{
-			$id= $request->get('id');
+			$id= request('
+'id');
 		}
 		
 		// Check that user can view company 
@@ -233,14 +237,14 @@ class SalesNotesController extends BaseController {
 	 */
 
 	public function store(SalesNotesFormRequest $request) {
-		$data = $request->all();
+		$data = request()->all();
 
 
 		// ALL THIS CAN BE SIMPLIFIED
 		if ($request->hasFile('attachment'))
 		{
 			
-			$file = $request->file('attachment');
+			$file = request()->file('attachment');
 			$attachment = $data['companyId'] ."_". $file->getClientOriginalName();
 			// check that company attachments directory exists and create if neccessary
 			if(! \File::exists(public_path().'/documents/attachments/'.$data['companyId']))

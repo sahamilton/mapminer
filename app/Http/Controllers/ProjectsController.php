@@ -133,9 +133,11 @@ class ProjectsController extends BaseController
         //
     }
     public function transfer(ProjectTransferRequest $request){
-        $project = $this->project->findOrFail($request->get('project_id'));
+        $project = $this->project->findOrFail(request('
+'project_id'));
         $person = $this->person->whereHas('userdetails',function ($q) use($request){
-            $q->where('username','=',$request->get('username'));
+            $q->where('username','=',request('
+'username'));
         })->first();
         $transferor = $this->person->where('user_id','=',auth()->user()->id)->first();
         $project->owner()->wherePivot('person_id','=',auth()->user()->person->id)->detach();
@@ -148,7 +150,7 @@ class ProjectsController extends BaseController
 
     public function updateField(Request $request, $id){
        
-        $input = $request->except('api_token');
+        $input = request()->except('api_token');
         $project = $this->project->findOrFail($id);
         $data = [$input['name']=>$input['value']];
 
@@ -174,7 +176,8 @@ class ProjectsController extends BaseController
         $project->pr_status = 'closed';
         $project->save();
         // upate status in person_project
-        $project->owner()->updateExistingPivot(auth()->user()->person()->first()->id,['status'=>'Closed','ranking'=>$request->get('ranking')]);
+        $project->owner()->updateExistingPivot(auth()->user()->person()->first()->id,['status'=>'Closed','ranking'=>request('
+'ranking')]);
         // add comment in project_note
         $this->addClosingNote($request);
         return redirect()->route('projects.show',$id);
@@ -185,9 +188,11 @@ class ProjectsController extends BaseController
  */
     private function addClosingNote(Request $request){
         $note = new Note;
-        $note->note = "Project Closed:" .$request->get('comments');
+        $note->note = "Project Closed:" .request('
+'comments');
         $note->type = 'project';
-        $note->related_id = $request->get('project_id');
+        $note->related_id = request('
+'project_id');
         $note->user_id = auth()->user()->id;
         $note->save();
     }
@@ -198,9 +203,11 @@ class ProjectsController extends BaseController
  */
     private function addTransferNote(Request $request){
         $note = new Note;
-        $note->note = "Project Transfered:" .$request->get('comments');
+        $note->note = "Project Transfered:" .request('
+'comments');
         $note->type = 'project';
-        $note->related_id = $request->get('project_id');
+        $note->related_id = request('
+'project_id');
         $note->user_id = auth()->user()->id;
         $note->save();
     }
@@ -211,7 +218,7 @@ class ProjectsController extends BaseController
     public function addCompanyContact(Request $request){
         $request->request->add(['user_id',auth()->user()->id]);
 
-        $contact = \App\ProjectContact::create($request->all());
+        $contact = \App\ProjectContact::create(request()->all());
         return redirect()->back();
 
 
@@ -222,8 +229,9 @@ class ProjectsController extends BaseController
  */
     public function addProjectCompany(Request $request){
 
-        $firm = \App\ProjectCompany::create($request->all());
-        $firm->project()->attach($request->get('project_id'));
+        $firm = \App\ProjectCompany::create(request()->all());
+        $firm->project()->attach(request('
+'project_id'));
         return redirect()->back();
     }
 /**
@@ -290,14 +298,18 @@ class ProjectsController extends BaseController
 
     }
     public function changeStatus (Request $request){
-       $project = $this->project->findOrFail($request->get('project_id'));
-       if (! $request->filled('status')){
+       $project = $this->project->findOrFail(request('
+'project_id'));
+       if (! request()->filled('
+'status')){
             $project->owner()->detach(auth()->user()->person()->first()->id);
        }else{
 
-        $project->owner()->updateExistingPivot(auth()->user()->person()->first()->id,['status'=>$request->get('status')]);
+        $project->owner()->updateExistingPivot(auth()->user()->person()->first()->id,['status'=>request('
+'status')]);
         }
-        return redirect()->route('projects.show',$request->get('project_id'));
+        return redirect()->route('projects.show',request('
+'project_id'));
     }
 
     public function myProjects(){
@@ -330,8 +342,10 @@ class ProjectsController extends BaseController
 
 
     public function projectStats(Request $request){
-        if($request->filled('id')){
-            $id = $request->get('id');
+        if(request()->filled('
+'id')){
+            $id = request('
+'id');
         }else{
             $id = null;
         }

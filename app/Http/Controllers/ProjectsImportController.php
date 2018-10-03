@@ -59,7 +59,8 @@ class ProjectsImportController extends ImportController
 
     public function getFile(Request $request){
         $requiredFields = $this->import->requiredFields;
-        $source= $request->get('source');
+        $source= request('
+'source');
         $sources= $this->sources->all()->pluck('source','id');
         $tables = ['projects','projectcompanies','projectcontacts'];
         return response()->view('projects.import',compact ('sources','source','tables','requiredFields'));
@@ -68,13 +69,15 @@ class ProjectsImportController extends ImportController
 
     public function import(ProjectsImportFormRequest $request) {
       
-        $data = $this->uploadfile($request->file('upload'));
-        $data['table']=$request->get('table');
+        $data = $this->uploadfile(request()->file('upload'));
+        $data['table']=request('
+'table');
         switch ($data['table']){
                 case 'projects';
                     $data['step'] = 1;
                     $data['table']= 'projectsimport';
-                    $data['additionaldata']['project_source_id'] = $request->get('source');
+                    $data['additionaldata']['project_source_id'] = request('
+'source');
                     $skip = ['created_at','updated_at','project_source_id','company_id','pr_status','serviceline_id'];
                     break;
                case 'projectcompanies':
@@ -87,7 +90,8 @@ class ProjectsImportController extends ImportController
               
            }
      
-        $data['type']=$request->get('type');
+        $data['type']=request('
+'type');
         
         $data['route'] = 'projects.mapfields';
         $fields = $this->getFileFields($data); 
@@ -102,10 +106,12 @@ class ProjectsImportController extends ImportController
     public function mapfields(Request $request){
         
         $data = $this->getData($request);  
-        if($multiple = $this->import->detectDuplicateSelections($request->get('fields'))){
+        if($multiple = $this->import->detectDuplicateSelections(request('
+'fields'))){
             return redirect()->route('projects.importfile')->withError(['You have mapped a field more than once.  Field: '. implode(' , ',$multiple)]);
         }
-        if($missing = $this->import->validateImport($request->get('fields'))){
+        if($missing = $this->import->validateImport(request('
+'fields'))){
              
             return redirect()->route('projects.importfile')->withError(['You have to map all required fields.  Missing: '. implode(' , ',$missing)]);
        }

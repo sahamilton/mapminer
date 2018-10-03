@@ -72,10 +72,14 @@ class LocationsController extends BaseController {
 	public function store(LocationFormRequest $request)
 	{
 				
-		$address = $request->get('street') . ",". $request->get('city') .",". $request->get('state')." ". $request->get('zip');
+		$address = request('
+'street') . ",". request('
+'city') .",". request('
+'state')." ". request('
+'zip');
 		$data = $this->location->getGeoCode(app('geocoder')->geocode($address)->get());
-		$request->merge($data);
-		$location = $this->location->create($request->all());
+		request()->merge($data);
+		$location = $this->location->create(request()->all());
 		return redirect()->route('locations.show',$location->id)->with('message', 'Location Added');
 	}
 
@@ -140,10 +144,14 @@ class LocationsController extends BaseController {
 	 */
 	public function update(LocationFormRequest $request, $location)
 	{
-		$address = $request->get('street') . ",". $request->get('city') .",". $request->get('state')." ". $request->get('zip');
+		$address = request('
+'street') . ",". request('
+'city') .",". request('
+'state')." ". request('
+'zip');
 		$data = $this->location->getGeoCode(app('geocoder')->geocode($address)->get());
-		$request->merge($data);
-		$location->update($request->all());
+		request()->merge($data);
+		$location->update(request()->all());
 
 		return redirect()->route('locations.show',$location->id )->with('message','Location updated');
 	}
@@ -196,8 +204,10 @@ class LocationsController extends BaseController {
 	public function getClosestBranch(Request $request,$id,$n=5)
 	{
 		
-		if ($request->filled('d')) {
-			$this->distance = $request->get('d');
+		if (request()->filled('
+'d')) {
+			$this->distance = request('
+'d');
 		}
 		$data['location'] = $this->location->with('company','company.serviceline')->findOrFail($id);
 
@@ -224,8 +234,10 @@ class LocationsController extends BaseController {
 	public function showNearbyLocations(Request $request)
 	{
 		
-		if ($request->filled('d')) {
-			$data['distance'] = $request->get('d');
+		if (request()->filled('
+'d')) {
+			$data['distance'] = request('
+'d');
 		}else{
 			$data['distance'] = '50';
 		}
@@ -310,14 +322,17 @@ class LocationsController extends BaseController {
 	public function bulkImport(LocationImportFormRequest $request) {
 		
 
-		if($request->filled('segment'))
+		if(request()->filled('
+'segment'))
 		{
-			$data['segment'] = $request->get('segment');
+			$data['segment'] = request('
+'segment');
 		}else{
 			$data['segment'] = NULL;
 		}	
-		$data['company_id'] = $request->get('company');
-		$file = $request->file('upload')->store('public/uploads');  
+		$data['company_id'] = request('
+'company');
+		$file = request()->file('upload')->store('public/uploads');  
 		$data['location'] = asset(Storage::url($file));
         $data['basepath'] = base_path()."/public".Storage::url($file);
         // read first line headers of import file
@@ -329,7 +344,7 @@ class LocationsController extends BaseController {
     		dd($this->location->fillable,array_keys($locations->toArray()));
     		
     		return redirect()->back()
-    		->withInput($request->all())
+    		->withInput(request()->all())
     		->withErrors(['upload'=>['Invalid file format.  Check the fields:', array_diff($this->location->fillable,array_keys($locations->toArray())), array_diff(array_keys($locations->toArray()),$this->location->fillable)]]);
     	}
 

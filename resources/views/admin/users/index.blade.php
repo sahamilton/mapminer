@@ -86,7 +86,7 @@
 			@endif
 	
 	</td>
-    <td>{{$user->updated_at->format('M j, Y h:i a')}}</td>
+    <td>@if($user->updated_at) {{$user->updated_at->format('M j, Y h:i a')}} @endif</td>
     <td class="col-md-2">
     
 

@@ -296,7 +296,8 @@ class TempleadController extends Controller
       $lead = $this->templead->with('salesteam')->findOrFail($id);
     
       $lead->salesteam()
-        ->updateExistingPivot(auth()->user()->person->id,['rating'=>$request->get('ranking'),'status_id'=>3]);
+        ->updateExistingPivot(auth()->user()->person->id,['rating'=>request('
+'ranking'),'status_id'=>3]);
         $this->addClosingNote($request,$id);
         return redirect()->route('salesteam.newleads',$lead->salesteam->first()->id)->with('message', 'Lead closed');
      }
@@ -304,7 +305,8 @@ class TempleadController extends Controller
 
     private function addClosingNote($request,$id){
         $note = new Note;
-        $note->note = "Lead Closed:" .$request->get('comments');
+        $note->note = "Lead Closed:" .request('
+'comments');
         $note->type = 'newlead';
         $note->related_id = $id;
         $note->user_id = auth()->user()->id;

@@ -56,7 +56,7 @@ class EmailsController extends Controller
      */
     public function store(EmailFormRequest $request)
     {
-        $email = $this->email->create($request->all());
+        $email = $this->email->create(request()->all());
         $email->recipients()->attach(auth()->user()->person->id);
         return redirect()->route('emails.show',$email->id);
     }
@@ -121,11 +121,15 @@ class EmailsController extends Controller
     public function addRecipients(Request $request){
         $recipients = array();
         $email = $this->email->findOrFail($request->id);
-        if($request->filled('vertical')){
-            $recipients = $this->getIndustryVerticalRecipients($request->get('vertical'));
+        if(request()->filled('
+'vertical')){
+            $recipients = $this->getIndustryVerticalRecipients(request('
+'vertical'));
         }
-        if($request->filled('role')){
-            $recipients = $this->getRoleRecipients($request->get('role'));
+        if(request()->filled('
+'role')){
+            $recipients = $this->getRoleRecipients(request('
+'role'));
         }
 
        $email->recipients()->sync($recipients);
@@ -134,8 +138,10 @@ class EmailsController extends Controller
 
     public function sendEmail(Request $request){
 
-        $email = $this->email->with('recipients','recipients.userdetails')->findOrFail($request->get('id'));
-        if($request->filled('test')){
+        $email = $this->email->with('recipients','recipients.userdetails')->findOrFail(request('
+'id'));
+        if(request()->filled('
+'test')){
             $data['test'] = TRUE;
         }
         
@@ -189,10 +195,13 @@ class EmailsController extends Controller
     }
     public function changelist(Request $request){
 
-        $email = $this->email->findOrFail($request->get('email_id'));
-        $recipient = $request->get('id');
+        $email = $this->email->findOrFail(request('
+'email_id'));
+        $recipient = request('
+'id');
         
-        switch ($request->get('action')) {
+        switch (request('
+'action')) {
             case 'add':
                 if($email->recipients()->attach($recipient)){
                     return 'success';
@@ -255,7 +264,7 @@ class EmailsController extends Controller
 
     public function confirmed(Request $request)
     {
-        $data = $request->all();
+        $data = request()->all();
         if (isset($data['edit'])) {
            return $this->edit($data);
         }

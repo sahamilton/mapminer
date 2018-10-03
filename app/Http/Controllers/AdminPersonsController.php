@@ -48,7 +48,7 @@ protected $permission;
 	public function store(PersonFormRequest $request)
 	{
 		
-		$this->person->create($request->all());
+		$this->person->create(request()->all());
 
 		return redirect()->route('person.index');
 	}
@@ -142,7 +142,7 @@ protected $permission;
 		//$Person = Person::findOrFail($id);
 
 		
-		$person->update($request->all());
+		$person->update(request()->all());
 
 		return redirect()->route('person.index');
 	}

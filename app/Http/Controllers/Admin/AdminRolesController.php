@@ -88,11 +88,12 @@ class AdminRolesController extends BaseController {
     {   
        
             
-            if(! $role = Role::create($request->all())){
+            if(! $role = Role::create(request()->all())){
                 return redirect()->to('admin/roles/create')->with('error', 'Unable to create role');
             }
          
-            if($request->filled('permissions')){
+            if(request()->filled('
+'permissions')){
                 // Save permissions
                 $role->permissions()->sync($request->permissions);
                 // Redirect to the new role page
@@ -162,12 +163,15 @@ class AdminRolesController extends BaseController {
         // Declare the rules for the form validation
         
         $permissions = array();
-        if($request->filled('permissions')){
-           $permissions =$request->get('permissions');
+        if(request()->filled('
+'permissions')){
+           $permissions =request('
+'permissions');
         }
 
 
-        $role->name = $request->get('name');
+        $role->name = request('
+'name');
         $role->permissions()->sync($permissions);
 
         // Was the role updated?

@@ -43,13 +43,16 @@ class LeadAssignedImportController extends ImportController
 
 
     public function import(LeadImportFormRequest $request) {
-        dd('leadimportassigned',$request->get('type'));
-        $data = $this->uploadfile($request->file('upload'));
+        dd('leadimportassigned',request('
+'type'));
+        $data = $this->uploadfile(request()->file('upload'));
         $title="Map the leads import file fields";
         
         $data['table']='leadimport';
-        $data['type']=$request->get('type');
-        $data['additionaldata'] = $request->get('additionaldata');
+        $data['type']=request('
+'type');
+        $data['additionaldata'] = request('
+'additionaldata');
         $data['route'] = 'leads.mapfields';
         $fields = $this->getFileFields($data);      
         $columns = $this->lead->getTableColumns($data['table']);
@@ -78,7 +81,7 @@ class LeadAssignedImportController extends ImportController
     private function postimport(){
         //copy to leads
 
-        if($request->has('assigned')){
+        if(request()->has('assigned')){
 
         // insert into lead_person_status (lead_id,person_id,status)
         // SELECT leads.id, leadsimport.pid,'2' from leads,leadsimport

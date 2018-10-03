@@ -1,7 +1,7 @@
 <?php
 
 namespace App;
-
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class UserImport extends Imports
@@ -9,8 +9,11 @@ class UserImport extends Imports
    	public $uniqueFields= ['username','email','employee_id'];
    	public $table = 'usersimport';
    	public $requiredFields = ['email','employee_id','firstname','lastname','role_id'];
+   	public $user;
+
+   	
    	public function __construct(){
-   		
+
    	}
 
 	public function checkUniqueFields(){
@@ -61,27 +64,158 @@ class UserImport extends Imports
  	}
 
  	public function postImport(){
+ 		// clean up null values in import db
+		$this->cleanseImport();
 
-		$queries[] = "insert into users (username,email,employee_id,created_at,password,confirmed) 
-	       select username,email,employee_id,created_at,hex(AES_ENCRYPT(username,'passw')),'1' from usersimport ";
-	       
-	    $queries[] = "update usersimport a
-					left join users b on
-					    a.username = b.username
-					set
-					    a.user_id = b.id";
-	        
-	 	$queries[] = "insert into persons (firstname,lastname,user_id) 
-	       select replace(firstname,char(13),''),replace(lastname,char(13),''),user_id from usersimport ";
-	    $queries[] = "insert into role_user (role_id,user_id) select role_id,user_id from usersimport";
-	    $queries[] = "insert into serviceline_user (serviceline_id,user_id) select serviceline,user_id from usersimport";
+		// create the user
+ 		$this->createUser();
+		
+	    // set the user_id in the import table
+	    $this->updateUserIdInImport();
+
+    	// create the person
+	    $this->createPerson();
+	    
+	    //set the person id in the import table
+	    $this->updatePersonIdInImport();
+	    
+	    // select branches from usersimport where branches is not null;
+	    $this->associateBranches();
+
+		// set the role id for the new user
+		$this->insertRoles();
+	    
+		// set the serviceline
+	    $this->insertServiceLines();
+	    
+	    
+
+	    // clean up the import table
 	    $queries[] = 'truncate table ' . $this->table;
      
-       foreach ($queries as $query){
+      	$this->executeImportQueries($queries);
+
+       // geocode new entries?
+	}
+	private function executeImportQueries($queries){
+		 foreach ($queries as $query){
        		if ($result = \DB::select(\DB::raw($query))){
  				return true;
  			}
        }
 	}
+	private function createuser(){
+		$newusers = $this->all('username', 'employee_id', 'email');
+		$a=0;
+		foreach ($newusers as $user){
+			$data[$a]= $user->toArray();
+			$data[$a]['password'] = md5(uniqid(mt_rand(), true));
+			$data[$a]['confirmed'] = 1; 
+			$data[$a]['created_at']= now();
+			$data[$a]['updated_at'] =null;
+			$a++;
 
+
+		}
+		
+		User::insert($data);
+		
+
+	}
+
+	private function createPerson(){
+		$newPeople = $this->all('firstname','lastname','user_id','reports_to','address','city','state','zip','business_title');
+		$a=0;
+		foreach ($newPeople as $person){
+			$data[$a]= $person->toArray();
+			$data[$a]['firstname'] = preg_replace( "/\r|\n/", "", $person['firstname'] );
+			$data[$a]['lastname'] = preg_replace( "/\r|\n/", "", $person['lastname'] );
+			$data[$a]['created_at'] = now();
+			$data[$a]['updated_at'] = null;
+			$a++;
+
+
+		}
+		Person::insert($data);
+	}
+
+	private function associateBranches(){
+		$validBranches = Branch::all(['id'])->pluck('id')->toArray();
+		$people = $this->whereNotNull('branches')->get(['person_id','role_id','branches']);
+		foreach ($people as $peep){
+			
+			
+			$branches = explode(",",str_replace(' ','',$peep->branches));
+			/// need to check if there are invalid branches
+			foreach ($branches as $branch){
+				$data[$branch]=['role_id' => $peep->role_id]; 
+			}
+			$person = Person::findOrFail($peep->person_id);
+			$person->branchesServiced()->sync($data);
+		}
+
+	}
+
+	public function updatePersonsGeoCode(){
+		   $people = Person::where('created_at','>',Carbon::now()->subDays(1))
+		   ->whereNotNull('city')
+		   ->whereNotNull('state')
+		   ->get();
+		   
+		   foreach ($people as $person){
+		   	$address = trim(str_replace('  ',' ',$person->address . " " . $person->city . " ". $person->state ." " . $person->zip));
+		   	$geoCode = $this->getLatLng($address);
+		   		$data['lat'] = $geoCode['lat'];
+		   		$data['lng'] = $geoCode['lng'];
+		   		$person->update($data);
+		   }
+		   
+	}
+
+	private function getLatLng($address)
+	{
+		$geoCode = app('geocoder')->geocode($address)->get();
+		$user = new User;
+        return $user->getGeoCode($geoCode);
+
+	
+
+	private function cleanseImport(){
+		$fields = ['reports_to','branches','address','city','state','zip']
+		foreach ($fields as $field){
+			$queries[] = "update usersimport set ". $field . " = null where". $field." = 0";
+			$queries[] = "update usersimport set ". $field . " = null where". $field." = ''";
+		
+		}
+		return $this->executeImportQueries($queries);
+		
+	}
+
+	private function insertRoles(){
+		$queries[] = "insert into role_user (role_id,user_id) select role_id,user_id from usersimport";
+		return $this->executeImportQueries($queries);
+	}
+	private function insertServiceLines(){
+		$queries[] = "insert into serviceline_user (serviceline_id,user_id) select serviceline,user_id from usersimport";
+		return $this->executeImportQueries($queries);
+	}
+
+	private function updateUserIdInImport(){
+		$queries[] = "update usersimport a
+					left join users b on
+					    a.username = b.username
+					set
+					    a.user_id = b.id";
+		return $this->executeImportQueries($queries);
+	}
+
+	private function updatePersonIdInImport(){
+
+	    $queries[] = "update usersimport a
+					left join persons b on
+					    a.user_id = b.user_id
+					set
+					    a.person_id = b.id";
+	    return $this->executeImportQueries($queries);
+	}
 }

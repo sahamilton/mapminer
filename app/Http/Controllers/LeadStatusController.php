@@ -42,7 +42,7 @@ class LeadStatusController extends Controller
      */
     public function store(LeadStatusFormRequest $request)
     {
-        $this->leadstatus->create($request->all());
+        $this->leadstatus->create(request()->all());
         return redirect()->route('leadstatus.index');
     }
 
@@ -81,7 +81,7 @@ class LeadStatusController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->leadstatus->where('id','=',$id)->update($request->except('_method', '_token'));
+        $this->leadstatus->where('id','=',$id)->update(request()->except('_method', '_token'));
         return redirect()->route('leadstatus.index');
     }
 

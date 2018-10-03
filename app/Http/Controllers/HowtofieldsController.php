@@ -41,12 +41,14 @@ class HowtofieldsController extends BaseController {
 	public function store(HowtofieldsFormRequest $request)
 	{
 		
-		if($request->has('addGroup') && $request->get('addGroup') != '') {
-			$request->request->add(['group' => $request->get('addGroup')]);
+		if(request()->has('addGroup') && request('
+'addGroup') != '') {
+			$request->request->add(['group' => request('
+'addGroup')]);
 			
 		}
 
-		$this->howtofield->create($request->all());
+		$this->howtofield->create(request()->all());
 
 		return redirect()->route('howtofields.index');
 	}
@@ -85,12 +87,14 @@ class HowtofieldsController extends BaseController {
 	public function update(HowtofieldsFormRequest $request, $howtofield)
 	{
 		
-		if($request->has('addGroup') && $request->get('addGroup') != '') {
-			$request->request->add(['group' => $request->get('addGroup')]);
+		if(request()->has('addGroup') && request('
+'addGroup') != '') {
+			$request->request->add(['group' => request('
+'addGroup')]);
 			
 		}
 
-		$howtofield->update($request->all());
+		$howtofield->update(request()->all());
 
 		return redirect()->route('admin.howtofields.index');
 	}

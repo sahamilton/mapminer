@@ -292,7 +292,7 @@ class PersonsController extends BaseController {
 	public function processimport(PersonUploadFormRequest $request) {
 
 
-		$file = $request->file('upload')->store('public/uploads');
+		$file = request()->file('upload')->store('public/uploads');
 		$data['people'] = asset(Storage::url($file));
         $data['basepath'] = base_path()."/public".Storage::url($file);
         // read first line headers of import file
@@ -303,7 +303,7 @@ class PersonsController extends BaseController {
     	if( $this->persons->fillable !== array_keys($people->toArray())){
 
     		return redirect()->back()
-    		->withInput($request->all())
+    		->withInput(request()->all())
     		->withErrors(['upload'=>['Invalid file format.  Check the fields:', array_diff($this->persons->fillable,array_keys($people->toArray())), array_diff(array_keys($people->toArray()),$this->persons->fillable)]]);
     	}
 

@@ -49,7 +49,7 @@ class SearchFiltersController extends BaseController {
 	 */
 	public function store(SearchFiltersFormRequest $request)
 	{
-		$data = $request->all();;
+		$data = request()->all();;
 		$data['color'] = str_replace("#",'',$data['color']);
 		if(isset($data['filterOption']))
 		{
@@ -104,7 +104,7 @@ class SearchFiltersController extends BaseController {
 	public function update(SearchFiltersFormRequest $request, $id)
 	{
 		$filter=$this->filter->findOrFail($id);
-		$data = $request->all();
+		$data = request()->all();
 		$data['color'] = str_replace("#",'',$data['color']);
 		if(isset($data['filterOption']))
 		{
@@ -195,13 +195,14 @@ class SearchFiltersController extends BaseController {
 	{
 				
 		session()->forget('Search');
-		$this->filter->setSearch($request->all());
+		$this->filter->setSearch(request()->all());
 	}
 
 	
 	public function getAccountSegments(Request $request)
 	{
-		$vertical = \App\Company::where('id','=',$request->get('id'))->pluck('vertical');
+		$vertical = \App\Company::where('id','=',request('
+'id'))->pluck('vertical');
 		
 		$segments = $this->filter->where('parent_id','=',$vertical)->orderBy('filter')->pluck('filter','id');
 

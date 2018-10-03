@@ -124,7 +124,7 @@ class ServicelinesController extends BaseController {
 	{
 		$serviceline = $this->serviceline->find($id);
 		
-		$serviceline->update($request->all());
+		$serviceline->update(request()->all());
 
 		return redirect()->route('serviceline.index');
 	}

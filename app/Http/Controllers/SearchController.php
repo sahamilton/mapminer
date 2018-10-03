@@ -11,7 +11,8 @@ class SearchController extends Controller
 	public function searchUsers(Request $request)
 	{
 		
-		return  User::search($request->get('q'))
+		return  User::search(request('
+'q'))
             ->with('person')
             ->get();
 	}
@@ -26,7 +27,8 @@ class SearchController extends Controller
 		whereHas('roles', function($q) use($roles){
 			$q->whereIn('role_id',$roles);
 		})
-		->search($request->get('q'))
+		->search(request('
+'q'))
             ->with('person')
             ->get();
 	}

@@ -38,20 +38,20 @@ class UsersImportController extends ImportController
 
     public function import(UsersImportFormRequest $request) {
       
-        $data = $this->uploadfile($request->file('upload'));
+        $data = $this->uploadfile(request()->file('upload'));
         $data['table']='usersimport';
            
-        $data['type']=$request->get('type');
+        $data['type']=request('type');
         
         $data['route'] = 'users.mapfields';
         $fields = $this->getFileFields($data); 
 
-        $data['additionaldata'] = ['serviceline'=>$request->get('serviceline')];
-        $addColumns = new \stdClass;
-        $addColumns->Field = 'role_id';
-        $addColumn[] = $addColumns;
-       
+        $data['additionaldata'] = ['serviceline'=>implode(",",request('serviceline')];
+        $addColumns = ['branches','role_id'];
+        $addColumn = $this->addColumns($addColumns);
+
    		$columns = array_merge($this->import->getTableColumns('users'),$this->import->getTableColumns('persons'),$addColumn);
+       
         $requiredFields = $this->import->requiredFields;
         $skip = ['id','password','confirmation_code','remember_token','created_at','updated_at','nonews','lastlogin','api_token','user_id','lft','rgt','depth','geostatus'];
         return response()->view('imports.mapfields',compact('columns','fields','data','skip','requiredFields'));
@@ -59,13 +59,13 @@ class UsersImportController extends ImportController
     
     public function mapfields(Request $request){
        
-       $data = $this->getData($request);  
+       $data = $this->getData(request()->all());  
        $this->import->setFields($data);
-       if($multiple = $this->import->detectDuplicateSelections($request->get('fields'))){
+       if($multiple = $this->import->detectDuplicateSelections(request('fields'))){
             return redirect()->route('users.importfile')->withError(['You have to mapped a field more than once.  Field: '. implode(' , ',$multiple)]);
         }
         
-       if($missing = $this->import->validateImport($request->get('fields'))){
+       if($missing = $this->import->validateImport(request('fields'))){
              
             return redirect()->route('users.importfile')->withError(['You have to map all required fields.  Missing: '. implode(' , ',$missing)]);
        }
@@ -86,12 +86,12 @@ class UsersImportController extends ImportController
 	}
     public function fixerrors(Request $request){
 
-    	if($request->filled('fixInput')){
-    		if($request->filled('skip')){
-    			$this->import->destroy($request->get('skip'));
+    	if(request()->filled('fixInput')){
+    		if(request()->filled('skip')){
+    			$this->import->destroy(request('skip'));
     		}
-    		$field = $request->get('field');
-    		foreach ($request->get('error') as $key=>$value){
+    		$field = request('field');
+    		foreach (request('error') as $key=>$value){
 
     			$this->import->where($field,'=',$key)->update([$field=>$value]);
 
@@ -108,17 +108,20 @@ class UsersImportController extends ImportController
        return redirect()->route('users.index')->with('success','Users imported');
     }
     
-    /*private function checkUniqueFields(){
-    	
-    	foreach ($this->import->uniqueFields as $field){
-         	
 
-         		return $importerrors = $this->import->checkUniqueFields($field);
-         			 
-         		
-         	}
-         return false;
-    }*/
+    /*
+        Add additional columns to list
+
+
+    */
+    private function addColumns($columns){
+        foreach ($columns as $column){
+            $columns = new \stdClass;
+            $columns->Field = $column;
+            $addColumn[] = $columns;
+        }
+        return $addColumn;
+    }
 
    
     

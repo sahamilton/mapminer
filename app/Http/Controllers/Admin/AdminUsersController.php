@@ -165,27 +165,32 @@ class AdminUsersController extends BaseController {
     public function store(UserFormRequest $request)
     {
 
-        $user = $this->user->create($request->all());
+        $user = $this->user->create(request()->all());
         $user->api_token = md5(uniqid(mt_rand(), true));
         $user->confirmation_code = md5(uniqid(mt_rand(), true));
         $user->password = \Hash::make(\Input::get('password'));
-        if ($request->filled('confirm')) {
-            $user->confirmed = $request->get('confirm');
+        if (request()->filled('
+'confirm')) {
+            $user->confirmed = request('
+'confirm');
         }
 
         if ( $user->save() ) {
 
 			$person = new Person;
             $person->user_id = $user->id;
-            $person->firstname = $request->get('firstname');
-            $person->lastname = $request->get('lastname');
+            $person->firstname = request('
+'firstname');
+            $person->lastname = request('
+'lastname');
             $person->save();
-           	$person = $this->updateAssociatedPerson($person,$request->all());
-            $person = $this->associateBranchesWithPerson($person,$request->all());
+           	$person = $this->updateAssociatedPerson($person,request()->all());
+            $person = $this->associateBranchesWithPerson($person,request()->all());
 			$user->person()->save($person);
             $track=Track::create(['user_id'=>$user->id]);
-            $user->saveRoles($request->get( 'roles' ));
-            $user->serviceline()->attach($request->get('serviceline'));
+            $user->saveRoles(request('roles' ));
+            $user->serviceline()->attach(request('
+'serviceline'));
 	        $person->rebuild();
             return redirect()->route('person.details',$person->id)
                 ->with('success', 'User created succesfully');
@@ -193,7 +198,7 @@ class AdminUsersController extends BaseController {
         } else {
 
             return redirect()->route('users.create')
-                ->withInput($request->except('password'))
+                ->withInput(request()->except('password'))
                 ->with( 'error', 'Unable to create user' );
         }
     }
@@ -273,29 +278,36 @@ class AdminUsersController extends BaseController {
       
         $user = $this->user->with('person')->find($user->id);
         $oldUser = clone($user);
-        if($request->filled('password')){
+        if(request()->filled('
+'password')){
           
-            $user->password = \Hash::make($request->get('password'));
+            $user->password = \Hash::make(request('
+'password'));
             $user->save();
         }
 
-		if($user->update($request->all())){
+		if($user->update(request()->all())){
 
-            $person = $this->updateAssociatedPerson($user->person,$request->all());
-            $person = $this->associateBranchesWithPerson($person,$request->all());
+            $person = $this->updateAssociatedPerson($user->person,request()->all());
+            $person = $this->associateBranchesWithPerson($person,request()->all());
 
-           if($request->filled('serviceline')){
+           if(request()->filled('
+'serviceline')){
 
-                $user->serviceline()->sync($request->get('serviceline'));
+                $user->serviceline()->sync(request('
+'serviceline'));
         	}
-            $user->saveRoles($request->get( 'roles' ));
-        	if($request->filled('vertical')){
-                $verticals = $request->get('vertical');
+            $user->saveRoles(request('roles' ));
+        	if(request()->filled('
+'vertical')){
+                $verticals = request('
+'vertical');
                     if($verticals[0]==0){
                       $person->industryfocus()->sync([]);
                     }else{
 
-            		  $person->industryfocus()->sync($request->get('vertical'));
+            		  $person->industryfocus()->sync(request('
+'vertical'));
                     }
         	}else{
                 $person->industryfocus()->sync([]);
@@ -434,7 +446,7 @@ class AdminUsersController extends BaseController {
    public function bulkImport(UserBulkImportForm $request)
 	{
 
-		$file = $request->file('upload');
+		$file = request()->file('upload');
 		$name = time() . '-' . $file->getClientOriginalName();
 
 

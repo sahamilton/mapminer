@@ -41,20 +41,23 @@ class ImportController extends BaseController
 
     
     protected function getData($request){
-        $data = $request->all();
-        $data['fields'] = array_values($request->get('fields'));
+        $data = request()->all();
+        $data['fields'] = array_values(request('
+'fields'));
         return $data;
     }
     
     protected function validateInput(Request $request){
 
-        if($fields = $this->import->detectDuplicateSelections($request->get('fields'))){
+        if($fields = $this->import->detectDuplicateSelections(request('
+'fields'))){
           
            return $error = ['You have to mapped a field more than once.  Field: '. implode(' , ',$fields)];
             
         }
   
-        if($fields = $this->import->validateImport($request->get('fields'))){
+        if($fields = $this->import->validateImport(request('
+'fields'))){
              
             return $error = ['You have to map all required fields.  Missing: '. implode(' , ',$fields)];
        }     

@@ -40,7 +40,7 @@ class AccounttypesController extends BaseController {
 	public function store(AccountTypeRequest $request)
 	{
 		
-		$this->accounttype->create($request->all());
+		$this->accounttype->create(request()->all());
 
 		return redirect()->route('accounttypes.index');
 	}
@@ -81,7 +81,7 @@ class AccounttypesController extends BaseController {
 	 */
 	public function update($id,AccountTypeRequest $request)
 	{
-		$accounttype = $this->accoun->ttype->findOrFail($id)->update($request->all());
+		$accounttype = $this->accoun->ttype->findOrFail($id)->update(request()->all());
 
 		return redirect()->route('accounttypes.index');
 	}

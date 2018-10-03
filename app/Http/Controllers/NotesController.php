@@ -53,10 +53,11 @@ class NotesController extends BaseController {
 	{
 
 
-		$request->merge(['user_id'=>auth()->user()->id]);
-		$note = $this->notes->create($request->all());
+		request()->merge(['user_id'=>auth()->user()->id]);
+		$note = $this->notes->create(request()->all());
  		
-		switch ($request->get('type')) {
+		switch (request('
+'type')) {
 			case 'location':
 				
 				return redirect()->route('locations.show',$note->related_id);
@@ -115,7 +116,8 @@ class NotesController extends BaseController {
 	{
 
 		$note =$this->notes->findOrFail($id);
-		$note->update(['note'=>$request->get('note')]);
+		$note->update(['note'=>request('
+'note')]);
 
 		
 		switch ($note->type) {

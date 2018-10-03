@@ -30,7 +30,7 @@ class ConstructionController  extends BaseController
 
     public function search(Request $request){
  
-        $data = $request->except('_token');
+        $data = request()->except('_token');
 
         $geoCode = app('geocoder')->geocode($data['address'])->get();
         $data['location'] =$this->construction->getGeoCode($geoCode);

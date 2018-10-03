@@ -89,14 +89,15 @@ class TestController extends Controller
     }
 
     public function select(Request $request){
-        return response()->json($this->states[$request->get('country')],201);
+        return response()->json($this->states[request('
+'country')],201);
         //return response()->json($this->states[$cid],201);
        
 
     }
 
     public function send(Request $request){
-        dd($request->all());
+        dd(request()->all());
     }
 
     public function test(){

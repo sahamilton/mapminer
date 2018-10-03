@@ -80,20 +80,25 @@ class TrainingController extends BaseController
      */
     public function store(TrainingFormRequest $request)
     {
-        $data = $request->all();
+        $data = request()->all();
         $data = $this->setDates($data);
 
-        if($request->has('noexpiration')){
+        if(request()->has('noexpiration')){
             $data['dateto']=null;
         }
         if($training = $this->training->create($data)){
             
-            $training->servicelines()->attach($request->get('serviceline'));
-            if($request->filled('vertical')){
-                $training->relatedIndustries()->attach($request->get('vertical'));
+            $training->servicelines()->attach(request('
+'serviceline'));
+            if(request()->filled('
+'vertical')){
+                $training->relatedIndustries()->attach(request('
+'vertical'));
             }
-            if($request->filled('role')){
-                $training->relatedRoles()->attach($request->get('role'));
+            if(request()->filled('
+'role')){
+                $training->relatedRoles()->attach(request('
+'role'));
             }
         }
         
