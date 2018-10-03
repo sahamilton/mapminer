@@ -69,7 +69,7 @@ class LeadSourceController extends Controller
     {
 
         request()->merge(['user_id'=>auth()->user()->id]);
-        $leadsource = $this->leadsource->create(request()->except(['datefrom','dateto']));
+        $leadsource = $this->leadsource->create(request()->except('datefrom','dateto'));
         $leadsource->update([
             'datefrom'=>Carbon::createFromFormat('m/d/Y',request('datefrom')),
             'dateto'=>Carbon::createFromFormat('m/d/Y',request('dateto')),

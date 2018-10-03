@@ -164,10 +164,9 @@ class AdminPermissionsController extends BaseController {
 	 */
 	public function update(Permission $permission, PermissionFormRequest $request)
 	{
-		
-		
+				
   	    // Get the inputs, with some exceptions
-            $inputs = request()->except((['csrf_token']);
+            $inputs = request()->except('csrf_token');
             $inputs['display_name'] = ucwords($inputs['name']);
             $inputs['name'] = strtolower(str_replace(' ','_',$inputs['name']));
             if ($permission->update($inputs))
