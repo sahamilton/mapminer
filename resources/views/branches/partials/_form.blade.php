@@ -1,7 +1,7 @@
 <?php
 
-$state = new App\State;
-$states = $state->getStates();
+
+
 
 ?>
 <div class="container" style="margin-top:40px">

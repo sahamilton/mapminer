@@ -8,6 +8,7 @@ use App\Location;
 use App\User;
 use App\State;
 use App\Person;
+use App\Role;
 use Excel;
 use App\Http\Requests\BranchFormRequest;
 use App\Http\Requests\BranchImportFormRequest;
@@ -90,11 +91,11 @@ class BranchesController extends BaseController {
 	 */
 	public function create()
 	{
-		$branchRoles = \App\Role::whereIn('id',$this->branch->branchRoles)->pluck('name','id');
+		$branchRoles = Role::whereIn('id',$this->branch->branchRoles)->pluck('name','id');
 		$team = $this->person->personroles($this->branch->branchRoles);
 		$servicelines = $this->serviceline->whereIn('id',$this->userServiceLines)->get();
-    
-		return response()->view('branches.create',compact('servicelines','team','branchRoles'));
+    	$states = State::all()->pluck('fullstate','statecode')->toarray();
+		return response()->view('branches.create',compact('servicelines','team','branchRoles','states'));
 	}
 
 	/**
@@ -185,14 +186,14 @@ class BranchesController extends BaseController {
 		$data['latlng'] = $data['branch']->lat.":".$data['branch']->lng;
 		$data['distance'] = '10';
 
-		$roles = \App\Role::pluck('name','id');
+		$roles = Role::pluck('name','id');
 		return response()->view('branches.show',compact('data','servicelines','filtered','roles'));
 	}
 	
 	public function showSalesTeam($id)
 	{
 		$salesteam = $this->branch->with('relatedPeople','servicelines')->find($id);
-		$roles = \App\Role::pluck('name','id');
+		$roles = Role::pluck('name','id');
 		return response()->view('branches.showteam',compact('salesteam','roles'));
 	}
 	
@@ -238,14 +239,14 @@ class BranchesController extends BaseController {
 	public function edit($branch)
 	{
 		
-		$branchRoles = \App\Role::whereIn('id',$this->branch->branchRoles)->pluck('name','id');
+		$branchRoles = Role::whereIn('id',$this->branch->branchRoles)->pluck('name','id');
 		$team = $this->person->personroles($this->branch->branchRoles);
 		$branch = $this->branch->find($branch->id);	
 		$branchteam = $branch->relatedPeople()->pluck('persons.id')->toArray();
 		$servicelines = $this->serviceline->whereIn('id',$this->userServiceLines )->get();
 		$branchservicelines = $branch->servicelines()->pluck('servicelines.id')->toArray();
-
-		return response()->view('branches.edit', compact('branch','servicelines','branchRoles','team','branchteam','branchservicelines'));
+		$states = State::all()->pluck('fullstate','statecode')->toarray();
+		return response()->view('branches.edit', compact('branch','servicelines','branchRoles','team','branchteam','branchservicelines','states'));
 	}
 
 	/**
@@ -353,7 +354,7 @@ class BranchesController extends BaseController {
 			$state=$request->get('state');
 			
 		}
-		$data = \App\State::where('statecode','=',$state)->firstOrFail()->toArray();
+		$data = State::where('statecode','=',$state)->firstOrFail()->toArray();
 		
 		return response()->view('branches.statemap', compact('data','servicelines'));	
 		
@@ -452,7 +453,7 @@ class BranchesController extends BaseController {
 	
 	Excel::create('Branches',function($excel){
 			$excel->sheet('BranchTeam',function($sheet) {
-				$roles = \App\Role::pluck('name','id')->toArray();
+				$roles = Role::pluck('name','id')->toArray();
 				
 				$result = $this->branch->with('relatedPeople','relatedPeople.userdetails')->get();
 				$sheet->loadView('branches.exportteam',compact('result','roles'));
