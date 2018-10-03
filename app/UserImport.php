@@ -66,6 +66,8 @@ class UserImport extends Imports
  	public function postImport(){
  		// clean up null values in import db
 		$this->cleanseImport();
+		$this->updateImportWithExistingUsers();
+		$this->updateImportWithManagers();
 		dd('here');
 		// Check all employee#s are valid
 		// add user id
@@ -76,20 +78,11 @@ class UserImport extends Imports
 			// person
 			// branch
 		// delete ones updated
-
+		$this->createNewUsers();
 
 		// for all new ones
 		// create the user
- 		$this->createUser();
-		
-	    // set the user_id in the import table
-	    $this->updateUserIdInImport();
-
-    	// create the person
-	    $this->createPerson();
-	    
-	    //set the person id in the import table
-	    $this->updatePersonIdInImport();
+ 		
 	    
 	    // select branches from usersimport where branches is not null;
 	    $this->associateBranches();
@@ -116,8 +109,22 @@ class UserImport extends Imports
  			}
        }
 	}
+
+	private function createNewUsers(){
+		$this->createUser();
+		
+	    // set the user_id in the import table
+	    $this->updateUserIdInImport();
+
+    	// create the person
+	    $this->createPerson();
+	    
+	    //set the person id in the import table
+	    $this->updatePersonIdInImport();
+	}
 	private function createuser(){
-		$newusers = $this->all('username', 'employee_id', 'email');
+		$newusers = $this->select('employee_id', 'email')
+		->whereNull('user_id');
 		$a=0;
 		foreach ($newusers as $user){
 			$data[$a]= $user->toArray();
@@ -234,5 +241,36 @@ class UserImport extends Imports
 	private function checkValidEmployeeId()
 	{
 
+	}
+	private function updateImportWithManagers(){
+		$queries[] = 'UPDATE usersimport AS t1
+
+		INNER JOIN ( 
+			select users.id as user_id, persons.id as reports_to,usersimport.employee_id as employee_id
+			from usersimport,users,persons
+			where usersimport.mgr_emp_id = users.employee_id
+			and users.id = persons.user_id) AS t2
+
+		ON t1.employee_id = t2.employee_id 
+
+		SET t1.reports_to = t2.reports_to';
+		return $this->executeImportQueries($queries);
+
+
+
+	}
+	private function updateImportWithExistingUsers(){
+		$queries[] = 'UPDATE usersimport AS t1
+
+			INNER JOIN ( 
+			select users.id as user_id, persons.id as person_id,users.employee_id as employee_id,reports_to
+           from usersimport,users,persons
+           where usersimport.employee_id = users.employee_id
+           and users.id = persons.user_id) AS t2
+
+			ON t1.employee_id = t2.employee_id 
+
+		SET t1.user_id = t2.user_id, t1.person_id = t2.person_id,t1.reports_to = t2.reports_to';
+		return $this->executeImportQueries($queries);
 	}
 }
