@@ -49,6 +49,7 @@ class Imports extends Model
     		$this->table = $data['table'];
     		$this->temptable = $this->table . "_import";
     		$this->importfilename = str_replace("\\","/",$data['filename']);
+    		
 
     	}
     	public function validateImport($fields){

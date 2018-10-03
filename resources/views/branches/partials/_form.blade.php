@@ -2,7 +2,7 @@
 
 $state = new App\State;
 $states = $state->getStates();
-
+dd($states);
 ?>
 <div class="container" style="margin-top:40px">
 <!-- id -->

@@ -263,7 +263,7 @@ class UserImport extends Imports
 		$queries[] = 'UPDATE usersimport AS t1
 
 			INNER JOIN ( 
-			select users.id as user_id, persons.id as person_id,users.employee_id as employee_id,reports_to
+			select users.id as user_id, persons.id as person_id,users.employee_id as employee_id,usersimport.reports_to
            from usersimport,users,persons
            where usersimport.employee_id = users.employee_id
            and users.id = persons.user_id) AS t2

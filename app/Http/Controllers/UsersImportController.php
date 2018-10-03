@@ -47,7 +47,7 @@ class UsersImportController extends ImportController
         $fields = $this->getFileFields($data); 
 
         $data['additionaldata'] = ['serviceline'=>implode(",",request('serviceline'))];
-        $addColumns = ['branches','role_id','mgr_emp_id','manager','reports_to','industry'];
+        $addColumns = ['branches','role_id','mgr_emp_id','manager','reports_to','industry','address','city','state','zip','serviceline','business_title'];
         $addColumn = $this->addColumns($addColumns);
 
    		$columns = array_merge($this->import->getTableColumns('users'),$this->import->getTableColumns('persons'),$addColumn);
