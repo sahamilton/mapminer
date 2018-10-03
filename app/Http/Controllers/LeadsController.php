@@ -296,7 +296,7 @@ class LeadsController extends BaseController
          
             // we should also add serviceline filter?
           $people = $this->findNearByPeople($lead,500);
-    
+
           $salesrepmarkers = $this->person->jsonify($people);
           $branchmarkers=$branches->toJson();
 
@@ -416,7 +416,7 @@ class LeadsController extends BaseController
           $data['distance']=100;
           $data['number']=5;
         }
-        
+
 
         return Person::whereHas('userdetails.serviceline', function ($q) {
               $q->whereIn('servicelines.id',$this->userServiceLines);

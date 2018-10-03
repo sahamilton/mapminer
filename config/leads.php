@@ -41,7 +41,7 @@ return [
     |
     */
 
-	'lead_distribution_roles'=>(['Sales']),
+	'lead_distribution_roles'=>(['Sales','Sales Representative']),
 
 
     'test'=>env("LEADS_TEST",false),
