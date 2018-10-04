@@ -43,8 +43,8 @@
 	
 		<div class='input-group input-group-lg'>
 			<select multiple name="serviceline[]" >
-				@foreach($servicelines as $serviceline)
-					<option value="{{$serviceline}}">{{$serviceline}}</option>
+				@foreach($servicelines as $key=>$serviceline)
+					<option value="{{$key}}">{{$serviceline}}</option>
 
 				@endforeach
 			</select>

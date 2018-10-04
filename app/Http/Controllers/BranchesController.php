@@ -353,7 +353,7 @@ class BranchesController extends BaseController {
 			$state=request('state');
 			
 		}
-		$data = \App\State::where('statecode','=',$state)->firstOrFail()->toArray();
+		$data = $this->state->where('statecode','=',$state)->firstOrFail()->toArray();
 		
 		return response()->view('branches.statemap', compact('data','servicelines'));	
 		
@@ -434,7 +434,7 @@ class BranchesController extends BaseController {
 			->get();
 
 		
-		$states= State::where('statecode','=',$statecode)->get();
+		$states= $this->state->where('statecode','=',$statecode)->get();
 		foreach($states as $state) {
 			$data['state']= $state->statecode;
 			$data['fullstate']= $state->fullstate;

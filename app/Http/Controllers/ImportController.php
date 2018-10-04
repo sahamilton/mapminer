@@ -36,6 +36,7 @@ class ImportController extends BaseController
         for ($i=0; $i<10; $i++){
             $fields[$i]= fgetcsv($content);
         }
+       
         return $fields;
     }
 

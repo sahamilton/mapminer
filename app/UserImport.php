@@ -3,7 +3,7 @@
 namespace App;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Http\Request;
 class UserImport extends Imports
 {
    	public $uniqueFields= ['employee_id'];
@@ -56,36 +56,19 @@ class UserImport extends Imports
 
  	}
 
- 	public function  createUserNames(){
-	$query ="update ". $this->table . " set username = lower(concat(left(replace(firstname,char(13),''),1),replace(lastname,char(13),'') ))";
-		if ($result = \DB::select(\DB::raw($query))){
- 			return true;
- 		}
- 	}
-
+ 	
  	public function postImport(){
  		// clean up null values in import db
 		$this->cleanseImport();
 		$this->updateImportWithExistingUsers();
 		$this->updateImportWithManagers();
-		dd('here');
-		// Check all employee#s are valid
-		// add user id
-		// add people id
-		// update all that have user ids & people ids
-			// role
-			// user
-			// person
-			// branch
-		// delete ones updated
-		$this->createNewUsers();
-
-		// for all new ones
-		// create the user
- 		
-	    
-	    // select branches from usersimport where branches is not null;
-	    
+		$this->createUserNames();
+		
+		return redirect()->route('import.newusers');
+	}
+		
+	public function setUpAllUsers(){
+	    dd('here');
 
 		// set the role id for the new user
 		$this->insertRoles();
@@ -110,28 +93,39 @@ class UserImport extends Imports
        }
 	}
 
-	private function createNewUsers(){
-		$this->createUser();
+	public function createNewUsers(Request $request){
+		
+		$this->createUser($request);
 		
 	    // set the user_id in the import table
 	    $this->updateUserIdInImport();
 
     	// create the person
-	    $this->createPerson();
+	    $this->createPerson($request);
 	    
 	    //set the person id in the import table
 	    $this->updatePersonIdInImport();
 	}
+
+	private function  createUserNames(){
+	$query ="update usersimport set username = lower(concat(left(replace(firstname,char(13),''),1),replace(lastname,char(13),'') )) where user_id is null";
+		if ($result = \DB::select(\DB::raw($query))){
+ 			return true;
+ 		}
+ 	}
+
 	private function createuser(){
-		$newusers = $this->select('employee_id', 'email')
-		->whereNull('user_id');
+		$newusers = $this->whereIn('employee_id',request('enter'))->get(
+			['username','email','employee_id']);
 		$a=0;
+		$emails = request('email');
 		foreach ($newusers as $user){
 			$data[$a]= $user->toArray();
 			$data[$a]['password'] = md5(uniqid(mt_rand(), true));
 			$data[$a]['confirmed'] = 1; 
 			$data[$a]['created_at']= now();
 			$data[$a]['updated_at'] =null;
+			$data[$a]['email'] = $emails[$user->employee_id];
 			$a++;
 
 
@@ -143,7 +137,8 @@ class UserImport extends Imports
 	}
 
 	private function createPerson(){
-		$newPeople = $this->all('firstname','lastname','user_id','reports_to','address','city','state','zip','business_title');
+		$newPeople = $this->whereIn('employee_id',request('enter'))
+		->get(['firstname','lastname','user_id','reports_to','address','city','state','zip','business_title']);
 		$a=0;
 		foreach ($newPeople as $person){
 			$data[$a]= $person->toArray();
@@ -160,7 +155,8 @@ class UserImport extends Imports
 
 	private function associateBranches(){
 		$validBranches = Branch::all(['id'])->pluck('id')->toArray();
-		$people = $this->whereNotNull('branches')->get(['person_id','role_id','branches']);
+		$people = $this->whereNotNull('branches')->whereNotNul('person_id')
+		->get(['person_id','role_id','branches']);
 		foreach ($people as $peep){
 			
 			
@@ -202,7 +198,10 @@ class UserImport extends Imports
 	private function cleanseImport(){
 		$fields = ['reports_to','branches','address','city','state','zip'];
 		foreach ($fields as $field){
-			$queries[] = "update usersimport set ". $field . " = null where ". $field." = 0";
+			if($field == 'reports_to'){
+				$queries[] = "update usersimport set ". $field . " = null where ". $field." = 0";
+			}
+			
 			$queries[] = "update usersimport set ". $field . " = null where ". $field." = ''";
 		
 		}
@@ -211,12 +210,29 @@ class UserImport extends Imports
 	}
 
 	private function insertRoles(){
-		$queries[] = "insert into role_user (role_id,user_id) select role_id,user_id from usersimport";
-		return $this->executeImportQueries($queries);
+		
+		$newuser = $this->whereNotNull('user_id')->pluck('role_id','user_id')->toArray();
+	
+
+		$users = $this->user->whereIn('id',array_keys($newuser))->get();
+		
+		foreach ($users as $user){
+			$roles = explode(",",$newuser[$user->id]);
+			$user->roles()->sync($roles);
+		}
 	}
 	private function insertServiceLines(){
-		$queries[] = "insert into serviceline_user (serviceline_id,user_id) select serviceline,user_id from usersimport";
-		return $this->executeImportQueries($queries);
+		
+
+		$newuser = $this->whereNotNull('user_id')->pluck('serviceline','user_id')->toArray();
+		$users = $this->user->whereIn('id',array_keys($newuser))->get();
+		
+		foreach ($users as $user){
+			$servicelines = explode(",",$newuser[$user->id]);
+			$user->servicelines()->sync($servicelines);
+		}
+		
+		
 	}
 
 	private function updateUserIdInImport(){
@@ -243,7 +259,7 @@ class UserImport extends Imports
 
 	}
 	private function updateImportWithManagers(){
-		$queries[] = 'UPDATE usersimport AS t1
+		$queries[] = "UPDATE usersimport AS t1
 
 		INNER JOIN ( 
 			select users.id as user_id, persons.id as reports_to,usersimport.employee_id as employee_id
@@ -253,24 +269,24 @@ class UserImport extends Imports
 
 		ON t1.employee_id = t2.employee_id 
 
-		SET t1.reports_to = t2.reports_to';
+		SET t1.reports_to = t2.reports_to";
 		return $this->executeImportQueries($queries);
 
 
 
 	}
 	private function updateImportWithExistingUsers(){
-		$queries[] = 'UPDATE usersimport AS t1
+		$queries[] = "UPDATE usersimport AS t1
 
 			INNER JOIN ( 
-			select users.id as user_id, persons.id as person_id,users.employee_id as employee_id,usersimport.reports_to
+			select users.id as user_id, users.username as username, persons.id as person_id,users.employee_id as employee_id,usersimport.reports_to
            from usersimport,users,persons
            where usersimport.employee_id = users.employee_id
            and users.id = persons.user_id) AS t2
 
 			ON t1.employee_id = t2.employee_id 
 
-		SET t1.user_id = t2.user_id, t1.person_id = t2.person_id,t1.reports_to = t2.reports_to';
+		SET t1.user_id = t2.user_id, t1.username = t2.username, t1.person_id = t2.person_id,t1.reports_to = t2.reports_to";
 		return $this->executeImportQueries($queries);
 	}
 }

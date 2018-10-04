@@ -458,6 +458,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 		Route::get('users/serviceline/{servicelineId}', ['as'=>'serviceline.user','uses'=>'Admin\AdminUsersController@index']);
 		Route::get('users/nomanager', ['as'=>'nomanager','uses'=>'SalesOrgController@noManager']);
 		Route::get('users/nomanager/export', ['as'=>'nomanager.export','uses'=>'SalesOrgController@noManagerExport']);
+		Route::get('users/newusers',['as'=>'import.newusers','uses'=>'UsersImportController@newUsers']);
+		Route::post('users/createnewusers',['as'=>'import.createnewusers','uses'=>'UsersImportController@createNewUsers']);
 		Route::resource('users', 'Admin\AdminUsersController');
 
 

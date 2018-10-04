@@ -31,7 +31,8 @@ class UsersImportController extends ImportController
     public function getFile(Request $request){
        $requiredFields = $this->import->requiredFields;
        $servicelines = Serviceline::pluck('ServiceLine','id');
-		return response()->view('admin/users/import',compact('servicelines','requiredFields'));
+
+		return response()->view('admin.users.import',compact('servicelines','requiredFields'));
         
     }
 
@@ -51,14 +52,14 @@ class UsersImportController extends ImportController
         $addColumn = $this->addColumns($addColumns);
 
    		$columns = array_merge($this->import->getTableColumns('users'),$this->import->getTableColumns('persons'),$addColumn);
-      
+
         $requiredFields = $this->import->requiredFields;
         $skip = ['id','password','confirmation_code','remember_token','created_at','updated_at','nonews','lastlogin','api_token','user_id','lft','rgt','depth','geostatus'];
         return response()->view('imports.mapfields',compact('columns','fields','data','skip','requiredFields'));
     }
     
     public function mapfields(Request $request){
-       
+    
        $data = $this->getData(request()->all());  
        $this->import->setFields($data);
        if($multiple = $this->import->detectDuplicateSelections(request('fields'))){
@@ -79,11 +80,27 @@ class UsersImportController extends ImportController
  	         	
          	}*/
          	$this->import->postImport();
-           return redirect()->route('users.index')->with('success','Users imported');
+            return redirect()->route('import.newusers');
+           //return redirect()->route('users.index')->with('success','Users imported');
 
         }
         
 	}
+
+    public function newUsers(){
+
+        $newusers = $this->import->whereNull('person_id')->get();
+        return response()->view('admin.users.importnew',compact('newusers'));
+    }
+
+
+    public function createNewUsers(Request $request){
+        $this->import->createNewUsers($request);
+        $this->import->setUpAllUsers();
+        return redirect()->route('users.index')->withMessage('All Imported and Updated');
+
+    }
+
     public function fixerrors(Request $request){
 
     	if(request()->filled('fixInput')){
