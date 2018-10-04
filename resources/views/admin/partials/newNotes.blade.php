@@ -23,12 +23,7 @@
 </td>
 <td>{{$newNote->relatesToLocation->locationAddress()}}</td>
 <td>{{$newNote->note}}</td>
-<td>
-<?php $date = new DateTime($newNote->created_at);
-
-echo $date->format('jS M g:i A');
-?>
-</td>
+<td>{{$newNote->created_at ? $newNote->format('jS M g:i A'):''}}</td>
 <td>{{$newNote->writtenBy->person->firstname}} {{$newNote->writtenBy->person->lastname}}</td>
 
 

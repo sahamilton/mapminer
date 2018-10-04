@@ -68,14 +68,7 @@
     </ul>
     </td>
     <td class="col-md-2">{{ $person->userdetails->confirmed == '1' ? "yes" :  "no"}}</td>
-    <td>
- 
-		@if(isset($person->userdetails->lastlogin) &&  $person->userdetails->lastlogin != '0000-00-00 00:00:00'  )
-                <?php  $lastlogin = Carbon\Carbon::parse($person->userdetails->lastlogin);?>
-                {{$lastlogin->format('M j, Y h:i a')}}
-			@endif
-	
-	</td>
+    <td>{{$person->userdetails->lastlogin ? $person->userdetails->lastlogin->format('M j, Y h:i a'):''}}</td>
     <td class="col-md-2">
     
 

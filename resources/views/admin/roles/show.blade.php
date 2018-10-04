@@ -37,11 +37,7 @@
 		   
 		    @endforeach
     	</td>
-    	   		<td>
-   		@if($user->lastlogin)
-   		{{$user->lastlogin->format('Y-m-d h:i a')}}
-   		@endif
-   		</td>
+    	 <td>{{$user->lastlogin ? $user->lastlogin->format('Y-m-d h:i a'):''}}</td>
 
 </tr>
 @endforeach

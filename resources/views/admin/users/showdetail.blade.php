@@ -11,11 +11,7 @@
         @endforeach
     </p>
     <p><strong>Last Login:</strong>
-    @if($user->lastlogin)
-    {{$user->lastlogin->format('d/m/Y')}}
-    @else
-    Never Logged in
-    @endif
+   {{$user->lastlogin  ? $user->lastlogin->format('d/m/Y'): 'Never Logged in'}}
     </p>
     <ul class="nav nav-tabs">
     <li class="nav-item active"><a class="nav-link" data-toggle="tab" href="#showmap"><strong>Location</strong></a></li>

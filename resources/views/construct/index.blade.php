@@ -22,7 +22,7 @@
 			<td>{{$project['_source']['construction']['construction_type']}}</td>
 			<td>${{number_format($project['_source']['valuation'],0)}}</td>
 			<td>{{$project['_source']['siteaddress']}}</td>
-			<td>{{Carbon\Carbon::parse($project['_source']['createdate'])->format('Y-m-d')}}</td>
+			<td>{{$project['_source']['createdate']->format('Y-m-d')}}</td>
 		</tr>
 		@endforeach
 	</tbody>

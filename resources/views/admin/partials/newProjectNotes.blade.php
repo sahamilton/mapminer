@@ -22,7 +22,7 @@
           </td>
           <td>{{$newNote->relatesToProject->fullAddress()}}</td>
           <td>{{$newNote->note}}</td>
-          <td>{{$newNote->created_at->format('jS M g:i A')}}</td>
+          <td>{{$newNote->created_at ? $newNote->created_at->format('jS M g:i A') :''}}</td>
           <td>{{$newNote->writtenBy->person->postName()}}</td>
         </tr>
       @endforeach

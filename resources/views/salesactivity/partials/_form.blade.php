@@ -34,7 +34,7 @@ $activity->datefrom->format('m/d/Y') : date('m/d/Y'))}}" />
 <div id="datepicker1" class="form-group @if ($errors->has('dateto')) has-error @endif">
 <label class="control-label col-sm-4" for="dateto">DateTo:</label>
 <div class="input-group date input-group-lg">
-<input type="text"  required name ='dateto' class="form-control"  value="{{old('dateto',isset($activity->dateto) ? $activity->dateto->format('m/d/Y') : date('m/d/Y', strtotime("+1 months",strtotime(date('m/d/Y')))))}}" />
+<input type="text"  required name ='dateto' class="form-control"  value="{{old('dateto',isset($activity->dateto) ? $activity->dateto->format('m/d/Y') : now()->addMonth()->format('m/d/Y') />
 <span class="input-group-addon"><i class="far fa-th" aria-hidden="true"></i>
 </span>
 </div>   

@@ -78,14 +78,7 @@
     </ul>
     </td>
     <td class="col-md-2">{{ $user->confirmed == '1' ? "yes" :  "no"}}</td>
-    <td>
- 
-		@if(isset($user->lastlogin) &&  $user->lastlogin != '0000-00-00 00:00:00'  )
-               
-                {{$user->lastlogin->format('M j, Y h:i a')}}
-			@endif
-	
-	</td>
+    <td>{{$user->lastlogin ? $user->lastlogin->format('M j, Y h:i a'): ''}}</td>
     <td>@if($user->updated_at) {{$user->updated_at->format('M j, Y h:i a')}} @endif</td>
     <td class="col-md-2">
     
