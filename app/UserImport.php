@@ -4,6 +4,9 @@ namespace App;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use App\Jobs\ProcessGeoCode;
+use App\Jobs\ProcessPersonRebuild;
+
 class UserImport extends Imports
 {
    	public $uniqueFields= ['employee_id'];
@@ -13,7 +16,6 @@ class UserImport extends Imports
 
    	
    	public function __construct(){
-
    	}
 
 	public function checkUniqueFields(){
@@ -68,19 +70,27 @@ class UserImport extends Imports
 	}
 		
 	public function setUpAllUsers(){
-	    dd('here');
-
+	
 		// set the role id for the new user
-		$this->insertRoles();
-	    
+		if($message = $this->updateRoles()){
+			return $message = "Unable to update roles";
+		}
 		// set the serviceline
-	    $this->insertServiceLines();
-	    
-	    $this->associateBranches();
-
+		if($message = $this->insertServiceLines()){
+			return $message = "Unable to insert servielines";
+		}
+	    // set the branch assignments
+	    if($message = $this->associateBranches()){
+	    	if(!is_array($message)){
+	    		return $message = "unable to unable to associate branches";
+	    	}
+	    		return $message;
+	    }
+	    $this->updatePersonsGeoCode();
 	    // clean up the import table
-	    $queries[] = 'truncate table ' . $this->table;
-     
+	    
+      	ProcessPersonRebuild::dispatch();
+      	$queries[] = 'truncate table ' . $this->table;
       	$this->executeImportQueries($queries);
 
        // geocode new entries?
@@ -95,16 +105,25 @@ class UserImport extends Imports
 
 	public function createNewUsers(Request $request){
 		
-		$this->createUser($request);
+		if(! $this->createUser($request)) {
+
+			return $message ="Unable to create new users";
+		};
 		
 	    // set the user_id in the import table
-	    $this->updateUserIdInImport();
-
+	    if($this->updateUserIdInImport()){
+	    	return $message ="Unable to add user_id to imports";
+	    }
     	// create the person
-	    $this->createPerson($request);
+	    if(! $this->createPerson($request)){
+	    	return $message = "Unable to add person record";
+	    }
 	    
 	    //set the person id in the import table
-	    $this->updatePersonIdInImport();
+	    if($this->updatePersonIdInImport()){
+	    	return $message = "Unable to add person id to imports";
+	    }
+	    return false;
 	}
 
 	private function  createUserNames(){
@@ -114,7 +133,7 @@ class UserImport extends Imports
  		}
  	}
 
-	private function createuser(){
+	private function createUser(Request $request){
 		$newusers = $this->whereIn('employee_id',request('enter'))->get(
 			['username','email','employee_id']);
 		$a=0;
@@ -131,7 +150,10 @@ class UserImport extends Imports
 
 		}
 		
-		User::insert($data);
+		if (User::insert($data)){
+			return true;
+		}
+		return false;
 		
 
 	}
@@ -150,39 +172,66 @@ class UserImport extends Imports
 
 
 		}
-		Person::insert($data);
+		return Person::insert($data);
 	}
 
 	private function associateBranches(){
-		$validBranches = Branch::all(['id'])->pluck('id')->toArray();
-		$people = $this->whereNotNull('branches')->whereNotNul('person_id')
+		
+		$people = $this->whereNotNull('branches')->whereNotNull('person_id')
 		->get(['person_id','role_id','branches']);
-		foreach ($people as $peep){
-			
-			
-			$branches = explode(",",str_replace(' ','',$peep->branches));
-			/// need to check if there are invalid branches
-			foreach ($branches as $branch){
-				$data[$branch]=['role_id' => $peep->role_id]; 
+		if(!$errors = $this->validateBranches($people)){
+			foreach ($people as $peep){
+				
+				
+				$branches = explode(",",str_replace(' ','',$peep->branches));
+				
+				foreach ($branches as $branch){
+					$data[$branch]=['role_id' => $peep->role_id]; 
+				}
+				$person = Person::findOrFail($peep->person_id);
+				$person->branchesServiced()->sync($data);
 			}
-			$person = Person::findOrFail($peep->person_id);
-			$person->branchesServiced()->sync($data);
+			return $error = false;
 		}
+
+		return $errors;
 
 	}
 
+	private function validateBranches($people){
+		$errors = array();
+		$validBranches = Branch::all(['id'])->pluck('id')->toArray();
+		foreach ($people as $person){
+			$branches = explode(",",str_replace(' ','',$person->branches));
+			if($invalids = array_diff($branches,$validBranches)){
+				foreach ($invalids as $invalid){
+					$errors[$person->person_id]['branches'][]=$invalid;
+				}
+				
+			}
+
+		}
+		if(count($errors)>0){
+			return $errors;
+		}
+		return $errors = false;
+	}
+
 	public function updatePersonsGeoCode(){
-		   $people = Person::where('created_at','>',Carbon::now()->subDays(1))
-		   ->whereNotNull('city')
+		   $people = Person::whereNotNull('city')
 		   ->whereNotNull('state')
+		   ->whereNull('lat')
+		   ->whereNull('lng')
+		   ->whereNull('geostatus')
 		   ->get();
 		   
 		   foreach ($people as $person){
-		   	$address = trim(str_replace('  ',' ',$person->address . " " . $person->city . " ". $person->state ." " . $person->zip));
+		   	/*$address = trim(str_replace('  ',' ',$person->address . " " . $person->city . " ". $person->state ." " . $person->zip));
 		   	$geoCode = $this->getLatLng($address);
 		   		$data['lat'] = $geoCode['lat'];
 		   		$data['lng'] = $geoCode['lng'];
-		   		$person->update($data);
+		   		$person->update($data);*/
+		   		ProcessGeoCode::dispatch($person);
 		   }
 		   
 	}
@@ -209,29 +258,26 @@ class UserImport extends Imports
 		
 	}
 
-	private function insertRoles(){
+	private function updateRoles(){
 		
 		$newuser = $this->whereNotNull('user_id')->pluck('role_id','user_id')->toArray();
-	
-
-		$users = $this->user->whereIn('id',array_keys($newuser))->get();
-		
+		$users = User::whereIn('id',array_keys($newuser))->get();
 		foreach ($users as $user){
 			$roles = explode(",",$newuser[$user->id]);
 			$user->roles()->sync($roles);
 		}
+		return $error = false;
 	}
 	private function insertServiceLines(){
-		
 
 		$newuser = $this->whereNotNull('user_id')->pluck('serviceline','user_id')->toArray();
-		$users = $this->user->whereIn('id',array_keys($newuser))->get();
+		$users = User::whereIn('id',array_keys($newuser))->get();
 		
 		foreach ($users as $user){
 			$servicelines = explode(",",$newuser[$user->id]);
-			$user->servicelines()->sync($servicelines);
+			$user->serviceline()->sync($servicelines);
 		}
-		
+		return $error = false;
 		
 	}
 

@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Person;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -29,6 +30,6 @@ class ProcessPersonRebuild implements ShouldQueue
      */
     public function handle()
     {
-        //
+        Person::rebuild();
     }
 }

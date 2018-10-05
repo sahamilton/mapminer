@@ -72,15 +72,8 @@ class UsersImportController extends ImportController
        }
       
        if($this->import->import()) {
-         	/*$this->import->createUserNames();
-         	if($importerrors = $this->import->checkUniqueFields()){
- 					$field = end($importerrors)->Field;
- 					array_pop($importerrors); 
- 	         		return response()->view('admin.users.importerrors',compact('field','importerrors'));
- 	         	
-         	}*/
          	$this->import->postImport();
-            return redirect()->route('import.newusers');
+          return redirect()->route('import.newusers');
            //return redirect()->route('users.index')->with('success','Users imported');
 
         }
@@ -90,42 +83,81 @@ class UsersImportController extends ImportController
     public function newUsers(){
 
         $newusers = $this->import->whereNull('person_id')->get();
-        return response()->view('admin.users.importnew',compact('newusers'));
+        if($newusers->count()>0){
+           return response()->view('admin.users.importnew',compact('newusers'));
+        }
+       if($message = $this->import->setUpAllUsers()){
+            
+        }else{
+          return redirect()->route('users.index')->withMessage('All Imported and Updated');
+        }
     }
 
 
     public function createNewUsers(Request $request){
-        $this->import->createNewUsers($request);
-        $this->import->setUpAllUsers();
-        return redirect()->route('users.index')->withMessage('All Imported and Updated');
+      if($message = $this->import->createNewUsers($request)){
+           return redirect()->back()->withMessage($message);
+      }
 
+      if(! $errors = $this->import->setUpAllUsers()){
+        return redirect()->route('users.index')->withMessage('All Imported and Updated');
+      
+      }else{
+
+        return $this->inputErrors($errors);
+      }
+    }
+
+    private function inputErrors($importerrors){
+        if(! is_array($importerrors)){
+          return redirect()->back()->withMessage($errors);
+        }
+        $ids = array_keys($importerrors);
+        $persons = $this->import->whereIn('person_id',$ids)->get();
+      return response()->view('admin.users.import.errors',compact('importerrors','persons'));
     }
 
     public function fixerrors(Request $request){
 
-    	if(request()->filled('fixInput')){
-    		if(request()->filled('skip')){
-    			$this->import->destroy(request('skip'));
-    		}
-    		$field = request('field');
-    		foreach (request('error') as $key=>$value){
+      $data['branches'] = request('branch');
+      $imports = $this->import->whereIn('person_id',array_keys(request('branch')))->get();
 
-    			$this->import->where($field,'=',$key)->update([$field=>$value]);
-
-    		}
-    	}
-    	//now we need to continue checks and import
-    	if($importerrors = $this->import->checkUniqueFields()){
- 	
- 	      return response()->view('admin.users.importerrors',compact('field','importerrors'));
- 	         	
+      foreach ($imports as $import){
+        $import->branches = $data['branches'][$import->person_id];
+        $import->save();
       }
+      if($message = $this->import->setUpAllUsers()){
+           dd('whoops'); 
+        }else{
+          return redirect()->route('users.index')->withMessage('All Imported and Updated');
+        }
+    }
+/*
+    public function fixerrors(Request $request){
+
+      	if(request()->filled('fixInput')){
+      		if(request()->filled('skip')){
+      			$this->import->destroy(request('skip'));
+      		}
+      		$field = request('field');
+      		foreach (request('error') as $key=>$value){
+
+      			$this->import->where($field,'=',$key)->update([$field=>$value]);
+
+      		}
+      	}
+    	 //now we need to continue checks and import
+      	if($importerrors = $this->import->checkUniqueFields()){
+   	
+   	      return response()->view('admin.users.importerrors',compact('field','importerrors'));
+   	         	
+        }
        $this->import->postImport();
 
        return redirect()->route('users.index')->with('success','Users imported');
     }
     
-
+*/
     /*
         Add additional columns to list
 
