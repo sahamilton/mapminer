@@ -283,4 +283,17 @@ class Model extends \Eloquent {
            ->select($table . '.*')
            ->where($pivot . '.' . $firstKey, '=', $this->id);
    }
+
+   public function removeNullsFromSelect($data){
+		
+		foreach ($data as $key=>$value)
+		{
+			
+			if($value[0]==null){
+			
+				unset($data[$key]);
+			}
+		}
+		return $data;
+	}
 }
