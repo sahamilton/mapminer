@@ -58,6 +58,7 @@ class Branch extends Model implements HasPresenter {
 		if($role){
 
 			return $this->belongsToMany(Person::class)
+			->withPivot('role_id')
 			->wherePivot('role_id','=',$role);
 		}else{
 			return $this->belongsToMany(Person::class)->withPivot('role_id');
@@ -232,4 +233,6 @@ class Branch extends Model implements HasPresenter {
         ->get();
 
 	}
+
+	
 }

@@ -257,19 +257,22 @@ class BranchesController extends BaseController {
 	 */
 	public function update(BranchFormRequest $request,$branch)
 	{
-		
+	
+		$data['roles'] = $this->branch->removeNullsFromSelect(request('roles'));
 		$branch->findOrFail($branch->id)
-		->update($request->all());
-		foreach ($request->get('roles') as $key=>$role){
-				foreach ($role as $person){
-				
-					$branch->relatedPeople()->sync($person,['role_id'=>$key]);
+		->update(request()->all());
+
+		foreach ($data['roles'] as $key=>$role){
+				foreach ($role as $person_id){
+					//$person = $this->person->findOrFail($person_id);
+					//dd($key);
+					$branchAssociations[$person_id]=['role_id'=>$key];
 				}
 				
 			}
-
-		
-		$branch->servicelines()->sync($request->get('serviceline'));
+		//dd($branchAssociations);
+		$branch->relatedPeople()->sync($branchAssociations);
+		$branch->servicelines()->sync(request('serviceline'));
 		$this->rebuildXMLfile();
 		return redirect()->route('branches.show',$branch->id );
 
