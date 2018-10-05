@@ -16,6 +16,7 @@ class UserImport extends Imports
 
    	
    	public function __construct(){
+   		
    	}
 
 	public function checkUniqueFields(){
