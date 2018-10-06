@@ -28,6 +28,11 @@ class UsersImportController extends ImportController
         
     }
 
+    public function index(){
+       $imports = $this->import->whereNull('person_id')->orWhereNull('user_id')->get();
+       return response()->view('admin.users.import.index',compact('imports')); 
+    }
+
     public function getFile(Request $request){
        $requiredFields = $this->import->requiredFields;
        $servicelines = Serviceline::pluck('ServiceLine','id');
@@ -38,7 +43,8 @@ class UsersImportController extends ImportController
 
 
     public function import(UsersImportFormRequest $request) {
-      
+
+        $this->import->truncate();
         $data = $this->uploadfile(request()->file('upload'));
         $data['table']='usersimport';
            
@@ -48,7 +54,7 @@ class UsersImportController extends ImportController
         $fields = $this->getFileFields($data); 
 
         $data['additionaldata'] = ['serviceline'=>implode(",",request('serviceline'))];
-        $addColumns = ['branches','role_id','mgr_emp_id','manager','reports_to','industry','address','city','state','zip','serviceline','business_title'];
+        $addColumns = ['branches','role_id','mgr_emp_id','manager','reports_to','industry','address','city','state','zip','serviceline','hiredate','business_title'];
         $addColumn = $this->addColumns($addColumns);
 
    		$columns = array_merge($this->import->getTableColumns('users'),$this->import->getTableColumns('persons'),$addColumn);
@@ -83,13 +89,15 @@ class UsersImportController extends ImportController
     public function newUsers(){
 
         $newusers = $this->import->whereNull('person_id')->get();
+        //$newusers = $this->import->addUserFields($newusers);
         if($newusers->count()>0){
            return response()->view('admin.users.importnew',compact('newusers'));
         }
        if($message = $this->import->setUpAllUsers()){
             
         }else{
-          return redirect()->route('users.index')->withMessage('All Imported and Updated');
+
+          return redirect()->route('usersimport.index')->withMessage('All Imported and Updated');
         }
     }
 
@@ -100,7 +108,7 @@ class UsersImportController extends ImportController
       }
 
       if(! $errors = $this->import->setUpAllUsers()){
-        return redirect()->route('users.index')->withMessage('All Imported and Updated');
+        return redirect()->route('usersimport.index')->withMessage('All Imported and Updated');
       
       }else{
 
@@ -127,42 +135,12 @@ class UsersImportController extends ImportController
         $import->save();
       }
       if($message = $this->import->setUpAllUsers()){
-           dd('whoops'); 
+           dd('whoops',$message);; 
         }else{
-          return redirect()->route('users.index')->withMessage('All Imported and Updated');
+          return redirect()->route('usersimport.index')->withMessage('All Imported and Updated');
         }
     }
-/*
-    public function fixerrors(Request $request){
 
-      	if(request()->filled('fixInput')){
-      		if(request()->filled('skip')){
-      			$this->import->destroy(request('skip'));
-      		}
-      		$field = request('field');
-      		foreach (request('error') as $key=>$value){
-
-      			$this->import->where($field,'=',$key)->update([$field=>$value]);
-
-      		}
-      	}
-    	 //now we need to continue checks and import
-      	if($importerrors = $this->import->checkUniqueFields()){
-   	
-   	      return response()->view('admin.users.importerrors',compact('field','importerrors'));
-   	         	
-        }
-       $this->import->postImport();
-
-       return redirect()->route('users.index')->with('success','Users imported');
-    }
-    
-*/
-    /*
-        Add additional columns to list
-
-
-    */
     private function addColumns($columns){
         foreach ($columns as $column){
             $columns = new \stdClass;

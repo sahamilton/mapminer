@@ -452,14 +452,18 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 
 		Route::get('cleanse',['as'=>'users.cleanse','uses'=>'Admin\AdminUsersController@cleanse']);
 		Route::get('users/import',['as'=>'users.importfile', 'uses'=>'UsersImportController@getFile']);
+		Route::get('usersimport',['as'=>'usersimport.index','uses'=>'UsersImportController@index']);
+
 		Route::post('users/bulkimport',['as'=>'admin.users.bulkimport', 'uses'=>'UsersImportController@import']);
 		Route::post('users/import',['as'=>'users.mapfields','uses'=>'UsersImportController@mapfields']);
 		Route::post('user/importerrors',['as'=>'fixuserinputerrors','uses'=>'UsersImportController@fixerrors']);
+		Route::get('users/newusers',['as'=>'import.newusers','uses'=>'UsersImportController@newUsers']);
+		Route::post('users/createnewusers',['as'=>'import.createnewusers','uses'=>'UsersImportController@createNewUsers']);
+		
 		Route::get('users/serviceline/{servicelineId}', ['as'=>'serviceline.user','uses'=>'Admin\AdminUsersController@index']);
 		Route::get('users/nomanager', ['as'=>'nomanager','uses'=>'SalesOrgController@noManager']);
 		Route::get('users/nomanager/export', ['as'=>'nomanager.export','uses'=>'SalesOrgController@noManagerExport']);
-		Route::get('users/newusers',['as'=>'import.newusers','uses'=>'UsersImportController@newUsers']);
-		Route::post('users/createnewusers',['as'=>'import.createnewusers','uses'=>'UsersImportController@createNewUsers']);
+
 		Route::resource('users', 'Admin\AdminUsersController');
 
 

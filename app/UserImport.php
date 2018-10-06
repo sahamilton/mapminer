@@ -91,8 +91,9 @@ class UserImport extends Imports
 	    // clean up the import table
 	    
       	ProcessPersonRebuild::dispatch();
-      	$queries[] = 'truncate table ' . $this->table;
-      	$this->executeImportQueries($queries);
+      	// return view of the import data table,
+      	//$queries[] = 'truncate table ' . $this->table;
+      	//$this->executeImportQueries($queries);
 
        // geocode new entries?
 	}
@@ -162,6 +163,18 @@ class UserImport extends Imports
 
 	}
 
+	public function addUserFields($users){
+		foreach ($users as $user){
+			// create username
+			// check its unique
+			// create email
+			// check its unique
+			//save
+		}
+
+
+	}
+
 	private function createPerson(){
 		$newPeople = $this->whereIn('employee_id',request('enter'))
 		->get(['firstname','lastname','user_id','reports_to','address','city','state','zip','business_title']);
@@ -223,18 +236,14 @@ class UserImport extends Imports
 
 	public function updatePersonsGeoCode(){
 		   $people = Person::whereNotNull('city')
-		   ->whereNotNull('state')
-		   ->whereNull('lat')
-		   ->whereNull('lng')
-		   ->whereNull('geostatus')
-		   ->get();
+					   ->whereNotNull('state')
+					   ->whereNull('lat')
+					   ->whereNull('lng')
+					   ->whereNull('geostatus')
+					   ->get();
 		   
 		   foreach ($people as $person){
-		   	/*$address = trim(str_replace('  ',' ',$person->address . " " . $person->city . " ". $person->state ." " . $person->zip));
-		   	$geoCode = $this->getLatLng($address);
-		   		$data['lat'] = $geoCode['lat'];
-		   		$data['lng'] = $geoCode['lng'];
-		   		$person->update($data);*/
+
 		   		ProcessGeoCode::dispatch($person);
 		   }
 		   
