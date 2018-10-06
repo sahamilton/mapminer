@@ -137,10 +137,13 @@ class UserImport extends Imports
 	private function createUser(Request $request){
 		$newusers = $this->whereIn('employee_id',request('enter'))->get(
 			['username','email','employee_id']);
+
 		$a=0;
 		$emails = request('email');
+		$usernames = request('username');
 		foreach ($newusers as $user){
 			$data[$a]= $user->toArray();
+			$data[$a]['username']=$usernames[$user->employee_id];
 			$data[$a]['password'] = md5(uniqid(mt_rand(), true));
 			$data[$a]['confirmed'] = 1; 
 			$data[$a]['created_at']= now();
