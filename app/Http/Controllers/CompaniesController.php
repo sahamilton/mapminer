@@ -544,11 +544,11 @@ class CompaniesController extends BaseController {
 
 
 	/*
-	Export all account swith manager details to Excel
+	Export all account with manager details to Excel
 	 */
 	public function exportAccounts()
 	{
-
+		
 		Excel::create('AllCompanies',function($excel){
 			$excel->sheet('Companies',function($sheet) {
 				$companies = $this->company
