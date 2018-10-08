@@ -37,7 +37,7 @@
                                     </li>
                                     
                                     <li{{ (Request::is('admin/companies/download') ? ' class = "active"' : '') }}>
-                                    <a href =" {{ route('companies.download') }}">                                
+                                    <a href =" {{ route('allcompanies.export') }}">                                
                                     <i class="fa fa-download" aria-hidden="true"> </i> Export Companies</a></li>
                                     
                                      <li{{ (Request::is('admin/companies/export') ? ' class="active"' : '') }}>
