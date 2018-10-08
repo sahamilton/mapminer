@@ -198,7 +198,7 @@ class UserImport extends Imports
 		$brancherrors = $this->associateBranches();
 
 		$industryerrors = $this->associateIndustries();
-	
+		
 		return $brancherrors + $industryerrors;
 	}
 		
@@ -218,7 +218,7 @@ class UserImport extends Imports
 				$person = Person::findOrFail($peep->person_id);
 				$person->branchesServiced()->sync($data);
 			}
-			return $error = false;
+			return $error = array();
 		}
 
 		return $errors;
@@ -228,15 +228,18 @@ class UserImport extends Imports
 		$people = $this->whereNotNull('industry')
 		->whereNotNull('person_id')
 		->get(['person_id','role_id','industry']);
+		$validIndustries = $this->validIndustries();
+
 		if(!$errors = $this->validateIndustries($people)){
 			foreach ($people as $peep){
 				
-				$industries = explode(",",str_replace(' ','',$peep->industry));
-				
+				$industries = explode(",",$peep->industry);
+				$ids = array_keys(array_intersect($validIndustries,$industries));
+
 				$person = Person::findOrFail($peep->person_id);
-				$person->industryfocus()->sync($industries);
+				$person->industryfocus()->sync($ids);
 			}
-			return $error = false;
+			return $error = array();
 		}
 
 		return $errors;
@@ -265,11 +268,11 @@ class UserImport extends Imports
 
 	private function validateIndustries($people){
 		$errors = array();
-		$validIndustries = SearchFilter::whereNotNull('type')
-				->where('type','!=','group')
-				->where('inactive','=',0)->pluck('filter')->toArray();
+		$validIndustries =$this->validIndustries();
+
 		foreach ($people as $person){
-			$industries = explode(",",str_replace(' ','',$person->industry));
+			$industries = explode(",",str_replace(", ",",",$person->industry));
+			
 			if($invalids = array_diff($industries,$validIndustries)){
 				
 				foreach ($invalids as $invalid){
@@ -280,11 +283,17 @@ class UserImport extends Imports
 
 		}
 		if(count($errors)>0){
+	
 			return $errors;
 		}
 		return $errors = false;
 	}
+	private function validIndustries(){
 
+		return SearchFilter::whereNotNull('type')
+				->where('type','!=','group')
+				->where('inactive','=',0)->pluck('filter','id')->toArray();
+	}
 	public function updatePersonsGeoCode(){
 		   $people = Person::whereNotNull('city')
 					   ->whereNotNull('state')
