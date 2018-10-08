@@ -14,6 +14,8 @@
 				<th>Employee Id</th>
 				<th>Branches</th>
 				<th>Invalid IDs</th>
+				<th>Industries</th>
+				<th>Invalid Industries</th>
 			</thead>
 			<tbody>
 				@foreach ($persons as $person)
@@ -24,6 +26,15 @@
 					</td>
 					<td class="text text-danger">
 						@foreach ($importerrors[$person->person_id]['branches'] as $invalid)
+							{{$invalid}}
+							{{! $loop->last ? ',' : ''}}
+							<i class="fas fa-exclamation-triangle class="text text-danger"></i>
+						@endforeach
+					</td>
+					<td><input type="text" name="industry[{{$person->person_id}}]" value="{{$person->industry}}" >
+					</td>
+					<td class="text text-danger">
+						@foreach ($importerrors[$person->person_id]['industries'] as $invalid)
 							{{$invalid}}
 							{{! $loop->last ? ',' : ''}}
 							<i class="fas fa-exclamation-triangle class="text text-danger"></i>

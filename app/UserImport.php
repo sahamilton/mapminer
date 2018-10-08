@@ -81,7 +81,7 @@ class UserImport extends Imports
 			return $message = "Unable to insert servielines";
 		}
 	    // set the branch assignments
-	    if($message = $this->associateBranches()){
+	    if($message = $this->associatePerson()){
 	    	if(!is_array($message)){
 	    		return $message = "unable to unable to associate branches";
 	    	}
@@ -191,7 +191,13 @@ class UserImport extends Imports
 		}
 		return Person::insert($data);
 	}
+	private function associatePerson(){
+		$brancherrors = $this->associateBranches();
 
+		$industryerrors = $this->associateIndustries();
+		dd($brancherrors,$industryerrors);
+		return array_merge($brancherrors,$industryerrors);
+	}
 	private function associateBranches(){
 		
 		$people = $this->whereNotNull('branches')->whereNotNull('person_id')
@@ -214,7 +220,26 @@ class UserImport extends Imports
 		return $errors;
 
 	}
+	private function associateIndustries(){
+		$people = $this->whereNotNull('industry')
+		->whereNotNull('person_id')
+		->get(['person_id','role_id','industry']);
+		if(!$errors = $this->validateIndustries($people)){
+			foreach ($people as $peep){
+				
+				$industries = explode(",",str_replace(' ','',$peep->industry));
+				
+				$person = Person::findOrFail($peep->person_id);
+				$person->industryfocus()->sync($industries);
+			}
+			return $error = false;
+		}
 
+		return $errors;
+
+
+
+	}
 	private function validateBranches($people){
 		$errors = array();
 		$validBranches = Branch::all(['id'])->pluck('id')->toArray();
@@ -223,6 +248,28 @@ class UserImport extends Imports
 			if($invalids = array_diff($branches,$validBranches)){
 				foreach ($invalids as $invalid){
 					$errors[$person->person_id]['branches'][]=$invalid;
+				}
+				
+			}
+
+		}
+		if(count($errors)>0){
+			return $errors;
+		}
+		return $errors = false;
+	}
+
+	private function validateIndustries($people){
+		$errors = array();
+		$validIndustries = SearchFilter::whereNotNull('type')
+				->where('type','!=','group')
+				->where('inactive','=',0)->pluck('filter')->toArray();
+		foreach ($people as $person){
+			$industries = explode(",",str_replace(' ','',$person->industry));
+			if($invalids = array_diff($industries,$validIndustries)){
+				dd($industries, $validIndustries,$invalids);
+				foreach ($invalids as $invalid){
+					$errors[$person->person_id]['industries'][]=$invalid;
 				}
 				
 			}
@@ -258,7 +305,7 @@ class UserImport extends Imports
 	}
 
 	private function cleanseImport(){
-		$fields = ['reports_to','branches','address','city','state','zip'];
+		$fields = ['reports_to','branches','address','city','state','zip','industry'];
 		foreach ($fields as $field){
 			if($field == 'reports_to'){
 				$queries[] = "update usersimport set ". $field . " = null where ". $field." = 0";
