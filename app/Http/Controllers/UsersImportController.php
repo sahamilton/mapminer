@@ -78,7 +78,7 @@ class UsersImportController extends ImportController
        }
       
        if($this->import->import()) {
-        dd('hree');
+        
          	$this->import->postImport();
           return redirect()->route('import.newusers');
            //return redirect()->route('users.index')->with('success','Users imported');

@@ -9,79 +9,126 @@
 	$keys = Session::get('Search');
 	$tree = $filters->first();
 ?>
-<div class="modal fade" id="advancedSearch" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content modal-sm">
-            <div class="modal-header">
-             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title" id="myModalLabel">Advanced Search Options</h4>
-            </div>
-            <div id='form' class="modal-body">
-               
-                <form id ='filterForm' action = 'post' method="{{route('setSearch')}}" >
-                {{csrf_field()}}
+<div class="modal fade" 
+    id="advancedSearch" 
+    tabindex="-1" role="dialog" 
+    aria-labelledby="advancedSearch" 
+    aria-hidden="true">
+  <div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title" id="advancedSearch">Advanced Search Options </h4>
+      <button type="button" 
+        class="close" 
+        data-dismiss="modal" 
+        aria-hidden="true">
+        &times;
+      </button>
+      
+    </div>
 
-@foreach($tree->getDescendants()->where('searchtable','=','companies') as $descendant)
+  
+  <div id='form' class="modal-body">
 
-	@if($descendant->type == 'group')
-        </fieldset><fieldset><legend>{{{$descendant->filter}}}</legend>         <?php 
-		 $levelName = $descendant->filter;
-		 $n=1;?>
-       
-         </li></ul>
-         <ul style="list-style-type: none"> 
-      @if ($descendant->inactive == 1)
-       	<li><input checked disabled readonly type="checkbox"  name="{{{$descendant->id}}}" value="{{{$descendant->filter}}}"/>Check All {{{trim($descendant->filter)}}}
-        <input hidden name="{{{$descendant->id}}}" value="{{{$descendant->filter}}}"/>
-       @else
-       
+    <form id ='filterForm' action = 'post' method="{{route('setSearch')}}" >
+      @csrf
+
+      @foreach($tree->getDescendants()->where('searchtable','=','companies') as $descendant)
+
+        @if($descendant->type == 'group')
+        </fieldset>
+        <fieldset>
+          <legend>{{{$descendant->filter}}}</legend> 
+          @php 
+            $levelName = $descendant->filter;
+            $n=1;
+          @endphp
+
+           </li>
+          </ul>
+          <ul style="list-style-type: none"> 
+          @if ($descendant->inactive == 1)
+            <li>
+              <input checked 
+                  disabled 
+                  readonly 
+                  type="checkbox"  
+                  name="{{{$descendant->id}}}" 
+                  value="{{{$descendant->filter}}}"/>Check All {{{trim($descendant->filter)}}}
+              <input hidden name="{{{$descendant->id}}}" value="{{{$descendant->filter}}}"/>
+          @else
+
             @if((isset($keys[0][$descendant->searchtable][$descendant->searchcolumn]) 
             and in_array($descendant->id,$keys[0][$descendant->searchtable][$descendant->searchcolumn])) 
             or !isset($keys))
-       
-                <li><input checked type="checkbox" name="{{{$descendant->id}}}" id="checkAll" value="{{{$descendant->filter}}}">Check All {{{$descendant->filter}}}
+
+              <li>
+                <input checked type="checkbox" 
+                  name="{{{$descendant->id}}}" 
+                  id="checkAll" 
+                  value="{{{$descendant->filter}}}">
+                  Check All {{{$descendant->filter}}}
             @else
-                    <li><input type="checkbox" name="{{{$descendant->id}}}" id="checkAll" value="{{{$descendant->filter}}}">Check All {{{$descendant->filter}}}
+              <li>
+                <input type="checkbox" name="{{{$descendant->id}}}" 
+                id="checkAll" 
+                value="{{{$descendant->filter}}}">Check All {{{$descendant->filter}}}
             @endif
-  		@endif
- 	@else
-        @if(isset($n) and $n > $descendant->depth)
-        
-        	</li></ul>
-        @elseif(isset($n) and $n < $descendant->depth)
-                <ul style="list-style-type: none">
-        @endif
-       @if ($descendant->inactive == 1)
-       	<li><input checked disabled readonly type="checkbox"  name="{{{$descendant->id}}}" value="{{{$descendant->filter}}}"/>{{{trim($descendant->filter)}}}
-        <input hidden name="{{{$descendant->id}}}" value="{{{$descendant->filter}}}"/>
-       @else
-       @if((isset($keys[0][$descendant->searchtable][$descendant->searchcolumn]) 
-		and in_array($descendant->id,$keys[0][$descendant->searchtable][$descendant->searchcolumn])) 
-		or !isset($keys))
-        	<li><input checked type="checkbox"  name="{{{$descendant->id}}}" value="{{{$descendant->filter}}}"/>{{{trim($descendant->filter)}}}
+          @endif
+        @else
+          @if(isset($n) and $n > $descendant->depth)
+
+            </li>
+          </ul>
+          @elseif(isset($n) and $n < $descendant->depth)
+            <ul style="list-style-type: none">
+          @endif
+          @if ($descendant->inactive == 1)
+            <li>
+              <input checked disabled readonly type="checkbox"  name="{{{$descendant->id}}}" value="{{{$descendant->filter}}}"/>{{{trim($descendant->filter)}}}
+              <input hidden name="{{{$descendant->id}}}" value="{{{$descendant->filter}}}"/>
+            
+          @else
+            @if((isset($keys[0][$descendant->searchtable][$descendant->searchcolumn]) 
+            and in_array($descendant->id,$keys[0][$descendant->searchtable][$descendant->searchcolumn])) 
+            or !isset($keys))
+              <li>
+                <input checked 
+                type="checkbox"  
+                name="{{{$descendant->id}}}" 
+                value="{{{$descendant->filter}}}"/>{{{trim($descendant->filter)}}}
+              
             @else
-                <li><input type="checkbox"  name="{{{$descendant->id}}}" value="{{{$descendant->filter}}}"/>{{{trim($descendant->filter)}}}
+              <li>
+                <input type="checkbox"  name="{{{$descendant->id}}}" value="{{{$descendant->filter}}}"/>{{{trim($descendant->filter)}}}
+              </li>
+
             @endif
-       @endif
-     @endif
-     
-<?php  $n = $descendant->depth;?>
+          @endif
+          @endif
 
-@endforeach
- </li></ul></fieldset>
+          @php
+            $n = $descendant->depth;
+          @endphp
 
+          @endforeach
+        </li>
+      </ul>
+    </fieldset>
 
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" id='reset'>Reset</button>
+        <input type="hidden" id='search' name= 'search' value='search' />
+        <input type="hidden" id='api_token' name= 'api_token' value='{{auth()->user()->api_token}}' />
+        <button type='button' id='searchsave' type="button" value='Save' class="btn btn-primary" data-dismiss="modal" >Save</button>
+      </div>   
 
+    </form> 
+  </div>
 
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" id='reset'>Reset</button>
-                <input type="hidden" id='search' name= 'search' value='search' />
-                <input type="hidden" id='api_token' name= 'api_token' value='{{auth()->user()->api_token}}' />
-                <button type='button' id='searchsave' type="button" value='Save' class="btn btn-primary" data-dismiss="modal" >Save</button>
-        </div>   </form> </div>
-        </div></div>
-
-            </div>
+  </div>
+  </div>
+</div>
 
 <script>
 $(function () {

@@ -63,6 +63,7 @@ class UserImport extends Imports
  	public function postImport(){
  		// clean up null values in import db
 		$this->cleanseImport();
+
 		$this->updateImportWithExistingUsers();
 		$this->updateImportWithManagers();
 		$this->createUserNames();
@@ -82,6 +83,7 @@ class UserImport extends Imports
 		}
 	    // set the branch assignments
 	    if($message = $this->associatePerson()){
+
 	    	if(!is_array($message)){
 	    		return $message = "unable to unable to associate branches";
 	    	}
@@ -106,25 +108,27 @@ class UserImport extends Imports
 	}
 
 	public function createNewUsers(Request $request){
+		if(request()->has('enter')){
 		
-		if(! $this->createUser($request)) {
+			if(! $this->createUser($request)) {
 
-			return $message ="Unable to create new users";
-		};
-		
-	    // set the user_id in the import table
-	    if($this->updateUserIdInImport()){
-	    	return $message ="Unable to add user_id to imports";
-	    }
-    	// create the person
-	    if(! $this->createPerson($request)){
-	    	return $message = "Unable to add person record";
-	    }
-	    
-	    //set the person id in the import table
-	    if($this->updatePersonIdInImport()){
-	    	return $message = "Unable to add person id to imports";
-	    }
+				return $message ="Unable to create new users";
+			};
+			
+		    // set the user_id in the import table
+		    if($this->updateUserIdInImport()){
+		    	return $message ="Unable to add user_id to imports";
+		    }
+	    	// create the person
+		    if(! $this->createPerson($request)){
+		    	return $message = "Unable to add person record";
+		    }
+		    
+		    //set the person id in the import table
+		    if($this->updatePersonIdInImport()){
+		    	return $message = "Unable to add person id to imports";
+		    }
+		}
 	    return false;
 	}
 
@@ -136,31 +140,30 @@ class UserImport extends Imports
  	}
 
 	private function createUser(Request $request){
-		$newusers = $this->whereIn('employee_id',request('enter'))->get(
-			['username','email','employee_id']);
-
-		$a=0;
-		$emails = request('email');
-		$usernames = request('username');
-		foreach ($newusers as $user){
-			$data[$a]= $user->toArray();
-			$data[$a]['username']=$usernames[$user->employee_id];
-			$data[$a]['password'] = md5(uniqid(mt_rand(), true));
-			$data[$a]['confirmed'] = 1; 
-			$data[$a]['created_at']= now();
-			$data[$a]['updated_at'] =null;
-			$data[$a]['email'] = $emails[$user->employee_id];
-			$a++;
-
-
-		}
 		
-		if (User::insert($data)){
-			return true;
-		}
-		return false;
-		
+			$newusers = $this->whereIn('employee_id',request('enter'))->get(
+				['username','email','employee_id']);
 
+			$a=0;
+			$emails = request('email');
+			$usernames = request('username');
+			foreach ($newusers as $user){
+				$data[$a]= $user->toArray();
+				$data[$a]['username']=$usernames[$user->employee_id];
+				$data[$a]['password'] = md5(uniqid(mt_rand(), true));
+				$data[$a]['confirmed'] = 1; 
+				$data[$a]['created_at']= now();
+				$data[$a]['updated_at'] =null;
+				$data[$a]['email'] = $emails[$user->employee_id];
+				$a++;
+
+
+			}
+			
+			if (User::insert($data)){
+				return true;
+			}
+			return false;
 	}
 
 	public function addUserFields($users){
@@ -195,9 +198,10 @@ class UserImport extends Imports
 		$brancherrors = $this->associateBranches();
 
 		$industryerrors = $this->associateIndustries();
-		dd($brancherrors,$industryerrors);
-		return array_merge($brancherrors,$industryerrors);
+	
+		return $brancherrors + $industryerrors;
 	}
+		
 	private function associateBranches(){
 		
 		$people = $this->whereNotNull('branches')->whereNotNull('person_id')
@@ -267,7 +271,7 @@ class UserImport extends Imports
 		foreach ($people as $person){
 			$industries = explode(",",str_replace(' ','',$person->industry));
 			if($invalids = array_diff($industries,$validIndustries)){
-				dd($industries, $validIndustries,$invalids);
+				
 				foreach ($invalids as $invalid){
 					$errors[$person->person_id]['industries'][]=$invalid;
 				}

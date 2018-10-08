@@ -25,20 +25,24 @@
 					<td><input type="text" name="branch[{{$person->person_id}}]" value="{{$person->branches}}" >
 					</td>
 					<td class="text text-danger">
+						@if(isset($importerrors[$person->person_id]['branches']))
 						@foreach ($importerrors[$person->person_id]['branches'] as $invalid)
 							{{$invalid}}
 							{{! $loop->last ? ',' : ''}}
 							<i class="fas fa-exclamation-triangle class="text text-danger"></i>
 						@endforeach
+						@endif
 					</td>
 					<td><input type="text" name="industry[{{$person->person_id}}]" value="{{$person->industry}}" >
 					</td>
 					<td class="text text-danger">
+						@if(isset($importerrors[$person->person_id]['industries']))
 						@foreach ($importerrors[$person->person_id]['industries'] as $invalid)
 							{{$invalid}}
 							{{! $loop->last ? ',' : ''}}
 							<i class="fas fa-exclamation-triangle class="text text-danger"></i>
 						@endforeach
+						@endif
 					</td>
 				</tr>
 				@endforeach

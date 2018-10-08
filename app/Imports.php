@@ -13,25 +13,7 @@ class Imports extends Model
     	public $additionaldata;
     	public $nullFields;
 
-    	/*public function __construct($data){
-
-    		if(isset($data['table'])){
-	    		$this->table = $data['table'];
-	    		$this->temptable = $this->table .'_import';
-
-	   			if(isset($data['additionaldata'])){
-
-	    			$this->additionaldata = $data['additionaldata'];
-	    		}else{
-	    			$this->additionaldata = [];
-	    		}
-	    		if(isset($data['filename'])){
-	    			$this->importfilename = str_replace("\\","/",$data['filename']);
-	    		}
-
-       		}
-
-    	}*/
+    	
 		public function setFields($data){
 			if(isset($data['additionaldata'])){
 
@@ -75,7 +57,7 @@ class Imports extends Model
 
       $this->_import_csv();
 
-      dd('ok check now');
+      
 
       $this->addCreateAtField();
 
@@ -98,7 +80,7 @@ class Imports extends Model
     	private function createTemporaryImportTable(){
 
 			//Create the temporary table
-			return $this->executeQuery("CREATE TABLE ".$this->temptable." AS SELECT * FROM ". $this->table." LIMIT 0");
+			return $this->executeQuery("CREATE TEMPORARY TABLE ".$this->temptable." AS SELECT * FROM ". $this->table." LIMIT 0");
 
 		}
 
