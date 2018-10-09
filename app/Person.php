@@ -92,7 +92,7 @@ class Person extends NodeModel implements HasPresenter {
 	
 	public function postName()
 	{
-		return $this->attributes['firstname'] . ' ' . $this->attributes['lastname'];
+		return  $this->attributes['firstname'] . ' ' . $this->attributes['lastname']  ;
 	}
 	
 
