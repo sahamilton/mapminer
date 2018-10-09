@@ -67,6 +67,7 @@ class UserImport extends Imports
 		$this->updateImportWithExistingUsers();
 		$this->updateImportWithManagers();
 		$this->createUserNames();
+		$this->createUserEmails();
 		
 		return redirect()->route('import.newusers');
 	}
@@ -109,6 +110,12 @@ class UserImport extends Imports
 
 	public function createNewUsers(Request $request){
 		if(request()->has('enter')){
+			// need to see if the usernames and emails are unique
+
+			if($errors =$this->validateNewUsers(request('enter'))){
+				return $errors;
+			}
+			
 		
 			if(! $this->createUser($request)) {
 
@@ -138,6 +145,49 @@ class UserImport extends Imports
  			return true;
  		}
  	}
+ 	private function  createUserEmails(){
+	$query ="update usersimport set email = lower(concat(left(replace(firstname,char(13),''),1),replace(lastname,char(13),'') ,'@trueblue.com')) where user_id is null";
+		if ($result = \DB::select(\DB::raw($query))){
+ 			return true;
+ 		}
+ 	}
+
+ 	private function validateNewUsers($ids){
+ 		$newusers = $this->whereIn('employee_id',request('enter'))->get(
+				['username','email','employee_id']);
+
+	 		$emailErrors = $this->validateNewEmails($newusers);
+	 		$userNameErrors = $this->validateNewUsernames($newusers);
+	 		return  $emailErrors + $userNameErrors;
+	 		
+
+ 	}
+
+ 	private function validateNewEmails($newusers){
+ 		$errors = array();
+ 		$emails = $newusers->pluck('email','employee_id')->toArray();
+
+ 		$validEmails = User::all()->pluck('email')->toArray();
+
+ 		$error = array_diff($emails,array_diff($emails,$validEmails));
+ 		foreach ($error as $key=>$value){
+ 				$errors['email'][$key][]=$value;
+ 			}
+ 		return $errors;
+ 	}
+
+ 	private function validateNewUsernames($newusers){
+ 		$errors = array();
+ 		$usernames = $newusers->pluck('username','employee_id')->toArray();
+
+ 		$validUserNames = User::all()->pluck('username')->toArray();
+
+ 		$error = array_diff($usernames,array_diff($usernames,$validUserNames));
+ 			foreach ($error as $key=>$value){
+ 				$errors['username'][$key][]=$value;
+ 			}
+ 		return $errors;
+	}
 
 	private function createUser(Request $request){
 		

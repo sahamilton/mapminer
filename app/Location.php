@@ -22,7 +22,6 @@ class Location extends Model implements HasPresenter {
 
 	public $table = 'locations';
 	public $branch;
-	// Don't forget to fill this array
 	// Note this array is used to check the imports as well.
 	// If you change this you will have to change the location import template.
 

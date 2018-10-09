@@ -458,6 +458,10 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 		Route::post('users/bulkimport',['as'=>'admin.users.bulkimport', 'uses'=>'UsersImportController@import']);
 		Route::post('users/import',['as'=>'users.mapfields','uses'=>'UsersImportController@mapfields']);
 		Route::post('user/importerrors',['as'=>'fixuserinputerrors','uses'=>'UsersImportController@fixerrors']);
+		Route::post('user/usererrors',['as'=>'fixusercreateerrors','uses'=>'UsersImportController@fixUserErrors']);
+		
+
+
 		Route::get('users/newusers',['as'=>'import.newusers','uses'=>'UsersImportController@newUsers']);
 		Route::post('users/createnewusers',['as'=>'import.createnewusers','uses'=>'UsersImportController@createNewUsers']);
 		

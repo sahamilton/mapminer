@@ -104,8 +104,12 @@ class UsersImportController extends ImportController
 
 
     public function createNewUsers(Request $request){
-      if($message = $this->import->createNewUsers($request)){
-           return redirect()->back()->withMessage($message);
+      if($errors = $this->import->createNewUsers($request)){
+          if(! is_array($errors)){
+           return redirect()->back()->withMessage($errors);
+          }else{
+            return $this->inputUserErrors($errors);
+          }
       }
 
       if(! $errors = $this->import->setUpAllUsers()){
@@ -116,6 +120,16 @@ class UsersImportController extends ImportController
         return $this->inputErrors($errors);
       }
     }
+    private function inputUserErrors($importerrors){
+        if(! is_array($importerrors)){
+          return redirect()->back()->withMessage($errors);
+        }
+        $ids = array_keys($importerrors['email']) + array_keys($importerrors['username']);
+    
+        $persons = $this->import->whereIn('employee_id',$ids)->get();
+
+        return response()->view('admin.users.import.createerrors',compact('importerrors','persons'));
+    }
 
     private function inputErrors($importerrors){
         if(! is_array($importerrors)){
@@ -123,16 +137,31 @@ class UsersImportController extends ImportController
         }
         $ids = array_keys($importerrors);
         $persons = $this->import->whereIn('person_id',$ids)->get();
-      return response()->view('admin.users.import.errors',compact('importerrors','persons'));
+        return response()->view('admin.users.import.errors',compact('importerrors','persons'));
+    }
+
+    public function fixUserErrors(Request $request){
+        //$data['email'] = request('email');
+        $data = request(['email','username']);
+       
+        $imports = $this->import->whereIn('employee_id',array_keys(request('email')))->get();
+        foreach ($imports as $import){
+         
+          $import->email = $data['email'][$import->employee_id];
+          $import->username = $data['username'][$import->employee_id];
+          $import->save();
+        }
+        return $this->newUsers();
     }
 
     public function fixerrors(Request $request){
-
+      
       $data['branches'] = request('branch');
       $imports = $this->import->whereIn('person_id',array_keys(request('branch')))->get();
 
       foreach ($imports as $import){
         $import->branches = $data['branches'][$import->person_id];
+        $import->serviceline_id = $data['industry'][$import->person_id];
         $import->save();
       }
       if($message = $this->import->setUpAllUsers()){
