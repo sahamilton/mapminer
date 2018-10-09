@@ -5,7 +5,7 @@
 <table class="table">
 	<thead>
 		<th>First Name</th>
-		<th>Lzst Name</th>
+		<th>Last Name</th>
 		<th>Employee ID</th>
 		<th>Manager</th>
 		<th>Manager Employee Id</th>
