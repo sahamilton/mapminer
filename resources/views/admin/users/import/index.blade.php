@@ -14,7 +14,7 @@
 		@foreach($imports as $person)
 			<tr>
 				<td>{{$person->firstname}}</td>
-				<td>{{$person->firstname}}</td>
+				<td>{{$person->lastname}}</td>
 				<td>{{$person->employee_id}}</td>
 				<td>{{$person->manager}}</td>
 				<td>{{$person->mgr_emp_id}}</td>
