@@ -152,7 +152,7 @@ class LeadsController extends BaseController
 
     public function show($lead)
     {
-    
+
       $table = $this->leadsource->findOrFail($lead->lead_source_id);
       $id= $lead->id;
       $table = $table->type ."leads";
@@ -469,9 +469,7 @@ class LeadsController extends BaseController
 
     private function showSalesLeads($person){
         
-       $openleads = $this->lead->has('openleads')->nearby($person,100,200)->get();
-        
-
+        $openleads = $this->lead->has('openleads')->nearby($person,100,200)->get();
         $closedleads = $this->getLeadsByType('closedleads',$person);
         $closedleads = $closedleads->with('relatedNotes','leadsource')
                     ->limit('200')
