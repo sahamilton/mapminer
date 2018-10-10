@@ -111,7 +111,7 @@ $group = $groups[0]->fieldname;
 									target=\"_blank\"
 
 									title=\"Download ".$file['attachmentname'] ."\">
-									<i class=\"far fa-cloud-download\" aria-hidden=\"true\"></i>
+									<i class=\"fas fa-cloud-download-alt\" aria-hidden=\"true\"></i>
 									".$file['attachmentname']."</a></h4>";
 									echo "<p>". $file['description'] ."</p>";
 									

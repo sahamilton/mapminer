@@ -14,7 +14,7 @@
            Available from {{$leadsource->datefrom->format('M j,Y')}} to {{$leadsource->dateto->format('M j,Y')}}
         @endif
     </p>
-				<p class="row"><a href="{{route('leadsource.export',$leadsource->id)}}"><i class="far fa-cloud-download" aria-hidden="true"></i></i>  Export owned and closed {{$leadsource->source}} Leads</a></p>
+				<p class="row"><a href="{{route('leadsource.export',$leadsource->id)}}"><i class="fas fa-cloud-download-alt" aria-hidden="true"></i></i>  Export owned and closed {{$leadsource->source}} Leads</a></p>
 				
 
 				<p><a href="{{route('leadsource.index')}}">Return to all Prospect sources</a></p>

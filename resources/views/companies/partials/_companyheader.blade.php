@@ -7,11 +7,11 @@ Read 'How to Sell to {{$company->companyname}}'</a>
 View My Watch List</a>
 
 <a href="{{route('watch.export')}}" title="Download my watch list as a CSV / Excel file">
-<i class="far fa-cloud-download" aria-hidden="true"></i></i> 
+<i class="fas fa-cloud-download-alt" aria-hidden="true"></i></i> 
 Download My Watch List</a>
 
 <a href="{{route('exportlocationnotes',$company->id)}}" title="Download my {{$company->companyname}} location notes as a CSV / Excel file">
-<i class="far fa-cloud-download" aria-hidden="true"></i></i> 
+<i class="fas fa-cloud-download-alt" aria-hidden="true"></i></i> 
 Download my {{$company->companyname}} location notes</a> </p>
 
 <p><a href="{{ route('company.index') }}" title='Show all accounts'><i class="fas fa-th-list" aria-hidden="true"></i>

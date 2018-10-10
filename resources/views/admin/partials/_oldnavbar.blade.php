@@ -42,7 +42,7 @@
                                     
                                      <li{{ (Request::is('admin/companies/export') ? ' class="active"' : '') }}>
                                      <a href="{{ route('companies.locationsexport') }}">
-                                     <i class="far fa-cloud-download" aria-hidden="true"></i> Export Locations</a></li>
+                                     <i class="fas fa-cloud-download-alt" aria-hidden="true"></i> Export Locations</a></li>
                                     
                                     <li class="divider"></li>
                                     

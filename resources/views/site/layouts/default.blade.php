@@ -66,9 +66,48 @@
 	<link rel="apple-touch-icon-precomposed" href="{{{ asset('assets/ico/apple-touch-icon-57-precomposed.png') }}}">
 	<link rel="shortcut icon" href="{{{ asset('assets/ico/favicon.png') }}}">
 	<style CSS> 
-		body {
-		min-height: 100vh; 
-		}
+		html,
+body {
+  height: 100%;
+  margin: 0;
+  min-height: 100%;
+  padding: 0;
+}
+body {
+  color: #666;
+  font: 1em/1.5 Arial, sans-serif;
+}
+main {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: box;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -moz-box-orient: vertical;
+  -o-box-orient: vertical;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  min-height: 100%;
+}
+.content {
+  -webkit-box-flex: 1;
+  -moz-box-flex: 1;
+  -o-box-flex: 1;
+  box-flex: 1;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  margin: 20px auto;
+  max-width: 600px;
+}
+footer {
+  background: #2980b9;
+  color: #fff;
+  text-align: center;
+}
 	</style>
 </head>
 	
@@ -85,7 +124,7 @@
 		<!-- Container -->
 	<div class="container" style="margin-bottom:40px">
     
-		<main class="py-4">
+		<main class="py-4 flex-grow">
 			
 			<!-- Notifications -->
 			@include('notifications')
