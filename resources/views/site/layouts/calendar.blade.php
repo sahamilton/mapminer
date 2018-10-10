@@ -99,9 +99,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 			<!-- Content -->
 			@yield('content')
-			<!-- ./ content -->
-			@include('site.layouts.footer')
 		</main>
+		<div class="clear"></div>	<!-- ./ content -->
+			@include('site.layouts.footer')
+		
 		<!-- ./ container -->
 </div>
 

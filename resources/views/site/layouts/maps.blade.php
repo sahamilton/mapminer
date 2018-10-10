@@ -47,14 +47,7 @@
 		<link rel="apple-touch-icon-precomposed" href="{{{ asset('assets/ico/apple-touch-icon-57-precomposed.png') }}}">
 		<link rel="shortcut icon" href="{{{ asset('assets/ico/favicon.png') }}}">
 
-	<style CSS> 
-body {
-  min-height: 100vh; 
-}
-
-
-
-</style>
+	
 	</head>
 	
 
@@ -66,7 +59,7 @@ body {
 @endif
 @include ('site.layouts._navbar')
 <div class="container">
-<main class="py-4">
+<main class="py-4 flex-grow">
 
 		
 
@@ -87,6 +80,7 @@ body {
 @endif
 
 </main>
+<div style="clear:both"></div>
 	    @include('site.layouts.footer')
    </div>        	    
 </div>
