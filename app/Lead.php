@@ -7,6 +7,7 @@ use\App\Presenters\LocationPresenter;
 use McCool\LaravelAutoPresenter\HasPresenter;
 use Geocoder\Laravel\Facades\Geocoder;
 use Illuminate\Database\Eloquent\SoftDeletes;
+
 class Lead extends Model implements HasPresenter {
   use SoftDeletes, Geocode;
 	public $dates = ['created_at','updated_at','deleted_at','datefrom','dateto'];

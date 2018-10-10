@@ -38,10 +38,18 @@ class TrainingController extends BaseController
      public function index(){
        
         $training = $this->training->query();
+        $training->with('servicelines','relatedRoles');
         // find users servicelines
-         $training->whereHas('servicelines', function ($q){
-            $q->whereIn('id',$this->userServiceLines);
+        if(! auth()->user()->hasrole('Admin')){
+         
+            $training->whereHas('servicelines', function ($q){
+                $q->whereIn('id',$this->userServiceLines);
+             });
+            $training->whereHas('relatedRoles', function ($q){
+            $q->whereIn('id',$this->userRoles);
          });
+        }
+         
         // find users industries
        
         /*if(count($this->userVerticals)>0){
@@ -50,9 +58,7 @@ class TrainingController extends BaseController
                  });
              }*/
         // find users roles
-         $training->whereHas('relatedRoles', function ($q){
-            $q->whereIn('id',$this->userRoles);
-         });
+         
          $trainings = $training->get();
 
          return response()->view('training.mytrainings',compact('trainings'));

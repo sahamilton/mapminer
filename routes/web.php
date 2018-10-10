@@ -13,7 +13,6 @@
 	Route::get('/', ['as'=>'welcome',function () {
 
 		    return view('welcome');
-
 	}]);
 /*Route::get('/testerror', function () {
     throw new Exception('Example exception!');
@@ -432,10 +431,21 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
 
 Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 {
+	# Admin Dashboard
+		Route::get('watching/{userid}', ['as'=>'watch.watching', 'uses'=>'WatchController@watching']);
+		Route::get('userlogin/{view?}',['as'=>'admin.showlogins', 'uses'=>'Admin\AdminDashboardController@logins']);
+		Route::get('userlogin/download/{view?}',['as'=>'admin.downloadlogins', 'uses'=>'Admin\AdminDashboardController@downloadlogins']);
+		Route::get('/', ['as'=>'dashboard','uses'=>'Admin\AdminDashboardController@dashboard']);
+
+	
+
 	# Branch management
 		Route::get('branchassignments/select',['as'=>'branchassignment.check','uses'=>'branchmanagement@select']);	
 		Route::get('branch/manage',['as'=>'branch.management','uses'=>'Admin\BranchManagementController@index']);
 		Route::get('branch/check',['as'=>'branch.check','uses'=>'Admin\AdminUsersController@checkBranchAssignments']);
+
+	#Comments
+		Route::get('comment/download', ['as'=>'comment.download', 'uses'=>'CommentsController@download']);
 
 	# Construction
 		Route::resource('/construction','ConstructionController');
@@ -446,7 +456,65 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 
 		Route::get('/construction/api/{distance}/{latLng}',['as'=>'construction.api','uses'=>'ConstructionController@map']);
     
-    # User Management
+    
+	#Howtofields
+		Route::resource('howtofields','HowtofieldsController');
+
+
+	# Leads
+		Route::get('/leads/{pid}/reassign',['as'=>'leads.reassign','uses'=>'LeadsAssignController@reassignLeads']);
+
+	
+
+	# Lead Status
+
+	 	Route::resource('leadstatus','LeadStatusController');
+
+	 #News
+		Route::get('news/{id}/audience',['as'=>'news.audience','uses'=>'NewsController@audience']);
+		Route::resource('news', 'NewsController',  ['except' => ['index', 'show']]);
+
+
+	#Notes
+		Route::get('notes/{companyid}/co',['as'=>'notes.company','uses'=>'NotesController@companynotes']);
+		Route::get('locationnotes',['as'=>'locations.notes', 'uses'=>'NotesController@index']);
+	#People
+		Route::get('person/import',['as'=>'person.bulkimport', 'uses'=>'PersonsController@import']);
+		Route::post('person/import',['as'=>'person.import', 'uses'=>'PersonsController@processimport']);
+		Route::get('person/export', ['as'=>'person.export', 'uses'=>'PersonsController@export']);
+
+
+	# Sales Process
+
+		Route::resource('process','SalesProcessController');
+
+	# Training
+		
+		Route::resource('training','TrainingController')->except(['index', 'show']);;
+
+	
+
+	
+
+	#Search Filters
+
+		Route::get('searchfilters/analysis/{id?}',['as'=>'vertical.analysis','uses'=>'SearchFiltersController@filterAnalysis']);
+		Route::get('searchfilters/export/{id?}',['as'=>'vertical.export','uses'=>'SearchFiltersController@export']);
+		Route::get('searchfilters/promote/{filterid}',['as'=>'admin.searchfilter.promote','uses'=>'SearchFiltersController@promote']);
+		Route::get('searchfilters/demote/{filterid}',['as'=>'admin.searchfilter.demote','uses'=>'SearchFiltersController@demote']);
+		Route::get('filterform','SearchFiltersController@filterForm');
+
+		Route::get('api/searchfilters/getAccounts',['as'=>'getAccountSegments','uses'=>'SearchFiltersController@getAccountSegments']);
+		Route::post('api/searchfilters/postAccounts',['as'=>'postAccountSegments','uses'=>'SearchFiltersController@getAccountSegments']);
+		Route::resource('searchfilters','SearchFiltersController');
+
+		
+
+	# Seeder for relationships with servicelines
+		Route::get('seeder',['as'=>'seeder','uses'=>'CompaniesController@seeder']);
+		Route::get('apiseeder',['as'=>'apiseeder','uses'=>'UsersController@seeder']);
+
+	# User Management
 
 		Route::get('cleanse',['as'=>'users.cleanse','uses'=>'Admin\AdminUsersController@cleanse']);
 		Route::get('users/import',['as'=>'users.importfile', 'uses'=>'UsersImportController@getFile']);
@@ -466,67 +534,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 
 		Route::resource('permissions','Admin\AdminPermissionsController');
 
-	#Howtofields
-		Route::resource('howtofields','HowtofieldsController');
 
-
-	#People
-		Route::get('person/import',['as'=>'person.bulkimport', 'uses'=>'PersonsController@import']);
-		Route::post('person/import',['as'=>'person.import', 'uses'=>'PersonsController@processimport']);
-		Route::get('person/export', ['as'=>'person.export', 'uses'=>'PersonsController@export']);
-
-
-	
-
-	# Lead Status
-
-	 	Route::resource('leadstatus','LeadStatusController');
-
-
-
-	# Sales Process
-
-		Route::resource('process','SalesProcessController');
-
-	# Training
-		
-		Route::resource('training','TrainingController')->except(['index', 'show']);;
-
-	# Admin Dashboard
-		Route::get('watching/{userid}', ['as'=>'watch.watching', 'uses'=>'WatchController@watching']);
-		Route::get('userlogin/{view?}',['as'=>'admin.showlogins', 'uses'=>'Admin\AdminDashboardController@logins']);
-		Route::get('userlogin/download/{view?}',['as'=>'admin.downloadlogins', 'uses'=>'Admin\AdminDashboardController@downloadlogins']);
-		Route::get('/', ['as'=>'dashboard','uses'=>'Admin\AdminDashboardController@dashboard']);
-
-	#Comments
-		Route::get('comment/download', ['as'=>'comment.download', 'uses'=>'CommentsController@download']);
-
-	#News
-		Route::get('news/{id}/audience',['as'=>'news.audience','uses'=>'NewsController@audience']);
-		Route::resource('news', 'NewsController',  ['except' => ['index', 'show']]);
-
-
-	#Notes
-		Route::get('notes/{companyid}/co',['as'=>'notes.company','uses'=>'NotesController@companynotes']);
-		Route::get('locationnotes',['as'=>'locations.notes', 'uses'=>'NotesController@index']);
-
-	#Search Filters
-
-		Route::get('searchfilters/analysis/{id?}',['as'=>'vertical.analysis','uses'=>'SearchFiltersController@filterAnalysis']);
-		Route::get('searchfilters/export/{id?}',['as'=>'vertical.export','uses'=>'SearchFiltersController@export']);
-		Route::get('searchfilters/promote/{filterid}',['as'=>'admin.searchfilter.promote','uses'=>'SearchFiltersController@promote']);
-		Route::get('searchfilters/demote/{filterid}',['as'=>'admin.searchfilter.demote','uses'=>'SearchFiltersController@demote']);
-		Route::get('filterform','SearchFiltersController@filterForm');
-
-		Route::get('api/searchfilters/getAccounts',['as'=>'getAccountSegments','uses'=>'SearchFiltersController@getAccountSegments']);
-		Route::post('api/searchfilters/postAccounts',['as'=>'postAccountSegments','uses'=>'SearchFiltersController@getAccountSegments']);
-		Route::resource('searchfilters','SearchFiltersController');
-
-		
-
-	# Seeder for relationships with servicelines
-		Route::get('seeder',['as'=>'seeder','uses'=>'CompaniesController@seeder']);
-		Route::get('apiseeder',['as'=>'apiseeder','uses'=>'UsersController@seeder']);
 
 	# Versions
 	 	Route::resource('versions','GitController');
