@@ -28,8 +28,4 @@
 
 </div>
 
-<<<<<<< HEAD
-@stop
-=======
 @endsection
->>>>>>> development

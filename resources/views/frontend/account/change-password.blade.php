@@ -3,11 +3,7 @@
 {{-- Page title --}}
 @section('title')
 Change your Password
-<<<<<<< HEAD
-@stop
-=======
 @endsection
->>>>>>> development
 
 {{-- Account page content --}}
 @section('account-content')
@@ -57,11 +53,7 @@ Change your Password
 		</div>
 	</div>
 </form>
-<<<<<<< HEAD
-@stop
-=======
 @endsection
->>>>>>> development
 
 @section('contenxt')
 
@@ -131,8 +123,4 @@ Change your Password
 		</div>
 	</div>
 </div>
-<<<<<<< HEAD
-@stop
-=======
 @endsection
->>>>>>> development

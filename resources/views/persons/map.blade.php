@@ -33,8 +33,4 @@
         });
     </script>
 
-<<<<<<< HEAD
-@stop
-=======
 @endsection
->>>>>>> development

@@ -39,20 +39,7 @@ $cumulative = array();
 
 {{-- Content --}}
 
-<<<<<<< HEAD
-@section('content')
-<div class="container">
-  <h2>{{auth()->user()->roles()->first()->name}} Dashboard</h2>
-  <ul class="nav nav-tabs">
-    <li class="active"><a data-toggle="tab" href="#home">Usage</a></li>
-    <li><a data-toggle="tab" href="#menu1">Activity</a></li>
-    <li><a data-toggle="tab" href="#menu2">Account Health</a></li>
-    <li><a data-toggle="tab" href="#menu3">Location Health</a></li>
-  </ul>
 
-  <div class="tab-content">
-    <div id="home" class="tab-pane fade in active">
-=======
 
 @section('content')
 <div class="container">
@@ -93,7 +80,7 @@ $cumulative = array();
 
   <div class="tab-content">
     <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
->>>>>>> development
+
       <h3>Usage</h3>
         @include ('admin.partials.firstlogged')
         @include('admin.partials.weeklylogins')
@@ -105,25 +92,7 @@ $cumulative = array();
     </div>
     <div id="menu1" class="tab-pane fade">
       <h3>Account Activity</h3>
-<<<<<<< HEAD
-    @include('admin.partials.watchers')
-    @include('admin.partials.newNotes')
-    @include('admin.partials.newLeadNotes')  
-    @include('admin.partials.newProjectNotes') 
-    </div>
-    <div id="menu2" class="tab-pane fade">
-      <h3>Account Health</h3>
-   <@include ('admin.partials.nosalesnotes')
-     @include ('admin.partials.duplicate')
-    </div>
-    <div id="menu3" class="tab-pane fade">
-      <h3>Location Health</h3>
-   @include('admin.partials.nocontacts')
-   @include('admin.partials.nogeocode')
-    </div>
-  </div>
-</div>
-=======
+
         @include('admin.partials.watchers')
         @include('admin.partials.newNotes')
         @include('admin.partials.newLeadNotes')  
@@ -140,11 +109,6 @@ $cumulative = array();
       @include('admin.partials.nogeocode')
     </div>
   </div>
-
-
->>>>>>> development
-
-
 
 
 <script type="text/javascript" 
@@ -185,10 +149,9 @@ var numberWithCommas = function(x) {
 var roleWeekChart = new Chart(ctx, 
 {
     type: 'bar',
-<<<<<<< HEAD
-=======
+
     resize:true,
->>>>>>> development
+
     data:{
       labels: ['{!! array_values($data['roleweekcount'])[0]['labels'] !!}'],
       datasets: [
@@ -240,10 +203,9 @@ var ctx = document.getElementById("weekChart").getContext("2d");
 var weekChart = new Chart(ctx, 
 {
     type: 'bar',
-<<<<<<< HEAD
-=======
+
     resize:true,
->>>>>>> development
+
     data:{
       labels: [{!! $weeklabels !!}],
 
@@ -271,10 +233,9 @@ var weekChart = new Chart(ctx,
 
 new Chart(document.getElementById("pieChart"), {
     type: 'doughnut',
-<<<<<<< HEAD
-=======
+
     resize:true,
->>>>>>> development
+
     data: {
      
       datasets: [
@@ -297,11 +258,8 @@ new Chart(document.getElementById("pieChart"), {
     }
 });
 </script>
-<<<<<<< HEAD
-@include('partials/_scripts')
-@stop
-=======
+
 </div>
 @include('partials/_scripts')
 @endsection
->>>>>>> development
+

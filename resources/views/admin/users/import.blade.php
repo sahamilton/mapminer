@@ -6,14 +6,9 @@
 {{-- Content --}}
 @section('content')
 	<div class="page-header">
-<<<<<<< HEAD
-		<h3>
-			Import Users</h3>
 
-			
-=======
 		<h3>Import Users</h3>
->>>>>>> development
+
 	</div>
 
 <h2>Steps to import users</h2>
@@ -42,20 +37,6 @@
 </div></div>
 <div>
 <!-- Service Lines -->
-<<<<<<< HEAD
-				<div class="form-group @if ($errors->has('serviceline')) has-error @endif">
-					{{Form::label('ServiceLine','Service Lines:', array('class'=>"col-md-2 control-label"))}}
-
-<div class="col-md-6">
-					{{Form::select('serviceline',$servicelines,isset($user) ? $user->serviceline->lists('id') :'',array('class'=>'form-control'))}}
-
-					@if ($errors->has('serviceline')) <p class="help-block">{{ $errors->first('serviceline') }}</p> @endif
-					</div></div>
-				<!-- ./ servicelines -->
-{{Form::submit('Import Users',['class' => 'btn btn-xs btn-success'])}}
-=======
-				
-
 <div class="form-group @if ($errors->has('serviceline')) has-error @endif">
 <label class='col-md-2 control-label'>ServiceLines</label>
 	<div class="col-md-6">
@@ -77,14 +58,10 @@
 <input class="btn btn-xs btn-success" type="submit" name="submit" value="Import Users" />
 				<!-- ./ servicelines -->
 </div>
->>>>>>> development
+
 </div>
-{{Form::close()}}
+</form>
 
     
 @include('partials/_scripts')
-<<<<<<< HEAD
-@stop
-=======
 @endsection
->>>>>>> development

@@ -30,8 +30,4 @@
 
 
 
-<<<<<<< HEAD
-@stop
-=======
 @endsection
->>>>>>> development

@@ -96,8 +96,4 @@ $(function () {
 
 
 
-<<<<<<< HEAD
-@stop
-=======
 @endsection
->>>>>>> development

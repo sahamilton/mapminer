@@ -6,17 +6,12 @@
     <div class="pull-right"><a href="{{route('branches.index')}}" class="btn btn-small btn-info iframe">Manage All branches</a></div>
 
     <ul class="nav nav-tabs">
-<<<<<<< HEAD
-    <li class="active"><a data-toggle="tab" href="#showmap">
-        <strong>Branches Without Managers<span style="color:red">*</span></strong></a></li>
-    <li>
-        <a data-toggle="tab" href="#details">
-=======
+
         <li class="nav-item active"><a class="nav-link active" data-toggle="tab" href="#showmap">
         <strong>Branches Without Managers<span style="color:red">*</span></strong></a></li>
         <li class="nav-item">
         <a class="nav-link" data-toggle="tab" href="#details">
->>>>>>> development
+
             <strong>Managers
                 <span style="color:red">*</span> Without Branches
             </strong>

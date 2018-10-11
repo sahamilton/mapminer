@@ -114,8 +114,4 @@ $(document).ready(function()
 	});
 });
 </script>
-<<<<<<< HEAD
-@stop
-=======
 @endsection
->>>>>>> development

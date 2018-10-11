@@ -65,8 +65,4 @@ and Team
 
 
 
-<<<<<<< HEAD
-@stop
-=======
 @endsection
->>>>>>> development

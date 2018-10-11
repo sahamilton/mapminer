@@ -42,9 +42,5 @@
 <h2>You have no items in your watch list</h2>
 <?php }?>
 
-<<<<<<< HEAD
-@stop
-=======
 @endsection
->>>>>>> development
 

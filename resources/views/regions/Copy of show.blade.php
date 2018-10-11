@@ -48,8 +48,4 @@ if(($location->lng) < $minlng) {
 
 {{$data['branches']->links()}}
 </div>
-<<<<<<< HEAD
-@stop
-=======
 @endsection
->>>>>>> development

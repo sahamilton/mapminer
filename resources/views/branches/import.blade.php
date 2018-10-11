@@ -6,8 +6,7 @@
 
 	<?php $actions = ['Replace','Add / Edit'];?>
 
-	{{-- Content --}}
-	@section('content')
+
 	<div class="page-header">
 		<h3>Import Branches</h3>
 
@@ -31,7 +30,7 @@
 	</ol>
 	<div>
 		<form method='post' action ="{{route('branches.import')}}" enctype="multipart/form-data" >
-		{{csrf_field()}}
+		@csrf
 
 		<!-- Service Lines -->
 		<div class="form-group{{ $errors->has('serviceline)') ? ' has-error' : '' }}">
@@ -73,14 +72,8 @@
 		</form>
 
 </div>
-<<<<<<< HEAD
-@stop	
 
-@include('partials/_scripts')
-@stop
-=======
-@endsection	
 
 @include('partials/_scripts')
 @endsection
->>>>>>> development
+

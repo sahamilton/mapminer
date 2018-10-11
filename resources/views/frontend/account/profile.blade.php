@@ -3,11 +3,7 @@
 {{-- Page title --}}
 @section('title')
 Your Profile
-<<<<<<< HEAD
-@stop
-=======
 @endsection
->>>>>>> development
 
 {{-- Account page content --}}
 @section('account-content')
@@ -78,8 +74,4 @@ Your Profile
 		</div>
 	</div>
 </form>
-<<<<<<< HEAD
-@stop
-=======
 @endsection
->>>>>>> development

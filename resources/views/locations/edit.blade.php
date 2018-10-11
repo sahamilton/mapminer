@@ -13,8 +13,4 @@ $ultimateDUNS = $location->company->DUNS;
 {{Form::close()}}
 </div>
 </div>
-<<<<<<< HEAD
-@stop
-=======
 @endsection
->>>>>>> development

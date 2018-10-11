@@ -37,15 +37,8 @@
 		   
 		    @endforeach
     	</td>
-<<<<<<< HEAD
-    	   		<td>
-   		@if($user->lastlogin)
-   		{{$user->lastlogin->format('Y-m-d h:i a')}}
-   		@endif
-   		</td>
-=======
+
     	 <td>{{$user->lastlogin ? $user->lastlogin->format('Y-m-d h:i a'):''}}</td>
->>>>>>> development
 
 </tr>
 @endforeach
@@ -53,8 +46,4 @@
 	</table>
     
 @include('partials/_scripts')
-<<<<<<< HEAD
-@stop
-=======
 @endsection
->>>>>>> development

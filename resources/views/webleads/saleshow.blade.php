@@ -34,9 +34,5 @@
 @include('webleads.partials.salesmap')
 @include('partials._modal')
 @include('partials/_scripts')
-<<<<<<< HEAD
-@stop
-=======
 @endsection
->>>>>>> development
 

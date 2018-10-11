@@ -3,11 +3,7 @@
 {{-- Web site Title --}}
 @section('title')
 	{{{ $title }}} :: @parent
-<<<<<<< HEAD
-@stop
-=======
 @endsection
->>>>>>> development
  @include('partials/_modal')
 {{-- Content --}}
 @section('content')
@@ -15,11 +11,9 @@
 		<h3>{{ $title }}</h3>
 			<p>
                  <a href="{{route('nomanager.export')}}">
-<<<<<<< HEAD
-                 <i class="fa fa-cloud-download" aria-hidden="true"></i></i> Export to Excel</a>
-=======
+
                  <i class="fas fa-cloud-download-alt" aria-hidden="true"></i></i> Export to Excel</a>
->>>>>>> development
+
             </p>
 	</div>
 
@@ -76,18 +70,9 @@
     </ul>
     </td>
     <td class="col-md-2">{{ $person->userdetails->confirmed == '1' ? "yes" :  "no"}}</td>
-<<<<<<< HEAD
-    <td>
- 
-		@if(isset($person->userdetails->lastlogin) &&  $person->userdetails->lastlogin != '0000-00-00 00:00:00'  )
-                <?php  $lastlogin = Carbon\Carbon::parse($person->userdetails->lastlogin);?>
-                {{$lastlogin->format('M j, Y h:i a')}}
-			@endif
-	
-	</td>
-=======
+
     <td>{{$person->userdetails->lastlogin ? $person->userdetails->lastlogin->format('M j, Y h:i a'):''}}</td>
->>>>>>> development
+
     <td class="col-md-2">
     
 
@@ -97,17 +82,6 @@
 				<span class="sr-only">Toggle Dropdown</span>
 			  </button>
 			  <ul class="dropdown-menu" role="menu">
-				
-<<<<<<< HEAD
-				<li><a href="{{route('users.edit',$person->userdetails->id)}}"><i class="fa fa-pencil" aria-hidden="true"> </i>Edit {{$person->firstname}}  {{$person->lastname}}</a></li>
-
-				<li><a data-href="{{route('users.destroy',$person->userdetails->id)}}" 
-				data-toggle="modal" 
-				data-target="#confirm-delete" 
-				data-title = "{{$person->firstname}}  {{$person->lastname}}" href="#">
-				<i class="fa fa-trash-o" aria-hidden="true"> </i> 
-				Delete {{$person->firstname}}  {{$person->lastname}}</a></li></a></li>
-=======
 				<a class="dropdown-item" 
                     href="{{route('users.edit',$person->userdetails->id)}}"><i class="far fa-edit text-info"" aria-hidden="true"> </i>Edit {{$person->firstname}}  {{$person->lastname}}
                 </a>
@@ -120,8 +94,6 @@
     				<i class="far fa-trash-o text-danger" aria-hidden="true"> </i> 
     				Delete {{$person->firstname}}  {{$person->lastname}}
                 </a>
->>>>>>> development
-
 			  </ul>
 			</div>
             </td>
@@ -131,8 +103,4 @@
 	</table>
     
 @include('partials/_scripts')
-<<<<<<< HEAD
-@stop
-=======
 @endsection
->>>>>>> development

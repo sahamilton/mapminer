@@ -25,8 +25,4 @@
 {{Form::submit('Import Managers',['class' => 'btn btn-xs btn-success'])}}
 </div>
 {{Form::close()}}
-<<<<<<< HEAD
-@stop
-=======
 @endsection
->>>>>>> development

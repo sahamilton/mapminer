@@ -4,11 +4,7 @@
 @section('title')
 Forgot Password ::
 @parent
-<<<<<<< HEAD
-@stop
-=======
 @endsection
->>>>>>> development
 
 {{-- Page content --}}
 @section('content')
@@ -37,8 +33,4 @@ Forgot Password ::
 		</div>
 	</div>
 </form>
-<<<<<<< HEAD
-@stop
-=======
 @endsection
->>>>>>> development

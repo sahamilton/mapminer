@@ -48,8 +48,4 @@
 
 
 
-<<<<<<< HEAD
-@stop
-=======
 @endsection
->>>>>>> development

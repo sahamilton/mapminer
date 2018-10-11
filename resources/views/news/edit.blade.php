@@ -50,8 +50,4 @@ $('.summernote').summernote({
 
 </script>
 
-<<<<<<< HEAD
-@stop
-=======
 @endsection
->>>>>>> development

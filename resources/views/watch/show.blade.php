@@ -43,8 +43,4 @@ title="Download {{$user->person->postName()}}'s Watch List as a CSV / Excel file
 </table>
 @include('partials/_scripts')
 
-<<<<<<< HEAD
-@stop
-=======
 @endsection
->>>>>>> development

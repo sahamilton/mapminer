@@ -3,11 +3,7 @@
 {{-- Web site Title --}}
 @section('title')
 	Permissions :: @parent
-<<<<<<< HEAD
-@stop
-=======
 @endsection
->>>>>>> development
 
 {{-- Content --}}
 @section('content')
@@ -17,11 +13,9 @@
 
 			<div class="pull-right">
 				<a href="{{{ route('permissions.create') }}}" class="btn btn-small btn-info iframe">
-<<<<<<< HEAD
-<i class="fa fa-plus-circle text-success" aria-hidden="true"></i>
-=======
+
 <i class="fas fa-plus-circle " aria-hidden="true"></i>
->>>>>>> development
+
  Create New Permission</a>
 			</div>
 		</h3>
@@ -56,10 +50,7 @@
 			  </button>
 			  <ul class="dropdown-menu" permission="menu">
 				
-<<<<<<< HEAD
-				<li><a href="{{route('permissions.edit',$permission->id)}}"><i class="fa fa-pencil" aria-hidden="true"> </i>Edit {{$permission->name}}</a></li>
-				<li><a data-href="{{route('permissions.destroy',$permission->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = "{{$permission->name}}" href="#"><i class="fa fa-trash-o" aria-hidden="true"> </i> Delete {{$permission->name}}</a></li>
-=======
+
 				<a class="dropdown-item"
 					href="{{route('permissions.edit',$permission->id)}}">
 						<i class="far fa-edit text-info"" aria-hidden="true"> </i>Edit {{$permission->name}}
@@ -70,7 +61,7 @@
 				data-title = "{{$permission->name}}" 
 				href="#">
 				<i class="far fa-trash-o text-danger" aria-hidden="true"> </i> Delete {{$permission->name}}</a>
->>>>>>> development
+
 			  </ul>
 			</div>
         
@@ -83,9 +74,5 @@
 	</table>
     
     @include('partials/_scripts')
-<<<<<<< HEAD
-@stop
-=======
 @endsection
->>>>>>> development
 

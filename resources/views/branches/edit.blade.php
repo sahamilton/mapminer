@@ -4,11 +4,7 @@
 @section('title')
 Edit Branch ::
 @parent
-<<<<<<< HEAD
-@stop
-=======
 @endsection
->>>>>>> development
 
 {{-- Page content --}}
 @section('content')
@@ -16,13 +12,20 @@ Edit Branch ::
 	<h3>Edit Branch</h3>
 </div>
 <ul class="nav nav-tabs">
-<<<<<<< HEAD
-  <li class="active"><a data-toggle="tab" href="#branch"><strong>Branch Location</strong></a></li>
-  <li><a data-toggle="tab" href="#team"><strong>Branch Team</strong></a></li>
-=======
-  <li class="nav-item active"><a class="nav-link" data-toggle="tab" href="#branch"><strong>Branch Location</strong></a></li>
-  <li class="nav-item"><a class="nav-link"  data-toggle="tab" href="#team"><strong>Branch Team</strong></a></li>
->>>>>>> development
+
+  <li class="nav-item active">
+    <a class="nav-link" data-toggle="tab" href="#branch">
+      <strong>Branch Location</strong>
+    </a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link"  
+    data-toggle="tab" 
+    href="#team">
+      <strong>Branch Team</strong>
+    </a>
+  </li>
+
 
 
 </ul>
@@ -34,7 +37,7 @@ Edit Branch ::
 $buttonLabel = 'Edit Branch';?>
 <form method="post" action ="{{route('branches.update', $branch->id)}}" >
 <input type="hidden" name="_method" value = 'patch' />
-	{{csrf_field()}}
+	@csrf
 <div class="tab-content">
     <div id="branch" class="tab-pane fade in active">
       @include('branches/partials/_form')
@@ -47,8 +50,4 @@ $buttonLabel = 'Edit Branch';?>
 <input type="submit" class="btn btn-success" value="Edit Branch" />
 </form>
 
-<<<<<<< HEAD
-@stop
-=======
 @endsection
->>>>>>> development

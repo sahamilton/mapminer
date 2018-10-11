@@ -17,8 +17,4 @@
 </div>
 
 @include('partials._scripts')
-<<<<<<< HEAD
-@stop
-=======
 @endsection
->>>>>>> development

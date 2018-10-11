@@ -7,9 +7,7 @@ $(document).ready(function()
 
     } 
 ); 
-<<<<<<< HEAD
-</script>
-=======
+
 // Bloodhound - search
         $(document).ready(function() {
             var bloodhound = new Bloodhound({
@@ -79,4 +77,3 @@ $( document ).ready( function () {
     } );
 } );
 </script>
->>>>>>> development

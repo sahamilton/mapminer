@@ -5,14 +5,12 @@
 
     <!-- Tabs -->
         <ul class="nav nav-tabs">
-<<<<<<< HEAD
-            <li class="active"><a href="#tab-general" data-toggle="tab">General</a></li>
-=======
+
             <li class="nav-item active">
                 <a class="nav-link active" 
                 href="#tab-general" 
                 data-toggle="tab">General</a></li>
->>>>>>> development
+
         </ul>
     <!-- ./ tabs -->
     {{-- Delete Post Form --}}
@@ -34,8 +32,4 @@
         </div>
         <!-- ./ form actions -->
     </form>
-<<<<<<< HEAD
-@stop
-=======
 @endsection
->>>>>>> development

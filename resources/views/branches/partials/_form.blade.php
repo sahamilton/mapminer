@@ -1,15 +1,7 @@
-<?php
-
-<<<<<<< HEAD
-
-
-
-=======
+@php
 $state = new App\State;
 $states = $state->getStates();
-dd($states);
->>>>>>> development
-?>
+@endphp
 <div class="container" style="margin-top:40px">
 <!-- id -->
 <div class="form-group{{ $errors->has('id') ? ' has-error' : '' }}">

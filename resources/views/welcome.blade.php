@@ -2,11 +2,7 @@
 @section('content')
 
 
-<<<<<<< HEAD
-@if(!Auth::check()) 
-=======
-@if(!auth()->check()) 
->>>>>>> development
+@if(!auth()->check())
 	<div class="jumbotron" style="margin-top:30px">
 		<div class="container" style="position:relative;text-align:center">
 			<h4 ">Welcome to the PeopleReady&reg; National Account Locator</h4>
@@ -64,8 +60,4 @@
 @endif
 
 @include('partials._newsscript')
-<<<<<<< HEAD
-@stop
-=======
 @endsection
->>>>>>> development

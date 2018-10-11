@@ -92,8 +92,4 @@
 {{-- Scripts --}}
 @include('partials._scripts')
 @include('partials._search')
-<<<<<<< HEAD
-@stop
-=======
 @endsection
->>>>>>> development

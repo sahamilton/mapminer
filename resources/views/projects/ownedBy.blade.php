@@ -66,8 +66,4 @@
 </div>
 @include('projects.partials._release')
 @include('partials._scripts')
-<<<<<<< HEAD
-@stop
-=======
 @endsection
->>>>>>> development

@@ -37,8 +37,4 @@ $('#add').click(function() {
 });
 </script>
 
-<<<<<<< HEAD
-@stop
-=======
 @endsection
->>>>>>> development

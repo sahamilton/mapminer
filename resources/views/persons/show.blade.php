@@ -4,8 +4,4 @@
 <h4>{{$people->firstname}} {{$people->lastname}} </h4>
 <p>{{$people->email}}</p>
 
-<<<<<<< HEAD
-@stop
-=======
 @endsection
->>>>>>> development

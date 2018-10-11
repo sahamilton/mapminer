@@ -30,9 +30,5 @@
 @include('webleads.partials.map')
 
 @include('partials/_scripts')
-<<<<<<< HEAD
-@stop
-=======
 @endsection
->>>>>>> development
 

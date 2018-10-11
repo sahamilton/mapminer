@@ -10,11 +10,9 @@
 <a href="{{route('locations.show',$data['location']->id)}}">{{$data['location']->businessname}} </a>
 location in {{$data['location']->city}}, {{$data['location']->state}} are:<p>
 <p><a href='{{route("nearby.location",$data['location']->id)}}'>
-<<<<<<< HEAD
-  <i class="fa fa-flag" aria-hidden="true"></i> Map view</a></p>
-=======
+
   <i class="far fa-flag" aria-hidden="true"></i> Map view</a></p>
->>>>>>> development
+
 <table class="table table-striped table-bordered table-condensed">
 <thead>
 <th>Branch</th>
@@ -42,8 +40,4 @@ location in {{$data['location']->city}}, {{$data['location']->state}} are:<p>
 </p>
 </div>
     
-<<<<<<< HEAD
-@stop
-=======
 @endsection
->>>>>>> development

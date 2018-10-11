@@ -11,12 +11,14 @@
 @if(isset($company->managedBy->firstname))
 <p>Account managed by <a href="{{route('person.show',$company->managedBy->id)}}" title="See all accounts managed by {{$company->managedBy->postName()}}">{{$company->managedBy->postName()}}</a></p>
 @endif
-<<<<<<< HEAD
- <a href="{{route('company.service.export',[$company->id])}}" title="Download service list as a CSV / Excel file"><i class="fa fa-cloud-download" aria-hidden="true"></i></i> Export this Service List</a>
-=======
- <a href="{{route('company.service.export',[$company->id])}}" title="Download service list as a CSV / Excel file"><i class="fas fa-cloud-download-alt" aria-hidden="true"></i></i> Export this Service List</a>
->>>>>>> development
-<?php $route = 'company.service.select';?>
+
+ <a href="{{route('company.service.export',[$company->id])}}" 
+ 	title="Download service list as a CSV / Excel file">
+ 	<i class="fas fa-cloud-download-alt" aria-hidden="true"></i> 
+ 		Export this Service List
+ </a>
+
+@php $route = 'company.service.select';@endphp
 <table id ='sorttable'  class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
 
@@ -65,9 +67,5 @@
     </tbody>
 </table>
 @include('partials/_scripts')
-<<<<<<< HEAD
-@stop
-=======
 @endsection
->>>>>>> development
 

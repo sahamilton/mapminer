@@ -93,11 +93,9 @@
 			<h3>
 				{{ $title }}
 				<div class="pull-right">
-<<<<<<< HEAD
-					<button class="btn btn-default btn-small btn-inverse close_popup"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i>Back</button>
-=======
+
 					<button class="btn btn-default btn-small btn-inverse close_popup"><i class="far fa-arrow-circle-left" aria-hidden="true"></i>Back</button>
->>>>>>> development
+
 				</div>
 			</h3>
 		</div>

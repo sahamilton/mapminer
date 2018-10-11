@@ -4,11 +4,7 @@
 @section('title')
 Edit a Manager ::
 @parent
-<<<<<<< HEAD
-@stop
-=======
 @endsection
->>>>>>> development
 
 {{-- Page content --}}
 @section('content')
@@ -27,8 +23,4 @@ Edit a Manager ::
 @include('persons/partials/_form')
 {{Form::close()}}
 
-<<<<<<< HEAD
-@stop
-=======
 @endsection
->>>>>>> development

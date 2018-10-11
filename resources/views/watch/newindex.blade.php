@@ -91,8 +91,4 @@ $(document).on("click", ".addLocationId", function () {
 });
 </script>
 @include('watch.partials._note')
-<<<<<<< HEAD
-@stop
-=======
 @endsection
->>>>>>> development

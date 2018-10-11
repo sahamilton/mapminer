@@ -4,11 +4,7 @@
 @section('title')
 Review Branch Changes
 @parent
-<<<<<<< HEAD
-@stop
-=======
 @endsection
->>>>>>> development
 
 {{-- Page content --}}
 @section('content')
@@ -16,22 +12,16 @@ Review Branch Changes
 	
 
 <ul class="nav nav-tabs">
-<<<<<<< HEAD
-  <li class="active"><a data-toggle="tab" href="#branch"><strong>Branch Additions</strong></a></li>
-  <li><a data-toggle="tab" href="#deletes"><strong>Branch Deletions</strong></a></li>
-  <li><a data-toggle="tab" href="#changes"><strong>Branch Changes</strong></a></li>
-=======
+
   <li class="nav-item active"><a class="nav-link" data-toggle="tab" href="#branch"><strong>Branch Additions</strong></a></li>
   <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#deletes"><strong>Branch Deletions</strong></a></li>
   <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#changes"><strong>Branch Changes</strong></a></li>
->>>>>>> development
-
 
 </ul>
 
 
 <form method="post" name="changebranches" action ="{{route('branches.change')}}" >
-{{csrf_field()}}
+@csrf
 <div class="tab-content">
     <div id="branch" class="tab-pane fade in active">
       @include('branches/partials/_adds')
@@ -75,8 +65,4 @@ Review Branch Changes
    });          
 });
 </script>
-<<<<<<< HEAD
-@stop
-=======
 @endsection
->>>>>>> development

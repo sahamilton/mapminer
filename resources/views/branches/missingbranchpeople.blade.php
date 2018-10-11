@@ -29,8 +29,4 @@
 		</tbody>
 	</table>
 </div>
-<<<<<<< HEAD
-@stop
-=======
 @endsection
->>>>>>> development

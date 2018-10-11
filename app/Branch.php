@@ -53,15 +53,16 @@ class Branch extends Model implements HasPresenter {
 		return $this->belongsTo(Region::class);
 		
 	}
-	
+
 	public function relatedPeople($role=null){
 		if($role){
 
 			return $this->belongsToMany(Person::class)
-			->withPivot('role_id')
+
 			->wherePivot('role_id','=',$role);
 		}else{
-			return $this->belongsToMany(Person::class)->withPivot('role_id');
+			return $this->belongsToMany(Person::class)->withTimestamps()->withPivot('role_id');
+
 		}
 		
 	}
@@ -95,7 +96,9 @@ class Branch extends Model implements HasPresenter {
 	
 	public function servicedBy()
 	{
-		return $this->belongsToMany(Person::class);
+
+		return $this->belongsToMany(Person::class)->withTimestamps()->withPivot('role_id');
+
 	}
 	public function leads(){
 		return $this->hasMany(Lead::class);
@@ -234,5 +237,4 @@ class Branch extends Model implements HasPresenter {
 
 	}
 
-	
 }

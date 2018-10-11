@@ -118,8 +118,4 @@
 {{-- Scripts --}}
 @include('partials._modal')
 @include('partials._scripts')
-<<<<<<< HEAD
-@stop
-=======
 @endsection
->>>>>>> development
