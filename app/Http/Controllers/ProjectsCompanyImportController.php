@@ -30,7 +30,7 @@ class ProjectsCompanyImportController extends ImportController
 
     public function getFile(Request $request){
         $requiredFields = $this->import->requiredFields;
-        $source= $request->get('source');
+        $source= request('source');
         $sources= $this->sources->all()->pluck('source','id');
         $tables = ['projectcompanies','projectcontacts'];
         return response()->view('projects.importcompany',compact ('sources','source','tables','requiredFields'));
@@ -39,15 +39,13 @@ class ProjectsCompanyImportController extends ImportController
 
     public function import(ProjectsImportFormRequest $request) {
       
-        $data = $this->uploadfile($request->file('upload'));
-    
+
+        $data = $this->uploadfile(request()->file('upload'));    
         $data['table']='projectcompanyimport';
         $data['additionaldata'] = array();
         $skip = ['created_at','updated_at','project_source_id','company_id','pr_status','serviceline_id'];
         $requiredFields = $this->import->requiredFields;
-
-        $data['type']=$request->get('type');
-        
+        $data['type']=request('type');        
         $data['route'] = 'projectcompany.mapfields';
         $fields = $this->getFileFields($data); 
 
@@ -60,10 +58,12 @@ class ProjectsCompanyImportController extends ImportController
     public function mapfields(Request $request){
         
         $data = $this->getData($request);  
-        if($multiple = $this->import->detectDuplicateSelections($request->get('fields'))){
+
+        if($multiple = $this->import->detectDuplicateSelections(request('fields'))){
             return redirect()->route('projects.importfile')->withError(['You have to mapped a field more than once.  Field: '. implode(' , ',$multiple)]);
         }
-        if($missing = $this->import->validateImport($request->get('fields'))){
+        if($missing = $this->import->validateImport(request('fields'))){
+
              
             return redirect()->route('projects.importfile')->withError(['You have to map all required fields.  Missing: '. implode(' , ',$missing)]);
        }

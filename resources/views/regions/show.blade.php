@@ -14,7 +14,11 @@
 	<th>Region</th>
 	<th>Manager</th>
 	<th>Sales Team</th>
+<<<<<<< HEAD
 	@if(Auth::user()->hasRole('Admin'))
+=======
+	@if(auth()->user()->hasRole('Admin'))
+>>>>>>> development
 	<th>Actions</th>
 	@endif 
     </thead>
@@ -81,7 +85,11 @@
 		</a>
 	@endif
 	</td>
+<<<<<<< HEAD
 	@if(Auth::user()->hasRole('Admin'))
+=======
+	@if(auth()->user()->hasRole('Admin'))
+>>>>>>> development
 		<td>
             @include('partials/_modal')
     
@@ -92,8 +100,18 @@
 			  </button>
 			  <ul class="dropdown-menu" role="menu">
 				
+<<<<<<< HEAD
 				<li><a href="{{route('branches.edit',$branch->id)}}"><i class="fa fa-pencil" aria-hidden="true"> </i>Edit {{$branch->branchname}} Branch</a></li>
 				<li><a data-href="{{route('branches.destroy',$branch->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = "{{$branch->branchname}} branch" href="#"><i class="fa fa-trash-o" aria-hidden="true"> </i> Delete {{$branch->branchname}} branch</a></li>
+=======
+				<a class="dropdown-item"
+				 href="{{route('branches.edit',$branch->id)}}">
+				 <i class="far fa-edit text-info"" 
+				 aria-hidden="true"> </i>
+				 Edit {{$branch->branchname}} Branch</a>
+				 <a class="dropdown-item"
+				  data-href="{{route('branches.destroy',$branch->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = "{{$branch->branchname}} branch" href="#"><i class="far fa-trash-o text-danger" aria-hidden="true"> </i> Delete {{$branch->branchname}} branch</a>
+>>>>>>> development
 			  </ul>
 			</div>
 	
@@ -111,4 +129,8 @@
 
 
 @include('partials/_scripts')
+<<<<<<< HEAD
 @stop
+=======
+@endsection
+>>>>>>> development

@@ -1,8 +1,14 @@
 <?php
 
+<<<<<<< HEAD
 
 
 
+=======
+$state = new App\State;
+$states = $state->getStates();
+dd($states);
+>>>>>>> development
 ?>
 <div class="container" style="margin-top:40px">
 <!-- id -->

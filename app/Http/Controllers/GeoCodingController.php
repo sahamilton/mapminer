@@ -32,35 +32,36 @@ class GeoCodingController extends BaseController {
 	 */
 	public function findMe(FindMeFormRequest $request) {
 
-
-		if($request->filled('address')) {
-			$address = urlencode($request->get('address'));
+		if(request()->filled('address')) {
+			$address = urlencode(request('address'));
 			
 		}
-		if(! $request->filled('lat')){
-			$geocode = app('geocoder')->geocode($request->get('address'))->get();
+		if(! request()->filled('lat')){
+			$geocode = app('geocoder')->geocode(request('address'))->get();
 
 			if(! $geocode or count($geocode)==0){
 
-				return redirect()->back()->withInput()->with('error','Unable to Geocode address:'.$request->get('address') );
+				return redirect()->back()->withInput()->with('error','Unable to Geocode address:'.request('address') );
 			}
 			
-			$request->merge($this->location->getGeoCode($geocode));
+			request()->merge($this->location->getGeoCode($geocode));
 			
 		
 		}
-		$data = $request->all();
+		$data = request()->all();
 
 		$data['latlng'] = $data['lat'].":".$data['lng'];
 		// Kludge to address the issue of different data in Session::geo
-		if(! $request->has('number')){
+		if(! request()->has('number')){
+
 			$data['number']=5;
 		}
 		// we have to do this in case the lat / lng was set via the browser
 		if(! isset($data['fulladdress'])){
 			$data['fulladdress'] = $data['address'];
 		}
-		session(['geo', $data]);
+
+		session()->put('geo', $data);
 	
 		$watchlist = array();
 		$data['vertical'] = NULL;
@@ -257,9 +258,11 @@ class GeoCodingController extends BaseController {
 
 		$filtered = $this->location->isFiltered(['locations'],['business','segment'],NULL);
 
-		if($request->filled('lat') && $request->filled('lng')) {
+
+		if(request()->filled('lat') && request()->filled('lng')) {
 			
-			$data = $request->all();
+			$data = request()->all();
+
 			$data['latlng'] = $data['lat'].":".$data['lng'];
 			if($data['type'] == 'list') {
 				$data['result'] = $this->getGeoListData($data);

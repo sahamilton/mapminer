@@ -6,7 +6,11 @@
 		<div class="panel-heading clearfix">
 			<h2 class="panel-title pull-left">{{$lead->company_name}} - {{$lead->rating}}</h2>
 			<a class="btn btn-primary pull-right" href="">
+<<<<<<< HEAD
 				<i class="fa fa-pencil"></i>
+=======
+				<i class="far fa-edit text-info""></i>
+>>>>>>> development
 				Edit
 			</a>
 		</div>
@@ -25,7 +29,11 @@
 			                    data-target="#unassign-weblead"
 			                    data-title = "unassign this weblead" 
 			                    href="#">
+<<<<<<< HEAD
 							<i class="fa fa-unlink"></i> Un-assign lead</a></p>
+=======
+							<i class="far fa-unlink"></i> Un-assign lead</a></p>
+>>>>>>> development
 						
 				</ul>
 			</div>
@@ -59,5 +67,9 @@
 @include('webleads.partials.map')
 
 @include('partials/_scripts')
+<<<<<<< HEAD
 @stop
+=======
+@endsection
+>>>>>>> development
 

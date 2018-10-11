@@ -15,9 +15,23 @@
 @endif
 
 <ul class="nav nav-tabs">
+<<<<<<< HEAD
   <li class="active"><a data-toggle="tab" href="#map"><strong>Map View</strong></a></li>
  
   <li><a data-toggle="tab" href="#leads"><strong>Prospects</strong></a></li>
+=======
+  <li class="nav-item active">
+  	<a class="nav-link active" data-toggle="tab" href="#map">
+  		<strong>Map View</strong>
+  	</a>
+  </li>
+ 
+  <li class="nav-item">
+  	<a class="nav-link" data-toggle="tab" href="#leads">
+  		<strong>Prospects</strong>
+  	</a>
+  </li>
+>>>>>>> development
 
 
   

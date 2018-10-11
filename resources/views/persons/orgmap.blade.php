@@ -3,7 +3,11 @@
 <h2>Sales Team Members</h2>
 @include('partials/_showsearchoptions')
 @include('partials/advancedsearch')
+<<<<<<< HEAD
 <p><a href='{{route("person.index")}}'><i class="fa fa-th-list" aria-hidden="true"></i> List view</a></p>
+=======
+<p><a href='{{route("person.index")}}'><i class="fas fa-th-list" aria-hidden="true"></i> List view</a></p>
+>>>>>>> development
 
 	
       
@@ -77,4 +81,8 @@
 
   </script>
 
+<<<<<<< HEAD
 @stop
+=======
+@endsection
+>>>>>>> development

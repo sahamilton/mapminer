@@ -30,6 +30,9 @@ class Person extends NodeModel implements HasPresenter {
     {
         return $this->hasMany(Person::class, 'reports_to');
     }
+
+    // not sure this works!
+
 	public function salesRole()
 	{
 		return $this->belongsTo(SalesOrg::class,'id','position');
@@ -37,13 +40,41 @@ class Person extends NodeModel implements HasPresenter {
 	
 	public function branchesServiced()
 	{
-		return $this->belongsToMany(Branch::class)->withPivot('role_id');
+
+		return $this->belongsToMany(Branch::class)
+		->withTimestamps()
+		->withPivot('role_id');
+		
+
 	}
-	
+
+	public function lastUpdatedBranches()
+	{
+		return $this->belongsToMany(Branch::class)
+		->withTimestamps()
+		->addSelect('branch_person.updated_at', \DB::raw("MAX(branch_person.updated_at) AS lastdate"))->get();
+	}
+
+
+	public function scopeStaleBranchAssignments($query,$roles){
+		return $query->whereHas('userdetails.roles',function($q)use($roles){
+            $q->whereIn('roles.id',$roles);
+        })
+        ->where(function($q){
+            $q->doesntHave('branchesServiced')
+            ->orWhereHas('branchesServiced',function($q){
+                $q->where('branch_person.updated_at','<',now()->subMonth(2))
+                ->orWhereNull('branch_person.updated_at');
+            });
+        });
+       // ->doesntHave('branchesServiced');
+	}
 
 	public function manages() {
 		
-		return $this->belongsToMany(Branch::class)->withPivot('role_id');
+		return $this->belongsToMany(Branch::class)
+		->withTimestamps()->withPivot('role_id');
+
 
 	}
 	public function comments () {
@@ -80,7 +111,7 @@ class Person extends NodeModel implements HasPresenter {
 
 	public function scopeLeadsByType($query,$id,$status){
      
-		return $this->belongsToMany(Lead::class, 'lead_person_status','person_id','related_id')
+		return $query->belongsToMany(Lead::class, 'lead_person_status','person_id','related_id')
 				->where('lead_source_id','=',$id)
 				->withPivot('created_at','updated_at','status_id','rating')
 				->wherePivot('status_id',2);
@@ -92,7 +123,9 @@ class Person extends NodeModel implements HasPresenter {
 	
 	public function postName()
 	{
-		return  $this->attributes['firstname'] . ' ' . $this->attributes['lastname']  ;
+
+		return $this->attributes['firstname'] . ' ' . $this->attributes['lastname'];
+
 	}
 	
 
@@ -287,4 +320,18 @@ class Person extends NodeModel implements HasPresenter {
        }
        return $data;
     }
+
+
+    public function scopePrimaryRole($query){
+
+    	return $query->with('userdetails.roles')->first()->userdetails->roles->first()->id;
+                    //->userdetails;
+    }
+
+    public function getPrimaryRole($person){
+
+    	return $person->userdetails->roles()->first()->id;
+                    //->userdetails;
+    }
+
 }

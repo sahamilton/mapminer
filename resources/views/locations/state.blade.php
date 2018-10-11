@@ -52,4 +52,8 @@ $data['distance'] = '100';?>
         });
       </script>
 	
+<<<<<<< HEAD
 @stop
+=======
+@endsection
+>>>>>>> development

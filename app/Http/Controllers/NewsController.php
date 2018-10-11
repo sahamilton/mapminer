@@ -74,15 +74,17 @@ class NewsController extends BaseController {
 	public function store(NewsFormRequest $request)
 	{
 		
-		$data = $request->all();
+
+		$data = request()->all();
 		$data = $this->setDates($data);
 		if($news = $this->news->create($data)){
-			$news->serviceline()->attach($request->get('serviceline'));
-			if($request->filled('vertical')){
-				$news->relatedIndustries()->attach($request->get('vertical'));
+			$news->serviceline()->attach(request('serviceline'));
+			if(request()->filled('vertical')){
+				$news->relatedIndustries()->attach(request('vertical'));
 			}
-			if($request->filled('role')){
-				$news->relatedRoles()->attach($request->get('role'));
+			if(request()->filled('role')){
+				$news->relatedRoles()->attach(request('role'));
+
 			}
 		}
 		
@@ -144,19 +146,23 @@ class NewsController extends BaseController {
 	public function update(NewsFormRequest $request,$id)
 	{
 		$news = $this->news->findOrFail($id);
-		$data = $request->all();
+
+		$data = request()->all();
+
 		$data = $this->setDates($data);
 
 		if($news->update($data)) {
 			
-			$news->serviceline()->sync($request->get('serviceline'));
+
+			$news->serviceline()->sync(request('serviceline'));
 
 			$vertical = [];
-			$vertical = $request->get('vertical');
+			$vertical = request('vertical');
 			$news->relatedIndustries()->sync($vertical);
 			
 			$role = [];
-			$role = $request->get('role');
+			$role = request('role');
+
 			$news->relatedRoles()->sync($role);
 			
 		}

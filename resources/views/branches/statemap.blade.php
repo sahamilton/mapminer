@@ -5,7 +5,11 @@
 <h4> <a href="{{route('branches.index')}}" title="Show all branches" />Show all branches</a></h4>
 <?php $route='branches.statemap';?>
 @include('branches/partials/_state')
+<<<<<<< HEAD
 <p><a href="{{route('branches.statelist',$data['statecode'])}}"><i class="fa fa-th-list" aria-hidden="true"></i> List view</a></p>
+=======
+<p><a href="{{route('branches.statelist',$data['statecode'])}}"><i class="fas fa-th-list" aria-hidden="true"></i> List view</a></p>
+>>>>>>> development
   
 <div id="store-locator-container"> @include('maps/partials/_keys')
 	<div id="map-container">
@@ -23,4 +27,8 @@
         });
     </script>
     
+<<<<<<< HEAD
 @stop
+=======
+@endsection
+>>>>>>> development

@@ -13,4 +13,8 @@
 @include('filters.partials._filterform')
 {{Form::submit('Create Filter',array('class'=>'btn btn-primary'))}}
 @include('partials/_scripts')
+<<<<<<< HEAD
 @stop
+=======
+@endsection
+>>>>>>> development

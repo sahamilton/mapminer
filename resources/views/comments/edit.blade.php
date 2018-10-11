@@ -14,4 +14,8 @@
 <input type="hidden" name="slug" value="{{$comment->relatesTo->slug}}" />
 <input type="submit" class="btn btn-info" name="submit" value="Edit Comment" />
 {{Form::close()}}
+<<<<<<< HEAD
 @stop
+=======
+@endsection
+>>>>>>> development

@@ -24,4 +24,8 @@
 @include('partials._maps')
 @include('partials._newsscript')
 
+<<<<<<< HEAD
 @stop
+=======
+@endsection
+>>>>>>> development

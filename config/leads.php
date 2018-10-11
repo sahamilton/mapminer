@@ -41,7 +41,11 @@ return [
     |
     */
 
+<<<<<<< HEAD
 	'lead_distribution_roles'=>(['Sales','Sales Representative']),
+=======
+	'lead_distribution_roles'=>(['Sales']),
+>>>>>>> development
 
 
     'test'=>env("LEADS_TEST",false),

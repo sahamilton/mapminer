@@ -44,6 +44,7 @@ $newTZ = new DateTimeZone('America/Los_Angeles');
 		   
 		    @endforeach
     	</td>
+<<<<<<< HEAD
    
  <?php 
 	if(! isset($user->usage->lastactivity) or  $user->usage->lastactivity == '0000-00-00 00:00:00'  ){
@@ -57,6 +58,10 @@ $newTZ = new DateTimeZone('America/Los_Angeles');
 	echo " <td class=\"col-md-2\">".$field."</td>";
 
 	?>
+=======
+   <td> {{$user->usage->lastactivity ? $user->usage->lastactivity->format('Y-m-d h:i a') : '' }}</td>
+ 
+>>>>>>> development
    
 </tr>
 @endforeach
@@ -64,4 +69,8 @@ $newTZ = new DateTimeZone('America/Los_Angeles');
 	</table>
     
 @include('partials/_scripts')
+<<<<<<< HEAD
 @stop
+=======
+@endsection
+>>>>>>> development

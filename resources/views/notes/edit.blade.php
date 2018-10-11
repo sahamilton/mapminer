@@ -16,4 +16,8 @@
 </form>
 </div>
 </div>
+<<<<<<< HEAD
 @stop
+=======
+@endsection
+>>>>>>> development

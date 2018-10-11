@@ -11,11 +11,15 @@ a.viewtraining{
 }
 </style>
 <div class="container">
+<<<<<<< HEAD
     @if(auth()->user()->hasRole('Admin'))
     <h2>All Trainings</h2>
     @else
     <h2>My Trainings</h2>
    @endif
+=======
+    <h2>My Trainings</h2>
+>>>>>>> development
    @if($trainings->count()==0)
         <p class="alert alert-warning">We are sorry {{auth()->user()->person->firstname}}, that there are no trainings based on your role and industry focus. Please contact sales operations.</p>
    @else
@@ -27,6 +31,7 @@ a.viewtraining{
                     <a class="viewtraining" href="{{route('training.show',$training->id)}}">
 
                     </a>
+<<<<<<< HEAD
                     <p>
                     @if(auth()->user()->hasRole('Admin'))
                         @foreach ($training->relatedRoles as $role)
@@ -35,6 +40,10 @@ a.viewtraining{
                         @endforeach
                     @endif
                     </p>
+=======
+
+                  
+>>>>>>> development
                 @endforeach
     @endif
 </div>

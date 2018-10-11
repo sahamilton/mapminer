@@ -44,4 +44,8 @@
           $('#map-container').storeLocator({'slideMap' : false, 'defaultLoc': true, 'defaultLat': '{{$data['branches']->lat}}', 'defaultLng' : '{{$data['branches']->lng}}', 'dataLocation' : '{{ route("nearby.branch", $data['branches']->id)?d=".$data['distance'])}}', 'infowindowTemplatePath' : '{{asset('maps/templates/infowindow-description.html')}}','listTemplatePath' : '{{asset('maps/templates/location-list-description.html')}}'} );
         });
     </script>
+<<<<<<< HEAD
 @stop
+=======
+@endsection
+>>>>>>> development

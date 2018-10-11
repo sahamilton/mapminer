@@ -47,5 +47,9 @@ function myFunction(element) {
 @include('leads.partials.map')
 
 @include('partials/_scripts')
+<<<<<<< HEAD
 @stop
+=======
+@endsection
+>>>>>>> development
 

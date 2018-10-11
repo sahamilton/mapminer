@@ -22,10 +22,6 @@ class Location extends Model implements HasPresenter {
 
 	public $table = 'locations';
 	public $branch;
-	public $salesRoles = [5];
-	// Don't forget to fill this array
-	// Note this array is used to check the imports as well.
-	// If you change this you will have to change the location import template.
 
 
 	public $fillable = ['businessname','street','address2','city','state','zip','company_id','phone','contact','lat','lng','segment','businesstype'];
@@ -124,7 +120,8 @@ class Location extends Model implements HasPresenter {
 			$q->whereIn('servicelines.id',$serviceline);
 		})
 		->whereHas('userdetails.roles',function ($q){
-			$q->whereIn('roles.id',$this->salesRoles);
+
+			$q->where('roles.id','=',5);
 		})
 		->nearby($this,'100')
         ->limit(5);

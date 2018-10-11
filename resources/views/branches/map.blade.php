@@ -2,7 +2,11 @@
 @section('content')
 <h2>All Branches</h2>
 
+<<<<<<< HEAD
 <p><a href='{{route("branches.index")}}'><i class="fa fa-th-list" aria-hidden="true"></i> List view</a></p>
+=======
+<p><a href='{{route("branches.index")}}'><i class="fas fa-th-list" aria-hidden="true"></i> List view</a></p>
+>>>>>>> development
 <?php $route ='branches.statemap';?>
   @include('branches/partials/_state')
   @include('maps.partials._form')  
@@ -13,4 +17,8 @@
 
  
 
+<<<<<<< HEAD
 @stop
+=======
+@endsection
+>>>>>>> development

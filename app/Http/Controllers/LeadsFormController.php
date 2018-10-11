@@ -45,7 +45,9 @@ class LeadsFormController  extends ImportController
 
     public function getLeadFormData(WebLeadFormRequest $request){
     	// first get teh rows of data
-		$rows = explode(PHP_EOL,$request->get('weblead'));
+
+		$rows = explode(PHP_EOL,request('weblead'));
+
 		// then create the
     	foreach ($rows as $row){
     		$field = explode("\t",$row);
@@ -56,16 +58,21 @@ class LeadsFormController  extends ImportController
        $title="Map the leads import file fields";
        $requiredFields = $this->import->requiredFields;
 
-        $data['type']=$request->get('type');
+
+        $data['type']=request('type');
+
         if($data['type']== 'assigned'){
             $data['table']='leadimport';
             $requiredFields[]='employee_id';
         }else{
             $data['table']='leads';
         }
+        //wtf!
         dd($data);
        
-        $data['additionaldata'] = $request->get('additionaldata');
+
+        $data['additionaldata'] = request('additionaldata');
+
         $data['route'] = 'leads.mapfields';
         $fields = $this->getFileFields($data);      
         $columns = $this->lead->getTableColumns($data['table']);

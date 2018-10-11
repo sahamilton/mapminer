@@ -39,6 +39,7 @@ $cumulative = array();
 
 {{-- Content --}}
 
+<<<<<<< HEAD
 @section('content')
 <div class="container">
   <h2>{{auth()->user()->roles()->first()->name}} Dashboard</h2>
@@ -51,6 +52,48 @@ $cumulative = array();
 
   <div class="tab-content">
     <div id="home" class="tab-pane fade in active">
+=======
+
+@section('content')
+<div class="container">
+  <h2>{{auth()->user()->roles()->first()->name}} Dashboard</h2>
+  <ul class="nav nav-tabs" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" 
+        data-toggle="tab" 
+        href="#home" 
+        aria-controls="home" aria-selected="true">Usage
+    </a>
+    </li>
+     <li class="nav-item">
+      <a class="nav-link" 
+          data-toggle="tab" 
+          href="#menu1" 
+          aria-controls="menu1" 
+          aria-selected="true">Activity
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" 
+          data-toggle="tab" 
+          href="#menu2" 
+          aria-controls="menu2" 
+          aria-selected="true">Account Health
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" 
+          data-toggle="tab" 
+          href="#menu3" 
+          aria-controls="menu3" 
+          aria-selected="true">Location Health
+      </a>
+    </li>
+  </ul>
+
+  <div class="tab-content">
+    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+>>>>>>> development
       <h3>Usage</h3>
         @include ('admin.partials.firstlogged')
         @include('admin.partials.weeklylogins')
@@ -62,6 +105,7 @@ $cumulative = array();
     </div>
     <div id="menu1" class="tab-pane fade">
       <h3>Account Activity</h3>
+<<<<<<< HEAD
     @include('admin.partials.watchers')
     @include('admin.partials.newNotes')
     @include('admin.partials.newLeadNotes')  
@@ -79,6 +123,26 @@ $cumulative = array();
     </div>
   </div>
 </div>
+=======
+        @include('admin.partials.watchers')
+        @include('admin.partials.newNotes')
+        @include('admin.partials.newLeadNotes')  
+        @include('admin.partials.newProjectNotes') 
+    </div>
+    <div id="menu2" class="tab-pane fade">
+      <h3>Account Health</h3>
+        @include ('admin.partials.nosalesnotes')
+        @include ('admin.partials.duplicate')
+    </div>
+    <div id="menu3" class="tab-pane fade">
+      <h3>Location Health</h3>
+      @include('admin.partials.nocontacts')
+      @include('admin.partials.nogeocode')
+    </div>
+  </div>
+
+
+>>>>>>> development
 
 
 
@@ -121,6 +185,10 @@ var numberWithCommas = function(x) {
 var roleWeekChart = new Chart(ctx, 
 {
     type: 'bar',
+<<<<<<< HEAD
+=======
+    resize:true,
+>>>>>>> development
     data:{
       labels: ['{!! array_values($data['roleweekcount'])[0]['labels'] !!}'],
       datasets: [
@@ -172,6 +240,10 @@ var ctx = document.getElementById("weekChart").getContext("2d");
 var weekChart = new Chart(ctx, 
 {
     type: 'bar',
+<<<<<<< HEAD
+=======
+    resize:true,
+>>>>>>> development
     data:{
       labels: [{!! $weeklabels !!}],
 
@@ -199,6 +271,10 @@ var weekChart = new Chart(ctx,
 
 new Chart(document.getElementById("pieChart"), {
     type: 'doughnut',
+<<<<<<< HEAD
+=======
+    resize:true,
+>>>>>>> development
     data: {
      
       datasets: [
@@ -221,5 +297,11 @@ new Chart(document.getElementById("pieChart"), {
     }
 });
 </script>
+<<<<<<< HEAD
 @include('partials/_scripts')
 @stop
+=======
+</div>
+@include('partials/_scripts')
+@endsection
+>>>>>>> development

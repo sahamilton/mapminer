@@ -11,12 +11,20 @@
 @include('partials/advancedsearch')
 @include('partials.companyfilter')
 
+<<<<<<< HEAD
 @if (Auth::user()->hasRole('Admin') or Auth::user()->hasRole('Sales Operations'))
+=======
+@if (auth()->user()->hasRole('Admin') or auth()->user()->hasRole('Sales Operations'))
+>>>>>>> development
 
 
 <div class="pull-right">
 <a href="{{ route('company.create') }}" class="btn btn-small btn-info iframe">
+<<<<<<< HEAD
 <i class="fa fa-plus-circle text-success" aria-hidden="true"></i>
+=======
+<i class="fas fa-plus-circle " aria-hidden="true"></i>
+>>>>>>> development
  Create New Account</a>
 </div>
 @endif
@@ -30,7 +38,11 @@
 			<th>Locations</th>
 			<th>Service Lines</th>
 
+<<<<<<< HEAD
 			@if (Auth::user()->hasRole('Admin') or Auth::user()->hasRole('Sales Operations'))
+=======
+			@if (auth()->user()->hasRole('Admin') or auth()->user()->hasRole('Sales Operations'))
+>>>>>>> development
 			<th>Actions</th>
 			@endif
 		</thead>
@@ -92,7 +104,11 @@
 				@endforeach
 				</ul>
 			</td>
+<<<<<<< HEAD
 			@if (Auth::user()->hasRole('Admin') or Auth::user()->hasRole('Sales Operations'))
+=======
+			@if (auth()->user()->hasRole('Admin') or auth()->user()->hasRole('Sales Operations'))
+>>>>>>> development
 				<td>
 
 
@@ -103,6 +119,7 @@
 						</button>
 						<ul class="dropdown-menu" role="menu">
 
+<<<<<<< HEAD
 						<li>
 						<a href="{{route('company.edit',$company->id)}}">
 						<i class="fa fa-pencil" aria-hidden="true"> </i>
@@ -111,6 +128,25 @@
 						<a data-href="{{route('company.destroy',$company->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = "{{$company->companyname}} and all its locations" href="#">
 						<i class="fa fa-trash-o" aria-hidden="true"> </i>
 						Delete {{$company->companyname}}</a></li>
+=======
+						
+						
+						<a class="dropdown-item" 
+						  href="{{route('company.edit',$company->id)}}">
+						<i class="far fa-edit text-info"" aria-hidden="true"> </i>
+						Edit {{$company->companyname}}</a>
+						
+						<a class="dropdown-item"
+						  data-href="{{route('company.destroy',$company->id)}}" 
+						  data-toggle="modal" 
+						  data-target="#confirm-delete" 
+						  data-title = "{{$company->companyname}} and all its locations" 
+						  href="#">
+						  <i class="far fa-trash-o text-danger" 
+						    aria-hidden="true"> </i>
+						   Delete {{$company->companyname}}
+						</a>
+>>>>>>> development
 						</ul>
 					</div>
 				</td>
@@ -123,4 +159,8 @@
 	</table>
 @include('partials/_modal')
 @include('partials/_scripts')
+<<<<<<< HEAD
 @stop
+=======
+@endsection
+>>>>>>> development

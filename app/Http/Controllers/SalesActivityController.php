@@ -83,11 +83,13 @@ class SalesActivityController extends BaseController
      */
     public function store(SalesActivityFormRequest $request)
     {
-        $data = $this->setDates($request->all());
+
+        $data = $this->setDates(request()->all());
 
         $activity = $this->activity->create($data);
-        foreach ($request->get('salesprocess') as $process){
-            foreach ($request->get('vertical') as $vertical){
+        foreach (request('salesprocess') as $process){
+            foreach (request('vertical') as $vertical){
+
                 $activity->salesprocess()->attach($process,['vertical_id'=>$vertical]);
             }
 
@@ -191,7 +193,9 @@ class SalesActivityController extends BaseController
     {
         
         $activity = $this->activity->findOrFail($id);
-        $data = $this->setDates($request->all());
+
+        $data = $this->setDates(request()->all());
+
         $activity->update($data);
         $activity->salesprocess()->detach();
 
@@ -228,9 +232,11 @@ class SalesActivityController extends BaseController
    }
    public function changeteam(Request $request){
 
-        $activity = $this->activity->findOrFail($request->get('campaign_id'));
-        $team = $request->get('id');
-        switch ($request->get('action')) {
+
+        $activity = $this->activity->findOrFail(request('campaign_id'));
+        $team = request('id');
+        switch (request('action')) {
+
             case 'add':
                 if($activity->campaignparticipants()->attach($team)){
                     return 'success';;
@@ -255,16 +261,20 @@ class SalesActivityController extends BaseController
    }
    public function updateteam(Request $request){
 
-        $activity = $this->activity->findOrFail($request->get('campaign_id'));
+
+        $activity = $this->activity->findOrFail(request('campaign_id'));
        // need to get all the sales reps in these verticals
        
 
-        $vertical = $request->get('vertical');
+        $vertical = request('vertical');
+
         $reps = $this->person->campaignparticipants($vertical)
                 ->pluck('id')->toArray();
 
         $activity->campaignparticipants()->sync($reps);
-        return redirect()->route('campaign.announce',$request->get('campaign_id'));
+
+        return redirect()->route('campaign.announce',request('campaign_id'));
+
    }
 
     

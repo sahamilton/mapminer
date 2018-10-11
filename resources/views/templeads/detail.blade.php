@@ -11,7 +11,11 @@
                           data-target="#unassign-weblead"
                           data-title = "unassign this weblead" 
                           href="#">
+<<<<<<< HEAD
               <i class="fa fa-unlink"></i> Un-assign lead</a></p>
+=======
+              <i class="far fa-unlink"></i> Un-assign lead</a></p>
+>>>>>>> development
 @include('partials._unassignleadmodal') 
     @endif
     <div class="row">
@@ -32,12 +36,18 @@
 
 
   <ul class="nav nav-tabs">
+<<<<<<< HEAD
       <li class="active">
         <a data-toggle="tab" href="#lead">
+=======
+      <li class="nav-item active">
+        <a class="nav-link active" data-toggle="tab" href="#lead">
+>>>>>>> development
           <strong>Lead Details</strong>
         </a>
       </li>
 @if(count($extrafields)>0)
+<<<<<<< HEAD
 <li>
         <a data-toggle="tab" href="#extra">
           <strong>Additional Info</strong>
@@ -65,6 +75,28 @@
 
 
     </ul>
+=======
+  <li class="nav-item">
+    <a class="nav-link"  data-toggle="tab" href="#extra">
+      <strong>Additional Info</strong>
+    </a>
+  </li>
+@endif
+
+
+  <li class="nav-item">
+    <a class="nav-link"  data-toggle="tab" href="#resources">
+      <strong>Nearby Resources</strong>
+    </a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" data-toggle="tab" href="#notes">
+      <strong>Lead  Notes @if($lead->relatedNotes) ({{$lead->relatedNotes->count()}}) @endif
+            </strong>
+      </a>
+    </li>
+</ul>
+>>>>>>> development
   <?php $type="lead";
   $id= $lead->id;?>
   <div class="tab-content">
@@ -97,4 +129,8 @@
 
 @include('partials._modal')
 @include('partials._scripts');
+<<<<<<< HEAD
 @stop
+=======
+@endsection
+>>>>>>> development

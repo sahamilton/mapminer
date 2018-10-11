@@ -9,7 +9,11 @@
     data-pk = "{{$location->id}}"
     href="#" 
     title=" contact {{$location->businessname}}">
+<<<<<<< HEAD
     <i class="fa fa-plus-circle success" aria-hidden="true"></i> Add Contact</a>
+=======
+    <i class="fas fa-plus-circle success" aria-hidden="true"></i> Add Contact</a>
+>>>>>>> development
 <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
      
@@ -35,7 +39,11 @@
 						    data-pk = "{{$contact->id}}"
 						    href="#" 
 						    title="Delete {{$contact->fullName()}}">
+<<<<<<< HEAD
 						    <i class="fa fa-minus-circle danger" aria-hidden="true"></i>
+=======
+						    <i class="far fa-minus-circle danger" aria-hidden="true"></i>
+>>>>>>> development
 						</a>
 
 					@endif

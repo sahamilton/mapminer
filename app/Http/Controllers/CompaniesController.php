@@ -65,14 +65,16 @@ class CompaniesController extends BaseController {
 	public function filter(Request $request){
 
 
-		if($request->get('locationFilter')=='both'){
+		if(request('locationFilter')=='both'){
 
 			return redirect()->route('company.index');
 		}
 		$filtered = $this->company->isFiltered(['companies'],['vertical']);
 		$companies=$this->getAllCompanies($filtered);
 
-		if($request->get('locationFilter') == 'nolocations'){
+
+		if(request('locationFilter') == 'nolocations'){
+
 			$companies = $companies->whereDoesntHave('locations')->get();
 
 			$title = 'Accounts without Locations';
@@ -84,7 +86,8 @@ class CompaniesController extends BaseController {
 
 		}
 
-		$locationFilter = $request->get('locationFilter');
+		$locationFilter = request('locationFilter');
+
 		return response()->view('companies.index', compact('companies','title','filtered','locationFilter'));
 
 	}
@@ -147,8 +150,8 @@ class CompaniesController extends BaseController {
 	public function store(CompanyFormRequest $request)
 	{
 
-		$company = $this->company->create($request->all());
-		$company->serviceline()->sync($request->get('serviceline'));
+		$company = $this->company->create(request()->all());
+		$company->serviceline()->sync(request('serviceline'));
 
 		return redirect()->route('company.index');
 	}
@@ -189,8 +192,10 @@ class CompaniesController extends BaseController {
 
 
 		$this->company = $company;
-		$this->company->update( $request->all());
-		$this->company->serviceline()->sync( $request->get('serviceline'));
+
+		$this->company->update( request()->all());
+		$this->company->serviceline()->sync( request('serviceline'));
+
 		return redirect()->route('company.index');
 	}
 	/**
@@ -383,9 +388,11 @@ class CompaniesController extends BaseController {
 	{
 
 		// The method can be used by either post or get routes
-		if($request->filled('id') && $request->filled('state')){
-					$id = $request->get('id');
-					$state = urldecode($request->get('state'));
+
+		if(request()->filled('id') && request()->filled('state')){
+					$id = request('id');
+					$state = urldecode(request('state'));
+
 
 		}
 		// Check if user can view company based on user serviceline
@@ -544,10 +551,12 @@ class CompaniesController extends BaseController {
 
 
 	/*
-	Export all account swith manager details to Excel
+
+	Export all account with manager details to Excel
 	 */
 	public function exportAccounts()
 	{
+		
 
 		Excel::create('AllCompanies',function($excel){
 			$excel->sheet('Companies',function($sheet) {
@@ -591,7 +600,9 @@ class CompaniesController extends BaseController {
 	 */
 	public function locationsexport(Request $request) {
 
-		$id = $request->get('company');
+
+		$id = request('company');
+
 		$company = $this->company->findOrFail($id);
 		Excel::create($company->companyname. " locations",function($excel) use($id){
 			$excel->sheet('Watching',function($sheet) use($id) {

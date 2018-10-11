@@ -1,4 +1,5 @@
 /*  People Ready branding */
+<<<<<<< HEAD
 body {
 	
 	padding:0;
@@ -9,6 +10,26 @@ body {
         height: 100%;
         /* The html and body elements cannot have any padding or margin. */
       }
+=======
+html {
+  height: 100%;
+  box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+body {
+  position: relative;
+  margin: 0;
+  padding-bottom: 6rem;
+  min-height: 100%;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+}
+>>>>>>> development
 
       /* Wrapper for page content to push down footer */
       #wrap {
@@ -20,6 +41,7 @@ body {
       }
 
       /* Set the fixed height of the footer here */
+<<<<<<< HEAD
       #push,
       #footer {
         height: 60px;
@@ -29,6 +51,23 @@ body {
 		background-color: #fff;
 		border-top:4px solid #E77C22;
 		color:#04AFEF;
+=======
+      #footer {
+		  position: absolute;
+		  right: 0;
+		  bottom: 0;
+		  left: 0;
+		  padding: 1rem;
+		  background-color: #efefef;
+		  text-align: center;
+}
+      #main {
+      	min-height:100vh;
+      }
+      .clear{
+      	clear:both;
+      	
+>>>>>>> development
       }
     .message{
 
@@ -43,6 +82,11 @@ body {
 		background-color:#fff;
 		border-bottom:4px solid #E77C22;
 		background-image:none;
+<<<<<<< HEAD
+=======
+		min-height:80px;
+		padding-top:40px;
+>>>>>>> development
 
       }
       /* Lastly, apply responsive CSS fixes as necessary */

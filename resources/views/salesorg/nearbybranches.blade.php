@@ -3,6 +3,7 @@
 <h2>Closest Branches</h2>
 <p><a href="{{route('salesorg')}}">Return to All Sales Org</a></p>
 <h4>{{$data['number']}} closest branches within {{$data['distance']}} miles of {{$data['fulladdress']}}</h4>
+<<<<<<< HEAD
   @include('leads.partials.search')
 <table id='sorttable' class ='table table-bordered table-striped table-hover dataTable'>
 <thead>
@@ -33,3 +34,12 @@
 @include('partials/_scripts')
 
 @stop
+=======
+@include('leads.partials.search')
+@include('branches.partials._nearby')
+
+
+@include('partials/_scripts')
+
+@endsection
+>>>>>>> development

@@ -38,27 +38,16 @@ class TrainingController extends BaseController
      public function index(){
        
         $training = $this->training->query();
-        $training->with('servicelines','relatedRoles');
+
         // find users servicelines
-        if(! auth()->user()->hasrole('Admin')){
-         
-            $training->whereHas('servicelines', function ($q){
-                $q->whereIn('id',$this->userServiceLines);
-             });
-            $training->whereHas('relatedRoles', function ($q){
+         $training->whereHas('servicelines', function ($q){
+            $q->whereIn('id',$this->userServiceLines);
+         });
+
+         $training->whereHas('relatedRoles', function ($q){
             $q->whereIn('id',$this->userRoles);
          });
-        }
-         
-        // find users industries
-       
-        /*if(count($this->userVerticals)>0){
-                 $training->whereHas('relatedIndustries', function ($q){
-                    $q->whereIn('id',$this->userVerticals);
-                 });
-             }*/
-        // find users roles
-         
+
          $trainings = $training->get();
 
          return response()->view('training.mytrainings',compact('trainings'));
@@ -86,20 +75,23 @@ class TrainingController extends BaseController
      */
     public function store(TrainingFormRequest $request)
     {
-        $data = $request->all();
+
+        $data = request()->all();
         $data = $this->setDates($data);
 
-        if($request->has('noexpiration')){
+        if(request()->has('noexpiration')){
+
             $data['dateto']=null;
         }
         if($training = $this->training->create($data)){
             
-            $training->servicelines()->attach($request->get('serviceline'));
-            if($request->filled('vertical')){
-                $training->relatedIndustries()->attach($request->get('vertical'));
+            $training->servicelines()->attach(request('serviceline'));
+            if(request()->filled('vertical')){
+                $training->relatedIndustries()->attach(request('vertical'));
             }
-            if($request->filled('role')){
-                $training->relatedRoles()->attach($request->get('role'));
+            if(request()->filled('role')){
+                $training->relatedRoles()->attach(request('role'));
+
             }
         }
         

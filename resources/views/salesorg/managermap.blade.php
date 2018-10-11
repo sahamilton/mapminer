@@ -26,11 +26,19 @@
 
   </h4>
   @if(isset ($salesteam[0]->userdetails) && $salesteam[0]->userdetails->email != '')
+<<<<<<< HEAD
   <p><i class="fa fa-envelope" aria-hidden="true"></i> <a href="mailto:{{$salesteam[0]->userdetails->email}}" title="Email {{$salesteam[0]->firstname}} {{$salesteam[0]->lastname}}">{{$salesteam[0]->userdetails->email}}</a> </p>
   @endif
   <p><a href="{{route('salesorg.list',$salesteam[0]->id)}}"
   title="See list view of {{$salesteam[0]->firstname}} {{$salesteam[0]->lastname}}'s sales team">
   <i class="fa fa-th-list" aria-hidden="true"></i> List view</a></p>
+=======
+  <p><i class="far fa-envelope" aria-hidden="true"></i> <a href="mailto:{{$salesteam[0]->userdetails->email}}" title="Email {{$salesteam[0]->firstname}} {{$salesteam[0]->lastname}}">{{$salesteam[0]->userdetails->email}}</a> </p>
+  @endif
+  <p><a href="{{route('salesorg.list',$salesteam[0]->id)}}"
+  title="See list view of {{$salesteam[0]->firstname}} {{$salesteam[0]->lastname}}'s sales team">
+  <i class="fas fa-th-list" aria-hidden="true"></i> List view</a></p>
+>>>>>>> development
       <div id="map-container">
         <div style="float:left;width:300px">
   <h2>Direct Reports:</h2>

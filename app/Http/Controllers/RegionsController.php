@@ -41,7 +41,8 @@ class RegionsController extends BaseController {
 	public function store(RegionsFormRequest $request)
 	{
 		
-		$this->region->create($request->all());
+
+		$this->region->create(request()->all());
 
 		return redirect()->route('regions.index');
 	}
@@ -94,7 +95,7 @@ class RegionsController extends BaseController {
 	{
 		$region = $this->region->findOrFail($id);
 
-		$region->update($request->all());
+		$region->update(request()->all());
 
 		return \redirect()->route('regions.index');
 	}

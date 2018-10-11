@@ -2,7 +2,11 @@
 {{-- Web site Title --}}
 @section('title')
 	{{{ $title }}} :: @parent
+<<<<<<< HEAD
 @stop
+=======
+@endsection
+>>>>>>> development
  @include('partials/_modal')
 {{-- Content --}}
 @section('content')
@@ -17,7 +21,11 @@
 
 				<a href="{{{ route('users.create') }}}" class="btn btn-small btn-info iframe">
 				
+<<<<<<< HEAD
 <i class="fa fa-plus-circle text-success" aria-hidden="true"></i>
+=======
+<i class="fas fa-plus-circle " aria-hidden="true"></i>
+>>>>>>> development
  Create</a>
 
 			</div>
@@ -78,6 +86,7 @@
     </ul>
     </td>
     <td class="col-md-2">{{ $user->confirmed == '1' ? "yes" :  "no"}}</td>
+<<<<<<< HEAD
     <td>
  
 		@if(isset($user->lastlogin) &&  $user->lastlogin != '0000-00-00 00:00:00'  )
@@ -87,6 +96,10 @@
 	
 	</td>
     <td>{{$user->updated_at ? $user->updated_at->format('M j, Y h:i a') : ''}}</td>
+=======
+    <td>{{$user->lastlogin ? $user->lastlogin->format('M j, Y h:i a'): ''}}</td>
+    <td>@if($user->updated_at) {{$user->updated_at->format('M j, Y h:i a')}} @endif</td>
+>>>>>>> development
     <td class="col-md-2">
     
 
@@ -97,6 +110,7 @@
 			  </button>
 			  <ul class="dropdown-menu" role="menu">
 				
+<<<<<<< HEAD
 				<li><a href="{{route('users.edit',$user->id)}}"><i class="fa fa-pencil" aria-hidden="true"> </i>Edit {{$user->person->firstname}}  {{$user->person->lastname}}</a></li>
 
 				<li><a data-href="{{route('users.destroy',$user->id)}}" 
@@ -105,6 +119,20 @@
 				data-title = "{{$user->person->firstname}}  {{$user->person->lastname}}" href="#">
 				<i class="fa fa-trash-o" aria-hidden="true"> </i> 
 				Delete {{$user->person->firstname}}  {{$user->person->lastname}}</a></li></a></li>
+=======
+				<a class="dropdown-item"
+                href="{{route('users.edit',$user->id)}}">
+                <i class="far fa-edit text-info"" 
+                aria-hidden="true"> </i>Edit {{$user->person->firstname}}  {{$user->person->lastname}}</a>
+
+				<a class="dropdown-item" 
+                data-href="{{route('users.destroy',$user->id)}}" 
+				data-toggle="modal" 
+				data-target="#confirm-delete" 
+				data-title = "{{$user->person->firstname}}  {{$user->person->lastname}}" href="#">
+				<i class="far fa-trash-o text-danger" aria-hidden="true"> </i> 
+				Delete {{$user->person->firstname}}  {{$user->person->lastname}}</a>
+>>>>>>> development
 
 			  </ul>
 			</div>
@@ -115,4 +143,8 @@
 	</table>
     
 @include('partials/_scripts')
+<<<<<<< HEAD
 @stop
+=======
+@endsection
+>>>>>>> development

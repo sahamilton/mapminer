@@ -6,4 +6,8 @@
 @include('maps.partials._form')
 
 @include('partials._scripts')
+<<<<<<< HEAD
 @stop
+=======
+@endsection
+>>>>>>> development

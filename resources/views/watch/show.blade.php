@@ -4,7 +4,11 @@
 <h1>{{$user->person->postName()}}'s Watch List</h1>
 <p><a href="{{route('watch.mywatchexport',$user->id)}}" 
 title="Download {{$user->person->postName()}}'s Watch List as a CSV / Excel file">
+<<<<<<< HEAD
 <i class="fa fa-cloud-download" aria-hidden="true"></i></i> Download {{$user->person->postName()}}'s Watch List</a> </p>
+=======
+<i class="fas fa-cloud-download-alt" aria-hidden="true"></i></i> Download {{$user->person->postName()}}'s Watch List</a> </p>
+>>>>>>> development
 
 <table id='sorttable' class ='table table-bordered table-striped table-hover dataTable'><thead>
 
@@ -39,4 +43,8 @@ title="Download {{$user->person->postName()}}'s Watch List as a CSV / Excel file
 </table>
 @include('partials/_scripts')
 
+<<<<<<< HEAD
 @stop
+=======
+@endsection
+>>>>>>> development

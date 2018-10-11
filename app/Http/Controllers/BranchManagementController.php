@@ -25,6 +25,14 @@ class BranchManagementController extends Controller
         $this->user = $user;
     }
 
+
+    /**
+     * Display a listing of the resource.
+     * Get list of sales people with stale branch assignments
+     * @return \Illuminate\Http\Response
+     */
+    
+
     public function index(){
         $id = auth()->user()->id;
         return redirect()->route('branchassignments.show',$id);
@@ -46,11 +54,19 @@ class BranchManagementController extends Controller
         }
 
         $details = $this->person->whereUser_id($id)
-        ->with('userdetails.roles')
-        ->with('branchesServiced')
-        ->firstOrFail();
-       
-        return response()->view('branchmanagement.show',['details'=>$details]);
+
+            ->with('userdetails.roles')
+            ->with('branchesServiced')
+            ->firstOrFail();
+        $branches = array();
+           
+        if($details->geostatus ==1){
+            $branches = $this->branch->nearby($details,100,5)->get();
+        }
+    
+        return response()->view('branchassignments.show',['details'=>$details,'branches'=>$branches]);
+
+
     }
 
     
@@ -63,53 +79,64 @@ class BranchManagementController extends Controller
      */
     public function update(BranchManagementRequest $request, $id)
     {
-       
+
         if(! auth()->user()->hasRole('Admin')){
             
             $id = auth()->user()->id;
         }
-        
-        $person = $this->person
-                    ->whereUser_id($id)
-                    ->with('userdetails.roles')
-                    ->firstOrFail();
-        $role = $person->userdetails->roles->first()->id;
-        $branches = explode(",",request('branches'));
-        foreach ($branches as $branch){
-           $data[$branch]=['role_id' => $role]; 
-        }
-        $person->branchesServiced()->sync($data);
-        return redirect()->route('branchmanagement.show',$person->user_id)
-        ->withMessage('You have successfully updated your branch assignments');
-       
+
+        $person = $this->person->whereUser_id($id)->firstorFail();
+        // this is odd!  Why both role?
+        $role = $person->getPrimaryRole($person);
+        $role = $person->whereUser_id($id)->primaryRole();                  
+        $branches = $this->branchmanagement->getBranches($request,$role);
+        $person->branchesServiced()->sync($branches);
+
+        return redirect()->route('user.show',$id)
+            ->withMessage("Thank You. Your branch associations have been updated. Check out the rest of your profile.");
+                
 
     }
 
     public function correct($token){
-      
+
+
+        //validate user from token
         if($user = $this->user->getAccess($token)){
-            $person = $this->user->person()->id;
-            $this->BranchManagement->updateConirmed($person);
+            $person = $user->person()->first();
+            // set updated_at to now
+            $this->branchmanagement->updateConfirmed($person);
+            //login user
             auth()->login($user);
-            dd('yay!');
-            return redirect()->route('home',$user->id)
-            ->withMessage("Thank You. Your branch associations have been confirmed.");;
+            // update token - single use
+            $user->update(['apitoken' => $user->setApiToken()]);
+            return redirect()->route('user.show',$user->id)
+            ->withMessage("Thank You. Your branch associations have been confirmed. Check out the rest of your profile.");
             
+
         }else{
             //go to home screen
             
-            return redirect()->route('welcome')->withMessage("Invalid or expired token");
+            return redirect()->route('welcome')->withMessage("Invalid or expired token.");
+
         }
     }
 
     public function confirm($token){
-     
+
+        //validate user from token
         if($user = $this->user->getAccess($token)){
+            
+            //login user
             auth()->login($user);
-            return redirect()->route('branchmanagement.show',$user->id);
+            // update token - single useauth()->login($user);
+            $user->update(['apitoken' => $user->setApiToken()]);
+           
+            return redirect()->route('branchassignments.show',$user->id);
 
         }else{
-            return redirect()->route('guest')->withMessage("Invalid or expired token");
+            return redirect()->route('welcome')->withMessage("Invalid or expired token");
+
         }
     }
 

@@ -4,7 +4,11 @@
 @section('title')
 Edit a Service Line::
 @parent
+<<<<<<< HEAD
 @stop
+=======
+@endsection
+>>>>>>> development
 @section('content')
 <div class="page-header">
 	<h3>
@@ -24,4 +28,8 @@ Edit a Service Line::
 	@include('servicelines.partials._form')
 {{Form::close()}}
 </div>
+<<<<<<< HEAD
 @stop
+=======
+@endsection
+>>>>>>> development

@@ -23,7 +23,9 @@ class BranchTeamImportController extends ImportController
 	public function import(BranchTeamImportFormRequest $request) {
         
         $title="Map the branch team import file fields";
-        $data = $this->uploadfile($request->file('upload'));
+
+        $data = $this->uploadfile(request()->file('upload'));
+
         $data['table']=$this->importtable;
         $data['type'] = 'branchteamimport';
         $data['additionaldata'] = array();

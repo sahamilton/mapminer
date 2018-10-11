@@ -3,7 +3,11 @@
 {{-- Page title --}}
 @section('title')
 Change your Email
+<<<<<<< HEAD
 @stop
+=======
+@endsection
+>>>>>>> development
 
 {{-- Account page content --}}
 @section('account-content')
@@ -56,4 +60,8 @@ Change your Email
 		</div>
 	</div>
 </form>
+<<<<<<< HEAD
 @stop
+=======
+@endsection
+>>>>>>> development

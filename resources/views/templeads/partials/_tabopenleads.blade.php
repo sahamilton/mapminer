@@ -10,7 +10,10 @@
                 <th>Address</th>
                 <th>City</th>
                 <th>State</th>
+<<<<<<< HEAD
                 <th>Distance</th>
+=======
+>>>>>>> development
                 <th>Lead source</th>
 
             </thead>
@@ -22,7 +25,10 @@
                     <td>{{$lead->address}}</td>
                     <td>{{$lead->city}}</td>
                     <td>{{$lead->state}}</td>
+<<<<<<< HEAD
                     <td>{{number_format($lead->distance,1)}} miles</td>
+=======
+>>>>>>> development
                     <td>{{$lead->leadsource->source}}</td>
                 </tr>  
 

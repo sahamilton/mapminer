@@ -38,11 +38,39 @@
 @endcan
 </div>
 <ul class="nav nav-tabs">
+<<<<<<< HEAD
   <li class="active"><a data-toggle="tab" href="#showmap"><strong>Project Location</strong></a></li>
   <li><a data-toggle="tab" href="#details"><strong>Project Details</strong></a></li>
   <li><a data-toggle="tab" href="#contacts"><strong>Project Contacts @if($project->companies->count()>0)({{$project->companies->count()}}) @endif</strong></a></li>
   <li><a data-toggle="tab" href="#branches"><strong>Nearby Branches</strong></a></li>
   <li><a data-toggle="tab" href="#notes"><strong>Project Notes @if($project->relatedNotes->count() >0) ({{$project->relatedNotes->count()}}) @endif</strong></a></li>
+=======
+  <li class="nav-item active">
+    <a class="nav-link active" data-toggle="tab" href="#showmap">
+    <strong>Project Location</strong>
+  </a>
+</li>
+  <li class="nav-item">
+    <a class="nav-link" data-toggle="tab" href="#details">
+      <strong>Project Details</strong>
+    </a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" data-toggle="tab" href="#contacts">
+      <strong>Project Contacts @if($project->companies->count()>0)({{$project->companies->count()}}) @endif</strong>
+    </a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link"  data-toggle="tab" href="#branches">
+      <strong>Nearby Branches</strong>
+    </a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link"  data-toggle="tab" href="#notes">
+      <strong>Project Notes @if($project->relatedNotes->count() >0) ({{$project->relatedNotes->count()}}) @endif</strong>
+    </a>
+  </li>
+>>>>>>> development
 
 </ul>
 
@@ -95,4 +123,8 @@ $(function(){
 });
 </script>
 
+<<<<<<< HEAD
 @stop
+=======
+@endsection
+>>>>>>> development

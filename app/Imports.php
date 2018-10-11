@@ -13,25 +13,7 @@ class Imports extends Model
     	public $additionaldata;
     	public $nullFields;
 
-    	/*public function __construct($data){
 
-    		if(isset($data['table'])){
-	    		$this->table = $data['table'];
-	    		$this->temptable = $this->table .'_import';
-
-	   			if(isset($data['additionaldata'])){
-
-	    			$this->additionaldata = $data['additionaldata'];
-	    		}else{
-	    			$this->additionaldata = [];
-	    		}
-	    		if(isset($data['filename'])){
-	    			$this->importfilename = str_replace("\\","/",$data['filename']);
-	    		}
-
-       		}
-
-    	}*/
 		public function setFields($data){
 			if(isset($data['additionaldata'])){
 
@@ -45,7 +27,7 @@ class Imports extends Model
 	    	
 	    	$data['fields'][key(array_intersect($data['fields'],array_keys($this->additionaldata)))]='@ignore';
 	    	
-    		$this->fields = implode(",",$data['fields']);
+    		$this->fields = implode(",",$data['fields']);    		
     		$this->table = $data['table'];
     		$this->temptable = $this->table . "_import";
     		$this->importfilename = str_replace("\\","/",$data['filename']);
@@ -108,7 +90,10 @@ class Imports extends Model
 
 		private function updateAdditionalFields(){
 		//Add the project source id
-		//foreach ($this->additonaldata as)
+
+		//foreach ($this->additionaldata as)
+		
+
 		foreach ($this->additionaldata as $field=>$value){
 
 				$this->fields.= ",".$field;

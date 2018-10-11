@@ -54,7 +54,11 @@
 @endif
 <a href="{{route('user.edit',$user->id)}}">
 <button type="button" class="btn btn-success" >
+<<<<<<< HEAD
 <i class="fa fa-pencil" aria-hidden="true"></i> Update</button></a>
+=======
+<i class="far fa-edit text-info"" aria-hidden="true"></i> Update</button></a>
+>>>>>>> development
 
 <script>
 $(document).ready(function() {
@@ -75,4 +79,8 @@ $(document).ready(function() {
 		});
 });
 </script>
+<<<<<<< HEAD
 @stop
+=======
+@endsection
+>>>>>>> development

@@ -4,7 +4,11 @@
 @section('title')
 Account Sign up ::
 @parent
+<<<<<<< HEAD
 @stop
+=======
+@endsection
+>>>>>>> development
 
 {{-- Page content --}}
 @section('content')
@@ -82,4 +86,8 @@ Account Sign up ::
 		</div>
 	</form>
 </div>
+<<<<<<< HEAD
 @stop
+=======
+@endsection
+>>>>>>> development

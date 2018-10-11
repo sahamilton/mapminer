@@ -17,10 +17,17 @@
    		$oldaddress = $branch->orgstreet . " ". $branch->orgaddress2 . " ". $branch->orgcity . " " . $branch->orgstate . " " . $branch->orgzip;
    		@endphp
     <tr>  
+<<<<<<< HEAD
  	<td><input type="checkbox" checked name="change[]"	value="{{$branch->branchid}}" />
 	<td>{{$branch->branchname}}</td>
 
 	<td>{{$branch->branchid}}	</td>
+=======
+ 	<td><input type="checkbox" checked name="change[]"	value="{{$branch->id}}" />
+	<td>{{$branch->branchname}}</td>
+
+	<td>{{$branch->id}}	</td>
+>>>>>>> development
 
 	<td>
 		@if($newaddress !== $oldaddress)

@@ -172,7 +172,9 @@ class LeadsController extends BaseController
     }
     public function store(LeadFormRequest $request){
 
-      $input = $request->all();
+
+      $input = request()->all();
+
       $leadsource = $this->leadsource->findOrFail($input['lead_source_id']);
       $table = $leadsource->type.'leads';
       $data = $this->extractLeadTableData($input,$table);
@@ -220,8 +222,8 @@ class LeadsController extends BaseController
    
       $lead->load('leadsource');
       $table = $lead->leadsource->type.'leads';
-      $data = $this->extractLeadTableData($request->all(),$table);
 
+      $data = $this->extractLeadTableData(request()->all(),$table);
       $lead->update($data['lead']);
       $lead->contacts()->update($data['contact']);
       if($table=='webleads'){
@@ -296,7 +298,6 @@ class LeadsController extends BaseController
          
             // we should also add serviceline filter?
           $people = $this->findNearByPeople($lead,500);
-
           $salesrepmarkers = $this->person->jsonify($people);
           $branchmarkers=$branches->toJson();
 
@@ -362,14 +363,17 @@ class LeadsController extends BaseController
         return redirect()->back()->withInput()->with('error','Unable to Geocode address:'.request('address') );
 
       }else{
-        $request->merge($this->lead->getGeoCode($geoCode));
-      }
-      $data = $request->all();
 
-      if(! $request->has('number')){
+        request()->merge($this->lead->getGeoCode($geoCode));
+      }
+      $data = request()->all();
+
+      if(! request()->has('number')){
           $data['number']=5;
         }
-        session(['geo', $data]);
+
+      session()->put('geo', $data);
+
       if($request->type =='branch'){
           $branches = $this->findNearByBranches($data);
           return response()->view('salesorg.nearbybranches',compact('data','branches'));
@@ -433,7 +437,9 @@ class LeadsController extends BaseController
    
     
     public function exportLeads(Request $request){
-       if($request->has('type')){
+
+       if(request()->has('type')){
+
         $type = request('type');
     }else{
         $type = 'csv';
@@ -469,7 +475,12 @@ class LeadsController extends BaseController
 
     private function showSalesLeads($person){
         
-        $openleads = $this->lead->has('openleads')->nearby($person,100,200)->get();
+
+        $openleads = $this->getLeadsByType('openleads',$person);
+        $openleads =$openleads->limit('200')
+                    ->with('leadsource')
+                    ->get();
+
         $closedleads = $this->getLeadsByType('closedleads',$person);
         $closedleads = $closedleads->with('relatedNotes','leadsource')
                     ->limit('200')

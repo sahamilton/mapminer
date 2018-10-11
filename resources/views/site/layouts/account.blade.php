@@ -15,4 +15,8 @@
 		@yield('account-content')
 	</div>
 </div>
+<<<<<<< HEAD
 @stop
+=======
+@endsection
+>>>>>>> development

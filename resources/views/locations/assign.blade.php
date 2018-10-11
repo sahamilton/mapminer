@@ -21,4 +21,8 @@ foreach($headings as $key=>$value)
 echo "</tr>";
 }
 echo "</tbody></table>";?>
+<<<<<<< HEAD
 @stop
+=======
+@endsection
+>>>>>>> development

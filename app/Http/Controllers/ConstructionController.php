@@ -30,11 +30,13 @@ class ConstructionController  extends BaseController
 
     public function search(Request $request){
  
-        $data = $request->except('_token');
+
+        $data = request()->except('_token');
 
         $geoCode = app('geocoder')->geocode($data['address'])->get();
         $data['location'] =$this->construction->getGeoCode($geoCode);
-        session(['geo',$data['location']]);
+        session()->put('geo', $data);
+
         
         if($data['view'] =='list'){
             $projects = $this->construction->getProjectData($data);

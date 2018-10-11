@@ -44,7 +44,14 @@
 		</form>
 
 </div>
+<<<<<<< HEAD
 @stop	
 
 @include('partials/_scripts')
 @stop
+=======
+@endsection	
+
+@include('partials/_scripts')
+@endsection
+>>>>>>> development

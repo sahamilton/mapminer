@@ -4,4 +4,8 @@
 
 
 
+<<<<<<< HEAD
 @stop
+=======
+@endsection
+>>>>>>> development

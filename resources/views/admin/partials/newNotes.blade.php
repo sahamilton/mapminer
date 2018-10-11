@@ -21,6 +21,7 @@
 <td>
 <a href = "{{route('locations.show',$newNote->relatesToLocation->id)}}" title="Review {{$newNote->relatesToLocation->businessname}} location" >{{$newNote->relatesToLocation->businessname}}</a>
 </td>
+<<<<<<< HEAD
 <td>{{$newNote->relatesToLocation->locationAddress()}}</td>
 <td>{{$newNote->note}}</td>
 <td>
@@ -29,6 +30,12 @@
 echo $date->format('jS M g:i A');
 ?>
 </td>
+=======
+
+<td>{{$newNote->relatesToLocation->locationAddress()}}</td>
+<td>{{$newNote->note}}</td>
+<td>{{$newNote->created_at ? $newNote->created_at->format('jS M g:i A'):''}}</td>
+>>>>>>> development
 <td>{{$newNote->writtenBy->person->firstname}} {{$newNote->writtenBy->person->lastname}}</td>
 
 

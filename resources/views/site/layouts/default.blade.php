@@ -19,11 +19,20 @@
 
 	<!-- CSS
 	================================================== -->
+<<<<<<< HEAD
 
 	<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous" />
 	<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.2/css/jquery.dataTables.css" />
 	<link rel="stylesheet" type="text/css" href="//code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css" />    
 	<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet" />
+=======
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+	
+	<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.2/css/jquery.dataTables.css" />
+	<link rel="stylesheet" type="text/css" href="//code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css" />    
+	<link rel="stylesheet" href="//use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+>>>>>>> development
 	<link href="{{asset('assets/css/summernote.css')}}" rel="stylesheet" />
 	<link rel="stylesheet" href="{{asset('assets/css/bootstrap-colorpicker.min.css')}}" rel="stylesheet" />  
 	<link rel="stylesheet" href="{{asset('assets/css/prmapminer.css')}}" />
@@ -32,9 +41,21 @@
 
 	<!-- jQuery -->
 
+<<<<<<< HEAD
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
 	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 	<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+=======
+	<script type="text/javascript" src="//code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+
+	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+	
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+	
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+>>>>>>> development
 	<!-- DataTables -->
 	<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.0-rc.1/js/jquery.dataTables.min.js" ></script>
 	<script src="{{asset('assets/js/summernote.min.js')}}"></script>
@@ -58,6 +79,7 @@
 	<link rel="apple-touch-icon-precomposed" sizes="72x72" href="{{{ asset('assets/ico/apple-touch-icon-72-precomposed.png') }}}">
 	<link rel="apple-touch-icon-precomposed" href="{{{ asset('assets/ico/apple-touch-icon-57-precomposed.png') }}}">
 	<link rel="shortcut icon" href="{{{ asset('assets/ico/favicon.png') }}}">
+<<<<<<< HEAD
 	</head>
 
 	<body>
@@ -93,10 +115,52 @@
 
 
 		@include('site.layouts.footer')
+=======
+	<style>
+	</style>
+</head>
+	
+<body>
+	<div id="app">
+	@include('site.layouts.partials._googletagmanager')
+	@if(config('app.env')=='production')
+		@include('site.layouts.partials._fullstory')
+	@endif
+		<!-- To make sticky footer need to wrap in a div -->
+		
+	@include ('site.layouts._navbar')
+
+		<!-- Container -->
+	<div class="container">
+    
+		<main class="py-4 flex-grow">
+			
+			<!-- Notifications -->
+			@include('notifications')
+			<!-- ./ notifications -->
+
+			<!-- Content -->
+			@yield('content')
+			<!-- ./ content -->
+
+			
+
+			@if (config('app.debug') && auth()->check() && config('app.env')=='local' )
+				@include('sudosu::user-selector')
+			@endif
+		
+		</main>		
+
+		<div class="clear"></div>
+@include('site.layouts.footer')
+</div>	</div>
+
+>>>>>>> development
 		<script
 			src="//d2s6cp23z9c3gz.cloudfront.net/js/embed.widget.min.js"
 			data-domain="trueblue.besnappy.com"
 			data-lang="en"
+<<<<<<< HEAD
 			data-name="{{ isset(Auth::user()->firstname) ? Auth::user()->firstname ." ". Auth::user()->lastname  : ''  }}"
 			data-email="{{ isset(Auth::user()->email) ? Auth::user()->email : '' }}"
 			>
@@ -109,6 +173,12 @@
 
 
 
+=======
+			
+			>
+		</script>
+
+>>>>>>> development
 		@yield('scripts')
 	</body>
 </html>

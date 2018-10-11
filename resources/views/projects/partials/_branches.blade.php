@@ -1,6 +1,7 @@
 <h2>Nearby Branches</h2>
 <p>The closest branches that can serve the {{$project->project_title}} project:</p>
 
+<<<<<<< HEAD
 <table class="table table-striped table-bordered table-condensed">
 	<thead>
 		<th>Branch</th>
@@ -30,3 +31,6 @@
 	 	@endforeach
 	</tbody>
  </table>
+=======
+@include('branches.partials._nearby')
+>>>>>>> development

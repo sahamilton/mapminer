@@ -1,7 +1,11 @@
 @extends('site/layouts/default')
 @section('content')
 
+<<<<<<< HEAD
 <p><a href="{{route('watch.index')}}" title="Review my watch list"><i class="fa fa-th-list" aria-hidden="true"></i> View My Watch List</a></p>
+=======
+<p><a href="{{route('watch.index')}}" title="Review my watch list"><i class="fas fa-th-list" aria-hidden="true"></i> View My Watch List</a></p>
+>>>>>>> development
 @foreach ($types as $key=>$type)
 <div class="row">
 	<div class="col-md-8 col-md-offset-2">
@@ -20,7 +24,11 @@
 					</td>	
 
 					<td>
+<<<<<<< HEAD
 						@if($type=='location' && $note->relatesToLocation->count()>0)
+=======
+						@if($type=='location' && $note->relatesToLocation && $note->relatesToLocation->count()>0)
+>>>>>>> development
 							<a href="{{route('locations.show',$note->relatesToLocation->id)}}"
 							title="See details of location">
 							{{$note->relatesToLocation->businessname}}

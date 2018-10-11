@@ -13,10 +13,16 @@
 	Route::get('/', ['as'=>'welcome',function () {
 
 		    return view('welcome');
+<<<<<<< HEAD
 	}]);
 /*Route::get('/testerror', function () {
     throw new Exception('Example exception!');
 });*/
+=======
+
+	}]);
+
+>>>>>>> development
 /*
 	
 	Route::get('/error',function(){
@@ -86,6 +92,12 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::post('findme',['as'=>'findme','uses'=>'GeoCodingController@findMe']);
 		Route::get('findme',['as'=>'findme','uses'=>'MapsController@findme']);
 
+<<<<<<< HEAD
+=======
+	#Industry Focus
+    	Route::resource('/industryfocus','PersonIndustryController');
+
+>>>>>>> development
 	#Locations
 
 		Route::get('location/{id}/branches', ['as' => 'assign.location', 'uses' => 'LocationsController@getClosestBranch']);
@@ -276,9 +288,15 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
 
 		Route::get('companies/export', ['as'=>'companies.export', 'uses'=>'CompaniesController@export']);
 		Route::post('companies/export', ['as'=>'companies.locationsexport', 'uses'=>'CompaniesController@locationsExport']);
+<<<<<<< HEAD
 		
 		Route::get('company/{companyId}/export',['as'=>'company.export','uses'=>'WatchController@companyexport']);
 		Route::get('companies/download', ['as'=>'allcompanies.export','uses'=>'CompaniesController@exportAccounts']);
+=======
+		Route::get('companies/download', ['as'=>'allcompanies.export','uses'=>'CompaniesController@exportAccounts']);
+		
+		Route::get('company/{companyId}/export',['as'=>'company.export','uses'=>'WatchController@companyexport']);
+>>>>>>> development
 		//Route::post('company/filter',['as'=>'company.filter','uses'=>'CompaniesController@filter']);
 		Route::resource('company','CompaniesController',['except' => ['index', 'show']]);
 
@@ -304,6 +322,11 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
     	Route::post('/importbranches/mapfields',['as'=>'branches.mapfields','uses'=>'BranchesImportController@mapfields']);
     	Route::post('/importbranchteams/mapfields',['as'=>'branchteam.mapfields','uses'=>'BranchTeamImportController@mapfields']);
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> development
 	#Locations
 		Route::get('locations/import', ['as'=>'locations.importfile', 'uses'=>'LocationsImportController@getfile']);
 		Route::post('locations/bulkimport', ['as'=>'locations.import', 'uses'=>'LocationsImportController@import']);
@@ -397,9 +420,12 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
 
 		Route::get('salesteam',['as'=>'teamupdate','uses'=>'SalesActivityController@changeTeam']);
 
+<<<<<<< HEAD
 	#ServiceLines
 		Route::resource('serviceline','ServicelinesController');
 
+=======
+>>>>>>> development
 	#CompanyService
 		
 		Route::get('/company/{id}/newservice/{state?}',['as'=>'company.service','uses'=>'CompaniesServiceController@getServiceDetails']);
@@ -431,6 +457,7 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
 
 Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 {
+<<<<<<< HEAD
 	# Admin Dashboard
 		Route::get('watching/{userid}', ['as'=>'watch.watching', 'uses'=>'WatchController@watching']);
 		Route::get('userlogin/{view?}',['as'=>'admin.showlogins', 'uses'=>'Admin\AdminDashboardController@logins']);
@@ -447,6 +474,16 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 	#Comments
 		Route::get('comment/download', ['as'=>'comment.download', 'uses'=>'CommentsController@download']);
 
+=======
+	# Branch management
+
+		Route::get('branchassignments/select',['as'=>'branchassignment.check','uses'=>'Admin\BranchManagementController@select']);
+		Route::post('branchassignments/email',['as'=>'branchteam.email','uses'=>'Admin\BranchManagementController@confirm']);
+		Route::post('branchassignments/send',['as'=>'branchassignments.send','uses'=>'Admin\BranchManagementController@emailAssignments']);	
+		Route::get('branch/manage',['as'=>'branch.management','uses'=>'Admin\BranchManagementController@index']);
+		Route::get('branch/check',['as'=>'branch.check','uses'=>'Admin\AdminUsersController@checkBranchAssignments']);
+
+>>>>>>> development
 	# Construction
 		Route::resource('/construction','ConstructionController');
 		
@@ -456,6 +493,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 
 		Route::get('/construction/api/{distance}/{latLng}',['as'=>'construction.api','uses'=>'ConstructionController@map']);
     
+<<<<<<< HEAD
     
 	#Howtofields
 		Route::resource('howtofields','HowtofieldsController');
@@ -478,12 +516,61 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 	#Notes
 		Route::get('notes/{companyid}/co',['as'=>'notes.company','uses'=>'NotesController@companynotes']);
 		Route::get('locationnotes',['as'=>'locations.notes', 'uses'=>'NotesController@index']);
+=======
+    # User Management
+
+		Route::get('cleanse',['as'=>'users.cleanse','uses'=>'Admin\AdminUsersController@cleanse']);
+		Route::get('users/import',['as'=>'users.importfile', 'uses'=>'UsersImportController@getFile']);
+		Route::get('usersimport',['as'=>'usersimport.index','uses'=>'UsersImportController@index']);
+
+		Route::post('users/bulkimport',['as'=>'admin.users.bulkimport', 'uses'=>'UsersImportController@import']);
+		Route::post('users/import',['as'=>'users.mapfields','uses'=>'UsersImportController@mapfields']);
+		Route::post('user/importerrors',['as'=>'fixuserinputerrors','uses'=>'UsersImportController@fixerrors']);
+		Route::post('user/usererrors',['as'=>'fixusercreateerrors','uses'=>'UsersImportController@fixUserErrors']);
+		
+
+
+		Route::get('users/newusers',['as'=>'import.newusers','uses'=>'UsersImportController@newUsers']);
+		Route::post('users/createnewusers',['as'=>'import.createnewusers','uses'=>'UsersImportController@createNewUsers']);
+		
+		Route::get('users/serviceline/{servicelineId}', ['as'=>'serviceline.user','uses'=>'Admin\AdminUsersController@index']);
+		Route::get('users/nomanager', ['as'=>'nomanager','uses'=>'SalesOrgController@noManager']);
+		Route::get('users/nomanager/export', ['as'=>'nomanager.export','uses'=>'SalesOrgController@noManagerExport']);
+
+		Route::resource('users', 'Admin\AdminUsersController');
+
+
+	# User Role Management
+
+		Route::resource('roles','Admin\AdminRolesController');
+	    #  Permissions
+
+		Route::resource('permissions','Admin\AdminPermissionsController');
+
+	#Howtofields
+		Route::resource('howtofields','HowtofieldsController');
+
+
+>>>>>>> development
 	#People
 		Route::get('person/import',['as'=>'person.bulkimport', 'uses'=>'PersonsController@import']);
 		Route::post('person/import',['as'=>'person.import', 'uses'=>'PersonsController@processimport']);
 		Route::get('person/export', ['as'=>'person.export', 'uses'=>'PersonsController@export']);
 
 
+<<<<<<< HEAD
+=======
+	#ServiceLines
+		Route::resource('serviceline','ServicelinesController');
+
+
+	# Lead Status
+
+	 	Route::resource('leadstatus','LeadStatusController');
+
+
+
+>>>>>>> development
 	# Sales Process
 
 		Route::resource('process','SalesProcessController');
@@ -492,9 +579,29 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 		
 		Route::resource('training','TrainingController')->except(['index', 'show']);;
 
+<<<<<<< HEAD
 	
 
 	
+=======
+	# Admin Dashboard
+		Route::get('watching/{userid}', ['as'=>'watch.watching', 'uses'=>'WatchController@watching']);
+		Route::get('userlogin/{view?}',['as'=>'admin.showlogins', 'uses'=>'Admin\AdminDashboardController@logins']);
+		Route::get('userlogin/download/{view?}',['as'=>'admin.downloadlogins', 'uses'=>'Admin\AdminDashboardController@downloadlogins']);
+		Route::get('/', ['as'=>'dashboard','uses'=>'Admin\AdminDashboardController@dashboard']);
+
+	#Comments
+		Route::get('comment/download', ['as'=>'comment.download', 'uses'=>'CommentsController@download']);
+
+	#News
+		Route::get('news/{id}/audience',['as'=>'news.audience','uses'=>'NewsController@audience']);
+		Route::resource('news', 'NewsController',  ['except' => ['index', 'show']]);
+
+
+	#Notes
+		Route::get('notes/{companyid}/co',['as'=>'notes.company','uses'=>'NotesController@companynotes']);
+		Route::get('locationnotes',['as'=>'locations.notes', 'uses'=>'NotesController@index']);
+>>>>>>> development
 
 	#Search Filters
 
@@ -514,6 +621,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 		Route::get('seeder',['as'=>'seeder','uses'=>'CompaniesController@seeder']);
 		Route::get('apiseeder',['as'=>'apiseeder','uses'=>'UsersController@seeder']);
 
+<<<<<<< HEAD
 	# User Management
 
 		Route::get('cleanse',['as'=>'users.cleanse','uses'=>'Admin\AdminUsersController@cleanse']);
@@ -536,6 +644,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 
 
 
+=======
+>>>>>>> development
 	# Versions
 	 	Route::resource('versions','GitController');
 

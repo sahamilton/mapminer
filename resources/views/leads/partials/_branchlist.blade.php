@@ -22,7 +22,11 @@
 				@if($branch->manager)
 					@foreach ($branch->manager as $person)
 					<a href="{{route('salesorg',$person->id)}}"  title="See {{$person->postName()}}'s details">{{$person->postName()}}</a>
+<<<<<<< HEAD
 					<span type="button" class="fa fa-copy btn-copy js-tooltip js-copy" data-toggle="tooltip" data-placement="bottom" data-copy="{{$person->postName()}}" title="Copy to clipboard"></span>
+=======
+					<span type="button" class="far fa-copy btn-copy js-tooltip js-copy" data-toggle="tooltip" data-placement="bottom" data-copy="{{$person->postName()}}" title="Copy to clipboard"></span>
+>>>>>>> development
 					@endforeach
 				@endif
 			</td>

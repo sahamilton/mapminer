@@ -27,4 +27,8 @@
 		</div>
 		<!-- ./ form actions -->
 	</form>
+<<<<<<< HEAD
 @stop
+=======
+@endsection
+>>>>>>> development

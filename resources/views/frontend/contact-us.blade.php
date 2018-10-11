@@ -4,7 +4,11 @@
 @section('title')
 Contact us ::
 @parent
+<<<<<<< HEAD
 @stop
+=======
+@endsection
+>>>>>>> development
 
 {{-- Page content --}}
 @section('content')
@@ -37,4 +41,8 @@ Contact us ::
 		<button type="submit" class="btn btn-warning pull-right">Submit</button>
 	</fieldset>
 </form>
+<<<<<<< HEAD
 @stop
+=======
+@endsection
+>>>>>>> development

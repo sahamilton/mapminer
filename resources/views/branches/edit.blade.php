@@ -4,7 +4,11 @@
 @section('title')
 Edit Branch ::
 @parent
+<<<<<<< HEAD
 @stop
+=======
+@endsection
+>>>>>>> development
 
 {{-- Page content --}}
 @section('content')
@@ -12,8 +16,13 @@ Edit Branch ::
 	<h3>Edit Branch</h3>
 </div>
 <ul class="nav nav-tabs">
+<<<<<<< HEAD
   <li class="active"><a data-toggle="tab" href="#branch"><strong>Branch Location</strong></a></li>
   <li><a data-toggle="tab" href="#team"><strong>Branch Team</strong></a></li>
+=======
+  <li class="nav-item active"><a class="nav-link" data-toggle="tab" href="#branch"><strong>Branch Location</strong></a></li>
+  <li class="nav-item"><a class="nav-link"  data-toggle="tab" href="#team"><strong>Branch Team</strong></a></li>
+>>>>>>> development
 
 
 </ul>
@@ -38,4 +47,8 @@ $buttonLabel = 'Edit Branch';?>
 <input type="submit" class="btn btn-success" value="Edit Branch" />
 </form>
 
+<<<<<<< HEAD
 @stop
+=======
+@endsection
+>>>>>>> development

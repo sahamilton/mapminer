@@ -2,7 +2,11 @@
 @section('content')
 
 <h2>{{$person->postName()}}'s Leads</h2>
+<<<<<<< HEAD
 <p><a href="{{route('webleads.map')}}"><i class="fa fa-map" aria-hidden="true"></i> Map View</a>
+=======
+<p><a href="{{route('webleads.map')}}"><i class="far fa-map" aria-hidden="true"></i> Map View</a>
+>>>>>>> development
  
 
     <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
@@ -41,4 +45,8 @@
     </table>
           @include('partials/_modal')
 @include('partials/_scripts')
+<<<<<<< HEAD
 @stop
+=======
+@endsection
+>>>>>>> development

@@ -33,4 +33,8 @@
         });
     </script>
     @include('partials/_copytoclipboard')
+<<<<<<< HEAD
 @stop
+=======
+@endsection
+>>>>>>> development

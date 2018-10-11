@@ -5,7 +5,11 @@
 		<div class="panel-heading clearfix">
 			<h2 class="panel-title pull-left"><strong>{{$people->postName()}}</strong></h2>
 			<a class="btn btn-primary pull-right" href="{{route('users.edit',$people->user_id)}}">
+<<<<<<< HEAD
 				<i class="fa fa-pencil"></i>
+=======
+				<i class="far fa-edit text-info""></i>
+>>>>>>> development
 				Edit
 			</a>
 		</div>

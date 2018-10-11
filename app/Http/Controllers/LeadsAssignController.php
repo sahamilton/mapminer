@@ -32,14 +32,29 @@ class LeadsAssignController extends Controller
         //$leadroles = $this->leadroles;
         $data['verticals'] = $leadsource->verticals()->pluck('searchfilters.id')->toArray();
 
-        $leads = $this->getUnassignedLeads($sid);
+        $leads = $this->lead->whereDoesntHave('salesteam')
+          ->where('lead_source_id','=',$sid)
+          ->whereHas('leadsource', function ($q){
+            $q->where('datefrom','<=',date('Y-m-d'))
+            ->where('dateto','>=',date('Y-m-d'));
+          })
+
+        ->get();
+
 
         $count = null;
         foreach ($leads as $lead) {
           $data['lat']=$lead->lat;
           $data['lng']=$lead->lng;
+         $people = $this->person->nearby($lead,$this->distance)
+          ->with('userdetails')
+          ->whereHas('userdetails.roles',function($q) {
+            $q->whereIn('name',$this->leadroles);
 
-          $people = $this->getPeopleToAcceptLeads($lead);
+          })
+          ->limit($this->limit)
+          ->get();
+
                 foreach ($people as $person){
                 	$count++;
                     $lead->salesteam()->attach($person->id,['status_id'=>1]);
@@ -51,9 +66,11 @@ class LeadsAssignController extends Controller
     public function assignLead(Request $request){
 
      $count=0;
-      $lead = $this->lead->findOrFail($request->get('lead_id'));
 
-      foreach($request->get('salesrep') as $key=>$value){
+      $lead = $this->lead->findOrFail(request('lead_id'));
+
+      foreach(request('salesrep') as $key=>$value){
+
         $lead->salesteam()->attach($value,['status_id'=>1]);
         $count++;
 
@@ -69,36 +86,4 @@ class LeadsAssignController extends Controller
 
     }
 
-    private function getUnassignedLeads($sid){
-      return $this->lead->whereDoesntHave('salesteam')
-          ->where('lead_source_id','=',$sid)
-          
-
-        ->get();
-
-    }
-
-    private function getPeopleToAcceptLeads($lead){
-      return $this->person->nearby($lead,$this->distance)
-          ->with('userdetails')
-          ->whereHas('userdetails.roles',function($q) {
-            $q->whereIn('name',$this->leadroles);
-
-          })
-          ->limit($this->limit)
-          ->get();
-    }
-    public function reassignLeads($pid){
-
-      $person = $this->person->with('openleads')->findOrFail($pid);
-      $person->openleads()->detach();
-      $leads = $this->lead->has('openleads')->nearby($person,25)->pluck('id')->toArray();
-      $data = array();
-      foreach ($leads as $lead){
-        $data[$lead]=['status_id'=>2];
-      }
-      
-      $person->leads()->attach($data);
-      return redirect()->route('salesrep.newleads',$pid);
-    }
 }

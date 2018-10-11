@@ -3,7 +3,11 @@
 {{-- Web site Title --}}
 @section('title')
 	{{{ $title }}} :: @parent
+<<<<<<< HEAD
 @stop
+=======
+@endsection
+>>>>>>> development
 
 {{-- Content --}}
 @section('content')
@@ -12,7 +16,11 @@
 
 			<div class="pull-right">
 				<a href="{{{ route('roles.create') }}}" class="btn btn-small btn-info iframe">
+<<<<<<< HEAD
 <i class="fa fa-plus-circle text-success" aria-hidden="true"></i>
+=======
+<i class="fas fa-plus-circle " aria-hidden="true"></i>
+>>>>>>> development
  Create New Role</a>
 			</div>
 		
@@ -51,8 +59,23 @@
 			  </button>
 			  <ul class="dropdown-menu" role="menu">
 				
+<<<<<<< HEAD
 				<li><a href="{{route('roles.edit',$role->id)}}"><i class="fa fa-pencil" aria-hidden="true"> </i>Edit {{$role->name}}</a></li>
 				<li><a data-href="{{route('roles.destroy',$role->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = "{{$role->name}}" href="#"><i class="fa fa-trash-o" aria-hidden="true"> </i> Delete {{$role->name}}</a></li>
+=======
+				<a class="dropdown-item" 
+				href="{{route('roles.edit',$role->id)}}">
+					<i class="far fa-edit text-info"" aria-hidden="true"> </i>Edit {{$role->name}}
+				</a>
+				<a class="dropdown-item"
+					data-href="{{route('roles.destroy',$role->id)}}" 
+					data-toggle="modal" 
+					data-target="#confirm-delete" 
+					data-title = "{{$role->name}}" 
+					href="#">
+					<i class="far fa-trash-o text-danger" aria-hidden="true"> </i> Delete {{$role->name}}
+				</a>
+>>>>>>> development
 			  </ul>
 			</div>
         
@@ -65,5 +88,9 @@
 	</table>
     
     @include('partials/_scripts')
+<<<<<<< HEAD
 @stop
+=======
+@endsection
+>>>>>>> development
 

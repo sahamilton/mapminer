@@ -26,4 +26,8 @@ $data['distance'] = Config::get('default_radius');?>
 
     </div>
 @include('partials/_scripts')
+<<<<<<< HEAD
 @stop
+=======
+@endsection
+>>>>>>> development

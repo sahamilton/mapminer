@@ -214,9 +214,11 @@ class SalesLeadsController extends Controller
     public function rank(Request $request)
     {
 
-       $user = User::where('api_token','=',$request->get('api_token'))
+
+       $user = User::where('api_token','=',request('api_token'))
        ->with('person')->first();
-       if($user->person->salesleads()->sync([$request->get('id') => ['person_id'=>$user->person->id,'rating' => $request->get('value')]],false))
+       if($user->person->salesleads()->sync([request('id') => ['person_id'=>$user->person->id,'rating' => request('value')]],false))
+
             {
                 
                 return 'success';
@@ -249,7 +251,7 @@ class SalesLeadsController extends Controller
       $lead = $this->salesleads->with('salesteam')->findOrFail($id);
     
       $lead->salesteam()
-        ->updateExistingPivot(auth()->user()->person->id,['rating'=>$request->get('ranking'),'status_id'=>3]);
+        ->updateExistingPivot(auth()->user()->person->id,['rating'=>request('ranking'),'status_id'=>3]);
         $this->addClosingNote($request,$id);
         return redirect()->route('salesleads.index')->with('message', 'Prospect closed');
      }
@@ -257,17 +259,19 @@ class SalesLeadsController extends Controller
 
     private function addClosingNote($request){
         $note = new Note;
-        $note->note = "Prospect Closed:" .$request->get('comments');
+
+        $note->note = "Prospect Closed:" .request('comments');
         $note->type = 'prospect';
-        $note->related_id = $request->get('lead_id');
+        $note->related_id = request('lead_id');
         $note->user_id = auth()->user()->id;
         $note->save();
     }
 
     public function download(Request $request){
          
-     if($request->has('type')){
-        $type = $request->get('type');
+     if(request()->has('type')){
+        $type = request('type');
+
     }else{
         $type = 'xlsx';
     }

@@ -9,9 +9,15 @@
     <h4>Branch Managed By {{$branches->first()->branches->manager->first()->postName()}}</h4>
     @endif
     <p><a href='{{route("newleads.branch.map",$branches->first()->branches->id)}}'>
+<<<<<<< HEAD
  <i class="fa fa-flag" aria-hidden="true"></i> Map view</a></p>
      <p><a href='{{route("leads.branch")}}'>
  <i class="fa fa-th-list" aria-hidden="true"></i> See All Branch Leads</a></p>
+=======
+ <i class="far fa-flag" aria-hidden="true"></i> Map view</a></p>
+     <p><a href='{{route("leads.branch")}}'>
+ <i class="fas fa-th-list" aria-hidden="true"></i> See All Branch Leads</a></p>
+>>>>>>> development
     <div class="col-md-10 col-md-offset-1">
         <table class="table" id = "sorttable">
             <thead>

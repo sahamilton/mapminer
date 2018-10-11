@@ -36,4 +36,8 @@ $('#add').click(function() {
 	
 	
 });
+<<<<<<< HEAD
 </script>@stop
+=======
+</script>@endsection
+>>>>>>> development

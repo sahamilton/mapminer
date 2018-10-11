@@ -8,5 +8,9 @@
 <hr />
 @include('webleads.partials._cutandpaste')
 </div>
+<<<<<<< HEAD
 @stop
+=======
+@endsection
+>>>>>>> development
 

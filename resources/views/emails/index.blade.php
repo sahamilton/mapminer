@@ -5,7 +5,11 @@
 
 <div class="pull-right">
 <a href="{{{ route('emails.create') }}}" class="btn btn-small btn-info iframe">
+<<<<<<< HEAD
 <i class="fa fa-plus-circle text-success" aria-hidden="true"></i>
+=======
+<i class="fas fa-plus-circle " aria-hidden="true"></i>
+>>>>>>> development
  Create New Email</a>
 </div>
 
@@ -43,6 +47,7 @@
 					<span class="sr-only">Toggle Dropdown</span>
 				</button>
 				<ul class="dropdown-menu" role="menu">
+<<<<<<< HEAD
 				<li>
 				@if(! $email->sent)
 					<a href="{{route('emails.edit',$email->id)}}" title="Edit this email">
@@ -56,13 +61,35 @@
 					
 					<li>
 						<a data-href="{{route('emails.destroy',$email->id)}}" 
+=======
+				
+				@if(! $email->sent)
+					<a class="dropdown-item"
+					href="{{route('emails.edit',$email->id)}}" 
+					title="Edit this email">
+					<i class="far fa-edit text-info"" aria-hidden="true"></i>
+					Edit this email
+				</a>
+				@else
+					<a class="dropdown-item"
+					 href="{{route('emails.clone',$email->id)}}" title="Clone this email"><i class="far fa-copy text-info" aria-hidden="true"></i>
+					Clone this email</a>
+				@endif
+				
+					<a class="dropdown-item"
+					 data-href="{{route('emails.destroy',$email->id)}}" 
+>>>>>>> development
 						data-toggle="modal" 
 						data-target="#confirm-delete" 
 						data-title = "email" 
 						href="#">
+<<<<<<< HEAD
 						<i class="fa fa-trash-o" aria-hidden="true"> </i> Delete Email</a>
 					</li>
 
+=======
+						<i class="far fa-trash-alt text-danger" aria-hidden="true"> </i> Delete Email</a>
+>>>>>>> development
 				</ul>
 			</div>	
 		</td>
@@ -73,4 +100,8 @@
 </table>
 @include('partials._modal')
 @include('partials._scripts')
+<<<<<<< HEAD
 @stop
+=======
+@endsection
+>>>>>>> development

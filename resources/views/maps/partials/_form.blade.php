@@ -31,7 +31,11 @@ $values = Config::get('app.search_radius');
 ?>
 <form class="form-inline" action="{{route('findme')}}" method = 'post' name="mapselector">
 {{csrf_field()}}
+<<<<<<< HEAD
 <label>Show a</label>
+=======
+<label>Show a </label>
+>>>>>>> development
 <select name='view' class="btn btn-mini" id="selectview" title="Select map or list views">    
     @foreach($views as $key=>$field)
       @if(isset($data['view']) && $key === $data['view'])
@@ -52,7 +56,11 @@ $values = Config::get('app.search_radius');
         				@endif
            @endforeach
         </select>
+<<<<<<< HEAD
 <label>within</label>  
+=======
+<label>within </label>  
+>>>>>>> development
    <select name='distance' class="btn btn-mini" id="selectdistance" title="Change the search distance">
        @foreach($values as $value)
        	@if(isset($data['distance']) && $value === $data['distance'])
@@ -61,9 +69,15 @@ $values = Config::get('app.search_radius');
        		<option value="{{$value}}">{{$value}} miles</option>
             @endif
        @endforeach
+<<<<<<< HEAD
     </select> of 
   <div class="form-group{{ $errors->has('address') ? ' has-error' : '' }}">
         <label for= "address">address</label> 
+=======
+    </select> 
+  <div class="form-group{{ $errors->has('address') ? ' has-error' : '' }}">
+        <label for= "address"> of address</label> 
+>>>>>>> development
         <input 
         class="form-control{{ $errors->has('address') ? ' has-error' : ''}}" 
         type="text" 
@@ -78,7 +92,11 @@ $values = Config::get('app.search_radius');
     </div>
 <button type="submit"  style="background-color: #4CAF50;"
 class= "btn btn-success ">
+<<<<<<< HEAD
 <i class="fa fa-search" aria-hidden="true"></i> Search!</button>
+=======
+<i class="fas fa-search" aria-hidden="true"></i> Search!</button>
+>>>>>>> development
 <input type="hidden" name ='company' value="{{isset($company) ? $company->id : ''}}" />
 <input type="hidden" name ='companyname' value="{{isset($company) ? $company->companyname : ''}}" />
 <input type="hidden" name="lng" id ="lng" value="{{isset($data['lng']) ? $data['lng'] : '-98.5795'}}" />

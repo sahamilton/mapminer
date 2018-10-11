@@ -5,28 +5,48 @@
 
 
 <ul class="nav nav-tabs">
+<<<<<<< HEAD
     <li class="active">
       <a data-toggle="tab" href="#project">
+=======
+    <li class="nav-item active">
+      <a class="nav-link active" data-toggle="tab" href="#project">
+>>>>>>> development
         <strong>Location Details</strong>
       </a>
     </li>
 
+<<<<<<< HEAD
     <li>
       <a data-toggle="tab" href="#notes">
+=======
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#notes">
+>>>>>>> development
         <strong>Location  Notes ({{$location->relatedNotes->count()}})
         </strong>
       </a>
     </li>
     
+<<<<<<< HEAD
     <li>
       <a data-toggle="tab" href="#contacts">
+=======
+    <<li class="nav-item">
+      <a class="nav-link"  data-toggle="tab" href="#contacts">
+>>>>>>> development
         <strong>Location  Contacts ({{$location->contacts->count()}})
         </strong>
       </a>
     </li>
     
+<<<<<<< HEAD
     <li>
       <a data-toggle="tab" href="#watchers">
+=======
+    <li class="nav-item">
+      <a class="nav-link"  data-toggle="tab" href="#watchers">
+>>>>>>> development
         <strong>Watched By {{$location->watchedBy->count()}}
         </strong>
       </a>
@@ -77,4 +97,8 @@ $id= $location->id;?>
 @include('partials._modal')
 @include('partials._locationcontactmodal')
 @include('partials._scripts');
+<<<<<<< HEAD
 @stop
+=======
+@endsection
+>>>>>>> development

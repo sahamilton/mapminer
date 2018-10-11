@@ -76,6 +76,7 @@
             </button>
             <ul class="dropdown-menu" role="menu">
 
+<<<<<<< HEAD
             <li><a href="{{route('documents.edit',$document->id)}}"><i class="fa fa-pencil" aria-hidden="true"> </i>Edit Sales document</a></li>
 
             <li><a data-href="{{route('documents.destroy',$document->id)}}" 
@@ -88,6 +89,22 @@
 
 
             </ul>
+=======
+            <a class="dropdown-item"
+                 href="{{route('documents.edit',$document->id)}}">
+                 <i class="far fa-edit text-info"" aria-hidden="true"> </i>
+                    Edit Sales document
+            </a>
+            <a class="dropdown-item" 
+                data-href="{{route('documents.destroy',$document->id)}}" 
+                data-toggle="modal" 
+                data-target="#confirm-delete" 
+                data-title = "document" 
+                href="#">
+                <i class="far fa-trash-o text-danger" aria-hidden="true"> </i> Delete Sales document
+            </a>
+          </ul>
+>>>>>>> development
 
             </div>
 

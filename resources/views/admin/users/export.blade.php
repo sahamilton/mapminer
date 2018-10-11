@@ -27,11 +27,15 @@
             {{ $serviceline->ServiceLine }}<br />
         @endforeach
         </td>
+<<<<<<< HEAD
         <td>
         @if(isset($user->lastlogin) &&  $user->lastlogin != '0000-00-00 00:00:00'  )
             {{$user->lastlogin->format('M j, Y h:i a')}}
         @endif
         </td>
+=======
+        <td>{{ $user->lastlogin ? $user->lastlogin->format('M j, Y h:i a') : ''}}</td>
+>>>>>>> development
     </tr>
 @endforeach
 </tbody>

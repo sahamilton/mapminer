@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <div class="modal fade" id="flashNews" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
     <div class="modal-dialog modal-sm">
         <div class="modal-content modal-sm">
@@ -6,6 +7,17 @@
             <h4 class="modal-title" id="myModalLabel">TrueBlue MapMiner Updates</h4>
             </div>
             <div class="modal-body">
+=======
+<div class="modal fade" id="flashNews" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true" style = "margin:auto;
+  max-width:100%;">
+    <div class="modal-dialog modal-lg">">
+        <div class="modal-content modal-lg">
+            <div class="modal-header">
+            
+            <h4 class="modal-title" id="myModalLabel">TrueBlue MapMiner Updates</h4><button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+            </div>
+            <div class="modal-body" >
+>>>>>>> development
                @foreach ($news as $new)
                 <h4>{{$new->title}}</h4>
                 <p>Dateline: {{date('M jS, Y'  ,strtotime($new->datefrom))}}</p>

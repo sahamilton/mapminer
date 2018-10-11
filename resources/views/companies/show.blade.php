@@ -24,12 +24,20 @@
 @if(isset($company->managedBy->firstname))
 <p>Account managed by <a href="{{route('person.show',$company->managedBy->id)}}" title="See all accounts managed by {{$company->managedBy->postName()}}">{{$company->managedBy->postName()}}</a></p>
 @endif
+<<<<<<< HEAD
 @if (Auth::user()->hasRole('Admin'))
+=======
+@if (auth()->user()->hasRole('Admin'))
+>>>>>>> development
 
 <div class="pull-right" style="margin-bottom:20px">
 				<a href="{{route('company.location.create',$company->id)}}" title="Create a new {{$company->companyname}} location" class="btn btn-small btn-info iframe">
 				
+<<<<<<< HEAD
 <i class="fa fa-plus-circle text-success" aria-hidden="true"></i>
+=======
+<i class="fas fa-plus-circle " aria-hidden="true"></i>
+>>>>>>> development
 
 				 Create New Location</a>
 			</div>
@@ -43,5 +51,9 @@
 @include('companies.partials._table')
 @include('partials/_modal')
 @include('partials/_scripts')
+<<<<<<< HEAD
 @stop
+=======
+@endsection
+>>>>>>> development
 

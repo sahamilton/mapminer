@@ -3,9 +3,15 @@
 
 <h1>My Watch List</h1>
 
+<<<<<<< HEAD
 <p><a href="{{route('watch.map')}}" title="Review my watch list"><i class="fa fa-flag" aria-hidden="true"></i> View My Watch Map</a> 
 
 <a href="{{route('watch.mywatchexport',auth()->user()->id)}}" title="Download my watch list as a CSV / Excel file"><i class="fa fa-cloud-download" aria-hidden="true"></i></i> Download My Watch List</a></p>
+=======
+<p><a href="{{route('watch.map')}}" title="Review my watch list"><i class="far fa-flag" aria-hidden="true"></i> View My Watch Map</a> 
+
+<a href="{{route('watch.mywatchexport',auth()->user()->id)}}" title="Download my watch list as a CSV / Excel file"><i class="fas fa-cloud-download-alt" aria-hidden="true"></i></i> Download My Watch List</a></p>
+>>>>>>> development
 
 
 
@@ -58,7 +64,11 @@
 			data-title = "{{$row['watching'][0]->businessname}}"
 			href="#noteform"
 			title="add new note to {{$row['watching'][0]->businessname}} location">
+<<<<<<< HEAD
 			<i class="fa fa-plus text-success" aria-hidden="true"></i>
+=======
+			<i class="fas fa-plus text-success" aria-hidden="true"></i>
+>>>>>>> development
 			</a>
 
 		</td>
@@ -84,4 +94,8 @@ $(document).on("click", ".addLocationId", function () {
 });
 </script>
 @include('watch.partials._note')
+<<<<<<< HEAD
 @stop
+=======
+@endsection
+>>>>>>> development

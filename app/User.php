@@ -5,12 +5,16 @@ namespace App;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Nicolaslopezj\Searchable\SearchableTrait;
-use \Crypt;
+use Crypt;
+
 
 class User extends Authenticatable
 {
  use Notifiable,HasRoles, Geocode, SearchableTrait;
- public $expiration = 2880;
+
+
+ protected $expiration = '2880';
+
  protected $searchable = [
         /**
          * Columns and their priority in search results.
@@ -115,6 +119,19 @@ class User extends Authenticatable
         return "39.50,98.35";
     }
 
+    public function setAccess(){
+        return $this->api_token ."tbmm".Crypt::encrypt(now());
+    }
+
+    public function getAccess($id){
+        if( Crypt::decrypt(substr($id,strpos($id,'tbmm')+4,strlen($id)))->diffInMinutes() < $this->expiration){
+
+        return $this->where('api_token','=',substr($id,0,strpos($id,'tbmm')))->first();
+    }else{
+        return false;
+        }
+    }
+
     /**
      * Get the date the user was created.
      *
@@ -210,9 +227,12 @@ class User extends Authenticatable
  * [seeder Seed api_token for all users. Not used]
  * @return [type] [description]
  */
-	public function seeder(){
-		$this->api_token = md5(uniqid(mt_rand(), true));
-		$this->save();
+
+	public function setApiToken(){
+
+		return $this->api_token = md5(uniqid(mt_rand(), true));
+		
+
 	}
 /**
  * scopeWithRole Select User by role
@@ -240,16 +260,4 @@ class User extends Authenticatable
 		return $query->whereNull('lastlogin');
 	}
 
-    public function setAccess(){
-        return $this->api_token ."pyc".Crypt::encrypt(now());
-    }
-
-    public function getAccess($id){
-        if( Crypt::decrypt(substr($id,strpos($id,'tbmm')+4,strlen($id)))->diffInMinutes() < $this->expiration){
-
-        return $this->where('api_token','=',substr($id,0,strpos($id,'tbmm')))->first();
-    }else{
-        return false;
-        }
-    }
 }

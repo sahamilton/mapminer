@@ -4,7 +4,11 @@
 @section('title')
 User login ::
 @parent
+<<<<<<< HEAD
 @stop
+=======
+@endsection
+>>>>>>> development
 
 {{-- Content --}}
 @section('content')
@@ -50,4 +54,8 @@ User login ::
     </fieldset>
 </form>
 
+<<<<<<< HEAD
 @stop
+=======
+@endsection
+>>>>>>> development

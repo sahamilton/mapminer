@@ -64,4 +64,8 @@ google.maps.event.addDomListener(window, 'load', initialize);
 
     </script>
 
+<<<<<<< HEAD
 @stop
+=======
+@endsection
+>>>>>>> development

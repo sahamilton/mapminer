@@ -16,7 +16,11 @@
     @endif
 		<p><a href="{{route('admin.downloadlogins',$view)}}" 
             title="Download these user details as a CSV / Excel file">
+<<<<<<< HEAD
             <i class="fa fa-cloud-download" aria-hidden="true"></i></i> 
+=======
+            <i class="fas fa-cloud-download-alt" aria-hidden="true"></i></i> 
+>>>>>>> development
             Download these user details</a> 
         </p>
 
@@ -78,4 +82,8 @@
 	</table>
     
 @include('partials/_scripts')
+<<<<<<< HEAD
 @stop
+=======
+@endsection
+>>>>>>> development

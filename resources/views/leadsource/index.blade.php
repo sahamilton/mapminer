@@ -4,11 +4,19 @@
 <h1>Prospect Sources</h1>
 
 
+<<<<<<< HEAD
 @if (Auth::user()->hasRole('Admin'))
 
 <div class="pull-right">
 				<a href="{{{ route('leadsource.create') }}}" class="btn btn-small btn-info iframe">
 <i class="fa fa-plus-circle text-success" aria-hidden="true"></i>
+=======
+@if (auth()->user()->hasRole('Admin'))
+
+<div class="pull-right">
+				<a href="{{{ route('leadsource.create') }}}" class="btn btn-small btn-info iframe">
+<i class="fas fa-plus-circle " aria-hidden="true"></i>
+>>>>>>> development
  Create New Prospect Source</a>
 			</div>
 @endif
@@ -26,7 +34,11 @@
     <th>Average Ranking</th>
     <th>Available From / To</th>
 
+<<<<<<< HEAD
     @if (Auth::user()->hasRole('Admin'))
+=======
+    @if (auth()->user()->hasRole('Admin'))
+>>>>>>> development
     <th>Actions</th>
     @endif
    
@@ -55,7 +67,11 @@
         @endif
     </td>
 
+<<<<<<< HEAD
 	@if (Auth::user()->hasRole('Admin'))
+=======
+	@if (auth()->user()->hasRole('Admin'))
+>>>>>>> development
     <td>
      @include('partials/_modal')
     
@@ -66,6 +82,7 @@
             </button>
             <ul class="dropdown-menu" role="menu">
                 
+<<<<<<< HEAD
                 <li>
                 <a href="{{route('leadsource.edit',$source->id)}}">
                 <i class="fa fa-pencil" aria-hidden="true"></i>
@@ -98,6 +115,36 @@
                 <i class="fa fa-trash-o" aria-hidden="true"> </i>
                  Delete this prospect source</a>
                  </li>
+=======
+                <a class="dropdown-item"
+                href="{{route('leadsource.edit',$source->id)}}">
+                <i class="far fa-edit text-info"" aria-hidden="true"></i>
+                 Edit this prospect source
+                 </a>
+                 
+                <a class="dropdown-item"
+                href="{{route('leadsource.addleads',$source->id)}}">
+                <i class="fas fa-plus text-success" aria-hidden="true"></i>
+                 Add prospects to this source
+                 </a>
+                 
+                <a class="dropdown-item"
+                href="{{route('leadsource.flushleads',$source->id)}}">
+                <i class="far fa-minus-circle text-danger" aria-hidden="true"></i>
+                 Flush all prospects from this source
+                 </a>
+                 
+                <a class="dropdown-item"
+                href="{{route('leadsource.announce',$source->id)}}">
+                <i class="far fa-envelope" aria-hidden="true"></i> 
+                Email sales team
+                </a>
+                
+                <a class="dropdown-item"
+                data-href="{{route('leadsource.destroy',$source->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = " this lead source and all its leads" href="#">
+                <i class="far fa-trash-o text-danger" aria-hidden="true"> </i>
+                 Delete this prospect source</a>
+>>>>>>> development
             </ul>
         </div>
 
@@ -112,4 +159,8 @@
     </tbody>
     </table>
 @include('partials/_scripts')
+<<<<<<< HEAD
 @stop
+=======
+@endsection
+>>>>>>> development

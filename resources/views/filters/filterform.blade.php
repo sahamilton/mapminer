@@ -62,4 +62,8 @@ $(function () {
 
 
 	</script>
+<<<<<<< HEAD
 @stop
+=======
+@endsection
+>>>>>>> development

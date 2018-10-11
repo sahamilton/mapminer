@@ -3,7 +3,11 @@
 <div class="container">
 <h2>Industry Vertical Analysis</h2>
 <p><a href =" {{{ route('vertical.export') }}}">
+<<<<<<< HEAD
 <i class="fa fa-cloud-download" aria-hidden="true"></i> Export Table to Excel</a></p>
+=======
+<i class="fas fa-cloud-download-alt" aria-hidden="true"></i> Export Table to Excel</a></p>
+>>>>>>> development
 <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
      
@@ -27,4 +31,8 @@
 </table>
 </div>
 @include('partials/_scripts')
+<<<<<<< HEAD
 @stop
+=======
+@endsection
+>>>>>>> development

@@ -63,4 +63,8 @@ $group = "";
 echo "</fieldset>";	?>
 		</div></div>
        
+<<<<<<< HEAD
         @stop
+=======
+        @endsection
+>>>>>>> development
