@@ -92,15 +92,11 @@ class UserImport extends Imports
 	    	}
 	    		return $message;
 	    }
-	    $this->updatePersonsGeoCode();
+	     $result = $this->updatePersonsGeoCode();
 	    // clean up the import table
 	    
-      	ProcessPersonRebuild::dispatch();
-      	// return view of the import data table,
-      	//$queries[] = 'truncate table ' . $this->table;
-      	//$this->executeImportQueries($queries);
+      	$result = ProcessPersonRebuild::dispatch();
 
-       // geocode new entries?
 	}
 	private function executeImportQueries($queries){
 		 foreach ($queries as $query){
@@ -358,7 +354,7 @@ class UserImport extends Imports
 		   
 		   foreach ($people as $person){
 
-		   		ProcessGeoCode::dispatch($person);
+		   		return ProcessGeoCode::dispatch($person);
 		   }
 		   
 	}

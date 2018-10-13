@@ -42,7 +42,7 @@ class ProcessGeoCode implements ShouldQueue
             }else{
                 $dat['geostatus'] = false;
             }
-        $this->person->update($data);
+        return $this->person->update($data);
     }
 
     private function getLatLng($address)

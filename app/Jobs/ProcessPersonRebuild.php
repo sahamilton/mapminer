@@ -33,7 +33,7 @@ class ProcessPersonRebuild implements ShouldQueue
     public function handle()
     {
 
-        Person::rebuild();
+        return Person::rebuild();
 
     }
 }
