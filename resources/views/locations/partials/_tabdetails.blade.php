@@ -74,7 +74,6 @@
 		<i class="fas fa-edit text-info"" aria-hidden="true"></i>
 		<a href="{{route('locations.edit',$location->id)}}" 
 		title="Edit this location">
-
 		Edit location</a>
 	</div>
 	 <div id="map" style="height:300px;width:500px;border:red solid 1px">
