@@ -36,12 +36,12 @@ class ProcessGeoCode implements ShouldQueue
         $geoCode = $this->getLatLng($address);
         if($geoCode){
 
-        $data['geostatus'] = true;
-        $data['lat'] = $geoCode['lat'];
-        $data['lng'] = $geoCode['lng'];
-        }else{
-            $dat['geostatus'] = false;
-        }
+            $data['geostatus'] = true;
+            $data['lat'] = $geoCode['lat'];
+            $data['lng'] = $geoCode['lng'];
+            }else{
+                $dat['geostatus'] = false;
+            }
         $this->person->update($data);
     }
 

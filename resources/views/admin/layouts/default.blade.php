@@ -115,7 +115,7 @@
 		@endif
 		
 		</main>	
-		<div class="clear" style="border:solid red 1px;margin-top: 80px"></div>
+		<div class="clear"></div>
 
        @include('site.layouts.footer')     
 @include('admin.partials._scripts')
