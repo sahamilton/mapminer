@@ -97,7 +97,7 @@
 
 	<!-- Container -->
 	<div class="container">
-		<main class="py-4" style="min-height: 100vh; ">
+		<main class="py-4 flex-grow">
 			
 
 			<!-- Notifications -->
@@ -115,11 +115,13 @@
 		@endif
 		
 		</main>	
-       </div>
+		<div class="clear" style="border:solid red 1px;margin-top: 80px"></div>
+
        @include('site.layouts.footer')     
 @include('admin.partials._scripts')
-   
+      </div>    
 
+</div>
     
 
 <script

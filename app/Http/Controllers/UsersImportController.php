@@ -99,16 +99,20 @@ class UsersImportController extends ImportController
     public function newUsers(){
 
         $newusers = $this->import->whereNull('person_id')->get();
+
         //$newusers = $this->import->addUserFields($newusers);
         if($newusers->count()>0){
            return response()->view('admin.users.importnew',compact('newusers'));
         }
-       if($message = $this->import->setUpAllUsers()){
+        if($importerrors = $this->import->setUpAllUsers()){
             
-        }else{
-
-          return redirect()->route('usersimport.index')->withMessage('All Imported and Updated');
-        }
+            $persons = $this->import->whereIn('person_id',array_keys($importerrors))->get();
+            
+             return response()->view('admin.users.import.errors',compact('importerrors','persons'));
+          }else{
+           
+            return redirect()->route('usersimport.index')->withMessage('All Imported and Updated');
+          }
     }
 
 
@@ -140,7 +144,7 @@ class UsersImportController extends ImportController
         return response()->view('admin.users.import.createerrors',compact('importerrors','persons'));
     }
 
-    private function inputErrors($importerrors){
+    private function inputErrors($importerrors){  
         if(! is_array($importerrors)){
           return redirect()->back()->withMessage($errors);
         }
@@ -166,15 +170,22 @@ class UsersImportController extends ImportController
     public function fixerrors(Request $request){
       
       $data['branches'] = request('branch');
+      $data['industry'] = request('industry');
+      // we need to convert the industry name to 
+
       $imports = $this->import->whereIn('person_id',array_keys(request('branch')))->get();
 
       foreach ($imports as $import){
+        
         $import->branches = $data['branches'][$import->person_id];
-        $import->serviceline_id = $data['industry'][$import->person_id];
+        $import->industry = $data['industry'][$import->person_id];
         $import->save();
       }
-      if($message = $this->import->setUpAllUsers()){
-           dd('whoops',$message);; 
+      if($importerrors = $this->import->setUpAllUsers()){
+           $persons = $this->import->whereIn('person_id',array_keys($importerrors))->get();
+            
+            return response()->view('admin.users.import.errors',compact('importerrors','persons'));
+           // this should now cycle through the check again 
         }else{
           return redirect()->route('usersimport.index')->withMessage('All Imported and Updated');
         }

@@ -42,7 +42,7 @@ $cumulative = array();
 
 
 @section('content')
-<div class="container">
+
   <h2>{{auth()->user()->roles()->first()->name}} Dashboard</h2>
   <ul class="nav nav-tabs" role="tablist">
     <li class="nav-item">
@@ -79,7 +79,7 @@ $cumulative = array();
   </ul>
 
   <div class="tab-content">
-    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab" style="margin-bottom:80px">
 
       <h3>Usage</h3>
         @include ('admin.partials.firstlogged')
@@ -88,7 +88,7 @@ $cumulative = array();
 
         @include('admin.partials.roleweekly')
         @include('admin.partials.firsttimers')
-
+        <div style="clear:both"></div>
     </div>
     <div id="menu1" class="tab-pane fade">
       <h3>Account Activity</h3>
