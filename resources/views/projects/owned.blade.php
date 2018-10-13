@@ -2,11 +2,9 @@
 @section('content')
 <h2>Owned Projects</h2>
 <p><a href="{{route('project.stats')}}">See projects summary</a></p>
-<<<<<<< HEAD
-<p><a href="{{route('projects.exportowned')}}" title="Download my claimed projects as a CSV / Excel file"><i class="fa fa-cloud-download" aria-hidden="true"></i></i> Download Owned Projects</a>
-=======
+
 <p><a href="{{route('projects.exportowned')}}" title="Download my claimed projects as a CSV / Excel file"><i class="fas fa-cloud-download-alt" aria-hidden="true"></i></i> Download Owned Projects</a>
->>>>>>> development
+
 <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
 	<thead>
 		

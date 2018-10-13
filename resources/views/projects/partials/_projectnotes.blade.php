@@ -26,11 +26,9 @@
 	@if($project->owned()  or auth()->user()->hasRole('Admin'))
 		
 		<a href="{{route('notes.edit',$note->id)}}" title="Edit this note">
-<<<<<<< HEAD
-			<i class="fa fa-pencil" aria-hidden="true"></i>
-=======
+
 			<i class="far fa-edit text-info"" aria-hidden="true"></i>
->>>>>>> development
+
 		</a> | 
 		<a data-href="{{route('notes.destroy',$note->id)}}" 
 		            data-toggle="modal" 
@@ -38,12 +36,8 @@
 		            data-title = "note"  
 		            title="Delete this note"
 		            href="#">
-<<<<<<< HEAD
-		            <i class="fa fa-trash-o" aria-hidden="true"> </i> </a>
-=======
-		            <i class="far fa-trash-o text-danger" aria-hidden="true"> </i> </a>
->>>>>>> development
-		           
+
+		            <i class="far fa-trash-o text-danger" aria-hidden="true"> </i> </a>		           
 
 
 		

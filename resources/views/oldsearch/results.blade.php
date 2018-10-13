@@ -19,11 +19,8 @@
               <div class="mdl-card__actions">
                 <a target="_blank" class="mdl-button" href="@{{item.location}}">Read Document</a>
                
-<<<<<<< HEAD
-                <a href="/documents/@{{item.id}}/add" ><i class="fa fa-bookmark" aria-hidden="true"> </i> 
-=======
-                <a href="/documents/@{{item.id}}/add" ><i class="far fa-bookmark" aria-hidden="true"> </i> 
->>>>>>> development
+        <a href="/documents/@{{item.id}}/add" ><i class="far fa-bookmark" aria-hidden="true"> </i> 
+
                 Add to my library</a>
 
               </div>

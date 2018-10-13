@@ -6,11 +6,9 @@
 {{$company[0]['_source']['companylinks'][0]['company']['city']}}
 {{$company[0]['_source']['companylinks'][0]['company']['state']}}
 {{$company[0]['_source']['companylinks'][0]['company']['zip']}}</p>
-<<<<<<< HEAD
-<p><i class="fa fa-phone" aria-hidden="true"></i>
-=======
+
 <p><i class="far fa-phone" aria-hidden="true"></i>
->>>>>>> development
+t
 {{$company[0]['_source']['companylinks'][0]['company']['phone']}}</p>
 
 

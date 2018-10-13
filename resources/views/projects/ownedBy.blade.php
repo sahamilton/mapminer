@@ -50,11 +50,9 @@
         data-toggle="modal" 
         data-target="#confirm-delete" 
         data-title = "{{$project->project_title}}" href="#">
-<<<<<<< HEAD
-        <i class="fa fa-trash-o" aria-hidden="true"> </i> 
-=======
+
         <i class="far fa-trash-o text-danger" aria-hidden="true"> </i> 
->>>>>>> development
+
         Release Project</a></a></td>
     </tr>
   @endforeach

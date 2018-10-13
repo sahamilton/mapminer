@@ -7,11 +7,7 @@
 <p>{{$projectcompany->addr1}}<br />
 {{$projectcompany->city}}, {{$projectcompany->state}} {{$projectcompany->zip}}</p>
 <ul class="nav nav-tabs">
-<<<<<<< HEAD
-  <li class="active"><a data-toggle="tab" href="#projects"><strong>Projects</strong></a></li>
 
-  <li><a data-toggle="tab" href="#contacts"><strong>Project Contacts</strong></a></li>
-=======
   <li class="nav-item active">
     <a class="nav-link active" data-toggle="tab" href="#projects">
       <strong>Projects</strong>
@@ -23,7 +19,7 @@
       <strong>Project Contacts</strong>
     </a>
   </li>
->>>>>>> development
+
 
 </ul>
 

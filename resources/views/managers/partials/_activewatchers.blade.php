@@ -1,10 +1,7 @@
 <h4>Active Watchers</h4>
 
-<<<<<<< HEAD
-<a href="{{route('company.watchexport')}}?id='{{strip_tags($data['accountstring'])}}'" title="Download {{$data['title']}}watch list as a CSV / Excel file"><i class="fa fa-cloud-download" aria-hidden="true"></i></i> Download Watch List</a>
-=======
+
 <a href="{{route('company.watchexport')}}?id='{{strip_tags($data['accountstring'])}}'" title="Download {{$data['title']}}watch list as a CSV / Excel file"><i class="fas fa-cloud-download-alt" aria-hidden="true"></i></i> Download Watch List</a>
->>>>>>> development
 
 <table id ='sorttable2' class='table table-striped table-bordered table-condensed table-hover'>
   <thead>

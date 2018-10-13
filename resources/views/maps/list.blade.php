@@ -6,21 +6,14 @@
 <h1>{{$data['title']}}</h1>
 
 @if ($data['type']== 'projects')
-<<<<<<< HEAD
-<p><a href="{{route('projects.myprojects')}}" title="Review my claimed projects"><i class="fa fa-th-list" aria-hidden="true"></i> View My Projects</a></p>
-<p><a href="{{route('projects.export')}}" title="Download my claimed projects as a CSV / Excel file"><i class="fa fa-cloud-download" aria-hidden="true"></i></i> Download My Projects</a> </p>
-@else
-{!!$filtered ? "<h4 class='filtered'>Filtered</h4>" : ''!!}
-<p><a href="{{route('watch.index')}}" title="Review my watch list"><i class="fa fa-th-list" aria-hidden="true"></i> View My Watch List</a></p>
-<p><a href="{{route('watch.export')}}" title="Download my watch list as a CSV / Excel file"><i class="fa fa-cloud-download" aria-hidden="true"></i></i> Download My Watch List</a> </p>
-=======
+
 <p><a href="{{route('projects.myprojects')}}" title="Review my claimed projects"><i class="fas fa-th-list" aria-hidden="true"></i> View My Projects</a></p>
 <p><a href="{{route('projects.export')}}" title="Download my claimed projects as a CSV / Excel file"><i class="fas fa-cloud-download-alt" aria-hidden="true"></i></i> Download My Projects</a> </p>
 @else
 {!!$filtered ? "<h4 class='filtered'>Filtered</h4>" : ''!!}
 <p><a href="{{route('watch.index')}}" title="Review my watch list"><i class="fas fa-th-list" aria-hidden="true"></i> View My Watch List</a></p>
 <p><a href="{{route('watch.export')}}" title="Download my watch list as a CSV / Excel file"><i class="fas fa-cloud-download-alt" aria-hidden="true"></i></i> Download My Watch List</a> </p>
->>>>>>> development
+
 @endif
 
 @include('maps.partials._form')

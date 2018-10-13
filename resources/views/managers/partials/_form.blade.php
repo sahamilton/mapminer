@@ -1,11 +1,9 @@
 <form method="post" action="{{route('managers.changeview')}}" class="form" id="selectAccount">
 <!-- {{Form::open(array('route'=>'managers.view','class'=>'form', 'id'=>'selectAccount'))}}-->
 {{csrf_field()}}
-<<<<<<< HEAD
-@if (Auth::user()->hasRole('Admin')) 
-=======
+
 @if (auth()->user()->hasRole('Admin')) 
->>>>>>> development
+
 
 <div class="row">
 

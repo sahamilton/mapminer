@@ -37,11 +37,9 @@ Show a
 {{Form::hidden('lat',$data['lat'],$attributes = array( 'id'=>'lat'))}}
 
 {{Form::hidden('lng',$data['lng'],$attributes = array( 'id'=>'lng'))}}
-<<<<<<< HEAD
-<button type="submit"  class= "btn btn-default btn-xs"><i class="fa fa-search" aria-hidden="true"></i> Search</button>
-=======
+
 <button type="submit"  class= "btn btn-default btn-xs"><i class="fas fa-search" aria-hidden="true"></i> Search</button>
->>>>>>> development
+
 {{Form::close()}}
 <div id="showMe"></div>
 <script>

@@ -5,11 +5,9 @@
 
 <div class="pull-right">
 <a href="{{{ route('howtofields.create') }}}" class="btn btn-small btn-info iframe">
-<<<<<<< HEAD
-<i class="fa fa-plus-circle text-success" aria-hidden="true"></i>
-=======
+
 <i class="fas fa-plus-circle " aria-hidden="true"></i>
->>>>>>> development
+
  Create New Field</a>
 </div>
 
@@ -45,16 +43,7 @@
 				</button>
 				<ul class="dropdown-menu" role="menu">
 
-<<<<<<< HEAD
-					<li>
-						<a href="{{route('howtofields.edit', $howtofield->id)}}">
-						<i class="fa fa-pencil" aria-hidden="true"></i>
-						Edit  {{$howtofield->fieldname}}
-						</a>
-					</li>
-					<li>
-						<a data-href="{{route('howtofields.destroy',$howtofield->id)}}" 
-=======
+
 						<a class="dropdown-item"
 						href="{{route('howtofields.edit', $howtofield->id)}}">
 						<i class="far fa-edit text-info"" aria-hidden="true"></i>
@@ -63,22 +52,16 @@
 					
 						<a class="dropdown-item" 
 						data-href="{{route('howtofields.destroy',$howtofield->id)}}" 
->>>>>>> development
+
 						data-toggle="modal" 
 						data-target="#confirm-delete" 
 						data-title = "location" 
 						href="#">
-<<<<<<< HEAD
-						<i class="fa fa-trash-o" aria-hidden="true"> </i> 
-						Delete {{$howtofield->fieldname}}
-						</a>
-					</li>
 
-=======
 						<i class="far fa-trash-o text-danger" aria-hidden="true"> </i> 
 						Delete {{$howtofield->fieldname}}
 						</a>
->>>>>>> development
+
 				</ul>
 			</div>	
 		</td>

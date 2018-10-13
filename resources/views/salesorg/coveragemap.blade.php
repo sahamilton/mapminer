@@ -2,11 +2,9 @@
 @section('content')
 <h2>Branch Sales Coverage</h2>
 
-<<<<<<< HEAD
-<p><a href='{{route("branches.index")}}'><i class="fa fa-th-list" aria-hidden="true"></i> List view</a></p>
-=======
+
 <p><a href='{{route("branches.index")}}'><i class="fas fa-th-list" aria-hidden="true"></i> List view</a></p>
->>>>>>> development
+
 
 @include('salesorg/_keys')
 

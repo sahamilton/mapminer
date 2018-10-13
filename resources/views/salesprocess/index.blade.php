@@ -38,39 +38,24 @@
                             </button>
                             <ul class="dropdown-menu" role="menu">
 
-<<<<<<< HEAD
-                                <li>
-                                <a href="{{route('process.edit',$step->id)}}">
-                                <i class="fa fa-pencil" aria-hidden="true"> </i>
-                                Edit Sales Step</a>
-                                </li>
 
-                                <li>
-                                <a data-href="{{route('process.destroy',$step->id)}}" 
-=======
                                 <a class="dropdown-item"
                                 href="{{route('process.edit',$step->id)}}">
                                 <i class="far fa-edit text-info"" aria-hidden="true"> </i>
                                 Edit Sales Step</a>
                                 <a class="dropdown-item"
                                 data-href="{{route('process.destroy',$step->id)}}" 
->>>>>>> development
+
                                     data-toggle="modal" 
                                     data-target="#confirm-delete" 
                                     data-title = "location" 
                                     href="#">
-<<<<<<< HEAD
-                                    <i class="fa fa-trash-o" aria-hidden="true"> </i> 
-                                    Delete Sales Step
-                                </a>
-                                </li>
-                            </ul>
-=======
+
                                     <i class="far fa-trash-o text-danger" aria-hidden="true"> </i> 
                                     Delete Sales Step
                                 </a>
                            </ul>
->>>>>>> development
+
                         </div>
 
                     </td>

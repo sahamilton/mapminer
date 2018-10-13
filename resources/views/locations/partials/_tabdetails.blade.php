@@ -1,4 +1,4 @@
-<h2>Location Details!!</h2>
+<h2>Location Details</h2>
 <div id="map-container">
 	<div style="float:left;width:300px">
 		<p><strong>Vertical: </strong>{{isset($location->company->industryVertical->filter) ? $location->company->industryVertical->filter : 'Not Specified'}}</p>
@@ -12,43 +12,32 @@
 		</i>
 		@endif
 		</p>
-<<<<<<< HEAD
-		<i class="fa fa-search" aria-hidden="true"></i>
-=======
+
 		<i class="fas fa-search" aria-hidden="true"></i>
->>>>>>> development
+
 		<a href="{{route('salesnotes',$location->company->id)}}" 
 		title="Read notes on selling to {{$location->company->companyname}}"> 
 		Read 'How to Sell to {{$location->company->companyname}}' </a>
 		<fieldset style="border:solid 1px grey;width:90%;padding:5px">
 			<p>
-<<<<<<< HEAD
-			<i class="fa fa-user" aria-hidden="true"></i>
-			 <b>Primary Contact:</b> {{$location->contact}}
-			 </p>
-			<p>
-			<i class="fa fa-map-marker" aria-hidden="true"></i>
-			 <b>Address:</b><br/>{{$location->street}}<br />{{$location->city}}  {{$location->state}} {{$location->zip}}</p>
-			<p><b><i class="fa fa-phone" aria-hidden="true"></i> Phone:</b>{{$location->phone}}</p>
-			<p><i class="fa fa-address-card-o" aria-hidden="true"></i><a href="{{route('locations.vcard',$location->id)}}">
-			 Download vcard </a></p>
-			 <p>Lat: {{number_format($location->lat,4)}};<br /> Lng: {{number_format($location->lng,4)}}</p>
-		 </fieldset>
-		 <p><i class="fa fa-eye" aria-hidden="true"></i>
-=======
+
 			<i class="far fa-user" aria-hidden="true"></i>
 			 <b>Primary Contact:</b> {{$location->contact}}
 			 </p>
 			<p>
-			<i class="far fa-map-marker" aria-hidden="true"></i>
+			<i class="fas fa-map-marker" aria-hidden="true"></i>
 			 <b>Address:</b><br/>{{$location->street}}<br />{{$location->city}}  {{$location->state}} {{$location->zip}}</p>
-			<p><b><i class="far fa-phone" aria-hidden="true"></i> Phone:</b>{{$location->phone}}</p>
-			<p><i class="far fa-address-card-o" aria-hidden="true"></i><a href="{{route('locations.vcard',$location->id)}}">
-			 Download vcard </a></p>
+			<p><b><i class="fas fa-phone" aria-hidden="true"></i> Phone:</b>{{$location->phone}}</p>
+			<p>
+				<i class="far fa-address-card"></i>
+					<a href="{{route('locations.vcard',$location->id)}}">
+				 Download vcard 
+				</a>
+			</p>
 			 <p>Lat: {{number_format($location->lat,4)}};<br /> Lng: {{number_format($location->lng,4)}}</p>
 		 </fieldset>
 		 <p><i class="far fa-eye" aria-hidden="true"></i>
->>>>>>> development
+
 		@if(isset($watch->location_id))
 
 		<a href="{{route('watch.delete',$watch->id)}}" 
@@ -64,40 +53,29 @@
 		<p>
 		
 		@isset($branch[0])
-<<<<<<< HEAD
-			<i class="fa fa-location-arrow" aria-hidden="true"></i>
-			<b>Closest Branch: </b>
-			<a href="{{ route('branches.show', $branch[0]->id) }}" 
-			title='show all {{trim($branch[0]->branchname)}} national accounts'>
-			{{$branch[0]->branchid}}:{{$branch[0]->branchname}} </a>
-=======
-			<i class="far fa-location-arrow" aria-hidden="true"></i>
+
+			<i class="fas fa-location-arrow" aria-hidden="true"></i>
 			<b>Closest Branch: </b>
 			<a href="{{ route('branches.show', $branch[0]->id) }}" 
 			title='show all {{trim($branch[0]->branchname)}} national accounts'>
 			{{$branch[0]->id}}:{{$branch[0]->branchname}} </a>
->>>>>>> development
+
 		 
 		@else
 			<p>Closest Branch: <a href="{{ route('assign.location', $location->id) }}" 
 			title='Find the closest branch'>Closest Branch</a>
 		@endif
 		</p>
-<<<<<<< HEAD
-		<p> <i class="fa fa-map-signs" aria-hidden="true"></i> 
-=======
-		<p> <i class="far fa-map-signs" aria-hidden="true"></i> 
->>>>>>> development
+
+		<p> <i class="fas fa-map-signs" aria-hidden="true"></i> 
+
 		<a href="{{ route('assign.location', $location->id) }}" 
 		title='See nearby branches'>Other Nearby Branches</a></p>
+		<i class="fas fa-edit text-info"" aria-hidden="true"></i>
 		<a href="{{route('locations.edit',$location->id)}}" 
 		title="Edit this location">
-<<<<<<< HEAD
-		<i class="fa fa-pencil" aria-hidden="true"></i>Edit location</a>
-=======
-		<i class="far fa-edit text-info"" aria-hidden="true"></i>Edit location</a>
->>>>>>> development
-		<hr />
+
+		Edit location</a>
 	</div>
 	 <div id="map" style="height:300px;width:500px;border:red solid 1px">
 	</div>

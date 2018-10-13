@@ -61,11 +61,9 @@ $values = config('app.search_radius');
     </div>
 <button type="submit"  style="background-color: #4CAF50;"
 class= "btn btn-success ">
-<<<<<<< HEAD
-<i class="fa fa-search" aria-hidden="true"></i> Search!</button>
-=======
+
 <i class="fas fa-search" aria-hidden="true"></i> Search!</button>
->>>>>>> development
+
 <input type="hidden" name ='company' value="{{isset($company) ? $company->id : ''}}" />
 <input type="hidden" name ='companyname' value="{{isset($company) ? $company->companyname : ''}}" />
 <input type="hidden" name="lng" id ="lng" value="{{isset($data['lng']) ? $data['lng'] : '-98.5795'}}" />

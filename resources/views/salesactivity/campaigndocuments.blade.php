@@ -5,11 +5,9 @@
     <p><a href="{{route('salesactivity.index')}}">Return to campaigns</a></p>
     <div class="pull-right">
         <a href ="{{route('salesactivity.create')}}">
-<<<<<<< HEAD
-            <button class="btn btn-success" ><i class="fa fa-briefcase" aria-hidden="true"> </i> Add Sales Campaign</button>
-=======
+
             <button class="btn btn-success" ><i class="far fa-briefcase" aria-hidden="true"> </i> Add Sales Campaign</button>
->>>>>>> development
+
         </a>
     </div> 
  <table class="table" id = "sorttable">

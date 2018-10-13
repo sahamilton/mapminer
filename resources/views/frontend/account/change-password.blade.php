@@ -60,16 +60,12 @@ Change your Password
 <div class="tabbable tabs-left">
 	<!-- Tabs -->
 	<ul class="nav nav-tabs">
-<<<<<<< HEAD
-		<li{{ Session::get('form', 'update-details') == 'update-details' ? ' class="active"' : '' }}><a href="#tab-general" data-toggle="tab">Profile</a></li>
-		<li{{ Session::get('form') == 'change-password' ? ' class="active"' : '' }}><a href="#tab-password" data-toggle="tab">Change Password</a></li>
-		<li{{ Session::get('form') == 'change-email' ? ' class="active"' : '' }}><a href="#tab-email" data-toggle="tab">Change Email</a></li>
-=======
+
 		<li{{ Session::get('form', 'update-details') == 'update-details' ? ' class="nav-item active"' : '' }}><a class="nav-link" href="#tab-general" data-toggle="tab">Profile</a></li>
 		<li{{ Session::get('form') == 'change-password' ? ' class="nav-item"' : '' }}>
 		<a class="nav-link" href="#tab-password" data-toggle="tab">Change Password</a></li>
 		<li{{ Session::get('form') == 'change-email' ? ' class="nav-item"' : '' }}><a href="#tab-email" data-toggle="tab">Change Email</a></li>
->>>>>>> development
+
 	</ul>
 
 	<!-- Tabs content -->

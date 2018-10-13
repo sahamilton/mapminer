@@ -25,17 +25,12 @@
 </td>
 
 <td>  @if($company->salesnotes->count()>0)
-<<<<<<< HEAD
-Yes
-@else
-No
-@endif
-=======
+
         Yes
         @else
         No
         @endif
->>>>>>> development
+
 </td>
 <td>
 @foreach ($company->serviceline as $serviceline)
@@ -45,16 +40,7 @@ No
 <td>
   <div class="btn-group">
        @if($company->salesnotes->count()>0)
-<<<<<<< HEAD
-        <a href="{{route('salesnotes.edit',$company->id)}}"
-        title=" Edit {{trim($company->companyname)}}'s Sales Notes">
-      @else
-        <a href="{{route('salesnotes.create','company='.$company->id)}}"
-        title=" Create {{trim($company->name)}}'s Sales Notes">
-      @endif
-      <button type="button" class="btn btn-success" >
-      <i class="fa fa-pencil" aria-hidden="true"></i>   
-=======
+
         <a class="dropdown-item" 
         href="{{route('salesnotes.edit',$company->id)}}"
         title=" Edit {{trim($company->companyname)}}'s Sales Notes">
@@ -65,7 +51,7 @@ No
       @endif
       <button type="button" class="btn btn-success" >
       <i class="far fa-edit text-info"" aria-hidden="true"></i>   
->>>>>>> development
+
       </a>
   	          
   </div>

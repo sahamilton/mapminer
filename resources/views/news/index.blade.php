@@ -6,11 +6,9 @@
 @if(auth()->user()->hasRole('Admin'))
 <div class="pull-right">
     <a href="{{ route('news.create') }}" class="btn btn-small btn-info iframe">
-<<<<<<< HEAD
-        <i class="fa fa-plus text-success" aria-hidden="true"></i>
-=======
+
         <i class="fas fa-plus text-success" aria-hidden="true"></i>
->>>>>>> development
+
         Add New Updates
     </a>
 </div>
@@ -51,30 +49,18 @@
 			<div class="col-md-8">
 			@if(auth()->user()->hasRole('Admin'))
 				<p>Visible to <a href="{{route('news.audience',$post->id)}}"
-<<<<<<< HEAD
-				title="See all users who can see the {{$post->title}} news item">{{$post->audience($post->id)->count()}} users.</a></p>
-				@endif
-				<p><i class="fa fa-user" aria-hidden="true"></i> by <span class="muted">
-=======
+
 				title="See all users who can see the {{$post->title}} news item">{{count($post->audience($post->id))}} users.</a></p>
 				@endif
 				<p><i class="far fa-user" aria-hidden="true"></i> by <span class="muted">
->>>>>>> development
+
 				@if(isset($post->author))
 					{{$post->author->person->postName()}}
 				@else
 					No Longer with the company
 				@endif
 				| </span>
-<<<<<<< HEAD
-					<i class="fa fa-calendar" aria-hidden="true"></i> <!--Sept 16th, 2012-->
-					{{$post->datefrom->format('M jS,Y')}}
-					| <i class="fa fa-comment-o" aria-hidden="true"></i> 
-					<a href="{{route('news.show', $post->slug)}}#comments"> {{$post->comments->count()}}</a>
 
-					@if($post->user_id == auth()->user()->id  or auth()->user()->hasRole('Admin'))
-<a href="{{route('news.edit',$post->id)}}" title="Edit this news item"><i class="fa fa-pencil" aria-hidden="true"></i></a> | 
-=======
 					<i class="far fa-calendar" aria-hidden="true"></i> <!--Sept 16th, 2012-->
 					{{$post->datefrom->format('M jS,Y')}}
 					| <i class="far fa-comment" aria-hidden="true"></i> 
@@ -82,18 +68,16 @@
 
 					@if($post->user_id == auth()->user()->id  or auth()->user()->hasRole('Admin'))
 <a href="{{route('news.edit',$post->id)}}" title="Edit this news item"><i class="far fa-edit text-info"" aria-hidden="true"></i></a> | 
->>>>>>> development
+
 <a data-href="{{route('news.destroy',$post->id)}}" 
             data-toggle="modal" 
             data-target="#confirm-delete" 
             data-title = "news item"  
             title="Delete this news item"
             href="#">
-<<<<<<< HEAD
-            <i class="fa fa-trash-o" aria-hidden="true"> </i> </a>
-=======
+
             <i class="far fa-trash-alt text-danger" aria-hidden="true"> </i>  </a>
->>>>>>> development
+
            
 
 				@endif
@@ -106,13 +90,6 @@
 
 <hr />
 @endforeach
-
-
-
-
-
-
-
 
 
 {{-- Scripts --}}

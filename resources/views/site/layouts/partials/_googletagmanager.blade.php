@@ -1,11 +1,9 @@
 <!-- Google Tag Manager -->
 <script>
 	dataLayer = [{ 
-<<<<<<< HEAD
-		'userId' : '{{{Auth::id()}}}'
-=======
+
 		'userId' : '{{{auth()->id()}}}'
->>>>>>> development
+
 	}];
 </script>
 

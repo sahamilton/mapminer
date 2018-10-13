@@ -4,14 +4,7 @@
     <h2>Sales Campaigns</h2>
     <div class="pull-right">
         <a href ="{{route('salesactivity.create')}}">
-<<<<<<< HEAD
-            <button class="btn btn-success" ><i class="fa fa-briefcase" aria-hidden="true"> </i> Add Sales Campaign</button>
-        </a>
-    </div> 
-    <ul class="nav nav-tabs">
-        <li class="active"><a data-toggle="tab" href="#calendar">Calendar</a></li>
-        <li><a data-toggle="tab" href="#list">List</a></li>
-=======
+
             <button class="btn btn-success" ><i class="far fa-briefcase" aria-hidden="true"> </i> Add Sales Campaign</button>
         </a>
     </div> 
@@ -22,7 +15,7 @@
         <li class="nav-item">
             <a class="nav-link" data-toggle="tab" href="#list">List</a>
         </li>
->>>>>>> development
+
     </ul>
 
     <div class="tab-content">

@@ -4,49 +4,35 @@
 <h2>{{$location->businessname}}</h2>
 
 
-<ul class="nav nav-tabs">
-<<<<<<< HEAD
-    <li class="active">
-      <a data-toggle="tab" href="#project">
-=======
-    <li class="nav-item active">
-      <a class="nav-link active" data-toggle="tab" href="#project">
->>>>>>> development
-        <strong>Location Details</strong>
-      </a>
-    </li>
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+  <li class="nav-item">
+    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true"><strong>Location Details</strong></a>
+  </li>
 
-<<<<<<< HEAD
-    <li>
-      <a data-toggle="tab" href="#notes">
-=======
+    
+
+
     <li class="nav-item">
       <a class="nav-link" data-toggle="tab" href="#notes">
->>>>>>> development
+
         <strong>Location  Notes ({{$location->relatedNotes->count()}})
         </strong>
       </a>
     </li>
     
-<<<<<<< HEAD
-    <li>
-      <a data-toggle="tab" href="#contacts">
-=======
-    <<li class="nav-item">
+
+    <li class="nav-item">
       <a class="nav-link"  data-toggle="tab" href="#contacts">
->>>>>>> development
+
         <strong>Location  Contacts ({{$location->contacts->count()}})
         </strong>
       </a>
     </li>
     
-<<<<<<< HEAD
-    <li>
-      <a data-toggle="tab" href="#watchers">
-=======
+
     <li class="nav-item">
       <a class="nav-link"  data-toggle="tab" href="#watchers">
->>>>>>> development
+
         <strong>Watched By {{$location->watchedBy->count()}}
         </strong>
       </a>
@@ -58,8 +44,8 @@
   </ul>
 <?php $type="location";
 $id= $location->id;?>
-  <div class="tab-content">
-    <div id="project" class="tab-pane fade in active">
+  <div class="tab-content" id="myTabContent">
+    <div id="project" class="tab-pane show active">
       @include('locations.partials._tabdetails')
     </div>
     <div id="notes" class="tab-pane fade in">

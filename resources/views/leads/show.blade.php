@@ -7,11 +7,9 @@
 		<div class="panel-heading clearfix">
 			<h2 class="panel-title pull-left">{{$lead->companyname}} - {{$lead->rating}}</h2>
 			<a class="btn btn-primary pull-right" href="{{route('leads.edit',$lead->id)}}">
-<<<<<<< HEAD
-				<i class="fa fa-pencil"></i>
-=======
+
 				<i class="far fa-edit text-info""></i>
->>>>>>> development
+
 				Edit
 			</a>
 		</div>
@@ -32,11 +30,8 @@
 			                    data-target="#unassign-weblead"
 			                    data-title = "unassign this weblead" 
 			                    href="#">
-<<<<<<< HEAD
-							<i class="fa fa-unlink"></i> Un-assign lead</a></p>
-=======
+
 							<i class="far fa-unlink"></i> Un-assign lead</a></p>
->>>>>>> development
 						
 				</ul>
 			</div>

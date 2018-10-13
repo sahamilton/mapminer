@@ -5,18 +5,13 @@
 
   <!---- Tab message -->
   <ul class="nav nav-tabs">
-<<<<<<< HEAD
-    <li class="active"><a data-toggle="tab" href="#home">Message</a></li>
-    <li><a data-toggle="tab" href="#menu1">Recipients ({{$email->recipients->count())}})</a></li>
-    <li><a data-toggle="tab" href="#menu2">Select Recipients</a></li>
-=======
+
     <li class="nav-item active">
       <a class="nav-link" data-toggle="tab" href="#home">Message</a></li>
     <li class="nav-item">
       <a class="nav-link" data-toggle="tab" href="#menu1">Recipients ({{$email->recipients->count())}})</a></li>
     <li class="nav-item">
       <a class="nav-link" data-toggle="tab" href="#menu2">Select Recipients</a></li>
->>>>>>> development
 
   </ul>
 

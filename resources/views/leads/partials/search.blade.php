@@ -8,10 +8,7 @@
     $session['number']=5;
   }
 @endphp
-<<<<<<< HEAD
 
-=======
->>>>>>> development
 <form class="form-inline" method ="post"  action ="{{route('lead.find')}}" name="leadaddress">
 {{csrf_field()}}
 <select id="selectnumber" name='number' class="btn btn-mini" >
@@ -64,11 +61,9 @@ required
 <input type="hidden" name="lat" id="lat" value=""/>
 <input type="hidden" name="lng" id="lat" value=""/>
     <button type="submit"  class= "btn btn-success btn-xs">
-<<<<<<< HEAD
-      <i class="fa fa-search" aria-hidden="true"></i>
-=======
+
       <i class="fas fa-search" aria-hidden="true"></i>
->>>>>>> development
+
        Search!</button>
 </form>
 <?php $action = route('lead.find');?>

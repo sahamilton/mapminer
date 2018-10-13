@@ -7,11 +7,8 @@
 @include('templeads.partials._limited')
 
 @endif
-<<<<<<< HEAD
-<p><a href="{{$data['listviewref']}}"><i class="fa fa-th-list" aria-hidden="true"></i> List view</a></p>
-=======
+
 <p><a href="{{$data['listviewref']}}"><i class="fas fa-th-list" aria-hidden="true"></i> List view</a></p>
->>>>>>> development
   
 <div id="store-locator-container"> 
 	<div id="map-container">

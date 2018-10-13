@@ -66,38 +66,24 @@
                             </button>
                             <ul class="dropdown-menu" role="menu">
 
-<<<<<<< HEAD
-                                <li>
-                                <a href="{{route('training.edit',$training->id)}}">
-                                <i class="fa fa-pencil" aria-hidden="true"> </i>
-                                Edit Sales Step</a>
-                                </li>
 
-                                <li>
-                                <a data-href="{{route('training.destroy',$training->id)}}" 
-=======
                                <a class="dropdown-item"
                                href="{{route('training.edit',$training->id)}}">
                                 <i class="far fa-edit text-info"" aria-hidden="true"> </i>
                                 Edit Sales Step</a>
                                <a class="dropdown-item"
                                data-href="{{route('training.destroy',$training->id)}}" 
->>>>>>> development
+
                                     data-toggle="modal" 
                                     data-target="#confirm-delete" 
                                     data-title = "location" 
                                     href="#">
-<<<<<<< HEAD
-                                    <i class="fa fa-trash-o" aria-hidden="true"> </i> 
-                                    Delete Training Item
-                                </a>
-                                </li>
-=======
+
                                     <i class="far fa-trash-o text-danger" aria-hidden="true"> </i> 
                                     Delete Training Item
                                 </a>
                               
->>>>>>> development
+
                             </ul>
                         </div>
 

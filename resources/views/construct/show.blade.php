@@ -20,19 +20,13 @@
 
 </div>
 <ul class="nav nav-tabs">
-<<<<<<< HEAD
-  <li class="active"><a data-toggle="tab" href="#showmap"><strong>Project Details</strong></a></li>
 
-  <li><a data-toggle="tab" href="#contacts"><strong>Project Contacts @if($project['companylinks'])({{count($project['companylinks'])}}) @endif</strong></a></li>
-  <li><a data-toggle="tab" href="#branches"><strong>Nearby Branches</strong></a></li>
-  <li><a data-toggle="tab" href="#notes"><strong>Project Notes </strong></a></li>
-=======
   <li class="nav-item active"><a class="nav-link" data-toggle="tab" href="#showmap"><strong>Project Details</strong></a></li>
 
   <li class="nav-item"><a class="nav-link" a data-toggle="tab" href="#contacts"><strong>Project Contacts @if($project['companylinks'])({{count($project['companylinks'])}}) @endif</strong></a></li>
   <li class="nav-item"><a class="nav-link"  data-toggle="tab" href="#branches"><strong>Nearby Branches</strong></a></li>
   <li class="nav-item"><a class="nav-link"  data-toggle="tab" href="#notes"><strong>Project Notes </strong></a></li>
->>>>>>> development
+
 
 </ul>
 

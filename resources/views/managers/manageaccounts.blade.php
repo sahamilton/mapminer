@@ -9,11 +9,7 @@
 </div>
 <hr />
 <ul class="nav nav-tabs">
-<<<<<<< HEAD
-  <li class="active"><a data-toggle="tab" href="#watchers"><strong>Activity</strong></a></li>
-<li><a data-toggle="tab" href="#health"><strong>Data Quality</strong></a></li>
-  <li><a data-toggle="tab" href="#summary"><strong>Accounts Summary </strong></a></li>
-=======
+
   <li class="nav-item active">
     <a class="nav-link active" data-toggle="tab" href="#watchers">
       <strong>Activity</strong>
@@ -29,9 +25,6 @@
     <strong>Accounts Summary </strong>
   </a>
 </li>
->>>>>>> development
-  
-
 </ul>
 
 <div class="tab-content">

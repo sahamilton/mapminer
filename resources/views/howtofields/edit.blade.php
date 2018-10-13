@@ -21,10 +21,12 @@ foreach($groups as $group) {
 
 <?php $buttonLabel = 'Edit Field';
 ?>
+<form method="post" action = "{{route(,$howtofield->id)}}" >
+	@csrf
+	@method('patch')
 
-{{Form::model($howtofield,['method'=>'PATCH','route'=>['admin.howtofields.update', $howtofield->id]])}}
 	@include('howtofields/partials/_form')
-{{Form::close()}}
+</form>
 
     
 <script>
@@ -36,8 +38,6 @@ $('#add').click(function() {
 	
 	
 });
-<<<<<<< HEAD
-</script>@stop
-=======
-</script>@endsection
->>>>>>> development
+
+</script>
+@endsection

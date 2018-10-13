@@ -67,11 +67,9 @@
 	<body>
    <script>
        dataLayer = [{ 
-<<<<<<< HEAD
-           'userId' : '{{{Auth::id()}}}'
-=======
+
            'userId' : '{{{auth()->id()}}}'
->>>>>>> development
+
 	   }];
 	   </script>
     <!-- Google Tag Manager -->
@@ -117,13 +115,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     src="//d2s6cp23z9c3gz.cloudfront.net/js/embed.widget.min.js"
     data-domain="trueblue.besnappy.com"
     data-lang="en"
-<<<<<<< HEAD
-	data-name="{{ isset(Auth::user()->firstname) ? Auth::user()->firstname ." ". Auth::user()->lastname  : ''  }}"
-    data-email="{{ isset(Auth::user()->email) ? Auth::user()->email : '' }}"
-=======
+
 	data-name="{{ isset(auth()->user()->firstname) ? auth()->user()->firstname ." ". auth()->user()->lastname  : ''  }}"
     data-email="{{ isset(auth()->user()->email) ? auth()->user()->email : '' }}"
->>>>>>> development
+
     >
 </script>
             	    </div>

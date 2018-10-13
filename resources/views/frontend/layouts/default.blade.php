@@ -77,36 +77,19 @@
                 </div>
                 <div class="collapse navbar-collapse navbar-ex1-collapse">
                     <ul class="nav navbar-nav">
-<<<<<<< HEAD
-                     @if (!Auth::check())
-						<li {{ (Request::is('/') ? ' class="active"' : '') }}><a href="{{{ URL::to('') }}}">Welcome</a></li>
-                        @endif
-                        @if (Auth::check())
-=======
+
                      @if (!auth()->check())
 						<li {{ (Request::is('/') ? ' class="active"' : '') }}><a href="{{{ URL::to('') }}}">Welcome</a></li>
                         @endif
                         @if (auth()->check())
->>>>>>> development
+
                         <li {{ (Request::is('/company') ? ' class="active"' : '') }}><a href="{{{ URL::to('company') }}}">Accounts</a></li>
                         <li {{ (Request::is('/branch') ? ' class="active"' : '') }}><a href="{{{ URL::to('branch') }}}">Branches</a></li>
                         <li {{ (Request::is('/branch') ? ' class="active"' : '') }}><a href="{{{ URL::to('person') }}}">People</a></li>
                        
                         @endif
 					</ul>
-<<<<<<< HEAD
- @if (Auth::check())
-					<ul class="nav navbar-nav pull-right">
- 						
-                        @if (Auth::user()->hasRole('Admin'))
-                         <li class="dropdown{{ (Request::is('admin/users*|admin/roles*') ? ' active' : '') }}">
-    						<a class="dropdown-toggle" data-toggle="dropdown" href="{{{ URL::to('admin/users') }}}">
-    							<i class="fa fa-user" aria-hidden="true"></i> Users <span class="caret"></span>
-    						</a>
-    						<ul class="dropdown-menu">
-    							<li{{ (Request::is('admin/users*') ? ' class="active"' : '') }}><a href="{{{ URL::to('admin/users') }}}"><i class="fa fa-user" aria-hidden="true"></i> Users</a></li>
-    							<li{{ (Request::is('admin/roles*') ? ' class="active"' : '') }}><a href="{{{ URL::to('admin/roles') }}}"><i class="fa fa-user" aria-hidden="true"></i> Roles</a></li>
-=======
+
  @if (auth()->check())
 					<ul class="nav navbar-nav pull-right">
  						
@@ -118,28 +101,21 @@
     						<ul class="dropdown-menu">
     							<li{{ (Request::is('admin/users*') ? ' class="active"' : '') }}><a href="{{{ URL::to('admin/users') }}}"><i class="far fa-user" aria-hidden="true"></i> Users</a></li>
     							<li{{ (Request::is('admin/roles*') ? ' class="active"' : '') }}><a href="{{{ URL::to('admin/roles') }}}"><i class="far fa-user" aria-hidden="true"></i> Roles</a></li>
->>>>>>> development
+
     						</ul>
     					</li>
                         @endif
     					<li class="divider-vertical"></li>
     					<li class="dropdown">
     							<a class="dropdown-toggle" data-toggle="dropdown" href="#">
-<<<<<<< HEAD
-    								<i class="fa fa-user" aria-hidden="true"></i> {{{ Auth::user()->username }}}	<span class="caret"></span>
-    							</a>
-    							<ul class="dropdown-menu">
-    								<li><a href="{{{ URL::to('user/settings') }}}"><i class="fa fa-wrench" aria-hidden="true"></i> Profile</a></li>
-    								<li class="divider"></li>
-    								<li><a href="{{{ URL::to('user/logout') }}}"><i class="fa fa-share" aria-hidden="true"></i> Logout</a></li>
-=======
+
     								<i class="far fa-user" aria-hidden="true"></i> {{{ auth()->user()->username }}}	<span class="caret"></span>
     							</a>
     							<ul class="dropdown-menu">
     								<li><a href="{{{ URL::to('user/settings') }}}"><i class="far fa-wrench" aria-hidden="true"></i> Profile</a></li>
     								<li class="divider"></li>
     								<li><a href="{{{ URL::to('user/logout') }}}"><i class="far fa-share" aria-hidden="true"></i> Logout</a></li>
->>>>>>> development
+
     							</ul>
     					</li>
     				</ul>

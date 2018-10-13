@@ -74,11 +74,9 @@
 	<body>
    <script>
        dataLayer = [{ 
-<<<<<<< HEAD
-           'userId' : '{{{Auth::id()}}}'
-=======
+
            'userId' : '{{{auth()->id()}}}'
->>>>>>> development
+
 	   }];
 	   </script>
     <!-- Google Tag Manager -->
@@ -92,33 +90,20 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <!-- End Google Tag Manager -->
 
 		<!-- To make sticky footer need to wrap in a div -->
-<<<<<<< HEAD
-		<div id="wrap">
-		@include ('site.layouts._navbar')
 
-		<!-- Container -->
-		<div class="container">
-=======
 		<div id="app">
 		@include ('site.layouts._navbar')
 
 		<!-- Container -->
 		<main class="py-4">
->>>>>>> development
+
 			<!-- Notifications -->
 			@include('notifications')
 			<!-- ./ notifications -->
 
 			<!-- Content -->
 			@yield('content')
-<<<<<<< HEAD
-			<!-- ./ content -->
-		</div>
-		<!-- ./ container -->
-</div>
-		<!-- the following div is needed to make a sticky footer -->
-		<div id="push"></div>
-=======
+
 		</main>
 		<div class="clear"></div>	<!-- ./ content -->
 			@include('site.layouts.footer')
@@ -126,28 +111,14 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 		<!-- ./ container -->
 </div>
 
->>>>>>> development
 
-		<!-- ./wrap -->
-
-
-<<<<<<< HEAD
-	    @include('site.layouts.footer')
-=======
-	    
->>>>>>> development
             <script
     src="//d2s6cp23z9c3gz.cloudfront.net/js/embed.widget.min.js"
     data-domain="trueblue.besnappy.com"
     data-lang="en"
-<<<<<<< HEAD
-	data-name="{{ isset(Auth::user()->firstname) ? Auth::user()->firstname ." ". Auth::user()->lastname  : ''  }}"
-    data-email="{{ isset(Auth::user()->email) ? Auth::user()->email : '' }}"
-=======
+
 	data-name="{{ isset(auth()->user()->firstname) ? auth()->user()->firstname ." ". auth()->user()->lastname  : ''  }}"
-    data-email="{{ isset(auth()->user()->email) ? auth()->user()->email : '' }}"
->>>>>>> development
-    >
+    data-email="{{ isset(auth()->user()->email) ? auth()->user()->email : '' }}"/ >
 </script>
             	    </div>
           </div>

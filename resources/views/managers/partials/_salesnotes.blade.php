@@ -9,20 +9,15 @@
             @if (isset($company->notes))
             <tr class="success"> 
                 <td><a href="route('salesnotes',$company->id)}}">{{$company->companyname}}</a>  </td>
-<<<<<<< HEAD
-                <td><i class="fa fa-check-circle text-success" aria-hidden="true"></i>
-=======
-                <td><i class="far fa-check-circle text-success" aria-hidden="true"></i>
->>>>>>> development
-</td></tr>
+                <td>
+                    <i class="far fa-check-circle text-success" aria-hidden="true"></i>
+                </td>
+            </tr>
             @else
             <tr class='danger'>
                 <td>{{$company->companyname}}</td>
-<<<<<<< HEAD
-                <td><i class="fa fa-minus-circle text-danger" aria-hidden="true"></i>No 'How to Sell' Notes</td>
-=======
-                <td><i class="far fa-minus-circle text-danger" aria-hidden="true"></i>No 'How to Sell' Notes</td>
->>>>>>> development
+        <td><i class="far fa-minus-circle text-danger" aria-hidden="true"></i>No 'How to Sell' Notes</td>
+
             </tr>
             @endif
         @endforeach

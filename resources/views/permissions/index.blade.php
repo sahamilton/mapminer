@@ -39,22 +39,7 @@
                  <td class="col-md-2">
                
                 <div class="btn-group">
-<<<<<<< HEAD
-                    <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
-                    <span class="caret"></span>
-                    <span class="sr-only">Toggle Dropdown</span>
-                    </button>
-                    <ul class="dropdown-menu" role="menu">
 
-                    <li><a href="{{route('permission.edit',$permission->id)}}"><i class="fa fa-pencil" aria-hidden="true"> </i>Edit permission</a></li>
-
-                    <li><a data-href="{{route('permissions.destroy',$permission->id)}}" 
-                    data-toggle="modal" 
-                    data-target="#confirm-delete" 
-                    data-title = "location" 
-                    href="#"><i class="fa fa-trash-o" aria-hidden="true"> </i> Delete permission</a>
-                    </li>
-=======
                     <button class="btn btn-secondary dropdown-toggle" 
                     type="button" 
                     id="dropdownMenuButton" 
@@ -72,7 +57,7 @@
                         href="#">
                     <i class="far fa-trash-o text-danger" aria-hidden="true"> </i> Delete permission</a>
                     </div></div>
->>>>>>> development
+
 
 
 
