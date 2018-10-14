@@ -48,7 +48,7 @@
 	</tbody>
 
 </table>
-<input type="submit" name="submit" value ="Create New Users" class="btn btn-default" />
+<input type="submit" name="submit" value ="Create New Users" class="btn btn-success" />
 </form>
 </div>
 @include('partials/_scripts')
