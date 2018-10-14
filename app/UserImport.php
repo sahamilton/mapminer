@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use App\Jobs\ProcessGeoCode;
 use App\Jobs\ProcessPersonRebuild;
-use App\JObs\updateUserRoles;
+use App\Jobs\updateUserRoles;
 use App\Jobs\updateUserServiceLines;
 use App\Jobs\associateIndustries;
 use App\Jobs\associateBranches;
