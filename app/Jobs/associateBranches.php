@@ -8,19 +8,21 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use App\Person;
+use App\UserImport;
 
 class associateBranches implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-    public $people;
+    public $person;
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($people)
+    public function __construct(UserImport $person)
     {
-        $this->people = $people;
+        $this->person = $person;
+
     }
 
     /**
@@ -30,16 +32,14 @@ class associateBranches implements ShouldQueue
      */
     public function handle()
     {
-        foreach ($this->people as $peep){
-                
-                // send to queue
-                $branches = explode(",",str_replace(' ','',$peep->branches));
-                
+        
+                $branches = explode(",",str_replace(' ','',$this->person->branches));
+               dd($branches);
                 foreach ($branches as $branch){
-                    $data[$branch]=['role_id' => $peep->role_id]; 
+                    $data[$branch]=['role_id' => $this->person->role_id]; 
                 }
-                $person = Person::findOrFail($peep->person_id);
+                $person = Person::findOrFail($person->person_id);
                 $person->branchesServiced()->sync($data);
-            }
+            
     }
 }

@@ -76,6 +76,7 @@ class Imports extends Model
     	private function createTemporaryImportTable(){
 
 			//Create the temporary table
+			$this->executeQuery("DROP TABLE IF EXISTS ". $this->temptable);
 			return $this->executeQuery("CREATE TEMPORARY TABLE ".$this->temptable." AS SELECT * FROM ". $this->table." LIMIT 0");
 
 		}
@@ -97,8 +98,10 @@ class Imports extends Model
 		foreach ($this->additionaldata as $field=>$value){
 
 				$this->fields.= ",".$field;
-				return $this->executeQuery("update ".$this->temptable." set ". $field. " ='".$value."'");
+
+				$this->executeQuery("update ".$this->temptable." set ". $field. " ='".$value."'");
 			}
+			return true;
 		}
 
 

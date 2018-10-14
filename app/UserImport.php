@@ -77,23 +77,26 @@ class UserImport extends Imports
 		$this->createUserEmails();
 		
 		return redirect()->route('import.newusers');
+		
 	}
 		
 	public function setUpAllUsers(){
 		// copy all person fields over to persons
-		// if($message = $this->updatePeople(){
-		//	return $message = "Unable to update people";
-		//	}
-		// 
+		if($message = $this->updatePeople()){
+			return $message = "Unable to update people";
+			}
+		
 		// set the role id for the new user
 		if($message = $this->updateRoles()){
 			
 			return $message = "Unable to update roles";
 		}
+
 		// set the serviceline
 		if($message = $this->insertServiceLines()){
 			return $message = "Unable to insert servielines";
-		}
+		}	
+
 	    // set the branch assignments
 	    if($message = $this->associatePerson()){
 
@@ -102,10 +105,12 @@ class UserImport extends Imports
 	    	}
 	    		return $message;
 	    }
+
+	 
 	    $this->updatePersonsGeoCode();
 	    // clean up the import table
 	    
-      	//$result = ProcessPersonRebuild::dispatch();
+      	ProcessPersonRebuild::dispatch();
 
 	}
 	private function executeImportQueries($queries){
@@ -123,7 +128,7 @@ class UserImport extends Imports
 			if($errors =$this->validateNewUsers(request('enter'))){
 				return $errors;
 			}
-			
+	
 		
 			if(! $this->createUser($request)) {
 
@@ -138,11 +143,12 @@ class UserImport extends Imports
 		    if(! $this->createPerson($request)){
 		    	return $message = "Unable to add person record";
 		    }
-		    
+		    	
 		    //set the person id in the import table
 		    if($this->updatePersonIdInImport()){
 		    	return $message = "Unable to add person id to imports";
 		    }
+
 		}
 	    return false;
 	}
@@ -266,8 +272,20 @@ class UserImport extends Imports
 		
 		$people = $this->whereNotNull('branches')->whereNotNull('person_id')
 		->get(['person_id','role_id','branches']);
+
 		if(!$errors = $this->validateBranches($people)){
-			associateBranches::dispatch($people);
+
+			foreach ($people as $person){
+                $branches = explode(",",str_replace(' ','',$person->branches));
+                $data = array();
+                foreach ($branches as $branch){
+                    $data[$branch]=['role_id' => $person->role_id]; 
+                }
+
+                Person::findOrFail($person->person_id)->branchesServiced()->sync($data);
+       			
+            }
+
 			return $error = array();
 		}
 
@@ -281,7 +299,16 @@ class UserImport extends Imports
 		$validIndustries = $this->validIndustries();
 
 		if(!$errors = $this->validateIndustries($people)){
-			associateIndustries::dispatch($people,$validIndustries);
+			foreach ($people as $peep){
+                // send to queue
+                $industries = explode(",",$peep->industry);
+                $ids=array();
+                $ids = array_keys(array_intersect($validIndustries,$industries));
+
+                $person = Person::findOrFail($peep->person_id);
+                $person->industryfocus()->sync($ids);
+            }
+			
 			
 			return array();
 		}
@@ -374,8 +401,20 @@ class UserImport extends Imports
 	}
 	private function updatePeople(){
 		$peoplefields = $this->getTableColumns('persons');
-		$people = $this->import->select($peoplefields)->whereNotNull('person_id')->get();
+		$fields= array();
+		$skip = ['id','created_at','updated_at','nonews','lastlogin','api_token','user_id','lft','rgt','depth','geostatus','email','lat','lng','active_from','phone'];
+		foreach($peoplefields as $field){
+	
+			if(! in_array($field->Field,$skip)){
+				$fields[]=$field->Field;
+			}
+		}
+		$fields[]='person_id';
+		
+		$people = $this->select($fields)->whereNotNull('person_id')->get();
+		
 		foreach ($people as $person){
+			
 		  $peep = Person::findOrFail($person->person_id);
 		  $peep->update($person->toArray());
 		}

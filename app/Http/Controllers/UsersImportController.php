@@ -117,6 +117,7 @@ class UsersImportController extends ImportController
 
 
     public function createNewUsers(Request $request){
+
       if($errors = $this->import->createNewUsers($request)){
           if(! is_array($errors)){
            return redirect()->back()->withMessage($errors);
