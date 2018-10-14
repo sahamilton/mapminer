@@ -18,7 +18,9 @@ body {
   min-height: 100%;
   font-family: "Helvetica Neue", Arial, sans-serif;
 }
-
+	.container{
+		 margin-bottom:80px;
+	}
 
       /* Wrapper for page content to push down footer */
       #wrap {
