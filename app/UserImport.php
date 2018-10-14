@@ -92,10 +92,10 @@ class UserImport extends Imports
 	    	}
 	    		return $message;
 	    }
-	     $result = $this->updatePersonsGeoCode();
+	     //$result = $this->updatePersonsGeoCode();
 	    // clean up the import table
 	    
-      	$result = ProcessPersonRebuild::dispatch();
+      	//$result = ProcessPersonRebuild::dispatch();
 
 	}
 	private function executeImportQueries($queries){
