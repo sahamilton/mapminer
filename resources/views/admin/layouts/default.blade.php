@@ -96,8 +96,8 @@
 	@include ('admin.partials._navbar')
 
 	<!-- Container -->
-	<div class="container">
-		<main class="py-4 flex-grow">
+	<div class="container" >
+		<main class="py-4 flex-grow" >
 			
 
 			<!-- Notifications -->
@@ -115,7 +115,7 @@
 		@endif
 		
 		</main>	
-		<div class="clear"></div>
+		<div class="clear" style="margin-bottom:80px"></div>
 
        @include('site.layouts.footer')     
 @include('admin.partials._scripts')

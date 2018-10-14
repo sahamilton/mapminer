@@ -10,7 +10,7 @@
 	<h3>Import Users</h3>
 
 </div>
-
+<div class="container" style="margin-bottom:80px">
 <h2>Steps to import users</h2>
 <ol>
 	<li>First create your csv file of projects from the template.  Your import file must contain at least {{count($requiredFields)}} columns that can be mapped to:
@@ -57,6 +57,6 @@
 	</div>
 </form>
 
-    
+    </div>
 @include('partials/_scripts')
 @endsection

@@ -1,7 +1,7 @@
 @extends('admin.layouts.default')
 @section('content')
 
-<div class="container">
+
 
 <h4> Import / Export Data </h4>
 
@@ -18,7 +18,7 @@
   </li>
   
 </ul>
-<div class="tab-content" id="myTabContent">
+<div class="tab-content" id="myTabContent"  style="margin-bottom:80px">
   <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
   	<h2>Import Data</h2>
 
@@ -35,7 +35,7 @@
 		</div>
   
 </div>
-</div>
+
 
 
 @endsection
