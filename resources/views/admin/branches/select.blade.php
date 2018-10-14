@@ -7,8 +7,9 @@
 @csrf
 <div class="form-group{{ $errors->has('message') ? ' has-error' : '' }}">
          <label class="control-label">Message text</label>
-          <div class="input-group input-group-lg ">
-             <textarea required class=" summernote" 
+          <div >
+             <textarea required 
+             class="summernote" 
              name='message' 
              title="message">{!!old('message', isset($message) ? $message : '') !!}</textarea>
                  <span class="help-block">
@@ -53,4 +54,5 @@
 			</div>
 		</div>
 </form>
+@include('emails.partials._scripts')
 @endsection
