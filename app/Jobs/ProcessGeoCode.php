@@ -13,16 +13,16 @@ class ProcessGeoCode implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $person;
+    protected $people;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(Person $person)
+    public function __construct($people)
     {
-        $this->person = $person;
+        $this->people = $people;
     }
 
     /**
@@ -32,28 +32,31 @@ class ProcessGeoCode implements ShouldQueue
      */
     public function handle()
     {
-        $address = $this->getAddress();
-        $geoCode = $this->getLatLng($address);
-        if($geoCode){
+        foreach ($this->people as $person){
+            
+            $geoCode = $this->getLatLng($person);
+            if($geoCode){
 
-            $data['geostatus'] = true;
-            $data['lat'] = $geoCode['lat'];
-            $data['lng'] = $geoCode['lng'];
+                $data['geostatus'] = true;
+                $data['lat'] = $geoCode['lat'];
+                $data['lng'] = $geoCode['lng'];
             }else{
                 $dat['geostatus'] = false;
             }
-        return $this->person->update($data);
+            $person->update($data);
+        }
     }
 
-    private function getLatLng($address)
+    private function getLatLng($person)
     {
+        $address = $this->getAddress($person);
         $geoCode = app('geocoder')->geocode($address)->get();
        
-        return $this->person->getGeoCode($geoCode);
+        return $person->getGeoCode($geoCode);
     }
 
-    private function getAddress(){
+    private function getAddress($person){
 
-        return trim(str_replace('  ',' ',$this->person->address . " " . $this->person->city . " ". $this->person->state ." " . $this->person->zip));
+        return trim(str_replace('  ',' ',$person->address . " " . $person->city . " ". $person->state ." " . $person->zip));
     }
 }

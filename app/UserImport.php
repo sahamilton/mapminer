@@ -7,6 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use App\Jobs\ProcessGeoCode;
 use App\Jobs\ProcessPersonRebuild;
+use App\JObs\updateUserRoles;
+use App\Jobs\updateUserServiceLines;
+use App\Jobs\associateIndustries;
+use App\Jobs\associateBranches;
 
 class UserImport extends Imports
 {
@@ -14,6 +18,7 @@ class UserImport extends Imports
    	public $table = 'usersimport';
    	public $requiredFields = ['employee_id','firstname','lastname','role_id'];
    	public $user;
+   	public $person;
 
    	
 
@@ -75,9 +80,14 @@ class UserImport extends Imports
 	}
 		
 	public function setUpAllUsers(){
-	
+		// copy all person fields over to persons
+		// if($message = $this->updatePeople(){
+		//	return $message = "Unable to update people";
+		//	}
+		// 
 		// set the role id for the new user
 		if($message = $this->updateRoles()){
+			
 			return $message = "Unable to update roles";
 		}
 		// set the serviceline
@@ -92,7 +102,7 @@ class UserImport extends Imports
 	    	}
 	    		return $message;
 	    }
-	     //$result = $this->updatePersonsGeoCode();
+	    $this->updatePersonsGeoCode();
 	    // clean up the import table
 	    
       	//$result = ProcessPersonRebuild::dispatch();
@@ -257,17 +267,7 @@ class UserImport extends Imports
 		$people = $this->whereNotNull('branches')->whereNotNull('person_id')
 		->get(['person_id','role_id','branches']);
 		if(!$errors = $this->validateBranches($people)){
-			foreach ($people as $peep){
-				
-				
-				$branches = explode(",",str_replace(' ','',$peep->branches));
-				
-				foreach ($branches as $branch){
-					$data[$branch]=['role_id' => $peep->role_id]; 
-				}
-				$person = Person::findOrFail($peep->person_id);
-				$person->branchesServiced()->sync($data);
-			}
+			associateBranches::dispatch($people);
 			return $error = array();
 		}
 
@@ -281,15 +281,9 @@ class UserImport extends Imports
 		$validIndustries = $this->validIndustries();
 
 		if(!$errors = $this->validateIndustries($people)){
-			foreach ($people as $peep){
-				
-				$industries = explode(",",$peep->industry);
-				$ids = array_keys(array_intersect($validIndustries,$industries));
-
-				$person = Person::findOrFail($peep->person_id);
-				$person->industryfocus()->sync($ids);
-			}
-			return $error = array();
+			associateIndustries::dispatch($people,$validIndustries);
+			
+			return array();
 		}
 
 		return $errors;
@@ -301,6 +295,7 @@ class UserImport extends Imports
 		$errors = array();
 		$validBranches = Branch::all(['id'])->pluck('id')->toArray();
 		foreach ($people as $person){
+			// send to queue
 			$branches = explode(",",str_replace(' ','',$person->branches));
 			if($invalids = array_diff($branches,$validBranches)){
 				foreach ($invalids as $invalid){
@@ -351,11 +346,8 @@ class UserImport extends Imports
 					   ->whereNull('lng')
 					   ->whereNull('geostatus')
 					   ->get();
-		   
-		   foreach ($people as $person){
+		   	return ProcessGeoCode::dispatch($people);
 
-		   		return ProcessGeoCode::dispatch($person);
-		   }
 		   
 	}
 
@@ -380,27 +372,29 @@ class UserImport extends Imports
 		return $this->executeImportQueries($queries);
 		
 	}
-
+	private function updatePeople(){
+		$peoplefields = $this->getTableColumns('persons');
+		$people = $this->import->select($peoplefields)->whereNotNull('person_id')->get();
+		foreach ($people as $person){
+		  $peep = Person::findOrFail($person->person_id);
+		  $peep->update($person->toArray());
+		}
+		return false;
+	}
 	private function updateRoles(){
 		
 		$newuser = $this->whereNotNull('user_id')->pluck('role_id','user_id')->toArray();
 		$users = User::whereIn('id',array_keys($newuser))->get();
-		foreach ($users as $user){
-			$roles = explode(",",$newuser[$user->id]);
-			$user->roles()->sync($roles);
-		}
-		return $error = false;
+		updateUserRoles::dispatch($newuser,$users);
+		return false;
+
 	}
 	private function insertServiceLines(){
 
 		$newuser = $this->whereNotNull('user_id')->pluck('serviceline','user_id')->toArray();
 		$users = User::whereIn('id',array_keys($newuser))->get();
-		
-		foreach ($users as $user){
-			$servicelines = explode(",",$newuser[$user->id]);
-			$user->serviceline()->sync($servicelines);
-		}
-		return $error = false;
+		updateUserServiceLines::dispatch($newuser,$users);
+		return false;
 		
 	}
 

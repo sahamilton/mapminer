@@ -1,4 +1,3 @@
-
 <footer id = "footer" class="bg-dark text-white mt-4" >
 	<div class="container-fluid py-2">
 		<div class="row">	
