@@ -20,7 +20,7 @@ body {
 }
 	.container{
 		 margin-bottom:80px;
-		
+		 border:1px white solid;
 	}
 
       /* Wrapper for page content to push down footer */
