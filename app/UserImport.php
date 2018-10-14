@@ -430,9 +430,13 @@ class UserImport extends Imports
 	}
 	private function insertServiceLines(){
 
-		$newuser = $this->whereNotNull('user_id')->pluck('serviceline','user_id')->toArray();
-		$users = User::whereIn('id',array_keys($newuser))->get();
-		updateUserServiceLines::dispatch($newuser,$users);
+		$usersWithServiclines = $this->whereNotNull('user_id')->pluck('serviceline','user_id')->toArray();
+	
+		$users = User::whereIn('id',array_keys($usersWithServiclines))->get();
+		foreach ($users as $user){
+            $servicelines = explode(",",$usersWithServiclines[$user->id]);
+            $user->serviceline()->sync($servicelines);
+        }
 		return false;
 		
 	}

@@ -34,7 +34,7 @@ class associateBranches implements ShouldQueue
     {
         
                 $branches = explode(",",str_replace(' ','',$this->person->branches));
-               dd($branches);
+              
                 foreach ($branches as $branch){
                     $data[$branch]=['role_id' => $this->person->role_id]; 
                 }
