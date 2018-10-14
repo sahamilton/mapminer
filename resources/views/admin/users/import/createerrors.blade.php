@@ -1,7 +1,7 @@
 @extends('admin.layouts.default')
 
 @section('content')
-<div class="container" style="margin-bottom:80px">
+<div class="container">
 	<h4>Import Errors</h4>
 	<div class="alert alert-warning">
 		<p>Fix these errors and reimport</p>

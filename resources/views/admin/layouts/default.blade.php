@@ -96,7 +96,7 @@
 	@include ('admin.partials._navbar')
 
 	<!-- Container -->
-	<div class="container" >
+	<div class="container" style="margin-bottom:0px">
 		<main class="py-4 flex-grow" >
 			
 
