@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-md navbar-light" >
- <div class="container" style="margin-bottom: 0px">
+
   <a href="{{ route('findme') }}" class="navbar-brand"><img src="{{ asset('assets/img/PRlogo.png')}}"  width ='164' ></a> <!--     <nav class="navbar navbar-toggleable-sm navbar-light bg-faded">
 <nav class="navbar navbar-toggleable-sm navbar-light bg-faded"> -->
    
@@ -129,5 +129,5 @@
     @endif
       </li>
     </ul>
-</div>
+
 </nav>
