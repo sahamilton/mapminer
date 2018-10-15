@@ -1,4 +1,4 @@
-<div class="pull-right">
+<div class="float-right">
 	 <p><a href="{{ route('branches.index') }}">Show all branches</a></p>	
 		</div>
         <h1>{{$data['title']}}</h1>

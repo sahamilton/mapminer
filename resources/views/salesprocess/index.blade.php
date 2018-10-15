@@ -2,7 +2,7 @@
 @section('content')
 <div class="container">
     <h2>Sales Process</h2>
-    <div class="pull-right">
+    <div class="float-right">
         <a href ="{{route('process.create')}}">
             <button class="btn btn-success" >
             Add Sales Step

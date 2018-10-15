@@ -17,7 +17,7 @@
 <p>@include('partials.advancedsearch')</p>
 	@if (auth()->user()->hasRole('Admin'))
 
-        <div class="pull-right">
+        <div class="float-right">
             <a href="{{{ route('searchfilters.create') }}}" 
             class="btn btn-small btn-info iframe">
             

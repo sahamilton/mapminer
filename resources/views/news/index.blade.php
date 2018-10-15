@@ -4,7 +4,7 @@
 <h1>Latest News and Comments</h1>
 
 @if(auth()->user()->hasRole('Admin'))
-<div class="pull-right">
+<div class="float-right">
     <a href="{{ route('news.create') }}" class="btn btn-small btn-info iframe">
 
         <i class="fas fa-plus text-success" aria-hidden="true"></i>

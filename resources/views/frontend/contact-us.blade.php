@@ -34,7 +34,7 @@ Contact us ::
 		</div>
 
 		<!-- Form actions -->
-		<button type="submit" class="btn btn-warning pull-right">Submit</button>
+		<button type="submit" class="btn btn-warning float-right">Submit</button>
 	</fieldset>
 </form>
 @endsection

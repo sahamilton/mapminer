@@ -195,7 +195,7 @@
     <div style="margin-top:10px">
                         <input  type="text" id="search" placeholder="Type to search users" autocomplete="off" ><i class="fas fa-search"></i>
                     </div> 
-    <ul class="nav navbar-nav pull-right">
+    <ul class="nav navbar-nav float-right">
                         
                         
                         <li class="dropdown">

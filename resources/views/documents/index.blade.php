@@ -4,7 +4,7 @@
     <h2>Document Library</h2>
 
     @if(auth()->user()->hasRole('Admin'))
-    <div class="pull-right">
+    <div class="float-right">
         <a href ="{{route('documents.create')}}">
             <button class="btn btn-success" >
             Add Document

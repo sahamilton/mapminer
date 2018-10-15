@@ -4,7 +4,7 @@
 <h1>Service Lines</h1>
 
  @if (auth()->user()->hasRole('Admin'))
-<div class="pull-right">
+<div class="float-right">
 				<p><a href="{{{ route('serviceline.create') }}}" class="btn btn-small btn-info iframe">
 <i class="fas fa-plus-circle " aria-hidden="true"></i>
 

@@ -7,7 +7,7 @@
 <h3>{{ $news->title }}</h3>
 <p><a href="{{route('currentnews')}}">Return to all news</a></p>
 @if(auth()->user()->hasRole('Admin'))
-<div class="pull-right">
+<div class="float-right">
 <a href="{{route('news.edit',$news->id)}}">
 <button class="btn btn-info">
 

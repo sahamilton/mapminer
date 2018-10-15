@@ -100,6 +100,12 @@ class Branch extends Model implements HasPresenter {
 		return $this->belongsToMany(Person::class)->withTimestamps()->withPivot('role_id');
 
 	}
+	public function salesTeam()
+	{
+
+		return $this->belongsToMany(Person::class)->withTimestamps()->withPivot('role_id')->wherePivot('role_id','=',5);
+
+	}
 	public function leads(){
 		return $this->hasMany(Lead::class);
 	}

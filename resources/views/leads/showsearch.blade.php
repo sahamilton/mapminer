@@ -11,7 +11,7 @@
 			<form action="{{route('leads.store')}}" method="post">
 				{{csrf_field()}}
 			@include('leads.partials._form')
-			<input class="btn btn-info pull-right" type="submit" name = "submit" value="Save New Lead" />
+			<input class="btn btn-info float-right" type="submit" name = "submit" value="Save New Lead" />
 		</form>
 
 		

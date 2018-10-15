@@ -6,6 +6,7 @@
     <thead>
 	    <th>Branch</th>
 		<th>Manager</th>
+		<th>Sales Team</th>
 		<th>Distance</th>
     </thead>
     <tbody>
@@ -28,7 +29,21 @@
 					@endforeach
 				@endif
 			</td>
-			<td>{{number_format($branch->distance,0)}}</td>
+			<td>
+				@if($branch->servicedBy)
+					@foreach ($branch->servicedBy as $person)
+
+					<a href="{{route('salesorg',$person->id)}}"  title="See {{$person->postName()}}'s details">{{$person->postName()}}</a>
+
+					<span type="button" class="far fa-copy btn-copy js-tooltip js-copy" data-toggle="tooltip" data-placement="bottom" data-copy="{{$person->postName()}}" title="Copy to clipboard"></span>
+					@if(! $loop->last)
+					<br />
+					@endif
+					@endforeach
+
+				@endif
+			</td>
+			<td class="text text-right">{{number_format($branch->distance,1)}} miles</td>
 		</tr>
 		@endforeach
 	</tbody>

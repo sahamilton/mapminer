@@ -1,6 +1,6 @@
 
 @if($user->person->lat && $user->person->lng)
-<div id="teammap" class="pull-right" style="height:400px;width:600px;border:red solid 1px"/></div> 
+<div id="teammap" class="float-right" style="height:400px;width:600px;border:red solid 1px"/></div> 
 <div style="clear:both"></div>   
 
 

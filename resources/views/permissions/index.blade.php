@@ -5,7 +5,7 @@
 <h2>Permissions</h2>
 <div class="container">
 
-<div class="pull-right">
+<div class="float-right">
         <a href ="{{route('permission.create')}}"><button class="btn btn-success" >Add permission
         </button></a>
     </div>    

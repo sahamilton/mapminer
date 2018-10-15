@@ -105,7 +105,7 @@
                         
 					</ul>
                 
-					<ul class="nav navbar-nav pull-right">
+					<ul class="nav navbar-nav float-right">
  						<?php $news = new \App\News;?>
                         @if($news->currentNews()->count()>0)
                         <li>

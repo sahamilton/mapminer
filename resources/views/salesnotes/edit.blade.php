@@ -3,7 +3,7 @@
 <?php $group = NULL;?>
 <h3>Edit Sales Notes for {{$company->companyname}}</h3>
 
-<div class ='pull-right'>
+<div class ='float-right'>
 <a href="{{route('howtofields.index')}}">Edit sales note fields</a>
 </div>
 <div id='tabs'>

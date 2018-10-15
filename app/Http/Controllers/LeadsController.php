@@ -405,7 +405,8 @@ class LeadsController extends BaseController
         
         return \App\Branch::whereHas('servicelines',function ($q){
               $q->whereIn('servicelines.id',$this->userServiceLines );
-          })->nearby($location,$data['distance'],$data['number'])
+          })
+          ->with('salesTeam')->nearby($location,$data['distance'],$data['number'])
           
           ->get();
 

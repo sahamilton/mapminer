@@ -6,7 +6,7 @@
 <div class="page-header">
 <h3>How to sell to {{$company->companyname}}</h3>
 @if (auth()->user()->hasRole('Admin'))
-<div class="pull-right">
+<div class="float-right">
 	<a href="{{route('salesnotes.cocreate',$company->id)}}" class="btn btn-small btn-info iframe">
 <i class="fas fa-plus-circle " aria-hidden="true"></i>
 

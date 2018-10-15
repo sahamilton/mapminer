@@ -2,7 +2,7 @@
 @section('content')
 <?php $maxlat=$minlat=$maxlng=$minlng="";?>
 <div class="page-header">
-<div class="pull-right">
+<div class="float-right">
 		
 		</div>
         

@@ -2,7 +2,7 @@
 @section('content')
 <div class="container">
     <h2>Sales Campaigns</h2>
-    <div class="pull-right">
+    <div class="float-right">
         <a href ="{{route('salesactivity.create')}}">
 
             <button class="btn btn-success" ><i class="far fa-briefcase" aria-hidden="true"> </i> Add Sales Campaign</button>

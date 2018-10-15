@@ -10,7 +10,7 @@
 	<div class="page-header">
 		<h3>Role Management</h3>
 
-			<div class="pull-right">
+			<div class="float-right">
 				<a href="{{{ route('roles.create') }}}" class="btn btn-small btn-info iframe">
 
 <i class="fas fa-plus-circle " aria-hidden="true"></i>

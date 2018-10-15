@@ -13,7 +13,7 @@
 			@if($serviceline != 'All')
 				<h6><a href="{{route('users.index')}}">See All Users</a></h6>
 			@endif
-			<div class="pull-right">
+			<div class="float-right">
 
 				<a href="{{{ route('users.create') }}}" class="btn btn-small btn-info iframe">
 				

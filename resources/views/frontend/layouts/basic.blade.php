@@ -63,7 +63,7 @@
 
 
                     @if (auth()->check())
-					<ul class="nav navbar-nav pull-right">
+					<ul class="nav navbar-nav float-right">
  						
                         @if (auth()->user()->hasRole('Admin'))
                          <li class="dropdown{{ (Request::is('admin/users*|admin/roles*') ? ' active' : '') }}">

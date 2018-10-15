@@ -3,7 +3,7 @@
 
 <h1>All Updates</h1>
 
-<div class="pull-right">
+<div class="float-right">
 				<a href="{{{ route('admin.news.create') }}}" class="btn btn-small btn-info iframe">
 
 <i class="fas fa-plus-circle text text-success" aria-hidden="true"></i>

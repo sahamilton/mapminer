@@ -200,7 +200,7 @@
                         
           
     </ul>
-    <ul class="nav navbar-nav pull-right">
+    <ul class="nav navbar-nav float-right">
                         
                         
                         <li class="dropdown">

@@ -12,7 +12,7 @@
 
 		@include('webleads.partials._form')
 		<div class="row">
-			<div class="col-md-6 offset-md-4 pull-right">
+			<div class="col-md-6 offset-md-4 float-right">
 			<input type="submit" class="btn btn-info" name="submit" value="Edit Web Lead" />
 		</div>
 		</div>

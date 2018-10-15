@@ -3,7 +3,7 @@
 <div class="container">
     <h2>Campaign Documents</h2>
     <p><a href="{{route('salesactivity.index')}}">Return to campaigns</a></p>
-    <div class="pull-right">
+    <div class="float-right">
         <a href ="{{route('salesactivity.create')}}">
 
             <button class="btn btn-success" ><i class="far fa-briefcase" aria-hidden="true"> </i> Add Sales Campaign</button>

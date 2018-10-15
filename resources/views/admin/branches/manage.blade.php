@@ -3,7 +3,7 @@
 <div class="container">
     <h2>Manage Branches</h2>
 
-    <div class="pull-right"><a href="{{route('branches.index')}}" class="btn btn-small btn-info iframe">Manage All branches</a></div>
+    <div class="float-right"><a href="{{route('branches.index')}}" class="btn btn-small btn-info iframe">Manage All branches</a></div>
 
     <ul class="nav nav-tabs">
 

@@ -7,7 +7,7 @@
 
 <link rel="stylesheet" href="{{asset('maps/css/map.css')}}">
 <div class="page-header">
-<div class="pull-right">
+<div class="float-right">
 
 	 <p><a href="{{route('branches.index')}}">Show all branches</a></p>	
 		</div>

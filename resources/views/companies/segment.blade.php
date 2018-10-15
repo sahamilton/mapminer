@@ -20,7 +20,7 @@ $data['companyname']=$company->companyname;
 @include('companies.partials._state')
 @include('partials.advancedsearch')
 @if(auth()->user()->hasRole('Admin'))
-	<div class="pull-right">
+	<div class="float-right">
 		<a href="{{{ route('locations.create') }}}" class="btn btn-small btn-info iframe">
 			<i class="fas fa-plus-circle " aria-hidden="true"></i>
 			Create

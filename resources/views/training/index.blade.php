@@ -2,7 +2,7 @@
 @section('content')
 <div class="container">
     <h2>Trainings</h2>
-    <div class="pull-right">
+    <div class="float-right">
         <a href ="{{route('training.create')}}">
             <button class="btn btn-success" >
             Add Training Item

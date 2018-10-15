@@ -46,7 +46,7 @@
 								</li>
 								
 							</ul>
-						<a class="btn btn-primary pull-right" href="">
+						<a class="btn btn-primary float-right" href="">
 						<i class="far fa-edit text-info""></i>
 						Edit</a>				
 					</div>
@@ -133,7 +133,7 @@
 					</ul>
 
 					@endif
-					<a class="btn btn-primary pull-right" href="{{route('branchassignments.index')}}">
+					<a class="btn btn-primary float-right" href="{{route('branchassignments.index')}}">
 						<i class="far fa-edit text-info"></i>
 						Change Assignments</a>
 

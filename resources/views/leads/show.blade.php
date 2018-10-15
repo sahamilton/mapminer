@@ -6,7 +6,7 @@
 	<div class="panel panel-default">
 		<div class="panel-heading clearfix">
 			<h2 class="panel-title pull-left">{{$lead->companyname}} - {{$lead->rating}}</h2>
-			<a class="btn btn-primary pull-right" href="{{route('leads.edit',$lead->id)}}">
+			<a class="btn btn-primary float-right" href="{{route('leads.edit',$lead->id)}}">
 
 				<i class="far fa-edit text-info""></i>
 
@@ -24,7 +24,7 @@
 						<li><strong>Lead Assigned to:</strong>{{$lead->salesteam->first()->postName()}}</li>
 						<li><strong>Lead Assigned on:</strong>{{$lead->salesteam->first()->pivot->created_at->format('j M, Y')}}</li>
 						<li><strong>Branch Assignment:</strong>{{$lead->branches->branchname}}</li>
-						<p class="pull-right text-danger">
+						<p class="float-right text-danger">
 							<a data-href="{{route('webleads.unassign',$lead->id)}}" 
 			                    data-toggle="modal" 
 			                    data-target="#unassign-weblead"
@@ -44,7 +44,7 @@
 		
 @endif
 </div>		
-<div class="col-sm-7 pull-right">
+<div class="col-sm-7 float-right">
 	@include('webleads.partials._search')
 <div id="map"  style="border:solid 1px red"></div>
 @if($lead->salesteam->count()==0)

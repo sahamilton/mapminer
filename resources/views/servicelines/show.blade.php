@@ -2,7 +2,7 @@
 @section('content')
 
 @if (auth()->user()->hasRole('Admin'))
-	<div class="pull-right">
+	<div class="float-right">
 		<a href="{{{ route('branches.create') }}}" class="btn btn-small btn-info iframe">
 		
 <i class="fas fa-plus-circle " aria-hidden="true"></i>

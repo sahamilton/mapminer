@@ -20,7 +20,7 @@
 
 				<p><a href="{{route('leadsource.index')}}">Return to all Prospect sources</a></p>
  @if (auth()->user()->hasRole('Admin') or auth()->user()->hasRole('Sales Operations'))
-<div class="pull-right">
+<div class="float-right">
                 <p><a href="{{{ route('leads.search') }}}" class="btn btn-small btn-info iframe">
 <i class="fas fa-plus-circle " aria-hidden="true"></i>
 

@@ -1,7 +1,7 @@
 @extends('site/layouts/default')
 @section('content')
 <div class="page-header">
-<div class="pull-right">
+<div class="float-right">
 		
 		</div>
 <h2>Nearby Branches</h2>

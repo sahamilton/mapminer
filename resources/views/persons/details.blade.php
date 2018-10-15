@@ -4,7 +4,7 @@
 	<div class="panel panel-default">
 		<div class="panel-heading clearfix">
 			<h2 class="panel-title pull-left"><strong>{{$people->postName()}}</strong></h2>
-			<a class="btn btn-primary pull-right" href="{{route('users.edit',$people->user_id)}}">
+			<a class="btn btn-primary float-right" href="{{route('users.edit',$people->user_id)}}">
 
 				<i class="far fa-edit text-info""></i>
 
