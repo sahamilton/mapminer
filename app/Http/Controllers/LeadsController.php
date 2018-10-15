@@ -300,8 +300,9 @@ class LeadsController extends BaseController
           $people = $this->findNearByPeople($lead,500);
           $salesrepmarkers = $this->person->jsonify($people);
           $branchmarkers=$branches->toJson();
+          $address = request('address');
 
-          return response()->view('leads.showsearch',compact('lead','branches','people','salesrepmarkers','branchmarkers','extrafields','sources'));
+          return response()->view('leads.showsearch',compact('lead','branches','people','salesrepmarkers','branchmarkers','extrafields','sources','address'));
 
     }else{
 

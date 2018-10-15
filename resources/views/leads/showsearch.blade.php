@@ -2,8 +2,11 @@
 @section('content')
 <h2>Assign Leads</h2>
 <p><a href="{{route('leadsource.show',$lead->lead_source_id)}}">Show All WebLeads</a></p>
-<div class="col-sm-5">
-	<div class="panel panel-default">
+<div class="container">
+  <div class="row">
+    <div class="col-sm-6">
+    	@include('leads.partials._search')
+      <div class="panel panel-default">
 	
 			<form action="{{route('leads.store')}}" method="post">
 				{{csrf_field()}}
@@ -13,24 +16,21 @@
 
 		
 	</div>
-	<style>
-	ul{list-style-type: none;}
-</style>
-
-</div>		
-<div class="col-sm-7 pull-right" >
-	@include('leads.partials._search')
-<div id="map"  style="border:solid 1px red"></div>
+    </div>
+    <div class="col-sm-6">
+      
+      
+<div id="map"  style="width:100%;border:solid 1px red"></div>
 		@include('leads.partials._branchlist')	
 		@include('leads.partials._repslist')
 
 
 </div>
-
-
-		
-
+    </div>
+  </div>
 </div>
+
+
 <!-- <script>
 function myFunction(element) {
 
