@@ -10,12 +10,12 @@
 	<a href= "{{route('company.service',$company->id)}}">Show Service Details</a></p>
 
 @if (isset($company->industryVertical->filter))
-<p>{{$company->industryVertical->filter}} Vertical</p>
+	<p>{{$company->industryVertical->filter}} Vertical</p>
 @endif
 <h4>ServiceLines:</h4>
 <ul>
 @foreach($company->serviceline as $serviceline)
-<li>{{$serviceline->ServiceLine}} </li>
+	<li>{{$serviceline->ServiceLine}} </li>
 @endforeach
 </ul>
 
@@ -23,7 +23,7 @@
 
 @if(isset($company->managedBy->firstname))
 <p>Account managed by <a href="{{route('person.show',$company->managedBy->id)}}" title="See all accounts managed by {{$company->managedBy->postName()}}">{{$company->managedBy->postName()}}</a></p>
-
+@endif
 @if (auth()->user()->hasRole('Admin'))
 
 
@@ -36,7 +36,7 @@
 
 				 Create New Location</a>
 			</div>
-           @endif
+@endif
          
 @include('companies.partials._companyheader')
 @include('partials/advancedsearch')
