@@ -38,8 +38,9 @@
 			<td>{{$person->userdetails->id}}</td>
 			<td>{{$person->userdetails->email}}</td>
 
-			<td>{{$person->userdetails->created_at->format('m/d/Y')}}</td>
-
+			<td>@if($person->userdetails->created_at)
+					{{$person->userdetails->created_at->format('m/d/Y')}}</td>
+				@endif
 			<td>
 			@foreach ($person->userdetails->serviceline as $serviceline)
 				{{$serviceline->ServiceLine}}
