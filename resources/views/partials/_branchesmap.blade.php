@@ -2,18 +2,11 @@
     //<![CDATA[
 
     var customIcons = {
-      'Spartan': {
-        icon: '//maps.google.com/mapfiles/ms/icons/green-dot.png'
+      @foreach ($servicelines as $serviceline)
+      '{{$serviceline->ServiceLine}}': {
+        icon: '//maps.google.com/mapfiles/ms/icons/{{$serviceline->color}}-dot.png'
       },
-      'CLP': {
-        icon: '//maps.google.com/mapfiles/ms/icons/yellow-dot.png'
-      },
-	  'PeopleReady':{
-		   icon: '//maps.google.com/mapfiles/ms/icons/blue-dot.png'
-	  },
-    'Centerline':{
-       icon: '//maps.google.com/mapfiles/ms/icons/red-dot.png'
-    }
+      @endforeach
     };
 
     function load() {
