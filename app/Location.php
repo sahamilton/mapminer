@@ -107,9 +107,11 @@ class Location extends Model implements HasPresenter {
  * [nearbyBranches description]
  * @return [type] [description]
  */
-	public function nearbyBranches(){
+	public function nearbyBranches($servicelines){
 
-		return Branch::nearby($this,'100')->limit(5);
+		return Branch::whereHas('servicelines', function($q) use ($servicelines){
+				$q->whereIn('servicelines.id',$servicelines);
+			})->nearby($this,'100')->limit(5);
 	}
 
 

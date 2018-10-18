@@ -156,6 +156,7 @@ trait Geocode
             and people.id = peepsfilter.peepid
             and branch.id = branchfilter.branchid
             order by locs.id";
+
           return \DB::select($query);
 
     }

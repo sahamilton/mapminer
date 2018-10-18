@@ -28,12 +28,14 @@ class CompaniesServiceController extends BaseController
 	public function getServiceDetails($id,$state=null){
 		$company = $this->company->with('managedBy','locations')->findOrFail($id);
 		$count = count($company->locations);
+
 		if($count > $this->limit){
 			dd("Contact Support - Companies Service Controller - 31 ",$count,$this->location->getStateSummary($company->id));
 			//dd($count,$this->location->getStateSummary($company->id));
 		}
 
 		$locations = $this->location->locationsNearbyBranches($company);
+	
 		$locations = $this->createServiceDetails($locations);
 
 		return response()->view('companies.newservice',compact('company','locations'));
@@ -224,7 +226,7 @@ class CompaniesServiceController extends BaseController
 			$data['salesteam'][$location->id]=$location->nearbySalesRep($servicelines)->get();
 			
 
-			$data['branches'][$location->id]=$location->nearbyBranches()->get();
+			$data['branches'][$location->id]=$location->nearbyBranches($servicelines)->get();
 
 		}
 
