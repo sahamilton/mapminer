@@ -33,35 +33,36 @@
    		
     </thead>
     <tbody>
-    	@foreach ($locations as $location)
+    	@foreach ($company->locations as $location)
 
     	 	<tr> 
 		    	<td>
-					<a title= "See details of {{$location['location']['businessname']}} location."
-					href={{route('locations.show',$location['location']['id'])}}>
-					{{$location['location']['businessname']}}</a>
+					<a title= "See details of {{$location->businessname}} location."
+					href="{{route('locations.show',$location->id)}}">
+					{{$location->businessname}}</a>
 				</td>
-				<td>{{$location['location']['street']}}</td>
-				<td>{{$location['location']['city']}}</td>
-				<td>{{$location['location']['state']}}</td>
-				<td>{{$location['location']['zip']}}</td>
+				<td>{{$location->street}}</td>
+				<td>{{$location->city}}</td>
+				<td>{{$location->state}}</td>
+				<td>{{$location->zip}}</td>
 				<td>
-					<?php usort($location['branch'], function ($a, $b) { return $a['distance'] - $b['distance']; });?>
-					@foreach ($location['branch'] as $branch)
 
-					<a href="{{route('branches.show',$branch['branch_id'])}}">
-						{{$branch['branchname']}}</a>: {{number_format($branch['distance'],2)}} mi<br />
+					
+					@foreach ($service['branches'][$location->id] as $branch)
+					
+					<a href="{{route('branches.show',$branch->id)}}">
+						{{$branch->branchname}}</a>: {{number_format($branch->distance,2)}} mi<br />
 					@endforeach
 				</td>
 				<td>
-					<?php usort($location['rep'], function ($a, $b) { return $a['distance'] - $b['distance']; });?>
-					@foreach ($location['rep'] as $rep)
-					<a href="{{route('person.show',$rep['pid'])}}">
-						{{$rep['repname']}}</a> : {{number_format($rep['distance'],2)}} mi 
+					
+					@foreach ($service['salesteam'][$location->id] as $rep)
+					<a href="{{route('person.show',$rep->id)}}">
+						{{$rep->fullName()}}</a> : {{number_format($rep->distance,2)}} mi 
 						<br />
 					@endforeach
 				</td>
-    	
+   	
    @endforeach
     
     </tbody>

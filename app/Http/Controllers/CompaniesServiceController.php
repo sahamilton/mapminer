@@ -33,12 +33,11 @@ class CompaniesServiceController extends BaseController
 			dd("Contact Support - Companies Service Controller - 31 ",$count,$this->location->getStateSummary($company->id));
 			//dd($count,$this->location->getStateSummary($company->id));
 		}
-
-		$locations = $this->location->locationsNearbyBranches($company);
-	
-		$locations = $this->createServiceDetails($locations);
-
-		return response()->view('companies.newservice',compact('company','locations'));
+		
+		$service = $this->getCompanyServiceDetails($company->locations,$company);
+		
+		
+		return response()->view('companies.newservice',compact('company','service'));
 
 	}
 /**
