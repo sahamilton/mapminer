@@ -2,7 +2,7 @@
 
 @foreach ($servicelines as $serviceline)
 
-	{{$serviceline->ServiceLine}} =  <img src='https://maps.gstatic.com/mapfiles/ridefinder-images/mm_20_{{$serviceline->color}}.png' />
+	{{$serviceline->ServiceLine}} =  <img src='{{asset('geocoding/markers/'.$serviceline->color.'-pin.png')}}' />
 
 @endforeach
 

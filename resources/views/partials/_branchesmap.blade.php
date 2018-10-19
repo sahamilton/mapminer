@@ -4,7 +4,7 @@
     var customIcons = {
       @foreach ($servicelines as $serviceline)
       '{{$serviceline->ServiceLine}}': {
-        icon: '//maps.google.com/mapfiles/ms/icons/{{$serviceline->color}}-dot.png'
+        icon: '{{asset('geocoding/markers/'.$serviceline->color.'-pin.png')}}'
       },
       @endforeach
     };
