@@ -127,9 +127,8 @@ class PersonsController extends BaseController {
 					    $q->whereIn('search_filter_id',$keys)
 					    	->orWhereNull('search_filter_id');
 
-					})
-					->with('userdetails','reportsTo','industryfocus','userdetails.roles')
-					->get();
+					});
+					
 
 			}else{
 
@@ -142,9 +141,8 @@ class PersonsController extends BaseController {
 				->whereHas('userdetails.roles', function($q) {
 					    $q->whereIn('role_id',$this->validroles);
 
-					})
-				->with('userdetails','industryfocus','userdetails.roles')
-				->get();
+					});
+				
 				}
 
 		}else{
@@ -155,12 +153,11 @@ class PersonsController extends BaseController {
 					->whereHas('userdetails.roles', function($q) {
 					    $q->whereIn('role_id',$this->validroles);
 
-					})
-					->with('industryfocus','industryfocus','userdetails.roles')
-					->get();
+					});
 		}
 
-		return $persons;
+		return $persons->with('userdetails','reportsTo','userdetails.serviceline','industryfocus','userdetails.roles')
+					->get();
 
 
 	}

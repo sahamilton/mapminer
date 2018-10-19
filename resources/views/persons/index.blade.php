@@ -28,6 +28,7 @@
 		<th>Role</th>
 		<th>Email</th>
 		<th>Industry</th>
+		<th>Servicelines</th>
 	</thead>
 	<tbody>
 		@foreach($persons as $person)
@@ -64,6 +65,14 @@
 					@endforeach
 
 					</ul>
+				</td>
+				<td>
+					<ul>
+						
+					@foreach ($person->userdetails->serviceline as $serviceline)
+					<li>{{$serviceline->ServiceLine}}</li>
+					@endforeach
+				</ul>
 				</td>
 			</tr>
 		@endforeach
