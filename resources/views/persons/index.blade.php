@@ -1,4 +1,4 @@
-@extends('site/layouts/default')
+@extends('site.layouts.default')
 @section('content')
 @if(isset($industry))
 	<h1>{{$industry->filter}} Industry Sales Team</h1>
