@@ -110,7 +110,7 @@
                         @if($news->currentNews()->count()>0)
                         <li>
                             <a href="{{route('currentnews')}}">
-                            <i class="far fa-bell-o" aria-hidden="true"> </i> News</a>
+                            <i class="fas fa-bell" aria-hidden="true"> </i> News</a>
 
 
                         </li>

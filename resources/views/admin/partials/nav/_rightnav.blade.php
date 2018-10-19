@@ -5,7 +5,7 @@
 
                 <li class="nav-item">
                   <a  class="dropdown-item" href="{{route('currentnews')}}">
-                  <i class="far fa-bell-o" aria-hidden="true"> </i> News</a>
+                  <i class="fas fa-bell" aria-hidden="true"> </i> News</a>
                 </li>
                 @endif
                 
