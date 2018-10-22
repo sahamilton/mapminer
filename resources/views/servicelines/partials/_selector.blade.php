@@ -3,9 +3,9 @@
 		<div class="col-md-6">
 
 		<div class='input-group input-group-lg'>
-			<select multiple name="serviceline[]" >
+			<select required multiple name="serviceline[]" >
 				@foreach($servicelines as $key=>$serviceline)
-					<option value="{{$key}}">{{$serviceline}}</option>
+					<option selected value="{{$key}}">{{$serviceline}}</option>
 				@endforeach
 			</select>
 			<span class="help-block{{ $errors->has('serviceline') ? ' has-error' : '' }}">

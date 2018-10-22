@@ -7,6 +7,7 @@ use App\Role;
 use App\Serviceline;
 use App\Http\Controllers\BaseController;
 use App\BranchManagement;
+use App\Http\Requests\BranchAssignmentRequest;
 use Mail;
 
 
@@ -90,7 +91,7 @@ class BranchManagementController extends BaseController
 
     }
 
-    public function confirm(Request $request){
+    public function confirm(BranchAssignmentRequest $request){
         
         $recipients = $this->branchmanagement->getRecipients($request);
         $test = request('test');
