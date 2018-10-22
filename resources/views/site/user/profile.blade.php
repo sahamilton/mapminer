@@ -179,7 +179,7 @@
 					<ul style="list-style-type: none;">
 						
 						<li>Total Logins: {{$user->usage()->count()}}</li>
-						@if($user->usage()->oldest()->first()->lastactivity)
+						@if($user->lastactivity && $user->usage()->oldest()->first()->lastactivity)
 						<li>First Login:{{$user->usage()->oldest()->first()->lastactivity->format('M d, Y')}}</li>
 						<li>Last Login:{{$user->usage()->latest()->first()->lastactivity->format('M d, Y')}}
 						@endif	

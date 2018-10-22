@@ -221,6 +221,7 @@ class UserImport extends Imports
 				$data[$a]['created_at']= now();
 				$data[$a]['updated_at'] =null;
 				$data[$a]['email'] = $emails[$user->employee_id];
+				$data[$a]['api_token'] = md5(uniqid(mt_rand(), true));
 				$a++;
 
 
