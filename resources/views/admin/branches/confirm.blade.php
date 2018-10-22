@@ -10,6 +10,7 @@
   <th>Recipient</th>
   <th>Role</th>
   <th>Assigned Branches</th>
+  <th>Servicelines</th>
   <th>Last Confirmed</th>
 </thead>
 <tbody>
@@ -21,8 +22,11 @@
       {{$role->name}}
       @endforeach
   </td>
+  <td>{{$recipient->branchesServiced->count()}}</td>
   <td>
-    {{$recipient->branchesServiced->count()}}
+    @foreach ($recipient->userdetails->serviceline as $serviceline)
+      <li>{{$serviceline->ServiceLine}}</li>
+    @endforeach
   </td>
   <td>@if($recipient->lastUpdatedBranches()->first()->lastdate)
     {{$recipient->lastUpdatedBranches()->first()->lastdate}}

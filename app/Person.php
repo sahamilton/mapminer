@@ -59,15 +59,15 @@ class Person extends NodeModel implements HasPresenter {
 	public function scopeStaleBranchAssignments($query,$roles){
 		return $query->whereHas('userdetails.roles',function($q)use($roles){
             $q->whereIn('roles.id',$roles);
-        })
-        ->where(function($q){
+        });
+        // removed for first time pass
+        /*->where(function($q){
             $q->doesntHave('branchesServiced')
             ->orWhereHas('branchesServiced',function($q){
                 $q->where('branch_person.updated_at','<',now()->subMonth(2))
                 ->orWhereNull('branch_person.updated_at');
             });
-        });
-       // ->doesntHave('branchesServiced');
+        });*/
 	}
 
 	public function manages() {
@@ -246,6 +246,13 @@ class Person extends NodeModel implements HasPresenter {
 		
 	}
 
+	public function scopeInServiceLine($query,$servicelines){
+		
+		return $query->whereHas('userdetails.serviceline',function($q) use ($servicelines)
+			{ 
+				$q->whereIn('servicelines.id',$servicelines);
+			});
+	}
 	public function ownedLeads(){
 		return $this->belongsToMany(Lead::class, 'lead_person_status','person_id','related_id')
 		->withTimestamps()
@@ -333,5 +340,11 @@ class Person extends NodeModel implements HasPresenter {
     	return $person->userdetails->roles()->first()->id;
                     //->userdetails;
     }
+
+    public function scopeSalesReps($query){
+		return $query->whereHas('userdetails.roles',function($q){
+    		$q->where('roles.id','=','5');
+		});
+	}
 
 }

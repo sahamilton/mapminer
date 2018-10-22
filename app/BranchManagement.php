@@ -81,19 +81,16 @@ class BranchManagement extends Model
 
 	public function getRecipients(Request $request){
 		
-		$recipients = $this->person
+		$recipients = $this->person->inServiceLine(request('serviceline'))
                     ->staleBranchAssignments(request('roles'))
-
-                    ->with('userdetails','branchesServiced','userdetails.roles');
+                    ->with('userdetails','branchesServiced','userdetails.roles','userdetails.serviceline');
 
 		if (request('test')){
-			return $recipients->inRandomOrder()
-                    ->limit(5)
-                    ->get();
-		}else{
-			return $recipients->get();
+			$recipients->inRandomOrder()
+                    ->limit(5);
+
 		}
-		
+			return $recipients->get();
 
 	}
 

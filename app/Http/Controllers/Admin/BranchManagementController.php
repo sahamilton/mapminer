@@ -4,7 +4,8 @@ namespace App\Http\Controllers\Admin;
 use App\Branch;
 use App\Person;
 use App\Role;
-
+use App\Serviceline;
+use App\Http\Controllers\BaseController;
 use App\BranchManagement;
 use Mail;
 
@@ -12,23 +13,30 @@ use Mail;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class BranchManagementController extends Controller
+class BranchManagementController extends BaseController
 {
     protected $branch;
     protected $person;
     protected $role;
+    protected $serviceline;
 
     protected $branchmanagement;
     
     protected $branchRoles = [3,5,11,9,13];
-    public function __construct(Branch $branch, Person $person, Role $role,BranchManagement $branchmanagement){
+    public function __construct(Branch $branch, 
+                        Person $person, 
+                        Role $role,
+                        BranchManagement $branchmanagement,
+                        Serviceline $serviceline){
 
 
     	$this->branch = $branch;
     	$this->person = $person;
         $this->role = $role;
+        $this->serviceline = $serviceline;
 
         $this->branchmanagement = $branchmanagement;
+        parent::__construct($this->branch);
     }
 
     public function index(){
@@ -67,20 +75,23 @@ class BranchManagementController extends Controller
 
     public function select()
     {
-            
+
             $roles = $this->role->wherehas('permissions',function ($q){
                     $q->where('permissions.name','=','service_branches');
             })
             ->pluck('name','id')->toArray();
-            // we need to move this to a model
+            $servicelines = $this->serviceline->whereIn('id',$this->userServiceLines)->get()->pluck('ServiceLine','id')->toArray();
+
+            
+            // we need to move this to a model, db or config
             $message = "It is important that we keep Mapminer data up to date as we use this information to assign leads among other things. Please help us help you by confirming or correcting the following information:";
      
-            return response()->view('admin.branches.select',compact('roles','message'));
+            return response()->view('admin.branches.select',compact('roles','message','servicelines'));
 
     }
 
     public function confirm(Request $request){
-
+        
         $recipients = $this->branchmanagement->getRecipients($request);
         $test = request('test');
 

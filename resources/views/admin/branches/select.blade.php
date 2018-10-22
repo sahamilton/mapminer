@@ -37,6 +37,7 @@
             </span>
     </div>
 </div>
+@include('servicelines.partials._selector')
 <div class="form-group row">
     <div class=" form-check-inline"">
       <input class="form-check-input" type="checkbox" checked id="test" name="test">
