@@ -408,6 +408,8 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
 	#CompanyService
 		
 		Route::get('/company/{id}/newservice/{state?}',['as'=>'company.service','uses'=>'CompaniesServiceController@getServiceDetails']);
+
+		Route::get('/company/{id}/teamservice/{state?}',['as'=>'company.teamservice','uses'=>'CompaniesServiceController@getServiceTeamDetails']);
 		Route::post('/company/service',['as'=>'company.service.select','uses'=>'CompaniesServiceController@selectServiceDetails']);
 		Route::get('company/{id}/serviceexport/{state?}',['as'=>'company.service.export','uses'=>'CompaniesServiceController@exportServiceDetails']);
 

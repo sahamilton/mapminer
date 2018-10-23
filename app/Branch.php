@@ -110,6 +110,15 @@ class Branch extends Model implements HasPresenter {
 		return $this->hasMany(Lead::class);
 	}
 	
+	public function getManagementTeam(){
+		$team = $this->salesTeam()->get();
+		$mgrs = array();
+		foreach ($team as $rep){
+			$mgrs = array_unique(array_merge($mgrs,$rep->ancestorsAndSelf()->pluck('id')->toArray()));
+
+		}
+		return $mgrs;
+	}
 
 	public function getPresenterClass()
     {

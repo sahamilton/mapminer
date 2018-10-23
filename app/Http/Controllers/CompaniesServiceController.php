@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Company;
 use App\Location;
+use App\Branch;
+use App\Person;
 use Excel;
 class CompaniesServiceController extends BaseController
 {
@@ -34,13 +36,39 @@ class CompaniesServiceController extends BaseController
 			//dd($count,$this->location->getStateSummary($company->id));
 		}
 		
-		$service = $this->getCompanyServiceDetails($company->locations,$company);
-		
+		$service = $this->getCompanyServiceDetails($company->locations,$company,$limit=5);
+		$service = array_merge($service,$this->getCompanyServiceBranchDetails($company->locations,$company,$limit=5));
 		
 		return response()->view('companies.newservice',compact('company','service'));
 
 	}
-/**
+	public function getServiceTeamDetails($id,$state=null){
+		$company = $this->company->with('managedBy','locations')->findOrFail($id);
+		$count = count($company->locations);
+
+		if($count > $this->limit){
+			dd("Contact Support - Companies Service Controller - 31 ",$count,$this->location->getStateSummary($company->id));
+			//dd($count,$this->location->getStateSummary($company->id));
+		}
+		
+		$service = $this->getCompanyServiceBranchDetails($company->locations,$company,$limit=1);
+		// get unique branches
+		$branchids = $this->getUniqueBranches($service['branches']);
+		$branches = Branch::whereIn('id',$branchids)->get();
+		$people = array();
+		// for each branch get associated team
+		foreach ($branches as $branch){
+			$people = array_unique(array_merge($people,$branch->getManagementTeam()));
+		}
+		$team = Person::whereIn('id',$people)->with('userdetails','userdetails.roles')->get();
+
+		// get the full team
+		
+		
+		return response()->view('companies.serviceteam',compact('company','service','team'));
+
+	}
+/*
  * createServiceDetails Create multidimensional array from query result
  * @param  array  $locations result of getServiceDetails query
  * @param  integer $limit     Limit branch and reps returned if greater than limit
@@ -215,17 +243,34 @@ class CompaniesServiceController extends BaseController
 		})->download('csv');
 	}
 
-	private function getCompanyServiceDetails($locations,Company $company){
+	private function getCompanyServiceBranchDetails($locations,Company $company,$limit=5){
 		$servicelines = $company->serviceline->pluck('id')->toArray();
 	
 		$data = array();
 		
 		foreach ($locations as $location){
 
-			$data['salesteam'][$location->id]=$location->nearbySalesRep($servicelines)->get();
-			
+			$data['branches'][$location->id]=$location->nearbyBranches($servicelines,$limit)->get();
 
-			$data['branches'][$location->id]=$location->nearbyBranches($servicelines)->get();
+		}
+
+		return $data;
+	}
+	private function getUniqueBranches($branches){
+		$branchids = array();
+		foreach ($branches as $branch){
+			$branchids = array_unique(array_merge($branchids,$branch->pluck('id')->toArray()));
+		}
+		return $branchids;
+	}
+	private function getCompanyServiceTeamDetails($locations,Company $company,$limit=5){
+		$servicelines = $company->serviceline->pluck('id')->toArray();
+	
+		$data = array();
+		
+		foreach ($locations as $location){
+
+			$data['salesteam'][$location->id]=$location->nearbySalesRep($servicelines,$limit)->get();
 
 		}
 

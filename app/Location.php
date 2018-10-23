@@ -107,15 +107,15 @@ class Location extends Model implements HasPresenter {
  * [nearbyBranches description]
  * @return [type] [description]
  */
-	public function nearbyBranches($servicelines){
+	public function nearbyBranches($servicelines,$limit=5){
 
 		return Branch::whereHas('servicelines', function($q) use ($servicelines){
 				$q->whereIn('servicelines.id',$servicelines);
-			})->nearby($this,'100')->limit(5);
+			})->nearby($this,'100')->limit($limit);
 	}
 
 
-	public function nearbySalesRep($serviceline=null){
+	public function nearbySalesRep($serviceline=null,$limit=5){
 
 		return Person::with('userdetails.roles')
 		->whereHas('userdetails.serviceline',function ($q) use ($serviceline){
@@ -126,7 +126,7 @@ class Location extends Model implements HasPresenter {
 			$q->where('roles.id','=',5);
 		})
 		->nearby($this,'100')
-        ->limit(5);
+        ->limit($limit);
 
 		//return Branch::nearby($this,'100')->limit(5);
 	}
