@@ -7,6 +7,7 @@
   if($session && ! isset($session['number'])){
     $session['number']=5;
   }
+  dd('here now');
 @endphp
 
 <form class="form-inline" method ="post"  action ="{{route('lead.find')}}" name="leadaddress">

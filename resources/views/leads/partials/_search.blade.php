@@ -6,7 +6,7 @@
 		<input class="form-control" 
 		type="text" 
 		name="address" 
-		value="{{$address}}"
+		value="{{isset($address) ? $address : ''}}"
 		placeholder="address">
 	<span class="help-block">
                     <strong>{{ $errors->has('address') ? $errors->first('address') : ''}}</strong>

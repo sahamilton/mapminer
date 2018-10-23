@@ -280,11 +280,13 @@ class LeadsController extends BaseController
     }
     public function searchAddress(){
       $leadsources = $this->leadsource->pluck('source','id');
+
       return response()->view('leads.search',compact('leadsources'));
     }
 
 
     public function search(LeadInputAddressFormRequest $request){
+
       $geoCode = app('geocoder')->geocode(request('address'))->get();
       if (count($geoCode)>0){
         // create the lead object
