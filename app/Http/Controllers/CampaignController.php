@@ -47,6 +47,7 @@ class CampaignController extends Controller
      */
     public function destroy(Campaign $campaign)
     {
-        //
+        $campaign->delete();
+        return redirect()->back()->withMessage("Campaign Deleted");
     }
 }

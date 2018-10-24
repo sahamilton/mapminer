@@ -9,6 +9,7 @@
 			<th>Participants</th>
 			<th>Respondents</th>
 			<th>Is Test</th>
+			<th></th>
 		</thead>
 		<tbody>
 			@foreach ($campaigns as $campaign)
@@ -24,12 +25,22 @@
 					@else
 						No
 					@endif
-</td>
+				</td>
+				<td>
+					<a 
+					 	data-href="{{route('campaigns.destroy',$campaign->id)}}" 
+						data-toggle="modal" 
+						data-target="#confirm-delete" 
+						data-title = "campaign"
+						title ="Delete this campaign" 
+						href="#">
+
+						<i class="far fa-trash-alt text-danger" aria-hidden="true"> </i> </a>
 			</tr>
 			@endforeach
 		</tbody>
 	</table>
 
-
+@include('partials._modal')
 @include ('partials._scripts')
 @endsection()
