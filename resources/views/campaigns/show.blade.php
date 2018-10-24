@@ -16,7 +16,10 @@
 			@foreach ($campaign->participants as $participant)
 			
 			<tr>
-				<td>{{$participant->fullName()}}</td>
+				<td>
+					<a href="{{route('person.details',$participant->id)}}">{{$participant->fullName()}}
+					</a>
+				</td>
 				<td>{{$participant->pivot->activity}}</td>
 			</tr>
 			@endforeach

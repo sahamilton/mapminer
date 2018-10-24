@@ -1,7 +1,7 @@
 @extends('admin.layouts.default')
 @section('content')
 <h2>Send Emails to Confirm Branch Associations</h2>
-
+<p><a href="{{route('campaigns.index')}}">See prior email campaigns</a></p>
 <p>Edit the body of the email message or leave default.</p>
 <form action="{{route('branchteam.email')}}" name="selectroles" method="post" >
 @csrf
