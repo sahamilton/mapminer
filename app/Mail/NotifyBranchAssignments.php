@@ -18,18 +18,21 @@ class NotifyBranchAssignments extends Mailable
     public $token;
     public $message;
     public $expiration;
+    public $cid;
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(Person $person, $message)
+    public function __construct(Person $person, $message,$cid)
     {
         $this->person = $person;
         $this->message = $message;
         // we have to create a unique new time expire token
         $this->user = User::findOrFail($person->user_id);
         $this->token = $this->user->setAccess();
+        // and add the campaign id
+        $this->cid = $cid;
         $this->expiration = Carbon::now()->addHours('48');
         
     }

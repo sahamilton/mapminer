@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Branch;
 use App\User;
 use App\Person;
+use App\Campaign;
 use Mail;
 use App\Mail\NotifyBranchAssignments;
 use App\BranchManagement;
@@ -16,13 +17,20 @@ class BranchManagementController extends Controller
     public $branchmanagement;
     public $person;
     public $user;
+    public $campaign;
     public $branchTeamRoles =[3,5,9,11,13];
-    public function __construct(Person $person, Branch $branch,BranchManagement $branchmanagement, User $user){
+    public function __construct(
+        Person $person, 
+        Branch $branch,
+        BranchManagement $branchmanagement, 
+        User $user,
+        Campaign $campaign){
 
         $this->branchmanagement = $branchmanagement;
         $this->branch = $branch;
         $this->person = $person;
         $this->user = $user;
+        $this->campaign = $campaign;
     }
 
 
@@ -98,8 +106,8 @@ class BranchManagementController extends Controller
 
     }
 
-    public function correct($token){
-
+    public function correct($token, $cid=null){
+ 
 
         //validate user from token
         if($user = $this->user->getAccess($token)){
@@ -109,6 +117,15 @@ class BranchManagementController extends Controller
             //login user
             auth()->login($user);
             // update token - single use
+            // insert activity_person_cid
+            if($cid){
+               
+                $campaign = $this->campaign->findOrFail($cid);
+                
+                $campaign->participants()->attach($person,['activity'=>'correct']);
+                //insert the campaign_person_activity
+            }
+            //
             $user->update(['apitoken' => $user->setApiToken()]);
             return redirect()->route('user.show',$user->id)
             ->withMessage("Thank You. Your branch associations have been confirmed. Check out the rest of your profile.");
@@ -122,16 +139,22 @@ class BranchManagementController extends Controller
         }
     }
 
-    public function confirm($token){
-
+    public function confirm($token, $cid=null){
+        
         //validate user from token
         if($user = $this->user->getAccess($token)){
-            
+            $person = $user->person()->first();
             //login user
             auth()->login($user);
             // update token - single useauth()->login($user);
             $user->update(['apitoken' => $user->setApiToken()]);
-           
+           // update token - single use
+            if($cid){
+                
+                $campaign = $this->campaign->findOrFail($cid);
+                $campaign->participants()->attach($person,['activity'=>'confirm']);
+            }
+            // insert activity_person_cid
             return redirect()->route('branchassignments.show',$user->id);
 
         }else{

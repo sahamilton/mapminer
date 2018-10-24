@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 use App\Branch;
 use App\Person;
+use App\Campaign;
 use App\Role;
 use App\Serviceline;
 use App\Http\Controllers\BaseController;
@@ -19,6 +20,7 @@ class BranchManagementController extends BaseController
     protected $branch;
     protected $person;
     protected $role;
+    protected $campaign;
     protected $serviceline;
 
     protected $branchmanagement;
@@ -28,14 +30,15 @@ class BranchManagementController extends BaseController
                         Person $person, 
                         Role $role,
                         BranchManagement $branchmanagement,
-                        Serviceline $serviceline){
+                        Serviceline $serviceline,
+                        Campaign $campaign){
 
 
     	$this->branch = $branch;
     	$this->person = $person;
         $this->role = $role;
         $this->serviceline = $serviceline;
-
+        $this->campaign = $campaign;
         $this->branchmanagement = $branchmanagement;
         parent::__construct($this->branch);
     }
@@ -113,13 +116,19 @@ class BranchManagementController extends BaseController
           
             if(request('id')){
             
-            $recipients = $this->branchmanagement->getConfirmedRecipients($request);
-
-            $emails = $this->branchmanagement->sendEmails($recipients,$request);   
-             }
-            return redirect()->route('home')->withMessage($emails . ' emails sent.');
-
+                $recipients = $this->branchmanagement->getConfirmedRecipients($request);
+                $campaign = $this->createCampaign($recipients);
+                $emails = $this->branchmanagement->sendEmails($recipients,$request,$campaign->id);   
+                 
+                return redirect()->route('branchassignment.check')->withMessage($emails . ' emails sent.');
+            }
+            return redirect()->route('branchassignment.check')->withMessage('No emails sent.');
         }
 
+        public function createCampaign($recipients){
+            $campaign = $this->campaign->create(['type'=>'branch assignment email']);
+            $campaign->participants()->attach($recipients);
+            return $campaign;
+        }
     
 }

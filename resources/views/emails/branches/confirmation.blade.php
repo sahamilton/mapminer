@@ -25,13 +25,13 @@ Our records show that you currently are not associated with any branches.
 
 If this is incorrect please use the button below to update your branch associations. 
 
-@component('mail::button', ['url' => route('branchassociation.confirm',$token), 'color' => 'blue'])
+@component('mail::button', ['url' => route('branchassociation.confirm',[$token,'cid'=>$cid]), 'color' => 'blue'])
         Update my branch associations.
 @endcomponent
 
 If they are all correct please use this link to let us know.
 
-@component('mail::button', ['url' => route('branchassociation.correct',$token), 'color' => 'green'])
+@component('mail::button', ['url' => route('branchassociation.correct',[$token,'cid'=>$cid]), 'color' => 'green'])
         All Correct.
 @endcomponent
 

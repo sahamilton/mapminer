@@ -88,6 +88,10 @@ class Person extends NodeModel implements HasPresenter {
 
 	}
 
+	public function emailcampaigns(){
+    	return $this->belongsToMany(Campaign::class)->withPivot('activity');
+    }
+
 	public function projects(){
       return $this->belongsToMany(Project::class)->withPivot('status');
     }

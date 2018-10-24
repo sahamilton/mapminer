@@ -24,8 +24,8 @@
 	});
 */
 	// Routes for branch assignment verification
-Route::get('/correction/{token}',['as'=>'branchassociation.confirm','uses'=>'BranchManagementController@confirm']);
-Route::get('/confirmation/{token}',['as'=>'branchassociation.correct','uses'=>'BranchManagementController@correct']);
+Route::get('/correction/{token}/{cid?}',['as'=>'branchassociation.confirm','uses'=>'BranchManagementController@confirm']);
+Route::get('/confirmation/{token}/{cid?}',['as'=>'branchassociation.correct','uses'=>'BranchManagementController@correct']);
 
 Route::auth();
 
@@ -446,7 +446,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 		Route::post('branchassignments/send',['as'=>'branchassignments.send','uses'=>'Admin\BranchManagementController@emailAssignments']);	
 		Route::get('branch/manage',['as'=>'branch.management','uses'=>'Admin\BranchManagementController@index']);
 		Route::get('branch/check',['as'=>'branch.check','uses'=>'Admin\AdminUsersController@checkBranchAssignments']);
-
+	
+	# Campaigns (email)
+		Route::resource('campaigns','CampaignController');
 
 	# Construction
 		Route::resource('/construction','ConstructionController');
