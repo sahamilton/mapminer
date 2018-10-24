@@ -117,7 +117,7 @@ class BranchManagementController extends BaseController
             if(request('id')){
             
                 $recipients = $this->branchmanagement->getConfirmedRecipients($request);
-                $campaign = $this->createCampaign($recipients);
+                $campaign = $this->createCampaign($recipients,$request);
                 $emails = $this->branchmanagement->sendEmails($recipients,$request,$campaign->id);   
                  
                 return redirect()->route('branchassignment.check')->withMessage($emails . ' emails sent.');
@@ -125,8 +125,9 @@ class BranchManagementController extends BaseController
             return redirect()->route('branchassignment.check')->withMessage('No emails sent.');
         }
 
-        public function createCampaign($recipients){
-            $campaign = $this->campaign->create(['type'=>'branch assignment email']);
+        public function createCampaign($recipients,$request){
+            
+            $campaign = $this->campaign->create(['type'=>'branch assignment email','test'=>request('test')]);
             $campaign->participants()->attach($recipients);
             return $campaign;
         }

@@ -8,6 +8,7 @@
 			<th>Type</th>
 			<th>Participants</th>
 			<th>Respondents</th>
+			<th>Is Test</th>
 		</thead>
 		<tbody>
 			@foreach ($campaigns as $campaign)
@@ -17,6 +18,13 @@
 				<td><a href="{{route('campaigns.show',$campaign->id)}}">{{ucwords($campaign->type)}}</a></td>
 				<td>{{$campaign->participants->count()}}</td>
 				<td>{{$campaign->respondents->count()}}</td>
+				<td>
+					@if($campaign->test == 'null')
+						Yes
+					@else
+						No
+					@endif
+</td>
 			</tr>
 			@endforeach
 		</tbody>

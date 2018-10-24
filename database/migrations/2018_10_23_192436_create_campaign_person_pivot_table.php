@@ -16,6 +16,7 @@ class CreateCampaignPersonPivotTable extends Migration
             $table->integer('campaign_id')->unsigned()->index();
             $table->foreign('campaign_id')->references('id')->on('campaign')->onDelete('cascade');
             $table->integer('person_id')->unsigned()->index();
+            $table->string('activity')->nullable();
             $table->foreign('person_id')->references('id')->on('person')->onDelete('cascade');
             $table->primary(['campaign_id', 'person_id']);
         });
