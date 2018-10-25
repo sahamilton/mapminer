@@ -15,8 +15,9 @@
 			@foreach ($campaigns as $campaign)
 			
 			<tr>
-				<td>{{$campaign->created_at->format('Y-m-d')}}</td>
-				<td><a href="{{route('campaigns.show',$campaign->id)}}">{{ucwords($campaign->type)}}</a></td>
+				<td><a href="{{route('campaigns.show',$campaign->id)}}"
+					title="See details of this campaign">{{$campaign->created_at->format('Y-m-d')}}</a></td>
+				<td><a href="{{route($campaign->route)}}">{{ucwords($campaign->type)}}</a></td>
 				<td>{{$campaign->participants->count()}}</td>
 				<td>{{$campaign->respondents->count()}}</td>
 				<td>

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Campaign extends Model
 {
-    public $fillable = ['type','test'];
+    public $fillable = ['type','test','route'];
 
 
     public function participants(){

@@ -127,7 +127,7 @@ class BranchManagementController extends BaseController
 
         public function createCampaign($recipients,$request){
             
-            $campaign = $this->campaign->create(['type'=>'branch assignment email','test'=>request('test')]);
+            $campaign = $this->campaign->create(['type'=>'branch assignment email','test'=>request('test'),'route'=>'branchassignment.check']);
             $campaign->participants()->attach($recipients);
             return $campaign;
         }
