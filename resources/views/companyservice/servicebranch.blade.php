@@ -3,7 +3,8 @@
 
 
 <div>
-<h4> {{$company->companyname}} Locations Serviced By</h4>
+<h4> Branches Servicing {{$company->companyname}} Locations</h4>
+<p><i class="fas fa-users"></i><a href="{{route('company.teamservice',$company->id)}}">Show Sales Team Servicing {{$company->companyname}}</a></p>
 
 <p><a href="{{route('company.show',$company->id)}}">
 	Return to all locations of {{$company->companyname}}</a></p>
@@ -18,7 +19,7 @@
  		Export this Service List
  </a>
 
-@php $route = 'company.service.select';@endphp
+
 <table id ='sorttable'  class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
 
@@ -28,7 +29,6 @@
 		<th>State</th>
 		<th>ZIP</th>
 		<th>Branches</th>
-		<th>Sales Reps</th>
 	
    		
     </thead>
@@ -54,14 +54,7 @@
 						{{$branch->branchname}}</a>: {{number_format($branch->distance,2)}} mi<br />
 					@endforeach
 				</td>
-				<td>
-					
-					@foreach ($service['salesteam'][$location->id] as $rep)
-					<a href="{{route('person.show',$rep->id)}}">
-						{{$rep->fullName()}}</a> : {{number_format($rep->distance,2)}} mi 
-						<br />
-					@endforeach
-				</td>
+				
    	
    @endforeach
     

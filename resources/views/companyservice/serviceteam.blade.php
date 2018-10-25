@@ -1,7 +1,11 @@
 @extends('site.layouts.default')
 @section('content')
 <h1>Service Team for {{$company->companyname}}</h1>
+<p><i class="fab fa-pagelines"></i> <a href="{{route('company.service',$company->id)}}">Show Branches Servicing {{$company->companyname}}</a></p>
 
+<p><a href="{{route('company.show',$company->id)}}">
+	Return to all locations of {{$company->companyname}}</a></p>
+<p><i class="fas fa-cloud-download-alt"></i> <a href="{{route('company.teamservice.export',$company->id)}}">Export to Excel</a></p>
 <div class="container" >
 	<table class="table" id="sorttable">
 	<thead>

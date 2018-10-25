@@ -5,10 +5,16 @@
 
 <div>
 <h2> {{$company->companyname}} {{$data['segment']}} Locations </h2>
+@if (auth()->user()->can('manage_accounts'))
 <p>
-
-	<a href= "{{route('company.service',$company->id)}}">Show Service Details</a></p>
-
+	<i class="fab fa-pagelines"></i> 
+	<a href= "{{route('company.service',$company->id)}}">Show Service Branch Details</a>
+</p>
+<p>
+	<i class="fas fa-users"></i> 
+	<a href= "{{route('company.teamservice',$company->id)}}">Show Service Team Details</a>
+</p>
+@endif
 @if (isset($company->industryVertical->filter))
 	<p>{{$company->industryVertical->filter}} Vertical</p>
 @endif

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Company;
+use App\CompanyService;
 use App\Location;
 use App\Branch;
 use App\Person;
@@ -11,63 +12,65 @@ use Excel;
 class CompaniesServiceController extends BaseController
 {
     protected $company;
+    protected $service;
     protected $location;
     protected $limit =2000;
 
-	public function __construct (Company $company,Location $location){
+	public function __construct (Company $company,CompanyService $service,Location $location){
 		$this->company = $company;
 		$this->location = $location;
+		$this->service = $service;
 		$this->limit = config('app.location_limit');
 		parent::__construct($this->company);
 	}
+/*
 	public function selectServiceDetails(Request $request){
-		
-
-		return $this->serviceDetails(request('id'),request('state'));
-
-	}
-
-	public function getServiceDetails($id,$state=null){
-		$company = $this->company->with('managedBy','locations')->findOrFail($id);
-		$count = count($company->locations);
-
-		if($count > $this->limit){
-			dd("Contact Support - Companies Service Controller - 31 ",$count,$this->location->getStateSummary($company->id));
-			//dd($count,$this->location->getStateSummary($company->id));
+		// is this really neccessary? Surely it will only be model?
+		if(is_object(request('id'))){
+			$id =request('id')->id;
+		}else{
+			$id = request('id');
 		}
 		
-		$service = $this->getCompanyServiceDetails($company->locations,$company,$limit=5);
-		$service = array_merge($service,$this->getCompanyServiceBranchDetails($company->locations,$company,$limit=5));
-		
-		return response()->view('companies.newservice',compact('company','service'));
+		if(! $company = $company->whereHas('serviceline',function($q){
+				$q->whereIn('servicelines.id',$this->userServiceLines);
+			})->with('managedBy','industryVertical')
+			->find($id)){
+			return redirect()->route('company.index');
+		}
+		dd($company->countlocations());
+		$locations = $this->getCompanyLocations($company,request('state'));
+		$states = $company->locations()->orderBy('state')->pluck('state')->unique()->toArray();
+		if($limited = $this->service->limitLocations($locations)){
+			$locations = $this->limitLocations($company);
+		}
+		$data = $this->service->getCompanyServiceBranchDetails($locations,$company);
+		$data['segment'] = 'All';
+		$data['statecode'] = $state;
+		return response()->view('companies.service',compact('data','company','locations','limited','count','segment','states'));
+	}
+
+*/
+
+
+
+	public function getServiceDetails($id,$state=null){
+		$company = $this->service->getCompany($id);		
+		$service = $this->service->getCompanyServiceBranchDetails($company->locations,$company,$limit=5);
+
+		return response()->view('companyservice.servicebranch',compact('company','service'));
 
 	}
 	public function getServiceTeamDetails($id,$state=null){
-		$company = $this->company->with('managedBy','locations')->findOrFail($id);
-		$count = count($company->locations);
+		$company = $this->service->getCompany($id);
+		$team = $this->service->getServiceTeam($id,$state);
 
-		if($count > $this->limit){
-			dd("Contact Support - Companies Service Controller - 31 ",$count,$this->location->getStateSummary($company->id));
-			//dd($count,$this->location->getStateSummary($company->id));
-		}
-		
-		$service = $this->getCompanyServiceBranchDetails($company->locations,$company,$limit=1);
-		// get unique branches
-		$branchids = $this->getUniqueBranches($service['branches']);
-		$branches = Branch::whereIn('id',$branchids)->get();
-		$people = array();
-		// for each branch get associated team
-		foreach ($branches as $branch){
-			$people = array_unique(array_merge($people,$branch->getManagementTeam()));
-		}
-		$team = Person::whereIn('id',$people)->with('userdetails','userdetails.roles')->get();
-
-		// get the full team
-		
-		
-		return response()->view('companies.serviceteam',compact('company','service','team'));
+		return response()->view('companyservice.serviceteam',compact('company','team'));
 
 	}
+	
+
+
 /*
  * createServiceDetails Create multidimensional array from query result
  * @param  array  $locations result of getServiceDetails query
@@ -97,49 +100,18 @@ class CompaniesServiceController extends BaseController
 				$service[$location->id]['branch'][$location->branch_id]['branchstate']=$location->state;
 				$service[$location->id]['branch'][$location->branch_id]['distance']=$location->branchdistance;
 				}
-			
+			/*	
 			if(! isset($service[$location->id]['rep']) || count($service[$location->id]['rep'])<$limit){
 				$service[$location->id]['rep'][$location->pid]['pid']=$location->pid;
 				$service[$location->id]['rep'][$location->pid]['repname']=$location->repname;
 				$service[$location->id]['rep'][$location->pid]['distance']=$location->peepsdistance;
 				//$service[$location->id]['rep'][$location->pid]['manager'][$location->depth] = $location->manager;	
 			   }
-
+			*/
 		}
 		return  $service;
 	}
 
-    public function serviceDetails($id,$state=null){
-		if(is_object($id)){
-			$id = $id->id;
-		}
-		
-		if (! $company = $this->company->checkCompanyServiceLine($id,$this->userServiceLines))
-		{
-			return redirect()->route('company.index');
-		}	
-		$company = $company->with('managedBy','industryVertical')
-		->find($id);
-		if(! $company){
-				return redirect()->route('company.index');
-		}
-		$locations = $this->getCompanyLocations($company,$state);
-		$states = $company->locations()->orderBy('state')->pluck('state')->unique()->toArray();
-		$limited = false;
-		$count = count($locations);
-	
-		if($count>$this->limit){
-
-			$locations = $this->limitLocations($company);
-			$limited = $this->limit;
-		}
-		
-
-		$data = $this->getCompanyServiceDetails($locations,$company);
-		$data['segment'] = 'All';
-		$data['statecode'] = $state;
-		return response()->view('companies.service',compact('data','company','locations','limited','count','segment','states'));
-	}
 
 
 	public function newExportServicedetails($id){
@@ -153,7 +125,7 @@ class CompaniesServiceController extends BaseController
 		$locations = $this->createServiceDetails($locations);
 	}
 
-
+	
 
 
 
@@ -178,6 +150,7 @@ class CompaniesServiceController extends BaseController
 		}else{
 		
 
+
 		$title = $this->getTitle($company,$limited,$state,$loop=null);
 
 		$this->writeExcel($title,$company,$locations);
@@ -185,13 +158,24 @@ class CompaniesServiceController extends BaseController
 		}
 
 	}
-	
-	private function getTitle($company,$limited,$state,$loop){
+	public function exportServiceTeamDetails($id,$state=null){
+		$company = $this->service->getCompany($id);
+		$team = $this->service->getServiceTeam($id,$state=null);
+		$title = $this->getTitle($company,$limited=null,$state,$loop=null,$team);
+		$this->writeExcelTeam($title,$company,$team);
+		return redirect()->back();
+
+	}
+	private function getTitle($company,$limited,$state,$loop,$team=null){
 		$title =$company->companyname;
 		if($state){
 			$title.=" ".strtoupper($state);
 		}
-		$title.=" service locations";
+		if($team){
+			$title.=" service team";
+		}else{
+			$title.=" branch service locations";
+		}
 		if($limited){
 			$title.=" (limited to ".$limited ." closest)";
 		}
@@ -215,7 +199,7 @@ class CompaniesServiceController extends BaseController
 		 foreach($allLocations as $locations){
 		 	fclose($output);
 		 	$output = fopen(storage_path('app/public/exports/'.$companyname.".csv"), 'a');
-			//$data = $this->getCompanyServiceDetails($locations,$company,null);
+			//$data = $this->service->getCompanyServiceBranchDetails($locations,$company,null);
 			// loop over the locations, outputting them
 	
 			foreach ($locations  as $location){
@@ -227,42 +211,34 @@ class CompaniesServiceController extends BaseController
 			} 
 			
 
-		}
-		fclose($output);
+		}		fclose($output);
 		return $companyname;
 		
 	}
-
+	private function writeExcelTeam($title,$company,$team){
+		return 	Excel::create($title,function($excel) use($company,$team){
+			
+			$excel->sheet('Team',function($sheet) use($company,$team) {
+				
+				
+				$sheet->loadview('companyservice.exportserviceteam',compact('company','team'));
+			});
+		})->download('csv');
+	}
 	private function writeExcel($title,$company,$locations){
 		return 	Excel::create($title,function($excel) use($company,$locations){
 			$excel->sheet('Service',function($sheet) use($company,$locations) {
 				
-				$data = $this->getCompanyServiceDetails($locations,$company,null);
-				$sheet->loadview('companies.exportservicelocations',compact('data','locations'));
+				$data = $this->service->getCompanyServiceBranchDetails($locations,$company,5);
+				
+				$sheet->loadview('companyservice.exportbranchservicelocations',compact('data','locations'));
 			});
+			
 		})->download('csv');
 	}
 
-	private function getCompanyServiceBranchDetails($locations,Company $company,$limit=5){
-		$servicelines = $company->serviceline->pluck('id')->toArray();
 	
-		$data = array();
-		
-		foreach ($locations as $location){
-
-			$data['branches'][$location->id]=$location->nearbyBranches($servicelines,$limit)->get();
-
-		}
-
-		return $data;
-	}
-	private function getUniqueBranches($branches){
-		$branchids = array();
-		foreach ($branches as $branch){
-			$branchids = array_unique(array_merge($branchids,$branch->pluck('id')->toArray()));
-		}
-		return $branchids;
-	}
+	
 	private function getCompanyServiceTeamDetails($locations,Company $company,$limit=5){
 		$servicelines = $company->serviceline->pluck('id')->toArray();
 	
