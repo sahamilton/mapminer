@@ -4,7 +4,7 @@
 
 <div>
 <h4> Branches Servicing {{$company->companyname}} Locations</h4>
-<p><i class="fas fa-users"></i><a href="{{route('company.teamservice',$company->id)}}">Show Sales Team Servicing {{$company->companyname}}</a></p>
+<p><i class="fas fa-users"></i> <a href="{{route('company.teamservice',$company->id)}}">Show Sales Team Servicing {{$company->companyname}}</a></p>
 
 <p><a href="{{route('company.show',$company->id)}}">
 	Return to all locations of {{$company->companyname}}</a></p>
