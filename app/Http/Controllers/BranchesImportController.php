@@ -29,12 +29,12 @@ class BranchesImportController extends ImportController
       $requiredFields =   $this->import->requiredFields;
 
 	  $servicelines = $this->serviceline->pluck('ServiceLine','id');
-		return response()->view('branches.import',compact('servicelines','requiredFields'));
+		return response()->view('imports.branches.import',compact('servicelines','requiredFields'));
 	}
 
 
 	public function import(BranchImportFormRequest $request) {
-        
+    
         $title="Map the branches import file fields";
 
         $data = $this->uploadfile(request()->file('upload'));
@@ -62,7 +62,7 @@ class BranchesImportController extends ImportController
         if($this->import->import()) {
             $this->import->setNullFields('branchesimport');
             $data= $this->showChanges($data);
-            return response()->view('branches.changes',compact('data'));
+            return response()->view('imports.branches.changes',compact('data'));
         }
         
     }

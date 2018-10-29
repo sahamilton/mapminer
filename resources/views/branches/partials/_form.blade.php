@@ -1,6 +1,7 @@
 @php
 $state = new App\State;
 $states = $state->getStates();
+
 @endphp
 <div class="container" style="margin-top:40px">
 <!-- id -->

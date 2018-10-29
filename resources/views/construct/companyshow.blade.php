@@ -7,7 +7,7 @@
 {{$company[0]['_source']['companylinks'][0]['company']['state']}}
 {{$company[0]['_source']['companylinks'][0]['company']['zip']}}</p>
 
-<p><i class="far fa-phone" aria-hidden="true"></i>
+<p><i class="fas fa-phone" aria-hidden="true"></i>
 t
 {{$company[0]['_source']['companylinks'][0]['company']['phone']}}</p>
 

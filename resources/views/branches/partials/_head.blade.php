@@ -25,7 +25,7 @@
                     
                 </strong>  
                 @if($people->phone != "")
-                   <i class="far fa-phone" aria-hidden="true"></i>
+                   <i class="fas fa-phone" aria-hidden="true"></i>
                     {{$people->phone}} 
                 @endif
                 @if($people->has('userdetails'))

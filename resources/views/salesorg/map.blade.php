@@ -3,7 +3,7 @@
 <h1>{{$salesorg->postName()}}</h1>
 <h4>{{$salesorg->userdetails->roles[0]->name}}</h4>
 
-<p><strong><i class="far fa-phone" aria-hidden="true"></i> Phone:</strong> {{$salesorg->phone}}</p>
+<p><strong><i class="fas fa-phone" aria-hidden="true"></i> Phone:</strong> {{$salesorg->phone}}</p>
 <p><strong><i class="far fa-envelope" aria-hidden="true"></i> Email:</strong> 
 
 <a href="mailto:{{$salesorg->userdetails->email}}" 

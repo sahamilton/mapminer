@@ -11,6 +11,8 @@ Edit Branch ::
 <div class="page-header">
 	<h3>Edit Branch</h3>
 </div>
+
+
 <ul class="nav nav-tabs">
 
   <li class="nav-item active">
@@ -38,13 +40,21 @@ $buttonLabel = 'Edit Branch';?>
 <form method="post" action ="{{route('branches.update', $branch->id)}}" >
 <input type="hidden" name="_method" value = 'patch' />
 	@csrf
-<div class="tab-content">
-    <div id="branch" class="tab-pane fade in active">
+<div class="tab-content" id="myTabContent">
+  <div 
+    class="tab-pane fade show active" 
+    id="branch" 
+    role="tabpanel" 
+    aria-labelledby="home-tab">
       @include('branches/partials/_form')
-    </div>
-	<div id="team" class="tab-pane fade in">
+  </div>
+	<div 
+    class="tab-pane fade" 
+    id="team" 
+    role="tabpanel" 
+    aria-labelledby="contact-tab">
       @include('branches/partials/_team')
-    </div>
+  </div>
 	
 </div>
 <input type="submit" class="btn btn-success" value="Edit Branch" />

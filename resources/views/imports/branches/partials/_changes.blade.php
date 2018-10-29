@@ -18,10 +18,10 @@
    		@endphp
     <tr>  
 
- 	<td><input type="checkbox" checked name="change[]"	value="{{$branch->id}}" />
+ 	<td><input type="checkbox" checked name="change[]"	value="{{$branch->branchid}}" />
 	<td>{{$branch->branchname}}</td>
 
-	<td>{{$branch->id}}	</td>
+	<td>{{$branch->branchid}}	</td>
 
 
 	<td>

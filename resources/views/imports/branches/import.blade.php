@@ -33,21 +33,7 @@
 		@csrf
 
 		<!-- Service Lines -->
-		<div class="form-group{{ $errors->has('serviceline)') ? ' has-error' : '' }}">
-			<label class="col-md-2 control-label">Servicelines:</label>
-			<div class="input-group input-group-lg ">
-
-				<select name="serviceline" >
-					@foreach ($servicelines as $key=>$serviceline)
-					<option value="{{$key}}">{{$serviceline}}</option>
-					@endforeach
-				</select>
-				<span class="help-block">
-					<strong>{{ $errors->has('serviceline') ? $errors->first('serviceline') : ''}}
-					</strong>
-				</span>
-			</div>
-		</div>
+		@include('servicelines.partials._selector')
 		<!-- ./ servicelines -->
 
 		<!-- File Location -->
