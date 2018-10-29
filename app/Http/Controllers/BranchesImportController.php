@@ -43,10 +43,7 @@ class BranchesImportController extends ImportController
         $data['type'] = 'branches';
         $data['additionaldata'] = array();
         $data['route']= 'branches.mapfields';
-
-        $data['serviceline'] = implode(",",request('serviceline'));
-        $company_id = request('company');
-
+        $data['additionaldata']['servicelines'] = implode(",",request('serviceline'));
         $fields = $this->getFileFields($data);      
         $columns = $this->branch->getTableColumns($data['table']);
         $requiredFields = $this->import->requiredFields;
@@ -62,6 +59,7 @@ class BranchesImportController extends ImportController
         if($this->import->import()) {
             $this->import->setNullFields('branchesimport');
             $data= $this->showChanges($data);
+           
             return response()->view('imports.branches.changes',compact('data'));
         }
         
@@ -72,11 +70,11 @@ class BranchesImportController extends ImportController
 
     private function showChanges($data){
         
-        $serviceline = $data['serviceline'];
+    
         //get the adds
         $data['adds'] = $this->import->getAdds();
 
-      
+        $serviceline = explode(",",$data['additionaldata']['servicelines']);
         $data['deletes'] = $this->import->getDeletes($serviceline);
         //
         $data['changes'] = $this->import->getChanges();
@@ -86,48 +84,28 @@ class BranchesImportController extends ImportController
     }
 
     public function update(Request $request){
+
         $adds = 0;
         $deletes=0;
-        $changes=0;
+
         $updates = 0;
 
-        if(request()->filled('add') or request()->filled('delete') or request()->filled('change')){
-            if(request()->filled('add')){
-                $adds = count(request('add'));
-                $branchesToImport = $this->import
-                ->whereIn('id',request('add'))
-
-                ->get();
-                foreach ($branchesToImport as $add){
-                    $branch = Branch::create($add->toArray());
-                    $branch->id = $add['id'];
-                    $branch->save();
-
-                    $branch->servicelines()->sync([request('serviceline')]);
-
-                }
-                
-            }
-
-
-            if(request()->filled('delete')){
-                $this->branch->destroy(request('delete'));
-                $this->import->destroy(request('delete'));
-                $deletes = count(request('delete'));
-            }
-
-            if(request()->filled('change')){
-                
-                $branchesToUpdate = $this->import
-                    ->whereIn('id',request('change'))
-                    ->get();
-  
-                $updates = count($branchesToUpdate);
-                foreach ($branchesToUpdate as $update){
-                    $branch = $this->branch->find($update->id)->update($update->toArray());
-               }
-            }
+        // branches add
+        if(request()->filled('add')){
+            $adds = $this->import->addBranches(request('adds'));               
         }
+
+        //branches delete
+        if(request()->filled('delete')){
+           
+            $deletes = $this->import->deleteBranches(request('delete'));
+        }
+        // branches change
+        if(request()->filled('change')){
+            
+            $updates = $this->import->changebranches(request('change'));
+        }
+
         $this->import->truncate();
         $this->import->fixId();
         return redirect()->route('branches.index')->with('success','Added ' . $adds .' deleted '. $deletes . ' and updated '.$updates);

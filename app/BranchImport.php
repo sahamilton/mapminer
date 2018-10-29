@@ -90,4 +90,49 @@ class BranchImport extends Imports
 
     return \DB::select($query);
     }
+    public function addBranches($add_ids){
+        
+        $branchesToImport = $this->whereIn('id',$add_ids)
+        ->get();
+        foreach ($branchesToImport as $add){
+            $branch = Branch::create($add->toArray());
+            $branch->id = $add['id'];
+            $branch->save();
+        $this->assignServiceLines($branch,$add);
+
+
+        }
+        return count($add_ids);
+    }
+
+    public function deleteBranches($delete_ids){
+
+
+        Branch::destroy($delete_ids);
+        $this->destroy($delete_ids);
+        return count($delete_ids);
+
+    }
+
+    public function changeBranches($change_ids){
+        $branchesToUpdate = $this->whereIn('id',$change_ids)
+                    ->get();
+        
+        foreach ($branchesToUpdate as $update){
+
+            $branchdata = $update->toArray(); 
+
+            $branch = Branch::find($update->id);
+            $branch->update($branchdata);
+            $this->assignServiceLines($branch,$branchdata);
+       }
+       return count($change_ids);
+    }
+    
+
+    private function assignServiceLines($branch, $branchdata){
+
+        $branchdata['servicelines']= explode(',',$branchdata['servicelines']);
+        $branch->servicelines()->sync($branchdata['servicelines']);
+    }
 }

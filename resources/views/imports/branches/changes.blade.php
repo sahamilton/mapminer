@@ -70,7 +70,7 @@ Review Branch Changes
     </div>
 	
 </div>	
-<input type="hidden" name="serviceline" value="{{$data['serviceline']}}" />
+<input type="hidden" name="serviceline" value="{{$data['additionaldata']['servicelines']}}" />
 <input type="submit" class="btn btn-success" value="Update Branches" />
 </form>
 </div>
