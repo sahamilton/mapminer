@@ -1,7 +1,7 @@
 @extends('admin.layouts.default')
 @section('content')
 <div class= "container">
-	<h2>Missing {{count($missingPeople)}} People</h2>
+	<h2>Missing {{count($errors['missingPeople'])}} People</h2>
 
 	<table class="table table-striped table-bordered table-condensed">
 		<thead>
@@ -9,7 +9,7 @@
 			<th>Valid People</th>
 		</thead>
 		<tbody>
-		@foreach ($missingPeople as $missing)
+		@foreach ($errors['missingPeople'] as $missing)
 
 			<tr>
 				<td>{{$missing->person_id}}</td>

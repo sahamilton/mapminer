@@ -8,7 +8,7 @@
 			<th>Valid Branches</th>
 		</thead>
 		<tbody>
-		@foreach ($missingBranches as $missing)
+		@foreach ($importErrors['missingBranches'] as $missing)
 			<tr>
 				<td>{{$missing->branch_id}}</td>
 				<td>

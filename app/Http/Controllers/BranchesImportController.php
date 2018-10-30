@@ -18,7 +18,8 @@ class BranchesImportController extends ImportController
     public $userServiceLines;
     public $import;
     public $importtable = 'branchesimport';
-	public function __construct(Branch $branch, Serviceline $serviceline,BranchImport $branchimport){
+	
+    public function __construct(Branch $branch, Serviceline $serviceline,BranchImport $branchimport){
 		$this->branch = $branch;
         $this->serviceline = $serviceline;
         $this->import = $branchimport;
@@ -41,7 +42,6 @@ class BranchesImportController extends ImportController
 
         $data['table']=$this->importtable;
         $data['type'] = 'branches';
-        $data['additionaldata'] = array();
         $data['route']= 'branches.mapfields';
         $data['additionaldata']['servicelines'] = implode(",",request('serviceline'));
         $fields = $this->getFileFields($data);      
@@ -59,7 +59,7 @@ class BranchesImportController extends ImportController
         if($this->import->import()) {
             $this->import->setNullFields('branchesimport');
             $data= $this->showChanges($data);
-           
+
             return response()->view('imports.branches.changes',compact('data'));
         }
         

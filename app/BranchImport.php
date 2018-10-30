@@ -32,7 +32,7 @@ class BranchImport extends Imports
 
     public function getDeletes($serviceline){
         return Branch::whereHas('servicelines',function($q) use($serviceline){
-            $q->where('id','=',$serviceline);
+            $q->whereIn('id',$serviceline);
          })
         ->select('branches.id','branches.branchname', 'branches.street','branches.address2','branches.city','branches.state','branches.zip')
         ->leftJoin('branchesimport',function($join){
@@ -106,7 +106,7 @@ class BranchImport extends Imports
     }
 
     public function deleteBranches($delete_ids){
-
+       
 
         Branch::destroy($delete_ids);
         $this->destroy($delete_ids);
