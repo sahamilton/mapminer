@@ -18,7 +18,7 @@
 @if(count($data) ==0)
 	<p>There are no sales notes for {{$company->companyname}}. 
 
-		@if($company->has('managedBy'))
+		@if($company->managedBy)
 			Contact account manager <strong>{{$company->managedBy->postName()}}</strong> 
 
 			<a href="mailto:{{$company->managedBy->userdetails->email}}">{{$company->managedBy->userdetails->email}}</a> 
