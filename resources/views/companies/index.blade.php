@@ -113,11 +113,13 @@
 						
 						
 						<a class="dropdown-item" 
+						title="Edit {{$company->companyname}}"
 						  href="{{route('company.edit',$company->id)}}">
 						<i class="far fa-edit text-info"" aria-hidden="true"> </i>
 						Edit {{$company->companyname}}</a>
 						
 						<a class="dropdown-item"
+						title="Delete {{$company->companyname}} and all its locations"
 						  data-href="{{route('company.destroy',$company->id)}}" 
 						  data-toggle="modal" 
 						  data-target="#confirm-delete" 
