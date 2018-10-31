@@ -81,7 +81,7 @@
 					data-target="#confirm-delete" 
 					data-title = " this news item and all its comments" 
 					href="#">
-                	<i class="far fa-trash-o text-danger" aria-hidden="true"> </i> Delete this news item
+                	<i class="far fa-trash-alt text-danger" aria-hidden="true"> </i> Delete this news item
                 </a>
 
 			  </ul>

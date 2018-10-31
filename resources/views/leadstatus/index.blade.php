@@ -59,7 +59,7 @@
         <a class="dropdown-item"
          href="{{route('leadstatus.edit',$status->id)}}"><i class="far fa-edit text-info"" aria-hidden="true"> </i>Edit this lead status</a>
          <a class="dropdown-item"
-          data-href="{{route('leadstatus.destroy',$status->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = " this lead status " href="#"><i class="far fa-trash-o text-danger" aria-hidden="true"> </i> Delete this lead status</a>
+          data-href="{{route('leadstatus.destroy',$status->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = " this lead status " href="#"><i class="far fa-trash-alt text-danger" aria-hidden="true"> </i> Delete this lead status</a>
 
         </ul>
       </div>

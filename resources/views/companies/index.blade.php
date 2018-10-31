@@ -123,7 +123,7 @@
 						  data-target="#confirm-delete" 
 						  data-title = "{{$company->companyname}} and all its locations" 
 						  href="#">
-						  <i class="far fa-trash-o text-danger" 
+						  <i class="far fa-trash-alt text-danger" 
 						    aria-hidden="true"> </i>
 						   Delete {{$company->companyname}}
 						</a>

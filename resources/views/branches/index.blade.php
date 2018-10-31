@@ -129,7 +129,7 @@
 				   data-href="{{route('branches.destroy',$branch->id)}}" data-toggle="modal" 
 				   data-target="#confirm-delete" 
 				   data-title = "{{$branch->branchname}} branch" 
-				   href="#"><i class="far fa-trash-o text-danger" aria-hidden="true"> </i> Delete {{$branch->branchname}} branch
+				   href="#"><i class="far fa-trash-alt text-danger" aria-hidden="true"> </i> Delete {{$branch->branchname}} branch
 				</a>
 			  </ul>
 			</div>

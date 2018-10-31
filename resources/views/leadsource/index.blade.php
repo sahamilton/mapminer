@@ -96,7 +96,7 @@
                 
                 <a class="dropdown-item"
                 data-href="{{route('leadsource.destroy',$source->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = " this lead source and all its leads" href="#">
-                <i class="far fa-trash-o text-danger" aria-hidden="true"> </i>
+                <i class="far fa-trash-alt text-danger" aria-hidden="true"> </i>
                  Delete this prospect source</a>
 
             </ul>

@@ -51,7 +51,7 @@
         data-target="#confirm-delete" 
         data-title = "{{$project->project_title}}" href="#">
 
-        <i class="far fa-trash-o text-danger" aria-hidden="true"> </i> 
+        <i class="far fa-trash-alt text-danger" aria-hidden="true"> </i> 
 
         Release Project</a></a></td>
     </tr>

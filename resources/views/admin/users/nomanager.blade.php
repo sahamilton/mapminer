@@ -91,7 +91,7 @@
     				data-toggle="modal" 
     				data-target="#confirm-delete" 
     				data-title = "{{$person->firstname}}  {{$person->lastname}}" href="#">
-    				<i class="far fa-trash-o text-danger" aria-hidden="true"> </i> 
+    				<i class="far fa-trash-alt text-danger" aria-hidden="true"> </i> 
     				Delete {{$person->firstname}}  {{$person->lastname}}
                 </a>
 			  </ul>

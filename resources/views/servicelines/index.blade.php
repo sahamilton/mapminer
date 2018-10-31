@@ -83,7 +83,7 @@
 				href="{{route('serviceline.edit',$serviceline->id)}}/"><i class="far fa-edit text-info"" aria-hidden="true"> </i>
 				Edit {{$serviceline->ServiceLine}}</a>
 				<a class="dropdown-item"
-				 data-href="{{route('serviceline.destroy',$serviceline->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = "{{$serviceline->ServiceLine}} and all its associations" href="#"><i class="far fa-trash-o text-danger" aria-hidden="true"> </i> Delete {{$serviceline->ServiceLine}}</a>
+				 data-href="{{route('serviceline.destroy',$serviceline->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = "{{$serviceline->ServiceLine}} and all its associations" href="#"><i class="far fa-trash-alt text-danger" aria-hidden="true"> </i> Delete {{$serviceline->ServiceLine}}</a>
 
 			  </ul>
 			</div>

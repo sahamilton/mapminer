@@ -87,7 +87,7 @@
                 data-target="#confirm-delete" 
                 data-title = "document" 
                 href="#">
-                <i class="far fa-trash-o text-danger" aria-hidden="true"> </i> Delete Sales document
+                <i class="far fa-trash-alt text-danger" aria-hidden="true"> </i> Delete Sales document
             </a>
           </ul>
             </div>

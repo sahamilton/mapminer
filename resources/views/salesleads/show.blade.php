@@ -49,7 +49,7 @@
 <br /><a href="{{route('notes.edit',$note->id)}}" title="Edit this note"><i class="far fa-edit text-info"" aria-hidden="true"></i></a> | 
 
 <a data-href="{{route('notes.destroy',$note->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = " this prospect note" href="#">
-  <i class="far fa-trash-o text-danger" aria-hidden="true"> </i></a>
+  <i class="far fa-trash-alt text-danger" aria-hidden="true"> </i></a>
 
 <hr />
 @endif

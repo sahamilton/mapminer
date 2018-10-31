@@ -44,7 +44,7 @@ Add Feedback</a>
 							<i class="far fa-edit text-info"" aria-hidden="true"> </i>Edit this comment</a>
 							<a class="dropdown-item"
 							data-href="{{route('comment.destroy',$comment->id)}}"data-toggle="modal" data-target="#confirm-delete" data-title = "this comment" href="#">
-							<i class="far fa-trash-o text-danger" aria-hidden="true"> </i> Delete this comment</a>
+							<i class="far fa-trash-alt text-danger" aria-hidden="true"> </i> Delete this comment</a>
 						</ul>
 					</div>
 

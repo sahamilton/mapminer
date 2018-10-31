@@ -23,7 +23,7 @@
 		            title="Delete this note"
 		            href="#">
 
-		            <i class="far fa-trash-o text-danger" aria-hidden="true"> </i> </a>
+		            <i class="far fa-trash-alt text-danger" aria-hidden="true"> </i> </a>
 
 		<hr />
 	@endif

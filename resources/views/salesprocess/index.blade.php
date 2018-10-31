@@ -51,7 +51,7 @@
                                     data-title = "location" 
                                     href="#">
 
-                                    <i class="far fa-trash-o text-danger" aria-hidden="true"> </i> 
+                                    <i class="far fa-trash-alt text-danger" aria-hidden="true"> </i> 
                                     Delete Sales Step
                                 </a>
                            </ul>

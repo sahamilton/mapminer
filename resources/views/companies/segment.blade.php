@@ -79,7 +79,7 @@ $data['companyname']=$company->companyname;
 					aria-hidden="true"> </i>
 					Edit {{$location->businessname}}</a>
 					<a class="dropdown-item"
-					  data-href="{{route('locations.destroy',$location->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = "{{$location->businessname}} and all associated notes" href="#"><i class="far fa-trash-o text-danger" aria-hidden="true"> </i> 
+					  data-href="{{route('locations.destroy',$location->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = "{{$location->businessname}} and all associated notes" href="#"><i class="far fa-trash-alt text-danger" aria-hidden="true"> </i> 
 					Delete {{$location->businessname}}</a>
 				</ul>
 			</div>
