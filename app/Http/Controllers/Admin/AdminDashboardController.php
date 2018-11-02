@@ -256,7 +256,7 @@ class AdminDashboardController extends BaseController {
 				->selectRaw('count(user) as login,week')
 				->mergeBindings($subQuery->getQuery())
 				->groupBy('week')
-				->latest('week')
+				->orderBy('week','asc')
 				->get();
     
 	}
