@@ -280,7 +280,7 @@ class AdminDashboardController extends BaseController {
 				->mergeBindings($subQuery->getQuery())
 				->groupBy('name')
 				->groupBy('week')
-				->latest('week')
+				->orderBy('week','asc')
 				->get();
 		
 			return $this->formatRoleWeekData($roleweek);
