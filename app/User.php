@@ -170,8 +170,8 @@ class User extends Authenticatable
      */
     public function currentRoleIds()
     {
-        $roles = $this->roles;
-        $roleIds = false;
+        return $this->roles->pluck('id')->toArray();
+        /*$roleIds = false;
         if( !empty( $roles ) ) {
             $roleIds = array();
             foreach( $roles as &$role )
@@ -179,7 +179,16 @@ class User extends Authenticatable
                 $roleIds[] = $role->id;
             }
         }
-        return $roleIds;
+        return $roleIds;*/
+    }
+
+     /**
+     * Returns user's current role ids only.
+     * @return array|bool
+     */
+    public function currentServiceLineIds()
+    {
+        return $this->serviceline->pluck('id')->toArray();
     }
 
     /**
