@@ -110,15 +110,14 @@
 			@endif
 				
             @foreach ($managers as $key=>$value))
+            <option 
                 @if(isset($user->person->reports_to) && $user->person->reports_to == $key)
-                	<option selected value="{{$key}}">
+                	selected 
+                @endif
+                	value="{{$key}}">
                 	{{$value}}
                 	</option>
-    			@else
-					<option value="{{$key}}">
-					{{$value}}
-					</option>
-    			@endif
+    			
             @endforeach
 
 
