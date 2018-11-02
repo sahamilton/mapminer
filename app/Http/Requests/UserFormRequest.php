@@ -29,19 +29,8 @@ class UserFormRequest extends FormRequest
         $salesrules=array();
         $branchrules=array();
 
-        
-
-       if (count(array_intersect(request('roles'), [5,6,7,8]))>0){
-            $salesrules = ['reports_to'=>'required'];
-        }
-       if (count(array_intersect(request('roles'), [9]))>0){
-
-            
-            $branchrules = ['branches'=>'required_without:branchstring',
-                        'branchstring'=>'required_without:branches',];
-        }
         $rules = [
-
+            'roles'=>'required',
             'username'=>'required|alpha_num|unique:users,username,' . request()->segment(3),
             'firstname'=>'required',
             'lastname'=>'required',
@@ -51,6 +40,15 @@ class UserFormRequest extends FormRequest
             'serviceline'=>'required',
 
         ];
+          if (count(array_intersect(request('roles'), [5,6,7,8]))>0){
+            $salesrules = ['reports_to'=>'required'];
+        }
+       if (count(array_intersect(request('roles'), [9]))>0){
+
+            
+            $branchrules = ['branches'=>'required_without:branchstring',
+                        'branchstring'=>'required_without:branches',];
+        }
         return array_merge($salesrules,$branchrules,$rules) ;
     }
     public function messages()

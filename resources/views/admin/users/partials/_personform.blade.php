@@ -2,7 +2,13 @@
 				<div class="form-group {!! $errors->has('firstname') ? 'has-error' : '' !!}">
 					<label class="col-md-2 control-label" for="firstname">First Name</label>
 					<div class="input-group input-group-lg">
-						<input class="form-control" type="text" name="firstname" id="firstname" value="{{old('firstname', isset($user) && isset($user->person)  ? $user->person->firstname : '') }}" 
+						<input 
+						required
+						class="form-control" 
+						type="text" 
+						name="firstname" 
+						id="firstname" 
+						value="{{old('firstname', isset($user) && isset($user->person)  ? $user->person->firstname : '') }}" 
 						placeholder="first name"/>
 						{!! $errors->first('firstname', '<span class="help-inline">:message</span>') !!}
 					</div>
@@ -13,7 +19,13 @@
 				<div class="form-group {!! $errors->has('lastname') ? 'has-error' : '' !!}">
 					<label class="col-md-2 control-label" for="lastname">Last Name</label>
 					<div class="input-group input-group-lg">
-						<input class="form-control" type="text" name="lastname" id="lastname" value="{{ old('lastname', isset($user) && isset($user->person) ? $user->person->lastname : '') }}" 
+						<input 
+						required
+						class="form-control" 
+						type="text" 
+						name="lastname" 
+						id="lastname" 
+						value="{{ old('lastname', isset($user) && isset($user->person) ? $user->person->lastname : '') }}" 
 						placeholder="last name"/>
 						{!! $errors->first('lastname', '<span class="help-inline">:message</span>') !!}
 					</div>
@@ -25,9 +37,13 @@
 				<div class="form-group {!! $errors->has('address') ? 'has-error' : '' !!}">
 					<label class="col-md-2 control-label" for="address">Full Address</label>
 					<div class="input-group input-group-lg">
-						<input class="form-control" type="text" 
+						<input 
+						class="form-control" 
+						type="text" 
 						placeholder="Full address with city & state"
-						name="address" id="address" value="{{old('address', isset($user) && isset($user->person) ? $user->person->fullAddress() : '') }}" 
+						name="address" 
+						id="address" 
+						value="{{old('address', isset($user) && isset($user->person) ? $user->person->fullAddress() : '') }}" 
 						/>
 						{!! $errors->first('address', '<span class="help-inline">:message</span>') !!}
 					</div>
@@ -38,9 +54,13 @@
 				<div class="form-group {!! $errors->has('city') ? 'has-error' : '' !!}">
 					<label class="col-md-2 control-label" for="city">City</label>
 					<div class="input-group input-group-lg">
-						<input class="form-control" type="text" 
+						<input 
+						class="form-control" 
+						type="text" 
 						placeholder="Leave blank unless you want to override geocode"
-						name="city" id="city" value="{{old('city', isset($user) && isset($user->person) ? $user->person->city : '') }}" />
+						name="city" 
+						id="city" 
+						value="{{old('city', isset($user) && isset($user->person) ? $user->person->city : '') }}" />
 						{!! $errors->first('city', '<span class="help-inline">:message</span>') !!}
 					</div>
 				</div>
@@ -51,9 +71,13 @@
 				<div class="form-group {!! $errors->has('state') ? 'has-error' : '' !!}">
 					<label class="col-md-2 control-label" for="state">State</label>
 					<div class="input-group input-group-lg">
-						<input class="form-control" type="text" 
+						<input 
+						class="form-control" 
+						type="text" 
 						placeholder="Leave blank unless you want to override geocode"
-						name="state" id="state" value="{{old('state', isset($user) ? $user->person->state : null) }}" />
+						name="state" 
+						id="state" 
+						value="{{old('state', isset($user) ? $user->person->state : null) }}" />
 						{!! $errors->first('state', '<span class="help-inline">:message</span>') !!}
 					</div>
 				</div>

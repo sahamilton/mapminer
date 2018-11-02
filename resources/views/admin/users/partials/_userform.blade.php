@@ -65,7 +65,11 @@
 				<div class="form-group {!! $errors->has('roles') ? 'has-error' : '' !!}">
 	                <label class="col-md-2 control-label" for="roles">Roles</label>
 	                <div class="col-md-6">
-		                <select class="form-control" name="roles[]" id="roles[]" multiple>
+		                <select require 
+		                class="form-control" 
+		                name="roles[]" 
+		                id="roles[]" 
+		                multiple>
 		                        @foreach ($roles as $role)
 									@if ($mode == 'create')
 		                        		<option value="{{{ $role->id }}}"{{{ ( in_array($role->id, $selectedRoles) ? ' selected="selected"' : '') }}}>{{{ $role->name }}}</option>
