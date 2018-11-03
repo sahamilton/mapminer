@@ -464,7 +464,7 @@ class AdminUsersController extends BaseController {
 		$fields = implode(",",$data);
 
 		$table = 'users';
-		$requiredFields = ['persons'=>['firstname','lastname'],'users'=>['username','email','lastlogin','mgrid']];
+		$requiredFields = ['persons'=>['firstname','lastname'],'users'=>['email','lastlogin','mgrid']];
 
 		if($data !== $requiredFields['users']){
 
@@ -510,7 +510,7 @@ class AdminUsersController extends BaseController {
 
 
 		// Remove duplicates from import file
-		$uniquefields =['email','username'];
+		$uniquefields =['email'];
 		foreach($uniquefields as $field) {
 			$query ="delete from ".$temptable."
 			where ". $field." in
@@ -523,14 +523,14 @@ class AdminUsersController extends BaseController {
 
 		// Add new users
 
-		$query = "INSERT INTO `".$table."` (".$fields.")  (SELECT ". $aliasfields." FROM ".$temptable." p WHERE NOT EXISTS ( SELECT s.username FROM users s WHERE s.username = p.username or s.email = p.email))";
+		$query = "INSERT INTO `".$table."` (".$fields.")  (SELECT ". $aliasfields." FROM ".$temptable." p WHERE NOT EXISTS ( SELECT s.email FROM users s WHERE s.email = p.email))";
 		$error = "I couldnt copy over to the permanent table!<br />";
 		$type='insert';
 		$this->rawQuery($query,$error,$type);
 
 
-		// get the user ids of the newly added users.  we should be able to use the username
-		 $query = "select username from ". $temptable;
+		// get the user ids of the newly added users.  we should be able to use the email address
+		 $query = "select email from ". $temptable;
 		 $type = 'select';
 		 $error ='Couldnt get the users';
 		 $newUsers = $this->rawQuery($query,$error,$type);
@@ -549,7 +549,7 @@ class AdminUsersController extends BaseController {
 		if (null!==(\Input::get('serviceline'))){
 			$servicelines = \Input::get('serviceline');
 
-			$users = $this->user->whereIn('username',$newUsers)->get();
+			$users = $this->user->whereIn('email',$newUsers)->get();
 
 			foreach ($users as $user){
 

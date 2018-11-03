@@ -19,7 +19,7 @@
 
             <input  type="text" 
             required id="search" 
-            name="username" 
+            name="email" 
             placeholder="Type to search users" 
             autocomplete="off" ><i class="fas fa-search"></i>
 
@@ -74,7 +74,7 @@
                 name: 'users',
                 source: bloodhound,
                 display: function(data) {
-                    return data.username  //Input value to be set when you select a suggestion. 
+                    return data.email  //Input value to be set when you select a suggestion. 
                 },
                 templates: {
                     empty: [

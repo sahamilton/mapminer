@@ -23,7 +23,7 @@
             <th class="col-md-2">id</th>
             <th class="col-md-2">First Name</th>
             <th class="col-md-2">Last Name</th>
-            <th class="col-md-2">User Name</th>
+         
             <th class="col-md-2">EMail</th>
             <th class="col-md-2">Roles</th>
             <th class="col-md-2">Service Lines</th>
@@ -47,7 +47,7 @@
         <a href="{{route('users.show',$person->userdetails->id)}}">{{$person->lastname}}</a>
         @endif
         </td>
-	<td class="col-md-2">{{ $person->userdetails->username }}</td>
+	
     <td class="col-md-2">{{ $person->userdetails->email }}</td>
     <td class="col-md-2">
     <ul>

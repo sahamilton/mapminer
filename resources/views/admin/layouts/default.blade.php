@@ -128,7 +128,8 @@
     src="//d2s6cp23z9c3gz.cloudfront.net/js/embed.widget.min.js"
     data-domain="trueblue.besnappy.com"
     data-lang="en"
-	data-name="{{ isset(auth()->user()->firstname) ? auth()->user()->firstname ." ". auth()->user()->lastname  : auth()->user()->username  }}"  data-email="{{ isset(auth()->user()->email) ? auth()->user()->email : '' }}"  ></script>
+	data-name="{{ isset(auth()->user()->firstname) ? auth()->user()->firstname ." "	. auth()->user()->lastname  : auth()->user()->email  }}"  
+	data-email="{{ isset(auth()->user()->email) ? auth()->user()->email : '' }}"  ></script>
         @yield('scripts')
 	</body>
 </html>

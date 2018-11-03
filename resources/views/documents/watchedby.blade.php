@@ -4,7 +4,7 @@
 <h2>Document Rankings by User</h2>
 <h4>{{$document->name}}</h4>
 <p>{{$document->description}}</p>
-<p>Posted by: {{$document->owner->username}}</p>
+<p>Posted by: {{$document->owner->fullName()}}</p>
 
   <div class="row">
   <div class="col-sm-6 col-offset-2">

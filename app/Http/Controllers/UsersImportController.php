@@ -138,7 +138,7 @@ class UsersImportController extends ImportController
         if(! is_array($importerrors)){
           return redirect()->back()->withMessage($errors);
         }
-        $ids = array_keys($importerrors['email']) + array_keys($importerrors['username']);
+        $ids = array_keys($importerrors['email']);
     
         $persons = $this->import->whereIn('employee_id',$ids)->get();
 
@@ -156,13 +156,13 @@ class UsersImportController extends ImportController
 
     public function fixUserErrors(Request $request){
         //$data['email'] = request('email');
-        $data = request(['email','username']);
+        $data = request(['email']);
        
         $imports = $this->import->whereIn('employee_id',array_keys(request('email')))->get();
         foreach ($imports as $import){
          
           $import->email = $data['email'][$import->employee_id];
-          $import->username = $data['username'][$import->employee_id];
+         
           $import->save();
         }
         return $this->newUsers();

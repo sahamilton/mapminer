@@ -18,6 +18,7 @@ class SearchController extends Controller
 
 	public function searchSalesteam(Request $request)
 	{
+		
 		$roles = Role::whereHas('permissions',function ($q){
 			$q->where('permissions.name','=','accept_projects');
 		})->pluck('id')->toarray();

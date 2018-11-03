@@ -40,7 +40,7 @@
            
             <th class="col-md-2">First Name</th>
             <th class="col-md-2">Last Name</th>
-            <th class="col-md-2">User Name</th>
+            
             <th class="col-md-2">EMail</th>
             <th class="col-md-2">Roles</th>
             <th class="col-md-2">ServiceLine</th>
@@ -56,7 +56,7 @@
         
         <td class="col-md-2"><a href="{{route('users.show',$user->id)}}">{{ $user->person->firstname }}</a></td>
         <td class="col-md-2"><a href="{{route('users.show',$user->id)}}">{{ $user->person->lastname }}</a></td>
-        <td class="col-md-2"><a href="{{route('users.show',$user->id)}}">{{ $user->username }}</a></td>
+       
         <td class="col-md-2">{{ $user->email }}</td>
         <td class="col-md-2">
             @foreach ($user->roles as $role)

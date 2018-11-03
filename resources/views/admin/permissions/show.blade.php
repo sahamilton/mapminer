@@ -21,7 +21,7 @@ $newTZ = new DateTimeZone('America/Los_Angeles');
            
             <th class="col-md-2">First Name</th>
             <th class="col-md-2">Last Name</th>
-            <th class="col-md-2">User Name</th>
+         
             
             <th class="col-md-2">EMail</th>
             <th class="col-md-2">Serviceline</th>
@@ -36,7 +36,7 @@ $newTZ = new DateTimeZone('America/Los_Angeles');
         <td class="col-md-2">{{ $user->person->firstname }}</td>
         <td class="col-md-2">{{ $user->person->lastname }}</td>
        	
-        <td class="col-md-2">{{ $user->username }}</td>
+       
         <td class="col-md-2">{{ $user->email }}</td>
         <td class="col-md-2"> @foreach($user->serviceline as $serviceline)
     

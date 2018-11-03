@@ -24,7 +24,7 @@ class User extends Authenticatable
          * @var array
          */
         'columns' => [
-            'users.username' => 10,
+            
             'persons.lastname' => 10,
             'persons.firstname' => 10,
             'users.email' => 10,
@@ -39,7 +39,7 @@ class User extends Authenticatable
 
 
 
-	public $fillable = ['username','email','lastlogin','confirmed','confirmation_code','employee_id'];
+	public $fillable = ['email','lastlogin','confirmed','confirmation_code','employee_id'];
     /**
      * Get user by username
      * @param $username
@@ -102,11 +102,11 @@ class User extends Authenticatable
 		   return $this->hasMany(User::class,'id','mgrid');
 	  }
 
-    public function getUserByUsername( $username )
+    /*public function getUserByUsername( $username )
     {
         return $this->where('username', '=', $username)->first();
     }
-
+*/
     public function position(){
         $position = $this->person()
                 ->select('lat','lng')

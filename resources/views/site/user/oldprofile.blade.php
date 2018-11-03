@@ -14,7 +14,7 @@
  	<p><strong>Latitude:</strong>  {{$user->person->lat}} <strong>Longitude:</strong>  {{$user->person->lng}}</p>
 
 @endif
-<p><strong>User Name:</strong>  {{$user->username}}</p>
+
 <p><strong>Email:</strong>  {{$user->email}}</p>
 
 @if($user->person->industryfocus()->get())

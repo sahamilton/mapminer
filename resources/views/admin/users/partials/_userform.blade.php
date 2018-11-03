@@ -1,21 +1,3 @@
-
-<!-- username -->
-<div class="form-group {!! $errors->has('username') ? 'has-error' : ''!!}">
-	<label class="col-md-2 control-label" for="username">Username</label>
-	<div class="col-md-10">
-		<input 
-		required
-		class="form-control" 
-		type="text" 
-		name="username" 
-		id="username" 
-		value="{{ old('username', isset($user) ? $user->username : '') }}" 
-		placeholder="user name"/>
-		{!! $errors->first('username', '<span class="help-inline">:message</span>') !!}
-	</div>
-</div>
-<!-- ./ username -->
-
 <!-- Email -->
 <div class="form-group {!! $errors->has('email') ? 'has-error' : '' !!}">
 	<label class="col-md-2 control-label" for="email">Email</label>

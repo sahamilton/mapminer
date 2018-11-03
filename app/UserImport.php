@@ -123,7 +123,7 @@ class UserImport extends Imports
 
 	public function createNewUsers(Request $request){
 		if(request()->has('enter')){
-			// need to see if the usernames and emails are unique
+			// need to see if the email is unique
 
 			if($errors =$this->validateNewUsers(request('enter'))){
 				return $errors;
@@ -153,12 +153,13 @@ class UserImport extends Imports
 	    return false;
 	}
 
-	private function  createUserNames(){
+	/*private function  createUserNames(){
 	$query ="update usersimport set username = lower(concat(left(replace(firstname,char(13),''),1),replace(lastname,char(13),'') )) where user_id is null";
 		if ($result = \DB::select(\DB::raw($query))){
  			return true;
  		}
- 	}
+ 	}*/
+
  	private function  createUserEmails(){
 	$query ="update usersimport set email = lower(concat(left(replace(firstname,char(13),''),1),replace(lastname,char(13),'') ,'@trueblue.com')) where user_id is null";
 
@@ -170,11 +171,11 @@ class UserImport extends Imports
 
  	private function validateNewUsers($ids){
  		$newusers = $this->whereIn('employee_id',request('enter'))->get(
-				['username','email','employee_id']);
+				['email','employee_id']);
 
 	 		$emailErrors = $this->validateNewEmails($newusers);
-	 		$userNameErrors = $this->validateNewUsernames($newusers);
-	 		return  $emailErrors + $userNameErrors;
+	 		//$userNameErrors = $this->validateNewUsernames($newusers);
+	 		return  $emailErrors;
 	 		
 
  	}
@@ -192,7 +193,7 @@ class UserImport extends Imports
  		return $errors;
  	}
 
- 	private function validateNewUsernames($newusers){
+ 	/*private function validateNewUsernames($newusers){
  		$errors = array();
  		$usernames = $newusers->pluck('username','employee_id')->toArray();
 
@@ -203,19 +204,19 @@ class UserImport extends Imports
  				$errors['username'][$key][]=$value;
  			}
  		return $errors;
-	}
+	}*/
 
 	private function createUser(Request $request){
 		
 			$newusers = $this->whereIn('employee_id',request('enter'))->get(
-				['username','email','employee_id']);
+				['email','employee_id']);
 
 			$a=0;
 			$emails = request('email');
-			$usernames = request('username');
+			//$usernames = request('username');
 			foreach ($newusers as $user){
 				$data[$a]= $user->toArray();
-				$data[$a]['username']=$usernames[$user->employee_id];
+				//$data[$a]['username']=$usernames[$user->employee_id];
 				$data[$a]['password'] = md5(uniqid(mt_rand(), true));
 				$data[$a]['confirmed'] = 1; 
 				$data[$a]['created_at']= now();
@@ -445,7 +446,7 @@ class UserImport extends Imports
 	private function updateUserIdInImport(){
 		$queries[] = "update usersimport a
 					left join users b on
-					    a.username = b.username
+					    a.email = b.email
 					set
 					    a.user_id = b.id";
 
@@ -487,14 +488,14 @@ class UserImport extends Imports
 		$queries[] = "UPDATE usersimport AS t1
 
 			INNER JOIN ( 
-			select users.id as user_id, users.username as username, persons.id as person_id,users.employee_id as employee_id,usersimport.reports_to
+			select users.id as user_id,  persons.id as person_id,users.employee_id as employee_id,usersimport.reports_to
            from usersimport,users,persons
            where usersimport.employee_id = users.employee_id
            and users.id = persons.user_id) AS t2
 
 			ON t1.employee_id = t2.employee_id 
 
-		SET t1.user_id = t2.user_id, t1.username = t2.username, t1.person_id = t2.person_id,t1.reports_to = t2.reports_to";
+		SET t1.user_id = t2.user_id,  t1.person_id = t2.person_id,t1.reports_to = t2.reports_to";
 		return $this->executeImportQueries($queries);
 	}
 

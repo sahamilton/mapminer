@@ -80,8 +80,6 @@ class ProjectsController extends BaseController
      */
     public function show($id)
     {
-
-
         $statuses = $this->project->getStatusOptions;
 
         $project = $this->project
@@ -136,7 +134,7 @@ class ProjectsController extends BaseController
 
         $project = $this->project->findOrFail(request('project_id'));
         $person = $this->person->whereHas('userdetails',function ($q) use($request){
-            $q->where('username','=',request('username'));
+            $q->where('email','=',request('email'));
 
         })->first();
         $transferor = $this->person->where('user_id','=',auth()->user()->id)->first();

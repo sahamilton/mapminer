@@ -3,7 +3,7 @@
 <div class="container">
     <p><a href="{{route('users.index')}}">Return to all users</a></p>
     <h2>{{$user->person->postName()}}</h2>
-    <p><strong>User Name:</strong> {{$user->username}}</p>
+    
     <p><strong>Email:</strong> {{$user->email}}</p>
     <p><strong>Roles:</strong>
         @foreach($user->roles as $role)

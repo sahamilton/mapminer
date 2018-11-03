@@ -89,7 +89,7 @@
     data-domain="trueblue.besnappy.com"
     data-lang="en"
 
-	data-name="{{ isset(auth()->user()->person->firstname) ? auth()->user()->person->firstname ." ". auth()->user()->person->lastname  : auth()->user()->username  }}"
+	data-name="{{ isset(auth()->user()) ? auth()->user()->fullName()  :'unknown'  }}"
     data-email="{{ isset(auth()->user()->email) ? auth()->user()->email : '' }}" >
 </script>
             

@@ -15,7 +15,7 @@
 				<th>Employee Id</th>
 				<th>Email</th>
 				<th></th>
-				<th>User Name</th>
+				
 				<th></th>
 			</thead>
 			<tbody>
@@ -34,17 +34,7 @@
 						
 						@endif
 					</td>
-					<td><input type="text" name="username[{{$person->employee_id}}]" value="{{$person->username}}" >
-					</td>
-					<td class="text text-danger">
-						@if(array_key_exists($person->employee_id,$importerrors['username']))
-						
-							<i class="fas fa-exclamation-triangle  text text-danger"
-							title="{{$person->username}} is not unique."
-							></i>
-						
-						@endif
-					</td>
+					
 				</tr>
 				@endforeach
 			</tbody>

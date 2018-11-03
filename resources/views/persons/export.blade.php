@@ -5,7 +5,7 @@
 			<td>firstname</td>
 			<td>lastname</td>
 			<td>Full Name</td>
-			<td>Username</td>
+		
 			<td>Employee Number</td>
 			<td>Reports To</td>
 			<td>Manager id</td>
@@ -22,7 +22,7 @@
 			<td>{{$person->firstname}}</td>
 			<td>{{$person->lastname}}</td>
 			<td>{{$person->firstname }} {{$person->lastname}}</td>
-			<td>{{$person->userdetails->username}}</td>
+			
 			<td>{{$person->userdetails->employee_id}}</td>
 			
 			@if(isset($person->reportsTo))

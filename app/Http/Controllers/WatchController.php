@@ -138,7 +138,7 @@ class WatchController extends BaseController {
 		}
 		$user = User::find($id);
 	
-		Excel::create('Watch_List_for_'.$user->username,function($excel) use($id){
+		Excel::create('Watch_List_for_'.$user->fullName(),function($excel) use($id){
 			$excel->sheet('Watching',function($sheet) use($id) {
 				$result = $this->getMyWatchList($id);
 				$sheet->loadview('watch.export',compact('result'));

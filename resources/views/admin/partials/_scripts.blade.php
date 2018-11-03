@@ -27,7 +27,7 @@ $(document).ready(function()
                 name: 'users',
                 source: bloodhound,
                 display: function(data) {
-                    return data.username  //Input value to be set when you select a suggestion. 
+                    return data.email  //Input value to be set when you select a suggestion. 
                 },
                 templates: {
                     empty: [

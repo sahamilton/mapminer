@@ -10,7 +10,7 @@
 		<th>Name</th>
 		<th>Business Title</th>
 		<th>Email*</th>
-		<th>Username</th>
+		
 		<th>Reports To</th>
 	</thead>
 	<tbody>
@@ -32,10 +32,7 @@
 				<input type ="text" name="email[{{$user->employee_id}}]" value="{{$user->email}}"/>
 				@endif
 		   </td>
-		   <td>@if($user->reports_to)
-		   	<input type ="text" name="username[{{$user->employee_id}}]" value="{{$user->username}}" />
-		   @endif
-		</td>
+		   
 			<td>{{$user->manager}}
 				@if(! $user->reports_to)
 					<i class="fas fa-exclamation-triangle text text-danger" title="Manager does not exist in Mapminer"></i>
