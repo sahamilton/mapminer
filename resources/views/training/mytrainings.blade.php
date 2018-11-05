@@ -14,6 +14,9 @@ a.viewtraining{
 
     @if(auth()->user()->hasRole('Admin'))
     <h2>All Trainings</h2>
+    <a href="{{route('training.create')}}" class="btn btn-info pull-right">
+    <i class="fas fa-plus-circle"></i>
+        Add Training</a>
     @else
     <h2>My Trainings</h2>
    @endif

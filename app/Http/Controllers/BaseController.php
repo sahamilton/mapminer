@@ -1,6 +1,8 @@
 <?php
 namespace App\Http\Controllers;
 use App\User;
+use App\Person;
+use App\Role;
 use App\State;
 use App\Company;
 use App\Model;

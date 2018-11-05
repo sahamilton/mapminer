@@ -99,16 +99,9 @@
 <!-- /Date to -->
 
 <!-- Roles -->
-<legend>Roles</legend>
-    <div class="form-group{{ $errors->has('roles') ? ' has-error' : '' }}">
-        <label class="col-md-2 control-label" for="role">User Roles</label>
-        <div class="input-group input-group-lg ">
-            @include('training.partials._roles') 
-            <span class="help-block{{ $errors->has('roles') ? ' has-error' : '' }}">
-                <strong>{{$errors->has('roles') ? $errors->first('roles')  : ''}}</strong>
-            </span>
-        </div>
-    </div>
+ 
+            @include('partials._roles') 
+            
 <!-- / Roles -->
 <!-- Industries -->
 <legend>Industries</legend>

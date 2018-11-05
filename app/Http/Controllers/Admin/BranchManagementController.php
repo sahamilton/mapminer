@@ -96,10 +96,11 @@ class BranchManagementController extends BaseController
 
     public function confirm(BranchAssignmentRequest $request){
         
+    
         $recipients = $this->branchmanagement->getRecipients($request);
         $test = request('test');
-
-        return response()->view('admin.branches.confirm',compact('recipients','test'));
+        $message =request('message');
+        return response()->view('admin.branches.confirm',compact('recipients','test','message'));
 
 
     }
@@ -113,7 +114,7 @@ class BranchManagementController extends BaseController
     public function emailAssignments(Request $request){
 
             $emails = 0;
-          
+         
             if(request('id')){
             
                 $recipients = $this->branchmanagement->getConfirmedRecipients($request);

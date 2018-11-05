@@ -60,11 +60,13 @@ class TrainingController extends BaseController
      */
     public function create()
     {
-        $roles = Role::pluck('name','id')->toArray();
+        $roles = Role::all();
         $verticals = $this->getAllVerticals();
         $servicelines = $this->getAllServicelines();
+        $selectedRoles = \Input::old('roles', array());
+        $mode = 'create';
 
-        return response()->view('training.create',compact('roles','servicelines','verticals'));
+        return response()->view('training.create',compact('roles','servicelines','verticals','selectedRoles','mode'));
     }
 
     /**
@@ -119,7 +121,9 @@ class TrainingController extends BaseController
      */
     public function edit(Training $training)
     {
-        //
+        /*
+        $mode=null;
+        */
     }
 
     /**

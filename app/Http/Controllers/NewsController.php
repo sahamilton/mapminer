@@ -5,6 +5,7 @@ use Carbon\Carbon;
 use App\User;
 use App\Serviceline;
 use App\Person;
+use App\Role;
 use App\SearchFilter;
 use App\Http\Requests\NewsFormRequest;
 class NewsController extends BaseController {
@@ -62,8 +63,10 @@ class NewsController extends BaseController {
 		$filters = new SearchFilter;
 		$verticals = $filters->industrysegments();
 		$servicelines = Serviceline::whereIn('id',$this->news->getUserServiceLines())->pluck('serviceline','id')->toArray();
-		
-		return response()->view('news.create', compact('servicelines','verticals'));
+		$roles=Role::all();
+		$mode='create';
+		$selectedRoles = \Input::old('roles',array());
+		return response()->view('news.create', compact('servicelines','verticals','roles','mode','selectedRoles'));
 	}
 
 	/**
