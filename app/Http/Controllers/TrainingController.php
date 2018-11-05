@@ -40,9 +40,9 @@ class TrainingController extends BaseController
         $training = $this->training->query();
 
         // find users servicelines
-         $training->whereHas('servicelines', function ($q){
+        /* $training->whereHas('servicelines', function ($q){
             $q->whereIn('id',$this->userServiceLines);
-         });
+         });*/
 
          $training->whereHas('relatedRoles', function ($q){
             $q->whereIn('id',$this->userRoles);
