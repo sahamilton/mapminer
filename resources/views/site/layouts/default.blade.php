@@ -108,11 +108,7 @@
 </div>	</div>
 
 
-		<script
-			src="//d2s6cp23z9c3gz.cloudfront.net/js/embed.widget.min.js"
-			data-domain="trueblue.besnappy.com"
-			data-lang="en">
-		</script>
+		@include('partials.besnappy')
 
 		@yield('scripts')
 	</body>

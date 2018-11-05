@@ -84,14 +84,7 @@
 </div>
 
 
- <script
-    src="https://d2s6cp23z9c3gz.cloudfront.net/js/embed.widget.min.js"
-    data-domain="trueblue.besnappy.com"
-    data-lang="en"
-
-	data-name="{{ isset(auth()->user()) ? auth()->user()->fullName()  :'unknown'  }}"
-    data-email="{{ isset(auth()->user()->email) ? auth()->user()->email : '' }}" >
-</script>
+ @include('partials.besnappy')
             
 
         @yield('scripts')
