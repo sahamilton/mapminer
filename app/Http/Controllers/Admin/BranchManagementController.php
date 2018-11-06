@@ -121,7 +121,7 @@ class BranchManagementController extends BaseController
                 $campaign = $this->campaign->findOrFail(request('campaign_id'));
                 $recipients = $this->branchmanagement->getConfirmedRecipients($request);
                 $this->addRecipients($campaign,$recipients);
-                $campaign->update(['expiration' => Carbon::now()->addDays('7')]);
+                $campaign->update(['expiration' => Carbon::now()->addDays(request('days'))]);
                 
                 //$campaign = $this->createCampaign($recipients,$request);
                 $emails = $this->branchmanagement->sendEmails($recipients,$request,$campaign);   
