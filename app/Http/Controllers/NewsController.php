@@ -134,10 +134,11 @@ class NewsController extends BaseController {
 
 		->with('author','author.person','serviceline','relatedRoles','relatedIndustries')
 		->findOrFail($id);
-
+		$mode='edit';
+		$selectedRoles = \Input::old('roles',array());
 
 		$servicelines = Serviceline::whereIn('id',$this->userServiceLines)->pluck('serviceline','id')->toArray();
-		return response()->view('news.edit', compact('news','servicelines','verticals'));
+		return response()->view('news.edit', compact('news','servicelines','verticals','mode','selectedRoles'));
 	}
 
 	/**
