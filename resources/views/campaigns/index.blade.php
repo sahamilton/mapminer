@@ -5,6 +5,7 @@
 	<table class="table" id="sorttable">
 		<thead>
 			<th>Created</th>
+			<th>Author</th>
 			<th>Type</th>
 			<th>Participants</th>
 			<th>Respondents</th>
@@ -17,6 +18,7 @@
 			<tr>
 				<td><a href="{{route('campaigns.show',$campaign->id)}}"
 					title="See details of this campaign">{{$campaign->created_at->format('Y-m-d')}}</a></td>
+				<td>@if($campaign->author) {{$campaign->author->fullName()}} @endif</td>
 				<td><a href="{{route($campaign->route)}}">{{ucwords($campaign->type)}}</a></td>
 				<td>{{$campaign->participants->count()}}</td>
 				<td>{{$campaign->respondents->count()}}</td>

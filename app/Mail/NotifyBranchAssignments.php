@@ -4,6 +4,7 @@ namespace App\Mail;
 
 use App\User;
 use App\Person;
+use App\Campaign;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
@@ -16,24 +17,22 @@ class NotifyBranchAssignments extends Mailable
     public $user;
     public $person;
     public $token;
-    public $message;
     public $expiration;
-    public $cid;
+    public $campaign;
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(Person $person, $message,$cid)
+    public function __construct(Person $person, Campaign $campaign)
     {
         $this->person = $person;
-        $this->message = $message;
+        $this->campaign = $campaign;
         // we have to create a unique new time expire token
         $this->user = User::findOrFail($person->user_id);
         $this->token = $this->user->setAccess();
-        // and add the campaign id
-        $this->cid = $cid;
-        $this->expiration = Carbon::now()->addHours('48');
+
+        
         
     }
 

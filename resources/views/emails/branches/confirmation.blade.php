@@ -4,7 +4,7 @@
 
 {{$person->firstname}}, 
 
-{!! $message !!}
+{!! $campaign->message !!}
 
 @if($person->branchesServiced()->exists()) 
 Please review your current branch associations that are in Mapminer.
@@ -25,17 +25,17 @@ Our records show that you currently are not associated with any branches.
 
 If this is incorrect please use the button below to update your branch associations. 
 
-@component('mail::button', ['url' => route('branchassociation.confirm',[$token,'cid'=>$cid]), 'color' => 'blue'])
+@component('mail::button', ['url' => route('branchassociation.confirm',[$token,'cid'=>$campaign->id]), 'color' => 'blue'])
         Update my branch associations.
 @endcomponent
 
 If they are all correct please use this link to let us know.
 
-@component('mail::button', ['url' => route('branchassociation.correct',[$token,'cid'=>$cid]), 'color' => 'green'])
+@component('mail::button', ['url' => route('branchassociation.correct',[$token,'cid'=>$campaign->id]), 'color' => 'green'])
         All Correct.
 @endcomponent
 
-Note that these links will expire on {{$expiration->format('l jS M Y')}} at {{$expiration->format('g:i a')}}
+Note that these links will expire on {{$campaign->expiration->format('l jS M Y')}} at {{$campaign->expiration->format('g:i a')}}
 
 Sincerely
 

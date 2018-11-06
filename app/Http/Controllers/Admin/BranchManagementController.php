@@ -5,6 +5,7 @@ use App\Branch;
 use App\Person;
 use App\Campaign;
 use App\Role;
+use Carbon\Carbon;
 use App\Serviceline;
 use App\Http\Controllers\BaseController;
 use App\BranchManagement;
@@ -99,8 +100,9 @@ class BranchManagementController extends BaseController
     
         $recipients = $this->branchmanagement->getRecipients($request);
         $test = request('test');
-        $message =request('message');
-        return response()->view('admin.branches.confirm',compact('recipients','test','message'));
+        $campaign = $this->createCampaign($request);
+      
+        return response()->view('admin.branches.confirm',compact('recipients','test','campaign'));
 
 
     }
@@ -114,23 +116,29 @@ class BranchManagementController extends BaseController
     public function emailAssignments(Request $request){
 
             $emails = 0;
-         
+           
             if(request('id')){
-            
+                $campaign = $this->campaign->findOrFail(request('campaign_id'));
                 $recipients = $this->branchmanagement->getConfirmedRecipients($request);
-                $campaign = $this->createCampaign($recipients,$request);
-                $emails = $this->branchmanagement->sendEmails($recipients,$request,$campaign->id);   
+                $this->addRecipients($campaign,$recipients);
+                $campaign->update(['expiration' => Carbon::now()->addDays('7')]);
+                
+                //$campaign = $this->createCampaign($recipients,$request);
+                $emails = $this->branchmanagement->sendEmails($recipients,$request,$campaign);   
                  
                 return redirect()->route('branchassignment.check')->withMessage($emails . ' emails sent.');
             }
             return redirect()->route('branchassignment.check')->withMessage('No emails sent.');
         }
 
-        public function createCampaign($recipients,$request){
+        private function createCampaign($request){
             
-            $campaign = $this->campaign->create(['type'=>'branch assignment email','test'=>request('test'),'route'=>'branchassignment.check']);
-            $campaign->participants()->attach($recipients);
-            return $campaign;
+            return $this->campaign->create(['type'=>'branch assignment email','test'=>request('test'),'route'=>'branchassignment.check','message'=>request('message'),'created_by'=>auth()->user()->id]);
+            
+        }
+
+        private function addRecipients($campaign,$recipients){
+            return $campaign->participants()->attach($recipients);
         }
     
 }

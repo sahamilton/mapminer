@@ -36,7 +36,8 @@
 </tbody>
 </table>
 <input type="hidden" name="test" value="{{$test}}" >
-<input type="hidden" name="message" value="{{$message}}" />
+<input type="hidden" name="campaign_id" value="{{$campaign->id}}" >
+
 </form>
 <script>
   $("#checkAll").click(function () {

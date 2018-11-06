@@ -4,7 +4,11 @@
 	<h2>Communication Campaign</h2>
 	<p><a href="{{route('campaigns.index')}}">Return to all campaigns</a></p>
 	<h4>{{ucwords($campaign->type)}}</h4>
-	<p><strong>Sent:</strong>{{$campaign->created_at->format('Y-d-m')}}</p>
+	<p><strong>Created By:</strong>{{$campaign->author ? $campaign->author->fullName() :''}}</p>
+	<p><strong>Sent:</strong>{{$campaign->created_at->format('l jS M Y')}}</p>
+	<p><strong>Expires:</strong>{{$campaign->expiration ? $campaign->expiration->format('l jS M Y') .' at ' .$campaign->expiration->format('g:i a') : ''}}</p>
+	<p><strong>Message:</strong>{!!$campaign->message!!}</p>
+
 	<h4>Participants</h4>
 	<table class="table" id="sorttable">
 		<thead>

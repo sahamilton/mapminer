@@ -105,13 +105,15 @@ class BranchManagement extends Model
 	public function getCampaignId(){
 		return now()->format('u') . now()->format('z');
 	}
-	public function sendEmails($recipients,Request $request,$cid){
-		
+	public function sendEmails($recipients,Request $request,Campaign $campaign){
+		$cid = $campaign->id;
+		$message = $campaign->message;
 
 		$emails=0;
             foreach ($recipients as $recipient){
             	
-                Mail::to($this->toAddress($recipient,request('test')))->queue(new NotifyBranchAssignments($recipient,request('message'),$cid));
+                Mail::to($this->toAddress($recipient,request('test')))
+                ->queue(new NotifyBranchAssignments($recipient,$campaign));
                 $emails++;
                 //add activity_person_cid
             }

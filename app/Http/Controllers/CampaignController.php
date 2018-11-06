@@ -21,7 +21,7 @@ class CampaignController extends Controller
      */
     public function index()
     {
-        $campaigns = $this->campaign->with('participants','respondents')->get();
+        $campaigns = $this->campaign->with('participants','respondents','author')->get();
         return response()->view('campaigns.index',compact('campaigns'));
     }
 
@@ -33,7 +33,7 @@ class CampaignController extends Controller
      */
     public function show(Campaign $campaign)
     {
-        $campaign = $this->campaign->with('participants')->findOrFail($campaign->id);
+        $campaign = $this->campaign->with('participants','author')->findOrFail($campaign->id);
         return response()->view('campaigns.show',compact('campaign'));
     }
 
