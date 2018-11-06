@@ -6,15 +6,17 @@ $expiration = [1,2,5,7,14];
 <h2>Confirm these recipients</h2>
 <form method="post" action="{{route('branchassignments.send')}}" >
   @csrf
-<div class="form-group{{ $errors->has('id') ? ' has-error' : '' }}">
-  <label class="col-md-2 control-label"><strong>Expiration days:</strong></label>
-  <select class="form-control col-md-2" name="days">
-    @foreach ($expiration as $day)
-    <option @if($day ==2 ) selected @endif value="{{$day}}">{{$day}}</option>
-    @endforeach
-  </select>
-</div>
 
+<div class="form-row">
+  <div class="form-group inline{{ $errors->has('days') ? ' has-error' : '' }}">
+    <label for="days" class="mr-2 col-form-label-sm"><strong>Expiration days:</strong></label>
+    <select class="form-control form-control-sm" required name="days">
+      @foreach ($expiration as $day)
+      <option @if($day ==2 ) selected @endif value="{{$day}}">{{$day}}</option>
+      @endforeach
+    </select>
+</div>
+</div>
   <input type="submit" name ="submit" value="Send Emails to Selected" class="btn btn-info" />
 <table class="table" id='nosorttable'>
 <thead>
