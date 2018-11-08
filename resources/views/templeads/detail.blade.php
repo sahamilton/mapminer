@@ -6,7 +6,7 @@
  
     <h4>Lead assigned to <a href="{{route('salesrep.newleads',$lead->salesteam->first()->id)}}">{{$lead->salesteam->first()->postName()}}</a></h4>
     @if(auth()->user()->hasRole('Admin'))
-<p  text-danger">
+<p text-danger">
               <a data-href="{{route('webleads.unassign',$lead->id)}}" 
                           data-toggle="modal" 
                           data-target="#unassign-weblead"
