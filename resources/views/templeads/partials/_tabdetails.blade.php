@@ -17,7 +17,7 @@
 			 <b>Title:</b> {{$lead->contacts->contacttitle}}</p>
 			<p>
 
-			<i class="far fa-map-marker" aria-hidden="true"></i>
+			<i class="fas fa-map-marker-alt"></i>
 			 <b>Address:</b><br/>{{$lead->address}}<br />{{$lead->city}}  {{$lead->state}} {{$lead->zip}}</p>
 			<p><b><i class="fas fa-phone" aria-hidden="true"></i> Phone:</b> {{$lead->contacts->contactphone}}</p>
 			@if(! empty($lead->contacts->contactemail))
@@ -29,7 +29,7 @@
 		 
 		<p>
 		
-			<i class="far fa-location-arrow" aria-hidden="true"></i>
+			<i class="fas fa-location-arrow"></i>
 			<b>Closest Branch: </b>
 			@if($branches->count()>0)
 			<a href="{{ route('branches.show', $branches->first()->id) }}" 

@@ -209,6 +209,7 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('/newleads/branch/{bid}/map',['as'=>'newleads.branch.map','uses'=>'LeadsController@branchLeadsMap']);
 		Route::get('api/newleads/branch/{id}/map',['as'=>'newleads.branch.mapdata','uses'=>'LeadsController@getBranchMapData']);
 		Route::get('newlead/{pid}/export',['as'=>'newleads.export','uses'=>'LeadsController@exportLeads']);
+		Route::post('newlead/{id}/claim',['as'=>'templead.claim','uses'=>'LeadsController@claim']);
 		Route::post('newlead/{id}/close',['as'=>'templead.close','uses'=>'LeadsController@close']);
 	## Webleads
 		/*Route::get('/myleads', ['as'=>'my.webleads','uses'=>'WebLeadsController@saleslist']);

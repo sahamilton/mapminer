@@ -611,7 +611,7 @@ class LeadsController extends BaseController
         })->with($type);
 
     }
- /**
+    /**
      * Close prospect
      * @param  Request $request post contents
      * @param  int  $id      prospect (lead) id
@@ -624,8 +624,24 @@ class LeadsController extends BaseController
       $lead->salesteam()
         ->updateExistingPivot(auth()->user()->person->id,['rating'=>request('ranking'),'status_id'=>3]);
         $this->addClosingNote($request,$id);
-        return redirect()->route('salesrep.newleads',$lead->salesteam->first()->id)->with('message', 'Lead closed');
+        return redirect()->route('salesrep.newleads.show',$id)->with('message', 'Lead closed');
      }
+    /**
+     * Claim prospect
+     * @param  Request $request post contents
+     * @param  int  $id      prospect (lead) id
+     * @return [type]           [description]
+     */
+    public function claim(Request $request, $id){
+   
+      $lead = $this->lead->with('salesteam')->findOrFail($id);
+    
+      $lead->salesteam()->save(auth()->user()->person,['status_id'=>2]);
+      
+
+        return redirect()->route('salesrep.newleads.show',$id)->with('message', 'Lead claimed');
+     }
+
      private function addClosingNote($request,$id){
         $note = new Note;
         $note->note = "Lead Closed:" .request('comments');
