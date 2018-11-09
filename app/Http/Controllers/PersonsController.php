@@ -75,7 +75,7 @@ class PersonsController extends BaseController {
 		$mylocation = $this->persons->getMyPosition();
 
 		$colors = $this->getColors($filtered);
-
+	
 		return response()->view('persons.map',compact('filtered','keys','mylocation','colors'));
 
 	}

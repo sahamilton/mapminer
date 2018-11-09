@@ -8,10 +8,10 @@
     @if(auth()->user()->hasRole('Admin'))
 <p text-danger">
               <a data-href="{{route('webleads.unassign',$lead->id)}}" 
-                          data-toggle="modal" 
-                          data-target="#unassign-weblead"
-                          data-title = "unassign this weblead" 
-                          href="#">
+                data-toggle="modal" 
+                data-target="#unassign-weblead"
+                data-title = "unassign this weblead" 
+                href="#">
 
               <i class="fas fa-unlink"></i> Un-assign lead</a></p>
 

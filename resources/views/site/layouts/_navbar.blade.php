@@ -31,9 +31,10 @@
          
           <a class="dropdown-item" href="{{{ route('branches.map') }}}">
           <i class="fab fa-pagelines"></i> Branches</a>
-          
-          <a class="dropdown-item" href="{{{ route('person.index') }}}">
-          <i class="fas fa-users" aria-hidden="true"> </i> People</a>
+          <a class="dropdown-item" href="{{route('salesorg')}}">
+                <i class="fas fa-sitemap" aria-hidden="true"> </i>
+                  People</a>
+    
           @can('view_projects')
               <a class="dropdown-item" href="{{{ route('projects.index') }}}">
               <i class="far fa-flag" aria-hidden="true"> </i> Projects</a>
