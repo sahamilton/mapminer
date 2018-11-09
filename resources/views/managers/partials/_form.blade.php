@@ -9,7 +9,7 @@
 
     <div class="form-group{{ $errors->has('manager)') ? ' has-error' : '' }}">
         <label class="col-md-2 control-label">Managers:</label>
-        <div class="col-md-6">
+        <div class="col-md-10">
             <select multiple class="form-control" name='manager[]' id='selectManager' onchange="this.form.submit()">
 
             @foreach ($data['managerList'] as $key=>$manager))
@@ -36,7 +36,7 @@
     
         <label class="col-md-2 control-label">Accounts:<br />
         Check all:{{Form::checkbox('checkAll', 'yes', true,array('id'=>'checkAllAccounts'))}}</label>
-        <div class="col-md-6">
+        <div class="col-md-10">
             <select multiple class="form-control" name='accounts[]' id='selectAccounts' onchange="this.form.submit()">
 
             @foreach ($data['accounts'] as $key=>$account))
