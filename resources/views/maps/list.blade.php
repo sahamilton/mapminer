@@ -23,7 +23,9 @@
 	@include('maps.branchlist')
 @elseif($data['type'] =='projects')
 	@include('projects.projectlist')
-@else
+@elseif($data['type']=='people')
+	Boo!
+#endif
     @include('maps.accountlist')
 @endif 
    
