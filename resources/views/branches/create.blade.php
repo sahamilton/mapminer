@@ -26,7 +26,7 @@ Create a New Branch
 <form method="post" name="createbranch" action ="{{route('branches.store')}}" >
 @csrf
 <div class="tab-content">
-    <div id="branch" class="tab-pane fade in active">
+    <div id="branch" class="tab-pane fade show active">
       @include('branches/partials/_form')
     </div>
 	<div id="team" class="tab-pane fade in">

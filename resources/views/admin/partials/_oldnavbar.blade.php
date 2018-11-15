@@ -125,7 +125,7 @@
                                 <li{{ (Request::is('admin/permissions*') ? ' class="active"' : '') }}><a href="{{ route('permissions.index') }}"><i class="far fa-check" aria-hidden="true"></i> Permissions</a></li>
                                 <li{{ (Request::is('admin/users/nomanager') ? ' class="active"' : '') }}>
                                 <a href="{{ route('nomanager') }}">
-                                <i class="far fa-minus-circle" aria-hidden="true"></i> Without Manager</a></li>
+                                <i class="fas fa-minus-circle" aria-hidden="true"></i> Without Manager</a></li>
 
                                 <li{{ (Request::is('admin/users/export') ? ' class="active"' : '') }}><a href="{{ route('person.export') }}">
                                 <i class="far fa-download" aria-hidden="true"> </i> Export Users</a></li>

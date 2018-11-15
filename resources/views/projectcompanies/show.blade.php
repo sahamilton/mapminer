@@ -24,7 +24,7 @@
 </ul>
 
   <div class="tab-content">
-    <div id="projects" class="tab-pane fade in active">
+    <div id="projects" class="tab-pane fade show active">
       @include('projectcompanies.partials._companyprojects') 
     </div>
     <div id="contacts" class="tab-pane fade">

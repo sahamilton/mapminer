@@ -170,6 +170,15 @@ class LeadsController extends BaseController
 
 
     }
+
+    public function create(){
+      $uid = auth()->user()->id;
+      $lead_source_id = 3;
+      // note hard coded ;  Need to change
+      return response()->view('leads.create',compact('uid','lead_source_id'));
+    }
+
+
     public function store(LeadFormRequest $request){
 
 
@@ -481,15 +490,18 @@ class LeadsController extends BaseController
         
 
         $openleads = $this->getLeadsByType('openleads',$person);
+
         $openleads =$openleads->limit('200')
                     ->with('leadsource')
                     ->get();
+
+        $openleads = $this->lead->distanceFromMe($openleads);
 
         $closedleads = $this->getLeadsByType('closedleads',$person);
         $closedleads = $closedleads->with('relatedNotes','leadsource')
                     ->limit('200')
                     ->get();
-        
+      
         return response()->view('templeads.show',compact('openleads','closedleads','person'));
     }
 
@@ -593,7 +605,7 @@ class LeadsController extends BaseController
 
         }
         $peeps = $person->descendants()->pluck('id')->toArray();
-        
+
         if(in_array($pid,$peeps)){
             return $person;
         }

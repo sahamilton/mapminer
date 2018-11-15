@@ -30,7 +30,7 @@
 </ul>
 
 <div class="tab-content">
-<div id="map" class="tab-pane fade in active">
+<div id="map" class="tab-pane fade show active">
 @include('leads.partials._tabpersonsmap')
 </div>
 <div id="leads" class="tab-pane fade in ">

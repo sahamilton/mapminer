@@ -11,7 +11,7 @@
                 <th>City</th>
                 <th>State</th>
 
-                <th>Distance</th>
+                <th>Distance (miles)</th>
 
                 <th>Lead source</th>
 
@@ -25,7 +25,7 @@
                     <td>{{$lead->city}}</td>
                     <td>{{$lead->state}}</td>
 
-                    <td>{{number_format($lead->distance,1)}} miles</td>
+                    <td>{{number_format($lead->distance,1)}}</td>
 
                     <td>{{$lead->leadsource->source}}</td>
                 </tr>  

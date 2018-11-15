@@ -213,4 +213,13 @@ trait Geocode
             }
         return $location;
     }
+
+    public function distanceFromMe($collection){
+        
+        $myPosition = $this->getMyPosition();
+        return $collection->map(function ($item) use($myPosition){
+           $item->distance = $this->distanceBetween($myPosition->lat,$myPosition->lng,$item->lat,$item->lng);
+           return $item;
+        });
+    }
 }

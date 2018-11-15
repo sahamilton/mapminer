@@ -16,7 +16,7 @@
   </ul>
 
   <div class="tab-content">
-    <div id="home" class="tab-pane fade in active">
+    <div id="home" class="tab-pane fade show active">
       @include('emails.partials._tabmessage')
     </div>
     <div id="menu1" class="tab-pane fade">

@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 use App\Watch;
 use App\User;
+use App\Location;
 use App\Document;
 use Illuminate\Http\Request;
 use Excel;
@@ -218,7 +219,7 @@ class WatchController extends BaseController {
 
 			Excel::create('Watch_List_for_',function($excel) use($accounts){
 			$excel->sheet('Watching',function($sheet) use($accounts) {
-			$result = \App\Location::whereIn('company_id',$accounts)->has('watchedBy')
+			$result = Location::whereIn('company_id',$accounts)->has('watchedBy')
 			->with('relatedNotes','relatedNotes.writtenBy','company','watchedBy','watchedBy.person')
 			->get();
 				$sheet->loadview('watch.companyexport',compact('result'));

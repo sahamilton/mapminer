@@ -198,7 +198,7 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('watch/map',['as'=>'watch.map','uses'=>'WatchController@showwatchmap']);
 		Route::get('cowatch/export',['as'=>'company.watchexport', 'uses'=>'WatchController@companywatchexport']);
 	#	New Leads
-
+		Route::resource('leads','LeadsController')->only(['create','store']);
 
 		Route::get('/newleads/{pid}',['as'=>'salesrep.newleads','uses'=>'LeadsController@salesLeads']);
 		Route::get('/newleads/show/{id}/',['as'=>'salesrep.newleads.show','uses'=>'LeadsController@salesLeadsDetail']);
@@ -373,7 +373,7 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
 		Route::post('lead/search',['as'=>'leads.search','uses'=>'LeadsController@search']);
 		Route::get('lead/search',['as'=>'leads.search','uses'=>'LeadsController@searchAddress']);
 		Route::get('lead/branch/{bid?}',['as'=>'leads.branch','uses'=>'LeadsController@branches']);
-		Route::resource('leads','LeadsController');
+		Route::resource('leads','LeadsController')->except(['create','store']);
 
 	# Prospect Source / LeadSource
 

@@ -23,7 +23,7 @@ Review Branch Changes
 <form method="post" name="changebranches" action ="{{route('branches.change')}}" >
 @csrf
 <div class="tab-content">
-    <div id="branch" class="tab-pane fade in active">
+    <div id="branch" class="tab-pane fade show active">
       @include('branches/partials/_adds')
     </div>
 	<div id="deletes" class="tab-pane fade in">

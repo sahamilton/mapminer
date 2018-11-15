@@ -40,7 +40,7 @@
 </ul>
 <?php $unassigned = array();?>
 <div class="tab-content">
-	<div id="map" class="tab-pane fade in active">
+	<div id="map" class="tab-pane fade show active">
 	@include('leads.partials._tabmapleads')
 	</div>
 	<div id="details" class="tab-pane fade in ">

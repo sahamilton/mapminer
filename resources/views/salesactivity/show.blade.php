@@ -30,7 +30,7 @@
 	</ul>
 
 	<div class="tab-content">
-		<div id="campaign" class="tab-pane fade in active">
+		<div id="campaign" class="tab-pane fade show active">
 
 			@include('salesactivity.partials._tabcampaign')
 

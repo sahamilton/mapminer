@@ -38,7 +38,7 @@
 						    href="#" 
 						    title="Delete {{$contact->fullName()}}">
 
-						    <i class="far fa-minus-circle danger" aria-hidden="true"></i>
+						    <i class="fas fa-minus-circle danger" aria-hidden="true"></i>
 						</a>
 
 					@endif

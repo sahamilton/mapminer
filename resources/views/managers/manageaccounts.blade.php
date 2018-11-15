@@ -34,7 +34,7 @@
     @include('managers.partials._activewatchers')
     </div>
     
-    <div style="border:1px solid #000;width:300px;margin:20px;padding:20px;float:left">
+    <div style="border:1px solid #000;width:400px;margin:20px;padding:20px;float:left">
     @include('managers.partials._locationnotes')
     </div>
   </div>

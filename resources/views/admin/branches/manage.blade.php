@@ -21,7 +21,7 @@
 
     </ul>
     <div class="tab-content">
-        <div id="showmap" class="tab-pane fade in active">
+        <div id="showmap" class="tab-pane fade show active">
             @include('admin.branches.partials._branches')
         </div>
         

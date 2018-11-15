@@ -71,7 +71,7 @@ class LeadSource extends Model
                     COUNT(b.related_id) as ownedleads,
                     COUNT(a.related_id) as closedleads,
                     avg(a.rating) as ranking')))
-                ->join('leads', 'leads.lead_source_id', '=', 'leadsources.id')
+                ->leftjoin('leads', 'leads.lead_source_id', '=', 'leadsources.id')
                 ->leftjoin('lead_person_status as a', function($join){
                     $join->on('leads.id', '=', 'a.related_id')->where('a.status_id','=',3);
                 })

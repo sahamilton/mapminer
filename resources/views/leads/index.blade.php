@@ -4,7 +4,6 @@
 <h1>Prospects</h1>
 
 
-
 <ul class="nav nav-tabs">
 
 	<li class="nav-item active">
@@ -26,7 +25,7 @@
 </ul>
 
 <div class="tab-content">
-	<div id="map" class="tab-pane fade in active">
+	<div id="map" class="tab-pane fade show active">
 		@include('leads.partials._tabmapleads')
 	</div>
 	<div id="list" class="tab-pane fade in">

@@ -84,7 +84,7 @@
                  
                 <a class="dropdown-item"
                 href="{{route('leadsource.flushleads',$source->id)}}">
-                <i class="far fa-minus-circle text-danger" aria-hidden="true"></i>
+                <i class="fas fa-minus-circle text-danger" aria-hidden="true"></i>
                  Flush all prospects from this source
                  </a>
                  

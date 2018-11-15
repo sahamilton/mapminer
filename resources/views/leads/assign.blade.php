@@ -12,7 +12,7 @@
 	</ul>
 
 	<div class="tab-content">
-		<div id="team" class="tab-pane fade in active">
+		<div id="team" class="tab-pane fade show active">
 
 			@include('leads.partials._repslist')
 		</div>

@@ -38,6 +38,7 @@ class Lead extends Model implements HasPresenter {
 						'lead_source_id',
             'branch_id',];
     public $statuses = [1=>'Offered',2=>'Claimed',3=>'Closed'];
+    
     public $getStatusOptions =  [
         1=>'Prospect data is completely inaccurate. No project or project completed.',
         2=>'Prospect data is incomplete and / or not useful.',
@@ -45,6 +46,7 @@ class Lead extends Model implements HasPresenter {
         4=>'Prospect data is accurate and there is a possibility of sales / service.',
         5=>'Prospect data is accurate and there is a definite opportunity for sales / service'
       ];
+    
     public function leadsource(){
     	return $this->belongsTo(LeadSource::class, 'lead_source_id');
 
@@ -59,9 +61,11 @@ class Lead extends Model implements HasPresenter {
     	return $this->belongsToMany(Person::class, 'lead_person_status','related_id','person_id')
                   ->withPivot('created_at','updated_at','status_id','rating');
     }
-     public function branches(){
+    
+    public function branches(){
       return $this->belongsTo(Branch::class,'branch_id','id');
     }
+    
     public function relatedNotes($type=null) {
       if(! $type){
         $type="lead";

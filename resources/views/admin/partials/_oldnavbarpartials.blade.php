@@ -51,7 +51,7 @@
                                 </li>
                                 <li class="dropdown-item">
                                     <a class="nav-link" href="{{ route('nomanager') }}">
-                                    <i class="far fa-minus-circle" aria-hidden="true"></i> Without Manager</a>
+                                    <i class="fas fa-minus-circle" aria-hidden="true"></i> Without Manager</a>
                                 </li>
 
                         

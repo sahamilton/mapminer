@@ -16,7 +16,7 @@
             @else
             <tr class='danger'>
                 <td>{{$company->companyname}}</td>
-        <td><i class="far fa-minus-circle text-danger" aria-hidden="true"></i>No 'How to Sell' Notes</td>
+        <td><i class="fas fa-minus-circle text-danger" aria-hidden="true"></i>No 'How to Sell' Notes</td>
 
             </tr>
             @endif

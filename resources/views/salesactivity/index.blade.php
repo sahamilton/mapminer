@@ -19,7 +19,7 @@
     </ul>
 
     <div class="tab-content">
-        <div id="calendar" class="tab-pane fade in active">
+        <div id="calendar" class="tab-pane fade show active">
 
             <div class='col-md-offset-2 col-md-8' style="margin-top:20px">
                 {!! $calendar->calendar() !!}

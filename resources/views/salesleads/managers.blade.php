@@ -36,7 +36,7 @@ and Team
 </ul>
 
 <div class="tab-content">
-	<div id="map" class="tab-pane fade in active">
+	<div id="map" class="tab-pane fade show active">
 		@include('salesleads.partials._tabmapleads')
 
 	</div>

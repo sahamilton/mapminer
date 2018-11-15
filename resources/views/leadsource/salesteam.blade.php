@@ -16,7 +16,7 @@
 </ul>
 
 <div class="tab-content">
-  <div id="home" class="tab-pane fade in active">
+  <div id="home" class="tab-pane fade show active">
   <div style="border:solid 1px red">
 
 {!! $message !!}
