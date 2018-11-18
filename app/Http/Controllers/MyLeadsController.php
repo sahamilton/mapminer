@@ -57,9 +57,9 @@ class MyLeadsController extends BaseController
     {
         $data = $this->cleanseInput($request);
        
-        $lead = $this->lead->fill($data['lead'])->save();
-
-        $lead->salesteam()->sync($lead->id, $data['team']);
+        $lead = $this->lead->fill($data['lead']);
+        $lead->save();
+        $lead->salesteam()->attach($lead->id, $data['team']);
         
         return redirect()->route('myleads.show',$lead)->withMessage('Lead Created');
     }
