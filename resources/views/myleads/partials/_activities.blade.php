@@ -36,7 +36,7 @@ body.modal-open .activitydate, .followupdate {
         <div class="form-group">
                     <label class="col-md-4 control-label">Activity:</label>
                     
-                    <select  id="activity" required>
+                    <select  id="activity" name="activity" required>
                       @foreach ($activities as $activity)
                         <option value="{{$activity}}">{{$activity}}</option>
                       @endforeach

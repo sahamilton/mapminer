@@ -39,7 +39,7 @@ class MyLeadsContactController extends Controller
         $mylead = MyLead::findOrFail(request('lead_id'));
         $mylead->contacts()->create(request()->all());
 
-        return redirect()->route('myleads.show',$mylead->id)->withMessage('Activity recorded');
+        return redirect()->route('myleads.show',$mylead->id)->withMessage('Contact recorded');
     }
 
     /**

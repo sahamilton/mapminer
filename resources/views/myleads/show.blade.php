@@ -76,6 +76,7 @@
 @php
 $lead = $mylead;
 @endphp
+@include('partials/_modal')
 @include ('myleads.partials._closeleadform')
 @include('myleads.partials.map')
 @include('partials._scripts');
