@@ -8,17 +8,20 @@ $rank = ($lead->salesteam->first()->pivot->rating ? $lead->salesteam->first()->p
     <!-- Modal content-->
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        
         <h4 class="modal-title">Close {!!$lead->companyname!!} Lead  </h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
       <div class="modal-body">
         <p>Please complete this form to close lead</p>
-        <?php $ratings = [1,2,3,4,5];?>
-        <form method="post" action="{{route('templead.close',$lead->id)}}">
+        <?php $ratings = [1,2,3];?>
+        <form method="post" action="{{route('mylead.close',$lead->id)}}">
         {{csrf_field()}}
         <div class="form-group">
                     <label class="col-md-4 control-label">Lead Rating:</label>
-                    <div style="font-size:150%" data-rating="{{$rank}}" id="rank" class='starrr col-md-6'></div>
+                    <div style="font-size:150%" data-rating="{{$rank}}" 
+                    id="rank" 
+                    class='starrr col-md-6'></div>
                     <input type="hidden" name="ranking" id="ranking" value="{{$rank}}" />
                     
                     <select  id="ranklist">

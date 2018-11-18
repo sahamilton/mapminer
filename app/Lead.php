@@ -10,10 +10,15 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Lead extends Model implements HasPresenter {
   use SoftDeletes, Geocode;
+
 	public $dates = ['created_at','updated_at','deleted_at','datefrom','dateto'];
   public $table= 'leads';
-
+  public $assignTo;
   public $type='temp';
+
+  public function __construct(){
+    $this->assignTo = config('leads.lead_distribution_roles');
+  }
 
   public $requiredfields = ['companyname',
             'businessname',
@@ -96,7 +101,7 @@ class Lead extends Model implements HasPresenter {
 
     }
 
-    public function createLeadFromGeo($geoCode){
+  public function createLeadFromGeo($geoCode){
           $coords = $this->getGeoCode($geoCode);
           $this->lat = $coords['lat'];
           $this->lng = $coords['lng'];
@@ -127,6 +132,8 @@ public function rankLead($salesteam){
     }  
     return $ranking;
     }
+
+
     public function ownedBy(){
       return $this->belongsToMany(Person::class,'lead_person_status','related_id','person_id')
             ->withPivot('status_id','rating','type')
@@ -207,7 +214,7 @@ public function rankLead($salesteam){
      return null;
     }
 
-    public function myLeads($verticals=null){
+  public function myLeads($verticals=null){
 
       $statuses = [1,2];
       return $this->whereHas('salesteam',function ($q) use ($statuses){
@@ -218,15 +225,15 @@ public function rankLead($salesteam){
         ->whereHas('leadsource', function ($q) {
             $q->where('datefrom','<=',date('Y-m-d'))
               ->where('dateto','>=',date('Y-m-d'));
-        })
-        ->whereHas('vertical',function($q) use($verticals){
-          if(isset($verticals)){
-            $q->whereIn('id',$verticals);
-          }
         });
 
 
     }
+    /*  public function myLeads(){
+      return $this->belongsToMany(Person::class,'lead_person_status','related_id','person_id')
+            ->withPivot('status_id','rating','type')
+            ->wherePivotIn('status_id',[2,3]);
+    }*/
     public function myLeadStatus(){
       
       return $this->salesteam()->wherePivot('person_id','=',auth()->user()->person->id)->first(['status_id','rating']);
@@ -296,4 +303,29 @@ public function rankLead($salesteam){
         ->withPivot('created_at','updated_at','status_id','rating')
         ->wherePivot('status_id',3);
     }
+
+    public function findNearByPeople($data){
+      $this->userServiceLines = session()->has('user.servicelines') 
+      && session()->get( 'user.servicelines' ) ? session()->get( 'user.servicelines' ) : $this->getUserServiceLines();
+      if(is_array($data)){
+              $location = new \stdClass;
+              $location->lat = $data['lat'];
+              $location->lng = $data['lng'];
+        }else{
+          $location = $data;
+          $data['distance']=100;
+          $data['number']=5;
+        }
+
+        
+        return Person::whereHas('userdetails.serviceline', function ($q) {
+              $q->whereIn('servicelines.id',$this->userServiceLines);
+          })
+          ->whereHas('userdetails.roles', function ($q) {
+              $q->whereIn('name',$this->assignTo);
+          })
+          ->with('userdetails','reportsTo','userdetails.roles','industryfocus')
+          ->nearby($location,$data['distance'],$data['number'])
+          ->get();
+      }
 }

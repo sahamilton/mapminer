@@ -18,11 +18,11 @@ class AdminDashboardController extends BaseController {
 	private $trackingField = 'track.lastactivity';
 	private $trackingtable ='track';
 	private $track;
-	private $user;
-	private $company;
-	private $person;
-	private $location;
-	private $begingingOfTime;
+	public $user;
+	public $company;
+	public $person;
+	public $location;
+	public $begingingOfTime;
 
 
 	public function __construct(Company $company,Location $location, Track $track,User $user,Person $person) {

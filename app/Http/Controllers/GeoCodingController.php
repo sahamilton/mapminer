@@ -6,6 +6,7 @@ use App\Company;
 use App\Project;
 use App\Branch;
 use App\Watch;
+use App\Lead;
 use App\Person;
 use App\Http\Requests\FindMeFormRequest;
 use Illuminate\Http\Request;
@@ -14,15 +15,25 @@ class GeoCodingController extends BaseController {
 	
 	public $project;
 	public $location;
+	public $lead;
 	public $branch;
 	public $serviceline;
 	public $person;
 
 
-	public function __construct(Location $location, Project $project, Branch $branch, Serviceline $serviceline,Person $person) {
+	public function __construct(
+			Location $location, 
+			Project $project, 
+			Branch $branch, 
+			Serviceline $serviceline,
+			Person $person,
+			Lead $lead
+		) 
+	{
 		$this->location = $location;
 		$this->project = $project;
-		$this->serviceline = $serviceline;	
+		$this->serviceline = $serviceline;
+		$this->lead = $lead;	
 		$this->branch = $branch;
 		$this->person = $person;
 		parent::__construct($location);	
@@ -32,6 +43,9 @@ class GeoCodingController extends BaseController {
 	/**
 	 * @return [type]
 	 */
+
+	/**  This needs some serious refactoring! **/
+
 	public function findMe(FindMeFormRequest $request) {
 
 		if(request()->filled('address')) {
@@ -78,6 +92,7 @@ class GeoCodingController extends BaseController {
     		$company=null;
     	}
     	$data['result'] = $this->getGeoListData($data);
+
     	if(count($data['result'])==0){
 			
 			session()->flash('warning','No results found. Consider increasing your search distance');
@@ -87,6 +102,11 @@ class GeoCodingController extends BaseController {
 		
 			if($data['type']=='people'){
 				return response()->view('maps.peoplelist', compact('data'));
+			}
+
+			if ($data['type']=='myleads'){
+				
+				return response()->view('myleads.index', compact('data'));
 			}
 
 			try {
@@ -107,7 +127,7 @@ class GeoCodingController extends BaseController {
 
 			$servicelines = $this->serviceline->whereIn('id',$this->userServiceLines)
     						->get();
-    			
+    		
 			return response()->view('maps.map', compact('data','filtered','servicelines','company'));
 		}
 		
@@ -178,6 +198,14 @@ class GeoCodingController extends BaseController {
 		$data['companyname']=NULL;
 		return $data;
 	}
+
+	private function getMyLeadsMapData($data){
+		$data['urllocation'] ="api/myleads";
+		$data['title'] = "Lead Locations";
+		$data['company']=NULL;
+		$data['companyname']=NULL;
+		return $data;
+	}
 	
 	/**
 	 * Add map zoom level to data array
@@ -204,49 +232,24 @@ class GeoCodingController extends BaseController {
 	 */
 	 
 	public function getGeoListData($data ) {
+
 	
 		$company = isset($data['company']) ? $data['company'] : NULL;
 		$location = new Location;
 		$location->lat = $data['lat'];
 		$location->lng = $data['lng'];
-	
-		switch ($data['type']) {
-			
-			case 'location':
-			case 'company':
-			if($company){
-				return $this->getCompanyListData($location,$data,$company);
-			}else{
-			
-				return $this->getLocationListData($location,$data);
-			}
-			
-			break;
-			
-			case 'branch':
 
-				return $this->getBranchListData($location,$data);
-			
-			break;
+		if(method_exists($this,'get'.ucwords($data['type']).'ListData')){
+			$method = 'get'.ucwords($data['type']).'ListData';
+			return $this->$method($location,$data,$company);
 
-			case 'projects':
-				return $this->getProjectsListData($location,$data);
-			break;
-
-			case 'people':
-				return $this->getPeopleListData($location,$data);
-			break;
-			
-			default:
-				if($company){
-					return $this->getCompanyListData($location,$data,$company);
-				}else{
-				
-					return $this->getLocationListData($location,$data);
-				}
-		
-			break;
+		}else{
+			// get default map view
+			$method = 'getLocationListData';
+			return $this->$method($location,$data,$company);
 		}
+	
+
 		
 	}
 	
@@ -293,6 +296,13 @@ class GeoCodingController extends BaseController {
 				->nearby($location,$data['distance'])
 				->with('userdetails.roles')
 				->get();
+	}
+
+	private function getMyLeadsListData($location,$data){
+		return $this->lead->myLeads()
+			->with('leadsource')
+			->nearby($location,$data['distance'])
+			->get();
 	}
 	
 	/**

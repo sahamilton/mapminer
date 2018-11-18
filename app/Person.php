@@ -131,7 +131,15 @@ class Person extends NodeModel implements HasPresenter {
 		return $this->attributes['firstname'] . ' ' . $this->attributes['lastname'];
 
 	}
-	
+	public function currentleads(){
+		return $this->belongsToMany(Lead::class, 'lead_person_status','person_id','related_id')
+			
+			->whereHas('leadsource', function ($q) {
+	            $q->where('datefrom','<=',date('Y-m-d'))
+	              ->where('dateto','>=',date('Y-m-d'));
+
+			})->withPivot('created_at','updated_at','status_id','rating');
+	}
 
 	public function leads(){
 		return $this->belongsToMany(Lead::class, 'lead_person_status','person_id','related_id')

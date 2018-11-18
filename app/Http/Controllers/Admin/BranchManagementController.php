@@ -18,15 +18,15 @@ use App\Http\Controllers\Controller;
 
 class BranchManagementController extends BaseController
 {
-    protected $branch;
-    protected $person;
-    protected $role;
-    protected $campaign;
-    protected $serviceline;
+    public $branch;
+    public $person;
+    public $role;
+    public $campaign;
+    public $serviceline;
 
-    protected $branchmanagement;
+    public $branchmanagement;
     
-    protected $branchRoles = [3,5,11,9,13];
+    public $branchRoles = [3,5,11,9,13];
     public function __construct(Branch $branch, 
                         Person $person, 
                         Role $role,

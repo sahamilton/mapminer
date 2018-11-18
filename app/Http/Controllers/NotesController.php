@@ -8,9 +8,9 @@ use Illuminate\Http\Request;
 class NotesController extends BaseController {
 
 	
-	protected $notes;
-	protected $locations;
-	protected $user;
+	public $notes;
+	public $locations;
+	public $user;
 
 	public function __construct(Note $note, Location $location, User $user) {
 

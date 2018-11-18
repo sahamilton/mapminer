@@ -222,4 +222,10 @@ trait Geocode
            return $item;
         });
     }
+
+    public function geoCodeAddress(string $address){
+
+        $geoCode = app('geocoder')->geocode($address)->get();
+        return $this->getGeoCode($geoCode);
+    }
 }

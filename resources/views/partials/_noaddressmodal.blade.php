@@ -2,8 +2,9 @@
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          
              <h4 class="modal-title" id="myModalLabel">No Address Specified</h4>
+             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
       </div>
 			<div class="modal-body">
 				<p><strong>Please enter an address to search from.</strong> You can enter an address, zip code or state code.</p>

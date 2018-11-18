@@ -7,6 +7,8 @@ class Model extends \Eloquent {
 	public $userVerticals;
 	public $userRoles;
 	
+
+	
 	public function getTableColumns($table=null){
 		
 	     		if(! $table){
