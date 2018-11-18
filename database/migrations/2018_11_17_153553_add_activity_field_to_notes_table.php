@@ -13,7 +13,7 @@ class AddActivityFieldToNotesTable extends Migration
      */
     public function up()
     {
-        Schema::table('Notes', function (Blueprint $table) {
+        Schema::table('notes', function (Blueprint $table) {
             $table->string('activity')->nullable();
             $table->integer('contact_id')->nullable();
             $table->datetime('activity_date')->nullable();
