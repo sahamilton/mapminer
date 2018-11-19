@@ -73,10 +73,12 @@ class MyLeadsController extends BaseController
     public function show(MyLead $mylead)
     {
         $people = $this->lead->findNearByPeople($mylead);
+        $branches = $this->lead->findNearByBranches($mylead);
+
         $mylead = $mylead->with('relatedLeadNotes','relatedLeadNotes.relatedContact','contacts')->findOrFail($mylead->id);
         $rankingstatuses = $this->lead->getStatusOptions;
 
-        return response()->view('myleads.show',compact('mylead','people','rankingstatuses'));
+        return response()->view('myleads.show',compact('mylead','people','rankingstatuses','branches'));
     }
 
     /**

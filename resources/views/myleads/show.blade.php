@@ -44,6 +44,16 @@
       aria-selected="false">
         <strong>Sales Team</strong>
   </a>
+
+  <a class="nav-item nav-link" 
+      data-toggle="tab" 
+      href="#branch"
+      id="branch-tab"
+      role="tab"
+      aria-controls="branch"
+      aria-selected="false">
+        <strong>Branches</strong>
+  </a>
     
 
 
@@ -63,6 +73,9 @@
     </div>
     <div id="team" class="tab-pane fade">
      @include('myleads.partials._tabsalesteam')
+    </div>
+    <div id="branch" class="tab-pane fade">
+     @include('myleads.partials._tabbranches')
     </div>
    
 

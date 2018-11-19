@@ -328,4 +328,25 @@ public function rankLead($salesteam){
           ->nearby($location,$data['distance'],$data['number'])
           ->get();
       }
+
+
+      public function findNearByBranches($data){
+        if(is_array($data)){
+                $location = new \stdClass;
+                $location->lat = $data['lat'];
+                $location->lng = $data['lng'];
+          }else{
+            $location = $data;
+            $data['distance']=100;
+            $data['number']=5;
+          }
+          
+          return Branch::whereHas('servicelines',function ($q){
+                $q->whereIn('servicelines.id',$this->userServiceLines );
+            })
+            ->with('salesTeam')->nearby($location,$data['distance'],$data['number'])
+            
+            ->get();
+
+    }
 }
