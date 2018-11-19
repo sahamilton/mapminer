@@ -30,7 +30,7 @@
        
         <td>{{$lead->leadsource->source}}</td>
         
-        <td></td>
+        <td>{{$lead->salesteam->first()->pivot->rating}}</td>
 
 
 

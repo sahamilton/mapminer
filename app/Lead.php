@@ -214,9 +214,10 @@ public function rankLead($salesteam){
      return null;
     }
 
-  public function myLeads($verticals=null){
-
-      $statuses = [1,2];
+  public function myLeads(array $statuses=null){
+    if(! $statuses){
+          $statuses = [1,2];
+      }
       return $this->whereHas('salesteam',function ($q) use ($statuses){
           $q->where('person_id','=',auth()->user()->person->id)
           ->whereIn('status_id',$statuses);
@@ -225,7 +226,7 @@ public function rankLead($salesteam){
         ->whereHas('leadsource', function ($q) {
             $q->where('datefrom','<=',date('Y-m-d'))
               ->where('dateto','>=',date('Y-m-d'));
-        });
+        })->with('salesteam');
 
 
     }

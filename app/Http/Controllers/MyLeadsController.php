@@ -33,8 +33,18 @@ class MyLeadsController extends BaseController
     
         $leads = $this->lead->distanceFromMe($leads);
         
+        return response()->view('myleads.index',compact('leads'));
+    }
+
+
+    public function closedleads()
+    {
+        $leads = $this->lead->myLeads([3])->get();
+       
+        $leads = $this->lead->distanceFromMe($leads);
+        
         $statuses = LeadStatus::all()->pluck('status','id')->toArray();
-        return response()->view('myleads.index',compact('leads','statuses'));
+        return response()->view('myleads.closed',compact('leads','statuses'));
     }
 
     /**
@@ -75,7 +85,8 @@ class MyLeadsController extends BaseController
         $people = $this->lead->findNearByPeople($mylead);
         $branches = $this->lead->findNearByBranches($mylead);
 
-        $mylead = $mylead->with('relatedLeadNotes','relatedLeadNotes.relatedContact','contacts')->findOrFail($mylead->id);
+        $mylead = $mylead->with('salesteam','relatedLeadNotes','relatedLeadNotes.relatedContact','contacts')->findOrFail($mylead->id);
+      
         $rankingstatuses = $this->lead->getStatusOptions;
 
         return response()->view('myleads.show',compact('mylead','people','rankingstatuses','branches'));

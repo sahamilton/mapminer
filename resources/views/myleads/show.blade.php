@@ -3,7 +3,14 @@
 
 <h2>{{$mylead->businessname}}</h2>
 <p><a href="{{route('myleads.index')}}">Return to all my leads</a></p>
+
+@if($mylead->salesteam->first()->pivot->status_id != 3)
  <button type="button" class="btn btn-info " data-toggle="modal" data-target="#closelead">Close Lead</button>
+@else
+<p><strong>Lead Closed: Rated {{$mylead->salesteam->first()->pivot->rating}}</strong></p>
+<p><a href="{{route('myclosedleads')}}">See all closed leads</a></p>
+
+@endif
 <nav>
   <div class="nav nav-tabs" id="nav-tab" role="tablist">
   <a class="nav-link nav-item active" 
