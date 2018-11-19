@@ -12,7 +12,7 @@
 <p><a href="{{route('newleads.export', $person->id)}}"><i class="far fa-file-excel-o" aria-hidden="true"></i> Export to Excel </a>
 </p>
   <div class="float-right">
-    <a href="{{route('leads.create')}}" class="btn btn-info">Add Personal Lead</a>
+    <a href="{{route('myleads.create')}}" class="btn btn-info">Add Personal Lead</a>
   </div>
  <nav>
   <div class="nav nav-tabs" id="nav-tab" role="tablist">

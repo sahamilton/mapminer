@@ -472,7 +472,6 @@ class LeadsController extends BaseController
 
         $person = $this->getSalesRep($pid);
       
-
         if($person->userdetails->can('accept_leads')){
            
             return $this->showSalesLeads($person);
