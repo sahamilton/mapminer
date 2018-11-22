@@ -29,7 +29,8 @@ $views = array('map'=>'map','list'=>'list');
 $values = Config::get('app.search_radius');
 
 ?>
-<form class="form-inline" action="{{route('findme')}}" method = 'post' name="mapselector">
+<form class="form-inline" action="{{route('findme')}}" 
+method = 'post' name="mapselector">
 @csrf
 
 <label>Show a </label>
@@ -111,5 +112,10 @@ $("select[id^='select']").change(function() {
     this.form.submit();
 }
 });
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push({
+  'event' : 'searchAddress',
+  'address' : '{{$data['address']}}'
 
+});
 </script>
