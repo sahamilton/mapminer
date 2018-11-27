@@ -193,6 +193,7 @@ class NotesController extends BaseController {
 	 */
 	public function mynotes()
 	{
+		
 		$user = auth()->user();
 		$types=['location','lead','project'];
 		foreach ($types as $type){ 
