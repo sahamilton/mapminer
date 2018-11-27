@@ -4,7 +4,7 @@
 	window.dataLayer = window.dataLayer || [];
   	window.dataLayer.push({
   		'userId' : '{{{auth()->id()}}}',
-		'employee_id' : '{{auth()->user()->employee_id}}'
+		'employee_id' : '{{auth()->user() ? auth()->user()->employee_id : ''}}'
 
 });
 </script>

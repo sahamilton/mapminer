@@ -10,7 +10,7 @@
 				<p><strong>Please enter an address to search from.</strong> You can enter an address, zip code or state code.</p>
         <form method="post" action="{{$action}}" >
           {{csrf_field()}}
-          <input type="text" id="address" name="address" />
+          <input type="text" id="noaddress" name="address" />
           <input type="submit" class="btn btn-info  btn-xs" name="submit" value="Use this address" />
           
           <input type="hidden" name="type" value="map" />

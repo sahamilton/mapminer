@@ -115,7 +115,8 @@ $("select[id^='select']").change(function() {
   window.dataLayer = window.dataLayer || [];
   window.dataLayer.push({
   'event' : 'searchAddress',
-  'address' : '{{$data['address']}}'
+  'address' : '{{$data['address']}}',
+  'searchtype' : '{{$data['type']}}'
 
 });
 </script>
