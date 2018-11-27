@@ -113,8 +113,10 @@ class MyLeadsController extends BaseController
     public function update(MyLeadFormRequest $request, MyLead $mylead)
     {
      
+        
         $data = $this->cleanseInput($request);
-        if($mylead->update($data)){
+    
+        if($mylead->update($data['lead'])){
             return redirect()->route('myleads.show',$mylead->id)->withMessage("Lead Updated");
         }else{
             return redirect()->route('myleads.show',$mylead->id)->withError("Unable to update lead");
