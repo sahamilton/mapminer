@@ -42,10 +42,10 @@
                @foreach ($data as $rep)
                <tr>
 					<td><a href="{{route('salesrep.newleads',$rep['id'])}}">{{$rep['name']}}</a></td> 
-					<td class="text-right">{{isset($rep['Claimed']) ? $rep['Claimed']['count'] : 0}}</td>
+					<td class="text-center">{{isset($rep['Claimed']) ? $rep['Claimed']['count'] : 0}}</td>
 					@if(isset($rep['Closed']))
-						<td class="text-right">	{{$rep['Closed']['count']}}</td>
-						<td class="text-right">
+						<td class="text-center">	{{$rep['Closed']['count']}}</td>
+						<td class="text-center">
 							<p data-rating="{{round($rep['Closed']['rating'])}}" class="starrr">
 								{{number_format($rep['Closed']['rating'],2)}}
 							</p>
