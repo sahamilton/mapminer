@@ -12,11 +12,11 @@
 			<?php $verticals[]=$vertical->filter;?>
 			@endif
 		@endforeach
-	<</uL>
-	<ul>
+	</uL>
+	
 		<h4>Sales Process:</h4>
 
-		<?php $processes = array();?>
+		<?php $processes = array();?><ul>
 		@foreach ($activity->salesprocess as $process)
 			@if(! in_array($process->step,$processes))
 			<li> {{$process->step}}</li>
