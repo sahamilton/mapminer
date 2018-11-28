@@ -18,7 +18,7 @@
 		</li>
 		
 		<li class="nav-item">
-			<a class="nav-link"  data-toggle="tab" href="#locations">Locations List ({{$locations->count())}})</a>
+			<a class="nav-link"  data-toggle="tab" href="#locations">Locations List ({{$locations->count()}})</a>
 		</li>
 	
 		
