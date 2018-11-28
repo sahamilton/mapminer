@@ -174,10 +174,10 @@ class SalesActivityController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($activity)
     {
        
-        $activity = $this->activity->with('salesprocess','vertical')->findOrFail($id);
+        $activity = $this->activity->load('salesprocess','vertical');
         $verticals = $this->vertical->industrysegments();
     
         $process = $this->process->pluck('step','id');
@@ -192,11 +192,9 @@ class SalesActivityController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(SalesActivityFormRequest $request, $id)
+    public function update(SalesActivityFormRequest $request, $activity)
     {
         
-        $activity = $this->activity->findOrFail($id);
-
         $data = $this->setDates(request()->all());
 
         $activity->update($data);
@@ -219,9 +217,9 @@ class SalesActivityController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($activity)
     {
-        $this->activity->destroy($id);
+        $activity->delete();
         return redirect()->route('salesactivity.index');
     }
 
