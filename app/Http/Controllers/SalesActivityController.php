@@ -140,7 +140,7 @@ class SalesActivityController extends BaseController
 
                 $location->lat = auth()->user()->person->lat;
                 $location->lng = auth()->user()->person->lng;
-                $locations = $this->locations
+                $locations = $this->location
                     ->wherehas('company.serviceline',function ($q){
                         $q->whereIn('servicelines.id',$this->userServiceLines);
                     });
