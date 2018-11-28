@@ -28,6 +28,7 @@ class SalesActivityController extends BaseController
     public $person;
 
 
+
     public function __construct(Salesactivity $activity, SearchFilter $vertical, SalesProcess $process, Document $document,Location $location, Person $person,Lead $lead){
 
         $this->activity = $activity;
@@ -128,9 +129,11 @@ class SalesActivityController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($activity)
     {
-        $activity = $this->activity->with('salesprocess','vertical')->findOrFail($id);
+        
+        $activity = $activity->load('salesprocess','vertical');
+        
         $verticals = array_unique($activity->vertical->pluck('id')->toArray());
         $statuses = LeadStatus::pluck('status','id')->toArray();
         $person = Person::findOrFail(auth()->user()->person->id);
@@ -140,7 +143,7 @@ class SalesActivityController extends BaseController
 
                 $location->lat = auth()->user()->person->lat;
                 $location->lng = auth()->user()->person->lng;
-                $locations = $this->locations
+                $locations = $this->location
                     ->wherehas('company.serviceline',function ($q){
                         $q->whereIn('servicelines.id',$this->userServiceLines);
                     });

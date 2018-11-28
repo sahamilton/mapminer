@@ -36,6 +36,7 @@ class RouteServiceProvider extends ServiceProvider
         Route::model('lead', \App\lead::class);
         Route::model('mylead', \App\Mylead::class);
         Route::model('myleadsactivity', \App\MyLeadActivity::class);
+        Route::model('salesactivity', \App\Salesactivity::class);
         
         
     }
