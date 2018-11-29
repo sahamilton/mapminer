@@ -1,7 +1,7 @@
-@extends ('admin.layouts.default')
+@extends ('site.layouts.default')
 @section('content')
 <div class="container">
-    <h2>Sales Campaigns</h2>
+    <h2>Sales Campaigns!!</h2>
     <div class="float-right">
         <a href ="{{route('salesactivity.create')}}">
 
