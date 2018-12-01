@@ -22,7 +22,7 @@ class AdminUsersController extends BaseController {
      * User Model
      * @var User
      */
-    protected $user;
+    public $user;
 
     /**
      * Role Model
@@ -34,7 +34,7 @@ class AdminUsersController extends BaseController {
      * Person Model
      * @var Person
      */
-    protected $person;
+    public $person;
 
 
     /**

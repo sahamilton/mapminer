@@ -13,7 +13,7 @@ class AdminRolesController extends BaseController {
      * User Model
      * @var User
      */
-    protected $user;
+    public $user;
 
     /**
      * Role Model

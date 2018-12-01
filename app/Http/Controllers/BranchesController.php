@@ -21,10 +21,10 @@ class BranchesController extends BaseController {
 	 * @return Response
 	 */
 	 
-	protected $branch;
-	protected $serviceline;
-	protected $person;
-	protected $state;
+	public $branch;
+	public $serviceline;
+	public $person;
+	public $state;
 
 	
 	

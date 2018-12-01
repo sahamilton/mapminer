@@ -15,7 +15,7 @@ foreach($session as $key=>$value)
 		$data[$key] = $value;
 	}
 }
-$types = ['location'=>'All accounts','branch'=>'Branches'];
+$types = ['location'=>'All accounts','branch'=>'Branches','people'=>'People','myleads'=>'Leads'];
 // added to filter out Centerline
 if(auth()->user()->can('view_projects') && in_array(5, Session::get('user.servicelines'))){
   $types['projects']='Construction projects';
@@ -29,7 +29,8 @@ $views = array('map'=>'map','list'=>'list');
 $values = Config::get('app.search_radius');
 
 ?>
-<form class="form-inline" action="{{route('findme')}}" method = 'post' name="mapselector">
+<form class="form-inline" action="{{route('findme')}}" 
+method = 'post' name="mapselector">
 @csrf
 
 <label>Show a </label>
@@ -111,5 +112,11 @@ $("select[id^='select']").change(function() {
     this.form.submit();
 }
 });
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push({
+  'event' : 'searchAddress',
+  'address' : '{{$data['address']}}',
+  'searchtype' : '{{$data['type']}}'
 
+});
 </script>

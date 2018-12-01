@@ -21,6 +21,10 @@ $(document).ready(function()
     	$(this).find('#title').html($(e.relatedTarget).data('title'));
 		$(this).find('#action-form').attr('action',$(e.relatedTarget).data('href'));
 	});	
+	$(document).on('show.bs.modal','#add_activity', function(e) {
+    	$(this).find('#title').html($(e.relatedTarget).data('title'));
+		$(this).find('#action-form').attr('action',$(e.relatedTarget).data('href'));
+	});	
 	$(document).on('show.bs.modal','#accept-lead', function(e) {
     	$(this).find('.warning').attr('href', $(e.relatedTarget).data('href'));
 		$(this).find('#title').html($(e.relatedTarget).data('title'));
@@ -40,7 +44,10 @@ $(document).ready(function()
 		$(this).find('input#location_id').val($(e.relatedTarget).data('pk'));
 		
 	});
-
+	$( "#activitydate" ).datepicker( {altField : "#activitydate",
+    altFormat: "yyyy-mm-dd"});
+    $( "#followupdate" ).datepicker( {altField : "#followupdate",
+    altFormat: "yyyy-mm-dd"});
 	$( "#todatepicker" ).datepicker( {altField : "#todate",
     altFormat: "yyyy-mm-dd"});
 	

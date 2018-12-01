@@ -17,9 +17,10 @@ use App\Http\Requests\WebleadFormRequest;
 class WebleadsController  extends ImportController
 {
     public $salesroles = [5,6,7,8];
-    protected $person;
-    protected $branch;
-    protected $lead;
+    public $person;
+    public $branch;
+    public $lead;
+    
     public function __construct(Lead $lead, LeadSource $leadsource, Person $person, Branch $branch){
         $this->lead = $lead;
         $this->leadsources = $leadsource;

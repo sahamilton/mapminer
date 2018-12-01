@@ -29,7 +29,7 @@
 							title="See details of location">
 							{{$note->relatesToLocation->businessname}}
 						</a>
-						@elseif($type=='lead' && $note->relatesToProspect->count()>0)
+						@elseif($type=='lead' && $note->relatesToProspect && $note->relatesToProspect->count()>0)
 							<a href="{{route('projects.show',$note->relatesToProspect->id)}}"
 							title="See details of prospect">
 							{{$note->relatesToProspect->businessname}}

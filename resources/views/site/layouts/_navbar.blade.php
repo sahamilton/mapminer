@@ -33,8 +33,10 @@
           <i class="fab fa-pagelines"></i> Branches</a>
           <a class="dropdown-item" href="{{route('salesorg')}}">
                 <i class="fas fa-sitemap" aria-hidden="true"> </i>
-                  People</a>
-    
+                 People</a>
+          <a class="dropdown-item" href="{{route('myleads.index')}}">
+            <i class="fab fa-envira"></i>My Leads
+          </a>
           @can('view_projects')
               <a class="dropdown-item" href="{{{ route('projects.index') }}}">
               <i class="far fa-flag" aria-hidden="true"> </i> Projects</a>

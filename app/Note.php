@@ -20,20 +20,27 @@ class Note extends Model {
 	public function relatesToLocation() 
 		{
 
-			return $this->belongsTo(Location::class,'related_id');
+			return $this->belongsTo(Location::class,'related_id')->where('type','=','location');
 		}
 	public function relatesToLead() 
 		{
-			return $this->belongsTo(Lead::class,'related_id');
+			return $this->belongsTo(Lead::class,'related_id')->where('type','=','lead');
 		}
+
 	public function relatesToProspect() 
 		{
-			return $this->belongsTo(Lead::class,'related_id');
+			return $this->belongsTo(Lead::class,'related_id')->where('type','=','prospect');
 		}
 	public function relatesToProject() 
 		{
-			return $this->belongsTo(Project::class,'related_id');
+			return $this->belongsTo(Project::class,'related_id')->where('type','=','project');
 
 		}
+	public function relatedContact() 
+		{
+			return $this->belongsTo(LeadContact::class,'contact_id');
+
+		}
+	
 	
 }

@@ -9,7 +9,7 @@
 
 				<i class="far fa-edit text-info""></i>
 
-				Edit
+				Edit**
 			</a>
 		</div>
 		@include('webleads.partials._detail')

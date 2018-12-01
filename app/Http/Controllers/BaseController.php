@@ -16,7 +16,8 @@ class BaseController extends Controller {
 	public $userServiceLines;
 	public $userVerticals;
     public $userRoles;
-
+    public $person;
+    public $user;
     /**
      * Initializer.
      *
@@ -27,7 +28,7 @@ class BaseController extends Controller {
     {
        $this->middleware(function ($request, $next) use($model){
 
-             
+               $this->user = auth()->user();
                $this->userServiceLines = session()->has('user.servicelines') && session()->get( 'user.servicelines' ) ? session()->get( 'user.servicelines' ) : $model->getUserServiceLines();
                $this->userVerticals = session()->has('user.verticals') && session()->get('user.verticals')  ? session()->get('user.verticals') : $model->getUserVerticals();
                $this->userRoles = session()->has('user.roles') && session()->get('user.roles')  ? session()->get('user.roles') : $model->getUserRoles();
@@ -40,7 +41,7 @@ class BaseController extends Controller {
         
 		
     }
-
+   
 	/**
 	 * Setup the layout used by the controller.
 	 *

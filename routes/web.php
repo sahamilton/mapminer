@@ -109,6 +109,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 	#Maps
 		Route::get('api/mylocalbranches/{distance}/{latLng}/{limit?}', ['as' => 'map.mybranches', 'uses' => 'MapsController@findLocalBranches']);
+		Route::get('api/mylocalpeople/{distance}/{latLng}/{limit?}', ['as' => 'map.mypeople', 'uses' => 'MapsController@findLocalPeople']);
 		Route::get('api/myAccountsList/{distance}/{latLng}', ['as' => 'list.myaccounts', 'uses' => 'MapsController@findLocalAccounts']);
 		Route::get('api/mylocalaccounts/{distance}/{latLng}/{companyId?}', ['as' => 'map.mylocations', 'uses' => 'MapsController@findLocalAccounts']);
 		Route::get('api/mybranchList/{distance}/{latLng}', ['as' => 'list.mybranches', 'uses' => 'MapsController@findLocalBranches']);
@@ -116,6 +117,7 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::post('api/note/post',['as'=>'postNewNote','uses'=>'NotesController@store']);
 		Route::get('api/note/get',['as'=>'addNewNote','uses'=>'NotesController@store']);
 		Route::get('api/geo',['as'=>'geo','uses'=>'GeoCodingController@index']);
+		Route::get('api/myleads/{distance}/{latLng}/{limit?}',['as'=>'myleadsmap','uses'=>'MapsController@findMyLeads']);
 
 	#News
 		Route::resource('news', 'NewsController',  ['only' => ['index', 'show']]);
@@ -198,7 +200,11 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('watch/map',['as'=>'watch.map','uses'=>'WatchController@showwatchmap']);
 		Route::get('cowatch/export',['as'=>'company.watchexport', 'uses'=>'WatchController@companywatchexport']);
 	#	New Leads
-		Route::resource('leads','LeadsController')->only(['create','store']);
+		Route::resource('myleads','MyLeadsController');
+		Route::get('myclosedleads',['as'=>'myclosedleads','uses'=>'MyLeadsController@closedleads']);
+		Route::post('mylead/{id}/close',['as'=>'mylead.close','uses'=>'MyLeadsController@close']);
+		Route::resource('myleadsactivity','MyLeadsActivityController');
+		Route::resource('myleadscontact','MyLeadsContactController');
 
 		Route::get('/newleads/{pid}',['as'=>'salesrep.newleads','uses'=>'LeadsController@salesLeads']);
 		Route::get('/newleads/show/{id}/',['as'=>'salesrep.newleads.show','uses'=>'LeadsController@salesLeadsDetail']);
@@ -373,7 +379,7 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
 		Route::post('lead/search',['as'=>'leads.search','uses'=>'LeadsController@search']);
 		Route::get('lead/search',['as'=>'leads.search','uses'=>'LeadsController@searchAddress']);
 		Route::get('lead/branch/{bid?}',['as'=>'leads.branch','uses'=>'LeadsController@branches']);
-		Route::resource('leads','LeadsController')->except(['create','store']);
+		Route::resource('leads','LeadsController');
 
 	# Prospect Source / LeadSource
 

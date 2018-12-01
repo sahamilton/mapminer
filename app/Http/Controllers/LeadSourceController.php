@@ -97,7 +97,7 @@ class LeadSourceController extends Controller
         
 
         $data = $this->reformatRepsData($data);
-   
+
         return response()->view('leadsource.show',compact('data','leadsource'));
     }
 
