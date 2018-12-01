@@ -48,6 +48,7 @@ class GeoCodingController extends BaseController {
 
 	public function findMe(FindMeFormRequest $request) {
 
+		
 		if(request()->filled('address')) {
 			$address = urlencode(request('address'));
 			

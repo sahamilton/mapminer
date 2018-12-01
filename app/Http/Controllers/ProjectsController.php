@@ -37,7 +37,7 @@ class ProjectsController extends BaseController
     public function index()
     {
 
-       session(['geo.type','projects']);
+       session(['geo.type'=>'projects']);
 
        if(session('geo')){
         //Kludge for missing session geo data search
