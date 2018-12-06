@@ -28,7 +28,7 @@ class MyLeadsController extends BaseController
      */
     public function index()
     {
-        session(['geo.type'=>'leads']);
+        session(['geo.type'=>'myleads']);
       
         $leads = $this->lead->myLeads()->get();
        

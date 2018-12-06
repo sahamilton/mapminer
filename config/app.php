@@ -26,7 +26,7 @@ return [
     */
 
     'env' => env('APP_ENV', 'production'),
-    'version' => env('APP_VERSION','2.0'),
+    'version' => env('MAPMINER_VERSION','2.0'),
 
     /*
     |--------------------------------------------------------------------------

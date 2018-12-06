@@ -340,7 +340,13 @@ class Person extends NodeModel implements HasPresenter {
        return $data;
     }
 
-
+    public function myAddress(){
+    	if(! $this->address){
+    		return config('mapminer.default_address');
+    	}else{
+    		return $this->address;
+    	}
+    }
     public function scopePrimaryRole($query){
 
     	return $query->with('userdetails.roles')->first()->userdetails->roles->first()->id;

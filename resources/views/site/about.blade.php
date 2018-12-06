@@ -9,19 +9,21 @@
 <p>Contact Sales Operations for any training or support issues.</p>
 <fieldset><legend>Technical Details</legend>
 <p><strong>Mapminer Version:</strong> <?php echo trim(exec('git tag'));?></p>
+
 @if(auth()->user()->hasRole('Admin'))
-<p><strong>Environment: </strong>
-{{App::environment()}} </p>
-<p><strong>Laravel Version:</strong>  {{App::version()}}</p>
+	<p><strong>Environment: </strong>
+	{{App::environment()}} </p>
+	<p><strong>Laravel Version:</strong>  {{App::version()}}</p>
+	<p><strong>Branch:</strong>
+		<?php echo ucwords(exec('git rev-parse --abbrev-ref HEAD'));?></p>
+	<p><strong>
+		<a href="{{route('versions.index')}}" title="See all versions">Git Version:</a>
+	</strong> {{$version}} </p>
 
-<p><strong>
-	<a href="{{route('versions.index')}}" title="See all versions">Git Version:</a>
-</strong> {{$version}} </p>
-
-<p><strong>PHP Version:</strong> {{ phpversion()}} </p> 
-<p><strong>Server Address:</strong> {{$_SERVER['SERVER_ADDR']}}</p>
-<p><strong>Server Name:</strong> {{gethostname()}}</p>
-<p><strong>Database:</strong> {{env('DB_DATABASE')}}</p>
+	<p><strong>PHP Version:</strong> {{ phpversion()}} </p> 
+	<p><strong>Server Address:</strong> {{$_SERVER['SERVER_ADDR']}}</p>
+	<p><strong>Server Name:</strong> {{gethostname()}}</p>
+	<p><strong>Database:</strong> {{env('DB_DATABASE')}}</p>
 @endif
 </fieldset>
 </div>

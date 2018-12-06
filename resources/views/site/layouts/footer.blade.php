@@ -9,7 +9,11 @@
 			</div>
 			@if(config('app.env')=='local' or config('app.env')=='staging')
 				<div class="float-right" style="color:grey">
-					{{App::environment()}} | {{App::version()}}| {{config('mapminer.app_version')}} | {{ phpversion() }}
+					{{ucwords(App::environment())}} | 
+					v{{App::version()}} |
+					 {{config('mapminer.app_version')}} |
+					{{ ucwords(exec('git rev-parse --abbrev-ref HEAD'))}} |
+					 {{ phpversion() }}
 				</div>
 			@endif
 		</div>

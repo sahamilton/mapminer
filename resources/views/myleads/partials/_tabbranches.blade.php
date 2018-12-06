@@ -14,7 +14,12 @@
                 @foreach ($branches as $branch)
                  
                 <tr> 
-                    <td>{{$branch->branchname}}</td>
+                    <td>
+                        <a href="{{route('branches.show',$branch->id)}}" 
+                        title="Review {{$branch->branchname}} details">
+                            {{$branch->branchname}}
+                        </a>
+                </td>
                     <td>
                         @foreach ($branch->manager as $manager)
                         {{$manager->postName()}}
