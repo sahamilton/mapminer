@@ -29,7 +29,7 @@ class MyLeadsController extends BaseController
     public function index()
     {
         session(['geo.type'=>'myleads']);
-      
+     
         $leads = $this->lead->myLeads()->get();
         $statuses = $statuses = LeadStatus::pluck('status','id')->toArray();
     

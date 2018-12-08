@@ -66,4 +66,4 @@
 
     </tbody>
     </table>
-    @include('partials/_leadsmodal')
+   
