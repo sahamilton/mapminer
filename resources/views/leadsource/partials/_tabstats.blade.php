@@ -20,8 +20,8 @@ foreach($leadsource->leads as $lead){
 		$stats[0] +=1;
 	}
 }
-$statuses[0] = 'Unassigned';?>
-
+$statuses[0] = 'Unassigned';
+?>
 @foreach ($stats as $key=>$value)
 <li>{{$statuses[$key]}} - {{$value}}</li>
 @endforeach

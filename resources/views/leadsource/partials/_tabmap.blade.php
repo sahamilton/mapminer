@@ -2,27 +2,17 @@
 <script src="https://maps.google.com/maps/api/js?key={{config('maps.api_key')}}"></script>
     <script>
      
-      // First, create an object containing LatLng and details for each branch.
+      // First, create an object containing LatLng and details for each lead.
       var leadmap = {
       <?php
       
       foreach($leadsource->leads as $lead){
-        
-           $status = null;
-             if(count($lead->salesteam)>0){
-            
-              foreach ($lead->salesteam as $team){
-                if($team->pivot->status_id > $status && in_array($team->pivot->status_id,[1,2,5,6])){
-                  $status = $team->pivot->status_id;
-                  
-                }
-              }
-             }
 
-              echo "'".$lead->businessname."':{";
+
+              echo "'".str_replace("'","",$lead->companyname)."':{";
               echo "center: {lat: ". $lead->lat .", lng:". $lead->lng."},";
-              echo "name : '" . $lead->businessname."',";
-              echo "contentString: '<a href=\"".route('leads.show',$lead->id)."\">". $lead->businessname ." </a> ',"; 
+              echo "name : '" . str_replace("'","",$lead->businessname)."',";
+              echo "contentString: '<a href=\"".route('leads.show',$lead->id)."\">".str_replace("'","", $lead->businessname) ." </a> ',"; 
               if(isset($status) && in_array($status,[1,2,5,6])){
                 
                 echo "type:  '".$statuses[$status]."'},";

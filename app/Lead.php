@@ -119,7 +119,12 @@ public function rankLead($salesteam){
             ->wherePivotIn('status_id',[2,3]);
             
     }
-    
+    public function closedLead(){
+      return $this->belongsToMany(Person::class,'lead_person_status','related_id','person_id')
+            ->withPivot('status_id','rating','type')
+            ->wherePivot('status_id','=',3);
+            
+    }
     public function leadRank(){
       $teams = $this->salesteam()->get();
     
@@ -167,8 +172,7 @@ public function rankLead($salesteam){
 
     public function scopeExtraFields($query,$table){
             
-
-             return $query->join($table .' as ExtraFields','leads.id','=','ExtraFields.lead_id');
+             return $query->leftjoin($table .' as ExtraFields','leads.id','=','ExtraFields.lead_id');
       }
      
     public function ownsLead($id){

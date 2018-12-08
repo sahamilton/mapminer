@@ -75,7 +75,7 @@ class LeadsController extends BaseController
        $people = null;
    
         $lead = $this->lead
-          //->join($leadsourcetype .' as ExtraFields','leads.id','=','ExtraFields.id')
+         
           ->with('salesteam','contacts','relatedNotes')
           ->ExtraFields($leadsourcetype)
           ->findOrFail($id);
@@ -154,14 +154,18 @@ class LeadsController extends BaseController
     {
     
       $table = $this->leadsource->findOrFail($lead->lead_source_id);
+
       $id= $lead->id;
       $table = $table->type ."leads";
+
       $lead = $this->lead
                   ->with('contacts')
                   ->ExtraFields($table)
                   ->find($id);
       $extrafields = $this->getExtraFields($table);
+     
       $branches = $this->findNearByBranches($lead);
+     
       $people = $this->findNearbySales($branches,$lead);
       $salesrepmarkers = $this->person->jsonify($people);
       $branchmarkers=$branches->toJson();
@@ -648,7 +652,7 @@ class LeadsController extends BaseController
 
     private function findNearBySales($branches,$lead){
         $branch_ids = $branches->pluck('id')->toArray(); 
-        $data['distance']=\Config::get('leads.search_radius');
+        $data['distance']=config('leads.search_radius');
 
         $salesroles = $this->salesroles;
  

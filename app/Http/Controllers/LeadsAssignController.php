@@ -25,15 +25,22 @@ class LeadsAssignController extends Controller
 
 	}
 
+    public function assignLeads($sid){
+      $leadsource = $this->leadsource->findOrFail($sid);
+      $leadroles = $this->setLeadAcceptRoles();
 
-     public function geoAssignLeads($sid){
+      return response()->view('leads.bulkassign',compact('leadroles','leadsource'));
 
-        $leadsource = $this->leadsource->findOrFail($sid);
-        //$leadroles = $this->leadroles;
+    }
+     public function geoAssignLeads(Request $request){
+       
+        $leadsource = $this->leadsource->findOrFail(request('sid'));
+        $this->leadroles = $this->setLeadAcceptRoles(request());
+       
         $data['verticals'] = $leadsource->verticals()->pluck('searchfilters.id')->toArray();
 
         $leads = $this->lead->whereDoesntHave('salesteam')
-          ->where('lead_source_id','=',$sid)
+          ->where('lead_source_id','=',$leadsource->id)
           ->whereHas('leadsource', function ($q){
             $q->where('datefrom','<=',date('Y-m-d'))
             ->where('dateto','>=',date('Y-m-d'));
@@ -41,26 +48,26 @@ class LeadsAssignController extends Controller
 
         ->get();
 
+     
         $count = null;
         foreach ($leads as $lead) {
-          $data['lat']=$lead->lat;
-          $data['lng']=$lead->lng;
-
-          $people = $this->person->nearby($lead,$this->distance)
+          
+          $people = $this->person
           ->with('userdetails')
           ->whereHas('userdetails.roles',function($q) {
             $q->whereIn('name',$this->leadroles);
 
-          })
+          })->nearby($lead,$this->distance)
           ->limit($this->limit)
           ->get();
-                foreach ($people as $person){
-                	$count++;
-                    $lead->salesteam()->attach($person->id,['status_id'=>1]);
-                }
+          foreach ($people as $person){
+          	$count++;
+              $lead->salesteam()->attach($person->id,['status_id'=>1]);
+          }
         }
-        return redirect()->route('leadsource.show',$sid)->with('status',$count . ' leads assigned');
+        return redirect()->route('leadsource.show',$leadsource->id)->with('status',$count . ' leads assigned');
     }
+
 
     public function assignLead(Request $request){
 
@@ -82,4 +89,15 @@ class LeadsAssignController extends Controller
 
 
     }
+
+    private function setLeadAcceptRoles(Request $request=null){
+        if ($request && request()->has('roles')){
+          return request('roles');
+        }else{
+          return $this->setleadRoles();
+        }
+
+
+    }
+
 }

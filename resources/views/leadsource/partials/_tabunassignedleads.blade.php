@@ -28,7 +28,7 @@
         </tbody>
     </table>
     
-    @if(count($leadsource->unassigned)>0)
+   
     <p><a href="{{route('leads.geoassign',$leadsource->id)}}"><button class="btn btn-info"  > Assign Prospects Geographically</button></a></p>
-    @endif
+
 

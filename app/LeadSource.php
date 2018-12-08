@@ -38,7 +38,7 @@ class LeadSource extends Model
 
      public function assignedTo($id= null){
         $leads = $this->with('leads')->findOrFail($id);
-        dd($leads);
+
         $salesreps = array();
         foreach ($leads as $lead){
             $reps = $lead->salesteam->pluck('id')->toArray();
@@ -47,25 +47,29 @@ class LeadSource extends Model
         return $salesreps;
      }
 
-     public function unassignedLeads($id){
-          return $this->select('leads.*') 
+     public function unassignedLeads(){
+          /*return $this->select('leads.*') 
           ->join('leads','leadsources.id','=','leads.lead_source_id')
           ->leftjoin('lead_person_status','leads.id','=','lead_person_status.related_id')
           ->whereRaw('lead_person_status.related_id is null')
-          ->where('leads.lead_source_id','=',$id);
+          ->where('leads.lead_source_id','=',$id);*/
 
 
 
             return $this->hasMany(Lead::class, 'lead_source_id')->doesntHave('salesteam');
 
      }
-      public function assignedLeads(){
+     public function closedLeads(){
+       return $this->hasMany(Lead::class, 'lead_source_id')->has('closedLead');
+     }
+    
+    public function assignedLeads(){
             return $this->hasMany(Lead::class, 'lead_source_id')->has('salesteam');
 
      }
 
      public function leadStatusSummary(){
-      
+     
      return $this->select(array('leadsources.*', 
                   \DB::raw('COUNT(leads.id) as allleads,
                     COUNT(b.related_id) as ownedleads,
@@ -94,7 +98,7 @@ class LeadSource extends Model
               and leads.lead_source_id = ".$id." 
               group by persons.id,status";
 
-return \DB::select($query);
+      return \DB::select($query);
 
     }
 

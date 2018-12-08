@@ -161,7 +161,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 
 	# Sales leads
-		/*Route::get('prospect/{id}/accept',['as'=>'saleslead.accept','uses'=>'SalesLeadsController@accept']);
+		Route::get('prospect/{id}/accept',['as'=>'saleslead.accept','uses'=>'SalesLeadsController@accept']);
 		Route::get('prospect/{id}/decline',['as'=>'saleslead.decline','uses'=>'SalesLeadsController@decline']);
 		Route::get('prospects/{pid}/showrep',['as'=>'salesleads.showrep','uses'=>'SalesLeadsController@showrep']);
 		Route::get('prospects/download',['as'=>'salesleads.download','uses'=>'SalesLeadsController@download']);
@@ -169,7 +169,7 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('leadrank',['as'=>'api.leadrank','uses'=>'SalesLeadsController@rank']);
 		Route::post('prospect/{id}/close',['as'=>'saleslead.close','uses'=>'SalesLeadsController@close']);
 		Route::get('prospect/{pid}/leads',['as'=>'saleslead.mapleads','uses'=>'SalesLeadsController@mapleads']);
-		Route::resource('salesleads','SalesLeadsController');*/
+		Route::resource('salesleads','SalesLeadsController');
 
 	# Sales Notes
 		Route::get('salesnotes/{companyId}',['as'=>'salesnotes','uses'=>'SalesNotesController@show']);
@@ -334,9 +334,9 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
 		Route::get('leads/import/assigned/{id?}',['as'=>'assigned_prospects.importfile','uses'=>'LeadAssignedImportController@getFile']);
 
 		Route::post('leads/import',['as'=>'leads.import','uses'=>'LeadImportController@import']);
-	/*	
-		Route::get('leads/assign/{sid}/source',['as'=>'leads.geoassign','uses'=>'LeadsAssignController@geoAssignLeads']);
-		Route::get('leads/{id}/assign',['as'=>'leads.leadassign','uses'=>'LeadsController@assignLeads']);*/
+		Route::get('leadsassign/{sid}/source',['as'=>'leads.geoassign','uses'=>'LeadsAssignController@assignLeads']);
+		Route::post('leadsassign/{sid}/source',['as'=>'leads.geoassign','uses'=>'LeadsAssignController@geoAssignLeads']);
+	/*	Route::get('leads/{id}/assign',['as'=>'leads.leadassign','uses'=>'LeadsController@assignLeads']);*/
 		//Route::post('leads/batchassign',['as'=>'leads.assignbatch','uses'=>'LeadsAssignController@assignLead']);
 		//Route::post('leads/assign',['as'=>'leads.assign','uses'=>'LeadsController@postAssignLeads']);
 		

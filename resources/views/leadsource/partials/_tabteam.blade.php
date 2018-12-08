@@ -4,14 +4,14 @@
 
 <p>Prospects have been offered to the following sales reps;</p>
 
-<table id ='sorttable1' class='table table-striped table-bordered table-condensed table-hover'>
+<table id ='sorttable1' class='table table-striped table-bordered table-hover'>
     <thead>
 
 
         <th>Sales Rep</th>
         <td>Manager</td>
         <td>Location</td>
-        <td>Industry Focus</td>
+       
         <td>Prospects</td>
 
 
@@ -21,30 +21,16 @@
         @foreach($salesteams as $team)
 
         <tr>  
-            <td><a href="{{route('leads.personsource',[$team['details']->id,$leadsource->id])}}">{{$team['details']->fullName()}}</a></td>
+            <td><a href="{{route('leads.personsource',[$team->id,$leadsource->id])}}">{{$team->postName()}}</a></td>
             <td>
-                @if(count($team['details']->reportsTo)>0)
-                    {{$team['details']->reportsTo->fullName()}}
-                @endif
+               
+                    {{$team->reportsTo ? $team->reportsTo->postName() : ''}}
+              
             </td>
-            <td>{{$team['details']->city}} {{$team['details']->state}}</td>
+            <td>{{$team->city}} {{$team->state}}</td>
+            
             <td>
-                <ul>
-                @foreach ($team['details']->industryfocus as $vertical)
-                   
-                    <li>{{$vertical->filter}}</li>
-       
-                @endforeach
-                </ul>
-            </td>
-            <td>
-                <ul>
-                @foreach ($team['status'] as $key=>$value)
-                    @if($value > 0)
-                    <li>{{$statuses[$key]}} - {{$value}}</li>
-                    @endif
-                @endforeach
-                </ul>
+                {{$team->leads->count()}}
             </td>
         </tr>
         @endforeach

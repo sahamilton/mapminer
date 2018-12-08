@@ -15,7 +15,6 @@ class LeadImport extends Imports
             'lat',
             'lng'];
 
-	public function __construct(){
-
-	}
+	public $temptable = 'leadimport';
+      public $dontCreateTemp = true;
 }

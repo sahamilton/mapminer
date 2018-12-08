@@ -44,7 +44,8 @@ class LeadSourceController extends Controller
     public function index()
     {   
    
-        $leadsources = $this->leadsource->leadStatusSummary()->get();
+        $leadsources = $this->leadsource->with('leads','assignedLeads','unassignedLeads','closedLeads')->get();
+       
         return response()->view('leadsource.index', compact('leadsources'));
     }
 
@@ -88,14 +89,23 @@ class LeadSourceController extends Controller
     {
 
      
-        $leadsource = $this->leadsource->findOrFail($id);
-        $data = $this->leadsource->leadRepStatusSummary($id);
-        
+        $leadsource = $this->leadsource->with('leads','assignedLeads','unassignedLeads','closedLeads')->findOrFail($id);
 
-        $data = $this->reformatRepsData($data);
-   
-        return response()->view('leadsource.show',compact('data','leadsource'));
+       
+        $salesteams = $this->person
+            ->whereHas('leads',function ($q) use ($id){
+                $q->where('lead_source_id','=',$id);
+            })
+            ->with('leads','reportsTo','industryfocus')->get();
+
+        $statuses = LeadStatus::pluck('status','id')->toArray();
+        return response()->view('leadsource.show',compact('salesteams','leadsource','leads','statuses'));
     }
+
+    private function getOwnedBy($leads){
+
+    }
+
 
     private function reformatRepsData($data){
         $newdata = array();
@@ -129,11 +139,9 @@ class LeadSourceController extends Controller
     }
     
     public function unassigned($id){
-        $leadsource = $this->leadsource->findOrFail($id);
-
-        $leads = $this->leadsource->unassignedLeads($id)->get();
+        $leadsource = $this->leadsource->with('unassignedLeads')->findOrFail($id);
      
-        return response()->view('leads.unassigned',compact('leads','leadsource'));
+        return response()->view('leads.unassigned',compact('leadsource'));
     }
 
     private function getLeads($id){
