@@ -20,9 +20,9 @@ trait Geocode
                 $data['lng'] = $geoCode->first()->getCoordinates()->getLongitude();
                 $data['geostatus']=TRUE;
                 $data['address'] =  $geoCode->first()->getStreetNumber()." " . $geoCode->first()->getStreetName();
-                
                 $data['city'] =  $geoCode->first()->getLocality();
                 $data['zip'] = $geoCode->first()->getPostalCode();
+
                 if(count($geoCode->first()->getadminLevels())>0){
                     //dd('it does');
                     $data['state'] = $geoCode->first()
@@ -34,7 +34,7 @@ trait Geocode
                    //dd('it doesnt');
                 }
 
-              
+               $data['fulladdress'] = $data['address'] .' ' . $data['city']. ' ' . $data['state'] .' ' . $data['zip'];
               
 
             }else{
@@ -54,7 +54,7 @@ trait Geocode
     $geocode = Geolocation::fromDegrees($location->lat,$location->lng);
     
     $bounding = $geocode->boundingCoordinates($radius,'mi');
-
+   
     $sub = $this->selectSub('id','lat','lng')
                 ->whereBetween('lat',[$bounding['min']->degLat,$bounding['max']->degLat])
                 ->whereBetween('lng',[$bounding['min']->degLon,$bounding['max']->degLon]);
@@ -63,14 +63,13 @@ trait Geocode
         ->select()//pick the columns you want here.
         ->selectRaw("{$this->haversine($location)} AS distance")
         ->mergeBindings($sub->getQuery())
-        ->join('addresses', 'id', '=', 'addresses.addressable_id')
-        ->whereRaw("{$this->haversine($location)} < $radius")
+        ->whereRaw("{$this->haversine($location)} < $radius ")
         ->orderBy('distance','ASC')
         ->inRandomOrder();
         if($limit){
             $query = $query->limit($limit);
         }
-
+       
         return $query;
     }
    
@@ -80,8 +79,6 @@ trait Geocode
 
     public function locationsNearbyBranches(Company $company,$radius=25,$limit=null){
         //add pagination
-        //
-        ///// need to update for new address trait
         $query ="select 
                 locs.id,
                 locs.businessname,
@@ -159,18 +156,18 @@ trait Geocode
             and people.id = peepsfilter.peepid
             and branch.id = branchfilter.branchid
             order by locs.id";
+
           return \DB::select($query);
 
     }
 
     private function haversine($location){
-
         return "(3956 * acos(cos(radians($location->lat)) 
-                     * cos(radians(addresses.lat)) 
-                     * cos(radians(addresses.lng) 
+                     * cos(radians($this->table.lat)) 
+                     * cos(radians($this->table.lng) 
                      - radians($location->lng)) 
                      + sin(radians($location->lat)) 
-                     * sin(radians(addresses.lat))))";
+                     * sin(radians($this->table.lat))))";
     }
     
     /*
@@ -191,5 +188,44 @@ trait Geocode
         } else {
             return $miles;
         }
+    }
+
+    public function getMyPosition(){
+        $location = new Location;
+            //$limited=$this->limit;
+            //we need to test to see if geo is filled
+        if ($geo = session()->get('geo') && isset($geo['lat']))
+            {
+            
+                $location->lat = $geo['lat'];
+                $location->lng = $geo['lng'];
+
+            }elseif($position = auth()->user()->position()){
+                
+                $position = explode(",",auth()->user()->position());
+                $location->lat =  $position[0];
+                $location->lng =  $position[1];
+
+            }else{
+                //default to Tacoma
+                $location->lat =  '47.25';
+                $location->lng =  '-122.44';
+            }
+        return $location;
+    }
+
+    public function distanceFromMe($collection){
+        
+        $myPosition = $this->getMyPosition();
+        return $collection->map(function ($item) use($myPosition){
+           $item->distance = $this->distanceBetween($myPosition->lat,$myPosition->lng,$item->lat,$item->lng);
+           return $item;
+        });
+    }
+
+    public function geoCodeAddress(string $address){
+
+        $geoCode = app('geocoder')->geocode($address)->get();
+        return $this->getGeoCode($geoCode);
     }
 }
