@@ -4,7 +4,7 @@
 @section('content')
 	<div class="container">
 <h2>Update Your Profile</h2>
-	<form name="profile" method="post" action="{{route('update.profile',auth()->user()->id)}}">
+	<form name="profile" method="post" action="{{route('user.update',auth()->user()->id)}}">
 {{csrf_field()}}
 		
 			<!-- firstname -->
@@ -39,7 +39,7 @@
 
 						<input class="form-control" type="text" 
 						placeholder="Full address with city & state"
-						name="address" id="address" value="{!!Input::old('address', isset($user) ? $user->person->address : null) !!}" 
+						name="address" id="address" value="{!!Input::old('address', isset($user) ? $user->person->fullAddress() : null) !!}" 
 						/>
 						{!! $errors->first('address', '<span class="help-inline">:message</span>') !!}
 					</div>

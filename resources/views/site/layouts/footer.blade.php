@@ -5,7 +5,7 @@
 				&copy;2014 - <?php echo date("Y");?>  
 				<a href="//www.elaconsultinggroup.com"
 				title="Visit the ELA Consulting Group website" 
-				target="_blank"> ELA Consulting Group, LLC </a>/ TrueBlue, Inc. & me
+				target="_blank"> ELA Consulting Group, LLC </a>/ TrueBlue, Inc.
 			</div>
 			@if(config('app.env')=='local' or config('app.env')=='staging')
 				<div class="float-right" style="color:grey">

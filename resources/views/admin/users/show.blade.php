@@ -25,7 +25,7 @@
            
             <th class="col-md-2">First Name</th>
             <th class="col-md-2">Last Name</th>
-            <th class="col-md-2">User Name</th>
+       
             <th class="col-md-2">EMail</th>
             <th class="col-md-2">Last Activity</th>
 			</tr>
@@ -38,7 +38,6 @@
         
         <td class="col-md-2"><a href="{{route('users.show',$user->id)}}">{{ $user->firstname }}</a></td>
         <td class="col-md-2"><a href="{{route('users.show',$user->id)}}">{{ $user->lastname }}</a></td>
-        <td class="col-md-2"><a href="{{route('users.show',$user->id)}}">{{ $user->username }}</a></td>
         <td class="col-md-2">{{ $user->email }}</td>
         
         <td class="col-md-2">
@@ -53,4 +52,4 @@
 	</table>
     
 @include('partials/_scripts')
-@stop
+@endsection

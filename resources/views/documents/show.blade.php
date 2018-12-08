@@ -12,7 +12,7 @@
 <p><strong>Type:</strong>{{$document->doctype}}</strong></p>
 <p><strong>Location:</strong> <a href="{{$document->location}}" target="_blank" >{{$document->location}}</a></p>
 
-@if(isset($document->rank) && count($document->rank) > 0 && count($document->score) > 0 && count($document->rankings) >0 )
+@if(isset($document->rank) && $document->rank->count() > 0 && $document->score->count() > 0 && $document->rankings->count() >0 )
    <?php $rank = round($document->rank[0]->rank,2)?>
 
 

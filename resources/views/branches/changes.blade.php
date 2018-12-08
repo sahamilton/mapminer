@@ -4,7 +4,7 @@
 @section('title')
 Review Branch Changes
 @parent
-@stop
+@endsection
 
 {{-- Page content --}}
 @section('content')
@@ -12,18 +12,18 @@ Review Branch Changes
 	
 
 <ul class="nav nav-tabs">
-  <li class="active"><a data-toggle="tab" href="#branch"><strong>Branch Additions</strong></a></li>
-  <li><a data-toggle="tab" href="#deletes"><strong>Branch Deletions</strong></a></li>
-  <li><a data-toggle="tab" href="#changes"><strong>Branch Changes</strong></a></li>
 
+  <li class="nav-item active"><a class="nav-link" data-toggle="tab" href="#branch"><strong>Branch Additions</strong></a></li>
+  <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#deletes"><strong>Branch Deletions</strong></a></li>
+  <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#changes"><strong>Branch Changes</strong></a></li>
 
 </ul>
 
-
+{{dd('here',$data)}}
 <form method="post" name="changebranches" action ="{{route('branches.change')}}" >
-{{csrf_field()}}
+@csrf
 <div class="tab-content">
-    <div id="branch" class="tab-pane fade in active">
+    <div id="branch" class="tab-pane fade show active">
       @include('branches/partials/_adds')
     </div>
 	<div id="deletes" class="tab-pane fade in">
@@ -34,7 +34,7 @@ Review Branch Changes
     </div>
 	
 </div>	
-<input type="hidden" name="serviceline" value="{{$data['serviceline']}}" />
+<input type="hidden" name="serviceline" value="{{$data['additionaldata]['servicelines']}}" />
 <input type="submit" class="btn btn-success" value="Update Branches" />
 </form>
 </div>
@@ -65,4 +65,4 @@ Review Branch Changes
    });          
 });
 </script>
-@stop
+@endsection

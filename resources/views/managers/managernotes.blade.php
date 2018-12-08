@@ -3,7 +3,12 @@
 <h2>{{$data['title']}}</h2>
 <p><a href="{{route('managers.view')}}">Back to account manager views</a></p>
 <p>
-<a href="{{route('exportlocationnotes',$companyID)}}" title="Download {{$data['title']}} as a CSV / Excel file"><i class="fa fa-cloud-download" aria-hidden="true"></i></i> Download {{$data['title']}}</a>
+
+<a href="{{route('exportlocationnotes',$companyID)}}" 
+title="Download {{$data['title']}} as a CSV / Excel file">
+    <i class="fas fa-cloud-download-alt" aria-hidden="true"></i> Download {{$data['title']}}
+</a>
+
 </p>
 
  <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
@@ -48,4 +53,4 @@
 @include('partials._scripts')
 
 
-@stop
+@endsection

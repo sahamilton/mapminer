@@ -72,25 +72,10 @@ class PersonsController extends BaseController {
 
 		$filtered = $this->persons->isFiltered(['companies'],['vertical']);
 
-		if ($latLng = session()->get('geo'))
-			// user has set their location
-		{
-			
-			$mylocation['lat']= $latLng['lat'];
-			$mylocation['lng']= $latLng['lng'];
-		}elseif(auth()->user()->position()){
-			// user has a default location
-			$position = explode(",",auth()->user()->position());
-			$mylocation['lat'] =  $position[0];
-			$mylocation['lng'] =  $position[1];
-		}else{
-			// default to center of the US
-			$mylocation['lat']= 39.8282;
-			$mylocation['lng']= -98.5696;
+		$mylocation = $this->persons->getMyPosition();
 
-		}
 		$colors = $this->getColors($filtered);
-
+	
 		return response()->view('persons.map',compact('filtered','keys','mylocation','colors'));
 
 	}
@@ -142,9 +127,8 @@ class PersonsController extends BaseController {
 					    $q->whereIn('search_filter_id',$keys)
 					    	->orWhereNull('search_filter_id');
 
-					})
-					->with('userdetails','reportsTo','industryfocus','userdetails.roles')
-					->get();
+					});
+					
 
 			}else{
 
@@ -157,9 +141,8 @@ class PersonsController extends BaseController {
 				->whereHas('userdetails.roles', function($q) {
 					    $q->whereIn('role_id',$this->validroles);
 
-					})
-				->with('userdetails','industryfocus','userdetails.roles')
-				->get();
+					});
+				
 				}
 
 		}else{
@@ -170,12 +153,11 @@ class PersonsController extends BaseController {
 					->whereHas('userdetails.roles', function($q) {
 					    $q->whereIn('role_id',$this->validroles);
 
-					})
-					->with('industryfocus','industryfocus','userdetails.roles')
-					->get();
+					});
 		}
 
-		return $persons;
+		return $persons->with('userdetails','reportsTo','userdetails.serviceline','industryfocus','userdetails.roles')
+					->get();
 
 
 	}
@@ -306,8 +288,7 @@ class PersonsController extends BaseController {
 	 */
 	public function processimport(PersonUploadFormRequest $request) {
 
-
-		$file = $request->file('upload')->store('public/uploads');
+		$file = request()->file('upload')->store('public/uploads');
 		$data['people'] = asset(Storage::url($file));
         $data['basepath'] = base_path()."/public".Storage::url($file);
         // read first line headers of import file
@@ -318,7 +299,7 @@ class PersonsController extends BaseController {
     	if( $this->persons->fillable !== array_keys($people->toArray())){
 
     		return redirect()->back()
-    		->withInput($request->all())
+    		->withInput(request()->all())
     		->withErrors(['upload'=>['Invalid file format.  Check the fields:', array_diff($this->persons->fillable,array_keys($people->toArray())), array_diff(array_keys($people->toArray()),$this->persons->fillable)]]);
     	}
 

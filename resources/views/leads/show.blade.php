@@ -6,14 +6,16 @@
 	<div class="panel panel-default">
 		<div class="panel-heading clearfix">
 			<h2 class="panel-title pull-left">{{$lead->companyname}} - {{$lead->rating}}</h2>
-			<a class="btn btn-primary pull-right" href="{{route('leads.edit',$lead->id)}}">
-				<i class="fa fa-pencil"></i>
+			<a class="btn btn-primary float-right" href="{{route('leads.edit',$lead->id)}}">
+
+				<i class="far fa-edit text-info""></i>
+
 				Edit
 			</a>
 		</div>
 		@include('leads.partials._detail')
 
-		@if(count($lead->salesteam)>0)
+		@if($lead->salesteam->count()>0)
 
 		<div class="list-group">
 			<div class="list-group-item">
@@ -23,7 +25,7 @@
 						<li><strong>Lead Assigned on:</strong>{{$lead->salesteam->first()->pivot->created_at->format('j M, Y')}}</li>
 						@if(isset($lead->branches->branchname))
 						<li><strong>Branch Assignment:</strong>{{$lead->branches->branchname}}</li>
-						<p class="pull-right text-danger">
+						<p class="float-right text-danger">
 							<a data-href="{{route('webleads.unassign',$lead->id)}}" 
 			                    data-toggle="modal" 
 			                    data-target="#unassign-weblead"
@@ -31,27 +33,27 @@
 			                    href="#">
 
 							<i class="far fa-unlink"></i> Un-assign lead</a></p>
-						@endif
+						
 				</ul>
 			</div>
 		</div>
 		@endif
 	</div>
-@if(count($lead->salesteam)==0)
+@if($lead->salesteam->count()==0)
 		@include('leads.partials._branchlist')	
 			
 		
 @endif
 </div>		
-<div class="col-sm-7 pull-right">
+<div class="col-sm-7 float-right">
 	@include('webleads.partials._search')
 <div id="map"  style="border:solid 1px red"></div>
-@if(count($lead->salesteam)==0)
+@if($lead->salesteam->count()==0)
 @include('leads.partials.select')
 @endif
 </div>
 
-@if(count($lead->salesteam)==0)
+@if($lead->salesteam->count()==0)
 		<div class="row">
 		<div class="col-sm-12">
 		@include('leads.partials._repslist')
@@ -64,5 +66,5 @@
 @include('webleads.partials.map')
 
 @include('partials/_scripts')
-@stop
+@endsection
 

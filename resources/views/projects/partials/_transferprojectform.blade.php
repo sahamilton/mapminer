@@ -5,8 +5,9 @@
     <!-- Modal content-->
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        
         <h4 class="modal-title">Transfer {!!$project->project_title!!} Project  </h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
       <div class="modal-body">
         <p>Please complete this form to transfer project</p>
@@ -16,7 +17,15 @@
         <div class="form-group{{ $errors->has('comments') ? ' has-error' : '' }}">
           <label class="col-md-4 control-label">Project Recipient</label>
            <div class="input-group input-group-lg ">
-            <input  type="text" required id="search" name="username" placeholder="Type to search users" autocomplete="off" ><i class="fa fa-search"></i>
+
+            <input  type="text" 
+            required 
+            id="search" 
+            name="email" 
+            placeholder="Type name to search users" 
+            autocomplete="off" >
+            <i class="fas fa-search"></i>
+
            
 
            </div>
@@ -33,7 +42,7 @@
         
                 </div>
             </div>
-            <div class="pull-right">
+            <div class="float-right">
            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button> <input type="submit" value="Transfer Project" class="btn btn-danger" />
             </div>
             <input type="hidden" name="project_id" value="{{$project->id}}" />
@@ -68,7 +77,7 @@
                 name: 'users',
                 source: bloodhound,
                 display: function(data) {
-                    return data.username  //Input value to be set when you select a suggestion. 
+                    return data.email  //Input value to be set when you select a suggestion. 
                 },
                 templates: {
                     empty: [

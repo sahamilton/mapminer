@@ -5,13 +5,15 @@
 
   <!---- Tab message -->
   <ul class="nav nav-tabs">
-    <li class="active"><a data-toggle="tab" href="#home">Message</a></li>
+
+    <li class="nav-item active"><a class="nav-link" data-toggle="tab" href="#home">Message</a></li>
+
     
 
   </ul>
 
   <div class="tab-content">
-    <div id="home" class="tab-pane fade in active">
+    <div id="home" class="tab-pane fade show active">
       @include('emails.partials._tabmessage')
     </div>
     

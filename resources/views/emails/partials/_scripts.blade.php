@@ -13,7 +13,7 @@ $('.summernote').summernote({
     //[groupname, [button list]]
      
     ['style', ['bold', 'italic', 'underline', 'clear']],
-	['fontsize', ['fontsize']],
+	   ['fontsize', ['fontsize']],
     ['color', ['color']],
     ['para', ['ul', 'ol', 'paragraph']],
     ['misc',['codeview']],

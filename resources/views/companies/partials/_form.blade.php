@@ -17,9 +17,16 @@
         <label class="col-md-2 control-label">National Account Manager:</label>
            <div class="input-group input-group-lg ">
             <select  required class="form-control" name='person_id'>
+                <option value=null>None Assigned</option>
             @foreach ($managers as $manager)
-                <option @if(isset($company) && $company->person_id == $manager->id) selected @endif
-                value="{{$manager->id}}">{{$manager->fullName()}}</option>
+                <option @if(isset($company) && $company->person_id == $manager->id)
+                    selected 
+@endif
+                value="{{$manager->id}}">{{$manager->fullName()}}
+              
+
+                
+            </option>
             @endforeach
             </select>
             <span class="help-block">
@@ -32,7 +39,7 @@
 
 
 <!-- Serviceline -->
-@if(count($servicelines)>1)
+@if($servicelines->count()>1)
         <div class="form-group{{ $errors->has('serviceline)') ? ' has-error' : '' }}">
         <label class="col-md-2 control-label">Service Lines:</label>
         <div class="input-group input-group-lg ">

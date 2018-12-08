@@ -7,12 +7,17 @@ use\App\Presenters\LocationPresenter;
 use McCool\LaravelAutoPresenter\HasPresenter;
 use Geocoder\Laravel\Facades\Geocoder;
 use Illuminate\Database\Eloquent\SoftDeletes;
+
 class Lead extends Model implements HasPresenter {
   use SoftDeletes, Geocode, Addressable;
 	public $dates = ['created_at','updated_at','deleted_at','datefrom','dateto'];
   public $table= 'leads';
-
+  public $assignTo;
   public $type='temp';
+
+  public function __construct(){
+    $this->assignTo = config('leads.lead_distribution_roles');
+  }
 
   public $requiredfields = ['companyname',
             'businessname',
@@ -37,6 +42,7 @@ class Lead extends Model implements HasPresenter {
 						'lead_source_id',
             'branch_id',];
     public $statuses = [1=>'Offered',2=>'Claimed',3=>'Closed'];
+    
     public $getStatusOptions =  [
         1=>'Prospect data is completely inaccurate. No project or project completed.',
         2=>'Prospect data is incomplete and / or not useful.',
@@ -44,6 +50,7 @@ class Lead extends Model implements HasPresenter {
         4=>'Prospect data is accurate and there is a possibility of sales / service.',
         5=>'Prospect data is accurate and there is a definite opportunity for sales / service'
       ];
+    
     public function leadsource(){
     	return $this->belongsTo(LeadSource::class, 'lead_source_id');
 
@@ -58,9 +65,11 @@ class Lead extends Model implements HasPresenter {
     	return $this->belongsToMany(Person::class, 'lead_person_status','related_id','person_id')
                   ->withPivot('created_at','updated_at','status_id','rating');
     }
-     public function branches(){
+    
+    public function branches(){
       return $this->belongsTo(Branch::class,'branch_id','id');
     }
+    
     public function relatedNotes($type=null) {
       if(! $type){
         $type="lead";
@@ -91,10 +100,19 @@ class Lead extends Model implements HasPresenter {
 
     }
 
-    public function fullAddress(){
-    	return $this->address . ",<br />" . $this->city. " " . $this->state . " " . $this->zip;
-    	
+  public function createLeadFromGeo($geoCode){
+          $coords = $this->getGeoCode($geoCode);
+          $this->lat = $coords['lat'];
+          $this->lng = $coords['lng'];
+          if(isset($coords['address'])){
+            $this->address = $coords['address'];
+          }
+          $this->city = $coords['city'];
+          $this->state = $coords['state'];
+          $this->zip = $coords['zip'];
+          return $this;
     }
+
 public function rankLead($salesteam){
       $ranking = null;
     
@@ -113,6 +131,8 @@ public function rankLead($salesteam){
     }  
     return $ranking;
     }
+
+
     public function ownedBy(){
       return $this->belongsToMany(Person::class,'lead_person_status','related_id','person_id')
             ->withPivot('status_id','rating','type')
@@ -197,9 +217,10 @@ public function rankLead($salesteam){
      return null;
     }
 
-    public function myLeads($verticals=null){
-
-      $statuses = [1,2];
+  public function myLeads(array $statuses=null){
+    if(! $statuses){
+          $statuses = [1,2];
+      }
       return $this->whereHas('salesteam',function ($q) use ($statuses){
           $q->where('person_id','=',auth()->user()->person->id)
           ->whereIn('status_id',$statuses);
@@ -208,15 +229,15 @@ public function rankLead($salesteam){
         ->whereHas('leadsource', function ($q) {
             $q->where('datefrom','<=',date('Y-m-d'))
               ->where('dateto','>=',date('Y-m-d'));
-        })
-        ->whereHas('vertical',function($q) use($verticals){
-          if(isset($verticals)){
-            $q->whereIn('id',$verticals);
-          }
-        });
+        })->with('salesteam');
 
 
     }
+    /*  public function myLeads(){
+      return $this->belongsToMany(Person::class,'lead_person_status','related_id','person_id')
+            ->withPivot('status_id','rating','type')
+            ->wherePivotIn('status_id',[2,3]);
+    }*/
     public function myLeadStatus(){
       
       return $this->salesteam()->wherePivot('person_id','=',auth()->user()->person->id)->first(['status_id','rating']);
@@ -285,5 +306,51 @@ public function rankLead($salesteam){
       return $this->belongsToMany(Person::class, 'lead_person_status','related_id','person_id')
         ->withPivot('created_at','updated_at','status_id','rating')
         ->wherePivot('status_id',3);
+    }
+
+    public function findNearByPeople($data){
+      $this->userServiceLines = session()->has('user.servicelines') 
+      && session()->get( 'user.servicelines' ) ? session()->get( 'user.servicelines' ) : $this->getUserServiceLines();
+      if(is_array($data)){
+              $location = new \stdClass;
+              $location->lat = $data['lat'];
+              $location->lng = $data['lng'];
+        }else{
+          $location = $data;
+          $data['distance']=100;
+          $data['number']=5;
+        }
+
+        
+        return Person::whereHas('userdetails.serviceline', function ($q) {
+              $q->whereIn('servicelines.id',$this->userServiceLines);
+          })
+          ->whereHas('userdetails.roles', function ($q) {
+              $q->whereIn('name',$this->assignTo);
+          })
+          ->with('userdetails','reportsTo','userdetails.roles','industryfocus')
+          ->nearby($location,$data['distance'],$data['number'])
+          ->get();
+      }
+
+
+      public function findNearByBranches($data){
+        if(is_array($data)){
+                $location = new \stdClass;
+                $location->lat = $data['lat'];
+                $location->lng = $data['lng'];
+          }else{
+            $location = $data;
+            $data['distance']=100;
+            $data['number']=5;
+          }
+          
+          return Branch::whereHas('servicelines',function ($q){
+                $q->whereIn('servicelines.id',$this->userServiceLines );
+            })
+            ->with('salesTeam')->nearby($location,$data['distance'],$data['number'])
+            
+            ->get();
+
     }
 }

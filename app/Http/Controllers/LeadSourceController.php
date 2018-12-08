@@ -43,9 +43,10 @@ class LeadSourceController extends Controller
      */
     public function index()
     {   
+
    
-        $leadsources = $this->leadsource->with('leads','assignedLeads','unassignedLeads','closedLeads')->get();
-       
+        $leadsources = $this->leadsource->leadStatusSummary()->get();
+
         return response()->view('leadsource.index', compact('leadsources'));
     }
 
@@ -69,13 +70,15 @@ class LeadSourceController extends Controller
     public function store(LeadSourceFormRequest $request)
     {
 
-        $request->merge(['user_id'=>auth()->user()->id]);
-        $leadsource = $this->leadsource->create($request->except(['datefrom','dateto']));
+
+        request()->merge(['user_id'=>auth()->user()->id]);
+        $leadsource = $this->leadsource->create(request()->except('datefrom','dateto'));
         $leadsource->update([
-            'datefrom'=>Carbon::createFromFormat('m/d/Y',$request->get('datefrom')),
-            'dateto'=>Carbon::createFromFormat('m/d/Y',$request->get('dateto')),
+            'datefrom'=>Carbon::createFromFormat('m/d/Y',request('datefrom')),
+            'dateto'=>Carbon::createFromFormat('m/d/Y',request('dateto')),
             ]);
-        $leadsource->verticals()->sync($request->get('vertical'));
+        $leadsource->verticals()->sync(request('vertical'));
+
         return redirect()->route('leadsource.index');
     }
 
@@ -91,15 +94,9 @@ class LeadSourceController extends Controller
      
         $leadsource = $this->leadsource->with('leads','assignedLeads','unassignedLeads','closedLeads')->findOrFail($id);
 
-       
-        $salesteams = $this->person
-            ->whereHas('leads',function ($q) use ($id){
-                $q->where('lead_source_id','=',$id);
-            })
-            ->with('leads','reportsTo','industryfocus')->get();
+        $data = $this->reformatRepsData($data);
 
-        $statuses = LeadStatus::pluck('status','id')->toArray();
-        return response()->view('leadsource.show',compact('salesteams','leadsource','leads','statuses'));
+        return response()->view('leadsource.show',compact('data','leadsource'));
     }
 
     private function getOwnedBy($leads){
@@ -180,11 +177,11 @@ class LeadSourceController extends Controller
     public function update(LeadSourceFormRequest $request, $id)
     {
         $leadsource= $this->leadsource->findOrFail($id);
-        $leadsource->update($request->except('_method', '_token','datefrom','dateto'));
+        $leadsource->update(request()->except('_method', '_token','datefrom','dateto'));
         $leadsource->update([
-            'datefrom'=>Carbon::createFromFormat('m/d/Y',$request->get('datefrom')),
-            'dateto'=>Carbon::createFromFormat('m/d/Y',$request->get('dateto'))]);
-        $leadsource->verticals()->sync($request->get('vertical'));
+            'datefrom'=>Carbon::createFromFormat('m/d/Y',request('datefrom')),
+            'dateto'=>Carbon::createFromFormat('m/d/Y',request('dateto'))]);
+        $leadsource->verticals()->sync(request('vertical'));
         return redirect()->route('leadsource.index');
     }
 
@@ -215,8 +212,9 @@ class LeadSourceController extends Controller
         if($request->hasFile('file')){
             return $this->leadImport($request,$id);
         }else{
-            $request->merge(['lead_source_id'=>$id]);
-            $data = $this->cleanseData( $request->all());
+
+            request()->merge(['lead_source_id'=>$id]);
+            $data = $this->cleanseData( request()->all());
             $lead = $this->lead->create($data);
             $geoCode = app('geocoder')->geocode($this->getAddress($request))->get();
             $data = $this->lead->getGeoCode($geoCode);
@@ -255,11 +253,13 @@ class LeadSourceController extends Controller
 
     private function getAddress($request){
         // if its a one line address return that
-        if(! $request->has('city')){
-            return $address = $request->get('address') ;
+
+        if(! request()->has('city')){
+            return $address = request('address') ;
         }
         // else build the full address
-        return $address = $request->get('address') . " " . $request->get('city') . " " . $request->get('state') . " " . $request->get('zip');
+        return $address = request('address') . " " . request('city') . " " . request('state') . " " . request('zip');
+
     }
 
 
@@ -332,8 +332,10 @@ class LeadSourceController extends Controller
 
     **/
     public function export(Request $request,$id){
-         if($request->has('type')){
-        $type = $request->get('type');
+
+    if(request()->has('type')){
+        $type = request('type');
+
     }else{
         $type = 'xlsx';
     }

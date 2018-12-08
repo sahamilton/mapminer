@@ -4,7 +4,9 @@
 @include('partials/_showsearchoptions')
 @include('partials/advancedsearch')
 @include('maps/partials/_industry_keys')
-<p><a href='{{route("person.index")}}'><i class="fa fa-th-list" aria-hidden="true"></i> List view</a></p>
+
+<p><a href='{{route("person.index")}}'><i class="fas fa-th-list" aria-hidden="true"></i> List view</a></p>
+
 
 	
       
@@ -25,8 +27,8 @@
 
 <script>
     $(function() {
-          $('#map-container').storeLocator({'slideMap' : false, 'defaultLoc': true, 'defaultLat': {{$mylocation['lat']}}, 'defaultLng' : {{$mylocation['lng']}}, 'dataLocation' : "{{ route('salesmap')}}",'zoomLevel': 4, 'infowindowTemplatePath' : '{{asset('maps/templates/personwindow-description.html')}}','listTemplatePath' : '{{asset('maps/templates/person-list-description.html')}}'} );
+          $('#map-container').storeLocator({'slideMap' : false, 'defaultLoc': true, 'defaultLat': {{$mylocation->lat}}, 'defaultLng' : {{$mylocation->lng}}, 'dataLocation' : "{{ route('salesmap')}}",'zoomLevel': 4, 'infowindowTemplatePath' : '{{asset('maps/templates/personwindow-description.html')}}','listTemplatePath' : '{{asset('maps/templates/person-list-description.html')}}'} );
         });
     </script>
 
-@stop
+@endsection

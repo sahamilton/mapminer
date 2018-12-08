@@ -1,6 +1,7 @@
 <?php
 
 namespace App;
+use\App\Presenters\LocationPresenter;
 
 class Project extends Model
 {
@@ -16,7 +17,7 @@ use Geocode, Addressable;
            'addr2',
            'city',
            'state',
-           'zipcode',
+           'zip',
            'project_county_name',
            'project_county_code',
            'structure_header',
@@ -53,10 +54,7 @@ use Geocode, Addressable;
     public function companies(){
     	return $this->belongsToMany(ProjectCompany::class,'project_company_contact','project_id','company_id')->withPivot('type','contact_id');
     }
-    public function fullAddress(){
-      return $this->street . "," . $this->city. " " . $this->state . " " . $this->zipcode;
-
-    }
+    
     public function owner(){
       return $this->belongsToMany(Person::class,'person_project','related_id')->withPivot('status','ranking');
     }

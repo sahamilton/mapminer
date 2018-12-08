@@ -29,9 +29,9 @@
     <tr>  
     <td><a href="{{route('projects.show',$project->id)}}"
     title="See details of this project">{{$project->project_title}}</a></td>
-    <td>{{$project->address->street}}</td>
-    <td>{{$project->address->city}}</td>
-    <td>{{$project->address->state}},{{$project->address->zipcode}}</td>
+    <td>{{$project->street}}</td>
+    <td>{{$project->city}}</td>
+    <td>{{$project->state}},{{$project->zip}}</td>
     <td>{{$project->structure_header}} / {{$project->project_type}}</td>
     <td>{{$project->ownership}}</td>
     <td>{{$project->stage}}</td>
@@ -50,7 +50,9 @@
         data-toggle="modal" 
         data-target="#confirm-delete" 
         data-title = "{{$project->project_title}}" href="#">
-        <i class="fa fa-trash-o" aria-hidden="true"> </i> 
+
+        <i class="far fa-trash-alt text-danger" aria-hidden="true"> </i> 
+
         Release Project</a></a></td>
     </tr>
   @endforeach
@@ -62,4 +64,4 @@
 </div>
 @include('projects.partials._release')
 @include('partials._scripts')
-@stop
+@endsection

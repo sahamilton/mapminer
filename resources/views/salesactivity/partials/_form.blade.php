@@ -24,7 +24,9 @@
 <div class="input-group date input-group-lg">       
 <input type="text"  required name='datefrom' class="form-control"  value="{{old('datefrom', isset($activity->datefrom) ? 
 $activity->datefrom->format('m/d/Y') : date('m/d/Y'))}}" />
-<span class="input-group-addon"><i class="fa fa-th" aria-hidden="true"></i>
+
+<span class="input-group-addon"><i class="far fa-th" aria-hidden="true"></i>
+
 </span>
 </div> 
 @if ($errors->has('datefrom')) <p class="help-block">{{ $errors->first('datefrom') }}</p> @endif
@@ -34,8 +36,10 @@ $activity->datefrom->format('m/d/Y') : date('m/d/Y'))}}" />
 <div id="datepicker1" class="form-group @if ($errors->has('dateto')) has-error @endif">
 <label class="control-label col-sm-4" for="dateto">DateTo:</label>
 <div class="input-group date input-group-lg">
-<input type="text"  required name ='dateto' class="form-control"  value="{{old('dateto',isset($activity->dateto) ? $activity->dateto->format('m/d/Y') : date('m/d/Y', strtotime("+1 months",strtotime(date('m/d/Y')))))}}" />
-<span class="input-group-addon"><i class="fa fa-th" aria-hidden="true"></i>
+
+<input type="text"  required name ='dateto' class="form-control"  value="{{old('dateto',isset($activity->dateto) ? $activity->dateto->format('m/d/Y') : now()->addMonth()->format('m/d/Y') />
+<span class="input-group-addon"><i class="far fa-th" aria-hidden="true"></i>
+
 </span>
 </div>   
 @if ($errors->has('dateto')) <p class="help-block">{{ $errors->first('dateto') }}</p> @endif

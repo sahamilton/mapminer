@@ -56,19 +56,20 @@
  
                 <td><a href="{{$document->link}}" target="_new">{{$document->link}}</a></td>
                 <td> 
-                 @if(count($document->rank) > 0 && count($document->score)> 0 && count($document->rankings) >0)
-                  {{$document->rank[0]->rank}}
+                 @if($document->rank->count() > 0 
+                   && $document->score->count()> 0 
+                   && $document->rankings->count() >0)
+                    
+                    {{$document->rank[0]->rank}}
 
             		@endif
                   </td>
                   <td>
-                  @if(count($document->rankings) >0)
+                 
                     
-                        {{count($document->rankings)}}
+                        {{($document->rankings->count())}}
                 
-                  @else
-                  {{count($document->rankings)}}
-                  @endif
+                  
                  
 
                   	</td>          
@@ -91,4 +92,4 @@
 {{-- Scripts --}}
 @include('partials._scripts')
 @include('partials._search')
-@stop
+@endsection

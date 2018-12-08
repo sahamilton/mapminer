@@ -1,7 +1,14 @@
 
+@php
+$statelist = App\Branch::distinct()->orderBy('state')->get(array('state'));
+		foreach ($statelist as $state) {
+			$states[]= $state->state;
+			
+		}
+@endphp
 
 <form method="post" id="selectForm" action ="{{route($route)}}" >
-{{csrf_field()}}
+@csrf
 
 
 <label>Search for branches in </label>
@@ -17,10 +24,10 @@
            @endforeach
         </select>
  
-         <button type="submit"  class= "btn btn-default btn-xs"><i class="fa fa-search" aria-hidden="true"></i> Search!</button>
 
+         <button type="submit"  class= "btn btn-default btn-xs"><i class="fas fa-search" aria-hidden="true"></i> Search!</button>
 
-        {{Form::close()}}
+        </form>
 		
 		<script>
 

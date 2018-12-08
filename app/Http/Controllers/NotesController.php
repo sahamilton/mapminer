@@ -8,9 +8,9 @@ use Illuminate\Http\Request;
 class NotesController extends BaseController {
 
 	
-	protected $notes;
-	protected $locations;
-	protected $user;
+	public $notes;
+	public $locations;
+	public $user;
 
 	public function __construct(Note $note, Location $location, User $user) {
 
@@ -25,10 +25,10 @@ class NotesController extends BaseController {
 	 */
 	public function index()
 	{
-		
+	
 		$notes = $this->notes
 		->where('type','=','location')
-		->with('relatesTo','relatesTo.company','relatesTo','writtenBy')
+		->with('relatesToLocation','relatesToLocation.company','writtenBy')
 		->get();
 
 		return response()->view('notes.index', compact('notes'));
@@ -53,17 +53,19 @@ class NotesController extends BaseController {
 	{
 
 
-		$request->merge(['user_id'=>auth()->user()->id]);
-		$note = $this->notes->create($request->all());
- 
-		switch ($request->get('type')) {
+
+		request()->merge(['user_id'=>auth()->user()->id]);
+		$note = $this->notes->create(request()->all());
+ 		
+		switch (request('type')) {
+
 			case 'location':
 				
 				return redirect()->route('locations.show',$note->related_id);
 			break;
 			case 'lead':
 				
-				return redirect()->route('salesleads.show',$note->related_id);
+				return redirect()->route('salesrep.newleads.show',$note->related_id);
 			break;
 			case 'project':
 				
@@ -72,7 +74,7 @@ class NotesController extends BaseController {
 
 			case 'weblead':
 				
-				return redirect()->route('webleads.salesshow',$note->related_id);
+				return redirect()->route('leads.show',$note->related_id);
 			break;
 		}
 		
@@ -115,8 +117,8 @@ class NotesController extends BaseController {
 	{
 
 		$note =$this->notes->findOrFail($id);
-		$note->update(['note'=>$request->get('note')]);
 
+		$note->update(['note'=>request('note')]);
 		
 		switch ($note->type) {
 			case 'location':
@@ -191,6 +193,7 @@ class NotesController extends BaseController {
 	 */
 	public function mynotes()
 	{
+		
 		$user = auth()->user();
 		$types=['location','lead','project'];
 		foreach ($types as $type){ 

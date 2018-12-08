@@ -4,7 +4,7 @@
 @section('title')
  Forgot Password  ::
 @parent
-@stop
+@endsection
 
 {{-- Content --}}
 @section('content')
@@ -12,4 +12,4 @@
 	<h1>Forgot Password</h1>
 </div>
 {{ Confide::makeResetPasswordForm($token)->render() }}
-@stop
+@endsection

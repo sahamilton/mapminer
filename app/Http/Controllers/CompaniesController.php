@@ -65,14 +65,16 @@ class CompaniesController extends BaseController {
 	public function filter(Request $request){
 
 
-		if($request->get('locationFilter')=='both'){
+		if(request('locationFilter')=='both'){
 
 			return redirect()->route('company.index');
 		}
 		$filtered = $this->company->isFiltered(['companies'],['vertical']);
 		$companies=$this->getAllCompanies($filtered);
 
-		if($request->get('locationFilter') == 'nolocations'){
+
+		if(request('locationFilter') == 'nolocations'){
+
 			$companies = $companies->whereDoesntHave('locations')->get();
 
 			$title = 'Accounts without Locations';
@@ -84,7 +86,8 @@ class CompaniesController extends BaseController {
 
 		}
 
-		$locationFilter = $request->get('locationFilter');
+		$locationFilter = request('locationFilter');
+
 		return response()->view('companies.index', compact('companies','title','filtered','locationFilter'));
 
 	}
@@ -147,8 +150,8 @@ class CompaniesController extends BaseController {
 	public function store(CompanyFormRequest $request)
 	{
 
-		$company = $this->company->create($request->all());
-		$company->serviceline()->sync($request->get('serviceline'));
+		$company = $this->company->create(request()->all());
+		$company->serviceline()->sync(request('serviceline'));
 
 		return redirect()->route('company.index');
 	}
@@ -189,8 +192,10 @@ class CompaniesController extends BaseController {
 
 
 		$this->company = $company;
-		$this->company->update( $request->all());
-		$this->company->serviceline()->sync( $request->get('serviceline'));
+
+		$this->company->update( request()->all());
+		$this->company->serviceline()->sync( request('serviceline'));
+
 		return redirect()->route('company.index');
 	}
 	/**
@@ -241,9 +246,10 @@ class CompaniesController extends BaseController {
 				}
 
 		$company = $company->find($id);
+		/*dd($company);
 		if(count($company)!=1){
 				return redirect()->route('company.index');
-		}
+		}*/
 		// get company locations
 
 		$locations = $this->getCompanyLocations($id,$segment,$company);
@@ -259,27 +265,7 @@ class CompaniesController extends BaseController {
 		// used when there are too many locations to show in list
 		if( $count > $this->limit)
 		{
-
-			$location = new Location;
-			//$limited=$this->limit;
-			//we need to test to see if geo is filled
-			if ($geo = session()->get('geo'))
-				{
-				
-					$location->lat = $geo['lat'];
-					$location->lng = $geo['lng'];
-
-				}elseif($position = auth()->user()->position()){
-					
-					$position = explode(",",auth()->user()->position());
-					$location->lat =  $position[0];
-					$location->lng =  $position[1];
-
-				}else{
-					
-					$location->lat =  '47.25';
-					$location->lng =  '-122.44';
-				}
+		$location = $this->locations->getMyPosition();
 		$distance = 1000;
 		$locations = $this->locations
 			->where('company_id','=',$company->id)
@@ -400,10 +386,14 @@ class CompaniesController extends BaseController {
 
 	public function stateselect(Request $request,$id=null,$state=null)
 	{
+
 		// The method can be used by either post or get routes
-		if($request->filled('id') && $request->filled('state')){
-					$id = $request->get('id');
-					$state = trim($request->get('state'));
+
+		if(request()->filled('id') && request()->filled('state')){
+					$id = request('id');
+					$state = urldecode(request('state'));
+
+
 		}
 		// Check if user can view company based on user serviceline
 		// association.
@@ -463,7 +453,9 @@ class CompaniesController extends BaseController {
 	private function getStateCompanyInfo($data,$state)
 	{
 
+		$state = trim($state);
 		$statedata = State::where('statecode','=',$state)->first();
+
 		$data['state']  = $statedata->fullstate;
 		$data['statecode'] = $statedata->statecode;
 		$data['lat'] = $statedata->lat;
@@ -559,10 +551,12 @@ class CompaniesController extends BaseController {
 
 
 	/*
-	Export all account swith manager details to Excel
+
+	Export all account with manager details to Excel
 	 */
 	public function exportAccounts()
 	{
+		
 
 		Excel::create('AllCompanies',function($excel){
 			$excel->sheet('Companies',function($sheet) {
@@ -606,7 +600,9 @@ class CompaniesController extends BaseController {
 	 */
 	public function locationsexport(Request $request) {
 
-		$id = $request->get('company');
+
+		$id = request('company');
+
 		$company = $this->company->findOrFail($id);
 		Excel::create($company->companyname. " locations",function($excel) use($id){
 			$excel->sheet('Watching',function($sheet) use($id) {

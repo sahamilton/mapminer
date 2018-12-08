@@ -8,5 +8,5 @@
 <hr />
 @include('webleads.partials._cutandpaste')
 </div>
-@stop
+@endsection
 

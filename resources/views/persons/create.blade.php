@@ -4,7 +4,7 @@
 @section('title')
 Create a Manager ::
 @parent
-@stop
+@endsection
 
 {{-- Page content --}}
 @section('content')
@@ -25,4 +25,4 @@ Create a Manager ::
 @include('persons/partials/_form')
 {{Form::close()}}
 
-@stop
+@endsection

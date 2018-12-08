@@ -3,7 +3,7 @@
 {{-- Web site Title --}}
 @section('title')
 	{{{ $title }}} :: @parent
-@stop
+@endsection
  @include('partials/_modal')
 {{-- Content --}}
 @section('content')
@@ -11,7 +11,9 @@
 		<h3>{{ $title }}</h3>
 			<p>
                  <a href="{{route('nomanager.export')}}">
-                 <i class="fa fa-cloud-download" aria-hidden="true"></i></i> Export to Excel</a>
+
+                 <i class="fas fa-cloud-download-alt" aria-hidden="true"></i></i> Export to Excel</a>
+
             </p>
 	</div>
 
@@ -21,7 +23,7 @@
             <th class="col-md-2">id</th>
             <th class="col-md-2">First Name</th>
             <th class="col-md-2">Last Name</th>
-            <th class="col-md-2">User Name</th>
+         
             <th class="col-md-2">EMail</th>
             <th class="col-md-2">Roles</th>
             <th class="col-md-2">Service Lines</th>
@@ -45,7 +47,7 @@
         <a href="{{route('users.show',$person->userdetails->id)}}">{{$person->lastname}}</a>
         @endif
         </td>
-	<td class="col-md-2">{{ $person->userdetails->username }}</td>
+	
     <td class="col-md-2">{{ $person->userdetails->email }}</td>
     <td class="col-md-2">
     <ul>
@@ -68,14 +70,9 @@
     </ul>
     </td>
     <td class="col-md-2">{{ $person->userdetails->confirmed == '1' ? "yes" :  "no"}}</td>
-    <td>
- 
-		@if(isset($person->userdetails->lastlogin) &&  $person->userdetails->lastlogin != '0000-00-00 00:00:00'  )
-                <?php  $lastlogin = Carbon\Carbon::parse($person->userdetails->lastlogin);?>
-                {{$lastlogin->format('M j, Y h:i a')}}
-			@endif
-	
-	</td>
+
+    <td>{{$person->userdetails->lastlogin ? $person->userdetails->lastlogin->format('M j, Y h:i a'):''}}</td>
+
     <td class="col-md-2">
     
 
@@ -85,16 +82,18 @@
 				<span class="sr-only">Toggle Dropdown</span>
 			  </button>
 			  <ul class="dropdown-menu" role="menu">
-				
-				<li><a href="{{route('users.edit',$person->userdetails->id)}}"><i class="fa fa-pencil" aria-hidden="true"> </i>Edit {{$person->firstname}}  {{$person->lastname}}</a></li>
+				<a class="dropdown-item" 
+                    href="{{route('users.edit',$person->userdetails->id)}}"><i class="far fa-edit text-info"" aria-hidden="true"> </i>Edit {{$person->firstname}}  {{$person->lastname}}
+                </a>
 
-				<li><a data-href="{{route('users.destroy',$person->userdetails->id)}}" 
-				data-toggle="modal" 
-				data-target="#confirm-delete" 
-				data-title = "{{$person->firstname}}  {{$person->lastname}}" href="#">
-				<i class="fa fa-trash-o" aria-hidden="true"> </i> 
-				Delete {{$person->firstname}}  {{$person->lastname}}</a></li></a></li>
-
+				<a class="dropdown-item"
+                    data-href="{{route('users.destroy',$person->userdetails->id)}}" 
+    				data-toggle="modal" 
+    				data-target="#confirm-delete" 
+    				data-title = "{{$person->firstname}}  {{$person->lastname}}" href="#">
+    				<i class="far fa-trash-alt text-danger" aria-hidden="true"> </i> 
+    				Delete {{$person->firstname}}  {{$person->lastname}}
+                </a>
 			  </ul>
 			</div>
             </td>
@@ -104,4 +103,4 @@
 	</table>
     
 @include('partials/_scripts')
-@stop
+@endsection

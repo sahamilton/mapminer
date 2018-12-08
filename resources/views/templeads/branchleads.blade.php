@@ -4,14 +4,15 @@
  
     <h2>Branch {{$branches->first()->branches->branchname}} Leads Overview</h2>
   
-    @if(count($branches->first()->branches->manager)>0)
+    @if($branches->first()->branches->manager->count()>0)
 
     <h4>Branch Managed By {{$branches->first()->branches->manager->first()->fullName()}}</h4>
     @endif
     <p><a href='{{route("newleads.branch.map",$branches->first()->branches->id)}}'>
- <i class="fa fa-flag" aria-hidden="true"></i> Map view</a></p>
+ <i class="far fa-flag" aria-hidden="true"></i> Map view</a></p>
      <p><a href='{{route("leads.branch")}}'>
- <i class="fa fa-th-list" aria-hidden="true"></i> See All Branch Leads</a></p>
+ <i class="fas fa-th-list" aria-hidden="true"></i> See All Branch Leads</a></p>
+
     <div class="col-md-10 col-md-offset-1">
         <table class="table" id = "sorttable">
             <thead>
@@ -31,11 +32,11 @@
                 <tr> 
 
                      <td><a href="{{route('salesrep.newleads.show',$lead->id)}}">{{$lead->companyname}}</a></td>
-                    <td>{{$lead->address->address}}</td>
-                    <td>{{$lead->address->city}}</td>
-                    <td>{{$lead->address->state}}</td>
-                    @if(count($lead->salesrep)>0)
-                        <td><a href="{{route('salesrep.newleads',$lead->salesrep->first()->id)}}">{{$lead->salesrep->first()->fullName()}}</a></td>
+                    <td>{{$lead->address}}</td>
+                    <td>{{$lead->city}}</td>
+                    <td>{{$lead->state}}</td>
+                    @if($lead->salesrep->count()>0)
+                        <td><a href="{{route('salesrep.newleads',$lead->salesrep->first()->id)}}">{{$lead->salesrep->first()->postName()}}</a></td>
                         <td>{{$leadStatuses[$lead->salesrep->first()->pivot->status_id]}}</td>
                         <td>{{$lead->salesrep->first()->pivot->ranking}}</td>
                     @else

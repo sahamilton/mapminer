@@ -16,10 +16,10 @@ class ProjectsCompanyImportController extends ImportController
     public $sources;
     public $import;
     
-    public $projectcompanyfields =['id','firm', 'addr1','addr2','city','state','zipcode','county','phone'];
-    public $projectcompanyimportfields=['company_id','firm', 'addr1','addr2','city','state','zipcode','county','phone'];
-    public $projectcontactfields = ['id','contact','title','company_id','contactphone'];
-    public $projectcontactimportfields = ['contact_id','contact','title','company_id','contactphone'];
+    public $projectcompanyfields =['id','firm', 'addr1','addr2','city','state','zip','county','phone'];
+    public $projectcompanyimportfields=['company_id','firm', 'addr1','addr2','city','state','zip','county','phone'];
+    public $projectcontactfields = ['contact','title','company_id','contactphone','contactemail'];
+    public $projectcontactimportfields = ['contact','title','company_id','contactphone','contactemail'];
 
     public function __construct(Project $project, ProjectSource $source,ProjectCompanyImport $import){
         $this->project = $project;
@@ -30,7 +30,7 @@ class ProjectsCompanyImportController extends ImportController
 
     public function getFile(Request $request){
         $requiredFields = $this->import->requiredFields;
-        $source= $request->get('source');
+        $source= request('source');
         $sources= $this->sources->all()->pluck('source','id');
         $tables = ['projectcompanies','projectcontacts'];
         return response()->view('projects.importcompany',compact ('sources','source','tables','requiredFields'));
@@ -39,15 +39,13 @@ class ProjectsCompanyImportController extends ImportController
 
     public function import(ProjectsImportFormRequest $request) {
       
-        $data = $this->uploadfile($request->file('upload'));
-    
+
+        $data = $this->uploadfile(request()->file('upload'));    
         $data['table']='projectcompanyimport';
         $data['additionaldata'] = array();
         $skip = ['created_at','updated_at','project_source_id','company_id','pr_status','serviceline_id'];
         $requiredFields = $this->import->requiredFields;
-
-        $data['type']=$request->get('type');
-        
+        $data['type']=request('type');        
         $data['route'] = 'projectcompany.mapfields';
         $fields = $this->getFileFields($data); 
 
@@ -60,10 +58,12 @@ class ProjectsCompanyImportController extends ImportController
     public function mapfields(Request $request){
         
         $data = $this->getData($request);  
-        if($multiple = $this->import->detectDuplicateSelections($request->get('fields'))){
+
+        if($multiple = $this->import->detectDuplicateSelections(request('fields'))){
             return redirect()->route('projects.importfile')->withError(['You have to mapped a field more than once.  Field: '. implode(' , ',$multiple)]);
         }
-        if($missing = $this->import->validateImport($request->get('fields'))){
+        if($missing = $this->import->validateImport(request('fields'))){
+
              
             return redirect()->route('projects.importfile')->withError(['You have to map all required fields.  Missing: '. implode(' , ',$missing)]);
        }
@@ -95,7 +95,7 @@ class ProjectsCompanyImportController extends ImportController
 
         }
     private function createCompanyId(){
-        $query = "Update projectcompanyimport set company_id = md5(lcase(trim(replace(concat(firm,addr1),' ',''))))";
+        $query = "Update projectcompanyimport set company_id = md5(lcase(trim(replace(concat(firm,addr1,city,state,zip),' ',''))))";
         if (\DB::select(\DB::raw($query))){
            
             return true;
@@ -118,7 +118,9 @@ class ProjectsCompanyImportController extends ImportController
             return true;
         }
     }
-
+    /*
+    remove contacts where should be null
+    */
     private function cleanseContacts(){
         $fields = ['firstname','lastname','contact'];
         foreach ($fields as $field){
@@ -129,6 +131,10 @@ class ProjectsCompanyImportController extends ImportController
         }     
         return true;
     }
+    /*
+    Set contact to equal firstname + lastname
+    */
+
     private function updateContacts(){
         // update projectcompanyimport set contact= null, firstname = null, lastname = null where firstname ='' and lastname='' and contact ='';
             $query = "update projectcompanyimport set contact = concat(firstname,' ',lastname) where contact is null";

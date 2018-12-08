@@ -1,4 +1,4 @@
-<p><strong>Address:</strong>{{$user->person->address}}</p>
+<p><strong>Address:</strong>{{$user->person->fullAddress()}}</p>
 @if(! $user->person->lat)
 No address or unable to geocode this address
 @else
@@ -19,11 +19,7 @@ function initialize() {
   var map = new google.maps.Map(document.getElementById('map'), mapOptions);
 <<<<<<< Updated upstream
 	var name = "{{$user->person->postName()}}";
-    var address = "{{$user->person->address}}";
-=======
-	var name = "{{$user->person->fullName()}}";
     var address = "{{$user->person->fullAddress()}}";
->>>>>>> Stashed changes
     var html = address;
 	var marker = new google.maps.Marker({
 	  position: myLatlng,

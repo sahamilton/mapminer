@@ -47,7 +47,7 @@ class ServicelinesController extends BaseController {
 	public function store(ServiceLineFormRequest $request)
 	{
 
-		$this->serviceline->create($this->request->all());
+		$this->serviceline->create(request()->all());
 
 		return \redirect()->route('serviceline.index');
 	}
@@ -124,7 +124,7 @@ class ServicelinesController extends BaseController {
 	{
 		$serviceline = $this->serviceline->find($id);
 		
-		$serviceline->update($request->all());
+		$serviceline->update(request()->all());
 
 		return redirect()->route('serviceline.index');
 	}

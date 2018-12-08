@@ -24,14 +24,14 @@ class ProjectTransferRequest extends FormRequest
     public function rules()
     {
         return [
-            'username'=>'exists:users,username',
+            'email'=>'exists:users,email',
         ];
     }
 
     public function messages()
     {
         return [
-            'username.exists'=>"That person doesn't exist in the system",
+            'email.exists'=>"That person doesn't exist in the system",
         ];
     }
 }

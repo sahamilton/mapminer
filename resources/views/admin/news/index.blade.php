@@ -3,9 +3,11 @@
 
 <h1>All Updates</h1>
 
-<div class="pull-right">
+<div class="float-right">
 				<a href="{{{ route('admin.news.create') }}}" class="btn btn-small btn-info iframe">
-<i class="fa fa-plus-circle text-success" aria-hidden="true"></i>
+
+<i class="fas fa-plus-circle text text-success" aria-hidden="true"></i>
+
  Create New Updates</a>
 			</div>
 
@@ -68,9 +70,20 @@
 			  </button>
 			  <ul class="dropdown-menu" role="menu">
 				
-				<li><a href="{{route(news.destroy',$item->id)}}"><i class="fa fa-pencil" aria-hidden="true"> </i>Edit this news item</a></li>
-				<li><a data-href="{{route('admin.news.delete',$item->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = " this news item and all its comments" href="#">
-                <i class="fa fa-trash-o" aria-hidden="true"> </i> Delete this news item</a></li>
+
+				<a class="dropdown-item" 
+					href="{{route(news.destroy',$item->id)}}">
+					<i class="far fa-edit text-info"" aria-hidden="true"> </i>Edit this news item
+				</a>
+				<a class="dropdown-item" 
+					data-href="{{route('admin.news.delete',$item->id)}}" 
+					data-toggle="modal" 
+					data-target="#confirm-delete" 
+					data-title = " this news item and all its comments" 
+					href="#">
+                	<i class="far fa-trash-alt text-danger" aria-hidden="true"> </i> Delete this news item
+                </a>
+
 			  </ul>
 			</div>
 		
@@ -101,4 +114,4 @@
 
 
 
-@stop
+@endsection

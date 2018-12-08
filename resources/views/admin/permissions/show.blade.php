@@ -21,7 +21,7 @@ $newTZ = new DateTimeZone('America/Los_Angeles');
            
             <th class="col-md-2">First Name</th>
             <th class="col-md-2">Last Name</th>
-            <th class="col-md-2">User Name</th>
+         
             
             <th class="col-md-2">EMail</th>
             <th class="col-md-2">Serviceline</th>
@@ -36,7 +36,7 @@ $newTZ = new DateTimeZone('America/Los_Angeles');
         <td class="col-md-2">{{ $user->person->firstname }}</td>
         <td class="col-md-2">{{ $user->person->lastname }}</td>
        	
-        <td class="col-md-2">{{ $user->username }}</td>
+       
         <td class="col-md-2">{{ $user->email }}</td>
         <td class="col-md-2"> @foreach($user->serviceline as $serviceline)
     
@@ -44,19 +44,10 @@ $newTZ = new DateTimeZone('America/Los_Angeles');
 		   
 		    @endforeach
     	</td>
-   
- <?php 
-	if(! isset($user->usage->lastactivity) or  $user->usage->lastactivity == '0000-00-00 00:00:00'  ){
-		$field = NULL;
-	}else{
-		$date = new DateTime( $user->usage->lastactivity, $UTC );
-		$date->setTimezone( $newTZ );
-		$field =$date->format('Y-m-d h:i a');
-	}
-	
-	echo " <td class=\"col-md-2\">".$field."</td>";
 
-	?>
+   <td> {{$user->usage->lastactivity ? $user->usage->lastactivity->format('Y-m-d h:i a') : '' }}</td>
+ 
+
    
 </tr>
 @endforeach
@@ -64,4 +55,4 @@ $newTZ = new DateTimeZone('America/Los_Angeles');
 	</table>
     
 @include('partials/_scripts')
-@stop
+@endsection

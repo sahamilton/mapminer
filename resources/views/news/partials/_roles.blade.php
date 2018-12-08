@@ -1,6 +1,6 @@
 <?php $roles = \App\Role::pluck('name','id')->toArray();?>
 
-
+<li><input type="checkbox" name="role[]" id="checkAll" value="">Check All Roles
 @foreach ($roles as $key=>$value)
 	<p>
 	@if((isset($news->relatedRoles) && $news->relatedRoles->contains('id',$key))
@@ -11,3 +11,4 @@
 	@endif
 </p>
 @endforeach
+</li>

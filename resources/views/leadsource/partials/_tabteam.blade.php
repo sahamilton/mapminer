@@ -21,7 +21,13 @@
         @foreach($salesteams as $team)
 
         <tr>  
-            <td><a href="{{route('leads.personsource',[$team->id,$leadsource->id])}}">{{$team->postName()}}</a></td>
+            <td><a href="{{route('leads.personsource',[$team['details']->id,$leadsource->id])}}">{{$team['details']->postName()}}</a></td>
+            <td>
+                @if($team['details']->reportsTo->count()>0)
+                    {{$team['details']->reportsTo->postName()}}
+                @endif
+            </td>
+            <td>{{$team['details']->city}} {{$team['details']->state}}</td>
             <td>
                
                     {{$team->reportsTo ? $team->reportsTo->postName() : ''}}

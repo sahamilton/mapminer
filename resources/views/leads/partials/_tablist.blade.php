@@ -24,13 +24,13 @@
     <td>{{$lead->address->state}}</td>
     <td>{{$lead->created_at->format('M j, Y')}}</td>
     <td>
-    @if(count($lead->salesteam)>0)
-        @if(count($lead->ownedBy) > 0)
+    @if($lead->salesteam)
+        @if($lead->ownedBy)
 
            {{$statuses[$lead->ownedBy[0]->pivot->status_id]}}  by {{$lead->ownedBy[0]->fullName()}}
 
         @else
-            Offered {{count($lead->salesteam)}}
+            Offered {{$lead->salesteam->count()}}
         @endif
     @else
     Unassigned

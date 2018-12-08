@@ -12,7 +12,7 @@ foreach($groups as $group) {
 	<h3> Edit </h3>
 		
 
-		<div class="pull-right">
+		<div class="float-right">
 			<a href="{{ route('admin.howtofields.index') }}" class="btn btn-small btn-inverse"><i class="icon-circle-arrow-left icon-white"></i> Back</a>
 		</div>
 	
@@ -21,10 +21,12 @@ foreach($groups as $group) {
 
 <?php $buttonLabel = 'Edit Field';
 ?>
+<form method="post" action = "{{route(,$howtofield->id)}}" >
+	@csrf
+	@method('patch')
 
-{{Form::model($howtofield,['method'=>'PATCH','route'=>['admin.howtofields.update', $howtofield->id]])}}
 	@include('howtofields/partials/_form')
-{{Form::close()}}
+</form>
 
     
 <script>
@@ -36,4 +38,6 @@ $('#add').click(function() {
 	
 	
 });
-</script>@stop
+
+</script>
+@endsection

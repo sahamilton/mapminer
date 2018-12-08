@@ -46,12 +46,12 @@ $nullBusinesstype = App\SearchFilter::where('searchtable','=','locations')
 </div>
 
 <!--- Suite -->
-<div class="form-group @if ($errors->has('suite')) has-error @endif">
+<div class="form-group @if ($errors->has('address2')) has-error @endif">
 {{Form::label('suite','Suite:',array('class'=>'control-label col-sm-2'))}}
 
-{{Form::text('suite')}}
+{{Form::text('address2')}}
 
-@if ($errors->has('suite')) <p class="help-block">{{ $errors->first('suite') }}</p> @endif
+@if ($errors->has('address2')) <p class="help-block">{{ $errors->first('address2') }}</p> @endif
 </div>
 
 <!--- City -->
@@ -114,7 +114,7 @@ $nullBusinesstype = App\SearchFilter::where('searchtable','=','locations')
 
 <!--- Segment -->
 
-@if(count($segments)>1)
+@if($segments->count()>1)
 <div class="form-group @if ($errors->has('segment')) has-error @endif">
 {{Form::label('segment','Segment:',array('class'=>'control-label col-sm-2'))}}
 

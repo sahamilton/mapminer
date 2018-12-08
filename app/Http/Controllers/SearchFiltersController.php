@@ -49,7 +49,8 @@ class SearchFiltersController extends BaseController {
 	 */
 	public function store(SearchFiltersFormRequest $request)
 	{
-		$data = $request->all();;
+
+		$data = request()->all();;
 		$data['color'] = str_replace("#",'',$data['color']);
 		if(isset($data['filterOption']))
 		{
@@ -104,7 +105,7 @@ class SearchFiltersController extends BaseController {
 	public function update(SearchFiltersFormRequest $request, $id)
 	{
 		$filter=$this->filter->findOrFail($id);
-		$data = $request->all();
+		$data = request()->all();
 		$data['color'] = str_replace("#",'',$data['color']);
 		if(isset($data['filterOption']))
 		{
@@ -136,6 +137,7 @@ class SearchFiltersController extends BaseController {
 	}
 	
 	public function filterAnalysis($id = null){
+	
 		$verticals = $this->getVerticalAnalysis($id);
 		return response()->view('filters.analysis',compact('verticals'));
 
@@ -158,11 +160,11 @@ class SearchFiltersController extends BaseController {
 	}
 	private function getVerticalAnalysis($id=null){
 		return $this->filter
-		->with('leads','people','companies','campaigns')
-		->whereNotNull('type')
-		->where('type','!=','group')
-		->where('inactive','=',0)
-		->get();
+				->with('leads','people','companies','campaigns')
+				->whereNotNull('type')
+				->where('type','!=','group')
+				->where('inactive','=',0)
+				->get();
 	}
 	public function filterForm()
 	{
@@ -193,15 +195,17 @@ class SearchFiltersController extends BaseController {
 	public function setSessionSearch(Request $request)
 	{
 				
-		\Session::forget('Search');
-		$this->filter->setSearch($request->all());
+		session()->forget('Search');
+
+		$this->filter->setSearch(request()->all());
+
 	}
 
 	
 	public function getAccountSegments(Request $request)
 	{
-		$vertical = \App\Company::where('id','=',$request->get('id'))->pluck('vertical');
-		
+
+		$vertical = \App\Company::where('id','=',request('id'))->pluck('vertical');		
 		$segments = $this->filter->where('parent_id','=',$vertical)->orderBy('filter')->pluck('filter','id');
 
 		//$i=0;

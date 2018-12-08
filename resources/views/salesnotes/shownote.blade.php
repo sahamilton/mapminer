@@ -5,11 +5,11 @@
 @section('content')
 <div class="page-header">
 <h3>How to sell to {{$company->companyname}}</h3>
-
-@if (Auth::user()->hasRole('Admin'))
-<div class="pull-right">
+@if (auth()->user()->hasRole('Admin'))
+<div class="float-right">
 	<a href="{{route('salesnotes.cocreate',$company->id)}}" class="btn btn-small btn-info iframe">
-<i class="fa fa-plus-circle text-success" aria-hidden="true"></i>
+<i class="fas fa-plus-circle " aria-hidden="true"></i>
+
  Create / Edit</a>
 </div>
 
@@ -17,8 +17,10 @@
 
 @if(count($data) ==0)
 	<p>There are no sales notes for {{$company->companyname}}. 
-		@if($company->has('managedBy'))
-			Contact account manager <strong>{{$company->managedBy->fullName()}}</strong> 
+
+		@if($company->managedBy)
+			Contact account manager <strong>{{$company->managedBy->postName()}}</strong> 
+
 			<a href="mailto:{{$company->managedBy->userdetails->email}}">{{$company->managedBy->userdetails->email}}</a> 
 			for information.
 		@endif
@@ -111,7 +113,9 @@ $group = $groups[0]->fieldname;
 									target=\"_blank\"
 
 									title=\"Download ".$file['attachmentname'] ."\">
-									<i class=\"fa fa-cloud-download\" aria-hidden=\"true\"></i>
+
+									<i class=\"fas fa-cloud-download-alt\" aria-hidden=\"true\"></i>
+
 									".$file['attachmentname']."</a></h4>";
 									echo "<p>". $file['description'] ."</p>";
 									
@@ -140,4 +144,6 @@ $(function() {
   </script>
 
 
-        @stop
+
+        @endsection
+

@@ -15,7 +15,7 @@
 		</li>
 	</ul>
 
-	<ul class="pull-right">
+	<ul class="float-right">
 		<?php echo $presenter->render(); ?>
 	</ul>
 </div>

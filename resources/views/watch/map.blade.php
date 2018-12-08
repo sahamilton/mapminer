@@ -5,13 +5,11 @@
 
 <h1>My Watch List</h1>
 
-
-<p><a href="{{route('watch.index')}}" title="Review my watch list"><i class="fa fa-th-list" aria-hidden="true"></i> View My Watch List</a></p>
-<p><a href="{{route('watch.export')}}" title="Download my watch list as a CSV / Excel file"><i class="fa fa-cloud-download" aria-hidden="true"></i></i> Download My Watch List</a> </p>
+<p><a href="{{route('watch.index')}}" title="Review my watch list"><i class="fas fa-th-list" aria-hidden="true"></i> View My Watch List</a></p>
+<p><a href="{{route('watch.export')}}" title="Download my watch list as a CSV / Excel file"><i class="fas fa-cloud-download-alt" aria-hidden="true"></i></i> Download My Watch List</a> </p>
 
 <?php if($data!= NULL) {?>
-<div id="store-locator-container">
-
+<div id="store-locator-container" >
 
 	<div id="map-container">
         <div id="loc-list"><p></p>
@@ -34,5 +32,5 @@
 <h2>You have no items in your watch list</h2>
 <?php }?>
 
-@stop
+@endsection
 

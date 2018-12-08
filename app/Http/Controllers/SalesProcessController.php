@@ -45,8 +45,7 @@ class SalesProcessController extends Controller
     public function store(SalesProcessStepRequest $request)
     {
         
-      
-        $this->process->create($request->all());
+        $this->process->create(request()->all());
         return redirect()->route('process.index');
 
     }
@@ -85,7 +84,9 @@ class SalesProcessController extends Controller
     public function update(SalesProcessStepRequest $request, $id)
     {
         $process = $this->process->findOrFail($id);
-        $process->update($request->all());
+
+        $process->update(request()->all());
+
         return redirect()->route('process.index');
 
     }

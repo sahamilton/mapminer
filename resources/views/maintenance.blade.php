@@ -6,7 +6,9 @@
     <h4>Welcome to the TrueBlue&reg; National Account Locator</h4>
 <div id="welcome">
 
-@if(Auth::check()) 
+
+@if(auth()->check()) 
+
 <div id="accountbtn" style="text-align:left; padding-left:20%;padding-top:100px">
 <a href='company'class='btn btn-lg btn-primary' title='Search for specific accounts'>Account Views</a>
 
@@ -35,4 +37,4 @@
   </div>
 </div>
 
-@stop
+@endsection

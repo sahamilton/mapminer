@@ -108,7 +108,9 @@
 			        </span>
 			</div>
 	</div>
-   @include('leads.partials._extrafields')
+@can('manage_leads')
+
+@include('leads.partials._extrafields')
      
 
 <legend>Prospect Source</legend>   
@@ -127,6 +129,10 @@
             
         </div>
     </div>
+@else
+<input type="hidden" name="leadsource" value="{{$lead_source_id}}" />
+<input type="hidden" name="uid" value="{{auth()->user()->id}}" />
 
+@endcan
 
     

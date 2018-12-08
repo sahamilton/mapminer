@@ -14,7 +14,9 @@
 	<th>Region</th>
 	<th>Manager</th>
 	<th>Sales Team</th>
-	@if(Auth::user()->hasRole('Admin'))
+
+	@if(auth()->user()->hasRole('Admin'))
+
 	<th>Actions</th>
 	@endif 
     </thead>
@@ -32,7 +34,7 @@
 		{{$branch->id}}
 	</td>
 	<td>
-	@if(count($branch->servicelines) > 0)
+	@if($branch->servicelines)
 		@foreach($branch->servicelines as $serviceline)
 				<a href = "{{route('serviceline.show',$serviceline->id)}}" 
 				title =" See all {{$serviceline->ServiceLine}} branches">
@@ -63,7 +65,7 @@
 
 	<td>
 
-	@if(count($branch->manager)>0)
+	@if($branch->manager->count()>0)
 		@foreach ($branch->manager as $manager)
 		<a href="{{route('managed.branch',$manager->id)}}"" 
 		title="See all branches managed by {{$manager->fullName() }}" >
@@ -77,11 +79,13 @@
 	@if(null!==$branch->servicedBy)
 		<a href="{{route('branches.show',$branch->id)}}" 
 		title="See details of {{$branch->branchname}} branch">
-		{{count($branch->servicedBy)}}
+		{{$branch->servicedBy->count()}}
 		</a>
 	@endif
 	</td>
-	@if(Auth::user()->hasRole('Admin'))
+
+	@if(auth()->user()->hasRole('Admin'))
+
 		<td>
             @include('partials/_modal')
     
@@ -92,8 +96,14 @@
 			  </button>
 			  <ul class="dropdown-menu" role="menu">
 				
-				<li><a href="{{route('branches.edit',$branch->id)}}"><i class="fa fa-pencil" aria-hidden="true"> </i>Edit {{$branch->branchname}} Branch</a></li>
-				<li><a data-href="{{route('branches.destroy',$branch->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = "{{$branch->branchname}} branch" href="#"><i class="fa fa-trash-o" aria-hidden="true"> </i> Delete {{$branch->branchname}} branch</a></li>
+				<a class="dropdown-item"
+				 href="{{route('branches.edit',$branch->id)}}">
+				 <i class="far fa-edit text-info"" 
+				 aria-hidden="true"> </i>
+				 Edit {{$branch->branchname}} Branch</a>
+				 <a class="dropdown-item"
+				  data-href="{{route('branches.destroy',$branch->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = "{{$branch->branchname}} branch" href="#"><i class="far fa-trash-alt text-danger" aria-hidden="true"> </i> Delete {{$branch->branchname}} branch</a>
+
 			  </ul>
 			</div>
 	
@@ -105,10 +115,5 @@
     
     </tbody>
     </table>
-
-
-
-
-
 @include('partials/_scripts')
-@stop
+@endsection

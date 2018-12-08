@@ -19,7 +19,7 @@ class Person extends NodeModel implements HasPresenter {
 
 	
 	// Don't forget to fill this array
-	public $fillable = ['firstname','lastname','phone','reports_to','geostatus','user_id'];
+	public $fillable = ['firstname','lastname','phone','address','lat','lng','reports_to','city','state','zip','geostatus','user_id'];
 
 	
 	public function reportsTo()
@@ -31,6 +31,9 @@ class Person extends NodeModel implements HasPresenter {
     {
         return $this->hasMany(Person::class, 'reports_to');
     }
+
+    // not sure this works!
+
 	public function salesRole()
 	{
 		return $this->belongsTo(SalesOrg::class,'id','position');
@@ -38,13 +41,41 @@ class Person extends NodeModel implements HasPresenter {
 	
 	public function branchesServiced()
 	{
-		return $this->belongsToMany(Branch::class)->withPivot('role_id');
+
+		return $this->belongsToMany(Branch::class)
+		->withTimestamps()
+		->withPivot('role_id');
+		
+
 	}
-	
+
+	public function lastUpdatedBranches()
+	{
+		return $this->belongsToMany(Branch::class)
+		->withTimestamps()
+		->addSelect('branch_person.updated_at', \DB::raw("MAX(branch_person.updated_at) AS lastdate"))->get();
+	}
+
+
+	public function scopeStaleBranchAssignments($query,$roles){
+		return $query->whereHas('userdetails.roles',function($q)use($roles){
+            $q->whereIn('roles.id',$roles);
+        });
+        // removed for first time pass
+        /*->where(function($q){
+            $q->doesntHave('branchesServiced')
+            ->orWhereHas('branchesServiced',function($q){
+                $q->where('branch_person.updated_at','<',now()->subMonth(2))
+                ->orWhereNull('branch_person.updated_at');
+            });
+        });*/
+	}
 
 	public function manages() {
 		
-		return $this->belongsToMany(Branch::class)->withPivot('role_id');
+		return $this->belongsToMany(Branch::class)
+		->withTimestamps()->withPivot('role_id');
+
 
 	}
 	public function comments () {
@@ -57,6 +88,10 @@ class Person extends NodeModel implements HasPresenter {
 		return $this->hasMany(Company::class);
 
 	}
+
+	public function emailcampaigns(){
+    	return $this->belongsToMany(Campaign::class)->withPivot('activity');
+    }
 
 	public function projects(){
       return $this->belongsToMany(Project::class)->withPivot('status');
@@ -81,7 +116,7 @@ class Person extends NodeModel implements HasPresenter {
 
 	public function scopeLeadsByType($query,$id,$status){
      
-		return $this->belongsToMany(Lead::class, 'lead_person_status','person_id','related_id')
+		return $query->belongsToMany(Lead::class, 'lead_person_status','person_id','related_id')
 				->where('lead_source_id','=',$id)
 				->withPivot('created_at','updated_at','status_id','rating')
 				->wherePivot('status_id',2);
@@ -90,9 +125,19 @@ class Person extends NodeModel implements HasPresenter {
 	
 	public function postName()
 	{
-		return $this->attributes['lastname'] . ' ' . $this->attributes['firstname'];
+
+		return $this->attributes['firstname'] . ' ' . $this->attributes['lastname'];
+
 	}
-	
+	public function currentleads(){
+		return $this->belongsToMany(Lead::class, 'lead_person_status','person_id','related_id')
+			
+			->whereHas('leadsource', function ($q) {
+	            $q->where('datefrom','<=',date('Y-m-d'))
+	              ->where('dateto','>=',date('Y-m-d'));
+
+			})->withPivot('created_at','updated_at','status_id','rating');
+	}
 
 	public function leads(){
 		return $this->belongsToMany(Lead::class, 'lead_person_status','person_id','related_id')
@@ -213,6 +258,13 @@ class Person extends NodeModel implements HasPresenter {
 		
 	}
 
+	public function scopeInServiceLine($query,$servicelines){
+		
+		return $query->whereHas('userdetails.serviceline',function($q) use ($servicelines)
+			{ 
+				$q->whereIn('servicelines.id',$servicelines);
+			});
+	}
 	public function ownedLeads(){
 		return $this->belongsToMany(Lead::class, 'lead_person_status','person_id','related_id')
 		->withTimestamps()
@@ -271,4 +323,46 @@ class Person extends NodeModel implements HasPresenter {
       
       return collect($salesrepmarkers)->toJson();
     }
+
+    public function updatePersonsAddress($data){
+    	if(! empty($data['address']) ){
+            $data = $this->getGeoCode(app('geocoder')->geocode($data['address'])->get());
+            unset ($data['fulladdress']);
+            
+       }else{
+            $data['address']=null;
+            $data['city']=null;
+            $data['state']=null;
+            $dta['zip']=null;
+            $data['lat']=null;
+            $data['lng']=null;
+       }
+       return $data;
+    }
+
+    public function myAddress(){
+    	if(! $this->address){
+    		return config('mapminer.default_address');
+    	}else{
+    		return $this->address;
+    	}
+    }
+    public function scopePrimaryRole($query){
+
+    	return $query->with('userdetails.roles')->first()->userdetails->roles->first()->id;
+                    //->userdetails;
+    }
+
+    public function getPrimaryRole($person){
+
+    	return $person->userdetails->roles()->first()->id;
+                    //->userdetails;
+    }
+
+    public function scopeSalesReps($query){
+		return $query->whereHas('userdetails.roles',function($q){
+    		$q->where('roles.id','=','5');
+		});
+	}
+
 }

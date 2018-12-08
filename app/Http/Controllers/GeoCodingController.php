@@ -6,6 +6,7 @@ use App\Company;
 use App\Project;
 use App\Branch;
 use App\Watch;
+use App\Lead;
 use App\Person;
 use App\Http\Requests\FindMeFormRequest;
 use Illuminate\Http\Request;
@@ -14,15 +15,27 @@ class GeoCodingController extends BaseController {
 	
 	public $project;
 	public $location;
+	public $lead;
 	public $branch;
 	public $serviceline;
+	public $person;
 
 
-	public function __construct(Location $location, Project $project, Branch $branch, Serviceline $serviceline) {
+	public function __construct(
+			Location $location, 
+			Project $project, 
+			Branch $branch, 
+			Serviceline $serviceline,
+			Person $person,
+			Lead $lead
+		) 
+	{
 		$this->location = $location;
 		$this->project = $project;
-		$this->serviceline = $serviceline;	
+		$this->serviceline = $serviceline;
+		$this->lead = $lead;	
 		$this->branch = $branch;
+		$this->person = $person;
 		parent::__construct($location);	
 }
 	
@@ -30,48 +43,70 @@ class GeoCodingController extends BaseController {
 	/**
 	 * @return [type]
 	 */
+
+	/**  This needs some serious refactoring! **/
+
 	public function findMe(FindMeFormRequest $request) {
 
 		
-		
-		$geocode = app('geocoder')->geocode($request->get('search'))->get();
-
-		if(! $geocode or count($geocode)==0){
-
-			return redirect()->back()->withInput()->with('error','Unable to Geocode address:'.$request->get('search') );
+		if(request()->filled('address')) {
+			$address = urlencode(request('address'));
+			
 		}
+		if(! request()->filled('lat')){
+			$geocode = app('geocoder')->geocode(request('address'))->get();
+
+			if(! $geocode or count($geocode)==0){
+
+				return redirect()->back()->withInput()->with('error','Unable to Geocode address:'.request('address') );
+			}
+			
+			request()->merge($this->location->getGeoCode($geocode));
+			
 		
-		$request->merge($this->location->getGeoCode($geocode));
-		
-		
-		
-		$data = $request->all();
+		}
+		$data = request()->all();
 
 		$data['latlng'] = $data['lat'].":".$data['lng'];
 		// Kludge to address the issue of different data in Session::geo
-		if(! $request->has('number')){
 			$data['number']=5;
 		}
-		if(! isset($data['address']) or $data['address']==' '){
-			$data['address'] = $data['search'];
+		// we have to do this in case the lat / lng was set via the browser
+		if(! isset($data['fulladdress'])){
+			$data['fulladdress'] = $data['address'];
 		}
-	
-		\Session::put('geo', $data);
 
+		session()->put('geo', $data);
+	
 		$watchlist = array();
 		$data['vertical'] = NULL;
 		
 		$data = $this->getViewData($data);
 
+
 		$filtered = $this->location->isFiltered(['companies','locations'],['vertical','business','segment'],NULL);
-		if(isset($data['company'])){
+		if(isset($data['company']) ){
     		$company = $data['company'];
     	}else{
     		$company=null;
     	}
+    	$data['result'] = $this->getGeoListData($data);
+
+    	if(count($data['result'])==0){
+			
+			session()->flash('warning','No results found. Consider increasing your search distance');
+
+		}
 		if(isset($data['view']) && $data['view'] == 'list') {
 		
-			$data['result'] = $this->getGeoListData($data);
+			if($data['type']=='people'){
+				return response()->view('maps.peoplelist', compact('data'));
+			}
+
+			if ($data['type']=='myleads'){
+				
+				return response()->view('myleads.index', compact('data'));
+			}
 
 			try {
 				$watching = Watch::where('user_id',"=",\Auth::id())->get();
@@ -91,7 +126,7 @@ class GeoCodingController extends BaseController {
 
 			$servicelines = $this->serviceline->whereIn('id',$this->userServiceLines)
     						->get();
-    			
+    		
 			return response()->view('maps.map', compact('data','filtered','servicelines','company'));
 		}
 		
@@ -104,39 +139,71 @@ class GeoCodingController extends BaseController {
 	 */
 	
 	private function getViewData($data) {
+	
+		if(method_exists($this,'get'.ucwords($data['type']).'MapData')){
+			$method = 'get'.ucwords($data['type']).'MapData';
+			$data = $this->$method($data);
 
-		if($data['type'] =='branch'){
+		}else{
+			// get default map view
+			$data= $this->getLocationMapData($data);
+		}
+		
+		$data['datalocation']=$data['urllocation'] . '/'. $data['distance'].'/'.$data['latlng'];
+		if($data['company']){
+			$data['datalocation'].="/".$data['company']->id;
+		}
 
-				$data['urllocation'] = "api/mylocalbranches";
-				$data['title'] ='Branch Locations';
-				$data['company']=NULL;
-				$data['companyname']=NULL;
+		return $data;
+	}
+
+	private function getBranchMapData($data){
+		$data['urllocation'] = "api/mylocalbranches";
+		$data['title'] ='Branch Locations';
+		$data['company']=NULL;
+		$data['companyname']=NULL;
+		return $data;
 				
-			
-			}elseif ($data['type']=='company'){
-				
-				$data['urllocation'] ="api/mylocalaccounts";
-				$data['title'] = (isset($data['companyname']) ? $data['companyname'] : 'Company') ." Locations";
-				$data['company'] = Company::where('id','=',$data['company'])->first();
-				$data['vertical'] = $data['company']->vertical;
 
-			}elseif ($data['type'] == 'projects'){
-				$data['urllocation'] ="api/mylocalprojects";
-				$data['title'] = "Project Locations";
-			
-			}else{
+	}
+	private function getLocationMapData($data){
+		$data['urllocation'] ="api/mylocalaccounts";
+		$data['title'] ='National Account Locations';
+		$data['company']=NULL;
+		$data['companyname']=NULL;
+		return $data;
+	}
+	private function getCompanyMapData($data){
+		$data['urllocation'] ="api/mylocalaccounts";
+		$data['title'] = (isset($data['companyname']) ? $data['companyname'] : 'Company') ." Locations";
+		$data['company'] = Company::where('id','=',$data['company'])->first();
+		$data['vertical'] = $data['company']->vertical;
+		return $data;
 
-				$data['urllocation'] ="api/mylocalaccounts";
-				$data['title'] ='National Account Locations';
-				$data['company']=NULL;
-				$data['companyname']=NULL;
-			}
-			$data['datalocation']=$data['urllocation'] . '/'. $data['distance'].'/'.$data['latlng'];
-			if($data['company']){
-				$data['datalocation'].="/".$data['company']->id;
-			}
+	}
 
-			return $data;
+	private function getProjectsMapData($data){
+		$data['urllocation'] ="api/mylocalprojects";
+		$data['title'] = "Project Locations";
+		$data['company']=NULL;
+		$data['companyname']=NULL;
+		return $data;
+	}
+
+	private function getPeopleMapData($data){
+		$data['urllocation'] ="api/mylocalpeople";
+		$data['title'] = "People Locations";
+		$data['company']=NULL;
+		$data['companyname']=NULL;
+		return $data;
+	}
+
+	private function getMyLeadsMapData($data){
+		$data['urllocation'] ="api/myleads";
+		$data['title'] = "Lead Locations";
+		$data['company']=NULL;
+		$data['companyname']=NULL;
+		return $data;
 	}
 	
 	/**
@@ -164,73 +231,78 @@ class GeoCodingController extends BaseController {
 	 */
 	 
 	public function getGeoListData($data ) {
+
+	
 		$company = isset($data['company']) ? $data['company'] : NULL;
 		$location = new Location;
 		$location->lat = $data['lat'];
 		$location->lng = $data['lng'];
 
-		switch ($data['type']) {
-			
-			case 'location':
-			case 'company':
-			if($company){
-				
-				return $this->location
-				->where('company_id','=',$company->id)
-				->nearby($location,$data['distance'])
-				->with('company')
-				->get();
-			}else{
-			
-				return $this->location
-				->whereHas('company.serviceline', function ($q) {
-						$q->whereIn('servicelines.id',$this->userServiceLines);
-				})->nearby($location,$data['distance'])
-				->with('company')
-				->get();
-			}
-			
-			
-			
-			break;
-			
-			case 'branch':
+		if(method_exists($this,'get'.ucwords($data['type']).'ListData')){
+			$method = 'get'.ucwords($data['type']).'ListData';
+			return $this->$method($location,$data,$company);
 
-			return $this->branch
+		}else{
+			// get default map view
+			$method = 'getLocationListData';
+			return $this->$method($location,$data,$company);
+		}
+	
+
+		
+	}
+	
+	private function getBranchListData($location,$data){
+		return $this->branch
 			->whereHas('servicelines', function ($q) {
 				$q->whereIn('servicelines.id',$this->userServiceLines);
 			})
 			->nearby($location,$data['distance'])
 			->get();
-			
-			break;
+	}
 
-			case 'projects':
-				
-				return $this->project
+	private function getProjectsListData($location,$data){
+
+		return $this->project
+				->whereHas('source', function($q){
+            		$q->where('status','=','open');
+        		})
 				->nearby($location,$data['distance'])
 				->with('owner')
 				->get();
 			
-			break;
-			
-			default:
-			if($company){
-				return $this->location
-				->where('company_id','=',$company)
-				->nearby($location,$data['distance'])
-				->get();
-			}else{
-				return $this->location
-				->nearby($location,$data['distance'])
-				->get();
-			}
-		
-			break;
-		}
-		
 	}
-	
+
+	private function getCompanyListData($location,$data,$company){
+		return $this->location
+				->where('company_id','=',$company->id)
+				->nearby($location,$data['distance'])
+				->with('company')
+				->get();
+	}
+
+	private function getLocationListData($location,$data){
+		return $this->location
+				->whereHas('company.serviceline', function ($q) {
+						$q->whereIn('servicelines.id',$this->userServiceLines);
+				})->nearby($location,$data['distance'])
+				->with('company')
+				->get();
+	}
+
+	private function getPeopleListData($location,$data){
+		return $this->person
+				->nearby($location,$data['distance'])
+				->with('userdetails.roles')
+				->get();
+	}
+
+	private function getMyLeadsListData($location,$data){
+		return $this->lead->myLeads()
+			->with('leadsource')
+			->nearby($location,$data['distance'])
+			->get();
+	}
 	
 	/**
 	 * Generate branches XML based on results
@@ -241,9 +313,11 @@ class GeoCodingController extends BaseController {
 
 		$filtered = $this->location->isFiltered(['locations'],['business','segment'],NULL);
 
-		if($request->filled('lat') && $request->filled('lng')) {
+
+		if(request()->filled('lat') && request()->filled('lng')) {
 			
-			$data = $request->all();
+			$data = request()->all();
+
 			$data['latlng'] = $data['lat'].":".$data['lng'];
 			if($data['type'] == 'list') {
 				$data['result'] = $this->getGeoListData($data);

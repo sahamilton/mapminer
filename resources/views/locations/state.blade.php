@@ -5,7 +5,7 @@
 
 <link rel="stylesheet" href="{{asset('maps/css/map.css')}}">
 <div class="page-header">
-<div class="pull-right">
+<div class="float-right">
 	
 		</div>
         <h1>National Accounts</h1>
@@ -52,4 +52,4 @@ $data['distance'] = '100';?>
         });
       </script>
 	
-@stop
+@endsection

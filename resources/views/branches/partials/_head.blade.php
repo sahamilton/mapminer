@@ -1,4 +1,4 @@
-<div class="pull-right">
+<div class="float-right">
 	 <p><a href="{{ route('branches.index') }}">Show all branches</a></p>	
 		</div>
         <h1>{{$data['title']}}</h1>
@@ -19,20 +19,22 @@
                     @endif
                     <a href="{{route('person.show',$people->id)}}"
                         title = "See {{$people->firstname}}'s organizational details">
-                        {{$people->fullName()}} </a> 
-                        <span type="button" class="fa fa-copy btn-copy js-tooltip js-copy" data-toggle="tooltip" data-placement="bottom" data-copy="{{$people->fullName()}}" title="Copy name to clipboard"></span> 
+                        {{$people->postName()}} </a> 
+
+                        <span type="button" class="far fa-copy btn-copy js-tooltip js-copy" data-toggle="tooltip" data-placement="bottom" data-copy="{{$people->postName()}}" title="Copy name to clipboard"></span> 
                     
                 </strong>  
                 @if($people->phone != "")
-                   <i class="fa fa-phone" aria-hidden="true"></i>
+                   <i class="fas fa-phone" aria-hidden="true"></i>
                     {{$people->phone}} 
                 @endif
                 @if($people->has('userdetails'))
-                    <i class="fa fa-envelope" aria-hidden="true"></i>
+                    <i class="far fa-envelope" aria-hidden="true"></i>
                     <a href="mailto:{{$people->userdetails()->first()->email}}"
                         title="Email {{$people->firstname}}">
                     {{$people->userdetails()->first()->email}}</a> 
-                    <span type="button" class="fa fa-copy btn-copy js-tooltip js-copy" data-toggle="tooltip" data-placement="bottom" data-copy="{{$people->userdetails()->first()->email}}" title="Copy email to clipboard"></span> 
+                    <span type="button" class="far fa-copy btn-copy js-tooltip js-copy" data-toggle="tooltip" data-placement="bottom" data-copy="{{$people->userdetails()->first()->email}}" title="Copy email to clipboard"></span> 
+
                     
                 @endif
             </p>
@@ -52,9 +54,11 @@ $data['lng'] = $data['branch']->lng;
 ?>
 
 @if($type=='map')
-<p><a href="{{route('showlist.locations',$data['branch']->id)}}"><i class="fa fa-th-list" aria-hidden="true"></i> List view</a></p>
+
+<p><a href="{{route('showlist.locations',$data['branch']->id)}}"><i class="fas fa-th-list" aria-hidden="true"></i> List view</a></p>
 @else
-<p><a href="{{route('branches.show',$data['branch']->id)}}"><i class="fa fa-flag" aria-hidden="true"></i>Map View</a></p>
+<p><a href="{{route('branches.show',$data['branch']->id)}}"><i class="far fa-flag" aria-hidden="true"></i>Map View</a></p>
+
 @endif
 <div>
 @include('partials/advancedsearch')

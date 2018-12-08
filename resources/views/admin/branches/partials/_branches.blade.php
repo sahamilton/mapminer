@@ -16,8 +16,10 @@
 	@foreach($branches as $branch)
 
 		<tr>
-			<td><a href="{{route('branches.edit',$branch->id)}}" title="Edit {{$branch->branchname}} branch details"><i class="fa fa-pencil" aria-hidden="true"> </i>{{$branch->id}}</a>
-				<a href="{{route('branches.show',$branch->id)}}" target="_blank" title="Review {{$branch->branchname}} branch details"><i class="fa fa-eye" aria-hidden="true"></i></a>
+
+			<td><a href="{{route('branches.edit',$branch->id)}}" title="Edit {{$branch->branchname}} branch details"><i class="far fa-edit text-info"" aria-hidden="true"> </i>{{$branch->id}}</a>
+				<a href="{{route('branches.show',$branch->id)}}" target="_blank" title="Review {{$branch->branchname}} branch details"><i class="far fa-eye" aria-hidden="true"></i></a>
+
 			</td>
 			<td>{{$branch->branchname}}</td>
 			<td>
@@ -29,16 +31,16 @@
 			<td>{{$branch->street}} {{$branch->address2}}</td>
 			<td>{{$branch->city}}</td>
 			<td>{{$branch->state}}</td>
-			<td>@if(count($branch->manager)>0)
-				{{$branch->manager->first()->fullName()}}
+			<td>@if($branch->manager->count()>0)
+				{{$branch->manager->first()->postName()}}
 				@endif
 			</td>
-			<td>@if(count($branch->businessmanager)>0) 
-				{{$branch->businessmanager->first()->fullName()}}
+			<td>@if($branch->businessmanager->count()>0) 
+				{{$branch->businessmanager->first()->postName()}}
 				@endif
 			</td>
-			<td>@if(count($branch->marketmanager)>0)
-				{{$branch->marketmanager->first()->fullName()}}
+			<td>@if($branch->marketmanager->count()>0)
+				{{$branch->marketmanager->first()->postName()}}
 				@endif
 			</td>
 

@@ -43,12 +43,14 @@
 
 @foreach ($lead->relatedNotes as $note)
 <p>{{date_format($note->created_at,'m-d-Y')}}...<em>{{$note->note}}</em><br />
- -- @if(isset($note->writtenBy->person)) {{$note->writtenBy->person->fullName()}} @endif</p>
-@if($note->user_id == Auth::user()->id  or Auth::user()->hasRole('Admin'))
-<br /><a href="{{route('notes.edit',$note->id)}}" title="Edit this note"><i class="fa fa-pencil" aria-hidden="true"></i></a> | 
+ -- @if(isset($note->writtenBy->person)) {{$note->writtenBy->person->postName()}} @endif</p>
+
+@if($note->user_id == auth()->user()->id  or auth()->user()->hasRole('Admin'))
+<br /><a href="{{route('notes.edit',$note->id)}}" title="Edit this note"><i class="far fa-edit text-info"" aria-hidden="true"></i></a> | 
 
 <a data-href="{{route('notes.destroy',$note->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = " this prospect note" href="#">
-  <i class="fa fa-trash-o" aria-hidden="true"> </i></a>
+  <i class="far fa-trash-alt text-danger" aria-hidden="true"> </i></a>
+
 <hr />
 @endif
 
@@ -126,4 +128,4 @@ google.maps.event.addDomListener(window, 'load', initialize);
 
     </script>
 
-@stop
+@endsection

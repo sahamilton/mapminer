@@ -1,4 +1,4 @@
-<?php 
+@php
   $values = Config::get('app.search_radius');
   $default = 100;
   $number = [5,10,25,100];
@@ -7,7 +7,8 @@
   if($session && ! isset($session['number'])){
     $session['number']=5;
   }
-  ?>
+
+@endphp
 
 <form class="form-inline" method ="post"  action ="{{route('lead.find')}}" name="leadaddress">
 {{csrf_field()}}
@@ -53,7 +54,7 @@ class="form-control{{ $errors->has('address') ? ' has-error' : ''}}"
 type="text" 
 id="address" 
 name="address" 
-value="{{isset($session['address']) ? $session['address'] : ''}}"
+value="{{isset($session['fulladdress']) ? $session['fulladdress'] : ''}}"
 required
 />
 {!! $errors->first('address', '<p class="help-block">:message</p>') !!}
@@ -61,7 +62,9 @@ required
 <input type="hidden" name="lat" id="lat" value=""/>
 <input type="hidden" name="lng" id="lat" value=""/>
     <button type="submit"  class= "btn btn-success btn-xs">
-      <i class="fa fa-search" aria-hidden="true"></i>
+
+      <i class="fas fa-search" aria-hidden="true"></i>
+
        Search!</button>
 </form>
 <?php $action = route('lead.find');?>

@@ -25,7 +25,7 @@ class TrainingController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    /*public function index()
     {
         if(auth()->user()->hasRole('Admin')){
             $trainings = $this->training->with('relatedRoles','relatedIndustries','servicelines')->get();
@@ -33,7 +33,25 @@ class TrainingController extends BaseController
         }else{
             return redirect()->route('mytraining');
         }
-    }
+    }*/
+
+     public function index(){
+       
+        $training = $this->training->query();
+
+        // find users servicelines
+        /* $training->whereHas('servicelines', function ($q){
+            $q->whereIn('id',$this->userServiceLines);
+         });*/
+
+         $training->whereHas('relatedRoles', function ($q){
+            $q->whereIn('id',$this->userRoles);
+         });
+
+         $trainings = $training->get();
+
+         return response()->view('training.mytrainings',compact('trainings'));
+        }
 
     /**
      * Show the form for creating a new resource.
@@ -42,12 +60,13 @@ class TrainingController extends BaseController
      */
     public function create()
     {
-        $roles = Role::pluck('name','id')->toArray();
-       
+        $roles = Role::all();
         $verticals = $this->getAllVerticals();
         $servicelines = $this->getAllServicelines();
+        $selectedRoles = \Input::old('roles', array());
+        $mode = 'create';
 
-        return response()->view('training.create',compact('roles','servicelines','verticals'));
+        return response()->view('training.create',compact('roles','servicelines','verticals','selectedRoles','mode'));
     }
 
     /**
@@ -58,20 +77,23 @@ class TrainingController extends BaseController
      */
     public function store(TrainingFormRequest $request)
     {
-        $data = $request->all();
+
+        $data = request()->all();
         $data = $this->setDates($data);
 
-        if($request->has('noexpiration')){
+        if(request()->has('noexpiration')){
+
             $data['dateto']=null;
         }
         if($training = $this->training->create($data)){
             
-            $training->servicelines()->attach($request->get('serviceline'));
-            if($request->filled('vertical')){
-                $training->relatedIndustries()->attach($request->get('vertical'));
+            $training->servicelines()->attach(request('serviceline'));
+            if(request()->filled('vertical')){
+                $training->relatedIndustries()->attach(request('vertical'));
             }
-            if($request->filled('role')){
-                $training->relatedRoles()->attach($request->get('role'));
+            if(request()->filled('role')){
+                $training->relatedRoles()->attach(request('role'));
+
             }
         }
         
@@ -85,6 +107,7 @@ class TrainingController extends BaseController
      * @return \Illuminate\Http\Response
      */
     public function show($id){
+       
         $training = $this->training->findOrFail($id);
         return response()->view('training.view',compact('training'));
 
@@ -98,7 +121,9 @@ class TrainingController extends BaseController
      */
     public function edit(Training $training)
     {
-        //
+        /*
+        $mode=null;
+        */
     }
 
     /**
@@ -125,27 +150,7 @@ class TrainingController extends BaseController
     }
 
 
-    public function mytraining(){
-       
-        $training = $this->training->query();
-        // find users servicelines
-         $training->whereHas('servicelines', function ($q){
-            $q->whereIn('id',$this->userServiceLines);
-         });
-        // find users industries
-        if(count($this->userVerticals)>0){
-                 $training->whereHas('relatedIndustries', function ($q){
-                    $q->whereIn('id',$this->userVerticals);
-                 });
-             }
-        // find users roles
-         $training->whereHas('relatedRoles', function ($q){
-            $q->whereIn('id',$this->userRoles);
-         });
-         $trainings = $training->get();
-
-         return response()->view('training.mytrainings',compact('trainings'));
+   
 
     }
     
-}

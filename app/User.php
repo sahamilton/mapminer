@@ -5,11 +5,15 @@ namespace App;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Nicolaslopezj\Searchable\SearchableTrait;
+use Crypt;
 
 
 class User extends Authenticatable
 {
  use Notifiable,HasRoles, Geocode, SearchableTrait;
+
+
+ protected $expiration = '2880';
 
  protected $searchable = [
         /**
@@ -20,7 +24,7 @@ class User extends Authenticatable
          * @var array
          */
         'columns' => [
-            'users.username' => 10,
+            
             'persons.lastname' => 10,
             'persons.firstname' => 10,
             'users.email' => 10,
@@ -35,7 +39,7 @@ class User extends Authenticatable
 
 
 
-	public $fillable = ['username','email','lastlogin','confirmed','confirmation_code','employee_id'];
+	public $fillable = ['email','lastlogin','confirmed','confirmation_code','employee_id'];
     /**
      * Get user by username
      * @param $username
@@ -98,11 +102,11 @@ class User extends Authenticatable
 		   return $this->hasMany(User::class,'id','mgrid');
 	  }
 
-    public function getUserByUsername( $username )
+    /*public function getUserByUsername( $username )
     {
         return $this->where('username', '=', $username)->first();
     }
-
+*/
     public function position(){
         $position = $this->person()
                 ->select('lat','lng')
@@ -113,6 +117,19 @@ class User extends Authenticatable
                 return implode(",",$position->toArray());
         }
         return "39.50,98.35";
+    }
+
+    public function setAccess(){
+        return $this->api_token ."tbmm".Crypt::encrypt(now());
+    }
+
+    public function getAccess($id){
+        if( Crypt::decrypt(substr($id,strpos($id,'tbmm')+4,strlen($id)))->diffInMinutes() < $this->expiration){
+
+        return $this->where('api_token','=',substr($id,0,strpos($id,'tbmm')))->first();
+    }else{
+        return false;
+        }
     }
 
     /**
@@ -153,8 +170,8 @@ class User extends Authenticatable
      */
     public function currentRoleIds()
     {
-        $roles = $this->roles;
-        $roleIds = false;
+        return $this->roles->pluck('id')->toArray();
+        /*$roleIds = false;
         if( !empty( $roles ) ) {
             $roleIds = array();
             foreach( $roles as &$role )
@@ -162,7 +179,16 @@ class User extends Authenticatable
                 $roleIds[] = $role->id;
             }
         }
-        return $roleIds;
+        return $roleIds;*/
+    }
+
+     /**
+     * Returns user's current role ids only.
+     * @return array|bool
+     */
+    public function currentServiceLineIds()
+    {
+        return $this->serviceline->pluck('id')->toArray();
     }
 
     /**
@@ -210,9 +236,12 @@ class User extends Authenticatable
  * [seeder Seed api_token for all users. Not used]
  * @return [type] [description]
  */
-	public function seeder(){
-		$this->api_token =\Hash::make(str_random(60));
-		$this->save();
+
+	public function setApiToken(){
+
+		return $this->api_token = md5(uniqid(mt_rand(), true));
+		
+
 	}
 /**
  * scopeWithRole Select User by role
@@ -239,4 +268,5 @@ class User extends Authenticatable
 			}
 		return $query->whereNull('lastlogin');
 	}
+
 }

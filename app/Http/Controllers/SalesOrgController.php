@@ -69,11 +69,11 @@ class SalesOrgController extends BaseController {
 			}else{
 				$salesroles = $this->salesroles;
 				$salesteam = $salesperson->descendantsAndSelf()
-				->with('userdetails.roles','directReports.userdetails','directReports.userdetails.roles','reportsTo.userdetails.roles')
+				->with('userdetails.roles','directReports','directReports.userdetails','directReports.userdetails.roles','reportsTo.userdetails.roles')
 				
 				->orderBy('lft')
 				->get();
-							
+						
 				return response()->view('salesorg.managermap', compact('salesteam'));
 			}
 			

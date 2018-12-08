@@ -1,38 +1,33 @@
 @extends ('admin.layouts.default')
 @section('content')
-<h2>Prospect Source - {{$leadsource->source}}</h2>
+<script type="text/javascript" src="{{asset('assets/js/starrr.js')}}"></script>
+<div class="container">
+			<h2>
+				<strong>Prospect Source - {{$leadsource->source}}</strong></h2>
+				<p>{{$leadsource->description}}</p>
+				<p>
+				@if($leadsource->dateto < Carbon\Carbon::now())
+            Expired {{$leadsource->datefrom->format('M j,Y')}}
+        @elseif ($leadsource->datefrom > Carbon\Carbon::now())
+            Commences {{$leadsource->datefrom->format('M j,Y')}}
+        @else
+           Available from {{$leadsource->datefrom->format('M j,Y')}} to {{$leadsource->dateto->format('M j,Y')}}
+        @endif
+    </p>
 
-<p><a href="{{route('leadsource.export',$leadsource->id)}}"><i class="fas fa-cloud-download-alt" aria-hidden="true"></i></i>  Export owned and closed prospects</a></p>
-<p><a href="{{route('leadsource.index')}}">Return to all Prospect sources</a></p>
-<ul class="nav nav-tabs">
-	<li class="nav-item active">
-		<a class="nav-link active" data-toggle="tab" href="#map">
-			<strong>Map View</strong>
-		</a>
-	</li>
-	<li class="nav-item">
-		<a class="nav-link" data-toggle="tab" href="#details">
-			<strong>Details</strong>
-		</a>
-	</li>
-	<li class="nav-item">
-		<a class="nav-link" data-toggle="tab" href="#team">
-			<strong>Assigned To</strong>
-		</a>
-	</li>
-	
-	<li class="nav-item">
-		<a class="nav-link"  data-toggle="tab" href="#unassigned">
-			<strong>Unassigned Prospects</strong>
-		</a>
-	</li>
+				<p class="row"><a href="{{route('leadsource.export',$leadsource->id)}}"><i class="fas fa-cloud-download-alt" aria-hidden="true"></i></i>  Export owned and closed {{$leadsource->source}} Leads</a></p>
+				
 
-	<li class="nav-item">
-		<a class="nav-link"  data-toggle="tab" href="#stats">
-			<strong>Lead Source Stats</strong>
-		</a>
-	</li>
-	
+				<p><a href="{{route('leadsource.index')}}">Return to all Prospect sources</a></p>
+ @if (auth()->user()->hasRole('Admin') or auth()->user()->hasRole('Sales Operations'))
+<div class="float-right">
+                <p><a href="{{{ route('leads.search') }}}" class="btn btn-small btn-info iframe">
+<i class="fas fa-plus-circle " aria-hidden="true"></i>
+
+ Import New Web Lead</a></p>
+            </div>
+ @endif  
+
 
 	
 </ul>

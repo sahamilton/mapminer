@@ -1,4 +1,4 @@
-@extends('site/layouts/default')
+@extends('site.layouts.default')
 @section('content')
 @if(isset($industry))
 	<h1>{{$industry->filter}} Industry Sales Team</h1>
@@ -9,12 +9,16 @@
 @include('partials/_showsearchoptions')
 @include('partials/advancedsearch')
 
-<p><a href="{{route('person.map')}}"><i class="fa fa-flag" aria-hidden="true"></i>Map View</a>
+
+<p><a href="{{route('person.map')}}"><i class="far fa-flag" aria-hidden="true"></i>Map View</a>
+
 
 @if (auth()->user()->hasRole('Admin'))
-	<div class="pull-right">
+	<div class="float-right">
 		<a href="{{{ route('users.create') }}}" class="btn btn-small btn-info iframe">
-		<i class="fa fa-plus text-success" aria-hidden="true"></i>
+
+		<i class="fas fa-plus text-success" aria-hidden="true"></i>
+
 		Create New Person</a>
 	</div>
 @endif
@@ -24,6 +28,7 @@
 		<th>Role</th>
 		<th>Email</th>
 		<th>Industry</th>
+		<th>Servicelines</th>
 	</thead>
 	<tbody>
 		@foreach($persons as $person)
@@ -60,6 +65,14 @@
 					@endforeach
 
 					</ul>
+				</td>
+				<td>
+					<ul>
+						
+					@foreach ($person->userdetails->serviceline as $serviceline)
+					<li>{{$serviceline->ServiceLine}}</li>
+					@endforeach
+				</ul>
 				</td>
 			</tr>
 		@endforeach

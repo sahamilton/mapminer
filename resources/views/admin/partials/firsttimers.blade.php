@@ -1,4 +1,4 @@
-<div style="border:1px solid #000;width:300px;margin:20px;padding:20px;float:left">
+<div style="border:1px solid #000;width:400px;margin:20px;padding:20px;float:left">
   <h4>First Time Users in Past Month</h4>
   <table id ='sorttable8' class='table table-striped table-bordered table-condensed table-hover'>
     <thead>

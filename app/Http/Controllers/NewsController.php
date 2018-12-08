@@ -5,6 +5,7 @@ use Carbon\Carbon;
 use App\User;
 use App\Serviceline;
 use App\Person;
+use App\Role;
 use App\SearchFilter;
 use App\Http\Requests\NewsFormRequest;
 class NewsController extends BaseController {
@@ -62,8 +63,10 @@ class NewsController extends BaseController {
 		$filters = new SearchFilter;
 		$verticals = $filters->industrysegments();
 		$servicelines = Serviceline::whereIn('id',$this->news->getUserServiceLines())->pluck('serviceline','id')->toArray();
-		
-		return response()->view('news.create', compact('servicelines','verticals'));
+		$roles=Role::all();
+		$mode='create';
+		$selectedRoles = \Input::old('roles',array());
+		return response()->view('news.create', compact('servicelines','verticals','roles','mode','selectedRoles'));
 	}
 
 	/**
@@ -74,15 +77,17 @@ class NewsController extends BaseController {
 	public function store(NewsFormRequest $request)
 	{
 		
-		$data = $request->all();
+
+		$data = request()->all();
 		$data = $this->setDates($data);
 		if($news = $this->news->create($data)){
-			$news->serviceline()->attach($request->get('serviceline'));
-			if($request->filled('vertical')){
-				$news->relatedIndustries()->attach($request->get('vertical'));
+			$news->serviceline()->attach(request('serviceline'));
+			if(request()->filled('vertical')){
+				$news->relatedIndustries()->attach(request('vertical'));
 			}
-			if($request->filled('role')){
-				$news->relatedRoles()->attach($request->get('role'));
+			if(request()->filled('role')){
+				$news->relatedRoles()->attach(request('role'));
+
 			}
 		}
 		
@@ -129,10 +134,11 @@ class NewsController extends BaseController {
 
 		->with('author','author.person','serviceline','relatedRoles','relatedIndustries')
 		->findOrFail($id);
-
+		$mode='edit';
+		$selectedRoles = \Input::old('roles',array());
 
 		$servicelines = Serviceline::whereIn('id',$this->userServiceLines)->pluck('serviceline','id')->toArray();
-		return response()->view('news.edit', compact('news','servicelines','verticals'));
+		return response()->view('news.edit', compact('news','servicelines','verticals','mode','selectedRoles'));
 	}
 
 	/**
@@ -144,19 +150,23 @@ class NewsController extends BaseController {
 	public function update(NewsFormRequest $request,$id)
 	{
 		$news = $this->news->findOrFail($id);
-		$data = $request->all();
+
+		$data = request()->all();
+
 		$data = $this->setDates($data);
 
 		if($news->update($data)) {
 			
-			$news->serviceline()->sync($request->get('serviceline'));
+
+			$news->serviceline()->sync(request('serviceline'));
 
 			$vertical = [];
-			$vertical = $request->get('vertical');
+			$vertical = request('vertical');
 			$news->relatedIndustries()->sync($vertical);
 			
 			$role = [];
-			$role = $request->get('role');
+			$role = request('role');
+
 			$news->relatedRoles()->sync($role);
 			
 		}
@@ -186,7 +196,7 @@ class NewsController extends BaseController {
 	
 	public function noNews()
 	{
-		$noNewsDate = Carbon::now();
+		$noNewsDate = now();
 		$this->updateNewsDate($noNewsDate);
 	}
 	

@@ -33,4 +33,4 @@
         });
     </script>
     @include('partials/_copytoclipboard')
-@stop
+@endsection

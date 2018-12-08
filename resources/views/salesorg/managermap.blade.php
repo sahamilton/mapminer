@@ -12,24 +12,27 @@
   @endforeach
   </h3>
   @endif
-  @if(count($salesteam[0]->reportsTo)==1 && isset($salesteam[0]->reportsTo->id))
+
+  @if($salesteam[0]->reportsTo)
   <h4>Reports to:<a href="{{route('salesorg',$salesteam[0]->reportsTo->id)}}" 
   title="See {{$salesteam[0]->reportsTo->firstname}} {{$salesteam[0]->reportsTo->lastname}}'s sales team">
     {{$salesteam[0]->reportsTo->firstname}} {{$salesteam[0]->reportsTo->lastname}}
     </a> 
   @endif
 
-@if(isset ($salesteam[0]->reportsTo->userdetails->roles) && count($salesteam[0]->reportsTo->userdetails->roles)>0) 
+@if(isset ($salesteam[0]->reportsTo->userdetails->roles) && $salesteam[0]->reportsTo->userdetails->roles->count()>0) 
     - {{$salesteam[0]->reportsTo->userdetails->roles[0]->name}}
   @endif
 
   </h4>
   @if(isset ($salesteam[0]->userdetails) && $salesteam[0]->userdetails->email != '')
-  <p><i class="fa fa-envelope" aria-hidden="true"></i> <a href="mailto:{{$salesteam[0]->userdetails->email}}" title="Email {{$salesteam[0]->firstname}} {{$salesteam[0]->lastname}}">{{$salesteam[0]->userdetails->email}}</a> </p>
+
+  <p><i class="far fa-envelope" aria-hidden="true"></i> <a href="mailto:{{$salesteam[0]->userdetails->email}}" title="Email {{$salesteam[0]->firstname}} {{$salesteam[0]->lastname}}">{{$salesteam[0]->userdetails->email}}</a> </p>
   @endif
   <p><a href="{{route('salesorg.list',$salesteam[0]->id)}}"
   title="See list view of {{$salesteam[0]->firstname}} {{$salesteam[0]->lastname}}'s sales team">
-  <i class="fa fa-th-list" aria-hidden="true"></i> List view</a></p>
+  <i class="fas fa-th-list" aria-hidden="true"></i> List view</a></p>
+
       <div id="map-container">
         <div style="float:left;width:300px">
   <h2>Direct Reports:</h2>
@@ -46,7 +49,7 @@
           {{$reports->firstname}} {{$reports->lastname}}</a>  
       @endif
      
-      @if(count($reports->userdetails->roles)>0)
+      @if($reports->userdetails->roles->count()>0)
         - {{$reports->userdetails->roles[0]->name}}
       @endif
       <br/>
@@ -56,6 +59,7 @@
 
   </div>
   <div class="container" style="float:right;width:700px;">
+    @php  $data['type'] ='people'; @endphp
   @include('leads.partials.search')
 <p>Branches = <img src='//maps.google.com/mapfiles/ms/icons/blue-dot.png' />
 Sales Team  = <img src='//maps.google.com/mapfiles/ms/icons/red-dot.png' /></p>
@@ -112,8 +116,8 @@ Sales Team  = <img src='//maps.google.com/mapfiles/ms/icons/red-dot.png' /></p>
           mapTypeId: 'terrain'
         });
       var infowindow = new google.maps.InfoWindow();
-        // Construct the circle for each value in citymap.
-        // Note: We scale the area of the circle based on the population.
+        // Construct the circle for each value in map.
+        // Note: We scale the area of the circle based on the service radius
         for (var branch in branchmap) {
           // Add the circle for this city to the map.
           var branchCircle = new google.maps.Circle({

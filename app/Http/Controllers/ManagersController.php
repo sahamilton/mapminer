@@ -47,9 +47,11 @@ class ManagersController extends BaseController {
 	 */
 	public function selectAccounts(Request $request)
 	{
-		//dd($request->all());
 
-		if(! $request->filled('manager')){
+		//dd(request()->all());
+
+		if(! request()->filled('manager')){
+
 
 			$managerArray = $this->getManagers(auth()->id());
 			if(isset($managerArray['user_id'])){
@@ -59,21 +61,25 @@ class ManagersController extends BaseController {
 			}
 			
 		}else{
-			$this->managerID = $request->get('manager');
+
+			$this->managerID = request('manager');
 			
 		}
 		// if there is a change of manager
-		if($this->managerID != \Session::get('manager') && ! $request->filled('accounts')){
+		if($this->managerID != session('manager') && ! request()->filled('accounts')){
+
 				
 				$data =  $this->getMyAccounts();
 
 				
 		}else{
-			$data['selectedAccounts'] = $request->get('accounts');
+
+			$data['selectedAccounts'] = request('accounts');
+
 			
 		}
 		
-		\Session::flash('manager', $this->managerID);
+		session()->flash('manager', $this->managerID);
 		if($this->managerID[0] == 'All' and ! isset($data['accounts']))
 		{
 			
@@ -217,11 +223,11 @@ class ManagersController extends BaseController {
 			
 			// Did we change the manager
 
-			if(null !== \Session::get('manager') and $this->managerID != \Session::get('manager')){
+			if(null !== session('manager') and $this->managerID != session('manager')){
 				$data['accountstring'] = NULL;
 				
 			}
-			\Session::flash('manager', $this->managerID);
+			session()->flash('manager', $this->managerID);
 			
 			$data['accounts'] = Company::whereIn('person_id',$this->managerID)
 			->orderBy('companyname')

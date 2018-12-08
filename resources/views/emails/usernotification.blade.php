@@ -3,7 +3,7 @@
 
 {{$person->firstname}},
 
-Welcome . You have been granted you access to the {{env('APP_NAME')}} system. 
+Welcome! You have been granted you access to the {{env('APP_NAME')}} system. 
 
 This system provides information on sales and support oppotunties and will allow you to 
 * Search for locations of national accounts

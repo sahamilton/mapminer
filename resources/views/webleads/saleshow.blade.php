@@ -6,7 +6,7 @@
 	<div class="panel panel-default">
 		<div class="panel-heading clearfix">
 			<h2 class="panel-title pull-left"><strong>{{$lead->companyname}}</strong> - {{$lead->rating}}</h2>
-			<div class="pull-right">
+			<div class="float-right">
 				@if($lead->salesteam->first()->pivot->status_id != 3)
 			
 				<button type="button" class="btn btn-info " data-toggle="modal" data-target="#closelead">
@@ -26,7 +26,7 @@
 	</div>
 
 </div>		
-<div class="col-sm-7 pull-right">
+<div class="col-sm-7 float-right">
 <div id="map"  style="border:solid 1px red"></div>
 </div>
 	
@@ -34,5 +34,5 @@
 @include('webleads.partials.salesmap')
 @include('partials._modal')
 @include('partials/_scripts')
-@stop
+@endsection
 

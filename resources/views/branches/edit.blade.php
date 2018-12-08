@@ -4,16 +4,30 @@
 @section('title')
 Edit Branch ::
 @parent
-@stop
+@endsection
 
 {{-- Page content --}}
 @section('content')
 <div class="page-header">
 	<h3>Edit Branch</h3>
 </div>
+
+
 <ul class="nav nav-tabs">
-  <li class="active"><a data-toggle="tab" href="#branch"><strong>Branch Location</strong></a></li>
-  <li><a data-toggle="tab" href="#team"><strong>Branch Team</strong></a></li>
+
+  <li class="nav-item active">
+    <a class="nav-link" data-toggle="tab" href="#branch">
+      <strong>Branch Location</strong>
+    </a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link"  
+    data-toggle="tab" 
+    href="#team">
+      <strong>Branch Team</strong>
+    </a>
+  </li>
+
 
 
 </ul>
@@ -25,17 +39,25 @@ Edit Branch ::
 $buttonLabel = 'Edit Branch';?>
 <form method="post" action ="{{route('branches.update', $branch->id)}}" >
 <input type="hidden" name="_method" value = 'patch' />
-	{{csrf_field()}}
-<div class="tab-content">
-    <div id="branch" class="tab-pane fade in active">
+	@csrf
+<div class="tab-content" id="myTabContent">
+  <div 
+    class="tab-pane fade show active" 
+    id="branch" 
+    role="tabpanel" 
+    aria-labelledby="home-tab">
       @include('branches/partials/_form')
-    </div>
-	<div id="team" class="tab-pane fade in">
+  </div>
+	<div 
+    class="tab-pane fade" 
+    id="team" 
+    role="tabpanel" 
+    aria-labelledby="contact-tab">
       @include('branches/partials/_team')
-    </div>
+  </div>
 	
 </div>
 <input type="submit" class="btn btn-success" value="Edit Branch" />
 </form>
 
-@stop
+@endsection

@@ -7,7 +7,7 @@
 
 <link rel="stylesheet" href="{{asset('maps/css/map.css')}}">
 <div class="page-header">
-<div class="pull-right">
+<div class="float-right">
 
 	 <p><a href="{{route('branches.index')}}">Show all branches</a></p>	
 		</div>
@@ -44,4 +44,4 @@
           $('#map-container').storeLocator({'slideMap' : false, 'defaultLoc': true, 'defaultLat': '{{$data['branches']->lat}}', 'defaultLng' : '{{$data['branches']->lng}}', 'dataLocation' : '{{ route("nearby.branch", $data['branches']->id)?d=".$data['distance'])}}', 'infowindowTemplatePath' : '{{asset('maps/templates/infowindow-description.html')}}','listTemplatePath' : '{{asset('maps/templates/location-list-description.html')}}'} );
         });
     </script>
-@stop
+@endsection

@@ -4,18 +4,28 @@
 <h1>Prospects</h1>
 
 
-
 <ul class="nav nav-tabs">
-	<li class="active"><a data-toggle="tab" href="#map"><strong>Map View</strong></a></li>
 
-	<li><a data-toggle="tab" href="#list"><strong>List</strong></a></li>
+	<li class="nav-item active">
+		<a class="nav-link active" data-toggle="tab" href="#map">
+			<strong>Map View</strong>
+		</a>
+	</li>
 
-	<li><a data-toggle="tab" href="#team"><strong>Sales Team</strong></a></li>
+	<li class="nav-item">
+		<a class="nav-link"  data-toggle="tab" href="#list">
+			<strong>List</strong>
+		</a>
+	</li>
+
+	<li class="nav-item">
+		<a class="nav-link" data-toggle="tab" href="#team"><strong>Sales Team</strong></a></li>
+
 
 </ul>
 
 <div class="tab-content">
-	<div id="map" class="tab-pane fade in active">
+	<div id="map" class="tab-pane fade show active">
 		@include('leads.partials._tabmapleads')
 	</div>
 	<div id="list" class="tab-pane fade in">
@@ -27,4 +37,4 @@
 </div>
    
 @include('partials._scripts')
-@stop
+@endsection

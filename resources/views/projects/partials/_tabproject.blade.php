@@ -1,14 +1,14 @@
 <p><strong>Address:</strong>
-<blockquote>{{$project->address->street}} /{{$project->addr2}}<br />{{$project->address->city}}, {{$project->address->state}} 
-{{$project->address->zipcode}}
+<blockquote>{{$project->street}} /{{$project->address2}}<br />{{$project->city}}, {{$project->state}} 
+{{$project->zip}}
 <br /><em>(Map accuracy: {{$project->accuracy}})</em>
 </blockquote>
 <p><strong>People Ready Status:</strong>
 @can('manage_projects')
   @include('projects.partials._manageprojects')
 @else
-@if(count($project->owner)>0)
-    {{$project->owner[0]->pivot->status}} by {{$project->owner[0]->fullName()}}
+@if($project->owner->count()>0)
+    {{$project->owner[0]->pivot->status}} by {{$project->owner[0]->postName()}}
   @else
     Open
 @endif

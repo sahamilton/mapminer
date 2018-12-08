@@ -33,14 +33,15 @@
                                                     </span>
                                            
                                     </div>
-                               <!-- email -->
-                                           <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-                                               <label class="col-md-4 control-label">Email:</label>
+                               <!-- contactemail
+ -->
+                                           <div class="form-group{{ $errors->has('contactemail') ? ' has-error' : '' }}">
+                                               <label class="col-md-4 control-label">contactemail:</label>
                                                  
-                                                       <input type="text" class="form-control" name='email' description="email" 
-                                                       placeholder="email">
+                                                       <input type="text" class="form-control" name='contactemail' description="contactemail" 
+                                                       placeholder="contactemail">
                                                        <span class="help-block">
-                                                           <strong>{{ $errors->has('email') ? $errors->first('email') : ''}}</strong>
+                                                           <strong>{{ $errors->has('contactemail') ? $errors->first('contactemail') : ''}}</strong>
                                                            </span>
                                                    
                                            </div>

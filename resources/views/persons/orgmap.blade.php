@@ -3,15 +3,9 @@
 <h2>Sales Team Members</h2>
 @include('partials/_showsearchoptions')
 @include('partials/advancedsearch')
-<p><a href='{{route("person.index")}}'><i class="fa fa-th-list" aria-hidden="true"></i> List view</a></p>
 
-	
-      
+<p><a href='{{route("person.index")}}'><i class="fas fa-th-list" aria-hidden="true"></i> List view</a></p>
 
-
-  </head>
-
-  <body onLoad="load()">
     <div id="map" style="width: 800px; height: 600px"></div>
 
     <script type="text/javascript">
@@ -77,4 +71,4 @@
 
   </script>
 
-@stop
+@endsection

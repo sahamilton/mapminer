@@ -2,13 +2,15 @@
 @section('content')
 <h1>{{$salesorg->fullName()}}</h1>
 <h4>{{$salesorg->userdetails->roles[0]->name}}</h4>
-<p><strong><i class="fa fa-phone" aria-hidden="true"></i> Phone:</strong> {{$salesorg->phone}}</p>
-<p><strong><i class="fa fa-envelope" aria-hidden="true"></i> Email:</strong> 
+
+<p><strong><i class="fas fa-phone" aria-hidden="true"></i> Phone:</strong> {{$salesorg->phone}}</p>
+<p><strong><i class="far fa-envelope" aria-hidden="true"></i> Email:</strong> 
+
 <a href="mailto:{{$salesorg->userdetails->email}}" 
 title="Email {{$salesorg->fullName()}}">
 {{$salesorg->userdetails->email}}</a></p>
   
-  @if(count($salesorg->reportsTo)==1 && isset($salesorg->reportsTo->id))
+  @if(isset($salesorg->reportsTo->id))
   <h4>Reports to:<a href="{{route('salesorg',$salesorg->reportsTo->id)}}" 
   title="See {{$salesorg->reportsTo->firstname}} {{$salesorg->reportsTo->lastname}}'s sales team">
     {{$salesorg->reportsTo->firstname}} {{$salesorg->reportsTo->lastname}}
@@ -60,7 +62,7 @@ title="Email {{$salesorg->fullName()}}">
         });
       var infowindow = new google.maps.InfoWindow();
         // Construct the circle for each value in citymap.
-        // Note: We scale the area of the circle based on the population.
+        // Note: We scale the area of the circle based on the esrvice radius.
         for (var branch in branchmap) {
           // Add the circle for this city to the map.
           var branchCircle = new google.maps.Circle({

@@ -67,7 +67,7 @@
         
                 </div>
             </div>
-            <div class="pull-right">
+            <div class="float-right">
            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button> <input type="submit" value="Close Lead" class="btn btn-danger" />
             </div>
         </form>

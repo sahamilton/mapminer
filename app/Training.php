@@ -6,7 +6,8 @@ namespace App;
 
 class Training extends Model
 {
-    
+
+
 	public $fillable =["title","description","reference","type","datefrom","dateto" ];
 
     public function relatedRoles(){
@@ -21,4 +22,6 @@ class Training extends Model
 	{
 		return $this->belongsToMany(Serviceline::class);
 	}
+
+	
 }

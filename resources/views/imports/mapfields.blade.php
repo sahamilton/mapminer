@@ -3,7 +3,7 @@
 @if(! isset($data['route']))
 <?php $data['route'] = 'imports.mapfields';?>
 @endif
-<div class="container">
+<div class="container" style="margin-bottom:80px">
 <h2>@if(isset($title)) {{$title}} @endif</h2>
 <form method="post" 
 	action ="{{route($data['route'])}}" 
@@ -82,4 +82,4 @@
 </div>
 
 
-@stop
+@endsection

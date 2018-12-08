@@ -3,9 +3,9 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use McCool\LaravelAutoPresenter\HasPresenter;
+class SalesLead extends Model implements HasPresenter {
 
-class SalesLead extends Model
-{
     public $table = 'leads';
     public $dates = ['created_at','updated_at','datefrom','dateto'];
     public $closedStatus =3;

@@ -22,8 +22,8 @@
         <tr>  
             <td><a href="{{route('leads.person',$team->id)}}">{{$team->fullName()}}</a></td>
             <td>
-                @if(count($team->reportsTo)>0)
-                    {{$team->reportsTo->fullName()}}
+                @if($team->reportsTo->count()>0)
+                    {{$team->reportsTo->postName()}}
                 @endif
             </td>
             <td>
@@ -32,7 +32,7 @@
                 <li>{{$vertical->filter}}</li>
             @endforeach
             <td>{{$team->city}} {{$team->state}}</td>
-            <td>{{count($team->salesleads)}}</td>
+            <td>{{$team->salesleads->count()}}</td>
         </tr>
         @endforeach
 

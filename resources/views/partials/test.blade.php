@@ -114,5 +114,7 @@ $(function () {
 
 
 	</script>
-    @stop
+
+    @endsection
+
 

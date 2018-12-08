@@ -228,9 +228,7 @@ public function segments(){
   }
 
   public function leads(){
-    return $this->belongsToMany(Lead::class,'lead_searchfilter','searchfilter_id')
-      ->where('datefrom','<=',date('Y-m-d'))
-      ->where('dateto','>=',date('Y-m-d'));
+    return $this->belongsToMany(Lead::class,'lead_searchfilter','searchfilter_id');
   }
   public function people(){
     return $this->belongsToMany(Person::class, 'person_search_filter','search_filter_id')

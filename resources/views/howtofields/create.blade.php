@@ -13,7 +13,7 @@ foreach($groups as $group) {
 	<h3> Create New How To Field </h3>
 		
 
-		<div class="pull-right">
+		<div class="float-right">
 			<a href="{{ route('admin.howtofields.index') }}" class="btn btn-small btn-inverse"><i class="icon-circle-arrow-left icon-white"></i> Back</a>
 		</div>
 	
@@ -37,4 +37,4 @@ $('#add').click(function() {
 });
 </script>
 
-@stop
+@endsection

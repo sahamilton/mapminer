@@ -40,7 +40,7 @@ $rank = ($lead->salesteam->first()->pivot->rating ? $lead->salesteam->first()->p
         
                 </div>
             </div>
-            <div class="pull-right">
+            <div class="float-right">
            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button> <input type="submit" value="Close Lead" class="btn btn-danger" />
             </div>
             <input type="hidden" name="lead_id" value="{{$lead->id}}" />

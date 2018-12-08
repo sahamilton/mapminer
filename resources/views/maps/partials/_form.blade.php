@@ -15,7 +15,7 @@ foreach($session as $key=>$value)
 		$data[$key] = $value;
 	}
 }
-$types = ['location'=>'All accounts','branch'=>'Branches'];
+$types = ['location'=>'All accounts','branch'=>'Branches','people'=>'People','myleads'=>'Leads'];
 // added to filter out Centerline
 if(auth()->user()->can('view_projects') && in_array(5, Session::get('user.servicelines'))){
   $types['projects']='Construction projects';
@@ -29,9 +29,12 @@ $views = array('map'=>'map','list'=>'list');
 $values = Config::get('app.search_radius');
 
 ?>
-<form class="form-inline" action="{{route('findme')}}" method = 'post' name="mapselector">
-{{csrf_field()}}
-<label>Show a</label>
+<form class="form-inline" action="{{route('findme')}}" 
+method = 'post' name="mapselector">
+@csrf
+
+<label>Show a </label>
+
 <select name='view' class="btn btn-mini" id="selectview" title="Select map or list views">    
     @foreach($views as $key=>$field)
       @if(isset($data['view']) && $key === $data['view'])
@@ -52,7 +55,9 @@ $values = Config::get('app.search_radius');
         				@endif
            @endforeach
         </select>
-<label>within</label>  
+
+<label>within </label>  
+
    <select name='distance' class="btn btn-mini" id="selectdistance" title="Change the search distance">
        @foreach($values as $value)
        	@if(isset($data['distance']) && $value === $data['distance'])
@@ -61,16 +66,18 @@ $values = Config::get('app.search_radius');
        		<option value="{{$value}}">{{$value}} miles</option>
             @endif
        @endforeach
-    </select> of 
-    <div class="form-group{{ $errors->has('search') ? ' has-error' : '' }}">
-        <label for= "address">address</label> 
+
+    </select> 
+  <div class="form-group{{ $errors->has('address') ? ' has-error' : '' }}">
+        <label for= "address"> of address</label> 
+
         <input 
         class="form-control{{ $errors->has('search') ? ' has-error' : ''}}" 
         type="text" 
         name="search" 
         title="Enter an address, zip code, or state code to search from"
-        value="{{isset($data['search']) ? str_replace('+','', str_replace('  ',' ',$data['search'])) : ''}}"
-        id="search" 
+        value="{{isset($data['fulladdress']) ? str_replace('+','', str_replace('  ',' ',$data['fulladdress'])) : ''}}"
+        id="address" 
         required
         style='width:300px'
         placeholder='Enter address or check Help Support for auto geocoding' />
@@ -78,13 +85,15 @@ $values = Config::get('app.search_radius');
     </div>
 <button type="submit"  style="background-color: #4CAF50;"
 class= "btn btn-success ">
-<i class="fa fa-search" aria-hidden="true"></i> Search!</button>
+
+<i class="fas fa-search" aria-hidden="true"></i> Search!</button>
+
 <input type="hidden" name ='company' value="{{isset($company) ? $company->id : ''}}" />
 <input type="hidden" name ='companyname' value="{{isset($company) ? $company->companyname : ''}}" />
 <input type="hidden" name="lng" id ="lng" value="{{isset($data['lng']) ? $data['lng'] : '-98.5795'}}" />
 <input type="hidden" name="lat" id ="lat" value="{{isset($data['lat']) ? $data['lat'] : '39.8282'}}" />
 </form>
-<?php $action = 'findme';?>
+<?php $action = '/findme';?>
 @include('partials._noaddressmodal')
 <script>
 
@@ -103,5 +112,11 @@ $("select[id^='select']").change(function() {
     this.form.submit();
 }
 });
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push({
+  'event' : 'searchAddress',
+  'address' : '{{isset($data['address']) ? $data['address'] : 'No address'}}',
+  'searchtype' : '{{isset($data['type']) ? $data['type'] : 'no type'}}'
 
+});
 </script>

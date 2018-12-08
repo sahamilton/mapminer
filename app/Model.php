@@ -7,6 +7,8 @@ class Model extends \Eloquent {
 	public $userVerticals;
 	public $userRoles;
 	
+
+	
 	public function getTableColumns($table=null){
 		
 	     		if(! $table){
@@ -48,24 +50,9 @@ class Model extends \Eloquent {
 			
 		}
 			
-	/*public function _import_csv($filename, $table,$fields)
-		{
-		$filename = str_replace("\\","/",$filename);
-
-		$query = sprintf("LOAD DATA LOCAL INFILE '".$filename."' INTO TABLE ". $table." FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '\"' ESCAPED BY '\"' LINES TERMINATED BY '\\n'  IGNORE 1 LINES (".$fields.");", $filename);
-		
-		
-		try {
-			return  \DB::connection()->getpdo()->exec($query);
-		}
-		catch (Exception $e)
-			{
-			 throw new Exception( 'Something really has gone wrong with the import:\r\n<br />'.$query, 0, $e);
-			
-			}
-		
-		}
-		*/
+	public function fullAddress(){
+		return $this->street.' ' .$this->address2.' ' .$this->city.' ' .$this->state.' ' .$this->zip;
+	}
 	
 	
 	public function rawQuery($query,$error,$type){
@@ -298,4 +285,17 @@ class Model extends \Eloquent {
            ->select($table . '.*')
            ->where($pivot . '.' . $firstKey, '=', $this->id);
    }
+
+   public function removeNullsFromSelect($data){
+		
+		foreach ($data as $key=>$value)
+		{
+			
+			if($value[0]==null){
+			
+				unset($data[$key]);
+			}
+		}
+		return $data;
+	}
 }

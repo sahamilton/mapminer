@@ -2,7 +2,9 @@
 @section('content')
 <h2>Owned Projects</h2>
 <p><a href="{{route('project.stats')}}">See projects summary</a></p>
-<p><a href="{{route('projects.exportowned')}}" title="Download my claimed projects as a CSV / Excel file"><i class="fa fa-cloud-download" aria-hidden="true"></i></i> Download Owned Projects</a>
+
+<p><a href="{{route('projects.exportowned')}}" title="Download my claimed projects as a CSV / Excel file"><i class="fas fa-cloud-download-alt" aria-hidden="true"></i></i> Download Owned Projects</a>
+
 <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
 	<thead>
 		
@@ -27,9 +29,9 @@
 		<td><a href="{{route('projects.show',$project->id)}}"
 		title="See details of this project">{{$project->project_title}}</a></td>
 		<td><a href="{{route('project.stats'). "?id=". $project->source->id}}">{{$project->source->source}}</a></td>
-		<td>{{$project->address->street}}</td>
-		<td>{{$project->address->city}}</td>
-		<td>{{$project->address->state}},{{$project->address->zipcode}}</td>
+		<td>{{$project->street}}</td>
+		<td>{{$project->city}}</td>
+		<td>{{$project->state}},{{$project->zip}}</td>
 		<td>{{$project->structure_header}} / {{$project->project_type}}</td>
 		<td>{{$project->ownership}}</td>
 		<td>{{$project->stage}}</td>

@@ -34,11 +34,11 @@
 		@foreach($projects as $project)
 			<tr> 
 			<td>{{$project->project_title}}</td>
-			<td>{{$project->address->street}}</td>
-			<td>{{$project->addr2}}</td>
-			<td>{{$project->address->city}}</td>
-			<td>{{$project->address->state}}</td>
-			<td>{{$project->address->zipcode}}</td>
+			<td>{{$project->street}}</td>
+			<td>{{$project->address2}}</td>
+			<td>{{$project->city}}</td>
+			<td>{{$project->state}}</td>
+			<td>{{$project->zip}}</td>
 			<td>{{$project->dodge_repnum}}</td>
 			<td>{{$project->structure_header}}</td>
 			<td>{{$project->project_type}}</td>
@@ -69,10 +69,10 @@
       @endif
       </td>
       <td>{{$company->addr1}}</td>
-      <td>{{$company->addr2}}</td>
+      <td>{{$company->address2}}</td>
       <td>{{$company->city}}</td>
       <td>{{$company->state}}</td>
-      <td>{{$company->zipcode}}</td>
+      <td>{{$company->zip}}</td>
       <td>{{$company->phone}}</td>
 				</tr>
 			@endforeach

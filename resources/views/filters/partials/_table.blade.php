@@ -11,20 +11,20 @@
    
     
     <td class="text-right">
-        @if(count($vertical->people)>0)
+        @if($vertical->people->count()>0)
         <a href="{{route('person.vertical',$vertical->id)}}"
         title= "See all people assigned to {{$vertical->filter}} industry">
-            {{count($vertical->people)}}
+            {{$vertical->people->count()}}
             </a>
         @else
             0
         @endif
     </td>
     <td class="text-right">
-        @if(count($vertical->leads)>0)
+        @if($vertical->leads->count()>0)
             <a href="{{route('lead.vertical',$vertical->id)}}"
             title="See all {{$vertical->filter}} leads">
-            {{count($vertical->leads)}}
+            {{$vertical->leads->count()}}
             </a>
 
         @else
@@ -32,10 +32,10 @@
         @endif
 </td>
     <td class="text-right">
-    @if(count($vertical->companies) > 0)
+    @if($vertical->companies)
             <a href="{{route('company.vertical',$vertical->id)}}"
             title="See all {{$vertical->filter}} companies">
-            {{count($vertical->companies)}}
+            {{$vertical->companies->count()}}
             </a>
     @else
         0
@@ -48,10 +48,10 @@
     <td class="text-right">{{$vertical->segment()}}</td>
     <td class="text-right">
         
-        @if(count($vertical->campaigns) > 0)
+        @if($vertical->campaigns->count()) > 0)
             <a href="{{route('salesactivity.vertical',$vertical->id)}}"
             title="See all {{$vertical->filter}} campaigns">
-            {{count($vertical->campaigns)}}
+            {{$vertical->campaigns->count()}}
             </a>
         @else
             0

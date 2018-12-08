@@ -5,7 +5,7 @@
 <div class="page-header">
 	<h3>Edit National Account</h3>
 
-		<div class="pull-right">
+		<div class="float-right">
 			<a href="{{ route('company.index') }}" class="btn btn-small btn-inverse"><i class="icon-circle-arrow-left icon-white"></i> Back</a>
 		</div>
 	
@@ -19,4 +19,4 @@
 		</div>
 	</form>
 </div>
-@stop
+@endsection

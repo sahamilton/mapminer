@@ -5,9 +5,11 @@
 <div class="container">
 <h2>Project Sources</h2>
 @can('manage_projects')
-<div class="pull-right">
+<div class="float-right">
         <a href="{{{ route('projectsource.create') }}}" class="btn btn-small btn-info iframe">
-<i class="fa fa-plus-circle text-success" aria-hidden="true"></i>
+
+<i class="fas fa-plus-circle " aria-hidden="true"></i>
+
  Create New Project Source</a>
       </div>
 @endcan
@@ -49,14 +51,21 @@
         </button>
         <ul class="dropdown-menu" role="menu">
         
-        <li><a href="{{route('projectsource.edit',$source->id)}}"><i class="fa fa-pencil" aria-hidden="true"> </i>Edit {{$source->source}}</a></li>
-     
-        <li><a data-href="{{route('projectsource.destroy',$source->id)}}" 
-        data-toggle="modal" 
-        data-target="#confirm-delete" 
-        data-title = "{{$source->source}}" href="#">
-        <i class="fa fa-trash-o" aria-hidden="true"> </i> 
-        Delete {{$source->source}}</a></li></a></li>
+
+        <a class="dropdown-item"
+        href="{{route('projectsource.edit',$source->id)}}">
+          <i class="far fa-edit text-info"" aria-hidden="true"> </i>
+          Edit {{$source->source}}
+        </a>
+        <a class="dropdown-item"
+          data-href="{{route('projectsource.destroy',$source->id)}}" 
+          data-toggle="modal" 
+          data-target="#confirm-delete" 
+          data-title = "{{$source->source}}" href="#">
+          <i class="far fa-trash-alt text-danger" aria-hidden="true"> </i> 
+          Delete {{$source->source}}
+        </a>
+
 
         </ul>
       </div>
@@ -68,5 +77,5 @@
 </div>
 @include('partials._modal')
 @include('partials/_scripts')
-@stop
+@endsection
         

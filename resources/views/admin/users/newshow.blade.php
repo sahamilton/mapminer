@@ -16,7 +16,9 @@
     @endif
 		<p><a href="{{route('admin.downloadlogins',$view)}}" 
             title="Download these user details as a CSV / Excel file">
-            <i class="fa fa-cloud-download" aria-hidden="true"></i></i> 
+
+            <i class="fas fa-cloud-download-alt" aria-hidden="true"></i></i> 
+
             Download these user details</a> 
         </p>
 
@@ -38,7 +40,7 @@
            
             <th class="col-md-2">First Name</th>
             <th class="col-md-2">Last Name</th>
-            <th class="col-md-2">User Name</th>
+            
             <th class="col-md-2">EMail</th>
             <th class="col-md-2">Roles</th>
             <th class="col-md-2">ServiceLine</th>
@@ -54,7 +56,7 @@
         
         <td class="col-md-2"><a href="{{route('users.show',$user->id)}}">{{ $user->person->firstname }}</a></td>
         <td class="col-md-2"><a href="{{route('users.show',$user->id)}}">{{ $user->person->lastname }}</a></td>
-        <td class="col-md-2"><a href="{{route('users.show',$user->id)}}">{{ $user->username }}</a></td>
+       
         <td class="col-md-2">{{ $user->email }}</td>
         <td class="col-md-2">
             @foreach ($user->roles as $role)
@@ -78,4 +80,4 @@
 	</table>
     
 @include('partials/_scripts')
-@stop
+@endsection

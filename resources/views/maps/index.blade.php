@@ -38,7 +38,9 @@ if($type =='branch'){
         <noscript><input type="submit" value="Submit"></noscript>
 </form>
 <p>
-<p><a href = "{{route('lists')}}?t={{$type}}&d={{$data['distance']}}"><i class="fa fa-th-list" aria-hidden="true"></i> Show List View</a></p>
+
+<p><a href = "{{route('lists')}}?t={{$type}}&d={{$data['distance']}}"><i class="fas fa-th-list" aria-hidden="true"></i> Show List View</a></p>
+
 
 <p>Show nearby <a href="{{route('maps')}}?t={{$switch}}&d={{$data['distance']}}" title="Show {{$switchlabel}} within {{$data['distance']}} miles">{{$switchlabel}}</a></p>
       </div>
@@ -58,4 +60,4 @@ if($type =='branch'){
           $('#map-container').storeLocator({'slideMap' : false, 'autoGeocode':true, 'dataLocation' : '{{ URL::to($datalocation) }}/{{$data['distance']}}','zoomLevel': 9, 'infowindowTemplatePath' : '{{asset('maps/templates/infowindow-description.html')}}','listTemplatePath' : '{{asset('maps/templates/location-list-description.html' )}}'} );
         });
     </script>
-@stop
+@endsection

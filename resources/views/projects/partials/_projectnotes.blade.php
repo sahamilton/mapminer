@@ -1,7 +1,7 @@
 <div class="col-md-8">
 <h4>Project Notes</h4>
 
-@if(count($project->relatedNotes)>0)
+@if($project->relatedNotes->count()>0)
 <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
 <thead>
 <th>Date</th>
@@ -26,7 +26,9 @@
 	@if($project->owned()  or auth()->user()->hasRole('Admin'))
 		
 		<a href="{{route('notes.edit',$note->id)}}" title="Edit this note">
-			<i class="fa fa-pencil" aria-hidden="true"></i>
+
+			<i class="far fa-edit text-info"" aria-hidden="true"></i>
+
 		</a> | 
 		<a data-href="{{route('notes.destroy',$note->id)}}" 
 		            data-toggle="modal" 
@@ -34,8 +36,8 @@
 		            data-title = "note"  
 		            title="Delete this note"
 		            href="#">
-		            <i class="fa fa-trash-o" aria-hidden="true"> </i> </a>
-		           
+
+		            <i class="far fa-trash-alt text-danger" aria-hidden="true"> </i> </a>		           
 
 
 		

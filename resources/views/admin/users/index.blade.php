@@ -2,7 +2,7 @@
 {{-- Web site Title --}}
 @section('title')
 	{{{ $title }}} :: @parent
-@stop
+@endsection
  @include('partials/_modal')
 {{-- Content --}}
 @section('content')
@@ -13,11 +13,12 @@
 			@if($serviceline != 'All')
 				<h6><a href="{{route('users.index')}}">See All Users</a></h6>
 			@endif
-			<div class="pull-right">
+			<div class="float-right">
 
 				<a href="{{{ route('users.create') }}}" class="btn btn-small btn-info iframe">
 				
-<i class="fa fa-plus-circle text-success" aria-hidden="true"></i>
+<i class="fas fa-plus-circle " aria-hidden="true"></i>
+
  Create</a>
 
 			</div>
@@ -30,7 +31,7 @@
             <th class="col-md-2">id</th>
             <th class="col-md-2">First Name</th>
             <th class="col-md-2">Last Name</th>
-            <th class="col-md-2">User Name</th>
+
             <th class="col-md-2">EMail</th>
             <th class="col-md-2">Roles</th>
             <th class="col-md-2">Service Lines</th>
@@ -55,7 +56,7 @@
         <a href="{{route('users.show',$user->id)}}">{{$user->person->lastname}}</a>
         @endif
         </td>
-	<td class="col-md-2">{{ $user->username }}</td>
+
     <td class="col-md-2">{{ $user->email }}</td>
     <td class="col-md-2">
     <ul>
@@ -78,15 +79,10 @@
     </ul>
     </td>
     <td class="col-md-2">{{ $user->confirmed == '1' ? "yes" :  "no"}}</td>
-    <td>
- 
-		@if(isset($user->lastlogin) &&  $user->lastlogin != '0000-00-00 00:00:00'  )
-               
-                {{$user->lastlogin->format('M j, Y h:i a')}}
-			@endif
-	
-	</td>
-    <td>{{$user->updated_at->format('M j, Y h:i a')}}</td>
+
+    <td>{{$user->lastlogin ? $user->lastlogin->format('M j, Y h:i a'): ''}}</td>
+    <td>@if($user->updated_at) {{$user->updated_at->format('M j, Y h:i a')}} @endif</td>
+
     <td class="col-md-2">
     
 
@@ -97,14 +93,18 @@
 			  </button>
 			  <ul class="dropdown-menu" role="menu">
 				
-				<li><a href="{{route('users.edit',$user->id)}}"><i class="fa fa-pencil" aria-hidden="true"> </i>Edit {{$user->person->firstname}}  {{$user->person->lastname}}</a></li>
+				<a class="dropdown-item"
+                href="{{route('users.edit',$user->id)}}">
+                <i class="far fa-edit text-info"" 
+                aria-hidden="true"> </i>Edit {{$user->person->firstname}}  {{$user->person->lastname}}</a>
 
-				<li><a data-href="{{route('users.destroy',$user->id)}}" 
+				<a class="dropdown-item" 
+                data-href="{{route('users.destroy',$user->id)}}" 
 				data-toggle="modal" 
 				data-target="#confirm-delete" 
 				data-title = "{{$user->person->firstname}}  {{$user->person->lastname}}" href="#">
-				<i class="fa fa-trash-o" aria-hidden="true"> </i> 
-				Delete {{$user->person->firstname}}  {{$user->person->lastname}}</a></li></a></li>
+				<i class="far fa-trash-alt text-danger" aria-hidden="true"> </i> 
+				Delete {{$user->person->firstname}}  {{$user->person->lastname}}</a>
 
 			  </ul>
 			</div>
@@ -115,4 +115,4 @@
 	</table>
     
 @include('partials/_scripts')
-@stop
+@endsection

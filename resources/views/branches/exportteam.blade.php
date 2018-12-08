@@ -18,7 +18,7 @@
 				<td>{{$branch->id}}</td>
 				<td>{{$branch->branchname}}</td>
 				@foreach($branch->relatedPeople as $team)
-					<td>{{$team->fullName()}}</td>
+					<td>{{$team->postName()}}</td>
 					<td>{{$team->userdetails->employee_id}}</td>
 					<td>{{$team->pivot->role_id}}</td>
 					@if(isset($roles[$team->pivot->role_id]))

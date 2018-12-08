@@ -9,21 +9,32 @@
 </div>
 <hr />
 <ul class="nav nav-tabs">
-  <li class="active"><a data-toggle="tab" href="#watchers"><strong>Activity</strong></a></li>
-<li><a data-toggle="tab" href="#health"><strong>Data Quality</strong></a></li>
-  <li><a data-toggle="tab" href="#summary"><strong>Accounts Summary </strong></a></li>
-  
 
+  <li class="nav-item active">
+    <a class="nav-link active" data-toggle="tab" href="#watchers">
+      <strong>Activity</strong>
+    </a>
+  </li>
+<li class="nav-item">
+  <a class="nav-link" data-toggle="tab" href="#health">
+    <strong>Data Quality</strong>
+  </a>
+</li>
+ <li class="nav-item">
+  <a class="nav-link" data-toggle="tab" href="#summary">
+    <strong>Accounts Summary </strong>
+  </a>
+</li>
 </ul>
 
 <div class="tab-content">
-  <div id="watchers" class="tab-pane fade in active">
+  <div id="watchers" class="tab-pane show active">
 
-    <div style="border:1px solid #000;width:300px;margin:20px;padding:20px;float:left">
+    <div style="border:1px solid #000;width:400px;margin:20px;padding:20px;float:left">
     @include('managers.partials._activewatchers')
     </div>
     
-    <div style="border:1px solid #000;width:300px;margin:20px;padding:20px;float:left">
+    <div style="border:1px solid #000;width:400px;margin:20px;padding:20px;float:left">
     @include('managers.partials._locationnotes')
     </div>
   </div>
@@ -78,4 +89,4 @@ $(function () {
 
 
 
-@stop
+@endsection

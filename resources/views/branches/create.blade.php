@@ -4,7 +4,7 @@
 @section('title')
 Create a New Branch
 @parent
-@stop
+@endsection
 
 {{-- Page content --}}
 @section('content')
@@ -14,17 +14,19 @@ Create a New Branch
 	</div>
 
 <ul class="nav nav-tabs">
-  <li class="active"><a data-toggle="tab" href="#branch"><strong>Branch Location</strong></a></li>
-  <li><a data-toggle="tab" href="#team"><strong>Branch Team</strong></a></li>
+
+  <li class="nav-item active"><a class="nav-link" data-toggle="tab" href="#branch"><strong>Branch Location</strong></a></li>
+  <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#team"><strong>Branch Team</strong></a></li>
+
 
 
 </ul>
 
 <?php $buttonLabel = 'Create Branch';?>
 <form method="post" name="createbranch" action ="{{route('branches.store')}}" >
-{{csrf_field()}}
+@csrf
 <div class="tab-content">
-    <div id="branch" class="tab-pane fade in active">
+    <div id="branch" class="tab-pane fade show active">
       @include('branches/partials/_form')
     </div>
 	<div id="team" class="tab-pane fade in">
@@ -36,4 +38,4 @@ Create a New Branch
 </form>
 </div>
 @include('partials/_scripts')
-@stop
+@endsection

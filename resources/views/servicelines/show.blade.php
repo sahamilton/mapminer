@@ -1,10 +1,12 @@
-@extends('site/layouts/default')
+@extends('site.layouts.default')
 @section('content')
-@if (Auth::user()->hasRole('Admin'))
-	<div class="pull-right">
-		<a href="{{{ route('webleads.create') }}}" class="btn btn-small btn-info iframe">
+
+@if (auth()->user()->hasRole('Admin'))
+	<div class="float-right">
+		<a href="{{{ route('branches.create') }}}" class="btn btn-small btn-info iframe">
 		
-<i class="fa fa-plus-circle text-success" aria-hidden="true"></i>
+<i class="fas fa-plus-circle " aria-hidden="true"></i>
+
  Create New Branch!!</a>	
 	</div>
 @endif
@@ -41,7 +43,7 @@
 					</a>
 				</td>
 				<td>
-					@if(count($branch->manager)>0)
+					@if($branch->manager)
 						
 						@foreach ($branch->manager as $manager)
 						<a href="{{'managed.branch',$manager->id}}" 
@@ -52,7 +54,7 @@
 					@endif
 				</td>
 				<td>
-					@if(count($branch->region)>0)
+					@if($branch->region)
 						{{$branch->region->region}}
 					@endif
 
@@ -67,14 +69,14 @@
 						<span class="sr-only">Toggle Dropdown</span>
 						</button>
 						<ul class="dropdown-menu" role="menu">
+							<a class="dropdown-item"
+							href="{{route('branches.edit',$branch->id)}}">
+							<i class="far fa-edit text-info"" aria-hidden="true"> </i>
+							Edit {{$branch->branchname}} Branch</a>
+							<a class="dropdown-item" data-href="{{route('branches.destroy',$branch->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = "{{$branch->branchname}} branch" href="#">
+							<i class="far fa-trash-alt text-danger" aria-hidden="true"> </i> 
+							Delete {{$branch->branchname}} branch</a>
 
-							<li><a href="{{route('branches.edit',$branch->id)}}">
-							<i class="fa fa-pencil" aria-hidden="true"> </i>
-							Edit {{$branch->branchname}} Branch</a></li>
-
-							<li><a data-href="{{route('branches.destroy',$branch->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = "{{$branch->branchname}} branch" href="#">
-							<i class="fa fa-trash-o" aria-hidden="true"> </i> 
-							Delete {{$branch->branchname}} branch</a></li>
 						</ul>
 					</div>
 
@@ -87,5 +89,5 @@
 	</table>
 @include('partials/_modal')
 @include('partials/_scripts')
-@stop
+@endsection
 

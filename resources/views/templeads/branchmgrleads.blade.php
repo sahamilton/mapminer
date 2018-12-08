@@ -2,8 +2,8 @@
 @section('content')
 <div class="container">
     <h2>Branch Leads Overview</h2>
-    <h4>Branches Managed By {{$branchmgr->fullName()}}</h4>
-    <p><a hef="{{route('leads.branch')}}">Return to all branches!!</a></p>
+    <h4>Branches Managed By {{$branchmgr->postName()}}</h4>
+    <p><a hef="{{route('leads.branch')}}">Return to all branches</a></p>
 
     <div class="col-md-10 col-md-offset-1">
         <table class="table" id = "sorttable">
@@ -25,11 +25,11 @@
                 <tr> 
                     <td>{{$lead->branches->branchname}}</td>
                     <td><a href="{{route('salesrep.newleads.show',$lead->id)}}">{{$lead->companyname}}</a></td>
-                    <td>{{$lead->address->address}}</td>
-                    <td>{{$lead->address->city}}</td>
-                    <td>{{$lead->address->state}}</td>
-                    @if(count($lead->salesrep)>0)
-                        <td><a href="{{route('salesrep.newleads',$lead->salesrep->first()->id)}}">{{$lead->salesrep->first()->fullName()}}</a></td>
+                    <td>{{$lead->address}}</td>
+                    <td>{{$lead->city}}</td>
+                    <td>{{$lead->state}}</td>
+                    @if($lead->salesrep)
+                        <td><a href="{{route('salesrep.newleads',$lead->salesrep->first()->id)}}">{{$lead->salesrep->first()->postName()}}</a></td>
                         <td>{{$leadStatuses[$lead->salesrep->first()->pivot->status_id]}}</td>
                         <td>{{$lead->salesrep->first()->pivot->ranking}}</td>
                     @else

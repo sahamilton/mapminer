@@ -5,14 +5,18 @@
 
   <!---- Tab message -->
   <ul class="nav nav-tabs">
-    <li class="active"><a data-toggle="tab" href="#home">Message</a></li>
-    <li><a data-toggle="tab" href="#menu1">Recipients ({{count($email->recipients)}})</a></li>
-    <li><a data-toggle="tab" href="#menu2">Select Recipients</a></li>
+
+    <li class="nav-item active">
+      <a class="nav-link" data-toggle="tab" href="#home">Message</a></li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#menu1">Recipients ({{$email->recipients->count())}})</a></li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#menu2">Select Recipients</a></li>
 
   </ul>
 
   <div class="tab-content">
-    <div id="home" class="tab-pane fade in active">
+    <div id="home" class="tab-pane fade show active">
       @include('emails.partials._tabmessage')
     </div>
     <div id="menu1" class="tab-pane fade">

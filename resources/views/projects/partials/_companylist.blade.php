@@ -6,10 +6,10 @@
             <th>firm</th>
             <th>contact</th>
             <th>addr1</th>
-            <th>addr2</th>
+            <th>address2</th>
             <th>city</th>
             <th>state</th>
-            <th>zipcode</th>
+            <th>zip</th>
             <th>phone</th>
 
 	</thead>
@@ -22,7 +22,7 @@
                         {{$company->firm}}</a></td>
                          <td>
                         <p>@include('projects.partials._addcontacts')</p>
-                              @if(count($company->employee)>0)
+                              @if($company->employee->count()>0)
                                     <table class="table table-bordered table-condensed">
 
                                           <tbody>
@@ -39,10 +39,10 @@
                               @endif
                         </td>
                         <td>{{$company->addr1}}</td>
-                        <td>{{$company->addr2}}</td>
+                        <td>{{$company->address2}}</td>
                         <td>{{$company->city}}</td>
                         <td>{{$company->state}}</td>
-                        <td>{{$company->zipcode}}</td>
+                        <td>{{$company->zip}}</td>
                         <td>{{$company->phone}}</td>
                   </tr>
             @endforeach
@@ -52,7 +52,7 @@
 @else
 
 <div class="alert alert-danger">
-@if(count($project->owner)>0)
+@if($project->owner->count()>0)
 
 <p>Project has been {{$project->owner[0]->pivot->status}} by {{$project->owner[0]->fullName()}}</p>
 

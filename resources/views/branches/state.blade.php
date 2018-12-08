@@ -5,8 +5,10 @@
 <h4> <a href="{{route('branches.index')}}" title="Show all branches" />Show all branches</a></h4>
 <?php $route='branches.state';?>
 @include('branches.partials._state')
-<p><a href="{{route('branches.showstatemap',$state->statecode)}}">
-<i class="fa fa-flag" aria-hidden="true"></i> Map view</a></p>
+<p><a href="{{route('branches.showstatemap',$data['state'])}}">
+
+<i class="far fa-flag" aria-hidden="true"></i> Map view</a></p>
+
 <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
 	<thead>
 		<th>Branch</th>
@@ -18,7 +20,9 @@
 		<th>Region</th>
 		<th>Manager</th>
 		<th>Sales Team</th>
-		@if(Auth::user()->hasRole('Admin'))
+
+		@if(auth()->user()->hasRole('Admin'))
+
 			<th>Actions</th>
 		@endif 
 	</thead>
@@ -53,7 +57,7 @@
 		{{$branch->address->state}}
 	</td>
 	<td>
-		@if(count($branch->region)>0)
+		@if($branch->region)
 		<a href="{{route('region.show',$branch->region->id)}}" 
 		title="See all {{$branch->region->region}} region branches">
 		{{$branch->region->region}}
@@ -62,7 +66,7 @@
 
 	</td>
 	<td>
-@if(count($branch->manager)>0)
+@if($branch->manager)
 				
 				@foreach ($branch->manager as $manager)
 				<a href="{{route('managed.branch',$manager->id)}}"
@@ -74,10 +78,12 @@
 	<td>
 		<a href="{{route('branches.show',$branch->id)}}" 
 		title="See details of {{$branch->branchname}} branch">
-		{{count($branch->servicedBy)}}
+		{{$branch->servicedBy->count()}}
 		</a>
 	</td>
-	@if(Auth::user()->hasRole('Admin'))
+
+	@if(auth()->user()->hasRole('Admin'))
+
 		<td>
             @include('partials/_modal')
     
@@ -87,9 +93,14 @@
 				<span class="sr-only">Toggle Dropdown</span>
 			  </button>
 			  <ul class="dropdown-menu" role="menu">
-				
-				<li><a href="{{route('branches.edit',$branch->id)}}"><i class="fa fa-pencil" aria-hidden="true"> </i>Edit {{$branch->branchname}} Branch</a></li>
-				<li><a data-href="{{route('branches.destroy',$branch->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = "{{$branch->branchname}} branch" href="#"><i class="fa fa-trash-o" aria-hidden="true"> </i> Delete {{$branch->branchname}} branch</a></li>
+							
+				<a class="dropdown-item"
+					href="{{route('branches.edit',$branch->id)}}"><i class="far fa-edit text-info"" aria-hidden="true"> </i>Edit {{$branch->branchname}} Branch
+				</a>
+				<a class="dropdown-item"
+					data-href="{{route('branches.destroy',$branch->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = "{{$branch->branchname}} branch" href="#"><i class="far fa-trash-alt text-danger" aria-hidden="true"> </i> Delete {{$branch->branchname}} Branch
+				</a>
+
 			  </ul>
 			</div>
 	
@@ -108,4 +119,4 @@
 
 @include('partials/_scripts')
     
-@stop
+@endsection

@@ -14,7 +14,7 @@
 		@include('leads.partials._branchlist')	
 		@include('leads.partials._repslist')
 </div>		
-<div class="col-sm-7 pull-right">
+<div class="col-sm-7 float-right">
 	@include('webleads.partials._search')
 <div id="map"  style="border:solid 1px red"></div>
 
@@ -30,5 +30,5 @@
 @include('webleads.partials.map')
 
 @include('partials/_scripts')
-@stop
+@endsection
 

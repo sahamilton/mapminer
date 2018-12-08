@@ -13,25 +13,7 @@ class Imports extends Model
     	public $additionaldata;
     	public $nullFields;
 
-    	/*public function __construct($data){
 
-    		if(isset($data['table'])){
-	    		$this->table = $data['table'];
-	    		$this->temptable = $this->table .'_import';
-
-	   			if(isset($data['additionaldata'])){
-
-	    			$this->additionaldata = $data['additionaldata'];
-	    		}else{
-	    			$this->additionaldata = [];
-	    		}
-	    		if(isset($data['filename'])){
-	    			$this->importfilename = str_replace("\\","/",$data['filename']);
-	    		}
-
-       		}
-
-    	}*/
 		public function setFields($data){
 			if(isset($data['additionaldata'])){
 
@@ -45,7 +27,7 @@ class Imports extends Model
 	    	
 	    	$data['fields'][key(array_intersect($data['fields'],array_keys($this->additionaldata)))]='@ignore';
 	    	
-    		$this->fields = implode(",",$data['fields']);
+    		$this->fields = implode(",",$data['fields']);    		
     		$this->table = $data['table'];
 
     		if(! $this->temptable){
@@ -98,6 +80,7 @@ class Imports extends Model
     	private function createTemporaryImportTable(){
 
 			//Create the temporary table
+			$this->executeQuery("DROP TABLE IF EXISTS ". $this->temptable);
 			return $this->executeQuery("CREATE TEMPORARY TABLE ".$this->temptable." AS SELECT * FROM ". $this->table." LIMIT 0");
 
 		}
@@ -107,17 +90,22 @@ class Imports extends Model
 
 			// make sure we bring the created at field across
 			$this->fields.=",created_at";
-			return $this->executeQuery("update ".$this->temptable." set created_at ='".Carbon::now()->toDateTimeString()."'");
+			return $this->executeQuery("update ".$this->temptable." set created_at ='".now()->toDateTimeString()."'");
 		}
 
 		private function updateAdditionalFields(){
 		//Add the project source id
-		//foreach ($this->additonaldata as)
+
+		//foreach ($this->additionaldata as)
+		
+
 		foreach ($this->additionaldata as $field=>$value){
 
 				$this->fields.= ",".$field;
-				return $this->executeQuery("update ".$this->temptable." set ". $field. " ='".$value."'");
+
+				$this->executeQuery("update ".$this->temptable." set ". $field. " ='".$value."'");
 			}
+			return true;
 		}
 
 

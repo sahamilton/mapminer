@@ -20,7 +20,7 @@
 		<!-- CSS
 		================================================== -->
         
-        <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous" />
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 		<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.2/css/jquery.dataTables.css" />
         <link rel="stylesheet" type="text/css" href="//code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css" />    
         <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet" />
@@ -35,9 +35,10 @@
 
 <!-- jQuery -->
 
-		<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+		<script  src="https://code.jquery.com/jquery-3.2.1.min.js" 
+		integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="  crossorigin="anonymous"></script>
 		<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-		<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 		<!-- DataTables -->
 		<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.0-rc.1/js/jquery.dataTables.min.js" ></script>
 		<script src="{{asset('assets/js/summernote.min.js')}}"></script>
@@ -67,7 +68,9 @@
 	<body>
    <script>
        dataLayer = [{ 
-           'userId' : '{{{Auth::id()}}}'
+
+           'userId' : '{{{auth()->id()}}}'
+
 	   }];
 	   </script>
     <!-- Google Tag Manager -->
@@ -109,14 +112,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 
 	    @include('site.layouts.footer')
-            <script
-    src="//d2s6cp23z9c3gz.cloudfront.net/js/embed.widget.min.js"
-    data-domain="trueblue.besnappy.com"
-    data-lang="en"
-	data-name="{{ isset(Auth::user()->firstname) ? Auth::user()->firstname ." ". Auth::user()->lastname  : ''  }}"
-    data-email="{{ isset(Auth::user()->email) ? Auth::user()->email : '' }}"
-    >
-</script>
+            @include('partials.besnappy')
             	    </div>
           </div>
 

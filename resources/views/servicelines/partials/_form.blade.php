@@ -1,5 +1,5 @@
 
-<?php $colors= ['blue','yellow','green','red'];?>
+<?php $colors= ['blue','brown','darkgreen','green','orange','paleblue','pink','purple','yellow','red'];?>
 
 <div class="form-group row @if ($errors->has('Serviceline')) has-error @endif">
 	<div class= "col-md-2" > 

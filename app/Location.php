@@ -22,12 +22,9 @@ class Location extends Model implements HasPresenter {
 
 	public $table = 'locations';
 	public $branch;
-	// Don't forget to fill this array
-	// Note this array is used to check the imports as well.
-	// If you change this you will have to change the location import template.
 
 
-	public $fillable = ['businessname','street','suite','city','state','zip','company_id','phone','contact','lat','lng','segment','businesstype'];
+	public $fillable = ['businessname','street','address2','city','state','zip','company_id','phone','contact','lat','lng','segment','businesstype'];
 
 	protected $hidden =  array('created_at','updated_at','id');
 /**
@@ -111,23 +108,26 @@ class Location extends Model implements HasPresenter {
  * [nearbyBranches description]
  * @return [type] [description]
  */
-	public function nearbyBranches(){
+	public function nearbyBranches($servicelines,$limit=5){
 
-		return Branch::nearby($this,'100')->limit(5);
+		return Branch::whereHas('servicelines', function($q) use ($servicelines){
+				$q->whereIn('servicelines.id',$servicelines);
+			})->nearby($this,'100')->limit($limit);
 	}
 
 
-	public function nearbySalesRep($serviceline=null){
+	public function nearbySalesRep($serviceline=null,$limit=5){
 
 		return Person::with('userdetails.roles')
 		->whereHas('userdetails.serviceline',function ($q) use ($serviceline){
 			$q->whereIn('servicelines.id',$serviceline);
 		})
 		->whereHas('userdetails.roles',function ($q){
-			$q->where('roles.name','=','Sales');
+
+			$q->where('roles.id','=',5);
 		})
 		->nearby($this,'100')
-        ->limit(5);
+        ->limit($limit);
 
 		//return Branch::nearby($this,'100')->limit(5);
 	}

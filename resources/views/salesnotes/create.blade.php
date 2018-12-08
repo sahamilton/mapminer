@@ -52,4 +52,4 @@ $(function() {
   </script>
 
 
-@stop
+@endsection

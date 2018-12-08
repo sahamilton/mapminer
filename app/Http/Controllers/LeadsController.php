@@ -42,7 +42,7 @@ class LeadsController extends BaseController
         $this->lead = $lead;
         $this->leadsource = $leadsource;
         $this->leadstatus = $status;
-        $this->assignTo = \Config::get('leads.lead_distribution_roles'); 
+        $this->assignTo = config('leads.lead_distribution_roles'); 
         parent::__construct($this->lead);
     }
     /**
@@ -152,7 +152,7 @@ class LeadsController extends BaseController
 
     public function show($lead)
     {
-    
+
       $table = $this->leadsource->findOrFail($lead->lead_source_id);
 
       $id= $lead->id;
@@ -174,9 +174,20 @@ class LeadsController extends BaseController
 
 
     }
+
+    public function create(){
+      $uid = auth()->user()->id;
+      $lead_source_id = 3;
+      // note hard coded ;  Need to change
+      return response()->view('leads.create',compact('uid','lead_source_id'));
+    }
+
+
     public function store(LeadFormRequest $request){
 
-      $input = $request->all();
+
+      $input = request()->all();
+
       $leadsource = $this->leadsource->findOrFail($input['lead_source_id']);
       $table = $leadsource->type.'leads';
       $data = $this->extractLeadTableData($input,$table);
@@ -224,8 +235,8 @@ class LeadsController extends BaseController
    
       $lead->load('leadsource');
       $table = $lead->leadsource->type.'leads';
-      $data = $this->extractLeadTableData($request->all(),$table);
 
+      $data = $this->extractLeadTableData(request()->all(),$table);
       $lead->update($data['lead']);
       $lead->contacts()->update($data['contact']);
       if($table=='webleads'){
@@ -269,10 +280,10 @@ class LeadsController extends BaseController
 
     public function leadrank(Request $request){
       $person = $this->person->whereHas('userdetails',function($q) use($request){
-        $q->where('api_token','=',$request->get('api_token'));
+        $q->where('api_token','=',request('api_token'));
       })->firstOrFail();
 
-      if($person->salesleads()->sync([$request->get('id') => ['rating' => $request->get('value')]],false))
+      if($person->salesleads()->sync([request('id') => ['rating' => request('value')]],false))
         {
             return 'success';
         }
@@ -282,40 +293,36 @@ class LeadsController extends BaseController
     }
     public function searchAddress(){
       $leadsources = $this->leadsource->pluck('source','id');
+
       return response()->view('leads.search',compact('leadsources'));
     }
 
 
     public function search(LeadInputAddressFormRequest $request){
-      $geoCode = app('geocoder')->geocode($request->get('address'))->get();
-      $lead = new Lead;
-      $coords = $this->lead->getGeoCode($geoCode);
-      $lead->lat = $coords['lat'];
-      $lead->lng = $coords['lng'];
-      $lead->address = $coords['address'];
-      $lead->city = $coords['city'];
-      $lead->state = $coords['state'];
-      $lead->zip = $coords['zip'];
-      $lead->lead_source_id = 2;
-      $extrafields = $this->getExtraFields('webleads');
-      $sources = $this->leadsource->pluck('source','id');
 
-      $branch = new \App\Branch;
-      $branches = $branch->nearby($lead,500)->limit(5)->get();
-      $people = $this->person
-                    ->whereHas('userdetails.roles',function($q) {
-                      $q->whereIn('name',$this->assignTo);
+      $geoCode = app('geocoder')->geocode(request('address'))->get();
+      if (count($geoCode)>0){
+        // create the lead object
+          $lead = $this->lead->createLeadFromGeo($geoCode);
+          
+          $lead->lead_source_id = 2;
+          $extrafields = $this->getExtraFields('webleads');
+          $sources = $this->leadsource->pluck('source','id');
+          // find nearby branches
+          $branches = $this->findNearByBranches($lead,500);
+         
+            // we should also add serviceline filter?
+          $people = $this->findNearByPeople($lead,500);
+          $salesrepmarkers = $this->person->jsonify($people);
+          $branchmarkers=$branches->toJson();
+          $address = request('address');
 
-              })->nearby($lead,'1000')->with('userdetails')
-             
-              ->limit(5)
-              ->get();      
-      $salesrepmarkers = $this->person->jsonify($people);
-      $branchmarkers=$branches->toJson();
+          return response()->view('leads.showsearch',compact('lead','branches','people','salesrepmarkers','branchmarkers','extrafields','sources','address'));
 
-      return response()->view('leads.showsearch',compact('lead','branches','people','salesrepmarkers','branchmarkers','extrafields','sources'));
+    }else{
 
-
+      return back()->withError('Unable to geo code ' . request('address'));
+    }
 
       //return response()->view('leads.showsearch',compact('lead','sources','rank','people','branches'));
     }
@@ -365,20 +372,24 @@ class LeadsController extends BaseController
     public function find(LeadAddressFormRequest $request){
 
 
-      $geoCode = app('geocoder')->geocode($request->get('address'))->get();
+      $geoCode = app('geocoder')->geocode(request('address'))->get();
 
       if(! $geoCode or count($geoCode)==0)
       {
-        return redirect()->back()->withInput()->with('error','Unable to Geocode address:'.$request->get('address') );
+        return redirect()->back()->withInput()->with('error','Unable to Geocode address:'.request('address') );
 
       }else{
-        $request->merge($this->lead->getGeoCode($geoCode));
+
+        request()->merge($this->lead->getGeoCode($geoCode));
       }
-      $data = $request->all();
-      if(! $request->has('number')){
+      $data = request()->all();
+
+      if(! request()->has('number')){
           $data['number']=5;
         }
-        \Session::put('geo', $data);
+
+      session()->put('geo', $data);
+
       if($request->type =='branch'){
           $branches = $this->findNearByBranches($data);
           return response()->view('salesorg.nearbybranches',compact('data','branches'));
@@ -390,7 +401,7 @@ class LeadsController extends BaseController
     }
 
     /**
-     * Find nearby sales people.
+     * Find nearby branches.
      *
      * @param  array $data
      * @return People object
@@ -409,7 +420,8 @@ class LeadsController extends BaseController
         
         return \App\Branch::whereHas('servicelines',function ($q){
               $q->whereIn('servicelines.id',$this->userServiceLines );
-          })->nearby($location,$data['distance'],$data['number'])
+          })
+          ->with('salesTeam')->nearby($location,$data['distance'],$data['number'])
           
           ->get();
 
@@ -425,15 +437,15 @@ class LeadsController extends BaseController
           $data['distance']=100;
           $data['number']=5;
         }
-        
+
 
         return Person::whereHas('userdetails.serviceline', function ($q) {
               $q->whereIn('servicelines.id',$this->userServiceLines);
           })
           ->whereHas('userdetails.roles', function ($q) {
-              $q->whereIn('roles.id',$this->salesroles);
+              $q->whereIn('name',$this->assignTo);
           })
-          ->with('userdetails','reportsTo','userdetails.roles')
+          ->with('userdetails','reportsTo','userdetails.roles','industryfocus')
           ->nearby($location,$data['distance'],$data['number'])
           
           ->get();
@@ -442,8 +454,10 @@ class LeadsController extends BaseController
    
     
     public function exportLeads(Request $request){
-       if($request->has('type')){
-        $type = $request->get('type');
+
+       if(request()->has('type')){
+
+        $type = request('type');
     }else{
         $type = 'csv';
     }
@@ -462,7 +476,6 @@ class LeadsController extends BaseController
 
         $person = $this->getSalesRep($pid);
       
-
         if($person->userdetails->can('accept_leads')){
            
             return $this->showSalesLeads($person);
@@ -478,11 +491,14 @@ class LeadsController extends BaseController
 
     private function showSalesLeads($person){
         
+
         $openleads = $this->getLeadsByType('openleads',$person);
+
         $openleads =$openleads->limit('200')
                     ->with('leadsource')
                     ->get();
-        
+
+        $openleads = $this->lead->distanceFromMe($openleads);
 
         $closedleads = $this->getLeadsByType('closedleads',$person);
         $closedleads = $closedleads->with('relatedNotes','leadsource')
@@ -592,7 +608,7 @@ class LeadsController extends BaseController
 
         }
         $peeps = $person->descendants()->pluck('id')->toArray();
-        
+
         if(in_array($pid,$peeps)){
             return $person;
         }
@@ -610,7 +626,7 @@ class LeadsController extends BaseController
         })->with($type);
 
     }
- /**
+    /**
      * Close prospect
      * @param  Request $request post contents
      * @param  int  $id      prospect (lead) id
@@ -621,13 +637,29 @@ class LeadsController extends BaseController
       $lead = $this->lead->with('salesteam')->findOrFail($id);
     
       $lead->salesteam()
-        ->updateExistingPivot(auth()->user()->person->id,['rating'=>$request->get('ranking'),'status_id'=>3]);
+        ->updateExistingPivot(auth()->user()->person->id,['rating'=>request('ranking'),'status_id'=>3]);
         $this->addClosingNote($request,$id);
-        return redirect()->route('salesrep.newleads',$lead->salesteam->first()->id)->with('message', 'Lead closed');
+        return redirect()->route('salesrep.newleads.show',$id)->with('message', 'Lead closed');
      }
+    /**
+     * Claim prospect
+     * @param  Request $request post contents
+     * @param  int  $id      prospect (lead) id
+     * @return [type]           [description]
+     */
+    public function claim(Request $request, $id){
+   
+      $lead = $this->lead->with('salesteam')->findOrFail($id);
+    
+      $lead->salesteam()->save(auth()->user()->person,['status_id'=>2]);
+      
+
+        return redirect()->route('salesrep.newleads.show',$id)->with('message', 'Lead claimed');
+     }
+
      private function addClosingNote($request,$id){
         $note = new Note;
-        $note->note = "Lead Closed:" .$request->get('comments');
+        $note->note = "Lead Closed:" .request('comments');
         $note->type = 'lead';
         $note->related_id = $id;
         $note->user_id = auth()->user()->id;
@@ -636,9 +668,9 @@ class LeadsController extends BaseController
 
      public function unAssignLeads(Request $request){
      
-       $lead = $this->lead->findOrFail($request->get('lead'));
+       $lead = $this->lead->findOrFail(request('lead'));
        $lead->branches()->dissociate();
-       $lead->salesteam()->detach($request->get('rep'));
+       $lead->salesteam()->detach(request('rep'));
        return redirect()->route('leads.show',$lead->id);
         
     }
@@ -716,17 +748,17 @@ class LeadsController extends BaseController
 
      public function assignLeads(Request $request){
 
-        $lead = $this->lead->with('contacts','leadsource')->findOrFail($request->get('lead_id'));
-        $branch = Branch::with('manager','manager.userdetails')->findOrFail($request->get('branch'));
+        $lead = $this->lead->with('contacts','leadsource')->findOrFail(request('lead_id'));
+        $branch = Branch::with('manager','manager.userdetails')->findOrFail(request('branch'));
 
         $lead->branches()->associate($branch);
         $lead->save();
-        if($request->get('salesrep')!=''){
+        if(request('salesrep')!=''){
 
-            $rep = $this->person->findOrFail($request->get('salesrep'));
+            $rep = $this->person->findOrFail(request('salesrep'));
             $rep = $this->checkIfTest($rep);
           
-            $lead->salesteam()->attach($request->get('salesrep'), ['status_id' => 2]);
+            $lead->salesteam()->attach(request('salesrep'), ['status_id' => 2]);
             Mail::queue(new NotifyWebLeadsAssignment($lead,$branch,$rep));
         }else{
     
@@ -739,7 +771,7 @@ class LeadsController extends BaseController
 
 
         }
-        if($request->get('notifymgr')){
+        if(request('notifymgr')){
 
             foreach ($branch->manager as $manager){
 

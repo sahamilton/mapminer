@@ -22,7 +22,7 @@ class AdminUsersController extends BaseController {
      * User Model
      * @var User
      */
-    protected $user;
+    public $user;
 
     /**
      * Role Model
@@ -34,7 +34,7 @@ class AdminUsersController extends BaseController {
      * Person Model
      * @var Person
      */
-    protected $person;
+    public $person;
 
 
     /**
@@ -153,7 +153,7 @@ class AdminUsersController extends BaseController {
 
 		$managers = $this->getManagerList();
 		// Show the page
-       
+
 		return response()->view('admin.users.create', compact('roles', 'permissions', 'verticals','selectedRoles', 'selectedPermissions', 'title', 'mode','managers','servicelines','branches'));
     }
 
@@ -165,27 +165,31 @@ class AdminUsersController extends BaseController {
     public function store(UserFormRequest $request)
     {
 
-        $user = $this->user->create($request->all());
-        $user->seeder();
+
+        $user = $this->user->create(request()->all());
+        $user->api_token = md5(uniqid(mt_rand(), true));
         $user->confirmation_code = md5(uniqid(mt_rand(), true));
         $user->password = \Hash::make(\Input::get('password'));
-        if ($request->filled('confirm')) {
-            $user->confirmed = $request->get('confirm');
+        if (request()->filled('confirm')) {
+            $user->confirmed = request('confirm');
+
         }
 
         if ( $user->save() ) {
 
 			$person = new Person;
             $person->user_id = $user->id;
-            $person->firstname = $request->get('firstname');
-            $person->lastname = $request->get('lastname');
+
+            $person->firstname = request('firstname');
+            $person->lastname = request('lastname');
             $person->save();
-           	$person = $this->updateAssociatedPerson($person,$request->all());
-            $person = $this->associateBranchesWithPerson($person,$request->all());
+           	$person = $this->updateAssociatedPerson($person,request()->all());
+            $person = $this->associateBranchesWithPerson($person,request()->all());
 			$user->person()->save($person);
             $track=Track::create(['user_id'=>$user->id]);
-            $user->saveRoles($request->get( 'roles' ));
-            $user->serviceline()->attach($request->get('serviceline'));
+            $user->saveRoles(request('roles' ));
+            $user->serviceline()->attach(request('serviceline'));
+
 	        $person->rebuild();
             return redirect()->route('person.details',$person->id)
                 ->with('success', 'User created succesfully');
@@ -193,7 +197,9 @@ class AdminUsersController extends BaseController {
         } else {
 
             return redirect()->route('users.create')
-                ->withInput($request->except('password'))
+
+                ->withInput(request()->except('password'))
+
                 ->with( 'error', 'Unable to create user' );
         }
     }
@@ -207,11 +213,11 @@ class AdminUsersController extends BaseController {
      */
     public function show($user)
     {
-        $roles= \App\Role::all()->pluck('name','id')->toArray();
+       
+        $person = $user->with('person')->findOrFail($user->id)->person;
+        return redirect()->route('person.details',$person->id);
 
-        $user = $this->user->with('person','serviceline','roles','person.openleads')->findOrFail($user->id);
-
-        return response()->view('admin.users.showdetail', compact('user','roles'));
+        //return response()->view('admin.users.showdetail', compact('user','roles'));
 
     }
 
@@ -273,29 +279,33 @@ class AdminUsersController extends BaseController {
       
         $user = $this->user->with('person')->find($user->id);
         $oldUser = clone($user);
-        if($request->filled('password')){
+
+        if(request()->filled('password')){
           
-            $user->password = \Hash::make($request->get('password'));
+            $user->password = \Hash::make(request('password'));
             $user->save();
         }
 
-		if($user->update($request->all())){
+		if($user->update(request()->all())){
 
-            $person = $this->updateAssociatedPerson($user->person,$request->all());
-            $person = $this->associateBranchesWithPerson($person,$request->all());
+            $person = $this->updateAssociatedPerson($user->person,request()->all());
+            $person = $this->associateBranchesWithPerson($person,request()->all());
 
-           if($request->filled('serviceline')){
+           if(request()->filled('serviceline')){
 
-                $user->serviceline()->sync($request->get('serviceline'));
+                $user->serviceline()->sync(request('serviceline'));
         	}
-            $user->saveRoles($request->get( 'roles' ));
-        	if($request->filled('vertical')){
-                $verticals = $request->get('vertical');
+            $user->saveRoles(request('roles' ));
+        	if(request()->filled('vertical')){
+                $verticals = request('vertical');
+
                     if($verticals[0]==0){
                       $person->industryfocus()->sync([]);
                     }else{
 
-            		  $person->industryfocus()->sync($request->get('vertical'));
+
+            		  $person->industryfocus()->sync(request('vertical'));
+
                     }
         	}else{
                 $person->industryfocus()->sync([]);
@@ -339,14 +349,10 @@ class AdminUsersController extends BaseController {
     }
 
     private function updateAssociatedPerson($person,$data){
-        
-
-       if(isset($data['address'])){
-
-            $data = $this->getLatLng($data['address']) + $data;
-
-       }
-
+       
+    
+        $geodata = $person->updatePersonsAddress($data);
+        $data = array_merge ($data,$geodata);
         $person->update($data);
 
         if(isset($data['vertical'])&& $data['vertical'][0]!=0){
@@ -438,7 +444,9 @@ class AdminUsersController extends BaseController {
    public function bulkImport(UserBulkImportForm $request)
 	{
 
-		$file = $request->file('upload');
+
+		$file = request()->file('upload');
+
 		$name = time() . '-' . $file->getClientOriginalName();
 
 
@@ -456,7 +464,7 @@ class AdminUsersController extends BaseController {
 		$fields = implode(",",$data);
 
 		$table = 'users';
-		$requiredFields = ['persons'=>['firstname','lastname'],'users'=>['username','email','lastlogin','mgrid']];
+		$requiredFields = ['persons'=>['firstname','lastname'],'users'=>['email','lastlogin','mgrid']];
 
 		if($data !== $requiredFields['users']){
 
@@ -502,7 +510,7 @@ class AdminUsersController extends BaseController {
 
 
 		// Remove duplicates from import file
-		$uniquefields =['email','username'];
+		$uniquefields =['email'];
 		foreach($uniquefields as $field) {
 			$query ="delete from ".$temptable."
 			where ". $field." in
@@ -515,14 +523,14 @@ class AdminUsersController extends BaseController {
 
 		// Add new users
 
-		$query = "INSERT INTO `".$table."` (".$fields.")  (SELECT ". $aliasfields." FROM ".$temptable." p WHERE NOT EXISTS ( SELECT s.username FROM users s WHERE s.username = p.username or s.email = p.email))";
+		$query = "INSERT INTO `".$table."` (".$fields.")  (SELECT ". $aliasfields." FROM ".$temptable." p WHERE NOT EXISTS ( SELECT s.email FROM users s WHERE s.email = p.email))";
 		$error = "I couldnt copy over to the permanent table!<br />";
 		$type='insert';
 		$this->rawQuery($query,$error,$type);
 
 
-		// get the user ids of the newly added users.  we should be able to use the username
-		 $query = "select username from ". $temptable;
+		// get the user ids of the newly added users.  we should be able to use the email address
+		 $query = "select email from ". $temptable;
 		 $type = 'select';
 		 $error ='Couldnt get the users';
 		 $newUsers = $this->rawQuery($query,$error,$type);
@@ -541,7 +549,7 @@ class AdminUsersController extends BaseController {
 		if (null!==(\Input::get('serviceline'))){
 			$servicelines = \Input::get('serviceline');
 
-			$users = $this->user->whereIn('username',$newUsers)->get();
+			$users = $this->user->whereIn('email',$newUsers)->get();
 
 			foreach ($users as $user){
 
@@ -602,8 +610,9 @@ class AdminUsersController extends BaseController {
 
 	private function getManagerList()
 	{
-		$managerroles=['3','4','6','7','8','9','11'];
 
+		$managerroles=['3','4','6','7','8','9','11'];
+        
         return $this->person
         ->select(
             \DB::raw("CONCAT(lastname ,', ',firstname) as fullname"),'id')
@@ -612,6 +621,7 @@ class AdminUsersController extends BaseController {
                 $q->whereIn('role_id',$managerroles);
             })
             ->orderBy('fullname')
+
         ->pluck('fullname','id')
         ->toArray();
 	}
@@ -641,7 +651,7 @@ class AdminUsersController extends BaseController {
                         $data[$person->id]['branches'][$branch->id]['id']= $branch->id;
                         $data[$person->id]['branches'][$branch->id]['branchname']= $branch->branchname;
                         $data[$person->id]['branches'][$branch->id]['distance']= $distance;
-                        $data[$person->id]['branches'][$branch->id]['address'] = $branch->fulladdress();
+                        $data[$person->id]['branches'][$branch->id]['address'] = $branch->fullAddress();
                     }
                 }
             }

@@ -14,7 +14,7 @@ $rank = ($lead->salesteam->first()->pivot->rating ? $lead->salesteam->first()->p
       <div class="modal-body">
         <p>Please complete this form to close lead</p>
         <?php $ratings = [1,2,3,4,5];?>
-        <form method="post" action="{{route('weblead.close',$lead->id)}}">
+        <form method="post" action="{{route('templead.close',$lead->id)}}">
         {{csrf_field()}}
         <div class="form-group">
                     <label class="col-md-4 control-label">Lead Rating:</label>
@@ -40,7 +40,7 @@ $rank = ($lead->salesteam->first()->pivot->rating ? $lead->salesteam->first()->p
         
                 </div>
             </div>
-            <div class="pull-right">
+            <div class="float-right">
            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button> <input type="submit" value="Close Lead" class="btn btn-danger" />
             </div>
             <input type="hidden" name="lead_id" value="{{$lead->id}}" />

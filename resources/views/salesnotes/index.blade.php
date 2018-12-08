@@ -14,7 +14,7 @@
 
 @foreach ($companies as $company)
 
- @if(count($company->salesnotes)>0)
+ @if($company->salesnotes->count()>0)
                 <tr class='success'>
                  @else
                <tr class='danger'>
@@ -24,11 +24,13 @@
 <a href="{{route('company.show',$company->id)}}">{{$company->companyname}}</a>
 </td>
 
-<td>  @if(count($company->salesnotes)>0)
-Yes
-@else
-No
-@endif
+<td>  @if($company->salesnotes->count()>0)
+
+        Yes
+        @else
+        No
+        @endif
+
 </td>
 <td>
 @foreach ($company->serviceline as $serviceline)
@@ -37,15 +39,19 @@ No
 </td>
 <td>
   <div class="btn-group">
-       @if(count($company->salesnotes)>0)
-        <a href="{{route('salesnotes.edit',$company->id)}}"
+       @if($company->salesnotes->count()>0)
+
+        <a class="dropdown-item" 
+        href="{{route('salesnotes.edit',$company->id)}}"
         title=" Edit {{trim($company->companyname)}}'s Sales Notes">
       @else
-        <a href="{{route('salesnotes.create','company='.$company->id)}}"
+        <a class="dropdown-item"
+        href="{{route('salesnotes.create','company='.$company->id)}}"
         title=" Create {{trim($company->name)}}'s Sales Notes">
       @endif
       <button type="button" class="btn btn-success" >
-      <i class="fa fa-pencil" aria-hidden="true"></i>   
+      <i class="far fa-edit text-info"" aria-hidden="true"></i>   
+
       </a>
   	          
   </div>
@@ -55,5 +61,5 @@ No
 </table>
 
 @include('partials/_scripts')
-@stop
+@endsection
         

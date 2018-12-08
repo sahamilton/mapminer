@@ -5,17 +5,23 @@
 
 <div>
 <h2> {{$company->companyname}} {{$data['segment']}} Locations </h2>
+@if (auth()->user()->can('manage_accounts'))
 <p>
-
-	<a href= "{{route('company.service',$company->id)}}">Show Service Details</a></p>
-
+	<i class="fab fa-pagelines"></i> 
+	<a href= "{{route('company.service',$company->id)}}">Show Service Branch Details</a>
+</p>
+<p>
+	<i class="fas fa-users"></i> 
+	<a href= "{{route('company.teamservice',$company->id)}}">Show Service Team Details</a>
+</p>
+@endif
 @if (isset($company->industryVertical->filter))
-<p>{{$company->industryVertical->filter}} Vertical</p>
+	<p>{{$company->industryVertical->filter}} Vertical</p>
 @endif
 <h4>ServiceLines:</h4>
 <ul>
 @foreach($company->serviceline as $serviceline)
-<li>{{$serviceline->ServiceLine}} </li>
+	<li>{{$serviceline->ServiceLine}} </li>
 @endforeach
 </ul>
 
@@ -24,16 +30,19 @@
 @if(isset($company->managedBy->firstname))
 <p>Account managed by <a href="{{route('person.show',$company->managedBy->id)}}" title="See all accounts managed by {{$company->managedBy->fullName()}}">{{$company->managedBy->fullName()}}</a></p>
 @endif
-@if (Auth::user()->hasRole('Admin'))
+@if (auth()->user()->hasRole('Admin'))
 
-<div class="pull-right" style="margin-bottom:20px">
+
+<div class="float-right" style="margin-bottom:20px">
 				<a href="{{route('company.location.create',$company->id)}}" title="Create a new {{$company->companyname}} location" class="btn btn-small btn-info iframe">
 				
-<i class="fa fa-plus-circle text-success" aria-hidden="true"></i>
+
+<i class="fas fa-plus-circle " aria-hidden="true"></i>
+
 
 				 Create New Location</a>
 			</div>
-           @endif
+@endif
          
 @include('companies.partials._companyheader')
 @include('partials/advancedsearch')
@@ -43,5 +52,5 @@
 @include('companies.partials._table')
 @include('partials/_modal')
 @include('partials/_scripts')
-@stop
+@endsection
 

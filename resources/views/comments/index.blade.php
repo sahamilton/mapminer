@@ -2,13 +2,12 @@
 @section('content')
 
 <h2>Feedback</h2>
-<div class="pull-right">
+<div class="float-right">
 <a href="{{{ Route('comment.create') }}}" class="btn btn-small btn-info iframe">
-
-<i class="fa fa-plus-circle text-success" aria-hidden="true"></i>
+<i class="fas fa-plus-circle " aria-hidden="true"></i>
 Add Feedback</a>
 </div>
-@if (Auth::user()->hasRole('Admin'))
+@if (auth()->user()->hasRole('Admin'))
 	<a href="{{route('comment.download')}}">Download feedback to Excel</a>
 @endif
 <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
@@ -40,10 +39,12 @@ Add Feedback</a>
 						<span class="sr-only">Toggle Dropdown</span>
 						</button>
 						<ul class="dropdown-menu" role="menu">
-							<li><a href="{{route('comment.edit',$comment->id)}}">
-							<i class="fa fa-pencil" aria-hidden="true"> </i>Edit this comment</a></li>
-							<li><a data-href="{{route('comment.destroy',$comment->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = "this comment" href="#">
-							<i class="fa fa-trash-o" aria-hidden="true"> </i> Delete this comment</a></li>
+							<a class="dropdown-item"
+							href="{{route('comment.edit',$comment->id)}}">
+							<i class="far fa-edit text-info"" aria-hidden="true"> </i>Edit this comment</a>
+							<a class="dropdown-item"
+							data-href="{{route('comment.destroy',$comment->id)}}"data-toggle="modal" data-target="#confirm-delete" data-title = "this comment" href="#">
+							<i class="far fa-trash-alt text-danger" aria-hidden="true"> </i> Delete this comment</a>
 						</ul>
 					</div>
 
@@ -57,4 +58,4 @@ Add Feedback</a>
 	</table>
 </div>
 @include('partials/_scripts')
-@stop
+@endsection

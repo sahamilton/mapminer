@@ -33,7 +33,7 @@
 				
 			</td>
 			<td>
-				@if(count($manager->userdetails->serviceline)>0)
+				@if($manager->userdetails->serviceline)
 					<ul style=" list-style-type: none;">
 					@foreach ( $manager->userdetails->serviceline as $serviceline)
 						<li>{{$serviceline->ServiceLine}}</li>
@@ -44,7 +44,7 @@
 			</td>
 			<td>{{$manager->userdetails->employee_id}}</td>
 			<td>{{$manager->userdetails->email}}</td>
-			<td>@if(count($manager->reportsTo)>0){{$manager->reportsTo->fullName()}}@endif</td>
+			<td>@if($manager->reportsTo){{$manager->reportsTo->fullName()}}@endif</td>
 		</tr>
 		@endforeach
 	</tbody>

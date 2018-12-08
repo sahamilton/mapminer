@@ -14,7 +14,7 @@
 		<p><strong>Available From:</strong> {{$lead->leadsource->datefrom->format('M j, Y')}}</p>
 		<p><strong>Available Until:</strong> {{$lead->leadsource->dateto->format('M j, Y')}}</p>
 		<p><strong>Description:</strong> {{$lead->description}}</p>
-		<p><strong>Assigned:</strong>{{count($lead->salesteam)}}</p>
+		<p><strong>Assigned:</strong>{{$lead->salesteam->count()}}</p>
 		@if($lead->leadsource)
 		<p><strong>Lead Source:</strong><a href="{{route('leadsource.show',$lead->leadsource->id)}}">{{$lead->leadsource->source}}</a></p>
 		@endif
@@ -28,7 +28,7 @@
 		</ul>
 	</div>
 
-@if (count($lead->salesteam) > 0)
+@if ($lead->salesteam)
 
 <p><strong>Closest Branch:</strong><a href= "{{route('branches.show',$branches->first()->id)}}">{{$branches->first()->branchname}}</a></p>
 <div>
@@ -107,7 +107,9 @@
 			</td>
 
 			<td>{{number_format($branch->distance,0)}}</td>
-			<td><input type = "radio" name="branch[]" value="{{$branch->branchid}}" /></td>
+
+			<td><input type = "radio" name="branch[]" value="{{$branch->id}}" /></td>
+
 			</tr>
 
 			@endforeach

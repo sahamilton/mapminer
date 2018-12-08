@@ -50,4 +50,4 @@ $('.summernote').summernote({
 
 </script>
 
-@stop
+@endsection

@@ -5,23 +5,26 @@
 
 @if(isset ($salesteam[0]->userdetails) && $salesteam[0]->userdetails->email !='' )
 
-    @if (count($salesteam[0]->userdetails->roles)==1)
+    @if ($salesteam[0]->userdetails->roles->count()==1)
     <h4> {{$salesteam[0]->userdetails->roles[0]->name}}</h4>
     @endif
-    <p><i class="fa fa-envelope" aria-hidden="true"></i> 
+
+    <p><i class="far fa-envelope" aria-hidden="true"></i> 
+
     <a href="mailto:{{$salesteam[0]->userdetails->email}}" title="Email {{$salesteam[0]->firstname}} {{$salesteam[0]->lastname}}">{{$salesteam[0]->userdetails->email}}</a> </p>
 @endif
 
-@if (isset($salesteam[0]->reportsTo) && count($salesteam[0]->reportsTo->userdetails) == 1)
+@if (isset($salesteam[0]->reportsTo) && $salesteam[0]->reportsTo->userdetails->count() == 1)
 <p>Reports to: <a href = "{{route('salesorg.list',$salesteam[0]->reportsTo->id)}}" 
-title= "See {{$salesteam[0]->reportsTo->firstname}} {{$salesteam[0]->reportsTo->lastname}}'s sales team"> {{$salesteam[0]->reportsTo->firstname}} {{$salesteam[0]->reportsTo->lastname}}  {{count($salesteam[0]->reportsTo->userdetails->roles) !=0 ? ' - ' . $salesteam[0]->reportsTo->userdetails->roles[0]->name : ''}}</a>
+title= "See {{$salesteam[0]->reportsTo->firstname}} {{$salesteam[0]->reportsTo->lastname}}'s sales team"> {{$salesteam[0]->reportsTo->firstname}} {{$salesteam[0]->reportsTo->lastname}}  {{$salesteam[0]->reportsTo->userdetails->roles->count() !=0 ? ' - ' . $salesteam[0]->reportsTo->userdetails->roles[0]->name : ''}}</a>
 @endif
 
 
 
 
   <p><a href="{{route('salesorg',$salesteam[0]->id)}}"
-  title="See map view of {{$salesteam[0]->firstname}} {{$salesteam[0]->lastname}}'s sales team"><i class="fa fa-flag" aria-hidden="true"></i> Map View</a></p>    
+
+  title="See map view of {{$salesteam[0]->firstname}} {{$salesteam[0]->lastname}}'s sales team"><i class="far fa-flag" aria-hidden="true"></i> Map View</a></p>    
 
 @include('leads.partials.search')
 <table id ='nosorttable' class='table table-striped table-bordered table-condensed table-hover'>
@@ -110,4 +113,4 @@ title= "See {{$salesteam[0]->reportsTo->firstname}} {{$salesteam[0]->reportsTo->
 
 
 @include('partials._scripts')
-@stop
+@endsection

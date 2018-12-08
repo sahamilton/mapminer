@@ -6,4 +6,4 @@
 {{Form::open(['route'=>'comment.store'])}}
 	@include('comments/partials/_form')
 {{Form::close()}}
-@stop
+@endsection

@@ -48,6 +48,7 @@ class LeadsAssignController extends Controller
 
         ->get();
 
+
      
         $count = null;
         foreach ($leads as $lead) {
@@ -72,9 +73,11 @@ class LeadsAssignController extends Controller
     public function assignLead(Request $request){
 
      $count=0;
-      $lead = $this->lead->findOrFail($request->get('lead_id'));
 
-      foreach($request->get('salesrep') as $key=>$value){
+      $lead = $this->lead->findOrFail(request('lead_id'));
+
+      foreach(request('salesrep') as $key=>$value){
+
         $lead->salesteam()->attach($value,['status_id'=>1]);
         $count++;
 
@@ -89,6 +92,7 @@ class LeadsAssignController extends Controller
 
 
     }
+
 
     private function setLeadAcceptRoles(Request $request=null){
         if ($request && request()->has('roles')){

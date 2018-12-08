@@ -9,6 +9,7 @@ use App\User;
 use App\Address;
 use App\State;
 use App\Person;
+use App\Role;
 use Excel;
 use App\Http\Requests\BranchFormRequest;
 use App\Http\Requests\BranchImportFormRequest;
@@ -21,11 +22,10 @@ class BranchesController extends BaseController {
 	 * @return Response
 	 */
 	 
-	protected $branch;
-	protected $serviceline;
-	protected $person;
-	protected $state;
-	protected $address;
+	public $branch;
+	public $serviceline;
+	public $person;
+	public $state;
 
 	
 	
@@ -105,11 +105,13 @@ class BranchesController extends BaseController {
 	 */
 	public function create()
 	{
-		$branchRoles = \App\Role::whereIn('id',$this->branch->branchRoles)->pluck('name','id');
+
+		$branchRoles = Role::whereIn('id',$this->branch->branchRoles)->pluck('name','id');
 		$team = $this->person->personroles($this->branch->branchRoles);
 		$servicelines = $this->serviceline->whereIn('id',$this->userServiceLines)->get();
     
 		return response()->view('branches.create',compact('servicelines','team','branchRoles'));
+
 	}
 
 	/**
@@ -119,8 +121,8 @@ class BranchesController extends BaseController {
 	 */
 	public function store(BranchFormRequest $request)
 	{
-		$input = $request->all();
 
+		$input = request()->all();
 		// Attempt to geo code the new branch address	
 		$address = $input['street'] . ",". $input['city'] . ",". $input['state'] . ",". $input['zip'];	
 
@@ -183,19 +185,21 @@ class BranchesController extends BaseController {
 		
 		$servicelines = $this->serviceline
 		->whereIn('id',$this->userServiceLines)->get();
-		
-		$data['branch'] = $this->branch->with('servicelines')
-		->whereHas('servicelines', function($q){
-					    $q->whereIn('serviceline_id',$this->userServiceLines);
+		// need a try here 
+		// check to see that this branch can be seen by this user
+		// move to model
+		$data['branch'] = $this->branch
+			->whereHas('servicelines', function($q){
+						    $q->whereIn('serviceline_id',$this->userServiceLines);
 
-					})
-		->find($branch->id);
+						})
+			->findOrFail($branch->id);
 
 		$filtered = $this->branch->isFiltered(['companies'],['vertical']);
 		
 		// in case of null results of manager search
 	
-
+		$data['fulladdress'] = $branch->fullAddress();
 		$data['urllocation'] ="api/mylocalaccounts";
 		$data['title'] ='National Account Locations';
 		$data['company']=NULL;
@@ -203,14 +207,18 @@ class BranchesController extends BaseController {
 		$data['latlng'] = $data['branch']->address->lat.":".$data['branch']->address->lng;
 		$data['distance'] = '10';
 
-		$roles = \App\Role::pluck('name','id');
+
+		$roles = Role::pluck('name','id');
+
 		return response()->view('branches.show',compact('data','servicelines','filtered','roles'));
 	}
 	
 	public function showSalesTeam($id)
 	{
 		$salesteam = $this->branch->with('relatedPeople','servicelines')->find($id);
-		$roles = \App\Role::pluck('name','id');
+
+		$roles = Role::pluck('name','id');
+
 		return response()->view('branches.showteam',compact('salesteam','roles'));
 	}
 	
@@ -224,8 +232,10 @@ class BranchesController extends BaseController {
 	public function showNearbyBranches(Request $request, $id)
 	{
 		
-		if ($request->filled('d')) {
-			$data['distance'] = $request->get('d');
+
+		if (request()->filled('d')) {
+			$data['distance'] = request('d');
+
 		}else{
 			$data['distance'] = '50';
 		}
@@ -243,7 +253,9 @@ class BranchesController extends BaseController {
 	{
 		
 		$locations = Location::where('branch_id','=',$id)->get();
-		return response()->json(array('error'=>false,'locations' =>$locations->toArray()),200)->setCallback($request->get('callback'));
+
+		return response()->json(array('error'=>false,'locations' =>$locations->toArray()),200)->setCallback(request('callback'));
+
 		
 	}
 
@@ -256,14 +268,18 @@ class BranchesController extends BaseController {
 	public function edit($branch)
 	{
 		
+
 		$branchRoles = \App\Role::whereIn('id',$this->branch->branchRoles)->pluck('name','id');
+
 		$team = $this->person->personroles($this->branch->branchRoles);
 		$branch = $this->branch->find($branch->id);	
 		$branchteam = $branch->relatedPeople()->pluck('persons.id')->toArray();
 		$servicelines = $this->serviceline->whereIn('id',$this->userServiceLines )->get();
 		$branchservicelines = $branch->servicelines()->pluck('servicelines.id')->toArray();
 
+
 		return response()->view('branches.edit', compact('branch','servicelines','branchRoles','team','branchteam','branchservicelines'));
+
 	}
 
 	/**
@@ -274,19 +290,23 @@ class BranchesController extends BaseController {
 	 */
 	public function update(BranchFormRequest $request,$branch)
 	{
-		
+
+		$data['roles'] = $this->branch->removeNullsFromSelect(request('roles'));
 		$branch->findOrFail($branch->id)
-		->update($request->all());
-		foreach ($request->get('roles') as $key=>$role){
-				foreach ($role as $person){
-				
-					$branch->relatedPeople()->sync($person,['role_id'=>$key]);
+		->update(request()->all());
+
+		foreach ($data['roles'] as $key=>$role){
+				foreach ($role as $person_id){
+					//$person = $this->person->findOrFail($person_id);
+					//dd($key);
+					$branchAssociations[$person_id]=['role_id'=>$key];
 				}
 				
 			}
+		//dd($branchAssociations);
+		$branch->relatedPeople()->sync($branchAssociations);
 
-		
-		$branch->servicelines()->sync($request->get('serviceline'));
+		$branch->servicelines()->sync(request('serviceline'));
 		$this->rebuildXMLfile();
 		return redirect()->route('branches.show',$branch->id );
 
@@ -321,7 +341,9 @@ class BranchesController extends BaseController {
 		->with('locations','locations.company')
 		->findOrFail($id);
 
-		if($co = $request->get('co'))
+
+		if($co = request('co'))
+
 			{
 				$result = $result->where('locations.company.companyname', 'like',$co)->get();
 			}
@@ -337,8 +359,10 @@ class BranchesController extends BaseController {
 	 */	public function getNearbyBranches(Request $request, $id)
 	
 	{
-		if ($request->filled('d')) {
-			$distance = $request->get('d');
+
+		if (request()->filled('d')) {
+			$distance = request('d');
+
 		}else{
 			$distance = '50';
 		}
@@ -368,10 +392,12 @@ class BranchesController extends BaseController {
 		$servicelines = $this->serviceline->whereIn('id',$this->userServiceLines)->get();
 
 		if(! isset($state)){
-			$state=$request->get('state');
+
+			$state=request('state');
+
 			
 		}
-		$data = \App\State::where('statecode','=',$state)->firstOrFail()->toArray();
+		$data = $this->state->where('statecode','=',$state)->firstOrFail()->toArray();
 		
 		return response()->view('branches.statemap', compact('data','servicelines'));	
 		
@@ -389,11 +415,12 @@ class BranchesController extends BaseController {
 		
 		
 	
+
 		$fullState = $this->state->getStates();
 		$data['fullstate'] = $fullState[$state];
 		$data['state'] = $state;
-		$states = $this->branch->allStates();
-		return response()->view('branches.state', compact('data','branches','states'));
+
+		return response()->view('branches.state', compact('data','branches'));
 		
 
 		
@@ -440,7 +467,9 @@ class BranchesController extends BaseController {
 
 
 		if(! $statecode){
-			$statecode = $request->get('state');
+
+			$statecode = request('state');
+
 		}
 
 		$branches = $this->branch
@@ -457,15 +486,29 @@ class BranchesController extends BaseController {
 			->get();
 
 		
-		$state= State::where('statecode','=',$statecode)->first();
-
-		$allstates = $this->branch->allStates();
-
 				
 		return response()->view('branches.state', compact('branches','state','fields','allstates'));
 		
 	}
+	public function exportTeam() 
+	{
 	
+	
+	Excel::create('Branches',function($excel){
+			$excel->sheet('BranchTeam',function($sheet) {
+
+				$roles = Role::pluck('name','id')->toArray();
+
+				
+				$result = $this->branch->with('relatedPeople','relatedPeople.userdetails')->get();
+				$sheet->loadView('branches.exportteam',compact('result','roles'));
+			});
+		})->download('csv');
+
+		return response()->return();
+	
+	
+}
 	
 	 
 	

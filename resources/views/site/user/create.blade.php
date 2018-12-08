@@ -4,7 +4,7 @@
 @section('title')
 Register user::
 @parent
-@stop
+@endsection
 
 {{-- Content --}}
 @section('content')
@@ -12,4 +12,4 @@ Register user::
 	<h1>Signup</h1>
 </div>
 {{ Confide::makeSignupForm()->render() }}
-@stop
+@endsection

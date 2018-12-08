@@ -4,7 +4,7 @@
 @section('title')
 Forgot password ::
 @parent
-@stop
+@endsection
 
 {{-- Content --}}
 @section('content')
@@ -12,4 +12,4 @@ Forgot password ::
     <h1>Forgot password</h1>
 </div>
 {{ Confide::makeForgotPasswordForm() }}
-@stop
+@endsection

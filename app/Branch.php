@@ -46,14 +46,16 @@ class Branch extends Model implements HasPresenter {
 		return $this->belongsTo(Region::class);
 		
 	}
-	
+
 	public function relatedPeople($role=null){
 		if($role){
 
 			return $this->belongsToMany(Person::class)
+
 			->wherePivot('role_id','=',$role);
 		}else{
-			return $this->belongsToMany(Person::class)->withPivot('role_id');
+			return $this->belongsToMany(Person::class)->withTimestamps()->withPivot('role_id');
+
 		}
 		
 	}
@@ -87,12 +89,29 @@ class Branch extends Model implements HasPresenter {
 	
 	public function servicedBy()
 	{
-		return $this->belongsToMany(Person::class);
+
+		return $this->belongsToMany(Person::class)->withTimestamps()->withPivot('role_id');
+
+	}
+	public function salesTeam()
+	{
+
+		return $this->belongsToMany(Person::class)->withTimestamps()->withPivot('role_id')->wherePivot('role_id','=',5);
+
 	}
 	public function leads(){
 		return $this->hasMany(Lead::class);
 	}
 	
+	public function getManagementTeam(){
+		$team = $this->salesTeam()->get();
+		$mgrs = array();
+		foreach ($team as $rep){
+			$mgrs = array_unique(array_merge($mgrs,$rep->ancestorsAndSelf()->pluck('id')->toArray()));
+
+		}
+		return $mgrs;
+	}
 
 	public function getPresenterClass()
     {
@@ -143,9 +162,6 @@ class Branch extends Model implements HasPresenter {
 		@return xml
 	
 	*/	
-	public function fullAddress(){
-		return $this->street . ' ' . $this->city .' ' . $this->state . ' ' . $this->zip;
-	}
 	
 	public function makeNearbyBranchXML($result) {
 		
@@ -223,10 +239,14 @@ class Branch extends Model implements HasPresenter {
 	}
 	
 
-	public function getServiceLineBranchesAttribute($servicelines){
-		return $this->wherehas('serviceline',function ($q) use($servicelines){
-            $q->whereIn('servicelines.id',$userServiceLines);
+	public function getNearByBranches($servicelines,$location,$distance=100,$limit=5){
+		return $this->wherehas('servicelines',function ($q) use($servicelines){
+            $q->whereIn('servicelines.id',$servicelines);
         })
+        ->nearby($location,$distance)
+        ->limit($limit)
         ->get();
+
 	}
+
 }

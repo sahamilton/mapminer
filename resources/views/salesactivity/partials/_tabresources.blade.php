@@ -4,10 +4,10 @@
 
 		<h4><a href="{{route('documents.show',$document->id)}}" title="See {{$document->title}} document details">{{$document->title}}</a></h4>
 		<p>{{$document->summary}}</p>
-		@if(count($document->rankings) >0)
-			<?php $rank = round($document->score[0]->score/count($document->rankings));
-			$count = count($document->rankings);
-			$avg = round($document->score[0]->score/count($document->rankings),2)?>
+		@if($document->rankings->count() >0)
+			<?php $rank = round($document->score[0]->score/$document->rankings->count());
+			$count = $document->rankings->count();
+			$avg = round($document->score[0]->score/$document->rankings->count(),2)?>
 		@else
 			<?php $rank = null;
 			$count=0;

@@ -30,12 +30,16 @@ class LocationsImportController extends ImportController
 	public function import(LocationImportFormRequest $request) {
 
         $title="Map the locations import file fields";
-        $data = $this->uploadfile($request->file('upload'));
+
+        $data = $this->uploadfile(request()->file('upload'));
+
       
         $data['table']='locations';
         $data['type'] = 'locations';
         $data['route'] = 'locations.mapfields';
-        $data['additionaldata']['company_id'] = $request->get('company');
+
+        $data['additionaldata']['company_id'] = request('company');
+
         $fields = $this->getFileFields($data);    
         $columns = $this->location->getTableColumns($data['table']);
         $skip = ['id','created_at','updated_at','serviceline_id'];

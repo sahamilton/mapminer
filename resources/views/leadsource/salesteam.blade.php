@@ -6,21 +6,17 @@
 <h4>from {{$source->datefrom->format('M j, Y')}} to {{$source->dateto->format('M j, Y')}}</h4>
 <!---- Tab message -->
 <ul class="nav nav-tabs">
-  <li class="active"><a data-toggle="tab" href="#home">Message</a></li>
-  <li><a data-toggle="tab" href="#menu1">Sales Team ({{count($salesteam)}}</a></li>
-  
 
   <li class="nav-item active"><a class="nav-link active" data-toggle="tab" href="#home">Message</a></li>
   <li class="nav-item">
     <a class="nav-link"  data-toggle="tab" href="#menu1">
-      
-      Sales Team ({{count($salesteam)}}
+      Sales Team ({{$salesteam->count()}}
     </a>
   </li>
 </ul>
 
 <div class="tab-content">
-  <div id="home" class="tab-pane fade in active">
+  <div id="home" class="tab-pane fade show active">
   <div style="border:solid 1px red">
 
 {!! $message !!}
@@ -57,7 +53,7 @@
 <tr>
 <td>{{$team['details']->fullName()}}</td>
 <td>
-@if(count($team['details']->reportsTo) > 0)
+@if($team['details']->reportsTo)
 	{{$team['details']->reportsTo->fullName()}}
 @endif
 </td>

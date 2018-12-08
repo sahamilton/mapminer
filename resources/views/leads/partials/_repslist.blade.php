@@ -1,6 +1,6 @@
 <h2>Closest Sales Reps </h2>
 
-@if(count($people)>0)
+@if($people)
 
 {{csrf_field()}}
     <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
@@ -18,9 +18,18 @@
         @foreach($people  as $person)
             <tr> 
 
-                <td><a href="{{route('salesorg',$person->id)}}"  title="See {{$person->fullName()}}'s details">{{$person->fullName()}}</a>
-                    <span type="button" class="fa fa-copy btn-copy js-tooltip js-copy" data-toggle="tooltip" data-placement="bottom" data-copy="{{$person->fullName()}}" title="Copy to clipboard"></span>
-                    <!-- <a class="fa fa-copy"  onclick="myFunction('#{{$person->id}}')" title="Copy {{$person->fullName()}}"></a></td>-->
+                <td><a href="{{route('salesorg',$person->id)}}"  
+                    title="See {{$person->postName()}}'s details">{{$person->postName()}}</a>
+
+                    <span type="button" class="far fa-copy btn-copy js-tooltip js-copy" 
+
+                    data-toggle="tooltip" 
+                    data-placement="bottom" 
+                    data-copy="{{$person->postName()}}" 
+                    title="Copy to clipboard"></span>
+
+                    <!-- <a class="far fa-copy"  onclick="myFunction('#{{$person->id}}')" title="Copy {{$person->postName()}}"></a></td>-->
+
 
                    
                     </p>

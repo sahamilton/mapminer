@@ -1,16 +1,16 @@
-@extends('admin/layouts/default')
+@extends('admin.layouts.default')
 
 {{-- Page title --}}
 @section('title')
 Edit a Service Line::
 @parent
-@stop
+@endsection
 @section('content')
 <div class="page-header">
 	<h3>
 		Edit Service Line
 
-		<div class="pull-right">
+		<div class="float-right">
 			<a href="{{ route('serviceline.index') }}" class="btn btn-small btn-inverse"><i class="icon-circle-arrow-left icon-white"></i> Back</a>
 		</div>
 	</h3>
@@ -24,4 +24,4 @@ Edit a Service Line::
 	@include('servicelines.partials._form')
 {{Form::close()}}
 </div>
-@stop
+@endsection

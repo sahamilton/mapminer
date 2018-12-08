@@ -100,7 +100,8 @@ class LeadsEmailController extends Controller
         ->findOrFail($id);
         $salesteam = $this->salesteam($data['source']->leads);
         
-        $data['message'] = $request->get('message');;
+
+        $data['message'] = request('message');;
         $data['count'] = count($salesteam);
         $this->notifySalesTeam($data,$salesteam);
         $this->notifyManagers($data,$salesteam);

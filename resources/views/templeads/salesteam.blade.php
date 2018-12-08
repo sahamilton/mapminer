@@ -32,4 +32,4 @@
     @endforeach 
 </table>   
 @include('partials/_scripts')
-@stop
+@endsection

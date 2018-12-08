@@ -2,8 +2,7 @@
 @section('content')
 
 <div class="container">
-	{{-- Content --}}
-	@section('content')
+
 	<div class="page-header">
 		<h3>Import Branches Team</h3>
 
@@ -19,7 +18,7 @@
 	</ol>
 	<div>
 		<form method='post' action ="{{route('branches.teamimport')}}" enctype="multipart/form-data" >
-		{{csrf_field()}}
+		@csrf
 
 
 		<!-- File Location -->
@@ -44,7 +43,8 @@
 		</form>
 
 </div>
-@stop	
+	
 
 @include('partials/_scripts')
-@stop
+@endsection
+

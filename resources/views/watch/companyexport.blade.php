@@ -19,10 +19,10 @@
 		<tr>
 			<td>{{$location->company->companyname}}</td>
 			<td>{{$location->businessname}}</td>
-			<td>{{$location->address->street}} {{$location->address->suite}}</td>
-			<td>{{$location->address->city}}</td>
-			<td>{{$location->address->state}}</td>
-			<td>{{$location->address->zip}}</td>
+			<td>{{$location->street}} {{$location->address2}}</td>
+			<td>{{$location->city}}</td>
+			<td>{{$location->state}}</td>
+			<td>{{$location->zip}}</td>
 			<td>{{$location->contact}}</td>
 			<td>{{$location->phone}}</td>
 			<td>
@@ -34,7 +34,7 @@
 			<td>
 				@foreach ($location->relatedNotes as $note)
 					{{$note->note}}-
-					@if(count($note->writtenBy)>0){{$note->writtenBy->person->fullName()}} -@endif  {{$note->created_at->format('m-d-Y')}}
+					@if($note->writtenBy->count()>0){{$note->writtenBy->person->postName()}} -@endif  {{$note->created_at->format('m-d-Y')}}
 					@if(! $loop->last)<br />@endif
 				@endforeach
 			</td>

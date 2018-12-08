@@ -59,25 +59,7 @@
 
 	@yield('styles')
 
-	<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
-	<!--[if lt IE 9]>
-	<script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-	<![endif]-->
-
-	<!-- Asynchronous google analytics; this is the official snippet.
-	 Replace UA-XXXXXX-XX with your site's ID and uncomment to enable.
-	<script type="text/javascript">
-		var _gaq = _gaq || [];
-	  	_gaq.push(['_setAccount', 'UA-31122385-3']);
-	  	_gaq.push(['_trackPageview']);
-
-	  	(function() {
-	   		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-	    		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'https://www') + '.google-analytics.com/ga.js';
-	    		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-	  	})();
-
-	</script> -->
+	
 
 </head>
 
@@ -92,8 +74,10 @@
 		<div class="page-header">
 			<h3>
 				{{ $title }}
-				<div class="pull-right">
-					<button class="btn btn-default btn-small btn-inverse close_popup"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i>Back</button>
+				<div class="float-right">
+
+					<button class="btn btn-default btn-small btn-inverse close_popup"><i class="far fa-arrow-circle-left" aria-hidden="true"></i>Back</button>
+
 				</div>
 			</h3>
 		</div>

@@ -1,8 +1,8 @@
-@if(count($project->owner)>0 && $project->owner[0]->id != auth()->user()->person()->first()->id)
+@if($project->owner->count()>0 && $project->owner[0]->id != auth()->user()->person()->first()->id)
 
 	{{$project->owner[0]->pivot->status}} by {{$project->owner[0]->fullName()}}
 
-@elseif(count($project->owner)>0 && $project->owner[0]->id == auth()->user()->person()->first()->id) 
+@elseif($project->owner->count()>0 && $project->owner[0]->id == auth()->user()->person()->first()->id) 
 	@if($project->pr_status == 'closed')
 		You closed this project on {{$project->updated_at->format('M d, Y')}}
 		<p><strong>Rating:</strong><div id="rating" data-rating="{{$project->owner[0]->pivot->ranking}}" class="starrr" >

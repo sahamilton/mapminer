@@ -1,245 +1,70 @@
-<!-- Navbar -->
-		<div class="navbar navbar-default navbar-inverse navbar-fixed-top"><div class="logo"><a href="{{ route('findme') }}"><img src="{{ asset('assets/img/PRlogo.png')}}" width ='164'/></a></div>
-			 <div class="container">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                </div>
-                <div class="collapse navbar-collapse navbar-ex1-collapse">
-                    <ul class="nav navbar-nav">
-                      
-                 		@if(auth()->user()->hasRole('Admin'))
-                    	<li><a href="{{route('dashboard')}}">
-                        <i class="fa fa-tachometer" aria-hidden="true"> </i> Dashboard</a></li>
-                        @endif
-                        <li class="dropdown{{ (Request::is('admin/company*','admin/locations*') ? ' class="active"' : '') }}">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="{{ route('company.index') }}">
-							<i class="fa fa-wrench" aria-hidden="true"></i> Data Management<span class="caret"></span>
-						</a> 
-                        
-						<ul class="dropdown-menu multi-level">
-                          <!-- Manage accounts -->
-                            <li class="dropdown-submenu">
-                            @can('manage_accounts')
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Accounts</a>
-                                <ul class="dropdown-menu">
-        							<li{{ (Request::is('company*') ? ' class="active"' : '') }}>
-                                    <a href="{{ route('company.index') }}">
-                                    <i class="fa fa-wrench" aria-hidden="true"></i>  Manage Accounts</a>
-                                    </li>
-                                    <li{{ (Request::is('admin/locations*') ? ' class="active"' : '') }}>
-                                    <a href="{{ route('locations.index') }}">
-                                    <i class="fa fa-upload" aria-hidden="true"> </i> Import Locations</a>
-                                    </li>
-                                    
-                                    <li{{ (Request::is('admin/companies/download') ? ' class = "active"' : '') }}>
-                                    <a href =" {{ route('companies.download') }}">                                
-                                    <i class="fa fa-download" aria-hidden="true"> </i> Export Companies</a></li>
-                                    
-                                     <li{{ (Request::is('admin/companies/export') ? ' class="active"' : '') }}>
-                                     <a href="{{ route('companies.locationsexport') }}">
-                                     <i class="fa fa-cloud-download" aria-hidden="true"></i> Export Locations</a></li>
-                                    
-                                    <li class="divider"></li>
-                                    
-                                    <li{{ (Request::is('serviceline*') ? ' class="active"' : '') }}>
-                                    <a href="{{ route('serviceline.index') }}">
-                                    <i class="fa fa-wrench" aria-hidden="true"></i>  Manage Service Lines</a>
-                                    </li>
-                                    <li{{ (Request::is('admin/searchfilters*') ? ' class="active"' : '') }}>
-                                    <a href="{{ route('searchfilters.index') }}">
-                                    <i class="fa fa-filter" aria-hidden="true"></i> Manage Filters</a>
-                                    </li> 
-                                   
-                                    <li class="divider"></li>
-                                    
-                                    <li{{ (Request::is('admin/salesnote*') ? ' class="active"' : '') }}>
-                                    <a href="{{ route('salesnotes.index') }}">
-                                    <i class="fa fa-wrench" aria-hidden="true"></i>  Manage Salesnotes</a>
-                                    </li>
-                                     <li{{ (Request::is('admin/locationnotes*') ? ' class="active"' : '') }}>
-                                    <a href="{{ route('locations.notes') }}">
-                                    <i class="fa fa-upload" aria-hidden="true"></i> Review / Manage Location Notes</a>
-                                    </li>
-                                    
-                                 </ul> 
-
-                                 </li>  
-                                    
-                                  @endcan       
-                              
-                              
-                            
-                           @can('manage_branches')
-                            <!-- Manage Branches  -->   
-
-						    <li class="dropdown-submenu">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Branches</a>
-                            <ul class="dropdown-menu">
-                                
-
-                                <li{{ (Request::is('branches*') ? ' class="active"' : '') }}>
-                                    <a href="{{ route('branch.management') }}">
-                                    <i class="fa fa-wrench" aria-hidden="true"></i>  Manage Branches
-                                    </a>
-                                 </li>
-                                 <li{{ (Request::is('branches*') ? ' class="active"' : '') }}>
-                                    <a href="{{ route('branch.check') }}">
-                                    <i class="fa fa-stethoscope"></i>  Check Assignments
-                                    </a>
-                                 </li>
-                                 
-
-<!--
-                                <li{{ (Request::is('admin/branch*') ? ' class="active"' : '') }}>
-                                <a href="{{ route('branches.import') }}">
-                               <i class="fa fa-upload" aria-hidden="true"> </i> 
-                                Import Branches
-                                </a>
-                                </li>-->
-                                <li{{ (Request::is('admin/branches/export') ? ' class="active"' : '') }}><a href="{{ route('branches.export') }}">
-                                <i class="fa fa-download" aria-hidden="true"> </i> Export Branches</a></li>
-
-
-                            </ul>
-                         </li>
-                         @endcan
-
-                             
-                         <!-- Manage Users  -->  
-                         @can('manage_users')  
-                        <li class="dropdown-submenu">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Users</a>
-                            <ul class="dropdown-menu">
-                                <li{{ (Request::is('admin/users/create') ? ' class="active"' : '') }}><a href="{{ route('users.create') }}">
-                                <i class="fa fa-user-plus" aria-hidden="true"></i> Create User</a></li>
-
-                                <li{{ (Request::is('admin/users*') ? ' class="active"' : '') }}><a href="{{ route('users.index') }}">
-                                <i class="fa fa-user" aria-hidden="true"></i> All Users</a></li>
-                                <li{{ (Request::is('admin/roles*') ? ' class="active"' : '') }}><a href="{{ route('roles.index') }}">
-                                <i class="fa fa-wrench" aria-hidden="true"></i> Roles</a></li>
-                                <li{{ (Request::is('admin/permissions*') ? ' class="active"' : '') }}><a href="{{ route('permissions.index') }}"><i class="fa fa-check" aria-hidden="true"></i> Permissions</a></li>
-                                <li{{ (Request::is('admin/users/nomanager') ? ' class="active"' : '') }}>
-                                <a href="{{ route('nomanager') }}">
-                                <i class="fa fa-minus-circle" aria-hidden="true"></i> Without Manager</a></li>
-
-                                <li{{ (Request::is('admin/users/export') ? ' class="active"' : '') }}><a href="{{ route('person.export') }}">
-                                <i class="fa fa-download" aria-hidden="true"> </i> Export Users</a></li>
-                            </ul>
-                        </li>
-                        <li{{ (Request::is('admin/import*') ? ' class="active"' : '') }}>
-                        <a href="{{ route('imports.index') }}">
-                            <i class="fa fa-level-up"></i>Import / Export</li>
-                        </a></li>
-                        @endcan
-              
-                      </ul>
-
-          <!-- Manage Resources  -->      
-            <li class="dropdown{{ (Request::is('admin/lead*','admin/document*','admin/search*','admin/projects*') ? ' active' : '') }}">
-                <a class="dropdown" data-toggle="dropdown" href="{{ route('users.index') }}">
-                    <i class="fa fa-wrench" aria-hidden="true"></i> 
-                     Resources 
-                    <span class="caret"></span>
-                </a>
-                <ul class="dropdown-menu">
-					<li{{ (Request::is('admin/news*') ? ' class="active"' : '') }}>
-                    <a href="{{ route('news.index') }}">
-                    <i class="fa fa-newspaper-o" aria-hidden="true"> </i> News</a></li>
-
-                    <li{{ (Request::is('admin/training*') ? ' class="active"' : '') }}>
-                    <a href="{{ route('training.index') }}">
-                    <i class="fa fa-graduation-cap" aria-hidden="true"> </i> Training</a></li>
-
-                    <li{{ (Request::is('admin/emails*') ? ' class="active"' : '') }}>
-                    <a href="{{ route('emails.index') }}">
-                    <i class="fa fa-envelope-o" aria-hidden="true"> </i> Emails</a></li>
-                    @can('manage_sales_campaigns')
-                        <li class="divider">Campaigns</li>
-                        <li{{ (Request::is('admin/documents*') ? ' class="active"' : '') }}><a href="{{ route('documents.index') }}">
-                        <i class="fa fa-book" aria-hidden="true"> </i> Sales Library</a></li>
-                        <li {{ (Request::is('admin/process*') ? ' class="active"' : '') }}><a href="{{ route('process.index') }}">
-                        <i class="fa fa-step-forward" aria-hidden="true"> </i> Sales Process</a></li>
-                        <li {{ (Request::is('admin/salesactivity*') ? ' class="active"' : '') }}><a href="{{ route('salesactivity.index') }}">
-                        <i class="fa fa-calendar-check-o" aria-hidden="true"> </i> Sales Campaigns</a></li>
-                    @endcan
-                    @can('manage_prospects')
-                        <li class="divider">Prospects</li>
-                        <li{{ (Request::is('ops/webleads*') ? ' class="active"' : '') }}><a href="{{ route('leads.search') }}">
-                        <i class="fa fa-plus" aria-hidden="true"> </i> Add New Prospect</a></li>
-                        <li{{ (Request::is('admin/leadsource*') ? ' class="active"' : '') }}><a href="{{ route('leadsource.index') }}">
-                        <i class="fa fa-diamond" aria-hidden="true"> </i> Prospect Sources</a></li>
-                        <li {{ (Request::is('admin/leadstatus*') ? ' class="active"' : '') }}><a href="{{ route('leadstatus.index') }}">
-                        <i class="fa fa-star-o" aria-hidden="true"> </i> Prospect Statuses</a></li>
-                     @endcan   
-                   
-                    
-                    <li class="divider">Industries</li>
-                    <li {{ (Request::is('admin/search*') ? ' class="active"' : '') }}><a href="{{ route('vertical.analysis') }}">
-                    <i class="fa fa-building-o" aria-hidden="true"> </i> Industries</a></li>
-                    @can('view_projects')
-                    <li {{ (Request::is('admin/projects*') ? ' class="active"' : '') }}>
-                    <a href="{{ route('project.stats') }}">
-                    
-                    <i class="fa fa-flag" aria-hidden="true"> </i> Projects</a></li>
-                    @endcan
-                </ul>
-			</li>
-                       
-          
-    </ul>
-    <div style="margin-top:10px">
-                        <input  type="text" id="search" placeholder="Type to search users" autocomplete="off" ><i class="fa fa-search"></i>
-                    </div> 
-    <ul class="nav navbar-nav pull-right">
-                        
-                        
-                        <li class="dropdown">
-                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                    <i class="fa fa-user" aria-hidden="true"></i> {{ucfirst(strtolower( auth()->user()->person->firstname ))}}  <span class="caret"></span>
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li>
-                                    <a href="{{ route('profile') }}">
-                                    <i class="fa fa-user" aria-hidden="true"> </i> 
-                                    Your Profile
-                                    </a>
-                                    </li>
-                                    @if(Auth::user()->hasRole('Admin')) 
-                                        <li>
-                                            <a href="{{route('about')}}">
-                                                <i class="fa fa-info-circle" aria-hidden="true"> </i> 
-                                                About Mapminer
-                                            </a>
-                                        </li>
-                                    @endif
-                                    <li class="divider"></li>
-                                    <li>
-                                        <a href="{{ route('logout') }}" 
-                                             onclick="event.preventDefault();
-                                             document.getElementById('logout-form').submit();">
-                                              <i class="fa fa-sign-out" aria-hidden="true"> </i>
-                                              Logout
-                                        </a>
-                                         <form id="logout-form" 
-                                            action="{{ route('logout') }}" 
-                                            method="POST" 
-                                            style="display: none;">
-                                            {{ csrf_field() }}
-                                          </form>
-                                    </li>
-                                </ul>
-                        </li>
-                    </ul>
-
-					<!-- ./ nav-collapse -->
-				</div>
-                
-			</div>
-		</div>
+<nav class="navbar navbar-expand-md navbar-light bg-light">
         
-		<!-- ./ navbar -->
+         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar" aria-controls="collapsibleNavbar" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon" style="color:white"></span>
+    </button>
+        <a href="{{ route('findme') }}"><img src="{{ asset('assets/img/PRlogo.png')}}"  width ='164' class="navbar-brand"></a>
+          <div class="collapse navbar-collapse" id="collapsibleNavbar">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{route('dashboard')}}">
+                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                    </a>
+                </li>
+                
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" 
+                    id="navbarDropdownMenuLink" 
+                    data-toggle="dropdown" 
+                    aria-haspopup="true" 
+                    aria-expanded="false">
+                       <i class="fas fa-database"></i> Data Management
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        @can('manage_accounts')
+                            @include('admin.partials.nav._accountsnav')
+                        @endcan
+                        @can('manage_branches')
+                            @include('admin.partials.nav._branchesnav')
+                        @endcan
+                        @can('manage_users')
+                            @include('admin.partials.nav._usersnav')
+                        @endcan
+                        <li>
+                            <a class="dropdown-item" href="{{ route('imports.index') }}">
+                                <i class="fas fa-recycle"></i> Import / Export
+                            </a>
+                        </li>
+
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" 
+                    href="#" id="navbarDropdownMenuLink" 
+                    data-toggle="dropdown" 
+                    aria-haspopup="true" 
+                    aria-expanded="false">
+                     <i class="fas fa-cogs"></i> 
+                        Resources</a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                       @include('admin.partials.nav._resources')
+                        
+                    </ul>
+                </li>
+
+            </ul>
+            
+                <input 
+                id="search" 
+                placeholder="Type to search users" 
+                autocomplete="off"
+                class="form-control mr-sm-2" 
+                type="search" 
+                aria-label="Search">
+
+            @include('admin.partials.nav._rightnav')
+        </div>
+        
+    </div>
+
+</nav>

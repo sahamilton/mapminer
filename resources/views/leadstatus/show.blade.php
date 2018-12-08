@@ -24,7 +24,7 @@
     <td>{{$lead->leadsource->source}}</td>
     <td>{{$lead->pivot->rating}}</td>
     <td>
-        @if(count($lead->ownedBy)>0)
+        @if($lead->ownedBy->count()>0)
         {{$lead->ownedBy->first()->fullName()}}
         @endif
     </td>
@@ -34,4 +34,4 @@
     </tbody>
     </table>
 @include('partials._scripts')
-@stop
+@endsection

@@ -7,6 +7,17 @@
       <?php
       
       foreach($leadsource->leads as $lead){
+        
+           $status = null;
+             if($lead->salesteam->count()>0){
+            
+              foreach ($lead->salesteam as $team){
+                if($team->pivot->status_id > $status && in_array($team->pivot->status_id,[1,2,5,6])){
+                  $status = $team->pivot->status_id;
+                  
+                }
+              }
+             }
 
 
               echo "'".str_replace("'","",$lead->companyname)."':{";

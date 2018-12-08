@@ -1,4 +1,4 @@
-@extends('admin.layouts.default')
+@extends('site.layouts.default')
 
 
 @section('content')
@@ -45,4 +45,4 @@ $('.summernote').summernote({
 
 </script>
 
-@stop
+@endsection

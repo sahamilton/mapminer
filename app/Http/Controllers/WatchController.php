@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 use App\Watch;
 use App\User;
+use App\Location;
 use App\Document;
 use Illuminate\Http\Request;
 use Excel;
@@ -138,7 +139,7 @@ class WatchController extends BaseController {
 		}
 		$user = User::find($id);
 	
-		Excel::create('Watch_List_for_'.$user->username,function($excel) use($id){
+		Excel::create('Watch_List_for_'.$user->fullName(),function($excel) use($id){
 			$excel->sheet('Watching',function($sheet) use($id) {
 				$result = $this->getMyWatchList($id);
 				$sheet->loadview('watch.export',compact('result'));
@@ -182,9 +183,11 @@ class WatchController extends BaseController {
 		//Refactor: Add request
 		
 
-		switch ($request->get('action')) {
+
+		switch (request('action')) {
 			case 'add':
-			if($this->add($request->get('id'))){
+			if($this->add(request('id'))){
+
 					return 'success';;
 				}else{
 					return 'error';
@@ -195,7 +198,7 @@ class WatchController extends BaseController {
 			
 			case 'remove':
 		
-				$watch = $this->watch->where("location_id","=",$request->get('id'))->where("user_id","=",auth()->id())->firstOrFail();
+				$watch = $this->watch->where("location_id","=",request('id'))->where("user_id","=",auth()->id())->firstOrFail();
 
 				if ($watch->destroy($watch->id)){
 					return 'success';;
@@ -210,13 +213,13 @@ class WatchController extends BaseController {
 	}
 
 	public function companywatchexport(Request $request){
-		if($request->has('id')){
-			$accounts = explode(",",str_replace("'","",$request->get('id')));
-			
-			
+
+		if(request()->has('id')){
+			$accounts = explode(",",str_replace("'","",request('id')));
+
 			Excel::create('Watch_List_for_',function($excel) use($accounts){
 			$excel->sheet('Watching',function($sheet) use($accounts) {
-			$result = \App\Location::whereIn('company_id',$accounts)->has('watchedBy')
+			$result = Location::whereIn('company_id',$accounts)->has('watchedBy')
 			->with('relatedNotes','relatedNotes.writtenBy','company','watchedBy','watchedBy.person')
 			->get();
 				$sheet->loadview('watch.companyexport',compact('result'));
@@ -232,7 +235,8 @@ class WatchController extends BaseController {
 	{
 		$watch = $this->getMyWatchList(auth()->user()->id);
 		$data['verticals'] = $this->watch->getUserVerticals();
-		if(count($data['verticals']=0)){
+
+		if($data['verticals']){
 			$data['verticals'] = null;
 		}
 		$data['salesprocess'] = null;

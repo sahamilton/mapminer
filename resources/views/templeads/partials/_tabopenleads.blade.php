@@ -1,5 +1,5 @@
-@if(count($openleads)==200)
-@php $data['title'] = $person->fullName() @endphp
+@if($openleads->count()==200)
+@php $data['title'] = $person->postName() @endphp
 @include('templeads.partials._limited')
 
 @endif
@@ -10,6 +10,9 @@
                 <th>Address</th>
                 <th>City</th>
                 <th>State</th>
+
+                <th>Distance (miles)</th>
+
                 <th>Lead source</th>
 
             </thead>
@@ -21,6 +24,9 @@
                     <td>{{$lead->address}}</td>
                     <td>{{$lead->city}}</td>
                     <td>{{$lead->state}}</td>
+
+                    <td>{{number_format($lead->distance,1)}}</td>
+
                     <td>{{$lead->leadsource->source}}</td>
                 </tr>  
 

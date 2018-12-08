@@ -4,7 +4,7 @@
 @section('title')
 Settings ::
 @parent
-@stop
+@endsection
 
 
 @section('styles')
@@ -12,7 +12,7 @@ Settings ::
 body {
 	background: #f2f2f2;
 }
-@stop
+@endsection
 
 {{-- Content --}}
 @section('content')
@@ -46,15 +46,7 @@ body {
 				</div>
 			
         </div>
-        <!-- username -->
-        <div class="form-group {{{ $errors->has('username') ? 'error' : '' }}}">
-            <label class="col-md-2 control-label" for="username">Username</label>
-            <div class="col-md-10">
-                <input class="form-control" type="text" name="username" id="username" value="{{{ Input::old('username', $user->username) }}}" />
-                {{ $errors->first('username', '<span class="help-inline">:message</span>') }}
-            </div>
-        </div>
-        <!-- ./ username -->
+        
 
         <!-- Email -->
         <div class="form-group {{{ $errors->has('email') ? 'error' : '' }}}">
@@ -70,7 +62,7 @@ body {
         <div class="form-group {{{ $errors->has('address') ? 'error' : '' }}}">
             <label class="col-md-2 control-label" for="address">Address</label>
             <div class="col-md-10">
-                <input class="form-control" type="text" name="address" id="address" value="{{{ Input::old('address', $user->person->address) }}}" />
+                <input class="form-control" type="text" name="address" id="address" value="{{{ Input::old('address', $user->person->fullAddress()) }}}" />
                 {{ $errors->first('address', '<span class="help-inline">:message</span>') }}
             </div>
         </div>
@@ -119,4 +111,4 @@ body {
     <!-- ./ form actions -->
 </form>
 </form>
-@stop
+@endsection

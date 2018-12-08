@@ -14,7 +14,7 @@
            
             <th>First Name</th>
             <th>Last Name</th>
-            <th>User Name</th>
+           
             
             <th>EMail</th>
             <th>Serviceline</th>
@@ -29,7 +29,7 @@
         <td><a href="{{route('users.show',$user->id)}}">{{ $user->person->firstname }}</a></td>
         <td><a href="{{route('users.show',$user->id)}}">{{ $user->person->lastname }}</td>
        	
-        <td><a href="{{route('users.show',$user->id)}}">{{ $user->username }}</a></td>
+     
         <td>{{ $user->email }}</td>
         <td> @foreach($user->serviceline as $serviceline)
     
@@ -37,11 +37,8 @@
 		   
 		    @endforeach
     	</td>
-    	   		<td>
-   		@if($user->lastlogin)
-   		{{$user->lastlogin->format('Y-m-d h:i a')}}
-   		@endif
-   		</td>
+
+    	 <td>{{$user->lastlogin ? $user->lastlogin->format('Y-m-d h:i a'):''}}</td>
 
 </tr>
 @endforeach
@@ -49,4 +46,4 @@
 	</table>
     
 @include('partials/_scripts')
-@stop
+@endsection
