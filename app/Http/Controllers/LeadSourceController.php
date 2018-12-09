@@ -97,8 +97,8 @@ class LeadSourceController extends Controller
         
 
         $data = $this->reformatRepsData($data);
-        //$data = $this->reformatRepsData($data);
-        $statuses = LeadStatus::pluck('status','id')->toArray();
+    
+       
 
         return response()->view('leadsource.show',compact('data','statuses','leadsource'));
     }
@@ -111,6 +111,7 @@ class LeadSourceController extends Controller
     private function reformatRepsData($data){
         $newdata = array();
         $statuses = $this->lead->statuses;
+
         foreach ($data as $rep){
             $newdata[$rep->id]['name'] = $rep->firstname . ' '. $rep->lastname;
             $newdata[$rep->id]['id'] = $rep->id;
@@ -120,6 +121,7 @@ class LeadSourceController extends Controller
             
 
         }
+
         return $newdata;
     }
     public function branches($id){
