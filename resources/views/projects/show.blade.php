@@ -27,8 +27,8 @@
 <p><strong>Address:</strong>
 
 <<<<<<< HEAD
-<blockquote>{{$project->address->street}} /{{$project->addr2}}<br />{{$project->address->city}}, {{$project->address->state}} 
-{{$project->address->zipcode}}
+<blockquote>{{$project->street}} /{{$project->addr2}}<br />{{$project->city}}, {{$project->state}} 
+{{$project->zipcode}}
 =======
 <blockquote>{{$project->street}} /{{$project->address2}}<br />{{$project->city}}, {{$project->state}} 
 {{$project->zip}}

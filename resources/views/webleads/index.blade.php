@@ -30,7 +30,7 @@
     <tr> 
     <td>{{$lead->created_at->format('Y-m-d')}}</td> 
 	<td><a href="{{route('webleads.show',$lead->id)}}">{{$lead->company_name}}</a></td>
-	<td>{{$lead->address->city}}, {{$lead->address->state}}</td>
+	<td>{{$lead->city}}, {{$lead->state}}</td>
 	
 	<td>{{$lead->rating}}</td>
 	<td>

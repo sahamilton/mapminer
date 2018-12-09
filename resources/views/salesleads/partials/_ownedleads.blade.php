@@ -32,8 +32,8 @@
                    
                    
                     </td>
-                    <td>{{$lead->address->city}}</td>
-                    <td>{{$lead->address->state}}</td>
+                    <td>{{$lead->city}}</td>
+                    <td>{{$lead->state}}</td>
        
                     <td>
                         <ul>

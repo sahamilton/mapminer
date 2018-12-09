@@ -8,8 +8,8 @@
 <h4>Branch Number {{$salesteam->id}}</h4>
        
         <h4>Address:</h4>
-        <p>{{$salesteam->address->street}}{{$salesteam->address->suite}}<br/>
-        {{$salesteam->address->city}},{{$salesteam->address->state}} {{$salesteam->address->zip}}<br />
+        <p>{{$salesteam->street}}{{$salesteam->suite}}<br/>
+        {{$salesteam->city}},{{$salesteam->state}} {{$salesteam->zip}}<br />
         {{$salesteam->phone}}</p>
        
         <h4>Branch Team</h4>
@@ -36,7 +36,7 @@
 
 <script type="text/javascript">
 function initialize() {
-  var myLatlng = new google.maps.LatLng({{$salesteam->address->lat}},{{$salesteam->address->lng}});
+  var myLatlng = new google.maps.LatLng({{$salesteam->lat}},{{$salesteam->lng}});
   var mapOptions = {
     zoom: 14,
     center: myLatlng

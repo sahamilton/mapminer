@@ -2,7 +2,7 @@
 			<h4 class="list-group-item-text">Lead Details:</h4>
 			<ul style="list-style-type: none;">
 				<li><strong>Lead Source:</strong> {{$lead->leadsource()->first()->source}}</li>
-				<li><strong>Address:</strong>{{$lead->address->address}}<br /> {{$lead->address->city}}, {{$lead->address->state}} {{$lead->address->zip}}</li>
+				<li><strong>Address:</strong>{{$lead->address}}<br /> {{$lead->city}}, {{$lead->state}} {{$lead->zip}}</li>
 				<li><strong>Contact:</strong> {{$lead->first_name}} {{$lead->last_name}}</li>
 				<li><strong>Phone:</strong> {{$lead->phone}}</li>
 				<li><strong>Email:</strong> {{$lead->contactemail}}</li>

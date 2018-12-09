@@ -29,10 +29,10 @@
    @foreach($locations as $location)
     <tr> 
 	<td>{{$location->businessname}}</td>
-	<td>{{$location->address->street}}</td>
-	<td>{{$location->address->city}}</td>
-	<td>{{$location->address->state}}</td>
-	<td>{{$location->address->zip}}</td>
+	<td>{{$location->street}}</td>
+	<td>{{$location->city}}</td>
+	<td>{{$location->state}}</td>
+	<td>{{$location->zip}}</td>
 	
 	<?php $branchcount =null;?>
 		@if(isset($data['branches'][$location->id]))

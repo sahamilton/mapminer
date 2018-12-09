@@ -11,7 +11,7 @@ function initialize() {
   
   var map = new google.maps.Map(document.getElementById('map'), mapOptions);
 	var name = "{{$location->company->companyname}}";
-    var address = "{{$location->address->street}}" + " {{$location->address->city}}" + " {{$location->address->state}}" + " {{$location->address->zip}}";
+    var address = "{{$location->street}}" + " {{$location->city}}" + " {{$location->state}}" + " {{$location->zip}}";
     var html = "<a href='{{route('company.show' , $location->company->id) }}'>" + name + "</a> <br/>" + address;
 	var marker = new google.maps.Marker({
 	  position: myLatlng,

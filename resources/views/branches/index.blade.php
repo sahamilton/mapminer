@@ -66,18 +66,18 @@
 	</td>
 
 	<td>
-			{{$branch->address->street}} {{$branch->address->suite}}
+			{{$branch->street}} {{$branch->suite}}
 	</td>
 
 	<td>
-			{{$branch->address->city}}
+			{{$branch->city}}
 
 	</td>
 
 	<td>
-			<a href="{{route('showstate.branch',$branch->address->state)}}"
-			 title="See all {{$branch->address->state}} state branches">
-			 	{{$branch->address->state}}
+			<a href="{{route('showstate.branch',$branch->state)}}"
+			 title="See all {{$branch->state}} state branches">
+			 	{{$branch->state}}
 			</a>
 
 	</td>

@@ -47,14 +47,14 @@
 		@endforeach
 	</td>
 	<td>
-		{{$branch->address->street}} {{$branch->address->suite}}
+		{{$branch->street}} {{$branch->suite}}
 	</td>
 
 	<td>
-		{{$branch->address->city}}
+		{{$branch->city}}
 	</td>
 	<td>
-		{{$branch->address->state}}
+		{{$branch->state}}
 	</td>
 	<td>
 		@if($branch->region)

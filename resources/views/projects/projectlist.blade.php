@@ -20,9 +20,9 @@
 		<tr>  
 		<td><a href="{{route('projects.show',$project->id)}}"
 		title="See details of this project">{{$project->project_title}}</a></td>
-		<td>{{$project->address->street}}</td>
-		<td>{{$project->address->city}}</td>
-		<td>{{$project->address->state}},{{$project->address->zip}}</td>
+		<td>{{$project->street}}</td>
+		<td>{{$project->city}}</td>
+		<td>{{$project->state}},{{$project->zip}}</td>
 		<td>{{$project->structure_header}} / {{$project->project_type}}</td>
 		<td>{{$project->ownership}}</td>
 		<td>{{$project->stage}}</td>

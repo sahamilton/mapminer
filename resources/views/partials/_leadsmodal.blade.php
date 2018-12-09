@@ -14,8 +14,8 @@
                 <p>{{$lead->contactemail}}</p>
 				<p>{{$lead->phone}}
 				<legend>Address</legend>
-				<p>{{$lead->address->address}}</p>
-				<p>{{$lead->address->city}} {{$lead->address->state}}</p>
+				<p>{{$lead->address}}</p>
+				<p>{{$lead->city}} {{$lead->state}}</p>
 				<p class="debug-url"></p>
                 </div>
                 

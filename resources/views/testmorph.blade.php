@@ -22,10 +22,10 @@
 				<tr>
 					<td>{{$branch->id}}</td>
 					<td>{{$branch->branchname}}</td>
-					<td>{{$branch->address->street}}</td>
-					<td>{{$branch->address->city}}</td>
-					<td>{{$branch->address->state}}</td>
-					<td>{{$branch->address->zip}}</td>
+					<td>{{$branch->street}}</td>
+					<td>{{$branch->city}}</td>
+					<td>{{$branch->state}}</td>
+					<td>{{$branch->zip}}</td>
 					<td>
 						<ul style="list-style-type: none">
 							@foreach ($branch->servicelines as $serviceline)

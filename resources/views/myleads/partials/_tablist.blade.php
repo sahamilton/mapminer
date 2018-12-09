@@ -48,6 +48,7 @@
                     href="#">
                     <i class="far fa-thumbs-up text-success" aria-hidden="true"></i> Claim Lead 
                 </a>
+                @include('myleads.partials._leadsmodal') 
                 <a class="dropdown-item"
                      href="{{route('saleslead.decline',$lead->id)}}">
                     <i class="far fa-thumbs-down text-danger" aria-hidden="true"></i> Decline Lead 

@@ -12,7 +12,7 @@ You have been assigned a new lead from the {{$lead->leadsource->source}}.  The d
 
 Company: {{$lead->companyname}}
 
-Address: {{$lead->address->address}} {{$lead->address->city}}, {{$lead->address->state}}
+Address: {{$lead->address}} {{$lead->city}}, {{$lead->state}}
 
 Contact: {{$lead->contacts->contact}}
 

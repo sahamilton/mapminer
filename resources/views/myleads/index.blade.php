@@ -1,7 +1,7 @@
 @extends('site.layouts.default')
 @section('content')
 
-<h1>My Leads</h1>
+<h1>My Leads!!</h1>
 <p><a href="{{route('myclosedleads')}}">See my closed leads</a></p>
 <div class="row float-right" style="padding-bottom:10px">
 
@@ -26,7 +26,6 @@
 </div>
 @include('myleads.partials._tablist')
 @include('myleads.partials._mylead')
-	
-   
+  
 @include('partials._scripts')
 @endsection

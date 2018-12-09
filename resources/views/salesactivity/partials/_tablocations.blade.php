@@ -28,7 +28,7 @@
 'locations.show'
 ,$location->id)}}" title="Review this location">{{$location->businessname}}</a></td>
 				<td>{{$location->vertical}}</td>
-				<td>{!! $location->address->street . "<br /> " .$location->address->city. " "   . $location->address->state !!}</a></td>
+				<td>{!! $location->street . "<br /> " .$location->city. " "   . $location->state !!}</a></td>
 				<td>{{$location->contact }}</td> 
 				<td>{{$location->phone }}</td>
 

@@ -16,10 +16,10 @@
 		@foreach($leads as $lead)
 			<tr>  
 				<td>{{$lead->companyname}}</td>
-				<td>{{$lead->address->address}}</td>
-				<td>{{$lead->address->city}}</td>
-				<td>{{$lead->address->state}}</td>
-				<td>{{$lead->address->zip}}</td>
+				<td>{{$lead->address}}</td>
+				<td>{{$lead->city}}</td>
+				<td>{{$lead->state}}</td>
+				<td>{{$lead->zip}}</td>
 				<td>{{$lead->contacts->contact}}</td>
 				<td>{{$lead->contacts->contacttitle}}</td>
 				<td>{{$lead->contacts->phone}}</td>

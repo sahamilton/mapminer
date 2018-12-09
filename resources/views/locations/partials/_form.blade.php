@@ -71,7 +71,7 @@ $nullBusinesstype = App\SearchFilter::where('searchtable','=','locations')
 		@foreach ($states as $key=>$state)
 		
 		<option 
-		@if($location && $location->address->state == $key)
+		@if($location && $location->state == $key)
 			selected
 		@endif
 

@@ -11,7 +11,7 @@ function initialize() {
   var map = new google.maps.Map(document.getElementById('map'), mapOptions);
 <<<<<<< HEAD
 	var name = "{{$lead->company_name}}";
-  var address = "{{$lead->address->city}}" + " {{$lead->address->state}}";
+  var address = "{{$lead->city}}" + " {{$lead->state}}";
 =======
   var name = "{!! trim($lead->companyname)!!}";
   var address = "{{trim($lead->city)}}" + ",{{trim($lead->state)}}";

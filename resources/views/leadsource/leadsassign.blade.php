@@ -24,7 +24,7 @@
     <tr>  
     <td><a href="{{route('leads.show',$lead->id)}}">{{$lead->companyname}}</a></td>
     <td>{{$lead->businessname}}</td>
-    <td>{{$lead->address->city}}, {{$lead->address->state}}</td>
+    <td>{{$lead->city}}, {{$lead->state}}</td>
     <td>{{number_format($data['reps'][$lead->id][0]->distance_in_mi,0)}}
     <input type="checkbox" name="salesrep[]" value="{{$lead->id}}" />
     </td>

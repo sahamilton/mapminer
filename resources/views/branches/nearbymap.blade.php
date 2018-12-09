@@ -7,7 +7,7 @@
 
 <a href="{{route('locations.show',$location->id)}}">{{$location->businessname}}!! </a>
 
-location in {{$location->address->city}}, {{$location->address->state}}<p>
+location in {{$location->city}}, {{$location->state}}<p>
 <p><a href='{{route("assign.location",$location->id)}}'>
 
   <i class="fas fa-th-list" aria-hidden="true"></i> List view</a></p>
