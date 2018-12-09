@@ -93,11 +93,14 @@ class LeadSourceController extends Controller
 
      
         $leadsource = $this->leadsource->with('leads','assignedLeads','unassignedLeads','closedLeads')->findOrFail($id);
+        $data = $this->leadsource->leadRepStatusSummary($id);
+        
 
+        $data = $this->reformatRepsData($data);
         //$data = $this->reformatRepsData($data);
         $statuses = LeadStatus::pluck('status','id')->toArray();
 
-        return response()->view('leadsource.show',compact('statuses','leadsource'));
+        return response()->view('leadsource.show',compact('data','statuses','leadsource'));
     }
 
     private function getOwnedBy($leads){
