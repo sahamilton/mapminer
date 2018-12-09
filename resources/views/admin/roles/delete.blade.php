@@ -6,7 +6,7 @@
     <!-- Tabs -->
         <ul class="nav nav-tabs">
 
-            <li class="nav-item active">
+            <li class="nav-item ">
                 <a class="nav-link active" 
                 href="#tab-general" 
                 data-toggle="tab">General</a></li>

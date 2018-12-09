@@ -23,7 +23,7 @@
 <div class="form-group{{ $errors->has('address') ? ' has-error' : '' }}">
 	<label class="col-md-4 control-label">Street Address</label>
 		<div class="input-group input-group-lg ">
-		    <input type="text"  class="form-control" name='address' description="address" value="{{ old('address' , isset($lead->address->address) ? $lead->address->address : '' )}}" placeholder="address">
+		    <input type="text"  class="form-control" name='address' description="address" value="{{ old('address' , isset($lead->address) ? $lead->address : '' )}}" placeholder="address">
 		    <span class="help-block">
 		        <strong>{{ $errors->has('address') ? $errors->first('address') : ''}}</strong>
 		        </span>
@@ -33,7 +33,7 @@
 <div class="form-group{{ $errors->has('city') ? ' has-error' : '' }}">
 	<label class="col-md-4 control-label">City</label>
 		<div class="input-group input-group-lg ">
-		   <input type="text"  class="form-control" name='city' description="city" value="{{ old('city' , isset($lead->address->city) ? $lead->address->city : '' )}}" placeholder="city">
+		   <input type="text"  class="form-control" name='city' description="city" value="{{ old('city' , isset($lead->city) ? $lead->city : '' )}}" placeholder="city">
 		   <span class="help-block">
 		       <strong>{{ $errors->has('city') ? $errors->first('city') : ''}}</strong>
 		       </span>
@@ -44,7 +44,7 @@
         <div class="form-group{{ $errors->has('state') ? ' has-error' : '' }}">
         <label class="col-md-4 control-label">state</label>
         <div class="input-group input-group-lg ">
-            <input type="text"  class="form-control" name='state' description="state" value="{{  old('state', isset($lead->address->state) ? $lead->address->state : "" )}}" placeholder="state">
+            <input type="text"  class="form-control" name='state' description="state" value="{{  old('state', isset($lead->state) ? $lead->state : "" )}}" placeholder="state">
             <span class="help-block">
                 <strong>{{ $errors->has('state') ? $errors->first('state') : ''}}</strong>
                 </span>
@@ -55,7 +55,7 @@
    <div class="form-group{{ $errors->has('zip') ? ' has-error' : '' }}">
 	   <label class="col-md-4 control-label">Zip</label>
 	   <div class="input-group input-group-lg ">
-	       <input type="text"  class="form-control" name='zip' description="zip" value="{{ old('zip' , isset($lead->address->zip) ? $lead->address->zip : "" )}}" placeholder="zip">
+	       <input type="text"  class="form-control" name='zip' description="zip" value="{{ old('zip' , isset($lead->zip) ? $lead->zip : "" )}}" placeholder="zip">
 	       <span class="help-block">
 	           <strong>{{ $errors->has('zip') ? $errors->first('zip') : ''}}</strong>
 	           </span>

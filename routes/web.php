@@ -173,7 +173,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 
 	# Sales leads
-		/*Route::get('prospect/{id}/accept',['as'=>'saleslead.accept','uses'=>'SalesLeadsController@accept']);
+		Route::get('prospect/{id}/accept',['as'=>'saleslead.accept','uses'=>'SalesLeadsController@accept']);
 		Route::get('prospect/{id}/decline',['as'=>'saleslead.decline','uses'=>'SalesLeadsController@decline']);
 		Route::get('prospects/{pid}/showrep',['as'=>'salesleads.showrep','uses'=>'SalesLeadsController@showrep']);
 		Route::get('prospects/download',['as'=>'salesleads.download','uses'=>'SalesLeadsController@download']);
@@ -181,7 +181,7 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('leadrank',['as'=>'api.leadrank','uses'=>'SalesLeadsController@rank']);
 		Route::post('prospect/{id}/close',['as'=>'saleslead.close','uses'=>'SalesLeadsController@close']);
 		Route::get('prospect/{pid}/leads',['as'=>'saleslead.mapleads','uses'=>'SalesLeadsController@mapleads']);
-		Route::resource('salesleads','SalesLeadsController');*/
+		Route::resource('salesleads','SalesLeadsController');
 
 	# Sales Notes
 		Route::get('salesnotes/{companyId}',['as'=>'salesnotes','uses'=>'SalesNotesController@show']);

@@ -1,35 +1,33 @@
 <div id="map" style="border:solid 1px red"></div>
+
 <script src="https://maps.google.com/maps/api/js?key={{config('maps.api_key')}}"></script>
     <script>
      
-      // First, create an object containing LatLng and details for each lead.
+      // First, create an object containing LatLng and details for each branch.
       var leadmap = {
       <?php
-      
       foreach($leadsource->leads as $lead){
-        
-           $status = null;
+      		 $status = null;
              if($lead->salesteam->count()>0){
-            
-              foreach ($lead->salesteam as $team){
-                if($team->pivot->status_id > $status && in_array($team->pivot->status_id,[1,2,5,6])){
-                  $status = $team->pivot->status_id;
-                  
-                }
-              }
+             
+             	foreach ($lead->salesteam as $team){
+                
+             		if($team->pivot->status_id > $status && in_array($team->pivot->status_id,[1,2,3])){
+             			$status = $team->pivot->status_id;
+             		}
+             	}
              }
 
-
-              echo "'".str_replace("'","",$lead->companyname)."':{";
+              echo "'".$lead->businessname."':{";
               echo "center: {lat: ". $lead->lat .", lng:". $lead->lng."},";
-              echo "name : '" . str_replace("'","",$lead->businessname)."',";
-              echo "contentString: '<a href=\"".route('leads.show',$lead->id)."\">".str_replace("'","", $lead->businessname) ." </a> ',"; 
-              if(isset($status) && in_array($status,[1,2,5,6])){
-                
-                echo "type:  '".$statuses[$status]."'},";
+              echo "name : '" . $lead->businessname."',";
+              echo "contentString: '<a href=\"".route('leads.show',$lead->id)."\">". $lead->businessname ." </a> ',"; 
+              if(isset($status) && in_array($status,[1,2,3])){
+              	
+              	echo "type:  '".$statuses[$status]."'},";
               }else{
-                
-                echo "type: 'Default'},";
+              	
+              	echo "type: 'Default'},";
               }
               
                
@@ -46,11 +44,8 @@
 
       var iconBase = '{{asset("assets/icons/")}}';
       var icons = {
-        'Closed - Cold':{
-      icon: 'https://maps.google.com/mapfiles/ms/icons/green-dot.png'
-        },
-        'Converted' :{
-           icon: 'https://maps.google.com/mapfiles/ms/icons/green-dot.png'
+        'Closed':{
+ 			    icon: 'https://maps.google.com/mapfiles/ms/icons/green-dot.png'
         },
 
         'Owned': {
@@ -58,11 +53,11 @@
         },
         'Offered': {
           
-          icon: iconBase + '/orangeflagsm.png'
+          icon: 'https://maps.google.com/mapfiles/ms/icons/red-dot.png'
         },
 
         'Default': {
-          icon: 'https://maps.google.com/mapfiles/ms/icons/red-dot.png'
+        	icon: 'https://maps.google.com/mapfiles/ms/icons/red-dot.png'
         },
       };
 

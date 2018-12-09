@@ -148,15 +148,29 @@ class Person extends NodeModel implements HasPresenter {
 		return $this->belongsToMany(Lead::class, 'lead_person_status','person_id','related_id')
 		->withPivot('created_at','updated_at','status_id','rating');
 	}
-	public function openleads(){
+	public function offeredleads(){
     	return $this->belongsToMany(Lead::class, 'lead_person_status','person_id','related_id')
-    	->wherePivot('status_id',2);
+    	->wherePivot('status_id',1)
+    	->withPivot('created_at','updated_at','status_id','rating');
     }
+    public function openleads(){
+    	return $this->belongsToMany(Lead::class, 'lead_person_status','person_id','related_id')
+    	->wherePivot('status_id',2)
+    	->withPivot('created_at','updated_at','status_id','rating');
+    }
+    
     public function closedleads(){
     	return $this->belongsToMany(Lead::class, 'lead_person_status','person_id','related_id')
-    	->wherePivot('status_id',3)->withPivot('created_at','updated_at','status_id','rating');
+    	->wherePivot('status_id',3)
+    	->withPivot('created_at','updated_at','status_id','rating');
     }
-
+    public function scopeLeadsWithStatus($query,$status){
+		
+		return $query->whereHas('leads',function($q) use ($status)
+			{ 
+				$q->where('lead_person_status.status_id',$status);
+			});
+	}
 	public function industryfocus()
 	{
 		return $this->belongsToMany(SearchFilter::class)->withTimestamps(); 
@@ -286,16 +300,7 @@ class Person extends NodeModel implements HasPresenter {
 		->where('person_id','=',auth()->user()->person->id);
 	}
 
-	public function offeredLeads(){
-
-		return $this->belongsToMany(Lead::class, 'lead_person_status','person_id','related_id')
-		->withTimestamps()
-		->withPivot('status_id','rating')
-		->whereIn('status_id',[1]);
-        
-        
-       
-    }
+	
     
     public function campaigns(){
     	return $this->belongsToMany(Salesactivity::class);

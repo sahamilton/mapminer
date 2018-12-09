@@ -13,7 +13,7 @@ Review Branch Changes
 
 <ul class="nav nav-tabs">
 
-  <li class="nav-item active"><a class="nav-link" data-toggle="tab" href="#branch"><strong>Branch Additions</strong></a></li>
+  <li class="nav-item "><a class="nav-link" data-toggle="tab" href="#branch"><strong>Branch Additions</strong></a></li>
   <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#deletes"><strong>Branch Deletions</strong></a></li>
   <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#changes"><strong>Branch Changes</strong></a></li>
 

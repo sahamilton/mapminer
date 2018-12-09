@@ -10,7 +10,7 @@
 <hr />
 <ul class="nav nav-tabs">
 
-  <li class="nav-item active">
+  <li class="nav-item ">
     <a class="nav-link active" data-toggle="tab" href="#watchers">
       <strong>Activity</strong>
     </a>

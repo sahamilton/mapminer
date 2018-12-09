@@ -14,4 +14,3 @@
 <p><strong>Number of Prospects:</strong>{{$leadsource->leads->count()}}</p>
 <!-- how do we check to see if they are already assigned?-->
 
-<p><a href="{{route('leads.geoassign',$leadsource->id)}}"><button class="btn btn-info"  > Assign Prospects Geographically</button></a></p>

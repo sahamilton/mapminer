@@ -9,7 +9,7 @@ and Team
 </h2>
 <ul class="nav nav-tabs">
 
-	<li class="nav-item active">
+	<li class="nav-item ">
 		<a class="nav-link active" data-toggle="tab" href="#map">
 			<strong>Prospects</strong>
 		</a>

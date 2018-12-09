@@ -6,7 +6,7 @@
       // First, create an object containing LatLng and details for each branch.
       var leadmap = {
       <?php
-      foreach($leads as $lead){
+      foreach($leadsource->leads as $lead){
       		 $status = null;
              if($lead->salesteam->count()>0){
              

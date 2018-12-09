@@ -10,7 +10,7 @@
 	Back to all campaigns</a>
 
 	<ul class="nav nav-tabs">
-		<li class="nav-item active">
+		<li class="nav-item ">
 			<a class="nav-link active" data-toggle="tab" href="#campaign">Campaign</a>
 		</li>
 		<li class="nav-item">

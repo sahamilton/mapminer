@@ -15,7 +15,7 @@ Create a New Branch
 
 <ul class="nav nav-tabs">
 
-  <li class="nav-item active"><a class="nav-link" data-toggle="tab" href="#branch"><strong>Branch Location</strong></a></li>
+  <li class="nav-item "><a class="nav-link" data-toggle="tab" href="#branch"><strong>Branch Location</strong></a></li>
   <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#team"><strong>Branch Team</strong></a></li>
 
 

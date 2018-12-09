@@ -92,21 +92,36 @@ class LeadSourceController extends Controller
     {
 
      
-        $leadsource = $this->leadsource->with('leads','assignedLeads','unassignedLeads','closedLeads')->findOrFail($id);
-        $data = $this->leadsource->leadRepStatusSummary($id);
-        
+        $leadsource = $this->leadsource->with('leads','unassignedLeads','closedLeads')->findOrFail($id);
+        $salesteams  = $this->getSalesTeam($id);
+       // $data = $this->leadsource->leadRepStatusSummary($id);
+        $statuses = LeadStatus::pluck('status','id')->toArray();
 
-        $data = $this->reformatRepsData($data);
+       // $data = $this->reformatRepsData($data);
     
        
 
-        return response()->view('leadsource.show',compact('data','statuses','leadsource'));
+        return response()->view('leadsource.show',compact('salesteams','statuses','leadsource'));
     }
 
     private function getOwnedBy($leads){
 
     }
 
+    private function getSalesTeam($id){
+        return  $this->person
+
+        ->whereHas('leads',function ($q) use($id){
+            $q->where('lead_source_id','=',$id);
+        })
+        ->with('reportsTo')
+        ->withCount('leads')
+        ->withCount('offeredleads')
+        ->withCount('openleads')
+        ->withCount('closedleads')
+        ->get();
+        
+    }
 
     private function reformatRepsData($data){
         $newdata = array();

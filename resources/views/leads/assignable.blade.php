@@ -20,8 +20,8 @@
     <tr>
     <td><a href="{{route('leads.show',$lead->id)}}">{{$lead->businessname}}</a></td>
     <td>{{$lead->companyname}}</td>
-    <td>{{$lead->address->city}}</td>
-    <td>{{$lead->address->state}}</td>
+    <td>{{$lead->city}}</td>
+    <td>{{$lead->state}}</td>
     <td>
         <ul style="list-style-type: none">
         @foreach ($data[$lead->id] as $rep)

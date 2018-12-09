@@ -7,7 +7,7 @@
 
     <ul class="nav nav-tabs">
 
-        <li class="nav-item active"><a class="nav-link active" data-toggle="tab" href="#showmap">
+        <li class="nav-item "><a class="nav-link active" data-toggle="tab" href="#showmap">
         <strong>Branches Without Managers<span style="color:red">*</span></strong></a></li>
         <li class="nav-item">
         <a class="nav-link" data-toggle="tab" href="#details">

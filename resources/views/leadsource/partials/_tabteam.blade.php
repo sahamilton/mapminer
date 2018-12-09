@@ -12,7 +12,10 @@
         <td>Manager</td>
         <td>Location</td>
        
-        <td>Prospects</td>
+        <td>Total Prospects</td>
+        <td>Offered Prospects</td>
+        <td>Owned Prospects</td>
+        <td>Closed Prospects</td>
 
 
     </thead>
@@ -21,23 +24,17 @@
         @foreach($salesteams as $team)
 
         <tr>  
-            <td><a href="{{route('leads.personsource',[$team['details']->id,$leadsource->id])}}">{{$team['details']->postName()}}</a></td>
+            <td><a href="{{route('leads.personsource',[$team->id,$leadsource->id])}}">{{$team->postName()}}</a></td>
             <td>
-                @if($team['details']->reportsTo->count()>0)
-                    {{$team['details']->reportsTo->postName()}}
+                @if($team->reportsTo)
+                    {{$team->reportsTo->postName()}}
                 @endif
             </td>
-            <td>{{$team['details']->city}} {{$team['details']->state}}</td>
-            <td>
-               
-                    {{$team->reportsTo ? $team->reportsTo->postName() : ''}}
-              
-            </td>
             <td>{{$team->city}} {{$team->state}}</td>
-            
-            <td>
-                {{$team->leads->count()}}
-            </td>
+            <td>{{$team->leads_count}}</td>
+            <td>{{$team->offeredleads_count}}</td>
+            <td>{{$team->ownedleads_count}}</td>         
+            <td>{{$team->closedleads_count}}</td>
         </tr>
         @endforeach
 
