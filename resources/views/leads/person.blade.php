@@ -33,7 +33,7 @@
 <div id="map" class="tab-pane fade show active">
 @include('leads.partials._tabpersonsmap')
 </div>
-<div id="leads" class="tab-pane fade in ">
+<div id="leads" class="tab-pane fade  ">
 @include('leads.partials._tabpersonsleads')
 </div>
 

@@ -40,10 +40,10 @@ and Team
 		@include('salesleads.partials._tabmapleads')
 
 	</div>
-	<div id="team" class="tab-pane fade in">
+	<div id="team" class="tab-pane fade ">
 		@include('salesleads.partials._managerleads')
 	</div>
-	<div id="list" class="tab-pane fade in">
+	<div id="list" class="tab-pane fade ">
 		@include('salesleads.partials._offeredleads')
 	</div>
 

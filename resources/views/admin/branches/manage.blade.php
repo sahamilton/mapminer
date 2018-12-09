@@ -25,7 +25,7 @@
             @include('admin.branches.partials._branches')
         </div>
         
-        <div id="details" class="tab-pane fade in">
+        <div id="details" class="tab-pane fade ">
              @include('admin.branches.partials._managers')
         </div>
 

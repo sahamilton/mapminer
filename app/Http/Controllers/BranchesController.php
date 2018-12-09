@@ -138,7 +138,7 @@ class BranchesController extends BaseController {
 		$input['addressable_type'] ='branch';
 		$input['addressable_id'] =$branch->id;
 
-		$address = $this->address->create($input);
+		$address = $this->create($input);
 
 		foreach ($input['roles'] as $key=>$role){
 				foreach ($role as $person){
@@ -204,7 +204,7 @@ class BranchesController extends BaseController {
 		$data['title'] ='National Account Locations';
 		$data['company']=NULL;
 		//$data['companyname']=NULL;
-		$data['latlng'] = $data['branch']->address->lat.":".$data['branch']->address->lng;
+		$data['latlng'] = $data['branch']->lat.":".$data['branch']->lng;
 		$data['distance'] = '10';
 
 

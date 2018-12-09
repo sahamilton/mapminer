@@ -26,10 +26,10 @@ Review Branch Changes
     <div id="branch" class="tab-pane fade show active">
       @include('branches/partials/_adds')
     </div>
-	<div id="deletes" class="tab-pane fade in">
+	<div id="deletes" class="tab-pane fade ">
       @include('branches/partials/_deletes')
     </div>
-  <div id="changes" class="tab-pane fade in">
+  <div id="changes" class="tab-pane fade ">
       @include('branches/partials/_changes')
     </div>
 	

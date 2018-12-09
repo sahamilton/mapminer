@@ -38,7 +38,7 @@
     @include('managers.partials._locationnotes')
     </div>
   </div>
-  <div id="health" class="tab-pane fade in">
+  <div id="health" class="tab-pane fade ">
     <div style="border:1px solid #000;width:440px;margin:20px;padding:20px;float:left">
     @include('managers.partials._nocontactphone')
     </div>
@@ -46,7 +46,7 @@
     @include('managers.partials._salesnotes')
     </div>
   </div>
-  <div id="summary" class="tab-pane fade in">
+  <div id="summary" class="tab-pane fade ">
     @if(isset($data['segments']))
 
     <div style="border:1px solid #000;width:450px;margin:20px;padding:20px;float:left">

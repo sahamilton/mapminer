@@ -3,7 +3,6 @@
 
 <h2>{{$location->businessname}}</h2>
 
-
 <ul class="nav nav-tabs" id="myTab" role="tablist">
   <li class="nav-item">
     <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true"><strong>Location Details</strong></a>
@@ -48,14 +47,14 @@ $id= $location->id;?>
     <div id="project" class="tab-pane show active">
       @include('locations.partials._tabdetails')
     </div>
-    <div id="notes" class="tab-pane fade in">
+    <div id="notes" class="tab-pane fade">
       @include('locations.partials._tabnotes')
     </div>
-    <div id="contacts" class="tab-pane fade in">
+    <div id="contacts" class="tab-pane fade">
       @include('locations.partials._tabcontacts')
     </div>
     @if($location->watchedBy->count()>0)
-    <div id="watchers" class="tab-pane fade in">
+    <div id="watchers" class="tab-pane fade">
       @include('locations.partials._tabwatchers')
     </div>
     @endif

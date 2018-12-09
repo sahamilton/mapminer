@@ -3,8 +3,8 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use McCool\LaravelAutoPresenter\HasPresenter;
-class Contacts extends Model implements HasPresenter
+
+class Contacts extends Model 
 {
     protected $fillable=['id','firstname','lastname','title','email','phone','comments','location_id','user_id'];
 
@@ -17,6 +17,8 @@ class Contacts extends Model implements HasPresenter
     	return $this->belongsTo(User::class);
     }
 
-    
+    public function fullName(){
+    	return $this->firstname . " " . $this->lastname;
+    }
     
 }

@@ -1,7 +1,7 @@
 @extends ('site.layouts.default')
 @section('content')
 <div class="container">
-    <h2>Sales Campaigns!!</h2>
+    <h2>Sales Campaigns</h2>
     <div class="float-right">
         <a href ="{{route('salesactivity.create')}}">
 
@@ -26,7 +26,7 @@
                 {!! $calendar->script() !!}
             </div>  
         </div>
-        <div id="list" class="tab-pane fade in ">      
+        <div id="list" class="tab-pane fade  ">      
         @include('salesactivity.partials._tablist')
 
         </div>

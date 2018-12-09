@@ -30,6 +30,7 @@
     <script src="https://code.jquery.com/jquery-1.10.1.min.js"></script>
     <script src="{{asset('maps/js/handlebars-1.0.0.min.js')}}"></script>
     <script src="https://maps.google.com/maps/api/js?key={{config('maps.api_key')}}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 
     <script src="{{asset('maps/js/jquery.storelocator.js')}}"></script>

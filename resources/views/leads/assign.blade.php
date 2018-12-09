@@ -17,7 +17,7 @@
 			@include('leads.partials._repslist')
 		</div>
 
-		<div id="branches" class="tab-pane fade in">
+		<div id="branches" class="tab-pane fade ">
 			@include('leads.partials._branchlist')
 		</div>
 	</div>

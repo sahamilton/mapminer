@@ -37,11 +37,11 @@
             @include('admin.users.partials._personmap')
         </div>
         
-        <div id="details" class="tab-pane fade in">
+        <div id="details" class="tab-pane fade ">
             @include('admin.users.partials._tabdetails')
         </div>
 
-        <div id="team" class="tab-pane fade in">
+        <div id="team" class="tab-pane fade ">
             <h4>Reports to:</h4>
             @if(isset($user->person->reportsTo))
             <a href="{{route('users.show',$user->person->reportsTo->user_id)}}">
@@ -57,7 +57,7 @@
             @endforeach
         </div>
         
-        <div id="branches" class="tab-pane fade in">
+        <div id="branches" class="tab-pane fade ">
             <h4>Branches Serviced:</h4>
             @foreach ($user->person->manages()->get() as $branch)
 
@@ -65,14 +65,14 @@
             @endforeach
         </div>
 
-        <div id="accounts" class="tab-pane fade in">
+        <div id="accounts" class="tab-pane fade ">
 
             <h4>Accounts Managed:</h4>
             @foreach ($user->person->managesAccount()->get() as $account)
                 <li>{{$account->companyname}}</li>
             @endforeach
         </div>
-         <div id="leads" class="tab-pane fade in">
+         <div id="leads" class="tab-pane fade ">
             @php $openleads = $user->person->openleads @endphp
             @include('templeads.partials._tabopenleads')
         </div>

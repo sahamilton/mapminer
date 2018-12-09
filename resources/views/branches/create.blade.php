@@ -29,7 +29,7 @@ Create a New Branch
     <div id="branch" class="tab-pane fade show active">
       @include('branches/partials/_form')
     </div>
-	<div id="team" class="tab-pane fade in">
+	<div id="team" class="tab-pane fade ">
       @include('branches/partials/_team')
     </div>
 	

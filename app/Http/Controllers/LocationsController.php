@@ -262,7 +262,7 @@ class LocationsController extends BaseController {
 
 		$data['branch'] = $branches;
 		$data['title']='National Accounts';
-		$locations  = $this->getNearbyLocations($branches->address->lat,$branches->address->lng);
+		$locations  = $this->getNearbyLocations($branches->lat,$branches->lng);
 		$watchlist = User::where('id','=',auth()->user()->id)->with('watching')->get();
 		foreach($watchlist as $watching) {
 			foreach($watching->watching as $watched) {
