@@ -6,7 +6,7 @@ use\App\Presenters\LocationPresenter;
 class Project extends Model
 {
     
-use Geocode, Addressable;
+use Geocode;
     public $table="projects";
     public $incrementing = false;
     public $statuses = ['Claimed','Closed'];

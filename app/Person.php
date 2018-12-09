@@ -5,7 +5,7 @@ use\App\Presenters\LocationPresenter;
 use McCool\LaravelAutoPresenter\HasPresenter;
 
 class Person extends NodeModel implements HasPresenter {
-	use Geocode,Filters, Addressable;
+	use Geocode,Filters;
 
 	// Add your validation rules here
 	public static $rules = [
@@ -121,7 +121,12 @@ class Person extends NodeModel implements HasPresenter {
 				->withPivot('created_at','updated_at','status_id','rating')
 				->wherePivot('status_id',2);
 	}
-	
+	public function fullName()
+	{
+
+		return $this->attributes['firstname'] . ' ' . $this->attributes['lastname'];
+
+	}
 	
 	public function postName()
 	{

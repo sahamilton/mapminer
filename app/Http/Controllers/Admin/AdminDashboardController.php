@@ -44,6 +44,7 @@ class AdminDashboardController extends BaseController {
 
 
 		$data['logins'] = $this->getLogins();
+		
 		$data['status'] = $this->getLastLogins();
 		$data['firsttimers'] = $this->getFirstTimers();
 		$data['weekcount'] = $this->getWeekLoginCount();

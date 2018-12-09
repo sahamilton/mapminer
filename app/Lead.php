@@ -9,7 +9,7 @@ use Geocoder\Laravel\Facades\Geocoder;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Lead extends Model implements HasPresenter {
-  use SoftDeletes, Geocode, Addressable;
+  use SoftDeletes, Geocode;
 	public $dates = ['created_at','updated_at','deleted_at','datefrom','dateto'];
   public $table= 'leads';
   public $assignTo;

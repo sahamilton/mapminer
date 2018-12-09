@@ -54,7 +54,7 @@ class User extends Authenticatable
 	 }
 
 	 public function fullName(){
-	 	return $this->person->fullName();
+	 	return $this->person->postName();
 	 }
 	 public function usage()
 	 {
