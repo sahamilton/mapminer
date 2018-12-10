@@ -3,6 +3,7 @@
 @include('partials._santa')
 
 @if(!auth()->check())
+
 <img class="santa" src="/assets/img/santa.png" width="20%" />
 	<div class="jumbotron" style="margin-top:30px">
 		<div class="container" style="position:relative;text-align:center">
