@@ -4,7 +4,7 @@
 <h2>{{$mylead->businessname}}</h2>
 <p><a href="{{route('myleads.index')}}">Return to all my leads</a></p>
 @if($mylead->salesteam->first()->pivot->status_id == 1)
-  <button type="button" class="btn btn-info " data-toggle="modal" data-target="#closelead">Claim Lead</button>
+  <button type="button" class="btn btn-info " data-toggle="modal" data-target="#claimlead">Claim Lead</button>
 @elseif($mylead->salesteam->first()->pivot->status_id == 2)
  <button type="button" class="btn btn-info " data-toggle="modal" data-target="#closelead">Close Lead</button>
 @else
@@ -99,6 +99,8 @@ $lead = $mylead;
 @endphp
 @include('partials/_modal')
 @include ('myleads.partials._closeleadform')
+@include ('myleads.partials._claimleadform')
+
 @include('myleads.partials.map')
 @include('partials._scripts');
 

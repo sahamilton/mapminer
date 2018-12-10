@@ -648,13 +648,13 @@ class LeadsController extends BaseController
      * @return [type]           [description]
      */
     public function claim(Request $request, $id){
-   
+     
       $lead = $this->lead->with('salesteam')->findOrFail($id);
-    
-      $lead->salesteam()->save(auth()->user()->person,['status_id'=>2]);
       
+      $lead->salesteam()->sync([auth()->user()->person->id=>['status_id'=>2]]);
+     
 
-        return redirect()->route('salesrep.newleads.show',$id)->with('message', 'Lead claimed');
+      return redirect()->route('myleads.show',$id)->with('message', 'Lead claimed');
      }
 
      private function addClosingNote($request,$id){

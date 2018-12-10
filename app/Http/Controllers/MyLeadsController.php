@@ -84,14 +84,21 @@ class MyLeadsController extends BaseController
      */
     public function show(MyLead $mylead)
     {
+        //dd($this->lead->myLeads()->pluck('id')->toArray());
+        if(in_array($mylead->id,$this->lead->myLeads()->pluck('id')->toArray())){
+            ;
+        $mylead->load('salesteam','relatedLeadNotes','relatedLeadNotes.relatedContact','contacts');
         $people = $this->lead->findNearByPeople($mylead);
         $branches = $this->lead->findNearByBranches($mylead);
-
-        $mylead = $mylead->with('salesteam','relatedLeadNotes','relatedLeadNotes.relatedContact','contacts')->findOrFail($mylead->id);
+        // this needs to include the logic of ownership  Must be in salesteam
+        
       
         $rankingstatuses = $this->lead->getStatusOptions;
 
         return response()->view('myleads.show',compact('mylead','people','rankingstatuses','branches'));
+    }else{
+        return redirect()->route('myleads.index')->withError('That is not one of your prospects');
+    }
     }
 
     /**
