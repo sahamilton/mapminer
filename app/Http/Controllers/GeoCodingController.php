@@ -70,7 +70,7 @@ class GeoCodingController extends BaseController {
 		$data['latlng'] = $data['lat'].":".$data['lng'];
 		// Kludge to address the issue of different data in Session::geo
 			$data['number']=5;
-		}
+
 		// we have to do this in case the lat / lng was set via the browser
 		if(! isset($data['fulladdress'])){
 			$data['fulladdress'] = $data['address'];

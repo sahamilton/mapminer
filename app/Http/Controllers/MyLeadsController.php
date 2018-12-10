@@ -84,7 +84,7 @@ class MyLeadsController extends BaseController
      */
     public function show(MyLead $mylead)
     {
-        //dd($this->lead->myLeads()->pluck('id')->toArray());
+        
         if(in_array($mylead->id,$this->lead->myLeads()->pluck('id')->toArray())){
             ;
         $mylead->load('salesteam','relatedLeadNotes','relatedLeadNotes.relatedContact','contacts');
@@ -146,7 +146,21 @@ class MyLeadsController extends BaseController
             return redirect()->back()->withError('Unable to delete lead');
         }
     }
+    /**
+     * Claim prospect
+     * @param  Request $request post contents
+     * @param  int  $id      prospect (lead) id
+     * @return [type]           [description]
+     */
+    public function claim(Request $request, $mylead){
+     
+      
+      $mylead->salesteam()->sync([auth()->user()->person->id=>['status_id'=>2]]);
+     
 
+      return redirect()->route('myleads.show',$id)->with('message', 'Lead claimed');
+     }
+    
     public function close(Request $request){
         $lead = $this->lead->with('salesteam')->findOrFail(request('lead_id'));
 
