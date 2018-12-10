@@ -77,7 +77,7 @@ method = 'post' name="mapselector">
         name="search" 
         title="Enter an address, zip code, or state code to search from"
         value="{{isset($data['fulladdress']) ? str_replace('+','', str_replace('  ',' ',$data['fulladdress'])) : ''}}"
-        id="address" 
+        id="search"
         required
         style='width:300px'
         placeholder='Enter address or check Help Support for auto geocoding' />
@@ -116,6 +116,7 @@ $("select[id^='select']").change(function() {
   window.dataLayer.push({
   'event' : 'searchAddress',
   'address' : '{{isset($data['address']) ? $data['address'] : 'No address'}}',
+  'search' : '{{isset($data['search']) ? $data['search'] : 'No address'}}',
   'searchtype' : '{{isset($data['type']) ? $data['type'] : 'no type'}}'
 
 });

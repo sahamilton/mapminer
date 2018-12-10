@@ -49,13 +49,13 @@ class GeoCodingController extends BaseController {
 	public function findMe(FindMeFormRequest $request) {
 
 		
-		if(request()->filled('address')) {
-			$address = urlencode(request('address'));
+		if(request()->filled('search')) {
+			$address = urlencode(request('search'));
 			
 		}
 		if(! request()->filled('lat')){
-			$geocode = app('geocoder')->geocode(request('address'))->get();
-
+			$geocode = app('geocoder')->geocode(request('search'))->get();
+			
 			if(! $geocode or count($geocode)==0){
 
 				return redirect()->back()->withInput()->with('error','Unable to Geocode address:'.request('address') );
@@ -65,15 +65,19 @@ class GeoCodingController extends BaseController {
 			
 		
 		}
+
 		$data = request()->all();
 
 		$data['latlng'] = $data['lat'].":".$data['lng'];
 		// Kludge to address the issue of different data in Session::geo
+		if(! request()->has('number')){
+
 			$data['number']=5;
+		}
 
 		// we have to do this in case the lat / lng was set via the browser
 		if(! isset($data['fulladdress'])){
-			$data['fulladdress'] = $data['address'];
+			$data['fulladdress'] = $data['search'];
 		}
 
 		session()->put('geo', $data);
@@ -90,6 +94,7 @@ class GeoCodingController extends BaseController {
     	}else{
     		$company=null;
     	}
+
     	$data['result'] = $this->getGeoListData($data);
 
     	if(count($data['result'])==0){
@@ -232,7 +237,7 @@ class GeoCodingController extends BaseController {
 	 
 	public function getGeoListData($data ) {
 
-	
+
 		$company = isset($data['company']) ? $data['company'] : NULL;
 		$location = new Location;
 		$location->lat = $data['lat'];
@@ -298,6 +303,7 @@ class GeoCodingController extends BaseController {
 	}
 
 	private function getMyLeadsListData($location,$data){
+		
 		return $this->lead->myLeads()
 			->with('leadsource')
 			->nearby($location,$data['distance'])
