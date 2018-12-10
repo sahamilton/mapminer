@@ -109,8 +109,8 @@ class GeoCodingController extends BaseController {
 			}
 
 			if ($data['type']=='myleads'){
-				
-				return response()->view('myleads.index', compact('data'));
+				$statuses = \App\LeadStatus::pluck('status','id')->toArray();
+				return response()->view('myleads.index', compact('data','statuses'));
 			}
 
 			try {

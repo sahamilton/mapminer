@@ -1,15 +1,16 @@
 @extends('site.layouts.default')
 @section('content')
-
+@include('partials._santa')
 
 @if(!auth()->check())
+<img class="santa" src="/assets/img/santa.png" width="20%" />
 	<div class="jumbotron" style="margin-top:30px">
 		<div class="container" style="position:relative;text-align:center">
 			<h4 ">Welcome to the PeopleReady&reg; National Account Locator</h4>
 			<div id="welcome">
 				<div id="loginbtn" style="padding-left:0px;padding-top:200px">
 				
-				<a href='login'class='btn btn-lg btn-success'>Login</a>
+					<a href='login'class='btn btn-lg btn-success'>Login</a>
 
 
 				</div>

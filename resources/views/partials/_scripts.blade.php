@@ -28,6 +28,7 @@ $(document).ready(function()
 	$(document).on('show.bs.modal','#accept-lead', function(e) {
     	$(this).find('.warning').attr('href', $(e.relatedTarget).data('href'));
 		$(this).find('#title').html($(e.relatedTarget).data('title'));
+		$(this).find('input#lead_id').val($(e.relatedTarget).data('pk'));
 	});	
 
 	$(document).on('show.bs.modal','#add-contact', function(e) {

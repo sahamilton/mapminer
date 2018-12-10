@@ -34,7 +34,7 @@ class MyLeadsController extends BaseController
         $statuses = $statuses = LeadStatus::pluck('status','id')->toArray();
     
         $leads = $this->lead->distanceFromMe($leads);
-        
+      
         return response()->view('myleads.index',compact('leads','statuses'));
     }
 
