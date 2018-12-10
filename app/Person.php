@@ -48,7 +48,13 @@ class Person extends NodeModel implements HasPresenter {
 		
 
 	}
+	public function myTeam(){
+ 		
+        return $this->where('user_id','=',auth()->user()->id)->firstOrFail()
+        		->descendants()
+        		->pluck('id')->toArray();
 
+	}
 	public function lastUpdatedBranches()
 	{
 		return $this->belongsToMany(Branch::class)

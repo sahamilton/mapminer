@@ -475,14 +475,15 @@ class LeadsController extends BaseController
   public function salesLeads($pid){
 
         $person = $this->getSalesRep($pid);
-      
+       
         if($person->userdetails->can('accept_leads')){
            
             return $this->showSalesLeads($person);
         }elseif($person->userdetails->hasRole('Admin') or $person->userdetails->hasRole('Sales Operations')){
+               
                 return redirect()->route('leadsource.index');
         }else{
-
+            
             return $this->showSalesTeamLeads($person);
         }
 
@@ -595,21 +596,22 @@ class LeadsController extends BaseController
 
     }
     private function getSalesRep($pid=null){
-
-        if(! $pid){
-            return $this->person->findOrFail(auth()->user()->person->id);
+        $me = $this->person->findOrFail(auth()->user()->person->id);
+        if(! $pid or $me->id == $pid){
+            return $me ;
         }
 
         $person = $this->person->findOrFail($pid);
-
+       
         if(auth()->user()->hasRole('Admin') or auth()->user()->hasRole('Sales Operations')){
            
            return $person;
 
-        }
-        $peeps = $person->descendants()->pluck('id')->toArray();
+        } 
+       $peeps = $this->person->myTeam();
 
-        if(in_array($pid,$peeps)){
+      
+        if(in_array($pid,$peeps) ){
             return $person;
         }
         
@@ -623,7 +625,12 @@ class LeadsController extends BaseController
 
         return $this->lead->whereHas($type, function ($q) use($person){
             $q->where('person_id','=',$person->id);
-        })->with($type);
+        })
+        ->whereHas('leadsource', function ($q) {
+            $q->where('datefrom','<=',date('Y-m-d'))
+              ->where('dateto','>=',date('Y-m-d'));
+        })
+        ->with($type);
 
     }
     /**
