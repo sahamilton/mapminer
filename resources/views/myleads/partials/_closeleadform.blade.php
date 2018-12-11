@@ -4,18 +4,18 @@
 
 @php 
 
-$rank = ($lead->salesteam->first()->pivot->rating ? $lead->salesteam->first()->pivot->rating: 3);@endphp
+$rank = ($mylead->salesteam->first()->pivot->rating ? $mylead->salesteam->first()->pivot->rating: 3);@endphp
     <!-- Modal content-->
     <div class="modal-content">
       <div class="modal-header">
         
-        <h4 class="modal-title">Close {!!$lead->companyname!!} Lead  </h4>
+        <h4 class="modal-title">Close {!!$mylead->companyname!!} Lead  </h4>
         <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
       <div class="modal-body">
         <p>Please complete this form to close lead</p>
         <?php $ratings = [1,2,3];?>
-        <form method="post" action="{{route('mylead.close',$lead->id)}}">
+        <form method="post" action="{{route('mylead.close',$mylead->id)}}">
         {{csrf_field()}}
         <div class="form-group">
                     <label class="col-md-4 control-label">Lead Rating:</label>
@@ -46,7 +46,7 @@ $rank = ($lead->salesteam->first()->pivot->rating ? $lead->salesteam->first()->p
             <div class="float-right">
            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button> <input type="submit" value="Close Lead" class="btn btn-danger" />
             </div>
-            <input type="hidden" name="lead_id" value="{{$lead->id}}" />
+            <input type="hidden" name="lead_id" value="{{$mylead->id}}" />
         </form><div class="modal-footer">
         
         

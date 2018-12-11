@@ -54,21 +54,24 @@ class Imports extends Model
 
 
     public function import(){
-    	if(! $this->dontCreateTemp){
-    	      $this->createTemporaryImportTable();
-    	}
-      $this->_import_csv();
+		if (! $this->dontCreateTemp){
+			$this->createTemporaryImportTable();
+		}
+		$this->_import_csv();
 
-      $this->addCreateAtField();
+		$this->addCreateAtField();
 
-      $this->updateAdditionalFields();
+		$this->updateAdditionalFields();
+		if (! $this->dontCreateTemp){
+			$this->copyTempToBaseTable();
+			$this->dropTempTable();
+		}
 
-      $this->copyTempToBaseTable();
 
-    		//$this->dropTempTable();
+		//
 
-    		return true;
-    	}
+		return true;
+		}
 
     public function setNullFields($table){
 

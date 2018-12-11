@@ -45,7 +45,7 @@ class LeadImportController extends ImportController
         
     }
 
-    public function getFile(Request $request,$type=null,$id=null){
+    public function getFile(Request $request,$id=null,$type=null){
 
         $sources= $this->leadsources->all()->pluck('source','id');
         if($sources->count() == 0){
@@ -59,6 +59,7 @@ class LeadImportController extends ImportController
        if($type=='assigned'){
         $requiredFields[] = 'employeee_number';
        }
+       
         return response()->view('leads.import',compact ('sources','leadsource','requiredFields','type'));
     }
 
@@ -96,12 +97,7 @@ class LeadImportController extends ImportController
         $this->validateInput($request);
         $this->import->setFields($data);
         if($this->import->import()) {
-
-            if(request('type')=='assigned'){
-
-                $this->postimport();
-            }
-
+            $this->postimport();
         
             return redirect()->route('leadsource.index')->with('success','Leads imported'); 
 

@@ -34,7 +34,7 @@ class MyLeadsController extends BaseController
         $statuses = $statuses = LeadStatus::pluck('status','id')->toArray();
     
         $leads = $this->lead->distanceFromMe($leads);
-      
+ 
         return response()->view('myleads.index',compact('leads','statuses'));
     }
 
@@ -85,12 +85,11 @@ class MyLeadsController extends BaseController
     public function show(MyLead $mylead)
     {
         
-        if(in_array($mylead->id,$this->lead->myLeads()->pluck('id')->toArray())){
-            ;
-        $mylead->load('salesteam','relatedLeadNotes','relatedLeadNotes.relatedContact','contacts');
-        $people = $this->lead->findNearByPeople($mylead);
-        $branches = $this->lead->findNearByBranches($mylead);
-        // this needs to include the logic of ownership  Must be in salesteam
+        if(in_array($mylead->id,$this->lead->myLeads([1,2,3],$all=true)->pluck('id')->toArray())){
+
+            $mylead->load('salesteam','relatedLeadNotes','relatedLeadNotes.relatedContact','contacts');
+            $people = $this->lead->findNearByPeople($mylead);
+            $branches = $this->lead->findNearByBranches($mylead);
         
       
         $rankingstatuses = $this->lead->getStatusOptions;

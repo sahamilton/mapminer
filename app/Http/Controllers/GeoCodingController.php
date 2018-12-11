@@ -304,7 +304,7 @@ class GeoCodingController extends BaseController {
 
 	private function getMyLeadsListData($location,$data){
 		
-		return $this->lead->myLeads()
+		return $this->lead->myLeads($statuses =[1,2],$all=true)
 			->with('leadsource')
 			->nearby($location,$data['distance'])
 			->get();

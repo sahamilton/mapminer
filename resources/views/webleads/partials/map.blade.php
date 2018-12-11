@@ -9,13 +9,10 @@ function initialize() {
   }
   var infoWindow = new google.maps.InfoWindow;
   var map = new google.maps.Map(document.getElementById('map'), mapOptions);
-<<<<<<< HEAD
-	var name = "{{$lead->company_name}}";
-  var address = "{{$lead->city}}" + " {{$lead->state}}";
-=======
+
   var name = "{!! trim($lead->companyname)!!}";
   var address = "{{trim($lead->city)}}" + ",{{trim($lead->state)}}";
->>>>>>> master
+
  
   var salesreps = {!! $salesrepmarkers !!};
   var branches = {!! $branchmarkers !!};

@@ -122,7 +122,7 @@ class MapsController extends BaseController {
 		
 		$location = $this->getLocationLatLng($latlng);
 	
-		$leads = $this->lead->myLeads();
+		$leads = $this->lead->myLeads([1,2],$all=true);
 		
 		$result = $leads->nearby($location,$distance)->get();
 		return response()->view('myleads.xml', compact('result'))->header('Content-Type', 'text/xml');

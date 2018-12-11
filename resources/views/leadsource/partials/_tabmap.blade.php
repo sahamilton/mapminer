@@ -18,10 +18,10 @@
              	}
              }
 
-              echo "'".$lead->businessname."':{";
+              echo "'".str_replace("'", "",$lead->businessname)."':{";
               echo "center: {lat: ". $lead->lat .", lng:". $lead->lng."},";
-              echo "name : '" . $lead->businessname."',";
-              echo "contentString: '<a href=\"".route('leads.show',$lead->id)."\">". $lead->businessname ." </a> ',"; 
+              echo "name : '".str_replace("'", "",$lead->businessname)."',";
+              echo "contentString: '<a href=\"".route('leads.show',$lead->id)."\">". str_replace("'", "",$lead->businessname) ." </a> ',"; 
               if(isset($status) && in_array($status,[1,2,3])){
               	
               	echo "type:  '".$statuses[$status]."'},";
