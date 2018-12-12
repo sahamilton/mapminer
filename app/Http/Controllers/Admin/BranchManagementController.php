@@ -51,23 +51,9 @@ class BranchManagementController extends BaseController
 
         $roles = $this->role->whereIn('id',$this->branchRoles)->get();
  
-    	$branches = $this->branch
-        ->doesntHave('manager')
-        ->orWhere(function ($q){
-            $q->doesntHave('businessmanager')
-            ->doesntHave('marketmanager');
-        })
-        
+    	$branches = $this->branchesWithoutManagers();
+		$people = $this->managersWithoutBranches();
 
-        ->with('servicelines','manager','marketmanager','businessmanager')
-        ->get();
-		
-
-        $people = $this->person
-        ->with('userdetails.roles','reportsTo','userdetails.serviceline')
-        ->doesntHave('manages')
-            ->manages($this->branchRoles)
-        ->get();
 		return response()->view('admin.branches.manage',compact('branches','people','roles'));
 
     }
@@ -85,6 +71,7 @@ class BranchManagementController extends BaseController
                     $q->where('permissions.name','=','service_branches');
             })
             ->pluck('name','id')->toArray();
+            
             $servicelines = $this->serviceline->whereIn('id',$this->userServiceLines)->get()->pluck('ServiceLine','id')->toArray();
 
             
@@ -129,16 +116,35 @@ class BranchManagementController extends BaseController
                 return redirect()->route('branchassignment.check')->withMessage($emails . ' emails sent.');
             }
             return redirect()->route('branchassignment.check')->withMessage('No emails sent.');
-        }
+    }
 
-        private function createCampaign($request){
-            
-            return $this->campaign->create(['type'=>'branch assignment email','test'=>request('test'),'route'=>'branchassignment.check','message'=>request('message'),'created_by'=>auth()->user()->id]);
-            
-        }
+    private function createCampaign($request){
+        
+        return $this->campaign->create(['type'=>'branch assignment email','test'=>request('test'),'route'=>'branchassignment.check','message'=>request('message'),'created_by'=>auth()->user()->id]);
+        
+    }
 
-        private function addRecipients($campaign,$recipients){
-            return $campaign->participants()->attach($recipients);
-        }
+    private function addRecipients($campaign,$recipients){
+        return $campaign->participants()->attach($recipients);
+    }
     
+
+    private function branchesWithoutManagers(){
+        return $this->branch
+            ->doesntHave('manager')
+            ->orWhere(function ($q){
+                $q->doesntHave('businessmanager')
+                ->doesntHave('marketmanager');
+            })
+            ->with('servicelines','manager','marketmanager','businessmanager')
+            ->get();
+    }
+
+    private function managersWithoutBranches(){
+        return $this->person
+        ->with('userdetails.roles','reportsTo','userdetails.serviceline')
+        ->doesntHave('manages')
+        ->manages($this->branchRoles)
+        ->get();
+    }
 }

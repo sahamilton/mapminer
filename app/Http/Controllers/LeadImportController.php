@@ -109,6 +109,7 @@ class LeadImportController extends ImportController
         
         //$this->addAssignedPID();
         $this->copyLeads();
+
         $this->copyLeadContacts();
         //$this->updateLeadPivot();
         $this->truncateTable();

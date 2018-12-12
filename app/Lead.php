@@ -132,7 +132,12 @@ public function rankLead($salesteam){
     return $ranking;
     }
 
+    public function leadStatus(){
 
+    return $this->belongsToMany(LeadStatus::class,'lead_person_status','related_id','status_id')
+    ->withPivot('created_at','updated_at','person_id','rating');
+
+    }
     public function ownedBy(){
       return $this->belongsToMany(Person::class,'lead_person_status','related_id','person_id')
             ->withPivot('status_id','rating','type')
@@ -369,5 +374,16 @@ public function rankLead($salesteam){
             
             ->get();
 
+    }
+
+    public function unassignedLeads(LeadSource $leadsource){
+        return $this->whereDoesntHave('salesteam')
+          ->where('lead_source_id','=',$leadsource->id)
+          ->whereHas('leadsource', function ($q){
+            $q->where('datefrom','<=',date('Y-m-d'))
+            ->where('dateto','>=',date('Y-m-d'));
+          })
+
+        ->get();
     }
 }

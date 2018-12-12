@@ -26,6 +26,7 @@ class LeadsAssignController extends Controller
 	}
 
     public function assignLeads($sid){
+
       $leadsource = $this->leadsource->findOrFail($sid);
       $leadroles = $this->setLeadAcceptRoles();
 
@@ -33,46 +34,29 @@ class LeadsAssignController extends Controller
 
     }
      public function geoAssignLeads(Request $request){
-       
+      
+        $this->distance = request('distance');
+        $this->limit = request('limit');
         $leadsource = $this->leadsource->findOrFail(request('sid'));
+
         $this->leadroles = $this->setLeadAcceptRoles(request());
-       
-        $data['verticals'] = $leadsource->verticals()->pluck('searchfilters.id')->toArray();
-
-        $leads = $this->lead->whereDoesntHave('salesteam')
-          ->where('lead_source_id','=',$leadsource->id)
-          ->whereHas('leadsource', function ($q){
-            $q->where('datefrom','<=',date('Y-m-d'))
-            ->where('dateto','>=',date('Y-m-d'));
-          })
-
-        ->get();
-
-
-     
-        $count = null;
-        foreach ($leads as $lead) {
-          
-          $people = $this->person
-          ->with('userdetails')
-          ->whereHas('userdetails.roles',function($q) {
-            $q->whereIn('name',$this->leadroles);
-
-          })->nearby($lead,$this->distance)
-          ->limit($this->limit)
-          ->get();
-          foreach ($people as $person){
-          	$count++;
-              $lead->salesteam()->attach($person->id,['status_id'=>1]);
-          }
+        if($leadsource->has('verticals')){
+          $verticals = $leadsource->verticals()->pluck('searchfilters.id')->toArray();
+        }else{
+          $verticals =null;
         }
+        
+
+        $leads = $this->lead->unassignedLeads($leadsource);
+        $count = $this->assignLeadsToPeople($leads,$verticals);
+
         return redirect()->route('leadsource.show',$leadsource->id)->with('status',$count . ' leads assigned');
     }
 
 
     public function assignLead(Request $request){
 
-     $count=0;
+      $count=0;
 
       $lead = $this->lead->findOrFail(request('lead_id'));
 
@@ -101,7 +85,39 @@ class LeadsAssignController extends Controller
           return $this->setleadRoles();
         }
 
+    }
 
+    private function assignLeadsToPeople($leads,$verticals=null){
+      
+      $count = null;
+      foreach ($leads as $lead) {
+          $people = $this->person
+                  ->with('userdetails')
+                  ->whereHas('userdetails.roles',function($q) {
+                    $q->whereIn('name',$this->leadroles);
+
+                  });
+          if($verticals){
+            // assign only to people who have industry focus == to leadsource
+            // or no industry focus
+              $people = $people->where(function ($q) use ($verticals){
+                $q->whereHas('industryfocus',function($q) use($verticals){
+                  $q->whereIn('searchfilters.id',$verticals);
+                })
+                ->orWhereDoesntHave('industryfocus');
+              });
+          }
+          $people = $people->nearby($lead,$this->distance)
+                ->limit($this->limit)
+                ->get();;
+          
+          foreach ($people as $person){
+            $count++;
+              $lead->salesteam()->attach($person->id,['status_id'=>1]);
+          }
+          
+        }
+        return $count;
     }
 
 }

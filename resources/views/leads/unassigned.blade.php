@@ -39,7 +39,8 @@
 
         </table>
     </div>
-
+<a href="{{route('leadsource.assign',$leadsource->id)}}" class="btn btn-info">Assign Geographically</a>
 </div>
+
 @include('partials._scripts')
 @endsection

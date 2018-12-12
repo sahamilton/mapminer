@@ -91,9 +91,11 @@ class LeadSourceController extends Controller
     public function show($id)
     {
 
-     
+  
         $leadsource = $this->leadsource->with('leads','unassignedLeads','closedLeads')->findOrFail($id);
-        $salesteams  = $this->getSalesTeam($id);
+        $teamStats  = $this->getSalesTeam($id);
+        $salesteams = $this->person->with('reportsTo')->whereIn('id',array_keys($teamStats))->get();
+       
        // $data = $this->leadsource->leadRepStatusSummary($id);
         $statuses = LeadStatus::pluck('status','id')->toArray();
 
@@ -101,7 +103,7 @@ class LeadSourceController extends Controller
     
        
 
-        return response()->view('leadsource.show',compact('salesteams','statuses','leadsource'));
+        return response()->view('leadsource.show',compact('salesteams','statuses','teamStats','leadsource'));
     }
 
     private function getOwnedBy($leads){
@@ -109,18 +111,25 @@ class LeadSourceController extends Controller
     }
 
     private function getSalesTeam($id){
-        return  $this->person
 
-        ->whereHas('leads',function ($q) use($id){
-            $q->where('lead_source_id','=',$id);
-        })
-        ->with('reportsTo')
-        ->withCount('leads')
-        ->withCount('offeredleads')
-        ->withCount('openleads')
-        ->withCount('closedleads')
+        $leads = $this->lead->where('lead_source_id','=',$id)
+        ->with('salesteam')
         ->get();
-        
+        $statuses = [1,2,3];
+        $teamStats = array();
+        foreach ($leads as $lead){
+            foreach ($lead->salesteam as $member){
+                if(! array_key_exists($member->id,$teamStats)){
+                    foreach ($statuses as $status){
+                        $teamStats[$member->id][$status]=0;
+                    }
+                    
+                }   
+                $teamStats[$member->id][$member->pivot->status_id]++;
+            }
+
+        }
+        return $teamStats;        
     }
 
     private function reformatRepsData($data){
