@@ -7,7 +7,7 @@
 <img class="santa" src="/assets/img/santa.png" width="20%" />
 	<div class="jumbotron" style="margin-top:30px">
 		<div class="container" style="position:relative;text-align:center">
-			<h4 ">Welcome to the PeopleReady&reg; National Account Locator</h4>
+			<h4 ">Welcome to the PeopleReady&reg; Mapminer</h4>
 			<div id="welcome">
 				<div id="loginbtn" style="padding-left:0px;padding-top:200px">
 				
@@ -21,7 +21,7 @@
 @else
 	<div class="jumbotron" style="margin-top:30px">
 		<div class="container" style="position:relative;text-align:center">
-			<h4 ">Welcome, {{auth()->user()->person()->first()->firstname}} to the PeopleReady&reg; National Account Locator</h4>
+			<h4 ">Welcome, {{auth()->user()->person()->first()->firstname}} to the PeopleReady&reg; Mapminer</h4>
 			<div id="welcome">
 				<div id="accountbtn" style="text-align:left; padding-left:20%;padding-top:100px">
 					<a href='{{URL::to('company')}}' class='btn btn-lg btn-primary' title='Search for specific accounts'>Account Views</a>

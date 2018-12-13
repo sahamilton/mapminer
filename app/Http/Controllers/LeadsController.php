@@ -190,10 +190,16 @@ class LeadsController extends BaseController
 
       $leadsource = $this->leadsource->findOrFail($input['lead_source_id']);
       $table = $leadsource->type.'leads';
-      $data = $this->extractLeadTableData($input,$table);
-      $lead = $this->lead->create($data['lead']);
+   
+      $data = $this->extractLeadTableData($input,$table);  
+
+      $lead = $this->lead->fill($data['lead']);
+
+      $lead->save();
+    
       $lead->contacts()->create($data['contact']);
       if($table =='webleads'){
+      
         $lead->webLead()->create($data['extra']);
       }else{
         $lead->tempLead()->create($data['extra']);
@@ -721,6 +727,7 @@ class LeadsController extends BaseController
                       ->whereNotNull('fieldname')
                       ->pluck('fieldname')->toArray();
 
+            $extra=array();
             foreach ($extraFields as $key=>$value){
               if($newdata[$value]){
                 $extra[$value] = $newdata[$value];
@@ -881,12 +888,12 @@ class LeadsController extends BaseController
         $contactFields = MapFields::whereType($type)
         ->whereDestination('contact')
         ->whereNotNull('fieldname')->pluck('fieldname')->toArray();
-
+       
         $contact['contact'] = null;
             foreach ($contactFields as $field){
-
-                    $contact[$field] = $newdata[$field];
- 
+              if(isset($newdata[$field])){
+                      $contact[$field] = $newdata[$field];
+               }
             }
       
         return  $contact;

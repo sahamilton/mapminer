@@ -14,7 +14,7 @@ $rank = ($mylead->salesteam->first()->pivot->rating ? $mylead->salesteam->first(
       </div>
       <div class="modal-body">
         <p>Please complete this form to close lead</p>
-        <?php $ratings = [1,2,3];?>
+        <?php $ratings = [1,2,3,4,5];?>
         <form method="post" action="{{route('mylead.close',$mylead->id)}}">
         {{csrf_field()}}
         <div class="form-group">

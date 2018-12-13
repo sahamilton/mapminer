@@ -3,7 +3,7 @@
 
 <div class="jumbotron">
 	<div class="container" style="position:relative;text-align:center">
-		<h4 ">Welcome to the My PeopleReady&reg; National Account Locator</h4>
+		<h4 ">Welcome to the My PeopleReady&reg; Mapminer</h4>
 		<div id="welcome">
 
 			@if(auth()->check()) 
