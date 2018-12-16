@@ -38,7 +38,7 @@ class TrainingController extends BaseController
      public function index(){
        
         $trainings = $this->training->myTraining()->get();
-         return response()->view('training.mytrainings',compact('trainings'));
+        return response()->view('training.mytrainings',compact('trainings'));
         }
 
     /**

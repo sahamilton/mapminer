@@ -36,6 +36,9 @@ Route::group(['middleware' => 'auth'], function () {
 	#About
 		Route::get('about',['as'=>'about','uses'=>'AdminAboutController@getInfo']);
 
+   	#Activities
+		Route::resource('activity','ActivityController');
+		
    	#AccountTypes
 		Route::resource('accounttype','AccounttypesController',	['only' => ['index', 'show']]);
 	#Address
