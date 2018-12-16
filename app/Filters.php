@@ -6,7 +6,7 @@ trait Filters
 	public function getSearchKeys($searchtable, $searchcolumn)
 	{
 
-		if(! \Session::has('Search')){
+		if(! session()->has('Search')){
 			
 			return $keys = FALSE;
 		}
@@ -18,7 +18,7 @@ trait Filters
 		}
 		// get the selected session keys
 
-		$searchKeys = array_flatten(\Session::get('Search'));
+		$searchKeys = array_flatten(session('Search'));
 		if(empty($searchKeys)){
 			return $keys =FALSE;
 		}
@@ -50,14 +50,14 @@ trait Filters
 		$filtered = FALSE;
 
 		// Get the current session filters
-		if (! \Session::get('Search'))
+		if (! session()->has('Search'))
 		{
 			
    				return $filtered;
 		}
 
 		
-		$searchFilters= array_flatten(\Session::get('Search'));
+		$searchFilters= array_flatten(session('Search'));
 
 		if(empty($searchFilters)){
 			

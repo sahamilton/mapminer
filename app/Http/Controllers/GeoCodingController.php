@@ -47,7 +47,7 @@ class GeoCodingController extends BaseController {
 	/**  This needs some serious refactoring! **/
 
 	public function findMe(FindMeFormRequest $request) {
-
+		
 		
 		if(request()->filled('search')) {
 			$address = urlencode(request('search'));
@@ -131,7 +131,7 @@ class GeoCodingController extends BaseController {
 
 			$servicelines = $this->serviceline->whereIn('id',$this->userServiceLines)
     						->get();
-    		
+    	
 			return response()->view('maps.map', compact('data','filtered','servicelines','company'));
 		}
 		
@@ -172,8 +172,8 @@ class GeoCodingController extends BaseController {
 
 	}
 	private function getLocationMapData($data){
-		$data['urllocation'] ="api/mylocalaccounts";
-		$data['title'] ='National Account Locations';
+		$data['urllocation'] ="api/address";
+		$data['title'] ='Nearby Locations';
 		$data['company']=NULL;
 		$data['companyname']=NULL;
 		return $data;

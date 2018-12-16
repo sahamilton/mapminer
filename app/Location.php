@@ -4,7 +4,7 @@ use\App\Presenters\LocationPresenter;
 use McCool\LaravelAutoPresenter\HasPresenter;
 class Location extends Model implements HasPresenter {
 
-	use Geocode;
+	use Geocode,Addressable;
 
 	// Add your validation rules here
 	public static $rules = [

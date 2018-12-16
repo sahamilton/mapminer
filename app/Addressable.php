@@ -15,4 +15,6 @@ trait Addressable
     	return  Address::where('addressable_type','=',$type)->select('state')->distinct()->get();
     	
     }
+
+    
 }

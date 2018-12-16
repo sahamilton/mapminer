@@ -4,7 +4,7 @@ namespace App;
 class SalesOrg extends \Eloquent {
 
 	use Geocode;
-
+	public $topdog = 1767;
 	// Add your validation rules here
 	public static $rules = [
 		'title' => 'required'
@@ -32,7 +32,7 @@ class SalesOrg extends \Eloquent {
 	// but are not in the sales organization
 	// hierarchy
 	public function salesRepsOutsideOrg(){
-		$topDog = Person::findOrFail(1767);
+		$topDog = Person::findOrFail($this->topdog);
 		$salesReps = $topDog->allLeaves()->salesReps()->pluck('id')->toArray();
 
 		$salesRoles = Person::salesReps()->pluck('id')->toArray();

@@ -6,7 +6,7 @@ use McCool\LaravelAutoPresenter\HasPresenter;
 
 class Person extends NodeModel implements HasPresenter {
 	use Geocode,Filters;
-
+	public $salesroles = ['5','9'];
 	// Add your validation rules here
 	public static $rules = [
 		'email'=>'required',
@@ -365,7 +365,7 @@ class Person extends NodeModel implements HasPresenter {
     }
     public function scopePrimaryRole($query){
 
-    	return $query->with('userdetails.roles')->first()->userdetails->roles->first()->id;
+    	return $query->with('userdetails.roles');
                     //->userdetails;
     }
 
@@ -377,7 +377,7 @@ class Person extends NodeModel implements HasPresenter {
 
     public function scopeSalesReps($query){
 		return $query->whereHas('userdetails.roles',function($q){
-    		$q->where('roles.id','=','5');
+    		$q->whereIn('roles.id',$this->salesroles);
 		});
 	}
 

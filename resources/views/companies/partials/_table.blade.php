@@ -28,7 +28,7 @@
 
 	<td>
 		<a title= "See details of {{$location->businessname}} location."
-		href={{route('locations.show',$location->id)}}>
+		href={{route('address.show',$location->id)}}>
 		{{$location->businessname}}</a>
 	</td>
 	<td>{{$location->street}}</td>

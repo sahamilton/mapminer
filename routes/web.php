@@ -38,7 +38,8 @@ Route::group(['middleware' => 'auth'], function () {
 
    	#AccountTypes
 		Route::resource('accounttype','AccounttypesController',	['only' => ['index', 'show']]);
-
+	#Address
+		Route::resource('address','AddressController');	
 	#Branches
 		Route::get('/branches/{state}/state/', ['as'=>'branches.statelist','uses'=>'BranchesController@state']);
 		Route::post('/branches/state', ['as'=>'branches.state','uses'=>'BranchesController@state']);
@@ -118,6 +119,7 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('api/note/get',['as'=>'addNewNote','uses'=>'NotesController@store']);
 		Route::get('api/geo',['as'=>'geo','uses'=>'GeoCodingController@index']);
 		Route::get('api/myleads/{distance}/{latLng}/{limit?}',['as'=>'myleadsmap','uses'=>'MapsController@findMyLeads']);
+		Route::get('api/address/{distance}/{latLng}',['as'=>'addressmap','uses'=>'AddressController@findLocations']);
 
 	#News
 		Route::resource('news', 'NewsController',  ['only' => ['index', 'show']]);
@@ -433,8 +435,8 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
 
 	#NewLeads
 	   // Route::get('newleads/team',['as'=>'templeads.team','uses'=>'TempleadController@salesteam']);
-	    Route::get('/newleads/{pid}/branchmgr',['as'=>'branchmgr.newleads','uses'=>'LeadsController@getAssociatedBranches']);
-	   Route::get('/newleads/branch',['as'=>'templeads.branch','uses'=>'LeadsController@branches']);
+	   // Route::get('/newleads/{pid}/branchmgr',['as'=>'branchmgr.newleads','uses'=>'LeadsController@getAssociatedBranches']);
+	   //Route::get('/newleads/branch',['as'=>'templeads.branch','uses'=>'LeadsController@branches']);
 	    //Route::get('/newleads/{id}/branch/',['as'=>'leads.branchid','uses'=>'LeadsController@branchLeads']);
 		Route::resource('newleads','LeadSourceController');
 		

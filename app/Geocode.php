@@ -69,7 +69,7 @@ trait Geocode
         if($limit){
             $query = $query->limit($limit);
         }
-       
+      
         return $query;
     }
    
