@@ -132,6 +132,10 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('exportlocationnotes/{companyID}', ['as'=>'exportlocationnotes','uses'=>'ManagersController@exportManagerNotes']);
 		Route::resource('notes','NotesController');
 
+	#Opportunity
+		Route::resource('opportunity','OpportunityController');
+
+
 	#People
 
 		Route::get('person/{personId}/showmap', ['as'=>'showmap.person', 'uses'=>'PersonsController@showmap']);

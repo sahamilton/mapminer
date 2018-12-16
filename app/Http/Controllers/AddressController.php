@@ -27,7 +27,7 @@ class AddressController extends Controller
     {
        
         $addresses = $this->address->filtered()->nearby($this->address->getMyPosition(),10)->get();
-        dd($addresses);
+        
         return response()->view('addresses.index',compact('addresses'));
         
     }
@@ -61,7 +61,7 @@ class AddressController extends Controller
      */
     public function show($address)
     {
-        $location = $address->load($address->addressable_type,'contacts','company',$address->addressable_type . '.relatedNotes');
+        $location = $address->load($address->addressable_type,'contacts','company','industryVertical',$address->addressable_type . '.relatedNotes');
         $branches = $this->branch->nearby($location,100,5)->get();
         $rankingstatuses = $this->address->getStatusOptions;
         $people = $this->person->salesReps()->PrimaryRole()->nearby($location,100,5)->get();
@@ -106,7 +106,7 @@ class AddressController extends Controller
         
         $location = $this->getLocationLatLng($latlng);
     
-        $result = $this->address->nearby($location,$distance)->get();
+        $result = $this->address->filtered()->nearby($location,$distance)->get();
         
         return response()->view('addresses.xml', compact('result'))->header('Content-Type', 'text/xml');
     

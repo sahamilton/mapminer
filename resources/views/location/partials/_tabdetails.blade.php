@@ -1,9 +1,8 @@
 <h2>Location Details</h2>
 <div id="map-container">
 	<div style="float:left;width:300px">
-		<p><strong>Vertical: </strong>{{isset($location->location->company->industryVertical->filter) ? $location->location->company->industryVertical->filter : 'Not Specified'}}</p>
-		<p><strong>Segment: </strong>{{isset($location->location->verticalsegment->filter) ? $location->location->verticalsegment->filter  : 'Not Specified'}}</p>
-		<p><strong>Business Type:</strong> {{isset($location->location->clienttype->filter) ? $location->location->clienttype->filter : 'Not Specified'}}
+		<p><strong>Vertical: </strong>{{isset($location->industryVertical->filter) ? $location->industryVertical->filter : 'Not Specified'}}</p>
+		
 		<p><i>A location of <a href="{{ route('company.show', $location->location->company->id) }}" title='show all locations of {{$location->location->company->companyname}} national account'>{{$location->location->company->companyname}}</a></i><br />
 		@if(isset($company->managedBy->firstname))
 			Account managed by <a href="{{route('person.show',$location->location->company->managedBy->id)}}" title="See all accounts managed by {{$location->location->company->managedBy->fullName()}}">

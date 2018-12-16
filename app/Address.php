@@ -8,8 +8,11 @@ class Address extends Model
 {
     use Geocode,Filters;
     public $table = 'addresses';
+
     public $timestamps = false;
-    public $fillable = ['addressable_id','addressable_type','street','suite','city','state','zip','lat','lng'];
+    
+    public $fillable = ['addressable_id','addressable_type','street','address2','city','state','zip','lat','lng'];
+    
     public $getStatusOptions =  [
         1=>'Prospect data is completely inaccurate. No project or project completed.',
         2=>'Prospect data is incomplete and / or not useful.',
@@ -17,6 +20,7 @@ class Address extends Model
         4=>'Prospect data is accurate and there is a possibility of sales / service.',
         5=>'Prospect data is accurate and there is a definite opportunity for sales / service'
       ];
+    
     public function lead(){
     	return $this->belongsTo(Lead::class,'addressable_id','id');
     }
@@ -37,10 +41,10 @@ class Address extends Model
            return $this->hasMany(Note::class,'related_id','addressable_id')
        ->with('writtenBy');
     }
-    
-    public function industryVertical()
-    
-    {
+    public function fullAddress(){
+        return $this->street." ". $this->address2." ".$this->city." ".$this->state." ".$this->zip;
+    }
+    public function industryVertical(){
         return $this->hasOne(SearchFilter::class,'id','vertical');
     }
 

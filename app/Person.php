@@ -48,11 +48,30 @@ class Person extends NodeModel implements HasPresenter {
 		
 
 	}
+	public function myBranches(){
+		$myteam = $this->myTeam()->get();
+        $data=[];
+        $teammembers =  $myteam->map(function ($team) 
+            { 
+                return $team->branchesServiced()->get(); 
+                
+            });
+        foreach ($teammembers as $member){
+            foreach ($member->pluck('id') as $id){
+                if(! in_array($id,$data)){
+                    
+                    $data[]=$id;
+                }
+            }
+        }
+        return $data;
+	}
+
+
 	public function myTeam(){
  		
         return $this->where('user_id','=',auth()->user()->id)->firstOrFail()
-        		->descendants()
-        		->pluck('id')->toArray();
+        		->descendantsAndSelf();
 
 	}
 	public function lastUpdatedBranches()
