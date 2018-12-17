@@ -8,9 +8,19 @@ class Activity extends Model
 {
     
 	protected $dates = ['activity_date','followup_date'];
-	public $fillable = ['activity_date','followup_date','activity','opportunity_id','note'];
-    public $activities = ['phone','email','meeting','proposal','quote'];
+	public $fillable = ['activity_date','followup_date','activity','opportunity_id','note','user_id'];
+    //public $activities = ['phone','email','meeting','proposal','quote'];
     
+    public $activityTypes = [
+			  'Call',
+			  'Email',
+			  'Cold Call',
+			  'Sales Appointment',
+			  'Stop By',
+			  'Left material',
+			  'Proposal'];
+
+
     public function relatesToOpportunity() 
 		{
 			return $this->belongsTo(Opportunity::class);

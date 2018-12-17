@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Opportunity;
 use App\Person;
+use App\Activity;
 use Illuminate\Http\Request;
 
 class OpportunityController extends Controller
@@ -11,10 +12,12 @@ class OpportunityController extends Controller
     
     public $person;
     public $opportunity;
+    public $activity;
 
-    public function __construct(Opportunity $opportunity, Person $person){
+    public function __construct(Opportunity $opportunity, Person $person, Activity $activity){
         $this->opportunity = $opportunity;
         $this->person = $person;
+        $this->activity = $activity;
     }
 
     /**
@@ -25,16 +28,18 @@ class OpportunityController extends Controller
     public function index()
     {
         
-       
-        $opportunities = $this->opportunity
+       $activityTypes = $this->activity->activityTypes;
+       $opportunities = $this->opportunity
         ->whereIn('branch_id',$this->person->myBranches())
-        ->with('address','branch')->OrderBy('branch_id')->get();
+        ->with('address','branch','activities')
+        ->orderBy('branch_id')
+        ->get();
 
         // is this a manager ?
         if($this->person->myTeam()->count() >1){
             return response()->view('opportunities.mgrindex',compact($opportunities));
         }
-        return response()->view('opportunities.index',compact('opportunities'));
+        return response()->view('opportunities.index',compact('opportunities','activityTypes'));
         // if no branches abort
         // if no branches then select branc / Sales OPs
     }
@@ -79,7 +84,8 @@ class OpportunityController extends Controller
      */
     public function edit(Opportunity $opportunity)
     {
-        //
+        $opportunity = $opportunity->load('address','branch','activities','address.contacts');
+        return response()->view('opportunities.show',compact('opportunity'));
     }
 
     /**

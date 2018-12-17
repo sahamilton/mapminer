@@ -3,10 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Activity;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use App\Http\Requests\ActivityFormRequest;
 
 class ActivityController extends Controller
 {
+    public $activity;
+
+    public function __construct(Activity $activity){
+        $this->activity = $activity;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +22,7 @@ class ActivityController extends Controller
      */
     public function index()
     {
-        //
+        $activities = $this->activity->myActivity()->get();
     }
 
     /**
@@ -33,9 +41,20 @@ class ActivityController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ActivityFormRequest $request)
     {
-        //
+        $data = $this->parseData($request);
+    
+        $activity = Activity::create($data);
+        return redirect()->route('opportunity.show',$data['opportunity_id']);
+    }
+
+    private function parseData($request){
+        $data= $request->except(['_token','submit']);
+        $data['activity_date'] = Carbon::parse($data['activity_date']);
+        $data['followup_date'] = Carbon::parse($data['followup_date']);
+        $data['user_id'] = auth()->user()->id;
+        return $data;
     }
 
     /**

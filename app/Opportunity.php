@@ -20,4 +20,8 @@ class Opportunity extends Model
     	}
     	return null;
     }
+
+    public function activities(){
+        return $this->hasMany(Activity::class);
+    }
 }
