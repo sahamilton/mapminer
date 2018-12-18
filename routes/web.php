@@ -309,7 +309,7 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
 		Route::post('customers/import', ['as'=>'customers.import', 'uses'=>'CustomerImportController@import']);
 		Route::get('customers/export', ['as'=>'customers.export', 'uses'=>'CompaniesExportController@export']);
 		Route::post('/importcustomers/mapfields',['as'=>'customers.mapfields','uses'=>'CustomerImportController@mapfields']);
-		Route::resource('customers','CustomersController');
+		Route::resource('customers','CustomerController');
     # Documents
     	Route::resource('documents','DocumentsController');
 
