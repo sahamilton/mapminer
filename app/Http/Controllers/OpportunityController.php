@@ -73,6 +73,14 @@ class OpportunityController extends Controller
      */
     public function show(Opportunity $opportunity)
     {
+        $opportunity->load('address');
+        $address = $opportunity->address;
+
+        $location = $address->load($address->addressable_type,'contacts','company','industryVertical',$address->addressable_type . '.relatedNotes');
+        $branches = $this->branch->nearby($location,100,5)->get();
+        $rankingstatuses = $this->address->getStatusOptions;
+        $people = $this->person->salesReps()->PrimaryRole()->nearby($location,100,5)->get();
+        return response()->view($location->addressable_type.'.show',compact('location','branches','rankingstatuses','people'));
         //
     }
 

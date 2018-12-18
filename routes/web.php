@@ -304,7 +304,12 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
 
 		//Route::post('company/filter',['as'=>'company.filter','uses'=>'CompaniesController@filter']);
 		Route::resource('company','CompaniesController',['except' => ['index', 'show']]);
-
+	# Customers
+		Route::get('customers/import', ['as'=>'customers.importfile', 'uses'=>'CustomerImportController@getFile']);
+		Route::post('customers/import', ['as'=>'customers.import', 'uses'=>'CustomerImportController@import']);
+		Route::get('customers/export', ['as'=>'customers.export', 'uses'=>'CompaniesExportController@export']);
+		Route::post('/importcustomers/mapfields',['as'=>'customers.mapfields','uses'=>'CustomerImportController@mapfields']);
+		Route::resource('customers','CustomersController');
     # Documents
     	Route::resource('documents','DocumentsController');
 
