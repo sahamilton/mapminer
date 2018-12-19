@@ -44,7 +44,7 @@
                   type="text" 
                   name="followup_date"  
                   id="todatepicker"  
-                  value="{{  old('followup_date', \Carbon\Carbon::now()->addWeek(1)->format('m/d/Y')) }}"/>
+                  value="{{  old('followup_date') }}"/>
               <span class="help-block">
                   <strong>{{$errors->has('activitydate') ? $errors->first('activitydate')  : ''}}</strong>
               </span>

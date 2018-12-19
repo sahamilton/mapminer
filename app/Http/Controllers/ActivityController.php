@@ -43,6 +43,7 @@ class ActivityController extends Controller
      */
     public function store(ActivityFormRequest $request)
     {
+        dd(request()->all());
         $data = $this->parseData($request);
     
         $activity = Activity::create($data);
@@ -52,7 +53,9 @@ class ActivityController extends Controller
     private function parseData($request){
         $data= $request->except(['_token','submit']);
         $data['activity_date'] = Carbon::parse($data['activity_date']);
-        $data['followup_date'] = Carbon::parse($data['followup_date']);
+        if($data['followup_date']){
+            $data['followup_date'] = Carbon::parse($data['followup_date']);
+        }
         $data['user_id'] = auth()->user()->id;
         return $data;
     }

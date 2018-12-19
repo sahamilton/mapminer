@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Opportunity;
 use App\Person;
+use App\Branch;
+use App\Address;
 use App\Activity;
 use Illuminate\Http\Request;
 
@@ -13,11 +15,15 @@ class OpportunityController extends Controller
     public $person;
     public $opportunity;
     public $activity;
+    public $branch;
+    public $address;
 
-    public function __construct(Opportunity $opportunity, Person $person, Activity $activity){
+    public function __construct(Opportunity $opportunity, Branch $branch, Person $person, Address $address,Activity $activity){
         $this->opportunity = $opportunity;
         $this->person = $person;
         $this->activity = $activity;
+        $this->branch = $branch;
+        $this->address = $address;
     }
 
     /**

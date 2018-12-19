@@ -20,7 +20,7 @@ class Address extends Model
         4=>'Prospect data is accurate and there is a possibility of sales / service.',
         5=>'Prospect data is accurate and there is a definite opportunity for sales / service'
       ];
-    
+    public $addressType = ['location'=>'National Account Location','project'=>'Construction Project', 'lead'=>'Web Lead'];
     public function lead(){
     	return $this->belongsTo(Lead::class,'addressable_id','id');
     }

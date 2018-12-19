@@ -15,11 +15,8 @@ foreach($session as $key=>$value)
 		$data[$key] = $value;
 	}
 }
-$types = ['location'=>'All accounts','branch'=>'Branches','people'=>'People','myleads'=>'Leads'];
+$types = ['location'=>'All locations','branch'=>'Branches','people'=>'People'];
 // added to filter out Centerline
-if(auth()->user()->can('view_projects') && in_array(5, Session::get('user.servicelines'))){
-  $types['projects']='Construction projects';
-}
 
 if(isset($data['type']) && $data['type'] == 'company' && isset($company)){
 	$types['company'] = $company->companyname .' locations';

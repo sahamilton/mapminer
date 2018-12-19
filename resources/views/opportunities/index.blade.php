@@ -2,7 +2,7 @@
 @section('content')
 
 <div class="container">
-<h2>My Opportunities</h2>
+<h2>{{$opportunities->first()->branch->branchname}} Branch Opportunities</h2>
    <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
       <th>Date Opened</th>
