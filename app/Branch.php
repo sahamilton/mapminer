@@ -60,6 +60,10 @@ class Branch extends Model implements HasPresenter {
 		
 	}
 
+	public function opportunities(){
+		return $this->hasMany(Opportunity::class);
+	}
+
 	public function instate() 
 	{
 		return $this->belongsTo(State::class,'state','statecode');

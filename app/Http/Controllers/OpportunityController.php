@@ -33,7 +33,13 @@ class OpportunityController extends Controller
      */
     public function index()
     {
-        
+       if($this->person->myTeam()->count() >1){
+            $branches = $this->branch->with('opportunities','manager')
+            ->whereIn('id',$this->person->myBranches())
+            ->get();
+            
+            return response()->view('opportunities.mgrindex',compact('branches'));
+        } else{
        $activityTypes = $this->activity->activityTypes;
        $opportunities = $this->opportunity
         ->whereIn('branch_id',$this->person->myBranches())
@@ -42,10 +48,10 @@ class OpportunityController extends Controller
         ->get();
 
         // is this a manager ?
-        if($this->person->myTeam()->count() >1){
-            return response()->view('opportunities.mgrindex',compact($opportunities));
-        }
+
         return response()->view('opportunities.index',compact('opportunities','activityTypes'));
+        
+        }
         // if no branches abort
         // if no branches then select branc / Sales OPs
     }
