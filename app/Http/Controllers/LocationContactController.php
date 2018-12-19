@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use \App\Contacts;
+use \App\Contact;
 use \App\Locations;
 use JeroenDesloovere\VCard\VCard;
 class LocationContactController extends Controller
@@ -11,7 +11,7 @@ class LocationContactController extends Controller
     
     public $contact;
 
-    public function __construct(Contacts $contact){
+    public function __construct(Contact $contact){
         $this->contact = $contact;
     }
     /**
@@ -58,7 +58,7 @@ class LocationContactController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($contact)
     {
         //
     }
@@ -69,9 +69,9 @@ class LocationContactController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($contact)
     {
-        //
+        return response()->view('contacts.edit',compact('contact'));
     }
 
     /**
@@ -81,9 +81,10 @@ class LocationContactController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $contact)
     {
-        //
+        $contact->update(request()->all());
+        return redirect()->route('address.show',$contact->location_id);
     }
 
     /**

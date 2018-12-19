@@ -32,7 +32,7 @@ class Address extends Model
     }
 
     public function contacts(){
-    	return $this->hasMany(Contacts::class,'location_id', 'addressable_id');
+    	return $this->hasMany(Contact::class,'location_id', 'addressable_id');
     }
     public function company(){
         return $this->belongsTo(Company::class,'company_id','id');

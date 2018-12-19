@@ -61,7 +61,7 @@ class Location extends Model implements HasPresenter {
  * @return [type] [description]
  */
 	public function contacts(){
-		return $this->hasMany(Contacts::class);
+		return $this->hasMany(Contact::class);
 	}
 
 /**

@@ -17,17 +17,21 @@
 @endif
 
 @include('maps.partials._form')
+
+
 @include('partials.advancedsearch')
 
-@if($data['type']=='branch')
+@if($data['type']=='location')
+	@include('maps.accountlist')
+@elseif($data['type']=='branch')
 	@include('maps.branchlist')
 @elseif($data['type'] =='projects')
 	@include('projects.projectlist')
 @elseif($data['type']=='people')
 	Boo!
-#endif
-    @include('maps.accountlist')
-@endif 
+@endif
+
+ 
    
 @include('partials/_scripts')
 

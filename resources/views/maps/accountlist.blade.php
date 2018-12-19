@@ -1,6 +1,7 @@
 <table id='sorttable' class ='table table-bordered table-striped table-hover'>
 	<thead>
 		<th>Business Name</th>
+		<th>Location Type</th>
 		<th>National Acct</th>
 		<th>Address</th>
 		<th>City</th>
@@ -15,15 +16,19 @@
 	
 			<tr>
 				<td>
-				<a href="{{route('locations.show',$account->id)}}"
-				title = "See details of the {{$account->businessname}} location">
-				{{$account->businessname}}
-				</a></td>
+					<a href="{{route('address.show',$account->id)}}"
+					title = "See details of the {{$account->businessname}} location">
+					{{$account->businessname}}
+					</a>
+				</td>
+				<td>{{$account->addressType[$account->addressable_type]}}</td>
 				<td>
+					@if($account->company)
 					<a href="{{route('company.show',$account->company_id)}}"
 					title="See all {{$account->company->companyname}} locations">
 						{{$account->company->companyname}}
 					</a>
+					@endif
 				</td>
 				<td>{{$account->street}}</td>
 				<td>{{$account->city}}</td>

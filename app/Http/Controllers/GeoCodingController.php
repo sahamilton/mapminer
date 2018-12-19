@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 use App\Serviceline;
+use App\Address;
 use App\Location;
 use App\Company;
 use App\Project;
@@ -19,6 +20,7 @@ class GeoCodingController extends BaseController {
 	public $branch;
 	public $serviceline;
 	public $person;
+	public $address;
 
 
 	public function __construct(
@@ -27,7 +29,8 @@ class GeoCodingController extends BaseController {
 			Branch $branch, 
 			Serviceline $serviceline,
 			Person $person,
-			Lead $lead
+			Lead $lead,
+			Address $address
 		) 
 	{
 		$this->location = $location;
@@ -36,6 +39,7 @@ class GeoCodingController extends BaseController {
 		$this->lead = $lead;	
 		$this->branch = $branch;
 		$this->person = $person;
+		$this->address = $address;
 		parent::__construct($location);	
 }
 	
@@ -102,6 +106,7 @@ class GeoCodingController extends BaseController {
 			session()->flash('warning','No results found. Consider increasing your search distance');
 
 		}
+	
 		if(isset($data['view']) && $data['view'] == 'list') {
 		
 			if($data['type']=='people'){
@@ -123,7 +128,7 @@ class GeoCodingController extends BaseController {
 			catch (Exception $e) {
 				$watchlist = NULL;
 			}
-		
+			
 			return response()->view('maps.list', compact('data','watchlist','filtered','company'));
 		}else{
 
@@ -131,7 +136,7 @@ class GeoCodingController extends BaseController {
 
 			$servicelines = $this->serviceline->whereIn('id',$this->userServiceLines)
     						->get();
-    	
+    
 			return response()->view('maps.map', compact('data','filtered','servicelines','company'));
 		}
 		
@@ -287,10 +292,8 @@ class GeoCodingController extends BaseController {
 	}
 
 	private function getLocationListData($location,$data){
-		return $this->location
-				->whereHas('company.serviceline', function ($q) {
-						$q->whereIn('servicelines.id',$this->userServiceLines);
-				})->nearby($location,$data['distance'])
+		
+		return $this->address->nearby($location,$data['distance'])
 				->with('company')
 				->get();
 	}

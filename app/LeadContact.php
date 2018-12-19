@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class LeadContact extends Contacts
+class LeadContact extends Contact
 {
     protected $table = 'contacts';
 

@@ -30,6 +30,7 @@ class RouteServiceProvider extends ServiceProvider
         Route::model('address', \App\Address::class);
         Route::model('branch', \App\Branch::class);
         Route::model('company', \App\Company::class);
+        Route::model('contact', \App\Contact::class);
         Route::model('customer', \App\Customer::class);
         Route::model('lead', \App\lead::class);
         Route::model('location', \App\Location::class);
