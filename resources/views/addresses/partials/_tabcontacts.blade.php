@@ -29,6 +29,18 @@
                     <a href="{{route('contacts.edit',$contact->id)}}" >
                         <i class="fas fa-edit text-success float-right"></i>
                     </a>
+                    <a 
+                        title="Delete {{$contact->contact}}"
+                          data-href="{{route('contacts.destroy',$contact->id)}}" 
+                          data-toggle="modal" 
+                          data-target="#confirm-delete" 
+                          data-title = "{{$contact->contact}}" 
+                          href="#">
+                          <i class="far fa-trash-alt text-danger float-right" 
+                            aria-hidden="true"> </i>
+                           
+                        </a>
+
                 </td>
                 <td>{{$contact->title}}</td>
                 <td>{{$contact->email}}</td>

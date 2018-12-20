@@ -33,7 +33,7 @@ $(document).ready(function()
 	$(document).on('show.bs.modal','#add-activity', function(e) {
     	$(this).find('.warning').attr('href', $(e.relatedTarget).data('href'));
 		$(this).find('#title').html($(e.relatedTarget).data('title'));
-		$(this).find('input#opportunity_id').val($(e.relatedTarget).data('id'));
+		$(this).find('input#address_id').val($(e.relatedTarget).data('id'));
 	});	
 	$(document).on('show.bs.modal','#add-contact', function(e) {
     	$(this).find('#title').html($(e.relatedTarget).data('title'));

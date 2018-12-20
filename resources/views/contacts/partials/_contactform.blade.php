@@ -6,7 +6,7 @@
                   required
                   name="contact"  
                   id="contact" 
-                  value="{{  old('contact', $contact ? $contact->contact : '') }}"
+                  value="{{  old('contact', isset($contact) ? $contact->contact : '') }}"
                   placeholder="contact name"/>
               <span class="help-block">
                   <strong>{{$errors->has('contact') ? $errors->first('contact')  : ''}}</strong>
@@ -22,7 +22,7 @@
                   required
                   name="title"  
                   id="title" 
-                  value="{{  old('title', $contact ? $contact->title : '') }}"
+                  value="{{  old('title', isset($contact) ? $contact->title : '') }}"
                   placeholder="contact title"/>
               <span class="help-block">
                   <strong>{{$errors->has('title') ? $errors->first('title')  : ''}}</strong>
@@ -38,7 +38,7 @@
                   required
                   name="email"  
                   id="email" 
-                  value="{{  old('email', $contact ? $contact->email : '') }}"
+                  value="{{  old('email', isset($contact) ? $contact->email : '') }}"
                   placeholder="contact email"/>
               <span class="help-block">
                   <strong>{{$errors->has('email') ? $errors->first('email')  : ''}}</strong>
@@ -54,7 +54,7 @@
                   required
                   name="phone"  
                   id="phone" 
-                  value="{{  old('phone', $contact ? $contact->phone : '') }}"
+                  value="{{  old('phone', isset($contact) ? $contact->phone : '') }}"
                   placeholder="contact phone"/>
               <span class="help-block">
                   <strong>{{$errors->has('phone') ? $errors->first('phone')  : ''}}</strong>
@@ -71,7 +71,7 @@
                   class="form-control" 
                   name='comments' 
                   title="comments" 
-                  value="{{ old('comments', $contact ? $contact->comments : '') }}"></textarea>
+                  value="{{ old('comments', isset($contact) ? $contact->comments : '') }}"></textarea>
                 
                       <span class="help-block">
                       <strong>{{$errors->has('comments') ? $errors->first('comments')  : ''}}</strong>
@@ -79,7 +79,7 @@
       
               </div>
           </div>
-          @if($contact)
+          @if(isset($contact))
           <input type="hidden" name="location_id" value="{{$contact->location_id}}" />
           @else
           <input type="hidden" name="location_id" value="{{$location->id}}" />

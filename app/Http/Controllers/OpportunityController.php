@@ -41,12 +41,12 @@ class OpportunityController extends Controller
             return response()->view('opportunities.mgrindex',compact('branches'));
         } else{
        $activityTypes = $this->activity->activityTypes;
+       
        $opportunities = $this->opportunity
-        ->whereIn('branch_id',$this->person->myBranches())
-        ->with('address','branch','activities')
+        ->whereIn('branch_id',array_keys($this->person->myBranches()))
+        ->with('address','branch','address.activities')
         ->orderBy('branch_id')
         ->get();
-
         // is this a manager ?
 
         return response()->view('opportunities.index',compact('opportunities','activityTypes'));
@@ -74,7 +74,9 @@ class OpportunityController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        
+        $this->opportunity->create(request()->all());
+        return redirect()->route('address.show',request('address_id'))->withMessage("Added to branch opportunities");
     }
 
     /**

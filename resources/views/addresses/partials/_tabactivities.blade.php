@@ -22,11 +22,11 @@
 
     </thead>
     <tbody>
-         @foreach($location->relatedNotes as $activity)
+         @foreach($location->activities as $activity)
          
             <tr>
                 <td>{{$activity->activity_date ? $activity->activity_date->format('M j, Y'):''}}</td>
-                <td>{{$activity->activity}}</td>
+                <td>{{$activity->activityTypes[$activity->activity]}}</td>
                 <td>{{$activity->relatedContact ? $activity->relatedContact->contact : ''}}</td>
                 <td>{{$activity->note}}</td>
                 <td>{{$activity->followup_date ? $activity->followup_date->format('M j, Y') : ''}}</td>

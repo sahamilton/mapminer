@@ -57,10 +57,10 @@ class Person extends NodeModel implements HasPresenter {
                 
             });
         foreach ($teammembers as $member){
-            foreach ($member->pluck('id') as $id){
-                if(! in_array($id,$data)){
+            foreach ($member->pluck('branchname','id') as $id=>$branchname){
+                if(! array_key_exists($id,$data)){
                     
-                    $data[]=$id;
+                    $data[$id]=$branchname;
                 }
             }
         }

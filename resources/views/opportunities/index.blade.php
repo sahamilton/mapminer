@@ -17,7 +17,7 @@
     </thead>
       <tbody>
         @foreach ($opportunities as $opportunity)
-        
+        <tr>
           <td>{{$opportunity->created_at ? $opportunity->created_at->format('Y-m-d') : ''}}</td>
           <td>{{$opportunity->daysOpen()}}</td>
           <td>{{$opportunity->closed}}</td>
@@ -30,15 +30,17 @@
           <td>{{$opportunity->value}}</td>
           <td>{{$opportunity->requirements}}</td>
           <td>
-            {{$opportunity->activities ? $activityTypes[$opportunity->activities->last()->activity] : ''}}<br />
-            {{$opportunity->activities ? $opportunity->activities->last()->activity_date->format('Y-m-d') : ''}}
+            @if($opportunity->address->activities->count() >0 )
+             {{$activityTypes[$opportunity->address->activities->last()->activity]}}<br />
+            {{$opportunity->address->activities->last()->activity_date->format('Y-m-d')}}
+            @endif
           </td>
           <td>
               <a 
                         data-href="{{route('activity.store')}}" 
                         data-toggle="modal" 
-                        data-pk = "{{$opportunity->id}}"
-                        data-id="{{$opportunity->id}}"
+                        data-pk = "{{$opportunity->address->id}}"
+                        data-id="{{$opportunity->address->id}}"
                         data-target="#add-activity" 
                         data-title = "location" 
                         href="#">
@@ -46,6 +48,7 @@
                     </div></div>
 
           </td>
+        </tr>
         @endforeach
 
       </tbody>

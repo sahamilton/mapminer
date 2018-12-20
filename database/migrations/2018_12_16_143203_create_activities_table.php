@@ -18,7 +18,7 @@ class CreateActivitiesTable extends Migration
             $table->date('activity_date');
             $table->date('followup_date')->nullable();
             $table->integer('activity');
-            $table->integer('opportunity_id')->index()->unsigned();
+            $table->integer('address_id')->index()->unsigned();
             $table->integer('user_id')->index()->unsigned();
             $table->text('note')->nullable();
             $table->timestamps();

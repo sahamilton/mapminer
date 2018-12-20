@@ -1,4 +1,5 @@
 <h2>Location Details</h2>
+add to opportunity list
 <div id="map-container">
 	<div style="float:left;width:300px">
 		<p><strong>Vertical: </strong>{{isset($location->industryVertical->filter) ? $location->industryVertical->filter : 'Not Specified'}}</p>

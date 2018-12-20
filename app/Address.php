@@ -32,7 +32,7 @@ class Address extends Model
     }
 
     public function contacts(){
-    	return $this->hasMany(Contact::class,'location_id', 'addressable_id');
+    	return $this->hasMany(Contact::class,'location_id', 'id');
     }
     public function company(){
         return $this->belongsTo(Company::class,'company_id','id');
@@ -40,6 +40,9 @@ class Address extends Model
     public function relatedNotes() {
            return $this->hasMany(Note::class,'related_id','addressable_id')
        ->with('writtenBy');
+    }
+    public function activities(){
+        return $this->hasMany(Activity::class);
     }
     public function fullAddress(){
         return $this->street." ". $this->address2." ".$this->city." ".$this->state." ".$this->zip;
@@ -54,5 +57,9 @@ class Address extends Model
         }
         return $query->whereIn('vertical',$keys);
        
+    }
+
+    public function opportunities(){
+        return $this->belongsTo(Opportunity::class,'id','address_id');
     }
 }

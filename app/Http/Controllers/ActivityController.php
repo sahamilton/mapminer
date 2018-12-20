@@ -43,11 +43,10 @@ class ActivityController extends Controller
      */
     public function store(ActivityFormRequest $request)
     {
-        dd(request()->all());
+      
         $data = $this->parseData($request);
-    
         $activity = Activity::create($data);
-        return redirect()->route('opportunity.show',$data['opportunity_id']);
+        return redirect()->route('address.show',$data['address_id']);
     }
 
     private function parseData($request){
@@ -56,6 +55,7 @@ class ActivityController extends Controller
         if($data['followup_date']){
             $data['followup_date'] = Carbon::parse($data['followup_date']);
         }
+        $data['address_id'] = request('address_id');
         $data['user_id'] = auth()->user()->id;
         return $data;
     }
