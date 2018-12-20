@@ -9,7 +9,7 @@ class SalesOrgController extends BaseController {
 	public $limit = 5;
 	public $branch;
 	public $person;
-	public $salesroles = [5,6,7,8];
+	public $salesroles = [5,6,7,8,13];
 	
 
 
