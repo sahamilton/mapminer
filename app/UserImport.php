@@ -70,10 +70,11 @@ class UserImport extends Imports
  	public function postImport(){
  		// clean up null values in import db
 		$this->cleanseImport();
-
+		$this->getUsersNotImported();
 		$this->updateImportWithExistingUsers();
+		$this->setManagersId();
 		$this->updateImportWithManagers();
-		$this->createUserNames();
+		//$this->createUserNames();
 		$this->createUserEmails();
 		
 		return redirect()->route('import.newusers');
@@ -112,6 +113,11 @@ class UserImport extends Imports
 	    
       	ProcessPersonRebuild::dispatch();
 
+	}
+
+	private function getUsersNotImported(){
+			$queries[]="select users.* from users left join usersimport on users.employee_id = usersimport.employee_id where usersimport.employee_id is null";
+		return $this->executeImportQueries($queries);
 	}
 	private function executeImportQueries($queries){
 		 foreach ($queries as $query){
@@ -338,6 +344,15 @@ class UserImport extends Imports
 			return $errors;
 		}
 		return $errors = false;
+	}
+
+	private function setManagersId(){
+
+		$queries =["update usersimport,users, persons
+				set usersimport.reports_to = persons.id
+				where usersimport.mgr_emp_id = users.employee_id
+				and users.id = persons.user_id"];
+return $this->executeImportQueries($queries);
 	}
 
 	private function validateIndustries($people){

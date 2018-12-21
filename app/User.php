@@ -54,8 +54,12 @@ class User extends Authenticatable
 	 }
 
 	 public function fullName(){
-	 	return $this->person->postName();
-	 }
+        if($this->person){
+	 	 return $this->person->postName();
+         }else{
+            return null;
+         }
+        }
 	 public function usage()
 	 {
 		  return $this->hasOne(Track::class,'user_id');
