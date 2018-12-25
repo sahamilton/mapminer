@@ -2,6 +2,7 @@
 @section('content')
 
 <h2>{{$mylead->businessname}}</h2>
+<div class="container">
 <p><a href="{{route('myleads.index')}}">Return to all my leads</a></p>
 @include('myleads.partials._leadaction')
 <nav>

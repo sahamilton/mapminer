@@ -27,7 +27,9 @@ class UsersImportController extends ImportController
 
         
     }
-
+//
+    // query to get all without manager in system
+    //SELECT * from usersimport where employee_id in (select mgr_emp_id from `usersimport` where reports_to is null)
 
     public function index(){
        $imports = $this->import->whereNull('person_id')->orWhereNull('user_id')->get();
@@ -58,7 +60,7 @@ class UsersImportController extends ImportController
         $fields = $this->getFileFields($data); 
 
         $data['additionaldata'] = ['serviceline'=>implode(",",request('serviceline'))];
-        $addColumns = ['branches','role_id','mgr_emp_id','manager','reports_to','industry','address','city','state','zip','serviceline','hiredate','business_title'];
+        $addColumns = ['branches','role_id','mgr_emp_id','manager','reports_to','industry','address','city','state','zip','serviceline','hiredate','business_title','fullname'];
         $addColumn = $this->addColumns($addColumns);
 
    		$columns = array_merge($this->import->getTableColumns('users'),$this->import->getTableColumns('persons'),$addColumn);
@@ -86,8 +88,8 @@ class UsersImportController extends ImportController
       
        if($this->import->import()) {
 
-         	$this->import->postImport();
-          return redirect()->route('import.newusers');
+         	$data = $this->import->postImport();
+          return response()->view('admin.users.import.index',compact('data'));
            //return redirect()->route('users.index')->with('success','Users imported');
 
 

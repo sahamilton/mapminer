@@ -69,15 +69,17 @@ class UserImport extends Imports
  	
  	public function postImport(){
  		// clean up null values in import db
+ 		
 		$this->cleanseImport();
-		$this->getUsersNotImported();
-		$this->updateImportWithExistingUsers();
+		$data['deleteUsers'] = $this->getUsersToDelete();
+		$data['newUsers'] = $this->getUsersToCreate();
+		/*$this->updateImportWithExistingUsers();
 		$this->setManagersId();
 		$this->updateImportWithManagers();
 		//$this->createUserNames();
-		$this->createUserEmails();
+		$this->createUserEmails();*/
 		
-		return redirect()->route('import.newusers');
+		return $data;
 		
 	}
 		
@@ -114,11 +116,35 @@ class UserImport extends Imports
       	ProcessPersonRebuild::dispatch();
 
 	}
-
-	private function getUsersNotImported(){
-			$queries[]="select users.* from users left join usersimport on users.employee_id = usersimport.employee_id where usersimport.employee_id is null";
-		return $this->executeImportQueries($queries);
+	public function role(){
+		return $this->belongsTo(Role::class);
 	}
+	public function manager(){
+		return $this->belongsTo(Person::class,'reports_to','id');
+	}
+	private function getUsersToDelete(){
+		return User::leftJoin('usersimport', function($join) {
+      			$join->on('users.employee_id', '=', 'usersimport.employee_id');
+    		})
+    	->with('person','roles')
+	    ->whereNull('usersimport.employee_id')
+	    ->select('users.*')
+	    ->get();
+		
+	}
+
+	private function getUsersToCreate(){
+		return $this->leftJoin('users', function($join) {
+      			$join->on('usersimport.employee_id', '=', 'users.employee_id');
+    		})
+    	
+	    ->whereNull('users.employee_id')
+	    ->select('usersimport.*')
+	    ->get();
+		
+	}
+
+
 	private function executeImportQueries($queries){
 		 foreach ($queries as $query){
        		if ($result = \DB::select(\DB::raw($query))){
@@ -167,11 +193,12 @@ class UserImport extends Imports
  	}*/
 
  	private function  createUserEmails(){
-	$query ="update usersimport set email = lower(concat(left(replace(firstname,char(13),''),1),replace(lastname,char(13),'') ,'@trueblue.com')) where user_id is null";
+	/*$query ="update usersimport set email = lower(concat(left(replace(firstname,char(13),''),1),replace(lastname,char(13),'') ,'@trueblue.com')) where user_id is null";
 
 		if ($result = \DB::select(\DB::raw($query))){
  			return true;
  		}
+ 		*/
  	}
 
 
@@ -352,7 +379,7 @@ class UserImport extends Imports
 				set usersimport.reports_to = persons.id
 				where usersimport.mgr_emp_id = users.employee_id
 				and users.id = persons.user_id"];
-return $this->executeImportQueries($queries);
+		return $this->executeImportQueries($queries);
 	}
 
 	private function validateIndustries($people){

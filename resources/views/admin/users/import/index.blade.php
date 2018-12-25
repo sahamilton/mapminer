@@ -1,26 +1,44 @@
 @extends('admin.layouts.default')
 @section('content')
+<div class="container">
+<h4>User Import</h4>
 
-<h4>Import Items Not Completed</h4>
-<table class="table">
-	<thead>
-		<th>First Name</th>
-		<th>Last Name</th>
-		<th>Employee ID</th>
-		<th>Manager</th>
-		<th>Manager Employee Id</th>
-	</thead>
-	<tbody>
-		@foreach($imports as $person)
-			<tr>
-				<td>{{$person->firstname}}</td>
-				<td>{{$person->lastname}}</td>
-				<td>{{$person->employee_id}}</td>
-				<td>{{$person->manager}}</td>
-				<td>{{$person->mgr_emp_id}}</td>
-			</tr>
-		@endforeach
-	</tbody>
-</table>
+<nav>
+  <div class="nav nav-tabs" id="nav-tab" role="tablist">
+	  <a class="nav-link nav-item active" 
+	      id="delete-tab" 
+	      data-toggle="tab" 
+	      href="#delete" 
+	      role="tab" 
+	      aria-controls="delete" 
+	      aria-selected="true">
+	    <strong>Users to Delete ({{count($data['deleteUsers'])}})</strong>
+	  </a>
 
+	  <a class="nav-link nav-item" 
+	      id="add-tab" 
+	      data-toggle="tab" 
+	      href="#add" 
+	      role="tab" 
+	      aria-controls="add" 
+	      aria-selected="true">
+	    <strong>Users to Create ({{count($data['newUsers'])}})</strong>
+	  </a>
+    
+
+
+	</div>
+</nav>
+
+<div class="tab-content" id="nav-tabContent">
+    <div id="delete" class="tab-pane show active">
+    	 @include('admin.users.import.partials._missingusers')
+    </div>
+    <div id="add" class="tab-pane show ">
+     	@include('admin.users.import.partials._newusers')
+    </div>
+</div>
+
+</div>
+@include('partials._scripts')
 @endsection
