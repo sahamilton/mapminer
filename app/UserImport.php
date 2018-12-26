@@ -71,10 +71,12 @@ class UserImport extends Imports
  		// clean up null values in import db
  		
 		$this->cleanseImport();
+		$this->setManagersId();
+		
 		$data['deleteUsers'] = $this->getUsersToDelete();
 		$data['newUsers'] = $this->getUsersToCreate();
 		/*$this->updateImportWithExistingUsers();
-		$this->setManagersId();
+		
 		$this->updateImportWithManagers();
 		//$this->createUserNames();
 		$this->createUserEmails();*/
@@ -438,6 +440,7 @@ class UserImport extends Imports
 			}
 			
 			$queries[] = "update usersimport set ". $field . " = null where ". $field." = ''";
+			$queries[] = 
 		
 		}
 		return $this->executeImportQueries($queries);
