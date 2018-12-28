@@ -20,27 +20,19 @@ class UserImportCleanseController extends Controller
 
     public function index(){
     	// show users to delete
+       
 
+        $data['deleteUsers'] = $this->import->getUsersToDelete();
+        $data['newUsers'] = $this->import->getUsersToCreate();
+        $data['noManagers'] = $this->getMissingManagers();
+
+        return response()->view('admin.users.import.index',compact('data'));
 
     	// show users to create
 
     	// show managers to create
     	
-    	$missingmanagers = $this->import->whereNull('reports_to')->get();
     	
-	    	foreach($missingmanagers as $missing){
-	    		
-	    		if($mgr = $this->import->where('employee_id','=',$missing->mgr_emp_id)->first()){
-	    		dd($mgr->person_id,$missing->mgr_emp_id,$missing->manager);
-	    		$missing->reports_to = $mgr->person_id;
-	    		$missing->save();
-	    	}
-    	}
-    	dd('here');
-    	$missingmanagers = $this->import->whereNull('reports_to')->get();
-    	// wont work becuase we dont have a fullname field
-    	dd($mgr = array_unique($missingmanagers->pluck('manager','mgr_emp_id')->toArray()));
-    	dd($this->import->whereIn('fullname',$mgr)->get());
 		
 
 		/*select usersimport.* from usersimport where employee_id in (select usersimport.mgr_emp_id from usersimport left join users on usersimport.mgr_emp_id = users.employee_id where users.employee_id is null)*/
@@ -69,7 +61,22 @@ class UserImportCleanseController extends Controller
 	   return response()->view('admin.users.import.missing',compact('missingPeople'));
 	   */
     }
+    public function getMissingManagers(){
+        $missingmanagers = $this->import->whereNull('reports_to')->get();
+        //dd($missingmanagers);
+        foreach($missingmanagers as $missing){
+                
+                if($mgr = $this->import->where('employee_id','=',$missing->mgr_emp_id)->first()){
+                    $missing->reports_to = $mgr->person_id;
+                    $missing->save();
+             
+            }
+        }
+        
+        return $this->import->whereNull('reports_to')->select('manager','mgr_emp_id')->distinct('manager','mgr_emp_id')->get();
 
+
+    }
 
     public function createNewUsers(Request $request){
     

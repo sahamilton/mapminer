@@ -24,6 +24,16 @@
 	      aria-selected="true">
 	    <strong>Users to Create ({{count($data['newUsers'])}})</strong>
 	  </a>
+
+	  <a class="nav-link nav-item" 
+	      id="missing-tab" 
+	      data-toggle="tab" 
+	      href="#missing" 
+	      role="tab" 
+	      aria-controls="missing" 
+	      aria-selected="true">
+	    <strong>Missing Managers ({{count($data['noManagers'])}})</strong>
+	  </a>
     
 
 
@@ -36,6 +46,9 @@
     </div>
     <div id="add" class="tab-pane show ">
      	@include('admin.users.import.partials._newusers')
+    </div>
+    <div id="missing" class="tab-pane show ">
+     	@include('admin.users.import.partials._missingmgrs')
     </div>
 </div>
 

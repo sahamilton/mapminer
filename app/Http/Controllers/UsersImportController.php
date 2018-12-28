@@ -88,9 +88,9 @@ class UsersImportController extends ImportController
       
        if($this->import->import()) {
 
-         	$data = $this->import->postImport();
-          return response()->view('admin.users.import.index',compact('data'));
-           //return redirect()->route('users.index')->with('success','Users imported');
+         	$this->import->postImport();
+          
+           return redirect()->route('importcleanse.index');
 
 
         }

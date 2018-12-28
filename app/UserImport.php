@@ -69,23 +69,105 @@ class UserImport extends Imports
  	
  	public function postImport(){
  		// clean up null values in import db
- 		
+
 		$this->cleanseImport();
-		$this->setManagersId();
+		$this->setUserId();
+		$this->setPersonId();
+		return $this->setManagersId();
 		
-		$data['deleteUsers'] = $this->getUsersToDelete();
-		$data['newUsers'] = $this->getUsersToCreate();
-		/*$this->updateImportWithExistingUsers();
 		
-		$this->updateImportWithManagers();
-		//$this->createUserNames();
-		$this->createUserEmails();*/
 		
-		return $data;
+		
+
+		
+		
 		
 	}
+	private function setUserId(){
+
+		$queries =["update usersimport,users
+				set usersimport.user_id = users.id
+				where usersimport.employee_id = users.employee_id"];
+		return $this->executeImportQueries($queries);
+	}
+
+	private function setPersonId(){
+
+		$queries =["update usersimport,users, persons
+				set usersimport.person_id = persons.id
+				where usersimport.employee_id = users.employee_id
+				and users.id = persons.user_id"];
+		return $this->executeImportQueries($queries);
+	}
+
+	private function setManagersId(){
+
+		$queries =["update usersimport ,users,persons
+				set usersimport.reports_to = persons.id 
+				where usersimport.mgr_emp_id = users.employee_id
+				and users.id = persons.user_id"];
+		return $this->executeImportQueries($queries);
+	}
+	
+	private function cleanseImport(){
+		$fields = ['reports_to','branches','address','city','state','zip','industry','mgr_emp_id'];
+		foreach ($fields as $field){
+			if($field == 'reports_to'){
+				$queries[] = "update usersimport set ". $field . " = null where ". $field." = 0";
+			}
+			if ($field == 'mgr_emp_id'){
+				$queries[] = "update usersimport set mgr_emp_id = left(mgr_emp_id,6) where char_length(mgr_emp_id)=7";
+			}
+
+			$queries[] = "update usersimport set ". $field . " = null where ". $field." = ''";
 		
-	public function setUpAllUsers(){
+		
+		}
+
+		return $this->executeImportQueries($queries);
+		
+	}
+
+
+	public function getUsersToDelete(){
+		return User::leftJoin('usersimport', function($join) {
+      			$join->on('users.employee_id', '=', 'usersimport.employee_id');
+    		})
+    	->with('person','roles')
+	    ->whereNull('usersimport.employee_id')
+	    ->select('users.*')
+	    ->get();
+		
+	}
+
+	public function getUsersToCreate(){
+		return $this->leftJoin('users', function($join) {
+      			$join->on('usersimport.employee_id', '=', 'users.employee_id');
+    		})
+    	
+	    ->whereNull('users.employee_id')
+	    ->with('role','manager')
+	    ->select('usersimport.*')
+	    ->get();
+		
+	}
+
+
+	private function executeImportQueries($queries){
+		 foreach ($queries as $query){
+       		if ($result = \DB::select(\DB::raw($query))){
+ 				return true;
+ 			}
+       }
+	}
+		
+	public function role(){
+		return $this->belongsTo(Role::class);
+	}
+	public function manager(){
+		return $this->belongsTo(Person::class,'reports_to','id');
+	}
+	/*public function setUpAllUsers(){
 		// copy all person fields over to persons
 		if($message = $this->updatePeople()){
 			return $message = "Unable to update people";
@@ -118,43 +200,11 @@ class UserImport extends Imports
       	ProcessPersonRebuild::dispatch();
 
 	}
-	public function role(){
-		return $this->belongsTo(Role::class);
-	}
-	public function manager(){
-		return $this->belongsTo(Person::class,'reports_to','id');
-	}
-	private function getUsersToDelete(){
-		return User::leftJoin('usersimport', function($join) {
-      			$join->on('users.employee_id', '=', 'usersimport.employee_id');
-    		})
-    	->with('person','roles')
-	    ->whereNull('usersimport.employee_id')
-	    ->select('users.*')
-	    ->get();
-		
-	}
 
-	private function getUsersToCreate(){
-		return $this->leftJoin('users', function($join) {
-      			$join->on('usersimport.employee_id', '=', 'users.employee_id');
-    		})
-    	
-	    ->whereNull('users.employee_id')
-	    ->select('usersimport.*')
-	    ->get();
-		
-	}
+	
+*/
 
-
-	private function executeImportQueries($queries){
-		 foreach ($queries as $query){
-       		if ($result = \DB::select(\DB::raw($query))){
- 				return true;
- 			}
-       }
-	}
-
+/*
 	public function createNewUsers(Request $request){
 		if(request()->has('enter')){
 			// need to see if the email is unique
@@ -186,21 +236,21 @@ class UserImport extends Imports
 		}
 	    return false;
 	}
-
+*/
 	/*private function  createUserNames(){
 	$query ="update usersimport set username = lower(concat(left(replace(firstname,char(13),''),1),replace(lastname,char(13),'') )) where user_id is null";
 		if ($result = \DB::select(\DB::raw($query))){
  			return true;
  		}
  	}*/
-
+/*
  	private function  createUserEmails(){
-	/*$query ="update usersimport set email = lower(concat(left(replace(firstname,char(13),''),1),replace(lastname,char(13),'') ,'@trueblue.com')) where user_id is null";
+	$query ="update usersimport set email = lower(concat(left(replace(firstname,char(13),''),1),replace(lastname,char(13),'') ,'@trueblue.com')) where user_id is null";
 
 		if ($result = \DB::select(\DB::raw($query))){
  			return true;
  		}
- 		*/
+ 		
  	}
 
 
@@ -241,7 +291,7 @@ class UserImport extends Imports
  		return $errors;
 	}*/
 
-	private function createUser(Request $request){
+	/*private function createUser(Request $request){
 		
 			$newusers = $this->whereIn('employee_id',request('enter'))->get(
 				['email','employee_id']);
@@ -432,20 +482,7 @@ class UserImport extends Imports
 
 	}
 
-	private function cleanseImport(){
-		$fields = ['reports_to','branches','address','city','state','zip','industry'];
-		foreach ($fields as $field){
-			if($field == 'reports_to'){
-				$queries[] = "update usersimport set ". $field . " = null where ". $field." = 0";
-			}
-			
-			$queries[] = "update usersimport set ". $field . " = null where ". $field." = ''";
-			$queries[] = 
-		
-		}
-		return $this->executeImportQueries($queries);
-		
-	}
+	
 	private function updatePeople(){
 		$peoplefields = $this->getTableColumns('persons');
 		$fields= array();
@@ -543,5 +580,5 @@ class UserImport extends Imports
 		SET t1.user_id = t2.user_id,  t1.person_id = t2.person_id,t1.reports_to = t2.reports_to";
 		return $this->executeImportQueries($queries);
 	}
-
+*/
 }
