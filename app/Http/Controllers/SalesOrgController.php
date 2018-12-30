@@ -67,8 +67,7 @@ class SalesOrgController extends BaseController {
 				return response()->view('salesorg.map', compact('salesorg'));
 				
 			}else{
-			//dd($salesperson);
-				//$salesroles = $this->salesroles;
+			
 				$salesteam = $salesperson->load('userdetails.roles','directReports','directReports.userdetails','directReports.userdetails.roles','reportsTo.userdetails.roles');
 		
 				return response()->view('salesorg.managermap', compact('salesteam'));

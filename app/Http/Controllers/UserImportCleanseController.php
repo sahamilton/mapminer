@@ -28,38 +28,6 @@ class UserImportCleanseController extends Controller
 
         return response()->view('admin.users.import.index',compact('data'));
 
-    	// show users to create
-
-    	// show managers to create
-    	
-    	
-		
-
-		/*select usersimport.* from usersimport where employee_id in (select usersimport.mgr_emp_id from usersimport left join users on usersimport.mgr_emp_id = users.employee_id where users.employee_id is null)*/
-    	/*
-    	$newPeople = $this->import->leftJoin('users', function($join) {
-      			$join->on('usersimport.employee_id', '=', 'users.employee_id');
-    		})
-	    	->select('usersimport.*')
-	    	//->whereHas('manager')
-	    	->with('role','manager')
-		    ->whereNull('users.employee_id')
-		    ->get();
-
-	    return response()->view('admin.users.import.new',compact('newPeople'));
-	    */
-
-    	/*
-    	$missingPeople = $this->user->leftJoin('usersimport', function($join) {
-      			$join->on('users.employee_id', '=', 'usersimport.employee_id');
-    		})
-    	->with('person','roles')
-	    ->whereNull('usersimport.employee_id')
-	    ->select('users.*')
-	    ->get();
-
-	   return response()->view('admin.users.import.missing',compact('missingPeople'));
-	   */
     }
     public function getMissingManagers(){
         $missingmanagers = $this->import->whereNull('reports_to')->get();

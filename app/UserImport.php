@@ -182,7 +182,7 @@ class UserImport extends Imports
 
 	}
 
-	public function updateImportRecords($users){
+	private function updateImportRecords($users){
 		foreach ($users as $userimport) {
 	        	
 	            // update user record
