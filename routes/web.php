@@ -495,6 +495,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 		Route::post('user/usererrors',['as'=>'fixusercreateerrors','uses'=>'UsersImportController@fixUserErrors']);
 		Route::post('user/importcleanse/delete',['as'=>'user.importdelete','uses'=>'UserImportCleanseController@bulkdestroy']);
 		Route::post('user/importcleanse/insert',['as'=>'user.importinsert','uses'=>'UserImportCleanseController@createNewUsers']);
+		Route::get('user/importfinal',['as'=>'user.importfinal','uses'=>'UserImportCleanseController@importAllUsers']);
 		Route::resource('user/importcleanse','UserImportCleanseController');
 		
 

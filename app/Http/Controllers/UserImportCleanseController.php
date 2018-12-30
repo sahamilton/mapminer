@@ -20,7 +20,7 @@ class UserImportCleanseController extends Controller
 
     public function index(){
     	// show users to delete
-       $this->import->updateExistingUsers();
+        
 
         $data['deleteUsers'] = $this->import->getUsersToDelete();
         $data['newUsers'] = $this->import->getUsersToCreate();
@@ -41,11 +41,19 @@ class UserImportCleanseController extends Controller
             }
         }
         
-        return $this->import->whereNull('reports_to')->select('manager','mgr_emp_id')->distinct('manager','mgr_emp_id')->get();
+        $mgr_id = $this->import->whereNull('reports_to')
+                    ->select('mgr_emp_id')
+                    ->distinct('mgr_emp_id')->get()->toArray();
+        return $this->import->whereIn('employee_id',$mgr_id)->get();
 
 
     }
+    public function importAllUsers(){
+        $this->import->updateExistingUsers();
+        $this->person->rebuild();
+        return redirect()->route('importcleanse.index');
 
+    }
     public function createNewUsers(Request $request){
         // we need to chunk this //
 

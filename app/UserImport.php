@@ -176,9 +176,10 @@ class UserImport extends Imports
 		->whereNotNull('reports_to')
 		->where('imported','=',0)
 		->chunk(100, function($users) {
+			
 			$this->updateImportRecords($users);
 	        
-    });
+    	});
 
 	}
 
