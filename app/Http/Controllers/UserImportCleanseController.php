@@ -20,7 +20,7 @@ class UserImportCleanseController extends Controller
 
     public function index(){
     	// show users to delete
-       
+       $this->import->updateExistingUsers();
 
         $data['deleteUsers'] = $this->import->getUsersToDelete();
         $data['newUsers'] = $this->import->getUsersToCreate();
@@ -79,21 +79,20 @@ class UserImportCleanseController extends Controller
     }
 
     public function createNewUsers(Request $request){
-    
-    	foreach (request('insert') as $id){
+        // we need to chunk this //
 
-    		$import = $this->import->findOrFail($id);
-    		
-    		$newuser = $this->user->create($import->toArray());
-    		
-    		
-    		$newuser->roles()->sync([$import->role_id]);
-    		$import->user_id=$newuser->id;
-    		$person = $this->person->create($import->toArray());
-    		$import->person_id = $person->id;
-    		
-    		$import->save();
-    	}
+        $import = $this->import->whereIn('id',request('insert'))->chunk(25, function($users) {
+        	foreach ($users as $import){
+
+        		$newuser = $this->user->create($import->toArray());
+        		$newuser->roles()->sync([$import->role_id]);
+        		$import->user_id=$newuser->id;
+        		$person = $this->person->create($import->toArray());
+        		$import->person_id = $person->id;
+        		$import->save();
+
+        	}
+        });
     	return redirect()->route('importcleanse.index')->withMessage("All created");
     }
 
@@ -101,7 +100,14 @@ class UserImportCleanseController extends Controller
 
     public function bulkdestroy(Request $request){
     	
-    	$this->user->destroy(request('delete'));
+        $delete = request('delete');
+        // dont want to commint suicde!
+        if (($key = array_search(auth()->user()->id, $delete)) !== false){
+         
+            unset($delete[$key]);
+        }
+
+    	$this->user->destroy($delete);
     	return redirect()->route('importcleanse.index')->withMessage("Deleted");
 
     }

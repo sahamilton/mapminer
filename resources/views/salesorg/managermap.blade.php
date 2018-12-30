@@ -1,43 +1,43 @@
 @extends('site.layouts.maps')
 @section('content')
 
-  <h2>{{$salesteam[0]->firstname}} {{$salesteam[0]->lastname}}'s Sales Team</h2>
-  @foreach ($salesteam[0]->userdetails->roles as $role)
+  <h2>{{$salesteam->fullName()}}'s Team</h2>
+  @foreach ($salesteam->userdetails->roles as $role)
     {{$role->name}}
   @endforeach
-  @if(isset($salesteam[0]->usersdetails->roles))
+  @if(isset($salesteam->usersdetails->roles))
   <h3>
-  @foreach ( $salesteam[0]->usersdetails->roles as $role)
+  @foreach ( $salesteam->usersdetails->roles as $role)
   {{$role->name}}
   @endforeach
   </h3>
   @endif
 
-  @if($salesteam[0]->reportsTo)
-  <h4>Reports to:<a href="{{route('salesorg',$salesteam[0]->reportsTo->id)}}" 
-  title="See {{$salesteam[0]->reportsTo->firstname}} {{$salesteam[0]->reportsTo->lastname}}'s sales team">
-    {{$salesteam[0]->reportsTo->firstname}} {{$salesteam[0]->reportsTo->lastname}}
+  @if($salesteam->reportsTo)
+  <h4>Reports to:<a href="{{route('salesorg',$salesteam->reportsTo->id)}}" 
+  title="See {{$salesteam->reportsTo->firstname}} {{$salesteam->reportsTo->lastname}}'s sales team">
+    {{$salesteam->reportsTo->fullName()}}
     </a> 
   @endif
 
-@if(isset ($salesteam[0]->reportsTo->userdetails->roles) && $salesteam[0]->reportsTo->userdetails->roles->count()>0) 
-    - {{$salesteam[0]->reportsTo->userdetails->roles[0]->name}}
+@if(isset ($salesteam->reportsTo->userdetails->roles) && $salesteam->reportsTo->userdetails->roles->count()>0) 
+    - {{$salesteam->reportsTo->userdetails->roles[0]->name}}
   @endif
 
   </h4>
-  @if(isset ($salesteam[0]->userdetails) && $salesteam[0]->userdetails->email != '')
+  @if(isset ($salesteam->userdetails) && $salesteam->userdetails->email != '')
 
-  <p><i class="far fa-envelope" aria-hidden="true"></i> <a href="mailto:{{$salesteam[0]->userdetails->email}}" title="Email {{$salesteam[0]->firstname}} {{$salesteam[0]->lastname}}">{{$salesteam[0]->userdetails->email}}</a> </p>
+  <p><i class="far fa-envelope" aria-hidden="true"></i> <a href="mailto:{{$salesteam->userdetails->email}}" title="Email {{$salesteam->firstname}} {{$salesteam->lastname}}">{{$salesteam->userdetails->email}}</a> </p>
   @endif
-  <p><a href="{{route('salesorg.list',$salesteam[0]->id)}}"
-  title="See list view of {{$salesteam[0]->firstname}} {{$salesteam[0]->lastname}}'s sales team">
+  <p><a href="{{route('salesorg.list',$salesteam->id)}}"
+  title="See list view of {{$salesteam->firstname}} {{$salesteam->lastname}}'s sales team">
   <i class="fas fa-th-list" aria-hidden="true"></i> List view</a></p>
 
       <div id="map-container">
         <div style="float:left;width:300px">
   <h2>Direct Reports:</h2>
 
-  @foreach($salesteam[0]->directReports as $reports)
+  @foreach($salesteam->directReports as $reports)
     @if(isset($reports->userdetails))
       @if($reports->isLeaf())
       <a href="{{route('salesorg',$reports->id)}}"
@@ -72,7 +72,7 @@ Sales Team  = <img src='//maps.google.com/mapfiles/ms/icons/red-dot.png' /></p>
 
       var branchmap = {
         
-      @foreach ($salesteam[0]->getDescendantsAndSelf() as $reports)
+      @foreach ($salesteam->getDescendantsAndSelf() as $reports)
          
 
             @foreach ($reports->branchesServiced as $branch)
@@ -109,9 +109,9 @@ Sales Team  = <img src='//maps.google.com/mapfiles/ms/icons/red-dot.png' /></p>
         };
         // Create the map.
         var map = new google.maps.Map(document.getElementById('map'), {
-          zoom: {{! $salesteam[0]->lat ? '4' : '9'}},
-          center: {lat: {{! $salesteam[0]->lat ? '39.8282' : $salesteam[0]->lat }}, 
-                  lng: {{! $salesteam[0]->lng ? '-98.5795' : $salesteam[0]->lng}} },
+          zoom: {{! $salesteam->lat ? '4' : '9'}},
+          center: {lat: {{! $salesteam->lat ? '39.8282' : $salesteam->lat }}, 
+                  lng: {{! $salesteam->lng ? '-98.5795' : $salesteam->lng}} },
          
           mapTypeId: 'terrain'
         });

@@ -1,10 +1,10 @@
-<h4>Users Not in Import</h4>
+<h4>Users To Delete</h4>
 
 <form name="deleteusers" method="post" action="{{route('user.importdelete')}}">
 	@csrf
 	<table class="table" id ="nosorttable">
 		<thead>
-			<th><input type="checkbox" checked id="checkAll"></th>
+			<th><input type="checkbox" id="checkAll"></th>
 			<th>First Name</th>
 			<th>Last Name</th>
 			<th>Email</th>
@@ -16,7 +16,7 @@
 			@foreach($data['deleteUsers'] as $user)
 
 				<tr>
-					<td><input type="checkbox" name="delete[]" value="{{$user->id}}" checked /></td>
+					<td><input type="checkbox" name="delete[]" value="{{$user->id}}"  /></td>
 					<td>{{$user->person->firstname}}</td>
 					<td>{{$user->person->lastname}}</td>
 					<td>{{$user->email}}</td>

@@ -78,6 +78,7 @@ class UserImport extends Imports
 		
 		
 		
+		
 
 		
 		
@@ -166,6 +167,41 @@ class UserImport extends Imports
 	}
 	public function manager(){
 		return $this->belongsTo(Person::class,'reports_to','id');
+
+	}
+
+	public function updateExistingUsers(){
+		$existing = $this->whereNotNull('user_id')
+		->whereNotNull('person_id')
+		->whereNotNull('reports_to')
+		->where('imported','=',0)
+		->chunk(100, function($users) {
+			$this->updateImportRecords($users);
+	        
+    });
+
+	}
+
+	public function updateImportRecords($users){
+		foreach ($users as $userimport) {
+	        	
+	            // update user record
+	        	$user= User::findOrFail($userimport->user_id);
+	        	$user->email = $userimport->email;
+	        	$user->save();
+	            // update roles
+	            $user->roles()->sync([$userimport->role_id]);
+
+	            // update servicelines
+	            $user->serviceline()->sync(explode(",",$userimport->serviceline));
+
+	            // update person record
+	            $person = Person::findOrFail($userimport->person_id);
+	            $person->update($userimport->toArray());
+	            $userimport->imported = 1;
+	            $userimport->save();
+
+	        }
 	}
 	/*public function setUpAllUsers(){
 		// copy all person fields over to persons

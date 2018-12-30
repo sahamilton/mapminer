@@ -89,6 +89,9 @@ class UsersImportController extends ImportController
        if($this->import->import()) {
 
          	$this->import->postImport();
+
+
+         // copy all data from import to persons and users where not null person_id, user_id
           
            return redirect()->route('importcleanse.index');
 

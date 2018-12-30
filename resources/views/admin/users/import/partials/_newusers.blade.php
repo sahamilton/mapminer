@@ -1,7 +1,7 @@
 <h4>New Users to Create</h4>
 <form name="createnewusers" method="post" action = "{{route('user.importinsert')}}" >
 	@csrf
-<table class="table" id ="nosorttable">
+<table class="table" id ="sorttable">
 	<thead>
 		<th><input type="checkbox" checked id="checkAll"></th>
 		<th>First Name</th>
