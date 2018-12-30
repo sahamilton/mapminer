@@ -9,7 +9,7 @@ class SalesOrgController extends BaseController {
 	public $limit = 5;
 	public $branch;
 	public $person;
-	public $salesroles = [3,5,6,7,11,13];
+	public $salesroles = [5,6,7,8];
 	
 
 
@@ -17,6 +17,7 @@ class SalesOrgController extends BaseController {
 	{
 		$this->person = $person;
 		$this->branch = $branch;
+
 		//$this->person->rebuild();
 		
 	}
@@ -68,14 +69,13 @@ class SalesOrgController extends BaseController {
 			}else{
 			
 				$salesteam = $salesperson->load('userdetails.roles','directReports','directReports.userdetails','directReports.userdetails.roles','reportsTo.userdetails.roles');
-		
+				
 				return response()->view('salesorg.managermap', compact('salesteam'));
 			}
 			
 	
 		
 	}
-
 
 	public function salesCoverageMap()
 	{
@@ -137,13 +137,14 @@ class SalesOrgController extends BaseController {
 		//refactor to remove hard coding
 		//
 		//// Head of sales organization
-	return $this->person->getPersonsWithRole([14])->first();
+		return $this->person->getPersonsWithRole([14])->first();
+
 		/*return (Person::where('depth','=',0)
 			->whereNull('reports_to')
 			->whereRaw('lft+1 != rgt')
 			_.whereHas('role == sales')
-			->pluck('id'));*/
-		//return $person = ['1767'];
+			->pluck('id'));
+		return $person = ['1767'];*/
 	}
 
 
