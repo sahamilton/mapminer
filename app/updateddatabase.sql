@@ -27,3 +27,5 @@ SELECT projects.id,lat,lng,`project_title`,street,`addr2`,city,state,`zipcode`,t
 FROM `projects`;
 
 ALTER TABLE `projects` DROP FOREIGN KEY `projects_project_source_foreign_key`; ALTER TABLE `projects` ADD CONSTRAINT `projects_project_source_foreign_key` FOREIGN KEY (`project_source_id`) REFERENCES `leadsources`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+INSERT INTO `roles` (`id`, `name`, `created_at`, `updated_at`) VALUES ('14', 'EVP', CURRENT_TIMESTAMP, NULL);
