@@ -47,39 +47,35 @@ class SalesOrgController extends BaseController {
 			// if not id then find root salesorg id
 			
 			if (! $salesPerson){
-				$salesLeader = $this->getSalesLeaders();
+				$salesperson = $this->getSalesLeaders();
 
-				$salesperson = Person::whereIn('id',$salesLeader)->first();
+				//$salesperson = Person::whereIn('id',$salesLeader)->first();
 
 			}else{
 				$salesperson = Person::whereId($salesPerson->id)->first();
 			}
 			
 			// if leaf
-
+		
 			
 			if( $salesperson->isLeaf())
 			{
-				
-				$salesorg = Person::whereId($salesPerson->id)
-				->with('userdetails.roles','reportsTo','reportsTo.userdetails.roles','branchesServiced')->first();
+			
+				$salesorg = $salesperson->load('userdetails.roles','reportsTo','reportsTo.userdetails.roles','branchesServiced');
 
 				return response()->view('salesorg.map', compact('salesorg'));
 				
 			}else{
-				$salesroles = $this->salesroles;
-				$salesteam = $salesperson->descendantsAndSelf()
-				->with('userdetails.roles','directReports','directReports.userdetails','directReports.userdetails.roles','reportsTo.userdetails.roles')
-				
-				->orderBy('lft')
-				->get();
-						
+			
+				$salesteam = $salesperson->load('userdetails.roles','directReports','directReports.userdetails','directReports.userdetails.roles','reportsTo.userdetails.roles');
+		
 				return response()->view('salesorg.managermap', compact('salesteam'));
 			}
 			
 	
 		
 	}
+
 
 	public function salesCoverageMap()
 	{
