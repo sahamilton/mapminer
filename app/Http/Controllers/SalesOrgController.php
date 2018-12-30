@@ -137,13 +137,13 @@ class SalesOrgController extends BaseController {
 		//refactor to remove hard coding
 		//
 		//// Head of sales organization
-	
+	return $this->person->getPersonsWithRole([14])->first();
 		/*return (Person::where('depth','=',0)
 			->whereNull('reports_to')
 			->whereRaw('lft+1 != rgt')
 			_.whereHas('role == sales')
 			->pluck('id'));*/
-		return $person = ['1767'];
+		//return $person = ['1767'];
 	}
 
 
