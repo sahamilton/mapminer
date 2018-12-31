@@ -16,7 +16,7 @@ class UserImport extends Imports
 {
    	public $uniqueFields= ['employee_id'];
    	public $table = 'usersimport';
-   	public $requiredFields = ['employee_id','firstname','lastname','role_id'];
+   	public $requiredFields = ['employee_id','firstname','lastname','role_id','email'];
    	public $user;
    	public $person;
 
