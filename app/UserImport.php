@@ -33,7 +33,10 @@ class UserImport extends Imports
          return false;
     }
 
-   
+   public function getDataErrors(){
+
+   	return \DB::select(\DB::raw("SELECT users.email as useremail,users.employee_id as userempid,usersimport.* FROM `usersimport`,`users` where `usersimport`.`email` = `users`.`email` and `usersimport`.`employee_id` != `users`.`employee_id`"));
+   }
 	private function checkFields($field){
 		$query ="SELECT ". $this->table."." . $field ." from ". $this->table." 
 			left join users on ". $this->table."." . $field ." = users." . $field ."
@@ -52,7 +55,10 @@ class UserImport extends Imports
         
 		
  	}
-
+ 	public function invalidEmpId(){
+ 		
+ 		
+ 	}
  	public function getImportErrors($field, $result){
  			
 			foreach ($result as $error){
@@ -169,6 +175,12 @@ class UserImport extends Imports
 		return $this->belongsTo(Person::class,'reports_to','id');
 
 	}
+	public function user(){
+		return $this->belongsTo(User::class,'email','email');
+
+	}
+
+	
 
 	public function updateExistingUsers(){
 		$existing = $this->whereNotNull('user_id')

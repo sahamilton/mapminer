@@ -10,40 +10,21 @@
 		@csrf
 		<table class="table">
 			<thead>
-				<th>Person</th>
-				<th>Employee Id</th>
-				<th>Branches</th>
-				<th>Invalid IDs</th>
-				<th>Industries</th>
-				<th>Invalid Industries</th>
+				<th>Import Person</th>
+				<th>Import Email</th>
+				<th>Import Employee Id</th>
+				<th>Existing Email</th>
+				<th>Existing Employee Id</th>
+				
 			</thead>
 			<tbody>
-				@foreach ($persons as $person)
+				@foreach ($data['errors'] as $person)
 				<tr>
 					<td>{{$person->firstname}} {{$person->lastname}}</td>
+					<td>{{$person->email}}</td>
 					<td>{{$person->employee_id}}</td>
-					<td><input type="text" name="branch[{{$person->person_id}}]" value="{{$person->branches}}" >
-					</td>
-					<td class="text text-danger">
-						@if(isset($importerrors[$person->person_id]['branches']))
-						@foreach ($importerrors[$person->person_id]['branches'] as $invalid)
-							{{$invalid}}
-							{{! $loop->last ? ',' : ''}}
-							<i class="fas fa-exclamation-triangle class="text text-danger"></i>
-						@endforeach
-						@endif
-					</td>
-					<td><input type="text" name="industry[{{$person->person_id}}]" value="{{$person->industry}}" >
-					</td>
-					<td class="text text-danger">
-						@if(isset($importerrors[$person->person_id]['industries']))
-						@foreach ($importerrors[$person->person_id]['industries'] as $invalid)
-							{{$invalid}}
-							{{! $loop->last ? ',' : ''}}
-							<i class="fas fa-exclamation-triangle class="text text-danger"></i>
-						@endforeach
-						@endif
-					</td>
+					<td>{{$person->useremail}}</td>
+					<td>{{$person->userempid}}</td>
 				</tr>
 				@endforeach
 			</tbody>

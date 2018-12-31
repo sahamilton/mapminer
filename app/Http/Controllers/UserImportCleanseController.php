@@ -20,8 +20,11 @@ class UserImportCleanseController extends Controller
 
     public function index(){
     	// show users to delete
-        
-
+        $data['errors'] = $this->import->getDataErrors();
+        if(count($data['errors']) >0){
+            
+            return response()->view('admin.users.import.errors',compact('data'));
+        }
         $data['deleteUsers'] = $this->import->getUsersToDelete();
         $data['newUsers'] = $this->import->getUsersToCreate();
         $data['noManagers'] = $this->getMissingManagers();
