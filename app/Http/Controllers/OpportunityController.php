@@ -33,6 +33,7 @@ class OpportunityController extends Controller
      */
     public function index()
     {
+       
        if($this->person->myTeam()->count() >1){
             $branches = $this->branch->with('opportunities','manager')
             ->whereIn('id',$this->person->myBranches())

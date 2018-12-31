@@ -247,7 +247,7 @@ class GeoCodingController extends BaseController {
 		$location = new Location;
 		$location->lat = $data['lat'];
 		$location->lng = $data['lng'];
-
+		
 		if(method_exists($this,'get'.ucwords($data['type']).'ListData')){
 			$method = 'get'.ucwords($data['type']).'ListData';
 			return $this->$method($location,$data,$company);

@@ -5,6 +5,7 @@
 @if($location->opportunities)
 Tracked as <a href="{{route('opportunity.index')}}">{{$location->opportunities->branch()->first()->branchname}} branch opportunity</a>
 @else
+@can('manage_opportunities')
 <form name="addOpportunity" method="post" action="{{route('opportunity.store')}}" >
   @csrf
   @if(count($mybranches)==1)
@@ -23,6 +24,7 @@ Tracked as <a href="{{route('opportunity.index')}}">{{$location->opportunities->
   <input type="hidden" value="{{$location->id}}" name="address_id" />
   
 </form>
+@endcan
 @endif
 <p>Location Source: {{$location->addressType[$location->addressable_type]}}</p>
 @include('maps.partials._form')

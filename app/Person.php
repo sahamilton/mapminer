@@ -50,6 +50,7 @@ class Person extends NodeModel implements HasPresenter {
 	}
 	public function myBranches(){
 		$myteam = $this->myTeam()->get();
+		
         $data=[];
         $teammembers =  $myteam->map(function ($team) 
             { 
