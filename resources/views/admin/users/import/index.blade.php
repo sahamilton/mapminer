@@ -2,7 +2,10 @@
 @section('content')
 <div class="container">
 	<h4>User Import</h4>
-
+	<p class="float-right">
+		<a href="{{route('importcleanse.flush')}}" class="btn btn-danger" style="padding-right:10px" >Start New Import</a>
+		<a href="{{route('importcleanse.flush')}}" class="btn btn-success" style="padding-left:10px">Complete Import</a></p>
+	<div class="row"></div>
 	<nav>
 	  <div class="nav nav-tabs" id="nav-tab" role="tablist">
 		  <a class="nav-link nav-item active" 
