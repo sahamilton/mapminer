@@ -87,4 +87,10 @@ class UserImportCleanseController extends Controller
     	return redirect()->route('importcleanse.index')->withMessage("Deleted");
 
     }
+
+    public function flush(){
+       
+        \DB::table($this->import->table)->truncate();
+        return redirect()->route('users.importfile');
+    }
 }

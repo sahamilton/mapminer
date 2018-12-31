@@ -32,16 +32,20 @@ class UsersImportController extends ImportController
     //SELECT * from usersimport where employee_id in (select mgr_emp_id from `usersimport` where reports_to is null)
 
     public function index(){
+
        $imports = $this->import->whereNull('person_id')->orWhereNull('user_id')->get();
        return response()->view('admin.users.import.index',compact('imports')); 
     }
 
-    public function getFile(Request $request){
+    public function getFile(){
+      if($this->import->count()>0){
+        return redirect()->route('importcleanse.index');
+      }else{
        $requiredFields = $this->import->requiredFields;
-       $servicelines = Serviceline::pluck('ServiceLine','id');
+       //$servicelines = Serviceline::pluck('ServiceLine','id');
 
-		return response()->view('admin.users.import',compact('servicelines','requiredFields'));
-
+		return response()->view('admin.users.import',compact('requiredFields'));
+  }
         
     }
 
@@ -59,7 +63,7 @@ class UsersImportController extends ImportController
         $data['route'] = 'users.mapfields';
         $fields = $this->getFileFields($data); 
 
-        $data['additionaldata'] = ['serviceline'=>implode(",",request('serviceline'))];
+        $data['additionaldata'] = [];//['serviceline'=>implode(",",request('serviceline'))];
         $addColumns = ['branches','role_id','mgr_emp_id','manager','reports_to','industry','address','city','state','zip','serviceline','hiredate','business_title','fullname'];
         $addColumn = $this->addColumns($addColumns);
 
