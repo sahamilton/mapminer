@@ -11,6 +11,7 @@ use App\Jobs\updateUserRoles;
 use App\Jobs\updateUserServiceLines;
 use App\Jobs\associateIndustries;
 use App\Jobs\associateBranches;
+use App\Jobs\ProcessUserImport;
 
 class UserImport extends Imports
 {
@@ -34,8 +35,55 @@ class UserImport extends Imports
     }
 
    public function getDataErrors(){
+	$errors['branch'] = $this->checkBranches();
+	$errors['emails'] = $this->checkEmails();
+	if(! $this->array_empty($errors)){
+		return $errors;
+	}else{
+		return false;
+	}
 
-   	return \DB::select(\DB::raw("SELECT users.email as useremail,users.employee_id as userempid,usersimport.* FROM `usersimport`,`users` where `usersimport`.`email` = `users`.`email` and `usersimport`.`employee_id` != `users`.`employee_id`"));
+   	
+   }
+
+   private function checkBranches(){
+
+   	$data=array();
+  
+   	$branchesImported = $this->whereNotNull('branches')->pluck('branches','employee_id');
+   	$branches = Branch::pluck('id')->toArray();
+   	foreach ($branchesImported as $empid=>$branchstring){
+   		$branchImport = explode(",",str_replace(" ", "", $branchstring));
+   		foreach ($branchImport as $checkId){
+   			if(! in_array($checkId, $branches)){
+   				$data[$empid][]=$checkId;
+   			}
+   		}
+   		
+   	}
+   	if (count($data)>0){
+   		return $data;
+   	}else{
+   		return false;
+   	}
+
+   	// invalid branch ids
+   	// get all branch strings
+   	// convert to array
+   	// reduce array to unique
+   	// id errors
+   	// id users with errors
+
+   	// invalid servicelines
+
+   	// invalid industries
+   }
+   private function checkEmails(){
+   	$emails = \DB::select(\DB::raw("SELECT users.email as useremail,users.employee_id as userempid,usersimport.* FROM `usersimport`,`users` where `usersimport`.`email` = `users`.`email` and `usersimport`.`employee_id` != `users`.`employee_id`"));
+   	if(count($emails) >0){
+   		return $emails;
+   	}
+   	return false;
    }
 	private function checkFields($field){
 		$query ="SELECT ". $this->table."." . $field ." from ". $this->table." 
@@ -80,14 +128,7 @@ class UserImport extends Imports
 		$this->setUserId();
 		$this->setPersonId();
 		return $this->setManagersId();
-		
-		
-		
-		
-		
-
-		
-		
+	
 		
 	}
 	private function setUserId(){
@@ -184,12 +225,12 @@ class UserImport extends Imports
 
 	public function updateExistingUsers(){
 		$existing = $this->whereNotNull('user_id')
-		->whereNotNull('person_id')
-		->whereNotNull('reports_to')
-		->where('imported','=',0)
-		->chunk(100, function($users) {
+					->whereNotNull('person_id')
+					->whereNotNull('reports_to')
+					->where('imported','=',0)
+					->chunk(100, function($users) {
 			
-			$this->updateImportRecords($users);
+					$this->updateImportRecords($users);
 	        
     	});
 
@@ -198,23 +239,10 @@ class UserImport extends Imports
 	private function updateImportRecords($users){
 		foreach ($users as $userimport) {
 	        	
-	            // update user record
-	        	$user= User::findOrFail($userimport->user_id);
-	        	$user->email = $userimport->email;
-	        	$user->save();
-	            // update roles
-	            $user->roles()->sync([$userimport->role_id]);
-
-	            // update servicelines
-	            $user->serviceline()->sync(explode(",",$userimport->serviceline));
-
-	            // update person record
-	            $person = Person::findOrFail($userimport->person_id);
-	            $person->update($userimport->toArray());
-	            $userimport->imported = 1;
-	            $userimport->save();
-
-	        }
+	            ProcessUserImport::dispatch($userimport);
+		}
 	}
+
+
 
 }

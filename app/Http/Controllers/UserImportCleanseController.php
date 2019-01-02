@@ -20,11 +20,15 @@ class UserImportCleanseController extends Controller
 
     public function index(){
     	// show users to delete
+
         $data['errors'] = $this->import->getDataErrors();
-        if(count($data['errors']) >0){
-            
-            return response()->view('admin.users.import.errors',compact('data'));
+        
+        if($data['errors']['branch']){
+            $import = $this->import->whereIn('employee_id',array_keys($data['errors']['branch']))->get();
+            $importerrors = $data['errors']['branch'];
+            return response()->view('admin.users.import.brancherrors',compact('importerrors','import'));
         }
+
         $data['deleteUsers'] = $this->import->getUsersToDelete();
         $data['newUsers'] = $this->import->getUsersToCreate();
         $data['noManagers'] = $this->getMissingManagers();
@@ -51,6 +55,7 @@ class UserImportCleanseController extends Controller
 
 
     }
+
     public function importAllUsers(){
         $this->import->updateExistingUsers();
         $this->person->rebuild();
@@ -96,4 +101,8 @@ class UserImportCleanseController extends Controller
         \DB::table($this->import->table)->truncate();
         return redirect()->route('users.importfile');
     }
+
+
+   
+
 }

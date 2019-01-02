@@ -6,31 +6,44 @@
 	<div class="alert alert-warning">
 		<p>Fix these errors and reimport</p>
 	</div>
-	<form name="fiximporterrors" method="post" action="{{route('fixuserinputerrors')}}" >
-		@csrf
-		<table class="table">
-			<thead>
-				<th>Import Person</th>
-				<th>Import Email</th>
-				<th>Import Employee Id</th>
-				<th>Existing Email</th>
-				<th>Existing Employee Id</th>
-				
-			</thead>
-			<tbody>
-				@foreach ($data['errors'] as $person)
-				<tr>
-					<td>{{$person->firstname}} {{$person->lastname}}</td>
-					<td>{{$person->email}}</td>
-					<td>{{$person->employee_id}}</td>
-					<td>{{$person->useremail}}</td>
-					<td>{{$person->userempid}}</td>
-				</tr>
-				@endforeach
-			</tbody>
-		</table>
-		<input class="btn btn-success" name="submit" type="submit" value="update import errors" >
-	</form>
+	<nav>
+	  <div class="nav nav-tabs" id="nav-tab" role="tablist">
+		  <a class="nav-link nav-item active" 
+		      id="delete-tab" 
+		      data-toggle="tab" 
+		      href="#email" 
+		      role="tab" 
+		      aria-controls="delete" 
+		      aria-selected="true">
+		    <strong>Email Errors ({{isset($data['errors']['email']) ? count($data['errors']['email']) : 0 }})</strong>
+		  </a>
+		<a class="nav-link nav-item" 
+		      id="missing-tab" 
+		      data-toggle="tab" 
+		      href="#branch" 
+		      role="tab" 
+		      aria-controls="missing" 
+		      aria-selected="true">
+		    <strong>Branch Errors ({{isset($data['errors']['branch']) ? count($data['errors']['branch']) : 0 }})</strong>
+		  </a>
+		</div>
+	</nav>
+	<div class="tab-content" id="nav-tabContent">
+	    <div id="email" class="tab-pane show active">
+	    	@if(isset($data['errors']['email']))
+	    	 	@include('admin.users.import.partials._emailerrors')
+	    	@endif
+	    </div>
+	    <div id="missing" class="tab-pane show ">
+	     	
+	    </div>
+	    <div id="branch" class="tab-pane show ">
+	     	@if(isset($data['errors']['branch']))}}
+	     		@include('admin.users.import.partials._brancherrors')
+	     	@endif
+	    </div>
+	    
+	</div>
 </div>
 
 @endsection

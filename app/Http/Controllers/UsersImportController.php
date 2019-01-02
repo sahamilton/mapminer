@@ -67,7 +67,7 @@ class UsersImportController extends ImportController
         $addColumns = ['branches','role_id','mgr_emp_id','manager','reports_to','industry','address','city','state','zip','serviceline','hiredate','business_title','fullname'];
         $addColumn = $this->addColumns($addColumns);
 
-   		$columns = array_merge($this->import->getTableColumns('users'),$this->import->getTableColumns('persons'),$addColumn);
+   		  $columns = array_merge($this->import->getTableColumns('users'),$this->import->getTableColumns('persons'),$addColumn);
 
 
         $requiredFields = $this->import->requiredFields;
@@ -105,7 +105,7 @@ class UsersImportController extends ImportController
 	}
 
 
-    public function newUsers(){
+   /* public function newUsers(){
 
         $newusers = $this->import->whereNull('person_id')->get();
 
@@ -162,10 +162,12 @@ class UsersImportController extends ImportController
         $persons = $this->import->whereIn('person_id',$ids)->get();
         return response()->view('admin.users.import.errors',compact('importerrors','persons'));
     }
+    */
 
     public function fixUserErrors(Request $request){
+      dd(request()->all());
         //$data['email'] = request('email');
-        $data = request(['email']);
+        $data = request('email');
        
         $imports = $this->import->whereIn('employee_id',array_keys(request('email')))->get();
         foreach ($imports as $import){
@@ -176,7 +178,7 @@ class UsersImportController extends ImportController
         }
         return $this->newUsers();
     }
-
+/*
     public function fixerrors(Request $request){
       
       $data['branches'] = request('branch');
@@ -200,7 +202,7 @@ class UsersImportController extends ImportController
           return redirect()->route('usersimport.index')->withMessage('All Imported and Updated');
         }
     }
-
+*/
     private function addColumns($columns){
         foreach ($columns as $column){
             $columns = new \stdClass;
