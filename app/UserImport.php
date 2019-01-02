@@ -169,6 +169,12 @@ class UserImport extends Imports
 		return $this->belongsTo(Person::class,'reports_to','id');
 
 	}
+	public function user(){
+		return $this->hasOne(User::class,'email','email');
+
+	}
+
+	
 
 	public function updateExistingUsers(){
 		$existing = $this->whereNotNull('user_id')
