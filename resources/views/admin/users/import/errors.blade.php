@@ -25,7 +25,7 @@
 		      role="tab" 
 		      aria-controls="missing" 
 		      aria-selected="true">
-		    <strong>Branch Errors ({{isset($data['errors']['branch']) ? $data['errors']['branch']->count() : 0 }})</strong>
+		    <strong>Branch Errors ({{isset($data['errors']['branch']) ? count($data['errors']['branch']) : 0 }})</strong>
 		  </a>
 		</div>
 	</nav>
@@ -39,12 +39,14 @@
 	     	
 	    </div>
 	    <div id="branch" class="tab-pane show ">
-	     	@if(isset($data['errors']['branch']))}}
+	     	@if(isset($data['errors']['branch']))
+
 	     		@include('admin.users.import.partials._brancherrors')
+	     	
 	     	@endif
 	    </div>
 	    
 	</div>
 </div>
-
+@include('partials._scripts')
 @endsection

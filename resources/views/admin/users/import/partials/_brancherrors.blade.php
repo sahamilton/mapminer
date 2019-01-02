@@ -11,7 +11,7 @@
 			<th></th>
 		</thead>
 		<tbody>
-			@foreach ($data['errors']['branch'] as $person)
+			@foreach ($data['import'] as $person)
 
 			<tr>
 				<td>{{$person->firstname}} {{$person->lastname}}</td>
@@ -20,7 +20,7 @@
 				</td>
 				<td><input type="checkbox" name="ignore[{{$person->employee_id}}]" />
 				<td class="text text-danger"><label>Unnknown Branch</label>
-					@foreach ($importerrors[$person->employee_id] as $invalid)
+					@foreach ($data['errors']['branch'][$person->employee_id] as $invalid)
 						{{$invalid}}
 						@if(! $loop->last),@endif
 					@endforeach

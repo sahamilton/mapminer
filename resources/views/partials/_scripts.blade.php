@@ -1,10 +1,7 @@
 <script src="//twitter.github.io/typeahead.js/releases/latest/typeahead.bundle.js"></script>
 <script>
 $(document).ready(function() 
-    { 
-      $("#checkAll").click(function () {
-     	$('input:checkbox').not(this).prop('checked', this.checked);
- 	});
+    {
     
     $("#selectall").change(function(){
       $(".watchItem").prop('checked', $(this).prop('checked')).change();
