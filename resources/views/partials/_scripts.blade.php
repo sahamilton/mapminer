@@ -51,6 +51,12 @@ $(document).ready(function()
 		$(this).find('input#location_id').val($(e.relatedTarget).data('pk'));
 		
 	});
+	
+	$('[id^=checkAll]').change(function() {
+	    var checkboxes = $(this).closest('form').find(':checkbox');
+	    checkboxes.prop('checked', $(this).is(':checked'));
+	});
+
 	$( "#activitydate" ).datepicker( {altField : "#activitydate",
     altFormat: "yyyy-mm-dd"});
     $( "#followupdate" ).datepicker( {altField : "#followupdate",
