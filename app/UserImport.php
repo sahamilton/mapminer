@@ -17,9 +17,11 @@ class UserImport extends Imports
 {
    	public $uniqueFields= ['employee_id'];
    	public $table = 'usersimport';
+   	public $temptable = 'usersimporttmp';
    	public $requiredFields = ['employee_id','firstname','lastname','role_id','email'];
    	public $user;
    	public $person;
+
 
    	
 
@@ -243,6 +245,23 @@ class UserImport extends Imports
 		}
 	}
 
-
+	public  function handleUserErrors(){
+		dd($this->import->getDataErrors());
+        if($data['errors'] = $this->import->getDataErrors()){
+            $import = array();
+            if($brancherrors = $data['errors']['branch']){
+                $data['import'] = $this->import->whereIn('employee_id',array_keys($brancherrors))->get();
+                
+              } else{
+                unset ($data['errors']['branch']);
+              } 
+            if(! $data['errors']['emails']){
+                 unset ($data['errors']['emails']);
+            }
+            return $data;
+            
+        }
+       return false;
+    }
 
 }
