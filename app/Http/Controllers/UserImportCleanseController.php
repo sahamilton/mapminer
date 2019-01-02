@@ -20,21 +20,17 @@ class UserImportCleanseController extends Controller
 
     public function index(){
     	// show users to delete
-
-        $data['errors'] = $this->import->getDataErrors();
         
-        if($data['errors']['branch']){
-            $import = $this->import->whereIn('employee_id',array_keys($data['errors']['branch']))->get();
-            $importerrors = $data['errors']['branch'];
-            return response()->view('admin.users.import.brancherrors',compact('importerrors','import'));
+        if($data = $this->handleUserErrors()){
+
+            return response()->view('admin.users.import.errors',compact('data'));
+        }else{
+                $data['deleteUsers'] = $this->import->getUsersToDelete();
+                $data['newUsers'] = $this->import->getUsersToCreate();
+                $data['noManagers'] = $this->getMissingManagers();
+        
+                return response()->view('admin.users.import.index',compact('data'));
         }
-
-        $data['deleteUsers'] = $this->import->getUsersToDelete();
-        $data['newUsers'] = $this->import->getUsersToCreate();
-        $data['noManagers'] = $this->getMissingManagers();
-
-        return response()->view('admin.users.import.index',compact('data'));
-
     }
     public function getMissingManagers(){
         $missingmanagers = $this->import->whereNull('reports_to')->get();
@@ -102,7 +98,22 @@ class UserImportCleanseController extends Controller
         return redirect()->route('users.importfile');
     }
 
-
-   
+    private function handleUserErrors(){
+        if($data['errors'] = $this->import->getDataErrors()){
+            $import = array();
+            if($brancherrors = $data['errors']['branch']){
+                $data['import'] = $this->import->whereIn('employee_id',array_keys($brancherrors))->get();
+                
+              } else{
+                unset ($data['errors']['branch']);
+              } 
+            if(! $data['errors']['emails']){
+                 unset ($data['errors']['emails']);
+            }
+            return $data;
+            
+        }
+       return false;
+    }
 
 }

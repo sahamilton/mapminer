@@ -165,6 +165,7 @@ class UsersImportController extends ImportController
     */
 
     public function fixUserErrors(Request $request){
+
         switch (request('type')) {
 
 
@@ -173,6 +174,7 @@ class UsersImportController extends ImportController
             break;
 
           case 'email':
+
             $this->fixEmailErrors($request);
             break;
           
@@ -199,16 +201,18 @@ class UsersImportController extends ImportController
 
     private function fixEmailErrors(){
       //$data['email'] = request('email');
-        $data = request('email');
-       
-        $imports = $this->import->whereIn('employee_id',array_keys(request('email')))->get();
+      $imports = $this->import->whereIn('id',array_keys(request('import')))->with('user')->get();
+      $data = request('import');
         foreach ($imports as $import){
-         
-          $import->email = $data['email'][$import->employee_id];
-         
-          $import->save();
-        }
-        return $this->newUsers();
+          if($data[$import->id] == 'import'){
+            $user = $import->user()->first();
+            $user->employee_id = $import->employee_id;
+            $user->save();
+          }else{
+            $import->employee_id = $import->user->employee_id;
+            $import->save();
+          }
+      }
     }
 /*
     public function fixerrors(Request $request){

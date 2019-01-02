@@ -217,7 +217,7 @@ class UserImport extends Imports
 
 	}
 	public function user(){
-		return $this->belongsTo(User::class,'email','email');
+		return $this->hasOne(User::class,'email','email');
 
 	}
 
