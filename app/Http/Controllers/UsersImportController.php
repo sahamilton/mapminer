@@ -165,8 +165,40 @@ class UsersImportController extends ImportController
     */
 
     public function fixUserErrors(Request $request){
-      dd(request()->all());
-        //$data['email'] = request('email');
+        switch (request('type')) {
+
+
+          case 'branch':
+            $this->fixBranchErrors($request);
+            break;
+
+          case 'email':
+            $this->fixEmailErrors($request);
+            break;
+          
+          default:
+            # code...
+            break;
+        }
+
+        return redirect()->route('importcleanse.index');
+        
+    }
+    private function fixBranchErrors($request){
+      $this->import->whereIn('employee_id',array_keys(request('ignore')))->update(['branches' => null]);
+      // update all branches
+      $toUpdate = array_diff_key(request('branch'),request('ignore'));
+      $update = $this->import->whereIn('employee_id',$toUpdate)->get();
+      foreach ($update as $upd){
+        $upd->branches = str_replace(" ", "",$toUpdate[$upd->employee_id]);
+        $upd->save();
+      }
+    }
+
+
+
+    private function fixEmailErrors(){
+      //$data['email'] = request('email');
         $data = request('email');
        
         $imports = $this->import->whereIn('employee_id',array_keys(request('email')))->get();

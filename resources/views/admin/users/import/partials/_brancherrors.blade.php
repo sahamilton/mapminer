@@ -5,7 +5,7 @@
 				<th>Person</th>
 				<th>Employee Id</th>
 				<th>Branches</th>
-				<th>Delete Branches</th>
+				<th><input type="checkbox" id="checkAll">Delete Branches</th> 
 				<th>Errors</th>
 				
 				<th></th>
@@ -19,9 +19,10 @@
 					<td><input type="text" name="branch[{{$person->employee_id}}]" value="{{$person->branches}}" >
 					</td>
 					<td><input type="checkbox" name="ignore[{{$person->employee_id}}]" />
-					<td class="text text-danger"><label>Ignore all</label>
+					<td class="text text-danger"><label>Unnknown Branch</label>
 						@foreach ($importerrors[$person->employee_id] as $invalid)
-							{{$invalid}},
+							{{$invalid}}
+							@if(! $loop->last),@endif
 						@endforeach
 						<i class="fas fa-exclamation-triangle text text-danger"
 							title="Invalid branches."
@@ -33,6 +34,7 @@
 				@endforeach
 			</tbody>
 		</table>
+		<input type="hidden" name="type" value="branch" />
 		<input class="btn btn-success" name="submit" type="submit" value="update import errors" >
 	</form>
 </div>
