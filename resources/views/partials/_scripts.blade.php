@@ -8,6 +8,10 @@ $(document).ready(function()
       $(".watchItem").prop('checked', $(this).prop('checked')).change();
      });
 
+	$('[id^=checkAll]').change(function() {
+	    var checkboxes = $(this).closest('form').find(':checkbox');
+	    checkboxes.prop('checked', $(this).is(':checked'));
+	});
     $(".more").toggle(function(){
     $(this).text("less..").siblings(".complete").show();    
 	}, function(){

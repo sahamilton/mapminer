@@ -4,7 +4,7 @@
 	@csrf
 <table class="table" id ="sorttable1">
 	<thead>
-		<th><input type="checkbox" checked id="checkAll"></th>
+		<th><input type="checkbox" checked id="checkAll2"></th>
 		<th>First Name</th>
 		<th>Last Name</th>
 		<th>Employee ID</th>
