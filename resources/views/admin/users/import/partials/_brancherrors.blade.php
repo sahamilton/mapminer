@@ -19,7 +19,7 @@
 				<td><input type="text" name="branch[{{$person->employee_id}}]" value="{{$person->branches}}" >
 				</td>
 				<td><input type="checkbox" name="ignore[{{$person->employee_id}}]" />
-				<td class="text text-danger"><label>Unnknown Branch</label>
+				<td class="text text-danger"><label>Unknown Branch: </label>
 					@foreach ($data['errors']['branch'][$person->employee_id] as $invalid)
 						{{$invalid}}
 						@if(! $loop->last),@endif

@@ -1,6 +1,6 @@
 @extends('site.layouts.default')
 @section('content')
-
+<div class="container">
 <h2>{{$location->location->businessname}}</h2>
 
 <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -74,7 +74,6 @@ $id= $location->location->id;?>
 
 
 </div>
-
 
 @include('location.partials.map')
 

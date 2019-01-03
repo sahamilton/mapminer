@@ -109,9 +109,9 @@ class AddressController extends Controller
     public function findLocations($distance=NULL,$latlng = NULL) {
         
         $location = $this->getLocationLatLng($latlng);
-    
+       
         $result = $this->address->filtered()->nearby($location,$distance)->get();
-        
+       
         return response()->view('addresses.xml', compact('result'))->header('Content-Type', 'text/xml');
     
     }

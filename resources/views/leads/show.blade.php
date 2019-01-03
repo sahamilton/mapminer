@@ -1,6 +1,6 @@
 @extends ('admin.layouts.default')
 @section('content')
-<h2>Lead Details</h2>
+<h2>Lead Details!!</h2>
 <p><a href="{{route('leadsource.show',$lead->lead_source_id)}}">Show All </a></p>
 <div class="float-left col-sm-5">
 	<div class="panel panel-default">

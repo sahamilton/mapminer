@@ -91,7 +91,6 @@ class GeoCodingController extends BaseController {
 		
 		$data = $this->getViewData($data);
 
-
 		$filtered = $this->location->isFiltered(['companies','locations'],['vertical','business','segment'],NULL);
 		if(isset($data['company']) ){
     		$company = $data['company'];

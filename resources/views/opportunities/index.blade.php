@@ -2,6 +2,7 @@
 @section('content')
 
 <div class="container">
+     @include('maps.partials._form')
 <h2>{{$opportunities->first()->branch->branchname}} Branch Opportunities</h2>
    <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
