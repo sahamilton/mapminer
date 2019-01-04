@@ -1,16 +1,18 @@
 <?php
 namespace App;
 
-class Company extends Model {
+class Company extends NodeModel {
+	use Filters;
 
 	// Add your validation rules here
 	public static $rules = [
 		 'companyname' => 'required',
-		 'serviceline'=>'required'
+		 'serviceline'=>'required',
+		 'accounttypes_id'=>'required',
 	];
 
 	// Don't forget to fill this array
-	protected $fillable = array('companyname', 'vertical','person_id');
+	protected $fillable = array('companyname', 'vertical','person_id','accounttypes_id');
 	
 	public function type() 
 	{
@@ -66,8 +68,7 @@ class Company extends Model {
 		return $this->belongsToMany(Howtofield::class);
 	}
 	
-	
-	
+
 	public function getFilteredLocations($filtered, $keys,$query,$paginate= NULL)
 	{
 		
@@ -122,7 +123,37 @@ class Company extends Model {
 						})->with('industryVertical')
 						->find($company_id);
 	}
+	public function getAllCompanies($filtered=null)
+	{
+		dd($this->userServiceLines);
+		$keys=array();
 
+		$companies = $this->with('managedBy','managedBy.userdetails','industryVertical','serviceline','countlocations')
+			->whereHas('serviceline', function($q) {
+					    $q->whereIn('serviceline_id', $this->userServiceLines);
+
+			});
+
+		if($filtered) {
+			$keys = $this->getSearchKeys(['companies'],['vertical']);
+			$isNullable = $this->isNullable($keys,NULL);
+			$companies = $companies->whereIn('vertical',$keys);
+
+			if($isNullable == 'Yes')
+			{
+
+					$companies = $companies->orWhere(function($query) use($keys)
+					{
+						$query->whereNull('vertical');
+					});
+
+			}
+
+		}
+
+		return $companies->orderBy('companyname');
+
+	}
 	
 	
 }

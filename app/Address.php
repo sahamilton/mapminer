@@ -11,7 +11,7 @@ class Address extends Model
 
     public $timestamps = false;
     
-    public $fillable = ['addressable_id','addressable_type','street','address2','city','state','zip','lat','lng'];
+    public $fillable = ['addressable_id','addressable_type','street','address2','city','state','zip','lat','businessname','lng','customer_id'];
     
     public $getStatusOptions =  [
         1=>'Prospect data is completely inaccurate. No project or project completed.',
@@ -32,7 +32,7 @@ class Address extends Model
     }
 
     public function contacts(){
-    	return $this->hasMany(Contact::class,'location_id', 'id');
+    	return $this->hasMany(Contact::class,'address_id', 'id');
     }
     public function company(){
         return $this->belongsTo(Company::class,'company_id','id');
@@ -40,6 +40,9 @@ class Address extends Model
     public function relatedNotes() {
            return $this->hasMany(Note::class,'related_id','addressable_id')
        ->with('writtenBy');
+    }
+    public function orders(){
+        return $this->belongsToMany(Branch::class)->withPivot('period','orders');
     }
     public function activities(){
         return $this->hasMany(Activity::class);
@@ -62,4 +65,10 @@ class Address extends Model
     public function opportunities(){
         return $this->belongsTo(Opportunity::class,'id','address_id');
     }
+
+    public function servicedBy(){
+        return $this->belongsTo(Branch::class,'branch_id','id');
+    }
+
+    
 }

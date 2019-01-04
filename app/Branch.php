@@ -253,4 +253,13 @@ class Branch extends Model implements HasPresenter {
 
 	}
 
+	public function orders($period = null){
+		if($period){
+			return $this->belongsToMany(Address::class)->withPivot('period','orders')
+			->wherePivot('period','=',$period);
+		}else{
+			return $this->belongsToMany(Address::class)->withPivot('period','orders');
+		}
+	}
+
 }

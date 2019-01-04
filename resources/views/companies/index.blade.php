@@ -28,6 +28,7 @@
 	<table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
 		<thead>
 			<th>Company</th>
+			<th>Customer Id</th>
 			<th>Manager</th>
 			<th>Email</th>
 			<th>Vertical</th>
@@ -46,7 +47,7 @@
 		<tr>
 
 			<td>
-			@if(count($company->countlocations)>0)
+			@if($company->locations_count > 0)
 
 			<a href="{{route('company.show',$company->id)}}"
 			title = 'See all {{$company->companyname}} locations'>{{$company->companyname}}</a>
@@ -54,6 +55,7 @@
 			<span title="{{$company->companyname}} has no locations">{{$company->companyname}}</span>
 			@endif
 			</td>
+			<td>{{$company->customer_id}}</td>
 			<td>
 			@if(isset($company->managedBy))
 			<a href="{{route('person.show',$company->managedBy->id)}}"
@@ -80,10 +82,10 @@
 			@endif
 			</td>
 			<td>
-				@if(count($company->countlocations)>0)
+				@if($company->locations_count>0)
 				<a href="{{route('company.show',$company->id)}}"
 				title = 'See all {{$company->companyname}} locations'>
-					{{number_format($company->countlocations->first()->count,0)}}
+					{{number_format($company->locations_count,0)}}
 				</a>
 				@endif
 		</td>

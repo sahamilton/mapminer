@@ -294,7 +294,8 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
 		Route::resource('branches','BranchesController',['except'=>['index','show']]);
 
 	#Companies
-
+		Route::get('companies/import', ['as'=>'companies.importfile', 'uses'=>'CompaniesImportController@getFile']);
+		Route::post('companies/import', ['as'=>'companies.import', 'uses'=>'CompaniesImportController@import']);
 		Route::get('companies/export', ['as'=>'companies.export', 'uses'=>'CompaniesController@export']);
 		Route::post('companies/export', ['as'=>'companies.locationsexport', 'uses'=>'CompaniesController@locationsExport']);
 
@@ -302,13 +303,14 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
 		
 		Route::get('company/{companyId}/export',['as'=>'company.export','uses'=>'WatchController@companyexport']);
 
+		Route::resource('orderimport','CompaniesImportController');
+
 		//Route::post('company/filter',['as'=>'company.filter','uses'=>'CompaniesController@filter']);
 		Route::resource('company','CompaniesController',['except' => ['index', 'show']]);
 	# Customers
-		Route::get('customers/import', ['as'=>'customers.importfile', 'uses'=>'CustomerImportController@getFile']);
-		Route::post('customers/import', ['as'=>'customers.import', 'uses'=>'CustomerImportController@import']);
+		
 		Route::get('customers/export', ['as'=>'customers.export', 'uses'=>'CompaniesExportController@export']);
-		Route::post('/importcustomers/mapfields',['as'=>'customers.mapfields','uses'=>'CustomerImportController@mapfields']);
+		Route::post('/importcustomers/mapfields',['as'=>'companies.mapfields','uses'=>'CompaniesImportController@mapfields']);
 		Route::resource('customers','CustomerController');
     # Documents
     	Route::resource('documents','DocumentsController');
@@ -397,6 +399,9 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
 		Route::get('lead/branch/{bid?}',['as'=>'leads.branch','uses'=>'LeadsController@branches']);
 		Route::resource('leads','LeadsController');
 
+	# OrderImports
+
+		Route::resource('orderimport','OrderImportController');
 	# Prospect Source / LeadSource
 
 		Route::get('leadsource/{id}/announce',['as'=>'leadsource.announce','uses'=>'LeadsEmailController@announceLeads']);

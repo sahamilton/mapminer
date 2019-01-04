@@ -25,12 +25,12 @@
         
             <tr>
                 <td>
-                    {{$contact->contact}}
+                    {{$contact->fullname}}
                     <a href="{{route('contacts.edit',$contact->id)}}" >
                         <i class="fas fa-edit text-success float-right"></i>
                     </a>
                     <a 
-                        title="Delete {{$contact->contact}}"
+                        title="Delete {{$contact->fullname}}"
                           data-href="{{route('contacts.destroy',$contact->id)}}" 
                           data-toggle="modal" 
                           data-target="#confirm-delete" 

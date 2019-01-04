@@ -14,6 +14,7 @@ use App\Http\Requests\CompanyFormRequest;
 
 class CompaniesController extends BaseController {
 
+
 	public $user;
 	public $company;
 	public $locations;
@@ -30,7 +31,7 @@ class CompaniesController extends BaseController {
 		$this->searchfilter = $searchfilter;
 		$this->user = $user;
 		$this->person = $person;
-		parent::__construct($this->company);
+
 
 	}
 
@@ -44,9 +45,12 @@ class CompaniesController extends BaseController {
 	public function index()
 	{
 
-		$filtered = $this->company->isFiltered(['companies'],['vertical']);
+		//$filtered = $this->company->fileterd()-(['companies'],['vertical']);
 
-		$companies = $this->getAllCompanies($filtered)->get();
+		$companies = $this->company->withCount('locations')
+		->with('managedBy','managedBy.userdetails','industryVertical','serviceline')
+		->where('depth','=',0)->get();
+
 		$title = 'All Accounts';
 		$locationFilter = 'both';
 
@@ -92,38 +96,7 @@ class CompaniesController extends BaseController {
 
 	}
 
-	public function getAllCompanies($filtered=null)
-	{
 
-		$keys=array();
-
-		$companies = $this->company
-			->with('managedBy','managedBy.userdetails','industryVertical','serviceline','countlocations')
-			->whereHas('serviceline', function($q) {
-					    $q->whereIn('serviceline_id', $this->userServiceLines);
-
-			});
-
-		if($filtered) {
-			$keys = $this->company->getSearchKeys(['companies'],['vertical']);
-			$isNullable = $this->company->isNullable($keys,NULL);
-			$companies = $companies->whereIn('vertical',$keys);
-
-			if($isNullable == 'Yes')
-			{
-
-					$companies = $companies->orWhere(function($query) use($keys)
-					{
-						$query->whereNull('vertical');
-					});
-
-			}
-
-		}
-
-		return $companies->orderBy('companyname');
-
-	}
 	/**
 	 * Show the form for creating a new company
 	 *

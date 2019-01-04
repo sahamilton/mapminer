@@ -75,7 +75,7 @@ class AdminUsersController extends BaseController {
         $this->branch = $branch;
         $this->serviceline = $serviceline;
         $this->searchfilter = $searchfilter;
-        parent::__construct($this->company);
+        
     }
 
     /**

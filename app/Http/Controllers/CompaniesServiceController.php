@@ -21,7 +21,7 @@ class CompaniesServiceController extends BaseController
 		$this->location = $location;
 		$this->service = $service;
 		$this->limit = config('app.location_limit');
-		parent::__construct($this->company);
+		
 	}
 /*
 	public function selectServiceDetails(Request $request){
