@@ -32,7 +32,7 @@ Route::auth();
 Route::get('/home', ['as'=>'home','uses'=>'HomeController@index']);
 
 Route::group(['middleware' => 'auth'], function () {
-   	
+   	Route::get('/company/find', 'SearchController@searchCompanies');
 	#About
 		Route::get('about',['as'=>'about','uses'=>'AdminAboutController@getInfo']);
 
@@ -200,7 +200,8 @@ Route::group(['middleware' => 'auth'], function () {
 
 	# Sales Resources
 		Route::get('resources',['as'=>'resources.view','uses'=>'WatchController@getCompaniesWatched']);
-
+		# Search
+		
 
 	# Watch List
 		Route::get('watch',['as'=>'watch.index', 'uses'=>'WatchController@index']);
@@ -452,6 +453,7 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
 
 	## Search
 		Route::get('/user/find', 'SearchController@searchUsers');
+
 		
 		Route::get('/person/{person}/find',['as'=>'person.details','uses'=>'PersonSearchController@find']);
 

@@ -201,11 +201,11 @@ class CompaniesController extends BaseController {
 
 		}
 
-		if (! $company = $this->company->checkCompanyServiceLine($id,$this->userServiceLines))
+		if (! $company = $this->company->serviceLine()->get())
 		{
 			return redirect()->route('company.index');
 		}
-
+dd($company);
 		$data = $this->getSegmentCompanyInfo($company,$segment);
 		$company = $this->company->with('managedBy','industryVertical');
 		if($filtered = $this->company->isFiltered(['companies'],['vertical'])){

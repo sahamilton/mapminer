@@ -245,4 +245,11 @@ public function _import_csv($filename, $table,$fields)
 		->pluck('ServiceLine','id')
 		->toArray();
 	}
+
+	public function scopeServiceLine($query){
+		$servicelines = $this->getUserServiceLines();
+		return $query->whereHas('serviceline', function($q) use ($servicelines){
+				$q->whereIn('serviceline',$servicelines);
+		});
+	}
 }

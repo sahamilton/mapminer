@@ -1,15 +1,34 @@
 <?php
 namespace App;
+use Nicolaslopezj\Searchable\SearchableTrait;
 
 class Company extends NodeModel {
-	use Filters;
-
+	use Filters,SearchableTrait;
 	// Add your validation rules here
 	public static $rules = [
 		 'companyname' => 'required',
 		 'serviceline'=>'required',
 		 'accounttypes_id'=>'required',
 	];
+
+	 protected $searchable = [
+        /**
+         * Columns and their priority in search results.
+         * Columns with higher values are more important.
+         * Columns with equal values have equal importance.
+         *
+         * @var array
+         */
+        'columns' => [
+            
+            'companyname' => 20,
+            
+            
+           
+          
+        ],
+       
+    ];
 
 	// Don't forget to fill this array
 	protected $fillable = array('companyname', 'vertical','person_id','accounttypes_id','customer_id');
@@ -23,7 +42,7 @@ class Company extends NodeModel {
 	{
 		
 								
-			return $this->hasMany(Location::class);
+			return $this->hasMany(Address::class);
 	
 	}
 
@@ -31,7 +50,7 @@ class Company extends NodeModel {
 
 	{
 
-		return $this->hasMany(Location::class)->selectRaw('company_id,count(*) as count')->groupBy('company_id');
+		return $this->hasMany(Address::class)->selectRaw('company_id,count(*) as count')->groupBy('company_id');
 
 	}
 	
@@ -39,7 +58,7 @@ class Company extends NodeModel {
 
 	{
 
-		return $this->hasMany(Location::class)->selectRaw('company_id,count(*) as count')->groupBy('company_id')->first();
+		return $this->hasMany(Address::class)->selectRaw('company_id,count(*) as count')->groupBy('company_id')->first();
 
 	}
 
@@ -116,7 +135,7 @@ class Company extends NodeModel {
 	 */
 	public function checkCompanyServiceLine($company_id,$userServiceLines)
 	{
-		
+		dd($this->userServiceLines);
 		return $this->whereHas('serviceline', function($q) use ($userServiceLines) {
 						    $q->whereIn('serviceline_id', $userServiceLines);
 
