@@ -1,10 +1,10 @@
 @extends('site.layouts.default')
 @section('content')
-@include('partials._santa')
+
 
 @if(!auth()->check())
 
-<img class="santa" src="/assets/img/newyear.gif" width="20%" />
+
 
 
 	<div class="jumbotron" style="margin-top:30px">
