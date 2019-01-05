@@ -2,6 +2,8 @@
 
 namespace App\Jobs;
 use App\UserImport;
+use App\User;
+use App\Person;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -11,7 +13,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 class ProcessUserImport implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-
+    public $import;
     /**
      * Create a new job instance.
      *
@@ -19,7 +21,7 @@ class ProcessUserImport implements ShouldQueue
      */
     public function __construct(Userimport $import)
     {
-        //
+        $this->import = $import;
     }
 
     /**
@@ -30,33 +32,33 @@ class ProcessUserImport implements ShouldQueue
     public function handle()
     {
         // update user record
-        $user= User::findOrFail($userimport->user_id);
-        $user->email = $userimport->email;
+        $user= User::findOrFail($this->import->user_id);
+        $user->email = $this->import->email;
         $user->save();
         // update roles
-        if(is_array($roles = explode(",",[$userimport->role_id))){
+        if(is_array($roles = explode(",",[$this->import->role_id))){
                 $user->roles()->sync($roles);
             }else{
                 $user->roles()->sync([]);
             }
 
         // update servicelines
-        if(is_array($servicelines = ",",$userimport->serviceline)){
-            $user->serviceline()->sync(explode(",",$userimport->serviceline));
+        if(is_array($servicelines = ",",$this->import->serviceline)){
+            $user->serviceline()->sync(explode(",",$this->import->serviceline));
         }else{
             $user->serviceline()->sync([]));
         }
         // update person record
-        $person = Person::findOrFail($userimport->person_id);
-        $person->update($userimport->toArray());
+        $person = Person::findOrFail($this->import->person_id);
+        $person->update($this->import->toArray());
         // update branch assignments  //
         //Not sure we want to do this until we get a good list
-       /* if(is_array($branches = explode(",",$userimport->branches)){
+       /* if(is_array($branches = explode(",",$this->import->branches)){
             $person->branchesServiced()->sync($branches));
         }else{
             $person->branchesServiced()->sync([]));
         }*/
-        $userimport->imported = 1;
-        $userimport->save();
+        $this->import->imported = 1;
+        $this->import->save();
     }
 }

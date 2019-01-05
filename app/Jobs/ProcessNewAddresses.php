@@ -2,27 +2,26 @@
 
 namespace App\Jobs;
 
+use App\Address;
+use App\OrderImport;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use App\User;
 
-class updateUserRoles implements ShouldQueue
+class ProcessNewAddresses implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-    public $users;
-    public $newuser;
+    public $import;
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(array $newuser, User $users)
+    public function __construct(OrderImport $import)
     {
-        $this->users = $users;
-        $this->newuser = $newuser;
+        $this->import = $import;
     }
 
     /**
@@ -32,11 +31,12 @@ class updateUserRoles implements ShouldQueue
      */
     public function handle()
     {
-        foreach ($this->users as $user){
-
-            // send to queue
-            $roles = explode(",",$this->newuser[$user->id]);
-            $user->roles()->sync($roles);
-        }
+            $data = $this->import->toArray();
+            
+            $data['addressable_type'] = 'customer';
+            
+            $address = Address::create($data);
+        
+            return $this->import->update(['address_id'=>$address->id]);
     }
 }

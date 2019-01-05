@@ -8,15 +8,7 @@
 	<nav>
 	  <div class="nav nav-tabs" id="nav-tab" role="tablist">
 		  <a class="nav-link nav-item active" 
-		      id="create-tab" 
-		      data-toggle="tab" 
-		      href="#create" 
-		      role="tab" 
-		      aria-controls="create" 
-		      aria-selected="true">
-		    <strong>Companies to Create ({{$data['missing'] ? count($data['missing']) : 0}})</strong>
-		  </a>
-		<a class="nav-link nav-item" 
+		      
 		      id="matching-tab" 
 		      data-toggle="tab" 
 		      href="#matching" 
@@ -35,19 +27,13 @@
 		      aria-selected="true">
 		    <strong>Matching Companies ({{count($data['companymatch'])}})</strong>
 		  </a>
-		  
-		  
-	    
-
-
+	
 		</div>
 	</nav>
 
 	<div class="tab-content" id="nav-tabContent">
-	    <div id="create" class="tab-pane show active">
-	    	 @include('orders.import.partials._newcompanies')
-	    </div>
-	    <div id="matching" class="tab-pane show ">
+	    
+	    <div id="matching" class="tab-pane show active">
 	     	@include('orders.import.partials._matchingaddresses')
 	    </div>
 	   <div id="matchco" class="tab-pane show ">

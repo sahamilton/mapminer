@@ -33,11 +33,7 @@ class OrderImportController extends Controller
 
      
         switch(request('type')){
-            case'companies';
-                $this->import->createMissingCompanies($request);
-
-            break;
-
+            
             case 'addresses';
                 $this->import->matchAddresses($request);
             break;

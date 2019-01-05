@@ -4,6 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use App\Jobs\ProcessOrderImport;
+use App\Jobs\ProcessNewCompanies;
+use App\Jobs\ProcessNewAddresses;
 class OrderImport extends Model
 {
     public $table = 'customerimport';
@@ -14,7 +17,7 @@ class OrderImport extends Model
         // how do we deduplicate?
     }
     public function getImportUpdates(){
-    	$data['missing'] = array();//$this->missingCompanies();
+    	
     	$data['matching'] = $this->getMatchingAddresses();
     	$data['companymatch'] = $this->getMatchingCompanies();
 
@@ -63,32 +66,26 @@ class OrderImport extends Model
 	->select('id','businessname','lat','lng','street','address2','city','state','zip','customer_id','company_id')
 	        ->distinct()
 	        ->get();
-	       
+	   
         foreach ($newAddresses as $newaddress){
-            $data = $newaddress->toArray();
-            
-            $data['addressable_type'] = 'customer';
-            
-            $address = Address::create($data);
-        
-            $newaddress->update(['address_id'=>$address->id]);
+                ProcessNewAddresses::dispatch($newaddress);
            
-            }
+        }
         
     }
 
     public function storeOrders(){
-        $orders = $this->whereNotNull('address_id')->select('address_id','branch_id','orders')->get();
-
+        $orders = $this->whereNotNull('address_id')
+                
+                ->get();
+       
         foreach ($orders as $order){
 
-            $address = Address::findOrFail($order->address_id);
+            ProcessOrderImport::dispatch($order);
            
-            $data = ['period'=>'201811','orders'=>$order->orders];         
-         
-            $address->orders()->attach($order->branch_id,$data);
             
         }
+
     }
 
     public function missingCompanies(){
@@ -99,20 +96,21 @@ class OrderImport extends Model
         return false;
     }
 
-     public function matchedLocations(){
+    /*public function matchedLocations(){
         if ($missing = $this->getLocationsToCreate()){
 
             
         }
         return false;
-    }
+    }*/
 
     public function getCompaniesToCreate(){
 
     	return $this->leftJoin('companies', function($join) {
-      			$join->on('customerimport.id', '=', 'companies.customer_id');
+      			$join->on('customerimport.customer_id', '=', 'companies.customer_id');
 		    })
 		    ->whereNull('companies.customer_id')
+         
 		    ->select("customerimport.*")->get();
 
 
@@ -125,16 +123,9 @@ class OrderImport extends Model
     }
     public function createMissingCompanies(){
     		$newcompany = $this->getCompaniesToCreate();
-
+           
         	foreach ($newcompany as $newco){
-        	   
-        		$data = array();
-        		$data['companyname'] = $newco->businessname;
-        		$data['customer_id'] = $newco->customer_id;
-        		$data['accounttypes_id'] = $newco->accounttypes_id;
-        	
-        		$company = Company::create($data);
-        		$newco->update(['company_id'=>$company->id]);
+        	   ProcessNewCompanies::dispatch($newco);
         		
         	}
 
@@ -142,9 +133,9 @@ class OrderImport extends Model
 		return true;
     }
 
-    public function updateMatchedLocations(Request $request){
+   /* public function updateMatchedLocations(Request $request){
         // update import with location ids
 
-    }
+    }*/
 
 }
