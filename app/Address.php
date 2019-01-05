@@ -9,9 +9,9 @@ class Address extends Model
     use Geocode,Filters;
     public $table = 'addresses';
 
-    public $timestamps = false;
+    public $timestamps = true;
     
-    public $fillable = ['addressable_id','addressable_type','street','address2','city','state','zip','lat','businessname','lng','customer_id'];
+    public $fillable = ['addressable_id','addressable_type','street','address2','city','state','zip','lat','businessname','lng','company_id'];
     
     public $getStatusOptions =  [
         1=>'Prospect data is completely inaccurate. No project or project completed.',
@@ -20,12 +20,15 @@ class Address extends Model
         4=>'Prospect data is accurate and there is a possibility of sales / service.',
         5=>'Prospect data is accurate and there is a definite opportunity for sales / service'
       ];
-    public $addressType = ['location'=>'National Account Location','project'=>'Construction Project', 'lead'=>'Web Lead'];
+    public $addressType = ['location'=>'National Account Location','project'=>'Construction Project', 'lead'=>'Web Lead','customer'=>'Customer'];
     public function lead(){
     	return $this->belongsTo(Lead::class,'addressable_id','id');
     }
     public function location(){
     	return $this->belongsTo(Location::class,'addressable_id','id');
+    }
+    public function customer(){
+        return $this->belongsTo(Customer::class,'addressable_id','id');
     }
     public function project(){
     	return $this->belongsTo(Project::class,'addressable_id','id');

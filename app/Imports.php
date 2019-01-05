@@ -115,7 +115,8 @@ class Imports extends Model
 		private function copyTempToBaseTable(){
 			$this->fields = str_replace('@ignore,','',$this->fields);
 			// Copy over to base table
-
+			$query ="INSERT IGNORE INTO `".$this->table."` (".$this->fields.") SELECT ".$this->fields." FROM `".$this->temptable."`";
+		
 			return $this->executeQuery("INSERT IGNORE INTO `".$this->table."` (".$this->fields.") SELECT ".$this->fields." FROM `".$this->temptable."`");
 		}
 		// Drop the temp table

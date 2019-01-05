@@ -26,6 +26,7 @@ Tracked as <a href="{{route('opportunity.index')}}">{{$location->opportunities->
 </form>
 @endcan
 @endif
+
 <p>Location Source: {{$location->addressType[$location->addressable_type]}}</p>
 @include('maps.partials._form')
 <nav>

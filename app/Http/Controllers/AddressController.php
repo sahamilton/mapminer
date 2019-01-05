@@ -68,7 +68,7 @@ class AddressController extends Controller
         $rankingstatuses = $this->address->getStatusOptions;
         $people = $this->person->salesReps()->PrimaryRole()->nearby($location,100,5)->get();
         $mybranches = $this->person->myBranches();
-
+        
         return response()->view('addresses.show',compact('location','branches','rankingstatuses','people','mybranches'));
     }
 

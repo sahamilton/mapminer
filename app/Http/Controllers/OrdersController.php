@@ -1,12 +1,19 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use App\Orders;
+use App\Branch;
 use Illuminate\Http\Request;
 
 class OrdersController extends Controller
 {
+   public $orders;
+   public function __construct(Orders $order, Branch $branch){
+
+        $this->orders = $order;
+        $this->branch = $branch;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -14,9 +21,9 @@ class OrdersController extends Controller
      */
     public function index()
     {
-        //
+        $orders = $this->orders->periodOrders();
+        return response()->view('orders.index',compact('orders'));
     }
-
     /**
      * Show the form for creating a new resource.
      *
@@ -41,21 +48,24 @@ class OrdersController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Orders  $orders
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Orders $orders)
+    public function show($id)
     {
-        //
+        $orders = $this->orders->where('branch_id','=',$id)->with('addresses','addresses.company')->branchOrders($id)->get();
+        $branch = $this->branch->with('manager')->findOrFail($id);
+        
+        return response()->view('orders.show',compact('branch','orders'));
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Orders  $orders
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Orders $orders)
+    public function edit($id)
     {
         //
     }
@@ -64,10 +74,10 @@ class OrdersController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Orders  $orders
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Orders $orders)
+    public function update(Request $request, $id)
     {
         //
     }
@@ -75,10 +85,10 @@ class OrdersController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Orders  $orders
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Orders $orders)
+    public function destroy($id)
     {
         //
     }

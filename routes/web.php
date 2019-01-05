@@ -125,7 +125,7 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('api/address/{distance}/{latLng}',['as'=>'addressmap','uses'=>'AddressController@findLocations']);
 
 	#News
-		Route::resource('news', 'NewsController',  ['only' => ['index', 'show']]);
+		Route::resource('news', 'NewsController',  ['' => ['index', 'show']]);
 		Route::get('currentnews',['as'=>'currentnews','uses'=>'NewsController@currentNews']);
 		//Route::get('news', ['as'=>'news.index', 'uses'=>'NewsController@index']);
 		//Route::get('news/{slug}', ['as'=>'news.show', 'uses'=>'NewsController@show']);
@@ -137,7 +137,8 @@ Route::group(['middleware' => 'auth'], function () {
 
 	#Opportunity
 		Route::resource('opportunity','OpportunityController');
-
+	#Orders
+		Route::resource('orders','OrdersController');
 
 	#People
 
@@ -302,6 +303,10 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
 		Route::get('companies/download', ['as'=>'allcompanies.export','uses'=>'CompaniesController@exportAccounts']);
 		
 		Route::get('company/{companyId}/export',['as'=>'company.export','uses'=>'WatchController@companyexport']);
+		
+	# Order Import
+		Route::get('orderimport/flush',['as'=>'orderimport.flush','uses'=>'OrderImportController@flush']);
+		Route::get('orderimport/finalize',['as'=>'orderimport.finalize','uses'=>'OrderImportController@finalize']);
 
 		Route::resource('orderimport','CompaniesImportController');
 

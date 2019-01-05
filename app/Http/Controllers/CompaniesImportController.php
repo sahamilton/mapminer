@@ -63,14 +63,14 @@ class CompaniesImportController extends ImportController
             return redirect()->route('companies.importfile')->withError(['You have to map all required fields.  Missing: '. implode(' , ',$missing)]);
        }
         $this->import->setFields($data);
-
+   
 
         if($this->import->import()) {
 
             //map to see if any are already in existance
             //then copy new ones to addresses.
             // copy $$ to companyorders period
-           return redirect()->route('companiesimport.index');
+           return redirect()->route('orderimport.index');
 
 
         }
