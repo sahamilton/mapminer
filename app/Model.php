@@ -228,6 +228,7 @@ class Model extends \Eloquent {
 	}
 	public function scopeServiceLine($query){
 		$servicelines = $this->getUserServiceLines();
+		dd('model',$servicelines);
 		return $query->whereHas('serviceline', function($q) use ($servicelines){
 				$q->whereIn('serviceline',$servicelines);
 		});

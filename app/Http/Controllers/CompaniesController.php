@@ -5,6 +5,7 @@ use App\State;
 use App\Person;
 use App\Company;
 use App\Location;
+use App\Address;
 use Excel;
 use App\Pagination;
 use App\SearchFilter;
@@ -17,6 +18,7 @@ class CompaniesController extends BaseController {
 
 	public $user;
 	public $company;
+	public $address;
 	public $locations;
 	public $searchfilter;
 	public $person;
@@ -24,13 +26,14 @@ class CompaniesController extends BaseController {
 	public $NAMRole =['4'];
 
 
-	public function __construct(Company $company, Location $location, SearchFilter $searchfilter,User $user,Person $person) {
+	public function __construct(Company $company, Address $address, Location $location, SearchFilter $searchfilter,User $user,Person $person) {
 
 		$this->company = $company;
 		$this->locations = $location;
 		$this->searchfilter = $searchfilter;
 		$this->user = $user;
 		$this->person = $person;
+		$this->address = $address;
 
 
 	}
@@ -193,68 +196,50 @@ class CompaniesController extends BaseController {
 	 * @return View
 	 */
 
-	public function show($id,$segment=null)
+	public function show($company,$segment=null)
 	{
-
-		if(is_object($id)){
-			$id = $id->id;
-
-		}
-
-		if (! $company = $this->company->serviceLine()->get())
-		{
-			return redirect()->route('company.index');
-		}
-dd($company);
+		
+	
 		$data = $this->getSegmentCompanyInfo($company,$segment);
-		$company = $this->company->with('managedBy','industryVertical');
-		if($filtered = $this->company->isFiltered(['companies'],['vertical'])){
-				$keys = $this->company->getSearchKeys(['companies'],['vertical']);
+		$parent = $company;
+		$companies = $company->getDescendantsAndSelf();
+		//dd($allcompanies->first()->load('locations'));
 
-					$company = $company
-					->whereHas('industryVertical',function($q) use($keys){
-						$q->whereIn('id',$keys);
-					});
+		$companies->transform(function($company){
+			return $company->load('locations','managedBy','industryVertical');
+		});
 
-				}
-
-		$company = $company->find($id);
-		/*dd($company);
-		if(count($company)!=1){
-				return redirect()->route('company.index');
-		}*/
-		// get company locations
-
-		$locations = $this->getCompanyLocations($id,$segment,$company);
-
-
-		$states = $this->getStatesInArray($locations);
+		
+		
+		//$states = $this->getStatesInArray($company->locations);
 		$segments = $this->getCompanySegments($company);
 		$filters = $this->searchfilter->vertical();
 		$limited = null;
 		$distance = null;
-		$count = count($locations);
+		/*$count = count($company->locations);
 
 		// used when there are too many locations to show in list
 		if( $count > $this->limit)
 		{
-		$location = $this->locations->getMyPosition();
-		$distance = 1000;
-		$locations = $this->locations
-			->where('company_id','=',$company->id)
-			->nearby($location,$distance,'10')
-			->limit($this->limit)
-			->get();
-			$limited = count($locations);
+			$location = $this->locations->getMyPosition();
+			$distance = 1000;
+			$locations = $this->address
+				->where('company_id','=',$company->id)
+				->nearby($location,$distance,'10')
+				->limit($this->limit)
+				->get();
+				$limited = count($locations);
 
-		
-		}
+			
+			}else{
+				$locations = $company->locations;
+			}
 		
 		$data['type']='company';
 		$mywatchlist = $this->locations->getWatchList();
+*/
 
-
-		return response()->view('companies.show', compact('data','company','locations','count','limited','mywatchlist','states','filtered','filters','segments','distance'));
+		return response()->view('companies.show', compact('data','company','mywatchlist','filtered','filters','segments'));
 	}
 
 

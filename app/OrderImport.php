@@ -11,7 +11,7 @@ class OrderImport extends Model
 {
     public $table = 'customerimport';
 
-    public $fillable = ['account_id','company_id','address_id'];
+    public $fillable = ['address_id','account_id','company_id','address_id'];
      public function addAddressContacts(){
         // no idea how to do this
         // how do we deduplicate?
@@ -27,7 +27,7 @@ class OrderImport extends Model
 
     private function getMatchingCompanies(){
 
-    return \DB::select(\DB::raw("SELECT customerimport.customer_id, customerimport.id as importid, customerimport.businessname,customerimport.street,customerimport.city,companies.id as existingid, companies.companyname FROM customerimport,companies where  position(businessname in companyname) and customerimport.company_id is null"));
+    return \DB::select(\DB::raw("SELECT customerimport.customer_id, customerimport.id as importid, customerimport.businessname,customerimport.street,customerimport.city,companies.id as existingid, companies.companyname FROM customerimport,companies where (position(companyname in businessname) or companies.customer_id = customerimport.customer_id) and customerimport.company_id is null"));
 
     }
 
@@ -36,15 +36,22 @@ class OrderImport extends Model
     	if (request()->has('match')){
 	    	foreach (request('match') as $key=>$value){
 	    		$import = $this->findOrFail($key);
-
-	    		$import->update(['company_id'=>$value]);
-	    		
-	    		if($import->customer_id){
-
-	    			$company = Company::findOrFail($value);
-	    			
-	    			$company->update(['customer_id'=>$import->customer_id]);
-	    		}
+                if(! $company = Company::where('customer_id','=',$import->customer_id)->first()){
+                    $company = Company::findOrFail($value);
+                }
+                
+                if($company->customer_id and $company->customer_id != $import->customer_id){
+                    
+                    $data=array();
+                    $data['companyname'] = $import->businessname;
+                    $data['parent_id'] = $value;
+                    $data['accounttypes_id'] = 3;
+                    
+                    $company = Company::create($data);
+                }
+	    		$import->update(['company_id'=>$company->id]);
+	    		$company->update(['customer_id'=>$import->customer_id]);
+	    	
 	    	}
 	    }
 	    return true;
@@ -63,7 +70,7 @@ class OrderImport extends Model
 
     public function addNewAddresses(){
         $newAddresses = $this->whereNull('address_id')
-	->select('id','businessname','lat','lng','street','address2','city','state','zip','customer_id','company_id')
+	       ->select('id','businessname','lat','lng','street','address2','city','state','zip','customer_id','company_id')
 	        ->distinct()
 	        ->get();
 	   
@@ -123,7 +130,7 @@ class OrderImport extends Model
     }
     public function createMissingCompanies(){
     		$newcompany = $this->getCompaniesToCreate();
-           
+          
         	foreach ($newcompany as $newco){
         	   ProcessNewCompanies::dispatch($newco);
         		
@@ -133,6 +140,7 @@ class OrderImport extends Model
 		return true;
     }
 
+    
    /* public function updateMatchedLocations(Request $request){
         // update import with location ids
 
