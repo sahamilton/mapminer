@@ -33,7 +33,10 @@ class Address extends Model
     public function project(){
     	return $this->belongsTo(Project::class,'addressable_id','id');
     }
+    public function watchedBy(){
 
+        return $this->belongsToMany(User::class,'location_user','address_id','user_id')->withPivot('created_at','updated_at');
+    }
     public function contacts(){
     	return $this->hasMany(Contact::class,'address_id', 'id');
     }

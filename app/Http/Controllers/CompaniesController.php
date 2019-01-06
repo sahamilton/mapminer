@@ -51,9 +51,9 @@ class CompaniesController extends BaseController {
 		//$filtered = $this->company->fileterd()-(['companies'],['vertical']);
 
 		$companies = $this->company->withCount('locations')
-		->with('managedBy','managedBy.userdetails','industryVertical','serviceline')
-		->whereNull('parent_id')
-		->get();
+			->with('managedBy','managedBy.userdetails','industryVertical','serviceline')
+			->whereNull('parent_id')
+			->get();
 
 		$title = 'All Accounts';
 		$locationFilter = 'both';

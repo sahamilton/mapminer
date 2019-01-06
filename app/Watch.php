@@ -17,7 +17,7 @@ class Watch extends Model {
 	
 	public function watching() 
 	{
-		return $this->hasMany(Location::class,'id','location_id');	
+		return $this->hasMany(Address::class,'id','address_id');	
 	}
 	
 	public function watchnotes() 

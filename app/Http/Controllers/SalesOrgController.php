@@ -57,7 +57,7 @@ class SalesOrgController extends BaseController {
 			}
 			
 			// if leaf
-		
+			
 			
 			if( $salesperson->isLeaf())
 			{

@@ -79,6 +79,16 @@ Tracked as <a href="{{route('opportunity.index')}}">{{$location->opportunities->
       aria-selected="false">
         <strong>Branches</strong>
   </a>
+  <a class="nav-item nav-link"  
+        data-toggle="tab" 
+        href="#watchers"
+        id="watcher-tab"
+        role="tab"
+        aria-controls="watchers"
+        aria-selected="false">
+
+    <strong>Location Watchers ({{$location->watchedBy->count()}})</strong>
+  </a>
     
 
 
@@ -101,6 +111,9 @@ Tracked as <a href="{{route('opportunity.index')}}">{{$location->opportunities->
     </div>
     <div id="branch" class="tab-pane fade">
      @include('addresses.partials._tabbranches')
+    </div>
+    <div id="watchers" class="tab-pane fade">
+     @include('addresses.partials._tabwatcher')
     </div>
    
 

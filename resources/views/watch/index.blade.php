@@ -30,7 +30,7 @@
 <tr>
 		<td>
 			<a href="{{route(
-'locations.show'
+'address.show'
 ,$row['watching'][0]->id)}}">
 			{{$row['watching'][0]->businessname}}</a>
 		</td>
