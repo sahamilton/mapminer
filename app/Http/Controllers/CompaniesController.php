@@ -52,7 +52,8 @@ class CompaniesController extends BaseController {
 
 		$companies = $this->company->withCount('locations')
 		->with('managedBy','managedBy.userdetails','industryVertical','serviceline')
-		->where('depth','=',0)->get();
+		->whereNull('parent_id')
+		->get();
 
 		$title = 'All Accounts';
 		$locationFilter = 'both';
@@ -199,47 +200,29 @@ class CompaniesController extends BaseController {
 	public function show($company,$segment=null)
 	{
 		
-	
-		$data = $this->getSegmentCompanyInfo($company,$segment);
-		$parent = $company;
-		$companies = $company->getDescendantsAndSelf();
-		//dd($allcompanies->first()->load('locations'));
-
-		$companies->transform(function($company){
-			return $company->load('locations','managedBy','industryVertical');
-		});
-
+		$data['company'] = $company->load('locations','managedBy','industryVertical');
 		
-		
+		//dd($data);
+		if(! $data['company']->isLeaf()){
+			$data['related'] = $data['company']->getDescendants();
+		}else{
+			$data['related']=false;
+		}
+		$data['states'] = $this->getStatesInArray($data['company']->locations);
 		//$states = $this->getStatesInArray($company->locations);
-		$segments = $this->getCompanySegments($company);
-		$filters = $this->searchfilter->vertical();
-		$limited = null;
-		$distance = null;
-		/*$count = count($company->locations);
-
-		// used when there are too many locations to show in list
-		if( $count > $this->limit)
-		{
-			$location = $this->locations->getMyPosition();
-			$distance = 1000;
-			$locations = $this->address
-				->where('company_id','=',$company->id)
-				->nearby($location,$distance,'10')
-				->limit($this->limit)
-				->get();
-				$limited = count($locations);
-
-			
-			}else{
-				$locations = $company->locations;
-			}
+		$data['segments'] = $this->getCompanySegments($company);
+		$data['filters'] = $this->searchfilter->vertical();
+		$data['mylocation'] = $this->locations->getMyPosition();
+		$data['count'] = $data['company']->locations->count();
+		$data = $this->company->limitLocations($data);
 		
+		$data['segment'] = $this->getSegmentCompanyInfo($company,$segment);
 		$data['type']='company';
-		$mywatchlist = $this->locations->getWatchList();
-*/
+		$data['mywatchlist'] = $this->locations->getWatchList();
+		
+	
+		return response()->view('companies.show', compact('data'));
 
-		return response()->view('companies.show', compact('data','company','mywatchlist','filtered','filters','segments'));
 	}
 
 
@@ -278,7 +261,7 @@ class CompaniesController extends BaseController {
 
 	private function getStatesInArray($locations)
 	{
-		 return$locations->unique('state')->pluck('state')->toArray();
+		 return $locations->unique('state')->sortBy('state')->pluck('state')->toArray();
 
 	}
 	/*
@@ -444,12 +427,12 @@ class CompaniesController extends BaseController {
 	{
 
 		if(! $segment){
-			$data['segment']='All';
+			return 'All';
 		}else{
-			$data['segment']  = $this->searchfilter->select('filter')->findOrFail($segment)->filter;
+			return $this->searchfilter->select('filter')->findOrFail($segment)->filter;
 		}
 
-		return $data;
+
 
 	}
 

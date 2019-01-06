@@ -10,4 +10,5 @@ img.santa {
       transform: translateX(calc(150vw + 300px));
     }
 }
-</style>	
+</style>
+<img class="santa" src="/assets/img/newyear.gif" width="20%" />	

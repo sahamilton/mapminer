@@ -10,6 +10,7 @@ class Company extends NodeModel {
 		 'serviceline'=>'required',
 		 'accounttypes_id'=>'required',
 	];
+	public $limit = 2000;
 
 	 protected $searchable = [
         /**
@@ -172,6 +173,22 @@ class Company extends NodeModel {
 
 		return $companies->orderBy('companyname');
 
+	}
+
+	public function limitLocations($data){
+		if($data['company']->locations->count() > $this->limit){
+
+			$locations = Location::where('company_id','=',$data['company']->id)->nearby($data['mylocation'],'200',$this->limit)->get();
+	
+			$data['company']->setRelation('locations',$locations);
+			$data['limited']=$data['company']->locations->count();
+			
+		}else{
+			$data['limited']= false;
+		}
+		
+		$data['distance'] = 200;
+		return $data;
 	}
 	
 	
