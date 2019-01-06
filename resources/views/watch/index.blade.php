@@ -29,9 +29,7 @@
 
 <tr>
 		<td>
-			<a href="{{route(
-'address.show'
-,$row['watching'][0]->id)}}">
+			<a href="{{route('address.show',$row['watching'][0]->id)}}">
 			{{$row['watching'][0]->businessname}}</a>
 		</td>
 		<td>

@@ -23,6 +23,7 @@ class Company extends NodeModel {
         'columns' => [
             
             'companyname' => 20,
+            'customer_id' =>20.
             
             
            
@@ -41,10 +42,13 @@ class Company extends NodeModel {
 	
 	public function locations() 
 	{
-		
 								
 			return $this->hasMany(Address::class);
 	
+	}
+
+	public function stateLocations($state){
+			return $this->hasMany(Address::class)->where('state','=',$state);
 	}
 
 	public function countlocations()
@@ -191,5 +195,7 @@ class Company extends NodeModel {
 		return $data;
 	}
 	
-	
+	public function parentAccounts(){
+		return $this->ancestors();
+	}
 }

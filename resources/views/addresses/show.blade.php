@@ -89,7 +89,19 @@ Tracked as <a href="{{route('opportunity.index')}}">{{$location->opportunities->
 
     <strong>Location Watchers ({{$location->watchedBy->count()}})</strong>
   </a>
-    
+    @if($location->addressable_type == 'customer')
+  <a class="nav-item nav-link"  
+        data-toggle="tab" 
+        href="#business"
+        id="business-tab"
+        role="tab"
+        aria-controls="business"
+        aria-selected="false">
+
+    <strong>Recent Business</strong>
+  </a>
+
+    @endif
 
 
 </div>
@@ -115,7 +127,9 @@ Tracked as <a href="{{route('opportunity.index')}}">{{$location->opportunities->
     <div id="watchers" class="tab-pane fade">
      @include('addresses.partials._tabwatcher')
     </div>
-   
+   <div id="business" class="tab-pane fade">
+     @include('addresses.partials._taborders')
+    </div>
 
   </div>
 

@@ -197,30 +197,10 @@ class CompaniesController extends BaseController {
 	 * @return View
 	 */
 
-	public function show($company,$segment=null)
+	public function show(Request $request, $company)
 	{
-		
-		$data['company'] = $company->load('locations','managedBy','industryVertical');
-		
-		//dd($data);
-		if(! $data['company']->isLeaf()){
-			$data['related'] = $data['company']->getDescendants();
-		}else{
-			$data['related']=false;
-		}
-		$data['states'] = $this->getStatesInArray($data['company']->locations);
-		//$states = $this->getStatesInArray($company->locations);
-		$data['segments'] = $this->getCompanySegments($company);
-		$data['filters'] = $this->searchfilter->vertical();
-		$data['mylocation'] = $this->locations->getMyPosition();
-		$data['count'] = $data['company']->locations->count();
-		$data = $this->company->limitLocations($data);
-		
-		$data['segment'] = $this->getSegmentCompanyInfo($company,$segment);
-		$data['type']='company';
-		$data['mywatchlist'] = $this->locations->getWatchList();
-		
-	
+		$data['state']=null;		
+		$data = $this->getCompanyViewData($company,$data);
 		return response()->view('companies.show', compact('data'));
 
 	}
@@ -268,12 +248,12 @@ class CompaniesController extends BaseController {
 	// Get all states that the company has locations in
 	 */
 
-	private function getCompanyStates($company,$data,$filtered) {
+	private function getCompanyStates($data) {
 
 		$states = $this->locations->select('state')->distinct()
-				->where('company_id','=',$company->id);
+				->where('company_id','=',$data['company']->id);
 
-				if($filtered && count($data['keys'])>0){
+				if($data['filtered'] && count($data['keys'])>0){
 
 					$states=$states->whereIn('segment', $data['keys'])
 					->orWhere(function($query) use($data){
@@ -282,8 +262,9 @@ class CompaniesController extends BaseController {
 					});
 
 				}
-		return $states->orderBy('state')
+		$data['states']= $states->orderBy('state')
 				->pluck('state');
+				return $data;
 
 
 	}
@@ -325,38 +306,45 @@ class CompaniesController extends BaseController {
 	 */
 
 
-	public function stateselect(Request $request,$id=null,$state=null)
+	public function stateselect(Request $request)
 	{
+		
+		$company = $this->company->findOrFail(request('id'));
+		$data['state']= request('state');
+		$data = $this->getCompanyViewData($company,$data);
+		
+		return response()->view('companies.show', compact('data'));
+	}
 
-		// The method can be used by either post or get routes
 
-		if(request()->filled('id') && request()->filled('state')){
-					$id = request('id');
-					$state = urldecode(request('state'));
+	private function getCompanyViewData($company,$data){
 
+		$data['company'] = $company->load('locations','managedBy','industryVertical');
+		$data['states'] = $this->getStatesInArray($data['company']->locations);
 
+		if($data['state']){
+			$data['company'] = $this->company->with(['locations' => function($query) use ($data) {
+    			$query->where('state', $data['state']);
+ 			}])
+ 			->with('managedBy','industryVertical')->findOrFail($company->id);
 		}
-		// Check if user can view company based on user serviceline
-		// association.
-		if (! $data['company'] =  $this->company->checkCompanyServiceLine($id,$this->userServiceLines))
-		{
-			return redirect()->route('company.index');
+
+		if(! $data['company']->isLeaf()){
+			$data['related'] = $data['company']->getDescendants();
+		}else{
+			$data['related']=false;
 		}
-
-		$data = $this->getStateCompanyInfo($data,$state);
-		$segments=$this->getCompanySegments($data['company']);
-		$filtered = $this->company->isFiltered(['companies'],['vertical']);
-
-		if($filtered){
-			$data['keys'] = $this->locations->getSearchKeys(['locations'],['segment','businesstype']);
-		}
-		$locations = $this->getStateLocations($data['company'],$state,$data,$filtered);
-		$mywatchlist = $this->locations->getWatchList();
-
-		$states= $this->getCompanyStates($data['company'],$data,$filtered);
-
-		$filters= SearchFilter::all()->pluck('filter','id');
-		return response()->view('companies.state', compact('data','filtered','locations','mywatchlist','states','filtered','filters','segments'));
+		$data['parent'] = $company->getAncestors();
+		$data['segments'] = $this->getCompanySegments($data['company']);
+		$data['filters'] = $this->searchfilter->vertical();
+		$data['mylocation'] = $this->locations->getMyPosition();
+		$data['count'] = $data['company']->locations->count();
+		$data = $this->company->limitLocations($data);
+		$data['segment']='All';
+		//$data['segment'] = $this->getSegmentCompanyInfo($data['company'],$segment);
+		
+		$data['mywatchlist'] = $this->locations->getWatchList();
+		return $data;
 	}
 
 	/**
@@ -391,7 +379,7 @@ class CompaniesController extends BaseController {
 	 * @param text $state
 	 * @return array $data
 	*/
-	private function getStateCompanyInfo($data,$state)
+	private function getStateCompanyInfo($state)
 	{
 
 		$state = trim($state);

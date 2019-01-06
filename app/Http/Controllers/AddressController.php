@@ -62,7 +62,7 @@ class AddressController extends Controller
     public function show($address)
     {
        
-        $location = $address->load($address->addressable_type,'contacts','activities','company','opportunities','industryVertical',$address->addressable_type . '.relatedNotes','watchedBy','watchedBy.person');
+        $location = $address->load($address->addressable_type,'contacts','activities','company','opportunities','industryVertical',$address->addressable_type . '.relatedNotes','orders','watchedBy','watchedBy.person');
        
         $branches = $this->branch->nearby($location,100,5)->get();
         $rankingstatuses = $this->address->getStatusOptions;

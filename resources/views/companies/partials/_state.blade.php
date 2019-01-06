@@ -10,7 +10,7 @@
            @foreach ($data['states'] as $state)
 
            @if(isset($data['statecode']) && $data['statecode'] == $state)
-				<option selected value="{{$state}}">{{$state}}</option>
+				  <option selected value="{{$state}}">{{$state}}</option>
            @else
            		<option value="{{$state}}">{{$state}}</option>
            @endif
@@ -18,8 +18,9 @@
            @endforeach
         </select>
 
-         <button type="submit"  class= "btn btn-default btn-xs"><i class="fas fa-search" aria-hidden="true"></i> Filter!</button>
-<input type="hidden" name='id' value="{{ isset($data['company']->id) ? $data['company']->id : $company[0]->id }}" />
+         <button type="submit"  class= "btn btn-default btn-xs">
+          <i class="fas fa-search" aria-hidden="true"></i> Filter!</button>
+<input type="hidden" name='id' value="{{ isset($data['company']->id) ? $data['company']->id : $data['company'][0]->id }}" />
 </form>
 		
 		<script>

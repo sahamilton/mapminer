@@ -33,12 +33,11 @@ class OpportunityController extends Controller
      */
     public function index()
     {
-       
-       if($this->person->myTeam()->count() >1){
+       if(! auth()->user()->hasRole('Branch Manager') && $this->person->myTeam()->count() >1){
             $branches = $this->branch->with('opportunities','manager')
             ->whereIn('id',$this->person->myBranches())
             ->get();
-            
+           
             return response()->view('opportunities.mgrindex',compact('branches'));
         } else{
        $activityTypes = $this->activity->activityTypes;
@@ -49,7 +48,7 @@ class OpportunityController extends Controller
         ->orderBy('branch_id')
         ->get();
         // is this a manager ?
-
+       
         return response()->view('opportunities.index',compact('opportunities','activityTypes'));
         
         }
