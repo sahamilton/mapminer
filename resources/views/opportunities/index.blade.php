@@ -18,6 +18,7 @@
     </thead>
       <tbody>
         @foreach ($opportunities as $opportunity)
+      
         <tr>
           <td>{{$opportunity->created_at ? $opportunity->created_at->format('Y-m-d') : ''}}</td>
           <td>{{$opportunity->daysOpen()}}</td>

@@ -200,7 +200,7 @@ class CompaniesController extends BaseController {
 	public function show(Request $request, $company)
 	{
 		$data['state']=null;		
-		$data = $this->getCompanyViewData($company,$data);
+		$data = $this->getCompanyViewData($company,$data5);
 		return response()->view('companies.show', compact('data'));
 
 	}

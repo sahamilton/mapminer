@@ -89,6 +89,8 @@
 							<li>Reports To:
 
 							<a href="{{route('salesorg',$user->person->reportsTo->id)}}">
+								{{$user->person->reportsTo->fullName()}}
+							</a>
 						@endif
 						@if($user->person->directReports->count()>0)
 							<li>Team:</li>
