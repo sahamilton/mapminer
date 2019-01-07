@@ -44,6 +44,7 @@
                   type="text" 
                   name="followup_date"  
                   id="todatepicker"  
+                  autocomplete="off"
                   value="{{  old('followup_date') }}"/>
               <span class="help-block">
                   <strong>{{$errors->has('activitydate') ? $errors->first('activitydate')  : ''}}</strong>

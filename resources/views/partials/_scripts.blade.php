@@ -22,6 +22,7 @@ $(document).ready(function()
 	});	
 	$(document).on('show.bs.modal','#add_activity', function(e) {
     	$(this).find('#title').html($(e.relatedTarget).data('title'));
+    	$(this).find('#address_id').html($(e.relatedTarget).data('id'));
 		$(this).find('#action-form').attr('action',$(e.relatedTarget).data('href'));
 	});	
 	$(document).on('show.bs.modal','#accept-lead', function(e) {

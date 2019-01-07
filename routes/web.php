@@ -81,7 +81,10 @@ Route::group(['middleware' => 'auth'], function () {
 	# Contacts
 		Route::get('contacts/{id}/vcard',['as'=>'contacts.vcard','uses'=>'LocationContactController@vcard']);
 		Route::resource('contacts','LocationContactController');
-
+	
+	# Dashboard
+	Route::resource('dashboard','DashboardController');
+   	
    	# Documents
 		Route::resource('docs','DocumentsController',['only' => ['index', 'show']]);
 
@@ -294,7 +297,8 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
 		Route::get('branches/export', ['as'=>'branches.export', 'uses'=>'BranchesController@export']);
 		Route::get('branches/team/export', ['as'=>'branches.team.export', 'uses'=>'BranchesController@exportTeam']);
 		Route::resource('branches','BranchesController',['except'=>['index','show']]);
-
+	# Branch Leads
+		Route::resource('branchleads',"BranchLeadController");
 	#Companies
 		Route::get('companies/import', ['as'=>'companies.importfile', 'uses'=>'CompaniesImportController@getFile']);
 		Route::post('companies/import', ['as'=>'companies.import', 'uses'=>'CompaniesImportController@import']);

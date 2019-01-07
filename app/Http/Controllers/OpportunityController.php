@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Opportunity;
+use App\Lead;
 use App\Person;
 use App\Branch;
+use App\Orders;
 use App\Address;
 use App\Activity;
 use Illuminate\Http\Request;
@@ -17,13 +19,17 @@ class OpportunityController extends Controller
     public $activity;
     public $branch;
     public $address;
+    public $orders;
+    public $leads;
 
-    public function __construct(Opportunity $opportunity, Branch $branch, Person $person, Address $address,Activity $activity){
+    public function __construct(Opportunity $opportunity, Orders $orders, Branch $branch, Person $person, Address $address,Activity $activity,Lead $leads){
         $this->opportunity = $opportunity;
         $this->person = $person;
         $this->activity = $activity;
         $this->branch = $branch;
         $this->address = $address;
+        $this->orders = $orders;
+        $this->leads = $leads;
     }
 
     /**
@@ -41,15 +47,19 @@ class OpportunityController extends Controller
             return response()->view('opportunities.mgrindex',compact('branches'));
         } else{
        $activityTypes = $this->activity->activityTypes;
-       
+       $mybranches = array_keys($this->person->myBranches());
        $opportunities = $this->opportunity
-        ->whereIn('branch_id',array_keys($this->person->myBranches()))
-        ->with('address','branch','address.activities')
-        ->orderBy('branch_id')
-        ->get();
-        // is this a manager ?
-       
-        return response()->view('opportunities.index',compact('opportunities','activityTypes'));
+                ->whereIn('branch_id',$mybranches)
+                ->with('address','branch','address.activities')
+                ->orderBy('branch_id')
+                ->get();
+        
+        
+        $branchorders = $this->branch->with('orders','orders.activities')->whereIn('id',$mybranches)->get(); 
+        
+        $leads = $this->branch->with('leads')->whereIn('id',$mybranches)->get();
+ 
+        return response()->view('opportunities.index',compact('opportunities','activityTypes','branchorders','leads'));
         
         }
         // if no branches abort
@@ -133,4 +143,6 @@ class OpportunityController extends Controller
     {
         //
     }
+
+    
 }

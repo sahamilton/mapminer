@@ -104,7 +104,7 @@ class Branch extends Model implements HasPresenter {
 
 	}
 	public function leads(){
-		return $this->hasMany(Lead::class);
+		return $this->belongsToMany(Address::class,'branch_lead','branch_id','address_id');
 	}
 	
 	public function getManagementTeam(){
@@ -256,9 +256,9 @@ class Branch extends Model implements HasPresenter {
 	public function orders($period = null){
 		if($period){
 			return $this->belongsToMany(Address::class)->withPivot('period','orders')
-			->wherePivot('period','=',$period);
+			->wherePivot('period','=',$period)->where('addressable_type','=','customer');
 		}else{
-			return $this->belongsToMany(Address::class)->withPivot('period','orders');
+			return $this->belongsToMany(Address::class)->withPivot('period','orders')->where('addressable_type','=','customer');
 		}
 	}
 

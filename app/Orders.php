@@ -22,11 +22,13 @@ class Orders extends Model
     	return $this->belongsTo(Branch::class,'branch_id','id');
     }
     public function addresses(){
-    	return $this->belongsTo(Address::class,'address_id','id');
+    	return $this->belongsTo(Address::class,'address_id','id')->where('addressable_id','=','customer');
     }
     
     public function scopeBranchOrders($query,$branch){
         return $query->groupBy('address_id')
             ->selectRaw('sum(orders) as sum, address_id');
     }
+
+    
 }

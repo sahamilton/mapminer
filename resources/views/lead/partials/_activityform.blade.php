@@ -43,6 +43,7 @@
               <input class="form-control followupdate" 
                   type="text" 
                   name="followupdate"  
+                  autocomplete="off"
                   id="followupdate" 
                   value="{{  old('followupdate', \Carbon\Carbon::now()->addWeek(1)->format('m/d/Y')) }}"/>
               <span class="help-block">

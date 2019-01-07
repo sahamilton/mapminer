@@ -1,65 +1,89 @@
 @extends('site.layouts.default')
 @section('content')
 
-<div class="container">
-     @include('maps.partials._form')
-<h2>{{$opportunities->first()->branch->branchname}} Branch Opportunities</h2>
-   <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
-    <thead>
-      <th>Date Opened</th>
-      <th>Days Open</th>
-      <th>Status</th>
-      <th>Business</th>
-      <th>Address</th>
-      <th>Potential $$</th>
-      <th>Potential Labor Reqts</th>
-      <th>Last Activity</th>
-      <th>Activities</th>
-    </thead>
-      <tbody>
-        @foreach ($opportunities as $opportunity)
-      
-        <tr>
-          <td>{{$opportunity->created_at ? $opportunity->created_at->format('Y-m-d') : ''}}</td>
-          <td>{{$opportunity->daysOpen()}}</td>
-          <td>{{$opportunity->closed}}</td>
-          <td>
-            <a href= "{{route('opportunity.show',$opportunity->id)}}">
-              {{$opportunity->address->businessname}}
-            </a>
-          </td>
-          <td>{{$opportunity->address->fullAddress()}}</td>
-          <td>{{$opportunity->value}}</td>
-          <td>{{$opportunity->requirements}}</td>
-          <td>
-            @if($opportunity->address->activities->count() >0 )
-             {{$activityTypes[$opportunity->address->activities->last()->activity]}}<br />
-            {{$opportunity->address->activities->last()->activity_date->format('Y-m-d')}}
-            @endif
-          </td>
-          <td>
-              <a 
-                        data-href="{{route('activity.store')}}" 
-                        data-toggle="modal" 
-                        data-pk = "{{$opportunity->address->id}}"
-                        data-id="{{$opportunity->address->id}}"
-                        data-target="#add-activity" 
-                        data-title = "location" 
-                        href="#">
-                    <i class="fa fa-plus-circle text-success" aria-hidden="true"></i> Add Activity</a>
-                    </div></div>
 
-          </td>
-        </tr>
-        @endforeach
+@include('maps.partials._form')
+<h2>{{$opportunities->first()->branch->branchname}} Branch Dashboard</h2>
+ <nav>
 
-      </tbody>
-    <tfoot>
-      
-    </tfoot>
+  <div class="nav  nav-tabs"
+  id="nav-tab"
+  role="tablist">
+  <a class="nav-item nav-link active"
+    id="nav-opportunities-tab"
+    data-toggle="tab"
+    href="#nav-opportunities"
+    role="tab"
+    aria-controls="nav-opportunities"
+    aria-selected="true">
+   Opportunities
+  </a>
 
-</table>
+  <a class="nav-item nav-link"
+    id="nav-leads-tab"
+    data-toggle="tab"
+    href="#nav-leads"
+    role="tab"
+    aria-controls="nav-leads"
+    aria-selected="true">
+   Leads
+  </a>
+
+  <a class="nav-item nav-link"
+    id="nav-customers-tab"
+    data-toggle="tab"
+    href="#nav-customers"
+    role="tab"
+    aria-controls="nav-customers"
+    aria-selected="false">
+    Customers
+  </a>
+  <a class="nav-item nav-link"
+    id="nav-activities-tab"
+    data-toggle="tab"
+    href="#nav-activities"
+    role="tab"
+    aria-controls="nav-activities"
+    aria-selected="false">
+    Activities
+  </a>
+
+ 
+  </div>
+</nav>
+<div class="tab-content" id="nav-tabContent">
+  <div class="tab-pane fade show active"
+    id="nav-opportunities"
+    role="tabpanel"
+    aria-labelledby="nav-home-tab">
+   
+   @include('opportunities.partials._tabopportunities')
+  </div>
+<div class="tab-pane fade"
+    id="nav-leads"
+    role="tabpanel"
+    aria-labelledby="nav-leads-tab-tab">
+   @include('opportunities.partials._tableads')
+  </div>
+
+
+  <div class="tab-pane fade"
+    id="nav-customers"
+    role="tabpanel"
+    aria-labelledby="nav-customers-tab">
+    @include('opportunities.partials._taborders')
+  </div>
+
+
+  <div class="tab-pane fade"
+    id="nav-activities"
+    role="tabpanel"
+    aria-labelledby="nav-activities-tab">
+    Activities
+  </div>
+
+ 
 </div>
-@include('activities.partials._activities')
+@include('opportunities.partials._activitiesmodal')
 @include('partials._scripts')
 @endsection

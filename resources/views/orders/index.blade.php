@@ -18,8 +18,10 @@
             </a></td>
             <td>
                 @if(! $order->branches->manager->isEmpty())
-              
-                {{$order->branches->manager->first()->fullName()}}
+              @foreach ($order->branches->manager as $manager)
+               <li> {{$manager->fullName()}}</li>
+               @endforeach
+                
                 
                
                 @endif

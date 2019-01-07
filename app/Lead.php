@@ -99,6 +99,11 @@ class Lead extends Model implements HasPresenter {
     	return $this->belongsToMany(SearchFilter::class,'lead_searchfilter','lead_id','searchfilter_id');
 
     }
+  
+  public function poohbar(){
+      return $this->hasOne(Address::class,'id','addressable_id');
+      //return $this->hasOne(Address::class,'id','addressable_id')->where('addressable_type','=','lead');
+  }
 
   public function createLeadFromGeo($geoCode){
           $coords = $this->getGeoCode($geoCode);
