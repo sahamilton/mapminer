@@ -4,7 +4,7 @@
         data-href="" 
         data-toggle="modal" 
         data-target="#add_contact" 
-        data-title = "Add contact to lead" 
+        data-title = "Add contact to address" 
         href="#">
         <i class="fas fa-user-alt"></i>
         Add Contact

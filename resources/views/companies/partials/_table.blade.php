@@ -7,6 +7,7 @@
 		<th>State</th>
 		<th>ZIP</th>
 		<th>Segment</th>
+		<th>Recent Business</th>
 
    		@if(auth()->user()->hasRole('Admin'))
 			<th>Actions</th>
@@ -54,7 +55,12 @@
 			@endif
 		@endif
 	</td>
-	
+	<td align='right'>
+		@if (array_key_exists($location->id,$data['orders']))
+			${{number_format($data['orders'][$location->id],0)}}
+		@endif
+
+	</td>
 	@if(auth()->user()->hasRole('Admin'))
 		<td>
 

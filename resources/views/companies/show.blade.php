@@ -7,10 +7,18 @@ id='results'></div>
 <h2>
 {{$data['company']->companyname}}
 Locations
+
+
 @if ($data['state'])
  in {{$data['state']}}
 @endif
 </h2>
+@if($data['state'])
+<p><a href= "{{route('company.show',$data['company']->id)}}" >See all {{$data['company']->companyname}} locations</a></p>
+@endif
+@if($data['company']->parent_id)
+	<p><a href="{{route('company.show',$data['company']->parent_id)}}">See parent company</a></p>
+@endif
 @include('maps.partials._form')
 <nav>
 	<div class="nav

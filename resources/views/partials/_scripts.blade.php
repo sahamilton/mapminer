@@ -46,7 +46,7 @@ $(document).ready(function()
 	});	
 	$(document).on('show.bs.modal','#add-locationcontact', function(e) {
     	$(this).find('#title').html($(e.relatedTarget).data('title'));
-		$(this).find('input#location_id').val($(e.relatedTarget).data('pk'));
+		$(this).find('input#address_id').val($(e.relatedTarget).data('pk'));
 		
 	});
 	

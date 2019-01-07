@@ -1,12 +1,8 @@
 <h2>Location Details</h2>
 <div id="map-container">
 	<div style="float:left;width:300px">
-		<p>
-		<p>
-			@if($location->company)
-				<i>A location of <a href="{{ route('company.show', $location->company->id) }}">{{$location->company->companyname}}</a></a></i>
-			@endif
-		</p>
+
+		
 
 		<fieldset style="border:solid 1px grey;width:90%;padding:5px">
 			<p>

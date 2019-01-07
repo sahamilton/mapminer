@@ -4,9 +4,9 @@
             <input class="form-control" 
                   type="text" 
                   required
-                  name="contact"  
-                  id="contact" 
-                  value="{{  old('contact', isset($contact) ? $contact->contact : '') }}"
+                  name="fullname"  
+                  id="fullname" 
+                  value="{{  old('contact', isset($contact) ? $contact->fullname : '') }}"
                   placeholder="contact name"/>
               <span class="help-block">
                   <strong>{{$errors->has('contact') ? $errors->first('contact')  : ''}}</strong>
@@ -80,7 +80,7 @@
               </div>
           </div>
           @if(isset($contact))
-          <input type="hidden" name="location_id" value="{{$contact->location_id}}" />
+          <input type="hidden" id="address_id" name="address_id" value="{{$contact->address_id}}" />
           @else
-          <input type="hidden" name="location_id" value="{{$location->id}}" />
+          <input type="hidden" id="address_id" name="address_id" value="{{$address_id}}" />
           @endif

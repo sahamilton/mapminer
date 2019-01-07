@@ -216,10 +216,6 @@ class CompaniesController extends BaseController {
 		$filtered = $company->isFiltered(['locations'],['segment','businesstype'],$company->vertical);
 		$keys = $this->company->getSearchKeys(['locations'],['segment','businesstype']);
 
-
-		// This doesnt make sense as long as companies belong to only one vertical
-
-
 		if($filtered && count($keys)>0) {
 			
 			 $locations = $locations
@@ -232,7 +228,7 @@ class CompaniesController extends BaseController {
 
 		}
 		
-		 return $locations->orderBy('state')->get();
+		 return $locations->with('orders')->orderBy('state')->get();
 
 	}
 
@@ -319,12 +315,12 @@ class CompaniesController extends BaseController {
 
 	private function getCompanyViewData($company,$data){
 
-		$data['company'] = $company->load('locations','managedBy','industryVertical');
+		$data['company'] = $company->load('locations','locations.orders','managedBy','industryVertical');
 		$data['states'] = $this->getStatesInArray($data['company']->locations);
 
 		if($data['state']){
 			$data['company'] = $this->company->with(['locations' => function($query) use ($data) {
-    			$query->where('state', $data['state']);
+    			$query->where('state', $data['state'])->with('orders');
  			}])
  			->with('managedBy','industryVertical')->findOrFail($company->id);
 		}
@@ -342,11 +338,28 @@ class CompaniesController extends BaseController {
 		$data = $this->company->limitLocations($data);
 		$data['segment']='All';
 		//$data['segment'] = $this->getSegmentCompanyInfo($data['company'],$segment);
+		$data['orders'] = $this->getLocationOrders($data['company']);
 		
 		$data['mywatchlist'] = $this->locations->getWatchList();
 		return $data;
 	}
 
+
+	private function getLocationOrders($company){
+		$data = array();
+		foreach ($company->locations as $location){
+			if ($location->orders->count()>0){
+				$sum = 0;
+				foreach ($location->orders as $order){
+					$sum += $order->pivot->orders;
+				}
+				$data[$location->id] = $sum;
+			}
+			
+		}
+		
+		return $data;
+	}
 	/**
 	 * Get locations of company in state information.
 	 *

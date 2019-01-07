@@ -1,7 +1,12 @@
 @extends('site.layouts.default')
 @section('content')
-
+@include('companies.partials._searchbar')
 <h2>{{$location->businessname}}</h2>
+<p>
+      @if($location->company)
+        <i>A location of <a href="{{ route('company.show', $location->company->id) }}">{{$location->company->companyname}}</a></a></i>
+      @endif
+    </p>
 @if($location->opportunities)
 Tracked as <a href="{{route('opportunity.index')}}">{{$location->opportunities->branch()->first()->branchname}} branch opportunity</a>
 @else

@@ -36,7 +36,7 @@ class SearchController extends Controller
 
 	public function searchCompanies(Request $request){
 
-		return Company::search(request('q'))
+		return Company::whereNull('parent_id')->search(request('q'))
             
             ->get();
 
