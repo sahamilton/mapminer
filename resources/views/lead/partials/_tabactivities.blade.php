@@ -22,7 +22,8 @@
 
     </thead>
     <tbody>
-         @foreach($location->lead->relatedNotes as $activity)
+    
+         @foreach($location->activities as $activity)
          
             <tr>
                 <td>{{$activity->activity_date ? $activity->activity_date->format('M j, Y'):''}}</td>

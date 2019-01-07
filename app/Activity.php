@@ -38,4 +38,8 @@ class Activity extends Model
 		}
 		return $query->where('user_id','=',auth()->user()->id);
 	}
+
+	public function branch(){
+		return $this->belongsTo(Branch::class);
+	}
 }

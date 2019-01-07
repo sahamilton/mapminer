@@ -1,7 +1,7 @@
 @extends('site.layouts.default')
 @section('content')
 @include('maps.partials._form')
-<h2>{{$location->businessname}}</h2>
+<h2>{{$location->businessname}}!!</h2>
 
 @include('lead.partials._leadaction')
 <nav>

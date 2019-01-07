@@ -100,7 +100,8 @@ class OpportunityController extends Controller
         $opportunity->load('address');
         $address = $opportunity->address;
 
-        $location = $address->load($address->addressable_type,'contacts','company','industryVertical',$address->addressable_type . '.relatedNotes');
+        $location = $address->load($address->addressable_type,'contacts','company','industryVertical','activities',$address->addressable_type . '.relatedNotes');
+  
         $branches = $this->branch->nearby($location,100,5)->get();
         $rankingstatuses = $this->address->getStatusOptions;
         $people = $this->person->salesReps()->PrimaryRole()->nearby($location,100,5)->get();
