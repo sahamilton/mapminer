@@ -1,6 +1,6 @@
 @extends('site.layouts.default')
 @section('content')
-
+@include('companies.partials._searchbar')
 
 @include('maps.partials._form')
 <h2>{{$opportunities->first()->branch->branchname}} Branch Dashboard</h2>
