@@ -60,7 +60,7 @@ class GeoCodingController extends BaseController {
 
 		if(! request()->filled('lat')){
 			$geocode = app('geocoder')->geocode(request('search'))->get();
-			dd($geocode);
+			
 			if(! $geocode or count($geocode)==0){
 
 				return redirect()->back()->withInput()->with('error','Unable to Geocode address:'.request('address') );
@@ -72,7 +72,7 @@ class GeoCodingController extends BaseController {
 		}
 
 		$data = request()->all();
-
+dd($data);
 		$data['latlng'] = $data['lat'].":".$data['lng'];
 		// Kludge to address the issue of different data in Session::geo
 		if(! request()->has('number')){
