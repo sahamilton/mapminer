@@ -611,7 +611,7 @@ class AdminUsersController extends BaseController {
 	private function getManagerList()
 	{
 
-		$managerroles=['3','4','6','7','8','9','11','13'];
+		$managerroles=['3','4','6','7','8','9','11','13','14'];
         
         return $this->person
         ->select(
