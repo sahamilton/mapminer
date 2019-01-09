@@ -13,13 +13,7 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        if( auth()->user()->hasRole('Branch Manager'){
-            
-            // get branch ids
-            // get prospects
-            // get customers
-
-        }
+       
     }
 
     /**

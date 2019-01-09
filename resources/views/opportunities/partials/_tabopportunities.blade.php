@@ -11,7 +11,7 @@
       <th>Activities</th>
     </thead>
       <tbody>
-        @foreach ($opportunities as $opportunity)
+        @foreach ($data['opportunities'] as $opportunity)
       
         <tr>
           <td>{{$opportunity->created_at ? $opportunity->created_at->format('Y-m-d') : ''}}</td>

@@ -84,10 +84,11 @@ class MyLeadsController extends BaseController
      */
     public function show(MyLead $mylead)
     {
+
         
         if(in_array($mylead->id,$this->lead->myLeads([1,2,3],$all=true)->pluck('id')->toArray())){
 
-            $mylead->load('salesteam','relatedLeadNotes','relatedLeadNotes.relatedContact','contacts');
+            $mylead->load('address','address.contacts','salesteam','relatedLeadNotes','relatedLeadNotes.relatedContact');
             $people = $this->lead->findNearByPeople($mylead);
             $branches = $this->lead->findNearByBranches($mylead);
         

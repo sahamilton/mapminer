@@ -401,4 +401,8 @@ class Person extends NodeModel implements HasPresenter {
 		});
 	}
 
+	public function rankings(){
+		return $this->belongsToMany(Address::class)->withPivot('ranking','comments')->withTimeStamps();
+	}
+
 }

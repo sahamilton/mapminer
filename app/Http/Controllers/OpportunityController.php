@@ -40,32 +40,50 @@ class OpportunityController extends Controller
     public function index()
     {
        if(! auth()->user()->hasRole('Branch Manager') && $this->person->myTeam()->count() >1){
-            $branches = $this->branch->with('opportunities','manager')
-            ->whereIn('id',$this->person->myBranches())
+            $branches = $this->branch->with('opportunities','leads','manager')
+            ->whereIn('id',array_keys($this->person->myBranches()))
             ->get();
-           
+         
             return response()->view('opportunities.mgrindex',compact('branches'));
         } else{
-       $activityTypes = $this->activity->activityTypes;
-       $mybranches = array_keys($this->person->myBranches());
-       $opportunities = $this->opportunity
-                ->whereIn('branch_id',$mybranches)
-                ->with('address','branch','address.activities')
-                ->orderBy('branch_id')
-                ->get();
-        
-        
-        $branchorders = $this->branch->with('orders','orders.activities')->whereIn('id',$mybranches)->get(); 
-        
-        $leads = $this->branch->with('leads')->whereIn('id',$mybranches)->get();
- 
-        return response()->view('opportunities.index',compact('opportunities','activityTypes','branchorders','leads'));
+            $activityTypes = $this->activity->activityTypes;
+            $branches = array_keys($this->person->myBranches());
+            $data = $this->getBranchOpportunities($branches);
+
+            return response()->view('opportunities.index',compact('data','activityTypes'));
         
         }
         // if no branches abort
         // if no branches then select branc / Sales OPs
     }
 
+    public function branchOpportunities($branch_id){
+
+       $activityTypes = $this->activity->activityTypes;
+       $data = $this->getBranchOpportunities([$branch_id]);
+
+       
+        return response()->view('opportunities.index',compact('data','activityTypes'));
+    }
+
+    public function getBranchOpportunities(array $branches){
+        $data['branches'] = $this->branch->with('opportunities','leads','manager')
+            ->whereIn('id',$branches)
+            ->get();
+        $data['opportunities'] = $this->opportunity
+                ->whereIn('branch_id',$branches)
+                ->with('address','branch','address.activities')
+                ->orderBy('branch_id')
+                ->distinct()
+                ->get();
+        
+        
+        $data['branchorders'] = $this->branch->with('orders','orders.activities')->whereIn('id',$branches)->get(); 
+        
+        $data['leads'] = $this->branch->with('leads','leads.leadsource')->whereIn('id',$branches)->get();
+
+        return $data;
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -105,8 +123,7 @@ class OpportunityController extends Controller
         $branches = $this->branch->nearby($location,100,5)->get();
         $rankingstatuses = $this->address->getStatusOptions;
         $people = $this->person->salesReps()->PrimaryRole()->nearby($location,100,5)->get();
-        
-        return response()->view($location->addressable_type.'.show',compact('location','branches','rankingstatuses','people'));
+               return response()->view($location->addressable_type.'.show',compact('location','branches','rankingstatuses','people'));
         //
     }
 

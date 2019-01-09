@@ -3,37 +3,18 @@
 @include('companies.partials._searchbar')
 <h2>{{$location->businessname}}</h2>
 <p>
-      @if($location->company)
-        <i>A location of <a href="{{ route('company.show', $location->company->id) }}">{{$location->company->companyname}}</a></a></i>
-      @endif
-    </p>
+    @if($location->company)
+      <i>A location of <a href="{{ route('company.show', $location->company->id) }}">{{$location->company->companyname}}</a></a></i>
+    @endif
+</p>
+@include('addresses.partials._ranking')
 @if($location->opportunities)
-Tracked as <a href="{{route('opportunity.index')}}">{{$location->opportunities->branch()->first()->branchname}} branch opportunity</a>
-@else
-@can('manage_opportunities')
-<form name="addOpportunity" method="post" action="{{route('opportunity.store')}}" >
-  @csrf
-  @if(count($mybranches)==1)
-    <input type="submit" class="btn btn-success" value="add to {{array_values($mybranches)[0]}} branch opportunity" />
-    <input type="hidden" name="branch_id" value="{{array_keys($mybranches)[0]}}" >
-  @else
-    <select name="branch_id" required >
-
-      @foreach($mybranches as $branch_id=>$branch)
-        <option value="{{$branch_id}}">{{$branch}}</option>
-
-      @endforeach
-    </select>
-    <input type="submit" class="btn btn-success" value="add to branch opportunity" />
-  @endif
-  <input type="hidden" value="{{$location->id}}" name="address_id" />
-  
-</form>
-@endcan
+@include('addresses.partials._opportunity')
 @endif
-
 <p>Location Source: {{$location->addressType[$location->addressable_type]}}</p>
 @include('maps.partials._form')
+
+
 <nav>
   <div class="nav nav-tabs" id="nav-tab" role="tablist">
   <a class="nav-link nav-item active" 
@@ -43,7 +24,7 @@ Tracked as <a href="{{route('opportunity.index')}}">{{$location->opportunities->
       role="tab" 
       aria-controls="details" 
       aria-selected="true">
-    <strong>Location Details</strong>
+    <strong> Details</strong>
   </a>
     <a class="nav-item nav-link"  
         data-toggle="tab" 
@@ -53,7 +34,7 @@ Tracked as <a href="{{route('opportunity.index')}}">{{$location->opportunities->
         aria-controls="contacts"
         aria-selected="false">
 
-    <strong>Location  Contacts</strong>
+    <strong>  Contacts</strong>
   </a>
   <a class="nav-item nav-link" 
       data-toggle="tab" 
@@ -62,7 +43,7 @@ Tracked as <a href="{{route('opportunity.index')}}">{{$location->opportunities->
       role="tab"
       aria-controls="activities"
       aria-selected="false">
-        <strong>Location Activities</strong>
+        <strong> Activities</strong>
   </a>
 
   <a class="nav-item nav-link" 
@@ -92,7 +73,7 @@ Tracked as <a href="{{route('opportunity.index')}}">{{$location->opportunities->
         aria-controls="watchers"
         aria-selected="false">
 
-    <strong>Location Watchers ({{$location->watchedBy->count()}})</strong>
+    <strong> Watchers ({{$location->watchedBy->count()}})</strong>
   </a>
     @if($location->addressable_type == 'customer')
   <a class="nav-item nav-link"  
@@ -105,8 +86,19 @@ Tracked as <a href="{{route('opportunity.index')}}">{{$location->opportunities->
 
     <strong>Recent Business</strong>
   </a>
+  @endif
+  @if($location->has('ranking'))
+<a class="nav-item nav-link"  
+        data-toggle="tab" 
+        href="#rating"
+        id="rating-tab"
+        role="tab"
+        aria-controls="rating"
+        aria-selected="false">
 
-    @endif
+    <strong> Ratings</strong>
+  </a>
+  @endif
 
 
 </div>
@@ -135,6 +127,9 @@ Tracked as <a href="{{route('opportunity.index')}}">{{$location->opportunities->
    <div id="business" class="tab-pane fade">
      @include('addresses.partials._taborders')
     </div>
+    <div id="rating" class="tab-pane fade">
+     @include('addresses.partials._tabratings')
+    </div>
 
   </div>
 
@@ -143,14 +138,11 @@ Tracked as <a href="{{route('opportunity.index')}}">{{$location->opportunities->
 
 
 </div>
-@php
-$lead = $location;
-@endphp
-@include('partials/_modal')
 
-
-
+@include('partials._modal');
+@include('addresses.partials._rateaddressform')
 @include('addresses.partials.map')
 @include('partials._scripts');
+
 
 @endsection

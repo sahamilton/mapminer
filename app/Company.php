@@ -182,16 +182,20 @@ class Company extends NodeModel {
 	public function limitLocations($data){
 		if($data['company']->locations->count() > $this->limit){
 
-			$locations = Location::where('company_id','=',$data['company']->id)->nearby($data['mylocation'],'200',$this->limit)->get();
+			$locations = Address::where('company_id','=',$data['company']->id)
+			->with('orders')->nearby($data['mylocation'],'200',$this->limit)->get();
 	
 			$data['company']->setRelation('locations',$locations);
+
 			$data['limited']=$data['company']->locations->count();
+			
 			
 		}else{
 			$data['limited']= false;
 		}
 		
 		$data['distance'] = 200;
+
 		return $data;
 	}
 	

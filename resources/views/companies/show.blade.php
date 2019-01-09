@@ -32,7 +32,7 @@ Locations
 		role="tab"
 		aria-controls="nav-home"
 		aria-selected="true">
-		Account Locations
+		<strong>Account Locations</strong>
 	</a>
 
 	<a class="nav-item nav-link"
@@ -42,7 +42,7 @@ Locations
 		role="tab"
 		aria-controls="nav-profile"
 		aria-selected="false">
-		Account Details
+		<strong>Account Details</strong>
 	</a>
 
 	<a class="nav-item nav-link"
@@ -52,7 +52,7 @@ Locations
 		role="tab"
 		aria-controls="nav-contact"
 		aria-selected="false">
-		Account Actions
+		<strong>Account Actions</strong>
 	</a>
 	@if($data['parent'] or $data['related'])
 		<a class="nav-item nav-link"
@@ -62,7 +62,7 @@ Locations
 			role="tab"
 			aria-controls="nav-related"
 			aria-selected="false">
-			Related Accounts
+			<strong>Related Accounts</strong>
 		</a>
 	@endif
 
@@ -93,6 +93,7 @@ Locations
 				<li>{{$serviceline->ServiceLine}} </li>
 			@endforeach
 		</ul>
+		<p><strong>Customer ID:</strong> {{$data['company']->customer_id}}</p>
 
 		
 

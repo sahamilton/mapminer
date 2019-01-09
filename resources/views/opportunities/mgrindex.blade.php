@@ -7,14 +7,26 @@
     <thead>
       <th>Branch</th>
       <th>Manager</th>
+      <th>Leads</th>
       <th>Opportunities</th>
     </thead>
       <tbody>
         @foreach ($branches as $branch)
+
         <tr>
-          <td>{{$branch->branchname}}</td>
-          <td>{{$branch->manager->first() ? $branch->manager->first()->fullName() : ''}}</td>
-          <td>{{$branch->opportunities->count()}}</td>
+          <td>
+            <a href="{{route('opportunities.branch',$branch->id)}}">
+              {{$branch->branchname}}
+            </a>
+          </td>
+          
+          <td>
+            @foreach ($branch->manager as $manager)
+              <li>{{$manager->fullName()}}</li>
+            @endforeach
+          </td>
+          <td align="center">{{$branch->leads->count()}}</td>
+          <td align="center">{{$branch->opportunities->count()}}</td>
           
         @endforeach
 
@@ -25,6 +37,6 @@
 
 </table>
 </div>
-@include('activities.partials._activities')
+
 @include('partials._scripts')
 @endsection

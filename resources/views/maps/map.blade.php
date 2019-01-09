@@ -1,7 +1,6 @@
 @extends('site.layouts.maps')
 @section('content')
 
-
 <h1>{{$data['title']}}</h1>
 @if(isset($data['listviewref']))
 

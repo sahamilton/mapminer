@@ -199,6 +199,7 @@ class CompaniesController extends BaseController {
 
 	public function show(Request $request, $company)
 	{
+		
 		$data['state']=null;		
 		$data = $this->getCompanyViewData($company,$data);
 		return response()->view('companies.show', compact('data'));
@@ -316,6 +317,7 @@ class CompaniesController extends BaseController {
 	private function getCompanyViewData($company,$data){
 
 		$data['company'] = $company->load('locations','locations.orders','managedBy','industryVertical');
+
 		$data['states'] = $this->getStatesInArray($data['company']->locations);
 
 		if($data['state']){
@@ -336,6 +338,7 @@ class CompaniesController extends BaseController {
 		$data['mylocation'] = $this->locations->getMyPosition();
 		$data['count'] = $data['company']->locations->count();
 		$data = $this->company->limitLocations($data);
+
 		$data['segment']='All';
 		//$data['segment'] = $this->getSegmentCompanyInfo($data['company'],$segment);
 		$data['orders'] = $this->getLocationOrders($data['company']);
@@ -347,8 +350,10 @@ class CompaniesController extends BaseController {
 
 	private function getLocationOrders($company){
 		$data = array();
+
 		foreach ($company->locations as $location){
-			if ($location->orders->count()>0){
+			
+			if ($location->has('orders')){
 				$sum = 0;
 				foreach ($location->orders as $order){
 					$sum += $order->pivot->orders;

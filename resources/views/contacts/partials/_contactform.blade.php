@@ -79,8 +79,4 @@
       
               </div>
           </div>
-          @if(isset($contact))
-          <input type="hidden" id="address_id" name="address_id" value="{{$contact->address_id}}" />
-          @else
-          <input type="hidden" id="address_id" name="address_id" value="{{$address_id}}" />
-          @endif
+         

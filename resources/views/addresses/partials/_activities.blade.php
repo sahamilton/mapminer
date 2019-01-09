@@ -7,7 +7,7 @@
   'Left material',
   'Proposal']; @endphp
   <style>
-body.modal-open .activitydate, .followupdate {
+body.modal-open .activity_date, .followup_date {
     z-index: 1200 !important;
 }
 </style>

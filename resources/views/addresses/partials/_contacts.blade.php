@@ -24,7 +24,7 @@
           <div class="float-right">
            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button> <input type="submit" value="Record Contact" class="btn btn-danger" />
             </div>
-            
+        <input type="hidden" id="address_id" name="address_id" value="{{$location->id}}" />  
         </form><div class="modal-footer">
         
         

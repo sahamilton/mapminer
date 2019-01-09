@@ -47,7 +47,7 @@
                   autocomplete="off"
                   value="{{  old('followup_date') }}"/>
               <span class="help-block">
-                  <strong>{{$errors->has('activitydate') ? $errors->first('activitydate')  : ''}}</strong>
+                  <strong>{{$errors->has('followup_date') ? $errors->first('followup_date')  : ''}}</strong>
               </span>
               </div>
           </div>

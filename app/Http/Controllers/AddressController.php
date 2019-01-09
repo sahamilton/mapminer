@@ -61,15 +61,18 @@ class AddressController extends Controller
      */
     public function show($address)
     {
-       
-        $location = $address->load($address->addressable_type,'contacts','activities','company','opportunities','industryVertical',$address->addressable_type . '.relatedNotes','orders','watchedBy','watchedBy.person');
+      // $ranking = $this->address->with('ranking')->myRanking()->findOrFail($address->id);
+
+        $location = $address->load($address->addressable_type,'contacts','activities','company','opportunities','industryVertical',$address->addressable_type . '.relatedNotes','orders','watchedBy','watchedBy.person','ranking');
+        
        
         $branches = $this->branch->nearby($location,100,5)->get();
         $rankingstatuses = $this->address->getStatusOptions;
         $people = $this->person->salesReps()->PrimaryRole()->nearby($location,100,5)->get();
         $mybranches = $this->person->myBranches();
-        
-        return response()->view('addresses.show',compact('location','branches','rankingstatuses','people','mybranches'));
+        $ranked = $this->address->getMyRanking($location->ranking);
+     
+        return response()->view('addresses.show',compact('location','branches','rankingstatuses','people','mybranches','ranked'));
     }
 
     /**
@@ -114,6 +117,13 @@ class AddressController extends Controller
        
         return response()->view('addresses.xml', compact('result'))->header('Content-Type', 'text/xml');
     
+    }
+
+    public function rating(Request $request,$address){
+        $data=request()->only('ranking','comments');
+        $person_id = auth()->user()->person->id;
+        $address->ranking()->attach($person_id,$data);
+        return redirect()->route('address.show',$address->id)->withMessasge("Thanks for rating this location");
     }
 
     private function getLocationLatLng($latlng){

@@ -100,10 +100,7 @@ class Lead extends Model implements HasPresenter {
 
     }
   
-  public function poohbar(){
-      return $this->hasOne(Address::class,'id','addressable_id');
-      //return $this->hasOne(Address::class,'id','addressable_id')->where('addressable_type','=','lead');
-  }
+  
 
   public function createLeadFromGeo($geoCode){
           $coords = $this->getGeoCode($geoCode);

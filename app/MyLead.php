@@ -46,4 +46,8 @@ class MyLead extends Lead
         return $note->save();
     }
 
+    public function address(){
+        return $this->belongsTo(Address::class,'id','addressable_id');
+    }
+
 }

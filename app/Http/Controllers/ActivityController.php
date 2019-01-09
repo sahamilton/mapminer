@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Activity;
+use App\Contact;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Requests\ActivityFormRequest;
@@ -10,9 +11,11 @@ use App\Http\Requests\ActivityFormRequest;
 class ActivityController extends Controller
 {
     public $activity;
+    public $contact;
 
-    public function __construct(Activity $activity){
+    public function __construct(Activity $activity,Contact $contact){
         $this->activity = $activity;
+        $this->contact = $contact;
     }
 
     /**
@@ -46,7 +49,11 @@ class ActivityController extends Controller
       
         $data = $this->parseData($request);
         $activity = Activity::create($data);
-        return redirect()->route('address.show',$data['address_id']);
+        if($data['contact_id']){
+            $contact = $this->contact->findOrFail($data['contact_id']);
+            $activity->relatedContact()->attach($data);
+        }
+        return redirect()->route('address.show',$data['location_id']);
     }
 
     private function parseData($request){
@@ -55,8 +62,9 @@ class ActivityController extends Controller
         if($data['followup_date']){
             $data['followup_date'] = Carbon::parse($data['followup_date']);
         }
-        $data['address_id'] = request('address_id');
+        $data['address_id'] = request('location_id');
         $data['user_id'] = auth()->user()->id;
+        $data['contact_id'] = request('contact_id');
         return $data;
     }
 

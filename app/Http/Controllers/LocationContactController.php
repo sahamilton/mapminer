@@ -83,8 +83,10 @@ class LocationContactController extends Controller
      */
     public function update(Request $request, $contact)
     {
+        
         $contact->update(request()->all());
-        return redirect()->route('address.show',$contact->location_id);
+
+        return redirect()->route('address.show',$contact->address_id);
     }
 
     /**

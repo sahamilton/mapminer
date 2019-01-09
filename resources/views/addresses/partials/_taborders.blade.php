@@ -23,3 +23,4 @@
             <td class="text-right" colspan='3'>${{number_format($total,2)}}</td>
         </tfoot>
 </tbody>
+</table>

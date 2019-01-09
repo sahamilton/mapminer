@@ -21,17 +21,7 @@
 
     </thead>
     <tbody>
-         @foreach($mylead->contacts as $contact)
-        
-            <tr>
-                <td>{{$contact->contact}}</td>
-                <td>{{$contact->contacttitle}}</td>
-                <td>{{$contact->contactemail}}</td>
-                <td>{{$contact->contactphone}}</td>
-                <td>{{$contact->description}}</td>
-            </tr>
-           @endforeach
-
+         
     </tbody>
 </table>
 @include('myleads.partials._contacts')

@@ -42,8 +42,9 @@ Route::group(['middleware' => 'auth'], function () {
    	#AccountTypes
 		Route::resource('accounttype','AccounttypesController',	['only' => ['index', 'show']]);
 	#Address
+		Route::post('address/{address}/rating',['as'=>'address.rating','uses'=>'AddressController@rating']);
 		Route::resource('address','AddressController');	
-	#Branches
+	#Branches4
 		Route::get('/branches/{state}/state/', ['as'=>'branches.statelist','uses'=>'BranchesController@state']);
 		Route::post('/branches/state', ['as'=>'branches.state','uses'=>'BranchesController@state']);
 		Route::get('/branches/{state}/statemap', ['as'=>'branches.showstatemap','uses'=>'BranchesController@statemap']);
@@ -62,7 +63,10 @@ Route::group(['middleware' => 'auth'], function () {
 
 	#Branch Assignments
 		Route::resource('branchassignments','BranchManagementController',['only'=>['index','show','edit','update']]);
-
+	# Branch Leads Import
+		Route::get('branchleads.import',['as'=>'branchleads.import','uses'=>'BranchLeadImportController@etFile']);
+		
+		Route::resource('branchleadsimport','BranchLeadImportController');
 	#Comments
 		Route::resource('comment','CommentsController');
 
@@ -139,6 +143,7 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::resource('notes','NotesController');
 
 	#Opportunity
+		Route::get('/opportunities/branch/{bid}',['as'=>'opportunities.branch','uses'=>'OpportunityController@branchOpportunities']);
 		Route::resource('opportunity','OpportunityController');
 	#Orders
 		Route::resource('orders','OrdersController');

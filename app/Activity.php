@@ -38,7 +38,9 @@ class Activity extends Model
 		}
 		return $query->where('user_id','=',auth()->user()->id);
 	}
-
+	public function relatedContact(){
+		return $this->belongsToMany(Contact::class);
+	}
 	public function branch(){
 		return $this->belongsTo(Branch::class);
 	}
