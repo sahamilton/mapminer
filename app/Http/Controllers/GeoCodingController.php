@@ -59,7 +59,7 @@ class GeoCodingController extends BaseController {
 		}
 		if(! request()->filled('lat')){
 			$geocode = app('geocoder')->geocode(request('search'))->get();
-			
+			dd($geocode);
 			if(! $geocode or count($geocode)==0){
 
 				return redirect()->back()->withInput()->with('error','Unable to Geocode address:'.request('address') );
