@@ -3,6 +3,7 @@
 $session = Session::get('geo');
 if(! isset($session)) {
   if(Session::has('geo.type')){
+
   $session = array('type'=>'accounts','distance'=>'10','address'=>NULL,'view'=>'maps','lat'=>'39.8282','lng'=>'-98.5795');
   }else{
     $session = array('type'=>'accounts','distance'=>'10','address'=>NULL,'view'=>'maps','lat'=>'39.8282','lng'=>'-98.5795');

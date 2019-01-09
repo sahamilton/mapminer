@@ -7,7 +7,10 @@
       <i>A location of <a href="{{ route('company.show', $location->company->id) }}">{{$location->company->companyname}}</a></a></i>
     @endif
 </p>
-@include('addresses.partials._ranking')
+Current Rating: {{$location->currentRating()}}
+@if(! $ranked)
+  @include('addresses.partials._addressaction')
+@endif
 @if($location->opportunities)
 @include('addresses.partials._opportunity')
 @endif
