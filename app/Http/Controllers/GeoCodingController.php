@@ -57,6 +57,7 @@ class GeoCodingController extends BaseController {
 			$address = urlencode(request('search'));
 			
 		}
+
 		if(! request()->filled('lat')){
 			$geocode = app('geocoder')->geocode(request('search'))->get();
 			dd($geocode);
