@@ -7,10 +7,10 @@
       <i>A location of <a href="{{ route('company.show', $location->company->id) }}">{{$location->company->companyname}}</a></a></i>
     @endif
 </p>
-Current Rating: {{$location->currentRating()}}
-@if(! $ranked)
+
+
   @include('addresses.partials._addressaction')
-@endif
+
 @if($location->opportunities)
 @include('addresses.partials._opportunity')
 @endif
@@ -37,7 +37,7 @@ Current Rating: {{$location->currentRating()}}
         aria-controls="contacts"
         aria-selected="false">
 
-    <strong>  Contacts</strong>
+    <strong>Contacts</strong>
   </a>
   <a class="nav-item nav-link" 
       data-toggle="tab" 
@@ -46,7 +46,7 @@ Current Rating: {{$location->currentRating()}}
       role="tab"
       aria-controls="activities"
       aria-selected="false">
-        <strong> Activities</strong>
+        <strong>Activities</strong>
   </a>
 
   <a class="nav-item nav-link" 

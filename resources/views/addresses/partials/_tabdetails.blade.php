@@ -18,10 +18,11 @@
 			 <p>Lat: {{number_format($location->lat,4)}};<br /> Lng: {{number_format($location->lng,4)}}</p>
 		 </fieldset>
 
-		
+		@can('manage_locations')
 		<a href="{{route('address.edit',$location->id)}}" 
 		title="Edit this location">
 		Edit location</a>
+		@endcan
 	</div>
 	 <div id="map" style="height:300px;width:500px;border:red solid 1px">
 	</div>

@@ -81,9 +81,10 @@ class AddressController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($address)
     {
-        //
+        $address->load('company');
+        return response()->view('addresses.edit',compact('address'));
     }
 
     /**
@@ -93,9 +94,14 @@ class AddressController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $address)
     {
-        //
+        $geocode = app('geocoder')->geocode(request('address'))->get();
+        $data = $this->address->getGeoCode($geocode);
+        $data['businessname'] =request('businessname');
+        $data['phone'] = request('phone');
+        $address->update($data);
+        return redirect()->route('address.show',$address->id)->withMessage('Location updated');
     }
 
     /**

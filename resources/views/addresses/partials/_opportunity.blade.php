@@ -1,5 +1,7 @@
 @if($location->opportunities->branch->count()>0)
-Tracked as <a href="{{route('opportunity.index')}}">{{$location->opportunities->branch()->first()->branchname}} branch opportunity</a>
+@can('manage_opportunities')
+<p>Tracked as <a href="{{route('opportunity.index')}}">{{$location->opportunities->branch()->first()->branchname}} branch opportunity</a></p>
+@endcan
 @else
   @can('manage_opportunities')
   <form name="addOpportunity" method="post" action="{{route('opportunity.store')}}" >

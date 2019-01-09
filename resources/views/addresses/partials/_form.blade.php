@@ -1,6 +1,6 @@
-<!-- companyname -->
-<div class="form-group row {{ $errors->has('companyname') ? ' has-error' : '' }}">
-    <label for="companyname" 
+<!-- businessname -->
+<div class="form-group row {{ $errors->has('businessname') ? ' has-error' : '' }}">
+    <label for="businessname" 
     class="col-sm-2 col-form-label">
 		Company Name: 
 	</label>
@@ -9,12 +9,12 @@
         required 
         type="text" 
         class="form-control" 
-        name='companyname' 
+        name='businessname' 
         description="source" 
-        value="{{ old('companyname', isset($mylead) ? $location->lead->companyname : '' )}}" 
-        placeholder="companyname">
+        value="{{ old('businessname', isset($address) ? $address->businessname : '' )}}" 
+        placeholder="businessname">
         <span class="help-block">
-            <strong>{{ $errors->has('companyname') ? $errors->first('companyname') : ''}}</strong>
+            <strong>{{ $errors->has('businessname') ? $errors->first('businessname') : ''}}</strong>
         </span>
     </div>
 </div>
@@ -26,7 +26,7 @@
         class="form-control" 
         name='address' 
         description="address" 
-        value="{{ old('address', isset($mylead) ? $location->lead->fullAddress() : '' )}}" 
+        value="{{ old('address', isset($address) ? $address->fullAddress() : '' )}}" 
         placeholder="address, city state zip">
         <span class="help-block">
             <strong>{{ $errors->has('address') ? $errors->first('address') : ''}}</strong>
@@ -42,10 +42,11 @@
         class="form-control" 
         name='phone' 
         description="phone" 
-        value="{{ old('phone', isset($mylead) ? $location->lead->phone : '' )}}" 
+        value="{{ old('phone', isset($address) ? $address->phone : '' )}}" 
         placeholder="phone">
         <span class="help-block">
             <strong>{{ $errors->has('phone') ? $errors->first('phone') : ''}}</strong>
         </span>
     </div>
 </div>
+<p>A {{$address->company->companyname}} location</p>
