@@ -58,7 +58,7 @@ class GeoCodingController extends BaseController {
 			
 		}
 
-		
+		if(! request('lat') && ! request('lng')){
 		$geocode = app('geocoder')->geocode(request('search'))->get();
 		
 		if(! $geocode or count($geocode)==0){
@@ -68,7 +68,7 @@ class GeoCodingController extends BaseController {
 		
 		request()->merge($this->location->getGeoCode($geocode));
 			
-		
+		}
 
 
 		$data = request()->all();
