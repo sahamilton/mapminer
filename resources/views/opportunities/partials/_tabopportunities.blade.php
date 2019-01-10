@@ -27,7 +27,8 @@
           <td>{{$opportunity->requirements}}</td>
           <td>
             @if($opportunity->address->activities->count() >0 )
-              {{$activityTypes[$opportunity->address->activities->last()->activity]}}
+
+              {{$opportunity->address->activities->last()->activity_id}}
              <br />
             {{$opportunity->address->activities->last()->activity_date->format('Y-m-d')}}
             @endif

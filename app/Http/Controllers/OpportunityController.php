@@ -123,7 +123,7 @@ class OpportunityController extends Controller
         $branches = $this->branch->nearby($location,100,5)->get();
         $rankingstatuses = $this->address->getStatusOptions;
         $people = $this->person->salesReps()->PrimaryRole()->nearby($location,100,5)->get();
-               return response()->view($location->addressable_type.'.show',compact('location','branches','rankingstatuses','people'));
+               return response()->view('addresses.show',compact('location','branches','rankingstatuses','people'));
         //
     }
 

@@ -67,6 +67,13 @@
               <a class="dropdown-item" href="{{{ route('branchassignments.show',auth()->user()->id) }}}">
               <i class="fas fa-search-location"></i> My Branch Assignments</a>
               @endcan
+              @can('manage_opportunities')
+              <a class="dropdown-item" href="{{route('contacts.index')}}">
+              <i class="far fa-address-card"></i> Branch Contacts</a>
+               <a class="dropdown-item" href="{{ route('activity.index') }}">
+              <i class="far fa-calendar-alt"></i> Branch Activites</a>
+
+              @endcan
             </div>
           </li>
 

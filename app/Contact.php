@@ -10,7 +10,7 @@ class Contact extends Model
 
 
     public function location(){
-    	return $this->belongsTo(Address::class);
+    	return $this->belongsTo(Address::class,'address_id','id');
     }
 
     public function user(){
@@ -20,5 +20,7 @@ class Contact extends Model
     public function fullName(){
     	return $this->firstname . " " . $this->lastname;
     }
-    
+    public function relatedActivities(){
+        return $this->belongsToMany(Activity::class,'activity_contact');
+    }
 }

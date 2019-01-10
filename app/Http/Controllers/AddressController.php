@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Address;
 use App\Branch;
 use App\Person;
+use App\ActivityType;
 
 class AddressController extends Controller
 {
@@ -63,16 +64,17 @@ class AddressController extends Controller
     {
       // $ranking = $this->address->with('ranking')->myRanking()->findOrFail($address->id);
 
-        $location = $address->load($address->addressable_type,'contacts','activities','company','opportunities','industryVertical',$address->addressable_type . '.relatedNotes','orders','watchedBy','watchedBy.person','ranking');
+        $location = $address->load($address->addressable_type,'contacts','contacts.relatedActivities','activities','activities.type','activities.relatedContact','company','opportunities','industryVertical',$address->addressable_type . '.relatedNotes','orders','watchedBy','watchedBy.person','ranking');
         
-       
+        $activities = ActivityType::orderBy('sequence')->pluck('activity','id')->toArray();
+    
         $branches = $this->branch->nearby($location,100,5)->get();
         $rankingstatuses = $this->address->getStatusOptions;
         $people = $this->person->salesReps()->PrimaryRole()->nearby($location,100,5)->get();
         $mybranches = $this->person->myBranches();
         $ranked = $this->address->getMyRanking($location->ranking);
      
-        return response()->view('addresses.show',compact('location','branches','rankingstatuses','people','mybranches','ranked'));
+        return response()->view('addresses.show',compact('location','branches','rankingstatuses','people','mybranches','ranked'.'activities'));
     }
 
     /**

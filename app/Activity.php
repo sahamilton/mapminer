@@ -27,7 +27,7 @@ class Activity extends Model
 		}
 	public function relatesToAddress() 
 		{
-			return $this->belongsTo(Address::class);
+			return $this->belongsTo(Address::class,'address_id','id');
 		}
 	public function user(){
 		return $this->belongsTo(User::class);
@@ -39,9 +39,13 @@ class Activity extends Model
 		return $query->where('user_id','=',auth()->user()->id);
 	}
 	public function relatedContact(){
-		return $this->belongsToMany(Contact::class);
+		return $this->belongsToMany(Contact::class,'activity_contact','activity_id','contact_id');
 	}
 	public function branch(){
 		return $this->belongsTo(Branch::class);
 	}
+	public function type(){
+		return $this->belongsTo(ActivityType::class,'activitytype_id','id');
+	}
+
 }

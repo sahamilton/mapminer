@@ -86,6 +86,6 @@ add selector
 
  
 </div>
-@include('opportunities.partials._activitiesmodal')
+
 @include('partials._scripts')
 @endsection

@@ -1,8 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Address;
 use App\Activity;
+use App\ActivityType;
 use App\Contact;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -25,7 +26,9 @@ class ActivityController extends Controller
      */
     public function index()
     {
-        $activities = $this->activity->myActivity()->get();
+        $activities = $this->activity->myActivity()->with('relatesToAddress','relatedContact','type')->get();
+       
+        return response()->view('activities.index',compact('activities'));
     }
 
     /**
@@ -49,11 +52,13 @@ class ActivityController extends Controller
       
         $data = $this->parseData($request);
         $activity = Activity::create($data);
-        if($data['contact_id']){
-            $contact = $this->contact->findOrFail($data['contact_id']);
-            $activity->relatedContact()->attach($data);
+
+        if(isset($data['contact'])){
+            
+            $activity->relatedContact()->attach($data['contact']);
         }
-        return redirect()->route('address.show',$data['location_id']);
+        $activity->load('relatedContact');
+        return redirect()->route('address.show',$data['address_id']);
     }
 
     private function parseData($request){
@@ -62,7 +67,7 @@ class ActivityController extends Controller
         if($data['followup_date']){
             $data['followup_date'] = Carbon::parse($data['followup_date']);
         }
-        $data['address_id'] = request('location_id');
+        $data['address_id'] = request('address_id');
         $data['user_id'] = auth()->user()->id;
         $data['contact_id'] = request('contact_id');
         return $data;
@@ -76,7 +81,10 @@ class ActivityController extends Controller
      */
     public function show(Activity $activity)
     {
-        //
+        if($activity->user_id == auth()->user()->id){
+            dd($activity->load('relatedContact'));
+        }
+        dd('it aint yours');
     }
 
     /**
@@ -87,7 +95,9 @@ class ActivityController extends Controller
      */
     public function edit(Activity $activity)
     {
-        //
+        $location = Address::with('contacts','activities')->findOrFail($activity->address_id);
+        $activities = ActivityType::orderBy('sequence')->pluck('activity','id')->toArray();
+        return response()->view('activities.edit', compact('activity','activities','location'));
     }
 
     /**
@@ -99,7 +109,13 @@ class ActivityController extends Controller
      */
     public function update(Request $request, Activity $activity)
     {
-        //
+        
+        
+        $data = $this->parseData($request);
+       
+        $activity->update($data);
+   
+        return redirect()->route('address.show',$activity->address_id);
     }
 
     /**
@@ -110,6 +126,8 @@ class ActivityController extends Controller
      */
     public function destroy(Activity $activity)
     {
-        //
+        $address = $activity->address_id;
+        $activity->delete();
+        return redirect()->route('address.show',$address)->withMessage('Activity deleted');
     }
 }

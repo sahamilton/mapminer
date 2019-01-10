@@ -1,12 +1,4 @@
-@php $activities = [
-  'Call',
-  'Email',
-  'Cold Call',
-  'Sales Appointment',
-  'Stop By',
-  'Left material',
-  'Proposal']; @endphp
-  <style>
+<style>
 
 .activity_date, .followup_date{z-index:1151 !important;}
 </style>
