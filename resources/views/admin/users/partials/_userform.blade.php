@@ -7,7 +7,7 @@
 		class="form-control" 
 		type="text" 
 		name="email" 
-		autoforward = 'off'
+		autocomplete = 'off'
 		id="email" 
 		value="{{ old('email', isset($user) ? $user->email : '') }}" 
 		placeholder="email@peopleready.com"/>
