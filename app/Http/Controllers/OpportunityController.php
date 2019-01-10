@@ -46,12 +46,12 @@ class OpportunityController extends Controller
         $myBranches = array_keys($this->person->myBranches());
        
         if(! auth()->user()->hasRole('Branch Manager') && $this->person->myTeam()->count() >1){
-            dd($data);
+             $data = $this->getMarketManagerData($myBranches);
             // need to get all the activities esp conversions / closes
             return response()->view('opportunities.mgrindex',compact('data','activityTypes'));
         } else{
           
-             $data = $this->getBrancMgrOpportunities($myBranches);
+             $data = $this->getBranchOpportunities($myBranches);
 
             return response()->view('opportunities.index',compact('data','activityTypes'));
         
@@ -69,6 +69,7 @@ class OpportunityController extends Controller
         return response()->view('opportunities.index',compact('data','activityTypes'));
     }
 
+    
     public function getBranchOpportunities(array $branches){
         $data['branches'] = $this->branch->with('opportunities','leads','manager')
             ->whereIn('id',$branches)
@@ -93,6 +94,24 @@ class OpportunityController extends Controller
 
         return $data;
     }
+
+
+    private function getMarketManagerData(array $branches){
+
+        $data = $this->getBranchOpportunities($branches);
+        $query = "SELECT opportunities.branch_id as branch,activities.activitytype_id as type, count(*) as sum
+                FROM activities,addresses ,opportunities
+                WHERE activities.address_id = addresses.id
+                and opportunities.branch_id in (" . implode(",",$branches) . ") and addresses.id = opportunities.address_id
+                group by branch, type";
+        $data['summary'] = \DB::select(\DB::raw($query));
+        foreach ($data['summary'] as $stats){
+
+            $data['stats'][$stats->branch][$stats->type] = $stats->sum; 
+        }
+       return $data;
+}    
+        
     /**
      * Show the form for creating a new resource.
      *

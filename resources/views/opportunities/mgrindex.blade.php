@@ -9,6 +9,7 @@
       <th>Manager</th>
       <th>Leads</th>
       <th>Opportunities</th>
+      <th>Closed</th>
     </thead>
       <tbody>
         @foreach ($data['branches'] as $branch)
@@ -27,6 +28,11 @@
           </td>
           <td align="center">{{$branch->leads->count()}}</td>
           <td align="center">{{$branch->opportunities->count()}}</td>
+          <td align="center">
+            @if(isset($data['stats'][$branch->id]))
+              {{$data['stats'][$branch->id][9]}}
+            @endif
+          </td>
           
         @endforeach
 
