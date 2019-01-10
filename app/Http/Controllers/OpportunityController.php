@@ -42,14 +42,15 @@ class OpportunityController extends Controller
      */
     public function index()
     {
-       if(! auth()->user()->hasRole('Branch Manager') && $this->person->myTeam()->count() >1){
+        $activityTypes = ActivityType::all();
+        if(! auth()->user()->hasRole('Branch Manager') && $this->person->myTeam()->count() >1){
             $branches = $this->branch->with('opportunities','leads','manager')
             ->whereIn('id',array_keys($this->person->myBranches()))
             ->get();
-         
-            return response()->view('opportunities.mgrindex',compact('branches'));
+            // need to get all the activities esp conversions / closes
+            return response()->view('opportunities.mgrindex',compact('branches','activityTypes'));
         } else{
-            $activityTypes = ActivityType::all();
+           ;
             $branches = array_keys($this->person->myBranches());
             $data = $this->getBranchOpportunities($branches);
 
@@ -62,9 +63,9 @@ class OpportunityController extends Controller
 
     public function branchOpportunities($branch_id){
 
-       $activityTypes = $this->activity->activityTypes;
+       $activityTypes = $activityTypes = ActivityType::all();
        $data = $this->getBranchOpportunities([$branch_id]);
-
+      
        
         return response()->view('opportunities.index',compact('data','activityTypes'));
     }
@@ -124,6 +125,7 @@ class OpportunityController extends Controller
      */
     public function show(Opportunity $opportunity)
     {
+        dd('hrere');
         $opportunity->load('address');
         $address = $opportunity->address;
 

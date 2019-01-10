@@ -88,7 +88,7 @@
     <strong>Recent Business</strong>
   </a>
   @endif
-  @if($location->has('ranking'))
+  @if($location->currentRating())
 <a class="nav-item nav-link"  
         data-toggle="tab" 
         href="#rating"

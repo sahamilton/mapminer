@@ -83,7 +83,7 @@ $(document).ready(function()
 		}
 		);
 	
-	
+	/*
 	$('.starrr').on('starrr:change', function(e, value){
   
 		  
@@ -95,7 +95,7 @@ $(document).ready(function()
 		  	function ranked(id,value,type)
 		       {
 		         if (type && type=='lead') {
-		         	var url = '{{route('api.newlead.rank')}}?api_token={{auth()->user()->api_token}}';
+		         	var url = 'api.newlead.rank'?api_token={{auth()->user()->api_token}}';
 		         }else{
 		         	var url = '{{route('api.rank')}}?api_token={{auth()->user()->api_token}}';
 		         }
@@ -134,7 +134,7 @@ $(document).ready(function()
 
 		});
 
-	
+	*/
         $('#sorttable, #store-locator-container').on('change','.watchItem',function() {
 		var id = $(this).val();
         if($(this).is(":checked")) {

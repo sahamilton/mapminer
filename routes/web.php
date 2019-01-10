@@ -43,8 +43,11 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::resource('accounttype','AccounttypesController',	['only' => ['index', 'show']]);
 	#Address
 		Route::post('address/{address}/rating',['as'=>'address.rating','uses'=>'AddressController@rating']);
-		Route::resource('address','AddressController');	
-	#Branches4
+		Route::resource('address','AddressController');
+	# Branch Leads
+		Route::get('branchleads.import',['as'=>'branchleads.import','uses'=>'BranchLeadImportController@getFile']);#branch leads
+		Route::resource('branchleads','BranchLeadController');	
+	#Branches
 		Route::get('/branches/{state}/state/', ['as'=>'branches.statelist','uses'=>'BranchesController@state']);
 		Route::post('/branches/state', ['as'=>'branches.state','uses'=>'BranchesController@state']);
 		Route::get('/branches/{state}/statemap', ['as'=>'branches.showstatemap','uses'=>'BranchesController@statemap']);
@@ -63,8 +66,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 	#Branch Assignments
 		Route::resource('branchassignments','BranchManagementController',['only'=>['index','show','edit','update']]);
-	# Branch Leads Import
-		Route::get('branchleads.import',['as'=>'branchleads.import','uses'=>'BranchLeadImportController@etFile']);
+	
 		
 		Route::resource('branchleadsimport','BranchLeadImportController');
 	#Comments
@@ -226,6 +228,7 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::resource('myleadsactivity','MyLeadsActivityController');
 		Route::resource('myleadscontact','MyLeadsContactController');
 
+		/*
 		Route::get('/newleads/{pid}',['as'=>'salesrep.newleads','uses'=>'LeadsController@salesLeads']);
 		Route::get('/newleads/show/{id}/',['as'=>'salesrep.newleads.show','uses'=>'LeadsController@salesLeadsDetail']);
 		Route::get('/newleads/{pid}/map',['as'=>'salesrep.newleads.map','uses'=>'LeadsController@salesLeadsMap']);
@@ -237,6 +240,7 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('newlead/{pid}/export',['as'=>'newleads.export','uses'=>'LeadsController@exportLeads']);
 		Route::post('lead/{id}/claim',['as'=>'lead.claim','uses'=>'LeadsController@claim']);
 		Route::post('lead/{id}/close',['as'=>'lead.close','uses'=>'LeadsController@close']);
+		*/
 	## Webleads
 		/*Route::get('/myleads', ['as'=>'my.webleads','uses'=>'WebLeadsController@saleslist']);
 		Route::get('/webleads/{lead}/salesshow',['as'=>'webleads.salesshow','uses'=>'WebLeadsController@salesshow']);
@@ -303,8 +307,7 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
 		Route::get('branches/export', ['as'=>'branches.export', 'uses'=>'BranchesController@export']);
 		Route::get('branches/team/export', ['as'=>'branches.team.export', 'uses'=>'BranchesController@exportTeam']);
 		Route::resource('branches','BranchesController',['except'=>['index','show']]);
-	# Branch Leads
-		Route::resource('branchleads',"BranchLeadController");
+	
 	#Companies
 		Route::get('companies/import', ['as'=>'companies.importfile', 'uses'=>'CompaniesImportController@getFile']);
 		Route::post('companies/import', ['as'=>'companies.import', 'uses'=>'CompaniesImportController@import']);

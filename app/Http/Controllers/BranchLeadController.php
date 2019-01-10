@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use App\Lead;
 use App\Address;
+use App\Person;
 use App\Branch;
 use App\BranchLead;
 use Illuminate\Http\Request;
@@ -12,12 +13,14 @@ class BranchLeadController extends Controller
     public $lead;
     public $branch;
     public $address;
+    public $person;
     public $branchlead;
-    public function __construct(Lead $lead, BranchLead $branchlead,Branch $branch, Address $address){
+    public function __construct(Lead $lead,Person $person, BranchLead $branchlead,Branch $branch, Address $address){
         $this->lead = $lead;
         $this->address = $address;
         $this->branch = $branch;
-        $this->$branchlead = $branchlead;;
+        $this->$branchlead = $branchlead;
+        $this->person = $person;
 
     }
     /**
@@ -27,8 +30,12 @@ class BranchLeadController extends Controller
      */
     public function index()
     {
-        $this->assign();
-
+        // get my branches
+          $branchleads = $this->address->whereHas('branchLead',function($q){
+            $q->whereIn('id',array_keys($this->person->myBranches()));
+          })->with('branchlead','branchlead.manager')->get();
+         
+        return response()->view('branchlead.index',compact('branchleads'));
     }
 
     /**

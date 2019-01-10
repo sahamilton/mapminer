@@ -96,16 +96,10 @@
 
                   @endif    
                   
-                  @if(auth()->user()->can('accept_leads') or auth()->user()->can('manage_leads'))
-                    <a class="dropdown-item"  
-                        href="{{route('salesrep.newleads',auth()->user()->person->id)}}">
-
-                    <i class="fas fa-envelope" aria-hidden="true"> </i> 
-                      Sales Prospects</a>
-                  @endif
                   
-                  @if(auth()->user()->hasRole('Branch Manager'))
-                    <a class="dropdown-item"  href="{{route('branchmanager.newleads')}}">
+                  
+                  @can('manage_oportunities')
+                    <a class="dropdown-item"  href="{{route('oportunities.index')}}">
                     <i class="far fa-envelope" aria-hidden="true"> </i> 
                     Branch Prospects</a>
                   @endif
@@ -117,16 +111,8 @@
                     Account Managers View</a>
                   @endif
                   
-                  @can('manage_projects')
-                   
-                  <a class="dropdown-item" href="{{route('projects.myprojects')}}">
-                  <i class="far fa-flag" aria-hidden="true"> </i> 
-                  My Construction projects</a>
-                  @endcan
+                  
 
-                  @can('manage_prospects')
-                           
-                  @endcan
                 </div>
               
             </li>    

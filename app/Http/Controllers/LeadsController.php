@@ -614,8 +614,8 @@ class LeadsController extends BaseController
            return $person;
 
         } 
-       $peeps = $this->person->myTeam();
-
+       $peeps = $this->person->myTeam()->pluck('id')->toArray();
+      
       
         if(in_array($pid,$peeps) ){
             return $person;

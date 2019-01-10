@@ -130,4 +130,10 @@ class ActivityController extends Controller
         $activity->delete();
         return redirect()->route('address.show',$address)->withMessage('Activity deleted');
     }
+
+    public function seeder(){
+        //first get branches
+        // then get addresses
+        //random create activity from random type
+    }
 }
