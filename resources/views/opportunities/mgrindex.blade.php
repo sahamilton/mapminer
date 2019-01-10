@@ -11,7 +11,7 @@
       <th>Opportunities</th>
     </thead>
       <tbody>
-        @foreach ($branches as $branch)
+        @foreach ($data['branches'] as $branch)
 
         <tr>
           <td>

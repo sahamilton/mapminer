@@ -39,7 +39,7 @@ add selector
     role="tab"
     aria-controls="nav-customers"
     aria-selected="false">
-    <strong>Customers</strong>
+    <strong>Accounts</strong>
 </a>  
 <a class="nav-item nav-link"
     id="nav-activities-tab"

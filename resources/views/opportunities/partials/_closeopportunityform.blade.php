@@ -13,29 +13,30 @@ $rank =  3 ;@endphp
         <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
       <div class="modal-body">
-        <p><strong>Close or Convert Opportunity</strong></p>
+        <p><strong>Close Opportunity</strong></p>
         <form method="post" action="{{route('opportunity.close',$location->id)}}">
           @csrf
           <div class="form-group">
-            <label class="col-md-4 control-label">Close Opportunity:</label>
-            
-              <input type="radio" class= "form-control" name="close" value="close" />
-       
+            <label class="col-md-4 control-label">Win/Loss</label>
+            <select required name="close">
+              <option value="close">Close - Lost</option>
+              <option value="converted">Close - Won</option>
+            </select>
           </div>
           <div class="form-group">
-            <label class="col-md-4 control-label">Convert Opportunity:</label>
-      
-              <input type="radio" class="form-control" name="close" checked value="convert" />
-           
-          </div>
-          <div class="form-group">
-            <label class="col-md-4 control-label">Estimated Requirements:</label>
+            <label class="col-md-4 control-label">Estimated Headcount:</label>
            
               <input class="form-control" type="text" name="requirements" />
        
           </div>
           <div class="form-group">
-            <label class="col-md-4 control-label">Estimated Business:</label>
+            <label class="col-md-4 control-label">Estimated Duration: (months):</label>
+           
+              <input class="form-control" type="text" name="durations" />
+       
+          </div>
+          <div class="form-group">
+            <label class="col-md-4 control-label">Estimated Revenue:</label>
             
               <input class="form-control" type="text" name="periodbusiness" />
            

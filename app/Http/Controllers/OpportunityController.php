@@ -44,15 +44,14 @@ class OpportunityController extends Controller
     {
         $activityTypes = ActivityType::all();
         $myBranches = array_keys($this->person->myBranches());
+       
         if(! auth()->user()->hasRole('Branch Manager') && $this->person->myTeam()->count() >1){
-            $branches = $this->branch->with('opportunities','leads','manager')
-            ->whereIn('id',$myBranches)
-            ->get();
+            dd($data);
             // need to get all the activities esp conversions / closes
-            return response()->view('opportunities.mgrindex',compact('branches','activityTypes'));
+            return response()->view('opportunities.mgrindex',compact('data','activityTypes'));
         } else{
           
-            $data = $this->getBranchOpportunities($myBranches);
+             $data = $this->getBrancMgrOpportunities($myBranches);
 
             return response()->view('opportunities.index',compact('data','activityTypes'));
         
