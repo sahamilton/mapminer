@@ -98,11 +98,11 @@
                   
                   
                   
-                  @can('manage_oportunities')
-                    <a class="dropdown-item"  href="{{route('oportunities.index')}}">
+                @can ('manage_opportunities')
+                    <a class="dropdown-item"  href="{{route('opportunity.index')}}">
                     <i class="far fa-envelope" aria-hidden="true"> </i> 
                     Branch Prospects</a>
-                  @endif
+                  @endCan
 
                   @if (auth()->user()->hasRole('Admin') or auth()->user()->hasRole('National Account Manager'))
                     
