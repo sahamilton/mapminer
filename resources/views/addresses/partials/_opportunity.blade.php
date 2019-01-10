@@ -1,5 +1,6 @@
 
 @if($location->opportunities && $location->opportunities->branch->count()>0)
+
   @can('manage_opportunities')
       <p>Tracked as <a href="{{route('opportunity.index')}}">{{$location->opportunities->branch()->first()->branchname}} branch opportunity</a></p>
       <button class="btn btn-danger" 

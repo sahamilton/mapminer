@@ -33,7 +33,7 @@ class Company extends NodeModel {
     ];
 
 	// Don't forget to fill this array
-	protected $fillable = array('companyname', 'vertical','person_id','accounttypes_id','customer_id','parent_id');
+	protected $fillable = array('companyname', 'vertical','person_id','c','customer_id','parent_id');
 	
 	public function type() 
 	{

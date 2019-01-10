@@ -10,6 +10,7 @@ use App\Branch;
 use App\Orders;
 use App\Address;
 use App\Activity;
+use \Carbon\Carbon;
 use App\ActivityType;
 use Illuminate\Http\Request;
 
@@ -173,19 +174,38 @@ class OpportunityController extends Controller
     }
 
     public function close(Request $request, $address){
-        dd(request()->all(),$address);
+        
+        $opportunity = $this->opportunity->findOrFail(request('opportunity_id'));
+      
         if(request('close')=='convert'){
             $address->load('company');
-            if(! $address->company){
-               
+            if(! $address->company or $address->company->customer_id != request('client_id')){
+              
                $company = Company::create(['companyname'=>$address->businessname,'accounttypes_id'=>3,'customer_id'=>request('client_id')]);
                
                $address->update(['company_id' => $company->id]);
-               dd($company,$address);
+               
             }
+            // update opportunity record
+            
+            $data = ['closed'=>1,'client_ref'=>request('client_id'),'requirements'=>request('requirements'),'value'=>request('periodbusiness')];
+            $opportunity->update($data); // create an activity on the address
+            $data=['address_id'=>$address->id,'user_id'=>auth()->user()->id,
+            'note'=>request('comments'),'activity_date'=>Carbon::now(),'activitytype_id'=>'8'];
+            $activity = Activity::create($data);
+            // store the values on the opportunity
         }else{
-            dd('close opportunity');
+            //create an activity on the address
+            // remove from opportunity
+            $address->branchLead()->detach([$opportunity->branch_id]);
+            $data=['address_id'=>$address->id,'user_id'=>auth()->user()->id,
+            'note'=>request('comments'),'activity_date'=>Carbon::now(),'activitytype_id'=>'9'];
+            $activity = Activity::create($data);
+            $address->activities()->save($activity);
+            $opportunity->delete();
+            
         }
+        return redirect()->route('opportunity.index')->withMessage('Opportunity '. request('close'));
         
     }
 

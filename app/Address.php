@@ -68,6 +68,10 @@ class Address extends Model
        
     }
 
+    public function branchLead(){
+        return $this->belongsToMany(Branch::class,'branch_lead','address_id','branch_id');
+    }
+
     public function opportunities(){
         return $this->belongsTo(Opportunity::class,'id','address_id');
     }
