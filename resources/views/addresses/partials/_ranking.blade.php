@@ -1,4 +1,4 @@
-<p>
+<div class="float-right">
 
 @if($ranked)
 	You rated this location <span style="font-size:150%" class='starrr2 text text-success col-md-6' id="rank" > </span>.
@@ -12,20 +12,19 @@
 })
 </script>
 @else
-@include('addresses.partials._addressaction')
+
+<button type="button" 
+		class="btn btn-info float-right" 
+		data-toggle="modal" 
+		data-target="#rateaddress">
+			Rate Location Data
+</button>
 @endif
 
-@if($location->currentRating())
-	The average ranking for this location is 
-	<span style="font-size:150%" class='starrr1 text text-danger col-md-6' id="rank" > </span></p>
-	<script>
-		$('.starrr1').starrr({
-	  		readOnly: true,
-	  		rating:{{number_format($location->currentRating(),0)}},
-		})
-	</script>
-@else
+@if(!$location->currentRating())
+	
 This location has not been rated yet.
 @endif
+</div>
 
 

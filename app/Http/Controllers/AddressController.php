@@ -66,7 +66,7 @@ class AddressController extends Controller
 
         $location = $address->load($address->addressable_type,'contacts','contacts.relatedActivities','activities','activities.type','activities.relatedContact','company','opportunities','industryVertical',$address->addressable_type . '.relatedNotes','orders','watchedBy','watchedBy.person','ranking');
         
-        $activities = ActivityType::orderBy('sequence')->pluck('activity','id')->toArray();
+       // $activities = ActivityType::orderBy('sequence')->pluck('activity','id')->toArray();
     
         $branches = $this->branch->nearby($location,100,5)->get();
         $rankingstatuses = $this->address->getStatusOptions;
@@ -74,7 +74,7 @@ class AddressController extends Controller
         $mybranches = $this->person->myBranches();
         $ranked = $this->address->getMyRanking($location->ranking);
      
-        return response()->view('addresses.show',compact('location','branches','rankingstatuses','people','mybranches','ranked'.'activities'));
+        return response()->view('addresses.show',compact('location','branches','rankingstatuses','people','mybranches','ranked'));
     }
 
     /**

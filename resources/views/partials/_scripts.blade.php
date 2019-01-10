@@ -20,7 +20,7 @@ $(document).ready(function()
     	$(this).find('#title').html($(e.relatedTarget).data('title'));
 		$(this).find('#action-form').attr('action',$(e.relatedTarget).data('href'));
 	});	
-	$(document).on('show.bs.modal','#add_activity', function(e) {
+	$(document).on('show.bs.modal','#add-activity', function(e) {
     	$(this).find('#title').html($(e.relatedTarget).data('title'));
     	$(this).find('#address_id').html($(e.relatedTarget).data('id'));
 		$(this).find('#action-form').attr('action',$(e.relatedTarget).data('href'));
@@ -30,7 +30,10 @@ $(document).ready(function()
 		$(this).find('#title').html($(e.relatedTarget).data('title'));
 		$(this).find('input#lead_id').val($(e.relatedTarget).data('pk'));
 	});
-
+	$(document).on('show.bs.modal','#closeopportunity', function(e) {
+    	
+		
+	});
 	
 
 

@@ -54,3 +54,4 @@
     </tfoot>
 
 </table>
+@include('opportunities.partials._activitiesmodal')

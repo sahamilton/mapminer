@@ -8,12 +8,10 @@
     @endif
 </p>
 
+@include('addresses.partials._ranking')
 
-  @include('addresses.partials._addressaction')
-
-@if($location->opportunities)
 @include('addresses.partials._opportunity')
-@endif
+
 <p>Location Source: {{$location->addressType[$location->addressable_type]}}</p>
 @include('maps.partials._form')
 
@@ -99,7 +97,7 @@
         aria-controls="rating"
         aria-selected="false">
 
-    <strong> Ratings</strong>
+    <strong> Ratings ({{number_format($location->currentRating(),1)}})</strong>
   </a>
   @endif
 
@@ -136,11 +134,6 @@
 
   </div>
 
-
-
-
-
-</div>
 
 @include('partials._modal');
 @include('addresses.partials._rateaddressform')

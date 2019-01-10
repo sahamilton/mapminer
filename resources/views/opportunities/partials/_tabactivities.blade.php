@@ -22,8 +22,8 @@
 
     </thead>
     <tbody>
-         @foreach($location->activities as $activity)
-      
+         @foreach($data['activities'] as $activities)
+           @foreach ($activities as $activity)
             <tr>
                 <td>{{$activity->activity_date ? $activity->activity_date->format('M j, Y'):''}}</td>
                 <td>@if($activity->type)
@@ -70,7 +70,7 @@
                 </td>
             </tr>
            @endforeach
-
+           @endforeach
     </tbody>
 </table>
-@include('addresses.partials._activities')
+

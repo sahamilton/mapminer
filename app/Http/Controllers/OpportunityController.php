@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Opportunity;
 use App\Lead;
+use App\Company;
 use App\Person;
 use App\Branch;
 use App\Orders;
 use App\Address;
 use App\Activity;
+use App\ActivityType;
 use Illuminate\Http\Request;
 
 class OpportunityController extends Controller
@@ -46,7 +48,7 @@ class OpportunityController extends Controller
          
             return response()->view('opportunities.mgrindex',compact('branches'));
         } else{
-            $activityTypes = $this->activity->activityTypes;
+            $activityTypes = ActivityType::all();
             $branches = array_keys($this->person->myBranches());
             $data = $this->getBranchOpportunities($branches);
 
@@ -76,7 +78,13 @@ class OpportunityController extends Controller
                 ->orderBy('branch_id')
                 ->distinct()
                 ->get();
-        
+        $data['addresses'] = $data['opportunities']->map(function ($opportunity){
+            return $opportunity->address;
+        });
+        $data['activities'] = $data['addresses']->map(function ($address){
+            return $address->activities->load('relatesToAddress','relatedContact');
+        });
+
         
         $data['branchorders'] = $this->branch->with('orders','orders.activities')->whereIn('id',$branches)->get(); 
         
@@ -118,12 +126,14 @@ class OpportunityController extends Controller
         $opportunity->load('address');
         $address = $opportunity->address;
 
-        $location = $address->load($address->addressable_type,'contacts','company','industryVertical','activities',$address->addressable_type . '.relatedNotes');
-  
+        $location = $address->load($address->addressable_type,'contacts','company','industryVertical','activities',$address->addressable_type . '.relatedNotes','ranking');
+        
+        $ranked = $address->getMyRanking($location->ranking);
+
         $branches = $this->branch->nearby($location,100,5)->get();
         $rankingstatuses = $this->address->getStatusOptions;
         $people = $this->person->salesReps()->PrimaryRole()->nearby($location,100,5)->get();
-               return response()->view('addresses.show',compact('location','branches','rankingstatuses','people'));
+               return response()->view('addresses.show',compact('location','branches','rankingstatuses','people','ranked'));
         //
     }
 
@@ -160,6 +170,23 @@ class OpportunityController extends Controller
     public function destroy(Opportunity $opportunity)
     {
         //
+    }
+
+    public function close(Request $request, $address){
+        dd(request()->all(),$address);
+        if(request('close')=='convert'){
+            $address->load('company');
+            if(! $address->company){
+               
+               $company = Company::create(['companyname'=>$address->businessname,'accounttypes_id'=>3,'customer_id'=>request('client_id')]);
+               
+               $address->update(['company_id' => $company->id]);
+               dd($company,$address);
+            }
+        }else{
+            dd('close opportunity');
+        }
+        
     }
 
     

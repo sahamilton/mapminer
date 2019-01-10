@@ -52,9 +52,7 @@ $rank =  3 ;@endphp
         </form>
       </div>
       <div class="modal-footer">
-
-        Footer
-      </div>
+     </div>
     </div>
   </div>
 </div>

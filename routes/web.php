@@ -143,6 +143,7 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::resource('notes','NotesController');
 
 	#Opportunity
+		Route::post('/opportunities/close/{address}',['as'=>'opportunity.close','uses'=>'OpportunityController@close']);
 		Route::get('/opportunities/branch/{bid}',['as'=>'opportunities.branch','uses'=>'OpportunityController@branchOpportunities']);
 		Route::resource('opportunity','OpportunityController');
 	#Orders

@@ -81,7 +81,7 @@ add selector
     id="nav-activities"
     role="tabpanel"
     aria-labelledby="nav-activities-tab">
-    Activities
+     @include('opportunities.partials._tabactivities')
   </div>
 
  
