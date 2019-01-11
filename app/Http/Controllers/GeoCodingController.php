@@ -51,13 +51,14 @@ class GeoCodingController extends BaseController {
 	/**  This needs some serious refactoring! **/
 
 	public function findMe(FindMeFormRequest $request) {
-		//dd(request()->all());	
+		
+		
 		if(request()->filled('search')) {
 			$address = urlencode(request('search'));
 			
 		}
 
-		if(! request('lat') && ! request('lng')){
+		if(request('search')!= session('geo.search')){
 		$geocode = app('geocoder')->geocode(request('search'))->get();
 		
 		if(! $geocode or count($geocode)==0){
