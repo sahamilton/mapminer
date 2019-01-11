@@ -1,3 +1,7 @@
+ <button class="btn btn-danger" 
+     
+      data-toggle="modal" 
+      data-target="#closeopportunity">Close Opportunity</button>
 <!-- Modal -->
 @php
 $rank =  3 ;@endphp
