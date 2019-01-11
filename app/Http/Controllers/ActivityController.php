@@ -27,7 +27,7 @@ class ActivityController extends Controller
     public function index()
     {
         $activities = $this->activity->myActivity()->with('relatesToAddress','relatedContact','type')->get();
-       
+
         return response()->view('activities.index',compact('activities'));
     }
 

@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use \App\Contact;
 use App\Orders;
 use App\Branch;
+
+use App\Person;
 use App\Opportunity;
 use \App\Locations;
 use JeroenDesloovere\VCard\VCard;
@@ -13,9 +15,11 @@ class LocationContactController extends Controller
 {
     
     public $contact;
+    public $person;
 
-    public function __construct(Contact $contact){
+    public function __construct(Contact $contact,Person $person){
         $this->contact = $contact;
+        $this->person = $person;
     }
     /**
      * Display a listing of the resource.
@@ -31,16 +35,16 @@ class LocationContactController extends Controller
              $branches = Branch::whereHas('manager',function($q) {
                 $q->where('id','=',auth()->user()->person->id);
              })->pluck('id')->toArray();
-             
+        }else{
+            $branches = array_keys($this->person->myBranches());
+        }
              $opportunity = Opportunity::whereIn('branch_id',$branches)->pluck('address_id')->toArray();
              $customer = Orders::whereIn('branch_id',$branches)->pluck('address_id')->toArray();
            
              $contacts = $this->contact->whereIn('address_id',array_merge($opportunity,$customer))->with('location')->get();
    
              return response()->view('contacts.index',compact('contacts'));
-        }else{
-            dd('hmmmm',auth()->user()->id);
-        }
+           
     }
 
     /**

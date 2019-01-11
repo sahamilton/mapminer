@@ -1,4 +1,4 @@
- <button class="btn btn-danger" 
+<button class="btn btn-danger" 
      
       data-toggle="modal" 
       data-target="#closeopportunity">Close Opportunity</button>
