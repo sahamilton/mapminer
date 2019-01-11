@@ -35,4 +35,4 @@
 
 </table>
 @endforeach
-@include('myleads.partials._mylead')
+@include('opportunities.partials._mylead')

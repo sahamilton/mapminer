@@ -60,10 +60,11 @@ class MyLeadsController extends BaseController
     {
       
         $data = $this->cleanseInput($request);
-       dd($data);
-        $lead = $this->lead->save($data);
-        $lead->save();
-        $lead->salesteam()->attach($lead->id, $data['team']);
+
+        $lead = $this->lead->create($data['lead']);
+  
+        $lead->branchLead()->attach($data['branch']);
+        
         
         return redirect()->route('address.show',$lead)->withMessage('Lead Created');
     }
@@ -127,7 +128,7 @@ class MyLeadsController extends BaseController
         $data['team']['person_id'] = auth()->user()->person->id;
         $data['team']['type'] = 'mylead';
         $data['team']['status_id'] =2;
-        $data['branch']='';
+        $data['branch']=request()->branch_id;
         return $data;
     }
 
