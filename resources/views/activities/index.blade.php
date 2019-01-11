@@ -19,27 +19,41 @@
 			
 			<tr>
 				<td>
+					@if($activity->relatesToAddress)
 					<a href="{{route('address.show',$activity->relatesToAddress->id)}}">
+
 						{{$activity->relatesToAddress->businessname}}
 					</a>
-				</td>
-				<td>{{$activity->relatesToAddress->fulladdress()}}</td>
-				<td>{{$activity->activity_date->format('Y-m-d')}}</td>
-				
-				<td>
-					@if($activity->followup_date)
-					{{$activity->followup_date->format('Y-m-d')}}
+					@else
+						{{$activity->id}}
 					@endif
 				</td>
 				<td>
-					@if($activity->relatedContact->count()>0)
+					@if($activity->relatesToAddress)
+						{{$activity->relatesToAddress->fulladdress()}}
+					@endif
+				</td>
+				<td>
+					{{$activity->activity_date->format('Y-m-d')}}</td>
+				
+				<td>
+					@if($activity->followup_date)
+						{{$activity->followup_date->format('Y-m-d')}}
+					@endif
+				</td>
+				<td>
+					@if($activity->relatedContact)
 						@foreach ($activity->relatedContact as $contact)
 							{{$contact->fullname}}
 						@endforeach
 					@endif
 				</td>
 					
-				<td>{{$activity->type->activity}}</td>
+				<td>
+					@if($activity->type)
+						{{$activity->type->activity}}
+					@endif
+			</td>
 				
 
 			</tr>
