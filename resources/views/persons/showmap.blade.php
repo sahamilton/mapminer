@@ -3,7 +3,7 @@
 
 <h4>Branches managed by {{$data['people']->postName()}}</h4>
 <p>{{$data['people']->userdetails->email}}</p>
-<p>
+<p>{{dd($data['people']->manages)}}
 <a href="{{route('person.show',$data['people']->id)}}">
 
 <i class="fas fa-th-list" aria-hidden="true"></i> List View</a>

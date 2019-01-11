@@ -174,9 +174,9 @@ class PersonsController extends BaseController {
 	{
 		$roles = $this->persons->findPersonsRole($person);
 
+
 		//note remove manages & manages.servicedby
-		$people = $this->persons
-			->with('directReports',
+		$people = $person->load('directReports',
 				'directReports.userdetails.roles',
 				'directReports.branchesServiced',
 				'reportsTo',
@@ -188,15 +188,12 @@ class PersonsController extends BaseController {
 				'userdetails.roles',
 				'branchesServiced',
 				'branchesServiced.servicedBy'
-						)
-
-			->find($person->id);
-
+						);
 
 
 		// Note that we will have to extend this to show Sales people
 
-		if(in_array('National Account Manager',$roles))
+		if(in_array('National Accounts',$roles))
 		{
 
 			$accounts = $people->managesAccount;
