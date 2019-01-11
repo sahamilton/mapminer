@@ -1,4 +1,4 @@
-@php $statuses = ['open','converted']; @endphp
+@php $statuses = ['open','closed - won','closed - lost']; @endphp
 <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
       <th>Date Opened</th>
@@ -6,8 +6,11 @@
       <th>Status</th>
       <th>Business</th>
       <th>Address</th>
+      <th>Top 50</th>
+      <th>Potential Headcount</th>
+      <th>Potential Duration (mos)</th>
       <th>Potential $$</th>
-      <th>Potential Labor Reqts</th>
+      
       <th>Last Activity</th>
       <th>Activities</th>
     </thead>
@@ -24,8 +27,17 @@
             </a>
           </td>
           <td>{{$opportunity->address->fullAddress()}}</td>
-          <td>{{$opportunity->value}}</td>
+          <td>
+
+            <input type="checkbox" name="top50" value="{{$opportunity->top50}}" 
+            @if($opportunity->top50)
+            checked/><span class="hidden">1</span>
+            @endif
+            
+          </td>
           <td>{{$opportunity->requirements}}</td>
+          <td>{{$opportunity->duration}}</td>
+          <td>{{$opportunity->value}}</td>
           <td>
             @if($opportunity->address->activities->count() >0 )
 

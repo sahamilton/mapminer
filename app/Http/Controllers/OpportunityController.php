@@ -132,6 +132,8 @@ class OpportunityController extends Controller
     {
         
         $this->opportunity->create(request()->all());
+        $address = $this->address->findOrFail(request('address_id'));
+        $address->branchLead()->detach([$opportunity->branch_id]);
         return redirect()->route('address.show',request('address_id'))->withMessage("Added to branch opportunities");
     }
 
@@ -143,7 +145,7 @@ class OpportunityController extends Controller
      */
     public function show(Opportunity $opportunity)
     {
-        dd('hrere');
+      
         $opportunity->load('address');
         $address = $opportunity->address;
 
@@ -217,12 +219,12 @@ class OpportunityController extends Controller
         }else{
             //create an activity on the address
             // remove from opportunity
-            $address->branchLead()->detach([$opportunity->branch_id]);
+            
             $data=['address_id'=>$address->id,'user_id'=>auth()->user()->id,
             'note'=>request('comments'),'activity_date'=>Carbon::now(),'activitytype_id'=>'9'];
             $activity = Activity::create($data);
             $address->activities()->save($activity);
-            $opportunity->delete();
+            $opportunity->update(['closed'=>3]);
             
         }
         return redirect()->route('opportunity.index')->withMessage('Opportunity '. request('close'));
