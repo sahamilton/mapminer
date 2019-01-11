@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Opportunity extends Model
 {
     
-    public $fillable = ['address_id','branch_id','value','requirements','client_id','closed'];
+    public $fillable = ['address_id','branch_id','value','requirements','client_id','closed','top50'];
     
     public function branch(){
     	return $this->belongsTo(Branch::class);

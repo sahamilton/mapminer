@@ -29,7 +29,7 @@
           <td>{{$opportunity->address->fullAddress()}}</td>
           <td>
 
-            <input type="checkbox" name="top50" value="{{$opportunity->top50}}" 
+            <input type="checkbox" id="top50{{$opportunity->id}}" value="{{$opportunity->id}}" 
             @if($opportunity->top50)
             checked/><span class="hidden">1</span>
             @endif
@@ -68,3 +68,31 @@
 
 </table>
 @include('opportunities.partials._activitiesmodal')
+<script>
+$( document ).ready(function() {
+    $("input[id^=top50]").change (function () {
+      var id = $(this).val();
+
+      $.ajax(
+    
+        {
+        
+        type: "get",
+        
+        cache: false,
+        
+        url: '{{route("opportunity.toggle")}}',
+
+        data: {id: id,api_token:"{{auth()->user()->api_token}}"},
+        
+        dataType: "xml",
+        
+        contentType: "json",
+        
+        success: true
+        
+        }); 
+    });
+});
+
+</script>

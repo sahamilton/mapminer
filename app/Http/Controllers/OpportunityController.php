@@ -233,5 +233,16 @@ class OpportunityController extends Controller
         
     }
 
+    public function toggle(Request $request){
+        $opportunity = $this->opportunity->findOrFail(request('id'));
+        
+        if($opportunity->top5){
+            $opportunity->update(['top50' => null]);
+        }else{
+            $opportunity->update(['top50' => 1]);
+        }
+       
+    }
+
     
 }
