@@ -81,8 +81,9 @@ class BranchesController extends BaseController {
 	{
 		
 		$servicelines = $this->serviceline->all();
-		
-		return response()->view('branches.map',compact('servicelines'));
+		$allstates = $this->branch->allstates();
+	
+		return response()->view('branches.map',compact('servicelines','allstates'));
 	}
 	
 	
