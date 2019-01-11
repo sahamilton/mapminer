@@ -131,8 +131,9 @@ class OpportunityController extends Controller
     public function store(Request $request)
     {
         
-        $this->opportunity->create(request()->all());
+        $opportunity = $this->opportunity->create(request()->all());
         $address = $this->address->findOrFail(request('address_id'));
+        
         if($address->addressable_type == 'lead'){
                 $address->branchLead()->detach([$opportunity->branch_id]);
         }

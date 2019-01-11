@@ -223,7 +223,7 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('watch/map',['as'=>'watch.map','uses'=>'WatchController@showwatchmap']);
 		Route::get('cowatch/export',['as'=>'company.watchexport', 'uses'=>'WatchController@companywatchexport']);
 	#	New Leads
-		//Route::resource('myleads','MyLeadsController');
+		Route::resource('myleads','MyLeadsController');
 		Route::get('myclosedleads',['as'=>'myclosedleads','uses'=>'MyLeadsController@closedleads']);
 		Route::post('mylead/{id}/close',['as'=>'mylead.close','uses'=>'MyLeadsController@close']);
 		Route::resource('myleadsactivity','MyLeadsActivityController');

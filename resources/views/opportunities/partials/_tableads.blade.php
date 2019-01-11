@@ -1,3 +1,10 @@
+<div class="row float-right"><button type="button" 
+    class="btn btn-info float-right" 
+    data-toggle="modal" 
+    data-target="#add_lead">
+      Add Lead
+</button>
+</div>
 @foreach ($data['leads'] as $lead)
 
 <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
@@ -28,3 +35,4 @@
 
 </table>
 @endforeach
+@include('myleads.partials._mylead')
