@@ -263,7 +263,9 @@ class Branch extends Model implements HasPresenter {
 	}
 
 	public function allStates(){
-		return $this->pluck('state')->toArray();
+		$states = $this->distinct('state')->pluck('state')->toArray();
+		return State::whereIn('statecode',$states)->orderBy('statecode')->get();
+	
 	}
 
 }

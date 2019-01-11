@@ -464,14 +464,14 @@ class BranchesController extends BaseController {
 	
 	public function state(Request $request, $statecode=null) {
 		
-
+		$state = request('state');
 
 		if(! $statecode){
 
-			$statecode = request('state');
+			$statecode = $state;
 
 		}
-
+	
 		$branches = $this->branch
 			->with('region','servicelines','manager','relatedPeople','servicedBy')
 	
@@ -479,14 +479,12 @@ class BranchesController extends BaseController {
 					    $q->whereIn('serviceline_id',$this->userServiceLines);
 
 					})
-			->whereHas('address',function ($q) use ($statecode){
-				$q->where('state','=',$statecode);
-			})
+			->where('state','=',$statecode)
 			->orderBy('id')
 			->get();
 
-		
-				
+		$state = \App\State::where('statecode','=',$statecode)->first();
+		$allstates = $this->branch->allStates();
 		return response()->view('branches.state', compact('branches','state','fields','allstates'));
 		
 	}

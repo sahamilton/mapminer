@@ -13,12 +13,12 @@ $statelist = App\Branch::distinct()->orderBy('state')->get(array('state'));
 
 <label>Search for branches in </label>
        <select name='state' class="btn btn-mini" onchange='this.form.submit()'>
-           @foreach ($allstates as $state)
+           @foreach ($allstates as $statecode)
 
-           @if(isset($state) && $state->statecode == $state->state)
-				<option selected value="{{$state->state}}">{{$state->state}}</option>
+           @if(isset($state) && $statecode->statecode == $state->state)
+				<option selected value="{{$statecode->statecode}}">{{$statecode->statecode}}</option>
            @else
-           		<option value="{{$state->state}}">{{$state->state}}</option>
+           		<option value="{{$statecode->statecode}}">{{$statecode->statecode}}</option>
            @endif
 				
            @endforeach
