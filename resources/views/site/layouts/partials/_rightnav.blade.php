@@ -14,7 +14,12 @@
                   @endif
                    
                 </li>
-                
+                @can('service_branches')
+                <li class="nav-item">
+                  <a class="dropdown-item" href="{{{ route('branchassignments.show',auth()->user()->id) }}}">
+                  <i class="fas fa-search-location"></i> My Branch Assignments</a>
+                </li>
+                @endcan
                 @if (auth()->user()->hasRole('Admin'))
 
                 <li class="nav-item">

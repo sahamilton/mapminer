@@ -34,9 +34,7 @@
           <a class="dropdown-item" href="{{route('salesorg')}}">
                 <i class="fas fa-sitemap" aria-hidden="true"> </i>
                  People</a>
-          <a class="dropdown-item" href="{{route('myleads.index')}}">
-            <i class="fab fa-envira"></i>My Leads
-          </a>
+          
           @can('view_projects')
               <a class="dropdown-item" href="{{{ route('projects.index') }}}">
               <i class="far fa-flag" aria-hidden="true"> </i> Projects</a>
@@ -55,9 +53,7 @@
               <a class="dropdown-item" href="{{{ route('watch.index') }}}">
               <i class ="far fa-eye"></i> My Watch List</a>
               
-              <a class="dropdown-item" href="{{{ route('mynotes') }}}">
-              <i class="fas fa-folder-open" aria-hidden="true"></i>
-              My Notes</a>
+              
               
               <a class="dropdown-item" href="{{{ route('training.index') }}}">
               <i class="fas fa-graduation-cap" aria-hidden="true"></i>
@@ -68,10 +64,7 @@
               <i class="fas fa-search-location"></i> My Branch Assignments</a>
               @endcan
               @can('manage_opportunities')
-              <a class="dropdown-item" href="{{route('contacts.index')}}">
-              <i class="far fa-address-card"></i> Branch Contacts</a>
-               <a class="dropdown-item" href="{{ route('activity.index') }}">
-              <i class="far fa-calendar-alt"></i> Branch Activites</a>
+              
 
               @endcan
             </div>
@@ -101,7 +94,11 @@
                 @can ('manage_opportunities')
                     <a class="dropdown-item"  href="{{route('opportunity.index')}}">
                     <i class="far fa-envelope" aria-hidden="true"> </i> 
-                    Branch Prospects</a>
+                    Branch Opportunities</a>
+                    <a class="dropdown-item" href="{{route('contacts.index')}}">
+              <i class="far fa-address-card"></i> Branch Contacts</a>
+               <a class="dropdown-item" href="{{ route('activity.index') }}">
+              <i class="far fa-calendar-alt"></i> Branch Activites</a>
                   @endCan
 
                   @if (auth()->user()->hasRole('Admin') or auth()->user()->hasRole('National Account Manager'))
