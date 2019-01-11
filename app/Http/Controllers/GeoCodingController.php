@@ -51,8 +51,7 @@ class GeoCodingController extends BaseController {
 	/**  This needs some serious refactoring! **/
 
 	public function findMe(FindMeFormRequest $request) {
-		
-		
+		//dd(request()->all());	
 		if(request()->filled('search')) {
 			$address = urlencode(request('search'));
 			
@@ -149,9 +148,10 @@ class GeoCodingController extends BaseController {
 	 */
 	
 	private function getViewData($data) {
-	
+
 		if(method_exists($this,'get'.ucwords($data['type']).'MapData')){
 			$method = 'get'.ucwords($data['type']).'MapData';
+
 			$data = $this->$method($data);
 
 		}else{

@@ -1,10 +1,11 @@
 <?php 
 // Default values
 $session = Session::get('geo');
+
 if(! isset($session)) {
   if(Session::has('geo.type')){
 
-  $session = array('type'=>'accounts','distance'=>'10','address'=>NULL,'view'=>'maps','lat'=>'39.8282','lng'=>'-98.5795');
+  $session = array('type'=>'accounts','distance'=>'10','address'=>NULL,'view'=>'maps','lat'=>session('geo.lat'),'lng'=>session('geo.lng'));
   }else{
     $session = array('type'=>'accounts','distance'=>'10','address'=>NULL,'view'=>'maps','lat'=>'39.8282','lng'=>'-98.5795');
   }

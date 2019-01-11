@@ -42,7 +42,7 @@ class MapsController extends BaseController {
 	 */
 	public function findMe()
 	{
-		
+	
 
 			$user = $this->user->findOrFail(auth()->id());
 			$nonews = $user->nonews;
@@ -73,7 +73,7 @@ class MapsController extends BaseController {
 		
 		$location = $this->getLocationLatLng($latlng);
 
-		$branches =  $this->branch->with('address')
+		$branches =  $this->branch
 			->whereHas('servicelines',function ($q){
 				$q->whereIn('servicelines.id',$this->userServiceLines);
 			})
