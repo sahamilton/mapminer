@@ -1,4 +1,6 @@
-<p>
+<div class="row">
+   
+
 @if($data['type'] == 'branch'))
 @foreach ($servicelines as $serviceline)
 
@@ -18,7 +20,7 @@
 	@endphp
 	@foreach ($addressKeys as $key=>$color)
 
-		{{ucwords($key)}} =  <img src='{{asset('geocoding/markers/'.$color.'-pin.png')}}' />
+		{{ucwords($key)}}&nbsp = &nbsp <img src='{{asset('geocoding/markers/'.$color.'-pin.png')}}' />&nbsp&nbsp&nbsp
 
 	@endforeach
 
@@ -27,5 +29,4 @@
 
 
 @endif
-
-</p>
+</div>
