@@ -224,7 +224,7 @@ class OpportunityController extends Controller
             'note'=>request('comments'),'activity_date'=>Carbon::now(),'activitytype_id'=>'9'];
             $activity = Activity::create($data);
             $address->activities()->save($activity);
-            $opportunity->update(['closed'=>3]);
+            $opportunity->update(['closed'=>2]);
             
         }
         return redirect()->route('opportunity.index')->withMessage('Opportunity '. request('close'));

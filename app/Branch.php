@@ -262,4 +262,8 @@ class Branch extends Model implements HasPresenter {
 		}
 	}
 
+	public function allStates(){
+		return $this->pluck('state')->toArray();
+	}
+
 }
