@@ -13,10 +13,10 @@
 
 @include('maps.partials._form')
 
-@if ($data['type'] == 'branch')
+
 
 @include('maps.partials._keys')
-@endif
+
 
 <div>
 
@@ -48,4 +48,4 @@
 
 
 @endsection
-
+@include('partials._scripts')

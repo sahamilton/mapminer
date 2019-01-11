@@ -772,6 +772,9 @@ $.fn.storeLocator = function(options) {
                }else if (type === 'lead'){
                    
                       var pinColor = "FDF569";
+               }else if (type === 'customer'){
+                   
+                      var pinColor = "ff0000";
                }else if (type === 'industry'){
                    
 

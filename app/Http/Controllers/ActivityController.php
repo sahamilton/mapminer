@@ -47,10 +47,10 @@ class ActivityController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(ActivityFormRequest $request)
-    {
-      
+    public function store(ActivityFormRequest $request){
+    
         $data = $this->parseData($request);
+     
         $activity = Activity::create($data);
 
         if(isset($data['contact'])){
@@ -67,7 +67,12 @@ class ActivityController extends Controller
         if($data['followup_date']){
             $data['followup_date'] = Carbon::parse($data['followup_date']);
         }
-        $data['address_id'] = request('address_id');
+        if(isset($data['location_id'])){
+            $data['address_id'] =$data['location_id'];
+        }else{
+            $data['address_id'] = $data['address_id'];
+        }
+        $data['activitytype_id'] = $data['activity'];
         $data['user_id'] = auth()->user()->id;
         $data['contact_id'] = request('contact_id');
         return $data;

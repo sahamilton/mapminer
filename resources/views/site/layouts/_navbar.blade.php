@@ -93,9 +93,11 @@
                     <i class="far fa-envelope" aria-hidden="true"> </i> 
                     Branch Opportunities</a>
                     <a class="dropdown-item" href="{{route('contacts.index')}}">
-              <i class="far fa-address-card"></i> Branch Contacts</a>
-               <a class="dropdown-item" href="{{ route('activity.index') }}">
-              <i class="far fa-calendar-alt"></i> Branch Activites</a>
+                    <i class="far fa-address-card"></i> Branch Contacts</a>
+                     <a class="dropdown-item" href="{{ route('activity.index') }}">
+                    <i class="far fa-calendar-alt"></i> Branch Activites</a>
+                     <a class="dropdown-item" href="{{ route('orders.index') }}">
+                    <i class="far fa-calendar-alt"></i> Branch Accounts</a>
                   @endCan
 
                   @if (auth()->user()->hasRole('Admin') or auth()->user()->hasRole('National Account Manager'))

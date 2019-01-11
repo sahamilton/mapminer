@@ -24,7 +24,10 @@
             </a>
           </td>
           <td>{{$lead->fullAddress()}}</td>
-          <td>{{$lead->leadsource->source}}</td>
+          <td>
+            @if($lead->leadsource)
+              {{$lead->leadsource->source}}
+            @endif</td>
         </tr>
         @endforeach
 

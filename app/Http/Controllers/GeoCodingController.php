@@ -52,26 +52,34 @@ class GeoCodingController extends BaseController {
 
 	public function findMe(FindMeFormRequest $request) {
 		
-		
 		if(request()->filled('search')) {
+				
 			$address = urlencode(request('search'));
 			
 		}
-
-		if(request('search')!= session('geo.search')){
-		$geocode = app('geocoder')->geocode(request('search'))->get();
-		
-		if(! $geocode or count($geocode)==0){
-
-			return redirect()->back()->withInput()->with('error','Unable to Geocode address:'.request('address') );
-		}
-		
-		request()->merge($this->location->getGeoCode($geocode));
-			
-		}
-
-
 		$data = request()->all();
+		if($data['search']!= session('geo.search')){
+			if(preg_match('^Lat:([0-9]*[.][0-9]*).Lng:([-]?[0-9]*[.][0-9]*)^', $data['search'],$string)){
+				$data['lat']=$string[1];
+				$data['lng'] = $string[2];
+				$geocode = app('geocoder')->reverse($data['lat'],$data['lng'])->get();
+				$data['search']= $geocode->first()->getFormattedAddress();
+			}else{
+			
+				$geocode = app('geocoder')->geocode($data['search'])->get();
+				
+				if(! $geocode or count($geocode)==0){
+
+					return redirect()->back()->withInput()->with('error','Unable to Geocode address:'.request('address') );
+				}
+				
+				request()->merge($this->location->getGeoCode($geocode));
+				$data = request()->all();
+			}
+		}
+
+
+		
 
 		$data['latlng'] = $data['lat'].":".$data['lng'];
 		// Kludge to address the issue of different data in Session::geo

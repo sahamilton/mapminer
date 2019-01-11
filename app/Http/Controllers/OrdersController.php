@@ -3,13 +3,16 @@
 namespace App\Http\Controllers;
 use App\Orders;
 use App\Branch;
+use App\Person;
 use Illuminate\Http\Request;
 
 class OrdersController extends Controller
 {
    public $orders;
-   public function __construct(Orders $order, Branch $branch){
-
+   public $branch;
+   public $person;
+   public function __construct(Orders $order, Branch $branch,Person $person){
+        $this->person = $person;
         $this->orders = $order;
         $this->branch = $branch;
     }
@@ -21,7 +24,9 @@ class OrdersController extends Controller
      */
     public function index()
     {
-        $orders = $this->orders->periodOrders();
+        $mybranches = array_keys($this->person->myBranches());
+        
+        $orders = $this->orders->periodOrders($mybranches);
         return response()->view('orders.index',compact('orders'));
     }
     /**
@@ -53,7 +58,10 @@ class OrdersController extends Controller
      */
     public function show($id)
     {
-        $orders = $this->orders->where('branch_id','=',$id)->with('addresses','addresses.company')->branchOrders($id)->get();
+        
+        $orders = $this->orders->where('branch_id','=',$id)
+        ->with('addresses','addresses.company')
+        ->branchOrders($id)->get();
         $branch = $this->branch->with('manager')->findOrFail($id);
         
         return response()->view('orders.show',compact('branch','orders'));

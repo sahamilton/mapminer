@@ -14,15 +14,19 @@ class Orders extends Model
    			if($branches){
    				$orders->whereIn('branch_id',$branches);
    			}
-   			return $orders->with('branches','branches.manager')->get();
+   			return $orders->with('branches','branches.manager','addresses')->get();
 
+    }
+
+    public function orders(){
+      
     }
 
     public function branches(){
     	return $this->belongsTo(Branch::class,'branch_id','id');
     }
     public function addresses(){
-    	return $this->belongsTo(Address::class,'address_id','id')->where('addressable_id','=','customer');
+    	return $this->belongsTo(Address::class,'address_id','id');
     }
     
     public function scopeBranchOrders($query,$branch){

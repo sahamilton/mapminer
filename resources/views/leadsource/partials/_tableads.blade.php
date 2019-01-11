@@ -19,7 +19,7 @@
     </thead>
     <tbody>
  @foreach($leadsource->assignedLeads as $lead)
- 
+
     @if($lead->salesteam->count()>0)
     <?php $history = $lead->history();?>
     <tr>  

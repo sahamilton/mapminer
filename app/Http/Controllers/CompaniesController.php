@@ -301,18 +301,27 @@ class CompaniesController extends BaseController {
 	 * @param text $state
 	 * @return View
 	 */
-
-
-	public function stateselect(Request $request)
-	{
-		
-		$company = $this->company->findOrFail(request('id'));
-		$data['state']= request('state');
-		$data = $this->getCompanyViewData($company,$data);
-		
+	public function stateselector(Request $request){
+		$id = request('id');
+		$state = request('state');
+		$data = $this->getStateLocationsAll($id,$state);
 		return response()->view('companies.show', compact('data'));
 	}
 
+	public function stateselect($id,$state=null)
+	{
+		
+		$data = $this->getStateLocationsAll($id,$state);
+		
+		
+		return response()->view('companies.show', compact('data'));
+	}
+	private function getStateLocationsAll($id, $state){
+		$company = $this->company->findOrFail($id);
+		$data['state']= $state;
+		$data = $this->getCompanyViewData($company,$data);
+		return $data;
+	}
 
 	private function getCompanyViewData($company,$data){
 
