@@ -133,7 +133,9 @@ class OpportunityController extends Controller
         
         $this->opportunity->create(request()->all());
         $address = $this->address->findOrFail(request('address_id'));
-        $address->branchLead()->detach([$opportunity->branch_id]);
+        if($address->addressable_type == 'lead'){
+                $address->branchLead()->detach([$opportunity->branch_id]);
+        }
         return redirect()->route('address.show',request('address_id'))->withMessage("Added to branch opportunities");
     }
 
