@@ -125,6 +125,7 @@ class MyLeadsController extends BaseController
         $data['lead']['businessname'] = $data['lead']['companyname'];
         $data['lead']['phone'] = preg_replace("/[^0-9]/","",$data['lead']['phone']);
         $data['lead']['lead_source_id']=4;
+        $data['lead']['type'] = 'lead';
         $data['team']['person_id'] = auth()->user()->person->id;
         $data['team']['type'] = 'mylead';
         $data['team']['status_id'] =2;

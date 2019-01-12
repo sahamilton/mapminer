@@ -11,8 +11,8 @@
 @include('addresses.partials._ranking')
 
   @include('addresses.partials._opportunity')
-
-<p>Location Source: {{$location->addressType[$location->addressable_type]}}</p>
+{{dd($location->leadsource)}}
+<p>Location Source: {{$location->leadsource->source}}</p>
 @include('maps.partials._form')
 
 

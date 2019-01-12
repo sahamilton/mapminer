@@ -64,7 +64,7 @@ class AddressController extends Controller
     {
       // $ranking = $this->address->with('ranking')->myRanking()->findOrFail($address->id);
 
-        $location = $address->load($address->addressable_type,'contacts','contacts.relatedActivities','activities','activities.type','activities.relatedContact','company','opportunities','industryVertical',$address->addressable_type . '.relatedNotes','orders','watchedBy','watchedBy.person','ranking');
+        $location = $address->load($address->addressable_type,'contacts','contacts.relatedActivities','activities','activities.type','activities.relatedContact','company','opportunities','industryVertical',$address->addressable_type . '.relatedNotes','orders','watchedBy','watchedBy.person','ranking','leadsource');
         
        // $activities = ActivityType::orderBy('sequence')->pluck('activity','id')->toArray();
     
