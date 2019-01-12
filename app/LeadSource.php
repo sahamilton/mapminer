@@ -28,7 +28,10 @@ class LeadSource extends Model
     
 
     }
-    
+
+    public function addresses(){
+      return $this->hasMany(Address::class,'lead_source_id','id');
+    }
     
 
     public function author(){
