@@ -17,6 +17,7 @@ class SalesOrgController extends BaseController {
 	{
 		$this->person = $person;
 		$this->branch = $branch;
+
 		//$this->person->rebuild();
 		
 	}
@@ -47,33 +48,28 @@ class SalesOrgController extends BaseController {
 			// if not id then find root salesorg id
 			
 			if (! $salesPerson){
-				$salesLeader = $this->getSalesLeaders();
+				$salesperson = $this->getSalesLeaders();
 
-				$salesperson = Person::whereIn('id',$salesLeader)->first();
+				//$salesperson = Person::whereIn('id',$salesLeader)->first();
 
 			}else{
 				$salesperson = Person::whereId($salesPerson->id)->first();
 			}
 			
 			// if leaf
-
+		
 			
 			if( $salesperson->isLeaf())
 			{
-				
-				$salesorg = Person::whereId($salesPerson->id)
-				->with('userdetails.roles','reportsTo','reportsTo.userdetails.roles','branchesServiced')->first();
+			
+				$salesorg = $salesperson->load('userdetails.roles','reportsTo','reportsTo.userdetails.roles','branchesServiced');
 
 				return response()->view('salesorg.map', compact('salesorg'));
 				
 			}else{
-				$salesroles = $this->salesroles;
-				$salesteam = $salesperson->descendantsAndSelf()
-				->with('userdetails.roles','directReports','directReports.userdetails','directReports.userdetails.roles','reportsTo.userdetails.roles')
+			
+				$salesteam = $salesperson->load('userdetails.roles','directReports','directReports.userdetails','directReports.userdetails.roles','reportsTo.userdetails.roles');
 				
-				->orderBy('lft')
-				->get();
-						
 				return response()->view('salesorg.managermap', compact('salesteam'));
 			}
 			
@@ -141,13 +137,14 @@ class SalesOrgController extends BaseController {
 		//refactor to remove hard coding
 		//
 		//// Head of sales organization
-	
+		return $this->person->getPersonsWithRole([14])->first();
+
 		/*return (Person::where('depth','=',0)
 			->whereNull('reports_to')
 			->whereRaw('lft+1 != rgt')
 			_.whereHas('role == sales')
-			->pluck('id'));*/
-		return $person = ['1767'];
+			->pluck('id'));
+		return $person = ['1767'];*/
 	}
 
 

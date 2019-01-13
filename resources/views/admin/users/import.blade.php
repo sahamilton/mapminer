@@ -35,7 +35,7 @@
 	</div>
 
 	<!-- Service Lines -->
-	@include('servicelines.partials._selector')
+	
 	<div class="row">
 		<input class="btn btn-xs btn-success" type="submit" name="submit" value="Import Users" />
 	<!-- ./ servicelines -->

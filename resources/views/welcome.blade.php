@@ -3,6 +3,10 @@
 
 
 @if(!auth()->check())
+
+
+
+
 	<div class="jumbotron" style="margin-top:30px">
 		<div class="container" style="position:relative;text-align:center">
 			<h4 ">Welcome to the PeopleReady&reg; National Account Locator</h4>

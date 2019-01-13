@@ -27,19 +27,25 @@ class UsersImportController extends ImportController
 
         
     }
-
+//
+    // query to get all without manager in system
+    //SELECT * from usersimport where employee_id in (select mgr_emp_id from `usersimport` where reports_to is null)
 
     public function index(){
+
        $imports = $this->import->whereNull('person_id')->orWhereNull('user_id')->get();
        return response()->view('admin.users.import.index',compact('imports')); 
     }
 
-    public function getFile(Request $request){
+    public function getFile(){
+      if($this->import->count()>0){
+        return redirect()->route('importcleanse.index');
+      }else{
        $requiredFields = $this->import->requiredFields;
-       $servicelines = Serviceline::pluck('ServiceLine','id');
+       //$servicelines = Serviceline::pluck('ServiceLine','id');
 
-		return response()->view('admin.users.import',compact('servicelines','requiredFields'));
-
+		return response()->view('admin.users.import',compact('requiredFields'));
+  }
         
     }
 
@@ -57,8 +63,8 @@ class UsersImportController extends ImportController
         $data['route'] = 'users.mapfields';
         $fields = $this->getFileFields($data); 
 
-        $data['additionaldata'] = ['serviceline'=>implode(",",request('serviceline'))];
-        $addColumns = ['branches','role_id','mgr_emp_id','manager','reports_to','industry','address','city','state','zip','serviceline','hiredate','business_title'];
+        $data['additionaldata'] = [];//['serviceline'=>implode(",",request('serviceline'))];
+        $addColumns = ['branches','role_id','mgr_emp_id','manager','reports_to','industry','address','city','state','zip','serviceline','hiredate','business_title','fullname'];
         $addColumn = $this->addColumns($addColumns);
 
    		$columns = array_merge($this->import->getTableColumns('users'),$this->import->getTableColumns('persons'),$addColumn);
@@ -87,8 +93,11 @@ class UsersImportController extends ImportController
        if($this->import->import()) {
 
          	$this->import->postImport();
-          return redirect()->route('import.newusers');
-           //return redirect()->route('users.index')->with('success','Users imported');
+
+
+         // copy all data from import to persons and users where not null person_id, user_id
+          
+           return redirect()->route('importcleanse.index');
 
 
         }
@@ -155,17 +164,54 @@ class UsersImportController extends ImportController
     }
 
     public function fixUserErrors(Request $request){
-        //$data['email'] = request('email');
-        $data = request(['email']);
-       
-        $imports = $this->import->whereIn('employee_id',array_keys(request('email')))->get();
-        foreach ($imports as $import){
-         
-          $import->email = $data['email'][$import->employee_id];
-         
-          $import->save();
+
+        switch (request('type')) {
+
+
+          case 'branch':
+            $this->fixBranchErrors($request);
+            break;
+
+          case 'email':
+
+            $this->fixEmailErrors($request);
+            break;
+          
+          default:
+            # code...
+            break;
         }
-        return $this->newUsers();
+
+        return redirect()->route('importcleanse.index');
+        
+    }
+    private function fixBranchErrors($request){
+      $this->import->whereIn('employee_id',array_keys(request('ignore')))->update(['branches' => null]);
+      // update all branches
+      $toUpdate = array_diff_key(request('branch'),request('ignore'));
+      $update = $this->import->whereIn('employee_id',$toUpdate)->get();
+      foreach ($update as $upd){
+        $upd->branches = str_replace(" ", "",$toUpdate[$upd->employee_id]);
+        $upd->save();
+      }
+    }
+
+
+
+    private function fixEmailErrors(){
+      //$data['email'] = request('email');
+      $imports = $this->import->whereIn('id',array_keys(request('import')))->with('user')->get();
+      $data = request('import');
+        foreach ($imports as $import){
+          if($data[$import->id] == 'import'){
+            $user = $import->user()->first();
+            $user->employee_id = $import->employee_id;
+            $user->save();
+          }else{
+            $import->employee_id = $import->user->employee_id;
+            $import->save();
+          }
+      }
     }
 
     public function fixerrors(Request $request){
