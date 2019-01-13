@@ -13,7 +13,6 @@
     </thead>
     <tbody>
       @foreach($data['recentLeadNotes'] as $newNote)
-        @if($newNote->relatesToLead->count()>0)
           <tr>
               <td> {{$newNote->relatesToLead->companyname}}</td>
               <td>
@@ -27,7 +26,7 @@
               <td>{{$newNote->created_at ? $newNote->created_at->format('jS M g:i A'):''}}</td>
               <td>{{$newNote->writtenBy->person->postName()}}</td>
           </tr>
-        @endif
+
       @endforeach
     </tbody>
   </table>

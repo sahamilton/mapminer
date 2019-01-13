@@ -75,7 +75,7 @@ class AdminUsersController extends BaseController {
         $this->branch = $branch;
         $this->serviceline = $serviceline;
         $this->searchfilter = $searchfilter;
-        parent::__construct($this->company);
+        
     }
 
     /**
@@ -98,13 +98,20 @@ class AdminUsersController extends BaseController {
                 $serviceline = $servicelines->ServiceLine;
                 $title = $serviceline ." users";
 	       	}
+            
 	      $users = $this->user
-           ->with('roles','usage','person','serviceline')
-           ->whereHas('serviceline', function($q)  {
+           ->with('roles','usage','person','serviceline');
+           
+           if($servicelines){
+                $users = $users->whereHas('serviceline', function($q)  {
                 $q->whereIn('serviceline_id',$this->userServiceLines);
 
-            })
-           ->get();
+            });
+
+           }
+           
+          $users = $users->get();
+         
 
         // Show the page
         return response()->view('admin.users.index', compact('users', 'title','serviceline'));
@@ -277,11 +284,10 @@ class AdminUsersController extends BaseController {
     public function update(UserFormRequest $request,$user)
     {
       
-        $user = $this->user->with('person')->find($user->id);
+        $user->load('person');
         $oldUser = clone($user);
 
         if(request()->filled('password')){
-          
             $user->password = \Hash::make(request('password'));
             $user->save();
         }
@@ -294,8 +300,10 @@ class AdminUsersController extends BaseController {
            if(request()->filled('serviceline')){
 
                 $user->serviceline()->sync(request('serviceline'));
-        	}
-            $user->saveRoles(request('roles' ));
+        	} 
+
+            $user->saveRoles(request('roles' )); 
+
         	if(request()->filled('vertical')){
                 $verticals = request('vertical');
 
@@ -312,7 +320,7 @@ class AdminUsersController extends BaseController {
             }
             // i want this to be queued
             // // also it is only neccessary if there have been chnges to the person model.
-            $person->rebuild();
+           // $person->rebuild();
 
             return redirect()->to(route('users.index'))->with('success', 'User updated succesfully');
         }else{

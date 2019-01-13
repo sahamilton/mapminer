@@ -13,7 +13,7 @@ Review Branch Changes
 
 <ul class="nav nav-tabs">
 
-  <li class="nav-item active"><a class="nav-link" data-toggle="tab" href="#branch"><strong>Branch Additions</strong></a></li>
+  <li class="nav-item "><a class="nav-link" data-toggle="tab" href="#branch"><strong>Branch Additions</strong></a></li>
   <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#deletes"><strong>Branch Deletions</strong></a></li>
   <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#changes"><strong>Branch Changes</strong></a></li>
 
@@ -26,10 +26,10 @@ Review Branch Changes
     <div id="branch" class="tab-pane fade show active">
       @include('branches/partials/_adds')
     </div>
-	<div id="deletes" class="tab-pane fade in">
+	<div id="deletes" class="tab-pane fade ">
       @include('branches/partials/_deletes')
     </div>
-  <div id="changes" class="tab-pane fade in">
+  <div id="changes" class="tab-pane fade ">
       @include('branches/partials/_changes')
     </div>
 	

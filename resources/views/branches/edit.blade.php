@@ -15,7 +15,7 @@ Edit Branch ::
 
 <ul class="nav nav-tabs">
 
-  <li class="nav-item active">
+  <li class="nav-item ">
     <a class="nav-link" data-toggle="tab" href="#branch">
       <strong>Branch Location</strong>
     </a>

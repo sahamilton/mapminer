@@ -17,7 +17,7 @@ Your Profile
 
 	<!-- First Name -->
 	<div class="control-group{{ $errors->first('first_name', ' error') }}">
-		<label class="control-label" for="first_name">First Name</label>
+		<label class="control-label" for="first_name">First Name!!</label>
 		<div class="controls">
 			<input class="span4" type="text" name="first_name" id="first_name" value="{{ Input::old('first_name', $user->first_name) }}" />
 			{{ $errors->first('first_name', '<span class="help-block">:message</span>') }}

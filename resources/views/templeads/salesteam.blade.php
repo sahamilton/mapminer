@@ -15,7 +15,7 @@
     <tr>
         
         <td>{{$team->id}}</td>
-        <td>{{$team->postName()}}</td>
+        <td>{{$team->fullName()}}</td>
         <td>{{$team->userdetails->roles->first()->name}}</td>
             @foreach ($team->getAncestors()->reverse() as $managers)
                 @if ($loop->first)
@@ -24,7 +24,7 @@
                
                 @endif
                 @if($managers->depth !=0)
-                <td>{{$managers->postName()}}</td>
+                <td>{{$managers->fullName()}}</td>
                 <td>{{$managers->userdetails()->first()->roles()->first()->name}}</td>
                 @endif
             @endforeach

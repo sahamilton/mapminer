@@ -1,7 +1,7 @@
 @extends('site/layouts/default')
 @section('content')
 
-<h1>{{$user->person->postName()}}'s Watch List</h1>
+<h1>{{$user->person->fullName()}}'s Watch List</h1>
 <p><a href="{{route('watch.mywatchexport',$user->id)}}" 
 title="Download {{$user->person->postName()}}'s Watch List as a CSV / Excel file">
 
@@ -24,9 +24,7 @@ title="Download {{$user->person->postName()}}'s Watch List as a CSV / Excel file
  @foreach($watch as $row)
 
 			<tr>
-			<td><a href="{{route(
-'locations.show'
-,$row['watching'][0]->id)}}">
+			<td><a href="{{route('locations.show',$row['watching'][0]->id)}}">
 			{{$row['watching'][0]->businessname}}</a></td>
 			<td>{{$row['watching'][0]->company->companyname}}</td>
 			<td>{{$row['watching'][0]->street}}</td>

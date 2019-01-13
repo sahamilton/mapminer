@@ -20,7 +20,7 @@ class RedirectIfAuthenticated
     {
        
         if (Auth::guard($guard)->check()) {
-            return redirect('/home');
+            return redirect()->route('findme');
         }
         return $next($request);
     }

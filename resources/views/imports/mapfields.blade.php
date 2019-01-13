@@ -5,6 +5,7 @@
 @endif
 <div class="container" style="margin-bottom:80px">
 <h2>@if(isset($title)) {{$title}} @endif</h2>
+
 <form method="post" 
 	action ="{{route($data['route'])}}" 
 	name = "mapfields">

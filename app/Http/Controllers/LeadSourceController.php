@@ -91,19 +91,51 @@ class LeadSourceController extends Controller
     public function show($id)
     {
 
-     
-        $leadsource = $this->leadsource->findOrFail($id);
-        $data = $this->leadsource->leadRepStatusSummary($id);
-        
+  
+        $leadsource = $this->leadsource->with('leads','unassignedLeads','closedLeads')->findOrFail($id);
+        $teamStats  = $this->getSalesTeam($id);
+        $salesteams = $this->person->with('reportsTo')->whereIn('id',array_keys($teamStats))->get();
+       
+       // $data = $this->leadsource->leadRepStatusSummary($id);
+        $statuses = LeadStatus::pluck('status','id')->toArray();
 
-        $data = $this->reformatRepsData($data);
+       // $data = $this->reformatRepsData($data);
+    
+       
 
-        return response()->view('leadsource.show',compact('data','leadsource'));
+        return response()->view('leadsource.show',compact('salesteams','statuses','teamStats','leadsource'));
+    }
+
+    private function getOwnedBy($leads){
+
+    }
+
+    private function getSalesTeam($id){
+
+        $leads = $this->lead->where('lead_source_id','=',$id)
+        ->with('salesteam')
+        ->get();
+        $statuses = [1,2,3];
+        $teamStats = array();
+        foreach ($leads as $lead){
+            foreach ($lead->salesteam as $member){
+                if(! array_key_exists($member->id,$teamStats)){
+                    foreach ($statuses as $status){
+                        $teamStats[$member->id][$status]=0;
+                    }
+                    
+                }   
+                $teamStats[$member->id][$member->pivot->status_id]++;
+            }
+
+        }
+        return $teamStats;        
     }
 
     private function reformatRepsData($data){
         $newdata = array();
         $statuses = $this->lead->statuses;
+
         foreach ($data as $rep){
             $newdata[$rep->id]['name'] = $rep->firstname . ' '. $rep->lastname;
             $newdata[$rep->id]['id'] = $rep->id;
@@ -113,6 +145,7 @@ class LeadSourceController extends Controller
             
 
         }
+
         return $newdata;
     }
     public function branches($id){
@@ -133,11 +166,9 @@ class LeadSourceController extends Controller
     }
     
     public function unassigned($id){
-        $leadsource = $this->leadsource->findOrFail($id);
-
-        $leads = $this->leadsource->unassignedLeads($id)->get();
+        $leadsource = $this->leadsource->with('unassignedLeads')->findOrFail($id);
      
-        return response()->view('leads.unassigned',compact('leads','leadsource'));
+        return response()->view('leads.unassigned',compact('leadsource'));
     }
 
     private function getLeads($id){

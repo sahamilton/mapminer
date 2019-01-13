@@ -6,8 +6,8 @@
 		<p><strong>Business Type:</strong> {{isset($location->clienttype->filter) ? $location->clienttype->filter : 'Not Specified'}}
 		<p><i>A location of <a href="{{ route('company.show', $location->company->id) }}" title='show all locations of {{$location->company->companyname}} national account'>{{$location->company->companyname}}</a></i><br />
 		@if(isset($company->managedBy->firstname))
-			Account managed by <a href="{{route('person.show',$location->company->managedBy->id)}}" title="See all accounts managed by {{$location->company->managedBy->postName()}}">
-			{{$location->company->managedBy->postName()}}</a>
+			Account managed by <a href="{{route('person.show',$location->company->managedBy->id)}}" title="See all accounts managed by {{$location->company->managedBy->fullName()}}">
+			{{$location->company->managedBy->fullName()}}</a>
 
 		</i>
 		@endif

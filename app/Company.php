@@ -1,16 +1,39 @@
 <?php
 namespace App;
+use Nicolaslopezj\Searchable\SearchableTrait;
 
-class Company extends Model {
-
+class Company extends NodeModel {
+	use Filters,SearchableTrait;
 	// Add your validation rules here
 	public static $rules = [
 		 'companyname' => 'required',
-		 'serviceline'=>'required'
+		 'serviceline'=>'required',
+		 'accounttypes_id'=>'required',
 	];
+	public $limit = 2000;
+
+	 protected $searchable = [
+        /**
+         * Columns and their priority in search results.
+         * Columns with higher values are more important.
+         * Columns with equal values have equal importance.
+         *
+         * @var array
+         */
+        'columns' => [
+            
+            'companyname' => 20,
+            'customer_id' =>20.
+            
+            
+           
+          
+        ],
+       
+    ];
 
 	// Don't forget to fill this array
-	protected $fillable = array('companyname', 'vertical','person_id');
+	protected $fillable = array('companyname', 'vertical','person_id','c','customer_id','parent_id');
 	
 	public function type() 
 	{
@@ -19,17 +42,20 @@ class Company extends Model {
 	
 	public function locations() 
 	{
-		
 								
-			return $this->hasMany(Location::class);
+			return $this->hasMany(Address::class);
 	
+	}
+
+	public function stateLocations($state){
+			return $this->hasMany(Address::class)->where('state','=',$state);
 	}
 
 	public function countlocations()
 
 	{
 
-		return $this->hasMany(Location::class)->selectRaw('company_id,count(*) as count')->groupBy('company_id');
+		return $this->hasMany(Address::class)->selectRaw('company_id,count(*) as count')->groupBy('company_id');
 
 	}
 	
@@ -37,7 +63,7 @@ class Company extends Model {
 
 	{
 
-		return $this->hasMany(Location::class)->selectRaw('company_id,count(*) as count')->groupBy('company_id')->first();
+		return $this->hasMany(Address::class)->selectRaw('company_id,count(*) as count')->groupBy('company_id')->first();
 
 	}
 
@@ -66,8 +92,7 @@ class Company extends Model {
 		return $this->belongsToMany(Howtofield::class);
 	}
 	
-	
-	
+
 	public function getFilteredLocations($filtered, $keys,$query,$paginate= NULL)
 	{
 		
@@ -115,14 +140,66 @@ class Company extends Model {
 	 */
 	public function checkCompanyServiceLine($company_id,$userServiceLines)
 	{
-		
+		dd($this->userServiceLines);
 		return $this->whereHas('serviceline', function($q) use ($userServiceLines) {
 						    $q->whereIn('serviceline_id', $userServiceLines);
 
 						})->with('industryVertical')
 						->find($company_id);
 	}
+	public function getAllCompanies($filtered=null)
+	{
+		dd($this->userServiceLines);
+		$keys=array();
 
+		$companies = $this->with('managedBy','managedBy.userdetails','industryVertical','serviceline','countlocations')
+			->whereHas('serviceline', function($q) {
+					    $q->whereIn('serviceline_id', $this->userServiceLines);
+
+			});
+
+		if($filtered) {
+			$keys = $this->getSearchKeys(['companies'],['vertical']);
+			$isNullable = $this->isNullable($keys,NULL);
+			$companies = $companies->whereIn('vertical',$keys);
+
+			if($isNullable == 'Yes')
+			{
+
+					$companies = $companies->orWhere(function($query) use($keys)
+					{
+						$query->whereNull('vertical');
+					});
+
+			}
+
+		}
+
+		return $companies->orderBy('companyname');
+
+	}
+
+	public function limitLocations($data){
+		if($data['company']->locations->count() > $this->limit){
+
+			$locations = Address::where('company_id','=',$data['company']->id)
+			->with('orders')->nearby($data['mylocation'],'200',$this->limit)->get();
 	
+			$data['company']->setRelation('locations',$locations);
+
+			$data['limited']=$data['company']->locations->count();
+			
+			
+		}else{
+			$data['limited']= false;
+		}
+		
+		$data['distance'] = 200;
+
+		return $data;
+	}
 	
+	public function parentAccounts(){
+		return $this->ancestors();
+	}
 }

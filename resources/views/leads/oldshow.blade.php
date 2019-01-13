@@ -41,7 +41,7 @@
 		<tbody>
 			@foreach ($lead->salesteam as $team)
 			<tr>
-			<td><a href="{{route('leads.person',$team->id)}}" title="See all prospects associated with {{$team->postName()}}">{{$team->postName()}}</a></td>
+			<td><a href="{{route('leads.person',$team->id)}}" title="See all prospects associated with {{$team->fullName()}}">{{$team->fullName()}}</a></td>
 			<td>{{$sources[$team->pivot->status_id]}}</td>
 
 
@@ -56,7 +56,7 @@
 @foreach ($lead->relatedNotes as $leadnote)
 
 <p>{{$leadnote->created_at->format('M j,Y')}}...<em>{{$leadnote->note}}</em><br />
- --  {{$leadnote->writtenBy->person->postName()}}</p>
+ --  {{$leadnote->writtenBy->person->fullName()}}</p>
 
 @endforeach
 </div>

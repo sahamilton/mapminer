@@ -6,7 +6,7 @@
  
     <h4>Lead assigned to <a href="{{route('salesrep.newleads',$lead->salesteam->first()->id)}}">{{$lead->salesteam->first()->postName()}}</a></h4>
     @if(auth()->user()->hasRole('Admin'))
-<p text-danger">
+    <p text-danger">
               <a data-href="{{route('webleads.unassign',$lead->id)}}" 
                 data-toggle="modal" 
                 data-target="#unassign-weblead"
@@ -15,16 +15,16 @@
 
               <i class="fas fa-unlink"></i> Un-assign lead</a></p>
 
-@include('partials._unassignleadmodal') 
+        @include('partials._unassignleadmodal') 
     @endif
     <div class="row">
       <p><strong>Status:</strong>{{$leadStatuses[$lead->salesteam->first()->pivot->status_id]}}</p>
       
     @if((auth()->user()->person->id == $lead->salesteam->first()->id) or (auth()->user()->hasRole('Admin')) && $lead->salesteam->first()->pivot->status_id != 3)
-
+</div>
       <button type="button" class="btn btn-info " data-toggle="modal" data-target="#closelead">
       Close Lead</button>
-    </div>
+   
     @else
     <div data-rating="{{$lead->salesteam->first()->pivot->rating}}" 
       class="starrr" 
@@ -38,12 +38,13 @@
   <form name="claimlead"
   id="claimlead"
   method="post"
-  action="{{route('templead.claim',$lead->id)}}">
+  action="{{route('lead.claim',$lead->id)}}">
   @csrf
   <input type="submit" name="submit" class="btn btn-info" value="Claim Lead"/>
   
   </form>
   @endif
+</div>
 
   <ul class="nav nav-tabs">
 
@@ -107,6 +108,7 @@
 
 </div>
 </div>
+
 
 @include('templeads.partials.map')
 

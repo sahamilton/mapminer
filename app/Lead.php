@@ -9,8 +9,7 @@ use Geocoder\Laravel\Facades\Geocoder;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Lead extends Model implements HasPresenter {
-  use SoftDeletes, Geocode;
-
+  use SoftDeletes, Geocode, Addressable;
 	public $dates = ['created_at','updated_at','deleted_at','datefrom','dateto'];
   public $table= 'leads';
   public $assignTo;
@@ -100,6 +99,8 @@ class Lead extends Model implements HasPresenter {
     	return $this->belongsToMany(SearchFilter::class,'lead_searchfilter','lead_id','searchfilter_id');
 
     }
+  
+  
 
   public function createLeadFromGeo($geoCode){
           $coords = $this->getGeoCode($geoCode);
@@ -133,14 +134,24 @@ public function rankLead($salesteam){
     return $ranking;
     }
 
+    public function leadStatus(){
 
+    return $this->belongsToMany(LeadStatus::class,'lead_person_status','related_id','status_id')
+    ->withPivot('created_at','updated_at','person_id','rating');
+
+    }
     public function ownedBy(){
       return $this->belongsToMany(Person::class,'lead_person_status','related_id','person_id')
             ->withPivot('status_id','rating','type')
             ->wherePivotIn('status_id',[2,3]);
             
     }
-    
+    public function closedLead(){
+      return $this->belongsToMany(Person::class,'lead_person_status','related_id','person_id')
+            ->withPivot('status_id','rating','type')
+            ->wherePivot('status_id','=',3);
+            
+    }
     public function leadRank(){
       $teams = $this->salesteam()->get();
     
@@ -188,8 +199,7 @@ public function rankLead($salesteam){
 
     public function scopeExtraFields($query,$table){
             
-
-             return $query->join($table .' as ExtraFields','leads.id','=','ExtraFields.lead_id');
+             return $query->leftjoin($table .' as ExtraFields','leads.id','=','ExtraFields.lead_id');
       }
      
     public function ownsLead($id){
@@ -214,19 +224,36 @@ public function rankLead($salesteam){
      return null;
     }
 
-  public function myLeads(array $statuses=null){
+  public function myLeads(array $statuses=null,$all=null){
     if(! $statuses){
           $statuses = [1,2];
       }
-      return $this->whereHas('salesteam',function ($q) use ($statuses){
-          $q->where('person_id','=',auth()->user()->person->id)
-          ->whereIn('status_id',$statuses);
-        
+    if($all){
+      // include unassigned leads
+      return $this->where(function ($q) use ($statuses) {
+        $q->whereHas('salesteam',function ($q) use ($statuses){
+            $q->where('person_id','=',auth()->user()->person->id)
+            ->whereIn('status_id',$statuses);
+          
+          })->orWhereDoesntHave('salesteam');
         })
         ->whereHas('leadsource', function ($q) {
             $q->where('datefrom','<=',date('Y-m-d'))
               ->where('dateto','>=',date('Y-m-d'));
-        })->with('salesteam');
+        });
+
+    }else{
+      return $this->whereHas('salesteam',function ($q) use ($statuses){
+            $q->where('person_id','=',auth()->user()->person->id)
+            ->whereIn('status_id',$statuses);
+          
+          })
+        ->whereHas('leadsource', function ($q) {
+            $q->where('datefrom','<=',date('Y-m-d'))
+              ->where('dateto','>=',date('Y-m-d'));
+        });
+
+    }
 
 
     }
@@ -349,5 +376,16 @@ public function rankLead($salesteam){
             
             ->get();
 
+    }
+
+    public function unassignedLeads(LeadSource $leadsource){
+        return $this->whereDoesntHave('salesteam')
+          ->where('lead_source_id','=',$leadsource->id)
+          ->whereHas('leadsource', function ($q){
+            $q->where('datefrom','<=',date('Y-m-d'))
+            ->where('dateto','>=',date('Y-m-d'));
+          })
+
+        ->get();
     }
 }

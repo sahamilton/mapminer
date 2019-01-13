@@ -2,12 +2,13 @@
 @section('content')
 <h1>Branch Details</h1>
 <h2>{{$salesteam->branchname}}</h2>
+<p><a href="{{route('branches.index')}}">Return to all branches</a></p>
 <div class="row">
 <div class="col-sm-3" >
 <h4>Branch Number {{$salesteam->id}}</h4>
        
         <h4>Address:</h4>
-        <p>{{$salesteam->street}}{{$salesteam->address2}}<br/>
+        <p>{{$salesteam->street}}{{$salesteam->suite}}<br/>
         {{$salesteam->city}},{{$salesteam->state}} {{$salesteam->zip}}<br />
         {{$salesteam->phone}}</p>
        
@@ -15,7 +16,7 @@
         @foreach ($salesteam->relatedPeople()->get() as $people)
 
         <p><strong>{{$roles[$people->pivot->role_id]}}</strong>: 
-        <a href = "{{route('salesorg',$people->id)}}" > {{$people->postName()}}</a> </p>
+        <a href = "{{route('salesorg',$people->id)}}" > {{$people->fullName()}}</a> </p>
 
         @endforeach
         </p>

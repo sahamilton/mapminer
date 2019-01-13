@@ -1,5 +1,5 @@
 
-<h2>Prospects for direct reports of {{$leads->postName()}}</h2>
+<h2>Prospects for direct reports of {{$leads->fullName()}}</h2>
 
     <div class="row">
         <table id ='sorttable1' class='table table-striped table-bordered table-condensed table-hover'>

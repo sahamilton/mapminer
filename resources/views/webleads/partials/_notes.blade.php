@@ -4,7 +4,7 @@
 	<p>{{$note->created_at->format('m-d-Y')}}...<em>{{$note->note}}</em><br />
 
 	 @if(null !==$note->writtenBy && null!==$note->writtenBy->person())
-		 {{$note->writtenBy->person->postName()}}
+		 {{$note->writtenBy->person->fullName()}}
 	 @else
 		 No longer with company
 	 @endif

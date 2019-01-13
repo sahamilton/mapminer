@@ -19,7 +19,7 @@
 @endif
 {!! $news->news !!}</div>
 <div class='col-md-12'>
-<p><strong>Posted by:</strong>{{ isset($news->author) ? $news->author->person->postName() : 'No longer with the company'}}</p>
+<p><strong>Posted by:</strong>{{ isset($news->author) ? $news->author->person->fullName() : 'No longer with the company'}}</p>
 
 	<span class="badge badge-info">Posted {{$news->created_at->format('M jS,Y')}}</span>
 </div>

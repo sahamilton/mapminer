@@ -31,7 +31,7 @@
     <td>
 
          <a href="{{route('person.show',$reports->id)}}">
-        {{$reports->postName()}}
+        {{$reports->fullName()}}
         </a>
 
         <span type="button" class="far fa-copy btn-copy js-tooltip js-copy" data-toggle="tooltip" data-placement="bottom" data-copy="{{$reports->postName()}}" title="Copy to clipboard"></span>

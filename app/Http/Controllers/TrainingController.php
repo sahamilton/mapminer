@@ -37,20 +37,8 @@ class TrainingController extends BaseController
 
      public function index(){
        
-        $training = $this->training->query();
-
-        // find users servicelines
-        /* $training->whereHas('servicelines', function ($q){
-            $q->whereIn('id',$this->userServiceLines);
-         });*/
-
-         $training->whereHas('relatedRoles', function ($q){
-            $q->whereIn('id',$this->userRoles);
-         });
-
-         $trainings = $training->get();
-
-         return response()->view('training.mytrainings',compact('trainings'));
+        $trainings = $this->training->myTraining()->get();
+        return response()->view('training.mytrainings',compact('trainings'));
         }
 
     /**

@@ -1,7 +1,7 @@
 @extends('site/layouts/maps')
 @section('content')
 
-<h4>Branches managed by {{$data['people']->postName()}}</h4>
+<h4>Branches managed by {{$data['people']->fullName()}}</h4>
 <p>{{$data['people']->userdetails->email}}</p>
 <p>{{dd($data['people']->manages)}}
 <a href="{{route('person.show',$data['people']->id)}}">

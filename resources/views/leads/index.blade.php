@@ -6,7 +6,7 @@
 
 <ul class="nav nav-tabs">
 
-	<li class="nav-item active">
+	<li class="nav-item ">
 		<a class="nav-link active" data-toggle="tab" href="#map">
 			<strong>Map View</strong>
 		</a>
@@ -28,10 +28,10 @@
 	<div id="map" class="tab-pane fade show active">
 		@include('leads.partials._tabmapleads')
 	</div>
-	<div id="list" class="tab-pane fade in">
+	<div id="list" class="tab-pane fade ">
 		@include('leads.partials._tablist')
 	</div>
-	<div id="team" class="tab-pane fade in">
+	<div id="team" class="tab-pane fade ">
 		@include('leads.partials._tabteam')
 	</div>
 </div>

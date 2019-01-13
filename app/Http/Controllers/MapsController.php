@@ -42,8 +42,8 @@ class MapsController extends BaseController {
 	 */
 	public function findMe()
 	{
-		
 	
+
 			$user = $this->user->findOrFail(auth()->id());
 			$nonews = $user->nonews;
 			$now = date('Y-m-d h:i:s');
@@ -72,14 +72,15 @@ class MapsController extends BaseController {
 	public function findLocalBranches($distance=NULL,$latlng = NULL,$limit=null) {
 		
 		$location = $this->getLocationLatLng($latlng);
-	
+
 		$branches =  $this->branch
 			->whereHas('servicelines',function ($q){
 				$q->whereIn('servicelines.id',$this->userServiceLines);
 			})
 			->nearby($location,$distance,$limit)
+			
 			->get();
-		
+
 		return response()->view('branches.xml', compact('branches'))->header('Content-Type', 'text/xml');
 		
 	}
@@ -105,7 +106,14 @@ class MapsController extends BaseController {
 		if($company){
 			$locations->where('company_id','=',$company);
 		}
+		if($filtered = $this->location->isFiltered(['companies'],['vertical'])){
+			$locations->whereHas('company',function ($q) use($filtered){
+				$q->whereIn('vertical',$filtered);
+			});
+		}
+
 		$result = $locations->nearby($location,$distance)->with('company')->get();
+
 		return response()->view('locations.xml', compact('result'))->header('Content-Type', 'text/xml');
 	
 	}
@@ -114,7 +122,7 @@ class MapsController extends BaseController {
 		
 		$location = $this->getLocationLatLng($latlng);
 	
-		$leads = $this->lead->myLeads();
+		$leads = $this->lead->myLeads([1,2],$all=true);
 		
 		$result = $leads->nearby($location,$distance)->get();
 		return response()->view('myleads.xml', compact('result'))->header('Content-Type', 'text/xml');

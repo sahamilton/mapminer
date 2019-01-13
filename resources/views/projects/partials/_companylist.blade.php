@@ -54,7 +54,7 @@
 <div class="alert alert-danger">
 @if($project->owner->count()>0)
 
-<p>Project has been {{$project->owner[0]->pivot->status}} by {{$project->owner[0]->postName()}}</p>
+<p>Project has been {{$project->owner[0]->pivot->status}} by {{$project->owner[0]->fullName()}}</p>
 
 @else
 <p>You need to claim this project before you can see the project contacts</p>

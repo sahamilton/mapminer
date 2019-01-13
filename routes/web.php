@@ -32,13 +32,21 @@ Route::auth();
 Route::get('/home', ['as'=>'home','uses'=>'HomeController@index']);
 
 Route::group(['middleware' => 'auth'], function () {
-   	
+   	Route::get('/company/find', 'SearchController@searchCompanies');
 	#About
 		Route::get('about',['as'=>'about','uses'=>'AdminAboutController@getInfo']);
 
+   	#Activities
+		Route::resource('activity','ActivityController');
+		
    	#AccountTypes
 		Route::resource('accounttype','AccounttypesController',	['only' => ['index', 'show']]);
-
+	#Address
+		Route::post('address/{address}/rating',['as'=>'address.rating','uses'=>'AddressController@rating']);
+		Route::resource('address','AddressController');
+	# Branch Leads
+		Route::get('branchleads.import',['as'=>'branchleads.import','uses'=>'BranchLeadImportController@getFile']);#branch leads
+		Route::resource('branchleads','BranchLeadController');	
 	#Branches
 		Route::get('/branches/{state}/state/', ['as'=>'branches.statelist','uses'=>'BranchesController@state']);
 		Route::post('/branches/state', ['as'=>'branches.state','uses'=>'BranchesController@state']);
@@ -58,14 +66,16 @@ Route::group(['middleware' => 'auth'], function () {
 
 	#Branch Assignments
 		Route::resource('branchassignments','BranchManagementController',['only'=>['index','show','edit','update']]);
-
+	
+		
+		Route::resource('branchleadsimport','BranchLeadImportController');
 	#Comments
 		Route::resource('comment','CommentsController');
 
 	#Companies
 		Route::post('company/filter',['as'=>'company.filter','uses'=>'CompaniesController@filter']);
 		Route::get('/company/{companyId}/state/{state?}', ['as'=>'company.state','uses'=>'CompaniesController@stateselect']);
-		Route::post('/company/stateselect', ['as'=>'company.stateselect','uses'=>'CompaniesController@stateselect']);
+		Route::post('/company/stateselect', ['as'=>'company.stateselect','uses'=>'CompaniesController@stateselector']);
 
 		Route::get('/company/{companyId}/statemap/{state}', ['as'=>'company.statemap','uses'=>'CompaniesController@statemap']);
 		Route::get('/company/vertical/{vertical}', ['as'=>'company.vertical','uses'=>'CompaniesController@vertical']);
@@ -77,7 +87,10 @@ Route::group(['middleware' => 'auth'], function () {
 	# Contacts
 		Route::get('contacts/{id}/vcard',['as'=>'contacts.vcard','uses'=>'LocationContactController@vcard']);
 		Route::resource('contacts','LocationContactController');
-
+	
+	# Dashboard
+	Route::resource('dashboard','DashboardController');
+   	
    	# Documents
 		Route::resource('docs','DocumentsController',['only' => ['index', 'show']]);
 
@@ -118,9 +131,10 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('api/note/get',['as'=>'addNewNote','uses'=>'NotesController@store']);
 		Route::get('api/geo',['as'=>'geo','uses'=>'GeoCodingController@index']);
 		Route::get('api/myleads/{distance}/{latLng}/{limit?}',['as'=>'myleadsmap','uses'=>'MapsController@findMyLeads']);
+		Route::get('api/address/{distance}/{latLng}',['as'=>'addressmap','uses'=>'AddressController@findLocations']);
 
 	#News
-		Route::resource('news', 'NewsController',  ['only' => ['index', 'show']]);
+		Route::resource('news', 'NewsController',  ['' => ['index', 'show']]);
 		Route::get('currentnews',['as'=>'currentnews','uses'=>'NewsController@currentNews']);
 		//Route::get('news', ['as'=>'news.index', 'uses'=>'NewsController@index']);
 		//Route::get('news/{slug}', ['as'=>'news.show', 'uses'=>'NewsController@show']);
@@ -129,6 +143,14 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('mynotes',['as'=>'mynotes','uses'=>'NotesController@mynotes']);
 		Route::get('exportlocationnotes/{companyID}', ['as'=>'exportlocationnotes','uses'=>'ManagersController@exportManagerNotes']);
 		Route::resource('notes','NotesController');
+
+	#Opportunity
+		Route::post('/opportunities/close/{address}',['as'=>'opportunity.close','uses'=>'OpportunityController@close']);
+		Route::get('/opportunities/branch/{bid}',['as'=>'opportunities.branch','uses'=>'OpportunityController@branchOpportunities']);
+		
+		Route::resource('opportunity','OpportunityController');
+	#Orders
+		Route::resource('orders','OrdersController');
 
 	#People
 
@@ -173,7 +195,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 
 	# Sales leads
-		/*Route::get('prospect/{id}/accept',['as'=>'saleslead.accept','uses'=>'SalesLeadsController@accept']);
+		Route::get('prospect/{id}/accept',['as'=>'saleslead.accept','uses'=>'SalesLeadsController@accept']);
 		Route::get('prospect/{id}/decline',['as'=>'saleslead.decline','uses'=>'SalesLeadsController@decline']);
 		Route::get('prospects/{pid}/showrep',['as'=>'salesleads.showrep','uses'=>'SalesLeadsController@showrep']);
 		Route::get('prospects/download',['as'=>'salesleads.download','uses'=>'SalesLeadsController@download']);
@@ -181,7 +203,7 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('leadrank',['as'=>'api.leadrank','uses'=>'SalesLeadsController@rank']);
 		Route::post('prospect/{id}/close',['as'=>'saleslead.close','uses'=>'SalesLeadsController@close']);
 		Route::get('prospect/{pid}/leads',['as'=>'saleslead.mapleads','uses'=>'SalesLeadsController@mapleads']);
-		Route::resource('salesleads','SalesLeadsController');*/
+		Route::resource('salesleads','SalesLeadsController');
 
 	# Sales Notes
 		Route::get('salesnotes/{companyId}',['as'=>'salesnotes','uses'=>'SalesNotesController@show']);
@@ -190,7 +212,8 @@ Route::group(['middleware' => 'auth'], function () {
 
 	# Sales Resources
 		Route::get('resources',['as'=>'resources.view','uses'=>'WatchController@getCompaniesWatched']);
-
+		# Search
+		
 
 	# Watch List
 		Route::get('watch',['as'=>'watch.index', 'uses'=>'WatchController@index']);
@@ -206,6 +229,7 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::resource('myleadsactivity','MyLeadsActivityController');
 		Route::resource('myleadscontact','MyLeadsContactController');
 
+		/*
 		Route::get('/newleads/{pid}',['as'=>'salesrep.newleads','uses'=>'LeadsController@salesLeads']);
 		Route::get('/newleads/show/{id}/',['as'=>'salesrep.newleads.show','uses'=>'LeadsController@salesLeadsDetail']);
 		Route::get('/newleads/{pid}/map',['as'=>'salesrep.newleads.map','uses'=>'LeadsController@salesLeadsMap']);
@@ -215,8 +239,9 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('/newleads/branch/{bid}/map',['as'=>'newleads.branch.map','uses'=>'LeadsController@branchLeadsMap']);
 		Route::get('api/newleads/branch/{id}/map',['as'=>'newleads.branch.mapdata','uses'=>'LeadsController@getBranchMapData']);
 		Route::get('newlead/{pid}/export',['as'=>'newleads.export','uses'=>'LeadsController@exportLeads']);
-		Route::post('newlead/{id}/claim',['as'=>'templead.claim','uses'=>'LeadsController@claim']);
-		Route::post('newlead/{id}/close',['as'=>'templead.close','uses'=>'LeadsController@close']);
+		Route::post('lead/{id}/claim',['as'=>'lead.claim','uses'=>'LeadsController@claim']);
+		Route::post('lead/{id}/close',['as'=>'lead.close','uses'=>'LeadsController@close']);
+		*/
 	## Webleads
 		/*Route::get('/myleads', ['as'=>'my.webleads','uses'=>'WebLeadsController@saleslist']);
 		Route::get('/webleads/{lead}/salesshow',['as'=>'webleads.salesshow','uses'=>'WebLeadsController@salesshow']);
@@ -283,19 +308,30 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
 		Route::get('branches/export', ['as'=>'branches.export', 'uses'=>'BranchesController@export']);
 		Route::get('branches/team/export', ['as'=>'branches.team.export', 'uses'=>'BranchesController@exportTeam']);
 		Route::resource('branches','BranchesController',['except'=>['index','show']]);
-
+	
 	#Companies
-
+		Route::get('companies/import', ['as'=>'companies.importfile', 'uses'=>'CompaniesImportController@getFile']);
+		Route::post('companies/import', ['as'=>'companies.import', 'uses'=>'CompaniesImportController@import']);
 		Route::get('companies/export', ['as'=>'companies.export', 'uses'=>'CompaniesController@export']);
 		Route::post('companies/export', ['as'=>'companies.locationsexport', 'uses'=>'CompaniesController@locationsExport']);
 
 		Route::get('companies/download', ['as'=>'allcompanies.export','uses'=>'CompaniesController@exportAccounts']);
 		
 		Route::get('company/{companyId}/export',['as'=>'company.export','uses'=>'WatchController@companyexport']);
+		
+	# Order Import
+		Route::get('orderimport/flush',['as'=>'orderimport.flush','uses'=>'OrderImportController@flush']);
+		Route::get('orderimport/finalize',['as'=>'orderimport.finalize','uses'=>'OrderImportController@finalize']);
+
+		Route::resource('orderimport','CompaniesImportController');
 
 		//Route::post('company/filter',['as'=>'company.filter','uses'=>'CompaniesController@filter']);
 		Route::resource('company','CompaniesController',['except' => ['index', 'show']]);
-
+	# Customers
+		
+		Route::get('customers/export', ['as'=>'customers.export', 'uses'=>'CompaniesExportController@export']);
+		Route::post('/importcustomers/mapfields',['as'=>'companies.mapfields','uses'=>'CompaniesImportController@mapfields']);
+		Route::resource('customers','CustomerController');
     # Documents
     	Route::resource('documents','DocumentsController');
 
@@ -353,9 +389,11 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
 		Route::get('leads/import/assigned/{id?}',['as'=>'assigned_prospects.importfile','uses'=>'LeadAssignedImportController@getFile']);
 
 		Route::post('leads/import',['as'=>'leads.import','uses'=>'LeadImportController@import']);
-	/*	
-		Route::get('leads/assign/{sid}/source',['as'=>'leads.geoassign','uses'=>'LeadsAssignController@geoAssignLeads']);
-		Route::get('leads/{id}/assign',['as'=>'leads.leadassign','uses'=>'LeadsController@assignLeads']);*/
+		
+		Route::get('leadsource/{sid}/assign/',['as'=>'leadsource.assign','uses'=>'LeadsAssignController@assignLeads']);
+		Route::post('leads/assign/{sid}/source',['as'=>'leads.geoassign','uses'=>'LeadsAssignController@geoAssignLeads']);
+		Route::get('leads/{id}/assign',['as'=>'leads.leadassign','uses'=>'LeadsController@assignLeads']);
+		
 		//Route::post('leads/batchassign',['as'=>'leads.assignbatch','uses'=>'LeadsAssignController@assignLead']);
 		//Route::post('leads/assign',['as'=>'leads.assign','uses'=>'LeadsController@postAssignLeads']);
 		
@@ -381,6 +419,9 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
 		Route::get('lead/branch/{bid?}',['as'=>'leads.branch','uses'=>'LeadsController@branches']);
 		Route::resource('leads','LeadsController');
 
+	# OrderImports
+
+		Route::resource('orderimport','OrderImportController');
 	# Prospect Source / LeadSource
 
 		Route::get('leadsource/{id}/announce',['as'=>'leadsource.announce','uses'=>'LeadsEmailController@announceLeads']);
@@ -426,13 +467,14 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
 
 	## Search
 		Route::get('/user/find', 'SearchController@searchUsers');
+
 		
 		Route::get('/person/{person}/find',['as'=>'person.details','uses'=>'PersonSearchController@find']);
 
 	#NewLeads
 	   // Route::get('newleads/team',['as'=>'templeads.team','uses'=>'TempleadController@salesteam']);
-	    Route::get('/newleads/{pid}/branchmgr',['as'=>'branchmgr.newleads','uses'=>'LeadsController@getAssociatedBranches']);
-	   Route::get('/newleads/branch',['as'=>'templeads.branch','uses'=>'LeadsController@branches']);
+	   // Route::get('/newleads/{pid}/branchmgr',['as'=>'branchmgr.newleads','uses'=>'LeadsController@getAssociatedBranches']);
+	   //Route::get('/newleads/branch',['as'=>'templeads.branch','uses'=>'LeadsController@branches']);
 	    //Route::get('/newleads/{id}/branch/',['as'=>'leads.branchid','uses'=>'LeadsController@branchLeads']);
 		Route::resource('newleads','LeadSourceController');
 		

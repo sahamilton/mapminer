@@ -1,13 +1,13 @@
-@extends('site/layouts/default')
+@extends('site.layouts.default')
 @section('content')
 <div class="page-header">
 <div class="float-right">
 		
-		</div>
+</div>
 <h2>Nearby Branches</h2>
 <p>The closest branches that can serve the 
 
-<a href="{{route('locations.show',$data['location']->id)}}">{{$data['location']->businessname}} </a>
+<a href="{{route('address.show',$data['location']->id)}}">{{$data['location']->businessname}} </a>
 location in {{$data['location']->city}}, {{$data['location']->state}} are:<p>
 <p><a href='{{route("nearby.location",$data['location']->id)}}'>
 

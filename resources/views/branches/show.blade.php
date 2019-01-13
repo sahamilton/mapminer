@@ -1,4 +1,4 @@
-@extends('site/layouts/maps')
+@extends('site.layouts.maps')
 @section('content')
 <?php $type='map';?>
 

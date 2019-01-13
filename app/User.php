@@ -4,13 +4,14 @@ namespace App;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Nicolaslopezj\Searchable\SearchableTrait;
 use Crypt;
 
 
 class User extends Authenticatable
 {
- use Notifiable,HasRoles, Geocode, SearchableTrait;
+ use Notifiable,HasRoles, Geocode, SearchableTrait,SoftDeletes;
 
 
  protected $expiration = '2880';
@@ -46,7 +47,7 @@ class User extends Authenticatable
      * @return mixed
      */
 
-    public $dates=['lastlogin','created_at','updated_at','nonews'];
+    public $dates=['lastlogin','created_at','updated_at','deleted_at','nonews'];
 
 	 public function person()
 	 {
@@ -54,8 +55,12 @@ class User extends Authenticatable
 	 }
 
 	 public function fullName(){
-	 	return $this->person->postName();
-	 }
+        if($this->person){
+	 	 return $this->person->postName();
+         }else{
+            return null;
+         }
+        }
 	 public function usage()
 	 {
 		  return $this->hasOne(Track::class,'user_id');

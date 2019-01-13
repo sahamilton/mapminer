@@ -66,7 +66,7 @@
 	</td>
 
 	<td>
-			{{$branch->street}} {{$branch->address2}}
+			{{$branch->street}} {{$branch->suite}}
 	</td>
 
 	<td>
@@ -97,17 +97,18 @@
 				
 				@foreach ($branch->manager as $manager)
 				<a href="{{route('managed.branch',$manager->id)}}"
-				title="See all branchesmanaged by {{$manager->postName()}}">
-				{{$manager->postName()}}</a>
+				title="See all branchesmanaged by {{$manager->fullName()}}">
+				{{$manager->fullName()}}</a>
+
 				@endforeach
 			@endif
 	</td>
 	
 	<td>
 
-		<a title= "See the {{'$branch->branchname'}} branch sales team"
+		<a title= "See the {{$branch->branchname}} branch sales team"
 		href ="{{route('showlist.salesteam',$branch->id)}}">
-		{{$branch->servicedBy->count()}}
+
 		</a>
 	</td>
 	@can('manage_branches')

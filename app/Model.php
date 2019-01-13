@@ -226,7 +226,13 @@ class Model extends \Eloquent {
  	 
 	
 	}
-	
+	public function scopeServiceLine($query){
+		$servicelines = $this->getUserServiceLines();
+		dd('model',$servicelines);
+		return $query->whereHas('serviceline', function($q) use ($servicelines){
+				$q->whereIn('serviceline',$servicelines);
+		});
+	}
 
 	
 	public function getUserServiceLines()
@@ -238,7 +244,13 @@ class Model extends \Eloquent {
        return $this->userServicelines;
 	}
 
-	
+	public function scopeFiltered($query){
+        if(!$keys= $this->getSearchKeys(['companies'],['vertical'])){
+            return $query;
+        }
+        return $query->whereIn('vertical',$keys);
+       
+    }
 
     public function getUserVerticals(){
         $this->userVerticals= auth()->user()->person->industryfocus()->pluck('search_filter_id')->toArray();
@@ -298,6 +310,7 @@ class Model extends \Eloquent {
 		}
 		return $data;
 	}
+
 	public function array_empty($mixed) {
         if (is_array($mixed)) {
             foreach ($mixed as $value) {

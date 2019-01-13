@@ -7,6 +7,7 @@
 		class="form-control" 
 		type="text" 
 		name="email" 
+		autocomplete = 'off'
 		id="email" 
 		value="{{ old('email', isset($user) ? $user->email : '') }}" 
 		placeholder="email@peopleready.com"/>
@@ -22,7 +23,8 @@
         required
         type="text" 
         class="form-control" 
-        name='employee_id' 
+        name='employee_id'
+		autocomplete = 'off' 
         description="employee_id" 
         value="{{ old('employee_id',isset($user) ? $user->employee_id : '') }}" 
         placeholder="employee_id">
@@ -39,6 +41,7 @@
 		<input 
 		class="form-control" 
 		type="password" 
+		autocomplete = 'off'
 		name="password" 
 		id="password" 
 		value="" />
@@ -53,6 +56,7 @@
 	<div class="col-md-10">
 		<input 
 		class="form-control" 
+		autocomplete = 'off'
 		type="password" 
 		name="password_confirmation" 
 		id="password_confirmation" 

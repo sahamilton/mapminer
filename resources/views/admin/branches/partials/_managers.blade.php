@@ -8,7 +8,7 @@
 		@endforeach
 
 </p>
-<table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
+<table id ='sorttable1' class='table table-striped table-bordered table-condensed table-hover'>
 <thead>
 	<th>Manager</th>
 	<th>Roles</th>

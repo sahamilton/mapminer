@@ -2,7 +2,7 @@
 
 ## New Comment on News
 
-{{$data['user']->person->postName()}} has added a comment to the <a href="{{route('news.show',$data['comments']->title)}}">{{$data['comments']->subject}}</a> news item.
+{{$data['user']->person->fullName()}} has added a comment to the <a href="{{route('news.show',$data['comments']->title)}}">{{$data['comments']->subject}}</a> news item.
 
 {{$data['user']->person->firstname}} said:
 

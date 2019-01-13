@@ -13,7 +13,7 @@
 <tr>
 <td>{{$lead->companyname}}</td>
 <td>{!! $lead->fullAddress() !!}</td>
-<td>{{$lead->ownedBy[0]->postName()}}</td>
+<td>{{$lead->ownedBy[0]->fullName()}}</td>
 <td>{{$statuses[$lead->ownedBy[0]->pivot->status_id]}}</td>
 <td>{{$lead->ownedBy[0]->pivot->rating}}</td>
 

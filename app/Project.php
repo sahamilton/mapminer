@@ -3,11 +3,10 @@
 namespace App;
 use\App\Presenters\LocationPresenter;
 
-
-class Project extends Model  {
-
+class Project extends Model
+{
     
-use Geocode;
+use Geocode, Addressable;
     public $table="projects";
     public $incrementing = false;
     public $statuses = ['Claimed','Closed'];

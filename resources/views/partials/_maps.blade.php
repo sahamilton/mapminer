@@ -54,9 +54,9 @@ $(document).ready(function() {
 		function submitMapCoords(lat,lng){
 			latLng=lat+','+lng;
 			//getAddress(latLng) 
-			address = 'Lat:'+lat.toFixed(3) + ' Lng:' + lng.toFixed(3);
+			search = 'Lat:'+lat.toFixed(3) + ' Lng:' + lng.toFixed(3);
 			distance ='100';
-			populateHeader(lat, lng,address,distance);
+			populateHeader(lat, lng,search,distance);
 			$('#selectForm').submit();
 			
 		}
@@ -68,11 +68,11 @@ $(document).ready(function() {
 			if (geocoder) {
 				geocoder.geocode({ 'latLng': latLng}, function (results, status) {
 				   if (status == google.maps.GeocoderStatus.OK) {
-					var address = results[0].formatted_address; 
-					$('#address').val(address);
+					var search = results[0].formatted_address; 
+					$('#search').val(search);
 				   }
 				   else {
-					$('#address').val(latLng);;
+					$('#search').val(latLng);;
 					
 				   }
 				})
@@ -84,10 +84,10 @@ $(document).ready(function() {
             console.log("Geocoder failed");
         }
 
-        function populateHeader(lat, lng, address, distance){
+        function populateHeader(lat, lng, search, distance){
          $('#lat:first').val(lat);
  		 $('#lng:first').val(lng);
-		$("#address").val(address);
+		$("#search").val(search);
 		if(distance == '100') {
 		 $("#distance").val(distance);
 		}else{

@@ -13,7 +13,7 @@
         
         <form method="post" action="{{route('projects.transfer',$project->id)}}">
         {{csrf_field()}}
-        <div class="form-group{{ $errors->has('comments') ? ' has-error' : '' }}">
+        <div class="form-group{{ $errors->has('search') ? ' has-error' : '' }}">
           <label class="col-md-4 control-label">Project Recipient</label>
            <div class="input-group input-group-lg ">
 

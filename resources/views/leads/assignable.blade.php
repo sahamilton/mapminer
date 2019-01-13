@@ -25,7 +25,7 @@
     <td>
         <ul style="list-style-type: none">
         @foreach ($data[$lead->id] as $rep)
-            <li>{{$rep->postName()}} <i>{{number_format($rep->distance,1)}} m</i></li>
+            <li>{{$rep->fullName()}} <i>{{number_format($rep->distance,1)}} m</i></li>
         @endforeach
         </ul>
     </td>

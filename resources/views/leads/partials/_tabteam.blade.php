@@ -20,7 +20,7 @@
         @foreach($salesteams as $team)
 
         <tr>  
-            <td><a href="{{route('leads.person',$team->id)}}">{{$team->postName()}}</a></td>
+            <td><a href="{{route('leads.person',$team->id)}}">{{$team->fullName()}}</a></td>
             <td>
                 @if($team->reportsTo->count()>0)
                     {{$team->reportsTo->postName()}}

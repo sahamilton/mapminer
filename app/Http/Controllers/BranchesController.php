@@ -6,6 +6,7 @@ use App\Branch;
 use App\Serviceline;
 use App\Location;
 use App\User;
+use App\Address;
 use App\State;
 use App\Person;
 use App\Role;
@@ -28,16 +29,29 @@ class BranchesController extends BaseController {
 
 	
 	
-	public function __construct(Branch $branch, Serviceline $serviceline,Person $person, State $state) {
+	public function __construct(Branch $branch, Serviceline $serviceline,Person $person, State $state, Address $address) {
 			$this->branch = $branch;
 			$this->serviceline = $serviceline;
 			$this->person = $person;
 			$this->state = $state;
+			$this->address = $address;
 			parent::__construct($this->branch);
 
 			
 	}
 	
+	public function testmorph(){
+		$branches = Branch::with('region','manager','relatedPeople','relatedPeople.userdetails.roles','servicelines','address')
+		->whereHas('servicelines', function($q) {
+					    $q->whereIn('serviceline_id',$this->userServiceLines);
+
+					})
+			->orderBy('id')
+			->get();
+		$allstates = $this->branch->allStates('branch');
+
+		return response()->view('testmorph',compact('branches','allstates'));
+	}
 	/**
 	 * List all branches with region, manager filtered by users serviceline
 	 * @return [type] [description]
@@ -46,17 +60,17 @@ class BranchesController extends BaseController {
 	{
 
 		$branches = $this->branch
-			->with('region','manager','relatedPeople','servicelines','servicedBy')
+			->with('region','manager','relatedPeople','relatedPeople.userdetails.roles','servicelines')
 			->whereHas('servicelines', function($q) {
 					    $q->whereIn('serviceline_id',$this->userServiceLines);
 
 					})
 			->orderBy('id')
 			->get();
-
+		$allstates = $this->branch->allStates('branch');
 		
 
-		return response()->view('branches.index', compact('branches'));
+		return response()->view('branches.index', compact('branches','allstates'));
 	}
 	
 	/**
@@ -67,8 +81,9 @@ class BranchesController extends BaseController {
 	{
 		
 		$servicelines = $this->serviceline->all();
-		
-		return response()->view('branches.map',compact('servicelines'));
+		$allstates = $this->branch->allstates();
+	
+		return response()->view('branches.map',compact('servicelines','allstates'));
 	}
 	
 	
@@ -120,6 +135,11 @@ class BranchesController extends BaseController {
 		// add lat lng to location
 
 		$branch = $this->branch->create($input);
+
+		$input['addressable_type'] ='branch';
+		$input['addressable_id'] =$branch->id;
+
+		$address = $this->create($input);
 
 		foreach ($input['roles'] as $key=>$role){
 				foreach ($role as $person){
@@ -415,13 +435,15 @@ class BranchesController extends BaseController {
 	public function retrieveStateBranches($state){
 		
 		return $this->branch
-		->where('state','=',$state)
-		->with('servicelines','servicedBy')
+		->whereHas('address',function($q) use ($state){
+			$q->where('state','=',$state);
+		})
+		->with('address','servicelines','servicedBy')
 		->whereHas('servicelines', function($q) {
 			$q->whereIn('serviceline_id',$this->userServiceLines);
 					})
-		->orderBy('city')
-		->get();
+		
+		->get()->sortBy('city');
 
 		
 	}
@@ -443,16 +465,16 @@ class BranchesController extends BaseController {
 	
 	public function state(Request $request, $statecode=null) {
 		
-
+		$state = request('state');
 
 		if(! $statecode){
 
-			$statecode = request('state');
+			$statecode = $state;
 
 		}
-
+	
 		$branches = $this->branch
-			->with('region','servicelines')
+			->with('region','servicelines','manager','relatedPeople','servicedBy')
 	
 			->whereHas('servicelines', function($q) {
 					    $q->whereIn('serviceline_id',$this->userServiceLines);
@@ -462,17 +484,9 @@ class BranchesController extends BaseController {
 			->orderBy('id')
 			->get();
 
-		
-		$states= $this->state->where('statecode','=',$statecode)->get();
-		foreach($states as $state) {
-			$data['state']= $state->statecode;
-			$data['fullstate']= $state->fullstate;
-			$data['lat'] = $state->lat;
-			$data['lng'] = $state->lng;
-		}
-		
-				
-		return response()->view('branches.state', compact('branches','data','fields'));
+		$state = \App\State::where('statecode','=',$statecode)->first();
+		$allstates = $this->branch->allStates();
+		return response()->view('branches.state', compact('branches','state','fields','allstates'));
 		
 	}
 	public function exportTeam() 
@@ -503,7 +517,7 @@ class BranchesController extends BaseController {
 	
 	Excel::create('Branches',function($excel){
 			$excel->sheet('Watching',function($sheet) {
-				$result = $this->branch->with('manager')->get();
+				$result = $this->branch->with('address','manager')->get();
 			
 			
 				$sheet->loadView('branches.export',compact('result'));

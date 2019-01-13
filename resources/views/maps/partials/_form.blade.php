@@ -1,9 +1,11 @@
 <?php 
 // Default values
 $session = Session::get('geo');
+
 if(! isset($session)) {
   if(Session::has('geo.type')){
-  $session = array('type'=>'accounts','distance'=>'10','address'=>NULL,'view'=>'maps','lat'=>'39.8282','lng'=>'-98.5795');
+
+  $session = array('type'=>'accounts','distance'=>'10','address'=>NULL,'view'=>'maps','lat'=>session('geo.lat'),'lng'=>session('geo.lng'));
   }else{
     $session = array('type'=>'accounts','distance'=>'10','address'=>NULL,'view'=>'maps','lat'=>'39.8282','lng'=>'-98.5795');
   }
@@ -15,11 +17,8 @@ foreach($session as $key=>$value)
 		$data[$key] = $value;
 	}
 }
-$types = ['location'=>'All accounts','branch'=>'Branches','people'=>'People','myleads'=>'Leads'];
+$types = ['location'=>'All locations','branch'=>'Branches','people'=>'People'];
 // added to filter out Centerline
-if(auth()->user()->can('view_projects') && in_array(5, Session::get('user.servicelines'))){
-  $types['projects']='Construction projects';
-}
 
 if(isset($data['type']) && $data['type'] == 'company' && isset($company)){
 	$types['company'] = $company->companyname .' locations';
@@ -72,16 +71,16 @@ method = 'post' name="mapselector">
         <label for= "address"> of address</label> 
 
         <input 
-        class="form-control{{ $errors->has('address') ? ' has-error' : ''}}" 
+        class="form-control{{ $errors->has('search') ? ' has-error' : ''}}" 
         type="text" 
-        name="address" 
+        name="search" 
         title="Enter an address, zip code, or state code to search from"
         value="{{isset($data['fulladdress']) ? str_replace('+','', str_replace('  ',' ',$data['fulladdress'])) : ''}}"
-        id="address" 
+        id="search"
         required
         style='width:300px'
         placeholder='Enter address or check Help Support for auto geocoding' />
-       {!! $errors->first('address', '<p class="help-block">:message</p>') !!}
+       {!! $errors->first('search', '<p class="help-block">:message</p>') !!}
     </div>
 <button type="submit"  style="background-color: #4CAF50;"
 class= "btn btn-success ">
@@ -97,14 +96,14 @@ class= "btn btn-success ">
 @include('partials._noaddressmodal')
 <script>
 
-$("#address").change(function() {
+$("#search").change(function() {
   $('#lat:first').val('');
   $('#lng:first').val('');
 });
 
 
 $("select[id^='select']").change(function() {
-  if($.trim($('#address').val()) == ''){
+  if($.trim($('#search').val()) == ''){
     $( "#noaddress" ).modal('show');
     
   }else{
@@ -116,6 +115,7 @@ $("select[id^='select']").change(function() {
   window.dataLayer.push({
   'event' : 'searchAddress',
   'address' : '{{isset($data['address']) ? $data['address'] : 'No address'}}',
+  'search' : '{{isset($data['search']) ? $data['search'] : 'No address'}}',
   'searchtype' : '{{isset($data['type']) ? $data['type'] : 'no type'}}'
 
 });

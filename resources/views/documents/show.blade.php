@@ -3,7 +3,7 @@
 
 <h1>{{$document->title}}</h1>
 
-<p><strong>Editor:</strong> {{$document->author->person->postName()}}</p>
+<p><strong>Editor:</strong> {{$document->author->person->fullName()}}</p>
 <p><strong>Published:</strong> {{$document->created_at->format('M j, Y')}}</p>
 <p><strong>Available From:</strong> {{$document->datefrom->format('M j, Y')}}</p>
 <p><strong>Available Until:</strong> {{$document->dateto->format('M j, Y')}}</p>

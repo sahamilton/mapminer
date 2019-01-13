@@ -11,11 +11,23 @@
 @endif
 
 <ul class="nav nav-tabs">
-  <li class="active"><a data-toggle="tab" href="#map"><strong>Map View</strong></a></li>
+	<li class="nav-item ">
+		<a class="nav-link active" data-toggle="tab" href="#map">
+			<strong>Map View</strong>
+		</a>
+	</li>
   @if($leads->offeredLeads->count()>0)
-  <li><a data-toggle="tab" href="#offered"><strong>Offered Prospects</strong></a></li>
+  <li class="nav-item">
+  	<a class="nav-link" data-toggle="tab" href="#offered">
+  		<strong>Offered Prospects</strong>
+  	</a>
+  </li>
   @endif
-  <li><a data-toggle="tab" href="#owned"><strong>Owned Prospects</strong></a></li>
+  <li class="nav-item">
+  	<a class="nav-link" data-toggle="tab" href="#owned">
+  		<strong>Owned Prospects</strong>
+  	</a>
+  </li>
   
 
 </ul>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
 use App\Role;
+use App\Company;
 class SearchController extends Controller
 {
 
@@ -31,5 +32,13 @@ class SearchController extends Controller
 		->search(request('q'))
             ->with('person')
             ->get();
+	}
+
+	public function searchCompanies(Request $request){
+
+		return Company::whereNull('parent_id')->search(request('q'))
+            
+            ->get();
+
 	}
 }

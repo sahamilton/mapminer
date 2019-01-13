@@ -20,7 +20,9 @@ class CreateOpportunitiesTable extends Migration
             $table->string('client_ref')->nullable();
             $table->boolean('closed')->default(0);
             $table->integer('value')->nullable();
+            $table->integer('duration')->nullable();
             $table->integer('requirements')->nullable();
+            $table->boolean('top50')->nullable();
             $table->timestamps();
         });
     }

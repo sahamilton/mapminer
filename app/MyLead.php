@@ -22,9 +22,11 @@ class MyLead extends Lead
 			'lead_source_id'];
 	public $getStatusOptions =  [
     
-        3=>'No sales / service opportunity.',
-        4=>'Possibility of sales / service opportunity.',
-        5=>'Definite opportunity for sales / service'
+        1=>'Prospect data is completely inaccurate. No project or project completed.',
+        2=>'Prospect data is incomplete and / or not useful.',
+        3=>'Prospect data is accurate but there is no sales / service opportunity.',
+        4=>'Prospect data is accurate and there is a possibility of sales / service.',
+        5=>'Prospect data is accurate and there is a definite opportunity for sales / service'
       ];
     public function relatedLeadNotes() {
       
@@ -42,6 +44,10 @@ class MyLead extends Lead
         $note->related_id = $this->id;
         $note->user_id = auth()->user()->id;
         return $note->save();
+    }
+
+    public function address(){
+        return $this->belongsTo(Address::class,'id','addressable_id');
     }
 
 }

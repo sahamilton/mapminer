@@ -19,7 +19,7 @@ class updateUserRoles implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(array $newuser, $users)
+    public function __construct(array $newuser, User $users)
     {
         $this->users = $users;
         $this->newuser = $newuser;

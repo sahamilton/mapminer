@@ -23,7 +23,7 @@
         <td>{{$branch->state}}</td>
         <td>
             @foreach ($branch->manager as $manager)
-                {{$manager->postName()}}<br />
+                {{$manager->fullName()}}<br />
             @endforeach
         </td>
         <td>{{$branch->leads_count}}</td>

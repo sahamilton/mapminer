@@ -3,16 +3,23 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use \App\Contacts;
+use \App\Contact;
+use App\Orders;
+use App\Branch;
+
+use App\Person;
+use App\Opportunity;
 use \App\Locations;
 use JeroenDesloovere\VCard\VCard;
 class LocationContactController extends Controller
 {
     
     public $contact;
+    public $person;
 
-    public function __construct(Contacts $contact){
+    public function __construct(Contact $contact,Person $person){
         $this->contact = $contact;
+        $this->person = $person;
     }
     /**
      * Display a listing of the resource.
@@ -21,7 +28,23 @@ class LocationContactController extends Controller
      */
     public function index()
     {
-        //
+
+       
+        if(auth()->user()->hasRole('Branch Manager')){
+             
+             $branches = Branch::whereHas('manager',function($q) {
+                $q->where('id','=',auth()->user()->person->id);
+             })->pluck('id')->toArray();
+        }else{
+            $branches = array_keys($this->person->myBranches());
+        }
+             $opportunity = Opportunity::whereIn('branch_id',$branches)->pluck('address_id')->toArray();
+             $customer = Orders::whereIn('branch_id',$branches)->pluck('address_id')->toArray();
+           
+             $contacts = $this->contact->whereIn('address_id',array_merge($opportunity,$customer))->with('location')->get();
+   
+             return response()->view('contacts.index',compact('contacts'));
+           
     }
 
     /**
@@ -47,7 +70,8 @@ class LocationContactController extends Controller
 
         $data['user_id']= auth()->user()->id;
         $contact = $this->contact->create($data);
-        return redirect()->route('locations.show',request('location_id'));
+        
+        return redirect()->route('address.show',request('address_id'));
 
     }
 
@@ -57,7 +81,7 @@ class LocationContactController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($contact)
     {
         //
     }
@@ -68,9 +92,9 @@ class LocationContactController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($contact)
     {
-        //
+        return response()->view('contacts.edit',compact('contact'));
     }
 
     /**
@@ -80,9 +104,12 @@ class LocationContactController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $contact)
     {
-        //
+        
+        $contact->update(request()->all());
+
+        return redirect()->route('address.show',$contact->address_id);
     }
 
     /**
@@ -91,10 +118,10 @@ class LocationContactController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($contact)
     {
         
-        $this->contact->destroy($id);
+        $contact->delete();
         return redirect()->back();
         
     }

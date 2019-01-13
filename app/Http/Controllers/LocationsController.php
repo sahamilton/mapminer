@@ -277,6 +277,7 @@ class LocationsController extends BaseController {
 	private function getNearbyLocations($lat=NULL,$lng=NULL,$distance=NULL,$company_id = null,$vertical=null)
 	
 	{
+
 		
 		if(! $distance){
 			$distance ='10';
@@ -306,7 +307,8 @@ class LocationsController extends BaseController {
 		return $locations->whereHas('company.serviceline',function ($q) {
 			$q->whereIn('servicelines.id',$this->userServiceLines);
 
-		})->nearby($location,$distance)
+		})
+		->with('address')->nearby($location,$distance)
 		->get();
 		
 

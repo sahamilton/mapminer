@@ -7,6 +7,7 @@
 $data['type'] ='people';
 @endphp
   @include('leads.partials.search')
+ @if($people->count()>0)
 <table id='sorttable' class ='table table-bordered table-striped table-hover dataTable'>
 <thead>
 		<th>Sales Team Member</th>
@@ -21,7 +22,7 @@ $data['type'] ='people';
 <tbody>
 @foreach ($people as $person)
 <tr>
-	<td><a href="{{route('salesorg',$person->id)}}">{{$person->postName()}}</a></td>
+	<td><a href="{{route('salesorg',$person->id)}}">{{$person->fullName()}}</a></td>
 	<td>
 		@foreach ($person->userdetails->roles as $role)
 			{{$role->name}}
@@ -46,7 +47,9 @@ $data['type'] ='people';
 
 
 </table>
-   
+   @else
+   @include('partials._noresults')
+   @endif
 @include('partials/_scripts')
 
 @endsection

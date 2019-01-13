@@ -26,17 +26,25 @@ class RouteServiceProvider extends ServiceProvider
       
 
         parent::boot();
+        Route::model('activity', \App\Activity::class);
+        Route::model('address', \App\Address::class);
         Route::model('branch', \App\Branch::class);
         Route::model('company', \App\Company::class);
+        Route::model('contact', \App\Contact::class);
+        Route::model('customer', \App\Customer::class);
+        Route::model('lead', \App\lead::class);
         Route::model('location', \App\Location::class);
+        Route::model('mylead', \App\Mylead::class);
+        Route::model('myleadsactivity', \App\MyLeadActivity::class);
+        Route::model('opportunity',\App\Opportunity::class);
         Route::model('permission', \App\Permission::class);
         Route::model('person', \App\Person::class);
         Route::model('role', \App\Role::class);
-        Route::model('user', \App\User::class);
-        Route::model('lead', \App\lead::class);
-        Route::model('mylead', \App\Mylead::class);
-        Route::model('myleadsactivity', \App\MyLeadActivity::class);
         Route::model('salesactivity', \App\Salesactivity::class);
+        Route::model('user', \App\User::class);
+        
+        
+        
         
         
     }

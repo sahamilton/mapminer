@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 use App\Serviceline;
+use App\Address;
 use App\Location;
 use App\Company;
 use App\Project;
@@ -19,6 +20,7 @@ class GeoCodingController extends BaseController {
 	public $branch;
 	public $serviceline;
 	public $person;
+	public $address;
 
 
 	public function __construct(
@@ -27,7 +29,8 @@ class GeoCodingController extends BaseController {
 			Branch $branch, 
 			Serviceline $serviceline,
 			Person $person,
-			Lead $lead
+			Lead $lead,
+			Address $address
 		) 
 	{
 		$this->location = $location;
@@ -36,6 +39,7 @@ class GeoCodingController extends BaseController {
 		$this->lead = $lead;	
 		$this->branch = $branch;
 		$this->person = $person;
+		$this->address = $address;
 		parent::__construct($location);	
 }
 	
@@ -47,25 +51,35 @@ class GeoCodingController extends BaseController {
 	/**  This needs some serious refactoring! **/
 
 	public function findMe(FindMeFormRequest $request) {
-
 		
-		if(request()->filled('address')) {
-			$address = urlencode(request('address'));
+		if(request()->filled('search')) {
+				
+			$address = urlencode(request('search'));
 			
-		}
-		if(! request()->filled('lat')){
-			$geocode = app('geocoder')->geocode(request('address'))->get();
-
-			if(! $geocode or count($geocode)==0){
-
-				return redirect()->back()->withInput()->with('error','Unable to Geocode address:'.request('address') );
-			}
-			
-			request()->merge($this->location->getGeoCode($geocode));
-			
-		
 		}
 		$data = request()->all();
+		if($data['search']!= session('geo.search')){
+			if(preg_match('^Lat:([0-9]*[.][0-9]*).Lng:([-]?[0-9]*[.][0-9]*)^', $data['search'],$string)){
+				$data['lat']=$string[1];
+				$data['lng'] = $string[2];
+				$geocode = app('geocoder')->reverse($data['lat'],$data['lng'])->get();
+				$data['search']= $geocode->first()->getFormattedAddress();
+			}else{
+			
+				$geocode = app('geocoder')->geocode($data['search'])->get();
+				
+				if(! $geocode or count($geocode)==0){
+
+					return redirect()->back()->withInput()->with('error','Unable to Geocode address:'.request('address') );
+				}
+				
+				request()->merge($this->location->getGeoCode($geocode));
+				$data = request()->all();
+			}
+		}
+
+
+		
 
 		$data['latlng'] = $data['lat'].":".$data['lng'];
 		// Kludge to address the issue of different data in Session::geo
@@ -73,9 +87,10 @@ class GeoCodingController extends BaseController {
 
 			$data['number']=5;
 		}
+
 		// we have to do this in case the lat / lng was set via the browser
 		if(! isset($data['fulladdress'])){
-			$data['fulladdress'] = $data['address'];
+			$data['fulladdress'] = $data['search'];
 		}
 
 		session()->put('geo', $data);
@@ -85,13 +100,13 @@ class GeoCodingController extends BaseController {
 		
 		$data = $this->getViewData($data);
 
-
 		$filtered = $this->location->isFiltered(['companies','locations'],['vertical','business','segment'],NULL);
 		if(isset($data['company']) ){
     		$company = $data['company'];
     	}else{
     		$company=null;
     	}
+
     	$data['result'] = $this->getGeoListData($data);
 
     	if(count($data['result'])==0){
@@ -99,6 +114,7 @@ class GeoCodingController extends BaseController {
 			session()->flash('warning','No results found. Consider increasing your search distance');
 
 		}
+	
 		if(isset($data['view']) && $data['view'] == 'list') {
 		
 			if($data['type']=='people'){
@@ -106,8 +122,8 @@ class GeoCodingController extends BaseController {
 			}
 
 			if ($data['type']=='myleads'){
-				
-				return response()->view('myleads.index', compact('data'));
+				$statuses = \App\LeadStatus::pluck('status','id')->toArray();
+				return response()->view('myleads.index', compact('data','statuses'));
 			}
 
 			try {
@@ -120,7 +136,7 @@ class GeoCodingController extends BaseController {
 			catch (Exception $e) {
 				$watchlist = NULL;
 			}
-		
+			
 			return response()->view('maps.list', compact('data','watchlist','filtered','company'));
 		}else{
 
@@ -128,7 +144,7 @@ class GeoCodingController extends BaseController {
 
 			$servicelines = $this->serviceline->whereIn('id',$this->userServiceLines)
     						->get();
-    		
+    
 			return response()->view('maps.map', compact('data','filtered','servicelines','company'));
 		}
 		
@@ -141,9 +157,10 @@ class GeoCodingController extends BaseController {
 	 */
 	
 	private function getViewData($data) {
-	
+
 		if(method_exists($this,'get'.ucwords($data['type']).'MapData')){
 			$method = 'get'.ucwords($data['type']).'MapData';
+
 			$data = $this->$method($data);
 
 		}else{
@@ -169,8 +186,8 @@ class GeoCodingController extends BaseController {
 
 	}
 	private function getLocationMapData($data){
-		$data['urllocation'] ="api/mylocalaccounts";
-		$data['title'] ='National Account Locations';
+		$data['urllocation'] ="api/address";
+		$data['title'] ='Nearby Locations';
 		$data['company']=NULL;
 		$data['companyname']=NULL;
 		return $data;
@@ -234,12 +251,12 @@ class GeoCodingController extends BaseController {
 	 
 	public function getGeoListData($data ) {
 
-	
+
 		$company = isset($data['company']) ? $data['company'] : NULL;
 		$location = new Location;
 		$location->lat = $data['lat'];
 		$location->lng = $data['lng'];
-
+		
 		if(method_exists($this,'get'.ucwords($data['type']).'ListData')){
 			$method = 'get'.ucwords($data['type']).'ListData';
 			return $this->$method($location,$data,$company);
@@ -284,10 +301,8 @@ class GeoCodingController extends BaseController {
 	}
 
 	private function getLocationListData($location,$data){
-		return $this->location
-				->whereHas('company.serviceline', function ($q) {
-						$q->whereIn('servicelines.id',$this->userServiceLines);
-				})->nearby($location,$data['distance'])
+		
+		return $this->address->nearby($location,$data['distance'])
 				->with('company')
 				->get();
 	}
@@ -300,7 +315,8 @@ class GeoCodingController extends BaseController {
 	}
 
 	private function getMyLeadsListData($location,$data){
-		return $this->lead->myLeads()
+		
+		return $this->lead->myLeads($statuses =[1,2],$all=true)
 			->with('leadsource')
 			->nearby($location,$data['distance'])
 			->get();

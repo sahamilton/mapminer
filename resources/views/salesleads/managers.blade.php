@@ -1,6 +1,6 @@
 @extends('site.layouts.default')
 @section('content')
-<h2>{{$title }} {{$leads->postName()}}
+<h2>{{$title }} {{$leads->fullName()}}
 @if($manager)
 and Team
 @endif
@@ -9,7 +9,7 @@ and Team
 </h2>
 <ul class="nav nav-tabs">
 
-	<li class="nav-item active">
+	<li class="nav-item ">
 		<a class="nav-link active" data-toggle="tab" href="#map">
 			<strong>Prospects</strong>
 		</a>
@@ -40,10 +40,10 @@ and Team
 		@include('salesleads.partials._tabmapleads')
 
 	</div>
-	<div id="team" class="tab-pane fade in">
+	<div id="team" class="tab-pane fade ">
 		@include('salesleads.partials._managerleads')
 	</div>
-	<div id="list" class="tab-pane fade in">
+	<div id="list" class="tab-pane fade ">
 		@include('salesleads.partials._offeredleads')
 	</div>
 

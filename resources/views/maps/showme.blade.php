@@ -5,6 +5,7 @@
 @include('news.newsmodal')
 @endif
 <h2>Use the Search Options</h2>
+@include('companies.partials._searchbar')
 <div id="message" style="color:#F00">{{\Session::get('message')}}</div>
     <style>
       #map_canvas {
@@ -23,5 +24,5 @@
 
 @include('partials._maps')
 @include('partials._newsscript')
-
+@include('partials._scripts')
 @endsection

@@ -1,6 +1,6 @@
 <table>
 <tr>
-<td>Owned and Closed Prospects of {{auth()->user()->person->postName()}}</td>
+<td>Owned and Closed Prospects of {{auth()->user()->person->fullName()}}</td>
 </tr>
 <tr><td>Prospect</td>
 	<td>Address</td>
@@ -19,7 +19,7 @@
 <td>{{$lead->contacts->contact}}</td>
 <td> {{$lead->contacts->contacttitle}}</td>
 <td>{{$lead->contacts->contactphone}}</td>
-<td>{{$lead->ownedBy[0]->postName()}}</td>
+<td>{{$lead->ownedBy[0]->fullName()}}</td>
 <td>{{$statuses[$lead->ownedBy[0]->pivot->status_id]}}</td>
 <td>{{$lead->ownedBy[0]->pivot->rating}}</td>
 

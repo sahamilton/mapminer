@@ -1,7 +1,6 @@
 @extends('site.layouts.maps')
 @section('content')
 
-
 <h1>{{$data['title']}}</h1>
 @if(isset($data['listviewref']))
 
@@ -14,10 +13,10 @@
 
 @include('maps.partials._form')
 
-@if ($data['type'] == 'branch')
+
 
 @include('maps.partials._keys')
-@endif
+
 
 <div>
 
@@ -42,15 +41,11 @@
             'dataLocation' : '{{URL::to($data['datalocation'])}}',
             'zoomLevel':{{$data['zoomLevel']}}, 
             'infowindowTemplatePath' : '{{asset('maps/templates/infowindow-description.html')}}','listTemplatePath' : '{{asset('maps/templates/location-list-description.html')}}'} );
-		  $(function() {
-        $('#cp2').colorpicker();
-      });
-		 
-			  
-		  
-        });
+      		   $('#cp2').colorpicker();
+		 });
+   
     </script>
 
 
 @endsection
-
+@include('partials._scripts')

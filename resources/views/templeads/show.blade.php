@@ -2,7 +2,7 @@
 @section('content')
 <div class="container">
   <div class="col-md-10 col-md-offset-1">
-    <h2>{{$person->postName()}} Leads</h2>
+    <h2>{{$person->fullName()}} Leads</h2>
     @if($person->reportsTo)
     <h4>Reports To:<a href="{{route('salesrep.newleads',$person->reportsTo->id)}}">{{$person->reportsTo->postName()}}</a></h4>
     @endif

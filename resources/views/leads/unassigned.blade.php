@@ -17,10 +17,12 @@
             </thead>
             <tbody>
                
-                   @foreach ($leads as $lead)
+                   @foreach ($leadsource->unassignedLeads as $lead)
+                    
                 <tr> 
                     
-                     <td><a href="{{route('leads.show',$lead->id)}}">@if($lead->businessname !='')  {{$lead->businessname}} @else {{$lead->companyname}} @endif</a></td>
+                     <td><a href="{{route('leads.show',$lead->id)}}">
+                        {{$lead->businessname !='' ?  $lead->businessname : $lead->companyname}}</a></td>
                   
                     <td>{{$lead->address}}</td>
                     <td>{{$lead->city}}</td>
@@ -37,7 +39,8 @@
 
         </table>
     </div>
-
+<a href="{{route('leadsource.assign',$leadsource->id)}}" class="btn btn-info">Assign Geographically</a>
 </div>
+
 @include('partials._scripts')
 @endsection

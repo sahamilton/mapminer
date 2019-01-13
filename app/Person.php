@@ -1,11 +1,12 @@
 <?php
 namespace App;
 use\App\Presenters\LocationPresenter;
+
 use McCool\LaravelAutoPresenter\HasPresenter;
 
 class Person extends NodeModel implements HasPresenter {
 	use Geocode,Filters;
-
+	public $salesroles = ['5','9'];
 	// Add your validation rules here
 	public static $rules = [
 		'email'=>'required',
@@ -47,7 +48,33 @@ class Person extends NodeModel implements HasPresenter {
 		
 
 	}
+	public function myBranches(){
+		$myteam = $this->myTeam()->get();
+		
+        $data=[];
+        $teammembers =  $myteam->map(function ($team) 
+            { 
+                return $team->branchesServiced()->get(); 
+                
+            });
+        foreach ($teammembers as $member){
+            foreach ($member->pluck('branchname','id') as $id=>$branchname){
+                if(! array_key_exists($id,$data)){
+                    
+                    $data[$id]=$branchname;
+                }
+            }
+        }
+        return $data;
+	}
 
+
+	public function myTeam(){
+ 		
+        return $this->where('user_id','=',auth()->user()->id)->firstOrFail()
+        		->descendantsAndSelf();
+
+	}
 	public function lastUpdatedBranches()
 	{
 		return $this->belongsToMany(Branch::class)
@@ -122,7 +149,9 @@ class Person extends NodeModel implements HasPresenter {
 	}
 	public function fullName()
 	{
-		return $this->attributes['lastname'] . ',' . $this->attributes['firstname'];
+
+		return $this->attributes['firstname'] . ' ' . $this->attributes['lastname'];
+
 	}
 	
 	public function postName()
@@ -145,15 +174,29 @@ class Person extends NodeModel implements HasPresenter {
 		return $this->belongsToMany(Lead::class, 'lead_person_status','person_id','related_id')
 		->withPivot('created_at','updated_at','status_id','rating');
 	}
-	public function openleads(){
+	public function offeredleads(){
     	return $this->belongsToMany(Lead::class, 'lead_person_status','person_id','related_id')
-    	->wherePivot('status_id',2);
+    	->wherePivot('status_id',1)
+    	->withPivot('created_at','updated_at','status_id','rating');
     }
+    public function openleads(){
+    	return $this->belongsToMany(Lead::class, 'lead_person_status','person_id','related_id')
+    	->wherePivot('status_id',2)
+    	->withPivot('created_at','updated_at','status_id','rating');
+    }
+    
     public function closedleads(){
     	return $this->belongsToMany(Lead::class, 'lead_person_status','person_id','related_id')
-    	->wherePivot('status_id',3)->withPivot('created_at','updated_at','status_id','rating');
+    	->wherePivot('status_id',3)
+    	->withPivot('created_at','updated_at','status_id','rating');
     }
-
+    public function scopeLeadsWithStatus($query,$status){
+		
+		return $query->whereHas('leads',function($q) use ($status)
+			{ 
+				$q->where('lead_person_status.status_id',$status);
+			});
+	}
 	public function industryfocus()
 	{
 		return $this->belongsToMany(SearchFilter::class)->withTimestamps(); 
@@ -204,7 +247,9 @@ class Person extends NodeModel implements HasPresenter {
 		->whereNotNull('rating');
 	
     }
-
+    public function fullAddress(){
+    	return $this->address . ' '. $this->city . ' ' . $this->state . ' ' . $this->zip;
+    }
 
 	public function findPersonsRole($people)
 	{
@@ -281,16 +326,7 @@ class Person extends NodeModel implements HasPresenter {
 		->where('person_id','=',auth()->user()->person->id);
 	}
 
-	public function offeredLeads(){
-
-		return $this->belongsToMany(Lead::class, 'lead_person_status','person_id','related_id')
-		->withTimestamps()
-		->withPivot('status_id','rating')
-		->whereIn('status_id',[1]);
-        
-        
-       
-    }
+	
     
     public function campaigns(){
     	return $this->belongsToMany(Salesactivity::class);
@@ -349,7 +385,7 @@ class Person extends NodeModel implements HasPresenter {
     }
     public function scopePrimaryRole($query){
 
-    	return $query->with('userdetails.roles')->first()->userdetails->roles->first()->id;
+    	return $query->with('userdetails.roles');
                     //->userdetails;
     }
 
@@ -361,8 +397,12 @@ class Person extends NodeModel implements HasPresenter {
 
     public function scopeSalesReps($query){
 		return $query->whereHas('userdetails.roles',function($q){
-    		$q->where('roles.id','=','5');
+    		$q->whereIn('roles.id',$this->salesroles);
 		});
+	}
+
+	public function rankings(){
+		return $this->belongsToMany(Address::class)->withPivot('ranking','comments')->withTimeStamps();
 	}
 
 }

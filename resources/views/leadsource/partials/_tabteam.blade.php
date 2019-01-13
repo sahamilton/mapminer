@@ -4,16 +4,19 @@
 
 <p>Prospects have been offered to the following sales reps;</p>
 
-<table id ='sorttable1' class='table table-striped table-bordered table-condensed table-hover'>
+<table id ='sorttable1' class='table table-striped table-bordered table-hover'>
     <thead>
 
 
         <th>Sales Rep</th>
         <td>Manager</td>
         <td>Location</td>
-        <td>Industry Focus</td>
-        <td>Prospects</td>
-
+       
+        
+        <td>Offered Prospects</td>
+        <td>Owned Prospects</td>
+        <td>Closed Prospects</td>
+        <td>Total Prospects</td>
 
     </thead>
     <tbody>
@@ -21,31 +24,21 @@
         @foreach($salesteams as $team)
 
         <tr>  
-            <td><a href="{{route('leads.personsource',[$team['details']->id,$leadsource->id])}}">{{$team['details']->postName()}}</a></td>
             <td>
-                @if($team['details']->reportsTo->count()>0)
-                    {{$team['details']->reportsTo->postName()}}
+                <a href="{{route('leads.personsource',[$team->id,$leadsource->id])}}">
+                    {{$team->postName()}}
+                </a>
+            </td>
+            <td>
+                @if($team->reportsTo)
+                    {{$team->reportsTo->postName()}}
                 @endif
             </td>
-            <td>{{$team['details']->city}} {{$team['details']->state}}</td>
-            <td>
-                <ul>
-                @foreach ($team['details']->industryfocus as $vertical)
-                   
-                    <li>{{$vertical->filter}}</li>
-       
-                @endforeach
-                </ul>
-            </td>
-            <td>
-                <ul>
-                @foreach ($team['status'] as $key=>$value)
-                    @if($value > 0)
-                    <li>{{$statuses[$key]}} - {{$value}}</li>
-                    @endif
-                @endforeach
-                </ul>
-            </td>
+            <td>{{$team->city}} {{$team->state}}</td>
+            <td>{{$teamStats[$team->id][1]}}</td>
+            <td>{{$teamStats[$team->id][2]}}</td>
+            <td>{{$teamStats[$team->id][3]}}</td>
+            <td>{{$teamStats[$team->id][1] + $teamStats[$team->id][2] + $teamStats[$team->id][3]}}</td>
         </tr>
         @endforeach
 

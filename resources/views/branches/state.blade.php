@@ -1,11 +1,11 @@
 @extends('site/layouts/default')
 @section('content')
 
-<h2>{{$data['fullstate']}} State Branches</h2>
+<h2>{{$state->fullstate}} State Branches</h2>
 <h4> <a href="{{route('branches.index')}}" title="Show all branches" />Show all branches</a></h4>
 <?php $route='branches.state';?>
 @include('branches.partials._state')
-<p><a href="{{route('branches.showstatemap',$data['state'])}}">
+<p><a href="{{route('branches.showstatemap',$state->statecode)}}">
 
 <i class="far fa-flag" aria-hidden="true"></i> Map view</a></p>
 
@@ -47,7 +47,7 @@
 		@endforeach
 	</td>
 	<td>
-		{{$branch->street}} {{$branch->address2}}
+		{{$branch->street}} {{$branch->suite}}
 	</td>
 
 	<td>
@@ -70,8 +70,8 @@
 				
 				@foreach ($branch->manager as $manager)
 				<a href="{{route('managed.branch',$manager->id)}}"
-				title="See all branchesmanaged by {{$manager->postName()}}">
-				{{$manager->postName()}}</a>
+				title="See all branchesmanaged by {{$manager->fullName()}}">
+				{{$manager->fullName()}}</a>
 				@endforeach
 			@endif
 	</td>

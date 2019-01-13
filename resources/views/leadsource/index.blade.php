@@ -40,10 +40,11 @@
    	<td><a href="{{route('leadsource.show',$source->id)}}">{{$source->source}}</a></td>
     <td>{{$source->description}}</td>
     <td>{{$source->reference}}</td>
-    <td>{{$source->allleads}}</td>
-    <td>{{$source->ownedleads}}</td>
-    <td><a href="{{route('leadsource.unassigned',$source->id)}}">{{$source->allleads - $source->ownedleads}}</a></td>
-    <td>{{$source->closedleads}}</td>
+    <td>{{$source->leads->count()}}</td>
+    <td>{{$source->assignedLeads->count()}}</td>
+    <td><a href="{{route('leadsource.unassigned',$source->id)}}">
+        {{$source->unassignedLeads->count()}}</a></td>
+    <td>{{$source->closedLeads->count()}}</td>
     
     <td>{{number_format($source->ranking,2)}}</td>
    	<td>
@@ -60,7 +61,7 @@
 	@if (auth()->user()->hasRole('Admin'))
 
     <td>
-     @include('partials/_modal')
+    
     
         <div class="btn-group">
             <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
@@ -112,5 +113,6 @@
     
     </tbody>
     </table>
+@include('partials/_modal')
 @include('partials/_scripts')
 @endsection

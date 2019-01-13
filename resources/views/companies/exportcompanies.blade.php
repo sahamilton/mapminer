@@ -31,7 +31,7 @@
 				@endif
 				
 				<td>@if($company->managedBy)
-					{{$company->managedBy->postName()}}
+					{{$company->managedBy->fullName()}}
 					@endif
 				</td>
 			</tr>

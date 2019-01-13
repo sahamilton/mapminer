@@ -3,7 +3,7 @@
 
 <div class="jumbotron">
 	<div class="container" style="position:relative;text-align:center">
-		<h4 ">Welcome to the My PeopleReady&reg; National Account Locator</h4>
+		<h4 ">Welcome to the My PeopleReady&reg; Mapminer</h4>
 		<div id="welcome">
 
 			@if(auth()->check()) 
@@ -27,7 +27,7 @@
 					<a href="" class="btn btn-lg btn-primary" 
 					title='Search for specific construction projects'>Construction Project Views</a>
 				</div>
-
+				
 			@else
 				<div id="loginbtn" style="padding-left:0px;padding-top:200px">
 					<a href='login'class='btn btn-lg btn-success'>Login</a>

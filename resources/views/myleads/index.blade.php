@@ -26,7 +26,6 @@
 </div>
 @include('myleads.partials._tablist')
 @include('myleads.partials._mylead')
-	
-   
+  
 @include('partials._scripts')
 @endsection

@@ -29,7 +29,11 @@ class Imports extends Model
 	    	
     		$this->fields = implode(",",$data['fields']);    		
     		$this->table = $data['table'];
-    		$this->temptable = $this->table . "_import";
+
+    		if(! $this->temptable){
+    			$this->temptable = $this->table . "_import";
+    		}
+    		
     		$this->importfilename = str_replace("\\","/",$data['filename']);
 
     	}
@@ -50,21 +54,24 @@ class Imports extends Model
 
 
     public function import(){
+		if (! $this->dontCreateTemp){
+			$this->createTemporaryImportTable();
+		}
+		$this->_import_csv();
 
-      $this->createTemporaryImportTable();
+		$this->addCreateAtField();
 
-      $this->_import_csv();
+		$this->updateAdditionalFields();
+		if (! $this->dontCreateTemp){
+			$this->copyTempToBaseTable();
+			$this->dropTempTable();
+		}
 
-      $this->addCreateAtField();
 
-      $this->updateAdditionalFields();
+		//
 
-      $this->copyTempToBaseTable();
-
-    		//$this->dropTempTable();
-
-    		return true;
-    	}
+		return true;
+		}
 
     public function setNullFields($table){
 
@@ -108,7 +115,8 @@ class Imports extends Model
 		private function copyTempToBaseTable(){
 			$this->fields = str_replace('@ignore,','',$this->fields);
 			// Copy over to base table
-
+			$query ="INSERT IGNORE INTO `".$this->table."` (".$this->fields.") SELECT ".$this->fields." FROM `".$this->temptable."`";
+		
 			return $this->executeQuery("INSERT IGNORE INTO `".$this->table."` (".$this->fields.") SELECT ".$this->fields." FROM `".$this->temptable."`");
 		}
 		// Drop the temp table
@@ -136,7 +144,6 @@ class Imports extends Model
 
    public function _import_csv()
 	{
-
 
 
 	$query = sprintf("LOAD DATA LOCAL INFILE '".$this->importfilename."' INTO TABLE ". $this->temptable." CHARACTER SET latin1 FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '\"' ESCAPED BY '\"' LINES TERMINATED BY '\\n'  IGNORE 1 LINES (".$this->fields.");", $this->importfilename);

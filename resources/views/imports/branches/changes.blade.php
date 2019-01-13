@@ -57,13 +57,13 @@ Review Branch Changes
       @include('imports.branches.partials._adds')
     </div>
 	<div id="deletes" 
-      class="tab-pane fade in"
+      class="tab-pane fade "
       role="tabpanel" 
       aria-labelledby="nav-deletes-tab">
       @include('imports.branches.partials._deletes')
     </div>
   <div id="changes" 
-      class="tab-pane fade in"
+      class="tab-pane fade "
       role="tabpanel" 
       aria-labelledby="nav-adds-tab">
       @include('imports.branches.partials._changes')

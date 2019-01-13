@@ -2,15 +2,9 @@
 @section('content')
 
 <h2>{{$mylead->businessname}}</h2>
+<div class="container">
 <p><a href="{{route('myleads.index')}}">Return to all my leads</a></p>
-
-@if($mylead->salesteam->first()->pivot->status_id != 3)
- <button type="button" class="btn btn-info " data-toggle="modal" data-target="#closelead">Close Lead</button>
-@else
-<p><strong>Lead Closed: Rated {{$mylead->salesteam->first()->pivot->rating}}</strong></p>
-<p><a href="{{route('myclosedleads')}}">See all closed leads</a></p>
-
-@endif
+@include('myleads.partials._leadaction')
 <nav>
   <div class="nav nav-tabs" id="nav-tab" role="tablist">
   <a class="nav-link nav-item active" 
@@ -97,7 +91,9 @@
 $lead = $mylead;
 @endphp
 @include('partials/_modal')
-@include ('myleads.partials._closeleadform')
+
+@include ('myleads.partials._claimleadform')
+
 @include('myleads.partials.map')
 @include('partials._scripts');
 

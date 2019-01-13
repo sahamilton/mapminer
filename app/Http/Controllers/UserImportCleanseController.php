@@ -21,7 +21,11 @@ class UserImportCleanseController extends Controller
     public function index(){
     	// show users to delete
         
+<<<<<<< HEAD
         if($data = $this->import->handleUserErrors()){
+=======
+        if($data = $this->handleUserErrors()){
+>>>>>>> development
 
             return response()->view('admin.users.import.errors',compact('data'));
         }else{
@@ -51,6 +55,10 @@ class UserImportCleanseController extends Controller
 
 
     }
+<<<<<<< HEAD
+=======
+
+>>>>>>> development
     public function importAllUsers(){
         $this->import->updateExistingUsers();
         $this->person->rebuild();
@@ -97,6 +105,28 @@ class UserImportCleanseController extends Controller
         return redirect()->route('users.importfile');
     }
 
+<<<<<<< HEAD
    
 
 }
+=======
+    private function handleUserErrors(){
+        if($data['errors'] = $this->import->getDataErrors()){
+            $import = array();
+            if($brancherrors = $data['errors']['branch']){
+                $data['import'] = $this->import->whereIn('employee_id',array_keys($brancherrors))->get();
+                
+              } else{
+                unset ($data['errors']['branch']);
+              } 
+            if(! $data['errors']['emails']){
+                 unset ($data['errors']['emails']);
+            }
+            return $data;
+            
+        }
+       return false;
+    }
+
+}
+>>>>>>> development

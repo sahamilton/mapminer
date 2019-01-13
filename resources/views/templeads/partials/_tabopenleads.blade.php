@@ -18,7 +18,7 @@
             </thead>
             <tbody>
                 @foreach ($openleads as $lead)
-                   
+               
                 <tr> 
                     <td><a href="{{route('salesrep.newleads.show',$lead->id)}}">{{$lead->businessname}}</a></td>
                     <td>{{$lead->address}}</td>

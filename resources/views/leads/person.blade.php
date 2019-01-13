@@ -3,7 +3,7 @@
 
 
 
-<h3>Prospects assigned to {{$leads->postName()}}</h3>
+<h3>Prospects assigned to {{$leads->fullName()}}</h3>
 
 @if(! isset($source))
 <p><a href="{{route('leadsource.index')}}">From All Sources</a></p>
@@ -16,7 +16,7 @@
 
 <ul class="nav nav-tabs">
 
-  <li class="nav-item active">
+  <li class="nav-item ">
   	<a class="nav-link active" data-toggle="tab" href="#map">
   		<strong>Map View</strong>
   	</a>
@@ -33,7 +33,7 @@
 <div id="map" class="tab-pane fade show active">
 @include('leads.partials._tabpersonsmap')
 </div>
-<div id="leads" class="tab-pane fade in ">
+<div id="leads" class="tab-pane fade ">
 @include('leads.partials._tabpersonsleads')
 </div>
 

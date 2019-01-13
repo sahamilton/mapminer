@@ -56,7 +56,7 @@
 
 
 		@if($status == 1) 
-			@include('partials/_leadsmodal')
+			
 		
             <div class="btn-group">
 			   <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
@@ -87,4 +87,4 @@
     </table>
     @endif
 </div>
-
+@include('partials/_leadsmodal')

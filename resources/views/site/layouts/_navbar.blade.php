@@ -34,9 +34,7 @@
           <a class="dropdown-item" href="{{route('salesorg')}}">
                 <i class="fas fa-sitemap" aria-hidden="true"> </i>
                  People</a>
-          <a class="dropdown-item" href="{{route('myleads.index')}}">
-            <i class="fab fa-envira"></i>My Leads
-          </a>
+          
           @can('view_projects')
               <a class="dropdown-item" href="{{{ route('projects.index') }}}">
               <i class="far fa-flag" aria-hidden="true"> </i> Projects</a>
@@ -55,17 +53,16 @@
               <a class="dropdown-item" href="{{{ route('watch.index') }}}">
               <i class ="far fa-eye"></i> My Watch List</a>
               
-              <a class="dropdown-item" href="{{{ route('mynotes') }}}">
-              <i class="fas fa-folder-open" aria-hidden="true"></i>
-              My Notes</a>
+              
               
               <a class="dropdown-item" href="{{{ route('training.index') }}}">
               <i class="fas fa-graduation-cap" aria-hidden="true"></i>
               Mapminer Training</a>
 
-              @can('service_branches')
-              <a class="dropdown-item" href="{{{ route('branchassignments.show',auth()->user()->id) }}}">
-              <i class="fas fa-search-location"></i> My Branch Assignments</a>
+              
+              @can('manage_opportunities')
+              
+
               @endcan
             </div>
           </li>
@@ -89,19 +86,19 @@
 
                   @endif    
                   
-                  @if(auth()->user()->can('accept_leads') or auth()->user()->can('manage_leads'))
-                    <a class="dropdown-item"  
-                        href="{{route('salesrep.newleads',auth()->user()->person->id)}}">
-
-                    <i class="fas fa-envelope" aria-hidden="true"> </i> 
-                      Sales Prospects</a>
-                  @endif
                   
-                  @if(auth()->user()->hasRole('Branch Manager'))
-                    <a class="dropdown-item"  href="{{route('branchmanager.newleads')}}">
+                  
+                @can ('manage_opportunities')
+                    <a class="dropdown-item"  href="{{route('opportunity.index')}}">
                     <i class="far fa-envelope" aria-hidden="true"> </i> 
-                    Branch Prospects</a>
-                  @endif
+                    Branch Opportunities</a>
+                    <a class="dropdown-item" href="{{route('contacts.index')}}">
+                    <i class="far fa-address-card"></i> Branch Contacts</a>
+                     <a class="dropdown-item" href="{{ route('activity.index') }}">
+                    <i class="far fa-calendar-alt"></i> Branch Activites</a>
+                     <a class="dropdown-item" href="{{ route('orders.index') }}">
+                    <i class="far fa-calendar-alt"></i> Branch Accounts</a>
+                  @endCan
 
                   @if (auth()->user()->hasRole('Admin') or auth()->user()->hasRole('National Account Manager'))
                     
@@ -110,16 +107,8 @@
                     Account Managers View</a>
                   @endif
                   
-                  @can('manage_projects')
-                   
-                  <a class="dropdown-item" href="{{route('projects.myprojects')}}">
-                  <i class="far fa-flag" aria-hidden="true"> </i> 
-                  My Construction projects</a>
-                  @endcan
+                  
 
-                  @can('manage_prospects')
-                           
-                  @endcan
                 </div>
               
             </li>    

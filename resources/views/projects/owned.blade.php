@@ -39,7 +39,7 @@
 		@foreach ($project->owner as $owner)
 		{{$owner->pivot->status}}
 		</td><td>
-		{{$owner->postName()}}
+		{{$owner->fullName()}}
 		</td><td>
 		{{$owner->pivot->ranking}}
 		@endforeach

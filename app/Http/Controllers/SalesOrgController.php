@@ -48,16 +48,14 @@ class SalesOrgController extends BaseController {
 			// if not id then find root salesorg id
 			
 			if (! $salesPerson){
-				$salesperson = $this->getSalesLeaders();
 
-				//$salesperson = Person::whereIn('id',$salesLeader)->first();
 
 			}else{
 				$salesperson = Person::whereId($salesPerson->id)->first();
 			}
 			
 			// if leaf
-		
+			
 			
 			if( $salesperson->isLeaf())
 			{
@@ -69,7 +67,7 @@ class SalesOrgController extends BaseController {
 			}else{
 			
 				$salesteam = $salesperson->load('userdetails.roles','directReports','directReports.userdetails','directReports.userdetails.roles','reportsTo.userdetails.roles');
-				
+		
 				return response()->view('salesorg.managermap', compact('salesteam'));
 			}
 			

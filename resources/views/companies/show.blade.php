@@ -1,56 +1,128 @@
 @extends('site/layouts/default')
 @section('content')
 
-<div id='results'></div>
+<div
+id='results'></div>
+@include('companies.partials._searchbar')
+<h2>
+{{$data['company']->companyname}}
+Locations
 
-<div>
-<h2> {{$company->companyname}} {{$data['segment']}} Locations </h2>
-@if (auth()->user()->can('manage_accounts'))
-<p>
-	<i class="fab fa-pagelines"></i> 
-	<a href= "{{route('company.service',$company->id)}}">Show Service Branch Details</a>
-</p>
-<p>
-	<i class="fas fa-users"></i> 
-	<a href= "{{route('company.teamservice',$company->id)}}">Show Service Team Details</a>
-</p>
+
+@if ($data['state'])
+ in {{$data['state']}}
 @endif
-@if (isset($company->industryVertical->filter))
-	<p>{{$company->industryVertical->filter}} Vertical</p>
+</h2>
+@if($data['state'])
+<p><a href= "{{route('company.show',$data['company']->id)}}" >See all {{$data['company']->companyname}} locations</a></p>
 @endif
-<h4>ServiceLines:</h4>
-<ul>
-@foreach($company->serviceline as $serviceline)
-	<li>{{$serviceline->ServiceLine}} </li>
-@endforeach
-</ul>
-
-@include('companies.partials._segment')
-
-@if(isset($company->managedBy->firstname))
-<p>Account managed by <a href="{{route('person.show',$company->managedBy->id)}}" title="See all accounts managed by {{$company->managedBy->postName()}}">{{$company->managedBy->postName()}}</a></p>
+@if($data['company']->parent_id)
+	<p><a href="{{route('company.show',$data['company']->parent_id)}}">See parent company</a></p>
 @endif
-@if (auth()->user()->hasRole('Admin'))
-
-
-<div class="float-right" style="margin-bottom:20px">
-				<a href="{{route('company.location.create',$company->id)}}" title="Create a new {{$company->companyname}} location" class="btn btn-small btn-info iframe">
-				
-
-<i class="fas fa-plus-circle " aria-hidden="true"></i>
-
-
-				 Create New Location</a>
-			</div>
-@endif
-         
-@include('companies.partials._companyheader')
-@include('partials/advancedsearch')
-@include('companies/partials/_state')
 @include('maps.partials._form')
-@include('companies.partials._limited') 
-@include('companies.partials._table')
+<nav>
+	<div class="nav
+	nav-tabs"
+	id="nav-tab"
+	role="tablist">
+	<a class="nav-item nav-link active"
+		id="nav-home-tab"
+		data-toggle="tab"
+		href="#nav-home"
+		role="tab"
+		aria-controls="nav-home"
+		aria-selected="true">
+		<strong>Account Locations</strong>
+	</a>
+
+	<a class="nav-item nav-link"
+		id="nav-profile-tab"
+		data-toggle="tab"
+		href="#nav-profile"
+		role="tab"
+		aria-controls="nav-profile"
+		aria-selected="false">
+		<strong>Account Details</strong>
+	</a>
+
+	<a class="nav-item nav-link"
+		id="nav-contact-tab"
+		data-toggle="tab"
+		href="#nav-contact"
+		role="tab"
+		aria-controls="nav-contact"
+		aria-selected="false">
+		<strong>Account Actions</strong>
+	</a>
+	@if($data['parent'] or $data['related'])
+		<a class="nav-item nav-link"
+			id="nav-related-tab"
+			data-toggle="tab"
+			href="#nav-related"
+			role="tab"
+			aria-controls="nav-related"
+			aria-selected="false">
+			<strong>Related Accounts</strong>
+		</a>
+	@endif
+
+	</div>
+</nav>
+<div class="tab-content" id="nav-tabContent">
+	<div class="tab-pane fade show active"
+		id="nav-home"
+		role="tabpanel"
+		aria-labelledby="nav-home-tab">
+		@include('companies.partials._limited')
+		@include('companies.partials._state')
+		@include('partials/advancedsearch')
+		@include('companies.partials._table')
+	</div>
+
+
+	<div class="tab-pane fade"
+		id="nav-profile"
+		role="tabpanel"
+		aria-labelledby="nav-profile-tab">
+		@if (isset($data['company']->industryVertical->filter))
+			<p>{{$data['company']->industryVertical->filter}} Vertical</p>
+		@endif
+		<h4>ServiceLines:</h4>
+		<ul>
+			@foreach($data['company']->serviceline as $serviceline)
+				<li>{{$serviceline->ServiceLine}} </li>
+			@endforeach
+		</ul>
+		<p><strong>Customer ID:</strong> {{$data['company']->customer_id}}</p>
+
+		
+
+		@if(isset($data['company']->managedBy->firstname))
+		<p>Account managed by 
+			<a href="{{route('person.show',$data['company']->managedBy->id)}}" 
+				title="See all accounts managed by {{$data['company']->managedBy->fullName()}}">
+				{{$data['company']->managedBy->fullName()}}
+			</a>
+		</p>
+		@endif
+	</div>
+
+
+	<div class="tab-pane fade"
+		id="nav-contact"
+		role="tabpanel"
+		aria-labelledby="nav-contact-tab">
+		@include('companies.partials._companyheader')
+	</div>
+	<div class="tab-pane fade"
+		id="nav-related"
+		role="tabpanel"
+		aria-labelledby="nav-related-tab">
+		@include('companies.partials._relatedaccounts')
+	</div>
+</div>
+
 @include('partials/_modal')
-@include('partials/_scripts')
+@include('partials._scripts')
 @endsection
 

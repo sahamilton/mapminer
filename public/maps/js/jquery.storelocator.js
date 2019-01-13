@@ -476,6 +476,7 @@ $.fn.storeLocator = function(options) {
         				  'brand': $(this).attr('brand'),
                   'reportsto': $(this).attr('reportsto'),
                   'salesorg': $(this).attr('salesorg'),
+                  'type': $(this).attr('type'),
         				  'account': $(this).attr('account'),
         				  'locid': $(this).attr('locationid'),
         				  'link':$(this).attr('link'),
@@ -768,6 +769,12 @@ $.fn.storeLocator = function(options) {
               }else if (type === 'project'){
                    
                       var pinColor = "59AB3D";
+               }else if (type === 'lead'){
+                   
+                      var pinColor = "FDF569";
+               }else if (type === 'customer'){
+                   
+                      var pinColor = "ff0000";
                }else if (type === 'industry'){
                    
 

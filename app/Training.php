@@ -23,5 +23,9 @@ class Training extends Model
 		return $this->belongsToMany(Serviceline::class);
 	}
 
-	
+	public function scopeMyTraining($query){
+		 $query->whereHas('relatedRoles', function ($q){
+            $q->whereIn('id',$this->myRoles());
+         });
+	}
 }

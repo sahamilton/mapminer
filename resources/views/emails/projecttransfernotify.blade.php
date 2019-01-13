@@ -4,7 +4,7 @@
 
 {{$person->firstname}}, 
 
-The following project has been transferred to you by {{$transferor->postName()}}:
+The following project has been transferred to you by {{$transferor->fullName()}}:
 @component('mail::panel')
 Project Name: {{$project->project_title}}
 

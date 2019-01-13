@@ -29,14 +29,7 @@ class Branch extends Model implements HasPresenter {
 	// Don't forget to fill this array
 	public $fillable = [
 		'id',
-		'lat',
-		'lng',
 		'branchname',
-		'street',
-		'address2',
-		'city',
-		'state',
-		'zip',
 		'phone',
 		'region_id'];
 	protected $guarded = [];
@@ -65,6 +58,10 @@ class Branch extends Model implements HasPresenter {
 
 		}
 		
+	}
+
+	public function opportunities(){
+		return $this->hasMany(Opportunity::class);
 	}
 
 	public function instate() 
@@ -107,7 +104,7 @@ class Branch extends Model implements HasPresenter {
 
 	}
 	public function leads(){
-		return $this->hasMany(Lead::class);
+		return $this->belongsToMany(Address::class,'branch_lead','branch_id','address_id');
 	}
 	
 	public function getManagementTeam(){
@@ -128,6 +125,10 @@ class Branch extends Model implements HasPresenter {
     public function branchemail(){
     	return $this->id ."br@peopleready.com";
     }
+
+    
+    
+
 	/* 
 		Calculate bounding box coordinates
 
@@ -250,6 +251,21 @@ class Branch extends Model implements HasPresenter {
         ->limit($limit)
         ->get();
 
+	}
+
+	public function orders($period = null){
+		if($period){
+			return $this->belongsToMany(Address::class)->withPivot('period','orders')
+			->wherePivot('period','=',$period)->where('addressable_type','=','customer');
+		}else{
+			return $this->belongsToMany(Address::class)->withPivot('period','orders')->where('addressable_type','=','customer');
+		}
+	}
+
+	public function allStates(){
+		$states = $this->distinct('state')->pluck('state')->toArray();
+		return State::whereIn('statecode',$states)->orderBy('statecode')->get();
+	
 	}
 
 }

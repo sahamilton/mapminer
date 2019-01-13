@@ -4,9 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class LeadContact extends Model
+class LeadContact extends Contact
 {
-    protected $table = 'leadcontacts';
+    protected $table = 'contacts';
 
     protected $fillable = ['lead_id','contact','contacttitle','description','contactphone','contactemail'];
 

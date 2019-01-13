@@ -75,7 +75,7 @@ class LeadsController extends BaseController
        $people = null;
    
         $lead = $this->lead
-          //->join($leadsourcetype .' as ExtraFields','leads.id','=','ExtraFields.id')
+         
           ->with('salesteam','contacts','relatedNotes')
           ->ExtraFields($leadsourcetype)
           ->findOrFail($id);
@@ -154,14 +154,18 @@ class LeadsController extends BaseController
     {
 
       $table = $this->leadsource->findOrFail($lead->lead_source_id);
+
       $id= $lead->id;
       $table = $table->type ."leads";
+
       $lead = $this->lead
                   ->with('contacts')
                   ->ExtraFields($table)
                   ->find($id);
       $extrafields = $this->getExtraFields($table);
+     
       $branches = $this->findNearByBranches($lead);
+     
       $people = $this->findNearbySales($branches,$lead);
       $salesrepmarkers = $this->person->jsonify($people);
       $branchmarkers=$branches->toJson();
@@ -186,10 +190,16 @@ class LeadsController extends BaseController
 
       $leadsource = $this->leadsource->findOrFail($input['lead_source_id']);
       $table = $leadsource->type.'leads';
-      $data = $this->extractLeadTableData($input,$table);
-      $lead = $this->lead->create($data['lead']);
+   
+      $data = $this->extractLeadTableData($input,$table);  
+
+      $lead = $this->lead->fill($data['lead']);
+
+      $lead->save();
+    
       $lead->contacts()->create($data['contact']);
       if($table =='webleads'){
+      
         $lead->webLead()->create($data['extra']);
       }else{
         $lead->tempLead()->create($data['extra']);
@@ -471,14 +481,15 @@ class LeadsController extends BaseController
   public function salesLeads($pid){
 
         $person = $this->getSalesRep($pid);
-      
+       
         if($person->userdetails->can('accept_leads')){
            
             return $this->showSalesLeads($person);
         }elseif($person->userdetails->hasRole('Admin') or $person->userdetails->hasRole('Sales Operations')){
+               
                 return redirect()->route('leadsource.index');
         }else{
-
+            
             return $this->showSalesTeamLeads($person);
         }
 
@@ -591,21 +602,22 @@ class LeadsController extends BaseController
 
     }
     private function getSalesRep($pid=null){
-
-        if(! $pid){
-            return $this->person->findOrFail(auth()->user()->person->id);
+        $me = $this->person->findOrFail(auth()->user()->person->id);
+        if(! $pid or $me->id == $pid){
+            return $me ;
         }
 
         $person = $this->person->findOrFail($pid);
-
+       
         if(auth()->user()->hasRole('Admin') or auth()->user()->hasRole('Sales Operations')){
            
            return $person;
 
-        }
-        $peeps = $person->descendants()->pluck('id')->toArray();
-
-        if(in_array($pid,$peeps)){
+        } 
+       $peeps = $this->person->myTeam()->pluck('id')->toArray();
+      
+      
+        if(in_array($pid,$peeps) ){
             return $person;
         }
         
@@ -619,7 +631,12 @@ class LeadsController extends BaseController
 
         return $this->lead->whereHas($type, function ($q) use($person){
             $q->where('person_id','=',$person->id);
-        })->with($type);
+        })
+        ->whereHas('leadsource', function ($q) {
+            $q->where('datefrom','<=',date('Y-m-d'))
+              ->where('dateto','>=',date('Y-m-d'));
+        })
+        ->with($type);
 
     }
     /**
@@ -644,13 +661,13 @@ class LeadsController extends BaseController
      * @return [type]           [description]
      */
     public function claim(Request $request, $id){
-   
+     
       $lead = $this->lead->with('salesteam')->findOrFail($id);
-    
-      $lead->salesteam()->save(auth()->user()->person,['status_id'=>2]);
       
+      $lead->salesteam()->sync([auth()->user()->person->id=>['status_id'=>2]]);
+     
 
-        return redirect()->route('salesrep.newleads.show',$id)->with('message', 'Lead claimed');
+      return redirect()->route('myleads.show',$id)->with('message', 'Lead claimed');
      }
 
      private function addClosingNote($request,$id){
@@ -680,7 +697,7 @@ class LeadsController extends BaseController
 
     private function findNearBySales($branches,$lead){
         $branch_ids = $branches->pluck('id')->toArray(); 
-        $data['distance']=\Config::get('leads.search_radius');
+        $data['distance']=config('leads.search_radius');
 
         $salesroles = $this->salesroles;
  
@@ -710,6 +727,7 @@ class LeadsController extends BaseController
                       ->whereNotNull('fieldname')
                       ->pluck('fieldname')->toArray();
 
+            $extra=array();
             foreach ($extraFields as $key=>$value){
               if($newdata[$value]){
                 $extra[$value] = $newdata[$value];
@@ -870,12 +888,12 @@ class LeadsController extends BaseController
         $contactFields = MapFields::whereType($type)
         ->whereDestination('contact')
         ->whereNotNull('fieldname')->pluck('fieldname')->toArray();
-
+       
         $contact['contact'] = null;
             foreach ($contactFields as $field){
-
-                    $contact[$field] = $newdata[$field];
- 
+              if(isset($newdata[$field])){
+                      $contact[$field] = $newdata[$field];
+               }
             }
       
         return  $contact;

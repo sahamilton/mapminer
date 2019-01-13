@@ -15,7 +15,7 @@ Create a New Branch
 
 <ul class="nav nav-tabs">
 
-  <li class="nav-item active"><a class="nav-link" data-toggle="tab" href="#branch"><strong>Branch Location</strong></a></li>
+  <li class="nav-item "><a class="nav-link" data-toggle="tab" href="#branch"><strong>Branch Location</strong></a></li>
   <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#team"><strong>Branch Team</strong></a></li>
 
 
@@ -29,7 +29,7 @@ Create a New Branch
     <div id="branch" class="tab-pane fade show active">
       @include('branches/partials/_form')
     </div>
-	<div id="team" class="tab-pane fade in">
+	<div id="team" class="tab-pane fade ">
       @include('branches/partials/_team')
     </div>
 	

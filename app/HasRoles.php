@@ -54,6 +54,7 @@ trait HasRoles
      * @param  Permission $permission
      * @return boolean
      */
-    
-   
+    public function myRoles(){
+        return auth()->user()->roles()->pluck('roles.id')->toarray();
+    }     
 }

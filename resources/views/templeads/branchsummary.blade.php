@@ -29,7 +29,7 @@
                         {{$branch->branchname}}, {{$branch->city}} {{$branch->state}}</a></td>
                    @if($branch->manager->count()>0)
 
-                        <td><a href="{{route('branchmgr.newleads',$branch->manager->first()->id)}}">{{$branch->manager->first()->postName()}}</a></td>
+                        <td><a href="{{route('branchmgr.newleads',$branch->manager->first()->id)}}">{{$branch->manager->first()->fullName()}}</a></td>
                        
                         <td> @if($branch->manager->first()->reportsTo->count()>0)
                             {{$branch->manager->first()->reportsTo->postName()}}

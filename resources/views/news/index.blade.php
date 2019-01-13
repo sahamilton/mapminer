@@ -55,7 +55,7 @@
 				<p><i class="far fa-user" aria-hidden="true"></i> by <span class="muted">
 
 				@if(isset($post->author))
-					{{$post->author->person->postName()}}
+					{{$post->author->person->fullName()}}
 				@else
 					No Longer with the company
 				@endif

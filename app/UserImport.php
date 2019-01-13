@@ -17,7 +17,6 @@ class UserImport extends Imports
 {
    	public $uniqueFields= ['employee_id'];
    	public $table = 'usersimport';
-   	public $temptable = 'usersimporttmp';
    	public $requiredFields = ['employee_id','firstname','lastname','role_id','email'];
    	public $user;
    	public $person;
@@ -244,6 +243,7 @@ class UserImport extends Imports
 	            ProcessUserImport::dispatch($userimport);
 		}
 	}
+
 
 	public  function handleUserErrors(){
 		dd($this->import->getDataErrors());

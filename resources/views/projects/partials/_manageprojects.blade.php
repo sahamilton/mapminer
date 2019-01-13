@@ -1,6 +1,6 @@
 @if($project->owner->count()>0 && $project->owner[0]->id != auth()->user()->person()->first()->id)
 
-	{{$project->owner[0]->pivot->status}} by {{$project->owner[0]->postName()}}
+	{{$project->owner[0]->pivot->status}} by {{$project->owner[0]->fullName()}}
 
 @elseif($project->owner->count()>0 && $project->owner[0]->id == auth()->user()->person()->first()->id) 
 	@if($project->pr_status == 'closed')

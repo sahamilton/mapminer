@@ -27,7 +27,7 @@
 			<td>{{$location->phone}}</td>
 			<td>
 				@foreach ($location->watchedBy as $watcher)
-					{{$watcher->person->postName()}}
+					{{$watcher->person->fullName()}}
 					@if(! $loop->last)<br />@endif
 				@endforeach
 			</td>

@@ -1,3 +1,4 @@
+
 @php
 $statelist = App\Branch::distinct()->orderBy('state')->get(array('state'));
 		foreach ($statelist as $state) {
@@ -12,11 +13,12 @@ $statelist = App\Branch::distinct()->orderBy('state')->get(array('state'));
 
 <label>Search for branches in </label>
        <select name='state' class="btn btn-mini" onchange='this.form.submit()'>
-           @foreach ($states as $state)
-           @if(isset($data['state']) && $data['state'] == $state)
-				<option selected value="{{$state}}">{{$state}}</option>
+           @foreach ($allstates as $statecode)
+
+           @if(isset($state) && $statecode->statecode == $state->state)
+				<option selected value="{{$statecode->statecode}}">{{$statecode->statecode}}</option>
            @else
-           		<option value="{{$state}}">{{$state}}</option>
+           		<option value="{{$statecode->statecode}}">{{$statecode->statecode}}</option>
            @endif
 				
            @endforeach

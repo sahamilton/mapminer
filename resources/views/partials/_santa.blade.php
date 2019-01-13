@@ -2,12 +2,13 @@
 img.santa {
   position: absolute;
   animation: moveImage 15s linear infinite;
-  left: -350px;
+  left: -300px;
 }
 
 @keyframes moveImage {
     100% {
-      transform: translateX(calc(100vw + 350px));
+      transform: translateX(calc(150vw + 300px));
     }
 }
-</style>	
+</style>
+<img class="santa" src="/assets/img/newyear.gif" width="20%" />	

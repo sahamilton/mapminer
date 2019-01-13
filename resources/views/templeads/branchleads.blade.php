@@ -6,7 +6,7 @@
   
     @if($branches->first()->branches->manager->count()>0)
 
-    <h4>Branch Managed By {{$branches->first()->branches->manager->first()->postName()}}</h4>
+    <h4>Branch Managed By {{$branches->first()->branches->manager->first()->fullName()}}</h4>
     @endif
     <p><a href='{{route("newleads.branch.map",$branches->first()->branches->id)}}'>
  <i class="far fa-flag" aria-hidden="true"></i> Map view</a></p>

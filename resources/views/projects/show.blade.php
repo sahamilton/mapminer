@@ -26,14 +26,21 @@
 
 <p><strong>Address:</strong>
 
+
 <blockquote>{{$project->street}} /{{$project->address2}}<br />{{$project->city}}, {{$project->state}} 
 {{$project->zip}}
+
 </blockquote>
 <div class="row">
   <p><strong>People Ready Status:</strong>
 
-  @can('manage_projects')
-    @include('projects.partials._manageprojects')
+
+@can('manage_projects')
+  @include('projects.partials._manageprojects')
+@else
+@if(count($project->owner)>0)
+    {{$project->owner[0]->pivot->status}} by {{$project->owner[0]->fullName()}}</p>
+
   @else
     @if($project->owner->count()>0)
         {{$project->owner[0]->pivot->status}} by {{$project->owner[0]->postName()}}</p>

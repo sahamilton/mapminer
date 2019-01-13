@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ProjectCompany extends Model
 {
-    
+  
 	public $table ="projectcompanies";
   public $incrementing = false;
 	public $fillable =['factor_type',
