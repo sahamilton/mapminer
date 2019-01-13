@@ -14,10 +14,15 @@ class CreateAddressBranchPivotTable extends Migration
     {
         Schema::create('address_branch', function (Blueprint $table) {
             $table->integer('address_id')->unsigned()->index();
-            $table->foreign('address_id')->references('id')->on('addresses')->onDelete('cascade');
-            $table->string('branch_id',20)->index();
+            
+            $table->string('branch_id',20)->index()->collation('utf8_general_ci');
             $table->integer('orders');
             $table->string('period');
+           
+        });
+
+        Schema::table('address_branch',function (Blueprint $table){
+            $table->foreign('address_id')->references('id')->on('addresses')->onDelete('cascade'); 
             $table->foreign('branch_id')->references('id')->on('branches')->onDelete('cascade');
             $table->primary(['address_id', 'branch_id']);
         });

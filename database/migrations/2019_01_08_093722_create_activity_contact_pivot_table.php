@@ -16,17 +16,24 @@ class CreateActivityContactPivotTable extends Migration
             $table->increments('id');
             
             $table->integer('activity_id')->unsigned()->index();
+            
+            $table->integer('contact_id')->unsigned()->index();
+            
+            $table->timestamps();
+           
+        });
+
+        Schema::table('activity_contact', function (Blueprint $table) {
+
             $table->foreign('activity_id')
             ->references('id')
-            ->on('activity')
+            ->on('activities')
             ->onDelete('cascade');
-            $table->integer('contact_id')->unsigned()->index();
             $table->foreign('contact_id')
             ->references('id')
-            ->on('contact')
-            ->onDelete('cascade');
-            $table->timestamps();
-            $table->primary(['activity_id', 'contact_id']);
+            ->on('contacts')
+            ->onDelete('cascade'); 
+            $table->unique(['activity_id', 'contact_id']);
         });
     }
 

@@ -45,7 +45,9 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::post('address/{address}/rating',['as'=>'address.rating','uses'=>'AddressController@rating']);
 		Route::resource('address','AddressController');
 	# Branch Leads
-		Route::get('branchleads.import',['as'=>'branchleads.import','uses'=>'BranchLeadImportController@getFile']);#branch leads
+		Route::get('branchleads.import',['as'=>'branchleads.import','uses'=>'BranchLeadImportController@getFile']);
+		# Temporary branch lead assignment
+		//Route::get('branchleads/assign',['as'=>'branchlead.tempassign','uses'=>'BranchLeadController@assign']);
 		Route::resource('branchleads','BranchLeadController');	
 	#Branches
 		Route::get('/branches/{state}/state/', ['as'=>'branches.statelist','uses'=>'BranchesController@state']);

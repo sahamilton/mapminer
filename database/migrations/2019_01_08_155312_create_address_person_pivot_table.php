@@ -19,6 +19,18 @@ class CreateAddressPersonPivotTable extends Migration
             $table->integer('rating');
             $table->text('comments')->nullable();
             $table->timestamps();
+            
+        });
+
+         Schema::table('address_person', function (Blueprint $table) {
+            $table->foreign('address_id')
+            ->references('id')
+            ->on('addresses')
+            ->onDelete('cascade');
+            $table->foreign('person_id')
+            ->references('id')
+            ->on('persons')
+            ->onDelete('cascade'); 
             $table->primary(['address_id', 'person_id']);
         });
     }

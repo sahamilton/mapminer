@@ -7,8 +7,6 @@ id='results'></div>
 <h2>
 {{$data['company']->companyname}}
 Locations
-
-
 @if ($data['state'])
  in {{$data['state']}}
 @endif

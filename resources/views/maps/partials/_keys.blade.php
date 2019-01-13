@@ -1,12 +1,13 @@
 <div class="row">
    
 
-@if($data['type'] == 'branch'))
-@foreach ($servicelines as $serviceline)
+@if(! isset($data) or $data['type'] == 'branch')
+	@foreach ($servicelines as $serviceline)
+		
+		{{str_replace("PeopleReady: ","",$serviceline->ServiceLine)}} = &nbsp; <img src='{{asset('geocoding/markers/'.$serviceline->color.'-pin.png')}}' />&nbsp&nbsp&nbsp
 
-	{{$serviceline->ServiceLine}} =  <img src='{{asset('geocoding/markers/'.$serviceline->color.'-pin.png')}}' />
 
-@endforeach
+	@endforeach
 @elseif($data['type'] == 'location')
 
 	@php 

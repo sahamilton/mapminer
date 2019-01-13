@@ -48,15 +48,15 @@ class CompaniesController extends BaseController {
 	public function index()
 	{
 
+		$myLocation =$this->locations->getMyPosition();
 		//$filtered = $this->company->fileterd()-(['companies'],['vertical']);
-
-		$companies = $this->company->withCount('locations')
+		$companies = $this->company->whereHas('locations', function ($q) use ($myLocation){
+			$q->nearby($myLocation,25);
+		})
+		->withCount('locations')
 			->with('managedBy','managedBy.userdetails','industryVertical','serviceline')
-			->whereNull('parent_id')
-			->get();
+		->get();
 
-		$title = 'All Accounts';
-		$locationFilter = 'both';
 
 		return response()->view('companies.index', compact('companies','title','filtered','locationFilter'));
 	}
