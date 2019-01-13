@@ -335,7 +335,7 @@ class CompaniesController extends BaseController {
  			}])
  			->with('managedBy','industryVertical')->findOrFail($company->id);
 		}
-
+		
 		if(! $data['company']->isLeaf()){
 			$data['related'] = $data['company']->getDescendants();
 		}else{
