@@ -42,8 +42,8 @@ class LocationContactController extends Controller
              $customer = Orders::whereIn('branch_id',$branches)->pluck('address_id')->toArray();
            
              $contacts = $this->contact->whereIn('address_id',array_merge($opportunity,$customer))->with('location')->get();
-   
-             return response()->view('contacts.index',compact('contacts'));
+            $title = "Branch Contacts";
+             return response()->view('contacts.index',compact('contacts','title'));
            
     }
 
@@ -67,7 +67,6 @@ class LocationContactController extends Controller
     {
 
         $data = request()->all();
-
         $data['user_id']= auth()->user()->id;
         $contact = $this->contact->create($data);
         

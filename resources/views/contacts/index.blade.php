@@ -2,7 +2,7 @@
 @section('content')
 @include('companies.partials._searchbar')
 @include('maps.partials._form')
-<h1>Branch Contacts</h1>  
+<h1>{{isset($title) ? $title : 'Contacts'"}}</h1>  
 
 <table id='sorttable' class ='table table-bordered table-striped table-hover'>
 	<thead>

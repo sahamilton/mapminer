@@ -89,6 +89,7 @@ Route::group(['middleware' => 'auth'], function () {
 	# Contacts
 		Route::get('contacts/{id}/vcard',['as'=>'contacts.vcard','uses'=>'LocationContactController@vcard']);
 		Route::resource('contacts','LocationContactController');
+		Route::resource('mycontacts','MyContactsController');
 	
 	# Dashboard
 	Route::resource('dashboard','DashboardController');

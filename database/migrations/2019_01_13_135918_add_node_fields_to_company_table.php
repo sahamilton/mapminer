@@ -13,7 +13,7 @@ class AddNodeFieldsToCompanyTable extends Migration
      */
     public function up()
     {
-        Schema::table('Companies', function (Blueprint $table) {
+        Schema::table('companies', function (Blueprint $table) {
             $table->integer('parent_id')->nullable();
             $table->integer('lft')->nullable();
             $table->integer('rgt')->nullable();
