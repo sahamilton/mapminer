@@ -16,7 +16,11 @@
 					</a>
 
 				</td>
-				<td>{{$location->address->company->companyname}}</td>
+				<td>
+					@if($location->address->company)
+						{{$location->address->company->companyname}}
+					@endif
+				</td>
 
 				<td>{{$location->address->fullAddress()}}</td>
 				<td align="center">{{$location->ranking}}</td>
