@@ -48,7 +48,7 @@ class SalesOrgController extends BaseController {
 			// if not id then find root salesorg id
 			
 			if (! $salesPerson){
-
+				$salesperson = $this->getSalesLeaders();
 
 			}else{
 				$salesperson = Person::whereId($salesPerson->id)->first();
