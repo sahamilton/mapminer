@@ -8,7 +8,7 @@ class Note extends Model {
 	];
 	// Don't forget to fill this array
 
-	protected $fillable = ['note','user_id','related_id','created_at','updated_at','type'];
+	protected $fillable = ['note','user_id','related_id','created_at','updated_at','type','address_id'];
 	protected $table ='notes';
 
 

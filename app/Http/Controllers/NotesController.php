@@ -55,9 +55,10 @@ class NotesController extends BaseController {
 
 
 		request()->merge(['user_id'=>auth()->user()->id]);
+
 		$note = $this->notes->create(request()->all());
  		
-		switch (request('type')) {
+		/*switch (request('type')) {
 
 			case 'location':
 				
@@ -76,9 +77,9 @@ class NotesController extends BaseController {
 				
 				return redirect()->route('leads.show',$note->related_id);
 			break;
-		}
+		}*/
 		
-
+		return redirect()->route('address.show',request('address_id'));
 	}
 
 	/**

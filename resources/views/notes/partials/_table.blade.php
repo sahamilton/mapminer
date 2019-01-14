@@ -1,4 +1,16 @@
-<table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
+ <div class="float-right">
+    <a class="btn btn-info" 
+        title="Add Note"
+        data-href="{{route('notes.store')}}" 
+        data-toggle="modal" 
+        data-target="#add-note" 
+        data-title = "Add note to address" 
+        href="#">
+        <i class="fas fa-pencil-alt"></i>
+        Add Activity
+        </a>
+    </div>
+    <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
     
     <th>Company</th>
@@ -48,3 +60,4 @@
     
     </tbody>
     </table>
+    @include('notes.partials._note')
