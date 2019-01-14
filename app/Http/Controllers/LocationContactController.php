@@ -67,6 +67,7 @@ class LocationContactController extends Controller
     {
 
         $data = request()->all();
+
         $data['user_id']= auth()->user()->id;
         $contact = $this->contact->create($data);
         

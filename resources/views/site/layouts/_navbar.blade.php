@@ -52,6 +52,12 @@
                     
               <a class="dropdown-item" href="{{{ route('watch.index') }}}">
               <i class ="far fa-eye"></i> My Watch List</a>
+
+              <a class="dropdown-item" href="{{{ route('mycontacts.index') }}}">
+              <i class ="far fa-eye"></i> My Contacts</a>
+
+              <a class="dropdown-item" href="{{{ route('activity.index') }}}">
+              <i class ="far fa-eye"></i> My Sales activities</a>
               
               
               

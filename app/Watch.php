@@ -12,12 +12,12 @@ class Watch extends Model {
 	
 	public function watchedBy() 
 	{
-		return $this->hasMany(User::class,'id','user_id');	
+		return $this->belongsTo(User::class,'user_id','id');	
 	}
 	
 	public function watching() 
 	{
-		return $this->hasMany(Address::class,'id','address_id');	
+		return $this->belongsTo(Address::class,'address_id','id');	
 	}
 	
 	public function watchnotes() 
@@ -86,5 +86,24 @@ class Watch extends Model {
 	return $string;
 	}
 
+	/**
+	 * Return watch list.
+	 *
+	 * @param  int  $id
+	 * @return array watchList
+	 */
+	
+	public function getMyWatchList($id=null) {
+		if(! $id){
+			$id = auth()->user()->id;
+		}
+		
+		 return $this->with('watching','watching.company','watchnotes')
+		->where("user_id","=", $id)
+		->get();
+
+		
+	}
+	
 	
 }

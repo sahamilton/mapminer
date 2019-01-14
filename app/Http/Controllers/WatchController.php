@@ -25,9 +25,9 @@ class WatchController extends BaseController {
 	public function index()
 	{
 	
-		$watch = $this->getMyWatchList(auth()->user()->id);
- 
-		return response()->view('watch.index', compact('watch'));
+		$watchlist = $this->watch->getMyWatchList(auth()->user()->id);
+
+		return response()->view('watch.index', compact('watchlist'));
 
 	}
 
@@ -110,21 +110,6 @@ class WatchController extends BaseController {
 		
 	}
 	
-	/**
-	 * Return watch list.
-	 *
-	 * @param  int  $id
-	 * @return array watchList
-	 */
-	
-	protected function getMyWatchList($id) {
-		
-		 return $this->watch->with('watching','watching.company','watchnotes')
-		->where("user_id","=", $id)
-		->get();
-
-		
-	}
 	
 	
 	/**

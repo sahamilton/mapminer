@@ -92,7 +92,7 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::resource('mycontacts','MyContactsController');
 	
 	# Dashboard
-	Route::resource('dashboard','DashboardController');
+		Route::resource('dashboard','DashboardController');
    	
    	# Documents
 		Route::resource('docs','DocumentsController',['only' => ['index', 'show']]);

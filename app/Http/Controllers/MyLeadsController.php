@@ -1,6 +1,4 @@
-
-<<<<<<< HEAD
-=======
+<?php
 namespace App\Http\Controllers;
 
 use App\Address;
@@ -135,4 +133,4 @@ class MyLeadsController extends BaseController
     }
 
 }
->>>>>>> development
+

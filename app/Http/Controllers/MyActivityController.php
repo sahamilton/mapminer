@@ -2,15 +2,12 @@
 
 namespace App\Http\Controllers;
 use App\Watch;
+use App\Contact;
+use App\Address;
 use Illuminate\Http\Request;
 
-class DashboardController extends Controller
+class MyActivityController extends Controller
 {
-    public $watch;
-
-    public function __construct(Watch $watch){
-        $this->watch = $watch;
-    }
     /**
      * Display a listing of the resource.
      *
@@ -18,8 +15,7 @@ class DashboardController extends Controller
      */
     public function index()
     {
-       $watchlist = $this->watch->getMyWatchList();
-       return response()->view('myactivities.index',compact('watchlist'));
+        //
     }
 
     /**
