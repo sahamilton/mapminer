@@ -20,7 +20,7 @@ class Note extends Model {
 	public function relatesToLocation() 
 		{
 
-			return $this->belongsTo(Location::class,'related_id')->where('type','=','location');
+			return $this->belongsTo(Address::class,'address_id','id');
 		}
 	public function relatesToLead() 
 		{
@@ -44,6 +44,10 @@ class Note extends Model {
 	public function myNotes()
 	{
 		return $this->where('user_id','=',auth()->user()->id)->with('relatesToLocation');
+	}
+
+	public function locationNotes($location){
+		return $this->where('address_id','=',$location);
 	}
 	
 	

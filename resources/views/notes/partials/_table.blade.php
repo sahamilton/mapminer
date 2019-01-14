@@ -12,6 +12,7 @@
     </thead>
     <tbody>
    @foreach($notes as $note)
+
         @if($note->relatesToLocation)
         <tr>  
     	<td>
@@ -24,7 +25,7 @@
 
         </td>
         <td>
-            <a href="{{route('locations.show',$note->relatesToLocation->id)}}"
+            <a href="{{route('address.show',$note->relatesToLocation->id)}}"
             title ="Review all notes at this  location" >
                 {{$note->relatesToLocation->businessname}}
             </a>

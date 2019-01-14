@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Address;
 use App\Branch;
+use App\Note;
 use App\Person;
 use App\ActivityType;
 
@@ -13,10 +14,12 @@ class AddressController extends Controller
     public $address;
     public $branch;
     public $person;
-    public function __construct(Address $address,Branch $branch, Person $person){
+    public $notes;
+    public function __construct(Address $address,Branch $branch, Person $person,Note $note){
         $this->address = $address;
         $this->branch = $branch;
         $this->person = $person;
+        $this->notes = $note;
     }
 
     /**
@@ -73,8 +76,10 @@ class AddressController extends Controller
         $people = $this->person->salesReps()->PrimaryRole()->nearby($location,100,5)->get();
         $mybranches = $this->person->myBranches();
         $ranked = $this->address->getMyRanking($location->ranking);
+        $notes = $this->notes->locationNotes($location->id)->get();
+
      
-        return response()->view('addresses.show',compact('location','branches','rankingstatuses','people','mybranches','ranked'));
+        return response()->view('addresses.show',compact('location','branches','rankingstatuses','people','mybranches','ranked','notes'));
     }
 
     /**

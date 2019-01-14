@@ -76,6 +76,15 @@
 
     <strong> Watchers ({{$location->watchedBy->count()}})</strong>
   </a>
+  <a class="nav-item nav-link" 
+      data-toggle="tab" 
+      href="#note"
+      id="note-tab"
+      role="tab"
+      aria-controls="note"
+      aria-selected="false">
+        <strong>Notes</strong>
+  </a>
     @if($location->addressable_type == 'customer')
   <a class="nav-item nav-link"  
         data-toggle="tab" 
@@ -130,6 +139,9 @@
     </div>
     <div id="rating" class="tab-pane fade">
      @include('addresses.partials._tabratings')
+    </div>
+    <div id="note" class="tab-pane fade">
+     @include('notes.partials._table')
     </div>
 
   </div>
