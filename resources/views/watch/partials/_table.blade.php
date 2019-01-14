@@ -1,7 +1,7 @@
-<table id='sorttable' class ='table table-bordered table-striped table-hover dataTable'>
+<table id='sorttable1' class ='table table-bordered table-striped table-hover dataTable'>
 <thead>
 		<th>Business Name</th>
-		<th>National Acct</th>
+		<th>Location of</th>
 		<th>Address</th>
 		<th>City</th>
 		<th>State</th>
@@ -64,19 +64,9 @@
 
 
 
-		</tr>@endif
+		</tr>
+@endif
 @endforeach
+</tbody>
 
-       </table>
-@include('partials/_scripts')
-
-<script>
-$(document).on("click", ".addLocationId", function () {
-	var title = "Add note to " + $(this).data('title') + " location.";
-	var locationID = $(this).data('id');
-	$(".modal-body #location_id").val( locationID );
-	$(".modal-header #myModalLabel").text( title );
-     
-});
-</script>
-@include('watch.partials._note')
+</table>

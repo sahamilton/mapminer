@@ -19,7 +19,7 @@ class MyContactsController extends Controller
      */
     public function index()
     {
-        $contacts = $this->contacts->with('location')->where('user_id','=',auth()->user()->id)->get();
+        $contacts = $this->contacts->getMyContacts();
         $title="My Contacts";
         return response()->view('contacts.index',compact('contacts','title'));
     }

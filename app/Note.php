@@ -41,6 +41,10 @@ class Note extends Model {
 			return $this->belongsTo(LeadContact::class,'contact_id');
 
 		}
+	public function myNotes()
+	{
+		return $this->where('user_id','=',auth()->user()->id)->with('relatesToLocation');
+	}
 	
 	
 }

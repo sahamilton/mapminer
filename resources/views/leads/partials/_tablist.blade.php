@@ -6,8 +6,6 @@
     <th>City</th>
     <th>State</th>
     <th>Date Created</th>
-    <th>Status</th>
-    <th>Source</th>
     <th>Vertical</th>
     <th>Rating</th>
 
@@ -23,20 +21,8 @@
     <td>{{$lead->city}}</td>
     <td>{{$lead->state}}</td>
     <td>{{$lead->created_at->format('M j, Y')}}</td>
-    <td>
-    @if($lead->salesteam)
-        @if($lead->ownedBy)
-
-           {{$statuses[$lead->ownedBy[0]->pivot->status_id]}}  by {{$lead->ownedBy[0]->fullName()}}
-
-        @else
-            Offered {{$lead->salesteam->count()}}
-        @endif
-    @else
-    Unassigned
-    @endif</td>
-    <td><a href = "{{route('leadsource.show',$lead->lead_source_id)}}">{{$sources[$lead->lead_source_id]}}</a></td>
-    <td>
+    
+ <td>
     <ul>
     @foreach ($lead->vertical as $vertical)
         <li>{{$vertical->filter}}</li>

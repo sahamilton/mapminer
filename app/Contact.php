@@ -23,4 +23,8 @@ class Contact extends Model
     public function relatedActivities(){
         return $this->belongsToMany(Activity::class,'activity_contact');
     }
+
+    public function getMyContacts(){
+        return $this->with('location')->where('user_id','=',auth()->user()->id)->get();
+    }
 }

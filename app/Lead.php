@@ -388,4 +388,8 @@ public function rankLead($salesteam){
 
         ->get();
     }
+
+    public function getMyLeads(){
+        return $this->where('user_id','=',auth()->user()->id);
+    }
 }

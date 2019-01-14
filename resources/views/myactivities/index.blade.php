@@ -2,7 +2,7 @@
 @section('content')
 @include('companies.partials._searchbar')
 @include('maps.partials._form')
-<h2>My dashboard</h2>
+<h2>My Dashboard</h2>
 <nav>
   <div class="nav nav-tabs" id="nav-tab" role="tablist">
   <a class="nav-link nav-item active" 
@@ -23,6 +23,15 @@
         aria-selected="false">
 
     <strong>My Contacts</strong>
+  <a class="nav-item nav-link"  
+        data-toggle="tab" 
+        href="#leads"
+        id="leads-tab"
+        role="tab"
+        aria-controls="leads"
+        aria-selected="false">
+
+    <strong>My Leads</strong>
   </a>
   <a class="nav-item nav-link" 
       data-toggle="tab" 
@@ -62,19 +71,23 @@
     <div id="details" class="tab-pane show active">
       @include('watch.partials._table')
     </div>
+     <div id="leads" class="tab-pane fade">
+      @include('leads.partials._tablist')
+    </div>
+
     <div id="contacts" class="tab-pane fade">
 
- 
+      @include('contacts.partials._table')
 
     </div>
     <div id="activities" class="tab-pane fade">
-
+      @include('activities.partials._table')
     </div>
     <div id="team" class="tab-pane fade">
-
+      @include('ratings.partials._table')
     </div>
     <div id="branch" class="tab-pane fade">
-
+      @include('notes.partials._table')
     </div>
 
 
