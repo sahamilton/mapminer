@@ -8,6 +8,7 @@ use App\Company;
 use App\Person;
 use App\Branch;
 use App\Orders;
+use App\Contact;
 use App\Address;
 use App\Activity;
 use \Carbon\Carbon;
@@ -24,8 +25,9 @@ class OpportunityController extends Controller
     public $address;
     public $orders;
     public $leads;
+    public $contact;
 
-    public function __construct(Opportunity $opportunity, Orders $orders, Branch $branch, Person $person, Address $address,Activity $activity,Lead $leads){
+    public function __construct(Opportunity $opportunity, Orders $orders, Branch $branch, Person $person, Address $address,Activity $activity,Lead $leads,Contact $contact){
         $this->opportunity = $opportunity;
         $this->person = $person;
         $this->activity = $activity;
@@ -33,6 +35,7 @@ class OpportunityController extends Controller
         $this->address = $address;
         $this->orders = $orders;
         $this->leads = $leads;
+        $this->contact = $contact;
     }
 
     /**
@@ -91,7 +94,10 @@ class OpportunityController extends Controller
         $data['branchorders'] = $this->branch->with('orders','orders.activities')->whereIn('id',$branches)->get(); 
         
         $data['leads'] = $this->branch->with('leads','leads.leadsource')->whereIn('id',$branches)->get();
-
+        $opportunity = $data['opportunities']->pluck('address_id')->toArray();
+        $customer = $data['branchorders']->pluck('address_id')->toArray();
+        
+        $data['contacts'] = $this->contact->whereIn('address_id',array_merge($opportunity,$customer))->with('location')->get();
         return $data;
     }
 

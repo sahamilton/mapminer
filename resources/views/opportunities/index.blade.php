@@ -40,7 +40,16 @@ add selector
     aria-controls="nav-customers"
     aria-selected="false">
     <strong>Accounts</strong>
-</a>  
+</a> 
+<a class="nav-item nav-link"
+    id="nav-customers-tab"
+    data-toggle="tab"
+    href="#nav-contacts"
+    role="tab"
+    aria-controls="nav-contacts"
+    aria-selected="false">
+    <strong>Contacts</strong>
+</a>   
 <a class="nav-item nav-link"
     id="nav-activities-tab"
     data-toggle="tab"
@@ -82,6 +91,14 @@ add selector
     role="tabpanel"
     aria-labelledby="nav-activities-tab">
      @include('opportunities.partials._tabactivities')
+  </div>
+
+  <div class="tab-pane fade"
+    id="nav-contacts"
+    role="tabpanel"
+    aria-labelledby="nav-activities-tab">
+   @php $contacts = $data['contacts'];@endphp
+    @include('contacts.partials._table')
   </div>
 
  
