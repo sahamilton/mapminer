@@ -1,4 +1,4 @@
- <div class="float-right">
+ @if(isset($location))<div class="float-right">
     <a class="btn btn-info" 
         title="Add Note"
         data-href="{{route('notes.store')}}" 
@@ -7,9 +7,10 @@
         data-title = "Add note to address" 
         href="#">
         <i class="fas fa-pencil-alt"></i>
-        Add Activity
+        Add Location
         </a>
     </div>
+    @endif
     <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
     
@@ -60,4 +61,6 @@
     
     </tbody>
     </table>
+    @if(isset($location))
     @include('notes.partials._note')
+    @endif
