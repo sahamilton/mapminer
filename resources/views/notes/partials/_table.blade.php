@@ -7,7 +7,7 @@
         data-title = "Add note to address" 
         href="#">
         <i class="fas fa-pencil-alt"></i>
-        Add Location
+        Add Note
         </a>
     </div>
     @endif
