@@ -24,6 +24,7 @@
        
     </thead>
     <tbody>
+@if(isset($notes))
    @foreach($notes as $note)
 
         @if($note->relatesToLocation)
@@ -58,7 +59,7 @@
         </tr>
         @endif
    @endforeach
-    
+   @endif 
     </tbody>
     </table>
     @if(isset($location))
