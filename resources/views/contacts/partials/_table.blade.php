@@ -21,9 +21,7 @@
 					@endif
 				</td>
 				<td>
-					
-						{{$contact->fullname}} {{$contact->id}}
-					
+					{{$contact->fullname}}
 				</td>
 
 				<td>
