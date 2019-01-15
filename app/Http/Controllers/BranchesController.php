@@ -291,6 +291,7 @@ class BranchesController extends BaseController {
 	 */
 	public function update(BranchFormRequest $request,$branch)
 	{
+		dd(request()_>all());
 
 		$data['roles'] = $this->branch->removeNullsFromSelect(request('roles'));
 		$branch->findOrFail($branch->id)
