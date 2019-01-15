@@ -107,16 +107,8 @@ class BranchesController extends BaseController {
 	 */
 	public function store(BranchFormRequest $request)
 	{
-
-		$input = request()->all();
 		// Attempt to geo code the new branch address	
-		$address = $input['street'] . ",". $input['city'] . ",". $input['state'] . ",". $input['zip'];	
-
-		$geoCode = app('geocoder')->geocode($address)->get();
-
-		$latlng = ($this->branch->getGeoCode($geoCode));
-		$input['lat']= $latlng['lat'];
-		$input['lng']= $latlng['lng'];
+		$input = $this->getbranchGeoCode($request);
 		// add lat lng to location
 
 		$branch = $this->branch->create($input);
@@ -273,8 +265,9 @@ class BranchesController extends BaseController {
 	{
 
 		$data['roles'] = $this->branch->removeNullsFromSelect(request('roles'));
+		$request = $this->getbranchGeoCode($request);
 		$branch->findOrFail($branch->id)
-		->update(request()->all());
+		->update($request->all());
 
 		foreach ($data['roles'] as $key=>$role){
 				foreach ($role as $person_id){
@@ -539,7 +532,7 @@ protected function getBranchFullAddress($branch)
 	return $address;
 }
 
-protected function getBranchGeoCode($address)
+/*protected function getBranchGeoCode($address)
 {
 	
 
@@ -559,6 +552,16 @@ protected function getBranchGeoCode($address)
 
 
 	return $input;
-}
+}*/
+	private function getbranchGeoCode($request){
+		$address = request('street') . ",". request('city') . ",". request('state') . ",". request('zip');	
 
+		$geoCode = app('geocoder')->geocode($address)->get();
+
+		$latlng = ($this->branch->getGeoCode($geoCode));
+		$request['lat']= $latlng['lat'];
+		$request['lng']= $latlng['lng'];
+		return $request;
+
+	}
 }
