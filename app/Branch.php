@@ -31,7 +31,13 @@ class Branch extends Model implements HasPresenter {
 		'id',
 		'branchname',
 		'phone',
-		'region_id'];
+		'region_id',
+		'street',
+		'address2',
+		'city',
+		'state',
+		'zip'
+	];
 	protected $guarded = [];
 	public $errors;
 	

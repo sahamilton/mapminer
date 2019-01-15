@@ -291,11 +291,19 @@ class BranchesController extends BaseController {
 	 */
 	public function update(BranchFormRequest $request,$branch)
 	{
-		dd(request()_>all());
+		
+		$data = request()->all();
+		$address = $data['street'] . ",". $data['city'] . ",". $data['state'] . ",". $data['zip'];	
+
+		$geoCode = app('geocoder')->geocode($address)->get();
+
+		$latlng = ($this->branch->getGeoCode($geoCode));
+		$data['lat']= $latlng['lat'];
+		$data['lng']= $latlng['lng'];
 
 		$data['roles'] = $this->branch->removeNullsFromSelect(request('roles'));
-		$branch->findOrFail($branch->id)
-		->update(request()->all());
+		$branch->update($data);
+		// geocode		
 
 		foreach ($data['roles'] as $key=>$role){
 				foreach ($role as $person_id){
