@@ -9,7 +9,7 @@ class SalesOrgController extends BaseController {
 	public $limit = 5;
 	public $branch;
 	public $person;
-	public $salesroles = [5,6,7,8];
+	public $salesroles = [4,5,6,7,8];
 	
 
 
@@ -25,7 +25,9 @@ class SalesOrgController extends BaseController {
 	
 	public function getSalesOrgList($salesperson)
 	{
-			$salesroles = $this->salesroles;	
+			
+			$salesroles = $this->salesroles;
+
 			$salesteam = $salesperson->descendantsAndSelf()
 			->with('reportsTo','userdetails','userdetails.roles','industryfocus')
 			->whereHas('userdetails.roles', function ($q) use($salesroles){
@@ -33,6 +35,7 @@ class SalesOrgController extends BaseController {
 			})
 			->orderBy('lft')
 			->get();
+			
 			return response()->view('salesorg.salesmanagerlist', compact('salesteam'));
 
 
