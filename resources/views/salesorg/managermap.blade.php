@@ -15,7 +15,7 @@
   @endif
 
   @if($salesteam->reportsTo)
-  <h4>Reports to:<a href="route('salesorg.show',$salesteam->reportsTo->id)}}" 
+  <h4>Reports to:<a href="{{route('salesorg.show',$salesteam->reportsTo->id)}}" 
   title="See {{$salesteam->reportsTo->firstname}} {{$salesteam->reportsTo->lastname}}'s sales team">
     {{$salesteam->reportsTo->fullName()}}
     </a> 
@@ -41,11 +41,11 @@
   @foreach($salesteam->directReports as $reports)
     @if(isset($reports->userdetails))
       @if($reports->isLeaf())
-      <a href="route('salesorg.show',$reports->id)}}"
+      <a href="{{route('salesorg.show',$reports->id)}}"
         title="See {{$reports->firstname}} {{$reports->lastname}}'s sales area">
           {{$reports->firstname}} {{$reports->lastname}}</a> 
       @else
-        <a href="route('salesorg.show',$reports->id)}}"
+        <a href="{{route('salesorg.show',$reports->id)}}"
         title="See {{$reports->firstname}} {{$reports->lastname}}'s Sales Team">
           {{$reports->firstname}} {{$reports->lastname}}</a>  
       @endif

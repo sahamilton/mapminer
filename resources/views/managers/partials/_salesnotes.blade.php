@@ -8,7 +8,7 @@
         @foreach($data['nosalesnotes'] as $company)
             @if (isset($company->notes))
             <tr class="success"> 
-                <td><a href="route('salesnotes',$company->id)}}">{{$company->companyname}}</a>  </td>
+                <td><a href="{{route('salesnotes',$company->id)}}">{{$company->companyname}}</a>  </td>
                 <td>
                     <i class="far fa-check-circle text-success" aria-hidden="true"></i>
                 </td>

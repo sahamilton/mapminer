@@ -51,7 +51,7 @@ title= "See {{$saleperson->reportsTo->fullName}}'s sales team"> {{$salesperson->
     <td>
     {!!str_repeat ( '&nbsp;' , ($reports->depth - $salesperson->depth) * 3 )!!} 
         @if($reports->isLeaf())
-        <a href="route('salesorg.show',$reports->id)}}"
+        <a href="{{route('salesorg.show',$reports->id)}}"
         title="See {{$reports->fullName()}}'s sales area">
         {{$reports->fullName()}}
         </a>
