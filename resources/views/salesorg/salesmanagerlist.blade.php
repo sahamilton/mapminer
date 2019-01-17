@@ -22,7 +22,7 @@ title= "See {{$saleperson->reportsTo->fullName}}'s sales team"> {{$salesperson->
 
 
 
-  <p><a href="{{route('salesorg.show',$salesperson->id)}}"
+  <p><a href="{{route('salesorg.show',array($salesperson->id, 'view'=>'map'))}}"
 
   title="See map view of {{$salesperson->fullName()}}'s sales team"><i class="far fa-flag" aria-hidden="true"></i> Map View</a></p>    
 

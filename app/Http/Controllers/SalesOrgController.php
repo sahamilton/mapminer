@@ -44,7 +44,7 @@ class SalesOrgController extends BaseController {
 			}else{
 			
 				$salesteam = $this->loadSalesOrgRelations($salesperson);
-				if(request()->has('v') && request('v')=='list'){
+				if(request()->has('view') && request('view')=='list'){
 					return response()->view('salesorg.salesmanagerlist', compact('salesperson'));
 
 				}

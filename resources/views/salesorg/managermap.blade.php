@@ -30,8 +30,8 @@
 
   <p><i class="far fa-envelope" aria-hidden="true"></i> <a href="mailto:{{$salesteam->userdetails->email}}" title="Email {{$salesteam->firstname}} {{$salesteam->lastname}}">{{$salesteam->userdetails->email}}</a> </p>
   @endif
-  <p><a href="{{route('salesorg.show',$salesteam->id)}}"
-  title="See list view of {{$salesteam->firstname}} {{$salesteam->lastname}}'s sales team">
+  <p><a href="{{route('salesorg.show',array($salesteam->id,'view'=>'list'))}}"
+  title="See list view of {{$salesteam->fullName}}'s sales team">
   <i class="fas fa-th-list" aria-hidden="true"></i> List view</a></p>
 
       <div id="map-container">
@@ -90,12 +90,12 @@ Sales Team  = <img src='//maps.google.com/mapfiles/ms/icons/red-dot.png' /></p>
 
         
 
-            '{{$reports->firstname}} {{$reports->lastname}}' : {
+            '{{$reports->fullName()}}' : {
               type : 'person',
               center : {lat: {{isset($reports->lat) ? $reports->lat:0}}, lng: {{isset($reports->lng) ? $reports->lng:0}}},
               radius :25,
-              name : '{{$reports->firstname}} {{$reports->lastname}}',
-              contentString:'<a href="route('salesorg.show',$reports->id)}}">{{$reports->firstname}} {{$reports->lastname}}</a>',
+              name : '{{$reports->fullName()}}',
+              contentString:'<a href="{{route('salesorg.show',$reports->id)}}">{{$reports->fullName()}}</a>',
             },
          
           
