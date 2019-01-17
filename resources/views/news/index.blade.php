@@ -3,7 +3,7 @@
 
 <h1>Latest News and Comments</h1>
 
-@if(auth()->user()->hasRole('Admin'))
+@if(auth()->user()->hasRole('admin'))
 <div class="float-right">
     <a href="{{ route('news.create') }}" class="btn btn-small btn-info iframe">
 
@@ -47,7 +47,7 @@
 		<!-- Post Footer -->
 		<div class="row">
 			<div class="col-md-8">
-			@if(auth()->user()->hasRole('Admin'))
+			@if(auth()->user()->hasRole('admin'))
 				<p>Visible to <a href="{{route('news.audience',$post->id)}}"
 
 				title="See all users who can see the {{$post->title}} news item">{{count($post->audience($post->id))}} users.</a></p>
@@ -66,7 +66,7 @@
 					| <i class="far fa-comment" aria-hidden="true"></i> 
 					<a href="{{route('news.show', $post->slug)}}#comments"> {{$post->comments()->exists()}}</a>
 
-					@if($post->user_id == auth()->user()->id  or auth()->user()->hasRole('Admin'))
+					@if($post->user_id == auth()->user()->id  or auth()->user()->hasRole('admin'))
 <a href="{{route('news.edit',$post->id)}}" title="Edit this news item"><i class="far fa-edit text-info"" aria-hidden="true"></i></a> | 
 
 <a data-href="{{route('news.destroy',$post->id)}}" 

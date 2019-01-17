@@ -1,7 +1,7 @@
 @extends('site.layouts.default')
 @section('content')
 
-@if (auth()->user()->hasRole('Admin'))
+@if (auth()->user()->hasRole('admin'))
 	<div class="float-right">
 		<a href="{{{ route('branches.create') }}}" class="btn btn-small btn-info iframe">
 		
@@ -20,7 +20,7 @@
 			<td>State</td>
 			<td>Manager</td>
 			<td>Region</td>
-			@if (auth()->user()->hasRole('Admin'))
+			@if (auth()->user()->hasRole('admin'))
 				<td>Actions</td>
 			@endif
 		</thead>
@@ -59,7 +59,7 @@
 					@endif
 
 				</td>
-				@if (auth()->user()->hasRole('Admin'))
+				@if (auth()->user()->hasRole('admin'))
 					<td>
 					
 

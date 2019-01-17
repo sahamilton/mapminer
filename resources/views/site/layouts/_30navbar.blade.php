@@ -64,7 +64,7 @@
                         <li><a href="{{route('salesorg.index')}}">
                         <i class="far fa-sitemap" aria-hidden="true"> </i>
                         Sales Organization</a></li>
-                        @if(auth()->user()->hasRole('Admin') or auth()->user()->hasRole('Sales') or  auth()->user()->hasRole('Sales Manager'))
+                        @if(auth()->user()->hasRole('admin') or auth()->user()->hasRole('Sales') or  auth()->user()->hasRole('Sales Manager'))
                             <li class="divider"></li>
                             <li><a href="{{route('resources.view')}}">
                             <i class="far fa-book" aria-hidden="true"> </i>
@@ -82,7 +82,7 @@
                             <li><a href="{{route('branchmanager.newleads')}}">
                             <i class="far fa-envelope" aria-hidden="true"> </i> Branch Prospects</a></li>
                         @endif
-                        @if (auth()->user()->hasRole('Admin') or auth()->user()->hasRole('National Account Manager'))
+                        @if (auth()->user()->hasRole('admin') or auth()->user()->hasRole('National Account Manager'))
                         <li class="divider"></li>
                          <li><a href="{{route('managers.view')}}">
                          <i class="far fa-eye" aria-hidden="true"> </i> Account Managers View</a></li>
@@ -115,7 +115,7 @@
 
                         </li>
                         @endif
-                        @if (auth()->user()->hasRole('Admin'))
+                        @if (auth()->user()->hasRole('admin'))
                          <li>
     						<a href="{{{ route('dashboard') }}}">
                            <i class="far fa-tachometer" aria-hidden="true"> </i> Admin </a>
@@ -123,7 +123,7 @@
     					</li>
                         @endif
 
-                         @if (auth()->user()->hasRole('Sales Operations'))
+                         @if (auth()->user()->hasRole('sales_operations'))
                          <li>
                             <a href="{{{ route('dashboard') }}}">
                            <i class="far fa-tachometer" aria-hidden="true"> </i> Ops </a>

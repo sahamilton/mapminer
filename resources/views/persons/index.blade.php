@@ -13,7 +13,7 @@
 <p><a href="{{route('person.map')}}"><i class="far fa-flag" aria-hidden="true"></i>Map View</a>
 
 
-@if (auth()->user()->hasRole('Admin'))
+@if (auth()->user()->hasRole('admin'))
 	<div class="float-right">
 		<a href="{{{ route('users.create') }}}" class="btn btn-small btn-info iframe">
 

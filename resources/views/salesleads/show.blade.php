@@ -45,7 +45,7 @@
 <p>{{date_format($note->created_at,'m-d-Y')}}...<em>{{$note->note}}</em><br />
  -- @if(isset($note->writtenBy->person)) {{$note->writtenBy->person->postName()}} @endif</p>
 
-@if($note->user_id == auth()->user()->id  or auth()->user()->hasRole('Admin'))
+@if($note->user_id == auth()->user()->id  or auth()->user()->hasRole('admin'))
 <br /><a href="{{route('notes.edit',$note->id)}}" title="Edit this note"><i class="far fa-edit text-info"" aria-hidden="true"></i></a> | 
 
 <a data-href="{{route('notes.destroy',$note->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = " this prospect note" href="#">

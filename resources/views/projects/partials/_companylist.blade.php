@@ -1,4 +1,4 @@
-@if(auth()->user()->hasRole('Admin') or $project->owner())
+@if(auth()->user()->hasRole('admin') or $project->owner())
 
 <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
 	<thead>

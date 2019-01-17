@@ -1,5 +1,5 @@
 <div class="alert alert-danger" role="alert">
-  @if(auth()->user()->hasRole('Admin'))
+  @if(auth()->user()->hasRole('admin'))
       {{$data['title']}} has 
   @else
   You have

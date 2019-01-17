@@ -15,7 +15,7 @@
 
 <p><i class="far fa-trash" aria-hidden="true"></i> = Delete | <i class="far fa-ban" aria-hidden="true"></i> = Inactive | <i class="far fa-home" aria-hidden="true"></i> = Applies to Accounts  | <i class="far fa-flag" aria-hidden="true"></i> = Applies to locations  | <i class="far fa-arrow-up" aria-hidden="true"></i> <i class="far fa-arrow-down" aria-hidden="true"></i>= Resequence</p>
 <p>@include('partials.advancedsearch')</p>
-	@if (auth()->user()->hasRole('Admin'))
+	@if (auth()->user()->hasRole('admin'))
 
         <div class="float-right">
             <a href="{{{ route('searchfilters.create') }}}" 

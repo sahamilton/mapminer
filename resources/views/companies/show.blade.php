@@ -30,7 +30,7 @@
 @if(isset($company->managedBy->firstname))
 <p>Account managed by <a href="{{route('person.show',$company->managedBy->id)}}" title="See all accounts managed by {{$company->managedBy->postName()}}">{{$company->managedBy->postName()}}</a></p>
 @endif
-@if (auth()->user()->hasRole('Admin'))
+@if (auth()->user()->hasRole('admin'))
 
 
 <div class="float-right" style="margin-bottom:20px">

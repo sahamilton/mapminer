@@ -18,7 +18,7 @@ $data['distance'] = Config::get('default_radius');?>
 
 @include('companies/partials/_state')
 @include('partials/advancedsearch')
-@if(auth()->user()->hasRole('Admin'))
+@if(auth()->user()->hasRole('admin'))
 
 @endif
 

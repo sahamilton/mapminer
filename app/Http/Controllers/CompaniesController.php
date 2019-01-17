@@ -234,7 +234,7 @@ class CompaniesController extends BaseController {
 		}
 
 		$data = $this->getSegmentCompanyInfo($company,$segment);
-		$company = $this->company->with('managedBy','industryVertical');
+		$company = $this->company->with('managedBy','industryVertical','type');
 		if($filtered = $this->company->isFiltered(['companies'],['vertical'])){
 				$keys = $this->company->getSearchKeys(['companies'],['vertical']);
 

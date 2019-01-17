@@ -8,7 +8,7 @@
 		<th>ZIP</th>
 		<th>Segment</th>
 
-   		@if(auth()->user()->hasRole('Admin'))
+   		@if(auth()->user()->hasRole('admin'))
 			<th>Actions</th>
    		@endif
     </thead>
@@ -55,7 +55,7 @@
 		@endif
 	</td>
 	
-	@if(auth()->user()->hasRole('Admin'))
+	@if(auth()->user()->hasRole('admin'))
 		<td>
 
 	    
