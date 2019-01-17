@@ -15,7 +15,7 @@
         @foreach ($salesteam->relatedPeople()->get() as $people)
 
         <p><strong>{{$roles[$people->pivot->role_id]}}</strong>: 
-        <a href = "{{route('salesorg',$people->id)}}" > {{$people->postName()}}</a> </p>
+        <a href = "route('salesorg.show',$people->id)}}" > {{$people->postName()}}</a> </p>
 
         @endforeach
         </p>

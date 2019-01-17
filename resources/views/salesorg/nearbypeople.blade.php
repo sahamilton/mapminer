@@ -1,7 +1,7 @@
 @extends('site.layouts.default')
 @section('content')
 <h2>Closest Sales Team</h2>
-<p><a href="{{route('salesorg')}}">Return to All Sales Org</a></p>
+<p><a href="{{route('salesorg.index')}}">Return to All Sales Org</a></p>
 <h4>{{$data['number']}} closest sales team members within {{$data['distance']}} miles of {{$data['fulladdress']}}</h4>
 @php
 $data['type'] ='people';
@@ -21,7 +21,7 @@ $data['type'] ='people';
 <tbody>
 @foreach ($people as $person)
 <tr>
-	<td><a href="{{route('salesorg',$person->id)}}">{{$person->postName()}}</a></td>
+	<td><a href="route('salesorg.show',$person->id)}}">{{$person->postName()}}</a></td>
 	<td>
 		@foreach ($person->userdetails->roles as $role)
 			{{$role->name}}
@@ -29,7 +29,7 @@ $data['type'] ='people';
 	</td>
 	<td>
 		@if($person->reportsTo)
-			<a href="{{route('salesorg',$person->reportsTo->id)}}">{{$person->reportsTo->postName()}}</a>
+			<a href="route('salesorg.show',$person->reportsTo->id)}}">{{$person->reportsTo->postName()}}</a>
 		@endif
 	</td>
 	<td>{{$person->fullAddress()}}</td>

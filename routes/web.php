@@ -163,10 +163,15 @@ Route::group(['middleware' => 'auth'], function () {
 			['only' => ['show']]);
 
 	# Sales organization
-		Route::get('salesorg/{person?}',['as'=>'salesorg','uses'=>'SalesOrgController@getSalesBranches']);
-		Route::get('salesorg/{person}/list',['as'=>'salesorg.list','uses'=>'SalesOrgController@getSalesOrgList']);
 		Route::get('salesorg/coverage',['as'=>'salescoverage','uses'=>'SalesOrgController@salesCoverageMap']);
 		Route::post('salesorg/find',['as'=>'lead.find','uses'=>'LeadsController@find']);
+		// add salesorg reqource with show and index only
+		Route::resource('salesorg','SalesOrgController',['only'=>['index','show']]);
+		//Route::get('salesorg/{person?}',['as'=>'salesorg','uses'=>'SalesOrgController@getSalesBranches']);
+		//Route::get('salesorg/{person}/list',['as'=>'salesorg.list','uses'=>'SalesOrgController@getSalesOrgList']);
+
+
+		
 		Route::get('branch/{branchId}/salesteam',array('as' => 'branch.salesteam', 'uses' => 'BranchesController@showSalesTeam'));
 
 

@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 use App\Branch;
 use App\Person;
 use Excel;
+use Illuminate\Http\Request;
 
 class SalesOrgController extends BaseController {
 	public $distance = 20;
@@ -22,21 +23,44 @@ class SalesOrgController extends BaseController {
 		
 	}
 	
-	
+	public function index(){
+
+		$salesperson = $this->loadSalesOrgRelations($this->getSalesLeaders());
+		return response()->view('salesorg.salesmanagerlist', compact('salesperson'));
+
+	}
+
+
+	public function show(Request $request,Person $salesperson){
+		
+
+		if( $salesperson->isLeaf())
+			{
+			
+				$salesorg = $this->loadSalesOrgRelations($salesperson);
+
+				return response()->view('salesorg.map', compact('salesorg'));
+				
+			}else{
+			
+				$salesteam = $this->loadSalesOrgRelations($salesperson);
+				if(request()->has('v') && request('v')=='list'){
+					return response()->view('salesorg.salesmanagerlist', compact('salesperson'));
+
+				}
+				return response()->view('salesorg.managermap', compact('salesteam'));
+			}
+
+	}
 	public function getSalesOrgList($salesperson)
 	{
+		// this could be combined with getSAlesBranches and 
+		// refactored to function show
 			
-			$salesroles = $this->salesroles;
-
-			$salesteam = $salesperson->descendantsAndSelf()
-			->with('reportsTo','userdetails','userdetails.roles','industryfocus')
-			->whereHas('userdetails.roles', function ($q) use($salesroles){
-				$q->whereIn('roles.id',$salesroles);
-			})
-			->orderBy('lft')
-			->get();
+			$salesperson->load('userdetails.roles','directReports','directReports.userdetails','directReports.userdetails.roles','reportsTo.userdetails.roles');
 			
-			return response()->view('salesorg.salesmanagerlist', compact('salesteam'));
+			
+			return response()->view('salesorg.salesmanagerlist', compact('salesperson'));
 
 
 	}
@@ -71,7 +95,7 @@ class SalesOrgController extends BaseController {
 				
 			}else{
 			
-				$salesteam = $salesperson->load('userdetails.roles','directReports','directReports.userdetails','directReports.userdetails.roles','reportsTo.userdetails.roles');
+				$salesteam = $this->loadSalesOrgRelations($salesperson);
 				
 				return response()->view('salesorg.managermap', compact('salesteam'));
 			}
@@ -174,4 +198,9 @@ class SalesOrgController extends BaseController {
         })->download('csv');
     }
 
+
+    private function loadSalesOrgRelations(Person $salesperson){
+    	return $salesperson->load('userdetails.roles','directReports','directReports.userdetails','directReports.userdetails.roles','reportsTo.userdetails.roles');
+
+    }
 }

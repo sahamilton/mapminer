@@ -11,7 +11,7 @@ title="Email {{$salesorg->postName()}}">
 {{$salesorg->userdetails->email}}</a></p>
   
   @if(isset($salesorg->reportsTo->id))
-  <h4>Reports to:<a href="{{route('salesorg',$salesorg->reportsTo->id)}}" 
+  <h4>Reports to:<a href="route('salesorg.show',$salesorg->reportsTo->id)}}" 
   title="See {{$salesorg->reportsTo->firstname}} {{$salesorg->reportsTo->lastname}}'s sales team">
     {{$salesorg->reportsTo->firstname}} {{$salesorg->reportsTo->lastname}}
     </a> 

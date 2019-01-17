@@ -61,7 +61,7 @@
                          Sales Resources<span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu">
-                        <li><a href="{{route('salesorg')}}">
+                        <li><a href="{{route('salesorg.index')}}">
                         <i class="far fa-sitemap" aria-hidden="true"> </i>
                         Sales Organization</a></li>
                         @if(auth()->user()->hasRole('Admin') or auth()->user()->hasRole('Sales') or  auth()->user()->hasRole('Sales Manager'))

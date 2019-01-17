@@ -24,7 +24,7 @@
                 <tr> 
                     <td>{{$person->userdetails->employee_id}} </td>
 
-                    <td><a href="{{route('salesorg',$person->id)}}"
+                    <td><a href="route('salesorg.show',$person->id)}}"
                     title = "See {{$person->firstname}}'s sales coverage area">{{$person->firstname}} {{$person->lastname}}</a></td> 
                     <td>{{$person->userdetails->roles[0]->name}}</td>
                     <td>

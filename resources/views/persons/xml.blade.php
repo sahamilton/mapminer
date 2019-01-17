@@ -19,7 +19,7 @@
 				color="{{$row->industryfocus[0]->color}}"
 			@endif
 			@if(isset($row->reportsTo))
-				salesorg="{{route('salesorg',$row->reportsTo->id)}}"
+				salesorg="route('salesorg.show',$row->reportsTo->id)}}"
 				reportsto="{{trim($row->reportsTo->firstname)}} {{trim($row->reportsTo->lastname)}}"
 
 			@endif
