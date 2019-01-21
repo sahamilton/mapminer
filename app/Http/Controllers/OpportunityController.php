@@ -236,6 +236,15 @@ class OpportunityController extends Controller
         return redirect()->route('opportunity.index')->withMessage('Opportunity '. request('close'));
         
     }
-
+    public function toggle(Request $request){
+        $opportunity = $this->opportunity->findOrFail(request('id'));
+        
+        if($opportunity->top50){
+            $opportunity->top50 = null;
+        }else{
+            $opportunity->top50 = 1;
+        }
+        $opportunity->save();
+    }
     
 }
