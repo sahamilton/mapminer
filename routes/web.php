@@ -57,6 +57,7 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::resource('branches','BranchesController',['only' => ['index', 'show']]);
 
 	#Branch Assignments
+		Route::get('branchassignment/{user}/change',['as'=>'branchassignment.change','uses'=>'BranchManagementController@change']);
 		Route::resource('branchassignments','BranchManagementController',['only'=>['index','show','edit','update']]);
 
 	#Comments
