@@ -9,7 +9,8 @@
 		name="email" 
 		id="email" 
 		value="{{ old('email', isset($user) ? $user->email : '') }}" 
-		placeholder="email@peopleready.com"/>
+		placeholder="email@peopleready.com"
+		autocomplete="off"/>
 		{!! $errors->first('email', '<span class="help-inline">:message</span>') !!}
 	</div>
 </div>
@@ -25,7 +26,8 @@
         name='employee_id' 
         description="employee_id" 
         value="{{ old('employee_id',isset($user) ? $user->employee_id : '') }}" 
-        placeholder="employee_id">
+        placeholder="employee_id"
+        autocomplete="off">
         <span class="help-block{{ $errors->has('employee_id') ? ' has-error' : '' }}">
             <strong>{{ $errors->has('employee_id') ? $errors->first('employee_id') : ''}}</strong>
             </span>
@@ -41,6 +43,7 @@
 		type="password" 
 		name="password" 
 		id="password" 
+		autocomplete="off"
 		value="" />
 		{!! $errors->first('password', '<span class="help-inline">:message</span>') !!}
 	</div>
@@ -56,6 +59,7 @@
 		type="password" 
 		name="password_confirmation" 
 		id="password_confirmation" 
+		autocomplete="off"
 		value="" />
 		{!! $errors->first('password_confirmation', '<span class="help-inline">:message</span>') !!}
 	</div>
