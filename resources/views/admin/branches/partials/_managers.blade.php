@@ -1,7 +1,7 @@
 <p><span style="color:red">*</span> Includes the following roles:
 
 		@foreach ( $roles as $role)
-			{{$role->displayName}}
+			{{$role->display_name}}
 			 @if (! $loop->last)
 			 ,
 			 @endif
@@ -26,7 +26,7 @@
 				
 					<ul style=" list-style-type: none;">
 					@foreach ( $manager->userdetails->roles as $role)
-						<li>{{$role->displayName}}</li>
+						<li>{{$role->display_name}}</li>
 					@endforeach
 					</ul>
 

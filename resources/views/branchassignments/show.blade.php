@@ -6,7 +6,7 @@
 <h2>Branch Associations for {{$details->fullName()}}</h2>
 <h4>Current Role:
 	@foreach ($details->userdetails->roles as $role)
-	{{$role->displayName}}
+	{{$role->display_name}}
 	@endforeach
 </h4>
 

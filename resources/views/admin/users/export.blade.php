@@ -19,7 +19,7 @@
         <td>{{ $user->email }}</td>
         <td>
         @foreach ($user->roles as $role)
-            {{ $role->displayName }}<br />
+            {{ $role->display_name }}<br />
         @endforeach
         </td>
         <td>

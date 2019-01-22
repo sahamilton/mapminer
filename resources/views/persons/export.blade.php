@@ -51,7 +51,7 @@
 			</td>
 			<td>
 			@foreach ($person->userdetails->roles as $role)
-				{{$role->displayName}}
+				{{$role->display_name}}
 				@if(! $loop->last)
 				|
 				@endif

@@ -6,7 +6,7 @@
 
 
   @foreach ($salesperson->userdetails->roles as $role)
-    <h4> {{$role->displayName}}</h4>
+    <h4> {{$role->display_name}}</h4>
   @endforeach
 
 
@@ -67,7 +67,7 @@ title= "See {{$saleperson->reportsTo->fullName}}'s sales team"> {{$salesperson->
    <td>
        @if(isset($reports->userdetails->roles)) 
          @foreach($reports->userdetails->roles as $role)
-            {{$role->displayName}}<br />
+            {{$role->display_name}}<br />
         @endforeach
         @endif
         

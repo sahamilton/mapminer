@@ -17,7 +17,7 @@
                         <ul style="list-style-type:none">
                         @foreach ($person->userdetails->roles()->get() as $role)
 
-                        <li>{{$role->displayName}}</li>
+                        <li>{{$role->display_name}}</li>
                         @endforeach
                     </ul>
                     </td>

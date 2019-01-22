@@ -41,7 +41,7 @@
    </td>
    <td>
         @foreach($reports->userdetails->roles as $role)
-            <li>{{$role->displayName}}</li>
+            <li>{{$role->display_name}}</li>
         @endforeach
         
     </td>

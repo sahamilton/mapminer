@@ -53,7 +53,7 @@
     <ul>
     @foreach($person->userdetails->roles as $role)
     
-    <li><a title="Show all {{$role->displayName}} users" href="{{route('roles.show',$role->id)}}">{{ $role->displayName }}</a></li>
+    <li><a title="Show all {{$role->display_name}} users" href="{{route('roles.show',$role->id)}}">{{ $role->display_name }}</a></li>
    
     @endforeach
     </ul>

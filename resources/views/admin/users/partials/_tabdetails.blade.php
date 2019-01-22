@@ -10,5 +10,5 @@
     <h4>Roles:</h4>
     @foreach ($user->roles as $role)
         <li><a href="{{route('roles.show',$role->id)}}"
-        title="See all {{$role->displayName}} users">{{$role->displayName}}</a></li>
+        title="See all {{$role->display_name}} users">{{$role->display_name}}</a></li>
     @endforeach
