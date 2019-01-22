@@ -113,6 +113,7 @@ class BranchesController extends BaseController {
 		$branch = $this->branch->create($input->all());
 
 		foreach ($input['roles'] as $key=>$role){
+			
 				foreach ($role as $person){
 				
 					$branch->relatedPeople()->sync($person,['role_id'=>$key]);

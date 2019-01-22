@@ -8,7 +8,7 @@ class Region extends Model {
 	];
 
 	// Don't forget to fill this array
-	protected $fillable = [];
+	protected $fillable = ['region'];
 	
 	public function branches() 
 	{
