@@ -152,7 +152,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 
 	#Regions
-		Route::resource('region','RegionsController',['only' => ['index', 'show']]);
+	//	Route::resource('region','RegionsController',['only' => ['index', 'show']]);
 
 	#ServiceLines
 		Route::get('serviceline/{id}/{type?}',['as'=>'serviceline.accounts','uses'=>'ServicelinesController@show']);
@@ -521,7 +521,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 
 	 	Route::resource('leadstatus','LeadStatusController');
 
-
+	 #Regions
+		Route::resource('region','RegionsController');
 
 
 	# Sales Process

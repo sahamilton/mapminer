@@ -95,7 +95,6 @@ class BranchesController extends BaseController {
 		$branchRoles = Role::whereIn('id',$this->branch->branchRoles)->pluck('name','id');
 		$team = $this->person->personroles($this->branch->branchRoles);
 		$servicelines = $this->serviceline->whereIn('id',$this->userServiceLines)->get();
-    
 		return response()->view('branches.create',compact('servicelines','team','branchRoles'));
 
 	}
@@ -110,8 +109,8 @@ class BranchesController extends BaseController {
 		// Attempt to geo code the new branch address	
 		$input = $this->getbranchGeoCode($request);
 		// add lat lng to location
-
-		$branch = $this->branch->create($input);
+		
+		$branch = $this->branch->create($input->all());
 
 		foreach ($input['roles'] as $key=>$role){
 				foreach ($role as $person){

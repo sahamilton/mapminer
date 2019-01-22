@@ -1,1 +1,6 @@
-D:\xampp\htdocs\mapminer\app/views/regions/index.blade.php
+@extends('site.layouts.default')
+@section('content')
+
+
+
+@endsection
