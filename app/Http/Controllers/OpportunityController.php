@@ -45,7 +45,7 @@ class OpportunityController extends Controller
         $activityTypes = ActivityType::all();
         $myBranches = array_keys($this->person->myBranches());
        
-        if(! auth()->user()->hasRole('Branch Manager') && $this->person->myTeam()->count() >1){
+        if(! auth()->user()->hasRole('branch_manager') && $this->person->myTeam()->count() >1){
              $data = $this->getMarketManagerData($myBranches);
             // need to get all the activities esp conversions / closes
             return response()->view('opportunities.mgrindex',compact('data','activityTypes'));

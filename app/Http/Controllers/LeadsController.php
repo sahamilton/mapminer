@@ -476,7 +476,7 @@ class LeadsController extends BaseController
         if($person->userdetails->can('accept_leads')){
            
             return $this->showSalesLeads($person);
-        }elseif($person->userdetails->hasRole('Admin') or $person->userdetails->hasRole('Sales Operations')){
+        }elseif($person->userdetails->hasRole('admin') or $person->userdetails->hasRole('sales_operations')){
                 return redirect()->route('leadsource.index');
         }else{
 
@@ -599,7 +599,7 @@ class LeadsController extends BaseController
 
         $person = $this->person->findOrFail($pid);
 
-        if(auth()->user()->hasRole('Admin') or auth()->user()->hasRole('Sales Operations')){
+        if(auth()->user()->hasRole('admin') or auth()->user()->hasRole('sales_operations')){
            
            return $person;
 
@@ -793,14 +793,14 @@ class LeadsController extends BaseController
 
     public function getAssociatedBranches($pid=null){
 
-        if(auth()->user()->hasRole('Branch Manager')){
+        if(auth()->user()->hasRole('branch_manager')){
 
             $branchmgr = $this->person
                             ->where('user_id','=',auth()->user()->id)
                             ->with('manages')
                             ->first();
 
-         }elseif(auth()->user()->hasRole('Admin')){
+         }elseif(auth()->user()->hasRole('admin')){
             $branches = Branch::has('leads')
             ->withCount('leads')
             ->with('manager')

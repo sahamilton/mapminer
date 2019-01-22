@@ -12,9 +12,9 @@
 		oninput="this.setCustomValidity('')"  />
 			@foreach ($roles as $role)
 				@if ($mode == 'create')
-            		<option value="{{ $role->id }}"{{ ( in_array($role->id, $selectedRoles) ? ' selected="selected"' : '') }}>{{ $role->name }}</option>
+            		<option value="{{ $role->id }}"{{ ( in_array($role->id, $selectedRoles) ? ' selected="selected"' : '') }}>{{ $role->displayName }}</option>
             	@else
-					<option value="{{ $role->id }}"{{ ( array_search($role->id, $user->currentRoleIds()) !== false && array_search($role->id, $user->currentRoleIds()) >= 0 ? ' selected="selected"' : '') }}>{{ $role->name }}</option>
+					<option value="{{ $role->id }}"{{ ( array_search($role->id, $user->currentRoleIds()) !== false && array_search($role->id, $user->currentRoleIds()) >= 0 ? ' selected="selected"' : '') }}>{{ $role->displayName }}</option>
 				@endif
             @endforeach
 		</select>

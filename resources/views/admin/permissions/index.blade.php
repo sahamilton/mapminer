@@ -37,7 +37,7 @@
         <td>
         <ul>
         @foreach ($permission->roles as $role)
-        <li>{{$role->name}}</li>
+        <li>{{$role->displayName}}</li>
         @endforeach
         </ul>
         <td>

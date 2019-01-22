@@ -41,7 +41,7 @@
 				<td>
 					<ul>
 						@foreach ($person->userdetails->roles as $role)
-							{!! $role->name != 'User' ? "<li>" . $role->name ."</li>" : '' !!}
+							{!! $role->displayName != 'User' ? "<li>" . $role->displayName ."</li>" : '' !!}
 
 						@endforeach
 					</ul>

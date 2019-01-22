@@ -76,7 +76,7 @@
                 <a class="dropdown-item" href="{{route('salesorg.index')}}">
                 <i class="fas fa-sitemap" aria-hidden="true"> </i>
                   Sales Organization</a>
-                  @if(auth()->user()->hasRole('admin') or auth()->user()->hasRole('Sales') or  auth()->user()->hasRole('Sales Manager'))
+                  @if(auth()->user()->hasRole('admin') or auth()->user()->hasRole('sales') or  auth()->user()->hasRole('sales_manager'))
                             
                   <a class="dropdown-item" href="{{route('resources.view')}}">
                   <i class="fas fa-book" aria-hidden="true"> </i>
@@ -95,13 +95,13 @@
                       Sales Prospects</a>
                   @endif
                   
-                  @if(auth()->user()->hasRole('Branch Manager'))
+                  @if(auth()->user()->hasRole('branch_manager'))
                     <a class="dropdown-item"  href="{{route('branchmanager.newleads')}}">
                     <i class="far fa-envelope" aria-hidden="true"> </i> 
                     Branch Prospects</a>
                   @endif
 
-                  @if (auth()->user()->hasRole('admin') or auth()->user()->hasRole('National Account Manager'))
+                  @if (auth()->user()->hasRole('admin') or auth()->user()->hasRole('national_account_manager')'))
                     
                     <a class="dropdown-item" href="{{route('managers.view')}}">
                     <i class="far fa-eye" aria-hidden="true"> </i> 

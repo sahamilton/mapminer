@@ -27,7 +27,7 @@ class TrainingController extends BaseController
      */
     /*public function index()
     {
-        if(auth()->user()->hasRole('Admin')){
+        if(auth()->user()->hasRole('admin')){
             $trainings = $this->training->with('relatedRoles','relatedIndustries','servicelines')->get();
             return response()->view('training.index',compact('trainings'));
         }else{

@@ -26,7 +26,7 @@
 					<td>{{$user->employee_id}}</td>
 					<td>
 						@foreach ($user->roles as $role)
-							<li>{{$role->name}}</li>
+							<li>{{$role->displayName}}</li>
 						@endforeach
 					</td>
 					

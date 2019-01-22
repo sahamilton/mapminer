@@ -5,7 +5,7 @@
 <h2>{{$permission->display_name}} Permission</h2>
 <h4>Roles that have this permission:</h4>
 @foreach ($permission->roles()->get() as $role)
-<li><a href="{{route('roles.show',$role->id)}}">{{$role->name}}</a></li>
+<li><a href="{{route('roles.show',$role->id)}}">{{$role->displayName}}</a></li>
 
 @endforeach
 </div>

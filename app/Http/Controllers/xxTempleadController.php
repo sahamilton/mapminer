@@ -43,7 +43,7 @@ class TempleadController extends Controller
     
     public function getAssociatedBranches($pid=null){
 
-        if(auth()->user()->hasRole('Branch Manager')){
+        if(auth()->user()->hasRole('branch_manager')){
 
             $branchmgr = $this->person
                             ->where('user_id','=',auth()->user()->id)
@@ -106,7 +106,7 @@ class TempleadController extends Controller
         if($person->userdetails->can('accept_leads')){
             
             return $this->showSalesLeads($person);
-        }elseif($person->userdetails->hasRole('Admin') or $person->userdetails->hasRole('Sales Operations')){
+        }elseif($person->userdetails->hasRole('admin') or $person->userdetails->hasRole('sales_operations')){
                 return redirect()->route('newleads.index');
         }else{
             return $this->showSalesTeamLeads($person);
@@ -213,7 +213,7 @@ class TempleadController extends Controller
 
         $person = $this->person->findOrFail($pid);
 
-        if(auth()->user()->hasRole('Admin') or auth()->user()->hasRole('Sales Operations')){
+        if(auth()->user()->hasRole('admin') or auth()->user()->hasRole('sales_operations')){
            
            return $person;
 

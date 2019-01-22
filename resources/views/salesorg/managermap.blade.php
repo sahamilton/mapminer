@@ -4,12 +4,12 @@
   <h2>{{$salesteam->fullName()}}'s Team</h2>
 
   @foreach ($salesteam->userdetails->roles as $role)
-    {{$role->name}}
+    {{$role->displayName}}
   @endforeach
   @if(isset($salesteam->usersdetails->roles))
   <h3>
   @foreach ( $salesteam->usersdetails->roles as $role)
-  {{$role->name}}
+  {{$role->displayName}}
   @endforeach
   </h3>
   @endif

@@ -29,7 +29,7 @@
 <td>
 <ul>
 @foreach ($team->userdetails->roles as $role)
-<li>{{$role->name}}</li>
+<li>{{$role->displayName}}</li>
 @endforeach
 </ul>
 </td>

@@ -21,7 +21,7 @@
 			<td>
 				@foreach($person->userdetails->roles as $role)
 
-				<li>{{$role->name}}</li>
+				<li>{{$role->displayName}}</li>
 				@endforeach
 			</td>
 			<td>{{$person->userdetails->email}}</td>

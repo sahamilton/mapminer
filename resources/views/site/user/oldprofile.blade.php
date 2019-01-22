@@ -34,7 +34,7 @@
 </p>
 <p><strong>Roles:</strong> 
 @foreach($user->roles as $role)
- {{$role->name }}
+ {{$role->displayName }}
  <?php $permissions[] = $role->permissions()->pluck('name')->toArray();?>
  @if(! $loop->last) | @endif
 @endforeach

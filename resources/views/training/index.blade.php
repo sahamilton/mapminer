@@ -39,7 +39,7 @@
                     <td>
                         <ul style="list-style-type: none">
                         @foreach ($training->relatedRoles as $role)
-                            <li>{{$role->name}}</li>
+                            <li>{{$role->displayName}}</li>
                         @endforeach
                         </ul>
                     </td>

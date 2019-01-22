@@ -55,9 +55,9 @@ class BranchManagementController extends Controller
      */
     public function show($id)
     {
-       
-        if(! auth()->user()->hasRole('Admin')){
-           
+
+        if(! auth()->user()->hasRole('admin')){
+           dd('you dont');
             $id = auth()->user()->id;
         }
 
@@ -88,7 +88,7 @@ class BranchManagementController extends Controller
     public function update(BranchManagementRequest $request, $id)
     {
 
-        if(! auth()->user()->hasRole('Admin')){
+        if(! auth()->user()->hasRole('admin')){
             
             $id = auth()->user()->id;
         }

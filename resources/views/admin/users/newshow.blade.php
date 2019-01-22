@@ -60,7 +60,7 @@
         <td class="col-md-2">{{ $user->email }}</td>
         <td class="col-md-2">
             @foreach ($user->roles as $role)
-                {{ $role->name }}<br />
+                {{ $role->displayName }}<br />
             @endforeach
         </td>
         <td class="col-md-2">

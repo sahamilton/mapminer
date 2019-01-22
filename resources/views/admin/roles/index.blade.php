@@ -33,7 +33,7 @@
 		<tbody>
         @foreach ($roles as $role)
         <tr>
-        <td><a href="{{route('roles.show',$role->id)}}" >{{$role->name}}</td>
+        <td><a href="{{route('roles.show',$role->id)}}" >{{$role->displayName}}</td>
         <td>
         <ul>
         @foreach($role->permissions as $permission)
@@ -54,15 +54,15 @@
 				
 			<a class="dropdown-item" 
 				href="{{route('roles.edit',$role->id)}}">
-					<i class="far fa-edit text-info"" aria-hidden="true"> </i>Edit {{$role->name}}
+					<i class="far fa-edit text-info"" aria-hidden="true"> </i>Edit {{$role->displayName}}
 				</a>
 				<a class="dropdown-item"
 					data-href="{{route('roles.destroy',$role->id)}}" 
 					data-toggle="modal" 
 					data-target="#confirm-delete" 
-					data-title = "{{$role->name}}" 
+					data-title = "{{$role->displayName}}" 
 					href="#">
-					<i class="far fa-trash-alt text-danger" aria-hidden="true"> </i> Delete {{$role->name}}
+					<i class="far fa-trash-alt text-danger" aria-hidden="true"> </i> Delete {{$role->displayName}}
 				</a>
 
 			  </ul>
