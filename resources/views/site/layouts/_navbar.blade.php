@@ -101,7 +101,7 @@
                     Branch Prospects</a>
                   @endif
 
-                  @if (auth()->user()->hasRole('admin') or auth()->user()->hasRole('national_account_manager')'))
+                  @if (auth()->user()->hasRole('admin') or auth()->user()->hasRole('national_account_manager'))
                     
                     <a class="dropdown-item" href="{{route('managers.view')}}">
                     <i class="far fa-eye" aria-hidden="true"> </i> 

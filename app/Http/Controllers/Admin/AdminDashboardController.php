@@ -303,7 +303,7 @@ class AdminDashboardController extends BaseController {
 			$data[$value->name][$value->week]=$value->login;
 		}
 		$chartdata=array();
-		$exclude = ['Admin','Sales Operations'];
+		$exclude = ['admin','sales_operations'];
 		$colors = $this->createColors(count($data)-count($exclude));
 		$n=0;
 		foreach ($data as $key=>$value){
