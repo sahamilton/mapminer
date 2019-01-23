@@ -266,19 +266,19 @@ class BranchesController extends BaseController {
 
 		$data['roles'] = $this->branch->removeNullsFromSelect(request('roles'));
 		$request = $this->getbranchGeoCode($request);
-		$branch->findOrFail($branch->id)
-		->update($request->all());
+		$branch->update($request->all());
 
 		foreach ($data['roles'] as $key=>$role){
 				foreach ($role as $person_id){
-					//$person = $this->person->findOrFail($person_id);
-					//dd($key);
+					
 					$branchAssociations[$person_id]=['role_id'=>$key];
 				}
 				
 			}
-		//dd($branchAssociations);
-		$branch->relatedPeople()->sync($branchAssociations);
+			if(isset($branchAssociations)){
+					
+				$branch->relatedPeople()->sync($branchAssociations);
+			}
 
 		$branch->servicelines()->sync(request('serviceline'));
 		$this->rebuildXMLfile();
