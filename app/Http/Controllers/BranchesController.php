@@ -92,7 +92,7 @@ class BranchesController extends BaseController {
 	public function create()
 	{
 
-		$branchRoles = Role::whereIn('id',$this->branch->branchRoles)->pluck('name','id');
+		$branchRoles = Role::whereIn('id',$this->branch->branchRoles)->pluck('display_name','id');
 		$team = $this->person->personroles($this->branch->branchRoles);
 		$servicelines = $this->serviceline->whereIn('id',$this->userServiceLines)->get();
 		return response()->view('branches.create',compact('servicelines','team','branchRoles'));
@@ -112,7 +112,7 @@ class BranchesController extends BaseController {
 
 		$branch = $this->branch->create($input->all());
 
-		$branch->associatePeople(request()->all());
+		$branch->associatePeople($request);
 		$branch->servicelines()->sync($input['serviceline']);
 		$this->rebuildXMLfile();
 
@@ -173,7 +173,7 @@ class BranchesController extends BaseController {
 		$data['distance'] = '10';
 
 
-		$roles = Role::pluck('name','id');
+		$roles = Role::pluck('display_name','id');
 
 		return response()->view('branches.show',compact('data','servicelines','filtered','roles'));
 	}
@@ -182,7 +182,7 @@ class BranchesController extends BaseController {
 	{
 		$salesteam = $this->branch->with('relatedPeople','servicelines')->find($id);
 
-		$roles = Role::pluck('name','id');
+		$roles = Role::pluck('display_name','id');
 
 		return response()->view('branches.showteam',compact('salesteam','roles'));
 	}
@@ -234,7 +234,7 @@ class BranchesController extends BaseController {
 	{
 		
 
-		$branchRoles = \App\Role::whereIn('id',$this->branch->branchRoles)->pluck('name','id');
+		$branchRoles = \App\Role::whereIn('id',$this->branch->branchRoles)->pluck('display_name','id');
 
 		$team = $this->person->personroles($this->branch->branchRoles);
 		$branch = $this->branch->find($branch->id);	

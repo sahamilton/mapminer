@@ -1,11 +1,8 @@
-@extends('site/layouts/maps')
+@extends('site.layouts.maps')
 @section('content')
 <?php $type='map';?>
 
-@include('branches/partials/_head')
-
-     
-
+@include('branches.partials._head')
 
  <div id="store-locator-container">
 	<div id="map-container">
@@ -17,7 +14,6 @@
       </div>
     </div>
 
-  
    
     <script>
 	  $(function() {
@@ -32,5 +28,5 @@
 
         });
     </script>
-    @include('partials/_copytoclipboard')
+
 @endsection

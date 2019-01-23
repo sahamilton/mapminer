@@ -252,7 +252,7 @@ class LocationsController extends BaseController {
 		
 		
 		$filtered = $this->location->isFiltered(['companies'],['vertical']);
-		$roles = \App\Role::pluck('name','id');
+		$roles = \App\Role::pluck('display_name','id');
 		$mywatchlist= array();
 		$locations = NULL;
 		$branches = $this->branch->with('manager')->findOrFail($id);

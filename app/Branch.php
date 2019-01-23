@@ -2,7 +2,7 @@
 namespace App;
 use\App\Presenters\LocationPresenter;
 use McCool\LaravelAutoPresenter\HasPresenter;
-
+use Illuminate\Http\Request;
 class Branch extends Model implements HasPresenter {
 	use Geocode;
 	public $table ='branches';
@@ -254,15 +254,13 @@ class Branch extends Model implements HasPresenter {
 
 	public function associatePeople(Request $request){
 		$data['roles'] = $this->removeNullsFromSelect(request('roles'));
+		$associatedPeople = array();
 		foreach ($data['roles'] as $key=>$role){
 				foreach ($role as $person){
-				
-					$this->relatedPeople()->sync($person,['role_id'=>$key]);
+					$associatedPeople[$person] = ['role_id'=>$key];
 				}
-				
 			}
-			
-
+		$this->relatedPeople()->sync($associatedPeople);
 	}
 
 }
