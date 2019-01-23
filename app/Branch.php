@@ -252,4 +252,17 @@ class Branch extends Model implements HasPresenter {
 
 	}
 
+	public function associatePeople(Request $request){
+		$data['roles'] = $this->removeNullsFromSelect(request('roles'));
+		foreach ($data['roles'] as $key=>$role){
+				foreach ($role as $person){
+				
+					$this->relatedPeople()->sync($person,['role_id'=>$key]);
+				}
+				
+			}
+			
+
+	}
+
 }

@@ -109,18 +109,10 @@ class BranchesController extends BaseController {
 		// Attempt to geo code the new branch address	
 		$input = $this->getbranchGeoCode($request);
 		// add lat lng to location
-		
+
 		$branch = $this->branch->create($input->all());
 
-		foreach ($input['roles'] as $key=>$role){
-			
-				foreach ($role as $person){
-				
-					$branch->relatedPeople()->sync($person,['role_id'=>$key]);
-				}
-				
-			}
-
+		$branch->associatePeople(request()->all());
 		$branch->servicelines()->sync($input['serviceline']);
 		$this->rebuildXMLfile();
 
@@ -202,7 +194,7 @@ class BranchesController extends BaseController {
 	 * @return View
 	 */
 	
-	public function showNearbyBranches(Request $request, $id)
+	public function showNearbyBranches(Request $request, $branch)
 	{
 		
 
@@ -212,8 +204,8 @@ class BranchesController extends BaseController {
 		}else{
 			$data['distance'] = '50';
 		}
-		
-		$data['branches'] = $this->branch->findOrFail($id);
+		$data['branch'] = $branch;
+		//$data['branches'] = $this->branch->nearby($branch,25,5)->get();
 
 		return response()->view('branches.nearby', compact('data'));
 	}
@@ -222,10 +214,10 @@ class BranchesController extends BaseController {
 	 *
 	 * @return Response json
 	 */
-	public function map(Request $request, $id)
+	public function map(Request $request, $branch)
 	{
 		
-		$locations = Location::where('branch_id','=',$id)->get();
+		$locations = Location::nearby($branch,25)->get();
 
 		return response()->json(array('error'=>false,'locations' =>$locations->toArray()),200)->setCallback(request('callback'));
 
@@ -264,22 +256,11 @@ class BranchesController extends BaseController {
 	public function update(BranchFormRequest $request,$branch)
 	{
 
-		$data['roles'] = $this->branch->removeNullsFromSelect(request('roles'));
+		
 		$request = $this->getbranchGeoCode($request);
 		$branch->update($request->all());
-
-		foreach ($data['roles'] as $key=>$role){
-				foreach ($role as $person_id){
-					
-					$branchAssociations[$person_id]=['role_id'=>$key];
-				}
-				
-			}
-			if(isset($branchAssociations)){
-					
-				$branch->relatedPeople()->sync($branchAssociations);
-			}
-
+		$branch->associatePeople($request);
+		
 		$branch->servicelines()->sync(request('serviceline'));
 		$this->rebuildXMLfile();
 		return redirect()->route('branches.show',$branch->id );
@@ -330,17 +311,17 @@ class BranchesController extends BaseController {
 	 *
 	 * @param  int $id
 	 * @return Response XML
-	 */	public function getNearbyBranches(Request $request, $id)
+	 */	public function getNearbyBranches(Request $request, $branch)
 	
 	{
-
+		
 		if (request()->filled('d')) {
 			$distance = request('d');
 
 		}else{
 			$distance = '50';
 		}
-		$branch = $this->branch->findOrFail($id);
+		
 
 		$servicelines = $this->userServiceLines;
 	
@@ -382,23 +363,23 @@ class BranchesController extends BaseController {
 	 * @param  int $state
 	 * @return Response XML
 	 */
-	public function getStateBranches($state)
+	/*public function getStateBranches($state)
 	
 	{
+		
 		$branches= $this->retrieveStateBranches($state);
 		
-		
-	
+
 
 		$fullState = $this->state->getStates();
-		$data['fullstate'] = $fullState[$state];
-		$data['state'] = $state;
+		$data['fullstate'] = $fullState[strtoupper($state)];
+		$data['state'] = strtoupper($state);
 
 		return response()->view('branches.state', compact('data','branches'));
 		
 
-		
-	}
+		*/
+		//superceded by function state
 	
 	public function makeStateMap($state){
 		$branches = $this->branch->with('servicelines')->where('state','=',$state)->get();
