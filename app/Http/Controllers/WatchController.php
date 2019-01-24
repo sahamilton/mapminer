@@ -136,7 +136,7 @@ class WatchController extends BaseController {
 	
 	public function showwatchmap() {
 		$data = NULL;
-		$result = $this->getMyWatchList(auth()->user()->id);
+		$result = $this->watch->getMyWatchList(auth()->user()->id);
 		if(count($result) >0){
 		foreach ($result as $row) {
 			
