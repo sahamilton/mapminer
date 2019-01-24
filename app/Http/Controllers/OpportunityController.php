@@ -47,18 +47,20 @@ class OpportunityController extends Controller
     {
         $activityTypes = ActivityType::all();
         $myBranches = array_keys($this->person->myBranches());
-       
-        if(! auth()->user()->hasRole('Branch Manager') && $this->person->myTeam()->count() >1){
-             $data = $this->getMarketManagerData($myBranches);
-            // need to get all the activities esp conversions / closes
-            return response()->view('opportunities.mgrindex',compact('data','activityTypes'));
-        } else{
-          
-             $data = $this->getBranchOpportunities($myBranches);
-
-            return response()->view('opportunities.index',compact('data','activityTypes'));
-        
+        if(count($myBranches)>0){
+            if(! auth()->user()->hasRole('branch_manager') && $this->person->myTeam()->count() >1){
+                 $data = $this->getMarketManagerData($myBranches);
+                // need to get all the activities esp conversions / closes
+                return response()->view('opportunities.mgrindex',compact('data','activityTypes'));
+            } else{
+              
+                 $data = $this->getBranchOpportunities($myBranches);
+               
+                return response()->view('opportunities.index',compact('data','activityTypes'));
+            
+            }
         }
+        return redirect()->route('user.show',auth()->user()->id)->withWarning("You are not assigned to any branches. You can assign yourself here or contact Sales Ops");
         // if no branches abort
         // if no branches then select branc / Sales OPs
     }

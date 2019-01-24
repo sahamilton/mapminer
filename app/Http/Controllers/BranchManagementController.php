@@ -88,16 +88,20 @@ class BranchManagementController extends Controller
     public function update(BranchManagementRequest $request, $id)
     {
 
+
         if(! auth()->user()->hasRole('Admin')){
             
             $id = auth()->user()->id;
         }
 
         $person = $this->person->whereUser_id($id)->firstorFail();
+        $role = $person->findRole();
+    
         // this is odd!  Why both role?
         //$role = $person->getPrimaryRole($person);
-        $role = $person->whereUser_id($id)->primaryRole();                  
-        $branches = $this->branchmanagement->getBranches($request,$role);
+         
+                
+        $branches = $this->branchmanagement->getBranches($request,$role[0]);
         $person->branchesServiced()->sync($branches);
 
         return redirect()->route('user.show',$id)
