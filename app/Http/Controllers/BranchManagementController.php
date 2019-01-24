@@ -96,11 +96,6 @@ class BranchManagementController extends Controller
 
         $person = $this->person->whereUser_id($id)->firstorFail();
         $role = $person->findRole();
-    
-        // this is odd!  Why both role?
-        //$role = $person->getPrimaryRole($person);
-         
-                
         $branches = $this->branchmanagement->getBranches($request,$role[0]);
         $person->branchesServiced()->sync($branches);
 
