@@ -19,7 +19,8 @@ class MyLead extends Lead
 			'description',
 			'lat',
 			'lng',
-			'lead_source_id'];
+			'lead_source_id',
+            'user_id'];
 	public $getStatusOptions =  [
     
         1=>'Prospect data is completely inaccurate. No project or project completed.',

@@ -49,4 +49,6 @@
         </span>
     </div>
 </div>
+@if(isset($address->company))
 <p>A {{$address->company->companyname}} location</p>
+@endif

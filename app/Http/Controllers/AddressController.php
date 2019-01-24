@@ -106,7 +106,8 @@ class AddressController extends Controller
         $geocode = app('geocoder')->geocode(request('address'))->get();
         $data = $this->address->getGeoCode($geocode);
         $data['businessname'] =request('businessname');
-        $data['phone'] = request('phone');
+      
+        $data['phone'] = preg_replace("/[^0-9]/","",request('phone'));
         $address->update($data);
         return redirect()->route('address.show',$address->id)->withMessage('Location updated');
     }

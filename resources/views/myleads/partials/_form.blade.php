@@ -10,7 +10,7 @@
         class="form-control" 
         name='companyname' 
         description="source" 
-        value="{{ old('companyname', isset($mylead) ? $mylead->companyname : '' )}}" 
+        value="{{ old('companyname', isset($location) ? $location->businessname : '' )}}" 
         placeholder="companyname">
         <span class="help-block">
             <strong>{{ $errors->has('companyname') ? $errors->first('companyname') : ''}}</strong>
@@ -25,7 +25,7 @@
         class="form-control" 
         name='address' 
         description="address" 
-        value="{{ old('address', isset($mylead) ? $mylead->fullAddress() : '' )}}" 
+        value="{{ old('address', isset($location) ? $location->fullAddress() : '' )}}" 
         placeholder="address, city state zip">
         <span class="help-block">
             <strong>{{ $errors->has('address') ? $errors->first('address') : ''}}</strong>
@@ -41,24 +41,27 @@
         class="form-control" 
         name='phone' 
         description="phone" 
-        value="{{ old('phone', isset($mylead) ? $mylead->phone : '' )}}" 
+        value="{{ old('phone', isset($location) ? $location->phone : '' )}}" 
         placeholder="phone">
         <span class="help-block">
             <strong>{{ $errors->has('phone') ? $errors->first('phone') : ''}}</strong>
         </span>
     </div>
 </div>
-@if($data['branches']->count()>1)
-<div class="form-group row{{ $errors->has('phone') ? ' has-error' : '' }}">
-    <label for="phone" class="col-md-2 control-label">Phone: </label>
-     <div class="col-sm-8">
-        <select required name="branch_id">
-            @foreach ($mybranches as $branch)
-                <option value="{{$branch->id}}">{{$branch->branchname}}</option>
-            @endforeach
-        </select>
+@if(isset($data))
+    @if($data['branches']->count()>1)
+
+    <div class="form-group row{{ $errors->has('phone') ? ' has-error' : '' }}">
+        <label for="phone" class="col-md-2 control-label">Phone: </label>
+         <div class="col-sm-8">
+            <select required name="branch_id">
+                @foreach ($mybranches as $branch)
+                    <option value="{{$branch->id}}">{{$branch->branchname}}</option>
+                @endforeach
+            </select>
+        </div>
     </div>
-</div>
-@else
-<input type ="hidden" name="branch_id" value="{{$data['branches']->first()->id}}" />
+    @else
+    <input type ="hidden" name="branch_id" value="{{$data['branches']->first()->id}}" />
+    @endif
 @endif
