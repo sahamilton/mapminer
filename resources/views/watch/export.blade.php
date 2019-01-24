@@ -1,42 +1,42 @@
 <table>
 	<tbody>
 		<tr>
-		<td>businessname</td>
-		<td>lat</td>
-		<td>lng</td>
-		<td>companyname</td>
-		<td>street</td>
-		<td>address</td>
-		<td>city</td>
-		<td>state</td>
-		<td>zip</td>
-		<td>contact</td>
-		<td>phone</td>
-		<td>watchnotes</td>
+			<td>businessname</td>
+			<td>lat</td>
+			<td>lng</td>
+			<td>companyname</td>
+			<td>street</td>
+			<td>address</td>
+			<td>city</td>
+			<td>state</td>
+			<td>zip</td>
+			<td>contact</td>
+			<td>phone</td>
+			<td>watchnotes</td>
 			
 		</tr>
 		@foreach($result as $watch)
-		
-			<tr>  
-				@foreach ($watch->watching as $company)
-					<td>{{$company->businessname}}</td>
-					<td>{{$company->lat}}</td>
-					<td>{{$company->lng}}</td>
-					<td>{{$company->company->companyname}}</td>
-					<td>{{$company->street}}</td>
-					<td>{{$company->address}}</td>
-					<td>{{$company->city}}</td>
-					<td>{{$company->state}}</td>
-					<td>{{$company->zip}}</td>
-					<td>{{$company->contact}}</td>
-					<td>{{$company->phone}}</td>
-				@endforeach
-				<td>
+
+		<tr> 
+			<td>{{$watch->watching->businessname}}</td>
+			<td>{{$watch->watching->lat}}</td>
+			<td>{{$watch->watching->lng}}</td>
+			<td>{{$watch->watching->company->companyname}}</td>
+			<td>{{$watch->watching->street}}</td>
+			<td>{{$watch->watching->address}}</td>
+			<td>{{$watch->watching->city}}</td>
+			<td>{{$watch->watching->state}}</td>
+			<td>{{$watch->watching->zip}}</td>
+			<td>{{$watch->watching->contact}}</td>
+			<td>{{$watch->watching->phone}}</td>
+
+
+			<td>
 				@foreach ($watch->watchnotes as $notes)
 					{{$notes->watchnotes}}
 				@endforeach
-				</td>
-			</tr>
+			</td>
+		</tr>
 		@endforeach
 	</tbody>
 </table>
