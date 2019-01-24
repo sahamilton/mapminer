@@ -105,6 +105,7 @@ class AddressController extends Controller
     {
         $geocode = app('geocoder')->geocode(request('address'))->get();
         $data = $this->address->getGeoCode($geocode);
+
         $data['businessname'] =request('businessname');
       
         $data['phone'] = preg_replace("/[^0-9]/","",request('phone'));
