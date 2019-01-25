@@ -92,8 +92,8 @@ class LeadSourceController extends Controller
     {
 
    
-        $leadsource = $leadsource->load('leads','unassignedLeads','closedLeads');
-
+        $leadsource = $leadsource->whereId($leadsource->id)->withCount('leads','unassignedLeads','closedLeads')->first();
+        dd($leadsource);
         $teamStats  = $this->getSalesTeam($leadsource->id);
         $salesteams = $this->person->with('reportsTo')->whereIn('id',array_keys($teamStats))->get();
        
