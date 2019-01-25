@@ -88,7 +88,7 @@
 						@if($user->person->reportsTo)
 							<li>Reports To:
 
-							<a href="{{route('salesorg',$user->person->reportsTo->id)}}">
+							<a href="{{route('salesorg.show',$user->person->reportsTo->id)}}">
 								{{$user->person->reportsTo->fullName()}}
 							</a>
 						@endif

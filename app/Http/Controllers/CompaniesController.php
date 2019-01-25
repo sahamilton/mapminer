@@ -47,9 +47,10 @@ class CompaniesController extends BaseController {
 
 	public function index()
 	{
-
+		$filtered = $this->company->isFiltered(['companies'],['vertical']);
+		
 		$myLocation =$this->locations->getMyPosition();
-		//$filtered = $this->company->filtered(['companies'],['vertical']);
+		
 		$companies = $this->company->whereHas('locations', function ($q) use ($myLocation){
 			$q->nearby($myLocation,25);
 		})
@@ -57,7 +58,7 @@ class CompaniesController extends BaseController {
 			->with('managedBy','managedBy.userdetails','industryVertical','serviceline')
 		->get();
 
-
+		$locationFilter = 'both';
 		return response()->view('companies.index', compact('companies','title','filtered','locationFilter'));
 	}
 

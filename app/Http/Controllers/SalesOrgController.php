@@ -33,7 +33,7 @@ class SalesOrgController extends BaseController {
 
 	public function show(Request $request,Person $salesperson){
 		
-
+		
 		if( $salesperson->isLeaf())
 			{
 			

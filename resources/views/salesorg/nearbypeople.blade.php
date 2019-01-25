@@ -22,7 +22,7 @@ $data['type'] ='people';
 <tbody>
 @foreach ($people as $person)
 <tr>
-	<td><a href="{{route('salesorg',$person->id)}}">{{$person->fullName()}}</a></td>
+	<td><a href="{{route('salesorg.show',$person->id)}}">{{$person->fullName()}}</a></td>
 	<td>
 		@foreach ($person->userdetails->roles as $role)
 			{{$role->display_name}}

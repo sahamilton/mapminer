@@ -19,7 +19,7 @@
         
             <tr> 
 
-                <td><a href="{{route('salesorg',$person->id)}}"  
+                <td><a href="{{route('salesorg.show',$person->id)}}"  
                     title="See {{$person->postName()}}'s details">{{$person->postName()}}</a>
 
                     <span type="button" class="far fa-copy btn-copy js-tooltip js-copy" 
