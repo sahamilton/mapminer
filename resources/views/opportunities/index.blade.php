@@ -5,10 +5,7 @@
 @include('maps.partials._form')
 
 <h2>{{$data['branches']->first()->branchname}} Branch Dashboard</h2>
-@if($data['branches']->count()>1)
-add selector
 
-@endif
  <nav>
 
   <div class="nav  nav-tabs"  id="nav-tab"  role="tablist">
