@@ -55,7 +55,7 @@ class OpportunityController extends Controller
                 return response()->view('opportunities.mgrindex',compact('data','activityTypes'));
             } else{
               
-                 $data = $this->getBranchOpportunities($myBranches);
+              $data = $this->getBranchOpportunities($myBranches);
                return response()->view('opportunities.mgrindex',compact('data','activityTypes'));
                // return response()->view('opportunities.index',compact('data','activityTypes'));
             
@@ -66,13 +66,18 @@ class OpportunityController extends Controller
         // if no branches then select branc / Sales OPs
     }
 
-    public function branchOpportunities($branch_id){
+    public function branchOpportunities(Branch $branch, Request $reqeust){
 
+       if(request()->has('branch')){
+            $data = $this->getBranchOpportunities([request('branch')]);
+       }else{
+             $data = $this->getBranchOpportunities([$branch->id]);
+       }
        $activityTypes = $activityTypes = ActivityType::all();
-       $data = $this->getBranchOpportunities([$branch_id]);
-      
        
-        return response()->view('opportunities.index',compact('data','activityTypes'));
+       $myBranches = $this->person->myBranches();
+       
+        return response()->view('opportunities.index',compact('data','activityTypes','myBranches'));
     }
 
     

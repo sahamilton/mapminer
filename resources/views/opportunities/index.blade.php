@@ -5,7 +5,18 @@
 @include('maps.partials._form')
 
 <h2>{{$data['branches']->first()->branchname}} Branch Dashboard</h2>
-
+@if(count($myBranches)>1)
+<div class="col-sm-2">
+<form name="selectbranch" method="post" action="{{route('opportunities.branch')}}" >
+@csrf
+ <select class="form-control input-sm" id="branchselect" name="branch" onchange="this.form.submit()">
+  @foreach ($myBranches as $key=>$branch)
+    <option {{$data['branches']->first()->id == $key ? 'selected' : ''}} value="{{$key}}">{{$branch}}</option>
+  @endforeach 
+</select>
+</form>
+</div>
+@endif
  <nav>
 
   <div class="nav  nav-tabs"  id="nav-tab"  role="tablist">
