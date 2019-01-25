@@ -40,7 +40,7 @@ class LeadSource extends Model
     }
 
     public function salesteam($id){
-      $query ="SELECT persons.id as id,concat_ws(' ',`firstname`,`lastname`) as `name`,`lead_person_status`.`status_id`, count(*)
+      $query ="SELECT persons.id as id,concat_ws(' ',`firstname`,`lastname`) as `name`,`lead_person_status`.`status_id`, count(*) as count
       FROM `lead_person_status` ,addresses,persons
       where related_id = addresses.addressable_id 
       and person_id = persons.id

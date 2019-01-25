@@ -9,9 +9,9 @@
 
 
         <th>Sales Rep</th>
-        <td>Offered Prospects</td>
-        <td>Owned Prospects</td>
-        <td>Closed Prospects</td>
+        @foreach ($statuses as $status)
+        <td>{{$status}} Prospects</td>
+        @endforeach
         <td>Total Prospects</td>
 
     </thead>
@@ -19,7 +19,7 @@
         @php $id=null;@endphp
         @foreach($teamStats as $team)
 
-       {{dd($team)}}
+      
             @if($team->id!=$id) 
             <tr> 
                 <td>
@@ -28,10 +28,12 @@
                     </a>
                 </td>
             @endif
-            <td></td>
-            <td>{{$team-></td>
-            <td></td>
-            <td></td>
+            @foreach($statuses as $key=>$status)
+                @if($key == $team->status_id)
+                    @php str_repeat("<td></td>",$team->status_id);@endphp
+                    <td>{{$team->count}}</td>
+                @endif
+            @endforeach
         @if( $team->id != $id)
             @php $id = $team->id;@endphp
             </tr>
