@@ -9,10 +9,6 @@
 
 
         <th>Sales Rep</th>
-        <td>Manager</td>
-        <td>Location</td>
-       
-        
         <td>Offered Prospects</td>
         <td>Owned Prospects</td>
         <td>Closed Prospects</td>
@@ -20,26 +16,26 @@
 
     </thead>
     <tbody>
+        @php $id=null;@endphp
+        @foreach($teamStats as $team)
 
-        @foreach($salesteams as $team)
-
-        <tr>  
-            <td>
-                <a href="{{route('leads.personsource',[$team->id,$leadsource->id])}}">
-                    {{$team->postName()}}
-                </a>
-            </td>
-            <td>
-                @if($team->reportsTo)
-                    {{$team->reportsTo->postName()}}
-                @endif
-            </td>
-            <td>{{$team->city}} {{$team->state}}</td>
-            <td>{{$teamStats[$team->id][1]}}</td>
-            <td>{{$teamStats[$team->id][2]}}</td>
-            <td>{{$teamStats[$team->id][3]}}</td>
-            <td>{{$teamStats[$team->id][1] + $teamStats[$team->id][2] + $teamStats[$team->id][3]}}</td>
-        </tr>
+       {{dd($team)}}
+            @if($team->id!=$id) 
+            <tr> 
+                <td>
+                    <a href="{{route('leads.personsource',[$team->id,$leadsource->id])}}">
+                        {{$team->name}}
+                    </a>
+                </td>
+            @endif
+            <td></td>
+            <td>{{$team-></td>
+            <td></td>
+            <td></td>
+        @if( $team->id != $id)
+            @php $id = $team->id;@endphp
+            </tr>
+        @endif
         @endforeach
 
     </tbody>

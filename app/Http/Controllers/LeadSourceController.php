@@ -93,18 +93,15 @@ class LeadSourceController extends Controller
 
    
         $leadsource = $leadsource->whereId($leadsource->id)->withCount('leads','unassignedLeads','closedLeads')->first();
-        dd($leadsource);
-        $teamStats  = $this->getSalesTeam($leadsource->id);
-        $salesteams = $this->person->with('reportsTo')->whereIn('id',array_keys($teamStats))->get();
-       
+        $teamStats = $leadsource->salesteam($leadsource->id);
+              
        // $data = $this->leadsource->leadRepStatusSummary($id);
         $statuses = LeadStatus::pluck('status','id')->toArray();
 
-       // $data = $this->reformatRepsData($data);
-        dd($leadsource->leads->count(),$teamStats, $salesteams);
+       
        
 
-        return response()->view('leadsource.show',compact('salesteams','statuses','teamStats','leadsource'));
+        return response()->view('leadsource.show',compact('statuses','teamStats','leadsource'));
     }
 
     private function getOwnedBy($leads){

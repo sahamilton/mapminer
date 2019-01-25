@@ -39,6 +39,18 @@ class LeadSource extends Model
        
     }
 
+    public function salesteam($id){
+      $query ="SELECT persons.id as id,concat_ws(' ',`firstname`,`lastname`) as `name`,`lead_person_status`.`status_id`, count(*)
+      FROM `lead_person_status` ,addresses,persons
+      where related_id = addresses.addressable_id 
+      and person_id = persons.id
+      and addresses.lead_source_id = ". $id . "
+      group by name,id,lead_person_status.status_id
+      order by persons.id,lead_person_status.status_id";
+
+      return \DB::select($query); 
+    }
+
      public function assignedTo($id= null){
         $leads = $this->with('leads')->findOrFail($id);
 
@@ -51,15 +63,7 @@ class LeadSource extends Model
      }
 
      public function unassignedLeads(){
-          /*return $this->select('leads.*') 
-          ->join('leads','leadsources.id','=','leads.lead_source_id')
-          ->leftjoin('lead_person_status','leads.id','=','lead_person_status.related_id')
-          ->whereRaw('lead_person_status.related_id is null')
-          ->where('leads.lead_source_id','=',$id);*/
-
-
-
-            return $this->hasMany(Lead::class, 'lead_source_id')->doesntHave('salesteam');
+          return $this->hasMany(Lead::class, 'lead_source_id')->doesntHave('salesteam');
 
      }
      public function closedLeads(){
