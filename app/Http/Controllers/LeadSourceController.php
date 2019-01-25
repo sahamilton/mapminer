@@ -93,8 +93,13 @@ class LeadSourceController extends Controller
 
    
         $leadsource = $leadsource->whereId($leadsource->id)->withCount('leads','unassignedLeads','closedLeads')->first();
-        $teamStats = $leadsource->salesteam($leadsource->id);
-              
+        $team = $leadsource->salesteam($leadsource->id);
+        foreach ($team as $person){
+           
+            $teamStats[$person->id][$person->status_id]= $person->count;
+            $teamStats[$person->id]['name'] = $person->name;
+        }
+
        // $data = $this->leadsource->leadRepStatusSummary($id);
         $statuses = LeadStatus::pluck('status','id')->toArray();
 

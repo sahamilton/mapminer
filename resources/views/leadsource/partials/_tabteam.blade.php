@@ -15,29 +15,27 @@
         <td>Total Prospects</td>
 
     </thead>
-    <tbody>
-        @php $id=null;@endphp
-        @foreach($teamStats as $team)
-
-      
-            @if($team->id!=$id) 
-            <tr> 
+           
+        @foreach($teamStats as $person=>$stats)
+          
+           <tr>  @php $total = 0;@endphp
                 <td>
-                    <a href="{{route('leads.personsource',[$team->id,$leadsource->id])}}">
-                        {{$team->name}}
-                    </a>
+                    <a href="{{route('leads.personsource',[$person,$leadsource->id])}}">
+                        {{$stats['name']}}</a>
                 </td>
-            @endif
+
             @foreach($statuses as $key=>$status)
-                @if($key == $team->status_id)
-                    @php str_repeat("<td></td>",$team->status_id);@endphp
-                    <td>{{$team->count}}</td>
+            
+                <td>
+                @if(isset($stats[$key]))
+                   
+                   {{$stats[$key]}} 
+                   @php $total += $stats[$key];@endphp
                 @endif
+                </td>
             @endforeach
-        @if( $team->id != $id)
-            @php $id = $team->id;@endphp
-            </tr>
-        @endif
+            <td>{{$total}}</td>
+        </tr>
         @endforeach
 
     </tbody>
