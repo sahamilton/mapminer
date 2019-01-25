@@ -217,7 +217,7 @@
                                     Your Profile
                                     </a>
                                     </li>
-                                    @if(auth()->user()->hasRole('Admin')) 
+                                    @if(auth()->user()->hasRole('admin')) 
                                         <li>
                                             <a href="{{route('about')}}">
                                                 <i class="far fa-info-circle" aria-hidden="true"> </i> 

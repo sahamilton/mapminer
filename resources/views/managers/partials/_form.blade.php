@@ -2,7 +2,7 @@
 <!-- {{Form::open(array('route'=>'managers.view','class'=>'form', 'id'=>'selectAccount'))}}-->
 {{csrf_field()}}
 
-@if (auth()->user()->hasRole('Admin')) 
+@if (auth()->user()->hasRole('admin')) 
 
 
 <div class="row">

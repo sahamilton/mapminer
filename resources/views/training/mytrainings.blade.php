@@ -12,7 +12,7 @@ a.viewtraining{
 </style>
 <div class="container">
 
-    @if(auth()->user()->hasRole('Admin'))
+    @if(auth()->user()->hasRole('admin'))
     <h2>All Trainings</h2>
     <a href="{{route('training.create')}}" class="btn btn-info pull-right">
     <i class="fas fa-plus-circle"></i>
@@ -34,7 +34,7 @@ a.viewtraining{
                     </a>
 
                     <p>
-                    @if(auth()->user()->hasRole('Admin'))
+                    @if(auth()->user()->hasRole('admin'))
                         @foreach ($training->relatedRoles as $role)
                             {{$role->name}}
                             @if(! $loop->last),@endif

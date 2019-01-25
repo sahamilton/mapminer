@@ -93,7 +93,7 @@
  @if (auth()->check())
 					<ul class="nav navbar-nav float-right">
  						
-                        @if (auth()->user()->hasRole('Admin'))
+                        @if (auth()->user()->hasRole('admin'))
                          <li class="dropdown{{ (Request::is('admin/users*|admin/roles*') ? ' active' : '') }}">
     						<a class="dropdown-toggle" data-toggle="dropdown" href="{{{ URL::to('admin/users') }}}">
     							<i class="far fa-user" aria-hidden="true"></i> Users <span class="caret"></span>

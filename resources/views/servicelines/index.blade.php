@@ -3,7 +3,7 @@
 
 <h1>Service Lines</h1>
 
- @if (auth()->user()->hasRole('Admin'))
+ @if (auth()->user()->hasRole('admin'))
 <div class="float-right">
 				<p><a href="{{{ route('serviceline.create') }}}" class="btn btn-small btn-info iframe">
 <i class="fas fa-plus-circle " aria-hidden="true"></i>
@@ -19,7 +19,7 @@
      <th>Branches</th>
      <th>Users</th>
 
-     @if (auth()->user()->hasRole('Admin'))
+     @if (auth()->user()->hasRole('admin'))
 
      <th>Actions</th>
      @endif
@@ -66,7 +66,7 @@
 	</td>
 
 	
-	@if(auth()->user()->hasRole('Admin'))
+	@if(auth()->user()->hasRole('admin'))
 	<td>
 
             @include('partials/_modal')

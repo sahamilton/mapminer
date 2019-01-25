@@ -10,7 +10,7 @@
 
 @foreach ($location->project->relatedNotes as $note)
 	<td>{{$note->created_at->format('m-d-Y')}}</td>
-	<td>@if($location->project->owned()  or auth()->user()->hasRole('Admin'))
+	<td>@if($location->project->owned()  or auth()->user()->hasRole('admin'))
 		<a href="#" class="note"  id='{{$note->id}}' data-type="textarea" data-pk="1">
 		{{$note->note}}</a>
 	@else
@@ -25,7 +25,7 @@
 	 @endif
 	 </td>
 	 <td>
-	@if($location->project->owned()  or auth()->user()->hasRole('Admin'))
+	@if($location->project->owned()  or auth()->user()->hasRole('admin'))
 		
 		<a href="{{route('notes.edit',$note->id)}}" title="Edit this note">
 

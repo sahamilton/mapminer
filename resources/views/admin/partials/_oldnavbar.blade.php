@@ -12,7 +12,7 @@
                 <div class="collapse navbar-collapse navbar-ex1-collapse">
                     <ul class="nav navbar-nav">
                       
-                 		@if(auth()->user()->hasRole('Admin'))
+                 		@if(auth()->user()->hasRole('admin'))
                     	<li><a href="{{route('dashboard')}}">
                         <i class="far fa-tachometer" aria-hidden="true"> </i> Dashboard</a></li>
                         @endif
@@ -209,7 +209,7 @@
                                     Your Profile
                                     </a>
                                     </li>
-                                    @if(auth()->user()->hasRole('Admin')) 
+                                    @if(auth()->user()->hasRole('admin')) 
                                         <li>
                                             <a href="{{route('about')}}">
                                                 <i class="far fa-info-circle" aria-hidden="true"> </i> 

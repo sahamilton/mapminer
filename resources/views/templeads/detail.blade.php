@@ -5,7 +5,7 @@
   @if($lead->salesteam->count()>0)
  
     <h4>Lead assigned to <a href="{{route('salesrep.newleads',$lead->salesteam->first()->id)}}">{{$lead->salesteam->first()->postName()}}</a></h4>
-    @if(auth()->user()->hasRole('Admin'))
+    @if(auth()->user()->hasRole('admin'))
     <p text-danger">
               <a data-href="{{route('webleads.unassign',$lead->id)}}" 
                 data-toggle="modal" 
@@ -20,7 +20,7 @@
     <div class="row">
       <p><strong>Status:</strong>{{$leadStatuses[$lead->salesteam->first()->pivot->status_id]}}</p>
       
-    @if((auth()->user()->person->id == $lead->salesteam->first()->id) or (auth()->user()->hasRole('Admin')) && $lead->salesteam->first()->pivot->status_id != 3)
+    @if((auth()->user()->person->id == $lead->salesteam->first()->id) or (auth()->user()->hasRole('admin')) && $lead->salesteam->first()->pivot->status_id != 3)
 </div>
       <button type="button" class="btn btn-info " data-toggle="modal" data-target="#closelead">
       Close Lead</button>

@@ -16,7 +16,7 @@
 			<th>Service Lines</th>
 
 
-			@if (auth()->user()->hasRole('Admin') or auth()->user()->hasRole('Sales Operations'))
+			@if (auth()->user()->hasRole('admin') or auth()->user()->hasRole('sales_operations'))
 
 			<th>Actions</th>
 			@endif
@@ -81,7 +81,7 @@
 				</ul>
 			</td>
 
-			@if (auth()->user()->hasRole('Admin') or auth()->user()->hasRole('Sales Operations'))
+			@if (auth()->user()->hasRole('admin') or auth()->user()->hasRole('sales_operations'))
 				<td>
 
 

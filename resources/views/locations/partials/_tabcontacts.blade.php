@@ -27,7 +27,7 @@
 		@foreach ($location->contacts as $contact)
 			<tr>
 				<td>
-					@if($contact->user_id == auth()->user()->id or auth()->user()->hasRole('Admin'))
+					@if($contact->user_id == auth()->user()->id or auth()->user()->hasRole('admin'))
 						<a 
 						    style="color:red" 
 						    data-href="{{route('contacts.destroy',$contact->id)}}"

@@ -7,7 +7,7 @@
 <i class="fas fa-plus-circle " aria-hidden="true"></i>
 Add Feedback</a>
 </div>
-@if (auth()->user()->hasRole('Admin'))
+@if (auth()->user()->hasRole('admin'))
 	<a href="{{route('comment.download')}}">Download feedback to Excel</a>
 @endif
 <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
@@ -29,7 +29,7 @@ Add Feedback</a>
 				<td>{{comment}}</td>
 				<td>{{comment_status}}</td>
 				<td>{{user_id}}</td>
-				@if(auth()->user()->hasRole('Admin'))
+				@if(auth()->user()->hasRole('admin'))
 					<td>
 					@include('partials/_modal')
 

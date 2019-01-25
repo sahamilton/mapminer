@@ -19,7 +19,7 @@ $data['companyname']=$company->companyname;
 @include('maps.partials._form')
 @include('companies.partials._state')
 @include('partials.advancedsearch')
-@if(auth()->user()->hasRole('Admin'))
+@if(auth()->user()->hasRole('admin'))
 	<div class="float-right">
 		<a href="{{{ route('locations.create') }}}" class="btn btn-small btn-info iframe">
 			<i class="fas fa-plus-circle " aria-hidden="true"></i>
@@ -36,7 +36,7 @@ $data['companyname']=$company->companyname;
 	     <th>Contact</th>
 	     <th>Phone</th>
 	     <th>Watching</th>
-	     @if(auth()->user()->hasRole('Admin'))
+	     @if(auth()->user()->hasRole('admin'))
 	     	<th>Actions</th>
 	     @endif
     </thead>
@@ -62,7 +62,7 @@ $data['companyname']=$company->companyname;
 		 type='checkbox' name='watchList' class='watchItem'  
 		 value='{{$location->id}}' >
 	</td>
-	@if(auth()->user()->hasRole('Admin'))
+	@if(auth()->user()->hasRole('admin'))
 		<td>
 			@include('partials/_modal')
 

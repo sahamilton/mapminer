@@ -88,19 +88,20 @@ class LeadSourceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($leadsource)
     {
 
-  
-        $leadsource = $this->leadsource->with('leads','unassignedLeads','closedLeads')->findOrFail($id);
-        $teamStats  = $this->getSalesTeam($id);
+   
+        $leadsource = $leadsource->load('leads','unassignedLeads','closedLeads');
+
+        $teamStats  = $this->getSalesTeam($leadsource->id);
         $salesteams = $this->person->with('reportsTo')->whereIn('id',array_keys($teamStats))->get();
        
        // $data = $this->leadsource->leadRepStatusSummary($id);
         $statuses = LeadStatus::pluck('status','id')->toArray();
 
        // $data = $this->reformatRepsData($data);
-    
+        dd($leadsource->leads->count(),$teamStats, $salesteams);
        
 
         return response()->view('leadsource.show',compact('salesteams','statuses','teamStats','leadsource'));

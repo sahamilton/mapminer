@@ -6,7 +6,7 @@
 <div class='col-md-8'>
 <h3>{{ $news->title }}</h3>
 <p><a href="{{route('currentnews')}}">Return to all news</a></p>
-@if(auth()->user()->hasRole('Admin'))
+@if(auth()->user()->hasRole('admin'))
 <div class="float-right">
 <a href="{{route('news.edit',$news->id)}}">
 <button class="btn btn-info">
@@ -49,7 +49,7 @@
 	            <i class="far fa-user" aria-hidden="true"></i> by <span class="muted">{{ isset($comment->postedBy) ?  
 	            $comment->postedBy->person->postName() :'Anonymous' }}</span>
 
-	            @if($comment->user_id == auth()->user()->id  or auth()->user()->hasRole('Admin'))
+	            @if($comment->user_id == auth()->user()->id  or auth()->user()->hasRole('admin'))
 				<a href="{{route('comment.edit',$comment->id)}}" title="Edit this comment"><i class="far fa-edit text-info"" aria-hidden="true"></i></a> | 
 
 				<a data-href="{{route('comment.destroy',$comment->id)}}" 

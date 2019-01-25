@@ -23,7 +23,7 @@
 	 @endif
 	 </td>
 	 <td>
-	@if($project->owned()  or auth()->user()->hasRole('Admin'))
+	@if($project->owned()  or auth()->user()->hasRole('admin'))
 		
 		<a href="{{route('notes.edit',$note->id)}}" title="Edit this note">
 

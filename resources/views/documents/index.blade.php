@@ -3,7 +3,7 @@
 <div class="container">
     <h2>Document Library</h2>
 
-    @if(auth()->user()->hasRole('Admin'))
+    @if(auth()->user()->hasRole('admin'))
     <div class="float-right">
         <a href ="{{route('documents.create')}}">
             <button class="btn btn-success" >
@@ -26,7 +26,7 @@
             <th>Location</th>
             <th>Rank</th>
             <th>Rated By</th>
-            @if(auth()->user()->hasRole('Admin'))
+            @if(auth()->user()->hasRole('admin'))
             <th>Actions</th>
             @endif
             </thead>
@@ -65,7 +65,7 @@
             {{$document->rankings->count()}}
             @endif
             </td>
-            @if(auth()->user()->hasRole('Admin'))
+            @if(auth()->user()->hasRole('admin'))
             <td class="col-md-2">
 
 

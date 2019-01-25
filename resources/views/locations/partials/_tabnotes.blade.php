@@ -9,7 +9,7 @@
 		 No longer with company
 	 @endif
 	 </p>
-	@if(null !==$note->writtenBy && $note->writtenBy->id == auth()->user()->id  or auth()->user()->hasRole('Admin'))
+	@if(null !==$note->writtenBy && $note->writtenBy->id == auth()->user()->id  or auth()->user()->hasRole('admin'))
 		<br />
 		<a href="{{route('notes.edit',$note->id)}}" title="Edit this note">
 

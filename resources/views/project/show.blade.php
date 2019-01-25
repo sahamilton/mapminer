@@ -6,7 +6,7 @@
 <h2>Construction Project</h2>
 <p><a href="{{route('projects.index')}}">Return to all projects</a> | <a href="{{route('projects.myprojects')}}">Return to my projects</a></p>
 <!-- Allow owner to edit project title -->
-@if($location->project->owned()  or auth()->user()->hasRole('Admin'))
+@if($location->project->owned()  or auth()->user()->hasRole('admin'))
   <h4>
     <p><strong>Project Title:</strong>
     <a href="#" 

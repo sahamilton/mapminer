@@ -9,7 +9,7 @@
 		<th>Segment</th>
 		<th>Recent Business</th>
 
-   		@if(auth()->user()->hasRole('Admin'))
+   		@if(auth()->user()->hasRole('admin'))
 			<th>Actions</th>
    		@endif
     </thead>
@@ -61,7 +61,7 @@
 		@endif
 
 	</td>
-	@if(auth()->user()->hasRole('Admin'))
+	@if(auth()->user()->hasRole('admin'))
 		<td>
 
 	    

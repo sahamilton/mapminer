@@ -3,7 +3,7 @@
 
 <h1>Web Leads</h1>
 
- @if (auth()->user()->hasRole('Admin') or auth()->user()->hasRole('Sales Operations'))
+ @if (auth()->user()->hasRole('admin') or auth()->user()->hasRole('sales_operations'))
 <div class="float-right">
 				<p><a href="{{{ route('webleads.import.create') }}}" class="btn btn-small btn-info iframe">
 <i class="fas fa-plus-circle " aria-hidden="true"></i>

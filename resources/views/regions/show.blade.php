@@ -15,7 +15,7 @@
 	<th>Manager</th>
 	<th>Sales Team</th>
 
-	@if(auth()->user()->hasRole('Admin'))
+	@if(auth()->user()->hasRole('admin'))
 
 	<th>Actions</th>
 	@endif 
@@ -84,7 +84,7 @@
 	@endif
 	</td>
 
-	@if(auth()->user()->hasRole('Admin'))
+	@if(auth()->user()->hasRole('admin'))
 
 		<td>
             @include('partials/_modal')
