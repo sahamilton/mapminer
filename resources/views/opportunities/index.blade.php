@@ -5,7 +5,7 @@
 @include('maps.partials._form')
 
 <h2>{{$data['branches']->first()->branchname}} Branch Dashboard</h2>
-@if(count($myBranches)>1)
+@if(count($data['branches'])>1)
 <div class="col-sm-2">
 <form name="selectbranch" method="post" action="{{route('opportunities.branch')}}" >
 @csrf

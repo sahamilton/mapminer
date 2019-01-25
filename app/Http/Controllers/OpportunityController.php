@@ -55,7 +55,7 @@ class OpportunityController extends Controller
         } else{
           
              $data = $this->getBranchOpportunities($myBranches);
-
+         
             return response()->view('opportunities.index',compact('data','activityTypes'));
         
         }
