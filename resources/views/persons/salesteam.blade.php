@@ -44,7 +44,7 @@
 	<td>
 		<ul>
 			@foreach($branch->servicelines as $serviceline)
-				<li><a href="route('serviceline.account',$serviceline->id)}}" 
+				<li><a href="{{route('serviceline.accounts',$serviceline->id)}}" 
 				title="See all {{$serviceline->ServiceLine}} branches">
 					{{$serviceline->ServiceLine}}
 				</a></li>
@@ -54,7 +54,7 @@
 	<td>{{$branch->street}} {{$branch->address2}}</td>
 	<td>{{$branch->city}}</td>
 	<td>
-		<a href="route(branch/statemap,$branch->state)" title="See all {{$branch->state}} branches">
+		<a href="{{route('branch.statemap',$branch->state)}}" title="See all {{$branch->state}} branches">
 			{{$branch->state}}
 		</a>
 	</td>

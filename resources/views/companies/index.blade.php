@@ -4,8 +4,26 @@
 <h1>Companies That Have Locations Nearby<span class="text text-danger"><sup>*</sup></span></h1>
 <p><span class="text text-danger"><sup>*</sup></span><em>Withing 25 miles of your location</em></p>
 
-@include('companies.partials._searchbar')
-<table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
+
+@include('partials/_showsearchoptions')
+@include('partials/advancedsearch')
+@include('partials.companyfilter')
+
+
+@if (auth()->user()->hasRole('admin') or auth()->user()->hasRole('sales_operations'))
+
+
+
+<div class="float-right">
+<a href="{{ route('company.create') }}" class="btn btn-small btn-info iframe">
+
+<i class="fas fa-plus-circle " aria-hidden="true"></i>
+
+ Create New Account</a>
+</div>
+@endif
+
+	<table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
 		<thead>
 			<th>Company</th>
 			<th>Customer Id</th>

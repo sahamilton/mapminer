@@ -36,7 +36,7 @@ a.viewtraining{
                     <p>
                     @if(auth()->user()->hasRole('admin'))
                         @foreach ($training->relatedRoles as $role)
-                            {{$role->name}}
+                            {{$role->display_name}}
                             @if(! $loop->last),@endif
                         @endforeach
                     @endif

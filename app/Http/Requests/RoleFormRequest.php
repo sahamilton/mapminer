@@ -14,7 +14,7 @@ class RoleFormRequest extends FormRequest
     public function authorize()
     {
    
-        return auth()->user()->hasRole('Admin');
+        return auth()->user()->hasRole('admin');
     }
 
     /**

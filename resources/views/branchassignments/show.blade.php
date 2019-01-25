@@ -1,10 +1,12 @@
 @extends('site.layouts.default')
 @section('content')
-
+<style>
+.highlight { background-color: AliceBlue; }
+</style>
 <h2>Branch Associations for {{$details->fullName()}}</h2>
 <h4>Current Role:
 	@foreach ($details->userdetails->roles as $role)
-	{{$role->name}}
+	{{$role->display_name}}
 	@endforeach
 </h4>
 
@@ -21,7 +23,7 @@
 <h5 class="card-title alert alert-info"><strong>Update Current Assignments</strong></h5>
     <p class="card-text">If your branch assignments are incomplete or incorrect, simply uncheck the appropriate branches in the list and / or add any missing in box below. </p>
 <h6>Last Updated: {{$details->branchesServiced[0]->pivot->updated_at}}</h6>
-<table class="table table-striped table-bordered table-condensed">
+<table class="table table-bordered table-condensed">
 <thead>
 <th>Branch</th>
 <th>Branch #</th>
@@ -75,6 +77,37 @@
   </div>
 </div>
 
+<script>
+$( document ).ready(function() {
+    $("input[id^=branch]").change (function () {
+     changeBackground();
+    var id = $(this).val();
+      $.ajax(
+        {
+            type: "get",
+            cache: false,
+            url: '{{route("branchassignment.change",$details->user_id)}}',
+            data: {id: id,api_token:"{{auth()->user()->api_token}}"},
+            dataType: "xml",
+            contentType: "json",
+            success: true
+        }); 
+    });
 
+    function changeBackground(){
+      $(".item").each(function () {
+          //Check if the checkbox is checked
+          if ($(this).closest('tr').find("input[id^=branch]").is(':checked')) {
+              $(this).closest("tr").addClass("highlight");
+          }else{
+             $(this).closest("tr").removeClass("highlight");
+
+          }
+
+      });
+  };
+});
+
+</script>
 
 @endsection

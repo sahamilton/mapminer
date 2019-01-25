@@ -1,30 +1,30 @@
 @extends('site.layouts.default')
 @section('content')
 
-<h2> {{$salesteam[0]->firstname}} {{$salesteam[0]->lastname}}'s Sales Team</h2>
+<h2> {{$salesperson->fullName()}}'s Sales Team</h2>
 
-@if(isset ($salesteam[0]->userdetails) && $salesteam[0]->userdetails->email !='' )
 
-    @if ($salesteam[0]->userdetails->roles->count()==1)
-    <h4> {{$salesteam[0]->userdetails->roles[0]->display_name}}</h4>
-    @endif
+
+  @foreach ($salesperson->userdetails->roles as $role)
+    <h4> {{$role->display_name}}</h4>
+  @endforeach
+
 
     <p><i class="far fa-envelope" aria-hidden="true"></i> 
 
-    <a href="mailto:{{$salesteam[0]->userdetails->email}}" title="Email {{$salesteam[0]->firstname}} {{$salesteam[0]->lastname}}">{{$salesteam[0]->userdetails->email}}</a> </p>
+    <a href="mailto:{{$salesperson->userdetails->email}}" title="Email {{$salesperson->fullName()}}">{{$salesperson->userdetails->email}}</a> </p>
+
+@if (isset($salesperson->reportsTo) && $salesperson->reportsTo->userdetails->count() == 1)
+<p>Reports to: <a href = "{{route('salesorg.list',$salesperson->reportsTo->id)}}" 
+title= "See {{$saleperson->reportsTo->fullName}}'s sales team"> {{$salesperson->reportsTo->fullName()}}  {{$salesperson->reportsTo->userdetails->roles->count() !=0 ? ' - ' . $salesperson->reportsTo->userdetails->roles->first()->name : ''}}</a>
 @endif
 
-@if (isset($salesteam[0]->reportsTo) && $salesteam[0]->reportsTo->userdetails->count() == 1)
-<p>Reports to: <a href = "{{route('salesorg.list',$salesteam[0]->reportsTo->id)}}" 
-title= "See {{$salesteam[0]->reportsTo->firstname}} {{$salesteam[0]->reportsTo->lastname}}'s sales team"> {{$salesteam[0]->reportsTo->firstname}} {{$salesteam[0]->reportsTo->lastname}}  {{$salesteam[0]->reportsTo->userdetails->roles->count() !=0 ? ' - ' . $salesteam[0]->reportsTo->userdetails->roles[0]->display_name : ''}}</a>
-@endif
 
 
 
+  <p><a href="{{route('salesorg.show',array($salesperson->id, 'view'=>'map'))}}"
 
-  <p><a href="{{route('salesorg',$salesteam[0]->id)}}"
-
-  title="See map view of {{$salesteam[0]->firstname}} {{$salesteam[0]->lastname}}'s sales team"><i class="far fa-flag" aria-hidden="true"></i> Map View</a></p>    
+  title="See map view of {{$salesperson->fullName()}}'s sales team"><i class="far fa-flag" aria-hidden="true"></i> Map View</a></p>    
 
 @include('leads.partials.search')
 <table id ='nosorttable' class='table table-striped table-bordered table-condensed table-hover'>
@@ -41,26 +41,24 @@ title= "See {{$salesteam[0]->reportsTo->firstname}} {{$salesteam[0]->reportsTo->
     </thead>
     <tbody>
   
-    <?php
 
-    ?>
-   @foreach($salesteam as $reports)
+   @foreach($salesperson->directReports as $reports)
 
-   @if($reports->id != $salesteam[0]->id)
+
 
     <tr>  
 
     <td>
-    {!!str_repeat ( '&nbsp;' , ($reports->depth - $salesteam[0]->depth) * 3 )!!} 
+    {!!str_repeat ( '&nbsp;' , ($reports->depth - $salesperson->depth) * 3 )!!} 
         @if($reports->isLeaf())
-        <a href="{{route('salesorg',$reports->id)}}"
-        title="See {{$reports->firstname . " " . $reports->lastname}}'s sales area">
-        {{$reports->firstname . " " . $reports->lastname}}
+        <a href="{{route('salesorg.show',$reports->id)}}"
+        title="See {{$reports->fullName()}}'s sales area">
+        {{$reports->fullName()}}
         </a>
         @else
-        <a href="{{route('salesorg.list',$reports->id)}}"
-        title="See {{$reports->firstname . " " . $reports->lastname}}'s sales team">
-        {{$reports->firstname . " " . $reports->lastname}}
+        <a href="{{route('salesorg.show',$reports->id)}}"
+        title="See {{$reports->fullName()}}'s sales team">
+        {{$reports->fullName()}}
         </a>
         @endif
 
@@ -102,7 +100,7 @@ title= "See {{$salesteam[0]->reportsTo->firstname}} {{$salesteam[0]->reportsTo->
     
    
     </tr>
-    @endif
+
    @endforeach
     
     </tbody>

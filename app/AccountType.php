@@ -4,6 +4,7 @@ namespace App;
 class AccountType extends Model {
 
 	// Add your validation rules here
+	public $table = 'accounttypes';
 	public static $rules = [
 		 'type' => 'required'
 	];

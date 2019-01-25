@@ -18,7 +18,7 @@ class RegionsController extends BaseController {
 	 */
 	public function index()
 	{
-		$regions = $this->region->all();
+		$regions = $this->region->withCount('branches')->get();
 
 		return response()->view('regions.index', compact('regions'));
 	}
@@ -38,13 +38,13 @@ class RegionsController extends BaseController {
 	 *
 	 * @return Response
 	 */
-	public function store(RegionsFormRequest $request)
+	public function store(RegionFormRequest $request)
 	{
 		
 
 		$this->region->create(request()->all());
 
-		return redirect()->route('regions.index');
+		return redirect()->route('region.index');
 	}
 
 	/**
@@ -53,12 +53,9 @@ class RegionsController extends BaseController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function show($id)
+	public function show(Region $region)
 	{
-		$region = $this->region->findOrFail($id);
-
-
-		
+				
 		$branches = $region->branches()
 				->with('servicelines','manager','region','servicedBy')
 				->where('region_id','=',$region->id)
@@ -66,8 +63,6 @@ class RegionsController extends BaseController {
 				->orderBy('city','ASC')
 				->get();
 	
-		
-
 						
 		return response()->view('regions.show', compact('region','branches'));
 	}
@@ -78,10 +73,9 @@ class RegionsController extends BaseController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function edit($id)
+	public function edit(Region $region)
 	{
-		$region = $this->region->find($id);
-
+		
 		return response()->view('regions.edit', compact('region'));
 	}
 
@@ -91,13 +85,13 @@ class RegionsController extends BaseController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update(RegionsFormRequest $request,$id)
+	public function update(RegionFormRequest $request,Region $region)
 	{
-		$region = $this->region->findOrFail($id);
+		
 
 		$region->update(request()->all());
 
-		return \redirect()->route('regions.index');
+		return redirect()->route('region.index')->withMessage('Region updated');
 	}
 
 	/**
@@ -106,11 +100,12 @@ class RegionsController extends BaseController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id)
+	public function destroy(Region $region)
 	{
-		$this->region->destroy($id);
+		
+		$region->delete();
 
-		return redirect()->route('regions.index');
+		return redirect()->route('region.index')->withWarning('Region deleted');
 	}
 
 

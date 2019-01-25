@@ -210,7 +210,7 @@ class ManagersController extends BaseController {
 	private function getMyAccounts($data=null)
 	{	
 	
-		if(auth()->user()->hasRole('National Account Manager'))
+		if(auth()->user()->hasRole('national_account_manager'))
 		{
 
 			$data['accounts'] = Company::where('person_id',"=",auth()->user()->person()->first()->id)

@@ -7,7 +7,7 @@
     <p><strong>Email:</strong> {{$user->email}}</p>
     <p><strong>Roles:</strong>
         @foreach($user->roles as $role)
-            <li>{{$role->name}}</li>
+            <li>{{$role->display_name}}</li>
         @endforeach
     </p>
     <p><strong>Last Login:</strong>

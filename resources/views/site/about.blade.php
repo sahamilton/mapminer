@@ -9,6 +9,10 @@
 <p>Contact Sales Operations for any training or support issues.</p>
 <fieldset><legend>Technical Details</legend>
 <p><strong>Mapminer Version:</strong> <?php echo trim(exec('git tag'));?></p>
+@if(auth()->user()->hasRole('admin'))
+<p><strong>Environment: </strong>
+{{App::environment()}} </p>
+<p><strong>Laravel Version:</strong>  {{App::version()}}</p>
 
 @if(auth()->user()->hasRole('admin'))
 	<p><strong>Environment: </strong>

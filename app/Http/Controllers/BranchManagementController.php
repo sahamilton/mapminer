@@ -55,9 +55,9 @@ class BranchManagementController extends Controller
      */
     public function show($id)
     {
-       
-        if(! auth()->user()->hasRole('Admin')){
-           
+
+        if(! auth()->user()->hasRole('admin')){
+           dd('you dont');
             $id = auth()->user()->id;
         }
 
@@ -88,8 +88,7 @@ class BranchManagementController extends Controller
     public function update(BranchManagementRequest $request, $id)
     {
 
-
-        if(! auth()->user()->hasRole('Admin')){
+        if(! auth()->user()->hasRole('admin')){
             
             $id = auth()->user()->id;
         }
@@ -159,6 +158,19 @@ class BranchManagementController extends Controller
         }else{
             return redirect()->route('welcome')->withMessage("Invalid or expired token");
 
+        }
+    }
+
+    public function change(Request $request,User $user){
+        $person = $user->person()->with('branchesServiced')->first();
+        $role = $user->roles()->first();
+
+        if ( $person->branchesServiced->contains('id', request('id'))){
+           $person->branchesServiced()->detach(request('id'));
+   
+        }else{
+            $person->branchesServiced()->attach([request('id')=>['role_id'=>$role->id]]);
+          
         }
     }
 

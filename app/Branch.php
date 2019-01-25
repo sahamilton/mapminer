@@ -2,7 +2,7 @@
 namespace App;
 use\App\Presenters\LocationPresenter;
 use McCool\LaravelAutoPresenter\HasPresenter;
-
+use Illuminate\Http\Request;
 class Branch extends Model implements HasPresenter {
 	use Geocode;
 	public $table ='branches';

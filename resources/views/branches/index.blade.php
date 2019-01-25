@@ -75,7 +75,7 @@
 	</td>
 
 	<td>
-			<a href="{{route('showstate.branch',$branch->state)}}"
+			<a href="{{route('branches.statelist',$branch->state)}}"
 			 title="See all {{$branch->state}} state branches">
 			 	{{$branch->state}}
 			</a>

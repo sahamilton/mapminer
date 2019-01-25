@@ -12,7 +12,7 @@
 			<p class="list-group-item-text"><strong>Role Details</strong></p>
 			<ul style="list-style-type: none;">
 			@foreach ($user->person->userdetails->roles as $role)
-				<li>{{$role->name}}</li>
+				<li>{{$role->display_name}}</li>
 			@endforeach
 			</ul>
 		</div>
@@ -195,9 +195,9 @@
 				<div class="alert alert-warning">
 					<p class="list-group-item-text"><strong>Corrections</strong></p>
 					<ul style="list-style-type: none;">
-						<p class="">If any details of your profile are incorrect or incomplete please contact <a href="mailto:salesops@trueblue.com">
+						<p class="">If any details of your profile are incorrect or incomplete please contact <a href="mailto:salesoperations@trueblue.com">
 							<i class="far fa-envelope" aria-hidden="true"> </i>
-							 salesops@trueblue.com
+							 salesoperations@trueblue.com
 						</a>.</p>
 							
 					</ul>

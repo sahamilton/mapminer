@@ -15,7 +15,7 @@
 			<p class="list-group-item-text"><strong>Role Details</strong></p>
 			<ul style="list-style-type: none;">
 			@foreach ($people->userdetails->roles as $role)
-				<li>{{$role->name}}</li>
+				<li>{{$role->display_name}}</li>
 			@endforeach
 			</ul>
 		</div>

@@ -21,7 +21,7 @@
                         title = "See {{$people->firstname}}'s organizational details">
                         {{$people->postName()}} </a> 
 
-                        <span type="button" class="far fa-copy btn-copy js-tooltip js-copy" data-toggle="tooltip" data-placement="bottom" data-copy="{{$people->postName()}}" title="Copy name to clipboard"></span> 
+                       
                     
                 </strong>  
                 @if($people->phone != "")
@@ -33,7 +33,7 @@
                     <a href="mailto:{{$people->userdetails()->first()->email}}"
                         title="Email {{$people->firstname}}">
                     {{$people->userdetails()->first()->email}}</a> 
-                    <span type="button" class="far fa-copy btn-copy js-tooltip js-copy" data-toggle="tooltip" data-placement="bottom" data-copy="{{$people->userdetails()->first()->email}}" title="Copy email to clipboard"></span> 
+                    
 
                     
                 @endif

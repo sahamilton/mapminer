@@ -54,19 +54,20 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::post('/branches/state', ['as'=>'branches.state','uses'=>'BranchesController@state']);
 		Route::get('/branches/{state}/statemap', ['as'=>'branches.showstatemap','uses'=>'BranchesController@statemap']);
 		Route::post('/branches/statemap', ['as'=>'branches.statemap','uses'=>'BranchesController@statemap']);
-		Route::get('/branch/{branchId}/map', ['as'=>'branch.map','uses'=>'BranchesController@map']);
+		Route::get('/branch/{branch}/map', ['as'=>'branch.map','uses'=>'BranchesController@map']);
 		Route::get('/branches/map', ['as'=>'branches.map', 'uses'=>'BranchesController@mapall']);
-		Route::get('branches/{branchId}/shownearby',['as' => 'shownearby.branch', 'uses' => 'BranchesController@showNearbyBranches']);
-		Route::get('branches/{state}/showstate', ['as' => 'showstate.branch','uses' => 'BranchesController@getStateBranches']);
-		Route::get('branches/{branchId}/nearby',['as' => 'nearby.branch', 'uses' => 'BranchesController@getNearbyBranches']);
-		Route::get('branches/{branchId}/locations',['as' => 'branch.locations', 'uses' => 'BranchesController@getLocationsServed']);
-		Route::get('branches/{branchId}/showlist',['as' => 'showlist.locations', 'uses' => 'LocationsController@listNearbyLocations']);
-		Route::get('branches/{branchId}/salesteam',['as' => 'showlist.salesteam', 'uses' => 'BranchesController@showSalesTeam']);
+		Route::get('branches/{branch}/shownearby',['as' => 'shownearby.branch', 'uses' => 'BranchesController@showNearbyBranches']);
+		//Route::get('branches/{state}/showstate', ['as' => 'showstate.branch','uses' => 'BranchesController@getStateBranches']);
+		Route::get('branches/{branch}/nearby',['as' => 'nearby.branch', 'uses' => 'BranchesController@getNearbyBranches']);
+		Route::get('branches/{branch}/locations',['as' => 'branch.locations', 'uses' => 'BranchesController@getLocationsServed']);
+		Route::get('branches/{branch}/showlist',['as' => 'showlist.locations', 'uses' => 'LocationsController@listNearbyLocations']);
+		Route::get('branches/{branch}/salesteam',['as' => 'showlist.salesteam', 'uses' => 'BranchesController@showSalesTeam']);
 		Route::get('branches/managed/{mgrId}',['as'=>'managed.branch', 'uses'=>'BranchesController@getMyBranches']);
 		Route::get('branches/managedmap/{mgrId}',['as'=>'managed.branchmap', 'uses'=>'BranchesController@mapMyBranches']);
 		Route::resource('branches','BranchesController',['only' => ['index', 'show']]);
 
 	#Branch Assignments
+		Route::get('branchassignment/{user}/change',['as'=>'branchassignment.change','uses'=>'BranchManagementController@change']);
 		Route::resource('branchassignments','BranchManagementController',['only'=>['index','show','edit','update']]);
 	
 		
@@ -178,7 +179,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 
 	#Regions
-		Route::resource('region','RegionsController',['only' => ['index', 'show']]);
+	//	Route::resource('region','RegionsController',['only' => ['index', 'show']]);
 
 	#ServiceLines
 		Route::get('serviceline/{id}/{type?}',['as'=>'serviceline.accounts','uses'=>'ServicelinesController@show']);
@@ -190,10 +191,15 @@ Route::group(['middleware' => 'auth'], function () {
 			['only' => ['show']]);
 
 	# Sales organization
-		Route::get('salesorg/{person?}',['as'=>'salesorg','uses'=>'SalesOrgController@getSalesBranches']);
-		Route::get('salesorg/{person}/list',['as'=>'salesorg.list','uses'=>'SalesOrgController@getSalesOrgList']);
 		Route::get('salesorg/coverage',['as'=>'salescoverage','uses'=>'SalesOrgController@salesCoverageMap']);
 		Route::post('salesorg/find',['as'=>'lead.find','uses'=>'LeadsController@find']);
+		// add salesorg reqource with show and index only
+		Route::resource('salesorg','SalesOrgController',['only'=>['index','show']]);
+		//Route::get('salesorg/{person?}',['as'=>'salesorg','uses'=>'SalesOrgController@getSalesBranches']);
+		//Route::get('salesorg/{person}/list',['as'=>'salesorg.list','uses'=>'SalesOrgController@getSalesOrgList']);
+
+
+		
 		Route::get('branch/{branchId}/salesteam',array('as' => 'branch.salesteam', 'uses' => 'BranchesController@showSalesTeam'));
 
 
@@ -566,7 +572,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 
 	 	Route::resource('leadstatus','LeadStatusController');
 
-
+	 #Regions
+		Route::resource('region','RegionsController');
 
 
 	# Sales Process

@@ -4,8 +4,21 @@
     <ul class="dropdown-menu">
         <li>
             <a class="dropdown-item" 
+            href="{{ route('branches.create') }}">
+                <i class="fas fa-plus-circle"></i> Add Branch
+            </a>
+        </li>
+        <li>
+            <a class="dropdown-item" 
             href="{{ route('branch.management') }}">
                 <i class="fas fa-wrench"></i> Manage Branches
+            </a>
+        </li>
+        
+        <li>
+            <a class="dropdown-item" 
+            href="{{ route('region.index') }}">
+                <i class="fas fa-map-marked"></i> Manage Regions
             </a>
         </li>
         

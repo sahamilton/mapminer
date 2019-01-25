@@ -33,7 +33,7 @@ $expiration = [1,2,5,7,14];
   <td><input checked type="checkbox" name="id[]" value="{{$recipient->id}}" /></td>
   <td>{{$recipient->fullName()}}</td>
   <td>@foreach($recipient->userdetails->roles as $role)
-      {{$role->name}}
+      {{$role->display_name}}
       @endforeach
   </td>
   <td>{{$recipient->branchesServiced->count()}}</td>

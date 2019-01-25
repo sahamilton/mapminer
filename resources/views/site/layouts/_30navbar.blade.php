@@ -61,7 +61,7 @@
                          Sales Resources<span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu">
-                        <li><a href="{{route('salesorg')}}">
+                        <li><a href="{{route('salesorg.index')}}">
                         <i class="far fa-sitemap" aria-hidden="true"> </i>
                         Sales Organization</a></li>
                         @if(auth()->user()->hasRole('admin') or auth()->user()->hasRole('sales') or  auth()->user()->hasRole('sales_manager'))
@@ -78,11 +78,11 @@
                             <li><a href="{{route('salesrep.newleads',auth()->user()->person->id)}}">
                             <i class="far fa-envelope" aria-hidden="true"> </i> Sales Prospects</a></li>
                         @endif
-                        @if(auth()->user()->hasRole('Branch Manager'))
+                        @if(auth()->user()->hasRole('branch_manager'))
                             <li><a href="{{route('branchmanager.newleads')}}">
                             <i class="far fa-envelope" aria-hidden="true"> </i> Branch Prospects</a></li>
                         @endif
-                        @if (auth()->user()->hasRole('admin') or auth()->user()->hasRole('National Account Manager'))
+                        @if (auth()->user()->hasRole('admin') or auth()->user()->hasRole('national_account_manager')'))
                         <li class="divider"></li>
                          <li><a href="{{route('managers.view')}}">
                          <i class="far fa-eye" aria-hidden="true"> </i> Account Managers View</a></li>

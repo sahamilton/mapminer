@@ -104,19 +104,18 @@ class LocationsController extends BaseController {
 		echo $this->location->makeNearbyLocationsXML($location);
 	}
 	
-	public function show($id)
+	public function show($location)
 	{
+		
 
-		$location = $this->location
-			->with('company','company.industryVertical','company.serviceline','relatedNotes','clienttype','verticalsegment','contacts','watchedBy')
-			->findOrFail($id->id);
+		$location->load('company','company.industryVertical','company.serviceline','relatedNotes','clienttype','verticalsegment','contacts','watchedBy');
 		
 
 		//$this->getCompanyServiceLines($location);
 	
 		$branch = $this->findBranch(1,$location);
 
-		$watch = $this->watch->where("location_id","=",$id->id)->where('user_id',"=",auth()->user()->id)->first();
+		$watch = $this->watch->where("location_id","=",$location->id)->where('user_id',"=",auth()->user()->id)->first();
 		
 	
 		return response()->view('locations.show', compact('location','branch','watch'));
@@ -248,21 +247,20 @@ class LocationsController extends BaseController {
 	}
 	
 	// Why is this in locations? Should be in branches
-	public function listNearbyLocations($id){
+	public function listNearbyLocations($branch){
 		
 		
 		$filtered = $this->location->isFiltered(['companies'],['vertical']);
-		$roles = \App\Role::pluck('name','id');
+		$roles = \App\Role::pluck('display_name','id');
 		$mywatchlist= array();
 		$locations = NULL;
-		$branches = $this->branch->with('manager')->findOrFail($id);
+		$data['branch']= $branch->load('manager');
 
 		// I dont understand this!
 		//$data['manager'] = ! isset($branches->manager) ? array() : Person::find($data['branch']->person_id);
 
-		$data['branch'] = $branches;
 		$data['title']='National Accounts';
-		$locations  = $this->getNearbyLocations($branches->lat,$branches->lng);
+		$locations  = $this->getNearbyLocations($branch->lat,$branch->lng);
 		$watchlist = User::where('id','=',auth()->user()->id)->with('watching')->get();
 		foreach($watchlist as $watching) {
 			foreach($watching->watching as $watched) {

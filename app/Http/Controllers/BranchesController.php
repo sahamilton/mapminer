@@ -107,10 +107,9 @@ class BranchesController extends BaseController {
 	public function create()
 	{
 
-		$branchRoles = Role::whereIn('id',$this->branch->branchRoles)->pluck('name','id');
+		$branchRoles = Role::whereIn('id',$this->branch->branchRoles)->pluck('display_name','id');
 		$team = $this->person->personroles($this->branch->branchRoles);
 		$servicelines = $this->serviceline->whereIn('id',$this->userServiceLines)->get();
-    
 		return response()->view('branches.create',compact('servicelines','team','branchRoles'));
 
 	}
@@ -122,33 +121,13 @@ class BranchesController extends BaseController {
 	 */
 	public function store(BranchFormRequest $request)
 	{
-
-		$input = request()->all();
 		// Attempt to geo code the new branch address	
-		$address = $input['street'] . ",". $input['city'] . ",". $input['state'] . ",". $input['zip'];	
-
-		$geoCode = app('geocoder')->geocode($address)->get();
-
-		$latlng = ($this->branch->getGeoCode($geoCode));
-		$input['lat']= $latlng['lat'];
-		$input['lng']= $latlng['lng'];
+		$input = $this->getbranchGeoCode($request);
 		// add lat lng to location
 
-		$branch = $this->branch->create($input);
+		$branch = $this->branch->create($input->all());
 
-		$input['addressable_type'] ='branch';
-		$input['addressable_id'] =$branch->id;
-
-		$address = $this->create($input);
-
-		foreach ($input['roles'] as $key=>$role){
-				foreach ($role as $person){
-				
-					$branch->relatedPeople()->sync($person,['role_id'=>$key]);
-				}
-				
-			}
-
+		$branch->associatePeople($request);
 		$branch->servicelines()->sync($input['serviceline']);
 		$this->rebuildXMLfile();
 
@@ -209,7 +188,7 @@ class BranchesController extends BaseController {
 		$data['distance'] = '10';
 
 
-		$roles = Role::pluck('name','id');
+		$roles = Role::pluck('display_name','id');
 
 		return response()->view('branches.show',compact('data','servicelines','filtered','roles'));
 	}
@@ -218,7 +197,7 @@ class BranchesController extends BaseController {
 	{
 		$salesteam = $this->branch->with('relatedPeople','servicelines')->find($id);
 
-		$roles = Role::pluck('name','id');
+		$roles = Role::pluck('display_name','id');
 
 		return response()->view('branches.showteam',compact('salesteam','roles'));
 	}
@@ -230,7 +209,7 @@ class BranchesController extends BaseController {
 	 * @return View
 	 */
 	
-	public function showNearbyBranches(Request $request, $id)
+	public function showNearbyBranches(Request $request, $branch)
 	{
 		
 
@@ -240,8 +219,8 @@ class BranchesController extends BaseController {
 		}else{
 			$data['distance'] = '50';
 		}
-		
-		$data['branches'] = $this->branch->findOrFail($id);
+		$data['branch'] = $branch;
+		//$data['branches'] = $this->branch->nearby($branch,25,5)->get();
 
 		return response()->view('branches.nearby', compact('data'));
 	}
@@ -250,10 +229,10 @@ class BranchesController extends BaseController {
 	 *
 	 * @return Response json
 	 */
-	public function map(Request $request, $id)
+	public function map(Request $request, $branch)
 	{
 		
-		$locations = Location::where('branch_id','=',$id)->get();
+		$locations = Location::nearby($branch,25)->get();
 
 		return response()->json(array('error'=>false,'locations' =>$locations->toArray()),200)->setCallback(request('callback'));
 
@@ -270,7 +249,7 @@ class BranchesController extends BaseController {
 	{
 		
 
-		$branchRoles = \App\Role::whereIn('id',$this->branch->branchRoles)->pluck('name','id');
+		$branchRoles = \App\Role::whereIn('id',$this->branch->branchRoles)->pluck('display_name','id');
 
 		$team = $this->person->personroles($this->branch->branchRoles);
 		$branch = $this->branch->find($branch->id);	
@@ -301,21 +280,11 @@ class BranchesController extends BaseController {
 		$data['lat']= $latlng['lat'];
 		$data['lng']= $latlng['lng'];
 
-		$data['roles'] = $this->branch->removeNullsFromSelect(request('roles'));
-		$branch->update($data);
-		// geocode		
-
-		foreach ($data['roles'] as $key=>$role){
-				foreach ($role as $person_id){
-					//$person = $this->person->findOrFail($person_id);
-					//dd($key);
-					$branchAssociations[$person_id]=['role_id'=>$key];
-				}
-				
-			}
-		//dd($branchAssociations);
-		$branch->relatedPeople()->sync($branchAssociations);
-
+		
+		$request = $this->getbranchGeoCode($request);
+		$branch->update($request->all());
+		$branch->associatePeople($request);
+		
 		$branch->servicelines()->sync(request('serviceline'));
 		$this->rebuildXMLfile();
 		return redirect()->route('branches.show',$branch->id );
@@ -366,17 +335,17 @@ class BranchesController extends BaseController {
 	 *
 	 * @param  int $id
 	 * @return Response XML
-	 */	public function getNearbyBranches(Request $request, $id)
+	 */	public function getNearbyBranches(Request $request, $branch)
 	
 	{
-
+		
 		if (request()->filled('d')) {
 			$distance = request('d');
 
 		}else{
 			$distance = '50';
 		}
-		$branch = $this->branch->findOrFail($id);
+		
 
 		$servicelines = $this->userServiceLines;
 	
@@ -419,23 +388,23 @@ class BranchesController extends BaseController {
 	 * @param  int $state
 	 * @return Response XML
 	 */
-	public function getStateBranches($state)
+	/*public function getStateBranches($state)
 	
 	{
+		
 		$branches= $this->retrieveStateBranches($state);
 		
-		
-	
+
 
 		$fullState = $this->state->getStates();
-		$data['fullstate'] = $fullState[$state];
-		$data['state'] = $state;
+		$data['fullstate'] = $fullState[strtoupper($state)];
+		$data['state'] = strtoupper($state);
 
 		return response()->view('branches.state', compact('data','branches'));
 		
 
-		
-	}
+		*/
+		//superceded by function state
 	
 	public function makeStateMap($state){
 		$branches = $this->branch->with('servicelines')->where('state','=',$state)->get();
@@ -563,7 +532,7 @@ protected function getBranchFullAddress($branch)
 	return $address;
 }
 
-protected function getBranchGeoCode($address)
+/*protected function getBranchGeoCode($address)
 {
 	
 
@@ -583,6 +552,11 @@ protected function getBranchGeoCode($address)
 
 
 	return $input;
-}
 
+		$latlng = ($this->branch->getGeoCode($geoCode));
+		$request['lat']= $latlng['lat'];
+		$request['lng']= $latlng['lng'];
+		return $request;
+
+	}
 }

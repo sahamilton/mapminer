@@ -2,6 +2,7 @@
 @section('content')
 
   <h2>{{$salesteam->fullName()}}'s Team</h2>
+
   @foreach ($salesteam->userdetails->roles as $role)
     {{$role->display_name}}
   @endforeach
@@ -14,7 +15,7 @@
   @endif
 
   @if($salesteam->reportsTo)
-  <h4>Reports to:<a href="{{route('salesorg',$salesteam->reportsTo->id)}}" 
+  <h4>Reports to:<a href="{{route('salesorg.show',$salesteam->reportsTo->id)}}" 
   title="See {{$salesteam->reportsTo->firstname}} {{$salesteam->reportsTo->lastname}}'s sales team">
     {{$salesteam->reportsTo->fullName()}}
     </a> 
@@ -29,8 +30,8 @@
 
   <p><i class="far fa-envelope" aria-hidden="true"></i> <a href="mailto:{{$salesteam->userdetails->email}}" title="Email {{$salesteam->firstname}} {{$salesteam->lastname}}">{{$salesteam->userdetails->email}}</a> </p>
   @endif
-  <p><a href="{{route('salesorg.list',$salesteam->id)}}"
-  title="See list view of {{$salesteam->firstname}} {{$salesteam->lastname}}'s sales team">
+  <p><a href="{{route('salesorg.show',array($salesteam->id,'view'=>'list'))}}"
+  title="See list view of {{$salesteam->fullName}}'s sales team">
   <i class="fas fa-th-list" aria-hidden="true"></i> List view</a></p>
 
       <div id="map-container">
@@ -40,11 +41,11 @@
   @foreach($salesteam->directReports as $reports)
     @if(isset($reports->userdetails))
       @if($reports->isLeaf())
-      <a href="{{route('salesorg',$reports->id)}}"
+      <a href="{{route('salesorg.show',$reports->id)}}"
         title="See {{$reports->firstname}} {{$reports->lastname}}'s sales area">
           {{$reports->firstname}} {{$reports->lastname}}</a> 
       @else
-        <a href="{{route('salesorg',$reports->id)}}"
+        <a href="{{route('salesorg.show',$reports->id)}}"
         title="See {{$reports->firstname}} {{$reports->lastname}}'s Sales Team">
           {{$reports->firstname}} {{$reports->lastname}}</a>  
       @endif
@@ -89,12 +90,12 @@ Sales Team  = <img src='//maps.google.com/mapfiles/ms/icons/red-dot.png' /></p>
 
         
 
-            '{{$reports->firstname}} {{$reports->lastname}}' : {
+            '{{$reports->fullName()}}' : {
               type : 'person',
               center : {lat: {{isset($reports->lat) ? $reports->lat:0}}, lng: {{isset($reports->lng) ? $reports->lng:0}}},
               radius :25,
-              name : '{{$reports->firstname}} {{$reports->lastname}}',
-              contentString:'<a href="{{route('salesorg',$reports->id)}}">{{$reports->firstname}} {{$reports->lastname}}</a>',
+              name : '{{$reports->fullName()}}',
+              contentString:'<a href="{{route('salesorg.show',$reports->id)}}">{{$reports->fullName()}}</a>',
             },
          
           

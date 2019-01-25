@@ -31,7 +31,7 @@
          
           <a class="dropdown-item" href="{{{ route('branches.map') }}}">
           <i class="fab fa-pagelines"></i> Branches</a>
-          <a class="dropdown-item" href="{{route('salesorg')}}">
+          <a class="dropdown-item" href="{{route('salesorg.index')}}">
                 <i class="fas fa-sitemap" aria-hidden="true"> </i>
                  People</a>
           
@@ -74,7 +74,7 @@
             Sales Resources<span class="caret"></span>
                             </a> 
             <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                <a class="dropdown-item" href="{{route('salesorg')}}">
+                <a class="dropdown-item" href="{{route('salesorg.index')}}">
                 <i class="fas fa-sitemap" aria-hidden="true"> </i>
                   Sales Organization</a>
                   @if(auth()->user()->hasRole('admin') or auth()->user()->hasRole('sales') or  auth()->user()->hasRole('sales_manager'))
