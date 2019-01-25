@@ -13,7 +13,9 @@
 </p>
 
   
-<div id="store-locator-container"> @include('maps/partials/_keys')
+<div id="store-locator-container"> 
+
+  @include('maps/partials/_keys')
 	<div id="map-container">
         <div id="loc-list"><p></p>
 

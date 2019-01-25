@@ -407,9 +407,10 @@ class BranchesController extends BaseController {
 
 			
 		}
+		$allstates = $this->branch->allStates();
 		$data = $this->state->where('statecode','=',$state)->firstOrFail()->toArray();
-		
-		return response()->view('branches.statemap', compact('data','servicelines'));	
+		$data['type'] = 'branch';
+		return response()->view('branches.statemap', compact('data','servicelines','allstates'));	
 		
 	}
 	/**
