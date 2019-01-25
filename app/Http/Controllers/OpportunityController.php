@@ -47,6 +47,7 @@ class OpportunityController extends Controller
     {
         $activityTypes = ActivityType::all();
         $myBranches = array_keys($this->person->myBranches());
+
         if(count($myBranches)>0){
             if(! auth()->user()->hasRole('branch_manager') && $this->person->myTeam()->count() >1){
                  $data = $this->getMarketManagerData($myBranches);

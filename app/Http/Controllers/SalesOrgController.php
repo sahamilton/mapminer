@@ -25,12 +25,12 @@ class SalesOrgController extends BaseController {
 	
 	public function getSalesOrgList($salesperson)
 	{
-			$salesroles = $this->salesroles;	
+			
+
+			
 			$salesteam = $salesperson->descendantsAndSelf()
 			->with('reportsTo','userdetails','userdetails.roles','industryfocus')
-			->whereHas('userdetails.roles', function ($q) use($salesroles){
-				$q->whereIn('roles.id',$salesroles);
-			})
+			
 			->orderBy('lft')
 			->get();
 			return response()->view('salesorg.salesmanagerlist', compact('salesteam'));
@@ -43,8 +43,7 @@ class SalesOrgController extends BaseController {
 	 */
 		public function getSalesBranches($salesPerson=null)
 	{
-			
-			
+						
 			// if not id then find root salesorg id
 			
 			if (! $salesPerson){
@@ -89,7 +88,7 @@ class SalesOrgController extends BaseController {
 	private function getSalesOrg(){
 		$salesorg = $this->person->with('userdetails','userdetails.roles','userdetails.serviceline')
 		->whereHas('userdetails.roles',function($q){
-    		$q->where('name','=','Sales');
+    		$q->where('name','=','sales');
 		})
 		->whereNotNull('lat')
 		->get();

@@ -25,7 +25,7 @@ $data['type'] ='people';
 	<td><a href="{{route('salesorg',$person->id)}}">{{$person->fullName()}}</a></td>
 	<td>
 		@foreach ($person->userdetails->roles as $role)
-			{{$role->name}}
+			{{$role->display_name}}
 		@endforeach
 	</td>
 	<td>

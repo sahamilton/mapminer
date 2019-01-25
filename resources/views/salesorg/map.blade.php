@@ -1,7 +1,7 @@
 @extends('site.layouts.maps')
 @section('content')
 <h1>{{$salesorg->fullName()}}</h1>
-<h4>{{$salesorg->userdetails->roles[0]->name}}</h4>
+<h4>{{$salesorg->userdetails->roles[0]->display_name}}</h4>
 
 <p><strong><i class="fas fa-phone" aria-hidden="true"></i> Phone:</strong> {{$salesorg->phone}}</p>
 <p><strong><i class="far fa-envelope" aria-hidden="true"></i> Email:</strong> 
@@ -18,7 +18,7 @@ title="Email {{$salesorg->fullName()}}">
   @endif
    @if(isset ($salesorg->reportsTo->userdetails) )
 
-    - {{$salesorg->reportsTo->userdetails->roles[0]->name}}
+    - {{$salesorg->reportsTo->userdetails->roles[0]->display_name}}
   @endif
 </h4>
 <div class ="container">

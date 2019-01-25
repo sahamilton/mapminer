@@ -3,12 +3,12 @@
 
   <h2>{{$salesteam->fullName()}}'s Team</h2>
   @foreach ($salesteam->userdetails->roles as $role)
-    {{$role->name}}
+    {{$role->display_name}}
   @endforeach
   @if(isset($salesteam->usersdetails->roles))
   <h3>
   @foreach ( $salesteam->usersdetails->roles as $role)
-  {{$role->name}}
+  {{$role->display_name}}
   @endforeach
   </h3>
   @endif
@@ -21,7 +21,7 @@
   @endif
 
 @if(isset ($salesteam->reportsTo->userdetails->roles) && $salesteam->reportsTo->userdetails->roles->count()>0) 
-    - {{$salesteam->reportsTo->userdetails->roles[0]->name}}
+    - {{$salesteam->reportsTo->userdetails->roles[0]->display_name}}
   @endif
 
   </h4>
@@ -50,7 +50,7 @@
       @endif
      
       @if($reports->userdetails->roles->count()>0)
-        - {{$reports->userdetails->roles[0]->name}}
+        - {{$reports->userdetails->roles[0]->display_name}}
       @endif
       <br/>
 

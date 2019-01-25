@@ -48,20 +48,4 @@
         </span>
     </div>
 </div>
-@if(isset($data))
-    @if($data['branches']->count()>1)
 
-    <div class="form-group row{{ $errors->has('phone') ? ' has-error' : '' }}">
-        <label for="phone" class="col-md-2 control-label">Phone: </label>
-         <div class="col-sm-8">
-            <select required name="branch_id">
-                @foreach ($mybranches as $branch)
-                    <option value="{{$branch->id}}">{{$branch->branchname}}</option>
-                @endforeach
-            </select>
-        </div>
-    </div>
-    @else
-    <input type ="hidden" name="branch_id" value="{{$data['branches']->first()->id}}" />
-    @endif
-@endif

@@ -6,7 +6,7 @@
 @if(isset ($salesteam[0]->userdetails) && $salesteam[0]->userdetails->email !='' )
 
     @if ($salesteam[0]->userdetails->roles->count()==1)
-    <h4> {{$salesteam[0]->userdetails->roles[0]->name}}</h4>
+    <h4> {{$salesteam[0]->userdetails->roles[0]->display_name}}</h4>
     @endif
 
     <p><i class="far fa-envelope" aria-hidden="true"></i> 
@@ -16,7 +16,7 @@
 
 @if (isset($salesteam[0]->reportsTo) && $salesteam[0]->reportsTo->userdetails->count() == 1)
 <p>Reports to: <a href = "{{route('salesorg.list',$salesteam[0]->reportsTo->id)}}" 
-title= "See {{$salesteam[0]->reportsTo->firstname}} {{$salesteam[0]->reportsTo->lastname}}'s sales team"> {{$salesteam[0]->reportsTo->firstname}} {{$salesteam[0]->reportsTo->lastname}}  {{$salesteam[0]->reportsTo->userdetails->roles->count() !=0 ? ' - ' . $salesteam[0]->reportsTo->userdetails->roles[0]->name : ''}}</a>
+title= "See {{$salesteam[0]->reportsTo->firstname}} {{$salesteam[0]->reportsTo->lastname}}'s sales team"> {{$salesteam[0]->reportsTo->firstname}} {{$salesteam[0]->reportsTo->lastname}}  {{$salesteam[0]->reportsTo->userdetails->roles->count() !=0 ? ' - ' . $salesteam[0]->reportsTo->userdetails->roles[0]->display_name : ''}}</a>
 @endif
 
 
@@ -69,7 +69,7 @@ title= "See {{$salesteam[0]->reportsTo->firstname}} {{$salesteam[0]->reportsTo->
    <td>
        @if(isset($reports->userdetails->roles)) 
          @foreach($reports->userdetails->roles as $role)
-            {{$role->name}}<br />
+            {{$role->display_name}}<br />
         @endforeach
         @endif
         
