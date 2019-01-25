@@ -104,19 +104,18 @@ class LocationsController extends BaseController {
 		echo $this->location->makeNearbyLocationsXML($location);
 	}
 	
-	public function show($id)
+	public function show($location)
 	{
+		
 
-		$location = $this->location
-			->with('company','company.industryVertical','company.serviceline','relatedNotes','clienttype','verticalsegment','contacts','watchedBy')
-			->findOrFail($id->id);
+		$location->load('company','company.industryVertical','company.serviceline','relatedNotes','clienttype','verticalsegment','contacts','watchedBy');
 		
 
 		//$this->getCompanyServiceLines($location);
 	
 		$branch = $this->findBranch(1,$location);
 
-		$watch = $this->watch->where("location_id","=",$id->id)->where('user_id',"=",auth()->user()->id)->first();
+		$watch = $this->watch->where("location_id","=",$location->id)->where('user_id',"=",auth()->user()->id)->first();
 		
 	
 		return response()->view('locations.show', compact('location','branch','watch'));
