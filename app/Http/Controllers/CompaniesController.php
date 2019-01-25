@@ -79,7 +79,7 @@ class CompaniesController extends BaseController {
 			return redirect()->route('company.index');
 		}
 		$filtered = $this->company->isFiltered(['companies'],['vertical']);
-		$companies=$this->getAllCompanies($filtered);
+		$companies=$this->company->getAllCompanies($filtered);
 
 
 		if(request('locationFilter') == 'nolocations'){

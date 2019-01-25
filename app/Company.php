@@ -149,15 +149,16 @@ class Company extends NodeModel {
 	}
 	public function getAllCompanies($filtered=null)
 	{
-		dd($this->userServiceLines);
+		
 		$keys=array();
 
-		$companies = $this->with('managedBy','managedBy.userdetails','industryVertical','serviceline','countlocations')
-			->whereHas('serviceline', function($q) {
+		$companies = $this->with('managedBy','managedBy.userdetails','industryVertical','serviceline','countlocations')->withCount('locations')
+			/*->whereHas('serviceline', function($q) {
 					    $q->whereIn('serviceline_id', $this->userServiceLines);
 
-			});
-
+			})*/
+			;
+			
 		if($filtered) {
 			$keys = $this->getSearchKeys(['companies'],['vertical']);
 			$isNullable = $this->isNullable($keys,NULL);
