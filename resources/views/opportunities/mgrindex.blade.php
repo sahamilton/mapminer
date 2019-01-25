@@ -8,7 +8,9 @@
       <th>Branch</th>
       <th>Manager</th>
       <th>Leads</th>
+      <th>Activities</th>
       <th>Opportunities</th>
+      
       <th>Closed</th>
     </thead>
       <tbody>
@@ -27,13 +29,19 @@
             @endforeach
           </td>
           <td align="center">{{$branch->leads->count()}}</td>
-          <td align="center">{{$branch->opportunities->count()}}</td>
-          <td align="center">
+           <td>
             @if(isset($data['stats'][$branch->id]))
-              {{$data['stats'][$branch->id][9]}}
+              @foreach ($data['stats'][$branch->id] as $activity=>$count)
+                <li>{{$activity}} = {{$count}}</li>
+              @endforeach
             @endif
           </td>
-          
+          <td align="center">{{$branch->opportunities->count()}}</td>
+          <td align="center">
+            @if(isset($data['stats'][$branch->id]['Closed - Won']))
+            {{$data['stats'][$branch->id]['Closed - Won']}}
+            @endif
+          </td>
         @endforeach
 
       </tbody>
