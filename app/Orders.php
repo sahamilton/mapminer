@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Orders extends Model
 {
-    public $table = 'address_branch';
+    public $table = 'orders';
 
     public function periodOrders($branches = null){
     	$orders = $this->groupBy('branch_id')
@@ -18,9 +18,6 @@ class Orders extends Model
 
     }
 
-    public function orders(){
-      
-    }
 
     public function branches(){
     	return $this->belongsTo(Branch::class,'branch_id','id');

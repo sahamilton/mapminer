@@ -48,7 +48,10 @@ class Address extends Model
        ->with('writtenBy');
     }
     public function orders(){
-        return $this->belongsToMany(Branch::class)->withPivot('period','orders');
+        // this is incorrect
+        // it should be through 
+        return $this->hasMany(Orders::class);
+       // return $this->belongsToMany(Branch::class)->withPivot('period','orders');
     }
     public function activities(){
         return $this->hasMany(Activity::class);

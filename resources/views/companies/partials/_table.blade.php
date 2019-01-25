@@ -55,6 +55,7 @@
 			@endif
 		@endif
 	</td>
+	<td>{{$data['orders'][$location->id]}}</td>
 	
 	@if(auth()->user()->hasRole('admin'))
 		<td>

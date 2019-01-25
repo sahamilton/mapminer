@@ -49,7 +49,7 @@ class CompaniesController extends BaseController {
 	{
 
 		$myLocation =$this->locations->getMyPosition();
-		//$filtered = $this->company->fileterd()-(['companies'],['vertical']);
+		//$filtered = $this->company->filtered(['companies'],['vertical']);
 		$companies = $this->company->whereHas('locations', function ($q) use ($myLocation){
 			$q->nearby($myLocation,25);
 		})
@@ -308,16 +308,16 @@ class CompaniesController extends BaseController {
 		return response()->view('companies.show', compact('data'));
 	}
 
-	public function stateselect($id,$state=null)
+	public function stateselect($company,$state=null)
 	{
 		
-		$data = $this->getStateLocationsAll($id,$state);
+		$data = $this->getStateLocationsAll($company,$state);
 		
 		
 		return response()->view('companies.show', compact('data'));
 	}
-	private function getStateLocationsAll($id, $state){
-		$company = $this->company->findOrFail($id);
+	private function getStateLocationsAll($company, $state){
+		
 		$data['state']= $state;
 		$data = $this->getCompanyViewData($company,$data);
 		return $data;

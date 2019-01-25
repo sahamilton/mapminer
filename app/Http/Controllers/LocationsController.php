@@ -89,6 +89,7 @@ class LocationsController extends BaseController {
 	 */
 	public function state($id,$state)
 	{
+		
 		$location = $this->location->where('state','=',$state)->where('company_id','=',$id)->get();
 		$filtered = $this->location->isFiltered(['locations'],['segment','business']);	
 		return response()->view('locations.state', compact('location','filtered'));
