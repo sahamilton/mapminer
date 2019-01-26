@@ -67,7 +67,7 @@ class AddressController extends Controller
     {
       // $ranking = $this->address->with('ranking')->myRanking()->findOrFail($address->id);
 
-        $location = $address->load($address->addressable_type,'contacts','contacts.relatedActivities','activities','activities.type','activities.relatedContact','company','opportunities','industryVertical',$address->addressable_type . '.relatedNotes','orders','watchedBy','watchedBy.person','ranking','leadsource');
+        $location = $address->load($address->addressable_type,'contacts','contacts.relatedActivities','activities','activities.type','activities.relatedContact','company','opportunities','industryVertical',$address->addressable_type . '.relatedNotes','orders','orders.branches','watchedBy','watchedBy.person','ranking','leadsource');
         
        // $activities = ActivityType::orderBy('sequence')->pluck('activity','id')->toArray();
     
@@ -78,7 +78,7 @@ class AddressController extends Controller
         $ranked = $this->address->getMyRanking($location->ranking);
         $notes = $this->notes->locationNotes($location->id)->get();
 
-     
+       
         return response()->view('addresses.show',compact('location','branches','rankingstatuses','people','mybranches','ranked','notes'));
     }
 

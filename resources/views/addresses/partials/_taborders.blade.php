@@ -9,14 +9,14 @@
     </thead>
     <tbody>
         @foreach ($location->orders as $order)
-     
+   
         <tr>
             <td>
-                {{$order->branchname}}
+                {{$order->branches->branchname}}
             </td>
-            <td>{{$order->pivot->period}}</td>
-            <td class="text-right">${{number_format($order->pivot->orders,2)}}</td>
-            @php $total = $total + $order->pivot->orders @endphp
+            <td>{{$order->period}}</td>
+            <td class="text-right">${{number_format($order->orders,2)}}</td>
+            @php $total = $total + $order->orders @endphp
         </tr>
         @endforeach
         <tfoot>
