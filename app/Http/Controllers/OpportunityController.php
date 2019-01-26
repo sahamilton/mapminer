@@ -99,8 +99,8 @@ class OpportunityController extends Controller
             return $address->activities->load('relatesToAddress','relatedContact');
         });
         
-        $data['branchorders'] = $this->branch->with('orders','orders.activities')->whereIn('id',$branches)->get(); 
-       
+        $data['branchorders'] = $this->branch->with('orders','orders.address')->whereIn('id',$branches)->get(); 
+ 
         $data['leads'] = $this->branch->with('leads','leads.leadsource')->whereIn('id',$branches)->get();
         $opportunity = $data['opportunities']->pluck('address_id')->toArray();
         $customer = $data['branchorders']->pluck('address_id')->toArray();
@@ -120,7 +120,7 @@ class OpportunityController extends Controller
                 and opportunities.branch_id in (" . implode(",",$branches) . ") and addresses.id = opportunities.address_id
                 group by branch, type";
         $data['summary'] = \DB::select(\DB::raw($query));
-        dd($data);
+       
         foreach ($data['summary'] as $stats){
 
             $data['stats'][$stats->branch][$stats->type] = $stats->sum; 

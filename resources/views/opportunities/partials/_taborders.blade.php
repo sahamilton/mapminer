@@ -13,16 +13,17 @@
     <tbody>
         
      @foreach($branch->orders as $order)
+  
 
         <tr>
             <td>
                 <a href="{{route('address.show',$order->id)}}">
-                    {{$order->businessname}}
+                    {{$order->address->address->businessname}}
                 </a>
             </td>
-            <td>{{$order->fullAddress()}}</td>
-            <td class="text-right">${{number_format($order->pivot->orders,2)}}</td>
-            @php $total = $total + $order->pivot->orders @endphp
+            <td>{{$order->address->address->fullAddress()}}</td>
+            <td class="text-right">${{number_format($order->orders,2)}}</td>
+            @php $total = $total + $order->orders @endphp
         </tr>
         @endforeach
         <tfoot>

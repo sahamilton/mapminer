@@ -19,11 +19,12 @@ class Orders extends Model
     }
 
 
-    public function branches(){
+    public function branch(){
     	return $this->belongsTo(Branch::class,'branch_id','id');
     }
-    public function addresses(){
-    	return $this->belongsTo(Address::class,'address_id','id');
+    public function address(){
+      return $this->belongsTo(AddressBranch::class,'address_branch_id','id')->with('address');
+    	//return $this->hasManyThrough(Address::class,AddressBranch::class,'address_branch_id','address_id');
     }
     
     public function scopeBranchOrders($query,$branch){

@@ -262,12 +262,12 @@ class Branch extends Model implements HasPresenter {
 	}
 
 	public function orders($period = null){
-		if($period){
-			return $this->belongsToMany(Address::class)->withPivot('period','orders')
-			->wherePivot('period','=',$period)->where('addressable_type','=','customer');
+		/*if($period){
+			
 		}else{
-			return $this->belongsToMany(Address::class)->withPivot('period','orders')->where('addressable_type','=','customer');
-		}
+			
+		}*/
+		return $this->hasManyThrough(Orders::class,AddressBranch::class,'branch_id','address_branch_id','id','id');
 	}
 
 	public function allStates(){
