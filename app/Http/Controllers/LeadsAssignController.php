@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\LeadSource;
+use App\Branch;
 use App\Lead;
 use App\Person;
 use App\Role;
@@ -12,49 +13,52 @@ class LeadsAssignController extends Controller
 {
     public $leadsource;
     public $lead;
+    public $branch;
     public $person;
     public $leadroles;
     public $distance = 100;
     public $limit = 5;
-	public function __construct(LeadSource $leadsource,Lead $lead, Person $person){
+	public function __construct(LeadSource $leadsource,Lead $lead, Person $person,Branch $branch){
 		$this->leadsource = $leadsource;
 		$this->lead = $lead;
+    $this->branch = $branch;
 		$this->person = $person;
     $this->leadroles = $this->setLeadRoles();
 
 
 	}
 
-    public function assignLeads($sid){
+    public function assignLeads($leadsource){
 
-      $leadsource = $this->leadsource->findOrFail($sid);
+
+
+     
       $leadroles = $this->setLeadAcceptRoles();
 
       return response()->view('leads.bulkassign',compact('leadroles','leadsource'));
 
     }
-     public function geoAssignLeads(Request $request){
-      
+     public function geoAssignLeads(Request $request,$leadsource){
+       
+        // get parameters
         $this->distance = request('distance');
         $this->limit = request('limit');
-        $leadsource = $this->leadsource->findOrFail(request('sid'));
-
-        $this->leadroles = $this->setLeadAcceptRoles(request());
-        if($leadsource->has('verticals')){
-          $verticals = $leadsource->verticals()->pluck('searchfilters.id')->toArray();
+        $verticals  = null;
+        $leadsource->load('unassignedLeads');
+        $leads = $leadsource->unassignedLeads;
+        if(request('type')=='branch'){
+          $count = $this->assignLeadsToBranches($leads,$verticals);
         }else{
-          $verticals =null;
+          $count = $this->assignLeadsToPeople($leads,$verticals);
         }
         
-
-        $leads = $this->lead->unassignedLeads($leadsource);
-        $count = $this->assignLeadsToPeople($leads,$verticals);
 
         return redirect()->route('leadsource.show',$leadsource->id)->with('status',$count . ' leads assigned');
     }
 
 
     public function assignLead(Request $request){
+
 
       $count=0;
 
@@ -119,5 +123,35 @@ class LeadsAssignController extends Controller
         }
         return $count;
     }
+
+    private function assignLeadsToBranches($leads,$verticals=null){
+      
+      $count = null;
+      foreach ($leads as $lead) {
+         
+          if($verticals){
+            // assign only to branches who have industry focus == to leadsource
+            // or no industry focus
+              /*$people = $people->where(function ($q) use ($verticals){
+                $q->whereHas('industryfocus',function($q) use($verticals){
+                  $q->whereIn('searchfilters.id',$verticals);
+                })
+                ->orWhereDoesntHave('industryfocus');
+              });*/
+          }
+          $branches = $this->branch->nearby($lead,$this->distance)
+                ->limit($this->limit)
+                ->get();
+       
+          foreach ($branches as $branch){
+            
+              $count++;
+              $lead->branches()->attach($branch->id,['status_id'=>1]);
+          }
+          
+        }
+        return $count;
+    }
+
 
 }

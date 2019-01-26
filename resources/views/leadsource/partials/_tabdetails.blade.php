@@ -11,6 +11,11 @@
 @endforeach
 </ul>
 </p>
-<p><strong>Number of Prospects:</strong>{{$leadsource->leads->count()}}</p>
+<p><strong>Number of Prospects:</strong>{{number_format($leadsource->leads_count,0)}}</p>
+<p><strong>Number of Sales Reps with Leads:</strong>{{number_format(count($teamStats),0)}}</p>
+<p><strong>Number of Assigned Prospects:</strong>{{number_format($leadsource->assigned_leads_count,0)}}</p>
+<p><strong>Number of Closed Prospects:</strong>{{number_format($leadsource->closed_leads_count,0)}}</p>
+<p><strong>Number of UnAssigned Prospects:</strong>{{number_format($leadsource->unassigned_leads_count,0)}}
+<a href="{{route('leads.assignbatch',$leadsource->id)}}" class="btn btn-info">Assign Prospects</a></p>
 <!-- how do we check to see if they are already assigned?-->
 

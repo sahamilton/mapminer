@@ -399,11 +399,10 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
 
 		Route::post('leads/import',['as'=>'leads.import','uses'=>'LeadImportController@import']);
 		
-		Route::get('leadsource/{sid}/assign/',['as'=>'leadsource.assign','uses'=>'LeadsAssignController@assignLeads']);
-		Route::post('leads/assign/{sid}/source',['as'=>'leads.geoassign','uses'=>'LeadsAssignController@geoAssignLeads']);
-		Route::get('leads/{id}/assign',['as'=>'leads.leadassign','uses'=>'LeadsController@assignLeads']);
+		Route::post('leadsource/{leadsource}/assign',['as'=>'leads.geoassign','uses'=>'LeadsAssignController@geoAssignLeads']);
+		Route::get('leads/{leadsource}/assign',['as'=>'leads.leadassign','uses'=>'LeadsController@assignLeads']);
 		
-		//Route::post('leads/batchassign',['as'=>'leads.assignbatch','uses'=>'LeadsAssignController@assignLead']);
+		Route::get('leads/{leadsource}/batchassign',['as'=>'leads.assignbatch','uses'=>'LeadsAssignController@assignLeads']);
 		//Route::post('leads/assign',['as'=>'leads.assign','uses'=>'LeadsController@postAssignLeads']);
 		
 		
@@ -435,7 +434,7 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
 
 		Route::get('leadsource/{id}/announce',['as'=>'leadsource.announce','uses'=>'LeadsEmailController@announceLeads']);
 		Route::post('leadsource/{id}/email',['as'=>'sendleadsource.message','uses'=>'LeadsEmailController@email']);
-		Route::get('leadsource/{id}/assign',['as'=>'leadsource.assign','uses'=>'LeadSourceController@assignLeads']);
+		Route::get('leadsource/{leadsource}/assign',['as'=>'leadsource.assign','uses'=>'LeadSourceController@assignLeads']);
 		Route::get('leadsource/{id}/branch',['as'=>'leadsource.branches','uses'=>'LeadSourceController@branches']);
 		Route::get('leadsource/{id}/unassigned',['as'=>'leadsource.unassigned','uses'=>'LeadSourceController@unassigned']);
 		Route::get('leadsource/{id}/addleads',['as'=>'leadsource.addleads','uses'=>'LeadImportController@getFile']);

@@ -92,7 +92,7 @@ class LeadSourceController extends Controller
     {
 
    
-        $leadsource = $leadsource->whereId($leadsource->id)->withCount('leads','unassignedLeads','closedLeads')->first();
+        $leadsource = $leadsource->whereId($leadsource->id)->withCount('leads','unassignedLeads','closedLeads','assignedLeads')->first();
         $team = $leadsource->salesteam($leadsource->id);
         foreach ($team as $person){
            
@@ -271,16 +271,16 @@ class LeadSourceController extends Controller
 
 
 
-    public function assignLeads($id){
+    public function assignLeads($leadsource){
 
-        $leads = $this->lead->where('lead_source_id','=',$id)
-        ->with('leadsource')
-        ->whereNotNull('lat')
-        ->whereNotNull('lng')
-        ->has('salesteam', '<', 1)
-        ->get();
-        $data['reps'] = $this->findClosestRep($leads);
-        $data['branches'] = $this->findClosestBranches($leads);
+        $leads = $this->lead->where('lead_source_id','=',$leadsource->id)
+                ->with('leadsource')
+                ->whereNotNull('lat')
+                ->whereNotNull('lng')
+                ->has('salesteam', '<', 1)
+                ->get();
+                $data['reps'] = $this->findClosestRep($leads);
+                $data['branches'] = $this->findClosestBranches($leads);
         return response()->view('leadsource.leadsassign',compact('leads','data'));
     }
 

@@ -8,16 +8,36 @@
     <!-- assign based on industry -->
 
     <!-- roles to assign to -->
+    <div class="form-group{{ $errors->has('type') ? ' has-error' : '' }}">
+        <label class="col-md-4 control-label"><strong>Assign to Roles</strong></label>
+        <div class="col-md-6">
+            
+          <input type="radio" checked name="type" value="role">
+            <span class="help-block">
+                <strong>{{ $errors->has('type') ? $errors->first('type') : ''}}</strong>
+            </span>
+        </div>
+    </div>
     <div class="form-group{{ $errors->has('roles') ? ' has-error' : '' }}">
         <label class="col-md-4 control-label">Assign to Roles:</label>
         <div class="col-md-6">
-            <select name="roles[]" required multiple class="form-control" >
+            <select name="roles[]" multiple class="form-control" >
                 @foreach ($leadroles as $key=>$role)
                     <option value="{{$role}}">{{$role}}</option>
                 @endforeach
             </select>
             <span class="help-block">
                 <strong>{{ $errors->has('roles') ? $errors->first('roles') : ''}}</strong>
+            </span>
+        </div>
+    </div>
+    <div class="form-group{{ $errors->has('type') ? ' has-error' : '' }}">
+        <label class="col-md-4 control-label"><strong>Assign to Branches<strong></label>
+        <div class="col-md-6">
+            
+          <input type="radio" name="type" value="branch">
+            <span class="help-block">
+                <strong>{{ $errors->has('type') ? $errors->first('type') : ''}}</strong>
             </span>
         </div>
     </div>

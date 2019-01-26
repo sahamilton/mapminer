@@ -22,7 +22,7 @@ class Address extends Model
       ];
     public $addressType = ['location'=>'National Account Location','project'=>'Construction Project', 'lead'=>'Web Lead','customer'=>'Customer'];
     public function lead(){
-    	return $this->belongsTo(Lead::class,'addressable_id','id');
+    	return $this->where('addressable_type','=','lead');
     }
     public function location(){
     	return $this->belongsTo(Location::class,'addressable_id','id');
@@ -72,9 +72,11 @@ class Address extends Model
     }
 
     public function branchLead(){
-        return $this->belongsToMany(Branch::class,'branch_lead','address_id','branch_id');
+        return $this->belongsToMany(Branch::class,'branch_lead','address_id','branch_id')->where('addressable_type','=','lead');
     }
-
+    public function scopeType($query,$type){
+        return $query->where('addressable_type','=',$type);
+    }
     public function opportunities(){
         return $this->belongsTo(Opportunity::class,'id','address_id');
     }
