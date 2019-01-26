@@ -36,7 +36,9 @@ class Branch extends Model implements HasPresenter {
 		'address2',
 		'city',
 		'state',
-		'zip'
+		'zip',
+		'lat',
+		'lng'
 	];
 	protected $guarded = [];
 	public $errors;
@@ -272,6 +274,29 @@ class Branch extends Model implements HasPresenter {
 		$states = $this->distinct('state')->pluck('state')->toArray();
 		return State::whereIn('statecode',$states)->orderBy('statecode')->get();
 	
+	}
+
+	public function associatePeople(Request $request){
+		$data['roles'] = $this->removeNullsFromSelect(request('roles'));
+		$associatedPeople = array();
+		foreach ($data['roles'] as $key=>$role){
+				foreach ($role as $person){
+					$associatedPeople[$person] = ['role_id'=>$key];
+				}
+			}
+		$this->relatedPeople()->sync($associatedPeople);
+	}
+
+	public function getbranchGeoCode($request){
+		$address = request('street') . ",". request('city') . ",". request('state') . ",". request('zip');	
+
+		$geoCode = app('geocoder')->geocode($address)->get();
+
+		$latlng = ($this->getGeoCode($geoCode));
+		$request['lat']= $latlng['lat'];
+		$request['lng']= $latlng['lng'];
+		return $request;
+
 	}
 
 }

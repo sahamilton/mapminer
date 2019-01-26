@@ -47,14 +47,14 @@ class OpportunityController extends Controller
     {
         $activityTypes = ActivityType::all();
         $myBranches = $this->person->myBranches();
-       
+     
         if(! auth()->user()->hasRole('branch_manager') && $this->person->myTeam()->count() >1){
-             $data = $this->getMarketManagerData(array_keys($myBranches));
+             
+                     $data = $this->getMarketManagerData(array_keys($myBranches));
             // need to get all the activities esp conversions / closes
             return response()->view('opportunities.mgrindex',compact('data','activityTypes'));
         } else{
-                
-                    
+               
                       $data = $this->getBranchOpportunities([array_keys($myBranches)[0]]);
                       
                       return response()->view('opportunities.index',compact('data','activityTypes','myBranches'));
@@ -91,6 +91,7 @@ class OpportunityController extends Controller
                 ->orderBy('branch_id')
                 ->distinct()
                 ->get();
+
         $data['addresses'] = $data['opportunities']->map(function ($opportunity){
             return $opportunity->address;
         });
@@ -99,7 +100,7 @@ class OpportunityController extends Controller
         });
         
         $data['branchorders'] = $this->branch->with('orders','orders.activities')->whereIn('id',$branches)->get(); 
-        
+       
         $data['leads'] = $this->branch->with('leads','leads.leadsource')->whereIn('id',$branches)->get();
         $opportunity = $data['opportunities']->pluck('address_id')->toArray();
         $customer = $data['branchorders']->pluck('address_id')->toArray();
@@ -119,6 +120,7 @@ class OpportunityController extends Controller
                 and opportunities.branch_id in (" . implode(",",$branches) . ") and addresses.id = opportunities.address_id
                 group by branch, type";
         $data['summary'] = \DB::select(\DB::raw($query));
+        dd($data);
         foreach ($data['summary'] as $stats){
 
             $data['stats'][$stats->branch][$stats->type] = $stats->sum; 
