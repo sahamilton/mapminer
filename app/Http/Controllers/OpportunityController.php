@@ -214,8 +214,8 @@ class OpportunityController extends Controller
     public function close(Request $request, $address){
         
         $opportunity = $this->opportunity->findOrFail(request('opportunity_id'));
-      
-        if(request('close')=='convert'){
+        
+        if(request('close')=='converted'){
             $address->load('company');
             if(! $address->company or $address->company->customer_id != request('client_id')){
               

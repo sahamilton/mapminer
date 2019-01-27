@@ -89,7 +89,7 @@ class Address extends Model
     }
 
     public function ranking(){
-        return $this->belongsToMany(Person::class)->withPivot('ranking','comments')->withTimeStamps();
+        return $this->belongsToMany(Person::class)->withPivot('ranking','comments','status_id')->withTimeStamps();
     }
 
     public function currentRating(){

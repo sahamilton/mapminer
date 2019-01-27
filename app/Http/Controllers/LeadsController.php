@@ -307,6 +307,7 @@ class LeadsController extends BaseController
     public function search(LeadInputAddressFormRequest $request){
 
       $geoCode = app('geocoder')->geocode(request('address'))->get();
+   
       if (count($geoCode)>0){
         // create the lead object
           $lead = $this->lead->createLeadFromGeo($geoCode);
@@ -322,7 +323,7 @@ class LeadsController extends BaseController
           $salesrepmarkers = $this->person->jsonify($people);
           $branchmarkers=$branches->toJson();
           $address = request('address');
-
+          
           return response()->view('leads.showsearch',compact('lead','branches','people','salesrepmarkers','branchmarkers','extrafields','sources','address'));
 
     }else{

@@ -6,7 +6,7 @@
 
 <h2>{{$data['branches']->first()->branchname}} Branch Dashboard</h2>
 @if(count($myBranches)>1)
-{{dd(count($myBranches))}}
+
 <div class="col-sm-4">
 <form name="selectbranch" method="post" action="{{route('opportunities.branch')}}" >
 @csrf

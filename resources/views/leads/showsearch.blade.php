@@ -1,6 +1,7 @@
 @extends ('admin.layouts.default')
 @section('content')
 <h2>Assign Leads</h2>
+
 <p><a href="{{route('leadsource.show',$lead->lead_source_id)}}">Show All WebLeads</a></p>
 <div class="container">
   <div class="row">
@@ -10,6 +11,7 @@
 	
 			<form action="{{route('leads.store')}}" method="post">
 				{{csrf_field()}}
+      
 			@include('leads.partials._form')
 			<input class="btn btn-info float-right" type="submit" name = "submit" value="Save New Lead" />
 		</form>

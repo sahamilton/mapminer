@@ -34,7 +34,9 @@ class DashboardController extends Controller
      */
     public function index()
     {
+      
        if(auth()->user()->can('manage_opportunities')){
+
             return redirect()->route('opportunity.index');
        }
 
@@ -42,7 +44,8 @@ class DashboardController extends Controller
        $contacts = $this->contacts->getMyContacts();
        $activities = $this->activity->myActivity()->with('relatesToAddress','relatedContact','type')->get();
        $ratings = $this->rating->myRatings()->get();
-       $notes = $this->notes->myNotes()->get();
+       $notes = $this->notes->myNotes()->get();      
+
        $leads = $this->lead->getMyLeads()->get();
     
 

@@ -16,7 +16,7 @@
     </thead>
       <tbody>
         @foreach ($lead->leads as $lead)
- 
+    
         <tr>         
           <td>
             <a href="{{route('address.show',$lead->id)}}">

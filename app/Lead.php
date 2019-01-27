@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Lead extends Model implements HasPresenter {
   use SoftDeletes, Geocode, Addressable;
 	public $dates = ['created_at','updated_at','deleted_at','datefrom','dateto'];
-  public $table= 'leads';
+  public $table= 'addresses';
   public $assignTo;
   public $type='temp';
 
@@ -83,7 +83,7 @@ class Lead extends Model implements HasPresenter {
     }
 
     public function contacts(){
-      return $this->hasOne(LeadContact::class);
+      return $this->hasMany(LeadContact::class,'address_id','id');
     }
 
     public function setDatefromAttribute($value)

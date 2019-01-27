@@ -2,7 +2,7 @@
 	{{csrf_field()}}
 	<div class="form-group{{ $errors->has('address') ? ' has-error' : '' }}">
 		<label class="col-md-5 control-label">Locate by Address:</label>
-           
+          
 		<input class="form-control" 
 		type="text" 
 		name="address" 
