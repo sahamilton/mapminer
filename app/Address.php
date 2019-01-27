@@ -21,6 +21,7 @@ class Address extends Model
         5=>'Location and contact data is very accurate'
       ];
     public $addressType = ['location'=>'National Account Location','project'=>'Construction Project', 'lead'=>'Web Lead','customer'=>'Customer'];
+    
     public function lead(){
     	return $this->where('addressable_type','=','lead');
     }
@@ -68,10 +69,15 @@ class Address extends Model
         return $query->whereIn('vertical',$keys);
        
     }
+    
+    public function assignedToBranch(){
+        return $this->belongsToMany(Branch::class,'address_branch','address_id','branch_id')
+        ->withPivot('rating','person_id','status_id','comments')->withTimeStamps();
+    }
 
-    public function branchLead(){
-        return $this->belongsToMany(Branch::class,'branch_lead','address_id','branch_id')
-        ->withPivot('ranking','person_id','status_id','comments')->withTimeStamps()->where('addressable_type','=','lead');
+    public function assignedToPerson(){
+        return $this->belongsToMany(Person::class,'address_branch','address_id','person_id')
+        ->withPivot('rating','branch_id','status_id','comments')->withTimeStamps();
     }
     public function scopeType($query,$type){
         return $query->where('addressable_type','=',$type);

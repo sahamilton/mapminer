@@ -44,9 +44,9 @@ class LeadSourceController extends Controller
     public function index()
     {   
 
-   
-        $leadsources = $this->leadsource->leadStatusSummary()->get();
-
+    
+        $leadsources = $this->leadsource->unassigned()->get();
+        dd($leadsources);
         return response()->view('leadsource.index', compact('leadsources'));
     }
 

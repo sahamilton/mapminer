@@ -35,16 +35,16 @@
     </thead>
     <tbody>
    @foreach($leadsources as $source)
-
+ 
     <tr> 
    	<td><a href="{{route('leadsource.show',$source->id)}}">{{$source->source}}</a></td>
     <td>{{$source->description}}</td>
     <td>{{$source->reference}}</td>
-    <td>{{$source->leads->count()}}</td>
-    <td>{{$source->assignedLeads->count()}}</td>
+    <td>{{$source->withCount('addresses')->addresses_count}}</td>
+    <td>{{$source->ownedleads}}</td>
     <td><a href="{{route('leadsource.unassigned',$source->id)}}">
-        {{$source->unassignedLeads->count()}}</a></td>
-    <td>{{$source->closedLeads->count()}}</td>
+       123</a></td>
+    <td>{{$source->closedleads}}</td>
     
     <td>{{number_format($source->ranking,2)}}</td>
    	<td>

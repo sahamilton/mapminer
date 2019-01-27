@@ -16,19 +16,31 @@ class LeadSource extends Model
     }
 
     public function leads(){
-    	return $this->hasMany(Lead::class, 'lead_source_id');
+    	return $this->hasMany(Address::class, 'lead_source_id');
     }
 
+    
     public function assigned (){
-      return $this->selectRaw('`leadsources`.*, count(`leads`.`id`) as assigned') 
+
+      return $this->whereHas('addresses',function ($q){
+        $q->has('assignedToBranch');
+      })->with('addresses');
+
+     /* return $this->selectRaw('`leadsources`.*, count(`address`.`id`) as assigned') 
           ->join('leads','leadsources.id','=','leads.lead_source_id')
           ->join('lead_person_status','leads.id','=','lead_person_status.related_id')
           ->groupBy('leadsources.id');
-
+*/
     
 
     }
+    public function scopeUnassigned ($query){
 
+      return $query
+      ->whereHas('addresses',function ($q){
+        $q->doesntHave('assignedToBranch');
+      })->withCount('addresses');
+    } 
     public function addresses(){
       return $this->hasMany(Address::class,'lead_source_id','id');
     }
@@ -76,8 +88,11 @@ class LeadSource extends Model
      }
 
      public function leadStatusSummary(){
+
+      return $this->withCount('addresses');
+
      
-     return $this->select(array('leadsources.*', 
+     /*return $this->select(array('leadsources.*', 
                   \DB::raw('COUNT(leads.id) as allleads,
                     COUNT(b.related_id) as ownedleads,
                     COUNT(a.related_id) as closedleads,
@@ -88,6 +103,7 @@ class LeadSource extends Model
                 })
                 ->leftjoin('lead_person_status as b','leads.id', '=', 'b.related_id')
                 ->groupBy('leadsources.id');
+                */
     }
 
     public function leadRepStatusSummary($id){
