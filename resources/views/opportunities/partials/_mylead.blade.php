@@ -13,13 +13,14 @@
     <div class="modal-content">
       <div class="modal-header">
         
-        <h4 class="modal-title">Add Lead</h4>
+        <h4 class="modal-title">Add Lead!!</h4>
         <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
       <div class="modal-body">
                 
         <form name="createlead" action="{{route('myleads.store')}}" method="post">
         {{csrf_field()}}
+        <input type="hidden" name="branch" value="{{$data['branches']->first()->id}}" />
         @include('myleads.partials._form')
           <div class="float-right">
            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button> <input type="submit" value="Add Lead" class="btn btn-danger" />

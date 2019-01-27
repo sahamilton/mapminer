@@ -8,16 +8,6 @@ class Orders extends Model
 {
     public $table = 'orders';
 
-    public function periodOrders($branches = null){
-    	$orders = $this->groupBy('branch_id')
-   					->selectRaw('sum(orders) as sum, branch_id');
-   			if($branches){
-   				$orders->whereIn('branch_id',$branches);
-   			}
-   			return $orders->with('branches','branches.manager','addresses')->get();
-
-    }
-
 
     public function branch(){
     	return $this->belongsTo(Branch::class,'branch_id','id');

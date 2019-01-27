@@ -59,9 +59,8 @@ class MyLeadsController extends BaseController
     {
       
         $data = $this->cleanseInput($request);
-
+        $data['addressable_type'] = 'lead';
         $lead = $this->lead->create($data['lead']);
-  
         $lead->branchLead()->attach($data['branch']);
         
         
@@ -129,7 +128,7 @@ class MyLeadsController extends BaseController
         $data['team']['user_id'] = auth()->user()->id;
         $data['team']['type'] = 'mylead';
         $data['team']['status_id'] =2;
-        $data['branch']=request()->branch_id;
+        $data['branch']=request('branch');
         return $data;
     }
 

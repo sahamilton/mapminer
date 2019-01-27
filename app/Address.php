@@ -48,10 +48,8 @@ class Address extends Model
        ->with('writtenBy');
     }
     public function orders(){
-        // this is incorrect
-        // it should be through 
-        return $this->hasMany(Orders::class);
-       // return $this->belongsToMany(Branch::class)->withPivot('period','orders');
+ 
+       return $this->hasManyThrough(Orders::class,AddressBranch::class,'address_id','address_branch_id','id','id');
     }
     public function activities(){
         return $this->hasMany(Activity::class);
@@ -72,7 +70,7 @@ class Address extends Model
     }
 
     public function branchLead(){
-        return $this->belongsToMany(Branch::class,'branch_lead','address_id','branch_id')->where('addressable_type','=','lead');
+        return $this->belongsToMany(Branch::class,'branch_lead','address_id','branch_id')->withTimeStamps()->where('addressable_type','=','lead');
     }
     public function scopeType($query,$type){
         return $query->where('addressable_type','=',$type);

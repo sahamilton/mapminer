@@ -25,9 +25,15 @@ class OrdersController extends Controller
     public function index()
     {
         $mybranches = array_keys($this->person->myBranches());
-        
-        $orders = $this->orders->periodOrders($mybranches);
-        return response()->view('orders.index',compact('orders'));
+       
+        $branchOrders = $this->branch->whereIn('id',$mybranches)->with('orders')->get();
+       
+        $orders = $branchOrders->map(function ($branch) {
+            return $branch->orders->sum('orders');
+           // return $branch->orders->load('branch','branch.manager');
+        });
+
+        return response()->view('orders.index',compact('orders','branchOrders'));
     }
     /**
      * Show the form for creating a new resource.

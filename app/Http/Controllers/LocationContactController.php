@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use \App\Contact;
-use App\Orders;
+use App\AddressBranch;
 use App\Branch;
 
 use App\Person;
@@ -29,7 +29,7 @@ class LocationContactController extends Controller
     public function index()
     {
 
-       
+    
         if(auth()->user()->hasRole('Branch Manager')){
              
              $branches = Branch::whereHas('manager',function($q) {
@@ -38,10 +38,13 @@ class LocationContactController extends Controller
         }else{
             $branches = array_keys($this->person->myBranches());
         }
+            
              $opportunity = Opportunity::whereIn('branch_id',$branches)->pluck('address_id')->toArray();
-             $customer = Orders::whereIn('branch_id',$branches)->pluck('address_id')->toArray();
+            
+             $customer = AddressBranch::whereIn('branch_id',$branches)->pluck('address_id')->toArray();
            
              $contacts = $this->contact->whereIn('address_id',array_merge($opportunity,$customer))->with('location')->get();
+           
             $title = "Branch Contacts";
              return response()->view('contacts.index',compact('contacts','title'));
            

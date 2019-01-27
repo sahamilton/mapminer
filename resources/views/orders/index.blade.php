@@ -7,28 +7,31 @@
 
     <th>Branch</th>
     <th>Manager</th>
-    <th>Orders</th>
+
+    <th class='text-center'>Orders</th>
 
     </thead>
     <tbody>
-        @foreach ($orders as $order)
-     
+        @foreach ($branchOrders as $branch)
+
         <tr>
-            <td><a href="{{route('orders.show',$order->branches->id)}}">{{$order->branches->branchname}}
-            </a></td>
             <td>
-                @if(! $order->branches->manager->isEmpty())
-              @foreach ($order->branches->manager as $manager)
-               <li> {{$manager->fullName()}}</li>
-               @endforeach
-                
-                
-               
+                <a href="{{route('branches.show',$branch->id)}}">
+                    {{$branch->branchname}}
+                </a>
+            </td>
+            <td>
+                @if(! $branch->manager->isEmpty())
+                    @foreach ($branch->manager as $manager)
+                        <li> {{$manager->fullName()}}</li>
+                    @endforeach
                 @endif
                 
             </td>
-            <td class="text-right">${{number_format($order->sum,2)}}</td>
-            @php $total = $total + $order->sum @endphp
+
+
+            <td class="text-right">${{number_format($orders[$loop->index],2)}}</td>
+            @php $total = $total + $orders[$loop->index] @endphp
         </tr>
         @endforeach
         <tfoot>
