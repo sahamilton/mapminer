@@ -70,7 +70,8 @@ class Address extends Model
     }
 
     public function branchLead(){
-        return $this->belongsToMany(Branch::class,'branch_lead','address_id','branch_id')->withTimeStamps()->where('addressable_type','=','lead');
+        return $this->belongsToMany(Branch::class,'branch_lead','address_id','branch_id')
+        ->withPivot('ranking','person_id','status_id','comments')->withTimeStamps()->where('addressable_type','=','lead');
     }
     public function scopeType($query,$type){
         return $query->where('addressable_type','=',$type);
