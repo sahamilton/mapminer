@@ -136,7 +136,7 @@ class LeadsAssignController extends Controller
 
         
           $branches = $this->branch->nearby($lead,$this->distance,$this->limit)->get();
-          dispatch(new AssignAddressesToBranches($branches,$lead));
+          dispatch(new AssignAddressesToBranches($branches,$lead))->onQueue('mapminer');
 
         }
         return $count;
