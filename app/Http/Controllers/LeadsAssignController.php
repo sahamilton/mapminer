@@ -5,24 +5,28 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\LeadSource;
 use App\Branch;
+use App\Address;
 use App\Lead;
 use App\Person;
 use App\Role;
 use App\Permission;
+use App\Jobs\AssignAddressesToBranches;
 class LeadsAssignController extends Controller
 {
     public $leadsource;
     public $lead;
+    public $address;
     public $branch;
     public $person;
     public $leadroles;
     public $distance = 100;
     public $limit = 5;
-	public function __construct(LeadSource $leadsource,Lead $lead, Person $person,Branch $branch){
+	public function __construct(LeadSource $leadsource,Lead $lead, Address $address,Person $person,Branch $branch){
 		$this->leadsource = $leadsource;
 		$this->lead = $lead;
     $this->branch = $branch;
 		$this->person = $person;
+    $this->address = $address;
     $this->leadroles = $this->setLeadRoles();
 
 
@@ -39,13 +43,15 @@ class LeadsAssignController extends Controller
 
     }
      public function geoAssignLeads(Request $request,$leadsource){
-       
+
         // get parameters
+
         $this->distance = request('distance');
         $this->limit = request('limit');
         $verticals  = null;
-        $leadsource->load('unassignedLeads');
-        $leads = $leadsource->unassignedLeads;
+        $leads = $this->address->doesntHave('assignedToBranch')->where('lead_source_id','=',$leadsource->id)->get();
+       
+     
         if(request('type')=='branch'){
           $count = $this->assignLeadsToBranches($leads,$verticals);
         }else{
@@ -58,7 +64,6 @@ class LeadsAssignController extends Controller
 
 
     public function assignLead(Request $request){
-
 
       $count=0;
 
@@ -117,38 +122,22 @@ class LeadsAssignController extends Controller
           
           foreach ($people as $person){
             $count++;
-              $lead->salesteam()->attach($person->id,['status_id'=>1]);
+              $lead->salesteam()->attach($person->id);
           }
           
         }
         return $count;
     }
 
-    private function assignLeadsToBranches($leads,$verticals=null){
+    private function assignLeadsToBranches($leads){
       
-      $count = null;
+
       foreach ($leads as $lead) {
-         
-          if($verticals){
-            // assign only to branches who have industry focus == to leadsource
-            // or no industry focus
-              /*$people = $people->where(function ($q) use ($verticals){
-                $q->whereHas('industryfocus',function($q) use($verticals){
-                  $q->whereIn('searchfilters.id',$verticals);
-                })
-                ->orWhereDoesntHave('industryfocus');
-              });*/
-          }
-          $branches = $this->branch->nearby($lead,$this->distance)
-                ->limit($this->limit)
-                ->get();
-       
-          foreach ($branches as $branch){
-            
-              $count++;
-              $lead->branches()->attach($branch->id,['status_id'=>1]);
-          }
-          
+
+        
+          $branches = $this->branch->nearby($lead,$this->distance,$this->limit)->get();
+          dispatch(new AssignAddressesToBranches($branches,$lead));
+
         }
         return $count;
     }

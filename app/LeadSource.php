@@ -23,7 +23,7 @@ class LeadSource extends Model
     public function assigned (){
 
       return $this->whereHas('addresses',function ($q){
-        $q->has('assignedToBranch');
+         $q->has('assignedToBranch');
       })->with('addresses');
 
      /* return $this->selectRaw('`leadsources`.*, count(`address`.`id`) as assigned') 
@@ -34,12 +34,11 @@ class LeadSource extends Model
     
 
     }
-    public function scopeUnassigned ($query){
+    public function unassigned (){
 
-      return $query
-      ->whereHas('addresses',function ($q){
+      return $this->whereHas('addresses',function ($q){
         $q->doesntHave('assignedToBranch');
-      })->withCount('addresses');
+      });
     } 
     public function addresses(){
       return $this->hasMany(Address::class,'lead_source_id','id');

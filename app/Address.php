@@ -74,6 +74,10 @@ class Address extends Model
         return $this->belongsToMany(Branch::class,'address_branch','address_id','branch_id')
         ->withPivot('rating','person_id','status_id','comments')->withTimeStamps();
     }
+    public function closed(){
+        return $this->belongsToMany(Branch::class,'address_branch','address_id','branch_id')
+        ->withPivot('rating','person_id','status_id','comments')->withTimeStamps()->whereIn('status_id',[1,2]);
+    }
 
     public function assignedToPerson(){
         return $this->belongsToMany(Person::class,'address_branch','address_id','person_id')

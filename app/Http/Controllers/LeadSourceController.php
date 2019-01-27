@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\LeadSource;
 use App\Lead;
+use App\Address;
 use Excel;
 use App\Person;
 use App\SearchFilter;
@@ -21,19 +22,21 @@ class LeadSourceController extends Controller
     public $vertical;
     public $lead;
     public $branch;
+    public $address;
     public function __construct(LeadSource $leadsource,
                             LeadStatus $status,
                             SearchFilter $vertical,
                             Lead $lead,
                             Person $person,
-                            Branch $branch){
+                            Branch $branch,
+                            Address $address){
         $this->leadsource = $leadsource;
         $this->leadstatus = $status;
         $this->person = $person;
         $this->vertical=$vertical;
         $this->lead = $lead;
-        $this->branch = $branch;
-
+            $this->branch = $branch;
+        $this->address = $address;
     }
 
     /**
@@ -42,11 +45,20 @@ class LeadSourceController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {   
-
+    {  
     
-        $leadsources = $this->leadsource->unassigned()->get();
-        dd($leadsources);
+        $leadsources = $this->leadsource->withCount(
+            ['addresses',
+            'addresses as assigned'=>function($query){
+                $query->has('assignedToBranch');
+            },
+            'addresses as unassigned' => function ($query) {
+                $query->whereDoesntHave('assignedToBranch');
+                },
+            'addresses as closed' => function($query){
+                    $query->has('closed');
+                }])->get();
+
         return response()->view('leadsource.index', compact('leadsources'));
     }
 
@@ -169,8 +181,19 @@ class LeadSourceController extends Controller
     }
     
     public function unassigned($id){
-        $leadsource = $this->leadsource->with('unassignedLeads')->findOrFail($id);
-     
+        $leadsource = $this->leadsource->withCount(
+            ['addresses',
+            'addresses as assigned'=>function($query){
+                $query->has('assignedToBranch');
+            },
+            'addresses as unassigned' => function ($query) {
+                $query->whereDoesntHave('assignedToBranch');
+                },
+            'addresses as closed' => function($query){
+                    $query->has('closed');
+                }])->findOrFail($id);
+
+
         return response()->view('leads.unassigned',compact('leadsource'));
     }
 

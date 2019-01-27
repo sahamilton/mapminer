@@ -434,7 +434,7 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
 
 		Route::get('leadsource/{id}/announce',['as'=>'leadsource.announce','uses'=>'LeadsEmailController@announceLeads']);
 		Route::post('leadsource/{id}/email',['as'=>'sendleadsource.message','uses'=>'LeadsEmailController@email']);
-		Route::get('leadsource/{leadsource}/assign',['as'=>'leadsource.assign','uses'=>'LeadSourceController@assignLeads']);
+		Route::get('leadsource/{leadsource}/assign',['as'=>'leadsource.assign','uses'=>'LeadsAssignController@assignLeads']);
 		Route::get('leadsource/{id}/branch',['as'=>'leadsource.branches','uses'=>'LeadSourceController@branches']);
 		Route::get('leadsource/{id}/unassigned',['as'=>'leadsource.unassigned','uses'=>'LeadSourceController@unassigned']);
 		Route::get('leadsource/{id}/addleads',['as'=>'leadsource.addleads','uses'=>'LeadImportController@getFile']);

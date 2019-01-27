@@ -40,11 +40,11 @@
    	<td><a href="{{route('leadsource.show',$source->id)}}">{{$source->source}}</a></td>
     <td>{{$source->description}}</td>
     <td>{{$source->reference}}</td>
-    <td>{{$source->withCount('addresses')->addresses_count}}</td>
-    <td>{{$source->ownedleads}}</td>
+    <td>{{$source->addresses_count}}</td>
+    <td>{{$source->assigned}}</td>
     <td><a href="{{route('leadsource.unassigned',$source->id)}}">
-       123</a></td>
-    <td>{{$source->closedleads}}</td>
+       {{$source->unassigned}}</a></td>
+    <td>{{$source->closed}}</td>
     
     <td>{{number_format($source->ranking,2)}}</td>
    	<td>
