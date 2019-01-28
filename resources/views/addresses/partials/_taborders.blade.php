@@ -9,10 +9,10 @@
     </thead>
     <tbody>
         @foreach ($location->orders as $order)
-   
+    
         <tr>
             <td>
-                {{$order->branches->branchname}}
+                {{$order->branch->branch->branchname}}
             </td>
             <td>{{$order->period}}</td>
             <td class="text-right">${{number_format($order->orders,2)}}</td>

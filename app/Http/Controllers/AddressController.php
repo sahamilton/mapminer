@@ -67,8 +67,8 @@ class AddressController extends Controller
     {
       // $ranking = $this->address->with('ranking')->myRanking()->findOrFail($address->id);
 
-        $location = $address->load('contacts','contacts.relatedActivities','activities','activities.type','activities.relatedContact','company','opportunities','industryVertical','relatedNotes','orders','orders.branches','watchedBy','watchedBy.person','ranking','leadsource');
-        
+        $location = $address->load('contacts','contacts.relatedActivities','activities','activities.type','activities.relatedContact','company','opportunities','industryVertical','relatedNotes','orders','orders.branch','watchedBy','watchedBy.person','ranking','leadsource');
+   
        // $activities = ActivityType::orderBy('sequence')->pluck('activity','id')->toArray();
         $branches = $this->branch->nearby($location,100,5)->get();
         $rankingstatuses = $this->address->getStatusOptions;
@@ -103,7 +103,7 @@ class AddressController extends Controller
     public function update(Request $request, $address)
     {
         $address = $this->getAddress($request);
-     
+
         $geocode = app('geocoder')->geocode($address)->get();
         $data = $this->address->getGeoCode($geocode);
 

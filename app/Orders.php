@@ -10,7 +10,7 @@ class Orders extends Model
 
 
     public function branch(){
-    	return $this->belongsTo(Branch::class,'branch_id','id');
+    	return $this->belongsTo(AddressBranch::class,'address_branch_id','id')->with('branch');
     }
     public function address(){
       return $this->belongsTo(AddressBranch::class,'address_branch_id','id')->with('address');
