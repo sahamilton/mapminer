@@ -366,7 +366,8 @@ class CompaniesController extends BaseController {
 			if ($location->has('orders')){
 				$sum = 0;
 				foreach ($location->orders as $order){
-					$sum += $order->pivot->orders;
+	
+					$sum += $order->orders;
 				}
 				$data[$location->id] = $sum;
 			}
