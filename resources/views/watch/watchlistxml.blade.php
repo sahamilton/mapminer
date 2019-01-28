@@ -2,7 +2,7 @@
 @foreach ($locations as $location)
 @if($location->watching)
 <marker 
-locationweb="{{route('locations.show',$location->location_id)}}"
+locationweb="{{route('address.show',$location->address_id)}}"
 name="{{trim($location->watching->businessname)}}"
 account="{{trim($location->watching->businessname)}}"
 accountweb="{{route('company.show' , $location->watching->company->id,['title'=>'see all locations'])}}"
