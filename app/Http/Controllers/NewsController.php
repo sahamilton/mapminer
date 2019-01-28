@@ -60,6 +60,7 @@ class NewsController extends BaseController {
 	 */
 	public function create()
 	{
+		
 		$filters = new SearchFilter;
 		$verticals = $filters->industrysegments();
 		$servicelines = Serviceline::whereIn('id',$this->news->getUserServiceLines())->pluck('serviceline','id')->toArray();

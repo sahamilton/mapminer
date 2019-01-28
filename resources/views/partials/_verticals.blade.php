@@ -38,7 +38,7 @@
 <?php  $n = $descendant->depth;?>
 @endforeach
 </li></ul></fieldset>
-            @include('partials._verticals')  
+         
             <span class="help-block{{ $errors->has('vertical') ? ' has-error' : '' }}">
                 <strong>{{$errors->has('vertical') ? $errors->first('vertical')  : ''}}</strong>
             </span>
