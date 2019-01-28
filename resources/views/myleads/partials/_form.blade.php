@@ -55,7 +55,7 @@
         class="form-control" 
         name='state' 
         description="state" 
-        value="{{ old('state', isset($location) ? $location->fullstate() : '' )}}" 
+        value="{{ old('state', isset($location) ? $location->state : '' )}}" 
         placeholder="state, city state zip">
         <span class="help-block">
             <strong>{{ $errors->has('state') ? $errors->first('state') : ''}}</strong>
@@ -70,7 +70,7 @@
         class="form-control" 
         name='zip' 
         description="zip" 
-        value="{{ old('zip', isset($location) ? $location->fullzip() : '' )}}" 
+        value="{{ old('zip', isset($location) ? $location->zip : '' )}}" 
         placeholder="zip, city state zip">
         <span class="help-block">
             <strong>{{ $errors->has('zip') ? $errors->first('zip') : ''}}</strong>
