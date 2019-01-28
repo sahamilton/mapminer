@@ -63,7 +63,7 @@
 				</div>
 				<div style="clear:both"></div> 
 			</div>
-			@if($people->reportsTo || $people->directReports->count()>0)
+			@can('manage_people')
 				<div class="list-group-item">
 					<div class="list-group-item-text col-sm-4">
 						<p><strong>Reporting Structure</strong></p>
@@ -93,7 +93,7 @@
 					</div>
 					<div style="clear:both"></div> 
 				</div>
-			@endif
+			@endcan
 				
 			@can('manage_branches')
 
@@ -113,8 +113,8 @@
 				</div>
 				<div style="clear:both"></div>  
 				</div>
-			@endif
-			@if($people->managesAccount->count()>0)
+			@endcan
+			@can('manage_accounts')
 				<div class="list-group-item"><p class="list-group-item-text">Accounts Managed</p>
 					<ul style="list-style-type: none;">
 						@foreach($people->managesAccount as $account)
@@ -122,7 +122,7 @@
 						@endforeach
 					</ul>
 				</div>
-			@endif
+			@endcan
 				<div class="list-group-item"><p class="list-group-item-text"><strong>Activity</strong></p>
 					<ul style="list-style-type: none;">
 						<li>Total Logins: {{$track->count()}}</li>
