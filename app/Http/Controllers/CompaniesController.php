@@ -113,8 +113,8 @@ class CompaniesController extends BaseController {
 		$managers = $this->person->getPersonsWithRole($this->NAMRole);
 
 		$filters = $this->getFilters();
-		$servicelines = Serviceline::whereIn('id',$this->userServiceLines)
-			->pluck('ServiceLine','id');
+
+		$servicelines = Serviceline::pluck('ServiceLine','id');
 			
 		return response()->view('companies.create',compact('managers','filters','servicelines'));
 	}
