@@ -283,7 +283,7 @@ class BranchesController extends BaseController {
 		$data['lng']= $latlng['lng'];
 
 		
-		$request = $this->getGeoCode($request);
+		$request = $this->branch->getGeoCode($request);
 		$branch->update($request->all());
 		$branch->associatePeople($request);
 		
@@ -519,10 +519,10 @@ public function geoCodeBranches()
 		$address = $this->branch->fullAddress($branch);
 		$geocode = app('geocoder')->geocode($address)->get();
         $data = $this->branch->getGeoCode($geocode);
-		$latLng = $this->getGeoCode($address);
 		
-		$branch->lat = $latLng['lat'];
-		$branch->lng = $latLng['lng'];
+		
+		$branch->lat = $data['lat'];
+		$branch->lng = $data['lng'];
 		$branch->update();
 
 	}
