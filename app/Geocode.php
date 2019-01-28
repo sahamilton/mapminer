@@ -16,9 +16,14 @@ trait Geocode
                 $data['geostatus']=TRUE; 
 
             }elseif(is_object($geoCode)){
-
-                $data['lat'] = $geoCode->first()->getCoordinates()->getLatitude();
-                $data['lng'] = $geoCode->first()->getCoordinates()->getLongitude();
+                
+                if(null!==$geoCode->first()){
+                  
+                    $data['lat'] = $geoCode->first()->getCoordinates()->getLatitude();
+                    $data['lng'] = $geoCode->first()->getCoordinates()->getLongitude();
+                }else{
+                    return false;
+                }
                 $data['geostatus']=TRUE;
                 $data['address'] =  $geoCode->first()->getStreetNumber()." " . $geoCode->first()->getStreetName();
                 $data['street'] = $data['address'];
