@@ -4,6 +4,7 @@
     <td>{{$branch->street}}</td>
     <td>{{$branch->city}}</td>
     <td>{{$branch->state}}</td>
+    <td>{{number_format($branch->distance,1)}} miles</td>
     <td>
       <input class="text text-success" 
       type="checkbox"
@@ -12,4 +13,5 @@
       name ="branch[]" 
       value="{{$branch->id}}">
     </td>
+
    </tr>

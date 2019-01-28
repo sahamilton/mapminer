@@ -30,12 +30,12 @@
 <th>Address</th>
 <th>City</th>
 <th>State</th>
+<th>Distance</th>
 <th></th>
-
 </thead>
 <tbody>
 
-@foreach($details->branchesServiced as $branch)
+@foreach($branches as $branch)
 @include('branchassignments.partials._selectbranch')
  @endforeach
 </tbody>

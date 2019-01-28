@@ -68,10 +68,10 @@ class BranchManagementController extends Controller
             ->firstOrFail();
         $branches = array();
            
-        if($details->geostatus ==1){
+        if($details->geostatus == 1){
             $branches = $this->branch->nearby($details,100,5)->get();
         }
-    
+        $branches = $details->branchesServiced->merge($branches);
         return response()->view('branchassignments.show',['details'=>$details,'branches'=>$branches]);
 
 
