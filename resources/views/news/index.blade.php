@@ -47,7 +47,7 @@
 		<!-- Post Footer -->
 		<div class="row">
 			<div class="col-md-8">
-				Audience {{$post->reach()}} 
+				
 			@if(auth()->user()->hasRole('admin'))
 				<p>Visible to <a href="{{route('news.audience',$post->id)}}"
 
