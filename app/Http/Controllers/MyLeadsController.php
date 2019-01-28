@@ -61,7 +61,7 @@ class MyLeadsController extends BaseController
         $data = $this->cleanseInput($request);
         $data['addressable_type'] = 'lead';
         $lead = $this->lead->create($data['lead']);
-        $lead->branchLead()->attach($data['branch']);
+        $lead->assignedToBranch()->attach($data['branch']);
         
         
         return redirect()->route('address.show',$lead)->withMessage('Lead Created');
