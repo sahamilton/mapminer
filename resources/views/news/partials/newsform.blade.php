@@ -94,6 +94,7 @@
 <!-- / Industry verticals -->
 <!-- Roles -->
 <legend>Roles</legend>
-   @include('partials._roles')
+
+   @include('news.partials._roles')
 <!-- / Sales process steps -->
 <input type="hidden" name="user_id" value="{{auth()->user()->id}}" />

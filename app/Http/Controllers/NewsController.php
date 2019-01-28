@@ -29,6 +29,7 @@ class NewsController extends BaseController {
 	public function index()
 	{
 		
+		
 		$news = $this->news
 		->whereHas('serviceline', function($q) {
 			$q->whereIn('serviceline_id', $this->userServiceLines);
@@ -36,6 +37,7 @@ class NewsController extends BaseController {
 		})
 		->with('author','author.person','serviceline','comments')
 		->orderBy('datefrom', 'DESC')->get();
+
 		return response()->view('news.index', compact('news'));
 	}
 
@@ -49,7 +51,7 @@ class NewsController extends BaseController {
 					})
 		->with('comments')
 		->orderBy('datefrom', 'DESC')->get();
-		
+		dd('hree');
 		return response()->view('news.index', compact('news'));
 		
 	}
@@ -66,8 +68,8 @@ class NewsController extends BaseController {
 		$servicelines = Serviceline::whereIn('id',$this->news->getUserServiceLines())->pluck('serviceline','id')->toArray();
 		$roles=Role::all();
 		$mode='create';
-		$selectedRoles = \Input::old('roles',array());
-		return response()->view('news.create', compact('servicelines','verticals','roles','mode','selectedRoles'));
+
+		return response()->view('news.create', compact('servicelines','verticals','roles','mode'));
 	}
 
 	/**
@@ -86,8 +88,8 @@ class NewsController extends BaseController {
 			if(request()->filled('vertical')){
 				$news->relatedIndustries()->attach(request('vertical'));
 			}
-			if(request()->filled('role')){
-				$news->relatedRoles()->attach(request('role'));
+			if(request()->filled('roles')){
+				$news->relatedRoles()->attach(request('roles'));
 
 			}
 		}
@@ -106,9 +108,12 @@ class NewsController extends BaseController {
 	 * @return Response
 	 */
 	public function show($slug)
-	{
+	{	
+
 		
-		$news = $this->news->currentNews($slug);
+		$news = $this->news->with('relatedRoles')->where('id','=','52')->first();
+		
+		
 		
 		if(! $news){
 			return redirect()->route('currentnews')->with('message',"No news found");
@@ -122,24 +127,18 @@ class NewsController extends BaseController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function edit($id)
+	public function edit($news)
 	{
 		$filters = new SearchFilter;
 		$verticals = $filters->industrysegments();
 
-		$news = $this->news
-		->whereHas('serviceline', function($q) {
-					    $q->whereIn('serviceline_id', $this->userServiceLines);
-
-					})
-
-		->with('author','author.person','serviceline','relatedRoles','relatedIndustries')
-		->findOrFail($id);
+		$news ->load('author','author.person','serviceline','relatedRoles','relatedIndustries');
 		$mode='edit';
-		$selectedRoles = \Input::old('roles',array());
 
+
+		$roles=Role::all();
 		$servicelines = Serviceline::whereIn('id',$this->userServiceLines)->pluck('serviceline','id')->toArray();
-		return response()->view('news.edit', compact('news','servicelines','verticals','mode','selectedRoles'));
+		return response()->view('news.edit', compact('news','servicelines','verticals','roles','mode'));
 	}
 
 	/**
@@ -148,9 +147,9 @@ class NewsController extends BaseController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update(NewsFormRequest $request,$id)
+	public function update(NewsFormRequest $request,$news)
 	{
-		$news = $this->news->findOrFail($id);
+		
 
 		$data = request()->all();
 
@@ -161,14 +160,11 @@ class NewsController extends BaseController {
 
 			$news->serviceline()->sync(request('serviceline'));
 
-			$vertical = [];
-			$vertical = request('vertical');
-			$news->relatedIndustries()->sync($vertical);
 			
-			$role = [];
-			$role = request('role');
+			$news->relatedIndustries()->sync(request('vertical'));
 
-			$news->relatedRoles()->sync($role);
+
+			$news->relatedRoles()->sync(request('roles'));
 			
 		}
 		return redirect()->route('news.index');

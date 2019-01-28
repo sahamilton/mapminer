@@ -1,14 +1,23 @@
-<?php $roles = \App\Role::pluck('name','id')->toArray();?>
+<div class="form-group {!! $errors->has('roles') ? 'has-error' : '' !!}">
 
-<li><input type="checkbox" name="role[]" id="checkAll" value="">Check All Roles
-@foreach ($roles as $key=>$value)
-	<p>
-	@if((isset($news->relatedRoles) && $news->relatedRoles->contains('id',$key))
-	or is_array(old('role')) && in_array($key,old('role')))
-	<input type="checkbox" name="role[]" checked value="{{$key}}">{{$value}}
-	@else
-	<input type="checkbox" name="role[]"  value="{{$key}}">{{$value}}
-	@endif
-</p>
-@endforeach
-</li>
+    <label class="col-md-2 control-label" for="roles">Roles</label>
+    <div class="col-md-6">
+        <select 
+        required
+        class="form-control" 
+        name="roles[]" 
+        id="roles" 
+        multiple
+		oninvalid="this.setCustomValidity('You must choose a role')"
+		oninput="this.setCustomValidity('')"  />
+			@foreach ($roles as $role)
+				
+            		<option value="{{ $role->id }}"{{ ( in_array($role->id, $news->relatedRoles->pluck('id')->toArray()) ? ' selected="selected"' : '') }}>{{ $role->display_name }}</option>
+            @endforeach
+		</select>
+
+		
+	</div>
+</div>
+
+

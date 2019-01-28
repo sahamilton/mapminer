@@ -26,7 +26,7 @@ class News extends Model {
 	}
 
 	public function relatedRoles(){
-		return $this->belongsToMany(Role::class);
+		return $this->belongsToMany(Role::class,'news_role','news_id','role_id');
 	}
 	public function relatedIndustries(){
 		return $this->belongsToMany(SearchFilter::class,'news_searchfilter','news_id','searchfilter_id');
@@ -74,7 +74,13 @@ class News extends Model {
 
 	}
 
+	public function reach(){
+		$roles = Role::withCount('assignedRoles')->whereIn('id',$this->relatedRoles->pluck('id')->toArray())->get();
+		return $roles->sum('assigned_roles_count');
+	}
+
 	public function audience($id){
+		dd($id);
 
 		// find all people by role
 			$audience = array();

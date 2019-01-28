@@ -47,10 +47,11 @@
 		<!-- Post Footer -->
 		<div class="row">
 			<div class="col-md-8">
+				Audience {{$post->reach()}} 
 			@if(auth()->user()->hasRole('admin'))
 				<p>Visible to <a href="{{route('news.audience',$post->id)}}"
 
-				title="See all users who can see the {{$post->title}} news item">{{count($post->audience($post->id))}} users.</a></p>
+				title="See all users who can see the {{$post->title}} news item">{{$post->reach()}} users.</a></p>
 				@endif
 				<p><i class="far fa-user" aria-hidden="true"></i> by <span class="muted">
 
