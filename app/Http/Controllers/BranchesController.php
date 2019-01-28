@@ -274,8 +274,8 @@ class BranchesController extends BaseController {
 	{
 		
 		$data = request()->all();
-		$address = $data['street'] . ",". $data['city'] . ",". $data['state'] . ",". $data['zip'];	
-
+		$address = $data['street'] . " ". $data['city'] . " ". $data['state'] . " ". $data['zip'];	
+		
 		$geoCode = app('geocoder')->geocode($address)->get();
 
 		$latlng = ($this->branch->getGeoCode($geoCode));
@@ -283,8 +283,7 @@ class BranchesController extends BaseController {
 		$data['lng']= $latlng['lng'];
 
 		
-		$request = $this->branch->getGeoCode($request);
-		$branch->update($request->all());
+		$branch->update($data);
 		$branch->associatePeople($request);
 		
 		$branch->servicelines()->sync(request('serviceline'));

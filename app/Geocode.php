@@ -7,6 +7,7 @@ trait Geocode
 
    **/
    public function getGeoCode($geoCode){
+   
         
         if(is_array($geoCode) && count($geoCode)>0){
            
@@ -14,7 +15,7 @@ trait Geocode
                 $data['lng'] = $geoCode[0]['longitude'];
                 $data['geostatus']=TRUE; 
 
-            }elseif(is_object($geoCode) && count($geoCode)>0){
+            }elseif(is_object($geoCode)){
 
                 $data['lat'] = $geoCode->first()->getCoordinates()->getLatitude();
                 $data['lng'] = $geoCode->first()->getCoordinates()->getLongitude();

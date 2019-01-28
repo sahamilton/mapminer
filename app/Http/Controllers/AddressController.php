@@ -102,7 +102,9 @@ class AddressController extends Controller
      */
     public function update(Request $request, $address)
     {
-        $geocode = app('geocoder')->geocode(request('address'))->get();
+        $address = $this->getAddress($request);
+     
+        $geocode = app('geocoder')->geocode($address)->get();
         $data = $this->address->getGeoCode($geocode);
 
         $data['businessname'] =request('businessname');
@@ -146,5 +148,9 @@ class AddressController extends Controller
         $location->lat = $position[0];
         $location->lng = $position[1];
         return $location;
+    }
+
+    private function getAddress(Request $request){
+        return request('street'). ' ' .request('city'). ' ' .request('state'). ' ' .request('zip');
     }
 }
