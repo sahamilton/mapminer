@@ -175,7 +175,7 @@
 				</p>
 					@if(count($user->person->industryfocus)==0)
 					<div class="alert alert-warning">
-						<p>You are not associated with any particular industy.</p>
+						<p>You are not associated with any particular industry.</p>
 					@else
 					<ul style="list-style-type: none;">
 						@foreach($user->person->industryfocus as $industry)
