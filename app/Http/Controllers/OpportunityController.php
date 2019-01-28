@@ -47,7 +47,9 @@ class OpportunityController extends Controller
     {
         $activityTypes = ActivityType::all();
         $myBranches = $this->person->myBranches();
-     
+        if(count($myBranches)==0){
+            return redirect()->route('user.show',auth()->user()->id)->withWarning("You are not assigned to any branches. You can assign yourself here or contact Sales Ops");
+        }
         if(! auth()->user()->hasRole('branch_manager') && $this->person->myTeam()->count() >1){
              
                      $data = $this->getMarketManagerData(array_keys($myBranches));
