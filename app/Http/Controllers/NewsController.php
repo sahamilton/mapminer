@@ -127,12 +127,12 @@ class NewsController extends BaseController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function edit($news)
+	public function edit($id)
 	{
 		$filters = new SearchFilter;
 		$verticals = $filters->industrysegments();
 
-		$news ->load('author','author.person','serviceline','relatedRoles','relatedIndustries');
+		$news= $this->news->with('author','author.person','serviceline','relatedRoles','relatedIndustries')->findOrFail($id);
 		$mode='edit';
 
 
@@ -147,10 +147,10 @@ class NewsController extends BaseController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update(NewsFormRequest $request,$news)
+	public function update(NewsFormRequest $request,$id)
 	{
 		
-
+		$news = $this->news->findOrFail($id);
 		$data = request()->all();
 
 		$data = $this->setDates($data);

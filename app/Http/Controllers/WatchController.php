@@ -41,7 +41,7 @@ class WatchController extends BaseController {
 	public function create($id){
 		
 		$this->add($id);
-		$watch = $this->getMyWatchList(\Auth::id());
+		$watch = $this->watch->getMyWatchList(\Auth::id());
 		
 		return response()->view('watch.index', compact('watch'));
 	}
@@ -222,7 +222,7 @@ class WatchController extends BaseController {
 
 	public function getCompaniesWatched()
 	{
-		$watch = $this->getMyWatchList(auth()->user()->id);
+		$watch = $this->watch->getMyWatchList(auth()->user()->id);
 		$data['verticals'] = $this->watch->getUserVerticals();
 
 		if($data['verticals']){
