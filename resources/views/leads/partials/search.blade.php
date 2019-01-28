@@ -40,11 +40,9 @@
  
  <select id="selectdistance" name='distance' class="btn btn-mini" >
            @foreach($values as $value)
-               @if(\Session::has('geo') && $session['distance'] == $value)
-              <option selected value="{{$value}}">{{$value}} miles</option>
-              @else
+              
               <option value="{{$value}}">{{$value}} miles</option>
-              @endif
+           
            @endforeach
         </select> 
         <label> of address</label>
