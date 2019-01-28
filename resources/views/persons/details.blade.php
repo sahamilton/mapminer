@@ -95,7 +95,7 @@
 				</div>
 			@endif
 				
-			@if($people->branchesServiced->count()>0)
+			@can('manage_branches')
 
 				<div class="list-group-item">
 					<div class="list-group-item-text col-sm-4">
