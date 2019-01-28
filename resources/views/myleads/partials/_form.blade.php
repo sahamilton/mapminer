@@ -25,10 +25,55 @@
         class="form-control" 
         name='address' 
         description="address" 
-        value="{{ old('address', isset($location) ? $location->fullAddress() : '' )}}" 
-        placeholder="address, city state zip">
+        value="{{ old('address', isset($location) ? $location->address : '' )}}" 
+        placeholder="street address">
         <span class="help-block">
             <strong>{{ $errors->has('address') ? $errors->first('address') : ''}}</strong>
+        </span>
+    </div>
+</div>
+<!-- city -->
+<div class="form-group row{{ $errors->has('city') ? ' has-error' : '' }}">
+    <label for="city" class="col-md-2 control-label">City: </label>
+     <div class="col-sm-8">
+        <input required type="text" 
+        class="form-control" 
+        name='city' 
+        description="city" 
+        value="{{ old('city', isset($location) ? $location->city : '' )}}" 
+        placeholder="city">
+        <span class="help-block">
+            <strong>{{ $errors->has('address') ? $errors->first('address') : ''}}</strong>
+        </span>
+    </div>
+</div>
+<!-- state -->
+<div class="form-group row{{ $errors->has('state') ? ' has-error' : '' }}">
+    <label for="state" class="col-md-2 control-label">State: </label>
+     <div class="col-sm-8">
+        <input required type="text" 
+        class="form-control" 
+        name='state' 
+        description="state" 
+        value="{{ old('state', isset($location) ? $location->fullstate() : '' )}}" 
+        placeholder="state, city state zip">
+        <span class="help-block">
+            <strong>{{ $errors->has('state') ? $errors->first('state') : ''}}</strong>
+        </span>
+    </div>
+</div>
+<!-- zip -->
+<div class="form-group row{{ $errors->has('zip') ? ' has-error' : '' }}">
+    <label for="zip" class="col-md-2 control-label">zip: </label>
+     <div class="col-sm-8">
+        <input required type="text" 
+        class="form-control" 
+        name='zip' 
+        description="zip" 
+        value="{{ old('zip', isset($location) ? $location->fullzip() : '' )}}" 
+        placeholder="zip, city state zip">
+        <span class="help-block">
+            <strong>{{ $errors->has('zip') ? $errors->first('zip') : ''}}</strong>
         </span>
     </div>
 </div>

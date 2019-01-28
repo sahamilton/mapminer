@@ -22,15 +22,17 @@ title="Download {{$user->person->postName()}}'s Watch List as a CSV / Excel file
 		</thead>
 <tbody>
  @foreach($watch as $row)
-
+@if(! $row->address_id)
+{{dd($row)}}
+@endif
 			<tr>
-			<td><a href="{{route('locations.show',$row['watching'][0]->id)}}">
-			{{$row['watching'][0]->businessname}}</a></td>
-			<td>{{$row['watching'][0]->company->companyname}}</td>
-			<td>{{$row['watching'][0]->street}}</td>
-			<td>{{$row['watching'][0]->city}}</td>
-			<td>{{$row['watching'][0]->state}}</td>
-			<td>{{$row['watching'][0]->zip}}</td>
+			<td><a href="{{route('address.show',$row->address_id)}}">
+			{{$row->watching->businessname}}</a></td>
+			<td>{{$row->watching->company->companyname}}</td>
+			<td>{{$row->watching->street}}</td>
+			<td>{{$row->watching->city}}</td>
+			<td>{{$row->watching->state}}</td>
+			<td>{{$row->watching->zip}}</td>
 				
 			</tr>
 @endforeach

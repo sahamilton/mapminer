@@ -100,9 +100,10 @@ class WatchController extends BaseController {
 	 */
 	
 	
-	public function watching($user_id){
-		$user = User::findOrFail($user_id);
-		$watch = $this->getMyWatchList($user_id);
+	public function watching($user){
+		
+		
+		$watch = $this->watch->getMyWatchList($user->id);
 		
 		
 		return response()->view('watch.show', compact('watch','user'));

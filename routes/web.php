@@ -585,7 +585,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 
 
 	# Admin Dashboard
-		Route::get('watching/{userid}', ['as'=>'watch.watching', 'uses'=>'WatchController@watching']);
+		Route::get('watching/{user}', ['as'=>'watch.watching', 'uses'=>'WatchController@watching']);
 		Route::get('userlogin/{view?}',['as'=>'admin.showlogins', 'uses'=>'Admin\AdminDashboardController@logins']);
 		Route::get('userlogin/download/{view?}',['as'=>'admin.downloadlogins', 'uses'=>'Admin\AdminDashboardController@downloadlogins']);
 		Route::get('/', ['as'=>'dashboard','uses'=>'Admin\AdminDashboardController@dashboard']);

@@ -114,8 +114,8 @@ class MyLeadsController extends BaseController
     
 
     private function cleanseInput(Request $request){
-        
-        if(! $geodata = $this->lead->geoCodeAddress(request('address'))){
+        $address = request('address'). ' ' . request('city').' ' .request('state').' ' .request('zip');
+        if(! $geodata = $this->lead->geoCodeAddress($address)){
             return redirect()->back()->withError('Unable to geocode that address');
         }
 
