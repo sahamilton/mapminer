@@ -303,9 +303,10 @@ class CompaniesController extends BaseController {
 	 * @return View
 	 */
 	public function stateselector(Request $request){
-		$id = request('id');
+		
+		$company = $this->company->findOrFail(request('id'));
 		$state = request('state');
-		$data = $this->getStateLocationsAll($id,$state);
+		$data = $this->getStateLocationsAll($company,$state);
 		return response()->view('companies.show', compact('data'));
 	}
 
@@ -325,6 +326,7 @@ class CompaniesController extends BaseController {
 	}
 
 	private function getCompanyViewData($company,$data){
+
 
 		$data['company'] = $company->load('locations','locations.orders','managedBy','industryVertical');
 
