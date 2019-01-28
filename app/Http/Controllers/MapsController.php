@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 use App\News;
 use App\Branch;
 use App\Lead;
+use App\Address;
 use App\User;
 use App\Person;
 use App\Location;
@@ -13,6 +14,7 @@ class MapsController extends BaseController {
 	public $news;
 	public $lead;
 	public $person;
+	public $address;
 	/**
 	 * Display a listing of regions
 	 *
@@ -24,7 +26,8 @@ class MapsController extends BaseController {
 				User $user,
 				News $news,
 				Lead $lead,
-				Person $person
+				Person $person,
+				Address $address
 			)	
 		{
 			$this->branch = $branch;
@@ -33,6 +36,7 @@ class MapsController extends BaseController {
 			$this->news = $news;
 			$this->person = $person;
 			$this->location = $location;
+			$this->address = $address;
 			parent::__construct($location);
 	}
 	
@@ -99,7 +103,7 @@ class MapsController extends BaseController {
 	public function findLocalAccounts($distance=NULL,$latlng = NULL,$company = NULL) {
 		
 		$location = $this->getLocationLatLng($latlng);
-		$locations = $this->location
+		$locations = $this->address
 		->whereHas('company.serviceline',function ($q){
 			$q->whereIn('servicelines.id',$this->userServiceLines);
 		});

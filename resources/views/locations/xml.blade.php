@@ -2,7 +2,7 @@
 @foreach($result as $row)		
 <marker
 	locationweb="{{route(
-'locations.show'
+'address.show'
  , $row->id)}}" 
 	name="{{trim($row->businessname)}}"
 	account="{{trim($row->companyname)}}"

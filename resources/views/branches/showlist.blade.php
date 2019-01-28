@@ -1,56 +1,47 @@
 @extends('site/layouts/default')
-@section('content'
-)<?php $type='list';?>
-@include('branches/partials/_head')
+@section('content')
+<h2>Branch {{$data['branch']->branchname}}  </h4>
+<p>{{$data['branch']->fullAddress()}}</p>
 
- <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
-    <thead>
-    	<th>Company Name</th> 
-		<th>Business Name</th> 
-		<th>Industry Vertical</th>
-		<th>Street </th> 
-		<th>City </th> 
-		<th>State </th> 
-		<th>ZIP </th> 
-		<th>Watching </th> 
+<p><a href="{{ route('branches.index') }}">Show all branches</a></p>	
+@php $data['type']='branch'; 
+$data['fulladdress'] = $data['branch']->fullAddress();
+@endphp
+@include('maps.partials._form')
+<p><a href="{{route('branches.show',$data['branch']->id)}}"><i class="far fa-flag" aria-hidden="true"></i>Map View</a></p>
+<nav>
+  <div class="nav nav-tabs" id="nav-tab" role="tablist">
+  <a class="nav-link nav-item active" 
+      id="locations-tab" 
+      data-toggle="tab" 
+      href="#locations" 
+      role="tab" 
+      aria-controls="locations" 
+      aria-selected="true">
+    <strong> Nearby Locations</strong>
+  </a>
+    <a class="nav-item nav-link"  
+        data-toggle="tab" 
+        href="#team"
+        id="team-tab"
+        role="tab"
+        aria-controls="team"
+        aria-selected="false">
 
-    </thead>
-    <tbody>
-   @foreach($locations as $location)
-    <tr>  
-    <td>
-<a href="{{route('company.show',$location->company_id)}}"
-				title="See all {{$location->companyname}} locations">
-				{{$location->companyname}}
-		</a>
-
-    </td>
-	<td>
-		<a href="{{route('address.show',$location->id)}}"
-				title="See details of the {{$location->businessname}} location">
-				{{$location->businessname}}
-		</a>
-	</td>
-	<td>{{$location->vertical}}</td>
-	<td>{{$location->street}}</td>
-	<td>{{$location->city}}</td>
-	<td>{{$location->state}}</td>
-	<td>{{$location->zip}}</td>
+    <strong> Branch Team</strong>
+  </a>
+</div>
+</nav>
+<div class="tab-content" id="nav-tabContent">
+    <div id="locations" class="tab-pane show active">
+     @include('branches.partials._tablocations')
+    </div>
+    <div id="team" class="tab-pane fade">
+ 		@include('branches.partials._tabteam')
+ 	</div>
+ </div>
 
 
-	<td style ="text-align: center; vertical-align: middle;">
-
-		<input type='checkbox' name='watchList' class='watchItem' 
-		{{ in_array($location->id,$mywatchlist) ? 'checked' : '' }}
-	 	id="{{$location->id}}"
-	 	value='{{$location->id}}' >
-	</td>
-		
-    </tr>
-   @endforeach
-    
-    </tbody>
-    </table>
 @include('partials/_scripts')
 
 

@@ -39,7 +39,12 @@ class LocationPresenter extends BasePresenter
     }
 
     public function fullAddress(){
+        if($this->wrappedObject->street){
+            return $this->wrappedObject->street . ' '. $this->wrappedObject->city .' ' . $this->wrappedObject->state . ' '  . $this->wrappedObject->zip;
+        }else{
         return $this->wrappedObject->address . ' '. $this->wrappedObject->city .' ' . $this->wrappedObject->state . ' '  . $this->wrappedObject->zip;
+        }
+        
     }
 
     public function fullName(){
