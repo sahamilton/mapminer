@@ -302,6 +302,7 @@ class GeoCodingController extends BaseController {
 
 	private function getLocationListData($location,$data){
 		
+		
 		return $this->address->nearby($location,$data['distance'])
 				->with('company')
 				->get();

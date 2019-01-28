@@ -2,6 +2,7 @@
 @section('content')
 <div class="container">
 <h2>About Mapminer</h2>
+
 <p><strong>Description: </strong>The People Ready Mapminer system is designed to give the sales teams insight into the locations of the national accounts that we serve. This information should make it easier to find new opportunities to service our largest accounts. In addition Mapminer provides information on the People Ready Branches and Sales Organization.  Addtionally there is information provided from purchased lists of current construction projects through out North America.</p> 
 
 <p>Mapminer was developed by <a href="//www.ELAConsultingGroup.com" target="_blank" title="Learn more about ELA">ELA Consulting Group</a> for People Ready</p>
@@ -13,11 +14,6 @@
 <p><strong>Environment: </strong>
 {{App::environment()}} </p>
 <p><strong>Laravel Version:</strong>  {{App::version()}}</p>
-
-@if(auth()->user()->hasRole('admin'))
-	<p><strong>Environment: </strong>
-	{{App::environment()}} </p>
-	<p><strong>Laravel Version:</strong>  {{App::version()}}</p>
 	<p><strong>Branch:</strong>
 		<?php echo ucwords(exec('git rev-parse --abbrev-ref HEAD'));?></p>
 	<p><strong>
