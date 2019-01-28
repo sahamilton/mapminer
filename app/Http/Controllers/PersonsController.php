@@ -172,6 +172,7 @@ class PersonsController extends BaseController {
 	 */
 	public function show($person)
 	{
+		
 		$roles = $this->persons->findPersonsRole($person);
 
 

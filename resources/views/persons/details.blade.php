@@ -106,6 +106,7 @@
 							<li><a href="{{route('branches.show',$branch->id)}}">{{$branch->branchname}}</a></li>
 						@endforeach
 					</ul>
+					<p><a href="{{route('branchassignments.show',$people->user_id)}}" class="btn btn-info">Update Branch Assignments</a></p>
 				</div>
 				<div class="col-sm-8">
 					@include('persons.partials._branchmap')
