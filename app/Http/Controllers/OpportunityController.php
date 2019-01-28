@@ -167,7 +167,7 @@ class OpportunityController extends Controller
         $opportunity->load('address');
         $address = $opportunity->address;
 
-        $location = $address->load($address->addressable_type,'contacts','company','industryVertical','activities',$address->addressable_type . '.relatedNotes','ranking');
+        $location = $address->load('contacts','company','industryVertical','activities','relatedNotes','ranking');
         
         $ranked = $address->getMyRanking($location->ranking);
 
