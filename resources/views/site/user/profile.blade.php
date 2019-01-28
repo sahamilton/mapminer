@@ -135,17 +135,28 @@
 					</ul>
 
 					@endif
-					<a class="btn btn-primary float-right" href="{{route('branchassignments.index')}}">
+					<div class="alert alert-warning">
+					<p class="">If your branch associations are incorrect or incomplete you can change them here
+							<a class="btn btn-primary float-right" href="{{route('branchassignments.index')}}">
 						<i class="far fa-edit text-info"></i>
-						Change Assignments</a>
-
+						Change Assignments</a> or contact <a href="mailto: {{config('mapminer.system_contact')}}">
+							<i class="far fa-envelope" aria-hidden="true"> </i>
+							 {{config('mapminer.system_contact')}}
+						</a>.</p> 
+					</div>
 				</div>
 				<div class="col-sm-8">
 					@include('site.user._branchmap')
 				</div>
 				<div style="clear:both"></div>  
 				</div>
-			
+				
+						
+							 
+						
+							
+				
+				</div>
 			</div>
 			@endcan
 
@@ -195,9 +206,9 @@
 				<div class="alert alert-warning">
 					<p class="list-group-item-text"><strong>Corrections</strong></p>
 					<ul style="list-style-type: none;">
-						<p class="">If any details of your profile are incorrect or incomplete please contact <a href="mailto:salesoperations@trueblue.com">
+						<p class="">If any details of your profile are incorrect or incomplete please contact <a href="mailto: {{config('mapminer.system_contact')}}">
 							<i class="far fa-envelope" aria-hidden="true"> </i>
-							 salesoperations@trueblue.com
+							 {{config('mapminer.system_contact')}}
 						</a>.</p>
 							
 					</ul>

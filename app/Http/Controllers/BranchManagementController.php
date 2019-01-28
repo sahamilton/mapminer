@@ -57,7 +57,7 @@ class BranchManagementController extends Controller
     {
 
         if(! auth()->user()->hasRole('admin')){
-           dd('you dont');
+           
             $id = auth()->user()->id;
         }
 
