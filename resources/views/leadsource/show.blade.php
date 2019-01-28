@@ -13,6 +13,10 @@
 	<a class="nav-item nav-link"  data-toggle="tab" href="#team">
 			<strong>Team</strong>
 		</a>
+
+	<a class="nav-item nav-link"  data-toggle="tab" href="#branch">
+			<strong>Branches</strong>
+		</a>
 	
 </div>
 
@@ -24,6 +28,9 @@
 	
 	<div id="team" class="tab-pane fade ">
 	@include('leadsource.partials._tabteam')
+	</div>
+	<div id="branch" class="tab-pane fade ">
+	@include('leadsource.partials._tabbranch')
 	</div>
 
 

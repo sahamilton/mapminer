@@ -51,13 +51,25 @@ class LeadSource extends Model
     }
 
     public function salesteam($id){
-      $query ="SELECT persons.id as id,concat_ws(' ',`firstname`,`lastname`) as `name`,`lead_person_status`.`status_id`, count(*) as count
-      FROM `lead_person_status` ,addresses,persons
-      where related_id = addresses.addressable_id 
+      $query ="SELECT persons.id as id,concat_ws(' ',`firstname`,`lastname`) as `name`,`address_person`.`status_id`, count(*) as count
+      FROM `address_person` ,addresses,persons
+      where address_id = addresses.id 
       and person_id = persons.id
       and addresses.lead_source_id = ". $id . "
-      group by name,id,lead_person_status.status_id
-      order by persons.id,lead_person_status.status_id";
+      group by name,id,address_person.status_id
+      order by persons.id,address_person.status_id";
+
+      return \DB::select($query); 
+    }
+
+    public function branches($id){
+      $query ="SELECT branches.id as id,branchname,`address_branch`.`status_id`, count(*) as count
+      FROM `address_branch` ,addresses,branches
+      where address_id = addresses.id 
+      and branch_id = branches.id
+      and addresses.lead_source_id = ". $id . "
+      group by branchname,id,address_branch.status_id
+      order by branches.id,address_branch.status_id";
 
       return \DB::select($query); 
     }
