@@ -16,7 +16,9 @@
 			
 		</tr>
 		@foreach($result as $watch)
-
+		@if( $watch->watching)
+			
+		
 		<tr> 
 			<td>{{$watch->watching->businessname}}</td>
 			<td>{{$watch->watching->lat}}</td>
@@ -37,6 +39,8 @@
 				@endforeach
 			</td>
 		</tr>
+		@endif
 		@endforeach
+		
 	</tbody>
 </table>

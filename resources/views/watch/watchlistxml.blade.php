@@ -1,6 +1,6 @@
 <markers>
 @foreach ($locations as $location)
-
+@if($location->watching)
 <marker 
 locationweb="{{route('locations.show',$location->location_id)}}"
 name="{{trim($location->watching->businessname)}}"
@@ -11,5 +11,6 @@ lat="{{$location->watching->lat}}"
 lng="{{$location->watching->lng}}"
 id="{{$location->location_id}}"
 />
+@endif
 @endforeach
 </markers>

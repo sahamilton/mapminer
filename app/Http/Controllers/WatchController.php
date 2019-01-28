@@ -137,15 +137,15 @@ class WatchController extends BaseController {
 	public function showwatchmap() {
 		$data = NULL;
 		$result = $this->watch->getMyWatchList(auth()->user()->id);
-		
+
 		if(count($result) >0){
 		foreach ($result as $row) {
-
+			if($row->watching){
 			$lat[]=$row->watching->lat;
 			$lng[]=$row->watching->lng;
-			
+			}
 		}
-	
+
 		$data['lat'] = array_sum($lat) / count($lat);
 		$data['lng'] = array_sum($lng) / count($lng);
 		}
