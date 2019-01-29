@@ -1,8 +1,13 @@
 @extends('site/layouts/default')
 @section('content')
-
+@if(! isset($title))
 <h1>Companies That Have Locations Nearby<span class="text text-danger"><sup>*</sup></span></h1>
-<p><span class="text text-danger"><sup>*</sup></span><em>Withing 25 miles of your location</em></p>
+
+@else
+<h1>{{$title}}</h1>
+<p><a href = "{{route('company.index')}}">Return to all companies</a></p>
+@endif
+
 
 
 @include('partials/_showsearchoptions')
