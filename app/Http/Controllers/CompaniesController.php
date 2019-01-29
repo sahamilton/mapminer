@@ -34,7 +34,7 @@ class CompaniesController extends BaseController {
 		$this->user = $user;
 		$this->person = $person;
 		$this->address = $address;
-
+		parent::__construct($this->address);
 
 	}
 
@@ -289,6 +289,7 @@ class CompaniesController extends BaseController {
 		$companies = $this->company
 		->with('managedBy','managedBy.userdetails','industryVertical','serviceline','countlocations')
 		->whereHas('serviceline', function($q) {
+			
 					    $q->whereIn('serviceline_id', $this->userServiceLines);
 
 					})
