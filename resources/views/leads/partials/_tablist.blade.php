@@ -24,15 +24,17 @@
     
  <td>
     <ul>
+        @if($lead->vertical)
     @foreach ($lead->vertical as $vertical)
         <li>{{$vertical->filter}}</li>
 
     @endforeach
-    </ul>
-    <td>  @php $rank =   $lead->rankLead($lead->salesteam) @endphp
+@endif    </ul>
+    <td> @if($lead->salesteam)
+        @php $rank =   $lead->rankLead($lead->salesteam) @endphp
 
         {{$rank}}
-
+@endif
     </td>
 
 

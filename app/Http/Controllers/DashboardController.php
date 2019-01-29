@@ -34,6 +34,7 @@ class DashboardController extends Controller
      */
     public function index()
     {
+
       
        if(auth()->user()->can('manage_opportunities')){
 
@@ -48,7 +49,7 @@ class DashboardController extends Controller
 
        $leads = $this->lead->getMyLeads()->get();
     
-
+      
        return response()->view('myactivities.index',compact('watchlist','contacts','activities','ratings','notes','leads'));
     }
 

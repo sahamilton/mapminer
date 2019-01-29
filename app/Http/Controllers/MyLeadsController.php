@@ -57,6 +57,7 @@ class MyLeadsController extends BaseController
      */
     public function store(MyLeadFormRequest $request)
     {
+
        
       
         if(! $data = $this->cleanseInput($request)){
@@ -65,8 +66,13 @@ class MyLeadsController extends BaseController
         $data['addressable_type'] = 'lead';
       
         $lead = $this->lead->create($data['lead']);
-        $lead->assignedToBranch()->attach($data['branch']);
+        if(count($data['branch'])>0){
+            $lead->assignedToBranch()->attach($data['branch']);
+        }
         
+        if($data['contact']){
+            $lead->contacts()->create($data['contact']);
+        }
         
         return redirect()->route('address.show',$lead)->withMessage('Lead Created');
     }
@@ -125,16 +131,31 @@ class MyLeadsController extends BaseController
         }
        
         $data['lead'] = array_merge(request()->all(),$geodata);
-     
+        $data['contact']['fullname'] = request('fullname');
+        $data['contact']['firstname'] = request('firstname');
+        $data['contact']['lastname'] = request('lastname');
+        $data['contact']['title'] = request('title');
+        $data['contact']['email'] = request('email');
+        $data['contact']['phone'] =  preg_replace("/[^0-9]/","",request('phone'));
+
+
+
         $data['lead']['businessname'] = $data['lead']['companyname'];
         $data['lead']['phone'] = preg_replace("/[^0-9]/","",$data['lead']['phone']);
-        $data['lead']['lead_source_id']=4;
+       
         $data['lead']['type'] = 'lead';
         $data['lead']['user_id'] =auth()->user()->id;
         $data['team']['user_id'] = auth()->user()->id;
         $data['team']['type'] = 'mylead';
         $data['team']['status_id'] =2;
-        $data['branch']=request('branch');
+        if(request()->has('branch') && is_array(request('branch'))){
+            foreach (request('branch') as $branch){
+                $data['branch'][$branch]=['status_id'=>1];
+            }
+        }else{
+            $data['branch'] = [request('branch')=>['status_id'=>2]];
+        }
+      
         return $data;
     }
 

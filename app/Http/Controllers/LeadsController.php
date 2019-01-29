@@ -189,10 +189,10 @@ class LeadsController extends BaseController
       $input = request()->all();
 
       $leadsource = $this->leadsource->findOrFail($input['lead_source_id']);
-      $table = $leadsource->type.'leads';
+      $table = 'addresses';
    
       $data = $this->extractLeadTableData($input,$table);  
-
+dd($input,$data, $table);
       $lead = $this->lead->fill($data['lead']);
 
       $lead->save();
@@ -257,6 +257,7 @@ class LeadsController extends BaseController
 
 
       private function extractLeadTableData($input,$table){
+
       $lead_source_id = $input['lead_source_id'];
       $input = $this->geoCodeAddress($input);
 
@@ -266,8 +267,9 @@ class LeadsController extends BaseController
       }
       $data['lead']['lead_source_id'] = $lead_source_id;
 
-      $data['contact'] = $this->getContactDetails($data['lead'],$table);
-      $data['extra'] = $this->getExtraFieldData($data['lead'],$table);
+      $data['contact'] = $this->getContactDetails($data['lead'],'contacts');
+      $data['extra'] = $this->getExtraFieldData($data['lead'],'leads');
+      
       return $data;
 
     }
@@ -885,10 +887,10 @@ class LeadsController extends BaseController
 
     private function getContactDetails($newdata,$type='webleads'){
 
-        $contactFields = MapFields::whereType($type)
+        $contactFields = MapFields::whereType('webleads')
         ->whereDestination('contact')
         ->whereNotNull('fieldname')->pluck('fieldname')->toArray();
-       
+     
         $contact['contact'] = null;
             foreach ($contactFields as $field){
               if(isset($newdata[$field])){

@@ -1,6 +1,7 @@
 @extends ('admin.layouts.default')
 @section('content')
-<h2>Assign Leads</h2>
+<div class="container">
+<h2>Assign Leads!!</h2>
 
 <p><a href="{{route('leadsource.show',$lead->lead_source_id)}}">Show All WebLeads</a></p>
 <div class="container">
@@ -9,7 +10,7 @@
     	@include('leads.partials._search')
       <div class="panel panel-default">
 	
-			<form action="{{route('leads.store')}}" method="post">
+			<form action="{{route('myleads.store')}}" method="post">
 				{{csrf_field()}}
       
 			@include('leads.partials._form')
@@ -24,14 +25,12 @@
       
 <div id="map"  style="width:100%;border:solid 1px red"></div>
 		@include('leads.partials._branchlist')	
-		@include('leads.partials._repslist')
 
 
 </div>
     </div>
   </div>
 </div>
-
 
 <!-- <script>
 function myFunction(element) {
