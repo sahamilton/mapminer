@@ -66,7 +66,9 @@ trait Geocode
 
     public function scopeNearby($query,$location,$radius=100,$limit=null){
     
-
+    if(! $this->table){
+            return false;
+    }
     $geocode = Geolocation::fromDegrees($location->lat,$location->lng);
     
     $bounding = $geocode->boundingCoordinates($radius,'mi');

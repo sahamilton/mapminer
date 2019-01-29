@@ -23,7 +23,12 @@
 			<td>{{$watch->watching->businessname}}</td>
 			<td>{{$watch->watching->lat}}</td>
 			<td>{{$watch->watching->lng}}</td>
-			<td>{{$watch->watching->company->companyname}}</td>
+
+			<td>
+				@if($watch->watching->company)
+					{{$watch->watching->company->companyname}}
+				@endif
+			</td>
 			<td>{{$watch->watching->street}}</td>
 			<td>{{$watch->watching->address}}</td>
 			<td>{{$watch->watching->city}}</td>
