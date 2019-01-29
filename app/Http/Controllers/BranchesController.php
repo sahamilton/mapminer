@@ -200,6 +200,7 @@ class BranchesController extends BaseController {
 		$salesteam = $this->branch->with('relatedPeople','servicelines')->find($id);
 
 		$roles = Role::pluck('display_name','id');
+		dd($salesteam,$roles);
 
 		return response()->view('branches.showteam',compact('salesteam','roles'));
 	}
@@ -313,22 +314,22 @@ class BranchesController extends BaseController {
 	 * @param  int $id
 	 * @return Response XML
 	 */
-	public function getLocationsServed(Request $request, $id)
+	public function getLocationsServed(Request $request, $branch)
 	{
 		// No longer used.  Based on hard assignment of branch to location
+	
+		/*$result = $this->branch
+		->with('locations','locations.company');
 		
-		$result = $this->branch
-		->with('locations','locations.company')
-		->findOrFail($id);
-
-
 		if($co = request('co'))
 
 			{
-				$result = $result->where('locations.company.companyname', 'like',$co)->get();
+				$result->where('locations.company.companyname', 'like',$co);
 			}
+		
+		$result = $result->findOrFail($branch->id);
 
-		return response()->view('branches.locationsxml', compact('result'))->header('Content-Type', 'text/xml');		
+		return response()->view('branches.locationsxml', compact('result'))->header('Content-Type', 'text/xml');		*/
 
 	}
 	/**

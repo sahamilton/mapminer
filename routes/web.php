@@ -59,7 +59,7 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('branches/{branch}/shownearby',['as' => 'shownearby.branch', 'uses' => 'BranchesController@showNearbyBranches']);
 		//Route::get('branches/{state}/showstate', ['as' => 'showstate.branch','uses' => 'BranchesController@getStateBranches']);
 		Route::get('branches/{branch}/nearby',['as' => 'nearby.branch', 'uses' => 'BranchesController@getNearbyBranches']);
-		Route::get('branches/{branch}/locations',['as' => 'branch.locations', 'uses' => 'BranchesController@getLocationsServed']);
+		//Route::get('branches/{branch}/locations',['as' => 'branch.locations', 'uses' => 'BranchesController@getLocationsServed']);
 		Route::get('branches/{branch}/showlist',['as' => 'showlist.locations', 'uses' => 'LocationsController@listNearbyLocations']);
 		Route::get('branches/{branch}/salesteam',['as' => 'showlist.salesteam', 'uses' => 'BranchesController@showSalesTeam']);
 		Route::get('branches/managed/{mgrId}',['as'=>'managed.branch', 'uses'=>'BranchesController@getMyBranches']);

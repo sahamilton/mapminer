@@ -29,7 +29,7 @@
 	<th>State</th>
 	<th>Region</th>
 	<th>Manager</th>
-	<th>Serviced</th>
+
 	@can('manage_branches')
 	<th>Actions</th>
 	@endcan
@@ -104,13 +104,7 @@
 			@endif
 	</td>
 	
-	<td>
 
-		<a title= "See the {{$branch->branchname}} branch sales team"
-		href ="{{route('showlist.salesteam',$branch->id)}}">
-
-		</a>
-	</td>
 	@can('manage_branches')
 	<td>
 	
