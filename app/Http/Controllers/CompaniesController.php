@@ -127,8 +127,12 @@ class CompaniesController extends BaseController {
 
 	public function store(CompanyFormRequest $request)
 	{
+		$data = request()->all();
+		if($data['person_id']== 'null'){
+			$data['person_id']= null;
+		}
 
-		$company = $this->company->create(request()->all());
+		$company = $this->company->create($data);
 		$company->serviceline()->sync(request('serviceline'));
 
 		return redirect()->route('company.index');
