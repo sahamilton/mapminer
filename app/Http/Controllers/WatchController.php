@@ -52,12 +52,9 @@ class WatchController extends BaseController {
 	 * 
 	 */
 	protected function add($id){
-		$user_id = \Auth::id();
-		$watch = $this->watch;
-		$watch->user_id =  	$user_id;
-		$watch->location_id = $id;
-
-		return $watch->save();
+		
+		
+		return $this->watch->create(['user_id'=>auth()->user()->id,'address_id'=>$id]);
 		
 	}
 	
@@ -138,17 +135,18 @@ class WatchController extends BaseController {
 	public function showwatchmap() {
 		$data = NULL;
 		$result = $this->watch->getMyWatchList(auth()->user()->id);
+		
 
 		if(count($result) >0){
-		foreach ($result as $row) {
-			if($row->watching){
-			$lat[]=$row->watching->lat;
-			$lng[]=$row->watching->lng;
+			foreach ($result as $row) {
+				if($row->watching){
+				$lat[]=$row->watching->lat;
+				$lng[]=$row->watching->lng;
+				}
 			}
-		}
 
-		$data['lat'] = array_sum($lat) / count($lat);
-		$data['lng'] = array_sum($lng) / count($lng);
+			$data['lat'] = array_sum($lat) / count($lat);
+			$data['lng'] = array_sum($lng) / count($lng);
 		}
 		return response()->view('watch.map', compact('data'));
 		
@@ -169,9 +167,6 @@ class WatchController extends BaseController {
 	
 	
 	public function watchupdate(Request $request) {
-		//Refactor: Add request
-		
-
 
 		switch (request('action')) {
 			case 'add':

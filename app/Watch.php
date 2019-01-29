@@ -8,7 +8,7 @@ class Watch extends Model {
 	];
 
 	// Don't forget to fill this array
-	protected $fillable = ['user_id','location_id'];
+	protected $fillable = ['user_id','location_id','address_id'];
 	
 	public function watchedBy() 
 	{

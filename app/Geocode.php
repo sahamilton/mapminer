@@ -24,10 +24,18 @@ trait Geocode
                 }else{
                     return false;
                 }
+              
                 $data['geostatus']=TRUE;
                 $data['address'] =  $geoCode->first()->getStreetNumber()." " . $geoCode->first()->getStreetName();
                 $data['street'] = $data['address'];
-                $data['city'] =  $geoCode->first()->getLocality();
+                if(! $geoCode->first()->getLocality() && count($geoCode->first()->getadminLevels())>0){
+                    
+                  
+                   $data['city'] =  $geoCode->first()->getadminLevels()->get($geoCode->first()->getadminLevels()->count())->getName();
+                }else{
+                    $data['city'] =  $geoCode->first()->getLocality();
+                }
+                
                 $data['zip'] = $geoCode->first()->getPostalCode();
 
                 if(count($geoCode->first()->getadminLevels())>0){

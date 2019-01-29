@@ -57,11 +57,13 @@ class MyLeadsController extends BaseController
      */
     public function store(MyLeadFormRequest $request)
     {
+       
       
         if(! $data = $this->cleanseInput($request)){
             return redirect()->back()->withError('Unable to geocode that address');
         }
         $data['addressable_type'] = 'lead';
+      
         $lead = $this->lead->create($data['lead']);
         $lead->assignedToBranch()->attach($data['branch']);
         
@@ -121,8 +123,9 @@ class MyLeadsController extends BaseController
             return false;
             
         }
-
+       
         $data['lead'] = array_merge(request()->all(),$geodata);
+     
         $data['lead']['businessname'] = $data['lead']['companyname'];
         $data['lead']['phone'] = preg_replace("/[^0-9]/","",$data['lead']['phone']);
         $data['lead']['lead_source_id']=4;

@@ -227,7 +227,7 @@ Route::group(['middleware' => 'auth'], function () {
 	# Watch List
 		Route::get('watch',['as'=>'watch.index', 'uses'=>'WatchController@index']);
 		Route::get('watch/export',['as'=>'watch.export', 'uses'=>'WatchController@export']);
-		Route::get('watch/add/{locationId}',['as'=>'watch.add', 'uses'=>'WatchController@create']);
+		Route::get('watch/add/{watch}',['as'=>'watch.add', 'uses'=>'WatchController@create']);
 		Route::get('watch/delete/{locationID}',['as'=>'watch.delete', 'uses'=>'WatchController@destroy']);
 		Route::get('watch/map',['as'=>'watch.map','uses'=>'WatchController@showwatchmap']);
 		Route::get('cowatch/export',['as'=>'company.watchexport', 'uses'=>'WatchController@companywatchexport']);
