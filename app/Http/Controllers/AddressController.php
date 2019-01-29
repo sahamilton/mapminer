@@ -76,7 +76,7 @@ class AddressController extends Controller
         $mybranches = $this->person->myBranches();
         $ranked = $this->address->getMyRanking($location->ranking);
         $notes = $this->notes->locationNotes($location->id)->get();
-
+       
        
         return response()->view('addresses.show',compact('location','branches','rankingstatuses','people','mybranches','ranked','notes'));
     }

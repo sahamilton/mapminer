@@ -5,7 +5,7 @@ use App\Address;
 use Illuminate\Http\Request;
 use App\Person;
 use App\LeadStatus;
-
+use App\Mail\NotifyWebLeadsBranchAssignment;
 use App\Http\Requests\MyLeadFormRequest;
 
 class MyLeadsController extends BaseController
@@ -73,7 +73,17 @@ class MyLeadsController extends BaseController
         if($data['contact']){
             $lead->contacts()->create($data['contact']);
         }
-        
+        if(request('notify')==1){
+            $branches = \App\Branch::with('manager','manager.userdetails')->whereIn('id',array_keys($data['branch']))->get();
+           
+            foreach ($branches as $branch){
+                foreach($branch->manager as $manager){
+                    \Mail::queue(new NotifyWebLeadsBranchAssignment($lead,$branch,$manager));
+                }
+                
+            }
+            
+        }
         return redirect()->route('address.show',$lead)->withMessage('Lead Created');
     }
 

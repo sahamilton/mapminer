@@ -5,23 +5,23 @@
 {{$manager->firstname}}, 
 
 
-A new lead that came through the People Ready website has been assigned to {{$lead->salesteam->first()->fullName()}} and branch {{$branch->branchname}}.  The details of this lead are below:
+A new lead that came through the People Ready website has been assigned to branch {{$branch->branchname}}.  The details of this lead are below:
 
 @component('mail::panel')
 
 **Company Details**
 
-Company: {{$lead->company_name}}
+Company: {{$lead->businessname}}
 
-Address: {{$lead->address}}{{$lead->city}}, {{$lead->state}}
+Address: {{$lead->fullAddress()}}
 
-Contact: {{$lead->contact}}
+Contact: {{$lead->contact->fullname}}
 
-Contact Title: {{$lead->contactitle}}
+Contact Title: {{$lead->contact->title}}
 
-Phone: {{$lead->contactphone}}
+Phone: {{$lead->contact->phone}}
 
-Email: {{$lead->contactemail}}
+Email: {{$lead->contact->email}}
 
 **Job Requirements**
 
@@ -33,7 +33,7 @@ Industry:{{$lead->industry}}
 
 @endcomponent
 
-@component('mail::button', ['url' => route('salesrep.newleads',$manager->id), 'color' => 'blue'])
+@component('mail::button', ['url' => route('address.show',$lead->id), 'color' => 'blue'])
         Check out your sales prospects and resources.
 @endcomponent
 

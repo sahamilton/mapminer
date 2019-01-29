@@ -10,7 +10,7 @@
 
 @include('addresses.partials._ranking')
 
-  @include('addresses.partials._opportunity')
+@include('addresses.partials._opportunity')
 
 <p>Location Source: {{$location->leadsource ? $location->leadsource->source : 'unknown'}}</p>
 @include('maps.partials._form')

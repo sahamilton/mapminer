@@ -1,3 +1,4 @@
+@if(in_array($location->branch_id,$mybranches))
 <button class="btn btn-danger" 
      
       data-toggle="modal" 
@@ -81,3 +82,4 @@ $rank =  3 ;@endphp
     </div>
   </div>
 </div>
+@endif

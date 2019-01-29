@@ -2,7 +2,7 @@
 
 namespace App\Mail;
 use App\Person;
-use App\Lead;
+use App\Address;
 use App\Branch;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
@@ -21,7 +21,7 @@ class NotifyWebLeadsBranchAssignment extends Mailable
      *
      * @return void
      */
-    public function __construct(Lead $lead, Branch $branch, Person $manager)
+    public function __construct(Address $lead, Branch $branch, Person $manager)
     {
         $this->lead = $lead;
         $this->branch = $branch;

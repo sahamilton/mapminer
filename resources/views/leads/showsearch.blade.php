@@ -1,37 +1,40 @@
 @extends ('admin.layouts.default')
 @section('content')
 <div class="container">
-<h2>Assign Leads!!</h2>
-
-<p><a href="{{route('leadsource.show',$lead->lead_source_id)}}">Show All WebLeads</a></p>
-<div class="container">
+  <h2>Assign Leads!!</h2>
+  <p><a href="{{route('leadsource.show',$lead->lead_source_id)}}">Show All WebLeads</a></p>
   <div class="row">
     <div class="col-sm-6">
-    	@include('leads.partials._search')
+      @include('leads.partials._search')
       <div class="panel panel-default">
-	
-			<form action="{{route('myleads.store')}}" method="post">
-				{{csrf_field()}}
-      
-			@include('leads.partials._form')
-			<input class="btn btn-info float-right" type="submit" name = "submit" value="Save New Lead" />
-		</form>
+        <form action="{{route('myleads.store')}}" method="post">
+          {{csrf_field()}}
 
-		
-	</div>
+          @include('leads.partials._form')
+          <div class="form-group {!! $errors->has('confirmed') ? 'has-error' : '' !!}">
+            <label class="col-md-2 control-label" for="password_confirmation">Notify Managers</label>
+            <div class="col-md-10">
+              <input 
+                class="form-control" 
+                type="checkbox" 
+                name="notify" 
+                id="notify" 
+                value="1"/>
+          
+            </div>
+            <input type="submit" name="submit" class="btn btn-info" value="Distribute Lead" />
+          </div>
+        </form>  
+      </div>
     </div>
-    <div class="col-sm-6">
-      
-      
-<div id="map"  style="width:100%;border:solid 1px red"></div>
-		@include('leads.partials._branchlist')	
-
-
-</div>
+    <div class="col-sm-6"> 
+      <div id="map"  style="width:100%;border:solid 1px red">
+        
+      </div>
+      		@include('leads.partials._branchlist')	
     </div>
   </div>
 </div>
-
 <!-- <script>
 function myFunction(element) {
 
