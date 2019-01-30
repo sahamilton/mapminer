@@ -99,6 +99,7 @@ class Watch extends Model {
 		}
 		
 		 return $this->with('watching','watching.company','watchnotes')
+		 ->has('watching.company')
 		->where("user_id","=", $id)
 		->get();
 
