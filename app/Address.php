@@ -64,9 +64,9 @@ class Address extends Model
 
     public function scopeFiltered($query){
         if(!$keys= $this->getSearchKeys(['companies'],['vertical'])){
-            return $query;
+            return $query->whereIn('addressable_type',session('geo.addressType'));
         }
-        return $query->whereIn('vertical',$keys);
+        return $query->whereIn('vertical',$keys)->whereIn('addressable_type',session('geo.addressType'));
        
     }
     

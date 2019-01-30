@@ -101,9 +101,11 @@ class MapsController extends BaseController {
 		
 	}
 	public function findLocalAccounts($distance=NULL,$latlng = NULL,$company = NULL) {
-		
+	
+		dd(session('geo'));
 		$location = $this->getLocationLatLng($latlng);
 		$locations = $this->address
+		->whereIn('addressable_type',session('geo.addressType'))
 		->whereHas('company.serviceline',function ($q){
 			$q->whereIn('servicelines.id',$this->userServiceLines);
 		});

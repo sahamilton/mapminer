@@ -1,6 +1,5 @@
 @extends('site.layouts.maps')
 @section('content')
-
 @if(! $news->isEmpty())
 @include('news.newsmodal')
 @endif

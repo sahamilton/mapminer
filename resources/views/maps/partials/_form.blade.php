@@ -86,7 +86,7 @@ method = 'post' name="mapselector">
 class= "btn btn-success ">
 
 <i class="fas fa-search" aria-hidden="true"></i> Search!</button>
-
+@include('maps.partials._keys')
 <input type="hidden" name ='company' value="{{isset($company) ? $company->id : ''}}" />
 <input type="hidden" name ='companyname' value="{{isset($company) ? $company->companyname : ''}}" />
 <input type="hidden" name="lng" id ="lng" value="{{isset($data['lng']) ? $data['lng'] : '-98.5795'}}" />

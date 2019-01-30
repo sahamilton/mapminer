@@ -30,8 +30,7 @@ class GeoCodingController extends BaseController {
 			Serviceline $serviceline,
 			Person $person,
 			Lead $lead,
-			Address $address
-		) 
+			Address $address) 
 	{
 		$this->location = $location;
 		$this->project = $project;
@@ -41,6 +40,7 @@ class GeoCodingController extends BaseController {
 		$this->person = $person;
 		$this->address = $address;
 		parent::__construct($location);	
+
 }
 	
 	
@@ -51,6 +51,7 @@ class GeoCodingController extends BaseController {
 	/**  This needs some serious refactoring! **/
 
 	public function findMe(FindMeFormRequest $request) {
+
 	
 		if(request()->filled('search')) {
 				
@@ -95,7 +96,10 @@ class GeoCodingController extends BaseController {
 		if(! isset($data['fulladdress'])){
 			$data['fulladdress'] = $data['search'];
 		}
-
+		if(! request()->filled('addressType')){
+			$data['addressType'] = ['customer','project','lead','location'];
+		}
+		
 		session()->put('geo', $data);
 
 		$watchlist = array();
@@ -275,6 +279,7 @@ class GeoCodingController extends BaseController {
 	}
 	
 	private function getBranchListData($location,$data){
+		
 		return $this->branch
 			->whereHas('servicelines', function ($q) {
 				$q->whereIn('servicelines.id',$this->userServiceLines);
@@ -305,9 +310,12 @@ class GeoCodingController extends BaseController {
 
 	private function getLocationListData($location,$data){
 		
-		
-		return $this->address->nearby($location,$data['distance'])
+	
+		return $this->address
+		->whereIn('addressable_type',$data['addressType'])
+		->nearby($location,$data['distance'])
 				->with('company')
+				
 				->get();
 	}
 
