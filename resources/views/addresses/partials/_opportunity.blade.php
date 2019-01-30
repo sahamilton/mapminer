@@ -1,7 +1,7 @@
   @if($location->opportunities && $location->opportunities->branch->count()>0)
 
     @can('manage_opportunities')
-    @if($location->opportunities->closed!=0)
+    @if($location->opportunities->closed !=0 )
       <p class="alert alert-warning">Opportunity closed</p>
       @else
         <p>Tracked as <a href="{{route('opportunity.index')}}">{{$location->opportunities->branch()->first()->branchname}} branch opportunity</a></p>

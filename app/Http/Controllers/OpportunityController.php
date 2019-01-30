@@ -45,6 +45,7 @@ class OpportunityController extends Controller
      */
     public function index()
     {
+        
         $activityTypes = ActivityType::all();
         $myBranches = $this->person->myBranches();
         if(count($myBranches)==0){
@@ -174,7 +175,8 @@ class OpportunityController extends Controller
         $branches = $this->branch->nearby($location,100,5)->get();
         $rankingstatuses = $this->address->getStatusOptions;
         $people = $this->person->salesReps()->PrimaryRole()->nearby($location,100,5)->get();
-               return response()->view('addresses.show',compact('location','branches','rankingstatuses','people','ranked'));
+        $mybranches = $this->person->myBranches();
+               return response()->view('addresses.show',compact('location','branches','mybranches', 'rankingstatuses','people','ranked'));
         //
     }
 
