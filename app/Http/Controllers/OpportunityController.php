@@ -47,13 +47,25 @@ class OpportunityController extends Controller
     {
         
         $activityTypes = ActivityType::all();
-        $myBranches = $this->person->myBranches();
+        if(auth()->user()->hasRole('admin')){
+
+             $myBranches = $this->branch->all()->pluck('branchname','id')->toArray();
+             $data = $this->getSummaryBranchOpportunities(array_keys($myBranches));
+      
+             return response()->view('opportunities.mgrindex',compact('data','activityTypes'));
+           
+             
+        }else{
+             $myBranches = $this->person->myBranches();
+        }
+      
         if(count($myBranches)==0){
             return redirect()->route('user.show',auth()->user()->id)->withWarning("You are not assigned to any branches. You can assign yourself here or contact Sales Ops");
         }
-        if(! auth()->user()->hasRole('branch_manager') && $this->person->myTeam()->count() >1){
+        if((! auth()->user()->hasRole('branch_manager') && $this->person->myTeam()->count() >1 )){
              
-                     $data = $this->getMarketManagerData(array_keys($myBranches));
+                     $data = $this->getSummaryBranchOpportunities(array_keys($myBranches));
+                   
             // need to get all the activities esp conversions / closes
             return response()->view('opportunities.mgrindex',compact('data','activityTypes'));
         } else{
@@ -82,7 +94,18 @@ class OpportunityController extends Controller
         return response()->view('opportunities.index',compact('data','activityTypes','myBranches'));
     }
 
-    
+    public function getSummaryBranchOpportunities(array $branches){
+
+        $data['branches'] = $this->branch->withCount('opportunities','leads')->with('manager')
+            ->whereIn('id',$branches)
+            ->get(); 
+
+        $data['activities'] = $this->getBranchActivities($branches);
+
+        return $data;
+
+
+    }
     public function getBranchOpportunities(array $branches){
         
         $data['branches'] = $this->branch->with('opportunities','leads','manager')
@@ -98,6 +121,7 @@ class OpportunityController extends Controller
         $data['addresses'] = $data['opportunities']->map(function ($opportunity){
             return $opportunity->address;
         });
+
         $data['activities'] = $data['addresses']->map(function ($address){
             return $address->activities->load('relatesToAddress','relatedContact');
         });
@@ -113,23 +137,7 @@ class OpportunityController extends Controller
     }
 
 
-    private function getMarketManagerData(array $branches){
-
-        $data = $this->getBranchOpportunities($branches);
-        $query = "SELECT opportunities.branch_id as branch,activity_type.activity as type, count(*) as sum
-                FROM activities,addresses ,opportunities,activity_type
-                WHERE activities.address_id = addresses.id
-                and activitytype_id = activity_type.id
-                and opportunities.branch_id in (" . implode(",",$branches) . ") and addresses.id = opportunities.address_id
-                group by branch, type";
-        $data['summary'] = \DB::select(\DB::raw($query));
-       
-        foreach ($data['summary'] as $stats){
-
-            $data['stats'][$stats->branch][$stats->type] = $stats->sum; 
-        }
-       return $data;
-}    
+   
         
     /**
      * Show the form for creating a new resource.
@@ -168,7 +176,7 @@ class OpportunityController extends Controller
         $opportunity->load('address');
         $address = $opportunity->address;
         return redirect()->route('address.show',$address->id);
-       
+        
     }
 
     /**
@@ -252,4 +260,20 @@ class OpportunityController extends Controller
         $opportunity->save();
     }
     
+    private function getBranchActivities($branches){
+        $query = "SELECT branches.id as id, activitytype_id as type, count(activities.id) as activities
+            FROM `activities`, address_branch,branches
+            where activities.address_id = address_branch.address_id
+            and address_branch.branch_id = branches.id
+            and activities.activity_date BETWEEN CAST('2019-01-01' AS DATE) AND CAST('2019-01-31' AS DATE)
+            and branches.id in (".implode(",",$branches).")
+            group by id,activitytype_id";
+        $activities =  \DB::select(\DB::raw($query));
+        $result = array();
+        foreach ($activities as $activity){
+            $result[$activity->id][$activity->type] = $activity->activities;
+        }
+        return $result;
+
+    }
 }

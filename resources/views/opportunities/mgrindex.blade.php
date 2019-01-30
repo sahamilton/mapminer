@@ -8,13 +8,16 @@
       <th>Branch</th>
       <th>Manager</th>
       <th>Leads</th>
-      <th>Activities</th>
       <th>Opportunities</th>
-      
-      <th>Closed</th>
+      @foreach ($activityTypes as $type)
+      <th>{{$type->activity}}</th>
+
+       @endforeach
+
     </thead>
       <tbody>
         @foreach ($data['branches'] as $branch)
+       
 
         <tr>
           <td>
@@ -28,19 +31,19 @@
               <li>{{$manager->fullName()}}</li>
             @endforeach
           </td>
-          <td align="center">{{$branch->leads->count()}}</td>
-           <td>
-            @if(isset($data['stats'][$branch->id]))
-              @foreach ($data['stats'][$branch->id] as $activity=>$count)
-                <li>{{$activity}} = {{$count}}</li>
-              @endforeach
-            @endif
-          </td>
-          <td align="center">{{$branch->opportunities->count()}}</td>
-          <td align="center">
-            @if(isset($data['stats'][$branch->id]['Closed - Won']))
-            {{$data['stats'][$branch->id]['Closed - Won']}}
-            @endif
+          <td align="center">{{$branch->leads_count}}</td>
+          
+          <td align="center">{{$branch->opportunities_count}}</td>
+          
+            @foreach ($activityTypes as $type)
+              @if(array_key_exists($branch->id, $data['activities']) && isset($data['activities'][$branch->id][$type->id]))
+                <td align='center'>{{$data['activities'][$branch->id][$type->id]}}</td>
+                @else
+                <td align="center">0</td>
+              @endif
+           @endforeach
+
+           
           </td>
         @endforeach
 

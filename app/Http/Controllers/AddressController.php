@@ -70,6 +70,7 @@ class AddressController extends Controller
         $location = $address->load('contacts','contacts.relatedActivities','activities','activities.type','activities.relatedContact','company','opportunities','industryVertical','relatedNotes','orders','orders.branch','watchedBy','watchedBy.person','ranking','leadsource');
  
        // $activities = ActivityType::orderBy('sequence')->pluck('activity','id')->toArray();
+       
         $branches = $this->branch->nearby($location,100,5)->get();
         $rankingstatuses = $this->address->getStatusOptions;
         $people = $this->person->salesReps()->PrimaryRole()->nearby($location,100,5)->get();
