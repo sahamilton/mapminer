@@ -47,11 +47,11 @@ class OpportunityController extends Controller
     {
         
         $activityTypes = ActivityType::all();
-        if(auth()->user()->hasRole('admin')){
+        if(auth()->user()->hasRole('admin') or auth()->user()->hasRole('sales_operations')){
 
              $myBranches = $this->branch->all()->pluck('branchname','id')->toArray();
              $data = $this->getSummaryBranchOpportunities(array_keys($myBranches));
-      
+
              return response()->view('opportunities.mgrindex',compact('data','activityTypes'));
            
              
@@ -265,7 +265,7 @@ class OpportunityController extends Controller
             FROM `activities`, address_branch,branches
             where activities.address_id = address_branch.address_id
             and address_branch.branch_id = branches.id
-            and activities.activity_date BETWEEN CAST('2019-01-01' AS DATE) AND CAST('2019-01-31' AS DATE)
+            and activities.activity_date BETWEEN CAST('".Carbon::now()->subMOnth(1)."' AS DATE) AND CAST('".Carbon::now()."' AS DATE)
             and branches.id in (".implode(",",$branches).")
             group by id,activitytype_id";
         $activities =  \DB::select(\DB::raw($query));
