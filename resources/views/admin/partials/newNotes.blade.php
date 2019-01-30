@@ -23,7 +23,7 @@
     @endif
   </td>
   <td>
-    <a href = "{{route('locations.show',$newNote->relatesToLocation->id)}}" 
+    <a href = "{{route('address.show',$newNote->address_id)}}" 
       title="Review {{$newNote->relatesToLocation->businessname}} location" >{{$newNote->relatesToLocation->businessname}} 
     </a>
   </td>
