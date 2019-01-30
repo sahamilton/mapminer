@@ -79,7 +79,7 @@ class DocumentsController extends BaseController
      */
     public function show($id)
     {
-        $document = $this->document->findOrFail($id);
+        $document = $this->document->with('author')->findOrFail($id);
         return response()->view('documents.show',compact('document'));
     }
 

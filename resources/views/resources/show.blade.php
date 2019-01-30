@@ -5,13 +5,15 @@
 <?php $companies = array();		?>
 <h4>How to Sell documents based on your watch list</h4>
 @foreach ($watch as $location)
-	@if(! in_array($location->watching[0]->company_id, $companies))
+  
+	@if($location->watching->company_id && ! in_array($location->watching->company_id, $companies))
 			
-				<?php $companies[] = $location->watching[0]->company->id;;?>
-				<p><a href = "{{route('salesnotes',$location->watching[0]->company_id) }}">
-				Read "How to Sell to {{$location->watching[0]->company->companyname}}"</a></p>
+				<?php $companies[] = $location->watching->company->id;;?>
+				<p><a href = "{{route('salesnotes',$location->watching->company_id) }}">
+				Read "How to Sell to {{$location->watching->company->companyname}}"</a></p>
 			
 	@endif
+    
 @endforeach
 <h4>Sales Campaign documents based on your industry vertical focus</h4>
 @include('search.search')
