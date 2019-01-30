@@ -121,7 +121,9 @@ class GeoCodingController extends BaseController {
 			session()->flash('warning','No results found. Consider increasing your search distance');
 
 		}
-	
+		$servicelines = $this->serviceline->whereIn('id',$this->userServiceLines)
+    						->get();
+
 		if(isset($data['view']) && $data['view'] == 'list') {
 		
 			if($data['type']=='people'){
@@ -144,13 +146,13 @@ class GeoCodingController extends BaseController {
 				$watchlist = NULL;
 			}
 			
-			return response()->view('maps.list', compact('data','watchlist','filtered','company'));
+			return response()->view('maps.list', compact('data','watchlist','filtered','company','servicelines'));
 		}else{
 
 			$data = $this->setZoomLevel($data);
 
-			$servicelines = $this->serviceline->whereIn('id',$this->userServiceLines)
-    						->get();
+			
+
     
 			return response()->view('maps.map', compact('data','filtered','servicelines','company'));
 		}
