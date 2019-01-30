@@ -22,7 +22,7 @@
           <td>{{$opportunity->daysOpen()}}</td>
           <td>{{$statuses[$opportunity->closed]}}</td>
           <td>
-            <a href= "{{route('opportunity.show',$opportunity->id)}}">
+            <a href= "{{route('address.show',$opportunity->address->id)}}">
               {{$opportunity->address->businessname}}
             </a>
           </td>

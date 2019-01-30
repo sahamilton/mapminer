@@ -167,17 +167,8 @@ class OpportunityController extends Controller
       
         $opportunity->load('address');
         $address = $opportunity->address;
-
-        $location = $address->load('contacts','company','industryVertical','activities','relatedNotes','ranking');
-        
-        $ranked = $address->getMyRanking($location->ranking);
-
-        $branches = $this->branch->nearby($location,100,5)->get();
-        $rankingstatuses = $this->address->getStatusOptions;
-        $people = $this->person->salesReps()->PrimaryRole()->nearby($location,100,5)->get();
-        $mybranches = $this->person->myBranches();
-               return response()->view('addresses.show',compact('location','branches','mybranches', 'rankingstatuses','people','ranked'));
-        //
+        return redirect()->route('address.show',$address->id);
+       
     }
 
     /**
