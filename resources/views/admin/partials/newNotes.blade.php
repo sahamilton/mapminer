@@ -30,7 +30,10 @@
   <td></td>
   <td>{{$newNote->note}}</td>
   <td>{{$newNote->created_at ? $newNote->created_at->format('jS M g:i A'):''}}</td>
-  <td>{{$newNote->writtenBy->person->firstname}} {{$newNote->writtenBy->person->lastname}}</td>
+  <td>
+    @if($newNote->writtenBy)
+    {{$newNote->writtenBy->person->fullName()}}</td>
+    @endif
 
 
  </tr>
