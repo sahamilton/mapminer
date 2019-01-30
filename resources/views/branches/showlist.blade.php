@@ -7,7 +7,9 @@
 @php $data['type']='branch'; 
 $data['fulladdress'] = $data['branch']->fullAddress();
 @endphp
+
 @include('maps.partials._form')
+
 <p><a href="{{route('branches.show',$data['branch']->id)}}"><i class="far fa-flag" aria-hidden="true"></i>Map View</a></p>
 <nav>
   <div class="nav nav-tabs" id="nav-tab" role="tablist">

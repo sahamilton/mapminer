@@ -164,7 +164,7 @@ class BranchesController extends BaseController {
 	 */
 	public function show($branch)
 	{
-		
+
 		$servicelines = $this->serviceline
 		->whereIn('id',$this->userServiceLines)->get();
 		// need a try here 

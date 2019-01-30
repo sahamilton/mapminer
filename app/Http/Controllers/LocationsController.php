@@ -249,8 +249,7 @@ class LocationsController extends BaseController {
 	
 	// Why is this in locations? Should be in branches
 	public function listNearbyLocations($branch){
-		
-		
+	
 		$filtered = $this->location->isFiltered(['companies'],['vertical']);
 		$roles = \App\Role::pluck('display_name','id');
 		$mywatchlist= array();
@@ -261,6 +260,7 @@ class LocationsController extends BaseController {
 		//$data['manager'] = ! isset($branches->manager) ? array() : Person::find($data['branch']->person_id);
 
 		$data['title']='National Accounts';
+		$servicelines = Serviceline::all();
 		$locations  = $this->getNearbyLocations($branch->lat,$branch->lng);
 		$watchlist = User::where('id','=',auth()->user()->id)->with('watching')->get();
 		foreach($watchlist as $watching) {
@@ -269,7 +269,8 @@ class LocationsController extends BaseController {
 			}
 		}
 
-		return response()->view('branches.showlist', compact('data','locations','mywatchlist','filtered','roles'));
+		return response()->view('branches.showlist', compact('data','locations','mywatchlist',
+			'filtered','roles','servicelines'));
 	}
 		
 	

@@ -21,7 +21,6 @@
 	
 	Route::get('/error',function(){
 		Bugsnag::notifyError('ErrorType', 'Test Error');
-	});
 */
 	// Routes for branch assignment verification
 Route::get('/correction/{token}/{cid?}',['as'=>'branchassociation.confirm','uses'=>'BranchManagementController@confirm']);
