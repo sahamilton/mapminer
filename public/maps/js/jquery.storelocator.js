@@ -761,6 +761,7 @@ $.fn.storeLocator = function(options) {
                   if(brand === 'People Ready'){
 
                     var pinColor = "f6ee66";
+                    
                     }else if(brand === 'Centerline' ){            
                       var pinColor = "59AB3D";
                     }else {	
