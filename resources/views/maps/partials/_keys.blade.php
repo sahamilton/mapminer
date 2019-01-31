@@ -1,7 +1,7 @@
 <div class="row">
    
 
-@if(! isset($data) or $data['type'] == 'branch')
+@if(! isset($data) or $data['type'] == 'branch' && isset($servicelines))
   @foreach ($servicelines as $serviceline)
     
     {{str_replace("PeopleReady: ","",$serviceline->ServiceLine)}} = &nbsp; <img src='{{asset('geocoding/markers/'.$serviceline->color.'-pin.png')}}' />&nbsp&nbsp&nbsp

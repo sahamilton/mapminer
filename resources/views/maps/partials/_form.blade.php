@@ -28,6 +28,7 @@ $views = array('map'=>'map','list'=>'list');
 $values = Config::get('app.search_radius');
 
 ?>
+<div class="row">
 <form class="form-inline" action="{{route('findme')}}" 
 method = 'post' name="mapselector">
 @csrf
@@ -92,6 +93,7 @@ class= "btn btn-success ">
 <input type="hidden" name="lng" id ="lng" value="{{isset($data['lng']) ? $data['lng'] : '-98.5795'}}" />
 <input type="hidden" name="lat" id ="lat" value="{{isset($data['lat']) ? $data['lat'] : '39.8282'}}" />
 </form>
+</div>
 <?php $action = '/findme';?>
 @include('partials._noaddressmodal')
 <script>
