@@ -1,10 +1,13 @@
 @extends('site.layouts.default')
 @section('content')
+<div class="container">
 @include('companies.partials._searchbar')
 
 @include('maps.partials._form')
 
 <h2>{{$data['branches']->first()->branchname}} Branch Dashboard</h2>
+
+
 @if(count($myBranches)>1)
 
 <div class="col-sm-4">
@@ -20,6 +23,7 @@
 </form>
 </div>
 @endif
+<div class="row">
  <nav>
 
   <div class="nav  nav-tabs"  id="nav-tab"  role="tablist">
@@ -73,6 +77,7 @@
  
   </div>
 </nav>
+</div>
 <div class="tab-content" id="nav-tabContent">
   <div class="tab-pane fade show "
     id="nav-opportunities"
@@ -116,4 +121,5 @@
 </div>
 
 @include('partials._scripts')
+</div>
 @endsection
