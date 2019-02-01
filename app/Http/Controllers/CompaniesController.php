@@ -172,7 +172,10 @@ class CompaniesController extends BaseController {
 	public function update(CompanyFormRequest $request,$company)
 	{
 
-
+		if(request('person_id','=','null')){
+			 request()->request->remove('person_id');
+			
+		}
 		$this->company = $company;
 
 		$this->company->update( request()->all());
