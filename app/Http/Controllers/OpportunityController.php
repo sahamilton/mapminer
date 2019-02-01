@@ -125,7 +125,7 @@ class OpportunityController extends Controller
         $data['activities'] = $data['addresses']->map(function ($address){
             return $address->activities->load('relatesToAddress','relatedContact');
         });
-        
+       
         $data['branchorders'] = $this->branch->with('orders','orders.address')->whereIn('id',$branches)->get(); 
  
         $data['leads'] = $this->branch->with('leads','leads.leadsource')->whereIn('id',$branches)->get();

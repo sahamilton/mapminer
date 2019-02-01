@@ -141,4 +141,12 @@ class ActivityController extends Controller
         // then get addresses
         //random create activity from random type
     }
+
+    public function future(){
+        dd(auth()->user()->id);
+        $activities = $this->activity->myActivity()->where('followup_date','>=',Carbon::now())->with('relatesToAddress','relatedContact','type')->get();
+        dd($activities);
+        return response()->view('activities.index',compact('activities'));
+
+    }
 }

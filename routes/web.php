@@ -36,6 +36,7 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('about',['as'=>'about','uses'=>'AdminAboutController@getInfo']);
 
    	#Activities
+		Route::get('followup',['as'=>'followup','uses'=>'ActivityController@future']);
 		Route::resource('activity','ActivityController');
 		
    	#AccountTypes

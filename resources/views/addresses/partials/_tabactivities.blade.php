@@ -14,6 +14,7 @@
     <thead>
 
     <th>Date</th>
+    <th>Posted by</th>
     <th>Activity</th>
     <th>Contact</th>
     <th>Notes</th>
@@ -23,9 +24,10 @@
     </thead>
     <tbody>
          @foreach($location->activities as $activity)
-      
+  
             <tr>
                 <td>{{$activity->activity_date ? $activity->activity_date->format('M j, Y'):''}}</td>
+                <td>{{$activity->user->person->fullName()}}</td>
                 <td>@if($activity->type)
                     {{$activity->type->activity}}
                     @endif
