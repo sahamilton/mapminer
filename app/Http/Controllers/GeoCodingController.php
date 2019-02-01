@@ -51,7 +51,7 @@ class GeoCodingController extends BaseController {
 	/**  This needs some serious refactoring! **/
 
 	public function findMe(FindMeFormRequest $request) {
-
+	
 	
 		if(request()->filled('search')) {
 				
@@ -59,6 +59,7 @@ class GeoCodingController extends BaseController {
 			
 		}
 		$data = request()->all();
+	
 		if($data['search'] != session('geo.search') or !session('geo.lat')){
 			
 			if(preg_match('^Lat:([0-9]*[.][0-9]*).Lng:([-]?[0-9]*[.][0-9]*)^', $data['search'],$string)){
@@ -80,8 +81,10 @@ class GeoCodingController extends BaseController {
 				$data = request()->all();
 
 			}
+		}else{
+			$data = session('geo');
 		}
-
+	
 
 		
 
