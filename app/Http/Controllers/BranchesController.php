@@ -122,10 +122,11 @@ class BranchesController extends BaseController {
 	public function store(BranchFormRequest $request)
 	{
 		$address = request('street')." ".request('address2').' '.request('city').' ' .request('state').' ' .request('zip');
+
 		$geoCode = app('geocoder')->geocode($address)->get();
 		$geodata = $this->branch->getGeoCode($geoCode);
 		$input = array_merge(request()->all(),$geodata);
-
+	
 		// add lat lng to location
 		$branch = $this->branch->create($input);
 

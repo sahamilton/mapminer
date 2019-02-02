@@ -25,7 +25,7 @@ class CommentsController extends BaseController {
 	
 	public function index()
 	{
-		$comments = $this->comment->with('postedBy')->orderBy('created_at','ASC')->get();
+		$comments = $this->comment->with('postedBy','postedBy.person')->orderBy('created_at','ASC')->get();
 
 
 		return response()->view('comments.index', compact('comments','fields'));
@@ -48,11 +48,8 @@ class CommentsController extends BaseController {
 	 */
 	public function store(CommentFormRequest $request)
 	{
-
+		
 		$data = request()->all();
-		$data['subject'] = request('title');
-		$data['title'] = request('slug');
-
 		$data['user_id'] = auth()->user()->id;
 		$data = $this->comment->create($data);
 		$this->notify($data);
@@ -154,13 +151,12 @@ class CommentsController extends BaseController {
 	
 	
 	
-	private function notify($comments){
-		$data = array();
-		$data['comments'] =  $comments;
-
-		$data['user'] = User::with('person')->findOrFail($comments['user_id']);
+	private function notify($comment){
 		
-		Mail::queue(new NotifyCommentsAdded($data));
+		$comment->load('postedBy');
+
+		
+		Mail::queue(new NotifyCommentsAdded($comment));
 	}
 	
 }

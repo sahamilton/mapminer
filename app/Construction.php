@@ -8,7 +8,7 @@ class Construction extends Model
     use Geocode;
     protected $value = '250000';
 	// setup map paramets for store locator 
-    protected $fillable = ['lat','lng','id','address','city','state','zip'];
+    protected $fillable = ['lat','lng','id','address','city','state','zip','position'];
     public function getMapData($data){
             $data['lat']=$data['location']['lat'];
             $data['lng']=$data['location']['lng'];

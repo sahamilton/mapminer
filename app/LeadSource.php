@@ -8,7 +8,7 @@ class LeadSource extends Model
 {	
 	public $table='leadsources';
 	public $dates = ['created_at','updated_at','datefrom','dateto'];
-	public $fillable = ['source','description','reference','datefrom','dateto','user_id','filename'];
+	public $fillable = ['source','description','reference','datefrom','dateto','user_id','filename','type'];
 
 
     public function verticals (){

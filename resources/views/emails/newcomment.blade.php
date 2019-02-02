@@ -2,23 +2,23 @@
 
 ## New Comment on News
 
-{{$data['user']->person->fullName()}} has added a comment to the <a href="{{route('news.show',$data['comments']->title)}}">{{$data['comments']->subject}}</a> news item.
+{{$comment->postedBy->person->fullName()}} has added a comment to the <a href="{{route('comment.show',$comment->id)}}">{{$comment->subject}}</a> news item.
 
-{{$data['user']->person->firstname}} said:
+{{$comment->postedBy->person->firstname}} said:
 
 @component('mail::panel')
-{{$data['comments']->comment}}
+{{$comment->comment}}
 
 @endcomponent
 
-You can review and or edit {{$data['user']->person->firstname}}'s comment with this link:
+You can review and or edit {{$comment->postedBy->person->firstname}}'s comment with this link:
 
-@component('mail::button', ['url' => route('comment.edit',$data['comments']->id), 'color' => 'blue'])
+@component('mail::button', ['url' => route('comment.edit',$comment->id), 'color' => 'blue'])
         Review / Edit Comment.
 @endcomponent
 
 <em> If you’re having trouble clicking the  button, copy and paste the URL below
-into your web browser: [{{ route('comment.edit',$data['comments']->id)}}]({{ route('comment.edit',$data['comments']->id)}}) </em>
+into your web browser: [{{ route('comment.edit',$comment->id)}}]({{ route('comment.edit',$comment->id)}}) </em>
 
 Sincerely
         

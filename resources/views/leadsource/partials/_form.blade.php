@@ -20,6 +20,23 @@
 
     </div>
 </div> 
+<!--- Type -->
+@php $types = ['lead','customer','construction'] ; @endphp
+<div class="form-group{{ $errors->has('type') ? ' has-error' : '' }}">
+    <label class="col-md-2 control-label">Type</label>
+    <div class="col-sm-2">
+
+       <select class="form-control" name="type" required>
+            @foreach ($types as $type)
+            <option value="{{$type}}">{{$type}}</option>
+            @endforeach
+       </select>
+        <span class="help-block">
+            <strong>{{ $errors->has('reference') ? $errors->first('reference') : ''}}</strong>
+        </span>
+    </div>
+</div>
+
 <!-- Reference -->
 <div class="form-group{{ $errors->has('reference') ? ' has-error' : '' }}">
     <label class="col-md-2 control-label">Reference</label>

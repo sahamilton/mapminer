@@ -11,7 +11,7 @@ class Address extends Model
 
     public $timestamps = true;
     
-    public $fillable = ['addressable_id','addressable_type','street','address2','city','state','zip','lat','businessname','lng','company_id','user_id','phone'];
+    public $fillable = ['addressable_id','addressable_type','street','address2','city','state','zip','lat','businessname','lng','company_id','user_id','phone','position','lead_source_id'];
     
     public $addressStatusOptions =  [
         1=>'Location data is completely inaccurate.',
@@ -121,6 +121,6 @@ class Address extends Model
     }
 
     public function createdBy(){
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class,'user_id','id');
     }
 }

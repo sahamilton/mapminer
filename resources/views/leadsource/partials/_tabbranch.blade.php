@@ -23,7 +23,8 @@
            <tr> 
                 <td>
                     <a href="{{route('leads.personsource',[$branch->id,$leadsource->id])}}">
-                        {{$branch->branchname}}</a>
+                        {{$branch->branchname}}
+                    </a>
                 </td>
                 <td>{{$branch->assigned}}</td>
                 <td>{{$branch->claimed}}</td>

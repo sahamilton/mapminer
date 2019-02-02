@@ -36,7 +36,8 @@
 <div class="form-group row{{ $errors->has('city') ? ' has-error' : '' }}">
     <label for="city" class="col-md-2 control-label">City: </label>
      <div class="col-sm-8">
-        <input required type="text" 
+        <input required 
+        type="text" 
         class="form-control" 
         name='city' 
         description="city" 

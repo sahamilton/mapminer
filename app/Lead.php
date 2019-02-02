@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Lead extends Model implements HasPresenter {
   use SoftDeletes, Geocode, Addressable;
-	public $dates = ['created_at','updated_at','deleted_at','datefrom','dateto'];
+	public $dates = ['created_at','updated_at','deleted_at','datefrom','dateto','position'];
   public $table= 'addresses';
   public $assignTo;
   public $type='temp';

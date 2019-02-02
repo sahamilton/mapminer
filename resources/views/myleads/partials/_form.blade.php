@@ -81,7 +81,7 @@
 <div class="form-group row{{ $errors->has('contact') ? ' has-error' : '' }}">
     <label for="contact" class="col-md-2 control-label">Contact: </label>
      <div class="col-sm-8">
-        <input required type="text" 
+        <input  type="text" 
         class="form-control" 
         name='contact' 
         description="contact" 
@@ -96,7 +96,7 @@
 <div class="form-group row{{ $errors->has('contact_title') ? ' has-error' : '' }}">
     <label for="contact title" class="col-md-2 control-label">Contact title: </label>
      <div class="col-sm-8">
-        <input required type="text" 
+        <input  type="text" 
         class="form-control" 
         name='contact title' 
         description="contact_title" 

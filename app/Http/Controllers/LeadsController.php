@@ -192,7 +192,7 @@ class LeadsController extends BaseController
       $table = 'addresses';
    
       $data = $this->extractLeadTableData($input,$table);  
-dd($input,$data, $table);
+
       $lead = $this->lead->fill($data['lead']);
 
       $lead->save();

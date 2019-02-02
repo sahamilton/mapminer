@@ -12,7 +12,8 @@
 
 @include('addresses.partials._opportunity')
 
-<p>Location Source: {{$location->leadsource ? $location->leadsource->source : 'unknown'}}</p>
+<p>Location Source: {{$location->leadsource ? $location->leadsource->source : 'unknown'}}
+{{$location->createdBy ? "Created by " . $location->createdBy->person->fullname() : ''}}</p>
 @include('maps.partials._form')
 
 

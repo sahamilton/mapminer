@@ -50,7 +50,7 @@ trait Geocode
                 }
 
                $data['fulladdress'] = $data['address'] .' ' . $data['city']. ' ' . $data['state'] .' ' . $data['zip'];
-              
+               $data['position']= $this->setLocationAttribute($data);
 
             }else{
               
@@ -243,5 +243,41 @@ trait Geocode
 
         $geoCode = app('geocoder')->geocode($address)->get();
         return $this->getGeoCode($geoCode);
+    }
+
+    protected $geofields = ['position'];
+
+    
+    public function setLocationAttribute($data)
+    
+    {
+        $LngLat = $data['lng']." ".$data['lat'];
+        return \DB::raw("ST_GeomFromText('POINT($LngLat)',4326)");
+    }
+
+    public function getLocationAttribute($value)
+    {
+        $loc =  substr($value, 6);
+        $loc = preg_replace('/[ ,]+/', ',', $loc, 1);
+        return substr($loc, 0, -1);
+    }
+
+    /*public function newQuery($excludeDeleted = true)
+    {
+        $raw='';
+        foreach($this->geofields as $column){
+            $raw .= ' astext(' . $column . ') as ' . $column . ' ';
+        }
+        return parent::newQuery($excludeDeleted)->addSelect('*', \DB::raw($raw));
+    }*/
+
+    public function scopeDistance($query, $dist, $position)
+    {
+        return $query->whereRaw('ST_Distance_Sphere(location,POINT(' . $position . ')) < ' . $dist);
+    }
+
+    public function scopeWithDistance($query, $position)
+    {
+        return $query->selectRaw('ST_Distance_Sphere(location,POINT(' . $position . ')) AS distance');
     }
 }

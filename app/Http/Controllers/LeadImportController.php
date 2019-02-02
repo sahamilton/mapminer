@@ -106,7 +106,8 @@ class LeadImportController extends ImportController
     }
     
     private function postimport(){
-        
+        // copy leads to addresses
+        // copy lead fields to leads
         //$this->addAssignedPID();
         $this->copyLeads();
 
@@ -126,6 +127,10 @@ class LeadImportController extends ImportController
         }
     }
     */
+
+    private function copyAddresses(){
+
+    }
     private function copyLeads(){
         
          $query = "insert ignore into leads (" . implode(",",$this->leadfields) .",lead_import_id) select t.". implode(",t.",$this->leadfields). ",t.id as lead_import_id FROM `leadimport` t";

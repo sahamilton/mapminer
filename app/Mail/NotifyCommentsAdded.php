@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Comments;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
@@ -9,7 +10,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 
 class NotifyCommentsAdded extends Mailable
 {
-    public $data;
+    public $comment;
     use Queueable, SerializesModels;
 
     /**
@@ -17,9 +18,9 @@ class NotifyCommentsAdded extends Mailable
      *
      * @return void
      */
-    public function __construct($data)
+    public function __construct(Comments $comment)
     {
-        $this->data = $data;
+        $this->comment = $comment;
     }
 
     /**

@@ -19,7 +19,7 @@ class Person extends NodeModel implements HasPresenter {
 
 	
 	// Don't forget to fill this array
-	public $fillable = ['firstname','lastname','phone','address','lat','lng','reports_to','city','state','zip','geostatus','user_id'];
+	public $fillable = ['firstname','lastname','phone','address','lat','lng','reports_to','city','state','zip','geostatus','user_id','position'];
 
 	
 	public function reportsTo()

@@ -38,7 +38,8 @@ class Branch extends Model implements HasPresenter {
 		'state',
 		'zip',
 		'lat',
-		'lng'
+		'lng',
+		'position'
 	];
 	protected $guarded = [];
 	public $errors;

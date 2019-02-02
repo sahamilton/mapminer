@@ -68,7 +68,7 @@ class AddressController extends Controller
       // $ranking = $this->address->with('ranking')->myRanking()->findOrFail($address->id);
 
         $location = $address->load('contacts','contacts.relatedActivities','activities','activities.type','activities.relatedContact',
-            'activities.user','activities.user.person','company','opportunities','industryVertical','relatedNotes','orders','orders.branch','watchedBy','watchedBy.person','ranking','leadsource');
+            'activities.user','activities.user.person','company','opportunities','industryVertical','relatedNotes','orders','orders.branch','watchedBy','watchedBy.person','ranking','leadsource','createdBy');
  
        // $activities = ActivityType::orderBy('sequence')->pluck('activity','id')->toArray();
        
@@ -78,7 +78,7 @@ class AddressController extends Controller
         $mybranches = $this->person->myBranches();
         $ranked = $this->address->getMyRanking($location->ranking);
         $notes = $this->notes->locationNotes($location->id)->get();
-       
+      
        
         return response()->view('addresses.show',compact('location','branches','rankingstatuses','people','mybranches','ranked','notes'));
     }
@@ -108,10 +108,11 @@ class AddressController extends Controller
         $geocode = app('geocoder')->geocode( $this->getAddress($request))->get();
         $data = $this->address->getGeoCode($geocode);
 
-        $data['businessname'] =request('businessname');
+        $data['businessname'] =request('companyname');
       
         $data['phone'] = preg_replace("/[^0-9]/","",request('phone'));
-      
+       
+   
         $address->update($data);
         return redirect()->route('address.show',$address->id)->withMessage('Location updated');
     }

@@ -14,24 +14,25 @@ Add Feedback</a>
 		<thead>
 			<th>Date</th>
 			<th>Subject</th>
-			<th>Title</th>
+		
 			<th>Feedback</th>
 			<th>Status</th>
 			<th>Posted By</th>
-
+			@if(auth()->user()->hasRole('admin'))<th></th>@endif
 		</thead>
 		<tbody>
 		@foreach($comments as $comment)
+	
 			<tr>  
 				<td>{{$comment->created_at}}</td>
 				<td>{{$comment->subject}}</td>
-				<td>{{title}}</td>
-				<td>{{comment}}</td>
-				<td>{{comment_status}}</td>
-				<td>{{user_id}}</td>
+			
+				<td>{{$comment->comment}}</td>
+				<td>{{$comment->status}}</td>
+				<td>{{$comment->postedBy ? $comment->postedBy->person->fullName() : 'No longer with the company'}}</td>
 				@if(auth()->user()->hasRole('admin'))
 					<td>
-					@include('partials/_modal')
+				
 
 					<div class="btn-group">
 						<button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
@@ -57,5 +58,6 @@ Add Feedback</a>
 		</tbody>
 	</table>
 </div>
-@include('partials/_scripts')
+	@include('partials/_modal')
+	@include('partials/_scripts')
 @endsection
