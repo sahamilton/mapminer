@@ -129,17 +129,20 @@ class LeadsAssignController extends Controller
         return $count;
     }
 
-    private function assignLeadsToBranches($leads){
+    private function assignLeadsToBranches($leadssource,$distance){
+      $distance = $this->distance * 1609;
       
-
-      foreach ($leads as $lead) {
-
-        
-          $branches = $this->branch->nearby($lead,$this->distance,$this->limit)->get();
-          dispatch(new AssignAddressesToBranches($branches,$lead))->onQueue('mapminer');
-
-        }
-        return $count;
+      $query = "insert into address_branch (address_id,branch_id) 
+                select branches.id as branchid, addresses.id as address_id 
+                from branches,addresses 
+                left join address_branch
+                on addresses.id = address_branch.address_id
+                where ST_Distance_Sphere(branches.position,addresses.position) < ". $distance." 
+                and lead_source_id = '3' 
+                and address_branch.address_id is null
+                ORDER BY branches.id asc";
+      
+     return $count;affectingStatement
     }
 
 

@@ -30,7 +30,7 @@ class MyLeadFormRequest extends FormRequest
         
         return [
             'address'=>'required',
-            'companyname'=>'required',
+            'companyname'=>'required|filled',
             'phone'=>'sometimes|numeric',
         ];
     }

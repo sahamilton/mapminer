@@ -58,7 +58,7 @@ class MyLeadsController extends BaseController
     public function store(MyLeadFormRequest $request)
     {
 
-       
+       dd(request()->all());
       
         if(! $data = $this->cleanseInput($request)){
             return redirect()->back()->withError('Unable to geocode that address');
