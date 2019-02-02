@@ -116,27 +116,33 @@ class LeadSourceController extends Controller
             'addresses as closed' => function($query){
                     $query->has('closed');
                 }])->first();
-
+        $teamStats=array();
         $team = $leadsource->salesteam($leadsource->id);
         foreach ($team as $person){
            
             $teamStats[$person->id][$person->status_id]= $person->count;
             $teamStats[$person->id]['name'] = $person->name;
         }
-       $branches = $leadsource->branches($leadsource->id);
-        foreach ($branches as $branch){
-           
-            $branchStats[$branch->id][$branch->status_id]= $branch->count;
-            $branchStats[$branch->id]['branchname'] = $branch->branchname;
-        }
-
+     
+       $branches = $this->branch->whereHas('leads',function($q) use($leadsource){
+            $q->where('lead_source_id','=',$leadsource->id);
+       })->withCount(["leads", 
+       'leads as assigned'=>function($query){
+                       $query->has('assignedToBranch');
+                   },
+        'leads as claimed' => function($query){
+                           $query->has('claimedByBranch');
+                       },
+                   
+        'leads as closed' => function($query){
+                           $query->has('closed');
+                       }])->get();
+       
        // $data = $this->leadsource->leadRepStatusSummary($id);
         $statuses = LeadStatus::pluck('status','id')->toArray();
+   
 
-       
-       
-
-        return response()->view('leadsource.show',compact('statuses','teamStats','branchStats','leadsource'));
+        return response()->view('leadsource.show',compact('statuses','teamStats','branches','leadsource'));
     }
 
     private function getOwnedBy($leads){

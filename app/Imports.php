@@ -117,7 +117,7 @@ class Imports extends Model
 			// Copy over to base table
 			$query ="INSERT IGNORE INTO `".$this->table."` (".$this->fields.") SELECT ".$this->fields." FROM `".$this->temptable."`";
 		
-			return $this->executeQuery("INSERT IGNORE INTO `".$this->table."` (".$this->fields.") SELECT ".$this->fields." FROM `".$this->temptable."`");
+			return $this->executeQuery($query);
 		}
 		// Drop the temp table
 		//

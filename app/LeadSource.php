@@ -63,13 +63,14 @@ class LeadSource extends Model
     }
 
     public function branches($id){
+   
       $query ="SELECT branches.id as id,branchname,`address_branch`.`status_id`, count(*) as count
-      FROM `address_branch` ,addresses,branches
-      where address_id = addresses.id 
-      and branch_id = branches.id
-      and addresses.lead_source_id = ". $id . "
-      group by branchname,id,address_branch.status_id
-      order by branches.id,address_branch.status_id";
+              FROM `address_branch` ,addresses,branches
+              where address_id = addresses.id 
+              and branch_id = branches.id
+              and addresses.lead_source_id = ". $id . "
+              group by branchname,id,address_branch.status_id
+              order by branches.id,address_branch.status_id";
 
       return \DB::select($query); 
     }

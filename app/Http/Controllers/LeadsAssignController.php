@@ -49,12 +49,11 @@ class LeadsAssignController extends Controller
         $this->distance = request('distance');
         $this->limit = request('limit');
         $verticals  = null;
-        $leads = $this->address->doesntHave('assignedToBranch')->where('lead_source_id','=',$leadsource->id)->get();
-       
-     
         if(request('type')=='branch'){
-          $count = $this->assignLeadsToBranches($leads,$verticals);
+          $count = $this->assignLeadsToBranches($leadsource,$verticals);
+         return redirect()->route('leadsource.show',$leadsource->id)->withMessage('Leads assigned to branches');
         }else{
+          $leads = $this->address->doesntHave('assignedToBranch')->where('lead_source_id','=',$leadsource->id)->get();
           $count = $this->assignLeadsToPeople($leads,$verticals);
         }
         
@@ -129,20 +128,21 @@ class LeadsAssignController extends Controller
         return $count;
     }
 
-    private function assignLeadsToBranches($leadssource,$distance){
+    private function assignLeadsToBranches($leadsource,$distance){
+      // convert miles to meters
       $distance = $this->distance * 1609;
-      
-      $query = "insert into address_branch (address_id,branch_id) 
-                select branches.id as branchid, addresses.id as address_id 
+     
+      $query = "insert into address_branch (branch_id,address_id) 
+                select distinct branches.id as branch_id, addresses.id as address_id 
                 from branches,addresses 
                 left join address_branch
                 on addresses.id = address_branch.address_id
-                where ST_Distance_Sphere(branches.position,addresses.position) < ". $distance." 
-                and lead_source_id = '3' 
+                where ST_Distance_Sphere(branches.position,addresses.position) < '". $distance."'
+                and lead_source_id = '" . $leadsource->id ."'
                 and address_branch.address_id is null
                 ORDER BY branches.id asc";
       
-     return $count;affectingStatement
+     return \DB::statement($query);
     }
 
 

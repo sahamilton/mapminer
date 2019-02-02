@@ -21,9 +21,12 @@
 </div>
 
 <div class="tab-content">
-	
+
 	 <div id="details" class="tab-pane show active">
+
+
 	@include('leadsource.partials._tabdetails')
+	
 	</div>
 	
 	<div id="team" class="tab-pane fade ">
