@@ -1,0 +1,21 @@
+
+ALTER TABLE `persons` ADD `position` POINT; 
+update `persons` set address = '1051 A St', city='Tacoma', state='WA', zip='98402', lat='47.2272972', lng='-122.4692548' where lat is null;
+update `persons` set position = POINT(`lng`, `lat`);
+ALTER TABLE `persons` CHANGE `position` `position` POINT NOT NULL;
+ALTER TABLE `persons` ADD SPATIAL INDEX ( `position` );
+UPDATE persons SET position = ST_GeomFromText(ST_AsText(position), 4312);
+
+ALTER TABLE `branches` ADD `position` POINT ;
+UPDATE `branches` SET `position` = POINT( lng, lat );
+ALTER TABLE `branches` CHANGE `position` `position` POINT NOT NULL;
+ALTER TABLE `branches` ADD SPATIAL INDEX ( `position` );
+
+
+ALTER TABLE `addresses` ADD `position` POINT ;
+UPDATE `addresses` SET `position` = POINT( lng, lat );
+ALTER TABLE `addresses` CHANGE `position` `position` POINT NOT NULL;
+ALTER TABLE `addresses` ADD SPATIAL INDEX ( `position` );
+UPDATE addresses SET position = ST_GeomFromText(ST_AsText(position), 4312);
+
+update addresses set street = '4450 Grant Road East", lat = '47.4059', lng = '120.1886' , `position` = POINT( lng, lat ) where address = 268309;

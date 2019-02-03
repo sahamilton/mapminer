@@ -23,7 +23,7 @@ class Address extends Model
     public $addressType = ['location'=>'National Account Location','project'=>'Construction Project', 'lead'=>'Web Lead','customer'=>'Customer'];
     
     public function lead(){
-    	return $this->where('addressable_type','=','lead');
+    	return $this->hasOne(Lead::class,'address_id');
     }
     public function location(){
     	return $this->belongsTo(Location::class,'addressable_id','id');

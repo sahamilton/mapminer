@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\Lead;
+use App\Address;
 use App\LeadImport;
 use App\LeadSource;
 
@@ -16,29 +16,34 @@ class LeadImportController extends ImportController
     public $lead;
     public $leadsources;
     public $import;
-    public $leadfields =[ 
-            'companyname',
+    
+    public $addressfields =[
             'businessname',
             'address',
             'city',
             'state',
             'zip',
-            'description',
             'lat',
             'lng',
+            'position'
             'lead_source_id',
-            'created_at'
-];
+            'created_at'];
+
+
+    public $leadfields =[ 'description'];
+
+
     public $leadcontactfields =[ 
                 'lead_id',
-                'contact',
-                'contacttitle',
-                'contactemail',
-                'contactphone',
+                'firstname',
+                'lastname',
+                'title',
+                'email',
+                'phone',
                 'created_at'
     ];
-    public function __construct(Lead $lead, LeadSource $leadsource,LeadImport $import){
-        $this->lead = $lead;
+    public function __construct(Address $address, LeadSource $leadsource,LeadImport $import){
+        $this->lead = $address;
         $this->import = $import;
         $this->leadsources = $leadsource;
 
@@ -106,14 +111,20 @@ class LeadImportController extends ImportController
     }
     
     private function postimport(){
-        // copy leads to addresses
-        // copy lead fields to leads
-        //$this->addAssignedPID();
+        
+        $this->copyAddresses();
+
+        $this->copyAddressIdtoImport();
+
         $this->copyLeads();
 
         $this->copyLeadContacts();
         //$this->updateLeadPivot();
+        $this->setAddressImportIdToNull();
+
         $this->truncateTable();
+
+        // set import_id to null in addresses table
         return true;
     
   
@@ -129,23 +140,43 @@ class LeadImportController extends ImportController
     */
 
     private function copyAddresses(){
-
-    }
-    private function copyLeads(){
-        
-         $query = "insert ignore into leads (" . implode(",",$this->leadfields) .",lead_import_id) select t.". implode(",t.",$this->leadfields). ",t.id as lead_import_id FROM `leadimport` t";
+             $query = "insert ignore into addresses (" . implode(",",$this->addressfields) .",lead_import_id) select t.". implode(",t.",$this->addressfields). ",t.id as lead_import_id FROM `leadimport` t";
         
         if (\DB::select(\DB::raw($query))){
            
             return true;
         }
+    }
+
+    private function copyAddressIdtoImport(){
+        $query ="update leadimport,addresses set leadimport.address_id = addresses.id where leadimpport.id = addresses.import_id";
+
+         if (\DB::select(\DB::raw($query))){
+               
+                return true;
+            }
+    }
+    /*
+    Copy incremntal data depending on type
+
+    */
+    private function copyLeads(){
+        if(count($this->leadfields)>0){
+             $query = "insert ignore into leads (" . implode(",",$this->leadfields) .",address_id) select t.". implode(",t.",$this->leadfields). ",t.address_id as address_id FROM `leadimport` t";
+            
+            
+            if (\DB::select(\DB::raw($query))){
+               
+                return true;
+            }
+        }
    }
 
    private function copyLeadContacts(){
-        $query = "insert ignore into leadcontacts 
-        (lead_id,contact,contacttitle,contactemail,contactphone,created_at)
-            select leads.id,contact,contacttitle,contactemail,leadimport.phone,leads.created_at 
-            FROM `leadimport`, leads where leadimport.id = leads.lead_import_id";
+        $query = "insert ignore into contacts 
+        (address_id,firstname,lastname,title,email,phone,created_at)
+            select addresses.id,firstname,lastname,title,email,leadimport.phone,addresess.created_at 
+            FROM `leadimport`, leads where leadimport.id = address.lead_import_id";
 
         if (\DB::select(\DB::raw($query))){
            
@@ -166,7 +197,13 @@ class LeadImportController extends ImportController
    }
    */
 
+   private function setAddressImportIdToNull(){
+    $query= "update addresses set import_id = null";
+    return \DB::statement($query);
+   }
+
    private function truncateTable(){
+
      return \DB::statement("TRUNCATE TABLE `leadimport`");
    }
 }

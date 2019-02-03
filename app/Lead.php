@@ -8,10 +8,10 @@ use McCool\LaravelAutoPresenter\HasPresenter;
 use Geocoder\Laravel\Facades\Geocoder;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Lead extends Model implements HasPresenter {
+class Lead extends Model  {
   use SoftDeletes, Geocode, Addressable;
 	public $dates = ['created_at','updated_at','deleted_at','datefrom','dateto','position'];
-  public $table= 'addresses';
+  public $table= 'leads';
   public $assignTo;
   public $type='temp';
 
@@ -19,29 +19,10 @@ class Lead extends Model implements HasPresenter {
     $this->assignTo = config('leads.lead_distribution_roles');
   }
 
-  public $requiredfields = ['companyname',
-            'businessname',
-            'address',
-            'city',
-            'state',
-            'zip',
-            'lat',
-            'lng',];
+  public $requiredfields = [];
             
-	public $fillable = ['companyname',
-						'businessname',
-            'customer_number',
-						'address',
-						'city',
-						'state',
-						'zip',
-            'phone',
-						'description',
-						'lat',
-						'lng',
-						'lead_source_id',
-            'branch_id',];
-    public $statuses = [1=>'Offered',2=>'Claimed',3=>'Closed'];
+	public $fillable = ['description','address_id'];
+ /* public $statuses = [1=>'Offered',2=>'Claimed',3=>'Closed'];
     
     public $getStatusOptions =  [
         1=>'Prospect data is completely inaccurate. No project or project completed.',
@@ -257,11 +238,11 @@ public function rankLead($salesteam){
 
 
     }
-    /*  public function myLeads(){
+    public function myLeads(){
       return $this->belongsToMany(Person::class,'lead_person_status','related_id','person_id')
             ->withPivot('status_id','rating','type')
             ->wherePivotIn('status_id',[2,3]);
-    }*/
+    }
     public function myLeadStatus(){
       
       return $this->salesteam()->wherePivot('person_id','=',auth()->user()->person->id)->first(['status_id','rating']);
@@ -391,5 +372,5 @@ public function rankLead($salesteam){
 
     public function getMyLeads(){
         return $this->where('user_id','=',auth()->user()->id);
-    }
+    }*/
 }
