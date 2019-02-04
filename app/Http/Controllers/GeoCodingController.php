@@ -52,7 +52,7 @@ class GeoCodingController extends BaseController {
 
 	public function findMe(FindMeFormRequest $request) {
 	
-	
+		
 		if(request()->filled('search')) {
 				
 			$address = urlencode(request('search'));
@@ -315,7 +315,7 @@ class GeoCodingController extends BaseController {
 
 	private function getLocationListData($location,$data){
 		
-	
+		
 		return $this->address
 		->whereIn('addressable_type',$data['addressType'])
 		->nearby($location,$data['distance'])

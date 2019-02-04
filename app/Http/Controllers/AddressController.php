@@ -69,11 +69,12 @@ class AddressController extends Controller
        
         $location = $address->load('contacts','contacts.relatedActivities','activities','activities.type','activities.relatedContact',
             'activities.user','activities.user.person','company','opportunities','industryVertical','relatedNotes','orders','orders.branch','watchedBy','watchedBy.person','ranking','leadsource','createdBy');
-    if($address->addressable_type){
-        $location->load($address->addressable_type);
-    }
+        if($address->addressable_type){
+           
+            $location->load($address->addressable_type);
+        }
        // $activities = ActivityType::orderBy('sequence')->pluck('activity','id')->toArray();
-       dd($location);
+
         $branches = $this->branch->nearby($location,100,5)->get();
         $rankingstatuses = $this->address->getStatusOptions;
         $people = $this->person->salesReps()->PrimaryRole()->nearby($location,100,5)->get();

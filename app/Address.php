@@ -24,15 +24,16 @@ class Address extends Model
     
     public function lead(){
     	return $this->hasOne(Lead::class,'address_id');
+
     }
     public function location(){
-    	return $this->belongsTo(Location::class,'addressable_id','id');
+    	return $this->hasOne(Location::class,'address_id');
     }
     public function customer(){
-        return $this->belongsTo(Customer::class,'addressable_id','id');
+        return $this->hasOne(Customer::class,'address_id');
     }
     public function project(){
-    	return $this->belongsTo(Project::class,'addressable_id','id');
+    	return $this->hasOne(Project::class,'address_id');
     }
     public function watchedBy(){
 
@@ -63,7 +64,7 @@ class Address extends Model
     }
 
     public function scopeFiltered($query){
-        if(!$keys= $this->getSearchKeys(['companies'],['vertical'])){
+        if(! $keys= $this->getSearchKeys(['companies'],['vertical'])){
             return $query->whereIn('addressable_type',session('geo.addressType'));
         }
         return $query->whereIn('vertical',$keys)->whereIn('addressable_type',session('geo.addressType'));

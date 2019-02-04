@@ -22,7 +22,7 @@
   @foreach ($addressKeys as $key=>$color)
 
     <input type="checkbox" 
-    {{session()->has('geo.addressType')&& in_array($key,session('geo.addressType')) ? 'checked' : ''}}  
+    {{session()->has('geo.addressType') && in_array($key,session('geo.addressType')) ? 'checked' : ''}}  
  
     name="addressType[]" value="{{$key}}" />
     {{ucwords($key)}}&nbsp = &nbsp <img src='{{asset('geocoding/markers/'.$color.'-pin.png')}}' />&nbsp&nbsp&nbsp

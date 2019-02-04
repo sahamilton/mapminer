@@ -71,7 +71,7 @@ class LocationsController extends BaseController {
 	 */
 	public function store(LocationFormRequest $request)
 	{
-				dd('hrere');
+			
 
 		$address = request('street') . ",". request('city') .",". request('state')." ". request('zip');
 		$data = $this->location->getGeoCode(app('geocoder')->geocode($address)->get());
