@@ -25,7 +25,7 @@ class LeadImportController extends ImportController
             'zip',
             'lat',
             'lng',
-            'position'
+            'position',
             'lead_source_id',
             'created_at'];
 
