@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 use App\User;
 use App\Person;
+use App\Address;
 use App\Branch;
 use App\Company;
 use App\SearchFilter;
@@ -13,12 +14,14 @@ class ManagersController extends BaseController {
 
 	public $persons;
 	public $company;
+	public $address;
 	public $managerID;
 	public $validroles = [3,4,5];
-	public function __construct(User $user, Person $person,  Company $company) {
+	public function __construct(User $user, Person $person,  Company $company,Address $address) {
 		
 		$this->persons = $person;
 		$this->company = $company;
+		$this->address = $address;
 		$this->user = $user;
 
 		//$this->persons->rebuild();
@@ -34,7 +37,7 @@ class ManagersController extends BaseController {
 	public function manager()
 	{
 		$data = $this->getManagersData();
-		
+	
 		return response()->view('managers.manageaccounts', compact('data'));
 		
 		
@@ -116,12 +119,13 @@ class ManagersController extends BaseController {
 			}
 		}
 		
-		$data['accountstring'] = implode("','",$data['selectedAccounts']);
-		$data['notes'] = $this->getMyNotes($data['accountstring']);
-		$data['watching'] = $this->getManagersWatchers($data['accountstring']);
-		$data['nocontact'] = $this->getLocationsWoContacts($data['accountstring']);
-		$data['nosalesnotes'] = $this->getNoSalesNotes($data['accountstring']);
-		$data['segments'] = $this->getSegmentDetails($data['accountstring']);
+		$data['accounts'] = $data['selectedAccounts'];
+		$data['notes'] = $this->getMyNotes($data['accounts']);
+		$data['watching'] = $this->getManagersWatchers($data['accounts']);
+		$data['nocontact'] = $this->getLocationsWoContacts($data['accounts']);
+		
+		$data['nosalesnotes'] = $this->getNoSalesNotes($data['accounts']);
+		$data['segments'] = $this->getSegmentDetails($data['accounts']);
 
 		return $data;
 	}
@@ -258,7 +262,7 @@ class ManagersController extends BaseController {
 	 * @param  [type] $accountstring [description]
 	 * @return [type]                [description]
 	 */
-	private function getMyNotes($accountstring)
+	private function getMyNotes($accounts)
 	{
 		
 		
@@ -275,7 +279,7 @@ class ManagersController extends BaseController {
 				notes.related_id = addresses.id 
 				and notes.type = 'location'
 				and addresses.company_id = companies.id 
-				and companies.id in('".$accountstring."') 
+				and companies.id in('".implode(",",$accounts)."') 
 			group by 
 				companies.id,
 				companyname
@@ -313,7 +317,7 @@ class ManagersController extends BaseController {
 	 * @param  [type] $accountstring [description]
 	 * @return [type]                [description]
 	 */
-	private function getAllAccountWatchers($accountstring)
+	private function getAllAccountWatchers($accounts)
 	{
 		// refactor to eloquent
 		// locations wherein company_id accountstring
@@ -337,7 +341,7 @@ class ManagersController extends BaseController {
 		where 
 			location_user.user_id = users.id
 			and location_user.location_id = locations.id
-			and locations.company_id in ('".$accountstring."') 
+			and locations.company_id in ('".implode(",",$accountstring)."') 
 			and locations.company_id = companies.id
 			and persons.user_id = users.id
 		order by 
@@ -360,18 +364,18 @@ class ManagersController extends BaseController {
 	 * @param  [type] $accountstring [description]
 	 * @return [type]                [description]
 	 */
-	private function getManagersWatchers($accountstring)
+	private function getManagersWatchers($accounts)
 	{
 		
 		
 		$query ="select persons.user_id, count(persons.user_id) as watching,concat(firstname,' ',lastname) as name,
-		locations.company_id
-				from locations,location_user,users,persons
+		addresses.company_id
+				from addresses,location_user,users,persons
 				where location_user.user_id = users.id
-				and location_user.location_id = locations.id
-				and locations.company_id in ('".$accountstring."') 
+				and location_user.address_id = addresses.id
+				and addresses.company_id in ('".implode(",",$accounts)."') 
 				and persons.user_id = users.id
-				group by locations.company_id,persons.user_id,firstname,lastname 
+				group by addresses.company_id,persons.user_id,firstname,lastname 
 				order by watching DESC";
 		
 		$result = \DB::select(\DB::raw($query));
@@ -387,25 +391,27 @@ class ManagersController extends BaseController {
 	 * @param  [type] $accountstring [description]
 	 * @return [type]                [description]
 	 */
-	private function getLocationsWoContacts($accountstring)
+	private function getLocationsWoContacts($accounts)
 	{
+		//return $this->company->whereIn('id'.)
+
 		$query ="select companyname, 
 				company_id , 
-				count(locations.id) as locations, 
-				((nocontacts / count(locations.id)) * 100) as percent, 
+				count(addresses.id) as addresses, 
+				((nocontacts / count(addresses.id)) * 100) as percent, 
 				nocontacts 
-				from locations,companies  
+				from addresses,companies  
 				left join ( 
-					select companies.id as coid, count(locations.id) as nocontacts 
-					from locations,companies 
-					where locations.company_id = companies.id and locations.phone = '' 
+					select companies.id as coid, count(addresses.id) as nocontacts 
+					from addresses,companies 
+					where addresses.company_id = companies.id and addresses.phone = '' 
 					group by coid 
 				) st2 
 				on st2.coid =  companies.id 
-				where companies.id = locations.company_id
-				and companies.id in ('".$accountstring."')
+				where companies.id = addresses.company_id
+				and companies.id in ('".implode(",",$accounts)."')
 				group by companyname,company_id,st2.nocontacts 
-				order by percent DESC,locations DESC";
+				order by percent DESC,addresses DESC";
 		$result = \DB::select(\DB::raw($query));
 		return $result;	
 		/**/
@@ -460,14 +466,14 @@ class ManagersController extends BaseController {
  * @param  [type] $accountstring [description]
  * @return [type]                [description]
  */
-	private function getNoSalesNotes($accountstring)
+	private function getNoSalesNotes($accounts)
 	{
 		
 		
 		$query = "SELECT distinct companyname,companies.id,company_howtofield.company_id as notes
 		FROM `companies` 
 		left join company_howtofield on companies.id = company_id 
-		where companies.id in ('".$accountstring."')
+		where companies.id in ('".implode(",",$accounts)."')
 		order by companyname";
 		
 		$result = \DB::select(\DB::raw($query));
@@ -480,33 +486,34 @@ class ManagersController extends BaseController {
 	 * @param  [type] $id [description]
 	 * @return [type]     [description]
 	 */
-	private function getSegmentDetails($id)
+	private function getSegmentDetails($ids)
 	{
 			
-			$ids = explode("'",$id);
-			/*
-			$result = Location::
-						select('filter',\DB::raw('count(*) as total'))
-						->with('segments')
+
+		
+			return Address::
+						select('vertical',\DB::raw('count(*) as total'))
+						->with('industryVertical')
 						->whereIn('company_id',$ids)
-						->groupBy('segments.filter')
-						->get();*/
-			
-			$query = "SELECT
-						companyname,
+						->groupBy('vertical')
+						->get();
+		
+			/*$query = "SELECT
+						companies.companyname as companyname,
 				
 						f.filter as industry,
 						s.filter as segment , 
-						count(locations.id) as count 
-						FROM companies, searchfilters f, locations
-						LEFT JOIN searchfilters s on  s.id = locations.segment 
-						WHERE locations.company_id in ('".$id."')
-						and f.id = vertical
-						and companies.id = locations.company_id  
+						count(addresses.id) as count 
+						FROM companies, searchfilters f, addresses
+						LEFT JOIN searchfilters s on  s.id = addresses.segment 
+						WHERE addresses.company_id in ('".$id."')
+						and f.id = addresses.vertical
+						and companies.id = addresses.company_id 
+						
 						group by companyname,f.filter,s.filter";
 			
 
-			$result = \DB::select(\DB::raw($query));
+			$result = \DB::select(\DB::raw($query));*/
 			
 		return $result;
 	}

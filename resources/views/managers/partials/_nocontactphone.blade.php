@@ -30,7 +30,7 @@
 <a href="/company/{{$nocontact->company_id}}" >{{$nocontact->companyname}}</a>
 </td>
 <td>
-{{$nocontact->locations}}
+{{$nocontact->addresses}}
 </td>
 <td>
 {{$nocontact->nocontacts}}
