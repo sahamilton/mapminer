@@ -47,9 +47,9 @@ class DashboardController extends Controller
        $ratings = $this->rating->myRatings()->get();
        $notes = $this->notes->myNotes()->get();      
 
-       $leads = $this->lead->getMyLeads()->get();
+       //$leads = $this->lead->getMyLeads()->get();
     
-      
+       $leads = array();
        return response()->view('myactivities.index',compact('watchlist','contacts','activities','ratings','notes','leads'));
     }
 
