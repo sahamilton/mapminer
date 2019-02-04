@@ -12,8 +12,8 @@ class SearchController extends Controller
 	public function searchUsers(Request $request)
 	{
 
-		return  User::search(request('q'))
-            ->with('person')
+		return User::search(request('q'))
+			->with('person')
             ->get();
 	}
 

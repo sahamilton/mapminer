@@ -61,7 +61,12 @@ class User extends Authenticatable
             return null;
          }
         }
-	 public function usage()
+	 
+        public function personWithOutGeo(){
+             return $this->hasOne(Person::class,'user_id');
+        }
+
+     public function usage()
 	 {
 		  return $this->hasOne(Track::class,'user_id');
 	 }

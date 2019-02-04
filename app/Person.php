@@ -14,7 +14,7 @@ class Person extends NodeModel implements HasPresenter {
 	];
 	
 	protected $table ='persons';
-	protected $hidden = ['created_at','updated_at'];
+	protected $hidden = ['created_at','updated_at','position'];
 	protected $parentColumn = 'reports_to';
 
 	
