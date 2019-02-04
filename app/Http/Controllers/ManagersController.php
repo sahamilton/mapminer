@@ -269,13 +269,13 @@ class ManagersController extends BaseController {
 				companyname,companies.id  
 			from 
 				notes,
-				locations,
+				addresses,
 				companies 
 			where 
-				notes.related_id = locations.id 
+				notes.related_id = addresses.id 
 				and notes.type = 'location'
-				and locations.company_id = companies.id 
-				and companies.id in ('".$accountstring."') 
+				and addresses.company_id = companies.id 
+				and companies.id in('".$accountstring."') 
 			group by 
 				companies.id,
 				companyname
