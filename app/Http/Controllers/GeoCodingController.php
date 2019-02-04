@@ -58,8 +58,9 @@ class GeoCodingController extends BaseController {
 			$address = urlencode(request('search'));
 			
 		}
-		$data = request()->all();
-	
+		$data = array_merge(session('geo'),request()->all());
+
+
 		if($data['search'] != session('geo.search') or !session('geo.lat')){
 			
 			if(preg_match('^Lat:([0-9]*[.][0-9]*).Lng:([-]?[0-9]*[.][0-9]*)^', $data['search'],$string)){
@@ -81,15 +82,7 @@ class GeoCodingController extends BaseController {
 				$data = request()->all();
 
 			}
-		}else{
-
-			$data = session('geo');
-
 		}
-		$data['view'] = request('view');
-		$data['type'] = request('type');
-		$data['addressType']= request('addressType');
-		
 
 		$data['latlng'] = $data['lat'].":".$data['lng'];
 		// Kludge to address the issue of different data in Session::geo
@@ -103,7 +96,7 @@ class GeoCodingController extends BaseController {
 			$data['fulladdress'] = $data['search'];
 		}
 
-		if(request()->has('addressType') && count(request('addressType'))==0){
+		if(! request()->has('addressType') or count(request('addressType'))==0){
 			
 			$data['addressType'] = ['customer','project','lead','location'];
 		}
