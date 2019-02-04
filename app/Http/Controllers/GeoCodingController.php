@@ -83,9 +83,10 @@ class GeoCodingController extends BaseController {
 			}
 		}else{
 			$data = session('geo');
+
 		}
 	
-
+		$data['addressType']= request('addressType');
 		
 
 		$data['latlng'] = $data['lat'].":".$data['lng'];
@@ -99,10 +100,12 @@ class GeoCodingController extends BaseController {
 		if(! isset($data['fulladdress'])){
 			$data['fulladdress'] = $data['search'];
 		}
-		if(! request()->filled('addressType')){
+
+		if(count(request('addressType'))==0){
+			dd(request('addressType'));
 			$data['addressType'] = ['customer','project','lead','location'];
 		}
-		
+
 		session()->put('geo', $data);
 
 		$watchlist = array();
