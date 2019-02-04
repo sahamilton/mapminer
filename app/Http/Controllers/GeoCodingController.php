@@ -64,7 +64,7 @@ class GeoCodingController extends BaseController {
 			$data = request()->all();
 		}
 
-		if($data['search'] != session('geo.search') or !session('geo.lat')){
+		if($data['search'] != session('geo.search') or session('geo.lat')==null){
 			
 			if(preg_match('^Lat:([0-9]*[.][0-9]*).Lng:([-]?[0-9]*[.][0-9]*)^', $data['search'],$string)){
 				$data['lat']=$string[1];
