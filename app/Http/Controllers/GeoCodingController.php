@@ -102,7 +102,7 @@ class GeoCodingController extends BaseController {
 		}
 
 		if(count(request('addressType'))==0){
-			dd(request('addressType'));
+			
 			$data['addressType'] = ['customer','project','lead','location'];
 		}
 
