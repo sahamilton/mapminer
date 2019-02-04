@@ -18,7 +18,7 @@
           </a>
           @endif
         </td>
-        <td>{{$duplicates->fulladdress}}</td>
+        <td><a href="{{route('address.show',$duplicates->address_id)}}">{{$duplicates->fulladdress}}</a></td>
         <td>{{$duplicates->total}}</td>
         </tr>
       @endforeach

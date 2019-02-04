@@ -488,7 +488,7 @@ class AdminDashboardController extends BaseController {
 	{
 		//Query to get duplicate addresses
 		return \App\Address::with('company')
-					->selectRaw("company_id,
+					->selectRaw("company_id,addresses.id as address_id,
 								concat_ws(' ',`businessname`,`street`,`city`,`state`) as fulladdress,
 								count(concat_ws(' ',`businessname`,`street`,`city`,`state`)) as total,
 								state")
