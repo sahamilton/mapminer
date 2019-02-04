@@ -167,7 +167,10 @@ class MyLeadsController extends BaseController
              $data['contact']['fullname'] = request('contact');
             $name = explode(' ', request('contact'), 2);
             $data['contact']['firstname'] = $name[0];
-            $data['contact']['lastname'] = $name[1];
+            if(isset($name[1])){
+                $data['contact']['lastname'] = $name[1];
+            }
+            
             $data['contact']['title'] = request('contact_title');
             $data['contact']['email'] = request('contactemail');
             $data['contact']['phone'] =  preg_replace("/[^0-9]/","",request('phone'));
