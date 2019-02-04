@@ -58,8 +58,11 @@ class GeoCodingController extends BaseController {
 			$address = urlencode(request('search'));
 			
 		}
-		$data = array_merge(session('geo'),request()->all());
-
+		if (session('geo')){
+			$data = array_merge(session('geo'),request()->all());
+		}else{
+			$data = request()->all();
+		}
 
 		if($data['search'] != session('geo.search') or !session('geo.lat')){
 			
