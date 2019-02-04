@@ -27,3 +27,8 @@
                 @endif
             </p>
         @endforeach
+        <h4>Servicelines</h4>
+        @foreach($data['branch']->servicelines as $serviceline)
+            <li>{{$serviceline->ServiceLine}}</li>
+
+        @endforeach
