@@ -12,9 +12,11 @@
       
         <tr>
         <td>
+          @if($duplicates->company)
           <a href ="{{route('company.state',array($duplicates->company_id,$duplicates->state))}}" >
             {{$duplicates->company->companyname}}
           </a>
+          @endif
         </td>
         <td>{{$duplicates->fulladdress}}</td>
         <td>{{$duplicates->total}}</td>

@@ -82,10 +82,12 @@ class GeoCodingController extends BaseController {
 
 			}
 		}else{
+
 			$data = session('geo');
 
 		}
-	
+		$data['view'] = request('view');
+		$data['type'] = request('type');
 		$data['addressType']= request('addressType');
 		
 
@@ -101,13 +103,13 @@ class GeoCodingController extends BaseController {
 			$data['fulladdress'] = $data['search'];
 		}
 
-		if(count(request('addressType'))==0){
+		if(request()->has('addressType') && count(request('addressType'))==0){
 			
 			$data['addressType'] = ['customer','project','lead','location'];
 		}
 
 		session()->put('geo', $data);
-
+		
 		$watchlist = array();
 		$data['vertical'] = NULL;
 		
@@ -318,10 +320,11 @@ class GeoCodingController extends BaseController {
 
 	private function getLocationListData($location,$data){
 		
-		
-		return $this->address
-		->whereIn('addressable_type',$data['addressType'])
-		->nearby($location,$data['distance'])
+		$addresses = $this->address;
+		if(session('geo.addressType')){
+			$addresses->whereIn('addressable_type',session('geo.addressType'));
+		}
+		return $addresses->nearby($location,$data['distance'])
 				->with('company')
 				
 				->get();

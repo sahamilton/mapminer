@@ -64,10 +64,17 @@ class Address extends Model
     }
 
     public function scopeFiltered($query){
-        if(! $keys= $this->getSearchKeys(['companies'],['vertical'])){
+        
+        if((! $keys= $this->getSearchKeys(['companies'],['vertical'])) && session('geo.addressType')){
+           
             return $query->whereIn('addressable_type',session('geo.addressType'));
-        }
-        return $query->whereIn('vertical',$keys)->whereIn('addressable_type',session('geo.addressType'));
+        }elseif(session('geo.addressType')){
+            
+            return $query->whereIn('vertical',$keys)->whereIn('addressable_type',session('geo.addressType'));
+       }else{
+        
+        return $query;
+       }
        
     }
     

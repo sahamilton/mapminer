@@ -1,6 +1,6 @@
 <?php
 namespace App\Http\Controllers\Admin;
-use App\Location;
+use App\Address;
 use App\Note;
 use App\Track;
 use App\User;
@@ -25,13 +25,13 @@ class AdminDashboardController extends BaseController {
 	public $begingingOfTime;
 
 
-	public function __construct(Company $company,Location $location, Track $track,User $user,Person $person) {
+	public function __construct(Company $company,Address $address, Track $track,User $user,Person $person) {
 		$this->calculateTimeOffset();
 		$this->track = $track;
 		$this->user = $user;
 		$this->company = $company;
 		$this->person = $person;
-		$this->location = $location;
+		$this->address = $address;
 		$this->begingingOfTime = Carbon::parse('2014-07-01');
 	}
 
@@ -428,23 +428,23 @@ class AdminDashboardController extends BaseController {
 		    select
 				companyname,
 				companies.id,
-				count(locations.id) as locations,
-				(count(locations.id)-withcontacts) as without,
-				(((count(locations.id)-withcontacts) / count(locations.id)) * 100) as percent
-			from locations,companies
+				count(addresses.id) as locations,
+				(count(addresses.id)-withcontacts) as without,
+				(((count(addresses.id)-withcontacts) / count(addresses.id)) * 100) as percent
+			from addresses,companies
 			left join
 				( select
 					companies.id as coid,
-					count(locations.id) as withcontacts
+					count(addresses.id) as withcontacts
 					from companies,
-					locations,
+					addresses,
 					contacts
-					where companies.id = locations.company_id
-					and locations.id = contacts.location_id
+					where companies.id = addresses.company_id
+					and addresses.id = contacts.address_id
 					group by coid
 				) st2
 			on st2.coid = companies.id
-			where companies.id = locations.company_id
+			where companies.id = addresses.company_id
 			group by companyname
 			having percent >0
 			ORDER BY `percent` ASC";
@@ -487,8 +487,7 @@ class AdminDashboardController extends BaseController {
 	private function getDuplicateAddresses()
 	{
 		//Query to get duplicate addresses
-		return $this->location
-					->with('company')
+		return \App\Address::with('company')
 					->selectRaw("company_id,
 								concat_ws(' ',`businessname`,`street`,`city`,`state`) as fulladdress,
 								count(concat_ws(' ',`businessname`,`street`,`city`,`state`)) as total,
@@ -540,7 +539,7 @@ class AdminDashboardController extends BaseController {
 	private function getNoGeocodedLocations()
 	{
 
-		return Location::where('geostatus','=',FALSE)->with('company')->get();
+		return Address::where('geostatus','=',FALSE)->with('company')->get();
 
 
 

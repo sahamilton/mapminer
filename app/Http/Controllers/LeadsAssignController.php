@@ -21,6 +21,7 @@ class LeadsAssignController extends Controller
     public $leadroles;
     public $distance = 100;
     public $limit = 5;
+    
 	public function __construct(LeadSource $leadsource,Lead $lead, Address $address,Person $person,Branch $branch){
 		$this->leadsource = $leadsource;
 		$this->lead = $lead;

@@ -102,16 +102,21 @@ class MapsController extends BaseController {
 	}
 	public function findLocalAccounts($distance=NULL,$latlng = NULL,$company = NULL) {
 	
-		dd(session('geo'));
+		
 		$location = $this->getLocationLatLng($latlng);
-		$locations = $this->address
-		->whereIn('addressable_type',session('geo.addressType'))
-		->whereHas('company.serviceline',function ($q){
+		$locations = $this->address;
+		if(session('geo.addressType')){
+			$locations->whereIn('addressable_type',session('geo.addressType'));
+		}
+		
+
+		$locations->whereHas('company.serviceline',function ($q){
 			$q->whereIn('servicelines.id',$this->userServiceLines);
-		});
+		});	
 		if($company){
 			$locations->where('company_id','=',$company);
 		}
+
 		if($filtered = $this->location->isFiltered(['companies'],['vertical'])){
 			$locations->whereHas('company',function ($q) use($filtered){
 				$q->whereIn('vertical',$filtered);
