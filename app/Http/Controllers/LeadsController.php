@@ -471,7 +471,7 @@ class LeadsController extends BaseController
         $type = 'csv';
     }
    
-    Excel::create('Prospects'.time(),function($excel) {
+    Excel::download('Prospects'.time(),function($excel) {
             $excel->sheet('Prospects',function($sheet) {
                 $leads = $this->person->where('user_id','=',auth()->user()->id)
                 ->with('ownedLeads','ownedLeads.relatedNotes','ownedLeads.contacts')->firstOrFail();

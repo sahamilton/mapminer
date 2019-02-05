@@ -332,7 +332,7 @@ class LocationsController extends BaseController {
 		$data['location'] = asset(Storage::url($file));
         $data['basepath'] = base_path()."/public".Storage::url($file);
         // read first line headers of import file
-        $locations = Excel::load($data['basepath'],function($reader){
+        $locations = Excel::import($data['basepath'],function($reader){
            
         })->first();
 

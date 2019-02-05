@@ -505,7 +505,7 @@ class BranchesController extends BaseController {
 	{
 	
 	
-	Excel::create('Branches',function($excel){
+	Excel::download('Branches',function($excel){
 			$excel->sheet('BranchTeam',function($sheet) {
 
 				$roles = Role::pluck('name','id')->toArray();
@@ -527,7 +527,7 @@ class BranchesController extends BaseController {
 	{
 	
 	
-	Excel::create('Branches',function($excel){
+	Excel::download('Branches',function($excel){
 			$excel->sheet('Watching',function($sheet) {
 				$result = $this->branch->with('address','manager')->get();
 			

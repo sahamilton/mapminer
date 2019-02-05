@@ -19,7 +19,14 @@ class Lead extends Model  {
     $this->assignTo = config('leads.lead_distribution_roles');
   }
 
-  public $requiredfields = [];
+  public $requiredfields = ['companyname',
+            'businessname',
+            'address',
+            'city',
+            'state',
+            'zip',
+            'lat',
+            'lng',];
             
 	public $fillable = ['description','address_id'];
  /* public $statuses = [1=>'Offered',2=>'Claimed',3=>'Closed'];

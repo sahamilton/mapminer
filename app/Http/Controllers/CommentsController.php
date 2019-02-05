@@ -140,7 +140,7 @@ class CommentsController extends BaseController {
 	public function download()
 	{
 		
-		Excel::create('Comments',function($excel){
+		Excel::download('Comments',function($excel){
 			$excel->sheet('Comments',function($sheet) {
 				$comments = $this->comment->orderBy('created_at','ASC')->get();
 				$sheet->loadview('comments.export',compact('comments'));

@@ -13,6 +13,15 @@ class Address extends Model
     
     public $fillable = ['addressable_id','addressable_type','street','address2','city','state','zip','lat','businessname','lng','company_id','user_id','phone','position','lead_source_id'];
     
+    public $requiredfields = ['companyname',
+            'businessname',
+            'address',
+            'city',
+            'state',
+            'zip',
+            'lat',
+            'lng',];
+    
     public $addressStatusOptions =  [
         1=>'Location data is completely inaccurate.',
         2=>'Location data is incomplete and / or not useful.',

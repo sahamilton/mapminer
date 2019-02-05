@@ -420,7 +420,7 @@ class LeadSourceController extends Controller
         $type = 'xlsx';
     }
 
-    Excel::create('Prospects'.time(),function($excel) use($id){
+    Excel::download('Prospects'.time(),function($excel) use($id){
             $excel->sheet('Prospects',function($sheet )use($id) {
                 $statuses = $this->lead->statuses;
                 $leadsource = $this->leadsource

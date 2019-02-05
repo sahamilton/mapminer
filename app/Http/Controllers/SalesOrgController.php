@@ -185,7 +185,7 @@ class SalesOrgController extends BaseController {
 	public function noManagerExport(){
 		
 
-		Excel::create('NoManagers'.time(),function($excel) {
+		Excel::download('NoManagers'.time(),function($excel) {
             $excel->sheet('No Managers',function($sheet) {
                 $people = $this->person->whereNull('reports_to')
 				->with('userdetails','userdetails.roles')

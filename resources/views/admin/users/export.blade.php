@@ -1,13 +1,13 @@
 <table>
 <thead> 
     <tr>
-        <td>First Name</td>
-        <td>Last Name</td>
+        <th>First Name</th>
+        <th>Last Name</th>
       
-        <td>EMail</td>
-        <td>Roles</td>
-        <td>ServiceLine</td>
-        <td>Last Activity</td>
+        <th>EMail</th>
+        <th>Roles</th>
+        <th>ServiceLine</th>
+        <th>Last Activity</th>
     </tr>
 </thead>
 <tbody>

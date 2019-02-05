@@ -17,7 +17,7 @@ class WebLeadImport extends Imports
             'time_frame',
             
             ];
-
+      public $table = 'webleads';
 	public function __construct(){
 
 	}

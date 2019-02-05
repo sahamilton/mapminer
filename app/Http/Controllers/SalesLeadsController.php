@@ -276,7 +276,7 @@ class SalesLeadsController extends Controller
         $type = 'xlsx';
     }
     
-    Excel::create('Prospects'.time(),function($excel) {
+    Excel::download('Prospects'.time(),function($excel) {
             $excel->sheet('Prospects',function($sheet) {
                 $leads = $this->person->where('user_id','=',auth()->user()->id)
                 ->with('ownedLeads','ownedLeads.relatedNotes')->firstOrFail();

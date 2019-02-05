@@ -307,7 +307,9 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
 {
 	#Ops Main Page
 		Route::get('/',['as'=>'ops','uses'=>'Admin\AdminDashboardController@dashboard']);
-	
+	# Address
+		Route::get('address/import', ['as'=>'address.importfile', 'uses'=>'AddressImportController@getfile']);
+
 	#Branches
 		Route::get('branches/import', ['as'=>'branches.importfile', 'uses'=>'BranchesImportController@getFile']);
 		Route::post('branches/change',['as'=>'branches.change','uses'=>'BranchesImportController@update']);

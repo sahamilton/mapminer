@@ -83,9 +83,12 @@ class AdminDashboardController extends BaseController {
 
 	public function downloadlogins($id=null){
 		$views = $this->getViews();
+		$interval = $views[$id]['interval'];
 		$title = str_replace(" ", "-", 'Last Login '. $views[$id]['label']);
+		$interval = $interval = $periods[$n]['interval'];
+		return Excel::download(new UserExport($interval), $title.'.csv');
 
-		Excel::create($title,function($excel) use($id,$title){
+		Excel::download($title,function($excel) use($id,$title){
 			$excel->sheet($title,function($sheet) use($id){
 				$users = $this->getUsersByLoginDate($id);
 				$sheet->loadView('admin.users.export',compact('users'));

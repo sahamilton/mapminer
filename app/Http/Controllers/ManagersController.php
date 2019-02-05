@@ -139,7 +139,7 @@ class ManagersController extends BaseController {
 		$company = $this->company->findOrFail($companyID);
 		$this->checkManager($companyID);
 		
-		Excel::create($company->companyname . ' Notes',function($excel) use ($companyID){
+		Excel::download($company->companyname . ' Notes',function($excel) use ($companyID){
 			$excel->sheet('Notes',function($sheet) use ($companyID) {
 				$notes = $this->getManagerNotes($companyID);
 				
@@ -300,7 +300,7 @@ class ManagersController extends BaseController {
 	public function companywatchexport(){
 		$id = urldecode(\Input::get('id'));
 		
-		Excel::create('Watch List',function($excel) use ($id){
+		Excel::download('Watch List',function($excel) use ($id){
 			$excel->sheet('Watching',function($sheet) use ($id) {
 				$result = $this->getAllAccountWatchers($id);
 				$sheet->loadview('companies.export',compact('result'));
