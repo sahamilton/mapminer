@@ -57,14 +57,13 @@ class MyLeadsController extends BaseController
      */
     public function store(MyLeadFormRequest $request)
     {
-
+        
      
         if(! $data = $this->cleanseInput($request)){
             return redirect()->back()->withError('Unable to geocode that address');
         }
 
-      
-       
+             
 
         $lead = $this->lead->create($data['lead']);
         if(count($data['branch'])>0){
@@ -75,6 +74,8 @@ class MyLeadsController extends BaseController
            
             $lead->contacts()->create($data['contact']);
         }
+        $lead->load('contacts');
+
         if(request('notify')==1){
             $branches = \App\Branch::with('manager','manager.userdetails')->whereIn('id',array_keys($data['branch']))->get();
            
