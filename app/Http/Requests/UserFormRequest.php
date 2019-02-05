@@ -38,6 +38,7 @@ class UserFormRequest extends FormRequest
             'employee_id' => 'required|unique:users,employee_id,' . request()->segment(3),
             'password'=>'confirmed',
             'serviceline'=>'required',
+            'address'=>'required',
 
         ];
           if (count(array_intersect(request('roles'), [5,6,7,8]))>0){
