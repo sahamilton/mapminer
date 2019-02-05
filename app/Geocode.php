@@ -27,11 +27,14 @@ trait Geocode
                 $data['geostatus']=TRUE;
                 $data['address'] =  $geoCode->first()->getStreetNumber()." " . $geoCode->first()->getStreetName();
                 $data['street'] = $data['address'];
+              
                 if(! $geoCode->first()->getLocality() && count($geoCode->first()->getadminLevels())>0){
-                    
-                  
-                   $data['city'] =  $geoCode->first()->getadminLevels()->get($geoCode->first()->getadminLevels()->count())->getName();
+                    foreach ( $geoCode->first()->getadminLevels() as $level){
+                        $data['city'] = $level->getName();
+                    }
+                
                 }else{
+                   
                     $data['city'] =  $geoCode->first()->getLocality();
                 }
                 
@@ -39,6 +42,7 @@ trait Geocode
 
                 if(count($geoCode->first()->getadminLevels())>0){
                     //dd('it does');
+                   
                     $data['state'] = $geoCode->first()
                                     ->getadminLevels()
                                     ->first()
@@ -51,7 +55,7 @@ trait Geocode
 
                $data['fulladdress'] = trim($data['address'] .' ' . $data['city']. ' ' . $data['state'] .' ' . $data['zip']);
                $data['position']= $this->setLocationAttribute($data);
-
+            
             }else{
               
                 $data['lat'] = null;
