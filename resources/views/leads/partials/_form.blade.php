@@ -66,23 +66,23 @@
 
 
 <!-- Contact -->
-	<div class="form-group{{ $errors->has('fullname') ? ' has-error' : '' }}">
+	<div class="form-group{{ $errors->has('contact') ? ' has-error' : '' }}">
 		<label class="col-md-4 control-label">Contact</label>
 			<div class="input-group input-group-lg ">
-			    <input type="text" required class="form-control" name='fullname' autocomplete="off" description="contact" value="{{ old('fullname') }}" placeholder="contact">
+			    <input type="text" required class="form-control" name='contact' autocomplete="off" description="contact" value="{{ old('contact') }}" placeholder="contact">
 			    <span class="help-block">
-			        <strong>{{ $errors->has('fullname') ? $errors->first('fullname') : ''}}</strong>
+			        <strong>{{ $errors->has('contact') ? $errors->first('contact') : ''}}</strong>
 			        </span>
 			</div>
 	</div>
 
 	<!-- Contact -->
-	<div class="form-group{{ $errors->has('title') ? ' has-error' : '' }}">
-		<label class="col-md-4 control-label">Titla</label>
+	<div class="form-group{{ $errors->has('contact_title') ? ' has-error' : '' }}">
+		<label class="col-md-4 control-label">Title</label>
 			<div class="input-group input-group-lg ">
-			    <input type="text" required class="form-control" name='title' autocomplete="off" description="title" value="{{ old('title')}}" placeholder="contact title">
+			    <input type="text" required class="form-control" name='contact_title' autocomplete="off" description="contact_title" value="{{ old('contact_title')}}" placeholder="contact contact_title">
 			    <span class="help-block">
-			        <strong>{{ $errors->has('title') ? $errors->first('title') : ''}}</strong>
+			        <strong>{{ $errors->has('contact_title') ? $errors->first('contact_title') : ''}}</strong>
 			        </span>
 			</div>
 	</div>
@@ -98,13 +98,13 @@
 			</div>
 	</div>
 
-	<!-- Phone -->
-	<div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
+	<!-- contactemail -->
+	<div class="form-group{{ $errors->has('contactemail') ? ' has-error' : '' }}">
 		<label class="col-md-4 control-label">Email</label>
 			<div class="input-group input-group-lg ">
-			    <input type="text" required class="form-control" name='email' autocomplete="off" description="email" value="{{ old('email') }}" placeholder="contact email">
+			    <input type="text"  class="form-control" name='contactemail' autocomplete="off" description="contactemail" value="{{ old('contactemail') }}" placeholder="contact@company.com">
 			    <span class="help-block">
-			        <strong>{{ $errors->has('email') ? $errors->first('email') : ''}}</strong>
+			        <strong>{{ $errors->has('contactemail') ? $errors->first('contactemail') : ''}}</strong>
 			        </span>
 			</div>
 	</div>

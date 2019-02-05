@@ -5,7 +5,7 @@
 {{$manager->firstname}}, 
 
 
-A new lead that came through the People Ready website has been assigned to branch {{$branch->branchname}}.  The details of this lead are below:
+A new lead has been assigned to branch {{$branch->branchname}}.  The details of this lead are below:
 
 @component('mail::panel')
 
@@ -15,13 +15,13 @@ Company: {{$lead->businessname}}
 
 Address: {{$lead->fullAddress()}}
 
-Contact: {{$lead->contact->fullname}}
+Contact: {{$lead->contacts->first()->fullname}}
 
-Contact Title: {{$lead->contact->title}}
+Contact Title: {{$lead->contacts->first()->title}}
 
-Phone: {{$lead->contact->phone}}
+Phone: {{$lead->contacts->first()->phone}}
 
-Email: {{$lead->contact->email}}
+Email: {{$lead->contacts->first()->email}}
 
 **Job Requirements**
 

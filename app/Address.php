@@ -35,6 +35,10 @@ class Address extends Model
     	return $this->hasOne(Lead::class,'address_id');
 
     }
+
+    public function weblead(){
+        return $this->hasOne(WebLead::class,'address_id');
+    }
     public function location(){
     	return $this->hasOne(Location::class,'address_id');
     }

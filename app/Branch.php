@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 class Branch extends Model implements HasPresenter {
 	use Geocode;
 	public $table ='branches';
-	protected $hidden = ['created_at','updated_at'];
+	protected $hidden = ['created_at','updated_at','position'];
 	protected $primaryKey = 'id'; // or null
 
     public $incrementing = false;

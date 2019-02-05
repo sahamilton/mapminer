@@ -63,8 +63,7 @@ class MyLeadsController extends BaseController
             return redirect()->back()->withError('Unable to geocode that address');
         }
 
-      
-       
+             
 
         $lead = $this->lead->create($data['lead']);
         if(count($data['branch'])>0){
@@ -74,7 +73,24 @@ class MyLeadsController extends BaseController
         if(isset($data['contact'])){
            
             $lead->contacts()->create($data['contact']);
+
         }
+        if(request()->filled('type')){
+           switch(request('type')){
+            case 'weblead':
+                $lead->weblead()->create(request()->all());
+            break;
+
+
+           }
+            
+            $lead->load('contacts',request('type'));
+
+        }else{
+          $lead->load('contacts');  
+        }
+    
+
         if(request('notify')==1){
             $branches = \App\Branch::with('manager','manager.userdetails')->whereIn('id',array_keys($data['branch']))->get();
            
@@ -140,14 +156,16 @@ class MyLeadsController extends BaseController
         if(! $geodata = $this->lead->geoCodeAddress($address)){
             return false;
             
-        }
-       
-        
-        
+        }       
         $data['lead'] = array_merge(request()->all(),$geodata);
         $data['lead']['businessname'] = $data['lead']['companyname'];
         $data['lead']['phone'] = preg_replace("/[^0-9]/","",$data['lead']['phone']);
-        $data['lead']['addressable_type'] = 'lead';
+        if(request()->filled('type')){
+            $data['lead']['addressable_type'] = request('type');
+        }else{
+           $data['lead']['addressable_type'] = 'lead'; 
+        }
+        
         $data['lead']['lead_source_id'] = '4';
         $data['lead']['type'] = 'lead';
         $data['lead']['user_id'] =auth()->user()->id;
