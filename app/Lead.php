@@ -81,7 +81,7 @@ class Lead extends Model  {
 
     }
   
-  
+  */
 
   public function createLeadFromGeo($geoCode){
           $coords = $this->getGeoCode($geoCode);
@@ -205,7 +205,7 @@ public function rankLead($salesteam){
      return null;
     }
 
-  public function myLeads(array $statuses=null,$all=null){
+ /* public function myLeads(array $statuses=null,$all=null){
     if(! $statuses){
           $statuses = [1,2];
       }
@@ -237,7 +237,7 @@ public function rankLead($salesteam){
     }
 
 
-    }
+    }*/
     public function myLeads(){
       return $this->belongsToMany(Person::class,'lead_person_status','related_id','person_id')
             ->withPivot('status_id','rating','type')
@@ -372,5 +372,5 @@ public function rankLead($salesteam){
 
     public function getMyLeads(){
         return $this->where('user_id','=',auth()->user()->id);
-    }*/
+    }
 }

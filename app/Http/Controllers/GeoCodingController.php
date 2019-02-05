@@ -74,8 +74,14 @@ class GeoCodingController extends BaseController {
 					$data['lat']=$string[1];
 					$data['lng'] = $string[2];
 					$geocode = app('geocoder')->reverse($data['lat'],$data['lng'])->get();
+				if(! $geocode or count($geocode)==0){
 
-				$data['search']= $geocode->first()->getFormattedAddress();
+					return redirect()->back()->withInput()->with('error','Unable to Geocode address:'.request('address') );
+				}
+				if($geocode->first()->getFormattedAddress()){
+					$data['search']= $geocode->first()->getFormattedAddress();
+				}
+				
 			}else{
 			
 				$geocode = app('geocoder')->geocode($data['search'])->get();
