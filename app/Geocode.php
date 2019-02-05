@@ -8,7 +8,6 @@ trait Geocode
    **/
    public function getGeoCode($geoCode){
    
-        
         if(is_array($geoCode) && count($geoCode)>0){
            
                 $data['lat'] = $geoCode[0]['latitude'];
@@ -48,8 +47,9 @@ trait Geocode
                    $data['state']=null;
                    //dd('it doesnt');
                 }
+     
 
-               $data['fulladdress'] = $data['address'] .' ' . $data['city']. ' ' . $data['state'] .' ' . $data['zip'];
+               $data['fulladdress'] = trim($data['address'] .' ' . $data['city']. ' ' . $data['state'] .' ' . $data['zip']);
                $data['position']= $this->setLocationAttribute($data);
 
             }else{
@@ -59,7 +59,7 @@ trait Geocode
                 $data['geostatus']=FALSE; 
 
             }
-
+          
           return $data;
     }
 

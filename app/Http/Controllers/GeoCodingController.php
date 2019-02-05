@@ -52,48 +52,48 @@ class GeoCodingController extends BaseController {
 
 	public function findMe(FindMeFormRequest $request) {
 	
-		
+
 		if(request()->filled('search')) {
 				
-			$address = urlencode(request('search'));
+			$address = trim(request('search'));
 			
 		}
+		
 		if (session('geo')){
 			$data = array_merge(session('geo'),request()->all());
+		
 		}else{
 			$data = request()->all();
 		}
 
-		if($data['search'] != session('geo.search') or session('geo.lat')==null){
-			
-			if(preg_match('^Lat:([0-9]*[.][0-9]*).Lng:([-]?[0-9]*[.][0-9]*)^', $data['search'],$string)){
-				$data['lat']=$string[1];
-				$data['lng'] = $string[2];
-				$geocode = app('geocoder')->reverse($data['lat'],$data['lng'])->get();
+	
+
+		if($data['search'] != session('geo.search') or ! $data['lat']){	
+
+				if(preg_match('^Lat:([0-9]*[.][0-9]*).Lng:([-]?[0-9]*[.][0-9]*)^', $data['search'],$string)){
+					$data['lat']=$string[1];
+					$data['lng'] = $string[2];
+					$geocode = app('geocoder')->reverse($data['lat'],$data['lng'])->get();
 
 				$data['search']= $geocode->first()->getFormattedAddress();
 			}else{
 			
 				$geocode = app('geocoder')->geocode($data['search'])->get();
+
 				//reset the geo session
 				if(! $geocode or count($geocode)==0){
 
 					return redirect()->back()->withInput()->with('error','Unable to Geocode address:'.request('address') );
 				}
 				
-				request()->merge($this->location->getGeoCode($geocode));
-				$data = request()->all();
+				
+				$data = array_merge($data,$this->location->getGeoCode($geocode));
 
 			}
 		}
-
+	
 		$data['latlng'] = $data['lat'].":".$data['lng'];
-		// Kludge to address the issue of different data in Session::geo
-		if(! request()->has('number')){
-
-			$data['number']=5;
-		}
-
+		
 		// we have to do this in case the lat / lng was set via the browser
 		if(! isset($data['fulladdress'])){
 			$data['fulladdress'] = $data['search'];
