@@ -34,13 +34,22 @@ roles</p>
 </div>
 <div class="row">
     <p><strong>Available for </strong>
+
     @foreach ($training->servicelines as $serviceline)
-    {{$serviceline->Serviceline}}|
+    {{$serviceline->ServiceLine}}|
     @endforeach
 servicelines</p>
 </p>
 </div>
-
+<div class="row">
+    <p><strong>Available for </strong>
+       
+    @foreach ($training->relatedIndustries as $industry)
+    {{$industry->filter}}|
+    @endforeach
+industries</p>
+</p>
+</div>
 @include('partials._modal')
 @include('partials._scripts')
 @endsection
