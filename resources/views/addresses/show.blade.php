@@ -32,7 +32,7 @@
  <a class="nav-item nav-link"  
         data-toggle="tab" 
         href="#projectdetails"
-        id="contact-tab"
+        id="project-tab"
         role="tab"
         aria-controls="projectdetails"
         aria-selected="false">
@@ -40,6 +40,19 @@
     <strong>Project Details</strong>
 
   @endif
+  @if($location->addressable_type == 'weblead')
+    <a class="nav-item nav-link"  
+          data-toggle="tab" 
+          href="#weblead"
+          id="weblead-tab"
+          role="tab"
+          aria-controls="weblead"
+          aria-selected="false">
+
+      <strong>Lead Details</strong>
+    </a>
+  @endif
+
     <a class="nav-item nav-link"  
         data-toggle="tab" 
         href="#contacts"
@@ -130,13 +143,20 @@
     <div id="details" class="tab-pane show active">
      @include('addresses.partials._tabdetails')
     </div>
+        @if($location->addressable_type == 'weblead')
+    <div id="weblead" class="tab-pane fade">
+      
+       @include('addresses.partials._tabwebleads') 
+
+    </div>
+    @endif
     @if($location->addressable_type == 'project')
     <div id="projectdetails" class="tab-pane fade">
       @php $project = $location->project @endphp
        @include('projects.partials._projectdetails') 
 
     </div>
-    
+
     <div id="contacts" class="tab-pane fade">
       @include('projects.partials._companylist')
       
@@ -150,7 +170,8 @@
 
     </div>
 
-    @endif
+    @endif    
+
     <div id="activities" class="tab-pane fade">
      @include('addresses.partials._tabactivities')
     </div>
