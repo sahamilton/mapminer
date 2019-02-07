@@ -11,12 +11,14 @@
     <tbody>
       
          @foreach($location->ranking as $rating)
+            @if($rating->pivot->ranking)
             <tr>
-                <td>{{$rating->fullname()}}</td>
+                <td><a href="{{route('person.show',$rating->id)}}">{{$rating->fullname()}}</a></td>
                 <td>{{$rating->pivot->ranking}}</td>
                 <td>{{$rating->pivot->comments}}</td>
                 <td>{{$rating->pivot->created_at->format('Y-m-d')}}</td>
             </tr>
+            @endif
            @endforeach
 
     </tbody>
