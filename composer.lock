@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "9f5c241eaaa49a9587c919f1f1a5d133",
+    "content-hash": "f6a8c9b7779b13243502f2dacb23ad27",
     "packages": [
         {
             "name": "algolia/algoliasearch-client-php",
@@ -61,6 +61,49 @@
             "description": "Algolia Search API Client for PHP",
             "homepage": "https://github.com/algolia/algoliasearch-client-php",
             "time": "2018-11-06T10:48:00+00:00"
+        },
+        {
+            "name": "askedio/laravel-soft-cascade",
+            "version": "5.6.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Askedio/laravel-soft-cascade.git",
+                "reference": "aeb875d23b0474524fa39cd02c8fd08dd3c12740"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Askedio/laravel-soft-cascade/zipball/aeb875d23b0474524fa39cd02c8fd08dd3c12740",
+                "reference": "aeb875d23b0474524fa39cd02c8fd08dd3c12740",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/container": "^5.6",
+                "illuminate/database": "^5.6",
+                "illuminate/events": "^5.6",
+                "illuminate/support": "^5.6",
+                "php": ">=7.1.3"
+            },
+            "require-dev": {
+                "codacy/coverage": "dev-master",
+                "orchestra/testbench": "3.6.x",
+                "phpunit/phpunit": "~7.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Askedio\\SoftCascade\\Providers\\GenericServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Askedio\\SoftCascade\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "description": "Soft Delete & Restore Cascader",
+            "time": "2018-02-12T10:47:14+00:00"
         },
         {
             "name": "baum/baum",
