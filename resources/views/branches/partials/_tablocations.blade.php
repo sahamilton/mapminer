@@ -12,13 +12,15 @@
     </thead>
     <tbody>
    @foreach($locations as $location)
+
     <tr>  
     <td>
+    	@if($location->company_id)
 <a href="{{route('company.show',$location->company_id)}}"
 				title="See all {{$location->companyname}} locations">
 				{{$location->companyname}}
 		</a>
-
+		@endif
     </td>
 	<td>
 		<a href="{{route('address.show',$location->id)}}"

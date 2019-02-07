@@ -290,7 +290,7 @@ class PersonsController extends BaseController {
 		$data['people'] = asset(Storage::url($file));
         $data['basepath'] = base_path()."/public".Storage::url($file);
         // read first line headers of import file
-        $people = Excel::load($data['basepath'],function(){
+        $people = Excel::import($data['basepath'],function(){
 
         })->first();
 
@@ -315,7 +315,7 @@ class PersonsController extends BaseController {
 
 		$data = $this->persons->with('userdetails','userdetails.roles','userdetails.serviceline','reportsTo','reportsTo.userdetails','industryfocus')->get();
 	
-		Excel::create('All People',function($excel) use ($data){
+		Excel::download('All People',function($excel) use ($data){
 			$excel->sheet('All People',function($sheet) use ($data) {
 
 				$sheet->loadview('persons.export',compact('data'));

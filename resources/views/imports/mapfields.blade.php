@@ -29,6 +29,7 @@
             
             <select name="fields[{{$field}}]">
                 <option value="@ignore">ignore</option>
+                <option value="@add">include (new)</option>
                @foreach ($columns as $column) 
         
                    @if(! in_array($column->Field,$skip))

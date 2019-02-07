@@ -317,7 +317,7 @@ class ProjectsController extends BaseController
     }
 
     public function exportMyProjects(){
-            Excel::create('Projects',function($excel){
+            Excel::download('Projects',function($excel){
             $excel->sheet('Watching',function($sheet) {
                 $projects = $this->getMyProjects();
                 $sheet->loadView('projects.export',compact('projects'));
@@ -363,7 +363,7 @@ class ProjectsController extends BaseController
     }
 
     public function exportProjectStats(){
-        Excel::create('Projects',function($excel){
+        Excel::download('Projects',function($excel){
             $excel->sheet('Stats',function($sheet) {
                 $projects = $this->project->projectStats($id=null);
                 $projects = $this->createStats($projects);
@@ -384,7 +384,7 @@ class ProjectsController extends BaseController
         return redirect()->route('project.owner',$owner);
     }
     public function exportowned(){
-            Excel::create('Projects',function($excel){
+            Excel::download('Projects',function($excel){
             $excel->sheet('Watching',function($sheet) {
                 $projects = $this->getOwnedProjects();
                 $sheet->loadView('projects.exportowned',compact('projects'));

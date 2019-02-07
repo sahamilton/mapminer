@@ -2,25 +2,33 @@
 @section('content')
 
 	<h2>Assign {{$lead->businessname}} Prospect</h2>
-	<p><a href="{{route('leads.show',$lead->id)}}">Return to prospects</a></p>
-	<ul class="nav nav-tabs">
-
-		<li class="nav-item "><a class="nav-link active" data-toggle="tab" href="#team"><strong>Sales Team</strong></a></li>
-
-		<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#branches"><strong>Branches</strong></a></li>
-
-	</ul>
-
-	<div class="tab-content">
-		<div id="team" class="tab-pane fade show active">
-
-			@include('leads.partials._repslist')
+	<p><a href="{{route('address.show',$lead->id)}}" target="_blank">Review Prospect</a>
+	
+		
+		<div id="branches" >
+			<form name="assigntoBranch" method="post" action="{{route('webleads.assign')}}">
+			  <div class="form-group">
+			  	<input type="submit" name="assign" class="btn btn-info" value="Assign to branches">	
+			  </div>
+				<div class="form-group">
+		            <label class="checkbox-inline " for="password_confirmation">Notify Managers</label>
+		           
+		              <input 
+		                class="checkbox-inline " 
+		                type="checkbox" 
+		                name="notify" 
+		                id="notify" 
+		                value="1"/>
+		          </div>
+            
+				@csrf
+				
+					@include('leads.partials._branchlist')
+				<input type="hidden" name="address_id" value="{{$lead->id}}" />
+			</form>
 		</div>
+		
 
-		<div id="branches" class="tab-pane fade ">
-			@include('leads.partials._branchlist')
-		</div>
-	</div>
 
 @include('partials._scripts')
 @endsection

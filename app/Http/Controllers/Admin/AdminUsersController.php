@@ -172,7 +172,7 @@ class AdminUsersController extends BaseController {
     public function store(UserFormRequest $request)
     {
 
-
+        
         $user = $this->user->create(request()->all());
         $user->api_token = md5(uniqid(mt_rand(), true));
         $user->confirmation_code = md5(uniqid(mt_rand(), true));
@@ -183,16 +183,31 @@ class AdminUsersController extends BaseController {
         }
 
         if ( $user->save() ) {
+            // need to get the lat lng;
+            $name = request(['firstname','lastname','phone']);
+            if(request()->filled('address')){
+                $geoCode = app('geocoder')->geocode(request('address'))->get();
+                $person = $this->person->getGeoCode($geoCode);
+            
+            }else{
+                $person['lat']=null;
+                $person['lng']=null;
+                $person['position'] = null;
+            } 
+            $person = array_merge($person,$name);
+       
+            $user->person()->create($person);
+            $person = $user->person;
 
-			$person = new Person;
+			/*$person = new Person;
             $person->user_id = $user->id;
 
             $person->firstname = request('firstname');
             $person->lastname = request('lastname');
-            $person->save();
+            $person->save();*/
            	$person = $this->updateAssociatedPerson($person,request()->all());
             $person = $this->associateBranchesWithPerson($person,request()->all());
-			$user->person()->save($person);
+			
             $track=Track::create(['user_id'=>$user->id]);
             $user->saveRoles(request('roles' ));
             $user->serviceline()->attach(request('serviceline'));

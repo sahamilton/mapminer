@@ -37,6 +37,7 @@ use Geocode, Addressable;
            'pr_status',
            'lat',
            'lng',
+           'position'
            
            ];
      public $getStatusOptions =  [

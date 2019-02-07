@@ -1,20 +1,22 @@
 <table>
-	<tbody>
+	<thead>
 		<tr>
-			<td>businessname</td>
-			<td>lat</td>
-			<td>lng</td>
-			<td>companyname</td>
-			<td>street</td>
-			<td>address</td>
-			<td>city</td>
-			<td>state</td>
-			<td>zip</td>
-			<td>contact</td>
-			<td>phone</td>
-			<td>watchnotes</td>
-			
+			<th>businessname</th>
+			<th>lat</th>
+			<th>lng</th>
+			<th>companyname</th>
+			<th>street</th>
+			<th>address</th>
+			<th>city</th>
+			<th>state</th>
+			<th>zip</th>
+			<th>contact</th>
+			<th>phone</th>
+			<th>watchnotes</th>
 		</tr>
+	</thead>
+	<tbody>
+
 		@foreach($result as $watch)
 		@if( $watch->watching)
 			

@@ -8,7 +8,6 @@ trait Geocode
    **/
    public function getGeoCode($geoCode){
    
-        
         if(is_array($geoCode) && count($geoCode)>0){
            
                 $data['lat'] = $geoCode[0]['latitude'];
@@ -28,11 +27,14 @@ trait Geocode
                 $data['geostatus']=TRUE;
                 $data['address'] =  $geoCode->first()->getStreetNumber()." " . $geoCode->first()->getStreetName();
                 $data['street'] = $data['address'];
+              
                 if(! $geoCode->first()->getLocality() && count($geoCode->first()->getadminLevels())>0){
-                    
-                  
-                   $data['city'] =  $geoCode->first()->getadminLevels()->get($geoCode->first()->getadminLevels()->count())->getName();
+                    foreach ( $geoCode->first()->getadminLevels() as $level){
+                        $data['city'] = $level->getName();
+                    }
+                
                 }else{
+                   
                     $data['city'] =  $geoCode->first()->getLocality();
                 }
                 
@@ -40,6 +42,7 @@ trait Geocode
 
                 if(count($geoCode->first()->getadminLevels())>0){
                     //dd('it does');
+                   
                     $data['state'] = $geoCode->first()
                                     ->getadminLevels()
                                     ->first()
@@ -48,10 +51,11 @@ trait Geocode
                    $data['state']=null;
                    //dd('it doesnt');
                 }
+     
 
-               $data['fulladdress'] = $data['address'] .' ' . $data['city']. ' ' . $data['state'] .' ' . $data['zip'];
-              
-
+               $data['fulladdress'] = trim($data['address'] .' ' . $data['city']. ' ' . $data['state'] .' ' . $data['zip']);
+               $data['position']= $this->setLocationAttribute($data);
+            
             }else{
               
                 $data['lat'] = null;
@@ -59,7 +63,7 @@ trait Geocode
                 $data['geostatus']=FALSE; 
 
             }
-
+          
           return $data;
     }
 
@@ -243,5 +247,41 @@ trait Geocode
 
         $geoCode = app('geocoder')->geocode($address)->get();
         return $this->getGeoCode($geoCode);
+    }
+
+    protected $geofields = ['position'];
+
+    
+    public function setLocationAttribute($data)
+    
+    {
+        $LngLat = $data['lng']." ".$data['lat'];
+        return \DB::raw("ST_GeomFromText('POINT($LngLat)',4326)");
+    }
+
+    public function getLocationAttribute($value)
+    {
+        $loc =  substr($value, 6);
+        $loc = preg_replace('/[ ,]+/', ',', $loc, 1);
+        return substr($loc, 0, -1);
+    }
+
+    /*public function newQuery($excludeDeleted = true)
+    {
+        $raw='';
+        foreach($this->geofields as $column){
+            $raw .= ' astext(' . $column . ') as ' . $column . ' ';
+        }
+        return parent::newQuery($excludeDeleted)->addSelect('*', \DB::raw($raw));
+    }*/
+
+    public function scopeDistance($query, $dist, $position)
+    {
+        return $query->whereRaw('ST_Distance_Sphere(location,POINT(' . $position . ')) < ' . $dist);
+    }
+
+    public function scopeWithDistance($query, $position)
+    {
+        return $query->selectRaw('ST_Distance_Sphere(location,POINT(' . $position . ')) AS distance');
     }
 }

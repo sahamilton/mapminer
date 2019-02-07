@@ -1,6 +1,5 @@
 <?php
 namespace App\Http\Controllers\Admin;
-use App\Location;
 use App\Address;
 use App\Note;
 use App\Track;
@@ -27,14 +26,13 @@ class AdminDashboardController extends BaseController {
 	public $begingingOfTime;
 
 
-	public function __construct(Company $company,Location $location, Track $track,User $user,Person $person,Address $address) {
+	public function __construct(Company $company,Address $address, Track $track,User $user,Person $person) {
 		$this->calculateTimeOffset();
 		$this->track = $track;
 		$this->user = $user;
 		$this->company = $company;
 		$this->person = $person;
 		$this->address = $address;
-		$this->location = $location;
 		$this->begingingOfTime = Carbon::parse('2014-07-01');
 	}
 
@@ -86,9 +84,12 @@ class AdminDashboardController extends BaseController {
 
 	public function downloadlogins($id=null){
 		$views = $this->getViews();
+		$interval = $views[$id]['interval'];
 		$title = str_replace(" ", "-", 'Last Login '. $views[$id]['label']);
+		$interval = $interval = $periods[$n]['interval'];
+		return Excel::download(new UserExport($interval), $title.'.csv');
 
-		Excel::create($title,function($excel) use($id,$title){
+		Excel::download($title,function($excel) use($id,$title){
 			$excel->sheet($title,function($sheet) use($id){
 				$users = $this->getUsersByLoginDate($id);
 				$sheet->loadView('admin.users.export',compact('users'));
@@ -490,9 +491,8 @@ class AdminDashboardController extends BaseController {
 	private function getDuplicateAddresses()
 	{
 		//Query to get duplicate addresses
-		return $this->address
-					->with('company')
-					->selectRaw("company_id,
+		return \App\Address::with('company')
+					->selectRaw("company_id,addresses.id as address_id,
 								concat_ws(' ',`businessname`,`street`,`city`,`state`) as fulladdress,
 								count(concat_ws(' ',`businessname`,`street`,`city`,`state`)) as total,
 								state")
@@ -543,7 +543,7 @@ class AdminDashboardController extends BaseController {
 	private function getNoGeocodedLocations()
 	{
 
-		return $this->address->where('geostatus','=',FALSE)->with('company')->get();
+		return Address::where('geostatus','=',FALSE)->with('company')->get();
 
 
 

@@ -40,6 +40,7 @@
 		<input 
 		class="form-control" 
 		type="text" 
+		required
 		placeholder="Full address with city & state"
 		name="address" 
 		id="address" 

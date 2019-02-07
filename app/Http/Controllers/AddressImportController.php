@@ -11,12 +11,12 @@ use App\LeadSource;
 use App\Http\Requests\LeadImportFormRequest;
 
 
-class LeadImportController extends ImportController
+class AddressImportController extends ImportController
 {
     public $lead;
     public $leadsources;
     public $import;
-    
+    public $importtable = 'addressimports';
     public $addressfields =[
             'businessname',
             'address',
@@ -30,11 +30,11 @@ class LeadImportController extends ImportController
             'created_at'];
 
 
-    public $leadfields =[ 'description'];
+    // $extrafields = ['leads']['description'];
 
 
-    public $leadcontactfields =[ 
-                'lead_id',
+    public $contactfields =[ 
+                'address_id',
                 'firstname',
                 'lastname',
                 'title',
@@ -43,7 +43,7 @@ class LeadImportController extends ImportController
                 'created_at'
     ];
     public function __construct(Address $address, LeadSource $leadsource,LeadImport $import){
-        $this->lead = $address;
+        $this->address = $address;
         $this->import = $import;
         $this->leadsources = $leadsource;
 
@@ -60,9 +60,9 @@ class LeadImportController extends ImportController
             
             $leadsource = $this->leadsources->find($id);
         }
-        $requiredFields = $this->lead->requiredfields;
+        $requiredFields = $this->address->requiredfields;
        if($type=='assigned'){
-        $requiredFields[] = 'employeee_number';
+           $requiredFields[] = 'employeee_number';
        }
        
         return response()->view('leads.import',compact ('sources','leadsource','requiredFields','type'));

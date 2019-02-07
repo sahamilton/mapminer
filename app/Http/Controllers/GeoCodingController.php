@@ -51,57 +51,67 @@ class GeoCodingController extends BaseController {
 	/**  This needs some serious refactoring! **/
 
 	public function findMe(FindMeFormRequest $request) {
-
 	
+
 		if(request()->filled('search')) {
 				
-			$address = urlencode(request('search'));
+			$address = trim(request('search'));
 			
 		}
-		$data = request()->all();
-		if($data['search'] != session('geo.search') or !session('geo.lat')){
-			
-			if(preg_match('^Lat:([0-9]*[.][0-9]*).Lng:([-]?[0-9]*[.][0-9]*)^', $data['search'],$string)){
-				$data['lat']=$string[1];
-				$data['lng'] = $string[2];
-				$geocode = app('geocoder')->reverse($data['lat'],$data['lng'])->get();
+		
+		if (session('geo')){
+			$data = array_merge(session('geo'),request()->all());
+		
+		}else{
+			$data = request()->all();
+		}
 
-				$data['search']= $geocode->first()->getFormattedAddress();
+	
+
+		if($data['search'] != session('geo.search') or ! $data['lat']){	
+
+				if(preg_match('^Lat:([0-9]*[.][0-9]*).Lng:([-]?[0-9]*[.][0-9]*)^', $data['search'],$string)){
+					$data['lat']=$string[1];
+					$data['lng'] = $string[2];
+					$geocode = app('geocoder')->reverse($data['lat'],$data['lng'])->get();
+				if(! $geocode or count($geocode)==0){
+
+					return redirect()->back()->withInput()->with('error','Unable to Geocode address:'.request('address') );
+				}
+				if($geocode->first()->getFormattedAddress()){
+					$data['search']= $geocode->first()->getFormattedAddress();
+				}
+				
 			}else{
 			
 				$geocode = app('geocoder')->geocode($data['search'])->get();
+
 				//reset the geo session
 				if(! $geocode or count($geocode)==0){
 
 					return redirect()->back()->withInput()->with('error','Unable to Geocode address:'.request('address') );
 				}
 				
-				request()->merge($this->location->getGeoCode($geocode));
-				$data = request()->all();
+				
+				$data = array_merge($data,$this->location->getGeoCode($geocode));
 
 			}
 		}
-
-
-		
-
+	
 		$data['latlng'] = $data['lat'].":".$data['lng'];
-		// Kludge to address the issue of different data in Session::geo
-		if(! request()->has('number')){
-
-			$data['number']=5;
-		}
-
+		
 		// we have to do this in case the lat / lng was set via the browser
 		if(! isset($data['fulladdress'])){
 			$data['fulladdress'] = $data['search'];
 		}
-		if(! request()->filled('addressType')){
+
+		if(! request()->has('addressType') or count(request('addressType'))==0){
+			
 			$data['addressType'] = ['customer','project','lead','location'];
 		}
-		
-		session()->put('geo', $data);
 
+		session()->put('geo', $data);
+		
 		$watchlist = array();
 		$data['vertical'] = NULL;
 		
@@ -312,10 +322,11 @@ class GeoCodingController extends BaseController {
 
 	private function getLocationListData($location,$data){
 		
-	
-		return $this->address
-		->whereIn('addressable_type',$data['addressType'])
-		->nearby($location,$data['distance'])
+		$addresses = $this->address;
+		if(session('geo.addressType')){
+			$addresses->whereIn('addressable_type',session('geo.addressType'));
+		}
+		return $addresses->nearby($location,$data['distance'])
 				->with('company')
 				
 				->get();

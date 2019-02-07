@@ -58,21 +58,39 @@ class MyLeadsController extends BaseController
     public function store(MyLeadFormRequest $request)
     {
 
-       
-      
+     
         if(! $data = $this->cleanseInput($request)){
             return redirect()->back()->withError('Unable to geocode that address');
         }
-        $data['addressable_type'] = 'lead';
-      
+
+             
+
         $lead = $this->lead->create($data['lead']);
         if(count($data['branch'])>0){
             $lead->assignedToBranch()->attach($data['branch']);
         }
         
-        if($data['contact']){
+        if(isset($data['contact'])){
+           
             $lead->contacts()->create($data['contact']);
+
         }
+        if(request()->filled('type')){
+           switch(request('type')){
+            case 'weblead':
+                $lead->weblead()->create(request()->all());
+            break;
+
+
+           }
+            
+            $lead->load('contacts',request('type'));
+
+        }else{
+          $lead->load('contacts');  
+        }
+    
+
         if(request('notify')==1){
             $branches = \App\Branch::with('manager','manager.userdetails')->whereIn('id',array_keys($data['branch']))->get();
            
@@ -138,23 +156,21 @@ class MyLeadsController extends BaseController
         if(! $geodata = $this->lead->geoCodeAddress($address)){
             return false;
             
-        }
-       
+        }       
         $data['lead'] = array_merge(request()->all(),$geodata);
-        $data['contact']['fullname'] = request('fullname');
-        $data['contact']['firstname'] = request('firstname');
-        $data['contact']['lastname'] = request('lastname');
-        $data['contact']['title'] = request('title');
-        $data['contact']['email'] = request('email');
-        $data['contact']['phone'] =  preg_replace("/[^0-9]/","",request('phone'));
-
-
-
         $data['lead']['businessname'] = $data['lead']['companyname'];
         $data['lead']['phone'] = preg_replace("/[^0-9]/","",$data['lead']['phone']);
-       
+        if(request()->filled('type')){
+            $data['lead']['addressable_type'] = request('type');
+        }else{
+           $data['lead']['addressable_type'] = 'lead'; 
+        }
+        
+        $data['lead']['lead_source_id'] = '4';
         $data['lead']['type'] = 'lead';
         $data['lead']['user_id'] =auth()->user()->id;
+    
+
         $data['team']['user_id'] = auth()->user()->id;
         $data['team']['type'] = 'mylead';
         $data['team']['status_id'] =2;
@@ -165,7 +181,20 @@ class MyLeadsController extends BaseController
         }else{
             $data['branch'] = [request('branch')=>['status_id'=>2]];
         }
-      
+        if(request()->filled('contact')){
+             $data['contact']['fullname'] = request('contact');
+            $name = explode(' ', request('contact'), 2);
+            $data['contact']['firstname'] = $name[0];
+            if(isset($name[1])){
+                $data['contact']['lastname'] = $name[1];
+            }
+            
+            $data['contact']['title'] = request('contact_title');
+            $data['contact']['email'] = request('contactemail');
+            $data['contact']['phone'] =  preg_replace("/[^0-9]/","",request('phone'));
+        }
+       
+
         return $data;
     }
 

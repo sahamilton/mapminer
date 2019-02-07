@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Lead;
 use App\Person;
+use App\Address;
 use App\Branch;
 use App\Note;
 use Excel;
@@ -25,6 +26,7 @@ use App\Mail\NotifyWebLeadsBranchAssignment;
 class LeadsController extends BaseController
 {
     public $person;
+    public $address;
     public $lead;
     public $leadsource;
     public $vertical;
@@ -35,9 +37,11 @@ class LeadsController extends BaseController
                                 Lead $lead,
                                 LeadSource $leadsource,
                                 SearchFilter $vertical,
-                                LeadStatus $status){
+                                LeadStatus $status,
+                                Address $address){
 
     	  $this->person = $person;
+        $this->address = $address;
         $this->vertical = $vertical;
         $this->lead = $lead;
         $this->leadsource = $leadsource;
@@ -192,7 +196,7 @@ class LeadsController extends BaseController
       $table = 'addresses';
    
       $data = $this->extractLeadTableData($input,$table);  
-dd($input,$data, $table);
+
       $lead = $this->lead->fill($data['lead']);
 
       $lead->save();
@@ -312,21 +316,25 @@ dd($input,$data, $table);
    
       if (count($geoCode)>0){
         // create the lead object
-          $lead = $this->lead->createLeadFromGeo($geoCode);
-          
+          $lead = $this->address->getGeoCode($geoCode);
+        
+          $lead = new Address($lead);
           $lead->lead_source_id = 2;
+       
           $extrafields = $this->getExtraFields('webleads');
           $sources = $this->leadsource->pluck('source','id');
           // find nearby branches
           $branches = $this->findNearByBranches($lead,500);
-         
+       
             // we should also add serviceline filter?
           $people = $this->findNearByPeople($lead,500);
+          
           $salesrepmarkers = $this->person->jsonify($people);
+    
           $branchmarkers=$branches->toJson();
           $address = request('address');
-          
-          return response()->view('leads.showsearch',compact('lead','branches','people','salesrepmarkers','branchmarkers','extrafields','sources','address'));
+          $type='new';
+          return response()->view('leads.showsearch',compact('lead','branches','people','salesrepmarkers','branchmarkers','extrafields','sources','address','type'));
 
     }else{
 
@@ -378,36 +386,7 @@ dd($input,$data, $table);
 
     // this really belongs in the sales org controller
 
-    public function find(LeadAddressFormRequest $request){
-
-
-      $geoCode = app('geocoder')->geocode(request('address'))->get();
-
-      if(! $geoCode or count($geoCode)==0)
-      {
-        return redirect()->back()->withInput()->with('error','Unable to Geocode address:'.request('address') );
-
-      }else{
-
-        request()->merge($this->lead->getGeoCode($geoCode));
-      }
-      $data = request()->all();
-
-      if(! request()->has('number')){
-          $data['number']=5;
-        }
-
-      session()->put('geo', $data);
-
-      if($request->type =='branch'){
-          $branches = $this->findNearByBranches($data);
-          return response()->view('salesorg.nearbybranches',compact('data','branches'));
-        }else{
-          $people= $this->findNearByPeople($data);
-          return response()->view('salesorg.nearbypeople',compact('data','people'));
-        }
-
-    }
+   
 
     /**
      * Find nearby branches.
@@ -437,6 +416,7 @@ dd($input,$data, $table);
     }
 
      private function findNearByPeople($data){
+
       if(is_array($data)){
               $location = new \stdClass;
               $location->lat = $data['lat'];
@@ -448,13 +428,7 @@ dd($input,$data, $table);
         }
 
 
-        return Person::whereHas('userdetails.serviceline', function ($q) {
-              $q->whereIn('servicelines.id',$this->userServiceLines);
-          })
-          ->whereHas('userdetails.roles', function ($q) {
-              $q->whereIn('name',$this->assignTo);
-          })
-          ->with('userdetails','reportsTo','userdetails.roles','industryfocus')
+        return Person::with('userdetails','reportsTo','userdetails.roles','industryfocus')
           ->nearby($location,$data['distance'],$data['number'])
           
           ->get();
@@ -471,7 +445,7 @@ dd($input,$data, $table);
         $type = 'csv';
     }
    
-    Excel::create('Prospects'.time(),function($excel) {
+    Excel::download('Prospects'.time(),function($excel) {
             $excel->sheet('Prospects',function($sheet) {
                 $leads = $this->person->where('user_id','=',auth()->user()->id)
                 ->with('ownedLeads','ownedLeads.relatedNotes','ownedLeads.contacts')->firstOrFail();
@@ -739,6 +713,7 @@ dd($input,$data, $table);
     }
 
     public function unassignedleads(){
+      // rewrite to use new MySql functions
       $leads= $this->lead->doesntHave('ownedBy')->get();
 
       $data = array();

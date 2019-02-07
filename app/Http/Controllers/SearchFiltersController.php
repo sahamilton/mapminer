@@ -146,7 +146,7 @@ class SearchFiltersController extends BaseController {
 
 	public function export($id=null){
 		$verticals = $this->getVerticalAnalysis();
-		Excel::create('Verticals',function($excel){
+		Excel::download('Verticals',function($excel){
 			$excel->sheet('Industries',function($sheet) {
 				$verticals = $this->getVerticalAnalysis();
 				

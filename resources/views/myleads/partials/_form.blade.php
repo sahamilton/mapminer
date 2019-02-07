@@ -56,7 +56,7 @@
         name='state' 
         description="state" 
         value="{{ old('state', isset($location) ? $location->state : '' )}}" 
-        placeholder="state, city state zip">
+        placeholder="state">
         <span class="help-block">
             <strong>{{ $errors->has('state') ? $errors->first('state') : ''}}</strong>
         </span>
@@ -71,9 +71,39 @@
         name='zip' 
         description="zip" 
         value="{{ old('zip', isset($location) ? $location->zip : '' )}}" 
-        placeholder="zip, city state zip">
+        placeholder="zip">
         <span class="help-block">
             <strong>{{ $errors->has('zip') ? $errors->first('zip') : ''}}</strong>
+        </span>
+    </div>
+</div>
+<!-- Contact -->
+<div class="form-group row{{ $errors->has('contact') ? ' has-error' : '' }}">
+    <label for="contact" class="col-md-2 control-label">Contact: </label>
+     <div class="col-sm-8">
+        <input  type="text" 
+        class="form-control" 
+        name='contact' 
+        description="contact" 
+        value="{{ old('contact', isset($location) ? $location->contact : '' )}}" 
+        placeholder="contact">
+        <span class="help-block">
+            <strong>{{ $errors->has('contact') ? $errors->first('contact') : ''}}</strong>
+        </span>
+    </div>
+</div>
+<!-- contact Title -->
+<div class="form-group row{{ $errors->has('contact_title') ? ' has-error' : '' }}">
+    <label for="contact title" class="col-md-2 control-label">Contact title: </label>
+     <div class="col-sm-8">
+        <input  type="text" 
+        class="form-control" 
+        name='contact title' 
+        description="contact_title" 
+        value="{{ old('contact_title', isset($location) ? $location->contact_title : '' )}}" 
+        placeholder="contact title">
+        <span class="help-block">
+            <strong>{{ $errors->has('contact_title') ? $errors->first('contact_title') : ''}}</strong>
         </span>
     </div>
 </div>

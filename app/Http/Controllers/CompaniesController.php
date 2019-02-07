@@ -172,7 +172,10 @@ class CompaniesController extends BaseController {
 	public function update(CompanyFormRequest $request,$company)
 	{
 
-
+		if(request('person_id','=','null')){
+			 request()->request->remove('person_id');
+			
+		}
 		$this->company = $company;
 
 		$this->company->update( request()->all());
@@ -523,7 +526,7 @@ class CompaniesController extends BaseController {
 	{
 		
 
-		Excel::create('AllCompanies',function($excel){
+		Excel::download('AllCompanies',function($excel){
 			$excel->sheet('Companies',function($sheet) {
 				$companies = $this->company
 
@@ -569,7 +572,7 @@ class CompaniesController extends BaseController {
 		$id = request('company');
 
 		$company = $this->company->findOrFail($id);
-		Excel::create($company->companyname. " locations",function($excel) use($id){
+		Excel::download($company->companyname. " locations",function($excel) use($id){
 			$excel->sheet('Watching',function($sheet) use($id) {
 				$company = 	$this->company
 					->whereHas('serviceline', function($q){

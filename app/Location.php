@@ -24,7 +24,7 @@ class Location extends Model implements HasPresenter {
 	public $branch;
 
 
-	public $fillable = ['businessname','street','address2','city','state','zip','company_id','phone','contact','lat','lng','segment','businesstype'];
+	public $fillable = ['businessname','street','address2','city','state','zip','company_id','phone','contact','lat','lng','segment','businesstype','position'];
 
 	protected $hidden =  array('created_at','updated_at','id');
 /**

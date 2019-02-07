@@ -9,32 +9,28 @@
 
 
         <th>Branch</th>
-        @foreach ($statuses as $status)
-        <td>{{$status}} Prospects</td>
-        @endforeach
+       
+        <td>Offered Prospects</td>
+        <td>Claimed Prospects</td>
+        <td>Closed Prospects</td>
+      
         <td>Total Prospects</td>
 
     </thead>
            
-        @foreach($branchStats as $branch=>$stats)
-      
-           <tr>  @php $total = 0;@endphp
+        @foreach($branches as $branch)
+     
+           <tr> 
                 <td>
-                    <a href="{{route('leads.personsource',[$branch,$leadsource->id])}}">
-                        {{$stats['branchname']}}</a>
+                    <a href="{{route('leads.personsource',[$branch->id,$leadsource->id])}}">
+                        {{$branch->branchname}}
+                    </a>
                 </td>
-
-            @foreach($statuses as $key=>$status)
-            
-                <td>
-                @if(isset($stats[$key]))
-                   
-                   {{$stats[$key]}} 
-                   @php $total += $stats[$key];@endphp
-                @endif
-                </td>
-            @endforeach
-            <td>{{$total}}</td>
+                <td>{{$branch->assigned}}</td>
+                <td>{{$branch->claimed}}</td>
+                <td>{{$branch->closed}}</td>
+                <td>{{$branch->leads_count}}</td>
+          
         </tr>
         @endforeach
 

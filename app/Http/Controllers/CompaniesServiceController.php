@@ -216,7 +216,7 @@ class CompaniesServiceController extends BaseController
 		
 	}
 	private function writeExcelTeam($title,$company,$team){
-		return 	Excel::create($title,function($excel) use($company,$team){
+		return 	Excel::download($title,function($excel) use($company,$team){
 			
 			$excel->sheet('Team',function($sheet) use($company,$team) {
 				
@@ -226,7 +226,7 @@ class CompaniesServiceController extends BaseController
 		})->download('csv');
 	}
 	private function writeExcel($title,$company,$locations){
-		return 	Excel::create($title,function($excel) use($company,$locations){
+		return 	Excel::download($title,function($excel) use($company,$locations){
 			$excel->sheet('Service',function($sheet) use($company,$locations) {
 				
 				$data = $this->service->getCompanyServiceBranchDetails($locations,$company,5);

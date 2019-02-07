@@ -5,7 +5,10 @@ use App\User;
 use App\Location;
 use App\Document;
 use Illuminate\Http\Request;
-use Excel;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\WatchListExport;
+use App\Exports\UsersExport;
+
 class WatchController extends BaseController {
 	protected $watch;
 	public $document;
@@ -121,13 +124,13 @@ class WatchController extends BaseController {
 			$id = auth()->id();
 		}
 		$user = User::find($id);
-	
-		Excel::create('Watch_List_for_'.$user->fullName(),function($excel) use($id){
+		return Excel::download(new WatchListExport($id), 'Watch_List_for_'.$user->fullName().'.csv');
+		/*Excel::download('Watch_List_for_'.$user->fullName(),function($excel) use($id){
 			$excel->sheet('Watching',function($sheet) use($id) {
 				$result = $this->watch->getMyWatchList($id);
 				$sheet->loadview('watch.export',compact('result'));
 			});
-		})->download('csv');
+		})->download('csv');*/
 	}
 	
 	
@@ -201,7 +204,7 @@ class WatchController extends BaseController {
 		if(request()->has('id')){
 			$accounts = explode(",",str_replace("'","",request('id')));
 
-			Excel::create('Watch_List_for_',function($excel) use($accounts){
+			Excel::download('Watch_List_for_',function($excel) use($accounts){
 			$excel->sheet('Watching',function($sheet) use($accounts) {
 			$result = Location::whereIn('company_id',$accounts)->has('watchedBy')
 			->with('relatedNotes','relatedNotes.writtenBy','company','watchedBy','watchedBy.person')

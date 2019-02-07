@@ -70,7 +70,7 @@
                                <a class="dropdown-item"
                                href="{{route('training.edit',$training->id)}}">
                                 <i class="far fa-edit text-info"" aria-hidden="true"> </i>
-                                Edit Sales Step</a>
+                                Edit Training</a>
                                <a class="dropdown-item"
                                data-href="{{route('training.destroy',$training->id)}}" 
 
@@ -98,7 +98,7 @@
         </table>
     </div>
 
-</div>
+
 
 @include('partials._modal')
 @include('partials._scripts')

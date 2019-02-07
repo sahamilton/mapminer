@@ -11,7 +11,16 @@ class Address extends Model
 
     public $timestamps = true;
     
-    public $fillable = ['addressable_id','addressable_type','street','address2','city','state','zip','lat','businessname','lng','company_id','user_id','phone'];
+    public $fillable = ['addressable_id','addressable_type','street','address2','city','state','zip','lat','businessname','lng','company_id','user_id','phone','position','lead_source_id','description'];
+    
+    public $requiredfields = ['companyname',
+            'businessname',
+            'address',
+            'city',
+            'state',
+            'zip',
+            'lat',
+            'lng',];
     
     public $addressStatusOptions =  [
         1=>'Location data is completely inaccurate.',
@@ -23,16 +32,21 @@ class Address extends Model
     public $addressType = ['location'=>'National Account Location','project'=>'Construction Project', 'lead'=>'Web Lead','customer'=>'Customer'];
     
     public function lead(){
-    	return $this->where('addressable_type','=','lead');
+    	return $this->hasOne(Lead::class,'address_id');
+
+    }
+
+    public function weblead(){
+        return $this->hasOne(WebLead::class,'address_id');
     }
     public function location(){
-    	return $this->belongsTo(Location::class,'addressable_id','id');
+    	return $this->hasOne(Location::class,'address_id');
     }
     public function customer(){
-        return $this->belongsTo(Customer::class,'addressable_id','id');
+        return $this->hasOne(Customer::class,'address_id');
     }
     public function project(){
-    	return $this->belongsTo(Project::class,'addressable_id','id');
+    	return $this->hasOne(Project::class,'address_id');
     }
     public function watchedBy(){
 
@@ -63,10 +77,17 @@ class Address extends Model
     }
 
     public function scopeFiltered($query){
-        if(!$keys= $this->getSearchKeys(['companies'],['vertical'])){
+        
+        if((! $keys= $this->getSearchKeys(['companies'],['vertical'])) && session('geo.addressType')){
+           
             return $query->whereIn('addressable_type',session('geo.addressType'));
-        }
-        return $query->whereIn('vertical',$keys)->whereIn('addressable_type',session('geo.addressType'));
+        }elseif(session('geo.addressType')){
+            
+            return $query->whereIn('vertical',$keys)->whereIn('addressable_type',session('geo.addressType'));
+       }else{
+        
+        return $query;
+       }
        
     }
     
@@ -74,9 +95,13 @@ class Address extends Model
         return $this->belongsToMany(Branch::class,'address_branch','address_id','branch_id')
         ->withPivot('rating','person_id','status_id','comments')->withTimeStamps();
     }
+    public function claimedByBranch(){
+        return $this->belongsToMany(Branch::class,'address_branch','address_id','branch_id')
+        ->withPivot('rating','person_id','status_id','comments')->withTimeStamps()->whereIn('status_id',[2]);
+    }
     public function closed(){
         return $this->belongsToMany(Branch::class,'address_branch','address_id','branch_id')
-        ->withPivot('rating','person_id','status_id','comments')->withTimeStamps()->whereIn('status_id',[1,2]);
+        ->withPivot('rating','person_id','status_id','comments')->withTimeStamps()->whereIn('status_id',[3]);
     }
 
     public function assignedToPerson(){
@@ -117,6 +142,14 @@ class Address extends Model
     }
 
     public function createdBy(){
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class,'user_id','id');
+    }
+
+    public function getExtraFields($type){
+        return  \App\MapFields::whereType($type)
+                      ->whereDestination('extra')
+                      ->whereNotNull('fieldname')
+                      ->pluck('fieldname')->toArray();
+
     }
 }

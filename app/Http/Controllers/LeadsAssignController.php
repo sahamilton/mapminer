@@ -21,6 +21,7 @@ class LeadsAssignController extends Controller
     public $leadroles;
     public $distance = 100;
     public $limit = 5;
+    
 	public function __construct(LeadSource $leadsource,Lead $lead, Address $address,Person $person,Branch $branch){
 		$this->leadsource = $leadsource;
 		$this->lead = $lead;
@@ -49,12 +50,11 @@ class LeadsAssignController extends Controller
         $this->distance = request('distance');
         $this->limit = request('limit');
         $verticals  = null;
-        $leads = $this->address->doesntHave('assignedToBranch')->where('lead_source_id','=',$leadsource->id)->get();
-       
-     
         if(request('type')=='branch'){
-          $count = $this->assignLeadsToBranches($leads,$verticals);
+          $count = $this->assignLeadsToBranches($leadsource,$verticals);
+         return redirect()->route('leadsource.show',$leadsource->id)->withMessage('Leads assigned to branches');
         }else{
+          $leads = $this->address->doesntHave('assignedToBranch')->where('lead_source_id','=',$leadsource->id)->get();
           $count = $this->assignLeadsToPeople($leads,$verticals);
         }
         
@@ -62,6 +62,26 @@ class LeadsAssignController extends Controller
         return redirect()->route('leadsource.show',$leadsource->id)->with('status',$count . ' leads assigned');
     }
 
+    public function show(Address $address){
+      
+          $lead = $address->load('contacts',$address->addressable_type);
+          $extrafields = $this->address->getExtraFields('webleads');
+
+          // find nearby branches
+          $branches = $this->branch->nearby($address,25,5)->get();;
+       
+            // we should also add serviceline filter?
+          $people = $this->person->nearby($address,25,5);
+          
+          $salesrepmarkers =null;
+    
+          $branchmarkers=$branches->toJson();
+          $address = $address->fullAddress();
+
+          $sources = array();
+          return response()->view('leads.showsearch',compact('lead','branches','people','salesrepmarkers','branchmarkers','extrafields','sources','address'));
+
+    }
 
     public function assignLead(Request $request){
 
@@ -129,17 +149,21 @@ class LeadsAssignController extends Controller
         return $count;
     }
 
-    private function assignLeadsToBranches($leads){
+    private function assignLeadsToBranches($leadsource,$distance){
+      // convert miles to meters
+      $distance = $this->distance * 1609;
+     
+      $query = "insert into address_branch (branch_id,address_id) 
+                select distinct branches.id as branch_id, addresses.id as address_id 
+                from branches,addresses 
+                left join address_branch
+                on addresses.id = address_branch.address_id
+                where ST_Distance_Sphere(branches.position,addresses.position) < '". $distance."'
+                and lead_source_id = '" . $leadsource->id ."'
+                and address_branch.address_id is null
+                ORDER BY branches.id asc";
       
-
-      foreach ($leads as $lead) {
-
-        
-          $branches = $this->branch->nearby($lead,$this->distance,$this->limit)->get();
-          dispatch(new AssignAddressesToBranches($branches,$lead))->onQueue('mapminer');
-
-        }
-        return $count;
+     return \DB::statement($query);
     }
 
 

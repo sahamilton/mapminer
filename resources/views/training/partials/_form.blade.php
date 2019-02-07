@@ -22,9 +22,7 @@
           <div class="input-group input-group-lg ">
              <textarea class="form-control" 
              name='description' 
-             title="description">
-             {!! old('description', isset($training) ? $training->description : '') !!}
-             </textarea>
+             title="description">{!! old('description', isset($training) ? $training->description : '') !!}</textarea>
                  <span class="help-block">
                  <strong>{{$errors->has('description') ? $errors->first('description')  : ''}}</strong>
                  </span>
@@ -56,7 +54,7 @@
                     name='type' 
                     description="type" 
                     required
-                    value="{!! old('type') , isset($training) ? $data->type : "" !!}" placeholder="type">
+                    value="{!! old('type') , isset($training) ? $training->type : "" !!}" placeholder="type">
                     <span class="help-block">
                         <strong>{{ $errors->has('type') ? $errors->first('type') : ''}}</strong>
                         </span>
@@ -88,19 +86,19 @@
             type="text" 
             name="dateto"  
             id="todatepicker" 
-            value="{{  old('dateto', isset($training) ? date('m/d/Y',strtotime($training->dateto)) : date('m/d/Y',strtotime('+1 years'))) }}"/>
+            value="{{  old('dateto', isset($training) && $training->dateto ? date('m/d/Y',strtotime($training->dateto)) : date('m/d/Y',strtotime('+1 years'))) }}"/>
 
         <span class="help-block">
             <strong>{{$errors->has('dateto') ? $errors->first('dateto')  : ''}}</strong>
         </span>
-        No Expiration <input type="checkbox" name="noexpiration"  {{isset($training) && $training->datato ? checked : ''}}>
+        No Expiration <input type="checkbox" name="noexpiration"  {{isset($training) && ! $training->datato ? 'checked' : ''}}>
     </div>
 </div>
 <!-- /Date to -->
 
 <!-- Roles -->
  
-            @include('partials._roles') 
+            @include('training.partials._roles') 
             
 <!-- / Roles -->
 <!-- Industries -->
@@ -113,7 +111,7 @@
     <div class="input-group input-group-lg">
         <select multiple class="form-control" name='serviceline[]'>
             @foreach ($servicelines as $key=>$value))
-                <option @if(isset($training) && in_array($key,$training->servicelines->toArray())) selected @endif value="{{$key}}">{{$value}}</option>
+                <option @if(isset($training) && $training->servicelines->contains($key)) selected @endif value="{{$key}}">{{$value}}</option>
             @endforeach
         </select>
         <span class="help-block">
@@ -121,4 +119,3 @@
         </span>
     </div>
 </div>
-@include('partials._verticalsscript') 

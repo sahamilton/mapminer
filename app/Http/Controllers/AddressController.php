@@ -66,18 +66,22 @@ class AddressController extends Controller
     public function show($address)
     {
       // $ranking = $this->address->with('ranking')->myRanking()->findOrFail($address->id);
-
-        $location = $address->load('contacts','contacts.relatedActivities','activities','activities.type','activities.relatedContact','company','opportunities','industryVertical','relatedNotes','orders','orders.branch','watchedBy','watchedBy.person','ranking','leadsource');
- 
-       // $activities = ActivityType::orderBy('sequence')->pluck('activity','id')->toArray();
        
+        $location = $address->load('contacts','contacts.relatedActivities','activities','activities.type','activities.relatedContact',
+            'activities.user','activities.user.person','company','opportunities','industryVertical','relatedNotes','orders','orders.branch','watchedBy','watchedBy.person','ranking','leadsource','createdBy');
+        if($address->addressable_type){
+           
+            $location->load($address->addressable_type);
+        }
+       // $activities = ActivityType::orderBy('sequence')->pluck('activity','id')->toArray();
+
         $branches = $this->branch->nearby($location,100,5)->get();
         $rankingstatuses = $this->address->getStatusOptions;
         $people = $this->person->salesReps()->PrimaryRole()->nearby($location,100,5)->get();
         $mybranches = $this->person->myBranches();
         $ranked = $this->address->getMyRanking($location->ranking);
         $notes = $this->notes->locationNotes($location->id)->get();
-       
+      
        
         return response()->view('addresses.show',compact('location','branches','rankingstatuses','people','mybranches','ranked','notes'));
     }
@@ -107,10 +111,11 @@ class AddressController extends Controller
         $geocode = app('geocoder')->geocode( $this->getAddress($request))->get();
         $data = $this->address->getGeoCode($geocode);
 
-        $data['businessname'] =request('businessname');
+        $data['businessname'] =request('companyname');
       
         $data['phone'] = preg_replace("/[^0-9]/","",request('phone'));
-      
+       
+   
         $address->update($data);
         return redirect()->route('address.show',$address->id)->withMessage('Location updated');
     }
@@ -121,17 +126,18 @@ class AddressController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Address $address)
     {
-        //
+        $address->delete();
+        return redirect()->route('leads.search')->withWarning('Lead deleted');
     }
 
     public function findLocations($distance=NULL,$latlng = NULL) {
-     
-        $location = $this->getLocationLatLng($latlng);
        
+        $location = $this->getLocationLatLng($latlng);
+      
         $result = $this->address->filtered()->nearby($location,$distance)->get();
-  
+
         return response()->view('addresses.xml', compact('result'))->header('Content-Type', 'text/xml');
     
     }

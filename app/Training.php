@@ -2,7 +2,7 @@
 
 namespace App;
 
-
+use Carbon\CArbon;
 
 class Training extends Model
 {
@@ -24,8 +24,14 @@ class Training extends Model
 	}
 
 	public function scopeMyTraining($query){
+
 		 $query->whereHas('relatedRoles', function ($q){
             $q->whereIn('id',$this->myRoles());
+         })
+         ->where('datefrom','<=',Carbon::now())
+         ->where(function ($q){
+         	$q->where('dateto','>=',Carbon::now())
+         	->orWhereNull('dateto');
          });
 	}
 }

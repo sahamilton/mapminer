@@ -1,5 +1,4 @@
 
-
 <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
 	<thead>
 		
@@ -19,7 +18,7 @@
 	@foreach($projectcompany->projects as $project)
 
 		<tr>  
-		<td><a href="{{route('projects.show',$project->id)}}"
+		<td><a href="{{route('address.show',$project->address_id)}}"
 		title="See details of this project">{{$project->project_title}}</a></td>
 		<td>{{$project->pivot->type}}</td>
 		<td>{{$project->street}}</td>

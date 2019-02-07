@@ -7,6 +7,7 @@ use App\Serviceline;
 use App\Location;
 use App\User;
 use App\Address;
+
 use App\State;
 use App\Person;
 use App\Role;
@@ -122,10 +123,11 @@ class BranchesController extends BaseController {
 	public function store(BranchFormRequest $request)
 	{
 		$address = request('street')." ".request('address2').' '.request('city').' ' .request('state').' ' .request('zip');
+
 		$geoCode = app('geocoder')->geocode($address)->get();
 		$geodata = $this->branch->getGeoCode($geoCode);
 		$input = array_merge(request()->all(),$geodata);
-
+	
 		// add lat lng to location
 		$branch = $this->branch->create($input);
 
@@ -308,6 +310,35 @@ class BranchesController extends BaseController {
 		return redirect()->route('branches.index');
 	}
 	
+
+
+
+		public function listNearbyLocations($branch){
+	
+		//$filtered = $this->location->isFiltered(['companies'],['vertical']);
+		$roles = \App\Role::pluck('display_name','id');
+		$mywatchlist= array();
+		//$locations = NULL;
+		$data['branch'] = $branch->load('manager');
+
+		// I dont understand this!
+		//$data['manager'] = ! isset($branches->manager) ? array() : Person::find($data['branch']->person_id);
+
+		$data['title']='National Accounts';
+		$servicelines = Serviceline::all();
+		$locations  = $this->address->nearby($branch,25)->with('company')->get();
+
+		$watchlist = User::where('id','=',auth()->user()->id)->with('watching')->get();
+		foreach($watchlist as $watching) {
+			foreach($watching->watching as $watched) {
+				$mywatchlist[]=$watched->id;
+			}
+		}
+
+		return response()->view('branches.showlist', compact('data','locations','mywatchlist',
+			'filtered','roles','servicelines'));
+
+}
 	/**
 	 * Generate location served by branch as XML.
 	 *
@@ -474,7 +505,7 @@ class BranchesController extends BaseController {
 	{
 	
 	
-	Excel::create('Branches',function($excel){
+	Excel::download('Branches',function($excel){
 			$excel->sheet('BranchTeam',function($sheet) {
 
 				$roles = Role::pluck('name','id')->toArray();
@@ -496,7 +527,7 @@ class BranchesController extends BaseController {
 	{
 	
 	
-	Excel::create('Branches',function($excel){
+	Excel::download('Branches',function($excel){
 			$excel->sheet('Watching',function($sheet) {
 				$result = $this->branch->with('address','manager')->get();
 			

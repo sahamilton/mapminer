@@ -3,7 +3,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Mail;
-use App\Lead;
+use App\Address;
 
 use App\LeadSource;
 use App\Note;
@@ -21,8 +21,8 @@ class WebleadsController  extends ImportController
     public $branch;
     public $lead;
     
-    public function __construct(Lead $lead, LeadSource $leadsource, Person $person, Branch $branch){
-        $this->lead = $lead;
+    public function __construct(Address $address, LeadSource $leadsource, Person $person, Branch $branch){
+        $this->address = $address;
         $this->leadsources = $leadsource;
         $this->person = $person;
         $this->branch = $branch;
@@ -52,7 +52,7 @@ class WebleadsController  extends ImportController
     
 */
 
-    public function saleslist(){
+   /* public function saleslist(){
 
             $leads = $this->lead->whereHas('salesteam',function ($q){
                 $q->where('persons.id','=',auth()->user()->person->id);
@@ -94,42 +94,30 @@ class WebleadsController  extends ImportController
     
         $lead->delete();
         return redirect()->route('webleads.index');
-    }
+    }*/
     
     public function assignLeads(Request $request){
 
-        $lead = $this->lead->findOrFail(request('lead_id'));
-        $branch = $this->branch->with('manager','manager.userdetails')->findOrFail(request('branch'));
-
-        if(request('salesrep')!=''){
-            $rep = $this->person->findOrFail(request('salesrep'));
-            $lead->salesteam()->attach(request('salesrep'), ['status_id' => 2,'type'=>'web']);
-
-            Mail::queue(new NotifyWebleadsAssignment($lead,$branch,$rep));
-        }else{
-            
-            foreach($branch->manager as $manager){
-                $lead->salesteam()->attach($manager->id, ['status_id' => 2,'type'=>'web']);
-                //notify branch managers
+        $address = $this->address->findOrFail(request('address_id'));
+        foreach(request('branch') as $branch){
+                $address->assignedToBranch()->attach($branch, ['status_id' => 1]);
+                
             }
 
+        if(request('notify')){
 
-        }
-
-        if(request('notifymgr')){
-
-
-            $branchemails = $this->getBranchEmails($branch);
-            
-            foreach ($branchemails as $email){
+            $branches = $this->branch->with('manager','manager.userdetails')->whereIn('id',request('branch'))->get();
+           
+           
+            foreach ($branches as $branch){
                 
                 Mail::queue(new NotifyWebleadsBranchAssignment($lead,$branch,$email));
             }
        
         }  
-        return redirect()->route('leadsource.show',$lead->lead_source_id);
+        return redirect()->route('address.show',$address->id);
     }
-    private function getBranchEmails($branch){
+   /* private function getBranchEmails($branch){
         $emails = array();
         foreach($branch->manager as $manager){
             $emails[$manager->id]['name'] = $manager->postName();
@@ -153,7 +141,7 @@ class WebleadsController  extends ImportController
      * @return People object
      */
 
-    private function findNearBySales($branches,$lead){
+  /*  private function findNearBySales($branches,$lead){
         $branch_ids = $branches->pluck('id')->toArray(); 
         $data['distance']=\Config::get('leads.search_radius');
         $salesroles = $this->salesroles;
@@ -213,7 +201,7 @@ class WebleadsController  extends ImportController
      * @param  int  $id      prospect (lead) id
      * @return [type]           [description]
      */
-    public function close(Request $request, $lead){
+  /*  public function close(Request $request, $lead){
     
       $lead->salesteam()
 
@@ -262,6 +250,6 @@ class WebleadsController  extends ImportController
         ->get();
         return response()->view('webleads.xml',compact('webleads'));
 
-    }
+    }*/
 }
 

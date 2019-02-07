@@ -12,7 +12,7 @@ function initialize() {
 	var name = "{{$lead->company_name}}";
   var address = "{{$lead->city}}" + " {{$lead->state}}";
  
-  var salesreps = {!! $salesrepmarkers !!};
+ 
   var branches = {!! $branchmarkers !!};
 
   $.each(branches, function(key, data) {

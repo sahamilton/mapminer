@@ -10,7 +10,7 @@
 
 @endphp
 
-<form class="form-inline" method ="post"  action ="{{route('lead.find')}}" name="leadaddress">
+<form class="form-inline" method ="post"  action ="{{route('salesorg.find')}}" name="leadaddress">
 {{csrf_field()}}
 <select id="selectnumber" name='number' class="btn btn-mini" >
            @foreach($number as $value)
@@ -65,7 +65,7 @@ required
 
        Search!</button>
 </form>
-<?php $action = route('lead.find');?>
+<?php $action = route('salesorg.find');?>
 @include('partials._noaddressmodal')
 <script>
 

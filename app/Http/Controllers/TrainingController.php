@@ -36,10 +36,15 @@ class TrainingController extends BaseController
     }*/
 
      public function index(){
-       
+
         $trainings = $this->training->myTraining()->get();
-        return response()->view('training.mytrainings',compact('trainings'));
-        }
+           if(auth()->user()->can('manage_training')){
+                return response()->view('training.index',compact('trainings'));
+           }else{
+           
+                return response()->view('training.mytrainings',compact('trainings'));
+            }
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -109,9 +114,12 @@ class TrainingController extends BaseController
      */
     public function edit(Training $training)
     {
-        /*
-        $mode=null;
-        */
+       $roles = Role::all();
+        $verticals = $this->getAllVerticals();
+        $servicelines = $this->getAllServicelines();
+        $training->load('relatedRoles','relatedIndustries');
+
+       return response()->view('training.edit',compact('training','roles','servicelines','verticals'));
     }
 
     /**
@@ -123,10 +131,23 @@ class TrainingController extends BaseController
      */
     public function update(TrainingFormRequest $request, Training $training)
     {
-        //
+        $data = request()->all();
+        $data = $this->setDates($data);
+
+        if(request()->has('noexpiration')){
+
+            $data['dateto']=null;
+        }
+
+        $training->update($data);
+        $training->relatedRoles()->sync($data['roles']);
+        $training->servicelines()->sync($data['serviceline']);
+        $training->relatedIndustries()->sync($data['vertical']);
+
+        return redirect()->route('training.show',$training->id)->withMessage("Training updated");
     }
 
-    /**
+    /**'relatedRoles','relatedIndustries'
      * Remove the specified resource from storage.
      *
      * @param  \App\Training  $training
@@ -134,7 +155,8 @@ class TrainingController extends BaseController
      */
     public function destroy(Training $training)
     {
-        //
+       $training->delete();
+       return redirect()->route('training.index')->withWarning('Training deleted');
     }
 
 

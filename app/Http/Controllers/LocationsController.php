@@ -5,7 +5,7 @@ use App\Branch;
 use App\Company;
 use App\User;
 use Excel;
-use App\Location;
+use App\Address;
 use App\SearchFilter;
 use App\Serviceline;
 use JeroenDesloovere\VCard\VCard;
@@ -31,13 +31,13 @@ class LocationsController extends BaseController {
 	public $searchfilter;
 
 	protected $branch;
-	public function __construct(Location $location, Branch $branch, Company $company, Watch $watch, SearchFilter $filters){
-		$this->location = $location;
+	public function __construct(Address $address, Branch $branch, Company $company, Watch $watch, SearchFilter $filters){
+		$this->location = $address;
 		$this->watch = $watch;
 		$this->company = $company;
 		$this->branch = $branch;
 		$this->searchfilter = $filters;
-		parent::__construct($location);
+		parent::__construct($address);
 	}
 	
 	
@@ -71,10 +71,11 @@ class LocationsController extends BaseController {
 	 */
 	public function store(LocationFormRequest $request)
 	{
-				
+			
 
 		$address = request('street') . ",". request('city') .",". request('state')." ". request('zip');
 		$data = $this->location->getGeoCode(app('geocoder')->geocode($address)->get());
+		$data['position'] = $this->location->setLocationAttribute($data);
 		request()->merge($data);
 		$location = $this->location->create(request()->all());
 
@@ -282,7 +283,7 @@ class LocationsController extends BaseController {
 		if(! $distance){
 			$distance ='10';
 		}
-		$location=new Location;
+		$location=new Address;
 
 		if (isset($lat) && isset($lng)){
 			$location->lat = $lat;
@@ -331,7 +332,7 @@ class LocationsController extends BaseController {
 		$data['location'] = asset(Storage::url($file));
         $data['basepath'] = base_path()."/public".Storage::url($file);
         // read first line headers of import file
-        $locations = Excel::load($data['basepath'],function($reader){
+        $locations = Excel::import($data['basepath'],function($reader){
            
         })->first();
 

@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 use App\Lead;
+use App\Address;
 use App\LeadSource;
+use App\Branch;
+use App\Person;
 use App\MapFields;
 use App\WebLeadImport;
 use Illuminate\Http\Request;
@@ -12,9 +15,11 @@ class WebleadsImportController extends Controller
     protected $lead;
     protected $fields;
     protected $import;
+    public $address;
 
-    public function __construct(Lead $lead, MapFields $fields,WebLeadImport $import){
+    public function __construct(Lead $lead, MapFields $fields,WebLeadImport $import,Address $address){
     	$this->lead = $lead;
+        $this->address = $address;
     	$this->fields = $fields;
     	$this->import = $import;
     }
@@ -30,10 +35,13 @@ class WebleadsImportController extends Controller
 
     	
     	$input = $this->parseInputData($request);
+
+
+
     	
     	// if all columns are known then we can skip all this
     	if(! $this->validateFields($input)){
-            
+           
 		       $data = $input; 
 		       $title="Map the leads import file fields";
 		       $requiredFields = $this->import->requiredFields;
@@ -61,29 +69,39 @@ class WebleadsImportController extends Controller
             
     		$input = $this->geoCodeAddress($input);
             $input = $this->renameFields($input);
+          
             foreach ($input[0] as $key=>$value){
-                $newdata[$value]=$input[1][$key];
+                $address[$value]=$input[1][$key];
             }
 
-            $newdata['lead_source_id'] = request('lead_source_id');
+            $address['lead_source_id'] = request('lead_source_id');
+            $address['addressable_type'] = 'weblead';
+            $address['user_id'] = auth()->user()->id;
+            $contact = $this->getContactDetails($address);
+            $extra = $this->getExtraFieldData($address);
 
-            $contact = $this->getContactDetails($newdata);
-            $extra = $this->getExtraFieldData($newdata);
-           
-    		$lead = $this->lead->create($newdata);
+    		$lead = $this->address->create($address);
             $lead->contacts()->create($contact);
-            $lead->webLead()->create($extra);
-    		return redirect()->route('leads.show',$lead->id);
-
+            $lead->weblead()->create($extra);
+    	  
+            return redirect()->route('leads.assignlead',$lead->id);
     	}
     }
+
+
     private function getExtraFieldData($newdata,$type='webleads'){
         $extraFields = $this->fields->whereType($type)
-        ->whereDestination('extra')
-        ->whereNotNull('fieldname')
-        ->pluck('fieldname')->toArray();
+                        ->whereDestination('extra')
+                        ->whereNotNull('fieldname')
+                        ->pluck('fieldname')->toArray();
+        
             foreach ($extraFields as $key=>$value){
-                $extra[$value] = $newdata[$value];
+                if(isset($newdata[$value])){
+                    $extra[$value] = $newdata[$value];
+                }else{
+                    $extra[$value] = null;
+                }
+                
             }
         return $extra;
     }
@@ -92,15 +110,16 @@ class WebleadsImportController extends Controller
         ->whereDestination('contact')
         ->whereNotNull('fieldname')->pluck('fieldname')->toArray();
 
-            $contact['contact'] = null;
+            $contact= array();
             foreach ($contactFields as $key=>$value){
-                if(in_array($value,['firstname','lastname'])){
-                    $contact['contact'] = $contact['contact'] . $newdata[$value]." ";
-                }elseif(isset($newdata[$value])){
-                    $contact[$value] = $newdata[$value];
-                }
+               
+               if(isset($newdata[$value])){
+                    $contact[$value] = trim($newdata[$value]);
+               }
+               
             }
-            $contact['contact'] = trim($contact['contact']);
+            $contact['fullname']= $contact['firstname']. ' ' . $contact['lastname'];
+            
        return $contact;
     }
     private function geoCodeAddress($input){
@@ -113,13 +132,14 @@ class WebleadsImportController extends Controller
         $location =$this->lead->getGeoCode($geoCode);
         $input['lat']= $location['lat'];
         $input['lng']= $location['lng'];
+        $input['position'] = $location['position'];
         return $input;
     }
     private function renameFields($input){
     			 
 		        
 		        $valid = $this->getValidFields();
-		
+		         
 		        foreach (array_keys($input) as $key=>$value){
 		        	if(isset($valid[$value])){
 		        		$fields[0][$key]=$valid[$value];
@@ -139,13 +159,16 @@ class WebleadsImportController extends Controller
     private function validateFields($input){
     	$valid = $this->getValidFields();
 
+        $data =  array();
     	foreach ($input as $key=>$value){
-    		if(array_key_exists($key,$valid)){
+
+    		if(array_key_exists(trim($key),$valid)){
     			$data[$valid[$key]] = $value;
     		}
     	}
+      
     	$requiredFields = $this->import->requiredFields;
-
+      
     	if($diff = array_diff($requiredFields,array_keys($data))){
     		
             return false;
@@ -175,11 +198,13 @@ class WebleadsImportController extends Controller
 
         // then create the individual elements
         foreach ($rows as $row){
-            $field = explode("\t",$row);
+            $field = explode(" \t",$row);
+          
             if(is_array($field) && count($field)==2){
-                $input[str_replace(" ","_",strtolower($field[0]))]=$field[1];
+                $input[str_replace(" ","_",trim(strtolower($field[0])))]=$field[1];
             }
         }
+
         return $input;
     }
 
@@ -196,7 +221,7 @@ class WebleadsImportController extends Controller
         foreach ($input[0] as $key=>$value){
             $newdata[$value]=$input[1][$key];
         }
-
+        dd($newdata);
         $contact = $this->getContactDetails($newdata);
         $extra = $this->getExtraFieldData($newdata);      
         

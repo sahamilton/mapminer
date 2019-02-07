@@ -27,7 +27,8 @@ class Imports extends Model
 	    	
 	    	$data['fields'][key(array_intersect($data['fields'],array_keys($this->additionaldata)))]='@ignore';
 	    	
-    		$this->fields = implode(",",$data['fields']);    		
+    		$this->fields = implode(",",$data['fields']);  
+    				
     		$this->table = $data['table'];
 
     		if(! $this->temptable){
@@ -60,7 +61,7 @@ class Imports extends Model
 		$this->_import_csv();
 
 		$this->addCreateAtField();
-
+		$this->createPositon();
 		$this->updateAdditionalFields();
 		if (! $this->dontCreateTemp){
 			$this->copyTempToBaseTable();
@@ -113,11 +114,12 @@ class Imports extends Model
 
 
 		private function copyTempToBaseTable(){
-			$this->fields = str_replace('@ignore,','',$this->fields);
+			$this->fields = str_replace('@ignore,','',$this->fields).",position";
+			
 			// Copy over to base table
 			$query ="INSERT IGNORE INTO `".$this->table."` (".$this->fields.") SELECT ".$this->fields." FROM `".$this->temptable."`";
 		
-			return $this->executeQuery("INSERT IGNORE INTO `".$this->table."` (".$this->fields.") SELECT ".$this->fields." FROM `".$this->temptable."`");
+			return $this->executeQuery($query);
 		}
 		// Drop the temp table
 		//
@@ -145,7 +147,6 @@ class Imports extends Model
    public function _import_csv()
 	{
 
-
 	$query = sprintf("LOAD DATA LOCAL INFILE '".$this->importfilename."' INTO TABLE ". $this->temptable." CHARACTER SET latin1 FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '\"' ESCAPED BY '\"' LINES TERMINATED BY '\\n'  IGNORE 1 LINES (".$this->fields.");", $this->importfilename);
 
 
@@ -171,6 +172,13 @@ class Imports extends Model
 		 throw new Exception( 'Something really has gone wrong with the import:\r\n<br />'.$query, 0, $e);
 
 		}
+	}
+
+	public function createPositon(){
+		
+		$this->executeQuery("update ".$this->temptable." set position = POINT(lat, lng);");
+		$this->executeQuery("update ".$this->temptable." set position = Geometry::STGeomFromText(position.STAsText(), 4326)");
+        
 	}
 
 }

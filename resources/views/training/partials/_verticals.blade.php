@@ -21,7 +21,7 @@
 		@endif
 <li>
 			@if((is_array(old('vertical')) && in_array($descendant->id,old('vertical'))) 
-			or (isset($news->relatedIndustries) && $news->relatedIndustries->contains('id',$descendant->id)))
+			or (isset($training->relatedIndustries) && $training->relatedIndustries->contains('id',$descendant->id)))
 
 				<input type="checkbox" checked name="vertical[]" value="{{{$descendant->id}}}"/>{{$descendant->filter}}
 			@else
