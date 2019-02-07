@@ -1,11 +1,11 @@
 <?php
 namespace App;
 use\App\Presenters\LocationPresenter;
-
+use Illuminate\Database\Eloquent\SoftDeletes;
 use McCool\LaravelAutoPresenter\HasPresenter;
 
 class Person extends NodeModel implements HasPresenter {
-	use Geocode,Filters;
+	use Geocode,Filters,SoftDeletes;
 	public $salesroles = ['5','9'];
 	// Add your validation rules here
 	public static $rules = [
@@ -14,7 +14,7 @@ class Person extends NodeModel implements HasPresenter {
 	];
 	
 	protected $table ='persons';
-	protected $hidden = ['created_at','updated_at','position'];
+	protected $hidden = ['created_at','updated_at',,'deleted_at','position'];
 	protected $parentColumn = 'reports_to';
 
 	
