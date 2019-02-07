@@ -50,14 +50,19 @@ class Person extends NodeModel implements HasPresenter {
 	}
 	public function myBranches(){
 		$myteam = $this->myTeam()->get();
+
 		
         $data=[];
+
         $teammembers =  $myteam->map(function ($team) 
             { 
-                return $team->branchesServiced()->get(); 
+                return $team->branchesServiced; 
                 
             });
+
         foreach ($teammembers as $member){
+
+        	
             foreach ($member->pluck('branchname','id') as $id=>$branchname){
                 if(! array_key_exists($id,$data)){
                     
@@ -65,13 +70,14 @@ class Person extends NodeModel implements HasPresenter {
                 }
             }
         }
+
         return $data;
 	}
 
 
 	public function myTeam(){
  		
-        return $this->where('user_id','=',auth()->user()->id)->firstOrFail()
+        return $this->with('branchesServiced')->where('user_id','=',auth()->user()->id)->firstOrFail()
         		->descendantsAndSelf();
 
 	}

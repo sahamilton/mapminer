@@ -11,7 +11,7 @@ class Address extends Model
 
     public $timestamps = true;
     
-    public $fillable = ['addressable_id','addressable_type','street','address2','city','state','zip','lat','businessname','lng','company_id','user_id','phone','position','lead_source_id'];
+    public $fillable = ['addressable_id','addressable_type','street','address2','city','state','zip','lat','businessname','lng','company_id','user_id','phone','position','lead_source_id','description'];
     
     public $requiredfields = ['companyname',
             'businessname',
@@ -143,5 +143,13 @@ class Address extends Model
 
     public function createdBy(){
         return $this->belongsTo(User::class,'user_id','id');
+    }
+
+    public function getExtraFields($type){
+        return  \App\MapFields::whereType($type)
+                      ->whereDestination('extra')
+                      ->whereNotNull('fieldname')
+                      ->pluck('fieldname')->toArray();
+
     }
 }

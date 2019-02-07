@@ -126,9 +126,10 @@ class AddressController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Address $address)
     {
-        //
+        $address->delete();
+        return redirect()->route('leads.search')->withWarning('Lead deleted');
     }
 
     public function findLocations($distance=NULL,$latlng = NULL) {

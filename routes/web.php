@@ -150,7 +150,8 @@ Route::group(['middleware' => 'auth'], function () {
 
 	#Opportunity
 		Route::post('/opportunities/close/{address}',['as'=>'opportunity.close','uses'=>'OpportunityController@close']);
-		Route::match(['get', 'post'],'/opportunities/branch/{branch?}',['as'=>'opportunities.branch','uses'=>'OpportunityController@branchOpportunities']);
+		Route::post('/opportunities/branch/',['as'=>'opportunity.branch','uses'=>'OpportunityController@branchOpportunities']);
+		Route::get('/opportunities/branch/{branch}',['as'=>'opportunities.branch','uses'=>'OpportunityController@branchOpportunities']);
 		
 		Route::resource('opportunity','OpportunityController');
 	#Orders
@@ -192,7 +193,8 @@ Route::group(['middleware' => 'auth'], function () {
 
 	# Sales organization
 		Route::get('salesorg/coverage',['as'=>'salescoverage','uses'=>'SalesOrgController@salesCoverageMap']);
-		Route::post('salesorg/find',['as'=>'lead.find','uses'=>'LeadsController@find']);
+		
+		Route::post('salesorg/find',['as'=>'salesorg.find','uses'=>'SalesOrgController@find']);
 		// add salesorg reqource with show and index only
 		Route::resource('salesorg','SalesOrgController',['only'=>['index','show']]);
 		//Route::get('salesorg/{person?}',['as'=>'salesorg','uses'=>'SalesOrgController@getSalesBranches']);
@@ -405,14 +407,13 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
 		Route::get('leads/{leadsource}/assign',['as'=>'leads.leadassign','uses'=>'LeadsController@assignLeads']);
 		
 		Route::get('leads/{leadsource}/batchassign',['as'=>'leads.assignbatch','uses'=>'LeadsAssignController@assignLeads']);
-		//Route::post('leads/assign',['as'=>'leads.assign','uses'=>'LeadsController@postAssignLeads']);
+		
+		Route::post('leads/assign',['as'=>'webleads.assign','uses'=>'WebLeadsController@assignLeads']);
 		
 		
 	## Web leads
 		
-		Route::post('/webleads/import/form',['as'=>'leads.webleadsinsert','uses'=>'WebleadsImportController@getLeadFormData']);
 		
-		Route::post('/webleads/import/create',['as'=>'webleads.import.store','uses'=>'WebleadsImportController@store']);
 
 		Route::post('/leads/assign',['as'=>'leads.assign','uses'=>'LeadsController@assignLeads']);
 		Route::delete('/leads/{id}/unassign',['as'=>'webleads.unassign','uses'=>'LeadsController@unAssignLeads']);
@@ -421,13 +422,18 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
 		//Route::get('webleads/{lead}',['as'=>'webleads.show','uses'=>'WebLeadsController@show']);
 		//Route::resource('webleads','WebLeadsImportController');
 
-		Route::get('leads/{id}/person',['as'=>'leads.person','uses'=>'LeadsController@getPersonsLeads']);
-		Route::get('leads/{id}/person/{sid}/source',['as'=>'leads.personsource','uses'=>'LeadsController@getPersonSourceLeads']);
+		
 		Route::get('leadsource/{id}/export',['as'=>'leadsource.export','uses'=>'LeadSourceController@export']);
+		
+		Route::post('/webleads/import/form',['as'=>'leads.webleadsinsert','uses'=>'WebleadsImportController@getLeadFormData']);
+		Route::post('/webleads/import/create',['as'=>'webleads.import.store','uses'=>'WebleadsImportController@store']);
 		Route::post('lead/search',['as'=>'leads.search','uses'=>'LeadsController@search']);
 		Route::get('lead/search',['as'=>'leads.search','uses'=>'LeadsController@searchAddress']);
+		Route::get('address/{address}/assign',['as'=>'leads.assignlead','uses'=>'LeadsAssignController@show']);
+		/*Route::get('leads/{id}/person',['as'=>'leads.person','uses'=>'LeadsController@getPersonsLeads']);
+		Route::get('leads/{id}/person/{sid}/source',['as'=>'leads.personsource','uses'=>'LeadsController@getPersonSourceLeads'])
 		Route::get('lead/branch/{bid?}',['as'=>'leads.branch','uses'=>'LeadsController@branches']);
-		Route::resource('leads','LeadsController');
+		Route::resource('leads','LeadsController');*/
 
 	# OrderImports
 
@@ -619,14 +625,14 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 		
 
 	# Seeder for relationships with servicelines
-		Route::get('seeder',['as'=>'seeder','uses'=>'CompaniesController@seeder']);
-		Route::get('apiseeder',['as'=>'apiseeder','uses'=>'UsersController@seeder']);
+		//Route::get('seeder',['as'=>'seeder','uses'=>'CompaniesController@seeder']);
+		//Route::get('apiseeder',['as'=>'apiseeder','uses'=>'UsersController@seeder']);
 
 
 	# Versions
 	 	Route::resource('versions','GitController');
 
-	 	Route::get('/leads/unassigned',['as'=>'unassigned.leads','uses'=>'LeadsController@unassignedleads']);
+	 	//Route::get('/leads/unassigned',['as'=>'unassigned.leads','uses'=>'LeadsController@unassignedleads']);
 	 	//Route::get('branch/{bid}/people',['as'=>'test.branch.people', 'uses'=>'WebLeadsController@getSalesPeopleofBranch']);
 	 	Route::get('authtest',['as'=>'test','uses'=>'TestController@test']);
 });

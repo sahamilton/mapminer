@@ -20,9 +20,6 @@ class Weblead extends Model implements HasPresenter {
             'time_frame',
             'multiple'];
    
-   public function relatedLead(){
-    return $belongsTo(Lead::class);
-   }
 
    public function getPresenterClass()
     {

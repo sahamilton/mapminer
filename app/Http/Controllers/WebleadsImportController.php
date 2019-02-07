@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 use App\Lead;
 use App\Address;
 use App\LeadSource;
+use App\Branch;
+use App\Person;
 use App\MapFields;
 use App\WebLeadImport;
 use Illuminate\Http\Request;
@@ -69,21 +71,24 @@ class WebleadsImportController extends Controller
             $input = $this->renameFields($input);
           
             foreach ($input[0] as $key=>$value){
-                $newdata[$value]=$input[1][$key];
+                $address[$value]=$input[1][$key];
             }
 
-            $newdata['lead_source_id'] = request('lead_source_id');
-            $newdata['addressable_type'] = 'weblead';
-            $contact = $this->getContactDetails($newdata);
-            $extra = $this->getExtraFieldData($newdata);
-           
-    		$lead = $this->address->create($newdata);
+            $address['lead_source_id'] = request('lead_source_id');
+            $address['addressable_type'] = 'weblead';
+            $address['user_id'] = auth()->user()->id;
+            $contact = $this->getContactDetails($address);
+            $extra = $this->getExtraFieldData($address);
+
+    		$lead = $this->address->create($address);
             $lead->contacts()->create($contact);
             $lead->weblead()->create($extra);
-    		return redirect()->route('address.show',$lead->id);
-
+    	  
+            return redirect()->route('leads.assignlead',$lead->id);
     	}
     }
+
+
     private function getExtraFieldData($newdata,$type='webleads'){
         $extraFields = $this->fields->whereType($type)
                         ->whereDestination('extra')
@@ -105,15 +110,16 @@ class WebleadsImportController extends Controller
         ->whereDestination('contact')
         ->whereNotNull('fieldname')->pluck('fieldname')->toArray();
 
-            $contact['contact'] = null;
+            $contact= array();
             foreach ($contactFields as $key=>$value){
-                if(in_array($value,['firstname','lastname'])){
-                    $contact['contact'] = $contact['contact'] . $newdata[$value]." ";
-                }elseif(isset($newdata[$value])){
-                    $contact[$value] = $newdata[$value];
-                }
+               
+               if(isset($newdata[$value])){
+                    $contact[$value] = trim($newdata[$value]);
+               }
+               
             }
-            $contact['contact'] = trim($contact['contact']);
+            $contact['fullname']= $contact['firstname']. ' ' . $contact['lastname'];
+            
        return $contact;
     }
     private function geoCodeAddress($input){
@@ -162,7 +168,7 @@ class WebleadsImportController extends Controller
     	}
       
     	$requiredFields = $this->import->requiredFields;
-
+      
     	if($diff = array_diff($requiredFields,array_keys($data))){
     		
             return false;

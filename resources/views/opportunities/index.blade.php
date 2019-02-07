@@ -11,7 +11,7 @@
 @if(count($myBranches)>1)
 
 <div class="col-sm-4">
-<form name="selectbranch" method="post" action="{{route('opportunities.branch')}}" >
+<form name="selectbranch" method="post" action="{{route('opportunity.branch')}}" >
 @csrf
 
  <select class="form-control input-sm" id="branchselect" name="branch" onchange="this.form.submit()">

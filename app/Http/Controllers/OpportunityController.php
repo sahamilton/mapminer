@@ -58,7 +58,7 @@ class OpportunityController extends Controller
         }else{
              $myBranches = $this->person->myBranches();
         }
-      
+     
         if(count($myBranches)==0){
             return redirect()->route('user.show',auth()->user()->id)->withWarning("You are not assigned to any branches. You can assign yourself here or contact Sales Ops");
         }
@@ -81,7 +81,7 @@ class OpportunityController extends Controller
     }
 
     public function branchOpportunities(Branch $branch, Request $request){
-
+       
        if(request()->has('branch')){
             $data = $this->getBranchOpportunities([request('branch')]);
        }else{

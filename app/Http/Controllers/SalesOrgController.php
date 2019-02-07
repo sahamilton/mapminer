@@ -2,7 +2,9 @@
 namespace App\Http\Controllers;
 use App\Branch;
 use App\Person;
+use App\Address;
 use Excel;
+use App\Http\Requests\LeadAddressFormRequest;
 use Illuminate\Http\Request;
 
 class SalesOrgController extends BaseController {
@@ -14,10 +16,11 @@ class SalesOrgController extends BaseController {
 	
 
 
-	public function __construct(Branch $branch, Person $person)
+	public function __construct(Branch $branch, Person $person,Address $address)
 	{
 		$this->person = $person;
 		$this->branch = $branch;
+		$this->address = $address;
 
 		//$this->person->rebuild();
 		
@@ -198,6 +201,38 @@ class SalesOrgController extends BaseController {
 
     private function loadSalesOrgRelations(Person $salesperson){
     	return $salesperson->load('userdetails.roles','directReports','directReports.userdetails','directReports.userdetails.roles','reportsTo.userdetails.roles');
+
+    }
+
+     public function find(LeadAddressFormRequest $request){
+    
+
+      $geoCode = app('geocoder')->geocode(request('address'))->get();
+
+      if(! $geoCode or count($geoCode)==0)
+      {
+        return redirect()->back()->withInput()->with('error','Unable to Geocode address:'.request('address') );
+
+      }else{
+
+        request()->merge($this->person->getGeoCode($geoCode));
+      }
+      $data = request()->all();
+
+      if(! request()->has('number')){
+          $data['number']=5;
+        }
+
+      session()->put('geo', $data);
+      $address = new Address($data);
+      
+      if($request->type =='branch'){
+          $branches = $this->branch->nearby($address,$data['distance'],$data['number'])->get();
+          return response()->view('salesorg.nearbybranches',compact('data','branches'));
+        }else{
+          $people= $this->person->nearby($address,$data['distance'],$data['number'])->get();
+          return response()->view('salesorg.nearbypeople',compact('data','people'));
+        }
 
     }
 }

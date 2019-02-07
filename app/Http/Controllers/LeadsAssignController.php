@@ -62,6 +62,26 @@ class LeadsAssignController extends Controller
         return redirect()->route('leadsource.show',$leadsource->id)->with('status',$count . ' leads assigned');
     }
 
+    public function show(Address $address){
+      
+          $lead = $address->load('contacts',$address->addressable_type);
+          $extrafields = $this->address->getExtraFields('webleads');
+
+          // find nearby branches
+          $branches = $this->branch->nearby($address,25,5)->get();;
+       
+            // we should also add serviceline filter?
+          $people = $this->person->nearby($address,25,5);
+          
+          $salesrepmarkers =null;
+    
+          $branchmarkers=$branches->toJson();
+          $address = $address->fullAddress();
+
+          $sources = array();
+          return response()->view('leads.showsearch',compact('lead','branches','people','salesrepmarkers','branchmarkers','extrafields','sources','address'));
+
+    }
 
     public function assignLead(Request $request){
 

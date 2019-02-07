@@ -1,8 +1,26 @@
 @extends ('admin.layouts.default')
 @section('content')
 <div class="container">
-  <h2>Assign Leads!!</h2>
-  <p><a href="{{route('leadsource.show',$lead->lead_source_id)}}">Show All WebLeads</a></p>
+  <h2>Assign Leads</h2>
+  <p><a href="{{route('leads.search')}}">Enter new leads</a></p>
+  <div class="row">
+
+    @if(isset($lead->id))                          
+   <a 
+   data-href="{{route('address.destroy',$lead->id)}}" 
+
+        data-toggle="modal" 
+        data-target="#confirm-delete" 
+        data-title = "this lead" 
+        href="#">
+
+        <i class="far fa-trash-alt text-danger" aria-hidden="true"> </i> 
+        Delete Lead
+    </a>
+
+
+  </div>
+  @endif
   <div class="row">
     <div class="col-sm-6">
       @include('leads.partials._search')
@@ -49,7 +67,7 @@ function myFunction(element) {
 
 </script>-->	
 @include('leads.partials.map')
-
+@include('partials._modal')
 @include('partials/_scripts')
 @endsection
 

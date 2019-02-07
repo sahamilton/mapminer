@@ -8,6 +8,7 @@
 		<th>Manager</th>
 		<th>Sales Team</th>
 		<th>Distance</th>
+		<th>Assign</th>
     </thead>
     <tbody>
 	   @foreach($branches as $branch)
@@ -44,6 +45,7 @@
 				@endif
 			</td>
 			<td class="text text-right">{{number_format($branch->distance,1)}} miles</td>
+			<td><input type="checkbox" name="branch[]" value="{{$branch->id}}"></td>
 		</tr>
 		@endforeach
 	</tbody>
