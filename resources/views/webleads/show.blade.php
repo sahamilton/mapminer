@@ -7,7 +7,7 @@
 			<h2 class="panel-title pull-left">{{$lead->company_name}} - {{$lead->rating}}</h2>
 			<a class="btn btn-primary float-right" href="">
 
-				<i class="far fa-edit text-info""></i>
+				<i class="far fa-edit text-info"></i>
 
 				Edit**
 			</a>

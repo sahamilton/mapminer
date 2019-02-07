@@ -414,7 +414,8 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
 	## Web leads
 		
 		
-
+		Route::get('/leads/{address}/singleassign',['as'=>'leads.singleassign','uses'=>'LeadsAssignController@singleleadassign']);
+		Route::post('/leads/{address}/singleassign',['as'=>'leads.postassign','uses'=>'LeadsAssignController@store']);
 		Route::post('/leads/assign',['as'=>'leads.assign','uses'=>'LeadsController@assignLeads']);
 		Route::delete('/leads/{id}/unassign',['as'=>'webleads.unassign','uses'=>'LeadsController@unAssignLeads']);
 		

@@ -10,6 +10,8 @@ use App\Lead;
 use App\Person;
 use App\Role;
 use App\Permission;
+use App\Mail\NotifyWebLeadsBranchAssignment;
+use Mail;
 use App\Jobs\AssignAddressesToBranches;
 class LeadsAssignController extends Controller
 {
@@ -83,7 +85,35 @@ class LeadsAssignController extends Controller
 
     }
 
-    public function assignLead(Request $request){
+    public function store(Request $request, Address $address){
+
+      $branches = $this->branch->whereIn('id',request('branch'))->with('manager','manager.userdetails')->get();
+      $address->load('contacts',$address->addressable_type);
+ 
+      foreach ($branches as $branch)
+        {
+            $address->assignedToBranch()->sync($branch, ['status_id'=>1]);
+            if(request()->has('notify'))
+            {
+              
+                Mail::queue(new NotifyWebLeadsBranchAssignment($address,$branch));
+              
+              
+            }
+        }
+      return redirect()->route('address.show',$address->id)->withMessage('Lead has been assigned');
+    }
+
+    public function singleleadassign(Address $lead){
+
+      $lead->load('assignedToBranch');
+
+      $branches = $this->branch->nearby($lead,25,5)->get();
+      $branchmarkers = $branches->toJson();
+      return response()->view('leads.singleassign',compact('branches','lead','branchmarkers'));
+    }
+
+  /*  public function assignLead(Request $request){
 
       $count=0;
 
@@ -96,7 +126,7 @@ class LeadsAssignController extends Controller
 
       }
       return redirect()->route('leadsource.index')->with(['status'=>'Lead assigned to ' .$count . 'reps']);
-    }
+    }*/
 
     private function setleadRoles(){
 
@@ -116,7 +146,7 @@ class LeadsAssignController extends Controller
 
     }
 
-    private function assignLeadsToPeople($leads,$verticals=null){
+   /* private function assignLeadsToPeople($leads,$verticals=null){
       
       $count = null;
       foreach ($leads as $lead) {
@@ -148,7 +178,7 @@ class LeadsAssignController extends Controller
         }
         return $count;
     }
-
+*/
     private function assignLeadsToBranches($leadsource,$distance){
       // convert miles to meters
       $distance = $this->distance * 1609;

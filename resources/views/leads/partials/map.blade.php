@@ -11,8 +11,7 @@ function initialize() {
   var map = new google.maps.Map(document.getElementById('map'), mapOptions);
 	var name = "{{$lead->company_name}}";
   var address = "{{$lead->city}}" + " {{$lead->state}}";
- 
- 
+  var mylatlng = "{{$lead->lat ."," .$lead->lng}}";
   var branches = {!! $branchmarkers !!};
 
   $.each(branches, function(key, data) {
@@ -37,23 +36,12 @@ function initialize() {
           });
 
     });
-  $.each(salesreps, function(key, data) {
-      var saleslatLng = new google.maps.LatLng(data.lat, data.lng); 
-      // Creating a marker and putting it on the map
-      var salesmarker = new google.maps.Marker({
-          position: saleslatLng,
-          map: map,
-          title: data.name,
-          icon:'https://maps.google.com/mapfiles/ms/icons/yellow-dot.png' ,
-          clickable: true
-      });
-
-    });
+ 
 
 	var leadmarker = new google.maps.Marker({
 	  position: myLatlng,
 	  map: map,
-	  title: name,
+	  title: "{{$lead->businessname}}",
     icon: 'https://maps.google.com/mapfiles/ms/icons/green-dot.png',
 	  clickable: true
 	});

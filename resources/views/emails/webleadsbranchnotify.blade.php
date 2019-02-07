@@ -25,11 +25,11 @@ Email: {{$lead->contacts->first()->email}}
 
 **Job Requirements**
 
-Jobs:{{$lead->jobs}}
+Jobs:{{$lead->weblead->jobs}}
 
-Time Frame:{{$lead->time_frame}}
+Time Frame:{{$lead->weblead->time_frame}}
 
-Industry:{{$lead->industry}}
+Industry:{{$lead->weblead->industry}}
 
 @endcomponent
 

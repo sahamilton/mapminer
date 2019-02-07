@@ -84,7 +84,7 @@ class WebleadsImportController extends Controller
             $lead->contacts()->create($contact);
             $lead->weblead()->create($extra);
     	  
-            return redirect()->route('leads.assignlead',$lead->id);
+            return redirect()->route('leads.singleassign',$lead->id);
     	}
     }
 

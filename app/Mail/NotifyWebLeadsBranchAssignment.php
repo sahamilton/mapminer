@@ -27,7 +27,6 @@ class NotifyWebLeadsBranchAssignment extends Mailable
         $this->branch = $branch;
      
        
-
     }
 
     /**
@@ -37,9 +36,10 @@ class NotifyWebLeadsBranchAssignment extends Mailable
      */
     public function build()
     {
-        foreach($this->branch->manager as $manager)
+        foreach($this->branch->manager as $this->manager)
+            
              return $this->markdown('emails.webleadsbranchnotify')
-             ->to($manager->userdetails->email, $manager->postName())->subject('New Lead');
+             ->to($this->manager->userdetails->email, $this->manager->postName())->subject('New Lead');
          
 
     }

@@ -45,7 +45,9 @@
 				@endif
 			</td>
 			<td class="text text-right">{{number_format($branch->distance,1)}} miles</td>
-			<td><input type="checkbox" name="branch[]" value="{{$branch->id}}"></td>
+			<td>
+				<span class="hidden">@if($lead->assignedToBranch->contains($branch->id)) checked @endif</span>
+				<input type="checkbox" @if($lead->assignedToBranch->contains($branch->id)) checked @endif name="branch[]" value="{{$branch->id}}"></td>
 		</tr>
 		@endforeach
 	</tbody>

@@ -13,14 +13,15 @@ You have been assigned a new lead from the {{$lead->leadsource->source}}.  The d
 Company: {{$lead->companyname}}
 
 Address: {{$lead->address}} {{$lead->city}}, {{$lead->state}}
+@foreach ($lead->contact as $contact)
+Contact: {{$contact->firstname}} {{$contact->lastname}}
 
-Contact: {{$lead->contacts->contact}}
+Contact Title: {{$contact->title}}
 
-Contact Title: {{$lead->contacts->contactitle}}
+Phone: {{$contact->phone}}
 
-Phone: {{$lead->contacts->contactphone}}
-
-Email: {{$lead->contacts->contactemail}}
+Email: {{$contact->email}}
+@endforeach
 
 @endcomponent
 

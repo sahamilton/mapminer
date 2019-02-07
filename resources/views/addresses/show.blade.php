@@ -1,5 +1,6 @@
 @extends('site.layouts.default')
 @section('content')
+@php $statuses = [1=>'offered',2=>'owned']; @endphp
 @include('companies.partials._searchbar')
 <h2>{{$location->businessname}}</h2>
 <p>
@@ -14,6 +15,14 @@
 
 <p>Location Source: {{$location->leadsource ? $location->leadsource->source : 'unknown'}}
 {{$location->createdBy ? "Created by " . $location->createdBy->person->fullname() : ''}}</p>
+@if($location->has('assignedToBranch'))
+<strong>Assigned to:</strong>
+  @foreach ($location->assignedToBranch as $branch)
+  <li><a href="{{route('branches.show',$branch->id)}}">{{$branch->branchname}}</a> - {{$statuses[$branch->pivot->status_id]}}</li>
+
+  @endforeach
+
+@endif
 @include('maps.partials._form')
 
 
@@ -92,6 +101,7 @@
       aria-selected="false">
         <strong>Branches</strong>
   </a>
+
   <a class="nav-item nav-link"  
         data-toggle="tab" 
         href="#watchers"

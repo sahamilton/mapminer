@@ -1,6 +1,7 @@
 @extends('site.layouts.default')
 @section('content')
-<h1>Nearby Locations!!</h1>  
+<h1>Nearby Locations</h1>  
+@include('maps.partials._form')
 <table id='sorttable' class ='table table-bordered table-striped table-hover'>
 	<thead>
 		<th>Business Name</th>

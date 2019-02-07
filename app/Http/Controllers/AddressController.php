@@ -68,7 +68,8 @@ class AddressController extends Controller
       // $ranking = $this->address->with('ranking')->myRanking()->findOrFail($address->id);
        
         $location = $address->load('contacts','contacts.relatedActivities','activities','activities.type','activities.relatedContact',
-            'activities.user','activities.user.person','company','opportunities','industryVertical','relatedNotes','orders','orders.branch','watchedBy','watchedBy.person','ranking','leadsource','createdBy');
+            'activities.user','activities.user.person','company','opportunities','industryVertical','relatedNotes','orders','orders.branch','watchedBy','watchedBy.person','ranking','leadsource','createdBy','assignedToBranch');
+    
         if($address->addressable_type){
            
             $location->load($address->addressable_type);
@@ -129,7 +130,7 @@ class AddressController extends Controller
     public function destroy(Address $address)
     {
         $address->delete();
-        return redirect()->route('leads.search')->withWarning('Lead deleted');
+        return redirect()->route('address.index')->withWarning('Location deleted');
     }
 
     public function findLocations($distance=NULL,$latlng = NULL) {

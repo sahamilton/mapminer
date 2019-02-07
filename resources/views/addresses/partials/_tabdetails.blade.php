@@ -19,9 +19,16 @@
 		 </fieldset>
 
 		@if(auth()->user()->hasRole('admin') or $location->user_id == auth()->user()->id)
-		<a href="{{route('address.edit',$location->id)}}" 
+		<a class="text text-info" href="{{route('address.edit',$location->id)}}" 
 		title="Edit this location">
-		Edit location</a>
+		<i class="far fa-edit"></i>
+		Edit Location</a>
+		<a data-href="{{route('address.destroy',$location->id)}}" 
+			data-toggle="modal" 
+			data-target="#confirm-delete" 
+			data-title = "This address and all its associations" href="#">
+			<i class="far fa-trash-alt text-danger" aria-hidden="true"> </i> 
+		Delete Locaton</a>
 		
 		@endif
 		
