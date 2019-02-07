@@ -27,8 +27,9 @@ class LocationsImportController extends ImportController
 	}
 
 
-	public function import(LocationImportFormRequest $request) {
+	public function import(Request $request) {
 
+       dd(request()->file('upload')->getMimeType());
         $title="Map the locations import file fields";
 
         $data = $this->uploadfile(request()->file('upload'));
