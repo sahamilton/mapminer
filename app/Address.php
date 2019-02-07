@@ -146,10 +146,10 @@ class Address extends Model
     }
 
     public function getExtraFields($type){
-        return  \App\MapFields::whereType($type)
+        $fields = \App\MapFields::whereType($type)
                       ->whereDestination('extra')
                       ->whereNotNull('fieldname')
                       ->pluck('fieldname')->toArray();
-
+        return array_unique($fields);
     }
 }

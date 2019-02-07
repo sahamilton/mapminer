@@ -40,6 +40,7 @@
                 value="1"/>
           
             </div>
+            <input type="hidden" name="addressable_type" value="weblead" />
             <input type="submit" name="submit" class="btn btn-info" value="Distribute Lead" />
           </div>
         </form>  

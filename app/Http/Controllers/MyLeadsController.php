@@ -75,16 +75,17 @@ class MyLeadsController extends BaseController
             $lead->contacts()->create($data['contact']);
 
         }
-        if(request()->filled('type')){
-           switch(request('type')){
+        if(request()->filled('addressable_type')){
+           switch(request('addressable_type')){
             case 'weblead':
+
                 $lead->weblead()->create(request()->all());
             break;
 
 
            }
-            
-            $lead->load('contacts',request('type'));
+           
+            $lead->load('contacts',request('addressable_type'));
 
         }else{
           $lead->load('contacts');  

@@ -322,6 +322,7 @@ class LeadsController extends BaseController
           $lead->lead_source_id = 2;
        
           $extrafields = $this->getExtraFields('webleads');
+     
           $sources = $this->leadsource->pluck('source','id');
           // find nearby branches
           $branches = $this->findNearByBranches($lead,500);
@@ -690,11 +691,11 @@ class LeadsController extends BaseController
 
     }
     private function getExtraFields($type){
-        return  \App\MapFields::whereType($type)
+        $fields =  \App\MapFields::whereType($type)
                       ->whereDestination('extra')
                       ->whereNotNull('fieldname')
                       ->pluck('fieldname')->toArray();
-
+         return array_unique($fields);             
     }
     private function getExtraFieldData($newdata,$type='webleads'){
 

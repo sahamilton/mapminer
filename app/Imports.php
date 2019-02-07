@@ -177,7 +177,8 @@ class Imports extends Model
 	public function createPositon(){
 		
 		$this->executeQuery("update ".$this->temptable." set position = POINT(lat, lng);");
-		$this->executeQuery("update ".$this->temptable." set position = Geometry::STGeomFromText(position.STAsText(), 4326)");
+	
+		$this->executeQuery("update ".$this->temptable." set position = ST_GeomFromText(ST_AsText(position), 4326)");
         
 	}
 

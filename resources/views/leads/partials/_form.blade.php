@@ -27,7 +27,7 @@
 	<label class="col-md-4 control-label">Street Address</label>
 		<div class="input-group input-group-lg ">
 		    <input type="text" 
-		     @if(!isset($type)) readonly @endif
+		    readonly
 		     required 
 		     class="form-control" 
 		     name='street' 
@@ -45,7 +45,7 @@
 	<label class="col-md-4 control-label">City</label>
 		<div class="input-group input-group-lg ">
 		   <input type="text" 
-		   @if(!isset($type)) readonly @endif
+		  readonly
 		   required class="form-control" 
 		   name='city' 
 		   autocomplete="off" 
@@ -62,7 +62,7 @@
         <label class="col-md-4 control-label">state</label>
         <div class="input-group input-group-lg ">
             <input type="text" 
-             @if(!isset($type)) readonly @endif
+            readonly
              required class="form-control" name='state' 
              autocomplete="off" 
              description="state" 
@@ -78,7 +78,7 @@
 	   <label class="col-md-4 control-label">Zip</label>
 	   <div class="input-group input-group-lg ">
 	       <input type="text" 
-	        @if(!isset($type)) readonly @endif 
+	       readonly 
 	       required class="form-control" name='zip' autocomplete="off" description="zip" value="{{ old('zip') ? old('zip') : isset($lead->zip) ? $lead->zip : "" }}" placeholder="zip">
 	       <span class="help-block">
 	           <strong>{{ $errors->has('zip') ? $errors->first('zip') : ''}}</strong>
