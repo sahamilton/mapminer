@@ -8,6 +8,10 @@
 			<h2 class="panel-title pull-left"><strong>{{$user->person->postName()}}</strong></h2>
 
 		</div>
+		<div class="panel-heading clearfix">
+			<h4 class="panel-title pull-left"><strong>{{ucwords($user->person->business_title)}}</strong></h4>
+
+		</div>
 		<div class="list-group-item">
 			<p class="list-group-item-text"><strong>Role Details</strong></p>
 			<ul style="list-style-type: none;">

@@ -44,7 +44,7 @@ class UserProfileFormRequest extends FormRequest
                'min:8',
                'regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\X])(?=.*[!$#%]).*$/',
                'confirmed'],
-
+    
 
         ];
     }

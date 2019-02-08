@@ -31,7 +31,7 @@ class UserFormRequest extends FormRequest
 
         $rules = [
             'roles'=>'required',
-            
+            'business_title'=>'required',
             'firstname'=>'required',
             'lastname'=>'required',
             'email' => 'required|email|unique:users,email,' . request()->segment(3),

@@ -98,6 +98,20 @@
 		{!! $errors->first('phone', '<span class="help-inline">:message</span>') !!}
 	</div>
 </div>
+<!-- Bsuiness Title -->
+<div class="form-group {!! $errors->has('business_title') ? 'has-error' : '' !!}">
+	<label class="col-md-3 control-label" for="address">Business Title</label>
+	<div class="input-group input-group-lg">
+		<input class="form-control" 
+		required
+		type="text" 
+		name="business_title" 
+		id="business_title"  
+		value="{{old('business_title', isset($user) && isset($user->person) ? $user->person->business_title : '') }}" 
+		placeholder="business title"/>
+		{!! $errors->first('business_title', '<span class="help-inline">:message</span>') !!}
+	</div>
+</div>
 
 <!--- Managers ---->
 <div class="form-group{{ $errors->has('reports_to)') ? ' has-error' : '' }}">

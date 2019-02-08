@@ -99,6 +99,8 @@ trait Geocode
 
     public function locationsNearbyBranches(Company $company,$radius=25,$limit=null){
         //add pagination
+
+        // can refactor this with
         $query ="select 
                 locs.id,
                 locs.businessname,
@@ -179,6 +181,17 @@ trait Geocode
 
           return \DB::select($query);
 
+    }
+
+    public function scopeAssociateCompanyLocationsBranches(Company $company,$radius=25){
+        $query = "select distinct branches.id as branch_id, addresses.id as address_id 
+                    from branches,addresses 
+                    left join address_branch
+                    on addresses.id = address_branch.address_id
+                    where ST_Distance_Sphere(branches.position,addresses.position) < '". $distance."'
+                    and addresses.company_id = '" . $company->id ."'
+                    and address_branch.address_id is null
+                    ORDER BY branches.id asc";
     }
 
     private function haversine($location){
