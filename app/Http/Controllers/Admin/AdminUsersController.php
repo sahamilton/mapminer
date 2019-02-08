@@ -184,7 +184,7 @@ class AdminUsersController extends BaseController {
 
         if ( $user->save() ) {
             // need to get the lat lng;
-            $name = request(['firstname','lastname','phone']);
+            $name = request(['firstname','lastname','phone','business_title']);
             if(request()->filled('address')){
                 $geoCode = app('geocoder')->geocode(request('address'))->get();
                 $person = $this->person->getGeoCode($geoCode);
