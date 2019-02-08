@@ -89,17 +89,16 @@ class LeadsAssignController extends Controller
 
       $branches = $this->branch->whereIn('id',request('branch'))->with('manager','manager.userdetails')->get();
       $address->load('contacts',$address->addressable_type);
- 
-      foreach ($branches as $branch)
-        {
-            $address->assignedToBranch()->sync($branch, ['status_id'=>1]);
-            if(request()->has('notify'))
-            {
-              
-                Mail::queue(new NotifyWebLeadsBranchAssignment($address,$branch));
-              
-              
-            }
+      $branchids = $branches->pluck('id')->toArray();
+   
+      $address->assignedToBranch()->sync([$branchids, ['status_id'=>1]]);
+      if(request()->has('notify'))
+      {       
+        foreach ($branches as $branch)
+          {
+                  Mail::queue(new NotifyWebLeadsBranchAssignment($address,$branch));
+                
+          }
         }
       return redirect()->route('address.show',$address->id)->withMessage('Lead has been assigned');
     }

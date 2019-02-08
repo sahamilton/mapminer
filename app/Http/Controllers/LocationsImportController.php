@@ -28,18 +28,18 @@ class LocationsImportController extends ImportController
 
 
 	public function import(LocationImportFormRequest $request) {
-
+       
+        
         $title="Map the locations import file fields";
-
         $data = $this->uploadfile(request()->file('upload'));
-
-      
+        $data['additionaldata'] = null;
         $data['table']='addresses';
         $data['type'] = 'locations';
         $data['route'] = 'locations.mapfields';
-
-        $data['additionaldata']['company_id'] = request('company');
-
+        $data['description'] = request('description');
+        if(request()->filled('company_id')){
+                $data['additionaldata']['company_id'] = request('company');
+        }
         $fields = $this->getFileFields($data);    
         $columns = $this->location->getTableColumns($data['table']);
         $skip = ['id','created_at','updated_at','serviceline_id'];
@@ -49,7 +49,7 @@ class LocationsImportController extends ImportController
     }
     
 	public function mapfields(Request $request){
-
+        
         $data = $this->getData($request);  
           
         if($error = $this->validateInput($request)){
@@ -59,8 +59,12 @@ class LocationsImportController extends ImportController
       
         $this->import->setFields($data);
 
-        if($this->import->import()) {
-             return redirect()->route('company.show',$data['additionaldata']['company_id'])->with('success','Locations imported');
+        if($fileimport = $this->import->import($request)) {
+
+            // create new FileImport ref
+
+
+             return redirect()->route('fileimport.show',$fileimport)->with('success','Locations imported');
 
         }
     
