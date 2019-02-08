@@ -18,8 +18,8 @@
 @if($location->has('assignedToBranch'))
 <strong>Assigned to:</strong>
   @foreach ($location->assignedToBranch as $branch)
-  
-  <li><a href="{{route('branches.show',$branch->id)}}">{{$branch->branchname}}</a> - @if(isset($branch->pivot->status_id))
+
+  <li><a href="{{route('branches.show',$branch->id)}}">{{$branch->branchname}}</a> - @if(isset($statuses[$branch->pivot->status_id])) 
     {{$statuses[$branch->pivot->status_id]}}
   @endif
 </li>
