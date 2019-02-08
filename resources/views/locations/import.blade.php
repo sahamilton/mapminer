@@ -1,17 +1,25 @@
 @extends('admin.layouts.default')
 @section('content')
+@php $importtypes = ['lead','project','location'] @endphp
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <div class="container">
 <h2>Steps to import locations for  accounts:</h2>
 <ol>
-<li>
-First create your csv file of projects from the template.  Your import file must contain at least {{count($requiredFields)}} columns that can be mapped to:
-            <ol>
+<li>First create your csv file of prospects from the template.  Your import file must contain at least {{count($requiredFields)}} columns that can be mapped to these fields:
+            <ul>
             @foreach ($requiredFields as $field)
                 <li style="color:red">{{$field}}</li>
             @endforeach
-        </ol>
-    </li>
+        </ul>
+        </li>
+        <li>Make sure there are no:
+            <ul>
+            <li>Commas</li>
+            <li>Parentheses</li>
+            <li>Quote marks</li>
+            <li>Apostrophes</li>
+        </ul>
+         in your csv file. (<em>hint: use global find and replace</em>)</li>
 <li>Save the CSV file locally on your computer.</li>
 <li>Select the company that locations belong to from the list</li>
 <li>Select the file and import</li>
@@ -28,7 +36,7 @@ First create your csv file of projects from the template.  Your import file must
         <label class="col-md-4 control-label">Upload for account:</label>
         <div class="input-group input-group-lg ">
             <select  id ="company" class="form-control" name='company'>
-
+            <option>No Existing Company</option>
             @foreach ($companies as $key=>$company))
             	<option 
                 old('company_id') == $key ? 'selected' : ''
@@ -44,23 +52,35 @@ First create your csv file of projects from the template.  Your import file must
         </div>
     </div>
 
-<!--- Segments -->
-		<div class="form-group{{ $errors->has('segment)') ? ' has-error' : '' }}">
-        <label class="col-md-4 control-label">Segments Available:</label>
+
+<!--- Types -->
+    <div class="form-group{{ $errors->has('type)') ? ' has-error' : '' }}">
+    <label class="col-md-4 control-label">types Available:</label>
         <div class="input-group input-group-lg ">
-            <select id="segment" class="form-control" name='segment'>
-            	<option value="">No segment data</option>
-    
+            <select id="type" class="form-control" name='type'>
+                @foreach($importtypes as $type)
+                    <option value="{{$type}}">{{$type}}</option>
+                @endforeach
             </select>
             <span class="help-block">
-                <strong>{{ $errors->has('segment') ? $errors->first('segment') : ''}}</strong>
+                <strong>{{ $errors->has('type') ? $errors->first('type') : ''}}</strong>
                 </span>
         </div>
     </div>
+<!---- Description -->
 
-
-
-
+    <div class="form-group{{ $errors->has('description)') ? ' has-error' : '' }}">
+    <label class="col-md-4 control-label">Import Description:</label>
+       
+            <div class="form-group">
+                <textarea name="description" class="form-control" rows="5" placeholder="Describe the import, source etc"></textarea>
+            </div>
+            <span class="help-block">
+                <strong>{{ $errors->has('description') ? $errors->first('description') : ''}}</strong>
+                </span>
+        
+    </div>
+<!-----/ description-->
 
 <!-- File Location -->
     <div class="form-group{{ $errors->has('upload') ? ' has-error' : '' }}">

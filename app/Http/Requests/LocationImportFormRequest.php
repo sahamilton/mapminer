@@ -27,7 +27,7 @@ class LocationImportFormRequest extends FormRequest
     {
         return [
            'upload' => 'required|file|mimetypes:'.implode(",",$this->mimetypes), 
-           'company'=>'required',
+           
         ];
     }
 }

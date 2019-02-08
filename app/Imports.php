@@ -54,12 +54,13 @@ class Imports extends Model
     	}
 
 
-    public function import(){
+    public function import($request=null){
+
 		if (! $this->dontCreateTemp){
 			$this->createTemporaryImportTable();
 		}
 		$this->_import_csv();
-
+		$fileimport = $this->addFileImportRef($request);
 		$this->addCreateAtField();
 		$this->createPositon();
 		$this->updateAdditionalFields();
@@ -71,7 +72,7 @@ class Imports extends Model
 
 		//
 
-		return true;
+		return $fileimport;
 		}
 
     public function setNullFields($table){
@@ -85,10 +86,16 @@ class Imports extends Model
 
 			//Create the temporary table
 			$this->executeQuery("DROP TABLE IF EXISTS ". $this->temptable);
-			return $this->executeQuery("CREATE TEMPORARY TABLE ".$this->temptable." AS SELECT * FROM ". $this->table." LIMIT 0");
+			return $this->executeQuery("CREATE TABLE ".$this->temptable." AS SELECT * FROM ". $this->table." LIMIT 0");
 
 		}
-
+		private function addFileImportRef($request){
+			// need to fix the type field
+			$import_ref = ['ref'=>date('YzHis'),'user_id'=>auth()->user()->id,'type'=>'address','description'=>request('description')];
+			$import = FileImport::create($import_ref);
+			$this->executeQuery("update ".$this->temptable." set import_ref ='".$import->id ."'");
+			return $import->id;
+		}
 		private function addCreateAtField(){
 			// Import from the CSV file
 
@@ -114,7 +121,7 @@ class Imports extends Model
 
 
 		private function copyTempToBaseTable(){
-			$this->fields = str_replace('@ignore,','',$this->fields).",position";
+			$this->fields = str_replace('@ignore,','',$this->fields).",import_ref,position";
 			
 			// Copy over to base table
 			$query ="INSERT IGNORE INTO `".$this->table."` (".$this->fields.") SELECT ".$this->fields." FROM `".$this->temptable."`";
@@ -124,7 +131,7 @@ class Imports extends Model
 		// Drop the temp table
 		//
 		private function dropTempTable(){
-			return $this->executeQuery("DROP TABLE ".$this->temptable);
+			//return $this->executeQuery("DROP TABLE ".$this->temptable);
 		 }
 
 

@@ -357,6 +357,8 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
     	Route::resource('emails','EmailsController');
 
     # Imports
+    	Route::post('fileimport/{import}/assign',['as'=>'fileimport.assign','uses'=>'FileImportController@assign']);
+    	Route::resource('fileimport','FileImportController');
    		Route::get('branch/teams',['as'=>'branch_team.importfile','uses'=>'BranchTeamImportController@getFile']);
    		Route::post('branch/teams',['as'=>'branches.teamimport','uses'=>'BranchTeamImportController@import']);
     	Route::get('imports',['as'=>'imports.index','uses'=>'ImportController@index']);
