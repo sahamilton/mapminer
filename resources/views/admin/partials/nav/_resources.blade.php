@@ -40,19 +40,19 @@
 <li class="nav-item">
     <a class="nav-link" 
     href="{{ route('leads.search') }}">
-        <i class="fas fa-cart-plus"></i> Add Prospect
+        <i class="fas fa-cart-plus"></i> Add Lead
     </a>
 </li>
 <li class="nav-item">
     <a class="nav-link" 
     href="{{ route('leadsource.index') }}">
-        <i class="fas fa-globe"></i> Prospect Sources
+        <i class="fas fa-globe"></i> Lead Sources
     </a>
 </li>
 <li class="nav-item">
     <a class="nav-link" 
     href="{{ route('leadstatus.index') }}">
-        <i class="fas fa-signal"></i> Prospect Status
+        <i class="fas fa-signal"></i> Lead Status
     </a>
 </li>
 <div class="dropdown-divider"></div>

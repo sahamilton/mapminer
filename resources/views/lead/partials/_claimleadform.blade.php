@@ -9,10 +9,10 @@
             
                 <div class="modal-body">
 				<legend>Contact Details</legend>
-				<p>{{$lead->contact}}</p>
-                <p>{{$lead->contacttitle}}</p>
-                <p>{{$lead->contactemail}}</p>
-				<p>{{$lead->phone}}
+				<p>{{$lead->fullName()}}</p>
+                <p>{{$lead->title}}</p>
+                <p>{{$lead->email}}</p>
+				<p>{{$lead->ontactphone}}
 				<legend>Address</legend>
 				<p>{{$lead->address}}</p>
 				<p>{{$lead->city}} {{$lead->state}}</p>

@@ -4,7 +4,7 @@
         <td>Parent</td>
         <td>Vertical</td>
         <td>People</td>
-        <td>Current Prospects</td>
+        <td>Current Leads</td>
         <td>Companies</td>
         <td>Locations</td>
         <td>Segment Locations</td>

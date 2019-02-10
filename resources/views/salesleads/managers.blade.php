@@ -11,22 +11,22 @@ and Team
 
 	<li class="nav-item ">
 		<a class="nav-link active" data-toggle="tab" href="#map">
-			<strong>Prospects</strong>
+			<strong>Leads</strong>
 		</a>
 	</li>
 	<li class="nav-item">
 		<a class="nav-link"  data-toggle="tab" href="#team">
-			<strong>Team Prospects</strong>
+			<strong>Team Leads</strong>
 		</a>
 	</li>
 	<li class="nav-item">
 		<a class="nav-link" data-toggle="tab" href="#list">
-			<strong>My Offered Prospects</strong>
+			<strong>My Offered Leads</strong>
 		</a>
 	</li>
 	<li class="nav-item">
 		<a class="nav-link" data-toggle="tab" href="#owned">
-			<strong>My Owned Prospects</strong>
+			<strong>My Owned Leads</strong>
 		</a>
 	</li>
 

@@ -34,18 +34,18 @@
     </div>
 </div>
 <!-- phone -->
-<div class="form-group row{{ $errors->has('phone') ? ' has-error' : '' }}">
+<div class="form-group row{{ $errors->has('contactphone') ? ' has-error' : '' }}">
     <label for="phone" class="col-md-2 control-label">Phone: </label>
      <div class="col-sm-8">
         <input 
         type="text" 
         class="form-control" 
-        name='phone' 
+        name='contactphone' 
         description="phone" 
-        value="{{ old('phone', isset($mylead) ? $location->lead->phone : '' )}}" 
-        placeholder="phone">
+        value="{{ old('phone', isset($mylead) ? $location->lead->contactphone : '' )}}" 
+        placeholder="contactphone">
         <span class="help-block">
-            <strong>{{ $errors->has('phone') ? $errors->first('phone') : ''}}</strong>
+            <strong>{{ $errors->has('contactphone') ? $errors->first('contactphone') : ''}}</strong>
         </span>
     </div>
 </div>

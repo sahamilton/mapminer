@@ -1,6 +1,6 @@
 @extends ('admin.layouts.default')
 @section('content')
-<h1>Prospect</h1>
+<h1>Lead</h1>
 
 <h2>{{$lead->businessname}}</h2>
 <h4>A location of {{$lead->companyname}}</h4>
@@ -41,7 +41,7 @@
 		<tbody>
 			@foreach ($lead->salesteam as $team)
 			<tr>
-			<td><a href="{{route('leads.person',$team->id)}}" title="See all prospects associated with {{$team->fullName()}}">{{$team->fullName()}}</a></td>
+			<td><a href="{{route('leads.person',$team->id)}}" title="See all leads associated with {{$team->fullName()}}">{{$team->fullName()}}</a></td>
 			<td>{{$sources[$team->pivot->status_id]}}</td>
 
 

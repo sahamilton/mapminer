@@ -1,4 +1,4 @@
-<h4>Unassigned Prospects</h4>
+<h4>Unassigned Leads</h4>
 
     <table id ='sorttable2' class='table table-striped table-bordered table-condensed table-hover'>
         <thead>
@@ -29,5 +29,5 @@
     </table>
     
     @if($leadsource->unassignedLeads )
-    <p><a href="{{route('leadsource.assign',$leadsource->id)}}"><button class="btn btn-info"  > Assign Prospects Geographically</button></a></p>
+    <p><a href="{{route('leadsource.assign',$leadsource->id)}}"><button class="btn btn-info"  > Assign Leads Geographically</button></a></p>
     @endif

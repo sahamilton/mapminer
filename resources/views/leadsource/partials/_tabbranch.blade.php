@@ -2,7 +2,7 @@
 <p><a  href="{{route('leadsource.announce',$leadsource->id)}}">
 <button class="btn btn-info">Notify Branches</button></a></p>
 
-<p>Prospects have been offered to the following branches;</p>
+<p>Leads have been offered to the following branches;</p>
 
 <table id ='sorttable1' class='table table-striped table-bordered table-hover'>
     <thead>
@@ -10,11 +10,11 @@
 
         <th>Branch</th>
        
-        <td>Offered Prospects</td>
-        <td>Claimed Prospects</td>
-        <td>Closed Prospects</td>
+        <td>Offered Leads</td>
+        <td>Claimed Leads</td>
+        <td>Closed Leads</td>
       
-        <td>Total Prospects</td>
+        <td>Total Leads</td>
 
     </thead>
            
@@ -22,7 +22,7 @@
      
            <tr> 
                 <td>
-                    <a href="{{route('leads.personsource',[$branch->id,$leadsource->id])}}">
+                    <a href="">
                         {{$branch->branchname}}
                     </a>
                 </td>

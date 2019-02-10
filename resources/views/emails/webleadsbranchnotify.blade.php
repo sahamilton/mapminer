@@ -34,7 +34,7 @@ Industry:{{$lead->weblead->industry}}
 @endcomponent
 
 @component('mail::button', ['url' => route('address.show',$lead->id), 'color' => 'blue'])
-        Check out your sales prospects and resources.
+        Check out your sales leads and resources.
 @endcomponent
 
 

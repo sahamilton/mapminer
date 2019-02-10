@@ -44,7 +44,7 @@
                 </td>
                 <td>{{$contact->title}}</td>
                 <td>{{$contact->email}}</td>
-                <td>{{$contact->phone}}</td>
+                <td>{{$contact->contactphone}}</td>
                 <td>{{$contact->comments}}</td>
             </tr>
            @endforeach

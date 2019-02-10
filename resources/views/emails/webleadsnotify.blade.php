@@ -26,7 +26,7 @@ Email: {{$contact->email}}
 @endcomponent
 
 @component('mail::button', ['url' => route('salesrep.newleads',$person->id), 'color' => 'blue'])
-        Check out your sales prospects and resources.
+        Check out your sales leads and resources.
 @endcomponent
 
 Note that the nearest branch to this lead is {{$branch->branchname}}.

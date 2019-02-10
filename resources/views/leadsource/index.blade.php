@@ -1,7 +1,7 @@
 @extends('admin/layouts/default')
 @section('content')
 
-<h1>Prospect Sources</h1>
+<h1>Lead Sources</h1>
 
 @if (auth()->user()->hasRole('admin'))
 
@@ -9,17 +9,17 @@
 				<a href="{{{ route('leadsource.create') }}}" class="btn btn-small btn-info iframe">
 <i class="fas fa-plus-circle " aria-hidden="true"></i>
 
- Create New Prospect Source</a>
+ Create New Lead Source</a>
 			</div>
 @endif
 
     <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
      
-    <th>Prospect Source</th>
+    <th>Lead Source</th>
     <th>Description</th>
     <th>Reference</th>
-    <th>Prospects</th>
+    <th>Leads</th>
     <th>Assigned</th>
     <th>UnAssigned</th>
     <th>Closed Leads</th>
@@ -74,19 +74,19 @@
                 <a class="dropdown-item"
                 href="{{route('leadsource.edit',$source->id)}}">
                 <i class="far fa-edit text-info"" aria-hidden="true"></i>
-                 Edit this prospect source
+                 Edit this Lead source
                  </a>
                  
                 <a class="dropdown-item"
                 href="{{route('leadsource.addleads',$source->id)}}">
                 <i class="fas fa-plus text-success" aria-hidden="true"></i>
-                 Add prospects to this source
+                 Add Leads to this source
                  </a>
                  
                 <a class="dropdown-item"
                 href="{{route('leadsource.flushleads',$source->id)}}">
                 <i class="fas fa-minus-circle text-danger" aria-hidden="true"></i>
-                 Flush all prospects from this source
+                 Flush all Leads from this source
                  </a>
                  
                 <a class="dropdown-item"
@@ -98,7 +98,7 @@
                 <a class="dropdown-item"
                 data-href="{{route('leadsource.destroy',$source->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = " this lead source and all its leads" href="#">
                 <i class="far fa-trash-alt text-danger" aria-hidden="true"> </i>
-                 Delete this prospect source</a>
+                 Delete this Lead source</a>
 
             </ul>
         </div>

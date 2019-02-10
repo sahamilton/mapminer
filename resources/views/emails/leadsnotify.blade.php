@@ -1,6 +1,6 @@
 @component('mail::message')
 
-## New Prospects 
+## New Leads 
 
 {{$team->firstname}}, 
 

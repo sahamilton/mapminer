@@ -171,13 +171,13 @@
 
                     @endcan
                     @can('manage_prospects')
-                        <li class="divider">Prospects</li>
+                        <li class="divider">Leads</li>
                       
                         <li{{ (Request::is('admin/leadsource*') ? ' class="active"' : '') }}><a href="{{ route('leadsource.index') }}">
 
-                        <i class="far fa-diamond" aria-hidden="true"> </i> Prospect Sources</a></li>
+                        <i class="far fa-diamond" aria-hidden="true"> </i> Lead Sources</a></li>
                         <li {{ (Request::is('admin/leadstatus*') ? ' class="active"' : '') }}><a href="{{ route('leadstatus.index') }}">
-                        <i class="far fa-star-o" aria-hidden="true"> </i> Prospect Statuses</a></li>
+                        <i class="far fa-star-o" aria-hidden="true"> </i> Lead Statuses</a></li>
 
                      @endcan   
                    

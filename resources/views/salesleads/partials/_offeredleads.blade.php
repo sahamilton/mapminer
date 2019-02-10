@@ -1,8 +1,8 @@
 <div class="row">
    @if($leads->ownedLeads->count() >=$limit)
     <div class="alert alert-danger">
-        <p><strong>You must close some of your {{$leads->ownedLeads->count()}} owned prospects before accessing any of the 
-        {{$leads->offeredLeads->count()}} additional prospects available.</strong></p>
+        <p><strong>You must close some of your {{$leads->ownedLeads->count()}} owned leads before accessing any of the 
+        {{$leads->offeredLeads->count()}} additional Leads available.</strong></p>
     </div>
 
    @else
@@ -56,15 +56,15 @@
                         data-href="{{route('saleslead.accept',$lead->id)}}" 
                         data-toggle="modal" 
                         data-target="#accept-lead" 
-                        data-title = "claim prospect" 
+                        data-title = "claim Lead" 
                         href="#">
                         <i class="far fa-thumbs-up" aria-hidden="true"></i> 
-                        Claim Prospect 
+                        Claim Lead 
                     </a>
                     <a class="dropdown-item" 
                         href="{{route('saleslead.decline',$lead->id)}}">
                         <i class="far fa-thumbs-down" aria-hidden="true"></i> 
-                        Decline Prospect 
+                        Decline Lead 
                     </a>
 
 
@@ -74,7 +74,7 @@
                    @if($lead->pivot->status_id ==2)
     				<a class="dropdown-item" href="">
     				<i class="far fa-hand-o-right" aria-hidden="true"></i>
-    				Work  Prospect </a>
+    				Work  Lead </a>
                    @endif
     			  </ul>
     			</div>

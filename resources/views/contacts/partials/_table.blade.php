@@ -29,7 +29,7 @@
 						{{$contact->location->fullAddress()}}
 					@endif
 				</td>
-				<td>{{$contact->phone}}</td>
+				<td>{{$contact->contactphone}}</td>
 				<td><a href="mailto:{{$contact->email}}">{{$contact->email}}</td>
 				
 

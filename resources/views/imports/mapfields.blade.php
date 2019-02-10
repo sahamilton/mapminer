@@ -20,7 +20,7 @@
 
         @foreach ($fields[0] as $key=>$field)
 
-            @if(! in_array($field,$skip))
+           
         <tr>
             <td>
             {{$field}}
@@ -32,7 +32,7 @@
                 <option value="@add">include (new)</option>
                @foreach ($columns as $column) 
         
-                   @if(! in_array($column->Field,$skip))
+                  
 
                     <option @if(in_array($column->Field,$requiredFields)) style="color:red" @endif value = '{{$column->Field}}'
                                         
@@ -42,7 +42,7 @@
                     >
                     {{$column->Field}}@if(in_array($column->Field,$requiredFields)) *@endif
                     </option>
-                    @endif
+                  
             @endforeach
             </select>
             </td>
@@ -58,16 +58,14 @@
             </td>
 
         </tr>
-        @endif
+     
         @endforeach 
 
 </tbody>
 </table>
 <!-- / File location -->
 <input type="submit" class="btn btn-success" value="Map Fields" />
-<input type="hidden" name="filename" value="{{$data['filename']}}" />
-<input type="hidden" name="description" value="{{$data['description']}}" />
-<input type="hidden" name="table" value="{{$data['table']}}" />
+
 @if(isset($data['lead_source_id']))
     <input type="hidden" name="lead_source_id" value="{{$data['lead_source_id']}}" />
 @endif
@@ -82,6 +80,10 @@
 @if(isset($data['step']))
 <input type = "hidden" name="step" value="{{$data['step']}}" />
 @endif
+@if(isset($data['contacts']))
+<input type = "hidden" name="contacts" value="{{$data['contacts']}}" />
+@endif
+
 <input type="hidden" name="type" value="{{$data['type']}}" />
 </form>
 </div>

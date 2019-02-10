@@ -137,9 +137,9 @@ $(document).ready(function()
 		       }
 
 		});
-
+//$("[id$=jander]")
 	*/
-        $('#sorttable, #store-locator-container').on('change','.watchItem',function() {
+        $('[id^=sorttable], #store-locator-container').on('change','.watchItem',function() {
 		var id = $(this).val();
         if($(this).is(":checked")) {
 			var action = 'add';

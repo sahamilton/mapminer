@@ -14,6 +14,7 @@ class LocationsImportController extends ImportController
     public $location;
     public $company;
     public $import;
+    public $table = 'addresses';
 	public function __construct(Address $location, Company $company,LocationImport $import){
 		$this->location = $location;
 		$this->company = $company;
@@ -28,43 +29,52 @@ class LocationsImportController extends ImportController
 
 
 	public function import(LocationImportFormRequest $request) {
-       
-        
+    
+        $data = request()->except('_token');
         $title="Map the locations import file fields";
-        $data = $this->uploadfile(request()->file('upload'));
+        $data = array_merge($data,$this->uploadfile(request()->file('upload')));
         $data['additionaldata'] = null;
-        $data['table']='addresses';
-        $data['type'] = 'locations';
+        
         $data['route'] = 'locations.mapfields';
-        $data['description'] = request('description');
+
+        if(! request()->has('lead_source_id')){
+            $data['lead_source_id'] = $this->import->createLeadSource($data)->id;
+
+        }
         if(request()->filled('company_id')){
                 $data['additionaldata']['company_id'] = request('company');
         }
-        $fields = $this->getFileFields($data);    
-        $columns = $this->location->getTableColumns($data['table']);
-        $skip = ['id','created_at','updated_at','serviceline_id'];
-        $requiredFields = $this->import->requiredFields;
 
-        return response()->view('imports.mapfields',compact('columns','fields','data','company_id','skip','title','requiredFields'));
+        $fields = $this->getFileFields($data);
+        $skip = ['id','created_at','updated_at','lead_source_id','serviceline_id','addressable_id','user_id','addressable_type','import_ref'];    
+        $columns = $this->location->getTableColumns($this->table,$skip);
+        $requiredFields = $this->import->requiredFields;
+        if(isset($data['contacts'])){
+            $skip = ['id','created_at','updated_at','address_id','location_id','user_id'];
+            $columns = array_merge($columns,$this->location->getTableColumns('contacts',$skip));
+
+        }
+        return response()->view('imports.mapfields',compact('columns','fields','data','company_id','title','requiredFields'));
     }
     
 	public function mapfields(Request $request){
-        
+       
         $data = $this->getData($request);  
           
         if($error = $this->validateInput($request)){
             return redirect()->route('locations.importfile')->withError($error)->withInput($data);
             
         }
-      
+        $data['table']=$this->table;
         $this->import->setFields($data);
-
+ 
+       
         if($fileimport = $this->import->import($request)) {
 
             // create new FileImport ref
 
 
-             return redirect()->route('fileimport.show',$fileimport)->with('success','Locations imported');
+             return redirect()->route('leadsource.show',request('lead_source_id'))->with('success','Locations imported');
 
         }
     

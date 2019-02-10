@@ -1,9 +1,9 @@
 @extends ('admin.layouts.default')
 @section('content')
-<h2>Prospect Source - {{$leadsource->source}}</h2>
+<h2>Lead Source - {{$leadsource->source}}</h2>
 
-<p><a href="{{route('leadsource.export',$leadsource->id)}}"><i class="fas fa-cloud-download-alt" aria-hidden="true"></i></i>  Export owned and closed prospects</a></p>
-<p><a href="{{route('leadsource.index')}}">Return to all Prospect sources</a></p>
+<p><a href="{{route('leadsource.export',$leadsource->id)}}"><i class="fas fa-cloud-download-alt" aria-hidden="true"></i></i>  Export owned and closed Leads</a></p>
+<p><a href="{{route('leadsource.index')}}">Return to all lead sources</a></p>
 <div class="nav nav-tabs" id="nav-tab" role="tablist">
   <a class="nav-link nav-item active" 
 		data-toggle="tab" href="#details">

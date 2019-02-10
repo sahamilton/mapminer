@@ -170,7 +170,7 @@ class WatchController extends BaseController {
 	
 	
 	public function watchupdate(Request $request) {
-
+		
 		switch (request('action')) {
 			case 'add':
 			if($this->add(request('id'))){
@@ -185,7 +185,7 @@ class WatchController extends BaseController {
 			
 			case 'remove':
 		
-				$watch = $this->watch->where("location_id","=",request('id'))->where("user_id","=",auth()->id())->firstOrFail();
+				$watch = $this->watch->where("address_id","=",request('id'))->where("user_id","=",auth()->id())->firstOrFail();
 
 				if ($watch->destroy($watch->id)){
 					return 'success';;

@@ -49,7 +49,7 @@
 				</td>
 				<td>{{$contact->title}}</td>
 				<td>{{$contact->email}}</td>
-				<td>{{$contact->phone}}</td>
+				<td>{{$contact->contactphone}}</td>
 		
 			</tr>
 		@endforeach

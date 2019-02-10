@@ -2,7 +2,7 @@
 <p><a  href="{{route('leadsource.announce',$leadsource->id)}}">
 <button class="btn btn-info">Notify Sales Team</button></a></p>
 
-<p>Prospects have been offered to the following sales reps;</p>
+<p>Leads have been offered to the following sales reps;</p>
 
 <table id ='sorttable1' class='table table-striped table-bordered table-hover'>
     <thead>
@@ -10,9 +10,9 @@
 
         <th>Sales Rep</th>
         @foreach ($statuses as $status)
-        <td>{{$status}} Prospects</td>
+        <td>{{$status}} Leads</td>
         @endforeach
-        <td>Total Prospects</td>
+        <td>Total Leads</td>
 
     </thead>
            

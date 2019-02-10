@@ -1,7 +1,7 @@
 @extends ('admin.layouts.default')
 @section('content')
 <div class="container">
-<h2>Import Prospects from Spreadsheet</h2>
+<h2>Import Leads from Spreadsheet</h2>
 
 <form method="post" name="createLead" action="{{route('leads.batch')}}" enctype="multipart/form-data">
 {{csrf_field()}}

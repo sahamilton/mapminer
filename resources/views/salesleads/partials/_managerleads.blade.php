@@ -1,12 +1,12 @@
 
-<h2>Prospects for direct reports of {{$leads->fullName()}}</h2>
+<h2>Leads for direct reports of {{$leads->fullName()}}</h2>
 
     <div class="row">
         <table id ='sorttable1' class='table table-striped table-bordered table-condensed table-hover'>
             <thead>
 
                 <th>Sales Rep</th>
-                <th>Total Prospects</th>
+                <th>Total Leads</th>
                 @foreach($statuses as $key=>$value)<th>{{$value}}</th>
                 @endforeach
                 <th>Average Rating</th>

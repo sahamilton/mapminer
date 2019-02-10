@@ -1,11 +1,10 @@
 @extends('admin.layouts.default')
 @section('content')
 @php $importtypes = ['lead','project','location'] @endphp
-<meta name="csrf-token" content="{{ csrf_token() }}">
 <div class="container">
 <h2>Steps to import locations for  accounts:</h2>
 <ol>
-<li>First create your csv file of prospects from the template.  Your import file must contain at least {{count($requiredFields)}} columns that can be mapped to these fields:
+<li>First create your csv file of leads from the template.  Your import file must contain at least {{count($requiredFields)}} columns that can be mapped to these fields:
             <ul>
             @foreach ($requiredFields as $field)
                 <li style="color:red">{{$field}}</li>
@@ -36,7 +35,7 @@
         <label class="col-md-4 control-label">Upload for account:</label>
         <div class="input-group input-group-lg ">
             <select  id ="company" class="form-control" name='company'>
-            <option>No Existing Company</option>
+            <option value={{null}}>No Existing Company</option>
             @foreach ($companies as $key=>$company))
             	<option 
                 old('company_id') == $key ? 'selected' : ''
@@ -55,7 +54,7 @@
 
 <!--- Types -->
     <div class="form-group{{ $errors->has('type)') ? ' has-error' : '' }}">
-    <label class="col-md-4 control-label">types Available:</label>
+    <label class="col-md-4 control-label">Types Available:</label>
         <div class="input-group input-group-lg ">
             <select id="type" class="form-control" name='type'>
                 @foreach($importtypes as $type)
@@ -81,7 +80,17 @@
         
     </div>
 <!-----/ description-->
-
+<div class="form-group{{ $errors->has('contacts)') ? ' has-error' : '' }}">
+    <label class="col-md-4 control-label">With Contacts?:</label>
+       
+            <div class="form-group">
+                <input type="checkbox" @if(old('contacts')) checked @endif name="contacts" class="form-control" />
+            </div>
+            <span class="help-block">
+                <strong>{{ $errors->has('contacts') ? $errors->first('contacts') : ''}}</strong>
+                </span>
+        
+    </div>
 <!-- File Location -->
     <div class="form-group{{ $errors->has('upload') ? ' has-error' : '' }}">
         <label class="col-md-4 control-label" for="field" >Upload File Location</label>

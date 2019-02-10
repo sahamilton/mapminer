@@ -1,6 +1,6 @@
 @extends ('admin.layouts.default')
 @section('content')
-<h2>Assignable Prospects from {{$leads[0]->leadsource->source}} Source </h2>
+<h2>Assignable Lead from {{$leads[0]->leadsource->source}} Source </h2>
 <p><a href="{{route('leadsource.index')}}">Return to all Prospect Sources</a></p>
 <form method = "post" action = "{{route('leads.assignbatch')}}" >
 {{csrf_field()}}
@@ -36,7 +36,7 @@
     
     </tbody>
     </table>
-    <input type = "submit" class = "btn btn-success" name="submit" value="Assign Checked Prospects" />
+    <input type = "submit" class = "btn btn-success" name="submit" value="Assign Checked Lead" />
 </form>
 @include('partials._scripts')
 @endsection

@@ -9,14 +9,14 @@ class Model extends \Eloquent {
 	
 
 	
-	public function getTableColumns($table=null){
-		
-	     		if(! $table){
-	     			$table=$this->table;
-	     		}
-	     		
-	   			return \DB::select( \DB::raw('SHOW COLUMNS FROM '.$table.''));
-			}
+	public function getTableColumns($table,array $skip=null){
+		$query = "SHOW COLUMNS FROM ".$table;
+ 		if($skip){
+ 			$query = $query . " WHERE Field NOT IN ('". implode("','",$skip)."')";
+ 		
+ 		}
+ 	return \DB::select( \DB::raw($query));
+	}
 
 	public function isValid($data)
 		{

@@ -33,9 +33,7 @@ class Activity extends Model
 		return $this->belongsTo(User::class);
 	}
 	public function scopeMyActivity($query){
-		if(auth()->user()->hasRole('admin')){
-			return $query;
-		}
+		
 		return $query->where('user_id','=',auth()->user()->id);
 	}
 	public function relatedContact(){

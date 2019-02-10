@@ -1,7 +1,7 @@
 <table>
 
-<tr><td><strong>Owned Prospects - {{$leadsource->source}}</strong></td></tr>
-<tr><td>Prospect</td>
+<tr><td><strong>Owned Leads - {{$leadsource->source}}</strong></td></tr>
+<tr><td>Lead</td>
 	<td>Address</td>
 	<td>Owned By</td>
 	<td>Status</td>

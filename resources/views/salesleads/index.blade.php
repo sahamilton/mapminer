@@ -4,7 +4,7 @@
 <h2>{{$title }} {{$leads->firstname}} {{$leads->lastname}}</h2>
 
 
-<p><a href="{{route('salesleads.download')}}"><i class="fas fa-cloud-download-alt" aria-hidden="true"></i></i> Download all owned and closed prospects</a></p>
+<p><a href="{{route('salesleads.download')}}"><i class="fas fa-cloud-download-alt" aria-hidden="true"></i></i> Download all owned and closed Leads</a></p>
 
 @if($manager)
 	<p><a href="{{route('salesleads.index')}}">Return to sales team</a></p>
@@ -19,13 +19,13 @@
   @if($leads->offeredLeads->count()>0)
   <li class="nav-item">
   	<a class="nav-link" data-toggle="tab" href="#offered">
-  		<strong>Offered Prospects</strong>
+  		<strong>Offered Leads</strong>
   	</a>
   </li>
   @endif
   <li class="nav-item">
   	<a class="nav-link" data-toggle="tab" href="#owned">
-  		<strong>Owned Prospects</strong>
+  		<strong>Owned Leads</strong>
   	</a>
   </li>
   

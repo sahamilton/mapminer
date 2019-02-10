@@ -11,4 +11,5 @@
 
 
 @include('watch.partials._table')
+@include('partials._scripts')
 @endsection

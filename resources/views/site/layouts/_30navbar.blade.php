@@ -76,11 +76,11 @@
                          
                         @if(auth()->user()->can('accept_leads') or auth()->user()->can('manage_leads'))
                             <li><a href="{{route('salesrep.newleads',auth()->user()->person->id)}}">
-                            <i class="far fa-envelope" aria-hidden="true"> </i> Sales Prospects</a></li>
+                            <i class="far fa-envelope" aria-hidden="true"> </i> Sales Leads</a></li>
                         @endif
                         @if(auth()->user()->hasRole('branch_manager'))
                             <li><a href="{{route('branchmanager.newleads')}}">
-                            <i class="far fa-envelope" aria-hidden="true"> </i> Branch Prospects</a></li>
+                            <i class="far fa-envelope" aria-hidden="true"> </i> Branch Leads</a></li>
                         @endif
                         @if (auth()->user()->hasRole('admin') or auth()->user()->hasRole('national_account_manager')'))
                         <li class="divider"></li>

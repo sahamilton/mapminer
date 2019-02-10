@@ -1,10 +1,10 @@
 @extends ('admin.layouts.default')
 @section('content')
 <div class="container">
-<h2>Add Prospects to the @if(isset($leadsource)) {{$leadsource->source}} @endif List</h2>
-<h4>Steps to import prospects</h4>
+<h2>Add Leads to the @if(isset($leadsource)) {{$leadsource->source}} @endif List</h2>
+<h4>Steps to import leads</h4>
     <ol>
-        <li>First create your csv file of prospects from the template.  Your import file must contain at least {{count($requiredFields)}} columns that can be mapped to these fields:
+        <li>First create your csv file of leads from the template.  Your import file must contain at least {{count($requiredFields)}} columns that can be mapped to these fields:
             <ul>
             @foreach ($requiredFields as $field)
                 <li style="color:red">{{$field}}</li>
@@ -22,14 +22,14 @@
         <li>Save the CSV file locally on your computer.</li>
         
         </ul>
-        <li>Choose the prospects source</li>
+        <li>Choose the leads source</li>
         <li>Select the file and import</li>
 
     </ol>
 <form method="post" name="createLead" action="{{route('leads.import')}}" enctype="multipart/form-data">
 {{csrf_field()}}
 <div class="form-group{{ $errors->has('lead_source_id)') ? ' has-error' : '' }}">
-    <label class="col-md-2 control-label">Prospects Source</label>
+    <label class="col-md-2 control-label">Leads Source</label>
     <div class="input-group input-group-lg ">
         <select class="form-control" name='additionaldata[lead_source_id]'>
 
@@ -64,7 +64,7 @@
 	
 
 <div class="form-group">
-<input type="submit" class="btn btn-success" value="Add Prospects" />
+<input type="submit" class="btn btn-success" value="Add Leads" />
 
 <input type="hidden" name="type" value="@if(! isset($type)) leads @else {{$type}} @endif" />
 

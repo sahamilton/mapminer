@@ -35,10 +35,7 @@
                 <i class="fas fa-sitemap" aria-hidden="true"> </i>
                  People</a>
           
-          @can('view_projects')
-              <a class="dropdown-item" href="{{{ route('projects.index') }}}">
-              <i class="far fa-flag" aria-hidden="true"> </i> Projects</a>
-          @endcan
+          
                            
           
         </div>
@@ -51,7 +48,10 @@
           <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                     
               <a class="dropdown-item" href="{{{ route('dashboard.index') }}}">
-              <i class ="far fa-eye"></i> My Dashboard</a>
+              <i class="fas fa-tachometer-alt"></i> My Dashboard</a>
+
+            <a class="dropdown-item" href="{{{ route('watch.index') }}}">
+              <i class ="far fa-eye"></i> My Watch List</a>
 
 
               

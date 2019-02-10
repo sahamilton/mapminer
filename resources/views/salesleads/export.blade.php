@@ -1,8 +1,8 @@
 <table>
 <tr>
-<td>Owned and Closed Prospects of {{auth()->user()->person->fullName()}}</td>
+<td>Owned and Closed Leads of {{auth()->user()->person->fullName()}}</td>
 </tr>
-<tr><td>Prospect</td>
+<tr><td>Lead</td>
 	<td>Address</td>
 	<td>Contact</td>
 	<td>Contact Title</td>

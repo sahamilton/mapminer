@@ -103,7 +103,7 @@ class LeadSourceController extends Controller
     public function show($leadsource)
     {
 
-   
+
         $leadsource = $leadsource->whereId($leadsource->id)
         ->withCount(
             ['addresses',
@@ -116,6 +116,7 @@ class LeadSourceController extends Controller
             'addresses as closed' => function($query){
                     $query->has('closed');
                 }])->first();
+       
         $teamStats=array();
         $team = $leadsource->salesteam($leadsource->id);
         foreach ($team as $person){
@@ -137,12 +138,28 @@ class LeadSourceController extends Controller
         'leads as closed' => function($query){
                            $query->has('closed');
                        }])->get();
-       
+   
+       $branchStats['assigned']=0;
+       $branchStats['claimed']=0;
+       $branchStats['closed']=0;
+      
+       foreach($branches as $branch){
+            foreach ($branchStats as $key=>$count){
+              
+                $branchStats[$key] =  $branchStats[$key] + $branch->$key;
+            }
+
+       }
+
+       $branchStats['leads_count']=$leadsource->addresses_count;
+       $branchStats['branch_count'] = $branches->count();
+
+
        // $data = $this->leadsource->leadRepStatusSummary($id);
         $statuses = LeadStatus::pluck('status','id')->toArray();
    
 
-        return response()->view('leadsource.show',compact('statuses','teamStats','branches','leadsource'));
+        return response()->view('leadsource.show',compact('statuses','teamStats','branches','branchStats','leadsource'));
     }
 
     private function getOwnedBy($leads){
@@ -239,9 +256,9 @@ class LeadSourceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($leadsource)
     {
-        $leadsource = $this->leadsource->with('leads','verticals')->findOrFail($id);
+        $leadsource->load('leads','verticals');
 
         $verticals = $this->vertical->industrysegments();
         return response()->view('leadsource.edit',compact('leadsource','verticals'));

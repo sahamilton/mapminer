@@ -1,7 +1,7 @@
 <h4>Team</h4>
 
 
-<p>Prospects have been offered to the following Mapminer users;</p>
+<p>Leads have been offered to the following Mapminer users;</p>
 
 <table id ='sorttable1' class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
@@ -11,7 +11,7 @@
         <td>Manager</td>
         <td>Industry Focus</td>
         <td>Location</td>
-        <td>Prospects</td>
+        <td>Leads</td>
 
 
     </thead>
