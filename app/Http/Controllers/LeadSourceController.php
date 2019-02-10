@@ -128,15 +128,15 @@ class LeadSourceController extends Controller
        $branches = $this->branch->whereHas('leads',function($q) use($leadsource){
             $q->where('lead_source_id','=',$leadsource->id);
        })->withCount(["leads", 
-       'leads as assigned'=>function($query){
-                       $query->has('assignedToBranch');
+       'leads as assigned'=>function($query) use($leadsource){
+                       $query->where('lead_source_id',$leadsource->id)->has('assignedToBranch');
                    },
-        'leads as claimed' => function($query){
-                           $query->has('claimedByBranch');
+        'leads as claimed' => function($query) use($leadsource){
+                           $query->where('lead_source_id',$leadsource->id)->has('claimedByBranch');
                        },
                    
-        'leads as closed' => function($query){
-                           $query->has('closed');
+        'leads as closed' => function($query) use($leadsource){
+                           $query->where('lead_source_id',$leadsource->id)->has('closed');
                        }])->get();
    
        $branchStats['assigned']=0;
@@ -148,6 +148,7 @@ class LeadSourceController extends Controller
               
                 $branchStats[$key] =  $branchStats[$key] + $branch->$key;
             }
+            
 
        }
 
@@ -288,9 +289,9 @@ class LeadSourceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($leadsource)
     {
-        $this->leadsource->destroy($id);
+        $leadsource->delete();
         return redirect()->route('leadsource.index');
     }
 

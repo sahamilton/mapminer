@@ -29,7 +29,7 @@
                 <td>{{$branch->assigned}}</td>
                 <td>{{$branch->claimed}}</td>
                 <td>{{$branch->closed}}</td>
-                <td>{{$branch->leads_count}}</td>
+                <td>{{$branch->assigned + $branch->claimed + $branch->closed}}</td>
           
         </tr>
         @endforeach
