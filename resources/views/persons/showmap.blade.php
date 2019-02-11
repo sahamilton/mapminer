@@ -25,7 +25,7 @@
   
     <script>
 	  $(function() {
-          $('#map-container').storeLocator({'slideMap' : false, 'defaultLoc': true,'defaultLat': '{{$data['people']->manages[0]->lat}}', 'defaultLng' : '{{$data['people']->manages[0]->lng}}', 'dataLocation' : "{{route('managed.branchmap',$data['people']->id)}}",'zoomLevel': 7, 'infowindowTemplatePath' : '{{asset('maps/templates/infowindow-branch.html')}}','listTemplatePath' : '{{asset('maps/templates/info-list-description.html')}}'} );
+          $('#map-container').storeLocator({'slideMap' : false, 'defaultLoc': true,'defaultLat': '{{$data['people']->manages->first()->lat}}', 'defaultLng' : '{{$data['people']->manages->first()->lng}}', 'dataLocation' : "{{route('managed.branchmap',$data['people']->id)}}",'zoomLevel': 7, 'infowindowTemplatePath' : '{{asset('maps/templates/infowindow-branch.html')}}','listTemplatePath' : '{{asset('maps/templates/info-list-description.html')}}'} );
         });
     </script>
 @endsection

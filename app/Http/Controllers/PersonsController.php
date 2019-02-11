@@ -192,9 +192,8 @@ class PersonsController extends BaseController {
 						);
 
 
-		// Note that we will have to extend this to show Sales people
-
-		if(in_array('National Accounts',$roles))
+	
+		if(in_array('national_account_manager',$roles))
 		{
 
 			$accounts = $people->managesAccount;
@@ -203,7 +202,7 @@ class PersonsController extends BaseController {
 
 			return response()->view('persons.showaccount', compact('people','accounts'));
 
-		}elseif(in_array('Market manager',$roles)){
+		}elseif(in_array('market_manager',$roles)){
 
 			return response()->view('persons.showlist', compact('people'));
 
