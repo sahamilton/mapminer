@@ -357,8 +357,7 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
     	Route::resource('emails','EmailsController');
 
     # Imports
-    	Route::post('fileimport/{import}/assign',['as'=>'fileimport.assign','uses'=>'FileImportController@assign']);
-    	Route::resource('fileimport','FileImportController');
+    
    		Route::get('branch/teams',['as'=>'branch_team.importfile','uses'=>'BranchTeamImportController@getFile']);
    		Route::post('branch/teams',['as'=>'branches.teamimport','uses'=>'BranchTeamImportController@import']);
     	Route::get('imports',['as'=>'imports.index','uses'=>'ImportController@index']);
@@ -443,7 +442,7 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
 		Route::resource('orderimport','OrderImportController');
 	# Prospect Source / LeadSource
 
-		Route::get('leadsource/{id}/announce',['as'=>'leadsource.announce','uses'=>'LeadsEmailController@announceLeads']);
+		Route::get('leadsource/{leadsource}/announce',['as'=>'leadsource.announce','uses'=>'LeadsEmailController@announceLeads']);
 		Route::post('leadsource/{id}/email',['as'=>'sendleadsource.message','uses'=>'LeadsEmailController@email']);
 		Route::get('leadsource/{leadsource}/assign',['as'=>'leadsource.assign','uses'=>'LeadsAssignController@assignLeads']);
 		Route::get('leadsource/{id}/branch',['as'=>'leadsource.branches','uses'=>'LeadSourceController@branches']);
