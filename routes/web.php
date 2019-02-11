@@ -35,7 +35,8 @@ Route::group(['middleware' => 'auth'], function () {
 	#About
 		Route::get('about',['as'=>'about','uses'=>'AdminAboutController@getInfo']);
 
-   	#Activities
+   	#Activities/
+		Route::get('branch/{branch}/activity/{activitytype}',['as'=>'branch.activity','uses'=>'ActivityController@getBranchActivtiesByType']);
 		Route::get('followup',['as'=>'followup','uses'=>'ActivityController@future']);
 		Route::resource('activity','ActivityController');
 		
@@ -97,6 +98,10 @@ Route::group(['middleware' => 'auth'], function () {
    	
    	# Documents
 		Route::resource('docs','DocumentsController',['only' => ['index', 'show']]);
+
+	# Feedback
+
+		Route::resource('feedback','FeedbackController',['except'=>['destroy']]);
 
 	#Geocoding
 
