@@ -525,8 +525,8 @@ class CompaniesController extends BaseController {
 	public function exportAccounts()
 	{
 		
-
-		Excel::download('AllCompanies',function($excel){
+		return Excel::download(new CompaniesExport(), 'Companies.csv');
+		/*Excel::download('AllCompanies',function($excel){
 			$excel->sheet('Companies',function($sheet) {
 				$companies = $this->company
 
@@ -540,14 +540,14 @@ class CompaniesController extends BaseController {
 
 				$sheet->loadview('companies.exportcompanies',compact('companies'));
 			});
-		})->download('csv');
+		})->download('csv');*/
 
 	}
 	/*
 	Generate the form to choose companies to download locations
 	 */
 
-	public function export(){
+	public function export($company){
 		$companies = $this->company
 						->whereHas('serviceline', function($q){
 							    $q->whereIn('serviceline_id', $this->userServiceLines);
@@ -563,13 +563,16 @@ class CompaniesController extends BaseController {
 	 *
 	 * Export locations of chosen company
 	 *
-	 * @param () none
+	 * @param () Company
 	 * @return (array) mywatchlist
 	 */
-	public function locationsexport(Request $request) {
+	public function locationsexport(Request $request, $company) {
 
 
-		$id = request('company');
+
+		return Excel::download(new CompanyWithLocationsExport($company), $company->companyname. " locations");
+
+		/*$id = request('company');
 
 		$company = $this->company->findOrFail($id);
 		Excel::download($company->companyname. " locations",function($excel) use($id){
@@ -584,7 +587,7 @@ class CompaniesController extends BaseController {
 					->findOrFail($id);
 				$sheet->loadview('locations.exportlocations',compact('company'));
 			});
-		})->download('csv');
+		})->download('csv');*/
 
 
 

@@ -501,11 +501,12 @@ class BranchesController extends BaseController {
 		return response()->view('branches.state', compact('branches','state','fields','allstates'));
 		
 	}
+	
 	public function exportTeam() 
 	{
 	
-	
-	Excel::download('Branches',function($excel){
+	return Excel::download(new BranchExport(), 'BranchTeam.csv');
+	/*Excel::download('Branches',function($excel){
 			$excel->sheet('BranchTeam',function($sheet) {
 
 				$roles = Role::pluck('name','id')->toArray();
@@ -516,7 +517,7 @@ class BranchesController extends BaseController {
 			});
 		})->download('csv');
 
-		return response()->return();
+		return response()->return();*/
 	
 	
 }
@@ -526,8 +527,8 @@ class BranchesController extends BaseController {
 	public function export() 
 	{
 	
-	
-	Excel::download('Branches',function($excel){
+	return Excel::download(new BranchTeamExport(), 'Branch.csv');
+	/*Excel::download('Branches',function($excel){
 			$excel->sheet('Watching',function($sheet) {
 				$result = $this->branch->with('address','manager')->get();
 			
@@ -536,7 +537,7 @@ class BranchesController extends BaseController {
 			});
 		})->download('csv');
 
-		return response()->return();
+		return response()->return();*/
 	
 	
 }

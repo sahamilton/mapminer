@@ -71,10 +71,7 @@ class LocationsImportController extends ImportController
        
         if($fileimport = $this->import->import($request)) {
 
-            // create new FileImport ref
-
-
-             return redirect()->route('leadsource.show',request('lead_source_id'))->with('success','Locations imported');
+            return redirect()->route('leadsource.show',request('lead_source_id'))->with('success','Locations imported');
 
         }
     

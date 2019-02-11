@@ -22,16 +22,13 @@ class LeadsEmailController extends Controller
     	$this->leadsource = $leadsource;
     }
 
-    public function announceLeads($id){
+    public function announceLeads($leadsource){
         
-        $source = $this->leadsource->with('leads','leads.salesteam','verticals')
-           ->where('datefrom','<=',date('Y-m-d'))
-           ->where('dateto','>=',date('Y-m-d'))
-        ->findOrFail($id);
-        
-        $salesteam = $this->salesteam($source->leads);
+        $source = $leadsource->load('leads','leads.assignedToBranch','verticals');
+     
+        //$salesteam = $this->salesteam($source->leads);
       
-        
+        $branches = $this->branches($source->leads);
         $message = $this->createMessage($source);
         return response()->view('leadsource.salesteam',compact('source','salesteam','message'));
     }
@@ -72,6 +69,23 @@ class LeadsEmailController extends Controller
        
        
     }
+
+    public function branches($leads){
+        
+
+       $branches =  $leads->map(function($lead){
+            return $lead->assignedToBranch->pluck('id');
+        })->flatten();
+       $branchManagers = \App\Branch::whereIn('id',array_unique($branches->toArray()))->with('manager')->get();
+       $managers = $branchManagers->map(function ($branch){
+        return $branch->manager->load('userdetails');
+
+        foreach ($branches as $branch){
+                
+                Mail::queue(new NotifyleadsBranchAssignment($lead,$branch,$email));
+            }
+        });
+    }
     // This should be in a mailable.
     
     private function createMessage($source){
@@ -94,7 +108,7 @@ class LeadsEmailController extends Controller
     public function email(Request $request, $id){
 
 
-        $data['source'] = $this->leadsource->with('leads','leads.salesteam','leads.salesteam.reportsTo')
+        $data['source'] = $this->leadsource->with('leads','leads.assignedToBranch','leads.assignedToBranch.manager')
         ->where('datefrom','<=',date('Y-m-d'))
         ->where('dateto','>=',date('Y-m-d'))
         ->findOrFail($id);

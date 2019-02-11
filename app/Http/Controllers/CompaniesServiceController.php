@@ -115,6 +115,7 @@ class CompaniesServiceController extends BaseController
 
 
 	public function newExportServicedetails($id){
+		// this can be refactored using ST_SPhere Distance
 		$company = 	$this->company
 					->whereHas('serviceline', function($q){
 							    $q->whereIn('serviceline_id', $this->userServiceLines);
@@ -216,6 +217,7 @@ class CompaniesServiceController extends BaseController
 		
 	}
 	private function writeExcelTeam($title,$company,$team){
+
 		return 	Excel::download($title,function($excel) use($company,$team){
 			
 			$excel->sheet('Team',function($sheet) use($company,$team) {
@@ -226,6 +228,7 @@ class CompaniesServiceController extends BaseController
 		})->download('csv');
 	}
 	private function writeExcel($title,$company,$locations){
+		
 		return 	Excel::download($title,function($excel) use($company,$locations){
 			$excel->sheet('Service',function($sheet) use($company,$locations) {
 				
