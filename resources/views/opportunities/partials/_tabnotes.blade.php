@@ -1,5 +1,5 @@
 @php $total = 0; @endphp
-<h2>Related Notes<span class="text text-danger">*</span></h2>
+<h2>Related Notes</h2>
 
 
 <table id ='sorttable9' class='table table-striped table-bordered table-condensed table-hover'>
@@ -19,7 +19,7 @@
         <tr>
            <td><a href="{{route('address.show',$note->relatesToLocation->id)}}">{{$note->relatesToLocation->businessname}}</a></td>
             <td>{{$note->created_at->format('Y-m-d')}}</td>
-            <td>{{$note->note}}</td>
+            <td>{!! $note->note !!}</td>
             <td>{{$note->writtenBy->person->fullName()}}</td>
         </tr>
         @endforeach
