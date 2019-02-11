@@ -1,4 +1,4 @@
- <li class="nav-item">
+<li class="nav-item">
     <a class="nav-link" 
     href="{{ route('news.index') }}">
     <i class="fas fa-newspaper"></i> News
@@ -53,17 +53,5 @@
     <a class="nav-link" 
     href="{{ route('leadstatus.index') }}">
         <i class="fas fa-signal"></i> Lead Status
-    </a>
-</li>
-<div class="dropdown-divider"></div>
-<li class="nav-item">
-    <a class="nav-link" 
-    href="{{ route('vertical.analysis') }}">
-        <i class="fas fa-industry"></i> Industries
-    </a>
-</li>
-<li class="nav-item">
-    <a class="nav-link" href="{{ route('project.stats') }}">
-        <i class="fas fa-truck-monster"></i> Projects
     </a>
 </li>
