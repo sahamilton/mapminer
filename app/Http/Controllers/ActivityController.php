@@ -5,6 +5,7 @@ use App\Address;
 use App\Activity;
 use App\ActivityType;
 use App\Contact;
+use App\AddressBranch;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Requests\ActivityFormRequest;
@@ -86,10 +87,11 @@ class ActivityController extends Controller
      */
     public function show(Activity $activity)
     {
+        //hmmmmmm
         if($activity->user_id == auth()->user()->id){
-            dd($activity->load('relatedContact'));
+           
         }
-        dd('it aint yours');
+    
     }
 
     /**
@@ -143,10 +145,26 @@ class ActivityController extends Controller
     }
 
     public function future(){
-        dd(auth()->user()->id);
+      
         $activities = $this->activity->myActivity()->where('followup_date','>=',Carbon::now())->with('relatesToAddress','relatedContact','type')->get();
-        dd($activities);
+       
         return response()->view('activities.index',compact('activities'));
 
+    }
+
+    public function getBranchActivtiesByType($branch,$activitytype){
+     
+        $activitytype = ActivityType::findOrFail($activitytype);
+
+     
+
+        $address =AddressBranch::where('branch_id','=',$branch->id)
+        ->whereHas('activities',function ($q) use($activitytype){
+            $q->where('activitytype_id','=',$activitytype->id);
+        })->with('address')->get();
+        $addresses = $address->map(function ($address){
+            return $address->address->load('activities');
+        });
+        return response()->view('opportunities.showactivities',compact('branch','activitytype','addresses'));
     }
 }

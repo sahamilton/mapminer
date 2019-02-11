@@ -17,4 +17,7 @@ class AddressBranch extends Model
      public function address(){
         return $this->belongsTo(Address::class, 'address_id','id');
     }
+    public function activities(){
+        return $this->hasMany(Activity::class,'address_id','address_id');
+    }
 }

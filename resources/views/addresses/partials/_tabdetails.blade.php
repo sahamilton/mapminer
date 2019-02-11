@@ -23,13 +23,15 @@
 		title="Edit this location">
 		<i class="far fa-edit"></i>
 		Edit Location</a>
+		@if($location->activities->count()==0)
 		<a data-href="{{route('address.destroy',$location->id)}}" 
 			data-toggle="modal" 
 			data-target="#confirm-delete" 
 			data-title = "This address and all its associations" href="#">
 			<i class="far fa-trash-alt text-danger" aria-hidden="true"> </i> 
 		Delete Locaton</a>
-		
+	
+		@endif
 		@endif
 		
 	</div>
