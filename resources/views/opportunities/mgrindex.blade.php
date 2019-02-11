@@ -37,7 +37,8 @@
           
             @foreach ($activityTypes as $type)
               @if(array_key_exists($branch->id, $data['activities']) && isset($data['activities'][$branch->id][$type->id]))
-                <td align='center'><a href="{{route('branch.activity',['branch'=>$branch->id,'activity'=>$type->id])}}">{{$data['activities'][$branch->id][$type->id]}}</td>
+                <td align='center'><a href="{{route('branch.activity',['branch'=>$branch->id,'activity'=>$type->id])}}"
+                  title= "Show this periods {{$type->activity}} activities of the {{$branch->branchname}} branch">{{$data['activities'][$branch->id][$type->id]}}</td>
                 @else
                 <td align="center">0</td>
               @endif

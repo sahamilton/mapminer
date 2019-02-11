@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Opportunity;
 use App\Lead;
 use App\Company;
+use App\Note;
 use App\Person;
 use App\Branch;
 use App\Orders;
@@ -81,16 +82,17 @@ class OpportunityController extends Controller
     }
 
     public function branchOpportunities(Branch $branch, Request $request){
-       
+      
        if(request()->has('branch')){
             $data = $this->getBranchOpportunities([request('branch')]);
        }else{
              $data = $this->getBranchOpportunities([$branch->id]);
        }
+
        $activityTypes = $activityTypes = ActivityType::all();
        
        $myBranches = $this->person->myBranches();
-       
+
         return response()->view('opportunities.index',compact('data','activityTypes','myBranches'));
     }
 
@@ -133,11 +135,13 @@ class OpportunityController extends Controller
         $customer = $data['branchorders']->pluck('address_id')->toArray();
         
         $data['contacts'] = $this->contact->whereIn('address_id',array_merge($opportunity,$customer))->with('location')->get();
+
+        $data['notes'] = $this->getBranchNotes($branches);
+      
         return $data;
     }
 
-
-   
+       
         
     /**
      * Show the form for creating a new resource.
@@ -218,7 +222,7 @@ class OpportunityController extends Controller
         
         $opportunity = $this->opportunity->findOrFail(request('opportunity_id'));
         
-        if(request('close')=='converted'){
+        if(request('close') =='converted'){
             $address->load('company');
             if(! $address->company or $address->company->customer_id != request('client_id')){
               
@@ -227,8 +231,7 @@ class OpportunityController extends Controller
                $address->update(['company_id' => $company->id]);
                
             }
-            // update opportunity record
-            
+           
             $data = ['closed'=>1,'client_ref'=>request('client_id'),'requirements'=>request('requirements'),'value'=>request('periodbusiness')];
             $opportunity->update($data); // create an activity on the address
             $data=['address_id'=>$address->id,'user_id'=>auth()->user()->id,
@@ -259,7 +262,22 @@ class OpportunityController extends Controller
         }
         $opportunity->save();
     }
-    
+
+
+    private function getBranchNotes($branches){
+
+        return Note::whereHas('relatesToLocation',function($q) use ($branches){
+            $q->whereHas('assignedToBranch',function ($q) use($branches){
+                $q->whereIn('branch_id',$branches);
+            });
+        })->with('relatesToLocation','writtenBy','writtenBy.person')->get();
+
+
+
+
+
+
+    }
     private function getBranchActivities($branches){
         $query = "SELECT branches.id as id, activitytype_id as type, count(activities.id) as activities
             FROM `activities`, address_branch,branches
@@ -273,6 +291,7 @@ class OpportunityController extends Controller
         foreach ($activities as $activity){
             $result[$activity->id][$activity->type] = $activity->activities;
         }
+
         return $result;
 
     }

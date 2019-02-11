@@ -74,6 +74,15 @@
     aria-selected="false">
     <strong>Activities</strong>
 </a>
+<a class="nav-item nav-link"
+    id="nav-notess-tab"
+    data-toggle="tab"
+    href="#nav-notes"
+    role="tab"
+    aria-controls="nav-notess"
+    aria-selected="false">
+    <strong>Notes</strong>
+</a>
  
   </div>
 </nav>
@@ -108,6 +117,15 @@
     aria-labelledby="nav-activities-tab">
      @include('opportunities.partials._tabactivities')
   </div>
+
+  <div class="tab-pane fade"
+    id="nav-notes"
+    role="tabpanel"
+    aria-labelledby="nav-notess-tab">
+     @include('opportunities.partials._tabnotes')
+  </div>
+
+
 
   <div class="tab-pane fade"
     id="nav-contacts"
