@@ -114,7 +114,7 @@ class ActivityController extends Controller
      * @param  \App\Activity  $activity
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Activity $activity)
+    public function update(ActivityFormRequest $request, Activity $activity)
     {
         
         
