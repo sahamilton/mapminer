@@ -24,7 +24,8 @@ class ActivityFormRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'activity_date'=>'date:required',
+            'followup_date'=>'date|nullable',
         ];
     }
 }
