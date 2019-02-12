@@ -1,4 +1,5 @@
-@if(in_array($location->branch_id,$mybranches))
+@if(array_key_exists($location->opportunities->branch()->first()->id,$mybranches))
+
 <button class="btn btn-danger" 
      
       data-toggle="modal" 

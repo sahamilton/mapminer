@@ -11,8 +11,8 @@ return [
     |
     */
 	'author' => 'Stephen Hamilton',
-	'developer' => 'ELA Consulting Group, LLC',
-	'website' => 'https://www.ELAConsultingGroup.com',
+	'developer' => 'Okos Partners, LLC',
+	'website' => 'https://www.OkosPartners.com',
 	'client' => 'TrueBlue, Inc.',
 
  	/*
