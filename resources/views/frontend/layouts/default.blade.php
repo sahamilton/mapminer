@@ -3,16 +3,7 @@
 	<head>
 		<!-- Basic Page Needs
 		================================================== -->
-		<meta charset="utf-8" />
-		<title>
-			@section('title')
-			{{env('APP_NAME')}}
-			@show
-		</title>
-		<meta name="keywords" content="National Accounts, True BLue Inc,Branch Mapping " />
-		<meta name="author" content="Stephen Hamilton, ELA Consulting Group,LLC" />
-		<meta name="description" content="A private system for TrueBlue, Inc designated employees and their agents only.  The system maps national account locations to branches." />
-
+		@include('site.layouts.partials._meta')
 		<!-- Mobile Specific Metas
 		================================================== -->
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">

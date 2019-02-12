@@ -3,19 +3,7 @@
 	<head>
 		<!-- Basic Page Needs
 		================================================== -->
-		<meta charset="utf-8" />
-		<title>
-			@section('title')
-			{{env('APP_NAME')}}
-			@show
-		</title>
-		<meta name="keywords" content="your, awesome, keywords, here" />
-		<meta name="author" content="Stephen hamilton, ELA Consulting Group,LLC" />
-		<meta name="description" content="Lorem ipsum dolor sit amet, nihil fabulas et sea, nam posse menandri scripserit no, mei." />
-
-		<!-- Mobile Specific Metas
-		================================================== -->
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		@include('site.layouts.partials._meta')
 
 		<!-- CSS
 		================================================== -->

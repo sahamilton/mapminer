@@ -5,11 +5,11 @@
 
 <p><strong>Description: </strong>The People Ready Mapminer system is designed to give the sales teams insight into the locations of the national accounts that we serve. This information should make it easier to find new opportunities to service our largest accounts. In addition Mapminer provides information on the People Ready Branches and Sales Organization.  Addtionally there is information provided from purchased lists of current construction projects through out North America.</p> 
 
-<p>Mapminer was developed by <a href="//www.ELAConsultingGroup.com" target="_blank" title="Learn more about ELA">ELA Consulting Group</a> for People Ready</p>
+<p>Mapminer was developed by <a href="{{config('mapminer.website')}}" target="_blank" title="Learn more about {{config('mapminer.developer')}}">{{config('mapminer.developer')}}</a> for {{config('mapminer.client')}}</p>
 
-<p>Contact Sales Operations for any training or support issues.</p>
+<p>Contact <a href="mailto:{{config('mapminer.system_contact')}}" title="Email {{config('mapminer.support')}}">{{config('mapminer.support')}}</a> for any training or support issues.</p>
 <fieldset><legend>Technical Details</legend>
-<p><strong>Mapminer Version:</strong> <?php echo trim(exec('git tag'));?></p>
+<p><strong>Mapminer Version:</strong> {{config('mapminer.app_version')}}</p>
 @if(auth()->user()->hasRole('admin'))
 <p><strong>Environment: </strong>
 {{App::environment()}} </p>
@@ -20,7 +20,12 @@
 		<a href="{{route('versions.index')}}" title="See all versions">Git Version:</a>
 	</strong> {{$version}} </p>
 
-	<p><strong>PHP Version:</strong> {{ phpversion()}} </p> 
+	<p><strong>PHP Version:</strong> {{ phpversion()}} </p>
+	@php
+	$results = \DB::select( \DB::raw("select version()") );
+$db_version = $results[0]->{'version()'};
+@endphp
+	<p><strong>Database Version:</strong> {{$db_version}}</p> 
 	<p><strong>Server Address:</strong> {{$_SERVER['SERVER_ADDR']}}</p>
 	<p><strong>Server Name:</strong> {{gethostname()}}</p>
 	<p><strong>Database:</strong> {{env('DB_DATABASE')}}</p>

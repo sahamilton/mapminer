@@ -26,7 +26,7 @@ return [
     */
 
     'env' => env('APP_ENV', 'production'),
-    'version' => env('MAPMINER_VERSION','2.0'),
+    'version' => trim(exec('git tag')),
 
     /*
     |--------------------------------------------------------------------------
@@ -52,7 +52,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://tbmapminer.com'),
+    'url' => env('APP_URL', 'https://tbmapminer.com'),
 
     /*
     |--------------------------------------------------------------------------
