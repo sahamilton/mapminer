@@ -64,7 +64,7 @@ class OpportunityController extends Controller
             return redirect()->route('user.show',auth()->user()->id)->withWarning("You are not assigned to any branches. You can assign yourself here or contact Sales Ops");
         }
         if((! auth()->user()->hasRole('branch_manager') && $this->person->myTeam()->count() >1 )){
-             
+        
                      $data = $this->getSummaryBranchOpportunities(array_keys($myBranches));
                    
             // need to get all the activities esp conversions / closes
@@ -98,10 +98,29 @@ class OpportunityController extends Controller
 
     public function getSummaryBranchOpportunities(array $branches){
 
-        $data['branches'] = $this->branch->withCount('opportunities','leads')->with('manager')
-            ->whereIn('id',$branches)
-            ->get(); 
+        $data['branches'] = $this->branch
+        ->whereHas('opportunities',function ($q){
+            $q->whereBetween('updated_at', [Carbon::now()->subMOnth(1), Carbon::now()]);
 
+        })
+        ->withCount('opportunities',
+            'leads')
+        ->withCount(       
+                ['opportunities',
+                    'opportunities as won'=>function($query){
+            
+                    $query->whereClosed(1);
+                },
+                'opportunities as lost'=>function($query){
+                    $query->whereClosed(2);
+                }]
+            )
+    
+           
+        ->with('manager')
+        ->whereIn('id',$branches)
+        ->get(); 
+       
         $data['activities'] = $this->getBranchActivities($branches);
 
         return $data;
