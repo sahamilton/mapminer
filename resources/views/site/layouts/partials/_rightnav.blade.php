@@ -1,7 +1,12 @@
  
-      <ul class="navbar-nav justify-content-end"> 
-
-                
+      <ul class="navbar-nav ml-auto justify-content-end"> 
+               <li class="nav-item">
+                <a  class="nav-link" href="#"
+                data-href="" 
+                data-toggle="modal" 
+                data-target="#add-feedback" >
+                    <i class="fas fa-bullhorn" style="color:red"> </i> Feedback</a>
+                </li>
                 @php $news = new \App\News;@endphp
                 <li class="nav-item">
                   
@@ -34,7 +39,7 @@
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <i class="far fa-user" aria-hidden="true"></i> {{ucfirst(strtolower( auth()->user()->person->firstname ))}}<span class="caret"></span></a> 
-            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            <div class="dropdown-menu ml-auto" aria-labelledby="navbarDropdownMenuLink">
 
               <a class="dropdown-item" href="{{{ route('user.show',auth()->user()->id) }}}">
               <i class="far fa-user" aria-hidden="true"> </i> 
@@ -64,3 +69,4 @@
               </div>      
               </li>
             </ul>
+            @include('feedback.partials._feedback')

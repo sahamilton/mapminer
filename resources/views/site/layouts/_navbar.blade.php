@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-md navbar-light" >
+<nav class="navbar navbar-expand-md ml-auto navbar-light" >
 
   <a href="{{ route('findme') }}" class="navbar-brand"><img src="{{ asset('assets/img/PRlogo.png')}}"  width ='164' ></a> <!--     <nav class="navbar navbar-toggleable-sm navbar-light bg-faded">
 <nav class="navbar navbar-toggleable-sm navbar-light bg-faded"> -->

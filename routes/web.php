@@ -101,7 +101,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 	# Feedback
 
-		Route::resource('feedback','FeedbackController',['except'=>['destroy']]);
+		Route::resource('feedback','FeedbackController',['only'=>['store']]);
 
 	#Geocoding
 
@@ -360,7 +360,8 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
     	Route::get('emails/{id}/recipients',['as'=>'emails.recipients','uses'=>'EmailsController@recipients']);
     	Route::post('emails/send',['as'=>'emails.send','uses'=>'EmailsController@sendEmail']);
     	Route::resource('emails','EmailsController');
-
+    # Feedback
+    	Route::resource('feedback','FeedbackController');
     # Imports
     
    		Route::get('branch/teams',['as'=>'branch_team.importfile','uses'=>'BranchTeamImportController@getFile']);
