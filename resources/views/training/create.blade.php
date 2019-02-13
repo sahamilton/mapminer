@@ -9,7 +9,7 @@
 {{csrf_field()}}
 @include('training.partials._form')
 <input type="submit" name ="submit" class="btn btn-success" value="Create Training Item" />
-</div>
+
 
 </form>
 

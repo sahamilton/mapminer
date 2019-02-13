@@ -58,8 +58,8 @@ class TrainingController extends BaseController
         $servicelines = $this->getAllServicelines();
         $selectedRoles = \Input::old('roles', array());
         $mode = 'create';
-
-        return response()->view('training.create',compact('roles','servicelines','verticals','selectedRoles','mode'));
+        $training = null;
+        return response()->view('training.create',compact('training','roles','servicelines','verticals','selectedRoles','mode'));
     }
 
     /**
