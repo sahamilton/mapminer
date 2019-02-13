@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class AddressBranch extends Model
 {
     public $table = 'address_branch';
-
+    public $fillable = ['branch_id','address_id'];
     public function orders(){
     	return $this->hasMany(Orders::class,'id', 'address_branch_id');
     }
@@ -19,5 +19,8 @@ class AddressBranch extends Model
     }
     public function activities(){
         return $this->hasMany(Activity::class,'address_id','address_id');
+    }
+    public function opportunities(){
+        return $this->hasMany(Opportunity::class,'id','address_branch_id');
     }
 }

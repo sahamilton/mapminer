@@ -2,41 +2,48 @@
 
 namespace App\Http\Controllers;
 
-use App\Opportunity;
-use App\Lead;
-use App\Company;
-use App\Note;
-use App\Person;
-use App\Branch;
-use App\Orders;
-use App\Contact;
-use App\Address;
 use App\Activity;
-use \Carbon\Carbon;
 use App\ActivityType;
+use App\Address;
+use App\AddressBranch;
+use App\Branch;
+use App\Company;
+use App\Contact;
+use App\Note;
+
+use App\Opportunity;
+use App\Person;
+use \Carbon\Carbon;
+
 use Illuminate\Http\Request;
 
 class OpportunityController extends Controller
 {
     
-    public $person;
-    public $opportunity;
-    public $activity;
-    public $branch;
-    public $address;
-    public $orders;
-    public $leads;
-    public $contact;
+        public $address;
+        public $addressbranch;
+        public $branch;
+        public $contact;
+        public $opportunity;
 
-    public function __construct(Opportunity $opportunity, Orders $orders, Branch $branch, Person $person, Address $address,Activity $activity,Lead $leads,Contact $contact){
-        $this->opportunity = $opportunity;
-        $this->person = $person;
-        $this->activity = $activity;
-        $this->branch = $branch;
+        public $person;
+
+
+    public function __construct(
+            Activity $activity,   
+            Address $address,
+            AddressBranch $addressbranch,
+            Branch $branch, 
+            Contact $contact,
+            Opportunity $opportunity,
+            Person $person
+        ){
         $this->address = $address;
-        $this->orders = $orders;
-        $this->leads = $leads;
+        $this->addressbranch = $addressbranch;
+        $this->branch = $branch;
         $this->contact = $contact;
+        $this->opportunity = $opportunity;
+        $this->person = $person; 
     }
 
     /**
@@ -180,10 +187,14 @@ class OpportunityController extends Controller
      */
     public function store(Request $request)
     {
+       
+        $join = $this->addressbranch
+            ->where('address_id','=',request('address_id'))
+            ->where('branch_id','=',request('branch_id'))
+            ->firstOrCreate(request()->except('_token'));
+    
+        $join->opportunities()->create(request()->except('_token'));
         
-        $opportunity = $this->opportunity->create(request()->all());
-        $address = $this->address->findOrFail(request('address_id'));
-        $address->assignedToBranch()->detach();
         return redirect()->route('address.show',request('address_id'))->withMessage("Added to branch opportunities");
     }
 
