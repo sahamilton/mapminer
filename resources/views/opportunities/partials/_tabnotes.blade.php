@@ -20,7 +20,8 @@
            <td><a href="{{route('address.show',$note->relatesToLocation->id)}}">{{$note->relatesToLocation->businessname}}</a></td>
             <td>{{$note->created_at->format('Y-m-d')}}</td>
             <td>{!! $note->note !!}</td>
-            <td>{{$note->writtenBy->person->fullName()}}</td>
+
+            <td>@if ( $note->writtenby) {{$note->writtenby->person->fullName()}} @else No Longer with the Company @endif</td>
         </tr>
         @endforeach
         
