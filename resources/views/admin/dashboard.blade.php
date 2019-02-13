@@ -259,7 +259,7 @@ new Chart(document.getElementById("pieChart"), {
 });
 </script>
 
-</div>
+
 @include('partials/_scripts')
 @endsection
 
