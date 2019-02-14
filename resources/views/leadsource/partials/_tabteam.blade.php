@@ -20,7 +20,7 @@
           
            <tr>  @php $total = 0;@endphp
                 <td>
-                    <a href="{{route('leads.personsource',[$person,$leadsource->id])}}">
+                    <a href="">
                         {{$stats['name']}}</a>
                 </td>
 
