@@ -201,7 +201,7 @@
           
     </ul>
     <ul class="nav navbar-nav float-right">
-                        
+                        <li class= 'nav-item'>Feedback <i class=""></i></li>
                         
                         <li class="dropdown">
                                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
