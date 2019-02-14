@@ -10,7 +10,7 @@
 
  Create New Feedback</a>
 </div>
-
+<a href="{{route('feedback.export')}}"><i class="fas fa-file-download"></i> Export Feedback</a>
 <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
 	<thead>
 		

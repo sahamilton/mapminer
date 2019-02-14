@@ -6,6 +6,7 @@ use Mail;
 use App\Mail\FeedbackClosed;
 use App\Feedback;
 use App\FeedbackComments;
+
 use Illuminate\Http\Request;
 
 class FeedbackCommentsController extends Controller

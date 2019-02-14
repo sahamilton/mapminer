@@ -361,6 +361,7 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
     	Route::post('emails/send',['as'=>'emails.send','uses'=>'EmailsController@sendEmail']);
     	Route::resource('emails','EmailsController');
     # Feedback
+    	Route::get('feedback/export',['as'=>'feedback.export','uses'=>'FeedbackController@export']);
     	Route::get('feedback{feedback}/close',['as'=>'feedback.close','uses'=>'FeedbackController@close']);
     	Route::resource('feedback','FeedbackController',['except'=>['store']]);
 

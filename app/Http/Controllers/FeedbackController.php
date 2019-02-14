@@ -7,6 +7,8 @@ use App\Feedback;
 use Illuminate\Http\Request;
 use App\Mail\FeedBackResponseEmail;
 use App\Mail\FeedbackClosed;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\FeedbackExport;
 use App\Http\Requests\FeedbackFormRequest;
 
 class FeedbackController extends Controller
@@ -116,7 +118,7 @@ class FeedbackController extends Controller
         return redirect()->route('feedback.index')->withMessage('Feedback deleted');
     }
 
-    public function close(FEedback $feedback)
+    public function close(Feedback $feedback)
     {
         $feedback->update(['status'=>'closed']);
         Mail::to(config('mapminer.system_contact'))
@@ -124,5 +126,10 @@ class FeedbackController extends Controller
         ->send(new FeedbackClosed($feedback));
 
         return redirect()->back()->withMessage('Feedback closed');
+    }
+
+    public function export(){
+
+        return Excel::download(new FeedbackExport(), 'AllFeedback.csv');
     }
 }
