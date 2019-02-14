@@ -361,7 +361,7 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
     	Route::post('emails/send',['as'=>'emails.send','uses'=>'EmailsController@sendEmail']);
     	Route::resource('emails','EmailsController');
     # Feedback
-    	Route::resource('feedback','FeedbackController');
+    	Route::resource('feedback','FeedbackController',['except'=>['store']]);
     # Imports
     
    		Route::get('branch/teams',['as'=>'branch_team.importfile','uses'=>'BranchTeamImportController@getFile']);

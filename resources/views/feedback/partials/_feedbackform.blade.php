@@ -28,3 +28,27 @@ $types = $types = \App\FeedbackCategory::orderBy('category')->get();
 
     </div>
 </div>
+@can('manage_feedback')
+@php $ratings = [1,2,3,4,5]; @endphp
+<div class="form-group {{ $errors->has('biz_rating') ? ' has-error' : '' }}">
+    <label class="col-md-4 control-label">Business Rating (5 = Highly important) </label>
+    
+         <select  id="biz_rating" name="biz_rating" required>
+              @foreach ($ratings as $rate)
+                <option value="{{$rate}}">{{$rate}}</option>
+              @endforeach
+        </select>
+    
+</div>
+
+<div class="form-group {{ $errors->has('tech_rating') ? ' has-error' : '' }}">
+    <label class="col-md-4 control-label">Technical Rating (5 = Very Difficult) </label>
+    
+         <select  id="tech_rating" name="tech_rating" required>
+              @foreach ($ratings as $rate)
+                <option value="{{$rate}}">{{$rate}}</option>
+              @endforeach
+        </select>
+   
+</div>
+@endcan

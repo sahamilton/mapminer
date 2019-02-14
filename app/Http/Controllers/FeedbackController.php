@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Mail;
 use App\Feedback;
 use Illuminate\Http\Request;
 use App\Mail\FeedBackResponseEmail;
-use Mail;
 use App\Http\Requests\FeedbackFormRequest;
+
 class FeedbackController extends Controller
 {
     public $feedback;
@@ -44,18 +45,23 @@ class FeedbackController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(FeedbackFormRequest $request)
+    public function store(Request $request)
     {
-        
+       
         $data = request()->except('_token');
         $data['user_id'] = auth()->user()->id;
         $feedback = $this->feedback->create($data);
+        
         $feedback->load('providedBy','category');
 
-        // send email reply
         Mail::queue(new FeedBackResponseEmail($feedback));
-        // forward email
-        return redirect()->back()->withMessage("Thanks,". $feedback->providedBy->person->firstname. " for your feedback");
+        if(auth()->user()->hasRole(['admin','sales_operations'])){
+        
+            return redirect()->route('feedback.index');
+        }else{
+           return redirect()->back()->withMessage("Thanks,". $feedback->providedBy->person->firstname. " for your feedback"); 
+        }
+        
     }
 
     /**
@@ -91,7 +97,8 @@ class FeedbackController extends Controller
      */
     public function update(FeedbackFormRequest $request, Feedback $feedback)
     {
-        //
+        $feedback->update(request()->except('_token'));
+        return redirect()->route('feedback.index')->withMessage('Feedback updated');
     }
 
     /**
@@ -102,6 +109,7 @@ class FeedbackController extends Controller
      */
     public function destroy(Feedback $feedback)
     {
-        //
+        $feedback->delete();
+        return redirect()->route('feedback.index')->withMessage('Feedback deleted');
     }
 }
