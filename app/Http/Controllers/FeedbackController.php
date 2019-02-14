@@ -6,7 +6,7 @@ use Mail;
 use App\Feedback;
 use Illuminate\Http\Request;
 use App\Mail\FeedBackResponseEmail;
-use App\Mail\FeedBackClosed;
+use App\Mail\FeedbackClosed;
 use App\Http\Requests\FeedbackFormRequest;
 
 class FeedbackController extends Controller
