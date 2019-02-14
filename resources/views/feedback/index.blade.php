@@ -8,7 +8,7 @@
 
 <i class="fas fa-plus-circle " aria-hidden="true"></i>
 
- Create New Feedbackl</a>
+ Create New Feedback</a>
 </div>
 
 <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>

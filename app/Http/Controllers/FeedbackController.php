@@ -52,14 +52,16 @@ class FeedbackController extends Controller
         $data['user_id'] = auth()->user()->id;
         $feedback = $this->feedback->create($data);
         
-        $feedback->load('providedBy','category');
-
-        Mail::queue(new FeedBackResponseEmail($feedback));
+       
         if(auth()->user()->hasRole(['admin','sales_operations'])){
         
-            return redirect()->route('feedback.index');
+            return redirect()->route('feedback.index')->withMessage("Feedback entered");
         }else{
-           return redirect()->back()->withMessage("Thanks,". $feedback->providedBy->person->firstname. " for your feedback"); 
+            $feedback->load('providedBy','category');
+            
+            Mail::queue(new FeedBackResponseEmail($feedback));
+        
+            return redirect()->back()->withMessage("Thanks,". $feedback->providedBy->person->firstname. " for your feedback"); 
         }
         
     }
