@@ -8,8 +8,9 @@
 <div class="card card-default">
 	<div class="card-header">
 		
-		<p><strong>Type</strong>  {{$feedback->category->category}} 
-			<strong>Submitted By</strong>  {{$feedback->providedBy->person->fullName()}}
+		<p><strong>Type:</strong>  {{$feedback->category->category}} 
+			<strong>Submitted By:</strong>  {{$feedback->providedBy->person->fullName()}}
+			<strong>Status:</strong> {{$feedback->status}}
 		</p>
 	</div>
 	<div class="card-body">
@@ -33,7 +34,17 @@
 
 <div class="card card-default"  style="margin-bottom:10px">
 	<div class="card-header">
-		<p> {{$comment->by->person->fullName()}} <em>{{$comment->created_at->format('Y-m-d')}}</em></p>
+		<p> {{$comment->by->person->fullName()}} <em>{{$comment->created_at->format('Y-m-d')}}</em>
+			
+			<a 
+			 	data-href="{{route('feedback_comment.destroy',$comment->id)}}" 
+				data-toggle="modal" 
+				data-target="#confirm-delete" 
+				data-title = "feedback comment" 
+				href="#">
+
+				<i class="far fa-trash-alt text-danger" aria-hidden="true"></i></a>
+		</p>
 	</div>
 	<div class="card-body">
 		{{$comment->comment}}
@@ -44,25 +55,34 @@
 
 
 @endforeach
-<h5>Add new comment</h5>
-<div class="newPost">
-	<form method="post" name="newComment" action="{{route('feedback_comment.store')}}" >
-		@csrf
-		<div class="forumDivOuter" style="">
-			<div id="forumDiv">
-				<textarea class="autoExpand forumPost form-control" 
-				rows="4" 
-				data-min-rows="4"
-				name="comment" 
-				placeholder="Enter your message here"></textarea>
-			
-				<input type="hidden" name="feedback_id" value="{{$feedback->id}}" />
-				<input type="submit" class="forumPostButton btn btn-info" value="Add Comment" />
-				
+@if($feedback->status=='open')
+	<h5>Add new comment</h5>
+	<div class="newPost">
+		<form method="post" name="newComment" action="{{route('feedback_comment.store')}}" >
+			@csrf
+			<div class="form-group" style="">
+				<div id="forumDiv">
+					<textarea class="autoExpand form-control" 
+					rows="4" 
+					data-min-rows="4"
+					name="comment" 
+					placeholder="Enter your message here"></textarea>
+					<div class="form-group">
+						<label>Close feedback?</label><input class="form-control" type="checkbox" name="close" />
+					</div>
+					<input type="hidden" name="feedback_id" value="{{$feedback->id}}" />
+					<div class="form-group">
+						<input type="submit" class="btn btn-info" value="Add Comment" />
+					</div>
+				</div>
 			</div>
-		</div>
-	</form>		
+		</form>		
+	</div>
+	@else
+	<div class="alert alert-warning" ><p>Feedback closed</p></div>
+	@endif
 </div>
 </div>
-</div>
+@include('partials._modal')
+@include('partials._scripts')
 @endsection

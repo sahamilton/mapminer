@@ -22,6 +22,7 @@
 		<th>Status</th>
 		<th>Biz Rating</th>
 		<th>Tech Rating</th>
+		<th>Comments</th>
 		<th>Actions</th>
 
 	</thead>
@@ -45,7 +46,7 @@
 		<td>{{$item->status}}</td>
 		<td>{{$item->biz_rating}}</td>
 		<td>{{$item->tech_rating}}</td>
-		
+		<td>{{$item->comments_count}}</td>
 		<td>
 			<div class="btn-group">
 				<button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">

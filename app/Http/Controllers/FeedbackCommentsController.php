@@ -24,11 +24,14 @@ class FeedbackCommentsController extends Controller
      */
     public function store(Request $request)
     {
-      
+     
         $feedback = $this->feedback->findOrFail(request('feedback_id'));
         $data = request()->except('_token');
         $data['user_id'] = auth()->user()->id;
         $feedback->comments()->create($data);
+        if(request()->filled('close')){
+            $feedback->update(['status'=>'closed']);
+        }
         return redirect()->route('feedback.show',$feedback->id)->withMessage('Thanks for commenting on this feedback');
     }
 
@@ -41,7 +44,7 @@ class FeedbackCommentsController extends Controller
      */
     public function edit(FeedbackComments $feedbackComments)
     {
-        //
+
     }
 
     /**
@@ -64,6 +67,7 @@ class FeedbackCommentsController extends Controller
      */
     public function destroy(FeedbackComments $comments)
     {
+        
         $comments->delete();
         return redirect()->back()->withMessage("Comment deleted");
     }
