@@ -101,10 +101,9 @@ class NotesController extends BaseController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function edit($id)
+	public function edit($note)
 	{
-		$note = $this->notes->find($id);
-
+		
 		return response()->view('notes.edit', compact('note'));
 	}
 
@@ -114,17 +113,15 @@ class NotesController extends BaseController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update(NoteFormRequest $request,$id)
+	public function update(NoteFormRequest $request,$note)
 	{
-
-		$note =$this->notes->findOrFail($id);
-
-		$note->update(['note'=>request('note')]);
 		
+		$note->update(['note'=>request('note')]);
+		$note->load('relatesToLocation');
 		switch ($note->type) {
 			case 'location':
 				
-				return redirect()->route('locations.show',$note->related_id);
+				return redirect()->route('address.show',$note->relatesToLocation->id);
 			break;
 			case 'lead':
 
@@ -134,7 +131,9 @@ class NotesController extends BaseController {
 				
 				return redirect()->route('projects.show',$note->related_id);
 			break;
-			
+			default:
+				return redirect()->back();
+			break;
 		}
 		
 
@@ -146,10 +145,10 @@ class NotesController extends BaseController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id, Request $request)
+	public function destroy($note)
 	{
 		
-		$this->notes->destroy($id);
+		$note->delete();
 		
 		return redirect()->back();
 		

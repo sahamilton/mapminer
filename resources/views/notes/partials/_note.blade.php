@@ -1,8 +1,3 @@
-<style>
-
-.activity_date, .followup_date{z-index:1151 !important;}
-</style>
-
 <!-- Modal -->
 <div class="modal fade" 
       id="add-note" 
@@ -25,14 +20,18 @@
                 
         <form method="post" action="{{route('notes.store')}}">
         @csrf
-        <textarea name="note"></textarea>
+        <div class="form-group">
+        <textarea name="note" class="form-control"></textarea>
           {{ $errors->first('note') }}
+        </div>
 
-          <div class="float-right">
+          <div class="form-group float-right">
            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button> 
-           <input type="submit" value="Record Activity" class="btn btn-danger" />
+          
+           <input type="submit" value="Record Location Note" class="btn btn-danger" />
             </div>
-            <input type="hidden" name = "address_id" value="{{$location->id}}" />
+            <input type="hidden" name = "address_id" value="{{$location->id}}" /> 
+            <p><em>Do not use this form to record activities</em></p>
         </form>
 
         <div class="modal-footer">
