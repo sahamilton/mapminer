@@ -6,7 +6,7 @@ Thanks {{$feedback->providedBy->person->firstname}} for posting feedback on {{co
 
 
 @component('mail::panel')
-Type: {{$feedback->type}}
+Type: {{$feedback->category->category}}
 
 Page Ref: {{$feedback->url}}
 

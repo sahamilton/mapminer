@@ -5,7 +5,7 @@ $types = $types = \App\FeedbackCategory::orderBy('category')->get();
 <div class="form-group">
     <label class="col-md-4 control-label">Feedback Type:</label>
     
-    <select  id="activity" name="activity" required>
+    <select  id="type" name="type" required>
       @foreach ($types as $type)
         <option value="{{$type->id}}">{{$type->category}}</option>
       @endforeach

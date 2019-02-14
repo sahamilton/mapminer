@@ -6,6 +6,7 @@ use App\Feedback;
 use Illuminate\Http\Request;
 use App\Mail\FeedBackResponseEmail;
 use Mail;
+use App\Http\Requests\FeedbackFormRequest;
 class FeedbackController extends Controller
 {
     public $feedback;
@@ -23,7 +24,8 @@ class FeedbackController extends Controller
      */
     public function index()
     {
-        
+        $feedback = $this->feedback->with('providedBy','category')->get();
+        return response()->view('feedback.index',compact('feedback'));
     }
 
     /**
@@ -33,7 +35,7 @@ class FeedbackController extends Controller
      */
     public function create()
     {
-        //
+        return response()->view('feedback.create');
     }
 
     /**
@@ -42,13 +44,14 @@ class FeedbackController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(FeedbackFormRequest $request)
     {
         
         $data = request()->except('_token');
         $data['user_id'] = auth()->user()->id;
         $feedback = $this->feedback->create($data);
-        $feedback->load('providedBy');
+        $feedback->load('providedBy','category');
+
         // send email reply
         Mail::queue(new FeedBackResponseEmail($feedback));
         // forward email
@@ -63,7 +66,8 @@ class FeedbackController extends Controller
      */
     public function show(Feedback $feedback)
     {
-        //
+        $feedback->load('providedBy','category');
+        return response()->view('feedback.show',compact('feedback'));
     }
 
     /**
@@ -74,7 +78,8 @@ class FeedbackController extends Controller
      */
     public function edit(Feedback $feedback)
     {
-        //
+         $feedback->load('providedBy','category');
+         return response()->view('feedback.edit',compact('feedback'));
     }
 
     /**
@@ -84,7 +89,7 @@ class FeedbackController extends Controller
      * @param  \App\Feedback  $feedback
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Feedback $feedback)
+    public function update(FeedbackFormRequest $request, Feedback $feedback)
     {
         //
     }
