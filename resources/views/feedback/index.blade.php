@@ -19,6 +19,7 @@
 		<th>Submitted By</th>
 		<th>Feedback</th>
 		<th>Posted From</th>
+		<th>Status</th>
 		<th>Biz Rating</th>
 		<th>Tech Rating</th>
 		<th>Actions</th>
@@ -26,12 +27,22 @@
 	</thead>
 	<tbody>
 	@foreach($feedback as $item)
+
+
+
 		<tr>  
-		<td>{{$item->created_at->format('M j, Y')}}</td>
+		<td><a href="{{route('feedback.show',$item->id)}}">{{$item->created_at->format('M j, Y')}}</a></td>
 		<td>{{$item->category->category}}</td>
 		<td>{{$item->providedBy->person->fullName()}}
-		<td>{{$item->feedback}}</td>
+		<td>
+			@if( strpos($item->feedback, '.')) 
+				{{substr($item->feedback, 0, strpos($item->feedback, '.'))}} 
+			@else 
+				{{$item->feedback}} 
+			@endif
+		</td>
 		<td>@if($item->url)<a href="{{$item->url}}" target="_blank" >{{$item->url}}</a>@endif</td>
+		<td>{{$item->status}}</td>
 		<td>{{$item->biz_rating}}</td>
 		<td>{{$item->tech_rating}}</td>
 		
@@ -50,7 +61,12 @@
 					<i class="far fa-edit text-info"" aria-hidden="true"></i>
 					Edit this feedback
 				</a>
-			f
+				<a class="dropdown-item"
+					href="{{route('feedback.close',$item->id)}}" 
+					title="Close this feedback">
+					<i class="fas fa-check text-success"></i>
+					Close this feedback
+				</a>
 				
 					<a class="dropdown-item"
 					 	data-href="{{route('feedback.destroy',$item->id)}}" 

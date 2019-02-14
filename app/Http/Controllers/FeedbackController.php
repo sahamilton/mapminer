@@ -25,7 +25,7 @@ class FeedbackController extends Controller
      */
     public function index()
     {
-        $feedback = $this->feedback->with('providedBy','category')->get();
+        $feedback = $this->feedback->with('providedBy','category')->withCount('comments')->get();
         return response()->view('feedback.index',compact('feedback'));
     }
 
@@ -74,7 +74,7 @@ class FeedbackController extends Controller
      */
     public function show(Feedback $feedback)
     {
-        $feedback->load('providedBy','category');
+        $feedback->load('providedBy','category','comments','comments.by');
         return response()->view('feedback.show',compact('feedback'));
     }
 
@@ -113,5 +113,11 @@ class FeedbackController extends Controller
     {
         $feedback->delete();
         return redirect()->route('feedback.index')->withMessage('Feedback deleted');
+    }
+
+    public function close(FEedback $feedback)
+    {
+        $feedback->update(['status'=>'closed']);
+        return redirect()->back()->withMessage('Feedback closed');
     }
 }

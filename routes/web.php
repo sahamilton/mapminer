@@ -361,7 +361,11 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
     	Route::post('emails/send',['as'=>'emails.send','uses'=>'EmailsController@sendEmail']);
     	Route::resource('emails','EmailsController');
     # Feedback
+    	Route::get('feedback{feedback}/close',['as'=>'feedback.close','uses'=>'FeedbackController@close']);
     	Route::resource('feedback','FeedbackController',['except'=>['store']]);
+
+    # Feedback Comments
+    	Route::resource('feedback_comment','FeedbackCommentsController');
     # Imports
     
    		Route::get('branch/teams',['as'=>'branch_team.importfile','uses'=>'BranchTeamImportController@getFile']);

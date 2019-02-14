@@ -33,6 +33,7 @@ class RouteServiceProvider extends ServiceProvider
         Route::model('contact', \App\Contact::class);
         Route::model('customer', \App\Customer::class);
         Route::model('feedback', \App\Feedback::class);
+        Route::model('feedbackcomment', \App\FeedbackComments::class);
        
         Route::model('lead', \App\Lead::class);
         Route::model('leadsource', \App\Leadsource::class);
