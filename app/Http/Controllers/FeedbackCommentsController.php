@@ -33,7 +33,9 @@ class FeedbackCommentsController extends Controller
         $feedback->comments()->create($data);
         if(request()->filled('close')){
             $feedback->update(['status'=>'closed']);
-            Mail::queue(new FeedbackClosed($feedback));
+            Mail::to(config('mapminer.system_contact'))
+                ->cc(config('mapminer.developer_email'))
+                ->send(new FeedbackClosed($feedback));
         }
         return redirect()->route('feedback.show',$feedback->id)->withMessage('Thanks for commenting on this feedback');
     }
