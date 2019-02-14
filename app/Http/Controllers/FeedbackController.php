@@ -6,6 +6,7 @@ use Mail;
 use App\Feedback;
 use Illuminate\Http\Request;
 use App\Mail\FeedBackResponseEmail;
+use App\Mail\FeedBackClosed;
 use App\Http\Requests\FeedbackFormRequest;
 
 class FeedbackController extends Controller
@@ -118,6 +119,8 @@ class FeedbackController extends Controller
     public function close(FEedback $feedback)
     {
         $feedback->update(['status'=>'closed']);
+        Mail::queue(new FeedbackClosed($feedback));
+
         return redirect()->back()->withMessage('Feedback closed');
     }
 }

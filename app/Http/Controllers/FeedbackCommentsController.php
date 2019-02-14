@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Mail;
+use App\Mail\FeedbackClosed;
 use App\Feedback;
 use App\FeedbackComments;
 use Illuminate\Http\Request;
@@ -31,6 +33,7 @@ class FeedbackCommentsController extends Controller
         $feedback->comments()->create($data);
         if(request()->filled('close')){
             $feedback->update(['status'=>'closed']);
+            Mail::queue(new FeedbackClosed($feedback));
         }
         return redirect()->route('feedback.show',$feedback->id)->withMessage('Thanks for commenting on this feedback');
     }
