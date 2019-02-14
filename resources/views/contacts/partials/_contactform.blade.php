@@ -35,7 +35,7 @@
           <div class="input-group input-group-lg">
             <input class="form-control" 
                   type="text" 
-                  required
+                 
                   name="email"  
                   id="email" 
                   value="{{  old('email', isset($contact) ? $contact->email : '') }}"
@@ -51,7 +51,7 @@
           <div class="input-group input-group-lg">
             <input class="form-control" 
                   type="text" 
-                  required
+                  
                   name="contactphone"  
                   id="contactphone" 
                   value="{{  old('contactphone', isset($contact) ? $contact->contactphone : '') }}"
@@ -67,7 +67,7 @@
               <label class="col-md-4 control-label">Comments</label>
               <div class="input-group input-group-lg">
                   <textarea 
-                  required 
+               
                   class="form-control" 
                   name='comments' 
                   title="comments" 
