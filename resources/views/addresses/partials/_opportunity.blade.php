@@ -4,7 +4,11 @@
       @if($location->opportunities->count()>0)
 
         @if(array_key_exists($location->assignedToBranch->first()->id,$mybranches))
-        @include('opportunities.partials._closeopportunityform')
+        <button class="btn btn-success" 
+      
+      data-toggle="modal" 
+      data-target="#createopportunity">Create New Opportunity</button>
+      @include('opportunities.partials._createmodal')
 
         @else
         <p>Active prospect for {{$location->assignedToBranch->first()->branchname}}</p>

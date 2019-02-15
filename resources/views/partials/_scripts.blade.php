@@ -40,6 +40,12 @@ $(document).ready(function()
 	});
 	$(document).on('show.bs.modal','#closeopportunity', function(e) {
     	
+		$(this).find('#action-form').attr('action',$(e.relatedTarget).data('href'));
+		
+	});
+	$(document).on('show.bs.modal','#editopportunity', function(e) {
+    	
+		$(this).find('#action-form').attr('action',$(e.relatedTarget).data('href'));
 		
 	});
 	

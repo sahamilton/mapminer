@@ -3,11 +3,13 @@
     <div class="form-group{{ $errors->has('title') ? ' has-error' : '' }}">
         <label class="col-md-2 control-label">Title</label>
               <div class="input-group input-group-lg ">
-            <input type="text" required 
+            <input type="text" 
+            required 
             class="form-control" 
             name='title' 
+            required
             description="title" 
-            value="{{ old('title' , isset($opportunity) ? $opportunity->title : "" ) }}" 
+            value="{{ old('title' , isset($opportunity) && $opportunity->title ? $opportunity->title : $opportunity->id ) }}" 
             placeholder="title">
             <span class="help-block">
                 <strong>{{ $errors->has('title') ? $errors->first('title') : ''}}</strong>
@@ -17,13 +19,14 @@
 <!--- value -->
 
     <div class="form-group{{ $errors->has('value') ? ' has-error' : '' }}">
-        <label class="col-md-2 control-label">value</label>
-              <div class="input-group input-group-lg ">
-            <input type="text" required 
+        <label class="col-md-2 control-label">Value</label>
+           <div class="input-group input-group-lg ">
+            <input type="text" 
+            required 
             class="form-control" 
             name='value' 
             description="value" 
-            value="{{ old('value' , isset($opportunity) ? $opportunity->value : "" ) }}" 
+            value="{{ old('value' , isset($opportunity) ? $opportunity->value : "0" ) }}" 
             placeholder="value">
             <span class="help-block">
                 <strong>{{ $errors->has('value') ? $errors->first('value') : ''}}</strong>
@@ -33,13 +36,14 @@
  <!--- requirements -->
 
     <div class="form-group{{ $errors->has('requirements') ? ' has-error' : '' }}">
-        <label class="col-md-2 control-label">requirements</label>
+        <label class="col-md-2 control-label">Requirements</label>
               <div class="input-group input-group-lg ">
-            <input type="text" required 
+            <input type="text" 
+            required 
             class="form-control" 
             name='requirements' 
             description="requirements" 
-            requirements="{{ old('requirements' , isset($opportunity) ? $opportunity->requirements : "" ) }}" 
+            value="{{ old('requirements' , isset($opportunity) ? $opportunity->requirements : '0' ) }}" 
             placeholder="requirements">
             <span class="help-block">
                 <strong>{{ $errors->has('requirements') ? $errors->first('requirements') : ''}}</strong>
@@ -49,13 +53,14 @@
   <!--- duration -->
 
     <div class="form-group{{ $errors->has('duration') ? ' has-error' : '' }}">
-        <label class="col-md-2 control-label">duration</label>
+        <label class="col-md-2 control-label">Duration</label>
               <div class="input-group input-group-lg ">
-            <input type="text" required 
+            <input type="text" 
+            required 
             class="form-control" 
             name='duration' 
             description="duration" 
-            duration="{{ old('duration' , isset($opportunity) ? $opportunity->duration : "" ) }}" 
+            value="{{ old('duration' , isset($opportunity) ? $opportunity->duration : "0" ) }}" 
             placeholder="duration">
             <span class="help-block">
                 <strong>{{ $errors->has('duration') ? $errors->first('duration') : ''}}</strong>

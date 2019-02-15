@@ -1,6 +1,8 @@
 @php $statuses = ['open','closed - won','closed - lost']; @endphp
+
 <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
+      <th>Title</th>
       <th>Date Opened</th>
       <th>Days Open</th>
       <th>Status</th>
@@ -19,13 +21,38 @@
      
       
         <tr>
-          <td>{{$opportunity->created_at ? $opportunity->created_at->format('Y-m-d') : ''}}</td>
-          <td>{{$opportunity->daysOpen()}}</td>
-          <td>{{$statuses[$opportunity->closed]}}</td>
           <td>
-            @if(! $opportunity->address)
-            {{dd($opportunity)}}
+            <a href="{{route('opportunity.show',$opportunity->id)}}">
+            {{$opportunity->title ?  $opportunity->title : $opportunity->id}}</a>
+           <a href="{{route('opportunity.edit',$opportunity->id)}}" title="Edit this opportunity"> <i class="fas fa-edit class="text text-info"></i></a>
+           <a 
+                               data-href="{{route('opportunity.destroy',$opportunity->id)}}" 
+
+                                    data-toggle="modal" 
+                                    data-target="#confirm-delete" 
+                                    data-title = "this opportunity" 
+                                    href="#"
+                                    title="Delete this opportunity">
+
+                                    <i class="far fa-trash-alt text-danger" aria-hidden="true"> </i> 
+                                    
+                                </a>
+          </td>
+          <td>{{$opportunity->created_at ? $opportunity->created_at->format('Y-m-d') : ''}}
+          </td>
+          <td>{{$opportunity->daysOpen()}}</td>
+          <td>
+
+            {{$statuses[$opportunity->closed]}}
+            @if($opportunity->closed == 0)
+            <button class="btn btn-danger" 
+        data-href="{{route('opportunity.close',$opportunity->id)}}"
+        data-toggle="modal" 
+        data-target="#closeopportunity">Close</button>
             @endif
+          </td>
+          <td>
+          
             <a href= "{{route('address.show',$opportunity->address->address->id)}}">
               {{$opportunity->address->address->businessname}}
             </a>
@@ -72,6 +99,7 @@
 
 </table>
 @include('opportunities.partials._activitiesmodal')
+@include('opportunities.partials._closemodal')
 <script>
 $( document ).ready(function() {
     $("input[id^=top50]").change (function () {

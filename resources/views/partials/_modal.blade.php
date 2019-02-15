@@ -28,8 +28,8 @@
                             method="post" 
 
                             style="display: none;">
-                            <input type="hidden" name="_method" value="delete">
-                            {{ csrf_field() }}
+                            @method('delete')
+                            @csrf
                         </form>
                 </div>
             </div>
