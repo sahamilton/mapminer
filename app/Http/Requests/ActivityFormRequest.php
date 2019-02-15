@@ -26,6 +26,7 @@ class ActivityFormRequest extends FormRequest
         return [
             'activity_date'=>'date:required',
             'followup_date'=>'date|nullable|after:activity_date',
+            'location_id' => 'required',
         ];
     }
 }
