@@ -146,9 +146,9 @@ class MyLeadsController extends BaseController
      * @param  \App\MyLead  $myLeads
      * @return \Illuminate\Http\Response
      */
-    public function destroy()
+    public function destroy( $mylead)
     {
-       
+        dd($mylead);
     }
     
 

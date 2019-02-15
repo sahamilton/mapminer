@@ -107,7 +107,7 @@ class OpportunityController extends Controller
 
         $data['branches'] = $this->branch
         ->whereHas('opportunities',function ($q){
-            $q->whereBetween('updated_at', [Carbon::now()->subMOnth(1), Carbon::now()]);
+            $q->whereBetween('opportunities.updated_at', [Carbon::now()->subMOnth(1), Carbon::now()]);
 
         })
         ->withCount('opportunities',
@@ -156,7 +156,10 @@ class OpportunityController extends Controller
        
         $data['branchorders'] = $this->branch->with('orders','orders.address')->whereIn('id',$branches)->get(); 
  
-        $data['leads'] = $this->branch->with('leads','leads.leadsource')->whereIn('id',$branches)->get();
+        $data['leads'] = $this->branch->with('leads','leads.leadsource')
+
+                        ->whereIn('id',$branches)->get();
+                   
         $opportunity = $data['opportunities']->pluck('address_id')->toArray();
         $customer = $data['branchorders']->pluck('address_id')->toArray();
         
@@ -247,6 +250,13 @@ class OpportunityController extends Controller
     {
         //
     }
+
+    public function remove(Address $address, Request $request)
+    {
+        $address->assignedToBranch()->detach(request('branch-id'));
+        return redirect()->back()->withMessage('lead removed');
+    }
+
 
     public function close(Request $request, $address){
         

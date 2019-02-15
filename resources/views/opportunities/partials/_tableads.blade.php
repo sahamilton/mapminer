@@ -13,6 +13,7 @@
       <th>Company</th>
       <th>Address</th>
       <th>Lead Source</th>
+      <th>Remove</th>
     </thead>
       <tbody>
         @foreach ($lead->leads as $lead)
@@ -27,7 +28,17 @@
           <td>
             @if($lead->leadsource)
               {{$lead->leadsource->source}}
-            @endif</td>
+            @endif
+          </td>
+          <td>
+            
+      <a 
+        data-href="{{route('branch.lead.remove',$lead->id)}}" 
+        data-toggle="modal" 
+        data-target="#confirm-remove" 
+        data-title = " this lead from your list" 
+        href="#">
+            <i class="fas fa-trash-alt text-danger"></i></a></td>
         </tr>
         @endforeach
 
@@ -38,4 +49,5 @@
 
 </table>
 @endforeach
+@include('partials._branchleadmodal')
 @include('opportunities.partials._mylead')
