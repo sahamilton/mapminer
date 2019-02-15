@@ -148,9 +148,15 @@ class MyLeadsController extends BaseController
      */
     public function destroy( $mylead)
     {
-        dd($mylead);
+        
     }
     
+
+    public function addToBranchLeads(Address $address, Request $request){
+        dd($address,$request);
+        $address->assignedToBranch()->firstOrCreate(request()->except('_token'));
+        return redirect()->back()->withMessage('Added to Branch Leads');
+    }
 
     private function cleanseInput(Request $request){
         $address = request('address'). ' ' . request('city').' ' .request('state').' ' .request('zip');

@@ -76,7 +76,7 @@ class AddressController extends Controller
         }
        // $activities = ActivityType::orderBy('sequence')->pluck('activity','id')->toArray();
 
-        $branches = $this->branch->nearby($location,100,5)->get();
+        $branches = $this->branch->nearby($location,100,5)->orderBy('distance')->get();
         $rankingstatuses = $this->address->getStatusOptions;
         $people = $this->person->salesReps()->PrimaryRole()->nearby($location,100,5)->get();
         $mybranches = $this->person->myBranches();

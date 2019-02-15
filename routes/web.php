@@ -92,7 +92,7 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('contacts/{id}/vcard',['as'=>'contacts.vcard','uses'=>'LocationContactController@vcard']);
 		Route::resource('contacts','LocationContactController');
 		Route::resource('mycontacts','MyContactsController');
-	
+
 	# Dashboard
 		Route::resource('dashboard','DashboardController');
    	
@@ -139,7 +139,7 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::post('api/note/post',['as'=>'postNewNote','uses'=>'NotesController@store']);
 		Route::get('api/note/get',['as'=>'addNewNote','uses'=>'NotesController@store']);
 		Route::get('api/geo',['as'=>'geo','uses'=>'GeoCodingController@index']);
-		Route::get('api/myleads/{distance}/{latLng}/{limit?}',['as'=>'myleadsmap','uses'=>'MapsController@findMyLeads']);
+		Route::get('api/myleads/{distance}/{latLng}/{limit?}',['as'=>'myleadsmap','uses'=>'MapsController@finds']);
 		Route::get('api/address/{distance}/{latLng}',['as'=>'addressmap','uses'=>'AddressController@findLocations']);
 
 	#News
@@ -154,6 +154,7 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::resource('notes','NotesController');
 
 	#Opportunity
+		Route::post('/branchlead/{address}',['as'=>'branch.lead.add','uses'=>'OpportunityController@addToBranchLeads']);
 		Route::post('/opportunities/close/{address}',['as'=>'opportunity.close','uses'=>'OpportunityController@close']);
 		Route::post('/opportunities/branch/',['as'=>'opportunity.branch','uses'=>'OpportunityController@branchOpportunities']);
 		Route::get('/opportunities/branch/{branch}',['as'=>'opportunities.branch','uses'=>'OpportunityController@branchOpportunities']);
