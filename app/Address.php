@@ -111,8 +111,13 @@ class Address extends Model
     public function scopeType($query,$type){
         return $query->where('addressable_type','=',$type);
     }
-    public function opportunities(){
+   /* public function opportunities(){
         return $this->belongsTo(Opportunity::class,'id','address_id');
+    }*/
+
+     public function opportunities(){
+ 
+       return $this->hasManyThrough(Opportunity::class,AddressBranch::class,'address_id','address_branch_id','id','id');
     }
 
     public function servicedBy(){

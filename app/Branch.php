@@ -69,9 +69,13 @@ class Branch extends Model implements HasPresenter {
 		
 	}
 
-	public function opportunities(){
+	/*public function opportunities(){
 		return $this->hasMany(Opportunity::class);
-	}
+	}*/
+	public function opportunities(){
+ 
+       return $this->hasManyThrough(Opportunity::class,AddressBranch::class,'branch_id','address_branch_id','id','id');
+    }
 
 	public function instate() 
 	{
@@ -113,7 +117,7 @@ class Branch extends Model implements HasPresenter {
 
 	}
 	public function leads(){
-		return $this->belongsToMany(Address::class,'address_branch','branch_id','address_id');
+		return $this->belongsToMany(Address::class,'address_branch','branch_id','address_id')->whereDoesntHave('opportunities');
 	}
 	
 	public function getManagementTeam(){
