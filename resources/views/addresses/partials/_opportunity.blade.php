@@ -1,16 +1,17 @@
-  @if($location->opportunities && $location->opportunities->branch->count()>0)
+  
+  @if($location->assignedToBranch->count()>0)
 
-    @can('manage_opportunities')
-    @if($location->opportunities->closed !=0 )
-      <p class="alert alert-warning">Opportunity closed</p>
-      @else
-        <p>Tracked as <a href="{{route('opportunity.index')}}">{{$location->opportunities->branch()->first()->branchname}} branch opportunity</a></p>
-      
+      @if($location->opportunities->count()>0)
+
+        @if(array_key_exists($location->assignedToBranch->first()->id,$mybranches))
         @include('opportunities.partials._closeopportunityform')
+
+        @else
+        <p>Active prospect for {{$location->assignedToBranch->first()->branchname}}</p>
         @endif
-    @endcan
-  @else
-    @can('manage_opportunities')
+      @else
+        @if(array_key_exists($location->assignedToBranch->first()->id,$mybranches))
+
       <form name="addOpportunity" method="post" action="{{route('opportunity.store')}}" >
         @csrf
         @if(count($mybranches)==1)
@@ -29,5 +30,13 @@
         <input type="hidden" value="{{$location->id}}" name="address_id" />
         
       </form>
-    @endcan
+
+        @else
+        <p>Assigned to {{$location->assignedToBranch->first()->branchname}}</p>
+        @endif
+      @endif
+
+    @else
+     <a href="" class="btn btn-success">Add to Leads</a>
   @endif
+

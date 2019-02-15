@@ -21,6 +21,6 @@ class AddressBranch extends Model
         return $this->hasMany(Activity::class,'address_id','address_id');
     }
     public function opportunities(){
-        return $this->hasMany(Opportunity::class,'id','address_branch_id');
+        return $this->hasMany(Opportunity::class,'address_branch_id','id');
     }
 }

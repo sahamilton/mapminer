@@ -1,16 +1,18 @@
 Good Queries
 
+insert ignore into address_branch 
+(address_id,branch_id, top50)
+select distinct address_id,branch_id,top50
+from opportunities 
+where opportunities.address_branch_id =0
+
 update opportunities,address_branch
 set opportunities.address_branch_id = address_branch.id
 where opportunities.address_id = address_branch.address_id
 and opportunities.branch_id = address_branch.branch_id
 and opportunities.address_branch_id = 0
 
-insert into address_branch 
-(address_id,branch_id, top50)
-select distinct address_id,branch_id,top50
-from opportunities 
-where opportunities.address_branch_id =0
+
 
 update opportunities, address_branch,activities
 set closed = 2 where activities.activitytype_id = 9

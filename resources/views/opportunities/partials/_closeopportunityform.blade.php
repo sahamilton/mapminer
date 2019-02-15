@@ -1,9 +1,16 @@
-@if(array_key_exists($location->opportunities->branch()->first()->id,$mybranches))
+
+
+@foreach($location->opportunities as $opportunity)
+@if($opportunity->closed ==0)
+<strong>Opportunity {{$opportunity->id}}:</strong><a href="{{route('opportunity.show',$opportunity->id)}}">  {{$opportunity->title}}</a>
 
 <button class="btn btn-danger" 
      
       data-toggle="modal" 
-      data-target="#closeopportunity">Close Opportunity</button>
+      data-target="#closeopportunity">Close</button>
+@endif
+@endforeach
+<a href="" class="btn btn-success">Create New Opportunity</a>
 <!-- Modal -->
 @php
 $rank =  3 ;@endphp
@@ -76,11 +83,11 @@ $rank =  3 ;@endphp
             <input type="submit" value="Close Opportunity" class="btn btn-success" />
           </div>
           <input type="hidden" name="address_id" value="{{$location->id}}" />
-          <input type="hidden" name="opportunity_id" value="{{$location->opportunities->id}}" />
+          
         </form>
       </div>
       <div class="modal-footer"></div>
     </div>
   </div>
 </div>
-@endif
+

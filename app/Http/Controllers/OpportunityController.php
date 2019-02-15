@@ -78,6 +78,7 @@ class OpportunityController extends Controller
             return response()->view('opportunities.mgrindex',compact('data','activityTypes'));
         } else{
                
+
                       $data = $this->getBranchOpportunities([array_keys($myBranches)[0]]);
                       
                       return response()->view('opportunities.index',compact('data','activityTypes','myBranches'));
@@ -151,7 +152,11 @@ class OpportunityController extends Controller
         });
 
         $data['activities'] = $data['addresses']->map(function ($address){
-            return $address->activities->load('relatesToAddress','relatedContact');
+            if($address)
+            {
+                return $address->activities;
+            }
+            
         });
        
         $data['branchorders'] = $this->branch->with('orders','orders.address')->whereIn('id',$branches)->get(); 
@@ -195,9 +200,9 @@ class OpportunityController extends Controller
             ->where('address_id','=',request('address_id'))
             ->where('branch_id','=',request('branch_id'))
             ->firstOrCreate(request()->except('_token'));
-    
-        $join->opportunities()->create(request()->except('_token'));
         
+        $join->opportunities()->create(request()->except('_token'));
+      
         return redirect()->route('address.show',request('address_id'))->withMessage("Added to branch opportunities");
     }
 
@@ -209,10 +214,10 @@ class OpportunityController extends Controller
      */
     public function show(Opportunity $opportunity)
     {
+        $opportunity->load('branch','address');
+        
       
-        $opportunity->load('address');
-        $address = $opportunity->address;
-        return redirect()->route('address.show',$address->id);
+        return response()->view('opportunities.show',compact('opportunity'));
         
     }
 
@@ -224,8 +229,8 @@ class OpportunityController extends Controller
      */
     public function edit(Opportunity $opportunity)
     {
-        $opportunity = $opportunity->load('address','branch','activities','address.contacts');
-        return response()->view('opportunities.show',compact('opportunity'));
+       
+        return response()->view('opportunities.edit',compact('opportunity'));
     }
 
     /**
@@ -237,7 +242,8 @@ class OpportunityController extends Controller
      */
     public function update(Request $request, Opportunity $opportunity)
     {
-        //
+        $opportunity->update(request()->except('_token'));
+        return redirect()->route('address.show',$opportunity->address_id);
     }
 
     /**

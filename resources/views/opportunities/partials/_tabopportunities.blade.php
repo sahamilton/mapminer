@@ -16,17 +16,21 @@
     </thead>
       <tbody>
         @foreach ($data['opportunities'] as $opportunity)
+     
       
         <tr>
           <td>{{$opportunity->created_at ? $opportunity->created_at->format('Y-m-d') : ''}}</td>
           <td>{{$opportunity->daysOpen()}}</td>
           <td>{{$statuses[$opportunity->closed]}}</td>
           <td>
-            <a href= "{{route('address.show',$opportunity->address->id)}}">
-              {{$opportunity->address->businessname}}
+            @if(! $opportunity->address)
+            {{dd($opportunity)}}
+            @endif
+            <a href= "{{route('address.show',$opportunity->address->address->id)}}">
+              {{$opportunity->address->address->businessname}}
             </a>
           </td>
-          <td>{{$opportunity->address->fullAddress()}}</td>
+          <td>{{$opportunity->address->address->fullAddress()}}</td>
           <td>
 
             <input type="checkbox" id="top50{{$opportunity->id}}" value="{{$opportunity->id}}" 

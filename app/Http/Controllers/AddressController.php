@@ -69,7 +69,7 @@ class AddressController extends Controller
        
         $location = $address->load('contacts','contacts.relatedActivities','activities','activities.type','activities.relatedContact',
             'activities.user','activities.user.person','company','opportunities','industryVertical','relatedNotes','orders','orders.branch','watchedBy','watchedBy.person','ranking','leadsource','createdBy','assignedToBranch');
-    
+
         if($address->addressable_type){
            
             $location->load($address->addressable_type);
