@@ -36,9 +36,9 @@
             {{$note->relatesToLocation->company->companyname}}
             </a>
          @endif
-         @if(auth()->user()->hasRole(['admin','sales_operations']) or auth()->user()->id == $note->writtenBy->id)
+         @if($note->user_id && (auth()->user()->hasRole(['admin','sales_operations']) or auth()->user()->id == $note->writtenBy->id))
          <a href="{{route('notes.edit',$note->id)}}" title="Edit this note"><i class="fas fa-edit"></i></a>
-         <a                         data-href="{{route('notes.destroy',$note->id)}}" 
+         <a             data-href="{{route('notes.destroy',$note->id)}}" 
                         data-toggle="modal" 
                         data-target="#confirm-delete" 
                         data-title = "this note" 
