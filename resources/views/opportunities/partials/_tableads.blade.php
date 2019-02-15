@@ -29,6 +29,9 @@
             @if($lead->leadsource)
               {{$lead->leadsource->source}}
             @endif
+            @if($lead->createdBy)
+             <em>by {{$lead->createdBy->person->fullName()}} </em>
+            @endif
           </td>
           <td>
             

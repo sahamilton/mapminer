@@ -147,7 +147,7 @@ class Address extends Model
     }
 
     public function createdBy(){
-        return $this->belongsTo(User::class,'user_id','id');
+        return $this->belongsTo(User::class,'user_id','id')->with('person');
     }
 
     public function getExtraFields($type){

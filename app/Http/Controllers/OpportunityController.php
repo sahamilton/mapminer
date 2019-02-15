@@ -156,7 +156,7 @@ class OpportunityController extends Controller
        
         $data['branchorders'] = $this->branch->with('orders','orders.address')->whereIn('id',$branches)->get(); 
  
-        $data['leads'] = $this->branch->with('leads','leads.leadsource')
+        $data['leads'] = $this->branch->with('leads','leads.leadsource','leads.createdBy')
 
                         ->whereIn('id',$branches)->get();
                    
