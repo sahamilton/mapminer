@@ -72,8 +72,8 @@ class OpportunityController extends Controller
         }
         if((! auth()->user()->hasRole('branch_manager') && $this->person->myTeam()->count() >1 )){
         
-                     $data = $this->getSummaryBranchOpportunities(array_keys($myBranches));
-                   
+             $data = $this->getSummaryBranchOpportunities(array_keys($myBranches));
+                 
             // need to get all the activities esp conversions / closes
             return response()->view('opportunities.mgrindex',compact('data','activityTypes'));
         } else{
@@ -107,10 +107,7 @@ class OpportunityController extends Controller
     public function getSummaryBranchOpportunities(array $branches){
 
         $data['branches'] = $this->branch
-        ->whereHas('opportunities',function ($q){
-            $q->whereBetween('opportunities.updated_at', [Carbon::now()->subMOnth(1), Carbon::now()]);
-
-        })
+        
         ->withCount('opportunities',
             'leads')
         ->withCount(       
@@ -196,14 +193,17 @@ class OpportunityController extends Controller
     public function store(Request $request)
     {
        
+        // make sure that the relationship exists
         $join = $this->addressbranch
             ->where('address_id','=',request('address_id'))
             ->where('branch_id','=',request('branch_id'))
-            ->firstOrCreate(request()->except('_token'));
-        
-        $join->opportunities()->create(request()->except('_token'));
-      
-        return redirect()->route('address.show',request('address_id'))->withMessage("Added to branch opportunities");
+            ->firstOrCreate(['address_id'=>request('address_id'),'branch_id'=>request('branch_id')]);
+        $data = request()->except('_token');
+        $data['user_id'] =auth()->user()->id;
+  
+        $join->opportunities()->create($data);
+
+        return redirect()->back()->withMessage("Added to branch opportunities");
     }
 
     /**
@@ -242,8 +242,10 @@ class OpportunityController extends Controller
      */
     public function update(Request $request, Opportunity $opportunity)
     {
+        
         $opportunity->update(request()->except('_token'));
-        return redirect()->route('address.show',$opportunity->address_id);
+        
+        return redirect()->route('address.show',$opportunity->address->address_id)->withMessage('Opportunity updated');
     }
 
     /**
@@ -254,7 +256,9 @@ class OpportunityController extends Controller
      */
     public function destroy(Opportunity $opportunity)
     {
-        //
+        $address = $opportunity->address->address_id;
+        $opportunity->delete();
+        return redirect()->route('address.show',$address)->withMessage('Opportunity deleted');
     }
 
     public function remove(Address $address, Request $request)
@@ -268,38 +272,23 @@ class OpportunityController extends Controller
         return redirect()->back()->withMessage('Added to Branch Leads');
     }
 
-    public function close(Request $request, $address){
-        
-        $opportunity = $this->opportunity->findOrFail(request('opportunity_id'));
-        
-        if(request('close') =='converted'){
-            $address->load('company');
-            if(! $address->company or $address->company->customer_id != request('client_id')){
-              
-               $company = Company::create(['companyname'=>$address->businessname,'accounttypes_id'=>3,'customer_id'=>request('client_id')]);
-               
+    public function close(Request $request, $opportunity){
+       
+        $opportunity->update(request()->except('_token'));
+        $opportunity->load('address','address.address','address.address.company');
+            // check to see if the client_id exists else create new company
+            if(request()->filled('client_id')){
+               $company = Company::where('client_id','=',request('client_id'))
+               ->firstOrCreate(
+                [
+                  'companyname'=>$address->address->businessname,
+                  'accounttypes_id'=>3,
+                  'customer_id'=>request('client_id')
+                ]);
                $address->update(['company_id' => $company->id]);
-               
             }
-           
-            $data = ['closed'=>1,'client_ref'=>request('client_id'),'requirements'=>request('requirements'),'value'=>request('periodbusiness')];
-            $opportunity->update($data); // create an activity on the address
-            $data=['address_id'=>$address->id,'user_id'=>auth()->user()->id,
-            'note'=>request('comments'),'activity_date'=>Carbon::now(),'activitytype_id'=>'8'];
-            $activity = Activity::create($data);
-            // store the values on the opportunity
-        }else{
-            //create an activity on the address
-            // remove from opportunity
-            
-            $data=['address_id'=>$address->id,'user_id'=>auth()->user()->id,
-            'note'=>request('comments'),'activity_date'=>Carbon::now(),'activitytype_id'=>'9'];
-            $activity = Activity::create($data);
-            $address->activities()->save($activity);
-            $opportunity->update(['closed'=>2]);
-            
-        }
-        return redirect()->route('opportunity.index')->withMessage('Opportunity '. request('close'));
+
+        return redirect()->back()->withMessage('Opportunity closed');
         
     }
     public function toggle(Request $request){
