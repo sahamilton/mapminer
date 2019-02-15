@@ -107,7 +107,10 @@ class OpportunityController extends Controller
     public function getSummaryBranchOpportunities(array $branches){
 
         $data['branches'] = $this->branch
-       
+        ->whereHas('opportunities',function ($q){
+            $q->whereBetween('opportunities.updated_at', [Carbon::now()->subMOnth(1), Carbon::now()]);
+
+        })
         ->withCount('opportunities',
             'leads')
         ->withCount(       
