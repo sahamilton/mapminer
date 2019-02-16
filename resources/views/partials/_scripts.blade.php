@@ -43,7 +43,7 @@ $(document).ready(function()
 		$(this).find('#action-form').attr('action',$(e.relatedTarget).data('href'));
 		
 	});
-	$(document).on('show.bs.modal','#editopportunity', function(e) {
+	$(document).on('show.bs.modal','#reassign', function(e) {
     	
 		$(this).find('#action-form').attr('action',$(e.relatedTarget).data('href'));
 		

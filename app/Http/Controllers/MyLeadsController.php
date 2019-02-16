@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use App\Address;
+use App\Branch;
 use Illuminate\Http\Request;
 use App\Person;
 use App\LeadStatus;
@@ -15,10 +16,14 @@ class MyLeadsController extends BaseController
     public $me;
     public $user;
     public $person;
-    public function __construct(Address $lead,Person $person){
+    public $branch;
+
+
+    public function __construct(Address $lead,Person $person,Branch $branch){
 
         $this->lead = $lead;
         $this->person = $person;
+        $this->branch = $branch;
 
        
     }
@@ -31,6 +36,19 @@ class MyLeadsController extends BaseController
     public function index()
     {
         
+        $myBranches = $this->person->myBranches();
+
+        $leads = $this->lead->wherehas('assignedToBranch',function($q) use($myBranches){
+            $q->whereIn('branches.id',array_keys($myBranches));
+        })->whereHas('assignedToBranch',function ($q){
+            $q->selectRaw('ST_Distance_Sphere(addresses.position ,branches.position)/1609 AS distance');
+        })->with('assignedToBranch')->get();
+      
+        return response()->view('myleads.branches',compact('leads','myBranches'));
+        // how to get the distance for each branch
+        // get my branches
+        // get addresses that are leads that are assigned to a branch
+        //
     }
 
 
@@ -152,11 +170,7 @@ class MyLeadsController extends BaseController
     }
     
 
-    public function addToBranchLeads(Address $address, Request $request){
-        dd($address,$request);
-        $address->assignedToBranch()->firstOrCreate(request()->except('_token'));
-        return redirect()->back()->withMessage('Added to Branch Leads');
-    }
+    
 
     private function cleanseInput(Request $request){
         $address = request('address'). ' ' . request('city').' ' .request('state').' ' .request('zip');

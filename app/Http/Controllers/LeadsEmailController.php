@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Mail;
 use App\LeadSource;
 use App\Lead;
+use App\Branch;
 use App\Person;
 use App\LeadStatus;
 use App\Mail\NotifyLeadsAssignment;
@@ -18,23 +19,48 @@ class LeadsEmailController extends Controller
 {
     
 	public $leadsource;
-    public function __construct(LeadSource $leadsource){
+    public $branch;
+
+
+    public function __construct(LeadSource $leadsource, Branch $branch){
     	$this->leadsource = $leadsource;
+        $this->branch = $branch;
     }
 
     public function announceLeads($leadsource){
         
         $source = $leadsource->load('leads','leads.assignedToBranch','verticals');
-     
-        //$salesteam = $this->salesteam($source->leads);
+        $data = $this->getBranches($source);
+        $branches = $this->branch->whereIn('id',array_keys($data))->with('manager','manager.userdetails','manager.reportsTo')->get();
       
-        $branches = $this->branches($source->leads);
         $message = $this->createMessage($source);
-        return response()->view('leadsource.salesteam',compact('source','salesteam','message'));
+        return response()->view('leadsource.salesteam',compact('source','branches','data','message'));
+    }
+
+    private function getBranches($source){
+        $branches = $source->leads->map(function ($lead){
+            return $lead->assignedToBranch->pluck('branchname','id');
+        });
+       
+        foreach ($branches as $leads){
+            foreach ($leads as $id=>$branch){
+                if(isset($data[$id]))
+                {
+                
+                    $data[$id]=1+$data[$id];
+               }else{
+                    $data[$id]=1;
+               }
+            }
+            
+        }
+
+      return $data;
     }
 
 
-    private function salesteam($leads){
+   /* private function salesteam($leads){
+        dd($leads);
         $salesreps = array();
   
         foreach ($leads as $lead){
@@ -69,7 +95,7 @@ class LeadsEmailController extends Controller
        
        
     }
-
+*/
     public function branches($leads){
         
 
@@ -78,13 +104,10 @@ class LeadsEmailController extends Controller
         })->flatten();
        $branchManagers = \App\Branch::whereIn('id',array_unique($branches->toArray()))->with('manager')->get();
        $managers = $branchManagers->map(function ($branch){
-        return $branch->manager->load('userdetails');
-
-        foreach ($branches as $branch){
-                
-                Mail::queue(new NotifyleadsBranchAssignment($lead,$branch,$email));
-            }
+            return $branch->manager->load('userdetails');
         });
+       return $managers;
+       
     }
     // This should be in a mailable.
     
@@ -105,25 +128,36 @@ class LeadsEmailController extends Controller
         return $message;
 }
 
-    public function email(Request $request, $id){
+    public function email(Request $request, $leadsource){
 
-
-        $data['source'] = $this->leadsource->with('leads','leads.assignedToBranch','leads.assignedToBranch.manager')
-        ->where('datefrom','<=',date('Y-m-d'))
-        ->where('dateto','>=',date('Y-m-d'))
-        ->findOrFail($id);
-        $salesteam = $this->salesteam($data['source']->leads);
-        
-
+        $data['branches'] = $this->getBranches($leadsource);
+        $branches = $this->branch->whereIn('id',array_keys($data['branches']))
+        ->has('manager')->with('manager','manager.userdetails','manager.reportsTo')->get();
+        $data['count'] = $branches->count();
         $data['message'] = request('message');;
-        $data['count'] = count($salesteam);
-        $this->notifySalesTeam($data,$salesteam);
-        $this->notifyManagers($data,$salesteam);
+        
+      
+        $this->notifyBranchTeam($data,$branches,$leadsource);
+        /*$this->notifyManagers($data,$salesteam);
         $this->notifySender($data);
-        return response()->view('leadsource.senderleads',compact('data'));
+        */
+        return response()->view('leadsource.senderleads',compact('data','leadsource'));
 
     }
-    private function notifySalesTeam($data,$salesteam){
+
+     private function notifyBranchTeam($data,$branches,$leadsource){
+        
+        foreach ($branches as $branch){
+           foreach ($branch->manager as $manager){
+            
+                Mail::to($manager->userdetails->email,$manager->fullName()
+                        ->queue(new NotifyLeadsAssignment($data,$manager,$leadsource,$branch));
+            }
+        }
+    }
+
+
+   /* private function notifySalesTeam($data,$salesteam){
         
         foreach ($salesteam as $team){
             
@@ -134,6 +168,7 @@ class LeadsEmailController extends Controller
     }
 
     private function notifySender($data){
+        dd('hrere');
         $data['sender'] = auth()->user()->email;
         Mail::queue(new NotifySenderLeadsAssignment($data));
 
@@ -160,5 +195,5 @@ class LeadsEmailController extends Controller
         }
 
     }
-    
+    */
 }

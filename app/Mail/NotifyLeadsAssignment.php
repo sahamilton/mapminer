@@ -2,6 +2,8 @@
 
 namespace App\Mail;
 use App\Person;
+use App\Branch;
+use App\LeadSource;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
@@ -11,18 +13,23 @@ class NotifyLeadsAssignment extends Mailable
 {
     use Queueable, SerializesModels;
     public $data;
-    public $team;
+    public $manager;
+    public $leadsource;
+    public $branch;
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($data,$team)
-    {
+    public function __construct($data,Person $manager,LeadSource $leadsource,Branch $branch){
         $this->data = $data;
-        $this->team = $team['details'];
-       
+        $this->branch = $branch;
         
+        $this->manager = $manager;
+
+        $this->leadsource = $leadsource;
+       
+ 
     }
 
     /**
@@ -33,7 +40,11 @@ class NotifyLeadsAssignment extends Mailable
     public function build()
     {
         
-        return $this->markdown('emails.leadsnotify')->to($this->team->userdetails->email, $this->team->postName())->subject('New Leads');
-    }
+      
+        return $this->from('salesops@trueblue.com','Sales Operations')
+        ->markdown('emails.leadsnotify')
+                ->subject('New Leads Assigned');
+        }
+
 
 }

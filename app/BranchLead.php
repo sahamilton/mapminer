@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class BranchLead extends Model
 {
-    public $table = 'branch_lead';
+    public $table = 'addresse_branch';
 
-    public $fillable = ['branch_id','lead_id','address_id','rating','status_id','comments'];
+    public $fillable = [];
 
     public function address(){
     	return $this->belongsTo(Address::class);

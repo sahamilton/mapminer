@@ -345,7 +345,6 @@ class LeadsController extends BaseController
       //return response()->view('leads.showsearch',compact('lead','sources','rank','people','branches'));
     }
 
-  
     /**
      * Display people near to address.
      *

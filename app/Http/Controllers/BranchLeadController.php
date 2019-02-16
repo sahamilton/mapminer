@@ -30,12 +30,17 @@ class BranchLeadController extends Controller
      */
     public function index()
     {
-        // get my branches
-          $branchleads = $this->address->whereHas('branchLead',function($q){
-            $q->whereIn('id',array_keys($this->person->myBranches()));
-          })->with('branchlead','branchlead.manager')->get();
-         
-        return response()->view('branchlead.index',compact('branchleads'));
+       
+        if(count($this->person->myBranches())>0){
+
+            $branches = $this->branch->whereIn('id',array_keys($this->person->myBranches()))
+            ->withCount('leads')->with('manager')->get();
+           
+        }else{
+            $branches = $this->branch->withCount('leads')->with('manager')->get();
+        }
+        
+        return response()->view('branchleads.index',compact('branches'));
     }
 
     /**
@@ -65,9 +70,12 @@ class BranchLeadController extends Controller
      * @param  \App\BranchLead  $branchLead
      * @return \Illuminate\Http\Response
      */
-    public function show(BranchLead $branchLead)
+    public function show(Branch $branch)
     {
-        //
+       
+        $branch = $branch->load('leads','manager','leads.industryVertical','leads.leadsource');
+
+        return response()->view('branchleads.show',compact('branch'));
     }
 
     /**

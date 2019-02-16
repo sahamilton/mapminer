@@ -1,18 +1,18 @@
 <!-- Modal -->
 @php
 $rank =  3 ;@endphp
-<div id="rateaddress" class="modal fade" role="dialog">
+<div id="reassign" class="modal fade" role="dialog">
   <div class="modal-dialog">
 
     <!-- Modal content-->
     <div class="modal-content">
       <div class="modal-header">
 
-        <h4 class="modal-title">Rate {!!$location->businessname !!} data  </h4>
+        <h4 class="modal-title">Rate {!!$location->businessname !!} lead  </h4>
         <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
       <div class="modal-body">
-        <p>Please complete this form to rate this locations data</p>
+        <p>Please  locations data</p>
         <?php $ratings = [1,2,3,4,5];?>
         <form method="post" action="{{route('address.rating',$location->id)}}">
           @csrf

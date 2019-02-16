@@ -7,7 +7,18 @@ use Illuminate\Database\Eloquent\Model;
 class Opportunity extends Model
 {
     
-    public $fillable = ['address_id','branch_id','address_branch_id','value','requirements','client_id','closed','top50','title','duration'];
+    public $fillable = ['address_id',
+                            'branch_id',
+                            'address_branch_id',
+                            'value','requirements',
+                            'client_id',
+                            'closed',
+                            'top50',
+                            'title',
+                            'duration',
+                            'description',
+                            'user_id',
+                            'comments'];
     
     public function branch(){
     	return $this->belongsTo(AddressBranch::class,'address_branch_id')->with('branch');
@@ -33,6 +44,11 @@ class Opportunity extends Model
     {
         return $this->where('closed','<>',2);
     }
+    public function createdBy()
+    {
+        return $this->belongsTo(User::class,'user_id')->with('person');
+    }
+
 
     
 }

@@ -27,7 +27,7 @@
                         action="" 
                         method="post"
                         style="display: none;">
-                        <input type="hidden" name="branch_id" value="{{$data['branches']->first()->id}}" />
+                        <input type="hidden" name="branch_id" value="{{$branch->id}}" />
                         
                         {{ csrf_field() }}
                     </form>

@@ -112,7 +112,9 @@ Route::group(['middleware' => 'auth'], function () {
 	#Industry Focus
     	Route::resource('/industryfocus','PersonIndustryController');
 
+    # Lead
 
+    	Route::post('lead/{address}/reassign',['as'=>'lead.reassign','uses'=>'MyLeadsController@reassign']);
 	#Locations
 
 		Route::get('location/{id}/branches', ['as' => 'assign.location', 'uses' => 'LocationsController@getClosestBranch']);
@@ -456,7 +458,7 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
 	# Prospect Source / LeadSource
 
 		Route::get('leadsource/{leadsource}/announce',['as'=>'leadsource.announce','uses'=>'LeadsEmailController@announceLeads']);
-		Route::post('leadsource/{id}/email',['as'=>'sendleadsource.message','uses'=>'LeadsEmailController@email']);
+		Route::post('leadsource/{leadsource}/email',['as'=>'sendleadsource.message','uses'=>'LeadsEmailController@email']);
 		Route::get('leadsource/{leadsource}/assign',['as'=>'leadsource.assign','uses'=>'LeadsAssignController@assignLeads']);
 		Route::get('leadsource/{id}/branch',['as'=>'leadsource.branches','uses'=>'LeadSourceController@branches']);
 		Route::get('leadsource/{id}/unassigned',['as'=>'leadsource.unassigned','uses'=>'LeadSourceController@unassigned']);

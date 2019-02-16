@@ -17,10 +17,20 @@
 {{$location->createdBy ? "Created by " . $location->createdBy->person->fullname() : ''}}</p>
 @if($location->has('assignedToBranch'))
 <strong>Assigned to:</strong>
+
   @foreach ($location->assignedToBranch as $branch)
 
   <li><a href="{{route('branches.show',$branch->id)}}">{{$branch->branchname}}</a> - @if(isset($statuses[$branch->pivot->status_id])) 
     {{$statuses[$branch->pivot->status_id]}}
+  @endif
+  @if(in_array($branch->id,array_keys($mybranches)))
+  <button type="button" 
+    class="btn btn-warning" 
+
+    data-toggle="modal" 
+    data-target="#reassign">
+      Reassign
+</button>
   @endif
 </li>
 
@@ -41,6 +51,25 @@
       aria-selected="true">
     <strong> Details</strong>
   </a>
+@if($location->opportunities->count()>0)
+<a class="nav-item nav-link"  
+        data-toggle="tab" 
+        href="#opportunities"
+        id="opportunity-tab"
+        role="tab"
+        aria-controls="opportunities"
+        aria-selected="false">
+
+    <strong>Opportunities</strong>
+
+
+
+@endif
+
+
+
+
+
   @if($location->addressable_type == 'project')
  <a class="nav-item nav-link"  
         data-toggle="tab" 
@@ -157,6 +186,16 @@
     <div id="details" class="tab-pane show active">
      @include('addresses.partials._tabdetails')
     </div>
+    @if($location->opportunities->count() > 0)
+    <div id="opportunities" class="tab-pane fade">
+        @php $data['opportunities'] = $location->opportunities; 
+
+        $activityTypes = \App\ActivityType::all();
+        @endphp
+        @include('opportunities.partials._tabopportunities')
+
+    </div>
+    @endif
         @if($location->addressable_type == 'weblead')
     <div id="weblead" class="tab-pane fade">
       
@@ -213,6 +252,7 @@
 
 @include('partials._modal');
 @include('addresses.partials._rateaddressform')
+@include('addresses.partials._reassign')
 @include('addresses.partials.map')
 @include('partials._scripts');
 
