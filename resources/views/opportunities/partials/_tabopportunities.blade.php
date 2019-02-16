@@ -22,21 +22,26 @@
       
         <tr>
           <td>
+            @if(isset($data['branches']) && in_array($data['branches']->first()->id,array_keys($myBranches)))
             <a href="{{route('opportunity.show',$opportunity->id)}}">
             {{$opportunity->title ?  $opportunity->title : $opportunity->id}}</a>
            <a href="{{route('opportunity.edit',$opportunity->id)}}" title="Edit this opportunity"> <i class="fas fa-edit class="text text-info"></i></a>
            <a 
-                               data-href="{{route('opportunity.destroy',$opportunity->id)}}" 
+               data-href="{{route('opportunity.destroy',$opportunity->id)}}" 
 
-                                    data-toggle="modal" 
-                                    data-target="#confirm-delete" 
-                                    data-title = "this opportunity" 
-                                    href="#"
-                                    title="Delete this opportunity">
+                    data-toggle="modal" 
+                    data-target="#confirm-delete" 
+                    data-title = "this opportunity" 
+                    href="#"
+                    title="Delete this opportunity">
 
-                                    <i class="far fa-trash-alt text-danger" aria-hidden="true"> </i> 
-                                    
-                                </a>
+                    <i class="far fa-trash-alt text-danger" aria-hidden="true"> </i> 
+                    
+                </a>
+              @else
+            {{$opportunity->title ?  $opportunity->title : $opportunity->id}}
+
+              @endif
           </td>
           <td>{{$opportunity->created_at ? $opportunity->created_at->format('Y-m-d') : ''}}
           </td>
@@ -44,7 +49,7 @@
           <td>
 
             {{$statuses[$opportunity->closed]}}
-            @if($opportunity->closed == 0)
+            @if(isset($data['branches']) &&  $opportunity->closed == 0 && in_array($data['branches']->first()->id,array_keys($myBranches)))
             <button class="btn btn-danger" 
         data-href="{{route('opportunity.close',$opportunity->id)}}"
         data-toggle="modal" 
@@ -78,6 +83,7 @@
             @endif
           </td>
           <td>
+            @if(isset($data['branches']) && in_array($data['branches']->first()->id,array_keys($myBranches)))
               <a 
                   data-href="{{route('activity.store')}}" 
                   data-toggle="modal" 
@@ -87,7 +93,7 @@
                   data-title = "location" 
                   href="#">
               <i class="fa fa-plus-circle text-success" aria-hidden="true"></i> Add Activity</a>
-
+              @endif
           </td>
         </tr>
         @endforeach

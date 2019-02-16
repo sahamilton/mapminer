@@ -26,3 +26,16 @@ where addresses.id = address_branch.address_id
 and address_branch.branch_id = branches.id
 and branches.id in (1115,1149,1150,2254,2255,2702,2751,2752,2753,2961)
 ORDER BY addresses.id, distance asc
+
+update addresses set position = POINT(lng, lat);
+update addresses set position = ST_GeomFromText(ST_AsText(position), 4326);
+update branches set position = POINT(lng, lat);
+update branches set position = ST_GeomFromText(ST_AsText(position), 4326);
+update persons set position = POINT(lng, lat);
+update persons set position = ST_GeomFromText(ST_AsText(position), 4326);
+
+select addresses.id, addresses.businessname, concat_ws(' ',addresses.street,addresses.city,addresses.state) as fullAddress,addresses.lat,addresses.lng,branches.id,branches.branchname,branches.lat,branches.lng,
+ST_Distance_Sphere(addresses.position,branches.position)/40633 AS distance
+from addresses,address_branch, branches
+where addresses.id = address_branch.address_id
+and address_branch.branch_id in ('1506','1518','1522','1525','1552','1589')
