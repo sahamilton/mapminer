@@ -150,7 +150,7 @@ class LeadsEmailController extends Controller
         foreach ($branches as $branch){
            foreach ($branch->manager as $manager){
             
-                Mail::to($manager->userdetails->email,$manager->fullName()
+                Mail::to($manager->userdetails->email,$manager->fullName())
                         ->queue(new NotifyLeadsAssignment($data,$manager,$leadsource,$branch));
             }
         }
