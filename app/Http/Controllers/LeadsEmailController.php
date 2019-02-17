@@ -147,24 +147,24 @@ class LeadsEmailController extends Controller
      private function notifyBranchTeam($data,$branches,$leadsource){
         if($data['test']){
             $branch = $branches->random();
-            dd($branch);
+
             foreach ($branch->manager as $manager){
                     
-                        Mail::to($manager->userdetails->email,$manager->fullName())
-                            ->queue(new NotifyLeadsAssignment($data,$manager,$leadsource,$branch));
-                    }
-                }
+                Mail::to($manager->userdetails->email,$manager->fullName())
+                    ->queue(new NotifyLeadsAssignment($data,$manager,$leadsource,$branch));
+            }
+
 
         }else{
             foreach ($branches as $branch){
                foreach ($branch->manager as $manager){
                     
-                        Mail::to($manager->userdetails->email,$manager->fullName())
-                            ->queue(new NotifyLeadsAssignment($data,$manager,$leadsource,$branch));
-                    }
+                    Mail::to($manager->userdetails->email,$manager->fullName())
+                        ->queue(new NotifyLeadsAssignment($data,$manager,$leadsource,$branch));
                 }
             }
         }
+
     }
 
 
