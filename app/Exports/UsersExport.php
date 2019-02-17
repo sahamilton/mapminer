@@ -19,10 +19,9 @@ class UsersExport implements FromView
     */
     public function view(): View
     {
-       
-       return view('admin.users.export', [
-            'result' => User::lastLogin($this->interval)->with('person','roles','serviceline')->get();
-        ]);
+       $users =  User::lastLogin($this->interval)->with('person','roles','serviceline')->get();
+        
+       return view('admin.users.export',compact('users'));
     }
 
 }

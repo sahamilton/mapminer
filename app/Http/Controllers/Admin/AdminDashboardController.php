@@ -7,6 +7,7 @@ use App\User;
 use App\Person;
 use App\Company;
 use Excel;
+use App\Exports\UsersExport;
 use Carbon\Carbon;
 use App\Http\Controllers\BaseController;
 
@@ -83,18 +84,17 @@ class AdminDashboardController extends BaseController {
 	}
 
 	public function downloadlogins($id=null){
+		
 		$views = $this->getViews();
+		
 		$interval = $views[$id]['interval'];
+		
+		
 		$title = str_replace(" ", "-", 'Last Login '. $views[$id]['label']);
-		$interval = $interval = $periods[$n]['interval'];
-		return Excel::download(new UserExport($interval), $title.'.csv');
 
-		Excel::download($title,function($excel) use($id,$title){
-			$excel->sheet($title,function($sheet) use($id){
-				$users = $this->getUsersByLoginDate($id);
-				$sheet->loadView('admin.users.export',compact('users'));
-			});
-		})->download('csv');
+		return Excel::download(new UsersExport($interval), $title.'.csv');
+
+		
 
 		return response()->return();
 	}
