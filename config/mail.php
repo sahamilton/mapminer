@@ -107,4 +107,5 @@ return [
         ],
     ],
 
+    'test'=>env('MAIL_TEST', true),
 ];

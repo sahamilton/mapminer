@@ -149,9 +149,13 @@ class LeadsEmailController extends Controller
         
         foreach ($branches as $branch){
            foreach ($branch->manager as $manager){
-            
-                Mail::to($manager->userdetails->email,$manager->fullName())
+                if(config('mail.test')){
+                    Mail::to(config('mapminer.developer_email'))
                         ->queue(new NotifyLeadsAssignment($data,$manager,$leadsource,$branch));
+                }else{
+                    Mail::to($manager->userdetails->email,$manager->fullName())
+                        ->queue(new NotifyLeadsAssignment($data,$manager,$leadsource,$branch));
+                }
             }
         }
     }
