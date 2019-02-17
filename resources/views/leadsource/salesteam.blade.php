@@ -25,9 +25,13 @@
     </div>
     <form id="campaignmessage" action="{{route('sendleadsource.message',$source->id)}}" method="post">
         {{csrf_field()}}
+        <div class="form-group">
+          <label class = "form-control">Test</label>
+          <input type="checkbox" checked name="test" value="1" class="form-control" />
+        </div>
         <button class='disabled'>Edit Text</button>
         <div id='message' style="display:none" class="form-group{{ $errors->has('description') ? ' has-error' : '' }}">
-        <label for="description" class="form-controll">Campaign Message</label>
+        <label for="description" class="form-control">Campaign Message</label>
 
         <textarea id ="summernote" required class='summernote form-control' data-error="Please provide some description of this campaign" name="message">{!! old('message') ? old('message') :  $message !!}</textarea>
         {!! $errors->first('message', '<p class="help-block">:message</p>') !!}

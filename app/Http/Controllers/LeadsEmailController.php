@@ -130,13 +130,12 @@ class LeadsEmailController extends Controller
 
     public function email(Request $request, $leadsource){
 
+        
+        $data = request()->except('_token');
         $data['branches'] = $this->getBranches($leadsource);
         $branches = $this->branch->whereIn('id',array_keys($data['branches']))
         ->has('manager')->with('manager','manager.userdetails','manager.reportsTo')->get();
-        $data['count'] = $branches->count();
-        $data['message'] = request('message');;
-        
-      
+        $data['count'] = $branches->count();    
         $this->notifyBranchTeam($data,$branches,$leadsource);
         /*$this->notifyManagers($data,$salesteam);
         $this->notifySender($data);
@@ -146,15 +145,23 @@ class LeadsEmailController extends Controller
     }
 
      private function notifyBranchTeam($data,$branches,$leadsource){
-        
-        foreach ($branches as $branch){
-           foreach ($branch->manager as $manager){
-                if(config('mail.test')){
-                    Mail::to(config('mapminer.developer_email'))
-                        ->queue(new NotifyLeadsAssignment($data,$manager,$leadsource,$branch));
-                }else{
-                    Mail::to($manager->userdetails->email,$manager->fullName())
-                        ->queue(new NotifyLeadsAssignment($data,$manager,$leadsource,$branch));
+        if($data['test']){
+            $branch = $branches->random();
+            dd($branch);
+            foreach ($branch->manager as $manager){
+                    
+                        Mail::to($manager->userdetails->email,$manager->fullName())
+                            ->queue(new NotifyLeadsAssignment($data,$manager,$leadsource,$branch));
+                    }
+                }
+
+        }else{
+            foreach ($branches as $branch){
+               foreach ($branch->manager as $manager){
+                    
+                        Mail::to($manager->userdetails->email,$manager->fullName())
+                            ->queue(new NotifyLeadsAssignment($data,$manager,$leadsource,$branch));
+                    }
                 }
             }
         }
