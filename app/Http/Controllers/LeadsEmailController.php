@@ -58,44 +58,6 @@ class LeadsEmailController extends Controller
       return $data;
     }
 
-
-   /* private function salesteam($leads){
-        dd($leads);
-        $salesreps = array();
-  
-        foreach ($leads as $lead){
-       
-            if(count($lead->salesteam)>0){
-                $reps = $lead->salesteam->pluck('id')->toArray();
-             
-                foreach ($reps as $rep){
-
-                    $salesrep = $lead->salesteam->where('id',$rep)->first();
-                    
-                    if(! array_key_exists($rep,$salesreps)){
-                        
-                        $salesreps[$rep]['details'] = $salesrep;
-                        $salesreps[$rep]['count'] = 0;
-                        $salesreps[$rep]['status'][1] = 0;
-                        $salesreps[$rep]['status'][2] = 0;
-                        $salesreps[$rep]['status'][3] = 0;
-                        $salesreps[$rep]['status'][4] = 0;
-                        $salesreps[$rep]['status'][5] = 0;
-                        $salesreps[$rep]['status'][6] = 0;
-                       
-                    }
-                    $salesreps[$rep]['count'] = $salesreps[$rep]['count'] ++;
-                    $salesreps[$rep]['status'][$salesrep->pivot->status_id] ++;
-                    
-                }          
-            }
-        }
-       
-        return $salesreps;
-       
-       
-    }
-*/
     public function branches($leads){
         
 
@@ -137,9 +99,10 @@ class LeadsEmailController extends Controller
         ->has('manager')->with('manager','manager.userdetails','manager.reportsTo')->get();
         $data['count'] = $branches->count();    
         $this->notifyBranchTeam($data,$branches,$leadsource);
-        /*$this->notifyManagers($data,$salesteam);
-        $this->notifySender($data);
-        */
+        /*$this->notifyManagers($data,$salesteam);*/
+       
+        $this->notifySender($data,$leadsource);
+   
         return response()->view('leadsource.senderleads',compact('data','leadsource'));
 
     }
@@ -176,15 +139,15 @@ class LeadsEmailController extends Controller
                 Mail::queue(new NotifyLeadsAssignment($data,$team));
             
         }
+    }*/
+
+    private function notifySender($data,LeadSource $leadsource){
+       
+       
+       Mail::to(auth()->user()->email)->queue(new NotifySenderLeadsAssignment($data,$leadsource));
+
     }
-
-    private function notifySender($data){
-        dd('hrere');
-        $data['sender'] = auth()->user()->email;
-        Mail::queue(new NotifySenderLeadsAssignment($data));
-
-    }
-
+/*
     private function notifyManagers($data,$salesteam){
 
        $data['managers']=array();
