@@ -226,17 +226,25 @@ class LeadSourceController extends Controller
         $leadsource = $this->leadsource->withCount(
             ['addresses',
             'addresses as assigned'=>function($query){
-                $query->has('assignedToBranch');
+                $query->has('assignedToBranch')->orHas('assignedToPerson');
             },
             'addresses as unassigned' => function ($query) {
-                $query->whereDoesntHave('assignedToBranch');
+                $query->whereDoesntHave('assignedToBranch')->whereDoesntHave('assignedToPerson');
                 },
             'addresses as closed' => function($query){
                     $query->has('closed');
-                }])->findOrFail($id);
+                }])
+        ->findOrFail($id);
 
+        $states = Address::where('lead_source_id','=',$leadsource->id)
+                ->whereDoesntHave('assignedToBranch')->whereDoesntHave('assignedToPerson')
 
-        return response()->view('leads.unassigned',compact('leadsource'));
+               ->selectRaw('state, count(*) as statetotal')
+             ->groupBy('state')
+             ->pluck('statetotal','state')->all();
+       
+
+        return response()->view('leads.unassigned',compact('leadsource','states'));
     }
 
     private function getLeads($id){
