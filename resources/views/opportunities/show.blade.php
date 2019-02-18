@@ -3,6 +3,13 @@
 <div class="container">
 	<div class="float-right">
 		<a href="{{route('opportunity.edit',$opportunity->id)}}" class="btn btn-info" name="editopportunity" >Edit Opportunity</a>
+		<a class="btn btn-danger"
+        data-href="{{route('opportunity.destroy',$opportunity->id)}}" 
+        data-toggle="modal" 
+        data-target="#confirm-delete" 
+        data-title = " this opportunity from your list" 
+        href="#">Delete Opportunity
+            <i class="fas fa-trash-alt text-danger"></i></a>
 	</div>
 
 <h2><strong>Opportunity </strong>{{$opportunity->title}}</h2>
@@ -16,5 +23,5 @@
 
 
 </div>
-
+@include('partials._modal')
 @endsection	

@@ -24,9 +24,9 @@ class OrdersController extends Controller
      */
     public function index()
     {
-        $mybranches = array_keys($this->person->myBranches());
+        $myBranches = array_keys($this->person->myBranches());
        
-        $branchOrders = $this->branch->whereIn('id',$mybranches)->with('orders')->get();
+        $branchOrders = $this->branch->whereIn('id',$myBranches)->with('orders')->get();
        
         $orders = $branchOrders->map(function ($branch) {
             return $branch->orders->sum('orders');

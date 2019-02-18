@@ -137,7 +137,8 @@
 
  
 </div>
-
+@include('partials._modal')
+@include('partials._opportunitymodal')
 @include('partials._scripts')
 </div>
 @endsection

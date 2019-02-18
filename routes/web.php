@@ -160,6 +160,7 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::post('/opportunities/{opportunity}/close/',['as'=>'opportunity.close','uses'=>'OpportunityController@close']);
 		Route::post('/opportunities/branch/',['as'=>'opportunity.branch','uses'=>'OpportunityController@branchOpportunities']);
 		Route::get('/opportunities/branch/{branch}',['as'=>'opportunities.branch','uses'=>'OpportunityController@branchOpportunities']);
+		Route::delete('opportunity/{opportunity}/destroy',['as'=>'opportunity.remove','uses'=>'OpportunityController@destroy']);
 		
 		Route::resource('opportunity','OpportunityController');
 	#Orders

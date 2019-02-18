@@ -23,21 +23,11 @@
         <tr>
           <td>
             @if(isset($data['branches']) && in_array($data['branches']->first()->id,array_keys($myBranches)))
-            <a href="{{route('opportunity.show',$opportunity->id)}}">
-            {{$opportunity->title ?  $opportunity->title : $opportunity->id}}</a>
-           <a href="{{route('opportunity.edit',$opportunity->id)}}" title="Edit this opportunity"> <i class="fas fa-edit class="text text-info"></i></a>
-           <a 
-               data-href="{{route('opportunity.destroy',$opportunity->id)}}" 
+            <a href="{{route('opportunity.show',$opportunity->id)}}" title="Review, edit or delete this opportunity">
+            {{$opportunity->title ?  $opportunity->title : $opportunity->id}} <i class="fas fa-edit class="text text-info"></i></a>
+           
+                             
 
-                    data-toggle="modal" 
-                    data-target="#confirm-delete" 
-                    data-title = "this opportunity" 
-                    href="#"
-                    title="Delete this opportunity">
-
-                    <i class="far fa-trash-alt text-danger" aria-hidden="true"> </i> 
-                    
-                </a>
               @else
             {{$opportunity->title ?  $opportunity->title : $opportunity->id}}
 
@@ -51,9 +41,9 @@
             {{$statuses[$opportunity->closed]}}
             @if(isset($data['branches']) &&  $opportunity->closed == 0 && in_array($data['branches']->first()->id,array_keys($myBranches)))
             <button class="btn btn-danger" 
-        data-href="{{route('opportunity.close',$opportunity->id)}}"
-        data-toggle="modal" 
-        data-target="#closeopportunity">Close</button>
+                    data-href="{{route('opportunity.close',$opportunity->id)}}"
+                    data-toggle="modal" 
+                    data-target="#closeopportunity">Close</button>
             @endif
           </td>
           <td>
@@ -104,8 +94,8 @@
     </tfoot>
 
 </table>
-@include('opportunities.partials._activitiesmodal')
-@include('opportunities.partials._closemodal')
+
+
 <script>
 $( document ).ready(function() {
     $("input[id^=top50]").change (function () {

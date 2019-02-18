@@ -50,10 +50,11 @@ class LeadSourceController extends Controller
         $leadsources = $this->leadsource->withCount(
             ['addresses',
             'addresses as assigned'=>function($query){
-                $query->has('assignedToBranch');
+                $query->where(
+                    has('assignedToBranch');
             },
             'addresses as unassigned' => function ($query) {
-                $query->whereDoesntHave('assignedToBranch');
+                $query->whereDoesntHave('assignedToBranch')->orWhereDoesntHave('assignedToPerson');
                 },
             'addresses as closed' => function($query){
                     $query->has('closed');

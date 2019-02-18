@@ -234,7 +234,13 @@ class Person extends NodeModel implements HasPresenter {
 		->orderBy('lastname')
 		->get();
 	}
+	public function scopeWithRoles($query, $roles){
 
+		return $query->wherehas('userdetails.roles', function($q) use($roles){
+					$q->whereIn('role_id',$roles);
+				});
+
+	}
 	public function getPersonsWithRole($roles){
 		return $this->select(\DB::raw("*, CONCAT(lastname,' ' ,firstname) AS fullname, id"))
 			->whereHas('userdetails.roles', 
