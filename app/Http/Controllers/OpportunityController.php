@@ -10,7 +10,7 @@ use App\Branch;
 use App\Company;
 use App\Contact;
 use App\Note;
-use App\Html\Requests\OpportunityFormRequest;
+use App\Http\Requests\OpportunityFormRequest;
 use App\Opportunity;
 use App\Person;
 use \Carbon\Carbon;
@@ -190,7 +190,7 @@ class OpportunityController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(OpportunityFormRequest $request)
     {
      
         // make sure that the relationship exists

@@ -24,7 +24,7 @@ class OpportunityFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'expected_close'=>'date|nullable|after_equal|today',
+            'expected_close'=>'date|nullable|after_or_equal:today',
         ];
     }
 }
