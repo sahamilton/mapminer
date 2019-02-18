@@ -19,7 +19,7 @@
             <
 
               <select class="form-control input-sm" id="branch">
-                @foreach ($mybranches as $key=>$value)
+                @foreach ($myBranches as $key=>$value)
                   <option  value="{{$key}}">{{$value}}</option>
                 @endforeach
             </select>

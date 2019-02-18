@@ -79,12 +79,12 @@ class AddressController extends Controller
         $branches = $this->branch->nearby($location,100,5)->orderBy('distance')->get();
         $rankingstatuses = $this->address->getStatusOptions;
         $people = $this->person->salesReps()->PrimaryRole()->nearby($location,100,5)->get();
-        $mybranches = $this->person->myBranches();
+        $myBranches = $this->person->myBranches();
         $ranked = $this->address->getMyRanking($location->ranking);
         $notes = $this->notes->locationNotes($location->id)->get();
       
        
-        return response()->view('addresses.show',compact('location','branches','rankingstatuses','people','mybranches','ranked','notes'));
+        return response()->view('addresses.show',compact('location','branches','rankingstatuses','people','myBranches','ranked','notes'));
     }
 
     /**

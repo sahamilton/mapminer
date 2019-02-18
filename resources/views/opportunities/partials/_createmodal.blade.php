@@ -13,13 +13,13 @@
         <form name="addOpportunity" method="post" action="{{route('opportunity.store')}}" >
         @csrf
         @include('opportunities.partials._opportunityform')
-        @if(count($mybranches)==1)
-          <input type="submit" class="btn btn-success" value="add to {{array_values($mybranches)[0]}} branch opportunity" />
-          <input type="hidden" name="branch_id" value="{{array_keys($mybranches)[0]}}" >
+        @if(count($myBranches)==1)
+          <input type="submit" class="btn btn-success" value="add to {{array_values($myBranches)[0]}} branch opportunity" />
+          <input type="hidden" name="branch_id" value="{{array_keys($myBranches)[0]}}" >
         @else
           <select name="branch_id" required >
 
-            @foreach($mybranches as $branch_id=>$branch)
+            @foreach($myBranches as $branch_id=>$branch)
               <option value="{{$branch_id}}">{{$branch}}</option>
 
             @endforeach

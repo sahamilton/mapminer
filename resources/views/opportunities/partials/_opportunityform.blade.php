@@ -46,7 +46,21 @@
     value="{{ old('value' , isset($opportunity) ? $opportunity->value : '0' ) }}"  />
  
 </div>
-
+<div class="form-group{{ $errors->has('expected_close)') ? ' has-error' : '' }}">
+              <label class="col-md-4 control-label" for="expected_close">Expected Close Date</label>
+              
+              <input class="form-control expected_close" 
+                  type="text" 
+                  required
+                  name="expected_close" 
+                  autocomplete='off' 
+                  id="fromdatepicker" 
+                  value="{{  old('expected_close', isset($opportunity) ? $opportunity->expected_close->format('m/d/Y') : "" )}}"/>
+              <span class="help-block">
+                  <strong>{{$errors->has('expected_close') ? $errors->first('expected_close')  : ''}}</strong>
+              </span>
+              
+          </div>
 
 <div class="form-group{{ $errors->has('description') ? ' has-error' : '' }}">
   <label class="col-md-4 control-label">Description</label>

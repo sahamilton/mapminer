@@ -192,15 +192,15 @@ class OpportunityController extends Controller
      */
     public function store(Request $request)
     {
-       
+     
         // make sure that the relationship exists
         $join = $this->addressbranch
             ->where('address_id','=',request('address_id'))
             ->where('branch_id','=',request('branch_id'))
             ->firstOrCreate(['address_id'=>request('address_id'),'branch_id'=>request('branch_id')]);
         $data = request()->except('_token');
-        $data['user_id'] =auth()->user()->id;
-  
+        $data['user_id'] = auth()->user()->id;
+
         $join->opportunities()->create($data);
 
         return redirect()->back()->withMessage("Added to branch opportunities");
@@ -256,6 +256,7 @@ class OpportunityController extends Controller
      */
     public function destroy(Opportunity $opportunity)
     {
+        
         $address = $opportunity->address->address_id;
         $opportunity->delete();
         return redirect()->route('address.show',$address)->withMessage('Opportunity deleted');
@@ -273,8 +274,9 @@ class OpportunityController extends Controller
     }
 
     public function close(Request $request, $opportunity){
-       
-        $opportunity->update(request()->except('_token'));
+        $data= request()->except('_token');
+        $data['actual_close'] = CArbon::now();
+        $opportunity->update($data);
         $opportunity->load('address','address.address','address.address.company');
             // check to see if the client_id exists else create new company
             if(request()->filled('client_id')){

@@ -26,7 +26,6 @@
                         <form id="action-form" 
                             action="" 
                             method="post" 
-
                             style="display: none;">
                             @method('delete')
                             @csrf
