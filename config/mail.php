@@ -57,7 +57,7 @@ return [
 
     'from' => [
         'address' => env('MAIL_FROM_ADDRESS', 'support@tbmapminer.com'),
-        'name' => env('MAIL_FROM_NAME', config('mapminer.support')),
+        'name' => env('MAIL_FROM_NAME', 'Sales Operations'),
     ],
 
     /*
