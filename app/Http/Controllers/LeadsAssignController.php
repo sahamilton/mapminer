@@ -187,12 +187,12 @@ class LeadsAssignController extends Controller
         $branches = $this->branch->withinMBR($box)->get();
         foreach ($branches as $branch){
            $addresses = $this->address->where('lead_source_id','=',$leadsource->id)
-           ->doesntHave('assignedToBranch')
-           ->doesntHave('assignedToPerson')
-           ->nearby($branch,$this->distance,$this->limit)
-           
-           ->pluck('id')
-           ->toArray();
+               ->doesntHave('assignedToBranch')
+               ->doesntHave('assignedToPerson')
+               ->nearby($branch,$this->distance)
+               
+               ->pluck('id')
+               ->toArray();
            foreach ($addresses as $address_id){
             $data[] = ['address_id'=>$address_id, 'branch_id'=>$branch->id];
            }

@@ -84,8 +84,7 @@ trait Geocode
         ->selectRaw("{$this->haversine($location)} AS distance")
         ->mergeBindings($sub->getQuery())
         ->whereRaw("{$this->haversine($location)} < $radius ")
-        ->orderBy('distance','ASC')
-        ->inRandomOrder();
+        ->orderBy('distance','ASC');
         if($limit){
             $query = $query->limit($limit);
         }
@@ -300,9 +299,9 @@ trait Geocode
         return parent::newQuery($excludeDeleted)->addSelect('*', \DB::raw($raw));
     }*/
 
-    public function scopeDistance($query, $dist, $position)
+    public function scopeDistance($query, $position, $dist)
     {
-        return $query->whereRaw('ST_Distance_Sphere(location,POINT(' . $position . ')) < ' . $dist);
+        return $query->whereRaw('ST_Distance_Sphere(position, POINT(' . $position->lng ."," .$position->lat . ')) < ' . $dist);
     }
 
     public function scopeWithDistance($query, $position)
