@@ -192,12 +192,16 @@ class OpportunityController extends Controller
      */
     public function store(OpportunityFormRequest $request)
     {
-     
+        
+        //nned to remove it from all the other branches when an oppty is created
+       $address = $this->address->findOrFail(request('address_id'));
+       $address->assignedToBranch()->sync([request('branch_id')]);
         // make sure that the relationship exists
         $join = $this->addressbranch
             ->where('address_id','=',request('address_id'))
             ->where('branch_id','=',request('branch_id'))
             ->firstOrCreate(['address_id'=>request('address_id'),'branch_id'=>request('branch_id')]);
+        
         $data = request()->except('_token');
         if($data['expected_close']){
             $data['expected_close'] = Carbon::parse($data['expected_close']);
