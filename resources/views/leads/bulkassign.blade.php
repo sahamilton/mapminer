@@ -22,8 +22,8 @@
         <label class="col-md-4 control-label">Assign to Roles:</label>
         <div class="col-md-6">
             <select name="roles[]" multiple class="form-control" >
-                @foreach ($leadroles as $key=>$role)
-                    <option value="{{$role}}">{{$role}}</option>
+                @foreach ($leadroles as $id=>$role)
+                    <option value="{{$id}}">{{$role}}</option>
                 @endforeach
             </select>
             <span class="help-block">

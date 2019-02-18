@@ -255,7 +255,19 @@ trait Geocode
            return $item;
         });
     }
+    public function getBoundingBox($collection){
 
+        $data['maxLat'] = $collection->max('lat')+0.05;
+        $data['minLat'] = $collection->min('lat')-0.05;
+        $data['maxLng'] = $collection->max('lng')-0.05;
+        $data['minLng'] = $collection->min('lng')+0.05;
+       
+        return $data;
+    }
+
+    public function scopeWithinMBR($query,$box){
+        return $query->whereRaw("MBRContains( GeomFromText('LINESTRING(".$box['maxLng']." " .$box['minLat'] . ", ". $box['minLng']." " . $box['maxLat'].")' ),position)");
+    }
     public function geoCodeAddress(string $address){
 
         $geoCode = app('geocoder')->geocode($address)->get();
@@ -297,4 +309,18 @@ trait Geocode
     {
         return $query->selectRaw('ST_Distance_Sphere(location,POINT(' . $position . ')) AS distance');
     }
+
+    public function scopeCloseTo( $query, $location,$radius = 25)
+{
+    return $query->whereRaw("
+       ST_Distance_Sphere(
+            point(lng, lat),
+            point(?, ?)
+        ) * .000621371192 < ?
+    ", [
+        $location->lng,
+        $location->lat,
+        $radius,
+    ]);
+}
 }

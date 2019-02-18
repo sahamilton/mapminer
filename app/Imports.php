@@ -85,7 +85,7 @@ class Imports extends Model
 			
 			$this->nullImportRefField();
 
-			$this->truncateTempTable();
+			//$this->truncateTempTable();
 		}
 
 

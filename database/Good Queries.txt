@@ -39,3 +39,24 @@ ST_Distance_Sphere(addresses.position,branches.position)/40633 AS distance
 from addresses,address_branch, branches
 where addresses.id = address_branch.address_id
 and address_branch.branch_id in ('1506','1518','1522','1525','1552','1589')
+
+select branches.id,branchname, slc( 40.716743, -73.951368, branches.lat, branches.lng) as distance_in_meters,  astext(branches.position) 
+from branches,addresses_import
+where MBRContains(envelope(linestring(point(addresses_import.max(lng), addresses_import.max(lat)), point(addresses_import.min(lng), addresses_import.min(lat))), branches.position) 
+order by distance_in_meters limit 10
+
+
+SELECT 
+       CONCAT('LINESTRING(',
+              max(lat)-0.5,' ',min(lng)-0.5,
+              ',', 
+              min(lat)+0.5 ,' ',max(lng) +0.5,
+              ')') AS box
+   FROM addresses_import
+
+------------------
+   SELECT *
+  FROM branches
+ WHERE MBRContains(
+        GeomFromText( envelope('LINESTRING(33.20434400000000 -118.47817100000000,34.09832500000000 -117.35715400000000)') ),
+       	POINT(lng, lat))
