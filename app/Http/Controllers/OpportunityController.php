@@ -10,7 +10,7 @@ use App\Branch;
 use App\Company;
 use App\Contact;
 use App\Note;
-
+use App\Html\Requests\OpportunityFormRequest;
 use App\Opportunity;
 use App\Person;
 use \Carbon\Carbon;
@@ -199,6 +199,9 @@ class OpportunityController extends Controller
             ->where('branch_id','=',request('branch_id'))
             ->firstOrCreate(['address_id'=>request('address_id'),'branch_id'=>request('branch_id')]);
         $data = request()->except('_token');
+        if($data['expected_close']){
+            $data['expected_close'] = Carbon::parse($data['expected_close']);
+        }
         $data['user_id'] = auth()->user()->id;
 
         $join->opportunities()->create($data);
@@ -240,7 +243,7 @@ class OpportunityController extends Controller
      * @param  \App\Opportunity  $opportunity
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Opportunity $opportunity)
+    public function update(OpportunityFormRequest $request, Opportunity $opportunity)
     {
         $data = request()->except(['_token','_method','submit']);
         $data['user_id'] = auth()->user()->id;
