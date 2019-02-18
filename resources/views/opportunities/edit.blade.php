@@ -12,5 +12,5 @@
 
 
 </div>
-
+@include('partials._scripts')
 @endsection	
