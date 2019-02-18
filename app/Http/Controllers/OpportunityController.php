@@ -247,8 +247,6 @@ class OpportunityController extends Controller
         if($data['expected_close']){
             $data['expected_close'] = Carbon::parse($data['expected_close']);
         }
-
-       
         $opportunity->update($data);
         
         return redirect()->route('address.show',$opportunity->address->address_id)->withMessage('Opportunity updated');

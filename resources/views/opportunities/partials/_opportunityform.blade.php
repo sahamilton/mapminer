@@ -8,8 +8,8 @@
         name='title' 
         required
         description="title" 
-        value="{{ old('title' , isset($opportunity) && $opportunity->title ? $opportunity->title : "" ) }}" 
-        placeholder="title">
+        value="{{ old('title' , isset($opportunity)  ? $opportunity->title : "" ) }}" 
+        placeholder="Oportunity Title">
       <span class="help-block">
         <strong>{{ $errors->has('title') ? $errors->first('title') : ''}}</strong>
       </span>
@@ -68,7 +68,7 @@
     
     <textarea required 
     class="form-control" name='description' 
-    title="description"
+    title="opportunity description"
     placeholder="Describe the opportunity">{{ old('description' , isset($opportunity) ? $opportunity->description : '' ) }}</textarea>
 
     <span class="help-block">
