@@ -23,15 +23,7 @@
   <li><a href="{{route('branches.show',$branch->id)}}">{{$branch->branchname}}</a> - @if(isset($statuses[$branch->pivot->status_id])) 
     {{$statuses[$branch->pivot->status_id]}}
   @endif
-  @if(in_array($branch->id,array_keys($myBranches)))
-  <button type="button" 
-    class="btn btn-warning" 
-
-    data-toggle="modal" 
-    data-target="#reassign">
-      Reassign
-</button>
-  @endif
+  
 </li>
 
   @endforeach
