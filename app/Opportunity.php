@@ -10,7 +10,8 @@ class Opportunity extends Model
     public $fillable = ['address_id',
                         'branch_id',
                         'address_branch_id',
-                        'value','requirements',
+                        'value',
+                        'requirements',
                         'client_id',
                         'closed',
                         'top50',
@@ -22,7 +23,8 @@ class Opportunity extends Model
                         'expected_close',
                         'actual_close'
                     ];
-    public $dates = ['expected_close','actual_close'];
+                    
+    public $dates = ['expected_close'];
     
     public function branch(){
     	return $this->belongsTo(AddressBranch::class,'address_branch_id')->with('branch');
