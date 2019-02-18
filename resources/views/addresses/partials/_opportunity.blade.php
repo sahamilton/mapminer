@@ -1,5 +1,6 @@
- @if($location->assignedToBranch->count()>0  && array_key_exists($location->assignedToBranch->first()->id,$myBranches))
-        <button class="btn btn-success" 
+@if($location->assignedToBranch->count()>0  && array_intersect(array_keys($myBranches),$location->assignedToBranch->pluck('id')->toArray()))
+
+       <button class="btn btn-success" 
       
           data-toggle="modal" 
           data-target="#createopportunity">Create New Opportunity</button>

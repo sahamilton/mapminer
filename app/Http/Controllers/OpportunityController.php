@@ -275,7 +275,8 @@ class OpportunityController extends Controller
         return redirect()->back()->withMessage('lead removed');
     }
     public function addToBranchLeads(Address $address, Request $request){
-  
+        // need to remove from other branches
+       // $address->assignedToBranch()->detach();
         $address->assignedToBranch()->attach(request('branch_id'));
         return redirect()->back()->withMessage('Added to Branch Leads');
     }

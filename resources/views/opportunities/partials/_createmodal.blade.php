@@ -27,6 +27,7 @@
           <input type="submit" class="btn btn-success" value="add to branch opportunity" />
         @endif
         <input type="hidden" value="{{$location->id}}" name="address_id" />
+        <input type="hidden" value="{{reset($myBranches)}}" name="branch_id" />
         
       </form>
       </div>
