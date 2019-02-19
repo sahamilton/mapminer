@@ -5,7 +5,7 @@
 	@csrf
 	@method('put')
 	@include('activities.partials._activityform')
-	<input hidden name="address_id" value="{{$activity->address_id}}" />
+	<input hidden name="location_id" value="{{$activity->address_id}}" />
 	<input type="submit" name="submit" class="btn btn-success" value="Edit Activity" />
 </form>
 @include('partials._scripts')

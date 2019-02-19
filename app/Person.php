@@ -5,7 +5,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use McCool\LaravelAutoPresenter\HasPresenter;
 
 class Person extends NodeModel implements HasPresenter {
-	use Geocode,Filters,SoftDeletes;
+	use Geocode,Filters,SoftDeletes,FullTextSearch;
 	public $salesroles = ['5','9'];
 	// Add your validation rules here
 	public static $rules = [
@@ -33,7 +33,10 @@ class Person extends NodeModel implements HasPresenter {
 						'business_title',
 						'user_id',
 						'position'];
-
+	protected $searchable = [
+        'firstname',
+        'lastname'
+    ];
 	
 	public function reportsTo()
     {
