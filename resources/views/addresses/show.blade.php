@@ -180,6 +180,7 @@
     </div>
     @if($location->opportunities->count() > 0)
     <div id="opportunities" class="tab-pane fade">
+
         @php $data['opportunities'] = $location->opportunities; 
 
         $activityTypes = \App\ActivityType::all();
@@ -242,10 +243,9 @@
   </div>
 
 
-@include('partials._modal');
-@include('addresses.partials._rateaddressform')
-@include('addresses.partials._reassign')
-@include('addresses.partials.map')
+
+@include('opportunities.partials._closemodal')
+
 @include('partials._scripts');
 
 

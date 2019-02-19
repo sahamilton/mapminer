@@ -141,6 +141,7 @@
 </div>
 @include('partials._modal')
 @include('partials._opportunitymodal')
+@include('opportunities.partials._closemodal')
 @include('partials._scripts')
 </div>
 @endsection

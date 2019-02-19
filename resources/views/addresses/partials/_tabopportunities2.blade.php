@@ -19,7 +19,6 @@
     </thead>
       <tbody>
         @foreach ($data['opportunities'] as $opportunity)
-
         <tr>
           <td>
            @if(isset($location) && array_intersect(array_keys($myBranches),$location->assignedToBranch->pluck('id')->toArray()))
@@ -40,7 +39,10 @@
           <td>
 
             {{$statuses[$opportunity->closed]}}
-             @if(isset($location) && array_intersect(array_keys($myBranches),$location->assignedToBranch->pluck('id')->toArray()))
+          
+             @if(isset($location) && $opportunity->closed!=1 && array_intersect(array_keys($myBranches),$location->assignedToBranch->pluck('id')->toArray()))
+            }
+            }
             <button class="btn btn-danger" 
                     data-href="{{route('opportunity.close',$opportunity->id)}}"
                     data-toggle="modal" 
