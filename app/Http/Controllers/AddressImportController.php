@@ -123,7 +123,7 @@ class AddressImportController extends ImportController
         //$this->updateLeadPivot();
         $this->setAddressImportIdToNull();
 
-        if (request()->filled('branches');
+        if (request()->filled('branches'));
 
             $addresses = $this->import->pluck(address_id)->toArray();
             $branches = Branch::whereIn('id',request('branches'));
