@@ -4,16 +4,18 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
+use App\Person;
 use App\Role;
 use App\Company;
+use App\Address;
 class SearchController extends Controller
 {
 
 	public function searchUsers(Request $request)
 	{
 
-		return User::search(request('q'))
-			->with('person')
+		return Person::search(request('q'))
+			->with('userdetails')
             ->get();
 	}
 
@@ -33,10 +35,13 @@ class SearchController extends Controller
             ->with('person')
             ->get();
 	}
+	
 
 	public function searchCompanies(Request $request){
 
-		return Company::whereNull('parent_id')->search(request('q'))
+		$person = auth()->user()->person;
+
+		return Address::with('company')->search(request('q'))->nearby($person,250)->orderBy('distance')
             
             ->get();
 

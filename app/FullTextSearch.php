@@ -33,6 +33,7 @@ trait FullTextSearch
         return $searchTerm;
     }
 
+
     /**
      * Scope a query that matches a full text search of term.
      *

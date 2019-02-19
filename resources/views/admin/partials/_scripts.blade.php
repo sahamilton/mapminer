@@ -27,7 +27,7 @@ $(document).ready(function()
                 name: 'users',
                 source: bloodhound,
                 display: function(data) {
-                    return data.email  //Input value to be set when you select a suggestion. 
+                    return data.firstname + " " + data.lastname  //Input value to be set when you select a suggestion. 
                 },
                 templates: {
                     empty: [
@@ -39,9 +39,9 @@ $(document).ready(function()
                     suggestion: function(data) {
                         var url = '{{ route("person.details", ":slug") }}';
 
-                        url = url.replace(':slug', data.person.id);
+                        url = url.replace(':slug', data.id);
                     return '<div style="font-weight:normal; margin-top:-10px ! important;" class="list-group-item"><a href="'+url+'">'
-                         + data.person.firstname + ' ' + data.person.lastname + '</a></div></div>'
+                         + data.firstname + ' ' + data.lastname + '</a></div></div>'
                     }
                 }
             });

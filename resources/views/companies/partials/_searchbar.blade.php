@@ -38,7 +38,7 @@
                 name: 'companies',
                 source: bloodhound,
                 display: function(data) {
-                    return data.companyname //Input value to be set when you select a suggestion. 
+                    return data.businessname +" "+ data.city //Input value to be set when you select a suggestion. 
                 },
                 templates: {
                     empty: [
@@ -48,11 +48,11 @@
                         '<div class="list-group search-results-dropdown">'
                     ],
                     suggestion: function(data) {
-                        var url = '{{ route("company.show", ":slug") }}';
+                        var url = '{{ route("address.show", ":slug") }}';
 
                         url = url.replace(':slug', data.id);
-                    return '<div style="font-weight:normal; margin-top:-10px ! important;" class="list-group-item"><a href="'+url+'">'
-                         + data.companyname + '</a></div></div>'
+                    return '<div style="font-weight:normal; margin-top:-10px ! important;" class="list-group-item"><a href="'+ url +'">'
+                         + data.businessname + ', ' + data.city + '</a></div></div>'
                     }
                 }
             });
