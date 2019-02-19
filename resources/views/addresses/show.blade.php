@@ -184,7 +184,7 @@
 
         $activityTypes = \App\ActivityType::all();
         @endphp
-        @include('opportunities.partials._tabopportunities2')
+        @include('addresses.partials._tabopportunities2')
 
     </div>
     @endif
