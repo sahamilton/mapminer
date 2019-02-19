@@ -43,7 +43,7 @@ class ImportController extends BaseController
 
     
     protected function getData($request){
-
+      
         $data = request()->all();
         $data['fields'] = array_values(request('fields'));
         return $data;

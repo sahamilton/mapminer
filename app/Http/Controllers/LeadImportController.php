@@ -71,7 +71,6 @@ class LeadImportController extends ImportController
 
     public function import(LeadImportFormRequest $request) {
        
-
         $data = $this->uploadfile(request()->file('upload'));
         $title="Map the leads import file fields";
          $requiredFields = $this->import->requiredFields;
@@ -97,7 +96,7 @@ class LeadImportController extends ImportController
     }
     
     public function mapfields(Request $request){
-
+        dd('lic',request()->all());
         $data = $this->getData($request);
         $this->validateInput($request);
         $this->import->setFields($data);

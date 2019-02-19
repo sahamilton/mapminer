@@ -1,7 +1,9 @@
 @extends('admin.layouts.default')
 @section('content')
 
-	<h2>Assign {{$leadsource->sourcename}} Prospect Geographically</h2>
+	<h2>Assign {{$leadsource->sourcename}} Leads</h2>
+
+  <fieldset><legend>Assign Geographically</legend>
 	<p><a href="{{route('leadsource.index')}}">Return to all prospect sources</a></p>
 	<form name="bulkassign" method="post" action="{{route('leads.geoassign', $leadsource->id)}}" >
 		@csrf()
@@ -32,7 +34,7 @@
         </div>
     </div>
     <div class="form-group{{ $errors->has('type') ? ' has-error' : '' }}">
-        <label class="col-md-4 control-label"><strong>Assign to Branches<strong></label>
+        <label class="col-md-4 control-label"><strong>Assign to Branches</strong></label>
         <div class="col-md-6">
             
           <input type="radio" name="type" value="branch">
@@ -83,9 +85,39 @@
                 </span>
             </div>
         </div>
-	    <input type="submit" name="submit" value="Assign Geographically" class="btn btn-info">
-	</form>
+	    
+</fieldset>
+<fieldset><legend>Assign Specifically</legend>
+<div class="form-group{{ $errors->has('type') ? ' has-error' : '' }}">
+        <label class="col-md-4 control-label"><strong>Assign to Specific Branches</strong></label>
+        <div class="col-md-6">
+            
+          <input type="radio" name="type" value="specific">
+            <span class="help-block">
+                <strong>{{ $errors->has('type') ? $errors->first('type') : ''}}</strong>
+            </span>
+        </div>
+    </div>
+<div class="form-group{{ $errors->has('branches)') ? ' has-error' : '' }}">
+    <label class="col-md-4 control-label">Assign to Branches:</label>
+        <div class="input-group input-group-lg ">
+            <select multiple id="branch" class="form-control" name='branch[]'>
+                <option selected value=null >Geo Assign</option>
+                @foreach($branches as $branch)
+                    <option value="{{$branch->id}}">{{$branch->branchname}}</option>
+                @endforeach
+            </select>
+            <span class="help-block">
+                <strong>{{ $errors->has('type') ? $errors->first('type') : ''}}</strong>
+                </span>
+        </div>
+        
+</div>
 
+
+  </fieldset>
+  <input type="submit" name="submit" value="Assign Leads" class="btn btn-info">
+  </form>
 
 @include('partials._scripts')
 @endsection

@@ -38,45 +38,49 @@ class LeadsAssignController extends Controller
 
     public function assignLeads($leadsource){
 
-
-
-     
       $leadroles = $this->setLeadAcceptRoles();
-
-      return response()->view('leads.bulkassign',compact('leadroles','leadsource'));
+      $branches = $this->branch->orderBy('id')->get();
+      return response()->view('leads.bulkassign',compact('leadroles','leadsource','branches'));
 
     }
-     public function geoAssignLeads(Request $request,$leadsource){
-        
-        $this->distance = request('distance');
-        $this->limit = request('limit');
-        $verticals  = null;
-        $addresses = $this->address->where('lead_source_id','=',$leadsource->id)->doesntHave('assignedToBranch')->get();
-      
-        if($addresses->count()>0){
-              $box = $this->address->getBoundingBox($addresses);
-  
-              if(request('type')=='branch'){
-                  $branchCount = $this->assignLeadsToBranches($leadsource,$box);
-                  $assignedCount = $this->address->where('lead_source_id','=',$leadsource->id)
-                  ->has('assignedToBranch')
-                  ->get(
-                  )->count();
-                $message = $assignedCount . ' Leads have been assigned to '. $branchCount . ' branches';
-               
-              }else{
-                
-                $count = $this->assignLeadsToPeople($leadsource,$box,request('roles'));
-                $assignedCount = $this->address->where('lead_source_id','=',$leadsource->id)
-                    ->has('assignedToPerson')
-                    ->get(
-                    )->count();
-                $message = $assignedCount . ' Leads have been assigned to '. $count . ' people';
-              }
-          }else{
-            $message ="No leads to assign";
-          }
+     
 
+    public function geoAssignLeads(Request $request,LeadSource $leadsource){
+
+        if(request('type')== 'specific'){
+
+          $message = $this->assignToSpecificBranches($request,$leadsource);
+
+        }else{
+            $this->distance = request('distance');
+            $this->limit = request('limit');
+            $verticals  = null;
+            $addresses = $this->address->where('lead_source_id','=',$leadsource->id)->doesntHave('assignedToBranch')->get();
+          
+            if($addresses->count()>0){
+                  $box = $this->address->getBoundingBox($addresses);
+      
+                  if(request('type')=='branch'){
+                      $branchCount = $this->assignLeadsToBranches($leadsource,$box);
+                      $assignedCount = $this->address->where('lead_source_id','=',$leadsource->id)
+                      ->has('assignedToBranch')
+                      ->get(
+                      )->count();
+                    $message = $assignedCount . ' Leads have been assigned to '. $branchCount . ' branches';
+                   
+                  }else{
+                    
+                    $count = $this->assignLeadsToPeople($leadsource,$box,request('roles'));
+                    $assignedCount = $this->address->where('lead_source_id','=',$leadsource->id)
+                        ->has('assignedToPerson')
+                        ->get(
+                        )->count();
+                    $message = $assignedCount . ' Leads have been assigned to '. $count . ' people';
+                  }
+              }else{
+                $message ="No leads to assign";
+              }
+            }
         return redirect()->route('leadsource.show',$leadsource->id)->withMessage($message);
     }
 
@@ -128,20 +132,7 @@ class LeadsAssignController extends Controller
       return response()->view('leads.singleassign',compact('branches','lead','branchmarkers'));
     }
 
-  /*  public function assignLead(Request $request){
 
-      $count=0;
-
-      $lead = $this->lead->findOrFail(request('lead_id'));
-
-      foreach(request('salesrep') as $key=>$value){
-
-        $lead->salesteam()->attach($value,['status_id'=>1]);
-        $count++;
-
-      }
-      return redirect()->route('leadsource.index')->with(['status'=>'Lead assigned to ' .$count . 'reps']);
-    }*/
 
     private function setleadRoles(){
 
@@ -159,6 +150,25 @@ class LeadsAssignController extends Controller
         }else{
           return $this->setleadRoles();
         }
+
+    }
+
+    private function assignToSpecificBranches(Request $request,$leadsource){
+          $addresses = $this->address->where('lead_source_id','=',$leadsource->id)
+          ->doesntHave('assignedToBranch')
+           ->doesntHave('assignedToPerson')
+           ->pluck('id')
+           ->toArray();
+           
+           foreach(request('branch') as $branch){
+                $branch = $this->branch->findOrFail($branch);
+
+                $branch->locations()->attach($addresses);
+
+           }
+   
+           return  count($addresses) . " leads assigned to " . count(request('branch')) . ' branches';
+          
 
     }
      private function assignLeadsToPeople($leadsource,$box,$roles){

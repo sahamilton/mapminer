@@ -16,6 +16,7 @@ class LocationsImportController extends ImportController
     public $company;
     public $import;
     public $table = 'addresses';
+    public $temptable = 'addresses_import';
 	public function __construct(Address $location, Company $company,LocationImport $import){
 		$this->location = $location;
 		$this->company = $company;
@@ -31,7 +32,7 @@ class LocationsImportController extends ImportController
 
 
 	public function import(LocationImportFormRequest $request) {
-    
+        
         $data = request()->except('_token');
         $title="Map the locations import file fields";
         $data = array_merge($data,$this->uploadfile(request()->file('upload')));
@@ -56,9 +57,9 @@ class LocationsImportController extends ImportController
             $columns = array_merge($columns,$this->location->getTableColumns('contacts',$skip));
 
         }
-        if(isset($data['branches'])){
+        if(isset($data['branch'])){
            
-            $data['branch_ids'] = implode(',',$data['branches']);
+            $data['branch_ids'] = implode(',',$data['branch']);
 
         }
         return response()->view('imports.mapfields',compact('columns','fields','data','company_id','title','requiredFields'));
@@ -67,7 +68,7 @@ class LocationsImportController extends ImportController
 	public function mapfields(Request $request){
        
         $data = $this->getData($request);  
-          
+     
         if($error = $this->validateInput($request)){
             return redirect()->route('locations.importfile')->withError($error)->withInput($data);
             
@@ -77,11 +78,13 @@ class LocationsImportController extends ImportController
  
        
         if($fileimport = $this->import->import($request)) {
+            
+            
 
             return redirect()->route('leadsource.show',request('lead_source_id'))->with('success','Locations imported');
 
         }
     
-    }
+     }
 	
 }

@@ -70,7 +70,7 @@ class AddressImportController extends ImportController
 
 
     public function import(LeadImportFormRequest $request) {
-       
+  
 
         $data = $this->uploadfile(request()->file('upload'));
         $title="Map the leads import file fields";
@@ -112,7 +112,7 @@ class AddressImportController extends ImportController
     
     private function postimport(Request $request){
 
-        
+       
         $this->copyAddresses();
 
         $this->copyAddressIdtoImport();
@@ -123,14 +123,7 @@ class AddressImportController extends ImportController
         //$this->updateLeadPivot();
         $this->setAddressImportIdToNull();
 
-        if (request()->filled('branches'));
-
-            $addresses = $this->import->pluck(address_id)->toArray();
-            $branches = Branch::whereIn('id',request('branches'));
-            foreach ($branches as $branch){
-                 $branch->locations()->create();
-            }
-        }
+        
             
 
 
