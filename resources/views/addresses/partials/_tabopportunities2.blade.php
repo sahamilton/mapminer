@@ -18,11 +18,11 @@
     </thead>
       <tbody>
         @foreach ($data['opportunities'] as $opportunity)
-     
-      
+
         <tr>
           <td>
-            @if(isset($data['branches']) && in_array($data['branches']->first()->id,array_keys($myBranches)))
+           @if(isset($location) && array_intersect(array_keys($myBranches),$location->assignedToBranch->pluck('id')->toArray()))
+            
             <a href="{{route('opportunity.show',$opportunity->id)}}" title="Review, edit or delete this opportunity">
             {{$opportunity->title ?  $opportunity->title : $opportunity->id}} <i class="fas fa-edit class="text text-info"></i></a>
            
@@ -39,7 +39,7 @@
           <td>
 
             {{$statuses[$opportunity->closed]}}
-            @if(isset($data['branches']) &&  $opportunity->closed == 0 && in_array($data['branches']->first()->id,array_keys($myBranches)))
+             @if(isset($location) && array_intersect(array_keys($myBranches),$location->assignedToBranch->pluck('id')->toArray()))
             <button class="btn btn-danger" 
                     data-href="{{route('opportunity.close',$opportunity->id)}}"
                     data-toggle="modal" 

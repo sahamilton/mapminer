@@ -34,7 +34,7 @@
     role="tab"
     aria-controls="nav-leads"
     aria-selected="true">
-<strong>Leads</strong>
+<strong>Leads ({{$data['leads'][0]->leads->count()}})</strong>
 
   <a class="nav-item nav-link "
     id="nav-opportunities-tab"
@@ -43,7 +43,7 @@
     role="tab"
     aria-controls="nav-opportunities"
     aria-selected="true">
-<strong>Opportunities</strong>
+<strong>Opportunities ({{$data['opportunities'] ->count()}})</strong>
 </a>
   
 </a>
@@ -88,6 +88,13 @@
 </nav>
 </div>
 <div class="tab-content" id="nav-tabContent">
+  <div class="tab-pane fade show active"
+    id="nav-leads"
+    role="tabpanel"
+    aria-labelledby="nav-leads-tab-tab">
+   @include('opportunities.partials._tableads')
+  </div>
+
   <div class="tab-pane fade show "
     id="nav-opportunities"
     role="tabpanel"
@@ -95,12 +102,7 @@
    
    @include('opportunities.partials._tabopportunities')
   </div>
-<div class="tab-pane fade show active"
-    id="nav-leads"
-    role="tabpanel"
-    aria-labelledby="nav-leads-tab-tab">
-   @include('opportunities.partials._tableads')
-  </div>
+
 
 
   <div class="tab-pane fade"
