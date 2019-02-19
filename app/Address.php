@@ -6,13 +6,21 @@ namespace App;
 
 class Address extends Model
 {
-    use Geocode,Filters;
+    use Geocode,Filters, FullTextSearch;
     public $table = 'addresses';
 
     public $timestamps = true;
     
     public $fillable = ['addressable_id','addressable_type','street','address2','city','state','zip','lat','businessname','lng','company_id','user_id','phone','position','lead_source_id','description'];
     
+    protected $searchable = [
+        'businessname',
+        'street',
+        'city',
+        'state'
+
+    ];
+    protected $hidden = ['position'];
     public $requiredfields = ['companyname',
             'businessname',
             'address',
