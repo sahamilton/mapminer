@@ -28,8 +28,11 @@ class ActivityController extends Controller
     public function index()
     {
         $activities = $this->activity->myActivity()->with('relatesToAddress','relatedContact','type')->get();
-
-        return response()->view('activities.index',compact('activities'));
+        $weekCount = $this->activity->myActivity()->sevenDayCount()->pluck('activities','yearweek')->toArray();
+        $data = $this->activity->summaryData($weekCount);
+        
+       
+        return response()->view('activities.index',compact('activities','data'));
     }
 
     /**
