@@ -1,4 +1,5 @@
-<div class="col-sm-4">
+<div class= "row">
+  <div class="col-sm-4">
 	<table id='sorttable' class ='table table-bordered table-striped table-hover'>
 	<thead>
 		<th>Week Beginning</th>
@@ -14,16 +15,16 @@
 		@endforeach
 	</tbody>
 </table>
+
 </div>
-<div class="col-sm-4" id = "weekchart">
-
-
-
+<div class="col-sm-4" style="border:1 solid grey" class="float-right">
+<canvas id="ctx" width="400" height="400" ></canvas>
+  </div>
 </div>
 <script type="text/javascript" 
 src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
 <script>
-var ctx = document.getElementById("barChart").getContext("2d");
+
 
 var barChart = new Chart(ctx, 
 {

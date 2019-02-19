@@ -48,7 +48,7 @@ class Activity extends Model
 	}
 
 	public function scopeSevenDayCount($query){
-		return $query->selectRaw('YEARWEEK(activity_date) as yearweek,count(*) as activities')->groupBy('yearweek')->orderBy('yearweek','desc');
+		return $query->selectRaw('YEARWEEK(activity_date) as yearweek,count(*) as activities')->groupBy('yearweek')->orderBy('yearweek','asc');
 	}
 
 	public function summaryData($data){

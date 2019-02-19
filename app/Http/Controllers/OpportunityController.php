@@ -203,7 +203,7 @@ class OpportunityController extends Controller
             ->firstOrCreate(['address_id'=>request('address_id'),'branch_id'=>request('branch_id')]);
         
         $data = request()->except('_token');
-        if($data['expected_close']){
+        if(request()->filled('expected_close')){
             $data['expected_close'] = Carbon::parse($data['expected_close']);
         }
         $data['user_id'] = auth()->user()->id;

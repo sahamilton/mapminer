@@ -280,9 +280,10 @@ class LeadSourceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(LeadSourceFormRequest $request, $id)
+    public function update(LeadSourceFormRequest $request, $leadsource)
     {
-        $leadsource= $this->leadsource->findOrFail($id);
+       
+       
         $leadsource->update(request()->except('_method', '_token','datefrom','dateto'));
         $leadsource->update([
             'datefrom'=>Carbon::createFromFormat('m/d/Y',request('datefrom')),
