@@ -91,6 +91,18 @@
                 </span>
         
     </div>
+    <!-----/ description-->
+<div class="form-group{{ $errors->has('branches)') ? ' has-error' : '' }}">
+    <label class="col-md-4 control-label">With Branches?:</label>
+       
+            <div class="form-group">
+                <input type="checkbox" @if(old('branches')) checked @endif name="branches" class="form-control" />
+            </div>
+            <span class="help-block">
+                <strong>{{ $errors->has('branches') ? $errors->first('branches') : ''}}</strong>
+                </span>
+        
+    </div>
 <!-- File Location -->
     <div class="form-group{{ $errors->has('upload') ? ' has-error' : '' }}">
         <label class="col-md-4 control-label" for="field" >Upload File Location</label>

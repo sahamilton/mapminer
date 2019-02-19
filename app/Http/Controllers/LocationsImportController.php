@@ -54,6 +54,11 @@ class LocationsImportController extends ImportController
             $columns = array_merge($columns,$this->location->getTableColumns('contacts',$skip));
 
         }
+        if(isset($data['branches'])){
+           
+            $columns = array_merge($columns,'branch_id');
+
+        }
         return response()->view('imports.mapfields',compact('columns','fields','data','company_id','title','requiredFields'));
     }
     

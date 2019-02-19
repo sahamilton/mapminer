@@ -1,3 +1,4 @@
+
 @php $statuses = ['open','closed - won','closed - lost']; @endphp
 
 <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
