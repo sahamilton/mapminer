@@ -28,7 +28,7 @@ class LeadSourceFormRequest extends FormRequest
             'description'=>'required',
             'datefrom'=>'required|date',
             'dateto'=>'required|date|after:datefrom',
-            'vertical'=>'required',
+            
         ];
     }
 }

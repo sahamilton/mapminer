@@ -466,7 +466,7 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
 		Route::get('leadsource/{id}/addleads',['as'=>'leadsource.addleads','uses'=>'LeadImportController@getFile']);
 
 		Route::get('leadsource/{leadsource}/state/{state}',['as'=>'leadsource.unassigned.state','uses'=>'LeadSournceCOntroller@unassignedstate']);
-		Route::get('leadsource/{id}/flush',['as'=>'leadsource.flushleads','uses'=>'LeadSourceController@flushLeads']);
+		Route::get('leadsource/{leadsource}/flush',['as'=>'leadsource.flushleads','uses'=>'LeadSourceController@flushLeads']);
 		Route::resource('leadsource','LeadSourceController');
 
 	#Salesnotes

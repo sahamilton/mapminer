@@ -304,9 +304,10 @@ class LeadSourceController extends Controller
         return redirect()->route('leadsource.index');
     }
 
-    public function flushLeads($id){
-        $this->lead->where('lead_source_id','=',$id)->delete();
-        return redirect()->route('leadsource.index');
+    public function flushLeads($leadsource){
+        $leadsource->leads()->delete();
+        $this->address->where('lead_source_id','=',$leadsource->id)->delete();
+        return redirect()->route('leadsource.index')->withWarning('all addresses removed from lead source');
     }
 
     public function addLeads($id){
