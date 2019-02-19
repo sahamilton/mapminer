@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Company;
 use App\Address;
+use App\Branch;
 use App\LocationImport;
 use App\Http\Requests\LocationImportFormRequest;
 use Excel;
@@ -23,8 +24,9 @@ class LocationsImportController extends ImportController
 
 	public function getFile(){
         $requiredFields = $this->import->requiredFields;
+        $branches = Branch::orderBy('id')->get();
 		$companies = $this->company->orderBy('companyname')->pluck('companyname','id');
-		return response()->view('locations.import',compact('companies','requiredFields'));
+		return response()->view('locations.import',compact('companies','requiredFields','branches'));
 	}
 
 
@@ -56,7 +58,7 @@ class LocationsImportController extends ImportController
         }
         if(isset($data['branches'])){
            
-            $columns = array_merge($columns,'branch_id');
+            $data['branch_ids'] = implode(',',$data['branches']);
 
         }
         return response()->view('imports.mapfields',compact('columns','fields','data','company_id','title','requiredFields'));

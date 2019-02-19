@@ -83,7 +83,9 @@
 @if(isset($data['contacts']))
 <input type = "hidden" name="contacts" value="{{$data['contacts']}}" />
 @endif
-
+@if(isset($data['branch_ids'])){
+    <input type = "hidden" name="branch_ids" value="{{$data['branch_ids']}}" />
+}
 <input type="hidden" name="type" value="{{$data['type']}}" />
 </form>
 </div>

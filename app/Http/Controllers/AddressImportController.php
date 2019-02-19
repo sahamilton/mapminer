@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use App\Branch;
 use App\Address;
 use App\LeadImport;
 use App\LeadSource;
@@ -102,7 +102,7 @@ class AddressImportController extends ImportController
         $this->validateInput($request);
         $this->import->setFields($data);
         if($this->import->import()) {
-            $this->postimport();
+            $this->postimport($request);
         
             return redirect()->route('leadsource.index')->with('success','Leads imported'); 
 
@@ -110,7 +110,8 @@ class AddressImportController extends ImportController
         
     }
     
-    private function postimport(){
+    private function postimport(Request $request){
+
         
         $this->copyAddresses();
 
@@ -121,6 +122,17 @@ class AddressImportController extends ImportController
         $this->copyLeadContacts();
         //$this->updateLeadPivot();
         $this->setAddressImportIdToNull();
+
+        if (request()->filled('branches');
+
+            $addresses = $this->import->pluck(address_id)->toArray();
+            $branches = Branch::whereIn('id',request('branches'));
+            foreach ($branches as $branch){
+                 $branch->locations()->create();
+            }
+        }
+            
+
 
         $this->truncateTable();
 
