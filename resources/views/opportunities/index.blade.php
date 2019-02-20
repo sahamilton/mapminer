@@ -4,7 +4,6 @@
 @include('companies.partials._searchbar')
 
 @include('maps.partials._form')
-
 <h2>{{$data['branches']->first()->branchname}} Branch Dashboard</h2>
 
 

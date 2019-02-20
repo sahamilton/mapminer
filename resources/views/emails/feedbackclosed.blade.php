@@ -16,6 +16,8 @@ Date: {{$feedback->updated_at->format('F js, Y')}}
 
 Originally posted By: {{$feedback->providedBy->person->fullName()}}
 
+Last Comment: {{$feedback->comments->last}}
+
 @endcomponent
 @component('mail::button', ['url' => route('feedback.show',$feedback->id), 'color' => 'blue'])
         You can see details at  {{route('feedback.show',$feedback->id)}}.

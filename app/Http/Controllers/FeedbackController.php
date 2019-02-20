@@ -102,6 +102,7 @@ class FeedbackController extends Controller
      */
     public function update(FeedbackFormRequest $request, Feedback $feedback)
     {
+        
         $feedback->update(request()->except('_token'));
         return redirect()->route('feedback.index')->withMessage('Feedback updated');
     }
