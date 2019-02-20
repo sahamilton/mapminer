@@ -48,7 +48,7 @@ class Activity extends Model
 	}
 
 	public function scopeSevenDayCount($query){
-		return $query->selectRaw('YEARWEEK(activity_date) as yearweek,count(*) as activities')->groupBy('yearweek')->orderBy('yearweek','asc');
+		return $query->selectRaw('YEARWEEK(activity_date,3) as yearweek,count(*) as activities')->groupBy('yearweek')->orderBy('yearweek','asc');
 	}
 	public function scopeCurrentWeekCount($query){
 		return $query->where('activity_date','>=',Carbon::now()->startOfWeek())
@@ -59,10 +59,12 @@ class Activity extends Model
 	public function summaryData($data){
 		foreach ($data as $yearweek=>$count){
             $year = substr($yearweek, 0, 4);
-            $week = substr($yearweek, 5, 2);
+            $week = substr($yearweek, 4, 2);
+            
             $weekStart = new Carbon;
             $data['show'][$yearweek]['date'] = $weekStart->setISODate($year,$week)->format('Y-m-d');
             $data['show'][$yearweek]['count'] = $count;
+
             if(! isset($data['chart'])){
             	$data['chart']['data'] =$count;
             	$data['chart']['label'] = $yearweek;
