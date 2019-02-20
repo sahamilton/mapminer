@@ -12,7 +12,7 @@
       <th>Potential Headcount</th>
       <th>Potential Duration (mos)</th>
       <th>Potential $$</th>
-      
+      <th>Expected Close</th>
       <th>Last Activity</th>
       <th>Activities</th>
     </thead>
@@ -70,6 +70,11 @@
               {{$opportunity->address->activities->last()->activity_id}}
              <br />
             {{$opportunity->address->activities->last()->activity_date->format('Y-m-d')}}
+            @endif
+          </td>
+          <td>
+            @if($opportunity->expected_close )
+            {{$opportunity->expected_close->format('Y-m-d')}}
             @endif
           </td>
           <td>
