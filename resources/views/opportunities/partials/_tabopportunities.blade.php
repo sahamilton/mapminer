@@ -65,6 +65,11 @@
           <td>{{$opportunity->duration}}</td>
           <td>{{$opportunity->value}}</td>
           <td>
+            @if($opportunity->expected_close )
+            {{$opportunity->expected_close->format('Y-m-d')}}
+            @endif
+          </td>
+          <td>
             @if($opportunity->address->activities->count() >0 )
 
               {{$opportunity->address->activities->last()->activity_id}}
@@ -72,11 +77,7 @@
             {{$opportunity->address->activities->last()->activity_date->format('Y-m-d')}}
             @endif
           </td>
-          <td>
-            @if($opportunity->expected_close )
-            {{$opportunity->expected_close->format('Y-m-d')}}
-            @endif
-          </td>
+          
           <td>
             @if(isset($data['branches']) && in_array($data['branches']->first()->id,array_keys($myBranches)))
               <a 
