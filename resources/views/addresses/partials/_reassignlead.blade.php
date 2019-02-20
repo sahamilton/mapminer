@@ -14,12 +14,12 @@
         
         <form method="post" action="{{route('lead.reassign',$location->id)}}">
           @csrf
-          @if(count($myBranches)>0)
+          @if(count($myBranches)>1)
           <div class="form-group">
             <label class="col-md-2 control-label">Transfer to:</label>
           
 
-              <select class="form-control input-sm" multiple name="branch[]"id="branch">
+              <select class="form-control input-sm"  multiple  name="branch[]"id="branch">
                 @foreach ($myBranches as $key=>$value)
                   <option  value="{{$key}}">{{$value}}</option>
                 @endforeach
@@ -29,7 +29,7 @@
           @endif
           <div class="form-group">
             <label class="col-md-2 control-label">Transfer to:</label>
-            <input type="text" class="form-control" name="branch_id" placeholder ="Enter branch numbers seprated by commas" />
+            <input type="text" class="form-control" name="branch_id" placeholder ="Enter branch numbers separated by commas" />
           </div>
           <input type="hidden" name="address_id" value="{{$location->id}}" />
           

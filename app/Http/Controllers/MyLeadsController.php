@@ -223,6 +223,7 @@ class MyLeadsController extends BaseController
         return $data;
     }
     public function reassign(LeadReassignFormRequest $request){
+        
         if(! request()->filled('branch')){
             $branch = $this->validateBranches($request);
             
@@ -231,9 +232,11 @@ class MyLeadsController extends BaseController
            
         }
         $address = $this->lead->findOrFail(request('address_id'));
+       
         $address->assignedToBranch()->sync($branch);
         // auth()->user()->person
         // address
+       
         $this->notifyLeadReassignment($branch,$address);
         
          // branch manager

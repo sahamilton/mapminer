@@ -79,17 +79,19 @@
           </td>
           
           <td>
+   
             @if(isset($data['branches']) && in_array($data['branches']->first()->id,array_keys($myBranches)))
               <a 
                   data-href="{{route('activity.store')}}" 
                   data-toggle="modal" 
-                  data-pk = "{{$opportunity->address->id}}"
-                  data-id="{{$opportunity->address->id}}"
+                  data-pk = "{{$opportunity->address->address->id}}"
+                  data-id="{{$opportunity->address->address->id}}"
                   data-target="#add-activity" 
                   data-title = "location" 
                   href="#">
               <i class="fa fa-plus-circle text-success" aria-hidden="true"></i> Add Activity</a>
               @endif
+            }
           </td>
         </tr>
         @endforeach
