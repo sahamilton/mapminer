@@ -30,7 +30,7 @@
            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button> 
            <input type="submit" value="Record Activity" class="btn btn-danger" />
             </div>
-            <input type="hidden" name= "address_id" id = "address_id" value="" />
+            <input type="hidden" name= "location_id" id = "address_id" value="" />
         </form>
 
         <div class="modal-footer">
