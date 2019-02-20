@@ -386,6 +386,6 @@ class OpportunityController extends Controller
          $data['chart'][$branch->id]['r'] = 1 + $branch->won;
 
       }
-      dd(json_encode($data['chart']);
+      return $data;
     }
 }

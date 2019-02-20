@@ -8,6 +8,7 @@ use App\Person;
 use App\LeadStatus;
 use App\Mail\NotifyWebLeadsBranchAssignment;
 use App\Http\Requests\MyLeadFormRequest;
+use App\Http\Requests\LeadReassignFormRequest;
 
 class MyLeadsController extends BaseController
 {
@@ -19,11 +20,13 @@ class MyLeadsController extends BaseController
     public $branch;
 
 
+
     public function __construct(Address $lead,Person $person,Branch $branch){
 
         $this->lead = $lead;
         $this->person = $person;
         $this->branch = $branch;
+
 
        
     }
@@ -218,6 +221,23 @@ class MyLeadsController extends BaseController
 
         return $data;
     }
+    public function reassign(LeadReassignFormRequest $request){
+        if(! request()->filled('branch')){
 
+            // they all must exist so we don't have to check
+            $branch = explode(",",request('branch_id'));
+            $branches = $this->branch->whereIn('id',$branch)->pluck('id')->toArray();
+            if(array_diff($branch,$branches)){
+                return redirect()->back()->withError('Invalid branch id '. implode(",",array_diff($branch_ids,$branches)));
+                
+            }
+        }else{
+            $branch = request('branch');
+        }
+        $address = $this->lead->findOrFail(request('address_id'));
+        $address->assignedToBranch()->sync($branch);
+        return redirect()->back()->withSuccess('Lead reassigned');
+        
+    }
 }
 
