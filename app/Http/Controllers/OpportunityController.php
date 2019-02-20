@@ -127,7 +127,7 @@ class OpportunityController extends Controller
         ->get(); 
        
         $data['activities'] = $this->getBranchActivities($branches);
-
+        $data['charts'] = $this->getChartData($data);
         return $data;
 
 
@@ -355,5 +355,37 @@ class OpportunityController extends Controller
 
         return $result;
 
+    }
+
+    private function getChartData($data){
+
+      /*
+       label: ["Germany"],
+          backgroundColor: "rgba(0,0,0,0.2)",
+          borderColor: "#000",
+          data: [{
+            x: 3979083,
+            y: 6.994,
+            r: 15
+          }]
+        }
+        */
+      $data['chart'] = array();
+      foreach ($data['branches'] as $branch){
+        $sum=0;
+        $data['chart'][$branch->id]['y']=$branch->won + $branch->lost;
+        for ($i =1; $i < 7; $i++){
+          if(isset($data['activities'][$branch->id][$i])){
+           
+              $sum = $sum + $data['activities'][$branch->id][$i];
+            }
+
+
+        }
+         $data['chart'][$branch->id]['x'] = $sum;
+         $data['chart'][$branch->id]['r'] = 1 + $branch->won;
+
+      }
+      dd(json_encode($data['chart']);
     }
 }
