@@ -64,6 +64,7 @@
 				<div id="forumDiv">
 					<textarea class="autoExpand form-control" 
 					rows="4" 
+					required
 					data-min-rows="4"
 					name="comment" 
 					placeholder="Enter your message here"></textarea>
