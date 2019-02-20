@@ -29,6 +29,12 @@ class LeadReassignFormRequest extends FormRequest
 
         ];
     }
-
+        public function messages()
+        {
+            return [
+                'branch_id.regex' => 'Use only numerics and commas for branch id's,
+                
+            ];
+        }
 
 }
