@@ -268,7 +268,7 @@ class MyLeadsController extends BaseController
         $branch = explode(",",request('branch_id'));
         $branches = $this->branch->whereIn('id',$branch)->pluck('id')->toArray();
         if(array_diff($branch,$branches)){
-            return redirect()->back()->withError('Invalid branch id '. implode(",",array_diff($branch_ids,$branches)));
+            return redirect()->back()->withError('Invalid branch id '. implode(",",array_diff($branch,$branches)));
             
         }
         return $branch;
