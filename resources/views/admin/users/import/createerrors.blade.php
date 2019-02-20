@@ -23,7 +23,7 @@
 				<tr>
 					<td>{{$person->firstname}} {{$person->lastname}}</td>
 					<td>{{$person->employee_id}}</td>
-					<td><input type="text" name="email[{{$person->employee_id}}]" value="{{$person->email}}" >
+					<td><input type ="email" name="email[{{$person->employee_id}}]" value="{{$person->email}}" >
 					</td>
 					<td class="text text-danger">
 						@if(array_key_exists($person->employee_id,$importerrors['email']))

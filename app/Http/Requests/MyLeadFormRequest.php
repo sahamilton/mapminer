@@ -32,11 +32,14 @@ class MyLeadFormRequest extends FormRequest
             'address'=>'required_without:street',
             'street'=>'required_without:address',
             'companyname'=>'required|filled',
-            'phone'=>'sometimes|numeric',
+            'phone'=>'sometimes|nullable|numeric',
+            'email'=>'sometimes|nullable|email',
         ];
     }
     protected function prepareForValidation()
     {
+      
+
         if ($this->has('phone'))
         { 
             $this->merge(['phone'=>preg_replace("/[^0-9]/","",$this->phone)]);

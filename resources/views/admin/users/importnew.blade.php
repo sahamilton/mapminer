@@ -29,7 +29,7 @@
 			<td>{{$user->business_title}}</td>
 			<td>
 				@if($user->reports_to)
-				<input type ="text" name="email[{{$user->employee_id}}]" value="{{$user->email}}"/>
+				<input type ="email" name="email[{{$user->employee_id}}]" value="{{$user->email}}"/>
 				@endif
 		   </td>
 		   

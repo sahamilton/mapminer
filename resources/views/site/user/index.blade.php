@@ -52,7 +52,7 @@ body {
         <div class="form-group {{{ $errors->has('email') ? 'error' : '' }}}">
             <label class="col-md-2 control-label" for="email">Email</label>
             <div class="col-md-10">
-                <input class="form-control" type="text" name="email" id="email" value="{{{ Input::old('email', $user->email) }}}" />
+                <input class="form-control" type ="email" name="email" id="email" value="{{{ Input::old('email', $user->email) }}}" />
                 {{ $errors->first('email', '<span class="help-inline">:message</span>') }}
             </div>
         </div>

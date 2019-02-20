@@ -64,7 +64,7 @@
 </div>
 <!-- zip -->
 <div class="form-group row{{ $errors->has('zip') ? ' has-error' : '' }}">
-    <label for="zip" class="col-md-2 control-label">zip: </label>
+    <label for="zip" class="col-md-2 control-label">Zip: </label>
      <div class="col-sm-8">
         <input required type="text" 
         class="form-control" 
@@ -120,6 +120,22 @@
         placeholder="phone">
         <span class="help-block">
             <strong>{{ $errors->has('phone') ? $errors->first('phone') : ''}}</strong>
+        </span>
+    </div>
+</div>
+<!-- email -->
+<div class="form-group row{{ $errors->has('email') ? ' has-error' : '' }}">
+    <label for="email" class="col-md-2 control-label">Email: </label>
+     <div class="col-sm-8">
+        <input 
+        type="email" 
+        class="form-control" 
+        name='email' 
+        description="email" 
+        value="{{ old('email', isset($location) ? $location->email : '' )}}" 
+        placeholder="email">
+        <span class="help-block">
+            <strong>{{ $errors->has('email') ? $errors->first('email') : ''}}</strong>
         </span>
     </div>
 </div>
