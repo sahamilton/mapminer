@@ -8,7 +8,7 @@
 @elseif($location->opportunities->count()>0)
      <p>Active prospect for {{$location->assignedToBranch->first()->branchname}}</p>
    
-@else
+@elseif($location->assignedToBranch->count()==0)
      <form name="addBranchLead" method="post" action="{{route('branch.lead.add',$location->id)}}" >
         @csrf
         @if(count($myBranches)==1)
