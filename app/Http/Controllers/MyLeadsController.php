@@ -9,6 +9,7 @@ use App\LeadStatus;
 use App\Mail\NotifyWebLeadsBranchAssignment;
 use App\Http\Requests\MyLeadFormRequest;
 use App\Http\Requests\LeadReassignFormRequest;
+use App\Mail\NotifyLeadReassignment;
 
 class MyLeadsController extends BaseController
 {
@@ -223,21 +224,54 @@ class MyLeadsController extends BaseController
     }
     public function reassign(LeadReassignFormRequest $request){
         if(! request()->filled('branch')){
-
-            // they all must exist so we don't have to check
-            $branch = explode(",",request('branch_id'));
-            $branches = $this->branch->whereIn('id',$branch)->pluck('id')->toArray();
-            if(array_diff($branch,$branches)){
-                return redirect()->back()->withError('Invalid branch id '. implode(",",array_diff($branch_ids,$branches)));
-                
-            }
+            $branch = $this->validateBranches($request);
+            
         }else{
             $branch = request('branch');
+           
         }
         $address = $this->lead->findOrFail(request('address_id'));
         $address->assignedToBranch()->sync($branch);
+        // auth()->user()->person
+        // address
+        $this->notifyLeadReassignment($branch,$address);
+        
+         // branch manager
         return redirect()->back()->withSuccess('Lead reassigned');
         
+    }
+    /*
+
+
+
+
+    */
+    private function notifyLeadReassignment(Array $branch, Address $address)
+    {
+         $branches = $this->branch->has('manager')->with('manager')->whereIn('id',$branch)->get();
+         foreach ($branches as $branch){
+                foreach($branch->manager as $manager){
+                    \Mail::queue(new NotifyLeadReassignment($address,$branch,$manager));
+                }
+                
+            }
+
+    }
+    /*
+    validate branch in branch string
+
+
+    */
+    private function validateBranches(Request $request)
+    {
+
+        $branch = explode(",",request('branch_id'));
+        $branches = $this->branch->whereIn('id',$branch)->pluck('id')->toArray();
+        if(array_diff($branch,$branches)){
+            return redirect()->back()->withError('Invalid branch id '. implode(",",array_diff($branch_ids,$branches)));
+            
+        }
+        return $branch;
     }
 }
 
