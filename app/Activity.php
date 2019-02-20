@@ -50,6 +50,11 @@ class Activity extends Model
 	public function scopeSevenDayCount($query){
 		return $query->selectRaw('YEARWEEK(activity_date) as yearweek,count(*) as activities')->groupBy('yearweek')->orderBy('yearweek','asc');
 	}
+	public function scopeCurrentWeekCount($query){
+		return $query->where('activity_date','>=',Carbon::now()->startOfWeek())
+		->selectRaw('user_id, count(*) as activities')
+		->groupBy('user_id');
+	}
 
 	public function summaryData($data){
 		foreach ($data as $yearweek=>$count){

@@ -25,7 +25,7 @@ class OpportunityController extends Controller
         public $branch;
         public $contact;
         public $opportunity;
-
+        public $activity;
         public $person;
 
 
@@ -44,6 +44,7 @@ class OpportunityController extends Controller
         $this->contact = $contact;
         $this->opportunity = $opportunity;
         $this->person = $person; 
+        $this->activity = $activity;
     }
 
     /**
@@ -59,7 +60,7 @@ class OpportunityController extends Controller
 
              $myBranches = $this->branch->all()->pluck('branchname','id')->toArray();
              $data = $this->getSummaryBranchOpportunities(array_keys($myBranches));
-
+            // dd($data['charts']['chart'][0]);
              return response()->view('opportunities.mgrindex',compact('data','activityTypes'));
            
              
@@ -78,9 +79,12 @@ class OpportunityController extends Controller
             return response()->view('opportunities.mgrindex',compact('data','activityTypes'));
         } else{
                
+                       $data = $this->getBranchOpportunities([array_keys($myBranches)[0]]);
+                       $data['weekcount'] = $this->activity->where('user_id','=',auth()->user()->id)
+                       ->currentWeekCount()
+                       ->pluck('activities','user_id')->toArray();
+                     
 
-                      $data = $this->getBranchOpportunities([array_keys($myBranches)[0]]);
-                      
                       return response()->view('opportunities.index',compact('data','activityTypes','myBranches'));
 
         }
@@ -127,7 +131,7 @@ class OpportunityController extends Controller
         ->get(); 
        
         $data['activities'] = $this->getBranchActivities($branches);
-        $data['charts'] = $this->getChartData($data);
+      //  $data['charts'] = $this->getChartData($data);
         return $data;
 
 

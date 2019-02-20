@@ -1,3 +1,12 @@
+
+@if(isset($data['weekcount']) && array_key_exists(auth()->user()->id,$data['weekcount']))
+  <div class="alert alert-success">
+    <p>{{auth()->user()->person->firstname}}, you have recorded {{$data['weekcount'][auth()->user()->id]}} activities this week.</p>
+  </div>
+@endif
+
+
+
  <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
 
