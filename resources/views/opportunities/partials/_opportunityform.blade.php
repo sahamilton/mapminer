@@ -22,6 +22,7 @@
       <input class="form-control" 
       type="number" 
       min="0" step="1" 
+      required
       name="requirements" 
       value="{{ old('requirements' , isset($opportunity) ? $opportunity->requirements : '0' ) }}" />
 
@@ -42,6 +43,7 @@
       <input class="form-control" 
       type="number" 
       min="0" 
+      required
       step="1" 
       name="value" 
       value="{{ old('value' , isset($opportunity) ? $opportunity->value : '0' ) }}"  />

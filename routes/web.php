@@ -161,7 +161,7 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::post('/opportunities/branch/',['as'=>'opportunity.branch','uses'=>'OpportunityController@branchOpportunities']);
 		Route::get('/opportunities/branch/{branch}',['as'=>'opportunities.branch','uses'=>'OpportunityController@branchOpportunities']);
 		Route::delete('opportunity/{opportunity}/destroy',['as'=>'opportunity.remove','uses'=>'OpportunityController@destroy']);
-		
+		Route::get('/opportunity/chart',['as'=>'oppoprtunity.chart','uses'=>'OpportunityController@chart']);
 		Route::resource('opportunity','OpportunityController');
 	#Orders
 		Route::resource('orders','OrdersController');

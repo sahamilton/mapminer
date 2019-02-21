@@ -327,7 +327,12 @@ class OpportunityController extends Controller
         }
         $opportunity->save();
     }
+    public function chart(){
 
+      $branches = $this->branch->limit('20')->pluck('id');
+      $data['activities'] = $this->getBranchActivities($branches);
+      dd($data);
+    }
 
     private function getBranchNotes($branches){
 
@@ -344,6 +349,27 @@ class OpportunityController extends Controller
 
     }
     private function getBranchActivities($branches){
+
+        $activities = $this->activity
+        ->whereBetween('activity_date',[Carbon::now()->subMOnth(1),Carbon::now()])
+        ->whereHas('relatesToAddress',function($q) use($branches){
+          $q->whereHas('assignedToBranch',function($q) use($branches){
+            $q->whereIn('branches.id',$branches);
+          });
+        })->count();
+       
+        dd($activities);    
+       /* $activities = $this->activities->with('relatesToAddress')
+        ->whereHas('relatesToAddress.assignedToBranch',function($q) use($branches){
+          $q->whereIn('branches.id',$branches);
+
+        })
+        ->selectRaw('activitytype_id as type, count(activities.id) as activities')->whereBetween('activity_date',[Carbon::now()->subMOnth(1),Carbon::now()]);
+        
+       
+        ->groupBy('branch_id','activities.activitytype_id')
+        ->get();
+        dd($activities);
         $query = "SELECT branches.id as id, activitytype_id as type, count(activities.id) as activities
             FROM `activities`, address_branch,branches
             where activities.address_id = address_branch.address_id
@@ -356,7 +382,7 @@ class OpportunityController extends Controller
         foreach ($activities as $activity){
             $result[$activity->id][$activity->type] = $activity->activities;
         }
-
+*/
         return $result;
 
     }
