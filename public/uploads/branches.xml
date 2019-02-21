@@ -2,7 +2,6 @@ HTTP/1.0 200 OK
 Cache-Control: no-cache, private
 Content-Type:  text/xml
 Date:          Wed, 13 Dec 2017 00:27:46 GMT
-
 <markers>
 <marker 
 name = "Redwood City, CA" 
