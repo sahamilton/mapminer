@@ -2,7 +2,7 @@
 
 <div style="clear:both"></div>   
 
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={{config('maps.api_key')}}"></script>
+<script type="text/javascript" src="//maps.googleapis.com/maps/api/js?key={{config('maps.api_key')}}"></script>
 @if(isset($user->person->lat))
 
 <script type="text/javascript">

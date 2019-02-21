@@ -61,7 +61,7 @@ Your Profile
 
 		<p>
 			<img src="//secure.gravatar.com/avatar/{{ md5(strtolower(trim($user->gravatar))) }}" width="30" height="30" />
-			<a href="https://gravatar.com">Change your avatar at Gravatar.com</a>.
+			<a href="//gravatar.com">Change your avatar at Gravatar.com</a>.
 		</p>
 	</div>
 

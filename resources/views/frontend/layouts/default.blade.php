@@ -20,7 +20,7 @@
 <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.0-rc.1/css/jquery.dataTables.css">-->
  <link rel="stylesheet" type="text/css" href="{{asset('/assets/css/jquery.dataTables.css')}}">
 <!-- jQuery
-<script type="text/javascript" charset="utf8" src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.2.min.js"></script> -->
+<script type="text/javascript" charset="utf8" src="//ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.2.min.js"></script> -->
  <script type="text/javascript" src="{{asset('/assets/js/jquery.js')}}"></script>
 <!-- DataTables 
 <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.0-rc.1/js/jquery.dataTables.js" />-->
@@ -40,7 +40,7 @@
 
 		<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
 		<!--[if lt IE 9]>
-		<script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
 		<![endif]-->
 
 		<!-- Favicons

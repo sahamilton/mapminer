@@ -33,7 +33,7 @@
               parseFloat(markers[i].getAttribute("lat")),
               parseFloat(markers[i].getAttribute("lng"))); 
           var html = "<b><a href='" + branchlink + "' title ='" +linktitle + "'>" + name +"/" + brand + "</a></b> <br/>" + address;
-          var icon =  customIcons[brand] || 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png';
+          var icon =  customIcons[brand] || '//maps.google.com/mapfiles/ms/icons/blue-dot.png';
           var marker = new google.maps.Marker({
             map: map,
             position: point,

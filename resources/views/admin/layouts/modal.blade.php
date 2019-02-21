@@ -20,10 +20,10 @@
 	<!-- Google will often use this as its description of your page/site. Make it good. -->
 	<meta name="description" content="@yield('description')" />
 
-	<!-- Speaking of Google, don't forget to set your site up: https://google.com/webmasters -->
+	<!-- Speaking of Google, don't forget to set your site up: //google.com/webmasters -->
 	<meta name="google-site-verification" content="">
 
-	<!-- Dublin Core Metadata : https://dublincore.org/ -->
+	<!-- Dublin Core Metadata : //dublincore.org/ -->
 	<meta name="DC.title" content="Project Name">
 	<meta name="DC.subject" content="@yield('description')">
 	<meta name="DC.creator" content="@yield('author')">
@@ -34,7 +34,7 @@
 	<!-- This is the traditional favicon.
 	 - size: 16x16 or 32x32
 	 - transparency is OK
-	 - see wikipedia for info on browser support: https://mky.be/favicon/ -->
+	 - see wikipedia for info on browser support: //mky.be/favicon/ -->
 	<link rel="shortcut icon" href="{{{ asset('assets/ico/favicon.png') }}}">
 
 	<!-- iOS favicons. -->
@@ -61,7 +61,7 @@
 
 	<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
 	<!--[if lt IE 9]>
-	<script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
 	<![endif]-->
 
 	<!-- Asynchronous google analytics; this is the official snippet.
@@ -73,7 +73,7 @@
 
 	  	(function() {
 	   		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-	    		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'https://www') + '.google-analytics.com/ga.js';
+	    		ga.src = ('https:' == document.location.protocol ? '//ssl' : '//www') + '.google-analytics.com/ga.js';
 	    		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
 	  	})();
 
@@ -114,11 +114,11 @@
 	<!-- ./ container -->
 
 	<!-- Javascripts -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
     <script src="{{asset('bootstrap/js/bootstrap.min.js')}}"></script>
     <script src="{{asset('assets/js/wysihtml5/wysihtml5-0.3.0.js')}}"></script>
     <script src="{{asset('assets/js/wysihtml5/bootstrap-wysihtml5.js')}}"></script>
-    <script src="https://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/jquery.dataTables.min.js"></script>
+    <script src="//ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/jquery.dataTables.min.js"></script>
     <script src="{{asset('assets/js/datatables-bootstrap.js')}}"></script>
     <script src="{{asset('assets/js/datatables.fnReloadAjax.js')}}"></script>
     <script src="{{asset('assets/js/jquery.colorbox.js')}}"></script>

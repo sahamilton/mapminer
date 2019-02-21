@@ -1,5 +1,5 @@
 <div id="map" style="border:solid 1px red"></div>
-<script src="https://maps.google.com/maps/api/js?key={{config('maps.api_key')}}"></script>
+<script src="//maps.google.com/maps/api/js?key={{config('maps.api_key')}}"></script>
     <script>
      
       // First, create an object containing LatLng and details for each branch.

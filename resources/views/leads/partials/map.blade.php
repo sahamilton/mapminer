@@ -1,4 +1,4 @@
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={{config('maps.api_key')}}"></script>
+<script type="text/javascript" src="//maps.googleapis.com/maps/api/js?key={{config('maps.api_key')}}"></script>
 
 <script type="text/javascript">
 function initialize() {
@@ -21,7 +21,7 @@ function initialize() {
           position: branchlatLng,
           map: map,
           title: data.branchname,
-          icon: 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png',
+          icon: '//maps.google.com/mapfiles/ms/icons/blue-dot.png',
           clickable: true
       });
       var branchCircle = new google.maps.Circle({
@@ -42,7 +42,7 @@ function initialize() {
 	  position: myLatlng,
 	  map: map,
 	  title: "{{$lead->businessname}}",
-    icon: 'https://maps.google.com/mapfiles/ms/icons/green-dot.png',
+    icon: '//maps.google.com/mapfiles/ms/icons/green-dot.png',
 	  clickable: true
 	});
 	 bindInfoWindow(leadmarker,  map, infoWindow, html);

@@ -151,6 +151,7 @@ class BranchesController extends BaseController {
 	 * 
 	 */
 	private function rebuildXMLfile(){
+		
 		$branches = $this->branch->with('servicelines')->get();
 		$xml = response()->view('branches.xml', compact('branches'))->header('Content-Type','text/xml');
 		$file = file_put_contents(storage_path(). '/app/public/uploads/branches.xml', $xml);

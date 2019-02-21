@@ -90,10 +90,7 @@ class ActivityController extends Controller
      */
     public function show(Activity $activity)
     {
-        //hmmmmmm
-        if($activity->user_id == auth()->user()->id){
-           
-        }
+        
     
     }
 

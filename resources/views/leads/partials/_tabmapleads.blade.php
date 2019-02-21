@@ -1,6 +1,6 @@
 <div id="map" style="border:solid 1px red"></div>
 
-<script src="https://maps.google.com/maps/api/js?key={{config('maps.api_key')}}"></script>
+<script src="//maps.google.com/maps/api/js?key={{config('maps.api_key')}}"></script>
     <script>
      
       // First, create an object containing LatLng and details for each branch.
@@ -45,19 +45,19 @@
       var iconBase = '{{asset("assets/icons/")}}';
       var icons = {
         'Closed':{
- 			    icon: 'https://maps.google.com/mapfiles/ms/icons/green-dot.png'
+ 			    icon: '//maps.google.com/mapfiles/ms/icons/green-dot.png'
         },
 
         'Owned': {
-          icon: 'https://maps.google.com/mapfiles/ms/icons/yellow-dot.png'
+          icon: '//maps.google.com/mapfiles/ms/icons/yellow-dot.png'
         },
         'Offered': {
           
-          icon: 'https://maps.google.com/mapfiles/ms/icons/red-dot.png'
+          icon: '//maps.google.com/mapfiles/ms/icons/red-dot.png'
         },
 
         'Default': {
-        	icon: 'https://maps.google.com/mapfiles/ms/icons/red-dot.png'
+        	icon: '//maps.google.com/mapfiles/ms/icons/red-dot.png'
         },
       };
 

@@ -1,5 +1,5 @@
 
-    <script src="https://maps.google.com/maps/api/js?key={{config('maps.api_key')}}"></script>
+    <script src="//maps.google.com/maps/api/js?key={{config('maps.api_key')}}"></script>
     <script>
     
       // First, create an object containing LatLng and details for each leads.
@@ -56,15 +56,15 @@
       var iconBase = '{{asset("assets/icons/")}}';
       var icons = {
         owned: {
-          icon: 'https://maps.google.com/mapfiles/ms/icons/red-dot.png' ,
+          icon: '//maps.google.com/mapfiles/ms/icons/red-dot.png' ,
         },
         offered: {
           
-          icon: 'https://maps.google.com/mapfiles/ms/icons/yellow-dot.png' ,
+          icon: '//maps.google.com/mapfiles/ms/icons/yellow-dot.png' ,
         },
         closed: {
           
-          icon: 'https://maps.google.com/mapfiles/ms/icons/green-dot.png' ,
+          icon: '//maps.google.com/mapfiles/ms/icons/green-dot.png' ,
         }
 
       };

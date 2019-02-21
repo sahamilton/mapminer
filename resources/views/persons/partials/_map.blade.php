@@ -2,7 +2,7 @@
 <div id="map" class="float-right" style="height:300px;width:500px;border:red solid 1px"/></div> 
 <div style="clear:both"></div>   
 
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={{config('maps.api_key')}}"></script>
+<script type="text/javascript" src="//maps.googleapis.com/maps/api/js?key={{config('maps.api_key')}}"></script>
 @if(isset($people->lat))
 
 <script type="text/javascript">

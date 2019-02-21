@@ -14,7 +14,7 @@
 
     <script src="//code.jquery.com/jquery-1.10.1.min.js"></script>
     <script src="{{asset('maps/js/handlebars-1.0.0.min.js')}}"></script>
-    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={{config('maps.api_key')}}"></script>
+    <script type="text/javascript" src="//maps.googleapis.com/maps/api/js?key={{config('maps.api_key')}}"></script>
        
       
 
@@ -32,7 +32,7 @@
 
 		<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
 		<!--[if lt IE 9]>
-		<script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
 		<![endif]-->
 
 		<!-- Favicons

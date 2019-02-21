@@ -23,7 +23,7 @@
 </div>
 @if(isset($data['chart']))
 <script type="text/javascript" 
-src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
+src="//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
 <script>
 
 

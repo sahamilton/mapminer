@@ -26,7 +26,7 @@ function initialize() {
           position: saleslatLng,
           map: map,
           title: data.name,
-          icon:'https://maps.google.com/mapfiles/ms/icons/yellow-dot.png' ,
+          icon:'//maps.google.com/mapfiles/ms/icons/yellow-dot.png' ,
           clickable: true
       });
 

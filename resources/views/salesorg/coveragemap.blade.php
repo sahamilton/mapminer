@@ -16,30 +16,30 @@
 
     var customIcons = {
       '7': {
-        icon: 'https://maps.google.com/mapfiles/ms/icons/green-dot.png'
+        icon: '//maps.google.com/mapfiles/ms/icons/green-dot.png'
       },
       '6': {
-        icon: 'https://maps.google.com/mapfiles/ms/icons/green-dot.png'
+        icon: '//maps.google.com/mapfiles/ms/icons/green-dot.png'
       },
       '5': {
-        icon: 'https://maps.google.com/mapfiles/ms/icons/green-dot.png'
+        icon: '//maps.google.com/mapfiles/ms/icons/green-dot.png'
       },
       '4': {
-        icon: 'https://maps.google.com/mapfiles/ms/icons/green-dot.png'
+        icon: '//maps.google.com/mapfiles/ms/icons/green-dot.png'
       },
     '3': {
-        icon: 'https://maps.google.com/mapfiles/ms/icons/yellow-dot.png'
+        icon: '//maps.google.com/mapfiles/ms/icons/yellow-dot.png'
       },
 
       '2': {
-        icon: 'https://maps.google.com/mapfiles/ms/icons/yellow-dot.png'
+        icon: '//maps.google.com/mapfiles/ms/icons/yellow-dot.png'
       },
       '1': {
-        icon: 'https://maps.google.com/mapfiles/ms/icons/yellow-dot.png'
+        icon: '//maps.google.com/mapfiles/ms/icons/yellow-dot.png'
       },
 
     '0':{
-       icon: 'https://maps.google.com/mapfiles/ms/icons/red-dot.png'
+       icon: '//maps.google.com/mapfiles/ms/icons/red-dot.png'
       }
     };
 
@@ -67,7 +67,7 @@
               parseFloat(markers[i].getAttribute("lat")),
               parseFloat(markers[i].getAttribute("lng"))); 
           var html = "<b><a href='" + branchlink + "' title ='" +linktitle + "'>" + name +"/" + brand + "</a></b> <br/>" + address;
-          var icon =  customIcons[salescoverage] || 'https://maps.google.com/mapfiles/ms/icons/green-dot.png';
+          var icon =  customIcons[salescoverage] || '//maps.google.com/mapfiles/ms/icons/green-dot.png';
           var marker = new google.maps.Marker({
             map: map,
             position: point,
