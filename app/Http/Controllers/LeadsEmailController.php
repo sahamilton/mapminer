@@ -92,16 +92,21 @@ class LeadsEmailController extends Controller
 
     public function email(Request $request, $leadsource){
 
-        
+       
         $data = request()->except('_token');
         $data['branches'] = $this->getBranches($leadsource);
         $branches = $this->branch->whereIn('id',array_keys($data['branches']))
         ->has('manager')->with('manager','manager.userdetails','manager.reportsTo')->get();
+
         $data['count'] = $branches->count();    
-        $this->notifyBranchTeam($data,$branches,$leadsource);
-        /*$this->notifyManagers($data,$salesteam);*/
-       
-        $this->notifySender($data,$leadsource);
+       // $this->notifyBranchTeam($data,$branches,$leadsource);
+
+        if(request()->has('managers')){
+          
+            $this->notifyManagers($data,$branches,$leadsource);
+        }
+        
+            $this->notifySender($data,$leadsource);
    
         return response()->view('leadsource.senderleads',compact('data','leadsource'));
 
@@ -130,7 +135,36 @@ class LeadsEmailController extends Controller
 
     }
 
+    private function notifyManagers($data,$branches,$leadsource){
+       // we need to get the unique reports to
 
+        $managers = $branches->map(function ($branch){
+           return $branch->manager->first()->reportsTo;
+               
+            
+        });
+        
+        if($data['test']){
+         
+
+            foreach ($managers as $manager){
+                 
+                Mail::to(auth()->user()->email,$manager->reportsTo->fullName())
+                    ->queue(new NotifyManagersLeadsAssignment($data,$manager,$leadsource,$branches));
+            }
+
+
+        }else{
+            
+               foreach ($managers as $manager){
+                    
+                    Mail::to($manager->userdetails->email,$manager->fullName())
+                        ->queue(new NotifyManagersLeadsAssignment($data,$manager,$leadsource,$branches));
+                }
+            }
+        }
+
+    }
    /* private function notifySalesTeam($data,$salesteam){
         
         foreach ($salesteam as $team){
@@ -147,8 +181,7 @@ class LeadsEmailController extends Controller
        Mail::to(auth()->user()->email)->queue(new NotifySenderLeadsAssignment($data,$leadsource));
 
     }
-/*
-    private function notifyManagers($data,$salesteam){
+   /* private function notifyManagers($data,$salesteam){
 
        $data['managers']=array();
         foreach ($salesteam as $salesrep){
@@ -168,6 +201,6 @@ class LeadsEmailController extends Controller
             
         }
 
-    }
-    */
+    }*/
+    
 }

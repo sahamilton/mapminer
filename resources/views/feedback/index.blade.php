@@ -62,13 +62,22 @@
 					<i class="far fa-edit text-info"" aria-hidden="true"></i>
 					Edit this feedback
 				</a>
+				@if($item->status =='open')
 				<a class="dropdown-item"
 					href="{{route('feedback.close',$item->id)}}" 
 					title="Close this feedback">
 					<i class="fas fa-check text-success"></i>
 					Close this feedback
 				</a>
-				
+				@else
+				<a class="dropdown-item"
+					href="{{route('feedback.open',$item->id)}}" 
+					title="Close this feedback">
+					<i class="fas fa-times text text-danger"></i>
+					Reopen this feedback
+				</a>
+
+				@endif
 					<a class="dropdown-item"
 					 	data-href="{{route('feedback.destroy',$item->id)}}" 
 						data-toggle="modal" 

@@ -368,6 +368,7 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
     # Feedback
     	Route::get('feedback/export',['as'=>'feedback.export','uses'=>'FeedbackController@export']);
     	Route::get('feedback{feedback}/close',['as'=>'feedback.close','uses'=>'FeedbackController@close']);
+    	Route::get('feedback{feedback}/open',['as'=>'feedback.open','uses'=>'FeedbackController@open']);
     	Route::resource('feedback','FeedbackController',['except'=>['store']]);
 
     # Feedback Comments

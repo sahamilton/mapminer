@@ -1,8 +1,8 @@
 @component('mail::message')
 
-## Feedback Closed
+## Feedback Reopened
 
-{{$user->person->fullName()}} has closed a feedback:
+{{$user->person->fullName()}} has reopened a feedback:
 
 
 @component('mail::panel')

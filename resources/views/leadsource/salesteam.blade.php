@@ -25,10 +25,17 @@
     </div>
     <form id="campaignmessage" action="{{route('sendleadsource.message',$source->id)}}" method="post">
         {{csrf_field()}}
-        <div class="form-group">
+        <div class="form-group form-check-inline">
+          
           <label class = "form-control">Test</label>
           <input type="checkbox" checked name="test" value="1" class="form-control" />
         </div>
+        <div class="form-group form-check-inline">
+          
+          <label class = "form-control">Notify Managers</label>
+          <input type="checkbox" checked name="managers" value="1" class="form-control" />
+        </div>
+         <div class="form-group">
         <button class='disabled'>Edit Text</button>
         <div id='message' style="display:none" class="form-group{{ $errors->has('description') ? ' has-error' : '' }}">
         <label for="description" class="form-control">Campaign Message</label>
@@ -37,6 +44,7 @@
         {!! $errors->first('message', '<p class="help-block">:message</p>') !!}
         </div>
         <input type="submit" value="Send message to team" />
+      </div>
     </form>
   </div>
   <div id="menu1" class="tab-pane fade">
