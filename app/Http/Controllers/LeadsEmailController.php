@@ -156,13 +156,13 @@ class LeadsEmailController extends Controller
 
         }else{
             
-               foreach ($managers as $manager){
-                    
-                    Mail::to($manager->userdetails->email,$manager->fullName())
-                        ->queue(new NotifyManagersLeadsAssignment($data,$manager,$leadsource,$branches));
-                }
+           foreach ($managers as $manager){
+                
+                Mail::to($manager->userdetails->email,$manager->fullName())
+                    ->queue(new NotifyManagersLeadsAssignment($data,$manager,$leadsource,$branches));
             }
         }
+      
 
     }
    /* private function notifySalesTeam($data,$salesteam){

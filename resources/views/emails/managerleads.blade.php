@@ -2,7 +2,7 @@
 
 ## New Leads Assigned to your team
 
-{{$manager['firstname']}};
+{{$manager->fullName()}};
 
 The following message has been sent to these members of your team:
 <ul>
