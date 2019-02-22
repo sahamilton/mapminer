@@ -20,8 +20,9 @@
 
     </thead>
     <tbody>
-         @foreach($data['activities'] as $activities)
-           @foreach ($activities as $activity)
+         @foreach($data['branches'] as $branch)
+       
+           @foreach ($branch->activities as $activity)
   
             <tr>
                 <td>{{$activity->activity_date ? $activity->activity_date->format('M j, Y'):''}}</td>
