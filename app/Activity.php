@@ -31,7 +31,7 @@ class Activity extends Model
 			return $this->belongsTo(Address::class,'address_id','id');
 		}
 	public function user(){
-		return $this->belongsTo(User::class);
+		return $this->belongsTo(User::class)->with('person');
 	}
 	public function scopeMyActivity($query){
 		

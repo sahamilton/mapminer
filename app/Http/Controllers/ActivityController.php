@@ -161,7 +161,7 @@ class ActivityController extends Controller
         $address =AddressBranch::where('branch_id','=',$branch->id)
         ->whereHas('activities',function ($q) use($activitytype){
             $q->where('activitytype_id','=',$activitytype->id);
-        })->with('address')->get();
+        })->with('address','activities.type')->get();
         $addresses = $address->map(function ($address){
             return $address->address->load('activities');
         });

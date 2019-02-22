@@ -8,6 +8,10 @@
       <th>Business</th>
       <th>Address</th>
       <th>Activity Date</th>
+      <th>Activity Type</th>
+      <th>Posted By</th>
+      <th>Comment</th>
+      <th>Follow Up Date</th>
      </thead>
      <tbody>
 
@@ -16,14 +20,20 @@
 
      		<td><a href="{{route('address.show',$location->id)}}">{{$location->businessname}}</a></td>
      		<td>{{$location->fullAddress()}}</td>
-     		<td>
+     		
      			@foreach ($location->activities as $siteactivity)
-     			
+     			<td>
      				@if($siteactivity->activitytype_id == $activitytype->id)
      					<li>{{$siteactivity->activity_date->format('Y-m-d')}}</li>
      				@endif
+                </td>
+                <td></td>
+                <td>{{$siteactivity->user->person->fullName()}}</td>
+                <td>{{$siteactivity->note}}</td>
+                <td>{{$siteactivity->followup_date ? $siteactivity->followup_date->format('Y-m-d') : ''}}</td>
      			@endforeach
-     		</td>
+     		
+
      	</tr>
      	@endforeach
      </tbody>

@@ -329,10 +329,72 @@ class OpportunityController extends Controller
     }
     public function chart(){
 
-      $branches = $this->branch->limit('20')->pluck('id');
-      $data['activities'] = $this->getBranchActivities($branches);
-      dd($data);
+      $branches = array_keys($this->person->myBranches());
+
+      $data = $this->getChartData($branches);
+ 
+      $data = $this->prepChartData($data);
+      
+      return response()->view('opportunities.chart',compact('data'));
     }
+
+    private function getChartData($branches){
+       return  $this->branch
+        ->whereIn('id',$branches)
+        ->withCount('leads','activities')
+        ->withCount(       
+                ['opportunities',
+                    'opportunities as won'=>function($query){
+            
+                    $query->whereClosed(1);
+                },
+                'opportunities as lost'=>function($query){
+                    $query->whereClosed(2);
+                }]
+            )
+        ->get();
+        /*return $this->addressbranch
+            
+            ->whereIn('branch_id',$branches)
+            ->whereHas('activities',function($q){
+               $q->whereBetween('activity_date',[Carbon::now()->subMOnth(2),Carbon::now()->addDay()]);
+            })
+            ->withCount(       
+                    ['opportunities',
+                        'opportunities as won'=>function($query){
+                
+                        $query->whereClosed(1);
+                    },'opportunities as lost'=>function($query){
+                
+                        $query->whereClosed(2);
+                    }]
+
+
+                  )
+            ->withCount('activities')
+            ->groupBy('address_branch.branch_id')->get();*/
+      }
+
+      private function prepChartData($results){
+
+
+        $string = '';
+
+        foreach ($results as $branch){
+
+          $winloss = $branch->won + $branch->lost;
+          
+          $string = $string . "[\"".$branch->branchname ."\",  ".$winloss  .",  ".$branch->activities_count .",  ".$branch->opportunities_count."],";
+         
+
+        }
+
+        return $string;
+
+      }
+          
+
+
 
     private function getBranchNotes($branches){
 
@@ -343,33 +405,10 @@ class OpportunityController extends Controller
         })->with('relatesToLocation','writtenBy','writtenBy.person')->get();
 
 
-
-
-
-
     }
     private function getBranchActivities($branches){
+   
 
-        $activities = $this->activity
-        ->whereBetween('activity_date',[Carbon::now()->subMOnth(1),Carbon::now()])
-        ->whereHas('relatesToAddress',function($q) use($branches){
-          $q->whereHas('assignedToBranch',function($q) use($branches){
-            $q->whereIn('branches.id',$branches);
-          });
-        })->count();
-       
-        dd($activities);    
-       /* $activities = $this->activities->with('relatesToAddress')
-        ->whereHas('relatesToAddress.assignedToBranch',function($q) use($branches){
-          $q->whereIn('branches.id',$branches);
-
-        })
-        ->selectRaw('activitytype_id as type, count(activities.id) as activities')->whereBetween('activity_date',[Carbon::now()->subMOnth(1),Carbon::now()]);
-        
-       
-        ->groupBy('branch_id','activities.activitytype_id')
-        ->get();
-        dd($activities);
         $query = "SELECT branches.id as id, activitytype_id as type, count(activities.id) as activities
             FROM `activities`, address_branch,branches
             where activities.address_id = address_branch.address_id
@@ -382,40 +421,10 @@ class OpportunityController extends Controller
         foreach ($activities as $activity){
             $result[$activity->id][$activity->type] = $activity->activities;
         }
-*/
+
         return $result;
 
     }
 
-    private function getChartData($data){
-
-      /*
-       label: ["Germany"],
-          backgroundColor: "rgba(0,0,0,0.2)",
-          borderColor: "#000",
-          data: [{
-            x: 3979083,
-            y: 6.994,
-            r: 15
-          }]
-        }
-        */
-      $data['chart'] = array();
-      foreach ($data['branches'] as $branch){
-        $sum=0;
-        $data['chart'][$branch->id]['y']=$branch->won + $branch->lost;
-        for ($i =1; $i < 7; $i++){
-          if(isset($data['activities'][$branch->id][$i])){
-           
-              $sum = $sum + $data['activities'][$branch->id][$i];
-            }
-
-
-        }
-         $data['chart'][$branch->id]['x'] = $sum;
-         $data['chart'][$branch->id]['r'] = 1 + $branch->won;
-
-      }
-      return $data;
-    }
+    
 }

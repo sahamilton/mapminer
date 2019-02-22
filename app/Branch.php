@@ -69,6 +69,10 @@ class Branch extends Model implements HasPresenter {
 		
 	}
 
+	public function activities(){
+		return $this->hasManyThrough(Activity::class,AddressBranch::class,'branch_id','address_id','id','address_id');
+	}
+
 	/*public function opportunities(){
 		return $this->hasMany(Opportunity::class);
 	}*/
