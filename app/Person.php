@@ -90,6 +90,12 @@ class Person extends NodeModel implements HasPresenter {
         return $data;
 	}
 
+	public function scopeMyReports($query)
+	{
+
+		return $query->descendantsAndSelf();
+	}
+
 
 	public function myTeam(){
  		

@@ -5,6 +5,8 @@
 		<th>Company</th>
 		<th>Address</th>
 		<th>Date</th>
+		<th>By</th>
+		<th>Comment</th>
 		<th>Follow up date</th>
 		<th>Contact</th>
 		<th>Activity</th>
@@ -28,8 +30,9 @@
 						{{$activity->relatesToAddress->fulladdress()}}
 					@endif
 				</td>
-				<td>
-					{{$activity->activity_date->format('Y-m-d')}}</td>
+				<td>{{$activity->activity_date->format('Y-m-d')}}</td>
+				<td>{{$activity->user->person->fullName()}}</td>
+				<td>{{$activity->note}}</td>
 				
 				<td>
 					@if($activity->followup_date)

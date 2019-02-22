@@ -37,6 +37,10 @@ class Activity extends Model
 		
 		return $query->where('user_id','=',auth()->user()->id);
 	}
+	public function scopeMyTeamsActivities($query,$myteam)
+	{
+		return $query->whereIn('user_id',$myteam);
+	}
 	public function relatedContact(){
 		return $this->belongsToMany(Contact::class,'activity_contact','activity_id','contact_id');
 	}

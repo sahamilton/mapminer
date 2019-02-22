@@ -5,6 +5,7 @@ use App\Address;
 use App\Activity;
 use App\ActivityType;
 use App\Contact;
+use App\Person;
 use App\AddressBranch;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -15,9 +16,10 @@ class ActivityController extends Controller
     public $activity;
     public $contact;
 
-    public function __construct(Activity $activity,Contact $contact){
+    public function __construct(Activity $activity,Contact $contact, Person $person){
         $this->activity = $activity;
         $this->contact = $contact;
+        $this->person = $person;
     }
 
     /**
@@ -27,8 +29,16 @@ class ActivityController extends Controller
      */
     public function index()
     {
-        $activities = $this->activity->myActivity()->with('relatesToAddress','relatedContact','type')->get();
-        $weekCount = $this->activity->myActivity()->sevenDayCount()->pluck('activities','yearweek')->toArray();
+        
+        $team = $this->person->where('user_id','=',auth()->user()->id)->first()->descendantsAndSelf()->pluck('user_id')->toArray();
+        if(count($team)>1){
+            $activities = $this->activity->myTeamsActivities($team)->with('relatesToAddress','relatedContact','type','user')->get();
+           $weekCount = $this->activity->myTeamsActivities($team)->sevenDayCount()->pluck('activities','yearweek')->toArray(); 
+        }else{
+           $activities = $this->activity->myActivity()->with('relatesToAddress','relatedContact','type','user')->get();
+           $weekCount = $this->activity->myActivity()->sevenDayCount()->pluck('activities','yearweek')->toArray(); 
+        }
+        
         $data = $this->activity->summaryData($weekCount);
         
        
