@@ -1,6 +1,6 @@
 <?php
 namespace App;
-
+use \Carbon\Carbon;
 class Model extends \Eloquent {
 	use Filters,HasRoles;
 	public $userServiceLines;

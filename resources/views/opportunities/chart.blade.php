@@ -1,7 +1,5 @@
 @extends('site.layouts.default')
 @section('content')
-<div class="container">
-
 
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
@@ -11,12 +9,12 @@
     function drawSeriesChart() {
 
       var data = google.visualization.arrayToDataTable([
-        ['Branch', 'Opportunities', 'Activities',     'Closes'],
+        ['Branch', 'Activities', 'Opportunities',     'Closes'],
         {!! $data !!}
       ]);
 
       var options = {
-        title: 'Correlation of activity and opportunities',
+        title: 'Correlation closes to activities and opportunities',
         hAxis: {title: 'Opportunities'},
         vAxis: {title: 'Activities'},
         bubble: {textStyle: {fontSize: 11}}

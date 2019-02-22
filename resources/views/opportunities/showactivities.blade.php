@@ -1,7 +1,15 @@
 @extends('site.layouts.default')
 @section('content')
 <h2>Branch {{$branch->branchname}}
-{{ $activitytype->activity}} activities</h2>
+  @if($activitytype)
+    {{ $activitytype->activity}} activities
+@else
+Activities
+@endif
+<span class="text text-danger" title="Activities in the past month">*</span></h2>
+@if ($activitytype)
+<p><a href="{{route('branch.activity',$branch->id)}}">Return to all activities</a></p>
+@endif
 <p><a href="{{route('opportunities.branch',$branch->id)}}">Return to {{$branch->branchname}} Dashboard</a></p>
 <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
@@ -15,28 +23,27 @@
      </thead>
      <tbody>
 
-     	@foreach ($addresses as $location)
+     	@foreach ($branch->activities as $activity)
+
      	<tr>
 
-     		<td><a href="{{route('address.show',$location->id)}}">{{$location->businessname}}</a></td>
-     		<td>{{$location->fullAddress()}}</td>
+     		<td><a href="{{route('address.show',$activity->address_id)}}">{{$activity->relatesToAddress->businessname}}</a></td>
+     		<td>{{$activity->relatesToAddress->fullAddress()}}</td>
      		
-     			@foreach ($location->activities as $siteactivity)
-     			<td>
-     				@if($siteactivity->activitytype_id == $activitytype->id)
-     					<li>{{$siteactivity->activity_date->format('Y-m-d')}}</li>
-     				@endif
-                </td>
-                <td></td>
-                <td>{{$siteactivity->user->person->fullName()}}</td>
-                <td>{{$siteactivity->note}}</td>
-                <td>{{$siteactivity->followup_date ? $siteactivity->followup_date->format('Y-m-d') : ''}}</td>
-     			@endforeach
+        <td>{{$activity->activity_date->format('Y-m-d')}}</td>
+
+        <td><a href="{{route('branch.activity',['branch'=>$branch->id,'activity'=>$activity->type])}}"
+          title="See all branch {{$branch->id}}'s {{$activity->type->activity}} activities" >{{$activity->type->activity}}</a></td>
+        <td>{{$activity->user->person->fullName()}}</td>
+        <td>{{$activity->note}}</td>
+        <td>{{$activity->followup_date ? $activity->followup_date->format('Y-m-d') : ''}}</td>
+
      		
 
      	</tr>
      	@endforeach
      </tbody>
  </table>
+ <p><span class="text text-danger">*</span> In past month</p>
 @include('partials._scripts')
 @endsection

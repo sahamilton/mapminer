@@ -72,7 +72,7 @@ class User extends Authenticatable
 	 }
      public function scopeFirstLogin($query, Carbon $date){
     
-
+// this doesnt make sense
     return $query->whereHas('usage',function ($q) use ($date){
         $q->where('roles.id','=',$role);
         });

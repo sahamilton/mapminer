@@ -33,9 +33,11 @@ class ActivityController extends Controller
         $team = $this->person->where('user_id','=',auth()->user()->id)->first()->descendantsAndSelf()->pluck('user_id')->toArray();
         if(count($team)>1){
             $activities = $this->activity->myTeamsActivities($team)->with('relatesToAddress','relatedContact','type','user')->get();
-           $weekCount = $this->activity->myTeamsActivities($team)->sevenDayCount()->pluck('activities','yearweek')->toArray(); 
+            $weekCount = $this->activity->myTeamsActivities($team)->sevenDayCount()->pluck('activities','yearweek')->toArray(); 
         }else{
+           
            $activities = $this->activity->myActivity()->with('relatesToAddress','relatedContact','type','user')->get();
+          
            $weekCount = $this->activity->myActivity()->sevenDayCount()->pluck('activities','yearweek')->toArray(); 
         }
         
@@ -162,19 +164,13 @@ class ActivityController extends Controller
 
     }
 
-    public function getBranchActivtiesByType($branch,$activitytype){
-     
-        $activitytype = ActivityType::findOrFail($activitytype);
+    public function getBranchActivtiesByType($branch,$activitytype= null){
 
-     
-
-        $address =AddressBranch::where('branch_id','=',$branch->id)
-        ->whereHas('activities',function ($q) use($activitytype){
-            $q->where('activitytype_id','=',$activitytype->id);
-        })->with('address','activities.type')->get();
-        $addresses = $address->map(function ($address){
-            return $address->address->load('activities');
-        });
-        return response()->view('opportunities.showactivities',compact('branch','activitytype','addresses'));
+        if($activitytype){
+            $activitytype = ActivityType::findOrFail($activitytype);
+        }
+        $branch = $branch->getActivitiesByType($activitytype)->findOrFail($branch->id);
+   
+        return response()->view('opportunities.showactivities',compact('branch','activitytype'));
     }
 }

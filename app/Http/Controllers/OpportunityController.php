@@ -73,10 +73,9 @@ class OpportunityController extends Controller
         }
         if((! auth()->user()->hasRole('branch_manager') && $this->person->myTeam()->count() >1 )){
         
-             $data = $this->getSummaryBranchOpportunities(array_keys($myBranches));
-                 
-            // need to get all the activities esp conversions / closes
-            return response()->view('opportunities.mgrindex',compact('data','activityTypes'));
+            $data = $this->getSummaryBranchOpportunities(array_keys($myBranches));
+            
+            return response()->view('opportunities.mgrindex',compact('data'));
         } else{
                
                        $data = $this->getBranchOpportunities([array_keys($myBranches)[0]]);
@@ -110,7 +109,7 @@ class OpportunityController extends Controller
 
     public function getSummaryBranchOpportunities(array $branches){
 
-        $data['branches'] = $this->branch
+        return $this->branch
         
         ->withCount('opportunities',
             'leads','activities')
@@ -127,12 +126,12 @@ class OpportunityController extends Controller
     
            
         ->with('manager')
+        ->getActivitiesByType()
         ->whereIn('id',$branches)
         ->get(); 
        
-        $data['activities'] = $this->getBranchActivities($branches);
-      //  $data['charts'] = $this->getChartData($data);
-        return $data;
+       // $data['activities'] = $this->branch->whereIn('id',$branches)->get();
+        //$data['charts'] = $this->getChartData($branches);
 
 
     }
@@ -328,34 +327,36 @@ class OpportunityController extends Controller
         $opportunity->save();
     }
     public function chart(){
-
-      $branches = array_keys($this->person->myBranches());
+      if(! $branch_ids = $this->person->myBranches()){
+        return redirect()->route('home')->withWarning('You are not associated with any branch');
+      }
+      $branches = array_keys($branch_ids);
 
       $data = $this->getChartData($branches);
- 
+
+
       $data = $this->prepChartData($data);
-      
+     
+    
       return response()->view('opportunities.chart',compact('data'));
     }
 
     private function getChartData($branches){
        return  $this->branch
-        ->whereIn('id',$branches)
-        ->whereHas('activities',function ($q){
-          $q->whereBetween('activity_date',Carbon::now()->subMonth(),Carbon::now());
-        })
-        ->withCount('leads','activities')
-        ->withCount(       
-                ['opportunities',
-                    'opportunities as won'=>function($query){
-            
-                    $query->whereClosed(1);
-                },
-                'opportunities as lost'=>function($query){
-                    $query->whereClosed(2);
-                }]
-            )
-        ->get();
+                    ->whereIn('id',$branches)
+                    ->getActivitiesByType()
+                    ->withCount('leads')
+                    ->withCount(       
+                            ['opportunities',
+                                'opportunities as won'=>function($query){
+                        
+                                $query->whereClosed(1);
+                            },
+                            'opportunities as lost'=>function($query){
+                                $query->whereClosed(2);
+                            }]
+                        )
+                    ->get();
         /*return $this->addressbranch
             
             ->whereIn('branch_id',$branches)
@@ -387,7 +388,7 @@ class OpportunityController extends Controller
 
           $winloss = $branch->won + $branch->lost;
           
-          $string = $string . "[\"".$branch->branchname ."\",  ".$winloss  .",  ".$branch->activities_count .",  ".$branch->opportunities_count."],";
+          $string = $string . "[\"".$branch->branchname ."\",  ".$branch->activities->count() .",  ".$branch->opportunities_count.", ".$winloss ."],";
          
 
         }
@@ -410,7 +411,11 @@ class OpportunityController extends Controller
 
     }
     private function getBranchActivities($branches){
-   
+        
+
+
+
+
 
         $query = "SELECT branches.id as id, activitytype_id as type, count(activities.id) as activities
             FROM `activities`, address_branch,branches

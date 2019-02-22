@@ -3,6 +3,7 @@ namespace App;
 use\App\Presenters\LocationPresenter;
 use McCool\LaravelAutoPresenter\HasPresenter;
 use Illuminate\Http\Request;
+use \Carbon\Carbon;
 class Branch extends Model implements HasPresenter {
 	use Geocode;
 	public $table ='branches';
@@ -72,6 +73,13 @@ class Branch extends Model implements HasPresenter {
 	public function activities(){
 		return $this->hasManyThrough(Activity::class,AddressBranch::class,'branch_id','address_id','id','address_id');
 	}
+
+	public function activitiesbytype($type=null){
+
+		
+			return $this->hasManyThrough(Activity::class,AddressBranch::class,'branch_id','address_id','id','address_id')->where('activitytype_id','=',2);
+	}
+
 
 	/*public function opportunities(){
 		return $this->hasMany(Opportunity::class);
@@ -310,5 +318,23 @@ class Branch extends Model implements HasPresenter {
 		return $request;
 
 	}
+
+	public function  scopeGetActivitiesByType($query,ActivityType $activitytype=null){
+		
+        $branch = $query->has('activities');
+        if($activitytype){
+           
+            return $branch->with(['activities'=> function($query) use ($activitytype) { 
+                $query->where('activitytype_id','=',$activitytype->id)
+                ->whereBetween('activity_date',[Carbon::now()->subMonth(),Carbon::now()]);
+            }],'activities.type','activities.relatedAddress');
+        }else{
+            
+             return $branch->with(['activities'=>function($query){
+                $query->whereBetween('activity_date',[Carbon::now()->subMonth(),Carbon::now()]);
+            }],'activities.type','activities.relatedAddress');
+            
+        }
+   }
 
 }
