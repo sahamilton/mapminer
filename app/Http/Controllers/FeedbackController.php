@@ -29,8 +29,10 @@ class FeedbackController extends Controller
      */
     public function index()
     {
-        $feedback = $this->feedback->with('providedBy','category')->withCount('comments')->get();
-        return response()->view('feedback.index',compact('feedback'));
+        $feedback_open = $this->feedback->with('providedBy','category')->open()->withCount('comments')->get();
+        $feedback_closed = $this->feedback->with('providedBy','category')->closed()->withCount('comments')->get();
+
+        return response()->view('feedback.index',compact('feedback_open','feedback_closed'));
     }
 
     /**

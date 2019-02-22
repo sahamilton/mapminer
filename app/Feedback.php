@@ -15,6 +15,13 @@ class Feedback extends Model
     	return $this->belongsTo(FeedbackCategory::class,'type','id');
     }
 
+    public function scopeClosed($query){
+        return $query->where('status','=','closed');
+    }
+    public function scopeOpen($query){
+         return $query->where('status','=','open');
+    }
+
     public function comments(){
     	return $this->hasMany(FeedbackComments::class);
     }
