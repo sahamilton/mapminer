@@ -14,6 +14,7 @@
       <th>{{$type->activity}}</th>
       @endif
        @endforeach
+      <th>Total Activities</th>
     <th>Won</th>
     <th>Lost</th>
     </thead>
@@ -50,6 +51,7 @@
 
            
           </td>
+          <td>{{$branch->activities_count}}</td>
           <td align="center">
             @if($branch->won >0)<a href="{{route('opportunities.branch',$branch->id)}}">{{$branch->won}}</a> @else 0 @endif
           </td>

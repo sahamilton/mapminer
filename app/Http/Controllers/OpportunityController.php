@@ -113,7 +113,7 @@ class OpportunityController extends Controller
         $data['branches'] = $this->branch
         
         ->withCount('opportunities',
-            'leads')
+            'leads','activities')
         ->withCount(       
                 ['opportunities',
                     'opportunities as won'=>function($query){
@@ -341,6 +341,9 @@ class OpportunityController extends Controller
     private function getChartData($branches){
        return  $this->branch
         ->whereIn('id',$branches)
+        ->whereHas('activities',function ($q){
+          $q->whereBetween('activity_date',Carbon::now()->subMonth(),Carbon::now());
+        })
         ->withCount('leads','activities')
         ->withCount(       
                 ['opportunities',
