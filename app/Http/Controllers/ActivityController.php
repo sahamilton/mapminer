@@ -29,18 +29,12 @@ class ActivityController extends Controller
      */
     public function index()
     {
-        
-        $team = $this->person->where('user_id','=',auth()->user()->id)->first()->descendantsAndSelf()->pluck('user_id')->toArray();
-        if(count($team)>1){
+            $team = $this->person->myBranchTeam();
+
             $activities = $this->activity->myTeamsActivities($team)->with('relatesToAddress','relatedContact','type','user')->get();
+
             $weekCount = $this->activity->myTeamsActivities($team)->sevenDayCount()->pluck('activities','yearweek')->toArray(); 
-        }else{
-           
-           $activities = $this->activity->myActivity()->with('relatesToAddress','relatedContact','type','user')->get();
-          
-           $weekCount = $this->activity->myActivity()->sevenDayCount()->pluck('activities','yearweek')->toArray(); 
-        }
-        
+       
         $data = $this->activity->summaryData($weekCount);
         
        

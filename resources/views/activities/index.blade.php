@@ -40,6 +40,6 @@
 		@include('activities.partials._table')
    </div>
 </div>
-@include('partials._scripts');
+@include('partials._scripts')
 
 @endsection
