@@ -91,7 +91,7 @@
                   href="#">
               <i class="fa fa-plus-circle text-success" aria-hidden="true"></i> Add Activity</a>
               @endif
-            }
+  
           </td>
         </tr>
         @endforeach
