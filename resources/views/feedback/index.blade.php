@@ -1,7 +1,7 @@
 @extends('admin.layouts.default')
 @section('content')
 
-<h2>All Feedback!!</h2>
+<h2>All Feedback</h2>
 
 <div class="float-right">
 <a href="{{{ route('feedback.create') }}}" class="btn btn-small btn-info iframe">
