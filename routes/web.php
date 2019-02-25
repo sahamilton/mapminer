@@ -152,7 +152,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 	#Notes
 		Route::get('mynotes',['as'=>'mynotes','uses'=>'NotesController@mynotes']);
-		Route::get('exportlocationnotes/{companyID}', ['as'=>'exportlocationnotes','uses'=>'ManagersController@exportManagerNotes']);
+		Route::get('exportlocationnotes/{company}', ['as'=>'exportlocationnotes','uses'=>'ManagersController@exportManagerNotes']);
 		Route::resource('notes','NotesController');
 
 	#Opportunity

@@ -2,18 +2,18 @@
 
 <table>
  <tbody>
-     <tr>
-     <td>companyid</td>
-     <td>companyname</td>
-     <td>locationid</td>
-     <td>businessname</td>
-     <td>date</td>
-     <td>note</td>
+     <thead>
+     <th>companyid</th>
+     <th>companyname</th>
+     <th>locationid</th>
+     <th>businessname</th>
+     <th>date</th>
+     <th>note</th>
 
-     <td>person</td>
+     <th>person</th>
     
-    </tr>
- 
+    </thead>
+ <tbody>
    @foreach($notes as $note)
     <tr>  
 

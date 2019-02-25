@@ -7,6 +7,7 @@ use App\Branch;
 use App\Company;
 use App\SearchFilter;
 use Excel;
+use App\Exports\LocationNotes;
 use Illuminate\Http\Request;
 
 class ManagersController extends BaseController {
@@ -134,20 +135,15 @@ class ManagersController extends BaseController {
 	 * @param  [type] $companyID [description]
 	 * @return [type]            [description]
 	 */
-	public function exportManagerNotes($companyID)
+	public function exportManagerNotes($company)
 	{
-		$company = $this->company->findOrFail($companyID);
-		$this->checkManager($companyID);
 		
-		Excel::download($company->companyname . ' Notes',function($excel) use ($companyID){
-			$excel->sheet('Notes',function($sheet) use ($companyID) {
-				$notes = $this->getManagerNotes($companyID);
-				
-				$sheet->loadview('persons.exportnotes',compact('notes'));
-			});
-		})->download('csv');
-
-		return response()->return();
+		
+		if (! $this->checkManager($company)){
+			return redirect()->route('managers.view')->withWarning('this is not one of your accounts');
+		}
+		
+		return Excel::download(new LocationNotes($company), 'Location_Notes_For_'.$company->companyname.'.csv');
 		
 	}
 	
@@ -175,13 +171,15 @@ class ManagersController extends BaseController {
 	 * @param  [type] $companyID [description]
 	 * @return [type]            [description]
 	 */
-	private function checkManager($companyID)
+	private function checkManager($company)
 	{
 		
 		$data = $this->getMyaccounts();
 		
-		if (! $key = array_search ((int)$companyID, array_keys($data['accounts']))) {
-    		return  redirect()->route('managers.view');
+		if (! $key = array_search ((int)$company->id, array_keys($data['accounts']))) {
+    		return  false;
+		}else{
+			return true;
 		}
 		
 		
