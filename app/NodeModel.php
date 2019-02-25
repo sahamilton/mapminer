@@ -145,10 +145,10 @@ class NodeModel extends Node
               'Content-Type' => 'text/csv',
               'Content-Disposition' => $filename ,
           ];
-        $results['headers'] = $headers;
-        $results['output'] = $output;
+          $results['headers'] = $headers;
+          $results['output'] = $output;
     
-        return $results;
+          return $results;
     }
     
     
@@ -204,10 +204,10 @@ class NodeModel extends Node
               'Content-Type' => 'text/csv',
               'Content-Disposition' => $filename ,
           ];
-        $results['headers'] = $headers;
-        $results['output'] = $output;
+          $results['headers'] = $headers;
+          $results['output'] = $output;
     
-        return $results;
+          return $results;
     }
     
     

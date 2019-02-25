@@ -162,7 +162,7 @@ class ProjectsController extends BaseController
                     'msg' => 'Setting created successfully',
                 ];
        
-        return response()->json($response);
+             return response()->json($response);
     }
 /**
  * closeProject user closes project
