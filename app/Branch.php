@@ -320,17 +320,16 @@ class Branch extends Model implements HasPresenter {
 	}
 
 	public function  scopeGetActivitiesByType($query,ActivityType $activitytype=null){
-		
-        $branch = $query->has('activities');
+	
         if($activitytype){
            
-            return $branch->with(['activities'=> function($query) use ($activitytype) { 
+            return $query->with(['activities'=> function($query) use ($activitytype) { 
                 $query->where('activitytype_id','=',$activitytype->id)
                 ->whereBetween('activity_date',[Carbon::now()->subMonth(),Carbon::now()]);
             }],'activities.type','activities.relatedAddress');
         }else{
             
-             return $branch->with(['activities'=>function($query){
+             return $query->with(['activities'=>function($query){
                 $query->whereBetween('activity_date',[Carbon::now()->subMonth(),Carbon::now()]);
             }],'activities.type','activities.relatedAddress');
             
