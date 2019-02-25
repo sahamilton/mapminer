@@ -10,12 +10,12 @@ class Role extends Model
 
     public function permissions()
     {
-    	return $this->belongsToMany(Permission::class);
+        return $this->belongsToMany(Permission::class);
     }
 
     public function givePermissionTo(Permission $permission)
     {
-    	return $this->permissions()->save($permission);
+        return $this->permissions()->save($permission);
     }
 
     public function assignedRoles()
@@ -25,16 +25,15 @@ class Role extends Model
 
     public function assignRoles($role)
     {
-    	return $this->roles()->save(
-    		Role::whereName($role)->firstOrFail()
-    		);
-
+        return $this->roles()->save(
+            Role::whereName($role)->firstOrFail()
+        );
     }
-    public function getCurrentPermissions(Role $role){
+    public function getCurrentPermissions(Role $role)
+    {
         $permissions = $this->whereId($role->id)->with('permissions')->first();
         $currentPermissions=array();
-        foreach($permissions->permissions as $permission){
-            
+        foreach ($permissions->permissions as $permission) {
             $currentPermissions[]= $permission->id;
         }
 

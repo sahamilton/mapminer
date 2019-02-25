@@ -8,7 +8,8 @@ class ActivityType extends Model
 {
     public $table = 'activity_type';
 
-    public function activities(){
-    	return $this->hasMany(Activity::class);
+    public function activities()
+    {
+        return $this->hasMany(Activity::class);
     }
 }

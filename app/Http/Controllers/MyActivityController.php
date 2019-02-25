@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Watch;
 use App\Contact;
 use App\Address;

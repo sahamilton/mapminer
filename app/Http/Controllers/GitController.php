@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\GitVersion;
+
 class GitController extends Controller
 {
     
     protected $git;
-    public function __construct(GitVersion $git){
+    public function __construct(GitVersion $git)
+    {
         $this->git = $git;
     }
 
@@ -23,7 +25,7 @@ class GitController extends Controller
         $this->git->history();
 
         $versions = $this->git->all();
-        return response()->view('git.index',compact('versions'));
+        return response()->view('git.index', compact('versions'));
     }
 
     /**
@@ -93,12 +95,11 @@ class GitController extends Controller
     }
 
 
-    public function replaceMessage($versions){
-        foreach ($versions as $version){
-           if(strpos($version->message," -0700 ")){
-
-
-            $version->update(['message'=>preg_replace('\A\N* -0[7,8]00 ', '', $version->message)]);
+    public function replaceMessage($versions)
+    {
+        foreach ($versions as $version) {
+            if (strpos($version->message, " -0700 ")) {
+                $version->update(['message'=>preg_replace('\A\N* -0[7,8]00 ', '', $version->message)]);
             }
         }
         return true;

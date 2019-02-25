@@ -17,7 +17,8 @@ class BranchLeadImportController extends ImportController
     public $import;
     public $importtable = 'branchesimport';
     
-    public function __construct(Branch $branch,BranchLeadImport $branchleadimport){
+    public function __construct(Branch $branch, BranchLeadImport $branchleadimport)
+    {
      
       
        
@@ -32,7 +33,7 @@ class BranchLeadImportController extends ImportController
     {
         
         $requiredFields =   $this->import->requiredFields;
-        return response()->view('imports.branchleads.import',compact('requiredFields'));
+        return response()->view('imports.branchleads.import', compact('requiredFields'));
     }
 
     /**

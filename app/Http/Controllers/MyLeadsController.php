@@ -22,14 +22,12 @@ class MyLeadsController extends BaseController
 
 
 
-    public function __construct(Address $lead,Person $person,Branch $branch){
+    public function __construct(Address $lead, Person $person, Branch $branch)
+    {
 
         $this->lead = $lead;
         $this->person = $person;
         $this->branch = $branch;
-
-
-       
     }
 
     /**
@@ -42,13 +40,13 @@ class MyLeadsController extends BaseController
         
         $myBranches = $this->person->myBranches();
 
-        $leads = $this->lead->wherehas('assignedToBranch',function($q) use($myBranches){
-            $q->whereIn('branches.id',array_keys($myBranches));
-        })->whereHas('assignedToBranch',function ($q){
+        $leads = $this->lead->wherehas('assignedToBranch', function ($q) use ($myBranches) {
+            $q->whereIn('branches.id', array_keys($myBranches));
+        })->whereHas('assignedToBranch', function ($q) {
             $q->selectRaw('ST_Distance_Sphere(addresses.position ,branches.position)/1609 AS distance');
         })->with('assignedToBranch')->get();
       
-        return response()->view('myleads.branches',compact('leads','myBranches'));
+        return response()->view('myleads.branches', compact('leads', 'myBranches'));
         // how to get the distance for each branch
         // get my branches
         // get addresses that are leads that are assigned to a branch
@@ -58,7 +56,6 @@ class MyLeadsController extends BaseController
 
     public function closedleads()
     {
-       
     }
 
     /**
@@ -68,7 +65,6 @@ class MyLeadsController extends BaseController
      */
     public function create()
     {
-       
     }
 
     /**
@@ -81,51 +77,43 @@ class MyLeadsController extends BaseController
     {
 
      
-        if(! $data = $this->cleanseInput($request)){
+        if (! $data = $this->cleanseInput($request)) {
             return redirect()->back()->withError('Unable to geocode that address');
         }
 
              
 
         $lead = $this->lead->create($data['lead']);
-        if(count($data['branch'])>0){
+        if (count($data['branch'])>0) {
             $lead->assignedToBranch()->attach($data['branch']);
         }
         
-        if(isset($data['contact'])){
-           
+        if (isset($data['contact'])) {
             $lead->contacts()->create($data['contact']);
-
         }
-        if(request()->filled('addressable_type')){
-           switch(request('addressable_type')){
-            case 'weblead':
-
-                $lead->weblead()->create(request()->all());
-            break;
-
-
-           }
+        if (request()->filled('addressable_type')) {
+            switch (request('addressable_type')) {
+                case 'weblead':
+                    $lead->weblead()->create(request()->all());
+                    break;
+            }
            
-            $lead->load('contacts',request('addressable_type'));
-
-        }else{
-          $lead->load('contacts');  
+            $lead->load('contacts', request('addressable_type'));
+        } else {
+            $lead->load('contacts');
         }
     
 
-        if(request('notify')==1){
-            $branches = \App\Branch::with('manager','manager.userdetails')->whereIn('id',array_keys($data['branch']))->get();
+        if (request('notify')==1) {
+            $branches = \App\Branch::with('manager', 'manager.userdetails')->whereIn('id', array_keys($data['branch']))->get();
            
-            foreach ($branches as $branch){
-                foreach($branch->manager as $manager){
-                    \Mail::queue(new NotifyWebLeadsBranchAssignment($lead,$branch,$manager));
+            foreach ($branches as $branch) {
+                foreach ($branch->manager as $manager) {
+                    \Mail::queue(new NotifyWebLeadsBranchAssignment($lead, $branch, $manager));
                 }
-                
             }
-            
         }
-        return redirect()->route('address.show',$lead)->withMessage('Lead Created');
+        return redirect()->route('address.show', $lead)->withMessage('Lead Created');
     }
 
     /**
@@ -136,7 +124,6 @@ class MyLeadsController extends BaseController
      */
     public function show()
     {
-
     }
 
     /**
@@ -147,7 +134,6 @@ class MyLeadsController extends BaseController
      */
     public function edit()
     {
-        
     }
 
     /**
@@ -159,7 +145,6 @@ class MyLeadsController extends BaseController
      */
     public function update(MyLeadFormRequest $request, MyLead $mylead)
     {
-     
     }
 
     /**
@@ -168,27 +153,26 @@ class MyLeadsController extends BaseController
      * @param  \App\MyLead  $myLeads
      * @return \Illuminate\Http\Response
      */
-    public function destroy( $mylead)
+    public function destroy($mylead)
     {
-        
     }
     
 
     
 
-    private function cleanseInput(Request $request){
+    private function cleanseInput(Request $request)
+    {
         $address = request('address'). ' ' . request('city').' ' .request('state').' ' .request('zip');
-        if(! $geodata = $this->lead->geoCodeAddress($address)){
+        if (! $geodata = $this->lead->geoCodeAddress($address)) {
             return false;
-            
-        }       
-        $data['lead'] = array_merge(request()->all(),$geodata);
+        }
+        $data['lead'] = array_merge(request()->all(), $geodata);
         $data['lead']['businessname'] = $data['lead']['companyname'];
-        $data['lead']['phone'] = preg_replace("/[^0-9]/","",$data['lead']['phone']);
-        if(request()->filled('type')){
+        $data['lead']['phone'] = preg_replace("/[^0-9]/", "", $data['lead']['phone']);
+        if (request()->filled('type')) {
             $data['lead']['addressable_type'] = request('type');
-        }else{
-           $data['lead']['addressable_type'] = 'lead'; 
+        } else {
+            $data['lead']['addressable_type'] = 'lead';
         }
         
         $data['lead']['lead_source_id'] = '4';
@@ -199,37 +183,36 @@ class MyLeadsController extends BaseController
         $data['team']['user_id'] = auth()->user()->id;
         $data['team']['type'] = 'mylead';
         $data['team']['status_id'] =2;
-        if(request()->has('branch') && is_array(request('branch'))){
-            foreach (request('branch') as $branch){
+        if (request()->has('branch') && is_array(request('branch'))) {
+            foreach (request('branch') as $branch) {
                 $data['branch'][$branch]=['status_id'=>1];
             }
-        }else{
+        } else {
             $data['branch'] = [request('branch')=>['status_id'=>2]];
         }
-        if(request()->filled('contact')){
+        if (request()->filled('contact')) {
              $data['contact']['fullname'] = request('contact');
             $name = explode(' ', request('contact'), 2);
             $data['contact']['firstname'] = $name[0];
-            if(isset($name[1])){
+            if (isset($name[1])) {
                 $data['contact']['lastname'] = $name[1];
             }
             
             $data['contact']['title'] = request('contact_title');
             $data['contact']['email'] = request('contactemail');
-            $data['contact']['phone'] =  preg_replace("/[^0-9]/","",request('phone'));
+            $data['contact']['phone'] =  preg_replace("/[^0-9]/", "", request('phone'));
         }
        
 
         return $data;
     }
-    public function reassign(LeadReassignFormRequest $request){
+    public function reassign(LeadReassignFormRequest $request)
+    {
         
-        if(! request()->filled('branch')){
+        if (! request()->filled('branch')) {
             $branch = $this->validateBranches($request);
-            
-        }else{
+        } else {
             $branch = request('branch');
-           
         }
         $address = $this->lead->findOrFail(request('address_id'));
        
@@ -237,11 +220,10 @@ class MyLeadsController extends BaseController
         // auth()->user()->person
         // address
        
-        $this->notifyLeadReassignment($branch,$address);
+        $this->notifyLeadReassignment($branch, $address);
         
          // branch manager
         return redirect()->back()->withSuccess('Lead reassigned');
-        
     }
     /*
 
@@ -249,16 +231,14 @@ class MyLeadsController extends BaseController
 
 
     */
-    private function notifyLeadReassignment(Array $branch, Address $address)
+    private function notifyLeadReassignment(array $branch, Address $address)
     {
-         $branches = $this->branch->has('manager')->with('manager')->whereIn('id',$branch)->get();
-         foreach ($branches as $branch){
-                foreach($branch->manager as $manager){
-                    \Mail::queue(new NotifyLeadReassignment($address,$branch,$manager));
-                }
-                
+         $branches = $this->branch->has('manager')->with('manager')->whereIn('id', $branch)->get();
+        foreach ($branches as $branch) {
+            foreach ($branch->manager as $manager) {
+                \Mail::queue(new NotifyLeadReassignment($address, $branch, $manager));
             }
-
+        }
     }
     /*
     validate branch in branch string
@@ -268,13 +248,11 @@ class MyLeadsController extends BaseController
     private function validateBranches(Request $request)
     {
 
-        $branch = explode(",",request('branch_id'));
-        $branches = $this->branch->whereIn('id',$branch)->pluck('id')->toArray();
-        if(array_diff($branch,$branches)){
-            return redirect()->back()->withError('Invalid branch id '. implode(",",array_diff($branch,$branches)));
-            
+        $branch = explode(",", request('branch_id'));
+        $branches = $this->branch->whereIn('id', $branch)->pluck('id')->toArray();
+        if (array_diff($branch, $branches)) {
+            return redirect()->back()->withError('Invalid branch id '. implode(",", array_diff($branch, $branches)));
         }
         return $branch;
     }
 }
-

@@ -6,7 +6,9 @@ use App\Role;
 use App\Permission;
 use App\Http\Controllers\BaseController;
 use App\Http\Requests\RoleFormRequest;
-class AdminRolesController extends BaseController {
+
+class AdminRolesController extends BaseController
+{
 
 
     /**
@@ -37,9 +39,8 @@ class AdminRolesController extends BaseController {
     {
         
         $this->user = $user;
-		$this->role = $role;
-		$this->permission = $permission;
-        
+        $this->role = $role;
+        $this->permission = $permission;
     }
 
     /**
@@ -50,10 +51,10 @@ class AdminRolesController extends BaseController {
     public function index()
     {
 
-		// Title
+        // Title
         $title = "Role Management";
 
-		$roles = $this->role->with('assignedRoles')->get();
+        $roles = $this->role->with('assignedRoles')->get();
         // Show the page
         return response()->view('admin/roles/index', compact('roles', 'title'));
     }
@@ -69,14 +70,14 @@ class AdminRolesController extends BaseController {
         // Get all the available permissions
         $permissions = $this->permission->all();
 
-        $currentPermissions = null;      
+        $currentPermissions = null;
         // Title
         $title = 'Create New Role';
 
         $role= new Role;
 
         // Show the page
-        return response()->view('admin.roles.create', compact('permissions','role', 'currentPermissions', 'title'));
+        return response()->view('admin.roles.create', compact('permissions', 'role', 'currentPermissions', 'title'));
     }
 
     /**
@@ -85,21 +86,19 @@ class AdminRolesController extends BaseController {
      * @return Response
      */
     public function store(RoleFormRequest $request)
-    {   
+    {
        
             
 
-            if(! $role = Role::create(request()->all())){
-                return redirect()->to('admin/roles/create')->with('error', 'Unable to create role');
-            }
+        if (! $role = Role::create(request()->all())) {
+            return redirect()->to('admin/roles/create')->with('error', 'Unable to create role');
+        }
          
-            if(request()->filled('permissions')){
-
-                // Save permissions
-                $role->permissions()->sync($request->permissions);
-                // Redirect to the new role page
-               
-            }
+        if (request()->filled('permissions')) {
+            // Save permissions
+            $role->permissions()->sync($request->permissions);
+            // Redirect to the new role page
+        }
 
             return redirect()->to(route('roles.index'))->with('success', 'Role created succesfully');
     }
@@ -114,16 +113,18 @@ class AdminRolesController extends BaseController {
     {
 
 
-    	$users = $this->user->whereHas('roles', 
-    			function($q) use($role){
-    			$q->where('role_id', $role->id);
-    			})
-        ->with('roles','usage','person','serviceline')
+        $users = $this->user->whereHas(
+            'roles',
+            function ($q) use ($role) {
+                    $q->where('role_id', $role->id);
+            }
+        )
+        ->with('roles', 'usage', 'person', 'serviceline')
         ->get();
-    	$title =$role->name .' users';
-		//$users = $this->role->findOrFail($role->id)->with('assignedRoles')->get();
-		return response()->view('admin/roles/show', compact('users','role','title'));
-		// redirect to the frontend
+        $title =$role->name .' users';
+        //$users = $this->role->findOrFail($role->id)->with('assignedRoles')->get();
+        return response()->view('admin/roles/show', compact('users', 'role', 'title'));
+        // redirect to the frontend
     }
 
     /**
@@ -135,12 +136,9 @@ class AdminRolesController extends BaseController {
     public function edit($role)
     {
         
-        if(! empty($role))
-        {
+        if (! empty($role)) {
             $permissions = $this->permission->all();
-        }
-        else
-        {
+        } else {
             // Redirect to the roles management page
             return redirect()->to('admin/roles')->with('error', 'Role does not exist');
         }
@@ -150,7 +148,7 @@ class AdminRolesController extends BaseController {
         $currentPermissions = $this->role->getCurrentPermissions($role);
 
         // Show the page
-        return response()->view('admin/roles/edit', compact('role', 'permissions', 'title','currentPermissions'));
+        return response()->view('admin/roles/edit', compact('role', 'permissions', 'title', 'currentPermissions'));
     }
 
     /**
@@ -159,14 +157,14 @@ class AdminRolesController extends BaseController {
      * @param $role
      * @return Response
      */
-    public function update(RoleFormRequest $request,$role)
+    public function update(RoleFormRequest $request, $role)
     {
         // Declare the rules for the form validation
         
         $permissions = array();
 
-        if(request()->filled('permissions')){
-           $permissions =request('permissions');
+        if (request()->filled('permissions')) {
+            $permissions =request('permissions');
         }
 
 
@@ -175,18 +173,13 @@ class AdminRolesController extends BaseController {
         $role->permissions()->sync($permissions);
 
         // Was the role updated?
-        if ($role->save())
-        {
+        if ($role->save()) {
             // Redirect to the role page
             return redirect()->to(route('roles.index'))->with('success', 'Role updated succesfully');
-        }
-        else
-        {
+        } else {
             // Redirect to the role page
-            return redirect()->to(route('roles.edit',$role->id))->with('error', 'Unable to update role');
+            return redirect()->to(route('roles.edit', $role->id))->with('error', 'Unable to update role');
         }
-
-
     }
 
 
@@ -216,15 +209,12 @@ class AdminRolesController extends BaseController {
     {
            
             // Was the role deleted?
-            if($role->delete()) {
-                // Redirect to the role management page
-                return redirect()->to(route('roles.index'))->with('success', 'Role deleted succesfully');
-            }
+        if ($role->delete()) {
+            // Redirect to the role management page
+            return redirect()->to(route('roles.index'))->with('success', 'Role deleted succesfully');
+        }
 
             // There was a problem deleting the role
             return redirect()->to('admin/roles')->with('error', 'Unable to delete role');
     }
-
-  
-
 }

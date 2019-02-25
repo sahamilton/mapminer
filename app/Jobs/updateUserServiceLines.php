@@ -32,10 +32,9 @@ class updateUserServiceLines implements ShouldQueue
      */
     public function handle()
     {
-        foreach ($this->users as $user){
-
+        foreach ($this->users as $user) {
             // send to queue
-            $roles = explode(",",$this->newuser[$user->id]);
+            $roles = explode(",", $this->newuser[$user->id]);
             $user->serviceline()->sync($roles);
         }
     }

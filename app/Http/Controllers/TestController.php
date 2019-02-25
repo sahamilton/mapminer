@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Person;
+
 class TestController extends Controller
 {
     
@@ -84,27 +85,28 @@ class TestController extends Controller
     {
         //
     }
-    public function form(){
+    public function form()
+    {
         return response()->view('test.index');
     }
 
-    public function select(Request $request){
+    public function select(Request $request)
+    {
 
-        return response()->json($this->states[request('country')],201);
+        return response()->json($this->states[request('country')], 201);
 
         //return response()->json($this->states[$cid],201);
-       
-
     }
 
-    public function send(Request $request){
+    public function send(Request $request)
+    {
 
         dd(request()->all());
-
     }
 
-    public function test(){
-        $person = Person::with('userdetails')->where('user_id','=',auth()->user()->id)->first();
+    public function test()
+    {
+        $person = Person::with('userdetails')->where('user_id', '=', auth()->user()->id)->first();
         
         dd($person);
     }

@@ -11,13 +11,15 @@ use App\Person;
 use App\Opportunity;
 use \App\Locations;
 use JeroenDesloovere\VCard\VCard;
+
 class LocationContactController extends Controller
 {
     
     public $contact;
     public $person;
 
-    public function __construct(Contact $contact,Person $person){
+    public function __construct(Contact $contact, Person $person)
+    {
         $this->contact = $contact;
         $this->person = $person;
     }
@@ -30,24 +32,22 @@ class LocationContactController extends Controller
     {
 
     
-        if(auth()->user()->hasRole('Branch Manager')){
-             
-             $branches = Branch::whereHas('manager',function($q) {
-                $q->where('id','=',auth()->user()->person->id);
+        if (auth()->user()->hasRole('Branch Manager')) {
+             $branches = Branch::whereHas('manager', function ($q) {
+                $q->where('id', '=', auth()->user()->person->id);
              })->pluck('id')->toArray();
-        }else{
+        } else {
             $branches = array_keys($this->person->myBranches());
         }
             
-             $opportunity = Opportunity::whereIn('branch_id',$branches)->pluck('address_id')->toArray();
+             $opportunity = Opportunity::whereIn('branch_id', $branches)->pluck('address_id')->toArray();
             
-             $customer = AddressBranch::whereIn('branch_id',$branches)->pluck('address_id')->toArray();
+             $customer = AddressBranch::whereIn('branch_id', $branches)->pluck('address_id')->toArray();
            
-             $contacts = $this->contact->whereIn('address_id',array_merge($opportunity,$customer))->with('location')->get();
+             $contacts = $this->contact->whereIn('address_id', array_merge($opportunity, $customer))->with('location')->get();
            
             $title = "Branch Contacts";
-             return response()->view('contacts.index',compact('contacts','title'));
-           
+             return response()->view('contacts.index', compact('contacts', 'title'));
     }
 
     /**
@@ -74,8 +74,7 @@ class LocationContactController extends Controller
         $data['user_id']= auth()->user()->id;
         $contact = $this->contact->create($data);
         
-        return redirect()->route('address.show',request('address_id'));
-
+        return redirect()->route('address.show', request('address_id'));
     }
 
     /**
@@ -97,7 +96,7 @@ class LocationContactController extends Controller
      */
     public function edit($contact)
     {
-        return response()->view('contacts.edit',compact('contact'));
+        return response()->view('contacts.edit', compact('contact'));
     }
 
     /**
@@ -112,7 +111,7 @@ class LocationContactController extends Controller
         
         $contact->update(request()->all());
 
-        return redirect()->route('address.show',$contact->address_id);
+        return redirect()->route('address.show', $contact->address_id);
     }
 
     /**
@@ -126,22 +125,21 @@ class LocationContactController extends Controller
         
         $contact->delete();
         return redirect()->back();
-        
     }
 
-    public function vcard($id){
+    public function vcard($id)
+    {
         \Debugbar::disable();
             $vcard = new VCard;
             $contact = $this->contact
             ->with('location')
             ->findOrFail($id);
-            $vcard->addName($contact->fullName(),null,null,null,null);
+            $vcard->addName($contact->fullName(), null, null, null, null);
             // add work data
             $vcard->addCompany($contact->location->businessname);
             $vcard->addPhoneNumber($contact->phone, 'PREF;WORK');
-            $vcard->addAddress(null,$contact->location->address2, $contact->location->street, $contact->location->city, null, $contact->location->zip, null);
-            $vcard->addURL(route('locations.show',$contact->location_id));
+            $vcard->addAddress(null, $contact->location->address2, $contact->location->street, $contact->location->city, null, $contact->location->zip, null);
+            $vcard->addURL(route('locations.show', $contact->location_id));
             $vcard->download();
-
     }
 }

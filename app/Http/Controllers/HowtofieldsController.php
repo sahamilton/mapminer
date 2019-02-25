@@ -1,111 +1,112 @@
 <?php
 namespace App\Http\Controllers;
+
 use App\Howtofield;
 use App\Http\Requests\HowtofieldsFormRequest;
-class HowtofieldsController extends BaseController {
-	public $howtofield;
-	/**
-	 * Display a listing of howtofields
-	 *
-	 * @return Response
-	 */
-	 public function __construct(Howtofield $howtofield) {
-		
-		$this->howtofield = $howtofield;
-	}
-	
-	 
-	public function index()
-	{
-		$howtofields = $this->howtofield->get();
-		
-		
-		return response()->view('howtofields.index',compact('howtofields'));
-	}
 
-	/**
-	 * Show the form for creating a new howtofield
-	 *
-	 * @return Response
-	 */
-	public function create()
-	{
-		return response()->view('howtofields.create');
-	}
+class HowtofieldsController extends BaseController
+{
+    public $howtofield;
+    /**
+     * Display a listing of howtofields
+     *
+     * @return Response
+     */
+    public function __construct(Howtofield $howtofield)
+    {
+        
+        $this->howtofield = $howtofield;
+    }
+    
+     
+    public function index()
+    {
+        $howtofields = $this->howtofield->get();
+        
+        
+        return response()->view('howtofields.index', compact('howtofields'));
+    }
 
-	/**
-	 * Store a newly created howtofield in storage.
-	 *
-	 * @return Response
-	 */
-	public function store(HowtofieldsFormRequest $request)
-	{
-		
-		if(request()->has('addGroup') && request('addGroup') != '') {
-			$request->request->add(['group' => request('addGroup')]);
-			
-		}
-		$this->howtofield->create(request()->all());
-		return redirect()->route('howtofields.index');
-	}
+    /**
+     * Show the form for creating a new howtofield
+     *
+     * @return Response
+     */
+    public function create()
+    {
+        return response()->view('howtofields.create');
+    }
 
-	/**
-	 * Display the specified howtofield.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function show($id)
-	{
-		$howtofield = $this->howtofield->findOrFail($id);
+    /**
+     * Store a newly created howtofield in storage.
+     *
+     * @return Response
+     */
+    public function store(HowtofieldsFormRequest $request)
+    {
+        
+        if (request()->has('addGroup') && request('addGroup') != '') {
+            $request->request->add(['group' => request('addGroup')]);
+        }
+        $this->howtofield->create(request()->all());
+        return redirect()->route('howtofields.index');
+    }
 
-		return response()->view('howtofields.show', compact('howtofield'));
-	}
+    /**
+     * Display the specified howtofield.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function show($id)
+    {
+        $howtofield = $this->howtofield->findOrFail($id);
 
-	/**
-	 * Show the form for editing the specified howtofield.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($howtofield)
-	{
-		
-		return response()->view('howtofields.edit', compact('howtofield'));
-	}
+        return response()->view('howtofields.show', compact('howtofield'));
+    }
 
-	/**
-	 * Update the specified howtofield in storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function update(HowtofieldsFormRequest $request, $howtofield)
-	{
-		
+    /**
+     * Show the form for editing the specified howtofield.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function edit($howtofield)
+    {
+        
+        return response()->view('howtofields.edit', compact('howtofield'));
+    }
 
-		if(request()->has('addGroup') && request('addGroup') != '') {
-			$request->request->add(['group' => request('addGroup')]);
-			
-		}
+    /**
+     * Update the specified howtofield in storage.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function update(HowtofieldsFormRequest $request, $howtofield)
+    {
+        
 
-		$howtofield->update(request()->all());
+        if (request()->has('addGroup') && request('addGroup') != '') {
+            $request->request->add(['group' => request('addGroup')]);
+        }
+
+        $howtofield->update(request()->all());
 
 
-		return redirect()->route('admin.howtofields.index');
-	}
+        return redirect()->route('admin.howtofields.index');
+    }
 
-	/**
-	 * Remove the specified howtofield from storage.
-	 *
-	 * @param  int  $id
-	 * @return Redirect
-	 */
-	public function destroy($id)
-	{
-		$this->howtofield->destroy($id);
+    /**
+     * Remove the specified howtofield from storage.
+     *
+     * @param  int  $id
+     * @return Redirect
+     */
+    public function destroy($id)
+    {
+        $this->howtofield->destroy($id);
 
-		return redirect()->route('admin.howtofields.index');
-	}
-
+        return redirect()->route('admin.howtofields.index');
+    }
 }

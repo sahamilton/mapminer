@@ -22,13 +22,11 @@ class NotifyLeadReassignment extends Mailable
      *
      * @return void
      */
-     public function __construct(Address $address, Branch $branch,Person $person)
+    public function __construct(Address $address, Branch $branch, Person $person)
     {
         $this->address = $address;
         $this->branch = $branch;
-        $this->person = $person;        
-    
-       
+        $this->person = $person;
     }
 
     /**
@@ -42,7 +40,5 @@ class NotifyLeadReassignment extends Mailable
             
             return $this->markdown('emails.leadreassignmentnotify')
             ->to($this->person->userdetails->email, $this->person->postName())->subject('Lead Reassigned');
-        
-
     }
 }

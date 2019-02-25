@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Jobs;
+
 use App\UserImport;
 use App\User;
 use App\Person;
@@ -36,16 +37,16 @@ class ProcessUserImport implements ShouldQueue
         $user->email = $this->import->email;
         $user->save();
         // update roles
-        if(is_array($roles = explode(",",[$this->import->role_id))){
+        if (is_array($roles = explode(",", [$this->import->role_id))) {
                 $user->roles()->sync($roles);
-            }else{
-                $user->roles()->sync([]);
-            }
+        } else {
+            $user->roles()->sync([]);
+        }
 
         // update servicelines
-        if(is_array($servicelines = ",",$this->import->serviceline)){
-            $user->serviceline()->sync(explode(",",$this->import->serviceline));
-        }else{
+        if (is_array($servicelines = ",", $this->import->serviceline)) {
+            $user->serviceline()->sync(explode(",", $this->import->serviceline));
+        } else {
             $user->serviceline()->sync([]));
         }
         // update person record

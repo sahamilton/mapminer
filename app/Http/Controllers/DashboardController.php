@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Watch;
 use App\Note;
 use App\Lead;
@@ -19,7 +20,8 @@ class DashboardController extends Controller
     public $notes;
 
 
-    public function __construct(Watch $watch,Contact $contact,Activity $activity,Rating $rating,Note $note,Lead $lead){
+    public function __construct(Watch $watch, Contact $contact, Activity $activity, Rating $rating, Note $note, Lead $lead)
+    {
         $this->watch = $watch;
         $this->contacts = $contact;
         $this->activity = $activity;
@@ -36,21 +38,20 @@ class DashboardController extends Controller
     {
 
       
-       if(auth()->user()->can('manage_opportunities')){
-
+        if (auth()->user()->can('manage_opportunities')) {
             return redirect()->route('opportunity.index');
-       }
+        }
 
-       $watchlist = $this->watch->getMyWatchList();
-       $contacts = $this->contacts->getMyContacts();
-       $activities = $this->activity->myActivity()->with('relatesToAddress','relatedContact','type')->get();
-       $ratings = $this->rating->myRatings()->get();
-       $notes = $this->notes->myNotes()->get();      
+        $watchlist = $this->watch->getMyWatchList();
+        $contacts = $this->contacts->getMyContacts();
+        $activities = $this->activity->myActivity()->with('relatesToAddress', 'relatedContact', 'type')->get();
+        $ratings = $this->rating->myRatings()->get();
+        $notes = $this->notes->myNotes()->get();
 
        //$leads = $this->lead->getMyLeads()->get();
     
-       $leads = array();
-       return response()->view('myactivities.index',compact('watchlist','contacts','activities','ratings','notes','leads'));
+        $leads = array();
+        return response()->view('myactivities.index', compact('watchlist', 'contacts', 'activities', 'ratings', 'notes', 'leads'));
     }
 
     /**
@@ -118,6 +119,4 @@ class DashboardController extends Controller
     {
         //
     }
-
-   
 }

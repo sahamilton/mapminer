@@ -23,8 +23,8 @@ class CreateCustomersTable extends Migration
             $table->string('zip');
             $table->string('customer_id');
             $table->string('site_id');
-            $table->decimal('lat',20,14);   
-            $table->decimal('lng',20,14);
+            $table->decimal('lat', 20, 14);
+            $table->decimal('lng', 20, 14);
             $table->string('accuracy');
             $table->string('geotype');
             $table->timestamps();

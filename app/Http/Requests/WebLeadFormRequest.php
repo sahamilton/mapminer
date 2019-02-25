@@ -23,10 +23,10 @@ class WebLeadFormRequest extends FormRequest
      */
     public function rules()
     {
-      return [
+        return [
          'weblead' => 'required',
-         'lead_source_id'=>'required', 
+         'lead_source_id'=>'required',
 
-      ];
+        ];
     }
 }

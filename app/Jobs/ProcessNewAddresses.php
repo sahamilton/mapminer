@@ -38,6 +38,5 @@ class ProcessNewAddresses implements ShouldQueue
             $address = Address::create($data);
             
             $this->import->update(['address_id'=>$address->id]);
-            
     }
 }

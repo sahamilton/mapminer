@@ -8,14 +8,15 @@ use App\Role;
 use App\SearchFilter;
 use App\Serviceline;
 use App\Http\Requests\TrainingFormRequest;
+
 class TrainingController extends BaseController
 {
     protected $training;
     public $userVerticals;
-    public function __construct(Training $training){
+    public function __construct(Training $training)
+    {
         $this->training = $training;
         parent::__construct($training);
-
     }
 
 
@@ -35,15 +36,15 @@ class TrainingController extends BaseController
         }
     }*/
 
-     public function index(){
+    public function index()
+    {
 
         $trainings = $this->training->myTraining()->get();
-           if(auth()->user()->can('manage_training')){
-                return response()->view('training.index',compact('trainings'));
-           }else{
-           
-                return response()->view('training.mytrainings',compact('trainings'));
-            }
+        if (auth()->user()->can('manage_training')) {
+            return response()->view('training.index', compact('trainings'));
+        } else {
+            return response()->view('training.mytrainings', compact('trainings'));
+        }
     }
 
     /**
@@ -59,7 +60,7 @@ class TrainingController extends BaseController
         $selectedRoles = \Input::old('roles', array());
         $mode = 'create';
         $training = null;
-        return response()->view('training.create',compact('training','roles','servicelines','verticals','selectedRoles','mode'));
+        return response()->view('training.create', compact('training', 'roles', 'servicelines', 'verticals', 'selectedRoles', 'mode'));
     }
 
     /**
@@ -74,19 +75,16 @@ class TrainingController extends BaseController
         $data = request()->all();
         $data = $this->setDates($data);
 
-        if(request()->has('noexpiration')){
-
+        if (request()->has('noexpiration')) {
             $data['dateto']=null;
         }
-        if($training = $this->training->create($data)){
-            
+        if ($training = $this->training->create($data)) {
             $training->servicelines()->attach(request('serviceline'));
-            if(request()->filled('vertical')){
+            if (request()->filled('vertical')) {
                 $training->relatedIndustries()->attach(request('vertical'));
             }
-            if(request()->filled('role')){
+            if (request()->filled('role')) {
                 $training->relatedRoles()->attach(request('role'));
-
             }
         }
         
@@ -99,11 +97,11 @@ class TrainingController extends BaseController
      * @param  \App\Training  $training
      * @return \Illuminate\Http\Response
      */
-    public function show($id){
+    public function show($id)
+    {
        
         $training = $this->training->findOrFail($id);
-        return response()->view('training.view',compact('training'));
-
+        return response()->view('training.view', compact('training'));
     }
 
     /**
@@ -114,12 +112,12 @@ class TrainingController extends BaseController
      */
     public function edit(Training $training)
     {
-       $roles = Role::all();
+        $roles = Role::all();
         $verticals = $this->getAllVerticals();
         $servicelines = $this->getAllServicelines();
-        $training->load('relatedRoles','relatedIndustries');
+        $training->load('relatedRoles', 'relatedIndustries');
 
-       return response()->view('training.edit',compact('training','roles','servicelines','verticals'));
+        return response()->view('training.edit', compact('training', 'roles', 'servicelines', 'verticals'));
     }
 
     /**
@@ -134,8 +132,7 @@ class TrainingController extends BaseController
         $data = request()->all();
         $data = $this->setDates($data);
 
-        if(request()->has('noexpiration')){
-
+        if (request()->has('noexpiration')) {
             $data['dateto']=null;
         }
 
@@ -144,7 +141,7 @@ class TrainingController extends BaseController
         $training->servicelines()->sync($data['serviceline']);
         $training->relatedIndustries()->sync($data['vertical']);
 
-        return redirect()->route('training.show',$training->id)->withMessage("Training updated");
+        return redirect()->route('training.show', $training->id)->withMessage("Training updated");
     }
 
     /**'relatedRoles','relatedIndustries'
@@ -155,12 +152,7 @@ class TrainingController extends BaseController
      */
     public function destroy(Training $training)
     {
-       $training->delete();
-       return redirect()->route('training.index')->withWarning('Training deleted');
+        $training->delete();
+        return redirect()->route('training.index')->withWarning('Training deleted');
     }
-
-
-   
-
-    }
-    
+}

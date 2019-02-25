@@ -7,11 +7,13 @@ use App\ProjectSource;
 use Carbon\Carbon;
 use App\Project;
 use App\Http\Requests\ProjectSourceRequest;
+
 class ProjectSourceController extends Controller
 {
     public $projectsource;
     public $project;
-    public function __construct(ProjectSource $projectsource,Project $project){
+    public function __construct(ProjectSource $projectsource, Project $project)
+    {
         $this->projectsource = $projectsource;
         $this->project = $project;
     }
@@ -28,7 +30,7 @@ class ProjectSourceController extends Controller
 
         $stats = $this->getStats($sources);
 
-        return response()->view('projectsource.index',compact('sources','stats'));
+        return response()->view('projectsource.index', compact('sources', 'stats'));
     }
 
     /**
@@ -54,12 +56,12 @@ class ProjectSourceController extends Controller
         $data['dateto'] = Carbon::createFromFormat('d/m/Y', request('dateto'));
 
 
-        if($this->projectsource->create($data)){
+        if ($this->projectsource->create($data)) {
             return redirect()->route('projectsource.index')
-            ->with('sucess','Project Source Created');
+            ->with('sucess', 'Project Source Created');
         }
         return redirect()->route('projectsource.index')
-            ->with('error','Project Source Not Created');
+            ->with('error', 'Project Source Not Created');
     }
 
     /**
@@ -71,7 +73,7 @@ class ProjectSourceController extends Controller
     public function show($id)
     {
         $projectsource = $this->projectsource->with('projects')->findOrFail($id);
-        return response()->view('projectsource.show',compact('projectsource'));
+        return response()->view('projectsource.show', compact('projectsource'));
     }
 
     /**
@@ -83,7 +85,7 @@ class ProjectSourceController extends Controller
     public function edit($id)
     {
         $projectsource = $this->projectsource->with('projects')->findOrFail($id);
-        return response()->view('projectsource.edit',compact('projectsource'));
+        return response()->view('projectsource.edit', compact('projectsource'));
     }
 
     /**
@@ -101,12 +103,12 @@ class ProjectSourceController extends Controller
         $data['dateto'] = Carbon::createFromFormat('m/d/Y', request('dateto'));
 
         $projectsource = $this->projectsource->with('projects')->findOrFail($id);
-        if($projectsource->update($data)){
+        if ($projectsource->update($data)) {
             return redirect()->route('projectsource.index')
-            ->with('sucess','Project Source Updated');
+            ->with('sucess', 'Project Source Updated');
         }
         return redirect()->route('projectsource.index')
-            ->with('error','Project Source Not Updated');
+            ->with('error', 'Project Source Not Updated');
     }
 
     /**
@@ -117,50 +119,49 @@ class ProjectSourceController extends Controller
      */
     public function destroy($id)
     {
-        if($this->projectsource->destroy($id)){
+        if ($this->projectsource->destroy($id)) {
              return redirect()->route('projectsource.index')
-            ->with('success','Project Source deleted');
+            ->with('success', 'Project Source deleted');
         }
          return redirect()->route('projectsource.index')
-            ->with('error','Unable to delete Project Source');
+            ->with('error', 'Unable to delete Project Source');
     }
 
-    private function getStats($sources){
+    private function getStats($sources)
+    {
         $stats =array();
-        foreach ($sources as $source){
+        foreach ($sources as $source) {
             $stats[$source->id]['count'] = $source->projects()->count();
             $owned = $source->projects()->has('owner')->with('owner')->get();
             $stats[$source->id]['statuses']= $this->getStatuses($owned);
             $stats[$source->id]['ranking']= $this->getRanking($owned);
             $stats[$source->id]['owned'] = $owned->count();
-
         }
-    return $stats;
-        
+        return $stats;
     }
-    private function getRanking($owned){
+    private function getRanking($owned)
+    {
         $data['ranking']=0;
         $count=0;
-        foreach ($owned as $project){
-            if(isset($project->owner->first()->pivot->ranking)){
+        foreach ($owned as $project) {
+            if (isset($project->owner->first()->pivot->ranking)) {
                 $count++;
                 $data['ranking']= $data['ranking'] + $project->owner->first()->pivot->ranking;
             }
         }
-        if($count>0){
+        if ($count>0) {
             return $data['ranking'] / $count;
         }
         return $data['ranking'];
-        
     }
 
-    private function getStatuses($owned){
-        foreach ($this->project->statuses as $status){
+    private function getStatuses($owned)
+    {
+        foreach ($this->project->statuses as $status) {
             $data[$status] = 0;
         }
         
-        foreach ($owned as $project){
-
+        foreach ($owned as $project) {
             $data[$project->owner->first()->pivot->status]++;
         }
         return $data;

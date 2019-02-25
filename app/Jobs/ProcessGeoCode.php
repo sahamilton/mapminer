@@ -32,15 +32,13 @@ class ProcessGeoCode implements ShouldQueue
      */
     public function handle()
     {
-        foreach ($this->people as $person){
-            
+        foreach ($this->people as $person) {
             $geoCode = $this->getLatLng($person);
-            if($geoCode){
-
+            if ($geoCode) {
                 $data['geostatus'] = true;
                 $data['lat'] = $geoCode['lat'];
                 $data['lng'] = $geoCode['lng'];
-            }else{
+            } else {
                 $dat['geostatus'] = false;
             }
             $person->update($data);
@@ -55,8 +53,9 @@ class ProcessGeoCode implements ShouldQueue
         return $person->getGeoCode($geoCode);
     }
 
-    private function getAddress($person){
+    private function getAddress($person)
+    {
 
-        return trim(str_replace('  ',' ',$person->address . " " . $person->city . " ". $person->state ." " . $person->zip));
+        return trim(str_replace('  ', ' ', $person->address . " " . $person->city . " ". $person->state ." " . $person->zip));
     }
 }

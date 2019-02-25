@@ -18,7 +18,7 @@ class CreatePersonProjectPivotTable extends Migration
             $table->integer('project_id')->unsigned()->index();
             $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
             $table->primary(['person_id', 'project_id']);
-            $table->string('status',100)->nullable();
+            $table->string('status', 100)->nullable();
         });
     }
 

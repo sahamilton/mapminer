@@ -6,11 +6,12 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class NewsFormRequest extends FormRequest
 {
-    public function __construct( ){
+    public function __construct()
+    {
 
 
 
-        \Input::merge(['slug' => strtolower(str_replace(" ","_",\Input::get('title')))]);
+        \Input::merge(['slug' => strtolower(str_replace(" ", "_", \Input::get('title')))]);
     }
 
     /**

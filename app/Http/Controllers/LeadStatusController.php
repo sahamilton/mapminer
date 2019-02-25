@@ -5,12 +5,13 @@ namespace App\Http\Controllers;
 use App\LeadStatus;
 use Illuminate\Http\Request;
 use App\Http\Requests\LeadStatusFormRequest;
+
 class LeadStatusController extends Controller
 {
     public $leadstatus;
-    public function __construct(LeadStatus $leadstatus){
+    public function __construct(LeadStatus $leadstatus)
+    {
         $this->leadstatus = $leadstatus;
-
     }
     /**
      * Display a listing of the resource.
@@ -21,7 +22,7 @@ class LeadStatusController extends Controller
     {
         $leadstatuses = $this->leadstatus->with('leads')->get();
  
-        return response()->view('leadstatus.index',compact('leadstatuses'));
+        return response()->view('leadstatus.index', compact('leadstatuses'));
     }
 
     /**
@@ -56,10 +57,10 @@ class LeadStatusController extends Controller
      */
     public function show($id)
     {
-        $leadstatus = $this->leadstatus->with('leads','leads.leadsource','leads.ownedBy')->findOrFail($id);
+        $leadstatus = $this->leadstatus->with('leads', 'leads.leadsource', 'leads.ownedBy')->findOrFail($id);
   
 
-        return response()->view('leadstatus.show',compact('leadstatus'));
+        return response()->view('leadstatus.show', compact('leadstatus'));
     }
 
     /**
@@ -71,7 +72,7 @@ class LeadStatusController extends Controller
     public function edit($id)
     {
         $leadstatus = $this->leadstatus->findOrFail($id);
-        return response()->view('leadstatus.edit',compact('leadstatus'));
+        return response()->view('leadstatus.edit', compact('leadstatus'));
     }
 
     /**
@@ -84,7 +85,7 @@ class LeadStatusController extends Controller
     public function update(Request $request, $id)
     {
 
-        $this->leadstatus->where('id','=',$id)->update(request()->except('_method', '_token'));
+        $this->leadstatus->where('id', '=', $id)->update(request()->except('_method', '_token'));
 
         return redirect()->route('leadstatus.index');
     }

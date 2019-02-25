@@ -29,14 +29,13 @@ class PersonFormRequest extends FormRequest
             'mgrtype' => 'required',
             'reportsTo'=>'required',
         
-        ];
-
-        }else{
-        return [
+            ];
+        } else {
+            return [
             'email'=>'required|email',
             'mgrtype' => 'required',
         
-        ];
-    }
+            ];
+        }
     }
 }

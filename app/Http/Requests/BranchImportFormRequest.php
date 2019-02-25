@@ -25,7 +25,7 @@ class BranchImportFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'upload' => 'file|required|mimetypes:'.implode(",",$this->mimetypes), 
+            'upload' => 'file|required|mimetypes:'.implode(",", $this->mimetypes),
         ];
     }
 }

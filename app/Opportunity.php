@@ -26,35 +26,35 @@ class Opportunity extends Model
                     
     public $dates = ['expected_close'];
     
-    public function branch(){
-    	return $this->belongsTo(AddressBranch::class,'address_branch_id')->with('branch');
+    public function branch()
+    {
+        return $this->belongsTo(AddressBranch::class, 'address_branch_id')->with('branch');
     }
 
-    public function address(){
-    	return $this->belongsTo(AddressBranch::class,'address_branch_id')->with('address');
+    public function address()
+    {
+        return $this->belongsTo(AddressBranch::class, 'address_branch_id')->with('address');
     }
 
-    public function daysOpen(){
-    	if($this->created_at){
-    		return $this->created_at->diffInDays();
-    	}
-    	return null;
+    public function daysOpen()
+    {
+        if ($this->created_at) {
+            return $this->created_at->diffInDays();
+        }
+        return null;
     }
 
     public function closed()
     {
-        return $this->where('closed','=',2);
+        return $this->where('closed', '=', 2);
     }
 
     public function open()
     {
-        return $this->where('closed','<>',2);
+        return $this->where('closed', '<>', 2);
     }
     public function createdBy()
     {
-        return $this->belongsTo(User::class,'user_id')->with('person');
+        return $this->belongsTo(User::class, 'user_id')->with('person');
     }
-
-
-    
 }

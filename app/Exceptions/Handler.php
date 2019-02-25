@@ -44,29 +44,25 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $e)
     {
-        if($this->isHttpException($e))
-        {
-            switch ($e->getStatusCode()) 
-                {
+        if ($this->isHttpException($e)) {
+            switch ($e->getStatusCode()) {
                 // not found
                 case 404:
-                return redirect()->guest('home');
+                    return redirect()->guest('home');
                 break;
 
                 // internal error
                 case 500:
-                return redirect()->guest('home');
+                    return redirect()->guest('home');
                 break;
 
                 default:
                     return $this->renderHttpException($e);
                 break;
             }
-        }
-        elseif ($e instanceof TokenMismatchException) {
-
+        } elseif ($e instanceof TokenMismatchException) {
             return redirect()->back()->with('message', 'You page session expired. Please try again');
-        }else{
+        } else {
                 return parent::render($request, $e);
         }
     }

@@ -12,7 +12,7 @@ return [
     | any other location as required by the application or its packages.
     */
 
-    'name' => env('APP_NAME','Crescent Creative'),
+    'name' => env('APP_NAME', 'Crescent Creative'),
 
     /*
     |--------------------------------------------------------------------------
@@ -256,6 +256,6 @@ return [
     'zoom_levels'=>array('2'=>'13','5'=>'12','10'=>'11','25'=>'10','50'=>'9','75'=>'8','100'=>'8','250'=>'6'),
     'default_radius'=>array('10'=>'10'),
     'mysql_data_loc'=>app_path() .'/storage/uploads/',
-    'api_key' => env('GOOGLE_MAPS_API_KEY','AIzaSyCzMYQy-JSMClnXr82HGmVp3YHYzZUOTTg'),
-    'location_limit'=>env('LOCATION_LIMIT',2000),
+    'api_key' => env('GOOGLE_MAPS_API_KEY', 'AIzaSyCzMYQy-JSMClnXr82HGmVp3YHYzZUOTTg'),
+    'location_limit'=>env('LOCATION_LIMIT', 2000),
 ];

@@ -1,102 +1,97 @@
 <?php
 namespace App;
+
 trait Geocode
 {
    /**
 
 
    **/
-   public function getGeoCode($geoCode){
+    public function getGeoCode($geoCode)
+    {
    
-        if(is_array($geoCode) && count($geoCode)>0){
-           
+        if (is_array($geoCode) && count($geoCode)>0) {
                 $data['lat'] = $geoCode[0]['latitude'];
                 $data['lng'] = $geoCode[0]['longitude'];
-                $data['geostatus']=TRUE; 
-
-            }elseif(is_object($geoCode)){
-                
-                if(null!==$geoCode->first()){
-                  
-                    $data['lat'] = $geoCode->first()->getCoordinates()->getLatitude();
-                    $data['lng'] = $geoCode->first()->getCoordinates()->getLongitude();
-                }else{
-                    return false;
-                }
+                $data['geostatus']=true;
+        } elseif (is_object($geoCode)) {
+            if (null!==$geoCode->first()) {
+                $data['lat'] = $geoCode->first()->getCoordinates()->getLatitude();
+                $data['lng'] = $geoCode->first()->getCoordinates()->getLongitude();
+            } else {
+                return false;
+            }
               
-                $data['geostatus']=TRUE;
-                $data['address'] =  $geoCode->first()->getStreetNumber()." " . $geoCode->first()->getStreetName();
-                $data['street'] = $data['address'];
+            $data['geostatus']=true;
+            $data['address'] =  $geoCode->first()->getStreetNumber()." " . $geoCode->first()->getStreetName();
+            $data['street'] = $data['address'];
               
-                if(! $geoCode->first()->getLocality() && count($geoCode->first()->getadminLevels())>0){
-                    foreach ( $geoCode->first()->getadminLevels() as $level){
-                        $data['city'] = $level->getName();
-                    }
-                
-                }else{
-                   
-                    $data['city'] =  $geoCode->first()->getLocality();
+            if (! $geoCode->first()->getLocality() && count($geoCode->first()->getadminLevels())>0) {
+                foreach ($geoCode->first()->getadminLevels() as $level) {
+                    $data['city'] = $level->getName();
                 }
+            } else {
+                $data['city'] =  $geoCode->first()->getLocality();
+            }
                 
-                $data['zip'] = $geoCode->first()->getPostalCode();
+            $data['zip'] = $geoCode->first()->getPostalCode();
 
-                if(count($geoCode->first()->getadminLevels())>0){
-                    //dd('it does');
+            if (count($geoCode->first()->getadminLevels())>0) {
+                //dd('it does');
                    
-                    $data['state'] = $geoCode->first()
-                                    ->getadminLevels()
-                                    ->first()
-                                    ->getCode();
-                }else{
-                   $data['state']=null;
-                   //dd('it doesnt');
-                }
+                $data['state'] = $geoCode->first()
+                                ->getadminLevels()
+                                ->first()
+                                ->getCode();
+            } else {
+                $data['state']=null;
+               //dd('it doesnt');
+            }
      
 
-               $data['fulladdress'] = trim($data['address'] .' ' . $data['city']. ' ' . $data['state'] .' ' . $data['zip']);
-               $data['position']= $this->setLocationAttribute($data);
-            
-            }else{
-              
-                $data['lat'] = null;
-                $data['lng'] = null;
-                $data['geostatus']=FALSE; 
-
-            }
+            $data['fulladdress'] = trim($data['address'] .' ' . $data['city']. ' ' . $data['state'] .' ' . $data['zip']);
+            $data['position']= $this->setLocationAttribute($data);
+        } else {
+            $data['lat'] = null;
+            $data['lng'] = null;
+            $data['geostatus']=false;
+        }
           
           return $data;
     }
 
 
-    public function scopeNearby($query,$location,$radius=100,$limit=null){
+    public function scopeNearby($query, $location, $radius = 100, $limit = null)
+    {
     
     
-    $geocode = Geolocation::fromDegrees($location->lat,$location->lng);
+        $geocode = Geolocation::fromDegrees($location->lat, $location->lng);
     
-    $bounding = $geocode->boundingCoordinates($radius,'mi');
+        $bounding = $geocode->boundingCoordinates($radius, 'mi');
    
-    $sub = $this->selectSub('id','lat','lng')
-                ->whereBetween('lat',[$bounding['min']->degLat,$bounding['max']->degLat])
-                ->whereBetween('lng',[$bounding['min']->degLon,$bounding['max']->degLon]);
+        $sub = $this->selectSub('id', 'lat', 'lng')
+                ->whereBetween('lat', [$bounding['min']->degLat,$bounding['max']->degLat])
+                ->whereBetween('lng', [$bounding['min']->degLon,$bounding['max']->degLon]);
 
-    $query = $query
+        $query = $query
         ->select()//pick the columns you want here.
         ->selectRaw("{$this->haversine($location)} AS distance")
         ->mergeBindings($sub->getQuery())
         ->whereRaw("{$this->haversine($location)} < $radius ")
-        ->orderBy('distance','ASC');
-        if($limit){
+        ->orderBy('distance', 'ASC');
+        if ($limit) {
             $query = $query->limit($limit);
         }
       
         return $query;
     }
    
-   /**  
+   /**
 
    **/
 
-    public function locationsNearbyBranches(Company $company,$radius=25,$limit=null){
+    public function locationsNearbyBranches(Company $company, $radius = 25, $limit = null)
+    {
         //add pagination
 
         // can refactor this with
@@ -179,10 +174,10 @@ trait Geocode
             order by locs.id";
 
           return \DB::select($query);
-
     }
 
-    public function scopeAssociateCompanyLocationsBranches(Company $company,$radius=25){
+    public function scopeAssociateCompanyLocationsBranches(Company $company, $radius = 25)
+    {
         $query = "select distinct branches.id as branch_id, addresses.id as address_id 
                     from branches,addresses 
                     left join address_branch
@@ -193,7 +188,8 @@ trait Geocode
                     ORDER BY branches.id asc";
     }
 
-    private function haversine($location){
+    private function haversine($location)
+    {
         return "(3956 * acos(cos(radians($location->lat)) 
                      * cos(radians($this->table.lat)) 
                      * cos(radians($this->table.lng) 
@@ -205,7 +201,8 @@ trait Geocode
     /*
     
     */
-    public function distanceBetween($lat1, $lon1, $lat2, $lon2, $unit=null) {
+    public function distanceBetween($lat1, $lon1, $lat2, $lon2, $unit = null)
+    {
         
         $theta = $lon1 - $lon2;
         $dist = sin(deg2rad($lat1)) * sin(deg2rad($lat2)) +  cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * cos(deg2rad($theta));
@@ -222,39 +219,37 @@ trait Geocode
         }
     }
 
-    public function getMyPosition(){
+    public function getMyPosition()
+    {
         $location = new Location;
             //$limited=$this->limit;
             //we need to test to see if geo is filled
-        if ($geo = session()->get('geo') && isset($geo['lat']))
-            {
-            
+        if ($geo = session()->get('geo') && isset($geo['lat'])) {
                 $location->lat = $geo['lat'];
                 $location->lng = $geo['lng'];
-
-            }elseif($position = auth()->user()->position()){
-                
-                $position = explode(",",auth()->user()->position());
-                $location->lat =  $position[0];
-                $location->lng =  $position[1];
-
-            }else{
-                //default to Tacoma
-                $location->lat =  '47.25';
-                $location->lng =  '-122.44';
-            }
+        } elseif ($position = auth()->user()->position()) {
+            $position = explode(",", auth()->user()->position());
+            $location->lat =  $position[0];
+            $location->lng =  $position[1];
+        } else {
+            //default to Tacoma
+            $location->lat =  '47.25';
+            $location->lng =  '-122.44';
+        }
         return $location;
     }
 
-    public function distanceFromMe($collection){
+    public function distanceFromMe($collection)
+    {
         
         $myPosition = $this->getMyPosition();
-        return $collection->map(function ($item) use($myPosition){
-           $item->distance = $this->distanceBetween($myPosition->lat,$myPosition->lng,$item->lat,$item->lng);
-           return $item;
+        return $collection->map(function ($item) use ($myPosition) {
+            $item->distance = $this->distanceBetween($myPosition->lat, $myPosition->lng, $item->lat, $item->lng);
+            return $item;
         });
     }
-    public function getBoundingBox($collection){
+    public function getBoundingBox($collection)
+    {
 
         $data['maxLat'] = $collection->max('lat')+0.05;
         $data['minLat'] = $collection->min('lat')-0.05;
@@ -264,10 +259,12 @@ trait Geocode
         return $data;
     }
 
-    public function scopeWithinMBR($query,$box){
+    public function scopeWithinMBR($query, $box)
+    {
         return $query->whereRaw("MBRContains( GeomFromText('LINESTRING(".$box['maxLng']." " .$box['minLat'] . ", ". $box['minLng']." " . $box['maxLat'].")' ),position)");
     }
-    public function geoCodeAddress(string $address){
+    public function geoCodeAddress(string $address)
+    {
 
         $geoCode = app('geocoder')->geocode($address)->get();
         return $this->getGeoCode($geoCode);
@@ -277,7 +274,6 @@ trait Geocode
 
     
     public function setLocationAttribute($data)
-    
     {
         $LngLat = $data['lng']." ".$data['lat'];
         return \DB::raw("ST_GeomFromText('POINT($LngLat)',4326)");
@@ -309,9 +305,9 @@ trait Geocode
         return $query->selectRaw('ST_Distance_Sphere(location,POINT(' . $position . ')) AS distance');
     }
 
-    public function scopeCloseTo( $query, $location,$radius = 25)
-{
-    return $query->whereRaw("
+    public function scopeCloseTo($query, $location, $radius = 25)
+    {
+        return $query->whereRaw("
        ST_Distance_Sphere(
             point(lng, lat),
             point(?, ?)
@@ -321,5 +317,5 @@ trait Geocode
         $location->lat,
         $radius,
     ]);
-}
+    }
 }

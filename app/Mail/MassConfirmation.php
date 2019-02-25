@@ -10,7 +10,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 class MassConfirmation extends Mailable
 {
     use Queueable, SerializesModels;
-    public  $data;
+    public $data;
     /**
      * Create a new message instance.
      *

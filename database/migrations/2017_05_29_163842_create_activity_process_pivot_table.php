@@ -21,7 +21,7 @@ class CreateActivityProcessPivotTable extends Migration
 
             $table->integer('vertical_id')->unsigned()->index();
             $table->foreign('vertical_id')->references('id')->on('searchfilters')->onDelete('cascade');
-            $table->primary(['activity_id','vertical_id', 'salesprocess_id'],'primary_key');
+            $table->primary(['activity_id','vertical_id', 'salesprocess_id'], 'primary_key');
         });
     }
 

@@ -1,4 +1,4 @@
-<?php	
+<?php
 
 return [
 
@@ -10,11 +10,11 @@ return [
     | 
     |
     */
-	'author' => 'Stephen Hamilton',
-	'developer' => 'Okos Partners, LLC',
+    'author' => 'Stephen Hamilton',
+    'developer' => 'Okos Partners, LLC',
     'developer_email' => 'hamilton@okospartners.com',
-	'website' => 'https://www.OkosPartners.com',
-	'client' => 'TrueBlue, Inc.',
+    'website' => 'https://www.OkosPartners.com',
+    'client' => 'TrueBlue, Inc.',
 
 
     /*
@@ -25,7 +25,7 @@ return [
     | 
     |
     */
-	'app_version' => trim(exec('git tag')),
+    'app_version' => trim(exec('git tag')),
 
 
 
@@ -39,8 +39,8 @@ return [
     |
     */
 
-	'default_address'=>'1015 A St, Tacoma, WA 98402',
-	
+    'default_address'=>'1015 A St, Tacoma, WA 98402',
+    
     /*
     |--------------------------------------------------------------------------
     | System Contact
@@ -52,7 +52,7 @@ return [
     */
 
     'support'=>'Sales Operations',
-	'system_contact'=>env('MAPMINER_CONTACT','salesoperations@trueblue.com'),
+    'system_contact'=>env('MAPMINER_CONTACT', 'salesoperations@trueblue.com'),
 
      /*
     |--------------------------------------------------------------------------
@@ -76,9 +76,9 @@ return [
     
     'mysql_data_loc'=>app_path() .'/storage/uploads/',
     
-    'api_key' => env('GOOGLE_MAPS_API_KEY','AIzaSyCzMYQy-JSMClnXr82HGmVp3YHYzZUOTTg'),
+    'api_key' => env('GOOGLE_MAPS_API_KEY', 'AIzaSyCzMYQy-JSMClnXr82HGmVp3YHYzZUOTTg'),
     
-    'location_limit'=>env('LOCATION_LIMIT',2000),
+    'location_limit'=>env('LOCATION_LIMIT', 2000),
 
 
 ];

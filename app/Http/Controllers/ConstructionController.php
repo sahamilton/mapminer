@@ -7,13 +7,13 @@ use Illuminate\Http\Request;
 use GuzzleHttp;
 use App\Branch;
 
-
-class ConstructionController  extends BaseController
+class ConstructionController extends BaseController
 {
     public $construction;
     public $branch;
     
-    public function __construct(Construction $construction,Branch $branch){
+    public function __construct(Construction $construction, Branch $branch)
+    {
         $this->construction = $construction;
         $this->branch = $branch;
         parent::__construct($construction);
@@ -22,13 +22,14 @@ class ConstructionController  extends BaseController
     public function index()
     {
         $projects = array();
-        return response()->view('construct.index',compact('projects'));
+        return response()->view('construct.index', compact('projects'));
     }
 
     
     
 
-    public function search(Request $request){
+    public function search(Request $request)
+    {
  
 
         $data = request()->except('_token');
@@ -38,15 +39,13 @@ class ConstructionController  extends BaseController
         session()->put('geo', $data);
 
         
-        if($data['view'] =='list'){
+        if ($data['view'] =='list') {
             $projects = $this->construction->getProjectData($data);
-            return response()->view('construct.index',compact('projects','data'));
-         
-        }else{
+            return response()->view('construct.index', compact('projects', 'data'));
+        } else {
             $data = $this->construction->getMapData($data);
-            return response()->view('construct.map',compact('data'));
+            return response()->view('construct.map', compact('data'));
         }
-        
     }
     
 
@@ -55,14 +54,13 @@ class ConstructionController  extends BaseController
     /
     /
     **/
-    public function map($distance,$latlng){
+    public function map($distance, $latlng)
+    {
 
-        $data = $this->construction->getMapParameters($distance,$latlng);
+        $data = $this->construction->getMapParameters($distance, $latlng);
         $projects = $this->construction->getProjectData($data);
 
-        return response()->view('construct.xml',compact('projects'));
-
-
+        return response()->view('construct.xml', compact('projects'));
     }
     
 
@@ -73,21 +71,20 @@ class ConstructionController  extends BaseController
         $project = $this->construction->getProject($id);
       
         $construction = $this->construction->makeConstruction($project);
-        if(! isset($project['location'])){
+        if (! isset($project['location'])) {
             $project['location']['lat'] = $construction->lat;
             $project['location']['lon'] = $construction->lng;
-
         }
     
-        $branches = $this->branch->getNearByBranches($this->userServiceLines,$construction);
+        $branches = $this->branch->getNearByBranches($this->userServiceLines, $construction);
             
-        return response()->view('construct.show',compact('project','branches'));
+        return response()->view('construct.show', compact('project', 'branches'));
     }
 
-    public function company($id){
+    public function company($id)
+    {
 
         $company = $this->construction->getCompany($id);
-        return response()->view('construct.companyshow',compact('company'));
+        return response()->view('construct.companyshow', compact('company'));
     }
-    
 }

@@ -1,21 +1,23 @@
 <?php
 
 namespace App;
+
 /**
 * SearchFilter
 */
-class SearchFilter extends NodeModel {
+class SearchFilter extends NodeModel
+{
 
   /**
    * Table name.
    *
    * @var string
    */
-  protected $table = 'searchfilters';
+    protected $table = 'searchfilters';
 
 
 
-  public $tables = ['companies','locations'];
+    public $tables = ['companies','locations'];
   //////////////////////////////////////////////////////////////////////////////
 
   //
@@ -124,142 +126,140 @@ class SearchFilter extends NodeModel {
   //     // YOUR CODE HERE
   //   });
   // }
-	public  $rules = [
-		 'filter' => 'required',
-		 'type' =>'required'
-	];
+    public $rules = [
+         'filter' => 'required',
+         'type' =>'required'
+    ];
 
-	// Don't forget to fill this array
-	protected $fillable = ['filter','type','searchtable','searchcolumn','canbenull','inactive','color'];
-	
-	public function setSearch($search = NULL)
-	{
-		$searchFilter = array();		
-		$searchFilters = array();
-		// Initialize the search session
+    // Don't forget to fill this array
+    protected $fillable = ['filter','type','searchtable','searchcolumn','canbenull','inactive','color'];
+    
+    public function setSearch($search = null)
+    {
+        $searchFilter = array();
+        $searchFilters = array();
+        // Initialize the search session
     //if search is set
-    //    then get search 
+    //    then get search
     //else if session is set
     //    then get session
     //else session is not set && search is blank
-    //    then get all 
-		if(isset($search)) {
-        $keys = array_keys($search);
-			}else{ 
-        if(\Session::has('Search')){
-			     $keys = array_keys($search);
-         }else{
-          // If session isn't set and none requested then get all filters
-           $keys = $this->whereNotNull('type')->orderBy('searchtable','searchcolumn','lft')->pluck('id');
-         }	
-		}
+    //    then get all
+        if (isset($search)) {
+            $keys = array_keys($search);
+        } else {
+            if (\Session::has('Search')) {
+                 $keys = array_keys($search);
+            } else {
+                // If session isn't set and none requested then get all filters
+                 $keys = $this->whereNotNull('type')->orderBy('searchtable', 'searchcolumn', 'lft')->pluck('id');
+            }
+        }
 
-		$filters = $this->whereIn('id',$keys)->whereNotNull('type')->orderBy('lft')->get();
-		foreach ($filters as $filter)
-		{				
-				// we need to set the vertical parent to checked if depth > 2
-				if ($filter->isLeaf() && $filter->depth > 2 && $filter->inactive == 0){
-					// set the parent to the be checked
-					$parent = $filter->parent()->get();
-					if(! isset($searchFilter[$parent[0]['searchtable']][$parent[0]['searchcolumn']][$parent[0]['id']])){
-						
-						$searchFilter[$parent[0]['searchtable']][$parent[0]['searchcolumn']][$parent[0]['id']]=$parent[0]['id'];
-					}
-					$searchFilter[$filter->searchtable][$filter->searchcolumn][$filter->id] = $filter->id;
-				}
-				// We dont want to set it twice!
-				if(! isset ($searchFilter[$filter->searchtable][$filter->searchcolumn][$filter->id])){
-					
-					$searchFilter[$filter->searchtable][$filter->searchcolumn][$filter->id] = $filter->id;
-					
-				}
-
-			}
-		// Clean out any junk	
-		/*foreach ($searchFilter as $key=>$value)
+        $filters = $this->whereIn('id', $keys)->whereNotNull('type')->orderBy('lft')->get();
+        foreach ($filters as $filter) {
+                // we need to set the vertical parent to checked if depth > 2
+            if ($filter->isLeaf() && $filter->depth > 2 && $filter->inactive == 0) {
+                // set the parent to the be checked
+                $parent = $filter->parent()->get();
+                if (! isset($searchFilter[$parent[0]['searchtable']][$parent[0]['searchcolumn']][$parent[0]['id']])) {
+                    $searchFilter[$parent[0]['searchtable']][$parent[0]['searchcolumn']][$parent[0]['id']]=$parent[0]['id'];
+                }
+                $searchFilter[$filter->searchtable][$filter->searchcolumn][$filter->id] = $filter->id;
+            }
+                // We dont want to set it twice!
+            if (! isset($searchFilter[$filter->searchtable][$filter->searchcolumn][$filter->id])) {
+                $searchFilter[$filter->searchtable][$filter->searchcolumn][$filter->id] = $filter->id;
+            }
+        }
+        // Clean out any junk
+        /*foreach ($searchFilter as $key=>$value)
 		{
 			if (in_array($key,$this->tables)) {
 				
 				$searchFilters[$key] = $value;
 			}
 		}*/
-		
-		\Session::forget('Search');
-		\Session::put('Search', array($searchFilter));
-	}
-	
-public function segments(){
+        
+        \Session::forget('Search');
+        \Session::put('Search', array($searchFilter));
+    }
+    
+    public function segments()
+    {
 
-    return $this->where('searchColumn','=','segment')
-        ->where('canbenull','=',0)
-        ->where('type','!=','group')
+        return $this->where('searchColumn', '=', 'segment')
+        ->where('canbenull', '=', 0)
+        ->where('type', '!=', 'group')
         ->orderBy('filter')
-        ->pluck('filter','id')
+        ->pluck('filter', 'id')
         ->toArray();
+    }
 
-  }
 
+    public function vertical()
+    {
 
-  public function vertical(){
-
-    return $this->where('searchColumn','=','vertical')
-        ->where('canbenull','=',0)
-        ->where('type','!=','group')
+        return $this->where('searchColumn', '=', 'vertical')
+        ->where('canbenull', '=', 0)
+        ->where('type', '!=', 'group')
         ->orderBy('filter')
-        ->pluck('filter','id')
+        ->pluck('filter', 'id')
         ->toArray();
-
-  }
+    }
 
   
 
-  public function industrysegments(){
+    public function industrysegments()
+    {
 
-    $filters = $this->first();
-    return $filters->getDescendants()
-    ->where('searchtable','=','companies')
+        $filters = $this->first();
+        return $filters->getDescendants()
+        ->where('searchtable', '=', 'companies')
     
-    ->where('inactive','=',0);
+        ->where('inactive', '=', 0);
+    }
 
-  }
+    public function companies()
+    {
+        return $this->hasMany(Company::class, 'vertical', 'id');
+    }
 
-  public function companies(){
-    return $this->hasMany(Company::class,'vertical','id');
-  }
+    public function leads()
+    {
+        return $this->belongsToMany(Address::class, 'lead_searchfilter', 'searchfilter_id');
+    }
+    public function people()
+    {
+        return $this->belongsToMany(Person::class, 'person_search_filter', 'search_filter_id')
+        ->withTimestamps();
+    }
 
-  public function leads(){
-    return $this->belongsToMany(Address::class,'lead_searchfilter','searchfilter_id');
-  }
-  public function people(){
-    return $this->belongsToMany(Person::class, 'person_search_filter','search_filter_id')
-    ->withTimestamps();
-  }
+    public function campaigns()
+    {
+        return $this->belongsToMany(Salesactivity::class, 'activity_process_vertical', 'vertical_id', 'activity_id')
+        ->groupBy(['vertical_id','activity_id'])
+        ->where('datefrom', '<=', date('Y-m-d'))
+        ->where('dateto', '>=', date('Y-m-d'))
+        ->withPivot('salesprocess_id');
+    }
 
-  public function campaigns(){
-    return $this->belongsToMany(Salesactivity::class,'activity_process_vertical','vertical_id','activity_id')
-    ->groupBy(['vertical_id','activity_id'])
-    ->where('datefrom','<=',date('Y-m-d'))
-    ->where('dateto','>=',date('Y-m-d'))
-    ->withPivot('salesprocess_id');
-  }
-
-  public function segment(){
-      return $this->hasMany(Location::class,'segment')->count();
-
-
-  }
+    public function segment()
+    {
+        return $this->hasMany(Location::class, 'segment')->count();
+    }
 
 
-  public function locations(){
-    $count = 0; 
-    $companies = Company::where('vertical','=',$this->id)->get();
+    public function locations()
+    {
+        $count = 0;
+        $companies = Company::where('vertical', '=', $this->id)->get();
     
 
-        foreach ($companies as $company){
-          $count = $count + $company->locations()->count();
+        foreach ($companies as $company) {
+            $count = $count + $company->locations()->count();
         }
 
-    return $count;
-  }
-	
+        return $count;
+    }
 }

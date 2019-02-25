@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Providers;
+
 use App\Observers\PersonObserver;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
@@ -10,8 +11,6 @@ use App\Branch;
 use App\Location;
 use App\Project;
 use App\Lead;
-
-
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -33,8 +32,6 @@ class AppServiceProvider extends ServiceProvider
             'lead' => Lead::class,
             'person'=>Person::class,
         ]);
-
-
     }
 
     /**
@@ -49,10 +46,8 @@ class AppServiceProvider extends ServiceProvider
         /*if ($this->app->environment() == 'local') {
             $this->app->register('Laracasts\Generators\GeneratorsServiceProvider');
         }*/
-        if (config('app.debug') ) {
+        if (config('app.debug')) {
             $this->app->register('VIACreative\SudoSu\ServiceProvider');
         }
-        
-       
     }
 }

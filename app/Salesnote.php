@@ -1,23 +1,24 @@
 <?php
 namespace App;
-class Salesnote extends Model {
 
-	// Add your validation rules here
-	
-	protected $table ='company_howtofield';
+class Salesnote extends Model
+{
 
-	// Don't forget to fill this array
-	protected $fillable = ['company_id','howtofield_id','value'];
-	
-	public function fields () {
-		
-		return $this->belongsTo(Howtofield::class,'howtofield_id');
+    // Add your validation rules here
+    
+    protected $table ='company_howtofield';
 
-	}
-	public function company () {
-		
-		return $this->belongsTo(Company::class,'company_id');
-
-	}
-
+    // Don't forget to fill this array
+    protected $fillable = ['company_id','howtofield_id','value'];
+    
+    public function fields()
+    {
+        
+        return $this->belongsTo(Howtofield::class, 'howtofield_id');
+    }
+    public function company()
+    {
+        
+        return $this->belongsTo(Company::class, 'company_id');
+    }
 }

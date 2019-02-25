@@ -25,7 +25,5 @@ class Construction extends JsonResource
             'lat' => $this->resource['geo_latitude'],
             'lng' => $this->resource['geo_longitude'],
         ];
-
-        
     }
 }
