@@ -1,7 +1,6 @@
 @extends('site/layouts/default')
 @section('content')
-
-<h2>{{$leads->first()->branch->branchname}} Leads </h2>
+<h2>{{$branch->branchname}} Opportunities </h2>
 <div class="row float-right"><button type="button" 
     class="btn btn-info float-right" 
     data-toggle="modal" 
@@ -9,11 +8,9 @@
       Add Lead
 </button>
 </div>
-@php $route = "branch.leads";
-$branch = $leads->first()->branch;@endphp
-
+@php $route= "branch.opportunities"; @endphp
 @include('branches.partials._selector')
-@include('branches.partials._tableads')
+@include('branches.partials._tabopportunities')
 
 @include('partials._scripts')
 @endsection

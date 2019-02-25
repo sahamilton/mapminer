@@ -337,4 +337,24 @@ class Branch extends Model implements HasPresenter {
         }
    }
 
+   public function checkIfMyBranch($request, $branch=null, $myBranches){
+   		if(request()->has('branch')){
+			return  $this->findOrFail(request('branch'));
+		}
+		
+		
+		if(count($myBranches)==0){
+			return false;
+		}
+		if(isset($branch) && ! in_array($branch->id,array_keys($myBranches))){
+		
+			return false;
+		}
+		$branch = array_keys($myBranches);
+
+		return  $this->findOrFail(reset($branch));
+			
+		
+   }
+
 }

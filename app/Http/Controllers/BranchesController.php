@@ -396,32 +396,31 @@ class BranchesController extends BaseController {
 
 
 	public function branchLeads(Request $request, $branch=null){
-		if(request()->has('branch')){
-			$branch= $this->branch->findOrFail(request('branch'));
-		}
-		$myBranches = $this->person->myBranches();
-		
-		if(count($myBranches)==0){
-			return redirect()->back()->withWarning('You are not associated with any branches');
-		}
-		if(isset($branch) && ! in_array($branch->id,array_keys($myBranches))){
-		
-			return redirect()->route('branches.show',$branch->id)->withWarning('You are not associated with this branch');
-		}
-		if(isset($branch)){
-			
-			$branches = $branch->id;
-		}else{
-			$keys = array_keys($myBranches);
-			$branches = reset($keys);
-			
-		}
-
+		 $myBranches = $this->person->myBranches();
+		 if (! $branch = $this->branch->checkIfMyBranch($request,$branch,$myBranches)){
+		 	return redirect()->back()->withWarning('You are not associated with these branches');
+		 }
+	
 		$leads = \App\AddressBranch::whereDoesnthave('opportunities')
-		->with('branch','address','address.leadsource')->whereIn('branch_id',[$branches])->get();
+		->with('branch','address','address.leadsource')->whereIn('branch_id',[$branch->id])->get();
 		
 
 		return response()->view('branches.leads',compact('leads','myBranches'));
+	}
+
+
+	public function branchOpportunities(Request $request, $branch=null){
+		
+		 $myBranches = $this->person->myBranches();
+		 if (! $branch = $this->branch->checkIfMyBranch($request,$branch,$myBranches)){
+		 	return redirect()->back()->withWarning('You are not associated with these branches');
+		 }
+		
+
+		$branch->load('opportunities','opportunities.address');
+		
+
+		return response()->view('branches.opportunities',compact('branch','myBranches'));
 	}
 	/**
 	 * Generate state map of branches.
