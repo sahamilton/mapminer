@@ -1,4 +1,4 @@
-<div class="row">
+
     <div class="col-sm-6 col-sm-offset-3">
         <div id="imaginary_container"> 
             <div class="input-group stylish-input-group">
@@ -8,15 +8,13 @@
                     name="companyname" 
                     placeholder="Search Companies" 
                     autocomplete="on" >
-               
                     <button type="submit" class="btn btn-success">
                         <i class="fas fa-search"></i>
                     </button>
-                </span>
             </div>
         </div>
     </div>
-</div>
+
 
 
 <script>
