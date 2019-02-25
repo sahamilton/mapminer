@@ -92,8 +92,11 @@
                   
                 @can ('manage_opportunities')
                     <a class="dropdown-item"  href="{{route('opportunity.index')}}">
+                    <a class="dropdown-item" href="{{route('branch.leads')}}">
+                    <i class="fas fa-arrow-right"></i> Branch Leads</a>
                     <i class="far fa-envelope" aria-hidden="true"> </i> 
                     Branch Opportunities</a>
+                    
                     <a class="dropdown-item" href="{{route('contacts.index')}}">
                     <i class="far fa-address-card"></i> Branch Contacts</a>
                      <a class="dropdown-item" href="{{ route('activity.index') }}">

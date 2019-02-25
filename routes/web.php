@@ -156,6 +156,7 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::resource('notes','NotesController');
 
 	#Opportunity
+		Route::match(['get','post'], 'branch/leads/{branch?}',['as'=>'branch.leads','uses'=>'BranchesController@branchLeads']);
 		Route::post('/branchlead/{address}',['as'=>'branch.lead.add','uses'=>'OpportunityController@addToBranchLeads']);
 		Route::post('/opportunities/{opportunity}/close/',['as'=>'opportunity.close','uses'=>'OpportunityController@close']);
 		Route::post('/opportunities/branch/',['as'=>'opportunity.branch','uses'=>'OpportunityController@branchOpportunities']);
