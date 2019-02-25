@@ -92,7 +92,7 @@ class LeadSource extends Model
     {
         $leads = $this->with('leads')->findOrFail($id);
 
-        $salesreps = array();
+        $salesreps = [];
         foreach ($leads as $lead) {
             $reps = $lead->salesteam->pluck('id')->toArray();
             $salesreps = array_unique(array_merge($reps, $salesreps));

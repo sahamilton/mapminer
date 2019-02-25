@@ -69,7 +69,7 @@ class BranchManagementController extends Controller
             ->with('branchesServiced')
             ->firstOrFail();
     
-        $branches = array();
+        $branches = [];
            
         if ($details->geostatus == 1) {
             $branches = $this->branch->nearby($details, 100, 5)->get();

@@ -82,7 +82,7 @@ class News extends Model
         dd($id);
 
         // find all people by role
-            $audience = array();
+            $audience = [];
             $news = $this->with('relatedRoles', 'relatedRoles.assignedRoles', 'relatedIndustries', 'relatedIndustries.people')->find($id);
 
             // Get roles

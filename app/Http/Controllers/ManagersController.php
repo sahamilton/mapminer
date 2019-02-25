@@ -98,7 +98,7 @@ class ManagersController extends BaseController
         $data['managerList'] = $this->getAllManagers();
 
         if (! isset($data['selectedAccounts'])) {
-            $data['selectedAccounts'] = array();
+            $data['selectedAccounts'] = [];
             foreach ($data['accounts'] as $keys => $value) {
                 $data['selectedAccounts'][] = $keys;
             }

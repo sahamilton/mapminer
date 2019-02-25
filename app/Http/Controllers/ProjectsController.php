@@ -157,10 +157,10 @@ class ProjectsController extends BaseController
         $data = [$input['name']=>$input['value']];
 
         $project->update($data);
-             $response = array(
+             $response = [
                     'status' => 'success',
                     'msg' => 'Setting created successfully',
-                );
+                ];
        
         return response()->json($response);
     }

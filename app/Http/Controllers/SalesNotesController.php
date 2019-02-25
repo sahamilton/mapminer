@@ -181,7 +181,7 @@ class SalesNotesController extends BaseController
         $salesnote = Salesnote::where('company_id', '=', $id)->with('fields')->get();
         $groups = Howtofield::select('group')->distinct()->get();
         if (count($salesnote)>0) {
-            $data = array();
+            $data = [];
             // Fields that need to be convereted to an array
             
             foreach ($fields as $field) {
@@ -250,16 +250,16 @@ class SalesNotesController extends BaseController
 
         $company = $this->company->findOrFail($data['companyId']);
         $salesnote = Salesnote::where('company_id', '=', $data['companyId']);
-        $queryArray=array();
+        $queryArray=[];
 
         foreach ($data as $key => $value) {
             try {
                 if (is_array($value)) {
                     $str = serialize($value);
                     $strenc = urlencode($str);
-                    $queryArray[] = array("company_id"=>$data['companyId'],"howtofield_id"=>$key,"value"=>$strenc);
+                    $queryArray[] = ["company_id"=>$data['companyId'],"howtofield_id"=>$key,"value"=>$strenc];
                 } elseif ($value !='' && is_int($key)) {
-                    $queryArray[] = array("company_id"=>$data['companyId'],"howtofield_id"=>$key,"value"=>$value);
+                    $queryArray[] = ["company_id"=>$data['companyId'],"howtofield_id"=>$key,"value"=>$value];
                 }
             } catch (Exception $e) {
                 throw new Exception("It went wrong with " . $key, 0, $e);

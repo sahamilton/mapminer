@@ -33,7 +33,7 @@ class ProcessNewCompanies implements ShouldQueue
     {
       
         if (! $company = Company::where('customer_id', '=', $this->import->customer_id)->first()) {
-            $data = array();
+            $data = [];
             $data['customer_id'] = $this->import->customer_id;
             $data['accounttypes_id'] = $this->import->accounttypes_id;
             $data['companyname'] = $this->import->businessname;

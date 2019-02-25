@@ -34,7 +34,7 @@ class SalesProcessController extends Controller
      */
     public function create()
     {
-        $process = array();
+        $process = [];
         return response()->view('salesprocess.create', compact('process'));
     }
 

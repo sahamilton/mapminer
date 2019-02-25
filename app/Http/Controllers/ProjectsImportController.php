@@ -85,7 +85,7 @@ class ProjectsImportController extends ImportController
             case 'projectcompanies':
                 $data['step']=2;
                 $data['table']='projectcompanyimport';
-                $data['additionaldata'] = array();
+                $data['additionaldata'] = [];
                 $skip = ['created_at','updated_at','project_source_id','company_id','pr_status','serviceline_id'];
                 break;
         }

@@ -21,7 +21,7 @@ class ConstructionController extends BaseController
     
     public function index()
     {
-        $projects = array();
+        $projects = [];
         return response()->view('construct.index', compact('projects'));
     }
 

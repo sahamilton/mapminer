@@ -698,7 +698,7 @@ class LeadsController extends BaseController
                       ->whereNotNull('fieldname')
                       ->pluck('fieldname')->toArray();
 
-            $extra=array();
+            $extra=[];
         foreach ($extraFields as $key => $value) {
             if ($newdata[$value]) {
                 $extra[$value] = $newdata[$value];
@@ -712,7 +712,7 @@ class LeadsController extends BaseController
       // rewrite to use new MySql functions
         $leads= $this->lead->doesntHave('ownedBy')->get();
 
-        $data = array();
+        $data = [];
         foreach ($leads as $lead) {
             $people = $this->person
             ->whereHas('userdetails.roles', function ($q) {

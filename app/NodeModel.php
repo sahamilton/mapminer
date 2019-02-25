@@ -26,7 +26,7 @@ class NodeModel extends Node
 
         $file = \Input::file('upload');
         // Make sure its a CSV file - test #1
-        $mimes = array('application/vnd.ms-excel','text/plain','text/csv','text/tsv','text/x-c');
+        $mimes = ['application/vnd.ms-excel','text/plain','text/csv','text/tsv','text/x-c'];
         if (!in_array($file->getMimeType(), $mimes)) {
             return Redirect::back()->withErrors(['Only CSV files are allowed']);
         }
@@ -67,7 +67,7 @@ class NodeModel extends Node
     
     public function rawQuery($query, $error, $type)
     {
-        $result = array();
+        $result = [];
         try {
             switch ($type) {
                 case 'insert':
@@ -141,10 +141,10 @@ class NodeModel extends Node
             $output.="\n";
         }
 
-          $headers = array(
+          $headers = [
               'Content-Type' => 'text/csv',
               'Content-Disposition' => $filename ,
-          );
+          ];
         $results['headers'] = $headers;
         $results['output'] = $output;
     
@@ -200,10 +200,10 @@ class NodeModel extends Node
             $output.="\n";
         }
 
-          $headers = array(
+          $headers = [
               'Content-Type' => 'text/csv',
               'Content-Disposition' => $filename ,
-          );
+          ];
         $results['headers'] = $headers;
         $results['output'] = $output;
     

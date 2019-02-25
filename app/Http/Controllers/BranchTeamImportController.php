@@ -36,7 +36,7 @@ class BranchTeamImportController extends ImportController
         $requiredFields = $this->import->requiredFields;
         $data['table']=$this->import->table;
         $data['type'] = 'branchteamimport';
-        $data['additionaldata'] = array();
+        $data['additionaldata'] = [];
         $data['route']= 'branchteam.mapfields';
         $fields = $this->getFileFields($data);
         $columns = $this->branch->getTableColumns($data['table']);

@@ -40,7 +40,7 @@ class SalesOrg extends \Eloquent
 
         $salesRoles = Person::salesReps()->pluck('id')->toArray();
 
-        $diff = array();
+        $diff = [];
         
         $diff['insiders'] = array_diff($salesRoles, $salesReps);
         return $diff;

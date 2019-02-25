@@ -141,7 +141,7 @@ class Branch extends Model implements HasPresenter
     public function getManagementTeam()
     {
         $team = $this->salesTeam()->get();
-        $mgrs = array();
+        $mgrs = [];
         foreach ($team as $rep) {
             $mgrs = array_unique(array_merge($mgrs, $rep->ancestorsAndSelf()->pluck('id')->toArray()));
         }
@@ -296,7 +296,7 @@ class Branch extends Model implements HasPresenter
     public function associatePeople(Request $request)
     {
         $data['roles'] = $this->removeNullsFromSelect(request('roles'));
-        $associatedPeople = array();
+        $associatedPeople = [];
         foreach ($data['roles'] as $key => $role) {
             foreach ($role as $person) {
                 $associatedPeople[$person] = ['role_id'=>$key];

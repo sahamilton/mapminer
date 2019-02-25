@@ -161,7 +161,7 @@ class AdminRolesController extends BaseController
     {
         // Declare the rules for the form validation
         
-        $permissions = array();
+        $permissions = [];
 
         if (request()->filled('permissions')) {
             $permissions =request('permissions');

@@ -84,7 +84,7 @@ class PersonsController extends BaseController
     private function getColors($filtered)
     {
         $this->validroles=['5'];
-        $colors = array();
+        $colors = [];
         $persons = $this->getAllPeople($filtered);
         foreach ($persons as $person) {
             if (isset($person->industryfocus[0]) && ! in_array($person->industryfocus[0]->color, $colors)) {
@@ -107,7 +107,7 @@ class PersonsController extends BaseController
 
     public function getAllPeople($filtered = null)
     {
-        $keys=array();
+        $keys=[];
         if ($filtered) {
             $keys = $this->persons->getSearchKeys(['companies'], ['vertical']);
 

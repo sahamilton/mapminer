@@ -122,7 +122,7 @@ class EmailsController extends Controller
 
     public function addRecipients(Request $request)
     {
-        $recipients = array();
+        $recipients = [];
         $email = $this->email->findOrFail($request->id);
 
         if (request()->filled('vertical')) {
@@ -269,7 +269,7 @@ class EmailsController extends Controller
     private function getTemplateFields($template)
     {
 
-        $fieldList=array();
+        $fieldList=[];
 
         $fieldsCount=preg_match_all('/(?<fullfield>(?<=\{)(?<field>.*?)(?=(\}|\:))(?<default>.*?)(?=(\}|\:)))(?=\})/', $template, $fields);
        

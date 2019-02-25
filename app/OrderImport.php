@@ -45,7 +45,7 @@ class OrderImport extends Model
                 }
                 
                 if ($company->customer_id and $company->customer_id != $import->customer_id) {
-                    $data=array();
+                    $data=[];
                     $data['companyname'] = $import->businessname;
                     $data['parent_id'] = $value;
                     $data['accounttypes_id'] = 3;

@@ -61,7 +61,7 @@ class WebleadsImportController extends Controller
 
                 $data['lead_source_id]'] = request('lead_source_id');
                 $data['filename'] = null;
-                $data['additionaldata'] = array();
+                $data['additionaldata'] = [];
                 $data['route'] = 'leads.mapfields';
                 $fields = $this->renameFields($input);
                 $data['route'] = 'webleads.import.store';
@@ -114,7 +114,7 @@ class WebleadsImportController extends Controller
         ->whereDestination('contact')
         ->whereNotNull('fieldname')->pluck('fieldname')->toArray();
 
-            $contact= array();
+            $contact= [];
         foreach ($contactFields as $key => $value) {
             if (isset($newdata[$value])) {
                  $contact[$value] = trim($newdata[$value]);
@@ -163,7 +163,7 @@ class WebleadsImportController extends Controller
     {
         $valid = $this->getValidFields();
 
-        $data =  array();
+        $data =  [];
         foreach ($input as $key => $value) {
             if (array_key_exists(trim($key), $valid)) {
                 $data[$valid[$key]] = $value;
@@ -237,7 +237,7 @@ class WebleadsImportController extends Controller
 
     private function getDefaultFields($request)
     {
-        $data=array();
+        $data=[];
         if (request()->has('default')) {
             foreach (request('default') as $key => $value) {
                         $data['aliasname'] =$key;

@@ -60,17 +60,17 @@ class BranchManagement extends Model
         $branches = explode(",", request('branches'));
 
         if ($branches[0]=='') {
-            $branches= array();
+            $branches= [];
         }
 
         $branch = request('branch');
         if (! is_array($branch)) {
-            $branch = array();
+            $branch = [];
         }
 
         $branches = array_unique(array_merge($branch, $branches));
 
-        $data = array();
+        $data = [];
         if (count($branches)>0) {
             foreach ($branches as $branch) {
                 $data[$branch]=['role_id' => $role];

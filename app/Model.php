@@ -39,7 +39,7 @@ class Model extends \Eloquent
 
             $file = Input::file('upload');
             // Make sure its a CSV file - test #1
-            $mimes = array('application/vnd.ms-excel','text/plain','text/csv','text/tsv','text/x-c');
+            $mimes = ['application/vnd.ms-excel','text/plain','text/csv','text/tsv','text/x-c'];
         if (!in_array($file->getMimeType(), $mimes)) {
             return Redirect::back()->withErrors(['Only CSV files are allowed']);
         }
@@ -63,7 +63,7 @@ class Model extends \Eloquent
     
     public function rawQuery($query, $error, $type)
     {
-        $result = array();
+        $result = [];
         try {
             switch ($type) {
                 case 'insert':
@@ -137,10 +137,10 @@ class Model extends \Eloquent
             $output.="\n";
         }
 
-          $headers = array(
+          $headers = [
               'Content-Type' => 'text/csv',
               'Content-Disposition' => $filename ,
-          );
+          ];
         $results['headers'] = $headers;
         $results['output'] = $output;
     
@@ -196,10 +196,10 @@ class Model extends \Eloquent
             $output.="\n";
         }
 
-          $headers = array(
+          $headers = [
               'Content-Type' => 'text/csv',
               'Content-Disposition' => $filename ,
-          );
+          ];
         $results['headers'] = $headers;
         $results['output'] = $output;
     

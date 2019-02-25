@@ -116,7 +116,7 @@ class SalesOrgController extends BaseController
 	 */
     private function getServicelines($servicelines)
     {
-        $userServiceLines = array();
+        $userServiceLines = [];
         foreach ($servicelines as $serviceline) {
             $userServiceLines[]= $serviceline->id;
         }
@@ -134,7 +134,7 @@ class SalesOrgController extends BaseController
         ->nearby($salesrep, $this->distance, $this->limit)
         
         ->get();
-        $branchIds = array();
+        $branchIds = [];
         foreach ($branches as $branch) {
             $branchIds[] = $branch['branchid'];
         }

@@ -129,10 +129,10 @@ class AdminUsersController extends BaseController
         $permissions = $this->permission->all();
 
         // Selected groups
-        $selectedRoles = \Input::old('roles', array());
+        $selectedRoles = \Input::old('roles', []);
 
         // Selected permissions
-        $selectedPermissions = \Input::old('permissions', array());
+        $selectedPermissions = \Input::old('permissions', []);
 
         // Title
         $title = 'Create New User';
@@ -332,7 +332,7 @@ class AdminUsersController extends BaseController
     private function associateBranchesWithPerson($person, $data)
     {
   
-        $syncData=array();
+        $syncData=[];
         if (isset($data['branchstring'])) {
             $data['branches'] = $this->branch->getBranchIdFromid($data['branchstring']);
         }
@@ -568,7 +568,7 @@ class AdminUsersController extends BaseController
     }
     private function rawQuery($query, $error, $type)
     {
-        $result = array();
+        $result = [];
         try {
             switch ($type) {
                 case 'insert':
@@ -635,7 +635,7 @@ class AdminUsersController extends BaseController
     public function checkBranchAssignments()
     {
         $branchpeople  = $this->person->where('lat', '!=', '')->has('branchesServiced')->with('branchesServiced')->get();
-        $data = array();
+        $data = [];
         foreach ($branchpeople as $person) {
             $data[$person->id]['id']= $person->id;
             $data[$person->id]['name']= $person->postName();

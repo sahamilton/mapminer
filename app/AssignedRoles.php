@@ -3,7 +3,7 @@ namespace App;
 
 class AssignedRoles extends Model
 {
-    protected $guarded = array();
+    protected $guarded = [];
 
-    public static $rules = array();
+    public static $rules = [];
 }

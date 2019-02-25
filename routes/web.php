@@ -215,7 +215,7 @@
 
 
         
-        Route::get('branch/{branchId}/salesteam', array('as' => 'branch.salesteam', 'uses' => 'BranchesController@showSalesTeam'));
+        Route::get('branch/{branchId}/salesteam', ['as' => 'branch.salesteam', 'uses' => 'BranchesController@showSalesTeam']);
 
 
         # Sales leads

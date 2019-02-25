@@ -122,7 +122,7 @@ class LeadSourceController extends Controller
             }]
         )->first();
        
-        $teamStats=array();
+        $teamStats=[];
         $team = $leadsource->salesteam($leadsource->id);
         foreach ($team as $person) {
             $teamStats[$person->id][$person->status_id]= $person->count;
@@ -175,7 +175,7 @@ class LeadSourceController extends Controller
         ->with('salesteam')
         ->get();
         $statuses = [1,2,3];
-        $teamStats = array();
+        $teamStats = [];
         foreach ($leads as $lead) {
             foreach ($lead->salesteam as $member) {
                 if (! array_key_exists($member->id, $teamStats)) {
@@ -191,7 +191,7 @@ class LeadSourceController extends Controller
 
     private function reformatRepsData($data)
     {
-        $newdata = array();
+        $newdata = [];
         $statuses = $this->lead->statuses;
 
         foreach ($data as $rep) {
@@ -336,7 +336,7 @@ class LeadSourceController extends Controller
     {
         $fields = ['companyname','businessname'];
         foreach ($fields as $field) {
-            $data[$field] = strtr($data[$field], array('.' => '', ',' => ''));
+            $data[$field] = strtr($data[$field], ['.' => '', ',' => '']);
         }
         return $data;
     }
@@ -372,7 +372,7 @@ class LeadSourceController extends Controller
 
     private function findClosestRep($leads)
     {
-        $leadinfo = array();
+        $leadinfo = [];
         foreach ($leads as $lead) {
             $leadinfo[$lead->id] = $this->person->nearby($lead, 1000)
             ->whereHas('userdetails.roles', function ($q) {
@@ -400,7 +400,7 @@ class LeadSourceController extends Controller
 
     private function salesteam($leads)
     {
-        $salesreps = array();
+        $salesreps = [];
 
         foreach ($leads as $lead) {
             if (count($lead->salesteam)>0) {

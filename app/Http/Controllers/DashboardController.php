@@ -50,7 +50,7 @@ class DashboardController extends Controller
 
        //$leads = $this->lead->getMyLeads()->get();
     
-        $leads = array();
+        $leads = [];
         return response()->view('myactivities.index', compact('watchlist', 'contacts', 'activities', 'ratings', 'notes', 'leads'));
     }
 

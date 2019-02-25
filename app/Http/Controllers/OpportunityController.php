@@ -421,7 +421,7 @@ class OpportunityController extends Controller
             and branches.id in (".implode(",", $branches).")
             group by id,activitytype_id";
         $activities =  \DB::select(\DB::raw($query));
-        $result = array();
+        $result = [];
         foreach ($activities as $activity) {
             $result[$activity->id][$activity->type] = $activity->activities;
         }

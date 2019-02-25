@@ -10,10 +10,10 @@ class HtmlReader implements TextInterface
     {
 
         $client = new Client();
-        $guzzleClient = new \GuzzleHttp\Client(array(
+        $guzzleClient = new \GuzzleHttp\Client([
         'timeout' => 90,
         'verify' => false,
-        ));
+        ]);
         $client->setClient($guzzleClient);
         $crawler = $client->request('GET', $location);
       // get the body of the page

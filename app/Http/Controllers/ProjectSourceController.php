@@ -129,7 +129,7 @@ class ProjectSourceController extends Controller
 
     private function getStats($sources)
     {
-        $stats =array();
+        $stats =[];
         foreach ($sources as $source) {
             $stats[$source->id]['count'] = $source->projects()->count();
             $owned = $source->projects()->has('owner')->with('owner')->get();

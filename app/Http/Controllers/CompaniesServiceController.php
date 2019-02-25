@@ -81,12 +81,12 @@ class CompaniesServiceController extends BaseController
     private function createServiceDetails($locations, $limit = 5)
     {
 
-        $service = array();
+        $service = [];
         $loc = null;
 
         foreach ($locations as $location) {
             if (! isset($service[$location->id])) {
-                $service[$location->id] = array();
+                $service[$location->id] = [];
             }
             $service[$location->id]['location']['id']= $location->id;
             $service[$location->id]['location']['businessname']= $location->businessname;
@@ -242,7 +242,7 @@ class CompaniesServiceController extends BaseController
     {
         $servicelines = $company->serviceline->pluck('id')->toArray();
     
-        $data = array();
+        $data = [];
         
         foreach ($locations as $location) {
             $data['salesteam'][$location->id]=$location->nearbySalesRep($servicelines, $limit)->get();

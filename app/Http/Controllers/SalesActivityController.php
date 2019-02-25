@@ -152,7 +152,7 @@ class SalesActivityController extends BaseController
                 }
                 $locations = $locations->nearby($location, 25)->get();
             } else {
-                $locations = array();
+                $locations = [];
             }
         //my watch list
             $mywatchlist = $this->activity->getWatchList();

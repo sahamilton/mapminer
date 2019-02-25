@@ -32,7 +32,7 @@ class Role extends Model
     public function getCurrentPermissions(Role $role)
     {
         $permissions = $this->whereId($role->id)->with('permissions')->first();
-        $currentPermissions=array();
+        $currentPermissions=[];
         foreach ($permissions->permissions as $permission) {
             $currentPermissions[]= $permission->id;
         }

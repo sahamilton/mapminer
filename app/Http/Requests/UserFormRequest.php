@@ -27,8 +27,8 @@ class UserFormRequest extends FormRequest
     public function rules(Request $request)
     {
   
-        $salesrules=array();
-        $branchrules=array();
+        $salesrules=[];
+        $branchrules=[];
 
         $rules = [
             'roles'=>'required',

@@ -361,7 +361,7 @@ class CompaniesController extends BaseController
 
     private function getLocationOrders($company)
     {
-        $data = array();
+        $data = [];
 
         foreach ($company->locations as $location) {
             if ($location->has('orders')) {
@@ -492,7 +492,7 @@ class CompaniesController extends BaseController
 	 */
     public function getWatchList()
     {
-        $mywatchlist = array();
+        $mywatchlist = [];
         $watchlist = $this->user->where('id', '=', \Auth::id())->with('watching')->get();
         foreach ($watchlist as $watching) {
             foreach ($watching->watching as $watched) {

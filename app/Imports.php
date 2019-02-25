@@ -43,7 +43,7 @@ class Imports extends Model
 
     public function detectDuplicateSelections($fields)
     {
-        $realFields = array_diff(array_values($fields), array("@ignore"));
+        $realFields = array_diff(array_values($fields), ["@ignore"]);
 
         if (count(array_unique($realFields)) < count($realFields)) {
             return array_unique(array_diff_key($realFields, array_unique($realFields)));

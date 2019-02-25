@@ -105,7 +105,7 @@ class GeoCodingController extends BaseController
 
         session()->put('geo', $data);
         
-        $watchlist = array();
+        $watchlist = [];
         $data['vertical'] = null;
         
         $data = $this->getViewData($data);

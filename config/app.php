@@ -251,10 +251,10 @@ return [
 
     ],
     // should move these to the mapminer config
-    'available_language' => array('en'),
-    'search_radius'=>array('2'=>'2','5'=>'5','10'=>'10','25'=>'25','50'=>'50','75'=>'75','100'=>'100','250'=>'250'),
-    'zoom_levels'=>array('2'=>'13','5'=>'12','10'=>'11','25'=>'10','50'=>'9','75'=>'8','100'=>'8','250'=>'6'),
-    'default_radius'=>array('10'=>'10'),
+    'available_language' => ['en'],
+    'search_radius'=>['2'=>'2','5'=>'5','10'=>'10','25'=>'25','50'=>'50','75'=>'75','100'=>'100','250'=>'250'],
+    'zoom_levels'=>['2'=>'13','5'=>'12','10'=>'11','25'=>'10','50'=>'9','75'=>'8','100'=>'8','250'=>'6'],
+    'default_radius'=>['10'=>'10'],
     'mysql_data_loc'=>app_path() .'/storage/uploads/',
     'api_key' => env('GOOGLE_MAPS_API_KEY', 'AIzaSyCzMYQy-JSMClnXr82HGmVp3YHYzZUOTTg'),
     'location_limit'=>env('LOCATION_LIMIT', 2000),

@@ -231,7 +231,7 @@ class User extends Authenticatable
             $redirectTo = \Redirect::to($redirect);
         }
 
-        return array($user, $redirectTo);
+        return [$user, $redirectTo];
     }
 
     public function currentUser()

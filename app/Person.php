@@ -396,7 +396,7 @@ class Person extends NodeModel implements HasPresenter
     public function jsonify($people)
     {
         $key=0;
-        $salesrepmarkers= array();
+        $salesrepmarkers= [];
         foreach ($people as $person) {
             $salesrepmarkers[$key]['id']=$person->id;
             $salesrepmarkers[$key]['lat']=$person->lat;

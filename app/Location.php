@@ -29,7 +29,7 @@ class Location extends Model implements HasPresenter
 
     public $fillable = ['businessname','street','address2','city','state','zip','company_id','phone','contact','lat','lng','segment','businesstype','position'];
 
-    protected $hidden =  array('created_at','updated_at','id');
+    protected $hidden =  ['created_at','updated_at','id'];
 /**
  * [relatedNotes description]
  * @return [type] [description]
@@ -181,8 +181,8 @@ class Location extends Model implements HasPresenter
  */
     private function getQuerySearchKeys()
     {
-            $keys = array();
-            $searchKeys = array();
+            $keys = [];
+            $searchKeys = [];
 
             $keys['vertical'] = $this->getSearchKeys(['companies'], ['vertical']);
 

@@ -136,8 +136,8 @@ class SearchFilter extends NodeModel
     
     public function setSearch($search = null)
     {
-        $searchFilter = array();
-        $searchFilters = array();
+        $searchFilter = [];
+        $searchFilters = [];
         // Initialize the search session
     //if search is set
     //    then get search
@@ -182,7 +182,7 @@ class SearchFilter extends NodeModel
 		}*/
         
         \Session::forget('Search');
-        \Session::put('Search', array($searchFilter));
+        \Session::put('Search', [$searchFilter]);
     }
     
     public function segments()

@@ -31,7 +31,7 @@ class CompanyService extends Model
         
         $servicelines = $company->serviceline->pluck('id')->toArray();
     
-        $data = array();
+        $data = [];
         
         foreach ($locations as $location) {
             $data['branches'][$location->id]=$location->nearbyBranches($servicelines, $limit)->get();
@@ -48,7 +48,7 @@ class CompanyService extends Model
         // get unique branches
         $branchids = $this->getUniqueBranches($service['branches']);
         $branches = Branch::whereIn('id', $branchids)->get();
-        $people = array();
+        $people = [];
         // for each branch get associated team
         foreach ($branches as $branch) {
             $people = array_unique(array_merge($people, $branch->getManagementTeam()));
@@ -58,7 +58,7 @@ class CompanyService extends Model
 
     private function getUniqueBranches($branches)
     {
-        $branchids = array();
+        $branchids = [];
         foreach ($branches as $branch) {
             $branchids = array_unique(array_merge($branchids, $branch->pluck('id')->toArray()));
         }

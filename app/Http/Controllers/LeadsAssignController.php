@@ -99,7 +99,7 @@ class LeadsAssignController extends Controller
           $branchmarkers=$branches->toJson();
           $address = $address->fullAddress();
 
-          $sources = array();
+          $sources = [];
           return response()->view('leads.showsearch', compact('lead', 'branches', 'people', 'salesrepmarkers', 'branchmarkers', 'extrafields', 'sources', 'address'));
     }
 

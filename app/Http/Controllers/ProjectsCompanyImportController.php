@@ -43,7 +43,7 @@ class ProjectsCompanyImportController extends ImportController
 
         $data = $this->uploadfile(request()->file('upload'));
         $data['table']='projectcompanyimport';
-        $data['additionaldata'] = array();
+        $data['additionaldata'] = [];
         $skip = ['created_at','updated_at','project_source_id','company_id','pr_status','serviceline_id'];
         $requiredFields = $this->import->requiredFields;
         $data['type']=request('type');

@@ -73,7 +73,7 @@ class AdminPermissionsController extends BaseController
         $roles = $this->role->all();
 
         // Selected permissions
-        $currentRoles = \Input::old('roles', array());
+        $currentRoles = \Input::old('roles', []);
 
         $permission = $this->permission;
         $title = 'Create New Permission';

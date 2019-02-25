@@ -240,7 +240,7 @@ class BranchesController extends BaseController {
 		
 		$locations = Location::nearby($branch,25)->get();
 
-		return response()->json(array('error'=>false,'locations' =>$locations->toArray()),200)->setCallback(request('callback'));
+		return response()->json(['error'=>false,'locations' =>$locations->toArray()],200)->setCallback(request('callback'));
 
 		
 	}
@@ -318,7 +318,7 @@ class BranchesController extends BaseController {
 	
 		//$filtered = $this->location->isFiltered(['companies'],['vertical']);
 		$roles = \App\Role::pluck('display_name','id');
-		$mywatchlist= array();
+		$mywatchlist= [];
 		//$locations = NULL;
 		$data['branch'] = $branch->load('manager');
 

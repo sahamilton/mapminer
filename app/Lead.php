@@ -111,7 +111,7 @@ class Lead extends Model
           $ranking = null;
     
         foreach ($salesteam as $team) {
-            $ratings[$team->id]=array();
+            $ratings[$team->id]=[];
             foreach ($team->closedleads as $lead) {
                 if ($lead->pivot->rating) {
                     $ratings[$team->id][] = $lead->pivot->rating;
@@ -294,7 +294,7 @@ class Lead extends Model
 
     public function history($id = null)
     {
-        $history = array();
+        $history = [];
         $history[$this->id]['created'] = $this->created_at;
         foreach ($this->salesteam as $team) {
             if (! $id or $id == $team->id) {

@@ -253,7 +253,7 @@ class LocationsController extends BaseController
     
         $filtered = $this->location->isFiltered(['companies'], ['vertical']);
         $roles = \App\Role::pluck('display_name', 'id');
-        $mywatchlist= array();
+        $mywatchlist= [];
         $locations = null;
         $data['branch']= $branch->load('manager');
 

@@ -50,7 +50,7 @@ class UserImport extends Imports
     private function checkBranches()
     {
 
-        $data=array();
+        $data=[];
   
         $branchesImported = $this->whereNotNull('branches')->pluck('branches', 'employee_id');
         $branches = Branch::pluck('id')->toArray();
@@ -244,7 +244,7 @@ class UserImport extends Imports
     {
         dd($this->import->getDataErrors());
         if ($data['errors'] = $this->import->getDataErrors()) {
-            $import = array();
+            $import = [];
             if ($brancherrors = $data['errors']['branch']) {
                 $data['import'] = $this->import->whereIn('employee_id', array_keys($brancherrors))->get();
             } else {

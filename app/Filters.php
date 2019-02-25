@@ -120,7 +120,7 @@ trait Filters
         $nullable=false;
         
         if (is_array($columns)) {
-            $nullable = array();
+            $nullable = [];
             foreach ($columns as $column) {
                 $nullFilters = SearchFilter::where('canbenull', '=', 1)->where('searchcolumn', '=', $column)->pluck('id');
                 if (is_array($searchKeys) && count(array_intersect($searchKeys, $nullFilters)) >0) {

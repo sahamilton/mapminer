@@ -173,7 +173,7 @@ class AdminDashboardController extends BaseController
 
     private function createColors($num)
     {
-        $colors=array();
+        $colors=[];
         $int = 0;
         // value must be between [0, 510]
         for ($int; $int<$num; $int++) {
@@ -304,9 +304,9 @@ class AdminDashboardController extends BaseController
 
     private function formatRoleWeekData($roleweek)
     {
-        $data=array();
+        $data=[];
         foreach (array_keys($roleweek->groupBy('name')->toArray()) as $role) {
-            $data[$role]=array();
+            $data[$role]=[];
             foreach (array_keys($roleweek->groupBy('week')->toArray()) as $date) {
                 $data[$role][$date]=0;
             }
@@ -314,7 +314,7 @@ class AdminDashboardController extends BaseController
         foreach ($roleweek as $value) {
             $data[$value->name][$value->week]=$value->login;
         }
-        $chartdata=array();
+        $chartdata=[];
         $exclude = ['admin','sales_operations'];
         $colors = $this->createColors(count($data)-count($exclude));
         $n=0;

@@ -33,10 +33,10 @@ class GitVersion extends Model
         $lastCommit = $this->max('commitdate');
         $command = 'git log --after="'.$lastCommit.'"';
         $dir = app_path();
-        $output = array();
+        $output = [];
         chdir($dir);
         exec($command, $output);
-        $history = array();
+        $history = [];
         foreach ($output as $line) {
             if (strpos($line, 'commit')===0) {
                 if (!empty($commit)) {
