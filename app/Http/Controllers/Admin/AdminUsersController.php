@@ -84,24 +84,24 @@ class AdminUsersController extends BaseController
      *
      * @return Response
      */
-    public function index($id = null)
+    public function index(Serviceline $serviceline = null)
     {
 
-        if (! $id) {
+        if (! $serviceline) {
         // Grab all the users
             $servicelines = $this->userServiceLines;
                 $serviceline = 'All';
                 $title = 'People / User Management';
         } else {
-            $servicelines = $this->serviceline->find($id);
-            $serviceline = $servicelines->ServiceLine;
-            $title = $serviceline ." users";
+           
+            
+            $title = $serviceline->ServiceLine ." users";
         }
             
           $users = $this->user
            ->with('roles', 'usage', 'person', 'serviceline');
            
-        if ($servicelines) {
+        if ($serviceline) {
             $users = $users->whereHas('serviceline', function ($q) {
                 $q->whereIn('serviceline_id', $this->userServiceLines);
             });
