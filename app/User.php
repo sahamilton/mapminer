@@ -7,6 +7,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Nicolaslopezj\Searchable\SearchableTrait;
 use Crypt;
+use \Carbon\Carbon;
 
 
 class User extends Authenticatable
@@ -49,6 +50,11 @@ class User extends Authenticatable
 
     public $dates=['lastlogin','created_at','updated_at','deleted_at','nonews'];
 
+
+    public function activities()
+    {
+        return $this->hasMany(Activity::class);
+    }
 	 public function person()
 	 {
 		  return $this->hasOne(Person::class,'user_id')->orderBy('lastname','firstname');
@@ -279,5 +285,31 @@ class User extends Authenticatable
 			}
 		return $query->whereNull('lastlogin');
 	}
+    
+    /**
+   * scopeUpcoming Activities ]
+   * @param  QueryBuilder $query    [description]
+   * @param  Array $interval intervale['from','to']
+   * @return QueryBuilder          [description]
+   */
 
+    public function scopeUpcomingActivities($query,$enddays=null)
+    {
+     if($enddays){
+           return $query->wherehas('activities',function ($query) use ($enddays){
+                $query->whereBetween('followup_date',[Carbon::now(),Carbon::now()->addDay($enddays)]);
+                })
+           ->with(['activities'=> function($query) use ($enddays) { 
+                $query->whereBetween('followup_date',[Carbon::now(),Carbon::now()->addDay($enddays)]);
+            }]);
+        }else{
+            return $query->wherehas('activities',function ($query){
+                $query->where('followup_date','>',Carbon::now());
+                })
+           ->with(['activities'=> function($query) use ($enddays) { 
+               $query->where('followup_date','>',Carbon::now());
+            }]);
+            
+        }
+    }
 }
