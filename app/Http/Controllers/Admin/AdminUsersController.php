@@ -298,9 +298,12 @@ class AdminUsersController extends BaseController
             $user->save();
         }
 
-        if ($user->update(request()->all())) {
-            $person = $this->updateAssociatedPerson($user->person, request()->all());
-            $person = $this->associateBranchesWithPerson($person, request()->all());
+		if($user->update(request()->except('password'))){
+
+            $person = $this->updateAssociatedPerson($user->person,request()->all());
+            $person = $this->associateBranchesWithPerson($person,request()->all());
+
+           if(request()->filled('serviceline')){
 
             if (request()->filled('serviceline')) {
                 $user->serviceline()->sync(request('serviceline'));

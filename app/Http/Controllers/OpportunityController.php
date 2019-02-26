@@ -56,17 +56,19 @@ class OpportunityController extends Controller
     {
         
         $activityTypes = ActivityType::all();
-        if (auth()->user()->hasRole('admin') or auth()->user()->hasRole('sales_operations')) {
-             $myBranches = $this->branch->all()->pluck('branchname', 'id')->toArray();
+        if(auth()->user()->hasRole('admin') or auth()->user()->hasRole('sales_operations')){
+
+             $myBranches = $this->branch->all()->pluck('branchname','id')->toArray();
+
              $data = $this->getSummaryBranchOpportunities(array_keys($myBranches));
             // dd($data['charts']['chart'][0]);
              return response()->view('opportunities.mgrindex', compact('data', 'activityTypes'));
         } else {
              $myBranches = $this->person->myBranches();
         }
-     
-        if (count($myBranches)==0) {
-            return redirect()->route('user.show', auth()->user()->id)->withWarning("You are not assigned to any branches. You can assign yourself here or contact Sales Ops");
+    
+        if(count($myBranches)==0){
+            return redirect()->route('user.show',auth()->user()->id)->withWarning("You are not assigned to any branches. You can assign yourself here or contact Sales Ops");
         }
         if ((! auth()->user()->hasRole('branch_manager') && $this->person->myTeam()->count() >1 )) {
             $data = $this->getSummaryBranchOpportunities(array_keys($myBranches));
@@ -102,9 +104,8 @@ class OpportunityController extends Controller
         return response()->view('opportunities.index', compact('data', 'activityTypes', 'myBranches'));
     }
 
-    public function getSummaryBranchOpportunities(array $branches)
-    {
-
+    public function getSummaryBranchOpportunities(array $branches){
+        
         return $this->branch
         
         ->withCount(

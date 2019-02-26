@@ -23,7 +23,7 @@
           <div class="float-right">
            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button> 
            <input type="submit" value="Feedback" class="btn btn-danger" />
-           {{route('feedback.store')}}
+           
             </div>
             <input type="hidden" name="url" value="{{url()->current()}}" />
         </form>
