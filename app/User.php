@@ -7,6 +7,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Nicolaslopezj\Searchable\SearchableTrait;
 use Crypt;
+use Carbon\Carbon;
 
 
 class User extends Authenticatable
@@ -54,70 +55,91 @@ class User extends Authenticatable
 		  return $this->hasOne(Person::class,'user_id')->orderBy('lastname','firstname');
 	 }
 
-	 public function fullName(){
+    public function fullName()
+    {
         if($this->person){
-	 	 return $this->person->postName();
-         }else{
+            return $this->person->postName();
+        }else{
             return null;
-         }
         }
-	 
-        public function personWithOutGeo(){
-             return $this->hasOne(Person::class,'user_id');
-        }
+    }
+
+    public function personWithOutGeo(){
+        return $this->hasOne(Person::class,'user_id');
+    }
 
      public function usage()
 	 {
 		  return $this->hasOne(Track::class,'user_id');
 	 }
-     public function scopeFirstLogin($query, Carbon $date){
-    
-// this doesnt make sense
+
+    public function scopeFirstLogin($query, Carbon $date){
+
+    // this doesnt make sense
     return $query->whereHas('usage',function ($q) use ($date){
         $q->where('roles.id','=',$role);
         });
-     }
+    }
 
-	 public function firstLogin(){
-	 	return $this->hasMany(Track::class,'user_id');
-	 }
+    public function firstLogin(){
+        return $this->hasMany(Track::class,'user_id');
+    }
 
-
-	 public function watching () {
-			return $this->belongsToMany(Location::class);
-
-	 }
-
-	 public function serviceline () {
-			return $this->belongsToMany(Serviceline::class)->withTimestamps();
-
-	 }
-
-   public function roles()
-	{
-		return $this->belongsToMany(Role::class);
-	}
-
-	
     public function active(){
-		return $this->where('confirmed','=',1);
-	}
+        return $this->where('confirmed','=',1);
+    }
+    
+    public function activities(){
+        return $this->hasMany(Activity::class);
+    }
 
-	  public function manager() {
 
-		  return $this->belongsTo(User::class,'mgrid','id');
-	  }
+    public function manager() 
+    {
 
-	  public function reports() {
+        return $this->belongsTo(User::class,'mgrid','id');
+    }
 
-		   return $this->hasMany(User::class,'id','mgrid');
-	  }
+    /**
+    * Rank documents
+    *
+    */
+
+    public function rankings()
+    {
+        return $this->belongsToMany(Document::class)->withPivot('rank');
+    }
+
+
+
+    public function reports() 
+    {
+
+        return $this->hasMany(User::class,'id','mgrid');
+    }
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class);
+    }
+
+    public function serviceline ()
+    {
+        return $this->belongsToMany(Serviceline::class)->withTimestamps();
+
+    }
+
+
+    public function watching () {
+        return $this->belongsToMany(Location::class);
+
+    }
+	  
 
     /*public function getUserByUsername( $username )
     {
         return $this->where('username', '=', $username)->first();
     }
-*/
+    */
     public function position(){
         $position = $this->person()
                 ->select('lat','lng')
@@ -152,16 +174,7 @@ class User extends Authenticatable
     {
         return \String::date(\Carbon::createFromFormat('Y-n-j G:i:s', $this->created_at));
     }
-	/**
-     * Rank documents
-     *
-     */
-
-	public function rankings()
-	{
-		return $this->belongsToMany(Document::class)->withPivot('rank');
-	}
-
+	
     /**
      * Save roles inputted from multiselect
      * @param $inputRoles
@@ -254,23 +267,23 @@ class User extends Authenticatable
 		
 
 	}
-/**
- * scopeWithRole Select User by role
- * @param  QueryBuilder $query [description]
- * @param  int $role  Role id
- * @return QueryBuilder        [description]
- */
-  public function scopeWithRole($query,$role){
-    return $query->whereHas('roles',function ($q) use ($role){
-      $q->where('roles.id','=',$role);
-    });
-  }
-  /**
-   * scopeLastLogin Select last login of user]
-   * @param  QueryBuilder $query    [description]
-   * @param  Array $interval intervale['from','to']
-   * @return QueryBuilder          [description]
-   */
+    /**
+     * scopeWithRole Select User by role
+     * @param  QueryBuilder $query [description]
+     * @param  int $role  Role id
+     * @return QueryBuilder        [description]
+     */
+      public function scopeWithRole($query,$role){
+        return $query->whereHas('roles',function ($q) use ($role){
+          $q->where('roles.id','=',$role);
+        });
+      }
+      /**
+       * scopeLastLogin Select last login of user]
+       * @param  QueryBuilder $query    [description]
+       * @param  Array $interval intervale['from','to']
+       * @return QueryBuilder          [description]
+       */
 
   public function scopeLastLogin($query,$interval=null){
 
@@ -280,4 +293,23 @@ class User extends Authenticatable
 		return $query->whereNull('lastlogin');
 	}
 
+
+    
+
+    /**
+   * scopeLastLogin Select last login of user]
+   * @param  QueryBuilder $query    [description]
+   * @param  Array $interval intervale['from','to']
+   * @return QueryBuilder          [description]
+   */
+
+    public function scopeUpcomingActivities($query,$nextdays)
+    {
+       
+        return $query->with(['activities',function ($q) use($nextdays){
+                $q->where('followup_date','>',now())
+                ->where('followup_date','<=',Carbon::now()->addDays($nextdays));
+            }]);
+
+    }
 }

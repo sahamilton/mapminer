@@ -37,7 +37,8 @@ class OpportunityController extends Controller
             Contact $contact,
             Opportunity $opportunity,
             Person $person
-        ){
+        )
+    {
         $this->address = $address;
         $this->addressbranch = $addressbranch;
         $this->branch = $branch;

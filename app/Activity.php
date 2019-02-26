@@ -82,4 +82,9 @@ class Activity extends Model
         return $data;
 	}
 
+	public function scopeUpcomingActivities($query)
+	{
+		return $query->where('followup_date','>',now()->whereUserId(auth()->user()->id));
+	}
+
 }
