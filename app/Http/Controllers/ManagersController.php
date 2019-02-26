@@ -106,7 +106,7 @@ class ManagersController extends BaseController {
 		if(! isset($data['accounts'])){
 			$data = $this->getMyAccounts($data);
 		}
-
+	
 		if(! isset($data['title'])){
 			$data['title'] = 'Title';
 		}
@@ -119,8 +119,9 @@ class ManagersController extends BaseController {
 				$data['selectedAccounts'][] = $keys;
 			}
 		}
-		
-		$data['accounts'] = $data['selectedAccounts'];
+	//dd('hrere',$data['accounts'],$data['selectedAccounts']);
+		//$data['accounts'] = $data['selectedAccounts'];		
+
 		$data['notes'] = $this->getMyNotes($data['accounts']);
 		$data['watching'] = $this->getManagersWatchers($data['accounts']);
 		$data['nocontact'] = $this->getLocationsWoContacts($data['accounts']);
@@ -446,11 +447,12 @@ class ManagersController extends BaseController {
 			
 			$managers = $this->persons->with('userdetails')
 			->whereHas('userdetails.roles',function($q){
-				$q->where('roles.name','=','National Account Manager');
+				$q->where('roles.name','=','national_account_manager');
 			})
 			
 			->select(\DB::raw("CONCAT(firstname,' ',lastname) AS name"),'id')
 			->pluck('name','id')->toArray();
+			
 			 return ['All'=>'All'] + $managers;
 		}
 			
