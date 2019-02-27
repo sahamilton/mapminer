@@ -1,4 +1,6 @@
-@if($location->assignedToBranch->count()>0  && array_intersect(array_keys($myBranches),$location->assignedToBranch->pluck('id')->toArray()))
+
+@if($location->assignedToBranch->count()>0  
+&& array_intersect( array_keys($myBranches),$location->assignedToBranch->pluck('id')->toArray()))
 
        <button class="btn btn-success" 
       
@@ -9,6 +11,7 @@
      <p>Active prospect for {{$location->assignedToBranch->first()->branchname}}</p>
    
 @elseif($location->assignedToBranch->count()==0)
+<!-- this is incorrect  --- need to limit it to the address_branch list --->
      <form name="addBranchLead" method="post" action="{{route('branch.lead.add',$location->id)}}" >
         @csrf
         @if(count($myBranches)==1)

@@ -1,3 +1,4 @@
+
 <div id="createopportunity" class="modal fade" role="dialog">
   <div class="modal-dialog">
 
@@ -13,15 +14,17 @@
         <form name="addOpportunity" method="post" action="{{route('opportunity.store')}}" >
         @csrf
         @include('opportunities.partials._opportunityform')
-        @if(count($myBranches)==1)
+        <!--- this is incorrect  Branches should be imited to the address_branch -->
+        @if(count(array_intersect( array_keys($myBranches),$location->assignedToBranch->pluck('id')->toArray()))==1)
           <input type="submit" class="btn btn-success" value="add to {{array_values($myBranches)[0]}} branch opportunity" />
-          <input type="hidden" name="branch_id" value="{{array_keys($myBranches)[0]}}" >
+          <input type="hidden" name="branch_id" value="{{$location->assignedToBranch->pluck('id')->toArray()[0]}}" >
         @else
           <select name="branch_id" required >
 
             @foreach($myBranches as $branch_id=>$branch)
+            @if(in_array($branch_id,$location->assignedToBranch->pluck('id')->toArray()))
               <option value="{{$branch_id}}">{{$branch}}</option>
-
+            @endif
             @endforeach
           </select>
           <input type="submit" class="btn btn-success" value="add to branch opportunity" />
@@ -31,8 +34,8 @@
 
 
         @endphp
-        <input type="hidden" value="{{reset($branch)}}" name="branch_id" />
-        
+
+       
       </form>
       </div>
       <div class="modal-footer"></div>
