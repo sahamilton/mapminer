@@ -85,9 +85,11 @@ $(document).ready(function()
 	});
 
 	$( "#activitydate" ).datepicker( {altField : "#activitydate",
-    altFormat: "yyyy-mm-dd"});
+    altFormat: "yy-mm-dd"});
+
     $( "#followupdate" ).datepicker( {altField : "#followupdate",
-    altFormat: "yyyy-mm-dd"});
+    altFormat: "yy-mm-dd"});
+
 	$( "#todatepicker" ).datepicker( {altField : "#todate",
     altFormat: "yyyy-mm-dd"});
 	

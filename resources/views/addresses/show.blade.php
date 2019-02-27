@@ -261,7 +261,7 @@
 @include('partials._modal')
 @include('opportunities.partials._closemodal')
 @include('addresses.partials._reassignlead')
-@include('partials._scripts');
+@include('partials._scripts')
 @include('addresses.partials.map')
 
 
