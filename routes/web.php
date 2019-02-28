@@ -69,7 +69,11 @@ Route::group(['middleware' => 'auth'], function () {
 	#Branch Assignments
 		Route::get('branchassignment/{user}/change',['as'=>'branchassignment.change','uses'=>'BranchManagementController@change']);
 		Route::resource('branchassignments','BranchManagementController',['only'=>['index','show','edit','update']]);
-	
+	#Branch Dashboard
+	    Route::resource('branch/dashboard','BranchDashboardController');
+
+	# Branch Leads
+		Route::get('branch/leads',['as'=>'branch.leads','uses'=>'MyLeadsController@index']);
 		
 		Route::resource('branchleadsimport','BranchLeadImportController');
 	#Comments
@@ -161,6 +165,7 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('/opportunities/branch/{branch}',['as'=>'opportunities.branch','uses'=>'OpportunityController@branchOpportunities']);
 		Route::delete('opportunity/{opportunity}/destroy',['as'=>'opportunity.remove','uses'=>'OpportunityController@destroy']);
 		Route::get('/opportunity/chart',['as'=>'oppoprtunity.chart','uses'=>'OpportunityController@chart']);
+
 		Route::resource('opportunity','OpportunityController');
 	#Orders
 		Route::resource('orders','OrdersController');

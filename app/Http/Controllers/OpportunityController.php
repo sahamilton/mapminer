@@ -54,47 +54,23 @@ class OpportunityController extends Controller
      */
     public function index()
     {
-        
-        $activityTypes = ActivityType::all();
-        if(auth()->user()->hasRole('admin') or auth()->user()->hasRole('sales_operations')){
+        $activityTypes = $activityTypes = ActivityType::all();
+       
+        $myBranches = $this->person->myBranches();
+   
+        $data = $this->getBranchData(array_keys($myBranches));
 
-             $myBranches = $this->branch->all()->pluck('branchname','id')->toArray();
-
-             $data = $this->getSummaryBranchOpportunities(array_keys($myBranches));
-            // dd($data['charts']['chart'][0]);
-             return response()->view('opportunities.mgrindex', compact('data', 'activityTypes'));
-        } else {
-             $myBranches = $this->person->myBranches();
-        }
-    
-        if(count($myBranches)==0){
-            return redirect()->route('user.show',auth()->user()->id)->withWarning("You are not assigned to any branches. You can assign yourself here or contact Sales Ops");
-        }
-        if ((! auth()->user()->hasRole('branch_manager') && $this->person->myTeam()->count() >1 )) {
-            $data = $this->getSummaryBranchOpportunities(array_keys($myBranches));
-            
-            return response()->view('opportunities.mgrindex', compact('data'));
-        } else {
-                       $data = $this->getBranchOpportunities([array_keys($myBranches)[0]]);
-                       $data['weekcount'] = $this->activity->where('user_id', '=', auth()->user()->id)
-                       ->currentWeekCount()
-                       ->pluck('activities', 'user_id')->toArray();
-                     
-
-                      return response()->view('opportunities.index', compact('data', 'activityTypes', 'myBranches'));
-        }
-        return redirect()->route('user.show', auth()->user()->id)->withWarning("You are not assigned to any branches. You can assign yourself here or contact Sales Ops");
-        // if no branches abort
-        // if no branches then select branc / Sales OPs
+        return response()->view('opportunities.index', compact('data', 'activityTypes', 'myBranches'));
     }
 
     public function branchOpportunities(Branch $branch, Request $request)
     {
-      
+     
+
         if (request()->has('branch')) {
-            $data = $this->getBranchOpportunities([request('branch')]);
+            $data = $this->getBranchData([request('branch')]);
         } else {
-             $data = $this->getBranchOpportunities([$branch->id]);
+             $data = $this->getBranchData([$branch->id]);
         }
 
         $activityTypes = $activityTypes = ActivityType::all();
@@ -133,18 +109,14 @@ class OpportunityController extends Controller
        // $data['activities'] = $this->branch->whereIn('id',$branches)->get();
         //$data['charts'] = $this->getChartData($branches);
     }
-    public function getBranchOpportunities(array $branches)
+    public function getBranchData(array $branches)
     {
-        
-        $data['branches'] = $this->branch->with('opportunities', 'leads', 'manager')
-            ->whereIn('id', $branches)
-            ->get();
-        $data['opportunities'] = $this->opportunity
-                ->whereIn('branch_id', $branches)
-                ->with('address', 'branch', 'address.activities')
-                ->orderBy('branch_id')
-                ->distinct()
-                ->get();
+        $data['branches'] =$this->getBranches($branches);
+
+
+        $data['opportunities'] = $this->getOpportunities($branches);
+
+       
 
         $data['addresses'] = $data['opportunities']->map(function ($opportunity) {
             return $opportunity->address;
@@ -156,23 +128,27 @@ class OpportunityController extends Controller
             }
         });
        
-        $data['branchorders'] = $this->branch->with('orders', 'orders.address')->whereIn('id', $branches)->get();
- 
-        $data['leads'] = $this->branch->with('leads', 'leads.leadsource', 'leads.createdBy')
-
-                        ->whereIn('id', $branches)->get();
-                   
-        $opportunity = $data['opportunities']->pluck('address_id')->toArray();
-        $customer = $data['branchorders']->pluck('address_id')->toArray();
-        
-        $data['contacts'] = $this->contact->whereIn('address_id', array_merge($opportunity, $customer))->with('location')->get();
-
-        $data['notes'] = $this->getBranchNotes($branches);
-      
+       
         return $data;
     }
 
        
+       private function getBranches($branches)
+       {
+        return  $this->branch->with('opportunities', 'leads', 'manager')
+            ->whereIn('id', $branches)
+            ->get();
+       }
+
+       private function getOpportunities($branches)
+       {
+         return $this->opportunity
+                ->whereIn('branch_id', $branches)
+                ->with('address', 'branch', 'address.activities')
+                ->orderBy('branch_id')
+                ->distinct()
+                ->get();
+       }
         
     /**
      * Show the form for creating a new resource.
