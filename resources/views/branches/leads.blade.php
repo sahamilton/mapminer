@@ -2,6 +2,7 @@
 @section('content')
 
 <h2>{{$leads->first()->branch->branchname}} Leads </h2>
+<p><a href="{{route('dashboard.index')}}">Return To Branch Dashboard</a></p>
 <div class="row float-right"><button type="button" 
     class="btn btn-info float-right" 
     data-toggle="modal" 

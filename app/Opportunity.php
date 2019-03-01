@@ -57,4 +57,9 @@ class Opportunity extends Model
     {
         return $this->belongsTo(User::class, 'user_id')->with('person');
     }
+
+    public function scopeOpenFunnel($query)
+    {
+        return $query->selectRaw('YEARWEEK(expected_close,3) as yearweek,sum(`value`) as funnel')->groupBy('yearweek')->orderBy('yearweek', 'asc');
+    }
 }

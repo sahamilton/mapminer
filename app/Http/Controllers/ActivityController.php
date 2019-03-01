@@ -151,6 +151,8 @@ class ActivityController extends Controller
      */
     public function show(Activity $activity)
     {
+
+        dd('herer',$activity);
     }
 
     /**

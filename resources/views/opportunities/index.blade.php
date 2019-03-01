@@ -5,7 +5,7 @@
 
 @include('maps.partials._form')
 <h2>{{$data['branches']->first()->branchname}} Branch Opportunities</h2>
-
+<p><a href="{{route('dashboard.index')}}">Return To Branch Dashboard</a></p>
 
 @if(count($myBranches)>1)
 

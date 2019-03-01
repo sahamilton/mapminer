@@ -173,7 +173,7 @@ class AdminUsersController extends BaseController
         $user = $this->user->create(request()->all());
         $user->api_token = md5(uniqid(mt_rand(), true));
         $user->confirmation_code = md5(uniqid(mt_rand(), true));
-        $user->password = \Hash::make(\Input::get('password'));
+        $this->updatePassword($request, $user);
         if (request()->filled('confirm')) {
             $user->confirmed = request('confirm');
         }
@@ -194,12 +194,6 @@ class AdminUsersController extends BaseController
             $user->person()->create($person);
             $person = $user->person;
 
-            /*$person = new Person;
-            $person->user_id = $user->id;
-
-            $person->firstname = request('firstname');
-            $person->lastname = request('lastname');
-            $person->save();*/
             $person = $this->updateAssociatedPerson($person, request()->all());
             $person = $this->associateBranchesWithPerson($person, request()->all());
             
@@ -287,43 +281,24 @@ class AdminUsersController extends BaseController
      * @param $user
      * @return Response
      */
-    public function update(UserFormRequest $request, $user)
+    public function update(UserFormRequest $request, User $user)
     {
       
         $user->load('person');
         $oldUser = clone($user);
 
-        if (request()->filled('password')) {
-            $user->password = \Hash::make(request('password'));
-            $user->save();
-        }
+        $this->updatePassword( $request, $user);
 
 		if($user->update(request()->except('password'))){
 
             $person = $this->updateAssociatedPerson($user->person,request()->all());
-            $person = $this->associateBranchesWithPerson($person,request()->all());
-
-           if(request()->filled('serviceline')){
-
-            if (request()->filled('serviceline')) {
-                $user->serviceline()->sync(request('serviceline'));
-            }
-
+            $person = $this->associateBranchesWithPerson($person,request()->all());        
             $user->saveRoles(request('roles'));
+            $this->updateServicelines($request, $user);
 
-            if (request()->filled('vertical')) {
-                $verticals = request('vertical');
+            $this->updateIndustryVertical($request,$person);
 
-                if ($verticals[0]==0) {
-                    $person->industryfocus()->sync([]);
-                } else {
-                    $person->industryfocus()->sync(request('vertical'));
-                }
-            } else {
-                $person->industryfocus()->sync([]);
-            }
-            // i want this to be queued
-            // // also it is only neccessary if there have been chnges to the person model.
+           
            // $person->rebuild();
 
             return redirect()->to(route('users.index'))->with('success', 'User updated succesfully');
@@ -332,6 +307,41 @@ class AdminUsersController extends BaseController
                 ->with('error', 'Unable to update user');
         }
     }
+    
+
+        private function updatePassword(Request $request, User $user)
+        {
+            if (request()->filled('password')) {
+                    $user->password = \Hash::make(request('password'));
+                    $user->save();
+                }
+        }
+
+        private function updateServicelines(Request $request, User $user)
+        {
+
+            if(request()->filled('serviceline')){
+
+
+                    $user->serviceline()->sync(request('serviceline'));
+
+            }
+        }
+
+        private function updateIndustryVertical(Request $request, Person $person)
+        {
+                        if (request()->filled('vertical')) {
+                        $verticals = request('vertical');
+
+                        if ($verticals[0]==0) {
+                            $person->industryfocus()->sync([]);
+                        } else {
+                            $person->industryfocus()->sync(request('vertical'));
+                        }
+                    } else {
+                        $person->industryfocus()->sync([]);
+                    }
+        }
     private function associateBranchesWithPerson($person, $data)
     {
   

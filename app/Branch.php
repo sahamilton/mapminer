@@ -90,7 +90,16 @@ class Branch extends Model implements HasPresenter
  
         return $this->hasManyThrough(Opportunity::class, AddressBranch::class, 'branch_id', 'address_branch_id', 'id', 'id');
     }
-
+    public function openOpportunities()
+    {
+ 
+        return $this->hasManyThrough(Opportunity::class, AddressBranch::class, 'branch_id', 'address_branch_id', 'id', 'id')->where('closed','=',0);
+    }
+    public function closedOpportunities()
+    {
+ 
+        return $this->hasManyThrough(Opportunity::class, AddressBranch::class, 'branch_id', 'address_branch_id', 'id', 'id')->where('closed','=',1);
+    }
     public function instate()
     {
         return $this->belongsTo(State::class, 'state', 'statecode');

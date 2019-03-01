@@ -3,6 +3,7 @@
 @include('companies.partials._searchbar')
 @include('maps.partials._form')
 <h1>{{$title}}</h1> 
+<p><a href="{{route('dashboard.index')}}">Return To Branch Dashboard</a></p>
 @if(count($myBranches)>1)
 
 <div class="col-sm-4">

@@ -21,9 +21,9 @@
 
         <tr>
           <td>
-            <a href="{{route('opportunities.branch',$branch->id)}}">
+           
               {{$branch->branchname}}
-            </a>
+           
           </td>
           
           <td>
@@ -31,12 +31,12 @@
               <li>{{$manager->fullName()}}</li>
             @endforeach
           </td>
-          <td align="center">{{$branch->leads_count}}</td>
+          <td align="center"><a href="{{route('lead.branch',$branch->id)}}">{{$branch->leads_count}}</td>
           
-          <td align="center">{{$branch->opportunities_count}}</td>
+          <td align="center"><a href="{{route('opportunities.branch',$branch->id)}}">{{$branch->opportunities_count}}</a></td>
           
             
-          <td align="center"><a href="{{route('branch.activity',$branch->id)}}">{{$branch->activities->count()}}</a></td>
+          <td align="center"><a href="{{route('activity.branch',$branch->id)}}">{{$branch->activities->count()}}</a></td>
           <td align="center">
             @if($branch->won >0)<a href="{{route('opportunities.branch',$branch->id)}}">{{$branch->won}}</a> @else 0 @endif
           </td>

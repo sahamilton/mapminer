@@ -45,7 +45,7 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::post('address/{address}/rating',['as'=>'address.rating','uses'=>'AddressController@rating']);
 		Route::resource('address','AddressController');
 	
-	# Branch Dashboard
+	
 	# Branch Leads
 		Route::get('branchleads.import',['as'=>'branchleads.import','uses'=>'BranchLeadImportController@getFile']);
 		# Temporary branch lead assignment
@@ -104,9 +104,7 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('contacts/branch/{branch}',['as'=>'contacts.branch','uses'=>'LocationContactController@branchcontacts']);
 		Route::resource('mycontacts','MyContactsController');
 
-	# Dashboard
-		Route::resource('dashboard','DashboardController');
-   	
+	   	
    	# Documents
 		Route::resource('docs','DocumentsController',['only' => ['index', 'show']]);
 
@@ -475,8 +473,6 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('leadsource/{id}/branch', ['as'=>'leadsource.branches','uses'=>'LeadSourceController@branches']);
         Route::get('leadsource/{id}/unassigned', ['as'=>'leadsource.unassigned','uses'=>'LeadSourceController@unassigned']);
         Route::get('leadsource/{id}/addleads', ['as'=>'leadsource.addleads','uses'=>'LeadImportController@getFile']);
-
-        Route::get('leadsource/{leadsource}/state/{state}', ['as'=>'leadsource.unassigned.state','uses'=>'LeadSournceCOntroller@unassignedstate']);
         Route::get('leadsource/{leadsource}/flush', ['as'=>'leadsource.flushleads','uses'=>'LeadSourceController@flushLeads']);
         Route::resource('leadsource', 'LeadSourceController');
 
