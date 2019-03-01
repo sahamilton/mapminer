@@ -318,34 +318,7 @@ class Branch extends Model implements HasPresenter
         $this->relatedPeople()->sync($associatedPeople);
     }
 
-    public function getbranchGeoCode($request)
-    {
-        $address = request('street') . ",". request('city') . ",". request('state') . ",". request('zip');
-
-        $geoCode = app('geocoder')->geocode($address)->get();
-
-        $latlng = ($this->getGeoCode($geoCode));
-        $request['lat']= $latlng['lat'];
-        $request['lng']= $latlng['lng'];
-        return $request;
-    }
-
-	public function  scopeGetActivitiesByType($query,$activitytype=null){
-	
-<<<<<<< HEAD
-	}
-
-	public function associatePeople(Request $request){
-		$data['roles'] = $this->removeNullsFromSelect(request('roles'));
-		$associatedPeople = array();
-		foreach ($data['roles'] as $key=>$role){
-				foreach ($role as $person){
-					$associatedPeople[$person] = ['role_id'=>$key];
-				}
-			}
-		$this->relatedPeople()->sync($associatedPeople);
-	}
-
+    
 	public function getbranchGeoCode($request){
 		$address = request('street') . ",". request('city') . ",". request('state') . ",". request('zip');	
 
@@ -358,19 +331,15 @@ class Branch extends Model implements HasPresenter
 
 	}
 
-	public function  scopeGetActivitiesByType($query,ActivityType $activitytype=null){
+	public function  scopeGetActivitiesByType($query,$activitytype=null){
 		
         
-        if($activitytype){
-           
-            return $query->with(['activities'=> function($query) use ($activitytype) { 
-                $query->where('activitytype_id','=',$activitytype->id)
-=======
+
         if($activitytype){
            
             return $query->with(['activities'=> function($query) use ($activitytype) { 
                 $query->where('activitytype_id','=',$activitytype)
->>>>>>> Dev
+
                 ->whereBetween('activity_date',[Carbon::now()->subMonth(),Carbon::now()]);
             }],'activities.type','activities.relatedAddress');
         }else{
