@@ -77,8 +77,12 @@ class Branch extends Model implements HasPresenter
     public function activitiesbytype($type = null)
     {
 
-        
-            return $this->hasManyThrough(Activity::class, AddressBranch::class, 'branch_id', 'address_id', 'id', 'address_id')->where('activitytype_id', '=', 2);
+            
+            $activities = $this->hasManyThrough(Activity::class, AddressBranch::class, 'branch_id', 'address_id', 'id', 'address_id');
+            if($type){
+                 $activities->where('activitytype_id', '=', $type);
+             }
+             return $activities;
     }
 
 
@@ -326,12 +330,12 @@ class Branch extends Model implements HasPresenter
         return $request;
     }
 
-	public function  scopeGetActivitiesByType($query,ActivityType $activitytype=null){
+	public function  scopeGetActivitiesByType($query,$activitytype=null){
 	
         if($activitytype){
            
             return $query->with(['activities'=> function($query) use ($activitytype) { 
-                $query->where('activitytype_id','=',$activitytype->id)
+                $query->where('activitytype_id','=',$activitytype)
                 ->whereBetween('activity_date',[Carbon::now()->subMonth(),Carbon::now()]);
             }],'activities.type','activities.relatedAddress');
         }else{

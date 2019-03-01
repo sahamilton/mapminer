@@ -318,9 +318,10 @@ class OpportunityController extends Controller
 
     private function getChartData($branches)
     {
+        
         return  $this->branch
                     ->whereIn('id', $branches)
-                    ->getActivitiesByType()
+                    ->getActivitiesByType(4)
                     ->withCount('leads')
                     ->withCount(
                         ['opportunities',
@@ -362,9 +363,9 @@ class OpportunityController extends Controller
         $string = '';
 
         foreach ($results as $branch) {
-            $winloss = $branch->won + $branch->lost;
           
-            $string = $string . "[\"".$branch->branchname ."\",  ".$branch->activities->count() .",  ".$branch->opportunities_count.", ".$winloss ."],";
+          
+            $string = $string . "[\"".$branch->branchname ."\",  ".$branch->activities->count() .",  ".$branch->opportunities_count.", ".$branch->won  ."],";
         }
 
         return $string;
