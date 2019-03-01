@@ -17,11 +17,13 @@ class LocationContactController extends Controller
     
     public $contact;
     public $person;
+    public $branch;
 
-    public function __construct(Contact $contact, Person $person)
+    public function __construct(Contact $contact, Person $person, Branch $branch)
     {
         $this->contact = $contact;
         $this->person = $person;
+        $this->branch = $branch;
     }
     /**
      * Display a listing of the resource.
@@ -30,26 +32,46 @@ class LocationContactController extends Controller
      */
     public function index()
     {
-
-    
-        if (auth()->user()->hasRole('Branch Manager')) {
-             $branches = Branch::whereHas('manager', function ($q) {
-                $q->where('id', '=', auth()->user()->person->id);
-             })->pluck('id')->toArray();
-        } else {
-            $branches = array_keys($this->person->myBranches());
-        }
-            
-             $opportunity = Opportunity::whereIn('branch_id', $branches)->pluck('address_id')->toArray();
-            
-             $customer = AddressBranch::whereIn('branch_id', $branches)->pluck('address_id')->toArray();
-           
-             $contacts = $this->contact->whereIn('address_id', array_merge($opportunity, $customer))->with('location')->get();
-           
-            $title = "Branch Contacts";
-             return response()->view('contacts.index', compact('contacts', 'title'));
+        $myBranches = $this->person->myBranches();
+        $data = $this->getBranchContacts(array_keys($myBranches));
+        $title = "Branch " . reset($myBranches) . " Contacts";
+         return response()->view('contacts.index', compact('data', 'title','myBranches'));
     }
 
+    public function branchContacts(Branch $branch, Request $request)
+    {
+     
+
+        if (request()->has('branch')) {
+            $data = $this->getBranchContacts([request('branch')]);
+        } else {
+            $data = $this->getBranchContact([$branch->id]);
+        }
+
+       
+        $myBranches = $this->person->myBranches();
+
+        $title = "Branch " . $data['branches']->first()->branchname . " Contacts";
+        return response()->view('contacts.index', compact('data', 'title', 'myBranches'));
+
+    }
+    private function getBranchContacts($branches)
+    {
+        $opportunity = Opportunity::whereIn('branch_id', $branches)->pluck('address_id')->toArray();
+            
+        $customer = AddressBranch::whereIn('branch_id', $branches)->pluck('address_id')->toArray();
+        $data['branches'] =$this->getBranches($branches);
+        $data['contacts']=$this->contact->whereIn('address_id', array_merge($opportunity, $customer))->with('location')->get();
+         return  $data;
+    }
+    private function getBranches($branches)
+       {
+        return  $this->branch->with('opportunities', 'leads', 'manager')
+            ->whereIn('id', $branches)
+            ->get();
+       }
+
+     
     /**
      * Show the form for creating a new resource.
      *

@@ -65,7 +65,9 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('branches/managed/{mgrId}',['as'=>'managed.branch', 'uses'=>'BranchesController@getMyBranches']);
 		Route::get('branches/managedmap/{mgrId}',['as'=>'managed.branchmap', 'uses'=>'BranchesController@mapMyBranches']);
 		Route::resource('branches','BranchesController',['only' => ['index', 'show']]);
-
+	# Branch Activities
+		Route::get('branch/{branch}/activities',['as'=>'activity.branch','uses'=>'ActivityController@branchActivities']);
+		Route::post('branch/activities',['as'=>'activities.branch','uses'=>'ActivityController@branchActivities']);
 	#Branch Assignments
 		Route::get('branchassignment/{user}/change',['as'=>'branchassignment.change','uses'=>'BranchManagementController@change']);
 		Route::resource('branchassignments','BranchManagementController',['only'=>['index','show','edit','update']]);
@@ -74,6 +76,8 @@ Route::group(['middleware' => 'auth'], function () {
 
 	# Branch Leads
 		Route::get('branch/leads',['as'=>'branch.leads','uses'=>'MyLeadsController@index']);
+		Route::get('branch/{branch}/leads',['as'=>'lead.branch','uses'=>'MyLeadsController@branchLeads']);
+		Route::post('branch/lead',['as'=>'leads.branch','uses'=>'MyLeadsController@branchLeads']);
 		
 		Route::resource('branchleadsimport','BranchLeadImportController');
 	#Comments
@@ -94,6 +98,8 @@ Route::group(['middleware' => 'auth'], function () {
 	# Contacts
 		Route::get('contacts/{id}/vcard',['as'=>'contacts.vcard','uses'=>'LocationContactController@vcard']);
 		Route::resource('contacts','LocationContactController');
+		Route::post('contact/branch',['as'=>'contact.branch','uses'=>'LocationContactController@branchcontacts']);
+		Route::get('contacts/branch/{branch}',['as'=>'contacts.branch','uses'=>'LocationContactController@branchcontacts']);
 		Route::resource('mycontacts','MyContactsController');
 
 	# Dashboard

@@ -38,22 +38,57 @@ class MyLeadsController extends BaseController
     public function index()
     {
         
-        $myBranches = $this->person->myBranches();
+       if(!  $myBranches = $this->person->myBranches()){
+        return redirect()->back()->withError('You are not assigned to any branches');
+       }
+       
+        $branch = array_keys($myBranches);
 
-        $leads = $this->lead->wherehas('assignedToBranch', function ($q) use ($myBranches) {
-            $q->whereIn('branches.id', array_keys($myBranches));
-        })->whereHas('assignedToBranch', function ($q) {
-            $q->selectRaw('ST_Distance_Sphere(addresses.position ,branches.position)/1609 AS distance');
-        })->with('assignedToBranch')->get();
-      
-        return response()->view('myleads.branches', compact('leads', 'myBranches'));
+        $data = $this->getBranchLeads([reset($branch)]);
+        
+        $title= $data['branches']->first()->branchname . " leads";
+        return response()->view('myleads.branches', compact('data', 'myBranches','title'));
         // how to get the distance for each branch
         // get my branches
         // get addresses that are leads that are assigned to a branch
         //
     }
 
+    public function branchLeads(Request $request, Branch $branch){
 
+        if (request()->has('branch')) {
+            $branch = request('branch');
+        } else {
+           $branch = $branch->id;
+        }
+        $myBranches = $this->person->myBranches();
+       
+        if(! ( $myBranches)  or ! in_array($branch,array_keys($myBranches))){
+            return redirect()->back()->withError('You are not assigned to any branches');
+       }
+       
+         
+        $data = $this->getBranchLeads([$branch]);
+       
+        $title= $data['branches']->first()->branchname . " leads";
+        return response()->view('myleads.branches', compact('data', 'myBranches','title'));
+    }
+
+    private function getBranchLeads(Array $branch){
+        $data['leads'] = $this->lead->wherehas('assignedToBranch', function ($q) use ($branch) {
+            $q->whereIn('branches.id', $branch);
+        })->with('assignedToBranch')->get();
+
+        $data['branches'] = $this->getBranches($branch);
+        return $data;
+    }
+
+     private function getBranches(Array $branches)
+       {
+        return  $this->branch->with('leads', 'manager')
+            ->whereIn('id', $branches)
+            ->get();
+       }
     public function closedleads()
     {
     }
