@@ -3,23 +3,25 @@
 namespace App;
 
 use Carbon\Carbon;
-use\App\Presenters\LocationPresenter;
+use App\Presenters\LocationPresenter;
 use McCool\LaravelAutoPresenter\HasPresenter;
 use Geocoder\Laravel\Facades\Geocoder;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Lead extends Model  {
-  use SoftDeletes, Geocode, Addressable;
-	public $dates = ['created_at','updated_at','deleted_at','datefrom','dateto','position'];
-  public $table= 'leads';
-  public $assignTo;
-  public $type='temp';
+class Lead extends Model
+{
+    use SoftDeletes, Geocode, Addressable;
+    public $dates = ['created_at','updated_at','deleted_at','datefrom','dateto','position'];
+    public $table= 'leads';
+    public $assignTo;
+    public $type='temp';
 
-  public function __construct(){
-    $this->assignTo = config('leads.lead_distribution_roles');
-  }
+    public function __construct()
+    {
+        $this->assignTo = config('leads.lead_distribution_roles');
+    }
 
-  public $requiredfields = ['companyname',
+    public $requiredfields = ['companyname',
             'businessname',
             'address',
             'city',
@@ -28,7 +30,7 @@ class Lead extends Model  {
             'lat',
             'lng',];
             
-	public $fillable = ['description','address_id'];
+    public $fillable = ['description','address_id'];
  /* public $statuses = [1=>'Offered',2=>'Claimed',3=>'Closed'];
     
     public $getStatusOptions =  [
@@ -90,126 +92,131 @@ class Lead extends Model  {
   
   */
 
-  public function createLeadFromGeo($geoCode){
+    public function createLeadFromGeo($geoCode)
+    {
           $coords = $this->getGeoCode($geoCode);
           $this->lat = $coords['lat'];
           $this->lng = $coords['lng'];
-          if(isset($coords['address'])){
+        if (isset($coords['address'])) {
             $this->address = $coords['address'];
-          }
+        }
           $this->city = $coords['city'];
           $this->state = $coords['state'];
           $this->zip = $coords['zip'];
           return $this;
     }
 
-public function rankLead($salesteam){
-      $ranking = null;
+    public function rankLead($salesteam)
+    {
+          $ranking = null;
     
-      foreach ($salesteam as $team){
-        $ratings[$team->id]=array();
-         foreach ($team->closedleads as $lead){
-
-              if($lead->pivot->rating){
-                $ratings[$team->id][] = $lead->pivot->rating;
-              }
-          }
+        foreach ($salesteam as $team) {
+            $ratings[$team->id]=[];
+            foreach ($team->closedleads as $lead) {
+                if ($lead->pivot->rating) {
+                    $ratings[$team->id][] = $lead->pivot->rating;
+                }
+            }
      
-        if (count($ratings[$team->id])>0){
-               $ranking[$team->id] = array_sum($ratings[$team->id]) / count($ratings[$team->id]);
+            if (count($ratings[$team->id])>0) {
+                   $ranking[$team->id] = array_sum($ratings[$team->id]) / count($ratings[$team->id]);
+            }
         }
-    }  
-    return $ranking;
+        return $ranking;
     }
 
-    public function leadStatus(){
+    public function leadStatus()
+    {
 
-    return $this->belongsToMany(LeadStatus::class,'lead_person_status','related_id','status_id')
-    ->withPivot('created_at','updated_at','person_id','rating');
-
+        return $this->belongsToMany(LeadStatus::class, 'lead_person_status', 'related_id', 'status_id')
+        ->withPivot('created_at', 'updated_at', 'person_id', 'rating');
     }
-    public function ownedBy(){
-      return $this->belongsToMany(Person::class,'lead_person_status','related_id','person_id')
-            ->withPivot('status_id','rating','type')
-            ->wherePivotIn('status_id',[2,3]);
-            
+    public function ownedBy()
+    {
+        return $this->belongsToMany(Person::class, 'lead_person_status', 'related_id', 'person_id')
+            ->withPivot('status_id', 'rating', 'type')
+            ->wherePivotIn('status_id', [2,3]);
     }
-    public function closedLead(){
-      return $this->belongsToMany(Person::class,'lead_person_status','related_id','person_id')
-            ->withPivot('status_id','rating','type')
-            ->wherePivot('status_id','=',3);
-            
+    public function closedLead()
+    {
+        return $this->belongsToMany(Person::class, 'lead_person_status', 'related_id', 'person_id')
+            ->withPivot('status_id', 'rating', 'type')
+            ->wherePivot('status_id', '=', 3);
     }
-    public function leadRank(){
-      $teams = $this->salesteam()->get();
+    public function leadRank()
+    {
+        $teams = $this->salesteam()->get();
     
-      $rank=null;
-      $count=null;
-      foreach ($teams as $team) {
-        $rank = $rank + $team->pivot->sum('rating');
-        $count = $count + $team->pivot->count('rating');
-      }
-      if($count >0){
-        return $rank / $count;
-      }
-      return null;
+        $rank=null;
+        $count=null;
+        foreach ($teams as $team) {
+            $rank = $rank + $team->pivot->sum('rating');
+            $count = $count + $team->pivot->count('rating');
+        }
+        if ($count >0) {
+            return $rank / $count;
+        }
+        return null;
     }
 
-    public function leadOwner($id){
-      $ownStatuses = [2,5,6];
+    public function leadOwner($id)
+    {
+        $ownStatuses = [2,5,6];
             $lead = $this->with('salesteam')
                 ->whereHas('leadsource', function ($q) {
-                  $q->where('datefrom','<=',date('Y-m-d'))
-                    ->where('dateto','>=',date('Y-m-d'));
-              })
-                ->whereHas('salesteam',function($q) use($ownStatuses,$id) {
-                  $q->whereIn('status_id',$ownStatuses);
+                    $q->where('datefrom', '<=', date('Y-m-d'))
+                    ->where('dateto', '>=', date('Y-m-d'));
                 })
-                ->find($id); 
-            if(isset($lead)){
-              foreach($lead->salesteam as $team){
-
-                if(in_array($team->pivot->status_id,$ownStatuses)){
-                  return $team;
+                ->whereHas('salesteam', function ($q) use ($ownStatuses, $id) {
+                    $q->whereIn('status_id', $ownStatuses);
+                })
+                ->find($id);
+        if (isset($lead)) {
+            foreach ($lead->salesteam as $team) {
+                if (in_array($team->pivot->status_id, $ownStatuses)) {
+                    return $team;
                 }
-              return null;
-              }
+                return null;
             }
-          }
+        }
+    }
     
-    public function webLead(){
-      return $this->hasOne(Weblead::class);
+    public function webLead()
+    {
+        return $this->hasOne(Weblead::class);
     }
 
-    public function tempLead(){
-      return $this->hasOne(Templead::class);
+    public function tempLead()
+    {
+        return $this->hasOne(Templead::class);
     }
 
-    public function scopeExtraFields($query,$table){
+    public function scopeExtraFields($query, $table)
+    {
             
-             return $query->leftjoin($table .' as ExtraFields','leads.id','=','ExtraFields.lead_id');
-      }
+             return $query->leftjoin($table .' as ExtraFields', 'leads.id', '=', 'ExtraFields.lead_id');
+    }
      
-    public function ownsLead($id){
+    public function ownsLead($id)
+    {
 
-      $ownStatuses = [2,5,6];
-      if($lead = $this->with('salesteam')
+        $ownStatuses = [2,5,6];
+        if ($lead = $this->with('salesteam')
         ->whereHas('leadsource', function ($q) {
-            $q->where('datefrom','<=',date('Y-m-d'))
-              ->where('dateto','>=',date('Y-m-d'));
+            $q->where('datefrom', '<=', date('Y-m-d'))
+              ->where('dateto', '>=', date('Y-m-d'));
         })
-          ->whereHas('salesteam',function($q) use($ownStatuses) {
-              $q->whereIn('status_id',$ownStatuses);
-            })
+          ->whereHas('salesteam', function ($q) use ($ownStatuses) {
+              $q->whereIn('status_id', $ownStatuses);
+          })
           ->find($id)) {
-
-           foreach ($lead->salesteam as $team){
-              if(in_array($team->pivot->status_id, $ownStatuses)){
-                return $team;
-              }
-           }
-     }
-     return null;
+            foreach ($lead->salesteam as $team) {
+                if (in_array($team->pivot->status_id, $ownStatuses)) {
+                    return $team;
+                }
+            }
+        }
+        return null;
     }
 
  /* public function myLeads(array $statuses=null,$all=null){
@@ -245,139 +252,142 @@ public function rankLead($salesteam){
 
 
     }*/
-    public function myLeads(){
-      return $this->belongsToMany(Person::class,'lead_person_status','related_id','person_id')
-            ->withPivot('status_id','rating','type')
-            ->wherePivotIn('status_id',[2,3]);
+    public function myLeads()
+    {
+        return $this->belongsToMany(Person::class, 'lead_person_status', 'related_id', 'person_id')
+            ->withPivot('status_id', 'rating', 'type')
+            ->wherePivotIn('status_id', [2,3]);
     }
-    public function myLeadStatus(){
+    public function myLeadStatus()
+    {
       
-      return $this->salesteam()->wherePivot('person_id','=',auth()->user()->person->id)->first(['status_id','rating']);
-
-
+        return $this->salesteam()->wherePivot('person_id', '=', auth()->user()->person->id)->first(['status_id','rating']);
     }
     
 
-    public function leadsByStatus($id){
-      return $this->whereHas('leadsource', function ($q) {
-            $q->where('datefrom','<=',date('Y-m-d'))
-              ->where('dateto','>=',date('Y-m-d'));
+    public function leadsByStatus($id)
+    {
+        return $this->whereHas('leadsource', function ($q) {
+            $q->where('datefrom', '<=', date('Y-m-d'))
+              ->where('dateto', '>=', date('Y-m-d'));
         })
-            ->whereHas('salesteam',function($q) use($id) {
-          $q->whereIn('status_id',[$id]);
-      })
-      ->get();
-
-
+            ->whereHas('salesteam', function ($q) use ($id) {
+                $q->whereIn('status_id', [$id]);
+            })
+        ->get();
     }
    
 
     
 
-    public function rankMyLead($salesteam,$id=null){
-      if(! isset($id)){
-        $id = auth()->user()->person->id;
-      }
-      foreach ($salesteam as $team){
-          
-            if($team->id == $id){
-              return $team->pivot->rating;
+    public function rankMyLead($salesteam, $id = null)
+    {
+        if (! isset($id)) {
+            $id = auth()->user()->person->id;
+        }
+        foreach ($salesteam as $team) {
+            if ($team->id == $id) {
+                return $team->pivot->rating;
             }
-          }
+        }
     }
 
-    public function history($id=null){
-      $history = array();
-      $history[$this->id]['created'] = $this->created_at;      
-      foreach ($this->salesteam as $team)
-      {
-        if(! $id or $id == $team->id){
-              if(! isset($history[$this->id]['status'][$team->pivot->status_id])){
-                  $history[$this->id]['status'][$team->pivot->status_id]['count'] = 0;
-                  $history[$this->id]['status'][$team->pivot->status_id]['activitydate'] = null;
-                  $history[$this->id]['status'][$team->pivot->status_id]['owner'] = null;
-                  $history[$this->id]['status'][$team->pivot->status_id]['status'] = null;
-    
-              }
+    public function history($id = null)
+    {
+        $history = [];
+        $history[$this->id]['created'] = $this->created_at;
+        foreach ($this->salesteam as $team) {
+            if (! $id or $id == $team->id) {
+                if (! isset($history[$this->id]['status'][$team->pivot->status_id])) {
+                    $history[$this->id]['status'][$team->pivot->status_id]['count'] = 0;
+                    $history[$this->id]['status'][$team->pivot->status_id]['activitydate'] = null;
+                    $history[$this->id]['status'][$team->pivot->status_id]['owner'] = null;
+                    $history[$this->id]['status'][$team->pivot->status_id]['status'] = null;
+                }
           
                 $history[$this->id]['status'][$team->pivot->status_id]['count'] +=1;
                 $history[$this->id]['status'][$team->pivot->status_id]['activitydate'] = $team->pivot->created_at;
                 $history[$this->id]['status'][$team->pivot->status_id]['owner'] = $team->pivot->person_id;
                 $history[$this->id]['status'][$team->pivot->status_id]['status'] = $team->pivot->status_id;
             }
-          }
+        }
 
-      return $history;
+        return $history;
     }
 
-     public function openleads(){
-      return $this->belongsToMany(Person::class, 'lead_person_status','related_id','person_id')
-      ->wherePivot('status_id',2);
+    public function openleads()
+    {
+        return $this->belongsToMany(Person::class, 'lead_person_status', 'related_id', 'person_id')
+        ->wherePivot('status_id', 2);
     }
-    public function closedleads(){
-      return $this->belongsToMany(Person::class, 'lead_person_status','related_id','person_id')
-        ->withPivot('created_at','updated_at','status_id','rating')
-        ->wherePivot('status_id',3);
+    public function closedleads()
+    {
+        return $this->belongsToMany(Person::class, 'lead_person_status', 'related_id', 'person_id')
+        ->withPivot('created_at', 'updated_at', 'status_id', 'rating')
+        ->wherePivot('status_id', 3);
     }
 
-    public function findNearByPeople($data){
-      $this->userServiceLines = session()->has('user.servicelines') 
-      && session()->get( 'user.servicelines' ) ? session()->get( 'user.servicelines' ) : $this->getUserServiceLines();
-      if(is_array($data)){
+    public function findNearByPeople($data)
+    {
+        $this->userServiceLines = session()->has('user.servicelines')
+        && session()->get('user.servicelines') ? session()->get('user.servicelines') : $this->getUserServiceLines();
+        if (is_array($data)) {
               $location = new \stdClass;
               $location->lat = $data['lat'];
               $location->lng = $data['lng'];
-        }else{
-          $location = $data;
-          $data['distance']=100;
-          $data['number']=5;
+        } else {
+            $location = $data;
+            $data['distance']=100;
+            $data['number']=5;
         }
 
         
         return Person::whereHas('userdetails.serviceline', function ($q) {
-              $q->whereIn('servicelines.id',$this->userServiceLines);
-          })
+              $q->whereIn('servicelines.id', $this->userServiceLines);
+        })
           ->whereHas('userdetails.roles', function ($q) {
-              $q->whereIn('name',$this->assignTo);
+              $q->whereIn('name', $this->assignTo);
           })
-          ->with('userdetails','reportsTo','userdetails.roles','industryfocus')
-          ->nearby($location,$data['distance'],$data['number'])
+          ->with('userdetails', 'reportsTo', 'userdetails.roles', 'industryfocus')
+          ->nearby($location, $data['distance'], $data['number'])
           ->get();
-      }
+    }
 
 
-      public function findNearByBranches($data){
-        if(is_array($data)){
+    public function findNearByBranches($data)
+    {
+        if (is_array($data)) {
                 $location = new \stdClass;
                 $location->lat = $data['lat'];
                 $location->lng = $data['lng'];
-          }else{
+        } else {
             $location = $data;
             $data['distance']=100;
             $data['number']=5;
-          }
+        }
           
-          return Branch::whereHas('servicelines',function ($q){
-                $q->whereIn('servicelines.id',$this->userServiceLines );
-            })
-            ->with('salesTeam')->nearby($location,$data['distance'],$data['number'])
+        return Branch::whereHas('servicelines', function ($q) {
+              $q->whereIn('servicelines.id', $this->userServiceLines);
+        })
+        ->with('salesTeam')->nearby($location, $data['distance'], $data['number'])
             
-            ->get();
-
+        ->get();
     }
 
-    public function unassignedLeads(LeadSource $leadsource){
+    public function unassignedLeads(LeadSource $leadsource)
+    {
         return $this->whereDoesntHave('salesteam')
-          ->where('lead_source_id','=',$leadsource->id)
-          ->whereHas('leadsource', function ($q){
-            $q->where('datefrom','<=',date('Y-m-d'))
-            ->where('dateto','>=',date('Y-m-d'));
+          ->where('lead_source_id', '=', $leadsource->id)
+          ->whereHas('leadsource', function ($q) {
+            $q->where('datefrom', '<=', date('Y-m-d'))
+            ->where('dateto', '>=', date('Y-m-d'));
           })
 
         ->get();
     }
 
-    public function getMyLeads(){
-        return $this->where('user_id','=',auth()->user()->id);
+    public function getMyLeads()
+    {
+        return $this->where('user_id', '=', auth()->user()->id);
     }
 }

@@ -1,5 +1,6 @@
 <?php
 namespace App\Http\Controllers;
+
 use App\User;
 use App\Person;
 use App\Address;
@@ -277,52 +278,51 @@ class ManagersController extends BaseController {
 				notes.related_id = addresses.id 
 				and notes.type = 'location'
 				and addresses.company_id = companies.id 
-				and companies.id in('".implode(",",$accounts)."') 
+				and companies.id in('".implode(",", $accounts)."') 
 			group by 
 				companies.id,
 				companyname
 			order by 
 				companyname";
-			$notes = \DB::select(\DB::raw($query));
-			
-	
-		return $notes;
-		
-	}
-	
+            $notes = \DB::select(\DB::raw($query));
+            
+    
+        return $notes;
+    }
+    
 
-	/**
-	 * [companywatchexport description]
-	 * @return [type] [description]
-	 */
-	public function companywatchexport(){
-		$id = urldecode(\Input::get('id'));
-		
-		Excel::download('Watch List',function($excel) use ($id){
-			$excel->sheet('Watching',function($sheet) use ($id) {
-				$result = $this->getAllAccountWatchers($id);
-				$sheet->loadview('companies.export',compact('result'));
-			});
-		})->download('csv');
+    /**
+     * [companywatchexport description]
+     * @return [type] [description]
+     */
+    public function companywatchexport()
+    {
+        $id = urldecode(\Input::get('id'));
+        
+        Excel::download('Watch List', function ($excel) use ($id) {
+            $excel->sheet('Watching', function ($sheet) use ($id) {
+                $result = $this->getAllAccountWatchers($id);
+                $sheet->loadview('companies.export', compact('result'));
+            });
+        })->download('csv');
 
-		return response()->return();
+        return response()->return();
+    }
+    
 
-	}
-	
+    /**
+     * [getAllAccountWatchers description]
+     * @param  [type] $accountstring [description]
+     * @return [type]                [description]
+     */
+    private function getAllAccountWatchers($accounts)
+    {
+        // refactor to eloquent
+        // locations wherein company_id accountstring
+        // with watchedBy, company
 
-	/**
-	 * [getAllAccountWatchers description]
-	 * @param  [type] $accountstring [description]
-	 * @return [type]                [description]
-	 */
-	private function getAllAccountWatchers($accounts)
-	{
-		// refactor to eloquent
-		// locations wherein company_id accountstring
-		// with watchedBy, company
-
-		$query =
-		"select 
+        $query =
+        "select 
 			persons.user_id as userid,
 			concat(firstname,' ',lastname) as person,
 			locations.businessname as businessname,
@@ -339,61 +339,54 @@ class ManagersController extends BaseController {
 		where 
 			location_user.user_id = users.id
 			and location_user.location_id = locations.id
-			and locations.company_id in ('".implode(",",$accountstring)."') 
+			and locations.company_id in ('".implode(",", $accountstring)."') 
 			and locations.company_id = companies.id
 			and persons.user_id = users.id
 		order by 
 			companyname,
 			date";
-		
-		$result = \DB::select(\DB::raw($query));
-		
-		return $result;	
-		
-		
-		
-		
-	}
-	
-	
-	
-	/**
-	 * [getManagersWatchers description]
-	 * @param  [type] $accountstring [description]
-	 * @return [type]                [description]
-	 */
-	private function getManagersWatchers($accounts)
-	{
-		
-		
-		$query ="select persons.user_id, count(persons.user_id) as watching,concat(firstname,' ',lastname) as name,
+        
+        $result = \DB::select(\DB::raw($query));
+        
+        return $result;
+    }
+    
+    
+    
+    /**
+     * [getManagersWatchers description]
+     * @param  [type] $accountstring [description]
+     * @return [type]                [description]
+     */
+    private function getManagersWatchers($accounts)
+    {
+        
+        
+        $query ="select persons.user_id, count(persons.user_id) as watching,concat(firstname,' ',lastname) as name,
 		addresses.company_id
 				from addresses,location_user,users,persons
 				where location_user.user_id = users.id
 				and location_user.address_id = addresses.id
-				and addresses.company_id in ('".implode(",",$accounts)."') 
+				and addresses.company_id in ('".implode(",", $accounts)."') 
 				and persons.user_id = users.id
 				group by addresses.company_id,persons.user_id,firstname,lastname 
 				order by watching DESC";
-		
-		$result = \DB::select(\DB::raw($query));
-		
-		return $result;	
-	
-	
-		
-	}
-	
-	/**
-	 * [getLocationsWoContacts description]
-	 * @param  [type] $accountstring [description]
-	 * @return [type]                [description]
-	 */
-	private function getLocationsWoContacts($accounts)
-	{
-		//return $this->company->whereIn('id'.)
+        
+        $result = \DB::select(\DB::raw($query));
+        
+        return $result;
+    }
+    
+    /**
+     * [getLocationsWoContacts description]
+     * @param  [type] $accountstring [description]
+     * @return [type]                [description]
+     */
+    private function getLocationsWoContacts($accounts)
+    {
+        //return $this->company->whereIn('id'.)
 
-		$query ="select companyname, 
+        $query ="select companyname, 
 				company_id , 
 				count(addresses.id) as addresses, 
 				((nocontacts / count(addresses.id)) * 100) as percent, 
@@ -407,96 +400,94 @@ class ManagersController extends BaseController {
 				) st2 
 				on st2.coid =  companies.id 
 				where companies.id = addresses.company_id
-				and companies.id in ('".implode(",",$accounts)."')
+				and companies.id in ('".implode(",", $accounts)."')
 				group by companyname,company_id,st2.nocontacts 
 				order by percent DESC,addresses DESC";
-		$result = \DB::select(\DB::raw($query));
-		return $result;	
-		/**/
-		
-		
-		
-	}
-	
+        $result = \DB::select(\DB::raw($query));
+        return $result;
+        /**/
+    }
+    
 
 
-	/**
-	 * [getManagers description]
-	 * @param  [type] $id [description]
-	 * @return [type]     [description]
-	 */
-	
-	private function getManagers($id)
-	{
-		
-			$managers = $this->persons
-			->has('managesAccount')
-			->select(\DB::raw("CONCAT(firstname,' ',lastname) AS name"),'id')
-			->firstOrFail($id);
+    /**
+     * [getManagers description]
+     * @param  [type] $id [description]
+     * @return [type]     [description]
+     */
+    
+    private function getManagers($id)
+    {
+        
+            $managers = $this->persons
+            ->has('managesAccount')
+            ->select(\DB::raw("CONCAT(firstname,' ',lastname) AS name"), 'id')
+            ->firstOrFail($id);
 
-			if($managers){
-				return $managers->toArray();
-			}
-			return $this->getAllManagers();
-	}	
-	private function getAllManagers(){
+        if ($managers) {
+            return $managers->toArray();
+        }
+            return $this->getAllManagers();
+    }
+    private function getAllManagers()
+    {
 
 
-		// This can be refactored.  Send a pluck array with just user id & persons postName
-			
-			$managers = $this->persons->with('userdetails')
-			->whereHas('userdetails.roles',function($q){
-				$q->where('roles.name','=','National Account Manager');
-			})
-			
-			->select(\DB::raw("CONCAT(firstname,' ',lastname) AS name"),'id')
-			->pluck('name','id')->toArray();
-			 return ['All'=>'All'] + $managers;
-		}
-			
-		
-		
+        // This can be refactored.  Send a pluck array with just user id & persons postName
+            
+            $managers = $this->persons->with('userdetails')
+            ->whereHas('userdetails.roles', function ($q) {
+                $q->where('roles.name', '=', 'National Account Manager');
+            })
+            
+            ->select(\DB::raw("CONCAT(firstname,' ',lastname) AS name"), 'id')
+            ->pluck('name', 'id')->toArray();
+             return ['All'=>'All'] + $managers;
+    }
+            
+        
+        
 
-	
-	
+    
+    
 /**
  * [getNoSalesNotes description]
  * @param  [type] $accountstring [description]
  * @return [type]                [description]
  */
-	private function getNoSalesNotes($accounts)
-	{
-		
-		
-		$query = "SELECT distinct companyname,companies.id,company_howtofield.company_id as notes
+    private function getNoSalesNotes($accounts)
+    {
+        
+        
+        $query = "SELECT distinct companyname,companies.id,company_howtofield.company_id as notes
 		FROM `companies` 
 		left join company_howtofield on companies.id = company_id 
-		where companies.id in ('".implode(",",$accounts)."')
+		where companies.id in ('".implode(",", $accounts)."')
 		order by companyname";
-		
-		$result = \DB::select(\DB::raw($query));
-		return $result;
-	}
-	
-	
-	/**
-	 * [getSegmentDetails description]
-	 * @param  [type] $id [description]
-	 * @return [type]     [description]
-	 */
-	private function getSegmentDetails($ids)
-	{
-			
+        
+        $result = \DB::select(\DB::raw($query));
+        return $result;
+    }
+    
+    
+    /**
+     * [getSegmentDetails description]
+     * @param  [type] $id [description]
+     * @return [type]     [description]
+     */
+    private function getSegmentDetails($ids)
+    {
+            
 
-		
-			return Address::
-						select('vertical',\DB::raw('count(*) as total'))
-						->with('industryVertical')
-						->whereIn('company_id',$ids)
-						->groupBy('vertical')
-						->get();
-		
-			/*$query = "SELECT
+        
+            return Address::
+                        select('vertical', \DB::raw('count(*) as total'))
+                        ->with('industryVertical')
+                        ->whereIn('company_id', $ids)
+                        ->groupBy('vertical')
+                        ->get();
+        
+            /*$query = "SELECT
 						companies.companyname as companyname,
 				
 						f.filter as industry,
@@ -512,9 +503,7 @@ class ManagersController extends BaseController {
 			
 
 			$result = \DB::select(\DB::raw($query));*/
-			
-		return $result;
-	}
-
-	
+            
+        return $result;
+    }
 }

@@ -1,5 +1,6 @@
 <?php
 namespace App\Http\Controllers;
+
 use App\User;
 use App\State;
 use App\Person;
@@ -13,56 +14,57 @@ use App\Serviceline;
 use Illuminate\Http\Request;
 use App\Http\Requests\CompanyFormRequest;
 
-class CompaniesController extends BaseController {
+class CompaniesController extends BaseController
+{
 
 
-	public $user;
-	public $company;
-	public $address;
-	public $locations;
-	public $searchfilter;
-	public $person;
-	public $limit = 500;
-	public $NAMRole =['4'];
+    public $user;
+    public $company;
+    public $address;
+    public $locations;
+    public $searchfilter;
+    public $person;
+    public $limit = 500;
+    public $NAMRole =['4'];
 
 
-	public function __construct(Company $company, Address $address, Location $location, SearchFilter $searchfilter,User $user,Person $person) {
+    public function __construct(Company $company, Address $address, Location $location, SearchFilter $searchfilter, User $user, Person $person)
+    {
 
-		$this->company = $company;
-		$this->locations = $location;
-		$this->searchfilter = $searchfilter;
-		$this->user = $user;
-		$this->person = $person;
-		$this->address = $address;
-		parent::__construct($this->address);
+        $this->company = $company;
+        $this->locations = $location;
+        $this->searchfilter = $searchfilter;
+        $this->user = $user;
+        $this->person = $person;
+        $this->address = $address;
+        parent::__construct($this->address);
+    }
 
-	}
 
+    /**
+     * Display a listing of companies
+     *
+     * @return View
+     */
 
-	/**
-	 * Display a listing of companies
-	 *
-	 * @return View
-	 */
+    public function index()
+    {
+        $filtered = $this->company->isFiltered(['companies'], ['vertical']);
+        
+        $myLocation =$this->locations->getMyPosition();
+        
+        $companies = $this->company->whereHas('locations', function ($q) use ($myLocation) {
+            $q->nearby($myLocation, 25);
+        })
+        ->withCount('locations')
+            ->with('managedBy', 'managedBy.userdetails', 'industryVertical', 'serviceline')
+        ->get();
 
-	public function index()
-	{
-		$filtered = $this->company->isFiltered(['companies'],['vertical']);
-		
-		$myLocation =$this->locations->getMyPosition();
-		
-		$companies = $this->company->whereHas('locations', function ($q) use ($myLocation){
-			$q->nearby($myLocation,25);
-		})
-		->withCount('locations')
-			->with('managedBy','managedBy.userdetails','industryVertical','serviceline')
-		->get();
+        $locationFilter = 'both';
+        return response()->view('companies.index', compact('companies', 'title', 'filtered', 'locationFilter'));
+    }
 
-		$locationFilter = 'both';
-		return response()->view('companies.index', compact('companies','title','filtered','locationFilter'));
-	}
-
-	/*
+    /*
 	Function filter
 
 	 * Returns list of companies based on selection: with or without locations
@@ -71,434 +73,416 @@ class CompaniesController extends BaseController {
 	 */
 
 
-	public function filter(Request $request){
+    public function filter(Request $request)
+    {
 
 
-		if(request('locationFilter')=='both'){
-
-			return redirect()->route('company.index');
-		}
-		$filtered = $this->company->isFiltered(['companies'],['vertical']);
-		$companies=$this->company->getAllCompanies($filtered);
-
-
-		if(request('locationFilter') == 'nolocations'){
-
-			$companies = $companies->whereDoesntHave('locations')->get();
-
-			$title = 'Accounts without Locations';
-
-		}else{
-			$companies = $companies->whereHas('locations')->get();
-
-			$title = 'Accounts with Locations';
-
-		}
-
-		$locationFilter = request('locationFilter');
-
-		return response()->view('companies.index', compact('companies','title','filtered','locationFilter'));
-
-	}
+        if (request('locationFilter')=='both') {
+            return redirect()->route('company.index');
+        }
+        $filtered = $this->company->isFiltered(['companies'], ['vertical']);
+        $companies=$this->company->getAllCompanies($filtered);
 
 
-	/**
-	 * Show the form for creating a new company
-	 *
-	 * @return Response
-	 */
-	public function create()
-	{
+        if (request('locationFilter') == 'nolocations') {
+            $companies = $companies->whereDoesntHave('locations')->get();
 
-		$managers = $this->person->getPersonsWithRole($this->NAMRole);
+            $title = 'Accounts without Locations';
+        } else {
+            $companies = $companies->whereHas('locations')->get();
 
-		$filters = $this->getFilters();
+            $title = 'Accounts with Locations';
+        }
 
-		$servicelines = Serviceline::pluck('ServiceLine','id');
-			
-		return response()->view('companies.create',compact('managers','filters','servicelines'));
-	}
+        $locationFilter = request('locationFilter');
 
-	/**
-	 * Store a newly created company in storage.
-	 *
-	 * @return Response
-	 */
-
-	public function store(CompanyFormRequest $request)
-	{
-		$data = request()->all();
-		if($data['person_id']== 'null'){
-			$data['person_id']= null;
-		}
-
-		$company = $this->company->create($data);
-		$company->serviceline()->sync(request('serviceline'));
-
-		return redirect()->route('company.index');
-	}
-	/**
-	 * Show the form for editing the specified company.
-	 *
-	 * @param  int  $company id
-	 * @return Response
-	 */
-	public function edit($company)
-	{
-
-		$managers = $this->person->getPersonsWithRole($this->NAMRole);
-		
-		$company = $company
-					->where('id','=',$company->id)
-					->with('managedBy')
-					->with('serviceline')
-					->firstOrFail();
-
-		$servicelines = Serviceline::whereIn('id',$this->userServiceLines)
-			->pluck('ServiceLine','id');
-
-		$filters = $this->getFilters();
-
-		//$verticals = $this->searchfilter->industrysegments();
-		return response()->view('companies.edit', compact('company','managers','filters','servicelines'));
-	}
-
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  int  $company
-	 * @return Response
-	 */
-	public function update(CompanyFormRequest $request,$company)
-	{
-
-		if(request('person_id','=','null')){
-			 request()->request->remove('person_id');
-			
-		}
-		$this->company = $company;
-
-		$this->company->update( request()->all());
-		$this->company->serviceline()->sync( request('serviceline'));
-
-		return redirect()->route('company.index');
-	}
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-
-	public function destroy($company)
-	{
-		$this->company->destroy($company->id);
-
-		return redirect()->route('company.index');
-	}
+        return response()->view('companies.index', compact('companies', 'title', 'filtered', 'locationFilter'));
+    }
 
 
-	/**
-	 * Display list of the locations of specified company.
-	 *
-	 * @param  int  $id
-	 * @return View
-	 */
+    /**
+     * Show the form for creating a new company
+     *
+     * @return Response
+     */
+    public function create()
+    {
 
-	public function show(Request $request, $company)
-	{
-		
-		$data['state']=null;		
-		$data = $this->getCompanyViewData($company,$data);
-		return response()->view('companies.show', compact('data'));
+        $managers = $this->person->getPersonsWithRole($this->NAMRole);
 
-	}
+        $filters = $this->getFilters();
+
+        $servicelines = Serviceline::pluck('ServiceLine', 'id');
+            
+        return response()->view('companies.create', compact('managers', 'filters', 'servicelines'));
+    }
+
+    /**
+     * Store a newly created company in storage.
+     *
+     * @return Response
+     */
+
+    public function store(CompanyFormRequest $request)
+    {
+        $data = request()->all();
+        if ($data['person_id']== 'null') {
+            $data['person_id']= null;
+        }
+
+        $company = $this->company->create($data);
+        $company->serviceline()->sync(request('serviceline'));
+
+        return redirect()->route('company.index');
+    }
+    /**
+     * Show the form for editing the specified company.
+     *
+     * @param  int  $company id
+     * @return Response
+     */
+    public function edit($company)
+    {
+
+        $managers = $this->person->getPersonsWithRole($this->NAMRole);
+        
+        $company = $company
+                    ->where('id', '=', $company->id)
+                    ->with('managedBy')
+                    ->with('serviceline')
+                    ->firstOrFail();
+
+        $servicelines = Serviceline::whereIn('id', $this->userServiceLines)
+            ->pluck('ServiceLine', 'id');
+
+        $filters = $this->getFilters();
+
+        //$verticals = $this->searchfilter->industrysegments();
+        return response()->view('companies.edit', compact('company', 'managers', 'filters', 'servicelines'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  int  $company
+     * @return Response
+     */
+    public function update(CompanyFormRequest $request, $company)
+    {
+
+        if (request('person_id', '=', 'null')) {
+             request()->request->remove('person_id');
+        }
+        $this->company = $company;
+
+        $this->company->update(request()->all());
+        $this->company->serviceline()->sync(request('serviceline'));
+
+        return redirect()->route('company.index');
+    }
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+
+    public function destroy($company)
+    {
+        $this->company->destroy($company->id);
+
+        return redirect()->route('company.index');
+    }
 
 
-	private function getCompanyLocations($id,$segment,$company){
-		$locations = $this->locations->where('company_id','=',$id);
+    /**
+     * Display list of the locations of specified company.
+     *
+     * @param  int  $id
+     * @return View
+     */
 
-		if($segment){
+    public function show(Request $request, $company)
+    {
+        
+        $data['state']=null;
+        $data = $this->getCompanyViewData($company, $data);
+        return response()->view('companies.show', compact('data'));
+    }
 
-			$locations = $locations->where('segment','=',$segment);
-		}
-		$filtered = $company->isFiltered(['locations'],['segment','businesstype'],$company->vertical);
-		$keys = $this->company->getSearchKeys(['locations'],['segment','businesstype']);
 
-		if($filtered && count($keys)>0) {
-			
-			 $locations = $locations
+    private function getCompanyLocations($id, $segment, $company)
+    {
+        $locations = $this->locations->where('company_id', '=', $id);
 
-				 ->whereIn('segment', $keys)
-				 ->orWhere(function($query) use($data){
+        if ($segment) {
+            $locations = $locations->where('segment', '=', $segment);
+        }
+        $filtered = $company->isFiltered(['locations'], ['segment','businesstype'], $company->vertical);
+        $keys = $this->company->getSearchKeys(['locations'], ['segment','businesstype']);
 
-					$query->whereIn('businesstype', $data['keys']);
-				});
+        if ($filtered && count($keys)>0) {
+             $locations = $locations
 
-		}
-		
-		 return $locations->with('orders')->orderBy('state')->get();
+                 ->whereIn('segment', $keys)
+                 ->orWhere(function ($query) use ($data) {
 
-	}
+                    $query->whereIn('businesstype', $data['keys']);
+                 });
+        }
+        
+         return $locations->with('orders')->orderBy('state')->get();
+    }
 
 
 
 
-	private function getStatesInArray($locations)
-	{
-		 return $locations->unique('state')->sortBy('state')->pluck('state')->toArray();
-
-	}
-	/*
+    private function getStatesInArray($locations)
+    {
+         return $locations->unique('state')->sortBy('state')->pluck('state')->toArray();
+    }
+    /*
 	// Get all states that the company has locations in
 	 */
 
-	private function getCompanyStates($data) {
+    private function getCompanyStates($data)
+    {
 
-		$states = $this->locations->select('state')->distinct()
-				->where('company_id','=',$data['company']->id);
+        $states = $this->locations->select('state')->distinct()
+                ->where('company_id', '=', $data['company']->id);
 
-				if($data['filtered'] && count($data['keys'])>0){
+        if ($data['filtered'] && count($data['keys'])>0) {
+            $states=$states->whereIn('segment', $data['keys'])
+            ->orWhere(function ($query) use ($data) {
 
-					$states=$states->whereIn('segment', $data['keys'])
-					->orWhere(function($query) use($data){
+                $query->whereIn('businesstype', $data['keys']);
+            });
+        }
+        $data['states']= $states->orderBy('state')
+                ->pluck('state');
+                return $data;
+    }
 
-					$query->whereIn('businesstype', $data['keys']);
-					});
+    /**
+     * Display list of the companies in specified vertical
+     *
+     *
+     * @param text $vertical
+     * @return View
+     */
+    public function vertical($vertical)
+    {
 
-				}
-		$data['states']= $states->orderBy('state')
-				->pluck('state');
-				return $data;
+        $filtered = $this->company->isFiltered(['companies'], ['vertical']);
 
-
-	}
-
-	/**
-	 * Display list of the companies in specified vertical
-	 *
-	 *
-	 * @param text $vertical
-	 * @return View
-	 */
-	public function vertical($vertical)
-	{
-
-		$filtered = $this->company->isFiltered(['companies'],['vertical']);
-
-		$verticalname = SearchFilter::where('id','=',$vertical)->pluck('filter');
-		$title = 'All '. $verticalname[0]. ' Accounts';
-		$locationFilter = 'both';
-		$companies = $this->company
-		->with('managedBy','managedBy.userdetails','industryVertical','serviceline','countlocations')
-		->whereHas('serviceline', function($q) {
-			
-					    $q->whereIn('serviceline_id', $this->userServiceLines);
-
-					})
-		->where('vertical','=',$vertical)
-		->orderBy('companyname')
-		->get();
-		return response()->view('companies.index', compact('companies','title','filtered','locationFilter'));
-	}
+        $verticalname = SearchFilter::where('id', '=', $vertical)->pluck('filter');
+        $title = 'All '. $verticalname[0]. ' Accounts';
+        $locationFilter = 'both';
+        $companies = $this->company
+        ->with('managedBy', 'managedBy.userdetails', 'industryVertical', 'serviceline', 'countlocations')
+        ->whereHas('serviceline', function ($q) {
+            
+                        $q->whereIn('serviceline_id', $this->userServiceLines);
+        })
+        ->where('vertical', '=', $vertical)
+        ->orderBy('companyname')
+        ->get();
+        return response()->view('companies.index', compact('companies', 'title', 'filtered', 'locationFilter'));
+    }
 
 
-	/**
-	 * Display list of the locations of specified company in specified state.
-	 *
-	 * @param  int  $id
-	 * @param text $state
-	 * @return View
-	 */
-	public function stateselector(Request $request){
-		
-		$company = $this->company->findOrFail(request('id'));
-		$state = request('state');
-		$data = $this->getStateLocationsAll($company,$state);
-		return response()->view('companies.show', compact('data'));
-	}
+    /**
+     * Display list of the locations of specified company in specified state.
+     *
+     * @param  int  $id
+     * @param text $state
+     * @return View
+     */
+    public function stateselector(Request $request)
+    {
+        
+        $company = $this->company->findOrFail(request('id'));
+        $state = request('state');
+        $data = $this->getStateLocationsAll($company, $state);
+        return response()->view('companies.show', compact('data'));
+    }
 
-	public function stateselect($company,$state=null)
-	{
-		
-		$data = $this->getStateLocationsAll($company,$state);
-		
-		
-		return response()->view('companies.show', compact('data'));
-	}
-	private function getStateLocationsAll($company, $state){
-		
-		$data['state']= $state;
-		$data = $this->getCompanyViewData($company,$data);
-		return $data;
-	}
+    public function stateselect($company, $state = null)
+    {
+        
+        $data = $this->getStateLocationsAll($company, $state);
+        
+        
+        return response()->view('companies.show', compact('data'));
+    }
+    private function getStateLocationsAll($company, $state)
+    {
+        
+        $data['state']= $state;
+        $data = $this->getCompanyViewData($company, $data);
+        return $data;
+    }
 
-	private function getCompanyViewData($company,$data){
-
-
-		$data['company'] = $company->load('locations','locations.orders','managedBy','industryVertical');
-
-		$data['states'] = $this->getStatesInArray($data['company']->locations);
-
-		if($data['state']){
-			$data['company'] = $this->company->with(['locations' => function($query) use ($data) {
-    			$query->where('state', $data['state'])->with('orders');
- 			}])
- 			->with('managedBy','industryVertical')->findOrFail($company->id);
-		}
-		
-		if(! $data['company']->isLeaf()){
-			$data['related'] = $data['company']->getDescendants();
-		}else{
-			$data['related']=false;
-		}
-		$data['parent'] = $company->getAncestors();
-		$data['segments'] = $this->getCompanySegments($data['company']);
-		$data['filters'] = $this->searchfilter->vertical();
-		$data['mylocation'] = $this->locations->getMyPosition();
-		$data['count'] = $data['company']->locations->count();
-		$data = $this->company->limitLocations($data);
-
-		$data['segment']='All';
-		//$data['segment'] = $this->getSegmentCompanyInfo($data['company'],$segment);
-		$data['orders'] = $this->getLocationOrders($data['company']);
-		
-		$data['mywatchlist'] = $this->locations->getWatchList();
-		return $data;
-	}
+    private function getCompanyViewData($company, $data)
+    {
 
 
-	private function getLocationOrders($company){
-		$data = array();
+        $data['company'] = $company->load('locations', 'locations.orders', 'managedBy', 'industryVertical');
 
-		foreach ($company->locations as $location){
-			
-			if ($location->has('orders')){
-				$sum = 0;
-				foreach ($location->orders as $order){
-	
-					$sum += $order->orders;
-				}
-				$data[$location->id] = $sum;
-			}
-			
-		}
-		
-		return $data;
-	}
-	/**
-	 * Get locations of company in state information.
-	 *
-	 * @param  int  $id
-	 * @param text $state
-	 * @return array $locations
-	 */
+        $data['states'] = $this->getStatesInArray($data['company']->locations);
 
-	private function getStateLocations($company,$state,$data,$filtered){
+        if ($data['state']) {
+            $data['company'] = $this->company->with(['locations' => function ($query) use ($data) {
+                $query->where('state', $data['state'])->with('orders');
+            }])
+            ->with('managedBy', 'industryVertical')->findOrFail($company->id);
+        }
+        
+        if (! $data['company']->isLeaf()) {
+            $data['related'] = $data['company']->getDescendants();
+        } else {
+            $data['related']=false;
+        }
+        $data['parent'] = $company->getAncestors();
+        $data['segments'] = $this->getCompanySegments($data['company']);
+        $data['filters'] = $this->searchfilter->vertical();
+        $data['mylocation'] = $this->locations->getMyPosition();
+        $data['count'] = $data['company']->locations->count();
+        $data = $this->company->limitLocations($data);
 
-			$locations= $this->locations
-			->where('state','=',$state)
-			->where('company_id','=',$company->id);
-
-
-			if($filtered && count($data['keys']) >0){
-				$locations = $locations->whereIn('segment', $data['keys'])
-
-						->orWhereIn('businesstype', $data['keys']);
-			}
-
-			return $locations->get();
+        $data['segment']='All';
+        //$data['segment'] = $this->getSegmentCompanyInfo($data['company'],$segment);
+        $data['orders'] = $this->getLocationOrders($data['company']);
+        
+        $data['mywatchlist'] = $this->locations->getWatchList();
+        return $data;
+    }
 
 
-	}
+    private function getLocationOrders($company)
+    {
+        $data = [];
 
-	/**
-	* Get Company && State Meta information
-	 * @param  int  $id
-	 * @param text $state
-	 * @return array $data
-	*/
-	private function getStateCompanyInfo($state)
-	{
+        foreach ($company->locations as $location) {
+            if ($location->has('orders')) {
+                $sum = 0;
+                foreach ($location->orders as $order) {
+                    $sum += $order->orders;
+                }
+                $data[$location->id] = $sum;
+            }
+        }
+        
+        return $data;
+    }
+    /**
+     * Get locations of company in state information.
+     *
+     * @param  int  $id
+     * @param text $state
+     * @return array $locations
+     */
 
-		$state = trim($state);
-		$statedata = State::where('statecode','=',$state)->first();
+    private function getStateLocations($company, $state, $data, $filtered)
+    {
 
-		$data['state']  = $statedata->fullstate;
-		$data['statecode'] = $statedata->statecode;
-		$data['lat'] = $statedata->lat;
-		$data['lng'] = $statedata->lng;
-		return $data;
-	}
-
-	/**
-	 * Get company segments (location filters)
-	 * @param  Integer $company Company ID
-	 * @return Array    Company segments (filters)
-	 */
-	private function getCompanySegments($company)
-	{
-
-		$segments = array_keys($company->locations->groupBy('segment')->toArray());
-
-	   return $this->searchfilter->whereIn('id',$segments)->pluck('filter','id')->toArray();
-	}
-
-	/**
-	* Get State Meta information
-	 * @param  int  $id
-	 * @param text $state
-	 * @return array $data
-	*/
-	private function getSegmentCompanyInfo($company,$segment)
-	{
-
-		if(! $segment){
-			return 'All';
-		}else{
-			return $this->searchfilter->select('filter')->findOrFail($segment)->filter;
-		}
+            $locations= $this->locations
+            ->where('state', '=', $state)
+            ->where('company_id', '=', $company->id);
 
 
+        if ($filtered && count($data['keys']) >0) {
+            $locations = $locations->whereIn('segment', $data['keys'])
 
-	}
+                ->orWhereIn('businesstype', $data['keys']);
+        }
+
+            return $locations->get();
+    }
+
+    /**
+    * Get Company && State Meta information
+     * @param  int  $id
+     * @param text $state
+     * @return array $data
+    */
+    private function getStateCompanyInfo($state)
+    {
+
+        $state = trim($state);
+        $statedata = State::where('statecode', '=', $state)->first();
+
+        $data['state']  = $statedata->fullstate;
+        $data['statecode'] = $statedata->statecode;
+        $data['lat'] = $statedata->lat;
+        $data['lng'] = $statedata->lng;
+        return $data;
+    }
+
+    /**
+     * Get company segments (location filters)
+     * @param  Integer $company Company ID
+     * @return Array    Company segments (filters)
+     */
+    private function getCompanySegments($company)
+    {
+
+        $segments = array_keys($company->locations->groupBy('segment')->toArray());
+
+        return $this->searchfilter->whereIn('id', $segments)->pluck('filter', 'id')->toArray();
+    }
+
+    /**
+    * Get State Meta information
+     * @param  int  $id
+     * @param text $state
+     * @return array $data
+    */
+    private function getSegmentCompanyInfo($company, $segment)
+    {
+
+        if (! $segment) {
+            return 'All';
+        } else {
+            return $this->searchfilter->select('filter')->findOrFail($segment)->filter;
+        }
+    }
 
 
-	/**
-	 * Display map of the locations of specified company in specified state.
-	 *
-	 * @param  int  $id
-	 * @param text $state
-	 * @return View
-	 */
-	public function statemap($id,$state)
-	{
+    /**
+     * Display map of the locations of specified company in specified state.
+     *
+     * @param  int  $id
+     * @param text $state
+     * @return View
+     */
+    public function statemap($id, $state)
+    {
 
-		// Check that user can view company
-		// based on user serviceline association
+        // Check that user can view company
+        // based on user serviceline association
 
-		if (! $company = $this->company->checkCompanyServiceLine($id,$this->userServiceLines))
-		{
-			return redirect()->route('company.index');
-		}
-		$data = $this->getStateCompanyInfo($state);
+        if (! $company = $this->company->checkCompanyServiceLine($id, $this->userServiceLines)) {
+            return redirect()->route('company.index');
+        }
+        $data = $this->getStateCompanyInfo($state);
 
-		return response()->view('companies.statemap', compact('data'));
-	}
+        return response()->view('companies.statemap', compact('data'));
+    }
 
-	private function getFilters(){
+    private function getFilters()
+    {
 
-		return SearchFilter::where('type','!=','group')
-		->where('searchtable','=','companies')
-		->where('searchcolumn','=','vertical')
-		->orderBy('lft')
-		->get();
-		//$verticals->getLeaves()->where('searchcolumn','=','vertical');
+        return SearchFilter::where('type', '!=', 'group')
+        ->where('searchtable', '=', 'companies')
+        ->where('searchcolumn', '=', 'vertical')
+        ->orderBy('lft')
+        ->get();
+        //$verticals->getLeaves()->where('searchcolumn','=','vertical');
+    }
 
-	}
 
-
-	/*
+    /*
 	 * Function getWatchList
 	 *
 	 * Create array of locations of logged in users watchlist
@@ -506,27 +490,28 @@ class CompaniesController extends BaseController {
 	 * @param () none
 	 * @return (array) mywatchlist
 	 */
-	public function getWatchList() {
-		$mywatchlist = array();
-		$watchlist = $this->user->where('id','=',\Auth::id())->with('watching')->get();
-		foreach($watchlist as $watching) {
-			foreach($watching->watching as $watched) {
-				$mywatchlist[]=$watched->id;
-			}
-		}
-		return $mywatchlist;
-	}
+    public function getWatchList()
+    {
+        $mywatchlist = [];
+        $watchlist = $this->user->where('id', '=', \Auth::id())->with('watching')->get();
+        foreach ($watchlist as $watching) {
+            foreach ($watching->watching as $watched) {
+                $mywatchlist[]=$watched->id;
+            }
+        }
+        return $mywatchlist;
+    }
 
 
-	/*
+    /*
 
 	Export all account with manager details to Excel
 	 */
-	public function exportAccounts()
-	{
-		
-		return Excel::download(new CompaniesExport(), 'Companies.csv');
-		/*Excel::download('AllCompanies',function($excel){
+    public function exportAccounts()
+    {
+        
+        return Excel::download(new CompaniesExport(), 'Companies.csv');
+        /*Excel::download('AllCompanies',function($excel){
 			$excel->sheet('Companies',function($sheet) {
 				$companies = $this->company
 
@@ -541,24 +526,23 @@ class CompaniesController extends BaseController {
 				$sheet->loadview('companies.exportcompanies',compact('companies'));
 			});
 		})->download('csv');*/
-
-	}
-	/*
+    }
+    /*
 	Generate the form to choose companies to download locations
 	 */
 
-	public function export($company){
-		$companies = $this->company
-						->whereHas('serviceline', function($q){
-							    $q->whereIn('serviceline_id', $this->userServiceLines);
+    public function export($company)
+    {
+        $companies = $this->company
+                        ->whereHas('serviceline', function ($q) {
+                                $q->whereIn('serviceline_id', $this->userServiceLines);
+                        })
+                        ->orderBy('companyname')->pluck('companyname', 'id');
 
-							})
-						->orderBy('companyname')->pluck('companyname','id');
+        return response()->view('locations.export', compact('companies'));
+    }
 
-		return response()->view('locations.export',compact('companies'));
-	}
-
-	/*
+    /*
 	 * Function locationsexport
 	 *
 	 * Export locations of chosen company
@@ -566,13 +550,14 @@ class CompaniesController extends BaseController {
 	 * @param () Company
 	 * @return (array) mywatchlist
 	 */
-	public function locationsexport(Request $request, $company) {
+    public function locationsexport(Request $request, $company)
+    {
 
 
 
-		return Excel::download(new CompanyWithLocationsExport($company), $company->companyname. " locations");
+        return Excel::download(new CompanyWithLocationsExport($company), $company->companyname. " locations");
 
-		/*$id = request('company');
+        /*$id = request('company');
 
 		$company = $this->company->findOrFail($id);
 		Excel::download($company->companyname. " locations",function($excel) use($id){
@@ -588,11 +573,5 @@ class CompaniesController extends BaseController {
 				$sheet->loadview('locations.exportlocations',compact('company'));
 			});
 		})->download('csv');*/
-
-
-
-	}
-
-
-
+    }
 }

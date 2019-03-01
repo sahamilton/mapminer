@@ -24,12 +24,11 @@ class AssignAddressesToBranches implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($branches,Address $address)
+    public function __construct($branches, Address $address)
     {
         $this->branch = $branches;
 
-       $this->address = $address;
-        
+        $this->address = $address;
     }
 
     /**
@@ -40,9 +39,8 @@ class AssignAddressesToBranches implements ShouldQueue
     public function handle()
     {
        
-        foreach ($this->branch as $branch)
-            {
-                 return $this->address->assignedToBranch()->attach($branch->id,['status_id'=>1]);
-            }
+        foreach ($this->branch as $branch) {
+                 return $this->address->assignedToBranch()->attach($branch->id, ['status_id'=>1]);
+        }
     }
 }

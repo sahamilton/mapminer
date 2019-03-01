@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class WebLeadImport extends Imports
 {
-	public $requiredFields = [
+    public $requiredFields = [
             'businessname',
             'city',
             'state',
@@ -17,8 +17,8 @@ class WebLeadImport extends Imports
             'time_frame',
             
             ];
-      public $table = 'webleads';
-	public function __construct(){
-
-	}
+    public $table = 'webleads';
+    public function __construct()
+    {
+    }
 }

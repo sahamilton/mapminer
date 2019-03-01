@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Mail;
+
 use App\Person;
 use App\Project;
 use Illuminate\Bus\Queueable;
@@ -24,8 +25,6 @@ class NotifyProjectTransfer extends Mailable
         $this->project = $project;
         $this->person = $person;
         $this->transferor = $transferor;
-       
-        
     }
 
     /**
@@ -38,5 +37,4 @@ class NotifyProjectTransfer extends Mailable
         
         return $this->markdown('emails.projecttransfernotify')->to($this->person->userdetails->email, $this->person->postName())->subject('Project Transferred');
     }
-
 }

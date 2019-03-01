@@ -17,12 +17,11 @@ class ExampleTest extends TestCase
     public function testBasicTest()
     {
        
-    $this->browse(function ($first) {
-    $first->loginAs(User::find(1))
-          ->visit('/home')
-          ->waitForText('National Account')
-          ->assertSee('Account Views');
-});
-       
+        $this->browse(function ($first) {
+            $first->loginAs(User::find(1))
+              ->visit('/home')
+              ->waitForText('National Account')
+              ->assertSee('Account Views');
+        });
     }
 }

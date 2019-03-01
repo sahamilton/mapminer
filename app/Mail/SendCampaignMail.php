@@ -19,7 +19,6 @@ class SendCampaignMail extends Mailable
     public function __construct($data)
     {
         $this->data = $data;
-
     }
 
     /**
@@ -29,6 +28,7 @@ class SendCampaignMail extends Mailable
      */
     public function build()
     {
-        return $this->markdown('salesactivity.campaignemail')->subject($this->data['activity']->title)->to($this->data['sales']->userdetails->email, $this->data['sales']->firstname . " " . $this->data['sales']->lastname);;
+        return $this->markdown('salesactivity.campaignemail')->subject($this->data['activity']->title)->to($this->data['sales']->userdetails->email, $this->data['sales']->firstname . " " . $this->data['sales']->lastname);
+        ;
     }
 }

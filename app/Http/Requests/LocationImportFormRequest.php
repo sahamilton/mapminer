@@ -26,7 +26,7 @@ class LocationImportFormRequest extends FormRequest
     public function rules()
     {
         return [
-           'upload' => 'required|file|mimetypes:'.implode(",",$this->mimetypes), 
+           'upload' => 'required|file|mimetypes:'.implode(",", $this->mimetypes),
            
         ];
     }

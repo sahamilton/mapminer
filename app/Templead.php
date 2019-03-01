@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Geocoder\Laravel\Facades\Geocoder;
+
 class Templead extends Model
 {
     use Geocode;

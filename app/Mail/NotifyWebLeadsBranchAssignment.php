@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Mail;
+
 use App\Person;
 use App\Address;
 use App\Branch;
@@ -25,8 +26,6 @@ class NotifyWebLeadsBranchAssignment extends Mailable
     {
         $this->lead = $lead;
         $this->branch = $branch;
-     
-       
     }
 
     /**
@@ -36,12 +35,9 @@ class NotifyWebLeadsBranchAssignment extends Mailable
      */
     public function build()
     {
-        foreach($this->branch->manager as $this->manager)
-            
+        foreach ($this->branch->manager as $this->manager) {
              return $this->markdown('emails.webleadsbranchnotify')
              ->to($this->manager->userdetails->email, $this->manager->postName())->subject('New Lead');
-         
-
+        }
     }
-
 }

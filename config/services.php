@@ -42,5 +42,5 @@ return [
         'user'=>env('CM_USER'),
         'secret'=>env('CM_SECRET'),
         'url'=>env('CM_URL'),
-     ],   
+     ],
 ];

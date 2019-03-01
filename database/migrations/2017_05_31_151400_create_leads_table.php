@@ -26,16 +26,13 @@ class CreateLeadsTable extends Migration
             $table->text('description')->nullable();
             $table->date('datefrom');
             $table->date('dateto');
-            $table->decimal('lat',12,7)->nullable();
-            $table->decimal('lng',12,7)->nullable();
+            $table->decimal('lat', 12, 7)->nullable();
+            $table->decimal('lng', 12, 7)->nullable();
             $table->integer('lead_source_id')->unsigned();
             $table->softDeletes();
             $table->timestamps();
             $table->index('lead_source_id');
-            
-
         });
-        
     }
 
     /**

@@ -20,12 +20,12 @@ return [
                 env('GOOGLE_MAPS_API_KEY'),
             ],
            
-        ],
+         ],
         
-        GoogleMaps::class => [
+         GoogleMaps::class => [
             'us',
             env('GOOGLE_MAPS_API_KEY'),
-        ],
+         ],
     ],
     'adapter'  => Client::class,
 ];

@@ -24,8 +24,8 @@ class CreateprojectsTable extends Migration
             $table->string('project_zipcode')->nullable();
             $table->string('project_county_name')->nullable();
             $table->string('project_county_code')->nullable();
-            $table->decimal('project_lat',20,14)->nullable();
-            $table->decimal('project_lng',20,14)->nullable();
+            $table->decimal('project_lat', 20, 14)->nullable();
+            $table->decimal('project_lng', 20, 14)->nullable();
             $table->string('structure_header')->nullable();
             $table->string('project_type')->nullable();
             $table->string('stage')->nullable();
@@ -64,8 +64,6 @@ class CreateprojectsTable extends Migration
             $table->string('gc_phone')->nullable();
 
             $table->timestamps();
-
-
         });
     }
 

@@ -7,6 +7,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\LeadSource;
+
 class NotifySenderLeadsAssignment extends Mailable
 {
     use Queueable, SerializesModels;
@@ -17,11 +18,10 @@ class NotifySenderLeadsAssignment extends Mailable
      *
      * @return void
      */
-    public function __construct($data,LeadSource $leadsource)
+    public function __construct($data, LeadSource $leadsource)
     {
         $this->data = $data;
         $this->leadsource = $leadsource;
-      
     }
 
     /**
@@ -33,6 +33,6 @@ class NotifySenderLeadsAssignment extends Mailable
     {
         return $this->markdown('emails.sendersleads')
           ->subject('Branches Notified')
-          ->from('salesoperations@tbmapminer.com','Sales Operations');
+          ->from('salesoperations@tbmapminer.com', 'Sales Operations');
     }
 }

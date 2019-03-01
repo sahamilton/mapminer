@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\ProjectCompany;
 use Illuminate\Http\Request;
 
@@ -8,7 +9,8 @@ class ProjectCompanyController extends Controller
 {
     public $projectcompany;
 
-    public function __construct(ProjectCompany $projectcompany){
+    public function __construct(ProjectCompany $projectcompany)
+    {
         $this->projectcompany = $projectcompany;
     }
 
@@ -52,9 +54,9 @@ class ProjectCompanyController extends Controller
     public function show($id)
     {
         $projectcompany = $this->projectcompany
-        ->with('projects','employee')
+        ->with('projects', 'employee')
         ->findOrFail($id);
-       return response()->view('projectcompanies.show',compact('projectcompany'));
+        return response()->view('projectcompanies.show', compact('projectcompany'));
     }
 
     /**

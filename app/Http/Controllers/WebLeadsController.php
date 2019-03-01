@@ -13,21 +13,19 @@ use App\Mail\NotifyWebleadsAssignment;
 use App\Mail\NotifyWebleadsBranchAssignment;
 use App\Http\Requests\WebleadFormRequest;
 
-
-class WebleadsController  extends ImportController
+class WebleadsController extends ImportController
 {
     public $salesroles = [5,6,7,8];
     public $person;
     public $branch;
     public $lead;
     
-    public function __construct(Address $address, LeadSource $leadsource, Person $person, Branch $branch){
+    public function __construct(Address $address, LeadSource $leadsource, Person $person, Branch $branch)
+    {
         $this->address = $address;
         $this->leadsources = $leadsource;
         $this->person = $person;
         $this->branch = $branch;
-
-        
     }
     /*public function index(){
            
@@ -96,26 +94,23 @@ class WebleadsController  extends ImportController
         return redirect()->route('webleads.index');
     }*/
     
-    public function assignLeads(Request $request){
+    public function assignLeads(Request $request)
+    {
 
         $address = $this->address->findOrFail(request('address_id'));
-        foreach(request('branch') as $branch){
+        foreach (request('branch') as $branch) {
                 $address->assignedToBranch()->attach($branch, ['status_id' => 1]);
-                
-            }
+        }
 
-        if(request('notify')){
-
-            $branches = $this->branch->with('manager','manager.userdetails')->whereIn('id',request('branch'))->get();
+        if (request('notify')) {
+            $branches = $this->branch->with('manager', 'manager.userdetails')->whereIn('id', request('branch'))->get();
            
            
-            foreach ($branches as $branch){
-                
-                Mail::queue(new NotifyWebleadsBranchAssignment($lead,$branch,$email));
+            foreach ($branches as $branch) {
+                Mail::queue(new NotifyWebleadsBranchAssignment($lead, $branch, $email));
             }
-       
-        }  
-        return redirect()->route('address.show',$address->id);
+        }
+        return redirect()->route('address.show', $address->id);
     }
    /* private function getBranchEmails($branch){
         $emails = array();
@@ -252,4 +247,3 @@ class WebleadsController  extends ImportController
 
     }*/
 }
-

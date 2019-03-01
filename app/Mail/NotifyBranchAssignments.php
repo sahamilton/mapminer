@@ -31,9 +31,6 @@ class NotifyBranchAssignments extends Mailable
         // we have to create a unique new time expire token
         $this->user = User::findOrFail($person->user_id);
         $this->token = $this->user->setAccess();
-
-        
-        
     }
 
     /**
@@ -45,7 +42,7 @@ class NotifyBranchAssignments extends Mailable
     {
         return $this->markdown('emails.branches.confirmation')
             ->subject('Please confirm your branch associations')
-            ->withSwiftMessage(function($message) {
+            ->withSwiftMessage(function ($message) {
                 $headers = $message->getHeaders();
                 $headers->addTextHeader("X-Mailgun-Variables", '{"type": "branch-confirmation"}');
                 $headers->addTextHeader("X-Mailgun-Tag", "branch-confirmation");

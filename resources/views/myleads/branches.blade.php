@@ -1,23 +1,35 @@
 @extends('site.layouts.default')
 @section('content')
 
-<h1>MyBranches Leads</h1>
+<h1>{{$title}}</h1>
+<p><a href="{{route('dashboard.index')}}">Return To Branch Dashboard</a></p>
+@if(count($myBranches)>1)
 
+<div class="col-sm-4">
+<form name="selectbranch" method="post" action="{{route('leads.branch')}}" >
+@csrf
 
+ <select class="form-control input-sm" id="branchselect" name="branch" onchange="this.form.submit()">
+  @foreach ($myBranches as $key=>$branch)
+    <option {{$data['branches']->first()->id == $key ? 'selected' : ''}} value="{{$key}}">{{$branch}}</option>
+  @endforeach 
+</select>
+
+</form>
+</div>
+@endif
  <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
 
     <th>Company</th>
     <th>Business Name</th>
     <th>Address</th>
-    
-    <th>Branches</th>
-    <th>Reassign</th>
+    <th>Distance</th>
 
     </thead>
     <tbody>
 
-        @foreach($leads as $lead)
+        @foreach($data['leads'] as $lead)
 
     <tr>
         <td>
@@ -27,27 +39,7 @@
         </td>
         <td>{{$lead->businessname}}</td>
         <td>{{$lead->fullAddress()}}</td>
-        <td>
-                @if($lead->assignedToBranch->count()>0)
-                @php $branchesassigned = $lead->assignedToBranch->pluck('id')->toArray(); @endphp
-              @else
-                       @php  $branchesassigned = array(); @endphp
-                @endif
-        @foreach ($myBranches as $id=>$branchname)
-                <li><input type="checkbox"
-                @if(in_array($id,$branchesassigned))
-                checked
-                @endif
-                />{{$branchname}} distance </li>
-
-        @endforeach
-            
-        </td>
-           
-
-        <td>
-                Reassign
-        </td>
+        <td>distance</td>
 
 
 

@@ -18,7 +18,7 @@ class associateIndustries implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($people,array $validIndustries)
+    public function __construct($people, array $validIndustries)
     {
         $this->people = $people;
     }
@@ -30,13 +30,13 @@ class associateIndustries implements ShouldQueue
      */
     public function handle()
     {
-        foreach ($this->people as $peep){
+        foreach ($this->people as $peep) {
                 // send to queue
-                $industries = explode(",",$peep->industry);
-                $ids = array_keys(array_intersect($validIndustries,$industries));
+                $industries = explode(",", $peep->industry);
+                $ids = array_keys(array_intersect($validIndustries, $industries));
 
                 $person = Person::findOrFail($peep->person_id);
                 $person->industryfocus()->sync($ids);
-            }
+        }
     }
 }

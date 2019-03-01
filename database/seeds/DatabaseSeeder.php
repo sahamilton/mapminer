@@ -13,7 +13,6 @@ class DatabaseSeeder extends Seeder
     {
          Model::unguard();
 
-  		$this->call(ActivityTable::class);
-  		
+        $this->call(ActivityTable::class);
     }
 }

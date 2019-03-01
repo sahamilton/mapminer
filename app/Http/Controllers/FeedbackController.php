@@ -16,7 +16,8 @@ class FeedbackController extends Controller
 {
     public $feedback;
 
-    public function __construct(Feedback $feedback){
+    public function __construct(Feedback $feedback)
+    {
 
         $this->feedback = $feedback;
     }
@@ -29,10 +30,10 @@ class FeedbackController extends Controller
      */
     public function index()
     {
-        $feedback_open = $this->feedback->with('providedBy','category')->open()->withCount('comments')->get();
-        $feedback_closed = $this->feedback->with('providedBy','category')->closed()->withCount('comments')->get();
+        $feedback_open = $this->feedback->with('providedBy', 'category')->open()->withCount('comments')->get();
+        $feedback_closed = $this->feedback->with('providedBy', 'category')->closed()->withCount('comments')->get();
 
-        return response()->view('feedback.index',compact('feedback_open','feedback_closed'));
+        return response()->view('feedback.index', compact('feedback_open', 'feedback_closed'));
     }
 
     /**
@@ -59,17 +60,15 @@ class FeedbackController extends Controller
         $feedback = $this->feedback->create($data);
         
        
-        if(auth()->user()->hasRole(['admin','sales_operations'])){
-        
+        if (auth()->user()->hasRole(['admin','sales_operations'])) {
             return redirect()->route('feedback.index')->withMessage("Feedback entered");
-        }else{
-            $feedback->load('providedBy','category');
+        } else {
+            $feedback->load('providedBy', 'category');
             
             Mail::queue(new FeedBackResponseEmail($feedback));
         
-            return redirect()->back()->withMessage("Thanks,". $feedback->providedBy->person->firstname. " for your feedback"); 
+            return redirect()->back()->withMessage("Thanks,". $feedback->providedBy->person->firstname. " for your feedback");
         }
-        
     }
 
     /**
@@ -80,8 +79,8 @@ class FeedbackController extends Controller
      */
     public function show(Feedback $feedback)
     {
-        $feedback->load('providedBy','category','comments','comments.by');
-        return response()->view('feedback.show',compact('feedback'));
+        $feedback->load('providedBy', 'category', 'comments', 'comments.by');
+        return response()->view('feedback.show', compact('feedback'));
     }
 
     /**
@@ -92,8 +91,8 @@ class FeedbackController extends Controller
      */
     public function edit(Feedback $feedback)
     {
-         $feedback->load('providedBy','category');
-         return response()->view('feedback.edit',compact('feedback'));
+         $feedback->load('providedBy', 'category');
+         return response()->view('feedback.edit', compact('feedback'));
     }
 
     /**
@@ -141,10 +140,11 @@ class FeedbackController extends Controller
         ->cc(config('mapminer.developer_email'))
         ->send(new FeedbackOpened($feedback));
 
-        return redirect()->route('feedback.show',$feedback->id)->withMessage('Feedback reopened. Add a comment');
+        return redirect()->route('feedback.show', $feedback->id)->withMessage('Feedback reopened. Add a comment');
     }
 
-    public function export(){
+    public function export()
+    {
 
         return Excel::download(new FeedbackExport(), 'AllFeedback.csv');
     }

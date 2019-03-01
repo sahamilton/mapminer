@@ -9,7 +9,7 @@
 
 	</thead>
 	<tbody>
-		@foreach ($contacts as $contact)
+		@foreach ($data['contacts'] as $contact)
 
 			<tr>
 				

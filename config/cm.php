@@ -36,7 +36,7 @@ return [
     |
     */
 
-    'app_version' => env('CM_APP_VERSION','v1'),
+    'app_version' => env('CM_APP_VERSION', 'v1'),
 
     /*
     |--------------------------------------------------------------------------
@@ -54,5 +54,5 @@ return [
     |
     |
     */
-    'app_endpoint'=>env('CM_URL','https://api.constructionmonitor.com/v1/'),
+    'app_endpoint'=>env('CM_URL', 'https://api.constructionmonitor.com/v1/'),
 ];

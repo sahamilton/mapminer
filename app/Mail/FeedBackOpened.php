@@ -7,6 +7,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Feedback;
 use App\User;
+
 class FeedbackOpened extends Mailable
 {
     use Queueable, SerializesModels;
@@ -21,7 +22,6 @@ class FeedbackOpened extends Mailable
     {
         $this->feedback = $feedback;
         $this->user = User::with('person')->findOrFail(auth()->user()->id);
-
     }
 
     /**
@@ -33,7 +33,5 @@ class FeedbackOpened extends Mailable
     {
          return $this->markdown('emails.feedbackopened')
         ->subject('Feedback Reopened');
-
-        
     }
 }

@@ -1,42 +1,39 @@
-<?php 
+<?php
 
 namespace App\Observers;
-Use Mail;
+
+use Mail;
 use App\User;
 use App\Mail\UserChanges;
 use App\Mail\UserNotification;
 use App\Notifications\UserUpdate;
 
-class UserObserver 
+class UserObserver
 {
     /**
-     * Those are the names of the observable function  
-     * 
+     * Those are the names of the observable function
+     *
      * @author Ajay Kumar
      */
 
     private $observableEventNames  = [
-                "creating", 
-                "created", 
-                "updating", 
+                "creating",
+                "created",
+                "updating",
                 "updated",
-                "deleting", 
-                "deleted", 
-                "saving", 
+                "deleting",
+                "deleted",
+                "saving",
                 "saved",
-                "restoring", 
+                "restoring",
                 "restored",
             ];
 
 
 
-   public function created(User $user )
+    public function created(User $user)
     {
        
-       // Mail::queue(new UserNotification($user));
+        // Mail::queue(new UserNotification($user));
     }
-
-    
-   
-
 }

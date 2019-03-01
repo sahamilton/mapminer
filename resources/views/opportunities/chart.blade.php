@@ -9,14 +9,14 @@
     function drawSeriesChart() {
 
       var data = google.visualization.arrayToDataTable([
-        ['Branch', 'Activities', 'Opportunities',     'Closes'],
+        ['Branch', 'Sales Appts', 'Opportunities Won',     'Closes'],
         {!! $data !!}
       ]);
 
       var options = {
-        title: 'Correlation closes to activities and opportunities',
-        hAxis: {title: 'Opportunities'},
-        vAxis: {title: 'Activities'},
+        title: 'Correlation closes / won to sales appointments and opportunities',
+        hAxis: {title: 'Sales Appts'},
+        vAxis: {title: ' Won'},
         bubble: {textStyle: {fontSize: 11}}
       };
 

@@ -22,7 +22,6 @@ class associateBranches implements ShouldQueue
     public function __construct(UserImport $person)
     {
         $this->person = $person;
-
     }
 
     /**
@@ -33,13 +32,12 @@ class associateBranches implements ShouldQueue
     public function handle()
     {
         
-                $branches = explode(",",str_replace(' ','',$this->person->branches));
+                $branches = explode(",", str_replace(' ', '', $this->person->branches));
               
-                foreach ($branches as $branch){
-                    $data[$branch]=['role_id' => $this->person->role_id]; 
-                }
+        foreach ($branches as $branch) {
+            $data[$branch]=['role_id' => $this->person->role_id];
+        }
                 $person = Person::findOrFail($person->person_id);
                 $person->branchesServiced()->sync($data);
-            
     }
 }

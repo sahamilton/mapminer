@@ -10,7 +10,8 @@ class LeadContact extends Contact
 
     protected $fillable = ['lead_id','contact','contacttitle','description','contactphone','contactemail'];
 
-    public function relatedlead(){
-      return $this->hasOne(Lead::class);
+    public function relatedlead()
+    {
+        return $this->hasOne(Lead::class);
     }
 }
