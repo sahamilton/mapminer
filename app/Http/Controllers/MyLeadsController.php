@@ -159,6 +159,7 @@ class MyLeadsController extends BaseController
      */
     public function show()
     {
+        
     }
 
     /**
@@ -169,6 +170,7 @@ class MyLeadsController extends BaseController
      */
     public function edit()
     {
+
     }
 
     /**

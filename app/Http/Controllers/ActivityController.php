@@ -66,6 +66,9 @@ class ActivityController extends Controller
         $title= $data['branches']->first()->branchname . " activities";
         return response()->view('activities.index', compact('data', 'myBranches','title'));
     }
+    
+
+
     private function getBranchActivities($branch)
     {
         $team = $this->person->myBranchTeam([$branch])->toArray();
@@ -86,7 +89,7 @@ class ActivityController extends Controller
 
     private function getBranches(Array $branches)
        {
-        return  $this->branch->with('opportunities', 'leads', 'manager')
+        return  $this->branch->with( 'manager')
             ->whereIn('id', $branches)
             ->get();
        }
