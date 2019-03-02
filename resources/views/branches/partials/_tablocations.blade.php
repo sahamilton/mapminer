@@ -1,7 +1,7 @@
 <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
     	<th>Company Name</th> 
-		<th>Business Name</th> 
+		<th>Company Name</th> 
 		<th>Industry Vertical</th>
 		<th>Street </th> 
 		<th>City </th> 

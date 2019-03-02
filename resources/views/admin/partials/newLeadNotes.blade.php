@@ -5,7 +5,7 @@
   class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
       <th>Company</th>
-      <th>Business</th>
+      <th>Company</th>
       <th>Address</th>
       <th>Note</th>
       <th>Date</th>

@@ -11,7 +11,7 @@
 		<table id ='sorttable{{$key}}' class='table table-striped table-bordered table-condensed table-hover'>
 			<thead>
 				<th>Created</th>
-				<th>Business Name</th>
+				<th>Company Name</th>
 				<th>Note</th>
 			</thead>
 			<tbody>

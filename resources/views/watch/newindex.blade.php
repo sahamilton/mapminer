@@ -11,7 +11,7 @@
 
 <table id='sorttable' class ='table table-bordered table-striped table-hover dataTable'><thead>
 	<thead>
-		<th>Business Name</th>
+		<th>Company Name</th>
 		<th>National Acct</th>
 		<th>Address</th>
 		<th>City</th>

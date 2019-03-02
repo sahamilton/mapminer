@@ -12,7 +12,7 @@
 
     <th>Date</th>
     <th>Activity</th>
-    <th>Business</th>
+    <th>Company</th>
     <th>Contact</th>
     <th>Notes</th>
     <th>Follow-Up</th>

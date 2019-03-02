@@ -1,7 +1,7 @@
 <table id ='sorttable'  class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
     	<th>Watch</th>
-		<th>Business Name</th>
+		<th>Company Name</th>
 		<th>Customer ID</th>
     </thead>
     <tbody>

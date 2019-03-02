@@ -8,7 +8,7 @@
     <thead>
 
     <th>Company</th>
-    <th>Business Name</th>
+    <th>Company Name</th>
     <th>Address</th>
     
     <th>Branches</th>

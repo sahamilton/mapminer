@@ -8,7 +8,7 @@
     <thead>
      
     <th>Company</th>
-    <th>Business Name</th>
+    <th>Company Name</th>
     <th>Location</th>
 
     <th>Closest Reps (in miles)</th>

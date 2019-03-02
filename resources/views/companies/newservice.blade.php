@@ -16,7 +16,7 @@
 <table id ='sorttable'  class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
 
-		<th>Business Name</th>
+		<th>Company Name</th>
 		<th>Street</th>
 		<th>City</th>
 		<th>State</th>
