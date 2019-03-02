@@ -69,7 +69,7 @@ class BranchDashboardController extends Controller
             return redirect()->route('user.show',auth()->user()->id)->withWarning("You are not assigned to any branches. You can assign yourself here or contact Sales Ops");
         }
         if ((! auth()->user()->hasRole('branch_manager') && $this->person->myTeam()->count() >1 )) {
-            $data['branches'] = $this->getSummaryBranchData(array_keys($myBranches));
+           $data['branches'] = $this->getSummaryBranchData(array_keys($myBranches));
 
            $data['funnel'] = $this->getBranchFunnel($myBranches);
            $data['chart'] = $this->getChartData(array_keys($myBranches));
@@ -169,19 +169,19 @@ class BranchDashboardController extends Controller
     {
        return  $this->branch
                     ->whereIn('id',$branches)
-                    ->getActivitiesByType()
+                    ->getActivitiesByType(4)
                     ->withCount('leads')
                     ->withCount(       
-                            ['opportunities',
-                                'opportunities as won'=>function($query){
+                            ['opportunities as won'=>function($query){
                         
                                 $query->whereClosed(1);
-                            },
-                            'opportunities as lost'=>function($query){
-                                $query->whereClosed(2);
                             }]
                         )
+                    ->with(['opportunities'=>function ($q){
+                      $q->whereClosed(1);
+                    }])
                     ->get();
+                    
        
       }
 
@@ -192,9 +192,8 @@ class BranchDashboardController extends Controller
 
         foreach ($results as $branch){
 
-          $winloss = $branch->won + $branch->lost;
-          
-          $string = $string . "[\"".$branch->branchname ."\",  ".$branch->activities->count() .",  ".$branch->opportunities_count.", ".$winloss ."],";
+         
+          $string = $string . "[\"".$branch->branchname ."\",  ".$branch->activities->count() .",  ".$branch->won.", ".$branch->opportunities->sum('value') ."],";
          
 
         }

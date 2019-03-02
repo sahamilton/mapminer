@@ -9,7 +9,7 @@
     function drawSeriesChart() {
 
       var data = google.visualization.arrayToDataTable([
-        ['Branch', 'Sales Appts', 'Opportunities Won',     'Closes'],
+        ['Branch', 'Sales Appts', 'Opportunities Won',     'Value'],
         {!! $data !!}
       ]);
 
