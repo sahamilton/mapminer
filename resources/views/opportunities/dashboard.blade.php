@@ -45,7 +45,7 @@
 <strong>Opportunities ({{$data['opportunities'] ->count()}})</strong>
 </a>
   
-</a>
+
   <a class="nav-item nav-link"
     id="nav-customers-tab"
     data-toggle="tab"

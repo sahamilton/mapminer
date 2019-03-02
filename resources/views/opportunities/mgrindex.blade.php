@@ -2,53 +2,73 @@
 @section('content')
 
 <div class="container">
-<h2>My Teams Branch Opportunities</h2>
-   <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
-    <thead>
-      <th>Branch</th>
-      <th>Manager</th>
-      <th>Leads</th>
-      <th>Opportunities</th>
-     
-      <th class="tip" title="Activities in the past month">Total Activities<span class="text text-warning">*</span></th>
-    <th>Won</th>
-    <th>Lost</th>
-    </thead>
-      <tbody>
+<h2>My Teams  Dashboard</h2>
+ <nav>
 
-        @foreach ($data as $branch)
-       
+  <div class="nav  nav-tabs"  id="nav-tab"  role="tablist">
+    <a class="nav-item nav-link active"
+    id="nav-dashboard-tab"
+    data-toggle="tab"
+    href="#dashboard"
+    role="tab"
+    aria-controls="nav-dashboard"
+    aria-selected="true">
+<strong>Dashboard</strong></a>
 
-        <tr>
-          <td>
-           
-              {{$branch->branchname}}
-           
-          </td>
-          
-          <td>
-            @foreach ($branch->manager as $manager)
-              <li>{{$manager->fullName()}}</li>
-            @endforeach
-          </td>
-          <td align="center"><a href="{{route('lead.branch',$branch->id)}}">{{$branch->leads_count}}</td>
-          
-          <td align="center"><a href="{{route('opportunities.branch',$branch->id)}}">{{$branch->opportunities_count}}</a></td>
-          
-            
-          <td align="center"><a href="{{route('activity.branch',$branch->id)}}">{{$branch->activities->count()}}</a></td>
-          <td align="center">
-            @if($branch->won >0)<a href="{{route('opportunities.branch',$branch->id)}}">{{$branch->won}}</a> @else 0 @endif
-          </td>
-          <td  align="center"> @if($branch->lost >0)<a href="{{route('opportunities.branch',$branch->id)}}">{{$branch->lost}}</a> @else 0 @endif</td>
-        @endforeach
+  <a class="nav-item nav-link "
+    id="nav-summary-tab"
+    data-toggle="tab"
+    href="#summary"
+    role="tab"
+    aria-controls="nav-summary"
+    aria-selected="true">
+<strong>Summary</strong>
+</a>
 
-      </tbody>
-    <tfoot>
-      <span class="text text-danger">*</span>In past month
-    </tfoot>
+</div>
+</nav>
 
-</table>
+<div class="tab-content" id="nav-tabContent">
+    <div id="dashboard" class="tab-pane show active">
+     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawSeriesChart);
+
+    function drawSeriesChart() {
+
+      var data = google.visualization.arrayToDataTable([
+        ['Branch', 'Sales Appts', 'Opportunities Won',     'Closes'],
+        {!! $data['chart'] !!}
+      ]);
+
+      var options = {
+        title: 'Correlation closes / won to sales appointments and opportunities',
+        hAxis: {title: 'Sales Appts'},
+        vAxis: {title: ' Won'},
+        bubble: {textStyle: {fontSize: 11}}
+      };
+
+      var chart = new google.visualization.BubbleChart(document.getElementById('series_chart_div'));
+      chart.draw(data, options);
+    }
+    </script>
+
+    <div id="series_chart_div" style="width: 900px; height: 500px;"></div>
+  </div>
+
+    <div id="summary" class="tab-pane fade">
+      @include('opportunities.partials._summary')
+   </div>
+</div>
+
+
+
+
+
+
+
+
 </div>
 
 @include('partials._scripts')

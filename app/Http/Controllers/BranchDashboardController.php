@@ -69,7 +69,14 @@ class BranchDashboardController extends Controller
             return redirect()->route('user.show',auth()->user()->id)->withWarning("You are not assigned to any branches. You can assign yourself here or contact Sales Ops");
         }
         if ((! auth()->user()->hasRole('branch_manager') && $this->person->myTeam()->count() >1 )) {
-            $data = $this->getSummaryBranchData(array_keys($myBranches));
+            $data['branches'] = $this->getSummaryBranchData(array_keys($myBranches));
+
+           $data['funnel'] = $this->getBranchFunnel($myBranches);
+           $data['chart'] = $this->getChartData(array_keys($myBranches));
+
+
+            $data['chart'] = $this->prepChartData($data['chart']);
+
             return response()->view('opportunities.mgrindex', compact('data'));
         } else {
                
