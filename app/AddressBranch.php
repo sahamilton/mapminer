@@ -28,4 +28,8 @@ class AddressBranch extends Model
     {
         return $this->hasMany(Opportunity::class, 'address_branch_id', 'id');
     }
+      public function scopeActivityChart($query)
+        {
+            return $query->selectRaw('address_branch.branch_id as branch_id,YEARWEEK(activities.expected_close,3) as yearweek,sum(activities.value) as funnel')->groupBy(['branch_id','yearweek'])->orderBy('yearweek', 'asc');
+        }
 }

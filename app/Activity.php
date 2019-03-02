@@ -3,7 +3,7 @@
 namespace App;
 
 use \Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
+
 
 class Activity extends Model
 {
@@ -51,6 +51,9 @@ class Activity extends Model
     {
         return $this->belongsTo(Branch::class);
     }
+
+
+
     public function type()
     {
         return $this->belongsTo(ActivityType::class, 'activitytype_id', 'id');
@@ -58,7 +61,8 @@ class Activity extends Model
 
     public function scopeSevenDayCount($query)
     {
-        return $query->selectRaw('YEARWEEK(activity_date,3) as yearweek,count(*) as activities')->groupBy('yearweek')->orderBy('yearweek', 'asc');
+        return $query->selectRaw('branch_id,YEARWEEK(activity_date,3) as yearweek,count(*) as activities')
+        ->groupBy(['branch_id','yearweek'])->orderBy('yearweek', 'asc');
     }
     public function scopeCurrentWeekCount($query)
     {
@@ -88,4 +92,61 @@ class Activity extends Model
       
         return $data;
     }
+
+    /*select branches.id,YEARWEEK(activity_date,3) as yearweek,count(*) as activities from activities,persons,branch_person,branches where activities.user_id = persons.user_id and persons.id = branch_person.person_id and branch_person.branch_id = branches.id group By branches.id, yearweek
+    */
+  public function scopeActivityChart($query)
+  {
+    return $query->selectRaw('branch_id,YEARWEEK(expected_close,3) as yearweek,sum(`value`) as funnel')->groupBy(['branch_id','yearweek'])->orderBy('yearweek', 'asc');
+  }
+   
+        
+/*
+
+
+   return 
+['1506'=>['201902' => '14',
+          '201903' => '4',
+          '201904' => '4',
+          '201905' => '8',
+          '201906' => '91',
+          '201907' => '294',
+          '201908' => '1',
+          '201909' => '2'],
+  '1518'=>['201902' => '14',
+          '201903' => '4',
+          '201904' => '4',
+          '201906' => '3',
+          '201907' => '5',
+          '201908' => '50',
+          '201909' => '41'],
+  '1522'=>['201902' => '14',
+            '201903' => '4',
+            '201904' => '4',
+            '201906' => '9',
+            '201907' => '9',
+            '201908' => '13',
+            '201909' => '36'],
+
+  '1525'=>['201902' => '14',
+            '201903' => '4',
+            '201904' => '4',
+            '201905' => '40',
+            '201906' => '16',
+            '201907' => '20',
+            '201908' => '46',
+            '201909' => '3'],
+    '1552'=>['201902' => '14',
+            '201903' => '4',
+            '201904' => '4',
+            '201906' => '7',
+            '201907' => '34',
+            '201908' => '34',
+            '201909' => '39'],
+    '1589'=>['201902' => '14',
+            '201903' => '4',
+            '201904' => '4']];
+        }
+
+    */
 }

@@ -25,6 +25,7 @@ class BranchDashboardController extends Controller
     public $opportunity;
     public $activity;
     public $person;
+    public $keys;
 
 
     public function __construct(
@@ -73,10 +74,9 @@ class BranchDashboardController extends Controller
 
            $data['funnel'] = $this->getBranchFunnel($myBranches);
            $data['chart'] = $this->getChartData(array_keys($myBranches));
-
-
-            $data['chart'] = $this->prepChartData($data['chart']);
-
+           
+           $data['activitychart'] =  $this->getActivityChartData(array_keys($myBranches));
+            
             return response()->view('opportunities.mgrindex', compact('data'));
         } else {
                
@@ -167,7 +167,7 @@ class BranchDashboardController extends Controller
 
     private function getChartData($branches)
     {
-       return  $this->branch
+       $results =   $this->branch
                     ->whereIn('id',$branches)
                     ->getActivitiesByType(4)
                     ->withCount('leads')
@@ -181,7 +181,7 @@ class BranchDashboardController extends Controller
                       $q->whereClosed(1);
                     }])
                     ->get();
-                    
+             return $this->prepChartData($results);       
        
       }
 
@@ -232,7 +232,82 @@ class BranchDashboardController extends Controller
         return $result;
 
     }
+  
+
+  private function getActivityChartData(Array $branches){
+        $branchdata = $this->getWeekActivities($branches)->toArray();
+     
+        $this->keys=[];
+        $branches = [];
+        foreach($branchdata as $branch){
+          $branch_id = implode(",",array_keys($branch));
+          foreach ($branch[implode(",",array_keys($branch))] as $item){
+            foreach($item as $period=>$el){
+              $branches[$branch_id][$period]= $el->count();
+            }
+          }
+        
+            for($i = Carbon::now()->subMonth(2)->format('YW'); $i< Carbon::now()->format('YW');$i++){
+                if(! in_array($i,$this->keys)){
+                    $this->keys[]=$i;
+                }
+                if(! array_key_exists($i,$branches[$branch_id])) {
+                    $branches[$branch_id][$i] = 0;
+                }
+           
+            }
+            ksort($branches[$branch_id]);
+         
+      }
+      
+       return $this->formatActivityChartData($branches);
+     }
+
+     private function formatActivityChartData(Array $branches){
+
+       /* this is the chart format required
+
+             {
+                label: "Harpo",
+                backgroundColor: "blue",
+                data: [3,7,4]
+            },
+        */      
+        $colors = $this->activity->createColors(count($branches));
+        $data = [];
+        $chartdata = '';
+        $i = 0;
+        foreach ($branches as $branch=>$info){
+            $chartdata = $chartdata . "{
+                label: \"Branch " .$branch ."\",
+            backgroundColor:'".$colors[$i] . "',
+            data: [".implode(",",$info)."]},
+            ";
+            $i++;
+        }
+        $data['keys'] = implode(",",$this->keys);
+        $data['chartdata'] = str_replace("\r\n","",$chartdata);
+      
+       return $data;
 
 
+     }
+
+     private function getWeekActivities(array $myBranches){
+      $weekCount = $this->branch->whereIn('id',$myBranches)
+           ->whereHas('activities',function ($q){
+            $q->whereBetween('activity_date',[Carbon::now()->subMonth(2),Carbon::now()]);
+            })
+           ->with(['activities'=>function ($q){
+            $q->whereBetween('activity_date',[Carbon::now()->subMonth(2),Carbon::now()]);
+           }])->get();
+       
+           $branchsummary = $weekCount->map(function ($branch){
+              return [$branch->id=>[$branch->activities->groupBy(function ($activity) {
+                   return $activity->activity_date->format('YW');
+              })]];
+             });
+           return $branchsummary;
+     }
 }
 

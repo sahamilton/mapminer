@@ -60,6 +60,6 @@ class Opportunity extends Model
 
     public function scopeOpenFunnel($query)
     {
-        return $query->selectRaw('YEARWEEK(expected_close,3) as yearweek,sum(`value`) as funnel')->groupBy('yearweek')->orderBy('yearweek', 'asc');
+        return $query->selectRaw('branch_id,YEARWEEK(expected_close,3) as yearweek,sum(`value`) as funnel')->groupBy(['branch_id','yearweek'])->orderBy('yearweek', 'asc');
     }
 }
