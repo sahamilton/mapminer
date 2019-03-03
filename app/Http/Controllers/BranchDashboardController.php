@@ -54,49 +54,40 @@ class BranchDashboardController extends Controller
     public function index()
     {
     
-       
-        if(auth()->user()->hasRole('admin') or auth()->user()->hasRole('sales_operations')){
-
-             $myBranches = $this->branch->all()->pluck('branchname','id')->toArray();
-
-             $data = $this->getSummaryBranchData(array_keys($myBranches));
-           
-             return response()->view('opportunities.mgrindex', compact('data'));
-        } else {
-             $myBranches = $this->person->myBranches();
-        }
-    
+        $myBranches = $this->getBranches();
+        
         if(count($myBranches)==0){
-            return redirect()->route('user.show',auth()->user()->id)->withWarning("You are not assigned to any branches. You can assign yourself here or contact Sales Ops");
+            return redirect()->route('user.show',auth()->user()->id)
+            ->withWarning("You are not assigned to any branches. You can assign yourself here or contact Sales Ops");
         }
-        if ((! auth()->user()->hasRole('branch_manager') && $this->person->myTeam()->count() >1 )) {
-           $data['branches'] = $this->getSummaryBranchData(array_keys($myBranches));
 
-           $data['funnel'] = $this->getBranchFunnel($myBranches);
-           $data['chart'] = $this->getChartData(array_keys($myBranches));
-           
-           $data['activitychart'] =  $this->getActivityChartData(array_keys($myBranches));
-            
-            return response()->view('opportunities.mgrindex', compact('data'));
+        $data['branches'] = $this->getSummaryBranchData(array_keys($myBranches));
+        $data['upcoming'] = $this->getUpcomingActivities(array_keys($myBranches));       
+        $data['funnel'] = $this->getBranchFunnel(array_keys($myBranches));
+        $data['activitychart'] =  $this->getActivityChartData(array_keys($myBranches));
+
+        
+        if (count($myBranches) > 1) {
+                     
+           return response()->view('opportunities.mgrindex', compact('data', 'myBranches'));
+        
         } else {
                
-            $data['upcoming'] = $this->getUpcomingActivities($myBranches);;
-
-            $data['branch'] = $this->getSummaryBranchData(array_keys($myBranches));
-            $team = $this->person->myBranchTeam(array_keys($myBranches));
-            $weekCount = $this->activity->myTeamsActivities($team)->sevenDayCount()->pluck('activities', 'yearweek')->toArray();
-            $data['funnel'] = $this->getBranchFunnel($myBranches);
-            $weekCount = $this->activity->myTeamsActivities($team)->sevenDayCount()->pluck('activities', 'yearweek')->toArray();
-       
-            $data['summary'] = $this->activity->summaryData($weekCount);
-        
             return response()->view('branches.dashboard', compact('data', 'myBranches'));
         }
-        return redirect()->route('user.show', auth()->user()->id)->withWarning("You are not assigned to any branches. You can assign yourself here or contact Sales Ops");
       
     }
 
-    
+    private function getBranches()
+    {
+      if(auth()->user()->hasRole('admin') or auth()->user()->hasRole('sales_operations')){
+
+            return $this->branch->all()->pluck('branchname','id')->toArray();
+        
+        } else {
+             return  $this->person->myBranches();
+        }
+    }
     
 
     private function getBranchNotes($branches)
@@ -109,19 +100,26 @@ class BranchDashboardController extends Controller
         })->with('relatesToLocation', 'writtenBy', 'writtenBy.person')->get();
     }
     
+    /*
+    
+
+
+     */
     public function getBranchFunnel(array $branches){
-       
     
          return $this->opportunity
                      ->whereHas('branch',function ($q) use($branches){
-                        $q->whereIn('branch_id',array_keys($branches));
+                        $q->whereIn('branch_id',$branches);
                      })
                      ->whereNotNull('expected_close')
                      ->openFunnel()->get(); 
-
-
     }
-    public function getSummaryBranchData(array $branches){
+    
+
+    /*
+    
+     */
+    private function getSummaryBranchData(array $branches){
         
         return $this->branch
         
@@ -142,30 +140,14 @@ class BranchDashboardController extends Controller
         ->getActivitiesByType()
         ->whereIn('id',$branches)
         ->get(); 
-       
-       // $data['activities'] = $this->branch->whereIn('id',$branches)->get();
-        //$data['charts'] = $this->getChartData($branches);
-
 
     }
    
-    public function chart()
-    {
-      if(! $branch_ids = $this->person->myBranches()){
-        return redirect()->route('home')->withWarning('You are not associated with any branch');
-      }
-      $branches = array_keys($branch_ids);
-
-      $data = $this->getChartData($branches);
-
-
-      $data = $this->prepChartData($data);
-     
+    /*
     
-      return response()->view('opportunities.chart',compact('data'));
-    }
 
-    private function getChartData($branches)
+    */
+/*private function getChartData($branches)
     {
        $results =   $this->branch
                     ->whereIn('id',$branches)
@@ -185,22 +167,23 @@ class BranchDashboardController extends Controller
        
       }
 
-      private function prepChartData($results){
+      /*
+      return string of chart data for single bar chart
+
+      */
+      /*private function prepChartData($results){
 
 
         $string = '';
 
         foreach ($results as $branch){
 
-         
           $string = $string . "[\"".$branch->branchname ."\",  ".$branch->activities->count() .",  ".$branch->won.", ".$branch->opportunities->sum('value') ."],";
          
-
         }
-
         return $string;
 
-      }
+      }*/
           
     private function getUpcomingActivities(Array $myBranches)
     {
@@ -213,7 +196,9 @@ class BranchDashboardController extends Controller
     }
 
 
-    private function getBranchActivities($branches){
+    /*
+    
+     private function getBranchActivities($branches){
         
 
         $query = "SELECT branches.id as id, activitytype_id as type, count(activities.id) as activities
@@ -232,8 +217,12 @@ class BranchDashboardController extends Controller
         return $result;
 
     }
-  
+  */
+  /*
 
+
+
+  */
   private function getActivityChartData(Array $branches){
         $branchdata = $this->getWeekActivities($branches)->toArray();
      
@@ -292,22 +281,24 @@ class BranchDashboardController extends Controller
 
 
      }
+     /*
+      Return 2 months worth of activities groupes by branch & week
 
+      */
      private function getWeekActivities(array $myBranches){
-      $weekCount = $this->branch->whereIn('id',$myBranches)
+          $weekCount = $this->branch->whereIn('id',$myBranches)
            ->whereHas('activities',function ($q){
             $q->whereBetween('activity_date',[Carbon::now()->subMonth(2),Carbon::now()]);
             })
            ->with(['activities'=>function ($q){
             $q->whereBetween('activity_date',[Carbon::now()->subMonth(2),Carbon::now()]);
            }])->get();
-       
-           $branchsummary = $weekCount->map(function ($branch){
+
+           return  $weekCount->map(function ($branch){
               return [$branch->id=>[$branch->activities->groupBy(function ($activity) {
                    return $activity->activity_date->format('YW');
               })]];
              });
-           return $branchsummary;
      }
 }
 
