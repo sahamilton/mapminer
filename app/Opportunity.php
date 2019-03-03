@@ -46,12 +46,12 @@ class Opportunity extends Model
 
     public function closed()
     {
-        return $this->where('closed', '=', 2);
+        return $this->where('closed', '<>', 0);
     }
 
     public function open()
     {
-        return $this->where('closed', '<>', 2);
+        return $this->where('closed', '=', 0);
     }
     public function createdBy()
     {
@@ -61,5 +61,13 @@ class Opportunity extends Model
     public function scopeOpenFunnel($query)
     {
         return $query->selectRaw('branch_id,YEARWEEK(expected_close,3) as yearweek,sum(`value`) as funnel')->groupBy(['branch_id','yearweek'])->orderBy('yearweek', 'asc');
+    }
+
+    public function lost(){
+        return $this->where('closed', '=', 2);
+    }
+
+    public function won(){
+        return $this->where('closed', '=', 1);
     }
 }

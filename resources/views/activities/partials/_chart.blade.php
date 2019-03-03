@@ -28,6 +28,9 @@ var barChart = new Chart(ctx,
       ]
     },
 },options = {
+ legend: {
+            position:'bottom',
+         },
     scales: {
         xAxes: [{
             gridLines: {

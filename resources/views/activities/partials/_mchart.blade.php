@@ -18,17 +18,13 @@ var barChart = new Chart(ctx,
 
       datasets: [{!! $data['activitychart']['chartdata'] !!} ]
     },
-},options = {
-    scales: {
-        xAxes: [{
-            gridLines: {
-                offsetGridLines: true
-            }
-        }]
+    @if($data['branches']->count()>10)
+    options: {
+         legend: {
+            display: false
+         }
     }
+    @endif
+
 });
 </script>
-
-
-
-</div>

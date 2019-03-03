@@ -25,7 +25,7 @@ class BranchDashboardController extends Controller
     public $opportunity;
     public $activity;
     public $person;
-    public $keys;
+    public $keys = [];
 
 
     public function __construct(
@@ -56,6 +56,7 @@ class BranchDashboardController extends Controller
     {
     
         $myBranches = $this->getBranches();
+    
         
         if(count($myBranches)==0){
             return redirect()->route('user.show',auth()->user()->id)
@@ -63,38 +64,47 @@ class BranchDashboardController extends Controller
         }
 
         $data = $this->getDashBoardData(array_keys($myBranches));
+      
+       return response()->view('opportunities.mgrindex', compact('data'));
         
-       return $this->displayDashboard($myBranches, $data);
       
     }
 
     public function selectBranch(Request $request)
     {
-      
       $data = $this->getDashBoardData([request('branch')]);
-      $myBranches = $this->getBranches();
-      return $this->displayDashboard($myBranches,$data);
+      return $this->displayDashboard($data);
 
     }
+    public function show($branch){
+      $data = $this->getDashBoardData([$branch]);
+      return $this->displayDashboard($data);
 
+    }
     private function getDashBoardData(array $myBranches)
     {
+    
       $data['branches'] = $this->getSummaryBranchData($myBranches);
       $data['upcoming'] = $this->getUpcomingActivities($myBranches);       
       $data['funnel'] = $this->getBranchFunnel($myBranches);
       $data['activitychart'] =  $this->getActivityChartData($myBranches);
+
       $data['chart'] = $this->getChartData($myBranches);
+      $data['won'] = $this->getWonOpportunities($myBranches);
+    
+
       return $data;
     }
-    private function displayDashboard($myBranches, $data)
+    private function displayDashboard($data)
     {
 
-       if (count($myBranches) > 1) {
-                     
+       if ($data['branches']->count() > 1) {
+
+                  
            return response()->view('opportunities.mgrindex', compact('data', 'myBranches'));
         
         } else {
-               
+           
             return response()->view('branches.dashboard', compact('data', 'myBranches'));
         }
 
@@ -102,11 +112,13 @@ class BranchDashboardController extends Controller
     }
     private function getBranches()
     {
+      
       if(auth()->user()->hasRole('admin') or auth()->user()->hasRole('sales_operations')){
-
+       
             return $this->branch->all()->pluck('branchname','id')->toArray();
         
         } else {
+      
              return  $this->person->myBranches();
         }
     }
@@ -206,7 +218,8 @@ private function getChartData($branches)
         return $string;
 
       }
-          
+        
+ 
     private function getUpcomingActivities(Array $myBranches)
     {
 
@@ -246,32 +259,65 @@ private function getChartData($branches)
 
   */
   private function getActivityChartData(Array $branches){
+
         $branchdata = $this->getWeekActivities($branches)->toArray();
-     
-        $this->keys=[];
         $branches = [];
+        // reformat branch data into array
         foreach($branchdata as $branch){
+
           $branch_id = implode(",",array_keys($branch));
           foreach ($branch[implode(",",array_keys($branch))] as $item){
+
             foreach($item as $period=>$el){
+
               $branches[$branch_id][$period]= $el->count();
+
             }
           }
-        
-            for($i = Carbon::now()->subMonth(2)->format('YW'); $i< Carbon::now()->format('YW');$i++){
-                if(! in_array($i,$this->keys)){
-                    $this->keys[]=$i;
-                }
-                if(! array_key_exists($i,$branches[$branch_id])) {
-                    $branches[$branch_id][$i] = 0;
-                }
-           
-            }
-            ksort($branches[$branch_id]);
-         
+          
+          // fill any missing periods with zeros
+          $branches[$branch_id] = $this->fillMissingPeriods($branches[$branch_id]);
+          // sort branch array in date sequence
+        ksort($branches[$branch_id]);
+     
+      }
+      // if too many for graph return table
+      if(count($branches) > 10){
+        return $this->formatActivityTableData($branches);
       }
       
        return $this->formatActivityChartData($branches);
+
+     }
+     private function fillMissingPeriods($branches)
+     {
+      
+        for($i = Carbon::now()->subMonth(2)->format('YW'); $i< Carbon::now()->format('YW');$i++){
+          
+              if(! in_array($i,$this->keys)){
+                  $this->keys[]=$i;
+              }
+            
+              if(! array_key_exists($i,$branches)) {
+                 
+                  $branches[$i] = 0;
+              }
+         
+          }
+          ksort($branches);
+          return $branches;
+
+     }
+
+     private function formatActivityTableData($branches)
+     {
+     
+      $data['branches'] = $branches;
+      $data['keys'] = $this->keys;
+
+      return $data;
+     
+
      }
 
      private function formatActivityChartData(Array $branches){
@@ -289,6 +335,7 @@ private function getChartData($branches)
         $chartdata = '';
         $i = 0;
         foreach ($branches as $branch=>$info){
+          
             $chartdata = $chartdata . "{
                 label: \"Branch " .$branch ."\",
             backgroundColor:'".$colors[$i] . "',
@@ -298,7 +345,7 @@ private function getChartData($branches)
         }
         $data['keys'] = implode(",",$this->keys);
         $data['chartdata'] = str_replace("\r\n","",$chartdata);
-      
+       
        return $data;
 
 
@@ -322,5 +369,37 @@ private function getChartData($branches)
               })]];
              });
      }
+     /*
+     Return 2 onths of won opportunities
+     */
+    
+    private function getWonOpportunities(array $myBranches){
+    
+      $won =  $this->opportunity
+      ->selectRaw('branch_id,YEARWEEK(actual_close,3) as yearweek,sum(value) as total')
+      ->whereNotNull('value')
+      ->where('value','>',0)
+
+      ->whereBetween('actual_close',[Carbon::now()->subMonth(2),Carbon::now()])
+      ->groupBy(['branch_id','yearweek'])
+      ->orderBy('branch_id','asc')
+      ->orderBy('yearweek','asc')
+      ->get();
+      $data = [];
+      
+      foreach ($won as $item){
+        
+          $data[$item->branch_id][$item->yearweek]=$item->total;
+          
+      }
+  
+      foreach(array_unique($won->pluck('branch_id')->toArray()) as $branch_id){
+        
+
+        $wondata[$branch_id]= $this->fillMissingPeriods($data[$branch_id],$branch_id);
+      
+      }
+      return $this->formatActivityChartData($wondata);
+    }
 }
 

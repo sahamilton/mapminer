@@ -2,20 +2,21 @@
 @section('content')
 <div class="container" style="clear:both">
 <h2>{{$data['branches']->first()->branchname}} Dashboard</h2>
-@if(count($myBranches)>1)
+@if($data['branches']->count()>1)
 
 <div class="col-sm-4">
 <form name="selectbranch" method="post" action="{{route('branches.dashboard')}}" >
 @csrf
 
  <select class="form-control input-sm" id="branchselect" name="branch" onchange="this.form.submit()">
-  @foreach ($myBranches as $key=>$branch)
-    <option {{$data['branches']->first()->id == $key ? 'selected' : ''}} value="{{$key}}">{{$branch}}</option>
+  @foreach ($data['branches'] as $branch)
+    <option  value="{{$branch->id}}">{{$branch->branchname}}</option>
   @endforeach 
 </select>
 
 </form>
 </div>
+
 @endif
 
 	<div class="col-sm-3 float-left">

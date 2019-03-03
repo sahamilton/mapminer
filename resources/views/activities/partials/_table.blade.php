@@ -12,6 +12,7 @@
 		<th>Activity</th>
 	</thead>
 	<tbody>
+		
 		@foreach ($data['activities'] as $activity)
 			
 			<tr>
