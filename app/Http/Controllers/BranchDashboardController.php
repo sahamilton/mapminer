@@ -51,6 +51,7 @@ class BranchDashboardController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    
     public function index()
     {
     
@@ -61,13 +62,34 @@ class BranchDashboardController extends Controller
             ->withWarning("You are not assigned to any branches. You can assign yourself here or contact Sales Ops");
         }
 
-        $data['branches'] = $this->getSummaryBranchData(array_keys($myBranches));
-        $data['upcoming'] = $this->getUpcomingActivities(array_keys($myBranches));       
-        $data['funnel'] = $this->getBranchFunnel(array_keys($myBranches));
-        $data['activitychart'] =  $this->getActivityChartData(array_keys($myBranches));
-
+        $data = $this->getDashBoardData(array_keys($myBranches));
         
-        if (count($myBranches) > 1) {
+       return $this->displayDashboard($myBranches, $data);
+      
+    }
+
+    public function selectBranch(Request $request)
+    {
+      
+      $data = $this->getDashBoardData([request('branch')]);
+      $myBranches = $this->getBranches();
+      return $this->displayDashboard($myBranches,$data);
+
+    }
+
+    private function getDashBoardData(array $myBranches)
+    {
+      $data['branches'] = $this->getSummaryBranchData($myBranches);
+      $data['upcoming'] = $this->getUpcomingActivities($myBranches);       
+      $data['funnel'] = $this->getBranchFunnel($myBranches);
+      $data['activitychart'] =  $this->getActivityChartData($myBranches);
+      $data['chart'] = $this->getChartData($myBranches);
+      return $data;
+    }
+    private function displayDashboard($myBranches, $data)
+    {
+
+       if (count($myBranches) > 1) {
                      
            return response()->view('opportunities.mgrindex', compact('data', 'myBranches'));
         
@@ -75,9 +97,9 @@ class BranchDashboardController extends Controller
                
             return response()->view('branches.dashboard', compact('data', 'myBranches'));
         }
-      
-    }
 
+
+    }
     private function getBranches()
     {
       if(auth()->user()->hasRole('admin') or auth()->user()->hasRole('sales_operations')){
@@ -147,7 +169,7 @@ class BranchDashboardController extends Controller
     
 
     */
-/*private function getChartData($branches)
+private function getChartData($branches)
     {
        $results =   $this->branch
                     ->whereIn('id',$branches)
@@ -171,7 +193,7 @@ class BranchDashboardController extends Controller
       return string of chart data for single bar chart
 
       */
-      /*private function prepChartData($results){
+      private function prepChartData($results){
 
 
         $string = '';
@@ -183,7 +205,7 @@ class BranchDashboardController extends Controller
         }
         return $string;
 
-      }*/
+      }
           
     private function getUpcomingActivities(Array $myBranches)
     {

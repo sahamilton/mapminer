@@ -74,6 +74,7 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('branchassignment/{user}/change',['as'=>'branchassignment.change','uses'=>'BranchManagementController@change']);
 		Route::resource('branchassignments','BranchManagementController',['only'=>['index','show','edit','update']]);
 	#Branch Dashboard
+		Route::post('branches/dashboard',['as'=>'branches.dashboard','uses'=>'BranchDashboardController@selectBranch']);
 	    Route::resource('branch/dashboard','BranchDashboardController');
 
 	# Branch Leads

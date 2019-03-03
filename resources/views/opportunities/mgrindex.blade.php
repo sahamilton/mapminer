@@ -3,6 +3,21 @@
 
 <div class="container">
 <h2>My Teams  Dashboard</h2>
+@if(count($myBranches)>1)
+
+<div class="col-sm-4">
+<form name="selectbranch" method="post" action="{{route('branches.dashboard')}}" >
+@csrf
+
+ <select class="form-control input-sm" id="branchselect" name="branch" onchange="this.form.submit()">
+  @foreach ($myBranches as $key=>$branch)
+    <option {{$data['branches']->first()->id == $key ? 'selected' : ''}} value="{{$key}}">{{$branch}}</option>
+  @endforeach 
+</select>
+
+</form>
+</div>
+@endif
   <nav>
 
     <div class="nav  nav-tabs"  id="nav-tab"  role="tablist">
