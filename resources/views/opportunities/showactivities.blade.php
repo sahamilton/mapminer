@@ -32,8 +32,13 @@ Activities
      		
         <td>{{$activity->activity_date->format('Y-m-d')}}</td>
 
-        <td><a href="{{route('branch.activity',['branch'=>$branch->id,'activity'=>$activity->type])}}"
-          title="See all branch {{$branch->id}}'s {{$activity->type->activity}} activities" >{{$activity->type->activity}}</a></td>
+        <td>
+          @if($activity->type)
+          <a href="{{route('branch.activity',['branch'=>$branch->id,'activity'=>$activity->type])}}"
+          title="See all branch {{$branch->id}}'s {{$activity->type->activity}} activities" >{{$activity->type->activity}}</a>
+          
+          @endif
+        </td>
         <td>{{$activity->user->person->fullName()}}</td>
         <td>{{$activity->note}}</td>
         <td>{{$activity->followup_date ? $activity->followup_date->format('Y-m-d') : ''}}</td>
