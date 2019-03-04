@@ -88,11 +88,12 @@ class BranchDashboardController extends Controller
       $data['upcoming'] = $this->getUpcomingActivities($myBranches);       
       $data['funnel'] = $this->getBranchFunnel($myBranches);
       $data['activitychart'] =  $this->getActivityChartData($myBranches);
-
+   
+      $data['pipeline'] = $this->getPipeline($myBranches);
+    
       $data['chart'] = $this->getChartData($myBranches);
       $data['won'] = $this->getWonOpportunities($myBranches);
-    
-
+     
       return $data;
     }
     private function displayDashboard($data)
@@ -276,26 +277,33 @@ private function getChartData($branches)
           }
           
           // fill any missing periods with zeros
-          $branches[$branch_id] = $this->fillMissingPeriods($branches[$branch_id]);
+          // 
+          $from = Carbon::now()->subMonth(2);
+          $to = Carbon::now();
+          $keys =  $this->yearWeekBetween($from, $to);
+          $branches[$branch_id] = $this->fillMissingPeriods($branches[$branch_id],$from, $to);
           // sort branch array in date sequence
         ksort($branches[$branch_id]);
      
       }
+      
       // if too many for graph return table
       if(count($branches) > 10){
-        return $this->formatActivityTableData($branches);
+        return $this->formatActivityTableData($branches,$keys);
       }
       
-       return $this->formatActivityChartData($branches);
+       return $this->formatChartData($branches,$keys);
 
      }
-     private function fillMissingPeriods($branches)
+
+
+     private function fillMissingPeriods($branches,Carbon $from,Carbon $to)
      {
-      
-        for($i = Carbon::now()->subMonth(2)->format('YW'); $i< Carbon::now()->format('YW');$i++){
+        $keys = $this->yearWeekBetween($from,$to);
+        for($i = $from->format('YW'); $i<= $to->format('YW');$i++){
           
-              if(! in_array($i,$this->keys)){
-                  $this->keys[]=$i;
+              if(! in_array($i,$keys)){
+                  $keys[]=$i;
               }
             
               if(! array_key_exists($i,$branches)) {
@@ -309,19 +317,20 @@ private function getChartData($branches)
 
      }
 
-     private function formatActivityTableData($branches)
+     private function formatActivityTableData(array $branches,array $keys)
      {
      
       $data['branches'] = $branches;
-      $data['keys'] = $this->keys;
+      $data['keys'] = $keys;
 
       return $data;
      
 
      }
 
-     private function formatActivityChartData(Array $branches){
+     private function formatChartData(Array $branches,array $keys){
 
+ 
        /* this is the chart format required
 
              {
@@ -334,6 +343,7 @@ private function getChartData($branches)
         $data = [];
         $chartdata = '';
         $i = 0;
+     
         foreach ($branches as $branch=>$info){
           
             $chartdata = $chartdata . "{
@@ -343,7 +353,9 @@ private function getChartData($branches)
             ";
             $i++;
         }
-        $data['keys'] = implode(",",$this->keys);
+
+        $data['keys'] = implode(",",$keys);
+       
         $data['chartdata'] = str_replace("\r\n","",$chartdata);
        
        return $data;
@@ -357,10 +369,10 @@ private function getChartData($branches)
      private function getWeekActivities(array $myBranches){
           $weekCount = $this->branch->whereIn('id',$myBranches)
            ->whereHas('activities',function ($q){
-            $q->whereBetween('activity_date',[Carbon::now()->subMonth(2),Carbon::now()]);
+              $q->whereBetween('activity_date',[Carbon::now()->subMonth(2),Carbon::now()]);
             })
            ->with(['activities'=>function ($q){
-            $q->whereBetween('activity_date',[Carbon::now()->subMonth(2),Carbon::now()]);
+              $q->whereBetween('activity_date',[Carbon::now()->subMonth(2),Carbon::now()]);
            }])->get();
 
            return  $weekCount->map(function ($branch){
@@ -370,21 +382,21 @@ private function getChartData($branches)
              });
      }
      /*
-     Return 2 onths of won opportunities
+     Return 2 months of won opportunities
      */
     
     private function getWonOpportunities(array $myBranches){
     
       $won =  $this->opportunity
-      ->selectRaw('branch_id,YEARWEEK(actual_close,3) as yearweek,sum(value) as total')
-      ->whereNotNull('value')
-      ->where('value','>',0)
-
-      ->whereBetween('actual_close',[Carbon::now()->subMonth(2),Carbon::now()])
-      ->groupBy(['branch_id','yearweek'])
-      ->orderBy('branch_id','asc')
-      ->orderBy('yearweek','asc')
-      ->get();
+                ->selectRaw('branch_id,YEARWEEK(actual_close,3) as yearweek,sum(value) as total')
+                ->whereNotNull('value')
+                ->where('value','>',0)
+                ->whereIn('branch_id',$myBranches)
+                ->whereBetween('actual_close',[Carbon::now()->subMonth(2),Carbon::now()])
+                ->groupBy(['branch_id','yearweek'])
+                ->orderBy('branch_id','asc')
+                ->orderBy('yearweek','asc')
+                ->get();
       $data = [];
       
       foreach ($won as $item){
@@ -392,14 +404,69 @@ private function getChartData($branches)
           $data[$item->branch_id][$item->yearweek]=$item->total;
           
       }
-  
+
+      $from = Carbon::now()->subMonth(2);
+
+      $to = Carbon::now();
+      $keys =  $this->yearWeekBetween($from, $to);
+
       foreach(array_unique($won->pluck('branch_id')->toArray()) as $branch_id){
         
 
-        $wondata[$branch_id]= $this->fillMissingPeriods($data[$branch_id],$branch_id);
+        $wondata[$branch_id]= $this->fillMissingPeriods($data[$branch_id],$from, $to);
       
       }
-      return $this->formatActivityChartData($wondata);
+      
+      return $this->formatChartData($wondata,$keys);
+    }
+
+    /*
+     Return 2 months of won opportunities
+     */
+    
+    private function getPipeline(array $myBranches){
+    
+      $pipeline =  $this->opportunity
+                    ->selectRaw('branch_id,YEARWEEK(expected_close,3) as yearweek,sum(value) as total')
+                    ->whereNotNull('value')
+                    ->where('value','>',0)
+                    ->whereIn('branch_id',$myBranches)
+                    ->where('expected_close','>',Carbon::now())
+                    ->groupBy(['branch_id','yearweek'])
+                    ->orderBy('branch_id','asc')
+                    ->orderBy('yearweek','asc')
+                    ->get();
+
+      $data = [];
+     
+      foreach ($pipeline as $item){
+        
+          $data[$item->branch_id][$item->yearweek]=$item->total;
+          
+      }
+
+      $from = Carbon::now();
+      $to = Carbon::now()->addMonth(2);
+      $keys =  $this->yearWeekBetween($from, $to);
+              
+      foreach($data as $branch_id=>$branchdata){
+        
+        $data[$branch_id] = $this->fillMissingPeriods($branchdata,$from, $to);
+        
+      }
+      
+      return $this->formatChartData($data,$keys);
+    }
+
+    private function yearWeekBetween($from, $to)
+    {
+      
+      $keys=[];
+      for($i = $from->format('YW'); $i<= $to->format('YW');$i = $from->addWeek()->format('YW')){
+        $keys[]=$i;
+      }
+
+      return $keys;
     }
 }
 
