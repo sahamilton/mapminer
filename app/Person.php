@@ -296,54 +296,7 @@ class Person extends NodeModel implements HasPresenter
         ->withPivot('status_id', 'rating')
         ->whereNotNull('rating');
     }
-	public function personroles($roles){
 
-
-		return $this->wherehas('userdetails.roles', function($q) use($roles){
-					$q->whereIn('role_id',$roles);
-				})
-		->with('userdetails','userdetails.roles')
-		->orderBy('lastname')
-		->get();
-	}
-	public function scopeWithRoles($query, $roles){
-
-		return $query->wherehas('userdetails.roles', function($q) use($roles){
-					$q->whereIn('role_id',$roles);
-				});
-
-	}
-	public function getPersonsWithRole($roles){
-		return $this->select(\DB::raw("*, CONCAT(lastname,' ' ,firstname) AS fullname, id"))
-			->whereHas('userdetails.roles', 
-				function($q) use($roles){
-					$q->whereIn('role_id',$roles);
-				})
-			->orderBy('lastname')->get();
-			
-	}
-	public function salesleads(){
-		return $this->belongsToMany(Lead::class, 'lead_person_status','person_id','related_id')
-		->withTimestamps()
-		
-		->withPivot('status_id','rating');
-	}
-
-	public function webleads(){
-		return $this->belongsToMany(WebLead::class, 'lead_person_status','person_id','related_id')
-			->withTimestamps()
-			->wherePivot('type','=','web')
-			->withPivot('status_id','rating','type');
-	}
-	
-	public function leadratings(){
-      	return  $this->belongsToMany(Lead::class, 'lead_person_status','person_id','related_id')
-		->withTimestamps()
-		
-		->withPivot('status_id','rating')
-		->whereNotNull('rating');
-	
-    }
     public function fullAddress(){
     	return $this->address . ' '. $this->city . ' ' . $this->state . ' ' . $this->zip;
     }
@@ -371,64 +324,11 @@ class Person extends NodeModel implements HasPresenter
 		
 	}
 
-	public function salesLeadsByStatus($id){
-		$leads = $this->with('salesleads')
-			->whereHas('salesleads.leadsource',function($q){
-				$q->where('datefrom','<=',date('Y-m-d'))
-				->where('dateto','>=',date('Y-m-d'));
-			})
-			->find($id);
-
-		foreach ($leads->salesleads as $lead){
-			if(! isset($statuses[$lead->pivot->status_id])){
-				$statuses[$lead->pivot->status_id]['status']=$lead->pivot->status_id;
-				$statuses[$lead->pivot->status_id]['count']=0;
-			}
-			$statuses[$lead->pivot->status_id]['count']+=1;
-			
-		}
-		return $statuses;
-	}
-	
-	private function getPersonsServiceLines(){
-
-		foreach($this->person->serviceline as $serviceline){
-
-			$servicelines[]=$serviceline->id;
-		}
-		$this->personServicelines = implode("','",$servicelines);
-		
-	}
-
-	public function scopeInServiceLine($query,$servicelines){
-		
-		return $query->whereHas('userdetails.serviceline',function($q) use ($servicelines)
-			{ 
-				$q->whereIn('servicelines.id',$servicelines);
-			});
-	}
-	public function ownedLeads(){
-		return $this->belongsToMany(Lead::class, 'lead_person_status','person_id','related_id')
-		->withTimestamps()
-		->withPivot('status_id','rating')
-		->whereIn('status_id',[2,3]);
-	}
-
-
-	public function myOwnedLeads(){
-		return $this->belongsToMany(Lead::class, 'lead_person_status','person_id','related_id')
-		->withTimestamps()
-		->withPivot('status_id','rating')
-		->whereIn('status_id',[2])
-		->where('person_id','=',auth()->user()->person->id);
-	}
 
 	public function activities(){
         return $this->hasMany(Activity::class,'user_id','user_id');
     }
     
-        return $result;
-    }
 
     public function salesLeadsByStatus($id)
     {
