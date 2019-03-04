@@ -4,7 +4,7 @@
 
 {{$person->firstname}}, 
 
-{{auth()->user()->person->fullName()}} has reassinged a lead to the {{$branch->branchname}} branch.  The details are below:
+{{$sender->fullName()}} has reassigned a lead to the {{$branch->branchname}} branch.  The details are below:
 
 @component('mail::panel')
 
@@ -21,7 +21,7 @@ Address: {{$address->fullAddress()}}
        Check out this lead.
 @endcomponent
 
-You can contact {{auth()->user()->person->firstname}}  at <a href="mailto:{{auth()->user()->email}}">{{auth()->user()->email}}</a> for more information.
+You can contact {{$sender->firstname}}  at <a href="mailto:{{auth()->user()->email}}">{{$sender->userdetails->email}}</a> for more information.
 
 Sincerely
         

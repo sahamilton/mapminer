@@ -252,9 +252,10 @@ class MyLeadsController extends BaseController
     private function notifyLeadReassignment(Array $branch, Address $address)
     {
          $branches = $this->branch->has('manager')->with('manager')->whereIn('id',$branch)->get();
+         $sender = $this->person->where('user_id','=',auth()->user()->id)->with('userdetails')->first();
          foreach ($branches as $branch){
                 foreach($branch->manager as $manager){
-                    \Mail::queue(new NotifyLeadReassignment($address,$branch,$manager));
+                    \Mail::queue(new NotifyLeadReassignment($address,$branch,$manager,$sender));
                 }
                 
             }
