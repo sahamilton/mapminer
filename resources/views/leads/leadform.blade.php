@@ -9,8 +9,7 @@
     <div class="form-group{{ $errors->has('weblead') ? ' has-error' : '' }}">
         <label class="col-md-2 control-label">Paste Web Lead:</label>
            <div class="input-group input-group-lg ">
-                <textarea class="form-control" name='weblead' description="weblead" >
-								</textarea>
+                <textarea class="form-control" name='weblead' description="weblead" >{{old('weblead')}}</textarea>
                 <span class="help-block">
                     <strong>{{ $errors->has('weblead') ? $errors->first('weblead') : ''}}</strong>
                     </span>

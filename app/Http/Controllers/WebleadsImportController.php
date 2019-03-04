@@ -34,9 +34,14 @@ class WebleadsImportController extends Controller
         return response()->view('webleads.leadform', compact('leadsources'));
     }
 
-    public function getLeadFormData(WebLeadFormRequest $request)
-    {
-        // first get the rows of data
+    public function getLeadFormData(WebLeadFormRequest $request){
+    	// first get the rows of data
+
+    	
+    	if(! $input = $this->parseInputData($request)){
+            return back()->withError('Unable to parse that input')->withInput();
+        }
+
 
         
         $input = $this->parseInputData($request);
@@ -206,7 +211,10 @@ class WebleadsImportController extends Controller
                 $input[str_replace(" ", "_", trim(strtolower($field[0])))]=$field[1];
             }
         }
-
+        if(! isset($input)){
+            return false;
+            
+        }
         return $input;
     }
 
