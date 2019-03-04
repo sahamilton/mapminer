@@ -251,8 +251,11 @@ class User extends Authenticatable
  * @return [type] [description]
  */
 
+    public function setApiToken(){
 
         return $this->api_token = md5(uniqid(mt_rand(), true));
+        
+
     }
 /**
  * scopeWithRole Select User by role
