@@ -35,4 +35,39 @@ class Track extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function getLogins(array $users = null){
+         if($users){
+               $subQuery =($this->whereHas('user', function ($q) {
+                        $q->where('confirmed', '=', 1);
+                })
+                ->whereIn('user_id',$users)
+               ->selectRaw('count(user_id) as logins,
+                    date(min(`lastactivity`)) as datelabel,
+                    DATE_FORMAT(min(`lastactivity`),"%Y-%m") as firstlogin')
+                ->whereNotNull('lastactivity')
+                ->groupBy('user_id'));
+        }else{
+             $subQuery =(
+                $this->whereHas('user', function ($q) {
+                        $q->where('confirmed', '=', 1);
+                })
+                ->selectRaw('count(user_id) as logins,
+                    date(min(`lastactivity`)) as datelabel,
+                    DATE_FORMAT(min(`lastactivity`),"%Y-%m") as firstlogin')
+                ->whereNotNull('lastactivity')
+                ->groupBy('user_id'));
+        }
+
+
+        return  \DB::
+                table(\DB::raw('('.$subQuery->toSql().') as ol'))
+                ->selectRaw('count(logins) as logins,firstlogin')
+                ->mergeBindings($subQuery->getQuery())
+                ->groupBy('firstlogin')
+                ->oldest('firstlogin')
+                ->get();
+                
+    
+    }
 }

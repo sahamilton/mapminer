@@ -87,9 +87,10 @@ class Person extends NodeModel implements HasPresenter
         return $data;
     }
 
-    public function myBranchTeam(Array $branches)
+    public function myBranchTeam(Array $myBranches)
     {
-        $branches = Branch::whereIn('id', $branches)->with('manager')->get();
+        $branches = Branch::whereIn('id', $myBranches)->with('manager')->get();
+        
         $team = $branches->map(function ($branch) {
             return $branch->manager->pluck('user_id');
         });

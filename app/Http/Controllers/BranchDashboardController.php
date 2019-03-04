@@ -8,6 +8,7 @@ use App\Address;
 use App\AddressBranch;
 use App\Branch;
 use App\Company;
+use App\Track;
 use App\Contact;
 use App\Note;
 use App\Http\Requests\OpportunityFormRequest;
@@ -25,6 +26,7 @@ class BranchDashboardController extends Controller
     public $opportunity;
     public $activity;
     public $person;
+    public $track;
     public $keys = [];
 
 
@@ -35,7 +37,8 @@ class BranchDashboardController extends Controller
         Branch $branch,
         Contact $contact,
         Opportunity $opportunity,
-        Person $person
+        Person $person,
+        Track $track
     ) {
         $this->address = $address;
         $this->addressbranch = $addressbranch;
@@ -44,6 +47,7 @@ class BranchDashboardController extends Controller
         $this->opportunity = $opportunity;
         $this->person = $person;
         $this->activity = $activity;
+        $this->track = $track;
     }
 
     /**
@@ -93,7 +97,8 @@ class BranchDashboardController extends Controller
     
       $data['chart'] = $this->getChartData($myBranches);
       $data['won'] = $this->getWonOpportunities($myBranches);
-     
+      $data['teamlogins'] = $this->getTeamLogins($myBranches);
+      dd($data['teamlogins']);
       return $data;
     }
     private function displayDashboard($data)
@@ -224,13 +229,19 @@ private function getChartData($branches)
     private function getUpcomingActivities(Array $myBranches)
     {
 
-           $users =  $this->person->myBranchTeam(array_keys($myBranches));
+           $users =  $this->person->myBranchTeam($myBranches);
 
            return $this->activity->whereIn('user_id',$users)
            ->where('followup_date','>=',Carbon::now())->get();
 
     }
-
+    private function getTeamLogins(array $branches)
+    {
+      
+      $users =  $this->person->myBranchTeam($branches)->toArray();
+ 
+      return $this->track->whereIn('user_id',$users)->get();
+    }
 
     /*
     
@@ -409,7 +420,7 @@ private function getChartData($branches)
 
       $to = Carbon::now();
       $keys =  $this->yearWeekBetween($from, $to);
-
+      $wondata = [];
       foreach(array_unique($won->pluck('branch_id')->toArray()) as $branch_id){
         
 

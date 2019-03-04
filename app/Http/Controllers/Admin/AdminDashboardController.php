@@ -212,9 +212,9 @@ class AdminDashboardController extends BaseController
      */
     private function getLogins()
     {
+        return $this->track->getLogins();
 
-
-        $subQuery =(
+        /*$subQuery =(
            $this->track
                 ->whereHas('user', function ($q) {
                         $q->where('confirmed', '=', 1);
@@ -232,6 +232,7 @@ class AdminDashboardController extends BaseController
                 ->groupBy('firstlogin')
                 ->oldest('firstlogin')
                 ->get();
+                */
     }
     
     private function getFirstTimers()

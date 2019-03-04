@@ -467,7 +467,9 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
 		Route::get('leads/{id}/person/{sid}/source',['as'=>'leads.personsource','uses'=>'LeadsController@getPersonSourceLeads'])
 		Route::get('lead/branch/{bid?}',['as'=>'leads.branch','uses'=>'LeadsController@branches']);
 		Route::resource('leads','LeadsController');*/
-
+		#Salesnotes
+		Route::get('salesnotes/filedelete/{file}', ['as'=>'salesnotes.filedelete', 'uses'=>'SalesNotesController@filedelete']);
+		Route::get('salesnotes/create/{companyId}',['as'=>'salesnotes.cocreate','uses'=>'SalesNotesController@createSalesNotes']);
         # OrderImports
 
         Route::resource('orderimport', 'OrderImportController');

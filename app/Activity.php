@@ -146,7 +146,7 @@ class Activity extends Model
     '1589'=>['201902' => '14',
             '201903' => '4',
             '201904' => '4']];
-        }
+        }*/
 
 	public function scopeUpcomingActivities($query)
 	{
