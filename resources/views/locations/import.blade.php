@@ -72,7 +72,11 @@
     <label class="col-md-4 control-label">Import Description:</label>
        
             <div class="form-group">
-                <textarea name="description" class="form-control" rows="5" placeholder="Describe the import, source etc"></textarea>
+                <textarea name="description" 
+                required 
+                class="form-control" 
+                rows="5" 
+                placeholder="Describe the import, source etc"></textarea>
             </div>
             <span class="help-block">
                 <strong>{{ $errors->has('description') ? $errors->first('description') : ''}}</strong>
