@@ -34,7 +34,9 @@ class WebleadsImportController extends Controller
     	// first get the rows of data
 
     	
-    	$input = $this->parseInputData($request);
+    	if(! $input = $this->parseInputData($request)){
+            return back()->withError('Unable to parse that input')->withInput();
+        }
 
 
 
@@ -204,7 +206,10 @@ class WebleadsImportController extends Controller
                 $input[str_replace(" ","_",trim(strtolower($field[0])))]=$field[1];
             }
         }
-
+        if(! isset($input)){
+            return false;
+            
+        }
         return $input;
     }
 
