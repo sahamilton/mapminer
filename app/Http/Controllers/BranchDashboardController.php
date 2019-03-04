@@ -85,6 +85,16 @@ class BranchDashboardController extends Controller
       return $this->displayDashboard($data);
 
     }
+
+    public function pipeline()
+    {
+      $myBranches = $this->getBranches();
+      $pipeline =$this->getPipelineData(array_keys($myBranches));
+      dd($pipeline);
+
+    }
+
+
     private function getDashBoardData(array $myBranches)
     {
     
@@ -98,7 +108,7 @@ class BranchDashboardController extends Controller
       $data['chart'] = $this->getChartData($myBranches);
       $data['won'] = $this->getWonOpportunities($myBranches);
       $data['teamlogins'] = $this->getTeamLogins($myBranches);
-      dd($data['teamlogins']);
+      //dd($data['teamlogins']);
       return $data;
     }
     private function displayDashboard($data)
@@ -145,7 +155,7 @@ class BranchDashboardController extends Controller
 
 
      */
-    public function getBranchFunnel(array $branches){
+    private function getBranchFunnel(array $branches){
     
          return $this->opportunity
                      ->whereHas('branch',function ($q) use($branches){
@@ -187,7 +197,7 @@ class BranchDashboardController extends Controller
     
 
     */
-private function getChartData($branches)
+  private function getChartData($branches)
     {
        $results =   $this->branch
                     ->whereIn('id',$branches)
@@ -239,8 +249,16 @@ private function getChartData($branches)
     {
       
       $users =  $this->person->myBranchTeam($branches)->toArray();
- 
-      return $this->track->whereIn('user_id',$users)->get();
+
+      $track =  $this->person->whereIn('user_id',$users)->with('userdetails','userdetails.usage')->get();
+
+      return $track->map(function($person){
+       
+          return [$person->fullName() => [
+                'first'=>$person->userdetails->usage->min('lastactivity'),
+                'last'=>$person->userdetails->usage->max('lastactivity'),
+                'count'=>$person->userdetails->usage->count()]];
+      });
     }
 
     /*
@@ -437,7 +455,15 @@ private function getChartData($branches)
     
     private function getPipeline(array $myBranches){
     
-      $pipeline =  $this->opportunity
+        $pipeline = $this->getPipeLineDatat($myBranches);
+        return $this->formatPipelineData($pipeline);
+     }
+     
+     private function getPipeLineData(array $myBranches)
+     {
+
+
+     return  $this->opportunity
                     ->selectRaw('branch_id,YEARWEEK(expected_close,3) as yearweek,sum(value) as total')
                     ->whereNotNull('value')
                     ->where('value','>',0)
@@ -447,7 +473,11 @@ private function getChartData($branches)
                     ->orderBy('branch_id','asc')
                     ->orderBy('yearweek','asc')
                     ->get();
+    }
 
+
+    private function formatPipelineData($pipeline)
+    {
       $data = [];
      
       foreach ($pipeline as $item){

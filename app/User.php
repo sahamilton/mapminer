@@ -70,7 +70,7 @@ class User extends Authenticatable
 
     public function usage()
     {
-        return $this->hasOne(Track::class, 'user_id');
+        return $this->hasMany(Track::class, 'user_id');
     }
     public function scopeFirstLogin($query, Carbon $date)
     {

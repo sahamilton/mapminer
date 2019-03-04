@@ -76,7 +76,9 @@ Route::group(['middleware' => 'auth'], function () {
 	#Branch Dashboard
 		Route::post('branches/dashboard',['as'=>'branches.dashboard','uses'=>'BranchDashboardController@selectBranch']);
 	    Route::resource('branch/dashboard','BranchDashboardController');
-
+	 # Branch Pipeline
+	    Route::get('branch/pipeline',['as'=>'branches.pipeline','uses'=>"BranchDashboardController@pipeline"]);
+	   
 	# Branch Leads
 		Route::get('branch/leads',['as'=>'branch.leads','uses'=>'MyLeadsController@index']);
 		Route::get('branch/{branch}/leads',['as'=>'lead.branch','uses'=>'MyLeadsController@branchLeads']);

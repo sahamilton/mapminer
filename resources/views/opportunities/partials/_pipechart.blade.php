@@ -14,7 +14,24 @@ var barChart = new Chart(ctpipe,
       labels: [{!! $data['pipeline']['keys'] !!}],
 
       datasets: [{!! $data['pipeline']['chartdata'] !!} ]
-    }   
-
-});
+    },
+ options: {
+        animation: {
+          duration: 10,
+        },
+  
+        scales: {
+          xAxes: [{ 
+            stacked: true, 
+            gridLines: { display: false },
+            }],
+          yAxes: [{ 
+            stacked: true, 
+             
+            }],
+        }, // scales
+        legend: {display: true}
+    } // options
+   }
+);
 </script>
