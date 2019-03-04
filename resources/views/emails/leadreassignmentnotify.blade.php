@@ -21,7 +21,7 @@ Address: {{$address->fullAddress()}}
        Check out this lead.
 @endcomponent
 
-You can contact {{$sender->firstname}}  at <a href="mailto:{{auth()->user()->email}}">{{$sender->userdetails->email}}</a> for more information.
+You can contact {{$sender->firstname}}  at <a href="mailto:{{$sender->userdetails->email}}">{{$sender->userdetails->email}}</a> for more information.
 
 Sincerely
         
