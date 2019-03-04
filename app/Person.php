@@ -367,7 +367,9 @@ class Person extends NodeModel implements HasPresenter {
 		->where('person_id','=',auth()->user()->person->id);
 	}
 
-	
+	public function activities(){
+        return $this->hasMany(Activity::class,'user_id','user_id');
+    }
     
     public function campaigns(){
     	return $this->belongsToMany(Salesactivity::class);

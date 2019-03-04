@@ -319,6 +319,10 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
 {
 	#Ops Main Page
 		Route::get('/',['as'=>'ops','uses'=>'Admin\AdminDashboardController@dashboard']);
+	
+	# Activity types
+	    Route::resource('activitytype','ActivityTypeController');
+
 	# Address
 		Route::get('address/import', ['as'=>'address.importfile', 'uses'=>'AddressImportController@getfile']);
 
@@ -466,7 +470,7 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
 		Route::get('leadsource/{id}/unassigned',['as'=>'leadsource.unassigned','uses'=>'LeadSourceController@unassigned']);
 		Route::get('leadsource/{id}/addleads',['as'=>'leadsource.addleads','uses'=>'LeadImportController@getFile']);
 
-		Route::get('leadsource/{leadsource}/state/{state}',['as'=>'leadsource.unassigned.state','uses'=>'LeadSournceCOntroller@unassignedstate']);
+		Route::get('leadsource/{leadsource}/state/{state}',['as'=>'leadsource.unassigned.state','uses'=>'LeadSourceController@unassignedstate']);
 		Route::get('leadsource/{leadsource}/flush',['as'=>'leadsource.flushleads','uses'=>'LeadSourceController@flushLeads']);
 		Route::resource('leadsource','LeadSourceController');
 

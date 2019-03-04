@@ -1,6 +1,6 @@
 <table id='sorttable5' class ='table table-bordered table-striped table-hover'>
 	<thead>
-		<td>Branch</td>
+		<th>Branch</th>
 		@foreach($data['activitychart']['keys'] as $key)
 			<th>{{$key}}</th>
 		@endforeach
