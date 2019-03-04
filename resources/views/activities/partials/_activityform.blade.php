@@ -31,7 +31,7 @@
                   type="text" 
                   name="activity_date" 
                   autocomplete='off' 
-                  id="fromdatepicker" 
+                  id="activitydate" 
                   value="{{  old('activity_date', isset($activity) ? $activity->activity_date->format('m/d/Y') : date('m/d/Y')) }}"/>
               <span class="help-block">
                   <strong>{{$errors->has('activity_date') ? $errors->first('activity_date')  : ''}}</strong>
@@ -61,7 +61,7 @@
               <input class="form-control followup_date" 
                   type="text" 
                   name="followup_date"  
-                  id="todatepicker"  
+                  id="followupdate"  
                   autocomplete="off"
                   value="{{  old('followup_date', isset($activity) && isset($activity->followup_date) ? $activity->followup_date->format('m/d/Y') : '') }}"/>
               <span class="help-block">

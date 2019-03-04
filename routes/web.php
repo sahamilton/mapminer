@@ -325,64 +325,69 @@ Route::group(['middleware' => 'auth'], function () {
  *  Admin / Sales  Routes
  *  ------------------------------------------
  */
-    Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function () {
-        #Ops Main Page
-        Route::get('/', ['as'=>'ops','uses'=>'Admin\AdminDashboardController@dashboard']);
-        # Address
-        Route::get('address/import', ['as'=>'address.importfile', 'uses'=>'AddressImportController@getfile']);
+Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
+{
+	#Ops Main Page
+		Route::get('/',['as'=>'ops','uses'=>'Admin\AdminDashboardController@dashboard']);
+	
+	# Activity types
+	    Route::resource('activitytype','ActivityTypeController');
 
-        #Branches
-        Route::get('branches/import', ['as'=>'branches.importfile', 'uses'=>'BranchesImportController@getFile']);
-        Route::post('branches/change', ['as'=>'branches.change','uses'=>'BranchesImportController@update']);
-        Route::post('branches/bulkimport', ['as'=>'branches.import', 'uses'=>'BranchesImportController@import']);
-        Route::get('geocode', ['as'=>'branches.geocode', 'uses'=>'BranchesController@geoCodeBranches']);
-        Route::get('branchmap', ['as'=>'branches.genmap', 'uses'=>'BranchesController@rebuildBranchMap']);
-        Route::get('branches/export', ['as'=>'branches.export', 'uses'=>'BranchesController@export']);
-        Route::get('branches/team/export', ['as'=>'branches.team.export', 'uses'=>'BranchesController@exportTeam']);
-        Route::resource('branches', 'BranchesController', ['except'=>['index','show']]);
-    
-        #Companies
-        Route::get('companies/import', ['as'=>'companies.importfile', 'uses'=>'CompaniesImportController@getFile']);
-        Route::post('companies/import', ['as'=>'companies.import', 'uses'=>'CompaniesImportController@import']);
-        Route::get('companies/export', ['as'=>'companies.export', 'uses'=>'CompaniesController@export']);
-        Route::post('companies/export', ['as'=>'companies.locationsexport', 'uses'=>'CompaniesController@locationsExport']);
+	# Address
+		Route::get('address/import', ['as'=>'address.importfile', 'uses'=>'AddressImportController@getfile']);
 
-        Route::get('companies/download', ['as'=>'allcompanies.export','uses'=>'CompaniesController@exportAccounts']);
-        
-        Route::get('company/{companyId}/export', ['as'=>'company.export','uses'=>'WatchController@companyexport']);
-        
-        # Order Import
-        Route::get('orderimport/flush', ['as'=>'orderimport.flush','uses'=>'OrderImportController@flush']);
-        Route::get('orderimport/finalize', ['as'=>'orderimport.finalize','uses'=>'OrderImportController@finalize']);
+	#Branches
+		Route::get('branches/import', ['as'=>'branches.importfile', 'uses'=>'BranchesImportController@getFile']);
+		Route::post('branches/change',['as'=>'branches.change','uses'=>'BranchesImportController@update']);
+		Route::post('branches/bulkimport', ['as'=>'branches.import', 'uses'=>'BranchesImportController@import']);
+		Route::get('geocode', ['as'=>'branches.geocode', 'uses'=>'BranchesController@geoCodeBranches']);
+		Route::get('branchmap', ['as'=>'branches.genmap', 'uses'=>'BranchesController@rebuildBranchMap']);
+		Route::get('branches/export', ['as'=>'branches.export', 'uses'=>'BranchesController@export']);
+		Route::get('branches/team/export', ['as'=>'branches.team.export', 'uses'=>'BranchesController@exportTeam']);
+		Route::resource('branches','BranchesController',['except'=>['index','show']]);
+	
+	#Companies
+		Route::get('companies/import', ['as'=>'companies.importfile', 'uses'=>'CompaniesImportController@getFile']);
+		Route::post('companies/import', ['as'=>'companies.import', 'uses'=>'CompaniesImportController@import']);
+		Route::get('companies/export', ['as'=>'companies.export', 'uses'=>'CompaniesController@export']);
+		Route::post('companies/export', ['as'=>'companies.locationsexport', 'uses'=>'CompaniesController@locationsExport']);
 
-        Route::resource('orderimport', 'CompaniesImportController');
+		Route::get('companies/download', ['as'=>'allcompanies.export','uses'=>'CompaniesController@exportAccounts']);
+		
+		Route::get('company/{companyId}/export',['as'=>'company.export','uses'=>'WatchController@companyexport']);
+		
+	# Order Import
+		Route::get('orderimport/flush',['as'=>'orderimport.flush','uses'=>'OrderImportController@flush']);
+		Route::get('orderimport/finalize',['as'=>'orderimport.finalize','uses'=>'OrderImportController@finalize']);
 
-        //Route::post('company/filter',['as'=>'company.filter','uses'=>'CompaniesController@filter']);
-        Route::resource('company', 'CompaniesController', ['except' => ['index', 'show']]);
-        # Customers
-        
-        Route::get('customers/export', ['as'=>'customers.export', 'uses'=>'CompaniesExportController@export']);
-        Route::post('/importcustomers/mapfields', ['as'=>'companies.mapfields','uses'=>'CompaniesImportController@mapfields']);
-        Route::resource('customers', 'CustomerController');
-        # Documents
-        Route::resource('documents', 'DocumentsController');
+		Route::resource('orderimport','CompaniesImportController');
 
-        # Emails
-        Route::post('emails/selectrecipients', ['as'=>'emails.updatelist','uses'=>'EmailsController@addRecipients']);
-        Route::get('emails/update', ['as'=>'emails.updaterecipients','uses'=>'EmailsController@changelist']);
-        Route::get('emails/{id}/clone', ['as'=>'emails.clone','uses'=>'EmailsController@clone']);
-        Route::get('emails/{id}/recipients', ['as'=>'emails.recipients','uses'=>'EmailsController@recipients']);
-        Route::post('emails/send', ['as'=>'emails.send','uses'=>'EmailsController@sendEmail']);
-        Route::resource('emails', 'EmailsController');
-        # Feedback
-        Route::get('feedback/export', ['as'=>'feedback.export','uses'=>'FeedbackController@export']);
-        Route::get('feedback{feedback}/close', ['as'=>'feedback.close','uses'=>'FeedbackController@close']);
-        Route::get('feedback{feedback}/open', ['as'=>'feedback.open','uses'=>'FeedbackController@open']);
-        Route::resource('feedback', 'FeedbackController', ['except'=>['store']]);
+		//Route::post('company/filter',['as'=>'company.filter','uses'=>'CompaniesController@filter']);
+		Route::resource('company','CompaniesController',['except' => ['index', 'show']]);
+	# Customers
+		
+		Route::get('customers/export', ['as'=>'customers.export', 'uses'=>'CompaniesExportController@export']);
+		Route::post('/importcustomers/mapfields',['as'=>'companies.mapfields','uses'=>'CompaniesImportController@mapfields']);
+		Route::resource('customers','CustomerController');
+    # Documents
+    	Route::resource('documents','DocumentsController');
 
-        # Feedback Comments
-        Route::resource('feedback_comment', 'FeedbackCommentsController');
-        # Imports
+    # Emails
+    	Route::post('emails/selectrecipients',['as'=>'emails.updatelist','uses'=>'EmailsController@addRecipients']);
+    	Route::get('emails/update',['as'=>'emails.updaterecipients','uses'=>'EmailsController@changelist']);
+    	Route::get('emails/{id}/clone',['as'=>'emails.clone','uses'=>'EmailsController@clone']);
+    	Route::get('emails/{id}/recipients',['as'=>'emails.recipients','uses'=>'EmailsController@recipients']);
+    	Route::post('emails/send',['as'=>'emails.send','uses'=>'EmailsController@sendEmail']);
+    	Route::resource('emails','EmailsController');
+    # Feedback
+    	Route::get('feedback/export',['as'=>'feedback.export','uses'=>'FeedbackController@export']);
+    	Route::get('feedback{feedback}/close',['as'=>'feedback.close','uses'=>'FeedbackController@close']);
+    	Route::get('feedback{feedback}/open',['as'=>'feedback.open','uses'=>'FeedbackController@open']);
+    	Route::resource('feedback','FeedbackController',['except'=>['store']]);
+
+    # Feedback Comments
+    	Route::resource('feedback_comment','FeedbackCommentsController');
+    # Imports
     
         Route::get('branch/teams', ['as'=>'branch_team.importfile','uses'=>'BranchTeamImportController@getFile']);
         Route::post('branch/teams', ['as'=>'branches.teamimport','uses'=>'BranchTeamImportController@import']);
@@ -477,9 +482,9 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('leadsource/{leadsource}/flush', ['as'=>'leadsource.flushleads','uses'=>'LeadSourceController@flushLeads']);
         Route::resource('leadsource', 'LeadSourceController');
 
-        #Salesnotes
-        Route::get('salesnotes/filedelete/{file}', ['as'=>'salesnotes.filedelete', 'uses'=>'SalesNotesController@filedelete']);
-        Route::get('salesnotes/create/{companyId}', ['as'=>'salesnotes.cocreate','uses'=>'SalesNotesController@createSalesNotes']);
+		Route::get('leadsource/{leadsource}/state/{state}',['as'=>'leadsource.unassigned.state','uses'=>'LeadSourceController@unassignedstate']);
+		Route::get('leadsource/{leadsource}/flush',['as'=>'leadsource.flushleads','uses'=>'LeadSourceController@flushLeads']);
+		Route::resource('leadsource','LeadSourceController');
 
 
         # Sales Activity

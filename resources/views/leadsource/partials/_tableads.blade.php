@@ -7,7 +7,7 @@
     <thead>
      
     <th>Company</th>
-    <th>Business Name</th>
+    <th>Company Name</th>
     <th>City</th>
     <th>State</th>
     <th>Date Created</th>

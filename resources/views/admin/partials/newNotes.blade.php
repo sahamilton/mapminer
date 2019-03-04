@@ -5,7 +5,7 @@
   <thead>
 
     <th>Company</th>
-    <th>Business</th>
+    <th>Company</th>
     <th>Address</th>
     <th>Note</th>
     <th>Date</th>

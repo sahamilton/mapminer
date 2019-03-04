@@ -31,11 +31,16 @@
                             @include('admin.partials.nav._usersnav')
                         @endcan
                         <li>
+                            <a class="dropdown-item" href="{{ route('activitytype.index') }}">
+                                <i class="far fa-calendar-alt"></i> Activities
+                            </a>
+                        </li>
+                        <li>
                             <a class="dropdown-item" href="{{ route('imports.index') }}">
                                 <i class="fas fa-recycle"></i> Import / Export
                             </a>
                         </li>
-
+                        
                     </ul>
                 </li>
                 <li class="nav-item dropdown">

@@ -10,7 +10,7 @@ title="Download {{$user->person->postName()}}'s Watch List as a CSV / Excel file
 <table id='sorttable' class ='table table-bordered table-striped table-hover dataTable'><thead>
 
 			
-			<th>Business Name</th>
+			<th>Company Name</th>
 			<th>National Acct</th>
 			<th>Address</th>
 			<th>City</th>

@@ -11,7 +11,7 @@
         <thead>
 
             <th>Company Name</th>
-            <th>Business Name</th>
+            <th>Company Name</th>
             <th>City</th>
             <th>State</th>
            

@@ -6,7 +6,7 @@
       <th>Date Opened</th>
       <th>Days Open</th>
       <th>Status</th>
-      <th>Business</th>
+      <th>Company</th>
       <th>Address</th>
       <th>Top 50</th>
       <th>Potential Headcount</th>

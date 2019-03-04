@@ -27,6 +27,7 @@ class RouteServiceProvider extends ServiceProvider
 
         parent::boot();
         Route::model('activity', \App\Activity::class);
+        Route::model('activitytype', \App\ActivityType::class);
         Route::model('address', \App\Address::class);
         Route::model('branch', \App\Branch::class);
         Route::model('branchlead', \App\Branch::class);

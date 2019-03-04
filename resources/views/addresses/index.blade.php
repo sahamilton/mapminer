@@ -4,7 +4,7 @@
 @include('maps.partials._form')
 <table id='sorttable' class ='table table-bordered table-striped table-hover'>
 	<thead>
-		<th>Business Name</th>
+		<th>Company Name</th>
 		<th>Type</th>
 		<th>Address</th>
 		<th>City</th>

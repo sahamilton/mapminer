@@ -148,5 +148,9 @@ class Activity extends Model
             '201904' => '4']];
         }
 
-    */
+	public function scopeUpcomingActivities($query)
+	{
+		return $query->where('followup_date','>',now()->whereUserId(auth()->user()->id));
+	}
+
 }

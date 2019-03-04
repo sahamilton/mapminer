@@ -1,6 +1,6 @@
 <table id='sorttable1' class ='table table-bordered table-striped table-hover dataTable'>
 <thead>
-		<th>Business Name</th>
+		<th>Company Name</th>
 		<th>Location of</th>
 		<th>Address</th>
 		<th>City</th>

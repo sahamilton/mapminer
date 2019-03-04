@@ -49,11 +49,6 @@ class User extends Authenticatable
 
     public $dates=['lastlogin','created_at','updated_at','deleted_at','nonews'];
 
-
-    public function activities()
-    {
-        return $this->hasMany(Activity::class);
-    }
 	 public function person()
 	 {
 		  return $this->hasOne(Person::class,'user_id')->orderBy('lastname','firstname');
@@ -129,16 +124,11 @@ class User extends Authenticatable
     {
         return $this->where('username', '=', $username)->first();
     }
-*/
-    public function position()
-    {
         $position = $this->person()
                 ->select('lat', 'lng')
                 ->whereNotNull('lat')
                 ->first();
         
-        if ($position) {
-                return implode(",", $position->toArray());
         }
         return "39.50,98.35";
     }
@@ -223,13 +213,11 @@ class User extends Authenticatable
      * @param bool $ifValid
      * @return mixed
      */
-    public static function checkAuthAndRedirect($redirect, $ifValid = false)
     {
         // Get the user information
         $user = \Auth::user();
         $redirectTo = false;
 
-        if (empty($user->id) && ! $ifValid) { // Not logged in redirect, set session.
             \Session::put('loginRedirect', $redirect);
             $redirectTo = \Redirect::to('user/login')
                 ->with('notice', \Lang::get('user/user.login_first'));
@@ -259,8 +247,6 @@ class User extends Authenticatable
  * @return [type] [description]
  */
 
-    public function setApiToken()
-    {
 
         return $this->api_token = md5(uniqid(mt_rand(), true));
     }
@@ -290,13 +276,6 @@ class User extends Authenticatable
 			}
 		return $query->whereNull('lastlogin');
 	}
-    
-    /**
-   * scopeUpcoming Activities ]
-   * @param  QueryBuilder $query    [description]
-   * @param  Array $interval intervale['from','to']
-   * @return QueryBuilder          [description]
-   */
 
     public function scopeUpcomingActivities($query,$enddays=null)
     {
