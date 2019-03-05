@@ -15,7 +15,7 @@
             return view('welcome');
     }]);
 
-
+	Route::resource('inbound','InboundMailController');
 /*
 	
 	Route::get('/error',function(){
@@ -120,7 +120,8 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::post('findme',['as'=>'findme','uses'=>'GeoCodingController@findMe']);
 		Route::get('findme',['as'=>'findme','uses'=>'MapsController@findme']);
 
-
+	# Incoming
+			
 	#Industry Focus
     	Route::resource('/industryfocus','PersonIndustryController');
 

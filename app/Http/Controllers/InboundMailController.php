@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Inbound;
+use App\InboundMail;
 use Illuminate\Http\Request;
 
-class InboundController extends Controller
+class InboundMailController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,7 +14,7 @@ class InboundController extends Controller
      */
     public function index()
     {
-        //
+
     }
 
     /**
@@ -24,7 +24,9 @@ class InboundController extends Controller
      */
     public function create()
     {
-        //
+        validate that it is coing from approved i
+        validate that it can be parsed
+        parse and store
     }
 
     /**
@@ -41,10 +43,10 @@ class InboundController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Inbound  $inbound
+     * @param  \App\InboundMail  $inboundMail
      * @return \Illuminate\Http\Response
      */
-    public function show(Inbound $inbound)
+    public function show(InboundMail $inboundMail)
     {
         //
     }
@@ -52,10 +54,10 @@ class InboundController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Inbound  $inbound
+     * @param  \App\InboundMail  $inboundMail
      * @return \Illuminate\Http\Response
      */
-    public function edit(Inbound $inbound)
+    public function edit(InboundMail $inboundMail)
     {
         //
     }
@@ -64,10 +66,10 @@ class InboundController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Inbound  $inbound
+     * @param  \App\InboundMail  $inboundMail
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Inbound $inbound)
+    public function update(Request $request, InboundMail $inboundMail)
     {
         //
     }
@@ -75,10 +77,10 @@ class InboundController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Inbound  $inbound
+     * @param  \App\InboundMail  $inboundMail
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Inbound $inbound)
+    public function destroy(InboundMail $inboundMail)
     {
         //
     }
