@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use \App\Inbound;
-use \App\InboundEmail;
+use \App\InboundMail;
 use \App\User;
 use \App\Person;
 use App\EmailLog;
@@ -47,16 +47,11 @@ class InboundMailController extends Controller
             $inbound = new \Postmark\Inbound(file_get_contents('php://input'));
             
         }
-              
-        $this->inbound = new Inbound($inbound);
-       /*
-        if (strtolower(str_replace(' ','', ucwords($this->inbound->subject)))=='barduty'){
-            return redirect()->route('resend.barsignup',$this->inbound->fromEmail);
-        }*/
-        $this->inboundemail = new InboundEmail($this->inbound);
+
+        $this->inboundemail = new InboundMail($inbound);
         $this->inboundemail->processEmail();
         if($request && request()->has('test')){
-            return redirect()->route('guest')->withMessage('all done');
+            return redirect()->back()->withMessage('all done');
         }else{
            return response()->json(['ok' => 'ok']); 
         }

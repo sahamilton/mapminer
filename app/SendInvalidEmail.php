@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class SendInvalidEmail extends InboundEmail
+class SendInvalidEmail extends InboundMail
 {
         
     public function getContent(){

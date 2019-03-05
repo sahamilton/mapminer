@@ -7,8 +7,8 @@ use Mail;
 use App\User;
 use App\Mail\SendMemberRequest;
 use App\Mail\SendUnknownRequest;
-
-class InboundEmail extends Model
+use \Postmark\Inbound;
+class InboundMail extends Model
 {
     protected $inbound;
     protected $attachment;
@@ -29,17 +29,20 @@ class InboundEmail extends Model
 
     public function processEmail() {
          // validate from email
-     
-        $from = $this->inbound->fromEmail;
-        $subject = str_replace(' ','',ucwords($this->inbound->subject));
+
+        $from = $this->inbound->FromEmail();
+        $subject = str_replace(' ','',ucwords($this->inbound->Subject()));
         $valid = false;
 
-         if($this->user = $this->checkValidMember($from))
+        $content = $this->inbound->StrippedTextReply();
+        $content2 = $this->inbound->TextBody();
+        $content3 = $this->inbound->HtmlBody();
+        if($this->user = $this->checkValidSender($from))
             {
                 $valid = true;
                 // get & check that we have a valid subject
-
-                $send = $this->checkValidSubject($subject);
+                // parse email
+               // $send = $this->checkValidSubject($subject);
               
         }else{
             
@@ -47,7 +50,7 @@ class InboundEmail extends Model
            
         }
 
-        $send->sendReply($this->template); 
+       //$send->sendReply($this->template); 
         $log = new EmailLog;
         $log->subject = $subject;
         $log->from = $from;
@@ -73,10 +76,12 @@ class InboundEmail extends Model
         return "OK";
     }
    
-   private function checkValidMember($from){
-     return User::where('email','=',$from)
+   private function checkValidSender($from){
+     /*return User::where('email','=',$from)
             ->with('member','member.member')
             ->first();
+            */
+           return true;
    }
 
    private function checkValidSubject($subject){

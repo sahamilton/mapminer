@@ -15,7 +15,10 @@
             return view('welcome');
     }]);
 
-	Route::resource('inbound','InboundMailController');
+
+	Route::get('testinbound',['as'=>'testinbound','uses'=>'InboundMailController@inbound']);
+	Route::get('testemail',['as'=>'testemail','uses'=>'InboundMailController@testemail']);
+
 /*
 	
 	Route::get('/error',function(){
