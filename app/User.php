@@ -123,16 +123,19 @@ class User extends Authenticatable
     /*public function getUserByUsername( $username )
     {
         return $this->where('username', '=', $username)->first();
-    }
+    }*/
+
+   public function position(){
         $position = $this->person()
-                ->select('lat', 'lng')
+                ->select('lat','lng')
                 ->whereNotNull('lat')
                 ->first();
         
+        if($position){
+                return implode(",",$position->toArray());
         }
         return "39.50,98.35";
     }
-
     public function setAccess()
     {
         return $this->api_token ."tbmm".Crypt::encrypt(now());
@@ -304,8 +307,4 @@ class User extends Authenticatable
         }
     }
 
-    public function position()
-    {
-        return $this->person->lat.",".$this->person->lng;
-    }
 }
