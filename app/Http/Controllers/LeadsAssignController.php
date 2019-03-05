@@ -106,12 +106,16 @@ class LeadsAssignController extends Controller
     }
 
     public function store(Request $request, Address $address){
-
+     
       $branches = $this->branch->whereIn('id',request('branch'))->with('manager','manager.userdetails')->get();
       $address->load('contacts',$address->addressable_type);
       $branchids = $branches->pluck('id')->toArray();
+      foreach ($branchids as $branch){
+        $syncData[$branch] = ['status_id'=>1];
+      }
    
-      $address->assignedToBranch()->sync([$branchids, ['status_id'=>1]]);
+      $address->assignedToBranch()->sync($syncData);
+
       if(request()->has('notify'))
       {       
         foreach ($branches as $branch)
