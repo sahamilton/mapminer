@@ -313,8 +313,5 @@ class User extends Authenticatable
 
     }
 
-    public function position()
-    {
-        return $this->person->lat.",".$this->person->lng;
-    }
+
 }
