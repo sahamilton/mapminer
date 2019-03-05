@@ -2,86 +2,70 @@
 
 namespace App\Http\Controllers;
 
-use App\InboundMail;
 use Illuminate\Http\Request;
+use \App\Inbound;
+use \App\InboundEmail;
+use \App\User;
+use \App\Person;
+use App\EmailLog;
 
 class InboundMailController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    
+    /*
+    Validate incoming email 
+    retreive content from sources
+    send reply message
+    */
+
+    protected $user;
+    protected $person;
+    protected $inbound;
+
+    public function __construct(User $user, Person $person){
+            $this->user = $user;
+        
+    }
+
+   public function testemail()
     {
+       return response()->view('emails.send.testemail');
+        
+    }
+    
+
+
+    public function inbound(Request $request){
+
+
+        if($request && request()->has('test')){
+           
+             $inbound = new \Postmark\Inbound(file_get_contents('inbound.json'));
+            
+        }else{
+           
+            $inbound = new \Postmark\Inbound(file_get_contents('php://input'));
+            
+        }
+              
+        $this->inbound = new Inbound($inbound);
+       /*
+        if (strtolower(str_replace(' ','', ucwords($this->inbound->subject)))=='barduty'){
+            return redirect()->route('resend.barsignup',$this->inbound->fromEmail);
+        }*/
+        $this->inboundemail = new InboundEmail($this->inbound);
+        $this->inboundemail->processEmail();
+        if($request && request()->has('test')){
+            return redirect()->route('guest')->withMessage('all done');
+        }else{
+           return response()->json(['ok' => 'ok']); 
+        }
+        
+        
 
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        validate that it is coing from approved i
-        validate that it can be parsed
-        parse and store
-    }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\InboundMail  $inboundMail
-     * @return \Illuminate\Http\Response
-     */
-    public function show(InboundMail $inboundMail)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\InboundMail  $inboundMail
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(InboundMail $inboundMail)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\InboundMail  $inboundMail
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, InboundMail $inboundMail)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\InboundMail  $inboundMail
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(InboundMail $inboundMail)
-    {
-        //
-    }
+    
+   
 }
