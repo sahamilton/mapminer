@@ -86,14 +86,7 @@ class BranchDashboardController extends Controller
 
     }
 
-    public function pipeline()
-    {
-      $myBranches = $this->getBranches();
-      $pipeline =$this->getPipelineData(array_keys($myBranches));
-      dd($pipeline);
-
-    }
-
+    
 
     private function getDashBoardData(array $myBranches)
     {
@@ -455,7 +448,7 @@ class BranchDashboardController extends Controller
     
     private function getPipeline(array $myBranches){
     
-        $pipeline = $this->getPipeLineDatat($myBranches);
+        $pipeline = $this->getPipeLineData($myBranches);
         return $this->formatPipelineData($pipeline);
      }
      

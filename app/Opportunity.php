@@ -3,7 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-
+use Carbon\Carbon;
 class Opportunity extends Model
 {
     
@@ -69,5 +69,17 @@ class Opportunity extends Model
 
     public function won(){
         return $this->where('closed', '=', 1);
+    }
+
+    public function getBranchPipeline(array $branches)
+    {
+         return  $this->whereNotNull('value')
+                    ->where('value','>',0)
+                    ->whereIn('branch_id',$branches)
+                    ->where('expected_close','>',Carbon::now())
+                    ->with('address','branch')
+                    ->orderBy('branch_id')
+                    ->get();
+
     }
 }

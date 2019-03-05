@@ -25,7 +25,7 @@
       @include('opportunities.partials._wonchart')
 ` </div>
 <div class="row" style="width:45%;float:right">
-    <h4>Pipeline</h4>
+    <h4><a href="{{route('branches.pipeline')}}">Pipeline</a></h4>
     <canvas id="ctpipe" width="400" height="400" ></canvas>
     @include('opportunities.partials._pipechart')
 

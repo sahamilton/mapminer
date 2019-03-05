@@ -42,10 +42,8 @@ class WebleadsImportController extends Controller
             return back()->withError('Unable to parse that input')->withInput();
         }
 
-
+       
         
-        $input = $this->parseInputData($request);
-
 
 
         
@@ -167,16 +165,16 @@ class WebleadsImportController extends Controller
     private function validateFields($input)
     {
         $valid = $this->getValidFields();
-
+       
         $data =  [];
         foreach ($input as $key => $value) {
             if (array_key_exists(trim($key), $valid)) {
                 $data[$valid[$key]] = $value;
             }
         }
-      
+       
         $requiredFields = $this->import->requiredFields;
-      
+   
         if ($diff = array_diff($requiredFields, array_keys($data))) {
             return false;
         }

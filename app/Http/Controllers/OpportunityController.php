@@ -406,4 +406,26 @@ class OpportunityController extends Controller
 
         return $result;
     }
+
+   public function pipeline()
+    {
+      $myBranches = $this->getMyBranches();
+
+      $pipeline =$this->opportunity->getBranchPipeline(array_keys($myBranches));
+      return response()->view('opportunities.pipeline',compact('pipeline','myBranches'));
+
+    }
+    private function getMyBranches()
+    {
+      
+      if(auth()->user()->hasRole('admin') or auth()->user()->hasRole('sales_operations')){
+       
+            return $this->branch->all()->pluck('branchname','id')->toArray();
+        
+        } else {
+      
+             return  $this->person->myBranches();
+        }
+    }
+
 }
