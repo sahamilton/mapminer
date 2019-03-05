@@ -7,6 +7,7 @@ use App\ActivityType;
 use App\Contact;
 use App\Person;
 use App\AddressBranch;
+use App\Branch;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Requests\ActivityFormRequest;
@@ -158,11 +159,8 @@ class ActivityController extends Controller
 
     }
 
-    public function getBranchActivtiesByType($branch,$activitytype= null){
+    public function getBranchActivtiesByType(Branch $branch,ActivityType $activitytype= null){
 
-        if($activitytype){
-            $activitytype = ActivityType::findOrFail($activitytype);
-        }
         $branch = $branch->getActivitiesByType($activitytype)->findOrFail($branch->id);
    
         return response()->view('opportunities.showactivities',compact('branch','activitytype'));
