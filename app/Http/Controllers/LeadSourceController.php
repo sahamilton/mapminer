@@ -218,7 +218,7 @@ class LeadSourceController extends Controller
             return response()->view('leads.branches', compact('branches', 'leadsource'));
     }
     
-    public function unassigned($leadsource)
+    public function unassigned(LeadSource $leadsource)
     {
        
         $leadsource = $this->leadsource->withCount(

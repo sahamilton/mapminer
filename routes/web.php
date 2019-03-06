@@ -446,7 +446,7 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
 		//Route::resource('webleads','WebLeadsImportController');
 
 		
-		Route::get('leadsource/{id}/export',['as'=>'leadsource.export','uses'=>'LeadSourceController@export']);
+		Route::get('leadsource/{leasource}/export',['as'=>'leadsource.export','uses'=>'LeadSourceController@export']);
 		
 		Route::post('/webleads/import/form',['as'=>'leads.webleadsinsert','uses'=>'WebleadsImportController@getLeadFormData']);
 		Route::post('/webleads/import/create',['as'=>'webleads.import.store','uses'=>'WebleadsImportController@store']);
@@ -467,7 +467,7 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
 		Route::post('leadsource/{leadsource}/email',['as'=>'sendleadsource.message','uses'=>'LeadsEmailController@email']);
 		Route::get('leadsource/{leadsource}/assign',['as'=>'leadsource.assign','uses'=>'LeadsAssignController@assignLeads']);
 		Route::get('leadsource/{id}/branch',['as'=>'leadsource.branches','uses'=>'LeadSourceController@branches']);
-		Route::get('leadsource/{id}/unassigned',['as'=>'leadsource.unassigned','uses'=>'LeadSourceController@unassigned']);
+		Route::get('leadsource/{leadsource}/unassigned',['as'=>'leadsource.unassigned','uses'=>'LeadSourceController@unassigned']);
 		Route::get('leadsource/{id}/addleads',['as'=>'leadsource.addleads','uses'=>'LeadImportController@getFile']);
 
 		Route::get('leadsource/{leadsource}/state/{state}',['as'=>'leadsource.unassigned.state','uses'=>'LeadSourceController@unassignedstate']);
