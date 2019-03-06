@@ -309,7 +309,7 @@ class AdminUsersController extends BaseController
     }
     
 
-        private function updatePassword(Request $request, User $user)
+        private function updatePassword(UserFormRequest $request, User $user)
         {
             if (request()->filled('password')) {
                     $user->password = \Hash::make(request('password'));
@@ -317,7 +317,7 @@ class AdminUsersController extends BaseController
                 }
         }
 
-        private function updateServicelines(Request $request, User $user)
+        private function updateServicelines(UserFormRequest $request, User $user)
         {
 
             if(request()->filled('serviceline')){
@@ -328,7 +328,7 @@ class AdminUsersController extends BaseController
             }
         }
 
-        private function updateIndustryVertical(Request $request, Person $person)
+        private function updateIndustryVertical(UserFormRequest $request, Person $person)
         {
                         if (request()->filled('vertical')) {
                         $verticals = request('vertical');
