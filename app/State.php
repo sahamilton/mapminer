@@ -25,4 +25,14 @@ class State extends Model
     {
         return $this->hasMany(Location::class, 'statecode', 'state');
     }
+    public function addresses()
+    {
+        return $this->hasMany(Address::class, 'statecode', 'state');
+    }
+
+    public function people()
+    {
+        return $this->hasMany(Person::class, 'statecode', 'state');
+    }
+
 }

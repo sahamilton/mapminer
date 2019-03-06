@@ -76,6 +76,13 @@ class Address extends Model
            return $this->hasMany(Note::class, 'related_id', 'addressable_id')
         ->with('writtenBy');
     }
+    
+    public function state()
+    {
+        return $this->belongsTo(State::class,'state','statecode');
+    }
+
+
     public function orders()
     {
  

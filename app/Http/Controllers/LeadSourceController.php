@@ -218,8 +218,9 @@ class LeadSourceController extends Controller
             return response()->view('leads.branches', compact('branches', 'leadsource'));
     }
     
-    public function unassigned($id)
+    public function unassigned($leadsource)
     {
+       
         $leadsource = $this->leadsource->withCount(
             ['addresses',
             'addresses as assigned'=>function ($query) {
@@ -232,7 +233,7 @@ class LeadSourceController extends Controller
                     $query->has('closed');
             }]
         )
-        ->findOrFail($id);
+        ->findOrFail($leadsource->id);
 
         $states = Address::where('lead_source_id', '=', $leadsource->id)
                 ->whereDoesntHave('assignedToBranch')->whereDoesntHave('assignedToPerson')
@@ -244,7 +245,25 @@ class LeadSourceController extends Controller
 
         return response()->view('leads.unassigned', compact('leadsource', 'states'));
     }
+    /*
+    
+    */
+    public function unassignedstate(LeadSource $leadsource, $state)
+    {
+        $leadsource = $this->leadsource
+        ->with(['addresses' => function ($query) use($state){
+                $query->whereDoesntHave('assignedToBranch')->whereDoesntHave('assignedToPerson')
+                ->where('state','=',trim($state));
+            }],'addresses.state')
+        ->findOrFail($leadsource->id);
 
+        return response()->view('leadsource.stateunassigned', compact('leadsource', 'state'));
+    }
+    /*
+    
+
+
+    */
     private function getLeads($id)
     {
 
@@ -453,4 +472,6 @@ class LeadSourceController extends Controller
             });
         })->download('csv');
     }
+
+    
 }
