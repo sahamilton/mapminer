@@ -1,9 +1,9 @@
 @extends ('admin.layouts.default')
 @section('content')
 <div class="container">
- <p><a href="{{route('leadsource.show',$leadsource->id)}}">Return to {{$leadsource->source}} details</a></p>
-<h4>{{$leadsource->source}} Unassigned Leads in {{$state}}</h4>
 
+<h4>{{$leadsource->source}} Unassigned Leads in {{$state}}</h4>
+ <p><a href="{{route('leadsource.show',$leadsource->id)}}">Return to {{$leadsource->source}} details</a></p>
     <table id ='sorttable2' class='table table-striped table-bordered table-condensed table-hover'>
         <thead>
          
@@ -23,7 +23,7 @@
                         <td><a href="{{route('address.show',$lead->id)}}">{{$lead->businessname}}</a></td>
                         <td>{{$lead->city}}</td>
                         <td>{{$lead->state}}</td>
-                        <td>{{$lead->created_at->format('M j, Y')}}</td>
+                        <td>{{$lead->created_at ? $lead->created_at->format('M j, Y') : ''}}</td>
                     </tr>
 
             @endforeach
