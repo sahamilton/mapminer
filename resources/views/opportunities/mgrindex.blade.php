@@ -3,15 +3,15 @@
 
 <div class="container">
 <h2>My Teams  Dashboard</h2>
-@if($data['branches']->count()>1)
+@if($data['team']['team']->count()>1)
 
 <div class="col-sm-4">
-<form name="selectbranch" method="post" action="{{route('branches.dashboard')}}" >
+<form name="selectmanager" method="post" action="{{route('managers.dashboard')}}" >
 @csrf
 
- <select class="form-control input-sm" id="branchselect" name="branch" onchange="this.form.submit()">
-  @foreach ($data['branches'] as $branch)
-    <option value="{{$branch->id}}">{{$branch->branchname}}</option>
+ <select class="form-control input-sm" id="managerselect" name="manager" onchange="this.form.submit()">
+  @foreach ($data['team']['team'] as $mgr)
+    <option value="{{$mgr->id}}">{{$mgr->fullName()}}</option>
   @endforeach 
 </select>
 
@@ -29,7 +29,20 @@
       aria-controls="nav-dashboard"
       aria-selected="true">
     <strong>Dashboard</strong></a>
+    @if($data['team']['team']->count()>0)
 
+      <a class="nav-item nav-link "
+          id="nav-team-tab"
+          data-toggle="tab"
+          href="#team"
+          role="tab"
+          aria-controls="nav-team"
+          aria-selected="true">
+        <strong>Team</strong>
+        </a>
+
+
+    @endif
     <a class="nav-item nav-link "
       id="nav-summary-tab"
       data-toggle="tab"
@@ -47,6 +60,9 @@
     <div id="dashboard" class="tab-pane show active">
       @include('branches.partials._dashboard')
      </div>
+     <div id="team" class="tab-pane fade">
+        @include('opportunities.partials._team')
+      </div>
       <div id="summary" class="tab-pane fade">
         @include('opportunities.partials._summary')
       </div>

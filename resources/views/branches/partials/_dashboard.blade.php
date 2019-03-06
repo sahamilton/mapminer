@@ -5,16 +5,16 @@
   @include('opportunities.partials._bubble')
 </div>
 
-@if($data['branches']->count()< 10 )
+@if($data['branches']->count() > 10 )
+  <div class="row" style="clear:both">
+    <h4>Branch Activities</h4>
+    @include('activities.partials._activitytable')
+  </div>
+@else
   <div style="width: 400px; height: 300px;float:left" >
     <h4>Branch Activities</h4>
     <canvas id="ctx" width="400" height="400" ></canvas>
     @include('activities.partials._mchart')
-  </div>
-@else
-  <div class="row" style="clear:both">
-    <h4>Branch Activities</h4>
-    @include('activities.partials._activitytable')
   </div>
 @endif
 

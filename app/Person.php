@@ -44,7 +44,9 @@ class Person extends NodeModel implements HasPresenter
     {
         return $this->belongsTo(Person::class, 'reports_to', 'id');
     }
-
+    public function reportChain(){
+       return $this->getAncestorsWithoutRoot();
+    }
     public function directReports()
     {
         return $this->hasMany(Person::class, 'reports_to');

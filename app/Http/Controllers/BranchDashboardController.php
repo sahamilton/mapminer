@@ -19,14 +19,17 @@ use Illuminate\Http\Request;
 
 class BranchDashboardController extends Controller
 {
+    public $activity;
     public $address;
     public $addressbranch;
     public $branch;
     public $contact;
+    public $manager;
     public $opportunity;
-    public $activity;
+    
     public $person;
     public $track;
+
     public $keys = [];
 
 
@@ -58,39 +61,65 @@ class BranchDashboardController extends Controller
     
     public function index()
     {
-    
+        $this->manager = $this->person->where('user_id','=',auth()->user()->id)->first();
         $myBranches = $this->getBranches();
-    
-        
         if(count($myBranches)==0){
-            return redirect()->route('user.show',auth()->user()->id)
-            ->withWarning("You are not assigned to any branches. You can assign yourself here or contact Sales Ops");
-        }
+                return redirect()->route('user.show',auth()->user()->id)
+                ->withWarning("You are not assigned to any branches. You can assign yourself here or contact Sales Ops");
+            }
 
         $data = $this->getDashBoardData(array_keys($myBranches));
+          
       
        return response()->view('opportunities.mgrindex', compact('data'));
         
       
     }
+    /*
+    
 
+
+    */
     public function selectBranch(Request $request)
     {
+
       $data = $this->getDashBoardData([request('branch')]);
       return $this->displayDashboard($data);
 
     }
+    /*
+    
+
+    */
     public function show($branch){
       $data = $this->getDashBoardData([$branch]);
       return $this->displayDashboard($data);
 
     }
+    public function manager(Request $request, Person $manager=null)
+    {
+      if($manager){
+        $this->manager = $manager;
+      }else{
+        $this->manager = $this->person->findOrFail(request('manager'));
+      }
+      
+      $team = $this->manager->descendantsAndSelf()->with('branchesServiced')->get();
+      $branches = $team->map(function ($mgr){
+        return $mgr->branchesServiced->pluck('id')->toArray();
+      });
+      $myBranches = array_unique($branches->flatten()->toArray());
 
+      $data = $this->getDashBoardData($myBranches);
+    
+      return $this->displayDashboard($data);
+    }
     
 
     private function getDashBoardData(array $myBranches)
     {
-    
+      
+      $data['team']= $this->myTeamsOpportunities();
       $data['branches'] = $this->getSummaryBranchData($myBranches);
       $data['upcoming'] = $this->getUpcomingActivities($myBranches);       
       $data['funnel'] = $this->getBranchFunnel($myBranches);
@@ -102,8 +131,12 @@ class BranchDashboardController extends Controller
       $data['won'] = $this->getWonOpportunities($myBranches);
       $data['teamlogins'] = $this->getTeamLogins($myBranches);
       //dd($data['teamlogins']);
+    
       return $data;
     }
+    /*
+    
+     */
     private function displayDashboard($data)
     {
 
@@ -119,7 +152,9 @@ class BranchDashboardController extends Controller
 
 
     }
-    private function getBranches()
+   /*
+   
+    */private function getBranches()
     {
       
       if(auth()->user()->hasRole('admin') or auth()->user()->hasRole('sales_operations')){
@@ -132,7 +167,9 @@ class BranchDashboardController extends Controller
         }
     }
     
-
+    /*
+    
+     */
     private function getBranchNotes($branches)
     {
 
@@ -157,32 +194,76 @@ class BranchDashboardController extends Controller
                      ->whereNotNull('expected_close')
                      ->openFunnel()->get(); 
     }
+    /*
     
+
+    */
+
+    private function myTeamsOpportunities()
+    {
+
+      $data['team'] =  $this->person->where('reports_to','=',$this->manager->id)
+            ->has('branchesServiced')
+            ->with('branchesServiced',
+                'branchesServiced.opportunities',
+                'branchesServiced.leads',
+                'branchesServiced.activities')   
+            ->get();
+   
+
+      $sum = $data['team']->map(function ($manager){
+        return [$manager->id=>$manager->branchesServiced->map(function ($branch){
+          return ['leads'=>$branch->leads->count(),
+                  'opportunities'=>$branch->opportunities->where('closed','=',0)->count(),
+                  'won'=>$branch->opportunities->where('closed','=',1)->where('actual_close','>',Carbon::now()->subMonth(2))->count(),
+                  'booked'=>$branch->opportunities->where('closed','=',1)->where('actual_close','>',Carbon::now()->subMonth(2))->sum('value'),
+                  'lost'=>$branch->opportunities->where('closed','=',2)->where('actual_close','>',Carbon::now()->subMonth(2))->count(),
+                  'pipeline'=>$branch->opportunities->where('closed','=',0)->where('expected_close','>',Carbon::now())->sum('value'),
+                  'activities'=>$branch->activities->count()];
+        })];
+      });
+      foreach ($sum as $manager){
+        foreach ($manager as $mgrid=>$items){
+          $data['results'][$mgrid]['leads'] = $items->sum('leads');
+          $data['results'][$mgrid]['opportunities'] = $items->sum('opportunities');
+          $data['results'][$mgrid]['booked'] = $items->sum('booked');
+          $data['results'][$mgrid]['won'] = $items->sum('won');
+         
+          $data['results'][$mgrid]['lost'] = $items->sum('lost');
+          $data['results'][$mgrid]['pipeline'] = $items->sum('pipeline');
+          $data['results'][$mgrid]['activities'] = $items->sum('activities');
+           
+        }
+      }
+      return $data;
+    }
 
     /*
     
+
+
      */
     private function getSummaryBranchData(array $branches){
         
         return $this->branch
         
-        ->withCount('opportunities',
-            'leads','activities')
-        ->withCount(       
-                ['opportunities',
-                    'opportunities as won'=>function($query){
-            
-                    $query->whereClosed(1);
-                },
-                'opportunities as lost'=>function($query){
-                    $query->whereClosed(2);
-                }]
-            )
-    
-        ->with('manager')
-        ->getActivitiesByType()
-        ->whereIn('id',$branches)
-        ->get(); 
+              ->withCount('opportunities',
+                  'leads','activities')
+              ->withCount(       
+                      ['opportunities',
+                          'opportunities as won'=>function($query){
+                  
+                          $query->whereClosed(1);
+                      },
+                      'opportunities as lost'=>function($query){
+                          $query->whereClosed(2);
+                      }]
+                  )
+          
+              ->with('manager','manager.reportsTo')
+              ->getActivitiesByType()
+              ->whereIn('id',$branches)
+              ->get(); 
 
     }
    
@@ -310,11 +391,11 @@ class BranchDashboardController extends Controller
       }
       
       // if too many for graph return table
-      if(count($branches) > 10){
-        return $this->formatActivityTableData($branches,$keys);
+      if(count($branches) < 10){
+        return $this->formatChartData($branches,$keys);
       }
-      
-       return $this->formatChartData($branches,$keys);
+      return $this->formatActivityTableData($branches,$keys);
+       
 
      }
 
@@ -415,6 +496,7 @@ class BranchDashboardController extends Controller
                 ->where('value','>',0)
                 ->whereIn('branch_id',$myBranches)
                 ->whereBetween('actual_close',[Carbon::now()->subMonth(2),Carbon::now()])
+                ->whereClosed(1)
                 ->groupBy(['branch_id','yearweek'])
                 ->orderBy('branch_id','asc')
                 ->orderBy('yearweek','asc')
