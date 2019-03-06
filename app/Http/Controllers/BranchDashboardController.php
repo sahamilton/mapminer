@@ -92,15 +92,26 @@ class BranchDashboardController extends Controller
 
     */
     public function show($branch){
-      $data = $this->getDashBoardData([$branch]);
+      // need to get branch manager
+      $branch = $this->branch->with('manager')->findOrFail($branch);
+      $this->manager = $branch->manager->first();
+      $data = $this->getDashBoardData([$branch->id]);
       return $this->displayDashboard($data);
 
     }
     public function manager(Request $request, Person $manager=null)
     {
+      
       if($manager){
+        $myteam = $this->person->myTeam()->pluck('id')->toArray();
+        if(! in_array($manager->id, $myteam)){
+          return redirect()->back()->withError('That is not one of your team members');
+        }
         $this->manager = $manager;
       }else{
+        // need to check that this person is in your team
+        
+
         $this->manager = $this->person->findOrFail(request('manager'));
       }
       
@@ -126,11 +137,12 @@ class BranchDashboardController extends Controller
       $data['activitychart'] =  $this->getActivityChartData($myBranches);
    
       $data['pipeline'] = $this->getPipeline($myBranches);
-    
+
+      $data['calendar'] = $this->getUpcomingCalendar($data['upcoming']);
       $data['chart'] = $this->getChartData($myBranches);
       $data['won'] = $this->getWonOpportunities($myBranches);
       $data['teamlogins'] = $this->getTeamLogins($myBranches);
-      //dd($data['teamlogins']);
+     
     
       return $data;
     }
@@ -146,6 +158,7 @@ class BranchDashboardController extends Controller
            return response()->view('opportunities.mgrindex', compact('data', 'myBranches'));
         
         } else {
+
            
             return response()->view('branches.dashboard', compact('data', 'myBranches'));
         }
@@ -201,9 +214,9 @@ class BranchDashboardController extends Controller
 
     private function myTeamsOpportunities()
     {
-
+      $data['me'] = $this->person->findOrFail($this->manager->id);;
       $data['team'] =  $this->person->where('reports_to','=',$this->manager->id)
-            ->has('branchesServiced')
+            
             ->with('branchesServiced',
                 'branchesServiced.opportunities',
                 'branchesServiced.leads',
@@ -308,8 +321,13 @@ class BranchDashboardController extends Controller
         return $string;
 
       }
+    private function getUpcomingCalendar($activities)
+    {
         
- 
+        return \Calendar::addEvents($activities);
+    }    
+  
+
     private function getUpcomingActivities(Array $myBranches)
     {
 
@@ -362,12 +380,18 @@ class BranchDashboardController extends Controller
 
 
   */
-  private function getActivityChartData(Array $branches){
+  private function getActivityChartData(Array $branches)
+  {
 
-        $branchdata = $this->getWeekActivities($branches)->toArray();
-        $branches = [];
-        // reformat branch data into array
-        foreach($branchdata as $branch){
+      $branchdata = $this->getWeekActivities($branches)->toArray();
+
+      $branches = [];
+      // reformat branch data into array
+      $from = Carbon::now()->subMonth(2);
+      $to = Carbon::now();
+
+      $keys =  $this->yearWeekBetween($from, $to); 
+      foreach($branchdata as $branch){
 
           $branch_id = implode(",",array_keys($branch));
           foreach ($branch[implode(",",array_keys($branch))] as $item){
@@ -381,16 +405,13 @@ class BranchDashboardController extends Controller
           
           // fill any missing periods with zeros
           // 
-          $from = Carbon::now()->subMonth(2);
-          $to = Carbon::now();
-          $keys =  $this->yearWeekBetween($from, $to);
+          
           $branches[$branch_id] = $this->fillMissingPeriods($branches[$branch_id],$from, $to);
           // sort branch array in date sequence
         ksort($branches[$branch_id]);
      
       }
-      
-      // if too many for graph return table
+     // if too many for graph return table
       if(count($branches) < 10){
         return $this->formatChartData($branches,$keys);
       }

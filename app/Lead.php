@@ -31,7 +31,7 @@ class Lead extends Model
             'lng',];
             
     public $fillable = ['description','address_id'];
- /* public $statuses = [1=>'Offered',2=>'Claimed',3=>'Closed'];
+    public $statuses = [1=>'Offered',2=>'Claimed',3=>'Closed'];
     
     public $getStatusOptions =  [
         1=>'Prospect data is completely inaccurate. No project or project completed.',
@@ -90,7 +90,7 @@ class Lead extends Model
 
     }
   
-  */
+ 
 
     public function createLeadFromGeo($geoCode)
     {

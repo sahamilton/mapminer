@@ -5,7 +5,7 @@ namespace App;
 use \Carbon\Carbon;
 
 
-class Activity extends Model
+class Activity extends Model implements \MaddHatter\LaravelFullcalendar\IdentifiableEvent
 {
     
     protected $dates = ['activity_date','followup_date'];
@@ -20,7 +20,60 @@ class Activity extends Model
               'Stop By',
               'Left material',
               'Proposal'];
+    
 
+    public function getId()
+        {
+            return $this->address_id;
+        }
+
+    /**
+     * Get the event's title
+     *
+     * @return string
+     */
+    public function getTitle()
+        {
+            return $this->note;
+        }
+
+    /**
+     * Is it an all day event?
+     *
+     * @return bool
+     */
+    public function isAllDay()
+        {
+            return true;
+        }
+
+    /**
+     * Get the start time
+     *
+     * @return DateTime
+     */
+    public function getStart()
+        {
+            return $this->followup_date;
+        }
+    
+
+    public function getEventOptions()
+    {
+        return [
+            'url' => route('address.show', $this->address_id),
+            //etc
+        ];
+    }
+    /**
+     * Get the end time
+     *
+     * @return DateTime
+     */
+    public function getEnd()
+    {
+        return $this->followup_date;
+    }
 
     public function relatesToOpportunity()
     {

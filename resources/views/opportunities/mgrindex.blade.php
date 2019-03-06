@@ -2,7 +2,8 @@
 @section('content')
 
 <div class="container">
-<h2>My Teams  Dashboard</h2>
+
+<h2>{{$data['team']['me']->fullName}}'s  Dashboard</h2>
 @if($data['team']['team']->count()>1)
 
 <div class="col-sm-4">
@@ -10,6 +11,7 @@
 @csrf
 
  <select class="form-control input-sm" id="managerselect" name="manager" onchange="this.form.submit()">
+  <option>Select</option>
   @foreach ($data['team']['team'] as $mgr)
     <option value="{{$mgr->id}}">{{$mgr->fullName()}}</option>
   @endforeach 
@@ -18,6 +20,7 @@
 </form>
 </div>
 @endif
+@include('opportunities.partials._dashboardselect')
   <nav>
 
     <div class="nav  nav-tabs"  id="nav-tab"  role="tablist">
@@ -29,20 +32,7 @@
       aria-controls="nav-dashboard"
       aria-selected="true">
     <strong>Dashboard</strong></a>
-    @if($data['team']['team']->count()>0)
-
-      <a class="nav-item nav-link "
-          id="nav-team-tab"
-          data-toggle="tab"
-          href="#team"
-          role="tab"
-          aria-controls="nav-team"
-          aria-selected="true">
-        <strong>Team</strong>
-        </a>
-
-
-    @endif
+   
     <a class="nav-item nav-link "
       id="nav-summary-tab"
       data-toggle="tab"
@@ -60,9 +50,7 @@
     <div id="dashboard" class="tab-pane show active">
       @include('branches.partials._dashboard')
      </div>
-     <div id="team" class="tab-pane fade">
-        @include('opportunities.partials._team')
-      </div>
+     
       <div id="summary" class="tab-pane fade">
         @include('opportunities.partials._summary')
       </div>

@@ -7,8 +7,8 @@
 
 @if($data['branches']->count() > 10 )
   <div class="row" style="clear:both">
-    <h4>Branch Activities</h4>
-    @include('activities.partials._activitytable')
+    <h4>Team Activities</h4>
+    @include('opportunities.partials._team')
   </div>
 @else
   <div style="width: 400px; height: 300px;float:left" >
@@ -17,7 +17,7 @@
     @include('activities.partials._mchart')
   </div>
 @endif
-
+@if($data['branches']->count() <= 10 )
 <div class="row" style="clear:both;width:45%;float:left">
 
     <h4>Opportunities Won</h4>
@@ -30,6 +30,7 @@
     @include('opportunities.partials._pipechart')
 
 </div>
+
 <div class="row" style="clear:both">
   <div class="col-sm-5">
     <h4>My Teams Logins</h4>
@@ -38,3 +39,4 @@
   </div>
 
 </div>
+@endif

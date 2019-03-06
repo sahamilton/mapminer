@@ -16,15 +16,11 @@
        
 
         <tr>
-          <td>
-           
-              {{$branch->branchname}}
-           
-          </td>
+          <td><a href="{{route('dashboard.show',$branch->id)}}">{{$branch->branchname}}</a></td>
           
           <td>
             @foreach ($branch->manager as $manager)
-              <li>{{$manager->fullName()}}</li>
+              <li><a href="{{route('manager.dashboard',$manager->id)}}">{{$manager->fullName()}}</a></li>
             @endforeach
           </td>
           <td align="center"><a href="{{route('lead.branch',$branch->id)}}">{{$branch->leads_count}}</td>
