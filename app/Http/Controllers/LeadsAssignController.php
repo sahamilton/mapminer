@@ -11,6 +11,7 @@ use App\Lead;
 use App\Person;
 use App\Role;
 use App\Permission;
+use App\Requests\GeoAssignLeadsRequest;
 use App\Mail\NotifyWebLeadsBranchAssignment;
 use Mail;
 use App\Jobs\AssignAddressesToBranches;
@@ -45,7 +46,7 @@ class LeadsAssignController extends Controller
     }
      
 
-    public function geoAssignLeads(Request $request,LeadSource $leadsource){
+    public function geoAssignLeads(GeoAssignLeadsRequest $request,LeadSource $leadsource){
 
         if(request('type')== 'specific'){
 
