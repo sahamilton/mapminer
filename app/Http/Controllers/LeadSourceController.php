@@ -366,7 +366,7 @@ class LeadSourceController extends Controller
 
     public function assignLeads($leadsource)
     {
-
+     
         $leads = $this->lead->where('lead_source_id', '=', $leadsource->id)
                 ->with('leadsource')
                 ->whereNotNull('lat')

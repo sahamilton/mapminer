@@ -14,6 +14,7 @@ use App\Permission;
 use App\Requests\GeoAssignLeadsRequest;
 use App\Mail\NotifyWebLeadsBranchAssignment;
 use Mail;
+use App\Http\Requests\GeoAssignLeadsRequest;
 use App\Jobs\AssignAddressesToBranches;
 class LeadsAssignController extends Controller
 {
@@ -46,6 +47,7 @@ class LeadsAssignController extends Controller
     }
      
 
+<<<<<<< Updated upstream
     public function geoAssignLeads(GeoAssignLeadsRequest $request,LeadSource $leadsource){
 
         if(request('type')== 'specific'){
@@ -57,6 +59,21 @@ class LeadsAssignController extends Controller
             $this->limit = request('limit');
             $verticals  = null;
             $addresses = $this->address->where('lead_source_id','=',$leadsource->id)->doesntHave('assignedToBranch')->get();
+=======
+    public function geoAssignLeads(GeoAssignLeadsRequest $request, LeadSource $leadsource)
+    {
+      
+        if (request('type')== 'specific') {
+
+            $message = $this->assignToSpecificBranches($request, $leadsource);
+        } else {
+
+            $this->distance = request('distance');
+            $this->limit = request('limit');
+            $verticals  = null;
+
+            $addresses = $this->address->where('lead_source_id', '=',107)->get();
+>>>>>>> Stashed changes
           
             if($addresses->count()>0){
                   $box = $this->address->getBoundingBox($addresses);
@@ -158,8 +175,15 @@ class LeadsAssignController extends Controller
 
     }
 
+<<<<<<< Updated upstream
     private function assignToSpecificBranches(Request $request,$leadsource){
           $addresses = $this->address->where('lead_source_id','=',$leadsource->id)
+=======
+    private function assignToSpecificBranches(Request $request, LeadSource $leadsource)
+    {
+          dd(request()->all());
+          $addresses = $this->address->where('lead_source_id', '=', $leadsource->id)
+>>>>>>> Stashed changes
           ->doesntHave('assignedToBranch')
            ->doesntHave('assignedToPerson')
            ->pluck('id')

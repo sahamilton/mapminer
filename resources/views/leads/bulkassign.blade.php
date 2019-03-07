@@ -21,7 +21,7 @@
         </div>
     </div>
     <div class="form-group{{ $errors->has('roles') ? ' has-error' : '' }}">
-        <label class="col-md-4 control-label">Assign to Roles:</label>
+        <label class="col-md-4 control-label">Select Roles:</label>
         <div class="col-md-6">
             <select name="roles[]" multiple class="form-control" >
                 @foreach ($leadroles as $id=>$role)
@@ -87,11 +87,10 @@
         </div>
 	    
 </fieldset>
-<fieldset><legend>Assign Specifically</legend>
+
 <div class="form-group{{ $errors->has('type') ? ' has-error' : '' }}">
         <label class="col-md-4 control-label"><strong>Assign to Specific Branches</strong></label>
         <div class="col-md-6">
-            
           <input type="radio" name="type" value="specific">
             <span class="help-block">
                 <strong>{{ $errors->has('type') ? $errors->first('type') : ''}}</strong>
@@ -99,10 +98,9 @@
         </div>
     </div>
 <div class="form-group{{ $errors->has('branches)') ? ' has-error' : '' }}">
-    <label class="col-md-4 control-label">Assign to Branches:</label>
-        <div class="input-group input-group-lg ">
+    <label class="col-md-4 control-label">Select Branches:</label>
+        <div class="col-md-6">
             <select multiple id="branch" class="form-control" name='branch[]'>
-                <option selected value=null >Geo Assign</option>
                 @foreach($branches as $branch)
                     <option value="{{$branch->id}}">{{$branch->branchname}}</option>
                 @endforeach
