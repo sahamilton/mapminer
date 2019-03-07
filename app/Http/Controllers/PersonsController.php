@@ -6,6 +6,7 @@ use App\Branch;
 use App\Company;
 use App\SearchFilter;
 use Excel;
+use App\Exports\PeopleExport;
 use Illuminate\Http\Request;
 
 
@@ -314,14 +315,15 @@ class PersonsController extends BaseController {
 
 		$data = $this->persons->with('userdetails','userdetails.roles','userdetails.serviceline','reportsTo','reportsTo.userdetails','industryfocus')->get();
 	
-		Excel::download('All People',function($excel) use ($data){
+		return Excel::download(new PeopleExport($data), 'AllPeople.csv');
+		/*Excel::download('All People',function($excel) use ($data){
 			$excel->sheet('All People',function($sheet) use ($data) {
 
 				$sheet->loadview('persons.export',compact('data'));
 			});
 		})->download('csv');
 
-		return response()->return();
+		return response()->return();*/
 
 
 	}

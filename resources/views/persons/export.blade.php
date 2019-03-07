@@ -16,6 +16,7 @@
 			<td>Roles</td>
 			<td>Industry Focus</td>
 		</tr>
+
 		@foreach($data as $person)
 		<tr>  
 			<td>{{$person->id}}</td>
