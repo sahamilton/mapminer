@@ -645,7 +645,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 		Route::post('api/searchfilters/postAccounts',['as'=>'postAccountSegments','uses'=>'SearchFiltersController@getAccountSegments']);
 		Route::resource('searchfilters','SearchFiltersController');
 
-		
+	# Tracking
+		Route::resource('track','TrackController');	
 
 	# Seeder for relationships with servicelines
 		//Route::get('seeder',['as'=>'seeder','uses'=>'CompaniesController@seeder']);

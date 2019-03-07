@@ -110,7 +110,10 @@ class User extends Authenticatable
         return $this->belongsToMany(Document::class)->withPivot('rank');
     }
 
-
+    public function latestlogin()
+    {
+        return $this->hasMany(Track::class)->max('lastactivity');
+    }
 
     public function reports() 
     {
@@ -285,13 +288,13 @@ class User extends Authenticatable
        * @return QueryBuilder          [description]
        */
 
-  public function scopeLastLogin($query,$interval=null){
+    public function scopeLastLogin($query,$interval=null){
 
-		if($interval){
-				return $query->whereBetween('lastlogin',[$interval['from'],$interval['to']]);
-			}
-		return $query->whereNull('lastlogin');
-	}
+	   if($interval){
+			return $query->whereBetween('lastlogin',[$interval['from'],$interval['to']]);
+		}
+	   return $query->whereNull('lastlogin');
+    }
 
 
     
