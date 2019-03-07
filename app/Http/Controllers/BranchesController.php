@@ -14,6 +14,7 @@ use App\Role;
 use Excel;
 use App\Http\Requests\BranchFormRequest;
 use App\Http\Requests\BranchImportFormRequest;
+use App\Exports\BranchTeamExport;
 
 class BranchesController extends BaseController {
 
