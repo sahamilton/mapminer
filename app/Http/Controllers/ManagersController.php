@@ -37,6 +37,7 @@ class ManagersController extends BaseController {
 	 */
 	public function manager()
 	{
+		
 		$data = $this->getManagersData();
 	
 		return response()->view('managers.manageaccounts', compact('data'));
@@ -101,7 +102,8 @@ class ManagersController extends BaseController {
 		return response()->view('managers.manageaccounts', compact('data'));
 	}
 	
-	private function getManagersData($data=null){
+	private function getManagersData($data=null)
+	{
 		
 		if(! isset($data['accounts'])){
 			$data = $this->getMyAccounts($data);
@@ -119,10 +121,13 @@ class ManagersController extends BaseController {
 				$data['selectedAccounts'][] = $keys;
 			}
 		}
+
+
 	//dd('hrere',$data['accounts'],$data['selectedAccounts']);
 		//$data['accounts'] = $data['selectedAccounts'];		
 
 		$data['notes'] = $this->getMyNotes($data['accounts']);
+		
 		$data['watching'] = $this->getManagersWatchers($data['accounts']);
 		$data['nocontact'] = $this->getLocationsWoContacts($data['accounts']);
 		
@@ -278,12 +283,13 @@ class ManagersController extends BaseController {
 				notes.related_id = addresses.id 
 				and notes.type = 'location'
 				and addresses.company_id = companies.id 
-				and companies.id in('".implode(",",$accounts)."') 
+				and companies.id in('".implode(",",array_keys($accounts))."') 
 			group by 
 				companies.id,
 				companyname
 			order by 
 				companyname";
+		
 			$notes = \DB::select(\DB::raw($query));
 			
 	
@@ -372,7 +378,7 @@ class ManagersController extends BaseController {
 				from addresses,location_user,users,persons
 				where location_user.user_id = users.id
 				and location_user.address_id = addresses.id
-				and addresses.company_id in ('".implode(",",$accounts)."') 
+				and addresses.company_id in ('".implode(",",array_keys($accounts))."') 
 				and persons.user_id = users.id
 				group by addresses.company_id,persons.user_id,firstname,lastname 
 				order by watching DESC";
@@ -408,7 +414,8 @@ class ManagersController extends BaseController {
 				) st2 
 				on st2.coid =  companies.id 
 				where companies.id = addresses.company_id
-				and companies.id in ('".implode(",",$accounts)."')
+				and companies.id in ('".implode(",",array_keys($accounts))
+."')
 				group by companyname,company_id,st2.nocontacts 
 				order by percent DESC,addresses DESC";
 		$result = \DB::select(\DB::raw($query));
@@ -473,7 +480,8 @@ class ManagersController extends BaseController {
 		$query = "SELECT distinct companyname,companies.id,company_howtofield.company_id as notes
 		FROM `companies` 
 		left join company_howtofield on companies.id = company_id 
-		where companies.id in ('".implode(",",$accounts)."')
+		where companies.id in ('".implode(",",array_keys($accounts))
+."')
 		order by companyname";
 		
 		$result = \DB::select(\DB::raw($query));
