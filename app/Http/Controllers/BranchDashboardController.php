@@ -68,12 +68,9 @@ class BranchDashboardController extends Controller
                 ->withWarning("You are not assigned to any branches. You can assign yourself here or contact Sales Ops");
             }
 
-        $data = $this->getDashBoardData(array_keys($myBranches));
-          
-      
+       $data = $this->getDashBoardData(array_keys($myBranches));
        return response()->view('opportunities.mgrindex', compact('data'));
-        
-      
+
     }
     /*
     
@@ -115,7 +112,8 @@ class BranchDashboardController extends Controller
         $this->manager = $this->person->findOrFail(request('manager'));
       }
       
-      $team = $this->manager->descendantsAndSelf()->with('branchesServiced')->get();
+      $team = $this->manager->descendantsAndSelf()
+              ->with('branchesServiced')->get();
       $branches = $team->map(function ($mgr){
         return $mgr->branchesServiced->pluck('id')->toArray();
       });
@@ -135,14 +133,11 @@ class BranchDashboardController extends Controller
       $data['upcoming'] = $this->getUpcomingActivities($myBranches);       
       $data['funnel'] = $this->getBranchFunnel($myBranches);
       $data['activitychart'] =  $this->getActivityChartData($myBranches);
-   
       $data['pipeline'] = $this->getPipeline($myBranches);
-
       $data['calendar'] = $this->getUpcomingCalendar($data['upcoming']);
       $data['chart'] = $this->getChartData($myBranches);
       $data['won'] = $this->getWonOpportunities($myBranches);
       $data['teamlogins'] = $this->getTeamLogins($myBranches);
-     
     
       return $data;
     }
@@ -300,7 +295,7 @@ class BranchDashboardController extends Controller
                       $q->whereClosed(1);
                     }])
                     ->get();
-             return $this->prepChartData($results);       
+       return $this->prepChartData($results);       
        
       }
 
@@ -353,28 +348,6 @@ class BranchDashboardController extends Controller
       });
     }
 
-    /*
-    
-     private function getBranchActivities($branches){
-        
-
-        $query = "SELECT branches.id as id, activitytype_id as type, count(activities.id) as activities
-            FROM `activities`, address_branch,branches
-            where activities.address_id = address_branch.address_id
-            and address_branch.branch_id = branches.id
-            and activities.activity_date BETWEEN CAST('".Carbon::now()->subMOnth(1)."' AS DATE) AND CAST('".Carbon::now()."' AS DATE)
-            and branches.id in (".implode(",",$branches).")
-            group by id,activitytype_id";
-        $activities =  \DB::select(\DB::raw($query));
-        $result = array();
-        foreach ($activities as $activity){
-            $result[$activity->id][$activity->type] = $activity->activities;
-        }
-
-        return $result;
-
-    }
-  */
   /*
 
 
@@ -384,7 +357,6 @@ class BranchDashboardController extends Controller
   {
 
       $branchdata = $this->getWeekActivities($branches)->toArray();
-
       $branches = [];
       // reformat branch data into array
       $from = Carbon::now()->subMonth(2);
@@ -419,7 +391,9 @@ class BranchDashboardController extends Controller
        
 
      }
-
+     /*
+     
+     */
 
      private function fillMissingPeriods($branches,Carbon $from,Carbon $to)
      {
@@ -440,7 +414,9 @@ class BranchDashboardController extends Controller
           return $branches;
 
      }
-
+     /*
+     
+     */
      private function formatActivityTableData(array $branches,array $keys)
      {
      
