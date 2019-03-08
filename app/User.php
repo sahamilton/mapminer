@@ -72,8 +72,6 @@ class User extends Authenticatable
     {
         return $this->hasMany(Track::class, 'user_id');
     }
-    public function scopeFirstLogin($query, Carbon $date)
-    {
     
 // this doesnt make sense
         return $query->whereHas('usage', function ($q) use ($date) {

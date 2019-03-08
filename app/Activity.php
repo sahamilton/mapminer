@@ -201,6 +201,11 @@ class Activity extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
             '201904' => '4']];
         }*/
 
+	public function scopeNextWeeksActivities($query)
+	{
+		return $query->whereBetween('followup_date',[Carbon::now(),Carbon::now()->addWeek()]);
+	}
+
 	public function scopeUpcomingActivities($query)
 	{
 		return $query->where('followup_date','>',now()->whereUserId(auth()->user()->id));
