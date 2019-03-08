@@ -21,7 +21,7 @@
 
     <tr>
         <td>
-            <a href="{{route('myleads.show',$lead->id)}}">
+            <a href="{{route('address.show',$lead->id)}}">
                 {{ $lead->companyname != '' ? $lead->companyname: $lead->businessname}} 
             </a>
         </td>
