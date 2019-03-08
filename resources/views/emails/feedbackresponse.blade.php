@@ -2,7 +2,7 @@
 
 ## Thanks for Your Feedback
 
-Thanks {{$feedback->providedBy->person->firstname}} for posting feedback on {{config('app.app_name')}}. We have forwarded your feeback onto the appropriate people.
+Thanks {{$feedback->providedBy->person->firstname}} for posting feedback on {{env('APP_NAME')}}. We have forwarded your feeback onto the appropriate people.
 
 
 @component('mail::panel')
@@ -12,7 +12,7 @@ Page Ref: {{$feedback->url}}
 
 Feedback: {{$feedback->feedback}}
 
-Date: {{$feedback->created_at->format('F js, Y')}}
+Date: {{$feedback->created_at->format('F jS, Y')}}
 
 Posted By: {{$feedback->providedBy->person->fullName()}}
 
