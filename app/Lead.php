@@ -30,7 +30,7 @@ class Lead extends Model
             'lat',
             'lng',];
             
-    public $fillable = ['description','address_id'];
+	public $fillable = ['description','address_id'];
     public $statuses = [1=>'Offered',2=>'Claimed',3=>'Closed'];
     
     public $getStatusOptions =  [
@@ -90,7 +90,6 @@ class Lead extends Model
 
     }
   
- 
 
     public function createLeadFromGeo($geoCode)
     {

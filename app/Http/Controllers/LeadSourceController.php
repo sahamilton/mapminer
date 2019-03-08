@@ -203,11 +203,11 @@ class LeadSourceController extends Controller
 
         return $newdata;
     }
-    public function branches($id)
+    public function branches(LeadSource $leadsource)
     {
-           $leadsource = $this->leadsource->findOrFail($id);
-           $branches = Branch::whereHas('leads', function ($q) use ($id) {
-                $q->where('lead_source_id', '=', $id);
+           
+           $branches = Branch::whereHas('leads', function ($q) use ($leadsource) {
+                $q->where('lead_source_id', '=', $leadsource->id);
            })
            ->withCount('leads')
                 ->with('leads.ownedBy')
@@ -218,7 +218,7 @@ class LeadSourceController extends Controller
             return response()->view('leads.branches', compact('branches', 'leadsource'));
     }
     
-    public function unassigned($leadsource)
+    public function unassigned(LeadSource $leadsource)
     {
        
         $leadsource = $this->leadsource->withCount(
@@ -250,6 +250,7 @@ class LeadSourceController extends Controller
     */
     public function unassignedstate(LeadSource $leadsource, $state)
     {
+        
         $leadsource = $this->leadsource
         ->with(['addresses' => function ($query) use($state){
                 $query->whereDoesntHave('assignedToBranch')->whereDoesntHave('assignedToPerson')
@@ -322,16 +323,16 @@ class LeadSourceController extends Controller
         return redirect()->route('leadsource.index');
     }
 
-    public function flushLeads($leadsource)
+    public function flushLeads(LeadSource $leadsource)
     {
         $leadsource->leads()->delete();
         $this->address->where('lead_source_id', '=', $leadsource->id)->delete();
         return redirect()->route('leadsource.index')->withWarning('all addresses removed from lead source');
     }
 
-    public function addLeads($id)
+    public function addLeads(LeadSource $leadsource)
     {
-        $leadsource = $this->leadsource->findOrFail($id);
+        
         return response()->view('leadsource.addleads', compact('leadsource'));
     }
     public function importLeads(LeadSourceAddLeadsFormRequest $request, $id)
@@ -365,7 +366,7 @@ class LeadSourceController extends Controller
 
     public function assignLeads($leadsource)
     {
-
+     
         $leads = $this->lead->where('lead_source_id', '=', $leadsource->id)
                 ->with('leadsource')
                 ->whereNotNull('lat')

@@ -13,7 +13,10 @@ use App\Role;
 use App\Permission;
 use App\Mail\NotifyWebLeadsBranchAssignment;
 use Mail;
+use App\Http\Requests\GeoAssignLeadsRequest;
 use App\Jobs\AssignAddressesToBranches;
+
+
 
 class LeadsAssignController extends Controller
 {
@@ -44,17 +47,24 @@ class LeadsAssignController extends Controller
         return response()->view('leads.bulkassign', compact('leadroles', 'leadsource', 'branches'));
     }
      
+    /*
+    
 
-    public function geoAssignLeads(Request $request, LeadSource $leadsource)
+    */
+    public function geoAssignLeads(GeoAssignLeadsRequest $request, LeadSource $leadsource)
     {
-
+      
         if (request('type')== 'specific') {
+
             $message = $this->assignToSpecificBranches($request, $leadsource);
         } else {
+
             $this->distance = request('distance');
             $this->limit = request('limit');
             $verticals  = null;
-            $addresses = $this->address->where('lead_source_id', '=', $leadsource->id)->doesntHave('assignedToBranch')->get();
+
+            $addresses = $this->address->where('lead_source_id', '=',107)->get();
+
           
             if ($addresses->count()>0) {
                   $box = $this->address->getBoundingBox($addresses);
@@ -103,18 +113,24 @@ class LeadsAssignController extends Controller
           return response()->view('leads.showsearch', compact('lead', 'branches', 'people', 'salesrepmarkers', 'branchmarkers', 'extrafields', 'sources', 'address'));
     }
 
-    public function store(Request $request, Address $address)
-    {
-
-        $branches = $this->branch->whereIn('id', request('branch'))->with('manager', 'manager.userdetails')->get();
-        $address->load('contacts', $address->addressable_type);
-        $branchids = $branches->pluck('id')->toArray();
+    public function store(Request $request, Address $address){
+     
+      $branches = $this->branch->whereIn('id',request('branch'))->with('manager','manager.userdetails')->get();
+      $address->load('contacts',$address->addressable_type);
+      $branchids = $branches->pluck('id')->toArray();
+      foreach ($branchids as $branch){
+        $syncData[$branch] = ['status_id'=>1];
+      }
    
-        $address->assignedToBranch()->sync([$branchids, ['status_id'=>1]]);
-        if (request()->has('notify')) {
-            foreach ($branches as $branch) {
-                  Mail::queue(new NotifyWebLeadsBranchAssignment($address, $branch));
-            }
+      $address->assignedToBranch()->sync($syncData);
+
+      if(request()->has('notify'))
+      {       
+        foreach ($branches as $branch)
+          {
+                  Mail::queue(new NotifyWebLeadsBranchAssignment($address,$branch));
+                
+          }
         }
         return redirect()->route('address.show', $address->id)->withMessage('Lead has been assigned');
     }
@@ -148,9 +164,13 @@ class LeadsAssignController extends Controller
             return $this->setleadRoles();
         }
     }
+    /*
+    
+    */
 
-    private function assignToSpecificBranches(Request $request, $leadsource)
+    private function assignToSpecificBranches(Request $request, LeadSource $leadsource)
     {
+
           $addresses = $this->address->where('lead_source_id', '=', $leadsource->id)
           ->doesntHave('assignedToBranch')
            ->doesntHave('assignedToPerson')

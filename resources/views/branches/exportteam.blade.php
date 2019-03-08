@@ -25,8 +25,7 @@
 					<td>{{$roles[$team->pivot->role_id]}}</td>
 					@endif
 				@endforeach
-			</td>
-				
+		
 				
 
 			</tr>

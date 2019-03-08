@@ -33,6 +33,7 @@
 
   @endif
   <div class="row" style="clear:both">
+  <div class="row">
     <div class="col-sm-6">
       <div class="panel panel-default">
         <form action="{{route('leads.postassign',$lead->id)}}" method="post">

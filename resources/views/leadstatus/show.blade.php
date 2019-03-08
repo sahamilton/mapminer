@@ -21,8 +21,7 @@
     <td>{{$lead->companyname}}</td>
     <td>{{$lead->city}}</td>
     <td>{{$lead->state}}</td>
-    <td>
-        @if($lead->leadsource){{ $lead->leadsource->source}} @endif</td>
+    <td>@if($lead->leadsource){{ $lead->leadsource->source}} @endif</td>
     <td>{{$lead->pivot->rating}}</td>
     <td>
         @if($lead->ownedBy->count()>0)

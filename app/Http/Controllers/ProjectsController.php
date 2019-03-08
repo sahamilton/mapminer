@@ -9,6 +9,7 @@ use App\Person;
 use App\ProjectSource;
 use App\Note;
 use \Mail;
+use App\Http\Requests\ProjectContactFormRequest;
 use Illuminate\Http\Request;
 use App\Mail\NotifyProjectTransfer;
 use App\Http\Requests\ProjectTransferRequest;
@@ -219,8 +220,7 @@ class ProjectsController extends BaseController
  * addCompanyContact add Contact Details to project company
  * @param Request $request [description]
  */
-    public function addCompanyContact(Request $request)
-    {
+    public function addCompanyContact(ProjectContactFormRequest $request){
         $request->request->add(['user_id',auth()->user()->id]);
 
 

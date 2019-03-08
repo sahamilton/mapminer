@@ -48,16 +48,13 @@ class LeadImportController extends ImportController
         $this->leadsources = $leadsource;
     }
 
-    public function getFile(Request $request, $id = null, $type = null)
-    {
+    public function getFile(Request $request,LeadSource $leadsource=null,$type=null){
 
         $sources= $this->leadsources->all()->pluck('source', 'id');
         if ($sources->count() == 0) {
             return redirect()->route('leadsource.index')->with('error', 'You must create a lead source first');
         }
-        if ($id) {
-            $leadsource = $this->leadsources->find($id);
-        }
+        
         $requiredFields = $this->lead->requiredfields;
         if ($type=='assigned') {
             $requiredFields[] = 'employeee_number';

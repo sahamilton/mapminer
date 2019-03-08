@@ -437,41 +437,41 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
         #Prospects / Leads
         /*	Route::get('leads/address',['as'=>'lead.address','uses'=>'LeadsController@address']);
 		Route::get('leads/{vertical}/vertical',['as'=>'lead.vertical','uses'=>'LeadsController@index']);
-		*/
-        Route::get('leads/import/{id?}', ['as'=>'prospects.importfile','uses'=>'LeadImportController@getFile']);
-        Route::get('leads/import/assigned/{id?}', ['as'=>'assigned_prospects.importfile','uses'=>'LeadAssignedImportController@getFile']);
+		*/	
+		Route::get('leads/import/{id?}',['as'=>'prospects.importfile','uses'=>'LeadImportController@getFile']);
+		Route::get('leads/import/assigned/{id?}',['as'=>'assigned_prospects.importfile','uses'=>'LeadAssignedImportController@getFile']);
 
-        Route::post('leads/import', ['as'=>'leads.import','uses'=>'LeadImportController@import']);
-        
-        Route::post('leadsource/{leadsource}/assign', ['as'=>'leads.geoassign','uses'=>'LeadsAssignController@geoAssignLeads']);
-        Route::get('leads/{leadsource}/assign', ['as'=>'leads.leadassign','uses'=>'LeadsController@assignLeads']);
-        
-        Route::get('leads/{leadsource}/batchassign', ['as'=>'leads.assignbatch','uses'=>'LeadsAssignController@assignLeads']);
-        
-        Route::post('leads/assign', ['as'=>'webleads.assign','uses'=>'WebLeadsController@assignLeads']);
-        
-        
-        ## Web leads
-        
-        
-        Route::get('/leads/{address}/singleassign', ['as'=>'leads.singleassign','uses'=>'LeadsAssignController@singleleadassign']);
-        Route::post('/leads/{address}/singleassign', ['as'=>'leads.postassign','uses'=>'LeadsAssignController@store']);
-        Route::post('/leads/assign', ['as'=>'leads.assign','uses'=>'LeadsController@assignLeads']);
-        Route::delete('/leads/{id}/unassign', ['as'=>'webleads.unassign','uses'=>'LeadsController@unAssignLeads']);
-        
-        
-        //Route::get('webleads/{lead}',['as'=>'webleads.show','uses'=>'WebLeadsController@show']);
-        //Route::resource('webleads','WebLeadsImportController');
+		Route::post('leads/import',['as'=>'leads.import','uses'=>'LeadImportController@import']);
+		
+		Route::post('leadsource/{leadsource}/assign',['as'=>'leads.geoassign','uses'=>'LeadsAssignController@geoAssignLeads']);
+		Route::get('leads/{leadsource}/assign',['as'=>'leads.leadassign','uses'=>'LeadsController@assignLeads']);
+		
+		Route::get('leads/{leadsource}/batchassign',['as'=>'leads.assignbatch','uses'=>'LeadsAssignController@assignLeads']);
+		
+		Route::post('leads/assign',['as'=>'webleads.assign','uses'=>'WebLeadsController@assignLeads']);
+		
+		
+	## Web leads
+		
+		
+		Route::get('/leads/{address}/singleassign',['as'=>'leads.singleassign','uses'=>'LeadsAssignController@singleleadassign']);
+		Route::post('/leads/{address}/singleassign',['as'=>'leads.postassign','uses'=>'LeadsAssignController@store']);
+		Route::post('/leads/assign',['as'=>'leads.assign','uses'=>'LeadsController@assignLeads']);
+		Route::delete('/leads/{id}/unassign',['as'=>'webleads.unassign','uses'=>'LeadsController@unAssignLeads']);
+		
+		
+		//Route::get('webleads/{lead}',['as'=>'webleads.show','uses'=>'WebLeadsController@show']);
+		//Route::resource('webleads','WebLeadsImportController');
 
-        
-        Route::get('leadsource/{id}/export', ['as'=>'leadsource.export','uses'=>'LeadSourceController@export']);
-        
-        Route::post('/webleads/import/form', ['as'=>'leads.webleadsinsert','uses'=>'WebleadsImportController@getLeadFormData']);
-        Route::post('/webleads/import/create', ['as'=>'webleads.import.store','uses'=>'WebleadsImportController@store']);
-        Route::post('lead/search', ['as'=>'leads.search','uses'=>'LeadsController@search']);
-        Route::get('lead/search', ['as'=>'leads.search','uses'=>'LeadsController@searchAddress']);
-        Route::get('address/{address}/assign', ['as'=>'leads.assignlead','uses'=>'LeadsAssignController@show']);
-        /*Route::get('leads/{id}/person',['as'=>'leads.person','uses'=>'LeadsController@getPersonsLeads']);
+		
+		Route::get('leadsource/{leasource}/export',['as'=>'leadsource.export','uses'=>'LeadSourceController@export']);
+		
+		Route::post('/webleads/import/form',['as'=>'leads.webleadsinsert','uses'=>'WebleadsImportController@getLeadFormData']);
+		Route::post('/webleads/import/create',['as'=>'webleads.import.store','uses'=>'WebleadsImportController@store']);
+		Route::post('lead/search',['as'=>'leads.search','uses'=>'LeadsController@search']);
+		Route::get('lead/search',['as'=>'leads.search','uses'=>'LeadsController@searchAddress']);
+		Route::get('address/{address}/assign',['as'=>'leads.assignlead','uses'=>'LeadsAssignController@show']);
+		/*Route::get('leads/{id}/person',['as'=>'leads.person','uses'=>'LeadsController@getPersonsLeads']);
 		Route::get('leads/{id}/person/{sid}/source',['as'=>'leads.personsource','uses'=>'LeadsController@getPersonSourceLeads'])
 		Route::get('lead/branch/{bid?}',['as'=>'leads.branch','uses'=>'LeadsController@branches']);
 		Route::resource('leads','LeadsController');*/
@@ -483,14 +483,12 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
         Route::resource('orderimport', 'OrderImportController');
         # Prospect Source / LeadSource
 
-        Route::get('leadsource/{leadsource}/announce', ['as'=>'leadsource.announce','uses'=>'LeadsEmailController@announceLeads']);
-        Route::post('leadsource/{leadsource}/email', ['as'=>'sendleadsource.message','uses'=>'LeadsEmailController@email']);
-        Route::get('leadsource/{leadsource}/assign', ['as'=>'leadsource.assign','uses'=>'LeadsAssignController@assignLeads']);
-        Route::get('leadsource/{id}/branch', ['as'=>'leadsource.branches','uses'=>'LeadSourceController@branches']);
-        Route::get('leadsource/{leadsource}/unassigned', ['as'=>'leadsource.unassigned','uses'=>'LeadSourceController@unassigned']);
-        Route::get('leadsource/{id}/addleads', ['as'=>'leadsource.addleads','uses'=>'LeadImportController@getFile']);
-        Route::get('leadsource/{leadsource}/flush', ['as'=>'leadsource.flushleads','uses'=>'LeadSourceController@flushLeads']);
-        Route::resource('leadsource', 'LeadSourceController');
+		Route::get('leadsource/{leadsource}/announce',['as'=>'leadsource.announce','uses'=>'LeadsEmailController@announceLeads']);
+		Route::post('leadsource/{leadsource}/email',['as'=>'sendleadsource.message','uses'=>'LeadsEmailController@email']);
+		Route::get('leadsource/{leadsource}/assign',['as'=>'leadsource.assign','uses'=>'LeadsAssignController@assignLeads']);
+		Route::get('leadsource/{leadsource}/branch',['as'=>'leadsource.branches','uses'=>'LeadSourceController@branches']);
+		Route::get('leadsource/{leadsource}/unassigned',['as'=>'leadsource.unassigned','uses'=>'LeadSourceController@unassigned']);
+		Route::get('leadsource/{leadsource}/addleads',['as'=>'leadsource.addleads','uses'=>'LeadImportController@getFile']);
 
 		Route::get('leadsource/{leadsource}/state/{state}',['as'=>'leadsource.unassigned.state','uses'=>'LeadSourceController@unassignedstate']);
 		Route::get('leadsource/{leadsource}/flush',['as'=>'leadsource.flushleads','uses'=>'LeadSourceController@flushLeads']);
@@ -662,7 +660,8 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
         Route::post('api/searchfilters/postAccounts', ['as'=>'postAccountSegments','uses'=>'SearchFiltersController@getAccountSegments']);
         Route::resource('searchfilters', 'SearchFiltersController');
 
-        
+	# Tracking
+		Route::resource('track','TrackController');	
 
         # Seeder for relationships with servicelines
         //Route::get('seeder',['as'=>'seeder','uses'=>'CompaniesController@seeder']);

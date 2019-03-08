@@ -9,6 +9,7 @@ use App\Branch;
 
 class BranchTeamExport implements FromView
 {
+    public $roles;
     public function __construct()
     {
         
@@ -19,7 +20,9 @@ class BranchTeamExport implements FromView
     */
     public function view(): View
     {
-        $result = Branch::with('relatedPeople', 'relatedPeople.userdetails')->get();
-        return view('branches.exportteam', compact('result', 'roles'));
+    	$result = Branch::with('relatedPeople','relatedPeople.userdetails')->get();
+        $roles = $this->roles;
+    	return view('branches.exportteam',compact('result','roles'));
+
     }
 }

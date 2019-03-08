@@ -9,6 +9,7 @@ use App\Contact;
 use App\Branch;
 use App\Person;
 use App\AddressBranch;
+use App\Branch;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Requests\ActivityFormRequest;
