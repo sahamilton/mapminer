@@ -22,9 +22,7 @@
 					</a>
 				</td>
 				<td>
-					@if(isset($account->addressType[$account->addressable_type]))
-						{{$account->addressType[$account->addressable_type]}}</td>
-					@endif
+					{{$account->addressable_type}}
 				<td>
 					@if($account->company)
 					<a href="{{route('company.show',$account->company_id)}}"
