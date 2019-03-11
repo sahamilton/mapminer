@@ -8,8 +8,6 @@ use App\ActivityType;
 use App\Contact;
 use App\Branch;
 use App\Person;
-use App\AddressBranch;
-use App\Branch;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Requests\ActivityFormRequest;
@@ -49,7 +47,19 @@ class ActivityController extends Controller
         return response()->view('activities.index', compact('activities', 'data','title','myBranches'));
        
     }
+    public function branchUpcomingActivities(Branch $branch){
+
+        $myBranches = $this->person->myBranches();
+        if(! ( $myBranches)  or ! in_array($branch->id,array_keys($myBranches))){
+            return redirect()->back()->withError('You are not assigned to that branch');
+        }else{
+            $data = $this->getBranchActivities($branch,$from = true);
+      
+        $title= $branch->branchname . "upcoming follow up activities";
     
+        return response()->view('activities.upcoming', compact('data', 'myBranches','title')); 
+        }
+    }
     public function branchActivities(Request $request, Branch $branch){
 
         if (request()->has('branch')) {
@@ -64,7 +74,7 @@ class ActivityController extends Controller
        }
        
          
-        $data = $this->getBranchActivities($branch);
+        $data = $this->getBranchActivities($branch,$from = false);
        
         $title= $data['branches']->first()->branchname . " activities";
         return response()->view('activities.index', compact('data', 'myBranches','title'));
@@ -72,12 +82,16 @@ class ActivityController extends Controller
     
 
 
-    private function getBranchActivities($branch)
+    private function getBranchActivities($branch,$from=null)
     {
         $team = $this->person->myBranchTeam([$branch])->toArray();
             
 
-        $data['activities'] = $this->activity->myTeamsActivities($team)->with('relatesToAddress', 'relatedContact', 'type', 'user')->get();
+        $data['activities'] = $this->activity->myTeamsActivities($team);
+        if($from){
+            $data['activities']= $data['activities']->where('followup_date','>=',now());
+        }
+        $data['activities'] =  $data['activities']->with('relatesToAddress', 'relatedContact', 'type', 'user')->get();
 
         $data['branches'] =  $this->getbranches([$branch]);
 

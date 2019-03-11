@@ -1,5 +1,7 @@
 <?php
-
+use \Carbon\Carbon;
+use App\User;
+use App\Mail\SendWeeklyActivityReminder;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -72,6 +74,7 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::resource('branches','BranchesController',['only' => ['index', 'show']]);
 	# Branch Activities
 		Route::get('branch/{branch}/activities',['as'=>'activity.branch','uses'=>'ActivityController@branchActivities']);
+		Route::get('branch/{branch}/upcoming',['as'=>'upcomingactivity.branch','uses'=>'ActivityController@branchUpcomingActivities']);
 		Route::post('branch/activities',['as'=>'activities.branch','uses'=>'ActivityController@branchActivities']);
 	#Branch Assignments
 		Route::get('branchassignment/{user}/change',['as'=>'branchassignment.change','uses'=>'BranchManagementController@change']);
@@ -410,7 +413,11 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
         #Locations
         Route::get('locations/import', ['as'=>'locations.importfile', 'uses'=>'LocationsImportController@getfile']);
         Route::post('locations/bulkimport', ['as'=>'locations.import', 'uses'=>'LocationsImportController@import']);
+       
+        # LocationsPostImport
 
+        Route::post('locations/adddelete',['as'=>'locations.adddelete','uses'=>'LocationsPostImportController@adddelete']);
+        Route::resource('locations/process','LocationPostImportController');
 
         Route::get('api/geocode', ['as'=>'api.geocode','uses'=>'LocationsController@bulkGeoCodeLocations']);
         Route::get('locations/{companyID}/create', ['as'=>'company.location.create','uses'=>'LocationsController@create']);

@@ -45,14 +45,15 @@ class BranchActivityController extends Controller
        }
        
          
-        $data = $this->getBranchctivities([$branch]);
+        $data = $this->getBranchActivities([$branch]);
        
         $title= $data['branches']->first()->branchname . " activities";
         return response()->view('activities.index', compact('data', 'myBranches','title'));
     }
 
-    private function getBranchAcytivities(Array $branch){
-        $data['activities'] = 
+    private function getBranchActivities(Array $branch){
+        $data['activities'] = $this->getUpcomingActivities($branch);
+        $data['calendar'] = $this->getUpcomingCalendar($data['activities']);
 
         $data['branches'] = $this->getBranches($branch);
         return $data;
@@ -64,6 +65,23 @@ class BranchActivityController extends Controller
             ->whereIn('id', $branches)
             ->get();
        }
+    private function getUpcomingCalendar($activities)
+    {
+        
+        return \Calendar::addEvents($activities);
+    }
+
+
+    private function getUpcomingActivities(Array $myBranches)
+    {
+
+           $users =  $this->person->myBranchTeam($myBranches);
+
+           return $this->activity->whereIn('user_id',$users)
+           ->where('followup_date','>=',Carbon::now())->get();
+
+    }
+
 
     /**
      * Show the form for creating a new resource.

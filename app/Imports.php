@@ -22,7 +22,7 @@ class Imports extends Model
             $this->additionaldata = [];
         }
         // set null empty fields
-            
+        
         // remove any additional data fields from input fields
             
         $data['fields'][key(array_intersect($data['fields'], array_keys($this->additionaldata)))]='@ignore';
@@ -105,10 +105,13 @@ class Imports extends Model
     {
         
         //Create the temporary table
-        return $this->executeQuery("TRUNCATE TABLE ". $this->temptable);
+        
         //$this->executeQuery("CREATE TABLE ".$this->temptable." AS SELECT * FROM ". $this->table." LIMIT 0");
     }
-
+    private function truncateImportTable()
+    {
+       return $this->executeQuery("TRUNCATE TABLE ". $this->temptable); 
+    }
     public function createLeadSource($data)
     {
         $lead_import_id = [
@@ -139,7 +142,13 @@ class Imports extends Model
         $this->fields.=",created_at";
         return $this->executeQuery("update ".$this->temptable." set created_at ='".now()->toDateTimeString()."'");
     }
-
+    public function createPositon()
+    {
+        
+        $this->executeQuery("update ".$this->temptable." set position = POINT(lng, lat);");
+    
+        //$this->executeQuery("update ".$this->temptable." set position = ST_GeomFromText(ST_AsText(position), 4326)");
+    }
     private function updateAdditionalFields()
     {
     //Add the project source id
@@ -155,7 +164,7 @@ class Imports extends Model
         return true;
     }
 
-
+// we should dedupe here 
     private function copyTempToBaseTable()
     {
         $this->fields = str_replace('@ignore,', '', $this->fields).",lead_source_id,position";
@@ -231,13 +240,5 @@ class Imports extends Model
         } catch (Exception $e) {
             throw new Exception('Something really has gone wrong with the import:\r\n<br />'.$query, 0, $e);
         }
-    }
-
-    public function createPositon()
-    {
-        
-        $this->executeQuery("update ".$this->temptable." set position = POINT(lng, lat);");
-    
-        //$this->executeQuery("update ".$this->temptable." set position = ST_GeomFromText(ST_AsText(position), 4326)");
-    }
+    }   
 }

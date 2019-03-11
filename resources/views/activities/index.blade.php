@@ -48,6 +48,7 @@
     	@if(isset($data['summary']))
 			@include('activities.partials._summary')
 		@endif
+		
 	</div>
 
     <div id="details" class="tab-pane fade">

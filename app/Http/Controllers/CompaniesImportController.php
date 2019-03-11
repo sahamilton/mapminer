@@ -34,7 +34,6 @@ class CompaniesImportController extends ImportController
 
     public function import(Request $request)
     {
-      
 
         $data = $this->uploadfile(request()->file('upload'));
         $data['table'] = 'customerimport';
@@ -66,7 +65,11 @@ class CompaniesImportController extends ImportController
    
 
         if ($this->import->import()) {
+
             //map to see if any are already in existance
+            //
+            //Do not delete import file
+            //check for duplicates based on lat lng (position?)
             //then copy new ones to addresses.
             // copy $$ to companyorders period
             return redirect()->route('orderimport.index');

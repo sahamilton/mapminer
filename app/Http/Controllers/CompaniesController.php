@@ -12,6 +12,7 @@ use App\Pagination;
 use App\SearchFilter;
 use App\Serviceline;
 use Illuminate\Http\Request;
+use App\Exports\CompanyWithLocationsExport;
 use App\Http\Requests\CompanyFormRequest;
 
 class CompaniesController extends BaseController
@@ -531,8 +532,11 @@ class CompaniesController extends BaseController
 	Generate the form to choose companies to download locations
 	 */
 
-    public function export($company)
+    public function export()
     {
+        
+
+
         $companies = $this->company
                         ->whereHas('serviceline', function ($q) {
                                 $q->whereIn('serviceline_id', $this->userServiceLines);
@@ -550,28 +554,15 @@ class CompaniesController extends BaseController
 	 * @param () Company
 	 * @return (array) mywatchlist
 	 */
-    public function locationsexport(Request $request, $company)
+    public function locationsexport(Request $request)
     {
+        $company =  $this->company
+                    ->whereHas('serviceline', function($q){
+                        $q->whereIn('serviceline_id', $this->userServiceLines);
+                    })
+                    ->with('locations')
+                    ->findOrFail(request('company'));
 
-
-
-        return Excel::download(new CompanyWithLocationsExport($company), $company->companyname. " locations");
-
-        /*$id = request('company');
-
-		$company = $this->company->findOrFail($id);
-		Excel::download($company->companyname. " locations",function($excel) use($id){
-			$excel->sheet('Watching',function($sheet) use($id) {
-				$company = 	$this->company
-					->whereHas('serviceline', function($q){
-							    $q->whereIn('serviceline_id', $this->userServiceLines);
-
-							})
-
-					->with('locations')
-					->findOrFail($id);
-				$sheet->loadview('locations.exportlocations',compact('company'));
-			});
-		})->download('csv');*/
+        return Excel::download(new CompanyWithLocationsExport($company), $company->companyname. " locations.csv");
     }
 }

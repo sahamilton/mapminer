@@ -73,11 +73,6 @@ class User extends Authenticatable
         return $this->hasMany(Track::class, 'user_id');
     }
     
-// this doesnt make sense
-        return $query->whereHas('usage', function ($q) use ($date) {
-            $q->where('roles.id', '=', $role);
-        });
-    }
 
     public function firstLogin()
     {
@@ -92,10 +87,10 @@ class User extends Authenticatable
 
     public function latestlogin()
     {
-        return $this->hasMany(Track::class)->max('lastactivity');
+        return $this->hasMany(Track::class)->latest();
     }
 
-    public function reports() 
+    public function serviceline() 
     {
           return $this->belongsToMany(Serviceline::class)->withTimestamps();
     }
@@ -104,7 +99,10 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Role::class);
     }
-
+    public function activities()
+    {
+        return $this->hasMany(Activity::class);
+    }
     
     public function active()
     {

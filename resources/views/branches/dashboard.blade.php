@@ -44,6 +44,7 @@
 	<div class="card">
 		<div class="card-header">
 			<h4>Upcoming Activities</h4>
+			<p><a href="{{route('upcomingactivity.branch',$data['branches']->first()->id)}}">See list view</a></p>
 		</div>
 
 		<div id="calendar"  class="card-body" >
