@@ -13,7 +13,7 @@
 	</thead>
 	<tbody>
 		@foreach ($data['result'] as $account)
-	
+
 			<tr>
 				<td>
 					<a href="{{route('address.show',$account->id)}}"
@@ -21,7 +21,8 @@
 					{{$account->businessname}}
 					</a>
 				</td>
-				<td>{{$account->addressType[$account->addressable_type]}}</td>
+				<td>
+					{{$account->addressable_type}}
 				<td>
 					@if($account->company)
 					<a href="{{route('company.show',$account->company_id)}}"

@@ -27,7 +27,13 @@
   
             <tr>
                 <td>{{$activity->activity_date ? $activity->activity_date->format('M j, Y'):''}}</td>
-                <td>{{$activity->user->person->fullName()}}</td>
+                <td>
+                    @if($activity->user)
+                        {{$activity->user->person->fullName()}}
+                    @else
+                    No Long with Company
+                    @endif
+                </td>
                 <td>@if($activity->type)
                     {{$activity->type->activity}}
                     @endif
