@@ -82,7 +82,24 @@ class LocationPostImportController extends Controller
     {
 
     }
+    private function copyAddresIdToImport($data)
+    {
+        $locations = $this->address
+            ->where('company_id','=',$data['company_id'])
+            ->whereNotNull('import_ref')
+            ->pluck('id','import_ref')->toArray();
+       
+        foreach ($locations as $id=>$ref)
+        {
+          
+            $loc = $this->import->findOrFail($id);
+           
+            $loc->update(['address_id'=>$ref]);
+           
+        }
+        dd('copy',$data);
 
+    }
     private function updateLocations($data)
     {
         

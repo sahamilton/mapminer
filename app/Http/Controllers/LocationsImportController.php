@@ -75,11 +75,16 @@ class LocationsImportController extends ImportController
         }
         $data['table']=$this->table;
         $this->import->setFields($data);
- 
-       
-        if($fileimport = $this->import->import($request)) {
-            
-            
+      
+        if ($fileimport = $this->import->import($request)) {
+
+            if(request('type')=='locations'){
+                
+                return redirect()->route('postprocess.index');
+            }
+            return redirect()->route('leadsource.show', request('lead_source_id'))->with('success', 'Locations imported');
+        }
+    }
 
             return redirect()->route('leadsource.show',request('lead_source_id'))->with('success','Locations imported');
 

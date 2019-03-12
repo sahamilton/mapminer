@@ -379,45 +379,49 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
     	Route::resource('feedback_comment','FeedbackCommentsController');
     # Imports
     
-   		Route::get('branch/teams',['as'=>'branch_team.importfile','uses'=>'BranchTeamImportController@getFile']);
-   		Route::post('branch/teams',['as'=>'branches.teamimport','uses'=>'BranchTeamImportController@import']);
-    	Route::get('imports',['as'=>'imports.index','uses'=>'ImportController@index']);
-    	Route::post('/importleads/mapfields',['as'=>'leads.mapfields','uses'=>'LeadImportController@mapfields']);
-    	Route::post('/importlocations/mapfields',['as'=>'locations.mapfields','uses'=>'LocationsImportController@mapfields']);
-    	Route::post('/importprojects/mapfields',['as'=>'projects.mapfields','uses'=>'ProjectsImportController@mapfields']);
-    	Route::post('/importprojectcompany/mapfields',['as'=>'projectcompany.mapfields','uses'=>'ProjectsCompanyImportController@mapfields']);
-    	Route::post('/importbranches/mapfields',['as'=>'branches.mapfields','uses'=>'BranchesImportController@mapfields']);
-    	Route::post('/importbranchteams/mapfields',['as'=>'branchteam.mapfields','uses'=>'BranchTeamImportController@mapfields']);
+        Route::get('branch/teams', ['as'=>'branch_team.importfile','uses'=>'BranchTeamImportController@getFile']);
+        Route::post('branch/teams', ['as'=>'branches.teamimport','uses'=>'BranchTeamImportController@import']);
+        Route::get('imports', ['as'=>'imports.index','uses'=>'ImportController@index']);
+        Route::post('/importleads/mapfields', ['as'=>'leads.mapfields','uses'=>'LeadImportController@mapfields']);
+        Route::post('/importlocations/mapfields', ['as'=>'locations.mapfields','uses'=>'LocationsImportController@mapfields']);
+        Route::post('/importprojects/mapfields', ['as'=>'projects.mapfields','uses'=>'ProjectsImportController@mapfields']);
+        Route::post('/importprojectcompany/mapfields', ['as'=>'projectcompany.mapfields','uses'=>'ProjectsCompanyImportController@mapfields']);
+        Route::post('/importbranches/mapfields', ['as'=>'branches.mapfields','uses'=>'BranchesImportController@mapfields']);
+        Route::post('/importbranchteams/mapfields', ['as'=>'branchteam.mapfields','uses'=>'BranchTeamImportController@mapfields']);
 
-	#Locations
-		Route::get('locations/import', ['as'=>'locations.importfile', 'uses'=>'LocationsImportController@getfile']);
-		Route::post('locations/bulkimport', ['as'=>'locations.import', 'uses'=>'LocationsImportController@import']);
+        #Locations
+        Route::get('locations/import', ['as'=>'locations.importfile', 'uses'=>'LocationsImportController@getfile']);
+        Route::post('locations/bulkimport', ['as'=>'locations.import', 'uses'=>'LocationsImportController@import']);
+       
+        # LocationsPostImport
+
+        Route::post('locations/adddelete',['as'=>'locations.adddelete','uses'=>'LocationPostImportController@adddelete']);
+        Route::resource('locations/postprocess','LocationPostImportController');
+
+        Route::get('api/geocode', ['as'=>'api.geocode','uses'=>'LocationsController@bulkGeoCodeLocations']);
+        Route::get('locations/{companyID}/create', ['as'=>'company.location.create','uses'=>'LocationsController@create']);
+        Route::resource('locations', 'LocationsController', ['except'=>['show']]);
+
+        # Projects
+        Route::get('projects/import', ['as'=>'projects.importfile','uses'=>'ProjectsImportController@getFile']);
+        Route::get('projects/importcompany', ['as'=>'project_company.importfile','uses'=>'ProjectsCompanyImportController@getFile']);
+        Route::post('projects/import', ['as'=>'projects.bulkimport','uses'=>'ProjectsImportController@import']);
+        Route::post('projects/importcompany', ['as'=>'projects.companyimport','uses'=>'ProjectsCompanyImportController@import']);
+
+        Route::get('projects/export', ['as'=>'projects.exportowned','uses'=>'ProjectsController@exportowned']);
+        Route::get('projects/status', ['as'=>'projects.status','uses'=>'ProjectsController@statuses']);
+
+        Route::get('projects/stats', ['as'=>'project.stats','uses'=>'ProjectsController@projectStats']);
+        Route::get('projects/exportstats', ['as'=>'project.exportstats','uses'=>'ProjectsController@exportProjectStats']);
+        Route::get('projects/{id}/owner', ['as'=>'project.owner','uses'=>'ProjectsController@ownedProjects']);
+        Route::post('projects/{id}/release', ['as'=>'projects.release','uses'=>'ProjectsController@release']);
 
 
-		Route::get('api/geocode',['as'=>'api.geocode','uses'=>'LocationsController@bulkGeoCodeLocations']);
-		Route::get('locations/{companyID}/create',['as'=>'company.location.create','uses'=>'LocationsController@create']);
-		Route::resource('locations','LocationsController',['except'=>['show']]);
+        #Project Source
+        Route::resource('projectsource', 'ProjectSourceController');
 
-	# Projects
-		Route::get('projects/import',['as'=>'projects.importfile','uses'=>'ProjectsImportController@getFile']);
-		Route::get('projects/importcompany',['as'=>'project_company.importfile','uses'=>'ProjectsCompanyImportController@getFile']);
-		Route::post('projects/import',['as'=>'projects.bulkimport','uses'=>'ProjectsImportController@import']);
-		Route::post('projects/importcompany',['as'=>'projects.companyimport','uses'=>'ProjectsCompanyImportController@import']);
-
-		Route::get('projects/export',['as'=>'projects.exportowned','uses'=>'ProjectsController@exportowned']);
-		Route::get('projects/status',['as'=>'projects.status','uses'=>'ProjectsController@statuses']);
-
-		Route::get('projects/stats',['as'=>'project.stats','uses'=>'ProjectsController@projectStats']);
-		Route::get('projects/exportstats',['as'=>'project.exportstats','uses'=>'ProjectsController@exportProjectStats']);
-		Route::get('projects/{id}/owner',['as'=>'project.owner','uses'=>'ProjectsController@ownedProjects']);
-		Route::post('projects/{id}/release',['as'=>'projects.release','uses'=>'ProjectsController@release']);
-
-
-	#Project Source
-		Route::resource('projectsource','ProjectSourceController');
-
-	#Prospects / Leads
-	/*	Route::get('leads/address',['as'=>'lead.address','uses'=>'LeadsController@address']);
+        #Prospects / Leads
+        /*	Route::get('leads/address',['as'=>'lead.address','uses'=>'LeadsController@address']);
 		Route::get('leads/{vertical}/vertical',['as'=>'lead.vertical','uses'=>'LeadsController@index']);
 		*/	
 		Route::get('leads/import/{id?}',['as'=>'prospects.importfile','uses'=>'LeadImportController@getFile']);
