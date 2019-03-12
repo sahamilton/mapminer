@@ -85,11 +85,5 @@ class LocationsImportController extends ImportController
             return redirect()->route('leadsource.show', request('lead_source_id'))->with('success', 'Locations imported');
         }
     }
-
-            return redirect()->route('leadsource.show',request('lead_source_id'))->with('success','Locations imported');
-
-        }
-    
-     }
 	
 }

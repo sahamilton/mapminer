@@ -54,7 +54,7 @@ class LocationPostImportController extends Controller
        // $insert = \DB::table($this->temptable);
         $insert = $this->setimport_ref($insert);
       
-        \DB::table('addresses')->insert($insert->toArray());*/
+        \DB::table('addresses')->insert($insert->toArray());
         $this->copyAddresIdToImport($data);
 
         $this->copyContacts($data);
@@ -82,24 +82,7 @@ class LocationPostImportController extends Controller
     {
 
     }
-    private function copyAddresIdToImport($data)
-    {
-        $locations = $this->address
-            ->where('company_id','=',$data['company_id'])
-            ->whereNotNull('import_ref')
-            ->pluck('id','import_ref')->toArray();
-       
-        foreach ($locations as $id=>$ref)
-        {
-          
-            $loc = $this->import->findOrFail($id);
-           
-            $loc->update(['address_id'=>$ref]);
-           
-        }
-        dd('copy',$data);
-
-    }
+   
     private function updateLocations($data)
     {
         
@@ -158,48 +141,4 @@ class LocationPostImportController extends Controller
         return redirect()->route('locations.process');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\LocationPostImport  $locationPostImport
-     * @return \Illuminate\Http\Response
-     */
-    public function show(LocationPostImport $locationPostImport)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\LocationPostImport  $locationPostImport
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(LocationPostImport $locationPostImport)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\LocationPostImport  $locationPostImport
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, LocationPostImport $locationPostImport)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\LocationPostImport  $locationPostImport
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(LocationPostImport $locationPostImport)
-    {
-        //
-    }
 }
