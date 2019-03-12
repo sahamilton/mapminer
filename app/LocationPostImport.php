@@ -8,6 +8,7 @@ class LocationPostImport extends Model
 {
     
 	public $table = 'addresses_import';
+    public $fillable = ['address_id'];
 
 	public function getAddressMatchData($request)
     {
@@ -67,7 +68,7 @@ class LocationPostImport extends Model
     @ return array
     find unmatched between import table and final table
      */
-    private function geoDeleteAddress( $company_id)
+   private function geoDeleteAddress( $company_id)
     {
     	
     	$query = "select addresses.*  FROM addresses left join addresses_import  on ". $this->distance . " < 100  where addresses.company_id = " .$company_id. " and addresses_import.id is null";
@@ -80,11 +81,11 @@ class LocationPostImport extends Model
     @return boolean
     insert matched id into import table
      */
-    private function updateImportTable($data)
+   private function updateImportTable($data)
     {
 
     	foreach ($data as $el){
-    		\DB::table($this->temptable)
+    		\DB::table('addresses_import')
 		    ->where('id', $el->id)
 		    ->update(['import_ref' => $el->import_ref]);
     		
@@ -93,7 +94,7 @@ class LocationPostImport extends Model
     	return true;
     }
     
-    private function addNewLocations($data)
+   /* private function addNewLocations($data)
     {
        /* insert into table
         update import_ref
@@ -101,7 +102,7 @@ class LocationPostImport extends Model
             add contacts
             delete from import table*/
  
-        $company = Company::findOrFail('275');
+  /*      $company = Company::findOrFail('275');
 
         $import = new LocationImport($company);
         $insert = $import->whereIn('id',$data)->get();
@@ -109,7 +110,7 @@ class LocationPostImport extends Model
        // $insert = \DB::table($this->temptable);
         $insert = $this->setimport_ref($insert);
         dd($insert->toArray());
-        \DB::table($this->table)->insert($insert);
+        \DB::table('addresses')->insert($insert);
     }
 
     private function updateLocations($data)
@@ -120,13 +121,13 @@ class LocationPostImport extends Model
         /*update table
         if contacts
             add contacts
-        delete from import table*/
+        delete from import table
     }
 
     private function deleteLocations($data)
     {
     
-       return  \DB::table($this->table)->whereIn('id',$data)->delete();
+       return  \DB::table('addresses')->whereIn('id',$data)->delete();
     }
 
       private function setimport_ref($collection)
@@ -141,5 +142,5 @@ class LocationPostImport extends Model
 
         return $collection;
     }    
-
+*/
 }

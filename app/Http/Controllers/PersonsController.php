@@ -271,20 +271,9 @@ class PersonsController extends BaseController
     {
 
         $data = $this->persons->with('userdetails', 'userdetails.roles', 'userdetails.serviceline', 'reportsTo', 'reportsTo.userdetails', 'industryfocus')->get();
-    
-        Excel::download('All People', function ($excel) use ($data) {
-            $excel->sheet('All People', function ($sheet) use ($data) {
-
-		$data = $this->persons->with('userdetails','userdetails.roles','userdetails.serviceline','reportsTo','reportsTo.userdetails','industryfocus')->get();
 	
 		return Excel::download(new PeopleExport($data), 'AllPeople.csv');
-		/*Excel::download('All People',function($excel) use ($data){
-			$excel->sheet('All People',function($sheet) use ($data) {
-
-        return response()->return();
     }
-
-		return response()->return();*/
 
     public function geoCodePersons()
     {

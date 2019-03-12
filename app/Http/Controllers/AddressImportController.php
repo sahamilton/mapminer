@@ -132,11 +132,11 @@ class AddressImportController extends ImportController
         $this->truncateTable();
         */
        
-       select addresses.id, addresses.businessname,addresses.city, addresses_import.id,addresses.businessname, addresses.city, ST_Distance_Sphere(addresses.position,addresses_import.position) as distance from addresses_import,addresses
+       /*select addresses.id, addresses.businessname,addresses.city, addresses_import.id,addresses.businessname, addresses.city, ST_Distance_Sphere(addresses.position,addresses_import.position) as distance from addresses_import,addresses
 where addresses.company_id = addresses_import.company_id
 and ST_Distance_Sphere(addresses.position,addresses_import.position) < 100
 
-SELECT addresses.id, addresses.businessname,addresses.street, addresses.city,addresses.zip FROM `addresses` left join addresses_import on ST_Distance_Sphere(addresses.position,addresses_import.position) < 100 where addresses.company_id = 275 and addresses_import.id is null
+SELECT addresses.id, addresses.businessname,addresses.street, addresses.city,addresses.zip FROM `addresses` left join addresses_import on ST_Distance_Sphere(addresses.position,addresses_import.position) < 100 where addresses.company_id = 275 and addresses_import.id is null*/
 
 
 

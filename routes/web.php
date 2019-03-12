@@ -416,8 +416,8 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
        
         # LocationsPostImport
 
-        Route::post('locations/adddelete',['as'=>'locations.adddelete','uses'=>'LocationsPostImportController@adddelete']);
-        Route::resource('locations/process','LocationPostImportController');
+        Route::post('locations/adddelete',['as'=>'locations.adddelete','uses'=>'LocationPostImportController@adddelete']);
+        Route::resource('locations/postprocess','LocationPostImportController');
 
         Route::get('api/geocode', ['as'=>'api.geocode','uses'=>'LocationsController@bulkGeoCodeLocations']);
         Route::get('locations/{companyID}/create', ['as'=>'company.location.create','uses'=>'LocationsController@create']);

@@ -5,15 +5,18 @@ namespace App\Http\Controllers;
 use App\LocationPostImport;
 use Illuminate\Http\Request;
 use App\Company;
-
+use App\Address;
+use Illuminate\Database\Eloquent\Collection;
 class LocationPostImportController extends Controller
 {
     public $company;
     public $import;
-    public function __construct(LocationPostImport $import, Company $company)
+    public $address;
+    public function __construct(LocationPostImport $import, Company $company,Address $address)
     {
         $this->company = $company;
         $this->import = $import;
+        $this->address = $address;
     }
 
     /**
@@ -23,48 +26,60 @@ class LocationPostImportController extends Controller
      */
     public function index()
     {
+
         $import = $this->import->first();
 
-        $company = $this->company->findOrFail($import->company_id);
-        $data = $this->import->returnAddressMatchData($company);
+        $this->company = $this->company->findOrFail($import->company_id);
+
+        $data = $this->import->returnAddressMatchData($this->company);
+
         return response()->view('location.imports',compact('data'));
     }
 
-        public function adddelete(Request $request)
-    {
-       if(request()->has('delete')){
-            $this->deleteLocations(request('delete'));
-       }
-        
-        $this->addNewLocations(request('add'));
-        return redirect()->route('locations.process');
-    }
-
+   
     
     private function addNewLocations($data)
     {
+       
        /* insert into table
         update import_ref
         if contacts
             add contacts
             delete from import table*/
- 
-        $company = Company::findOrFail('275');
+     
+        /*$company = $this->company->findOrFail($data['company_id']);
 
-        $import = new LocationImport($company);
-        $insert = $import->whereIn('id',$data)->get();
-        dd($insert);
+        $insert = $this->import->whereIn('id',$data['add'])->get();
+      
        // $insert = \DB::table($this->temptable);
         $insert = $this->setimport_ref($insert);
-        dd($insert->toArray());
-        \DB::table($this->table)->insert($insert);
+      
+        \DB::table('addresses')->insert($insert->toArray());*/
+        $this->copyAddresIdToImport($data);
     }
+    private function copyAddresIdToImport($data)
+    {
+        $locations = $this->address
+            ->where('company_id','=',$data['company_id'])
+            ->whereNotNull('import_ref')
+            ->pluck('id','import_ref')->toArray();
+       
+        foreach ($locations as $id=>$ref)
+        {
+          
+            $loc = $this->import->findOrFail($id);
+           
+            $loc->update(['address_id'=>$ref]);
+           
+        }
+        dd('copy',$data);
 
+    }
     private function updateLocations($data)
     {
         
         
-
+        dd($data);
         /*update table
         if contacts
             add contacts
@@ -73,20 +88,20 @@ class LocationPostImportController extends Controller
 
     private function deleteLocations($data)
     {
-    
-       return  \DB::table($this->table)->whereIn('id',$data)->delete();
+       
+       return  \DB::table('addresses')->whereIn('id',$data)->delete();
     }
 
-      private function setimport_ref($collection)
+      private function setimport_ref(Collection $collection)
     {
         $collection->map(function ($item)
         {
             $item->import_ref = $item->id;
             $item->user_id = auth()->user()->id;
-           
-            return $item;
+          
+            return array_except($item,['id','address_id','contactphone','email','firstname','lastname','fullname','title']);
         });
-
+       
         return $collection;
     }
 
@@ -95,9 +110,9 @@ class LocationPostImportController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        
     }
 
     /**
@@ -108,7 +123,14 @@ class LocationPostImportController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        if(request()->has('delete')){
+            $this->deleteLocations(request()->all());
+       }
+        
+        $this->addNewLocations(request()->all());
+        $this->updateLocations(request()->all());
+
+        return redirect()->route('locations.process');
     }
 
     /**

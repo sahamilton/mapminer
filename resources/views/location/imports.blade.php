@@ -35,7 +35,8 @@
       
       </div>
     </nav>
-    <form name="locationsimport" method="post" action ="{{route('locations.adddelete')}}" >
+    <form name="postprocess.create" method="post" 
+    action ="{{route('postprocess.store')}}" >
       @csrf
     <div class="tab-content" id="myTabContent">
       <div id="add" class="tab-pane show active">
@@ -51,7 +52,9 @@
         <p>Locations matched on geography will be updated if neccessary.</p>
       </div>
       </div>
+      <input type="hidden" name="company_id" value="{{$data['company']->id}}" />
       <input type='submit' name="submit" value="Post changes" class="btn btn-info" />
+
     </form>
   </div>
 @include('partials._scripts')

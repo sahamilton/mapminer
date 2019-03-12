@@ -78,10 +78,8 @@ class LocationsImportController extends ImportController
         if ($fileimport = $this->import->import($request)) {
 
             if(request('type')=='locations'){
-                $company_id = request('additionaldata')['company_id'];
-        
-                $data = $this->import->getAddressMatchData($company_id);
-                return response()->view('location.imports',compact('data'));
+                
+                return redirect()->route('postprocess.index');
             }
             return redirect()->route('leadsource.show', request('lead_source_id'))->with('success', 'Locations imported');
         }
