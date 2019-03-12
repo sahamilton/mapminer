@@ -339,8 +339,8 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
 	#Companies
 		Route::get('companies/import', ['as'=>'companies.importfile', 'uses'=>'CompaniesImportController@getFile']);
 		Route::post('companies/import', ['as'=>'companies.import', 'uses'=>'CompaniesImportController@import']);
-		Route::get('companies/export', ['as'=>'companies.export', 'uses'=>'CompaniesController@export']);
-		Route::post('companies/export', ['as'=>'companies.locationsexport', 'uses'=>'CompaniesController@locationsExport']);
+		Route::get('companies/export', ['as'=>'companies.export', 'uses'=>'CompaniesExportController@index']);
+		Route::post('companies/export', ['as'=>'companies.locationsexport', 'uses'=>'CompaniesExportController@export']);
 
 		Route::get('companies/download', ['as'=>'allcompanies.export','uses'=>'CompaniesController@exportAccounts']);
 		
