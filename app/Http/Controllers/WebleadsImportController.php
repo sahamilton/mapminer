@@ -162,6 +162,7 @@ class WebleadsImportController extends Controller
     	$valid = $this->getValidFields();
 
         $data =  array();
+
     	foreach ($input as $key=>$value){
 
     		if(array_key_exists(trim($key),$valid)){
@@ -170,9 +171,9 @@ class WebleadsImportController extends Controller
     	}
       
     	$requiredFields = $this->import->requiredFields;
-      
+       
     	if($diff = array_diff($requiredFields,array_keys($data))){
-    		
+    		dd($diff,$requiredFields,array_keys($data));
             return false;
     	}
     	
@@ -206,10 +207,12 @@ class WebleadsImportController extends Controller
                 $input[str_replace(" ","_",trim(strtolower($field[0])))]=$field[1];
             }
         }
+
         if(! isset($input)){
             return false;
             
         }
+       
         return $input;
     }
 
@@ -226,7 +229,7 @@ class WebleadsImportController extends Controller
         foreach ($input[0] as $key=>$value){
             $newdata[$value]=$input[1][$key];
         }
-        dd($newdata);
+      
         $contact = $this->getContactDetails($newdata);
         $extra = $this->getExtraFieldData($newdata);      
         

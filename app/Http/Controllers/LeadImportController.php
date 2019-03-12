@@ -93,7 +93,7 @@ class LeadImportController extends ImportController
     }
     
     public function mapfields(Request $request){
-        dd('lic',request()->all());
+     
         $data = $this->getData($request);
         $this->validateInput($request);
         $this->import->setFields($data);

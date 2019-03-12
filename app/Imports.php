@@ -145,7 +145,7 @@ class Imports extends Model
 	//Add the project source id
 
 	//foreach ($this->additionaldata as)
-	
+	dd($this->additionaldata);
 
 	foreach ($this->additionaldata as $field=>$value){
 

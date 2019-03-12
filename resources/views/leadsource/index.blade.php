@@ -17,6 +17,7 @@
     <thead>
      
     <th>Lead Source</th>
+    <th>Created</th>
     <th>Description</th>
     <th>Reference</th>
     <th>Leads</th>
@@ -38,6 +39,7 @@
  
     <tr> 
    	<td><a href="{{route('leadsource.show',$source->id)}}">{{$source->source}}</a></td>
+    <td>{{$source->created_at->format('Y-m-d')}}</td>
     <td>{{$source->description}}</td>
     <td>{{$source->reference}}</td>
     <td>{{$source->addresses_count}}</td>

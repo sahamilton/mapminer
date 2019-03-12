@@ -213,6 +213,7 @@ class LeadsAssignController extends Controller
     private function assignLeadsToBranches($leadsource,$box){
 
         $branches = $this->branch->withinMBR($box)->get();
+       
         foreach ($branches as $branch){
            $addresses = $this->address->where('lead_source_id','=',$leadsource->id)
                ->doesntHave('assignedToBranch')

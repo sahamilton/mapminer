@@ -32,7 +32,7 @@
 
 
   @endif
-  <div class="row" style="clear:both">
+
   <div class="row">
     <div class="col-sm-6">
       <div class="panel panel-default">
@@ -56,14 +56,16 @@
         </form>  
       </div>
     </div>
-    <div class="col-sm-6"> 
-      <div id="map"  style="width:100%;border:solid 1px red">
-        
+    <div class="container">
+      <div class="col-sm-8"> 
+        <div id="map"  style="width:100%;border:solid 1px red">
+          
+        </div>
+        	
       </div>
-      	
     </div>
   </div>
-</div>
+
 <!-- <script>
 function myFunction(element) {
 

@@ -192,6 +192,7 @@ class CompaniesController extends BaseController {
 
 	public function destroy($company)
 	{
+		
 		$this->company->destroy($company->id);
 
 		return redirect()->route('company.index');

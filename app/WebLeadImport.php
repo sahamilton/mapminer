@@ -14,7 +14,6 @@ class WebLeadImport extends Imports
             'phone',
             'firstname',
             'lastname',
-            'time_frame',
             
             ];
       public $table = 'webleads';
