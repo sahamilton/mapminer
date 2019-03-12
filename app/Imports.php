@@ -145,9 +145,9 @@ class Imports extends Model
     public function createPositon()
     {
         
-        $this->executeQuery("update ".$this->temptable." set position = POINT(lng, lat);");
+       // $this->executeQuery("update ".$this->temptable." set position = POINT(lng, lat);");
     
-        //$this->executeQuery("update ".$this->temptable." set position = ST_GeomFromText(ST_AsText(position), 4326)");
+        $this->executeQuery("update ".$this->temptable." set position = ST_GeomFromText(ST_AsText(position), 4326)");
     }
     private function updateAdditionalFields()
     {
