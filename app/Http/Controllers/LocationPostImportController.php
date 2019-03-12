@@ -38,27 +38,65 @@ class LocationPostImportController extends Controller
 
    
     
+    
+
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        $company = $this->company->findOrFail(request('company_id'));
+        $data = $this->import->returnAddressMatchData($company);
+        
+        if(count($data['delete'])>0){
+            $this->deleteLocations($data['delete']);
+       }
+        if(count($data['add'])>0){
+            $data = $this->addNewLocations($data);
+            $this->copyAddressIdToImport($data);
+        }
+      
+        if(count($data['matched'])>0){
+            $this->updateLocations($data);
+        }
+        
+        /// copy all contact information to contacts
+        $this->import->truncate();
+      
+        return redirect()->route('company.show',$data['company']->id)->withSuccess('Locations imported and updated');
+    }
+
+    
+    
+    /**
+    * Insert new locations into addresses
+    * @param array
+    */
     private function addNewLocations($data)
     {
-       
-       /* insert into table
-        update import_ref
-        if contacts
-            add contacts
-            delete from import table*/
-     
-        /*$company = $this->company->findOrFail($data['company_id']);
-
-        $insert = $this->import->whereIn('id',$data['add'])->get();
-      
-       // $insert = \DB::table($this->temptable);
+        $m = $this->getIdsFromArray($data['add']);
+        $insert = $this->import->whereIn('id',$m)->get();
         $insert = $this->setimport_ref($insert);
-      
-        \DB::table('addresses')->insert($insert->toArray());*/
-        $this->copyAddresIdToImport($data);
+        if($insert->count()>0){
+            \DB::table('addresses')->insert($insert->toArray());
+        }
+        return $data;
+
     }
-    private function copyAddresIdToImport($data)
+    
+    /**
+    * Copy the effected address id back to import table
+    * 
+    * @param array
+    */
+
+    private function copyAddressIdToImport($data)
     {
+       dd($data);
         $locations = $this->address
             ->where('company_id','=',$data['company_id'])
             ->whereNotNull('import_ref')
@@ -72,27 +110,74 @@ class LocationPostImportController extends Controller
             $loc->update(['address_id'=>$ref]);
            
         }
-        dd('copy',$data);
+        
 
     }
+    /**
+    * Update all the matched addresses
+    * 
+    * @param array
+    */
+
     private function updateLocations($data)
     {
+        //get ids
         
-        
-        dd($data);
-        /*update table
-        if contacts
-            add contacts
-        delete from import table*/
+        $this->updateImportTable($data['matched']);
+        $imports = $this->getMatchedAddresses($data);
+        foreach ($imports as $import){
+            
+            $address = $this->address->findOrFail($import->address_id);
+            $address->update($import->toArray());
+        }
+        return true;
+    }
+    /**
+     * [getMatchedAddresses description]
+     * @param  [type] $data [description]
+     * @return [type]       [description]
+     */
+    private function getMatchedAddresses($data)
+    {
+        $match = $this->getIdsFromArray($data['matched']);
+       
+        return $this->import->whereNotNull('address_id')->whereIn('id',$match)->get(); 
+    
     }
 
+    /**
+    * Remove unmatched / new locations from addresses
+    *   
+    * @param array
+    *
+    *
+    */
     private function deleteLocations($data)
     {
-       
-       return  \DB::table('addresses')->whereIn('id',$data)->delete();
+       $m = $this->getIdsFromArray($data['delete']);
+       return  \DB::table('addresses')->whereIn('id',$m)->delete();
     }
+    /**
+     * [getIdsFromArray description]
+     * @param  array $data [description]
+     * @return array       ids of data array
+     */
+    private function getIdsFromArray($data)
+    {
+        $m=[];
+        foreach ($data as $el){
+            $m[] = $el->id;
+        }
+       return $m;
+    }
+    /*
+    *  Add / remove fields from collection for import ref
+    *
+    *
+    *   @param collection  
+    */
 
-      private function setimport_ref(Collection $collection)
+    private function setimport_ref(Collection $collection)
     {
         $collection->map(function ($item)
         {
@@ -105,76 +190,20 @@ class LocationPostImportController extends Controller
         return $collection;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
+    /*
+    @function updateImportTable
+    @return boolean
+    insert matched id into import table
      */
-    public function create(Request $request)
+    private function updateImportTable($data)
     {
+
+        foreach ($data as $el){
+          
+            $import = $this->import->whereId($el->id)->update(['address_id' => $el->import_ref]);
+            
+        }
         
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        if(request()->has('delete')){
-            $this->deleteLocations(request()->all());
-       }
-        
-        $this->addNewLocations(request()->all());
-        $this->updateLocations(request()->all());
-
-        return redirect()->route('locations.process');
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\LocationPostImport  $locationPostImport
-     * @return \Illuminate\Http\Response
-     */
-    public function show(LocationPostImport $locationPostImport)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\LocationPostImport  $locationPostImport
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(LocationPostImport $locationPostImport)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\LocationPostImport  $locationPostImport
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, LocationPostImport $locationPostImport)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\LocationPostImport  $locationPostImport
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(LocationPostImport $locationPostImport)
-    {
-        //
+        return true;
     }
 }

@@ -71,7 +71,7 @@ class LocationPostImport extends Model
    private function geoDeleteAddress( $company_id)
     {
     	
-    	$query = "select addresses.*  FROM addresses left join addresses_import  on ". $this->distance . " < 100  where addresses.company_id = " .$company_id. " and addresses_import.id is null";
+    	$query = "select addresses.*  FROM addresses left join addresses_import  on ". $this->distance . " < 10  where addresses.company_id = " .$company_id. " and addresses_import.id is null";
     	
   		return \DB::select($query); 
   	
@@ -94,53 +94,5 @@ class LocationPostImport extends Model
     	return true;
     }
     
-   /* private function addNewLocations($data)
-    {
-       /* insert into table
-        update import_ref
-        if contacts
-            add contacts
-            delete from import table*/
- 
-  /*      $company = Company::findOrFail('275');
-
-        $import = new LocationImport($company);
-        $insert = $import->whereIn('id',$data)->get();
-        dd($insert);
-       // $insert = \DB::table($this->temptable);
-        $insert = $this->setimport_ref($insert);
-        dd($insert->toArray());
-        \DB::table('addresses')->insert($insert);
-    }
-
-    private function updateLocations($data)
-    {
-        
-        
-
-        /*update table
-        if contacts
-            add contacts
-        delete from import table
-    }
-
-    private function deleteLocations($data)
-    {
-    
-       return  \DB::table('addresses')->whereIn('id',$data)->delete();
-    }
-
-      private function setimport_ref($collection)
-    {
-        $collection->map(function ($item)
-        {
-            $item->import_ref = $item->id;
-            $item->user_id = auth()->user()->id;
-           
-            return $item;
-        });
-
-        return $collection;
-    }    
-*/
+   
 }
