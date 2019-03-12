@@ -32,7 +32,7 @@ class LocationsImportController extends ImportController
 
 
 	public function import(LocationImportFormRequest $request) {
-        
+     
         $data = request()->except('_token');
         $title="Map the locations import file fields";
         $data = array_merge($data,$this->uploadfile(request()->file('upload')));
@@ -44,7 +44,7 @@ class LocationsImportController extends ImportController
             $data['lead_source_id'] = $this->import->createLeadSource($data)->id;
 
         }
-        if(request()->filled('company_id')){
+        if(request()->filled('company')){
                 $data['additionaldata']['company_id'] = request('company');
         }
 

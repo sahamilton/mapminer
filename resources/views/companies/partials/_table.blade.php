@@ -69,7 +69,7 @@
 				<ul class="dropdown-menu" role="menu">
 
 					<a class="dropdown-item"
-						href="{{route('addresses.edit',$location->id)}}">
+						href="{{route('address.edit',$location->id)}}">
 							<i class="far fa-edit text-info"" aria-hidden="true"> </i>
 
 							Edit {{$location->businessname}}

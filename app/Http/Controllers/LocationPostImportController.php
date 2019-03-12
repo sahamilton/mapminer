@@ -95,9 +95,9 @@ class LocationPostImportController extends Controller
 
     private function copyAddressIdToImport($data)
     {
-      
+    
         $locations = $this->address
-            ->where('company_id','=',$data['company_id'])
+            ->where('company_id','=',$data['company']->id)
             ->whereNotNull('import_ref')
             ->pluck('id','import_ref')->toArray();
       
