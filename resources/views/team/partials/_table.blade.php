@@ -9,14 +9,14 @@
     <tbody>
         @foreach ($people as $person)
         <tr>
-            <td>{{$person->fullName}}</td>
+            <td><a href="{{route('team.show',$person->id)}}">{{$person->fullName}}</a></td>
             <td>
                 @if(isset($person->userdetails))
                     @foreach ($person->userdetails->roles as $role)
                         <li>{{$role->display_name}}</li>
                     @endforeach
                 @else
-                    {{dd($person)}}
+                    User deleted
                 @endif
             </td>
             <td>{{$person->userdetails->usage->count()}}</td>

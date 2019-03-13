@@ -15,6 +15,10 @@ class TeamActivityController extends Controller
         $this->person = $person;
     }
    
+    public function index(){
+        $person = $this->person->where('user_id','=',auth()->user()->id)->firstOrFail();
+        return redirect()->route('team.show',$person->id);
+    }
 
     /**
      * Display the specified resource.
@@ -24,24 +28,41 @@ class TeamActivityController extends Controller
      */
     public function show(Person $person)
     {
-        $people = $this->getTeamLogins($person);
+       if($people = $this->getTeamLogins($person)){
         
-        return response()->view('team.activity',compact('people'));
+            return response()->view('team.activity',compact('people'));
+        }else{
+            return redirect()->route('home')->withWarning($person->fullName() . " is not a member of your team");
+        }
     }
 
 
     public function export(Person $person)
     {
-        $people = $this->getTeamLogins($person);
-        return Excel::download(new TeamLoginsExport($people), $people->first()->fullName() .'\'s Team logins.csv');
+        if($people = $this->getTeamLogins($person)){
+            
+             return Excel::download(new TeamLoginsExport($people), $people->first()->fullName() .'\'s Team logins.csv');
+        }
+        return redirect()->route('home')->withWarning($person->fullName() . " is not a member of your team");
+       
     }
     
     private function getTeamLogins(Person $person)
     {
        //check if in team or can manage people
-        $persons = $person->getDescendantsAndSelf();
-        return $persons->map(function ($person){
-            return $person->load('userdetails','userdetails.usage','userdetails.roles');
-        });
+       //
+       $myTeam = $this->person->where('user_id','=',auth()->user()->id)->firstOrFail()
+                ->descendantsAndSelf()->pluck('id')->toArray();
+        
+        if(! in_array($person->id,$myTeam) && ! auth()->user()->hasRole('admin')){
+
+            return false;
+        }else{
+
+            $persons = $person->getDescendantsAndSelf();
+            return $persons->map(function ($person){
+                return $person->load('userdetails','userdetails.usage','userdetails.roles');
+            });
+        }
     }
 }

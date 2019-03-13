@@ -448,7 +448,7 @@ class AdminUsersController extends BaseController {
             return redirect()->to('admin/users')
             ->with('error', 'You cannot delete yourself');
         }
-        
+        $user->person->delete();
         $user->delete();
 		return redirect()->to('admin/users')
 		->with('success', 'User deleted succesfully');
