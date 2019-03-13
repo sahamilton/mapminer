@@ -21,7 +21,11 @@
 <fieldset><legend>Branches</legend>
 <p><strong>Number of Branches with Leads:</strong>{{number_format($branches->count(),0)}}</p>
 <p><strong>Number of Assigned Leads:</strong>{{number_format($branchStats['assigned'],0)}}</p>
-<p><strong>Assignment Ratio:</strong>{{number_format($branchStats['assigned']/$leadsource->addresses_count,0)}}</p>
+<p><strong>Assignment Ratio:</strong>
+	@if($leadsource->addresses_count >0)
+		{{number_format($branchStats['assigned']/$leadsource->addresses_count,0)}}
+	@endif
+</p>
 <p><strong>Number of Closed Leads:</strong>{{number_format($branchStats['closed'],0)}}</p>
 </fieldset>
 <p><strong>Number of UnAssigned Leads:</strong>{{number_format($leadsource->unassigned_leads_count,0)}}</p>
