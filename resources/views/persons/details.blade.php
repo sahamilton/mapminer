@@ -125,6 +125,11 @@
 			@endcan
 				<div class="list-group-item"><p class="list-group-item-text"><strong>Activity</strong></p>
 					<ul style="list-style-type: none;">
+						@if($people->directReports->count()>0)
+						<div class="float-right">
+						<a href="{{route('team.show',$people->id)}}" class="btn btn-info">	See Teams Mapminer Usage</a>
+						</div>
+						@endif
 						<li>Total Logins: {{$track->count()}}</li>
 						<li>Last Login:
 							@if($track->count()>0)

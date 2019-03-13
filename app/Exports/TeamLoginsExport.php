@@ -5,13 +5,13 @@ namespace App\Exports;
 use App\Person;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
-class PeopleExport implements FromView
+class TeamLoginsExport implements FromView
 {
-    public $data;
+    public $people;
 
     public function __construct($people)
     {
-        $this->data = $people;
+        $this->people = $people;
     }
     
     /**
@@ -19,7 +19,7 @@ class PeopleExport implements FromView
     */
     public function view(): View
     {
- 		$data = $this->data;
-       return view('persons.export',compact('data'));
+ 		$people = $this->people;
+       return view('team.export',compact('people'));
     }
 }

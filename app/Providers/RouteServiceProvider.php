@@ -49,6 +49,7 @@ class RouteServiceProvider extends ServiceProvider
         Route::model('role', \App\Role::class);
         Route::model('salesactivity', \App\Salesactivity::class);
         Route::model('salesorg',\App\Person::class);
+        Route::model('team', \App\Person::class);
         Route::model('track',\App\Track::class);
         Route::model('user', \App\User::class);
        
