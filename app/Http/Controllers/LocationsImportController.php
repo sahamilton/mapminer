@@ -46,6 +46,9 @@ class LocationsImportController extends ImportController
         }
         if(request()->filled('company')){
                 $data['additionaldata']['company_id'] = request('company');
+                $this->import->setDontCreateTemp(true);
+        }else{
+                $this->import->setDontCreateTemp(false);
         }
 
         $fields = $this->getFileFields($data);

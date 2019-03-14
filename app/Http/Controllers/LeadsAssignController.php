@@ -171,13 +171,13 @@ class LeadsAssignController extends Controller
 
     private function assignToSpecificBranches(Request $request, LeadSource $leadsource)
     {
-
+     
           $addresses = $this->address->where('lead_source_id', '=', $leadsource->id)
           ->doesntHave('assignedToBranch')
            ->doesntHave('assignedToPerson')
            ->pluck('id')
            ->toArray();
-           
+    
            foreach(request('branch') as $branch){
                 $branch = $this->branch->findOrFail($branch);
 
