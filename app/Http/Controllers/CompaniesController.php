@@ -11,6 +11,7 @@ use App\Pagination;
 use App\SearchFilter;
 use App\Serviceline;
 use Illuminate\Http\Request;
+use App\Exports\CompaniesExport;
 use App\Http\Requests\CompanyFormRequest;
 
 class CompaniesController extends BaseController {

@@ -32,7 +32,7 @@ class LocationsImportController extends ImportController
 
 
 	public function import(LocationImportFormRequest $request) {
-     
+      
         $data = request()->except('_token');
         $title="Map the locations import file fields";
         $data = array_merge($data,$this->uploadfile(request()->file('upload')));
@@ -62,6 +62,7 @@ class LocationsImportController extends ImportController
             $data['branch_ids'] = implode(',',$data['branch']);
 
         }
+       
         return response()->view('imports.mapfields',compact('columns','fields','data','company_id','title','requiredFields'));
     }
     
@@ -77,7 +78,7 @@ class LocationsImportController extends ImportController
         $this->import->setFields($data);
       
         if ($fileimport = $this->import->import($request)) {
-
+           
             if(request('type')=='locations'){
                 
                 return redirect()->route('postprocess.index');
