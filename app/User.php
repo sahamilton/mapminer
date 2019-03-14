@@ -67,11 +67,7 @@ class User extends Authenticatable
         return $this->hasOne(Person::class,'user_id');
     }
 
-     public function usage()
-	 {
-		  return $this->hasMany(Track::class,'user_id');
-	 }
-
+     
     public function scopeFirstLogin($query, Carbon $date){
 
     // this doesnt make sense
@@ -80,10 +76,7 @@ class User extends Authenticatable
         });
     }
 
-    public function firstLogin(){
-        return $this->hasMany(Track::class,'user_id');
-    }
-
+   
     public function usage()
     {
         return $this->hasMany(Track::class, 'user_id');
