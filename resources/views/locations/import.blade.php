@@ -114,7 +114,7 @@
     </div>
 <!-- / File location -->
 <input type="submit" class="btn btn-success" value="Import Locations" />
-<input type="hidden" name="type" value="locations" />
+
 </form>
 </div>
 

@@ -18,7 +18,6 @@ class LocationPostImportController extends Controller
         $this->import = $import;
         $this->address = $address;
     }
-
     /**
      * Display a listing of the resource.
      *
@@ -96,19 +95,19 @@ class LocationPostImportController extends Controller
 
     private function copyAddressIdToImport($data)
     {
-       dd($data);
+    
         $locations = $this->address
-            ->where('company_id','=',$data['company_id'])
+            ->where('company_id','=',$data['company']->id)
             ->whereNotNull('import_ref')
             ->pluck('id','import_ref')->toArray();
-       
+      
         foreach ($locations as $id=>$ref)
         {
           
             $loc = $this->import->findOrFail($id);
            
             $loc->update(['address_id'=>$ref]);
-           
+
         }
         
 
@@ -154,8 +153,10 @@ class LocationPostImportController extends Controller
     */
     private function deleteLocations($data)
     {
-       $m = $this->getIdsFromArray($data['delete']);
-       return  \DB::table('addresses')->whereIn('id',$m)->delete();
+       
+       $m = $this->getIdsFromArray($data);
+       
+       return  $this->address->whereIn('id',$m)->delete();
     }
     /**
      * [getIdsFromArray description]

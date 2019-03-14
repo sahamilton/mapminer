@@ -33,9 +33,8 @@ class LocationsImportController extends ImportController
     }
 
 
-    public function import(LocationImportFormRequest $request)
-    {
-        
+	public function import(LocationImportFormRequest $request) {
+      
         $data = request()->except('_token');
         $title="Map the locations import file fields";
         $data = array_merge($data, $this->uploadfile(request()->file('upload')));
@@ -45,8 +44,11 @@ class LocationsImportController extends ImportController
         if (! request()->has('lead_source_id')) {
             $data['lead_source_id'] = $this->import->createLeadSource($data)->id;
         }
-        if (request()->filled('company')) {
+        if(request()->filled('company')){
                 $data['additionaldata']['company_id'] = request('company');
+                $this->import->setDontCreateTemp(true);
+        }else{
+                $this->import->setDontCreateTemp(false);
         }
 
         $fields = $this->getFileFields($data);
@@ -61,7 +63,7 @@ class LocationsImportController extends ImportController
             $data['branch_ids'] = implode(',', $data['branch']);
         }
        
-        return response()->view('imports.mapfields', compact('columns', 'fields', 'data', 'company_id', 'title', 'requiredFields'));
+        return response()->view('imports.mapfields',compact('columns','fields','data','company_id','title','requiredFields'));
     }
     
     public function mapfields(Request $request)
@@ -76,7 +78,7 @@ class LocationsImportController extends ImportController
         $this->import->setFields($data);
       
         if ($fileimport = $this->import->import($request)) {
-
+           
             if(request('type')=='locations'){
                 
                 return redirect()->route('postprocess.index');
@@ -84,6 +86,5 @@ class LocationsImportController extends ImportController
             return redirect()->route('leadsource.show', request('lead_source_id'))->with('success', 'Locations imported');
         }
     }
-
-
+	
 }

@@ -13,6 +13,7 @@ use App\LeadStatus;
 use App\Branch;
 use App\Http\Requests\LeadSourceFormRequest;
 use App\Http\Requests\LeadSourceAddLeadsFormRequest;
+use App\Exports\LeadSourceExport;
 use Carbon\Carbon;
 
 class LeadSourceController extends Controller
@@ -453,25 +454,18 @@ class LeadSourceController extends Controller
     **/
     public function export(Request $request, $id)
     {
-
+       
         if (request()->has('type')) {
             $type = request('type');
         } else {
             $type = 'xlsx';
         }
-
-        Excel::download('Prospects'.time(), function ($excel) use ($id) {
-            $excel->sheet('Prospects', function ($sheet) use ($id) {
-                $statuses = $this->lead->statuses;
-                $leadsource = $this->leadsource
-                ->with('leads', 'leads.relatedNotes')
-                ->has('leads.ownedBy')
-                ->with('leads.ownedBy')
-                ->findOrFail($id);
-
-                $sheet->loadView('leadsource.export', compact('leadsource', 'statuses'));
-            });
-        })->download('csv');
+        $statuses = $this->lead->statuses;
+        $leadsource = $this->leadsource
+            ->with('leads', 'leads.relatedNotes','leads.assignedToBranch')
+            ->findOrFail($id);
+        return Excel::download(new LeadSourceExport($leadsource, $statuses),'Prospects'.time().'.csv');
+        
     }
 
     

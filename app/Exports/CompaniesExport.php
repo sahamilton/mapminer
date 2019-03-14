@@ -4,7 +4,7 @@ namespace App\Exports;
 
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
-use App\Companies
+use App\Company;
 
 class CompaniesExport implements FromView
 {
@@ -18,12 +18,9 @@ class CompaniesExport implements FromView
     */
     public function view(): View
     {
-    	$result = Companies::with('industryVertical','managedBy','serviceline')
+    	$companies = Company::with('industryVertical','managedBy','serviceline')
 
-				->whereHas('serviceline', function($q){
-							    $q->whereIn('serviceline_id', $this->userServiceLines);
-
-							})
+				
 				->get();
     	return view('companies.exportcompanies',compact('companies'));
 

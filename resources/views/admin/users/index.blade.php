@@ -47,12 +47,12 @@
         <tr>
         <td class="col-md-2">{{ $user->id }}</td>
         <td class="col-md-2">
-        @if(isset($user->person->firstname))
+        @if(isset($user->person))
         <a href="{{route('users.show',$user->id)}}">{{$user->person->firstname}}</a>
         @endif
         </td>
         <td class="col-md-2">
-        @if(isset($user->person->lastname))
+        @if(isset($user->person))
         <a href="{{route('users.show',$user->id)}}">{{$user->person->lastname}}</a>
         @endif
         </td>
@@ -96,15 +96,15 @@
 				<a class="dropdown-item"
                 href="{{route('users.edit',$user->id)}}">
                 <i class="far fa-edit text-info"" 
-                aria-hidden="true"> </i>Edit {{$user->person->firstname}}  {{$user->person->lastname}}</a>
+                aria-hidden="true"> </i>Edit {{$user->person ? $user->person->fullName(): 'this person'}}</a>
 
 				<a class="dropdown-item" 
                 data-href="{{route('users.destroy',$user->id)}}" 
 				data-toggle="modal" 
 				data-target="#confirm-delete" 
-				data-title = "{{$user->person->firstname}}  {{$user->person->lastname}}" href="#">
+				data-title = "{{$user->person ? $user->person->fullName(): 'this person'}}" href="#">
 				<i class="far fa-trash-alt text-danger" aria-hidden="true"> </i> 
-				Delete {{$user->person->firstname}}  {{$user->person->lastname}}</a>
+				Delete  {{$user->person ? $user->person->fullName(): 'this person'}}</a>
 
 			  </ul>
 			</div>

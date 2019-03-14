@@ -22,7 +22,8 @@
 					@endif
 				@endforeach
 				</td>
-				<td>{{$company->industryVertical->filter}}</td>
+				<td>
+					{{$company->industryVertical ? $company->industryVertical->filter : ''}}</td>
 				<td>
 
 				@if($company->locationcount() !== null)

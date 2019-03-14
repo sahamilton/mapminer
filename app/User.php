@@ -62,10 +62,26 @@ class User extends Authenticatable
             return null;
         }
     }
-     
-    public function personWithOutGeo()
-    {
-        return $this->hasOne(Person::class, 'user_id');
+
+    public function personWithOutGeo(){
+        return $this->hasOne(Person::class,'user_id');
+    }
+
+     public function usage()
+	 {
+		  return $this->hasMany(Track::class,'user_id');
+	 }
+
+    public function scopeFirstLogin($query, Carbon $date){
+
+    // this doesnt make sense
+    return $query->whereHas('usage',function ($q) use ($date){
+        $q->where('roles.id','=',$role);
+        });
+    }
+
+    public function firstLogin(){
+        return $this->hasMany(Track::class,'user_id');
     }
 
     public function usage()

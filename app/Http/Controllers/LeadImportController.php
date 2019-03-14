@@ -90,9 +90,8 @@ class LeadImportController extends ImportController
         return response()->view('imports.mapfields', compact('columns', 'fields', 'data', 'company_id', 'skip', 'title', 'requiredFields'));
     }
     
-    public function mapfields(Request $request)
-    {
-        dd('lic', request()->all());
+    public function mapfields(Request $request){
+     
         $data = $this->getData($request);
         $this->validateInput($request);
         $this->import->setFields($data);

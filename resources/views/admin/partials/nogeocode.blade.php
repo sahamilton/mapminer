@@ -22,9 +22,10 @@
     </thead>
     <tbody>
    @foreach($data['nogeocode'] as $nogeocode)
+
 <tr>
 <td>
-<a href = "{{url('/location/'.$nogeocode->id.'/edit/')}}">{{$nogeocode->company->companyname}}</a>
+<a href = "{{url('/address/'.$nogeocode->id.'/edit/')}}">{{$nogeocode->businessname}}</a>
 </td>
 <td>
 {{$nogeocode->street}}

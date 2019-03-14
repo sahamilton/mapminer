@@ -69,16 +69,18 @@
 				<ul class="dropdown-menu" role="menu">
 
 					<a class="dropdown-item"
-						href="{{route('locations.edit',$location->id)}}">
+						href="{{route('address.edit',$location->id)}}">
 							<i class="far fa-edit text-info"" aria-hidden="true"> </i>
 
 							Edit {{$location->businessname}}
 						</a>
 					
 						<a class="dropdown-item"
-						data-href="{{route('locations.destroy',$location->id)}}" data-toggle="modal" data-target="#confirm-delete" data-title = "{{$location->businessname}} and all associated notes" 
+						data-href="{{route('address.destroy',$location->id)}}" data-toggle="modal" 
+						data-target="#confirm-delete" 
+						data-title = "{{$location->businessname}} and all associated records" 
 						href="#">
-						<i class="far fa-trash" aria-hidden="true"></i>
+						<i class="far fa-trash-alt text text-danger"></i>
 						Delete {{$location->businessname}}
 						</a>
 				</ul>

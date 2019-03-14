@@ -1,8 +1,7 @@
 @extends('site/layouts/default')
 @section('content')
 
-<div
-id='results'></div>
+<div id='results'></div>
 @include('companies.partials._searchbar')
 <h2>
 {{$data['company']->companyname}}

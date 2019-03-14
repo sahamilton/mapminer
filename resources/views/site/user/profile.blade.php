@@ -194,7 +194,11 @@
 				<div class="list-group-item">
 					<p class="list-group-item-text"><strong>Activity</strong></p>
 					<ul style="list-style-type: none;">
-						
+						@if($user->person->directReports->count()>0)
+						<div class="float-right">
+						<a href="{{route('team.show',$user->person->id)}}" class="btn btn-info">	See Teams Mapminer Usage</a>
+						</div>
+						@endif
 						<li>Total Logins: {{$user->usage()->count()}}</li>
 						@if($user->lastactivity && $user->usage()->oldest()->first()->lastactivity)
 						<li>First Login:{{$user->usage()->oldest()->first()->lastactivity->format('M d, Y')}}</li>

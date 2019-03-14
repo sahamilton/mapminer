@@ -259,8 +259,8 @@ trait Geocode
         return $data;
     }
 
-    public function scopeWithinMBR($query, $box)
-    {
+    public function scopeWithinMBR($query,$box){
+        
         return $query->whereRaw("MBRContains( GeomFromText('LINESTRING(".$box['maxLng']." " .$box['minLat'] . ", ". $box['minLng']." " . $box['maxLat'].")' ),position)");
     }
     public function geoCodeAddress(string $address)

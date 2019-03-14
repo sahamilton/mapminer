@@ -3,9 +3,20 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
-class CompaniesExportController extends Controller
+use App\Company;
+use App\Address;
+use \Excel;
+use App\Exports\CompanyWithLocationsExport;
+class CompaniesExportController extends BaseController
 {
+    public $company;
+    public $address;
+    public function __construct(Company $company,Address $address)
+    {
+        $this->company = $company;
+        parent::__construct($address);
+        
+    }
     /**
      * Display a listing of the resource.
      *
@@ -13,72 +24,21 @@ class CompaniesExportController extends Controller
      */
     public function index()
     {
-        //
+        $companies = $this->company
+                        ->whereHas('serviceline', function($q){
+                                $q->whereIn('serviceline_id', $this->userServiceLines);
+
+                            })
+                        ->orderBy('companyname')->pluck('companyname','id');
+
+        return response()->view('locations.export',compact('companies'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function export(Request $request)
     {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+       
+        $company = $this->company->findOrFail(request('company'));
+        return Excel::download(new CompanyWithLocationsExport($company), 'Companies.csv');
     }
 }
