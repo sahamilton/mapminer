@@ -12,8 +12,20 @@
 
       var options = {
         title: 'Correlation closes / won to sales appointments and opportunities',
-        hAxis: {title: 'Sales Appts'},
-        vAxis: {title: ' Won'},
+       
+        hAxis: {title: 'Sales Appts',
+          viewWindow: {
+              min: 0,
+              max: 100
+          },
+          ticks: [0, 25, 50, 75, 100]
+        },
+       vAxis: {title: ' Won',
+      viewWindow: {
+              min: 0,
+              max:20,
+          },
+        },
         bubble: {textStyle: {fontSize: 11}}
       };
 
