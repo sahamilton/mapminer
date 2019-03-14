@@ -25,7 +25,7 @@
 
 <tr>
 <td>
-<a href = "{{url('/location/'.$nogeocode->id.'/edit/')}}">{{$nogeocode->businessname}}</a>
+<a href = "{{url('/address/'.$nogeocode->id.'/edit/')}}">{{$nogeocode->businessname}}</a>
 </td>
 <td>
 {{$nogeocode->street}}
