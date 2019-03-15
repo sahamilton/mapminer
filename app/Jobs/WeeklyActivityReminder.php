@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Jobs;
 
 use Carbon\Carbon;
@@ -14,7 +15,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 class WeeklyActivityReminder implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-
+    public $user;
     /**
      * Create a new job instance.
      *
@@ -40,12 +41,13 @@ class WeeklyActivityReminder implements ShouldQueue
             ->with('relatesToAddress')
             ->orderBy('followup_date');
         }])->with('person')
-        ->limit(10)->get();
+        ->get();
        
         foreach ($users as $user){
+            
             Mail::to($user->email)
                 ->cc(config('mapminer.system_contact'),config('mapminer.developer_email'))
-                ->send(new SendWeeklyActivityReminder($user));
+                ->send(new SendWeeklyActivityReminder($user,$user->activities));
         }
     }
 }
