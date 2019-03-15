@@ -18,13 +18,14 @@
               min: 0,
               max: 50
           },
-          ticks: [0, 25, 50, 75, 100]
+          ticks: [25]
         },
        vAxis: {title: ' Won',
-      viewWindow: {
-              min: 0,
-              max:20,
-          },
+              viewWindow: {
+                      min: 0,
+                      max:12,
+                  },
+              ticks: [6]
         },
         bubble: {textStyle: {fontSize: 11}}
       };

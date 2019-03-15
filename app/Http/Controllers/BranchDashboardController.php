@@ -206,28 +206,34 @@ class BranchDashboardController extends Controller
                      ->whereNotNull('expected_close')
                      ->openFunnel()->get(); 
     }
-    /*
-    
-
-    */
-
+    /**
+     * myTeamsOpportunities Extract and sum all the associated
+     * branches statistics
+     * @return [associative array] 
+     */
     private function myTeamsOpportunities()
     {
+      $stats = ['leads',
+              'opportunities',
+              'booked',
+              'won',
+              'lost',
+              'pipeline',
+              'activities'];
+
       $data['me'] = $this->person->findOrFail($this->manager->id);;
-      $data['team'] =  $this->person->where('reports_to','=',$this->manager->id)
-      /*->with('branchesServiced',
-      'branchesServiced.opportunities',
-      'branchesServiced.leads',
-      'branchesServiced.activities') */  
+      $data['team'] =  $this->person
+      ->where('reports_to','=',$this->manager->id)      
       ->get();
+      // get all branch managers
       foreach ($data['team'] as $team){
         $data['branchteam'] = $team->descendantsAndSelf()->withRoles([9])
-          ->has('branchesServiced')
-          ->with('branchesServiced',
-          'branchesServiced.opportunities',
-          'branchesServiced.leads',
-          'branchesServiced.activities')
-          ->get();
+            ->has('branchesServiced')
+            ->with('branchesServiced',
+            'branchesServiced.opportunities',
+            'branchesServiced.leads',
+            'branchesServiced.activities')
+            ->get();
         if($data['branchteam']->count()>0){
 
           $sum = $data['branchteam']->map(function ($manager){
@@ -247,44 +253,29 @@ class BranchDashboardController extends Controller
               'activities'=>$branch->activities->count()];
               })];
             });
+            // zero out the associative array
+            foreach($stats as $stat){
+              $data[$stat] = 0;
+            }
 
-            $data['leads']=0;
-            $data['opportunities']=0;
-            $data['booked']=0;
-            $data['won']=0;
-            $data['lost']=0;
-            $data['pipeline']=0;
-            $data['activities']=0;
             
             foreach ($sum as $manager){
               foreach ($manager as $mgrid=>$items){
-                $data['leads'] = $data['leads']+ $items->sum('leads');
-                $data['opportunities'] =$data['opportunities']+ $items->sum('opportunities');
-                $data['booked'] = $data['booked']+ $items->sum('booked');
-                $data['won'] = $data['won']+ $items->sum('won');
-
-                $data['lost'] = $data['lost']+ $items->sum('lost');
-                $data['pipeline'] = $data['pipeline']+ $items->sum('pipeline');
-                $data['activities'] = $data['activities']+ $items->sum('activities');
-
+                foreach ($stats as $stat){
+                  $data[$stat] += $items->sum($stat);
+                }
               }
 
             }
             $data['results'][$team->id] = $data;
           }else{
-            $data['results'][$team->id]['leads']=0;
-            $data['results'][$team->id]['opportunities']=0;
-            $data['results'][$team->id]['booked']=0;
-            $data['results'][$team->id]['won']=0;
-            $data['results'][$team->id]['lost']=0;
-            $data['results'][$team->id]['pipeline']=0;
-            $data['results'][$team->id]['activities']=0;
+            foreach($stats as $stat){
+              $data['results'][$team->id][$stat] = 0;
+            }
+            
           } 
 
-        }
-
-
-       
+        }  
       return $data;
     }
 
@@ -407,6 +398,7 @@ class BranchDashboardController extends Controller
       $to = Carbon::now();
 
       $keys =  $this->yearWeekBetween($from, $to); 
+      
       foreach($branchdata as $branch){
 
           $branch_id = implode(",",array_keys($branch));
@@ -432,7 +424,8 @@ class BranchDashboardController extends Controller
       }
 
      // if too many for graph return table
-      if(count($branches) < 10){
+    
+      if(count($branches) <= 10){
         return $this->formatChartData($branches,$keys);
       }
       return $this->formatActivityTableData($branches,$keys);
@@ -478,7 +471,6 @@ class BranchDashboardController extends Controller
 
      private function formatChartData(Array $branches,array $keys){
 
- 
         $colors = $this->activity->createColors(count($branches));
         $data = [];
         $chartdata = '';
