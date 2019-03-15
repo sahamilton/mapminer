@@ -6,13 +6,15 @@
         <th>Activities</th>
       </thead>
       <tbody>
-        @foreach ($data['summary']['show'] as $dates)
+        @if(isset($data['summary']['show']))
+          @foreach ($data['summary']['show'] as $dates)
 
-          <tr>
-            <td>{{$dates['date']}}</td>
-            <td>{{$dates['count']}}</td>
-          </tr>
-        @endforeach
+            <tr>
+              <td>{{$dates['date']}}</td>
+              <td>{{$dates['count']}}</td>
+            </tr>
+          @endforeach
+        @endif
       </tbody>
     </table>
 

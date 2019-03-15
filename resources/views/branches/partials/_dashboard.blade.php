@@ -30,7 +30,7 @@
     @include('opportunities.partials._pipechart')
 
 </div>
-
+@if(isset($data['teamlogins']))
 <div class="row" style="clear:both">
   <div class="col-sm-5">
     <h4>My Teams Logins</h4>
@@ -39,4 +39,5 @@
   </div>
 
 </div>
+@endif
 @endif

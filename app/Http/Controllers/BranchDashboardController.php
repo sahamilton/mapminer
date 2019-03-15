@@ -114,9 +114,10 @@ class BranchDashboardController extends Controller
       
       $team = $this->manager->descendantsAndSelf()
               ->with('branchesServiced')->get();
+
       $branches = $team->map(function ($mgr){
         return $mgr->branchesServiced->pluck('id')->toArray();
-      });
+      }); 
       $myBranches = array_unique($branches->flatten()->toArray());
 
       $data = $this->getDashBoardData($myBranches);
@@ -127,8 +128,9 @@ class BranchDashboardController extends Controller
 
     private function getDashBoardData(array $myBranches)
     {
-      
+    
       $data['team']= $this->myTeamsOpportunities();
+
       $data['branches'] = $this->getSummaryBranchData($myBranches);
       $data['upcoming'] = $this->getUpcomingActivities($myBranches);       
       $data['funnel'] = $this->getBranchFunnel($myBranches);
@@ -137,8 +139,9 @@ class BranchDashboardController extends Controller
       $data['calendar'] = $this->getUpcomingCalendar($data['upcoming']);
       $data['chart'] = $this->getChartData($myBranches);
       $data['won'] = $this->getWonOpportunities($myBranches);
-      $data['teamlogins'] = $this->getTeamLogins($myBranches);
-    
+      if(isset($data['team']['results'])){
+        $data['teamlogins'] = $this->getTeamLogins(array_keys($data['team']['results']));
+      }
       return $data;
     }
     /*
@@ -332,11 +335,14 @@ class BranchDashboardController extends Controller
            ->where('followup_date','>=',Carbon::now())->get();
 
     }
-    private function getTeamLogins(array $branches)
+    private function getTeamLogins(array $team)
     {
-      
-    //  $users =  $this->person->myBranchTeam($branches)->toArray();
-      $track =  $this->person->where('user_id','=',auth()->user()->id)->with('userdetails','userdetails.usage')->get();
+      //dd($team);
+      //$users =  $this->person->myBranchTeam($branches)->toArray();
+      //$team = $this->person->where('user_id','=',auth()->user()->id)->first();
+      $track = $this->person->whereIn('id',$team)->with('userdetails','userdetails.usage')->get();
+      //$track =  $this->person->where('user_id','=',auth()->user()->id)
+     // ->descendantsAndSelf()->with('userdetails','userdetails.usage')->get();
 
       return $track->map(function($person){
        

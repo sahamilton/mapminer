@@ -17,6 +17,16 @@
 
 </form>
 </div>
+@else
+<div class="row float-right"><button type="button" 
+    class="btn btn-info float-right" 
+    data-toggle="modal" 
+    data-target="#add_lead">
+      Add Lead
+</button>
+</div>
+
+@php $branch = $data['branches']->first(); @endphp
 @endif
  <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
@@ -51,6 +61,6 @@
    
 
 
-  
+@include('branchleads.partials._mylead') 
 @include('partials._scripts')
 @endsection

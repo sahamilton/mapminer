@@ -16,7 +16,7 @@
         hAxis: {title: 'Sales Appts',
           viewWindow: {
               min: 0,
-              max: 100
+              max: 50
           },
           ticks: [0, 25, 50, 75, 100]
         },

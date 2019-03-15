@@ -37,7 +37,7 @@ class MyLeadsController extends BaseController
      */
     public function index()
     {
-        
+               
        if(!  $myBranches = $this->person->myBranches()){
         return redirect()->back()->withError('You are not assigned to any branches');
        }

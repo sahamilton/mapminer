@@ -33,15 +33,17 @@ class ActivityController extends Controller
      */
     public function index()
     {
-       
+     
         
             if(! $myBranches = $this->person->myBranches()){
                 return redirect()->back()->withError('You are not assigned to any branches');
            }
 
             $branches = array_keys($myBranches);
-            $branch = reset($branches);
+            $branch = $this->branch->findOrFail(reset($branches));
+
             $data = $this->getBranchActivities($branch);
+           
             $title= $data['branches']->first()->branchname . " activities";
        
         return response()->view('activities.index', compact('activities', 'data','title','myBranches'));
@@ -55,21 +57,19 @@ class ActivityController extends Controller
         }else{
             $data = $this->getBranchActivities($branch,$from = true);
       
-        $title= $branch->branchname . "upcoming follow up activities";
+        $title= $branch->branchname . " upcoming follow up activities";
     
         return response()->view('activities.upcoming', compact('data', 'myBranches','title')); 
         }
     }
     public function branchActivities(Request $request, Branch $branch){
-
+        
         if (request()->has('branch')) {
-            $branch = request('branch');
-        } else {
-           $branch = $branch->id;
+            $branch = $this->branch->findOrFail(request('branch'));
         }
         $myBranches = $this->person->myBranches();
        
-        if(! ( $myBranches)  or ! in_array($branch,array_keys($myBranches))){
+        if(! ( $myBranches)  or ! in_array($branch->id,array_keys($myBranches))){
             return redirect()->back()->withError('You are not assigned to any branches');
        }
        
@@ -84,7 +84,8 @@ class ActivityController extends Controller
 
     private function getBranchActivities($branch,$from=null)
     {
-        $team = $this->person->myBranchTeam([$branch])->toArray();
+      
+        $team = $this->person->myBranchTeam([$branch->id])->toArray();
             
 
         $data['activities'] = $this->activity->myTeamsActivities($team);
@@ -93,7 +94,7 @@ class ActivityController extends Controller
         }
         $data['activities'] =  $data['activities']->with('relatesToAddress', 'relatedContact', 'type', 'user')->get();
 
-        $data['branches'] =  $this->getbranches([$branch]);
+        $data['branches'] =  $this->getbranches([$branch->id]);
 
         $weekCount = $this->activity->myTeamsActivities($team)->sevenDayCount()->pluck('activities', 'yearweek')->toArray();
        
