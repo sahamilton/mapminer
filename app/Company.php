@@ -140,7 +140,7 @@ class Company extends NodeModel {
 	 */
 	public function checkCompanyServiceLine($company_id,$userServiceLines)
 	{
-		dd($this->userServiceLines);
+		
 		return $this->whereHas('serviceline', function($q) use ($userServiceLines) {
 						    $q->whereIn('serviceline_id', $userServiceLines);
 

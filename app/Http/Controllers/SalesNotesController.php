@@ -58,7 +58,11 @@ class SalesNotesController extends BaseController {
 	}
 
 	
+	public function bulkcreate(Request $request)
+	{
 
+
+	}
 	/**
 	 * Display the specified companies howtofield.
 	 *
@@ -68,7 +72,7 @@ class SalesNotesController extends BaseController {
 	public function show($id)
 	{
 		
-		
+
 		if (! $this->company->checkCompanyServiceLine($id,$this->userServiceLines))
 		{
 			return redirect()->route('company.index');
@@ -98,6 +102,7 @@ class SalesNotesController extends BaseController {
 	 */
 	public function edit(SalesNotesFormRequest $request, $salesnote)
 	{
+	
 		return $this->createSalesNotes($request, $salesnote);
 	}
 
@@ -177,7 +182,7 @@ class SalesNotesController extends BaseController {
 			$id= request('id');
 
 		}
-		
+
 		// Check that user can view company 
 		// based on user service line associations.
 		
@@ -186,9 +191,11 @@ class SalesNotesController extends BaseController {
 			
 			return redirect()->route('company.index');
 		}
+		
 		$data = $this->company
 		->with('managedBy')
-		->get();
+		->findOrFail($id);
+
 		$company = $data->find($id);
 		$fields = Howtofield::orderBy('group')->get();
 		
@@ -318,7 +325,7 @@ class SalesNotesController extends BaseController {
 
 		//Check that user can view company 
 		// based on user service line associations.
-		
+	
 		
 		$company = $this->company->with('managedBy')->get();
 		$company = $company->find($id);
