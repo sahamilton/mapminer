@@ -63,6 +63,7 @@ class BranchDashboardController extends Controller
     {
         $this->manager = $this->person->where('user_id','=',auth()->user()->id)->first();
         $myBranches = $this->getBranches();
+
         if(count($myBranches)==0){
                 return redirect()->route('user.show',auth()->user()->id)
                 ->withWarning("You are not assigned to any branches. You can assign yourself here or contact Sales Ops");
@@ -214,38 +215,76 @@ class BranchDashboardController extends Controller
     {
       $data['me'] = $this->person->findOrFail($this->manager->id);;
       $data['team'] =  $this->person->where('reports_to','=',$this->manager->id)
-            
-            ->with('branchesServiced',
-                'branchesServiced.opportunities',
-                'branchesServiced.leads',
-                'branchesServiced.activities')   
-            ->get();
-   
+      /*->with('branchesServiced',
+      'branchesServiced.opportunities',
+      'branchesServiced.leads',
+      'branchesServiced.activities') */  
+      ->get();
+      foreach ($data['team'] as $team){
+        $data['branchteam'] = $team->descendantsAndSelf()->withRoles([9])
+          ->has('branchesServiced')
+          ->with('branchesServiced',
+          'branchesServiced.opportunities',
+          'branchesServiced.leads',
+          'branchesServiced.activities')
+          ->get();
+        if($data['branchteam']->count()>0){
 
-      $sum = $data['team']->map(function ($manager){
-        return [$manager->id=>$manager->branchesServiced->map(function ($branch){
-          return ['leads'=>$branch->leads->count(),
-                  'opportunities'=>$branch->opportunities->where('closed','=',0)->count(),
-                  'won'=>$branch->opportunities->where('closed','=',1)->where('actual_close','>',Carbon::now()->subMonth(2))->count(),
-                  'booked'=>$branch->opportunities->where('closed','=',1)->where('actual_close','>',Carbon::now()->subMonth(2))->sum('value'),
-                  'lost'=>$branch->opportunities->where('closed','=',2)->where('actual_close','>',Carbon::now()->subMonth(2))->count(),
-                  'pipeline'=>$branch->opportunities->where('closed','=',0)->where('expected_close','>',Carbon::now())->sum('value'),
-                  'activities'=>$branch->activities->count()];
-        })];
-      });
-      foreach ($sum as $manager){
-        foreach ($manager as $mgrid=>$items){
-          $data['results'][$mgrid]['leads'] = $items->sum('leads');
-          $data['results'][$mgrid]['opportunities'] = $items->sum('opportunities');
-          $data['results'][$mgrid]['booked'] = $items->sum('booked');
-          $data['results'][$mgrid]['won'] = $items->sum('won');
-         
-          $data['results'][$mgrid]['lost'] = $items->sum('lost');
-          $data['results'][$mgrid]['pipeline'] = $items->sum('pipeline');
-          $data['results'][$mgrid]['activities'] = $items->sum('activities');
-           
+          $sum = $data['branchteam']->map(function ($manager){
+
+          return [$manager->id=>$manager->branchesServiced->map(function ($branch){
+
+            return ['leads'=>$branch->leads->count(),
+              'opportunities'=>$branch->opportunities
+              ->where('closed','=',0)->count(),
+              'won'=>$branch->opportunities
+              ->where('closed','=',1)->where('actual_close','>',Carbon::now()->subMonth(2))->count(),
+              'booked'=>$branch->opportunities
+              ->where('closed','=',1)->where('actual_close','>',Carbon::now()->subMonth(2))->sum('value'),
+              'lost'=>$branch->opportunities->where('closed','=',2)
+              ->where('actual_close','>',Carbon::now()->subMonth(2))->count(),
+              'pipeline'=>$branch->opportunities->where('closed','=',0)->where('expected_close','>',Carbon::now())->sum('value'),
+              'activities'=>$branch->activities->count()];
+              })];
+            });
+
+            $data['leads']=0;
+            $data['opportunities']=0;
+            $data['booked']=0;
+            $data['won']=0;
+            $data['lost']=0;
+            $data['pipeline']=0;
+            $data['activities']=0;
+            
+            foreach ($sum as $manager){
+              foreach ($manager as $mgrid=>$items){
+                $data['leads'] = $data['leads']+ $items->sum('leads');
+                $data['opportunities'] =$data['opportunities']+ $items->sum('opportunities');
+                $data['booked'] = $data['booked']+ $items->sum('booked');
+                $data['won'] = $data['won']+ $items->sum('won');
+
+                $data['lost'] = $data['lost']+ $items->sum('lost');
+                $data['pipeline'] = $data['pipeline']+ $items->sum('pipeline');
+                $data['activities'] = $data['activities']+ $items->sum('activities');
+
+              }
+
+            }
+            $data['results'][$team->id] = $data;
+          }else{
+            $data['results'][$team->id]['leads']=0;
+            $data['results'][$team->id]['opportunities']=0;
+            $data['results'][$team->id]['booked']=0;
+            $data['results'][$team->id]['won']=0;
+            $data['results'][$team->id]['lost']=0;
+            $data['results'][$team->id]['pipeline']=0;
+            $data['results'][$team->id]['activities']=0;
+          } 
+
         }
-      }
+
+
+       
       return $data;
     }
 
