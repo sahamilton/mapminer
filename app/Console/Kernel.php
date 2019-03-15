@@ -4,7 +4,7 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
-
+use App\Jobs\WeeklyActivityReminder;
 class Kernel extends ConsoleKernel
 {
     /**
@@ -24,7 +24,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->job(new WeeklyActivityReminder())->weekly()->fridays()->at('13:24');      
+        $schedule->job(new WeeklyActivityReminder())->weekly()->fridays()->at('16:02');      
     }
 
     /**
