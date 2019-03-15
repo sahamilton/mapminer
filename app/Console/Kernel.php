@@ -26,7 +26,7 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')
         //          ->hourly();
-        $schedule->job(new WeeklyActivityReminder())->weekly()->fridays()->at('12:38');
+        $schedule->job(new WeeklyActivityReminder())->weekly()->fridays()->at('12:40');
     }
 
     /**
