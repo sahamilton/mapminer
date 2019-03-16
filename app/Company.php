@@ -107,40 +107,42 @@ class Company extends NodeModel
                 $query->whereIn($column,$keys)->get();
             }
 					
-            }*/
-        }
+								
+			}
 
-        if ($paginate) {
-            //$locations = $query->paginate($paginate);
-            $locations = $query->get();
-        } else {
-            $locations = $query->get();
-        }
+			if($paginate)
+			{
+				//$locations = $query->paginate($paginate);
+				$locations = $query->get();
+			}else{
+				$locations = $query->get();
+			}			
 
-            return $locations;
-    }
-    /**
-     * Check that user can access company based on user
-     * serviceline settings
-     * @param  integer $company_id Company ID
-     * @return Object $company with servicelines
-     *                         in user servicelines settings
-     */
-    public function checkCompanyServiceLine($company_id, $userServiceLines)
-    {
-        dd($this->userServiceLines);
-        return $this->whereHas('serviceline', function ($q) use ($userServiceLines) {
-                            $q->whereIn('serviceline_id', $userServiceLines);
-        })->with('industryVertical')
-                        ->find($company_id);
-    }
-    public function getAllCompanies($filtered = null)
-    {
-        
-        $keys=[];
+			return $locations;
+	}
+	/**
+	 * Check that user can access company based on user
+	 * serviceline settings
+	 * @param  integer $company_id Company ID
+	 * @return Object $company with servicelines 
+	 *                         in user servicelines settings
+	 */
+	public function checkCompanyServiceLine($company_id,$userServiceLines)
+	{
+		
+		return $this->whereHas('serviceline', function($q) use ($userServiceLines) {
+						    $q->whereIn('serviceline_id', $userServiceLines);
 
-        $companies = $this->with('managedBy', 'managedBy.userdetails', 'industryVertical', 'serviceline', 'countlocations')->withCount('locations')
-            /*->whereHas('serviceline', function($q) {
+						})->with('industryVertical')
+						->find($company_id);
+	}
+	public function getAllCompanies($filtered=null)
+	{
+		
+		$keys=array();
+
+		$companies = $this->with('managedBy','managedBy.userdetails','industryVertical','serviceline','countlocations')->withCount('locations')
+			/*->whereHas('serviceline', function($q) {
 					    $q->whereIn('serviceline_id', $this->userServiceLines);
 
 			})*/

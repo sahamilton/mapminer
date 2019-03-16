@@ -24,9 +24,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
-        $schedule->job(new WeeklyActivityReminder())->weekly()->sundays()->at('18:40');
+        $schedule->job(new WeeklyActivityReminder())->weekly()->sundays()->at('17:52');      
     }
 
     /**
