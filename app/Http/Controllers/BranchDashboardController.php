@@ -63,7 +63,11 @@ class BranchDashboardController extends Controller
     {
         $this->manager = $this->person->where('user_id','=',auth()->user()->id)->first();
         $myBranches = $this->getBranches();
-
+   
+        if(count($myBranches)==1){
+          $branch = array_keys($myBranches);
+          return redirect()->route('dashboard.show',$branch[0]);
+        }
         if(count($myBranches)==0){
                 return redirect()->route('user.show',auth()->user()->id)
                 ->withWarning("You are not assigned to any branches. You can assign yourself here or contact Sales Ops");
@@ -91,6 +95,13 @@ class BranchDashboardController extends Controller
     */
     public function show($branch){
       // need to get branch manager
+      //check that this manager is authorized to see this
+     
+      $this->manager = $this->person->where('user_id','=',auth()->user()->id)->first();
+        $myBranches = $this->getBranches();
+      if(! array_key_exists($branch, $myBranches)){
+        return redirect()->route('dashboard.index')->withError('That is not one of your branches');
+      }
       $branch = $this->branch->with('manager')->findOrFail($branch);
       $this->manager = $branch->manager->first();
       $data = $this->getDashBoardData([$branch->id]);
