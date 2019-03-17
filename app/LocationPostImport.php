@@ -19,7 +19,10 @@ class LocationPostImport extends Model
 
     public function returnAddressMatchData(Company $company)
     {
-    	
+    	/* ST_Distance_Sphere(
+                point(lng, lat),
+                point(". $longitude . ", " . $latitude .")
+            )  < ".$close_in_metres );*/
     	$data['company'] = $company;
     	$this->distance = "ST_Distance_Sphere(addresses.position,addresses_import.position)";
     	

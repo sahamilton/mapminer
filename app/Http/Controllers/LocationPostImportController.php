@@ -26,6 +26,7 @@ class LocationPostImportController extends Controller
     public function index()
     {
 
+       
         $import = $this->import->first();
 
         $this->company = $this->company->findOrFail($import->company_id);

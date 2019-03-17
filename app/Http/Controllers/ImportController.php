@@ -13,7 +13,10 @@ class ImportController extends BaseController
 {
     public $userServiceLines;
     
-
+    /**
+     * [index description]
+     * @return [type] [description]
+     */
     public function index()
     {
         $imports = ['branches','branch_team','companies','locations','users'];
@@ -21,7 +24,11 @@ class ImportController extends BaseController
         return response()->view('imports.index',compact('imports','exports'));
     }
 
-
+    /**
+     * [uploadfile description]
+     * @param  [type] $file [description]
+     * @return [type]       [description]
+     */
     protected function uploadfile($file)
     {
        
@@ -32,7 +39,11 @@ class ImportController extends BaseController
         $data['filename'] = storage_path()."/app/".$file;
         return $data;
     }
-
+    /**
+     * [getFileFields description]
+     * @param  [type] $data [description]
+     * @return [type]       [description]
+     */
     protected function getFileFields($data)
     {
         $content = fopen($data['filename'], "r");
@@ -44,7 +55,11 @@ class ImportController extends BaseController
         return $fields;
     }
 
-    
+    /**
+     * [getData description]
+     * @param  [type] $request [description]
+     * @return [type]          [description]
+     */
     protected function getData($request)
     {
       
@@ -53,6 +68,11 @@ class ImportController extends BaseController
         return $data;
     }
     
+    /**
+     * [validateInput description]
+     * @param  Request $request [description]
+     * @return [type]           [description]
+     */
     protected function validateInput(Request $request)
     {
 

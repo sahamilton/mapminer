@@ -116,7 +116,12 @@ class MyLeadsController extends BaseController
             return redirect()->back()->withError('Unable to geocode that address');
         }
 
-             
+      
+        $dupes = $this->lead->duplicate($data['lead']['lng'],$data['lead']['lat'])->get();
+
+        if($dupes->count()>0){
+            return response()->view('addresses.duplicates',compact('dupes','data'));
+        } 
 
         $lead = $this->lead->create($data['lead']);
         if (count($data['branch'])>0) {

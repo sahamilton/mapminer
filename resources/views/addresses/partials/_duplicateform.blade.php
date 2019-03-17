@@ -1,4 +1,5 @@
 <!-- Company Name -->
+
 <div class="form-group{{ $errors->has('companyname') ? ' has-error' : '' }}">
 	<label class="col-md-4 control-label">Company</label>
 		<div class="input-group input-group-lg ">
@@ -8,7 +9,7 @@
 		    name='companyname' 
 		    autocomplete="off" 
 		    description="companyname" 
-		    value="{{ old('companyname' , isset($lead->companyname) ? $lead->companyname : '' )}}" 
+		    value="{{ old('companyname' , isset($data['lead']['companyname']) ? $data['lead']['companyname'] : '' )}}" 
 		    placeholder="companyname">
 		    <span class="help-block">
 		        <strong>{{ $errors->has('companyname') ? $errors->first('companyname') : ''}}</strong>
@@ -26,7 +27,7 @@
 		    name='businessname' 
 		    autocomplete="off" 
 		    description="businessname" 
-		    value="{{ old('businessname', isset($lead->businessname) ? $lead->businessname : '' )}}" 
+		    value="{{ old('businessname', isset($data['lead']['businessname']) ? $data['lead']['businessname'] : '' )}}" 
 		    placeholder="businessname">
 		    <span class="help-block">
 		        <strong>{{ $errors->has('businessname') ? $errors->first('businessname') : ''}}</strong>
@@ -44,7 +45,7 @@
 		     name='street' 
 		     autocomplete="off" 
 		     description="street" 
-		     value="{{ old('street', isset($lead) ? $lead->street : '' )}}" 
+		     value="{{ old('street', isset($lead) ? $data['lead']['street'] : '' )}}" 
 		     placeholder="address">
 		    <span class="help-block">
 		        <strong>{{ $errors->has('street') ? $errors->first('street') : ''}}</strong>
@@ -61,7 +62,7 @@
 		   name='city' 
 		   autocomplete="off" 
 		   description="city" 
-		   value="{{ old('city', isset($lead->city) ? $lead->city : '' )}}" placeholder="city">
+		   value="{{ old('city', isset($data['lead']['city']) ? $data['lead']['city'] : '' )}}" placeholder="city">
 		   <span class="help-block">
 		       <strong>{{ $errors->has('city') ? $errors->first('city') : ''}}</strong>
 		       </span>
@@ -77,7 +78,7 @@
              required class="form-control" name='state' 
              autocomplete="off" 
              description="state" 
-             value="{{ old('state', isset($lead->state) ? $lead->state : "" )}}" placeholder="state">
+             value="{{ old('state', isset($data['lead']['state']) ? $data['lead']['state'] : "" )}}" placeholder="state">
             <span class="help-block">
                 <strong>{{ $errors->has('state') ? $errors->first('state') : ''}}</strong>
                 </span>
@@ -94,7 +95,7 @@
 	       name='zip' 
 	       autocomplete="off" 
 	       description="zip" 
-	       value="{{ old('zip', isset($lead->zip) ? $lead->zip : "" )}}" 
+	       value="{{ old('zip', isset($data['lead']['zip']) ? $data['lead']['zip'] : "" )}}" 
 	       placeholder="zip">
 	       <span class="help-block">
 	           <strong>{{ $errors->has('zip') ? $errors->first('zip') : ''}}</strong>
@@ -114,7 +115,7 @@
 			     @if(!isset($type)) readonly @endif
 			     required class="form-control" name='contact' autocomplete="off" 
 			    description="contact" 
-			    value="{{ old('contact', ! $lead->contacts->isEmpty() ? $lead->contacts->first()->fullname : '') }}" 
+			    value="{{ old('contact', '') }}" 
 			    placeholder="contact">
 			    <span class="help-block">
 			        <strong>{{ $errors->has('contact') ? $errors->first('contact') : ''}}</strong>
@@ -133,8 +134,8 @@
 			    name='contact_title' 
 			    autocomplete="off" 
 			    description="contact_title" 
-			    value="{{ old('contact_title', 
-			   ! $lead->contacts->isEmpty() ? $lead->contacts->first()->title : '' )}}" placeholder="contact contact_title">
+			    value="{{ old('contact_title', '' )}}" 
+			    placeholder="contact contact_title">
 			    <span class="help-block">
 			        <strong>{{ $errors->has('contact_title') ? $errors->first('contact_title') : ''}}</strong>
 			        </span>
@@ -160,50 +161,17 @@
 			<div class="input-group input-group-lg ">
 			    <input 
 			    @if(!isset($type)) readonly @endif
-			    type="text"  class="form-control" name='contactemail' autocomplete="off" description="contactemail" value="{{ old('contactemail', ! $lead->contacts->isEmpty() ? $lead->contacts->first()->email : '') }}" placeholder="contact@company.com">
+			    type="text"  class="form-control" 
+			    name='contactemail' 
+			    autocomplete="off" 
+			    description="contactemail" 
+			    value="{{ old('contactemail',  '') }}" 
+			    placeholder="contact@company.com">
 			    <span class="help-block">
 			        <strong>{{ $errors->has('contactemail') ? $errors->first('contactemail') : ''}}</strong>
 			        </span>
 			</div>
 	</div>
-
-
-@include('leads.partials._extrafields')
-     
-
-<legend>Prospect Source</legend>   
-	<div class="form-group{{ $errors->has('lead_source_id') ? ' has-error' : '' }}">
-        <label class="col-md-4 control-label">Prospect Source</label>
-        <div class="input-group input-group-lg ">
-            <select id="leadsource" required autocomplete="off" class="form-control" name='lead_source_id'>
-
-            @foreach ($sources as $key=>$value)
-            	<option {{isset($lead) && ($lead->lead_source_id == $key) ? 'selected' : '' }} value="{{$key}}">{{$value}}</option>
-
-            @endforeach
-
-
-            </select>
-            
-        </div>
-    </div>
-
-<input type="hidden" name="uid" value="{{auth()->user()->id}}" />
-<legend>Assign to Branches</legend>
-<div class="form-group{{ $errors->has('branch') ? ' has-error' : '' }}">
-        <label class="col-md-4 control-label">Branch</label>
-        <div class="input-group input-group-lg ">
-            <select id="branch"  multiple autocomplete="off" class="form-control" name='branch[]'>
-
-            @foreach ($branches as $branch)
-            	<option selected value="{{$branch->id}}">{{$branch->branchname}}</option>
-
-            @endforeach
-
-
-            </select>
-            
-        </div>
-    </div>
+</div>
 
     

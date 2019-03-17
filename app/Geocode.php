@@ -305,17 +305,24 @@ trait Geocode
         return $query->selectRaw('ST_Distance_Sphere(location,POINT(' . $position . ')) AS distance');
     }
 
+    /**
+     * scopeCloseTo Return addresses within radius
+     * @param  [type]  $query    [description]
+     * @param  Object  $location [description]
+     * @param  integer $radius   [description]
+     * @return Builder           Query
+     */
     public function scopeCloseTo($query, $location, $radius = 25)
     {
         return $query->whereRaw("
-       ST_Distance_Sphere(
-            point(lng, lat),
-            point(?, ?)
-        ) * .000621371192 < ?
-    ", [
-        $location->lng,
-        $location->lat,
-        $radius,
-    ]);
+               ST_Distance_Sphere(
+                    point(lng, lat),
+                    point(?, ?)
+                ) * .000621371192 < ?
+            ", [
+                $location->lng,
+                $location->lat,
+                $radius,
+            ]);
     }
 }

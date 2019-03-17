@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class LocationImport extends Imports
 {
 	public $table = 'addresses';
-	public $dontCreateTemp= false;
+	public $dontCreateTemp= true;
 	public function setDontCreateTemp($state){
 		$this->dontCreateTemp = $state;
 	}

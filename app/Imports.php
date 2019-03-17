@@ -3,7 +3,7 @@
 namespace App;
 
 use Carbon\Carbon;
-
+use Illuminate\Http\Request;
 class Imports extends Model
 {
     public $table;
@@ -63,16 +63,19 @@ class Imports extends Model
             $this->importfilename = str_replace("\\", "/", LeadSource::findOrFail(request('lead_source_id'))->filename);
         }
         
-    
+        
         if (! $this->dontCreateTemp) {
             $this->createTemporaryImportTable();
         }
     
         $this->_import_csv();
-        $this->addLeadSourceRef($request);
+
+        $this->addLeadSourceRef($request); 
+
         $this->addCreateAtField();
-        $this->createPositon();
-        $this->updateAdditionalFields();
+         $this->createPositon();
+        $this->updateAdditionalFields($request);
+      
         if (! $this->dontCreateTemp) {
             $this->copyTempToBaseTable();
             if (request()->filled('contacts')) {
@@ -118,43 +121,16 @@ class Imports extends Model
     public function createPositon()
     {
         
-       // $this->executeQuery("update ".$this->temptable." set position = POINT(lng, lat);");
+       $this->executeQuery("update ".$this->temptable." set position = POINT(lng, lat);");
     
-        $this->executeQuery("update ".$this->temptable." set position = ST_GeomFromText(ST_AsText(position), 4326)");
+       // $this->executeQuery("update ".$this->temptable." set position = ST_GeomFromText(ST_AsText(position), 4326)");
     }
-    private function updateAdditionalFields()
+    private function updateAdditionalFields(Request $request)
     {
-    //Add the project source id
-
-    //foreach ($this->additionaldata as)
+       foreach (request('additionaldata') as $key=>$data){
+        $this->executeQuery("update ".$this->temptable." set " . $key . " = " . $data . ";");
+       }
     
-		if (! $this->dontCreateTemp){
-			$this->createTemporaryImportTable();
-		}
-	
-		$this->_import_csv();
-		$this->addLeadSourceRef($request);
-		$this->addCreateAtField();
-		$this->createPositon();
-		$this->updateAdditionalFields();
-		if (! $this->dontCreateTemp){
-
-			$this->copyTempToBaseTable();
-			if(request()->filled('contacts')){
-				$this->copyAddressIdBackToImportTable(request('lead_source_id'));
-				$this->copyContactsToContactsTable();
-				
-			// copy contacts to contacts
-			}
-			
-			$this->nullImportRefField();
-
-			//$this->truncateTempTable();
-		}
-
-
-		//
-
 		return true;
 		}
 

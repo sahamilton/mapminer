@@ -96,8 +96,8 @@ class Company extends NodeModel
             
             $isNullable = $this->isNullable($keys, $columns);
             
-        if ($filtered) {
-            /*	foreach ($columns as $column){
+       /* if ($filtered) {
+            foreach ($columns as $column){
             if(isset($isNullable[$column]) && $isNullable[$column]){
                 $query->where(function($q) use ($filtered,$keys, $isNullable,$column) {
                     $q->whereIn($column,$keys)
@@ -112,13 +112,13 @@ class Company extends NodeModel
 
 			if($paginate)
 			{
-				//$locations = $query->paginate($paginate);
+				//$locations = $locations->paginate($paginate);
 				$locations = $query->get();
 			}else{
 				$locations = $query->get();
-			}			
+			}	*/		
 
-			return $locations;
+			return $query->get();
 	}
 	/**
 	 * Check that user can access company based on user
