@@ -4,8 +4,12 @@
     <div class="form-group{{ $errors->has('companyname') ? ' has-error' : '' }}">
         <label class="col-md-2 control-label">Company Name:</label>
            <div class="input-group input-group-lg ">
-                <input required type="text" class="form-control" name='companyname' description="company" 
-                value="{!! old('companyname', isset($company) ? $company->companyname : "") !!}" placeholder="companyname">
+                <input required type="text" 
+                class="form-control" 
+                name='companyname' 
+                description="company" 
+                value="{!! old('companyname', isset($company) ? $company->companyname : "") !!}" 
+                placeholder="companyname">
                 <span class="help-block">
                     <strong>{{ $errors->has('companyname') ? $errors->first('companyname') : ''}}</strong>
                     </span>
@@ -35,7 +39,7 @@
         </div>
     </div>
 
-             @include('companies.partials._verticalselector')
+@include('companies.partials._verticalselector')
 
 
 <!-- Serviceline -->
@@ -61,4 +65,19 @@
 <input type="hidden" name="serviceline[]" value="{{key($servicelines->toArray())}}" />
 
 @endif
-    @include('partials._verticalsscript') 
+<!-- company -->
+    <div class="form-group{{ $errors->has('customer_id') ? ' has-error' : '' }}">
+        <label class="col-md-2 control-label">Customer Number:</label>
+           <div class="input-group input-group-lg ">
+                <input required type="text" 
+                class="form-control" 
+                name='customer_id' 
+                description="Customer Number" 
+                value="{!! old('companyname', isset($company) ? $company->customer_id : "") !!}" 
+                placeholder="Customer Number">
+                <span class="help-block">
+                    <strong>{{ $errors->has('companyname') ? $errors->first('companyname') : ''}}</strong>
+                    </span>
+            </div>
+    </div>
+@include('partials._verticalsscript') 
