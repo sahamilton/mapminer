@@ -82,7 +82,7 @@ class LocationsImportController extends ImportController
       
         if ($fileimport = $this->import->import($request)) {
            
-            if(request('type')=='locations'){
+            if(request('type')=='location'){
                 
                 return redirect()->route('postprocess.index');
             }
