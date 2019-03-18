@@ -12,6 +12,9 @@
 			<td>phone</td>
 			<td>contact</td>
 			<td>segment</td>
+			<td>lat</td>
+			<td>lng</td>
+
 		</tr>
 		@foreach($company->locations as $location)
 			<tr>  
@@ -26,6 +29,8 @@
 			<td>{{$location->phone}}</td>
 			<td>{{$location->contact}}</td>
 			<td>{{$location->segment}}</td>
+			<td>{{$location->lat}}</td>
+			<td>{{$location->lng}}</td>
 			</tr>
 		@endforeach
 	</tbody>

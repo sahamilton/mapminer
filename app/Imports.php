@@ -68,7 +68,7 @@ class Imports extends Model
 		if (! $this->dontCreateTemp){
 			$this->createTemporaryImportTable();
 		}
-	
+		$this->truncateTempTable();
 		$this->_import_csv();
 		$this->addLeadSourceRef($request);
 		$this->addCreateAtField();
@@ -86,7 +86,7 @@ class Imports extends Model
 			
 			$this->nullImportRefField();
 
-			//$this->truncateTempTable();
+			$this->truncateTempTable();
 		}
 
 
