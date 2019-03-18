@@ -34,7 +34,7 @@ class Activity extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
      */
     public function getTitle()
         {
-            return $this->note;
+            return $this->relatesToAddress->businessname;
         }
 
     /**
