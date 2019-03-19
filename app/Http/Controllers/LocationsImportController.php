@@ -78,7 +78,9 @@ class LocationsImportController extends ImportController
         }
         $data['table']=$this->table;
         $this->import->setFields($data);
-      
+        if(request('type')!='location'){
+           $this->import->setDontCreateTemp(false); 
+        }
         if ($fileimport = $this->import->import($request)) {
            
             if(request('type')=='location'){

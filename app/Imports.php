@@ -6,89 +6,88 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 class Imports extends Model
 {
-    public $table;
-    public $temptable;
-    public $fields;
-    public $importfilename;
-    public $additionaldata;
-    public $nullFields;
-    public $contactFields = ['fullname','firstname','lastname','title','contactphone','email'];
+    	public $table;
+    	public $temptable;
+    	public $fields;
+    	public $importfilename;
+    	public $additionaldata;
+    	public $nullFields;
+    	public $contactFields = ['fullname','firstname','lastname','title','contactphone','email'];
 
-    public function setFields($data)
-    {
-        if (isset($data['additionaldata'])) {
-                $this->additionaldata = $data['additionaldata'];
-        } else {
-            $this->additionaldata = [];
-        }
-        // set null empty fields
+		public function setFields($data){
+			if(isset($data['additionaldata'])){
+
+	    			$this->additionaldata = $data['additionaldata'];
+	    		}else{
+	    			$this->additionaldata = [];
+	    		}
+	    	// set null empty fields
+	    	
+	    	// remove any additional data fields from input fields
+	    	
+	    	$data['fields'][key(array_intersect($data['fields'],array_keys($this->additionaldata)))]='@ignore';
+	    	
+    		$this->fields = implode(",",$data['fields']);  
+    				
+    		$this->table = $data['table'];
+
+    		if(! $this->temptable){
+    			$this->temptable = $this->table . "_import";
+    		}
+    		
+    		
+
+    	}
+    	public function validateImport($fields){
+
+	   		return array_diff($this->requiredFields,array_values($fields));
+    	}
+
+    	public function detectDuplicateSelections($fields){
+    		$realFields = array_diff(array_values($fields), array("@ignore"));
+
+    		if(count(array_unique($realFields)) < count($realFields)){
+
+    			return array_unique(array_diff_key( $realFields , array_unique( $realFields ) ));
+    		}
+    		return false;
+    	}
+
+
+    public function import($request=null){
+    	// set filename
+    	
         
-        // remove any additional data fields from input fields
-            
-        $data['fields'][key(array_intersect($data['fields'], array_keys($this->additionaldata)))]='@ignore';
-            
-        $this->fields = implode(",", $data['fields']);
-                    
-        $this->table = $data['table'];
-
-        if (! $this->temptable) {
-            $this->temptable = $this->table . "_import";
-        }
-    }
-    public function validateImport($fields)
-    {
-
-        return array_diff($this->requiredFields, array_values($fields));
-    }
-
-    public function detectDuplicateSelections($fields)
-    {
-        $realFields = array_diff(array_values($fields), ["@ignore"]);
-
-        if (count(array_unique($realFields)) < count($realFields)) {
-            return array_unique(array_diff_key($realFields, array_unique($realFields)));
-        }
-        return false;
-    }
-
-
-    public function import($request = null)
-    {
-        // set filename
-        
-
-        if (request()->filled('filename')) {
-            $this->importfilename = request('filename');
-        } else {
-            $this->importfilename = str_replace("\\", "/", LeadSource::findOrFail(request('lead_source_id'))->filename);
-        }
-        
-        
-        if (! $this->dontCreateTemp) {
-            $this->createTemporaryImportTable();
-        }
+    	if(request()->filled('filename')){
+    		$this->importfilename = request('filename');
+    	}else{
+    		$this->importfilename = str_replace("\\","/",LeadSource::findOrFail(request('lead_source_id'))->filename);
+    	}
+    	
     
-        $this->_import_csv();
+		if (! $this->dontCreateTemp){
+			$this->createTemporaryImportTable();
+		}
+		$this->truncateTempTable();
+		$this->_import_csv();
+		$this->addLeadSourceRef($request);
+		$this->addCreateAtField();
+		$this->createPositon();
+		$this->updateAdditionalFields();
+		if (! $this->dontCreateTemp){
 
-        $this->addLeadSourceRef($request); 
+			$this->copyTempToBaseTable();
+			if(request()->filled('contacts')){
+				$this->copyAddressIdBackToImportTable(request('lead_source_id'));
+				$this->copyContactsToContactsTable();
+				
+			// copy contacts to contacts
+			}
+			
+			$this->nullImportRefField();
 
-        $this->addCreateAtField();
-         $this->createPositon();
-        $this->updateAdditionalFields($request);
-      
-        if (! $this->dontCreateTemp) {
-            $this->copyTempToBaseTable();
-            if (request()->filled('contacts')) {
-                $this->copyAddressIdBackToImportTable(request('lead_source_id'));
-                $this->copyContactsToContactsTable();
-                
-            // copy contacts to contacts
-            }
-            
-            $this->nullImportRefField();
-
-            //$this->truncateTempTable();
-        }
+			$this->truncateTempTable();
+		}
 
 
         //

@@ -24,7 +24,7 @@ class LocationPostImport extends Model
                 point(". $longitude . ", " . $latitude .")
             )  < ".$close_in_metres );*/
     	$data['company'] = $company;
-    	$this->distance = "ST_Distance_Sphere(addresses.position,addresses_import.position)";
+    	$this->distance = "ST_Distance_Sphere(point(addresses.lng,addresses.lat),point(addresses_import.lng,addresses_import.lat))";
     	
     	$data['matched'] = $this->geoMatchAddresses($company->id);
     	$this->updateImportTable($data['matched']);
@@ -45,10 +45,11 @@ class LocationPostImport extends Model
     	addresses.id as import_ref
     	 from addresses,addresses_import where addresses.company_id = addresses_import.company_id 
 		and addresses_import.company_id = " .$company_id . 
-		" and " . $this->distance ." < 10";
-		$data =  \DB::select($query); 
+		" and " . $this->distance ." < 50";
+    
+		return  \DB::select($query); 
     	// update import table with existing id
-    	return $data;
+    	
     }
     /*
     geoAddAddress

@@ -6,6 +6,8 @@
     <th>City</th>
     <th>State</th>
     <th>ZIP</th>
+    <th>Lat</th>
+    <th>Lng</th>
     <th>Add</th>
     </thead>
     <tbody>
@@ -19,6 +21,8 @@
         <td>{{$address->city}}</td>
         <td>{{$address->state}}</td>
         <td>{{$address->zip}}</td>
+        <td>{{$address->lat}}</td>
+        <td>{{$address->lng}}</td>
         <td><input type="checkbox" checked name="add[]" value="{{$address->id}}"></td>
 
     </td>
