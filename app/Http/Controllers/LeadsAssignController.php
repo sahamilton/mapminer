@@ -53,7 +53,7 @@ class LeadsAssignController extends Controller
     */
     public function geoAssignLeads(GeoAssignLeadsRequest $request, LeadSource $leadsource)
     {
-      
+
         if (request('type')== 'specific') {
 
             $message = $this->assignToSpecificBranches($request, $leadsource);
@@ -63,14 +63,15 @@ class LeadsAssignController extends Controller
             $this->limit = request('limit');
             $verticals  = null;
 
-            $addresses = $this->address->where('lead_source_id', '=',$leadsource->id)->get();
-
+            $addresses = $this->address->where('lead_source_id', '=',$leadsource->id)
+            ->get();
+           
           
             if($addresses->count()>0){
                   $box = $this->address->getBoundingBox($addresses);
       
                   if(request('type')=='branch'){
-                      $branchCount = $this->assignLeadsToBranches($leadsource,$box);
+                      $branchCount = $this->assignBranchesToLeads($leadsource,$box);
                       $assignedCount = $this->address->where('lead_source_id','=',$leadsource->id)
                       ->has('assignedToBranch')
                       ->get(
@@ -210,15 +211,39 @@ class LeadsAssignController extends Controller
         return $people->count();
     }
   
+    private function assignBranchesToLeads($leadsource,$box){
+     
+      $addresses = $this->address->where('lead_source_id','=',$leadsource->id)
+               ->doesntHave('assignedToBranch')
+               ->doesntHave('assignedToPerson')
+               ->get();
+    if($this->limit == 1){
+      $this->distance = '1000';
+
+    }
+      foreach ($addresses as $address){
+          $branches = $this->branch->withinMBR($box)
+          ->nearby($address, '200', $this->limit)
+          ->pluck('id')
+          ->toArray();
+        
+          foreach ($branches as $branch_id){
+            $data[] = ['address_id'=>$address->id, 'branch_id'=>$branch_id];
+           }
+         }
+        AddressBranch::insert($data);
+        return $addresses->count();              
+    }
+               
     private function assignLeadsToBranches($leadsource,$box){
 
         $branches = $this->branch->withinMBR($box)->get();
-       
+        // this gets all branches within bounding box
         foreach ($branches as $branch){
            $addresses = $this->address->where('lead_source_id','=',$leadsource->id)
                ->doesntHave('assignedToBranch')
                ->doesntHave('assignedToPerson')
-               ->nearby($branch,$this->distance, $this->limit)
+               ->nearby($branch, $this->distance, $this->limit)
                
                ->pluck('id')
                ->toArray();
