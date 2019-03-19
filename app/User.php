@@ -150,7 +150,11 @@ class User extends Authenticatable
     {
         return $this->api_token ."tbmm".Crypt::encrypt(now());
     }
-
+    /**
+     * [getAccess description]
+     * @param  [type] $id [description]
+     * @return [type]     [description]
+     */
     public function getAccess($id)
     {
         if (Crypt::decrypt(substr($id, strpos($id, 'tbmm')+4, strlen($id)))->diffInMinutes() < $this->expiration) {
