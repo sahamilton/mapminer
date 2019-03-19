@@ -112,16 +112,13 @@ class BranchLeadController extends Controller
         //
     }
     public function assign(){
-        $leads = $this->address->where('state','=','CA')
-       
+        $leads = $this->address       
         ->where('addressable_type','=','lead')
         ->get();
        $a=$leads->count();
         foreach ($leads as $lead){
             $branch = $this->branch->nearby($lead,'25',1)->get();
-            
             if($branch->count()>0){
-            
                 $data = ['branch_id'=>$branch->first()->id, 'address_id'=>$lead->id];
                $a--;
                 BranchLead::create($data);

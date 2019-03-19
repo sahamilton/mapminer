@@ -63,7 +63,7 @@ class LeadsAssignController extends Controller
             $this->limit = request('limit');
             $verticals  = null;
 
-            $addresses = $this->address->where('lead_source_id', '=',107)->get();
+            $addresses = $this->address->where('lead_source_id', '=',$leadsource->id)->get();
 
           
             if($addresses->count()>0){
@@ -218,7 +218,7 @@ class LeadsAssignController extends Controller
            $addresses = $this->address->where('lead_source_id','=',$leadsource->id)
                ->doesntHave('assignedToBranch')
                ->doesntHave('assignedToPerson')
-               ->nearby($branch,$this->distance)
+               ->nearby($branch,$this->distance, $this->limit)
                
                ->pluck('id')
                ->toArray();
