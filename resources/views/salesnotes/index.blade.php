@@ -38,22 +38,30 @@
 @endforeach
 </td>
 <td>
+
   <div class="btn-group">
+      <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
+        <span class="caret"></span>
+        <span class="sr-only">Toggle Dropdown</span>
+        </button>
+        <ul class="dropdown-menu" role="menu">
        @if($company->salesnotes->count()>0)
 
         <a class="dropdown-item" 
         href="{{route('salesnotes.edit',$company->id)}}"
         title=" Edit {{trim($company->companyname)}}'s Sales Notes">
+         <i class="far fa-edit text-info" aria-hidden="true"></i>
+        Edit Sales Notes
+      </a>
       @else
         <a class="dropdown-item"
         href="{{route('salesnotes.create','company='.$company->id)}}"
         title=" Create {{trim($company->name)}}'s Sales Notes">
-      @endif
-      <button type="button" class="btn btn-success" >
-      <i class="far fa-edit text-info"" aria-hidden="true"></i>   
-
+        <i class="far fa-edit text-info" aria-hidden="true"></i> Create Sales Notes
       </a>
-  	          
+      @endif
+      
+  	 </ul>      
   </div>
 </td>
 @endforeach
