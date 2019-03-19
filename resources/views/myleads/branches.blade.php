@@ -10,8 +10,8 @@
 @csrf
 
  <select class="form-control input-sm" id="branchselect" name="branch" onchange="this.form.submit()">
-  @foreach ($myBranches as $key=>$branch)
-    <option {{$data['branches']->first()->id == $key ? 'selected' : ''}} value="{{$key}}">{{$branch}}</option>
+  @foreach ($myBranches as $key=>$branchname)
+    <option {{$data['branches']->first()->id == $key ? 'selected' : ''}} value="{{$key}}">{{$branchname}}</option>
   @endforeach 
 </select>
 
@@ -58,9 +58,7 @@
 
     </tbody>
     </table>
-   
-
-
+ 
 @include('branchleads.partials._mylead') 
 @include('partials._scripts')
 @endsection
