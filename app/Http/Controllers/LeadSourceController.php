@@ -455,15 +455,11 @@ class LeadSourceController extends Controller
     public function export(Request $request, $id)
     {
        
-        if (request()->has('type')) {
-            $type = request('type');
-        } else {
-            $type = 'xlsx';
-        }
         $statuses = $this->lead->statuses;
         $leadsource = $this->leadsource
             ->with('leads', 'leads.relatedNotes','leads.assignedToBranch')
             ->findOrFail($id);
+
         return Excel::download(new LeadSourceExport($leadsource, $statuses),'Prospects'.time().'.csv');
         
     }

@@ -53,7 +53,7 @@ class LeadsAssignController extends Controller
     */
     public function geoAssignLeads(GeoAssignLeadsRequest $request, LeadSource $leadsource)
     {
-      
+
         if (request('type')== 'specific') {
 
             $message = $this->assignToSpecificBranches($request, $leadsource);
@@ -63,18 +63,19 @@ class LeadsAssignController extends Controller
             $this->limit = request('limit');
             $verticals  = null;
 
-            $addresses = $this->address->where('lead_source_id', '=',107)->get();
-
+            $addresses = $this->address->where('lead_source_id', '=',$leadsource->id)
+            ->get();
+           
           
             if ($addresses->count()>0) {
                   $box = $this->address->getBoundingBox($addresses);
       
-                if (request('type')=='branch') {
-                    $branchCount = $this->assignLeadsToBranches($leadsource, $box);
-                    $assignedCount = $this->address->where('lead_source_id', '=', $leadsource->id)
-                    ->has('assignedToBranch')
-                    ->get(
-                    )->count();
+                  if(request('type')=='branch'){
+                      $branchCount = $this->assignBranchesToLeads($leadsource);
+                      $assignedCount = $this->address->where('lead_source_id','=',$leadsource->id)
+                      ->has('assignedToBranch')
+                      ->get(
+                      )->count();
                     $message = $assignedCount . ' Leads have been assigned to '. $branchCount . ' branches';
                 } else {
                     $count = $this->assignLeadsToPeople($leadsource, $box, request('roles'));
@@ -207,16 +208,34 @@ class LeadsAssignController extends Controller
         return $people->count();
     }
   
-    private function assignLeadsToBranches($leadsource, $box)
-    {
+    private function assignBranchesToLeads(LeadSource $leadsource){
+     
+      $addresses = $this->unassignedLeads($leadsource);
+      
+      foreach ($addresses as $address){
+          $branches = $this->branch
+            ->nearby($address, $this->distance, $this->limit)
+            ->pluck('id')
+            ->toArray();
+          if(count($branches)>0){
+            foreach ($branches as $branch_id){
+              $data[] = ['address_id'=>$address->id, 'branch_id'=>$branch_id];
+             }
+           }
+         }
+        AddressBranch::insert($data);
+        return $addresses->count();              
+    }
+               
+    private function assignLeadsToBranches($leadsource,$box){
 
         $branches = $this->branch->withinMBR($box)->get();
-       
+        // this gets all branches within bounding box
         foreach ($branches as $branch){
            $addresses = $this->address->where('lead_source_id','=',$leadsource->id)
                ->doesntHave('assignedToBranch')
                ->doesntHave('assignedToPerson')
-               ->nearby($branch, $this->distance)
+               ->nearby($branch, $this->distance, $this->limit)
                
                ->pluck('id')
                ->toArray();
@@ -242,4 +261,15 @@ class LeadsAssignController extends Controller
       
      return \DB::statement($query);*/
     }
+
+    private function unassignedLeads(LeadSource $leadsource)
+    {
+     return $this->address->where('lead_source_id','=',$leadsource->id)
+               ->doesntHave('assignedToBranch')
+               ->doesntHave('assignedToPerson')
+               ->get();
+    
+    }
+
+
 }

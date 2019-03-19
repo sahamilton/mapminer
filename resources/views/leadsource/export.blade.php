@@ -11,8 +11,8 @@
 @foreach ($leadsource->leads as $lead)
 
 <tr>
-<td>{{$lead->companyname}}</td>
-<td>{!! $lead->fullAddress() !!}</td>
+<td>{{ $lead->businessname }}</td>
+<td>{{ $lead->fullAddress() }}</td>
 @if($lead->assignedToBranch->count()>0)
 <td>
 	
@@ -35,10 +35,12 @@
 	<td></td>
 	<td>
 @endif
-{{$note->note}} - {{$note->created_at->format('M d, Y')}}</td>
+{{ $note->note }} - {{$note->created_at->format('M d, Y')}}</td>
 </tr>
 @endforeach
+
 </tr>
 @endforeach
 
 </table>
+
