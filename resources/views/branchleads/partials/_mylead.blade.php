@@ -20,7 +20,9 @@
                 
         <form name="createlead" action="{{route('myleads.store')}}" method="post">
         {{csrf_field()}}
-        <input type="hidden" name="branch" value="{{$branch->id}}" />
+        <input type="hidden" 
+        name="branch" 
+        value="{{$branch->id}}" />
         @include('myleads.partials._form')
           <div class="float-right">
            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button> <input type="submit" value="Add Lead" class="btn btn-danger" />
