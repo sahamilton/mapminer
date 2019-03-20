@@ -6,7 +6,7 @@
     <div class="modal-content">
       <div class="modal-header">
 
-        <h4 class="modal-title">Create {!! $location->businessname !!} Opportunity</h4>
+        <h4 class="modal-title">Create {{ $location->businessname }} Opportunity</h4>
         <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
       <div class="modal-body">
@@ -15,15 +15,16 @@
         @csrf
         @include('opportunities.partials._opportunityform')
         
-        @if(count(array_intersect( $location->assignedToBranch->pluck('id')->toArray(),array_keys($myBranches)))==1)
+        @if($location->assignedToBranch && count(array_intersect( $location->assignedToBranch->pluck('id')->toArray(),array_keys($myBranches)))==1)
         @php
+            
             $branches = $location->assignedToBranch->keyBy('id');
             $branch_id = array_intersect( $location->assignedToBranch->pluck('id')->toArray(),array_keys($myBranches));
-          
-            $assignedBranch = $branches->get($branch_id[0]);
+            
+            $assignedBranch = $branches->get(reset($branch_id));
            
         @endphp
-      
+        
           <input type="submit" class="btn btn-success" 
           value="add to {{$assignedBranch->branchname}} branch opportunity" />
           <input type="hidden" 
