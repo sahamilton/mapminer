@@ -6,7 +6,7 @@
     <div class="modal-content">
       <div class="modal-header">
 
-        <h4 class="modal-title">Create {!! $location->businessname !!} Opportunity  </h4>
+        <h4 class="modal-title">Create {!! $location->businessname !!} Opportunity</h4>
         <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
       <div class="modal-body">
@@ -14,10 +14,21 @@
         <form name="addOpportunity" method="post" action="{{route('opportunity.store')}}" >
         @csrf
         @include('opportunities.partials._opportunityform')
-        <!--- this is incorrect  Branches should be imited to the address_branch -->
-        @if(count(array_intersect( array_keys($myBranches),$location->assignedToBranch->pluck('id')->toArray()))==1)
-          <input type="submit" class="btn btn-success" value="add to {{array_values($myBranches)[0]}} branch opportunity" />
-          <input type="hidden" name="branch_id" value="{{$location->assignedToBranch->pluck('id')->toArray()[0]}}" >
+        
+        @if(count(array_intersect( $location->assignedToBranch->pluck('id')->toArray(),array_keys($myBranches)))==1)
+        @php
+            $branches = $location->assignedToBranch->keyBy('id');
+            $branch_id = array_intersect( $location->assignedToBranch->pluck('id')->toArray(),array_keys($myBranches));
+          
+            $assignedBranch = $branches->get($branch_id[0]);
+           
+        @endphp
+      
+          <input type="submit" class="btn btn-success" 
+          value="add to {{$assignedBranch->branchname}} branch opportunity" />
+          <input type="hidden" 
+          name="branch_id" 
+          value="{{$assignedBranch->id}}" >
         @else
           <select name="branch_id" required >
 
