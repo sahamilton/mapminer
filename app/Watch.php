@@ -97,9 +97,9 @@ class Watch extends Model {
 		if(! $id){
 			$id = auth()->user()->id;
 		}
-		
+	
 		 return $this->with('watching','watching.company','watchnotes')
-		 ->has('watching.company')
+		
 		->where("user_id","=", $id)
 		->get();
 

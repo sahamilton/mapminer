@@ -159,13 +159,14 @@ $(document).ready(function()
 		});
 //$("[id$=jander]")
 	*/
-        $('[id^=sorttable], #store-locator-container').on('change','.watchItem',function() {
+        $('[id^=sorttable], #store-locator-container').on('change','.watchItem',function(e) {
+        e.stopImmediatePropagation();
 		var id = $(this).val();
         if($(this).is(":checked")) {
 			var action = 'add';
 			var msg =  id + " to List";
             var returnVal = changed(msg,action,id);
-            $(this).attr("checked", returnVal);
+          	$(this).attr("checked",returnVal);
             
         }else{
 			var action = 'remove';

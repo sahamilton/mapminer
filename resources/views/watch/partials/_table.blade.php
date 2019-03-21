@@ -56,10 +56,13 @@
 			</a>
 
 		</td>
-		<td style =\"text-align: center; vertical-align: middle;\">
-			<input checked id="{{$watch->watching->id}}"
-			type='checkbox' name='watchList' 
-			class='watchItem' value="{{$watch->watching->id}}" />
+		<td style ="text-align: center; vertical-align: middle;">
+			<input checked 
+			id="{{$watch->watching->id}}"
+			type='checkbox' 
+			name='watchList' 
+			class='watchItem' 
+			value="{{$watch->watching->id}}" />
 		</td>
 
 
