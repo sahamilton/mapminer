@@ -9,7 +9,13 @@
 	<div class="card-header">
 		
 		<p><strong>Type:</strong>  {{$feedback->category->category}} 
-			<strong>Submitted By:</strong>  {{$feedback->providedBy->person->fullName()}}
+			<strong>Submitted By:</strong>  
+			@if($feedback->providedBy)
+				{{$feedback->providedBy->person->fullName()}}
+			@else
+				No longer a mapminer user
+			@endif
+
 			<strong>Status:</strong> {{$feedback->status}}
 		</p>
 	</div>

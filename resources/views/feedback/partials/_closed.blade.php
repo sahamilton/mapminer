@@ -21,7 +21,12 @@
 		<tr>  
 		<td><a href="{{route('feedback.show',$item->id)}}">{{$item->created_at->format('M j, Y')}}</a></td>
 		<td>{{$item->category->category}}</td>
-		<td>{{$item->providedBy->person->fullName()}}
+		<td>
+			@if($item->providedBy)
+			{{$item->providedBy->person->fullName()}}
+			@else
+			No longer a Mapminer User
+			@endif
 		<td>
 			@if( strpos($item->feedback, '.')) 
 				{{substr($item->feedback, 0, strpos($item->feedback, '.'))}} 
