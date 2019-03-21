@@ -30,7 +30,7 @@ class WatchController extends BaseController {
 	{
 	
 		$watchlist = $this->watch->getMyWatchList(auth()->user()->id);
-
+		
 		return response()->view('watch.index', compact('watchlist'));
 
 	}

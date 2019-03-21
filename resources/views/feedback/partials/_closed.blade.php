@@ -19,7 +19,11 @@
 
 
 		<tr>  
-		<td><a href="{{route('feedback.show',$item->id)}}">{{$item->created_at->format('M j, Y')}}</a></td>
+		<td><a href="{{route('feedback.show',$item->id)}}">
+			<span class="hidden">
+				{{$item->created_at->format('Y-m-d')}}
+			</span>
+			{{$item->created_at->format('M j, Y')}}</a></td>
 		<td>{{$item->category->category}}</td>
 		<td>
 			@if($item->providedBy)
