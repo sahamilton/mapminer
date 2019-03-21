@@ -49,6 +49,17 @@ class WatchController extends BaseController {
 	    return redirect()->route('watch.index');
 	}
 	
+	/**
+	 * Store new watched location
+	 *
+	 * 
+	 */
+	protected function add($id){
+		
+		
+		return $this->watch->create(['user_id'=>auth()->user()->id,'address_id'=>$id]);
+		
+	}
 	
 	
 	/**
