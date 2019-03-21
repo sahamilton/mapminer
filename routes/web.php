@@ -589,7 +589,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 
 		Route::resource('roles','Admin\AdminRolesController');
 	    #  Permissions
-
+		Route::get('setapitoken',['as'=>'setapi.token','uses'=>'UsersController@resetApiToken']);
 		Route::resource('permissions','Admin\AdminPermissionsController');
 
 	#Howtofields

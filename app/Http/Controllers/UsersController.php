@@ -93,12 +93,23 @@ class UsersController extends Controller
 
     }
 
- function seeder(){
+    public function seeder(){
         $users = User::all();
         foreach ($users as $user){
             $user->seeder();
         }
         echo "All done";
+    }
+
+    public function resetApiToken()
+    {
+        $users = $this->user->whereNull('api_token')->get();
+        foreach ($users as $user){
+         
+            $user->update(['api_token'=>md5(uniqid(mt_rand(),true))]);
+         
+        }
+        return redirect()->route('users.index')->withMessage('Update '. $users->count() . ' api tokens');
     }
 
 }

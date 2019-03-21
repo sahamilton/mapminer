@@ -19,7 +19,8 @@ class WatchController extends BaseController {
 	 *
 	 * @return Response
 	 */
-	public function __construct(Watch $watch, Document $document) {
+	public function __construct(Watch $watch, Document $document) 
+	{
 		$this->document = $document;
 		$this->watch = $watch;
 	}
@@ -41,25 +42,13 @@ class WatchController extends BaseController {
 	 * @return list of watched locations
 	 */
 	
-	public function create($id){
+	public function create($id)
+	{
 		
-		$this->add($id);
-		$watch = $this->watch->getMyWatchList(\Auth::id());
-		
-		return response()->view('watch.index', compact('watch'));
+		$this->watch->create(['user_id'=>auth()->user()->id,'address_id'=>$id]);
+	    return redirect()->route('watch.index');
 	}
 	
-	/**
-	 * Store new watched location
-	 *
-	 * 
-	 */
-	protected function add($id){
-		
-		
-		return $this->watch->create(['user_id'=>auth()->user()->id,'address_id'=>$id]);
-		
-	}
 	
 	
 	/**
