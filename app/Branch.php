@@ -57,7 +57,8 @@ class Branch extends Model implements HasPresenter {
 		
 	}
 
-	public function relatedPeople($role=null){
+	public function relatedPeople($role=null)
+	{
 		if($role){
 
 			return $this->belongsToMany(Person::class)
@@ -70,7 +71,8 @@ class Branch extends Model implements HasPresenter {
 		
 	}
 
-	public function activities(){
+	public function activities()
+	{
 		return $this->hasManyThrough(Activity::class,AddressBranch::class,'branch_id','address_id','id','address_id');
 	}
 
@@ -84,7 +86,8 @@ class Branch extends Model implements HasPresenter {
 	/*public function opportunities(){
 		return $this->hasMany(Opportunity::class);
 	}*/
-	public function opportunities(){
+	public function opportunities()
+	{
  
        return $this->hasManyThrough(Opportunity::class,AddressBranch::class,'branch_id','address_branch_id','id','id');
     }
@@ -199,7 +202,8 @@ class Branch extends Model implements HasPresenter {
 	
 	*/	
 	
-	public function makeNearbyBranchXML($result) {
+	public function makeNearbyBranchXML($result) 
+	{
 		
 		$dom = new \DOMDocument("1.0");
 		$node = $dom->createElement("markers");
@@ -267,7 +271,8 @@ class Branch extends Model implements HasPresenter {
 		return $managers;
 	}
 
-	public function getBranchTeam(){
+	public function getBranchTeam()
+	{
 		return User::whereHas('roles', 
 			function($q) {
 			$q->whereIn('role_id',$this->branchRoles);
@@ -275,7 +280,8 @@ class Branch extends Model implements HasPresenter {
 	}
 	
 
-	public function getNearByBranches($servicelines,$location,$distance=100,$limit=5){
+	public function getNearByBranches($servicelines,$location,$distance=100,$limit=5)
+	{
 		return $this->wherehas('servicelines',function ($q) use($servicelines){
             $q->whereIn('servicelines.id',$servicelines);
         })
@@ -285,18 +291,21 @@ class Branch extends Model implements HasPresenter {
 
 	}
 
-	public function orders($period = null){
+	public function orders($period = null)
+	{
 		
 		return $this->hasManyThrough(Orders::class,AddressBranch::class,'branch_id','address_branch_id','id','id');
 	}
 
-	public function allStates(){
+	public function allStates()
+	{
 		$states = $this->distinct('state')->pluck('state')->toArray();
 		return State::whereIn('statecode',$states)->orderBy('statecode')->get();
 	
 	}
 
-	public function associatePeople(Request $request){
+	public function associatePeople(Request $request)
+	{
 		$data['roles'] = $this->removeNullsFromSelect(request('roles'));
 		$associatedPeople = array();
 		foreach ($data['roles'] as $key=>$role){
@@ -307,7 +316,8 @@ class Branch extends Model implements HasPresenter {
 		$this->relatedPeople()->sync($associatedPeople);
 	}
 
-	public function getbranchGeoCode($request){
+	public function getbranchGeoCode($request)
+	{
 		$address = request('street') . ",". request('city') . ",". request('state') . ",". request('zip');	
 
 		$geoCode = app('geocoder')->geocode($address)->get();
@@ -319,7 +329,8 @@ class Branch extends Model implements HasPresenter {
 
 	}
 
-	public function  scopeGetActivitiesByType($query,ActivityType $activitytype=null){
+	public function  scopeGetActivitiesByType($query,ActivityType $activitytype=null)
+	{
 	
         if($activitytype){
            
