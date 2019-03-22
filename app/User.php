@@ -133,7 +133,7 @@ class User extends Authenticatable
 
 
     public function watching () {
-        return $this->belongsToMany(Location::class);
+        return $this->belongsToMany(Address::class,'location_user');
 
     }
 	  
