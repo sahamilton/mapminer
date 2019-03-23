@@ -435,7 +435,7 @@ class BranchDashboardController extends Controller
       $branchdata = $this->getWeekActivities($branches)->toArray();
       $branches = [];
       // reformat branch data into array
-      $from = Carbon::now()->subMonth(2);
+      $from = $this->activity->getPeriod('thisMonth');
       $to = Carbon::now();
 
       $keys =  $this->yearWeekBetween($from, $to); 
@@ -555,6 +555,8 @@ class BranchDashboardController extends Controller
       * @return [type]             [description]
       */
      private function getWeekActivities(array $myBranches){
+      $dates = $this->activity->getPeriod('lastWeek');
+      dd($dates);
           $weekCount = $this->branch->whereIn('id',$myBranches)
            ->whereHas('activities',function ($q){
               $q->whereBetween('activity_date',[Carbon::now()->subMonth(2),Carbon::now()]);
