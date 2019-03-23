@@ -281,7 +281,8 @@ class Branch extends Model implements HasPresenter
         })
         ->limit($limit)
         ->get();
-
+    }
+    
     public function orders($period = null)
     {
         
