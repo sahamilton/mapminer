@@ -131,11 +131,14 @@ class ActivityController extends Controller
      */
     public function store(ActivityFormRequest $request)
     {
-    
+       
         $data = $this->parseData($request);
      
         $activity = Activity::create($data);
-
+        if(request()->has('followup_date')){
+            // create a new activity
+             $this->createFollowUpActivity($data);
+        }
         if (isset($data['contact'])) {
             $activity->relatedContact()->attach($data['contact']);
         }
@@ -143,6 +146,16 @@ class ActivityController extends Controller
         return redirect()->route('address.show', $data['address_id']);
     }
 
+
+    private function createFollowUpActivity(array $data)
+    {
+        dd($data);
+    }
+    /**
+     * [parseData description]
+     * @param  [type] $request [description]
+     * @return [type]          [description]
+     */
     private function parseData($request)
     {
         $data= $request->except(['_token','submit']);
