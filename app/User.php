@@ -40,7 +40,7 @@ class User extends Authenticatable
 
 
 
-    public $fillable = ['email','lastlogin','confirmed','confirmation_code','employee_id'];
+	public $fillable = ['email','lastlogin','confirmed','confirmation_code','employee_id','api_token'];
     /**
      * Get user by username
      * @param $username
@@ -127,7 +127,9 @@ class User extends Authenticatable
     public function reports()
     {
 
-        return $this->hasMany(User::class, 'id', 'mgrid');
+    public function watching () {
+        return $this->belongsToMany(Address::class,'location_user');
+
     }
 
     /*public function getUserByUsername( $username )
@@ -263,10 +265,13 @@ class User extends Authenticatable
     {
         return $this->email;
     }
-/**
- * [seeder Seed api_token for all users. Not used]
- * @return [type] [description]
- */
+
+
+
+    /**
+     * [seeder Seed api_token for all users. Not used]
+     * @return [type] [description]
+     */
 
     public function setApiToken(){
 

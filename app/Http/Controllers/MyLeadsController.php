@@ -155,14 +155,14 @@ class MyLeadsController extends BaseController
         }
         return redirect()->route('address.show', $lead)->withMessage('Lead Created');
     }
-
+    
+    
     /**
-     * Display the specified resource.
-     *
-     * @param  \App\MyLead  $myLeads
-     * @return \Illuminate\Http\Response
+     * Extract data from request and format for storage
+     * @param  Request $request [description]
+     * @return [type]           [description]
      */
-    public function show()
+    private function cleanseInput(Request $request)
     {
         
     }
@@ -188,12 +188,12 @@ class MyLeadsController extends BaseController
     public function update(MyLeadFormRequest $request, MyLead $mylead)
     {
     }
+    
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\MyLead  $myLeads
-     * @return \Illuminate\Http\Response
+     * Prepare address data for storage
+     * @param  Request $request [description]
+     * @return [type]           [description]
      */
     public function destroy($mylead)
     {
@@ -216,12 +216,19 @@ class MyLeadsController extends BaseController
         } else {
             $data['lead']['addressable_type'] = 'lead';
         }
-        
-        $data['lead']['lead_source_id'] = '4';
+        $userCreatedLeadSourceId = '4';
+        $data['lead']['lead_source_id'] = $userCreatedLeadSourceId;
         $data['lead']['type'] = 'lead';
         $data['lead']['user_id'] =auth()->user()->id;
-    
-
+        return $data;
+    }
+    /**
+     * Cleanse and assign address to branch
+     * @param  Request $request [description]
+     * @return array data['team'] assigned to branch
+     */
+    private function cleanseBranchData(Request $request,array $data)
+    {
         $data['team']['user_id'] = auth()->user()->id;
         $data['team']['type'] = 'mylead';
         $data['team']['status_id'] =2;
@@ -246,6 +253,27 @@ class MyLeadsController extends BaseController
         }
        
 
+    /**
+     * Extract contact information from request
+     * @param  Array   $data    [description]
+     * @param  Request $request [description]
+     * @return array          [description]
+     */
+    
+    public function cleanseContactData(Array $data, Request $request){
+
+        $data['contact']['fullname'] = request('contact');
+        // extract first last name
+        $name = explode(' ', request('contact'), 2);
+        $data['contact']['firstname'] = $name[0];
+        
+        if(isset($name[1])){
+            $data['contact']['lastname'] = $name[1];
+        }
+        
+        $data['contact']['title'] = request('contact_title');
+        $data['contact']['email'] = request('email');
+        $data['contact']['contactphone'] =  preg_replace("/[^0-9]/","",request('phone'));
         return $data;
     }
     public function reassign(LeadReassignFormRequest $request)
@@ -284,11 +312,12 @@ class MyLeadsController extends BaseController
             }
         }
     }
-    /*
-    validate branch in branch string
-
-
-    */
+    /**
+     * Validate incoming string of comma separated branches
+     * Could move to branch model
+     * @param  Request $request [description]
+     * @return array of valid branches
+     */
     private function validateBranches(Request $request)
     {
 

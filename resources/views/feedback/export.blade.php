@@ -17,11 +17,23 @@
             <td>{{ $item->created_at->format('Y-m-d') }}</td>
             <td>{{ $item->category->category }}</td>
             <td>{{ $item->feedback }}</td>
-            <td>{{ $item->providedBy->person->fullName() }}</td>
+            <td>
+                @if($item->providedBy)
+                    {{ $item->providedBy->person->fullName() }}
+                @else
+                    No Longer a Mapminer User
+                @endif
+            </td>
             <td>{{ $item->status }}</td>
             <td>
                 @foreach ($item->comments as $comment)
-                <li>{{ $comment->comment}} {{$comment->by->person->fullName()}}</li>
+                    <li>{{ $comment->comment}} 
+                        @if($comment->by)
+                            {{$comment->by->person->fullName()}}
+                        @else
+                            No longer a mpminer user
+                        @endif
+                    </li>
                 @endforeach
             </td>
         </tr>

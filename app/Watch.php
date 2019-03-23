@@ -81,22 +81,65 @@ class Watch extends Model
         return $string;
     }
 
-    /**
-     * Return watch list.
-     *
-     * @param  int  $id
-     * @return array watchList
-     */
-    
-    public function getMyWatchList($id = null)
-    {
-        if (! $id) {
-            $id = auth()->user()->id;
-        }
-        
-         return $this->with('watching', 'watching.company', 'watchnotes')
-         ->has('watching.company')
-        ->where("user_id", "=", $id)
-        ->get();
-    }
+						foreach ($row->$value as $watched){
+							$string =$this->cleanseString($watched->note);
+							$output.= $string."  |  ";
+
+
+						}
+					$output.=",";	
+					}else{
+						// remove non printing characters from string then remove any commas
+						$string =$this->cleanseString($row->watching[0]->$key->$value);
+						
+						$output.=$string.",";
+					}
+				}
+			 }else{
+				if(!$row->watching[0]->$field) {
+					$output.=",";
+				}else{
+					// remove non printing characters from string then remove any commas
+					$string =$this->cleanseString($row->watching[0]->$field);
+					$output.=$string.",";
+				}
+			 }
+
+			  
+		  }
+		  $output.="\n";
+			  
+			  
+		  }
+	return $output;
+	}
+	
+	private function cleanseString($string)
+	{
+		$string = preg_replace('/[\x00-\x1F\x80-\xFF]/', '',$string);
+		$string = str_replace(","," ", $string);
+	return $string;
+	}
+
+	/**
+	 * Return watch list.
+	 *
+	 * @param  int  $id
+	 * @return array watchList
+	 */
+	
+	public function getMyWatchList($id=null) {
+		if(! $id){
+			$id = auth()->user()->id;
+		}
+	
+		 return $this->with('watching','watching.company','watchnotes')
+		
+		->where("user_id","=", $id)
+		->get();
+
+		
+	}
+	
+	
 }

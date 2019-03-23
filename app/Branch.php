@@ -273,26 +273,14 @@ class Branch extends Model implements HasPresenter
         return $managers;
     }
 
-    public function getBranchTeam()
-    {
-        return User::whereHas(
-            'roles',
-            function ($q) {
-                $q->whereIn('role_id', $this->branchRoles);
-            }
-        )->with('Person')->get();
-    }
-    
 
     public function getNearByBranches($servicelines, $location, $distance = 100, $limit = 5)
     {
         return $this->wherehas('servicelines', function ($q) use ($servicelines) {
             $q->whereIn('servicelines.id', $servicelines);
         })
-        ->nearby($location, $distance)
         ->limit($limit)
         ->get();
-    }
 
     public function orders($period = null)
     {
@@ -300,11 +288,6 @@ class Branch extends Model implements HasPresenter
         return $this->hasManyThrough(Orders::class, AddressBranch::class, 'branch_id', 'address_branch_id', 'id', 'id');
     }
 
-    public function allStates()
-    {
-        $states = $this->distinct('state')->pluck('state')->toArray();
-        return State::whereIn('statecode', $states)->orderBy('statecode')->get();
-    }
 
     public function associatePeople(Request $request)
     {

@@ -39,7 +39,13 @@ Activities
           
           @endif
         </td>
-        <td>{{$activity->user->person->fullName()}}</td>
+        <td>
+          @if(! $activity->user)
+         No Longer with the company
+          @else
+          {{$activity->user->person->fullName()}}
+        @endif
+      </td>
         <td>{{$activity->note}}</td>
         <td>{{$activity->followup_date ? $activity->followup_date->format('Y-m-d') : ''}}</td>
 

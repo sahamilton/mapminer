@@ -604,10 +604,10 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
 
         # User Role Management
 
-        Route::resource('roles', 'Admin\AdminRolesController');
-        #  Permissions
-
-        Route::resource('permissions', 'Admin\AdminPermissionsController');
+		Route::resource('roles','Admin\AdminRolesController');
+	    #  Permissions
+		Route::get('setapitoken',['as'=>'setapi.token','uses'=>'UsersController@resetApiToken']);
+		Route::resource('permissions','Admin\AdminPermissionsController');
 
         #Howtofields
         Route::resource('howtofields', 'HowtofieldsController');
