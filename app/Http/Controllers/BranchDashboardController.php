@@ -26,7 +26,7 @@ class BranchDashboardController extends Controller
     public $contact;
     public $manager;
     public $opportunity;
-    
+    public $period = [];
     public $person;
     public $track;
 
@@ -51,6 +51,11 @@ class BranchDashboardController extends Controller
         $this->person = $person;
         $this->activity = $activity;
         $this->track = $track;
+        
+        if(session('period')){
+          $this->period = session('period');
+        }
+       
     }
 
     /**
@@ -61,7 +66,11 @@ class BranchDashboardController extends Controller
     
     public function index()
     {
-        $this->manager = $this->person->where('user_id','=',auth()->user()->id)->first();
+        
+
+       $this->period = session('period');
+
+       $this->manager = $this->person->where('user_id','=',auth()->user()->id)->first();
         $myBranches = $this->getBranches();
    
         if(count($myBranches)==1){
@@ -72,10 +81,22 @@ class BranchDashboardController extends Controller
                 return redirect()->route('user.show',auth()->user()->id)
                 ->withWarning("You are not assigned to any branches. You can assign yourself here or contact Sales Ops");
             }
-       $this->setTimeFrame();
+      
        $data = $this->getDashBoardData(array_keys($myBranches));
+       
+       $data['period'] = $this->period;
+
        return response()->view('opportunities.mgrindex', compact('data'));
 
+    }
+
+    public function setPeriod(Request $request)
+    {
+      
+      $this->period = $this->activity->setPeriod(request('period'));
+      session()->put('period', $this->period);
+
+      return redirect()->route('dashboard.index');
     }
     /**
      * [selectBranch description]
@@ -84,7 +105,7 @@ class BranchDashboardController extends Controller
      */
     public function selectBranch(Request $request)
     {
-
+      $this->period = session('period');
       $data = $this->getDashBoardData([request('branch')]);
       return $this->displayDashboard($data);
 
@@ -98,7 +119,7 @@ class BranchDashboardController extends Controller
     {
       // need to get branch manager
       //check that this manager is authorized to see this
-     
+     $this->period = session('period');
       $this->manager = $this->person->where('user_id','=',auth()->user()->id)->first();
         $myBranches = $this->getBranches();
       if(! array_key_exists($branch, $myBranches)){
@@ -119,7 +140,7 @@ class BranchDashboardController extends Controller
      */
     public function manager(Request $request, Person $manager=null)
     {
-      
+      $this->period = session('period');
       if($manager){
         $myteam = $this->person->myTeam()->pluck('id')->toArray();
         if(! in_array($manager->id, $myteam)){
@@ -153,16 +174,21 @@ class BranchDashboardController extends Controller
      */
     private function getDashBoardData(array $myBranches)
     {
-    
+      
       $data['team']= $this->myTeamsOpportunities();
       $data['branches'] = $this->getSummaryBranchData($myBranches);
       $data['upcoming'] = $this->getUpcomingActivities($myBranches);       
-      $data['funnel'] = $this->getBranchFunnel($myBranches);
-      $data['activitychart'] =  $this->getActivityChartData($myBranches);
+   
+       $data['funnel'] = $this->getBranchFunnel($myBranches);    
+
+      $data['activitychart'] =  $this->getActivityChartData($myBranches);  
+      
       $data['pipeline'] = $this->getPipeline($myBranches);
+     
       $data['calendar'] = $this->getUpcomingCalendar($data['upcoming']);
       $data['chart'] = $this->getChartData($myBranches);
-      $data['won'] = $this->getWonOpportunities($myBranches);
+      $data['won'] = $this->getWonOpportunities($myBranches); 
+
       if(isset($data['team']['results'])){
         $data['teamlogins'] = $this->getTeamLogins(array_keys($data['team']['results']));
       }
@@ -273,11 +299,11 @@ class BranchDashboardController extends Controller
               'opportunities'=>$branch->opportunities
               ->where('closed','=',0)->count(),
               'won'=>$branch->opportunities
-              ->where('closed','=',1)->where('actual_close','>',Carbon::now()->subMonth(2))->count(),
+              ->where('closed','=',1)->where('actual_close','>',$this->period['from'])->count(),
               'booked'=>$branch->opportunities
-              ->where('closed','=',1)->where('actual_close','>',Carbon::now()->subMonth(2))->sum('value'),
+              ->where('closed','=',1)->where('actual_close','>',$this->period['to'])->sum('value'),
               'lost'=>$branch->opportunities->where('closed','=',2)
-              ->where('actual_close','>',Carbon::now()->subMonth(2))->count(),
+              ->where('actual_close','>',$this->period['from'])->count(),
               'pipeline'=>$branch->opportunities->where('closed','=',0)->where('expected_close','>',Carbon::now())->sum('value'),
               'activities'=>$branch->activities->count()];
               })];
@@ -330,7 +356,7 @@ class BranchDashboardController extends Controller
                   )
           
               ->with('manager','manager.reportsTo')
-              ->getActivitiesByType()
+              ->getActivitiesByType($this->period)
               ->whereIn('id',$branches)
               ->get(); 
 
@@ -345,7 +371,7 @@ class BranchDashboardController extends Controller
     {
        $results =   $this->branch
                     ->whereIn('id',$branches)
-                    ->getActivitiesByType(4)
+                    ->getActivitiesByType($this->period,4)
                     ->withCount('leads')
                     ->withCount(       
                             ['opportunities as won'=>function($query){
@@ -435,11 +461,10 @@ class BranchDashboardController extends Controller
       $branchdata = $this->getWeekActivities($branches)->toArray();
       $branches = [];
       // reformat branch data into array
-      $from = $this->activity->getPeriod('thisMonth');
-      $to = Carbon::now();
+    
 
-      $keys =  $this->yearWeekBetween($from, $to); 
-      
+      $keys =  $this->yearWeekBetween(); 
+   
       foreach($branchdata as $branch){
 
           $branch_id = implode(",",array_keys($branch));
@@ -454,11 +479,11 @@ class BranchDashboardController extends Controller
 
             }
           }
-          
+           
           // fill any missing periods with zeros
           // 
           
-          $branches[$branch_id] = $this->fillMissingPeriods($branches[$branch_id],$from, $to);
+          $branches[$branch_id] = $this->fillMissingPeriods($branches[$branch_id],$this->period['from'], $this->period['to']);
           // sort branch array in date sequence
         ksort($branches[$branch_id]);
      
@@ -481,10 +506,13 @@ class BranchDashboardController extends Controller
       * @param  Carbon $to       [description]
       * @return [type]           [description]
       */
-     private function fillMissingPeriods($branches,Carbon $from,Carbon $to)
+     private function fillMissingPeriods($branches)
      {
+        $from = clone($this->period['from']);
+        $to = clone($this->period['to']);
         $keys = $this->yearWeekBetween($from,$to);
-        for($i = $from->format('Y-m-d'); $i<= $to->format('Y-m-d');$i+7){
+
+        for($i = $from->format('Y-m-d'); $from <= $to->format('Y-m-d');$from->addWeeks(1)){
           
               if(! in_array($i,$keys)){
                   $keys[]=$i;
@@ -555,14 +583,13 @@ class BranchDashboardController extends Controller
       * @return [type]             [description]
       */
      private function getWeekActivities(array $myBranches){
-      $dates = $this->activity->getPeriod('lastWeek');
-      dd($dates);
+     
           $weekCount = $this->branch->whereIn('id',$myBranches)
            ->whereHas('activities',function ($q){
-              $q->whereBetween('activity_date',[Carbon::now()->subMonth(2),Carbon::now()]);
+              $q->whereBetween('activity_date',[$this->period['from'],$this->period['to']]);
             })
            ->with(['activities'=>function ($q){
-              $q->whereBetween('activity_date',[Carbon::now()->subMonth(2),Carbon::now()]);
+              $q->whereBetween('activity_date',[$this->period['from'],$this->period['to']]);
            }])->get();
 
            return  $weekCount->map(function ($branch){
@@ -583,7 +610,7 @@ class BranchDashboardController extends Controller
                 ->whereNotNull('value')
                 ->where('value','>',0)
                 ->whereIn('branch_id',$myBranches)
-                ->whereBetween('actual_close',[Carbon::now()->subMonth(2),Carbon::now()])
+                ->whereBetween('actual_close',[$this->period['from'],$this->period['to']])
                 ->whereClosed(1)
                 ->groupBy(['branch_id','yearweek'])
                 ->orderBy('branch_id','asc')
@@ -597,15 +624,12 @@ class BranchDashboardController extends Controller
           
       }
 
-      $from = Carbon::now()->subMonth(2);
-
-      $to = Carbon::now();
-      $keys =  $this->yearWeekBetween($from, $to);
+      $keys =  $this->yearWeekBetween($this->period['from'], $this->period['to']);
       $wondata = [];
       foreach(array_unique($won->pluck('branch_id')->toArray()) as $branch_id){
         
 
-        $wondata[$branch_id]= $this->fillMissingPeriods($data[$branch_id],$from, $to);
+        $wondata[$branch_id]= $this->fillMissingPeriods($data[$branch_id]);
       
       }
       
@@ -679,11 +703,14 @@ class BranchDashboardController extends Controller
      * @param  [type] $to   [description]
      * @return [type]       [description]
      */
-    private function yearWeekBetween($from, $to)
+    private function yearWeekBetween()
     {
       
+      $dates['from'] = clone($this->period['from']);
+      $dates['to'] = clone($this->period['to']);
+
       $keys=[];
-      for($i = $from->format('Y-m-d'); $i<= $to->format('Y-m-d');$i = $from->addWeek()->format('Y-m-d')){
+      for($i = $dates['from']->format('Y-m-d'); $i<= $dates['to']->format('Y-m-d');$i = $dates['from']->addWeek()->format('Y-m-d')){
         $keys[]="'".$i."'";
       }
 

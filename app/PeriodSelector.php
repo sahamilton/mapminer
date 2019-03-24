@@ -8,24 +8,45 @@ use \Carbon\Carbon;
 trait PeriodSelector
 {
     public $period = [];
-
+    
+    /**
+     * [setPeriod description]
+     * @param [type] $period [description]
+     */
     public function setPeriod($period)
     {
     	
     	if(method_exists($this,$period)){
     	 	$this->period = $this->$period();
-    		session()->put('period', $this->period);
-    		return $this->period;
-    	}
+        }else{
+            $this->period = $this->default();
+        }
+		session()->put('period', $this->period);
+		return $this->period;
     }
-
+    /**
+     * [getPeriod description]
+     * @param  [type] $period [description]
+     * @return [type]         [description]
+     */
     public function getPeriod($period)
     {
     	if(method_exists($this,$period)){
     		return $this->$period();
     	}
-    	return false;
+        return $this->default();
+ 
     }
+
+    /**
+     * [default description]
+     * @return [type] [description]
+     */
+    private function default(){
+    	return $this->lastDays(30);
+    }
+
+
 
     /**
      * Today
@@ -36,7 +57,8 @@ trait PeriodSelector
     {
     	$data['from'] = Carbon::today();
     	$data['to'] = Carbon::tomorrow()->subSeconds(1);
-    	return $data;
+    	$data['period'] = 'today';
+        return $data;
 
     }
     /**
@@ -48,7 +70,8 @@ trait PeriodSelector
     {
 		$data['from'] = Carbon::yesterday();
     	$data['to'] = Carbon::today()->subSeconds(1);
-    	return $data;
+    	$data['period'] = 'yesterday';
+        return $data;
     }
     
     /**
@@ -60,7 +83,8 @@ trait PeriodSelector
     {
     	$data['from'] = Carbon::now()->subDays($number);
     	$data['to'] = Carbon::now();
-  		return $data;
+  		$data['period'] = 'last ' . $number . ' days';
+        return $data;
 
     }
     /**
@@ -72,7 +96,8 @@ trait PeriodSelector
     	
     	$data['from'] = Carbon::now()->startOfWeek();
     	$data['to'] = Carbon::now()->endOfWeek();
-    	return $data;
+    	$data['period'] = 'thisWeek';
+        return $data;
     }
     /**
      * [thisWeekToDate returns beginning and current time
@@ -84,7 +109,9 @@ trait PeriodSelector
     
     	$data['from'] = Carbon::now()->startOfWeek();
     	$data['to'] = Carbon::tomorrow()->subSeconds(1);
-    	return $data;
+    	$data['period'] = 'thisWeekToDate';
+       
+        return $data;
 
     }
 
@@ -97,7 +124,8 @@ trait PeriodSelector
     	
     	$data['from'] = Carbon::now()->subWeek(1)->startOfWeek();
     	$data['to'] = Carbon::now()->subWeek(1)->endOfWeek();
-    	return $data;
+    	$data['period'] = 'lastWeek';
+        return $data;
     }
     /**
      * this Month returns beginning and end of current month
@@ -107,7 +135,8 @@ trait PeriodSelector
     {
     	$data['from'] = new Carbon('first day of this month');
     	$data['to'] = new Carbon('last day of this month');
-  		return $data;
+  		$data['period'] = 'thisMonth';
+        return $data;
 
     }
     /**
@@ -119,7 +148,8 @@ trait PeriodSelector
     {
     	$data['from'] = new Carbon('first day of this month');
     	$data['to'] = Carbon::now();
-  		return $data;
+  		$data['period'] = 'thisMonthToDate';
+        return $data;
 
     }
     /**
@@ -130,7 +160,8 @@ trait PeriodSelector
     {
     	$data['from'] = new Carbon('first day of last month');
     	$data['to'] = new Carbon('last day of last month');
-  		return $data;
+  		$data['period'] = 'lastMonth';
+        return $data;
 
     }
     
@@ -145,7 +176,8 @@ trait PeriodSelector
     
     	$data['from'] = Carbon::now()->firstOfQuarter();
     	$data['to'] = Carbon::now()->lastOfQuarter();
-    	return $data;
+    	$data['period'] = 'thisQuarter';
+        return $data;
     }
     /**
      * thisQuarterToDate returns beginging date
@@ -159,7 +191,8 @@ trait PeriodSelector
     	$data['from'] = Carbon::now()->firstOfQuarter();
     	$data['to'] = Carbon::now();
     	
-    	return $data;
+    	$data['period'] = 'thisQuarterToDate';
+        return $data;
     }
     /**
      * lastQuarter returns begining and ending dates
@@ -170,7 +203,8 @@ trait PeriodSelector
     {
     	$data['from'] =  Carbon::now()->subMonths(3)->firstOfQuarter();
     	$data['to'] =  Carbon::now()->subMonths(3)->lastOfQuarter();
-    	return $data;
+    	$data['period'] = 'lastQuarter';
+        return $data;
     }
     
 

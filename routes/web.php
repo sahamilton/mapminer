@@ -80,6 +80,7 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('branchassignment/{user}/change',['as'=>'branchassignment.change','uses'=>'BranchManagementController@change']);
 		Route::resource('branchassignments','BranchManagementController',['only'=>['index','show','edit','update']]);
 	#Branch Dashboard
+		Route::post('branches/period',['as'=>'dashboard.setperiod','uses'=>'BranchDashboardController@setPeriod']);
 		Route::post('branches/dashboard',['as'=>'branches.dashboard','uses'=>'BranchDashboardController@selectBranch']);
 		Route::get('manager/{person}/dashboard',['as'=>'manager.dashboard','uses'=>'BranchDashboardController@manager']);
 		Route::post('manager/dashboard',['as'=>'managers.dashboard','uses'=>'BranchDashboardController@manager']);

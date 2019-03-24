@@ -4,6 +4,7 @@
 <div class="container">
 
 <h2>{{$data['team']['me']->fullName}}'s  Dashboard</h2>
+<p>for the period from {{$data['period']['from']->format('Y-m-d')}} to {{$data['period']['to']->format('Y-m-d')}}</p>
 @if($data['team']['team']->count()>1)
 
 <div class="col-sm-4">
@@ -20,6 +21,7 @@
 </form>
 </div>
 @endif
+@include('branches.partials._periodselector')
 @include('opportunities.partials._dashboardselect')
   <nav>
 

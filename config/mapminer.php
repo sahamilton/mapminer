@@ -54,13 +54,29 @@ return [
     'support'=>'Sales Operations',
     'system_contact'=>env('MAPMINER_CONTACT', 'salesoperations@trueblue.com'),
 
+    
+    'timeframes'=>[
+        'today'=>'Today',
+        'yesterday'=>'Yesterday',
+        'thisWeek'=>'This Week',
+        'thisWeekToDate'=>'This Week To Date',
+        'lastWeek'=>'Last Week',
+        'thisMonth'=>'This Month',
+        'thisMonthToDate'=>'This Month To Date',
+        'lastMonth'=>'Last Month',
+        'thisQuarter'=>'This Quarter',
+        'thisQuarterToDate'=>'This Quarter To Date',
+        'lastQuarter'=>'Last Quarter',
+
+    ],
+
+
      /*
     |--------------------------------------------------------------------------
     | Old Configs
     |--------------------------------------------------------------------------
     |
-    | This option defines the default email address for sending emails. Also
-    | used as the primary contact for support.
+    | These options defines the default mapminer settings.
     |
     */
 
@@ -76,9 +92,12 @@ return [
     
     'mysql_data_loc'=>app_path() .'/storage/uploads/',
     
-    'api_key' => env('GOOGLE_MAPS_API_KEY', 'AIzaSyCzMYQy-JSMClnXr82HGmVp3YHYzZUOTTg'),
+    'api_key' => env('GOOGLE_MAPS_API_KEY', 
+        'AIzaSyCzMYQy-JSMClnXr82HGmVp3YHYzZUOTTg'),
     
     'location_limit'=>env('LOCATION_LIMIT', 2000),
+
+
 
 
 ];
