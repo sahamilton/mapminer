@@ -5,7 +5,7 @@
       <th>Leads</th>
       <th>Opportunities</th>
      
-      <th class="tip" title="Activities in the past month">Total Activities<span class="text text-warning">*</span></th>
+      <th class="tip" title="Activities in the past month">Period Activities</th>
       <th>Pipeline</th>
     <th>Won</th>
     <th>Booked</th>
