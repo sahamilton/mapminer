@@ -29,13 +29,22 @@ trait PeriodSelector
      * @param  [type] $period [description]
      * @return [type]         [description]
      */
-    public function getPeriod($period)
+    public function getPeriod($period=null)
     {
-    	if(method_exists($this,$period)){
-    		return $this->$period();
-    	}
-        return $this->default();
- 
+    	if(session('period')) {
+            $this->period = session('period');
+            return $this->period;
+        }
+        if($period && method_exists($this,$period)){
+    		$this->period = $this->$period();
+    	}else{
+           $this->period = $this->default(); 
+           $this->period['period'] = 'default';
+        }
+        
+
+        session()->put('period', $this->period);
+        return $this->period;
     }
 
     /**
@@ -110,7 +119,7 @@ trait PeriodSelector
     	$data['from'] = Carbon::now()->startOfWeek();
     	$data['to'] = Carbon::tomorrow()->subSeconds(1);
     	$data['period'] = 'thisWeekToDate';
-       
+
         return $data;
 
     }

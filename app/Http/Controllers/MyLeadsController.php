@@ -156,16 +156,7 @@ class MyLeadsController extends BaseController
         return redirect()->route('address.show', $lead)->withMessage('Lead Created');
     }
     
-    
-    /**
-     * Extract data from request and format for storage
-     * @param  Request $request [description]
-     * @return [type]           [description]
-     */
-    private function cleanseInput(Request $request)
-    {
-        
-    }
+  
 
     /**
      * Show the form for editing the specified resource.
@@ -251,7 +242,7 @@ class MyLeadsController extends BaseController
             $data['contact']['email'] = request('contactemail');
             $data['contact']['phone'] =  preg_replace("/[^0-9]/", "", request('phone'));
         }
-       
+     }  
 
     /**
      * Extract contact information from request

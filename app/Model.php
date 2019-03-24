@@ -5,12 +5,12 @@ use \Carbon\Carbon;
 
 class Model extends \Eloquent
 {
-    use Filters,HasRoles;
+    use Filters,HasRoles,PeriodSelector;
     public $userServiceLines;
     public $userVerticals;
     public $userRoles;
     
-
+ 
     
     public function getTableColumns($table, array $skip = null)
     {

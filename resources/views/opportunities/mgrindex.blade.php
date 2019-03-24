@@ -4,22 +4,10 @@
 <div class="container">
 
 <h2>{{$data['team']['me']->fullName}}'s  Dashboard</h2>
-<p>for the period from {{$data['period']['from']->format('Y-m-d')}} to {{$data['period']['to']->format('Y-m-d')}}</p>
+
 @if($data['team']['team']->count()>1)
 
-<div class="col-sm-4">
-<form name="selectmanager" method="post" action="{{route('managers.dashboard')}}" >
-@csrf
-
- <select class="form-control input-sm" id="managerselect" name="manager" onchange="this.form.submit()">
-  <option>Select</option>
-  @foreach ($data['team']['team'] as $mgr)
-    <option value="{{$mgr->id}}">{{$mgr->fullName()}}</option>
-  @endforeach 
-</select>
-
-</form>
-</div>
+@include('branches.partials._branchselector')
 @endif
 @include('branches.partials._periodselector')
 @include('opportunities.partials._dashboardselect')

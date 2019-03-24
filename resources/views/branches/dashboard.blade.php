@@ -6,7 +6,7 @@
 
 <h2>{{$data['branches']->first()->branchname}} Dashboard</h2>
 @foreach ($data['branches']->first()->manager as $manager)
-
+@include('branches.partials._periodselector')
 <p><strong>Manager:</strong>{{$manager->fullName()}}</p>
 @endforeach
 @if($data['branches']->count()>1)
@@ -64,7 +64,7 @@
 	</div>
 	<div class="card float-right">
 		<div class="card-header">
-			<h4>Sales Funnel</h4>
+			<h4>Sales Pipeline</h4>
 		</div>
 		<div class="card-body">
 			<canvas id="ctpipe" width="400" height="400" ></canvas>
