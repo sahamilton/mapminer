@@ -65,8 +65,8 @@ class BranchDashboardController extends Controller
       if(! $this->period){
         $this->period = $this->activity->getPeriod();
       }
-       $this->manager = $this->person->where('user_id','=',auth()->user()->id)->first();
-       $myBranches = $this->getBranches();
+      $this->manager = $this->person->where('user_id','=',auth()->user()->id)->first();
+      $myBranches = $this->getBranches();
    
         if(count($myBranches)==1){
           $branch = array_keys($myBranches);
@@ -80,7 +80,7 @@ class BranchDashboardController extends Controller
        $data = $this->getDashBoardData(array_keys($myBranches));
        
        $data['period'] = $this->period;
-
+       dd($data['team']['results']);
        return response()->view('opportunities.mgrindex', compact('data'));
 
     }
@@ -342,7 +342,8 @@ class BranchDashboardController extends Controller
             
           } 
 
-        }  
+        }
+
       return $data;
     }
     /**

@@ -55,6 +55,6 @@ Period Activities
      	@endforeach
      </tbody>
  </table>
- <p><span class="text text-danger">*</span> In past month</p>
+
 @include('partials._scripts')
 @endsection
