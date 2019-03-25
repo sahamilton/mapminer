@@ -2,20 +2,29 @@
 @extends('site.layouts.default')
 
 @section('content')
+
 <div class="container">
 	<div class="panel panel-default">
 		<div class="panel-heading clearfix">
 			<h2 class="panel-title pull-left"><strong>{{$user->person->postName()}}</strong></h2>
 
 		</div>
+		@if (session()->has('impersonated_by'))
+			<a href="{{route('impersonate.leave')}}" 
+			class="btn btn-success">
+				Return to original user
+			</a>
+
+		@endif
 		<div class="panel-heading clearfix">
 			<h4 class="panel-title pull-left"><strong>{{ucwords($user->person->business_title)}}</strong></h4>
 
 		</div>
+		
 		<div class="list-group-item">
 			<p class="list-group-item-text"><strong>Role Details</strong></p>
 			<ul style="list-style-type: none;">
-			@foreach ($user->person->userdetails->roles as $role)
+			@foreach ($user->roles as $role)
 				<li>{{$role->display_name}}</li>
 			@endforeach
 			</ul>

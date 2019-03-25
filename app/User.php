@@ -38,8 +38,18 @@ class User extends Authenticatable
             'persons' => ['users.id','persons.user_id'],
         ],
     ];
+    
 
+    public function canImpersonate()
+    {
+        return $this->hasRole('admin');
+    }
+    
 
+    public function canBeImpersonated()
+    {
+        return ! $this->hasRole('admin');
+    }
 
     public $fillable = ['email','lastlogin','confirmed','confirmation_code','employee_id','api_token'];
     /**

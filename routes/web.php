@@ -324,7 +324,8 @@ Route::group(['middleware' => 'auth'], function () {
         */
         # Training
         Route::resource('training', 'TrainingController')->only(['index', 'show']);
-        
+        # Impersonate
+        Route::impersonate();
         #User (Profile) settings
         Route::resource('user', 'UsersController')->only(['show','edit','update']);
         
@@ -641,6 +642,7 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
         Route::resource('training', 'TrainingController')->except(['index', 'show']);
         ;
 
+        
 
         # Admin Dashboard
         Route::get('watching/{user}', ['as'=>'watch.watching', 'uses'=>'WatchController@watching']);
