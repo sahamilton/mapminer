@@ -48,7 +48,7 @@ class User extends Authenticatable
 
     public function canBeImpersonated()
     {
-        return ! $this->hasRole('admin');
+        return  ! $this->hasRole(['admin','sales_operations']);
     }
 
     public $fillable = ['email','lastlogin','confirmed','confirmation_code','employee_id','api_token'];
