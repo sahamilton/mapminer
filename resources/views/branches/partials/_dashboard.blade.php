@@ -8,7 +8,8 @@
 @if($data['branches']->count() > 10 )
   <div class="row">
     <h4>Team Activities</h4>
-      @include('opportunities.partials._team')
+    <canvas id="ctx" width="400" height="400" ></canvas>
+      @include('opportunities.partials._teamchart')
   </div>
 @else
   <div style="width: 400px; height: 300px;float:left" >

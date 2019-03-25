@@ -276,13 +276,11 @@ class BranchDashboardController extends Controller
       ->where('reports_to','=',$this->manager->id)      
       ->get();
       // get all branch managers
+      $branchManagerRole = 9;
       foreach ($data['team'] as $team){
-        $data['branchteam'] = $team->descendantsAndSelf()->withRoles([9])
+        $data['branchteam'] = $team->descendantsAndSelf()->withRoles([$branchManagerRole])
             ->has('branchesServiced')
-            ->with('branchesServiced',
-              'branchesServiced.opportunities',
-              'branchesServiced.leads',
-              'branchesServiced.activities')
+            ->with('branchesServiced')
             ->get();
         if($data['branchteam']->count()>0){
 
@@ -325,7 +323,6 @@ class BranchDashboardController extends Controller
               $data[$stat] = 0;
             }
 
-            
             foreach ($sum as $manager){
               foreach ($manager as $mgrid=>$items){
                 foreach ($stats as $stat){
@@ -335,6 +332,7 @@ class BranchDashboardController extends Controller
 
             }
             $data['results'][$team->id] = $data;
+            
           }else{
             foreach($stats as $stat){
               $data['results'][$team->id][$stat] = 0;
@@ -343,9 +341,31 @@ class BranchDashboardController extends Controller
           } 
 
         }
-
+       
+        $data = $this->getTeamChart($data);
       return $data;
     }
+      
+    private function getTeamChart(array $data)
+    {
+      
+      
+
+      foreach($data['team'] as $team){
+        
+        $chart[$team->lastname]=$data['results'][$team->id]['activities'];
+        
+
+      }
+      $data['chart']['keys'] = "'" . implode("','",array_keys($chart))."'";
+      $data['chart']['data'] = implode(",",$chart);
+      
+      return $data;
+    }
+
+
+
+
     /**
      * [getSummaryBranchData description]
      * @param  array  $branches [description]
