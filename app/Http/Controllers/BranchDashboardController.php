@@ -80,7 +80,7 @@ class BranchDashboardController extends Controller
        $data = $this->getDashBoardData(array_keys($myBranches));
        
        $data['period'] = $this->period;
-       dd($data['team']['results']);
+     
        return response()->view('opportunities.mgrindex', compact('data'));
 
     }
