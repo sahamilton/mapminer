@@ -61,9 +61,6 @@
 
 
 		<!-- ./ container -->
- @if (config('app.debug') && auth()->check() && config('app.env')=='local')
-    @include('sudosu::user-selector')
-@endif
 
 
 </main>
