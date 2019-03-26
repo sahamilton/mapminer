@@ -51,7 +51,14 @@ class User extends Authenticatable
         return  ! $this->hasRole(['admin','sales_operations']);
     }
 
-    public $fillable = ['email','lastlogin','confirmed','confirmation_code','employee_id','api_token'];
+    public $fillable = [
+                'email',
+                'lastlogin',
+                'confirmed',
+                'confirmation_code',
+                'employee_id',
+                'api_token',
+                'avatar'];
     /**
      * Get user by username
      * @param $username
