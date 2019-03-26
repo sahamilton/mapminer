@@ -7,7 +7,7 @@
 	<div class="panel panel-default">
 		<div class="panel-heading clearfix">
 			<h2 class="panel-title pull-left"><strong>{{$user->person->postName()}}</strong></h2>
-
+			@include('persons.partials._avatar')
 		</div>
 		@if (session()->has('impersonated_by'))
 			<a href="{{route('impersonate.leave')}}" 

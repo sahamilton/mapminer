@@ -49,7 +49,9 @@ Route::group(['middleware' => 'auth'], function () {
 	#Address
 		Route::post('address/{address}/rating',['as'=>'address.rating','uses'=>'AddressController@rating']);
 		Route::resource('address','AddressController');
-	
+		
+	#Avatar
+		Route::post('change/avatar',['as'=>'change.avatar','uses'=>'AvatarController@store']);
 	
 	# Branch Leads
 		Route::get('branchleads.import',['as'=>'branchleads.import','uses'=>'BranchLeadImportController@getFile']);

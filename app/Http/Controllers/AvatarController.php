@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use App\Avatar;
 use App\Person;
+Use Image;
 use Illuminate\Http\Request;
 use App\Http\Requests\AvatarFormRequest;
 
