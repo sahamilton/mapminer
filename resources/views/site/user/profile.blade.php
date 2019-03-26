@@ -7,6 +7,9 @@
 	<div class="panel panel-default">
 		<div class="panel-heading clearfix">
 			<h2 class="panel-title pull-left"><strong>{{$user->person->postName()}}</strong></h2>
+			
+		</div>
+		<div class="col-sm-3 panel-heading float-right">
 			@include('persons.partials._avatar')
 		</div>
 		@if (session()->has('impersonated_by'))
@@ -30,7 +33,7 @@
 			</ul>
 		</div>
 	<div class="list-group">
-		<div class="list-group-item">
+		<div class="list-group-item float-left">
 			<p class="list-group-item-text"><strong>User Details</strong></p>
 			<ul style="list-style-type: none;">
 				<li>User id: {{$user->person->userdetails->id}}</li>
@@ -45,6 +48,7 @@
 					</ul>
 				</li>
 			</ul>
+			
 		</div>
 		<div class="list-group">
     		<div class="list-group-item">

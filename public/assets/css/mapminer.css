@@ -227,3 +227,20 @@ body {
 	font-weight:bold;
 }
 
+.profile {
+  width: 40%;
+}
+.profile-avatar-wrap {
+  width: 30%;
+  float: left;
+  margin: 0 20px 5px 0;
+  position: relative;
+
+  border: 5px solid transparent;
+}
+
+.profile-avatar-wrap img {
+  width: 50%;
+  display: block;
+}
+
