@@ -74,13 +74,13 @@ class NewDashboardController extends Controller
       $data['team'] = $this->manager->directReports;
       $data['branchteam'] = [];
       foreach ($data['team'] as $team){
-          $branchteam =  $team->descendants()
+          $branchteam =  $team->descendantsAndSelf()
               ->wherehas('userdetails.roles', function ($q) {
                         $q->whereIn('role_id',[9]);
             })
               ->with('branchesServiced')->get();
           if($branchteam->count()>0){
-            dd($this->getBranchData($branchteam));
+            
             $data['branchteam'][$team->id] = $branchteam;
           }
           
