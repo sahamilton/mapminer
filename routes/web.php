@@ -226,8 +226,8 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::resource('salesleads','SalesLeadsController');
 
 	# Sales Notes
-		Route::get('salesnotes/{companyId}',['as'=>'salesnotes','uses'=>'SalesNotesController@show']);
-		Route::get('salesnotes/print/{companyId}',['as'=>'salesnotes.print','uses'=>'SalesNotesController@printSalesNotes']);
+		Route::get('salesnotes/{company}',['as'=>'salesnotes','uses'=>'SalesNotesController@show']);
+		Route::get('salesnotes/print/{company}',['as'=>'salesnotes.print','uses'=>'SalesNotesController@printSalesNotes']);
 		Route::resource('salesnotes','SalesNotesController');
 
 	# Sales Resources

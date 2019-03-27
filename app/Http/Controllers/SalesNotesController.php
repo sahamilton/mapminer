@@ -69,20 +69,12 @@ class SalesNotesController extends BaseController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function show($id)
+	public function show(Company $company)
 	{
-		
-
-		if (! $this->company->checkCompanyServiceLine($id,$this->userServiceLines))
-		{
-			return redirect()->route('company.index');
-		}
-			
-		$company = $this->company->with('managedBy','managedBy.userdetails')
-			->findOrFail($id);
+		$company->load('managedBy','managedBy.userdetails');
 	
 
-		$data = $this->salesnote->where('company_id','=',$id)
+		$data = $this->salesnote->where('company_id','=',$company->id)
 				->with('fields')->get();;
 
 		return response()->view('salesnotes.shownote', compact('data','company'));
@@ -177,7 +169,6 @@ class SalesNotesController extends BaseController {
 	public function createSalesNotes(SalesNotesFormRequest $request,Company $company) {
 		
 		$company->load('managedBy');
-		
 		$fields = Howtofield::orderBy('group')->get();
 		
 		$salesnote = Salesnote::where('company_id','=',$company->id)->with('fields')->get();
