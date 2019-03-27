@@ -484,7 +484,7 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
 
 	#Salesnotes
 		Route::get('salesnotes/filedelete/{file}', ['as'=>'salesnotes.filedelete', 'uses'=>'SalesNotesController@filedelete']);
-		Route::get('salesnotes/create/{companyId}',['as'=>'salesnotes.cocreate','uses'=>'SalesNotesController@createSalesNotes']);
+		Route::get('salesnotes/create/{company}',['as'=>'salesnotes.cocreate','uses'=>'SalesNotesController@createSalesNotes']);
 
 
 	# Sales Activity

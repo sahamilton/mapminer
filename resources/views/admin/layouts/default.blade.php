@@ -97,9 +97,7 @@
 
 			
 
-		@if (config('app.debug') && auth()->check() && config('app.env')=='local' )
-			@include('sudosu::user-selector')
-		@endif
+		
 		
 		</main>	
 		<div class="clear" style="margin-bottom:80px"></div>

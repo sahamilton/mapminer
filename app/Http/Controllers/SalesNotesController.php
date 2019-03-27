@@ -174,32 +174,13 @@ class SalesNotesController extends BaseController {
 	 * @param  integer $id Company Id
 	 * @return [type]     [description]
 	 */
-	public function createSalesNotes(SalesNotesFormRequest $request, $companyId=NULL) {
-
-		if(! request()->filled('id')){
-			$id= $companyId;
-		}else{
-			$id= request('id');
-
-		}
-
-		// Check that user can view company 
-		// based on user service line associations.
+	public function createSalesNotes(SalesNotesFormRequest $request,Company $company) {
 		
-		if (! $this->company->checkCompanyServiceLine($id,$this->userServiceLines))
-		{
-			
-			return redirect()->route('company.index');
-		}
+		$company->load('managedBy');
 		
-		$data = $this->company
-		->with('managedBy')
-		->findOrFail($id);
-
-		$company = $data->find($id);
 		$fields = Howtofield::orderBy('group')->get();
 		
-		$salesnote = Salesnote::where('company_id','=',$id)->with('fields')->get();
+		$salesnote = Salesnote::where('company_id','=',$company->id)->with('fields')->get();
 		$groups = Howtofield::select('group')->distinct()->get();
 		if(count($salesnote)>0) {
 			$data = array();
