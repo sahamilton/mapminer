@@ -24,7 +24,7 @@ class LeadReassignFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'branch_id' => 'required_without:branch|regex:/^[0-9,]*$/',
+            'branch_id' => 'required_without:branch|regex:/^[0-9,]*$/|exists:branches,id',
             'branch' => 'required_without:branch_id',
 
         ];
@@ -33,6 +33,7 @@ class LeadReassignFormRequest extends FormRequest
         {
             return [
                 'branch_id.regex' => 'Use only numerics and commas for branch id',
+                'branch_id.exists' => 'Invalid branch id',
                 
             ];
         }
