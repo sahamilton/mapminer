@@ -40,7 +40,17 @@
 			</div> 
 			<div class="card-footer"></div>
 		</div>
+		<div class="card float-left">
+		<div class="card-header">
+			<h4>Weekly Activity</h4>
+		</div>
+		<div class="card-body">
+			  <canvas id="ctx" width="300" height="400" ></canvas>
+			@include('activities.partials._mchart')
+		</div>
 	</div>
+	</div>
+
 	<div class="card">
 		<div class="card-header">
 			<h4>Upcoming Activities</h4>
@@ -52,14 +62,16 @@
 			{!! $data['calendar']->calendar() !!}
 			{!! $data['calendar']->script() !!}
 		</div>
-	</div> 
+	</div>
+	 
 	<div class="card float-left">
 		<div class="card-header">
-			<h4>Weekly Activity</h4>
+			<h4>Wins vs Sales Appts</h4>
 		</div>
 		<div class="card-body">
-			  <canvas id="ctx" width="300" height="400" ></canvas>
-			@include('activities.partials._mchart')
+			<canvas id="series_chart_div" ></canvas>
+			@include('opportunities.partials._bubble')
+
 		</div>
 	</div>
 	<div class="card float-right">
@@ -68,9 +80,10 @@
 		</div>
 		<div class="card-body">
 			<canvas id="ctpipe" width="400" height="400" ></canvas>
-				@include('opportunities.partials._pipechart')
+			@include('opportunities.partials._pipechart')
 		</div>
 	</div>
+
 </div>
 
 
