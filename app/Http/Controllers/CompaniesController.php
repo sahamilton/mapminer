@@ -459,6 +459,8 @@ class CompaniesController extends BaseController {
 			->findOrFail($data['company']->id);
 
 
+		}else{
+			$company = $data['company'];
 		}
 		$allSegments = array_keys($company->locations->groupBy('segment')->toArray());
 
