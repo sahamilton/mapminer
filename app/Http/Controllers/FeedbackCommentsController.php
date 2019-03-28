@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use Mail;
 use App\Mail\FeedbackClosed;
+use App\Mail\FeedbackComment;
 use App\Feedback;
 use App\FeedbackComments;
-
+use App\Events\FeedbackEvent;
 use Illuminate\Http\Request;
 
 class FeedbackCommentsController extends Controller
@@ -27,17 +28,16 @@ class FeedbackCommentsController extends Controller
      */
     public function store(Request $request)
     {
-     
+      
         $feedback = $this->feedback->with('providedBy','comments')->findOrFail(request('feedback_id'));
         $data = request()->except('_token');
         $data['user_id'] = auth()->user()->id;
         $feedback->comments()->create($data);
+        $feedback->load('comments');
         if(request()->filled('close')){
             $feedback->update(['status'=>'closed']);
-            Mail::to($feedback->providedBy->email)
-                ->cc(config('mapminer.system_contact'),config('mapminer.developer_email'))
-                ->send(new FeedbackClosed($feedback));
         }
+        event(new FeedbackEvent($feedback));
         return redirect()->route('feedback.show',$feedback->id)->withMessage('Thanks for commenting on this feedback');
     }
 

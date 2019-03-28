@@ -41,7 +41,7 @@
                                         @if(isset($subcopy))
                                         {{ $subcopy or '' }}
                                         @else
-                                        ''
+                                        
                                         @endif
                                     </td>
                                 </tr>
@@ -49,7 +49,7 @@
                         </td>
                     </tr>
 
-                    {{ $footer or '' }}
+                    {{ $footer }}
                 </table>
             </td>
         </tr>
