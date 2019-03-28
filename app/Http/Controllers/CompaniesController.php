@@ -207,16 +207,18 @@ class CompaniesController extends BaseController {
 	 * @return View
 	 */
 
-	public function show(Request $request, Company $company)
+	public function show(Company $company,$segment = null)
 	{
-		
+		if(isset($segment)){
+			$data['segment'] = $segment;
+		}
 		$data['state']=null;		
 		$data = $this->getCompanyViewData($company,$data);
 		return response()->view('companies.show', compact('data'));
 
 	}
 
-
+	
 	private function getCompanyLocations($id,$segment,$company){
 		$locations = $this->locations->where('company_id','=',$id);
 
@@ -337,8 +339,16 @@ class CompaniesController extends BaseController {
 
 	private function getCompanyViewData($company,$data){
 
+		if(isset($data['segment'])){
+			$data['company'] = $this->company->with(['locations'=>function($q) use($data){
+				$q->where('segment','=',$data['segment']);
+			},'locations.orders'])
+			->with('managedBy','industryVertical')
+			->findOrFail($company->id);
+		}else{
+			$data['company'] = $company->load('locations','locations.orders','managedBy','industryVertical');
+		}
 	
-		$data['company'] = $company->load('locations','locations.orders','managedBy','industryVertical');
 
 		$data['states'] = $this->getStatesInArray($data['company']->locations);
 
@@ -348,6 +358,7 @@ class CompaniesController extends BaseController {
  			}])
  			->with('managedBy','industryVertical')->findOrFail($company->id);
 		}
+
 		
 		if(! $data['company']->isLeaf()){
 			$data['related'] = $data['company']->getDescendants();
