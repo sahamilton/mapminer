@@ -432,6 +432,9 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
 		Route::get('leads/import/assigned/{id?}',['as'=>'assigned_prospects.importfile','uses'=>'LeadAssignedImportController@getFile']);
 
 		Route::post('leads/import',['as'=>'leads.import','uses'=>'LeadImportController@import']);
+		Route::get('leadsource/{leadsource}/addcompany',['as'=>'leadsource.addcompany','uses'=>'LeadSourceController@selectCompaniesToAdd']);
+		Route::post('leadsource/{leadsource}/addcompanylocations',['as'=>'leadsource.addcompanylocations','uses'=>'LeadSourceController@addCompanyLocationsToLeadSource']);
+
 		
 		Route::post('leadsource/{leadsource}/assign',['as'=>'leads.geoassign','uses'=>'LeadsAssignController@geoAssignLeads']);
 		Route::get('leads/{leadsource}/assign',['as'=>'leads.leadassign','uses'=>'LeadsController@assignLeads']);

@@ -1,7 +1,7 @@
 @extends ('admin.layouts.default')
 @section('content')
 <h2>Lead Source - {{$leadsource->source}}</h2>
-
+<p><a href="{{route('leadsource.addcompany',$leadsource->id)}}" class="btn btn-success" >Add Existing Company Locations</a></p>
 <p><a href="{{route('leadsource.export',$leadsource->id)}}"><i class="fas fa-cloud-download-alt" aria-hidden="true"></i></i>  Export owned and closed Leads</a></p>
 <p><a href="{{route('leadsource.index')}}">Return to all lead sources</a></p>
 <div class="nav nav-tabs" id="nav-tab" role="tablist">

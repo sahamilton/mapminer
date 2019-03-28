@@ -84,18 +84,34 @@
         
     </div>
 <!-----/ description-->
+<!-- Lead Source -->
+<div class="form-group{{ $errors->has('leadsource)') ? ' has-error' : '' }}">
+    
+        <label class="col-md-2 control-label radio-inline">Create LeadSource?:</label>
+        
+            <div class="form-group  radio-inline">
+                <input class="form-control" type="checkbox" @if(old('leadsource')) checked @endif 
+                name="leadsource" 
+                 />
+         
+            <span class="help-block">
+                <strong>{{ $errors->has('leadsource') ? $errors->first('leadsource') : ''}}</strong>
+                </span>
+        </div>
+    </div>
+    <!-----/ Contacts-->
 <div class="form-group{{ $errors->has('contacts)') ? ' has-error' : '' }}">
-    <label class="col-md-4 control-label">With Contacts?:</label>
+    <label class="col-md-4 control-label  radio-inline">With Contacts?:</label>
        
-            <div class="form-group">
+            
                 <input type="checkbox" @if(old('contacts')) checked @endif name="contacts" class="form-control" />
-            </div>
+          
             <span class="help-block">
                 <strong>{{ $errors->has('contacts') ? $errors->first('contacts') : ''}}</strong>
                 </span>
         
     </div>
-    <!-----/ description-->
+    <!-----/ Contacts-->
 
 <!-- File Location -->
     <div class="form-group{{ $errors->has('upload') ? ' has-error' : '' }}">
