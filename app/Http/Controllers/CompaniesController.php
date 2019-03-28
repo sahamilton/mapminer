@@ -366,7 +366,7 @@ class CompaniesController extends BaseController {
 			$data['related']=false;
 		}
 		$data['parent'] = $company->getAncestors();
-		$data['segments'] = $this->getCompanySegments($data['company']);
+		$data['segments'] = $this->getCompanySegments($data);
 		$data['filters'] = $this->searchfilter->vertical();
 		$data['mylocation'] = $this->locations->getMyPosition();
 		$data['count'] = $data['company']->locations->count();
@@ -377,6 +377,7 @@ class CompaniesController extends BaseController {
 		$data['orders'] = $this->getLocationOrders($data['company']);
 		
 		$data['mywatchlist'] = $this->locations->getWatchList();
+
 		return $data;
 	}
 
@@ -445,16 +446,23 @@ class CompaniesController extends BaseController {
 	}
 
 	/**
-	 * Get company segments (location filters)
+	 * Get all company segments (location filters)
 	 * @param  Integer $company Company ID
 	 * @return Array    Company segments (filters)
 	 */
-	private function getCompanySegments($company)
+	private function getCompanySegments($data)
 	{
+		if(isset($data['segment'])){
+			$company = $this->company->with(['locations'=>function ($q){
+				$q->groupBy('segment');
+			}])
+			->findOrFail($data['company']->id);
 
-		$segments = array_keys($company->locations->groupBy('segment')->toArray());
 
-	   return $this->searchfilter->whereIn('id',$segments)->pluck('filter','id')->toArray();
+		}
+		$allSegments = array_keys($company->locations->groupBy('segment')->toArray());
+
+	   return $this->searchfilter->whereIn('id',$allSegments)->pluck('filter','id')->toArray();
 	}
 
 	/**
