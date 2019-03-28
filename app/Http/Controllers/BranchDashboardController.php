@@ -349,7 +349,7 @@ class BranchDashboardController extends Controller
     private function getTeamChart(array $data)
     {
       
-      
+      $chart= array();
 
       foreach($data['team'] as $team){
         
