@@ -207,7 +207,7 @@ class CompaniesController extends BaseController {
 	 * @return View
 	 */
 
-	public function show(Request $request, $company)
+	public function show(Request $request, Company $company)
 	{
 		
 		$data['state']=null;		
@@ -337,7 +337,7 @@ class CompaniesController extends BaseController {
 
 	private function getCompanyViewData($company,$data){
 
-
+	
 		$data['company'] = $company->load('locations','locations.orders','managedBy','industryVertical');
 
 		$data['states'] = $this->getStatesInArray($data['company']->locations);
