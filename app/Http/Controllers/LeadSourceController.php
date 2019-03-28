@@ -387,15 +387,14 @@ class LeadSourceController extends Controller
     public function addCompanyLocationsToLeadSource(Request $request,LeadSource $leadsource)
     {
         $company = $this->company
-            ->withCount('locations')
-            ->findOrFail(request('company_id'));
-      
-        $this->address->where('company_id','=',$company->id)
+            ->withCount('locations')            
+            ->find(request('company_id'));
         
-        ->update(['lead_source_id'=>$leadsource->id]);
+        $affected = $this->address->where('company_id','=',$company->id)
+            ->update(['lead_source_id'=>$leadsource->id]);
+        
         return redirect()->route('leadsource.show',$leadsource->id)
-        ->withMessage($company->locations_count.' ' .$company->companyname . ' locations added to lead source');
-
+            ->withMessage($affected.' ' .$company->companyname . ' locations added to lead source');
     }
 
     public function assignLeads($leadsource)
@@ -497,5 +496,19 @@ class LeadSourceController extends Controller
         
     }
 
-    
+    public function leadSourceBranchResults(LeadSource $leadsource)
+    {
+
+        // find all branches that have addresses
+            $branches = $this->branch
+            ->whereHas('leads',function($q) use($leadsource){
+                $q->where('lead_source_id','=',$leadsource->id);
+            })
+            ->withCount(['leads'=>function($q) use($leadsource){
+                $q->where('lead_source_id','=',$leadsource->id);
+            },'opportunities'])->get();
+            dd($branches);
+        // find all activities on leads assigned back to branch
+        // find all opportunities on addresses grouped by branch, status
+    }
 }
