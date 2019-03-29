@@ -510,7 +510,7 @@ class LeadSourceController extends Controller
                 ->whereBetween('address_branch.created_at',
                     [$this->period['from'],$this->period['to']]);
             }])->get();
-            dd($branches);
+    
         // find all activities on leads assigned back to branch
         // find all opportunities on addresses grouped by branch, status
     }
