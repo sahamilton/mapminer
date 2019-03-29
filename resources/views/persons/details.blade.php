@@ -11,6 +11,15 @@
 				Edit
 			</a>
 		</div>
+		
+
+		@canImpersonate
+			
+		<a href="{{route('impersonate', $people->user_id)}}" class="btn btn-warning">
+			Login As {{$people->postName()}}
+		</a>
+		@endCanImpersonate
+		<div class="list-group-item">
 		<div class="list-group-item">
 			<p class="list-group-item-text"><strong>Role Details</strong></p>
 			<ul style="list-style-type: none;">

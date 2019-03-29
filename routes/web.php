@@ -299,6 +299,8 @@ Route::group(['middleware' => 'auth'], function () {
     	});
 
 */
+    	 # Impersonate
+        Route::impersonate();
     	# Training
     	Route::resource('training','TrainingController')->only(['index', 'show']);
 		

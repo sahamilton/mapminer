@@ -12,10 +12,17 @@
 			<h4 class="panel-title pull-left"><strong>{{ucwords($user->person->business_title)}}</strong></h4>
 
 		</div>
+		@if (session()->has('impersonated_by'))
+			<a href="{{route('impersonate.leave')}}" 
+			class="btn btn-success">
+				Return to original user
+			</a>
+
+		@endif
 		<div class="list-group-item">
 			<p class="list-group-item-text"><strong>Role Details</strong></p>
 			<ul style="list-style-type: none;">
-			@foreach ($user->person->userdetails->roles as $role)
+			@foreach ($user->roles as $role)
 				<li>{{$role->display_name}}</li>
 			@endforeach
 			</ul>

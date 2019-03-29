@@ -38,10 +38,27 @@ class User extends Authenticatable
             'persons' => ['users.id','persons.user_id'],
         ],
     ];
+    
 
+    public function canImpersonate()
+    {
+        return $this->hasRole('admin');
+    }
+    
 
+    public function canBeImpersonated()
+    {
+        return  ! $this->hasRole(['admin','sales_operations']);
+    }
 
-	public $fillable = ['email','lastlogin','confirmed','confirmation_code','employee_id','api_token'];
+    public $fillable = [
+                'email',
+                'lastlogin',
+                'confirmed',
+                'confirmation_code',
+                'employee_id',
+                'api_token',
+                'avatar'];
     /**
      * Get user by username
      * @param $username
@@ -50,10 +67,10 @@ class User extends Authenticatable
 
     public $dates=['lastlogin','created_at','updated_at','deleted_at','nonews'];
 
-	 public function person()
-	 {
-		  return $this->hasOne(Person::class,'user_id')->orderBy('lastname','firstname');
-	 }
+     public function person()
+     {
+          return $this->hasOne(Person::class,'user_id')->orderBy('lastname','firstname');
+     }
 
     public function fullName()
     {
@@ -69,9 +86,9 @@ class User extends Authenticatable
     }
 
      public function usage()
-	 {
-		  return $this->hasMany(Track::class,'user_id');
-	 }
+     {
+          return $this->hasMany(Track::class,'user_id');
+     }
 
     public function scopeFirstLogin($query, Carbon $date){
 
@@ -136,7 +153,7 @@ class User extends Authenticatable
         return $this->belongsToMany(Address::class,'location_user');
 
     }
-	  
+      
 
     /*public function getUserByUsername( $username )
     {
@@ -177,7 +194,7 @@ class User extends Authenticatable
     {
         return \String::date(\Carbon::createFromFormat('Y-n-j G:i:s', $this->created_at));
     }
-	
+    
     /**
      * Save roles inputted from multiselect
      * @param $inputRoles
@@ -267,12 +284,12 @@ class User extends Authenticatable
      * @return [type] [description]
      */
 
-	public function setApiToken(){
+    public function setApiToken(){
 
-		return $this->api_token = md5(uniqid(mt_rand(), true));
-		
+        return $this->api_token = md5(uniqid(mt_rand(), true));
+        
 
-	}
+    }
     /**
      * scopeWithRole Select User by role
      * @param  QueryBuilder $query [description]
@@ -293,10 +310,10 @@ class User extends Authenticatable
 
     public function scopeLastLogin($query,$interval=null){
 
-	   if($interval){
-			return $query->whereBetween('lastlogin',[$interval['from'],$interval['to']]);
-		}
-	   return $query->whereNull('lastlogin');
+       if($interval){
+            return $query->whereBetween('lastlogin',[$interval['from'],$interval['to']]);
+        }
+       return $query->whereNull('lastlogin');
     }
 
 
@@ -313,8 +330,8 @@ class User extends Authenticatable
     {
        
         return $query->with(['activities',function ($q) use($nextdays){
-                $q->where('followup_date','>',now())
-                ->where('followup_date','<=',Carbon::now()->addDays($nextdays));
+                $q->where('activity_date','>',now())
+                ->where('activity_date','<=',Carbon::now()->addDays($nextdays));
             }]);
 
     }

@@ -136,7 +136,8 @@ class MyLeadsController extends BaseController
      */
     private function cleanseLeadData(Request $request,$geodata)
     {
-        $data['lead'] = array_merge(request()->all(),$geodata);
+        $data['lead'] = $this->getAddressDetails($geodata,$request);
+      
         $data['lead']['businessname'] = $data['lead']['companyname'];
         $data['lead']['phone'] = preg_replace("/[^0-9]/","",$data['lead']['phone']);
         if(request()->filled('type')){
@@ -148,6 +149,18 @@ class MyLeadsController extends BaseController
         $data['lead']['lead_source_id'] = $userCreatedLeadSourceId;
         $data['lead']['type'] = 'lead';
         $data['lead']['user_id'] =auth()->user()->id;
+        return $data;
+    }
+
+    private function getAddressDetails($geodata,Request $request)
+    {
+        $data = array_merge(request()->all(),$geodata);
+        $fields = ['address','city','state','zip'];
+        foreach ($fields as $field){
+            if (!$data[$field]){
+                $data[$field] = request($field);
+            }
+        }
         return $data;
     }
     /**
