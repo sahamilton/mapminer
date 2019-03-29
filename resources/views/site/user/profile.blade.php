@@ -6,7 +6,7 @@
 <div class="container">
 	<div class="panel panel-default">
 		<div class="panel-heading clearfix">
-			<h2 class="panel-title pull-left"><strong>{{$user->person->postName()}}</strong></h2>
+			<h2 class="panel-title pull-left"><strong>{{$user->person->fullName()}}</strong></h2>
 			
 		</div>
 		<div class="col-sm-3 panel-heading float-right">

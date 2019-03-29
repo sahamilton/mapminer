@@ -17,7 +17,7 @@ function initialize() {
   var infoWindow = new google.maps.InfoWindow;
   
   var map = new google.maps.Map(document.getElementById('map'), mapOptions);
-<<<<<<< Updated upstream
+
 	var name = "{{$user->person->postName()}}";
     var address = "{{$user->person->fullAddress()}}";
     var html = address;
