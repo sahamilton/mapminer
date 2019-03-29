@@ -55,7 +55,7 @@
       </a>
       @else
         <a class="dropdown-item"
-        href="{{route('salesnotes.create','company='.$company->id)}}"
+        href="{{route('salesnotes.cocreate',$company->id)}}"
         title=" Create {{trim($company->name)}}'s Sales Notes">
         <i class="far fa-edit text-info" aria-hidden="true"></i> Create Sales Notes
       </a>

@@ -130,11 +130,11 @@ class Company extends NodeModel
 	public function checkCompanyServiceLine($company_id,$userServiceLines)
 	{
 		
-		return $this->whereHas('serviceline', function($q) use ($userServiceLines) {
+		dd($this->whereHas('serviceline', function($q) use ($userServiceLines) {
 						    $q->whereIn('serviceline_id', $userServiceLines);
 
 						})->with('industryVertical')
-						->find($company_id);
+						->find($company_id));
 	}
 	public function getAllCompanies($filtered=null)
 	{

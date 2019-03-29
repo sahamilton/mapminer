@@ -3,28 +3,37 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\LeadSource;
-use App\Lead;
+
 use App\Address;
-use Excel;
+use App\Branch;
+use App\Company;
+use App\Lead;
+use App\LeadSource;
+use App\LeadStatus;
 use App\Person;
 use App\SearchFilter;
-use App\LeadStatus;
-use App\Branch;
+
+use Excel;
+use Carbon\Carbon;
+
 use App\Http\Requests\LeadSourceFormRequest;
 use App\Http\Requests\LeadSourceAddLeadsFormRequest;
 use App\Exports\LeadSourceExport;
-use Carbon\Carbon;
+
 
 class LeadSourceController extends Controller
 {
+    public $address;
+    public $branch;
+    public $company;
+    public $lead;
     public $leadsource;
     public $leadstatus;
     public $person;
     public $vertical;
-    public $lead;
-    public $branch;
-    public $address;
+    
+    
+    
     public function __construct(
         LeadSource $leadsource,
         LeadStatus $status,
@@ -32,7 +41,8 @@ class LeadSourceController extends Controller
         Lead $lead,
         Person $person,
         Branch $branch,
-        Address $address
+        Address $address,
+        Company $company
     ) {
         $this->leadsource = $leadsource;
         $this->leadstatus = $status;
@@ -41,6 +51,7 @@ class LeadSourceController extends Controller
         $this->lead = $lead;
             $this->branch = $branch;
         $this->address = $address;
+        $this->company = $company;
     }
 
     /**
@@ -361,9 +372,30 @@ class LeadSourceController extends Controller
         }
         return $data;
     }
+    public function selectCompaniesToAdd(LeadSource $leadsource)
+    {
+        
+        $companies = $this->company
+            ->has('locations')
+            ->withCount('locations')
+            ->orderBy('companyname')
+            ->get();
+        return response()->view('leadsource.addcompany',compact('companies','leadsource'));
+    }
 
 
-
+    public function addCompanyLocationsToLeadSource(Request $request,LeadSource $leadsource)
+    {
+        $company = $this->company
+            ->withCount('locations')            
+            ->find(request('company_id'));
+        
+        $affected = $this->address->where('company_id','=',$company->id)
+            ->update(['lead_source_id'=>$leadsource->id]);
+        
+        return redirect()->route('leadsource.show',$leadsource->id)
+            ->withMessage($affected.' ' .$company->companyname . ' locations added to lead source');
+    }
 
     public function assignLeads($leadsource)
     {
@@ -464,5 +496,22 @@ class LeadSourceController extends Controller
         
     }
 
-    
+    public function leadSourceBranchResults(LeadSource $leadsource)
+    {
+        $this->period['from'] = Carbon::now()->subMonths(2);
+        $this->period['to'] = Carbon::now();
+        // find all branches that have addresses
+            $branches = $this->branch
+            ->whereHas('leads',function($q) use($leadsource){
+                $q->where('lead_source_id','=',$leadsource->id);
+            })
+            ->withCount(['leads'=>function($q) use($leadsource){
+                $q->where('lead_source_id','=',$leadsource->id)
+                ->whereBetween('address_branch.created_at',
+                    [$this->period['from'],$this->period['to']]);
+            }])->get();
+            dd($branches);
+        // find all activities on leads assigned back to branch
+        // find all opportunities on addresses grouped by branch, status
+    }
 }

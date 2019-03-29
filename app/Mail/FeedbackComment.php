@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
@@ -8,9 +9,10 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Feedback;
 use App\User;
 
-class FeedbackOpened extends Mailable
+class FeedbackComment extends Mailable
 {
     use Queueable, SerializesModels;
+
     public $feedback;
     public $user;
     /**
@@ -22,8 +24,9 @@ class FeedbackOpened extends Mailable
     {
         $this->feedback = $feedback;
         $this->user = User::with('person')->findOrFail(auth()->user()->id);
-    }
 
+    }
+    
     /**
      * Build the message.
      *
@@ -31,12 +34,10 @@ class FeedbackOpened extends Mailable
      */
     public function build()
     {
-         return $this->markdown('emails.feedbackopened')
+        return $this->markdown('emails.feedbackcomment')
             ->to($this->feedback->providedBy->email)
             ->cc(config('mapminer.system_contact'))
             ->bcc(config('mapminer.developer_email'))
-            ->subject('Feedback Reopened');
-
-        
+            ->subject('Feedback Comment');;
     }
 }

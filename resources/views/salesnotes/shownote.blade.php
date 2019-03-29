@@ -5,6 +5,7 @@
 @section('content')
 <div class="page-header">
 <h3>How to sell to {{$company->companyname}}</h3>
+
 @if (auth()->user()->hasRole('admin'))
 <div class="float-right">
 	<a href="{{route('salesnotes.cocreate',$company->id)}}" class="btn btn-small btn-info iframe">

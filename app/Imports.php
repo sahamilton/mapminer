@@ -152,7 +152,7 @@ class Imports extends Model
 
 	public function createLeadSource($data){
 		$lead_import_id = [
-			'source'=>"Import". date('YzHis'),
+			
 			'reference'=>date('YzHis'),
 			'user_id'=>auth()->user()->id,
 			'type'=>$data['type'],
@@ -161,7 +161,12 @@ class Imports extends Model
 			'dateto'=>Carbon::now()->addYear(),
 			'filename'=>$data['filename'],
 		];
-		
+		if(isset($data['company'])){
+			$company = Company::findOrFail($data['company']);
+			$lead_import_id['source']= $company->companyname ." | ". date('YzHis');
+		}else{
+			$lead_import_id['source']="Import". date('YzHis');
+		}
 		return LeadSource::create($lead_import_id);
 	}
 

@@ -94,6 +94,10 @@
 			<!-- Content -->
 			@yield('content')
 			<!-- ./ content -->
+
+			
+
+		
 		
 		</main>	
 		<div class="clear" style="margin-bottom:80px"></div>

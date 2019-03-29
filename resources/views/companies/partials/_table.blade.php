@@ -6,6 +6,7 @@
 		<th>City</th>
 		<th>State</th>
 		<th>ZIP</th>
+		<th>Phone</th>
 		<th>Segment</th>
 		<th>Recent Business</th>
 
@@ -40,11 +41,8 @@
 		title="See all {{$location->state}} locations for $data['company']->companyname">
 		{{$location->state}}</a>
 	</td>
-	<td>
-		{{$location->zip}}
-
-	</td>
-
+	<td>{{$location->zip}}</td>
+	<td>{{$location->phone}}</td>
 	<td>
 
 		@if (! isset($location->segment) or $location->segment == '') 

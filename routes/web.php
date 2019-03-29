@@ -108,9 +108,9 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('/company/{company}/state/{state?}', ['as'=>'company.state','uses'=>'CompaniesController@stateselect']);
 		Route::post('/company/stateselect', ['as'=>'company.stateselect','uses'=>'CompaniesController@stateselector']);
 
-		Route::get('/company/{companyId}/statemap/{state}', ['as'=>'company.statemap','uses'=>'CompaniesController@statemap']);
+		Route::get('/company/{company}/statemap/{state}', ['as'=>'company.statemap','uses'=>'CompaniesController@statemap']);
 		Route::get('/company/vertical/{vertical}', ['as'=>'company.vertical','uses'=>'CompaniesController@vertical']);
-		Route::get('/company/{companyId}/segment/{segment}', ['as'=>'company.segment','uses'=>'CompaniesController@show']);
+		Route::get('/company/{company}/segment/{segment}', ['as'=>'company.segment','uses'=>'CompaniesController@show']);
 		
 		Route::resource('company', 'CompaniesController',['only' => ['index', 'show']]);
 
@@ -255,8 +255,8 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::resource('salesleads','SalesLeadsController');
 
 	# Sales Notes
-		Route::get('salesnotes/{companyId}',['as'=>'salesnotes','uses'=>'SalesNotesController@show']);
-		Route::get('salesnotes/print/{companyId}',['as'=>'salesnotes.print','uses'=>'SalesNotesController@printSalesNotes']);
+		Route::get('salesnotes/{company}',['as'=>'salesnotes','uses'=>'SalesNotesController@show']);
+		Route::get('salesnotes/print/{company}',['as'=>'salesnotes.print','uses'=>'SalesNotesController@printSalesNotes']);
 		Route::resource('salesnotes','SalesNotesController');
 
 	# Sales Resources
@@ -461,6 +461,9 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
 		Route::get('leads/import/assigned/{id?}',['as'=>'assigned_prospects.importfile','uses'=>'LeadAssignedImportController@getFile']);
 
 		Route::post('leads/import',['as'=>'leads.import','uses'=>'LeadImportController@import']);
+		Route::get('leadsource/{leadsource}/addcompany',['as'=>'leadsource.addcompany','uses'=>'LeadSourceController@selectCompaniesToAdd']);
+		Route::post('leadsource/{leadsource}/addcompanylocations',['as'=>'leadsource.addcompanylocations','uses'=>'LeadSourceController@addCompanyLocationsToLeadSource']);
+		Route::get('leadsource/{leadsource}/results',['as'=>'leadsource.results','uses'=>'LeadSourceController@leadSourceBranchResults']);
 		
 		Route::post('leadsource/{leadsource}/assign',['as'=>'leads.geoassign','uses'=>'LeadsAssignController@geoAssignLeads']);
 		Route::get('leads/{leadsource}/assign',['as'=>'leads.leadassign','uses'=>'LeadsController@assignLeads']);
@@ -513,6 +516,9 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
 		Route::get('leadsource/{leadsource}/flush',['as'=>'leadsource.flushleads','uses'=>'LeadSourceController@flushLeads']);
 		Route::resource('leadsource','LeadSourceController');
 
+	#Salesnotes
+		Route::get('salesnotes/filedelete/{file}', ['as'=>'salesnotes.filedelete', 'uses'=>'SalesNotesController@filedelete']);
+		Route::get('salesnotes/create/{company}',['as'=>'salesnotes.cocreate','uses'=>'SalesNotesController@createSalesNotes']);
 
         # Sales Activity
 
