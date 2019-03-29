@@ -8,12 +8,15 @@ var barChart = new Chart(ctb,
     type: 'bar',
 
     resize:true,
-
+	
     data:{
+
       labels: [{!! $data['team']['chart']['keys'] !!}],
 
       datasets:[{
-        data: [{!! $data['team']['chart']['data'] !!}]
+      	label: 'Team Activities',
+        data: [{!! $data['team']['chart']['data'] !!}],
+        backgroundColor: 'red'
       }]
     }
 

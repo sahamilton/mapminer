@@ -140,12 +140,8 @@ class Branch extends Model implements HasPresenter
 
         return $this->belongsToMany(Person::class)->withTimestamps()->withPivot('role_id')->wherePivot('role_id', '=', 5);
     }
-    public function leads()
-    {
-        return  $this->belongsToMany(Address::class, 'address_branch', 'branch_id', 'address_id')->whereDoesntHave('opportunities');
-    }
+    
 
-	}
 	public function addresses(){
 		return  $this->belongsToMany(Address::class,'address_branch','branch_id','address_id');
 	}

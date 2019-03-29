@@ -14,14 +14,7 @@ var barChart = new Chart(ctx,
       labels: [{!! $data['activitychart']['keys'] !!}],
 
       datasets: [{!! $data['activitychart']['chartdata'] !!} ]
-    },
-    @if($data['branches']->count()>10)
-    options: {
-         legend: {
-            display: false
-         }
     }
-    @endif
 
 });
 </script>
