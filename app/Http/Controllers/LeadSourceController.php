@@ -498,58 +498,23 @@ class LeadSourceController extends Controller
 
     public function leadSourceBranchResults(LeadSource $leadsource)
     {
+
         $this->period['from'] = Carbon::now()->subMonths(2);
         $this->period['to'] = Carbon::now();
         // find all branches that have addresses
-        /*    $branches = $this->branch
-            ->whereHas('leads',function($q) use($leadsource){
+            $branches = $this->branch
+            ->whereHas('addresses',function($q) use($leadsource){
                 $q->where('lead_source_id','=',$leadsource->id);
             })
-            ->with(['leads'=>function($q) use($leadsource){
-                $q->where('lead_source_id','=',$leadsource->id)
-                ->withCount(['opportunities'=>function($q){
-                    $q->whereBetween('opportunities.created_at',[$this->period['from'],$this->period['to']]);
-                }]);
+            ->with(['addresses'=>function($q) use($leadsource){
+                $q->where('lead_source_id','=',$leadsource->id);
             }])
-            ->get();
-            dd($branches->first()->leads->sum('opportunities_count'));
-            */
-           
-           $branchData = $branches->map(function ($branch){
-
-            return [
-              'leads'=>$branch->leads
-                  ->whereBetween('address_branch.created_at',[$this->period['from'],$this->period['to']])
-                  ->count(),
-              'opportunities'=>$branch->opportunities
-                ->where('closed','=',0)
-                ->whereBetween('opportunities.created_at',[$this->period['from'],$this->period['to']])
-                ->count(),
-              'won'=>$branch->opportunities
-                ->where('closed','=',1)
-                ->whereBetween('actual_close',[$this->period['from'],$this->period['to']])
-                ->count(),
-              'booked'=>$branch->opportunities
-                  ->where('closed','=',1)
-                  ->where('actual_close','>',$this->period['to'])
-                  ->where('opportunities.created_at','<=',$this->period['to'])
-                  ->sum('value'),
-              'lost'=>$branch->opportunities->where('closed','=',2)
-                  ->whereBetween('actual_close',[$this->period['from'],$this->period['to']])
-                  ->count(),
-              'pipeline'=>$branch->opportunities
-                ->where('closed','=',0)
-                ->where('created-at','<=',$this->period['to'])
-                ->where('expected_close','>',$this->period['to'])
-                ->sum('value'),
-              'activities'=>$branch->activities
-                ->whereBetween('activity_date',[$this->period['from'],$this->period['to']])
-                ->count()];
-           
-            });
             
-           dd($branchData);
-
+            ->with('addresses.opportunities')
+            
+            ->get();
+            $data = $this->branch->branchData($branches);
+            return response()->view('leadsource.results',compact('data','leadsource'));
         // find all activities on leads assigned back to branch
         // find all opportunities on addresses grouped by branch, status
     }

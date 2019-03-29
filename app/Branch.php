@@ -385,6 +385,5 @@ class Branch extends Model implements HasPresenter
         
         }
         return $data;
-
     }
 }
