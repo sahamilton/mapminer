@@ -137,12 +137,23 @@ class Branch extends Model implements HasPresenter
     public function salesTeam()
     {
 
+
         return $this->belongsToMany(Person::class)->withTimestamps()->withPivot('role_id')->wherePivot('role_id', '=', 5);
     }
     public function leads()
     {
         return  $this->belongsToMany(Address::class, 'address_branch', 'branch_id', 'address_id')->whereDoesntHave('opportunities');
     }
+
+	}
+	public function addresses(){
+		return  $this->belongsToMany(Address::class,'address_branch','branch_id','address_id');
+	}
+	public function leads(){
+		return  $this->belongsToMany(Address::class,'address_branch','branch_id','address_id')->whereDoesntHave('opportunities'); 
+		
+	}
+
 
     public function leadsBySourceCount($leadsource)
     {
@@ -333,6 +344,7 @@ class Branch extends Model implements HasPresenter
             }],'activities.type','activities.relatedAddress');
             
         }
+
     }
 
     public function checkIfMyBranch($request, $branch = null, $myBranches)
@@ -351,5 +363,28 @@ class Branch extends Model implements HasPresenter
         $branch = array_keys($myBranches);
 
         return  $this->findOrFail(reset($branch));
+
+   }
+   
+   public function branchData($branches)
+    {
+        $data = [];
+        foreach ($branches as $branch){
+        	
+        	$data[$branch->id]['branch'] = $branch->branchname;
+        	$data[$branch->id]['leads'] = $branch->leads->count();
+			$data[$branch->id]['activities'] = 0;
+			$data[$branch->id]['opportunities'] = 0;
+
+        	foreach ($branch->addresses as $lead){
+        		
+        		$data[$branch->id]['opportunities'] += $lead->opportunities->count();
+        		$data[$branch->id]['activities'] += $lead->activities->count();
+        		
+        	}
+        
+        }
+        return $data;
+
     }
 }
