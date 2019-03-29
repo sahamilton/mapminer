@@ -193,6 +193,7 @@ class BranchDashboardController extends Controller
       if(isset($data['team']['results'])){
         $data['teamlogins'] = $this->getTeamLogins(array_keys($data['team']['results']));
       }
+      
       return $data;
     }
     /**
