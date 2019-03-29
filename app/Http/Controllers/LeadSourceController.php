@@ -498,15 +498,18 @@ class LeadSourceController extends Controller
 
     public function leadSourceBranchResults(LeadSource $leadsource)
     {
-
+        $this->period['from'] = Carbon::now()->subMonths(2);
+        $this->period['to'] = Carbon::now();
         // find all branches that have addresses
             $branches = $this->branch
             ->whereHas('leads',function($q) use($leadsource){
                 $q->where('lead_source_id','=',$leadsource->id);
             })
             ->withCount(['leads'=>function($q) use($leadsource){
-                $q->where('lead_source_id','=',$leadsource->id);
-            },'opportunities'])->get();
+                $q->where('lead_source_id','=',$leadsource->id)
+                ->whereBetween('address_branch.created_at',
+                    [$this->period['from'],$this->period['to']]);
+            }])->get();
             dd($branches);
         // find all activities on leads assigned back to branch
         // find all opportunities on addresses grouped by branch, status
