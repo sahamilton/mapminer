@@ -32,7 +32,7 @@ var barChart = new Chart(ctpipe,
                
               }],
           }, // scales
-          legend: {display: true}
+          legend: {display: false}
       } // options
    }
 );
