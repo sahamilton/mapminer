@@ -100,6 +100,7 @@ class BranchDashboardController extends Controller
      */
     public function selectBranch(Request $request)
     {
+     
       if(!$this->period) {
         $this->period= $this->activity->getPeriod();
       } 
@@ -117,7 +118,7 @@ class BranchDashboardController extends Controller
       if(! $this->period){
         $this->period = $this->activity->getPeriod();
       }
-  
+   
       $this->manager = $this->person->where('user_id','=',auth()->user()->id)->first();
         $myBranches = $this->getBranches();
       if(! array_key_exists($branch, $myBranches)){
@@ -138,6 +139,7 @@ class BranchDashboardController extends Controller
      */
     public function manager(Request $request, Person $manager=null)
     {
+     
       if(! $this->period){
         $this->period = $this->activity->getPeriod();
       }
@@ -159,6 +161,10 @@ class BranchDashboardController extends Controller
       $branches = $team->map(function ($mgr){
         return $mgr->branchesServiced->pluck('id')->toArray();
       }); 
+      if(count($branches->first())==0){
+        return redirect()->back()->withMessage($this->manager->fullName().' is not assigned to any branches');
+      }
+     
       $myBranches = array_unique($branches->flatten()->toArray());
 
       $data = $this->getDashBoardData($myBranches);
@@ -271,7 +277,8 @@ class BranchDashboardController extends Controller
               'pipeline',
               'activities'];
 
-      $data['me'] = $this->person->findOrFail($this->manager->id);;
+      $data['me'] = $this->person->findOrFail($this->manager->id);
+      // this might return branch managers with no branches!
       $data['team'] =  $this->person
       ->where('reports_to','=',$this->manager->id)      
       ->get();
@@ -510,13 +517,17 @@ class BranchDashboardController extends Controller
 
     private function formatBranchActivities($branchdata)
       { 
+        $data[]=array();
         foreach($branchdata as $branch){
          
           $data[$branch['id']] = $branch['activities_count'];
         }
-        return $this->formatChartFullData($data,array_keys($data));
+        if(count($data[0])>0){
+          return $this->formatChartFullData($data,array_keys($data));
+        }
+        
+        return false;
        
-
      }
       // reformat branch data into array
     

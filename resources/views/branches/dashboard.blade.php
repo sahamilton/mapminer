@@ -64,16 +64,7 @@
 		</div>
 	</div>
 	 
-	<div class="card float-left">
-		<div class="card-header">
-			<h4>Wins vs Sales Appts</h4>
-		</div>
-		<div class="card-body">
-			<canvas id="series_chart_div" ></canvas>
-			@include('opportunities.partials._bubble')
-
-		</div>
-	</div>
+	
 	<div class="card float-right">
 		<div class="card-header">
 			<h4>Sales Pipeline</h4>
