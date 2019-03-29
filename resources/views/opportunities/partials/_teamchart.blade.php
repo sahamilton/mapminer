@@ -21,4 +21,4 @@ var barChart = new Chart(ctb,
     }
 
 });
-</script
+</script>

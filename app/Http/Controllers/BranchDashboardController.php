@@ -193,7 +193,7 @@ class BranchDashboardController extends Controller
       if(isset($data['team']['results'])){
         $data['teamlogins'] = $this->getTeamLogins(array_keys($data['team']['results']));
       }
-      
+
       return $data;
     }
     /**
@@ -283,6 +283,7 @@ class BranchDashboardController extends Controller
       $data['team'] =  $this->person
       ->where('reports_to','=',$this->manager->id)      
       ->get();
+
       // get all branch managers
       $branchManagerRole = 9;
       foreach ($data['team'] as $team){
@@ -302,7 +303,7 @@ class BranchDashboardController extends Controller
                   ->count(),
               'opportunities'=>$branch->opportunities
                 ->where('closed','=',0)
-                ->whereBetween('opportunities.created_at',[$this->period['from'],$this->period['to']])
+                ->where('opportunities.created_at','<=',$this->period['to'])
                 ->count(),
               'won'=>$branch->opportunities
                 ->where('closed','=',1)
@@ -318,7 +319,7 @@ class BranchDashboardController extends Controller
                   ->count(),
               'pipeline'=>$branch->opportunities
                 ->where('closed','=',0)
-                ->where('created-at','<=',$this->period['to'])
+                ->where('created_at','<=',$this->period['to'])
                 ->where('expected_close','>',$this->period['to'])
                 ->sum('value'),
               'activities'=>$branch->activities
@@ -349,12 +350,18 @@ class BranchDashboardController extends Controller
           } 
 
         }
-       
+      
         $data = $this->getTeamChart($data);
       return $data;
     }
-      
-    private function getTeamChart(array $data)
+    private function getTeamChart(array $data){
+
+      $data['chart'] = $this->getTeamActivityChart($data);
+      $data['pipelinechart'] = $this->getTeamPipelineChart($data);
+    
+      return $data;
+    }
+    private function getTeamActivityChart(array $data)
     {
       
       $chart= array();
@@ -368,7 +375,24 @@ class BranchDashboardController extends Controller
       $data['chart']['keys'] = "'" . implode("','",array_keys($chart))."'";
       $data['chart']['data'] = implode(",",$chart);
       
-      return $data;
+      return $data['chart'];
+    }
+
+    private function getTeamPipelineChart(array $data)
+    {
+      
+      $chart= array();
+
+      foreach($data['team'] as $team){
+        
+        $chart[$team->lastname]=$data['results'][$team->id]['pipeline'];
+        
+
+      }
+      $data['pipelinechart']['keys'] = "'" . implode("','",array_keys($chart))."'";
+      $data['pipelinechart']['data'] = implode(",",$chart);
+    
+      return $data['pipelinechart'];
     }
 
 
