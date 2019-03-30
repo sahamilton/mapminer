@@ -115,17 +115,23 @@ class BranchDashboardController extends Controller
      */
     public function show($branch)
     {
+       
       if(! $this->period){
         $this->period = $this->activity->getPeriod();
       }
    
       $this->manager = $this->person->where('user_id','=',auth()->user()->id)->first();
+    
         $myBranches = $this->getBranches();
       if(! array_key_exists($branch, $myBranches)){
         return redirect()->route('dashboard.index')->withError('That is not one of your branches');
       }
       $branch = $this->branch->with('manager')->findOrFail($branch);
+
       $this->manager = $branch->manager->first();
+      if(!$this->manager){
+        return redirect()->route('dashboard.index')->withMessage("There is no manager assigned to branch ". $branch->branchname . ". Notify Sales Opersations");
+      }
       $data = $this->getDashBoardData([$branch->id]);
       return $this->displayDashboard($data);
 
@@ -139,7 +145,7 @@ class BranchDashboardController extends Controller
      */
     public function manager(Request $request, Person $manager=null)
     {
-     
+   
       if(! $this->period){
         $this->period = $this->activity->getPeriod();
       }
@@ -193,7 +199,7 @@ class BranchDashboardController extends Controller
       if(isset($data['team']['results'])){
         $data['teamlogins'] = $this->getTeamLogins(array_keys($data['team']['results']));
       }
-     
+
       return $data;
     }
     /**
