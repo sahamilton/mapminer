@@ -13,10 +13,16 @@
     </div>
  
 </div>
-<div style="width: 40%;float:left;border:solid 1px #aaaaaa;margin:5px;">
-	<h4>Team Pipeline</h4>
-               <canvas id="ctpipe" width="300" height="300"></canvas>
-               @include('opportunities.partials._pipechart')
-          </div>
-          
+<div class="row">
+	<div style="width: 40%;float:left;border:solid 1px #aaaaaa;margin:5px;">
+		<h4>Team Pipeline</h4>
+           <canvas id="ctpipe" width="300" height="300"></canvas>
+           @include('opportunities.partials._pipechart')
+	</div>
+	<div style="width: 40%;float:right;border:solid 1px #aaaaaa;margin:5px;">
+		<h4>Team Top 50 Opportunities</h4>
+           <canvas id="cttop50" width="300" height="300"></canvas>
+           @include('opportunities.partials._top50chart')
+	</div>
+	          
 </div>

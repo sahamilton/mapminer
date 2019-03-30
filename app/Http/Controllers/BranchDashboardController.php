@@ -193,7 +193,7 @@ class BranchDashboardController extends Controller
       if(isset($data['team']['results'])){
         $data['teamlogins'] = $this->getTeamLogins(array_keys($data['team']['results']));
       }
-
+     
       return $data;
     }
     /**
@@ -272,6 +272,7 @@ class BranchDashboardController extends Controller
     {
       $stats = ['leads',
               'opportunities',
+              'top50',
               'booked',
               'won',
               'lost',
@@ -302,8 +303,14 @@ class BranchDashboardController extends Controller
                   ->whereBetween('address_branch.created_at',[$this->period['from'],$this->period['to']])
                   ->count(),
               'opportunities'=>$branch->opportunities
-                ->where('closed','=',0)
+             
                 ->where('opportunities.created_at','<=',$this->period['to'])
+                ->count(),
+              'top50'=>$branch->opportunities
+                ->where('opportunities.created_at','<=',$this->period['to'])
+              
+                ->where('top50','=',1)
+                
                 ->count(),
               'won'=>$branch->opportunities
                 ->where('closed','=',1)
@@ -311,8 +318,7 @@ class BranchDashboardController extends Controller
                 ->count(),
               'booked'=>$branch->opportunities
                   ->where('closed','=',1)
-                  ->where('actual_close','>',$this->period['to'])
-                  ->where('opportunities.created_at','<=',$this->period['to'])
+                  ->whereBetween('actual_close',[$this->period['from'],$this->period['to']])
                   ->sum('value'),
               'lost'=>$branch->opportunities->where('closed','=',2)
                   ->whereBetween('actual_close',[$this->period['from'],$this->period['to']])
@@ -350,14 +356,15 @@ class BranchDashboardController extends Controller
           } 
 
         }
-      
-        $data = $this->getTeamChart($data);
+  
+      $data = $this->getTeamChart($data);
       return $data;
     }
     private function getTeamChart(array $data){
 
       $data['chart'] = $this->getTeamActivityChart($data);
       $data['pipelinechart'] = $this->getTeamPipelineChart($data);
+      $data['top50chart'] = $this->getTeamTop50Chart($data);
     
       return $data;
     }
@@ -365,11 +372,8 @@ class BranchDashboardController extends Controller
     {
       
       $chart= array();
-
       foreach($data['team'] as $team){
-        
         $chart[$team->lastname]=$data['results'][$team->id]['activities'];
-        
 
       }
       $data['chart']['keys'] = "'" . implode("','",array_keys($chart))."'";
@@ -393,6 +397,20 @@ class BranchDashboardController extends Controller
       $data['pipelinechart']['data'] = implode(",",$chart);
     
       return $data['pipelinechart'];
+    }
+
+    private function getTeamTop50Chart(array $data)
+    {
+      
+      $chart= array();
+      foreach($data['team'] as $team){
+        $chart[$team->lastname]=$data['results'][$team->id]['top50'];
+
+      }
+      $data['chart']['keys'] = "'" . implode("','",array_keys($chart))."'";
+      $data['chart']['data'] = implode(",",$chart);
+      
+      return $data['chart'];
     }
 
 
