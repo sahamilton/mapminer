@@ -87,6 +87,7 @@ class AdminUsersController extends BaseController
     public function index(Serviceline $serviceline = null)
     {
 
+
         if (! $serviceline) {
         // Grab all the users
             $servicelines = $this->userServiceLines;
@@ -101,11 +102,11 @@ class AdminUsersController extends BaseController
           $users = $this->user
            ->with('roles', 'usage', 'person', 'serviceline');
            
-        if ($serviceline) {
+        /*if ($serviceline) {
             $users = $users->whereHas('serviceline', function ($q) {
                 $q->whereIn('serviceline_id', $this->userServiceLines);
             });
-        }
+        }*/
            
           $users = $users->get();
          
