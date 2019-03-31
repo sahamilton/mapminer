@@ -34,12 +34,14 @@ class WeeklyActivityReminder implements ShouldQueue
     public function handle()
     {
         $users = User::whereHas('activities',function ($q){
-            $q->whereBetween('followup_date',[Carbon::now(),Carbon::now()->addWeek()]);
+            $q->whereBetween('activity_date',[Carbon::now(),Carbon::now()->addWeek()])
+            ->whereNull('completed');
         })
         ->with(['activities'=>function ($q){
             $q->whereBetween('followup_date',[Carbon::now(),Carbon::now()->addWeek()])
+            ->whereNull('completed')
             ->with('relatesToAddress')
-            ->orderBy('followup_date');
+            ->orderBy('activity_date');
         }])->with('person')
         ->get();
        
