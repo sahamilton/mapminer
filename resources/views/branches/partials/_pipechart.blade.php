@@ -28,7 +28,7 @@ var barChart = new Chart(ctpipe,
               }
           }]
       }
-
+    }
 });
 </script>
 
