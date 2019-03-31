@@ -41,6 +41,7 @@ Route::group(['middleware' => 'auth'], function () {
 
    	#Activities/
 		Route::get('branch/{branch}/activity/{activitytype?}',['as'=>'branch.activity','uses'=>'ActivityController@getBranchActivtiesByType']);
+		Route::get('activity/{activity}/complete',['as'=>'activity.complete','uses'=>'ActivityController@complete']);
 		Route::get('followup',['as'=>'followup','uses'=>'ActivityController@future']);
 		Route::resource('activity','ActivityController');
 		

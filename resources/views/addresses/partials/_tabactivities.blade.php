@@ -18,7 +18,7 @@
     <th>Activity</th>
     <th>Contact</th>
     <th>Notes</th>
-    <th>Follow-Up</th>
+    <th>Completed</th>
     <th>Actions</th>
 
     </thead>
@@ -44,7 +44,7 @@
                     
                 </td>
                 <td>{{$activity->note}}</td>
-                <td>{{$activity->followup_date ? $activity->followup_date->format('M j, Y') : ''}}</td>
+                <td>{{$activity->completed ? 'Completed' : ''}}</td>
                 <td>
                     <div class="btn-group">
                         <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
@@ -60,6 +60,16 @@
                           href="{{route('activity.edit',$activity->id)}}">
                         <i class="far fa-edit text-info"" aria-hidden="true"> </i>
                         Edit activity</a>
+                        @if(! $activity->completed)
+                        <a class="dropdown-item"
+                        title="Complete Activity"
+                          href="{{route('activity.complete',$activity->id)}}" 
+                          >
+                          <i class="fas fa-clipboard-check"></i>
+                           Mark As Complete
+                        </a>
+
+                        @endif
                         
                         <a class="dropdown-item"
                         title="Delete Activity"

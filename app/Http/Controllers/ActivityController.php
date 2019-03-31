@@ -133,7 +133,6 @@ class ActivityController extends Controller
     {
        
         $data = $this->parseData($request);
-     
         $activity = Activity::create($data);
         if(request()->has('followup_date')){
             // create a new activity
@@ -146,11 +145,16 @@ class ActivityController extends Controller
         $activity->load('relatedContact');
         return redirect()->route('address.show', $data['address_id']);
     }
-
+    public function complete(Activity $activity)
+    {
+        $activity->update(['completed'=>1]);
+        return redirect()->back();
+    }
 
     private function createFollowUpActivity(array $data,Activity $activity)
     {
         $data['activity_date'] = $data['followup_date'];
+        $data['activitytype_id'] = $data['followup_activity'];
         $data['relatedActivity'] = $activity->id;
         $data['followup_date'] = null;
         return Activity::create($data);
