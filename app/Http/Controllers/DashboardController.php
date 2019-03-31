@@ -49,7 +49,7 @@ class DashboardController extends Controller
    public function select (Request $request)
    {
         $this->manager = $this->person->with('manages')->findOrFail(request('manager'));
-        dd($this->manager->hasRole('branch_manager'));
+     
         $branchCount = $this->dashboard->checkBranchCount($this->manager);
         if($branchCount > 1){
 
