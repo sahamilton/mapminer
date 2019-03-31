@@ -112,11 +112,11 @@ class BranchDashboardController extends Controller
      */
     public function show($branch)
     {
-       
-      if(! $this->period){
+      
+      
         $this->period = $this->activity->getPeriod();
-      }
    
+    
       $branch = $this->branch->with('manager')->findOrFail($branch);
 
       $this->manager = $branch->manager->first();
@@ -137,7 +137,7 @@ class BranchDashboardController extends Controller
      * @param  Person|null $manager [description]
      * @return [type]               [description]
      */
-    public function manager(Request $request, Person $manager=null)
+    /*public function manager(Request $request, Person $manager=null)
     {
    
       if(! $this->period){
@@ -168,9 +168,9 @@ class BranchDashboardController extends Controller
       $myBranches = array_unique($branches->flatten()->toArray());
 
       $data = $this->getDashBoardData($myBranches);
-      dd('175',$data);
+
       return response()->view('branches.dashboard', compact('data'));
-    }
+    }*/
     
     /**
      * [getDashBoardData description]
@@ -518,9 +518,9 @@ class BranchDashboardController extends Controller
     {
 
       $branchdata = $this->getBranchActivities($this->myBranches)->toArray();
-      
-        return $this->formatBranchWeekActivities($branchdata);
-      
+     
+      $data = $this->formatBranchWeekActivities($branchdata);
+      dd($data);
     }
 
     private function formatBranchActivities($branchdata)
@@ -543,9 +543,10 @@ class BranchDashboardController extends Controller
 
       private function formatBranchWeekActivities($branchdata)
       { 
+
       $branches = [];
       $keys =  $this->yearWeekBetween(); 
-   
+     
       foreach($branchdata as $branch){
 
           $branch_id = implode(",",array_keys($branch));
@@ -556,25 +557,23 @@ class BranchDashboardController extends Controller
               list ( $year,$week) = explode('-', $period);
               $d = new Carbon;
               $d->setISODate($year, $week);              
-              $branches[$branch_id][$d->format('Y-m-d')]= $el->count();
+              $branches[$d->format('Y-m-d')]= $el->count();
 
             }
           }
            
           // fill any missing periods with zeros
           // 
-          
-          $branches[$branch_id] = $this->fillMissingPeriods($branches[$branch_id],$this->period['from'], $this->period['to']);
+          $from = clone($this->period['from']);
+          $to = clone($this->period['to']);
+          $branches = $this->fillMissingPeriods($branches);
+          dd('570',$branches);
           // sort branch array in date sequence
-        ksort($branches[$branch_id]);
+        
      
       }
-
-     // if too many for graph return table
+      ksort($branches);
     
-      if(count($branches) <= 10){
-        return $this->formatChartData($branches,$keys);
-      }
       return $this->formatActivityTableData($branches,$keys);
        
 
@@ -587,15 +586,19 @@ class BranchDashboardController extends Controller
       * @param  Carbon $to       [description]
       * @return [type]           [description]
       */
-     private function fillMissingPeriods($branches)
+     private function fillMissingPeriods($branches,Carbon $from=null,Carbon $to=null)
      {
-       
-        $from = clone($this->period['from']);
-        $to = clone($this->period['to']);
+      
+       if(! $from){
+          $from = clone($this->period['from']);
+        }
+        if(! $to){
+          $to = clone($this->period['to']);
+        }
         $keys = $this->yearWeekBetween($from,$to);
-
+        dd(598,$keys,$from,$to);
         for($i = $from->format('Y-m-d'); $from <= $to->format('Y-m-d');$from->addWeeks(1)){
-          
+            dd(600,$i);
               if(! in_array($i,$keys)){
                   $keys[]=$i;
               }
@@ -617,7 +620,7 @@ class BranchDashboardController extends Controller
      * @param  array  $keys     [description]
      * @return [type]           [description]
      */
-    /* private function formatActivityTableData(array $branches,array $keys)
+     private function formatActivityTableData(array $branches,array $keys)
      {
      
       $data['branches'] = $branches;
@@ -626,7 +629,7 @@ class BranchDashboardController extends Controller
       return $data;
      
 
-     }*/
+     }
      private function formatChartFullData(Array $branches,array $keys)
      {
         $colors = $this->activity->createColors(count($branches));
@@ -689,7 +692,7 @@ class BranchDashboardController extends Controller
       */
      private function getBranchActivities()
      {
-       
+      
         $activityCount = $this->branch->whereIn('id',$this->myBranches)
          ->whereHas('activities',function ($q){
             $q->whereBetween('activity_date',[$this->period['from'],$this->period['to']]);
@@ -697,7 +700,7 @@ class BranchDashboardController extends Controller
          ->with(['activities'=>function ($q){
             $q->whereBetween('activity_date',[$this->period['from'],$this->period['to']]);
          }])->get();
-      
+       
          return  $activityCount->map(function ($branch){
             return [$branch->id=>[$branch->activities->groupBy(function ($activity) {
                  return $activity->activity_date->format('Y-W');
@@ -765,8 +768,8 @@ class BranchDashboardController extends Controller
      private function getPipeLineData()
      {
 
-  
-     return  $this->opportunity
+     
+     return $this->opportunity
                     ->selectRaw('branch_id,YEARWEEK(expected_close,3) as yearweek,sum(value) as total')
                     ->where('value','>',0)
                     ->whereIn('branch_id',$this->myBranches)
@@ -788,25 +791,23 @@ class BranchDashboardController extends Controller
      */
     private function formatPipelineData($pipeline)
     {
-      $data = [];
+     
+      $chartdata = [];
      
       foreach ($pipeline as $item){
         
-          $data[$item->branch_id][$item->yearweek]=$item->total;
+          $chartdata[$item->yearweek]=$item->total;
           
       }
-
+    
       $from = Carbon::now();
       $to = Carbon::now()->addMonth(2);
       $keys =  $this->yearWeekBetween($from, $to);
-              
-      foreach($data as $branch_id=>$branchdata){
-        
-        $data[$branch_id] = $this->fillMissingPeriods($branchdata,$from, $to);
-        
-      }
-      
-      return $this->formatChartData($data,$keys);
+     
+      $data['keys'] = implode(",",$keys);
+      $data['data'] = implode(",",$chartdata); 
+      return $data;
+     
     }
     /**
      * [yearWeekBetween description]
@@ -814,14 +815,20 @@ class BranchDashboardController extends Controller
      * @param  [type] $to   [description]
      * @return [type]       [description]
      */
-    private function yearWeekBetween()
+    private function yearWeekBetween(Carbon $from=null,Carbon $to=null)
     {
+
+      if(! $from){
+        $from = clone($this->period['from']);
+      }
+      if(! $to){
+        $to = clone($this->period['to']);
+      }
       
-      $dates['from'] = clone($this->period['from']);
-      $dates['to'] = clone($this->period['to']);
+      
 
       $keys=[];
-      for($i = $dates['from']->format('Y-m-d'); $i<= $dates['to']->format('Y-m-d');$i = $dates['from']->addWeek()->format('Y-m-d')){
+      for($i = $from->format('Y-m-d'); $i<= $to->format('Y-m-d');$i = $from->addWeek()->format('Y-m-d')){
         $keys[]="'".$i."'";
       }
 
