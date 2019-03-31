@@ -189,13 +189,13 @@ class BranchDashboardController extends Controller
       //$data['team']= $this->myTeamsOpportunities();
       $data['summary'] = $this->getSummaryBranchData();
 
-      $data['upcoming'] = $this->getUpcomingActivities();       
+      //$data['upcoming'] = $this->getUpcomingActivities();       
       //$data['funnel'] = $this->getBranchFunnel();    
       $data['activitychart'] =  $this->getActivityChartData();  
       $data['team']['pipelinechart'] = $this->getPipeline();
     
-      $data['calendar'] = $this->getUpcomingCalendar($data['upcoming']);
-      $data['chart'] = $this->getChartData();
+      $data['calendar'] = $this->getUpcomingCalendar($this->getUpcomingActivities());
+      //$data['chart'] = $this->getChartData();
       //$data['won'] = $this->getWonOpportunities(); 
       $data['period'] = $this->period;
      
