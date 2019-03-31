@@ -19,7 +19,18 @@ var barChart = new Chart(cttop50,
         data: [{!! $data['team']['top50chart']['data'] !!}],
         backgroundColor: 'red'
       }]
-    }
+    },
+    options: {
+      scales: {
+          yAxes: [{
+              display: true,
+              ticks: {
+                  
+                  beginAtZero: true   // minimum value will be 0.
+              }
+          }]
+      }
+  }
 
 });
 </script>

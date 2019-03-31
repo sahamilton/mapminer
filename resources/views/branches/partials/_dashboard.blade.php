@@ -1,6 +1,6 @@
 <div class="row">
   <div id="series_chart_div" 
-   style="width: 40%;float:left;border:solid 1px #aaaaaa;margin:5px;"> 
+   style="width: 45%;float:left;border:solid 1px #aaaaaa;margin:5px;"> 
    <h4>Wins vs Sales Appts</h4>
     @include('opportunities.partials._bubble')
   </div>
