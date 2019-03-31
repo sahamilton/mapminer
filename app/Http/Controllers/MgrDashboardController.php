@@ -120,34 +120,7 @@ class MgrDashboardController extends DashboardController
       return $this->displayDashboard($data);
 
     }
-    /**
-     * [show description]
-     * @param  [type] $branch [description]
-     * @return [type]         [description]
-     */
-   /* public function show($branch)
-    {
-       
-      if(! $this->period){
-        $this->period = $this->activity->getPeriod();
-      }
    
-      $this->manager = $this->person->where('user_id','=',auth()->user()->id)->first();
-    
-        $this->myBranches = $this->getBranches();
-      if(! array_key_exists($branch, $myBranches)){
-        return redirect()->route('dashboard.index')->withError('That is not one of your branches');
-      }
-      $branch = $this->branch->with('manager')->findOrFail($branch);
-
-      $this->manager = $branch->manager->first();
-      if(! $this->manager){
-        return redirect()->route('dashboard.index')->withWarning("There is no manager assigned to branch ". $branch->branchname . ". Notify Sales Opersations");
-      }
-      $data = $this->getDashBoardData([$branch->id]);
-      return $this->displayDashboard($data);
-
-    }*/
    
     /**
      * [manager description]
@@ -157,7 +130,7 @@ class MgrDashboardController extends DashboardController
      */
     public function manager(Request $request, Person $manager=null)
     {
-      
+     
       if(! $this->period){
         $this->period = $this->activity->getPeriod();
       }
@@ -201,13 +174,8 @@ class MgrDashboardController extends DashboardController
       $data['branches'] = $this->getSummaryBranchData();
       $data['team']= $this->myTeamsOpportunities($data['branches']);
       $data['period'] = $this->period;
-      //$data['upcoming'] = $this->getUpcomingActivities();       
-      //$data['funnel'] = $this->getBranchFunnel($myBranches);    
-      //$data['activitychart'] =  $this->getActivityChartData($myBranches);  
-     // $data['pipeline'] = $this->getPipeline($myBranches);
-      ///$data['calendar'] = $this->getUpcomingCalendar($data['upcoming']);
       $data['chart'] = $this->getChartData($data['branches']);
-      //$data['won'] = $this->getWonOpportunities($myBranches); 
+      
       
       if(isset($data['team']['results'])){
         $data['teamlogins'] = $this->getTeamLogins(array_keys($data['team']['results']));
@@ -341,65 +309,6 @@ class MgrDashboardController extends DashboardController
           $data[$team->id]['open'] = $branchdata
                 ->whereIn('id',$branches)
                 ->sum('open');
-         
-         /* return [$manager->id=>$manager->branchesServiced->map(function ($branch) use($branchdata){
-
-            return [
-              'leads'=>$branch->leads
-                  ->whereBetween('address_branch.created_at',[$this->period['from'],$this->period['to']])
-                  ->count(),
-              'opportunities'=>$branch->opportunities
-             
-                ->where('opportunities.created_at','<=',$this->period['to'])
-                ->count(),
-              'top50'=>$branch->opportunities
-                ->where('opportunities.created_at','<=',$this->period['to'])
-              
-                ->where('top50','=',1)
-                
-                ->count(),
-              'won'=>$branch->opportunities
-                ->where('closed','=',1)
-                ->whereBetween('actual_close',[$this->period['from'],$this->period['to']])
-                ->count(),
-              'booked'=>$branch->opportunities
-                  ->where('closed','=',1)
-                  ->whereBetween('actual_close',[$this->period['from'],$this->period['to']])
-                  ->sum('value'),
-              'lost'=>$branch->opportunities->where('closed','=',2)
-                  ->whereBetween('actual_close',[$this->period['from'],$this->period['to']])
-                  ->count(),
-              'pipeline'=>$branch->opportunities
-                ->where('closed','=',0)
-                ->where('created_at','<=',$this->period['to'])
-                ->where('expected_close','>',$this->period['to'])
-                ->sum('value'),
-              'activities'=>$branch->activities
-                ->whereBetween('activity_date',[$this->period['from'],$this->period['to']])
-                ->count()];
-              })];
-            });
-            // zero out the associative array
-            foreach($stats as $stat){
-              $data[$stat] = 0;
-            }
-
-            foreach ($sum as $manager){
-              foreach ($manager as $mgrid=>$items){
-                foreach ($stats as $stat){
-                  $data[$stat] += $items->sum($stat);
-                }
-              }
-
-            }
-            $data['results'][$team->id] = $data;
-            
-          }else{
-            foreach($stats as $stat){
-              $data['results'][$team->id][$stat] = 0;
-            }
-            
-          } */
 
         }
       }
@@ -525,35 +434,7 @@ class MgrDashboardController extends DashboardController
 
     }
    
-    /**
-     * [getChartData description]
-     * @param  [type] $branches [description]
-     * @return [type]           [description]
-     */
-   /*private function getChartData($branches)
-    {
-       $results =   $this->branch
-                    ->whereIn('id',$branches)
-                    ->getActivitiesByType($this->period,4)
-
-                    ->withCount(       
-                       ['leads'=>function($query){
-                            $query->whereBetween('address_branch.created_at',[$this->period['from'],$this->period['to']]);
-                        },
-                        'opportunities as won'=>function($query){
-                        
-                                $query->whereClosed(1)
-                                ->whereBetween('actual_close',[$this->period['from'],$this->period['to']]);
-                            }]
-                        )
-                    ->with(['opportunities'=>function ($q){
-                      $q->whereClosed(1)
-                      ->whereBetween('actual_close',[$this->period['from'],$this->period['to']]);
-                    }])
-                    ->get();
-       //return $this->prepChartData($branches);       
-       
-      }*/
+    
 
      /**
       * [prepChartData description]

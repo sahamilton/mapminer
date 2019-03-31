@@ -1,15 +1,16 @@
 @extends('site.layouts.calendar')
 @section('content')
 <div class="container">
-
-@include('branches.partials._periodselector')
 <h2>{{$branch->branchname}} Dashboard</h2>
+@include('branches.partials._periodselector')
+
 	@foreach ($branch->manager as $manager)
 		<p><strong>Manager:</strong>{{$manager->fullName()}}</p>
 	@endforeach
-@if($data['team'])
-	@include('opportunities.partials._dashboardselect')
+@if($data['branches'])
+	@include('branches.partials._branchdashboardselector')
 @endif
+
 
 
 	<div class="col-sm-4 float-left">

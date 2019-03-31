@@ -25,6 +25,7 @@ class BranchDashboardController extends Controller
     public $branch;
     public $contact;
     public $manager;
+    public $myBranches;
     public $opportunity;
     public $period = [];
     public $person;
@@ -62,26 +63,26 @@ class BranchDashboardController extends Controller
     
     public function index()
     {
+     
       if(! $this->period){
         $this->period = $this->activity->getPeriod();
       }
       $this->manager = $this->person->where('user_id','=',auth()->user()->id)->first();
-      $myBranches = $this->getBranches();
-   
-        if(count($myBranches)==1){
-          $branch = array_keys($myBranches);
+      $this->myBranches = $this->getBranches();
+     
+        if(count($this->myBranches)>0){
+          $branch = array_keys($this->myBranches);
           return redirect()->route('dashboard.show',$branch[0]);
-        }
-        if(count($myBranches)==0){
+        }else{
                 return redirect()->route('user.show',auth()->user()->id)
                 ->withWarning("You are not assigned to any branches. You can assign yourself here or contact Sales Ops");
             }
-      
-       $data = $this->getDashBoardData(array_keys($myBranches));
+        
+       //$data = $this->getDashBoardData(array_keys($this->myBranches));
        
-       $data['period'] = $this->period;
+       //$data['period'] = $this->period;
      
-       return response()->view('opportunities.mgrindex', compact('data'));
+       //return response()->view('opportunities.mgrindex', compact('data'));
 
     }
 
@@ -100,12 +101,8 @@ class BranchDashboardController extends Controller
      */
     public function selectBranch(Request $request)
     {
-     
-      if(!$this->period) {
-        $this->period= $this->activity->getPeriod();
-      } 
-      $data = $this->getDashBoardData([request('branch')]);
-      return $this->displayDashboard($data);
+      
+     return redirect()->route('branchdashboard.show',request('branch'));
 
     }
     /**
@@ -129,7 +126,8 @@ class BranchDashboardController extends Controller
       $this->myBranches = [$branch->id];
       $data = $this->getDashBoardData();
       
-      return $this->displayDashboard($data);
+     
+      return response()->view('branches.dashboard', compact('data','branch'));
 
     }
    
@@ -170,8 +168,8 @@ class BranchDashboardController extends Controller
       $myBranches = array_unique($branches->flatten()->toArray());
 
       $data = $this->getDashBoardData($myBranches);
-    
-      return $this->displayDashboard($data);
+      dd('175',$data);
+      return response()->view('branches.dashboard', compact('data'));
     }
     
     /**
@@ -181,6 +179,7 @@ class BranchDashboardController extends Controller
      */
     private function getDashBoardData()
     {
+      
       $data['team']['me'] = $this->person->findOrFail($this->manager->id);
       // this might return branch managers with no branches!
       $data['team']['team'] =  $this->person
@@ -198,23 +197,15 @@ class BranchDashboardController extends Controller
       //$data['chart'] = $this->getChartData();
       //$data['won'] = $this->getWonOpportunities(); 
       $data['period'] = $this->period;
-     
-
+      $branches = $this->getBranches();
+      if(count($branches)>1){
+        $data['branches'] = $branches;
+      }
+  
       return $data;
     }
-    /**
-     * [displayDashboard description]
-     * @param  [type] $data [description]
-     * @return [type]       [description]
-     */
-    private function displayDashboard($data)
-    {
-      
-           $branch = $this->branch->with('manager')->findOrFail($this->myBranches)->first();
-     
-            return response()->view('branches.dashboard', compact('data', 'branch'));
 
-    }
+    
     /**
      * [getBranches description]
      * @return [type] [description]
