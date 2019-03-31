@@ -188,16 +188,17 @@ class BranchDashboardController extends Controller
       ->get();
       //$data['team']= $this->myTeamsOpportunities();
       $data['summary'] = $this->getSummaryBranchData();
-      
+
       $data['upcoming'] = $this->getUpcomingActivities();       
-      $data['funnel'] = $this->getBranchFunnel();    
+      //$data['funnel'] = $this->getBranchFunnel();    
       $data['activitychart'] =  $this->getActivityChartData();  
-      $data['pipeline'] = $this->getPipeline();
+      $data['team']['pipelinechart'] = $this->getPipeline();
+    
       $data['calendar'] = $this->getUpcomingCalendar($data['upcoming']);
       $data['chart'] = $this->getChartData();
-      $data['won'] = $this->getWonOpportunities(); 
+      //$data['won'] = $this->getWonOpportunities(); 
       $data['period'] = $this->period;
-      
+     
 
       return $data;
     }
@@ -212,8 +213,6 @@ class BranchDashboardController extends Controller
            $branch = $this->branch->with('manager')->findOrFail($this->myBranches)->first();
      
             return response()->view('branches.dashboard', compact('data', 'branch'));
-     
-
 
     }
     /**
@@ -233,20 +232,7 @@ class BranchDashboardController extends Controller
         }
     }
     
-   /**
-    * [getBranchNotes description]
-    * @param  [type] $branches [description]
-    * @return [type]           [description]
-    */
-    private function getBranchNotes($branches)
-    {
-
-        return Note::whereHas('relatesToLocation', function ($q) use ($branches) {
-            $q->whereHas('assignedToBranch', function ($q) use ($branches) {
-                $q->whereIn('branch_id', $branches);
-            });
-        })->with('relatesToLocation', 'writtenBy', 'writtenBy.person')->get();
-    }
+   
     
     /**
      * [getBranchFunnel description]
@@ -267,7 +253,7 @@ class BranchDashboardController extends Controller
      * branches statistics
      * @return [associative array] 
      */
-    private function myTeamsOpportunities()
+    /*private function myTeamsOpportunities()
     {
       $stats = ['leads',
               'opportunities',
@@ -366,7 +352,7 @@ class BranchDashboardController extends Controller
       $data['top50chart'] = $this->getTeamTop50Chart($data);
     
       return $data;
-    }
+    }*/
     private function getTeamActivityChart(array $data)
     {
       
@@ -381,7 +367,7 @@ class BranchDashboardController extends Controller
       return $data['chart'];
     }
 
-    private function getTeamPipelineChart(array $data)
+    /*private function getTeamPipelineChart(array $data)
     {
       
       $chart= array();
@@ -396,9 +382,9 @@ class BranchDashboardController extends Controller
       $data['pipelinechart']['data'] = implode(",",$chart);
     
       return $data['pipelinechart'];
-    }
+    }*/
 
-    private function getTeamTop50Chart(array $data)
+    /*private function getTeamTop50Chart(array $data)
     {
       
       $chart= array();
@@ -411,7 +397,7 @@ class BranchDashboardController extends Controller
       
       return $data['chart'];
     }
-
+*/
 
 
 
@@ -640,7 +626,7 @@ class BranchDashboardController extends Controller
      * @param  array  $keys     [description]
      * @return [type]           [description]
      */
-     private function formatActivityTableData(array $branches,array $keys)
+    /* private function formatActivityTableData(array $branches,array $keys)
      {
      
       $data['branches'] = $branches;
@@ -649,7 +635,7 @@ class BranchDashboardController extends Controller
       return $data;
      
 
-     }
+     }*/
      private function formatChartFullData(Array $branches,array $keys)
      {
         $colors = $this->activity->createColors(count($branches));
@@ -698,7 +684,7 @@ class BranchDashboardController extends Controller
 
         $data['keys'] = implode(",",$keys);
       
-        $data['chartdata'] = str_replace("\r\n","",$chartdata);
+        $data['data'] = str_replace("\r\n","",$chartdata);
        
        return $data;
 
@@ -775,8 +761,9 @@ class BranchDashboardController extends Controller
      * @return [type]             [description]
      */
     private function getPipeline(){
-    
-        $pipeline = $this->getPipeLineData($this->myBranches);
+        
+        $pipeline = $this->getPipeLineData();
+     
         return $this->formatPipelineData($pipeline);
      }
      /**
@@ -787,13 +774,16 @@ class BranchDashboardController extends Controller
      private function getPipeLineData()
      {
 
-
+  
      return  $this->opportunity
                     ->selectRaw('branch_id,YEARWEEK(expected_close,3) as yearweek,sum(value) as total')
-                    ->whereNotNull('value')
                     ->where('value','>',0)
                     ->whereIn('branch_id',$this->myBranches)
-                    ->where('expected_close','>',$this->period['to'])
+                    
+                    ->where(function($q){
+                      $q->where('actual_close','>',$this->period['to'])
+                      ->orWhereNull('actual_close');
+                    })
                     ->groupBy(['branch_id','yearweek'])
                     ->orderBy('branch_id','asc')
                     ->orderBy('yearweek','asc')

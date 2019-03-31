@@ -13,7 +13,7 @@ var barChart = new Chart(ctx,
     data:{
       labels: [{!! $data['activitychart']['keys'] !!}],
 
-      datasets: [{!! $data['activitychart']['chartdata'] !!} ]
+      datasets: [{!! $data['activitychart']['data'] !!} ]
     }
 
 });

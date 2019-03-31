@@ -51,13 +51,13 @@
 	</div>
 	 
 	
-	<div class="card float-right">
+	<div class="card float-left" style="margin-top:10px">
 		<div class="card-header">
 			<h4>Sales Pipeline</h4>
 		</div>
 		<div class="card-body">
 			<canvas id="ctpipe" width="400" height="400" ></canvas>
-			
+			@include('opportunities.partials._pipechart')
 		</div>
 	</div>
 

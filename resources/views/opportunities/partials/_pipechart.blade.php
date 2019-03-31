@@ -12,11 +12,20 @@ var barChart = new Chart(ctpipe,
 
       labels: [{!! $data['team']['pipelinechart']['keys'] !!}],
 
-      datasets:[{
-        label: 'Team Pipeline',
-        data: [{!! $data['team']['pipelinechart']['data'] !!}],
-        backgroundColor: 'red'
-      }]
+      datasets:[{!! $data['team']['pipelinechart']['data'] !!}],
+        
+     
+    },
+    options:{
+      scales: {
+          xAxes: [{ 
+            stacked: true, 
+            gridLines: { display: false },
+            }],
+          yAxes: [{ 
+            stacked: true, 
+           }],
+        }
     }
 
 });
