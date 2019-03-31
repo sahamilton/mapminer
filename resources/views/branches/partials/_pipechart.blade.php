@@ -10,14 +10,24 @@ var barChart = new Chart(ctpipe,
   
     data:{
 
-      labels: [{!! $data['team']['pipelinechart']['keys'] !!}],
+      labels: [{!! $data['pipelinechart']['keys'] !!}],
 
       datasets:[{
-        label: 'Team Pipeline',
-        data: [{!! $data['team']['pipelinechart']['data'] !!}],
+        label: 'Branch Pipeline',
+        data: [{!! $data['pipelinechart']['data'] !!}],
         backgroundColor: 'red'
       }]
-    }
+    },
+    options: {
+      scales: {
+          yAxes: [{
+              display: true,
+              ticks: {
+                  
+                  beginAtZero: true   // minimum value will be 0.
+              }
+          }]
+      }
 
 });
 </script>

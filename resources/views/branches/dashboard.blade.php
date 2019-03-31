@@ -1,6 +1,7 @@
 @extends('site.layouts.calendar')
 @section('content')
 <div class="container">
+	{{dd($data)}}
 @include('branches.partials._periodselector')
 <h2>{{$branch->branchname}} Dashboard</h2>
 	@foreach ($branch->manager as $manager)
@@ -57,7 +58,7 @@
 		</div>
 		<div class="card-body">
 			<canvas id="ctpipe" width="400" height="400" ></canvas>
-		
+			@include('branches.partials._pipechart')
 		</div>
 	</div>
 
