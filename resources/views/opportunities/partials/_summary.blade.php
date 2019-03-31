@@ -5,7 +5,7 @@ class='table table-striped table-bordered table-condensed table-hover'>
       <th>Branch</th>
       <th>Manager</th>
       <th>Leads</th>
-      <th>Opportunities</th>
+      <th>Open Opportunities</th>
       <th class="tip" title="Activities in the past month">Period Activities</th>
     <th>Won</th>
     <th>Lost</th>
@@ -31,7 +31,7 @@ class='table table-striped table-bordered table-condensed table-hover'>
             
             <td align="center">
               <a href="{{route('opportunities.branch',$branch->id)}}">
-                {{$branch->opportunities_count}}
+                {{$branch->open_count}}
               </a>
             </td>
             <td align="center">

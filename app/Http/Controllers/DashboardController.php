@@ -2,32 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Watch;
-use App\Note;
-use App\Lead;
-use App\Contact;
-use App\Activity;
-use App\Rating;
+use App\Dashboard;
+use App\Person;
+use App\Branch;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
-    public $watch;
-    public $contact;
-    public $activity;
-    public $rating;
-    public $lead;
-    public $notes;
+    public $dashboard;
+    public $person;
+    public $branch;
 
-
-    public function __construct(Watch $watch, Contact $contact, Activity $activity, Rating $rating, Note $note, Lead $lead)
+    public function __construct(Dashboard $dashboard,Person $person,Branch $branch)
     {
-        $this->watch = $watch;
-        $this->contacts = $contact;
-        $this->activity = $activity;
-        $this->rating = $rating;
-        $this->notes = $note;
-        $this->lead = $lead;
+        $this->dashboard = $dashboard;
+        $this->person = $person;
+        $this->branch = $branch;
     }
     /**
      * Display a listing of the resource.
@@ -37,22 +27,38 @@ class DashboardController extends Controller
     public function index()
     {
 
-      
-        if (auth()->user()->can('manage_opportunities')) {
-            return redirect()->route('opportunity.index');
+        $branchCount = $this->dashboard->checkBranchCount();
+        if($branchCount > 1){
+            return redirect()->route('mgrdashboard.index');
+        }else{
+            return redirect()->route('branchdashboard.index');
         }
+        
 
-        $watchlist = $this->watch->getMyWatchList();
-        $contacts = $this->contacts->getMyContacts();
-        $activities = $this->activity->myActivity()->with('relatesToAddress', 'relatedContact', 'type')->get();
-        $ratings = $this->rating->myRatings()->get();
-        $notes = $this->notes->myNotes()->get();
 
-       //$leads = $this->lead->getMyLeads()->get();
-    
-        $leads = [];
-        return response()->view('myactivities.index', compact('watchlist', 'contacts', 'activities', 'ratings', 'notes', 'leads'));
     }
 
-   
+    public function show($branch)
+    {
+        $branch = $this->branch->with('manager')->findOrFail($branch);
+        return redirect()->route('branchdashboard.show',$branch->id);
+        
+    }
+
+   public function select (Request $request)
+   {
+        $this->manager = $this->person->with('manages')->findOrFail(request('manager'));
+
+        $branchCount = $this->dashboard->checkBranchCount($this->manager);
+        if($branchCount > 1){
+
+            return redirect()->route('manager.dashboard',$this->manager->id);
+        }elseif($branchCount==1){
+        //get my branch
+            return redirect()->route('branchdashboard.show',$this->manager->manages->first()->id);
+        }else{
+            return redirect()->back('You do not have any branches');
+        }
+    
+   }
 }

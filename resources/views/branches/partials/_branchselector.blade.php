@@ -1,9 +1,9 @@
 <div class="form">
 	<form 
-	method="post" 
+
 	class="inline"
 	 method="post" 
-	 action="{{route('managers.dashboard')}}" >
+	 action="{{route('dashboard.select')}}" >
 	@csrf
 		<div class="form-group row col-sm-8 inline align-middle">
 			<div class="input-group-prepend">

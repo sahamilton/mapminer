@@ -84,12 +84,13 @@ Route::group(['middleware' => 'auth'], function () {
 	#Branch Dashboard
 		Route::post('branches/period',['as'=>'dashboard.setperiod','uses'=>'BranchDashboardController@setPeriod']);
 		Route::post('branches/dashboard',['as'=>'branches.dashboard','uses'=>'BranchDashboardController@selectBranch']);
-		Route::get('manager/{person}/dashboard',['as'=>'manager.dashboard','uses'=>'BranchDashboardController@manager']);
-		Route::post('manager/dashboard',['as'=>'managers.dashboard','uses'=>'BranchDashboardController@manager']);
-	    Route::resource('branch/dashboard','BranchDashboardController');
-	
-	# New Branch Dashboard
-			Route::resource('newdashboard','NewDashboardController');
+		Route::get('manager/{person}/dashboard',['as'=>'manager.dashboard','uses'=>'MgrDashboardController@manager']);
+		Route::post('manager/dashboard',['as'=>'dashboard.select','uses'=>'DashboardController@select']);
+	    Route::resource('branchdashboard','BranchDashboardController');
+	# Manager Dashboard
+		Route::resource('mgrdashboard','MgrDashboardController');
+	# Dashboard
+		Route::resource('dashboard','DashboardController');
 
 	# Branch Pipeline
 	    Route::get('branch/pipeline',['as'=>'branches.pipeline','uses'=>"OpportunityController@pipeline"]);

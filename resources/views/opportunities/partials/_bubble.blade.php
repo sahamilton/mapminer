@@ -27,8 +27,8 @@
                   },
               ticks: [6]
         },
-        height: 500,
-        width: 400,
+        height: 400,
+        width: 350,
         bubble: {textStyle: {fontSize: 11}}
       };
 

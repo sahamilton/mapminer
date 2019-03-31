@@ -109,9 +109,11 @@ class Person extends NodeModel implements HasPresenter
      * [myTeam description]
      * @return [type] [description]
      */
-    public function myTeam()
+    public function myTeam(Person $person=null)
     {
-        
+        if($person){
+            return $person->descendantsAndSelf()->with('branchesServiced');
+        }
         return $this->where('user_id', '=', auth()->user()->id)->firstOrFail()
                 ->descendantsAndSelf()->with('branchesServiced');
     }

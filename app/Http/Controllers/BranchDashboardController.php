@@ -120,19 +120,15 @@ class BranchDashboardController extends Controller
         $this->period = $this->activity->getPeriod();
       }
    
-      $this->manager = $this->person->where('user_id','=',auth()->user()->id)->first();
-    
-        $myBranches = $this->getBranches();
-      if(! array_key_exists($branch, $myBranches)){
-        return redirect()->route('dashboard.index')->withError('That is not one of your branches');
-      }
       $branch = $this->branch->with('manager')->findOrFail($branch);
 
       $this->manager = $branch->manager->first();
       if(!$this->manager){
         return redirect()->route('dashboard.index')->withMessage("There is no manager assigned to branch ". $branch->branchname . ". Notify Sales Opersations");
       }
-      $data = $this->getDashBoardData([$branch->id]);
+      $this->myBranches = [$branch->id];
+      $data = $this->getDashBoardData();
+      
       return $this->displayDashboard($data);
 
     }
@@ -183,22 +179,25 @@ class BranchDashboardController extends Controller
      * @param  array  $myBranches [description]
      * @return [type]             [description]
      */
-    private function getDashBoardData(array $myBranches)
+    private function getDashBoardData()
     {
+      $data['team']['me'] = $this->person->findOrFail($this->manager->id);
+      // this might return branch managers with no branches!
+      $data['team']['team'] =  $this->person
+      ->where('reports_to','=',$this->manager->id)      
+      ->get();
+      //$data['team']= $this->myTeamsOpportunities();
+      $data['summary'] = $this->getSummaryBranchData();
       
-      $data['team']= $this->myTeamsOpportunities();
-      $data['branches'] = $this->getSummaryBranchData($myBranches);
-      $data['upcoming'] = $this->getUpcomingActivities($myBranches);       
-      $data['funnel'] = $this->getBranchFunnel($myBranches);    
-      $data['activitychart'] =  $this->getActivityChartData($myBranches);  
-      $data['pipeline'] = $this->getPipeline($myBranches);
+      $data['upcoming'] = $this->getUpcomingActivities();       
+      $data['funnel'] = $this->getBranchFunnel();    
+      $data['activitychart'] =  $this->getActivityChartData();  
+      $data['pipeline'] = $this->getPipeline();
       $data['calendar'] = $this->getUpcomingCalendar($data['upcoming']);
-      $data['chart'] = $this->getChartData($myBranches);
-      $data['won'] = $this->getWonOpportunities($myBranches); 
+      $data['chart'] = $this->getChartData();
+      $data['won'] = $this->getWonOpportunities(); 
       $data['period'] = $this->period;
-      if(isset($data['team']['results'])){
-        $data['teamlogins'] = $this->getTeamLogins(array_keys($data['team']['results']));
-      }
+      
 
       return $data;
     }
@@ -209,17 +208,11 @@ class BranchDashboardController extends Controller
      */
     private function displayDashboard($data)
     {
-
-       if ($data['branches']->count() > 1) {
-
-                  
-           return response()->view('opportunities.mgrindex', compact('data', 'myBranches'));
-        
-        } else {
-
-           
-            return response()->view('branches.dashboard', compact('data', 'myBranches'));
-        }
+      
+           $branch = $this->branch->with('manager')->findOrFail($this->myBranches)->first();
+     
+            return response()->view('branches.dashboard', compact('data', 'branch'));
+     
 
 
     }
@@ -260,11 +253,11 @@ class BranchDashboardController extends Controller
      * @param  array  $branches [description]
      * @return [type]           [description]
      */
-    private function getBranchFunnel(array $branches){
+    private function getBranchFunnel(){
     
          return $this->opportunity
-                     ->whereHas('branch',function ($q) use($branches){
-                        $q->whereIn('branch_id',$branches);
+                     ->whereHas('branch',function ($q) {
+                        $q->whereIn('branch_id',$this->myBranches);
                      })
                      ->whereNotNull('expected_close')
                      ->openFunnel()->get(); 
@@ -427,7 +420,7 @@ class BranchDashboardController extends Controller
      * @param  array  $branches [description]
      * @return [type]           [description]
      */
-    private function getSummaryBranchData(array $branches){
+    private function getSummaryBranchData(){
         
         return $this->branch
               ->withCount(       
@@ -448,12 +441,21 @@ class BranchDashboardController extends Controller
                       'opportunities as lost'=>function($query){
                           $query->whereClosed(2)
                           ->whereBetween('actual_close',[$this->period['from'],$this->period['to']]);
+                      },
+                      'opportunities as top50'=>function($query){
+                          $query->whereClosed(0)
+                          ->where('opportunities.top50','=',1)
+                          ->where(function($q){
+                            $q->where('actual_close','>',$this->period['to'])
+                            ->orwhereNull('actual_close');
+                          })
+                          ->where('opportunities.created_at','<',$this->period['to']);
                       }]
                   )
           
               ->with('manager','manager.reportsTo')
               ->getActivitiesByType($this->period)
-              ->whereIn('id',$branches)
+              ->whereIn('id',$this->myBranches)
               ->get(); 
 
     }
@@ -463,10 +465,10 @@ class BranchDashboardController extends Controller
      * @param  [type] $branches [description]
      * @return [type]           [description]
      */
-    private function getChartData($branches)
+    private function getChartData()
     {
        $results =   $this->branch
-                    ->whereIn('id',$branches)
+                    ->whereIn('id',$this->myBranches)
                     ->getActivitiesByType($this->period,4)
 
                     ->withCount(       
@@ -503,6 +505,7 @@ class BranchDashboardController extends Controller
           $string = $string . "[\"".$branch->branchname ."\",  ".$branch->activities->count() .",  ".$branch->won.", ".$branch->opportunities->sum('value') ."],";
          
         }
+
         return $string;
 
       }
@@ -522,46 +525,25 @@ class BranchDashboardController extends Controller
        * @param  Array  $myBranches [description]
        * @return [type]             [description]
        */
-      private function getUpcomingActivities(Array $myBranches)
+      private function getUpcomingActivities()
       {
-             $users =  $this->person->myBranchTeam($myBranches);
-             return $this->activity->whereIn('user_id',$users)
-             ->where('activity_date','>=',Carbon::now())->get();
+             $users =  $this->person->myBranchTeam($this->myBranches);
+             return $this->activity->whereIn('user_id',$users)->get();
 
       }
-      /**
-       * [getTeamLogins description]
-       * @param  array  $team [description]
-       * @return [type]       [description]
-       */
-      private function getTeamLogins(array $team)
-      {
-        
-        $track = $this->person->whereIn('id',$team)
-                ->with('userdetails','userdetails.usage')
-                ->get();
-        
-        return $track->map(function($person){
-         
-            return [$person->fullName() => [
-                  'first'=>$person->userdetails->usage->min('lastactivity'),
-                  'last'=>$person->userdetails->usage->max('lastactivity'),
-                  'count'=>$person->userdetails->usage->count()]];
-        });
-      }
+     
       /**
        * [getActivityChartData description]
        * @param  Array  $branches [description]
        * @return [type]           [description]
        */
-    private function getActivityChartData(Array $branches)
+    private function getActivityChartData()
     {
 
-      $branchdata = $this->getBranchActivities($branches)->toArray();
-      if(count($branches)==1){
+      $branchdata = $this->getBranchActivities($this->myBranches)->toArray();
+      
         return $this->formatBranchWeekActivities($branchdata);
-      }
-      return $this->formatBranchActivities($branchdata);
+      
     }
 
     private function formatBranchActivities($branchdata)
@@ -728,43 +710,36 @@ class BranchDashboardController extends Controller
       * @param  array  $myBranches [description]
       * @return [type]             [description]
       */
-     private function getBranchActivities(array $myBranches){
-        if(count($myBranches)==1){
-          $activityCount = $this->branch->whereIn('id',$myBranches)
-           ->whereHas('activities',function ($q){
-              $q->whereBetween('activity_date',[$this->period['from'],$this->period['to']]);
-            })
-           ->with(['activities'=>function ($q){
-              $q->whereBetween('activity_date',[$this->period['from'],$this->period['to']]);
-           }])->get();
-        
-           return  $activityCount->map(function ($branch){
-              return [$branch->id=>[$branch->activities->groupBy(function ($activity) {
-                   return $activity->activity_date->format('Y-W');
-              })]];
-             });
-         }else{
-          return  $this->branch
-            ->whereIn('id',$myBranches)
-            ->withCount([
-              'activities'=>function($query){
-                    $query->whereBetween('activity_date',[$this->period['from'],$this->period['to']]);
-               } ])
-            ->get();
-         }
+     private function getBranchActivities()
+     {
+       
+        $activityCount = $this->branch->whereIn('id',$this->myBranches)
+         ->whereHas('activities',function ($q){
+            $q->whereBetween('activity_date',[$this->period['from'],$this->period['to']]);
+          })
+         ->with(['activities'=>function ($q){
+            $q->whereBetween('activity_date',[$this->period['from'],$this->period['to']]);
+         }])->get();
+      
+         return  $activityCount->map(function ($branch){
+            return [$branch->id=>[$branch->activities->groupBy(function ($activity) {
+                 return $activity->activity_date->format('Y-W');
+            })]];
+           });
+
      }
      /**
       * [get 2 months of won opportunities description]
       * @param  array  $myBranches [description]
       * @return [type]             [description]
       */
-    private function getWonOpportunities(array $myBranches){
+    private function getWonOpportunities(){
     
       $won =  $this->opportunity
                 ->selectRaw('branch_id,YEARWEEK(actual_close,3) as yearweek,sum(value) as total')
                 ->whereNotNull('value')
                 ->where('value','>',0)
-                ->whereIn('branch_id',$myBranches)
+                ->whereIn('branch_id',$this->myBranches)
                 ->whereBetween('actual_close',[$this->period['from'],$this->period['to']])
                 ->whereClosed(1)
                 ->groupBy(['branch_id','yearweek'])
@@ -799,9 +774,9 @@ class BranchDashboardController extends Controller
      * @param  array  $myBranches [description]
      * @return [type]             [description]
      */
-    private function getPipeline(array $myBranches){
+    private function getPipeline(){
     
-        $pipeline = $this->getPipeLineData($myBranches);
+        $pipeline = $this->getPipeLineData($this->myBranches);
         return $this->formatPipelineData($pipeline);
      }
      /**
@@ -809,7 +784,7 @@ class BranchDashboardController extends Controller
       * @param  array  $myBranches [description]
       * @return [type]             [description]
       */
-     private function getPipeLineData(array $myBranches)
+     private function getPipeLineData()
      {
 
 
@@ -817,7 +792,7 @@ class BranchDashboardController extends Controller
                     ->selectRaw('branch_id,YEARWEEK(expected_close,3) as yearweek,sum(value) as total')
                     ->whereNotNull('value')
                     ->where('value','>',0)
-                    ->whereIn('branch_id',$myBranches)
+                    ->whereIn('branch_id',$this->myBranches)
                     ->where('expected_close','>',$this->period['to'])
                     ->groupBy(['branch_id','yearweek'])
                     ->orderBy('branch_id','asc')

@@ -17,7 +17,7 @@ use App\Person;
 use \Carbon\Carbon;
 use Illuminate\Http\Request;
 
-class NewDashboardController extends Controller
+class MgrDashboardController extends DashboardController
 {
     public $activity;
     public $address;
@@ -73,12 +73,9 @@ class NewDashboardController extends Controller
       $this->myBranches = array_keys($this->getBranches());
       // redirect if only one or no branches
       $this->checkBranches();
-        
-      
+          
        $data = $this->getDashBoardData();
-       
-       $data['period'] = $this->period;
-     
+      
        return response()->view('opportunities.mgrindex', compact('data'));
 
     }
@@ -128,7 +125,7 @@ class NewDashboardController extends Controller
      * @param  [type] $branch [description]
      * @return [type]         [description]
      */
-    public function show($branch)
+   /* public function show($branch)
     {
        
       if(! $this->period){
@@ -150,7 +147,7 @@ class NewDashboardController extends Controller
       $data = $this->getDashBoardData([$branch->id]);
       return $this->displayDashboard($data);
 
-    }
+    }*/
    
     /**
      * [manager description]
@@ -160,16 +157,12 @@ class NewDashboardController extends Controller
      */
     public function manager(Request $request, Person $manager=null)
     {
-   
+      
       if(! $this->period){
         $this->period = $this->activity->getPeriod();
       }
 
       if($manager){
-        $myteam = $this->person->myTeam()->pluck('id')->toArray();
-        if(! in_array($manager->id, $myteam)){
-          return redirect()->back()->withError('That is not one of your team members');
-        }
         $this->manager = $manager;
       }else{
         
@@ -182,14 +175,15 @@ class NewDashboardController extends Controller
       $branches = $team->map(function ($mgr){
         return $mgr->branchesServiced->pluck('id')->toArray();
       }); 
+
       if(count($branches->first())==0){
         return redirect()->back()->withMessage($this->manager->fullName().' is not assigned to any branches');
       }
      
-      $myBranches = array_unique($branches->flatten()->toArray());
+      $this->myBranches = array_unique($branches->flatten()->toArray());
 
-      $data = $this->getDashBoardData($myBranches);
-    
+      $data = $this->getDashBoardData();
+   
       return $this->displayDashboard($data);
     }
     
@@ -205,7 +199,7 @@ class NewDashboardController extends Controller
       $data['team']= $this->myTeamsOpportunities();
 
       $data['branches'] = $this->getSummaryBranchData();
-  
+      $data['period'] = $this->period;
       //$data['upcoming'] = $this->getUpcomingActivities();       
       //$data['funnel'] = $this->getBranchFunnel($myBranches);    
       //$data['activitychart'] =  $this->getActivityChartData($myBranches);  
