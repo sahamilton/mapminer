@@ -57,7 +57,7 @@
 		</div>
 		<div class="card-body">
 			<canvas id="ctpipe" width="400" height="400" ></canvas>
-			@include('opportunities.partials._pipechart')
+			@include('branches.partials._pipechart')
 		</div>
 	</div>
 

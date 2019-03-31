@@ -192,7 +192,7 @@ class BranchDashboardController extends Controller
       //$data['upcoming'] = $this->getUpcomingActivities();       
       //$data['funnel'] = $this->getBranchFunnel();    
       $data['activitychart'] =  $this->getActivityChartData();  
-      $data['team']['pipelinechart'] = $this->getPipeline();
+      $data['pipelinechart'] = $this->getPipeline();
     
       $data['calendar'] = $this->getUpcomingCalendar($this->getUpcomingActivities());
       //$data['chart'] = $this->getChartData();
@@ -239,7 +239,7 @@ class BranchDashboardController extends Controller
      * @param  array  $branches [description]
      * @return [type]           [description]
      */
-    private function getBranchFunnel(){
+    /*private function getBranchFunnel(){
     
          return $this->opportunity
                      ->whereHas('branch',function ($q) {
@@ -247,7 +247,7 @@ class BranchDashboardController extends Controller
                      })
                      ->whereNotNull('expected_close')
                      ->openFunnel()->get(); 
-    }
+    }*/
     /**
      * myTeamsOpportunities Extract and sum all the associated
      * branches statistics

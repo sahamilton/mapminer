@@ -414,7 +414,7 @@ class MgrDashboardController extends DashboardController
       }
       $data['pipelinechart']['keys'] = "'" . implode("','",array_keys($chart))."'";
       $data['pipelinechart']['data'] = implode(",",$chart);
-    
+      
       return $data['pipelinechart'];
     }
 

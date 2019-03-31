@@ -1,7 +1,7 @@
 <script type="text/javascript" 
 src="//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
-
 <script>
+
 var barChart = new Chart(ctb, 
 {
 
@@ -18,6 +18,7 @@ var barChart = new Chart(ctb,
         data: [{!! $data['team']['chart']['data'] !!}],
         backgroundColor: 'red'
       }]
+      
     }
 
 });
