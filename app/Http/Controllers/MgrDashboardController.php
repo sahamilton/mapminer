@@ -16,7 +16,7 @@ use App\Opportunity;
 use App\Person;
 use \Carbon\Carbon;
 use Illuminate\Http\Request;
-
+use Illuminate\Database\Eloquent\Collection;
 class MgrDashboardController extends DashboardController
 {
     public $activity;
@@ -196,9 +196,10 @@ class MgrDashboardController extends DashboardController
     {
       $myBranches = $this->myBranches;
 
-      $data['team']= $this->myTeamsOpportunities();
+      
 
       $data['branches'] = $this->getSummaryBranchData();
+      $data['team']= $this->myTeamsOpportunities($data['branches']);
       $data['period'] = $this->period;
       //$data['upcoming'] = $this->getUpcomingActivities();       
       //$data['funnel'] = $this->getBranchFunnel($myBranches);    
@@ -211,7 +212,7 @@ class MgrDashboardController extends DashboardController
       if(isset($data['team']['results'])){
         $data['teamlogins'] = $this->getTeamLogins(array_keys($data['team']['results']));
       }
-     
+   
       return $data;
     }
     /**
@@ -287,7 +288,7 @@ class MgrDashboardController extends DashboardController
      * branches statistics
      * @return [associative array] 
      */
-    private function myTeamsOpportunities()
+    private function myTeamsOpportunities(Collection $branchdata)
     {
       $stats = ['leads',
               'opportunities',
@@ -303,19 +304,45 @@ class MgrDashboardController extends DashboardController
       $data['team'] =  $this->person
       ->where('reports_to','=',$this->manager->id)      
       ->get();
-
+      
       // get all branch managers
       $branchManagerRole = 9;
       foreach ($data['team'] as $team){
+
         $data['branchteam'] = $team->descendantsAndSelf()->withRoles([$branchManagerRole])
             ->has('branchesServiced')
             ->with('branchesServiced')
             ->get();
+
         if($data['branchteam']->count()>0){
+          $branches = $data['branchteam']->map(function($person){
+            return $person->branchesServiced->pluck('id');
+          });
+       
+          $branches = $branches->flatten();
+          $data[$team->id]['leads'] = $branchdata
+                ->whereIn('id',$branches)
+                ->sum('leads_count');
+          $data[$team->id]['activities'] = $branchdata
+                ->whereIn('id',$branches)
+                ->sum('activities_count');
+          $data[$team->id]['won'] = $branchdata
+                ->whereIn('id',$branches)
+                ->sum('won');
 
-          $sum = $data['branchteam']->map(function ($manager){
+          $data[$team->id]['lost'] = $branchdata
+                ->whereIn('id',$branches)
+                ->sum('lost');
 
-          return [$manager->id=>$manager->branchesServiced->map(function ($branch){
+          $data[$team->id]['top50'] = $branchdata
+                ->whereIn('id',$branches)
+                ->sum('top50');
+
+          $data[$team->id]['open'] = $branchdata
+                ->whereIn('id',$branches)
+                ->sum('open');
+         
+         /* return [$manager->id=>$manager->branchesServiced->map(function ($branch) use($branchdata){
 
             return [
               'leads'=>$branch->leads
@@ -372,10 +399,11 @@ class MgrDashboardController extends DashboardController
               $data['results'][$team->id][$stat] = 0;
             }
             
-          } 
+          } */
 
         }
-  
+      }
+     
       $data = $this->getTeamChart($data);
       return $data;
     }
@@ -392,12 +420,12 @@ class MgrDashboardController extends DashboardController
       
       $chart= array();
       foreach($data['team'] as $team){
-        $chart[$team->lastname]=$data['results'][$team->id]['activities'];
+        $chart[$team->lastname]=$data[$team->id]['activities'];
 
       }
       $data['chart']['keys'] = "'" . implode("','",array_keys($chart))."'";
       $data['chart']['data'] = implode(",",$chart);
-      
+    
       return $data['chart'];
     }
 
@@ -408,7 +436,7 @@ class MgrDashboardController extends DashboardController
 
       foreach($data['team'] as $team){
         
-        $chart[$team->lastname]=$data['results'][$team->id]['pipeline'];
+        $chart[$team->lastname]=$data[$team->id]['open'];
         
 
       }
@@ -423,7 +451,7 @@ class MgrDashboardController extends DashboardController
       
       $chart= array();
       foreach($data['team'] as $team){
-        $chart[$team->lastname]=$data['results'][$team->id]['top50'];
+        $chart[$team->lastname]=$data[$team->id]['top50'];
 
       }
       $data['chart']['keys'] = "'" . implode("','",array_keys($chart))."'";
