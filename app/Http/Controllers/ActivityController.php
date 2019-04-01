@@ -227,7 +227,7 @@ class ActivityController extends Controller
         
         $data = $this->parseData($request);
        
-        $activity->update($data);
+        $activity->update($data['activity']);
    
         return redirect()->route('address.show', $activity->address_id);
     }
