@@ -131,10 +131,11 @@ class ActivityController extends Controller
      */
     public function store(ActivityFormRequest $request)
     {
-       
+      
         $data = $this->parseData($request);
 
         $activity = Activity::create($data['activity']);
+
         if(request()->filled('followup_date')){
             // create a new activity
              $relatedActivity = $this->createFollowUpActivity($data,$activity);
@@ -181,7 +182,7 @@ class ActivityController extends Controller
             $data['activity']['address_id'] = request('location_id');
         }
         $data['activity']['activity_date'] = Carbon::parse($data['activity']['activity_date']);
-
+        $data['activity']['user_id'] = auth()->user()->id;
         // get follow up date 
 
         if (request()->filled('followup_date')){
@@ -191,10 +192,11 @@ class ActivityController extends Controller
             $data['followup']['activitytype_id'] = request('followup_id');
             $data['followup']['address_id'] = request('address_id');
             $data['followup_date']['followup_date'] = null;
+            $data['activity']['user_id'] = auth()->user()->id
         }
     // contact data
         $data['contact']= $request->only(['contact']);
-        $data['user_id'] = auth()->user()->id;
+        
         return $data;
     }
 
