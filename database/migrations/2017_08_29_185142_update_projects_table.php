@@ -14,7 +14,7 @@ class UpdateProjectsTable extends Migration
     public function up()
     {
         Schema::table('projects', function (Blueprint $table) {
-            $table->renameColumn('dodge_repnum','source_ref');
+            $table->renameColumn('dodge_repnum', 'source_ref');
             $table->integer('project_source_id')->unsigned();
         });
     }

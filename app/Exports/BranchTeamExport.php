@@ -13,7 +13,7 @@ class BranchTeamExport implements FromView
     public function __construct()
     {
         
-        $this->roles = Role::pluck('name','id')->toArray();
+        $this->roles = Role::pluck('name', 'id')->toArray();
     }
     /**
     * @return \Illuminate\Support\Collection

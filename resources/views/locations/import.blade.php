@@ -73,7 +73,7 @@
        
             <div class="form-group">
                 <textarea name="description" 
-                required 
+                required
                 class="form-control" 
                 rows="5" 
                 placeholder="Describe the import, source etc"></textarea>

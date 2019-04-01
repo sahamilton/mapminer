@@ -8,6 +8,8 @@
 			<td>city</td>
 			<td>state</td>
 			<td>zip</td>
+			<td>Lat</td>
+			<td>Lng</td>
 			<td>company_id</td>
 			<td>phone</td>
 			<td>contact</td>
@@ -25,6 +27,8 @@
 			<td>{{$location->city}}</td>
 			<td>{{$location->state}}</td>
 			<td>{{$location->zip}}</td>
+			<td>{{$location->lat}}</td>
+			<td>{{$location->lng}}</td>
 			<td>{{$location->company_id}}</td>
 			<td>{{$location->phone}}</td>
 			<td>{{$location->contact}}</td>

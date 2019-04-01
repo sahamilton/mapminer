@@ -2,7 +2,6 @@
 
 namespace App\Jobs;
 
-
 use App\Person;
 
 use Illuminate\Bus\Queueable;
@@ -34,6 +33,5 @@ class ProcessPersonRebuild implements ShouldQueue
     {
 
         return Person::rebuild();
-
     }
 }

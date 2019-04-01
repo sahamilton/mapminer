@@ -2,15 +2,15 @@
 @extends('site.layouts.default')
 
 @section('content')
+
 <div class="container">
 	<div class="panel panel-default">
 		<div class="panel-heading clearfix">
-			<h2 class="panel-title pull-left"><strong>{{$user->person->postName()}}</strong></h2>
-
+			<h2 class="panel-title pull-left"><strong>{{$user->person->fullName()}}</strong></h2>
+			
 		</div>
-		<div class="panel-heading clearfix">
-			<h4 class="panel-title pull-left"><strong>{{ucwords($user->person->business_title)}}</strong></h4>
-
+		<div class="col-sm-3 panel-heading float-right">
+			@include('persons.partials._avatar')
 		</div>
 		@if (session()->has('impersonated_by'))
 			<a href="{{route('impersonate.leave')}}" 
@@ -19,6 +19,11 @@
 			</a>
 
 		@endif
+		<div class="panel-heading clearfix">
+			<h4 class="panel-title pull-left"><strong>{{ucwords($user->person->business_title)}}</strong></h4>
+
+		</div>
+		
 		<div class="list-group-item">
 			<p class="list-group-item-text"><strong>Role Details</strong></p>
 			<ul style="list-style-type: none;">
@@ -28,7 +33,7 @@
 			</ul>
 		</div>
 	<div class="list-group">
-		<div class="list-group-item">
+		<div class="list-group-item float-left">
 			<p class="list-group-item-text"><strong>User Details</strong></p>
 			<ul style="list-style-type: none;">
 				<li>User id: {{$user->person->userdetails->id}}</li>
@@ -43,6 +48,7 @@
 					</ul>
 				</li>
 			</ul>
+			
 		</div>
 		<div class="list-group">
     		<div class="list-group-item">

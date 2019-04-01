@@ -4,7 +4,12 @@
 		<div class="input-group input-group-lg ">
 		    <input type="text" 
 		    @if(!isset($type)) readonly @endif
-		    required class="form-control" name='companyname' autocomplete="off" description="companyname" value="{{ old('companyname') ? old('companyname') :isset($lead->companyname) ? $lead->companyname : '' }}" placeholder="companyname">
+		    required class="form-control" 
+		    name='companyname' 
+		    autocomplete="off" 
+		    description="companyname" 
+		    value="{{ old('companyname' , isset($lead->companyname) ? $lead->companyname : '' )}}" 
+		    placeholder="companyname">
 		    <span class="help-block">
 		        <strong>{{ $errors->has('companyname') ? $errors->first('companyname') : ''}}</strong>
 		        </span>
@@ -16,7 +21,13 @@
 		<div class="input-group input-group-lg ">
 		    <input 
 		    @if(!isset($type)) readonly @endif
-		    type="text" class="form-control" name='businessname' autocomplete="off" description="businessname" value="{{ old('businessname') ? old('businessname') : isset($lead->businessname) ? $lead->businessname : '' }}" placeholder="businessname">
+		    type="text" 
+		    class="form-control" 
+		    name='businessname' 
+		    autocomplete="off" 
+		    description="businessname" 
+		    value="{{ old('businessname', isset($lead->businessname) ? $lead->businessname : '' )}}" 
+		    placeholder="businessname">
 		    <span class="help-block">
 		        <strong>{{ $errors->has('businessname') ? $errors->first('businessname') : ''}}</strong>
 		        </span>
@@ -33,7 +44,7 @@
 		     name='street' 
 		     autocomplete="off" 
 		     description="street" 
-		     value="{{ old('street') ? old('street') : isset($lead) ? $lead->street : '' }}" 
+		     value="{{ old('street', isset($lead) ? $lead->street : '' )}}" 
 		     placeholder="address">
 		    <span class="help-block">
 		        <strong>{{ $errors->has('street') ? $errors->first('street') : ''}}</strong>
@@ -50,7 +61,7 @@
 		   name='city' 
 		   autocomplete="off" 
 		   description="city" 
-		   value="{{ old('city') ? old('city') : isset($lead->city) ? $lead->city : '' }}" placeholder="city">
+		   value="{{ old('city', isset($lead->city) ? $lead->city : '' )}}" placeholder="city">
 		   <span class="help-block">
 		       <strong>{{ $errors->has('city') ? $errors->first('city') : ''}}</strong>
 		       </span>
@@ -66,7 +77,7 @@
              required class="form-control" name='state' 
              autocomplete="off" 
              description="state" 
-             value="{{ old('state') ? old('state') : isset($lead->state) ? $lead->state : "" }}" placeholder="state">
+             value="{{ old('state', isset($lead->state) ? $lead->state : "" )}}" placeholder="state">
             <span class="help-block">
                 <strong>{{ $errors->has('state') ? $errors->first('state') : ''}}</strong>
                 </span>
@@ -79,7 +90,12 @@
 	   <div class="input-group input-group-lg ">
 	       <input type="text" 
 	       readonly 
-	       required class="form-control" name='zip' autocomplete="off" description="zip" value="{{ old('zip') ? old('zip') : isset($lead->zip) ? $lead->zip : "" }}" placeholder="zip">
+	       required class="form-control" 
+	       name='zip' 
+	       autocomplete="off" 
+	       description="zip" 
+	       value="{{ old('zip', isset($lead->zip) ? $lead->zip : "" )}}" 
+	       placeholder="zip">
 	       <span class="help-block">
 	           <strong>{{ $errors->has('zip') ? $errors->first('zip') : ''}}</strong>
 	           </span>
@@ -98,7 +114,8 @@
 			     @if(!isset($type)) readonly @endif
 			     required class="form-control" name='contact' autocomplete="off" 
 			    description="contact" 
-			    value="{{ old('contact', ! $lead->contacts->isEmpty() ? $lead->contacts->first()->fullname : '') }}" placeholder="contact">
+			    value="{{ old('contact', ! $lead->contacts->isEmpty() ? $lead->contacts->first()->fullname : '') }}" 
+			    placeholder="contact">
 			    <span class="help-block">
 			        <strong>{{ $errors->has('contact') ? $errors->first('contact') : ''}}</strong>
 			        </span>

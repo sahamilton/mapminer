@@ -241,7 +241,7 @@ class BranchesController extends BaseController {
 		
 		$locations = Location::nearby($branch,25)->get();
 
-		return response()->json(array('error'=>false,'locations' =>$locations->toArray()),200)->setCallback(request('callback'));
+		return response()->json(['error'=>false,'locations' =>$locations->toArray()],200)->setCallback(request('callback'));
 
 		
 	}
@@ -319,7 +319,7 @@ class BranchesController extends BaseController {
 	
 		//$filtered = $this->location->isFiltered(['companies'],['vertical']);
 		$roles = \App\Role::pluck('display_name','id');
-		$mywatchlist= array();
+		$mywatchlist= [];
 		//$locations = NULL;
 		$data['branch'] = $branch->load('manager');
 
@@ -393,6 +393,35 @@ class BranchesController extends BaseController {
         return response()->view('branches.xml', compact('branches'))->header('Content-Type', 'text/xml');
 
 		
+	}
+
+
+	public function branchLeads(Request $request, $branch=null){
+		 $myBranches = $this->person->myBranches();
+		 if (! $branch = $this->branch->checkIfMyBranch($request,$branch,$myBranches)){
+		 	return redirect()->back()->withWarning('You are not associated with these branches');
+		 }
+	
+		$leads = \App\AddressBranch::whereDoesnthave('opportunities')
+		->with('branch','address','address.leadsource')->whereIn('branch_id',[$branch->id])->get();
+		
+
+		return response()->view('branches.leads',compact('leads','myBranches'));
+	}
+
+
+	public function branchOpportunities(Request $request, $branch=null){
+		
+		 $myBranches = $this->person->myBranches();
+		 if (! $branch = $this->branch->checkIfMyBranch($request,$branch,$myBranches)){
+		 	return redirect()->back()->withWarning('You are not associated with these branches');
+		 }
+		
+
+		$branch->load('opportunities','opportunities.address');
+		
+
+		return response()->view('branches.opportunities',compact('branch','myBranches'));
 	}
 	/**
 	 * Generate state map of branches.

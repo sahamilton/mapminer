@@ -9,6 +9,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Feedback;
 use App\User;
+
 class FeedbackClosed extends Mailable
 {
     use Queueable, SerializesModels;
@@ -23,7 +24,6 @@ class FeedbackClosed extends Mailable
     {
         $this->feedback = $feedback;
         $this->user = User::with('person')->findOrFail(auth()->user()->id);
-
     }
 
     /**

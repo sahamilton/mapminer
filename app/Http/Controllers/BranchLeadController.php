@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Lead;
 use App\Address;
 use App\Person;
@@ -15,13 +16,13 @@ class BranchLeadController extends Controller
     public $address;
     public $person;
     public $branchlead;
-    public function __construct(Lead $lead,Person $person, BranchLead $branchlead,Branch $branch, Address $address){
+    public function __construct(Lead $lead, Person $person, BranchLead $branchlead, Branch $branch, Address $address)
+    {
         $this->lead = $lead;
         $this->address = $address;
         $this->branch = $branch;
         $this->$branchlead = $branchlead;
         $this->person = $person;
-
     }
     /**
      * Display a listing of the resource.
@@ -31,16 +32,14 @@ class BranchLeadController extends Controller
     public function index()
     {
        
-        if(count($this->person->myBranches())>0){
-
-            $branches = $this->branch->whereIn('id',array_keys($this->person->myBranches()))
+        if (count($this->person->myBranches())>0) {
+            $branches = $this->branch->whereIn('id', array_keys($this->person->myBranches()))
             ->withCount('leads')->with('manager')->get();
-           
-        }else{
+        } else {
             $branches = $this->branch->withCount('leads')->with('manager')->get();
         }
         
-        return response()->view('branchleads.index',compact('branches'));
+        return response()->view('branchleads.index', compact('branches'));
     }
 
     /**
@@ -73,9 +72,9 @@ class BranchLeadController extends Controller
     public function show(Branch $branch)
     {
        
-        $branch = $branch->load('leads','manager','leads.industryVertical','leads.leadsource');
+        $branch = $branch->load('leads', 'manager', 'leads.industryVertical', 'leads.leadsource');
 
-        return response()->view('branchleads.show',compact('branch'));
+        return response()->view('branchleads.show', compact('branch'));
     }
 
     /**
@@ -120,11 +119,10 @@ class BranchLeadController extends Controller
             $branch = $this->branch->nearby($lead,'25',1)->get();
             if($branch->count()>0){
                 $data = ['branch_id'=>$branch->first()->id, 'address_id'=>$lead->id];
-               $a--;
+                $a--;
                 BranchLead::create($data);
-            }         
-            
-        } 
+            }
+        }
         dd($a, 'unassigned');
     }
 }

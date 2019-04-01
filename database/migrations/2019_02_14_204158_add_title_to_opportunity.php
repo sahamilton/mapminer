@@ -14,7 +14,7 @@ class AddTitleToOpportunity extends Migration
     public function up()
     {
         Schema::table('opportunities', function (Blueprint $table) {
-           $table->string('title');
+            $table->string('title');
         });
     }
 

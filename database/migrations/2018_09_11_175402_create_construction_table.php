@@ -20,8 +20,8 @@ class CreateConstructionTable extends Migration
             $table->string('city');
             $table->string('state');
             $table->string('zip');
-            $table->decimal('lat',20,14)->nullable();
-            $table->decimal('lng',20,14)->nullable();
+            $table->decimal('lat', 20, 14)->nullable();
+            $table->decimal('lng', 20, 14)->nullable();
             $table->string('valuation')->nullable();
             $table->string('type')->nullable();
             $table->timestamps();

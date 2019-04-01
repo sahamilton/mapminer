@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Requests;
+
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\User;
@@ -26,8 +27,8 @@ class UserFormRequest extends FormRequest
     public function rules(Request $request)
     {
   
-        $salesrules=array();
-        $branchrules=array();
+        $salesrules=[];
+        $branchrules=[];
 
         $rules = [
             'roles'=>'required',
@@ -41,16 +42,14 @@ class UserFormRequest extends FormRequest
             'address'=>'required',
 
         ];
-          if (count(array_intersect(request('roles'), [5,6,7,8]))>0){
+        if (count(array_intersect(request('roles'), [5,6,7,8]))>0) {
             $salesrules = ['reports_to'=>'required'];
         }
-       if (count(array_intersect(request('roles'), [9]))>0){
-
-            
+        if (count(array_intersect(request('roles'), [9]))>0) {
             $branchrules = ['branches'=>'required_without:branchstring',
                         'branchstring'=>'required_without:branches',];
         }
-        return array_merge($salesrules,$branchrules,$rules) ;
+        return array_merge($salesrules, $branchrules, $rules) ;
     }
     public function messages()
     {
@@ -60,5 +59,4 @@ class UserFormRequest extends FormRequest
             'branchstring.required_without' =>'Branches or Branchstring required for branchmanagers',
         ];
     }
-
 }

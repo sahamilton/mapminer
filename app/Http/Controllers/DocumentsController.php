@@ -17,11 +17,11 @@ class DocumentsController extends BaseController
     public $document;
     public $process;
     public $vertical;
-    public function __construct(Document $document, SalesProcess $process, SearchFilter $vertical){
+    public function __construct(Document $document, SalesProcess $process, SearchFilter $vertical)
+    {
         $this->document = $document;
         $this->process = $process;
         $this->vertical = $vertical;
-
     }
 
     /**
@@ -31,8 +31,8 @@ class DocumentsController extends BaseController
      */
     public function index()
     {
-        $documents = $this->document->with('rankings','rank','score','author','vertical','process')->get();
-        return response()->view('documents.index',compact('documents'));
+        $documents = $this->document->with('rankings', 'rank', 'score', 'author', 'vertical', 'process')->get();
+        return response()->view('documents.index', compact('documents'));
     }
 
     /**
@@ -42,10 +42,10 @@ class DocumentsController extends BaseController
      */
     public function create()
     {
-       $verticals = $this->vertical->industrysegments();
+        $verticals = $this->vertical->industrysegments();
 
-        $process = $this->process->pluck('step','id');
-        return response()->view('documents.create',compact('verticals','process'));
+        $process = $this->process->pluck('step', 'id');
+        return response()->view('documents.create', compact('verticals', 'process'));
     }
 
     /**
@@ -65,10 +65,11 @@ class DocumentsController extends BaseController
         $document->vertical()->attach(request('vertical'));
         $document->process()->attach(request('salesprocess'));
 
-        if ($data['plaintext']==''){
-            return redirect()->route('documents.index')->with('warning','Document added but full text is not included in search. Possibly a secured document.');
+        if ($data['plaintext']=='') {
+            return redirect()->route('documents.index')->with('warning', 'Document added but full text is not included in search. Possibly a secured document.');
         }
-        return redirect()->route('documents.index')->with('success','Document added but not in full text search');;
+        return redirect()->route('documents.index')->with('success', 'Document added but not in full text search');
+        ;
     }
 
     /**
@@ -80,7 +81,7 @@ class DocumentsController extends BaseController
     public function show($id)
     {
         $document = $this->document->with('author')->findOrFail($id);
-        return response()->view('documents.show',compact('document'));
+        return response()->view('documents.show', compact('document'));
     }
 
     /**
@@ -92,9 +93,9 @@ class DocumentsController extends BaseController
     public function edit($id)
     {
         $verticals = $this->vertical->industrysegments();
-        $process = $this->process->pluck('step','id');
+        $process = $this->process->pluck('step', 'id');
         $document = $this->document->findOrFail($id);
-        return response()->view('documents.edit',compact('document','verticals','process'));
+        return response()->view('documents.edit', compact('document', 'verticals', 'process'));
     }
 
     /**
@@ -129,12 +130,12 @@ class DocumentsController extends BaseController
          return redirect()->route('documents.index');
     }
 
-    public function select(){
+    public function select()
+    {
         $verticals = $this->vertical->vertical();
 
-        $process = $this->process->pluck('step','id');
-        return response()->view('documents.select',compact('verticals','process'));
-
+        $process = $this->process->pluck('step', 'id');
+        return response()->view('documents.select', compact('verticals', 'process'));
     }
     /*
      * Select documents filtered by sales process and vertical.
@@ -143,13 +144,14 @@ class DocumentsController extends BaseController
      * @return \Illuminate\Http\Response
 
      */
-    public function getDocuments(Request $request){
+    public function getDocuments(Request $request)
+    {
 
         $data = request()->all();
 
         $documents = $this->document->getDocumentsWithVerticalProcess($data);
 
-        return response()->view('documents.index',compact('documents','data'));
+        return response()->view('documents.index', compact('documents', 'data'));
     }
     /*
      * Accept user ranking of document
@@ -163,23 +165,16 @@ class DocumentsController extends BaseController
     {
         
 
-       $user = User::where('api_token','=',request('api_token'))->first();
-       if($user->rankings()->sync([request('id') => ['rank' => request('value')]],false))
-
-        {
+        $user = User::where('api_token', '=', request('api_token'))->first();
+        if ($user->rankings()->sync([request('id') => ['rank' => request('value')]], false)) {
             return 'success';
         }
         return 'error';
-    
-       
     }
    
-    public function watchedby ($id)
+    public function watchedby($id)
     {
-        $document = $this->document->with('rankings','owner','owner.person')->find($id);
-        return response()->view('documents.watchedby',compact('document'));
+        $document = $this->document->with('rankings', 'owner', 'owner.person')->find($id);
+        return response()->view('documents.watchedby', compact('document'));
     }
-    
-    
-    
 }

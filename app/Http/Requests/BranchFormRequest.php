@@ -24,8 +24,7 @@ class BranchFormRequest extends FormRequest
     public function rules()
     {
        
-      if($this->method()== 'POST'){
-
+        if ($this->method()== 'POST') {
             return ['branchname'=>'required',
             'id'=>'required|unique:branches,id',
             'street'=>'required',
@@ -35,10 +34,9 @@ class BranchFormRequest extends FormRequest
             'region_id'=>'required',
             'radius'=>'required',
             'serviceline'=>'required',
-            'roles'=>'required',  
+            'roles'=>'required',
             ];
-    }else{
-            
+        } else {
             return ['branchname'=>'required',
             'id'=>'required|unique:branches,id,'.$this->id,
             'street'=>'required',

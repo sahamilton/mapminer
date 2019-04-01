@@ -1,9 +1,9 @@
 <?php
 
 namespace App;
+
 use Carbon\Carbon;
-
-
+use Illuminate\Http\Request;
 class Imports extends Model
 {
     	public $table;
@@ -90,8 +90,46 @@ class Imports extends Model
 		}
 
 
-		//
+        //
 
+        return true;
+    }
+
+   
+    
+    private function truncateImportTable()
+    {
+       return $this->executeQuery("TRUNCATE TABLE ". $this->temptable); 
+    }
+    
+    private function addLeadSourceRef($request)
+    {
+        // need to fix the type field
+        
+        
+        return $this->executeQuery("update ".$this->temptable." set lead_source_id='".request('lead_source_id')."'");
+    }
+    private function addCreateAtField()
+    {
+        // Import from the CSV file
+
+        // make sure we bring the created at field across
+        $this->fields.=",created_at";
+        return $this->executeQuery("update ".$this->temptable." set created_at ='".now()->toDateTimeString()."'");
+    }
+    public function createPositon()
+    {
+        
+       $this->executeQuery("update ".$this->temptable." set position = POINT(lng, lat);");
+    
+       // $this->executeQuery("update ".$this->temptable." set position = ST_GeomFromText(ST_AsText(position), 4326)");
+    }
+    private function updateAdditionalFields(Request $request)
+    {
+       foreach (request('additionaldata') as $key=>$data){
+        $this->executeQuery("update ".$this->temptable." set " . $key . " = " . $data . ";");
+       }
+    
 		return true;
 		}
 
@@ -131,125 +169,84 @@ class Imports extends Model
 		}
 		return LeadSource::create($lead_import_id);
 	}
-	private function addLeadSourceRef($request){
-		// need to fix the type field
-		
-		
-		return $this->executeQuery("update ".$this->temptable." set lead_source_id='".request('lead_source_id')."'");
-		
-	}
-	private function addCreateAtField(){
-		// Import from the CSV file
 
-		// make sure we bring the created at field across
-		$this->fields.=",created_at";
-		return $this->executeQuery("update ".$this->temptable." set created_at ='".now()->toDateTimeString()."'");
-	}
+   
 
-	private function updateAdditionalFields(){
-	//Add the project source id
+// we should dedupe here 
+    private function copyTempToBaseTable()
+    {
+        $this->fields = str_replace('@ignore,', '', $this->fields).",lead_source_id,position";
+        $this->fields = implode(",", array_diff(explode(",", $this->fields), $this->contactFields));
 
-	//foreach ($this->additionaldata as)
+        // Copy addresses over to base table
+        $query ="INSERT IGNORE INTO `".$this->table."` (import_ref,".$this->fields.") SELECT id,".$this->fields." FROM `".$this->temptable."`";
+    
+        return $this->executeQuery($query);
+    }
 
+    private function copyAddressIdBackToImportTable($import)
+    {
+    //update addresses_import,addresses set addresses_import.addressable_id = addresses.id where addresses.import_ref = addresses_import.id
+        $query ="update " . $this->temptable. ",". $this->table . " set " . $this->temptable.".address_id = addresses.id where addresses.import_ref = ".$this->temptable.".id and ". $this->table . ".lead_source_id = '".$import."'";
 
-	foreach ($this->additionaldata as $field=>$value){
+        return $this->executeQuery($query);
+    }
 
-			$this->fields.= ",".$field;
+    private function copyContactsToContactsTable()
+    {
+        $query ="INSERT IGNORE INTO `contacts` (".implode(",", $this->contactFields).") 
+		SELECT ".implode(",", $this->contactFields)." FROM `".$this->temptable."`";
+        return $this->executeQuery($query);
+    }
 
-			$this->executeQuery("update ".$this->temptable." set ". $field. " ='".$value."'");
-		}
-		return true;
-	}
+    private function nullImportRefField()
+    {
+        return $this->executeQuery("update " . $this->table . " set import_ref = null");
+    }
+    // Drop the temp table
+    //
+    private function dropTempTable()
+    {
+        //return $this->executeQuery("DROP TABLE ".$this->temptable);
+    }
 
+    private function truncateTempTable()
+    {
+        return $this->executeQuery("TRUNCATE TABLE ".$this->temptable);
+    }
 
-	private function copyTempToBaseTable(){
-		$this->fields = str_replace('@ignore,','',$this->fields).",lead_source_id,position";
-		$this->fields = implode(",",array_diff(explode(",",$this->fields),$this->contactFields));
-
-		// Copy addresses over to base table
-		$query ="INSERT IGNORE INTO `".$this->table."` (import_ref,".$this->fields.") SELECT id,".$this->fields." FROM `".$this->temptable."`";
-	
-		return $this->executeQuery($query);
-	}
-
-	private function copyAddressIdBackToImportTable($import){
-	//update addresses_import,addresses set addresses_import.addressable_id = addresses.id where addresses.import_ref = addresses_import.id
-		$query ="update " . $this->temptable. ",". $this->table . " set " . $this->temptable.".address_id = addresses.id where addresses.import_ref = ".$this->temptable.".id and ". $this->table . ".lead_source_id = '".$import."'";
-
-		return $this->executeQuery($query);
-
-	}
-
-	private function copyContactsToContactsTable(){
-		$query ="INSERT IGNORE INTO `contacts` (".implode(",",$this->contactFields).") 
-		SELECT ".implode(",",$this->contactFields)." FROM `".$this->temptable."`";
-		return $this->executeQuery($query);
-	}
-
-	private function nullImportRefField(){
-		return $this->executeQuery("update " . $this->table . " set import_ref = null");
-	}
-	// Drop the temp table
-	//
-	private function dropTempTable(){
-		//return $this->executeQuery("DROP TABLE ".$this->temptable);
-	 }
-
-	 private function truncateTempTable(){
-		return $this->executeQuery("TRUNCATE TABLE ".$this->temptable);
-	 }
-
-	public function executeQuery($query)
-	{
-		try{
-			return \DB::statement($query);
-		}
-		catch (Exception $e)
-		{
-		 throw new Exception( 'Something really has gone wrong with the import:\r\n<br />'.$query, 0, $e);
-
-		}
-
-	}
+    public function executeQuery($query)
+    {
+        try {
+            return \DB::statement($query);
+        } catch (Exception $e) {
+            throw new Exception('Something really has gone wrong with the import:\r\n<br />'.$query, 0, $e);
+        }
+    }
 
 
 
-   public function _import_csv()
-	{
-		
-	$query = sprintf("LOAD DATA LOCAL INFILE '".$this->importfilename."' INTO TABLE ". $this->temptable." CHARACTER SET latin1 FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '\"' ESCAPED BY '\"' LINES TERMINATED BY '\\n'  IGNORE 1 LINES (".$this->fields.");", $this->importfilename);
-
-
-	try {
-		return  \DB::connection()->getpdo()->exec($query);
-	}
-	catch (Exception $e)
-		{
-		 throw new Exception( 'Something really has gone wrong with the import:\r\n<br />'.$query, 0, $e);
-
-		}
-
-	}
-
-	public function truncateImport($table){
-
-		$query = 'truncate ' . $table;
-		try {
-			return  \DB::connection()->getpdo()->exec($query);
-		}
-		catch (Exception $e)
-		{
-		 throw new Exception( 'Something really has gone wrong with the import:\r\n<br />'.$query, 0, $e);
-
-		}
-	}
-
-	public function createPositon(){
-		
-		$this->executeQuery("update ".$this->temptable." set position = POINT(lng, lat);");
-	
-		//$this->executeQuery("update ".$this->temptable." set position = ST_GeomFromText(ST_AsText(position), 4326)");
+    public function _import_csv()
+    {
         
-	}
+        $query = sprintf("LOAD DATA LOCAL INFILE '".$this->importfilename."' INTO TABLE ". $this->temptable." CHARACTER SET latin1 FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '\"' ESCAPED BY '\"' LINES TERMINATED BY '\\n'  IGNORE 1 LINES (".$this->fields.");", $this->importfilename);
 
+
+        try {
+            return  \DB::connection()->getpdo()->exec($query);
+        } catch (Exception $e) {
+             throw new Exception('Something really has gone wrong with the import:\r\n<br />'.$query, 0, $e);
+        }
+    }
+
+    public function truncateImport($table)
+    {
+
+        $query = 'truncate ' . $table;
+        try {
+            return  \DB::connection()->getpdo()->exec($query);
+        } catch (Exception $e) {
+            throw new Exception('Something really has gone wrong with the import:\r\n<br />'.$query, 0, $e);
+        }
+    }   
 }

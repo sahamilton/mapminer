@@ -26,8 +26,8 @@ class CreateProjectcompanyTable extends Migration
             $table->string('zipcode')->nullable();
             $table->string('county')->nullable();
             $table->string('phone')->nullable();
-            $table->decimal('company_lat',20,14)->nullable();
-            $table->decimal('company_lng',20,14)->nullable();
+            $table->decimal('company_lat', 20, 14)->nullable();
+            $table->decimal('company_lng', 20, 14)->nullable();
             $table->timestamps();
         });
     }

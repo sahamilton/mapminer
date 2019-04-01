@@ -57,7 +57,7 @@ return [
         ],
          'bugsnag' => [
             'driver' => 'bugsnag',
-        ],
+         ],
 
         'syslog' => [
             'driver' => 'syslog',

@@ -29,25 +29,23 @@ class BranchManagementRequest extends FormRequest
         return [
             'branch.*' => 'exists:branches,id', // check each item in the array
         ];
-
     }
 
     public function messages()
-{
-    return [
+    {
+        return [
         'branch.*.exists' => 'One or more of the branch ids is invalid',
        
-    ];
-}
+        ];
+    }
     protected function getValidatorInstance()
-{
-    $data = $this->all();
-    $data['branch'] = array_filter(array_unique(explode(",", $data['branches'])));
-    $this->getInputSource()->replace($data);
+    {
+        $data = $this->all();
+        $data['branch'] = array_filter(array_unique(explode(",", $data['branches'])));
+        $this->getInputSource()->replace($data);
 
     /*modify data before send to validator*/
 
-    return parent::getValidatorInstance();
-}
-
+        return parent::getValidatorInstance();
+    }
 }

@@ -8,5 +8,4 @@ class Customer extends Model
 {
     public $fillable = [];
     public $table = 'customer';
-
 }

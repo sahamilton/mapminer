@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\SearchFilter;
 use App\PersonIndustry;
 use App\Person;
@@ -26,10 +27,10 @@ class PersonIndustryController extends Controller
      */
     public function index()
     {
-        $industries = $this->industry->with('industry')->where('person_id','=',auth()->user()->person->id)->get()->pluck('industry.id')->toArray();
+        $industries = $this->industry->with('industry')->where('person_id', '=', auth()->user()->person->id)->get()->pluck('industry.id')->toArray();
 
-        $filters = $this->searchfilter->where('filter','=','Industry & Segments')->first()->getDescendantsAndSelf();
-        return response()->view('industries.index',compact('industries','filters'));
+        $filters = $this->searchfilter->where('filter', '=', 'Industry & Segments')->first()->getDescendantsAndSelf();
+        return response()->view('industries.index', compact('industries', 'filters'));
     }
 
     /**
@@ -52,7 +53,7 @@ class PersonIndustryController extends Controller
     {
         $person = $this->person->findOrFail(request('id'));
         $person->industryfocus()->sync(request('vertical'));
-        return redirect()->route('user.show',auth()->user()->id);
+        return redirect()->route('user.show', auth()->user()->id);
     }
 
     /**
@@ -86,7 +87,6 @@ class PersonIndustryController extends Controller
      */
     public function update(Request $request)
     {
-        
     }
 
     /**

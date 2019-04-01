@@ -1,5 +1,6 @@
 <?php
 namespace App\Http\Controllers;
+
 use App\Watch;
 use App\User;
 use App\Location;
@@ -131,104 +132,100 @@ class WatchController extends BaseController {
 				$sheet->loadview('watch.export',compact('result'));
 			});
 		})->download('csv');*/
-	}
-	
-	
-	
-	public function showwatchmap() {
-		$data = NULL;
-		$result = $this->watch->getMyWatchList(auth()->user()->id);
-		
+    }
+    
+    
+    
+    public function showwatchmap()
+    {
+        $data = null;
+        $result = $this->watch->getMyWatchList(auth()->user()->id);
+        
 
-		if(count($result) >0){
-			foreach ($result as $row) {
-				if($row->watching){
-				$lat[]=$row->watching->lat;
-				$lng[]=$row->watching->lng;
-				}
-			}
+        if (count($result) >0) {
+            foreach ($result as $row) {
+                if ($row->watching) {
+                    $lat[]=$row->watching->lat;
+                    $lng[]=$row->watching->lng;
+                }
+            }
 
-			$data['lat'] = array_sum($lat) / count($lat);
-			$data['lng'] = array_sum($lng) / count($lng);
-		}
-		return response()->view('watch.map', compact('data'));
-		
-	}
-	
-	
-	public function watchmap(){
-		$locations = $this->watch->getMyWatchList(auth()->user()->id);
-		
+            $data['lat'] = array_sum($lat) / count($lat);
+            $data['lng'] = array_sum($lng) / count($lng);
+        }
+        return response()->view('watch.map', compact('data'));
+    }
+    
+    
+    public function watchmap()
+    {
+        $locations = $this->watch->getMyWatchList(auth()->user()->id);
+        
 
-		$content = view('watch.watchlistxml', compact('locations'));
+        $content = view('watch.watchlistxml', compact('locations'));
         return response($content, 200)
-            ->header('Content-Type', 'text/xml');	
+            ->header('Content-Type', 'text/xml');
+    }
+    
+    
+    public function watchupdate(Request $request)
+    {
+        
+        switch (request('action')) {
+            case 'add':
+                if ($this->add(request('id'))) {
+                    return 'success';
+                    ;
+                } else {
+                    return 'error';
+                }
+                
+             
+                break;
+            
+            case 'remove':
+                $watch = $this->watch->where("address_id", "=", request('id'))->where("user_id", "=", auth()->id())->firstOrFail();
 
-		
-		
-	}
-	
-	
-	public function watchupdate(Request $request) {
-		
-		switch (request('action')) {
-			case 'add':
-			if($this->add(request('id'))){
+                if ($watch->destroy($watch->id)) {
+                    return 'success';
+                    ;
+                } else {
+                    return 'error';
+                }
+                break;
+        }
+    }
 
-					return 'success';;
-				}else{
-					return 'error';
-				}
-				
-			 
-			break;
-			
-			case 'remove':
-		
-				$watch = $this->watch->where("address_id","=",request('id'))->where("user_id","=",auth()->id())->firstOrFail();
+    public function companywatchexport(Request $request)
+    {
 
-				if ($watch->destroy($watch->id)){
-					return 'success';;
-				}else{
-					return 'error';
-				}
-			break;	
-			
-		}
-		
-		
-	}
+        if (request()->has('id')) {
+            $accounts = explode(",", str_replace("'", "", request('id')));
 
-	public function companywatchexport(Request $request){
-
-		if(request()->has('id')){
-			$accounts = explode(",",str_replace("'","",request('id')));
-
-			Excel::download('Watch_List_for_',function($excel) use($accounts){
-			$excel->sheet('Watching',function($sheet) use($accounts) {
-			$result = Location::whereIn('company_id',$accounts)->has('watchedBy')
-			->with('relatedNotes','relatedNotes.writtenBy','company','watchedBy','watchedBy.person')
-			->get();
-				$sheet->loadview('watch.companyexport',compact('result'));
-			});
-		})->download('csv');
-		}
-		
-	}
+            Excel::download('Watch_List_for_', function ($excel) use ($accounts) {
+                $excel->sheet('Watching', function ($sheet) use ($accounts) {
+                    $result = Location::whereIn('company_id', $accounts)->has('watchedBy')
+                    ->with('relatedNotes', 'relatedNotes.writtenBy', 'company', 'watchedBy', 'watchedBy.person')
+                    ->get();
+                    $sheet->loadview('watch.companyexport', compact('result'));
+                });
+            })->download('csv');
+        }
+    }
 
 
 
-	public function getCompaniesWatched()
-	{
-		$watch = $this->watch->getMyWatchList(auth()->user()->id);
-		$data['verticals'] = $this->watch->getUserVerticals();
+    public function getCompaniesWatched()
+    {
+        $watch = $this->watch->getMyWatchList(auth()->user()->id);
+        $data['verticals'] = $this->watch->getUserVerticals();
 
-		if($data['verticals']){
-			$data['verticals'] = null;
-		}
-		$data['salesprocess'] = null;
-		$documents = $this->document->getDocumentsWithVerticalProcess($data);
+        if ($data['verticals']) {
+            $data['verticals'] = null;
+        }
+        $data['salesprocess'] = null;
+        $documents = $this->document->getDocumentsWithVerticalProcess($data);
 
-		return response()->view('resources.show', compact('watch','documents'));
-	}
+        return response()->view('resources.show', compact('watch', 'documents'));
+    }
 }

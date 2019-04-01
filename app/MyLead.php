@@ -8,20 +8,20 @@ class MyLead extends Lead
 {
     
 
-	public $fillable = ['companyname',
-			'businessname',
+    public $fillable = ['companyname',
+            'businessname',
             'customer_number',
-			'address',
-			'city',
-			'state',
-			'zip',
+            'address',
+            'city',
+            'state',
+            'zip',
             'phone',
-			'description',
-			'lat',
-			'lng',
-			'lead_source_id',
+            'description',
+            'lat',
+            'lng',
+            'lead_source_id',
             'user_id'];
-	public $getStatusOptions =  [
+    public $getStatusOptions =  [
     
         1=>'Prospect data is completely inaccurate. No project or project completed.',
         2=>'Prospect data is incomplete and / or not useful.',
@@ -29,16 +29,19 @@ class MyLead extends Lead
         4=>'Prospect data is accurate and there is a possibility of sales / service.',
         5=>'Prospect data is accurate and there is a definite opportunity for sales / service'
       ];
-    public function relatedLeadNotes() {
+    public function relatedLeadNotes()
+    {
       
-      return $this->hasMany(MyLeadActivity::class,'related_id')->where('type','=','mylead')->with('writtenBy');
-     }
-
-    public function contacts(){
-      return $this->hasMany(LeadContact::class,'lead_id');
+        return $this->hasMany(MyLeadActivity::class, 'related_id')->where('type', '=', 'mylead')->with('writtenBy');
     }
 
-    public function addClosingNote($request){
+    public function contacts()
+    {
+        return $this->hasMany(LeadContact::class, 'lead_id');
+    }
+
+    public function addClosingNote($request)
+    {
         $note = new Note;
         $note->note = "Lead Closed:" .request('comments');
         $note->type = 'lead';
@@ -47,8 +50,8 @@ class MyLead extends Lead
         return $note->save();
     }
 
-    public function address(){
-        return $this->belongsTo(Address::class,'id','addressable_id');
+    public function address()
+    {
+        return $this->belongsTo(Address::class, 'id', 'addressable_id');
     }
-
 }

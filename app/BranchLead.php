@@ -10,11 +10,13 @@ class BranchLead extends Model
 
     public $fillable = [];
 
-    public function address(){
-    	return $this->belongsTo(Address::class);
+    public function address()
+    {
+        return $this->belongsTo(Address::class);
     }
 
-    public function branch(){
-    	return $this->belongsTo(Branch::class);
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class);
     }
 }

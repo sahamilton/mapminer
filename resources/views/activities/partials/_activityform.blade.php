@@ -38,6 +38,14 @@
               </span>
               
           </div>
+          <div class="form-group inline">
+            <label class="col-md-4 control-label" for="completed">Completed</label>
+            <input class="form-control"
+            type="checkbox"
+            name="completed"
+            checked
+            />
+          </div>
           @if($location && $location->contacts && $location->contacts->count()>0)
           
           <div class="form-group{{ $errors->has('activity_date)') ? ' has-error' : '' }}">
@@ -69,4 +77,13 @@
               </span>
              
           </div>
+          <div class="form-group">
+              <label class="col-md-4 control-label">Follow Up Activity:</label>
+              
+              <select  id="followup_activity" name="followup_activity">
+                @foreach ($activities as $key=>$type)
+                  <option value="{{$key}}">{{$type}}</option>
+                @endforeach
+        </select>
+        </div>
          

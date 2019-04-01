@@ -48,7 +48,7 @@
 
     
     
-    <script>
+<script>
 	if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(successFunction, errorFunction);
 } else {

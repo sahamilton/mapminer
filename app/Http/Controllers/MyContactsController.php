@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Contact;
 use Illuminate\Http\Request;
 
@@ -8,7 +9,8 @@ class MyContactsController extends Controller
 {
     public $contacts;
 
-    public function __construct(Contact $contacts){
+    public function __construct(Contact $contacts)
+    {
 
         $this->contacts = $contacts;
     }
@@ -21,7 +23,7 @@ class MyContactsController extends Controller
     {
         $contacts = $this->contacts->getMyContacts();
         $title="My Contacts";
-        return response()->view('contacts.index',compact('contacts','title'));
+        return response()->view('contacts.index', compact('contacts', 'title'));
     }
 
     /**

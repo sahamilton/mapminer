@@ -4,22 +4,21 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Factory;
+
 class DocumentFormRequest extends FormRequest
 {
     private $mimetypes = ['application/msword','application/vnd.openxmlformats-officedocument.wordprocessingml.document',
     'application/pdf'];
     public function __construct(Factory $factory)
     {
-    $factory->extend(
-        'empty_with', function($attribute, $value, $parameters)
-    {
-        return ($value != '' && $parameters[0] != '') ? false : true;
-    },'Enter either file or link but not both'
-
-
-       
-    );
-}
+        $factory->extend(
+            'empty_with',
+            function ($attribute, $value, $parameters) {
+                return ($value != '' && $parameters[0] != '') ? false : true;
+            },
+            'Enter either file or link but not both'
+        );
+    }
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -43,7 +42,7 @@ class DocumentFormRequest extends FormRequest
             'description'=>'required',
             'datefrom'=>'required|date',
             'dateto'=>'required',
-            'file'=>'required_without_all:location|file|mimetypes:'.implode(",",$this->mimetypes),
+            'file'=>'required_without_all:location|file|mimetypes:'.implode(",", $this->mimetypes),
             'location'=>'required_without_all:file',
             'vertical'=>'required',
             'salesprocess'=>'required',

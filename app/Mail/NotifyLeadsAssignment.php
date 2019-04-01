@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Mail;
+
 use App\Person;
 use App\Branch;
 use App\LeadSource;
@@ -21,15 +22,14 @@ class NotifyLeadsAssignment extends Mailable
      *
      * @return void
      */
-    public function __construct($data,Person $manager,LeadSource $leadsource,Branch $branch){
+    public function __construct($data, Person $manager, LeadSource $leadsource, Branch $branch)
+    {
         $this->data = $data;
         $this->branch = $branch;
         
         $this->manager = $manager;
 
         $this->leadsource = $leadsource;
-       
- 
     }
 
     /**
@@ -41,10 +41,8 @@ class NotifyLeadsAssignment extends Mailable
     {
         
       
-        return $this->from('salesoperations@tbmapminer.com','Sales Operations')
+        return $this->from('salesoperations@tbmapminer.com', 'Sales Operations')
         ->markdown('emails.leadsnotify')
                 ->subject('New Leads Assigned');
-        }
-
-
+    }
 }

@@ -2,7 +2,8 @@
 
 namespace App;
 
-interface TextInterface {
-	
-	public function read($location);
+interface TextInterface
+{
+    
+    public function read($location);
 }

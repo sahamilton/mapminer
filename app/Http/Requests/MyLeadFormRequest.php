@@ -40,11 +40,8 @@ class MyLeadFormRequest extends FormRequest
     {
       
 
-        if ($this->has('phone'))
-        { 
-            $this->merge(['phone'=>preg_replace("/[^0-9]/","",$this->phone)]);
+        if ($this->has('phone')) {
+            $this->merge(['phone'=>preg_replace("/[^0-9]/", "", $this->phone)]);
         }
-
     }
-
 }

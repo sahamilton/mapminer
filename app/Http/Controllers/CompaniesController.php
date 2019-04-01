@@ -1,5 +1,6 @@
 <?php
 namespace App\Http\Controllers;
+
 use App\User;
 use App\State;
 use App\Person;
@@ -14,56 +15,57 @@ use Illuminate\Http\Request;
 use App\Exports\CompaniesExport;
 use App\Http\Requests\CompanyFormRequest;
 
-class CompaniesController extends BaseController {
+class CompaniesController extends BaseController
+{
 
 
-	public $user;
-	public $company;
-	public $address;
-	public $locations;
-	public $searchfilter;
-	public $person;
-	public $limit = 500;
-	public $NAMRole =['4'];
+    public $user;
+    public $company;
+    public $address;
+    public $locations;
+    public $searchfilter;
+    public $person;
+    public $limit = 500;
+    public $NAMRole =['4'];
 
 
-	public function __construct(Company $company, Address $address, Location $location, SearchFilter $searchfilter,User $user,Person $person) {
+    public function __construct(Company $company, Address $address, Location $location, SearchFilter $searchfilter, User $user, Person $person)
+    {
 
-		$this->company = $company;
-		$this->locations = $location;
-		$this->searchfilter = $searchfilter;
-		$this->user = $user;
-		$this->person = $person;
-		$this->address = $address;
-		parent::__construct($this->address);
+        $this->company = $company;
+        $this->locations = $location;
+        $this->searchfilter = $searchfilter;
+        $this->user = $user;
+        $this->person = $person;
+        $this->address = $address;
+        parent::__construct($this->address);
+    }
 
-	}
 
+    /**
+     * Display a listing of companies
+     *
+     * @return View
+     */
 
-	/**
-	 * Display a listing of companies
-	 *
-	 * @return View
-	 */
+    public function index()
+    {
+        $filtered = $this->company->isFiltered(['companies'], ['vertical']);
+        
+        $myLocation =$this->locations->getMyPosition();
+        
+        $companies = $this->company->whereHas('locations', function ($q) use ($myLocation) {
+            $q->nearby($myLocation, 25);
+        })
+        ->withCount('locations')
+            ->with('managedBy', 'managedBy.userdetails', 'industryVertical', 'serviceline')
+        ->get();
 
-	public function index()
-	{
-		$filtered = $this->company->isFiltered(['companies'],['vertical']);
-		
-		$myLocation =$this->locations->getMyPosition();
-		
-		$companies = $this->company->whereHas('locations', function ($q) use ($myLocation){
-			$q->nearby($myLocation,25);
-		})
-		->withCount('locations')
-			->with('managedBy','managedBy.userdetails','industryVertical','serviceline')
-		->get();
+        $locationFilter = 'both';
+        return response()->view('companies.index', compact('companies', 'title', 'filtered', 'locationFilter'));
+    }
 
-		$locationFilter = 'both';
-		return response()->view('companies.index', compact('companies','title','filtered','locationFilter'));
-	}
-
-	/*
+    /*
 	Function filter
 
 	 * Returns list of companies based on selection: with or without locations
@@ -72,35 +74,32 @@ class CompaniesController extends BaseController {
 	 */
 
 
-	public function filter(Request $request){
+    public function filter(Request $request)
+    {
 
 
-		if(request('locationFilter')=='both'){
+        if (request('locationFilter')=='both') {
+            return redirect()->route('company.index');
+        }
+        $filtered = $this->company->isFiltered(['companies'], ['vertical']);
+        $companies=$this->company->getAllCompanies($filtered);
 
-			return redirect()->route('company.index');
-		}
-		$filtered = $this->company->isFiltered(['companies'],['vertical']);
-		$companies=$this->company->getAllCompanies($filtered);
 
+        if (request('locationFilter') == 'nolocations') {
+            $companies = $companies->whereDoesntHave('locations')->get();
 
-		if(request('locationFilter') == 'nolocations'){
+            $title = 'Accounts without Locations';
+        } else {
+            $companies = $companies->whereHas('locations')->get();
 
-			$companies = $companies->whereDoesntHave('locations')->get();
+            $title = 'Accounts with Locations';
+        }
 
-			$title = 'Accounts without Locations';
+        $locationFilter = request('locationFilter');
 
-		}else{
-			$companies = $companies->whereHas('locations')->get();
+        return response()->view('companies.index', compact('companies', 'title', 'filtered', 'locationFilter'));
+    }
 
-			$title = 'Accounts with Locations';
-
-		}
-
-		$locationFilter = request('locationFilter');
-
-		return response()->view('companies.index', compact('companies','title','filtered','locationFilter'));
-
-	}
 
 
 	/**
@@ -529,27 +528,28 @@ class CompaniesController extends BaseController {
 	 * @param () none
 	 * @return (array) mywatchlist
 	 */
-	public function getWatchList() {
-		$mywatchlist = array();
-		$watchlist = $this->user->where('id','=',\Auth::id())->with('watching')->get();
-		foreach($watchlist as $watching) {
-			foreach($watching->watching as $watched) {
-				$mywatchlist[]=$watched->id;
-			}
-		}
-		return $mywatchlist;
-	}
+    public function getWatchList()
+    {
+        $mywatchlist = [];
+        $watchlist = $this->user->where('id', '=', \Auth::id())->with('watching')->get();
+        foreach ($watchlist as $watching) {
+            foreach ($watching->watching as $watched) {
+                $mywatchlist[]=$watched->id;
+            }
+        }
+        return $mywatchlist;
+    }
 
 
-	/*
+    /*
 
 	Export all account with manager details to Excel
 	 */
-	public function exportAccounts()
-	{
-		
-		return Excel::download(new CompaniesExport(), 'Companies.csv');
-		/*Excel::download('AllCompanies',function($excel){
+    public function exportAccounts()
+    {
+        
+        return Excel::download(new CompaniesExport(), 'Companies.csv');
+        /*Excel::download('AllCompanies',function($excel){
 			$excel->sheet('Companies',function($sheet) {
 				$companies = $this->company
 
@@ -564,24 +564,26 @@ class CompaniesController extends BaseController {
 				$sheet->loadview('companies.exportcompanies',compact('companies'));
 			});
 		})->download('csv');*/
-
-	}
-	/*
+    }
+    /*
 	Generate the form to choose companies to download locations
 	 */
 
-	public function export($company){
-		$companies = $this->company
-						->whereHas('serviceline', function($q){
-							    $q->whereIn('serviceline_id', $this->userServiceLines);
+    public function export()
+    {
+        
 
-							})
-						->orderBy('companyname')->pluck('companyname','id');
 
-		return response()->view('locations.export',compact('companies'));
-	}
+        $companies = $this->company
+                        ->whereHas('serviceline', function ($q) {
+                                $q->whereIn('serviceline_id', $this->userServiceLines);
+                        })
+                        ->orderBy('companyname')->pluck('companyname', 'id');
 
-	/*
+        return response()->view('locations.export', compact('companies'));
+    }
+
+    /*
 	 * Function locationsexport
 	 *
 	 * Export locations of chosen company
@@ -589,33 +591,15 @@ class CompaniesController extends BaseController {
 	 * @param () Company
 	 * @return (array) mywatchlist
 	 */
-	public function locationsexport(Request $request, $company) {
+    public function locationsexport(Request $request)
+    {
+        $company =  $this->company
+                    ->whereHas('serviceline', function($q){
+                        $q->whereIn('serviceline_id', $this->userServiceLines);
+                    })
+                    ->with('locations')
+                    ->findOrFail(request('company'));
 
-
-
-		return Excel::download(new CompanyWithLocationsExport($company), $company->companyname. " locations");
-
-		/*$id = request('company');
-
-		$company = $this->company->findOrFail($id);
-		Excel::download($company->companyname. " locations",function($excel) use($id){
-			$excel->sheet('Watching',function($sheet) use($id) {
-				$company = 	$this->company
-					->whereHas('serviceline', function($q){
-							    $q->whereIn('serviceline_id', $this->userServiceLines);
-
-							})
-
-					->with('locations')
-					->findOrFail($id);
-				$sheet->loadview('locations.exportlocations',compact('company'));
-			});
-		})->download('csv');*/
-
-
-
-	}
-
-
-
+        return Excel::download(new CompanyWithLocationsExport($company), $company->companyname. " locations.csv");
+    }
 }

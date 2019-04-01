@@ -8,7 +8,6 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\User;
 
-
 class UserNotification extends Mailable
 {
     use Queueable, SerializesModels;
@@ -28,9 +27,7 @@ class UserNotification extends Mailable
         $this->user = $user->with('person')->first();
         //$this->person = Person::where('id','=',$this->user->person_id)->first();
     
-dd($this->user);
-      
-
+        dd($this->user);
     }
 
     /**
@@ -41,8 +38,7 @@ dd($this->user);
     public function build()
     {
     
-        if($this->user->status == 'active'){
-
+        if ($this->user->status == 'active') {
             return $this->markdown('emails.usernotification')->to($this->user->email);
         }
         //return $this->markdown('emails.usernotification');

@@ -10,7 +10,6 @@ use App\LeadSource;
 
 use App\Http\Requests\LeadImportFormRequest;
 
-
 class AddressImportController extends ImportController
 {
     public $lead;
@@ -33,7 +32,7 @@ class AddressImportController extends ImportController
     // $extrafields = ['leads']['description'];
 
 
-    public $contactfields =[ 
+    public $contactfields =[
                 'address_id',
                 'firstname',
                 'lastname',
@@ -42,34 +41,34 @@ class AddressImportController extends ImportController
                 'phone',
                 'created_at'
     ];
-    public function __construct(Address $address, LeadSource $leadsource,LeadImport $import){
+    public function __construct(Address $address, LeadSource $leadsource, LeadImport $import)
+    {
         $this->address = $address;
         $this->import = $import;
         $this->leadsources = $leadsource;
-
-        
     }
 
-    public function getFile(Request $request,$id=null,$type=null){
+    public function getFile(Request $request, $id = null, $type = null)
+    {
 
-        $sources= $this->leadsources->all()->pluck('source','id');
-        if($sources->count() == 0){
-            return redirect()->route('leadsource.index')->with('error','You must create a lead source first');
+        $sources= $this->leadsources->all()->pluck('source', 'id');
+        if ($sources->count() == 0) {
+            return redirect()->route('leadsource.index')->with('error', 'You must create a lead source first');
         }
-        if($id){
-            
+        if ($id) {
             $leadsource = $this->leadsources->find($id);
         }
         $requiredFields = $this->address->requiredfields;
-       if($type=='assigned'){
-           $requiredFields[] = 'employeee_number';
-       }
+        if ($type=='assigned') {
+            $requiredFields[] = 'employeee_number';
+        }
        
-        return response()->view('leads.import',compact ('sources','leadsource','requiredFields','type'));
+        return response()->view('leads.import', compact('sources', 'leadsource', 'requiredFields', 'type'));
     }
 
 
-    public function import(LeadImportFormRequest $request) {
+    public function import(LeadImportFormRequest $request)
+    {
   
 
         $data = $this->uploadfile(request()->file('upload'));
@@ -78,41 +77,44 @@ class AddressImportController extends ImportController
 
         $data['type']=request('type');
 
-        if($data['type']== 'assigned'){
+        if ($data['type']== 'assigned') {
             $data['table']='leadimport';
             $requiredFields[]='employee_id';
-        }else{
+        } else {
             $data['table']='leadimport';
         }
 
         $data['additionaldata'] = request('additionaldata');
 
         $data['route'] = 'leads.mapfields';
-        $fields = $this->getFileFields($data);      
+        $fields = $this->getFileFields($data);
         $columns = $this->import->getTableColumns($data['table']);
     
         $skip = ['id','deleted_at','created_at','updated_at','lead_source_id','pr_status'];
-        return response()->view('imports.mapfields',compact('columns','fields','data','company_id','skip','title','requiredFields'));
-
+        return response()->view('imports.mapfields', compact('columns', 'fields', 'data', 'company_id', 'skip', 'title', 'requiredFields'));
     }
     
-    public function mapfields(Request $request){
+    public function mapfields(Request $request)
+    {
 
         $data = $this->getData($request);
         $this->validateInput($request);
         $this->import->setFields($data);
-        if($this->import->import()) {
+        if ($this->import->import()) {
             $this->postimport($request);
         
-            return redirect()->route('leadsource.index')->with('success','Leads imported'); 
-
+            return redirect()->route('leadsource.index')->with('success', 'Leads imported');
         }
-        
     }
     
-    private function postimport(Request $request){
+    private function postimport(Request $request)
+    {
+        dd('heree');
+        /*
+        // get same, added & deleted based on spatial
+        $data = $this->getAddEditDeleteOnSpatial()
 
-       
+
         $this->copyAddresses();
 
         $this->copyAddressIdtoImport();
@@ -128,13 +130,20 @@ class AddressImportController extends ImportController
 
 
         $this->truncateTable();
+        */
+       
+       /*select addresses.id, addresses.businessname,addresses.city, addresses_import.id,addresses.businessname, addresses.city, ST_Distance_Sphere(addresses.position,addresses_import.position) as distance from addresses_import,addresses
+where addresses.company_id = addresses_import.company_id
+and ST_Distance_Sphere(addresses.position,addresses_import.position) < 100
+
+SELECT addresses.id, addresses.businessname,addresses.street, addresses.city,addresses.zip FROM `addresses` left join addresses_import on ST_Distance_Sphere(addresses.position,addresses_import.position) < 100 where addresses.company_id = 275 and addresses_import.id is null*/
+
+
 
         // set import_id to null in addresses table
         return true;
-    
-  
     }
-   /* 
+   /*
     private function addAssignedPID(){
         $query ="UPDATE leadimport dest, (SELECT leadimport.id as id, persons.id as pid from persons,leadimport,users where REPLACE(leadimport.employee_id, '\r', '')=users.employee_id and persons.user_id = users.id) src set dest.pid = src.pid where dest.id = src.id";
         if (\DB::select(\DB::raw($query))){
@@ -144,51 +153,50 @@ class AddressImportController extends ImportController
     }
     */
 
-    private function copyAddresses(){
-             $query = "insert ignore into addresses (" . implode(",",$this->addressfields) .",lead_import_id) select t.". implode(",t.",$this->addressfields). ",t.id as lead_import_id FROM `leadimport` t";
+    private function copyAddresses()
+    {
+             $query = "insert ignore into addresses (" . implode(",", $this->addressfields) .",lead_import_id) select t.". implode(",t.", $this->addressfields). ",t.id as lead_import_id FROM `leadimport` t";
         
-        if (\DB::select(\DB::raw($query))){
-           
+        if (\DB::select(\DB::raw($query))) {
             return true;
         }
     }
 
-    private function copyAddressIdtoImport(){
+    private function copyAddressIdtoImport()
+    {
         $query ="update leadimport,addresses set leadimport.address_id = addresses.id where leadimpport.id = addresses.import_id";
 
-         if (\DB::select(\DB::raw($query))){
-               
-                return true;
-            }
+        if (\DB::select(\DB::raw($query))) {
+              return true;
+        }
     }
     /*
     Copy incremntal data depending on type
 
     */
-    private function copyLeads(){
-        if(count($this->leadfields)>0){
-             $query = "insert ignore into leads (" . implode(",",$this->leadfields) .",address_id) select t.". implode(",t.",$this->leadfields). ",t.address_id as address_id FROM `leadimport` t";
+    private function copyLeads()
+    {
+        if (count($this->leadfields)>0) {
+             $query = "insert ignore into leads (" . implode(",", $this->leadfields) .",address_id) select t.". implode(",t.", $this->leadfields). ",t.address_id as address_id FROM `leadimport` t";
             
             
-            if (\DB::select(\DB::raw($query))){
-               
+            if (\DB::select(\DB::raw($query))) {
                 return true;
             }
         }
-   }
+    }
 
-   private function copyLeadContacts(){
+    private function copyLeadContacts()
+    {
         $query = "insert ignore into contacts 
         (address_id,firstname,lastname,title,email,phone,created_at)
             select addresses.id,firstname,lastname,title,email,leadimport.phone,addresess.created_at 
             FROM `leadimport`, leads where leadimport.id = address.lead_import_id";
 
-        if (\DB::select(\DB::raw($query))){
-           
+        if (\DB::select(\DB::raw($query))) {
             return true;
         }
-
-   }
+    }
    /*
    private function updateLeadPivot(){
         $query ="insert ignore into lead_person_status (related_id,person_id,status_id,type)
@@ -202,13 +210,15 @@ class AddressImportController extends ImportController
    }
    */
 
-   private function setAddressImportIdToNull(){
-    $query= "update addresses set import_id = null";
-    return \DB::statement($query);
-   }
+    private function setAddressImportIdToNull()
+    {
+        $query= "update addresses set import_id = null";
+        return \DB::statement($query);
+    }
 
-   private function truncateTable(){
+    private function truncateTable()
+    {
 
-     return \DB::statement("TRUNCATE TABLE `leadimport`");
-   }
+        return \DB::statement("TRUNCATE TABLE `leadimport`");
+    }
 }

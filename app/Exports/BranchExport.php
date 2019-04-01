@@ -12,16 +12,14 @@ class BranchExport implements FromView
     public function __construct()
     {
         
-        $this->roles = Role::pluck('name','id')->toArray();
+        $this->roles = Role::pluck('name', 'id')->toArray();
     }
     /**
     * @return \Illuminate\Support\Collection
     */
     public function view(): View
     {
-    	$result = Branch::with('address','manager')->get();
-    	return view('branches.export',compact('result'));
-
+        $result = Branch::with('address', 'manager')->get();
+        return view('branches.export', compact('result'));
     }
 }
-

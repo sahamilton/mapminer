@@ -97,7 +97,7 @@ return [
     | theme and component paths here, allowing you to customize the design
     | of the emails. Or, you may simply stick with the Laravel defaults!
     |
-    */
+    
 
     'markdown' => [
         'theme' => 'default',
@@ -106,6 +106,6 @@ return [
             resource_path('views/vendor/mail'),
         ],
     ],
-
+*/
     'test'=>env('MAIL_TEST', true),
 ];

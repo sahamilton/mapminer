@@ -6,12 +6,18 @@
 		@endforeach
 	</thead>
 	<tbody>
+
 		@foreach ($data['activitychart']['branches'] as $branch=>$activities)
 		<tr>
-			<td>{{$branch}}</td>
+			<td><a href="{{route('activity.branch',$branch)}}">{{$branch}}</a></td>
 			@foreach($data['activitychart']['keys'] as $key)
-				<td>{{$activities[$key]}}</td>
-
+			<td>
+				@if(isset($activities[$key]))
+					{{$activities[$key]}}
+				@else
+					0
+				@endif
+			</td>
 			@endforeach
 		</tr>
 		@endforeach

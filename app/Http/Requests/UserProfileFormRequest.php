@@ -7,8 +7,8 @@ use Illuminate\Foundation\Http\FormRequest;
 class UserProfileFormRequest extends FormRequest
 {
     
-    public function __construct(){
-        
+    public function __construct()
+    {
     }
 
     /**
@@ -28,7 +28,7 @@ class UserProfileFormRequest extends FormRequest
      */
     public function rules()
     {
-      /* 
+      /*
         The password contains characters from at least three of the following five categories:
             English uppercase characters (A – Z)
             English lowercase characters (a – z)
@@ -36,7 +36,7 @@ class UserProfileFormRequest extends FormRequest
             Non-alphanumeric (For example: !, $, #, or %)
             Unicode characters
       */
-       return [
+        return [
         
         'firstname'=>'required',
         'lastname'=>'required',

@@ -20,8 +20,6 @@ class CreateSalesactivityTable extends Migration
             $table->date('datefrom');
             $table->date('dateto');
             $table->timestamps();
-           
-            
         });
     }
 

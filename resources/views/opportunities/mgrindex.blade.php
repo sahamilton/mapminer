@@ -2,53 +2,44 @@
 @section('content')
 
 <div class="container">
-<h2>My Teams Branch Opportunities</h2>
-   <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
-    <thead>
-      <th>Branch</th>
-      <th>Manager</th>
-      <th>Leads</th>
-      <th>Opportunities</th>
+  <h2>{{$data['team']['me']->fullName}}'s  Dashboard</h2>
+  @if($data['team']['team']->count()>1)
+    @include('branches.partials._branchselector')
+  @endif
+  @include('branches.partials._periodselector')
+  @include('opportunities.partials._dashboardselect')
+  <nav>
+    <div class="nav  nav-tabs"  id="nav-tab"  role="tablist">
+      <a class="nav-item nav-link active"
+      id="nav-dashboard-tab"
+      data-toggle="tab"
+      href="#dashboard"
+      role="tab"
+      aria-controls="nav-dashboard"
+      aria-selected="true">
+      <strong>Dashboard</strong></a>
      
-      <th class="tip" title="Activities in the past month">Total Activities<span class="text text-warning">*</span></th>
-    <th>Won</th>
-    <th>Lost</th>
-    </thead>
-      <tbody>
+      <a class="nav-item nav-link "
+        id="nav-summary-tab"
+        data-toggle="tab"
+        href="#summary"
+        role="tab"
+        aria-controls="nav-summary"
+        aria-selected="true">
+      <strong>Summary</strong>
+      </a>
 
-        @foreach ($data as $branch)
-       
+    </div>
+  </nav>
 
-        <tr>
-          <td>
-            <a href="{{route('opportunities.branch',$branch->id)}}">
-              {{$branch->branchname}}
-            </a>
-          </td>
-          
-          <td>
-            @foreach ($branch->manager as $manager)
-              <li>{{$manager->fullName()}}</li>
-            @endforeach
-          </td>
-          <td align="center">{{$branch->leads_count}}</td>
-          
-          <td align="center">{{$branch->opportunities_count}}</td>
-          
-            
-          <td align="center"><a href="{{route('branch.activity',$branch->id)}}">{{$branch->activities->count()}}</a></td>
-          <td align="center">
-            @if($branch->won >0)<a href="{{route('opportunities.branch',$branch->id)}}">{{$branch->won}}</a> @else 0 @endif
-          </td>
-          <td  align="center"> @if($branch->lost >0)<a href="{{route('opportunities.branch',$branch->id)}}">{{$branch->lost}}</a> @else 0 @endif</td>
-        @endforeach
-
-      </tbody>
-    <tfoot>
-      <span class="text text-danger">*</span>In past month
-    </tfoot>
-
-</table>
+  <div class="tab-content" id="nav-tabContent">
+    <div id="dashboard" class="tab-pane show active">
+      @include('branches.partials._dashboard')
+    </div>
+    <div id="summary" class="tab-pane fade">
+      @include('opportunities.partials._summary')
+    </div>
+  </div>
 </div>
 
 @include('partials._scripts')

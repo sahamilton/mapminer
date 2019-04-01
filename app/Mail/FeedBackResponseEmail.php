@@ -20,7 +20,6 @@ class FeedBackResponseEmail extends Mailable
     public function __construct(Feedback $feedback)
     {
         $this->feedback = $feedback;
-       
     }
 
     /**

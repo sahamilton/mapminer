@@ -33,7 +33,7 @@ class LeadSourceAddLeadsFormRequest extends FormRequest
                 'phone'=>'required_without:file',
                 'contact'=>'required_without:file',
 
-                'file'=>'file|required_without:companyname,businessname,address,city,state,zip,phone|mimetypes:'.implode(",",$this->mimetypes),
+                'file'=>'file|required_without:companyname,businessname,address,city,state,zip,phone|mimetypes:'.implode(",", $this->mimetypes),
         ];
     }
 }

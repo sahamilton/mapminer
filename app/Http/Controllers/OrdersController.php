@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Orders;
 use App\Branch;
 use App\Person;
@@ -8,10 +9,11 @@ use Illuminate\Http\Request;
 
 class OrdersController extends Controller
 {
-   public $orders;
-   public $branch;
-   public $person;
-   public function __construct(Orders $order, Branch $branch,Person $person){
+    public $orders;
+    public $branch;
+    public $person;
+    public function __construct(Orders $order, Branch $branch, Person $person)
+    {
         $this->person = $person;
         $this->orders = $order;
         $this->branch = $branch;
@@ -26,14 +28,14 @@ class OrdersController extends Controller
     {
         $myBranches = array_keys($this->person->myBranches());
        
-        $branchOrders = $this->branch->whereIn('id',$myBranches)->with('orders')->get();
+        $branchOrders = $this->branch->whereIn('id', $myBranches)->with('orders')->get();
        
         $orders = $branchOrders->map(function ($branch) {
             return $branch->orders->sum('orders');
            // return $branch->orders->load('branch','branch.manager');
         });
 
-        return response()->view('orders.index',compact('orders','branchOrders'));
+        return response()->view('orders.index', compact('orders', 'branchOrders'));
     }
     /**
      * Show the form for creating a new resource.
@@ -65,12 +67,12 @@ class OrdersController extends Controller
     public function show($id)
     {
         
-        $orders = $this->orders->where('branch_id','=',$id)
-        ->with('addresses','addresses.company')
+        $orders = $this->orders->where('branch_id', '=', $id)
+        ->with('addresses', 'addresses.company')
         ->branchOrders($id)->get();
         $branch = $this->branch->with('manager')->findOrFail($id);
         
-        return response()->view('orders.show',compact('branch','orders'));
+        return response()->view('orders.show', compact('branch', 'orders'));
     }
 
     /**

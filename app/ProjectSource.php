@@ -8,8 +8,9 @@ class ProjectSource extends Model
 {
     public $table = 'projectsource';
     public $dates = ['datefrom','dateto'];
-	public $fillable=['source','description','reference','datefrom','dateto','status'];
-    public function projects(){
-    	return $this->hasMany(Project::class);
+    public $fillable=['source','description','reference','datefrom','dateto','status'];
+    public function projects()
+    {
+        return $this->hasMany(Project::class);
     }
 }

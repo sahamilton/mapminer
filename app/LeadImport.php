@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class LeadImport extends Imports
 {
-	public $requiredFields = ['companyname',
+    public $requiredFields = ['companyname',
             'businessname',
             'address',
             'city',
@@ -15,6 +15,6 @@ class LeadImport extends Imports
             'lat',
             'lng'];
 
-	public $temptable = 'leadimport';
-      public $dontCreateTemp = true;
+    public $temptable = 'leadimport';
+    public $dontCreateTemp = true;
 }

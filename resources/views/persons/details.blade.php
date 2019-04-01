@@ -3,7 +3,7 @@
 <div class="container">
 	<div class="panel panel-default">
 		<div class="panel-heading clearfix">
-			<h2 class="panel-title pull-left"><strong>{{$people->postName()}}</strong></h2>
+			<h2 class="panel-title pull-left"><strong>{{$people->fullName()}}</strong></h2>
 			<a class="btn btn-primary float-right" href="{{route('users.edit',$people->user_id)}}">
 
 				<i class="far fa-edit text-info""></i>
@@ -11,15 +11,14 @@
 				Edit
 			</a>
 		</div>
-		
+
 
 		@canImpersonate
 			
 		<a href="{{route('impersonate', $people->user_id)}}" class="btn btn-warning">
-			Login As {{$people->postName()}}
+			Login As {{$people->fullName()}}
 		</a>
 		@endCanImpersonate
-		<div class="list-group-item">
 		<div class="list-group-item">
 			<p class="list-group-item-text"><strong>Role Details</strong></p>
 			<ul style="list-style-type: none;">

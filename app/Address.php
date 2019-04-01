@@ -192,4 +192,16 @@ class Address extends Model
                       ->pluck('fieldname')->toArray();
         return array_unique($fields);
     }
+
+    public function scopeDuplicate($query, $longitude, $latitude)
+    {
+        $close_in_metres = 5;
+  
+        return $query->whereRaw("
+           ST_Distance_Sphere(
+                point(lng, lat),
+                point(". $longitude . ", " . $latitude .")
+            )  < ".$close_in_metres );
+    }
+
 }

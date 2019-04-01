@@ -1,5 +1,6 @@
 <?php
 namespace App\Http\Controllers;
+
 use App\Company;
 use App\Salesnote;
 use App\Howtofield;
@@ -215,77 +216,67 @@ class SalesNotesController extends BaseController {
 	 * @return none
 	 */
 
-	public function store(SalesNotesFormRequest $request) {
+    public function store(SalesNotesFormRequest $request)
+    {
 
-		$data = request()->all();
+        $data = request()->all();
 
 
 
-		// ALL THIS CAN BE SIMPLIFIED
-		if ($request->hasFile('attachment'))
-		{
+        // ALL THIS CAN BE SIMPLIFIED
+        if ($request->hasFile('attachment')) {
+            $file = request()->file('attachment');
 
-			$file = request()->file('attachment');
+            $attachment = $data['companyId'] ."_". $file->getClientOriginalName();
+            // check that company attachments directory exists and create if neccessary
+            if (! \File::exists(public_path().'/documents/attachments/'.$data['companyId'])) {
+                if (! \File::makeDirectory(public_path().'/documents/attachments/'.$data['companyId'], 0775, true)) {
+                    dd('sorry couldnt do that');
+                }
+            }
 
-			$attachment = $data['companyId'] ."_". $file->getClientOriginalName();
-			// check that company attachments directory exists and create if neccessary
-			if(! \File::exists(public_path().'/documents/attachments/'.$data['companyId']))
-			{ 
-				if(! \File::makeDirectory(public_path().'/documents/attachments/'.$data['companyId'], 0775, true)) 
-				{
-					dd('sorry couldnt do that');
-				}
-			}
+            $file->move(public_path().'/documents/attachments/'.$data['companyId'], $attachment);
+            $oldAttachments= $files = unserialize(urldecode($data[$this->attachmentField[0]]));
+            $newAttachment=[$data['attachmentname']=>['attachmentname'=>$data['attachmentname'],'filename'=>$attachment,'description'=>$data['attachmentdescription']]];
+            if (is_array($oldAttachments)) {
+                $data[$this->attachmentField[0]] = array_merge($oldAttachments, $newAttachment);
+            } else {
+                $data[$this->attachmentField[0]] = $newAttachment;
+            }
+        }
+    
 
-			$file->move(public_path().'/documents/attachments/'.$data['companyId'],  $attachment);
-			$oldAttachments= $files = unserialize(urldecode($data[$this->attachmentField[0]]));
-			$newAttachment=[$data['attachmentname']=>['attachmentname'=>$data['attachmentname'],'filename'=>$attachment,'description'=>$data['attachmentdescription']]];
-			if(is_array($oldAttachments)){
-				$data[$this->attachmentField[0]] = array_merge ($oldAttachments,$newAttachment);
-			}else{
-				$data[$this->attachmentField[0]] = $newAttachment;
-			}
-		}
-	
+        $company = $this->company->findOrFail($data['companyId']);
+        $salesnote = Salesnote::where('company_id', '=', $data['companyId']);
+        $queryArray=[];
 
-		$company = $this->company->findOrFail($data['companyId']);
-		$salesnote = Salesnote::where('company_id','=',$data['companyId']);
-		$queryArray=array();
+        foreach ($data as $key => $value) {
+            try {
+                if (is_array($value)) {
+                    $str = serialize($value);
+                    $strenc = urlencode($str);
+                    $queryArray[] = ["company_id"=>$data['companyId'],"howtofield_id"=>$key,"value"=>$strenc];
+                } elseif ($value !='' && is_int($key)) {
+                    $queryArray[] = ["company_id"=>$data['companyId'],"howtofield_id"=>$key,"value"=>$value];
+                }
+            } catch (Exception $e) {
+                throw new Exception("It went wrong with " . $key, 0, $e);
+            }
+        }
+        $salesnote->delete();
+        if (count($queryArray)>0) {
+            \DB::table('company_howtofield')->insert($queryArray);
+        }
+        return redirect()->to('salesnotes/'.$data['companyId']);
+    }
+    
 
-		foreach($data as $key=>$value)
-		{
-			try {
-				if(is_array($value)) {
-
-					$str = serialize($value);
-					$strenc = urlencode($str);
-					$queryArray[] = array("company_id"=>$data['companyId'],"howtofield_id"=>$key,"value"=>$strenc);
-					
-				}elseif($value !='' && is_int($key)) {
-					$queryArray[] = array("company_id"=>$data['companyId'],"howtofield_id"=>$key,"value"=>$value);
-					
-				}
-			}
-			catch (Exception $e)
-			{
-				throw new Exception("It went wrong with " . $key,0,$e);
-			}
-		}
-		$salesnote->delete();
-		if(count($queryArray)>0){
-			\DB::table('company_howtofield')->insert($queryArray);
-		}
-		return redirect()->to('salesnotes/'.$data['companyId']);
-		
-	}
-	
-
-	
-	
-	
-	
-	
-	/*
+    
+    
+    
+    
+    
+    /*
 	 * Function printSalesNotes
 	 *
 	 * Create Printable Sales Notes

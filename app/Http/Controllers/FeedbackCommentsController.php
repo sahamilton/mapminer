@@ -15,10 +15,10 @@ class FeedbackCommentsController extends Controller
     public $comments;
     public $feedback;
 
-    public function __construct(Feedback $feedback, FeedbackComments $comments){
+    public function __construct(Feedback $feedback, FeedbackComments $comments)
+    {
         $this->comments = $comments;
         $this->feedback = $feedback;
-
     }
     /**
      * Store a newly created resource in storage.

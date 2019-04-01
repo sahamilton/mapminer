@@ -1,16 +1,16 @@
 <?php
 
 return [
-	/*
+    /*
 	|---------------------------------------------------------------------------
 	|
 	|
 	|
 	|
 	 */
-	
-	'test'=>env('LEADS_TEST',false),
- 	/*
+    
+    'test'=>env('LEADS_TEST', false),
+    /*
     |--------------------------------------------------------------------------
     |Ownedlimit
     |--------------------------------------------------------------------------
@@ -19,9 +19,9 @@ return [
     |
     */
 
-	'owned_limit'=> env("OWNED_LEADS_LIMIT",5),
+    'owned_limit'=> env("OWNED_LEADS_LIMIT", 5),
 
- 	/*
+    /*
     |--------------------------------------------------------------------------
     | Search Radius
     |--------------------------------------------------------------------------
@@ -30,9 +30,9 @@ return [
     |
     */
 
-	'search_radius'=>env("LEADS_SEARCH_RADIUS",100),
-	
-	/*
+    'search_radius'=>env("LEADS_SEARCH_RADIUS", 100),
+    
+    /*
     |--------------------------------------------------------------------------
     | Lead Distribution Roles
     |--------------------------------------------------------------------------
@@ -42,10 +42,10 @@ return [
     */
 
 
-	'lead_distribution_roles'=>(['Sales','Sales Representative']),
+    'lead_distribution_roles'=>(['Sales','Sales Representative']),
 
 
 
-    'test'=>env("LEADS_TEST",false),
+    'test'=>env("LEADS_TEST", false),
 
 ];

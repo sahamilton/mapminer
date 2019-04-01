@@ -20,7 +20,6 @@ class CreateProjectProjectcompanyPivotTable extends Migration
             $table->string('type');
             $table->foreign('projectcompany_id')->references('id')->on('projectcompany')->onDelete('cascade');
             $table->primary(['project_id', 'projectcompany_id']);
-
         });
     }
 

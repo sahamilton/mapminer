@@ -1,6 +1,7 @@
 <?php
 
 namespace Tests\Browser;
+
 use App\User;
 use Tests\DuskTestCase;
 use Laravel\Dusk\Browser;
@@ -18,13 +19,13 @@ class ExampleTest extends DuskTestCase
     {
          $this->browse(function ($first) {
             $first->loginAs(User::find(1))
-          ->visit('/branches')
-          ->waitForText('All Branches')
-          ->assertSee('Map View')
-          ->clickLink('Portland, OR')
-          ->assertSee('Branch managed by')
-          ->clickLink('List view')
-          ->assertSee('Locations');
-        });
+            ->visit('/branches')
+            ->waitForText('All Branches')
+            ->assertSee('Map View')
+            ->clickLink('Portland, OR')
+            ->assertSee('Branch managed by')
+            ->clickLink('List view')
+            ->assertSee('Locations');
+         });
     }
 }

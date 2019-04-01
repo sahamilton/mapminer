@@ -1,7 +1,11 @@
 {
     "name": "sahamilton/mapminerv25",
     "description": "People Ready Mapminer.",
-    "keywords": ["trueblue", "people ready", "mapminer"],
+    "keywords": [
+        "trueblue",
+        "people ready",
+        "mapminer"
+    ],
     "license": "MIT",
     "type": "project",
     "require": {
@@ -14,9 +18,9 @@
         "fabpot/goutte": "^3.1",
         "guzzlehttp/guzzle": "~5.3|~6.0",
         "jeroendesloovere/vcard": "^1.5",
-        "laravel/framework": "5.6.*",
+        "laravel/framework": "5.7.*",
         "laravel/scout": "^3.0",
-        "laravel/tinker": "~1.0",
+        "laravel/tinker": "^1.0",
         "laravelcollective/html": "^5.3.0",
         "maatwebsite/excel": "~3",
         "maddhatter/laravel-fullcalendar": "^1.2",
@@ -24,7 +28,6 @@
         "smalot/pdfparser": "^0.10.0",
         "tamayo/laravel-scout-elastic": "^3.0",
         "toin0u/geocoder-laravel": "^4.0",
-        "viacreative/sudo-su": "^1.1",
         "dompdf/dompdf": "~0.6.1",
         "h4cc/wkhtmltopdf-amd64": "0.12.x",
         "nicolaslopezj/searchable": "1.*",
@@ -32,20 +35,23 @@
         "eyewitness/eye": "^2.0",
         "askedio/laravel-soft-cascade": "5.6",
         "grimzy/laravel-mysql-spatial": "^2.1",
-        "lab404/laravel-impersonate": "^1.2"
+        "fideloper/proxy": "^4.0",
+        "jjaffeux/postmark-inbound-php": "^3.0",
+        "lab404/laravel-impersonate": "^1.2",
+        "intervention/image": "^2.4"
     },
-
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.1",
-        "fzaninotto/faker": "~1.4",
+        "fzaninotto/faker": "^1.4",
         "mockery/mockery": "0.9.*",
-        "phpunit/phpunit": "~6.0",
+        "phpunit/phpunit": "^7.0",
         "symfony/css-selector": "3.1.*",
         "symfony/dom-crawler": "3.1.*",
         "laracasts/generators": "^1.1",
-        "filp/whoops": "~2.0"
+        "filp/whoops": "^2.0",
+        "beyondcode/laravel-dump-server": "^1.0",
+        "nunomaduro/collision": "^2.0"
     },
-        
     "autoload": {
         "classmap": [
             "database"
@@ -55,24 +61,18 @@
             "Tests\\": "tests/"
         }
     },
-        "scripts": {
+    "scripts": {
         "post-root-package-install": [
             "php -r \"file_exists('.env') || copy('.env.example', '.env');\""
         ],
         "post-create-project-cmd": [
             "php artisan key:generate"
         ],
-        "post-install-cmd": [
-            
-           
-        ],
-        "post-update-cmd": [
-            
-        
-        ],
+        "post-install-cmd": [],
+        "post-update-cmd": [],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
-            "@php artisan package:discover"
+            "@php artisan package:discover --ansi"
         ]
     },
     "config": {

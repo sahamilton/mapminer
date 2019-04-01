@@ -35,7 +35,6 @@ class LeadReassignFormRequest extends FormRequest
                 'branch_id.regex' => 'Use only numerics and commas for branch id',
                 'branch_id.exists' => 'Invalid branch id',
                 
-            ];
-        }
-
+        ];
+    }
 }

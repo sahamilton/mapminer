@@ -1,105 +1,112 @@
 <?php
 namespace App;
-use\App\Presenters\LocationPresenter;
+
+use App\Presenters\LocationPresenter;
 use McCool\LaravelAutoPresenter\HasPresenter;
-class Location extends Model implements HasPresenter {
 
-	use Geocode,Addressable;
+class Location extends Model implements HasPresenter
+{
 
-	// Add your validation rules here
-	public static $rules = [
-		'businessname' => 'required',
-		'street' => 'required',
-		'city' => 'required',
-		'state' => 'required',
-		'zip' => 'required',
-		'company_id' => 'required',
-		'segment' => 'required',
-		'businesstype' => 'required'
+    use Geocode,Addressable;
 
-	];
+    // Add your validation rules here
+    public static $rules = [
+        'businessname' => 'required',
+        'street' => 'required',
+        'city' => 'required',
+        'state' => 'required',
+        'zip' => 'required',
+        'company_id' => 'required',
+        'segment' => 'required',
+        'businesstype' => 'required'
 
-
-	public $table = 'locations';
-	public $branch;
+    ];
 
 
-	public $fillable = ['businessname','street','address2','city','state','zip','company_id','phone','contact','lat','lng','segment','businesstype','position'];
+    public $table = 'locations';
+    public $branch;
 
-	protected $hidden =  array('created_at','updated_at','id');
+
+    public $fillable = ['businessname','street','address2','city','state','zip','company_id','phone','contact','lat','lng','segment','businesstype','position'];
+
+    protected $hidden =  ['created_at','updated_at','id'];
 /**
  * [relatedNotes description]
  * @return [type] [description]
  */
-	public function relatedNotes() {
+    public function relatedNotes()
+    {
 
-		return $this->hasMany(Note::class,'related_id')->where('type','=','location')->with('writtenBy');
-
-	}
+        return $this->hasMany(Note::class, 'related_id')->where('type', '=', 'location')->with('writtenBy');
+    }
 /**
  * [company description]
  * @return [type] [description]
  */
-	public function company() {
+    public function company()
+    {
 
-		return $this->belongsTo(Company::class)->with('managedBy');
-
-	}
+        return $this->belongsTo(Company::class)->with('managedBy');
+    }
 /**
  * [branch description]
  * @return [type] [description]
  */
-	public function branch () {
+    public function branch()
+    {
 
-		return $this->belongsTo(Branch::class);
-
-	}
-	
+        return $this->belongsTo(Branch::class);
+    }
+    
 
 /**
  * [contacts description]
  * @return [type] [description]
  */
-	public function contacts(){
-		return $this->hasMany(Contact::class);
-	}
+    public function contacts()
+    {
+        return $this->hasMany(Contact::class);
+    }
 
 /**
  * [instate description]
  * @return [type] [description]
  */
-	public function instate () {
+    public function instate()
+    {
 
-		return $this->belongsTo(State::class,'state','statecode');
-
-	}
+        return $this->belongsTo(State::class, 'state', 'statecode');
+    }
 /**
  * [verticalsegment description]
  * @return [type] [description]
  */
-	public function verticalsegment () {
-		return $this->hasOne(SearchFilter::class,'id','segment');
-	}
+    public function verticalsegment()
+    {
+        return $this->hasOne(SearchFilter::class, 'id', 'segment');
+    }
 /**
  * [clienttype description]
  * @return [type] [description]
  */
-	public function clienttype() {
+    public function clienttype()
+    {
 
-		return $this->hasOne(SearchFilter::class,'id','businesstype');
-	}
+        return $this->hasOne(SearchFilter::class, 'id', 'businesstype');
+    }
 
 /**
  * [watchedBy description]
  * @return [type] [description]
  */
 
-	public function watchedBy(){
+    public function watchedBy()
+    {
 
-		return $this->belongsToMany(User::class,'location_user','location_id','user_id')->withPivot('created_at','updated_at');
-	}
+        return $this->belongsToMany(User::class, 'location_user', 'location_id', 'user_id')->withPivot('created_at', 'updated_at');
+    }
 
-	public function getPresenterClass()
+    public function getPresenterClass()
     {
         return LocationPresenter::class;
     }
@@ -108,36 +115,39 @@ class Location extends Model implements HasPresenter {
  * [nearbyBranches description]
  * @return [type] [description]
  */
-	public function nearbyBranches($servicelines,$limit=5){
+    public function nearbyBranches($servicelines, $limit = 5)
+    {
 
-		return Branch::whereHas('servicelines', function($q) use ($servicelines){
-				$q->whereIn('servicelines.id',$servicelines);
-			})->nearby($this,'100')->limit($limit);
-	}
+        return Branch::whereHas('servicelines', function ($q) use ($servicelines) {
+                $q->whereIn('servicelines.id', $servicelines);
+        })->nearby($this, '100')->limit($limit);
+    }
 
 
-	public function nearbySalesRep($serviceline=null,$limit=5){
+    public function nearbySalesRep($serviceline = null, $limit = 5)
+    {
 
-		return Person::with('userdetails.roles')
-		->whereHas('userdetails.serviceline',function ($q) use ($serviceline){
-			$q->whereIn('servicelines.id',$serviceline);
-		})
-		->whereHas('userdetails.roles',function ($q){
+        return Person::with('userdetails.roles')
+        ->whereHas('userdetails.serviceline', function ($q) use ($serviceline) {
+            $q->whereIn('servicelines.id', $serviceline);
+        })
+        ->whereHas('userdetails.roles', function ($q) {
 
-			$q->where('roles.id','=',5);
-		})
-		->nearby($this,'100')
+            $q->where('roles.id', '=', 5);
+        })
+        ->nearby($this, '100')
         ->limit($limit);
 
-		//return Branch::nearby($this,'100')->limit(5);
-	}
+        //return Branch::nearby($this,'100')->limit(5);
+    }
 
 
 
-	public function locationAddress(){
-		return ($this->street . " " . $this->address2 . " " .$this->city . " " . $this->state);
-	}
-	/*
+    public function locationAddress()
+    {
+        return ($this->street . " " . $this->address2 . " " .$this->city . " " . $this->state);
+    }
+    /*
 		Generate Mapping xml file from location results
 
 		Passed to function:
@@ -146,59 +156,56 @@ class Location extends Model implements HasPresenter {
 
 	*/
 
-	public function makeNearbyLocationsXML($result) {
-		$content = view('locations.xml', compact('result'));
+    public function makeNearbyLocationsXML($result)
+    {
+        $content = view('locations.xml', compact('result'));
 
         return response($content, 200)
             ->header('Content-Type', 'text/xml');
-
-	}
-	/**
-	 * function getStateSummary
-	 * @param  int $id Company ID
-	 * @return Collections     location count by state for company
-	 */
-	public function getStateSummary($id){
-		return $this->where('company_id','=',$id)
-			->select('state', \DB::raw('count(*) as total'))
+    }
+    /**
+     * function getStateSummary
+     * @param  int $id Company ID
+     * @return Collections     location count by state for company
+     */
+    public function getStateSummary($id)
+    {
+        return $this->where('company_id', '=', $id)
+            ->select('state', \DB::raw('count(*) as total'))
              ->groupBy('state')
-             ->pluck('total','state');
-	}
+             ->pluck('total', 'state');
+    }
 /**
  * [getQuerySearchKeys description]
  * @return [type] [description]
  */
-	private function getQuerySearchKeys(){
-			$keys = array();
-			$searchKeys = array();
+    private function getQuerySearchKeys()
+    {
+            $keys = [];
+            $searchKeys = [];
 
-			$keys['vertical'] = $this->getSearchKeys(['companies'],['vertical']);
+            $keys['vertical'] = $this->getSearchKeys(['companies'], ['vertical']);
 
-			if(count($keys['vertical']) > 0){
-
-				$searchKeys['vertical']['keys'] = implode("','",$keys['vertical']);
-				$searchKeys['vertical']['null']= $this->isNullable($keys['vertical']);
-			}
-
-
-			$keys['segment'] = $this->getSearchKeys(['locations'],['segment','businesstype']);
-			if(count($keys['segment']) > 0){
-
-				$searchKeys['segment']['keys'] = implode("','",$keys['segment']);
-				$searchKeys['segment']['null'] = $this->isNullable($keys['segment']);
-			}
+        if (count($keys['vertical']) > 0) {
+            $searchKeys['vertical']['keys'] = implode("','", $keys['vertical']);
+            $searchKeys['vertical']['null']= $this->isNullable($keys['vertical']);
+        }
 
 
-			$keys['businesstype'] = $this->getSearchKeys(['locations'],['businesstype']);
+            $keys['segment'] = $this->getSearchKeys(['locations'], ['segment','businesstype']);
+        if (count($keys['segment']) > 0) {
+            $searchKeys['segment']['keys'] = implode("','", $keys['segment']);
+            $searchKeys['segment']['null'] = $this->isNullable($keys['segment']);
+        }
 
-			if(count($keys['businesstype']) > 0){
 
-				$searchKeys['businesstype']['keys'] = implode("','",$keys['businesstype']);
-				$searchKeys['businesstype']['null'] = $this->isNullable($keys['businesstype']);
+            $keys['businesstype'] = $this->getSearchKeys(['locations'], ['businesstype']);
 
-			}
+        if (count($keys['businesstype']) > 0) {
+            $searchKeys['businesstype']['keys'] = implode("','", $keys['businesstype']);
+            $searchKeys['businesstype']['null'] = $this->isNullable($keys['businesstype']);
+        }
 
-			return $searchKeys;
-	}
-
+            return $searchKeys;
+    }
 }

@@ -9,6 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use App\User;
 use App\Track;
 use Carbon\Carbon;
+
 class UpdateLastLoggedInAt
 {
     /**
@@ -18,7 +19,6 @@ class UpdateLastLoggedInAt
      */
     public function __construct(Request $request)
     {
-        
     }
 
     /**
@@ -29,20 +29,21 @@ class UpdateLastLoggedInAt
      */
     public function handle(Login $event)
     {
-       if(\App::environment() != 'local'){
+        if (\App::environment() != 'local') {
               $this->updateTrackTable($event);
               $this->updateUserTable();
-          }
-        
+        }
     }
 
-    private function updateTrackTable($event){
+    private function updateTrackTable($event)
+    {
         $data['user_id'] = $event->user->id;
         $data['lastactivity'] = now();
         Track::create($data);
     }
 
-    private function updateUserTable(){
+    private function updateUserTable()
+    {
         // update the user record for last login
         // we don't want to update the updated_at field for logins. Its redundant.
         $user = auth()->user();

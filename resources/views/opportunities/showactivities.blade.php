@@ -2,11 +2,11 @@
 @section('content')
 <h2>Branch {{$branch->branchname}}
   @if($activitytype)
-    {{ $activitytype->activity}} activities
+    Period {{ $activitytype->activity}} activities
 @else
-Activities
+Period Activities
 @endif
-<span class="text text-danger" title="Activities in the past month">*</span></h2>
+</h2>
 @if ($activitytype)
 <p><a href="{{route('branch.activity',$branch->id)}}">Return to all activities</a></p>
 @endif
@@ -55,6 +55,6 @@ Activities
      	@endforeach
      </tbody>
  </table>
- <p><span class="text text-danger">*</span> In past month</p>
+
 @include('partials._scripts')
 @endsection

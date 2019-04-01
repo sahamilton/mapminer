@@ -23,7 +23,6 @@ class ProcessOrderImport implements ShouldQueue
     {
         
         $this->import = $import;
-
     }
 
     /**
@@ -37,8 +36,8 @@ class ProcessOrderImport implements ShouldQueue
             
             $address = $address->findOrFail($this->import->address_id);
            
-            $data = ['period'=>'201811','orders'=>$this->import->orders];         
+            $data = ['period'=>'201811','orders'=>$this->import->orders];
          
-            $address->orders()->attach($this->import->branch_id,$data);
-           }
+            $address->orders()->attach($this->import->branch_id, $data);
+    }
 }

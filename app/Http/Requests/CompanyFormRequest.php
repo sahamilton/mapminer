@@ -26,9 +26,8 @@ class CompanyFormRequest extends FormRequest
         return [
          'companyname' => 'required',
          'serviceline'=>'required'
-    ];
+        ];
 
             //
-        
     }
 }
