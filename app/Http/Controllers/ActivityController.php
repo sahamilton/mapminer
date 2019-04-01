@@ -175,6 +175,11 @@ class ActivityController extends Controller
         }else{
             $data['activity']['completed']=null;
         }
+        // this should not be neccessary but some forms have
+        // location id vs address id
+        if(request()->has('location_id')){
+            $data['activity']['address_id'] = request('location_id');
+        }
         $data['activity']['activity_date'] = Carbon::parse($data['activity']['activity_date']);
 
         // get follow up date 
