@@ -2,7 +2,7 @@
 	<thead>
 		
 		
-		<th>Company</th>
+		<th>Companies</th>
 		<th>Address</th>
 		<th>Date</th>
 		<th>By</th>
@@ -10,6 +10,7 @@
 		<th>Follow up date</th>
 		<th>Contact</th>
 		<th>Activity</th>
+		<th>Status</th>
 	</thead>
 	<tbody>
 		
@@ -53,9 +54,21 @@
 						{{$activity->type->activity}}
 					@endif
 			</td>
-				
-
-			</tr>
+			<td>
+			
+			
+			@if(! $activity->completed)
+                        <a title="Complete Activity"
+                          href="{{route('activity.complete',$activity->id)}}" 
+                          >
+                          <i class="fas fa-clipboard-check"></i>
+                           Mark As Complete
+                        </a>	
+			@else
+			Completed
+			@endif
+			</td>
+		</tr>
 		@endforeach
 	</tbody>
 
