@@ -64,6 +64,7 @@ class MgrDashboardController extends DashboardController
     public function index()
     {
       // set period
+   
       if(! $this->period){
         $this->period = $this->activity->getPeriod();
       }
@@ -176,6 +177,7 @@ class MgrDashboardController extends DashboardController
 
       $data['branches'] = $this->getSummaryBranchData();
       $data['team']= $this->myTeamsOpportunities($data['branches']);
+
       $data['period'] = $this->period;
       $data['chart'] = $this->getChartData($data['branches']);
       
@@ -183,7 +185,7 @@ class MgrDashboardController extends DashboardController
       if(isset($data['team']['results'])){
         $data['teamlogins'] = $this->getTeamLogins(array_keys($data['team']['results']));
       }
-   
+  
       return $data;
     }
     /**
@@ -270,11 +272,13 @@ class MgrDashboardController extends DashboardController
               'lost',
               'pipeline',
               'activities'];
-
+      $teamroles = [14,6,7,3,9];
       $data['me'] = $this->person->findOrFail($this->manager->id);
       // this might return branch managers with no branches!
       $data['team'] =  $this->person
-      ->where('reports_to','=',$this->manager->id)      
+      ->where('reports_to','=',$this->manager->id)
+      ->WithRoles($teamroles)
+            
       ->get();
       
       // get all branch managers
