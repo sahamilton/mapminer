@@ -167,7 +167,7 @@ class ActivityController extends Controller
      */
     private function parseData($request)
     {
-        $data= $request->except(['_token','submit']);
+        $data= $request->except(['_token','submit','followup_activity']);
         $data['activity_date'] = Carbon::parse($data['activity_date']);
         if ($data['followup_date']) {
             $data['followup_date'] = Carbon::parse($data['followup_date']);
