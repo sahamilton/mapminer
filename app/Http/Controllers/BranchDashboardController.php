@@ -179,11 +179,12 @@ class BranchDashboardController extends Controller
      */
     private function getDashBoardData()
     {
-      
+      $teamroles = [9]; // only branch managers
       $data['team']['me'] = $this->person->findOrFail($this->manager->id);
       // this might return branch managers with no branches!
       $data['team']['team'] =  $this->person
-      ->where('reports_to','=',$this->manager->id)      
+      ->where('reports_to','=',$this->manager->id) 
+      ->WithRoles($teamroles)     
       ->get();
       //$data['team']= $this->myTeamsOpportunities();
       $data['summary'] = $this->getSummaryBranchData();
