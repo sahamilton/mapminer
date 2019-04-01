@@ -111,7 +111,7 @@ class MyLeadsController extends BaseController
     public function store(MyLeadFormRequest $request)
     {
 
-     
+        // we need to geocode this address
         if (! $data = $this->cleanseInput($request)) {
             return redirect()->back()->withError('Unable to geocode that address');
         }
@@ -156,7 +156,22 @@ class MyLeadsController extends BaseController
         return redirect()->route('address.show', $lead)->withMessage('Lead Created');
     }
     
-  
+    private function cleanseInput(Request $request)
+    {
+        $geocode = app('geocoder')->geocode($this->getAddress($request))->get();
+        $data['lead'] = $this->address->getGeoCode($geocode);
+
+        $data['lead']['businessname'] =request('companyname');
+      
+        $data['lead']['phone'] = preg_replace("/[^0-9]/", "", request('phone'));
+        return $data;
+    }
+
+
+    private function getAddress(Request $request)
+    {
+        return request('street'). ' ' .request('city'). ' ' .request('state'). ' ' .request('zip');
+    }
 
     /**
      * Show the form for editing the specified resource.
@@ -178,6 +193,9 @@ class MyLeadsController extends BaseController
      */
     public function update(MyLeadFormRequest $request, MyLead $mylead)
     {
+
+
+
     }
     
 
