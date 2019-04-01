@@ -140,7 +140,7 @@ class ActivityController extends Controller
              $relatedActivity = $this->createFollowUpActivity($data,$activity);
              $activity->update(['relatedActivity'=>$relatedActivity->id]);
         }
-        if (isset($data['contact'])) {
+        if (request()->filled('contact'))) {
             $activity->relatedContact()->attach($data['contact']['contact']);
         }
         $activity->load('relatedContact');
