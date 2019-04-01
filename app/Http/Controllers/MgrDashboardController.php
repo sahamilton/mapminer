@@ -130,7 +130,7 @@ class MgrDashboardController extends DashboardController
      */
     public function manager(Request $request, Person $manager=null)
     {
-     
+      
       if(! $this->period){
         $this->period = $this->activity->getPeriod();
       }
@@ -144,19 +144,22 @@ class MgrDashboardController extends DashboardController
       
       $team = $this->manager->descendantsAndSelf()
               ->with('branchesServiced')->get();
-
+     
       $branches = $team->map(function ($mgr){
         return $mgr->branchesServiced->pluck('id')->toArray();
       }); 
-
+      
       if(count($branches->first())==0){
         return redirect()->back()->withMessage($this->manager->fullName().' is not assigned to any branches');
       }
-     
+    
       $this->myBranches = array_unique($branches->flatten()->toArray());
-
+      if(count($this->myBranches)==1){
+        
+        return redirect()->route('dashboard.show',$this->myBranches[0]);
+      }
       $data = $this->getDashBoardData();
-   
+     
       return $this->displayDashboard($data);
     }
     
@@ -198,8 +201,9 @@ class MgrDashboardController extends DashboardController
         
         } else {
 
-           
-            return response()->view('branches.dashboard', compact('data', 'myBranches'));
+            $branch = $data['branches']->first();
+
+            return response()->view('branches.dashboard', compact('data', 'branch'));
         }
 
 
