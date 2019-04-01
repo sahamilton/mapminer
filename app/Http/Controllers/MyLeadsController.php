@@ -110,7 +110,7 @@ class MyLeadsController extends BaseController
      */
     public function store(MyLeadFormRequest $request)
     {
-
+       
         // we need to geocode this address
         if (! $data = $this->cleanseInput($request)) {
             return redirect()->back()->withError('Unable to geocode that address');
@@ -124,12 +124,14 @@ class MyLeadsController extends BaseController
             return response()->view('addresses.duplicates',compact('dupes','data'));
         } 
         */
+     
         $lead = $this->lead->create($data['lead']);
        
         $lead->assignedToBranch()->attach($data['branch']);
 
         
         if (isset($data['contact'])) {
+        
             $lead->contacts()->create($data['contact']);
         }
         if (request()->filled('addressable_type')) {
@@ -170,11 +172,19 @@ class MyLeadsController extends BaseController
         $data['lead']['businessname'] =request('companyname');
       
         $data['lead']['phone'] = preg_replace("/[^0-9]/", "", request('phone'));
-      
+        /*
+          "contact" => "Joe Blow"
+          "contact_title" => "big Kahuna"
+          "phone" => "1234568"
+          "email" => null
+         */
+        $data['contact'] = $this->cleanseContactData($request);
+
+       
         return $data;
     }
 
-
+    
     private function getAddress(Request $request)
     {
         
@@ -279,21 +289,22 @@ class MyLeadsController extends BaseController
      * @return array          [description]
      */
     
-    public function cleanseContactData(Array $data, Request $request){
+    public function cleanseContactData(Request $request){
 
-        $data['contact']['fullname'] = request('contact');
+        $data['fullname'] = request('contact');
         // extract first last name
         $name = explode(' ', request('contact'), 2);
-        $data['contact']['firstname'] = $name[0];
+        $data['firstname'] = $name[0];
         
         if(isset($name[1])){
-            $data['contact']['lastname'] = $name[1];
+            $data['lastname'] = $name[1];
         }
         
-        $data['contact']['title'] = request('contact_title');
-        $data['contact']['email'] = request('email');
-        $data['contact']['contactphone'] =  preg_replace("/[^0-9]/","",request('phone'));
-        return $data;
+        $data['title'] = request('contact_title');
+        $data['email'] = request('email');
+        $data['contactphone'] =  preg_replace("/[^0-9]/","",request('phone'));
+
+        return array_filter($data);
     }
     public function reassign(LeadReassignFormRequest $request)
     {
