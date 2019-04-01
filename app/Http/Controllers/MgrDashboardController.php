@@ -144,17 +144,17 @@ class MgrDashboardController extends DashboardController
       
       $team = $this->manager->descendantsAndSelf()
               ->with('branchesServiced')->get();
-     
+   
       $branches = $team->map(function ($mgr){
         return $mgr->branchesServiced->pluck('id')->toArray();
       }); 
       
-      if(count($branches->first())==0){
-        return redirect()->back()->withMessage($this->manager->fullName().' is not assigned to any branches');
-      }
-    
       $this->myBranches = array_unique($branches->flatten()->toArray());
-      if(count($this->myBranches)==1){
+      
+      if(count($this->myBranches)==0){
+        return redirect()->back()->withMessage($this->manager->fullName().' is not assigned to any branches');
+
+      }if(count($this->myBranches)==1){
         
         return redirect()->route('dashboard.show',$this->myBranches[0]);
       }

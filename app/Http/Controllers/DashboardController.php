@@ -54,7 +54,7 @@ class DashboardController extends Controller
         $branchCount = $this->dashboard->checkBranchCount($this->manager);
         
        if($branchCount > 1){
-
+            
             return redirect()->route('manager.dashboard',$this->manager->id);
         }elseif($branchCount==1 && count($this->manager->manages) >0){
         //get my branch
