@@ -192,7 +192,7 @@ class ActivityController extends Controller
             $data['followup']['activitytype_id'] = request('followup_id');
             $data['followup']['address_id'] = request('address_id');
             $data['followup_date']['followup_date'] = null;
-            $data['activity']['user_id'] = auth()->user()->id
+            $data['activity']['user_id'] = auth()->user()->id;
         }
     // contact data
         $data['contact']= $request->only(['contact']);
