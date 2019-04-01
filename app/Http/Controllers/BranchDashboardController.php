@@ -406,7 +406,8 @@ class BranchDashboardController extends Controller
                            $query->whereBetween('address_branch.created_at',[$this->period['from'],$this->period['to']]);
                         },
                         'activities'=>function($query){
-                            $query->whereBetween('activity_date',[$this->period['from'],$this->period['to']]);
+                            $query->whereBetween('activity_date',[$this->period['from'],$this->period['to']])
+                            ->where('completed','=',1);
                         },
 
                         'opportunities',

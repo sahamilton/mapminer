@@ -301,6 +301,7 @@ class MgrDashboardController extends DashboardController
                 ->sum('leads_count');
           $data[$team->id]['activities'] = $branchdata
                 ->whereIn('id',$branches)
+
                 ->sum('activities_count');
           $data[$team->id]['won'] = $branchdata
                 ->whereIn('id',$branches)
@@ -402,7 +403,8 @@ class MgrDashboardController extends DashboardController
                            $query->where('address_branch.created_at','<=',$this->period['to']);
                         },
                         'activities'=>function($query){
-                            $query->whereBetween('activity_date',[$this->period['from'],$this->period['to']]);
+                            $query->whereBetween('activity_date',[$this->period['from'],$this->period['to']])
+                            ->where('completed','=',1);
                         },
                        'opportunities as won'=>function($query){
                   
