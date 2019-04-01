@@ -6,7 +6,7 @@
 @include('maps.partials._form')
 <h2>{{$data['branches']->first()->branchname}} Branch Opportunities</h2>
 <p><a href="{{route('dashboard.index')}}">Return To Branch Dashboard</a></p>
-
+@php $activityTypes = \App\ActivityType::all(); @endphp
 @if(count($myBranches)>1)
 
 <div class="col-sm-4">

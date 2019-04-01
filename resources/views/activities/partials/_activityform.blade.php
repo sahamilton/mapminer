@@ -2,7 +2,7 @@
                     <label class="col-md-4 control-label">Activity:</label>
                     
                     <select  id="activitytype_id" name="activitytype_id" required>
-                      @foreach ($activities as $key=>$type)
+                      @foreach ($activityTypes as $key=>$type)
                         <option value="{{$key}}">{{$type}}</option>
                       @endforeach
         </select>
