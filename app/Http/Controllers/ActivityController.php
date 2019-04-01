@@ -134,7 +134,7 @@ class ActivityController extends Controller
        
         $data = $this->parseData($request);
         $activity = Activity::create($data);
-        if(request()->has('followup_date')){
+        if(request()->filled('followup_date')){
             // create a new activity
              $relatedActivity = $this->createFollowUpActivity($data,$activity);
              $activity->update(['relatedActivity'=>$relatedActivity->id]);
@@ -153,6 +153,7 @@ class ActivityController extends Controller
 
     private function createFollowUpActivity(array $data,Activity $activity)
     {
+
         $data['activity_date'] = $data['followup_date'];
         $data['activitytype_id'] = $data['followup_activity'];
         $data['relatedActivity'] = $activity->id;
