@@ -5,7 +5,7 @@ namespace App\Listeners;
 use App\Events\FeedbackEvent;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use App\Mail\FeedbackCLosed;
+use App\Mail\FeedbackClosed;
 use App\Mail\FeedbackComment;
 use App\Mail\FeedbackOpened;
 use App\Mail\FeedbackResponse;
