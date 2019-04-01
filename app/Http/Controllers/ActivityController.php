@@ -170,7 +170,11 @@ class ActivityController extends Controller
         
        // get activity data
         $data['activity'] = request()->only(['activitytype_id','note','activity_date','address_id','followup_date']);
-        
+        if(request()->has('completed')){
+            $data['activity']['completed']=1;
+        }else{
+            $data['activity']['completed']=null;
+        }
         $data['activity']['activity_date'] = Carbon::parse($data['activity']['activity_date']);
 
         // get follow up date 
