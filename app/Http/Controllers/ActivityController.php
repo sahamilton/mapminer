@@ -133,7 +133,6 @@ class ActivityController extends Controller
     {
       
         $data = $this->parseData($request);
-
         $activity = Activity::create($data['activity']);
 
         if(request()->filled('followup_date')){
