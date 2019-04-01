@@ -189,7 +189,7 @@ class ActivityController extends Controller
             $data['activity']['followup_date'] = Carbon::parse($data['activity']['followup_date']);
             $data['followup'] = request()->only(['followup_id','note','address_id']);
             $data['followup']['activity_date'] = $data['activity']['followup_date'];
-            $data['followup']['activitytype_id'] = request('followup_id');
+            $data['followup']['activitytype_id'] = request('followup_activity');
             $data['followup']['address_id'] = request('address_id');
             $data['followup_date']['followup_date'] = null;
             $data['activity']['user_id'] = auth()->user()->id;
