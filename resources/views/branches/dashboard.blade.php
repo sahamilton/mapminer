@@ -8,7 +8,7 @@
 	@foreach ($branch->manager as $manager)
 		<p><strong>Manager:</strong>{{$manager->fullName()}}</p>
 	@endforeach
-@if($data['branches'])
+@if(isset($data['branches']))
 	@include('branches.partials._branchdashboardselector')
 @endif
 @if($data['team']['team'])

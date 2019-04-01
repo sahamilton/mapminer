@@ -114,7 +114,7 @@ class BranchDashboardController extends Controller
     {
       
       
-        $this->period = $this->activity->getPeriod();
+      $this->period = $this->activity->getPeriod();
    
     
       $branch = $this->branch->with('manager')->findOrFail($branch);
@@ -190,7 +190,7 @@ class BranchDashboardController extends Controller
 
       //$data['upcoming'] = $this->getUpcomingActivities();       
       //$data['funnel'] = $this->getBranchFunnel();    
-      $data['activitychart'] =  $this->getActivityChartData();  
+      $data['activitychart'] =  $this->getActivityChartData();
       $data['pipelinechart'] = $this->getPipeline();
     
       $data['calendar'] = $this->getUpcomingCalendar($this->getUpcomingActivities());
@@ -201,7 +201,7 @@ class BranchDashboardController extends Controller
       if(count($branches)>1){
         $data['branches'] = $branches;
       }
-  
+ 
       return $data;
     }
 
@@ -344,7 +344,7 @@ class BranchDashboardController extends Controller
     
       return $data;
     }*/
-    private function getTeamActivityChart(array $data)
+   /* private function getTeamActivityChart(array $data)
     {
       
       $chart= array();
@@ -352,11 +352,11 @@ class BranchDashboardController extends Controller
         $chart[$team->lastname]=$data['results'][$team->id]['activities'];
 
       }
-      $data['chart']['keys'] = "'" . implode("','",array_keys($chart))."'";
+      $data['chart']['keys'] = "'" . implode(",",array_keys($chart))."'";
       $data['chart']['data'] = implode(",",$chart);
-      
+      dd($data);
       return $data['chart'];
-    }
+    }*/
 
     /*private function getTeamPipelineChart(array $data)
     {
@@ -442,7 +442,7 @@ class BranchDashboardController extends Controller
      * @param  [type] $branches [description]
      * @return [type]           [description]
      */
-    private function getChartData()
+    /*private function xgetChartData()
     {
        $results =   $this->branch
                     ->whereIn('id',$this->myBranches)
@@ -465,7 +465,7 @@ class BranchDashboardController extends Controller
                     ->get();
        return $this->prepChartData($results);       
        
-      }
+      }*/
 
      /**
       * [prepChartData description]
@@ -519,8 +519,11 @@ class BranchDashboardController extends Controller
 
       $branchdata = $this->getBranchActivities($this->myBranches)->toArray();
      
-      $data = $this->formatBranchWeekActivities($branchdata);
-      dd($data);
+     $chart = $this->formatBranchWeekActivities($branchdata);
+     $data['keys']= "'". implode("','",array_keys($chart['values']))."'";
+     $data['data']= implode(",",$chart['values']);
+     return $data;
+     
     }
 
     private function formatBranchActivities($branchdata)
@@ -553,21 +556,23 @@ class BranchDashboardController extends Controller
           foreach ($branch[implode(",",array_keys($branch))] as $item){
 
             foreach($item as $period=>$el){
-              //convert YW to wekday begign
+              //convert YW to weekday begining
               list ( $year,$week) = explode('-', $period);
+             
               $d = new Carbon;
-              $d->setISODate($year, $week);              
-              $branches[$d->format('Y-m-d')]= $el->count();
-
+              $d->setISODate($year, $week);
+                           
+              $branches[$d->endOfWeek()->format('Y-m-d')]= $el->count();
+              
             }
           }
            
           // fill any missing periods with zeros
           // 
-          $from = clone($this->period['from']);
-          $to = clone($this->period['to']);
-          $branches = $this->fillMissingPeriods($branches);
-          dd('570',$branches);
+          //$from = clone($this->period['from']);
+         // $to = clone($this->period['to']);
+          //$branches = $this->fillMissingPeriods($branches);
+          
           // sort branch array in date sequence
         
      
@@ -588,7 +593,7 @@ class BranchDashboardController extends Controller
       */
      private function fillMissingPeriods($branches,Carbon $from=null,Carbon $to=null)
      {
-      
+       
        if(! $from){
           $from = clone($this->period['from']);
         }
@@ -596,9 +601,9 @@ class BranchDashboardController extends Controller
           $to = clone($this->period['to']);
         }
         $keys = $this->yearWeekBetween($from,$to);
-        dd(598,$keys,$from,$to);
+       
         for($i = $from->format('Y-m-d'); $from <= $to->format('Y-m-d');$from->addWeeks(1)){
-            dd(600,$i);
+           
               if(! in_array($i,$keys)){
                   $keys[]=$i;
               }
@@ -622,6 +627,15 @@ class BranchDashboardController extends Controller
      */
      private function formatActivityTableData(array $branches,array $keys)
      {
+    
+     foreach ($keys as $key){
+      
+      if(array_key_exists($key, $branches)){
+        $data['values'][$key] = $branches[$key];
+      }else{
+        $data['values'][$key] =0;
+      }
+     }
      
       $data['branches'] = $branches;
       $data['keys'] = $keys;
@@ -700,10 +714,12 @@ class BranchDashboardController extends Controller
          ->with(['activities'=>function ($q){
             $q->whereBetween('activity_date',[$this->period['from'],$this->period['to']]);
          }])->get();
-       
+
          return  $activityCount->map(function ($branch){
             return [$branch->id=>[$branch->activities->groupBy(function ($activity) {
-                 return $activity->activity_date->format('Y-W');
+                 return $activity
+                 ->activity_date->endOfWeek()
+                 ->format('Y-W');
             })]];
            });
 
@@ -804,7 +820,7 @@ class BranchDashboardController extends Controller
       $to = Carbon::now()->addMonth(2);
       $keys =  $this->yearWeekBetween($from, $to);
      
-      $data['keys'] = implode(",",$keys);
+      $data['keys'] = "'".implode("','",$keys)."'";
       $data['data'] = implode(",",$chartdata); 
       return $data;
      
@@ -828,8 +844,8 @@ class BranchDashboardController extends Controller
       
 
       $keys=[];
-      for($i = $from->format('Y-m-d'); $i<= $to->format('Y-m-d');$i = $from->addWeek()->format('Y-m-d')){
-        $keys[]="'".$i."'";
+      for($i = $from->endOfWeek()->format('Y-m-d'); $i<= $to->endOfWeek()->format('Y-m-d');$i = $from->addWeek()->format('Y-m-d')){
+        $keys[]=$i;
       }
 
       return $keys;
