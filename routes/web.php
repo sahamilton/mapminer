@@ -130,7 +130,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 	# Feedback
 
-		Route::resource('feedback','FeedbackController',['only'=>['store']]);
+		Route::resource('feedback','FeedbackController',['only'=>['index','show','store']]);
 
 	#Geocoding
 
@@ -408,7 +408,7 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
     	Route::get('feedback/export',['as'=>'feedback.export','uses'=>'FeedbackController@export']);
     	Route::get('feedback{feedback}/close',['as'=>'feedback.close','uses'=>'FeedbackController@close']);
     	Route::get('feedback{feedback}/open',['as'=>'feedback.open','uses'=>'FeedbackController@open']);
-    	Route::resource('feedback','FeedbackController',['except'=>['store']]);
+    	Route::resource('feedback','FeedbackController',['except'=>['index','show','store']]);
 
     # Feedback Comments
     	Route::resource('feedback_comment','FeedbackCommentsController');
