@@ -138,7 +138,7 @@ class ActivityController extends Controller
         if(request()->filled('followup_date')){
             // create a new activity
              $relatedActivity = $this->createFollowUpActivity($data,$activity);
-             dd($relatedActivity);
+             
              $activity->update(['relatedActivity'=>$relatedActivity->id]);
         }
         if (request()->filled('contact')) {
