@@ -115,8 +115,9 @@ class MyLeadsController extends BaseController
         if (! $data = $this->cleanseInput($request)) {
             return redirect()->back()->withError('Unable to geocode that address');
         }
+
         $data['branch'] = $this->branch->findOrFail(request('branch'));
-    
+       
         $dupes = $this->lead->duplicate($data['lead']['lng'],$data['lead']['lat'])->get();
 
        /* if($dupes->count()>0){
@@ -158,8 +159,12 @@ class MyLeadsController extends BaseController
     
     private function cleanseInput(Request $request)
     {
-       
-        $geocode = app('geocoder')->geocode($this->getAddress($request))->get();
+        $address = $this->getAddress($request); 
+        $geocode = app('geocoder')->geocode($address)->get();
+        if($geocode->count()==0){
+            
+            return false;
+        }
         $data['lead'] = $this->lead->getGeoCode($geocode);
 
         $data['lead']['businessname'] =request('companyname');
