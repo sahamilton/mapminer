@@ -48,17 +48,19 @@ class DashboardController extends Controller
 
    public function select (Request $request)
    {
+        
         $this->manager = $this->person->with('manages')->findOrFail(request('manager'));
      
         $branchCount = $this->dashboard->checkBranchCount($this->manager);
-        if($branchCount > 1){
+        
+       if($branchCount > 1){
 
             return redirect()->route('manager.dashboard',$this->manager->id);
-        }elseif($branchCount==1){
+        }elseif($branchCount==1 && count($this->manager->manages) >0){
         //get my branch
             return redirect()->route('branchdashboard.show',$this->manager->manages->first()->id);
         }else{
-            return redirect()->back('You do not have any branches');
+            return redirect()->back()->withWarning($this->manager->fullName() . 'is not associated with any branches');
         }
     
    }
