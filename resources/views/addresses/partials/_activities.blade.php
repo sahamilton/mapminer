@@ -30,7 +30,7 @@ body.modal-open .activity_date, .followup_date {
           <div class="float-right">
            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button> <input type="submit" value="Record Activity" class="btn btn-danger" />
             </div>
-            <input type="hidden" name="location_id" value="{{$location->id}}" />
+            <input type="hidden" name="address_id" value="{{$location->id}}" />
         </form>
 
         <div class="modal-footer">

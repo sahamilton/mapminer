@@ -133,18 +133,21 @@ class ActivityController extends Controller
     {
        
         $data = $this->parseData($request);
-        $activity = Activity::create($data);
+
+        $activity = Activity::create($data['activity']);
         if(request()->filled('followup_date')){
             // create a new activity
              $relatedActivity = $this->createFollowUpActivity($data,$activity);
              $activity->update(['relatedActivity'=>$relatedActivity->id]);
         }
         if (isset($data['contact'])) {
-            $activity->relatedContact()->attach($data['contact']);
+            $activity->relatedContact()->attach($data['contact']['contact']);
         }
         $activity->load('relatedContact');
-        return redirect()->route('address.show', $data['address_id']);
+        return redirect()->route('address.show', $data['activity']['address_id']);
     }
+
+
     public function complete(Activity $activity)
     {
         $activity->update(['completed'=>1]);
@@ -153,33 +156,36 @@ class ActivityController extends Controller
 
     private function createFollowUpActivity(array $data,Activity $activity)
     {
+   
 
-        $data['activity_date'] = $data['followup_date'];
-        $data['activitytype_id'] = $data['followup_activity'];
-        $data['relatedActivity'] = $activity->id;
-        $data['followup_date'] = null;
-        return Activity::create($data);
+        return Activity::create($data['followup']);
     }
     /**
      * [parseData description]
      * @param  [type] $request [description]
      * @return [type]          [description]
      */
-    private function parseData($request)
+    private function parseData(Request $request)
     {
-        $data= $request->except(['_token','submit','followup_activity']);
-        $data['activity_date'] = Carbon::parse($data['activity_date']);
-        if ($data['followup_date']) {
-            $data['followup_date'] = Carbon::parse($data['followup_date']);
+        
+       // get activity data
+        $data['activity'] = request()->only(['activitytype_id','note','activity_date','address_id','followup_date']);
+        
+        $data['activity']['activity_date'] = Carbon::parse($data['activity']['activity_date']);
+
+        // get follow up date 
+
+        if (request()->filled('followup_date')){
+            $data['activity']['followup_date'] = Carbon::parse($data['activity']['followup_date']);
+            $data['followup'] = request()->only(['followup_id','note','address_id']);
+            $data['followup']['activity_date'] = $data['activity']['followup_date'];
+            $data['followup']['activitytype_id'] = request('followup_id');
+            $data['followup']['address_id'] = request('address_id');
+            $data['followup_date']['followup_date'] = null;
         }
-        if (isset($data['location_id'])) {
-            $data['address_id'] =$data['location_id'];
-        } else {
-            $data['address_id'] = $data['address_id'];
-        }
-        $data['activitytype_id'] = $data['activity'];
+    // contact data
+        $data['contact']= $request->only(['contact']);
         $data['user_id'] = auth()->user()->id;
-        $data['contact_id'] = request('contact_id');
         return $data;
     }
 
