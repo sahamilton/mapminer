@@ -309,7 +309,11 @@ class Branch extends Model implements HasPresenter
         $this->relatedPeople()->sync($associatedPeople);
     }
 
-    
+    public function allStates()
+    {
+        $states = $this->distinct('state')->pluck('state')->toArray();
+        return State::whereIn('statecode', $states)->orderBy('statecode')->get();
+    }
 	public function getbranchGeoCode($request){
 		$address = request('street') . ",". request('city') . ",". request('state') . ",". request('zip');	
 
