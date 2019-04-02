@@ -107,58 +107,7 @@ $(document).ready(function()
 		}
 		);
 	
-	/*
-	$('.starrr').on('starrr:change', function(e, value){
-  
-		  
-		    var id = e.target.id;
-			var type = e.target.className.replace("starrr ", '');
-			
-		    var returnVal = ranked(id,parseInt(value),type);
-		    
-		  	function ranked(id,value,type)
-		       {
-		         if (type && type=='lead') {
-		         	var url = 'api.newlead.rank'?api_token={{auth()->user()->api_token}}';
-		         }else{
-		         	var url = '{{route('api.rank')}}?api_token={{auth()->user()->api_token}}';
-		         }
-		         var myajax = $.ajax(
-		      
-		          {
-		          
-		          type: "GET",
-		          
-		          cache: false,
-		       
-		          
-		          url: url,
-		          data: {id: id,value: value,type: type},
-		          
-		          dataType: "json",
-		          
-		          contentType: "json",
-		          
-		         
-		          
-		          }); 
-		          return myajax.responseText;
-		          //end of $.ajax
-		         
-		        
-		       }
 
-		        function processData(){
-		         //alert("I did it!");
-		       }
-		       
-		       function errorAlert() {
-		         alert("Whoops that didnt work");
-		       }
-
-		});
-//$("[id$=jander]")
-	*/
         $('[id^=sorttable], #store-locator-container').on('change','.watchItem',function(e) {
         e.stopImmediatePropagation();
 		var id = $(this).val();

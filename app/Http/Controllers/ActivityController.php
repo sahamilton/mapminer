@@ -104,7 +104,10 @@ class ActivityController extends Controller
                 ->thisPeriod($this->period)
                 ->sevenDayCount()
                 ->get();
-        $data['chart'] = $this->getActivityChart($weekCount);
+       if(count($weekCount)>0){
+            $data['chart'] = $this->getActivityChart($weekCount);
+        }
+        
         $data['summary'] = $this->activity->summaryData($weekCount);
 
         
@@ -118,8 +121,8 @@ class ActivityController extends Controller
             $chart[$activityTypes->where('id','=',$week->activitytype_id)->first()->activity][$week->yearweek]= $week->activities;
             
         }
-        $periods = ['201909','201910','201911','201912','201913'];
-        foreach ($chart as $key=>$value){
+       $periods = $this->yearWeekBetween();
+       foreach ($chart as $key=>$value){
            
             foreach ($periods as $period){
                 if(! array_key_exists($period, $value)){
@@ -140,7 +143,31 @@ class ActivityController extends Controller
             ->whereIn('id', $branches)
             ->get();
        }
+    /**
+     * [yearWeekBetween description]
+     * @param  [type] $from [description]
+     * @param  [type] $to   [description]
+     * @return [type]       [description]
+     */
+    private function yearWeekBetween(Carbon $from=null,Carbon $to=null)
+    {
 
+      if(! $from){
+        $from = clone($this->period['from']);
+      }
+      if(! $to){
+        $to = clone($this->period['to']);
+      }
+      
+      
+
+      $keys=[];
+      for($i = $from->startOfWeek()->format('Y-m-d'); $i<= $to->startOfWeek()->format('Y-m-d');$i = $from->addWeek()->format('Y-m-d')){
+        $keys[]=$i;
+      }
+
+      return $keys;
+    }
 
     /**
      * Show the form for creating a new resource.

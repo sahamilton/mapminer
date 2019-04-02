@@ -128,7 +128,7 @@ class Activity extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
 
     public function scopeSevenDayCount($query)
     {
-        return $query->selectRaw('activitytype_id,YEARWEEK(activity_date,3) as yearweek,count(*) as activities')
+        return $query->selectRaw('activitytype_id,FROM_DAYS(TO_DAYS(activity_date) -MOD(TO_DAYS(activity_date) -2, 7)) as yearweek,count(*) as activities')
         ->groupBy(['activitytype_id','yearweek']);
     }
     public function scopeCurrentWeekCount($query)

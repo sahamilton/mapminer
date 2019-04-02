@@ -1,50 +1,50 @@
 Good Queries
-
+//*************************************************
 insert ignore into address_branch 
 (address_id,branch_id, top50)
 select distinct address_id,branch_id,top50
 from opportunities 
 where opportunities.address_branch_id =0
-
+//*************************************************
 update opportunities,address_branch
 set opportunities.address_branch_id = address_branch.id
 where opportunities.address_id = address_branch.address_id
 and opportunities.branch_id = address_branch.branch_id
 and opportunities.address_branch_id = 0
 
-
+//*************************************************
 
 update opportunities, address_branch,activities
 set closed = 2 where activities.activitytype_id = 9
 and opportunities.address_branch_id = address_branch.id
 and address_branch.address_id = activities.address_id
-
+//*************************************************
 SELECT addresses.id, businessname, addresses.street,addresses.city,addresses.state,branches.id as branchid,branchname, ST_Distance_Sphere(branches.position,addresses.position)  as distance
 FROM `addresses`,address_branch,branches
-
+//*************************************************
 where addresses.id = address_branch.address_id 
 and address_branch.branch_id = branches.id
 and branches.id in (1115,1149,1150,2254,2255,2702,2751,2752,2753,2961)
 ORDER BY addresses.id, distance asc
-
+//**************************************************
 update addresses set position = POINT(lng, lat);
 update addresses set position = ST_GeomFromText(ST_AsText(position), 4326);
 update branches set position = POINT(lng, lat);
 update branches set position = ST_GeomFromText(ST_AsText(position), 4326);
 update persons set position = POINT(lng, lat);
 update persons set position = ST_GeomFromText(ST_AsText(position), 4326);
-
+//**************************************************
 select addresses.id, addresses.businessname, concat_ws(' ',addresses.street,addresses.city,addresses.state) as fullAddress,addresses.lat,addresses.lng,branches.id,branches.branchname,branches.lat,branches.lng,
 ST_Distance_Sphere(addresses.position,branches.position)/40633 AS distance
 from addresses,address_branch, branches
 where addresses.id = address_branch.address_id
 and address_branch.branch_id in ('1506','1518','1522','1525','1552','1589')
-
+//**************************************************
 select branches.id,branchname, slc( 40.716743, -73.951368, branches.lat, branches.lng) as distance_in_meters,  astext(branches.position) 
 from branches,addresses_import
 where MBRContains(envelope(linestring(point(addresses_import.max(lng), addresses_import.max(lat)), point(addresses_import.min(lng), addresses_import.min(lat))), branches.position) 
 order by distance_in_meters limit 10
-
+//**************************************************
 
 SELECT 
        CONCAT('LINESTRING(',
@@ -54,9 +54,30 @@ SELECT
               ')') AS box
    FROM addresses_import
 
-------------------
+//*************************************************
    SELECT *
   FROM branches
  WHERE MBRContains(
         GeomFromText( envelope('LINESTRING(33.20434400000000 -118.47817100000000,34.09832500000000 -117.35715400000000)') ),
        	POINT(lng, lat))
+
+//*****************************************
+select persons.user_id,  activities.id
+from persons,branch_person,address_branch,activities
+where persons.id = branch_person.person_id
+and branch_person.role_id = 9
+and branch_person.branch_id = address_branch.branch_id
+and address_branch.address_id = activities.address_id
+and activities.user_id = 0;
+
+//*****************************************
+SELECT activities.id, persons.user_id FROM `activities`,address_branch,branch_person,persons WHERE activities.user_id =0 and activities.address_id = address_branch.address_id and address_branch.branch_id = branch_person.branch_id and branch_person.person_id = persons.id
+//***************************************
+insert into activities
+
+(`activity_date`,`activitytype_id`,`address_id`,`branch_id`,`user_id`,`relatedActivity`,`created_at`,`note`)
+select * from (SELECT
+          `followup_date`,'12',`address_id`,`branch_id`,`user_id`,`id`,`created_at`, concat_ws(' ','----',note,'----') from activities where followup_date is not null) b;
+
+
+update`activities` set completed = 1 WHERE activity_date < '2019-03-30';
