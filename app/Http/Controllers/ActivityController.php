@@ -135,7 +135,7 @@ class ActivityController extends Controller
         }
         
         // fill missing periods
-        dd($charts,$this->period);
+        dd($this->formatActivityChartData($charts));
     }
     private function getBranches(Array $branches)
        {
@@ -337,5 +337,22 @@ class ActivityController extends Controller
         $branch = $branch->getActivitiesByType($activitytype)->findOrFail($branch->id);
    
         return response()->view('opportunities.showactivities', compact('branch', 'activitytype'));
+    }
+
+    private function formatActivityChartData($data){
+        $chartdata=[];
+       
+        
+        $n=0;
+        foreach ($data as $key => $value) {
+            
+                //$chartdata[$key]['color'] = $colors[$n];
+                //$n++;
+                $chartdata[$key]['labels']=implode("','", array_keys($value));
+                $chartdata[$key]['data']=implode(",", array_values($value));
+           
+        }
+
+        return $chartdata;
     }
 }
