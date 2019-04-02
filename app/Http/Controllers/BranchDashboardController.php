@@ -17,7 +17,7 @@ use App\Person;
 use \Carbon\Carbon;
 use Illuminate\Http\Request;
 
-class BranchDashboardController extends Controller
+class BranchDashboardController extends DashboardController
 {
     public $activity;
     public $address;

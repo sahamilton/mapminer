@@ -17,6 +17,7 @@ class ActivityController extends Controller
     public $activity;
     public $contact;
     public $branch;
+    public $period;
 
     public function __construct(Activity $activity, Contact $contact, Person $person, Branch $branch)
     {
@@ -43,10 +44,10 @@ class ActivityController extends Controller
             $branch = $this->branch->findOrFail(reset($branches));
 
             $data = $this->getBranchActivities($branch);
-           
+         
             $title= $data['branches']->first()->branchname . " activities";
        
-        return response()->view('activities.index', compact('activities', 'data','title','myBranches'));
+        return response()->view('activities.index', compact( 'data','title','myBranches'));
        
     }
     public function branchUpcomingActivities(Branch $branch){
@@ -95,16 +96,44 @@ class ActivityController extends Controller
         $data['activities'] =  $data['activities']->with('relatesToAddress', 'relatedContact', 'type', 'user')->get();
 
         $data['branches'] =  $this->getbranches([$branch->id]);
-
-        $weekCount = $this->activity->myTeamsActivities($team)->sevenDayCount()->pluck('activities', 'yearweek')->toArray();
-       
+        if(! $this->period){
+            $this->period = $this->activity->getPeriod();
+        }
+        $weekCount = $this->activity->myTeamsActivities($team)
+                ->whereCompleted(1)
+                ->thisPeriod($this->period)
+                ->sevenDayCount()
+                ->get();
+        $data['chart'] = $this->getActivityChart($weekCount);
         $data['summary'] = $this->activity->summaryData($weekCount);
 
         
         return $data;
     }
 
-
+    private function getActivityChart($weekCount)
+    {
+        $activityTypes = \App\ActivityType::all();
+        foreach ($weekCount as $week){
+            $chart[$activityTypes->where('id','=',$week->activitytype_id)->first()->activity][$week->yearweek]= $week->activities;
+            
+        }
+        $periods = ['201909','201910','201911','201912','201913'];
+        foreach ($chart as $key=>$value){
+           
+            foreach ($periods as $period){
+                if(! array_key_exists($period, $value)){
+                    $charts[$key][$period]=0;
+                }else{
+                    $charts[$key][$period] = $value[$period];
+                }
+            }
+            ksort($charts[$key]);
+        }
+        
+        // fill missing periods
+        dd($charts,$this->period);
+    }
     private function getBranches(Array $branches)
        {
         return  $this->branch->with( 'manager')

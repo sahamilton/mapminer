@@ -24,7 +24,7 @@ class BranchActivityController extends Controller
         $data = $this->getBranchActivities([reset($branch)]);
         
         $title= $data['branches']->first()->branchname . " activities";
-         return response()->view('activities.index', compact('activities', 'data'));        return response()->view('activities.index', compact('data', 'myBranches','title'));
+         return response()->view('activities.index', compact('activities', 'data')); 
         // how to get the distance for each branch
         // get my branches
         // get addresses that are leads that are assigned to a branch
@@ -48,6 +48,7 @@ class BranchActivityController extends Controller
         $data = $this->getBranchActivities([$branch]);
        
         $title= $data['branches']->first()->branchname . " activities";
+
         return response()->view('activities.index', compact('data', 'myBranches','title'));
     }
 
@@ -78,7 +79,7 @@ class BranchActivityController extends Controller
            $users =  $this->person->myBranchTeam($myBranches);
 
            return $this->activity->whereIn('user_id',$users)
-           ->where('followup_date','>=',Carbon::now())->get();
+           ->where('completed','<>',1)->get();
 
     }
 

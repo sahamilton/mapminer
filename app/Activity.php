@@ -106,6 +106,10 @@ class Activity extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
     {
         return $query->whereIn('user_id', $myteam);
     }
+    public function scopeThisPeriod($query,$period)
+    {
+      return $query->whereBetween('activity_date',[$period['from'],$period['to']]);
+    }
     public function relatedContact()
     {
         return $this->belongsToMany(Contact::class, 'activity_contact', 'activity_id', 'contact_id');
@@ -124,8 +128,8 @@ class Activity extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
 
     public function scopeSevenDayCount($query)
     {
-        return $query->selectRaw('branch_id,YEARWEEK(activity_date,3) as yearweek,count(*) as activities')
-        ->groupBy(['branch_id','yearweek'])->orderBy('yearweek', 'asc');
+        return $query->selectRaw('activitytype_id,YEARWEEK(activity_date,3) as yearweek,count(*) as activities')
+        ->groupBy(['activitytype_id','yearweek']);
     }
     public function scopeCurrentWeekCount($query)
     {
