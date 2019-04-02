@@ -119,13 +119,18 @@ class BranchDashboardController extends Controller
     
       $branch = $this->branch->with('manager')->findOrFail($branch);
 
-      $this->manager = $branch->manager->first();
-      if(!$this->manager){
+      if($branch->manager->count()>1 && 
+        $branch->manager->where('user_id','=',auth()->user()->id)->count()==1){
+          $this->manager = $branch->manager->where('user_id','=',auth()->user()->id)->first();
+      }else{
+        $this->manager = $branch->manager->first();
+      }
+      if(! $this->manager){
         return redirect()->route('dashboard.index')->withMessage("There is no manager assigned to branch ". $branch->branchname . ". Notify Sales Opersations");
       }
       $this->myBranches = [$branch->id];
       $data = $this->getDashBoardData();
-      
+   
      
       return response()->view('branches.dashboard', compact('data','branch'));
 
