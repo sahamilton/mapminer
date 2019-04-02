@@ -19,8 +19,9 @@
 
         </form>
     </div>
-@else
-    <div class="row float-right">
+@endif
+@php $branch = $data['branches']->first(); @endphp    
+<div class="row float-right">
         <button type="button" 
             class="btn btn-info float-right" 
             data-toggle="modal" 
@@ -30,10 +31,10 @@
     </div>
 
 
-@php $branch = $data['branches']->first(); @endphp
+
 @include('branchleads.partials._mylead') 
 
-@endif
+
  <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
 

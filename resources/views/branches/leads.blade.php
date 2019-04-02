@@ -1,4 +1,4 @@
-@extends('site/layouts/default')
+@extends('site.layouts.default')
 @section('content')
 
 <h2>{{$leads->first()->branch->branchname}} Leads</h2>
