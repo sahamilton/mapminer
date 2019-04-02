@@ -114,13 +114,18 @@ class BranchDashboardController extends DashboardController
     
       $branch = $this->branch->with('manager')->findOrFail($branch);
 
-      $this->manager = $branch->manager->first();
-      if(!$this->manager){
+      if($branch->manager->count()>1 && 
+        $branch->manager->where('user_id','=',auth()->user()->id)->count()==1){
+          $this->manager = $branch->manager->where('user_id','=',auth()->user()->id)->first();
+      }else{
+        $this->manager = $branch->manager->first();
+      }
+      if(! $this->manager){
         return redirect()->route('dashboard.index')->withMessage("There is no manager assigned to branch ". $branch->branchname . ". Notify Sales Opersations");
       }
       $this->myBranches = [$branch->id];
       $data = $this->getDashBoardData();
-      
+   
      
       return response()->view('branches.dashboard', compact('data','branch'));
 
@@ -135,11 +140,12 @@ class BranchDashboardController extends DashboardController
      */
     private function getDashBoardData()
     {
-      
+      $teamroles = [9]; // only branch managers
       $data['team']['me'] = $this->person->findOrFail($this->manager->id);
       // this might return branch managers with no branches!
       $data['team']['team'] =  $this->person
-      ->where('reports_to','=',$this->manager->id)      
+      ->where('reports_to','=',$this->manager->id) 
+      ->WithRoles($teamroles)     
       ->get();
       //$data['team']= $this->myTeamsOpportunities();
       $data['summary'] = $this->getSummaryBranchData();
@@ -198,7 +204,8 @@ class BranchDashboardController extends DashboardController
                            $query->whereBetween('address_branch.created_at',[$this->period['from'],$this->period['to']]);
                         },
                         'activities'=>function($query){
-                            $query->whereBetween('activity_date',[$this->period['from'],$this->period['to']]);
+                            $query->whereBetween('activity_date',[$this->period['from'],$this->period['to']])
+                            ->where('completed','=',1);
                         },
 
                         'opportunities',

@@ -26,7 +26,7 @@ body.modal-open .activity_date, .followup_date {
                 
         <form method="post" action="{{route('activity.store')}}">
         {{csrf_field()}}
-        @include('activities.partials._activityform')
+        @include('activities.partials._activitynewform')
           <div class="float-right">
            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button> <input type="submit" value="Record Activity" class="btn btn-danger" />
             </div>

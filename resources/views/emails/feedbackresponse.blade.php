@@ -16,6 +16,8 @@ Date: {{$feedback->created_at->format('F jS, Y')}}
 
 Posted By: {{$feedback->providedBy->person->fullName()}}
 
+Email: {{$feedback->providedBy->email}}
+
 @endcomponent
 
 

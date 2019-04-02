@@ -12,6 +12,7 @@ class='table table-striped table-bordered table-condensed table-hover'>
     </thead>
       <tbody>
         @foreach ($data['branches'] as $branch)
+       
           <tr>
             <td>
               <a href="{{route('dashboard.show',$branch->id)}}">{{$branch->branchname}}</a>
@@ -31,7 +32,7 @@ class='table table-striped table-bordered table-condensed table-hover'>
             
             <td align="center">
               <a href="{{route('opportunities.branch',$branch->id)}}">
-                {{$branch->open_count}}
+                {{$branch->open}}
               </a>
             </td>
             <td align="center">
