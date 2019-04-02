@@ -82,4 +82,40 @@ class Opportunity extends Model
                     ->get();
 
     }
+
+    public function scopeThisPeriod($query,$period)
+    {
+      return $query->where('opportunities.created_at','<=',$period['to']);
+    }
+
+    public function scopeTop50($query,$period)
+    {
+            return $query->where('opportunities.top50','=',1);
+    }
+
+    public function scopeOpen($query, $period)
+    {
+        return $query->where(function($q) use($period){
+                $q->where('actual_close','>',$period['to'])
+                ->orwhereNull('actual_close');
+              })
+              ->where('opportunities.created_at','<=',$period['to']);
+    } 
+
+    public function scopeClosed($query, $period)
+    {
+        return $query->where('Closed','<>',0)
+            ->whereBetween('actual_close',[$period['from'],$period['to']]);
+    }  
+
+    public function scopeWon($query, $period)
+    {
+        return $query->whereClosed(1)
+            ->whereBetween('actual_close',[$period['from'],$period['to']]);
+    } 
+    public function scopeLost($query, $period)
+    {
+        return $query->whereClosed(2)
+            ->whereBetween('actual_close',[$period['from'],$period['to']]);
+    }            
 }

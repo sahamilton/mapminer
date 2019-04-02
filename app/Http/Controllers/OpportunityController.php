@@ -27,6 +27,7 @@ class OpportunityController extends Controller
     public $opportunity;
     public $activity;
     public $person;
+    public $period;
 
 
     public function __construct(
@@ -45,6 +46,7 @@ class OpportunityController extends Controller
         $this->opportunity = $opportunity;
         $this->person = $person;
         $this->activity = $activity;
+        
     }
 
     /**
@@ -54,13 +56,16 @@ class OpportunityController extends Controller
      */
     public function index()
     {
+        if(! $this->period){
+            $this->period = $this->activity->getPeriod();
+        }
         $activityTypes = $activityTypes = ActivityType::all();
        
         $myBranches = $this->person->myBranches();
    
         $data = $this->getBranchData(array_keys($myBranches));
-
-        return response()->view('opportunities.index', compact('data', 'activityTypes', 'myBranches'));
+        $data['period'] = $this->period;
+        return response()->view('opportunities.index', compact('data', 'activityTypes', 'myBranches','period'));
     }
 
     public function branchOpportunities(Branch $branch, Request $request)
@@ -142,9 +147,12 @@ class OpportunityController extends Controller
 
        private function getOpportunities($branches)
        {
+         
          return $this->opportunity
                 ->whereIn('branch_id', $branches)
                 ->with('address', 'branch', 'address.activities')
+                ->thisPeriod($this->period)
+                ->open($this->period)
                 ->orderBy('branch_id')
                 ->distinct()
                 ->get();
