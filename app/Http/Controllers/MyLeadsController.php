@@ -35,18 +35,26 @@ class MyLeadsController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($branch=null)
     {
-               
+                
        if(!  $myBranches = $this->person->myBranches()){
         return redirect()->back()->withError('You are not assigned to any branches');
        }
+       if(! $branch){
+          $branch = array_keys($myBranches);
+          $branch = reset($branch);
+        }else{
+           if(! in_array($branch->id,array_keys($this->person->myBranches()))){
+            return redirect()->back()->withError('That is not one of your branches');
+            }
+            $branch = $branch->id;
+        }
        
-        $branch = array_keys($myBranches);
-
-        $data = $this->getBranchLeads([reset($branch)]);
+        $data = $this->getBranchLeads([$branch]);
         
         $title= $data['branches']->first()->branchname . " leads";
+
         return response()->view('myleads.branches', compact('data', 'myBranches','title'));
         // how to get the distance for each branch
         // get my branches

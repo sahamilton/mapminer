@@ -41,13 +41,13 @@
     <th>Company</th>
     <th>Company Name</th>
     <th>Address</th>
-    <th>Distance</th>
+    <th>Remove</th>
 
     </thead>
     <tbody>
 
         @foreach($data['leads'] as $lead)
-
+        
     <tr>
         <td>
             <a href="{{route('address.show',$lead->id)}}">
@@ -56,7 +56,18 @@
         </td>
         <td>{{$lead->businessname}}</td>
         <td>{{$lead->fullAddress()}}</td>
-        <td>distance</td>
+        <td>
+            
+          <a 
+            data-href="{{route('branch.lead.remove',$lead->id)}}" 
+            data-toggle="modal" 
+            data-target="#confirm-remove" 
+            data-title = " this lead from your list" 
+            href="#">
+                <i class="fas fa-trash-alt text-danger"></i>
+            </a>
+        </td>
+
 
 
 
@@ -66,6 +77,6 @@
     </tbody>
     </table>
  
-
+@include('branchleads.partials._branchleadmodal')
 @include('partials._scripts')
 @endsection

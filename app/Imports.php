@@ -73,7 +73,7 @@ class Imports extends Model
 		$this->addLeadSourceRef($request);
 		$this->addCreateAtField();
 		$this->createPositon();
-		$this->updateAdditionalFields();
+		$this->updateAdditionalFields($request);
 		if (! $this->dontCreateTemp){
 
 			$this->copyTempToBaseTable();
@@ -126,10 +126,11 @@ class Imports extends Model
     }
     private function updateAdditionalFields(Request $request)
     {
-       foreach (request('additionaldata') as $key=>$data){
-        $this->executeQuery("update ".$this->temptable." set " . $key . " = " . $data . ";");
-       }
-    
+        if(request()->filled('additionaldata')){
+           foreach (request('additionaldata') as $key=>$data){
+            $this->executeQuery("update ".$this->temptable." set " . $key . " = " . $data . ";");
+           }
+        }
 		return true;
 		}
 
