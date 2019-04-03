@@ -18,13 +18,8 @@ class BackupDatabase extends Command
     public function __construct()
     {
         parent::__construct();
-        $date = now()->format('Y-m-d hh:mm');
-        dd(sprintf(
-            'mysqldump -u%s -p%s %s > %s',
-            config('database.connections.mysql.username'),
-            config('database.connections.mysql.password'),
-            config('database.connections.mysql.database'),
-            storage_path('backups/backup'.$date.'.sql'));
+        $date = now()->format('Y-m-d-hh:mm');
+       
         $this->process = new Process(sprintf(
             'mysqldump -u%s -p%s %s > %s',
             config('database.connections.mysql.username'),
