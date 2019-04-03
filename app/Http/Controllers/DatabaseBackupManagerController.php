@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\DatabaseManager;
+use App\DatabaseBackupManager;
 use Illuminate\Http\Request;
 
-class DatabaseManagerController extends Controller
+class DatabaseBackupManagerController extends Controller
 {
     public $database;
 

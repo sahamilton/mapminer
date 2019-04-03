@@ -589,7 +589,7 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
         Route::get('/construction/api/{distance}/{latLng}', ['as'=>'construction.api','uses'=>'ConstructionController@map']);
     
         # Database Backups
-        Route::resource('database','DatabaseManagerController');
+        Route::resource('database','DatabaseBackupManagerController');
         # User Management
 
         Route::get('cleanse', ['as'=>'users.cleanse','uses'=>'Admin\AdminUsersController@cleanse']);

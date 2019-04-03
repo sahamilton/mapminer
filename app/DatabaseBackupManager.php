@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class DatabaseManager extends Model
+class DatabaseBackupManager extends Model
 {
 	public $backupDirectory = 'exports';
 
