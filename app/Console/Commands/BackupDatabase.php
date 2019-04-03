@@ -6,7 +6,8 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
-
+use App\Mail\ConfirmBackup;
+use Mail;
 class BackupDatabase extends Command
 {
     protected $signature = 'db:backup';
@@ -19,13 +20,14 @@ class BackupDatabase extends Command
     {
         parent::__construct();
         $date = now()->format('Y-m-d-hh:mm');
-       
+        $db = env('DB_DATABASE');
+        $this->file = 'backups/backup'.$db."-".$date.'.sql';
         $this->process = new Process(sprintf(
             'mysqldump -u%s -p%s %s > %s',
             config('database.connections.mysql.username'),
             config('database.connections.mysql.password'),
             config('database.connections.mysql.database'),
-            storage_path('backups/backup'.$date.'.sql')
+            storage_path($this->file)
         ));
     }
 
@@ -33,8 +35,8 @@ class BackupDatabase extends Command
     {
         try {
             $this->process->mustRun();
-
             $this->info('The backup has been processed successfully.');
+            Mail::queue(new ConfirmBackup($this->file));
         } catch (ProcessFailedException $exception) {
             $this->error('The backup process has failed.');
         }

@@ -1,4 +1,9 @@
-<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" 
+id="confirm-delete" 
+tabindex="-1" 
+role="dialog" 
+aria-labelledby="myModalLabel" 
+aria-hidden="true">
         <div class="modal-dialog"  role="document">
             <div class="modal-content">
             
@@ -21,8 +26,7 @@
                     <a href="#" class="btn btn-danger danger"
                         onclick="event.preventDefault();
                         document.getElementById('action-form').submit();"
-                        class="btn btn-danger danger">Delete</a>
-                                        
+                        class="btn btn-danger danger">Delete</a>           
                         <form id="action-form" 
                             action="" 
                             method="post" 
