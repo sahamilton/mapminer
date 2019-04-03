@@ -19,7 +19,9 @@ class BackupDatabase extends Command
     {
         parent::__construct();
         $date = now()->format('Y-m-d hh:mm');
-        dd(config('database.connections.mysql.username'),
+        dd(sprintf(
+            'mysqldump -u%s -p%s %s > %s',
+            config('database.connections.mysql.username'),
             config('database.connections.mysql.password'),
             config('database.connections.mysql.database'),
             storage_path('backups/backup'.$date.'.sql'));
