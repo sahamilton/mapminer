@@ -4,7 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 
-class WeeklyActivitiesREminder extends Command
+class WeeklyActivitiesReminder extends Command
 {
     /**
      * The name and signature of the console command.
