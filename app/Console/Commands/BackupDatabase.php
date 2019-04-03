@@ -7,6 +7,7 @@ use Illuminate\Console\Command;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use App\Mail\ConfirmBackup;
+use App\Mail\FailedBackup;
 use Mail;
 class BackupDatabase extends Command
 {
@@ -39,6 +40,7 @@ class BackupDatabase extends Command
             Mail::queue(new ConfirmBackup($this->file));
         } catch (ProcessFailedException $exception) {
             $this->error('The backup process has failed.');
+            Mail::queue(new FailedBackup($this->file));
         }
     }
 }
