@@ -250,8 +250,10 @@ class OpportunityController extends Controller
 
     public function remove(Address $address, Request $request)
     {
-        $address->assignedToBranch()->detach(request('branch-id'));
-        return redirect()->back()->withMessage('lead removed');
+        
+        $address->assignedToBranch()->detach(request('branch_id'));
+       
+        return redirect()->route('branch.leads',request('branch_id'))->withMessage('Lead removed');
     }
     public function addToBranchLeads(Address $address, Request $request)
     {

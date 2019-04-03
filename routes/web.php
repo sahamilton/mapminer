@@ -97,7 +97,7 @@ Route::group(['middleware' => 'auth'], function () {
 	    Route::get('branch/pipeline',['as'=>'branches.pipeline','uses'=>"OpportunityController@pipeline"]);
 	   
 	# Branch Leads
-		Route::get('branch/leads',['as'=>'branch.leads','uses'=>'MyLeadsController@index']);
+		Route::get('branch/leads/{branch?}',['as'=>'branch.leads','uses'=>'MyLeadsController@index']);
 		Route::get('branch/{branch}/leads',['as'=>'lead.branch','uses'=>'MyLeadsController@branchLeads']);
 		Route::post('branch/lead',['as'=>'leads.branch','uses'=>'MyLeadsController@branchLeads']);
 		
