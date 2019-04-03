@@ -45,9 +45,9 @@
 </nav>
 <div class="tab-content" id="nav-tabContent">
     <div id="summary" class="tab-pane show active">
-    	@if(isset($data['summary']))
+    	
 			@include('activities.partials._summary')
-		@endif
+		
 		
 	</div>
 

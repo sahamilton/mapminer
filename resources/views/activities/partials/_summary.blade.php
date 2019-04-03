@@ -22,4 +22,4 @@
 <div class="col-sm-4" style="border:1 solid grey" class="float-right">
   <canvas id="ctx" width="400" height="400" ></canvas>
 </div>
-@include('activities.partials._chart')
+@include('activities.partials._activitiesstackedchart')

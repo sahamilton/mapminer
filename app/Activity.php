@@ -125,8 +125,12 @@ class Activity extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
     {
         return $this->belongsTo(ActivityType::class, 'activitytype_id', 'id');
     }
-
     public function scopeSevenDayCount($query)
+    {
+        return $query->selectRaw('FROM_DAYS(TO_DAYS(activity_date) -MOD(TO_DAYS(activity_date) -2, 7)) as yearweek,count(*) as activities')
+        ->groupBy(['yearweek']);
+    }
+    public function scopeSevenDayTypeCount($query)
     {
         return $query->selectRaw('activitytype_id,FROM_DAYS(TO_DAYS(activity_date) -MOD(TO_DAYS(activity_date) -2, 7)) as yearweek,count(*) as activities')
         ->groupBy(['activitytype_id','yearweek']);

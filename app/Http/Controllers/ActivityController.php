@@ -99,16 +99,24 @@ class ActivityController extends Controller
         if(! $this->period){
             $this->period = $this->activity->getPeriod();
         }
-        $weekCount = $this->activity->myTeamsActivities($team)
+        $data['summary']=  $this->activity->myTeamsActivities($team)
                 ->whereCompleted(1)
                 ->thisPeriod($this->period)
                 ->sevenDayCount()
                 ->get();
+        dd(107,$data['summary']);
+        $weekTypeCount = $this->activity->myTeamsActivities($team)
+                ->whereCompleted(1)
+                ->thisPeriod($this->period)
+                ->sevenDayTypeCount()
+                ->get();
+        dd($weekCount);
        if(count($weekCount)>0){
+            $data['summary'] = $this->activity->summaryData($weekCount);
             $data['chart'] = $this->getActivityChart($weekCount);
         }
         
-        $data['summary'] = $this->activity->summaryData($weekCount);
+        
 
         
         return $data;
@@ -135,7 +143,7 @@ class ActivityController extends Controller
         }
         
         // fill missing periods
-        dd($this->formatActivityChartData($charts));
+        return $this->formatActivityChartData($charts);
     }
     private function getBranches(Array $branches)
        {
@@ -342,12 +350,12 @@ class ActivityController extends Controller
     private function formatActivityChartData($data){
         $chartdata=[];
        
-        
+        $colors = $this->activity->createColors(12);
         $n=0;
         foreach ($data as $key => $value) {
             
-                //$chartdata[$key]['color'] = $colors[$n];
-                //$n++;
+                $chartdata[$key]['color'] = $colors[$n];
+                $n++;
                 $chartdata[$key]['labels']=implode("','", array_keys($value));
                 $chartdata[$key]['data']=implode(",", array_values($value));
            
