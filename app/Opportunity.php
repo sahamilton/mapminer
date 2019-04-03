@@ -117,5 +117,11 @@ class Opportunity extends Model
     {
         return $query->whereClosed(2)
             ->whereBetween('actual_close',[$period['from'],$period['to']]);
-    }            
+    } 
+
+    public function scopeSevenDayCount($query)
+    {
+        return $query->selectRaw('FROM_DAYS(TO_DAYS(actual_close) -MOD(TO_DAYS(actual_close) -2, 7)) as yearweek,count(*) as opportunities')
+        ->groupBy(['yearweek']);
+    }           
 }

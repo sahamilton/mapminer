@@ -590,6 +590,10 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
     
         # Database Backups
         Route::resource('database','DatabaseBackupManagerController');
+        
+        # Reports
+        Route::resource('reports','ReportsController');
+
         # User Management
 
         Route::get('cleanse', ['as'=>'users.cleanse','uses'=>'Admin\AdminUsersController@cleanse']);

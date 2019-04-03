@@ -68,7 +68,7 @@ class Branch extends Model implements HasPresenter
             return $this->belongsToMany(Person::class)->withTimestamps()->withPivot('role_id');
         }
     }
-
+    
     public function activities()
     {
         return $this->hasManyThrough(Activity::class, AddressBranch::class, 'branch_id', 'address_id', 'id', 'address_id');
