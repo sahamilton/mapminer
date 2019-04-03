@@ -28,6 +28,7 @@ class FailedBackup extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.failedbackup');
+        return $this->markdown('emails.failedbackup')
+        ->to('stephen@crescentcreative.com');
     }
 }
