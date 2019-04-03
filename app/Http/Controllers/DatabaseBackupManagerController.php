@@ -9,7 +9,7 @@ class DatabaseBackupManagerController extends Controller
 {
     public $database;
 
-    public function __construct(DatabaseManager $database)
+    public function __construct(DatabaseBackupManager $database)
     {
 
         $this->database = $database;
