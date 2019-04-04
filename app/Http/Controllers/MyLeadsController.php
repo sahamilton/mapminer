@@ -319,6 +319,9 @@ class MyLeadsController extends BaseController
         
         if (! request()->filled('branch')) {
             $branch = $this->validateBranches($request);
+            if(! $branch){
+              return redirect()->back()->withError('Invalid branch ids');
+            }
         } else {
             $branch = request('branch');
         }
@@ -358,12 +361,19 @@ class MyLeadsController extends BaseController
      */
     private function validateBranches(Request $request)
     {
+        
+        preg_match_all('/(([0-9]{4})+)/m', request('branch_id'), $branches, PREG_PATTERN_ORDER);
 
-        $branch = explode(",", request('branch_id'));
-        $branches = $this->branch->whereIn('id', $branch)->pluck('id')->toArray();
-        if (array_diff($branch, $branches)) {
-            return redirect()->back()->withError('Invalid branch id '. implode(",", array_diff($branch, $branches)));
+        if(count($branches[1])==0){
+          
+          return false;
         }
-        return $branch;
+        
+       // check that the branches are valid
+        $branches = $this->branch->whereIn('id', $branches)->pluck('id')->toArray();
+        if (count($branches)==0) {
+            return false;
+        }
+        return $branches;
     }
 }
