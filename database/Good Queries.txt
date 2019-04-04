@@ -21,7 +21,6 @@ and address_branch.address_id = activities.address_id
 //*************************************************
 SELECT addresses.id, businessname, addresses.street,addresses.city,addresses.state,branches.id as branchid,branchname, ST_Distance_Sphere(branches.position,addresses.position)  as distance
 FROM `addresses`,address_branch,branches
-//*************************************************
 where addresses.id = address_branch.address_id 
 and address_branch.branch_id = branches.id
 and branches.id in (1115,1149,1150,2254,2255,2702,2751,2752,2753,2961)
@@ -81,3 +80,33 @@ select * from (SELECT
 
 
 update`activities` set completed = 1 WHERE activity_date < '2019-03-30';
+
+**********************************************************************
+get closed won opportunities by branch / date
+SELECT branch_id,DATE_FORMAT(actual_close, '%Y/%m/%d') as dateclosed, count(id) 
+FROM `opportunities` 
+WHERE actual_close is not null
+and actual_close between cast('2019-01-01' as date) and cast('2019-03-31' as date)
+group by branch_id,dateclosed
+
+*********************************************************************
+Get sales appt activities by branch / date
+SELECT address_branch.branch_id as branch,DATE_FORMAT(activity_date, '%Y/%m/%d') as activitydate, count(activities.id) 
+FROM `activities` , address_branch
+WHERE activity_date between cast('2019-01-01' as date) and cast('2019-03-31' as date)
+and activitytype_id =4
+and activities.address_id = address_branch.address_id
+group by branch,activitydate
+
+**************************************************
+Get all opportunities, activities, contacts for branch
+select addresses.businessname,addresses.street,addresses.city,addresses.state,addresses.zip,addresses.phone, opportunities.description,opportunities.comments,opportunities.expected_close,opportunities.closed, opportunities.top50,opportunities.value,opportunities.requirements,opportunities.actual_close,opportunities.duration, activities.activity_date,activities.activitytype_id,activities.followup_date,activities.note, contacts.fullname,contacts.firstname,contacts.lastname,contacts.title,contacts.contactphone,contacts.email from addresses,address_branch left join opportunities on address_branch.id = opportunities.address_branch_id left join activities on address_branch.address_id = activities.address_id left join contacts on address_branch.address_id = contacts.address_id where address_branch.branch_id = 2681 and address_branch.address_id = addresses.id
+
+25502,52206,186508,186510,186513,186514,186516,186518,186521,186522,186523,186524,186525,186529,186530,186532,186534,186541,336208,336210,336215,336235,336772,336778,336806,336818,337387,338053,338062,338910,346450,346746,346806,346879,346908,346930,347126,347216,348528,348554,348632,349264,349311,349320,349323,358967,359037,391242,391244,391249,391268,391273,392636,392642
+
+SELECT 
+    IF(ISNULL(user_id), 'NULL', 'NOT NULL') as myfield, 
+    COUNT(*) 
+FROM addresses 
+
+GROUP BY myfield

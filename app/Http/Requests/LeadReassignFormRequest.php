@@ -24,7 +24,7 @@ class LeadReassignFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'branch_id' => 'required_without:branch|regex:/^[0-9,]*$/|exists:branches,id',
+            'branch_id' => 'required_without:branch',
             'branch' => 'required_without:branch_id',
 
         ];
