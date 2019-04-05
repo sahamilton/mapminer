@@ -25,6 +25,7 @@ class OpportunityFormRequest extends FormRequest
     {
         return [
             'expected_close'=>'date|nullable|after_or_equal:today',
+            'actual_close'=>'required_if:closed,1,2|date|nullable|before_or_equal:today',
         ];
     }
 }

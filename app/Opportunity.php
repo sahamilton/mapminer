@@ -24,7 +24,7 @@ class Opportunity extends Model
                         'actual_close'
                     ];
                     
-    public $dates = ['expected_close'];
+    public $dates = ['expected_close','actual_close'];
     
     public function branch()
     {

@@ -224,10 +224,14 @@ class OpportunityController extends Controller
      */
     public function update(OpportunityFormRequest $request, Opportunity $opportunity)
     {
+       
         $data = request()->except(['_token','_method','submit']);
         $data['user_id'] = auth()->user()->id;
         if ($data['expected_close']) {
             $data['expected_close'] = Carbon::parse($data['expected_close']);
+        }
+        if ($data['actual_close']) {
+            $data['actual_close'] = Carbon::parse($data['actual_close']);
         }
         $opportunity->update($data);
         

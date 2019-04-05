@@ -1,3 +1,4 @@
+
 <div class="col-sm-6">
   <div class="form-group{{ $errors->has('title') ? ' has-error' : '' }}">
     <label class="col-md-2 control-label">Title</label>
@@ -64,6 +65,43 @@
                 </span>
                 
             </div>
+@php $statuses = [0=>'open',1=>'Closed-Won',2=>'Closed-Lost'] @endphp
+<div class="form-group">
+    <label class="col-md-4 control-label">Status:</label>
+    
+      <select class="form-control" 
+       
+      required
+    
+      name="closed" >
+      @foreach ($statuses as $key=>$status)
+        @if(isset($opportunity) and $opportunity->closed == $key)
+            <option  selected  value={{$key}}>{{$status}}</option>
+        @else
+            <option  value={{$key}}>{{$status}}</option>
+        @endif
+      @endforeach
+    </select>
+      
+   
+  </div>
+ <div class="form-group{{ $errors->has('expected_close)') ? ' has-error' : '' }}">
+                <label class="col-md-4 control-label" for="expected_close">Actual Close Date</label>
+                
+                <input class="form-control expected_close" 
+                    type="text" 
+                    
+                    name="actual_close" 
+                    autocomplete='off' 
+                    id="todatepicker" 
+                    value="{{  old('actual_close', isset($opportunity) && $opportunity->actual_close ? $opportunity->actual_close->format('m/d/Y') : "" )}}"/>
+                <span class="help-block">
+                    <strong>{{$errors->has('actual_close') ? $errors->first('actual_close')  : ''}}</strong>
+                </span>
+                
+            </div>
+
+
 
   <div class="form-group{{ $errors->has('description') ? ' has-error' : '' }}">
     <label class="col-md-4 control-label">Description</label>
