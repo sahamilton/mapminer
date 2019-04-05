@@ -100,8 +100,12 @@ group by branch,activitydate
 
 **************************************************
 Get all opportunities, activities, contacts for branch
-select addresses.businessname,addresses.street,addresses.city,addresses.state,addresses.zip,addresses.phone, opportunities.description,opportunities.comments,opportunities.expected_close,opportunities.closed, opportunities.top50,opportunities.value,opportunities.requirements,opportunities.actual_close,opportunities.duration, activities.activity_date,activities.activitytype_id,activities.followup_date,activities.note, contacts.fullname,contacts.firstname,contacts.lastname,contacts.title,contacts.contactphone,contacts.email from addresses,address_branch left join opportunities on address_branch.id = opportunities.address_branch_id left join activities on address_branch.address_id = activities.address_id left join contacts on address_branch.address_id = contacts.address_id where address_branch.branch_id = 2681 and address_branch.address_id = addresses.id
-
+select addresses.id as aid, addresses.businessname,addresses.street,addresses.city,addresses.state,addresses.zip,addresses.phone,addresses.lat,addresses.lng, 
+address_branch.id as abid,
+opportunities.id as oppid, opportunities.description,opportunities.comments,opportunities.expected_close,opportunities.closed, opportunities.top50,opportunities.value,opportunities.requirements,opportunities.actual_close,opportunities.duration, 
+activities.id as actid, activities.activity_date,activities.activitytype_id,activities.followup_date,activities.note, 
+contacts.id as cid, contacts.fullname,contacts.firstname,contacts.lastname,contacts.title,contacts.contactphone,contacts.email from addresses,address_branch left join opportunities on address_branch.id = opportunities.address_branch_id left join activities on address_branch.address_id = activities.address_id left join contacts on address_branch.address_id = contacts.address_id where address_branch.branch_id = 7383 and address_branch.address_id = addresses.id
+///
 25502,52206,186508,186510,186513,186514,186516,186518,186521,186522,186523,186524,186525,186529,186530,186532,186534,186541,336208,336210,336215,336235,336772,336778,336806,336818,337387,338053,338062,338910,346450,346746,346806,346879,346908,346930,347126,347216,348528,348554,348632,349264,349311,349320,349323,358967,359037,391242,391244,391249,391268,391273,392636,392642
 
 SELECT 
