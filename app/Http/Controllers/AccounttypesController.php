@@ -21,7 +21,7 @@ class AccounttypesController extends BaseController
      */
     public function index()
     {
-        $accounttypes = $this->accounttype->all();
+        $accounttypes = $this->accounttype->active()->get();
         
         return response()->view('accounttypes.index', compact('accounttypes'));
     }

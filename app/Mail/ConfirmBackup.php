@@ -1,5 +1,6 @@
 <?php
 
+
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
@@ -29,6 +30,6 @@ class ConfirmBackup extends Mailable
     public function build()
     {
         return $this->markdown('emails.confirmbackup')
-        ->to(config('mapminer.developer_email');
+        ->to(config('mapminer.developer_email'));
     }
 }

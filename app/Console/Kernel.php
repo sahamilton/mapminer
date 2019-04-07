@@ -7,6 +7,7 @@ use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use App\Jobs\WeeklyActivityReminder;
 class Kernel extends ConsoleKernel
 {
+    
     /**
      * The Artisan commands provided by your application.
      *
@@ -26,7 +27,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->job(new WeeklyActivityReminder())->weekly()->sundays()->at('17:52');
-        $schedule->command('db:backup')->dailyAt('01:42');    
+        $schedule->command('db:backup')->dailyAt('17:30');    
     }
 
     /**
