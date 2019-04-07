@@ -171,7 +171,7 @@ class AdminDashboardController extends BaseController
         return $this->user->lastLogin($interval)->with('person', 'roles', 'serviceline')->get();
     }
 
-    private function createColors($num)
+   private function createColors($num)
     {
         $colors=[];
         $int = 0;

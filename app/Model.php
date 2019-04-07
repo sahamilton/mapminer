@@ -208,7 +208,7 @@ class Model extends \Eloquent
     public function scopeServiceLine($query)
     {
         $servicelines = $this->getUserServiceLines();
-        dd('model', $servicelines);
+       
         return $query->whereHas('serviceline', function ($q) use ($servicelines) {
                 $q->whereIn('serviceline', $servicelines);
         });
@@ -304,7 +304,7 @@ class Model extends \Eloquent
         return true;
     }
 
-    public function createColors($num)
+    public function createOldColors($num)
     {
         $colors=[];
         $int = 0;
@@ -335,4 +335,21 @@ class Model extends \Eloquent
             return dechex($value);
         }
     }
+
+  public function createColors($len)
+  {
+    $frequency = 1/$len;
+
+    for ($i = 0; $i < $len; ++$i)
+    {
+       $red = $this->decToHex((sin($frequency*$i + 0) * 127) + 128);
+       $grn = $this->decToHex((sin($frequency*$i + 2) * 127) + 128);
+       
+       $blu = $this->decToHex((sin($frequency*$i + 4) * 127) + 128);
+       
+
+       $color[]="#".$red.$grn.$blu;
+    }
+    return $color;
+  }
 }

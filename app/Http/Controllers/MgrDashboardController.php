@@ -75,9 +75,9 @@ class MgrDashboardController extends DashboardController
       // redirect if only one or no branches
       $this->checkBranches();
           
-       $data = $this->getDashBoardData();
+      $data = $this->getDashBoardData();
       
-       return response()->view('opportunities.mgrindex', compact('data'));
+      return response()->view('opportunities.mgrindex', compact('data'));
 
     }
     /**
@@ -626,6 +626,12 @@ class MgrDashboardController extends DashboardController
      
 
      }
+     /**
+      * [formatChartFullData description]
+      * @param  Array  $branches [description]
+      * @param  array  $keys     [description]
+      * @return [type]           [description]
+      */
      private function formatChartFullData(Array $branches,array $keys)
      {
         $colors = $this->activity->createColors(count($branches));
