@@ -338,9 +338,11 @@ class Model extends \Eloquent
 
   public function createColors($len)
   {
-    $frequency = 1/$len;
+    $frequency = .3;
 
-    for ($i = 0; $i < $len; ++$i)
+    
+
+    for ($i = 0; $i < $len; $i = ++$i)
     {
        $red = $this->decToHex((sin($frequency*$i + 0) * 127) + 128);
        $grn = $this->decToHex((sin($frequency*$i + 2) * 127) + 128);

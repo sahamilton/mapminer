@@ -19,7 +19,6 @@ Review Branch Changes
 
 </ul>
 
-{{dd('here',$data)}}
 <form method="post" name="changebranches" action ="{{route('branches.change')}}" >
 @csrf
 <div class="tab-content">

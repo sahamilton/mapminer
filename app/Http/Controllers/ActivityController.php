@@ -44,7 +44,7 @@ class ActivityController extends Controller
             $branch = $this->branch->findOrFail(reset($branches));
 
             $data = $this->getBranchActivities($branch);
-         
+      
             $title= $data['branches']->first()->branchname . " activities";
        
         return response()->view('activities.index', compact( 'data','title','myBranches'));
@@ -104,18 +104,19 @@ class ActivityController extends Controller
                 ->thisPeriod($this->period)
                 ->sevenDayCount()
                 ->get();
-        dd(107,$data['summary']);
+       
         $weekTypeCount = $this->activity->myTeamsActivities($team)
                 ->whereCompleted(1)
                 ->thisPeriod($this->period)
                 ->sevenDayTypeCount()
                 ->get();
-        dd($weekCount);
-       if(count($weekCount)>0){
-            $data['summary'] = $this->activity->summaryData($weekCount);
-            $data['chart'] = $this->getActivityChart($weekCount);
+       
+       if(count($weekTypeCount)>0){
+            //$data['summary'] = $this->activity->summaryData($weekTypeCount);
+            
+            $data['chart'] = $this->getActivityChart($weekTypeCount);
+           
         }
-        
         
 
         

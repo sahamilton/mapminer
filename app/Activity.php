@@ -144,24 +144,27 @@ class Activity extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
 
     public function summaryData($data)
     {
-        foreach ($data as $yearweek => $count) {
-            $year = substr($yearweek, 0, 4);
+       
+       
+        foreach ($data as $element) {
+          dd($element);
+            /*$year = substr($yearweek, 0, 4);
             $week = substr($yearweek, 4, 2);
-            
+            dd($year,$week);
             $weekStart = new Carbon;
-            $data['show'][$yearweek]['date'] = $weekStart->setISODate($year, $week)->format('Y-m-d');
-            $data['show'][$yearweek]['count'] = $count;
+            $show[$yearweek]['date'] = $weekStart->setISODate($year, $week)->format('Y-m-d');
+            $show[$yearweek]['count'] = $count;
 
             if (! isset($data['chart'])) {
-                $data['chart']['data'] =$count;
-                $data['chart']['label'] = $yearweek;
+                $show['chart']['data'] =$count;
+                $show['chart']['label'] = $yearweek;
             } else {
-                $data['chart']['data'] = $data['chart']['data'] . "," .$count;
-                $data['chart']['label'] = $data['chart']['label'] . "," .$yearweek;
-            }
+                $show['chart']['data'] = $data['chart']['data'] . "," .$count;
+                $show['chart']['label'] = $data['chart']['label'] . "," .$yearweek;
+            }*/
         }
-      
-        return $data;
+        dd(165,$show);
+        return $show;
     }
 
     /*select branches.id,YEARWEEK(activity_date,3) as yearweek,count(*) as activities from activities,persons,branch_person,branches where activities.user_id = persons.user_id and persons.id = branch_person.person_id and branch_person.branch_id = branches.id group By branches.id, yearweek

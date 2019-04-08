@@ -40,7 +40,7 @@
         "lab404/laravel-impersonate": "^1.2",
         "intervention/image": "^2.4",
         "barryvdh/laravel-dompdf": "^0.8.2",
-        "barryvdh/laravel-ide-helper": "^2.4",
+        "barryvdh/laravel-ide-helper": "^2.4"
 
     },
     "require-dev": {
