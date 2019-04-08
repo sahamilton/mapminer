@@ -185,11 +185,6 @@ class BranchDashboardController extends DashboardController
         }
     }
     
-   
-    
-    
-
-
     /**
      * [getSummaryBranchData description]
      * @param  array  $branches [description]
@@ -236,35 +231,7 @@ class BranchDashboardController extends DashboardController
 
     }
    
-    /**
-     * [getChartData description]
-     * @param  [type] $branches [description]
-     * @return [type]           [description]
-     */
-    /*private function xgetChartData()
-    {
-       $results =   $this->branch
-                    ->whereIn('id',$this->myBranches)
-                    ->getActivitiesByType($this->period,4)
-
-                    ->withCount(       
-                       ['leads'=>function($query){
-                            $query->whereBetween('address_branch.created_at',[$this->period['from'],$this->period['to']]);
-                        },
-                        'opportunities as won'=>function($query){
-                        
-                                $query->whereClosed(1)
-                                ->whereBetween('actual_close',[$this->period['from'],$this->period['to']]);
-                            }]
-                        )
-                    ->with(['opportunities'=>function ($q){
-                      $q->whereClosed(1)
-                      ->whereBetween('actual_close',[$this->period['from'],$this->period['to']]);
-                    }])
-                    ->get();
-       return $this->prepChartData($results);       
-       
-      }*/
+    
 
      /**
       * [prepChartData description]
@@ -324,7 +291,11 @@ class BranchDashboardController extends DashboardController
      return $data;
      
     }
-
+    /**
+     * [formatBranchActivities description]
+     * @param  [type] $branchdata [description]
+     * @return [type]             [description]
+     */
     private function formatBranchActivities($branchdata)
       { 
         $data[]=array();
@@ -342,7 +313,11 @@ class BranchDashboardController extends DashboardController
       // reformat branch data into array
     
 
-
+    /**
+     * [formatBranchWeekActivities description]
+     * @param  [type] $branchdata [description]
+     * @return [type]             [description]
+     */
       private function formatBranchWeekActivities($branchdata)
       { 
 
@@ -364,16 +339,7 @@ class BranchDashboardController extends DashboardController
               $branches[$d->endOfWeek()->format('Y-m-d')]= $el->count();
               
             }
-          }
-           
-          // fill any missing periods with zeros
-          // 
-          //$from = clone($this->period['from']);
-         // $to = clone($this->period['to']);
-          //$branches = $this->fillMissingPeriods($branches);
-          
-          // sort branch array in date sequence
-        
+          }       
      
       }
       ksort($branches);
@@ -443,6 +409,12 @@ class BranchDashboardController extends DashboardController
      
 
      }
+     /**
+      * [formatChartFullData description]
+      * @param  Array  $branches [description]
+      * @param  array  $keys     [description]
+      * @return [type]           [description]
+      */
      private function formatChartFullData(Array $branches,array $keys)
      {
         $colors = $this->activity->createColors(count($branches));
