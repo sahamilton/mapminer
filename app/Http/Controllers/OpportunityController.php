@@ -54,10 +54,13 @@ class OpportunityController extends Controller
      */
     public function index()
     {
+        
         $activityTypes = $activityTypes = ActivityType::all();
        
         $myBranches = $this->person->myBranches();
-   
+        if(! $myBranches){
+            return redirect()->back()->withWarning("You are not assigned to any branches. Please contact Sales Operations");
+        }
         $data = $this->getBranchData(array_keys($myBranches));
 
         return response()->view('opportunities.index', compact('data', 'activityTypes', 'myBranches'));
