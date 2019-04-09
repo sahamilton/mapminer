@@ -52,7 +52,7 @@ trait PeriodSelector
      * @return [type] [description]
      */
     private function default(){
-    	return $this->lastDays(30);
+    	return $this->thisWeek();
     }
 
 
