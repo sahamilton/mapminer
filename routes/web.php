@@ -691,12 +691,7 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
 	# Tracking
 		Route::resource('track','TrackController');	
 
-        # Seeder for relationships with servicelines
-        //Route::get('seeder',['as'=>'seeder','uses'=>'CompaniesController@seeder']);
-        //Route::get('apiseeder',['as'=>'apiseeder','uses'=>'UsersController@seeder']);
-
-
-        # Versions
+    # Versions
         Route::resource('versions', 'GitController');
 
         //Route::get('/leads/unassigned',['as'=>'unassigned.leads','uses'=>'LeadsController@unassignedleads']);

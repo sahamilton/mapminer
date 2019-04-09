@@ -49,6 +49,11 @@ class ActivityController extends Controller
         return response()->view('activities.index', compact('activities', 'data','title','myBranches'));
        
     }
+    /**
+     * [branchUpcomingActivities description]
+     * @param  Branch $branch [description]
+     * @return [type]         [description]
+     */
     public function branchUpcomingActivities(Branch $branch){
 
         $myBranches = $this->person->myBranches();
@@ -62,6 +67,12 @@ class ActivityController extends Controller
         return response()->view('activities.upcoming', compact('data', 'myBranches','title')); 
         }
     }
+    /**
+     * [branchActivities description]
+     * @param  Request $request [description]
+     * @param  Branch  $branch  [description]
+     * @return [type]           [description]
+     */
     public function branchActivities(Request $request, Branch $branch){
         
         if (request()->has('branch')) {
@@ -80,26 +91,33 @@ class ActivityController extends Controller
         return response()->view('activities.index', compact('data', 'myBranches','title'));
     }
     
-
-
+   
+    /**
+     * [getBranchActivities description]
+     * @param  [type] $branch [description]
+     * @param  [type] $from   [description]
+     * @return [type]         [description]
+     */
     private function getBranchActivities($branch,$from=null)
     {
-   
         $team = $this->person->myBranchTeam([$branch->id])->toArray();
             
 
         $data['activities'] = $this->activity->myTeamsActivities($team);
         if($from){
-            $data['activities']= $data['activities']->where('activity_date','>=',now())
+            $data['activities']= $data['activities']
+            ->where('activity_date','>=',now())
             ->whereNull('completed');
         }
         $data['activities'] =  $data['activities']->with('relatesToAddress', 'relatedContact', 'type', 'user')->get();
 
         $data['branches'] =  $this->getbranches([$branch->id]);
 
-        $weekCount = $this->activity->myTeamsActivities($team)->sevenDayCount()
-        ->where('completed','=',1)
-        ->pluck('activities', 'yearweek')->toArray();
+        $weekCount = $this->activity->myTeamsActivities($team)
+            ->sevenDayCount()
+            ->where('completed','=',1)
+            ->pluck('activities', 'yearweek')
+            ->toArray();
       
         $data['summary'] = $this->activity->summaryData($weekCount);
 
@@ -155,13 +173,22 @@ class ActivityController extends Controller
         return redirect()->route('address.show', $data['activity']['address_id']);
     }
 
-
+    /**
+     * [complete description]
+     * @param  Activity $activity [description]
+     * @return [type]             [description]
+     */
     public function complete(Activity $activity)
     {
         $activity->update(['completed'=>1]);
         return redirect()->back();
     }
-
+    /**
+     * [createFollowUpActivity description]
+     * @param  array    $data     [description]
+     * @param  Activity $activity [description]
+     * @return [type]             [description]
+     */
     private function createFollowUpActivity(array $data,Activity $activity)
     {
    
@@ -208,18 +235,7 @@ class ActivityController extends Controller
         return $data;
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Activity  $activity
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Activity $activity)
-    {
-
-
-    }
-
+    
     /**
      * Show the form for editing the specified resource.
      *
@@ -264,13 +280,11 @@ class ActivityController extends Controller
         return redirect()->route('address.show', $address)->withMessage('Activity deleted');
     }
 
-    public function seeder()
-    {
-        //first get branches
-        // then get addresses
-        //random create activity from random type
-    }
-
+    
+    /**
+     * [future description]
+     * @return [type] [description]
+     */
     public function future()
     {
       
@@ -278,7 +292,12 @@ class ActivityController extends Controller
        
         return response()->view('activities.index', compact('activities'));
     }
-
+    /**
+     * [getBranchActivtiesByType description]
+     * @param  [type] $branch       [description]
+     * @param  [type] $activitytype [description]
+     * @return [type]               [description]
+     */
     public function getBranchActivtiesByType($branch, $activitytype = null)
     {
 
