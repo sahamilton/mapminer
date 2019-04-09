@@ -40,7 +40,7 @@ trait PeriodSelector
     		$this->period = $this->$period();
     	}else{
            $this->period = $this->thisWeek(); 
-           $this->period['period'] = 'thisWeek';
+           $this->period['period'] = $this->default;
         }
         
 
