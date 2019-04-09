@@ -71,9 +71,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 })(window,document,'script','dataLayer','GTM-PZM3WV');</script>
 
 @include('site.layouts.partials._googletagmanager')
-@if(config('app.env')=='production')
-	@include('site.layouts.partials._fullstory')
-@endif
+
 		<!-- To make sticky footer need to wrap in a div -->
 		<div id="wrap">
 		@include ('admin.partials._navbar')
