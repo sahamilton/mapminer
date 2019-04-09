@@ -90,7 +90,8 @@ class ActivityController extends Controller
 
         $data['activities'] = $this->activity->myTeamsActivities($team);
         if($from){
-            $data['activities']= $data['activities']->where('followup_date','>=',now());
+            $data['activities']= $data['activities']->where('activity_date','>=',now())
+            ->whereNull('completed');
         }
         $data['activities'] =  $data['activities']->with('relatesToAddress', 'relatedContact', 'type', 'user')->get();
 
