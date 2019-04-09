@@ -45,7 +45,7 @@ class ActivityController extends Controller
             $data = $this->getBranchActivities($branch);
            
             $title= $data['branches']->first()->branchname . " activities";
-       
+  
         return response()->view('activities.index', compact('activities', 'data','title','myBranches'));
        
     }
@@ -84,7 +84,7 @@ class ActivityController extends Controller
 
     private function getBranchActivities($branch,$from=null)
     {
-      
+   
         $team = $this->person->myBranchTeam([$branch->id])->toArray();
             
 
@@ -96,15 +96,21 @@ class ActivityController extends Controller
 
         $data['branches'] =  $this->getbranches([$branch->id]);
 
-        $weekCount = $this->activity->myTeamsActivities($team)->sevenDayCount()->pluck('activities', 'yearweek')->toArray();
-       
+        $weekCount = $this->activity->myTeamsActivities($team)->sevenDayCount()
+        ->where('completed','=',1)
+        ->pluck('activities', 'yearweek')->toArray();
+      
         $data['summary'] = $this->activity->summaryData($weekCount);
 
         
         return $data;
     }
 
-
+    /**
+     * [getBranches description]
+     * @param  Array  $branches [description]
+     * @return [type]           [description]
+     */
     private function getBranches(Array $branches)
        {
         return  $this->branch->with( 'manager')
@@ -131,7 +137,7 @@ class ActivityController extends Controller
      */
     public function store(ActivityFormRequest $request)
     {
-      
+        // can we detect the branch here?
         $data = $this->parseData($request);
         $activity = Activity::create($data['activity']);
 

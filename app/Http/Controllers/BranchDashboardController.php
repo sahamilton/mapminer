@@ -512,7 +512,10 @@ class BranchDashboardController extends Controller
       private function getUpcomingActivities()
       {
              $users =  $this->person->myBranchTeam($this->myBranches);
-             return $this->activity->whereIn('user_id',$users)->get();
+             return $this->activity
+             ->whereNull('completed')
+             ->whereIn('user_id',$users)
+             ->get();
 
       }
      
@@ -716,10 +719,12 @@ class BranchDashboardController extends Controller
       
         $activityCount = $this->branch->whereIn('id',$this->myBranches)
          ->whereHas('activities',function ($q){
-            $q->whereBetween('activity_date',[$this->period['from'],$this->period['to']]);
+            $q->whereBetween('activity_date',[$this->period['from'],$this->period['to']])
+            ->where('completed','=',1);
           })
          ->with(['activities'=>function ($q){
-            $q->whereBetween('activity_date',[$this->period['from'],$this->period['to']]);
+            $q->whereBetween('activity_date',[$this->period['from'],$this->period['to']])
+            ->where('completed','=',1);
          }])->get();
 
          return  $activityCount->map(function ($branch){

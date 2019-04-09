@@ -395,8 +395,7 @@ class MgrDashboardController extends DashboardController
      * @return [type]           [description]
      */
     private function getSummaryBranchData(){
-       
-        return $this->branch
+      return $this->branch
               ->withCount(       
                       [
                         'leads'=>function($query){
