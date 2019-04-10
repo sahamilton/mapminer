@@ -42,6 +42,7 @@ body.modal-open .activity_date, .followup_date {
               name="branch_id" 
               value="{{$location->assignedToBranch->first()->id}}" />
             @endif
+          
           @else
           <label>Select Branch</label>
           <select required name="branch_id">
