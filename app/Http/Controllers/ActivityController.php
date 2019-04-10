@@ -63,7 +63,7 @@ class ActivityController extends Controller
             $data = $this->getBranchActivities($branch,$from = true);
       
         $title= $branch->branchname . " upcoming follow up activities";
-    
+        
         return response()->view('activities.upcoming', compact('data', 'myBranches','title')); 
         }
     }
@@ -118,7 +118,7 @@ class ActivityController extends Controller
             ->where('completed','=',1)
             ->pluck('activities', 'yearweek')
             ->toArray();
-      
+
         $data['summary'] = $this->activity->summaryData($weekCount);
 
         
@@ -156,6 +156,7 @@ class ActivityController extends Controller
      */
     public function store(ActivityFormRequest $request)
     {
+    
         // can we detect the branch here?
         $data = $this->parseData($request);
         $activity = Activity::create($data['activity']);
@@ -204,7 +205,7 @@ class ActivityController extends Controller
     {
         
        // get activity data
-        $data['activity'] = request()->only(['activitytype_id','note','activity_date','address_id','followup_date']);
+        $data['activity'] = request()->only(['activitytype_id','note','activity_date','address_id','followup_date','branch_id']);
         if(request()->has('completed')){
             $data['activity']['completed']=1;
         }else{

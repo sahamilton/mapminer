@@ -1,5 +1,22 @@
 Good Queries
 
+SELECT branch_id,count(*)
+FROM `opportunities` 
+where
+closed = 1
+and actual_close  between date('2019-04-01') and date('2019-04-08')
+group by branch_id;
+
+
+SELECT branch_id,count(*)
+FROM `activities` 
+where
+activitytype_id = 4
+and activity_date  between date('2019-04-01') and date('2019-04-08')
+group by branch_id;
+
+
+
 insert ignore into address_branch 
 (address_id,branch_id, top50)
 select distinct address_id,branch_id,top50
