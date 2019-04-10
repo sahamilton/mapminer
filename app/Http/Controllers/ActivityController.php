@@ -100,10 +100,10 @@ class ActivityController extends Controller
      */
     private function getBranchActivities($branch,$from=null)
     {
-        $team = $this->person->myBranchTeam([$branch->id])->toArray();
+       
             
 
-        $data['activities'] = $this->activity->myTeamsActivities($team);
+        $data['activities'] = $this->activity->myBranchActivities([$branch->id]);
         if($from){
             $data['activities']= $data['activities']
             ->where('activity_date','>=',now())
@@ -113,7 +113,7 @@ class ActivityController extends Controller
 
         $data['branches'] =  $this->getbranches([$branch->id]);
 
-        $weekCount = $this->activity->myTeamsActivities($team)
+        $weekCount = $this->activity->myBranchActivities([$branch->id])
             ->sevenDayCount()
             ->where('completed','=',1)
             ->pluck('activities', 'yearweek')
