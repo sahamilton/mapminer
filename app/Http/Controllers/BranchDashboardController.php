@@ -268,10 +268,10 @@ class BranchDashboardController extends Controller
        */
       private function getActivities()
       {
-             $users =  $this->person->myBranchTeam($this->myBranches);
+             
              return $this->activity
             
-             ->whereIn('user_id',$users)
+             ->whereIn('branch_id',$this->myBranches)
              ->get();
 
       }
@@ -282,10 +282,9 @@ class BranchDashboardController extends Controller
        */
       private function getUpcomingActivities()
       {
-             $users =  $this->person->myBranchTeam($this->myBranches);
              return $this->activity
-             ->whereNull('completed')
-             ->whereIn('user_id',$users)
+            ->whereNull('completed')
+             ->whereIn('branch_id',$this->myBranches)
              ->get();
 
       }

@@ -71,14 +71,15 @@ class Branch extends Model implements HasPresenter
 
     public function activities()
     {
-        return $this->hasManyThrough(Activity::class, AddressBranch::class, 'branch_id', 'address_id', 'id', 'address_id');
+        
+        return $this->hasMany(Activity::class);
     }
 
     public function activitiesbytype($type = null)
     {
 
             
-            $activities = $this->hasManyThrough(Activity::class, AddressBranch::class, 'branch_id', 'address_id', 'id', 'address_id');
+            $activities = $this->hasMany(Activity::class);
             if($type){
                  $activities->where('activitytype_id', '=', $type);
              }
