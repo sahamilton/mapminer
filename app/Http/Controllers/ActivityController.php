@@ -103,7 +103,7 @@ class ActivityController extends Controller
        
        
 
-        $data['activities'] = $this->activity->myBranchActivities([$branch->id]); ;
+        $data['activities'] = $this->activity->myBranchActivities([$branch->id]); 
         if($from){
             $data['activities']= $data['activities']
             ->where('activity_date','>=',now())

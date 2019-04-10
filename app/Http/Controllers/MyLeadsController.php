@@ -85,8 +85,9 @@ class MyLeadsController extends BaseController
     private function getBranchLeads(Array $branch){
         $data['leads'] = $this->lead->wherehas('assignedToBranch', function ($q) use ($branch) {
             $q->whereIn('branches.id', $branch);
-        })->with('assignedToBranch')->get();
-
+        })->with('assignedToBranch','opportunities')
+        ->get();
+       
         $data['branches'] = $this->getBranches($branch);
         return $data;
     }
