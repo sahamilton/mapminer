@@ -101,9 +101,9 @@ class ActivityController extends Controller
     private function getBranchActivities($branch,$from=null)
     {
        
-            
+       
 
-        $data['activities'] = $this->activity->myBranchActivities([$branch->id]);
+        $data['activities'] = $this->activity->myBranchActivities([$branch->id]); ;
         if($from){
             $data['activities']= $data['activities']
             ->where('activity_date','>=',now())

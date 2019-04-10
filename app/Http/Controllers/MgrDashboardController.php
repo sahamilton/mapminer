@@ -481,8 +481,7 @@ class MgrDashboardController extends DashboardController
        */
       private function getUpcomingActivities()
       {
-             $users =  $this->person->myBranchTeam($this->myBranches);
-             return $this->activity->whereIn('user_id',$users)
+             return $this->activity->whereIn('branch_id',$this->myBranches)
              ->where('activity_date','>=',Carbon::now())->get();
 
       }
