@@ -9,7 +9,7 @@ class Activity extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
 {
  
     protected $dates = ['activity_date','followup_date'];
-    public $fillable = ['activity_date','followup_date','activitytype_id','address_id','note','user_id','relatedActivity','completed','followup_activity'];
+    public $fillable = ['activity_date','followup_date','activitytype_id','address_id','note','user_id','relatedActivity','completed','followup_activity','branch_id'];
     //public $activities = ['phone','email','meeting','proposal','quote'];
     
     public $activityTypes = [
