@@ -19,7 +19,7 @@ class BackupDatabase extends Command
     public function __construct()
     {
         parent::__construct();
-        $date = now()->format('Y-m-d-hh:mm');
+        $date = now()->format('Y-m-d_h:i');
         $db = env('DB_DATABASE');
         $this->file = 'backups/backup'.$db."-".$date.'.sql';
         $this->process = new Process(sprintf(
