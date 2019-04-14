@@ -27,7 +27,8 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->job(new WeeklyActivityReminder())->weekly()->sundays()->at('17:52');
-        $schedule->command('db:backup')->dailyAt('17:30');    
+        $schedule->command('db:backup')->dailyAt('23:30');
+        $schedule->job(new WeeklyReports())->weekly()->sundays()->at('22:52');    
     }
 
     /**
