@@ -7,7 +7,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class SendWeeklyReports extends Mailable
+class SendTop50WeeklyReport extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -33,7 +33,7 @@ class SendWeeklyReports extends Mailable
     {
         return $this->from('salesoperations@tbmapminer.com', 'Sales Operations')
             ->markdown('emails.weeklyreports')  
-            ->subject('Weekly Report')
+            ->subject('Top 50 Opportunities Weekly Report')
             ->attach(storage_path($this->file), [
                         'mime' => 'application/xls']);
             

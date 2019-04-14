@@ -6,7 +6,11 @@
 			</th>
 		</tr>
 		<tr>
-			<th><h4> For the week ending {{$period->format('M jS,Y')}}</h4></th>
+			<th>
+				<h4>
+					For the week ending {{$period->format('M jS,Y')}}
+				</h4>
+			</th>
 		</tr>
 		<tr></tr>
 		<tr>

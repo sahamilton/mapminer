@@ -17,7 +17,9 @@ use App\Mail\SendWeeklyActivityReminder;
             return view('welcome');
     }]);
 
-
+    Route::get('testjob',function(){
+    	App\Jobs\Top50WeeklyReport::dispatch();
+    });
 	Route::get('testinbound',['as'=>'testinbound','uses'=>'InboundMailController@inbound']);
 	Route::get('testemail',['as'=>'testemail','uses'=>'InboundMailController@testemail']);
 

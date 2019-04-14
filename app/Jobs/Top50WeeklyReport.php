@@ -6,15 +6,15 @@ use Mail;
 use Excel;
 use Carbon\Carbon;
 use App\Opportunity;
-use App\Mail\SendWeeklyReports;
-use App\Exports\WeekReportExport;
+use App\Mail\SendTop50WeeklyReport;
+use App\Exports\Top50WeekReportExport;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 
-class WeeklyReports implements ShouldQueue
+class Top50WeeklyReport implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -36,13 +36,13 @@ class WeeklyReports implements ShouldQueue
     public function handle()
     {
         // create the file
-        $file = '\public\reports\wkrpt'. Carbon::now()->timestamp. ".xlsx";
+        $file = '\public\reports\top50wkrpt'. Carbon::now()->timestamp. ".xlsx";
         
-        Excel::store(new WeekReportExport(), $file);
+        Excel::store(new Top50WeekReportExport(), $file);
         Mail::to('astarr@peopleready.com')
                 ->bcc('hamilton@okospartners.com')
                 ->cc('salesoperations@trueblue.com')
-                ->send(new SendWeeklyReports($file));
+                ->send(new SendTop50WeeklyReport($file));
         
 
 

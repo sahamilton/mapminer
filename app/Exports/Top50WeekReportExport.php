@@ -6,7 +6,7 @@ use App\Opportunity;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
 use Carbon\Carbon;
-class WeekReportExport implements FromView
+class Top50WeekReportExport implements FromView
 {
     /**
     * @return \Illuminate\Support\Collection
