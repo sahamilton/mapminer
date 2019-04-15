@@ -13,8 +13,8 @@ class ActivityOpportunityExport implements FromView
     */
     public function view(): View
     {
-     	$period['from'] = Carbon::now()->startOfWeek();
-     	$period['to'] = Carbon::now()->endOfWeek();
+     	$period['from'] = Carbon::now()->subWeek(1)->startOfWeek();
+     	$period['to'] = Carbon::now()->subWeek(1)->endOfWeek();
         $query = 
         "select branches.id as branch_id,
 	        branches.branchname as branchname, 

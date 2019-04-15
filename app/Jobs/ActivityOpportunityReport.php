@@ -36,7 +36,7 @@ class ActivityOpportunityReport implements ShouldQueue
     public function handle()
     {
         // create the file
-        $file = '\public\reports\actopptywkrpt'. Carbon::now()->timestamp. ".xlsx";
+        $file = '/public/reports/actopptywkrpt'. Carbon::now()->timestamp. ".xlsx";
         
         Excel::store(new ActivityOpportunityExport(), $file);
        
