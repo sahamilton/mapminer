@@ -20,7 +20,7 @@ class SendTop50WeeklyReport extends Mailable
      */
     public function __construct($file)
     {
-        $this->file = '\app\\'. $file;
+        $this->file = '/app/'. $file;
         
     }
 

@@ -36,7 +36,7 @@ class Top50WeeklyReport implements ShouldQueue
     public function handle()
     {
         // create the file
-        $file = '\public\reports\top50wkrpt'. Carbon::now()->timestamp. ".xlsx";
+        $file = '/public/reports/top50wkrpt'. Carbon::now()->timestamp. ".xlsx";
         
         Excel::store(new Top50WeekReportExport(), $file);
         Mail::to('astarr@peopleready.com')
