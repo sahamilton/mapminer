@@ -2,6 +2,9 @@
 
 namespace App\Jobs;
 
+use Mail;
+use Excel;
+use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -9,6 +12,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use App\Mail\WeeklyActivityOpportunityReport;
 use App\Exports\ActivityOpportunityExport;
+
 
 class ActivityOpportunityReport implements ShouldQueue
 {
@@ -35,6 +39,7 @@ class ActivityOpportunityReport implements ShouldQueue
         $file = '\public\reports\actopptywkrpt'. Carbon::now()->timestamp. ".xlsx";
         
         Excel::store(new ActivityOpportunityExport(), $file);
+       
         Mail::to('jhammar@peopleready.com')
                 ->bcc('hamilton@okospartners.com')
                 ->cc('salesoperations@trueblue.com')

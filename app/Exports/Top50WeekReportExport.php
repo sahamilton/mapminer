@@ -28,7 +28,3 @@ class Top50WeekReportExport implements FromView
         return view('reports.weeklyreport',compact('opportunities','period'));
     }
 }
-
-
-
-

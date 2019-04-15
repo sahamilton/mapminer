@@ -1,11 +1,9 @@
 @component('mail::message')
-# Introduction
+# Sales Appointments vs Opportunitie Won
 
-The body of your message.
+Attached is the weekly report of sales appointments by opportunities won for all branches for the week ended {{$period['to']->format('jS M, Y')}}.
 
-@component('mail::button', ['url' => ''])
-Button Text
-@endcomponent
+If you no longer need this report please advise Sales Operations.
 
 Thanks,<br>
 {{ config('app.name') }}
