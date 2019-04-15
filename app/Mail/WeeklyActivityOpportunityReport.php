@@ -33,7 +33,7 @@ class WeeklyActivityOpportunityReport extends Mailable
     public function build()
     {
         return $this->from('salesoperations@tbmapminer.com', 'Sales Operations')
-            ->markdown('emails\activityopportunityreport')
+            ->markdown('emails.activityopportunityreport')
             ->subject('Acitivities and OpportunitiesWeekly Report')
             ->attach(storage_path($this->file), [
                         'mime' => 'application/xls']);

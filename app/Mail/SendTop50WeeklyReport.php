@@ -6,12 +6,14 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Carbon\Carbon;
 
 class SendTop50WeeklyReport extends Mailable
 {
     use Queueable, SerializesModels;
 
     public $file;
+    public $period;
     
     /**
      * Create a new message instance.
@@ -21,6 +23,7 @@ class SendTop50WeeklyReport extends Mailable
     public function __construct($file)
     {
         $this->file = '/app/'. $file;
+        $this->period = Carbon::now()->endOfWeek();
         
     }
 
@@ -32,7 +35,7 @@ class SendTop50WeeklyReport extends Mailable
     public function build()
     {
         return $this->from('salesoperations@tbmapminer.com', 'Sales Operations')
-            ->markdown('emails.weeklyreports')  
+            ->markdown('emails.top50openopportunitiesreport')  
             ->subject('Top 50 Opportunities Weekly Report')
             ->attach(storage_path($this->file), [
                         'mime' => 'application/xls']);

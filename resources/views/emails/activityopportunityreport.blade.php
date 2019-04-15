@@ -1,5 +1,5 @@
 @component('mail::message')
-# Sales Appointments vs Opportunitie Won
+# Sales Appointments and Opportunities Won
 
 
 Attached is the weekly report of sales appointments by opportunities won for all branches for the week ended {{$period['to']->format('jS M, Y')}}.

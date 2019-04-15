@@ -47,7 +47,7 @@
     </thead>
     <tbody>
 
-        @foreach($data['leads'] as $lead)
+    @foreach($data['leads'] as $lead)
         
     <tr>
         <td>
@@ -82,7 +82,7 @@
    @endforeach
 
     </tbody>
-    </table>
+</table>
  
 @include('branchleads.partials._branchleadmodal')
 @include('partials._scripts')
