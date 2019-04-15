@@ -6,7 +6,7 @@ use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use App\Jobs\WeeklyActivityReminder;
 use App\Jobs\Top50WeeklyReport;
-use App\ActivityOpportunityReport;
+use App\Jobs\ActivityOpportunityReport;
 
 class Kernel extends ConsoleKernel
 {
