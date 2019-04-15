@@ -41,6 +41,7 @@
     <th>Company</th>
     <th>Company Name</th>
     <th>Address</th>
+    <th>Lead Source</th>
     <th>Remove</th>
 
     </thead>
@@ -56,6 +57,11 @@
         </td>
         <td>{{$lead->businessname}}</td>
         <td>{{$lead->fullAddress()}}</td>
+        <td>
+            @if($lead->leadsource)
+             {{$lead->leadsource->source}}
+            @endif
+        </td>
         <td>
            @if($lead->opportunities->count()==0) 
           <a 
