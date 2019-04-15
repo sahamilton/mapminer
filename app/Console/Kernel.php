@@ -32,7 +32,7 @@ class Kernel extends ConsoleKernel
         $schedule->job(new WeeklyActivityReminder())->weekly()->sundays()->at('19:52');
         $schedule->command('db:backup')->dailyAt('23:30');
         $schedule->job(new Top50WeeklyReport())->weekly()->sundays()->at('23:59');
-       $schedule->job(new ActivityOpportunityReport())->weekly()->sundays()->at('23:59');    
+       $schedule->job(new ActivityOpportunityReport())->weekly()->mondays()->at('04:59');    
     }
 
     /**
