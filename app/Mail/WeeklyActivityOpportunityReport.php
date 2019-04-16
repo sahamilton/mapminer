@@ -18,11 +18,10 @@ class WeeklyActivityOpportunityReport extends Mailable
      *
      * @return void
      */
-    public function __construct($file)
+    public function __construct($file, array $period)
     {
         $this->file = 'app'. $file;
-        $this->period = ['to'=>Carbon::now()->subWeek(1)->endOfWeek(),
-                        'from'=>Carbon::now()->subWeek(1)->startOfWeek()];
+        $this->period = $period;
     }
 
     /**

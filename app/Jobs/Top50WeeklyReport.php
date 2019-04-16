@@ -18,6 +18,7 @@ class Top50WeeklyReport implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    public $period;
     /**
      * Create a new job instance.
      *
@@ -25,7 +26,8 @@ class Top50WeeklyReport implements ShouldQueue
      */
     public function __construct()
     {
-        //
+        $this->period = Carbon::now()->endOfWeek();
+       
     }
 
     /**
@@ -36,9 +38,9 @@ class Top50WeeklyReport implements ShouldQueue
     public function handle()
     {
         // create the file
-        $file = '/public/reports/top50wkrpt'. Carbon::now()->timestamp. ".xlsx";
+        $file = '/public/reports/top50wkrpt'. $this->period->timestamp. ".xlsx";
         
-        Excel::store(new Top50WeekReportExport(), $file);
+        Excel::store(new Top50WeekReportExport($this->period), $file);
         Mail::to('astarr@peopleready.com')
                 ->bcc('hamilton@okospartners.com')
                 ->cc('salesoperations@trueblue.com')

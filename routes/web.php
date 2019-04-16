@@ -688,10 +688,10 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
         Route::post('api/searchfilters/postAccounts', ['as'=>'postAccountSegments','uses'=>'SearchFiltersController@getAccountSegments']);
         Route::resource('searchfilters', 'SearchFiltersController');
     # Jobs
-     /*Route::get('testjob',function(){
+     Route::get('testjob',function(){
     	App\Jobs\Top50WeeklyReport::dispatch();
     	App\Jobs\ActivityOpportunityReport::dispatch();
-    });*/
+    });
 	# Tracking
 		Route::resource('track','TrackController');	
 

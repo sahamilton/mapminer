@@ -17,7 +17,7 @@ use App\Exports\ActivityOpportunityExport;
 class ActivityOpportunityReport implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-
+    public $period;
     /**
      * Create a new job instance.
      *
@@ -25,7 +25,8 @@ class ActivityOpportunityReport implements ShouldQueue
      */
     public function __construct()
     {
-        //
+        $this->period['from'] = Carbon::now()->subWeek(1)->startOfWeek();
+        $this->period['to'] = Carbon::now()->subWeek(1)->endOfWeek();
     }
 
     /**
@@ -38,12 +39,12 @@ class ActivityOpportunityReport implements ShouldQueue
         // create the file
         $file = '/public/reports/actopptywkrpt'. Carbon::now()->timestamp. ".xlsx";
         
-        Excel::store(new ActivityOpportunityExport(), $file);
+        Excel::store(new ActivityOpportunityExport($this->period), $file);
        
         Mail::to('jhammar@peopleready.com')
                 ->bcc('hamilton@okospartners.com')
                 ->cc('salesoperations@trueblue.com')
-                ->send(new WeeklyActivityOpportunityReport($file));
+                ->send(new WeeklyActivityOpportunityReport($file,$this->period));
         
 
     }
