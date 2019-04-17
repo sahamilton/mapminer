@@ -149,7 +149,8 @@ class AdminUsersController extends BaseController
         $branches =$this->branch->wherehas('servicelines', function ($q) use ($servicelines) {
             $q->whereIn('servicelines.id', array_keys($servicelines));
         })
-        ->pluck('branchname', 'id')->toArray();
+        ->pluck('branchname', 'id')
+        ->toArray();
 
         $branches[0] = 'none';
             ksort($branches);

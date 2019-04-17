@@ -12,7 +12,12 @@
 		oninput="this.setCustomValidity('')"  />
 			@foreach ($roles as $role)
 				
-            		<option value="{{ $role->id }}"{{ isset($news) && ( in_array($role->id, $news->relatedRoles->pluck('id')->toArray()) ? ' selected="selected"' : '') }}>{{ $role->display_name }}</option>
+            		<option value="{{ $role->id }}"
+                        @if(isset($news) && in_array($role->id, $news->relatedRoles->pluck('id')->toArray()))
+                        selected 
+                        @endif
+                        >
+                        {{ $role->display_name }}</option>
             @endforeach
 		</select>
 
