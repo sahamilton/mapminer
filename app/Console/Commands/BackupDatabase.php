@@ -7,6 +7,7 @@ use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use App\Mail\ConfirmBackup;
 use App\Mail\FailedBackup;
+use App\Jobs\ZipBackUp;
 use Mail;
 class BackupDatabase extends Command
 {
@@ -15,7 +16,7 @@ class BackupDatabase extends Command
     protected $description = 'Backup the database';
 
     protected $process;
-
+    public $file;
     public function __construct()
     {
         parent::__construct();
@@ -29,13 +30,16 @@ class BackupDatabase extends Command
             config('database.connections.mysql.database'),
             storage_path($this->file)
         ));
+
+        
     }
 
     public function handle()
     {
-        try {
+        try { 
             $this->process->mustRun();
             $this->info('The backup has been processed successfully.');
+            ZipBackUp::dispatch($this->file)->onQueue('mapminer');
             Mail::queue(new ConfirmBackup($this->file));
         } catch (ProcessFailedException $exception) {
             $this->error('The backup process has failed.');
