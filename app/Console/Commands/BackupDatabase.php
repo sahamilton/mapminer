@@ -22,7 +22,7 @@ class BackupDatabase extends Command
         parent::__construct();
         $date = now()->format('Y-m-d_h:i');
         $db = env('DB_DATABASE');
-        $this->file = 'backups/backup'.$db."-".$date.'.sql';
+        $this->file = storage_path('app/public/backups/').$db."-".$date.'.sql';
         $this->process = new Process(sprintf(
             'mysqldump -u%s -p%s %s > %s',
             config('database.connections.mysql.username'),
