@@ -185,7 +185,7 @@ class OpportunityController extends Controller
         if (request()->filled('expected_close')) {
             $data['expected_close'] = Carbon::parse($data['expected_close']);
         }
-        if ($data['actual_close']) {
+        if (isset($data['actual_close'])) {
             $data['actual_close'] = Carbon::parse($data['actual_close']);
         }
         $data['user_id'] = auth()->user()->id;
