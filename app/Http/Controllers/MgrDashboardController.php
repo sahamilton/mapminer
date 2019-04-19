@@ -415,8 +415,7 @@ class MgrDashboardController extends DashboardController
                           ->whereBetween('actual_close',[$this->period['from'],$this->period['to']]);
                       },
                       'opportunities as top50'=>function($query){
-                          $query->whereClosed(0)
-                          ->where('opportunities.top50','=',1)
+                          $query->where('opportunities.top50','=',1)
                           ->where(function($q){
                             $q->where('actual_close','>',$this->period['to'])
                             ->orwhereNull('actual_close');
