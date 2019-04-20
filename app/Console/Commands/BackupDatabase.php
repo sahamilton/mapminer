@@ -23,7 +23,7 @@ class BackupDatabase extends Command
     {
         parent::__construct();
         
-        $this->filename = env('DB_DATABASE')."-".now()->format('Y-m-d_h:i');
+        $this->filename = env('DB_DATABASE')."-".now()->format('Y-m-d-h-i-s');
         
         $this->file = storage_path('app/public/backups/').$this->filename.'.sql';
         
