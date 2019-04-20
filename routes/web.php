@@ -693,7 +693,8 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
     	//App\Jobs\ActivityOpportunityReport::dispatch();
     	//App\Jobs\ActivityOpportunityReport::dispatch();
     	
-    	App\Jobs\ZipBackup::dispatch('MMProd20190123.sql');
+    	//App\Jobs\ZipBackup::dispatch('MMProd20190123');
+    	//Mail::queue(new App\Mail\ConfirmBackup('MMProd20190123'));
     });
 	# Tracking
 		Route::resource('track','TrackController');	
