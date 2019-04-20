@@ -21,6 +21,7 @@ class ZipBackUp implements ShouldQueue
     public function __construct($file)
     {
         $this->file = $file;
+        dd($this->file);
         $this->db = env('DB_DATABASE');
     }
 
