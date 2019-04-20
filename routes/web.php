@@ -692,9 +692,8 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
     	//App\Jobs\Top50WeeklyReport::dispatch();
     	//App\Jobs\ActivityOpportunityReport::dispatch();
     	//App\Jobs\ActivityOpportunityReport::dispatch();
-    	$job = (new App\Console\Commands\BackupDatabase());
-        dispatch($job);
-    	//App\Console\Commands\BackupDatabase::dispatch();
+    	
+    	App\Jobs\ZipBackup::dispatch('MMProd20190123.sql');
     });
 	# Tracking
 		Route::resource('track','TrackController');	

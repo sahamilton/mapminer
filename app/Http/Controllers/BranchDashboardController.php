@@ -219,7 +219,7 @@ class BranchDashboardController extends Controller
                             $q->where('actual_close','>',$this->period['to'])
                             ->orwhereNull('actual_close');
                           })
-                          ->where('opportunities.created_at','<',$this->period['to']);
+                          ->where('opportunities.created_at','<=',$this->period['to']);
                       }]
                   )
           
