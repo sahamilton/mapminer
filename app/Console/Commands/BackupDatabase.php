@@ -25,12 +25,14 @@ class BackupDatabase extends Command
         
         $this->filename = env('DB_DATABASE')."-".now()->format('Y-m-d_h:i');
         
+        $this->file = storage_path('app/public/backups/').$this->filename.'.sql';
+        
         $this->process = new Process(sprintf(
             'mysqldump -u%s -p%s %s > %s',
             config('database.connections.mysql.username'),
             config('database.connections.mysql.password'),
             config('database.connections.mysql.database'),
-            storage_path('app/public/backups/').$this->filename.'.sql'
+            $this->file
         ));
 
         
