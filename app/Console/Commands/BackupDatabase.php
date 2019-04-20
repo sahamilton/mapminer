@@ -22,16 +22,15 @@ class BackupDatabase extends Command
     public function __construct()
     {
         parent::__construct();
-        $date = now()->format('Y-m-d_h:i');
-        $db = env('DB_DATABASE');
-        $this->filename = $db."-".$date;
-        $this->file = storage_path('app/public/backups/').$filename.'.sql';
+        
+        $this->filename = env('DB_DATABASE')."-".now()->format('Y-m-d_h:i');
+        
         $this->process = new Process(sprintf(
             'mysqldump -u%s -p%s %s > %s',
             config('database.connections.mysql.username'),
             config('database.connections.mysql.password'),
             config('database.connections.mysql.database'),
-            $this->file
+            storage_path('app/public/backups/').$this->filename.'.sql'
         ));
 
         
