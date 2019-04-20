@@ -35,10 +35,8 @@ class ZipBackUp implements ShouldQueue
     public function handle()
     {
        
-        dd($this->path. $this->file . '.zip',$this->path.$this->file);
         $zip = new \ZipArchive();
-        
-        $zip->open($path. $this->file . '.zip', \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
+        $zip->open($this->path. $this->file . '.zip', \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
         $zip->addFile($this->path.$this->file,$this->file);
         $zip->close();
     }
