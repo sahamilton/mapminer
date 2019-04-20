@@ -17,12 +17,15 @@ class BackupDatabase extends Command
 
     protected $process;
     public $file;
+    public $filename;
+
     public function __construct()
     {
         parent::__construct();
         $date = now()->format('Y-m-d_h:i');
         $db = env('DB_DATABASE');
-        $this->file = storage_path('app/public/backups/').$db."-".$date.'.sql';
+        $this->filename = $db."-".$date;
+        $this->file = storage_path('app/public/backups/').$filename.'.sql';
         $this->process = new Process(sprintf(
             'mysqldump -u%s -p%s %s > %s',
             config('database.connections.mysql.username'),
@@ -40,7 +43,7 @@ class BackupDatabase extends Command
             $this->process->mustRun();
             $this->info('The backup has been processed successfully.');
             ZipBackUp::dispatch($this->file)->onQueue('mapminer');
-            Mail::queue(new ConfirmBackup($this->file));
+            Mail::queue(new ConfirmBackup($this->filename));
         } catch (ProcessFailedException $exception) {
             $this->error('The backup process has failed.'. $exception);
             Mail::queue(new FailedBackup($this->file));
