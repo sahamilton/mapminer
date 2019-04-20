@@ -13,6 +13,7 @@ class ZipBackUp implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     public $file;
     public $db;
+    public $path;
     /**
      * Create a new job instance.
      *
@@ -20,9 +21,9 @@ class ZipBackUp implements ShouldQueue
      */
     public function __construct($file)
     {
-        dd($file);
+        
         $this->file = $file;
-       
+        $this->path =  storage_path('app/public/backups/');
         $this->db = env('DB_DATABASE');
     }
 
@@ -33,12 +34,12 @@ class ZipBackUp implements ShouldQueue
      */
     public function handle()
     {
-        $path = storage_path('app/public/backups/');
-        
-        $zip = new \ZipArchive();
        
+        dd($this->path. $this->file . '.zip',$this->path.$this->file);
+        $zip = new \ZipArchive();
+        
         $zip->open($path. $this->file . '.zip', \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
-        $zip->addFile($path.$this->file.".sql",$this->file.".sql");
+        $zip->addFile($this->path.$this->file,$this->file);
         $zip->close();
     }
 }
