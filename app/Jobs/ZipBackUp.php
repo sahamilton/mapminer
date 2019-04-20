@@ -20,8 +20,9 @@ class ZipBackUp implements ShouldQueue
      */
     public function __construct($file)
     {
+        dd($file);
         $this->file = $file;
-        dd($this->file);
+       
         $this->db = env('DB_DATABASE');
     }
 
@@ -35,7 +36,7 @@ class ZipBackUp implements ShouldQueue
         $path = storage_path('app/public/backups/');
         
         $zip = new \ZipArchive();
-        dd($path. $this->file . '.zip',$path.$this->file.".sql");
+       
         $zip->open($path. $this->file . '.zip', \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
         $zip->addFile($path.$this->file.".sql",$this->file.".sql");
         $zip->close();
