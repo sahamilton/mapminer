@@ -8,11 +8,14 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 
-class ZipBackUp implements ShouldQueue
+
+
+class UploadToDropbox implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
+    public $filesystem;
     public $file;
-    public $db;
     public $path;
     /**
      * Create a new job instance.
@@ -24,7 +27,7 @@ class ZipBackUp implements ShouldQueue
         
         $this->file = $file;
         $this->path =  storage_path('backups/');
-        $this->db = env('DB_DATABASE');
+     
     }
 
     /**
@@ -34,11 +37,8 @@ class ZipBackUp implements ShouldQueue
      */
     public function handle()
     {
+        
+      \Storage::disk('dropbox')->put($this->file.".zip", fopen($this->path.$this->file.'.zip', 'r+'));
        
-        $zip = new \ZipArchive();
-        $zip->open($this->path. $this->file . '.zip', \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
-        $zip->addFile($this->path.$this->file.".sql");
-        $zip->close();
-
     }
 }

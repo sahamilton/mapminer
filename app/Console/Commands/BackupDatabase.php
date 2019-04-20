@@ -24,8 +24,8 @@ class BackupDatabase extends Command
         parent::__construct();
         
         $this->filename = env('DB_DATABASE')."-".now()->format('Y-m-d-h-i-s');
-        
-        $this->file = storage_path('app/public/backups/').$this->filename.'.sql';
+        $this->path = storage_path('backups/');
+        $this->file = $this->path.$this->filename.'.sql';
         
         $this->process = new Process(sprintf(
             'mysqldump -u%s -p%s %s > %s',
@@ -44,6 +44,7 @@ class BackupDatabase extends Command
             $this->process->mustRun();
             $this->info('The backup has been processed successfully.');
             ZipBackUp::dispatch($this->filename)->onQueue('mapminer');
+            UploadToDropbox::dispatch($this->filename)->onQueue('mapminer');
             Mail::queue(new ConfirmBackup($this->filename));
         } catch (ProcessFailedException $exception) {
             $this->error('The backup process has failed.'. $exception);
