@@ -32,8 +32,7 @@ class ZipBackUp implements ShouldQueue
     public function handle()
     {
         $path = storage_path('app/public/backups/');
-        $zip_file = $this->db."-".now()->format('Y-m-d') ; 
-        
+        $zip_file = $this->db."-".now()->format('Y-m-d-h-i-s') ; 
         $zip = new \ZipArchive();
         $zip->open($path. $zip_file . '.zip', \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
         $zip->addFile($this->file,$zip_file.".sql");
