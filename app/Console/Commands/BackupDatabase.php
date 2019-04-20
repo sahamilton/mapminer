@@ -8,6 +8,7 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 use App\Mail\ConfirmBackup;
 use App\Mail\FailedBackup;
 use App\Jobs\ZipBackUp;
+use App\Jobs\UploadToDropbox;
 use Mail;
 class BackupDatabase extends Command
 {
