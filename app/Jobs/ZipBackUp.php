@@ -23,7 +23,7 @@ class ZipBackUp implements ShouldQueue
     {
         
         $this->file = $file;
-        $this->path =  storage_path('app/public/backups/');
+        $this->path =  public_path('storage/backups/');
         $this->db = env('DB_DATABASE');
     }
 
