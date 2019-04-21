@@ -44,7 +44,7 @@ class BackupDatabase extends Command
         try { 
             $this->process->mustRun();
             $this->info('The backup has been processed successfully.');
-            ZipBackUp::withChain([new UploadToDropbox($this->filename)
+            ZipBackUp::withChain([UploadToDropbox::dispatch($this->filename)
             ->delay(now()->addMinutes(5)])
             ->dispatch($this->filename)->onQueue('mapminer');
             Mail::queue(new ConfirmBackup($this->filename));
