@@ -693,7 +693,7 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
      	foreach ($filesInFolder as $file){
      		if(pathinfo($file)['extension'] == 'sql'){
      			$filename = pathinfo($file)['filename'];
-     			ZipBackUp::withChain([new UploadToDropbox($filename)])
+     			App\Jobs\ZipBackUp::withChain([new App\Jobs\UploadToDropbox($filename)])
             	->dispatch($filename)->onQueue('mapminer');
      		}
      		
