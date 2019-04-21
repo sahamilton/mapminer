@@ -689,6 +689,15 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
         Route::resource('searchfilters', 'SearchFiltersController');
     # Jobs
      Route::get('testjob',function(){
+     	$filesInFolder = \File::files(storage_path('backups'));
+     	foreach ($filesInFolder as $file){
+     		if(pathinfo($file)['extension'] == 'sql'){
+     			$filename = pathinfo($file)['filename'];
+     			ZipBackUp::withChain([new UploadToDropbox($filename)])
+            	->dispatch($filename)->onQueue('mapminer');
+     		}
+     		
+     	}
     	//App\Jobs\Top50WeeklyReport::dispatch();
     	//App\Jobs\ActivityOpportunityReport::dispatch();
     	//App\Jobs\ActivityOpportunityReport::dispatch();
