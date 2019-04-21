@@ -434,10 +434,14 @@ class AdminUsersController extends BaseController
         //$user = $this->user->find($id);
         //dd($user);
         // Check if we are not trying to delete ourselves
-        if ($user->id === \Auth::user()->id) {
+        if ($user->id === auth()->user()->id) {
             // Redirect to the user management page
             return redirect()->to('admin/users')
             ->with('error', 'You cannot delete yourself');
+        }
+        if($user->person->has('directReports')){
+            $person = $user->person->load('directReports');
+            return response()->view('admin.users.hasreports',compact('person'));
         }
         $user->person->delete();
         $user->delete();
