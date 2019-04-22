@@ -1,7 +1,7 @@
 @extends('admin.layouts.default')
 @section('content')
 <div class="container">
-<div class="col-sm-5">
+<div class="col-sm-6">
 	<h2>{{$person->fullName()}}'s Direct Reports</h2>
 <div class="alert-danger"><p>You must re-assign these reports before you can delete {{$person->firstname}}</p></div>
 

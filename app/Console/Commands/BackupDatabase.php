@@ -24,7 +24,7 @@ class BackupDatabase extends Command
     {
         parent::__construct();
         
-        $this->filename = env('DB_DATABASE')."-".now()->format('Y-m-d-h-i-s');
+        $this->filename = env('DB_DATABASE')."-".now()->format('Y-m-d-H-i-s');
         $this->path = storage_path('backups/');
         $this->file = $this->path.$this->filename.'.sql';
         
