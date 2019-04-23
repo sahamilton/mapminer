@@ -41,7 +41,7 @@ class Top50WeeklyReport implements ShouldQueue
         $file = '/public/reports/top50wkrpt'. $this->period->timestamp. ".xlsx";
         
         Excel::store(new Top50WeekReportExport($this->period), $file);
-        Mail::to('astarr@peopleready.com')
+        Mail::to('astarr@trueblue.com')
                 ->bcc('hamilton@okospartners.com')
                 ->cc('salesoperations@trueblue.com')
                 ->send(new SendTop50WeeklyReport($file));
