@@ -123,8 +123,7 @@
         name="serviceline[]" 
         id="serviceline" 
         multiple
-		oninvalid="this.setCustomValidity('You must choose a serviceline')"
-		oninput="this.setCustomValidity('')"  />
+		 />
 
 			@foreach ($servicelines as $id=>$serviceline)
 				

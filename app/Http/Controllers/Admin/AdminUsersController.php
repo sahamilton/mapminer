@@ -268,6 +268,10 @@ class AdminUsersController extends BaseController
             return redirect()->to(route('users.index'))->with('error', 'User does not exist');
         }
     }
+    /**
+     * [getFilters description]
+     * @return Collection [description]
+     */
     private function getFilters()
     {
 
@@ -310,7 +314,12 @@ class AdminUsersController extends BaseController
         }
     }
     
-
+        /**
+         * [updatePassword description]
+         * @param  UserFormRequest $request [description]
+         * @param  User            $user    [description]
+         * @return [type]                   [description]
+         */
         private function updatePassword(UserFormRequest $request, User $user)
         {
             if (request()->filled('password')) {
@@ -318,7 +327,12 @@ class AdminUsersController extends BaseController
                     $user->save();
                 }
         }
-
+        /**
+         * [updateServicelines description]
+         * @param  UserFormRequest $request [description]
+         * @param  User            $user    [description]
+         * @return [type]                   [description]
+         */
         private function updateServicelines(UserFormRequest $request, User $user)
         {
 
@@ -329,7 +343,12 @@ class AdminUsersController extends BaseController
 
             }
         }
-
+        /**
+         * [updateIndustryVertical description]
+         * @param  UserFormRequest $request [description]
+         * @param  Person          $person  [description]
+         * @return [type]                   [description]
+         */
         private function updateIndustryVertical(UserFormRequest $request, Person $person)
         {
                         if (request()->filled('vertical')) {
@@ -344,6 +363,12 @@ class AdminUsersController extends BaseController
                         $person->industryfocus()->sync([]);
                     }
         }
+    /**
+     * [associateBranchesWithPerson description]
+     * @param  [type] $person [description]
+     * @param  [type] $data   [description]
+     * @return [type]         [description]
+     */
     private function associateBranchesWithPerson($person, $data)
     {
   
@@ -366,11 +391,16 @@ class AdminUsersController extends BaseController
 
         return $person;
     }
-
+    /**
+     * [updateAssociatedPerson description]
+     * @param  [type] $person [description]
+     * @param  [type] $data   [description]
+     * @return [type]         [description]
+     */
     private function updateAssociatedPerson($person, $data)
     {
        
-    
+        
         $geodata = $person->updatePersonsAddress($data);
         $data = array_merge($data, $geodata);
         $person->update($data);
@@ -382,7 +412,12 @@ class AdminUsersController extends BaseController
 
         return $person;
     }
-
+    /**
+     * [getUsersBranches description]
+     * @param  User   $user             [description]
+     * @param  [type] $branchesServiced [description]
+     * @return [type]                   [description]
+     */
     private function getUsersBranches(User $user, $branchesServiced = null)
     {
 
@@ -439,7 +474,8 @@ class AdminUsersController extends BaseController
             return redirect()->to('admin/users')
             ->with('error', 'You cannot delete yourself');
         }
-        if($user->person->has('directReports')){
+        if($user->person->directReports()->count() >0){
+            
             $person = $user->person->load('directReports');
             return response()->view('admin.users.hasreports',compact('person'));
         }
@@ -449,14 +485,21 @@ class AdminUsersController extends BaseController
         ->with('success', 'User deleted succesfully');
     }
 
-
+    /**
+     * [import description]
+     * @return [type] [description]
+     */
     public function import()
     {
         $servicelines = Serviceline::whereIn('id', $this->userServiceLines)
                 ->pluck('ServiceLine', 'id');
         return response()->view('admin/users/import', compact('servicelines'));
     }
-
+    /**
+     * [bulkImport description]
+     * @param  UserBulkImportForm $request [description]
+     * @return [type]                      [description]
+     */
     public function bulkImport(UserBulkImportForm $request)
     {
 
@@ -578,13 +621,24 @@ class AdminUsersController extends BaseController
 
         return redirect()->to('/admin/users');
     }
-
+    /**
+     * [executeQuery description]
+     * @param  [type] $query [description]
+     * @return [type]        [description]
+     */
     private function executeQuery($query)
     {
 
         $results = DB::statement($query);
         echo $query . ";<br />";
     }
+    /**
+     * [rawQuery description]
+     * @param  [type] $query [description]
+     * @param  [type] $error [description]
+     * @param  [type] $type  [description]
+     * @return [type]        [description]
+     */
     private function rawQuery($query, $error, $type)
     {
         $result = [];
@@ -612,7 +666,10 @@ class AdminUsersController extends BaseController
         }
         return $result;
     }
-
+    /**
+     * [export description]
+     * @return [type] [description]
+     */
     public function export()
     {
         $data = $this->user->with('person')->get();
@@ -620,8 +677,11 @@ class AdminUsersController extends BaseController
         return \Response::make(rtrim($export['output'], "\n"), 200, $export['headers']);
     }
 
-
-
+   
+    /**
+     * [getManagerList description]
+     * @return [type] [description]
+     */
     private function getManagerList()
     {
 
@@ -643,14 +703,21 @@ class AdminUsersController extends BaseController
     }
 
 
-
+    /**
+     * [getLatLng description]
+     * @param  [type] $address [description]
+     * @return [type]          [description]
+     */
     private function getLatLng($address)
     {
         $geoCode = app('geocoder')->geocode($address)->get();
         return $this->user->getGeoCode($geoCode);
     }
     
-
+    /**
+     * [checkBranchAssignments description]
+     * @return [type] [description]
+     */
     public function checkBranchAssignments()
     {
         $branchpeople  = $this->person->where('lat', '!=', '')->has('branchesServiced')->with('branchesServiced')->get();

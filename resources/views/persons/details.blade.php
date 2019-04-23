@@ -6,13 +6,22 @@
 			<h2 class="panel-title pull-left"><strong>{{$people->fullName()}}</strong></h2>
 			<a class="btn btn-primary float-right" href="{{route('users.edit',$people->user_id)}}">
 
-				<i class="far fa-edit text-info""></i>
+				<i class="far fa-edit text-white"></i>
 
 				Edit
 			</a>
+		
+		@can('manage_users')
+		<a class="btn btn-danger float-right" 
+                data-href="{{route('users.destroy',$people->user_id)}}" 
+				data-toggle="modal" 
+				data-target="#confirm-delete" 
+				data-title = "{{$people->fullName()}}" 
+				href="#">
+				<i class="far fa-trash-alt text-white" aria-hidden="true"> </i> 
+				Delete </a>
+		@endcan
 		</div>
-
-
 		@canImpersonate
 			
 		<a href="{{route('impersonate', $people->user_id)}}" class="btn btn-warning">
@@ -151,4 +160,6 @@
 		</div>
 	</div>
 </div>
+@include('partials._scripts')
+@include('partials._modal')
 @endsection
