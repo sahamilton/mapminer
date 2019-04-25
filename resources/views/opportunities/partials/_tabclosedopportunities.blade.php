@@ -12,9 +12,7 @@
       <th>Potential Headcount</th>
       <th>Potential Duration (mos)</th>
       <th>Potential $$</th>
-      <th>Expected Close</th>
-      <th>Last Activity</th>
-      <th>Activities</th>
+      <th>Date Closed</th>
     </thead>
       <tbody>
         @foreach ($data['opportunities'] as $opportunity)
@@ -65,34 +63,11 @@
           <td>{{$opportunity->duration}}</td>
           <td>{{$opportunity->value}}</td>
           <td>
-            @if($opportunity->expected_close )
-            {{$opportunity->expected_close->format('Y-m-d')}}
-            @endif
-          </td>
-          <td>
-            @if($opportunity->address->activities->count() >0 )
-
-              {{$opportunity->address->activities->last()->activity_id}}
-             <br />
-            {{$opportunity->address->activities->last()->activity_date->format('Y-m-d')}}
+            @if($opportunity->actual_close )
+            {{$opportunity->actual_close->format('Y-m-d')}}
             @endif
           </td>
           
-          <td>
-   
-            @if(isset($data['branches']) && in_array($data['branches']->first()->id,array_keys($myBranches)))
-              <a 
-                  data-href="{{route('activity.store')}}" 
-                  data-toggle="modal" 
-                  data-pk = "{{$opportunity->address->address->id}}"
-                  data-id="{{$opportunity->address->address->id}}"
-                  data-target="#add-activity" 
-                  data-title = "location" 
-                  href="#">
-              <i class="fa fa-plus-circle text-success" aria-hidden="true"></i> Add Activity</a>
-              @endif
-  
-          </td>
         </tr>
         @endif
         @endforeach
