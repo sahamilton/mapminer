@@ -61,8 +61,6 @@ class OpportunityController extends Controller
             $this->period = $this->activity->getPeriod();
         }
         $activityTypes = $activityTypes = ActivityType::all();
-       
-        
         $myBranches = $this->person->myBranches();
         if(! $myBranches){
             return redirect()->back()->withWarning("You are not assigned to any branches. Please contact Sales Operations");
@@ -72,7 +70,12 @@ class OpportunityController extends Controller
         $data['period'] = $this->period;
         return response()->view('opportunities.index', compact('data', 'activityTypes', 'myBranches','period'));
     }
-
+    /**
+     * [branchOpportunities description]
+     * @param  Branch  $branch  [description]
+     * @param  Request $request [description]
+     * @return [type]           [description]
+     */
     public function branchOpportunities(Branch $branch, Request $request)
     {
       if(! $this->period){
@@ -91,7 +94,11 @@ class OpportunityController extends Controller
          $data['period'] = $this->period;
         return response()->view('opportunities.index', compact('data', 'activityTypes', 'myBranches'));
     }
-
+    /**
+     * [getSummaryBranchOpportunities description]
+     * @param  array  $branches [description]
+     * @return [type]           [description]
+     
     public function getSummaryBranchOpportunities(array $branches){
         
         return $this->branch
@@ -120,7 +127,12 @@ class OpportunityController extends Controller
        
        // $data['activities'] = $this->branch->whereIn('id',$branches)->get();
         //$data['charts'] = $this->getChartData($branches);
-    }
+    }*/
+    /**
+     * [getBranchData description]
+     * @param  array  $branches [description]
+     * @return [type]           [description]
+     */
     public function getBranchData(array $branches)
     {
         $data['branches'] =$this->getBranches($branches);
@@ -144,7 +156,11 @@ class OpportunityController extends Controller
         return $data;
     }
 
-       
+     /**
+      * [getBranches description]
+      * @param  [type] $branches [description]
+      * @return [type]           [description]
+      */
        private function getBranches($branches)
        {
         return  $this->branch->with('opportunities', 'leads', 'manager')
@@ -274,7 +290,12 @@ class OpportunityController extends Controller
         $opportunity->delete();
         return redirect()->route('address.show', $address)->withMessage('Opportunity deleted');
     }
-
+    /**
+     * [remove description]
+     * @param  Address $address [description]
+     * @param  Request $request [description]
+     * @return [type]           [description]
+     */
     public function remove(Address $address, Request $request)
     {
         
@@ -282,6 +303,11 @@ class OpportunityController extends Controller
        
         return redirect()->route('branch.leads',request('branch_id'))->withMessage('Lead removed');
     }
+    /**
+     * [addToBranchLeads description]
+     * @param Address $address [description]
+     * @param Request $request [description]
+     */
     public function addToBranchLeads(Address $address, Request $request)
     {
  
@@ -296,7 +322,12 @@ class OpportunityController extends Controller
         $address->assignedToBranch()->attach(request('branch_id'));
         return redirect()->back()->withMessage('Added to Branch Leads');
     }
-
+    /**
+     * [close description]
+     * @param  Request $request     [description]
+     * @param  [type]  $opportunity [description]
+     * @return [type]               [description]
+     */
     public function close(Request $request, $opportunity)
     {
         $data= request()->except('_token');
@@ -318,6 +349,11 @@ class OpportunityController extends Controller
 
         return redirect()->back()->withMessage('Opportunity closed');
     }
+    /**
+     * [toggle description]
+     * @param  Request $request [description]
+     * @return [type]           [description]
+     */
     public function toggle(Request $request)
     {
         $opportunity = $this->opportunity->findOrFail(request('id'));
@@ -329,6 +365,10 @@ class OpportunityController extends Controller
         }
         $opportunity->save();
     }
+    /**
+     * [chart description]
+     * @return [type] [description]
+     
     public function chart()
     {
         if (! $branch_ids = $this->person->myBranches()) {
@@ -343,8 +383,12 @@ class OpportunityController extends Controller
      
     
         return response()->view('opportunities.chart', compact('data'));
-    }
-
+    }*/
+    /**
+     * [getChartData description]
+     * @param  [type] $branches [description]
+     * @return [type]           [description]
+    
     private function getChartData($branches)
     {
         
@@ -362,7 +406,7 @@ class OpportunityController extends Controller
                                 $query->whereClosed(2);
                             }]
                     )
-                    ->get();
+                    ->get(); */
         /*return $this->addressbranch
             
             ->whereIn('branch_id',$branches)
@@ -382,9 +426,13 @@ class OpportunityController extends Controller
 
                   )
             ->withCount('activities')
-            ->groupBy('address_branch.branch_id')->get();*/
-    }
-
+            ->groupBy('address_branch.branch_id')->get();
+    }*/
+    /**
+     * [prepChartData description]
+     * @param  [type] $results [description]
+     * @return [type]          [description]
+     
     private function prepChartData($results)
     {
 
@@ -398,11 +446,14 @@ class OpportunityController extends Controller
         }
 
         return $string;
-    }
+    }*/
           
 
-
-
+    /**
+     * [getBranchNotes description]
+     * @param  [type] $branches [description]
+     * @return [type]           [description]
+     
     private function getBranchNotes($branches)
     {
 
@@ -411,15 +462,15 @@ class OpportunityController extends Controller
                 $q->whereIn('branch_id', $branches);
             });
         })->with('relatesToLocation', 'writtenBy', 'writtenBy.person')->get();
-    }
+    }*/
+    /**
+     * [getBranchActivities description]
+     * @param  [type] $branches [description]
+     * @return [type]           [description]
+     
     private function getBranchActivities($branches)
     {
-        
-
-
-
-
-
+       
         $query = "SELECT branches.id as id, activitytype_id as type, count(activities.id) as activities
             FROM `activities`, address_branch,branches
             where activities.address_id = address_branch.address_id
@@ -434,8 +485,11 @@ class OpportunityController extends Controller
         }
 
         return $result;
-    }
-
+    }*/
+/**
+ * [pipeline description]
+ * @return [type] [description]
+ 
    public function pipeline()
     {
       $myBranches = $this->getMyBranches();
@@ -443,7 +497,11 @@ class OpportunityController extends Controller
       $pipeline =$this->opportunity->getBranchPipeline(array_keys($myBranches));
       return response()->view('opportunities.pipeline',compact('pipeline','myBranches'));
 
-    }
+    }*/
+    /**
+     * [getMyBranches description]
+     * @return [type] [description]
+     */
     private function getMyBranches()
     {
       
