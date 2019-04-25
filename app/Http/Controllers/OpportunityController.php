@@ -56,7 +56,7 @@ class OpportunityController extends Controller
      */
     public function index()
     {
-      
+     
         if(! $this->period){
             $this->period = $this->activity->getPeriod();
         }

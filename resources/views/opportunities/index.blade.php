@@ -1,11 +1,8 @@
 @extends('site.layouts.default')
 @section('content')
 <div class="container">
-@include('companies.partials._searchbar')
-
-@include('maps.partials._form')
 <h2>{{$data['branches']->first()->branchname}} Branch Opportunities</h2>
-@include('branches.partials._periodselector')
+
 <p><a href="{{route('dashboard.index')}}">Return To Branch Dashboard</a></p>
 @php $activityTypes = \App\ActivityType::all(); @endphp
 @if(count($myBranches)>1)
