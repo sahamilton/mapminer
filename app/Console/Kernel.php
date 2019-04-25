@@ -29,10 +29,12 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->job(new WeeklyActivityReminder())->weekly()->sundays()->at('19:52');
-        $schedule->command('db:backup')->dailyAt('22:58');
-        $schedule->job(new Top50WeeklyReport())->weekly()->fridays()->at('06:59');
-        $schedule->job(new ActivityOpportunityReport())->weekly()->wednesdays()->at('04:59');    
+       if(config('app.env')=='production'){
+           $schedule->job(new WeeklyActivityReminder())->weekly()->sundays()->at('19:52');
+           $schedule->command('db:backup')->dailyAt('22:58');
+           $schedule->job(new Top50WeeklyReport())->weekly()->fridays()->at('06:59');
+           $schedule->job(new ActivityOpportunityReport())->weekly()->wednesdays()->at('04:59'); 
+       }   
     }
 
     /**
