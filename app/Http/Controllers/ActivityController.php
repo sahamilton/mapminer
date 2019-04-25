@@ -35,7 +35,7 @@ class ActivityController extends Controller
     public function index()
     {
      
-        
+
             if(! $myBranches = $this->person->myBranches()){
                 return redirect()->back()->withError('You are not assigned to any branches');
            }
@@ -44,7 +44,7 @@ class ActivityController extends Controller
             $branch = $this->branch->findOrFail(reset($branches));
 
             $data = $this->getBranchActivities($branch);
-      
+     
             $title= $data['branches']->first()->branchname . " activities";
   
         return response()->view('activities.index', compact('activities', 'data','title','myBranches'));
@@ -110,6 +110,7 @@ class ActivityController extends Controller
             ->where('activity_date','>=',now())
             ->whereNull('completed');
         }
+
         $data['activities'] =  $data['activities']->with('relatesToAddress', 'relatedContact', 'type', 'user')->get();
 
         $data['branches'] =  $this->getbranches([$branch->id]);
@@ -119,9 +120,9 @@ class ActivityController extends Controller
             ->where('completed','=',1)
             ->pluck('activities', 'yearweek')
             ->toArray();
-
+        
         $data['summary'] = $this->activity->summaryData($weekCount);
-
+        dd($data);
         
         return $data;
     }

@@ -214,7 +214,7 @@ class ProjectsImportController extends ImportController
     {
         $query = "insert ignore into projectcompanies (" . implode(",", $this->projectcompanyfields) . ") select t.". implode(",t.", $this->projectcompanyimportfields). " FROM `projectcompanyimport` t
             ";
-            dd($query);
+    
         if (\DB::select(\DB::raw($query))) {
             return true;
         }

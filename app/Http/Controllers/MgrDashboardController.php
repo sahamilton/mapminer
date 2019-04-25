@@ -64,13 +64,13 @@ class MgrDashboardController extends DashboardController
     public function index()
     {
       // set period
-   
+
       if(! $this->period){
         $this->period = $this->activity->getPeriod();
       }
       // get users details
       $this->manager = $this->person->where('user_id','=',auth()->user()->id)->firstOrFail();
-      // get assocciated branches
+      // get associated branches
       $this->myBranches = array_keys($this->getBranches());
       // redirect if only one or no branches
       $this->checkBranches();
@@ -176,6 +176,7 @@ class MgrDashboardController extends DashboardController
       
 
       $data['branches'] = $this->getSummaryBranchData();
+ 
       $data['team']= $this->myTeamsOpportunities($data['branches']);
 
       $data['period'] = $this->period;

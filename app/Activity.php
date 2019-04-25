@@ -208,7 +208,7 @@ class Activity extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
        
        
         foreach ($data as $element) {
-          dd($element);
+        
             /*$year = substr($yearweek, 0, 4);
             $week = substr($yearweek, 4, 2);
             dd($year,$week);
@@ -224,7 +224,7 @@ class Activity extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
                 $show['chart']['label'] = $data['chart']['label'] . "," .$yearweek;
             }*/
         }
-        dd(165,$show);
+        //dd(165,$show);
         return $show;
     }
 

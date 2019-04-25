@@ -107,7 +107,7 @@ class ReportsController extends Controller
 
     private function consoliData($data)
     {
-        dd($data);
+     
         return $data;
     }
    private function summarizeOpportunities($branchopportunities)

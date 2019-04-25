@@ -204,7 +204,7 @@ class BranchesController extends BaseController {
 		$salesteam = $this->branch->with('relatedPeople','servicelines')->find($id);
 
 		$roles = Role::pluck('display_name','id');
-		dd($salesteam,$roles);
+	
 
 		return response()->view('branches.showteam',compact('salesteam','roles'));
 	}
