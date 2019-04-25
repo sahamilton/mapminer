@@ -41,10 +41,12 @@
 					@endif
 				</td>
 				<td>
-					<a href="#" id="activity" 
+					<a href="#" 
+					class="editable" 
 					data-type="textarea" 
 					data-pk="{{$activity->id}}" 
-					data-url="/post" 
+					data-url="{{route('api.note.edit',$activity->id)}}" 
+					data-name="note"
 					data-title="Edit note">{{$activity->note}}</a></td>
 				
 				<td>

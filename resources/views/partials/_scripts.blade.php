@@ -97,7 +97,28 @@ $(document).ready(function()
     altFormat: "yyyy-mm-dd"});
    
 	$("[id^=sorttable]").DataTable();
-	
+	$.fn.editable.defaults.mode = 'inline';
+	$.fn.editableform.buttons = '<button type="submit" class="btn btn-info editable-submit"><i class="fa fa-fw fa-check"></i></button>' + '<button type="button" class="btn editable-cancel"><i class="fa fa-fw fa-remove"></i></button>' ;
+   
+	$('.editable').editable(
+        {
+           params: function(params) {  //params already contain `name`, `value` and `pk`
+                var data = params;
+                data[params.name] = params.value;
+                data['id'] = params.pk;
+                data['field'] = $(this).attr('id');
+                data['api_token'] = '{{auth()->check() ? auth()->user()->api_token : ''}}';
+               return data;
+              },
+        
+        ajaxOptions: {
+            type: 'POST',
+            dataType: 'JSON',
+        },
+        success: function( msg ) {
+               
+      }
+    });
 	
 
 	$("[id^=nosorttable]").DataTable(

@@ -348,4 +348,16 @@ class ActivityController extends Controller
 
         return $chartdata;
     }
+
+    public function updateNote(Activity $activity, Request $request) 
+    {
+        
+        $activity->update(['note'=>request('note')]);
+        $response = array(
+                'status' => 'success',
+                'msg' => 'Note updated successfully',
+            ); 
+       
+        return response()->json($response);
+    }
 }
