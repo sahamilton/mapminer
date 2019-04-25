@@ -85,8 +85,9 @@ class MyLeadsController extends BaseController
     private function getBranchLeads(Array $branch){
         $data['leads'] = $this->lead->wherehas('assignedToBranch', function ($q) use ($branch) {
             $q->whereIn('branches.id', $branch);
-        })->with('assignedToBranch')->get();
-
+        })->with('assignedToBranch','opportunities','leadsource')
+        ->get();
+       
         $data['branches'] = $this->getBranches($branch);
         return $data;
     }
@@ -232,7 +233,7 @@ class MyLeadsController extends BaseController
      */
     public function destroy($mylead)
     {
-        $data['lead'] = $this->getAddressDetails($geodata,$request);
+       /* $data['lead'] = $this->getAddressDetails($geodata,$request);
       
         $data['lead']['businessname'] = $data['lead']['companyname'];
         $data['lead']['phone'] = preg_replace("/[^0-9]/", "", $data['lead']['phone']);
@@ -245,7 +246,7 @@ class MyLeadsController extends BaseController
         $data['lead']['lead_source_id'] = $userCreatedLeadSourceId;
         $data['lead']['type'] = 'lead';
         $data['lead']['user_id'] =auth()->user()->id;
-        return $data;
+        return $data;*/
     }
 
     private function getAddressDetails($geodata,Request $request)

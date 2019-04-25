@@ -34,4 +34,10 @@ class PersonObserver
        
         // return Mail::queue(new PersonNotification($person));
     }
+
+    public function deleting(Person $person)
+    {
+        // set all direct reports to null
+        // return Mail::queue(new PersonNotification($person));
+    }
 }

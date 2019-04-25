@@ -17,7 +17,7 @@ use App\Mail\SendWeeklyActivityReminder;
             return view('welcome');
     }]);
 
-
+    
 	Route::get('testinbound',['as'=>'testinbound','uses'=>'InboundMailController@inbound']);
 	Route::get('testemail',['as'=>'testemail','uses'=>'InboundMailController@testemail']);
 
@@ -692,16 +692,29 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
         Route::get('api/searchfilters/getAccounts', ['as'=>'getAccountSegments','uses'=>'SearchFiltersController@getAccountSegments']);
         Route::post('api/searchfilters/postAccounts', ['as'=>'postAccountSegments','uses'=>'SearchFiltersController@getAccountSegments']);
         Route::resource('searchfilters', 'SearchFiltersController');
-
+    # Jobs
+     Route::get('testjob',function(){
+     	$filesInFolder = \File::files(storage_path('backups'));
+     	foreach ($filesInFolder as $file){
+     		if(pathinfo($file)['extension'] == 'sql'){
+     			$filename = pathinfo($file)['filename'];
+     			App\Jobs\ZipBackUp::withChain([new App\Jobs\UploadToDropbox($filename)])
+            	->dispatch($filename)->onQueue('mapminer');
+     		}
+     		
+     	}
+    	//App\Jobs\Top50WeeklyReport::dispatch();
+    	//App\Jobs\ActivityOpportunityReport::dispatch();
+    	//App\Jobs\ActivityOpportunityReport::dispatch();
+    	
+    	//App\Jobs\ZipBackup::dispatch('MMProd20190123');
+    	//App\Jobs\UploadToDropbox::dispatch('MMProd20190123');
+    	//Mail::queue(new App\Mail\ConfirmBackup('MMProd20190123'));
+    });
 	# Tracking
 		Route::resource('track','TrackController');	
 
-        # Seeder for relationships with servicelines
-        //Route::get('seeder',['as'=>'seeder','uses'=>'CompaniesController@seeder']);
-        //Route::get('apiseeder',['as'=>'apiseeder','uses'=>'UsersController@seeder']);
-
-
-        # Versions
+    # Versions
         Route::resource('versions', 'GitController');
 
         //Route::get('/leads/unassigned',['as'=>'unassigned.leads','uses'=>'LeadsController@unassignedleads']);

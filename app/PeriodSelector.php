@@ -5,10 +5,11 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use \Carbon\Carbon;
 
+
 trait PeriodSelector
 {
     public $period = [];
-    
+    public $default = 'thisWeek';
     /**
      * [setPeriod description]
      * @param [type] $period [description]
@@ -38,8 +39,8 @@ trait PeriodSelector
         if($period && method_exists($this,$period)){
     		$this->period = $this->$period();
     	}else{
-           $this->period = $this->default(); 
-           $this->period['period'] = 'default';
+           $this->period = $this->thisWeek(); 
+           $this->period['period'] = $this->default;
         }
         
 
@@ -52,7 +53,7 @@ trait PeriodSelector
      * @return [type] [description]
      */
     private function default(){
-    	return $this->lastDays(30);
+    	return $this->thisWeek();
     }
 
 

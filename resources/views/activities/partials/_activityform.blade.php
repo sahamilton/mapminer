@@ -85,5 +85,6 @@
                   <option value="{{$key}}">{{$type}}</option>
                 @endforeach
         </select>
+        <input type="hidden" name="branch_id" value="{{$activity ? $activity->branch_id : ''}}" />
         </div>
          

@@ -395,8 +395,7 @@ class MgrDashboardController extends DashboardController
      * @return [type]           [description]
      */
     private function getSummaryBranchData(){
-       
-        return $this->branch
+      return $this->branch
               ->withCount(       
                       [
                         'leads'=>function($query){
@@ -416,8 +415,7 @@ class MgrDashboardController extends DashboardController
                           ->whereBetween('actual_close',[$this->period['from'],$this->period['to']]);
                       },
                       'opportunities as top50'=>function($query){
-                          $query->whereClosed(0)
-                          ->where('opportunities.top50','=',1)
+                          $query->where('opportunities.top50','=',1)
                           ->where(function($q){
                             $q->where('actual_close','>',$this->period['to'])
                             ->orwhereNull('actual_close');
@@ -482,8 +480,7 @@ class MgrDashboardController extends DashboardController
        */
       private function getUpcomingActivities()
       {
-             $users =  $this->person->myBranchTeam($this->myBranches);
-             return $this->activity->whereIn('user_id',$users)
+             return $this->activity->whereIn('branch_id',$this->myBranches)
              ->where('activity_date','>=',Carbon::now())->get();
 
       }

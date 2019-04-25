@@ -85,6 +85,7 @@
       
    
   </div>
+  @if(isset($opportunity))
  <div class="form-group{{ $errors->has('expected_close)') ? ' has-error' : '' }}">
                 <label class="col-md-4 control-label" for="expected_close">Actual Close Date</label>
                 
@@ -101,7 +102,7 @@
                 
             </div>
 
-
+  @endif
 
   <div class="form-group{{ $errors->has('description') ? ' has-error' : '' }}">
     <label class="col-md-4 control-label">Description</label>

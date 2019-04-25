@@ -28,6 +28,7 @@ class ActivityFormRequest extends FormRequest
             'followup_date'=>'date|nullable|after:activity_date',
             'location_id' => 'required_without:address_id',
             'address_id' => 'required_without:location_id',
+            'branch_id'=>'required',
         ];
     }
 }

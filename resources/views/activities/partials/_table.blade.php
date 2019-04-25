@@ -33,7 +33,13 @@
 					@endif
 				</td>
 				<td>{{$activity->activity_date->format('Y-m-d')}}</td>
-				<td>{{$activity->user->person->fullName()}}</td>
+				<td>
+					@if($activity->user)
+					{{$activity->user->person->fullName()}}
+					@else
+					No longer with the company
+					@endif
+				</td>
 				<td>{{$activity->note}}</td>
 				
 				<td>

@@ -1,5 +1,52 @@
 Good Queries
 //*************************************************
+
+SELECT branch_id,count(*)
+FROM `opportunities` 
+where
+closed = 1
+and actual_close  between date('2019-04-01') and date('2019-04-08')
+group by branch_id;
+
+
+SELECT branch_id,count(*)
+FROM `activities` 
+where
+activitytype_id = 4
+and activity_date  between date('2019-04-01') and date('2019-04-08')
+group by branch_id;
+
+
+/// Weekly Report
+
+select branches.id,branches.branchname, a.salesmeetings,b.opportunitieswon,b.value from 
+
+branches
+
+left join 
+(select branch_id, count(activities.id) as salesmeetings 
+ from activities 
+ where activities.activitytype_id = 4 
+ and activities.activity_date between date('2019-04-01') 
+ and date('2019-04-14') 
+ group by activities.branch_id) a 
+ 
+ on branches.id = a.branch_id
+ 
+ left join (
+     select opportunities.branch_id, count(opportunities.id) as opportunitieswon,sum(value) as value 
+     from opportunities 
+     where opportunities.closed = 1 
+     and opportunities.actual_close between date('2019-04-01') 
+     and date('2019-04-14') 
+     group by opportunities.branch_id) b 
+     
+     on branches.id = b.branch_id  
+ORDER BY `b`.`opportunitieswon`  DESC 
+
+///
+
+
 insert ignore into address_branch 
 (address_id,branch_id, top50)
 select distinct address_id,branch_id,top50

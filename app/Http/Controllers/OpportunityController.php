@@ -61,8 +61,11 @@ class OpportunityController extends Controller
         }
         $activityTypes = $activityTypes = ActivityType::all();
        
+        
         $myBranches = $this->person->myBranches();
-   
+        if(! $myBranches){
+            return redirect()->back()->withWarning("You are not assigned to any branches. Please contact Sales Operations");
+        }
         $data = $this->getBranchData(array_keys($myBranches));
         $data['period'] = $this->period;
         return response()->view('opportunities.index', compact('data', 'activityTypes', 'myBranches','period'));
@@ -177,7 +180,7 @@ class OpportunityController extends Controller
     public function store(OpportunityFormRequest $request)
     {
         
-        //nned to remove it from all the other branches when an oppty is created
+        //need to remove it from all the other branches when an oppty is created
         $address = $this->address->findOrFail(request('address_id'));
         $address->assignedToBranch()->sync([request('branch_id')]);
         // make sure that the relationship exists
@@ -187,12 +190,17 @@ class OpportunityController extends Controller
             ->firstOrCreate(['address_id'=>request('address_id'),'branch_id'=>request('branch_id')]);
         
         $data = request()->except('_token');
+        
         if (request()->filled('expected_close')) {
             $data['expected_close'] = Carbon::parse($data['expected_close']);
         }
-        if ($data['actual_close']) {
+        if(in_array(request('closed'),['1','2'] )){
+            $data['actual_close'] = request('expected_close');
+        }
+        if (isset($data['actual_close'])) {
             $data['actual_close'] = Carbon::parse($data['actual_close']);
         }
+
         $data['user_id'] = auth()->user()->id;
 
         $join->opportunities()->create($data);
@@ -288,7 +296,7 @@ class OpportunityController extends Controller
     public function close(Request $request, $opportunity)
     {
         $data= request()->except('_token');
-        $data['actual_close'] = CArbon::now();
+        $data['actual_close'] = Carbon::now();
         $opportunity->update($data);
         $opportunity->load('address', 'address.address', 'address.address.company');
             // check to see if the client_id exists else create new company

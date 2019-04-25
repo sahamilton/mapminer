@@ -41,12 +41,13 @@
     <th>Company</th>
     <th>Company Name</th>
     <th>Address</th>
+    <th>Lead Source</th>
     <th>Remove</th>
 
     </thead>
     <tbody>
 
-        @foreach($data['leads'] as $lead)
+    @foreach($data['leads'] as $lead)
         
     <tr>
         <td>
@@ -57,15 +58,21 @@
         <td>{{$lead->businessname}}</td>
         <td>{{$lead->fullAddress()}}</td>
         <td>
-            
+            @if($lead->leadsource)
+             {{$lead->leadsource->source}}
+            @endif
+        </td>
+        <td>
+           @if($lead->opportunities->count()==0) 
           <a 
             data-href="{{route('branch.lead.remove',$lead->id)}}" 
             data-toggle="modal" 
             data-target="#confirm-remove" 
-            data-title = " this lead from your list" 
+            data-title = " this lead and all associated opportunities from your branch" 
             href="#">
                 <i class="fas fa-trash-alt text-danger"></i>
             </a>
+            @endif
         </td>
 
 
@@ -75,7 +82,7 @@
    @endforeach
 
     </tbody>
-    </table>
+</table>
  
 @include('branchleads.partials._branchleadmodal')
 @include('partials._scripts')

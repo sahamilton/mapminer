@@ -38,7 +38,7 @@ class WeeklyActivityReminder implements ShouldQueue
             ->whereNull('completed');
         })
         ->with(['activities'=>function ($q){
-            $q->whereBetween('followup_date',[Carbon::now(),Carbon::now()->addWeek()])
+            $q->whereBetween('activity_date',[Carbon::now(),Carbon::now()->addWeek()])
             ->whereNull('completed')
             ->with('relatesToAddress')
             ->orderBy('activity_date');
@@ -48,7 +48,7 @@ class WeeklyActivityReminder implements ShouldQueue
         foreach ($users as $user){
             
             Mail::to($user->email)
-                ->cc(config('mapminer.system_contact'),config('mapminer.developer_email'))
+                
                 ->send(new SendWeeklyActivityReminder($user,$user->activities));
         }
     }

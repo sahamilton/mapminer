@@ -5,6 +5,9 @@ namespace App\Console;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use App\Jobs\WeeklyActivityReminder;
+use App\Jobs\Top50WeeklyReport;
+use App\Jobs\ActivityOpportunityReport;
+
 class Kernel extends ConsoleKernel
 {
     
@@ -26,8 +29,10 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->job(new WeeklyActivityReminder())->weekly()->sundays()->at('17:52');
-        $schedule->command('db:backup')->dailyAt('17:30');    
+        $schedule->job(new WeeklyActivityReminder())->weekly()->sundays()->at('19:52');
+        $schedule->command('db:backup')->dailyAt('22:58');
+        $schedule->job(new Top50WeeklyReport())->weekly()->fridays()->at('06:59');
+        $schedule->job(new ActivityOpportunityReport())->weekly()->wednesdays()->at('04:59');    
     }
 
     /**

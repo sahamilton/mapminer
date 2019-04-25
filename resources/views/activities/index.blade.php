@@ -1,7 +1,6 @@
 @extends('site.layouts.default')
 @section('content')
-@include('companies.partials._searchbar')
-@include('maps.partials._form')
+
 <h1>{{$title}}</h1> 
 <p><a href="{{route('dashboard.index')}}">Return To Branch Dashboard</a></p>
 

@@ -10,7 +10,7 @@ class Feedback extends Model
 
     public function providedBy()
     {
-        return $this->belongsTo(User::class, 'user_id')->with('person');
+        return $this->belongsTo(User::class, 'user_id')->with('person')->withDefault('No longer with the company');
     }
     public function category()
     {

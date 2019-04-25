@@ -1,10 +1,11 @@
 @component('mail::message')
-# Introduction
+# Failed Database Backed up
 
-The body of your message.
+
+We were unable to backup {{config('app.name')}} database at {{now()->format('Y-m-d h:i')}} ;
 
 @component('mail::button', ['url' => ''])
-Button Text
+You can download the db here
 @endcomponent
 
 Thanks,<br>

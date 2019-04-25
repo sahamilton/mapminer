@@ -46,10 +46,15 @@ class ActivityController extends Controller
             $data = $this->getBranchActivities($branch);
       
             $title= $data['branches']->first()->branchname . " activities";
-       
-        return response()->view('activities.index', compact( 'data','title','myBranches'));
+  
+        return response()->view('activities.index', compact('activities', 'data','title','myBranches'));
        
     }
+    /**
+     * [branchUpcomingActivities description]
+     * @param  Branch $branch [description]
+     * @return [type]         [description]
+     */
     public function branchUpcomingActivities(Branch $branch){
 
         $myBranches = $this->person->myBranches();
@@ -59,10 +64,16 @@ class ActivityController extends Controller
             $data = $this->getBranchActivities($branch,$from = true);
       
         $title= $branch->branchname . " upcoming follow up activities";
-    
+        
         return response()->view('activities.upcoming', compact('data', 'myBranches','title')); 
         }
     }
+    /**
+     * [branchActivities description]
+     * @param  Request $request [description]
+     * @param  Branch  $branch  [description]
+     * @return [type]           [description]
+     */
     public function branchActivities(Request $request, Branch $branch){
         
         if (request()->has('branch')) {
@@ -81,71 +92,40 @@ class ActivityController extends Controller
         return response()->view('activities.index', compact('data', 'myBranches','title'));
     }
     
-
-
+   
+    /**
+     * [getBranchActivities description]
+     * @param  [type] $branch [description]
+     * @param  [type] $from   [description]
+     * @return [type]         [description]
+     */
     private function getBranchActivities($branch,$from=null)
     {
-      
-        $team = $this->person->myBranchTeam([$branch->id])->toArray();
-            
+       
+       
 
-        $data['activities'] = $this->activity->myTeamsActivities($team);
+        $data['activities'] = $this->activity->myBranchActivities([$branch->id]); 
         if($from){
-            $data['activities']= $data['activities']->where('followup_date','>=',now());
+            $data['activities']= $data['activities']
+            ->where('activity_date','>=',now())
+            ->whereNull('completed');
         }
         $data['activities'] =  $data['activities']->with('relatesToAddress', 'relatedContact', 'type', 'user')->get();
 
         $data['branches'] =  $this->getbranches([$branch->id]);
-        if(! $this->period){
-            $this->period = $this->activity->getPeriod();
-        }
-        $data['summary']=  $this->activity->myTeamsActivities($team)
-                ->whereCompleted(1)
-                ->thisPeriod($this->period)
-                ->sevenDayCount()
-                ->get();
-       
-        $weekTypeCount = $this->activity->myTeamsActivities($team)
-                ->whereCompleted(1)
-                ->thisPeriod($this->period)
-                ->sevenDayTypeCount()
-                ->get();
-       
-       if(count($weekTypeCount)>0){
-            //$data['summary'] = $this->activity->summaryData($weekTypeCount);
-            
-            $data['chart'] = $this->getActivityChart($weekTypeCount);
-           
-        }
-        
+
+        $weekCount = $this->activity->myBranchActivities([$branch->id])
+            ->sevenDayCount()
+            ->where('completed','=',1)
+            ->pluck('activities', 'yearweek')
+            ->toArray();
+
+        $data['summary'] = $this->activity->summaryData($weekCount);
 
         
         return $data;
     }
 
-    private function getActivityChart($weekCount)
-    {
-        $activityTypes = \App\ActivityType::all();
-        foreach ($weekCount as $week){
-            $chart[$activityTypes->where('id','=',$week->activitytype_id)->first()->activity][$week->yearweek]= $week->activities;
-            
-        }
-       $periods = $this->yearWeekBetween();
-       foreach ($chart as $key=>$value){
-           
-            foreach ($periods as $period){
-                if(! array_key_exists($period, $value)){
-                    $charts[$key][$period]=0;
-                }else{
-                    $charts[$key][$period] = $value[$period];
-                }
-            }
-            ksort($charts[$key]);
-        }
-        
-        // fill missing periods
-        return $this->formatActivityChartData($charts);
-    }
     private function getBranches(Array $branches)
        {
         return  $this->branch->with( 'manager')
@@ -196,7 +176,8 @@ class ActivityController extends Controller
      */
     public function store(ActivityFormRequest $request)
     {
-      
+    
+        // can we detect the branch here?
         $data = $this->parseData($request);
         $activity = Activity::create($data['activity']);
 
@@ -213,13 +194,22 @@ class ActivityController extends Controller
         return redirect()->route('address.show', $data['activity']['address_id']);
     }
 
-
+    /**
+     * [complete description]
+     * @param  Activity $activity [description]
+     * @return [type]             [description]
+     */
     public function complete(Activity $activity)
     {
         $activity->update(['completed'=>1]);
         return redirect()->back();
     }
-
+    /**
+     * [createFollowUpActivity description]
+     * @param  array    $data     [description]
+     * @param  Activity $activity [description]
+     * @return [type]             [description]
+     */
     private function createFollowUpActivity(array $data,Activity $activity)
     {
    
@@ -235,7 +225,7 @@ class ActivityController extends Controller
     {
         
        // get activity data
-        $data['activity'] = request()->only(['activitytype_id','note','activity_date','address_id','followup_date']);
+        $data['activity'] = request()->only(['activitytype_id','note','activity_date','address_id','followup_date','branch_id']);
         if(request()->has('completed')){
             $data['activity']['completed']=1;
         }else{
@@ -257,6 +247,7 @@ class ActivityController extends Controller
             $data['followup']['activity_date'] = $data['activity']['followup_date'];
             $data['followup']['activitytype_id'] = request('followup_activity');
             $data['followup']['address_id'] = request('address_id');
+            $data['followup']['branch_id']= request('branch_id');
             $data['followup']['followup_date'] = null;
             $data['followup']['user_id'] = auth()->user()->id;
         }
@@ -266,18 +257,7 @@ class ActivityController extends Controller
         return $data;
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Activity  $activity
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Activity $activity)
-    {
-
-
-    }
-
+    
     /**
      * Show the form for editing the specified resource.
      *
@@ -322,13 +302,11 @@ class ActivityController extends Controller
         return redirect()->route('address.show', $address)->withMessage('Activity deleted');
     }
 
-    public function seeder()
-    {
-        //first get branches
-        // then get addresses
-        //random create activity from random type
-    }
-
+    
+    /**
+     * [future description]
+     * @return [type] [description]
+     */
     public function future()
     {
       
@@ -336,7 +314,12 @@ class ActivityController extends Controller
        
         return response()->view('activities.index', compact('activities'));
     }
-
+    /**
+     * [getBranchActivtiesByType description]
+     * @param  [type] $branch       [description]
+     * @param  [type] $activitytype [description]
+     * @return [type]               [description]
+     */
     public function getBranchActivtiesByType($branch, $activitytype = null)
     {
 
