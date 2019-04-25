@@ -56,6 +56,7 @@ class OpportunityController extends Controller
      */
     public function index()
     {
+      
         if(! $this->period){
             $this->period = $this->activity->getPeriod();
         }
@@ -67,14 +68,17 @@ class OpportunityController extends Controller
             return redirect()->back()->withWarning("You are not assigned to any branches. Please contact Sales Operations");
         }
         $data = $this->getBranchData(array_keys($myBranches));
+
         $data['period'] = $this->period;
         return response()->view('opportunities.index', compact('data', 'activityTypes', 'myBranches','period'));
     }
 
     public function branchOpportunities(Branch $branch, Request $request)
     {
-     
-
+      if(! $this->period){
+            $this->period = $this->activity->getPeriod();
+        }
+        
         if (request()->has('branch')) {
             $data = $this->getBranchData([request('branch')]);
         } else {
@@ -84,7 +88,7 @@ class OpportunityController extends Controller
         $activityTypes = $activityTypes = ActivityType::all();
        
         $myBranches = $this->person->myBranches();
-
+         $data['period'] = $this->period;
         return response()->view('opportunities.index', compact('data', 'activityTypes', 'myBranches'));
     }
 
@@ -150,12 +154,12 @@ class OpportunityController extends Controller
 
        private function getOpportunities($branches)
        {
-         
+ 
          return $this->opportunity
                 ->whereIn('branch_id', $branches)
                 ->with('address', 'branch', 'address.activities')
                 ->thisPeriod($this->period)
-                ->open($this->period)
+                
                 ->orderBy('branch_id')
                 ->distinct()
                 ->get();

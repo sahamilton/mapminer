@@ -33,7 +33,7 @@
 	      role="tab" 
 	      aria-controls="summary" 
 	      aria-selected="true">
-	    <strong> Upcoming</strong>
+	    <strong> Open</strong>
 	  </a>
 	  
 	  <a class="nav-item nav-link" 
@@ -43,7 +43,7 @@
 	      role="tab" 
 	      aria-controls="details" 
 	      aria-selected="false">
-	    <strong> Completed</strong>
+	    <strong> Closed</strong>
 	  </a>
 
 	</div>

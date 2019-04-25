@@ -39,6 +39,9 @@ class Opportunity extends Model
     public function daysOpen()
     {
         if ($this->created_at) {
+            if($this->actual_close){
+              return $this->created_at->diffInDays($this->actual_close);
+            }
             return $this->created_at->diffInDays();
         }
         return null;
