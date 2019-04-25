@@ -40,7 +40,12 @@
 					No longer with the company
 					@endif
 				</td>
-				<td>{{$activity->note}}</td>
+				<td>
+					<a href="#" id="activity" 
+					data-type="textarea" 
+					data-pk="{{$activity->id}}" 
+					data-url="/post" 
+					data-title="Edit note">{{$activity->note}}</a></td>
 				
 				<td>
 					@if($activity->followup_date)
