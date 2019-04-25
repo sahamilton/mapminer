@@ -24,12 +24,44 @@
 </div>
 @endif
 <div class="row">
- 
+<nav>
+  <div class="nav nav-tabs" id="nav-tab" role="tablist">
+	  <a class="nav-link nav-item active" 
+	      id="summary-tab" 
+	      data-toggle="tab" 
+	      href="#summary" 
+	      role="tab" 
+	      aria-controls="summary" 
+	      aria-selected="true">
+	    <strong> Upcoming</strong>
+	  </a>
+	  
+	  <a class="nav-item nav-link" 
+	      id="details-tab" 
+	      data-toggle="tab" 
+	      href="#details" 
+	      role="tab" 
+	      aria-controls="details" 
+	      aria-selected="false">
+	    <strong> Completed</strong>
+	  </a>
 
+	</div>
+</nav>
+ <div class="tab-content" id="nav-tabContent">
+    <div id="summary" class="tab-pane show active">
+    	
+			@include('opportunities.partials._tabopenopportunities')
+
+		
+	</div>
+
+    <div id="details" class="tab-pane fade">
+		 @include('opportunities.partials._tabclosedopportunities')
+   </div>
+</div>  
    
-   @include('opportunities.partials._tabopportunities')
-
-
+  
 
 </div>
 @include('partials._modal')
