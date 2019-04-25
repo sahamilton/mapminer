@@ -187,6 +187,7 @@ class Activity extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
         return $query->selectRaw('activitytype_id,FROM_DAYS(TO_DAYS(activity_date) -MOD(TO_DAYS(activity_date) -2, 7)) as yearweek,count(*) as activities')
         ->groupBy(['activitytype_id','yearweek']);
     }
+    
     /**
      * [scopeCurrentWeekCount description]
      * @param  [type] $query [description]
@@ -205,29 +206,25 @@ class Activity extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
      */
     public function summaryData($data)
     {
-       
-       
-        foreach ($data as $element) {
-        
-            /*$year = substr($yearweek, 0, 4);
+        foreach ($data as $yearweek => $count) {
+            $year = substr($yearweek, 0, 4);
             $week = substr($yearweek, 4, 2);
-            dd($year,$week);
+            
             $weekStart = new Carbon;
-            $show[$yearweek]['date'] = $weekStart->setISODate($year, $week)->format('Y-m-d');
-            $show[$yearweek]['count'] = $count;
+            $data['show'][$yearweek]['date'] = $weekStart->setISODate($year, $week)->format('Y-m-d');
+            $data['show'][$yearweek]['count'] = $count;
 
             if (! isset($data['chart'])) {
-                $show['chart']['data'] =$count;
-                $show['chart']['label'] = $yearweek;
+                $data['chart']['data'] =$count;
+                $data['chart']['label'] = $yearweek;
             } else {
-                $show['chart']['data'] = $data['chart']['data'] . "," .$count;
-                $show['chart']['label'] = $data['chart']['label'] . "," .$yearweek;
-            }*/
+                $data['chart']['data'] = $data['chart']['data'] . "," .$count;
+                $data['chart']['label'] = $data['chart']['label'] . "," .$yearweek;
+            }
         }
-        //dd(165,$show);
-        return $show;
+      
+        return $data;
     }
-
   /**
    * [scopeActivityChart description]
    * @param  [type] $query [description]

@@ -28,7 +28,7 @@
 	      role="tab" 
 	      aria-controls="summary" 
 	      aria-selected="true">
-	    <strong> Summary</strong>
+	    <strong> Upcoming</strong>
 	  </a>
 	  
 	  <a class="nav-item nav-link" 
@@ -38,7 +38,7 @@
 	      role="tab" 
 	      aria-controls="details" 
 	      aria-selected="false">
-	    <strong> Details</strong>
+	    <strong> Completed</strong>
 	  </a>
 
 	</div>
@@ -46,13 +46,12 @@
 <div class="tab-content" id="nav-tabContent">
     <div id="summary" class="tab-pane show active">
     	
-			@include('activities.partials._summary')
-		
+			@include('activities.partials._upcoming')
 		
 	</div>
 
     <div id="details" class="tab-pane fade">
-		@include('activities.partials._table')
+		@include('activities.partials._completed')
    </div>
 </div>
 @include('partials._scripts')

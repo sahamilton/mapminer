@@ -15,7 +15,7 @@
 	<tbody>
 		
 		@foreach ($data['activities'] as $activity)
-			
+			@if(! $activity->completed)
 			<tr>
 				<td>
 					@if($activity->relatesToAddress)
@@ -75,6 +75,7 @@
 			@endif
 			</td>
 		</tr>
+		@endif
 		@endforeach
 	</tbody>
 

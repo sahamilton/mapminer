@@ -122,7 +122,7 @@ class ActivityController extends Controller
             ->toArray();
         
         $data['summary'] = $this->activity->summaryData($weekCount);
-        dd($data);
+       //dd($data['summary']);
         
         return $data;
     }
