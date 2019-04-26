@@ -98,7 +98,7 @@ $(document).ready(function()
    
 	$("[id^=sorttable]").DataTable();
 	$.fn.editable.defaults.mode = 'inline';
-	$.fn.editableform.buttons = '<button type="submit" class="btn btn-info editable-submit"><i class="fa fa-fw fa-check"></i></button>' + '<button type="button" class="btn editable-cancel"><i class="fa fa-fw fa-remove"></i></button>' ;
+	$.fn.editableform.buttons = '<button type="submit" class="btn btn-info editable-submit"><i class="fa fa-fw fa-check"></i></button>' + '<button type="button" class="btn btn-danger editable-cancel"><i class="fas fa-window-close"></i></button>' ;
    
 	$('.editable').editable(
         {
@@ -127,7 +127,7 @@ $(document).ready(function()
 			"bPaginate": false,
 		}
 		);
-	
+	  
 
         $('[id^=sorttable], #store-locator-container').on('change','.watchItem',function(e) {
         e.stopImmediatePropagation();

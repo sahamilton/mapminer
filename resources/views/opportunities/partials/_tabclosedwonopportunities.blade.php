@@ -16,7 +16,7 @@
     </thead>
       <tbody>
         @foreach ($data['opportunities'] as $opportunity)
-      @if($opportunity->closed != 0)
+      @if($opportunity->closed == 1)
       
         <tr>
           <td>

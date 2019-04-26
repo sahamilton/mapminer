@@ -34,13 +34,23 @@
 	  </a>
 	  
 	  <a class="nav-item nav-link" 
-	      id="details-tab" 
+	      id="closedwon-tab" 
 	      data-toggle="tab" 
-	      href="#details" 
+	      href="#closedwon" 
 	      role="tab" 
-	      aria-controls="details" 
+	      aria-controls="closedwon" 
 	      aria-selected="false">
-	    <strong> Closed</strong>
+	    <strong> Closed - Won</strong>
+	  </a>
+
+	  <a class="nav-item nav-link" 
+	      id="closedlost-tab" 
+	      data-toggle="tab" 
+	      href="#closedlost" 
+	      role="tab" 
+	      aria-controls="closedlost" 
+	      aria-selected="false">
+	    <strong> Closed - Lost</strong>
 	  </a>
 
 	</div>
@@ -53,8 +63,11 @@
 		
 	</div>
 
-    <div id="details" class="tab-pane fade">
-		 @include('opportunities.partials._tabclosedopportunities')
+    <div id="closedwon" class="tab-pane fade">
+		 @include('opportunities.partials._tabclosedwonopportunities')
+   </div>
+   <div id="closedlost" class="tab-pane fade">
+		 @include('opportunities.partials._tabclosedlostopportunities')
    </div>
 </div>  
    

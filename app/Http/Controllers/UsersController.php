@@ -107,4 +107,10 @@ class UsersController extends Controller
         return redirect()->route('users.index')->withMessage('Update '. $users->count() . ' api tokens');
     }
 
+    public function inactiveSince()
+    {
+
+        
+    }
+
 }

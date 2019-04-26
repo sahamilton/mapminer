@@ -5,8 +5,8 @@
 		<th>Companies</th>
 		<th>Address</th>
 		<th>Date</th>
-		<th>By</th>
-		<th>Comment</th>
+		<th>Created By</th>
+		<th>Notes</th>
 		<th>Follow up date</th>
 		<th>Contact</th>
 		<th>Activity</th>

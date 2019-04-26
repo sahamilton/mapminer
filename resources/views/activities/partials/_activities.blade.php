@@ -24,13 +24,21 @@
       <div class="modal-body">
                 
         <form method="post" action="{{route('activity.store')}}">
-        {{csrf_field()}}
+        @csrf
         @include('activities.partials._activitynewform')
           <div class="float-right">
-           <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button> 
-           <input type="submit" value="Record Activity" class="btn btn-danger" />
+           <button 
+           type="button" 
+           class="btn btn-default" 
+           data-dismiss="modal">Cancel</button> 
+           <input type="submit" 
+           value="Record Activity" c
+           lass="btn btn-danger" />
             </div>
-            <input type="hidden" name = "address_id" value="{{$opportunity->address->id}}" />
+            <input 
+            type="hidden" 
+            name = "address_id" 
+            value="{{$opportunity->address->id}}" />
         </form>
 
         <div class="modal-footer">

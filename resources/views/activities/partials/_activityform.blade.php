@@ -7,9 +7,24 @@
                       @endforeach
         </select>
         </div>
-
+@if($location && $location->contacts && $location->contacts->count()>0)
+          
+          <div class="form-group{{ $errors->has('activity_date)') ? ' has-error' : '' }}">
+              <label class="col-md-4 control-label align-top" for="activity_date">Contact</label>
+              <select name="contact" class form-control>
+                <option></option>
+              @foreach($location->contacts as $contact)
+                <option value="{{$contact->id}}">{{$contact->fullname}}</option> 
+              @endforeach
+              </select>
+              <span class="help-block">
+                  <strong>{{$errors->has('contact') ? $errors->first('contat')  : ''}}</strong>
+              </span>
+             
+          </div>
+          @endif
          <div class="form-group {{ $errors->has('note') ? ' has-error' : '' }}">
-              <label class="col-md-4 control-label">Comments</label>
+              <label class="col-md-4 control-label">Notes:</label>
               <div class="input-group input-group-lg">
                   <textarea 
                   required 
@@ -46,24 +61,9 @@
             checked
             />
           </div>
-          @if($location && $location->contacts && $location->contacts->count()>0)
           
-          <div class="form-group{{ $errors->has('activity_date)') ? ' has-error' : '' }}">
-              <label class="col-md-4 control-label align-top" for="activity_date">Contact</label>
-              <select name="contact" class form-control>
-                <option></option>
-              @foreach($location->contacts as $contact)
-                <option value="{{$contact->id}}">{{$contact->fullname}}</option> 
-              @endforeach
-              </select>
-              <span class="help-block">
-                  <strong>{{$errors->has('contact') ? $errors->first('contat')  : ''}}</strong>
-              </span>
-             
-          </div>
-          @endif
 
-          <div class="form-group{{ $errors->has('followup_date)') ? ' has-error' : '' }}">
+          <div class="form-group{{ $errors->has('followup_date') ? ' has-error' : '' }}">
               <label class="col-md-4 control-label" for="followup_date">Followup Date</label>
               
               <input class="form-control followup_date" 

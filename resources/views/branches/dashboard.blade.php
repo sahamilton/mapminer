@@ -1,5 +1,6 @@
 @extends('site.layouts.calendar')
 @section('content')
+
 <div class="container">
 
 <h2>{{$branch->branchname}} Dashboard</h2>
@@ -24,10 +25,10 @@
 			<div class="card-body">
 				<p><strong>Leads:</strong><a href="{{route('lead.branch',$branch->id)}}">{{$data['summary']->first()->leads_count}}</a></p>
 				<p><strong>Top 50 Open Opportunities:</strong><a href="{{route('opportunities.branch',$branch->id)}}">{{$data['summary']->first()->top50}}</a></p>
-				<p><strong>All Opportunities:</strong><a href="{{route('opportunities.branch',$branch->id)}}">{{$data['summary']->first()->opportunities_count}}</a></p>
-				<p><strong>Won:</strong>{{$data['summary']->first()->won}}</p>
-				<p><strong>Lost:</strong>{{$data['summary']->first()->lost}}</p>
-				<p><strong>Activities:</strong><a href="{{route('activity.branch',$branch->id)}}">{{$data['summary']->first()->activities_count}}</a></p>
+				<p><strong>All Open Opportunities:</strong><a href="{{route('opportunities.branch',$branch->id)}}">{{$data['summary']->first()->opportunities_count}}</a></p>
+				<p><strong>All Won Opportunities:</strong>{{$data['summary']->first()->won}}</p>
+				<p><strong>All Lost Opportunities:</strong>{{$data['summary']->first()->lost}}</p>
+				<p><strong>Completed Activities:</strong><a href="{{route('activity.branch',$branch->id)}}">{{$data['summary']->first()->activities_count}}</a></p>
 			</div> 
 			<div class="card-footer"></div>
 		</div>
@@ -44,7 +45,7 @@
 
 	<div class="card">
 		<div class="card-header">
-			<h4>Upcoming Activities</h4>
+			<h4>Activities Calendar</h4>
 			<p><a href="{{route('upcomingactivity.branch',$branch->id)}}">See list view</a></p>
 		</div>
 
@@ -65,7 +66,6 @@
 			@include('branches.partials._pipechart')
 		</div>
 	</div>
-
 
 
 @include('partials._scripts')

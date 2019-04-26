@@ -14,7 +14,7 @@
     <thead>
 
     <th>Date</th>
-    <th>Posted by</th>
+    <th>Created by</th>
     <th>Activity</th>
     <th>Contact</th>
     <th>Notes</th>
