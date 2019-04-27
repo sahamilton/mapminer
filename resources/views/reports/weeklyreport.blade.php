@@ -15,6 +15,7 @@
 		<tr></tr>
 		<tr>
 			<th><b>Branch</b></th>
+			<th><b>Branch Name</b></th>
 			<th><b>Count</b></th>
 			<th><b>Sum of Value</b></th> 
 		</tr>
@@ -24,6 +25,16 @@
 		@foreach ($opportunities as $item)
 			<tr>
 				<td>{{$item->branch_id}}</td>
+				<td>
+					@if($item->branch)
+						{{$item->branch->branchname}}
+					@endif
+				</td>
+				<td>
+					@if($item->branch && $item->branch->manager)
+						{{$item->branch->manager->fullName()}}
+					@endif
+				</td>
 				<td>{{$item->total}}</td>
 				<td>{{$item->sumvalue}}</td>
 			</tr>

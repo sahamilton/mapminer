@@ -46,7 +46,7 @@
 	<div class="card">
 		<div class="card-header">
 			<h4>Activities Calendar</h4>
-			<p><a href="{{route('upcomingactivity.branch',$branch->id)}}">See list view</a></p>
+			<p><a href="{{route('upcomingactivity.branch',$branch->id)}}">Upcoming Activities</a></p>
 		</div>
 
 		<div id="calendar"  class="card-body" >

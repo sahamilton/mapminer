@@ -18,6 +18,8 @@
 	<link rel="stylesheet" href="{{asset('assets/css/bootstrap-colorpicker.min.css')}}" rel="stylesheet" />  
 	<link rel="stylesheet" href="{{asset('assets/css/prmapminer.css')}}" />
 	<link rel="stylesheet" type="text/css" href="{{asset('maps/css/map.css')}}" />
+
+	
 	<link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>
 
 	<!-- jQuery -->
