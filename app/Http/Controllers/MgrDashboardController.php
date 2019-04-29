@@ -340,9 +340,9 @@ class MgrDashboardController extends DashboardController
       $chart= array();
       foreach($data['team'] as $team){
         if(isset($data[$team->id]['activities'])){
-            $chart[$team->lastname]=$data[$team->id]['activities'];
+            $chart[$team->lastname.','.$team->firstname]=$data[$team->id]['activities'];
           }else{
-            $chart[$team->lastname]=0;
+            $chart[$team->lastname.','.$team->firstname]=0;
           }
 
       }
