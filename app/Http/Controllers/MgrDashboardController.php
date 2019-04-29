@@ -64,20 +64,20 @@ class MgrDashboardController extends DashboardController
     public function index()
     {
       // set period
-   
+
       if(! $this->period){
         $this->period = $this->activity->getPeriod();
       }
       // get users details
       $this->manager = $this->person->where('user_id','=',auth()->user()->id)->firstOrFail();
-      // get assocciated branches
+      // get associated branches
       $this->myBranches = array_keys($this->getBranches());
       // redirect if only one or no branches
       $this->checkBranches();
           
-       $data = $this->getDashBoardData();
+      $data = $this->getDashBoardData();
       
-       return response()->view('opportunities.mgrindex', compact('data'));
+      return response()->view('opportunities.mgrindex', compact('data'));
 
     }
     /**
@@ -176,6 +176,7 @@ class MgrDashboardController extends DashboardController
       
 
       $data['branches'] = $this->getSummaryBranchData();
+ 
       $data['team']= $this->myTeamsOpportunities($data['branches']);
 
       $data['period'] = $this->period;
@@ -339,9 +340,9 @@ class MgrDashboardController extends DashboardController
       $chart= array();
       foreach($data['team'] as $team){
         if(isset($data[$team->id]['activities'])){
-            $chart[$team->lastname]=$data[$team->id]['activities'];
+            $chart[$team->lastname.','.$team->firstname]=$data[$team->id]['activities'];
           }else{
-            $chart[$team->lastname]=0;
+            $chart[$team->lastname.','.$team->firstname]=0;
           }
 
       }
@@ -623,6 +624,12 @@ class MgrDashboardController extends DashboardController
      
 
      }
+     /**
+      * [formatChartFullData description]
+      * @param  Array  $branches [description]
+      * @param  array  $keys     [description]
+      * @return [type]           [description]
+      */
      private function formatChartFullData(Array $branches,array $keys)
      {
         $colors = $this->activity->createColors(count($branches));
