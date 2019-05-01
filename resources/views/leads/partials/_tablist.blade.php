@@ -1,7 +1,7 @@
  <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
 
-    <th>Company</th>
+    <th>National Account</th>
     <th>Company Name</th>
     <th>City</th>
     <th>State</th>
@@ -16,7 +16,11 @@
  @foreach($leads as $lead)
 
     <tr>
-    <td><a href="{{route('leads.show',$lead->id)}}">{{ $lead->companyname!='' ? $lead->companyname: $lead->businessname}} </a></td>
+    <td>
+        @if ($lead->companyname!='') 
+            <a href="{{route('leads.show',$lead->id)}}">{{ $lead->companyname}} </a>
+        @endif
+    </td>
     <td>{{$lead->businessname}}</td>
     <td>{{$lead->city}}</td>
     <td>{{$lead->state}}</td>

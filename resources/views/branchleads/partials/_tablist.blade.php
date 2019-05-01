@@ -1,6 +1,6 @@
 <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
-    <th>Company</th>
+    <th>National Account</th>
     <th>Company Name</th>
     <th>City</th>
     <th>State</th>
@@ -15,7 +15,7 @@
             <tr>
                 <td>
                     <a href="{{route('address.show',$lead->id)}}">
-                        {{ $lead->companyname!='' ? $lead->companyname: $lead->businessname}} 
+                        {{ $lead->companyname!='' ? $lead->companyname:''}} 
                     </a>
                 </td>
                 <td>{{$lead->businessname}}</td>

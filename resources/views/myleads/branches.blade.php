@@ -39,7 +39,6 @@
     <thead>
 
     <th>Company</th>
-    <th>Company Name</th>
     <th>Date Added</th>
     <th>Address</th>
     <th>Lead Source</th>
@@ -51,12 +50,12 @@
     @foreach($data['leads'] as $lead)
       
     <tr>
+        
         <td>
             <a href="{{route('address.show',$lead->id)}}">
-                {{ $lead->companyname != '' ? $lead->companyname: $lead->businessname}} 
+                {{$lead->businessname}}
             </a>
         </td>
-        <td>{{$lead->businessname}}</td>
         
         <td>{{$lead->assignedToBranch->where('id','=',$branch->id)->first()->pivot->created_at->format("Y-m-d")}}</td>
         <td>{{$lead->fullAddress()}}</td>
