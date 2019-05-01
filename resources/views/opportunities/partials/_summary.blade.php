@@ -29,7 +29,9 @@ class='table table-striped table-bordered table-condensed table-hover'>
               @endforeach
             </td>
             <td align="center">
-              <a href="{{route('lead.branch',$branch->id)}}">{{$branch->leads_count}}</a>
+              <a href="{{route('lead.branch',$branch->id)}}"> 
+                {{$branch->leads_count}}
+              </a>
             </td>
             
             <td align="center">
