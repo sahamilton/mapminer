@@ -359,9 +359,9 @@ class MgrDashboardController extends DashboardController
 
       foreach($data['team'] as $team){
         if(isset($data[$team->id]['open'])){
-          $chart[$team->lastname]=$data[$team->id]['open'];
+          $chart[$team->lastname.", ". $team->firstname]=$data[$team->id]['open'];
         }else{
-          $chart[$team->lastname]=0;
+          $chart[$team->lastname.", ". $team->firstname]=0;
         }
       }
       $data['pipelinechart']['keys'] = "'" . implode("','",array_keys($chart))."'";
@@ -376,9 +376,9 @@ class MgrDashboardController extends DashboardController
       $chart= array();
       foreach($data['team'] as $team){
         if(isset($data[$team->id]['top50'])){
-          $chart[$team->lastname]=$data[$team->id]['top50'];
+          $chart[$team->lastname.", ". $team->firstname]=$data[$team->id]['top50'];
         }else{
-          $chart[$team->lastname]=0;
+          $chart[$team->lastname.", ". $team->firstname]=0;
         }
       }
       $data['chart']['keys'] = "'" . implode("','",array_keys($chart))."'";

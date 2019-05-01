@@ -6,13 +6,15 @@ class='table table-striped table-bordered table-condensed table-hover'>
       <th>Manager</th>
       <th>Leads</th>
       <th>Open Opportunities</th>
-      <th class="tip" title="Activities in the past month">Period Activities</th>
-    <th>Won</th>
-    <th>Lost</th>
+      <th class="tip" title="Activities in this period">
+        Period Activities
+      </th>
+      <th>Won</th>
+      <th>Lost</th>
     </thead>
       <tbody>
         @foreach ($data['branches'] as $branch)
-       
+      
           <tr>
             <td>
               <a href="{{route('dashboard.show',$branch->id)}}">{{$branch->branchname}}</a>
@@ -37,7 +39,7 @@ class='table table-striped table-bordered table-condensed table-hover'>
             </td>
             <td align="center">
               <a href="{{route('activity.branch',$branch->id)}}">
-                {{$branch->activities->count()}}
+                 {{$branch->activities_count}}
               </a>
             </td>
             <td align="center">
