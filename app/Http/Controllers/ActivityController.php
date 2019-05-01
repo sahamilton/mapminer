@@ -244,7 +244,7 @@ class ActivityController extends Controller
         if (request()->filled('followup_date')){
             $data['activity']['followup_date'] = Carbon::parse($data['activity']['followup_date']);
             $data['followup'] = request()->only(['followup_id','address_id']);
-            $data['followup']['note'] = "----" . request('note') ."----";
+            $data['followup']['note'] = " ";
             $data['followup']['activity_date'] = $data['activity']['followup_date'];
             $data['followup']['activitytype_id'] = request('followup_activity');
             $data['followup']['address_id'] = request('address_id');
