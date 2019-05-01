@@ -694,6 +694,12 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
         Route::resource('searchfilters', 'SearchFiltersController');
     # Jobs
      Route::get('testjob',function(){
+     	$company = App\Company::findOrFail(38);
+     	$period['from'] = \Carbon\Carbon::create(2019,4,1);
+     	$period['to'] = now();
+     	//App\Jobs\AccountActivities::dispatch($company,$period);
+     	App\Jobs\AccountOpportunities::dispatch($company,$period);
+
      	/*$filesInFolder = \File::files(storage_path('backups'));
      	foreach ($filesInFolder as $file){
      		if(pathinfo($file)['extension'] == 'sql'){
@@ -703,7 +709,7 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
      		}
      		
      	}*/
-    	App\Jobs\Top50WeeklyReport::dispatch();
+    	//App\Jobs\Top50WeeklyReport::dispatch();
     	//App\Jobs\ActivityOpportunityReport::dispatch();
     	//App\Jobs\ActivityOpportunityReport::dispatch();
     	
