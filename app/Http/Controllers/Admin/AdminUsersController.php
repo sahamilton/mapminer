@@ -12,7 +12,7 @@ use App\Branch;
 use App\Track;
 use Carbon\Carbon;
 use App\Serviceline;
-
+use Illuminate\Http\Request;
 use App\SearchFilter;
 use App\Http\Controllers\BaseController;
 
@@ -363,6 +363,17 @@ class AdminUsersController extends BaseController
                         $person->industryfocus()->sync([]);
                     }
         }
+
+    public function lastlogged(Request $request)
+    {
+       
+        $lastlogged = Carbon::createFromFormat('m/d/Y',request('fromdatepicker'));
+      
+        $users = $this->user->where('lastlogin','<=',$lastlogged)
+        ->with('roles','person')
+        ->get();
+        return response()->view('admin.users.lastlogged',compact('users','lastlogged'));
+    }
     /**
      * [associateBranchesWithPerson description]
      * @param  [type] $person [description]

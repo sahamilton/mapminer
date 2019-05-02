@@ -622,6 +622,7 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
 
         Route::resource('users', 'Admin\AdminUsersController');
 
+        Route::post('lastlogged',['as'=>'lastlogged','uses'=>'Admin\AdminUsersController@lastlogged']);
 
         # User Role Management
 

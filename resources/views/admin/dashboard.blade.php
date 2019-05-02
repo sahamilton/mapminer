@@ -82,6 +82,7 @@ $cumulative = array();
     <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab" style="margin-bottom:80px">
 
       <h3>Usage</h3>
+        @include('admin.partials._lastloggedselector')
         @include ('admin.partials.firstlogged')
         @include('admin.partials.weeklylogins')
         @include ('admin.partials.lastlogged')

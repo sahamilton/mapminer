@@ -40,12 +40,15 @@ class AccountOpportunities implements ShouldQueue
      */
     public function handle()
     {
+        
+        
+
         $companyname = str_replace(" ", "_", $this->company->companyname);
         $file = "/public/reports/".$this->company->companyname."_opportunityreport_". Carbon::now()->timestamp. ".xlsx";
         Excel::store(new AccountOpportunitiesExport($this->company, $this->period), $file);
         $this->company->load('managedBy');
         $manageremail = $this->company->managedBy->userdetails()->first()->email;
-
+        
         Mail::to($manageremail)
                 ->bcc('hamilton@okospartners.com')
                 ->cc('salesoperations@trueblue.com')
