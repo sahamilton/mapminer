@@ -20,7 +20,7 @@
            @include('opportunities.partials._pipechart')
 	</div>
 	<div style="width: 40%;float:right;border:solid 1px #aaaaaa;margin:5px;">
-		<h4>Team Top 50 Opportunities</h4>
+		<h4>Team Top 50 Open Opportunities</h4>
            <canvas id="cttop50" width="300" height="300"></canvas>
            @include('opportunities.partials._top50chart')
 	</div>
