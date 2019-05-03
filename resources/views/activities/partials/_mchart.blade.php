@@ -15,7 +15,7 @@ var barChart = new Chart(ctx,
       labels: [{!! $data['activitychart']['keys'] !!}],
 
       datasets:[{
-        label: 'Team Pipeline',
+        label: 'Activities',
         data: [{!! $data['activitychart']['data'] !!}],
         backgroundColor: 'red'
       }]
