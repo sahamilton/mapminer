@@ -24,7 +24,7 @@
           </div>
           @endif
          <div class="form-group {{ $errors->has('note') ? ' has-error' : '' }}">
-              <label class="col-md-4 control-label">Notes:</label>
+              <label class="col-md-4 control-label">Comments:</label>
               <div class="input-group input-group-lg">
                   <textarea 
                   required 
