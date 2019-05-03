@@ -227,11 +227,7 @@ class ActivityController extends Controller
         
        // get activity data
         $data['activity'] = request()->only(['activitytype_id','note','activity_date','address_id','followup_date','branch_id']);
-        if(request()->has('completed')){
-            $data['activity']['completed']=1;
-        }else{
-            $data['activity']['completed']=null;
-        }
+        
         // this should not be neccessary but some forms have
         // location id vs address id
         if(request()->has('location_id')){
@@ -239,8 +235,15 @@ class ActivityController extends Controller
         }
         $data['activity']['activity_date'] = Carbon::parse($data['activity']['activity_date']);
         $data['activity']['user_id'] = auth()->user()->id;
-        // get follow up date 
-
+        // assume if activity date is in the past then completed
+        if(request()->has('completed')){
+            $data['activity']['completed']=1;
+        }elseif($data['activity']['activity_date'] <= Carbon::now()){
+            $data['activity']['completed']=1;
+        }else{
+            $data['activity']['completed']=null;
+        }
+        // get follow up date
         if (request()->filled('followup_date')){
             $data['activity']['followup_date'] = Carbon::parse($data['activity']['followup_date']);
             $data['followup'] = request()->only(['followup_id','address_id']);

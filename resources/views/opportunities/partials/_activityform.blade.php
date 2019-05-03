@@ -38,15 +38,7 @@
               </span>
               
           </div>
-          <div class="form-group inline">
-            <label class="col-md-4 control-label" for="completed">Completed</label>
-            <input class="form-control"
-            type="checkbox"
-            name="completed"
-            checked
-            />
-          </div>
-          
+                    
 
           <div class="form-group{{ $errors->has('followup_date)') ? ' has-error' : '' }}">
               <label class="col-md-4 control-label" for="followup_date">Followup Date</label>
