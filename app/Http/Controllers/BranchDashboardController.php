@@ -296,9 +296,13 @@ class BranchDashboardController extends DashboardController
     private function getActivityChartData()
     {
 
-      $branchdata = $this->getBranchActivities($this->myBranches)->toArray();
-     
-     $chart = $this->formatBranchWeekActivities($branchdata);
+    $branchdata = $this->getBranchActivities($this->myBranches)->toArray();
+    if(stripos($this->period['period'],'week')){
+      $chart = $this->formatBranchDayActivities($branchdata);
+    }else{
+      $chart = $this->formatBranchWeekActivities($branchdata);
+    }
+    
      $data['keys']= "'". implode("','",array_keys($chart['values']))."'";
      $data['data']= implode(",",$chart['values']);
      return $data;
@@ -325,7 +329,38 @@ class BranchDashboardController extends DashboardController
      }
       // reformat branch data into array
     
+         /**
+     * [formatBranchWeekActivities description]
+     * @param  [type] $branchdata [description]
+     * @return [type]             [description]
+     */
+      private function formatBranchDayActivities($branchdata)
+      { 
 
+      $branches = [];
+      $keys =  $this->daysBetween(); 
+     //dd($keys);
+      foreach($branchdata as $branch){
+
+          $branch_id = implode(",",array_keys($branch));
+          foreach ($branch[implode(",",array_keys($branch))] as $item){
+
+            foreach($item as $period=>$el){
+                      
+              $branches[$period]= $el->count();
+              
+            }
+          }
+         
+        
+     
+      }
+
+      ksort($branches);
+      return $this->formatActivityTableData($branches,$keys);
+       
+
+     }
     /**
      * [formatBranchWeekActivities description]
      * @param  [type] $branchdata [description]
@@ -502,9 +537,16 @@ class BranchDashboardController extends DashboardController
             $q->whereBetween('activity_date',[$this->period['from'],$this->period['to']])
             ->where('completed','=',1);
          }])->get();
-
-         return  $activityCount->map(function ($branch){
+         
+     
+        // if this period is week then group by day
+         return $activityCount->map(function ($branch){
             return [$branch->id=>[$branch->activities->groupBy(function ($activity) {
+              if(stripos($this->period['period'],'week')){
+                
+                return $activity
+                 ->activity_date->format('Y-m-d');
+              }
                  return $activity
                  ->activity_date->endOfWeek()
                  ->format('Y-W');
@@ -612,6 +654,28 @@ class BranchDashboardController extends DashboardController
       $data['data'] = implode(",",$chartdata); 
       return $data;
      
+    }
+    /**
+     * [daysBetween description]
+     * @param  [type] $from [description]
+     * @param  [type] $to   [description]
+     * @return [type]       [description]
+     */
+    private function daysBetween(Carbon $from=null,Carbon $to=null)
+    {
+
+      if(! $from){
+        $from = clone($this->period['from']);
+      }
+      if(! $to){
+        $to = clone($this->period['to']);
+      }
+      $keys=[];
+      for($i = $from->format('Y-m-d'); $i<= $to->format('Y-m-d');$i = $from->addDay()->format('Y-m-d')){
+        $keys[]=$i;
+      }
+
+      return $keys;
     }
     /**
      * [yearWeekBetween description]
