@@ -1,7 +1,7 @@
 @extends('admin.layouts.default')
 @section('content')
 <div class="container">
-	heree
+
 <h4>Select Company to add locations to {{$leadsource->title}} leadsource</h4>
 	<form name="selectcompany" 
 		action="{{route('leadsource.addcompanylocations',$leadsource->id)}}"
