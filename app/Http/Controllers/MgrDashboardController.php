@@ -181,8 +181,8 @@ class MgrDashboardController extends DashboardController
 
       $data['period'] = $this->period;
       $data['chart'] = $this->getChartData($data['branches']);
-      
-      
+    
+ 
       if(isset($data['team']['results'])){
         $data['teamlogins'] = $this->getTeamLogins(array_keys($data['team']['results']));
       }
@@ -302,7 +302,6 @@ class MgrDashboardController extends DashboardController
                 ->sum('leads_count');
           $data[$team->id]['activities'] = $branchdata
                 ->whereIn('id',$branches)
-
                 ->sum('activities_count');
           $data[$team->id]['won'] = $branchdata
                 ->whereIn('id',$branches)
@@ -320,6 +319,8 @@ class MgrDashboardController extends DashboardController
                 ->whereIn('id',$branches)
                 ->sum('open');
 
+
+
         }
       }
      
@@ -331,7 +332,7 @@ class MgrDashboardController extends DashboardController
       $data['chart'] = $this->getTeamActivityChart($data);
       $data['pipelinechart'] = $this->getTeamPipelineChart($data);
       $data['top50chart'] = $this->getTeamTop50Chart($data);
-    
+      $data['winratiochart'] = $this->getWinRatioChart($data);
       return $data;
     }
     private function getTeamActivityChart(array $data)
@@ -387,7 +388,23 @@ class MgrDashboardController extends DashboardController
       return $data['chart'];
     }
 
-
+    private function getWinRatioChart(array $data)
+    {
+      
+      $chart= array();
+      foreach($data['team'] as $team){
+       
+        if($data[$team->id]['won'] + $data[$team->id]['lost']>0){
+          $chart[$team->lastname.", ". $team->firstname] = 
+          $data[$team->id]['won'] / ($data[$team->id]['won'] + $data[$team->id]['lost']);
+        }else{
+          $chart[$team->lastname.", ". $team->firstname] = 0;
+        }
+      }
+      $data['chart']['keys'] = "'" . implode("','",array_keys($chart))."'";
+      $data['chart']['data'] = implode(",",$chart);
+      return $data['chart'];
+    }
 
 
     /**
@@ -405,6 +422,11 @@ class MgrDashboardController extends DashboardController
                         'activities'=>function($query){
                             $query->whereBetween('activity_date',[$this->period['from'],$this->period['to']])
                             ->where('completed','=',1);
+                        },
+                        'activities as salesappts'=>function($query){
+                            $query->whereBetween('activity_date',[$this->period['from'],$this->period['to']])
+                            ->where('completed','=',1)
+                            ->where('activitytype_id','=',4);
                         },
                        'opportunities as won'=>function($query){
                   
@@ -431,7 +453,12 @@ class MgrDashboardController extends DashboardController
                             ->orwhereNull('actual_close');
                           })
                           ->where('opportunities.created_at','<',$this->period['to']);
-                      }]
+                      },
+                      'opportunities as wonvalue' => function ($query) {
+                      $query->select(\DB::raw("SUM(value) as wonvalue"))
+                      ->where('closed', 1)
+                      ->whereBetween('actual_close',[$this->period['from'],$this->period['to']]);
+                    }]
                       
                   )
               
@@ -456,13 +483,15 @@ class MgrDashboardController extends DashboardController
         $string = '';
 
         foreach ($results as $branch){
-
-          $string = $string . "[\"".$branch->branchname ."\",  ".$branch->activities->count() .",  ".$branch->won.", ".$branch->opportunities->sum('value') ."],";
+          
+          $string = $string . "[\"".$branch->branchname ."\",  ".$branch->salesappts .",  ".$branch->won.", ". ($branch->wonvalue ? $branch->wonvalue : 0) ."],";
          
         }
+     
         return $string;
 
       }
+
       /**
        * [getUpcomingCalendar description]
        * @param  [type] $activities [description]
