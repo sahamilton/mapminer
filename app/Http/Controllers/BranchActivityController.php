@@ -30,7 +30,12 @@ class BranchActivityController extends Controller
         // get addresses that are leads that are assigned to a branch
         //
     }
-
+    /**
+     * [branchActivities description]
+     * @param  Request $request [description]
+     * @param  Branch  $branch  [description]
+     * @return [type]           [description]
+     */
     public function branchActivities(Request $request, Branch $branch){
 
         if (request()->has('branch')) {
@@ -51,7 +56,11 @@ class BranchActivityController extends Controller
 
         return response()->view('activities.index', compact('data', 'myBranches','title'));
     }
-
+    /**
+     * [getBranchActivities description]
+     * @param  Array  $branch [description]
+     * @return [type]         [description]
+     */
     private function getBranchActivities(Array $branch){
         $data['activities'] = $this->getUpcomingActivities($branch);
         $data['calendar'] = $this->getUpcomingCalendar($data['activities']);
@@ -59,23 +68,36 @@ class BranchActivityController extends Controller
         $data['branches'] = $this->getBranches($branch);
         return $data;
     }
-
+    /**
+     * [getBranches description]
+     * @param  Array  $branches [description]
+     * @return [type]           [description]
+     */
      private function getBranches(Array $branches)
        {
         return  $this->branch->with('manager')
             ->whereIn('id', $branches)
             ->get();
        }
+    /**
+     * [getUpcomingCalendar description]
+     * @param  [type] $activities [description]
+     * @return [type]             [description]
+     */
     private function getUpcomingCalendar($activities)
     {
         
         return \Calendar::addEvents($activities);
     }
 
-
+    /**
+     * [Return open activities for branch]
+     * @param  Array  $myBranches [description]
+     * @return [Collection]     [description]
+     */
     private function getUpcomingActivities(Array $myBranches)
     {
-
+            // should rename to open activities
            $users =  $this->person->myBranchTeam($myBranches);
 
            return $this->activity->whereIn('user_id',$users)

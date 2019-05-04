@@ -107,7 +107,7 @@ class ActivityController extends Controller
         $data['activities'] = $this->activity->myBranchActivities([$branch->id]); 
         if($from){
             $data['activities']= $data['activities']
-            ->where('activity_date','>=',now())
+            ->where('activity_date','>=',Carbon::now()->startOfDay())
             ->whereNull('completed');
         }
 

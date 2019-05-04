@@ -511,7 +511,7 @@ class MgrDashboardController extends DashboardController
       private function getUpcomingActivities()
       {
              return $this->activity->whereIn('branch_id',$this->myBranches)
-             ->where('activity_date','>=',Carbon::now())->get();
+             ->where('activity_date','>=',Carbon::now()->startOfDay())->get();
 
       }
       /**

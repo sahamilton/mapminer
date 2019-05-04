@@ -281,11 +281,10 @@ class BranchDashboardController extends DashboardController
        */
       private function getUpcomingActivities()
       {
-             return $this->activity
-            ->whereNull('completed')
-             ->whereIn('branch_id',$this->myBranches)
-             ->get();
-
+         return $this->activity
+          ->whereNull('completed')
+          ->whereIn('branch_id',$this->myBranches)
+          ->get();
       }
      
       /**
@@ -293,21 +292,21 @@ class BranchDashboardController extends DashboardController
        * @param  Array  $branches [description]
        * @return [type]           [description]
        */
-    private function getActivityChartData()
-    {
+      private function getActivityChartData()
+      {
 
-    $branchdata = $this->getBranchActivities($this->myBranches)->toArray();
-    if(stripos($this->period['period'],'week')){
-      $chart = $this->formatBranchDayActivities($branchdata);
-    }else{
-      $chart = $this->formatBranchWeekActivities($branchdata);
-    }
-    
-     $data['keys']= "'". implode("','",array_keys($chart['values']))."'";
-     $data['data']= implode(",",$chart['values']);
-     return $data;
-     
-    }
+      $branchdata = $this->getBranchActivities($this->myBranches)->toArray();
+      if(stripos($this->period['period'],'week')){
+        $chart = $this->formatBranchDayActivities($branchdata);
+      }else{
+        $chart = $this->formatBranchWeekActivities($branchdata);
+      }
+      
+       $data['keys']= "'". implode("','",array_keys($chart['values']))."'";
+       $data['data']= implode(",",$chart['values']);
+       return $data;
+       
+      }
     /**
      * [formatBranchActivities description]
      * @param  [type] $branchdata [description]
