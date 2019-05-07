@@ -7,6 +7,7 @@ use App\ActivityType;
 use App\Address;
 use App\AddressBranch;
 use App\Branch;
+use App\Chart;
 use App\Company;
 use App\Track;
 use App\Contact;
@@ -17,12 +18,14 @@ use App\Person;
 use \Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Collection;
+
 class MgrDashboardController extends DashboardController
 {
     public $activity;
     public $address;
     public $addressbranch;
     public $branch;
+    public $chart;
     public $contact;
     public $manager;
     public $myBranches;
@@ -39,6 +42,7 @@ class MgrDashboardController extends DashboardController
             Address $address,
             AddressBranch $addressbranch,
             Branch $branch,
+            Chart $chart,
             Contact $contact,
             Opportunity $opportunity,
             Person $person,
@@ -47,6 +51,7 @@ class MgrDashboardController extends DashboardController
             $this->address = $address;
             $this->addressbranch = $addressbranch;
             $this->branch = $branch;
+            $this->chart = $chart;
             $this->contact = $contact;
             $this->opportunity = $opportunity;
             $this->person = $person;
@@ -174,12 +179,12 @@ class MgrDashboardController extends DashboardController
       $myBranches = $this->myBranches;
 
       
-
+      $data['period'] = $this->period;
       $data['branches'] = $this->getSummaryBranchData();
  
       $data['team']= $this->myTeamsOpportunities($data['branches']);
 
-      $data['period'] = $this->period;
+      
       $data['chart'] = $this->getChartData($data['branches']);
     
  
@@ -278,7 +283,7 @@ class MgrDashboardController extends DashboardController
       // this might return branch managers with no branches!
       $data['team'] =  $this->person
       ->where('reports_to','=',$this->manager->id)
-      ->WithRoles($teamroles)
+      ->withRoles($teamroles)
             
       ->get();
       
@@ -324,88 +329,20 @@ class MgrDashboardController extends DashboardController
         }
       }
      
-      $data = $this->getTeamChart($data);
+      $data = $this->getCharts($data);
       return $data;
     }
-    private function getTeamChart(array $data){
+    private function getCharts(array $data){
 
-      $data['chart'] = $this->getTeamActivityChart($data);
-      $data['pipelinechart'] = $this->getTeamPipelineChart($data);
-      $data['top50chart'] = $this->getTeamTop50Chart($data);
-      $data['winratiochart'] = $this->getWinRatioChart($data);
-      return $data;
-    }
-    private function getTeamActivityChart(array $data)
-    {
-     
-      $chart= array();
-      foreach($data['team'] as $team){
-        if(isset($data[$team->id]['activities'])){
-            $chart[$team->lastname.','.$team->firstname]=$data[$team->id]['activities'];
-          }else{
-            $chart[$team->lastname.','.$team->firstname]=0;
-          }
-
-      }
-      $data['chart']['keys'] = "'" . implode("','",array_keys($chart))."'";
-      $data['chart']['data'] = implode(",",$chart);
+      $data['activities'] = $this->chart->getTeamActivityChart($data);
+      $data['pipelinechart'] = $this->chart->getTeamPipelineChart($data);
+      $data['top50chart'] = $this->chart->getTeamTop50Chart($data);
+      $data['winratiochart'] = $this->chart->getWinRatioChart($data);
+      $data['openleadschart'] = $this->chart->getOpenLeadsChart($data);
     
-      return $data['chart'];
+      return $data;
     }
-
-    private function getTeamPipelineChart(array $data)
-    {
-      
-      $chart= array();
-
-      foreach($data['team'] as $team){
-        if(isset($data[$team->id]['open'])){
-          $chart[$team->lastname.", ". $team->firstname]=$data[$team->id]['open'];
-        }else{
-          $chart[$team->lastname.", ". $team->firstname]=0;
-        }
-      }
-      $data['pipelinechart']['keys'] = "'" . implode("','",array_keys($chart))."'";
-      $data['pipelinechart']['data'] = implode(",",$chart);
-      
-      return $data['pipelinechart'];
-    }
-
-    private function getTeamTop50Chart(array $data)
-    {
-      
-      $chart= array();
-      foreach($data['team'] as $team){
-        if(isset($data[$team->id]['top50'])){
-          $chart[$team->lastname.", ". $team->firstname]=$data[$team->id]['top50'];
-        }else{
-          $chart[$team->lastname.", ". $team->firstname]=0;
-        }
-      }
-      $data['chart']['keys'] = "'" . implode("','",array_keys($chart))."'";
-      $data['chart']['data'] = implode(",",$chart);
-      
-      return $data['chart'];
-    }
-
-    private function getWinRatioChart(array $data)
-    {
-      
-      $chart= array();
-      foreach($data['team'] as $team){
-       
-        if(isset($data[$team->id]) && ($data[$team->id]['won'] + $data[$team->id]['lost']>0)){
-          $chart[$team->lastname.", ". $team->firstname] = 
-          $data[$team->id]['won'] / ($data[$team->id]['won'] + $data[$team->id]['lost']);
-        }else{
-          $chart[$team->lastname.", ". $team->firstname] = 0;
-        }
-      }
-      $data['chart']['keys'] = "'" . implode("','",array_keys($chart))."'";
-      $data['chart']['data'] = implode(",",$chart);
-      return $data['chart'];
-    }
-
+    
 
     /**
      * [getSummaryBranchData description]
@@ -417,7 +354,13 @@ class MgrDashboardController extends DashboardController
               ->withCount(       
                       [
                         'leads'=>function($query){
-                           $query->where('address_branch.created_at','<=',$this->period['to']);
+                           $query->where('address_branch.created_at','<=',$this->period['to'])
+                           ->where(function($q){
+                            $q->whereDoesntHave('opportunities')
+                            ->orWhereHas('opportunities',function($q1){
+                              $q1->where('opportunities.created_at','>',$this->period['to']);
+                            });
+                           });
                         },
                         'activities'=>function($query){
                             $query->whereBetween('activity_date',[$this->period['from'],$this->period['to']])
@@ -863,4 +806,3 @@ class MgrDashboardController extends DashboardController
       return $keys;
     }
 }
-

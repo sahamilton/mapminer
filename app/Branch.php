@@ -147,7 +147,8 @@ class Branch extends Model implements HasPresenter
 		return  $this->belongsToMany(Address::class,'address_branch','branch_id','address_id');
 	}
 	public function leads(){
-		return  $this->belongsToMany(Address::class,'address_branch','branch_id','address_id')->whereDoesntHave('opportunities'); 
+		return  $this->belongsToMany(Address::class,'address_branch','branch_id','address_id')
+        ->whereDoesntHave('opportunities'); 
 		
 	}
 

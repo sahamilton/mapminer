@@ -196,7 +196,13 @@ class BranchDashboardController extends DashboardController
               ->withCount(       
                       [
                         'leads'=>function($query){
-                           $query->whereBetween('address_branch.created_at',[$this->period['from'],$this->period['to']]);
+                           $query->whereBetween('address_branch.created_at',[$this->period['from'],$this->period['to']])
+                           ->where(function($q){
+                            $q->whereDoesntHave('opportunities')
+                            ->orWhereHas('opportunities',function($q1){
+                              $q1->where('opportunities.created_at','>',$this->period['to']);
+                            });
+                           });
                         },
                         'activities'=>function($query){
                             $query->whereBetween('activity_date',[$this->period['from'],$this->period['to']])
