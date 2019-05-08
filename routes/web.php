@@ -455,6 +455,9 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
         #Project Source
         Route::resource('projectsource', 'ProjectSourceController');
 
+
+        # Reports
+        Route::resource('reports','ReportsController');
         #Prospects / Leads
         /*	Route::get('leads/address',['as'=>'lead.address','uses'=>'LeadsController@address']);
 		Route::get('leads/{vertical}/vertical',['as'=>'lead.vertical','uses'=>'LeadsController@index']);
@@ -695,11 +698,11 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
         Route::resource('searchfilters', 'SearchFiltersController');
     # Jobs
      Route::get('testjob',function(){
-     	$company = App\Company::findOrFail(38);
-     	$period['from'] = \Carbon\Carbon::create(2019,4,1);
-     	$period['to'] = now();
-     	//App\Jobs\AccountActivities::dispatch($company,$period);
-     	App\Jobs\AccountOpportunities::dispatch($company,$period);
+     	/*$company = App\Company::findOrFail(532);
+     	$period['from'] = \Carbon\Carbon::create(2019,4,29);
+     	$period['to'] = \Carbon\Carbon::create(2019,5,5);
+     	App\Jobs\AccountActivities::dispatch($company,$period);
+     	//App\Jobs\SelectCompanyOpportunities::dispatch();
 
      	/*$filesInFolder = \File::files(storage_path('backups'));
      	foreach ($filesInFolder as $file){
@@ -710,7 +713,9 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
      		}
      		
      	}*/
-    	//App\Jobs\Top50WeeklyReport::dispatch();
+     	$period['from'] = \Carbon\Carbon::now()->subWeek()->startOfWeek();
+     	$period['to'] = \Carbon\Carbon::now()->subWeek()->endOfWeek();
+    	App\Jobs\BranchStats::dispatch($period);
     	//App\Jobs\ActivityOpportunityReport::dispatch();
     	//App\Jobs\ActivityOpportunityReport::dispatch();
     	

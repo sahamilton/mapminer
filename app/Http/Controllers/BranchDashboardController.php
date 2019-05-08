@@ -193,41 +193,7 @@ class BranchDashboardController extends DashboardController
     private function getSummaryBranchData(){
         
         return $this->branch
-              ->withCount(       
-                      [
-                        'leads'=>function($query){
-                           $query->whereBetween('address_branch.created_at',[$this->period['from'],$this->period['to']])
-                           ->where(function($q){
-                            $q->whereDoesntHave('opportunities')
-                            ->orWhereHas('opportunities',function($q1){
-                              $q1->where('opportunities.created_at','>',$this->period['to']);
-                            });
-                           });
-                        },
-                        'activities'=>function($query){
-                            $query->whereBetween('activity_date',[$this->period['from'],$this->period['to']])
-                            ->where('completed','=',1);
-                        },
-
-                        'opportunities',
-                          'opportunities as won'=>function($query){
-                  
-                          $query->whereClosed(1)
-                          ->whereBetween('actual_close',[$this->period['from'],$this->period['to']]);
-                      },
-                      'opportunities as lost'=>function($query){
-                          $query->whereClosed(2)
-                          ->whereBetween('actual_close',[$this->period['from'],$this->period['to']]);
-                      },
-                      'opportunities as top50'=>function($query){
-                          $query->where('opportunities.top50','=',1)
-                          ->where(function($q){
-                            $q->where('actual_close','>',$this->period['to'])
-                            ->orwhereNull('actual_close');
-                          })
-                          ->where('opportunities.created_at','<=',$this->period['to']);
-                      }]
-                  )
+              ->SummaryStats($this->period)
           
               ->with('manager','manager.reportsTo')
               ->getActivitiesByType($this->period)
