@@ -11,7 +11,7 @@
       ]);
 
       var options = {
-        title: 'Correlation closes / won to sales appointments and opportunities',
+        title: 'TAHA Report : Correlation closes / won to sales appointments and opportunities',
        
         hAxis: {title: 'Sales Appts',
           viewWindow: {
@@ -27,8 +27,8 @@
                   },
               ticks: [6]
         },
-        height: 400,
-        width: 400,
+        height: 350,
+        width: 700,
         bubble: {textStyle: {fontSize: 11}}
       };
 

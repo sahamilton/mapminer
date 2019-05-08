@@ -25,8 +25,15 @@ var barChart = new Chart(ctleads,
           yAxes: [{
               display: true,
               ticks: {
-                  
+                  autoSkip:false,
                   beginAtZero: true   // minimum value will be 0.
+              }
+          }],
+          xAxes: [{
+              display: true,
+              ticks: {
+                  autoSkip:false
+                 
               }
           }]
       }
