@@ -46,7 +46,12 @@ class Kernel extends ConsoleKernel
            $schedule->job(new ActivityOpportunityReport())
                ->weekly()
                ->wednesdays()
-               ->at('04:59'); 
+               ->at('04:59');
+           
+           $schedule->job(new SelectCompanyOpportunities())
+               ->weekly()
+               ->sundays()
+               ->at('21:12'); 
        }   
     }
 

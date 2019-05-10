@@ -21,17 +21,15 @@ class Top50WeekReportExport implements FromView
     public function view(): View
     {
      	$period = $this->period;
-        $opportunities = Opportunity::where('closed','=',0)
-		        ->where('top50','=',1)
-		        ->where(function($q){
-		        	$q->whereNull('actual_close')
-		        	->orWhere('actual_close','>',$this->period);
-		        })
-		        
-		        ->select('branch_id', \DB::raw('count(id) as total,sum(value) as sumvalue'))
-		        ->groupBy('branch_id')
-		        ->get();
+        $opportunities = Opportunity::
+            where('closed','=',0)
+            ->orWhere('actual_close','>',$this->period)
+            ->with('branch')
 
-        return view('reports.weeklyreport',compact('opportunities','period'));
+            ->select('branch_id', \DB::raw('count(id) as total,count(top50) as top50, sum(value) as sumvalue'))
+            ->groupBy('branch_id')
+            ->get();
+ 
+       return view('reports.weeklyreport',compact('opportunities','period'));
     }
 }

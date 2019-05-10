@@ -186,3 +186,14 @@ left join opportunities d on address_branch.id = d.address_branch_id and d.close
 where address_branch.created_at > '2019-03-01'
 //where address_branch.branch_id in ()
 group by address_branch.branch_id
+
+//////////////////////////////
+select branchname,count(opportunities.id),count(opportunities.top50)
+from branches,opportunities
+where branches.id = opportunities.branch_id
+and opportunities.closed = 0
+group by branchname
+
+branch::whereHas(opportunities,function($q){
+  $q->where('closed','=',0);
+})->select('branchname', DB::raw('count(opportunities.id) as open,count(opportunities.top50 as top50'))->groupBy('branchname')->get();

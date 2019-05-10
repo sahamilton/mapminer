@@ -24,10 +24,11 @@ class AccountActivitiesExport implements FromView
     public function view(): View
     {
         $results = Address::where('company_id','=',$this->company->id)
-                ->whereHas('activities',function($q){
-                    $q->whereBetween('activity_date',[$this->period['from'],$this->period['to']]);
-                })
-                ->with('activities','activities.type')
+                ->with(['activities'=>function($q){
+                    $q->where('completed','=','1')
+                    ->whereBetween('activity_date',[$this->period['from'],$this->period['to']]);
+                }])
+                ->with('activities.type')
                 ->get();
         $period = $this->period;
         $company = $this->company;

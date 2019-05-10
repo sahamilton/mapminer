@@ -698,11 +698,10 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
         Route::resource('searchfilters', 'SearchFiltersController');
     # Jobs
      Route::get('testjob',function(){
-     	/*$company = App\Company::findOrFail(532);
-     	$period['from'] = \Carbon\Carbon::create(2019,4,29);
-     	$period['to'] = \Carbon\Carbon::create(2019,5,5);
+     	$company = App\Company::findOrFail(532);
+     	$period['from'] = \Carbon\Carbon::now()->subWeek()->startOfWeek();
+     	$period['to'] = \Carbon\Carbon::now()->subWeek()->startOfWeek();
      	App\Jobs\AccountActivities::dispatch($company,$period);
-     	//App\Jobs\SelectCompanyOpportunities::dispatch();
 
      	/*$filesInFolder = \File::files(storage_path('backups'));
      	foreach ($filesInFolder as $file){
@@ -712,7 +711,7 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
             	->dispatch($filename)->onQueue('mapminer');
      		}
      		
-     	}*/
+     	}
      	$period['from'] = \Carbon\Carbon::now()->subWeek()->startOfWeek();
      	$period['to'] = \Carbon\Carbon::now()->subWeek()->endOfWeek();
     	App\Jobs\BranchStats::dispatch($period);
@@ -722,7 +721,12 @@ Route::group(['prefix' => 'ops', 'middleware' =>'ops'], function()
     	//App\Jobs\ZipBackup::dispatch('MMProd20190123');
     	//App\Jobs\UploadToDropbox::dispatch('MMProd20190123');
     	//Mail::queue(new App\Mail\ConfirmBackup('MMProd20190123'));
+    	*/
     });
+
+     Route::get('testgraph',function (){
+     	return response()->view('charts.testgraph');
+     })->name('testgraph');
 	# Tracking
 		Route::resource('track','TrackController');	
 
