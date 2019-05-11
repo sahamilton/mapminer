@@ -21,15 +21,17 @@ class AccountOpportunities implements ShouldQueue
     
     public $company;
     public $period;
+    public $distribution;
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(Company $company,Array $period)
+    public function __construct(Company $company,Array $period, Array $distribution)
     {
         $this->company = $company;
         $this->period = $period;
+        $this->distribution = $distribution;
 
     }
 
@@ -48,11 +50,10 @@ class AccountOpportunities implements ShouldQueue
         Excel::store(new AccountOpportunitiesExport($this->company, $this->period), $file);
         $this->company->load('managedBy');
         $manageremail = $this->company->managedBy->userdetails()->first()->email;
-        
-        Mail::to($manageremail)
-                ->bcc('hamilton@okospartners.com')
-                ->cc('salesoperations@trueblue.com')
-                ->send(new AccountOpportunitiesReport($file,$this->period,$this->company));
+        // get disty list
+        Mail::to($this->distribution['to'])
+           ->cc(isset($this->distribution['cc']) ? $this->distribution['cc'] : config('mapminer.system_contact'))
+           ->send(new AccountOpportunitiesReport($file,$this->period,$this->company));
         
         
     }
