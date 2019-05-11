@@ -232,7 +232,9 @@ class Activity extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
    */
   public function scopeActivityChart($query)
   {
-    return $query->selectRaw('branch_id,YEARWEEK(expected_close,3) as yearweek,sum(`value`) as funnel')->groupBy(['branch_id','yearweek'])->orderBy('yearweek', 'asc');
+    return $query->selectRaw('branch_id,YEARWEEK(expected_close,3) as yearweek,sum(`value`) as funnel')
+    ->groupBy(['branch_id','yearweek'])
+    ->orderBy('yearweek', 'asc');
   }
    
   /**

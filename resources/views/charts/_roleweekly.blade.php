@@ -1,8 +1,5 @@
-<script type="text/javascript" 
-src="//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
-
 <script>
-var ctx = document.getElementById("ctx").getContext("2d");
+  var ctx = document.getElementById("roleWeekChart").getContext("2d");
 var numberWithCommas = function(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
@@ -13,9 +10,11 @@ var roleWeekChart = new Chart(ctx,
     resize:true,
 
     data:{
-      labels: ['{!!  array_keys(reset($data['activitytypechart'] )) !!}'],
+      labels: ['{!! array_values($data['roleweekcount'])[0]['labels'] !!}'],
       datasets: [
-       @foreach ($data['activitytypechart'] as $key=>$value)    
+       @foreach ($data['roleweekcount'] as $key=>$value)
+       
+      
       {
 
         label: '{{$key}}',

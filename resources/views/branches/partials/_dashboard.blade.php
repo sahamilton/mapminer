@@ -27,7 +27,7 @@
 	<div style="width: 40%;float:left;border:solid 1px #aaaaaa;margin:5px;margin-left:5px">
       <h4>Activities</h4>
       <canvas id="ctb" width="300" height="300" style="float-right"></canvas>
-        @include('charts._teamactivitieschart')
+        @include('charts._activitiesstackedchart')
     </div>
 	
 

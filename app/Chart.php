@@ -6,6 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Chart extends Model
 {
+    /**
+     * [getTeamActivityChart description]
+     * @param  array  $data [description]
+     * @return [type]       [description]
+     */
     public function getTeamActivityChart(array $data)
     {
      
@@ -20,7 +25,42 @@ class Chart extends Model
       }
      return $this->getChartData($chart);
     }
+    /**
+     * [getTeamActivityByTypeChart description]
+     * @param  array  $data [description]
+     * @return [type]       [description]
+     */
+    public function getTeamActivityByTypeChart(array $data)
+    {
 
+     $activitytypes = ActivityType::all();
+     //dd($activitytypes);
+      $chart= array();
+      foreach($data['team'] as $team){
+        $types = reset($data[$team->id]['activitiestype']);
+        foreach($types as $type){
+         
+          foreach ($activitytypes as $acttype){
+            
+            if(array_key_exists($acttype->id, $type)){
+
+              $chart[$team->lastname.','.$team->firstname][$acttype->activity]['data'] = count($type[$acttype->id]);
+            }else{
+              $chart[$team->lastname.','.$team->firstname][$acttype->activity]['data']= 0;
+            }
+             $chart[$team->lastname.','.$team->firstname][$acttype->activity]['color']= $acttype->color;
+          }
+        }
+      } 
+     
+      return $chart;
+    // return $this->getChartData($chart);
+    }
+    /**
+     * [getTeamPipelineChart description]
+     * @param  array  $data [description]
+     * @return [type]       [description]
+     */
     public function getTeamPipelineChart(array $data)
     {
       
@@ -35,7 +75,11 @@ class Chart extends Model
       }
       return $this->getChartData($chart);
     }
-
+    /**
+     * [getTeamTop50Chart description]
+     * @param  array  $data [description]
+     * @return [type]       [description]
+     */
     public function getTeamTop50Chart(array $data)
     {
       
@@ -49,7 +93,11 @@ class Chart extends Model
       }
       return $this->getChartData($chart);
     }
-
+    /**
+     * [getWinRatioChart description]
+     * @param  array  $data [description]
+     * @return [type]       [description]
+     */
     public function getWinRatioChart(array $data)
     {
       
@@ -66,7 +114,11 @@ class Chart extends Model
       
       return $this->getChartData($chart);
     }
-
+    /**
+     * [getOpenLeadsChart description]
+     * @param  array  $data [description]
+     * @return [type]       [description]
+     */
     public function getOpenLeadsChart(array $data)
     {
       $chart= array();
@@ -81,7 +133,11 @@ class Chart extends Model
     	return $this->getChartData($chart);
     }
 
-
+    /**
+     * [getChartData description]
+     * @param  [type] $chart [description]
+     * @return [type]        [description]
+     */
     private function getChartData($chart)
     {
     	$data['chart']['keys'] = "'" . implode("','",array_keys($chart))."'";

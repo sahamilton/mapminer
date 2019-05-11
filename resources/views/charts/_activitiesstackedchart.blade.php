@@ -2,30 +2,30 @@
 src="//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
 
 <script>
-var ctx = document.getElementById("ctx").getContext("2d");
+
 var numberWithCommas = function(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
-var roleWeekChart = new Chart(ctx, 
+var roleWeekChart = new Chart(ctb, 
 {
     type: 'bar',
 
     resize:true,
 
     data:{
-      labels: ['{!!  array_keys(reset($data['activitytypechart'] )) !!}'],
+      labels: ['{!!  implode("','",array_keys($data['team']['activitytypechart']) ) !!}'],
       datasets: [
-       @foreach ($data['activitytypechart'] as $key=>$value)    
-      {
-
-        label: '{{$key}}',
-        data: [{!! $value['data'] !!}],
-        backgroundColor: '{!! $value['color'] !!}' 
-       },
-      
+       @foreach ($data['team']['activitytypechart'] as $activities) 
+        @foreach($activities as $key=>$data)
+        
+        {
+        label: '{!! $key !!}',
+        data: '{{$data['data']}}',
+        backgroundColor:'#{{$data['color']}}',
+      },
       @endforeach
-               
-      ]
+       @endforeach      
+     ]
     },
  options: {
         animation: {
@@ -42,11 +42,18 @@ var roleWeekChart = new Chart(ctx,
         scales: {
           xAxes: [{ 
             stacked: true, 
+            ticks: {
+                  autoSkip:false,
+                  beginAtZero: true   // minimum value will be 0.
+              },
             gridLines: { display: false },
             }],
           yAxes: [{ 
             stacked: true, 
             ticks: {
+                  autoSkip:false,
+                  beginAtZero: true ,  // minimum value will be 0.
+            
               callback: function(value) { return numberWithCommas(value); },
             }, 
             }],

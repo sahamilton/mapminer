@@ -81,7 +81,7 @@ class MgrDashboardController extends DashboardController
       $this->checkBranches();
           
       $data = $this->getDashBoardData();
-      
+
       return response()->view('opportunities.mgrindex', compact('data'));
 
     }
@@ -186,7 +186,7 @@ class MgrDashboardController extends DashboardController
 
       
       $data['chart'] = $this->getChartData($data['branches']);
-    
+    //dd($data['chart']);
  
       if(isset($data['team']['results'])){
         $data['teamlogins'] = $this->getTeamLogins(array_keys($data['team']['results']));
@@ -270,6 +270,7 @@ class MgrDashboardController extends DashboardController
      */
     private function myTeamsOpportunities(Collection $branchdata)
     {
+      
       $stats = ['leads',
               'opportunities',
               'top50',
@@ -302,12 +303,21 @@ class MgrDashboardController extends DashboardController
           });
        
           $branches = $branches->flatten();
+          
           $data[$team->id]['leads'] = $branchdata
                 ->whereIn('id',$branches)
                 ->sum('leads_count');
+          
           $data[$team->id]['activities'] = $branchdata
                 ->whereIn('id',$branches)
                 ->sum('activities_count');
+          
+          $data[$team->id]['activitiestype'] = $branchdata
+                ->whereIn('id',$branches)
+                ->map(function($branch){
+                  return $branch->activities->groupBy('activitytype_id')->toArray();
+                });
+
           $data[$team->id]['won'] = $branchdata
                 ->whereIn('id',$branches)
                 ->sum('won');
@@ -339,7 +349,9 @@ class MgrDashboardController extends DashboardController
       $data['top50chart'] = $this->chart->getTeamTop50Chart($data);
       $data['winratiochart'] = $this->chart->getWinRatioChart($data);
       $data['openleadschart'] = $this->chart->getOpenLeadsChart($data);
-    
+      $data['activitytypechart'] = $this->chart->getTeamActivityByTypeChart($data);
+
+
       return $data;
     }
     

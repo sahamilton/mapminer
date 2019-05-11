@@ -13,7 +13,9 @@ $values = array_column($data, 'values');
 @endphp
 
 <script>
-
+var numberWithCommas = function(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  };
 var barChart = new Chart(ctbubble,
       {
 
@@ -43,14 +45,16 @@ var barChart = new Chart(ctbubble,
         @endforeach
         ]},
         options: {
-          tooltips: {
+          tooltips: { 
+            mode: 'label',
              callbacks: {
                 label: function(tooltipItem, data) {
-                   var label = data.datasets[1].label;
+                   var label = data.datasets[tooltipItem.datasetIndex].label;
                    return label + ': (' + tooltipItem.xLabel + ', ' + tooltipItem.yLabel + ')';
                 }
              }
           },
+        
           scales: {
               yAxes: [{
                   display: true,
