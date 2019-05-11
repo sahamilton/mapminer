@@ -6,28 +6,26 @@ src="//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
 var numberWithCommas = function(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
-var roleWeekChart = new Chart(ctb, 
+var activityTypeChart = new Chart(ctb, 
 {
     type: 'bar',
 
     resize:true,
 
     data:{
-      labels: ['{!!  implode("','",array_keys($data['team']['activitytypechart']) ) !!}'],
+      labels: ['{!!  reset($data['team']['activitytypechart'])['labels'] !!}'],
       datasets: [
-       @foreach ($data['team']['activitytypechart'] as $activities) 
-        @foreach($activities as $key=>$data)
-        
+       @foreach ($data['team']['activitytypechart'] as $key=>$value) 
+       
         {
-        label: '{!! $key !!}',
-        data: '{{$data['data']}}',
-        backgroundColor:'#{{$data['color']}}',
+          label: '{!! $key !!}',
+          data: [{{$value['data']}}],
+          backgroundColor:'{{$value['color']}}',
       },
-      @endforeach
-       @endforeach      
+      @endforeach      
      ]
     },
- options: {
+    options: {
         animation: {
           duration: 10,
         },
@@ -42,15 +40,15 @@ var roleWeekChart = new Chart(ctb,
         scales: {
           xAxes: [{ 
             stacked: true, 
-            ticks: {
+            gridLines: { display: false },
+             ticks: {
                   autoSkip:false,
                   beginAtZero: true   // minimum value will be 0.
               },
-            gridLines: { display: false },
             }],
           yAxes: [{ 
             stacked: true, 
-            ticks: {
+             ticks: {
                   autoSkip:false,
                   beginAtZero: true ,  // minimum value will be 0.
             
@@ -60,6 +58,6 @@ var roleWeekChart = new Chart(ctb,
         }, // scales
         legend: {display: true}
     } // options
-   }
+  }
 );
 </script>

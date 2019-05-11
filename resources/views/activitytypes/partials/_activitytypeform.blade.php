@@ -5,10 +5,21 @@
         type="text" 
         name="activity" 
         required
-        id="activitydate" 
+        id="activity" 
         value="{{  old('activity', isset($activitytype) ? $activitytype->activity : '') }}"/>
     <span class="help-block">
         <strong>{{$errors->has('activity') ? $errors->first('activity')  : ''}}</strong>
     </span>
     
 </div>
+<div class= "form-group">
+    <label class="col-md-4 control-label" for="color">Color</label>
+    <input class="form-control colorpicker-component" 
+        type="text" 
+        name="color" 
+        required
+        id="color" 
+        value="{{  old('color', isset($activitytype) ? $activitytype->color : '') }}"/>
+    <span class="help-block">
+        <strong>{{$errors->has('color') ? $errors->first('color')  : ''}}</strong>
+    </span>

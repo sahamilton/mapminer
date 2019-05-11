@@ -10,6 +10,7 @@
 			<thead>
 				<th>Activity</th>
 				<th>Count</th>
+				<th>Color</th>
 				<th>Actions</th>
 			</thead>
 			<tbody>
@@ -18,7 +19,8 @@
 					<td><a href="{{route('activitytype.show',$activitytype->id)}}">{{$activitytype->activity}}</a></td>
 					
 					<td>{{$activitytype->activities_count}}</td>
-
+					<td bgcolor='#{{$activitytype->color}}'>#{{$activitytype->color}}
+					</td>
 					<td>
 						<div class="btn-group">
 				            <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
