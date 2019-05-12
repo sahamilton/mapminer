@@ -1,6 +1,3 @@
-<script type="text/javascript" 
-src="//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
-
 <script>
 
 var numberWithCommas = function(x) {
@@ -27,7 +24,7 @@ var activityTypeChart = new Chart(ctb,
     },
     options: {
         animation: {
-          duration: 10,
+          duration: 5,
         },
         tooltips: {
           mode: 'label',

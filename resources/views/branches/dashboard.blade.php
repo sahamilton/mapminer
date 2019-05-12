@@ -38,7 +38,7 @@
 			</div>
 			<div class="card-body">
 				  <canvas id="ctx" width="230" height="250" ></canvas>
-				@include('activities.partials._mchart')
+				@include('charts._weeklyactivitychart')
 			</div>
 	</div>
 	</div>
@@ -63,7 +63,7 @@
 		</div>
 		<div class="card-body">
 			<canvas id="ctpipe" width="400" height="400" ></canvas>
-			@include('branches.partials._pipechart')
+			@include('charts._pipechart')
 		</div>
 	</div>
 

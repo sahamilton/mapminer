@@ -44,6 +44,11 @@
 	<script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
 
 
+	<!-- Charts -->
+	<script type="text/javascript" 
+	src="//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js">
+	
+	</script>
 
 
 	<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->

@@ -47,94 +47,160 @@ class Branch extends Model implements HasPresenter
     ];
     protected $guarded = [];
     public $errors;
-    
+    /**
+     * [locations description]
+     * 
+     * @return [type] [description]
+     */
     public function locations()
     {
         return $this->belongsToMany(Address::class);
     }
-    
+    /**
+     * [region description]
+     * 
+     * @return [type] [description]
+     */
     public function region()
     {
         return $this->belongsTo(Region::class);
     }
-
+    /**
+     * [relatedPeople description]
+     * 
+     * @param [type] $role [description]
+     * 
+     * @return [type]       [description]
+     */
     public function relatedPeople($role = null)
     {
         if ($role) {
             return $this->belongsToMany(Person::class)
-
-            ->wherePivot('role_id', '=', $role);
+                ->wherePivot('role_id', '=', $role);
         } else {
-            return $this->belongsToMany(Person::class)->withTimestamps()->withPivot('role_id');
+            return $this->belongsToMany(Person::class)
+                ->withTimestamps()
+                ->withPivot('role_id');
         }
     }
-    
+    /**
+     * [activities description]
+     * 
+     * @return [type] [description]
+     */
     public function activities()
     {
         
         return $this->hasMany(Activity::class);
     }
-
+    /**
+     * [activitiesbytype description]
+     * 
+     * @param [type] $type [description]
+     * 
+     * @return [type]       [description]
+     */
     public function activitiesbytype($type = null)
     {
-
-            
-            $activities = $this->hasMany(Activity::class);
-            if($type){
-                 $activities->where('activitytype_id', '=', $type);
-             }
-             return $activities;
+    
+        $activities = $this->hasMany(Activity::class);
+        if ($type) {
+             $activities->where('activitytype_id', '=', $type);
+        }
+        return $activities;
     }
 
 
-    /*public function opportunities(){
-		return $this->hasMany(Opportunity::class);
-	}*/
+    /**
+     * [opportunities description]
+     * 
+     * @return [type] [description]
+     */
     public function opportunities()
     {
  
         return $this->hasManyThrough(Opportunity::class, AddressBranch::class, 'branch_id', 'address_branch_id', 'id', 'id');
     }
+    /**
+     * [openOpportunities description]
+     * 
+     * @return [type] [description]
+     */
     public function openOpportunities()
     {
  
-        return $this->hasManyThrough(Opportunity::class, AddressBranch::class, 'branch_id', 'address_branch_id', 'id', 'id')->where('closed','=',0);
+        return $this->hasManyThrough(Opportunity::class, AddressBranch::class, 'branch_id', 'address_branch_id', 'id', 'id')->where('closed', '=', 0);
     }
+    /**
+     * [closedOpportunities description]
+     * 
+     * @return [type] [description]
+     */
     public function closedOpportunities()
     {
  
-        return $this->hasManyThrough(Opportunity::class, AddressBranch::class, 'branch_id', 'address_branch_id', 'id', 'id')->where('closed','=',1);
+        return $this->hasManyThrough(Opportunity::class, AddressBranch::class, 'branch_id', 'address_branch_id', 'id', 'id')->where('closed', '=', 1);
     }
+    /**
+     * [instate description]
+     * 
+     * @return [type] [description]
+     */
     public function instate()
     {
         return $this->belongsTo(State::class, 'state', 'statecode');
     }
-    
+    /**
+     * [manager description]
+     * 
+     * @return [type] [description]
+     */
     public function manager()
     {
         return $this->relatedPeople($this->branchManagerRole);
     }
-
+    /**
+     * [businessmanager description]
+     * 
+     * @return [type] [description]
+     */
     public function businessmanager()
     {
         return $this->relatedPeople($this->businessManagerRole);
     }
-
+    /**
+     * [marketmanager description]
+     * 
+     * @return [type] [description]
+     */
     public function marketmanager()
     {
         return $this->relatedPeople($this->marketManagerRole);
     }
-    
+    /**
+     * [servicelines description]
+     * 
+     * @return [type] [description]
+     */
     public function servicelines()
     {
             return $this->belongsToMany(Serviceline::class);
     }
-    
+    /**
+     * [servicedBy description]
+     * 
+     * @return [type] [description]
+     */
     public function servicedBy()
     {
 
         return $this->belongsToMany(Person::class)->withTimestamps()->withPivot('role_id');
     }
+    /**
+     * [salesTeam description]
+     * 
+     * @return [type] [description]
+     */
     public function salesTeam()
     {
 
@@ -142,24 +208,45 @@ class Branch extends Model implements HasPresenter
         return $this->belongsToMany(Person::class)->withTimestamps()->withPivot('role_id')->wherePivot('role_id', '=', 5);
     }
     
+    /**
+     * [addresses description]
+     * 
+     * @return [type] [description]
+     */
+    public function addresses()
+    {
+         return  $this->belongsToMany(Address::class, 'address_branch', 'branch_id', 'address_id');
+    }
+    /**
+     * [leads description]
+     * 
+     * @return [type] [description]
+     */
+    public function leads()
+    {
+        return  $this->belongsToMany(Address::class, 'address_branch', 'branch_id', 'address_id')
+            ->whereDoesntHave('opportunities'); 
 
-	public function addresses(){
-		return  $this->belongsToMany(Address::class,'address_branch','branch_id','address_id');
-	}
-	public function leads(){
-		return  $this->belongsToMany(Address::class,'address_branch','branch_id','address_id')
-        ->whereDoesntHave('opportunities'); 
-		
-	}
+    }
 
-
+    /**
+     * [leadsBySourceCount description]
+     * 
+     * @param [type] $leadsource [description]
+     * 
+     * @return [type]             [description]
+     */
     public function leadsBySourceCount($leadsource)
     {
 
         return $this->belongsToMany(Address::class, 'address_branch', 'branch_id', 'address_id')->where(['lead_source_id' => $leadsource->id])->count();
     }
     
-    
+    /**
+     * [getManagementTeam description]
+     * 
+     * @return [type] [description]
+     */
     public function getManagementTeam()
     {
         $team = $this->salesTeam()->get();
@@ -169,12 +256,20 @@ class Branch extends Model implements HasPresenter
         }
         return $mgrs;
     }
-
+    /**
+     * [getPresenterClass description]
+     * 
+     * @return [type] [description]
+     */
     public function getPresenterClass()
     {
         return LocationPresenter::class;
     }
-
+    /**
+     * [branchemail description]
+     * 
+     * @return [type] [description]
+     */
     public function branchemail()
     {
         return $this->id ."br@peopleready.com";
@@ -183,9 +278,9 @@ class Branch extends Model implements HasPresenter
     
    
     /*
-		Calculate bounding box coordinates
+    Calculate bounding box coordinates
 
-	*/
+    
     private function getPositionCoordinates($lat, $lng, $distance)
     {
         
@@ -203,24 +298,29 @@ class Branch extends Model implements HasPresenter
     
         return $coordinates;
     }
-    
+    */
+    /**
+     * [getBranchIdFromid description]
+     * 
+     * @param [type] $branchstring [description]
+     * 
+     * @return [type]               [description]
+     */
     public function getBranchIdFromid($branchstring)
     {
         $branchstring = str_replace(" ", "", $branchstring);
         return $this->whereIn('id', explode(',', $branchstring))
-        ->pluck('id')->toArray();
+            ->pluck('id')->toArray();
     }
         
-    /*
-		Generate Mapping xml file from branches results
-		       
-		Passed to function:                                                   
-		@ results                             
-	
-		@return xml
-	
-	*/
     
+    /**
+     * [makeNearbyBranchXML   Generate Mapping xml file from branches results]
+     * 
+     * @param [type] $result [description]
+     * 
+     * @return [xml]         [description]
+     */
     public function makeNearbyBranchXML($result)
     {
         
@@ -228,7 +328,7 @@ class Branch extends Model implements HasPresenter
         $node = $dom->createElement("markers");
         $parnode = $dom->appendChild($node);
         foreach ($result as $row) {
-          // ADD TO XML DOCUMENT NODE
+
             $node = $dom->createElement("marker");
             $newnode = $parnode->appendChild($node);
             $newnode->setAttribute("name", trim($row->branchname));
@@ -265,7 +365,11 @@ class Branch extends Model implements HasPresenter
         return $dom->saveXML();
     }
     
-    
+    /**
+     * [getBranchManagers description]
+     * 
+     * @return [type] [description]
+     */
     public function getBranchManagers()
     {
         // this shouldnt be hardcoded!
@@ -282,23 +386,44 @@ class Branch extends Model implements HasPresenter
         return $managers;
     }
 
-
+    /**
+     * [getNearByBranches description]
+     * 
+     * @param [type]  $servicelines [description]
+     * @param [type]  $location     [description]
+     * @param integer $distance     [description]
+     * @param integer $limit        [description]
+     * 
+     * @return [type]                [description]
+     */
     public function getNearByBranches($servicelines, $location, $distance = 100, $limit = 5)
     {
-        return $this->wherehas('servicelines', function ($q) use ($servicelines) {
-            $q->whereIn('servicelines.id', $servicelines);
-        })
-        ->limit($limit)
-        ->get();
+            return $this->wherehas('servicelines', function ($q) use ($servicelines) {
+                $q->whereIn('servicelines.id', $servicelines);
+            })
+            ->limit($limit)
+            ->get();
     }
-    
+    /**
+     * [orders description]
+     * 
+     * @param  [type] $period [description]
+     * 
+     * @return [type]         [description]
+     */
     public function orders($period = null)
     {
         
         return $this->hasManyThrough(Orders::class, AddressBranch::class, 'branch_id', 'address_branch_id', 'id', 'id');
     }
 
-
+    /**
+     * [associatePeople description]
+     * 
+     * @param Request $request [description]
+     * 
+     * @return [type]           [description]
+     */
     public function associatePeople(Request $request)
     {
         $data['roles'] = $this->removeNullsFromSelect(request('roles'));
@@ -310,55 +435,87 @@ class Branch extends Model implements HasPresenter
         }
         $this->relatedPeople()->sync($associatedPeople);
     }
-
+    /**
+     * [allStates description]
+     * 
+     * @return [type] [description]
+     */
     public function allStates()
     {
         $states = $this->distinct('state')->pluck('state')->toArray();
         return State::whereIn('statecode', $states)->orderBy('statecode')->get();
     }
-	public function getbranchGeoCode($request){
-		$address = request('street') . ",". request('city') . ",". request('state') . ",". request('zip');	
+    /**
+     * [getbranchGeoCode description]
+     * 
+     * @param [type] $request [description]
+     * 
+     * @return [type]          [description]
+     */
+    public function getbranchGeoCode($request)
+    {
+            $address = request('street') . ",". request('city') . ",". request('state') . ",". request('zip');
 
-		$geoCode = app('geocoder')->geocode($address)->get();
+            $geoCode = app('geocoder')->geocode($address)->get();
 
-		$latlng = ($this->getGeoCode($geoCode));
-		$request['lat']= $latlng['lat'];
-		$request['lng']= $latlng['lng'];
-		return $request;
+            $latlng = ($this->getGeoCode($geoCode));
+            $request['lat']= $latlng['lat'];
+            $request['lng']= $latlng['lng'];
+            return $request;
 
-	}
+    }
+    /**
+     * [scopeGetActivitiesByType description]
+     * 
+     * @param [type] $query        [description]
+     * @param [type] $period       [description]
+     * @param [type] $activitytype [description]
+     * 
+     * @return [type]               [description]
+     */
+    public function scopeGetActivitiesByType($query,$period,$activitytype=null)
+    {
 
-	public function  scopeGetActivitiesByType($query,$period,$activitytype=null){
-		
-        
-
-        if($activitytype){
+        if ($activitytype) {
            
-            return $query->with(['activities'=> function($query) use ($activitytype,$period) { 
-                $query->where('activitytype_id','=',$activitytype)
-
-                ->whereBetween('activity_date',[$period['from'],$period['to']]);
-            }],'activities.type','activities.relatedAddress');
-        }else{
-            
-             return $query->with(['activities'=>function($query) use ($period){
-                $query->whereBetween('activity_date',[$period['from'],$period['to']]);
-            }],'activities.type','activities.relatedAddress');
+            return $query->with(
+                ['activities' => function ($query) use ($activitytype,$period) {
+                    $query->where('activitytype_id', '=', $activitytype)
+                        ->whereBetween('activity_date', [$period['from'],$period['to']]);
+                    }
+                 ], 'activities.type', 'activities.relatedAddress'
+            );
+        } else {
+        
+            return $query->with(
+                ['activities'=>function ($query) use ($period) {
+                    $query->whereBetween('activity_date', [$period['from'],$period['to']]);
+                    }
+                    ], 'activities.type', 'activities.relatedAddress'
+             );
             
         }
 
     }
-
+    /**
+     * [checkIfMyBranch description]
+     * 
+     * @param [type] $request    [description]
+     * @param [type] $branch     [description]
+     * @param [type] $myBranches [description]
+     * 
+     * @return [type]             [description]
+     */
     public function checkIfMyBranch($request, $branch = null, $myBranches)
     {
         if (request()->has('branch')) {
             return  $this->findOrFail(request('branch'));
         }
         
-        
         if (count($myBranches)==0) {
             return false;
         }
+
         if (isset($branch) && ! in_array($branch->id, array_keys($myBranches))) {
             return false;
         }
@@ -367,18 +524,24 @@ class Branch extends Model implements HasPresenter
         return  $this->findOrFail(reset($branch));
 
    }
-   
+   /**
+    * [branchData description]
+    * 
+    * @param [type] $branches [description]
+    * 
+    * @return [type]           [description]
+    */
    public function branchData($branches)
     {
         $data = [];
-        foreach ($branches as $branch){
-        	
+        foreach ($branches as $branch) {
+     	
         	$data[$branch->id]['branch'] = $branch->branchname;
         	$data[$branch->id]['leads'] = $branch->leads->count();
 			$data[$branch->id]['activities'] = 0;
 			$data[$branch->id]['opportunities'] = 0;
 
-        	foreach ($branch->addresses as $lead){
+        	foreach ($branch->addresses as $lead) {
         		
         		$data[$branch->id]['opportunities'] += $lead->opportunities->count();
         		$data[$branch->id]['activities'] += $lead->activities->count();
@@ -388,63 +551,73 @@ class Branch extends Model implements HasPresenter
         }
         return $data;
     }
-
-    public function scopeSummaryStats($query,$period){
+    /**
+     * [scopeSummaryStats description]
+     * 
+     * @param [type] $query  [description]
+     * @param [type] $period [description]
+     * 
+     * @return [type]         [description]
+     */
+    public function scopeSummaryStats($query,$period)
+    {
         $this->period = $period;
     
         return $query->withCount(       
-              [
-                'leads'=>function($query){
-                   $query->where('address_branch.created_at','<=',$this->period['to'])
-                   ->where(function($q){
+            ['leads'=>function ($query) {
+                   $query->where('address_branch.created_at', '<=', $this->period['to'])
+                  ->where(
+                    function ($q) {
                     $q->whereDoesntHave('opportunities')
-                    ->orWhereHas('opportunities',function($q1){
-                      $q1->where('opportunities.created_at','>',$this->period['to']);
-                    });
-                   });
+                        ->orWhereHas('opportunities', function ($q1) {
+                          $q1->where('opportunities.created_at', '>', $this->period['to']);
+                        });
+                        }
+                    );
                 },
-                'activities'=>function($query){
+                'activities'=>function ($query) {
                     $query->whereBetween('activity_date',[$this->period['from'],$this->period['to']])
-                    ->where('completed','=',1);
+                    ->where('completed', '=', 1);
                 },
-                'activities as salesappts'=>function($query){
-                    $query->whereBetween('activity_date',[$this->period['from'],$this->period['to']])
-                    ->where('completed','=',1)
-                    ->where('activitytype_id','=',4);
+                'activities as salesappts'=>function ($query) {
+                    $query->whereBetween('activity_date', [$this->period['from'],$this->period['to']])
+                    ->where('completed', '=', 1)
+                    ->where('activitytype_id', '=', 4);
                 },
-               'opportunities as won'=>function($query){
+               'opportunities as won'=>function ($query) {
           
                   $query->whereClosed(1)
-                  ->whereBetween('actual_close',[$this->period['from'],$this->period['to']]);
+                  ->whereBetween('actual_close', [$this->period['from'],$this->period['to']]);
               },
-              'opportunities as lost'=>function($query){
+              'opportunities as lost'=>function ($query) {
                   $query->whereClosed(2)
-                  ->whereBetween('actual_close',[$this->period['from'],$this->period['to']]);
+                  ->whereBetween('actual_close', [$this->period['from'],$this->period['to']]);
               },
-              'opportunities as top50'=>function($query){
-                  $query->where('opportunities.top50','=',1)
-                  ->where(function($q){
-                    $q->where('actual_close','>',$this->period['to'])
-                    ->orwhereNull('actual_close');
-                  })
-                  ->where('opportunities.created_at','<',$this->period['to']);
+              'opportunities as top50'=>function ($query) {
+                  $query->where('opportunities.top50', '=', 1)
+                    ->where(function ($q) {
+                        $q->where('actual_close', '>', $this->period['to'])
+                            ->orwhereNull('actual_close');
+                      }
+                  )
+                ->where('opportunities.created_at', '<', $this->period['to']);
               },
-              'opportunities as open'=>function($query){
-                  $query->whereClosed(0)
-                  
-                  ->where(function($q){
-                    $q->where('actual_close','>',$this->period['to'])
-                    ->orwhereNull('actual_close');
-                  })
-                  ->where('opportunities.created_at','<',$this->period['to']);
+              'opportunities as open'=>function ($query) {
+                  $query->whereClosed(0)        
+                    ->where(
+                        function ($q) {
+                            $q->where('actual_close', '>', $this->period['to'])
+                                ->orwhereNull('actual_close');
+                    }
+                  )
+                  ->where('opportunities.created_at', '<', $this->period['to']);
               },
               'opportunities as wonvalue' => function ($query) {
-              $query->select(\DB::raw("SUM(value) as wonvalue"))
-              ->where('closed', 1)
-              ->whereBetween('actual_close',[$this->period['from'],$this->period['to']]);
-            }]
-                      
-
-          );
+                  $query->select(\DB::raw("SUM(value) as wonvalue"))
+                      ->where('closed', 1)
+                      ->whereBetween('actual_close', [$this->period['from'],$this->period['to']]);
+              }
+            ]
+        );
     }
 }
