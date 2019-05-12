@@ -18,7 +18,7 @@ var barChart = new Chart(ctx,
       datasets: [
           
           {
-              label: "Weekly Activity",
+              label: "Weekly Activities",
               backgroundColor: "#ff0000",
               data:[{!! $data['summary']['chart']['data'] !!}],
               borderWidth: 1,
@@ -34,7 +34,20 @@ var barChart = new Chart(ctx,
         xAxes: [{
             gridLines: {
                 offsetGridLines: true
-            }
+            },
+             ticks: {
+                  autoSkip:false,
+                  beginAtZero: true   // minimum value will be 0.
+              },
+        }],
+        yAxes: [{
+            gridLines: {
+                offsetGridLines: true
+            },
+             ticks: {
+                  autoSkip:false,
+                  beginAtZero: true   // minimum value will be 0.
+              },
         }]
     }
 });

@@ -20,6 +20,30 @@ var barChart = new Chart(ctx,
         backgroundColor: 'red'
       }]
      }
+     ,
+     options:{
+ 
+	    scales: {
+	        xAxes: [{
+	            gridLines: {
+	                offsetGridLines: true
+	            },
+	             ticks: {
+	                  autoSkip:false,
+	                   // minimum value will be 0.
+	              },
+	        }],
+	        yAxes: [{
+	            gridLines: {
+	                offsetGridLines: true
+	            },
+	             ticks: {
+	                  autoSkip:false,
+	                  beginAtZero: true   // minimum value will be 0.
+	              },
+	        }]
+	     }
+    }
 
 });
 </script>

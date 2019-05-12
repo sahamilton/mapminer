@@ -109,8 +109,7 @@ class NewsController extends BaseController
     public function show($slug)
     {
 
-        
-        $news = $this->news->with('relatedRoles')->where('id', '=', '52')->first();
+        $news = $this->news->with('relatedRoles')->where('slug','=',$slug)->first();
         
         
         
