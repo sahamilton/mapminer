@@ -14,64 +14,56 @@ class Chart extends Model
     public function getTeamActivityChart(array $data)
     {
      
-      $chart= array();
-      foreach($data['team'] as $team){
-        if(isset($data[$team->id]['activities'])){
-            $chart[$team->postName()]=$data[$team->id]['activities'];
-          }else{
-            $chart[$team->postName()]=0;
-          }
+        $chart= array();
+        foreach ($data['team'] as $team) {
+            if (isset($data[$team->id]['activities'])) {
+                $chart[$team->postName()]=$data[$team->id]['activities'];
+            } else {
+                $chart[$team->postName()]=0;
+            }
 
-      }
-     return $this->getChartData($chart);
+        }
+        return $this->getChartData($chart);
     }
     /**
      * [getTeamActivityByTypeChart description]
-     * @param  array  $data [description]
+     * 
+     * @param array  $data [description]
+     * 
      * @return [type]       [description]
      */
     public function getTeamActivityByTypeChart(array $data)
     {
-$labels = $data['team']->map(function ($person){
-
-  return $person->postName();
-});
-$labels = implode("','",$labels->toArray());
- $activitytypes = ActivityType::all();
-  
-     //dd($activitytypes);
-      $chart= array();
-      foreach($data['team'] as $team){
-    
-        $types = reset($data[$team->id]['activitiestype']);
-        foreach($types as $type){
-         
-          foreach ($activitytypes as $acttype){
-            // set the data
-            if(array_key_exists($acttype->id, $type)){
-              $chart[$acttype->activity]['data'][] = count($type[$acttype->id]);
-            }else{
-              $chart[$acttype->activity]['data'][]= 0;
+        $labels = $data['team']->map(
+            function ($person) {
+                return $person->postName();
             }
-             $chart[$acttype->activity]['color']= "#" . $acttype->color;
-            // set the labels
-            //if(! isset( $chart[$team->postName()][$acttype->activity]['labels'] )){
-              
-           // }else{$chart[$team->postName()][$acttype->activity]['labels']= 
-            $chart[$acttype->activity]['labels']=$labels; 
-           // }
-            
-            }
+        );
+        $labels = implode("','", $labels->toArray());
+        $activitytypes = ActivityType::all();
+        $chart= array();
+        foreach ($data['team'] as $team) {
+            if (isset($data[$team->id]['activitiestype'])) {
+                $types = reset($data[$team->id]['activitiestype']);
+                foreach ($types as $type) {
+                    foreach ($activitytypes as $acttype) {
+                        // set the data
+                        if (array_key_exists($acttype->id, $type)) {
+                            $chart[$acttype->activity]['data'][] = count($type[$acttype->id]);
+                        } else {
+                            $chart[$acttype->activity]['data'][]= 0;
+                        }
+                        $chart[$acttype->activity]['color']= "#" . $acttype->color;
+                        $chart[$acttype->activity]['labels']=$labels; 
+                    }
+                }
+            } 
         }
-      } 
-      
-      foreach ($chart as $key=>$cht){
-        $chart[$key]['data']=implode(",",$cht['data']);
-        
-      }
-   
-      return $chart;
-    // return $this->getChartData($chart);
+        foreach ($chart as $key=>$cht) {
+            $chart[$key]['data']=implode(",", $cht['data']);
+        }
+        return $chart;
+
     }
     /**
      * [getTeamPipelineChart description]
@@ -83,10 +75,10 @@ $labels = implode("','",$labels->toArray());
       
       $chart= array();
 
-      foreach($data['team'] as $team){
-        if(isset($data[$team->id]['open'])){
+      foreach ($data['team'] as $team) {
+        if (isset($data[$team->id]['open'])) {
           $chart[$team->postName()]=$data[$team->id]['open'];
-        }else{
+        } else {
           $chart[$team->postName()]=0;
         }
       }
@@ -101,10 +93,10 @@ $labels = implode("','",$labels->toArray());
     {
       
       $chart= array();
-      foreach($data['team'] as $team){
-        if(isset($data[$team->id]['top50'])){
+      foreach ($data['team'] as $team) {
+        if (isset($data[$team->id]['top50'])) {
           $chart[$team->postName()]=$data[$team->id]['top50'];
-        }else{
+        } else {
           $chart[$team->postName()]=0;
         }
       }
@@ -119,12 +111,12 @@ $labels = implode("','",$labels->toArray());
     {
       
       $chart= array();
-      foreach($data['team'] as $team){
+      foreach ($data['team'] as $team) {
        
-        if(isset($data[$team->id]) && ($data[$team->id]['won'] + $data[$team->id]['lost']>0)){
+        if (isset($data[$team->id]) && ($data[$team->id]['won'] + $data[$team->id]['lost']>0)) {
           $chart[$team->postName()] = 
           $data[$team->id]['won'] / ($data[$team->id]['won'] + $data[$team->id]['lost']);
-        }else{
+        } else {
           $chart[$team->postName()] = 0;
         }
       }
@@ -139,10 +131,10 @@ $labels = implode("','",$labels->toArray());
     public function getOpenLeadsChart(array $data)
     {
       $chart= array();
-      foreach($data['team'] as $team){
-        if(isset($data[$team->id]['leads'])){
+      foreach ($data['team'] as $team) {
+        if (isset($data[$team->id]['leads'])) {
             $chart[$team->postName()]=$data[$team->id]['leads'];
-          }else{
+          } else {
             $chart[$team->postName()]=0;
           }
 
