@@ -57,7 +57,7 @@
 
             <input type="checkbox" id="top50{{$opportunity->id}}" value="{{$opportunity->id}}" 
             @if($opportunity->top50)
-            checked/><span class="hidden">1</span>
+              checked /><span class="hidden">1</span>
             @endif
             
           </td>
