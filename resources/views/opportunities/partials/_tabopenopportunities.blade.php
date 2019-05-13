@@ -54,10 +54,12 @@
           </td>
           <td>{{$opportunity->address->address->fullAddress()}}</td>
           <td>
-
-            <input type="checkbox" id="top50{{$opportunity->id}}" value="{{$opportunity->id}}" 
             @if($opportunity->top50)
-              checked /><span class="hidden">1</span>
+            <input type="checkbox" id="top50{{$opportunity->id}}" value="{{$opportunity->id}}" 
+            
+              checked /><span class="d-none">1</span>
+            @else
+            <input type="checkbox" id="top50{{$opportunity->id}}" value="{{$opportunity->id}}"  />
             @endif
             
           </td>

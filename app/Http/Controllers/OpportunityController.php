@@ -374,8 +374,12 @@ class OpportunityController extends Controller
         } else {
             $opportunity->top50 = 1;
         }
-        $opportunity->save();
-   
+        if ($opportunity->save()) {
+            return 'success';
+        }
+
+
+        
     }
 
    
