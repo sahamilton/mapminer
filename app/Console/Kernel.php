@@ -7,6 +7,7 @@ use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use App\Jobs\WeeklyActivityReminder;
 use App\Jobs\Top50WeeklyReport;
 use App\Jobs\ActivityOpportunityReport;
+use App\Jobs\AccountActivities;
 
 class Kernel extends ConsoleKernel
 {
@@ -24,32 +25,40 @@ class Kernel extends ConsoleKernel
     /**
      * Define the application's command schedule.
      *
-     * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
+     * @param \Illuminate\Console\Scheduling\Schedule $schedule [description]
+     * 
      * @return void
      */
     protected function schedule(Schedule $schedule)
     {
-       if(config('app.env') == 'production'){
-           $schedule->job(new WeeklyActivityReminder())
-               ->weekly()
-               ->sundays()
-               ->at('19:52');
+        if (config('app.env') == 'production') {
+             $schedule->job(new WeeklyActivityReminder())
+                 ->weekly()
+                 ->sundays()
+                 ->at('19:52');
 
-           $schedule->command('db:backup')
-                ->dailyAt('22:58');
-           
-           $schedule->job(new Top50WeeklyReport())
-               ->weekly()
-               ->fridays()
-               ->at('06:59');
-           
-           $schedule->job(new ActivityOpportunityReport())
-               ->weekly()
-               ->wednesdays()
-               ->at('04:59');
-           
-           
-       }   
+             $schedule->command('db:backup')
+                 ->dailyAt('22:58');
+             
+             $schedule->job(new Top50WeeklyReport())
+                 ->weekly()
+                 ->fridays()
+                 ->at('06:59');
+             
+             $schedule->job(new ActivityOpportunityReport())
+                 ->weekly()
+                 ->wednesdays()
+                 ->at('04:59');
+            
+            $company = App\Company::findOrFail(532);
+            $period['from'] = \Carbon\Carbon::now()->subWeek()->startOfWeek();
+            $period['to'] = \Carbon\Carbon::now()->subWeek()->startOfWeek();
+          
+            $schedule->job(new AccountActivities($company, $period))
+                ->weekly()
+                ->modays()
+                ->at('18:05');
+        }   
     }
 
     /**

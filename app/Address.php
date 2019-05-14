@@ -9,7 +9,25 @@ class Address extends Model
 
     public $timestamps = true;
     
-    public $fillable = ['addressable_id','addressable_type','street','address2','city','state','zip','lat','businessname','lng','company_id','user_id','phone','position','lead_source_id','customer_id','description'];
+    public $fillable = [
+        'addressable_id',
+        'addressable_type',
+        'street',
+        'address2',
+        'city',
+        'state',
+        'zip',
+        'lat',
+        'lng',
+        'position',
+        'businessname',
+        'company_id',
+        'user_id',
+        'phone',
+        
+        'lead_source_id',
+        'customer_id',
+        'description'];
     
     protected $searchable = [
         'businessname',
@@ -19,7 +37,9 @@ class Address extends Model
 
     ];
     protected $hidden = ['position'];
-    public $requiredfields = ['companyname',
+
+    public $requiredfields = [
+            'companyname',
             'businessname',
             'address',
             'city',
@@ -35,139 +55,277 @@ class Address extends Model
         4=>'Location data is accurate and contact data is mostly accurate.',
         5=>'Location and contact data is very accurate'
       ];
-    public $addressType = ['location'=>'National Account Location','project'=>'Construction Project', 'lead'=>'Web Lead','customer'=>'Customer'];
+
+    public $addressType = [
+            'location'=>'National Account Location',
+            'project'=>'Construction Project', 
+            'lead'=>'Web Lead',
+            'customer'=>'Customer'];
     
+    /**
+     * [lead description]
+     * 
+     * @return [type] [description]
+     */
     public function lead()
     {
         return $this->hasOne(Lead::class, 'address_id');
     }
-
+    /**
+     * [weblead description]
+     * 
+     * @return [type] [description]
+     */
     public function weblead()
     {
         return $this->hasOne(WebLead::class, 'address_id');
     }
+    /**
+     * [location description]
+     * 
+     * @return [type] [description]
+     */
     public function location()
     {
         return $this->hasOne(Location::class, 'address_id');
     }
+    /**
+     * [customer description]
+     * 
+     * @return [type] [description]
+     */
     public function customer()
     {
         return $this->hasOne(Customer::class, 'address_id');
     }
+    /**
+     * [project description]
+     * 
+     * @return [type] [description]
+     */
     public function project()
     {
         return $this->hasOne(Project::class, 'address_id');
     }
+    /**
+     * [watchedBy description]
+     * 
+     * @return [type] [description]
+     */
     public function watchedBy()
     {
 
-        return $this->belongsToMany(User::class, 'location_user', 'address_id', 'user_id')->withPivot('created_at', 'updated_at');
+        return $this->belongsToMany(User::class, 'location_user', 'address_id', 'user_id')
+            ->withPivot('created_at', 'updated_at');
     }
+    /**
+     * [contacts description]
+     * 
+     * @return [type] [description]
+     */
     public function contacts()
     {
         return $this->hasMany(Contact::class, 'address_id', 'id');
     }
+    /**
+     * [company description]
+     * 
+     * @return [type] [description]
+     */
     public function company()
     {
         return $this->belongsTo(Company::class, 'company_id', 'id');
     }
+    /**
+     * [relatedNotes description]
+     * 
+     * @return [type] [description]
+     */
     public function relatedNotes()
     {
-           return $this->hasMany(Note::class, 'related_id', 'addressable_id')
-        ->with('writtenBy');
+        return $this->hasMany(Note::class, 'related_id', 'addressable_id')
+            ->with('writtenBy');
     }
-    
+    /** 
+     * [state description]
+     * 
+     * @return [type] [description]
+     */
     public function state()
     {
-        return $this->belongsTo(State::class,'state','statecode');
+        return $this->belongsTo(State::class, 'state', 'statecode');
     }
 
-
+    /**
+     * [orders description]
+     * 
+     * @return [type] [description]
+     */
     public function orders()
     {
  
         return $this->hasManyThrough(Orders::class, AddressBranch::class, 'address_id', 'address_branch_id', 'id', 'id');
     }
+    /**
+     * [activities description]
+     * 
+     * @return [type] [description]
+     */
     public function activities()
     {
         return $this->hasMany(Activity::class);
     }
+    /**
+     * [fullAddress description]
+     * 
+     * @return [type] [description]
+     */
     public function fullAddress()
     {
         return $this->street." ". $this->address2." ".$this->city." ".$this->state." ".$this->zip;
     }
+    /**
+     * [industryVertical description]
+     * 
+     * @return [type] [description]
+     */
     public function industryVertical()
     {
         return $this->hasOne(SearchFilter::class, 'id', 'vertical');
     }
-
+    /**
+     * [scopeFiltered description]
+     * 
+     * @param [type] $query [description]
+     * 
+     * @return [type]        [description]
+     */
     public function scopeFiltered($query)
     {
         
-        if ((! $keys= $this->getSearchKeys(['companies'], ['vertical'])) && session('geo.addressType')) {
+        if ((! $keys= $this->getSearchKeys(['companies'], ['vertical'])) 
+            && session('geo.addressType')
+        ) {
             return $query->whereIn('addressable_type', session('geo.addressType'));
         } elseif (session('geo.addressType')) {
-            return $query->whereIn('vertical', $keys)->whereIn('addressable_type', session('geo.addressType'));
+            return $query->whereIn('vertical', $keys)
+                ->whereIn('addressable_type', session('geo.addressType'));
         } else {
             return $query;
         }
     }
-    
+    /**
+     * [assignedToBranch description]
+     * 
+     * @return [type] [description]
+     */
     public function assignedToBranch()
     {
         return $this->belongsToMany(Branch::class, 'address_branch', 'address_id', 'branch_id')
-        ->withPivot('rating', 'person_id', 'status_id', 'comments')->withTimeStamps();
+            ->withPivot('rating', 'person_id', 'status_id', 'comments')
+            ->withTimeStamps();
     }
+    /**
+     * [claimedByBranch description]
+     * 
+     * @return [type] [description]
+     */
     public function claimedByBranch()
     {
         return $this->belongsToMany(Branch::class, 'address_branch', 'address_id', 'branch_id')
-        ->withPivot('rating', 'person_id', 'status_id', 'comments')->withTimeStamps()->whereIn('status_id', [2]);
+            ->withPivot('rating', 'person_id', 'status_id', 'comments')
+            ->withTimeStamps()->whereIn('status_id', [2]);
     }
+    /**
+     * [closed description]
+     * 
+     * @return [type] [description]
+     */
     public function closed()
     {
         return $this->belongsToMany(Branch::class, 'address_branch', 'address_id', 'branch_id')
-        ->withPivot('rating', 'person_id', 'status_id', 'comments')->withTimeStamps()->whereIn('status_id', [3]);
+            ->withPivot('rating', 'person_id', 'status_id', 'comments')
+            ->withTimeStamps()->whereIn('status_id', [3]);
     }
-
+    /**
+     * [assignedToPerson description]
+     * 
+     * @return [type] [description]
+     */
     public function assignedToPerson()
     {
         return $this->belongsToMany(Person::class, 'address_branch', 'address_id', 'person_id')
-        ->withPivot('rating', 'branch_id', 'status_id', 'comments')->withTimeStamps();
+            ->withPivot('rating', 'branch_id', 'status_id', 'comments')
+            ->withTimeStamps();
     }
+    /**
+     * [scopeType description]
+     * 
+     * @param [type] $query [description]
+     * @param [type] $type  [description]
+     * 
+     * @return [type]        [description]
+     */
     public function scopeType($query, $type)
     {
         return $query->where('addressable_type', '=', $type);
     }
-   /* public function opportunities(){
-        return $this->belongsTo(Opportunity::class,'id','address_id');
-    }*/
-
+   
+    /**
+     * [opportunities description]
+     * 
+     * @return [type] [description]
+     */
     public function opportunities()
     {
  
         return $this->hasManyThrough(Opportunity::class, AddressBranch::class, 'address_id', 'address_branch_id', 'id', 'id');
     }
-
+    /**
+     * [servicedBy description]
+     * 
+     * @return [type] [description]
+     */
     public function servicedBy()
     {
         return $this->belongsTo(Branch::class, 'branch_id', 'id');
     }
-
+    /**
+     * [leadsource description]
+     * 
+     * @return [type] [description]
+     */
     public function leadsource()
     {
         return $this->belongsTo(LeadSource::class, 'lead_source_id', 'id');
     }
-
+    /**
+     * [ranking description]
+     * 
+     * @return [type] [description]
+     */
     public function ranking()
     {
-        return $this->belongsToMany(Person::class)->withPivot('ranking', 'comments', 'status_id')->withTimeStamps();
+        return $this->belongsToMany(Person::class)
+            ->withPivot('ranking', 'comments', 'status_id')
+            ->withTimeStamps();
     }
-
+    /**
+     * [currentRating description]
+     * 
+     * @return [type] [description]
+     */
     public function currentRating()
     {
         return $this->ranking()->average('ranking');
     }
-
+    /**
+     * [getMyRanking description]
+     * 
+     * @param [type] $rankings [description]
+     * 
+     * @return [type]           [description]
+     */
     public function getMyRanking($rankings)
     {
        
@@ -178,30 +336,49 @@ class Address extends Model
         }
         return false;
     }
-
+    /**
+     * [createdBy description]
+     * 
+     * @return [type] [description]
+     */
     public function createdBy()
     {
         return $this->belongsTo(User::class, 'user_id', 'id')->with('person');
     }
-
+    /**
+     * [getExtraFields description]
+     * 
+     * @param [type] $type [description]
+     * 
+     * @return [type]       [description]
+     */
     public function getExtraFields($type)
     {
         $fields = \App\MapFields::whereType($type)
-                      ->whereDestination('extra')
-                      ->whereNotNull('fieldname')
-                      ->pluck('fieldname')->toArray();
+            ->whereDestination('extra')
+            ->whereNotNull('fieldname')
+            ->pluck('fieldname')->toArray();
         return array_unique($fields);
     }
-
+    /**
+     * [scopeDuplicate description]
+     * 
+     * @param [type] $query     [description]
+     * @param [type] $longitude [description]
+     * @param [type] $latitude  [description]
+     * 
+     * @return [type]            [description]
+     */
     public function scopeDuplicate($query, $longitude, $latitude)
     {
         $close_in_metres = 5;
   
-        return $query->whereRaw("
-           ST_Distance_Sphere(
+        return $query->whereRaw(
+            "ST_Distance_Sphere(
                 point(lng, lat),
                 point(". $longitude . ", " . $latitude .")
-            )  < ".$close_in_metres );
+            )  < ".$close_in_metres 
+        );
     }
 
 }

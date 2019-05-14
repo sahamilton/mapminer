@@ -30,7 +30,7 @@ class Chart extends Model
     /**
      * [getTeamActivityByTypeChart description]
      * 
-     * @param array  $data [description]
+     * @param array $data [description]
      * 
      * @return [type]       [description]
      */
@@ -51,7 +51,8 @@ class Chart extends Model
                     foreach ($activitytypes as $acttype) {
                         // set the data
                         if (array_key_exists($acttype->id, $type)) {
-                            $chart[$acttype->activity]['data'][] = count($type[$acttype->id]);
+                            $chart[$acttype->activity]['data'][] 
+                                = count($type[$acttype->id]);
                         } else {
                             $chart[$acttype->activity]['data'][]= 0;
                         }
@@ -121,7 +122,9 @@ class Chart extends Model
         $chart= array();
         foreach ($data['team'] as $team) {
          
-            if (isset($data[$team->id]) && ($data[$team->id]['won'] + $data[$team->id]['lost']>0)) {
+            if (isset($data[$team->id]) 
+                && ($data[$team->id]['won'] + $data[$team->id]['lost'] > 0)
+            ) {
                 $chart[$team->postName()] = $data[$team->id]['won'] / ($data[$team->id]['won'] + $data[$team->id]['lost']);
             } else {
                 $chart[$team->postName()] = 0;
