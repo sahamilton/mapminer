@@ -17,7 +17,7 @@
        <link rel="stylesheet" href="{{asset('assets/css/responsive-tables.css')}}">
 <!-- SummerNote -->
 		<link href="//cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote.css" rel="stylesheet">
-		
+	
 <!-- Calendar -->
         <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.2.7/fullcalendar.min.css"/>       
         <link rel="stylesheet" href="{{asset('assets/css/prmapminer.css')}}">
@@ -46,7 +46,8 @@
 		<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js"></script>
 		<script src="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.2.7/fullcalendar.min.js"></script>
 		<script src="//twitter.github.io/typeahead.js/releases/latest/typeahead.bundle.js"></script>
-
+<!--- Charts --->
+		<script src="//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" ></script>	
 
 		<style>
         body {
