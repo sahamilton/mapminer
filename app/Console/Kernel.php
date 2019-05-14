@@ -8,6 +8,7 @@ use App\Jobs\WeeklyActivityReminder;
 use App\Jobs\Top50WeeklyReport;
 use App\Jobs\ActivityOpportunityReport;
 use App\Jobs\AccountActivities;
+use App\Company;
 
 class Kernel extends ConsoleKernel
 {
