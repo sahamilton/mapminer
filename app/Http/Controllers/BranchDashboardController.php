@@ -696,6 +696,54 @@ class BranchDashboardController extends DashboardController
       return $data;
      
     }*/
+
+    private function _getPipeLineData()
+    {
+
+     
+        return $this->opportunity
+            ->selectRaw('branch_id,YEARWEEK(expected_close,3) as yearweek,sum(value) as total')
+            ->where('value', '>', 0)
+            ->whereIn('branch_id', $this->myBranches)
+            
+            ->where(function ($q) {
+                $q->where('actual_close', '>', $this->period['to'])
+                    ->orWhereNull('actual_close');
+                }
+            )
+            ->groupBy(['branch_id','yearweek'])
+            ->orderBy('branch_id', 'asc')
+            ->orderBy('yearweek', 'asc')
+            ->get();
+    }
+
+    /**
+     * [formatPipelineData description]
+     * 
+     * @param [type] $pipeline [description]
+     * 
+     * @return [type]           [description]
+     */
+    private function _formatPipelineData($pipeline)
+    {
+     
+        $chartdata = [];
+     
+        foreach ($pipeline as $item) {
+          
+            $chartdata[$item->yearweek]=$item->total;
+            
+        }
+      
+        $from = Carbon::now();
+        $to = Carbon::now()->addMonth(2);
+        $keys =  $this->_yearWeekBetween($from, $to);
+       
+        $data['keys'] = "'".implode("','", $keys)."'";
+        $data['data'] = implode(",", $chartdata); 
+        return $data;
+     
+    }
     /**
      * [daysBetween description]
      * 
