@@ -167,7 +167,7 @@ class BranchDashboardController extends DashboardController
         //$data['upcoming'] = $this->getUpcomingActivities();       
         //$data['funnel'] = $this->getBranchFunnel();    
         $data['activitychart'] =  $this->_getActivityChartData();
-        $data['pipelinechart'] = $this->getPipeline();
+        $data['pipelinechart'] = $this->_getPipeline();
       
         $data['calendar'] = $this->_getUpcomingCalendar($this->_getActivities());
    
