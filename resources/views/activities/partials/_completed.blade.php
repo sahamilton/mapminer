@@ -61,18 +61,7 @@
 					@endif
 			</td>
 			<td>
-			
-			
-			@if(! $activity->completed)
-                        <a title="Complete Activity"
-                          href="{{route('activity.complete',$activity->id)}}" 
-                          >
-                          <i class="fas fa-clipboard-check"></i>
-                           Mark As Complete
-                        </a>	
-			@else
-			Completed
-			@endif
+				Completed
 			</td>
 		</tr>
 		@endif

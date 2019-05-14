@@ -16,6 +16,26 @@ var barChart = new Chart(ctx,
         data: [{!! $data['activitychart']['data'] !!}],
         backgroundColor: 'red'
       }]
+     },
+     options: {
+     	scales: {
+          xAxes: [{ 
+            
+             ticks: {
+                  autoSkip:false,
+                  beginAtZero: true   // minimum value will be 0.
+              },
+            }],
+          yAxes: [{ 
+             
+             ticks: {
+                  autoSkip:false,
+                  
+            	}, 
+            }],
+        }, // scales
+
+
      }
 
 });

@@ -25,7 +25,7 @@
 			<div class="card-body">
 				<p><strong>Leads:</strong><a href="{{route('lead.branch',$branch->id)}}">{{$data['summary']->first()->leads_count}}</a></p>
 				<p><strong>Top 50 Open Opportunities:</strong><a href="{{route('opportunities.branch',$branch->id)}}">{{$data['summary']->first()->top50}}</a></p>
-				<p><strong>All Open Opportunities:</strong><a href="{{route('opportunities.branch',$branch->id)}}">{{$data['summary']->first()->opportunities_count}}</a></p>
+				<p><strong>All Open Opportunities:</strong><a href="{{route('opportunities.branch',$branch->id)}}">{{$data['summary']->first()->open}}</a></p>
 				<p><strong>All Won Opportunities:</strong>{{$data['summary']->first()->won}}</p>
 				<p><strong>All Lost Opportunities:</strong>{{$data['summary']->first()->lost}}</p>
 				<p><strong>Completed Activities:</strong><a href="{{route('activity.branch',$branch->id)}}">{{$data['summary']->first()->activities_count}}</a></p>
