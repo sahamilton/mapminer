@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Note;
@@ -15,6 +16,13 @@ class NotesController extends BaseController
     public $locations;
     public $user;
 
+    /**
+     * [__construct description]
+     * 
+     * @param Note     $note     [description]
+     * @param Location $location [description]
+     * @param User     $user     [description]
+     */
     public function __construct(Note $note, Location $location, User $user)
     {
 
@@ -31,9 +39,9 @@ class NotesController extends BaseController
     {
     
         $notes = $this->notes
-        ->where('type', '=', 'location')
-        ->with('relatesToLocation', 'relatesToLocation.company', 'writtenBy')
-        ->get();
+            ->where('type', '=', 'location')
+            ->with('relatesToLocation', 'relatesToLocation.company', 'writtenBy')
+            ->get();
 
         return response()->view('notes.index', compact('notes'));
     }
@@ -49,47 +57,27 @@ class NotesController extends BaseController
     }
 
     /**
-     * Store a newly created note in storage.
-     *
-     * @return Response
+     * [store description]
+     * 
+     * @param NoteFormRequest $request [description]
+     * 
+     * @return [type]                   [description]
      */
     public function store(NoteFormRequest $request)
     {
 
-
-
         request()->merge(['user_id'=>auth()->user()->id]);
 
         $note = $this->notes->create(request()->all());
-        
-        /*switch (request('type')) {
 
-			case 'location':
-				
-				return redirect()->route('locations.show',$note->related_id);
-			break;
-			case 'lead':
-				
-				return redirect()->route('salesrep.newleads.show',$note->related_id);
-			break;
-			case 'project':
-				
-				return redirect()->route('projects.show',$note->related_id);
-			break;
-
-			case 'weblead':
-				
-				return redirect()->route('leads.show',$note->related_id);
-			break;
-		}*/
-        
         return redirect()->route('address.show', request('address_id'));
     }
 
     /**
      * Display the specified note.
      *
-     * @param  int  $id
+     * @param int $id [description]
+     * 
      * @return Response
      */
     public function show($id)
@@ -100,10 +88,11 @@ class NotesController extends BaseController
     }
 
     /**
-     * Show the form for editing the specified note.
-     *
-     * @param  int  $id
-     * @return Response
+     * [edit description]
+     * 
+     * @param [type] $note [description]
+     * 
+     * @return [type]       [description]
      */
     public function edit($note)
     {
@@ -112,10 +101,12 @@ class NotesController extends BaseController
     }
 
     /**
-
-     *
-     * @param  int  $id
-     * @return Response
+     * [update description]
+     * 
+     * @param NoteFormRequest $request [description]
+     * @param [type]          $note    [description]
+     * 
+     * @return [type]                   [description]
      */
     public function update(NoteFormRequest $request, $note)
     {
@@ -123,26 +114,27 @@ class NotesController extends BaseController
         $note->update(['note'=>request('note')]);
         $note->load('relatesToLocation');
         switch ($note->type) {
-            case 'location':
-                return redirect()->route('address.show', $note->relatesToLocation->id);
-            break;
-            case 'lead':
-                return redirect()->route('salesleads.show', $note->related_id);
-            break;
-            case 'project':
-                return redirect()->route('projects.show', $note->related_id);
-            break;
-            default:
-                return redirect()->back();
-            break;
+        case 'location':
+            return redirect()->route('address.show', $note->relatesToLocation->id);
+        break;
+        case 'lead':
+            return redirect()->route('salesleads.show', $note->related_id);
+        break;
+        case 'project':
+            return redirect()->route('projects.show', $note->related_id);
+        break;
+        default:
+            return redirect()->back();
+        break;
         }
     }
 
     /**
-     * Remove the specified note from storage.
-     *
-     * @param  int  $id
-     * @return Response
+     * [destroy description]
+     * 
+     * @param [type] $note [description]
+     * 
+     * @return [type]       [description]
      */
     public function destroy($note)
     {
@@ -151,41 +143,61 @@ class NotesController extends BaseController
         
         return redirect()->back();
     }
-
-    private function notify($data)
+    /**
+     * [notify description]
+     * 
+     * @param [type] $data [description]
+     * 
+     * @return [type]       [description]
+     */
+    private function _notify($data)
     {
-        
+        // Move to observer
         // refactor mailables
         // Only notify if there is national account manager
         if (isset($data['company'][0]->company['managedBy']->email)) {
             $data['user'] = $this->user->findOrFail($data['user_id']);
             
-            $data['company']  = $this->location->where('id', '=', $data['location_id'])->with('company')->get();
+            $data['company']  = $this->location->where(
+                'id', '=', $data['location_id']
+            )
+                ->with('company')
+                ->get();
             
-            \Mail::send('emails.newnote', $data, function ($message) use ($data) {
-                $message->to($data['company'][0]->company['managedBy']->email)->subject('New Location Note');
-            });
+            \Mail::send(
+                'emails.newnote', $data, function ($message) use ($data) {
+                    $message->to($data['company'][0]->company['managedBy']->email)
+                        ->subject('New Location Note');
+                }
+            );
         }
     }
     
-
+    /**
+     * [companynotes description]
+     * 
+     * @param [type] $companyid [description]
+     * 
+     * @return [type]            [description]
+     */
     public function companynotes($companyid)
     {
         $company =\App\Company::findOrFail($companyid);
         $notes = $this->notes
             ->where('type', '=', 'location')
             ->with('relatesTo', 'relatesTo.company', 'writtenBy')
-            ->whereHas('relatesTo', function ($q) use ($companyid) {
-                $q->where('company_id', '=', $companyid);
-            })
+            ->whereHas(
+                'relatesTo', function ($q) use ($companyid) {
+                    $q->where('company_id', '=', $companyid);
+                }
+            )
             ->get();
 
         return response()->view('notes.companynotes', compact('notes', 'company'));
     }
     /**
      * Show notes of user.
-     *
-     * @param  int  $id
+     *  
      * @return Response
      */
     public function mynotes()

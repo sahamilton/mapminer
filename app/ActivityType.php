@@ -8,14 +8,25 @@ class ActivityType extends Model
 {
     public $table = 'activity_type';
     public $fillable = ['activity','active','color'];
-    
-    public function activities(){
-    	return $this->hasMany(Activity::class,'activitytype_id');
-    }
-
-    public function scopeActive($uery)
+    /**
+     * [activities description]
+     * 
+     * @return [type] [description]
+     */
+    public function activities()
     {
-    	return $query->whereActive(1);
+         return $this->hasMany(Activity::class, 'activitytype_id');
+    }
+    /**
+     * [scopeActive description]
+     * 
+     * @param [type] $query [description]
+     * 
+     * @return [type]       [description]
+     */
+    public function scopeActive($query)
+    {
+        return $query->whereActive(1);
     }
 
 }

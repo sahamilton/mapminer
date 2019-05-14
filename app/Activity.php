@@ -27,9 +27,9 @@ class Activity extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
      * @return [type] [description]
      */
     public function getId()
-        {
-            return $this->address_id;
-        }
+    {
+        return $this->address_id;
+    }
 
     /**
      * Get the event's title
@@ -37,9 +37,9 @@ class Activity extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
      * @return string
      */
     public function getTitle()
-        {
-            return $this->relatesToAddress->businessname;
-        }
+    {
+        return $this->relatesToAddress->businessname;
+    }
 
     /**
      * Is it an all day event?
@@ -47,9 +47,9 @@ class Activity extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
      * @return bool
      */
     public function isAllDay()
-        {
-            return true;
-        }
+    {
+        return true;
+    }
 
     /**
      * Get the start time
@@ -57,27 +57,28 @@ class Activity extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
      * @return DateTime
      */
     public function getStart()
-        {
-            return $this->activity_date;
-        }
+    {
+        return $this->activity_date;
+    }
     
     /**
      * [getEventOptions description]
+     * 
      * @return [type] [description]
      */
     public function getEventOptions()
     {
-        if($this->completed){
-          return [
-              'url' => route('address.show', $this->address_id),
-              'color' => '#800',
-            ];
-             
-        }else{
-          return [
-            'url' => route('address.show', $this->address_id),
-            'color' => '#008',
-          ];
+        if ($this->completed) {
+              return [
+                  'url' => route('address.show', $this->address_id),
+                  'color' => '#800',
+                ];
+                 
+            } else {
+              return [
+                'url' => route('address.show', $this->address_id),
+                'color' => '#008',
+              ];
         }
 
 
@@ -93,6 +94,7 @@ class Activity extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
     }
     /**
      * [relatesToOpportunity description]
+     * 
      * @return [type] [description]
      */
     public function relatesToOpportunity()
@@ -102,6 +104,7 @@ class Activity extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
     
     /**
      * [relatesToAddress description]
+     * 
      * @return [type] [description]
      */
     public function relatesToAddress()
@@ -110,6 +113,7 @@ class Activity extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
     }
     /**
      * [user description]
+     * 
      * @return [type] [description]
      */
     public function user()
@@ -118,7 +122,9 @@ class Activity extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
     }
     /**
      * [scopeMyActivity description]
-     * @param  [type] $query [description]
+     * 
+     * @param [type] $query [description]
+     * 
      * @return [type]        [description]
      */
     public function scopeMyActivity($query)
@@ -128,8 +134,10 @@ class Activity extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
     }
     /**
      * [scopeMyTeamsActivities description]
-     * @param  [type] $query  [description]
-     * @param  [type] $myteam [description]
+     * 
+     * @param [type] $query  [description]
+     * @param [type] $myteam [description]
+     * 
      * @return [type]         [description]
      */
     public function scopeMyTeamsActivities($query, $myteam)
@@ -138,8 +146,10 @@ class Activity extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
     }
     /**
      * [scopeMyBranchActivities description]
-     * @param  [type] $query      [description]
-     * @param  [type] $mybranches [description]
+     * 
+     * @param [type] $query      [description]
+     * @param [type] $mybranches [description]
+     * 
      * @return [type]             [description]
      */
     public function scopeMyBranchActivities($query, $mybranches)
@@ -148,6 +158,7 @@ class Activity extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
     }
     /**
      * [relatedContact description]
+     * 
      * @return [type] [description]
      */
     public function relatedContact()
@@ -156,6 +167,7 @@ class Activity extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
     }
     /**
      * [branch description]
+     * 
      * @return [type] [description]
      */
     public function branch()
@@ -166,6 +178,7 @@ class Activity extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
 
     /**
      * [type description]
+     * 
      * @return [type] [description]
      */
     public function type()
@@ -174,34 +187,47 @@ class Activity extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
     }
     /**
      * [scopeSevenDayCount description]
-     * @param  [type] $query [description]
+     * 
+     * @param [type] $query [description]
+     * 
      * @return [type]        [description]
      */
     public function scopeSevenDayCount($query)
     {
         return $query->selectRaw('FROM_DAYS(TO_DAYS(activity_date) -MOD(TO_DAYS(activity_date) -2, 7)) as yearweek,count(*) as activities')
-        ->groupBy(['yearweek']);
+            ->groupBy(['yearweek']);
     }
+    /**
+     * [scopeSevenDayTypeCount description]
+     * 
+     * @param  [type] $query [description]
+     * 
+     * @return [type]        [description]
+     */
     public function scopeSevenDayTypeCount($query)
     {
         return $query->selectRaw('activitytype_id,FROM_DAYS(TO_DAYS(activity_date) -MOD(TO_DAYS(activity_date) -2, 7)) as yearweek,count(*) as activities')
-        ->groupBy(['activitytype_id','yearweek']);
+            ->groupBy(['activitytype_id','yearweek']);
     }
     
     /**
      * [scopeCurrentWeekCount description]
-     * @param  [type] $query [description]
+     * 
+     * @param [type] $query [description]
+     * 
      * @return [type]        [description]
      */
     public function scopeCurrentWeekCount($query)
     {
         return $query->where('activity_date', '>=', Carbon::now()->startOfWeek())
-        ->selectRaw('user_id, count(*) as activities')
-        ->groupBy('user_id');
+            ->selectRaw('user_id, count(*) as activities')
+            ->groupBy('user_id');
     }
     /**
      * [summaryData description]
-     * @param  [type] $data [description]
+     * 
+     * @param [type] $data [description]
+     * 
      * @return [type]       [description]
      */
     public function summaryData($data)
@@ -225,35 +251,41 @@ class Activity extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
       
         return $data;
     }
-  /**
-   * [scopeActivityChart description]
-   * @param  [type] $query [description]
-   * @return [type]        [description]
-   */
-  public function scopeActivityChart($query)
-  {
-    return $query->selectRaw('branch_id,YEARWEEK(expected_close,3) as yearweek,sum(`value`) as funnel')
-    ->groupBy(['branch_id','yearweek'])
-    ->orderBy('yearweek', 'asc');
-  }
+    /**
+     * [scopeActivityChart description]
+     * 
+     * @param [type] $query [description]
+     * 
+     * @return [type]        [description]
+     */
+    public function scopeActivityChart($query)
+    {
+        return $query->selectRaw('branch_id,YEARWEEK(expected_close,3) as yearweek,sum(`value`) as funnel')
+            ->groupBy(['branch_id','yearweek'])
+            ->orderBy('yearweek', 'asc');
+    }
    
-  /**
-   * [scopeNextWeeksActivities description]
-   * @param  [type] $query [description]
-   * @return [type]        [description]
-   */
-	public function scopeNextWeeksActivities($query)
-	{
-		return $query->whereBetween('followup_date',[Carbon::now(),Carbon::now()->addWeek()]);
-	}
-  /**
-   * [scopeUpcomingActivities description]
-   * @param  [type] $query [description]
-   * @return [type]        [description]
-   */
-	public function scopeUpcomingActivities($query)
-	{
-		return $query->where('followup_date','>',now()->whereUserId(auth()->user()->id));
-	}
+    /**
+     * [scopeNextWeeksActivities description]
+     * 
+     * @param [type] $query [description]
+     * 
+     * @return [type]        [description]
+     */
+    public function scopeNextWeeksActivities($query)
+    {
+        return $query->whereBetween('followup_date', [Carbon::now(),Carbon::now()->addWeek()]);
+    }
+    /**
+     * [scopeUpcomingActivities description]
+     * 
+     * @param [type] $query [description]
+     * 
+     * @return [type]        [description]
+     */
+    public function scopeUpcomingActivities($query)
+    {
+        return $query->where('followup_date', '>', now()->whereUserId(auth()->user()->id));
+    }
 
 }

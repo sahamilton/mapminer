@@ -88,7 +88,7 @@ class BranchDashboardController extends DashboardController
             return redirect()->route('user.show', auth()->user()->id)
                 ->withWarning("You are not assigned to any branches. You can assign yourself here or contact Sales Ops");
         }
-        
+          
        
 
     }
@@ -418,11 +418,6 @@ class BranchDashboardController extends DashboardController
       * 
       * @return [type]           [description]
       */
-    private function _fillMissingPeriods(
-        $branches, 
-        Carbon $from=null,
-        Carbon $to=null
-    ) {
        
         if (! $from) {
             $from = clone($this->period['from']);
@@ -447,7 +442,7 @@ class BranchDashboardController extends DashboardController
         ksort($branches);
         return $branches;
 
-     }
+    }
      
     /**
      * [_formatActivityTableData description]
@@ -457,8 +452,6 @@ class BranchDashboardController extends DashboardController
      * 
      * @return [type]           [description]
      */
-    private function _formatActivityTableData(array $branches, array $keys)
-    {
     
         foreach ($keys as $key) {
       
@@ -528,7 +521,7 @@ class BranchDashboardController extends DashboardController
             $chartdata = $chartdata . "{
                 label: \"Branch " .$branch ."\",
             backgroundColor:'".$colors[$i] . "',
-            data: [".implode(",",$info)."]},";
+            data: [".implode(",", $info)."]},";
             
             $i++;
         }
@@ -540,7 +533,7 @@ class BranchDashboardController extends DashboardController
         return $data;
 
 
-     }
+    }
 
      /**
       * [Return 2 months worth of activities groupes by branch & week]
@@ -623,18 +616,10 @@ class BranchDashboardController extends DashboardController
         return $this->_formatChartData($wondata, $keys);
     }
 
-    /*
-     Return 2 months of won opportunities
-     */
+
+
     /**
-     * Get upcoming opportunity closes
-     * 
-     * @param array $myBranches [description]
-     * 
-     * @return [type]             [description]
      */
-    private function _getPipeLine() 
-    {
         
         $pipeline = $this->_getPipeLineData();
      
@@ -669,9 +654,6 @@ class BranchDashboardController extends DashboardController
 
     /**
      * [formatPipelineData description]
-     * 
-     * @param  [type] $pipeline [description]
-     * 
      * @return [type]           [description]
      */
     private function _formatPipelineData($pipeline)
@@ -696,8 +678,10 @@ class BranchDashboardController extends DashboardController
     }
     /**
      * [daysBetween description]
-     * @param  [type] $from [description]
-     * @param  [type] $to   [description]
+     * 
+     * @param [type] $from [description]
+     * @param [type] $to   [description]
+     * 
      * @return [type]       [description]
      */
     private function _daysBetween(Carbon $from=null,Carbon $to=null)
@@ -744,4 +728,3 @@ class BranchDashboardController extends DashboardController
         return $keys;
     }
 }
-

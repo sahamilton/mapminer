@@ -29,7 +29,17 @@ class OpportunityController extends Controller
     public $person;
     public $period;
 
-
+    /**
+     * [__construct description]
+     * 
+     * @param Activity      $activity      [description]
+     * @param Address       $address       [description]
+     * @param AddressBranch $addressbranch [description]
+     * @param Branch        $branch        [description]
+     * @param Contact       $contact       [description]
+     * @param Opportunity   $opportunity   [description]
+     * @param Person        $person        [description]
+     */
     public function __construct(
         Activity $activity,
         Address $address,
@@ -57,28 +67,34 @@ class OpportunityController extends Controller
     public function index()
     {
      
-        if(! $this->period){
+        if (! $this->period) {
             $this->period = $this->activity->getPeriod();
         }
         $activityTypes = $activityTypes = ActivityType::all();
         $myBranches = $this->person->myBranches();
-        if(! $myBranches){
-            return redirect()->back()->withWarning("You are not assigned to any branches. Please contact Sales Operations");
+        if (! $myBranches) {
+            return redirect()->back()
+                ->withWarning("You are not assigned to any branches. Please contact Sales Operations");
         }
         $data = $this->getBranchData(array_keys($myBranches));
 
         $data['period'] = $this->period;
-        return response()->view('opportunities.index', compact('data', 'activityTypes', 'myBranches','period'));
+        return response()->view(
+            'opportunities.index', 
+            compact('data', 'activityTypes', 'myBranches', 'period')
+        );
     }
     /**
      * [branchOpportunities description]
-     * @param  Branch  $branch  [description]
-     * @param  Request $request [description]
+     * 
+     * @param Branch  $branch  [description]
+     * @param Request $request [description]
+     * 
      * @return [type]           [description]
      */
     public function branchOpportunities(Branch $branch, Request $request)
     {
-      if(! $this->period){
+        if (! $this->period) {
             $this->period = $this->activity->getPeriod();
         }
         
@@ -92,94 +108,77 @@ class OpportunityController extends Controller
        
         $myBranches = $this->person->myBranches();
          $data['period'] = $this->period;
-        return response()->view('opportunities.index', compact('data', 'activityTypes', 'myBranches'));
+        return response()->view(
+            'opportunities.index', 
+            compact('data', 'activityTypes', 'myBranches')
+        );
     }
-    /**
-     * [getSummaryBranchOpportunities description]
-     * @param  array  $branches [description]
-     * @return [type]           [description]
-     
-    public function getSummaryBranchOpportunities(array $branches){
-        
-        return $this->branch
-        
-        ->withCount(
-            'opportunities',
-            'leads',
-            'activities'
-        )
-        ->withCount(
-            ['opportunities',
-                    'opportunities as won'=>function ($query) {
-            
-                        $query->whereClosed(1);
-                    },
-                'opportunities as lost'=>function ($query) {
-                    $query->whereClosed(2);
-                }]
-        )
-    
-           
-        ->with('manager')
-        ->getActivitiesByType()
-        ->whereIn('id', $branches)
-        ->get();
-       
-       // $data['activities'] = $this->branch->whereIn('id',$branches)->get();
-        //$data['charts'] = $this->getChartData($branches);
-    }*/
+   
     /**
      * [getBranchData description]
-     * @param  array  $branches [description]
+     * 
+     * @param array $branches [description]
+     * 
      * @return [type]           [description]
      */
     public function getBranchData(array $branches)
     {
-        $data['branches'] =$this->getBranches($branches);
+        $data['branches'] =$this->_getBranches($branches);
 
 
-        $data['opportunities'] = $this->getOpportunities($branches);
+        $data['opportunities'] = $this->_getOpportunities($branches);
 
        
 
-        $data['addresses'] = $data['opportunities']->map(function ($opportunity) {
-            return $opportunity->address;
-        });
-
-        $data['activities'] = $data['addresses']->map(function ($address) {
-            if ($address) {
-                return $address->activities;
+        $data['addresses'] = $data['opportunities']->map(
+            function ($opportunity) {
+                return $opportunity->address;
             }
-        });
+        );
+
+        $data['activities'] = $data['addresses']->map(
+            function ($address) {
+                if ($address) {
+                    return $address->activities;
+                }
+            }
+        );
        
        
         return $data;
     }
 
-     /**
-      * [getBranches description]
-      * @param  [type] $branches [description]
-      * @return [type]           [description]
-      */
-       private function getBranches($branches)
-       {
+    /**
+     * [getBranches description]
+     * 
+     * @param [type] $branches [description]
+     * 
+     * @return [type]           [description]
+     */
+    private function _getBranches($branches)
+    {
         return  $this->branch->with('opportunities', 'leads', 'manager')
             ->whereIn('id', $branches)
             ->get();
-       }
+    }
+    /**
+     * [_getOpportunities description]
+     * 
+     * @param [type] $branches [description]
+     * 
+     * @return [type]           [description]
+     */
+    private function _getOpportunities($branches)
+    {
 
-       private function getOpportunities($branches)
-       {
- 
-         return $this->opportunity
-                ->whereIn('branch_id', $branches)
-                ->with('address', 'branch', 'address.activities')
-                ->thisPeriod($this->period)
-                
-                ->orderBy('branch_id')
-                ->distinct()
-                ->get();
-       }
+        return $this->opportunity
+            ->whereIn('branch_id', $branches)
+            ->with('address', 'branch', 'address.activities')
+            ->thisPeriod($this->period)
+            ->orderBy('branch_id')
+            ->distinct()
+            ->get();
+    }
         
     /**
      * Show the form for creating a new resource.
@@ -194,7 +193,8 @@ class OpportunityController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request [description]
+     * 
      * @return \Illuminate\Http\Response
      */
     public function store(OpportunityFormRequest $request)
@@ -207,14 +207,17 @@ class OpportunityController extends Controller
         $join = $this->addressbranch
             ->where('address_id', '=', request('address_id'))
             ->where('branch_id', '=', request('branch_id'))
-            ->firstOrCreate(['address_id'=>request('address_id'),'branch_id'=>request('branch_id')]);
+            ->firstOrCreate(
+                ['address_id'=>request('address_id'), 
+                'branch_id'=>request('branch_id')]
+            );
         
         $data = request()->except('_token');
         
         if (request()->filled('expected_close')) {
             $data['expected_close'] = Carbon::parse($data['expected_close']);
         }
-        if(in_array(request('closed'),['1','2'] )){
+        if (in_array(request('closed'), ['1','2'])) {
             $data['actual_close'] = request('expected_close');
         }
         if (isset($data['actual_close'])) {
@@ -231,7 +234,8 @@ class OpportunityController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Opportunity  $opportunity
+     * @param \App\Opportunity $opportunity [description]
+     * 
      * @return \Illuminate\Http\Response
      */
     public function show(Opportunity $opportunity)
@@ -245,7 +249,8 @@ class OpportunityController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Opportunity  $opportunity
+     * @param \App\Opportunity $opportunity [description]
+     * 
      * @return \Illuminate\Http\Response
      */
     public function edit(Opportunity $opportunity)
@@ -257,8 +262,9 @@ class OpportunityController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Opportunity  $opportunity
+     * @param \Illuminate\Http\Request $request     [description]
+     * @param \App\Opportunity         $opportunity [description]
+     * 
      * @return \Illuminate\Http\Response
      */
     public function update(OpportunityFormRequest $request, Opportunity $opportunity)
@@ -274,13 +280,17 @@ class OpportunityController extends Controller
         }
         $opportunity->update($data);
         
-        return redirect()->route('opportunity.index', $opportunity->address->address_id)->withMessage('Opportunity updated');
+        return redirect()->route(
+            'opportunity.index', $opportunity->address->address_id
+        )
+            ->withMessage('Opportunity updated');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Opportunity  $opportunity
+     * @param \App\Opportunity $opportunity [description]
+     * 
      * @return \Illuminate\Http\Response
      */
     public function destroy(Opportunity $opportunity)
@@ -288,12 +298,15 @@ class OpportunityController extends Controller
         
         $address = $opportunity->address->address_id;
         $opportunity->delete();
-        return redirect()->route('address.show', $address)->withMessage('Opportunity deleted');
+        return redirect()->route('address.show', $address)
+            ->withMessage('Opportunity deleted');
     }
     /**
-     * [remove description]
-     * @param  Address $address [description]
-     * @param  Request $request [description]
+     * [remove description] 
+     * 
+     * @param Address $address [description]
+     * @param Request $request [description]
+     * 
      * @return [type]           [description]
      */
     public function remove(Address $address, Request $request)
@@ -301,22 +314,26 @@ class OpportunityController extends Controller
         
         $address->assignedToBranch()->detach(request('branch_id'));
        
-        return redirect()->route('branch.leads',request('branch_id'))->withMessage('Lead removed');
+        return redirect()->route('branch.leads', request('branch_id'))
+            ->withMessage('Lead removed');
     }
     /**
      * [addToBranchLeads description]
+     * 
      * @param Address $address [description]
      * @param Request $request [description]
+     *
+     * @return redirect [<description>]
      */
     public function addToBranchLeads(Address $address, Request $request)
     {
  
-        // need to remove from other branches
-       // $address->assignedToBranch()->detach();
-        //check if it exists
-        $test = $this->addressbranch->where('address_id', '=', $address->id)->where('branch_id', '=', request('branch_id'))->get();
+
+        $test = $this->addressbranch->where('address_id', '=', $address->id)
+            ->where('branch_id', '=', request('branch_id'))->get();
         if ($test->count()>0) {
-            return redirect()->back()->withError($address->businessname .' is already on the branch '. request('branch_id'). ' leads list');
+            return redirect()->back()
+                ->withError($address->businessname .' is already on the branch '. request('branch_id'). ' leads list');
         }
 
         $address->assignedToBranch()->attach(request('branch_id'));
@@ -324,8 +341,10 @@ class OpportunityController extends Controller
     }
     /**
      * [close description]
-     * @param  Request $request     [description]
-     * @param  [type]  $opportunity [description]
+     * 
+     * @param Request $request     [description]
+     * @param [type]  $opportunity [description]
+     * 
      * @return [type]               [description]
      */
     public function close(Request $request, $opportunity)
@@ -337,13 +356,13 @@ class OpportunityController extends Controller
             // check to see if the client_id exists else create new company
         if (request()->filled('client_id')) {
             $company = Company::where('client_id', '=', request('client_id'))
-            ->firstOrCreate(
-                [
-                'companyname'=>$address->address->businessname,
-                'accounttypes_id'=>3,
-                'customer_id'=>request('client_id')
-                ]
-            );
+                ->firstOrCreate(
+                    [
+                    'companyname'=>$address->address->businessname,
+                    'accounttypes_id'=>3,
+                    'customer_id'=>request('client_id')
+                    ]
+                );
             $address->update(['company_id' => $company->id]);
         }
 
@@ -351,11 +370,14 @@ class OpportunityController extends Controller
     }
     /**
      * [toggle description]
-     * @param  Request $request [description]
+     * 
+     * @param Request $request [description]
+     * 
      * @return [type]           [description]
      */
     public function toggle(Request $request)
     {
+        
         $opportunity = $this->opportunity->findOrFail(request('id'));
         
         if ($opportunity->top50) {
@@ -363,156 +385,8 @@ class OpportunityController extends Controller
         } else {
             $opportunity->top50 = 1;
         }
-        $opportunity->save();
+        if ($opportunity->save()) {
+            return 'success';
+        }   
     }
-    /**
-     * [chart description]
-     * @return [type] [description]
-     
-    public function chart()
-    {
-        if (! $branch_ids = $this->person->myBranches()) {
-            return redirect()->route('home')->withWarning('You are not associated with any branch');
-        }
-        $branches = array_keys($branch_ids);
-
-        $data = $this->getChartData($branches);
-
-
-        $data = $this->prepChartData($data);
-     
-    
-        return response()->view('opportunities.chart', compact('data'));
-    }*/
-    /**
-     * [getChartData description]
-     * @param  [type] $branches [description]
-     * @return [type]           [description]
-    
-    private function getChartData($branches)
-    {
-        
-        return  $this->branch
-                    ->whereIn('id', $branches)
-                    ->getActivitiesByType(4)
-                    ->withCount('leads')
-                    ->withCount(
-                        ['opportunities',
-                                'opportunities as won'=>function ($query) {
-                        
-                                    $query->whereClosed(1);
-                                },
-                            'opportunities as lost'=>function ($query) {
-                                $query->whereClosed(2);
-                            }]
-                    )
-                    ->get(); */
-        /*return $this->addressbranch
-            
-            ->whereIn('branch_id',$branches)
-            ->whereHas('activities',function($q){
-               $q->whereBetween('activity_date',[Carbon::now()->subMOnth(2),Carbon::now()->addDay()]);
-            })
-            ->withCount(       
-                    ['opportunities',
-                        'opportunities as won'=>function($query){
-                
-                        $query->whereClosed(1);
-                    },'opportunities as lost'=>function($query){
-                
-                        $query->whereClosed(2);
-                    }]
-
-
-                  )
-            ->withCount('activities')
-            ->groupBy('address_branch.branch_id')->get();
-    }*/
-    /**
-     * [prepChartData description]
-     * @param  [type] $results [description]
-     * @return [type]          [description]
-     
-    private function prepChartData($results)
-    {
-
-
-        $string = '';
-
-        foreach ($results as $branch) {
-          
-          
-            $string = $string . "[\"".$branch->branchname ."\",  ".$branch->activities->count() .",  ".$branch->opportunities_count.", ".$branch->won  ."],";
-        }
-
-        return $string;
-    }*/
-          
-
-    /**
-     * [getBranchNotes description]
-     * @param  [type] $branches [description]
-     * @return [type]           [description]
-     
-    private function getBranchNotes($branches)
-    {
-
-        return Note::whereHas('relatesToLocation', function ($q) use ($branches) {
-            $q->whereHas('assignedToBranch', function ($q) use ($branches) {
-                $q->whereIn('branch_id', $branches);
-            });
-        })->with('relatesToLocation', 'writtenBy', 'writtenBy.person')->get();
-    }*/
-    /**
-     * [getBranchActivities description]
-     * @param  [type] $branches [description]
-     * @return [type]           [description]
-     
-    private function getBranchActivities($branches)
-    {
-       
-        $query = "SELECT branches.id as id, activitytype_id as type, count(activities.id) as activities
-            FROM `activities`, address_branch,branches
-            where activities.address_id = address_branch.address_id
-            and address_branch.branch_id = branches.id
-            and activities.activity_date BETWEEN CAST('".Carbon::now()->subMOnth(1)."' AS DATE) AND CAST('".Carbon::now()."' AS DATE)
-            and branches.id in (".implode(",", $branches).")
-            group by id,activitytype_id";
-        $activities =  \DB::select(\DB::raw($query));
-        $result = [];
-        foreach ($activities as $activity) {
-            $result[$activity->id][$activity->type] = $activity->activities;
-        }
-
-        return $result;
-    }*/
-/**
- * [pipeline description]
- * @return [type] [description]
- 
-   public function pipeline()
-    {
-      $myBranches = $this->getMyBranches();
-
-      $pipeline =$this->opportunity->getBranchPipeline(array_keys($myBranches));
-      return response()->view('opportunities.pipeline',compact('pipeline','myBranches'));
-
-    }*/
-    /**
-     * [getMyBranches description]
-     * @return [type] [description]
-     */
-    private function getMyBranches()
-    {
-      
-      if(auth()->user()->hasRole('admin') or auth()->user()->hasRole('sales_operations')){
-       
-            return $this->branch->all()->pluck('branchname','id')->toArray();
-        
-        } else {
-      
-             return  $this->person->myBranches();
-        }
-    }
-
 }

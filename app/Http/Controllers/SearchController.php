@@ -12,6 +12,13 @@ use App\Address;
 class SearchController extends Controller
 {
 
+    /**
+     * [searchUsers description]
+     * 
+     * @param Request $request [description]
+     * 
+     * @return [type]           [description]
+     */
     public function searchUsers(Request $request)
     {
 
@@ -19,25 +26,40 @@ class SearchController extends Controller
             ->with('userdetails')
             ->get();
     }
-
+    /**
+     * [searchSalesteam description]
+     * 
+     * @param Request $request [description]
+     * 
+     * @return [type]           [description]
+     */
     public function searchSalesteam(Request $request)
     {
         
-        $roles = Role::whereHas('permissions', function ($q) {
-            $q->where('permissions.name', '=', 'accept_projects');
-        })->pluck('id')->toarray();
+        $roles = Role::whereHas(
+            'permissions', function ($q) {
+                $q->where('permissions.name', '=', 'accept_projects');
+            }
+        )->pluck('id')->toarray();
         
-        return  User::
-        whereHas('roles', function ($q) use ($roles) {
-            $q->whereIn('role_id', $roles);
-        })
+        return  User::whereHas(
+            'roles', function ($q) use ($roles) {
+                $q->whereIn('role_id', $roles);
+            }
+        )
 
         ->search(request('q'))
             ->with('person')
             ->get();
     }
     
-
+    /**
+     * [searchCompanies description]
+     * 
+     * @param Request $request [description]
+     * 
+     * @return [type]           [description]
+     */
     public function searchCompanies(Request $request)
     {
 
