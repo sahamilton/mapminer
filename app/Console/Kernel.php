@@ -57,7 +57,7 @@ class Kernel extends ConsoleKernel
           
             $schedule->job(new AccountActivities($company, $period))
                 ->weekly()
-                ->modays()
+                ->mondays()
                 ->at('18:15');
         }   
     }
