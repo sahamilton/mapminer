@@ -79,7 +79,10 @@ class OpportunityController extends Controller
         $data = $this->getBranchData(array_keys($myBranches));
 
         $data['period'] = $this->period;
-        return response()->view('opportunities.index', compact('data', 'activityTypes', 'myBranches', 'period'));
+        return response()->view(
+            'opportunities.index', 
+            compact('data', 'activityTypes', 'myBranches', 'period')
+        );
     }
     /**
      * [branchOpportunities description]
@@ -105,7 +108,10 @@ class OpportunityController extends Controller
        
         $myBranches = $this->person->myBranches();
          $data['period'] = $this->period;
-        return response()->view('opportunities.index', compact('data', 'activityTypes', 'myBranches'));
+        return response()->view(
+            'opportunities.index', 
+            compact('data', 'activityTypes', 'myBranches')
+        );
     }
    
     /**
@@ -201,7 +207,10 @@ class OpportunityController extends Controller
         $join = $this->addressbranch
             ->where('address_id', '=', request('address_id'))
             ->where('branch_id', '=', request('branch_id'))
-            ->firstOrCreate(['address_id'=>request('address_id'), 'branch_id'=>request('branch_id')]);
+            ->firstOrCreate(
+                ['address_id'=>request('address_id'), 
+                'branch_id'=>request('branch_id')]
+            );
         
         $data = request()->except('_token');
         
@@ -254,7 +263,7 @@ class OpportunityController extends Controller
      * Update the specified resource in storage.
      *
      * @param \Illuminate\Http\Request $request     [description]
-     * @param \App\Opportunity $opportunity     [description]
+     * @param \App\Opportunity         $opportunity [description]
      * 
      * @return \Illuminate\Http\Response
      */
@@ -271,7 +280,9 @@ class OpportunityController extends Controller
         }
         $opportunity->update($data);
         
-        return redirect()->route('opportunity.index', $opportunity->address->address_id)
+        return redirect()->route(
+            'opportunity.index', $opportunity->address->address_id
+        )
             ->withMessage('Opportunity updated');
     }
 
@@ -376,12 +387,6 @@ class OpportunityController extends Controller
         }
         if ($opportunity->save()) {
             return 'success';
-        }
-
-
-        
+        }   
     }
-
-   
-
 }
