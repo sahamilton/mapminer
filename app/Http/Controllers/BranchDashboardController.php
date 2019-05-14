@@ -299,7 +299,7 @@ class BranchDashboardController extends DashboardController
     private function _getActivityChartData()
     {
 
-        $branchdata = $this->getBranchActivities($this->myBranches)->toArray();
+        $branchdata = $this->_getBranchActivities($this->myBranches)->toArray();
         if (stripos($this->period['period'], 'week')) {
             $chart = $this->_formatBranchDayActivities($branchdata);
         } else {
