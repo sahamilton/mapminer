@@ -125,7 +125,9 @@ class Chart extends Model
             if (isset($data[$team->id]) 
                 && ($data[$team->id]['won'] + $data[$team->id]['lost'] > 0)
             ) {
-                $chart[$team->postName()] = $data[$team->id]['won'] / ($data[$team->id]['won'] + $data[$team->id]['lost']);
+                $chart[$team->postName()] 
+                    =  $data[$team->id]['won'] 
+                        / ($data[$team->id]['won'] + $data[$team->id]['lost']);
             } else {
                 $chart[$team->postName()] = 0;
             }
