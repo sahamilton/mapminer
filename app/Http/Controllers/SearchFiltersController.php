@@ -38,17 +38,19 @@ class SearchFiltersController extends BaseController
      */
     public function create()
     {
-        //$parents = $this->filter->orderBy('lft')->get(array('id', 'filter','depth'));
+      
         $parents = $this->filter->getNestedList('filter', 'id', '    .');
-        //$parents = $this->filter->select('filter', 'id','depth')->orderBy('lft')->get();
+    
 
         return response()->view('filters.create', compact('parents'));
     }
 
     /**
-     * Store a newly created filter in storage.
-     *
-     * @return Response
+     * [store description]
+     * 
+     * @param SearchFiltersFormRequest $request [description]
+     * 
+     * @return [type]                            [description]
      */
     public function store(SearchFiltersFormRequest $request)
     {
@@ -72,7 +74,8 @@ class SearchFiltersController extends BaseController
     /**
      * Display the specified filter.
      *
-     * @param  int  $id
+     * @param int $id Filter to show
+     * 
      * @return Response
      */
     public function show($id)
@@ -85,7 +88,8 @@ class SearchFiltersController extends BaseController
     /**
      * Show the form for editing the specified filter.
      *
-     * @param  int  $id
+     * @param int $id Filter to edit
+     * 
      * @return Response
      */
     public function edit($id)
@@ -98,10 +102,12 @@ class SearchFiltersController extends BaseController
     }
 
     /**
-     * Update the specified filter in storage.
-     *
-     * @param  int  $id
-     * @return Response
+     * [update description]
+     * 
+     * @param SearchFiltersFormRequest $request [description]
+     * @param [type]                   $id      [description]
+     * 
+     * @return [type]                            [description]
      */
     public function update(SearchFiltersFormRequest $request, $id)
     {
@@ -123,7 +129,8 @@ class SearchFiltersController extends BaseController
     /**
      * Remove the specified filter from storage.
      *
-     * @param  int  $id
+     * @param int $id item to delete
+     * 
      * @return Response
      */
     public function destroy($id)
@@ -133,37 +140,63 @@ class SearchFiltersController extends BaseController
 
         return redirect()->route('searchfilters.index');
     }
-    
+    /**
+     * [filterAnalysis description]
+     * 
+     * @param [type] $id [description]
+     * 
+     * @return [type]     [description]
+     */
     public function filterAnalysis($id = null)
     {
     
         $verticals = $this->getVerticalAnalysis($id);
         return response()->view('filters.analysis', compact('verticals'));
     }
-
+    /**
+     * [export description]
+     * 
+     * @param [type] $id [description]
+     * 
+     * @return [type]     [description]
+     */
     public function export($id = null)
     {
         $verticals = $this->getVerticalAnalysis();
-        Excel::download('Verticals', function ($excel) {
-            $excel->sheet('Industries', function ($sheet) {
-                $verticals = $this->getVerticalAnalysis();
-                
-            
-                $sheet->loadView('filters.export', compact('verticals'));
-            });
-        })->download('csv');
+        Excel::download(
+            'Verticals', function ($excel) {
+                $excel->sheet(
+                    'Industries', function ($sheet) {
+                        $verticals = $this->getVerticalAnalysis();            
+                        $sheet->loadView('filters.export', compact('verticals'));
+                    }
+                );
+            }
+        )->download('csv');
 
         return response()->return();
     }
+    /**
+     * [getVerticalAnalysis description]
+     * 
+     * @param [type] $id [description]
+     * 
+     * @return [type]     [description]
+     */
     private function getVerticalAnalysis($id = null)
     {
         return $this->filter
-                ->with('leads', 'people', 'companies', 'campaigns')
-                ->whereNotNull('type')
-                ->where('type', '!=', 'group')
-                ->where('inactive', '=', 0)
-                ->get();
+            ->with('leads', 'people', 'companies', 'campaigns')
+            ->whereNotNull('type')
+            ->where('type', '!=', 'group')
+            ->where('inactive', '=', 0)
+            ->get();
     }
+    /**
+     * [filterForm description]
+     * 
+     * @return [type] [description]
+     */
     public function filterForm()
     {
         $filters = $this->filter->all();
@@ -171,6 +204,13 @@ class SearchFiltersController extends BaseController
         
         return response()->view('filters.filterform', compact('tree'));
     }
+    /**
+     * [promote description]
+     * 
+     * @param [type] $id [description]
+     * 
+     * @return [type]     [description]
+     */
     public function promote($id)
     {
         $filter = $this->filter->findOrFail($id);
@@ -178,14 +218,26 @@ class SearchFiltersController extends BaseController
         return redirect()->route('searchfilters.index');
     }
 
-
+    /**
+     * [demote description]
+     * 
+     * @param [type] $id [description]
+     * 
+     * @return [type]     [description]
+     */
     public function demote($id)
     {
         $filter = $this->filter->findOrFail($id);
         $filter->moveRight();
         return redirect()->route('searchfilters.index');
     }
-    
+    /**
+     * [setSessionSearch description]
+     * 
+     * @param Request $request [description]
+     *
+     * @return $this filter
+     */
     public function setSessionSearch(Request $request)
     {
                 
@@ -194,12 +246,20 @@ class SearchFiltersController extends BaseController
         $this->filter->setSearch(request()->all());
     }
 
-    
+    /**
+     * [getAccountSegments description]
+     * 
+     * @param Request $request [description]
+     * 
+     * @return [type]           [description]
+     */
     public function getAccountSegments(Request $request)
     {
 
         $vertical = \App\Company::where('id', '=', request('id'))->pluck('vertical');
-        $segments = $this->filter->where('parent_id', '=', $vertical)->orderBy('filter')->pluck('filter', 'id');
+        $segments = $this->filter->where('parent_id', '=', $vertical)
+            ->orderBy('filter')
+            ->pluck('filter', 'id');
 
         //$i=0;
         //$data['example'] = "test";
