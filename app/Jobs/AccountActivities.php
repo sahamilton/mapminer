@@ -44,12 +44,12 @@ class AccountActivities implements ShouldQueue
         $file = "/public/reports/".$this->company->companyname."_activityreport_". Carbon::now()->timestamp. ".xlsx";
         Excel::store(new AccountActivitiesExport($this->company, $this->period), $file);
         $this->company->load('managedBy');
-       // $manageremail = $this->company->managedBy->userdetails()->first()->email;
+       
         
         Mail::to('athompson@peopleready.com')
-                ->bcc('hamilton@okospartners.com')
-                ->cc('salesoperations@trueblue.com')
-                ->send(new AccountActivitiesReport($file,$this->period,$this->company));
+            ->bcc('hamilton@okospartners.com')
+            ->cc('salesoperations@trueblue.com')
+            ->send(new AccountActivitiesReport($file, $this->period, $this->company));
         
         
     }
