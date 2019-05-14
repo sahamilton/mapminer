@@ -125,7 +125,9 @@ class BranchDashboardController extends DashboardController
         $branch = $this->branch->with('manager')->findOrFail($branch);
 
         if ($branch->manager->count() >1 
-            && $branch->manager->where('user_id', '=', auth()->user()->id)->count() == 1
+            && $branch->manager->where(
+                'user_id', '=', auth()->user()->id
+            )->count() == 1
         ) {
             $this->manager = $branch->manager
                 ->where('user_id', '=', auth()->user()->id)->first();
@@ -223,30 +225,7 @@ class BranchDashboardController extends DashboardController
     }
   
 
-     /**
-      * [prepChartData description]
-      * 
-      * @param [type] $results [description]
-      * 
-      * @return [type]          [description]
-      */
-    private function _prepChartData($results) 
-    {
-
-
-        $string = '';
-
-        foreach ($results as $branch) {
-
-            $string = $string . "[\"".$branch->branchname ."\",  "
-              .$branch->activities->count() .",  ".$branch->won.", "
-              .$branch->opportunities->sum('value') ."],";
-         
-        }
-
-        return $string;
-
-    }
+    
       /**
        * [getUpcomingCalendar description]
        * 
@@ -274,21 +253,7 @@ class BranchDashboardController extends DashboardController
                ->get();
 
     }
-    /**
-     * [getUpcomingActivities description]
-     * 
-     * @param Array $myBranches [description]
-     * 
-     * @return [type]             [description]
-     */
-    /* private function getUpcomingActivities()
-    {
-        return $this->activity
-            ->whereNull('completed')
-            ->whereIn('branch_id', $this->myBranches)
-            ->get();
-    }*/
-     
+    
     /**
      * [getActivityChartData description]
      * 
@@ -311,26 +276,7 @@ class BranchDashboardController extends DashboardController
         return $data;
          
     }
-    /**
-     * [formatBranchActivities description]
-     * 
-     * @param [type] $branchdata [description]
-     * 
-     * @return [type]             [description]
-     */
-    private function _formatBranchActivities($branchdata)
-    { 
-        $data[]=array();
-        foreach ($branchdata as $branch) {
-            $data[$branch['id']] = $branch['activities_count'];
-        }
-        if (count($data[0])>0) {
-            return $this->_formatChartFullData($data, array_keys($data));
-        }
-        
-        return false;
-       
-    }
+   
     // reformat branch data into array
   
     /**
@@ -472,35 +418,7 @@ class BranchDashboardController extends DashboardController
      
 
     }
-     /**
-      * [formatChartFullData description]
-      * 
-      * @param Array $branches [description]
-      * @param array $keys     [description]
-      * 
-      * @return [type]           [description]
-      */
-    private function _formatChartFullData(Array $branches,array $keys)
-    {
-        $colors = $this->activity->createColors(count($branches));
-        $data = [];
-        $chartdata = '';
-        $i = 0;
-
-        foreach ($branches as $branch=>$info) {
-           
-            $chartdata = $chartdata . "{
-                label: \"Branch " .$branch ."\",
-            backgroundColor:'".$colors[$i] . "',
-            data: [".$info."]},";
-            
-            $i++;
-        }
-        $data['keys'] = null;
-      
-        $data['chartdata'] = str_replace("\r\n", "", $chartdata);
-        return $data;
-    }
+    
 
 
      /**
@@ -585,56 +503,13 @@ class BranchDashboardController extends DashboardController
         );
 
     }
-     /**
-      * [get 2 months of won opportunities description]
-      * 
-      * @param array $myBranches [description]
-      * 
-      * @return [type]             [description]
-      */
-    private function _getWonOpportunities() 
-    {
-    
-        $won =  $this->opportunity
-            ->selectRaw('branch_id,YEARWEEK(actual_close,3) as yearweek,sum(value) as total')
-            ->whereNotNull('value')
-            ->where('value', '>', 0)
-            ->whereIn('branch_id', $this->myBranches)
-            ->whereBetween('actual_close', [$this->period['from'], $this->period['to']])
-            ->whereClosed(1)
-            ->groupBy(['branch_id', 'yearweek'])
-            ->orderBy('branch_id', 'asc')
-            ->orderBy('yearweek', 'asc')
-            ->get();
-        $data = [];
-      
-        foreach ($won as $item) {
-          
-            $data[$item->branch_id][$item->yearweek]=$item->total;
-            
-        }
 
-        $keys =  $this->_yearWeekBetween($this->period['from'], $this->period['to']);
-        $wondata = [];
-        foreach (array_unique($won->pluck('branch_id')->toArray()) as $branch_id) {
-          
 
-            $wondata[$branch_id]= $this->_fillMissingPeriods($data[$branch_id]);
-        
-        }
-      
-        return $this->_formatChartData($wondata, $keys);
-    }
 
-    /*
-     Return 2 months of won opportunities
-     */
     /**
-     * Get upcoming opportunity closes
+     * [_getPipeLine description]
      * 
-     * @param array $myBranches [description]
-     * 
-     * @return [type]             [description]
+     * @return [type] [description]
      */
     private function _getPipeLine() 
     {
@@ -643,60 +518,12 @@ class BranchDashboardController extends DashboardController
      
         return $this->_formatPipelineData($pipeline);
     }
-     /**
-      * [getPipeLineData description]
-      * 
-      * @param array $myBranches [description]
-      * 
-      * @return [type]             [description]
-      */
-     /*private function getPipeLineData()
-     {
-
-     
-     return $this->opportunity
-                    ->selectRaw('branch_id,YEARWEEK(expected_close,3) as yearweek,sum(value) as total')
-                    ->where('value', '>',0)
-                    ->whereIn('branch_id', $this->myBranches)
-                    
-                    ->where(function($q) {
-                      $q->where('actual_close', '>', $this->period['to'])
-                      ->orWhereNull('actual_close');
-                    })
-                    ->groupBy(['branch_id', 'yearweek'])
-                    ->orderBy('branch_id', 'asc')
-                    ->orderBy('yearweek', 'asc')
-                    ->get();
-    }*/
-
-    /**
-     * [formatPipelineData description]
-     * 
-     * @param [type] $pipeline [description]
-     * 
-     * @return [type]           [description]
-     */
-    /*private function formatPipelineData($pipeline)
-    {
-     
-      $chartdata = [];
-     
-      foreach ($pipeline as $item) {
-        
-          $chartdata[$item->yearweek]=$item->total;
-          
-      }
     
-      $from = Carbon::now();
-      $to = Carbon::now()->addMonth(2);
-      $keys =  $this->_yearWeekBetween($from, $to);
-     
-      $data['keys'] = "'".implode("', '", $keys)."'";
-      $data['data'] = implode(",", $chartdata); 
-      return $data;
-     
-    }*/
-
+    /**
+     * [_getPipeLineData description]
+     * 
+     * @return [type] [description]
+     */
     private function _getPipeLineData()
     {
 
@@ -705,10 +532,10 @@ class BranchDashboardController extends DashboardController
             ->selectRaw('branch_id,YEARWEEK(expected_close,3) as yearweek,sum(value) as total')
             ->where('value', '>', 0)
             ->whereIn('branch_id', $this->myBranches)
-            
-            ->where(function ($q) {
-                $q->where('actual_close', '>', $this->period['to'])
-                    ->orWhereNull('actual_close');
+            ->where(
+                function ($q) {
+                    $q->where('actual_close', '>', $this->period['to'])
+                        ->orWhereNull('actual_close');
                 }
             )
             ->groupBy(['branch_id','yearweek'])
