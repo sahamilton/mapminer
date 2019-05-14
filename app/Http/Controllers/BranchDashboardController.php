@@ -636,13 +636,13 @@ class BranchDashboardController extends DashboardController
      * 
      * @return [type]             [description]
      */
-    /*private function _getWonOpportunities()
+    private function _getPipeLine() 
     {
         
-        $pipeline = $this->getPipeLineData();
+        $pipeline = $this->_getPipeLineData();
      
-        return $this->formatPipelineData($pipeline);
-     }*/
+        return $this->_formatPipelineData($pipeline);
+    }
      /**
       * [getPipeLineData description]
       * 
