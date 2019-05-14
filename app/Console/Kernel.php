@@ -51,14 +51,14 @@ class Kernel extends ConsoleKernel
                  ->wednesdays()
                  ->at('04:59');
             
-            $company = App\Company::findOrFail(532);
+            $company = Company::findOrFail(532);
             $period['from'] = \Carbon\Carbon::now()->subWeek()->startOfWeek();
             $period['to'] = \Carbon\Carbon::now()->subWeek()->startOfWeek();
           
             $schedule->job(new AccountActivities($company, $period))
                 ->weekly()
                 ->modays()
-                ->at('18:05');
+                ->at('18:15');
         }   
     }
 
