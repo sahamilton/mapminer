@@ -137,16 +137,22 @@ class BranchDashboardController extends DashboardController
         $branch = $this->branch->with('manager')->findOrFail($branch);
 
         if ($branch->manager->count()>1 
-            && $branch->manager->where('user_id', '=', auth()->user()->id)
-            ->count()==1 
+            && $branch->manager->where(
+                'user_id', '=', auth()->user()->id
+            )->count()==1 
         ) {
-            $this->manager = $branch->manager->where('user_id', '=', auth()->user()->id)->first();
+            $this->manager = $branch->manager->where(
+                'user_id', '=', auth()->user()->id
+            )->first();
         } else {
             $this->manager = $branch->manager->first();
         }
         if (! $this->manager) {
             return redirect()->route('dashboard.index')
-                ->withWarning("There is no manager assigned to branch ". $branch->branchname . ". Notify Sales Opersations"
+                ->withWarning(
+                    "There is no manager assigned to branch "
+                    . $branch->branchname 
+                    . ". Notify Sales Opersations"
                 );
         }
         $this->myBranches = [$branch->id];
@@ -160,7 +166,9 @@ class BranchDashboardController extends DashboardController
     
     /**
      * [_getDashBoardData description]
-     * @param  array  $myBranches [description]
+     * 
+     * @param array $myBranches [description]
+     * 
      * @return [type]             [description]
      */
     private function _getDashBoardData()
@@ -174,7 +182,7 @@ class BranchDashboardController extends DashboardController
             ->get();
           //$data['team']= $this->myTeamsOpportunities();
         $data['summary'] = $this->_getSummaryBranchData();
-        dd($data['summary']);
+       
         //$data['upcoming'] = $this->_getUpcomingActivities();       
         //$data['funnel'] = $this->getBranchFunnel();    
         $data['activitychart'] =  $this->_getActivityChartData();
