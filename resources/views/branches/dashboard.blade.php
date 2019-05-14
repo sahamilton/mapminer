@@ -25,7 +25,7 @@
 			<div class="card-body">
 				<p><strong>Leads:</strong><a href="{{route('lead.branch',$branch->id)}}">{{$data['summary']->first()->leads_count}}</a></p>
 				<p><strong>Top 50 Open Opportunities:</strong><a href="{{route('opportunities.branch',$branch->id)}}">{{$data['summary']->first()->top50}}</a></p>
-				<p><strong>All Open Opportunities:</strong><a href="{{route('opportunities.branch',$branch->id)}}">{{$data['summary']->first()->opportunities_count}}</a></p>
+				<p><strong>All Open Opportunities:</strong><a href="{{route('opportunities.branch',$branch->id)}}">{{$data['summary']->first()->open}}</a></p>
 				<p><strong>All Won Opportunities:</strong>{{$data['summary']->first()->won}}</p>
 				<p><strong>All Lost Opportunities:</strong>{{$data['summary']->first()->lost}}</p>
 				<p><strong>Completed Activities:</strong><a href="{{route('activity.branch',$branch->id)}}">{{$data['summary']->first()->activities_count}}</a></p>
@@ -38,7 +38,7 @@
 			</div>
 			<div class="card-body">
 				  <canvas id="ctx" width="230" height="250" ></canvas>
-				@include('activities.partials._mchart')
+				@include('charts._weeklyactivitychart')
 			</div>
 	</div>
 	</div>
@@ -63,7 +63,7 @@
 		</div>
 		<div class="card-body">
 			<canvas id="ctpipe" width="400" height="400" ></canvas>
-			@include('branches.partials._pipechart')
+			@include('charts._pipechart')
 		</div>
 	</div>
 
