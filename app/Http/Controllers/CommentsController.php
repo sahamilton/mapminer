@@ -17,6 +17,11 @@ class CommentsController extends BaseController
      */
     public $comment;
     
+    /**
+     * [__construct description]
+     * 
+     * @param Comments $comment [description]
+     */
     public function __construct(Comments $comment)
     {
         
@@ -25,10 +30,16 @@ class CommentsController extends BaseController
     }
     
     
-    
+    /**
+     * [index description]
+     * 
+     * @return [type] [description]
+     */
     public function index()
     {
-        $comments = $this->comment->with('postedBy', 'postedBy.person')->orderBy('created_at', 'ASC')->get();
+        $comments = $this->comment->with('postedBy', 'postedBy.person')
+            ->orderBy('created_at', 'ASC')
+            ->get();
 
 
         return response()->view('comments.index', compact('comments', 'fields'));
@@ -45,9 +56,11 @@ class CommentsController extends BaseController
     }
 
     /**
-     * Store a newly created Comment in storage.
-     *
-     * @return Response
+     * [store description]
+     * 
+     * @param CommentFormRequest $request [description]
+     * 
+     * @return [type]                      [description]
      */
     public function store(CommentFormRequest $request)
     {
@@ -55,14 +68,15 @@ class CommentsController extends BaseController
         $data = request()->all();
         $data['user_id'] = auth()->user()->id;
         $data = $this->comment->create($data);
-        $this->notify($data);
+        $this->_notify($data);
         return redirect()->route('news.index');
     }
 
     /**
      * Display the specified Comment.
      *
-     * @param  int  $id
+     * @param int $id [description]
+     * 
      * @return Response
      */
     public function show($id)
@@ -76,7 +90,8 @@ class CommentsController extends BaseController
     /**
      * Mark specified Comment as closed.
      *
-     * @param  int  $id
+     * @param int $id [description]
+     * 
      * @return Response
      */
     public function close($id)
@@ -97,21 +112,25 @@ class CommentsController extends BaseController
     /**
      * Show the form for editing the specified Comment.
      *
-     * @param  int  $id
+     * @param int $id [descripiton]
+     * 
      * @return Response
      */
     public function edit($id)
     {
             
-            $comment = $this->comment->with('relatesTo', 'postedBy')->findOrFail($id);
+            $comment = $this->comment->with('relatesTo', 'postedBy')
+                ->findOrFail($id);
             return response()->view('comments.edit', compact('comment'));
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  int  $id
-     * @return Response
+     * [update description]
+     * 
+     * @param CommentFormRequest $request [description]
+     * @param [type]             $id      [description]
+     * 
+     * @return [type]                      [description]
      */
     public function update(CommentFormRequest $request, $id)
     {
@@ -125,7 +144,8 @@ class CommentsController extends BaseController
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id [description]
+     * 
      * @return Response
      */
     public function destroy($id)
@@ -136,21 +156,36 @@ class CommentsController extends BaseController
         return redirect()->route('news.show', $comment->relatesTo->slug);
     }
 
-
+    /**
+     * [download description]
+     * 
+     * @return [type] [description]
+     */
     public function download()
     {
         
-        Excel::download('Comments', function ($excel) {
-            $excel->sheet('Comments', function ($sheet) {
-                $comments = $this->comment->orderBy('created_at', 'ASC')->get();
-                $sheet->loadview('comments.export', compact('comments'));
-            });
-        })->download('csv');
+        Excel::download(
+            'Comments', function ($excel) {
+                $excel->sheet(
+                    'Comments', function ($sheet) {
+                        $comments = $this->comment->orderBy('created_at', 'ASC')
+                            ->get();
+                        $sheet->loadview('comments.export', compact('comments'));
+                    }
+                );
+            }
+        )->download('csv');
     }
     
     
-    
-    private function notify($comment)
+    /**
+     * [_notify description]
+     * 
+     * @param [type] $comment [description]
+     * 
+     * @return [type]          [description]
+     */
+    private function _notify($comment)
     {
         
         $comment->load('postedBy');

@@ -10,6 +10,11 @@ class CampaignController extends Controller
     
     public $campaign;
 
+    /**
+     * [__construct description]
+     * 
+     * @param Campaign $campaign [description]
+     */
     public function __construct(Campaign $campaign)
     {
         $this->campaign = $campaign;
@@ -22,19 +27,22 @@ class CampaignController extends Controller
      */
     public function index()
     {
-        $campaigns = $this->campaign->with('participants', 'respondents', 'author')->get();
+        $campaigns = $this->campaign->with('participants', 'respondents', 'author')
+            ->get();
         return response()->view('campaigns.index', compact('campaigns'));
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Campaign  $campaign
+     * @param \App\Campaign $campaign [description]
+     * 
      * @return \Illuminate\Http\Response
      */
     public function show(Campaign $campaign)
     {
-        $campaign = $this->campaign->with('participants', 'author')->findOrFail($campaign->id);
+        $campaign = $this->campaign->with('participants', 'author')
+            ->findOrFail($campaign->id);
         return response()->view('campaigns.show', compact('campaign'));
     }
 
@@ -43,7 +51,8 @@ class CampaignController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Campaign  $campaign
+     * @param \App\Campaign $campaign [description]
+     * 
      * @return \Illuminate\Http\Response
      */
     public function destroy(Campaign $campaign)
