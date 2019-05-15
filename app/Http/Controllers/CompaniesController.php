@@ -178,17 +178,24 @@ class CompaniesController extends BaseController
 		}
 		$this->company = $company;
 
-		$this->company->update( request()->all());
-		$this->company->serviceline()->sync( request('serviceline'));
+    /**
+     * [update description]
+     * 
+     * @param CompanyFormRequest $request [description]
+     * @param [type]             $company [description]
+     * 
+     * @return [type]                      [description]
+     */
+    public function update(CompanyFormRequest $request,Company $company)
+    {
 
-		return redirect()->route('company.index');
-	}
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
+        if (! request()->filled('person_id')) {
+             request()->remove('person_id');
+        }
+
+
+        $company->update(request()->all());
+        $company->serviceline()->sync(request('serviceline'));
 
 	public function destroy($company)
 	{
