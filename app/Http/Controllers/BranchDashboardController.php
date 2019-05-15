@@ -174,6 +174,7 @@ class BranchDashboardController extends DashboardController
         $teamroles = [9]; // only branch managers
         $data['team']['me'] = $this->person->findOrFail($this->manager->id);
         // this might return branch managers with no branches!
+            
         $data['team']['team'] =  $this->person
             ->where('reports_to', '=', $this->manager->id) 
             ->WithRoles($teamroles)     
@@ -191,7 +192,7 @@ class BranchDashboardController extends DashboardController
         if (count($branches)>1) {
             $data['branches'] = $branches;
         }
- 
+    
         return $data;
     }
 
@@ -256,6 +257,7 @@ class BranchDashboardController extends DashboardController
     {
              
         return $this->activity
+            ->with('relatesToAddress')
             ->whereIn('branch_id', $this->myBranches)
             ->get();
 

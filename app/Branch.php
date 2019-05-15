@@ -398,16 +398,18 @@ class Branch extends Model implements HasPresenter
      */
     public function getNearByBranches($servicelines, $location, $distance = 100, $limit = 5)
     {
-            return $this->wherehas('servicelines', function ($q) use ($servicelines) {
-                $q->whereIn('servicelines.id', $servicelines);
-            })
+            return $this->wherehas(
+                'servicelines', function ($q) use ($servicelines) {
+                    $q->whereIn('servicelines.id', $servicelines);
+                }
+            )
             ->limit($limit)
             ->get();
     }
     /**
      * [orders description]
      * 
-     * @param  [type] $period [description]
+     * @param [type] $period [description]
      * 
      * @return [type]         [description]
      */
@@ -482,17 +484,19 @@ class Branch extends Model implements HasPresenter
                 ['activities' => function ($query) use ($activitytype,$period) {
                     $query->where('activitytype_id', '=', $activitytype)
                         ->whereBetween('activity_date', [$period['from'],$period['to']]);
-                    }
-                 ], 'activities.type', 'activities.relatedAddress'
+                }
+                ], 'activities.type', 'activities.relatedAddress'
             );
         } else {
         
             return $query->with(
                 ['activities'=>function ($query) use ($period) {
-                    $query->whereBetween('activity_date', [$period['from'],$period['to']]);
-                    }
-                    ], 'activities.type', 'activities.relatedAddress'
-             );
+                    $query->whereBetween(
+                        'activity_date', [$period['from'],$period['to']]
+                    );
+                }
+                ], 'activities.type', 'activities.relatedAddress'
+            );
             
         }
 
@@ -506,7 +510,7 @@ class Branch extends Model implements HasPresenter
      * 
      * @return [type]             [description]
      */
-    public function checkIfMyBranch($request, $branch = null, $myBranches)
+    public function checkIfMyBranch($request, $myBranches, $branch = null )
     {
         if (request()->has('branch')) {
             return  $this->findOrFail(request('branch'));
