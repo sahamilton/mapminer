@@ -59,7 +59,7 @@ class ActivityController extends Controller
         $activitytypes = $this->_getBranchActivititiesByType($branch);
         $data['activitychart'] = $this->chart->getBranchActivityByTypeChart($activitytypes);
         $title= $data['branches']->first()->branchname . " activities";
-        
+
         return response()->view(
             'activities.index', 
             compact('activities', 'data', 'title', 'myBranches')
@@ -378,6 +378,7 @@ class ActivityController extends Controller
             ->whereBetween(
                 'activity_date', [$this->period['from'], $this->period['to']]
             )
+            ->where('completed', '=', 1)
             ->typeCount()
             ->get();
     }
