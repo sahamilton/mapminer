@@ -28,9 +28,17 @@
 	      role="tab" 
 	      aria-controls="summary" 
 	      aria-selected="true">
+	    <strong> Summary</strong>
+	  </a>
+	  <a class="nav-link nav-item" 
+	      id="upcoming-tab" 
+	      data-toggle="tab" 
+	      href="#upcoming" 
+	      role="tab" 
+	      aria-controls="upcoming" 
+	      aria-selected="true">
 	    <strong> Upcoming</strong>
 	  </a>
-	  
 	  <a class="nav-item nav-link" 
 	      id="details-tab" 
 	      data-toggle="tab" 
@@ -45,6 +53,12 @@
 </nav>
 <div class="tab-content" id="nav-tabContent">
     <div id="summary" class="tab-pane show active">
+    	<canvas id="ctb" width="500" height="300" ></canvas>
+			@include('charts._branchactivitiestype')
+		
+	</div>
+
+	<div id="summary" class="tab-pane fade">
     	
 			@include('activities.partials._upcoming')
 		

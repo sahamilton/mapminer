@@ -169,4 +169,68 @@ class Chart extends Model
         $data['chart']['data'] = implode(",", $chart);
         return $data;
     }
+
+    /**
+     * [getTeamActivityByTypeChart description]
+     * 
+     * @param array $data [description]
+     * 
+     * @return [type]       [description]
+     */
+    public function getBranchActivityByTypeChart(Object $data)
+    {
+           $labels = $data->pluck('day')->unique()->toArray();
+           sort($labels);
+           $labelstring = implode("','", $labels);
+           
+           /*
+           "activitytypechart" => array:6 [▼
+                "Sales Appointment" => array:3 [▼
+                    "data" => "1,0,0,3,0,1,0"
+                    "color" => "#FF0000"
+                    "labels" => "Salinas, Salvador','McKenzie, Patrick','Windsor, Jeff','Lingar, Aaron','Roberts, Jami','Beardslee, Rachel','Mancell, Michon"
+          ]*/
+           /*
+           "activitytypechart" => array:6 [▼
+                "Sales Appointment" => array:3 [▼
+                    "data" => "1,0,0,3,0,1,0"
+                    "color" => "#FF0000"
+                    "labels" => "2019-05-02,2019-05-03"
+          ]*/
+        
+        $raw = $data->groupBy('activitytype_id');
+        $activitytypes = ActivityType::all();
+        $chart= array();
+        foreach ($raw as $key=>$el) {
+            $activity = $activitytypes->where('id', '=', $key)->first();
+            $chart[$activity->activity]=[];
+            foreach ($labels as $label) {
+                if ($e = $el->where('day', '=', $label)->first()) {
+                    $res[$activity->activity]['data'][] = $e->activities;
+                } else {
+                    $res[$activity->activity]['data'][] = 0;
+                }
+                
+            }
+            $chart[$activity->activity]['color'] = "#".$activity->color;
+            $chart[$activity->activity]['data'] = implode(",", $res[$activity->activity]['data']);
+            $chart[$activity->activity]['labels'] = $labelstring;
+        }
+        return $chart;
+        
+
+            
+    
+            
+            $chart[$acttype->activity]['color']= "#" . $acttype->color;
+            $chart[$acttype->activity]['labels']=$labels; 
+
+  
+
+        foreach ($chart as $key=>$cht) {
+            $chart[$key]['data']=implode(",", $cht['data']);
+        }
+        return $chart;
+
+    }
 }

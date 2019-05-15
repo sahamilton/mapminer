@@ -186,7 +186,7 @@ class MgrDashboardController extends DashboardController
             return redirect()->route('dashboard.show', $this->myBranches[0]);
         }
         $data = $this->_getDashBoardData();
-       
+
         return $this->_displayDashboard($data);
     }
     

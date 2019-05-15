@@ -443,7 +443,6 @@ class BranchDashboardController extends DashboardController
             $i++;
         }
         $data['keys'] = null;
-      
         $data['chartdata'] = str_replace("\r\n", "", $chartdata);
         return $data;
     }
@@ -596,7 +595,7 @@ class BranchDashboardController extends DashboardController
      * 
      * @return [type]       [description]
      */
-    private function _daysBetween(Carbon $from=null,Carbon $to=null)
+    private function _daysBetween(Carbon $from = null,Carbon $to = null)
     {
 
         if (! $from) {

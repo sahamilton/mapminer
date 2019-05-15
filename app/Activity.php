@@ -74,7 +74,7 @@ class Activity extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
                   'color' => '#800',
                 ];
                  
-            } else {
+        } else {
               return [
                 'url' => route('address.show', $this->address_id),
                 'color' => '#008',
@@ -198,9 +198,26 @@ class Activity extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
             ->groupBy(['yearweek']);
     }
     /**
+     * [scopePeriodTypeCount description]
+     * 
+     * @param [type] $query [description]
+     * 
+     * @return [type]         [description]
+     */
+    public function scopeTypeCount($query)
+    {
+
+        return $query->selectRaw("DATE_FORMAT(`activity_date`,'%Y-%m-%d') as day,`activitytype_id`,count(activities.id) as activities")
+            ->groupBy(['branch_id','activitytype_id','day'])
+            ->orderBy('activitytype_id')
+            ->orderBy('day');
+            
+    }
+
+    /**
      * [scopeSevenDayTypeCount description]
      * 
-     * @param  [type] $query [description]
+     * @param [type] $query [description]
      * 
      * @return [type]        [description]
      */
