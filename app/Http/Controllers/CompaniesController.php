@@ -115,9 +115,9 @@ class CompaniesController extends BaseController
         $locationFilter = request('locationFilter');
 
         return response()->view(
-                                       'companies.index', 
-                                       compact('companies', 'title', 'filtered', 'locationFilter')
-                                       );
+            'companies.index', 
+            compact('companies', 'title', 'filtered', 'locationFilter')
+        );
     }
 
 
@@ -161,7 +161,7 @@ class CompaniesController extends BaseController
     /**
      * Show the form for editing the specified company.
      *
-     * @param int  $company id
+     * @param int $company id
      * 
      * @return Response
      */
@@ -197,11 +197,7 @@ class CompaniesController extends BaseController
      */
     public function update(CompanyFormRequest $request,$company)
     {
-
-        if (request('person_id', '=', 'null')) {
-             request()->request->remove('person_id');
-            
-        }
+               
         $this->company = $company;
 
         $this->company->update(request()->all());

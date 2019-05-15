@@ -37,7 +37,7 @@
 	      role="tab" 
 	      aria-controls="upcoming" 
 	      aria-selected="true">
-	    <strong> Upcoming</strong>
+	    <strong> Upcoming ({{$data['activities']->where('completed', '=' , 1)->count()}})</strong>
 	  </a>
 	  <a class="nav-item nav-link" 
 	      id="details-tab" 
@@ -46,7 +46,7 @@
 	      role="tab" 
 	      aria-controls="details" 
 	      aria-selected="false">
-	    <strong> Completed</strong>
+	    <strong> Completed ({{$data['activities']->where('completed', '=' ,0)->count()}})</strong>
 	  </a>
 
 	</div>
@@ -60,12 +60,13 @@
 	</div>
 
 	<div id="upcoming" class="tab-pane fade">
-    	
+    		<h2>Upcoming Activities</h2>
 			@include('activities.partials._upcoming')
 		
 	</div>
 
     <div id="details" class="tab-pane fade">
+    	<h2>Completed Activities</h2>
 		@include('activities.partials._completed')
    </div>
 </div>

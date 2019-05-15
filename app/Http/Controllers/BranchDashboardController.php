@@ -293,7 +293,7 @@ class BranchDashboardController extends DashboardController
      * 
      * @return [type]           [description]
      */
-    private function _getActivityChartData()
+    /*private function _getActivityChartData()
     {
 
         $branchdata = $this->_getBranchActivities($this->myBranches)->toArray();
@@ -307,7 +307,7 @@ class BranchDashboardController extends DashboardController
         $data['data']= implode(",", $chart['values']);
         return $data;
        
-    }
+    }*/
 
     
     /**
@@ -317,7 +317,7 @@ class BranchDashboardController extends DashboardController
      * 
      * @return [type]             [description]
      */
-    private function _formatBranchDayActivities($branchdata)
+    /*private function _formatBranchDayActivities($branchdata)
     { 
 
         $branches = [];
@@ -339,7 +339,7 @@ class BranchDashboardController extends DashboardController
 
         ksort($branches);
         return $this->_formatActivityTableData($branches, $keys);
-    }
+    }*/
     
     /**
      * [_formatBranchWeekActivities description]
@@ -348,7 +348,7 @@ class BranchDashboardController extends DashboardController
      * 
      * @return [type]             [description]
      */
-    private function _formatBranchWeekActivities($branchdata)
+    /*private function _formatBranchWeekActivities($branchdata)
     { 
 
         $branches = [];
@@ -377,7 +377,7 @@ class BranchDashboardController extends DashboardController
     
         return $this->_formatActivityTableData($branches, $keys);
   
-    }
+    }*/
      
      /**
       * [_fillMissingPeriods description]
@@ -388,7 +388,7 @@ class BranchDashboardController extends DashboardController
       * 
       * @return [type]           [description]
       */
-    private function _fillMissingPeriods($branches, Carbon $from,Carbon $to)
+    /*private function _fillMissingPeriods($branches, Carbon $from,Carbon $to)
     { 
         if (! $from) {
             $from = clone($this->period['from']);
@@ -415,7 +415,7 @@ class BranchDashboardController extends DashboardController
         ksort($branches);
         return $branches;
 
-    }
+    }*/
      
     /**
      * [_formatActivityTableData description]
@@ -425,7 +425,7 @@ class BranchDashboardController extends DashboardController
      * 
      * @return [type]           [description]
      */
-    private function _formatActivityTableData($branches,$keys)
+    /*private function _formatActivityTableData($branches,$keys)
     {
         foreach ($keys as $key) {
       
@@ -442,7 +442,7 @@ class BranchDashboardController extends DashboardController
         return $data;
  
 
-    }
+    }*/
 
     /**
      * [_formatChartFullData description]
@@ -452,7 +452,7 @@ class BranchDashboardController extends DashboardController
      * 
      * @return [type]           [description]
      */
-    private function _formatChartFullData(Array $branches, array $keys)
+    /*private function _formatChartFullData(Array $branches, array $keys)
     {
         $colors = $this->activity->createColors(count($branches));
         $data = [];
@@ -471,7 +471,7 @@ class BranchDashboardController extends DashboardController
         $data['keys'] = null;
         $data['chartdata'] = str_replace("\r\n", "", $chartdata);
         return $data;
-    }
+    }*/
 
 
      /**
@@ -482,7 +482,7 @@ class BranchDashboardController extends DashboardController
       * 
       * @return [type]           [description]
       */
-    private function _formatChartData(Array $branches,array $keys) 
+    /*private function _formatChartData(Array $branches,array $keys) 
     {
 
         $colors = $this->activity->createColors(count($branches));
@@ -507,14 +507,14 @@ class BranchDashboardController extends DashboardController
         return $data;
 
 
-    }
+    }*/
 
      /**
       * [Return 2 months worth of activities groupes by branch & week]
       * 
       * @return [type]             [description]
       */
-    private function _getBranchActivities()
+    /*private function _getBranchActivities()
     {
       
         $activityCount = $this->branch->whereIn('id', $this->myBranches)
@@ -541,7 +541,7 @@ class BranchDashboardController extends DashboardController
             }
         );
 
-    }
+    }*/
     
     /**
      * [_getPipeLine description]
@@ -616,7 +616,7 @@ class BranchDashboardController extends DashboardController
      * 
      * @return [type]       [description]
      */
-    private function _daysBetween(Carbon $from = null,Carbon $to = null)
+    /*private function _daysBetween(Carbon $from = null,Carbon $to = null)
     {
 
         if (! $from) {
@@ -633,7 +633,7 @@ class BranchDashboardController extends DashboardController
         }
 
         return $keys;
-    }
+    }*/
     /**
      * [yearWeekBetween description]
      * 

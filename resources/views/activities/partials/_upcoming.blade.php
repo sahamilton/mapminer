@@ -7,7 +7,6 @@
 		<th>Date</th>
 		<th>Created By</th>
 		<th>Notes</th>
-		<th>Follow up date</th>
 		<th>Contact</th>
 		<th>Activity</th>
 		<th>Status</th>
@@ -49,11 +48,7 @@
 					data-name="note"
 					data-title="Edit note">{{$activity->note}}</a></td>
 				
-				<td>
-					@if($activity->followup_date)
-						{{$activity->followup_date->format('Y-m-d')}}
-					@endif
-				</td>
+				
 				<td>
 					@if($activity->relatedContact)
 						@foreach ($activity->relatedContact as $contact)
