@@ -7,9 +7,11 @@ use App\ActivityType;
 use App\Address;
 use App\AddressBranch;
 use App\Branch;
+use App\Chart;
 use App\Company;
-use App\Track;
 use App\Contact;
+use App\Track;
+
 use App\Note;
 use App\Http\Requests\OpportunityFormRequest;
 use App\Opportunity;
@@ -23,6 +25,7 @@ class BranchDashboardController extends DashboardController
     public $address;
     public $addressbranch;
     public $branch;
+    public $chart;
     public $contact;
     public $manager;
     public $myBranches;
@@ -40,6 +43,7 @@ class BranchDashboardController extends DashboardController
      * @param Address       $address       [description]
      * @param AddressBranch $addressbranch [description]
      * @param Branch        $branch        [description]
+     * @param Chart         $chart         [description]
      * @param Contact       $contact       [description]
      * @param Opportunity   $opportunity   [description]
      * @param Person        $person        [description]
@@ -50,6 +54,7 @@ class BranchDashboardController extends DashboardController
         Address $address,
         AddressBranch $addressbranch,
         Branch $branch,
+        Chart $chart,
         Contact $contact,
         Opportunity $opportunity,
         Person $person,
@@ -58,6 +63,7 @@ class BranchDashboardController extends DashboardController
             $this->address = $address;
             $this->addressbranch = $addressbranch;
             $this->branch = $branch;
+            $this->chart = $chart;
             $this->contact = $contact;
             $this->opportunity = $opportunity;
             $this->person = $person;
@@ -182,7 +188,11 @@ class BranchDashboardController extends DashboardController
           //$data['team']= $this->myTeamsOpportunities();
         $data['summary'] = $this->_getSummaryBranchData();
     
-        $data['activitychart'] =  $this->_getActivityChartData();
+        //$data['activitychart'] =  $this->_getActivityChartData();
+        $data['activitychart'] = $this->chart->getBranchActivityByTypeChart(
+            $this->_getActivityTypeChartData()
+        );
+       
         $data['pipelinechart'] = $this->_getPipeLine();
 
         $data['calendar'] = $this->_getUpcomingCalendar($this->_getActivities());
@@ -262,7 +272,21 @@ class BranchDashboardController extends DashboardController
             ->get();
 
     }
+    /**
+     * [_getActivityTypeChartData description]
+     * 
+     * @return [type]           [description]
+     */
+    private function _getActivityTypeChartData()
+    {
 
+        return $this->activity->whereIn('branch_id', $this->myBranches)
+            ->periodActivities($this->period)
+            ->completed()
+            ->typeCount()
+            ->get();
+       
+    }
      
     /**
      * [_getActivityChartData description]
@@ -487,8 +511,6 @@ class BranchDashboardController extends DashboardController
 
      /**
       * [Return 2 months worth of activities groupes by branch & week]
-      * 
-      * @param array $myBranches [description]
       * 
       * @return [type]             [description]
       */

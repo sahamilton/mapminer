@@ -179,25 +179,10 @@ class Chart extends Model
      */
     public function getBranchActivityByTypeChart(Object $data)
     {
-           $labels = $data->pluck('day')->unique()->toArray();
-           sort($labels);
-           $labelstring = implode("','", $labels);
-           
-           /*
-           "activitytypechart" => array:6 [▼
-                "Sales Appointment" => array:3 [▼
-                    "data" => "1,0,0,3,0,1,0"
-                    "color" => "#FF0000"
-                    "labels" => "Salinas, Salvador','McKenzie, Patrick','Windsor, Jeff','Lingar, Aaron','Roberts, Jami','Beardslee, Rachel','Mancell, Michon"
-          ]*/
-           /*
-           "activitytypechart" => array:6 [▼
-                "Sales Appointment" => array:3 [▼
-                    "data" => "1,0,0,3,0,1,0"
-                    "color" => "#FF0000"
-                    "labels" => "2019-05-02,2019-05-03"
-          ]*/
-        
+        $labels = $data->pluck('day')->unique()->toArray();
+        sort($labels);
+        $labelstring = implode("','", $labels);
+            
         $raw = $data->groupBy('activitytype_id');
         $activitytypes = ActivityType::all();
         $chart= array();
@@ -215,20 +200,6 @@ class Chart extends Model
             $chart[$activity->activity]['color'] = "#".$activity->color;
             $chart[$activity->activity]['data'] = implode(",", $res[$activity->activity]['data']);
             $chart[$activity->activity]['labels'] = $labelstring;
-        }
-        return $chart;
-        
-
-            
-    
-            
-            $chart[$acttype->activity]['color']= "#" . $acttype->color;
-            $chart[$acttype->activity]['labels']=$labels; 
-
-  
-
-        foreach ($chart as $key=>$cht) {
-            $chart[$key]['data']=implode(",", $cht['data']);
         }
         return $chart;
 

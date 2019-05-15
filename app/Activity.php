@@ -305,4 +305,31 @@ class Activity extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
         return $query->where('followup_date', '>', now()->whereUserId(auth()->user()->id));
     }
 
+    /**
+     * [scopePeriodActivities description]
+     * 
+     * @param [type] $query  [description]
+     * @param Array  $period Period[from], Period[to]
+     * 
+     * @return [type]         [description]
+     */
+    public function scopePeriodActivities($query,Array $period)
+    {
+        return $query->whereBetween(
+            'activity_date', [$period['from'], $period['to']]
+        );
+    }
+
+    /**
+     * [scopeCompleted description]
+     * 
+     * @param Illuminate\Eloquent\Builder $query [description]
+     * 
+     * @return [type]        [description]
+     */
+    public function scopeCompleted($query)
+    {
+        return $query->whereCompleted(1);
+    }
+
 }

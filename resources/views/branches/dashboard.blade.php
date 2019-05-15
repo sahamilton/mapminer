@@ -63,7 +63,7 @@
 			<h4>Sales Pipeline</h4>
 		</div>
 		<div class="card-body">
-			<canvas id="ctpipe" width="400" height="400" ></canvas>
+			<canvas id="ctpipe" width="450" height="400" ></canvas>
 			@include('charts._pipechart')
 		</div>
 	</div>
@@ -72,8 +72,8 @@
 			<h4>Activities</h4>
 		</div>
 		<div class="card-body">
-				  <canvas id="ctx" width="400" height="400" ></canvas>
-				@include('charts._weeklyactivitychart')
+				  <canvas id="ctb" width="450" height="400" ></canvas>
+				@include('charts._branchactivitiestype')
 		</div>
 	</div>
 

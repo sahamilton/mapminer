@@ -375,10 +375,8 @@ class ActivityController extends Controller
             $this->period['to'] = Carbon::now()->endOfWeek();
         }
         return $this->activity->whereIn('branch_id', [$branch->id])
-            ->whereBetween(
-                'activity_date', [$this->period['from'], $this->period['to']]
-            )
-            ->where('completed', '=', 1)
+            ->periodActivities($this->period)
+            ->completed()
             ->typeCount()
             ->get();
     }
