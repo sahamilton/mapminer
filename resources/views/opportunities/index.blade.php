@@ -30,7 +30,7 @@
 	      role="tab" 
 	      aria-controls="summary" 
 	      aria-selected="true">
-	    <strong> Open</strong>
+	    <strong> Open ({{$data['opportunities']->where('closed', '=', 0)->count()}})</strong>
 	  </a>
 	  
 	  <a class="nav-item nav-link" 
@@ -40,7 +40,7 @@
 	      role="tab" 
 	      aria-controls="closedwon" 
 	      aria-selected="false">
-	    <strong> Closed - Won</strong>
+	    <strong> Closed - Won ({{$data['opportunities']->where('closed', '=', 1)->count()}})</strong>
 	  </a>
 
 	  <a class="nav-item nav-link" 
@@ -50,23 +50,25 @@
 	      role="tab" 
 	      aria-controls="closedlost" 
 	      aria-selected="false">
-	    <strong> Closed - Lost</strong>
+	    <strong> Closed - Lost ({{$data['opportunities']->where('closed', '=', 2)->count()}})</strong>
 	  </a>
 
 	</div>
 </nav>
  <div class="tab-content" id="nav-tabContent">
     <div id="summary" class="tab-pane show active">
-    	
+    		<h4>Open Opportunities</h4>
 			@include('opportunities.partials._tabopenopportunities')
 
 		
 	</div>
 
     <div id="closedwon" class="tab-pane fade">
+    	<h4>Closed Won Opportunities</h4>
 		 @include('opportunities.partials._tabclosedwonopportunities')
    </div>
    <div id="closedlost" class="tab-pane fade">
+   		<h4>Closed Lost Opportunities</h4>
 		 @include('opportunities.partials._tabclosedlostopportunities')
    </div>
 </div>  
