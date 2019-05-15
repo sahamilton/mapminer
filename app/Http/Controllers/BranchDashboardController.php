@@ -182,7 +182,7 @@ class BranchDashboardController extends DashboardController
         // this might return branch managers with no branches!
             
         $data['team']['team'] =  $this->person
-            ->where('reports_to', '=', $this->manager->id) 
+            ->where('reports_to', $this->manager->id) 
             ->WithRoles($teamroles)     
             ->get();
           //$data['team']= $this->myTeamsOpportunities();
@@ -199,7 +199,7 @@ class BranchDashboardController extends DashboardController
 
         $data['period'] = $this->period;
         $branches = $this->_getBranches();
-        if (count($branches)>1) {
+        if (count($branches) > 1) {
             $data['branches'] = $branches;
         }
     
@@ -520,10 +520,7 @@ class BranchDashboardController extends DashboardController
         $activityCount = $this->branch->whereIn('id', $this->myBranches)
             ->with(
                 ['activities'=>function ($q) {
-                    $q->whereBetween(
-                        'activity_date', [$this->period['from'], $this->period['to']]
-                    )
-                        ->where('completed', '=', 1);
+                        $q->period($this->period)->completed();
                 }]
             )
         ->get();
