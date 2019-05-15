@@ -103,7 +103,13 @@ body {
   font-size: 1.2em;
   margin-bottom: 15px;
 }
+.sorttable thead {
+  cursor: pointer;
+  background-color:#E77C22;
+  color:#fff;
+ 
 
+}
 
 [id^=sorttable] thead {
   cursor: pointer;

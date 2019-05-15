@@ -17,9 +17,9 @@
 @endif
 
 <div class="col-sm-10 offset-1">
-	<table id="sortable" class='table table-striped table-bordered table-condensed table-hover'>
+	<table class='table table-striped table-bordered table-condensed table-hover sorttable'>
 
-		<thead>
+		<thead style="background-color:#E77C22;  color:#fff;">
 			<th colspan=6 class="text-center">Summary</th>
 			<tr>
 				<th class="text-center">Top 50 Open Opportunities</th>
@@ -31,13 +31,15 @@
 			</tr>
 		</thead>
 		<tbody>
-			<td class="text-center">{{$data['summary']->first()->top50}}</td>
+			<td class="text-center">
+				<a href="{{route('opportunity.index')}}">{{$data['summary']->first()->top50}}</a></td>
 			<td class="text-center">{{$data['summary']->first()->open}}</td>
 			<td class="text-center">{{$data['summary']->first()->won}}</td>
 			<td class="text-center">{{$data['summary']->first()->lost}}</td>
-			<td class="text-center">{{$data['summary']->first()->leads_count}}</td>
-			<td class="text-center">{{$data['summary']->first()->activities_count}}</td>
-				
+			<td class="text-center">
+				<a href="{{route('branch.leads')}}">{{$data['summary']->first()->leads_count}}</a></td>
+			<td class="text-center">
+				<a href="{{route('activity.index')}}">{{$data['summary']->first()->activities_count}}</a></td>	
 		</tbody>
 	</table>
 </div>

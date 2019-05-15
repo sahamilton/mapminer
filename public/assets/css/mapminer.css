@@ -60,7 +60,7 @@ body {
   margin-bottom: 15px;
 }
 
-
+.sortable thead,
 #sorttable thead {
   cursor: pointer;
   background-color:#04B7F9;
