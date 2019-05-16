@@ -127,7 +127,7 @@ class Chart extends Model
             ) {
                 $chart[$team->postName()] 
                     =  $data[$team->id]['won'] 
-                        / ($data[$team->id]['won'] + $data[$team->id]['lost']);
+                        / ($data[$team->id]['won'] + $data[$team->id]['lost']) * 100;
             } else {
                 $chart[$team->postName()] = 0;
             }
