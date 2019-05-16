@@ -43,18 +43,20 @@ class Kernel extends ConsoleKernel
             $schedule->command('db:backup')
                 ->dailyAt('22:58');
             
+            // Stephanie Harp Report
             $period['from'] = \Carbon\Carbon::now()->subWeek()->startOfWeek();
             $period['to'] = \Carbon\Carbon::now()->subWeek()->endOfWeek();
             $schedule->job(new BranchStats($period))
                 ->weekly()
-                ->thursdays()
-                ->at('13:55');
+                ->sundays()
+                ->at('23:15');
             
-
+            //Amy Starr Report
             $schedule->job(new Top50WeeklyReport())
                 ->weekly()
                 ->fridays()
                 ->at('06:59');
+            
             // Josh Hammer report
             $schedule->job(new ActivityOpportunityReport())
                 ->weekly()
