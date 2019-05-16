@@ -379,14 +379,19 @@ class OpportunityController extends Controller
     {
         
         $opportunity = $this->opportunity->findOrFail(request('id'));
-        
-        if ($opportunity->top50) {
+ 
+        if ($opportunity->top50 == 1) {
             $opportunity->top50 = null;
+        
         } else {
             $opportunity->top50 = 1;
+          
         }
         if ($opportunity->save()) {
-            return 'success';
-        }   
+            return response()->json(
+                ['message'=>'success'], 200
+            );
+        }      
+        
     }
 }

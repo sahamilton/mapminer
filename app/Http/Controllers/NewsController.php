@@ -147,7 +147,7 @@ class NewsController extends BaseController
     /**
      * Show the form for editing the specified news.
      *
-     * @param int $id
+     * @param int $id 
      * 
      * @return Response
      */
