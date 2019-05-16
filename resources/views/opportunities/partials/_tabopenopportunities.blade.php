@@ -54,13 +54,16 @@
           </td>
           <td>{{$opportunity->address->address->fullAddress()}}</td>
           <td>
-            @if($opportunity->top50)
-            <input type="checkbox" id="top50{{$opportunity->id}}" value="{{$opportunity->id}}" 
             
-              checked /><span class="d-none">1</span>
-            @else
-            <input type="checkbox" id="top50{{$opportunity->id}}" value="{{$opportunity->id}}"  />
-            @endif
+            <input 
+              type="checkbox" 
+              class="top50" 
+              value="{{$opportunity->id}}" 
+              @if($opportunity->top50)
+                checked
+              @endif />
+            <span class="d-none">{{$opportunity->top50}}</span>
+            
             
           </td>
           <td>{{$opportunity->requirements}}</td>
@@ -109,7 +112,8 @@
 
 <script>
 $( document ).ready(function() {
-    $("input[id^=top50]").change (function () {
+    $(".top50").change (function () {
+      
       var id = $(this).val();
 
       $.ajax(
@@ -117,18 +121,25 @@ $( document ).ready(function() {
         {
         
         type: "get",
+               
+        url: '{{route("opportunity.toggle")}}',
         
         cache: false,
         
-        url: '{{route("opportunity.toggle")}}',
-
         data: {id: id,api_token:"{{auth()->user()->api_token}}"},
         
         dataType: "xml",
         
         contentType: "json",
         
-        success: true
+        success: function(msg){
+                    if(msg =='success'){
+                        alert('Success');
+                    } 
+                    else{
+                        alert('Fail');
+                    }
+               }
         
         }); 
     });
