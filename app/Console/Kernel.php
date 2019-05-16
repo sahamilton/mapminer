@@ -8,6 +8,7 @@ use App\Jobs\WeeklyActivityReminder;
 use App\Jobs\Top50WeeklyReport;
 use App\Jobs\ActivityOpportunityReport;
 use App\Jobs\AccountActivities;
+use App\Jobs\BranchStats;
 use App\Company;
 
 class Kernel extends ConsoleKernel
@@ -41,6 +42,12 @@ class Kernel extends ConsoleKernel
 
             $schedule->command('db:backup')
                 ->dailyAt('22:58');
+            
+
+            $schedule->job(new BranchStats())
+                ->weekly()
+                ->thursdays()
+                ->at('14:09');
             
 
             $schedule->job(new Top50WeeklyReport())
