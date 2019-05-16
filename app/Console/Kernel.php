@@ -43,11 +43,12 @@ class Kernel extends ConsoleKernel
             $schedule->command('db:backup')
                 ->dailyAt('22:58');
             
-
-            $schedule->job(new BranchStats())
+            $period['from'] = \Carbon\Carbon::now()->subWeek()->startOfWeek();
+            $period['to'] = \Carbon\Carbon::now()->subWeek()->endOfWeek();
+            $schedule->job(new BranchStats($period))
                 ->weekly()
                 ->thursdays()
-                ->at('14:09');
+                ->at('13:55');
             
 
             $schedule->job(new Top50WeeklyReport())

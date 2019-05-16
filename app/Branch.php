@@ -412,6 +412,11 @@ class Branch extends Model implements HasPresenter
                     ->where('completed','=',1)
                     ->where('activitytype_id','=',4);
                 },
+                'opportunities as open'=>function($query){
+          
+                  $query->whereClosed(0)
+                        ->orWhere('actual_close', $this->period['to']);
+                },
                'opportunities as won'=>function($query){
           
                   $query->whereClosed(1)
