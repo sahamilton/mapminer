@@ -69,7 +69,7 @@
     <div class="form-group{{ $errors->has('customer_id') ? ' has-error' : '' }}">
         <label class="col-md-2 control-label">Customer Number:</label>
            <div class="input-group input-group-lg ">
-                <input required type="text" 
+                <input type="text" 
                 class="form-control" 
                 name='customer_id' 
                 description="Customer Number" 

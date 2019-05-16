@@ -65,8 +65,11 @@ class SearchController extends Controller
 
         $person = auth()->user()->person;
 
-        return Address::with('company')->search(request('q'))->nearby($person, 250)->orderBy('distance')
+        return Address::with('company')
+            ->search(request('q'))
+            ->nearby($person, 250)
             
+            ->orderBy('distance')
             ->get();
     }
 }
