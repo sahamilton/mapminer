@@ -9,10 +9,11 @@
             </div>
             <div class="modal-body" >
                @foreach ($news as $new)
+               
                 <h4>{{$new->title}}</h4>
                 <p>Dateline: {{date('M jS, Y'  ,strtotime($new->datefrom))}}</p>
                 @if(strlen($new->news) > 100)
-                <p>{!! substr($new->news,0,100) . "<a href=\"".route('news.show',$new->slug)."\">&#8250 Read More</a>"!!}</p>
+                <p>{{ substr(strip_tags($new->news),0,100) }} <a href="{{route('news.show',$new->slug)}}">&#8250 Read More</a></p>
                 @else
                 <p>{!!$new->news!!}</p>
                 @endif
