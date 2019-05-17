@@ -24,7 +24,7 @@ class Dashboard extends Model
      * 
      * @return [type]              [description]
      */
-    public function checkBranchCount(Person $person)
+    public function checkBranchCount(Person $person=null)
     {
 
         $this->manager = $this->person->myTeam($person)->get();
