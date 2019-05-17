@@ -17,8 +17,8 @@ class DashboardController extends Controller
      * [__construct description]
      * 
      * @param Dashboard $dashboard [description]
-     * @param Person  $person    [description]
-     * @param Branch  $branch    [description]
+     * @param Person    $person    [description]
+     * @param Branch    $branch    [description]
      */
     public function __construct(Dashboard $dashboard,Person $person,Branch $branch)
     {
@@ -35,6 +35,7 @@ class DashboardController extends Controller
     {
 
         $branchCount = $this->dashboard->checkBranchCount();
+
         if ($branchCount > 1) {
             return redirect()->route('mgrdashboard.index');
         } else {
@@ -44,7 +45,13 @@ class DashboardController extends Controller
 
 
     }
-
+    /**
+     * [show description]
+     * 
+     * @param [type] $branch [description]
+     * 
+     * @return [type]         [description]
+     */
     public function show($branch)
     {
        
@@ -62,7 +69,8 @@ class DashboardController extends Controller
     public function select(Request $request)
     {
         
-        $this->manager = $this->person->with('manages')->findOrFail(request('manager'));
+        $this->manager = $this->person->with('manages')
+            ->findOrFail(request('manager'));
      
         $branchCount = $this->dashboard->checkBranchCount($this->manager);
         
@@ -71,9 +79,11 @@ class DashboardController extends Controller
             return redirect()->route('manager.dashboard', $this->manager->id);
         } elseif ($branchCount==1 && count($this->manager->manages) >0) {
         
-            return redirect()->route('branchdashboard.show', $this->manager->manages->first()->id);
+            return redirect()
+                ->route('branchdashboard.show', $this->manager->manages->first()->id);
         } else {
-            return redirect()->back()->withWarning($this->manager->fullName() . 'is not associated with any branches');
+            return redirect()->back()
+                ->withWarning($this->manager->fullName() . 'is not associated with any branches');
         }
     
     }
