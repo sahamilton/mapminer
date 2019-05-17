@@ -17,10 +17,10 @@ class BranchStats implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     public $period;
+
     /**
-     * Create a new job instance.
-     *
-     * @return void
+     * [__construct description]
+     * @param Array $period [description]
      */
     public function __construct(Array $period)
     {
@@ -38,12 +38,18 @@ class BranchStats implements ShouldQueue
 
         // create the file
         $file = '/public/reports/branchstatsrpt'. $this->period['to']->timestamp. ".xlsx";
-        
+     
         Excel::store(new BranchStatsExport($this->period), $file);
-        Mail::to('sharp@trueblue.com')
-                //->bcc('hamilton@okospartners.com')
-                //->cc('salesoperations@trueblue.com')
-                ->send(new BranchStatsReport($file,$this->period));
+        Mail::to(
+            [   'astarr@trueblue.com'=>'Amy Starr',
+                'jhammar@trueblue.com'=>'Josh Hammer'
+                ]
+        )
+            ->cc(
+                ['hamilton@okospartners.com'=>"Stephen Hamilton",
+                'salesoperations@trueblue.com'=>'Sales Operations']
+            )
+            ->send(new BranchStatsReport($file, $this->period));
                 
         
 
