@@ -77,4 +77,21 @@ class DashboardController extends Controller
         }
     
     }
+
+    /**
+     * [_getSummaryBranchData description]
+     * 
+     * @return [type]           [description]
+     */
+    protected function getSummaryBranchData() 
+    {
+        return $this->branch
+            ->SummaryStats($this->period)
+            ->with('manager', 'manager.reportsTo')
+            ->getActivitiesByType($this->period)
+            ->whereIn('id', $this->myBranches)
+            ->get(); 
+
+    }
+   
 }

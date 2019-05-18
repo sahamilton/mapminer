@@ -186,7 +186,7 @@ class BranchDashboardController extends DashboardController
             ->WithRoles($teamroles)     
             ->get();
           //$data['team']= $this->myTeamsOpportunities();
-        $data['summary'] = $this->_getSummaryBranchData();
+        $data['summary'] = $this->getSummaryBranchData() ;
     
         //$data['activitychart'] =  $this->_getActivityChartData();
         $data['activitychart'] = $this->chart->getBranchActivityByTypeChart(
@@ -228,22 +228,7 @@ class BranchDashboardController extends DashboardController
     }
     
 
-    /**
-     * [_getSummaryBranchData description]
-     * 
-     * @return [type]           [description]
-     */
-    private function _getSummaryBranchData()
-    {
-        
-        return $this->branch
-            ->summaryStats($this->period)
-            ->with('manager', 'manager.reportsTo')
-            ->getActivitiesByType($this->period)
-            ->whereIn('id', $this->myBranches)
-            ->get();
-
-    }
+    
   
 
     /**

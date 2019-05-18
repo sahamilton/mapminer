@@ -203,11 +203,10 @@ class MgrDashboardController extends DashboardController
 
         
         $data['period'] = $this->period;
-        $data['branches'] = $this->_getSummaryBranchData();
+        $data['branches'] = $this->getSummaryBranchData() ;
    
         $data['team']= $this->_myTeamsOpportunities($data['branches']);
 
-        
         $data['chart'] = $this->_getChartData($data['branches']);
    
         if (isset($data['team']['results'])) {
@@ -264,7 +263,7 @@ class MgrDashboardController extends DashboardController
      */
     private function _myTeamsOpportunities(Collection $branchdata)
     {
-      
+      dd($branchdata);
         $stats = ['leads',
                 'opportunities',
                 'top50',
@@ -278,28 +277,31 @@ class MgrDashboardController extends DashboardController
         // this might return branch managers with no branches!
         $data['team'] =  $this->person
             ->where('reports_to', '=', $this->manager->id)
+            ->with('branchesServiced')
             ->withRoles($teamroles)   
             ->get();
         
         // get all branch managers
         $branchManagerRole = 9;
         foreach ($data['team'] as $team) {
-
-            $data['branchteam'] = $team->descendantsAndSelf()
+            $branches = $team->branchesServiced->pluck('id')->toArray();
+            dd($branches, $data['branchteam']);
+            /*$data['branchteam'] = $team->descendantsAndSelf()
                 ->withRoles([$branchManagerRole])
                 ->has('branchesServiced')
                 ->with('branchesServiced')
                 ->get();
 
-            if ($data['branchteam']->count()>0) {
+            
                 $branches = $data['branchteam']->map(
                     function ($person) {
                         return $person->branchesServiced->pluck('id');
                     }
                 );
-             
-                $branches = $branches->flatten();
                 
+                $branches = $branches->flatten();
+               */
+            if ($data['branchteam']->count() >0 ) {
                 $data[$team->id]['leads'] = $branchdata
                       ->whereIn('id', $branches)
                       ->sum('leads_count');
@@ -307,7 +309,7 @@ class MgrDashboardController extends DashboardController
                 $data[$team->id]['activities'] = $branchdata
                       ->whereIn('id', $branches)
                       ->sum('activities_count');
-                
+
                 $data[$team->id]['activitiestype'] = $branchdata
                       ->whereIn('id', $branches)
                     ->map(
@@ -358,24 +360,7 @@ class MgrDashboardController extends DashboardController
     }
     
 
-    /**
-     * [_getSummaryBranchData description]
-     * 
-     * @param array $branches [description]
-     * 
-     * @return [type]           [description]
-     */
-    private function _getSummaryBranchData() 
-    {
-        return $this->branch
-            ->SummaryStats($this->period)             
-            ->with('manager', 'manager.reportsTo')
-            ->getActivitiesByType($this->period)
-            ->whereIn('id', $this->myBranches)
-            ->get(); 
-
-    }
-   
+    
     
      /**
       * [_getChartData description]
