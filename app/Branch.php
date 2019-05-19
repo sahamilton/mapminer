@@ -387,26 +387,7 @@ class Branch extends Model implements HasPresenter
         return $managers;
     }
 
-    /**
-     * [getNearByBranches description]
-     * 
-     * @param [type]  $servicelines [description]
-     * @param [type]  $location     [description]
-     * @param integer $distance     [description]
-     * @param integer $limit        [description]
-     * 
-     * @return [type]                [description]
-     */
-    public function getNearByBranches($servicelines, $location, $distance = 100, $limit = 5)
-    {
-            return $this->wherehas(
-                'servicelines', function ($q) use ($servicelines) {
-                    $q->whereIn('servicelines.id', $servicelines);
-                }
-            )
-            ->limit($limit)
-            ->get();
-    }
+
     /**
      * [orders description]
      * 
@@ -417,7 +398,10 @@ class Branch extends Model implements HasPresenter
     public function orders($period = null)
     {
         
-        return $this->hasManyThrough(Orders::class, AddressBranch::class, 'branch_id', 'address_branch_id', 'id', 'id');
+        return $this->hasManyThrough(
+            Orders::class, 
+            AddressBranch::class, 'branch_id', 'address_branch_id', 'id', 'id'
+        );
     }
 
     /**
@@ -508,9 +492,9 @@ class Branch extends Model implements HasPresenter
      * [checkIfMyBranch description]
      * 
      * @param [type] $request    [description]
-     * @param [type] $branch     [description]
      * @param [type] $myBranches [description]
-     * 
+     * @param [type] $branch     [description]
+     *  
      * @return [type]             [description]
      */
     public function checkIfMyBranch($request, $myBranches, $branch = null )
@@ -530,14 +514,14 @@ class Branch extends Model implements HasPresenter
 
         return  $this->findOrFail(reset($branch));
 
-   }
-   /**
-    * [branchData description]
-    * 
-    * @param [type] $branches [description]
-    * 
-    * @return [type]           [description]
-    */
+    }
+    /**
+     * [branchData description]
+     * 
+     * @param [type] $branches [description]
+     * 
+     * @return [type]           [description]
+     */
     public function branchData($branches)
     {
         $data = [];
@@ -569,7 +553,6 @@ class Branch extends Model implements HasPresenter
     public function scopeSummaryStats($query,$period)
     {
         $this->period = $period;
-    
         return $query->withCount(       
             ['leads'=>function ($query) {
                 $query->where('address_branch.created_at', '<=', $this->period['to'])
@@ -578,28 +561,38 @@ class Branch extends Model implements HasPresenter
                             $q->whereDoesntHave('opportunities')
                                 ->orWhereHas(
                                     'opportunities', function ($q1) {
-                                        $q1->where('opportunities.created_at', '>', $this->period['to']);
+                                        $q1->where(
+                                            'opportunities.created_at', '>', $this->period['to']
+                                        );
                                     }
                                 );
                         }
                     );
             },
             'activities'=>function ($query) {
-                $query->whereBetween('activity_date', [$this->period['from'],$this->period['to']])
+                $query->whereBetween(
+                    'activity_date', [$this->period['from'],$this->period['to']]
+                )
                     ->where('completed', '=', 1);
             },
             'activities as salesappts'=>function ($query) {
-                $query->whereBetween('activity_date', [$this->period['from'],$this->period['to']])
+                $query->whereBetween(
+                    'activity_date', [$this->period['from'],$this->period['to']]
+                )
                     ->where('completed', 1)
                     ->where('activitytype_id', 4);
             },
             'opportunities as won'=>function ($query) {
                 $query->whereClosed(1)
-                    ->whereBetween('actual_close', [$this->period['from'],$this->period['to']]);
+                    ->whereBetween(
+                        'actual_close', [$this->period['from'],$this->period['to']]
+                    );
             },
             'opportunities as lost'=>function ($query) {
                 $query->whereClosed(2)
-                    ->whereBetween('actual_close', [$this->period['from'],$this->period['to']]);
+                    ->whereBetween(
+                        'actual_close', [$this->period['from'],$this->period['to']]
+                    );
             },
             'opportunities as top50'=>function ($query) {
                 $query->where('opportunities.top50', '=', 1)
@@ -624,7 +617,9 @@ class Branch extends Model implements HasPresenter
             'opportunities as wonvalue' => function ($query) {
                 $query->select(\DB::raw("SUM(value) as wonvalue"))
                     ->where('closed', 1)
-                    ->whereBetween('actual_close', [$this->period['from'],$this->period['to']]);
+                    ->whereBetween(
+                        'actual_close', [$this->period['from'],$this->period['to']]
+                    );
             }
             ]
         );

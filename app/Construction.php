@@ -10,6 +10,13 @@ class Construction extends Model
     protected $value = '250000';
     // setup map paramets for store locator
     protected $fillable = ['lat','lng','id','address','city','state','zip','position'];
+    /**
+     * [getMapData description]
+     * 
+     * @param [type] $data [description]
+     * 
+     * @return [type]       [description]
+     */
     public function getMapData($data)
     {
             $data['lat']=$data['location']['lat'];
@@ -20,7 +27,14 @@ class Construction extends Model
             $data['view']='map';
             return $data;
     }
-
+    /**
+     * [getMapParameters description]
+     * 
+     * @param [type] $distance [description]
+     * @param [type] $latlng   [description]
+     * 
+     * @return [type]           [description]
+     */
     public function getMapParameters($distance, $latlng)
     {
         $data['distance']= $distance;
@@ -31,18 +45,24 @@ class Construction extends Model
     }
     
 
-    // Call API for nearby projects
-
+    /**
+     * [getProjectData description]
+     * 
+     * @param [type] $data [description]
+     * 
+     * @return [type]       [description]
+     */
     public function getProjectData($data)
     {
         $client = new GuzzleHttp\Client();
-        $res = $client->request('post', config('services.cm.url') .'permits/', [
+        $res = $client->request(
+            'post', config('services.cm.url') .'permits/', [
             'auth' => [config('services.cm.user'),config('services.cm.secret')],
-            ['decode_content' => 'gzip'],
-            'form_params'=>$this->getRequestBody($data)
-
-
-        ]);
+            [
+                'decode_content' => 'gzip'],
+                'form_params'=>$this->_getRequestBody($data)
+            ]
+        );
  
         $collection = collect(json_decode($res->getBody(), true));
 
@@ -50,7 +70,13 @@ class Construction extends Model
     }
 
     // Call API for id resource
-
+    /**
+     * [getCompany description]
+     * 
+     * @param [type] $id [description]
+     * 
+     * @return [type]     [description]
+     */
     public function getCompany($id)
     {
         $client = new GuzzleHttp\Client();
@@ -60,7 +86,7 @@ class Construction extends Model
             ['auth' => [config('services.cm.user'),config('services.cm.secret')],
             ['decode_content' => 'gzip'],
             
-            'form_params' => $this->getCompanyRequest($id),
+            'form_params' => $this->_getCompanyRequest($id),
          
 
 
@@ -73,7 +99,13 @@ class Construction extends Model
     }
 
     // Call API for id resource
-
+    /**
+     * [getProject description]
+     * 
+     * @param [type] $id [description]
+     * 
+     * @return [type]     [description]
+     */
     public function getProject($id)
     {
         $client = new GuzzleHttp\Client();
@@ -89,12 +121,14 @@ class Construction extends Model
         $collection = collect(json_decode($res->getBody(), true));
         return $collection['hits']['hits'][0]['_source'];
     }
-    /*
-		Construct the API query
-
-
-    */
-    private function getRequestBody($data)
+    /**
+     * [_getRequestBody description]
+     * 
+     * @param [type] $data [description]
+     * 
+     * @return [type]       [description]
+     */
+    private function _getRequestBody($data)
     {
 
         return ['filter'=>'{
@@ -111,8 +145,14 @@ class Construction extends Model
             'pageLimit'=>100];
     }
 
-
-    private function getCompanyRequest($id)
+    /**
+     * [_getCompanyRequest description]
+     * 
+     * @param [type] $id [description]
+     * 
+     * @return [type]     [description]
+     */
+    private function _getCompanyRequest($id)
     {
         return ['filter'=>'{
                         "nested": {
@@ -128,7 +168,13 @@ class Construction extends Model
             'sourceExclude'=>'flatfile,cbsa,jurisdiction,county,area',
             'pageLimit'=>100];
     }
-
+    /**
+     * [makeConstruction description]
+     * 
+     * @param [type] $project [description]
+     * 
+     * @return [type]          [description]
+     */
     public function makeConstruction($project)
     {
         if (isset($project['location'])) {
@@ -136,7 +182,7 @@ class Construction extends Model
                 $data['lng'] = $project['location']['lon'];
                 $data['id'] = $project['id'];
         } else {
-          // try and geocode address
+            // try and geocode address
             $geoCode = app('geocoder')->geocode($project['siteaddress'])->get();
             $data =$this->getGeoCode($geoCode);
             $data['id']= $project['id'];
