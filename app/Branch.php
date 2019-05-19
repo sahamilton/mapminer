@@ -93,6 +93,7 @@ class Branch extends Model implements HasPresenter
         
         return $this->hasMany(Activity::class);
     }
+
     /**
      * [activitiesbytype description]
      * 
@@ -483,7 +484,8 @@ class Branch extends Model implements HasPresenter
             return $query->with(
                 ['activities' => function ($query) use ($activitytype,$period) {
                     $query->where('activitytype_id', '=', $activitytype)
-                        ->whereBetween('activity_date', [$period['from'],$period['to']]);
+                        ->whereBetween('activity_date', [$period['from'],$period['to']])
+                        ->where('completed', '=', 1);
                 }
                 ], 'activities.type', 'activities.relatedAddress'
             );
@@ -493,7 +495,8 @@ class Branch extends Model implements HasPresenter
                 ['activities'=>function ($query) use ($period) {
                     $query->whereBetween(
                         'activity_date', [$period['from'],$period['to']]
-                    );
+                    )
+                        ->where('completed', '=', 1);
                 }
                 ], 'activities.type', 'activities.relatedAddress'
             );
@@ -535,23 +538,23 @@ class Branch extends Model implements HasPresenter
     * 
     * @return [type]           [description]
     */
-   public function branchData($branches)
+    public function branchData($branches)
     {
         $data = [];
         foreach ($branches as $branch) {
-     	
-        	$data[$branch->id]['branch'] = $branch->branchname;
-        	$data[$branch->id]['leads'] = $branch->leads->count();
-			$data[$branch->id]['activities'] = 0;
-			$data[$branch->id]['opportunities'] = 0;
 
-        	foreach ($branch->addresses as $lead) {
-        		
-        		$data[$branch->id]['opportunities'] += $lead->opportunities->count();
-        		$data[$branch->id]['activities'] += $lead->activities->count();
-        		
-        	}
-        
+            $data[$branch->id]['branch'] = $branch->branchname;
+            $data[$branch->id]['leads'] = $branch->leads->count();
+            $data[$branch->id]['activities'] = 0;
+            $data[$branch->id]['opportunities'] = 0;
+
+            foreach ($branch->addresses as $lead) {
+
+                $data[$branch->id]['opportunities'] += $lead->opportunities->count();
+                $data[$branch->id]['activities'] += $lead->activities->count();
+
+            }
+    
         }
         return $data;
     }
@@ -569,58 +572,60 @@ class Branch extends Model implements HasPresenter
     
         return $query->withCount(       
             ['leads'=>function ($query) {
-                   $query->where('address_branch.created_at', '<=', $this->period['to'])
-                  ->where(
-                    function ($q) {
-                    $q->whereDoesntHave('opportunities')
-                        ->orWhereHas('opportunities', function ($q1) {
-                          $q1->where('opportunities.created_at', '>', $this->period['to']);
-                        });
+                $query->where('address_branch.created_at', '<=', $this->period['to'])
+                    ->where(
+                        function ($q) {
+                            $q->whereDoesntHave('opportunities')
+                                ->orWhereHas(
+                                    'opportunities', function ($q1) {
+                                        $q1->where('opportunities.created_at', '>', $this->period['to']);
+                                    }
+                                );
                         }
                     );
-                },
-                'activities'=>function ($query) {
-                    $query->whereBetween('activity_date',[$this->period['from'],$this->period['to']])
+            },
+            'activities'=>function ($query) {
+                $query->whereBetween('activity_date', [$this->period['from'],$this->period['to']])
                     ->where('completed', '=', 1);
-                },
-                'activities as salesappts'=>function ($query) {
-                    $query->whereBetween('activity_date', [$this->period['from'],$this->period['to']])
-                    ->where('completed', '=', 1)
-                    ->where('activitytype_id', '=', 4);
-                },
-               'opportunities as won'=>function ($query) {
-          
-                  $query->whereClosed(1)
-                  ->whereBetween('actual_close', [$this->period['from'],$this->period['to']]);
-              },
-              'opportunities as lost'=>function ($query) {
-                  $query->whereClosed(2)
-                  ->whereBetween('actual_close', [$this->period['from'],$this->period['to']]);
-              },
-              'opportunities as top50'=>function ($query) {
-                  $query->where('opportunities.top50', '=', 1)
-                    ->where(function ($q) {
-                        $q->where('actual_close', '>', $this->period['to'])
-                            ->orwhereNull('actual_close');
-                      }
-                  )
-                ->where('opportunities.created_at', '<', $this->period['to']);
-              },
-              'opportunities as open'=>function ($query) {
-                  $query->whereClosed(0)        
+            },
+            'activities as salesappts'=>function ($query) {
+                $query->whereBetween('activity_date', [$this->period['from'],$this->period['to']])
+                    ->where('completed', 1)
+                    ->where('activitytype_id', 4);
+            },
+            'opportunities as won'=>function ($query) {
+                $query->whereClosed(1)
+                    ->whereBetween('actual_close', [$this->period['from'],$this->period['to']]);
+            },
+            'opportunities as lost'=>function ($query) {
+                $query->whereClosed(2)
+                    ->whereBetween('actual_close', [$this->period['from'],$this->period['to']]);
+            },
+            'opportunities as top50'=>function ($query) {
+                $query->where('opportunities.top50', '=', 1)
                     ->where(
                         function ($q) {
                             $q->where('actual_close', '>', $this->period['to'])
                                 ->orwhereNull('actual_close');
-                    }
-                  )
-                  ->where('opportunities.created_at', '<', $this->period['to']);
-              },
-              'opportunities as wonvalue' => function ($query) {
-                  $query->select(\DB::raw("SUM(value) as wonvalue"))
-                      ->where('closed', 1)
-                      ->whereBetween('actual_close', [$this->period['from'],$this->period['to']]);
-              }
+                        }
+                    )
+                ->where('opportunities.created_at', '<', $this->period['to']);
+            },
+            'opportunities as open'=>function ($query) {
+                $query->whereClosed(0)        
+                    ->where(
+                        function ($q) {
+                            $q->where('actual_close', '>', $this->period['to'])
+                                ->orwhereNull('actual_close');
+                        }
+                    )
+                ->where('opportunities.created_at', '<', $this->period['to']);
+            },
+            'opportunities as wonvalue' => function ($query) {
+                $query->select(\DB::raw("SUM(value) as wonvalue"))
+                    ->where('closed', 1)
+                    ->whereBetween('actual_close', [$this->period['from'],$this->period['to']]);
+            }
             ]
         );
     }

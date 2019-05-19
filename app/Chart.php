@@ -36,36 +36,72 @@ class Chart extends Model
      */
     public function getTeamActivityByTypeChart(array $data)
     {
-        $labels = $data['team']->map(
+        // Initialize
+        $fullabels = $data['team']->map(
             function ($person) {
-                return $person->postName();
+                return ['pid'=>$person->id,'name'=>$person->postName()];
             }
         );
-        $labels = implode("','", $labels->toArray());
+        $fullabels = $fullabels->pluck('name', 'pid')->toArray();
+        $labels = implode("','", $fullabels);
         $activitytypes = ActivityType::all();
+        $types = $activitytypes->pluck('activity')->toArray();
         $chart= array();
+        // Build array by team member of all activities by type
         foreach ($data['team'] as $team) {
-            if (isset($data[$team->id]['activitiestype'])) {
-                $types = reset($data[$team->id]['activitiestype']);
-                foreach ($types as $type) {
-                    foreach ($activitytypes as $acttype) {
-                        // set the data
-                        if (array_key_exists($acttype->id, $type)) {
-                            $chart[$acttype->activity]['data'][] 
-                                = count($type[$acttype->id]);
-                        } else {
-                            $chart[$acttype->activity]['data'][]= 0;
-                        }
-                        $chart[$acttype->activity]['color']= "#" . $acttype->color;
-                        $chart[$acttype->activity]['labels']=$labels; 
-                    }
-                }
-            } 
+            foreach ($data[$team->id]['activitiestype'] as  $activity) {
+                ksort($activity);
+                foreach ($activity as $key=>$act) {
+                    // set key to activity name
+                    $type = $activitytypes->where('id', $key)->first()->activity;
+                    if (isset($result[$team->id][$type])) {
+                        $result[$team->id][$type] += count($act);   
+                    } else {
+                        $result[$team->id][$type] = count($act);
+                    }    
+                }   
+            }
         }
-        foreach ($chart as $key=>$cht) {
-            $chart[$key]['data']=implode(",", $cht['data']);
+        // fill array with necessary blank team members
+        foreach (array_diff($data['team']->pluck('id')->toArray(), array_keys($result)) as $missing) {
+            $result[$missing] = [];
         }
+        // fill complete team array with missing activity types
+        foreach ($result as $key=>$res) {
+            $filled[$key] = $res;
+            foreach (array_diff($types, array_keys($res)) as $missing) {
+                $filled[$key][$missing] = 0;
+            }
+            ksort($filled[$key]);
+        }
+        // fill chart array by type, color, labels and data
+        foreach ($this->_transpose($filled) as $key=>$result) {
+            $color = $activitytypes->where('activity', $key)->first()->color;
+            $chart[$key]['color']= "#" . $color;
+            $chart[$key]['labels']=$labels; 
+            $chart[$key]['data'] = implode(",", $result);
+            
+        }
+
         return $chart;
+    }
+    /**
+     * Transpose array
+     * 
+     * @param array $array [description]
+     * 
+     * @return array $out [description]
+     */
+    private function _transpose(Array $array)
+    {
+
+        $out = array();
+        foreach ($array as $key => $subarr) {
+            foreach ($subarr as $subkey => $subvalue) {
+                $out[$subkey][$key] = $subvalue;
+            }
+        }
+        return $out;
 
     }
     /**
