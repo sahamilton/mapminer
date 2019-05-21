@@ -700,7 +700,7 @@
              Route::get('testjob',function(){
              $company = App\Company::findOrFail(532);
              $period['from'] = \Carbon\Carbon::now()->subWeek()->startOfWeek();
-             $period['to'] = \Carbon\Carbon::now()->subWeek()->startOfWeek();
+             $period['to'] = \Carbon\Carbon::now()->subWeek()->endOfWeek();
              App\Jobs\AccountActivities::dispatch($company,$period);
         
              /*$filesInFolder = \File::files(storage_path('backups'));
