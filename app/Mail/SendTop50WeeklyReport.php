@@ -37,8 +37,9 @@ class SendTop50WeeklyReport extends Mailable
         return $this->from('salesoperations@tbmapminer.com', 'Sales Operations')
             ->markdown('emails.top50openopportunitiesreport')  
             ->subject('Top 50 Opportunities Weekly Report')
-            ->attach(storage_path($this->file), [
-                        'mime' => 'application/xls']);
+            ->attach(
+                storage_path($this->file), ['mime' => 'application/xls']
+            );
             
     }
 }

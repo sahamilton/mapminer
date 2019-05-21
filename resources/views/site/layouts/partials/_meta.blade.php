@@ -9,5 +9,6 @@
 		<meta name="description" content="A private system for {{config('mapminer.client')}} designated employees anad their agents only.  The system maps client and lead locations based on any US or Canadian geo coordinates." />
 
 		<!-- Mobile Specific Metas
+			hjadskadkjadsjkdas
 		================================================== -->
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">

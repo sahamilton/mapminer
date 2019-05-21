@@ -39,7 +39,8 @@ class UserNotification extends Mailable
     {
     
         if ($this->user->status == 'active') {
-            return $this->markdown('emails.usernotification')->to($this->user->email);
+            return $this->markdown('emails.usernotification')
+                ->to($this->user->email);
         }
         //return $this->markdown('emails.usernotification');
     }

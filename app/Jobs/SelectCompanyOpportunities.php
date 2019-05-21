@@ -32,32 +32,45 @@ class SelectCompanyOpportunities implements ShouldQueue
     public function handle()
     {
         $reports = Report::whereJob('AccountOpportunities')
-                    ->with('companyreport','companyreport.company','companyreport.distribution','companyreport.distribution.person')->first();
+            ->with(
+                'companyreport', 
+                'companyreport.company', 
+                'companyreport.distribution', 
+                'companyreport.distribution.person'
+            )->first();
         
-     $period = $reports->period();
-        foreach ($reports->companyreport as $company){
-            if($distribution = $this->getDistribution($company)){
-                $report = AccountOpportunities::dispatch($company->company,$period,$distribution);
+        $period = $reports->period();
+
+        foreach ($reports->companyreport as $company) {
+            if ($distribution = $this->_getDistribution($company)) {
+                $report = AccountOpportunities::dispatch($company->company, $period, $distribution);
             }
 
             
             
         }     
     }
-    private function getDistribution($company)
+    /**
+     * [_getDistribution description]
+     * 
+     * @param [type] $company [description]
+     * 
+     * @return [type]          [description]
+     */
+    private function _getDistribution($company)
     {
-        $distry = $company->distribution->map(function($list){
+        $distry = $company->distribution->map(
+            function ($list) {
                 return [$list->pivot->type => $list->email];
                 
-            });
-        $distribution= [];
-        foreach ($distry as $person){;
-            
-                $distribution[implode(',',array_keys($person))][] = 
-                implode(',',$person);
             }
+        );
+        $distribution= [];
+        foreach ($distry as $person) {
+            
+            $distribution[implode(',', array_keys($person))][] = implode(',', $person);
+        }
    
-        
         return $distribution;
 
     }

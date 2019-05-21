@@ -34,8 +34,9 @@ class WeeklyActivityOpportunityReport extends Mailable
         return $this->from('salesoperations@tbmapminer.com', 'Sales Operations')
             ->markdown('emails.activityopportunityreport')
             ->subject('Activities and Opportunities Weekly Report')
-            ->attach(storage_path($this->file), [
-                        'mime' => 'application/xls']);
+            ->attach(
+                storage_path($this->file), ['mime' => 'application/xls']
+            );
 
     }
 }

@@ -29,7 +29,7 @@ class SendSenderCampaignMail extends Mailable
     public function build()
     {
         return $this->markdown('salesactivity.senderscampaignemail')
-         ->subject($this->data['activity']->title)
-         ->to($this->data['sender']);
+            ->subject($this->data['activity']->title)
+            ->to($this->data['sender']);
     }
 }

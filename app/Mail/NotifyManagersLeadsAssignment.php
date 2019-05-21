@@ -18,9 +18,12 @@ class NotifyManagersLeadsAssignment extends Mailable
     public $branches;
     public $leadsource;
     /**
-     * Create a new message instance.
-     *
-     * @return void
+     * [__construct description]
+     * 
+     * @param [type]     $data       [description]
+     * @param Person     $manager    [description]
+     * @param LeadSource $leadsource [description]
+     * @param [type]     $branches   [description]
      */
     public function __construct($data, Person $manager, LeadSource $leadsource, $branches)
     {
@@ -38,7 +41,7 @@ class NotifyManagersLeadsAssignment extends Mailable
     public function build()
     {
         return $this->markdown('emails.managerleads')
-         ->subject('New Leads assigned to your team')
-         ->to($this->manager['email'], $this->manager['firstname']." ".$this->manager['lastname']);
+            ->subject('New Leads assigned to your team')
+            ->to($this->manager['email'], $this->manager['firstname'] ." ". $this->manager['lastname']);
     }
 }

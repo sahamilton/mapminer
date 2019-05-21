@@ -38,9 +38,7 @@ class NotifyLeadReassignment extends Mailable
      */
     public function build()
     {
-        
-            
-            return $this->markdown('emails.leadreassignmentnotify')
+        return $this->markdown('emails.leadreassignmentnotify')
             ->to($this->person->userdetails->email, $this->person->postName())
             ->subject('Lead Reassigned');
     }

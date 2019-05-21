@@ -16,9 +16,9 @@ class FeedbackClosed extends Mailable
     public $feedback;
     public $user;
     /**
-     * Create a new message instance.
-     *
-     * @return void
+     * [__construct description]
+     * 
+     * @param Feedback $feedback [description]
      */
     public function __construct(Feedback $feedback)
     {
@@ -33,7 +33,7 @@ class FeedbackClosed extends Mailable
      */
     public function build()
     {
-         return $this->markdown('emails.feedbackclosed')
+        return $this->markdown('emails.feedbackclosed')
             ->to($this->feedback->providedBy->email)
             ->cc(config('mapminer.system_contact'))
             ->bcc(config('mapminer.developer_email'))

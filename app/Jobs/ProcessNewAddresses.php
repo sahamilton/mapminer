@@ -13,6 +13,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 class ProcessNewAddresses implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    
     public $import;
     /**
      * Create a new job instance.

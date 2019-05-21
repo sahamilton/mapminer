@@ -36,6 +36,6 @@ class SendWeeklyActivityReminder extends Mailable implements ShouldQueue
        
     
         return $this->markdown('emails.upcomingactivities')
-        ->subject('Upcoming Activities');
+            ->subject('Upcoming Activities');
     }
 }

@@ -12,11 +12,17 @@ use App\Person;
 class associateIndustries implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    /**
+     * [$people description]
+     * 
+     * @var [type]
+     */
     public $people;
     /**
-     * Create a new job instance.
-     *
-     * @return void
+     * [__construct description]
+     * 
+     * @param [type] $people          [description]
+     * @param array  $validIndustries [description]
      */
     public function __construct($people, array $validIndustries)
     {

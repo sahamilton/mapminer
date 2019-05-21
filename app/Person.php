@@ -449,7 +449,9 @@ class Person extends NodeModel implements HasPresenter
     }
     /**
      * [findPersonsRole description]
-     * @param  [type] $people [description]
+     * 
+     * @param [type] $people [description]
+     * 
      * @return [type]         [description]
      */
     public function findPersonsRole($people)
@@ -490,7 +492,9 @@ class Person extends NodeModel implements HasPresenter
     
     /**
      * [salesLeadsByStatus description]
-     * @param  [type] $id [description]
+     * 
+     * @param [type] $id [description]
+     * 
      * @return [type]     [description]
      */
     public function salesLeadsByStatus($id)

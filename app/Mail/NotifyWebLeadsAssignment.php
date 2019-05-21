@@ -34,10 +34,9 @@ class NotifyWebLeadsAssignment extends Mailable
      * @return $this
      */
     public function build()
-    {
-        
-            
-            return $this->markdown('emails.webleadsnotify')
-            ->to($this->person->userdetails->email, $this->person->postName())->subject('New Lead');
+    {         
+        return $this->markdown('emails.webleadsnotify')
+            ->to($this->person->userdetails->email, $this->person->postName())
+            ->subject('New Lead');
     }
 }

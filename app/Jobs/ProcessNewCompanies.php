@@ -15,9 +15,9 @@ class ProcessNewCompanies implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     public $import;
     /**
-     * Create a new job instance.
-     *
-     * @return void
+     * [__construct description]
+     * 
+     * @param OrderImport $import [description]
      */
     public function __construct(OrderImport $import)
     {
@@ -32,7 +32,10 @@ class ProcessNewCompanies implements ShouldQueue
     public function handle()
     {
       
-        if (! $company = Company::where('customer_id', '=', $this->import->customer_id)->first()) {
+        if (! $company = Company::where(
+            'customer_id', '=', $this->import->customer_id
+        )->first()
+        ) {
             $data = [];
             $data['customer_id'] = $this->import->customer_id;
             $data['accounttypes_id'] = $this->import->accounttypes_id;

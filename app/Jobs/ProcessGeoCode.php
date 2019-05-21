@@ -33,7 +33,7 @@ class ProcessGeoCode implements ShouldQueue
     public function handle()
     {
         foreach ($this->people as $person) {
-            $geoCode = $this->getLatLng($person);
+            $geoCode = $this->_getLatLng($person);
             if ($geoCode) {
                 $data['geostatus'] = true;
                 $data['lat'] = $geoCode['lat'];
@@ -44,18 +44,18 @@ class ProcessGeoCode implements ShouldQueue
             $person->update($data);
         }
     }
-
-    private function getLatLng($person)
+    /**
+     * Geocode Persons address
+     * 
+     * @param Object Person $person [description]
+     * 
+     * @return [type]         [description]
+     */
+    private function _getLatLng($person)
     {
-        $address = $this->getAddress($person);
-        $geoCode = app('geocoder')->geocode($address)->get();
+      
+        $geoCode = app('geocoder')->geocode($person->fullAddress())->get();
        
         return $person->getGeoCode($geoCode);
-    }
-
-    private function getAddress($person)
-    {
-
-        return trim(str_replace('  ', ' ', $person->address . " " . $person->city . " ". $person->state ." " . $person->zip));
     }
 }

@@ -1,6 +1,6 @@
-@extends('site/layouts/default')
+@extends('site.layouts.default')
 @section('content')
-<h2>{{$branch->branchname}} Opportunities </h2>
+<h2>{{$branch->branchname}} Opportunities</h2>
 <p><a href="{{route('dashboard.index')}}">Return To Branch Dashboard</a></p>
 <div class="row float-right"><button type="button" 
     class="btn btn-info float-right" 
@@ -12,6 +12,5 @@
 @php $route= "branch.opportunities"; @endphp
 @include('branches.partials._selector')
 @include('branches.partials._tabopportunities')
-
 @include('partials._scripts')
 @endsection
