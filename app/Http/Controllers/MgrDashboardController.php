@@ -225,7 +225,7 @@ class MgrDashboardController extends DashboardController
      */
     private function _displayDashboard($data)
     {
-
+        
         if ($data['branches']->count() > 1) {     
              return response()->view('opportunities.mgrindex', compact('data', 'myBranches'));
           

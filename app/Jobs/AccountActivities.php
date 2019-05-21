@@ -42,14 +42,18 @@ class AccountActivities implements ShouldQueue
     {
         $companyname = str_replace(" ", "_", $this->company->companyname);
         $file = "/public/reports/".$this->company->companyname."_activityreport_". Carbon::now()->timestamp. ".xlsx";
-        Excel::store(new AccountActivitiesExport($this->company, $this->period), $file);
+        Excel::store(
+            new AccountActivitiesExport($this->company, $this->period), $file
+        );
         $this->company->load('managedBy');
        
         
-        Mail::to('athompson@trueblue.com')
-            ->bcc('hamilton@okospartners.com')
-            ->cc('salesoperations@trueblue.com')
-            ->send(new AccountActivitiesReport($file, $this->period, $this->company));
+        Mail::to('athompson@trueblue.com'.'Amy Thompson')
+            ->bcc('hamilton@okospartners.com', 'Stephen Hamilton')
+            ->cc('salesoperations@trueblue.com', 'Sales Operations')
+            ->send(
+                new AccountActivitiesReport($file, $this->period, $this->company)
+            );
         
         
     }

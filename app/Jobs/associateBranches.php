@@ -15,9 +15,9 @@ class associateBranches implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     public $person;
     /**
-     * Create a new job instance.
-     *
-     * @return void
+     * [__construct description]
+     * 
+     * @param UserImport $person [description]
      */
     public function __construct(UserImport $person)
     {
@@ -32,8 +32,7 @@ class associateBranches implements ShouldQueue
     public function handle()
     {
         
-                $branches = explode(",", str_replace(' ', '', $this->person->branches));
-              
+        $branches = explode(",", str_replace(' ', '', $this->person->branches));     
         foreach ($branches as $branch) {
             $data[$branch]=['role_id' => $this->person->role_id];
         }

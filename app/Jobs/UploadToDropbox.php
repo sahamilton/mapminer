@@ -18,9 +18,9 @@ class UploadToDropbox implements ShouldQueue
     public $file;
     public $path;
     /**
-     * Create a new job instance.
-     *
-     * @return void
+     * [__construct description]
+     * 
+     * @param string $file [description]
      */
     public function __construct($file)
     {

@@ -16,9 +16,11 @@ class NotifyProjectTransfer extends Mailable
     public $person;
     public $transferor;
     /**
-     * Create a new message instance.
-     *
-     * @return void
+     * [__construct description]
+     * 
+     * @param Project $project    [description]
+     * @param Person  $person     [description]
+     * @param Person  $transferor [description]
      */
     public function __construct(Project $project, Person $person, Person $transferor)
     {
@@ -35,6 +37,8 @@ class NotifyProjectTransfer extends Mailable
     public function build()
     {
         
-        return $this->markdown('emails.projecttransfernotify')->to($this->person->userdetails->email, $this->person->postName())->subject('Project Transferred');
+        return $this->markdown('emails.projecttransfernotify')
+            ->to($this->person->userdetails->email, $this->person->postName())
+            ->subject('Project Transferred');
     }
 }

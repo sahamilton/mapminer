@@ -30,6 +30,6 @@ class FailedBackup extends Mailable
     public function build()
     {
         return $this->markdown('emails.failedbackup')
-        ->to(config('mapminer.developer_email'));
+            ->to(config('mapminer.developer_email'));
     }
 }

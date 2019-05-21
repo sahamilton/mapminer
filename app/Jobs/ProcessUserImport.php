@@ -37,7 +37,7 @@ class ProcessUserImport implements ShouldQueue
         $user->email = $this->import->email;
         $user->save();
         // update roles
-        if (is_array($roles = explode(",", [$this->import->role_id))) {
+        if (is_array($roles = explode(",", [$this->import->role_id]))) {
                 $user->roles()->sync($roles);
         } else {
             $user->roles()->sync([]);
@@ -47,14 +47,14 @@ class ProcessUserImport implements ShouldQueue
         if (is_array($servicelines = ",", $this->import->serviceline)) {
             $user->serviceline()->sync(explode(",", $this->import->serviceline));
         } else {
-            $user->serviceline()->sync([]));
+            $user->serviceline()->sync();
         }
         // update person record
         $person = Person::findOrFail($this->import->person_id);
         $person->update($this->import->toArray());
         // update branch assignments  //
         //Not sure we want to do this until we get a good list
-       /* if(is_array($branches = explode(",",$this->import->branches)){
+        /* if(is_array($branches = explode(",",$this->import->branches)){
             $person->branchesServiced()->sync($branches));
         }else{
             $person->branchesServiced()->sync([]));

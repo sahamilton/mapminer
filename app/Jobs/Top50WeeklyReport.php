@@ -27,7 +27,7 @@ class Top50WeeklyReport implements ShouldQueue
      */
     public function __construct()
     {
-        $this->period['from'] = Carbon::create(2019,03,01);
+        $this->period['from'] = Carbon::create(2019, 03, 01);
         $this->period['to'] = Carbon::now()->endOfWeek();
        
     }
@@ -43,7 +43,7 @@ class Top50WeeklyReport implements ShouldQueue
         $file = '/public/reports/top50wkrpt'. $this->period['to']->timestamp. ".xlsx";
         
         Excel::store(new OpenTop50BranchOpportunitiesExport($this->period), $file);
-        Mail::to(['astarr@trueblue.com'])
+        Mail::to('astarr@trueblue.com', 'Amy Starr')
                // ->bcc('hamilton@okospartners.com')
                 //->cc('salesoperations@trueblue.com')
                 ->send(new SendTop50WeeklyReport($file));

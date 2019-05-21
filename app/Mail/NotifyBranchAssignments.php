@@ -20,9 +20,10 @@ class NotifyBranchAssignments extends Mailable
     public $expiration;
     public $campaign;
     /**
-     * Create a new message instance.
-     *
-     * @return void
+     * [__construct description]
+     * 
+     * @param Person   $person   [description]
+     * @param Campaign $campaign [description]
      */
     public function __construct(Person $person, Campaign $campaign)
     {
@@ -42,10 +43,12 @@ class NotifyBranchAssignments extends Mailable
     {
         return $this->markdown('emails.branches.confirmation')
             ->subject('Please confirm your branch associations')
-            ->withSwiftMessage(function ($message) {
-                $headers = $message->getHeaders();
-                $headers->addTextHeader("X-Mailgun-Variables", '{"type": "branch-confirmation"}');
-                $headers->addTextHeader("X-Mailgun-Tag", "branch-confirmation");
-            });
+            ->withSwiftMessage(
+                function ($message) {
+                    $headers = $message->getHeaders();
+                    $headers->addTextHeader("X-Mailgun-Variables", '{"type": "branch-confirmation"}');
+                    $headers->addTextHeader("X-Mailgun-Tag", "branch-confirmation");
+                }
+            );
     }
 }

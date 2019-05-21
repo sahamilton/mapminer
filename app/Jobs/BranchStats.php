@@ -41,12 +41,11 @@ class BranchStats implements ShouldQueue
      
         Excel::store(new BranchStatsExport($this->period), $file);
         Mail::to(
-            [   'astarr@trueblue.com'=>'Amy Starr',
-                'jhammar@trueblue.com'=>'Josh Hammer'
-                ]
+            ['astarr@trueblue.com'=>'Amy Starr',
+                'jhammar@trueblue.com'=>'Josh Hammer']
         )
             ->cc(
-                ['hamilton@okospartners.com'=>"Stephen Hamilton",
+                ['hamilton@okospartners.com'=>'Stephen Hamilton',
                 'salesoperations@trueblue.com'=>'Sales Operations']
             )
             ->send(new BranchStatsReport($file, $this->period));

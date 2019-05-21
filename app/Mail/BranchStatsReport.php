@@ -37,8 +37,9 @@ class BranchStatsReport extends Mailable
         return $this->from('salesoperations@tbmapminer.com', 'Sales Operations')
             ->markdown('emails.branchstatsreport')  
             ->subject('Branch Statistics Weekly Report')
-            ->attach(storage_path($this->file), [
-                        'mime' => 'application/xls']);
+            ->attach(
+                storage_path($this->file), ['mime' => 'application/xls']
+            );
             
     }
 }

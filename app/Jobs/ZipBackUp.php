@@ -15,9 +15,9 @@ class ZipBackUp implements ShouldQueue
     public $db;
     public $path;
     /**
-     * Create a new job instance.
-     *
-     * @return void
+     * [__construct description]
+     * 
+     * @param [type] $file [description]
      */
     public function __construct($file)
     {
@@ -37,7 +37,7 @@ class ZipBackUp implements ShouldQueue
        
         $zip = new \ZipArchive();
         $zip->open($this->path. $this->file . '.zip', \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
-        $zip->addFile($this->path.$this->file.".sql",$this->file.".sql");
+        $zip->addFile($this->path.$this->file.".sql", $this->file.".sql");
         $zip->close();
 
     }

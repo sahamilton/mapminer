@@ -36,9 +36,8 @@ class SendUnknownRequest extends Mailable
     public function build()
     {
        
-
         return $this->markdown('emails.unknownrequest')
-        ->subject('re: Your email');
+            ->subject('re: Your email');
 
     }
 }

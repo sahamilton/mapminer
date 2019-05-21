@@ -52,9 +52,11 @@ class AccountOpportunities implements ShouldQueue
         $manageremail = $this->company->managedBy->userdetails()->first()->email;
         // get disty list
         Mail::to($this->distribution['to'])
-           ->cc(isset($this->distribution['cc']) ? $this->distribution['cc'] : config('mapminer.system_contact'))
-           ->send(new AccountOpportunitiesReport($file,$this->period,$this->company));
-        
-        
+            ->cc(
+                isset($this->distribution['cc']) ? $this->distribution['cc'] : config('mapminer.system_contact')
+            )
+            ->send(
+                new AccountOpportunitiesReport($file, $this->period, $this->company)
+            );
     }
 }
