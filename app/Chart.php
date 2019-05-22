@@ -48,20 +48,24 @@ class Chart extends Model
         $types = $activitytypes->pluck('activity')->toArray();
         $chart= array();
         // Build array by team member of all activities by type
+        $result = [];
         foreach ($data['team'] as $team) {
             foreach ($data[$team->id]['activitiestype'] as  $activity) {
-                ksort($activity);
-                foreach ($activity as $key=>$act) {
-                    // set key to activity name
-                    $type = $activitytypes->where('id', $key)->first()->activity;
-                    if (isset($result[$team->id][$type])) {
-                        $result[$team->id][$type] += count($act);   
-                    } else {
-                        $result[$team->id][$type] = count($act);
-                    }    
-                }   
+                if (count($activity)>0) {
+                    ksort($activity);
+                    foreach ($activity as $key=>$act) {
+                        // set key to activity name
+                        $type = $activitytypes->where('id', $key)->first()->activity;
+                        if (isset($result[$team->id][$type])) {
+                            $result[$team->id][$type] += count($act);   
+                        } else {
+                            $result[$team->id][$type] = count($act);
+                        }    
+                    } 
+                }  
             }
         }
+  
         // fill array with necessary blank team members
         foreach (array_diff($data['team']->pluck('id')->toArray(), array_keys($result)) as $missing) {
             $result[$missing] = [];
@@ -74,6 +78,7 @@ class Chart extends Model
             }
             ksort($filled[$key]);
         }
+
         // fill chart array by type, color, labels and data
         foreach ($this->_transpose($filled) as $key=>$result) {
             $color = $activitytypes->where('activity', $key)->first()->color;
