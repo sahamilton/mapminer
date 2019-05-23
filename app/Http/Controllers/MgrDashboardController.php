@@ -310,6 +310,7 @@ class MgrDashboardController extends DashboardController
                 
                 $data[$team->id]['activities'] = $branchdata
                       ->whereIn('id', $branches)
+                      ->where('completed', 1)
                       ->sum('activities_count');
 
                 $data[$team->id]['activitiestype'] = $branchdata
