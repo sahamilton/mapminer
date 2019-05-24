@@ -37,7 +37,7 @@
 	      role="tab" 
 	      aria-controls="upcoming" 
 	      aria-selected="true">
-	    <strong> Upcoming ({{$data['activities']->where('completed', '=' , 1)->count()}})</strong>
+	    <strong> Upcoming ({{$data['activities']->where('completed', '=' , 0)->count()}})</strong>
 	  </a>
 	  <a class="nav-item nav-link" 
 	      id="details-tab" 
@@ -46,7 +46,7 @@
 	      role="tab" 
 	      aria-controls="details" 
 	      aria-selected="false">
-	    <strong> Completed ({{$data['activities']->where('completed', '=' ,0)->count()}})</strong>
+	    <strong> Completed ({{$data['activities']->where('completed', '=' ,1)->count()}})</strong>
 	  </a>
 
 	</div>

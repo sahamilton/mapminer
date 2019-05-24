@@ -56,8 +56,7 @@ class ActivityController extends Controller
         $branches = array_keys($myBranches);
         $branch = $this->branch->findOrFail(reset($branches));
         $data = $this->_getBranchActivities($branch);
-        $activitytypes = $this->_getBranchActivititiesByType($branch);
-        $data['activitychart'] = $this->chart->getBranchActivityByTypeChart($activitytypes);
+       
         $title= $data['branches']->first()->branchname . " activities";
 
         return response()->view(
@@ -101,7 +100,7 @@ class ActivityController extends Controller
      */
     public function branchActivities(Request $request, Branch $branch) 
     {
-        
+    
         if (request()->has('branch')) {
             $branch = $this->branch->findOrFail(request('branch'));
         }
@@ -116,7 +115,7 @@ class ActivityController extends Controller
        
          
         $data = $this->_getBranchActivities($branch, $from = false);
-       
+        
         $title= $data['branches']->first()->branchname . " activities";
         return response()->view(
             'activities.index',
@@ -158,7 +157,8 @@ class ActivityController extends Controller
             ->toArray();
         
         $data['summary'] = $this->activity->summaryData($weekCount);
-       
+        $activitytypes = $this->_getBranchActivititiesByType($branch);
+        $data['activitychart'] = $this->chart->getBranchActivityByTypeChart($activitytypes);
         return $data;
     }
     /**
