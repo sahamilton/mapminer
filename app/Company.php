@@ -147,27 +147,7 @@ class Company extends NodeModel
         
         
         $isNullable = $this->isNullable($keys, $columns);
-            
-        /* if ($filtered) {
-            foreach ($columns as $column){
-            if(isset($isNullable[$column]) && $isNullable[$column]){
-                $query->where(
-                function($q) use ($filtered,$keys, $isNullable,$column) {
-                    $q->whereIn($column,$keys)
-                    ->orWhereNull($column)->get();
-                });$this->locations->where('company_id','=',$company_id)->whereIn('segment',$segment_keys)->whereIn('businesstype',$businesstype_keys)->get()
-            }else{
-                $query->whereIn($column,$keys)->get();
-            }
-        }
 
-        if($paginate)
-        {
-         //$locations = $locations->paginate($paginate);
-        $locations = $query->get();
-        } else {
-            $locations = $query->get();
-        }*/
 
         return $query->get();
     }
