@@ -33,6 +33,7 @@ class Address extends Model
         'businessname',
         'street',
         'city',
+        'zip',
         'state'
 
     ];
@@ -164,7 +165,10 @@ class Address extends Model
     public function orders()
     {
  
-        return $this->hasManyThrough(Orders::class, AddressBranch::class, 'address_id', 'address_branch_id', 'id', 'id');
+        return $this->hasManyThrough(
+            Orders::class, AddressBranch::class, 
+            'address_id', 'address_branch_id', 'id', 'id'
+        );
     }
     /**
      * [activities description]
@@ -182,7 +186,8 @@ class Address extends Model
      */
     public function fullAddress()
     {
-        return $this->street." ". $this->address2." ".$this->city." ".$this->state." ".$this->zip;
+        return $this->street ." "
+        . $this->address2." ".$this->city." ".$this->state." ".$this->zip;
     }
     /**
      * [industryVertical description]
@@ -221,7 +226,9 @@ class Address extends Model
      */
     public function assignedToBranch()
     {
-        return $this->belongsToMany(Branch::class, 'address_branch', 'address_id', 'branch_id')
+        return $this->belongsToMany(
+            Branch::class, 'address_branch', 'address_id', 'branch_id'
+        )
             ->withPivot('rating', 'person_id', 'status_id', 'comments')
             ->withTimeStamps();
     }
@@ -232,7 +239,9 @@ class Address extends Model
      */
     public function claimedByBranch()
     {
-        return $this->belongsToMany(Branch::class, 'address_branch', 'address_id', 'branch_id')
+        return $this->belongsToMany(
+            Branch::class, 'address_branch', 'address_id', 'branch_id'
+        )
             ->withPivot('rating', 'person_id', 'status_id', 'comments')
             ->withTimeStamps()->whereIn('status_id', [2]);
     }
@@ -243,7 +252,9 @@ class Address extends Model
      */
     public function closed()
     {
-        return $this->belongsToMany(Branch::class, 'address_branch', 'address_id', 'branch_id')
+        return $this->belongsToMany(
+            Branch::class, 'address_branch', 'address_id', 'branch_id'
+        )
             ->withPivot('rating', 'person_id', 'status_id', 'comments')
             ->withTimeStamps()->whereIn('status_id', [3]);
     }
@@ -254,7 +265,9 @@ class Address extends Model
      */
     public function assignedToPerson()
     {
-        return $this->belongsToMany(Person::class, 'address_branch', 'address_id', 'person_id')
+        return $this->belongsToMany(
+            Person::class, 'address_branch', 'address_id', 'person_id'
+        )
             ->withPivot('rating', 'branch_id', 'status_id', 'comments')
             ->withTimeStamps();
     }
@@ -279,7 +292,10 @@ class Address extends Model
     public function opportunities()
     {
  
-        return $this->hasManyThrough(Opportunity::class, AddressBranch::class, 'address_id', 'address_branch_id', 'id', 'id');
+        return $this->hasManyThrough(
+            Opportunity::class, AddressBranch::class, 
+            'address_id', 'address_branch_id', 'id', 'id'
+        );
     }
     /**
      * [servicedBy description]
@@ -381,4 +397,15 @@ class Address extends Model
         );
     }
 
+    public function addressType()
+    {
+        if ($this->has('opportunities')) {
+            return 'opportunity';
+        } elseif ($this->has('assignedToBranch')) {
+            return 'lead';
+
+        } else {
+            return 'prospect';
+        }
+    }
 }

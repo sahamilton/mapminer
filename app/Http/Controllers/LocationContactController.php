@@ -60,16 +60,23 @@ class LocationContactController extends Controller
         $opportunity = Opportunity::whereIn('branch_id', $branches)->pluck('address_id')->toArray();
             
         $customer = AddressBranch::whereIn('branch_id', $branches)->pluck('address_id')->toArray();
-        $data['branches'] =$this->getBranches($branches);
+        $data['branches'] =$this->_getBranches($branches);
         $data['contacts']=$this->contact->whereIn('address_id', array_merge($opportunity, $customer))->with('location')->get();
          return  $data;
     }
-    private function getBranches($branches)
-       {
+    /**
+     * [_getBranches description]
+     * 
+     * @param [type] $branches [description]
+     * 
+     * @return [type]           [description]
+     */
+    private function _getBranches($branches)
+    {
         return  $this->branch->with('opportunities', 'leads', 'manager')
             ->whereIn('id', $branches)
             ->get();
-       }
+    }
 
      
     /**
@@ -85,7 +92,8 @@ class LocationContactController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request 
+     * 
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -100,10 +108,11 @@ class LocationContactController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * [show description]
+     * 
+     * @param [type] $contact [description]
+     * 
+     * @return [type]          [description]
      */
     public function show($contact)
     {
@@ -111,10 +120,11 @@ class LocationContactController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * [edit description]
+     * 
+     * @param [type] $contact [description]
+     * 
+     * @return [type]          [description]
      */
     public function edit($contact)
     {
@@ -122,11 +132,12 @@ class LocationContactController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * [update description]
+     * 
+     * @param Request $request [description]
+     * @param [type]  $contact [description]
+     * 
+     * @return [type]           [description]
      */
     public function update(Request $request, $contact)
     {
@@ -137,10 +148,11 @@ class LocationContactController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * [destroy description]
+     * 
+     * @param [type] $contact [description]
+     * 
+     * @return [type]          [description]
      */
     public function destroy($contact)
     {
@@ -148,14 +160,20 @@ class LocationContactController extends Controller
         $contact->delete();
         return redirect()->back();
     }
-
+    /**
+     * [vcard description]
+     * 
+     * @param [type] $id [description]
+     * 
+     * @return [type]     [description]
+     */
     public function vcard($id)
     {
         \Debugbar::disable();
             $vcard = new VCard;
             $contact = $this->contact
-            ->with('location')
-            ->findOrFail($id);
+                ->with('location')
+                ->findOrFail($id);
             $vcard->addName($contact->fullName(), null, null, null, null);
             // add work data
             $vcard->addCompany($contact->location->businessname);

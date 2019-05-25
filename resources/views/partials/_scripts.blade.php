@@ -127,7 +127,12 @@ $(document).ready(function()
 			"bPaginate": false,
 		}
 		);
-	  
+	  $("[id^=sorttableno]").DataTable(
+		{
+
+			"bPaginate": false,
+		}
+		);
 
         $('[id^=sorttable], #store-locator-container').on('change','.watchItem',function(e) {
         e.stopImmediatePropagation();

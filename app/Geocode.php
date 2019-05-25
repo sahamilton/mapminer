@@ -3,10 +3,13 @@ namespace App;
 
 trait Geocode
 {
-   /**
-
-
-   **/
+      /**
+       * [getGeoCode description]
+       * 
+       * @param [type] $geoCode [description]
+       * 
+       * @return [type]          [description]
+       */
     public function getGeoCode($geoCode)
     {
    
@@ -23,10 +26,13 @@ trait Geocode
             }
               
             $data['geostatus']=true;
-            $data['address'] =  $geoCode->first()->getStreetNumber()." " . $geoCode->first()->getStreetName();
+            $data['address'] =  $geoCode->first()
+                ->getStreetNumber()." " . $geoCode->first()->getStreetName();
             $data['street'] = $data['address'];
               
-            if (! $geoCode->first()->getLocality() && count($geoCode->first()->getadminLevels())>0) {
+            if (! $geoCode->first()->getLocality() 
+                && count($geoCode->first()->getadminLevels())>0
+            ) {
                 foreach ($geoCode->first()->getadminLevels() as $level) {
                     $data['city'] = $level->getName();
                 }
@@ -37,19 +43,23 @@ trait Geocode
             $data['zip'] = $geoCode->first()->getPostalCode();
 
             if (count($geoCode->first()->getadminLevels())>0) {
-                //dd('it does');
                    
                 $data['state'] = $geoCode->first()
-                                ->getadminLevels()
-                                ->first()
-                                ->getCode();
+                    ->getadminLevels()
+                    ->first()
+                    ->getCode();
             } else {
                 $data['state']=null;
-               //dd('it doesnt');
+             
             }
      
 
-            $data['fulladdress'] = trim($data['address'] .' ' . $data['city']. ' ' . $data['state'] .' ' . $data['zip']);
+            $data['fulladdress'] = trim(
+                $data['address'] 
+                    .' ' . $data['city']
+                    . ' ' . $data['state'] 
+                    .' ' . $data['zip']
+            );
             $data['position']= $this->setLocationAttribute($data);
         } else {
             $data['lat'] = null;
@@ -60,7 +70,16 @@ trait Geocode
           return $data;
     }
 
-
+    /**
+     * [scopeNearby description]
+     * 
+     * @param [type]  $query    [description]
+     * @param [type]  $location [description]
+     * @param integer $radius   [description]
+     * @param [type]  $limit    [description]
+     * 
+     * @return [type]            [description]
+     */
     public function scopeNearby($query, $location, $radius = 100, $limit = null)
     {
     

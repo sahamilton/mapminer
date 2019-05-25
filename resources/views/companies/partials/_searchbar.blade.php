@@ -36,6 +36,7 @@
                 name: 'companies',
                 source: bloodhound,
                 display: function(data) {
+
                     return data.businessname +" "+ data.city //Input value to be set when you select a suggestion. 
                 },
                 templates: {
@@ -47,10 +48,10 @@
                     ],
                     suggestion: function(data) {
                         var url = '{{ route("address.show", ":slug") }}';
-
-                        url = url.replace(':slug', data.id);
-                    return '<div style="font-weight:normal; margin-top:-10px ! important;" class="list-group-item"><a href="'+ url +'">'
-                         + data.businessname + ', ' + data.city + '</a></div></div>'
+                        var color = 'orange';
+                        url = url.replace(':slug', data.id,color);
+                    return '<div font-weight:bold; margin-top:-10px ! important;" class="list-group-item"><a style="color:' + color +'" href="'+ url +'">'
+                         + data.businessname + ', ' + data.city +   '</a></div></div>'
                     }
                 }
             });

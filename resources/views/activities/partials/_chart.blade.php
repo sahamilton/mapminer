@@ -1,4 +1,3 @@
-
 @if(isset($data['summary']) && count($data['summary']) > 0)
 
 <script type="text/javascript" 

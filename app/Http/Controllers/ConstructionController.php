@@ -9,16 +9,26 @@ use App\Branch;
 
 class ConstructionController extends BaseController
 {
+    use GeoCode;
     public $construction;
     public $branch;
-    
+    /**
+     * [__construct description]
+     * 
+     * @param Construction $construction [description]
+     * @param Branch       $branch       [description]
+     */
     public function __construct(Construction $construction, Branch $branch)
     {
         $this->construction = $construction;
         $this->branch = $branch;
         parent::__construct($construction);
     }
-    
+    /**
+     * [index description]
+     * 
+     * @return [type] [description]
+     */
     public function index()
     {
         $projects = [];
@@ -26,8 +36,13 @@ class ConstructionController extends BaseController
     }
 
     
-    
-
+    /**
+     * [search description]
+     * 
+     * @param Request $request [description]
+     * 
+     * @return [type]           [description]
+     */
     public function search(Request $request)
     {
  
@@ -48,12 +63,14 @@ class ConstructionController extends BaseController
         }
     }
     
-
     /**
-    /    Create XML of nearby construction projects for mapping.
-    /
-    /
-    **/
+     * [map description]
+     * 
+     * @param [type] $distance [description]
+     * @param [type] $latlng   [description]
+     * 
+     * @return xml          [description]
+     */
     public function map($distance, $latlng)
     {
 
@@ -64,7 +81,13 @@ class ConstructionController extends BaseController
     }
     
 
-
+    /**
+     * [show description]
+     * 
+     * @param [type] $id [description]
+     * 
+     * @return [type]     [description]
+     */
     public function show($id)
     {
 
@@ -76,11 +99,17 @@ class ConstructionController extends BaseController
             $project['location']['lon'] = $construction->lng;
         }
     
-        $branches = $this->branch->getNearByBranches($this->userServiceLines, $construction);
+        $branches = $this->branch->nearby($construction);
             
         return response()->view('construct.show', compact('project', 'branches'));
     }
-
+    /**
+     * [company description]
+     * 
+     * @param [type] $id [description]
+     * 
+     * @return [type]     [description]
+     */
     public function company($id)
     {
 

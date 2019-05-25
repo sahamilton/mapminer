@@ -23,9 +23,16 @@ var barChart = new Chart(ctpipe,
           yAxes: [{
               display: true,
               ticks: {
-                  
+                  autoSkip:false,
                   beginAtZero: true   // minimum value will be 0.
               }
+          }],
+           yAxes: [{
+              display: true,
+              ticks: {
+                  autoSkip:false,
+                  beginAtZero: true   // minimum value will be 0.
+              },
           }]
       }
     }

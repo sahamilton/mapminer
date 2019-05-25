@@ -20,6 +20,17 @@ class BranchManagementController extends Controller
     public $user;
     public $campaign;
     public $branchTeamRoles =[3,5,9,11,13];
+    
+
+    /**
+     * [__construct description]
+     * 
+     * @param Person           $person           [description]
+     * @param Branch           $branch           [description]
+     * @param BranchManagement $branchmanagement [description]
+     * @param User             $user             [description]
+     * @param Campaign         $campaign         [description]
+     */
     public function __construct(
         Person $person,
         Branch $branch,
@@ -39,22 +50,21 @@ class BranchManagementController extends Controller
     /**
      * Display a listing of the resource.
      * Get list of sales people with stale branch assignments
+     * 
      * @return \Illuminate\Http\Response
      */
-    
-
     public function index()
     {
         $id = auth()->user()->id;
         return redirect()->route('branchassignments.show', $id);
     }
 
-
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * [show description]
+     * 
+     * @param [type] $id [description]
+     * 
+     * @return [type]     [description]
      */
     public function show($id)
     {
@@ -76,16 +86,18 @@ class BranchManagementController extends Controller
         }
  
         $branches = $details->branchesServiced->merge($branches);
-        return response()->view('branchassignments.show', ['details'=>$details,'branches'=>$branches]);
+        return response()->view(
+            'branchassignments.show', ['details'=>$details,'branches'=>$branches]
+        );
     }
 
-    
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  App\Request\BranchManagementRequest  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * [update description]
+     * 
+     * @param BranchManagementRequest $request [description]
+     * @param [type]                  $id      [description]
+     * 
+     * @return [type]                           [description]
      */
     public function update(BranchManagementRequest $request, $id)
     {
@@ -102,7 +114,14 @@ class BranchManagementController extends Controller
         return redirect()->route('user.show', $id)
             ->withMessage("Thank You. Your branch associations have been updated. Check out the rest of your profile.");
     }
-
+    /**
+     * [correct description]
+     * 
+     * @param [type] $token [description]
+     * @param [type] $cid   [description]
+     * 
+     * @return [type]        [description]
+     */
     public function correct($token, $cid = null)
     {
  
@@ -125,14 +144,22 @@ class BranchManagementController extends Controller
             //
             $user->update(['apitoken' => $user->setApiToken()]);
             return redirect()->route('user.show', $user->id)
-            ->withMessage("Thank You. Your branch associations have been confirmed. Check out the rest of your profile.");
+                ->withMessage("Thank You. Your branch associations have been confirmed. Check out the rest of your profile.");
         } else {
             //go to home screen
             
-            return redirect()->route('welcome')->withMessage("Invalid or expired token.");
+            return redirect()->route('welcome')
+                ->withMessage("Invalid or expired token.");
         }
     }
-
+    /**
+     * [confirm description]
+     * 
+     * @param [type] $token [description]
+     * @param [type] $cid   [description]
+     * 
+     * @return [type]        [description]
+     */
     public function confirm($token, $cid = null)
     {
         
@@ -143,7 +170,7 @@ class BranchManagementController extends Controller
             auth()->login($user);
             // update token - single useauth()->login($user);
             $user->update(['apitoken' => $user->setApiToken()]);
-           // update token - single use
+
             if ($cid) {
                 $campaign = $this->campaign->findOrFail($cid);
                 $campaign->participants()->attach($person, ['activity'=>'confirm']);
@@ -151,10 +178,18 @@ class BranchManagementController extends Controller
             // insert activity_person_cid
             return redirect()->route('branchassignments.show', $user->id);
         } else {
-            return redirect()->route('welcome')->withMessage("Invalid or expired token");
+            return redirect()->route('welcome')
+                ->withMessage("Invalid or expired token");
         }
     }
-
+    /**
+     * [change description]
+     * 
+     * @param Request $request [description]
+     * @param User    $user    [description]
+     * 
+     * @return [type]           [description]
+     */
     public function change(Request $request, User $user)
     {
         $person = $user->person()->with('branchesServiced')->first();
@@ -163,7 +198,8 @@ class BranchManagementController extends Controller
         if ($person->branchesServiced->contains('id', request('id'))) {
             $person->branchesServiced()->detach(request('id'));
         } else {
-            $person->branchesServiced()->attach([request('id')=>['role_id'=>$role->id]]);
+            $person->branchesServiced()
+                ->attach([request('id')=>['role_id'=>$role->id]]);
         }
     }
 }

@@ -19,7 +19,10 @@ class BackupDatabase extends Command
     protected $process;
     public $file;
     public $filename;
-
+    
+    /**
+     * [__construct description]
+     */
     public function __construct()
     {
         parent::__construct();
@@ -28,17 +31,23 @@ class BackupDatabase extends Command
         $this->path = storage_path('backups/');
         $this->file = $this->path.$this->filename.'.sql';
         
-        $this->process = new Process(sprintf(
-            'mysqldump -u%s -p%s %s > %s',
-            config('database.connections.mysql.username'),
-            config('database.connections.mysql.password'),
-            config('database.connections.mysql.database'),
-            $this->file
-        ));
+        $this->process = new Process(
+            sprintf(
+                'mysqldump -u%s -p%s %s > %s',
+                config('database.connections.mysql.username'),
+                config('database.connections.mysql.password'),
+                config('database.connections.mysql.database'),
+                $this->file
+            )
+        );
 
         
     }
-
+    /**
+     * [handle description]
+     * 
+     * @return [type] [description]
+     */
     public function handle()
     {
         try { 
