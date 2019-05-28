@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Exports;
-use App\Activities;
+use App\Activity;
 
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
@@ -26,7 +26,7 @@ class MyActivities implements FromView
      */
     public function view(): View
     {
-        $results = Activities::where('user_id', auth()->user()->id)
+        $results = Activity::where('user_id', auth()->user()->id)
                 ->with('relatesToAddress')
                 ->with('type')
                 ->get();
