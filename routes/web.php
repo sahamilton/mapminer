@@ -698,38 +698,42 @@
             Route::post('api/searchfilters/postAccounts', ['as'=>'postAccountSegments', 'uses'=>'SearchFiltersController@getAccountSegments']);
             Route::resource('searchfilters', 'SearchFiltersController');
             //   Jobs
-             Route::get('testjob',function(){
-             $company = App\Company::findOrFail(532);
-             $period['from'] = \Carbon\Carbon::now()->subWeek()->startOfWeek();
-             $period['to'] = \Carbon\Carbon::now()->subWeek()->startOfWeek();
-             App\Jobs\AccountActivities::dispatch($company,$period);
-        
-             /*$filesInFolder = \File::files(storage_path('backups'));
-             foreach ($filesInFolder as $file){
-             if(pathinfo($file)['extension'] == 'sql'){
-             $filename = pathinfo($file)['filename'];
-             App\Jobs\ZipBackUp::withChain([new App\Jobs\UploadToDropbox($filename)])
+            Route::get(
+                'testjob', function () {
+                    //$company = App\Company::findOrFail(532);
+                    $period['from'] = \Carbon\Carbon::now()->subWeek()->startOfWeek();
+                    $period['to'] = \Carbon\Carbon::now()->subWeek()->startOfWeek();
+                    //App\Jobs\AccountActivities::dispatch($company,$period);
+
+                    /*$filesInFolder = \File::files(storage_path('backups'));
+                    foreach ($filesInFolder as $file){
+                    if(pathinfo($file)['extension'] == 'sql'){
+                    $filename = pathinfo($file)['filename'];
+                    App\Jobs\ZipBackUp::withChain([new App\Jobs\UploadToDropbox($filename)])
                     ->dispatch($filename)->onQueue('mapminer');
-             }
-             
-             }
-             $period['from'] = \Carbon\Carbon::now()->subWeek()->startOfWeek();
-             $period['to'] = \Carbon\Carbon::now()->subWeek()->endOfWeek();
-            App\Jobs\BranchStats::dispatch($period);
-            //App\Jobs\ActivityOpportunityReport::dispatch();
-            //App\Jobs\ActivityOpportunityReport::dispatch();
-            
-            //App\Jobs\ZipBackup::dispatch('MMProd20190123');
-            //App\Jobs\UploadToDropbox::dispatch('MMProd20190123');
-            //Mail::queue(new App\Mail\ConfirmBackup('MMProd20190123'));
-            */
-            });
+                    }
+
+                    }
+                    */
+                    App\Jobs\BranchStats::dispatch($period);
+                    /*
+                    //App\Jobs\ActivityOpportunityReport::dispatch();
+                    //App\Jobs\ActivityOpportunityReport::dispatch();
+
+                    //App\Jobs\ZipBackup::dispatch('MMProd20190123');
+                    //App\Jobs\UploadToDropbox::dispatch('MMProd20190123');
+                    //Mail::queue(new App\Mail\ConfirmBackup('MMProd20190123'));
+                    */
+                }
+            );
         
-             Route::get('testgraph',function (){
-             return response()->view('charts.testgraph');
-             })->name('testgraph');
-        //   Tracking
-        Route::resource('track', 'TrackController');
+            Route::get(
+                'testgraph', function () {
+                    return response()->view('charts.testgraph');
+                }
+            )->name('testgraph');
+            //   Tracking
+            Route::resource('track', 'TrackController');
         
             //   Versions
             Route::resource('versions', 'GitController');
