@@ -48,9 +48,9 @@ class AccountActivities implements ShouldQueue
         $this->company->load('managedBy');
        
         
-        Mail::to('athompson@trueblue.com')
-            ->bcc('hamilton@okospartners.com')
-            ->cc('salesoperations@trueblue.com')
+        Mail::to('athompson4@trueblue.com', 'Amy Thompson')
+            ->bcc('hamilton@okospartners.com', 'Stephen Hamilton')
+            ->cc('salesoperations@trueblue.com', 'Sales Operations')
             ->send(
                 new AccountActivitiesReport($file, $this->period, $this->company)
             );
