@@ -70,6 +70,7 @@ class Chart extends Model
         foreach (array_diff($data['team']->pluck('id')->toArray(), array_keys($result)) as $missing) {
             $result[$missing] = [];
         }
+        $filled = array();
         // fill complete team array with missing activity types
         foreach ($result as $key=>$res) {
             $filled[$key] = $res;
@@ -78,16 +79,17 @@ class Chart extends Model
             }
             ksort($filled[$key]);
         }
-
-        // fill chart array by type, color, labels and data
-        foreach ($this->_transpose($filled) as $key=>$result) {
-            $color = $activitytypes->where('activity', $key)->first()->color;
-            $chart[$key]['color']= "#" . $color;
-            $chart[$key]['labels']=$labels; 
-            $chart[$key]['data'] = implode(",", $result);
-            
+        if ($filled) {
+            // fill chart array by type, color, labels and data
+            foreach ($this->_transpose($filled) as $key=>$result) {
+                $color = $activitytypes->where('activity', $key)->first()->color;
+                $chart[$key]['color']= "#" . $color;
+                $chart[$key]['labels']=$labels; 
+                $chart[$key]['data'] = implode(",", $result);
+                
+            }
         }
-
+       
         return $chart;
     }
     /**
