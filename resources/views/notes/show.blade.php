@@ -2,8 +2,6 @@
 @section('content')
 
 
-<p><a href="{{route('watch.index')}}" title="Review my watch list"><i class="fas fa-th-list" aria-hidden="true"></i> View My Watch List</a></p>
-
 @foreach ($types as $key=>$type)
 <div class="row">
 	<div class="col-md-8 col-md-offset-2">

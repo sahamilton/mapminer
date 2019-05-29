@@ -142,16 +142,6 @@
         <strong>Branches</strong>
   </a>
 
-  <a class="nav-item nav-link"  
-        data-toggle="tab" 
-        href="#watchers"
-        id="watcher-tab"
-        role="tab"
-        aria-controls="watchers"
-        aria-selected="false">
-
-    <strong> Watchers ({{$location->watchedBy->count()}})</strong>
-  </a>
   <a class="nav-item nav-link" 
       data-toggle="tab" 
       href="#note"
@@ -242,10 +232,7 @@
     <div id="branch" class="tab-pane fade">
      @include('addresses.partials._tabbranches')
     </div>
-    <div id="watchers" class="tab-pane fade">
-     @include('addresses.partials._tabwatcher')
-    </div>
-   <div id="business" class="tab-pane fade">
+    <div id="business" class="tab-pane fade">
      @include('addresses.partials._taborders')
     </div>
     <div id="rating" class="tab-pane fade">

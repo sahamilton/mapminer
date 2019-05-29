@@ -49,13 +49,6 @@
                     
               <a class="dropdown-item" href="{{{ route('dashboard.index') }}}">
               <i class="fas fa-tachometer-alt"></i> My Dashboard</a>
-
-            <a class="dropdown-item" href="{{{ route('watch.index') }}}">
-              <i class ="far fa-eye"></i> My Watch List</a>
-
-
-              
-              
               
               <a class="dropdown-item" href="{{{ route('training.index') }}}">
               <i class="fas fa-graduation-cap" aria-hidden="true"></i>

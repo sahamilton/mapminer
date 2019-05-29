@@ -7,7 +7,7 @@
 		<th>City </th> 
 		<th>State </th> 
 		<th>ZIP </th> 
-		<th>Watching </th> 
+
 
     </thead>
     <tbody>
@@ -34,15 +34,6 @@
 	<td>{{$location->state}}</td>
 	<td>{{$location->zip}}</td>
 
-
-	<td style ="text-align: center; vertical-align: middle;">
-
-		<input type='checkbox' name='watchList' class='watchItem' 
-		{{ in_array($location->id,$mywatchlist) ? 'checked' : '' }}
-	 	id="{{$location->id}}"
-	 	value='{{$location->id}}' >
-	</td>
-		
     </tr>
    @endforeach
     

@@ -1,6 +1,6 @@
 <table id ='sorttable'  class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
-    	<th>Watch</th>
+    	
 		<th>Company Name</th>
 		<th>Customer ID</th>
     </thead>
@@ -8,7 +8,7 @@
     	@if($data['parent'])
 			@foreach($data['parent'] as $parent)
 				<tr> 
-					<td>Belongs To</td>
+					
 					<td>
 						<a href="{{route('company.show',$parent->id)}}">
 							{{$parent->companyname}}

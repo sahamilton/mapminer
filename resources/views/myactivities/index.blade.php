@@ -6,15 +6,6 @@
 <nav>
   <div class="nav nav-tabs" id="nav-tab" role="tablist">
   <a class="nav-link nav-item active" 
-      id="details-tab" 
-      data-toggle="tab" 
-      href="#details" 
-      role="tab" 
-      aria-controls="details" 
-      aria-selected="true">
-    <strong>My Watch List</strong>
-  </a>
-    <a class="nav-item nav-link"  
         data-toggle="tab" 
         href="#contacts"
         id="contact-tab"
@@ -68,10 +59,8 @@
 </div>
 </nav>
 <div class="tab-content" id="nav-tabContent">
-    <div id="details" class="tab-pane show active">
-      @include('watch.partials._table')
-    </div>
-     <div id="leads" class="tab-pane fade">
+    <div id="leads" class="tab-pane show active">
+      
       @include('leads.partials._tablist')
     </div>
 
