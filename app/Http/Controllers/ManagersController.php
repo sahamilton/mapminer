@@ -56,11 +56,11 @@ class ManagersController extends BaseController {
 
 		//dd(request()->all());
 
-		if(! request()->filled('manager')){
+		if (! request()->filled('manager')) {
 
 
 			$managerArray = $this->getManagers(auth()->id());
-			if(isset($managerArray['user_id'])){
+			if (isset($managerArray['user_id'])) {
 				$this->managerID = $managerArray['user_id'];
 			}else{
 				$this->managerID = 'All';
@@ -72,7 +72,7 @@ class ManagersController extends BaseController {
 			
 		}
 		// if there is a change of manager
-		if($this->managerID != session('manager') && ! request()->filled('accounts')){
+		if ($this->managerID != session('manager') && ! request()->filled('accounts')) {
 
 				
 				$data =  $this->getMyAccounts();
@@ -86,7 +86,7 @@ class ManagersController extends BaseController {
 		}
 		
 		session()->flash('manager', $this->managerID);
-		if($this->managerID[0] == 'All' and ! isset($data['accounts']))
+		if ($this->managerID[0] == 'All' and ! isset($data['accounts']))
 		{
 			
 			return  redirect()->to(route('managers.view'));
@@ -94,7 +94,7 @@ class ManagersController extends BaseController {
 		
 		$data =  $this->getManagersData($data);
 
-		if(! is_array($data['accounts']))
+		if (! is_array($data['accounts']))
 		{
 
 			return  redirect()->to(route('managers.view'));
@@ -106,16 +106,16 @@ class ManagersController extends BaseController {
 	private function getManagersData($data=null)
 	{
 		
-		if(! isset($data['accounts'])){
+		if (! isset($data['accounts'])) {
 			$data = $this->getMyAccounts($data);
 		}
 	
-		if(! isset($data['title'])){
+		if (! isset($data['title'])) {
 			$data['title'] = 'Title';
 		}
 		$data['managerList'] = $this->getAllManagers();
 
-		if(! isset($data['selectedAccounts'])){
+		if (! isset($data['selectedAccounts'])) {
 			$data['selectedAccounts'] = array();
 			foreach ($data['accounts'] as $keys=>$value)
 			{
@@ -146,7 +146,7 @@ class ManagersController extends BaseController {
 	{
 		
 		
-		if (! $this->checkManager($company)){
+		if (! $this->checkManager($company)) {
 			return redirect()->route('managers.view')->withWarning('this is not one of your accounts');
 		}
 		
@@ -203,7 +203,7 @@ class ManagersController extends BaseController {
 			// refactor
 		return \App\Note::where('type','=','location')
 		
-		->whereHas('relatesToLocation',function($q) use($companyID){
+		->whereHas('relatesToLocation',function($q) use($companyID) {
 			$q->where('company_id','=',$companyID);
 		})
 		->with('relatesToLocation','relatesToLocation.company','writtenBy')
@@ -219,7 +219,7 @@ class ManagersController extends BaseController {
 	private function getMyAccounts($data=null)
 	{	
 	
-		if(auth()->user()->hasRole('national_account_manager'))
+		if (auth()->user()->hasRole('national_account_manager'))
 		{
 
 			$data['accounts'] = Company::where('person_id',"=",auth()->user()->person()->first()->id)
@@ -228,11 +228,11 @@ class ManagersController extends BaseController {
 			->pluck('companyname','id')
 			->toArray();;
 			$data['title'] = 'Your Accounts';
-		}elseif(isset($this->managerID) and $this->managerID !='All'){
+		}elseif (isset($this->managerID) and $this->managerID !='All') {
 			
 			// Did we change the manager
 
-			if(null !== session('manager') and $this->managerID != session('manager')){
+			if (null !== session('manager') and $this->managerID != session('manager')) {
 				$data['accountstring'] = NULL;
 				
 			}
@@ -303,10 +303,10 @@ class ManagersController extends BaseController {
 	 * [companywatchexport description]
 	 * @return [type] [description]
 	 */
-	public function companywatchexport(){
+	public function companywatchexport() {
 		$id = urldecode(\Input::get('id'));
 		
-		Excel::download('Watch List',function($excel) use ($id){
+		Excel::download('Watch List',function($excel) use ($id) {
 			$excel->sheet('Watching',function($sheet) use ($id) {
 				$result = $this->getAllAccountWatchers($id);
 				$sheet->loadview('companies.export',compact('result'));

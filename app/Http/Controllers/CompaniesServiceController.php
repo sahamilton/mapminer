@@ -25,24 +25,24 @@ class CompaniesServiceController extends BaseController
         $this->limit = config('app.location_limit');
     }
 /*
-	public function selectServiceDetails(Request $request){
+	public function selectServiceDetails(Request $request) {
 		// is this really neccessary? Surely it will only be model?
-		if(is_object(request('id'))){
+		if (is_object(request('id'))) {
 			$id =request('id')->id;
 		}else{
 			$id = request('id');
 		}
 		
-		if(! $company = $company->whereHas('serviceline',function($q){
+		if (! $company = $company->whereHas('serviceline',function($q) {
 				$q->whereIn('servicelines.id',$this->userServiceLines);
 			})->with('managedBy','industryVertical')
-			->find($id)){
+			->find($id)) {
 			return redirect()->route('company.index');
 		}
 		dd($company->countlocations());
 		$locations = $this->getCompanyLocations($company,request('state'));
 		$states = $company->locations()->orderBy('state')->pluck('state')->unique()->toArray();
-		if($limited = $this->service->limitLocations($locations)){
+		if ($limited = $this->service->limitLocations($locations)) {
 			$locations = $this->limitLocations($company);
 		}
 		$data = $this->service->getCompanyServiceBranchDetails($locations,$company);
@@ -102,7 +102,7 @@ class CompaniesServiceController extends BaseController
                 $service[$location->id]['branch'][$location->branch_id]['distance']=$location->branchdistance;
             }
             /*
-			if(! isset($service[$location->id]['rep']) || count($service[$location->id]['rep'])<$limit){
+			if (! isset($service[$location->id]['rep']) || count($service[$location->id]['rep'])<$limit) {
 				$service[$location->id]['rep'][$location->pid]['pid']=$location->pid;
 				$service[$location->id]['rep'][$location->pid]['repname']=$location->repname;
 				$service[$location->id]['rep'][$location->pid]['distance']=$location->peepsdistance;

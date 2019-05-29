@@ -22,7 +22,7 @@ class InboundMailController extends Controller
     protected $person;
     protected $inbound;
 
-    public function __construct(User $user, Person $person){
+    public function __construct(User $user, Person $person) {
             $this->user = $user;
         
     }
@@ -35,10 +35,10 @@ class InboundMailController extends Controller
     
 
 
-    public function inbound(Request $request){
+    public function inbound(Request $request) {
 
 
-        if($request && request()->has('test')){
+        if ($request && request()->has('test')) {
            
              $inbound = new \Postmark\Inbound(file_get_contents('inbound.json'));
             
@@ -50,7 +50,7 @@ class InboundMailController extends Controller
 
         $this->inboundemail = new InboundMail($inbound);
         $this->inboundemail->processEmail();
-        if($request && request()->has('test')){
+        if ($request && request()->has('test')) {
             return redirect()->back()->withMessage('all done');
         }else{
            return response()->json(['ok' => 'ok']); 

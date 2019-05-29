@@ -55,7 +55,7 @@ class WatchController extends BaseController {
 	 *
 	 * 
 	 */
-	protected function add($id){
+	protected function add($id) {
 		
 		
 		return $this->watch->create(['user_id'=>auth()->user()->id,'address_id'=>$id]);
@@ -88,7 +88,7 @@ class WatchController extends BaseController {
 		
 		$watch = $this->watch->find($id);
 		
-		if($watch && $watch->destroy($id)){
+		if ($watch && $watch->destroy($id)) {
 			return redirect()->route('watch.index')->with('success','Watch item deleted');
 		}
 		return redirect()->route('watch.index')->with('error','Unable to delete that item');
@@ -101,7 +101,7 @@ class WatchController extends BaseController {
 	 */
 	
 	
-	public function watching($user){
+	public function watching($user) {
 		
 		
 		$watch = $this->watch->getMyWatchList($user->id);
@@ -121,12 +121,12 @@ class WatchController extends BaseController {
 	 */
 	
 	public function export ($id=NULL) {
-		if(! $id){
+		if (! $id) {
 			$id = auth()->id();
 		}
 		$user = User::find($id);
 		return Excel::download(new WatchListExport($id), 'Watch_List_for_'.$user->fullName().'.csv');
-		/*Excel::download('Watch_List_for_'.$user->fullName(),function($excel) use($id){
+		/*Excel::download('Watch_List_for_'.$user->fullName(),function($excel) use($id) {
 			$excel->sheet('Watching',function($sheet) use($id) {
 				$result = $this->watch->getMyWatchList($id);
 				$sheet->loadview('watch.export',compact('result'));

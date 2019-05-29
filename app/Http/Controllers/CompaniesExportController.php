@@ -25,7 +25,7 @@ class CompaniesExportController extends BaseController
     public function index()
     {
         $companies = $this->company
-                        ->whereHas('serviceline', function($q){
+                        ->whereHas('serviceline', function($q) {
                                 $q->whereIn('serviceline_id', $this->userServiceLines);
 
                             })

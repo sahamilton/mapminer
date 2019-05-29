@@ -26,7 +26,7 @@ class AvatarController extends Controller
     public function store(AvatarFormRequest $request)
     {
 
-        if($request->hasFile('avatar')){
+        if ($request->hasFile('avatar')) {
             $avatar = $request->file('avatar');
             $filename = request('person_id')."_". time() .".". $avatar->getClientOriginalExtension();
             Image::make($avatar)->fit(300)->save(storage_path('/app/public/avatars/'.$filename));

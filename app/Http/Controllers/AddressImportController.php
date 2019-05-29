@@ -144,9 +144,9 @@ SELECT addresses.id, addresses.businessname,addresses.street, addresses.city,add
         return true;
     }
    /*
-    private function addAssignedPID(){
+    private function addAssignedPID() {
         $query ="UPDATE leadimport dest, (SELECT leadimport.id as id, persons.id as pid from persons,leadimport,users where REPLACE(leadimport.employee_id, '\r', '')=users.employee_id and persons.user_id = users.id) src set dest.pid = src.pid where dest.id = src.id";
-        if (\DB::select(\DB::raw($query))){
+        if (\DB::select(\DB::raw($query))) {
            
             return true;
         }
@@ -198,12 +198,12 @@ SELECT addresses.id, addresses.businessname,addresses.street, addresses.city,add
         }
     }
    /*
-   private function updateLeadPivot(){
+   private function updateLeadPivot() {
         $query ="insert ignore into lead_person_status (related_id,person_id,status_id,type)
                 SELECT distinct leads.id, leadimport.pid ,'2','prospect'  from leads,leadimport
                 where MD5(lower(replace(concat(`leads`.`companyname`,`leads`.`businessname`,`leads`.`address`,`leads`.`city`,`leads`.`state`,`leads`.`zip`),' ',''))) = MD5(lower(replace(concat(`leadimport`.`companyname`,`leadimport`.`businessname`,`leadimport`.`address`,`leadimport`.`city`,`leadimport`.`state`,`leadimport`.`zip`),' ','')))
                 and leads.lead_source_id = leadimport.lead_source_id;";
-       if (\DB::select(\DB::raw($query))){
+       if (\DB::select(\DB::raw($query))) {
            
             return true;
         }

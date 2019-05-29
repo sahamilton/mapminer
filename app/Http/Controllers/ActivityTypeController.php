@@ -61,7 +61,7 @@ class ActivityTypeController extends Controller
         $activityType= $this->activitytype->with('activities')
                 ->findOrFail($activityType->id);
        $users = $activityType->activities->pluck('id','user_id')->toArray();
-       $people = $this->person->whereIn('user_id',array_keys($users))->with(['activities'=>function ($q) use ($activityType){
+       $people = $this->person->whereIn('user_id',array_keys($users))->with(['activities'=>function ($q) use ($activityType) {
             $q->where('activitytype_id','=',$activityType->id);
        }])->with('userdetails','userdetails.roles')->get();
 

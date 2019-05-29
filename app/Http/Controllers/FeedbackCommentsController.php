@@ -34,7 +34,7 @@ class FeedbackCommentsController extends Controller
         $data['user_id'] = auth()->user()->id;
         $feedback->comments()->create($data);
         $feedback->load('comments');
-        if(request()->filled('close')){
+        if (request()->filled('close')) {
             $feedback->update(['status'=>'closed']);
         }
         event(new FeedbackEvent($feedback));

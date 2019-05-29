@@ -150,9 +150,9 @@ class LeadsEmailController extends Controller
             }
         }
     }
-   /* private function notifySalesTeam($data,$salesteam){
+   /* private function notifySalesTeam($data,$salesteam) {
         
-        foreach ($salesteam as $team){
+        foreach ($salesteam as $team) {
             
             
                 Mail::queue(new NotifyLeadsAssignment($data,$team));
@@ -166,12 +166,12 @@ class LeadsEmailController extends Controller
        
         Mail::to(auth()->user()->email)->queue(new NotifySenderLeadsAssignment($data, $leadsource));
     }
-   /* private function notifyManagers($data,$salesteam){
+   /* private function notifyManagers($data,$salesteam) {
 
        $data['managers']=array();
-        foreach ($salesteam as $salesrep){
+        foreach ($salesteam as $salesrep) {
            
-            if($salesrep['details']->reportsTo){
+            if ($salesrep['details']->reportsTo) {
                 $data['managers'][$salesrep['details']->reportsTo->id]['team'][]=$salesrep['details']->postName();
                 $data['managers'][$salesrep['details']->reportsTo->id]['email']=$salesrep['details']->reportsTo->userdetails->email;
                 $data['managers'][$salesrep['details']->reportsTo->id]['firstname']=$salesrep['details']->reportsTo->firstname;
@@ -179,7 +179,7 @@ class LeadsEmailController extends Controller
             }
         }
         
-        foreach ($data['managers'] as $manager){
+        foreach ($data['managers'] as $manager) {
            
                 Mail::queue(new NotifyManagersLeadsAssignment($data,$manager));
           

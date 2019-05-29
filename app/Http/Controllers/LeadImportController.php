@@ -48,7 +48,7 @@ class LeadImportController extends ImportController
         $this->leadsources = $leadsource;
     }
 
-    public function getFile(Request $request,LeadSource $leadsource=null,$type=null){
+    public function getFile(Request $request,LeadSource $leadsource=null,$type=null) {
 
         $sources= $this->leadsources->all()->pluck('source', 'id');
         if ($sources->count() == 0) {
@@ -90,7 +90,7 @@ class LeadImportController extends ImportController
         return response()->view('imports.mapfields', compact('columns', 'fields', 'data', 'company_id', 'skip', 'title', 'requiredFields'));
     }
     
-    public function mapfields(Request $request){
+    public function mapfields(Request $request) {
      
         $data = $this->getData($request);
         $this->validateInput($request);
@@ -121,9 +121,9 @@ class LeadImportController extends ImportController
         return true;
     }
    /*
-    private function addAssignedPID(){
+    private function addAssignedPID() {
         $query ="UPDATE leadimport dest, (SELECT leadimport.id as id, persons.id as pid from persons,leadimport,users where REPLACE(leadimport.employee_id, '\r', '')=users.employee_id and persons.user_id = users.id) src set dest.pid = src.pid where dest.id = src.id";
-        if (\DB::select(\DB::raw($query))){
+        if (\DB::select(\DB::raw($query))) {
            
             return true;
         }
@@ -175,12 +175,12 @@ class LeadImportController extends ImportController
         }
     }
    /*
-   private function updateLeadPivot(){
+   private function updateLeadPivot() {
         $query ="insert ignore into lead_person_status (related_id,person_id,status_id,type)
                 SELECT distinct leads.id, leadimport.pid ,'2','prospect'  from leads,leadimport
                 where MD5(lower(replace(concat(`leads`.`companyname`,`leads`.`businessname`,`leads`.`address`,`leads`.`city`,`leads`.`state`,`leads`.`zip`),' ',''))) = MD5(lower(replace(concat(`leadimport`.`companyname`,`leadimport`.`businessname`,`leadimport`.`address`,`leadimport`.`city`,`leadimport`.`state`,`leadimport`.`zip`),' ','')))
                 and leads.lead_source_id = leadimport.lead_source_id;";
-       if (\DB::select(\DB::raw($query))){
+       if (\DB::select(\DB::raw($query))) {
            
             return true;
         }

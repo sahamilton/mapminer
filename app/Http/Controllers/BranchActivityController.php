@@ -15,7 +15,7 @@ class BranchActivityController extends Controller
     {
        
         
-       if(!  $myBranches = $this->person->myBranches()){
+       if (!  $myBranches = $this->person->myBranches()) {
         return redirect()->back()->withError('You are not assigned to any branches');
        }
        
@@ -64,7 +64,7 @@ class BranchActivityController extends Controller
      * @param  Array  $branch [description]
      * @return [type]         [description]
      */
-    private function getBranchActivities(Array $branch){
+    private function getBranchActivities(Array $branch) {
         $data['activities'] = $this->getUpcomingActivities($branch);
         $data['calendar'] = $this->getUpcomingCalendar($data['activities']);
 

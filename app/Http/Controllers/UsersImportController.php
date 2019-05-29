@@ -101,15 +101,15 @@ class UsersImportController extends ImportController
     }
 
 
-   /* public function newUsers(){
+   /* public function newUsers() {
 
         $newusers = $this->import->whereNull('person_id')->get();
 
         //$newusers = $this->import->addUserFields($newusers);
-        if($newusers->count()>0){
+        if ($newusers->count()>0) {
            return response()->view('admin.users.importnew',compact('newusers'));
         }
-        if($importerrors = $this->import->setUpAllUsers()){
+        if ($importerrors = $this->import->setUpAllUsers()) {
             
             $persons = $this->import->whereIn('person_id',array_keys($importerrors))->get();
             
@@ -121,17 +121,17 @@ class UsersImportController extends ImportController
     }
 
 
-    public function createNewUsers(Request $request){
+    public function createNewUsers(Request $request) {
 
-      if($errors = $this->import->createNewUsers($request)){
-          if(! is_array($errors)){
+      if ($errors = $this->import->createNewUsers($request)) {
+          if (! is_array($errors)) {
            return redirect()->back()->withMessage($errors);
           }else{
             return $this->inputUserErrors($errors);
           }
       }
 
-      if(! $errors = $this->import->setUpAllUsers()){
+      if (! $errors = $this->import->setUpAllUsers()) {
         return redirect()->route('usersimport.index')->withMessage('All Imported and Updated');
       
       }else{
@@ -139,8 +139,8 @@ class UsersImportController extends ImportController
         return $this->inputErrors($errors);
       }
     }
-    private function inputUserErrors($importerrors){
-        if(! is_array($importerrors)){
+    private function inputUserErrors($importerrors) {
+        if (! is_array($importerrors)) {
           return redirect()->back()->withMessage($errors);
         }
         $ids = array_keys($importerrors['email']);
@@ -150,8 +150,8 @@ class UsersImportController extends ImportController
         return response()->view('admin.users.import.createerrors',compact('importerrors','persons'));
     }
 
-    private function inputErrors($importerrors){  
-        if(! is_array($importerrors)){
+    private function inputErrors($importerrors) {  
+        if (! is_array($importerrors)) {
           return redirect()->back()->withMessage($errors);
         }
         $ids = array_keys($importerrors);
@@ -210,7 +210,7 @@ class UsersImportController extends ImportController
         }
     }
 /*
-    public function fixerrors(Request $request){
+    public function fixerrors(Request $request) {
       
       $data['branches'] = request('branch');
       $data['industry'] = request('industry');
@@ -218,13 +218,13 @@ class UsersImportController extends ImportController
 
       $imports = $this->import->whereIn('person_id',array_keys(request('branch')))->get();
 
-      foreach ($imports as $import){
+      foreach ($imports as $import) {
         
         $import->branches = $data['branches'][$import->person_id];
         $import->industry = $data['industry'][$import->person_id];
         $import->save();
       }
-      if($importerrors = $this->import->setUpAllUsers()){
+      if ($importerrors = $this->import->setUpAllUsers()) {
            $persons = $this->import->whereIn('person_id',array_keys($importerrors))->get();
             
             return response()->view('admin.users.import.errors',compact('importerrors','persons'));
