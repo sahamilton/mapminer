@@ -36,6 +36,7 @@ class Chart extends Model
      */
     public function getTeamActivityByTypeChart(array $data)
     {
+       
         // Initialize
         $fullabels = $data['team']->map(
             function ($person) {
@@ -48,20 +49,23 @@ class Chart extends Model
         $types = $activitytypes->pluck('activity')->toArray();
         $chart= array();
         // Build array by team member of all activities by type
-        $result = [];
+        $result = []; 
+        
         foreach ($data['team'] as $team) {
-            foreach ($data[$team->id]['activitiestype'] as  $activity) {
-                if (count($activity)>0) {
-                    ksort($activity);
-                    foreach ($activity as $key=>$act) {
-                        // set key to activity name
-                        $type = $activitytypes->where('id', $key)->first()->activity;
-                        if (isset($result[$team->id][$type])) {
-                            $result[$team->id][$type] += count($act);   
-                        } else {
-                            $result[$team->id][$type] = count($act);
-                        }    
-                    } 
+            if(isset($data[$team->id]['activitiestype'])) {
+                foreach ($data[$team->id]['activitiestype'] as  $activity) {
+                    if (count($activity)>0) {
+                        ksort($activity);
+                        foreach ($activity as $key=>$act) {
+                            // set key to activity name
+                            $type = $activitytypes->where('id', $key)->first()->activity;
+                            if (isset($result[$team->id][$type])) {
+                                $result[$team->id][$type] += count($act);   
+                            } else {
+                                $result[$team->id][$type] = count($act);
+                            }    
+                        } 
+                    }
                 }  
             }
         }

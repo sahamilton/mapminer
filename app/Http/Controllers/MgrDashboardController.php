@@ -165,10 +165,10 @@ class MgrDashboardController extends DashboardController
           
             $this->manager = $this->person->findOrFail(request('manager'));
         }
-        
+       
         $team = $this->manager->descendantsAndSelf()
             ->with('branchesServiced')->get();
-     
+        
         $branches = $team->map(
             function ($mgr) {
                 return $mgr->branchesServiced->pluck('id')->toArray();
@@ -176,7 +176,7 @@ class MgrDashboardController extends DashboardController
         ); 
         
         $this->myBranches = array_unique($branches->flatten()->toArray());
-        
+       
         if (count($this->myBranches)==0) {
             return redirect()->back()->withMessage($this->manager->fullName().' is not assigned to any branches');
 
@@ -193,8 +193,7 @@ class MgrDashboardController extends DashboardController
     /**
      * [_getDashBoardData description]
      * 
-     * 
-     * @return [type]             [description]
+     * @return array $data     [description]
      */
     private function _getDashBoardData()
     {
@@ -203,12 +202,11 @@ class MgrDashboardController extends DashboardController
         
         $data['period'] = $this->period;
         $data['branches'] = $this->getSummaryBranchData();
-   
         $data['team']= $this->_myTeamsOpportunities($data['branches']);
 
         // this should go away and incorparte in charts
         $data['chart'] = $this->_getChartData($data['branches']);
-   
+        
         if (isset($data['team']['results'])) {
             $data['teamlogins'] = $this->_getTeamLogins(array_keys($data['team']['results']));
         }
@@ -278,9 +276,10 @@ class MgrDashboardController extends DashboardController
         $data['team'] =  $this->person
             ->where('reports_to', '=', $this->manager->id)
             ->with('branchesServiced')
-            ->withRoles($teamroles)   
+            ->withRoles($teamroles) 
+            
             ->get();
-        
+       
         // get all branch managers
         $branchManagerRole = 9;
        
@@ -339,8 +338,9 @@ class MgrDashboardController extends DashboardController
 
             }
         }
-        
+         
         $data = $this->_getCharts($data);
+       
         return $data;
     }
     /**
