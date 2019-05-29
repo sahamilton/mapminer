@@ -354,7 +354,6 @@ class MgrDashboardController extends DashboardController
     {
 
         $data['activities'] = $this->chart->getTeamActivityChart($data);
-
         $data['pipelinechart'] = $this->chart->getTeamPipelineChart($data);
         $data['top50chart'] = $this->chart->getTeamTop50Chart($data);
         $data['winratiochart'] = $this->chart->getWinRatioChart($data);
