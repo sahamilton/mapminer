@@ -174,7 +174,7 @@ class BranchesController extends BaseController {
 
         $branch->associatePeople($request);
         $branch->servicelines()->sync($input['serviceline']);
-        $this->rebuildXMLfile();
+        $this->_rebuildXMLfile();
 
         return redirect()->route('branches.show', $branch->id);
     }
@@ -190,7 +190,7 @@ class BranchesController extends BaseController {
 
     }
     /**
-     * [rebuildXMLfile description]
+     * [_rebuildXMLfile description]
      * 
      * @return [type] [description]
      */
@@ -363,7 +363,7 @@ class BranchesController extends BaseController {
         $branch->associatePeople($request);
         
         $branch->servicelines()->sync(request('serviceline'));
-        $this->rebuildXMLfile();
+        $this->_rebuildXMLfile();
         return redirect()->route('branches.show', $branch->id);
 
         
@@ -379,7 +379,7 @@ class BranchesController extends BaseController {
     {
         
         $branch->delete();
-        $this->rebuildXMLfile();
+        $this->_rebuildXMLfile();
         return redirect()->route('branches.index');
     }
     
@@ -685,6 +685,6 @@ class BranchesController extends BaseController {
             $branch->update();
 
         }
-        $this->rebuildXMLfile();
+        $this->_rebuildXMLfile();
     }
 }
