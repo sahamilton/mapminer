@@ -121,7 +121,7 @@ class MyLeadsController extends BaseController
      */
     public function store(MyLeadFormRequest $request)
     {
-       
+        
         // we need to geocode this address
         if (! $data = $this->cleanseInput($request)) {
             return redirect()->back()->withError('Unable to geocode that address');
@@ -131,11 +131,11 @@ class MyLeadsController extends BaseController
        
         $dupes = $this->lead->duplicate($data['lead']['lng'],$data['lead']['lat'])->get();
 
-       /* if($dupes->count()>0){
+        /* if ($dupes->count()>0) {
             return response()->view('addresses.duplicates',compact('dupes','data'));
         } 
         */
-     
+        
         $lead = $this->lead->create($data['lead']);
        
         $lead->assignedToBranch()->attach($data['branch']);
@@ -178,17 +178,15 @@ class MyLeadsController extends BaseController
             
             return false;
         }
+        
         $data['lead'] = $this->lead->getGeoCode($geocode);
 
         $data['lead']['businessname'] =request('companyname');
       
         $data['lead']['phone'] = preg_replace("/[^0-9]/", "", request('phone'));
-        /*
-          "contact" => "Joe Blow"
-          "contact_title" => "big Kahuna"
-          "phone" => "1234568"
-          "email" => null
-         */
+        if (! request()->has('leadsource_id')) {
+            $data['lead']['lead_source_id'] = 4;
+        }
         $data['contact'] = $this->cleanseContactData($request);
 
        

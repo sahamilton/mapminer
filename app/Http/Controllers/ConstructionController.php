@@ -9,7 +9,7 @@ use App\Branch;
 
 class ConstructionController extends BaseController
 {
-    use GeoCode;
+
     public $construction;
     public $branch;
     /**
