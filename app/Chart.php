@@ -18,8 +18,8 @@ class Chart extends Model
      
         $chart= array();
         foreach ($data['team'] as $team) {
-            if (isset($data[$team->id]['activities'])) {
-                $chart[$team->postName()]=$data[$team->id]['activities'];
+            if (isset($data['data'][$team->id]['activities'])) {
+                $chart[$team->postName()]=$data['data'][$team->id]['activities'];
             } else {
                 $chart[$team->postName()]=0;
             }
@@ -36,6 +36,7 @@ class Chart extends Model
      */
     public function getTeamActivityByTypeChart(array $data)
     {
+       
         // Initialize
         $fullabels = $data['team']->map(
             function ($person) {
@@ -48,28 +49,35 @@ class Chart extends Model
         $types = $activitytypes->pluck('activity')->toArray();
         $chart= array();
         // Build array by team member of all activities by type
-        $result = [];
+        $result = []; 
+        
         foreach ($data['team'] as $team) {
-            foreach ($data[$team->id]['activitiestype'] as  $activity) {
-                if (count($activity)>0) {
-                    ksort($activity);
-                    foreach ($activity as $key=>$act) {
-                        // set key to activity name
-                        $type = $activitytypes->where('id', $key)->first()->activity;
-                        if (isset($result[$team->id][$type])) {
-                            $result[$team->id][$type] += count($act);   
-                        } else {
-                            $result[$team->id][$type] = count($act);
-                        }    
-                    } 
+            
+            if (isset($data['data'][$team->id]['activitiestype'])) {
+                foreach ($data['data'][$team->id]['activitiestype'] as  $activity) {
+                    
+                    if (count($activity)>0) {
+                        ksort($activity);
+                        foreach ($activity as $key=>$act) {
+                            // set key to activity name
+                            $type = $activitytypes->where('id', $key)->first()->activity;
+                            if (isset($result[$team->id][$type])) {
+                                $result[$team->id][$type] += count($act);   
+                            } else {
+                                $result[$team->id][$type] = count($act);
+                            }    
+                        } 
+                    }
                 }  
             }
         }
-  
+        
         // fill array with necessary blank team members
         foreach (array_diff($data['team']->pluck('id')->toArray(), array_keys($result)) as $missing) {
             $result[$missing] = [];
         }
+        ksort($result);
+        
         $filled = array();
         // fill complete team array with missing activity types
         foreach ($result as $key=>$res) {
@@ -124,8 +132,8 @@ class Chart extends Model
         $chart= array();
 
         foreach ($data['team'] as $team) {
-            if (isset($data[$team->id]['open'])) {
-                $chart[$team->postName()]=$data[$team->id]['open'];
+            if (isset($data['data'][$team->id]['open'])) {
+                $chart[$team->postName()]=$data['data'][$team->id]['open'];
             } else {
                 $chart[$team->postName()]=0;
             }
@@ -144,8 +152,8 @@ class Chart extends Model
       
         $chart= array();
         foreach ($data['team'] as $team) {
-            if (isset($data[$team->id]['top50'])) {
-                $chart[$team->postName()]=$data[$team->id]['top50'];
+            if (isset($data['data'][$team->id]['top50'])) {
+                $chart[$team->postName()]=$data['data'][$team->id]['top50'];
             } else {
                 $chart[$team->postName()]=0;
             }
@@ -165,12 +173,12 @@ class Chart extends Model
         $chart= array();
         foreach ($data['team'] as $team) {
          
-            if (isset($data[$team->id]) 
-                && ($data[$team->id]['won'] + $data[$team->id]['lost'] > 0)
+            if (isset($data['data'][$team->id]) 
+                && ($data['data'][$team->id]['won'] + $data['data'][$team->id]['lost'] > 0)
             ) {
                 $chart[$team->postName()] 
-                    =  $data[$team->id]['won'] 
-                        / ($data[$team->id]['won'] + $data[$team->id]['lost']) * 100;
+                    =  $data['data'][$team->id]['won'] 
+                        / ($data['data'][$team->id]['won'] + $data['data'][$team->id]['lost']) * 100;
             } else {
                 $chart[$team->postName()] = 0;
             }
@@ -189,8 +197,8 @@ class Chart extends Model
     {
         $chart= array();
         foreach ($data['team'] as $team) {
-            if (isset($data[$team->id]['leads'])) {
-                $chart[$team->postName()]=$data[$team->id]['leads'];
+            if (isset($data['data'][$team->id]['leads'])) {
+                $chart[$team->postName()]=$data['data'][$team->id]['leads'];
             } else {
                   $chart[$team->postName()]=0;
             }

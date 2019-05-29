@@ -18,6 +18,7 @@
 			<th><b>Branch ID</b></th>
 			<th><b>Branch Manager</b></th>
 			<th><b>Open Leads</b></th>
+			<th><b>Avg Velocity</b></th>
 			<th><p>Sales Appts</p></th>
 			<th><p>Opportunities Open</p></th>
 			<th><p>Opportunities Won</p></th>
@@ -40,8 +41,10 @@
 				</td>
 				<td>{{$branch->leads_count}}</td>
 				<td>{{$branch->activities_count}}</td>
+				<td></td>
 				<td>{{$branch->salesappts}}</td>
 				<td>{{$branch->won}}</td>
+
 				<td>{{$branch->open}}</td>
 				<td>{{$branch->lost}}</td>
 				<td>{{$branch->top50}}</td>

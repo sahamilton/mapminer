@@ -186,7 +186,7 @@ class BranchDashboardController extends DashboardController
             ->WithRoles($teamroles)     
             ->get();
           //$data['team']= $this->myTeamsOpportunities();
-        $data['summary'] = $this->getSummaryBranchData() ;
+        $data['summary'] = $this->getSummaryBranchData();
     
         //$data['activitychart'] =  $this->_getActivityChartData();
         $data['activitychart'] = $this->chart->getBranchActivityByTypeChart(

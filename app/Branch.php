@@ -573,7 +573,7 @@ class Branch extends Model implements HasPresenter
                 $query->whereBetween(
                     'activity_date', [$this->period['from'],$this->period['to']]
                 )
-                    ->where('completed', '=', 1);
+                    ->where('completed', 1);
             },
             'activities as salesappts'=>function ($query) {
                 $query->whereBetween(
@@ -595,7 +595,7 @@ class Branch extends Model implements HasPresenter
                     );
             },
             'opportunities as top50'=>function ($query) {
-                $query->where('opportunities.top50', '=', 1)
+                $query->where('opportunities.top50',  1)
                     ->where(
                         function ($q) {
                             $q->where('actual_close', '>', $this->period['to'])
