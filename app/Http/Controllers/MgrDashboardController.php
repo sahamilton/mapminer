@@ -261,7 +261,7 @@ class MgrDashboardController extends DashboardController
      */
     private function _myTeamsOpportunities(Collection $branchdata)
     {
-     
+       
         $stats = ['leads',
                 'opportunities',
                 'top50',
@@ -303,16 +303,16 @@ class MgrDashboardController extends DashboardController
             $branches = $branches->flatten();
               
             if ($data['branchteam']->count() > 0 ) {
-                $data[$team->id]['leads'] = $branchdata
+                $data['data'][$team->id]['leads'] = $branchdata
                       ->whereIn('id', $branches)
                       ->sum('leads_count');
                 
-                $data[$team->id]['activities'] = $branchdata
+                $data['data'][$team->id]['activities'] = $branchdata
                       ->whereIn('id', $branches)
                       ->where('completed', 1)
                       ->sum('activities_count');
 
-                $data[$team->id]['activitiestype'] = $branchdata
+                $data['data'][$team->id]['activitiestype'] = $branchdata
                     ->whereIn('id', $branches)
                     ->map(
                         function ($branch) {
@@ -320,27 +320,27 @@ class MgrDashboardController extends DashboardController
                         }
                     );
 
-                $data[$team->id]['won'] = $branchdata
+                $data['data'][$team->id]['won'] = $branchdata
                       ->whereIn('id', $branches)
                       ->sum('won');
 
-                $data[$team->id]['lost'] = $branchdata
+                $data['data'][$team->id]['lost'] = $branchdata
                       ->whereIn('id', $branches)
                       ->sum('lost');
 
-                $data[$team->id]['top50'] = $branchdata
+                $data['data'][$team->id]['top50'] = $branchdata
                       ->whereIn('id', $branches)
                       ->sum('top50');
 
-                $data[$team->id]['open'] = $branchdata
+                $data['data'][$team->id]['open'] = $branchdata
                       ->whereIn('id', $branches)
                       ->sum('open');
 
             }
         }
-         
+    
         $data = $this->_getCharts($data);
-       
+
         return $data;
     }
     /**
@@ -354,12 +354,13 @@ class MgrDashboardController extends DashboardController
     {
 
         $data['activities'] = $this->chart->getTeamActivityChart($data);
+
         $data['pipelinechart'] = $this->chart->getTeamPipelineChart($data);
         $data['top50chart'] = $this->chart->getTeamTop50Chart($data);
         $data['winratiochart'] = $this->chart->getWinRatioChart($data);
         $data['openleadschart'] = $this->chart->getOpenLeadsChart($data);
         $data['activitytypechart'] = $this->chart->getTeamActivityByTypeChart($data);
-       
+        
         return $data;
     }
     
