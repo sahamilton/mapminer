@@ -217,7 +217,7 @@ class MyLeadsController extends BaseController
         
         $data['lead'] = $this->lead->getGeoCode($geocode);
         $data['lead'] = $this->_fillAddress($request, $data['lead']);
-        dd(220, $data['lead']);
+       
         $data['lead']['businessname'] =request('companyname');
       
         $data['lead']['phone'] = preg_replace("/[^0-9]/", "", request('phone'));
