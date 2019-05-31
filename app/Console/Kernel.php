@@ -72,8 +72,10 @@ class Kernel extends ConsoleKernel
                 ->weekly()
                 ->sundays()
                 ->at('18:30');
-
-            $schedule->job(new BranchOpportunities())
+            
+            // Kristi Willis Report
+            $period['to'] = \Carbon\Carbon::now()->subWeek()->endOfWeek();
+            $schedule->job(new BranchOpportunities($period))
                 ->weekly()
                 ->mondays()
                 ->at('04:59');
