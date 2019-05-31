@@ -37,7 +37,8 @@ class BranchOpportunities implements ShouldQueue
         $file = '/public/reports/branchopptysrpt'. $this->period['to']->timestamp. ".xlsx";
         Excel::store(new BranchOpportunitiesExport($this->period), $file);
         $distribution = [
-            ['address'=>'kwillis@peopleready.com','name'=>'Kristi Starr'], 
+            ['address'=>'jsauer@peopleready.com','name'=>'Jacob Sauer'], 
+            ['address'=>'dtuot@peopleready.com','name'=>'Daniel Tuot'],
             ['address'=>'salesoperations@trueblue.com','name'=>'Sales Operations']];
         foreach ($distribution as $recipient) {
             
