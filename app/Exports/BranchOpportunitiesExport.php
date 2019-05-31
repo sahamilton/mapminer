@@ -30,7 +30,7 @@ class BranchOpportunitiesExport implements FromView
     {
         
         $branches = Branch::branchOpportunities($this->period)
-            ->with('manager', 'manager.reportsTo')
+            ->with('manager')
             ->get();
 
         $period = $this->period;

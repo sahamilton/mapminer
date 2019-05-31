@@ -18,9 +18,10 @@
 			<th><b>Branch Name</b></th>
 			<th><b>City</b></th>
 			<th><b>State</b></th>
-			<th><b>Branch Manager / Market Manager</b></th>
+			
 			<th><b># Open Opportunities</b></th>
 			<th><b>$ Value</b></th>
+			<th><b>Branch Manager / Market Manager / RVP</b></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -30,17 +31,21 @@
 				<td>{{$branch->branchname}}</td>
 				<td>{{$branch->city}}</td>
 				<td>{{$branch->state}}</td>
+				
+				<td>{{$branch->open}}</td>
+				<td>${{number_format($branch->openvalue,0)}}</td>
 				<td>
 					@foreach($branch->manager as $manager)
-						{{$manager->fullName()}} / 
-						@if($manager->reportsTo)
-						{{$manager->reportsTo->fullName()}}
+						@if(! $loop->first)
+							/ 
 						@endif
+						{{$manager->fullName()}} / 
+						@foreach($manager->reportChain()->reverse() as $reportmgr)
+							{{$reportmgr->fullName()}} /
+						@endforeach
 						<br />
 					@endforeach
 				</td>
-				<td>{{$branch->open}}</td>
-				<td>${{number_format($branch->openvalue,0)}}</td>
 			</tr>
 		@endforeach
 	</tbody>
