@@ -8,6 +8,7 @@ use App\Jobs\WeeklyActivityReminder;
 use App\Jobs\Top50WeeklyReport;
 use App\Jobs\ActivityOpportunityReport;
 use App\Jobs\AccountActivities;
+use App\Jobs\BranchOpportunities;
 use App\Jobs\BranchStats;
 use App\Company;
 
@@ -71,6 +72,12 @@ class Kernel extends ConsoleKernel
                 ->weekly()
                 ->sundays()
                 ->at('18:30');
+
+            $schedule->job(new BranchOpportunities())
+                ->weekly()
+                ->mondays()
+                ->at('04:59');
+            
         }   
     }
 

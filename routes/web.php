@@ -584,80 +584,46 @@ use App\Mail\SendWeeklyActivityReminder;
 
 
 
-            //     People
-            Route::get('person/import', ['as'=>'person.bulkimport', 'uses'=>'PersonsController@import']);
-            Route::post('person/import', ['as'=>'person.import', 'uses'=>'PersonsController@processimport']);
-            Route::get('person/export', ['as'=>'person.export', 'uses'=>'PersonsController@export']);
-    
-            //     ServiceLines
-            Route::resource('serviceline', 'ServicelinesController');
-            //   Lead Status
-            Route::resource('leadstatus', 'LeadStatusController');
-             //     Regions
-            Route::resource('region', 'RegionsController');
-            //   Sales Process
-            Route::resource('process', 'SalesProcessController');
-            //   Training
-            Route::resource('training', 'TrainingController')->except(['index', 'show']);
-            ;
-            //   Admin Dashboard
-            Route::get('watching/{user}', ['as'=>'watch.watching', 'uses'=>'WatchController@watching']);
-            Route::get('userlogin/{view?}', ['as'=>'admin.showlogins', 'uses'=>'Admin\AdminDashboardController@logins']);
-            Route::get('userlogin/download/{view?}', ['as'=>'admin.downloadlogins', 'uses'=>'Admin\AdminDashboardController@downloadlogins']);
-            Route::get('/', ['as'=>'dashboard', 'uses'=>'Admin\AdminDashboardController@dashboard']);
-    
-            //     Comments
-            Route::get('comment/download', ['as'=>'comment.download', 'uses'=>'CommentsController@download']);
-    
-            //     News
-            Route::get('news/{id}/audience', ['as'=>'news.audience', 'uses'=>'NewsController@audience']);
-            Route::resource('news', 'NewsController', ['except' => ['index', 'show']]);
-    
-    
-            //     Notes
-            Route::get('notes/{companyid}/co', ['as'=>'notes.company', 'uses'=>'NotesController@companynotes']);
-            Route::get('locationnotes', ['as'=>'locations.notes', 'uses'=>'NotesController@index']);
-    
-            //     Search Filters
-    
-            Route::get('searchfilters/analysis/{id?}', ['as'=>'vertical.analysis', 'uses'=>'SearchFiltersController@filterAnalysis']);
-            Route::get('searchfilters/export/{id?}', ['as'=>'vertical.export', 'uses'=>'SearchFiltersController@export']);
-            Route::get('searchfilters/promote/{filterid}', ['as'=>'admin.searchfilter.promote', 'uses'=>'SearchFiltersController@promote']);
-            Route::get('searchfilters/demote/{filterid}', ['as'=>'admin.searchfilter.demote', 'uses'=>'SearchFiltersController@demote']);
-            Route::get('filterform', 'SearchFiltersController@filterForm');
-    
-            Route::get('api/searchfilters/getAccounts', ['as'=>'getAccountSegments', 'uses'=>'SearchFiltersController@getAccountSegments']);
-            Route::post('api/searchfilters/postAccounts', ['as'=>'postAccountSegments', 'uses'=>'SearchFiltersController@getAccountSegments']);
-            Route::resource('searchfilters', 'SearchFiltersController');
-            //   Jobs
-            Route::get(
-                'testjob', function () {
-                     $company = App\Company::findOrFail(532);
-                     $period['from'] = \Carbon\Carbon::now()->subWeek()->startOfWeek();
-                     $period['to'] = \Carbon\Carbon::now()->subWeek()->endOfWeek();
-                     App\Jobs\AccountActivities::dispatch($company, $period);
+        Route::get('api/searchfilters/getAccounts', ['as'=>'getAccountSegments', 'uses'=>'SearchFiltersController@getAccountSegments']);
+        Route::post('api/searchfilters/postAccounts', ['as'=>'postAccountSegments', 'uses'=>'SearchFiltersController@getAccountSegments']);
+        Route::resource('searchfilters', 'SearchFiltersController');
+        //   Jobs
+        Route::get(
+            'testjob', function () {
+                 //$company = App\Company::findOrFail(532);
+                 $period['from'] = \Carbon\Carbon::now()->subWeek()->startOfWeek();
+                 $period['to'] = \Carbon\Carbon::now()->subWeek()->endOfWeek();
+                 App\Jobs\BranchOpportunities::dispatch($period);
+            
+                 //$filesInFolder = \File::files(storage_path('backups'));
+                 //foreach ($filesInFolder as $file){
+                 //if(pathinfo($file)['extension'] == 'sql'){
+                 //$filename = pathinfo($file)['filename'];
+                 //App\Jobs\ZipBackUp::withChain([new App\Jobs\UploadToDropbox($filename)])
+                 //       ->dispatch($filename)->onQueue('mapminer');
+                 //}
+                 
+                 //}
+                //$period['from'] = \Carbon\Carbon::now()->subWeek()->startOfWeek();
+                //$period['to'] = \Carbon\Carbon::now()->subWeek()->endOfWeek();
+
+                //App\Jobs\BranchStats::dispatch($period);
+                //App\Jobs\ActivityOpportunityReport::dispatch();
+                //App\Jobs\ActivityOpportunityReport::dispatch();
                 
-                     /*$filesInFolder = \File::files(storage_path('backups'));
-                     foreach ($filesInFolder as $file){
-                     if(pathinfo($file)['extension'] == 'sql'){
-                     $filename = pathinfo($file)['filename'];
-                     App\Jobs\ZipBackUp::withChain([new App\Jobs\UploadToDropbox($filename)])
-                            ->dispatch($filename)->onQueue('mapminer');
-                     }
-                     
-                     }
-                     $period['from'] = \Carbon\Carbon::now()->subWeek()->startOfWeek();
-                     $period['to'] = \Carbon\Carbon::now()->subWeek()->endOfWeek();
-                    App\Jobs\BranchStats::dispatch($period);
-                    //App\Jobs\ActivityOpportunityReport::dispatch();
-                    //App\Jobs\ActivityOpportunityReport::dispatch();
-                    
-                    //App\Jobs\ZipBackup::dispatch('MMProd20190123');
-                    //App\Jobs\UploadToDropbox::dispatch('MMProd20190123');
-                    //Mail::queue(new App\Mail\ConfirmBackup('MMProd20190123'));
-                    */
-                }
-            );
+                //App\Jobs\ZipBackup::dispatch('MMProd20190123');
+                //App\Jobs\UploadToDropbox::dispatch('MMProd20190123');
+                //Mail::queue(new App\Mail\ConfirmBackup('MMProd20190123'));
+              
+            }
+        );
+
+
+        //   Tracking
+        Route::resource('track', 'TrackController');
+
+        //   Versions
+        Route::resource('versions', 'GitController');
 
 
             //   Tracking
