@@ -559,7 +559,10 @@ use App\Mail\SendWeeklyActivityReminder;
             Route::get('user/importflush', ['as'=>'importcleanse.flush', 'uses'=>'UserImportCleanseController@flush']);
             Route::resource('user/importcleanse', 'UserImportCleanseController');
             
-    
+            
+            Route::get('userlogin/{view?}', ['as'=>'admin.showlogins', 'uses'=>'Admin\AdminDashboardController@logins']);
+            Route::get('userlogin/download/{view?}', ['as'=>'admin.downloadlogins', 'uses'=>'Admin\AdminDashboardController@downloadlogins']);
+            Route::get('/', ['as'=>'dashboard', 'uses'=>'Admin\AdminDashboardController@dashboard']);
     
             Route::get('users/newusers', ['as'=>'import.newusers', 'uses'=>'UsersImportController@newUsers']);
             Route::post('users/createnewusers', ['as'=>'import.createnewusers', 'uses'=>'UsersImportController@createNewUsers']);
@@ -584,10 +587,10 @@ use App\Mail\SendWeeklyActivityReminder;
 
 
 
-        Route::get('api/searchfilters/getAccounts', ['as'=>'getAccountSegments', 'uses'=>'SearchFiltersController@getAccountSegments']);
-        Route::post('api/searchfilters/postAccounts', ['as'=>'postAccountSegments', 'uses'=>'SearchFiltersController@getAccountSegments']);
-        Route::resource('searchfilters', 'SearchFiltersController');
-        //   Jobs
+            Route::get('api/searchfilters/getAccounts', ['as'=>'getAccountSegments', 'uses'=>'SearchFiltersController@getAccountSegments']);
+            Route::post('api/searchfilters/postAccounts', ['as'=>'postAccountSegments', 'uses'=>'SearchFiltersController@getAccountSegments']);
+            Route::resource('searchfilters', 'SearchFiltersController');
+            //   Jobs
         Route::get(
             'testjob', function () {
                  //$company = App\Company::findOrFail(532);
