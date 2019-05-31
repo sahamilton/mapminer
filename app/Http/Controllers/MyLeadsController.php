@@ -150,7 +150,7 @@ class MyLeadsController extends BaseController
      */
     public function store(MyLeadFormRequest $request)
     {
-        
+       
         // we need to geocode this address
         if (! $data = $this->_cleanseInput($request)) {
             return redirect()->back()->withError('Unable to geocode that address');
@@ -209,13 +209,15 @@ class MyLeadsController extends BaseController
     {
         $address = $this->_getAddress($request); 
         $geocode = app('geocoder')->geocode($address)->get();
+
         if ($geocode->count()==0) {
             
             return false;
         }
         
         $data['lead'] = $this->lead->getGeoCode($geocode);
-
+        $data['lead'] = $this->_fillAddress($request, $data['lead']);
+        dd(220, $data['lead']);
         $data['lead']['businessname'] =request('companyname');
       
         $data['lead']['phone'] = preg_replace("/[^0-9]/", "", request('phone'));
@@ -226,6 +228,26 @@ class MyLeadsController extends BaseController
 
        
         return $data;
+    }
+    /**
+     * [_fillAddress description]
+     * 
+     * @param Request $request [description]
+     * @param Array   $lead    [description]
+     * 
+     * @return [type]           [description]
+     */
+    private function _fillAddress(Request $request, Array $lead)
+    {
+     
+        $fields = ['address','city','state','zip'];
+        foreach ($fields as $field) {
+            if (! $lead[$field] or str_replace(" ", "", $lead[$field])=='') {
+                $lead[$field] = request($field);
+            }
+        }
+        return $lead;
+
     }
 
     /**
