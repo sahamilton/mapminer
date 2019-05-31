@@ -10,6 +10,7 @@ use App\Jobs\ActivityOpportunityReport;
 use App\Jobs\AccountActivities;
 use App\Jobs\BranchOpportunities;
 use App\Jobs\BranchStats;
+use App\Jobs\RebuildPeople;
 use App\Company;
 
 class Kernel extends ConsoleKernel
@@ -40,6 +41,8 @@ class Kernel extends ConsoleKernel
                 ->sundays()
                 ->at('19:52');
 
+            $schedule->job(new RebuildPeople())
+                ->dailyAt('21:12');
 
             $schedule->command('db:backup')
                 ->dailyAt('22:58');
