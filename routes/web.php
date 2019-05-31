@@ -674,11 +674,12 @@ Route::group(
         //   Jobs
         Route::get(
             'testjob', function () {
-                 $company = App\Company::findOrFail(532);
+                 //$company = App\Company::findOrFail(532);
                  $period['from'] = \Carbon\Carbon::now()->subWeek()->startOfWeek();
                  $period['to'] = \Carbon\Carbon::now()->subWeek()->endOfWeek();
-                 App\Jobs\AccountActivities::dispatch($company, $period);
-            
+                 //App\Jobs\AccountActivities::dispatch($company, $period);
+                //App\Jobs\BranchOpportunities::dispatch($period);
+                 App\Jobs\RebuildPeople::dispatch();
                  /*$filesInFolder = \File::files(storage_path('backups'));
                  foreach ($filesInFolder as $file){
                  if(pathinfo($file)['extension'] == 'sql'){
