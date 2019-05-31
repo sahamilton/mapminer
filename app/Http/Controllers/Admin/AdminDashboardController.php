@@ -359,7 +359,7 @@ class AdminDashboardController extends BaseController
         foreach ($views as $view) {
             $seq = $view['value'] +1 . ". ";
             if ($view['interval']) {
-                $query.=" if(date(lastlogin)>='".
+                $query.=" if (date(lastlogin)>='".
                       $view['interval']['from'].
                       "','".
                       $seq  .
@@ -367,7 +367,7 @@ class AdminDashboardController extends BaseController
                       $view['label'].
                       "',";
             } else {
-                $query.=" if(date(lastlogin) is NULL ,'".
+                $query.=" if (date(lastlogin) is NULL ,'".
                     $seq .
                     " ".
                     $view['label'].
@@ -505,7 +505,7 @@ class AdminDashboardController extends BaseController
         /*return $this->location->with('company','verticalsegment')
 			->selectRaw('*,
 					count(locations.id) as incorrect')
-			->whereNotIn('segment',function($query){
+			->whereNotIn('segment',function($query) {
                $query->select('vertical')->from('companies')->find();
             })
          ->groupBy('company_id')

@@ -36,20 +36,7 @@ add to opportunity list
 			</p>
 			 <p>Lat: {{number_format($location->location->lat,4)}};<br /> Lng: {{number_format($location->location->lng,4)}}</p>
 		 </fieldset>
-		 <p><i class="far fa-eye" aria-hidden="true"></i>
-
-		@if(isset($watch->location_id))
-
-		<a href="{{route('watch.delete',$watch->id)}}" 
-		title="Remove this location to my watch list"> 
-		Remove from My Watch List</a>
-
-		@else
-			<a href="{{route('watch.add',$location->location->id)}}" 
-			title="Add this location to my watch list"> 
-			Add to My Watch List</a>
-		@endif
-		</p>
+		 
 		<p>
 		
 		@isset($branch[0])

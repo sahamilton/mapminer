@@ -295,7 +295,7 @@ class AdminUsersController extends BaseController
 
         $this->updatePassword( $request, $user);
 
-		if($user->update(request()->except('password'))){
+		if ($user->update(request()->except('password'))) {
 
             $person = $this->updateAssociatedPerson($user->person,request()->all());
             $person = $this->associateBranchesWithPerson($person,request()->all());        
@@ -336,7 +336,7 @@ class AdminUsersController extends BaseController
         private function updateServicelines(UserFormRequest $request, User $user)
         {
 
-            if(request()->filled('serviceline')){
+            if (request()->filled('serviceline')) {
 
 
                     $user->serviceline()->sync(request('serviceline'));
@@ -485,7 +485,7 @@ class AdminUsersController extends BaseController
             return redirect()->to('admin/users')
             ->with('error', 'You cannot delete yourself');
         }
-        if($user->person->directReports()->count() >0){
+        if ($user->person->directReports()->count() >0) {
             
             $person = $user->person->load('directReports');
             return response()->view('admin.users.hasreports',compact('person'));

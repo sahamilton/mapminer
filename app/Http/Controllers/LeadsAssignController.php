@@ -70,7 +70,7 @@ class LeadsAssignController extends Controller
             if ($addresses->count()>0) {
                   $box = $this->address->getBoundingBox($addresses);
       
-                  if(request('type')=='branch'){
+                  if (request('type')=='branch') {
                       $branchCount = $this->assignBranchesToLeads($leadsource);
                       $assignedCount = $this->address->where('lead_source_id','=',$leadsource->id)
                       ->has('assignedToBranch')
@@ -114,18 +114,18 @@ class LeadsAssignController extends Controller
           return response()->view('leads.showsearch', compact('lead', 'branches', 'people', 'salesrepmarkers', 'branchmarkers', 'extrafields', 'sources', 'address'));
     }
 
-    public function store(Request $request, Address $address){
+    public function store(Request $request, Address $address) {
      
       $branches = $this->branch->whereIn('id',request('branch'))->with('manager','manager.userdetails')->get();
       $address->load('contacts',$address->addressable_type);
       $branchids = $branches->pluck('id')->toArray();
-      foreach ($branchids as $branch){
+      foreach ($branchids as $branch) {
         $syncData[$branch] = ['status_id'=>1];
       }
    
       $address->assignedToBranch()->sync($syncData);
 
-      if(request()->has('notify'))
+      if (request()->has('notify'))
       {       
         foreach ($branches as $branch)
           {
@@ -178,7 +178,7 @@ class LeadsAssignController extends Controller
            ->pluck('id')
            ->toArray();
     
-           foreach(request('branch') as $branch){
+           foreach(request('branch') as $branch) {
                 $branch = $this->branch->findOrFail($branch);
 
             $branch->locations()->attach($addresses);
@@ -208,17 +208,17 @@ class LeadsAssignController extends Controller
         return $people->count();
     }
   
-    private function assignBranchesToLeads(LeadSource $leadsource){
+    private function assignBranchesToLeads(LeadSource $leadsource) {
      
       $addresses = $this->unassignedLeads($leadsource);
       
-      foreach ($addresses as $address){
+      foreach ($addresses as $address) {
           $branches = $this->branch
             ->nearby($address, $this->distance, $this->limit)
             ->pluck('id')
             ->toArray();
-          if(count($branches)>0){
-            foreach ($branches as $branch_id){
+          if (count($branches)>0) {
+            foreach ($branches as $branch_id) {
               $data[] = ['address_id'=>$address->id, 'branch_id'=>$branch_id];
              }
            }
@@ -227,11 +227,11 @@ class LeadsAssignController extends Controller
         return $addresses->count();              
     }
                
-    private function assignLeadsToBranches($leadsource,$box){
+    private function assignLeadsToBranches($leadsource,$box) {
 
         $branches = $this->branch->withinMBR($box)->get();
         // this gets all branches within bounding box
-        foreach ($branches as $branch){
+        foreach ($branches as $branch) {
            $addresses = $this->address->where('lead_source_id','=',$leadsource->id)
                ->doesntHave('assignedToBranch')
                ->doesntHave('assignedToPerson')

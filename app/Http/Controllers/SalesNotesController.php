@@ -31,7 +31,7 @@ class SalesNotesController extends BaseController {
 	 
 	public function index($companyid = NULL)
 	{
-		if(isset($companyid)) {
+		if (isset($companyid)) {
 			return redirect()->route('salesnotes',$companyid);
 		}
 		$companies = $this->company->with('salesNotes','serviceline')
@@ -51,7 +51,7 @@ class SalesNotesController extends BaseController {
 		$fields = Howtofield::orderBy('group')->get();
 		$groups = Howtofield::select('group')->distinct()->get();
 
-		if(request()->filled('company')){
+		if (request()->filled('company')) {
 			$company = $this->company->findOrFail(request('company'));
 
 		}
@@ -136,12 +136,12 @@ class SalesNotesController extends BaseController {
 			->where('company_id','=',$company_id)
 			->firstorFail();
 	
-		if(count($attachments) != 0 )
+		if (count($attachments) != 0 )
 		{
 			$data = unserialize(urldecode($attachments->value));
 			
-			foreach($data as $key=>$value){
-				if($value['filename'] == $file){
+			foreach($data as $key=>$value) {
+				if ($value['filename'] == $file) {
 					unset($data[$key]);
 				}
 			}
@@ -174,7 +174,7 @@ class SalesNotesController extends BaseController {
 		
 		$salesnote = Salesnote::where('company_id','=',$company->id)->with('fields')->get();
 		$groups = Howtofield::select('group')->distinct()->get();
-		if(count($salesnote)>0) {
+		if (count($salesnote)>0) {
 			$data = array();
 			// Fields that need to be convereted to an array
 			
@@ -189,7 +189,7 @@ class SalesNotesController extends BaseController {
 			}
 			foreach ($salesnote as $note) {
 				$field_id = $note->howtofield_id;
-				if($note->fields->type == 'checkbox' || $note->fields->type == 'multiple') {
+				if ($note->fields->type == 'checkbox' || $note->fields->type == 'multiple') {
 					$data[$field_id]['value']= unserialize(urldecode($note->value));
 					
 				}else{

@@ -48,9 +48,9 @@ class RouteServiceProvider extends ServiceProvider
         Route::model('person', \App\Person::class);
         Route::model('role', \App\Role::class);
         Route::model('salesactivity', \App\Salesactivity::class);
-        Route::model('salesorg',\App\Person::class);
+        Route::model('salesorg', \App\Person::class);
         Route::model('team', \App\Person::class);
-        Route::model('track',\App\Track::class);
+        Route::model('track', \App\Track::class);
         Route::model('user', \App\User::class);
     }
 
@@ -80,8 +80,8 @@ class RouteServiceProvider extends ServiceProvider
     protected function mapWebRoutes()
     {
         Route::middleware('web')
-             ->namespace($this->namespace)
-             ->group(base_path('routes/web.php'));
+            ->namespace($this->namespace)
+            ->group(base_path('routes/web.php'));
     }
 
     /**
@@ -94,23 +94,23 @@ class RouteServiceProvider extends ServiceProvider
     protected function mapApiRoutes()
     {
         Route::prefix('api')
-             ->middleware('api')
-             ->namespace($this->namespace)
-             ->group(base_path('routes/api.php'));
+            ->middleware('api')
+            ->namespace($this->namespace)
+            ->group(base_path('routes/api.php'));
     }
 
      /**
-     * Define the "api" routes for the application.
-     *
-     * These routes are typically stateless.
-     *
-     * @return void
-     */
+      * Define the "api" routes for the application.
+      *
+      * These routes are typically stateless.
+      *
+      * @return void
+      */
     protected function mapAdminRoutes()
     {
         Route::prefix('admin')
-             ->middleware('Admin')
-             ->namespace($this->namespace)
-             ->group(base_path('routes/admin.php'));
+            ->middleware('Admin')
+            ->namespace($this->namespace)
+            ->group(base_path('routes/admin.php'));
     }
 }

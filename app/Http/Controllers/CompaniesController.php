@@ -444,7 +444,7 @@ class CompaniesController extends BaseController
                 ->where('company_id', $company->id);
 
 
-            if($filtered && count($data['keys']) >0){
+            if ($filtered && count($data['keys']) >0) {
                 $locations = $locations->whereIn('segment', $data['keys'])
 
                         ->orWhereIn('businesstype', $data['keys']);

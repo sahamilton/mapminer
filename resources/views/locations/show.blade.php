@@ -40,18 +40,7 @@
       </a>
     </li>
     
-      <a class="nav-link" 
-          id="watchers-tab" 
-          data-toggle="tab" 
-          href="#watchers"
-          role="tab" 
-          aria-controls="watchers" 
-          aria-selected="true">
 
-        <strong>Watched By {{$location->watchedBy->count()}}
-        </strong>
-      </a>
-    </li>
     
 
 
@@ -69,11 +58,7 @@ $id= $location->id;?>
     <div id="contacts" class="tab-pane fade">
       @include('locations.partials._tabcontacts')
     </div>
-    @if($location->watchedBy->count()>0)
-    <div id="watchers" class="tab-pane fade">
-      @include('locations.partials._tabwatchers')
-    </div>
-    @endif
+    
    
 
   </div>

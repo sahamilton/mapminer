@@ -220,7 +220,7 @@ class ProjectsController extends BaseController
  * addCompanyContact add Contact Details to project company
  * @param Request $request [description]
  */
-    public function addCompanyContact(ProjectContactFormRequest $request){
+    public function addCompanyContact(ProjectContactFormRequest $request) {
         $request->request->add(['user_id',auth()->user()->id]);
 
 

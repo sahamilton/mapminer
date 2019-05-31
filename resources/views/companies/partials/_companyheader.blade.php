@@ -2,13 +2,6 @@
 <i class="fas fa-search" aria-hidden="true"></i>  
 Read 'How to Sell to {{$data['company']->companyname}}'</a></p>
 
-<p><a href="{{route('watch.index')}}" title="Review my watch list">
-<i class="fas fa-th-list" aria-hidden="true"></i> 
-View My Watch List</a></p>
-
-<p><a href="{{route('watch.export')}}" title="Download my watch list as a CSV / Excel file">
-<i class="fas fa-cloud-download-alt" aria-hidden="true"></i></i> 
-Download My Watch List</a></p>
 
 <p><a href="{{route('exportlocationnotes',$data['company']->id)}}" title="Download my {{$data['company']->companyname}} location notes as a CSV / Excel file">
 <i class="fas fa-cloud-download-alt" aria-hidden="true"></i></i> 

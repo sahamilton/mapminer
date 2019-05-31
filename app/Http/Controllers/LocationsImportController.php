@@ -45,7 +45,7 @@ class LocationsImportController extends ImportController
             $data['lead_source_id'] = $this->import->createLeadSource($data)->id;
         }
 
-        if(request()->filled('company')){
+        if (request()->filled('company')) {
                 $data['additionaldata']['company_id'] = request('company');
                 $this->import->setDontCreateTemp(true); 
 
@@ -78,12 +78,12 @@ class LocationsImportController extends ImportController
         }
         $data['table']=$this->table;
         $this->import->setFields($data);
-        if(request('type')!='location'){
+        if (request('type')!='location') {
            $this->import->setDontCreateTemp(false); 
         }
         if ($fileimport = $this->import->import($request)) {
            
-            if(request('type')=='location'){
+            if (request('type')=='location') {
                 
                 return redirect()->route('postprocess.index');
             }

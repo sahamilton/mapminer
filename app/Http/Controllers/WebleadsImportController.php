@@ -34,11 +34,11 @@ class WebleadsImportController extends Controller
         return response()->view('webleads.leadform', compact('leadsources'));
     }
 
-    public function getLeadFormData(WebLeadFormRequest $request){
+    public function getLeadFormData(WebLeadFormRequest $request) {
     	// first get the rows of data
 
     	
-    	if(! $input = $this->parseInputData($request)){
+    	if (! $input = $this->parseInputData($request)) {
             return back()->withError('Unable to parse that input')->withInput();
         }
 
@@ -162,21 +162,21 @@ class WebleadsImportController extends Controller
 
 
 
-    private function validateFields($input){
+    private function validateFields($input) {
     	$valid = $this->getValidFields();
 
         $data =  array();
 
-    	foreach ($input as $key=>$value){
+    	foreach ($input as $key=>$value) {
 
-    		if(array_key_exists(trim($key),$valid)){
+    		if (array_key_exists(trim($key),$valid)) {
     			$data[$valid[$key]] = $value;
     		}
     	}
       
     	$requiredFields = $this->import->requiredFields;
        
-    	if($diff = array_diff($requiredFields,array_keys($data))){
+    	if ($diff = array_diff($requiredFields,array_keys($data))) {
     		dd($diff,$requiredFields,array_keys($data));
             return false;
         }
@@ -212,7 +212,7 @@ class WebleadsImportController extends Controller
             }
         }
 
-        if(! isset($input)){
+        if (! isset($input)) {
             return false;
             
         }

@@ -39,13 +39,12 @@
                             @endcan
                             </ul>
                             </li>
-                        <li class="dropdown{{ (Request::is('watch*','mynote*') ? ' active' : '') }}">
+                        <li class="dropdown{{ (Request::is('mynote*') ? ' active' : '') }}">
                             <a class="dropdown-toggle" data-toggle="dropdown" >
                          My Activity<span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu">
-                        <li {{ (Request::is('watch') ? ' class="active"' : '') }}><a href="{{{ route('watch.index') }}}">
-                        <i class ="far fa-eye"></i> My Watch List</a></li>
+                        
                          <li {{ (Request::is('mynotes') ? ' class="active"' : '') }}><a href="{{{ route('mynotes') }}}">
                         <i class="far fa-folder-open-o" aria-hidden="true"></i>
                          My Notes</a>

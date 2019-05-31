@@ -264,7 +264,7 @@ class LeadSourceController extends Controller
     {
         
         $leadsource = $this->leadsource
-        ->with(['addresses' => function ($query) use($state){
+        ->with(['addresses' => function ($query) use($state) {
                 $query->whereDoesntHave('assignedToBranch')->whereDoesntHave('assignedToPerson')
                 ->where('state','=',trim($state));
             }],'addresses.state')
@@ -281,7 +281,7 @@ class LeadSourceController extends Controller
     {
 
         return $this->lead->where('lead_source_id', '=', $id)
-        /*->wherehas('leadsource',function($q){
+        /*->wherehas('leadsource',function($q) {
             $q->where('datefrom','<=',date('Y-m-d'))
                 ->where('dateto','>=',date('Y-m-d'));
             })
@@ -503,10 +503,10 @@ class LeadSourceController extends Controller
         $this->period['to'] = Carbon::now();
         // find all branches that have addresses
             $branches = $this->branch
-            ->whereHas('addresses',function($q) use($leadsource){
+            ->whereHas('addresses',function($q) use($leadsource) {
                 $q->where('lead_source_id','=',$leadsource->id);
             })
-            ->with(['addresses'=>function($q) use($leadsource){
+            ->with(['addresses'=>function($q) use($leadsource) {
                 $q->where('lead_source_id','=',$leadsource->id);
             }])
             

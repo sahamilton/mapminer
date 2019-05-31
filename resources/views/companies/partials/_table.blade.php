@@ -1,6 +1,6 @@
 <table id ='sorttable'  class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
-    <th>Watch</th>
+    
 		<th>Company Name</th>
 		<th>Street</th>
 		<th>City</th>
@@ -20,13 +20,7 @@
 
 
     <tr> 
-    <td style ="text-align: center; vertical-align: middle;">
-		<input @if(in_array($location->id,$data['mywatchlist'])) checked @endif
 
-		id="{{$location->id}}" 
-		type='checkbox' name='watchList' class='watchItem' 
-		value="{{$location->id}}" >
-		</td> 
 
 	<td>
 		<a title= "See details of {{$location->businessname}} location."

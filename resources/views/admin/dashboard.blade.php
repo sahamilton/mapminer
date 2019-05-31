@@ -94,7 +94,7 @@ $cumulative = array();
     <div id="menu1" class="tab-pane fade">
       <h3>Account Activity</h3>
 
-        @include('admin.partials.watchers')
+      
         @include('admin.partials.newNotes')
         @include('admin.partials.newLeadNotes')  
         @include('admin.partials.newProjectNotes') 

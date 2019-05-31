@@ -8,6 +8,8 @@ use App\ActivityType;
 use App\Chart;
 use App\Contact;
 use App\Branch;
+use Excel;
+use App\Exports\MyActivities;
 use App\Person;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -343,7 +345,15 @@ class ActivityController extends Controller
         return redirect()->route('address.show', $address)
             ->withMessage('Activity deleted');
     }
-
+    /**
+     * [export description]
+     * 
+     * @return [type] [description]
+     */
+    public function export()
+    {
+        return Excel::download(new MyActivities(), auth()->user()->person->fullName() . ' Activities.csv');
+    }
     
     /**
      * [future description]

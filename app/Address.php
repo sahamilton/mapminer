@@ -24,7 +24,6 @@ class Address extends Model
         'company_id',
         'user_id',
         'phone',
-        
         'lead_source_id',
         'customer_id',
         'description'];

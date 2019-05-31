@@ -9,7 +9,7 @@ class EmailLogController extends Controller
 {
     protected $emaillog;
 
-    public function __construct(EmailLog $emaillog){
+    public function __construct(EmailLog $emaillog) {
         $this->emaillog = $emaillog;
 
     }
@@ -96,7 +96,7 @@ class EmailLogController extends Controller
 
     public function destroychecked(Request $request)
     {
-        if($request->has('ids')){
+        if ($request->has('ids')) {
             $deleteIds = explode(',',request('ids'));
         
         }

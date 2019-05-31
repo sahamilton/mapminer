@@ -52,15 +52,15 @@ class LocationPostImportController extends Controller
         $company = $this->company->findOrFail(request('company_id'));
         $data = $this->import->returnAddressMatchData($company);
         
-        if(count($data['delete'])>0){
+        if (count($data['delete'])>0) {
             $this->deleteLocations($data['delete']);
        }
-        if(count($data['add'])>0){
+        if (count($data['add'])>0) {
             $data = $this->addNewLocations($data);
             $this->copyAddressIdToImport($data);
         }
       
-        if(count($data['matched'])>0){
+        if (count($data['matched'])>0) {
             $this->updateLocations($data);
         }
         
@@ -81,7 +81,7 @@ class LocationPostImportController extends Controller
         $m = $this->getIdsFromArray($data['add']);
         $insert = $this->import->whereIn('id',$m)->get();
         $insert = $this->setimport_ref($insert);
-        if($insert->count()>0){
+        if ($insert->count()>0) {
             \DB::table('addresses')->insert($insert->toArray());
         }
         return $data;
@@ -125,7 +125,7 @@ class LocationPostImportController extends Controller
         
         $this->updateImportTable($data['matched']);
         $imports = $this->getMatchedAddresses($data);
-        foreach ($imports as $import){
+        foreach ($imports as $import) {
             
             $address = $this->address->findOrFail($import->address_id);
             $address->update($import->toArray());
@@ -167,7 +167,7 @@ class LocationPostImportController extends Controller
     private function getIdsFromArray($data)
     {
         $m=[];
-        foreach ($data as $el){
+        foreach ($data as $el) {
             $m[] = $el->id;
         }
        return $m;
@@ -200,7 +200,7 @@ class LocationPostImportController extends Controller
     private function updateImportTable($data)
     {
 
-        foreach ($data as $el){
+        foreach ($data as $el) {
           
             $import = $this->import->whereId($el->id)->update(['address_id' => $el->import_ref]);
             

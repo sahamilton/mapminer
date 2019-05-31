@@ -27,7 +27,7 @@ class WebleadsController extends ImportController
         $this->person = $person;
         $this->branch = $branch;
     }
-    /*public function index(){
+    /*public function index() {
            
             $webleads = $this->lead->all();
         
@@ -38,7 +38,7 @@ class WebleadsController extends ImportController
      
     
 /*
-    public function show($lead){
+    public function show($lead) {
         
         $branches = $this->findNearByBranches($lead);
         $people = $this->findNearbySales($branches,$lead); 
@@ -50,9 +50,9 @@ class WebleadsController extends ImportController
     
 */
 
-   /* public function saleslist(){
+   /* public function saleslist() {
 
-            $leads = $this->lead->whereHas('salesteam',function ($q){
+            $leads = $this->lead->whereHas('salesteam',function ($q) {
                 $q->where('persons.id','=',auth()->user()->person->id);
             })->get();
 
@@ -61,7 +61,7 @@ class WebleadsController extends ImportController
             return response()->view('webleads.salesrep',compact('leads','person','leadstatuses'));
      
     }
-    public function salesshow($lead){
+    public function salesshow($lead) {
     
         $person = $this->person->findOrFail(auth()->user()->person->id);
         $rankingstatuses = $lead->getStatusOptions;
@@ -70,11 +70,11 @@ class WebleadsController extends ImportController
     }
     
 
-    public function edit($weblead){
+    public function edit($weblead) {
         return response()->view('webleads.edit',compact('weblead'));
     }
 
-    public function update(Request $request,$weblead){
+    public function update(Request $request,$weblead) {
         
 
         $address = request('address') . " " . request('city') . " " . request('state'). " " . request('zip');
@@ -88,7 +88,7 @@ class WebleadsController extends ImportController
         return redirect()->route('webleads.show',$weblead->id);
     }
 
-    public function destroy($lead){
+    public function destroy($lead) {
     
         $lead->delete();
         return redirect()->route('webleads.index');
@@ -112,9 +112,9 @@ class WebleadsController extends ImportController
         }
         return redirect()->route('address.show', $address->id);
     }
-   /* private function getBranchEmails($branch){
+   /* private function getBranchEmails($branch) {
         $emails = array();
-        foreach($branch->manager as $manager){
+        foreach($branch->manager as $manager) {
             $emails[$manager->id]['name'] = $manager->postName();
             $emails[$manager->id]['email'] = $manager->userdetails->email;
         }
@@ -122,7 +122,7 @@ class WebleadsController extends ImportController
         $emails['B' . $branch->id]['name'] = 'Branch Manager';
         return $emails;
     }
-    public function unAssignLeads(Request $request){
+    public function unAssignLeads(Request $request) {
      
        $lead = $this->lead->findOrFail(request('lead'));
        $lead->salesteam()->detach(request('rep'));
@@ -136,15 +136,15 @@ class WebleadsController extends ImportController
      * @return People object
      */
 
-  /*  private function findNearBySales($branches,$lead){
+  /*  private function findNearBySales($branches,$lead) {
         $branch_ids = $branches->pluck('id')->toArray(); 
         $data['distance']=\Config::get('leads.search_radius');
         $salesroles = $this->salesroles;
-        $persons =  $this->person->whereHas('userdetails.roles',function ($q) use($salesroles){
+        $persons =  $this->person->whereHas('userdetails.roles',function ($q) use($salesroles) {
           $q->whereIn('roles.id',$salesroles);
         })
        
-        ->whereHas('branchesServiced',function ($q) use ($branch_ids){
+        ->whereHas('branchesServiced',function ($q) use ($branch_ids) {
             $q->whereIn('branches.id',$branch_ids);
         })
         ->with('userdetails','userdetails.roles','industryfocus','branchesServiced');
@@ -153,7 +153,7 @@ class WebleadsController extends ImportController
 
     }
 
-     private function findNearByBranches($lead){
+     private function findNearByBranches($lead) {
         $data['distance']=\Config::get('leads.search_radius');
        
        return  $this->branch->with('manager')->nearby($lead,$data['distance'])->limit(10)->get();
@@ -162,7 +162,7 @@ class WebleadsController extends ImportController
     }
     public function jsonify($people) {
         $key=0;
-        foreach ($people as $person){
+        foreach ($people as $person) {
             $salesrepmarkers[$key]['id']=$person->id;
             $salesrepmarkers[$key]['lat']=$person->lat;
             $salesrepmarkers[$key]['lng']=$person->lng;
@@ -175,11 +175,11 @@ class WebleadsController extends ImportController
     }
 
 
-    public function getSalesPeopleofBranch(Request $request){
+    public function getSalesPeopleofBranch(Request $request) {
 
         $bid = request('branch');
 
-        $salesreps = $this->person->whereHas('branchesServiced', function($q) use($bid){
+        $salesreps = $this->person->whereHas('branchesServiced', function($q) use($bid) {
             $q->where('branches.id','=',$bid);
         })
         
@@ -196,7 +196,7 @@ class WebleadsController extends ImportController
      * @param  int  $id      prospect (lead) id
      * @return [type]           [description]
      */
-  /*  public function close(Request $request, $lead){
+  /*  public function close(Request $request, $lead) {
     
       $lead->salesteam()
 
@@ -206,7 +206,7 @@ class WebleadsController extends ImportController
         return redirect()->route('my.webleads')->with('message', 'Lead closed');
      }
 
-     private function addClosingNote($request,$id){
+     private function addClosingNote($request,$id) {
         $note = new Note;
 
         $note->note = "Lead Closed:" .request('comments');
@@ -216,7 +216,7 @@ class WebleadsController extends ImportController
         $note->save();
     }
 
-    public function salesLeadsMap(){
+    public function salesLeadsMap() {
         $person = $this->person->findOrFail(auth()->user()->person->id);
         $data['title']= $person->postName();
         $data['datalocation'] = route('api.webleads.map');
@@ -236,9 +236,9 @@ class WebleadsController extends ImportController
         return response()->view('webleads.showmap',compact('data'));
     }
 
-    public function getMapData(){
+    public function getMapData() {
         
-        $webleads = $this->lead->whereHas('salesteam',function ($q){
+        $webleads = $this->lead->whereHas('salesteam',function ($q) {
                 $q->where('persons.id','=',auth()->user()->person->id);
             })
         ->limit('200')

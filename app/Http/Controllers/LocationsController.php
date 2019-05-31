@@ -186,7 +186,7 @@ class LocationsController extends BaseController
         }
         //dd($this->userServiceLines);
         return $this->branch->with('servicelines')
-            /*->whereHas('servicelines', function ($q) use($userservicelines){
+            /*->whereHas('servicelines', function ($q) use($userservicelines) {
 				$q->whereIn('id',$userservicelines);
 			})*/
             ->nearby($location, '100')
