@@ -10,6 +10,9 @@ use App\Branch;
 class BranchTeamExport implements FromView
 {
     public $roles;
+    /**
+     * [__construct description]
+     */
     public function __construct()
     {
         

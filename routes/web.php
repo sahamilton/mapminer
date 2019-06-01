@@ -679,7 +679,8 @@ Route::group(
                  $period['to'] = \Carbon\Carbon::now()->subWeek()->endOfWeek();
                  //App\Jobs\AccountActivities::dispatch($company, $period);
                 //App\Jobs\BranchOpportunities::dispatch($period);
-                 App\Jobs\RebuildPeople::dispatch();
+                 //App\Jobs\RebuildPeople::dispatch();
+                App\Jobs\BranchLogins::dispatch($period);
                  /*$filesInFolder = \File::files(storage_path('backups'));
                  foreach ($filesInFolder as $file){
                  if(pathinfo($file)['extension'] == 'sql'){

@@ -82,7 +82,14 @@ class Kernel extends ConsoleKernel
                 ->weekly()
                 ->mondays()
                 ->at('04:59');
-            
+
+            // Branch Login Report
+            $period['from'] = \Carbon\Carbon::now()->subMonth(2)->startOfMonth();  
+            $period['to'] = \Carbon\Carbon::now()->subWeek()->endOfWeek();
+            $schedule->job(new BranchLogins($period))
+                ->weekly()
+                ->mondays()
+                ->at('03:59');
         }   
     }
 
