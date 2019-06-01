@@ -11,6 +11,7 @@ use App\Jobs\AccountActivities;
 use App\Jobs\BranchOpportunities;
 use App\Jobs\BranchStats;
 use App\Jobs\RebuildPeople;
+use App\Jobs\BranchLogins;
 use App\Company;
 
 class Kernel extends ConsoleKernel
