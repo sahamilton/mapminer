@@ -15,6 +15,14 @@
                 <i class="fas fa-users"></i> All Users
             </a>
         </li>
+        <li>
+            <a class="dropdown-item" 
+            href="{{ route('deleted.users') }}">
+                 <i class="fas fa-user-slash"></i> Deleted Users
+            </a>
+        </li>
+
+
         <div class="dropdown-divider"></div>
         <li>
             <a class="dropdown-item" 

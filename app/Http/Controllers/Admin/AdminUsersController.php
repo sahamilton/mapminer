@@ -727,6 +727,7 @@ class AdminUsersController extends BaseController
     
     /**
      * [checkBranchAssignments description]
+     * 
      * @return [type] [description]
      */
     public function checkBranchAssignments()
@@ -750,5 +751,47 @@ class AdminUsersController extends BaseController
         }
     
         return response()->view('admin.branches.checkbranches', compact('data'));
+    }
+    /**
+     * Return all deleted users
+     * 
+     * @return View [description]
+     */
+    public function deleted()
+    {
+        $users = $this->user->onlyTrashed()->with('deletedperson', 'roles')->get();
+
+        return response()->view('admin.users.deleted', compact('users'));
+    }
+    /**
+     * Restre soft deleted person
+     * 
+     * @param Int $id id of deleted user
+     * 
+     * @return [type]           [description]
+     */
+    public function restore(Int $id)
+    {
+        $user = $this->user->onlyTrashed()->with('deletedperson')->findOrFail($id);
+        $user->restore();
+        $user->deletedperson->restore();
+        return redirect()->route('deleted.users')->withMessage($user->deletedperson->fullName() . ' has been restored');
+    }
+
+    /**
+     * Permanently delete user
+     * 
+     * @param  Request $request [description]
+     * 
+     * @return [type]           [description]
+     */
+    public function permdeleted($id, Request $request)
+    {
+       
+        $user = $this->user->onlyTrashed()->with('deletedperson')->findOrFail($id);
+        $user->deletedperson->forceDelete();
+        $user->forceDelete();
+
+        return redirect()->route('deleted.users')->withWarning($user->deletedperson->fullName() . ' has been permanently deleted');
     }
 }

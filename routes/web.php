@@ -45,7 +45,7 @@ Route::group(
            //     Activities/
         Route::get('branch/{branch}/activity/{activitytype?}', ['as'=>'branch.activity', 'uses'=>'ActivityController@getBranchActivtiesByType']);
         Route::get('activity/{activity}/complete', ['as'=>'activity.complete', 'uses'=>'ActivityController@complete']);
-        Route::get('activities/export', ['as'=>'activities.export','uses'=>'ActivityContoller@export']);
+        Route::get('activities/export', ['as'=>'activities.export','uses'=>'ActivityController@export']);
 
         Route::get('followup', ['as'=>'followup', 'uses'=>'ActivityController@future']);
         Route::resource('activity', 'ActivityController');
@@ -580,7 +580,10 @@ Route::group(
 
         Route::post('users/bulkimport', ['as'=>'admin.users.bulkimport', 'uses'=>'UsersImportController@import']);
         Route::post('users/import', ['as'=>'users.mapfields', 'uses'=>'UsersImportController@mapfields']);
+        Route::get('users/deleted', ['as'=>'deleted.users', 'uses'=>'Admin\AdminUsersController@deleted']);
+        Route::get('users/{id}/restore', ['as'=>'users.restore', 'uses'=>'Admin\AdminUsersController@restore']);
 
+        Route::delete('users/{id}/purge', ['as'=>'users.permdestroy', 'uses'=>'Admin\AdminUsersController@permdeleted']);
 
         Route::post('user/usererrors', ['as'=>'fixusercreateerrors', 'uses'=>'UsersImportController@fixUserErrors']);
         Route::post('user/importcleanse/delete', ['as'=>'user.importdelete', 'uses'=>'UserImportCleanseController@bulkdestroy']);
