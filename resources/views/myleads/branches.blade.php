@@ -42,13 +42,14 @@
     <th>Date Added</th>
     <th>Address</th>
     <th>Lead Source</th>
+    <th>Last Activity</th>
     <th>Remove</th>
 
     </thead>
     <tbody>
 
     @foreach($data['leads'] as $lead)
-      
+
     <tr>
         
         <td>
@@ -62,6 +63,11 @@
         <td>
             @if($lead->leadsource)
              {{$lead->leadsource->source}}
+            @endif
+        </td>
+        <td>
+            @if($lead->lastActivity->count()==1)
+                {{$lead->lastActivity->first()->activity_date->format('Y-m-d')}}
             @endif
         </td>
         <td>
