@@ -178,6 +178,19 @@ class Address extends Model
     {
         return $this->hasMany(Activity::class);
     }
+
+    /**
+     * [lastActivity description]
+     * 
+     * @return [type] [description]
+     */
+    public function lastActivity()
+    {
+        return $this->hasMany(Activity::class)
+            ->where('completed', 1)
+            ->orderBy('activity_date', 'desc')
+            ->take(1);
+    }
     /**
      * [fullAddress description]
      * 

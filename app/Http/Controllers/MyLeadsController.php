@@ -52,7 +52,7 @@ class MyLeadsController extends BaseController
         }
        
         $data = $this->_getBranchLeads([$branch]);
-        
+      
         $title= $data['branches']->first()->branchname . " leads";
 
         return response()->view('myleads.branches', compact('data', 'myBranches', 'title'));
@@ -104,7 +104,7 @@ class MyLeadsController extends BaseController
             }
         )
         ->whereDoesntHave('opportunities')
-        ->with('assignedToBranch', 'opportunities', 'leadsource')
+        ->with('assignedToBranch', 'opportunities', 'leadsource', 'lastActivity')
         ->get();
        
         $data['branches'] = $this->_getBranches($branch);
