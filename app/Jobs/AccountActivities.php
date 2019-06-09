@@ -69,8 +69,5 @@ class AccountActivities implements ShouldQueue
             
         }
         
-           
-        
-        
     }
 }
