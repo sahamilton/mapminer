@@ -55,7 +55,7 @@ class AccountActivities implements ShouldQueue
                     ->bcc('hamilton@okospartners.com', 'Stephen Hamilton')
                     ->cc('salesoperations@trueblue.com', 'Sales Operations')
                     ->send(
-                        new AccountActivitiesReport($file, $this->period, $this->company);
+                        new AccountActivitiesReport($file, $this->period, $this->company)
                     );
                 $loop = true;
             } else {
