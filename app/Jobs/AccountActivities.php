@@ -62,7 +62,7 @@ class AccountActivities implements ShouldQueue
                 Mail::to($email, $recipient)
                    
                     ->send(
-                        new AccountActivitiesReport($file, $this->period, $this->company);
+                        new AccountActivitiesReport($file, $this->period, $this->company)
                     );
 
             }
