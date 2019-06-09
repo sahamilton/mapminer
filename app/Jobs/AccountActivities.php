@@ -47,8 +47,8 @@ class AccountActivities implements ShouldQueue
         );
         $this->company->load('managedBy');
        
-        $distribution = ['athompson4@trueblue.com'=>'Amy Thompson']
-        $loop=false;
+        $distribution = ['athompson4@trueblue.com'=>'Amy Thompson'];
+        $loop = false;
         foreach ($distribution as $email=>$recipient) {
             if (! $loop) {
                 Mail::to($email, $recipient)
