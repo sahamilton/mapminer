@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Branch;
 use App\Person;
 use App\Address;
+use App\Serviceline;
 use Excel;
 use App\Http\Requests\LeadAddressFormRequest;
 use Illuminate\Http\Request;
@@ -17,40 +18,65 @@ class SalesOrgController extends BaseController
     public $salesroles = [4,5,6,7,8];
     
 
-
-    public function __construct(Branch $branch, Person $person, Address $address)
-    {
+    /**
+     * [__construct description]
+     * 
+     * @param Branch  $branch  [description]
+     * @param Person  $person  [description]
+     * @param Address $address [description]
+     */
+    public function __construct(
+        Branch $branch, Person $person, Address $address
+    ) {
         $this->person = $person;
         $this->branch = $branch;
         $this->address = $address;
 
         //$this->person->rebuild();
     }
-    
+    /**
+     * [index description]
+     * 
+     * @return [type] [description]
+     */
     public function index()
     {
 
-        $salesperson = $this->loadSalesOrgRelations($this->getSalesLeaders());
+        $salesperson = $this->_loadSalesOrgRelations($this->_getSalesLeaders());
         return response()->view('salesorg.salesmanagerlist', compact('salesperson'));
     }
 
-
+    /**
+     * [show description]
+     * 
+     * @param Request $request     [description]
+     * @param Person  $salesperson [description]
+     * 
+     * @return [type]               [description]
+     */
     public function show(Request $request, Person $salesperson)
     {
         
         
         if ($salesperson->isLeaf()) {
-                $salesorg = $this->loadSalesOrgRelations($salesperson);
+                $salesorg = $this->_loadSalesOrgRelations($salesperson);
 
                 return response()->view('salesorg.map', compact('salesorg'));
         } else {
-            $salesteam = $this->loadSalesOrgRelations($salesperson);
+            $salesteam = $this->_loadSalesOrgRelations($salesperson);
             if (request()->has('view') && request('view')=='list') {
                 return response()->view('salesorg.salesmanagerlist', compact('salesperson'));
             }
             return response()->view('salesorg.managermap', compact('salesteam'));
         }
     }
+    /**
+     * [getSalesOrgList description]
+     * 
+     * @param [type] $salesperson [description]
+     * 
+     * @return [type]              [description]
+     */
     public function getSalesOrgList($salesperson)
     {
         // this could be combined with getSAlesBranches and
@@ -62,16 +88,20 @@ class SalesOrgController extends BaseController
             return response()->view('salesorg.salesmanagerlist', compact('salesperson'));
     }
 
-    /*
-	
-	 */
+    /**
+     * [getSalesBranches description]
+     * 
+     * @param [type] $salesPerson [description]
+     * 
+     * @return [type]              [description]
+     */
     public function getSalesBranches($salesPerson = null)
     {
                         
         // if not id then find root salesorg id
             
         if (! $salesPerson) {
-            $salesperson = $this->getSalesLeaders();
+            $salesperson = $this->_getSalesLeaders();
         } else {
             $salesperson = Person::whereId($salesPerson->id)->first();
         }
@@ -84,12 +114,16 @@ class SalesOrgController extends BaseController
 
             return response()->view('salesorg.map', compact('salesorg'));
         } else {
-            $salesteam = $this->loadSalesOrgRelations($salesperson);
+            $salesteam = $this->_loadSalesOrgRelations($salesperson);
                 
             return response()->view('salesorg.managermap', compact('salesteam'));
         }
     }
-
+    /**
+     * [salesCoverageMap description]
+     * 
+     * @return [type] [description]
+     */
     public function salesCoverageMap()
     {
         $this->salesCoverageData();
@@ -98,23 +132,14 @@ class SalesOrgController extends BaseController
 
     
 
-    /*
-	
-	 */
-    private function getSalesOrg()
-    {
-        $salesorg = $this->person->with('userdetails', 'userdetails.roles', 'userdetails.serviceline')
-        ->whereHas('userdetails.roles', function ($q) {
-            $q->where('name', '=', 'sales');
-        })
-        ->whereNotNull('lat')
-        ->get();
-        return $salesorg;
-    }
-    /*
-	
-	 */
-    private function getServicelines($servicelines)
+    /**
+     * [_getServicelines description]
+     * 
+     * @param Serviceline $servicelines [description]
+     * 
+     * @return [type]                    [description]
+     */
+    private function _getServicelines(Serviceline $servicelines)
     {
         $userServiceLines = [];
         foreach ($servicelines as $serviceline) {
@@ -123,74 +148,76 @@ class SalesOrgController extends BaseController
         return $userServiceLines;
     }
 
-    private function getLocalBranches($salesrep)
+    /**
+     * [_getSalesLeaders description]
+     * 
+     * @return [type] [description]
+     */
+    private function _getSalesLeaders()
     {
         
-        $userServiceLines = $this->getServicelines($salesrep->userdetails->serviceline);
-
-        $branches = $this->branch->whereHas('servicelines', function ($q) use ($userServiceLines) {
-            $q->whereIn('serviceline.id', $userServiceLines);
-        })
-        ->nearby($salesrep, $this->distance, $this->limit)
-        
-        ->get();
-        $branchIds = [];
-        foreach ($branches as $branch) {
-            $branchIds[] = $branch['branchid'];
-        }
-        return $branchIds;
-    }
-
-
-    
-    private function getSalesLeaders()
-    {
-        
-        //refactor to remove hard coding
-        //
-        //// Head of sales organization
+        //Note this is hard coded to the first person with the EVP role  
         return $this->person->getPersonsWithRole([14])->first();
 
-        /*return (Person::where('depth','=',0)
-			->whereNull('reports_to')
-			->whereRaw('lft+1 != rgt')
-			_.whereHas('role == sales')
-			->pluck('id'));
-		return $person = ['1767'];*/
+        
     }
 
-
+    /**
+     * [noManager description]
+     * 
+     * @return [type] [description]
+     */
     public function noManager()
     {
         $people = $this->person->whereNull('reports_to')
-        ->with('userdetails', 'userdetails.roles')
-        ->get();
+            ->with('userdetails', 'userdetails.roles')
+            ->get();
         $title="Users with no manager";
 
 
         return response()->view('admin.users.nomanager', compact('people', 'title'));
     }
-
+    /**
+     * [noManagerExport description]
+     * 
+     * @return [type] [description]
+     */
     public function noManagerExport()
     {
         
 
-        Excel::download('NoManagers'.time(), function ($excel) {
-            $excel->sheet('No Managers', function ($sheet) {
-                $people = $this->person->whereNull('reports_to')
-                ->with('userdetails', 'userdetails.roles')
-                ->get();
-                $sheet->loadView('admin.users.nmexport', compact('people'));
-            });
-        })->download('csv');
+        Excel::download(
+            'NoManagers'.time(), function ($excel) {
+                $excel->sheet(
+                    'No Managers', function ($sheet) {
+                        $people = $this->person->whereNull('reports_to')
+                            ->with('userdetails', 'userdetails.roles')
+                            ->get();
+                        $sheet->loadView('admin.users.nmexport', compact('people'));
+                    }
+                );
+            }
+        )->download('csv');
     }
 
-
-    private function loadSalesOrgRelations(Person $salesperson)
+    /**
+     * [_loadSalesOrgRelations description]
+     * 
+     * @param Person $salesperson [description]
+     * 
+     * @return [type]              [description]
+     */
+    private function _loadSalesOrgRelations(Person $salesperson)
     {
         return $salesperson->load('userdetails.roles', 'directReports', 'directReports.userdetails', 'directReports.userdetails.roles', 'reportsTo.userdetails.roles');
     }
-
+    /**
+     * [find description]
+     * 
+     * @param LeadAddressFormRequest $request [description]
+     * 
+     * @return [type]                          [description]
+     */
     public function find(LeadAddressFormRequest $request)
     {
     
