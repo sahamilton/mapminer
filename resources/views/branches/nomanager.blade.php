@@ -1,8 +1,10 @@
 <table>
     <thead>
+        <tr>
         <th colspan="3">
         {{$title}}
         </th>
+    </tr>
         <tr>
             <th>Branch</th>
             <th>City</th>
@@ -10,7 +12,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach ($result as $branch)
+        @foreach ($results as $branch)
         <tr>
             <td>{{$branch->branchname}}</td>
             <td>{{$branch->city}}</td>

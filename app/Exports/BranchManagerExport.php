@@ -10,7 +10,7 @@ use App\Branch;
 
 class BranchManagerExport implements FromView
 {
-    public function __construct(string $mgr)
+    public function __construct(string $manager)
     {
         $this->manager = $manager;
     }
@@ -22,8 +22,8 @@ class BranchManagerExport implements FromView
      */
     public function view(): View
     {
-        $results = Branch::doesntHave($mgr)->get();
-        $title = "Branches without " . $mgr;
-        return view('branches.nomanager', compact('result', 'title'));
+        $results = Branch::doesntHave($this->manager)->get();
+        $title = "Branches without " . $this->manager;
+        return view('branches.nomanager', compact('results', 'title'));
     }
 }

@@ -553,7 +553,7 @@ Route::group(
         Route::post('branchassignments/send', ['as'=>'branchassignments.send', 'uses'=>'Admin\BranchManagementController@emailAssignments']);
         Route::get('branch/manage', ['as'=>'branch.management', 'uses'=>'Admin\BranchManagementController@index']);
         Route::get('branch/check', ['as'=>'branch.check', 'uses'=>'Admin\AdminUsersController@checkBranchAssignments']);
-
+        Route::get('branch/nomanager/{mgr}', ['as'=>'branch.nomanager', 'uses'=>'Admin\BranchManagementController@noManagers']);
         //   Campaigns (email)
         Route::resource('campaigns', 'CampaignController');
 
