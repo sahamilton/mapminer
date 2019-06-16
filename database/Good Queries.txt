@@ -170,8 +170,8 @@ select address_branch.branch_id,
 count(address_branch.id) as leads,
 count(b.id) + count(c.id) + count(d.id) as opptys,
 count(a.id) / count(address_branch.id) as conv,
-avg(datediff(a.created_at,address_branch.created_at)) as lagdays,
-avg(datediff(a.actual_close,a.created_at)) as velocitydays,
+avg(datediff(a.created_at, address_branch.created_at)) as lagdays,
+avg(datediff(a.actual_close, a.created_at)) as velocitydays,
 avg(a.value) as avgdeal,
 count(b.id) as open,
 count(c.id) as won,
@@ -181,7 +181,7 @@ from address_branch
 
 left join opportunities a on address_branch.id = a.address_branch_id
 left join opportunities b on address_branch.id = b.address_branch_id and b.closed = 0
-left join opportunities c on address_branch.id = c.address_branch_id and c.closed =1
+left join opportunities c on address_branch.id = c.address_branch_id and c.closed = 1
 left join opportunities d on address_branch.id = d.address_branch_id and d.closed = 2
 where address_branch.created_at > '2019-03-01'
 //where address_branch.branch_id in ()

@@ -114,14 +114,7 @@ class SalesActivityController extends BaseController
     {
        
         $activities = $this->activity->with('salesprocess', 'vertical')
-         /*
-         removed so all sales reps see all campaigns
-
-          ->when(count($this->userVerticals)>0,function($q) {
-            $q->whereHas('vertical',function($q1) {
-                $q1->whereIn('vertical_id',$this->userVerticals);
-            });
-        })*/
+         
             ->where('datefrom', '<=', date('Y-m-d'))
             ->where('dateto', '>=', date('Y-m-d'))
             ->get();
@@ -141,7 +134,6 @@ class SalesActivityController extends BaseController
     {
         
         $activity = $activity->load('salesprocess', 'vertical');
-        
         $verticals = array_unique($activity->vertical->pluck('id')->toArray());
         $statuses = LeadStatus::pluck('status', 'id')->toArray();
         $person = Person::findOrFail(auth()->user()->person->id);;
