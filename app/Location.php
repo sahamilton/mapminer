@@ -23,7 +23,7 @@ class Location extends Model implements HasPresenter
     ];
 
 
-    public $table = 'locations';
+    public $table = 'addresses';
     public $branch;
 
 
@@ -118,23 +118,35 @@ class Location extends Model implements HasPresenter
     public function nearbyBranches($servicelines, $limit = 5)
     {
 
-        return Branch::whereHas('servicelines', function ($q) use ($servicelines) {
+        return Branch::whereHas(
+            'servicelines', function ($q) use ($servicelines) {
                 $q->whereIn('servicelines.id', $servicelines);
-        })->nearby($this, '100')->limit($limit);
+            }
+        )->nearby($this, '100')->limit($limit);
     }
 
-
+    /**
+     * [nearbySalesRep description]
+     * 
+     * @param [type]  $serviceline [description]
+     * @param integer $limit       [description]
+     * 
+     * @return [type]               [description]
+     */
     public function nearbySalesRep($serviceline = null, $limit = 5)
     {
 
         return Person::with('userdetails.roles')
-        ->whereHas('userdetails.serviceline', function ($q) use ($serviceline) {
-            $q->whereIn('servicelines.id', $serviceline);
-        })
-        ->whereHas('userdetails.roles', function ($q) {
-
-            $q->where('roles.id', '=', 5);
-        })
+            ->whereHas(
+                'userdetails.serviceline', function ($q) use ($serviceline) {
+                    $q->whereIn('servicelines.id', $serviceline);
+                }
+            )
+            ->whereHas(
+                'userdetails.roles', function ($q) {
+                    $q->where('roles.id', '=', 5);
+                }
+            )
         ->nearby($this, '100')
         ->limit($limit);
 
@@ -142,20 +154,23 @@ class Location extends Model implements HasPresenter
     }
 
 
-
+    /**
+     * [locationAddress description]
+     * 
+     * @return [type] [description]
+     */
     public function locationAddress()
     {
         return ($this->street . " " . $this->address2 . " " .$this->city . " " . $this->state);
     }
-    /*
-		Generate Mapping xml file from location results
-
-		Passed to function:
-		@ results
-		@return xml
-
-	*/
-
+    
+    /**
+     * [makeNearbyLocationsXML description]
+     * 
+     * @param [type] $result [description]
+     * 
+     * @return [type]         [description]
+     */
     public function makeNearbyLocationsXML($result)
     {
         $content = view('locations.xml', compact('result'));
@@ -164,22 +179,21 @@ class Location extends Model implements HasPresenter
             ->header('Content-Type', 'text/xml');
     }
     /**
-     * function getStateSummary
-     * @param  int $id Company ID
+     * Function getStateSummary
+     * 
+     * @param int $id Company ID
+     * 
      * @return Collections     location count by state for company
      */
     public function getStateSummary($id)
     {
         return $this->where('company_id', '=', $id)
             ->select('state', \DB::raw('count(*) as total'))
-             ->groupBy('state')
-             ->pluck('total', 'state');
+            ->groupBy('state')
+            ->pluck('total', 'state');
     }
-/**
- * [getQuerySearchKeys description]
- * @return [type] [description]
- */
-    private function getQuerySearchKeys()
+
+    /*private function getQuerySearchKeys()
     {
             $keys = [];
             $searchKeys = [];
@@ -207,5 +221,5 @@ class Location extends Model implements HasPresenter
         }
 
             return $searchKeys;
-    }
+    }*/
 }

@@ -59,8 +59,8 @@ class Kernel extends ConsoleKernel
             //Amy Starr Report
             $schedule->job(new Top50WeeklyReport())
                 ->weekly()
-                ->fridays()
-                ->at('06:59');
+                ->sundays()
+                ->at('18:59');
             
             // Josh Hammer report
             $schedule->job(new ActivityOpportunityReport())
