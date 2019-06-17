@@ -23,7 +23,7 @@ class Location extends Model implements HasPresenter
     ];
 
 
-    public $table = 'addresses';
+    public $table = 'locations';
     public $branch;
 
 
