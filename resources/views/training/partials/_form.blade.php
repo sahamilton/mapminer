@@ -60,7 +60,7 @@
                         isset($training) && $training->type == $type) 
                         selected 
                         @endif
-                        value="{{$key}}>">{{$type}}</option>
+                        value="{{$key}}">{{$type}}</option>
 
                     @endforeach
                 </select>
