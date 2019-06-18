@@ -8,7 +8,10 @@ use App\Jobs\WeeklyActivityReminder;
 use App\Jobs\Top50WeeklyReport;
 use App\Jobs\ActivityOpportunityReport;
 use App\Jobs\AccountActivities;
+use App\Jobs\BranchOpportunities;
 use App\Jobs\BranchStats;
+use App\Jobs\RebuildPeople;
+use App\Jobs\BranchLogins;
 use App\Company;
 
 class Kernel extends ConsoleKernel
@@ -39,6 +42,8 @@ class Kernel extends ConsoleKernel
                 ->sundays()
                 ->at('19:52');
 
+            $schedule->job(new RebuildPeople())
+                ->dailyAt('21:12');
 
             $schedule->command('db:backup')
                 ->dailyAt('22:58');
@@ -54,8 +59,8 @@ class Kernel extends ConsoleKernel
             //Amy Starr Report
             $schedule->job(new Top50WeeklyReport())
                 ->weekly()
-                ->fridays()
-                ->at('06:59');
+                ->sundays()
+                ->at('18:59');
             
             // Josh Hammer report
             $schedule->job(new ActivityOpportunityReport())
@@ -71,6 +76,21 @@ class Kernel extends ConsoleKernel
                 ->weekly()
                 ->sundays()
                 ->at('18:30');
+            
+            // Kristi Willis Report
+            $period['to'] = \Carbon\Carbon::now()->subWeek()->endOfWeek();
+            $schedule->job(new BranchOpportunities($period))
+                ->weekly()
+                ->mondays()
+                ->at('04:59');
+
+            // Branch Login Report
+            $period['from'] = \Carbon\Carbon::now()->subMonth(2)->startOfMonth();  
+            $period['to'] = \Carbon\Carbon::now()->subWeek()->endOfWeek();
+            $schedule->job(new BranchLogins($period))
+                ->weekly()
+                ->mondays()
+                ->at('03:59');
         }   
     }
 

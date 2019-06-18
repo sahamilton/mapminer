@@ -176,6 +176,7 @@ class Branch extends Model implements HasPresenter
      */
     public function marketmanager()
     {
+       
         return $this->relatedPeople($this->marketManagerRole);
     }
     /**
@@ -541,6 +542,42 @@ class Branch extends Model implements HasPresenter
     
         }
         return $data;
+    }
+    /**
+     * [scopeBranchOpportunities description]
+     * 
+     * @param [type] $query  [description]
+     * @param [type] $period [description]
+     * 
+     * @return [type]         [description]
+     */
+    public function scopeBranchOpportunities($query, $period)
+    {
+        $this->period = $period;
+        return $query->withCount( 
+            ['opportunities as open'=>function ($query) {
+                $query->whereClosed(0)        
+                    ->where(
+                        function ($q) {
+                            $q->where('actual_close', '>', $this->period['to'])
+                                ->orwhereNull('actual_close');
+                        }
+                    )
+                ->where('opportunities.created_at', '<', $this->period['to']);
+            },
+            'opportunities as openvalue' => function ($query) {
+                $query->select(\DB::raw("SUM(value) as openvalue"))
+                    ->where(
+                        function ($q) {
+                            $q->where('actual_close', '>', $this->period['to'])
+                                ->orwhereNull('actual_close');
+                        }
+                    )
+                ->where('opportunities.created_at', '<', $this->period['to']);
+            }
+            ]
+        );
+
     }
     /**
      * [scopeSummaryStats description]

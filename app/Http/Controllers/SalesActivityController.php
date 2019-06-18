@@ -27,7 +27,17 @@ class SalesActivityController extends BaseController
     public $person;
 
 
-
+    /**
+     * [__construct description]
+     * 
+     * @param Salesactivity $activity [description]
+     * @param SearchFilter  $vertical [description]
+     * @param SalesProcess  $process  [description]
+     * @param Document      $document [description]
+     * @param Address       $location [description]
+     * @param Person        $person   [description]
+     * @param Lead          $lead     [description]
+     */
     public function __construct(Salesactivity $activity, SearchFilter $vertical, SalesProcess $process, Document $document, Address $location, Person $person, Lead $lead)
     {
 
@@ -43,22 +53,27 @@ class SalesActivityController extends BaseController
     }
 
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * [index description]
+     * 
+     * @param [type] $vertical [description]
+     * 
+     * @return [type]           [description]
      */
     public function index($vertical = null)
     {
-        
+
         $query = $this->activity->with('salesprocess', 'vertical');
         if ($vertical) {
-            $query = $query->whereHas('vertical', function ($q) use ($vertical) {
-                $q->whereIn('vertical_id', [$vertical]);
-            });
+            $query = $query->whereHas(
+                'vertical', function ($q) use ($vertical) {
+                    $q->whereIn('vertical_id', [$vertical]);
+                }
+            );
         }
         $activities = $query->get();
-        $calendar = \Calendar::addEvents($activities);
 
+        $calendar = \Calendar::addEvents($activities);
+       
         return response()->view('salesactivity.index', compact('activities', 'calendar'));
     }
 
@@ -79,7 +94,8 @@ class SalesActivityController extends BaseController
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request 
+     * 
      * @return \Illuminate\Http\Response
      */
     public function store(SalesActivityFormRequest $request)
@@ -100,39 +116,37 @@ class SalesActivityController extends BaseController
 
         return redirect()->route('salesactivity.index');
     }
-
+    /**
+     * [mycampaigns description]
+     * 
+     * @return [type] [description]
+     */
     public function mycampaigns()
     {
        
         $activities = $this->activity->with('salesprocess', 'vertical')
-         /*
-         removed so all sales reps see all campaigns
-
-          ->when(count($this->userVerticals)>0,function($q) {
-            $q->whereHas('vertical',function($q1) {
-                $q1->whereIn('vertical_id',$this->userVerticals);
-            });
-        })*/
-        ->where('datefrom', '<=', date('Y-m-d'))
-        ->where('dateto', '>=', date('Y-m-d'))
-        ->get();
+         
+            ->where('datefrom', '<=', date('Y-m-d'))
+            ->where('dateto', '>=', date('Y-m-d'))
+            ->get();
         $calendar = \Calendar::addEvents($activities);
 
         return response()->view('salesactivity.calendar', compact('calendar'));
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * [show description]
+     * 
+     * @param Salesactivity $activity [description]
+     * 
+     * @return [type]                  [description]
      */
-    public function show($activity)
+    public function show(Salesactivity $activity)
     {
         
         $activity = $activity->load('salesprocess', 'vertical');
-        
         $verticals = array_unique($activity->vertical->pluck('id')->toArray());
+
         $statuses = LeadStatus::pluck('status', 'id')->toArray();
         $person = Person::findOrFail(auth()->user()->person->id);;
        
@@ -140,19 +154,21 @@ class SalesActivityController extends BaseController
             
             if (auth()->user()->person->lat) {
                 $location = new Address;
-
                 $location->lat = auth()->user()->person->lat;
                 $location->lng = auth()->user()->person->lng;
-
                 $locations = $this->location
-                    ->wherehas('company.serviceline', function ($q) {
-                        $q->whereIn('servicelines.id', $this->userServiceLines);
-                    });
+                    ->wherehas(
+                        'company.serviceline', function ($q) {
+                            $q->whereIn('servicelines.id', $this->userServiceLines);
+                        }
+                    );
 
                 if (count($verticals)>0) {
-                    $locations = $locations->whereHas('company.industryVertical', function ($q) use ($verticals) {
-                        $q->whereIn('searchfilters.id', $verticals);
-                    });
+                    $locations = $locations->whereHas(
+                        'company.industryVertical', function ($q) use ($verticals) {
+                            $q->whereIn('searchfilters.id', $verticals);
+                        }
+                    );
                 }
 
                 $locations = $locations->nearby($location, 25)->get();
@@ -160,25 +176,25 @@ class SalesActivityController extends BaseController
                 $locations = [];
             }
 
-        //my watch list
             $mywatchlist = $this->activity->getWatchList();
             // find all lead locations for the logged in user in these verticals
-            $leads = $this->lead->myLeads($verticals)->get();
-            dd($leads,$verticals);
+            $leads = $this->lead->myLeads()->get();
+            dd(167, $leads, $verticals);
             return response()->view('salesactivity.show', compact('activity', 'locations', 'leads', 'statuses', 'mywatchlist'));
         }
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * [edit description]
+     * 
+     * @param SAlesactivity $activity [description]
+     * 
+     * @return [type]                  [description]
      */
-    public function edit($activity)
+    public function edit(Salesactivity $activity)
     {
        
-        $activity = $this->activity->load('salesprocess', 'vertical');
+        $activity = $activity->load('salesprocess', 'vertical');
         $verticals = $this->vertical->industrysegments();
     
         $process = $this->process->pluck('step', 'id');
@@ -187,13 +203,14 @@ class SalesActivityController extends BaseController
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * [update description]
+     * 
+     * @param SalesActivityFormRequest $request  [description]
+     * @param Salesactivity            $activity [description]
+     * 
+     * @return [type]                             [description]
      */
-    public function update(SalesActivityFormRequest $request, $activity)
+    public function update(SalesActivityFormRequest $request, Salesactivity $activity)
     {
         
         $data = $this->setDates(request()->all());
@@ -212,23 +229,37 @@ class SalesActivityController extends BaseController
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * [destroy description]
+     * 
+     * @param SAlesactivity $activity [description]
+     * 
+     * @return [type]                  [description]
      */
-    public function destroy($activity)
+    public function destroy(Salesactivity $activity)
     {
         $activity->delete();
         return redirect()->route('salesactivity.index');
     }
-
+    /**
+     * [campaignDocuments description]
+     * 
+     * @param [type] $id [description]
+     * 
+     * @return [type]     [description]
+     */
     public function campaignDocuments($id)
     {
         $activity = $this->activity->findOrFail($id);
         $documents = $activity->relatedDocuments();
         return response()->view('salesactivity.campaigndocuments', compact('activity', 'documents'));
     }
+    /**
+     * [changeteam description]
+     * 
+     * @param Request $request [description]
+     * 
+     * @return [type]           [description]
+     */
     public function changeteam(Request $request)
     {
 
@@ -236,27 +267,34 @@ class SalesActivityController extends BaseController
         $activity = $this->activity->findOrFail(request('campaign_id'));
         $team = request('id');
         switch (request('action')) {
-            case 'add':
-                if ($activity->campaignparticipants()->attach($team)) {
-                    return 'success';
-                    ;
-                } else {
-                    return 'error';
-                }
-                break;
+        case 'add':
+            if ($activity->campaignparticipants()->attach($team)) {
+                return 'success';
+                ;
+            } else {
+                return 'error';
+            }
+            break;
             
-            case 'remove':
-                if ($activity->campaignparticipants()->detach($team)) {
-                    return 'success';
-                    ;
-                } else {
-                    return 'error';
-                }
+        case 'remove':
+            if ($activity->campaignparticipants()->detach($team)) {
+                return 'success';
+                ;
+            } else {
+                return 'error';
+            }
 
-                
-                break;
+            
+            break;
         }
     }
+    /**
+     * [updateteam description]
+     * 
+     * @param Request $request [description]
+     * 
+     * @return [type]           [description]
+     */
     public function updateteam(Request $request)
     {
 
@@ -268,7 +306,7 @@ class SalesActivityController extends BaseController
         $vertical = request('vertical');
 
         $reps = $this->person->campaignparticipants($vertical)
-                ->pluck('id')->toArray();
+            ->pluck('id')->toArray();
 
         $activity->campaignparticipants()->sync($reps);
 

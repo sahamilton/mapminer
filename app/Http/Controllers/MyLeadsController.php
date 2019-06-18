@@ -21,7 +21,13 @@ class MyLeadsController extends BaseController
     public $branch;
 
 
-
+    /**
+     * [__construct description]
+     * 
+     * @param Address $lead   [description]
+     * @param Person  $person [description]
+     * @param Branch  $branch [description]
+     */
     public function __construct(Address $lead, Person $person, Branch $branch)
     {
 
@@ -31,9 +37,10 @@ class MyLeadsController extends BaseController
     }
 
     /**
-     * Display a listing of all leads.
-     *
-     * @return \Illuminate\Http\Response
+     * [index description]
+     * 
+     * @param  [type] $branch [description]
+     * @return [type]         [description]
      */
     public function index($branch=null)
     {
@@ -42,8 +49,8 @@ class MyLeadsController extends BaseController
             return redirect()->back()->withError('You are not assigned to any branches');
         }
         if (! $branch) {
-          $branch = array_keys($myBranches);
-          $branch = reset($branch);
+            $branch = array_keys($myBranches);
+            $branch = reset($branch);
         } else {
             if (! in_array($branch->id, array_keys($this->person->myBranches()))) {
                 return redirect()->back()->withError('That is not one of your branches');
@@ -150,7 +157,7 @@ class MyLeadsController extends BaseController
      */
     public function store(MyLeadFormRequest $request)
     {
-        
+       
         // we need to geocode this address
         if (! $data = $this->_cleanseInput($request)) {
             return redirect()->back()->withError('Unable to geocode that address');
@@ -209,13 +216,15 @@ class MyLeadsController extends BaseController
     {
         $address = $this->_getAddress($request); 
         $geocode = app('geocoder')->geocode($address)->get();
+
         if ($geocode->count()==0) {
             
             return false;
         }
         
         $data['lead'] = $this->lead->getGeoCode($geocode);
-
+        $data['lead'] = $this->_fillAddress($request, $data['lead']);
+       
         $data['lead']['businessname'] =request('companyname');
       
         $data['lead']['phone'] = preg_replace("/[^0-9]/", "", request('phone'));
@@ -226,6 +235,26 @@ class MyLeadsController extends BaseController
 
        
         return $data;
+    }
+    /**
+     * [_fillAddress description]
+     * 
+     * @param Request $request [description]
+     * @param Array   $lead    [description]
+     * 
+     * @return [type]           [description]
+     */
+    private function _fillAddress(Request $request, Array $lead)
+    {
+     
+        $fields = ['address','city','state','zip'];
+        foreach ($fields as $field) {
+            if (! $lead[$field] or str_replace(" ", "", $lead[$field])=='') {
+                $lead[$field] = request($field);
+            }
+        }
+        return $lead;
+
     }
 
     /**

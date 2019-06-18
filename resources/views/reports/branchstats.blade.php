@@ -16,7 +16,6 @@
 		<tr>
 			<th><b>Branch Name</b></th>
 			<th><b>Branch ID</b></th>
-			<th><b>Branch Manager</b></th>
 			<th><b>Open Leads</b></th>
 			<th><b>Completed Activities</b></th>
 			<th><p>Sales Appts</p></th>
@@ -24,7 +23,8 @@
 			<th><p>Opportunities Won</p></th>
 			<th><p>Opportunities Lost</p></th>
 			<th><p>Open Top 50 Opportunities</p></th>
-			<th><b>Sum of Won Value</b></th> 
+			<th><b>Sum of Won Value</b></th>
+			<th><b>Branch Manager</b></th>
 		</tr>
 
 	</thead>
@@ -34,11 +34,7 @@
 			<tr>
 				<td>{{$branch->branchname}}</td>
 				<td>{{$branch->id}}</td>
-				<td>
-					@foreach ($branch->manager as $manager)
-					<li>{{$manager->fullName()}}</li>
-					@endforeach
-				</td>
+				
 				<td>{{$branch->leads_count}}</td>
 				<td>{{$branch->activities_count}}</td>
 				<td>{{$branch->salesappts}}</td>
@@ -48,6 +44,25 @@
 				<td>{{$branch->lost}}</td>
 				<td>{{$branch->top50}}</td>
 				<td>{{$branch->wonvalue}}</td>
+				<td>
+					@foreach ($branch->manager as $manager)
+
+					<li>{{$manager->fullName()}}
+					@if(! $loop->last)
+					/
+					@endif
+					</li>
+					@endforeach
+				</td>
+				@if($branch->manager->first())
+			
+				@foreach ($branch->manager->first()->reportChain()->sortByDesc('depth') as $manager)
+				<td>
+					{{$manager->fullName()}} / {{$manager->business_title}}
+				</td>
+				@endforeach
+				@endif
+
 			</tr>
 		@endforeach
 	</tbody>

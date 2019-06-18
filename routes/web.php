@@ -580,7 +580,10 @@ Route::group(
 
         Route::post('users/bulkimport', ['as'=>'admin.users.bulkimport', 'uses'=>'UsersImportController@import']);
         Route::post('users/import', ['as'=>'users.mapfields', 'uses'=>'UsersImportController@mapfields']);
+        Route::get('users/deleted', ['as'=>'deleted.users', 'uses'=>'Admin\AdminUsersController@deleted']);
+        Route::get('users/{id}/restore', ['as'=>'users.restore', 'uses'=>'Admin\AdminUsersController@restore']);
 
+        Route::delete('users/{id}/purge', ['as'=>'users.permdestroy', 'uses'=>'Admin\AdminUsersController@permdeleted']);
 
         Route::post('user/usererrors', ['as'=>'fixusercreateerrors', 'uses'=>'UsersImportController@fixUserErrors']);
         Route::post('user/importcleanse/delete', ['as'=>'user.importdelete', 'uses'=>'UserImportCleanseController@bulkdestroy']);
@@ -674,11 +677,15 @@ Route::group(
         //   Jobs
         Route::get(
             'testjob', function () {
-                 $company = App\Company::findOrFail(532);
+                 //$company = App\Company::findOrFail(532);
                  $period['from'] = \Carbon\Carbon::now()->subWeek()->startOfWeek();
                  $period['to'] = \Carbon\Carbon::now()->subWeek()->endOfWeek();
-                 App\Jobs\AccountActivities::dispatch($company, $period);
-            
+                 App\Jobs\Top50WeeklyReport::dispatch();
+               
+                 //App\Jobs\AccountActivities::dispatch($company, $period);
+                //App\Jobs\BranchOpportunities::dispatch($period);
+                 //App\Jobs\RebuildPeople::dispatch();
+                //App\Jobs\BranchLogins::dispatch($period);
                  /*$filesInFolder = \File::files(storage_path('backups'));
                  foreach ($filesInFolder as $file){
                  if(pathinfo($file)['extension'] == 'sql'){

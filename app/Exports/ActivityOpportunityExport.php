@@ -48,9 +48,9 @@ class ActivityOpportunityExport implements FromView
 				     from opportunities 
 				     where opportunities.closed = 1 
 				     and opportunities.actual_close between '"
-				     . $this->period['from']. 
+				     . $this->period['from'] . 
 				 		"' and '"
-				 	.$this->period['to'] .
+				 	. $this->period['to'] .
 				     "' group by opportunities.branch_id) b 
 			     
 			     on branches.id = b.branch_id  
@@ -58,6 +58,6 @@ class ActivityOpportunityExport implements FromView
 	
 		$results = \DB::select($query);
 		$period = $this->period;
-        return view('reports.actopptyreport',compact('results','period'));
+        return view('reports.actopptyreport', compact('results', 'period'));
     }
 }

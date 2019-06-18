@@ -21,21 +21,12 @@ class TrainingController extends BaseController
 
 
 
+    
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * [index description]
+     * 
+     * @return [type] [description]
      */
-    /*public function index()
-    {
-        if (auth()->user()->hasRole('admin')) {
-            $trainings = $this->training->with('relatedRoles','relatedIndustries','servicelines')->get();
-            return response()->view('training.index',compact('trainings'));
-        }else{
-            return redirect()->route('mytraining');
-        }
-    }*/
-
     public function index()
     {
 
@@ -66,7 +57,8 @@ class TrainingController extends BaseController
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request 
+     * 
      * @return \Illuminate\Http\Response
      */
     public function store(TrainingFormRequest $request)
@@ -79,36 +71,39 @@ class TrainingController extends BaseController
             $data['dateto']=null;
         }
         if ($training = $this->training->create($data)) {
+
             $training->servicelines()->attach(request('serviceline'));
             if (request()->filled('vertical')) {
                 $training->relatedIndustries()->attach(request('vertical'));
             }
-            if (request()->filled('role')) {
-                $training->relatedRoles()->attach(request('role'));
+            if (request()->filled('roles')) {
+
+                $training->relatedRoles()->attach(request('roles'));
             }
         }
         
         return redirect()->route('training.index');
     }
-
     /**
-     * Display the specified resource.
-     *
-     * @param  \App\Training  $training
-     * @return \Illuminate\Http\Response
+     * [show description]
+     * 
+     * @param Training $training [description]
+     * 
+     * @return [type]             [description]
      */
-    public function show($id)
+    public function show(Training $training)
     {
        
-        $training = $this->training->findOrFail($id);
+      
         return response()->view('training.view', compact('training'));
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Training  $training
-     * @return \Illuminate\Http\Response
+     * [edit description]
+     * 
+     * @param Training $training [description]
+     * 
+     * @return [type]             [description]
      */
     public function edit(Training $training)
     {
@@ -121,11 +116,12 @@ class TrainingController extends BaseController
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Http\Requests\TrainingFormRequest  $request
-     * @param  \App\Training  $training
-     * @return \Illuminate\Http\Response
+     * [update description]
+     * 
+     * @param TrainingFormRequest $request  [description]
+     * @param Training            $training [description]
+     * 
+     * @return [type]                        [description]
      */
     public function update(TrainingFormRequest $request, Training $training)
     {
@@ -143,12 +139,12 @@ class TrainingController extends BaseController
 
         return redirect()->route('training.show', $training->id)->withMessage("Training updated");
     }
-
-    /**'relatedRoles','relatedIndustries'
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Training  $training
-     * @return \Illuminate\Http\Response
+    /**
+     * [destroy description]
+     * 
+     * @param Training $training [description]
+     * 
+     * @return [type]             [description]
      */
     public function destroy(Training $training)
     {

@@ -10,19 +10,24 @@ use App\Branch;
 class BranchTeamExport implements FromView
 {
     public $roles;
+    /**
+     * [__construct description]
+     */
     public function __construct()
     {
         
         $this->roles = Role::pluck('name', 'id')->toArray();
     }
     /**
-    * @return \Illuminate\Support\Collection
-    */
+     * [view description]
+     * 
+     * @return [type] [description]
+     */
     public function view(): View
     {
-    	$result = Branch::with('relatedPeople','relatedPeople.userdetails')->get();
+        $result = Branch::with('relatedPeople', 'relatedPeople.userdetails')->get();
         $roles = $this->roles;
-    	return view('branches.exportteam',compact('result','roles'));
+        return view('branches.exportteam', compact('result', 'roles'));
 
     }
 }

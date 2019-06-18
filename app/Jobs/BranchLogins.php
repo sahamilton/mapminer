@@ -4,28 +4,28 @@ namespace App\Jobs;
 
 use Mail;
 use Excel;
-use Carbon\Carbon;
-use App\Mail\BranchStatsReport;
-use App\Exports\BranchStatsExport;
+use App\Exports\BranchLoginsExport;
+use App\Mail\BranchLoginsReport;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 
-class BranchStats implements ShouldQueue
+class BranchLogins implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-    public $period;
 
+    public $period;
+    
     /**
      * [__construct description]
+     * 
      * @param Array $period [description]
      */
     public function __construct(Array $period)
     {
         $this->period = $period;
-
     }
 
     /**
@@ -35,19 +35,15 @@ class BranchStats implements ShouldQueue
      */
     public function handle()
     {
-
-        // create the file
-        $file = '/public/reports/branchstatsrpt'. $this->period['to']->timestamp. ".xlsx";
-        //$file = '/public/reports/branchstatsrpt1557125999.xlsx';
-        Excel::store(new BranchStatsExport($this->period), $file);
+        $file = '/public/reports/branchlogins'. $this->period['to']->timestamp. ".xlsx";
+        Excel::store(new BranchLoginsExport($this->period), $file);
         $distribution = [
-            ['address'=>'astarr@trueblue.com','name'=>'Amy Starr'], 
-            ['address'=>'jhammar@trueblue.com','name'=>'Josh Hammer'],
-            ['address'=>'jsauer@trueblue.com','name'=>'Jacob Sauer'],
+            ['address'=>'jsauer@peopleready.com','name'=>'Jacob Sauer'], 
+            ['address'=>'dtuot@peopleready.com','name'=>'Daniel Tuot'],
             ['address'=>'salesoperations@trueblue.com','name'=>'Sales Operations']];
         foreach ($distribution as $recipient) {
             
-            Mail::to($recipient['address'], $recipient['name'])->send(new BranchStatsReport($file, $this->period));   
+            Mail::to($recipient['address'], $recipient['name'])->send(new BranchLoginsReport($file, $this->period));   
         }
     }
 }

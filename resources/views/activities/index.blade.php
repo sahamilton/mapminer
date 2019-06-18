@@ -5,7 +5,6 @@
 <p><a href="{{route('dashboard.index')}}">
 <i class="fas fa-tachometer-alt"></i>
  Return To Branch Dashboard</a></p>
-<p><a href="{{route('activities.export')}}"><i class="far fa-file-excel"> </i> Download All Activities</a></p>
 @if(count($myBranches)>1)
 
 <div class="col-sm-4">
