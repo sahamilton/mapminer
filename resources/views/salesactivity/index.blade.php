@@ -1,4 +1,4 @@
-@extends ('site.layouts.default')
+@extends('site.layouts.calendar')
 @section('content')
 <div class="container">
     <h2>Sales Campaigns</h2>

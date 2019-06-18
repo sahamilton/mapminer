@@ -27,7 +27,17 @@ class SalesActivityController extends BaseController
     public $person;
 
 
-
+    /**
+     * [__construct description]
+     * 
+     * @param Salesactivity $activity [description]
+     * @param SearchFilter  $vertical [description]
+     * @param SalesProcess  $process  [description]
+     * @param Document      $document [description]
+     * @param Address       $location [description]
+     * @param Person        $person   [description]
+     * @param Lead          $lead     [description]
+     */
     public function __construct(Salesactivity $activity, SearchFilter $vertical, SalesProcess $process, Document $document, Address $location, Person $person, Lead $lead)
     {
 
@@ -51,7 +61,7 @@ class SalesActivityController extends BaseController
      */
     public function index($vertical = null)
     {
-        
+
         $query = $this->activity->with('salesprocess', 'vertical');
         if ($vertical) {
             $query = $query->whereHas(
@@ -61,8 +71,9 @@ class SalesActivityController extends BaseController
             );
         }
         $activities = $query->get();
-        $calendar = \Calendar::addEvents($activities);
 
+        $calendar = \Calendar::addEvents($activities);
+       
         return response()->view('salesactivity.index', compact('activities', 'calendar'));
     }
 
@@ -135,6 +146,7 @@ class SalesActivityController extends BaseController
         
         $activity = $activity->load('salesprocess', 'vertical');
         $verticals = array_unique($activity->vertical->pluck('id')->toArray());
+
         $statuses = LeadStatus::pluck('status', 'id')->toArray();
         $person = Person::findOrFail(auth()->user()->person->id);;
        
@@ -142,10 +154,8 @@ class SalesActivityController extends BaseController
             
             if (auth()->user()->person->lat) {
                 $location = new Address;
-
                 $location->lat = auth()->user()->person->lat;
                 $location->lng = auth()->user()->person->lng;
-
                 $locations = $this->location
                     ->wherehas(
                         'company.serviceline', function ($q) {
@@ -168,7 +178,7 @@ class SalesActivityController extends BaseController
 
             $mywatchlist = $this->activity->getWatchList();
             // find all lead locations for the logged in user in these verticals
-            $leads = $this->lead->myLeads($verticals)->get();
+            $leads = $this->lead->myLeads()->get();
             dd(167, $leads, $verticals);
             return response()->view('salesactivity.show', compact('activity', 'locations', 'leads', 'statuses', 'mywatchlist'));
         }
@@ -181,7 +191,7 @@ class SalesActivityController extends BaseController
      * 
      * @return [type]                  [description]
      */
-    public function edit(SAlesactivity $activity)
+    public function edit(Salesactivity $activity)
     {
        
         $activity = $activity->load('salesprocess', 'vertical');
@@ -225,7 +235,7 @@ class SalesActivityController extends BaseController
      * 
      * @return [type]                  [description]
      */
-    public function destroy(SAlesactivity $activity)
+    public function destroy(Salesactivity $activity)
     {
         $activity->delete();
         return redirect()->route('salesactivity.index');
