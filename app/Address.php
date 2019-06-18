@@ -26,7 +26,9 @@ class Address extends Model
         'phone',
         'lead_source_id',
         'customer_id',
-        'description'];
+        'description',
+        'duns',
+        'naic'];
     
     protected $searchable = [
         'businessname',
