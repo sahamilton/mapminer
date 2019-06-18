@@ -12,7 +12,7 @@ use Carbon\Carbon;
 
 class User extends Authenticatable
 {
-    use Notifiable,HasRoles, Geocode, SearchableTrait,SoftDeletes;
+    use Notifiable,HasRoles, Geocode, SearchableTrait, SoftDeletes;
 
 
     protected $expiration = '2880';

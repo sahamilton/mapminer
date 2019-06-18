@@ -66,8 +66,10 @@
             @endif
         </td>
         <td>
-            @if($lead->lastActivity->count()==1)
+            @if($lead->lastActivity->count() > 0)
+                  
                 {{$lead->lastActivity->first()->activity_date->format('Y-m-d')}}
+            
             @endif
         </td>
         <td>

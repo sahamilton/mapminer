@@ -21,7 +21,13 @@ class MyLeadsController extends BaseController
     public $branch;
 
 
-
+    /**
+     * [__construct description]
+     * 
+     * @param Address $lead   [description]
+     * @param Person  $person [description]
+     * @param Branch  $branch [description]
+     */
     public function __construct(Address $lead, Person $person, Branch $branch)
     {
 
@@ -31,9 +37,10 @@ class MyLeadsController extends BaseController
     }
 
     /**
-     * Display a listing of all leads.
-     *
-     * @return \Illuminate\Http\Response
+     * [index description]
+     * 
+     * @param  [type] $branch [description]
+     * @return [type]         [description]
      */
     public function index($branch=null)
     {
@@ -42,8 +49,8 @@ class MyLeadsController extends BaseController
             return redirect()->back()->withError('You are not assigned to any branches');
         }
         if (! $branch) {
-          $branch = array_keys($myBranches);
-          $branch = reset($branch);
+            $branch = array_keys($myBranches);
+            $branch = reset($branch);
         } else {
             if (! in_array($branch->id, array_keys($this->person->myBranches()))) {
                 return redirect()->back()->withError('That is not one of your branches');
