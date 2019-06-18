@@ -306,6 +306,19 @@ class Address extends Model
             'address_id', 'address_branch_id', 'id', 'id'
         );
     }
+
+    /**
+     * [opportunities description]
+     * 
+     * @return [type] [description]
+     */
+    public function campaigns()
+    {
+ 
+        return $this->belongsToMany(Salesactivity::class);
+    }
+
+
     /**
      * [servicedBy description]
      * 
@@ -405,7 +418,11 @@ class Address extends Model
             )  < ".$close_in_metres 
         );
     }
-
+    /**
+     * [addressType description]
+     * 
+     * @return [type] [description]
+     */
     public function addressType()
     {
         if ($this->has('opportunities')) {

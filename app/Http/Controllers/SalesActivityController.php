@@ -38,17 +38,23 @@ class SalesActivityController extends BaseController
      * @param Person        $person   [description]
      * @param Lead          $lead     [description]
      */
-    public function __construct(Salesactivity $activity, SearchFilter $vertical, SalesProcess $process, Document $document, Address $location, Person $person, Lead $lead)
-    {
+    public function __construct(
+        Address $location,
+        Document $document, 
+        Person $person,
+        Salesactivity $activity, 
+        SalesProcess $process, 
+        SearchFilter $vertical,
+        State $state
+    ) {
 
         $this->activity = $activity;
-        $this->vertical = $vertical;
-        $this->process = $process;
         $this->document = $document;
         $this->location = $location;
         $this->person = $person;
-       
-        $this->lead = $lead;
+        $this->process = $process;
+        $this->vertical = $vertical;
+        
         parent::__construct($location);
     }
 
@@ -62,7 +68,7 @@ class SalesActivityController extends BaseController
     public function index($vertical = null)
     {
 
-        $query = $this->activity->with('salesprocess', 'vertical');
+        $query = $this->activity->with('salesprocess', 'vertical', 'states');
         if ($vertical) {
             $query = $query->whereHas(
                 'vertical', function ($q) use ($vertical) {
@@ -85,10 +91,10 @@ class SalesActivityController extends BaseController
     public function create()
     {
         $verticals = $this->vertical->industrysegments();
-  
+        $states = $this->state->all();
         $process = $this->process->pluck('step', 'id');
 
-        return response()->view('salesactivity.create', compact('verticals', 'process'));
+        return response()->view('salesactivity.create', compact('verticals', 'process', 'states'));
     }
 
     /**

@@ -43,6 +43,11 @@ class Salesactivity extends Model implements \MaddHatter\LaravelFullcalendar\Ide
     {
         return $this->datefrom;
     }
+    /**
+     * [getEventOptions description]
+     * 
+     * @return [type] [description]
+     */
     public function getEventOptions()
     {
         return [
@@ -59,63 +64,125 @@ class Salesactivity extends Model implements \MaddHatter\LaravelFullcalendar\Ide
     {
         return $this->dateto;
     }
+    /**
+     * [salesprocess description]
+     * 
+     * @return [type] [description]
+     */
     public function salesprocess()
     {
         return $this->belongsToMany(SalesProcess::class, 'activity_process_vertical', 'activity_id', 'salesprocess_id')->withPivot('vertical_id');
     }
-
+    /**
+     * [vertical description]
+     * 
+     * @return [type] [description]
+     */
     public function vertical()
     {
         return $this->belongsToMany(SearchFilter::class, 'activity_process_vertical', 'activity_id', 'vertical_id')->withPivot('salesprocess_id');
     }
-    
+    /**
+     * [relatedDocuments description]
+     * 
+     * @return [type] [description]
+     */
     public function relatedDocuments()
     {
      
-        return Document::whereHas('process', function ($q) {
-            $q->whereIn('id', $this->salesprocess()->pluck('salesprocess_id'));
-        })
-        ->whereHas('vertical', function ($q) {
-            $q->whereIn('id', $this->vertical()->pluck('vertical_id'));
-        })
+        return Document::whereHas(
+            'process', function ($q) {
+                $q->whereIn('id', $this->salesprocess()->pluck('salesprocess_id'));
+            }
+        )
+        ->whereHas(
+            'vertical', function ($q) {
+                $q->whereIn('id', $this->vertical()->pluck('vertical_id'));
+            }
+        )
         ->with('process', 'vertical', 'rankings', 'score')
         ->get();
     }
 
-    
+    /**
+     * [campaignleads description]
+     * 
+     * @return [type] [description]
+     */
+    public function campaignLeads()
+    {
+        return $this->belongsToMany(Address::class);
+    }
+    /**
+     * [states description]
+     * 
+     * @return [type] [description]
+     */
+    public function states()
+    {
+        return $this->belongsToMany(State::class);
+    }
+    /**
+     * [relatedSalesReps description]
+     * 
+     * @return [type] [description]
+     */
     public function relatedSalesReps()
     {
-        $salesreps = User::whereHas('roles', function ($q) {
-            $q->where('name', '=', 'Sales');
-        })->get();
+        $salesreps = User::whereHas(
+            'roles', function ($q) {
+                $q->where('name', '=', 'Sales');
+            }
+        )->get();
     }
+    /**
+     * [currentActivities description]
+     * 
+     * @return [type] [description]
+     */
     public function currentActivities()
     {
 
         return $this->where('datefrom', '<=', date('Y-m-d'))
-        ->where('dateto', '>=', date('Y-m-d'));
+            ->where('dateto', '>=', date('Y-m-d'));
     }
-    
+    /**
+     * [campaignparticipants description]
+     * 
+     * @return [type] [description]
+     */
     public function campaignparticipants()
     {
         return $this->belongsToMany(Person::class);
     }
-
+    /**
+     * [campaignSalesReps description]
+     * 
+     * @return [type] [description]
+     */
     public function campaignSalesReps()
     {
         $verticals = $this->vertical->pluck('id')->toArray();
         return Person::with('userdetails', 'reportsTo', 'reportsTo.userdetails')
-            ->whereHas('userdetails.roles', function ($q) {
-                $q->where('role_id', '=', 5);
-            })
-            ->whereHas('userdetails', function ($q) {
-                $q->where('confirmed', '=', 1);
-            })
-            ->where(function ($query) use ($verticals) {
-                $query->whereHas('industryfocus', function ($q) use ($verticals) {
-                    $q->whereIn('search_filter_id', $verticals);
-                });
-            })
+            ->whereHas(
+                'userdetails.roles', function ($q) {
+                    $q->where('role_id', '=', 5);
+                }
+            )
+            ->whereHas(
+                'userdetails', function ($q) {
+                    $q->where('confirmed', '=', 1);
+                }
+            )
+            ->where(
+                function ($query) use ($verticals) {
+                    $query->whereHas(
+                        'industryfocus', function ($q) use ($verticals) {
+                            $q->whereIn('search_filter_id', $verticals);
+                        }
+                    );
+                }
+            )
             ->whereNotNull('lat')
             ->whereNotNull('lng')
             ->get();
