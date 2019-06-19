@@ -15,18 +15,21 @@ class ImportController extends BaseController
     
     /**
      * [index description]
+     * 
      * @return [type] [description]
      */
     public function index()
     {
         $imports = ['branches','branch_team','companies','locations','users'];
         $exports = ['allcompanies','branches','branches_team','companies','nomanager','person','projects','vertical','watch'];
-        return response()->view('imports.index',compact('imports','exports'));
+        return response()->view('imports.index', compact('imports', 'exports'));
     }
 
     /**
      * [uploadfile description]
-     * @param  [type] $file [description]
+     * 
+     * @param [type] $file [description]
+     * 
      * @return [type]       [description]
      */
     protected function uploadfile($file)
@@ -41,7 +44,9 @@ class ImportController extends BaseController
     }
     /**
      * [getFileFields description]
-     * @param  [type] $data [description]
+     * 
+     * @param [type] $data [description]
+     * 
      * @return [type]       [description]
      */
     protected function getFileFields($data)
@@ -57,7 +62,9 @@ class ImportController extends BaseController
 
     /**
      * [getData description]
-     * @param  [type] $request [description]
+     * 
+     * @param [type] $request [description]
+     * 
      * @return [type]          [description]
      */
     protected function getData($request)
@@ -70,7 +77,9 @@ class ImportController extends BaseController
     
     /**
      * [validateInput description]
-     * @param  Request $request [description]
+     * 
+     * @param Request $request [description]
+     * 
      * @return [type]           [description]
      */
     protected function validateInput(Request $request)

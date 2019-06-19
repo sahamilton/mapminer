@@ -197,3 +197,6 @@ group by branchname
 branch::whereHas(opportunities,function($q){
   $q->where('closed','=',0);
 })->select('branchname', DB::raw('count(opportunities.id) as open,count(opportunities.top50 as top50'))->groupBy('branchname')->get();
+ /// Get random addresses
+SELECT @min := MIN(id), @max := MAX(id) FROM addresses;
+SELECT DISTINCT id, businessname, street, address2, city, state, zip, lat, lng FROM addresses AS a JOIN ( SELECT FLOOR(@min + (@max - @min + 1) * RAND()) AS id FROM addresses LIMIT 50 -- more than 10 (to compensate for dups) ) b USING (id) LIMIT 25

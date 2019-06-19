@@ -5,7 +5,7 @@
     <div class="float-right">
         <a href ="{{route('salesactivity.create')}}">
 
-            <button class="btn btn-success" ><i class="far fa-briefcase" aria-hidden="true"> </i> Add Sales Campaign</button>
+            <button class="btn btn-success" ><i class="fas fa-plus-circle"></i> </i> Add Sales Campaign</button>
         </a>
     </div> 
     <ul class="nav nav-tabs">
