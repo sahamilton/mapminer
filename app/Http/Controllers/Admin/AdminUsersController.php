@@ -196,7 +196,7 @@ class AdminUsersController extends BaseController
             $user->person()->create($person);
             $person = $user->person;
 
-            $person = $this->updateAssociatedPerson($person, request()->all());
+            $person = $this->_updateAssociatedPerson($person, request()->all());
             $person = $this->associateBranchesWithPerson($person, request()->all());
             
             $track=Track::create(['user_id'=>$user->id]);
@@ -297,12 +297,12 @@ class AdminUsersController extends BaseController
 
 		if ($user->update(request()->except('password'))) {
 
-            $person = $this->updateAssociatedPerson($user->person,request()->all());
-            $person = $this->associateBranchesWithPerson($person,request()->all());        
+            $person = $this->_updateAssociatedPerson($user->person, request()->all());
+            $person = $this->associateBranchesWithPerson($person, request()->all());        
             $user->saveRoles(request('roles'));
             $this->updateServicelines($request, $user);
 
-            $this->updateIndustryVertical($request,$person);
+            $this->updateIndustryVertical($request, $person);
 
            
            // $person->rebuild();
@@ -403,16 +403,17 @@ class AdminUsersController extends BaseController
         return $person;
     }
     /**
-     * [updateAssociatedPerson description]
-     * @param  [type] $person [description]
+     * [_updateAssociatedPerson description]
+     * @param  Person $person [description]
      * @param  [type] $data   [description]
      * @return [type]         [description]
      */
-    private function updateAssociatedPerson($person, $data)
+    private function _updateAssociatedPerson(Person $person, $data)
     {
        
-        
+       
         $geodata = $person->updatePersonsAddress($data);
+        
         $data = array_merge($data, $geodata);
         $person->update($data);
 

@@ -12,12 +12,14 @@ trait Geocode
        */
     public function getGeoCode($geoCode)
     {
-   
-        if (is_array($geoCode) && count($geoCode)>0) {
+        
+        if (is_array($geoCode) && count($geoCode) >0 ) {
+            dd('array', $geoCode);
                 $data['lat'] = $geoCode[0]['latitude'];
                 $data['lng'] = $geoCode[0]['longitude'];
                 $data['geostatus']=true;
-        } elseif (is_object($geoCode)) {
+        } elseif (is_object($geoCode) && $geoCode->count()>0) {
+            
             if (null!==$geoCode->first()) {
                 $data['lat'] = $geoCode->first()->getCoordinates()->getLatitude();
                 $data['lng'] = $geoCode->first()->getCoordinates()->getLongitude();
