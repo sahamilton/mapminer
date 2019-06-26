@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use App\Salesactivity;
 use App\State;
@@ -13,11 +13,12 @@ use App\Address;
 use App\Lead;
 use App\LeadStatus;
 use App\Person;
+use App\Http\Controllers\BaseController;
 
 use App\Http\Requests\SalesActivityFormRequest;
 use Illuminate\Http\Request;
 
-class SalesActivityController extends BaseController
+class SalesActivityManagementController extends BaseController
 {
    
     public $activity;
@@ -125,11 +126,12 @@ class SalesActivityController extends BaseController
                 $activity->salesprocess()->attach($process, ['vertical_id'=>$vertical]);
             }
         }
-
+        foreach (request('org') as $role=>$id) {
+            $activity->campaignparticipants()->attach($id, ['role'=>$role]);
+        }
         $branches = $activity->getCampaignBranches($data);
        
-        $activity->campaignBranches()->attach(array_keys($branches));
-
+        $activity->campaignBranches()->sync(array_keys($branches));
 
         return redirect()->route('salesactivity.index');
     }
@@ -161,44 +163,14 @@ class SalesActivityController extends BaseController
     public function show(Salesactivity $activity)
     {
         
-        $activity = $activity->load('salesprocess', 'vertical');
+        $activity = $activity->load('salesprocess', 'vertical', 'campaignBranches', 'campaignBranches.manager', 'campaignparticipants', 'campaignparticipants.userdetails.roles');
+
         $verticals = array_unique($activity->vertical->pluck('id')->toArray());
 
         $statuses = LeadStatus::pluck('status', 'id')->toArray();
-        $person = Person::findOrFail(auth()->user()->person->id);;
-       
-        if ($person->isLeaf()) {
-            
-            if (auth()->user()->person->lat) {
-                $location = new Address;
-                $location->lat = auth()->user()->person->lat;
-                $location->lng = auth()->user()->person->lng;
-                $locations = $this->location
-                    ->wherehas(
-                        'company.serviceline', function ($q) {
-                            $q->whereIn('servicelines.id', $this->userServiceLines);
-                        }
-                    );
+  
+        return response()->view('salesactivity.manageshow', compact('activity', 'verticals', 'statuses'));
 
-                if (count($verticals)>0) {
-                    $locations = $locations->whereHas(
-                        'company.industryVertical', function ($q) use ($verticals) {
-                            $q->whereIn('searchfilters.id', $verticals);
-                        }
-                    );
-                }
-
-                $locations = $locations->nearby($location, 25)->get();
-            } else {
-                $locations = [];
-            }
-
-            $mywatchlist = $this->activity->getWatchList();
-            // find all lead locations for the logged in user in these verticals
-            $leads = $this->lead->myLeads()->get();
-            dd(167, $leads, $verticals);
-            return response()->view('salesactivity.show', compact('activity', 'locations', 'leads', 'statuses', 'mywatchlist'));
-        }
     }
 
     /**
@@ -211,7 +183,7 @@ class SalesActivityController extends BaseController
     public function edit(Salesactivity $activity)
     {
        
-        $activity = $activity->load('salesprocess', 'vertical');
+        $activity = $activity->load('salesprocess', 'vertical', 'campaignBranches', 'campaignparticipants');
         $verticals = $this->vertical->industrysegments();
     
         $process = $this->process->pluck('step', 'id');

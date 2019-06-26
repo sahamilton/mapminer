@@ -234,7 +234,7 @@ Route::group(
         
         //     Sales Campaigns
         Route::get('campaigns', ['as'=>'salescampaigns', 'uses'=>'SalesActivityController@mycampaigns']);
-        Route::resource('salesactivity', 'SalesActivityController', ['only' => ['show']]);
+        //Route::resource('salesactivity', 'SalesActivityController', ['only' => ['show']]);
         
         //   Sales organization
         Route::get('salesorg/coverage', ['as'=>'salescoverage', 'uses'=>'SalesOrgController@salesCoverageMap']);
@@ -508,11 +508,11 @@ Route::group(
         Route::get('salesnotes/filedelete/{file}', ['as'=>'salesnotes.filedelete', 'uses'=>'SalesNotesController@filedelete']);
         Route::get('salesnotes/create/{company}', ['as'=>'salesnotes.cocreate', 'uses'=>'SalesNotesController@createSalesNotes']);
         
-        //   Sales Activity
+        //   Sales Activity / Campaigns
 
         Route::get('salesactivity/{vertical}/vertical', ['as'=>'salesactivity.vertical', 'uses'=>'SalesActivityController@index']);
         Route::post('salesactivity/updateteam', ['as'=>'salesactivity.modifyteam', 'uses'=>'SalesActivityController@updateteam']);
-        Route::resource('salesactivity', 'SalesActivityController', ['except' => ['show']]);
+        Route::resource('salesactivity', 'Admin\SalesActivityManagementController');
 
         Route::get('campaigndocs/{id}', ['as'=>'salesdocuments.index', 'uses'=>'SalesActivityController@campaignDocuments']);
         Route::get('campaign/{id}/announce', ['as'=>'campaign.announce', 'uses'=>'CampaignEmailController@announceCampaign']);

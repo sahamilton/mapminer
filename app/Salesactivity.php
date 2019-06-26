@@ -139,12 +139,25 @@ class Salesactivity extends Model implements \MaddHatter\LaravelFullcalendar\Ide
      * [currentActivities description]
      * 
      * @return [type] [description]
-     */
+     
     public function currentActivities()
     {
 
         return $this->where('datefrom', '<=', date('Y-m-d'))
             ->where('dateto', '>=', date('Y-m-d'));
+    }*/
+    /**
+     * [scopeCurrentActivities description]
+     * 
+     * @param Query $query [<description>]
+     * 
+     * @return [type] [description]
+     */
+    public function scopeCurrentActivities($query)
+    {
+
+        return $query->where('datefrom', '<=', now())
+            ->where('dateto', '>=', now());
     }
     /**
      * [campaignparticipants description]
@@ -153,13 +166,22 @@ class Salesactivity extends Model implements \MaddHatter\LaravelFullcalendar\Ide
      */
     public function campaignparticipants()
     {
-        return $this->belongsToMany(Person::class);
+        return $this->belongsToMany(Person::class)->withPivot('role');
+    }
+    /**
+     * [campaignBranches description]
+     * 
+     * @return [type] [description]
+     */
+    public function campaignBranches()
+    {
+        return $this->belongsToMany(Branch::class);
     }
     /**
      * [campaignSalesReps description]
      * 
      * @return [type] [description]
-     */
+    
     public function campaignSalesReps()
     {
         $verticals = $this->vertical->pluck('id')->toArray();
@@ -186,5 +208,24 @@ class Salesactivity extends Model implements \MaddHatter\LaravelFullcalendar\Ide
             ->whereNotNull('lat')
             ->whereNotNull('lng')
             ->get();
+    } */
+    /**
+     * [getCampaignBranches description]
+     * 
+     * @param [type] $request [description]
+     * 
+     * @return [type]          [description]
+     */
+    public function getCampaignBranches($request)
+    {
+        if (isset($request['org']['mm'])) {
+            return Person::findOrFail($request['org']['mm'])->myBranches();
+            
+        } elseif (isset($request['org']['rvp'])) {
+            return Person::findOrFail($request['org']['rvp'])->myBranches();
+        } elseif (isset($request['org']['rvp'])) {
+            return Person::findOrFail($request['org']['svp'])->myBranches();
+        }
+        return Branch::all()->pluck('branchname', 'id')->toArray();
     }
 }

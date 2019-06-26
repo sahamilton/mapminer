@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2322757de2872afdf008e4fda285919b",
+    "content-hash": "2e00a95f8f3567d2fdbdd58ea276945b",
     "packages": [
         {
             "name": "algolia/algoliasearch-client-php",
@@ -4689,24 +4689,26 @@
         },
         {
             "name": "smalot/pdfparser",
-            "version": "v0.10.0",
+            "version": "v0.14.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/smalot/pdfparser.git",
-                "reference": "c20bfd40e3d7f40ff4083de5971b2a9e7a839dd5"
+                "reference": "ec72a99028ba5e21a0acad92047b85e128cbf81f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/smalot/pdfparser/zipball/c20bfd40e3d7f40ff4083de5971b2a9e7a839dd5",
-                "reference": "c20bfd40e3d7f40ff4083de5971b2a9e7a839dd5",
+                "url": "https://api.github.com/repos/smalot/pdfparser/zipball/ec72a99028ba5e21a0acad92047b85e128cbf81f",
+                "reference": "ec72a99028ba5e21a0acad92047b85e128cbf81f",
                 "shasum": ""
             },
             "require": {
+                "ext-mbstring": "*",
+                "ext-zlib": "*",
                 "php": ">=5.3.0",
                 "tecnickcom/tcpdf": "~6.0"
             },
             "require-dev": {
-                "atoum/atoum": "dev-master"
+                "atoum/atoum": "^2.8 | ^3.0"
             },
             "type": "library",
             "autoload": {
@@ -4716,11 +4718,11 @@
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "LGPLv3"
+                "LGPL-3.0"
             ],
             "authors": [
                 {
-                    "name": "Sebastien Malot",
+                    "name": "Sebastien MALOT",
                     "email": "sebastien@malot.fr"
                 }
             ],
@@ -4733,7 +4735,7 @@
                 "pdf",
                 "text"
             ],
-            "time": "2017-01-03T14:32:29+00:00"
+            "time": "2019-01-23T09:14:37+00:00"
         },
         {
             "name": "spatie/dropbox-api",

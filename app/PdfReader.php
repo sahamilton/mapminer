@@ -7,6 +7,13 @@ use Smalot\PdfParser\Document;
 
 class PdfReader implements TextInterface
 {
+    /**
+     * [read description]
+     * 
+     * @param  [type] $data [description]
+     * 
+     * @return [type]       [description]
+     */
     public function read($data)
     {
 
