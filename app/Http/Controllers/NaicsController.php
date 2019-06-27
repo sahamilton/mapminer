@@ -1,11 +1,18 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Naics;
 use Illuminate\Http\Request;
 
 class NaicsController extends Controller
 {
+    public $naic;
+
+    public function __construct(Naics $naic)
+    {
+        $this->naic = $naic;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -13,7 +20,8 @@ class NaicsController extends Controller
      */
     public function index()
     {
-        //
+        $naics = $this->naic->whereRaw('CHAR_LENGTH(naics)=2')->get();
+        return response()->view('naics.index', compact('naics'));
     }
 
     /**
@@ -43,9 +51,14 @@ class NaicsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Naics $naic)
     {
-        //
+        $len = strlen($naic->naics) + 1;
+
+        $naics = $this->naic->where('naics', 'like', $naic->naics . "%")
+            ->whereRaw('CHAR_LENGTH(naics)='.$len)->get();
+        
+        return response()->view('naics.index', compact('naics'));
     }
 
     /**

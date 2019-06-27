@@ -44,12 +44,14 @@ class MyLeadsController extends BaseController
      */
     public function index($branch=null)
     {
-                
+               
         if (!  $myBranches = $this->person->myBranches()) {
             return redirect()->back()->withError('You are not assigned to any branches');
         }
+
         if (! $branch) {
             $branch = array_keys($myBranches);
+            // get first branch
             $branch = reset($branch);
         } else {
             if (! in_array($branch->id, array_keys($this->person->myBranches()))) {
@@ -57,7 +59,7 @@ class MyLeadsController extends BaseController
             }
             $branch = $branch->id;
         }
-       
+        
         $data = $this->_getBranchLeads([$branch]);
       
         $title= $data['branches']->first()->branchname . " leads";
@@ -157,7 +159,7 @@ class MyLeadsController extends BaseController
      */
     public function store(MyLeadFormRequest $request)
     {
-       
+
         // we need to geocode this address
         if (! $data = $this->_cleanseInput($request)) {
             return redirect()->back()->withError('Unable to geocode that address');
@@ -167,10 +169,10 @@ class MyLeadsController extends BaseController
        
         $dupes = $this->lead->duplicate($data['lead']['lng'], $data['lead']['lat'])->get();
 
-        /* if ($dupes->count()>0) {
-            return response()->view('addresses.duplicates',compact('dupes','data'));
-        } 
-        */
+        //if ($dupes->count()>0) {
+            //return response()->view('addresses.duplicates', compact('dupes', 'data'));
+        //} 
+        
         
         $lead = $this->lead->create($data['lead']);
        
