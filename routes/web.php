@@ -146,7 +146,8 @@ Route::group(
         
         Route::post('findme', ['as'=>'findme', 'uses'=>'GeoCodingController@findMe']);
         Route::get('findme', ['as'=>'findme', 'uses'=>'MapsController@findme']);
-        
+        // Industries
+        Route::resource('naic', 'NaicsController');
         //     Industry Focus
         Route::resource('/industryfocus', 'PersonIndustryController');
     

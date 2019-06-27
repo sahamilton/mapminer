@@ -19,37 +19,56 @@ class UsersImportController extends ImportController
     public $import;
     public $userfields =[];
     public $personfields =[];
-
+    /**
+     * [__construct description]
+     * 
+     * @param Person     $person [description]
+     * @param User       $user   [description]
+     * @param UserImport $import [description]
+     */
     public function __construct(Person $person, User $user, UserImport $import)
     {
         $this->person = $person;
         $this->user = $user;
         $this->import = $import;
     }
-//
-    // query to get all without manager in system
-    //SELECT * from usersimport where employee_id in (select mgr_emp_id from `usersimport` where reports_to is null)
 
+    
+    /**
+     * [index description]
+     * 
+     * @return [type] [description]
+     */
     public function index()
     {
 
         $imports = $this->import->whereNull('person_id')->orWhereNull('user_id')->get();
         return response()->view('admin.users.import.index', compact('imports'));
     }
-
+    /**
+     * [getFile description]
+     * 
+     * @return [type] [description]
+     */
     public function getFile()
     {
         if ($this->import->count()>0) {
             return redirect()->route('importcleanse.index');
         } else {
             $requiredFields = $this->import->requiredFields;
-           //$servicelines = Serviceline::pluck('ServiceLine','id');
+            //$servicelines = Serviceline::pluck('ServiceLine','id');
 
             return response()->view('admin.users.import', compact('requiredFields'));
         }
     }
 
-
+    /**
+     * [import description]
+     * 
+     * @param UsersImportFormRequest $request [description]
+     * 
+     * @return [type]                          [description]
+     */
     public function import(UsersImportFormRequest $request)
     {
 
@@ -65,8 +84,8 @@ class UsersImportController extends ImportController
         $fields = $this->getFileFields($data);
 
         $data['additionaldata'] = [];//['serviceline'=>implode(",",request('serviceline'))];
-        $addColumns = ['branches','role_id','mgr_emp_id','manager','reports_to','industry','address','city','state','zip','serviceline','hiredate','business_title','fullname'];
-        $addColumn = $this->addColumns($addColumns);
+        $_addColumns = ['branches','role_id','mgr_emp_id','manager','reports_to','industry','address','city','state','zip','serviceline','hiredate','business_title','fullname'];
+        $addColumn = $this->_addColumns($_addColumns);
 
           $columns = array_merge($this->import->getTableColumns('users'), $this->import->getTableColumns('persons'), $addColumn);
 
@@ -75,7 +94,13 @@ class UsersImportController extends ImportController
         $skip = ['id','password','confirmation_code','remember_token','created_at','updated_at','nonews','lastlogin','api_token','user_id','lft','rgt','depth','geostatus'];
         return response()->view('imports.mapfields', compact('columns', 'fields', 'data', 'skip', 'requiredFields'));
     }
-    
+    /**
+     * [mapfields description]
+     * 
+     * @param Request $request [description]
+     * 
+     * @return [type]           [description]
+     */
     public function mapfields(Request $request)
     {
 
@@ -92,97 +117,49 @@ class UsersImportController extends ImportController
       
         if ($this->import->import()) {
             $this->import->postImport();
-
-
-           // copy all data from import to persons and users where not null person_id, user_id
           
             return redirect()->route('importcleanse.index');
         }
     }
 
 
-   /* public function newUsers() {
-
-        $newusers = $this->import->whereNull('person_id')->get();
-
-        //$newusers = $this->import->addUserFields($newusers);
-        if ($newusers->count()>0) {
-           return response()->view('admin.users.importnew',compact('newusers'));
-        }
-        if ($importerrors = $this->import->setUpAllUsers()) {
-            
-            $persons = $this->import->whereIn('person_id',array_keys($importerrors))->get();
-            
-             return response()->view('admin.users.import.errors',compact('importerrors','persons'));
-          }else{
-           
-            return redirect()->route('usersimport.index')->withMessage('All Imported and Updated');
-          }
-    }
-
-
-    public function createNewUsers(Request $request) {
-
-      if ($errors = $this->import->createNewUsers($request)) {
-          if (! is_array($errors)) {
-           return redirect()->back()->withMessage($errors);
-          }else{
-            return $this->inputUserErrors($errors);
-          }
-      }
-
-      if (! $errors = $this->import->setUpAllUsers()) {
-        return redirect()->route('usersimport.index')->withMessage('All Imported and Updated');
-      
-      }else{
-
-        return $this->inputErrors($errors);
-      }
-    }
-    private function inputUserErrors($importerrors) {
-        if (! is_array($importerrors)) {
-          return redirect()->back()->withMessage($errors);
-        }
-        $ids = array_keys($importerrors['email']);
-    
-        $persons = $this->import->whereIn('employee_id',$ids)->get();
-
-        return response()->view('admin.users.import.createerrors',compact('importerrors','persons'));
-    }
-
-    private function inputErrors($importerrors) {  
-        if (! is_array($importerrors)) {
-          return redirect()->back()->withMessage($errors);
-        }
-        $ids = array_keys($importerrors);
-        $persons = $this->import->whereIn('person_id',$ids)->get();
-        return response()->view('admin.users.import.errors',compact('importerrors','persons'));
-    }
-    */
-
+    /**
+     * [fixUserErrors description]
+     * 
+     * @param Request $request [description]
+     * 
+     * @return [type]           [description]
+     */
     public function fixUserErrors(Request $request)
     {
 
         switch (request('type')) {
-            case 'branch':
-                $this->fixBranchErrors($request);
-                break;
+        case 'branch':
+            $this->_fixBranchErrors($request);
+            break;
 
-            case 'email':
-                $this->fixEmailErrors($request);
-                break;
-          
-            default:
-                # code...
-                break;
+        case 'email':
+            $this->_fixEmailErrors($request);
+            break;
+      
+        default:
+            
+            break;
         }
 
         return redirect()->route('importcleanse.index');
     }
-    private function fixBranchErrors($request)
+    /**
+     * [_fixBranchErrors description]
+     * 
+     * @param [type] $request [description]
+     * 
+     * @return [type]          [description]
+     */
+    private function _fixBranchErrors($request)
     {
         $this->import->whereIn('employee_id', array_keys(request('ignore')))->update(['branches' => null]);
-      // update all branches
+        // update all branches
         $toUpdate = array_diff_key(request('branch'), request('ignore'));
         $update = $this->import->whereIn('employee_id', $toUpdate)->get();
         foreach ($update as $upd) {
@@ -192,10 +169,14 @@ class UsersImportController extends ImportController
     }
 
 
-
-    private function fixEmailErrors()
+    /**
+     * [_fixEmailErrors description]
+     * 
+     * @return [type] [description]
+     */
+    private function _fixEmailErrors()
     {
-      //$data['email'] = request('email');
+        //$data['email'] = request('email');
         $imports = $this->import->whereIn('id', array_keys(request('import')))->with('user')->get();
         $data = request('import');
         foreach ($imports as $import) {
@@ -209,32 +190,14 @@ class UsersImportController extends ImportController
             }
         }
     }
-/*
-    public function fixerrors(Request $request) {
-      
-      $data['branches'] = request('branch');
-      $data['industry'] = request('industry');
-      // we need to convert the industry name to 
-
-      $imports = $this->import->whereIn('person_id',array_keys(request('branch')))->get();
-
-      foreach ($imports as $import) {
-        
-        $import->branches = $data['branches'][$import->person_id];
-        $import->industry = $data['industry'][$import->person_id];
-        $import->save();
-      }
-      if ($importerrors = $this->import->setUpAllUsers()) {
-           $persons = $this->import->whereIn('person_id',array_keys($importerrors))->get();
-            
-            return response()->view('admin.users.import.errors',compact('importerrors','persons'));
-           // this should now cycle through the check again 
-        }else{
-          return redirect()->route('usersimport.index')->withMessage('All Imported and Updated');
-        }
-    }
-*/
-    private function addColumns($columns)
+    /**
+     * [_addColumns description]
+     * 
+     * @param [type] $columns [description]
+     *
+     * @return stdClass $addColumn [<description>]
+     */
+    private function _addColumns($columns)
     {
         foreach ($columns as $column) {
             $columns = new \stdClass;

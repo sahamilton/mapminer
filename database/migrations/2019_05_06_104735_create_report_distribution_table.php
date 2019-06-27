@@ -13,13 +13,15 @@ class CreateReportDistributionTable extends Migration
      */
     public function up()
     {
-        Schema::create('report_distribution', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('report_id')->index()->unsigned();
-            $table->integer('user_id')->index()->unsigned();
-            $table->enum('type',['to','cc','bcc'])->default('to');
-            $table->timestamps();
-        });
+        Schema::create(
+            'report_distribution', function (Blueprint $table) {
+                $table->increments('id');
+                $table->integer('report_id')->index()->unsigned();
+                $table->integer('user_id')->index()->unsigned();
+                $table->enum('type', ['to','cc','bcc'])->default('to');
+                $table->timestamps();
+            }
+        );
     }
 
     /**
