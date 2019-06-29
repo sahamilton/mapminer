@@ -679,10 +679,10 @@ Route::group(
         Route::get(
             'testjob', function () {
                  //$company = App\Company::findOrFail(532);
-                 $period['from'] = \Carbon\Carbon::now()->subWeek()->startOfWeek();
+                /* $period['from'] = \Carbon\Carbon::now()->subWeek()->startOfWeek();
                  $period['to'] = \Carbon\Carbon::now()->subWeek()->endOfWeek();
                  App\Jobs\Top50WeeklyReport::dispatch();
-               
+               */
                  //App\Jobs\AccountActivities::dispatch($company, $period);
                 //App\Jobs\BranchOpportunities::dispatch($period);
                  //App\Jobs\RebuildPeople::dispatch();
@@ -695,17 +695,19 @@ Route::group(
                         ->dispatch($filename)->onQueue('mapminer');
                  }
                  
-                 }
-                 $period['from'] = \Carbon\Carbon::now()->subWeek()->startOfWeek();
-                 $period['to'] = \Carbon\Carbon::now()->subWeek()->endOfWeek();
-                App\Jobs\BranchStats::dispatch($period);
+                 }*/
+                
+                 App\Jobs\WeeklyOpportunitiesReminder::dispatch();
+                 /*$period['from'] = \Carbon\Carbon::now()->subWeek()->startOfWeek();
+                 $period['to'] = \Carbon\Carbon::now();
+                App\Jobs\BranchStats::dispatch($period);*/
                 //App\Jobs\ActivityOpportunityReport::dispatch();
                 //App\Jobs\ActivityOpportunityReport::dispatch();
                 
                 //App\Jobs\ZipBackup::dispatch('MMProd20190123');
                 //App\Jobs\UploadToDropbox::dispatch('MMProd20190123');
                 //Mail::queue(new App\Mail\ConfirmBackup('MMProd20190123'));
-                */
+                
             }
         );
 

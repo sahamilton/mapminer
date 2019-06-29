@@ -133,6 +133,26 @@ class Branch extends Model implements HasPresenter
         return $this->hasManyThrough(Opportunity::class, AddressBranch::class, 'branch_id', 'address_branch_id', 'id', 'id')->where('closed', '=', 0);
     }
     /**
+     * [opportunitiesClosingThisWeek description]
+     * 
+     * @return [type] [description]
+     */
+    public function opportunitiesClosingThisWeek()
+    {
+        return $this->hasManyThrough(Opportunity::class, AddressBranch::class, 'branch_id', 'address_branch_id', 'id', 'id')->where('closed', '=', 0)
+            ->whereBetween('expected_close', [now(), now()->addWeek()]);
+    }
+    /**
+     * [pastDueOpportunities description]
+     * 
+     * @return [type] [description]
+     */
+    public function pastDueOpportunities()
+    {
+        return $this->hasManyThrough(Opportunity::class, AddressBranch::class, 'branch_id', 'address_branch_id', 'id', 'id')->where('closed', '=', 0)
+            ->where('expected_close', '<', now());
+    }
+    /**
      * [closedOpportunities description]
      * 
      * @return [type] [description]
@@ -657,6 +677,17 @@ class Branch extends Model implements HasPresenter
                     ->whereBetween(
                         'actual_close', [$this->period['from'],$this->period['to']]
                     );
+            },
+            'opportunities as openvalue' => function ($query) {
+                $query->select(\DB::raw("SUM(value) as wonvalue"))
+                    ->whereClosed(0)        
+                    ->where(
+                        function ($q) {
+                            $q->where('actual_close', '>', $this->period['to'])
+                                ->orwhereNull('actual_close');
+                        }
+                    )
+                ->where('opportunities.created_at', '<', $this->period['to']);
             }
             ]
         );

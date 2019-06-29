@@ -19,7 +19,8 @@
 			<th><b>Open Leads</b></th>
 			<th><b>Completed Activities</b></th>
 			<th><p>Sales Appts</p></th>
-			<th><p>Open Opportunities</p></th>
+			<th><p>Open Opportunities Count</p></th>
+			<th><p>Open Opportunities Value</p></th>
 			<th><p>Opportunities Won</p></th>
 			<th><p>Opportunities Lost</p></th>
 			<th><p>Open Top 50 Opportunities</p></th>
@@ -39,14 +40,13 @@
 				<td>{{$branch->activities_count}}</td>
 				<td>{{$branch->salesappts}}</td>
 				<td>{{$branch->open}}</td>
-				
+				<td>{{$branch->openvalue}}</td>
 				<td>{{$branch->won}}</td>
 				<td>{{$branch->lost}}</td>
 				<td>{{$branch->top50}}</td>
 				<td>{{$branch->wonvalue}}</td>
 				<td>
 					@foreach ($branch->manager as $manager)
-
 					<li>{{$manager->fullName()}}
 					@if(! $loop->last)
 					/
