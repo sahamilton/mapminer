@@ -102,9 +102,10 @@ Route::group(
         Route::resource('mgrdashboard', 'MgrDashboardController');
         //   Dashboard
         Route::resource('dashboard', 'DashboardController');
-        
+        // Branch Next Week View
+        Route::resource('branchsummary', 'BranchSummaryController');
         //   Branch Pipeline
-            Route::get('branch/pipeline', ['as'=>'branches.pipeline', 'uses'=>"OpportunityController@pipeline"]);
+        Route::get('branch/pipeline', ['as'=>'branches.pipeline', 'uses'=>"OpportunityController@pipeline"]);
            
         //   Branch Leads
         Route::get('branch/leads/{branch?}', ['as'=>'branch.leads', 'uses'=>'MyLeadsController@index']);
