@@ -24,10 +24,10 @@ class UsersController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function show($user)
+    public function show(User $user)
     {
-      
-        $user = $this->user->with(
+        
+        $user->load(
             'person',
             'serviceline',
             'person.branchesServiced',
@@ -36,7 +36,7 @@ class UsersController extends Controller
             'person.industryfocus',
             'roles',
             'usage'
-        )->findOrFail(auth()->user()->id);
+        );
         if ($user->person->has('branchesServiced')) {
             $branchmarkers = $user->person->branchesServiced->toJson();
         }
