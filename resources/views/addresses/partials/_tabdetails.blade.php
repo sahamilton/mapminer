@@ -32,7 +32,7 @@
 		Delete Locaton</a>
 	
 		@endif
-		@elseif (isset($location->user_id))
+		@elseif (isset($location->user_id) && $location->createdBy)
 
 
 			<p>Lead Created by: <a href="{{route('user.show',$location->createdBy->id)}}">{{$location->createdBy->postName()}}</a></p>
