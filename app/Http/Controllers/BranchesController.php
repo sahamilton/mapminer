@@ -6,13 +6,15 @@ use App\Branch;
 use App\Serviceline;
 use App\Location;
 use App\User;
+use App\Activity;
 use App\Address;
-
+use App\AddressBranch;
 use App\State;
 use App\Person;
 use App\Role;
 use Excel;
 use App\Http\Requests\BranchFormRequest;
+use App\Http\Requests\BranchReassignFormRequest;
 use App\Http\Requests\BranchImportFormRequest;
 use App\Exports\BranchTeamExport;
 
@@ -23,7 +25,8 @@ class BranchesController extends BaseController {
      *
      * @return Response
      */
-     
+    public $activity;
+    public $addressBranch;
     public $branch;
     public $serviceline;
     public $person;
@@ -40,13 +43,20 @@ class BranchesController extends BaseController {
      * @param Address     $address     [description]
      */
     public function __construct(
-        Branch $branch, Serviceline $serviceline,
-        Person $person, State $state, Address $address
+        Branch $branch, 
+        Serviceline $serviceline,
+        Person $person, 
+        State $state, 
+        Address $address,
+        AddressBranch $addressBranch,
+        Activity $activity
     ) {
         $this->branch = $branch;
         $this->serviceline = $serviceline;
         $this->person = $person;
         $this->state = $state;
+        $this->activity = $activity;
+        $this->addressBranch = $addressBranch;
         $this->address = $address;
         parent::__construct($this->branch);
 
@@ -174,7 +184,7 @@ class BranchesController extends BaseController {
 
         $branch->associatePeople($request);
         $branch->servicelines()->sync($input['serviceline']);
-        $this->_rebuildXMLfile();
+        //$this->_rebuildXMLfile();
 
         return redirect()->route('branches.show', $branch->id);
     }
@@ -212,7 +222,7 @@ class BranchesController extends BaseController {
      * 
      * @return [type]         [description]
      */
-    public function show($branch)
+    public function show(Branch $branch)
     {
 
         $servicelines = $this->serviceline
@@ -274,7 +284,7 @@ class BranchesController extends BaseController {
      * 
      * @return [type]           [description]
      */
-    public function showNearbyBranches(Request $request, $branch)
+    public function showNearbyBranches(Request $request, Branch $branch)
     {
         
 
@@ -297,7 +307,7 @@ class BranchesController extends BaseController {
      * 
      * @return [type]           [description]
      */
-    public function map(Request $request, $branch)
+    public function map(Request $request, Branch $branch)
     {
         
         $locations = Location::nearby($branch, 25)->get();
@@ -315,7 +325,7 @@ class BranchesController extends BaseController {
      * 
      * @return [type]         [description]
      */
-    public function edit($branch)
+    public function edit(Branch $branch)
     {
         
 
@@ -323,7 +333,7 @@ class BranchesController extends BaseController {
             ->pluck('display_name', 'id');
 
         $team = $this->person->personroles($this->branch->branchRoles);
-        $branch = $this->branch->find($branch->id);    
+        //$branch = $this->branch->find($branch->id);    
         $branchteam = $branch->relatedPeople()->pluck('persons.id')->toArray();
         $servicelines = $this->serviceline->whereIn(
             'id', $this->userServiceLines 
@@ -347,7 +357,7 @@ class BranchesController extends BaseController {
      * 
      * @return [type]                     [description]
      */
-    public function update(BranchFormRequest $request,$branch)
+    public function update(BranchFormRequest $request, Branch $branch)
     {
         
         $data = request()->all();
@@ -363,10 +373,47 @@ class BranchesController extends BaseController {
         $branch->associatePeople($request);
         
         $branch->servicelines()->sync(request('serviceline'));
-        $this->_rebuildXMLfile();
+        //$this->_rebuildXMLfile();
         return redirect()->route('branches.show', $branch->id);
 
         
+    }
+    /**
+     * [destroy description]
+     * 
+     * @param Branch $branch [description]
+     * 
+     * @return [type]         [description]
+     */
+    public function destroy(Branch $branch)
+    {
+        $branch->load('openActivities', 'openOpportunities', 'allLeads');
+        if ($branch->openActivities->count() > 0
+            or $branch->openOpportunities->count() > 0
+            or $branch->allLeads()->count() > 0
+        ) {
+            return redirect()->route('branchReassign', $branch->id)->withError('You must first reassign the leads, opportunities and activities');
+        } else {
+            
+            $branch->delete();
+            //$this->_rebuildXMLfile();
+            return redirect()->route('branches.index')->withSuccess($branch->branchname . ' has been deleted');
+        }
+        
+    }
+    /**
+     * [reassignBranch description]
+     * 
+     * @param Branch $branch [description]
+     * 
+     * @return [type]         [description]
+     */
+    public function reassignBranch(Branch $branch)
+    {
+        $branch->load('openActivities', 'openOpportunities', 'allLeads');
+        $branches = $this->branch->orderBy('id')->get();
+        $nearby = $this->branch->nearby($branch, 100, 5)->get();
+        return response()->view('branches.reassign', compact('branch', 'branches', 'nearby'));
     }
     /**
      * [destroy description]
@@ -375,14 +422,34 @@ class BranchesController extends BaseController {
      * 
      * @return [type]         [description]
      */
-    public function destroy($branch)
+    /*public function destroy(Branch $branch)
     {
         
         $branch->delete();
-        $this->_rebuildXMLfile();
+        //$this->_rebuildXMLfile();
         return redirect()->route('branches.index');
+    }*/
+    /**
+     * [reassign description]
+     * 
+     * @param BranchReassignFormRequest $request [description]
+     * @param Branch                    $branch  [description]
+     * 
+     * @return [type]                            [description]
+     */
+    public function reassign(BranchReassignFormRequest $request, Branch $branch)
+    {
+        
+        if (request()->filled('newbranch')) {
+            $newbranch = request('newbranch');
+        } else {
+            $newbranch = request('newbranch');
+        }
+       
+        $branch->allLeads()->update(['branch_id' => $newbranch]);
+        $branch->openActivities()->update(['branch_id' => $newbranch]);
+        return redirect()->route('branches.show', $newbranch)->withSuccess('All leads & opportunities & open activities have been reassigned to branch ' . $newbranch);
     }
-    
     /**
      * [listNearbyLocations description]
      * 
@@ -390,7 +457,7 @@ class BranchesController extends BaseController {
      * 
      * @return [type]         [description]
      */
-    public function listNearbyLocations($branch)
+    public function listNearbyLocations(Branch $branch)
     {
         //$filtered = $this->location->isFiltered(['companies'],['vertical']);
         $roles = \App\Role::pluck('display_name', 'id');
@@ -423,7 +490,7 @@ class BranchesController extends BaseController {
      * 
      * @return [type]           [description]
      */
-    public function getNearbyBranches(Request $request, $branch)
+    public function getNearbyBranches(Request $request, Branch $branch)
     {
         
         if (request()->filled('d')) {
@@ -459,7 +526,7 @@ class BranchesController extends BaseController {
      * 
      * @return [type]           [description]
      */
-    public function branchLeads(Request $request, $branch=null)
+    public function branchLeads(Request $request, Branch $branch=null)
     {
         $myBranches = $this->person->myBranches();
         if (! $branch = $this->branch->checkIfMyBranch($request, $myBranches, $branch)) {
@@ -484,7 +551,7 @@ class BranchesController extends BaseController {
      * 
      * @return [type]           [description]
      */
-    public function branchOpportunities(Request $request, $branch=null)
+    public function branchOpportunities(Request $request, Branch $branch=null)
     {
         
         $myBranches = $this->person->myBranches();
@@ -495,7 +562,6 @@ class BranchesController extends BaseController {
         
 
         $branch->load('opportunities', 'opportunities.address');
-        
 
         return response()->view(
             'branches.opportunities', 
@@ -520,7 +586,6 @@ class BranchesController extends BaseController {
 
             $state=request('state');
 
-            
         }
         $allstates = $this->branch->allStates();
         $data = $this->state->where('statecode', '=', $state)

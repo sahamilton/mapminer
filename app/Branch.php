@@ -93,7 +93,16 @@ class Branch extends Model implements HasPresenter
         
         return $this->hasMany(Activity::class);
     }
-
+    /**
+     * [openActivities description]
+     * 
+     * @return [type] [description]
+     */
+    public function openActivities()
+    {
+        
+        return $this->hasMany(Activity::class)->whereNull('completed');
+    }
     /**
      * [activitiesbytype description]
      * 
@@ -230,7 +239,15 @@ class Branch extends Model implements HasPresenter
             ->whereDoesntHave('opportunities'); 
 
     }
-
+    /**
+     * [allLeads description]
+     * 
+     * @return [type] [description]
+     */
+    public function allLeads()
+    {
+        return  $this->belongsToMany(Address::class, 'address_branch', 'branch_id', 'address_id');
+    }
     /**
      * [leadsBySourceCount description]
      * 
@@ -387,7 +404,22 @@ class Branch extends Model implements HasPresenter
         }
         return $managers;
     }
-
+    /**
+     * [rebuildBranchXMLfile description]
+     * 
+     * @return [type] [description]
+     */
+    public function rebuildBranchXMLfile()
+    {
+        
+        $branches = $this->with('servicelines')->get();
+        $xml = response()->view('branches.xml', compact('branches'))
+            ->header('Content-Type', 'text/xml');
+        $file = file_put_contents(
+            storage_path() . '/app/public/uploads/branches.xml', $xml
+        );
+        return true;
+    }
 
     /**
      * [orders description]
