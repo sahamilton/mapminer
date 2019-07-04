@@ -416,20 +416,6 @@ class BranchesController extends BaseController {
         return response()->view('branches.reassign', compact('branch', 'branches', 'nearby'));
     }
     /**
-     * [destroy description]
-     * 
-     * @param [type] $branch [description]
-     * 
-     * @return [type]         [description]
-     */
-    /*public function destroy(Branch $branch)
-    {
-        
-        $branch->delete();
-        //$this->_rebuildXMLfile();
-        return redirect()->route('branches.index');
-    }*/
-    /**
      * [reassign description]
      * 
      * @param BranchReassignFormRequest $request [description]
@@ -445,8 +431,9 @@ class BranchesController extends BaseController {
         } else {
             $newbranch = request('newbranch');
         }
-       
         $branch->allLeads()->update(['branch_id' => $newbranch]);
+        $branch->openOpportunities()->update(['branch_id' => $newbranch]);
+        
         $branch->openActivities()->update(['branch_id' => $newbranch]);
         return redirect()->route('branches.show', $newbranch)->withSuccess('All leads & opportunities & open activities have been reassigned to branch ' . $newbranch);
     }
