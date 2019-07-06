@@ -433,7 +433,6 @@ class BranchesController extends BaseController {
         }
         $branch->allLeads()->update(['branch_id' => $newbranch]);
         $branch->openOpportunities()->update(['branch_id' => $newbranch]);
-        
         $branch->openActivities()->update(['branch_id' => $newbranch]);
         return redirect()->route('branches.show', $newbranch)->withSuccess('All leads & opportunities & open activities have been reassigned to branch ' . $newbranch);
     }
