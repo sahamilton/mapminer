@@ -51,7 +51,7 @@ class PersonObserver
      */
     public function updated(Person $person)
     {
-        RebuildPeople::dispatch();
+        //RebuildPeople::dispatch();
         // return Mail::queue(new PersonNotification($person));
     }
     /**
@@ -61,9 +61,9 @@ class PersonObserver
      * 
      * @return [type]         [description]
      */
-    public function deleting(Person $person)
+    public function deleted(Person $person)
     {
-        RebuildPeople::dispatch();
+        //RebuildPeople::dispatch();
         // return Mail::queue(new PersonNotification($person));
     }
 }
