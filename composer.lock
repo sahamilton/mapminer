@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2e00a95f8f3567d2fdbdd58ea276945b",
+    "content-hash": "e2f058ea0e7a2ca7a27b3a53023c7fce",
     "packages": [
         {
             "name": "algolia/algoliasearch-client-php",
@@ -4686,6 +4686,49 @@
                 "promises"
             ],
             "time": "2019-01-07T21:25:54+00:00"
+        },
+        {
+            "name": "reportico/laravel-reportico",
+            "version": "5.4.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/reportico-web/laravel-reportico.git",
+                "reference": "68731621c328f0cd569ef87c40465588785097d0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/reportico-web/laravel-reportico/zipball/68731621c328f0cd569ef87c40465588785097d0",
+                "reference": "68731621c328f0cd569ef87c40465588785097d0",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "~5.2",
+                "php": ">=5.4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src/migrations",
+                    "src/controllers"
+                ],
+                "files": [
+                    "src/Reportico/Reportico/reportico.php"
+                ],
+                "psr-0": {
+                    "Reportico\\Reportico\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Reportico",
+                    "email": "info@reportico.org"
+                }
+            ],
+            "time": "2018-09-06T07:53:04+00:00"
         },
         {
             "name": "smalot/pdfparser",

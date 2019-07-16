@@ -600,6 +600,44 @@ class Branch extends Model implements HasPresenter
 
     }
     /**
+     * [scopeMobileStats description]
+     * 
+     * @param [type] $query [description]
+     * 
+     * @return [type]        [description]
+     */
+    public function scopeMobileStats($query)
+    {
+        return $query->with(       
+            ['leads'=>function ($query) {
+                $query->where(
+                    function ($q) {
+                        $q->whereDoesntHave('opportunities');
+                    }
+                );
+            },
+            
+            'activities'=>function ($query) {
+                $query->where('completed', 0);
+            },
+            'activities.address',
+            'opportunities'=>function ($query) {
+                $query->whereClosed(0)        
+                    ->where(
+                        function ($q) {
+                            $q->where('actual_close', '>', now())
+                                ->orwhereNull('actual_close');
+                        }
+                    )
+                ->where('opportunities.created_at', '<', now());
+            },
+            'opportunities.address'
+
+            ]
+        );
+
+    }
+    /**
      * [scopeSummaryStats description]
      * 
      * @param [type] $query  [description]
@@ -631,6 +669,9 @@ class Branch extends Model implements HasPresenter
                     'activity_date', [$this->period['from'],$this->period['to']]
                 )
                     ->where('completed', 1);
+            },
+            'activities as openactivities'=>function ($query) {
+                $query->where('completed', 0);
             },
             'activities as salesappts'=>function ($query) {
                 $query->whereBetween(

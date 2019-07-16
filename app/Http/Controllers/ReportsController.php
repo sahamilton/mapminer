@@ -7,6 +7,16 @@ use Illuminate\Http\Request;
 
 class ReportsController extends Controller
 {
+    public $report;
+    /**
+     * [__construct description]
+     * 
+     * @param Report $report [description]
+     */
+    public function __construct(Report $report)
+    {
+        $this->report = $report;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +24,8 @@ class ReportsController extends Controller
      */
     public function index()
     {
-        //
+        $reports = $this->report->all();
+        return response()->view('reports.index', compact('reports'));
     }
 
     /**
@@ -46,7 +57,11 @@ class ReportsController extends Controller
      */
     public function show(Report $report)
     {
-        //
+        $report->load(
+            'distribution', 'roleDistribution', 'companyDistribution', 'companyDistribution.managedBy'
+        );
+      
+        return response()->view('reports.show', compact('report'));
     }
 
     /**

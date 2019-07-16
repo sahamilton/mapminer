@@ -331,6 +331,8 @@ Route::group(
             
             }
         );
+
+        Route::resource('mobile', 'MobileController');
     }
 );
     

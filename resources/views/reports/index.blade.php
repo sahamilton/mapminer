@@ -5,30 +5,23 @@
 <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
         <th>Report</th>
-        <th>Frequency</th>
-        <th>Schedule</th>
-        <th>Time</th>
-        <th>Period From</th>
-        <th>Period To</th>
+        <th>Model</th>
         <th>Distribution</th>
         <th>Send Copy</th>
     </thead>
     <tbody>
-        @foreach ($results as $report)
+        @foreach ($reports as $report)
         <tr>
-            <td>{{$report->report}}</td>
-            <td>{{$report->frequency}}</td>
-            <td>{{$report->schedule}}</td>
-            <td>{{date('h:i A',strtotime($report->time))}}</td>
-            <td>{{$report->periodFrom}}</td>
-            <td>{{$report->periodTo}}</td>
             <td>
                 <a href="{{route('reports.show', $report->id)}}">
-                    {{$report->distribution_count}}
+                    {{$report->report}}
                 </a>
             </td>
+            <td>{{ucwords($report->type)}}</td>
+            
+            <td>{{$report->distribution_count}}</td>
             <td>
-                <a href="{{route('reports.send',$report->id)}}">
+                <a href="">
                     <button class="btn btn-success">Send Copy</button>
                 </a>
             </td>

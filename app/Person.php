@@ -7,7 +7,7 @@ use McCool\LaravelAutoPresenter\HasPresenter;
 
 class Person extends NodeModel implements HasPresenter
 {
-    use Geocode,Filters, SoftDeletes, FullTextSearch;
+    use Geocode, Filters, SoftDeletes, FullTextSearch;
     public $salesroles = ['5','9'];
     // Add your validation rules here
     public static $rules = [

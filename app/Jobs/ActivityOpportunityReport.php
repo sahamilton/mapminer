@@ -23,10 +23,9 @@ class ActivityOpportunityReport implements ShouldQueue
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(Array $period)
     {
-        $this->period['from'] = Carbon::now()->subWeek(1)->startOfWeek();
-        $this->period['to'] = Carbon::now()->subWeek(1)->endOfWeek();
+        $this->period = $period;
     }
 
     /**
@@ -47,5 +46,15 @@ class ActivityOpportunityReport implements ShouldQueue
             ->send(new WeeklyActivityOpportunityReport($file, $this->period));
         
 
+    }
+    /**
+     * [_getDistribution description]
+     * 
+     * @return [type] [description]
+     */
+    private function _getDistribution()
+    {
+        // get distribution from database
+        // unless specified
     }
 }

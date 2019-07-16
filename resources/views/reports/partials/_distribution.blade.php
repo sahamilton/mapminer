@@ -1,6 +1,10 @@
-<h2>Recipients</h2>
+<h4>Recipients</h4>
+
 <div class="container">
-<table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
+    <div class="float-right">
+        <button class="btn btn-success">Add Email</button>
+    </div>
+<table id ='sorttable1' class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
         <th>Name</th>
         <th>Email</th>
@@ -8,6 +12,7 @@
     </thead>
     <tbody>
         @foreach ($report->distribution as $recipient)
+
         <tr>
             <td>{{$recipient->fullName()}}</td>
             <td>{{$recipient->email}}</td>
@@ -20,3 +25,4 @@
         @endforeach
     </tbody>
 </table>
+</div>
