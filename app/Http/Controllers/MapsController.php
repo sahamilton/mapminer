@@ -74,11 +74,19 @@ class MapsController extends BaseController
         echo $this->findLocalBranches($distance = '50', $latlng);
     }
 
-
+    /**
+     * [findLocalBranches description]
+     * 
+     * @param [type] $distance [description]
+     * @param [type] $latlng   [description]
+     * @param [type] $limit    [description]
+     * 
+     * @return [type]           [description]
+     */
     public function findLocalBranches($distance = null, $latlng = null, $limit = null)
     {
         
-        $location = $this->getLocationLatLng($latlng);
+        $location = $this->_getLocationLatLng($latlng);
 
         $branches =  $this->branch
             ->whereHas('servicelines', function ($q) {
@@ -90,10 +98,19 @@ class MapsController extends BaseController
 
         return response()->view('branches.xml', compact('branches'))->header('Content-Type', 'text/xml');
     }
+    /**
+     * [findLocalPeople description]
+     * 
+     * @param [type] $distance [description]
+     * @param [type] $latlng   [description]
+     * @param [type] $limit    [description]
+     * 
+     * @return [type]           [description]
+     */
     public function findLocalPeople($distance = null, $latlng = null, $limit = null)
     {
         
-        $location = $this->getLocationLatLng($latlng);
+        $location = $this->_getLocationLatLng($latlng);
     
         $persons =  $this->person
             
@@ -102,39 +119,59 @@ class MapsController extends BaseController
         
         return response()->view('persons.xml', compact('persons'))->header('Content-Type', 'text/xml');
     }
+    /**
+     * [findLocalAccounts description]
+     * 
+     * @param [type] $distance [description]
+     * @param [type] $latlng   [description]
+     * @param [type] $company  [description]
+     * 
+     * @return [type]           [description]
+     */
     public function findLocalAccounts($distance = null, $latlng = null, $company = null)
     {
     
         
-        $location = $this->getLocationLatLng($latlng);
+        $location = $this->_getLocationLatLng($latlng);
         $locations = $this->address;
         if (session('geo.addressType')) {
             $locations->whereIn('addressable_type', session('geo.addressType'));
         }
         
 
-        $locations->whereHas('company.serviceline', function ($q) {
-            $q->whereIn('servicelines.id', $this->userServiceLines);
-        });
+        $locations->whereHas(
+            'company.serviceline', function ($q) {
+                $q->whereIn('servicelines.id', $this->userServiceLines);
+            }
+        );
         if ($company) {
             $locations->where('company_id', '=', $company);
         }
 
         if ($filtered = $this->location->isFiltered(['companies'], ['vertical'])) {
-            $locations->whereHas('company', function ($q) use ($filtered) {
-                $q->whereIn('vertical', $filtered);
-            });
+            $locations->whereHas(
+                'company', function ($q) use ($filtered) {
+                    $q->whereIn('vertical', $filtered);
+                }
+            );
         }
 
         $result = $locations->nearby($location, $distance)->with('company')->get();
 
         return response()->view('locations.xml', compact('result'))->header('Content-Type', 'text/xml');
     }
-
+    /**
+     * [findMyLeads description]
+     * 
+     * @param  [type] $distance [description]
+     * @param  [type] $latlng   [description]
+     * 
+     * @return [type]           [description]
+     */
     public function findMyLeads($distance = null, $latlng = null)
     {
         
-        $location = $this->getLocationLatLng($latlng);
+        $location = $this->_getLocationLatLng($latlng);
     
         $leads = $this->lead->myLeads([1,2], $all = true);
         
@@ -146,8 +183,14 @@ class MapsController extends BaseController
     {
         return $centerPoint;
     }
-
-    private function getLocationLatLng($latlng)
+    /**
+     * [_getLocationLatLng description]
+     * 
+     * @param [type] $latlng [description]
+     * 
+     * @return [type]         [description]
+     */
+    private function _getLocationLatLng($latlng)
     {
         $position =explode(":", $latlng);
         $location = new Location;

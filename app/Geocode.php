@@ -282,10 +282,12 @@ trait Geocode
             $position = explode(",", auth()->user()->position());
             $location->lat =  $position[0];
             $location->lng =  $position[1];
+            $location->address = auth()->user()->person->fulladdress();
         } else {
             //default to Tacoma
             $location->lat =  '47.25';
             $location->lng =  '-122.44';
+            $location->address = 'A St, Tacoma, WA';
         }
         return $location;
     }
@@ -378,7 +380,18 @@ trait Geocode
         $loc = preg_replace('/[ ,]+/', ',', $loc, 1);
         return substr($loc, 0, -1);
     }
-
+    public function setGeoSession(Address $address)
+    {
+        if ($address->lat && $address->lng ) {
+            session(
+                [
+                'geo.lat'=>$address->lat,
+                'geo.lng'=>$address->lng,
+                'geo.address'=>$address->fullAddress(),
+                ]
+            );
+        }
+    }
     /**
      * ScopeDistance [description]
      * 

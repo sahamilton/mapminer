@@ -95,6 +95,15 @@ class Branch extends Model implements HasPresenter
     }
 
     /**
+     * [openActivities description]
+     * 
+     * @return [type] [description]
+     */
+    public function openActivities()
+    {
+        return $this->hasMany(Activity::class)->whereCompleted(0);
+    }
+    /**
      * [activitiesbytype description]
      * 
      * @param [type] $type [description]
@@ -509,6 +518,7 @@ class Branch extends Model implements HasPresenter
         }
 
     }
+
     /**
      * [checkIfMyBranch description]
      * 

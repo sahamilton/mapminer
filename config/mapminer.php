@@ -98,6 +98,9 @@ return [
     
     'location_limit'=>env('LOCATION_LIMIT', 2000),
 
+    'default_lat'=>'39.8282',
+    'default_lng'=>'-98.5795',
+
 
 
 
