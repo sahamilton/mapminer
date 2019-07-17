@@ -28,8 +28,9 @@ class MyLeadsController extends BaseController
      * @param Person  $person [description]
      * @param Branch  $branch [description]
      */
-    public function __construct(Address $lead, Person $person, Branch $branch)
-    {
+    public function __construct(
+        Address $lead, Person $person, Branch $branch
+    ) {
 
         $this->lead = $lead;
         $this->person = $person;

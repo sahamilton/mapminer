@@ -46,7 +46,7 @@
         <div class="form-group">
             <input type="submit" class="btn btn-warning " name="Submit" value="Reassign" />
         </div>
-        <input type="hidden" name="oldbranch" value="{$branch->id}}" />
+        <input type="hidden" name="oldbranch" value="{{$branch->id}}" />
     </div>
 </div>
 </form>

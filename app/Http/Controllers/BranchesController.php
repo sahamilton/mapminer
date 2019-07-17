@@ -426,15 +426,11 @@ class BranchesController extends BaseController {
     public function reassign(BranchReassignFormRequest $request, Branch $branch)
     {
         
-        if (request()->filled('newbranch')) {
-            $newbranch = request('newbranch');
-        } else {
-            $newbranch = request('newbranch');
-        }
-        $branch->allLeads()->update(['branch_id' => $newbranch]);
-        $branch->openOpportunities()->update(['branch_id' => $newbranch]);
-        $branch->openActivities()->update(['branch_id' => $newbranch]);
-        return redirect()->route('branches.show', $newbranch)->withSuccess('All leads & opportunities & open activities have been reassigned to branch ' . $newbranch);
+        // we need to check to see if the branch already has this lead.
+        $branch->allLeads()->update(['branch_id' => request('newbranch')]);
+        $branch->openOpportunities()->update(['branch_id' => request('newbranch')]);
+        $branch->openActivities()->update(['branch_id' => request('newbranch')]);
+        return redirect()->route('branches.show', request('newbranch'))->withSuccess('All leads & opportunities & open activities have been reassigned to branch ' . request('newbranch'));
     }
     /**
      * [listNearbyLocations description]
