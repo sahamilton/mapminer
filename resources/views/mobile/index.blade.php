@@ -1,6 +1,6 @@
 @extends('site.layouts.mobile')
 @section('content')
-<h2>Mobile View</h2>
+<h2><a href="{{route('mobile.index')}}">Mobile View</a></h2>
 <h4>{{$branch->branchname}}</h4>
 
     <a href="{{route('mobile.show','activities')}}"  class="btn btn-primary  mr-1">Open Activities: ({{$branch->openactivities}})</button>
