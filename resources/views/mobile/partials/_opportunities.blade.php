@@ -7,16 +7,18 @@
         <th>Opportunity</th>
         <th>Value</th>
         <th>Expected Close</th>
+        <th>Distance</th>
     </thead>
     <tbody>
         @foreach($results as $result)
         
         <tr>
-            <td>{{$result->address->address->businessname}}</td>
+            <td><a href="{{route('address.show',$result->address_id)}}">{{$result->address->address->businessname}}</a></td>
             <td>{{$result->address->address->fullAddress()}}</td>
             <td>{{$result->title}}</td>
             <td>{{$result->value}}</td>
             <td>{{$result->expected_close}}</td>
+            <td>{{number_format($result->distance,2)}} mi</td>
         </tr>
         @endforeach
     </tbody>

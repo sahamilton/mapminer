@@ -169,7 +169,7 @@ class MobileController extends Controller
             break;
 
         }
-      
+
         return $results;
     }
     private function _getNearbyOpenLeads(
@@ -209,7 +209,7 @@ class MobileController extends Controller
     private function _getNearbyOpenOpportunities(
         Branch $branch, Address $address, $distance
     ) {
-        return $branch->openOpportunities()->whereHas(
+        $opportunities = $branch->openOpportunities()->whereHas(
             'address', function ($q) use ($address, $distance) {
                 $q->whereHas(
                     'address', function ($q) use ($address, $distance) {
@@ -217,7 +217,17 @@ class MobileController extends Controller
                     }
                 );
             }
-        )->with('address')->get();
+        )->with('address.address')->get();
+        
+
+        return $opportunities->map(
+            function ($item) use ($address) {
+                
+                $item->distance = $this->branch->distanceBetween($address->lat, $address->lng, $item->address->address->lat, $item->address->address->lng);
+                return $item;
+            }
+        );
+        
     }
 
 }
