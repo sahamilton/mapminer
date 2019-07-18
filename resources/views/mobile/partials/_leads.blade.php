@@ -5,15 +5,23 @@
         <th>Company</th>
         <th>Address</th>
         <th>Distance</th>
+        <th>Last Activity</th>
         
     </thead>
     <tbody>
         @foreach($results as $result)
 
+
         <tr>
             <td><a href="{{route('address.show',$result->address_id)}}">{{$result->businessname}}</a></td>
             <td>{{$result->fullAddress()}}</td>
             <td>{{number_format($result->distance,2)}} mi</td>
+            <td>
+                @if($result->lastActivity->count() > 0)
+
+                    {{$result->lastActivity->first()->activity_date->format('Y-m-d')}} 
+                @endif
+            </td>
             
         </tr>
         @endforeach

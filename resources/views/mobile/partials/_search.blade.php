@@ -70,31 +70,3 @@ class= "btn btn-success ">
 <input type="hidden" name="lat" id ="lat" value="{{session('geo.lat')? session('geo.lat') : config('mapminer.default_lat')}}" />
 </form>
 
-<?php $action = '/findme';?>
-@include('partials._noaddressmodal')
-<script>
-
-$("#search").change(function() {
-  $('#lat:first').val('');
-  $('#lng:first').val('');
-});
-
-
-$("select[id^='select']").change(function() {
-  if($.trim($('#search').val()) == ''){
-    $( "#noaddress" ).modal('show');
-    
-  }else{
-    
-    this.form.submit();
-}
-});
-  window.dataLayer = window.dataLayer || [];
-  window.dataLayer.push({
-  'event' : 'searchAddress',
-  'address' : '{{isset($data['address']) ? $data['address'] : 'No address'}}',
-  'search' : '{{isset($data['search']) ? $data['search'] : 'No address'}}',
-  'searchtype' : '{{isset($data['type']) ? $data['type'] : 'no type'}}'
-
-});
-</script>

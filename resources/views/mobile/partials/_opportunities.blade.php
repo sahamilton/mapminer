@@ -8,6 +8,7 @@
         <th>Value</th>
         <th>Expected Close</th>
         <th>Distance</th>
+        <th>Last Activity</th>
     </thead>
     <tbody>
         @foreach($results as $result)
@@ -19,6 +20,11 @@
             <td>{{$result->value}}</td>
             <td>{{$result->expected_close}}</td>
             <td>{{number_format($result->distance,2)}} mi</td>
+            <td>
+                @if($result->address->address->lastActivity->count() >0)
+                    {{$result->address->address->lastActivity->first()->activity_date->format('Y-m-d')}}
+                @endif
+            </td>
         </tr>
         @endforeach
     </tbody>

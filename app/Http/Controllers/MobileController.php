@@ -143,9 +143,10 @@ class MobileController extends Controller
     /**
      * [_getDataByType description]
      * 
-     * @param  Branch  $branch   [description]
-     * @param  Address $address  [description]
-     * @param  [type]  $distance [description]
+     * @param Branch  $branch   [description]
+     * @param Address $address  [description]
+     * @param Integer  $distance [description]
+     * @param String  $type     [description]
      * 
      * @return [type]            [description]
      */
@@ -156,26 +157,38 @@ class MobileController extends Controller
         switch($type) {
 
         case 'activities':
-            $results = $this->_getNearbyActivities($branch, $address, $distance);
+            return $this->_getNearbyActivities($branch, $address, $distance);
             break;
         case 'leads':
-            $results = $this->_getNearbyOpenLeads($branch, $address, $distance);
+            return $this->_getNearbyOpenLeads($branch, $address, $distance);
             break;
         case 'opportunities':
-            $results = $this->_getNearbyOpenOpportunities($branch, $address, $distance);
+            return $this->_getNearbyOpenOpportunities($branch, $address, $distance);
             break;
         default: 
-            
+            dd('Error');
             break;
 
         }
 
-        return $results;
+        
     }
+    /**
+     * [_getNearbyOpenLeads description]
+     * 
+     * @param Branch  $branch   [description]
+     * @param Address $address  [description]
+     * @param [type]  $distance [description]
+     * 
+     * @return [type]            [description]
+     */
     private function _getNearbyOpenLeads(
         Branch $branch, Address $address, $distance
     ) {
-        return $branch->leads()->nearby($address, $distance)->get();
+        return $branch->leads()
+            ->nearby($address, $distance)
+            ->with('lastActivity')
+            ->get();
     }
     /**
     /**
@@ -217,7 +230,8 @@ class MobileController extends Controller
                     }
                 );
             }
-        )->with('address.address')->get();
+        )->with('address.address', 'address.address.lastActivity')
+        ->get();
         
 
         return $opportunities->map(
