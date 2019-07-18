@@ -1,4 +1,4 @@
-<h4>Nearby Activities</h4>
+<h4>Nearby Leads</h4>
 <div class="container">
 <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
