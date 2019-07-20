@@ -103,5 +103,5 @@
 		@yield('scripts')
 	</body>
 
-	<script src="//maps.google.com/maps/api/js?key={{config('maps.api_key')}}"></script>
+	<script src="//maps.google.com/maps/api/js?key={{config('maps.api_key')}}&libraries=places&callback=initMap"></script>
 </html>

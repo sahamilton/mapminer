@@ -380,7 +380,7 @@ trait Geocode
         $loc = preg_replace('/[ ,]+/', ',', $loc, 1);
         return substr($loc, 0, -1);
     }
-    public function setGeoSession(Address $address)
+    public function setGeoSession(Address $address, $distance)
     {
         if ($address->lat && $address->lng ) {
             session(
@@ -388,6 +388,7 @@ trait Geocode
                 'geo.lat'=>$address->lat,
                 'geo.lng'=>$address->lng,
                 'geo.address'=>$address->fullAddress(),
+                'geo.distance'=>$distance,
                 ]
             );
         }

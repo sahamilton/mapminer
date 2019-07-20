@@ -17,12 +17,12 @@ class MobileController extends Controller
     /**
      * [__construct description]
      * 
-     * @param Branch  $branch  [description]
      * @param Address $address [description]
+     * @param Branch  $branch  [description]
      * @param Person  $person  [description]
      */
     public function __construct(
-         Address $address, Branch $branch, Person $person
+        Address $address, Branch $branch, Person $person
     ) {
         $this->address = $address;
         $this->branch = $branch;
@@ -45,9 +45,9 @@ class MobileController extends Controller
                 'geo.address'=> $person->fullAddress()]
             );
        
-        
+        $markers = '['.$person->lat.",".$person->lng.']';
         $branch = $this->_getBranchData($person);
-        return response()->view('mobile.index', compact('person', 'branch'));
+        return response()->view('mobile.index', compact('person', 'branch', 'markers'));
     }
 
     /**
@@ -67,85 +67,68 @@ class MobileController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * [search description]
+     * 
+     * @param Request $request [description]
+     * 
+     * @return [type]           [description]
      */
     public function search(Request $request)
     {
         //set geo from address
-        $person = $this->person->where('user_id', auth()->user()->id)->first();
+      
         $distance = request('distance');
-
-        $branch = $this->_getBranchData($person);
-        $geocode = app('geocoder')->geocode(request('search'))->get();
-        $addressData = $this->address->getGeoCode($geocode);
-        $address = new Address($addressData);
         $type = request('type');
-        $address->setGeoSession($address);
-        $results = $this->_getDataByType($branch, $address, $distance, $type);
-        return response()->view('mobile.index', compact('person', 'branch', 'results', 'type', 'distance'));
+        $address = request('search');
+        return $this->_mobileView($distance, $type, $address);
+        
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * [show description]
+     * 
+     * @param [type] $type [description]
+     * 
+     * @return [type]       [description]
      */
     public function show($type)
     {
+        $distance = session()->has('geo.distance') ? session('geo.distance') : 2;
+        return $this->_mobileView($distance, $type);
+        
+    }
+
+    /**
+     * [_mobileView description]
+     * 
+     * @param [type] $distance [description]
+     * @param [type] $type     [description]
+     * 
+     * @return [type]           [description]
+     */
+    private function _mobileView($distance, $type, $address=null)
+    {
         $person = $this->person->where('user_id', auth()->user()->id)->first();
+        if (! $address) {
+            $address = session('geo.address');
+        } 
         $branch = $this->_getBranchData($person);
-        $geocode = app('geocoder')->geocode(session('geo.address'))->get();
-        $distance = 10;
+        $geocode = app('geocoder')->geocode($address)->get();
+      
         $addressData = $this->address->getGeoCode($geocode);
         $address = new Address($addressData);
+        $this->address->setGeoSession($address, $distance);
         $results = $this->_getDataByType($branch, $address, $distance, $type);
-      
-        return response()->view('mobile.index', compact('person', 'branch', 'results', 'type', 'distance'));
-    }
+        $markers = $this->_getMapMarkers($results, $type);
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        return response()->view('mobile.index', compact('person', 'branch', 'results', 'type', 'distance', 'address', 'markers'));
     }
     /**
      * [_getDataByType description]
      * 
      * @param Branch  $branch   [description]
      * @param Address $address  [description]
-     * @param Integer  $distance [description]
+     * @param Integer $distance [description]
      * @param String  $type     [description]
      * 
      * @return [type]            [description]
@@ -243,5 +226,139 @@ class MobileController extends Controller
         );
         
     }
+    /**
+     * [_getMapMarkers description]
+     * 
+     * @param [type] $results [description]
+     * @param [type] $type    [description]
+     * 
+     * @return [type]          [description]
+     */
+    private function _getMapMarkers($results,$type)
+    {
+        switch($type) {
+
+        case 'activities':
+            $results = $this->_getActivityMapMarkers($results);
+            break;
+
+        case 'leads':
+            $results =  $this->_getLeadMapMarkers($results);
+            break;
+        
+        case 'opportunities':
+            $results =  $this->_getOpportunityMapMarkers($results);
+            break;
+        default: 
+            dd('Error');
+            break;
+
+        }
+        return $results->toJson();
+    }
+
+    /**
+     * [_getMapMarkers description]
+     * 
+     * @param [type] $results [description]
+     * 
+     * @return [type]          [description]
+     */
+    private function _getLeadMapMarkers($results)
+    {
+        return $results->map(
+            function ($result) {
+                
+                return [
+                    'id'=>$result->id,
+                    'businessname'=>$result->businessname, 
+                    'lat'=>$result->lat, 
+                    'lng'=>$result->lng,
+                    'type'=>'lead',
+                ];
+            }
+        );
+       
+ 
+    }
+
+    /**
+     * [_getMapMarkers description]
+     * 
+     * @param [type] $results [description]
+     * 
+     * @return [type]          [description]
+     */
+    private function _getActivityMapMarkers($results)
+    {
+        
+        
+        return $results->map(
+            function ($result) {
+                return [
+                    'id'=>$result->address->id,
+                    'businessname'=>$result->address->businessname, 
+                    'lat'=>$result->address->lat, 
+                    'lng'=>$result->address->lng,
+                    'type'=>'activity',
+                ];
+            }
+        );
+  
+       
+ 
+    }
+    /**
+     * [_getOpportunityMapMarkers description]
+     * 
+     * @param [type] $results [description]
+     * 
+     * @return [type]          [description]
+     */
+    private function _getOpportunityMapMarkers($results)
+    {
+        
+        return $results->map(
+            function ($result) {
+                return [
+                    'id'=>$result->address->address->id,
+                    'businessname'=>$result->address->address->businessname, 
+                    'lat'=>$result->address->address->lat, 
+                    'lng'=>$result->address->address->lng,
+                    'type'=>'opportunity',
+                ];
+            }
+        );
+        
+ 
+    }
+    /**
+     * [_getMarkersXML description]
+     * 
+     * @param [type] $result [description]
+     * 
+     * @return [type]         [description]
+     */
+    private function _getMarkersXML($results)
+    {
+        $markers = "<markers>";
+        foreach ($results as $result) {
+   
+            $markers.="<marker ";
+            $markers.="id=\"".$result['id']."\" ";
+            $markers.="businessname=\"".$result['businessname']."\" ";;
+            $markers.="lat=\"".$result['lat']."\" ";
+            $markers.="lng=\"".$result['lng']."\" ";
+            $markers.="type=\"".$result['type']."\" ";
+            $markers.=">";
+
+        }
+        $markers.="</markers>";
+        return $markers;
+
+
+
+    }
+
 
 }
