@@ -10,10 +10,10 @@
     </thead>
     <tbody>
         @foreach($results as $result)
-
+        
 
         <tr>
-            <td><a href="{{route('mobile.show',$result->address_id)}}">{{$result->businessname}}</a></td>
+            <td><a href="{{route('mobile.show',$result->id)}}">{{$result->businessname}}</a></td>
             <td>{{$result->fullAddress()}}</td>
             <td>{{number_format($result->distance,2)}} mi</td>
             <td>

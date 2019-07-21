@@ -65,7 +65,21 @@ class MobileController extends Controller
         return $this->branch->SummaryStats($this->period)->findOrFail(array_keys($myBranches)[0]);
 
     }
-
+    /**
+     * [search description]
+     * 
+     * @param  Request $request [description]
+     * 
+     * @return [type]           [description]
+     */
+    public function search(Request $request)
+    {
+       
+        $distance = request('distance');
+        $type = request('type');
+        $address = request('search');
+        return $this->_mobileView($distance, $type, $address);
+    }
     /**
      * [search description]
      * 
@@ -73,37 +87,54 @@ class MobileController extends Controller
      * 
      * @return [type]           [description]
      */
-    public function search(Request $request)
+    public function searchaddress(Request $request)
     {
-        //set geo from address
-      
-        $distance = request('distance');
-        $type = request('type');
-        $address = request('search');
-        return $this->_mobileView($distance, $type, $address);
+        $address = request('address');//set geo from address
+        $person = $this->person->where('user_id', auth()->user()->id)->first();
+        if (! $address) {
+            $address = session('geo.address');
+        } 
+        $branch = $this->_getBranchData($person);
+        $geocode = app('geocoder')->geocode($address)->get();
+        $addressData = $this->address->getGeoCode($geocode);
+        $lead = new Address($addressData);
+        $results = $this->address->nearby($lead, .1)
+            ->with('openActivities', 'openOpportunities', 'contacts')->orderBy('distance')->get();
+        $this->address->setGeoSession($lead, 1);
+        return response()->view('mobile.newaddress', compact('results', 'lead'));
         
     }
 
     /**
      * [show description]
      * 
-     * @param [type] $type [description]
+     * @param Address $address [description]
      * 
-     * @return [type]       [description]
+     * @return [type]           [description]
      */
     public function show(Address $address)
     {
-        $address->load('activities', 'openOpportunities', 'contacts');
+        $person = $this->person->where('user_id', auth()->user()->id)->first();
+        $branch = $this->_getBranchData($person);
 
-        return response()->view('mobile.show', compact('address'));
+        $address->load('openActivities', 'openOpportunities', 'contacts');
+
+        return response()->view('mobile.show', compact('address', 'branch'));
         
     }
+    public function getLocationsFromLatLng($latlng)
+    {
 
+        // find addresses based on lat lng
+        // if not found create new lead
+        // else confirm this is correct address
+    }
     /**
      * [_mobileView description]
      * 
      * @param [type] $distance [description]
      * @param [type] $type     [description]
+     * @param [type] $address  [description]
      * 
      * @return [type]           [description]
      */
@@ -272,7 +303,8 @@ class MobileController extends Controller
                 
                 return [
                     'id'=>$result->id,
-                    'businessname'=>$result->businessname, 
+                    'businessname'=>$result->businessname,
+                    'address' => $result->fullAddress(), 
                     'lat'=>$result->lat, 
                     'lng'=>$result->lng,
                     'type'=>'lead',
@@ -298,6 +330,7 @@ class MobileController extends Controller
             function ($result) {
                 return [
                     'id'=>$result->address->id,
+                    'address' => $result->address->fullAddress(), 
                     'businessname'=>$result->address->businessname, 
                     'lat'=>$result->address->lat, 
                     'lng'=>$result->address->lng,
@@ -323,7 +356,8 @@ class MobileController extends Controller
             function ($result) {
                 return [
                     'id'=>$result->address->address->id,
-                    'businessname'=>$result->address->address->businessname, 
+                    'businessname'=>$result->address->address->businessname,
+                    'address' => $result->address->address->fullAddress(), 
                     'lat'=>$result->address->address->lat, 
                     'lng'=>$result->address->address->lng,
                     'type'=>'opportunity',
@@ -347,7 +381,8 @@ class MobileController extends Controller
    
             $markers.="<marker ";
             $markers.="id=\"".$result['id']."\" ";
-            $markers.="businessname=\"".$result['businessname']."\" ";;
+            $markers.="businessname=\"".$result['businessname']."\" ";
+            $markers.="address=\"".$result['address']->fullAddress()."\" ";
             $markers.="lat=\"".$result['lat']."\" ";
             $markers.="lng=\"".$result['lng']."\" ";
             $markers.="type=\"".$result['type']."\" ";

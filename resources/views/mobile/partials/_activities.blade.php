@@ -1,26 +1,52 @@
-<h4>Nearby Activities</h4>
-<div class="container">
-<table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
-    <thead>
-        <th>Company</th>
-        <th>Address</th>
-        <th>Activity</th>
-        <th>Due Date</th>
-    </thead>
-    <tbody>
-        @foreach($results as $result)
+@php $activities = \App\ActivityType::orderBy('sequence')->pluck('activity','id')->toArray(); @endphp
+  <style>
+body.modal-open .activity_date, .followup_date {
+    z-index: 1200 !important;
+}
+</style>
+
+<!-- Modal -->
+<div class="modal fade" 
+      id="add_activity" 
+      tabindex="-1" 
+      role="dialog" 
+      aria-labelledby="myModalLabel" 
+      aria-hidden="true">
+
+  <div class="modal-dialog">
+
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
         
-        <tr>
-            <td>
-                <a href="{{route('mobile.show',$result->address->id)}}"> 
-                    {{$companyname}}
-                </a>
-            </td>
-            <td>{{$result->address->fullAddress()}}</td>
-            <td>{{$result->activity}}</td>
-            <td>{{$result->activity_date}}</td>
-        </tr>
-        @endforeach
-    </tbody>
-</table>
+        <h4 class="modal-title">Record Activity</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+                
+        <form method="post" action="{{route('activity.store')}}">
+        @csrf
+         @include('mobile.partials._activitynewform')
+         <input 
+              type="hidden" 
+              name="branch_id" 
+              value="{{$branch->id}}" />
+          <div class="float-right">
+           <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button> <input type="submit" value="Record Activity" class="btn btn-danger" />
+            </div>
+            <input type="hidden" name="address_id" value="{{$address->id}}" />
+
+        </form>
+
+        <div class="modal-footer">
+        
+        
+      </div>
+      </div>
+
+      
+    </div>
+
+  </div>
 </div>

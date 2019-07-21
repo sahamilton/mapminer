@@ -1,4 +1,4 @@
-<div class="float-right">
+<div class="float-left">
     <a class="btn btn-info" 
         title="Add Contact"
         data-href="" 

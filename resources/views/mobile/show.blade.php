@@ -65,23 +65,36 @@
     <div id="details" class="tab-pane show active">
      @include('mobile.partials._tabdetails')
     </div>
-    @if($address->opportunities->count() > 0)
+    
     <div id="opportunities" class="tab-pane fade">
-
+      @include('mobile.partials._tabopportunities')
        
 
     </div>
-    @endif
+
 
 
     <div id="contacts" class="tab-pane fade">
+
       @include('mobile.partials._tabcontacts')
 
     </div>
   
-
+    
     <div id="activities" class="tab-pane fade">
-     
+      <div class="float-left">
+    <a class="btn btn-info" 
+        title="Add Activity"
+        data-href="{{route('activity.store')}}" 
+        data-toggle="modal" 
+        data-target="#add_activity" 
+        data-title = "Add activity to lead" 
+        href="#">
+        <i class="fas fa-pencil-alt"></i>
+        Add Activity
+        </a>
+</div>
+@include('mobile.partials._tabactivities')
     </div>
     
 
@@ -92,6 +105,7 @@
 @include('opportunities.partials._closemodal')
 @include('partials._scripts')
 @include('mobile.partials.map')
+@include('mobile.partials._activities')
 
 
 @endsection

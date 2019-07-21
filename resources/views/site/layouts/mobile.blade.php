@@ -38,7 +38,7 @@
 	<!-- DataTables -->
 	<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.0-rc.1/js/jquery.dataTables.min.js" ></script>
 	<script src="{{asset('assets/js/summernote.min.js')}}"></script>
-	<script src="{{asset('assets/js/starrr.js')}}"></script>
+	
 	<script src="{{asset('assets/js/bootstrap-colorpicker.min.js')}}"></script>
 	<script src="//cdn.jsdelivr.net/algoliasearch/3/algoliasearchLite.min.js"></script>
 

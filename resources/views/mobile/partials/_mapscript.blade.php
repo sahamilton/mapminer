@@ -33,15 +33,19 @@ function initMap() {
         
       var data = markers[i],
           latLng = new google.maps.LatLng(data.lat, data.lng); 
-
+     
       // Creating a marker and putting it on the map
-          var marker = new google.maps.Marker({
-            position: latLng,
-            map: map,
-            title: data.businessname
-          });
-  
-    };
+      var marker = new google.maps.Marker({
+        position: latLng,
+        map: map,
+        title: data.businessname
+      });
+
+      
+
+      
+            
+      };
 
 
   autocomplete.addListener('place_changed', function() {
@@ -55,6 +59,7 @@ function initMap() {
       return;
     }
 
+    
     // If the place has a geometry, then present it on a map.
     if (place.geometry.viewport) {
       map.fitBounds(place.geometry.viewport);
@@ -64,42 +69,35 @@ function initMap() {
     }
     marker.setPosition(place.geometry.location);
     marker.setVisible(true);
-
+    
     var address = '';
     if (place.address_components) {
       address = [
         (place.address_components[0] && place.address_components[0].short_name || ''),
         (place.address_components[1] && place.address_components[1].short_name || ''),
-        (place.address_components[2] && place.address_components[2].short_name || '')
+        (place.address_components[2] && place.address_components[2].short_name || ''),
+        (place.address_components[4] && place.address_components[4].
+          short_name || ''),
+        (place.address_components[6] && place.address_components[6].short_name || '')
       ].join(' ');
     }
-
+    
+    var link = "/mobile/searchaddress?address="+ address;
+     
     infowindowContent.children['place-icon'].src = place.icon;
-    infowindowContent.children['place-name'].textContent = place.name;
-    infowindowContent.children['place-address'].textContent = address;
+    infowindowContent.children['place-link'].textContent = place.name;
+    infowindowContent.children['place-link'].href = link;
     infowindow.open(map, marker);
   });
 
-  // Sets a listener on a radio button to change the filter type on Places
-  // Autocomplete.
-  function setupClickListener(id, types) {
-    var radioButton = document.getElementById(id);
-    radioButton.addEventListener('click', function() {
-      autocomplete.setTypes(types);
-    });
+
+  function checkAddress(place){
+    //alert(JSON.stringify(place.geometry.location));
+    // send address to back end
+    // if response is address id
+    // else check if new lead create
   }
-
-  setupClickListener('changetype-all', []);
-  setupClickListener('changetype-address', ['address']);
-  setupClickListener('changetype-establishment', ['establishment']);
-  setupClickListener('changetype-geocode', ['geocode']);
-
-  document.getElementById('use-strict-bounds')
-    .addEventListener('click', function() {
-      console.log('Checkbox clicked! New state=' + this.checked);
-      autocomplete.setOptions({
-        strictBounds: this.checked
-      });
-    });
+  
+  
 }
 </script>

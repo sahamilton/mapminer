@@ -331,7 +331,9 @@ Route::group(
             
             }
         );
-      Route::get('mobile/{address}/show', ['as'=>'mobile.show', 'uses'=>'MobileController@show']);
+        Route::get('mobile/{address}/show', ['as'=>'mobile.show', 'uses'=>'MobileController@show']);
+        Route::get('mobile/{address}/check', ['as'=>'mobile.checkaddress','uses'=>'MobileController@check']);
+        Route::get('mobile/searchaddress', ['as'=>'mobile.searchaddress', 'uses'=>'MobileController@searchaddress']);
         Route::post('mobile/search', ['as'=>'mobile.search', 'uses'=>'MobileController@search']);
         Route::resource('mobile', 'MobileController');
     }

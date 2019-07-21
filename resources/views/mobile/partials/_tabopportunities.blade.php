@@ -4,7 +4,7 @@
     <thead>
 
         <th>Date Opened</th>
-        <th>Status</th>
+        <th>Change Status</th>
         <th>Branch</th>
         <th>Title</th>
         <th>Potential Headcount</th>
@@ -20,14 +20,13 @@
 
         <tr>
             <td>{{$opportunity->created_at->format('Y-m-d')}}</td>
-            <td>{{$opportunity->closed}}
-             @if(isset($data['branches']) &&  $opportunity->closed == 0 && in_array($data['branches']->first()->id,array_keys($myBranches)))
+            <td>
 
             <button class="btn btn-danger" 
                     data-href="{{route('opportunity.close',$opportunity->id)}}"
                     data-toggle="modal" 
                     data-target="#closeopportunity">Close</button>
-            @endif</td>
+            </td>
             <td>{{$opportunity->address->branch->branchname}}</td>
             <td>{{$opportunity->title}}</td>
             <td>{{$opportunity->requirements}}</td>

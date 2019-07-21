@@ -1,18 +1,8 @@
 @extends('site.layouts.mobile')
 @section('content')
-<style>
-    .search-container {
-        float: none;
-    }
-    .topnav a, .topnav input[type=text], .topnav .search-container button {
-    float: none;
-    display: block;
-    text-align: left;
-    width: 100%;
-    margin: 0;
-    padding: 14px;
-  }
-</style>
+@php
+$distances = [1=>'1 mile',2=>'2 miles',5=>'5 miles', 10=>'10 miles',25=>'25 miles'];
+@endphp
 <div class="container">
 <h2><a href="{{route('mobile.index')}}">Mobile View</a></h2>
 <h4>{{$branch->branchname}}</h4>
@@ -51,36 +41,15 @@
         <div class="form-group mx-sm-3 mb-2">
             <label for distance>Within</label>
             <select onchange="this.form.submit()" class="form-control" name="distance">
+                @foreach ($distances as $key=>$dist)
                 <option 
-                    value='1'
-                    @if(isset($distance) && $distance==1) selected @endif
+                    value='{{$key}}'
+                    @if(isset($distance) && $distance==$key) selected @endif
                 >
-                    1 mile
+                    {{$dist}}
                 </option>
-                <option 
-                    value='2'
-                    @if(isset($distance) && $distance==2) selected @endif
-                >
-                    2 miles
-                </option>
-                <option 
-                    value='5'
-                    @if(isset($distance) && $distance==5) selected @endif
-                >
-                    5 miles
-                </option>
-                <option 
-                    value='10'
-                    @if(isset($distance) && $distance==10) selected @endif
-                >
-                    10 miles
-                </option>
-                <option 
-                    value='25'
-                    @if(isset($distance) && $distance==25) selected @endif
-                >
-                    25 Miles
-                </option>
+                @endforeach
+                
 
             </select>
         </div>
@@ -107,20 +76,14 @@
 
 <div id="map"></div>
 <div id="infowindow-content">
-  <img src="" width="16" height="16" id="place-icon">
-  <span id="place-name" class="title"></span><br>
-  <span id="place-address"></span>
+  <img  id="place-icon" src="" width="16" height="16" >
+  <a id="place-link" href=""></a>
+
 </div>
 
 
 <div id="message" style="color:#F00">{{\Session::get('message')}}</div>
-    <style>
-      #map_canvas {
-        width: 800px;
-        height: 600px;
-      
-      }
-    </style>
+
     <div style="margin-top:20px"></div>
 </div>
 <div style="clear:both"></div>

@@ -182,6 +182,16 @@ class Address extends Model
     }
 
     /**
+     * [openActivities description]
+     * 
+     * @return [type] [description]
+     */
+    public function openActivities()
+    {
+        return $this->hasMany(Activity::class)->where('completed', 0);
+    }
+
+    /**
      * [lastActivity description]
      * 
      * @return [type] [description]

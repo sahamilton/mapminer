@@ -1,16 +1,4 @@
- <div class="float-right">
-    <a class="btn btn-info" 
-        title="Add Activity"
-        data-href="{{route('activity.store')}}" 
-        data-toggle="modal" 
-        data-target="#add_activity" 
-        data-title = "Add activity to lead" 
-        href="#">
-        <i class="fas fa-pencil-alt"></i>
-        Add Activity
-        </a>
-    </div>
- <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
+<table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
 
     <th>Date</th>
@@ -23,7 +11,7 @@
 
     </thead>
     <tbody>
-         @foreach($address->activities as $activity)
+         @foreach($address->openActivities as $activity)
   
             <tr>
                 <td>{{$activity->activity_date ? $activity->activity_date->format('M j, Y'):''}}</td>
@@ -91,4 +79,4 @@
 
     </tbody>
 </table>
-@include('mobile.partials._activities')
+
