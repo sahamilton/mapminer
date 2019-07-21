@@ -13,7 +13,7 @@
 
 
         <tr>
-            <td><a href="{{route('address.show',$result->address_id)}}">{{$result->businessname}}</a></td>
+            <td><a href="{{route('mobile.show',$result->address_id)}}">{{$result->businessname}}</a></td>
             <td>{{$result->fullAddress()}}</td>
             <td>{{number_format($result->distance,2)}} mi</td>
             <td>

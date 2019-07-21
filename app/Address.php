@@ -314,6 +314,20 @@ class Address extends Model
      * 
      * @return [type] [description]
      */
+    public function openOpportunities()
+    {
+ 
+        return $this->hasManyThrough(
+            Opportunity::class, AddressBranch::class, 
+            'address_id', 'address_branch_id', 'id', 'id'
+        )->where('closed', 0);
+    }
+
+    /**
+     * [opportunities description]
+     * 
+     * @return [type] [description]
+     */
     public function campaigns()
     {
  

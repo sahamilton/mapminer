@@ -91,10 +91,11 @@ class MobileController extends Controller
      * 
      * @return [type]       [description]
      */
-    public function show($type)
+    public function show(Address $address)
     {
-        $distance = session()->has('geo.distance') ? session('geo.distance') : 2;
-        return $this->_mobileView($distance, $type);
+        $address->load('activities', 'openOpportunities', 'contacts');
+
+        return response()->view('mobile.show', compact('address'));
         
     }
 

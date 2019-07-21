@@ -9,12 +9,16 @@
     </thead>
     <tbody>
         @foreach($results as $result)
-        {{dd($result)}}
+        
         <tr>
-            <td>{{$companyname}}</td>
-            <td>{{$fullAddress()}}</td>
-            <td>{{$activity}}</td>
-            <td>{{$duedate}}</td>
+            <td>
+                <a href="{{route('mobile.show',$result->address->id)}}"> 
+                    {{$companyname}}
+                </a>
+            </td>
+            <td>{{$result->address->fullAddress()}}</td>
+            <td>{{$result->activity}}</td>
+            <td>{{$result->activity_date}}</td>
         </tr>
         @endforeach
     </tbody>

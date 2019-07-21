@@ -14,7 +14,7 @@
         @foreach($results as $result)
         
         <tr>
-            <td><a href="{{route('address.show',$result->address_id)}}">{{$result->address->address->businessname}}</a></td>
+            <td><a href="{{route('mobile.show',$result->address_id)}}">{{$result->address->address->businessname}}</a></td>
             <td>{{$result->address->address->fullAddress()}}</td>
             <td>{{$result->title}}</td>
             <td>{{$result->value}}</td>
