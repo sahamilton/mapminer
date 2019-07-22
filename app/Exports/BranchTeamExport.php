@@ -10,12 +10,15 @@ use App\Branch;
 class BranchTeamExport implements FromView
 {
     public $roles;
+    public $branch;
     /**
      * [__construct description]
+     * 
+     * @param Array|null $branch [description]
      */
-    public function __construct()
+    public function __construct(Array $branch=null)
     {
-        
+        $this->branch = $branch;
         $this->roles = Role::pluck('name', 'id')->toArray();
     }
     /**
@@ -25,7 +28,11 @@ class BranchTeamExport implements FromView
      */
     public function view(): View
     {
-        $result = Branch::with('relatedPeople', 'relatedPeople.userdetails')->get();
+        $result = Branch::with('relatedPeople', 'relatedPeople.userdetails');
+        if ($this->branch) {
+            $result->whereIn('id', $this->branch);
+        }
+        $result->get();
         $roles = $this->roles;
         return view('branches.exportteam', compact('result', 'roles'));
 

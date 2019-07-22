@@ -10,13 +10,14 @@ use App\Branch;
 class BranchOpportunitiesExport implements FromView
 {
     public $period;
+    public $branches;
 
     /**
      * [__construct description]
      * 
      * @param Array $period [description]
      */
-    public function __construct(Array $period)
+    public function __construct(Array $period, Array $branches)
     {
         $this->period = $period;
     }
@@ -30,8 +31,12 @@ class BranchOpportunitiesExport implements FromView
     {
         
         $branches = Branch::branchOpenOpportunities($this->period)
-            ->with('manager')
-            ->get();
+            ->with('manager');
+        if ($this->branches) {
+            $branches->whereIn('id', $this->branches);
+        }   
+        $branches->get();
+        
 
         $period = $this->period;
         return view('reports.branchopportunities', compact('branches', 'period'));

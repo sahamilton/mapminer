@@ -9,15 +9,17 @@ use Carbon\Carbon;
 class ActivityOpportunityExport implements FromView
 {
     public $period;
+    public $branch;
 
     /**
      * [__construct description]
      * 
      * @param array $period [description]
      */
-    public function __construct(array $period)
+    public function __construct(array $period, array $branches=null)
     {
         $this->period = $period;
+        $this->branch = $branch;
     }
 
 
@@ -60,8 +62,11 @@ class ActivityOpportunityExport implements FromView
                     . $this->period['to'] .
                      "' group by opportunities.branch_id) b 
                  
-                 on branches.id = b.branch_id  
-            ORDER BY branches.id  ASC ";
+                 on branches.id = b.branch_id";
+        if ($this->branch) {
+            $query.=" where branches.id in ('". implode("','", $this->branch) ."') ";
+        }  
+        $query.=" ORDER BY branches.id  ASC ";
     
         $results = \DB::select($query);
         $period = $this->period;
