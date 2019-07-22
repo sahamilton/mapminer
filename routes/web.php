@@ -449,7 +449,7 @@ Route::group(
         Route::resource('projectsource', 'ProjectSourceController');
 
         //   Reports
-        Route::get('reports/{report}/run', ['as'=>'reports.run', 'uses'=>'ReportsController@run']);
+        Route::post('reports/{report}/run', ['as'=>'reports.run', 'uses'=>'ReportsController@run']);
         Route::resource('reports', 'ReportsController');
 
         //Leads Import       

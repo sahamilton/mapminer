@@ -64,8 +64,13 @@ class ReportsController extends Controller
         $report->load(
             'distribution', 'roleDistribution', 'companyDistribution', 'companyDistribution.managedBy'
         );
+        if ($report->object == 'company') {
+            $companies = \App\Company::has('locations')->with('managedBy')->get();
+        } else {
+            $companies=null;
+        }
       
-        return response()->view('reports.show', compact('report'));
+        return response()->view('reports.show', compact('report', 'companies'));
     }
 
     /**
@@ -102,12 +107,11 @@ class ReportsController extends Controller
         //
     }
 
-    public function run(Report $report)
+    public function run(Report $report, Request $request)
     {
-        $export = "\App\Exports\\". $report->export;
-        
-        $period['from']=Carbon::create(2019, 03, 01);
-        $period['to'] = Carbon::now()->endOfWeek();
+        $period['from']=Carbon::parse(request('fromdate'));
+        $period['to'] = Carbon::parse(request('todate'));
+        $export = "\App\Exports\\". $report->export;     
         return Excel::download(new $export($period), $report->job . 'Activities.csv');
         
 

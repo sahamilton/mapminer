@@ -23,9 +23,12 @@
             <td>
                 @if(! $report->object)
                     <a 
-                    href="{{route('reports.run',$report->id)}}" 
-                    class="btn btn-success">
-                        Run Report
+                    href="#" 
+                    class="btn btn-success"
+                    data-href="{{route('reports.run',$report->id)}}" data-toggle="modal" 
+                    data-target="#run-report" 
+                    data-title = "{{$report->report}}" 
+                    href="#"> Run Report
                     </a>
                 </a>
                 @endif
@@ -36,5 +39,6 @@
 </table>
 
 </div>
+@include('reports.partials._periodselector')
 @include('partials._scripts')
 @endsection
