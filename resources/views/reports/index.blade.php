@@ -22,7 +22,11 @@
             <td>{{$report->distribution_count}}</td>
             <td>
                 @if(! $report->object)
-                <a href="{{route('reports.run',$report->id)}}" class="btn btn-success">Run Report</a>
+                    <a 
+                    href="{{route('reports.run',$report->id)}}" 
+                    class="btn btn-success">
+                        Run Report
+                    </a>
                 </a>
                 @endif
             </td>
