@@ -29,7 +29,7 @@ class BranchOpportunitiesExport implements FromView
     public function view(): View
     {
         
-        $branches = Branch::branchOpportunities($this->period)
+        $branches = Branch::branchOpenOpportunities($this->period)
             ->with('manager')
             ->get();
 

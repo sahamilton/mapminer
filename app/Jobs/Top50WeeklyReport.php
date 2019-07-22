@@ -25,7 +25,7 @@ class Top50WeeklyReport implements ShouldQueue
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(array $period)
     {
         $this->period['from'] = Carbon::create(2019, 03, 01);
         $this->period['to'] = Carbon::now()->endOfWeek();

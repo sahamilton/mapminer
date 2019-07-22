@@ -3,7 +3,7 @@
 <h2>{{$report->report}}</h2>
 <p><a href="{{route('reports.index')}}">Back to all reports</a></p>
 <p>{{$report->description}}</p>
-<p><label><strong>Model:</strong></label>{{ucwords($report->type)}}</p>
+<p><label><strong>Model:</strong></label>{{ucwords($report->object)}}</p>
 @if($report->distribution->count() >0)
     @include('reports.partials._distribution')
 @endif

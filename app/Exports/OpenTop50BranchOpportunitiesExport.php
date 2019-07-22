@@ -31,7 +31,7 @@ class OpenTop50BranchOpportunitiesExport implements FromView
         $branches = Branch::summaryStats($this->period)
             ->with('manager')
             ->get();
-
+         
         $period = $this->period;
         return view('reports.branchstats', compact('branches', 'period'));
     }

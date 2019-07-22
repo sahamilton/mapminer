@@ -581,7 +581,7 @@ class Branch extends Model implements HasPresenter
      * 
      * @return [type]         [description]
      */
-    public function scopeBranchOpportunities($query, $period)
+    public function scopeBranchOpenOpportunities($query, $period)
     {
         $this->period = $period;
         return $query->withCount( 

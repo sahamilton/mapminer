@@ -17,13 +17,14 @@
                     {{$report->report}}
                 </a>
             </td>
-            <td>{{ucwords($report->type)}}</td>
+            <td>{{ucwords($report->object)}}</td>
             
             <td>{{$report->distribution_count}}</td>
             <td>
-                <a href="">
-                    <button class="btn btn-success">Send Copy</button>
+                @if(! $report->object)
+                <a href="{{route('reports.run',$report->id)}}" class="btn btn-success">Run Report</a>
                 </a>
+                @endif
             </td>
         </tr>
         @endforeach

@@ -448,10 +448,11 @@ Route::group(
         //     Project Source
         Route::resource('projectsource', 'ProjectSourceController');
 
-
         //   Reports
+        Route::get('reports/{report}/run', ['as'=>'reports.run', 'uses'=>'ReportsController@run']);
         Route::resource('reports', 'ReportsController');
-        
+
+        //Leads Import       
         Route::get('leads/import/{id?}', ['as'=>'prospects.importfile', 'uses'=>'LeadImportController@getFile']);
         Route::get('leads/import/assigned/{id?}', ['as'=>'assigned_prospects.importfile', 'uses'=>'LeadAssignedImportController@getFile']);
         
@@ -576,8 +577,7 @@ Route::group(
         //   Database Backups
         Route::resource('database', 'DatabaseBackupManagerController');
 
-        //   Reports
-        Route::resource('reports', 'ReportsController');
+        
 
         //   User Management
 

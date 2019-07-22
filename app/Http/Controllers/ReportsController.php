@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Excel;
+use Carbon\Carbon;
 use App\Report;
 use Illuminate\Http\Request;
+use \App\Exports\OpenTop50BranchOpportunitiesExport;
 
 class ReportsController extends Controller
 {
@@ -24,7 +27,8 @@ class ReportsController extends Controller
      */
     public function index()
     {
-        $reports = $this->report->all();
+        $reports = $this->report->withCount('distribution')->get();
+
         return response()->view('reports.index', compact('reports'));
     }
 
@@ -96,5 +100,16 @@ class ReportsController extends Controller
     public function destroy(Report $report)
     {
         //
+    }
+
+    public function run(Report $report)
+    {
+        $export = "\App\Exports\\". $report->export;
+        
+        $period['from']=Carbon::create(2019, 03, 01);
+        $period['to'] = Carbon::now()->endOfWeek();
+        return Excel::download(new $export($period), $report->job . 'Activities.csv');
+        
+
     }
 }
