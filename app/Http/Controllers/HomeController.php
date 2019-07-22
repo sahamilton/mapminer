@@ -23,6 +23,13 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('welcome');
+        if (auth()->user()->hasRole(['svp','rvp','evp','market_manager'])) {
+            return redirect()->route('dashboard.index');
+        } else if (auth()->user()->hasRole(['branch_manager'])) {
+            return redirect()->route('mobile.index');
+
+        } else {
+            return view('welcome');
+        }
     }
 }

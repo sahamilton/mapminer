@@ -11,15 +11,15 @@ function initialize() {
   
   var map = new google.maps.Map(document.getElementById('map'), mapOptions);
 	var name = "{{$address->companyname}}";
-    var address = "{{$address->street}}" + " {{$address->city}}" + " {{$address->state}}" + " {{$address->zip}}";
-    var html =  name +  address;
+  var address = "{{$address->street}}" + " {{$address->city}}" + " {{$address->state}}" + " {{$address->zip}}";
+  var html =  name +  address;
 	var marker = new google.maps.Marker({
 	  position: myLatlng,
 	  map: map,
 	  title: name,
 	  clickable: true
 	});
-	 bindInfoWindow(marker, map, infoWindow, html);
+	bindInfoWindow(marker, map, infoWindow, html);
 }
 function bindInfoWindow(marker, map, infoWindow, html) {
       google.maps.event.addListener(marker, 'click', function() {

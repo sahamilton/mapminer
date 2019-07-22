@@ -12,12 +12,8 @@ use App\Mail\SendWeeklyActivityReminder;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get(
-    '/', ['as'=>'welcome',function () {
+Route::get('/', ['as'=>'welcome','uses'=>'HomeController@index']);
 
-        return view('welcome');
-    }]
-);
     
         
 Route::get('testinbound', ['as'=>'testinbound', 'uses'=>'InboundMailController@inbound']);
