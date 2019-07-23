@@ -6,8 +6,9 @@
     <thead>
         <th>Report</th>
         <th>Model</th>
+        <th>Description</th>
         <th>Distribution</th>
-        <th>Send Copy</th>
+        <th>Actions</th>
     </thead>
     <tbody>
         @foreach ($reports as $report)
@@ -18,20 +19,27 @@
                 </a>
             </td>
             <td>{{ucwords($report->object)}}</td>
-            
+            <td>{{ucwords($report->description)}}</td>            
             <td>{{$report->distribution_count}}</td>
             <td>
-                @if(! $report->object)
-                    <a 
-                    href="#" 
-                    class="btn btn-success"
-                    data-href="{{route('reports.run',$report->id)}}" data-toggle="modal" 
-                    data-target="#run-report" 
-                    data-title = "{{$report->report}}" 
-                    href="#"> Run Report
-                    </a>
-                </a>
+                @if(auth()->user()->hasRole('admin'))
+                    @include('reports.partials._actions')
+                @elseif (! $report->object)
+
+                            <a class="btn btn-success"
+                            href="#" 
+                            data-href="{{route('reports.run',$report->id)}}" data-toggle="modal" 
+                            data-target="#run-report" 
+                            data-title = "{{$report->report}}" 
+                            href="#">
+                            <i class="fas fa-file-download"></i>
+                             Run Report
+                            </a>
+                        </a>
+
+        
                 @endif
+
             </td>
         </tr>
         @endforeach
@@ -40,5 +48,6 @@
 
 </div>
 @include('reports.partials._periodselector')
+@include('partials._modal')
 @include('partials._scripts')
 @endsection

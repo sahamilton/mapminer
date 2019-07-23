@@ -20,6 +20,7 @@ class BranchOpportunitiesExport implements FromView
     public function __construct(Array $period, Array $branches)
     {
         $this->period = $period;
+        $this->branches = $branches;
     }
 
     /**

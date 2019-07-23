@@ -81,7 +81,7 @@ class ReportsController extends Controller
      */
     public function edit(Report $report)
     {
-        //
+        return response()->view('reports.edit', compact('report'));
     }
 
     /**
@@ -93,7 +93,9 @@ class ReportsController extends Controller
      */
     public function update(Request $request, Report $report)
     {
-        //
+        $report->update(request()->all());
+
+        return redirect()->route('reports.index');
     }
 
     /**
@@ -104,9 +106,18 @@ class ReportsController extends Controller
      */
     public function destroy(Report $report)
     {
-        //
+        dd($report);
+        $report->delete();
+        return redirect()->route('reports.index')->withMessage('Report deleted');
     }
-
+    /**
+     * [run description]
+     * 
+     * @param  Report  $report  [description]
+     * @param  Request $request [description]
+     * 
+     * @return [type]           [description]
+     */
     public function run(Report $report, Request $request)
     {
         $period['from']=Carbon::parse(request('fromdate'));

@@ -10,15 +10,17 @@ use App\Branch;
 class BranchStatsExport implements FromView
 {
     public $period;
+    public $branches;
 
     /**
      * [__construct description]
      * 
      * @param Array $period [description]
      */
-    public function __construct(Array $period)
+    public function __construct(Array $period, Array $branches=null)
     {
         $this->period = $period;
+        $this->branches = $branches;
     }
     /**
      * [view description]
@@ -29,8 +31,11 @@ class BranchStatsExport implements FromView
     {
 
         $branches = Branch::summaryStats($this->period)
-            ->with('manager')
-            ->get();
+            ->with('manager');
+        if ($this->branches) {
+            $branches->whereIn('id', $this->branches);
+        }
+        $branches->get();
         
         $period = $this->period;
         return view('reports.branchstats', compact('branches', 'period'));

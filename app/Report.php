@@ -6,18 +6,25 @@ use Illuminate\Database\Eloquent\Model;
 
 class Report extends Model
 {
-    public $dates = ['period_from','period_to'];
-    // Distribution
-    // many through
-    // 
     
+    
+    public $fillable = ['report', 'description', 'details', 'job', 'export'];
+    
+    /**
+     * [company description]
+     * 
+     * @return [type] [description]
+     */
     public function company()
     {
         return $this->belongsToMany(Company::class, 'company_report', 'id', 'company_id');
 
     } 
-    // //
-    // 
+    /**
+     * [companyreport description]
+     * 
+     * @return [type] [description]
+     */
     public function companyreport()
     {
         return $this->hasMany(CompanyReport::class, 'report_id');
@@ -54,10 +61,10 @@ class Report extends Model
          return $this->hasManyThrough(Distribution::class, CompanyReport::class, 'company_id', 'company_report_id', 'id', 'id');
     }*/
     /**
-     * Generate period for report
-     * @return array [period to & period from]
+     * [period description]
+     * 
+     * @return [type] [description]
      */
-    
     public function period()
     {
         if (! $this->period_to) {
