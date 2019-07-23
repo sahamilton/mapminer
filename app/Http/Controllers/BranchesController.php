@@ -10,6 +10,7 @@ use App\Activity;
 use App\Address;
 use App\AddressBranch;
 use App\State;
+use App\Opportunity;
 use App\Person;
 use App\Role;
 use Excel;
@@ -29,6 +30,7 @@ class BranchesController extends BaseController {
     public $addressBranch;
     public $branch;
     public $serviceline;
+    public $opportunity;
     public $person;
     public $state;
 
@@ -45,19 +47,22 @@ class BranchesController extends BaseController {
     public function __construct(
         Branch $branch, 
         Serviceline $serviceline,
+        Opportunity $opportunity,
         Person $person, 
         State $state, 
         Address $address,
         AddressBranch $addressBranch,
         Activity $activity
     ) {
-        $this->branch = $branch;
-        $this->serviceline = $serviceline;
-        $this->person = $person;
-        $this->state = $state;
         $this->activity = $activity;
-        $this->addressBranch = $addressBranch;
         $this->address = $address;
+        $this->addressBranch = $addressBranch;
+        $this->branch = $branch;
+        $this->opportunity = $opportunity;
+        $this->person = $person;
+        $this->serviceline = $serviceline;
+        $this->state = $state;
+       
         parent::__construct($this->branch);
 
             
@@ -425,12 +430,17 @@ class BranchesController extends BaseController {
      */
     public function reassign(BranchReassignFormRequest $request, Branch $branch)
     {
-        
-        // we need to check to see if the branch already has this lead.
-        $branch->allLeads()->update(['branch_id' => request('newbranch')]);
-        $branch->openOpportunities()->update(['branch_id' => request('newbranch')]);
-        $branch->openActivities()->update(['branch_id' => request('newbranch')]);
-        return redirect()->route('branches.show', request('newbranch'))->withSuccess('All leads & opportunities & open activities have been reassigned to branch ' . request('newbranch'));
+        if (request()->filled('nearbranch')) {
+            $newbranch = request('nearbranch');
+        } else {
+            $newbranch = request('newbranch');
+        }
+        $leads = $this->addressBranch->where('branch_id', $branch->id)->update(['branch_id'=> $newbranch]);
+              
+        $opportunities = $this->opportunity->where('branch_id', $branch->id)->update(['branch_id'=> $newbranch]);
+      
+        $activities = $this->activity->where('branch_id', $branch->id)->update(['branch_id'=> $newbranch]);
+        return redirect()->route('branches.show', $newbranch)->withSuccess('All leads & opportunities & open activities have been reassigned from ' . $branch->branchname . ' to branch ' . $newbranch);
     }
     /**
      * [listNearbyLocations description]

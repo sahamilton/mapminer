@@ -6,6 +6,9 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class BranchReassignFormRequest extends FormRequest
 {
+    
+    
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -23,9 +26,10 @@ class BranchReassignFormRequest extends FormRequest
      */
     public function rules()
     {
+        
         return [
-            'newbranch'=>'required_without:nearbranch|exists:branches,id',
-            'nearbranch'=>'required_without:newbranch'
+            'newbranch' => 'required_without:nearbranch',
+            'nearbranch' => 'required_without:newbranch',
 
         ];
     }
