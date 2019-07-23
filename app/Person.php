@@ -94,9 +94,10 @@ class Person extends NodeModel implements HasPresenter
      * 
      * @return [type] [description]
      */
-    public function myBranches()
+    public function myBranches(Person $person=null)
     {
-        $myteam = $this->myTeam()->has('branchesServiced')->get();
+        
+        $myteam = $this->myTeam($person)->has('branchesServiced')->get();
 
         $data=[];
 

@@ -113,17 +113,24 @@ class ReportsController extends Controller
     /**
      * [run description]
      * 
-     * @param  Report  $report  [description]
-     * @param  Request $request [description]
+     * @param Report  $report  [description]
+     * @param Request $request [description]
      * 
      * @return [type]           [description]
      */
     public function run(Report $report, Request $request)
     {
+        if (auth()->user()->hasRole(['evp','svp','rvp','market_manager', 'admin', 'sales_ops'])) {
+            $myBranches =  array_keys($this->person->myBranches());
+        } else {
+            return redirect()->route('welcome');
+        }
+        
+
         $period['from']=Carbon::parse(request('fromdate'));
         $period['to'] = Carbon::parse(request('todate'));
         $export = "\App\Exports\\". $report->export;     
-        return Excel::download(new $export($period), $report->job . 'Activities.csv');
+        return Excel::download(new $export($period, $myBranches), $report->job . 'Activities.csv');
         
 
     }

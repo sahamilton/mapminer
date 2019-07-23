@@ -14,7 +14,7 @@ class CreateBranchSalesactivityPivotTable  extends Migration
     {
         Schema::create(
             'branch_salesactivity', function (Blueprint $table) {
-                $table->string('branch_id', 20)->index();
+                $table->string('branch_id', 20)->collation('utf8_general_ci')->index();
                
                 $table->integer('salesactivity_id')->unsigned()->index();
 
