@@ -63,7 +63,7 @@
         required
         job="job" 
         value="{{ old('job', isset($report) ? $report->job :'' ) }}" 
-        placeholder="short description">
+        placeholder="job">
         <span class="help-block">
             <strong>{{ $errors->has('job') ? $errors->first('job') : ''}}</strong>
         </span>
@@ -81,7 +81,7 @@
         required
         export="export" 
         value="{{ old('export', isset($report) ? $report->export :'' ) }}" 
-        placeholder="short description">
+        placeholder="export">
         <span class="help-block">
             <strong>{{ $errors->has('export') ? $errors->first('export') : ''}}</strong>
         </span>

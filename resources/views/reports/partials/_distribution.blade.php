@@ -1,9 +1,4 @@
 <h4>Recipients</h4>
-
-<div class="container">
-    <div class="float-right">
-        <button class="btn btn-success">Add Email</button>
-    </div>
 <table id ='sorttable1' class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
         <th>Name</th>
@@ -25,4 +20,3 @@
         @endforeach
     </tbody>
 </table>
-</div>

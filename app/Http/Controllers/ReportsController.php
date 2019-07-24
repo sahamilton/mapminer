@@ -6,6 +6,7 @@ use Excel;
 use Carbon\Carbon;
 use App\Report;
 use Illuminate\Http\Request;
+use App\Http\Requests\AddRecipientReportRequest;
 use \App\Exports\OpenTop50BranchOpportunitiesExport;
 
 class ReportsController extends Controller
@@ -39,7 +40,8 @@ class ReportsController extends Controller
      */
     public function create()
     {
-        //
+        $objects = ['company', 'user'];
+        return response()->view('reports.create', compact('objects'));
     }
 
     /**
@@ -50,7 +52,8 @@ class ReportsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->report->create(request()->all());
+        return redirect()->route('reports.index');
     }
 
     /**
@@ -94,8 +97,38 @@ class ReportsController extends Controller
     public function update(Request $request, Report $report)
     {
         $report->update(request()->all());
-
         return redirect()->route('reports.index');
+    }
+
+    /**
+     * [addRecipient description]
+     * 
+     * @param AddRecipientReportRequest $request [description]
+     * @param Report                    $report  [description]
+     */
+    public function addRecipient(AddRecipientReportRequest $request, Report $report)
+    {
+        
+        $user = \App\User::where('email', request('email'))->where('confirmed', 1)->first();
+       
+        $report->distribution()->attach($user);
+        return redirect()->route('reports.show', $report->id);
+    }
+    /**
+     * [removeRecipient description]
+     * 
+     * @param  AddRecipientReportRequest $request [description]
+     * @param  Report                    $report  [description]
+     * 
+     * @return [type]                             [description]
+     */
+    public function removeRecipient(Request $request, Report $report)
+    {
+        
+        $user = \App\User::where('id', request('id'))->first();
+       
+        $report->distribution()->detach($user);
+        return redirect()->route('reports.show', $report->id);
     }
 
     /**
@@ -106,9 +139,9 @@ class ReportsController extends Controller
      */
     public function destroy(Report $report)
     {
-        dd($report);
+       
         $report->delete();
-        return redirect()->route('reports.index')->withMessage('Report deleted');
+        return redirect()->route('reports.index')->withMessage($report->report . ' Report deleted');
     }
     /**
      * [run description]

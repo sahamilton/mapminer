@@ -446,6 +446,10 @@ Route::group(
 
         //   Reports
         Route::post('reports/{report}/run', ['as'=>'reports.run', 'uses'=>'ReportsController@run']);
+
+        Route::post('reports/{report}/addrecipient', ['as'=>'reports.addrecipient', 'uses'=>'ReportsController@addRecipient']);
+
+
         Route::resource('reports', 'ReportsController');
 
         //Leads Import       

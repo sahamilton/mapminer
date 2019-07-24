@@ -2,6 +2,9 @@
 @section('content')
 <h2>All Batch Reports</h2>
 <div class="container">
+    <div class="float-right">
+        <a href="{{route('reports.create')}}" class="btn btn-info">Add Report</a>
+    </div>
 <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
         <th>Report</th>
