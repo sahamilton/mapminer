@@ -44,7 +44,12 @@ $(document).ready(function()
     	$(this).find('#title').html($(e.relatedTarget).data('title'));
     	$(this).find('#address_id').html($(e.relatedTarget).data('id'));
 		$(this).find('#action-form').attr('action',$(e.relatedTarget).data('href'));
-	});	
+	});
+    $(document).on('show.bs.modal','#remove-recipient', function(e) {
+        $(this).find('#title').html($(e.relatedTarget).data('title'));
+        $(this).find('#user').val($(e.relatedTarget).data('pk'));
+        $(this).find('#action-form').attr('action',$(e.relatedTarget).data('href'));
+    });	
 	$(document).on('show.bs.modal','#accept-lead', function(e) {
     	$(this).find('.warning').attr('href', $(e.relatedTarget).data('href'));
 		$(this).find('#title').html($(e.relatedTarget).data('title'));

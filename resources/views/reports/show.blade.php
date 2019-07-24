@@ -28,5 +28,6 @@
     @include('reports.partials._companydistribution')
 @endif
 </div>
+@include('reports.partials._removerecipient')
 @include('partials._scripts')
 @endsection

@@ -797,12 +797,14 @@ class LeadsController extends BaseController
      */
     public function claim(Request $request, $id)
     {
-     
+        
         $lead = $this->lead->with('salesteam')->findOrFail($id);
-      
+        
         $lead->salesteam()->sync([auth()->user()->person->id=>['status_id'=>2]]);
      
-
+        // need to remove all other branches that have this as a lead;
+        // 
+        // 
         return redirect()->route('myleads.show', $id)->with('message', 'Lead claimed');
     }
     /**

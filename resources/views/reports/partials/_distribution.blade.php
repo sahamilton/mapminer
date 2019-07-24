@@ -9,7 +9,18 @@
         @foreach ($report->distribution as $recipient)
 
         <tr>
-            <td>{{$recipient->fullName()}}</td>
+            <td>
+                <a 
+                    data-href="{{route('reports.removerecipient', $report->id)}}" 
+                    data-toggle="modal" 
+                    data-target="#remove-recipient" 
+                    data-title = " {{$recipient->fullName()}} from {{$report->report}} report" 
+                    data-pk="{{$recipient->id}}"
+                    href="#"> 
+                    
+                    <i class="fas fa-trash-alt text-danger"> </i>
+                </a>
+                {{$recipient->fullName()}}</td>
             <td>{{$recipient->email}}</td>
             <td>
                 @foreach ($recipient->roles as $role)

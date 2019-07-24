@@ -125,8 +125,7 @@ class ReportsController extends Controller
     public function removeRecipient(Request $request, Report $report)
     {
         
-        $user = \App\User::where('id', request('id'))->first();
-       
+        $user = \App\User::where('id', request('user'))->first();
         $report->distribution()->detach($user);
         return redirect()->route('reports.show', $report->id);
     }
