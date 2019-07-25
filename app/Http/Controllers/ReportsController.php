@@ -37,7 +37,7 @@ class ReportsController extends Controller {
     public function index()
     {
         $reports = $this->report->withCount('distribution')->get();
-
+       
         return response()->view('reports.index', compact('reports'));
     }
 

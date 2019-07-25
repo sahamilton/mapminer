@@ -101,17 +101,11 @@ class Branch extends Model implements HasPresenter
     public function openActivities()
     {
         
-        return $this->hasMany(Activity::class)->whereNull('completed');
+        return $this->hasMany(Activity::class)
+            ->whereCompleted(0)
+            ->orWhereNull('completed');
     }
-    /**
-     * [openActivities description]
-     * 
-     * @return [type] [description]
-     */
-    public function openActivities()
-    {
-        return $this->hasMany(Activity::class)->whereCompleted(0);
-    }
+    
     /**
      * [activitiesbytype description]
      * 
