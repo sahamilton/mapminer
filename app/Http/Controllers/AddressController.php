@@ -15,6 +15,14 @@ class AddressController extends Controller
     public $branch;
     public $person;
     public $notes;
+    /**
+     * [__construct description]
+     * 
+     * @param Address $address [description]
+     * @param Branch  $branch  [description]
+     * @param Person  $person  [description]
+     * @param Note    $note    [description]
+     */
     public function __construct(Address $address, Branch $branch, Person $person, Note $note)
     {
         $this->address = $address;
@@ -49,7 +57,8 @@ class AddressController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request 
+     * 
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -58,14 +67,15 @@ class AddressController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * [show description]
+     * 
+     * @param [type] $address [description]
+     * 
+     * @return [type]          [description]
      */
     public function show($address)
     {
-      // $ranking = $this->address->with('ranking')->myRanking()->findOrFail($address->id);
+        // $ranking = $this->address->with('ranking')->myRanking()->findOrFail($address->id);
        
         $location = $address->load(
             'contacts',
@@ -92,7 +102,7 @@ class AddressController extends Controller
         if ($address->addressable_type) {
             $location->load($address->addressable_type);
         }
-       // $activities = ActivityType::orderBy('sequence')->pluck('activity','id')->toArray();
+        // $activities = ActivityType::orderBy('sequence')->pluck('activity','id')->toArray();
 
         $branches = $this->branch->nearby($location, 100, 5)->orderBy('distance')->get();
         $rankingstatuses = $this->address->getStatusOptions;
@@ -106,28 +116,30 @@ class AddressController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * [edit description]
+     * 
+     * @param Address $address [description]
+     * 
+     * @return [type]           [description]
      */
-    public function edit($address)
+    public function edit(Address $address)
     {
         $address->load('company');
         return response()->view('addresses.edit', compact('address'));
     }
 
     /**
-     * Update the specified resource in storage.
+     * [update description]
+     * 
+     * @param Request $request [description]
+     * @param Address $address [description]
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return [type]           [description]
      */
-    public function update(Request $request, $address)
+    public function update(Request $request, Address $address)
     {
       
-        $geocode = app('geocoder')->geocode($this->getAddress($request))->get();
+        $geocode = app('geocoder')->geocode($this->_getAddress($request))->get();
         $data = $this->address->getGeoCode($geocode);
 
         $data['businessname'] =request('companyname');
@@ -140,36 +152,57 @@ class AddressController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * [destroy description]
+     * 
+     * @param Address $address [description]
+     * 
+     * @return [type]           [description]
      */
     public function destroy(Address $address)
     {
         $address->delete();
         return redirect()->route('address.index')->withWarning('Location deleted');
     }
-
+    /**
+     * [findLocations description]
+     * 
+     * @param [type] $distance [description]
+     * @param [type] $latlng   [description]
+     * 
+     * @return [type]           [description]
+     */
     public function findLocations($distance = null, $latlng = null)
     {
        
-        $location = $this->getLocationLatLng($latlng);
+        $location = $this->_getLocationLatLng($latlng);
       
         $result = $this->address->filtered()->nearby($location, $distance)->get();
 
         return response()->view('addresses.xml', compact('result'))->header('Content-Type', 'text/xml');
     }
-
-    public function rating(Request $request, $address)
+    /**
+     * [rating description]
+     * 
+     * @param Request $request [description]
+     * @param Address $address [description]
+     * 
+     * @return [type]           [description]
+     */
+    public function rating(Request $request, Address $address)
     {
         $data=request()->only('ranking', 'comments');
         $person_id = auth()->user()->person->id;
         $address->ranking()->attach($person_id, $data);
         return redirect()->route('address.show', $address->id)->withMessasge("Thanks for rating this location");
     }
-
-    private function getLocationLatLng($latlng)
+    /**
+     * [_getLocationLatLng description]
+     * 
+     * @param [type] $latlng [description]
+     * 
+     * @return [type]         [description]
+     */
+    private function _getLocationLatLng($latlng)
     {
         $position =explode(":", $latlng);
         $location = new Address;
@@ -177,8 +210,14 @@ class AddressController extends Controller
         $location->lng = $position[1];
         return $location;
     }
-
-    private function getAddress(Request $request)
+    /**
+     * [_getAddress description]
+     * 
+     * @param Request $request [description]
+     * 
+     * @return [type]           [description]
+     */
+    private function _getAddress(Request $request)
     {
         return request('street'). ' ' .request('city'). ' ' .request('state'). ' ' .request('zip');
     }

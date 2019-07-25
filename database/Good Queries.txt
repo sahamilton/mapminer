@@ -9,6 +9,19 @@ and actual_close  between date('2019-04-01') and date('2019-04-08')
 group by branch_id;
 
 
+// Get all branch activities grouped by week, activity type & branch
+
+select branchname, WEEK(activity_date) as week,activity, count(activities.id)
+from activities, branches, activity_type 
+where activities.activity_date between '2019-06-01' and '2019-07-14' 
+and activities.activitytype_id = activity_type.id 
+and activities.completed =1 
+and branch_id = branches.id 
+group by branchname, week, activity 
+ORDER BY `week` DESC
+
+//******************************************************************
+
 SELECT branch_id,count(*)
 FROM `activities` 
 where

@@ -358,6 +358,8 @@ Route::group(
         Route::get('branchmap', ['as'=>'branches.genmap', 'uses'=>'BranchesController@rebuildBranchMap']);
         Route::get('branches/export', ['as'=>'branches.export', 'uses'=>'BranchesController@export']);
         Route::get('branches/team/export', ['as'=>'branches.team.export', 'uses'=>'BranchesController@exportTeam']);
+        Route::get('branch/{branch}/reassign', ['as'=>'branchReassign','uses'=>'BranchesController@reassignBranch']);
+        Route::post('branch/{branch}/reassign', ['as'=>'branch.reassign','uses'=>'BranchesController@reassign']);
         Route::resource('branches', 'BranchesController', ['except'=>['index', 'show']]);
         
         //     Companies
@@ -565,6 +567,8 @@ Route::group(
         Route::get('branch/manage', ['as'=>'branch.management', 'uses'=>'Admin\BranchManagementController@index']);
         Route::get('branch/check', ['as'=>'branch.check', 'uses'=>'Admin\AdminUsersController@checkBranchAssignments']);
 
+       // Route::get('branch/{branch}/purge', ['as'=>'branch.purge','uses'=>'BranchesController@delete']);
+        
         //   Campaigns (email)
         Route::resource('campaigns', 'CampaignController');
 

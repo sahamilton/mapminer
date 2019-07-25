@@ -526,6 +526,7 @@ class AdminUsersController extends BaseController
             $person = $user->person->load('directReports');
             return response()->view('admin.users.hasreports', compact('person'));
         }
+     
         $user->person->delete();
         $user->delete();
         return redirect()->to('admin/users')

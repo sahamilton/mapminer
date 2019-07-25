@@ -123,6 +123,20 @@ class User extends Authenticatable
             return null;
         }
     }
+
+    /**
+     * [fullName description]
+     * 
+     * @return [type] [description]
+     */
+    public function postName()
+    {
+        if ($this->person) {
+            return $this->person->fullName();
+        } else {
+            return null;
+        }
+    }
     /**
      * [personWithOutGeo description]
      * 

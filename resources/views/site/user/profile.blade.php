@@ -141,7 +141,7 @@
 						<p><strong>Branches Serviced</strong></p>
 						@if($user->person->branchesServiced->count()==0)
 						<div class="alert alert-warning">
-							<p>You are not assigned to any branches</p>
+							<p>{{$user->person->firstname}} is not assigned to any branches</p>
 						</div>
 						@else
 
@@ -152,6 +152,7 @@
 					</ul>
 
 					@endif
+					@if($user->id == auth()->user()->id)
 					<div class="alert alert-warning">
 					<p class="">If your branch associations are incorrect or incomplete you can change them here
 							<a class="btn btn-primary float-right" href="{{route('branchassignments.index')}}">
@@ -161,6 +162,7 @@
 							 {{config('mapminer.system_contact')}}
 						</a>.</p> 
 					</div>
+					@endif
 				</div>
 				<div class="col-sm-8">
 					@include('site.user._branchmap')
@@ -192,7 +194,7 @@
 				</p>
 					@if(count($user->person->industryfocus)==0)
 					<div class="alert alert-warning">
-						<p>You are not associated with any particular industry.</p>
+						<p>{{$user->person->firstname}} is not associated with any particular industry.</p>
 					@else
 					<ul style="list-style-type: none;">
 						@foreach($user->person->industryfocus as $industry)
@@ -200,8 +202,10 @@
 						@endforeach
 					</ul>
 					@endif
-					<a href="{{route('industryfocus.index')}}"" class="btn btn-primary">
+					@if($user->id == auth()->user()->id)
+					<a href="{{route('industryfocus.index')}}" class="btn btn-primary">
 						<i class="far fa-edit text-info"></i> Change</a>
+					@endif
 				</div>
 			
 				<div class="list-group-item">
@@ -223,7 +227,7 @@
 							
 					</ul>
 				</div>
-
+				@if ($user->id == auth()->user()->id)
 				<div class="alert alert-warning">
 					<p class="list-group-item-text"><strong>Corrections</strong></p>
 					<ul style="list-style-type: none;">
@@ -234,6 +238,7 @@
 							
 					</ul>
 				</div>
+				@endif
 
 			</div>
 		</div>

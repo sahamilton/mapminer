@@ -24,20 +24,9 @@ class ActivityOpportunityExport implements FromView
 
 
     /**
-     * [view description]
-     * 
-     * @return [type] [description]
-     */
     public function view(): View
     {
-        
-        $query = "select branches.id as branch_id,
-            branches.branchname as branchname, 
-            a.salesmeetings,
-            b.opportunitieswon,
-            b.value 
 
-            from branches
 
             left join 
                 (select branch_id, count(activities.id) as salesmeetings 
