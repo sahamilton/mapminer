@@ -447,6 +447,8 @@ Route::group(
         //   Reports
         Route::post('reports/{report}/run', ['as'=>'reports.run', 'uses'=>'ReportsController@run']);
 
+        Route::post('reports/{report}/send', ['as'=>'reports.send', 'uses'=>'ReportsController@send']);
+
         Route::post('reports/{report}/addrecipient', ['as'=>'reports.addrecipient', 'uses'=>'ReportsController@addRecipient']);
         Route::post('reports/{report}/removerecipient', ['as'=>'reports.removerecipient', 'uses'=>'ReportsController@removeRecipient']);
 
@@ -702,19 +704,19 @@ Route::group(
                         ->dispatch($filename)->onQueue('mapminer');
                  }
                  
-                 }*/
+                 }
                 
-                 App\Jobs\WeeklyOpportunitiesReminder::dispatch();
-                 /*$period['from'] = \Carbon\Carbon::now()->subWeek()->startOfWeek();
+                 App\Jobs\WeeklyOpportunitiesReminder::dispatch();*/
+                 $period['from'] = \Carbon\Carbon::now()->subWeek()->startOfWeek();
                  $period['to'] = \Carbon\Carbon::now();
-                App\Jobs\BranchStats::dispatch($period);*/
-                //App\Jobs\ActivityOpportunityReport::dispatch();
+                App\Jobs\BranchStats::dispatch($period);
+                /*//App\Jobs\ActivityOpportunityReport::dispatch();
                 //App\Jobs\ActivityOpportunityReport::dispatch();
                 
                 //App\Jobs\ZipBackup::dispatch('MMProd20190123');
                 //App\Jobs\UploadToDropbox::dispatch('MMProd20190123');
                 //Mail::queue(new App\Mail\ConfirmBackup('MMProd20190123'));
-                
+                */
             }
         );
 

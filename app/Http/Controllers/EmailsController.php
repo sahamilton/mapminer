@@ -179,7 +179,7 @@ class EmailsController extends Controller
                     );
                 }
             );
-            dd($recipients);
+            
         }
 
         $email->recipients()->sync($recipients);

@@ -39,12 +39,15 @@ class ActivityOpportunityReport implements ShouldQueue
         $file = '/public/reports/actopptywkrpt'. Carbon::now()->timestamp. ".xlsx";
         
         Excel::store(new ActivityOpportunityExport($this->period), $file);
-       
-        Mail::to('jhammar@peopleready.com')
-            ->bcc('hamilton@okospartners.com')
-            ->cc('salesoperations@trueblue.com')
-            ->send(new WeeklyActivityOpportunityReport($file, $this->period));
+        $class= str_replace("App\Jobs\\", "", get_class($this));
+        $report = Report::with('distribution')
+            ->where('job', $class)
+            ->firstOrFail();
         
+        foreach ($report->distribution as $recipient) {
+            Mail::to([['email'=>$recipient->email, 'name'=>$recipient->fullName()]])
+            ->send(new WeeklyActivityOpportunityReport($file, $this->period));
+        }
 
     }
     /**

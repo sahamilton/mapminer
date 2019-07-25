@@ -4,22 +4,31 @@ namespace App\Http\Controllers;
 
 use Excel;
 use Carbon\Carbon;
+use App\Branch;
 use App\Report;
+use App\Person;
 use Illuminate\Http\Request;
 use App\Http\Requests\AddRecipientReportRequest;
 use \App\Exports\OpenTop50BranchOpportunitiesExport;
 
 class ReportsController extends Controller
 {
+    public $branch;
+    public $person;
     public $report;
     /**
      * [__construct description]
      * 
+     * @param Branch $branch [description]
      * @param Report $report [description]
+     * @param Person $person [description]
      */
-    public function __construct(Report $report)
-    {
+    public function __construct(
+        Branch $branch, Report $report, Person $person
+    ) {
+        $this->branch = $branch;
         $this->report = $report;
+        $this->person = $person;
     }
     /**
      * Display a listing of the resource.
@@ -152,12 +161,15 @@ class ReportsController extends Controller
      */
     public function run(Report $report, Request $request)
     {
-        if (auth()->user()->hasRole(['evp','svp','rvp','market_manager', 'admin', 'sales_ops'])) {
-            $myBranches =  array_keys($this->person->myBranches());
+        if (auth()->user()->hasRole(['evp','svp','rvp','market_manager'])) {
+            $person = $this->person->where('user_id', auth()->user()->id)->first();
+            $myBranches =  array_keys($this->person->myBranches($person));
+        } elseif (auth()->user()->hasRole(['admin', 'sales_ops'])) {
+            $myBranches = $this->branch->pluck('id')->toArray();
         } else {
             return redirect()->route('welcome');
+
         }
-        
 
         $period['from']=Carbon::parse(request('fromdate'));
         $period['to'] = Carbon::parse(request('todate'));

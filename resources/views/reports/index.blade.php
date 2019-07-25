@@ -30,8 +30,7 @@
                 @elseif (! $report->object)
 
                             <a class="btn btn-success"
-                            href="#" 
-                            data-href="{{route('reports.run',$report->id)}}" data-toggle="modal" 
+                             data-href="{{route('reports.run',$report->id)}}" data-toggle="modal" 
                             data-target="#run-report" 
                             data-title = "{{$report->report}}" 
                             href="#">

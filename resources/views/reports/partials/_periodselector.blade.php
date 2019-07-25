@@ -22,7 +22,7 @@
             </div>
             <div class="modal-body">
                 <p>Select period for the <span id='title'></span> report.</p>
-                 <form id="period-form" 
+                 <form id="action-form" 
                         action="" 
                         method="post" 
                         >

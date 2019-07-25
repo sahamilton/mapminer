@@ -34,11 +34,11 @@ class BranchLoginsExport implements FromView
             where track.created_at between '". $this->period['from'] ."' and '". $this->period['to']."'
             and track.user_id = persons.user_id
             and persons.id = branch_person.person_id
-            and branch_person.branch_id = branches.id";
+            and branch_person.branch_id = branches.id ";
         if ($this->branches) {
-            $query.= " where branches.id in ('".implode("','", $this->branches) ."')";
+            $query.= " and branches.id in ('".implode("','", $this->branches) ."')";
         }
-        $query.="group by branchname";
+        $query.=" group by branches.id, branchname ";
 
         $results = \DB::select($query);
    

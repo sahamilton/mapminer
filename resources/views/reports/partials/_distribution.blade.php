@@ -11,7 +11,7 @@
         <tr>
             <td>
                 <a 
-                    data-href="{{route('reports.removerecipient', $report->id)}}" 
+                    data-href="{{route('reports.removerecipient', $report->id)}}"
                     data-toggle="modal" 
                     data-target="#remove-recipient" 
                     data-title = " {{$recipient->fullName()}} from {{$report->report}} report" 
