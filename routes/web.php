@@ -446,16 +446,7 @@ Route::group(
         //     Project Source
         Route::resource('projectsource', 'ProjectSourceController');
 
-        //   Reports
-        Route::post('reports/{report}/run', ['as'=>'reports.run', 'uses'=>'ReportsController@run']);
-
-        Route::post('reports/{report}/send', ['as'=>'reports.send', 'uses'=>'ReportsController@send']);
-
-        Route::post('reports/{report}/addrecipient', ['as'=>'reports.addrecipient', 'uses'=>'ReportsController@addRecipient']);
-        Route::post('reports/{report}/removerecipient', ['as'=>'reports.removerecipient', 'uses'=>'ReportsController@removeRecipient']);
-
-
-        Route::resource('reports', 'ReportsController');
+        
 
         //Leads Import       
         Route::get('leads/import/{id?}', ['as'=>'prospects.importfile', 'uses'=>'LeadImportController@getFile']);
@@ -618,7 +609,16 @@ Route::group(
         Route::resource('users', 'Admin\AdminUsersController');
 
         Route::post('lastlogged', ['as'=>'lastlogged', 'uses'=>'Admin\AdminUsersController@lastlogged']);
+        //   Reports
+        Route::post('reports/{report}/run', ['as'=>'reports.run', 'uses'=>'ReportsController@run']);
 
+        Route::post('reports/{report}/send', ['as'=>'reports.send', 'uses'=>'ReportsController@send']);
+
+        Route::post('reports/{report}/addrecipient', ['as'=>'reports.addrecipient', 'uses'=>'ReportsController@addRecipient']);
+        Route::post('reports/{report}/removerecipient', ['as'=>'reports.removerecipient', 'uses'=>'ReportsController@removeRecipient']);
+
+
+        Route::resource('reports', 'ReportsController');
         //   User Role Management
 
         Route::resource('roles', 'Admin\AdminRolesController');

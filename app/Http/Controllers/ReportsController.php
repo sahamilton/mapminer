@@ -37,7 +37,7 @@ class ReportsController extends Controller {
     public function index()
     {
         $reports = $this->report->withCount('distribution')->get();
-       
+
         return response()->view('reports.index', compact('reports'));
     }
 
@@ -60,7 +60,8 @@ class ReportsController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
+    {   
+
         $this->report->create(request()->all());
         return redirect()->route('reports.index');
     }
