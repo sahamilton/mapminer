@@ -27,17 +27,21 @@
             <td>
                 @if(auth()->user()->hasRole('admin'))
                     @include('reports.partials._actions')
+                
+                
                 @elseif (! $report->object)
 
-                            <a class="btn btn-success"
-                             data-href="{{route('reports.run',$report->id)}}" data-toggle="modal" 
-                            data-target="#run-report" 
-                            data-title = "{{$report->report}}" 
-                            href="#">
-                            <i class="fas fa-file-download"></i>
-                             Run Report
-                            </a>
-                        </a>
+                    <a class="btn btn-success"
+                    data-href="{{route('reports.run',$report->id)}}" data-toggle="modal" 
+                    data-target="#run-report" 
+                    data-title = "{{$report->report}}" 
+                    href="#">
+                    <i class="fas fa-file-download"></i>
+                    Run Report
+                    </a>
+
+
+
 
         
                 @endif

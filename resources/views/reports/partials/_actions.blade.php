@@ -25,7 +25,17 @@
                                 <i class="fas fa-file-download"></i>
                              Run Report
                             </a>
-                        </a>
+
+                            <a class="dropdown-item"
+                            data-href="{{route('reports.send',$report->id)}}" 
+                            data-toggle="modal" 
+                            data-target="#run-report" 
+                            data-title = "{{$report->report}}" 
+                            href="#">
+                            <i class="far fa-envelope"></i>
+                            Send Report
+                            </a>
+                       
                         @endif
                         <a class="dropdown-item"
                            data-href="{{route('reports.destroy',$report->id)}}" data-toggle="modal" 

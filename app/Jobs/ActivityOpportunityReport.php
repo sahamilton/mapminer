@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use Mail;
 use Excel;
+use App\Report;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;

@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use Mail;
 use Excel;
+use App\Report;
 use Carbon\Carbon;
 use App\Opportunity;
 use App\Mail\SendTop50WeeklyReport;
@@ -43,9 +44,12 @@ class Top50WeeklyReport implements ShouldQueue
         $file = '/public/reports/top50wkrpt' . $this->period['to']->timestamp . ".xlsx";
       
         Excel::store(new OpenTop50BranchOpportunitiesExport($this->period), $file);
-        $distribution = ['astarr@trueblue.com'=>'Amy Starr'];
-        foreach ($distribution as $email=>$recipient) {
-            Mail::to($email, $recipient)
+        $report = Report::with('distribution')
+            ->where('job', $class)
+            ->firstOrFail();
+        
+        foreach ($report->distribution as $recipient) {
+            Mail::to([[$recipient->email, $recipient->fullName()]])
             ->send(new SendTop50WeeklyReport($file));
         }
         return true;

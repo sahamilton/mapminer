@@ -11,8 +11,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\AddRecipientReportRequest;
 use \App\Exports\OpenTop50BranchOpportunitiesExport;
 
-class ReportsController extends Controller
-{
+class ReportsController extends Controller {
     public $branch;
     public $person;
     public $report;
@@ -56,7 +55,8 @@ class ReportsController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request  $request 
+     * 
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -89,6 +89,7 @@ class ReportsController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\Report  $report
+     * 
      * @return \Illuminate\Http\Response
      */
     public function edit(Report $report)
@@ -161,21 +162,58 @@ class ReportsController extends Controller
      */
     public function run(Report $report, Request $request)
     {
-        if (auth()->user()->hasRole(['evp','svp','rvp','market_manager'])) {
-            $person = $this->person->where('user_id', auth()->user()->id)->first();
-            $myBranches =  array_keys($this->person->myBranches($person));
-        } elseif (auth()->user()->hasRole(['admin', 'sales_ops'])) {
-            $myBranches = $this->branch->pluck('id')->toArray();
+        if ($myBranches = $this->_getMyBranches()) {
+
+            $period['from']=Carbon::parse(request('fromdate'));
+            $period['to'] = Carbon::parse(request('todate'));
+            $export = "\App\Exports\\". $report->export;     
+            return Excel::download(new $export($period, $myBranches), $report->job . 'Activities.csv');
         } else {
             return redirect()->route('welcome');
-
         }
 
-        $period['from']=Carbon::parse(request('fromdate'));
-        $period['to'] = Carbon::parse(request('todate'));
-        $export = "\App\Exports\\". $report->export;     
-        return Excel::download(new $export($period, $myBranches), $report->job . 'Activities.csv');
-        
+    }
 
+    /**
+     * [run description]
+     * 
+     * @param Report  $report  [description]
+     * @param Request $request [description]
+     * 
+     * @return [type]           [description]
+     */
+    public function send(Report $report, Request $request)
+    {
+        
+        if ($myBranches = $this->_getMyBranches()) {
+            $period['from']=Carbon::parse(request('fromdate'));
+            $period['to'] = Carbon::parse(request('todate'));
+            $job = "\App\Jobs\\". $report->job; 
+
+            dispatch(new $job($period, $myBranches));
+
+            return redirect()->back();
+        } else {
+            
+            return redirect()->route('welcome');
+        }
+
+    }
+    /**
+     * [_getMyBranches description]
+     * 
+     * @return [type] [description]
+     */
+    private function _getMyBranches()
+    {
+        if (auth()->user()->hasRole(['evp','svp','rvp','market_manager'])) {
+            $person = $this->person->where('user_id', auth()->user()->id)->first();
+            return array_keys($this->person->myBranches($person));
+        } elseif (auth()->user()->hasRole(['admin', 'sales_ops'])) {
+            return Branch::all()->pluck('id')->toarray();
+        } else {
+            return false;
+
+        }
     }
 }
