@@ -19,15 +19,14 @@
     </thead>
       <tbody>
         @foreach ($data['opportunities'] as $opportunity)
+
         <tr>
           <td>
-           @if(isset($location) && array_intersect(array_keys($myBranches),$location->assignedToBranch->pluck('id')->toArray()))
+           @if(isset($location) && array_intersect(array_keys($myBranches),$location->assignedToBranch->pluck('id')->toArray()) or auth()->user()->hasRole(['admin', 'sales_operations']))
             
             <a href="{{route('opportunity.show',$opportunity->id)}}" title="Review, edit or delete this opportunity">
             {{$opportunity->title ?  $opportunity->title : $opportunity->id}} <i class="fas fa-edit class="text text-info"></i></a>
-           
-                             
-
+          
               @else
             {{$opportunity->title ?  $opportunity->title : $opportunity->id}}
 

@@ -1,6 +1,6 @@
 @extends ('admin.layouts.default')
 @section('content')
-<h4>Reassign {{$branch->branchname}} Leads, Opportunities & Activities</h4>
+<h4>Reassign {{$branch->branchname}} Leads, Open Opportunities & Open Activities</h4>
 <p><strong>{{$branch->branchname}} branch has</strong>:
     <ul>
         <li>{{$branch->allLeads->count()}} leads</li>

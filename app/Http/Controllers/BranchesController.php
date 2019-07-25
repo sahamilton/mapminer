@@ -397,7 +397,7 @@ class BranchesController extends BaseController {
             or $branch->openOpportunities->count() > 0
             or $branch->allLeads()->count() > 0
         ) {
-            return redirect()->route('branchReassign', $branch->id)->withError('You must first reassign the leads, opportunities and activities');
+            return redirect()->route('branchReassign', $branch->id)->withError('You must first reassign the leads, open opportunities and open activities');
         } else {
             
             $branch->delete();
@@ -435,11 +435,20 @@ class BranchesController extends BaseController {
         } else {
             $newbranch = request('newbranch');
         }
-        $leads = $this->addressBranch->where('branch_id', $branch->id)->update(['branch_id'=> $newbranch]);
+        $leads = $this->addressBranch
+            ->where('branch_id', $branch->id)
+            ->update(['branch_id'=> $newbranch]);
               
-        $opportunities = $this->opportunity->where('branch_id', $branch->id)->update(['branch_id'=> $newbranch]);
+        $opportunities = $this->opportunity
+            ->where('closed', 0)
+            ->where('branch_id', $branch->id)
+            ->update(['branch_id'=> $newbranch]);
       
-        $activities = $this->activity->where('branch_id', $branch->id)->update(['branch_id'=> $newbranch]);
+        $activities = $this->activity
+            ->where('completed', 0)
+            ->where('branch_id', $branch->id)
+            ->update(['branch_id'=> $newbranch]);
+
         return redirect()->route('branches.show', $newbranch)->withSuccess('All leads & opportunities & open activities have been reassigned from ' . $branch->branchname . ' to branch ' . $newbranch);
     }
     /**
