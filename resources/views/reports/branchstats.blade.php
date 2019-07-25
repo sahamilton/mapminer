@@ -1,14 +1,7 @@
 <table>
 	<thead>
-		<tr>
-			<th colspan="10">
-				<h2>Branch Statistics</h2>
-			</th>
-		</tr>
-		<tr>
-			<th colspan="10"><h4>For the period from {{$period['from']->format('M jS,Y')}} to {{$period['to']->format('M jS,Y')}}</h4>
-			</th>
-		</tr>
+		<tr><th colspan="10"><h2>Branch Statistics</h2></th></tr>
+		<tr><th colspan="10"><h4>For the period from {{$period['from']->format('M jS,Y')}} to {{$period['to']->format('M jS,Y')}}</h4></th></tr>
 		<tr></tr>
 		<tr>
 			<th><b>Branch Name</b></th>
@@ -32,13 +25,9 @@
 				<td>{{$branch->branchname}}</td>
 				<td>{{$branch->id}}</td>
 				<td>
-					
 					@foreach ($branch->manager as $manager)
-					<li>{{$manager->fullName()}}
-					@if(! $loop->last)
-					/
-					@endif
-					</li>
+					{{$manager->fullName()}}
+					@if(! $loop->last)/@endif
 					@endforeach
 				</td>
 				<td>{{$branch->open}}</td>

@@ -1,9 +1,15 @@
 @extends('admin.layouts.default')
 @section('content')
 <h2>{{$report->report}}</h2>
+<p>
+    <a href="{{route('reports.edit',$report->id)}}">
+        <i class="fas fa-pencil-alt"></i>Edit
+    </a>
+</p>
 <p><a href="{{route('reports.index')}}">Back to all reports</a></p>
 <p>{{$report->description}}</p>
 <p><label><strong>Model:</strong></label>{{ucwords($report->object)}}</p>
+<p>{!! $report->details !!}</p>
 <div class="container">
     <div class="float-left" style="margin-bottom:10px">
         <fieldset><legend>Add recipient</legend>
