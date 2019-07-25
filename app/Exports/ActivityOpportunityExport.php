@@ -19,7 +19,7 @@ class ActivityOpportunityExport implements FromView
     public function __construct(array $period, array $branches=null)
     {
         $this->period = $period;
-        $this->branch = $branch;
+        $this->branch = $branches;
     }
 
 
@@ -64,7 +64,7 @@ class ActivityOpportunityExport implements FromView
                  
                  on branches.id = b.branch_id";
         if ($this->branch) {
-            $query.=" where branches.id in ('". implode("','", $this->branch) ."') ";
+            $query.=" and branches.id in ('". implode("','", $this->branch) ."') ";
         }  
         $query.=" ORDER BY branches.id  ASC ";
     
