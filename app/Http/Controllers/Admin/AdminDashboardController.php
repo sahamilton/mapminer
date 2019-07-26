@@ -73,7 +73,7 @@ class AdminDashboardController extends BaseController
         $data['recentProjectNotes'] = $this->recentProjectNotes();
         $color = $this->getChartColors();
         $reports=\App\Report::withCount('distribution')->get();
-        $managers=[];
+        $managers=$this->_getManagers();
         return response()->view('admin.dashboard', compact('data', 'color', 'reports', 'managers'));
     }
 
@@ -577,5 +577,23 @@ class AdminDashboardController extends BaseController
         ->whereNotNull('related_id')
         ->with(['writtenBy','relatesToProject','writtenBy.person'])
         ->get();
+    }
+
+    /**
+     * GetManagers returns collection of all managers except BM's
+     * 
+     * @return Collection [description]
+     */
+    private function _getManagers()
+    {
+        //evp, svp, rvp & MM roles
+        $roles = [14,6,7,3];
+
+        return $this->person->wherehas(
+            'userdetails.roles', function ($q) use ($roles) {
+
+                    $q->whereIn('role_id', $roles);
+            }
+        )->orderBy('lastname')->orderBy('firstname')->get();
     }
 }
