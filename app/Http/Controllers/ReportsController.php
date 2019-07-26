@@ -37,8 +37,9 @@ class ReportsController extends Controller {
     public function index()
     {
         $reports = $this->report->withCount('distribution')->get();
-
-        return response()->view('reports.index', compact('reports'));
+        $managers = $this->_getManagers();
+        
+        return response()->view('reports.index', compact('reports', 'managers'));
     }
 
     /**
@@ -164,7 +165,7 @@ class ReportsController extends Controller {
     public function run(Report $report, Request $request)
     {
         
-        if ($myBranches = $this->_getMyBranches()) {
+        if ($myBranches = $this->_getMyBranches(request('manager'))) {
 
             $period['from']=Carbon::parse(request('fromdate'));
             $period['to'] = Carbon::parse(request('todate'));
@@ -187,7 +188,7 @@ class ReportsController extends Controller {
     public function send(Report $report, Request $request)
     {
         
-        if ($myBranches = $this->_getMyBranches()) {
+        if ($myBranches = $this->_getMyBranches(request('manager'))) {
             $period['from']=Carbon::parse(request('fromdate'));
             $period['to'] = Carbon::parse(request('todate'));
             $job = "\App\Jobs\\". $report->job; 
@@ -206,8 +207,14 @@ class ReportsController extends Controller {
      * 
      * @return [type] [description]
      */
-    private function _getMyBranches()
+    private function _getMyBranches($manager=null)
     {
+      
+        if ($manager) {
+            $person = $this->person->findOrFail($manager);
+            return array_keys($this->person->myBranches($person));
+        }
+
         if (auth()->user()->hasRole(['evp','svp','rvp','market_manager'])) {
             $person = $this->person->where('user_id', auth()->user()->id)->first();
             return array_keys($this->person->myBranches($person));
@@ -217,5 +224,22 @@ class ReportsController extends Controller {
             return false;
 
         }
+    }
+    /**
+     * GetManagers returns collection of all managers except BM's
+     * 
+     * @return Collection [description]
+     */
+    private function _getManagers()
+    {
+        //evp, svp, rvp & MM roles
+        $roles = [14,6,7,3];
+
+        return $this->person->wherehas(
+            'userdetails.roles', function ($q) use ($roles) {
+
+                    $q->whereIn('role_id', $roles);
+            }
+        )->orderBy('lastname')->orderBy('firstname')->get();
     }
 }
