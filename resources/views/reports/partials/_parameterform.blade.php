@@ -38,7 +38,27 @@
         <option value="{{$manager->id}}">{{$manager->fullName()}}
         </option>
         @endforeach
+    </select>
     <span class="help-block">
-        <strong>{{$errors->has('todate') ? $errors->first('todate')  : ''}}</strong>
+        <strong>{{$errors->has('manager') ? $errors->first('manager')  : ''}}</strong>
     </span>
 </div>
+@if($report->object == 'Company')
+<div class="form-group form-group-lg">
+    <label for='manager'>Company:</label>
+    <select class="form-control" 
+        name="company" 
+        id="company" 
+        value="{{old('company')}}">
+        
+        @foreach ($companies as $company)
+        <option value="{{$company->id}}">
+            {{$company->companyname}}
+        </option>
+        @endforeach
+    </select>
+    <span class="help-block">
+        <strong>{{$errors->has('company') ? $errors->first('company')  : ''}}</strong>
+    </span>
+</div>
+@endif

@@ -11,12 +11,11 @@
 			<th><b># Open Top 50 Opportunities</b></th>
 			<th><b># All Open Opportunities Count</b></th>
 			<th><b>All Open Opportunities Value</b></th>
-			
-			<th><b>Opportunities Lost</b></th>
-			<th><b>Opportunities Won</b></th>
+			<th><b># Opportunities Lost</b></th>
+			<th><b># Opportunities Won</b></th>
 			<th><b>Sum of Won Value</b></th>
-			<th><b>Open Leads</b></th>
-			<th><b>Completed Activities</b></th>
+			<th><b># Open Leads</b></th>
+			<th><b># Completed Activities</b></th>
 			
 		</tr>
 

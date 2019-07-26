@@ -6,6 +6,7 @@ use Excel;
 use Carbon\Carbon;
 use App\Branch;
 use App\Report;
+use App\Company;
 use App\Person;
 use Illuminate\Http\Request;
 use App\Http\Requests\AddRecipientReportRequest;
@@ -13,6 +14,7 @@ use \App\Exports\OpenTop50BranchOpportunitiesExport;
 
 class ReportsController extends Controller {
     public $branch;
+    public $company;
     public $person;
     public $report;
     /**
@@ -23,9 +25,10 @@ class ReportsController extends Controller {
      * @param Person $person [description]
      */
     public function __construct(
-        Branch $branch, Report $report, Person $person
+        Branch $branch, Company $company, Report $report, Person $person
     ) {
         $this->branch = $branch;
+        $this->company = $company;
         $this->report = $report;
         $this->person = $person;
     }
@@ -37,9 +40,8 @@ class ReportsController extends Controller {
     public function index()
     {
         $reports = $this->report->withCount('distribution')->get();
-        $managers = $this->_getManagers();
         
-        return response()->view('reports.index', compact('reports', 'managers'));
+        return response()->view('reports.index', compact('reports'));
     }
 
     /**
@@ -56,7 +58,7 @@ class ReportsController extends Controller {
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request  $request 
+     * @param \Illuminate\Http\Request $request 
      * 
      * @return \Illuminate\Http\Response
      */
@@ -70,7 +72,8 @@ class ReportsController extends Controller {
     /**
      * Display the specified resource.
      *
-     * @param  \App\Report  $report
+     * @param \App\Report  $report
+     * 
      * @return \Illuminate\Http\Response
      */
     public function show(Report $report)
@@ -78,8 +81,9 @@ class ReportsController extends Controller {
         $report->load(
             'distribution', 'roleDistribution', 'companyDistribution', 'companyDistribution.managedBy'
         );
-        if ($report->object == 'company') {
-            $companies = \App\Company::has('locations')->with('managedBy')->get();
+
+        if ($report->object == 'Company') {
+            $companies = $this->_getManagedCompanies();
         } else {
             $companies=null;
         }
@@ -169,8 +173,14 @@ class ReportsController extends Controller {
 
             $period['from']=Carbon::parse(request('fromdate'));
             $period['to'] = Carbon::parse(request('todate'));
-            $export = "\App\Exports\\". $report->export;     
-            return Excel::download(new $export($period, $myBranches), $report->job . 'Activities.csv');
+            $export = "\App\Exports\\". $report->export;
+            if (request()->has('company')) {
+                $company = $this->company->findOrFail(request('company'));
+                return Excel::download(new $export($company, $period, $myBranches), $company->companyname . " " . $report->job . 'Activities.csv');
+            } else {
+                return Excel::download(new $export($period, $myBranches), $report->job . 'Activities.csv');
+            }
+            
         } else {
             return redirect()->route('welcome');
         }
@@ -192,9 +202,12 @@ class ReportsController extends Controller {
             $period['from']=Carbon::parse(request('fromdate'));
             $period['to'] = Carbon::parse(request('todate'));
             $job = "\App\Jobs\\". $report->job; 
-
-            dispatch(new $job($period, $myBranches));
-
+            if (request()->has('company')) {
+                $company = $this->company->findOrFail(request('company'));
+                dispatch(new $job($company, $period, $myBranches));
+            } else {
+                dispatch(new $job( $period, $myBranches));
+            }   
             return redirect()->back();
         } else {
             
@@ -241,5 +254,13 @@ class ReportsController extends Controller {
                     $q->whereIn('role_id', $roles);
             }
         )->orderBy('lastname')->orderBy('firstname')->get();
+    }
+
+    private function _getManagedCompanies()
+    {
+        return $this->company
+            ->whereHas('managedBy')
+            ->where('accounttypes_id', 1)
+            ->orderBy('companyname')->get();
     }
 }

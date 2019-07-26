@@ -45,29 +45,19 @@ class AccountActivities implements ShouldQueue
         Excel::store(
             new AccountActivitiesExport($this->company, $this->period), $file
         );
-        $this->company->load('managedBy');
+        $this->company->load('managedBy', 'managedBy.userdetails');
        
-        $distribution = ['athompson4@trueblue.com'=>'Amy Thompson'];
-        $loop = false;
-        foreach ($distribution as $email=>$recipient) {
-            if (! $loop) {
-                Mail::to($email, $recipient)
-                    ->bcc('hamilton@okospartners.com', 'Stephen Hamilton')
-                    ->cc('salesoperations@trueblue.com', 'Sales Operations')
-                    ->send(
-                        new AccountActivitiesReport($file, $this->period, $this->company)
-                    );
-                $loop = true;
-            } else {
-                Mail::to($email, $recipient)
-                   
-                    ->send(
-                        new AccountActivitiesReport($file, $this->period, $this->company)
-                    );
-
-            }
+        //$distribution = ['athompson4@trueblue.com'=>'Amy Thompson'];
+       
+        Mail::to([['email'=>$this->company->managedBy->userdetails->email, 'name'=>$this->company->managedBy->fullName()]])
+                
+                ->send(
+                    new AccountActivitiesReport($file, $this->period, $this->company)
+                );
             
-        }
+            
+            
+      
         
     }
 }
