@@ -7,7 +7,9 @@
 			<th><b>Branch Name</b></th>
 			<th><b>Branch ID</b></th>
 			<th><b>Branch Manager</b></th>
+			<th><b>Opportunities Opened</b></th>
 			<th><b>Open Opportunities Count</b></th>
+			<th><b>Open Opportunities Value</b></th>
 			<th><b>Open Top 50 Opportunities</b></th>
 			<th><b>Opportunities Won</b></th>
 			<th><b>Opportunities Lost</b></th>
@@ -30,7 +32,9 @@
 					@if(! $loop->last)/@endif
 					@endforeach
 				</td>
+				<td>{{$branch->opened}}</td>
 				<td>{{$branch->open}}</td>
+				<td>{{$branch->openvalue}}</td>
 				<td>{{$branch->top50}}</td>
 				<td>{{$branch->lost}}</td>
 				<td>{{$branch->won}}</td>

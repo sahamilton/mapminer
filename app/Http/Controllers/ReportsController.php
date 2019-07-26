@@ -83,8 +83,8 @@ class ReportsController extends Controller {
         } else {
             $companies=null;
         }
-      
-        return response()->view('reports.show', compact('report', 'companies'));
+       $managers = $this->_getManagers();
+        return response()->view('reports.show', compact('report', 'companies', 'managers'));
     }
 
     /**

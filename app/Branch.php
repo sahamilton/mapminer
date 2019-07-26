@@ -716,6 +716,11 @@ class Branch extends Model implements HasPresenter
                     ->where('completed', 1)
                     ->where('activitytype_id', 4);
             },
+            'opportunities as opened'=>function ($query) {
+                $query->whereBetween(
+                    'opportunities.created_at', [$this->period['from'],$this->period['to']]
+                );
+            },
             'opportunities as won'=>function ($query) {
                 $query->whereClosed(1)
                     ->whereBetween(
