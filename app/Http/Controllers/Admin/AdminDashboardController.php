@@ -72,7 +72,9 @@ class AdminDashboardController extends BaseController
         $data['recentLeadNotes'] = $this->recentLeadNotes();
         $data['recentProjectNotes'] = $this->recentProjectNotes();
         $color = $this->getChartColors();
-        return response()->view('admin.dashboard', compact('data', 'color'));
+        $reports=\App\Report::withCount('distribution')->get();
+        $managers=[];
+        return response()->view('admin.dashboard', compact('data', 'color', 'reports', 'managers'));
     }
 
 
@@ -261,10 +263,12 @@ class AdminDashboardController extends BaseController
     private function getWeekLoginCount()
     {
         $subQuery = $this->track
-                    ->selectRaw("distinct user_id as user,
-			         	DATE_FORMAT(lastactivity,'%Y%U') as week")
-                    ->whereNotNull('lastactivity')
-                    ->where('lastactivity', '>', '2017-01-01');
+            ->selectRaw(
+                "distinct user_id as user,
+	         	DATE_FORMAT(lastactivity,'%Y%U') as week"
+            )
+            ->whereNotNull('lastactivity')
+            ->where('lastactivity', '>', now()->subYear());
 
         return  \DB::
                 table(\DB::raw('('.$subQuery->toSql().') as ol'))
@@ -280,12 +284,14 @@ class AdminDashboardController extends BaseController
     {
         
         $subQuery = $this->track
-                    ->join('role_user', 'track.user_id', '=', 'role_user.user_id')
-                    ->join('roles', 'role_user.role_id', '=', 'roles.id')
-                    ->selectRaw("distinct name,track.user_id as user,
-			         	DATE_FORMAT(lastactivity,'%Y%U') as week")
-                    ->whereNotNull('lastactivity')
-                    ->where('lastactivity', '>', '2017-01-01');
+            ->join('role_user', 'track.user_id', '=', 'role_user.user_id')
+            ->join('roles', 'role_user.role_id', '=', 'roles.id')
+            ->selectRaw(
+                "distinct name,track.user_id as user,
+	         	DATE_FORMAT(lastactivity,'%Y%U') as week"
+            )
+            ->whereNotNull('lastactivity')
+            ->where('lastactivity', '>', now()->subYear(1));
 
                     
 
