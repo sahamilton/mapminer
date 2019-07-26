@@ -22,7 +22,7 @@
             </div>
             <div class="modal-body">
                 <p>Select period for the <span id='title'></span> report.</p>
-                 <form id="action-form" 
+                 <form id="period-form" 
                         action="" 
                         method="post" 
                         >
@@ -55,7 +55,7 @@
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                 <a href="#" class="btn btn-danger danger"
                     onclick="event.preventDefault();
-                    document.getElementById('action-form').submit();"
+                    document.getElementById('period-form').submit();"
                     class="btn btn-danger danger">Run Report</a>           
                    
                 </form>

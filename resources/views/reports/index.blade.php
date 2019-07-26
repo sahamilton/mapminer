@@ -49,7 +49,7 @@
 </table>
 
 </div>
-
+@include('reports.partials._periodselector')
 @include('partials._modal')
 @include('partials._scripts')
 @endsection

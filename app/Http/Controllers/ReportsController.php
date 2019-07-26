@@ -163,6 +163,7 @@ class ReportsController extends Controller {
      */
     public function run(Report $report, Request $request)
     {
+        
         if ($myBranches = $this->_getMyBranches()) {
 
             $period['from']=Carbon::parse(request('fromdate'));

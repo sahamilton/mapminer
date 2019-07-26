@@ -59,21 +59,6 @@ class Kernel extends ConsoleKernel
                 ->sundays()
                 ->at('23:15');
             
-            //Amy Starr Report
-            $period['from']=Carbon::create(2019, 03, 01);
-            $period['to'] = Carbon::now()->endOfWeek();
-            $schedule->job(new Top50WeeklyReport($period))
-                ->weekly()
-                ->sundays()
-                ->at('18:59');
-            
-            // Josh Hammer report
-            $period['from'] = Carbon::now()->subWeek()->startOfWeek();
-            $period['to'] = Carbon::now()->subWeek()->endOfWeek();
-            $schedule->job(new ActivityOpportunityReport($period))
-                ->weekly()
-                ->wednesdays()
-                ->at('04:59');
             
             // Walmart job
             $company = Company::findOrFail(532);
@@ -84,13 +69,7 @@ class Kernel extends ConsoleKernel
                 ->sundays()
                 ->at('18:30');
             
-            // Kristi Willis Report
-            $period['to'] = Carbon::now()->subWeek()->endOfWeek();
-            $schedule->job(new BranchOpportunities($period))
-                ->weekly()
-                ->mondays()
-                ->at('04:59');
-
+            
             // Branch Login Report
             $period['from'] = Carbon::now()->subMonth(2)->startOfMonth();  
             $period['to'] = Carbon::now()->subWeek()->endOfWeek();

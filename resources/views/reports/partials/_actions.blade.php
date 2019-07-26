@@ -25,7 +25,7 @@
                                 <i class="fas fa-file-download"></i>
                              Run Report
                             </a>
-
+                        @if($report->distribution->count()>0)
                             <a class="dropdown-item"
                             data-href="{{route('reports.send',$report->id)}}" 
                             data-toggle="modal" 
@@ -35,7 +35,7 @@
                             <i class="far fa-envelope"></i>
                             Send Report
                             </a>
-                       
+                            @endif                 
                         @endif
                         <a class="dropdown-item"
                            data-href="{{route('reports.destroy',$report->id)}}" data-toggle="modal" 
