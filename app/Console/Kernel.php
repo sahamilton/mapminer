@@ -60,7 +60,8 @@ class Kernel extends ConsoleKernel
                 ->at('23:15');
             
             
-            // Walmart job
+            // National Account Jobs
+            // // need to make the companies configurable
             $company = Company::findOrFail(532);
             $period['from'] = Carbon::now()->subWeek()->startOfWeek();
             $period['to'] = Carbon::now()->subWeek()->endOfWeek();
@@ -69,6 +70,13 @@ class Kernel extends ConsoleKernel
                 ->sundays()
                 ->at('18:30');
             
+            // Branch Stats Report
+            $period['from'] = Carbon::now()->subMonth(2)->startOfMonth();  
+            $period['to'] = Carbon::now()->subWeek()->endOfWeek();
+            $schedule->job(new BranchStats($period))
+                ->weekly()
+                ->wednesdays()
+                ->at('01:59');
             
             // Branch Login Report
             $period['from'] = Carbon::now()->subMonth(2)->startOfMonth();  
@@ -77,6 +85,14 @@ class Kernel extends ConsoleKernel
                 ->weekly()
                 ->mondays()
                 ->at('03:59');
+            // Branch Login Report
+            $period['from'] = Carbon::now()->subMonth(2)->startOfMonth();  
+            $period['to'] = Carbon::now()->subWeek()->endOfWeek();
+            $schedule->job(new BranchActivitiesDetail($period))
+                ->weekly()
+                ->tuedays()
+                ->at('03:59');
+
         }   
     }
 
