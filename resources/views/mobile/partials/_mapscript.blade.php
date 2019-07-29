@@ -68,11 +68,7 @@
           title: data.businessname
         });
 
-        google.maps.event.addListener(marker, 'click', function(){
-          infowindow.close(); // Close previously opened infowindow
-          infowindow.setContent( "<div id='infowindow'>"+ data.businessname +"</div>");
-          infowindow.open(map, marker);
-      });
+        
      
               
     };
