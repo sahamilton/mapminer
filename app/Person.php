@@ -312,7 +312,7 @@ class Person extends NodeModel implements HasPresenter
         if (! isset($this->attributes['firstname'])) {
             return 'No longer a Mapminer User';
         }
-        return $this->attributes['firstname'] . ' ' . $this->attributes['lastname'];
+        return addslashes($this->attributes['firstname']) . ' ' . addslashes($this->attributes['lastname']);
     }
     /**
      * Return concatenated name,
@@ -322,7 +322,7 @@ class Person extends NodeModel implements HasPresenter
     public function postName()
     {
 
-        return $this->attributes['lastname'] . ', ' . $this->attributes['firstname'];
+        return addslashes($this->attributes['lastname']) . ', ' . addslashes($this->attributes['firstname']) ;
     }
     
     /**
