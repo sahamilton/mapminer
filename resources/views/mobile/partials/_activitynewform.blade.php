@@ -7,7 +7,7 @@
           @endforeach
         </select>
         </div>
-    @if($address && $address->contacts && $address->contacts->count()>0)
+    @if(isset($address) && $address->contacts && $address->contacts->count()>0)
           
           <div class="form-group{{ $errors->has('activity_date)') ? ' has-error' : '' }}">
               <label class="col-md-4 control-label align-top" for="activity_date">Contact</label>
