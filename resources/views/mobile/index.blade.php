@@ -6,9 +6,15 @@ $distances = [1=>'1 mile',2=>'2 miles',5=>'5 miles', 10=>'10 miles',25=>'25 mile
 <div class="container">
 <h2><a href="{{route('mobile.index')}}">Mobile View</a></h2>
 <h4>{{$branch->branchname}}</h4>
+
     <div class="col-md-5">
+      
     <form action="{{route('mobile.search')}}" method = 'post' name="mapselector">
         @csrf
+        @if($branches->count() > 1)
+            @include('mobile.partials._branchselector')
+        
+        @endif
         <div class="form-group mx-sm-3 mb-2">
             <label for type>Select</label>
             <select  onchange="this.form.submit()" class="form-control" name="type">
@@ -62,7 +68,7 @@ $distances = [1=>'1 mile',2=>'2 miles',5=>'5 miles', 10=>'10 miles',25=>'25 mile
             type="text" 
             name="search" 
             
-            value="{{session()->has('geo.address') ? session('geo.address') : ''}}"
+            value="{{$address}}"
             id="search"
             required
            

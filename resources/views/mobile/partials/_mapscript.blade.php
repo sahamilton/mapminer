@@ -2,8 +2,8 @@
     function initMap() {
       var map = new google.maps.Map(document.getElementById('map'), {
         center: {
-          lat: {{session('geo.lat')}},
-          lng: {{session('geo.lng')}}
+          lat: {{$branch->lat}},
+          lng: {{$branch->lng}}
         },
         zoom: 13
       });

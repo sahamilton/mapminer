@@ -52,7 +52,7 @@ method = 'post' name="mapselector">
         type="text" 
         name="search" 
         
-        value="{{session('geo.address')}}"
+        value="{{$address}}"
         id="search"
         required
         style='width:300px'
