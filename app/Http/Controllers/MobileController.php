@@ -186,12 +186,8 @@ class MobileController extends Controller
      */
     public function searchaddress(Request $request)
     {
-        $address = request('address');//set geo from address
-        $person = $this->person->where('user_id', auth()->user()->id)->first();
-        if (! $address) {
-            $address = session('geo.address');
-        } 
-        $branch = $this->_getBranchData($person);
+        
+        $address = request('address');//set geo from address            
         $geocode = app('geocoder')->geocode($address)->get();
         $addressData = $this->address->getGeoCode($geocode);
         $lead = new Address($addressData);
@@ -211,9 +207,28 @@ class MobileController extends Controller
      */
     public function show(Address $address)
     {
-        dd($address);
+        
         $person = $this->person->where('user_id', auth()->user()->id)->first();
-        $branch = $this->_getBranchData($person);
+        $myBranches = $person->myBranches();
+        if (count($myBranches)==0) {
+            return redirect()->route('welcome')->withMessage("Sorry you don't have assigned branches");
+        }
+        $distance = request('distance');
+        $type = request('type');
+        $branches = $this->branch->whereIn('id', array_keys($myBranches))->get();
+        
+        if (request()->has('branch')) {
+            
+            $branch = $this->_getBranchData($this->branch->findOrFail(request('branch')));
+
+
+        } else {
+
+            
+            $branch = $this->_getBranchData($branches->first());
+
+        }
+     
 
         $address->load('openActivities', 'openOpportunities', 'contacts');
 

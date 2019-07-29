@@ -118,7 +118,7 @@ $distances = [1=>'1 mile',2=>'2 miles',5=>'5 miles', 10=>'10 miles',25=>'25 mile
 
 @endif
 </div></div>
-
+@include('mobile.partials._activitiesmodal')
 @include('mobile.partials._mapscript')
 @include('partials._maps')
 @include('partials._scripts')

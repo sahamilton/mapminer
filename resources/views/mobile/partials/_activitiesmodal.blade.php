@@ -31,11 +31,15 @@ body.modal-open .activity_date, .followup_date {
          <input 
               type="hidden" 
               name="branch_id" 
-              value="{{$branch->id}}" />
+              value="{{$branch->id}}" /> 
+            <input type="hidden" 
+            name = "address_id" 
+            id = "address_id" 
+            value = "" />
           <div class="float-right">
            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button> <input type="submit" value="Record Activity" class="btn btn-danger" />
             </div>
-            <input type="hidden" name="address_id" value="{{$address->id}}" />
+           
 
         </form>
 

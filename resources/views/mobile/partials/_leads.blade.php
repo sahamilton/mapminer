@@ -6,6 +6,7 @@
         <th>Address</th>
         <th>Distance</th>
         <th>Last Activity</th>
+ 
         
     </thead>
     <tbody>
@@ -21,6 +22,18 @@
 
                     {{$result->lastActivity->first()->activity_date->format('Y-m-d')}} 
                 @endif
+               <br /><a 
+                    
+                    title="Add Activity"
+                    data-href="{{route('activity.store')}}" 
+                    data-toggle="modal" 
+                    data-target="#add_activity" 
+                    data-title = "Add activity to lead" 
+                    data-pk = "{{$result->id}}"
+                    href="#">
+
+
+               <i class="fas fa-plus-circle text-success"></i>{{$result->id}}</a>
             </td>
             
         </tr>
