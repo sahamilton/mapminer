@@ -41,14 +41,15 @@ class MobileController extends Controller
         
         $branches = $this->_getBranchData($person);
         $branch = $branches->first();
-        $this->branch->setGeoSession($branch, $branch->radius);
+        $this->branch->setGeoBranchSession($branch, $branch->radius);
         session(
             [
             'geo.branch'=>$branch->id]
         );
         $markers = '['.$branch->lat.",".$branch->lng.']';
-        $address = $branch->fullAddress();
-        return response()->view('mobile.index', compact('person', 'branch', 'branches', 'markers', 'address'));
+        $searchaddress = $branch->fullAddress();
+
+        return response()->view('mobile.index', compact('person', 'branch', 'branches', 'markers', 'searchaddress'));
     }
 
     /**
@@ -60,14 +61,15 @@ class MobileController extends Controller
      */
     public function select(Request $request)
     {
+        
         $person = $this->person->where('user_id', auth()->user()->id)->first();
         $branches = $this->_getBranchData($person);
         $branch = $branches->where('id', request('branch'))->first();
-        $this->branch->setGeoSession($branch, $branch->radius);
+        $this->branch->setGeoBranchSession($branch, $branch->radius);
         $markers = '['.$branch->lat.",".$branch->lng.']';
-        $address = $branch->fullAddress();
+        $searchaddress = $branch->fullAddress();
         
-        return response()->view('mobile.index', compact('person', 'branch', 'branches', 'markers', 'address'));
+        return response()->view('mobile.index', compact('person', 'branch', 'branches', 'markers', 'searchaddress'));
 
     }
     /**
@@ -99,7 +101,7 @@ class MobileController extends Controller
         //  search != session address
         //
         // has branch changed?
-        
+     
         $distance = request('distance');
         $type = request('type');
 
@@ -114,23 +116,30 @@ class MobileController extends Controller
             $branch = $branches->first();
 
         }
-
+        
         if ($this->_branchChanged($request)) {
 
-            $this->address->setGeoSession($branch, $distance);
-            $address = $branch->fullAddress();
-
+            $this->address->setGeoBranchSession($branch, $distance);
+            $address = new Address($branch->toArray());
+            $address->load('contacts');
         } elseif ($this->_addressChanged($request)) {
-            $geocode = app('geocoder')->geocode($address)->get();
+            
+            $geocode = app('geocoder')->geocode(request('search'))->get();
             $addressData = $this->address->getGeoCode($geocode);
             $address = new Address($addressData);
-            $address = $address->fullAddress();
+            $this->address->setGeoAddressSession($address, $distance);
+            $address->load('contacts');
+        } else {
+            $address = new Address(session('geo'));
         }
         
         $results = $this->_getDataByType($branch, $address, $distance, $type);
+
         $markers = $this->_getMapMarkers($results, $type);
+        $searchaddress = $address->fulladdress();
+        dd($searchaddress);
         
-        return response()->view('mobile.index', compact('person', 'branch', 'results', 'branches', 'type', 'distance', 'address', 'markers'));
+        return response()->view('mobile.index', compact('person', 'branch', 'results', 'branches', 'type', 'distance', 'searchaddress', 'address', 'markers'));
     }
     /**
      * [_branchChanged description]
@@ -141,7 +150,7 @@ class MobileController extends Controller
      */
     private function _branchChanged(Request $request)
     {
-        if (request()->has('branch') && request('branch') != session('branch')) {
+        if (request()->has('branch') && request('branch') != session('geo.branch')) {
                 
                 return true;
         }
@@ -156,6 +165,7 @@ class MobileController extends Controller
      */
     private function _addressChanged(Request $request)
     {
+        
         if (request()->filled('search') && request('search') != session('geo.address')) {
             
                 return true;
@@ -183,7 +193,7 @@ class MobileController extends Controller
         $lead = new Address($addressData);
         $results = $this->address->nearby($lead, .1)
             ->with('openActivities', 'openOpportunities', 'contacts')->orderBy('distance')->get();
-        $this->address->setGeoSession($lead, 1);
+        $this->address->setGeoAddressSession($lead, 1);
         return response()->view('mobile.newaddress', compact('results', 'lead'));
         
     }
@@ -239,7 +249,7 @@ class MobileController extends Controller
       
         $addressData = $this->address->getGeoCode($geocode);
         $address = new Address($addressData);
-        $this->address->setGeoSession($address, $distance);
+        $this->address->setGeoAddressSession($address, $distance);
         $results = $this->_getDataByType($branch, $address, $distance, $type);
         $markers = $this->_getMapMarkers($results, $type);
 

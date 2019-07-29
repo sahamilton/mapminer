@@ -707,7 +707,8 @@ class Branch extends Model implements HasPresenter
                     ->where('completed', 1);
             },
             'activities as openactivities'=>function ($query) {
-                $query->where('completed', 0);
+                $query->where('completed', 0)->orWhereNull('completed');
+                    
             },
             'activities as salesappts'=>function ($query) {
                 $query->whereBetween(

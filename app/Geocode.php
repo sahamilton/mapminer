@@ -380,7 +380,15 @@ trait Geocode
         $loc = preg_replace('/[ ,]+/', ',', $loc, 1);
         return substr($loc, 0, -1);
     }
-    public function setGeoSession(Model $address, $distance)
+    /**
+     * [setGeoSession description]
+     * 
+     * @param Model  $address  [description]
+     * @param [type] $distance [description]
+     *
+     * @return session [<description>]
+     */
+    public function setGeoAddressSession(Address $address, $distance)
     {
         if ($address->lat && $address->lng ) {
             session(
@@ -388,7 +396,31 @@ trait Geocode
                 'geo.lat'=>$address->lat,
                 'geo.lng'=>$address->lng,
                 'geo.address'=>$address->fullAddress(),
+                'geo.distance'=>$distance
+                
+                ]
+            );
+        }
+    }
+
+    /**
+     * [setGeoSession description]
+     * 
+     * @param Model  $address  [description]
+     * @param [type] $distance [description]
+     *
+     * @return session [<description>]
+     */
+    public function setGeoBranchSession(Branch $branch, $distance)
+    {
+        if ($address->lat && $address->lng ) {
+            session(
+                [
+                'geo.lat'=>$branch->lat,
+                'geo.lng'=>$branch->lng,
+                'geo.address'=>$branch->fullAddress(),
                 'geo.distance'=>$distance,
+                'geo.branch'=>$branch->id
                 
                 ]
             );

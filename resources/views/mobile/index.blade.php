@@ -59,28 +59,32 @@ $distances = [1=>'1 mile',2=>'2 miles',5=>'5 miles', 10=>'10 miles',25=>'25 mile
 
             </select>
         </div>
-        <div id="pac-container" class="form-group mx-sm-3 mb-2 search-container">
+        <div id="pac-container" class="form-group mx-sm-3 mb-2">
             
-            <label for type>Address</label>
+            
             <input 
             id="pac-input" 
             class="form-control {{ $errors->has('search') ? ' has-error' : ''}}" 
             type="text" 
             name="search" 
             
-            value="{{$address}}"
+            value="{{$searchaddress}}"
             id="search"
             required
            
             placeholder='Enter address or check Help Support for auto geocoding' />
+            <span class="form-group-addon">
             <button type="submit" class= "btn btn-success">
 
+
             <i class="fas fa-search" aria-hidden="true"></i> </button>
+        </span>
         </div>
+        
     </form>
 </div>
 
-<div id="map"></div>
+<div id="map" style="max-width:400px;max-height:400px; "></div>
 <div id="infowindow-content">
   <img  id="place-icon" src="" width="16" height="16" >
   <a id="place-link" href=""></a>
