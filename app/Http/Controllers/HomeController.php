@@ -24,11 +24,11 @@ class HomeController extends Controller
     public function index()
     {
         $agent = new \Jenssegers\Agent\Agent;
-       
+      
         if (auth()->user()->hasRole(['svp','rvp','evp','market_manager'])) {
             return redirect()->route('dashboard.index');
         } elseif (auth()->user()->hasRole(['branch_manager'])) {
-            if ($agent->isMobile) {
+            if ($agent->isMobile()) {
                 return redirect()->route('mobile.index');  
             } else {
                 return redirect()->route('dashboard.index');
