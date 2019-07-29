@@ -1,4 +1,4 @@
-<table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover col-md-5'>
+<table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
     <th>Company</th>
     <th>Planned Date</th>

@@ -38,9 +38,13 @@ class MobileController extends Controller
     {
 
         $person = $this->person->where('user_id', auth()->user()->id)->first();
-        
-        $branches = $this->_getBranchData($person);
-        $branch = $branches->first();
+        // check if user has branches
+        $myBranches = $person->myBranches();
+        if (count($myBranches)==0) {
+            return redirect()->route('welcome')->withMessage("Sorry you don't have assigned branches");
+        }
+        $branches = $this->branch->whereIn('id', array_keys($myBranches))->get();
+        $branch = $this->_getBranchData($branches->first());
         $this->branch->setGeoBranchSession($branch, $branch->radius);
         $address = new Address($branch->toArray());
         $type="activities";
@@ -55,7 +59,7 @@ class MobileController extends Controller
     /**
      * [select description]
      * 
-     * @param  Request $request [description]
+     * @param Request $request [description]
      * 
      * @return [type]           [description]
      */
@@ -72,20 +76,20 @@ class MobileController extends Controller
         return response()->view('mobile.index', compact('person', 'branch', 'branches', 'markers', 'searchaddress'));
 
     }
+
     /**
      * [_getBranchData description]
      * 
-     * @param Person $person [description]
+     * @param Branch $branch [description]
      * 
-     * @return Branch $branch [description]
+     * @return [type]         [description]
      */
-    private function _getBranchData(Person $person)
+    private function _getBranchData(Branch $branch)
     {
         $this->period['from'] = Carbon::now()->subMonth(1);
         $this->period['to'] = Carbon::now();
-        $myBranches = $person->myBranches();
-
-        return $this->branch->SummaryStats($this->period)->whereIn('id', array_keys($myBranches))->get();
+       
+        return $this->branch->SummaryStats($this->period)->findOrFail($branch->id);
 
     }
     /**
@@ -97,20 +101,24 @@ class MobileController extends Controller
      */
     public function search(Request $request)
     {
-
-     
+        $person = $this->person->where('user_id', auth()->user()->id)->first();
+        $myBranches = $person->myBranches();
+        if (count($myBranches)==0) {
+            return redirect()->route('welcome')->withMessage("Sorry you don't have assigned branches");
+        }
         $distance = request('distance');
         $type = request('type');
-
-        $person = $this->person->where('user_id', auth()->user()->id)->first();
-        $branches = $this->_getBranchData($person);
+        $branches = $this->branch->whereIn('id', array_keys($myBranches))->get();
         
         if (request()->has('branch')) {
             
-            $branch = $branches->where('id', request('branch'))->first();
+            $branch = $this->_getBranchData($this->branch->findOrFail(request('branch')));
+
 
         } else {
-            $branch = $branches->first();
+
+            
+            $branch = $this->_getBranchData($branches->first());
 
         }
         

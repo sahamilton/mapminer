@@ -13,6 +13,7 @@ $distances = [1=>'1 mile',2=>'2 miles',5=>'5 miles', 10=>'10 miles',25=>'25 mile
       
     <form action="{{route('mobile.search')}}" method = 'post' name="mapselector">
         @csrf
+      
         @if($branches->count() > 1)
             @include('mobile.partials._branchselector')
         
@@ -106,8 +107,10 @@ $distances = [1=>'1 mile',2=>'2 miles',5=>'5 miles', 10=>'10 miles',25=>'25 mile
         @include('mobile.partials._activities')
     
     @elseif ($type== 'leads')
+    <h4>Open Leads within {{$distance}} miles</h4>
         @include('mobile.partials._leads')
     @elseif ($type == 'opportunities')
+    <h4>Open Oportunities within {{$distance}} miles</h4>
         @include('mobile.partials._opportunities')
     @else
       
