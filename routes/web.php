@@ -540,7 +540,7 @@ Route::group(
         Route::get('watchlist/{userid}', ['as'=>'watch.mywatchexport', 'uses'=>'WatchController@export']);
 
         //     //   Search
-        Route::get('/user/find', 'SearchController@searchUsers');
+        Route::get('user/find', 'SearchController@searchUsers');
 
         
         Route::get('/person/{person}/find', ['as'=>'person.details', 'uses'=>'PersonSearchController@find']);

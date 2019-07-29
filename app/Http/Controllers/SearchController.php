@@ -21,7 +21,7 @@ class SearchController extends Controller
      */
     public function searchUsers(Request $request)
     {
-
+        
         return Person::search(request('q'))
             ->with('userdetails')
             ->get();
