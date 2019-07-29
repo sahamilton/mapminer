@@ -105,7 +105,7 @@
 @include('opportunities.partials._closemodal')
 @include('partials._scripts')
 @include('mobile.partials.map')
-@include('mobile.partials._activities')
+@include('mobile.partials._activitiesmodal')
 
 
 @endsection

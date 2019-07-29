@@ -393,10 +393,9 @@ trait Geocode
         if ($address->lat && $address->lng ) {
             session(
                 [
-                'geo.lat'=>$address->lat,
-                'geo.lng'=>$address->lng,
-                'geo.address'=>$address->fullAddress(),
-                'geo.distance'=>$distance
+                'geo'=>$address->toArray(),
+                'geo.address'=>$address->fulladdress(),
+                'geo.distance'=>$distance,
                 
                 ]
             );
@@ -404,23 +403,22 @@ trait Geocode
     }
 
     /**
-     * [setGeoSession description]
+     * [setGeoBranchSession description]
      * 
-     * @param Model  $address  [description]
-     * @param [type] $distance [description]
+     * @param Branch $branch   [description]
+     * @param [type] $distance [description]\
      *
      * @return session [<description>]
      */
     public function setGeoBranchSession(Branch $branch, $distance)
     {
-        if ($address->lat && $address->lng ) {
+        if ($branch->lat && $branch->lng ) {
             session(
                 [
-                'geo.lat'=>$branch->lat,
-                'geo.lng'=>$branch->lng,
-                'geo.address'=>$branch->fullAddress(),
+                'geo'=>$branch->toArray(),
+                'geo.address'=>$branch->fulladdress(),
                 'geo.distance'=>$distance,
-                'geo.branch'=>$branch->id
+                'geo.branch' =>$branch->id,
                 
                 ]
             );

@@ -2,12 +2,14 @@
 @section('content')
 @php
 $distances = [1=>'1 mile',2=>'2 miles',5=>'5 miles', 10=>'10 miles',25=>'25 miles'];
+
 @endphp
 <div class="container">
-<h2><a href="{{route('mobile.index')}}">Mobile View</a></h2>
-<h4>{{$branch->branchname}}</h4>
-
     <div class="col-md-5">
+        <h2><a href="{{route('mobile.index')}}">Branch View</a></h2>
+        <h4>{{$branch->branchname}}</h4>
+
+    
       
     <form action="{{route('mobile.search')}}" method = 'post' name="mapselector">
         @csrf
@@ -82,7 +84,7 @@ $distances = [1=>'1 mile',2=>'2 miles',5=>'5 miles', 10=>'10 miles',25=>'25 mile
         </div>
         
     </form>
-</div>
+
 
 <div id="map" style="max-width:400px;max-height:400px; "></div>
 <div id="infowindow-content">
@@ -95,10 +97,12 @@ $distances = [1=>'1 mile',2=>'2 miles',5=>'5 miles', 10=>'10 miles',25=>'25 mile
 <div id="message" style="color:#F00">{{\Session::get('message')}}</div>
 
     <div style="margin-top:20px"></div>
-</div>
+
 <div style="clear:both"></div>
+
 @if(isset($results))
     @if($type=='activities')
+        <h4>Open Activities within {{$distance}} miles</h4>
         @include('mobile.partials._activities')
     
     @elseif ($type== 'leads')
@@ -106,10 +110,11 @@ $distances = [1=>'1 mile',2=>'2 miles',5=>'5 miles', 10=>'10 miles',25=>'25 mile
     @elseif ($type == 'opportunities')
         @include('mobile.partials._opportunities')
     @else
-        
+      
     @endif
 
 @endif
+</div></div>
 
 @include('mobile.partials._mapscript')
 @include('partials._maps')

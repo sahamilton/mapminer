@@ -1,52 +1,66 @@
-@php $activities = \App\ActivityType::orderBy('sequence')->pluck('activity','id')->toArray(); @endphp
-  <style>
-body.modal-open .activity_date, .followup_date {
-    z-index: 1200 !important;
-}
-</style>
-
-<!-- Modal -->
-<div class="modal fade" 
-      id="add_activity" 
-      tabindex="-1" 
-      role="dialog" 
-      aria-labelledby="myModalLabel" 
-      aria-hidden="true">
-
-  <div class="modal-dialog">
-
-
-    <!-- Modal content-->
-    <div class="modal-content">
-      <div class="modal-header">
-        
-        <h4 class="modal-title">Record Activity</h4>
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-      </div>
-      <div class="modal-body">
+<table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover col-md-5'>
+    <thead>
+    <th>Company</th>
+    <th>Planned Date</th>
+    <th>Activity</th>
+    <th>Actions</th>
+    </thead>
+    <tbody>
+         @foreach($results as $activity)
+  
+            <tr>
+                <td><a href="{{route('mobile.show',$activity->relatesToAddress->id)}}">{{$activity->relatesToAddress->businessname}}</a></td>
+                <td>{{$activity->activity_date ? $activity->activity_date->format('M j, Y'):''}}</td>
                 
-        <form method="post" action="{{route('activity.store')}}">
-        @csrf
-         @include('mobile.partials._activitynewform')
-         <input 
-              type="hidden" 
-              name="branch_id" 
-              value="{{$branch->id}}" />
-          <div class="float-right">
-           <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button> <input type="submit" value="Record Activity" class="btn btn-danger" />
-            </div>
-            <input type="hidden" name="address_id" value="{{$address->id}}" />
+                
+                <td>@if($activity->type)
+                    {{$activity->type->activity}}
+                    @endif
+                </td>
+                <td>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
+                        <span class="caret"></span>
+                        <span class="sr-only">Toggle Dropdown</span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
 
-        </form>
+                        
+                        
+                        <a class="dropdown-item" 
+                        title="Edit Activity"
+                          href="{{route('activity.edit',$activity->id)}}">
+                        <i class="far fa-edit text-info"" aria-hidden="true"> </i>
+                        Edit activity</a>
+                        @if(! $activity->completed)
+                        <a class="dropdown-item"
+                        title="Complete Activity"
+                          href="{{route('activity.complete',$activity->id)}}" 
+                          >
+                          <i class="fas fa-clipboard-check"></i>
+                           Mark As Complete
+                        </a>
 
-        <div class="modal-footer">
-        
-        
-      </div>
-      </div>
+                        @endif
+                        
+                        <a class="dropdown-item"
+                        title="Delete Activity"
+                          data-href="{{route('activity.destroy',$activity->id)}}" 
+                          data-toggle="modal" 
+                          data-target="#confirm-delete" 
+                          data-title = "activity" 
+                          href="#">
+                          <i class="far fa-trash-alt text-danger" 
+                            aria-hidden="true"> </i>
+                           Delete Activity
+                        </a>
 
-      
-    </div>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+           @endforeach
 
-  </div>
-</div>
+    </tbody>
+</table>
+

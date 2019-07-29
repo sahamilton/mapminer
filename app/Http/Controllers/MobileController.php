@@ -42,14 +42,14 @@ class MobileController extends Controller
         $branches = $this->_getBranchData($person);
         $branch = $branches->first();
         $this->branch->setGeoBranchSession($branch, $branch->radius);
-        session(
-            [
-            'geo.branch'=>$branch->id]
-        );
-        $markers = '['.$branch->lat.",".$branch->lng.']';
+        $address = new Address($branch->toArray());
+        $type="activities";
+        $distance = 1;
+        $results = $this->_getDataByType($branch, $address, $distance, $type);
         $searchaddress = $branch->fullAddress();
+        $markers = $this->_getMapMarkers($results, $type);
 
-        return response()->view('mobile.index', compact('person', 'branch', 'branches', 'markers', 'searchaddress'));
+        return response()->view('mobile.index', compact('person', 'branch', 'branches', 'results', 'type', 'distance', 'markers', 'searchaddress'));
     }
 
     /**
@@ -97,10 +97,7 @@ class MobileController extends Controller
      */
     public function search(Request $request)
     {
-        // has address changes?
-        //  search != session address
-        //
-        // has branch changed?
+
      
         $distance = request('distance');
         $type = request('type');
@@ -137,8 +134,7 @@ class MobileController extends Controller
 
         $markers = $this->_getMapMarkers($results, $type);
         $searchaddress = $address->fulladdress();
-        dd($searchaddress);
-        
+
         return response()->view('mobile.index', compact('person', 'branch', 'results', 'branches', 'type', 'distance', 'searchaddress', 'address', 'markers'));
     }
     /**
@@ -207,6 +203,7 @@ class MobileController extends Controller
      */
     public function show(Address $address)
     {
+        dd($address);
         $person = $this->person->where('user_id', auth()->user()->id)->first();
         $branch = $this->_getBranchData($person);
 

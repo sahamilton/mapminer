@@ -7,6 +7,8 @@
         },
         zoom: 13
       });
+
+    var bounds = new google.maps.LatLngBounds();
     if (navigator.geolocation) {
 
       navigator.geolocation.getCurrentPosition(function(position) {
@@ -22,6 +24,7 @@
         var marker = new google.maps.Marker({
           position: geolocate,
           map: map,
+
           title: 'You are here!'
         });
        
@@ -54,20 +57,21 @@
     infowindow.setContent(infowindowContent);
     var markers = {!! $markers !!};
     for (var i = 0, length = markers.length; i < length; i++) {
-          
+         
         var data = markers[i],
             latLng = new google.maps.LatLng(data.lat, data.lng); 
-       
+        bounds.extend(latLng); 
         // Creating a marker and putting it on the map
         var marker = new google.maps.Marker({
           position: latLng,
           map: map,
+
           title: data.businessname
         });
      
               
     };
-
+    map.fitBounds(bounds);
 
     autocomplete.addListener('place_changed', function() {
       infowindow.close();
