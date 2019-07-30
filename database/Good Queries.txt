@@ -43,6 +43,13 @@ activitytype_id = 4
 and activity_date  between date('2019-04-01') and date('2019-04-08')
 group by branch_id;
 
+//***************** Open Opportunities Aging
+select count(id) as open, 
+round(datediff( now(), created_at) / 7)) as weeks, 
+branch_id from opportunities 
+where opportunities.closed is null or opportunities.closed = 0 
+group by branch_id, weeks ORDER BY `branch_id`, weeks
+
 
 /// Weekly Report
 
