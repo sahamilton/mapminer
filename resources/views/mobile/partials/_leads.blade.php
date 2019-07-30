@@ -1,4 +1,4 @@
-<h4>Nearby Leads</h4>
+
 <div class="container">
 <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
@@ -23,17 +23,14 @@
                     {{$result->lastActivity->first()->activity_date->format('Y-m-d')}} 
                 @endif
                <br /><a 
-                    
-                    title="Add Activity"
-                    data-href="{{route('activity.store')}}" 
-                    data-toggle="modal" 
-                    data-target="#add_activity" 
-                    data-title = "Add activity to lead" 
-                    data-pk = "{{$result->id}}"
-                    href="#">
+                    data-href="" 
+                    data-id="{{$result->id}}"
+                           data-toggle="modal" 
+                           data-target="#add_activity" 
+                           data-title = "{{$result->businessname}}" 
+                           href="#">
 
-
-               <i class="fas fa-plus-circle text-success"></i>{{$result->id}}</a>
+               <i class="fas fa-plus-circle text-success"></i>Add Activity</a>
             </td>
             
         </tr>

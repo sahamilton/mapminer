@@ -40,9 +40,10 @@ $(document).ready(function()
     	$(this).find('#title').html($(e.relatedTarget).data('title'));
 		$(this).find('#action-form').attr('action',$(e.relatedTarget).data('href'));
 	});	
-	$(document).on('show.bs.modal','#add-activity', function(e) {
+	$(document).on('show.bs.modal','#add_activity', function(e) {
     	$(this).find('#title').html($(e.relatedTarget).data('title'));
-    	$(this).find('input#address_id').val($(e.relatedTarget).data('pk'));
+
+    	$(this).find('input#address_id').val($(e.relatedTarget).data('id'));
 		$(this).find('#action-form').attr('action',$(e.relatedTarget).data('href'));
 	});
     $(document).on('show.bs.modal','#remove-recipient', function(e) {

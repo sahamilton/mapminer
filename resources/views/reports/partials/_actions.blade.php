@@ -16,7 +16,8 @@
                         </a>
                         
                         <a class="dropdown-item"
-                           data-href="{{route('reports.destroy',$report->id)}}" data-toggle="modal" 
+                           data-href="{{route('reports.destroy',$report->id)}}" 
+                           data-toggle="modal" 
                            data-target="#confirm-delete" 
                            data-title = "{{$report->report}} report" 
                            href="#">
