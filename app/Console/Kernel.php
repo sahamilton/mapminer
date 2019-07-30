@@ -63,7 +63,9 @@ class Kernel extends ConsoleKernel
                 ->at('18:59');
             
             // Josh Hammer report
-            $schedule->job(new ActivityOpportunityReport())
+            $period['from'] = \Carbon\Carbon::now()->subWeek()->startOfWeek();
+            $period['to'] = \Carbon\Carbon::now()->subWeek()->endOfWeek();
+            $schedule->job(new ActivityOpportunityReport($period))
                 ->weekly()
                 ->wednesdays()
                 ->at('04:59');
