@@ -168,7 +168,7 @@ Route::group(
         //     Managers
         Route::get('manage/account', ['as'=>'managers.view', 'uses'=>'ManagersController@manager']);
         Route::post('manage/account', ['as'=>'managers.changeview', 'uses'=>'ManagersController@selectaccounts']);
-        Route::get('locationnotes/{companyID}', ['as'=>'locationnotes.show', 'uses'=>'ManagersController@showManagerNotes']);
+        Route::get('locationnotes/{company}', ['as'=>'locationnotes.show', 'uses'=>'ManagersController@showManagerNotes']);
         
         //     Maps
         Route::get('api/mylocalbranches/{distance}/{latLng}/{limit?}', ['as' => 'map.mybranches', 'uses' => 'MapsController@findLocalBranches']);
