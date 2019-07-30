@@ -101,6 +101,7 @@ class MobileController extends Controller
      */
     public function search(Request $request)
     {
+        
         $person = $this->person->where('user_id', auth()->user()->id)->first();
         $myBranches = $person->myBranches();
         if (count($myBranches)==0) {
@@ -139,8 +140,19 @@ class MobileController extends Controller
         }
         
         $results = $this->_getDataByType($branch, $address, $distance, $type);
+        if ($results->count() ==0) {
+            $mapmarkers[0] = ['id'=>'1',
+                                'businessname'=>$address->street,
+                                'address' => $address->fullAddress(), 
+                                'lat'=>$address->lat, 
+                                'lng'=>$address->lng,
+                                'type'=>'center'];
+            $markers = json_encode($mapmarkers);
 
-        $markers = $this->_getMapMarkers($results, $type);
+        } else {
+            $markers = $this->_getMapMarkers($results, $type);
+        }
+        
         $searchaddress = $address->fulladdress();
 
         return response()->view('mobile.index', compact('person', 'branch', 'results', 'branches', 'type', 'distance', 'searchaddress', 'address', 'markers'));

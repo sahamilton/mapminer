@@ -1,16 +1,6 @@
  
       <ul class="navbar-nav ml-auto justify-content-end" style="margin-right:60px"> 
-           @if (auth()->user()->hasRole('admin'))
-            <li class="nav-item"><input 
-                id="search" 
-                placeholder="Type to search users" 
-                autocomplete="off"
-                class="form-control mr-sm-2" 
-                type="search" 
-                aria-label="Search">
-              </li>
-              
-            @endif
+           
                <li class="nav-item">
                 <a  class="nav-link" href="#"
                 data-href="" 
