@@ -197,11 +197,12 @@ class ActivityController extends Controller
      */
     public function store(ActivityFormRequest $request)
     {
-    
+       
         // can we detect the branch here?
-        $data = $this->_parseData($request);
-        $activity = Activity::create($data['activity']);
+        $data = $this->_parseData($request); 
 
+        $activity = Activity::create($data['activity']);
+        
         if (request()->filled('followup_date')) {
             // create a new activity
              $relatedActivity = $this->_createFollowUpActivity($data, $activity);

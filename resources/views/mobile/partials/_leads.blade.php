@@ -14,7 +14,7 @@
         
 
         <tr>
-            <td><a href="{{route('mobile.show',$result->id)}}">{{$result->businessname}}</a></td>
+            <td><a href="{{route('mobile.show',$result->address_id)}}">{{$result->businessname}}</a></td>
             <td>{{$result->fullAddress()}}</td>
             <td>{{number_format($result->distance,2)}} mi</td>
             <td>
@@ -24,7 +24,7 @@
                 @endif
                <br /><a 
                     data-href="" 
-                    data-id="{{$result->id}}"
+                    data-id="{{$result->address_id}}"
                            data-toggle="modal" 
                            data-target="#add_activity" 
                            data-title = "{{$result->businessname}}" 
