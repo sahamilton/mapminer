@@ -11,7 +11,7 @@
     </thead>
     <tbody>
         @foreach($results as $result)
-        
+      
 
         <tr>
             <td><a href="{{route('mobile.show',$result->address_id)}}">{{$result->businessname}}</a></td>
@@ -22,7 +22,8 @@
 
                     {{$result->lastActivity->first()->activity_date->format('Y-m-d')}} 
                 @endif
-               <br /><a 
+               <br />
+               @if(isset($result->address_id))<a 
                     data-href="" 
                     data-id="{{$result->address_id}}"
                            data-toggle="modal" 
@@ -31,6 +32,7 @@
                            href="#">
 
                <i class="fas fa-plus-circle text-success"></i>Add Activity</a>
+               @endif
             </td>
             
         </tr>

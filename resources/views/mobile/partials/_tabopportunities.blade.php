@@ -1,5 +1,12 @@
-
-
+<a 
+    class="btn btn-info" 
+    title="Add Opportunity"
+    href=""
+    data-toggle="modal" 
+    data-target="#createopportunity">
+      <i class="fas fa-file-invoice-dollar"></i> 
+  Create New Opportunity
+</a>
 <table id ='sorttable6' class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
 
@@ -47,3 +54,4 @@
 
 </table>
 @include('opportunities.partials._closemodal')
+@include('mobile.partials._createopportunitymodal')
