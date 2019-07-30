@@ -685,7 +685,7 @@ Route::group(
                  //$company = App\Company::findOrFail(532);
                  $period['from'] = \Carbon\Carbon::now()->subWeek()->startOfWeek();
                  $period['to'] = \Carbon\Carbon::now()->subWeek()->endOfWeek();
-                 App\Jobs\Top50WeeklyReport::dispatch();
+                 //App\Jobs\Top50WeeklyReport::dispatch();
                
                  //App\Jobs\AccountActivities::dispatch($company, $period);
                 //App\Jobs\BranchOpportunities::dispatch($period);
@@ -701,15 +701,15 @@ Route::group(
                  
                  }
                  $period['from'] = \Carbon\Carbon::now()->subWeek()->startOfWeek();
-                 $period['to'] = \Carbon\Carbon::now()->subWeek()->endOfWeek();
+                 $period['to'] = \Carbon\Carbon::now()->subWeek()->endOfWeek();*/
                 App\Jobs\BranchStats::dispatch($period);
-                //App\Jobs\ActivityOpportunityReport::dispatch();
+                //App\Jobs\ActivityOpportunityReport::dispatch($period);
                 //App\Jobs\ActivityOpportunityReport::dispatch();
                 
                 //App\Jobs\ZipBackup::dispatch('MMProd20190123');
                 //App\Jobs\UploadToDropbox::dispatch('MMProd20190123');
                 //Mail::queue(new App\Mail\ConfirmBackup('MMProd20190123'));
-                */
+                
             }
         );
 

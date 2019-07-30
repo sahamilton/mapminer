@@ -38,16 +38,16 @@ class BranchStats implements ShouldQueue
 
         // create the file
         $file = '/public/reports/branchstatsrpt'. $this->period['to']->timestamp. ".xlsx";
-        //$file = '/public/reports/branchstatsrpt1557125999.xlsx';
+        
         Excel::store(new BranchStatsExport($this->period), $file);
         $distribution = [
-            ['address'=>'astarr@trueblue.com','name'=>'Amy Starr'], 
-            ['address'=>'jhammar@trueblue.com','name'=>'Josh Hammer'],
-            ['address'=>'jsauer@trueblue.com','name'=>'Jacob Sauer'],
-            ['address'=>'salesoperations@trueblue.com','name'=>'Sales Operations']];
-        foreach ($distribution as $recipient) {
+            ['email'=>'astarr@trueblue.com','name'=>'Amy Starr'], 
+            ['email'=>'jhammar@trueblue.com','name'=>'Josh Hammer'],
+            ['email'=>'jsauer@trueblue.com','name'=>'Jacob Sauer'],
+            ['email'=>'salesoperations@trueblue.com','name'=>'Sales Operations']];
+        
             
-            Mail::to($recipient['address'], $recipient['name'])->send(new BranchStatsReport($file, $this->period));   
-        }
+            Mail::to($distribution)->send(new BranchStatsReport($file, $this->period));   
+        
     }
 }

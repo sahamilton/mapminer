@@ -23,10 +23,9 @@ class ActivityOpportunityReport implements ShouldQueue
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(Array $period)
     {
-        $this->period['from'] = Carbon::now()->subWeek(1)->startOfWeek();
-        $this->period['to'] = Carbon::now()->subWeek(1)->endOfWeek();
+        $this->period = $period;
     }
 
     /**
@@ -41,9 +40,9 @@ class ActivityOpportunityReport implements ShouldQueue
         
         Excel::store(new ActivityOpportunityExport($this->period), $file);
        
-        Mail::to('jhammar@peopleready.com')
-            ->bcc('hamilton@okospartners.com')
-            ->cc('salesoperations@trueblue.com')
+        Mail::to(['email'=>'jhammar@peopleready.com', 'name'=>'Josh Hammer'])
+            ->bcc(['email'=>'hamilton@okospartners.com', 'name'=>'Stephen Hamilton'])
+            ->cc(['email'=>'salesoperations@trueblue.com', 'name'=>'Sales Operations'])
             ->send(new WeeklyActivityOpportunityReport($file, $this->period));
         
 
