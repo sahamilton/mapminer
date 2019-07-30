@@ -113,6 +113,7 @@ $distances = [1=>'1 mile',2=>'2 miles',5=>'5 miles', 10=>'10 miles',25=>'25 mile
     @elseif ($type == 'opportunities')
     <h4>Open Oportunities within {{$distance}} miles</h4>
         @include('mobile.partials._opportunities')
+        @include('mobile.partials._activitiesmodal')
     @else
       
     @endif

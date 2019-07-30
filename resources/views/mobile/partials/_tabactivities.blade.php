@@ -11,7 +11,7 @@
 
     </thead>
     <tbody>
-         @foreach($address->openActivities as $activity)
+         @foreach($address->activities as $activity)
   
             <tr>
                 <td>{{$activity->activity_date ? $activity->activity_date->format('M j, Y'):''}}</td>

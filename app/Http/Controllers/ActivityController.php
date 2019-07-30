@@ -197,12 +197,12 @@ class ActivityController extends Controller
      */
     public function store(ActivityFormRequest $request)
     {
-       
+        
         // can we detect the branch here?
         $data = $this->_parseData($request); 
 
         $activity = Activity::create($data['activity']);
-        
+
         if (request()->filled('followup_date')) {
             // create a new activity
              $relatedActivity = $this->_createFollowUpActivity($data, $activity);
@@ -213,7 +213,12 @@ class ActivityController extends Controller
             $activity->relatedContact()->attach($data['contact']['contact']);
         }
         $activity->load('relatedContact');
-        return redirect()->route('address.show', $data['activity']['address_id']);
+        if (request()->has('mobile')) {
+            return redirect()->route('mobile.show', $data['activity']['address_id']);
+        } else {
+            return redirect()->route('address.show', $data['activity']['address_id']);
+        }
+        
     }
 
     /**

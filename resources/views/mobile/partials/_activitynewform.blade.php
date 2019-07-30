@@ -73,6 +73,7 @@
               <label class="col-md-4 control-label">Follow Up Activity:</label>
               
               <select  id="followup_activity" name="followup_activity">
+                <option value="">No follow up</option>
                 @foreach ($activities as $key=>$type)
                   <option value="{{$key}}">{{$type}}</option>
                 @endforeach

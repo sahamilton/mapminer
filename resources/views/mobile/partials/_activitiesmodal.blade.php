@@ -32,6 +32,10 @@ body.modal-open .activity_date, .followup_date {
               type="hidden" 
               name="branch_id" 
               value="{{$branch->id}}" /> 
+               <input 
+              type="hidden" 
+              name="mobile" 
+              value="1" /> 
             <input type="hidden" 
             name = "address_id" 
             id = "address_id" 

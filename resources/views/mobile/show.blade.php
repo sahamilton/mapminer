@@ -54,7 +54,7 @@
       role="tab"
       aria-controls="activities"
       aria-selected="false">
-        <strong>Activities</strong>
+        <strong>Activities ({{$address->activities->count()}})</strong>
   </a>
 
 
