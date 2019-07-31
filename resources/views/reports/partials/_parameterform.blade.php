@@ -1,3 +1,4 @@
+@if ($report->period_from)
 <div class="form-group form-group-lg">
     <label for='fromdate'>From:</label>
     <input class="form-control" 
@@ -23,6 +24,8 @@
         <strong>{{$errors->has('todate') ? $errors->first('todate')  : ''}}</strong>
     </span>
 </div>
+@endif
+
 
 <div class="form-group form-group-lg">
     <label for='manager'>Branches of Manager:</label>
@@ -44,21 +47,7 @@
     </span>
 </div>
 @if($report->object == 'Company')
-<div class="form-group form-group-lg">
-    <label for='manager'>Company:</label>
-    <select class="form-control" 
-        name="company" 
-        id="company" 
-        value="{{old('company')}}">
-        
-        @foreach ($companies as $company)
-        <option value="{{$company->id}}">
-            {{$company->companyname}}
-        </option>
-        @endforeach
-    </select>
-    <span class="help-block">
-        <strong>{{$errors->has('company') ? $errors->first('company')  : ''}}</strong>
-    </span>
-</div>
+    @include('reports.partials._companyselector')
+@elseif ($report->object == 'Role')
+    @include('reports.partials._roleselector')
 @endif

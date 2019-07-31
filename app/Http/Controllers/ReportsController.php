@@ -6,6 +6,7 @@ use Excel;
 use Carbon\Carbon;
 use App\Branch;
 use App\Report;
+use App\Role;
 use App\Company;
 use App\Person;
 use Illuminate\Http\Request;
@@ -81,14 +82,13 @@ class ReportsController extends Controller {
         $report->load(
             'distribution', 'roleDistribution', 'companyDistribution', 'companyDistribution.managedBy'
         );
-
-        if ($report->object == 'Company') {
-            $companies = $this->_getManagedCompanies();
+        if ($report->object) {
+            $object = $this->_getObject($report);
         } else {
-            $companies=null;
+            $object=null;
         }
         $managers = $this->_getManagers();
-        return response()->view('reports.show', compact('report', 'companies', 'managers'));
+        return response()->view('reports.show', compact('report', 'object', 'managers'));
     }
 
     /**
@@ -169,14 +169,29 @@ class ReportsController extends Controller {
     public function run(Report $report, Request $request)
     {
         
+        // check if period selector
+        // check model
+        $team = $this->_getMyTeam($request);
         if ($myBranches = $this->_getMyBranches(request('manager'))) {
-
-            $period['from']=Carbon::parse(request('fromdate'));
-            $period['to'] = Carbon::parse(request('todate'));
+            if (request()->has('fromdate')) {
+                $period['from']=Carbon::parse(request('fromdate'));
+                $period['to'] = Carbon::parse(request('todate'));
+            }
             $export = "\App\Exports\\". $report->export;
-            if (request()->has('company')) {
-                $company = $this->company->findOrFail(request('company'));
-                return Excel::download(new $export($company, $period, $myBranches), $company->companyname . " " . $report->job . 'Activities.csv');
+            if ($report->object) {
+                switch ($report->object) {
+                case 'Company':
+                    $company = $this->company->findOrFail(request('company'));
+                    return Excel::download(new $export($company, $period, $myBranches), $company->companyname . " " . $report->job . 'Activities.csv');
+                break;
+
+                case 'Role':
+                   
+                    return Excel::download(new $export(request('role'), $team), $report->job . '.csv');
+
+                break;
+                }
+
             } else {
                 return Excel::download(new $export($period, $myBranches), $report->job . 'Activities.csv');
             }
@@ -215,6 +230,34 @@ class ReportsController extends Controller {
         }
 
     }
+    private function _getObject(Report $report)
+    {
+        $object['name'] = $report->object;
+        switch ($report->object){
+        case 'Company':
+
+            return $this->_getManagedCompanies();
+            break;
+
+        case 'Role':
+            return  Role::all();
+
+            break;
+
+            
+        }
+    }
+    private function _getMyTeam(Request $request)
+    {
+        if (request()->filled('manager')) {
+            return $team = $this->person->findOrFail(request('manager'))
+                ->descendants()
+                ->pluck('id')
+                ->toArray();
+        }
+        return null;
+    }
+
     /**
      * [_getMyBranches description]
      * 
@@ -258,6 +301,7 @@ class ReportsController extends Controller {
 
     private function _getManagedCompanies()
     {
+
         return $this->company
             ->whereHas('managedBy')
             ->where('accounttypes_id', 1)

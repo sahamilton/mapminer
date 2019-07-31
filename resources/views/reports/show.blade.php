@@ -55,6 +55,6 @@
 @endif
 </div>
 @include('reports.partials._removerecipient')
-@include('reports.partials._periodselector')
+@include('reports.partials._variableselector')
 @include('partials._scripts')
 @endsection
