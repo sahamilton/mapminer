@@ -40,9 +40,9 @@ class ActivityOpportunityReport implements ShouldQueue
         
         Excel::store(new ActivityOpportunityExport($this->period), $file);
        
-        Mail::to(['email'=>'jhammar@peopleready.com', 'name'=>'Josh Hammer'])
-            ->bcc(['email'=>'hamilton@okospartners.com', 'name'=>'Stephen Hamilton'])
-            ->cc(['email'=>'salesoperations@trueblue.com', 'name'=>'Sales Operations'])
+        Mail::to([['email'=>'jhammar@peopleready.com', 'name'=>'Josh Hammer']])
+            ->bcc([['email'=>'hamilton@okospartners.com', 'name'=>'Stephen Hamilton']])
+            ->cc([['email'=>'salesoperations@trueblue.com', 'name'=>'Sales Operations']])
             ->send(new WeeklyActivityOpportunityReport($file, $this->period));
         
 
