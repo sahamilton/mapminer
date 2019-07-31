@@ -38,12 +38,11 @@ class BranchLogins implements ShouldQueue
         $file = '/public/reports/branchlogins'. $this->period['to']->timestamp. ".xlsx";
         Excel::store(new BranchLoginsExport($this->period), $file);
         $distribution = [
-            ['address'=>'jsauer@peopleready.com','name'=>'Jacob Sauer'], 
-            ['address'=>'dtuot@peopleready.com','name'=>'Daniel Tuot'],
-            ['address'=>'salesoperations@trueblue.com','name'=>'Sales Operations']];
-        foreach ($distribution as $recipient) {
+            ['email'=>'jsauer@peopleready.com','name'=>'Jacob Sauer'], 
+            ['email'=>'dtuot@peopleready.com','name'=>'Daniel Tuot'],
+            ['email'=>'salesoperations@trueblue.com','name'=>'Sales Operations']];
+        
             
-            Mail::to($recipient['address'], $recipient['name'])->send(new BranchLoginsReport($file, $this->period));   
-        }
+            Mail::to($distribution)->send(new BranchLoginsReport($file, $this->period));   
     }
 }

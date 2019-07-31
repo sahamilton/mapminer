@@ -39,12 +39,12 @@ class OpenTop50BranchOpportunities implements ShouldQueue
         $file = '/public/reports/topopen50wkrpt'. $this->period->timestamp. ".xlsx";
         
         Excel::store(new OpenTop50BranchOpportunitiesExport($this->period), $file);
-        $distribution = ['sharp@trueblue.com'=>'Stephanie Harp'];
-        foreach ($distribution as $email=>$recipient) {
+        $distribution = ['email'=>'sharp@trueblue.com', 'name'=>'Stephanie Harp'];
+        
             Mail::to($email, $recipient)
               
                 ->send(new SendTop50WeeklyReport($file));
-        }
+
         
                 
         
