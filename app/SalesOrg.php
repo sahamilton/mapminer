@@ -72,4 +72,10 @@ class SalesOrg extends \Eloquent
         );
         return $team->toJson();
     }
+
+    public function getCapoDiCapo()
+    {
+
+        return Person::findOrFail($this->topdog);
+    }
 }
