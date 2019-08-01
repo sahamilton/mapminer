@@ -47,8 +47,6 @@ class ActivityOpportunityReport implements ShouldQueue
         $distribution = $report->getDistribution();
         Mail::to($distribution)
             ->send(new WeeklyActivityOpportunityReport($file, $this->period));
-
-
     }
         
 }
