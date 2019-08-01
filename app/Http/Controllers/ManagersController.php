@@ -39,8 +39,10 @@ class ManagersController extends BaseController {
     public function manager()
     {
         
-        $data = $this->getManagersData();
-    
+        if (! $data = $this->_getManagersData()) {
+            return redirect()->route('home')->witherror('You do not have access to this view');
+        }
+        
         return response()->view('managers.manageaccounts', compact('data'));
         
         
@@ -62,7 +64,7 @@ class ManagersController extends BaseController {
         if (! request()->filled('manager')) {
 
 
-            $managerArray = $this->getManagers(auth()->id());
+            $managerArray = $this->_getManagers(auth()->id());
             if (isset($managerArray['user_id'])) {
                 $this->managerID = $managerArray['user_id'];
             } else {
@@ -78,7 +80,7 @@ class ManagersController extends BaseController {
         if ($this->managerID != session('manager') && ! request()->filled('accounts')) {
 
                 
-                $data =  $this->getMyAccounts();
+                $data =  $this->_getMyAccounts();
 
                 
         } else {
@@ -94,7 +96,7 @@ class ManagersController extends BaseController {
             return  redirect()->to(route('managers.view'));
         }
         
-        $data =  $this->getManagersData($data);
+        $data =  $this->_getManagersData($data);
 
         if (! is_array($data['accounts'])) {
 
@@ -104,24 +106,26 @@ class ManagersController extends BaseController {
         return response()->view('managers.manageaccounts', compact('data'));
     }
     /**
-     * [getManagersData description]
+     * [__getManagersData description]
      * 
      * @param [type] $data [description]
      * 
      * @return [type]       [description]
      */
-    private function getManagersData($data=null)
+    private function _getManagersData($data=null)
     {
         
         if (! isset($data['accounts'])) {
-            $data = $this->getMyAccounts($data);
+            if(! $data = $this->_getMyAccounts($data)){
+                return false;
+            }
         }
     
         if (! isset($data['title'])) {
             $data['title'] = 'Title';
         }
         $data['managerList'] = $this->getAllManagers();
-
+     
         if (! isset($data['selectedAccounts'])) {
             $data['selectedAccounts'] = array();
             foreach ($data['accounts'] as $keys=>$value) {
@@ -133,13 +137,13 @@ class ManagersController extends BaseController {
     //dd('hrere',$data['accounts'],$data['selectedAccounts']);
         //$data['accounts'] = $data['selectedAccounts'];        
 
-        $data['notes'] = $this->getMyNotes($data['accounts']);
+        $data['notes'] = $this->_getMyNotes($data['accounts']);
         
-        $data['watching'] = $this->getManagersWatchers($data['accounts']);
-        $data['nocontact'] = $this->getLocationsWoContacts($data['accounts']);
+        $data['watching'] = $this->_getManagersWatchers($data['accounts']);
+        $data['nocontact'] = $this->_getLocationsWoContacts($data['accounts']);
         
-        $data['nosalesnotes'] = $this->getNoSalesNotes($data['accounts']);
-        $data['segments'] = $this->getSegmentDetails($data['accounts']);
+        $data['nosalesnotes'] = $this->_getNoSalesNotes($data['accounts']);
+        $data['segments'] = $this->_getSegmentDetails($data['accounts']);
 
         return $data;
     }
@@ -152,7 +156,7 @@ class ManagersController extends BaseController {
     {
         
         
-        if (! $this->checkManager($company)) {
+        if (! $this->_checkManager($company)) {
             return redirect()->route('managers.view')->withWarning('this is not one of your accounts');
         }
         
@@ -171,10 +175,10 @@ class ManagersController extends BaseController {
     public function showManagerNotes(Company $company)
     {
         
-        if (! $this->checkManager($company)) {
+        if (! $this->_checkManager($company)) {
             return redirect()->route('home')->withMessage('You are not authorized to view this page');
         }
-        $notes = $this->getManagerNotes($company);
+        $notes = $this->_getManagerNotes($company);
 
         $data['title'] = $notes[0]->relatesToLocation->company->companyname . ' Location Notes';
 
@@ -185,14 +189,14 @@ class ManagersController extends BaseController {
     
 
     /**
-     * [checkManager description]
+     * [_checkManager description]
      * @param  [type] $companyID [description]
      * @return [type]            [description]
      */
-    private function checkManager(Company $company)
+    private function _checkManager(Company $company)
     {
        
-        if (! $data = $this->getMyaccounts()) {
+        if (! $data = $this->_getMyAccounts()) {
             return false;
         } 
         
@@ -207,13 +211,13 @@ class ManagersController extends BaseController {
     
 
     /**
-     * [getManagerNotes description]
+     * [_getManagerNotes description]
      * 
      * @param Company $company [description]
      * 
      * @return [type]           [description]
      */
-    private function getManagerNotes(Company $company)
+    private function _getManagerNotes(Company $company)
     {
             // refactor
         return \App\Note::where('type', '=', 'location')
@@ -229,13 +233,13 @@ class ManagersController extends BaseController {
     }
     
     /**
-     * [getMyAccounts description]
+     * [_getMyAccounts description]
      * 
      * @param array $data [description]
      * 
      * @return [type]       [description]
      */
-    private function getMyAccounts($data=null)
+    private function _getMyAccounts($data=null)
     {   
 
         if (auth()->user()->hasRole('national_account_manager')) {
@@ -262,7 +266,7 @@ class ManagersController extends BaseController {
             ->pluck('companyname','id')
             ->toArray();
 
-            $data['manager'] = $this->getManagers($this->managerID);
+            $data['manager'] = $this->_getManagers($this->managerID);
         
             
             //$data['manager'] = array('id' => current(array_keys($managerTemp)),'name'=>array_values($managerTemp)[0]);
@@ -271,7 +275,7 @@ class ManagersController extends BaseController {
         } elseif (auth()->user()->hasRole(['admin', 'sales_operations'])) {
             
             $data['accounts'] = Company::orderBy('companyname')
-                ->pluck('companyname','id')
+                ->pluck('companyname', 'id')
                 ->toArray();
             $data['title'] = "All Managers Accounts";
             
@@ -285,11 +289,11 @@ class ManagersController extends BaseController {
     
     
     /**
-     * [getMyNotes description]
+     * [_getMyNotes description]
      * @param  [type] $accountstring [description]
      * @return [type]                [description]
      */
-    private function getMyNotes($accounts)
+    private function _getMyNotes($accounts)
     {
         
         
@@ -323,17 +327,23 @@ class ManagersController extends BaseController {
 
     /**
      * [companywatchexport description]
+     * 
      * @return [type] [description]
      */
-    public function companywatchexport() {
+    public function companywatchexport() 
+    {
         $id = urldecode(\Input::get('id'));
         
-        Excel::download('Watch List',function($excel) use ($id) {
-            $excel->sheet('Watching',function($sheet) use ($id) {
-                $result = $this->getAllAccountWatchers($id);
-                $sheet->loadview('companies.export',compact('result'));
-            });
-        })->download('csv');
+        Excel::download(
+            'Watch List', function ($excel) use ($id) {
+                $excel->sheet(
+                    'Watching', function ($sheet) use ($id) {
+                        $result = $this->_getAllAccountWatchers($id);
+                        $sheet->loadview('companies.export', compact('result'));
+                    }
+                );
+            }
+        )->download('csv');
 
         return response()->return();
 
@@ -341,11 +351,11 @@ class ManagersController extends BaseController {
     
 
     /**
-     * [getAllAccountWatchers description]
+     * [_getAllAccountWatchers description]
      * @param  [type] $accountstring [description]
      * @return [type]                [description]
      */
-    private function getAllAccountWatchers($accounts)
+    private function _getAllAccountWatchers($accounts)
     {
         // refactor to eloquent
         // locations wherein company_id accountstring
@@ -384,11 +394,11 @@ class ManagersController extends BaseController {
     
     
     /**
-     * [getManagersWatchers description]
+     * [_getManagersWatchers description]
      * @param  [type] $accountstring [description]
      * @return [type]                [description]
      */
-    private function getManagersWatchers($accounts)
+    private function _getManagersWatchers($accounts)
     {
         
         
@@ -408,11 +418,11 @@ class ManagersController extends BaseController {
     }
     
     /**
-     * [getLocationsWoContacts description]
+     * [_getLocationsWoContacts description]
      * @param  [type] $accountstring [description]
      * @return [type]                [description]
      */
-    private function getLocationsWoContacts($accounts)
+    private function _getLocationsWoContacts($accounts)
     {
         //return $this->company->whereIn('id'.)
 
@@ -442,12 +452,12 @@ class ManagersController extends BaseController {
 
 
     /**
-     * [getManagers description]
+     * [_getManagers description]
      * @param  [type] $id [description]
      * @return [type]     [description]
      */
     
-    private function getManagers($id)
+    private function _getManagers($id)
     {
         
             $managers = $this->persons
@@ -482,11 +492,11 @@ class ManagersController extends BaseController {
     
     
 /**
- * [getNoSalesNotes description]
+ * [_getNoSalesNotes description]
  * @param  [type] $accountstring [description]
  * @return [type]                [description]
  */
-    private function getNoSalesNotes($accounts)
+    private function _getNoSalesNotes($accounts)
     {
         
         
@@ -503,21 +513,20 @@ class ManagersController extends BaseController {
     
     
     /**
-     * [getSegmentDetails description]
-     * @param  [type] $id [description]
+     * [_getSegmentDetails description]
+     * 
+     * @param [type] $ids [description]
+     * 
      * @return [type]     [description]
      */
-    private function getSegmentDetails($ids)
+    private function _getSegmentDetails($ids)
     {
-            
-
-        
-            return Address::
-                        select('vertical', \DB::raw('count(*) as total'))
-                        ->with('industryVertical')
-                        ->whereIn('company_id', $ids)
-                        ->groupBy('vertical')
-                        ->get();
+         
+            return Address::select('vertical', \DB::raw('count(*) as total'))
+                ->with('industryVertical')
+                ->whereIn('company_id', $ids)
+                ->groupBy('vertical')
+                ->get();
         
             /*$query = "SELECT
                         companies.companyname as companyname,

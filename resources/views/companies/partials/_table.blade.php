@@ -32,7 +32,7 @@
 	<td>
 
 		<a href= "{{route('company.state', ['companyId'=>$data['company']->id,'state'=>$location->state])}}"
-		title="See all {{$location->state}} locations for $data['company']->companyname">
+		title="See all {{$location->state}} locations for {{$data['company']->companyname}}">
 		{{$location->state}}</a>
 	</td>
 	<td>{{$location->zip}}</td>
