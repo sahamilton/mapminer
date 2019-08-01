@@ -530,6 +530,7 @@ class BranchesController extends BaseController {
     public function branchLeads(Request $request, Branch $branch=null)
     {
         $myBranches = $this->person->myBranches();
+      
         if (! $branch = $this->branch->checkIfMyBranch($request, $myBranches, $branch)) {
             return redirect()->back()
                 ->withWarning('You are not associated with these branches');

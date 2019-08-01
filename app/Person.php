@@ -96,6 +96,9 @@ class Person extends NodeModel implements HasPresenter
      */
     public function myBranches()
     {
+        if (auth()->user()->hasRole('admin')) {
+            return Branch::all()->pluck('branchname', 'id')->toArray();
+        }
         $myteam = $this->myTeam()->has('branchesServiced')->get();
 
         $data=[];
