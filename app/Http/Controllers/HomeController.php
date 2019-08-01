@@ -23,7 +23,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        /*$agent = new \Jenssegers\Agent\Agent;
+        $agent = new \Jenssegers\Agent\Agent;
       
         if (auth()->user()->hasRole(['svp','rvp','evp','market_manager'])) {
             return redirect()->route('dashboard.index');
@@ -36,8 +36,8 @@ class HomeController extends Controller
     
         } else {
             return view('welcome');
-        }*/
+        }
 
-        return view('welcome');
+       // return view('welcome');
     }
 }
