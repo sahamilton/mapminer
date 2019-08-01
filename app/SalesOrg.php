@@ -45,4 +45,31 @@ class SalesOrg extends \Eloquent
         $diff['insiders'] = array_diff($salesRoles, $salesReps);
         return $diff;
     }
+    /**
+     * [getSalesOrgJson description]
+     * 
+     * @return [type] [description]
+     */
+    public function getSalesOrgJson()
+    {
+        $topDog = Person::findOrFail($this->topdog);
+
+        $salesteam = $topDog->descendants()->whereHas(
+            'userdetails.roles', function ($q) {
+                $q->whereIn('roles.id', [3,6,7]);
+            }
+        )->get();
+        $team = $salesteam->map(
+            function ($person) {
+                return ['id'=>$person->id,'name'=>$person->fullName(),'reports_to'=>$person->reports_to];
+            }
+        );
+        return $team->toJson();
+    }
+
+    public function getCapoDiCapo()
+    {
+
+        return Person::findOrFail($this->topdog);
+    }
 }
