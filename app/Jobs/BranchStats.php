@@ -41,7 +41,7 @@ class BranchStats implements ShouldQueue
         
         // create the file
         $file = '/public/reports/branchstatsrpt'. $this->period['to']->timestamp. ".xlsx";
-        //$file = '/public/reports/branchstatsrpt1557125999.xlsx';
+        
         Excel::store(new BranchStatsExport($this->period), $file);
         $class= str_replace("App\Jobs\\", "", get_class($this));
         $report = Report::with('distribution')

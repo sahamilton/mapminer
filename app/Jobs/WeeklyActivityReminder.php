@@ -53,7 +53,7 @@ class WeeklyActivityReminder implements ShouldQueue
        
         foreach ($users as $user) {
             
-            Mail::to($user->email, $user->person->fullName())
+            Mail::to(['email'=>$user->email, 'name'=>$user->person->fullName()])
                 
                 ->send(new SendWeeklyActivityReminder($user, $user->activities));
         }

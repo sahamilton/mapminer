@@ -51,7 +51,7 @@ class Top50WeeklyReport implements ShouldQueue
         foreach ($report->distribution as $recipient) {
             Mail::to([[$recipient->email, $recipient->fullName()]])
             ->send(new SendTop50WeeklyReport($file));
-        }
+
         return true;
     }
 }

@@ -60,8 +60,15 @@ class Kernel extends ConsoleKernel
                 ->at('23:15');
             
             
-            // National Account Jobs
-            // // need to make the companies configurable
+            // Josh Hammer report
+            $period['from'] = \Carbon\Carbon::now()->subWeek()->startOfWeek();
+            $period['to'] = \Carbon\Carbon::now()->subWeek()->endOfWeek();
+            $schedule->job(new ActivityOpportunityReport($period))
+                ->weekly()
+                ->wednesdays()
+                ->at('04:59');
+            
+            // Walmart job
             $company = Company::findOrFail(532);
             $period['from'] = Carbon::now()->subWeek()->startOfWeek();
             $period['to'] = Carbon::now()->subWeek()->endOfWeek();
