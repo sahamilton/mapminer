@@ -14,7 +14,9 @@ class ActivityOpportunityExport implements FromView
     /**
      * [__construct description]
      * 
-     * @param array $period [description]
+     * @param array      $period   [description]
+     * @param array|null $branches [description]
+     * 
      */
     public function __construct(array $period, array $branches=null)
     {
@@ -22,11 +24,21 @@ class ActivityOpportunityExport implements FromView
         $this->branch = $branches;
     }
 
-
     /**
+     * [view description]
+     * 
+     * @return [type] [description]
+     */
     public function view(): View
     {
 
+        $query = "select branches.id as branch_id,
+            branches.branchname as branchname, 
+            a.salesmeetings,
+            b.opportunitieswon,
+            b.value 
+
+            from branches
 
             left join 
                 (select branch_id, count(activities.id) as salesmeetings 
@@ -51,12 +63,9 @@ class ActivityOpportunityExport implements FromView
                     . $this->period['to'] .
                      "' group by opportunities.branch_id) b 
                  
-                 on branches.id = b.branch_id";
-        if ($this->branch) {
-            $query.=" and branches.id in ('". implode("','", $this->branch) ."') ";
-        }  
-        $query.=" ORDER BY branches.id  ASC ";
-    
+                 on branches.id = b.branch_id  
+            ORDER BY branches.id  ASC ";
+       
         $results = \DB::select($query);
         $period = $this->period;
         return view('reports.actopptyreport', compact('results', 'period'));

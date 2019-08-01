@@ -76,5 +76,13 @@ class Report extends Model
         return $period;
     }
 
+    public function getDistribution()
+    {
+        return $this->distribution->map(
+            function ($user) {
+                return ['email'=>$user->email, 'name'=>$user->person->fullName()];
+            }
+        );
+    }
    
 }

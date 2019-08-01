@@ -40,10 +40,8 @@ class OrganizationReport implements ShouldQueue
         $report = Report::with('distribution')
             ->where('job', $class)
             ->firstOrFail();
-        // map all recipinets to one array
-        foreach ($report->distribution as $recipient) {
-            Mail::to([['email'=>$recipient->email, 'name'=>$recipient->fullName()]])->send(new BranchStatsReport($file, $this->period));   
-        }
+        $distribution = $report->getDistribution();
+        Mail::to($distribution)->send(new BranchStatsReport($file, $this->period));   
 
     }
 }

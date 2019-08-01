@@ -47,10 +47,8 @@ class BranchStats implements ShouldQueue
         $report = Report::with('distribution')
             ->where('job', $class)
             ->firstOrFail();
-        
-        foreach ($report->distribution as $recipient) {
-            Mail::to([['email'=>$recipient->email, 'name'=>$recipient->fullName()]])->send(new BranchStatsReport($file, $this->period));   
-        }
+        $distribution = $report->getDistribution();
+        Mail::to($distribution)->send(new BranchStatsReport($file, $this->period));   
 
     }
 }

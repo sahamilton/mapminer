@@ -37,25 +37,14 @@ class BranchOpportunities implements ShouldQueue
     {
         $file = '/public/reports/branchopptysrpt'. $this->period['to']->timestamp. ".xlsx";
         Excel::store(new BranchOpportunitiesExport($this->period), $file);
-<<<<<<< HEAD
         
         $class= str_replace("App\Jobs\\", "", get_class($this));
         $report = Report::with('distribution')
             ->where('job', $class)
             ->firstOrFail();
         
-        foreach ($report->distribution as $recipient) {
-            
-            Mail::to([[$recipient->email, $recipient->fullName()]])->send(new BranchOpportunitiesReport($file, $this->period));   
-        }
-=======
-        $distribution = [
-            ['email'=>'jsauer@peopleready.com','name'=>'Jacob Sauer'], 
-            ['email'=>'dtuot@peopleready.com','name'=>'Daniel Tuot'],
-            ['email'=>'salesoperations@trueblue.com','name'=>'Sales Operations']];
+        $distribution = $report->getDistribution();
+        Mail::to($distribution)->send(new BranchOpportunitiesReport($file, $this->period));   
         
-            Mail::to($distribution)->send(new BranchOpportunitiesReport($file, $this->period));   
-        
->>>>>>> master
     }
 }

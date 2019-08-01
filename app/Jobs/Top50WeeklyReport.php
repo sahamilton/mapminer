@@ -47,9 +47,8 @@ class Top50WeeklyReport implements ShouldQueue
         $report = Report::with('distribution')
             ->where('job', $class)
             ->firstOrFail();
-        
-        foreach ($report->distribution as $recipient) {
-            Mail::to([[$recipient->email, $recipient->fullName()]])
+        $distribution = $report->getDistribution();
+        Mail::to($distribution)
             ->send(new SendTop50WeeklyReport($file));
 
         return true;

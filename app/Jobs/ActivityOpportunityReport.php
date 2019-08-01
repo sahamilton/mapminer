@@ -41,24 +41,14 @@ class ActivityOpportunityReport implements ShouldQueue
         
         Excel::store(new ActivityOpportunityExport($this->period), $file);
         $class= str_replace("App\Jobs\\", "", get_class($this));
-        $report = Report::with('distribution')
+        $report = Report::with('distribution', 'distribution.person')
             ->where('job', $class)
             ->firstOrFail();
-        
-        foreach ($report->distribution as $recipient) {
-            Mail::to([['email'=>$recipient->email, 'name'=>$recipient->fullName()]])
+        $distribution = $report->getDistribution();
+        Mail::to($distribution)
             ->send(new WeeklyActivityOpportunityReport($file, $this->period));
-        }
+
 
     }
-    /**
-     * [_getDistribution description]
-     * 
-     * @return [type] [description]
-     */
-    private function _getDistribution()
-    {
-        // get distribution from database
-        // unless specified
-    }
+        
 }

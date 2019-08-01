@@ -28,14 +28,14 @@
 
 
 <div class="form-group form-group-lg">
-    <label for='manager'>Branches of Manager:</label>
+    <label for='manager'>Manager:</label>
     <select class="form-control" 
        
         name="manager" 
         
         id="manager" 
         value="{{  old('manager')}}">
-        <option value="">All Branches
+        <option value="">All Managers
         </option>
         @foreach ($managers as $manager)
         <option value="{{$manager->id}}">{{$manager->fullName()}}

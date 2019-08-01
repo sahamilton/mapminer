@@ -21,7 +21,7 @@ class SelectCompanyActivities implements ShouldQueue
      */
     public function __construct()
     {
-        
+        // not sure about this class!!
     }
 
     /**
