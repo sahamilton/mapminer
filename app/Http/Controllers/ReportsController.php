@@ -18,12 +18,14 @@ class ReportsController extends Controller {
     public $company;
     public $person;
     public $report;
+
     /**
      * [__construct description]
      * 
-     * @param Branch $branch [description]
-     * @param Report $report [description]
-     * @param Person $person [description]
+     * @param Branch  $branch  [description]
+     * @param Company $company [description]
+     * @param Report  $report  [description]
+     * @param Person  $person  [description]
      */
     public function __construct(
         Branch $branch, Company $company, Report $report, Person $person

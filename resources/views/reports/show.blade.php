@@ -2,7 +2,8 @@
 @section('content')
 <h2>{{$report->report}}</h2>
 <a class="btn btn-success"
-    data-href="{{route('reports.run',$report->id)}}" data-toggle="modal" 
+    data-href="{{route('reports.run',$report->id)}}" 
+    data-toggle="modal" 
     data-target="#run-report" 
     data-title = "{{$report->report}}" 
     href="#">

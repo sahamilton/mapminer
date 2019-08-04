@@ -636,6 +636,29 @@ class Branch extends Model implements HasPresenter
 
     }
     /**
+     * [scopeAgingOpportunities description]
+     * 
+     * @param [type] $query [description]
+     * @param [type] $age   [description]
+     * 
+     * @return [type]        [description]
+     */
+    public function scopeAgingOpportunities($query, $age)
+    {
+        $period = now()->subDays($age);
+        return $query->with(
+            ['opportunities', function ($query) use ($period) {
+                            $query->where('closed', 0)
+                                ->where('opportunities.created_at', '<', $period);
+                        }]
+        );
+        
+        
+
+
+    }
+
+    /**
      * [scopeMobileStats description]
      * 
      * @param [type] $query [description]

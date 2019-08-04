@@ -2,7 +2,7 @@
 <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
         <th>Opportunity</th>
-        <th>Value</th>
+        <th>Address</th>
         <th>Expected Close</th>
         <th>Distance</th>
         <th>Last Activity</th>
@@ -13,7 +13,7 @@
         <tr>
             
             <td><a href="{{route('mobile.show',$result->address_id)}}">{{$result->title}}</a></td>
-            <td>{{$result->value}}</td>
+            <td>{{$result->address->address->fullAddress()}}</td>
             <td>{{$result->expected_close}}</td>
             <td>{{number_format($result->distance,2)}} mi</td>
             <td>

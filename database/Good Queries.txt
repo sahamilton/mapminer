@@ -1,4 +1,21 @@
 Good Queries
+
+//       Open but Closed opportunities
+
+select branchname, concat_ws(' ', persons.firstname, persons.lastname), concat_ws(' ', b.firstname, b.lastname) as createdby,  addresses.businessname, opportunities.title, opportunities.created_at, actual_close
+from branches, branch_person, addresses, opportunities, persons, persons b
+
+where opportunities.closed = 0
+and opportunities.actual_close is not null
+and opportunities.branch_id = branches.id
+and branches.id = branch_person.branch_id
+and branch_person.role_id = 9
+and branch_person.person_id = persons.id
+and opportunities.user_id = b.user_id
+and opportunities.address_id = addresses.id
+order by branches.id
+
+
 //*************************************************
 
 SELECT branch_id,count(*)

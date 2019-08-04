@@ -35,7 +35,7 @@
            data-dismiss="modal">Cancel</button> 
            <input type="submit" 
            value="Run Report" 
-           data-dismiss="modal" 
+          
            class="btn btn-danger" />
             </div>
             
