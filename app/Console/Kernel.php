@@ -44,7 +44,7 @@ class Kernel extends ConsoleKernel
             $schedule->job(new WeeklyActivityReminder($period))
                 ->weekly()
                 ->sundays()
-                ->at('19:52');
+                ->at('20:20');
 
             $schedule->job(new RebuildPeople())
                 ->dailyAt('21:12');
