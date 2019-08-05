@@ -68,7 +68,6 @@ class ActivityOpportunityExport implements FromView
             $query.=" where branches.id in ('" . implode("','", $this->branch) ."') "; 
         } 
         $query.=" ORDER BY branches.id  ASC ";
-     
         $results = \DB::select($query);
         $period = $this->period;
         return view('reports.actopptyreport', compact('results', 'period'));

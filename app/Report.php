@@ -8,7 +8,7 @@ class Report extends Model
 {
     
     
-    public $fillable = ['report', 'description', 'details', 'job', 'export'];
+    public $fillable = ['report', 'description', 'details', 'job', 'export', 'period'];
     
     /**
      * [company description]

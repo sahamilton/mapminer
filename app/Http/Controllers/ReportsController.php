@@ -114,7 +114,11 @@ class ReportsController extends Controller {
      */
     public function update(Request $request, Report $report)
     {
+
         $report->update(request()->all());
+        if (! request()->has('period')) {
+            $report->update(['period'=>0]);
+        }
         return redirect()->route('reports.index');
     }
 

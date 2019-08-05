@@ -87,3 +87,24 @@
         </span>
     </div>
 </div>
+
+<!-- Period Selector -->
+<div class="form-group  {{ $errors->has('period') ? ' has-error' : ''}}">
+    <label class=" control-label">Period Selector:
+    <div class="input-group checkbox inline input-group-sm">
+        <input 
+        type="checkbox" 
+        class="form-control" 
+        name='period' 
+        @if(old('period',isset($report) && $report->period))
+            checked
+       @endif
+        value="1"
+        title="Include Period Selector"
+        period="period" 
+        ></label>
+        <span class="help-block">
+            <strong>{{ $errors->has('period') ? $errors->first('period') : ''}}</strong>
+        </span>
+    </div>
+</div>
