@@ -37,10 +37,11 @@
 
 <!-- Report details -->
 <div class="form-group{{ $errors->has('details') ? ' has-error' : '' }}">
-    <label class=" control-label">details:</label>
+    <label class=" control-label">Details:</label>
     <div class="input-group input-group-lg">
-        <textarea  
-        class="form-control" 
+        <textarea 
+        id="summernote" 
+        class="form-control summernote" 
         name='details' 
         required
         details="details">{{ old('details', isset($report) ? $report->details :'' ) }}

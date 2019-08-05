@@ -68,8 +68,12 @@ class ReportsController extends Controller {
     public function store(Request $request)
     {   
 
-        $this->report->create(request()->all());
-        return redirect()->route('reports.index');
+        $report = $this->report->create(request()->all());
+        if (! request()->has('period')) {
+            $report->update(['period'=>0]);
+        }
+
+        return redirect()->route('reports.show', $report->id);
     }
 
     /**
