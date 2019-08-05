@@ -174,6 +174,7 @@ class ReportsController extends Controller {
         // check if period selector
         // check model
         $team = $this->_getMyTeam($request);
+   
         if ($myBranches = $this->_getMyBranches(request('manager'))) {
             if (request()->has('fromdate')) {
                 $period['from']=Carbon::parse(request('fromdate'));

@@ -19,14 +19,17 @@ class ActivityOpportunityReport implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     public $period;
+    public $branches;
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(Array $period)
+    public function __construct(Array $period, Array $branches = null)
     {
+     
         $this->period = $period;
+        $this->branches = $branches;
     }
 
     /**
@@ -39,7 +42,7 @@ class ActivityOpportunityReport implements ShouldQueue
         // create the file
         $file = '/public/reports/actopptywkrpt'. Carbon::now()->timestamp. ".xlsx";
         
-        Excel::store(new ActivityOpportunityExport($this->period), $file);
+        Excel::store(new ActivityOpportunityExport($this->period), $this->branches);
         $class= str_replace("App\Jobs\\", "", get_class($this));
         $report = Report::with('distribution', 'distribution.person')
             ->where('job', $class)

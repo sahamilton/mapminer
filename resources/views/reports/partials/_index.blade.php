@@ -1,4 +1,4 @@
-<h2>All Batch Reports</h2>
+<h2>Admin Reports</h2>
 <div class="container">
     <div class="float-right">
         <a href="{{route('reports.create')}}" class="btn btn-info">Add Report</a>
