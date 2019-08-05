@@ -39,11 +39,13 @@ class BranchOpportunities implements ShouldQueue
         Excel::store(new BranchOpportunitiesExport($this->period), $file);
         
         $class= str_replace("App\Jobs\\", "", get_class($this));
+       
         $report = Report::with('distribution')
             ->where('job', $class)
             ->firstOrFail();
         
         $distribution = $report->getDistribution();
+        
         Mail::to($distribution)->send(new BranchOpportunitiesReport($file, $this->period));   
         
     }
