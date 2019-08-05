@@ -710,13 +710,15 @@ Route::group(
                         ->dispatch($filename)->onQueue('mapminer');
                  }
                  
-                 }
-                
-                 App\Jobs\WeeklyOpportunitiesReminder::dispatch();*/
+                 }*/
+                 $period['from'] = now();
+                 $period['to'] = now()->addWeek();
+                 App\Jobs\WeeklyActivityReminder::dispatch($period);
+                 /*App\Jobs\WeeklyOpportunitiesReminder::dispatch();
                  $period['from'] = \Carbon\Carbon::now()->subWeek()->startOfWeek();
                  $period['to'] = \Carbon\Carbon::now();
                 App\Jobs\BranchStats::dispatch($period);
-                /*//App\Jobs\ActivityOpportunityReport::dispatch();
+                App\Jobs\ActivityOpportunityReport::dispatch();
                 //App\Jobs\ActivityOpportunityReport::dispatch();
                 
                 //App\Jobs\ZipBackup::dispatch('MMProd20190123');
