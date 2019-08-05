@@ -187,8 +187,8 @@ class LocationsController extends BaseController
         //dd($this->userServiceLines);
         return $this->branch->with('servicelines')
             /*->whereHas('servicelines', function ($q) use($userservicelines) {
-				$q->whereIn('id',$userservicelines);
-			})*/
+                $q->whereIn('id',$userservicelines);
+            })*/
             ->nearby($location, '100')
             ->limit($limit)
             ->get();
@@ -306,13 +306,17 @@ class LocationsController extends BaseController
             $locations->where('company_id', '=', $company_id);
         }
         if ($vertical) {
-            $locations->whereHas('company.industryVertical', function ($q) use ($vertical) {
-                $q->whereIn('searchfilter.id', $vertical);
-            });
+            $locations->whereHas(
+                'company.industryVertical', function ($q) use ($vertical) {
+                    $q->whereIn('searchfilter.id', $vertical);
+                }
+            );
         }
-        return $locations->whereHas('company.serviceline', function ($q) {
-            $q->whereIn('servicelines.id', $this->userServiceLines);
-        })
+        return $locations->whereHas(
+            'company.serviceline', function ($q) {
+                $q->whereIn('servicelines.id', $this->userServiceLines);
+            }
+        )
         ->with('address')->nearby($location, $distance)
         ->get();
     }

@@ -10,7 +10,7 @@ class SalesOrg extends \Eloquent
     public static $rules = [
         'title' => 'required'
     ];
-    public $table = 'salesorgs';
+    public $table = 'persons';
     // Don't forget to fill this array
     protected $fillable = ['title','name'];
     /**

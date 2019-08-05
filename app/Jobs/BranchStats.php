@@ -5,6 +5,7 @@ namespace App\Jobs;
 use Mail;
 use Excel;
 use Carbon\Carbon;
+use App\Report;
 use App\Mail\BranchStatsReport;
 use App\Exports\BranchStatsExport;
 use Illuminate\Bus\Queueable;
@@ -25,6 +26,7 @@ class BranchStats implements ShouldQueue
     public function __construct(Array $period)
     {
         $this->period = $period;
+        
 
     }
 
@@ -35,19 +37,18 @@ class BranchStats implements ShouldQueue
      */
     public function handle()
     {
-
+        
+        
         // create the file
         $file = '/public/reports/branchstatsrpt'. $this->period['to']->timestamp. ".xlsx";
         
         Excel::store(new BranchStatsExport($this->period), $file);
-        $distribution = [
-            ['email'=>'astarr@trueblue.com','name'=>'Amy Starr'], 
-            ['email'=>'jhammar@trueblue.com','name'=>'Josh Hammer'],
-            ['email'=>'jsauer@trueblue.com','name'=>'Jacob Sauer'],
-            ['email'=>'salesoperations@trueblue.com','name'=>'Sales Operations']];
-        
-            
-            Mail::to($distribution)->send(new BranchStatsReport($file, $this->period));   
-        
+        $class= str_replace("App\Jobs\\", "", get_class($this));
+        $report = Report::with('distribution')
+            ->where('job', $class)
+            ->firstOrFail();
+        $distribution = $report->getDistribution();
+        Mail::to($distribution)->send(new BranchStatsReport($file, $this->period));   
+
     }
 }

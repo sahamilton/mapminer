@@ -135,10 +135,10 @@ class CompaniesController extends BaseController
         $filters = $this->_getFilters();
 
         $servicelines = Serviceline::pluck('ServiceLine', 'id');
-            
+        $types = \App\AccountType::all();    
         return response()->view(
             'companies.create', 
-            compact('managers', 'filters', 'servicelines')
+            compact('managers', 'filters', 'servicelines', 'types')
         );
     }
 
@@ -168,25 +168,23 @@ class CompaniesController extends BaseController
      * 
      * @return Response
      */
-    public function edit($company)
+    public function edit(Company $company)
     {
-
+        
         $managers = $this->person->getPersonsWithRole($this->NAMRole);
         
-        $company = $company->where('id', '=', $company->id)
-            ->with('managedBy')
-            ->with('serviceline')
-            ->firstOrFail();
+        $company->load('managedBy', 'serviceline', 'type');
+            
 
         $servicelines = Serviceline::whereIn('id', $this->userServiceLines)
             ->pluck('ServiceLine', 'id');
 
         $filters = $this->_getFilters();
-
+        $types = \App\AccountType::all();
         //$verticals = $this->searchfilter->industrysegments();
         return response()->view(
             'companies.edit', 
-            compact('company', 'managers', 'filters', 'servicelines')
+            compact('company', 'managers', 'filters', 'servicelines', 'types')
         );
     }
 
@@ -198,13 +196,11 @@ class CompaniesController extends BaseController
      * 
      * @return [type]                      [description]
      */
-    public function update(CompanyFormRequest $request,$company)
+    public function update(CompanyFormRequest $request, Company $company)
     {
-               
-        $this->company = $company;
-
-        $this->company->update(request()->all());
-        $this->company->serviceline()->sync(request('serviceline'));
+       
+        $company->update(request()->all());
+        $company->serviceline()->sync(request('serviceline'));
 
         return redirect()->route('company.index');
     }
@@ -215,12 +211,12 @@ class CompaniesController extends BaseController
      * 
      * @return [type]          [description]
      */
-    public function destroy($company)
+    public function destroy(Company $company)
     {
         
-        $this->company->destroy($company->id);
+        $company->delete();
 
-        return redirect()->route('company.index');
+        return redirect()->route('company.index')->withMessage($company->companyname. ' has been deleted');
     }
 
     /**
@@ -350,7 +346,7 @@ class CompaniesController extends BaseController
      * 
      * @return [type]          [description]
      */
-    private function _getCompanyViewData($company,$data)
+    private function _getCompanyViewData(Company $company,$data)
     {
 
         if (isset($data['segment'])) {

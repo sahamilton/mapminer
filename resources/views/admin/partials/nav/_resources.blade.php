@@ -50,3 +50,10 @@
         <i class="fas fa-signal"></i> Lead Status
     </a>
 </li>
+<div class="dropdown-divider"></div>
+<li class="nav-item">
+    <a class="nav-link" 
+    href="{{ route('reports.index') }}">
+        <i class="fas fa-file-download"></i> Reports
+    </a>
+</li>

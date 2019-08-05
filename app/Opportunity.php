@@ -87,7 +87,7 @@ class Opportunity extends Model
         return $this->belongsTo(User::class, 'user_id')->with('person');
     }
     /**
-     * [scopeOpenFunnel description]
+     * [scopeOpenFunnel description]\
      * 
      * @param [type] $query [description]
      * 
@@ -118,7 +118,7 @@ class Opportunity extends Model
     /**
      * [getBranchPipeline description]
      * 
-     * @param array $branches [description]
+     * @param array  $branches [description]
      * 
      * @return [type]           [description]
      */
@@ -155,7 +155,7 @@ class Opportunity extends Model
      */
     public function scopeTop50($query,$period)
     {
-            return $query->where('opportunities.top50', 1);
+            return $query->where('opportunities.top50', '=', 1);
     }
     /**
      * [scopeOpen description]
@@ -212,7 +212,7 @@ class Opportunity extends Model
     public function scopeLost($query, $period)
     {
         return $query->whereClosed(2)
-            ->whereBetween('actual_close', [$period['from'], $period['to']]);
+            ->whereBetween('actual_close', [$period['from'],$period['to']]);
     } 
     /**
      * [scopeSevenDayCount description]

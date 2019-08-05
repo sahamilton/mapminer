@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use Mail;
 use Excel;
+use App\Report;
 use Illuminate\Bus\Queueable;
 use App\Exports\BranchOpportunitiesExport;
 use App\Mail\BranchOpportunitiesReport;
@@ -22,7 +23,7 @@ class BranchOpportunities implements ShouldQueue
      * 
      * @param array $period [description]
      */
-    public function __construct($period)
+    public function __construct(array $period)
     {
         $this->period = $period;
     }
@@ -36,12 +37,14 @@ class BranchOpportunities implements ShouldQueue
     {
         $file = '/public/reports/branchopptysrpt'. $this->period['to']->timestamp. ".xlsx";
         Excel::store(new BranchOpportunitiesExport($this->period), $file);
-        $distribution = [
-            ['email'=>'jsauer@peopleready.com','name'=>'Jacob Sauer'], 
-            ['email'=>'dtuot@peopleready.com','name'=>'Daniel Tuot'],
-            ['email'=>'salesoperations@trueblue.com','name'=>'Sales Operations']];
         
-            Mail::to($distribution)->send(new BranchOpportunitiesReport($file, $this->period));   
+        $class= str_replace("App\Jobs\\", "", get_class($this));
+        $report = Report::with('distribution')
+            ->where('job', $class)
+            ->firstOrFail();
+        
+        $distribution = $report->getDistribution();
+        Mail::to($distribution)->send(new BranchOpportunitiesReport($file, $this->period));   
         
     }
 }

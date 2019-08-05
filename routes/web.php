@@ -12,12 +12,8 @@ use App\Mail\SendWeeklyActivityReminder;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get(
-    '/', ['as'=>'welcome',function () {
+Route::get('/', ['as'=>'welcome','uses'=>'HomeController@index']);
 
-        return view('welcome');
-    }]
-);
     
         
 Route::get('testinbound', ['as'=>'testinbound', 'uses'=>'InboundMailController@inbound']);
@@ -102,9 +98,10 @@ Route::group(
         Route::resource('mgrdashboard', 'MgrDashboardController');
         //   Dashboard
         Route::resource('dashboard', 'DashboardController');
-        
+        // Branch Next Week View
+        Route::resource('branchsummary', 'BranchSummaryController');
         //   Branch Pipeline
-            Route::get('branch/pipeline', ['as'=>'branches.pipeline', 'uses'=>"OpportunityController@pipeline"]);
+        Route::get('branch/pipeline', ['as'=>'branches.pipeline', 'uses'=>"OpportunityController@pipeline"]);
            
         //   Branch Leads
         Route::get('branch/leads/{branch?}', ['as'=>'branch.leads', 'uses'=>'MyLeadsController@index']);
@@ -235,7 +232,7 @@ Route::group(
         
         //     Sales Campaigns
         Route::get('campaigns', ['as'=>'salescampaigns', 'uses'=>'SalesActivityController@mycampaigns']);
-        Route::resource('salesactivity', 'SalesActivityController', ['only' => ['show']]);
+        //Route::resource('salesactivity', 'SalesActivityController', ['only' => ['show']]);
         
         //   Sales organization
         Route::get('salesorg/coverage', ['as'=>'salescoverage', 'uses'=>'SalesOrgController@salesCoverageMap']);
@@ -330,6 +327,13 @@ Route::group(
             
             }
         );
+        Route::get('mobile/{address}/show', ['as'=>'mobile.show', 'uses'=>'MobileController@show']);
+        Route::get('mobile/{address}/check', ['as'=>'mobile.checkaddress','uses'=>'MobileController@check']);
+        Route::get('mobile/searchaddress', ['as'=>'mobile.searchaddress', 'uses'=>'MobileController@searchaddress']);
+
+        Route::post('mobile/search', ['as'=>'mobile.search', 'uses'=>'MobileController@search']);
+        Route::post('mobile/select', ['as'=>'mobile.select', 'uses'=>'MobileController@select']);
+        Route::resource('mobile', 'MobileController');
     }
 );
     
@@ -444,10 +448,9 @@ Route::group(
         //     Project Source
         Route::resource('projectsource', 'ProjectSourceController');
 
-
-        //   Reports
-        Route::resource('reports', 'ReportsController');
         
+
+        //Leads Import       
         Route::get('leads/import/{id?}', ['as'=>'prospects.importfile', 'uses'=>'LeadImportController@getFile']);
         Route::get('leads/import/assigned/{id?}', ['as'=>'assigned_prospects.importfile', 'uses'=>'LeadAssignedImportController@getFile']);
         
@@ -511,11 +514,11 @@ Route::group(
         Route::get('salesnotes/filedelete/{file}', ['as'=>'salesnotes.filedelete', 'uses'=>'SalesNotesController@filedelete']);
         Route::get('salesnotes/create/{company}', ['as'=>'salesnotes.cocreate', 'uses'=>'SalesNotesController@createSalesNotes']);
         
-        //   Sales Activity
+        //   Sales Activity / Campaigns
 
         Route::get('salesactivity/{vertical}/vertical', ['as'=>'salesactivity.vertical', 'uses'=>'SalesActivityController@index']);
         Route::post('salesactivity/updateteam', ['as'=>'salesactivity.modifyteam', 'uses'=>'SalesActivityController@updateteam']);
-        Route::resource('salesactivity', 'SalesActivityController', ['except' => ['show']]);
+        Route::resource('salesactivity', 'Admin\SalesActivityManagementController');
 
         Route::get('campaigndocs/{id}', ['as'=>'salesdocuments.index', 'uses'=>'SalesActivityController@campaignDocuments']);
         Route::get('campaign/{id}/announce', ['as'=>'campaign.announce', 'uses'=>'CampaignEmailController@announceCampaign']);
@@ -537,7 +540,7 @@ Route::group(
         Route::get('watchlist/{userid}', ['as'=>'watch.mywatchexport', 'uses'=>'WatchController@export']);
 
         //     //   Search
-        Route::get('/user/find', 'SearchController@searchUsers');
+        Route::get('user/find', 'SearchController@searchUsers');
 
         
         Route::get('/person/{person}/find', ['as'=>'person.details', 'uses'=>'PersonSearchController@find']);
@@ -574,8 +577,7 @@ Route::group(
         //   Database Backups
         Route::resource('database', 'DatabaseBackupManagerController');
 
-        //   Reports
-        Route::resource('reports', 'ReportsController');
+        
 
         //   User Management
 
@@ -609,7 +611,16 @@ Route::group(
         Route::resource('users', 'Admin\AdminUsersController');
 
         Route::post('lastlogged', ['as'=>'lastlogged', 'uses'=>'Admin\AdminUsersController@lastlogged']);
+        //   Reports
+        Route::post('reports/{report}/run', ['as'=>'reports.run', 'uses'=>'ReportsController@run']);
 
+        Route::post('reports/{report}/send', ['as'=>'reports.send', 'uses'=>'ReportsController@send']);
+
+        Route::post('reports/{report}/addrecipient', ['as'=>'reports.addrecipient', 'uses'=>'ReportsController@addRecipient']);
+        Route::post('reports/{report}/removerecipient', ['as'=>'reports.removerecipient', 'uses'=>'ReportsController@removeRecipient']);
+
+
+        Route::resource('reports', 'ReportsController');
         //   User Role Management
 
         Route::resource('roles', 'Admin\AdminRolesController');
@@ -683,10 +694,10 @@ Route::group(
         Route::get(
             'testjob', function () {
                  //$company = App\Company::findOrFail(532);
-                 $period['from'] = \Carbon\Carbon::now()->subWeek()->startOfWeek();
+                /* $period['from'] = \Carbon\Carbon::now()->subWeek()->startOfWeek();
                  $period['to'] = \Carbon\Carbon::now()->subWeek()->endOfWeek();
-                 //App\Jobs\Top50WeeklyReport::dispatch();
-               
+                 App\Jobs\Top50WeeklyReport::dispatch();
+               */
                  //App\Jobs\AccountActivities::dispatch($company, $period);
                 //App\Jobs\BranchOpportunities::dispatch($period);
                  //App\Jobs\RebuildPeople::dispatch();
@@ -700,16 +711,18 @@ Route::group(
                  }
                  
                  }
+                
+                 App\Jobs\WeeklyOpportunitiesReminder::dispatch();*/
                  $period['from'] = \Carbon\Carbon::now()->subWeek()->startOfWeek();
-                 $period['to'] = \Carbon\Carbon::now()->subWeek()->endOfWeek();*/
-                //App\Jobs\BranchStats::dispatch($period);
-                App\Jobs\ActivityOpportunityReport::dispatch($period);
-         
+                 $period['to'] = \Carbon\Carbon::now();
+                App\Jobs\BranchStats::dispatch($period);
+                /*//App\Jobs\ActivityOpportunityReport::dispatch();
+                //App\Jobs\ActivityOpportunityReport::dispatch();
                 
                 //App\Jobs\ZipBackup::dispatch('MMProd20190123');
                 //App\Jobs\UploadToDropbox::dispatch('MMProd20190123');
                 //Mail::queue(new App\Mail\ConfirmBackup('MMProd20190123'));
-                
+                */
             }
         );
 

@@ -25,7 +25,7 @@
         "maatwebsite/excel": "~3",
         "maddhatter/laravel-fullcalendar": "^1.2",
         "pda/pheanstalk": "^3.1",
-        "smalot/pdfparser": "^0.10.0",
+        "smalot/pdfparser": "^0.14.0",
         "tamayo/laravel-scout-elastic": "^3.0",
         "toin0u/geocoder-laravel": "^4.0",
         "dompdf/dompdf": "~0.6.1",
@@ -39,7 +39,9 @@
         "jjaffeux/postmark-inbound-php": "^3.0",
         "lab404/laravel-impersonate": "^1.2",
         "intervention/image": "^2.4",
-        "spatie/flysystem-dropbox": "^1.0"
+        "spatie/flysystem-dropbox": "^1.0",
+        "reportico/laravel-reportico": "~5.2",
+        "jenssegers/agent": "^2.6"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.1",

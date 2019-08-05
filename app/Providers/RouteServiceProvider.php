@@ -36,10 +36,11 @@ class RouteServiceProvider extends ServiceProvider
         Route::model('customer', \App\Customer::class);
         Route::model('feedback', \App\Feedback::class);
         Route::model('feedback_comment', \App\FeedbackComments::class);
-       
+        Route::model('branchsummary', \App\Branch::class);
         Route::model('lead', \App\Lead::class);
         Route::model('leadsource', \App\Leadsource::class);
         Route::model('location', \App\Location::class);
+        Route::model('mobile', \App\Address::class);
         Route::model('mylead', \App\Mylead::class);
         Route::model('myleadsactivity', \App\MyLeadActivity::class);
         Route::model('note', \App\Note::class);

@@ -17,9 +17,22 @@ class DocumentsController extends BaseController
     public $document;
     public $process;
     public $vertical;
-    public function __construct(Document $document, SalesProcess $process, SearchFilter $vertical)
-    {
+    public $reader;
+    /**
+     * [__construct description]
+     * 
+     * @param Document     $document [description]
+     * @param SalesProcess $process  [description]
+     * @param SearchFilter $vertical [description]
+     */
+    public function __construct(
+        Document $document, 
+        DocumentReader $reader,
+        SalesProcess $process, 
+        SearchFilter $vertical
+    ) {
         $this->document = $document;
+        $this->reader = $reader;
         $this->process = $process;
         $this->vertical = $vertical;
     }
@@ -51,14 +64,15 @@ class DocumentsController extends BaseController
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request 
+     * 
      * @return \Illuminate\Http\Response
      */
     public function store(DocumentFormRequest $request)
     {
         
-        $text = new DocumentReader;
-        $data = $text->readDocument($request);
+       
+        $data = $this->reader->readDocument($request);
        
         $document = $this->document->create($data);
 
@@ -73,43 +87,47 @@ class DocumentsController extends BaseController
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * [show description]
+     * 
+     * @param Document $document [description]
+     * 
+     * @return [type]             [description]
      */
-    public function show($id)
+    public function show(Document $document)
     {
-        $document = $this->document->with('author')->findOrFail($id);
+        $document->load('author');
         return response()->view('documents.show', compact('document'));
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * [edit description]
+     * 
+     * @param Document $document [description]
+     * 
+     * @return [type]             [description]
      */
-    public function edit($id)
+    public function edit(Document $document)
     {
         $verticals = $this->vertical->industrysegments();
         $process = $this->process->pluck('step', 'id');
-        $document = $this->document->findOrFail($id);
+        
         return response()->view('documents.edit', compact('document', 'verticals', 'process'));
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * [update description]
+     * 
+     * @param DocumentFormRequest $request  [description]
+     * @param Document            $document [description]
+     * 
+     * @return [type]                        [description]
      */
-    public function update(DocumentFormRequest $request, $id)
+    public function update(DocumentFormRequest $request, Document $document)
     {
-        $text = new DocumentReader;
-        $data = $text->readDocument($request);
-        $document = $this->document->findOrFail($id);
+        
+        
+        $data = $this->reader->readDocument($request);
+       
         $document->update($data);
 
         $document->vertical()->sync(request('vertical'));
@@ -119,17 +137,22 @@ class DocumentsController extends BaseController
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * [destroy description]
+     * 
+     * @param Document $document [description]
+     * 
+     * @return [type]             [description]
      */
-    public function destroy($id)
+    public function destroy(Document $document)
     {
-         $this->document->destroy($id);
-         return redirect()->route('documents.index');
+         $document->delete();
+         return redirect()->route('documents.index')->withMessage('Document deleted');
     }
-
+    /**
+     * [select description]
+     * 
+     * @return [type] [description]
+     */
     public function select()
     {
         $verticals = $this->vertical->vertical();
@@ -137,12 +160,12 @@ class DocumentsController extends BaseController
         $process = $this->process->pluck('step', 'id');
         return response()->view('documents.select', compact('verticals', 'process'));
     }
-    /*
-     * Select documents filtered by sales process and vertical.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-
+    /**
+     * [getDocuments description]
+     * 
+     * @param Request $request [description]
+     * 
+     * @return [type]           [description]
      */
     public function getDocuments(Request $request)
     {
@@ -153,14 +176,13 @@ class DocumentsController extends BaseController
 
         return response()->view('documents.index', compact('documents', 'data'));
     }
-    /*
-     * Accept user ranking of document
-     *
-     * @param  \Illuminate\Http\Request  $request
+    /**
+     * [rank description]
      * 
-
+     * @param Request $request [description]
+     * 
+     * @return [type]           [description]
      */
-
     public function rank(Request $request)
     {
         
@@ -171,10 +193,16 @@ class DocumentsController extends BaseController
         }
         return 'error';
     }
-   
-    public function watchedby($id)
+    /**
+     * [watchedby description]
+     * 
+     * @param Document $document [description]
+     * 
+     * @return [type]             [description]
+     */
+    public function watchedby(Document $document)
     {
-        $document = $this->document->with('rankings', 'owner', 'owner.person')->find($id);
+        $document->load('rankings', 'owner', 'owner.person');
         return response()->view('documents.watchedby', compact('document'));
     }
 }

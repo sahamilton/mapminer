@@ -2,26 +2,26 @@
 // Default values
 $session = Session::get('geo');
 
-if(! isset($session)) {
-  if(Session::has('geo.type')){
+if (! isset($session)) {
+  if (Session::has('geo.type')) {
 
   $session = array('type'=>'accounts','distance'=>'10','address'=>NULL,'view'=>'maps','lat'=>session('geo.lat'),'lng'=>session('geo.lng'));
-  }else{
+  } else {
     $session = array('type'=>'accounts','distance'=>'10','address'=>NULL,'view'=>'maps','lat'=>'39.8282','lng'=>'-98.5795');
   }
 }
 
 foreach($session as $key=>$value)
 {
-	if(!isset($data[$key])){
-		$data[$key] = $value;
-	}
+  if(!isset($data[$key])){
+    $data[$key] = $value;
+  }
 }
 $types = ['location'=>'All locations','branch'=>'Branches','people'=>'People'];
 // added to filter out Centerline
 
-if(isset($data['type']) && $data['type'] == 'company' && isset($company)){
-	$types['company'] = $company->companyname .' locations';
+if (isset($data['type']) && $data['type'] == 'company' && isset($company)){
+  $types['company'] = $company->companyname .' locations';
 }
 
 $views = array('map'=>'map','list'=>'list');
@@ -40,19 +40,19 @@ method = 'post' name="mapselector">
       @if(isset($data['view']) && $key === $data['view'])
         <option selected value="{{$key}}">{{$key}}</option>
       @else
-    		<option value="{{$key}}">{{$key}}</option>
+        <option value="{{$key}}">{{$key}}</option>
       @endif
     @endforeach
 </select>
 <label>of</label>
        <select name='type' class="btn btn-mini" id="selecttype" title="Select accounts, projects or branches">
             @foreach($types as $key=>$value)
-        				@if(isset($data['type']) && $key === $data['type'])
+                @if(isset($data['type']) && $key === $data['type'])
                         <option selected value="{{$key}}">{{$value}}</option>
                         @else
                     
-                   		<option value="{{$key}}">{{$value}}</option>
-        				@endif
+                      <option value="{{$key}}">{{$value}}</option>
+                @endif
            @endforeach
         </select>
 
@@ -60,10 +60,10 @@ method = 'post' name="mapselector">
 
    <select name='distance' class="btn btn-mini" id="selectdistance" title="Change the search distance">
        @foreach($values as $value)
-       	@if(isset($data['distance']) && $value === $data['distance'])
-        	<option selected value="{{$value}}">{{$value}} miles</option>
+        @if(isset($data['distance']) && $value === $data['distance'])
+          <option selected value="{{$value}}">{{$value}} miles</option>
             @else
-       		<option value="{{$value}}">{{$value}} miles</option>
+          <option value="{{$value}}">{{$value}} miles</option>
             @endif
        @endforeach
 

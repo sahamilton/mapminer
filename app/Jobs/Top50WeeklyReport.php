@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use Mail;
 use Excel;
+use App\Report;
 use Carbon\Carbon;
 use App\Opportunity;
 use App\Mail\SendTop50WeeklyReport;
@@ -25,7 +26,7 @@ class Top50WeeklyReport implements ShouldQueue
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(array $period)
     {
         $this->period['from'] = Carbon::create(2019, 03, 01);
         $this->period['to'] = Carbon::now()->endOfWeek();
@@ -43,9 +44,11 @@ class Top50WeeklyReport implements ShouldQueue
         $file = '/public/reports/top50wkrpt' . $this->period['to']->timestamp . ".xlsx";
       
         Excel::store(new OpenTop50BranchOpportunitiesExport($this->period), $file);
-        $distribution = ['email'=>'astarr@trueblue.com', 'name'=>'Amy Starr'];
-       
-            Mail::to($distribution)
+        $report = Report::with('distribution')
+            ->where('job', $class)
+            ->firstOrFail();
+        $distribution = $report->getDistribution();
+        Mail::to($distribution)
             ->send(new SendTop50WeeklyReport($file));
 
         return true;

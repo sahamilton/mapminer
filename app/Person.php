@@ -7,7 +7,7 @@ use McCool\LaravelAutoPresenter\HasPresenter;
 
 class Person extends NodeModel implements HasPresenter
 {
-    use Geocode,Filters, SoftDeletes, FullTextSearch;
+    use Geocode, Filters, SoftDeletes, FullTextSearch;
     public $salesroles = ['5','9'];
     // Add your validation rules here
     public static $rules = [
@@ -94,7 +94,7 @@ class Person extends NodeModel implements HasPresenter
      * 
      * @return [type] [description]
      */
-    public function myBranches()
+    public function myBranches(Person $person=null)
     {
         if (auth()->user()->hasRole('admin')) {
             return Branch::all()->pluck('branchname', 'id')->toArray();
@@ -277,8 +277,10 @@ class Person extends NodeModel implements HasPresenter
      */
     public function scopeManages($query, $roles)
     {
+        dd('hree');
         return $query->wherehas(
             'userdetails.roles', function ($q) use ($roles) {
+
                     $q->whereIn('role_id', $roles);
             }
         );

@@ -7,7 +7,7 @@ use \Carbon\Carbon;
 
 class Activity extends Model implements \MaddHatter\LaravelFullcalendar\IdentifiableEvent
 {
- 
+    use GeoCode;
     protected $dates = ['activity_date','followup_date'];
     public $fillable = ['activity_date','followup_date','activitytype_id','address_id','note','user_id','relatedActivity','completed','followup_activity','branch_id'];
     //public $activities = ['phone','email','meeting','proposal','quote'];
@@ -330,6 +330,17 @@ class Activity extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
     public function scopeCompleted($query)
     {
         return $query->whereCompleted(1);
+    }
+    /**
+     * [scopeOpen description]
+     * 
+     * @param Illuminate\Eloquent\Builder $query [description]
+     * 
+     * @return [type]        [description]
+     */
+    public function scopeOpen($query)
+    {
+        return $query->whereCompleted(0);
     }
 
 }

@@ -11,13 +11,18 @@ class AccountActivitiesExport implements FromView
 {
     public $period;
     public $company;
+    public $branches;
     /**
      * [__construct description]
-     * @param Company $company [description]
-     * @param array   $period  [description]
+     * 
+     * @param Company    $company  [description]
+     * @param array      $period   [description]
+     * 
+     * @param array|null $branches [description]
      */
-    public function __construct(Company $company, array $period)
-    {
+    public function __construct(
+        Company $company, array $period, array $branches=null
+    ) {
         $this->period = $period;
         $this->company = $company;
     }
@@ -29,15 +34,14 @@ class AccountActivitiesExport implements FromView
      */
     public function view(): View
     {
+        
         $results = Address::where('company_id', $this->company->id)
                 ->with(
                     ['activities'=>function ($q) {
                         $q->where('completed', '1')
                             ->whereBetween('activity_date', [$this->period['from'],$this->period['to']]);
-                    }]
-                )
-                ->with('activities.type')
-                ->get();
+                    }], 'activities.type'
+                )->get();
         $period = $this->period;
         $company = $this->company;
         return view('reports.accountactivityreport', compact('results', 'period', 'company'));

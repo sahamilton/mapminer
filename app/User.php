@@ -104,25 +104,27 @@ class User extends Authenticatable
     public function fullName()
     {
         if ($this->person) {
-            return $this->person->postName();
+            return $this->person->fullName();
         } else {
             return null;
         }
     }
 
     /**
-     * [fullName description]
+     * [postName description]
      * 
      * @return [type] [description]
      */
     public function postName()
     {
         if ($this->person) {
-            return $this->person->fullName();
+            return $this->person->postName();
         } else {
             return null;
         }
     }
+
+    
     /**
      * [personWithOutGeo description]
      * 

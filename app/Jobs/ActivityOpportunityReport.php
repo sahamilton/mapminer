@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use Mail;
 use Excel;
+use App\Report;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
@@ -39,12 +40,13 @@ class ActivityOpportunityReport implements ShouldQueue
         $file = '/public/reports/actopptywkrpt'. Carbon::now()->timestamp. ".xlsx";
         
         Excel::store(new ActivityOpportunityExport($this->period), $file);
-       
-        Mail::to([['email'=>'jhammar@peopleready.com', 'name'=>'Josh Hammer']])
-            ->bcc([['email'=>'hamilton@okospartners.com', 'name'=>'Stephen Hamilton']])
-            ->cc([['email'=>'salesoperations@trueblue.com', 'name'=>'Sales Operations']])
+        $class= str_replace("App\Jobs\\", "", get_class($this));
+        $report = Report::with('distribution', 'distribution.person')
+            ->where('job', $class)
+            ->firstOrFail();
+        $distribution = $report->getDistribution();
+        Mail::to($distribution)
             ->send(new WeeklyActivityOpportunityReport($file, $this->period));
-        
-
     }
+        
 }

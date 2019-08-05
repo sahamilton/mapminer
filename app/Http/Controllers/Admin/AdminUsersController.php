@@ -262,9 +262,7 @@ class AdminUsersController extends BaseController
 
         return redirect()->route('person.details', $user->person->id);
 
-        //return response()->view('admin.users.showdetail', compact('user','roles'));
     }
-
     /**
      * [edit description]
      * 
@@ -497,7 +495,7 @@ class AdminUsersController extends BaseController
      * 
      * @return [type]       [description]
      */
-    public function delete($user)
+    public function delete(User $user)
     {
         // Title
         $title = 'Delete user';
@@ -516,8 +514,7 @@ class AdminUsersController extends BaseController
     public function destroy(User $user)
     {
 
-        //$user = $this->user->find($id);
-        //dd($user);
+
         // Check if we are not trying to delete ourselves
         if ($user->id === auth()->user()->id) {
             // Redirect to the user management page
@@ -536,6 +533,7 @@ class AdminUsersController extends BaseController
             ->with('success', 'User deleted succesfully');
     }
 
+  
     /**
      * [import description]
      * 

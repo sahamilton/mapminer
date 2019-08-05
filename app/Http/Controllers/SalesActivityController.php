@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Salesactivity;
+use App\State;
 use App\SearchFilter;
 use App\SalesProcess;
+use App\SalesOrg;
 use App\Document;
 use App\Location;
 use App\Address;
@@ -25,30 +27,41 @@ class SalesActivityController extends BaseController
     public $location;
     public $salesorg;
     public $person;
+    public $state;
 
 
     /**
      * [__construct description]
      * 
-     * @param Salesactivity $activity [description]
-     * @param SearchFilter  $vertical [description]
-     * @param SalesProcess  $process  [description]
-     * @param Document      $document [description]
      * @param Address       $location [description]
+     * @param Document      $document [description]
      * @param Person        $person   [description]
-     * @param Lead          $lead     [description]
+     * @param Salesactivity $activity [description]
+     * @param SalesProcess  $process  [description]
+     * @param SalesOrg      $salesorg  [description]
+     * @param SearchFilter  $vertical [description]
+     * @param State         $state    [description]
      */
-    public function __construct(Salesactivity $activity, SearchFilter $vertical, SalesProcess $process, Document $document, Address $location, Person $person, Lead $lead)
-    {
-
-        $this->activity = $activity;
-        $this->vertical = $vertical;
-        $this->process = $process;
-        $this->document = $document;
+    public function __construct(
+        Address $location,
+        Document $document, 
+        Person $person,
+        Salesactivity $activity, 
+        SalesProcess $process, 
+        SalesOrg $salesorg, 
+        SearchFilter $vertical,
+        State $state
+    ) {
         $this->location = $location;
-        $this->person = $person;
+        $this->document = $document;
+        $this->activity = $activity;
        
-        $this->lead = $lead;
+        
+        $this->person = $person;
+        $this->process = $process;
+        $this->salesorg = $salesorg;
+        $this->vertical = $vertical;
+        $this->state = $state;
         parent::__construct($location);
     }
 
@@ -62,7 +75,7 @@ class SalesActivityController extends BaseController
     public function index($vertical = null)
     {
 
-        $query = $this->activity->with('salesprocess', 'vertical');
+        $query = $this->activity->with('salesprocess', 'vertical', 'states');
         if ($vertical) {
             $query = $query->whereHas(
                 'vertical', function ($q) use ($vertical) {
@@ -85,10 +98,13 @@ class SalesActivityController extends BaseController
     public function create()
     {
         $verticals = $this->vertical->industrysegments();
-  
+        $states = $this->state->all();
         $process = $this->process->pluck('step', 'id');
+        $salesorg = $this->salesorg->first();
+        $salesorgJson = $salesorg->getSalesOrgJson();
+       
 
-        return response()->view('salesactivity.create', compact('verticals', 'process'));
+        return response()->view('salesactivity.create', compact('verticals', 'process', 'states', 'salesorgJson'));
     }
 
     /**
@@ -110,8 +126,9 @@ class SalesActivityController extends BaseController
             }
         }
 
-        $reps = $activity->campaignSalesReps();
-        $activity->campaignparticipants()->attach($reps);
+        $branches = $activity->getCampaignBranches($data);
+       
+        $activity->campaignBranches()->attach(array_keys($branches));
 
 
         return redirect()->route('salesactivity.index');

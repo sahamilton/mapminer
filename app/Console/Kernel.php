@@ -13,6 +13,7 @@ use App\Jobs\BranchStats;
 use App\Jobs\RebuildPeople;
 use App\Jobs\BranchLogins;
 use App\Company;
+use Carbon\Carbon;
 
 class Kernel extends ConsoleKernel
 {
@@ -37,7 +38,9 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         if (config('app.env') == 'production') {
-            $schedule->job(new WeeklyActivityReminder())
+            $period['from'] = Carbon::now();
+            $period['to'] = Carbon::now()->addWeek();
+            $schedule->job(new WeeklyActivityReminder($period))
                 ->weekly()
                 ->sundays()
                 ->at('19:52');
@@ -49,18 +52,13 @@ class Kernel extends ConsoleKernel
                 ->dailyAt('22:58');
             
             // Stephanie Harp Report
-            $period['from'] = \Carbon\Carbon::now()->subWeek()->startOfWeek();
-            $period['to'] = \Carbon\Carbon::now()->subWeek()->endOfWeek();
+            $period['from'] = Carbon::now()->subWeek()->startOfWeek();
+            $period['to'] = Carbon::now()->subWeek()->endOfWeek();
             $schedule->job(new BranchStats($period))
                 ->weekly()
                 ->sundays()
                 ->at('23:15');
             
-            //Amy Starr Report
-            $schedule->job(new Top50WeeklyReport())
-                ->weekly()
-                ->sundays()
-                ->at('18:59');
             
             // Josh Hammer report
             $period['from'] = \Carbon\Carbon::now()->subWeek()->startOfWeek();
@@ -72,27 +70,37 @@ class Kernel extends ConsoleKernel
             
             // Walmart job
             $company = Company::findOrFail(532);
-            $period['from'] = \Carbon\Carbon::now()->subWeek()->startOfWeek();
-            $period['to'] = \Carbon\Carbon::now()->subWeek()->endOfWeek();
+            $period['from'] = Carbon::now()->subWeek()->startOfWeek();
+            $period['to'] = Carbon::now()->subWeek()->endOfWeek();
             $schedule->job(new AccountActivities($company, $period))
                 ->weekly()
                 ->sundays()
                 ->at('18:30');
             
-            // Kristi Willis Report
-            $period['to'] = \Carbon\Carbon::now()->subWeek()->endOfWeek();
-            $schedule->job(new BranchOpportunities($period))
+            // Branch Stats Report
+            $period['from'] = Carbon::now()->subMonth(2)->startOfMonth();  
+            $period['to'] = Carbon::now()->subWeek()->endOfWeek();
+            $schedule->job(new BranchStats($period))
                 ->weekly()
-                ->mondays()
-                ->at('04:59');
-
+                ->wednesdays()
+                ->at('01:59');
+            
             // Branch Login Report
-            $period['from'] = \Carbon\Carbon::now()->subMonth(2)->startOfMonth();  
-            $period['to'] = \Carbon\Carbon::now()->subWeek()->endOfWeek();
+            $period['from'] = Carbon::now()->subMonth(2)->startOfMonth();  
+            $period['to'] = Carbon::now()->subWeek()->endOfWeek();
             $schedule->job(new BranchLogins($period))
                 ->weekly()
                 ->mondays()
                 ->at('03:59');
+                
+            // Branch Activities Report
+            $period['from'] = Carbon::now()->subMonth(2)->startOfMonth();  
+            $period['to'] = Carbon::now()->subWeek()->endOfWeek();
+            $schedule->job(new BranchActivitiesDetail($period))
+                ->weekly()
+                ->tuedays()
+                ->at('03:59');
+
         }   
     }
 

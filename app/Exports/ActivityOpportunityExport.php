@@ -9,17 +9,20 @@ use Carbon\Carbon;
 class ActivityOpportunityExport implements FromView
 {
     public $period;
+    public $branch;
 
     /**
      * [__construct description]
      * 
-     * @param array $period [description]
+     * @param array      $period   [description]
+     * @param array|null $branches [description]
+     * 
      */
-    public function __construct(array $period)
+    public function __construct(array $period, array $branches=null)
     {
         $this->period = $period;
+        $this->branch = $branches;
     }
-
 
     /**
      * [view description]
@@ -28,7 +31,7 @@ class ActivityOpportunityExport implements FromView
      */
     public function view(): View
     {
-        
+
         $query = "select branches.id as branch_id,
             branches.branchname as branchname, 
             a.salesmeetings,

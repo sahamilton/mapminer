@@ -59,6 +59,7 @@ class SelectCompanyOpportunities implements ShouldQueue
      */
     private function _getDistribution($company)
     {
+        // dont understand this!
         $distry = $company->distribution->map(
             function ($list) {
                 return [$list->pivot->type => $list->email];

@@ -1,4 +1,21 @@
 Good Queries
+
+//       Open but Closed opportunities
+
+select branchname, concat_ws(' ', persons.firstname, persons.lastname), concat_ws(' ', b.firstname, b.lastname) as createdby,  addresses.businessname, opportunities.title, opportunities.created_at, actual_close
+from branches, branch_person, addresses, opportunities, persons, persons b
+
+where opportunities.closed = 0
+and opportunities.actual_close is not null
+and opportunities.branch_id = branches.id
+and branches.id = branch_person.branch_id
+and branch_person.role_id = 9
+and branch_person.person_id = persons.id
+and opportunities.user_id = b.user_id
+and opportunities.address_id = addresses.id
+order by branches.id
+
+
 //*************************************************
 
 SELECT branch_id,count(*)
@@ -11,14 +28,28 @@ group by branch_id;
 
 // Get all branch activities grouped by week, activity type & branch
 
-select branchname, WEEK(activity_date) as week,activity, count(activities.id)
-from activities, branches, activity_type 
-where activities.activity_date between '2019-06-01' and '2019-07-14' 
-and activities.activitytype_id = activity_type.id 
-and activities.completed =1 
-and branch_id = branches.id 
-group by branchname, week, activity 
-ORDER BY `week` DESC
+select  a.branchname,
+         concat_ws(' ',firstname,lastname) as manager, 
+         STR_TO_DATE(concat(CAST(week AS CHAR),' Monday'),'%X%V %W') as weekbegin, 
+         a.activity, 
+         a.activitycount
+        from persons, branch_person, branches, 
+        (
+            select branchname, 
+            concat(YEAR(activity_date),
+            WEEK(activity_date)) as week,
+            activity, count(activities.id) as activitycount
+            from activities, branches, activity_type 
+            where activities.activity_date between '2019-07-01'  and '2019-07-31' 
+            and activities.activitytype_id = activity_type.id 
+            and activities.completed =1 
+            and branch_id = branches.id
+            group by branchname, week, activity ) a
+          where persons.id = branch_person.person_id
+          and branch_person.role_id = 9
+          and branch_person.branch_id = branches.id
+          and branches.branchname = a.branchname  
+          ORDER BY `a`.`week`  ASC
 
 //******************************************************************
 
@@ -28,6 +59,13 @@ where
 activitytype_id = 4
 and activity_date  between date('2019-04-01') and date('2019-04-08')
 group by branch_id;
+
+//***************** Open Opportunities Aging
+select count(id) as open, 
+round(datediff( now(), created_at) / 7)) as weeks, 
+branch_id from opportunities 
+where opportunities.closed is null or opportunities.closed = 0 
+group by branch_id, weeks ORDER BY `branch_id`, weeks
 
 
 /// Weekly Report

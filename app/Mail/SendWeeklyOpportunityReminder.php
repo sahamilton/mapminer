@@ -2,30 +2,27 @@
 
 namespace App\Mail;
 
+use App\Branch;
+use App\Person;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use App\User;
-use \App\Inbound;
 
-class SendUnknownRequest extends Mailable
+class SendWeeklyOpportunityReminder extends Mailable
 {
     use Queueable, SerializesModels;
-    public $content;
-
-    public $inbound;
-
+    public $branch;
+    public $manager;
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct( $content,Inbound $inbound)
+    public function __construct(Branch $branch, Person $manager)
     {
-        $this->content = $content;
-        $this->inbound = $inbound;
-      
+        $this->branch = $branch;
+        $this->manager = $manager;
     }
 
     /**
@@ -36,8 +33,7 @@ class SendUnknownRequest extends Mailable
     public function build()
     {
        
-        return $this->markdown('emails.unknownrequest')
-            ->subject('re: Your email');
-
+        return $this->markdown('emails.upcomingopportunities')
+            ->subject('Closing Opportunities');
     }
 }
