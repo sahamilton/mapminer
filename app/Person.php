@@ -277,7 +277,6 @@ class Person extends NodeModel implements HasPresenter
      */
     public function scopeManages($query, $roles)
     {
-        dd('hree');
         return $query->wherehas(
             'userdetails.roles', function ($q) use ($roles) {
 
