@@ -85,15 +85,20 @@ class BranchDashboardController extends DashboardController
         }
         $this->manager = $this->person
             ->where('user_id', '=', auth()->user()->id)->first();
-        $this->myBranches = $this->_getBranches();
-     
-        if (count($this->myBranches)>0) {
-            $branch = array_keys($this->myBranches);
-            return redirect()->route('dashboard.show', $branch[0]);
+        if (! session('branch')) {
+            $branch = session('branch');
         } else {
-            return redirect()->route('user.show', auth()->user()->id)
-                ->withWarning("You are not assigned to any branches. You can assign yourself here or contact Sales Ops");
+            $this->myBranches = $this->_getBranches();
+     
+            if (count($this->myBranches)>0) {
+                $branch = array_keys($this->myBranches);
+                return redirect()->route('dashboard.show', $branch[0]);
+            } else {
+                return redirect()->route('user.show', auth()->user()->id)
+                    ->withWarning("You are not assigned to any branches. You can assign yourself here or contact Sales Ops");
+            }
         }
+        
           
        
 
@@ -136,8 +141,10 @@ class BranchDashboardController extends DashboardController
      */
     public function show($branch)
     {
-      
-      
+        if (! session()->has('branch') or $branch != session('branch') ) {
+            session(['branch'=>$branch]);
+        }
+        
         $this->period = $this->activity->getPeriod();
 
         $branch = $this->branch->with('manager')->findOrFail($branch);

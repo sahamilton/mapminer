@@ -100,7 +100,7 @@ Route::group(
         Route::resource('dashboard', 'DashboardController');
         // Branch Next Week View
         Route::resource('branchsummary', 'BranchSummaryController');
-        //   Branch Pipeline
+        //   Branch PipelineMyLea
         Route::get('branch/pipeline', ['as'=>'branches.pipeline', 'uses'=>"OpportunityController@pipeline"]);
            
         //   Branch Leads

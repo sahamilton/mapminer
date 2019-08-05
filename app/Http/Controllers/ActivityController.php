@@ -49,13 +49,19 @@ class ActivityController extends Controller
      */
     public function index()
     {
-     
+       
         if (! $myBranches = $this->person->myBranches()) {
             return redirect()->back()
                 ->withError('You are not assigned to any branches');
         }
 
         $branches = array_keys($myBranches);
+        if (session()->has('branch') ) {
+            $branch = session('branch');
+        } else {
+            $branch = $this->branch->findOrFail(reset($branches));
+            session(['branch'=>$branch]);
+        }
         $branch = $this->branch->findOrFail(reset($branches));
         $data = $this->_getBranchActivities($branch);
        

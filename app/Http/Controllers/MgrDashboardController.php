@@ -83,7 +83,7 @@ class MgrDashboardController extends DashboardController
      */
     public function index()
     {
-      
+        request()->session()->forget('branch');
 
         if (! $this->period) {
             $this->period = $this->activity->getPeriod();
@@ -164,7 +164,7 @@ class MgrDashboardController extends DashboardController
      */
     public function manager(Request $request, Person $manager=null)
     {
-      
+        request()->session()->forget('branch');
         if (! $this->period) {
             $this->period = $this->activity->getPeriod();
         }

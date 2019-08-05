@@ -70,6 +70,12 @@ class ReportsController extends Controller {
 
         $this->report->create(request()->all());
         return redirect()->route('reports.index');
+        $report = $this->report->create(request()->all());
+        if (! request()->has('period')) {
+            $report->update(['period'=>0]);
+        }
+
+        return redirect()->route('reports.show', $report->id);
     }
 
     /**
@@ -114,7 +120,14 @@ class ReportsController extends Controller {
      */
     public function update(Request $request, Report $report)
     {
+
+        if (! $this->_checkValidJob(request('job'))) {
+            return redirect()->back()->withError('job does not exist');
+        }
         $report->update(request()->all());
+        if (! request()->has('period')) {
+            $report->update(['period'=>0]);
+        }
         return redirect()->route('reports.index');
     }
 
@@ -174,6 +187,7 @@ class ReportsController extends Controller {
         // check if period selector
         // check model
         $team = $this->_getMyTeam($request);
+   
         if ($myBranches = $this->_getMyBranches(request('manager'))) {
             if (request()->has('fromdate')) {
                 $period['from']=Carbon::parse(request('fromdate'));
@@ -300,7 +314,11 @@ class ReportsController extends Controller {
             }
         )->orderBy('lastname')->orderBy('firstname')->get();
     }
-
+    /**
+     * [_getManagedCompanies description]
+     * 
+     * @return [type] [description]
+     */
     private function _getManagedCompanies()
     {
 
@@ -308,5 +326,41 @@ class ReportsController extends Controller {
             ->whereHas('managedBy')
             ->where('accounttypes_id', 1)
             ->orderBy('companyname')->get();
+    }
+
+    private function _checkValidJob($class)
+    {
+        $check = ['Jobs','Exports'];
+        foreach ($check as $type) {
+            if (! $this->_checkClassExists($class, $type)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private function _checkClassExists($class, $type) {
+
+       
+    
+        switch($type) {
+
+        case "Jobs":
+             $dir = "\App\\Jobs\\";
+            break;
+
+        case "Exports":
+            $dir = "\App\\Exports\\";
+            $class = $class.'Export';
+            break;
+        }
+        
+        if (class_exists($dir . $class)) {
+            return true;
+        } else {
+
+            return false;
+        }
+        
     }
 }

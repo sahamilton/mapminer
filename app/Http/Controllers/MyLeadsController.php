@@ -45,20 +45,27 @@ class MyLeadsController extends BaseController
      */
     public function index($branch=null)
     {
-               
+              
         if (!  $myBranches = $this->person->myBranches()) {
             return redirect()->back()->withError('You are not assigned to any branches');
         }
 
-        if (! $branch) {
+        if (! $branch && ! session('branch')) {
+
             $branch = array_keys($myBranches);
             // get first branch
             $branch = reset($branch);
-        } else {
+            session(['branch'=>$branch]);
+
+        } elseif (session('branch')) {
+            $branch = session('branch');
+        
+        } else {   
             if (! in_array($branch->id, array_keys($this->person->myBranches()))) {
                 return redirect()->back()->withError('That is not one of your branches');
             }
             $branch = $branch->id;
+            session(['branch'=>$branch]);
         }
         
         $data = $this->_getBranchLeads([$branch]);

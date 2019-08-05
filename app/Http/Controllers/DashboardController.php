@@ -35,8 +35,9 @@ class DashboardController extends Controller
     {
 
         $branchCount = $this->dashboard->checkBranchCount();
-
-        if ($branchCount > 1 or auth()->user()->hasRole('admin')) {
+        if (session('branch')) {
+            return redirect()->route('branchdashboard.index');
+        } elseif ($branchCount > 1 or auth()->user()->hasRole('admin')) {
             return redirect()->route('mgrdashboard.index');
         } else {
             return redirect()->route('branchdashboard.index');
