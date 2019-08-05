@@ -9,6 +9,7 @@ use App\Jobs\Top50WeeklyReport;
 use App\Jobs\ActivityOpportunityReport;
 use App\Jobs\AccountActivities;
 use App\Jobs\BranchOpportunities;
+use App\Jobs\BranchActivitiesDetail;
 use App\Jobs\BranchStats;
 use App\Jobs\RebuildPeople;
 use App\Jobs\BranchLogins;
