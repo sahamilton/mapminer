@@ -55,14 +55,17 @@ class ActivityController extends Controller
                 ->withError('You are not assigned to any branches');
         }
 
-        $branches = array_keys($myBranches);
-        if (session()->has('branch') ) {
-            $branch = session('branch');
+        
+        if (session('branch')) {
+            $branch = $this->branch->findOrFail(session('branch'));
+
         } else {
+            $branches = array_keys($myBranches);
             $branch = $this->branch->findOrFail(reset($branches));
-            session(['branch'=>$branch]);
+            //session(['branch'=>$branch]);
         }
-        $branch = $this->branch->findOrFail(reset($branches));
+    
+       
         $data = $this->_getBranchActivities($branch);
        
         $title= $data['branches']->first()->branchname . " activities";
@@ -140,7 +143,7 @@ class ActivityController extends Controller
      * 
      * @return [type]         [description]
      */
-    private function _getBranchActivities($branch,$from=null)
+    private function _getBranchActivities(Branch $branch,$from=null)
     {
        
        

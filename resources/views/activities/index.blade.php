@@ -1,8 +1,9 @@
 @extends('site.layouts.default')
 @section('content')
 
-<h1>{{$title}}</h1> 
-<p><a href="{{route('dashboard.index')}}">
+<h1>{{$title}}</h1>
+
+<p><a href="{{route('dashboard.show', session('branch'))}}">
 <i class="fas fa-tachometer-alt"></i>
  Return To Branch Dashboard</a></p>
 @if(count($myBranches)>1)

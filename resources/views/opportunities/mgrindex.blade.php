@@ -3,6 +3,7 @@
 
 <div class="container">
   <h2>{{$data['team']['me']->fullName}}'s  Dashboard</h2>
+  <p>Session:{{session('branch')}}</p>
   @if($data['team']['team']->count()>1)
 
     @include('branches.partials._branchselector')

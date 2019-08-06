@@ -87,7 +87,8 @@ class Person extends NodeModel implements HasPresenter
 
         return $this->belongsToMany(Branch::class)
             ->withTimestamps()
-            ->withPivot('role_id');
+            ->withPivot('role_id')
+            ->orderBy('branchname');
     }
     /**
      * [myBranches description]
@@ -116,7 +117,7 @@ class Person extends NodeModel implements HasPresenter
                 }
             }
         }
-
+        ksort($data);
         return $data;
     }
     /**
