@@ -226,7 +226,7 @@ class Person extends NodeModel implements HasPresenter
     public function managesAccount()
     {
         
-        return $this->hasMany(Company::class);
+        return $this->hasMany(Company::class)->orderBy('companyname');
     }
     /**
      * [emailcampaigns description]

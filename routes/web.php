@@ -96,6 +96,8 @@ Route::group(
             Route::resource('branchdashboard', 'BranchDashboardController');
         //   Manager Dashboard
         Route::resource('mgrdashboard', 'MgrDashboardController');
+        Route::post('namdashboard/select', ['as'=>'namdashboard.select', 'uses'=>'NAMDashboardController@select']);
+        Route::resource('namdashboard', 'NAMDashboardController');
         //   Dashboard
         Route::resource('dashboard', 'DashboardController');
         // Branch Next Week View

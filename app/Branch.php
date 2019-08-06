@@ -769,7 +769,7 @@ class Branch extends Model implements HasPresenter
             },
             'opportunities as open'=>function ($query) {
                 $query->whereClosed(0)        
-                    ->where(
+                    ->OrWhere(
                         function ($q) {
                             $q->where('actual_close', '>', $this->period['to'])
                                 ->orwhereNull('actual_close');

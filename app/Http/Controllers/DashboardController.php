@@ -33,7 +33,9 @@ class DashboardController extends Controller
      */
     public function index()
     {
-
+        if (auth()->user()->hasRole('national_account_manager')) {
+            return redirect()->route('namdashboard.index');
+        }
         $branchCount = $this->dashboard->checkBranchCount();
         if (session('branch')) {
             return redirect()->route('branchdashboard.index');
