@@ -109,3 +109,24 @@
         </span>
     </div>
 </div>
+
+<!-- Public  -->
+<div class="form-group  {{ $errors->has('public') ? ' has-error' : ''}}">
+    <label class=" control-label">Public Report:
+    <div class="input-group checkbox inline input-group-sm">
+        <input 
+        type="checkbox" 
+        class="form-control" 
+        name='public' 
+        @if(old('public',isset($report) && $report->public))
+            checked
+       @endif
+        value="1"
+        title="Include public Selector"
+        public="public" 
+        ></label>
+        <span class="help-block">
+            <strong>{{ $errors->has('public') ? $errors->first('public') : ''}}</strong>
+        </span>
+    </div>
+</div>

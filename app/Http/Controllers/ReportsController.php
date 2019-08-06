@@ -76,6 +76,9 @@ class ReportsController extends Controller {
         if (! request()->has('period')) {
             $report->update(['period'=>0]);
         }
+        if (! request()->has('public')) {
+            $report->update(['public'=>0]);
+        }
 
         return redirect()->route('reports.show', $report->id);
     }
@@ -130,6 +133,9 @@ class ReportsController extends Controller {
         $report->update(request()->all());
         if (! request()->has('period')) {
             $report->update(['period'=>0]);
+        }
+        if (! request()->has('public')) {
+            $report->update(['public'=>0]);
         }
         return redirect()->route('reports.index');
     }
@@ -325,3 +331,4 @@ class ReportsController extends Controller {
             ->where('accounttypes_id', 1)
             ->orderBy('companyname')->get();
     }
+}
