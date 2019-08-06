@@ -166,6 +166,7 @@ class MgrDashboardController extends DashboardController
      */
     public function manager(Request $request, Person $manager=null)
     {
+        
         request()->session()->forget('branch');
         if (! $this->period) {
             $this->period = $this->activity->getPeriod();
@@ -235,8 +236,11 @@ class MgrDashboardController extends DashboardController
     private function _displayDashboard($data)
     {
         
-        if ($data['branches']->count() > 1) {     
-             return response()->view('opportunities.mgrindex', compact('data', 'myBranches'));
+        if ($data['branches']->count() > 1) { 
+            $reports = \App\Report::publicReports()->get();
+            $managers = $data['team']['me']->directReports()->get();
+            
+            return response()->view('opportunities.mgrindex', compact('data', 'myBranches', 'reports', 'managers'));
           
         } else {
 
