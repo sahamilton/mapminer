@@ -87,7 +87,7 @@ $distances = [1=>'1 mile',2=>'2 miles',5=>'5 miles', 10=>'10 miles',25=>'25 mile
     </form>
 
 
-<div id="map" style="max-width:400px;max-height:400px; "></div>
+<div id="map" style="max-width:100%;max-height:100%; "></div>
 <div id="infowindow-content">
   <img  id="place-icon" src="" width="16" height="16" >
   <a id="place-link" href=""></a>
