@@ -1,4 +1,4 @@
-<table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
+<table id ='responsive'  class="table-bordered nowrap" style="width:100%">>
     <thead>
 
     <th>Date</th>

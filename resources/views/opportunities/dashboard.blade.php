@@ -5,7 +5,7 @@
 
 @include('maps.partials._form')
 <h2>{{$data['branches']->first()->branchname}} Branch Dashboard</h2>
- <p>Session:{{session('branch')}}</p>
+
 
 @if(count($myBranches)>1)
 

@@ -4,7 +4,7 @@
 <div class="container">
 
 <h2>{{$branch->branchname}} Dashboard</h2>
- <p>Session:{{session('branch')}}</p>
+
 @include('branches.partials._periodselector')
 
 	@foreach ($branch->manager as $manager)

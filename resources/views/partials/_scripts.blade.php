@@ -106,6 +106,12 @@ $(document).ready(function()
     $( "#fromdatepicker" ).datepicker({ altField : "#fromdate",
     altFormat: "yyyy-mm-dd"});
    
+
+    $("[id^=responsive]").DataTable( {
+    
+        responsive: true
+    } );
+
 	$("[id^=sorttable]").DataTable();
 	$.fn.editable.defaults.mode = 'inline';
 	$.fn.editableform.buttons = '<button type="submit" class="btn btn-info editable-submit"><i class="fa fa-fw fa-check"></i></button>' + '<button type="button" class="btn btn-danger editable-cancel"><i class="fas fa-window-close"></i></button>' ;
