@@ -314,11 +314,6 @@ class ReportsController extends Controller {
             }
         )->orderBy('lastname')->orderBy('firstname')->get();
     }
-    /**
-     * [_getManagedCompanies description]
-     * 
-     * @return [type] [description]
-     */
     private function _getManagedCompanies()
     {
 

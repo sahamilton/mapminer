@@ -62,7 +62,7 @@ class ActivityController extends Controller
         } else {
             $branches = array_keys($myBranches);
             $branch = $this->branch->findOrFail(reset($branches));
-            //session(['branch'=>$branch]);
+            session(['branch'=>$branch->id]);
         }
     
        
