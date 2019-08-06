@@ -1,9 +1,9 @@
-<table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
+<table id ='responsive'  class="display responsive no-wrap" width="100%">
     <thead>
-    <th>Company</th>
-    <th>Planned Date</th>
-    <th>Activity</th>
-    <th>Actions</th>
+      <th>Company</th>
+      <th>Planned Date</th>
+      <th>Activity</th>
+      <th>Actions</th>
     </thead>
     <tbody>
          @foreach($results as $activity)

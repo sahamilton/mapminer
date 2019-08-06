@@ -4,7 +4,7 @@
 $distances = [1=>'1 mile',2=>'2 miles',5=>'5 miles', 10=>'10 miles',25=>'25 miles'];
 
 @endphp
-<div class="container">
+<div class="container" style="margin-bottom:40px">
     <div class="col-md-5">
         <h2><a href="{{route('mobile.index')}}">Branch View</a></h2>
         <h4>{{$branch->branchname}}</h4>
@@ -119,7 +119,8 @@ $distances = [1=>'1 mile',2=>'2 miles',5=>'5 miles', 10=>'10 miles',25=>'25 mile
     @endif
 
 @endif
-</div></div>
+</div>
+</div>
 
 @include('mobile.partials._mapscript')
 @include('partials._maps')
