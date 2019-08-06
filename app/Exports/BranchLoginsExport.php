@@ -41,8 +41,8 @@ class BranchLoginsExport implements FromView
         $query.=" group by branches.id, branchname ";
 
         $results = \DB::select($query);
-   
+        $branches = $this->branches
         $period = $this->period;
-        return view('reports.branchlogins', compact('results', 'period'));
+        return view('reports.branchlogins', compact('results', 'period', 'branches'));
     }
 }
