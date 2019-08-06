@@ -42,7 +42,11 @@ class ReportsController extends Controller {
      */
     public function index()
     {
-        $reports = $this->report->withCount('distribution')->get();
+        $reports = $this->report->withCount('distribution');
+        if (! auth()->user()->hasRole('admin')) {
+            $reports = $reports->publicReports();
+        }
+        $reports = $reports->get();
         
         return response()->view('reports.index', compact('reports'));
     }

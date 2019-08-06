@@ -31,6 +31,16 @@
       <strong>Summary</strong>
       </a>
 
+      <a class="nav-item nav-link "
+        id="nav-reports-tab"
+        data-toggle="tab"
+        href="#reports"
+        role="tab"
+        aria-controls="nav-summary"
+        aria-selected="true">
+      <strong>Reports</strong>
+      </a>
+
     </div>
   </nav>
 
@@ -40,6 +50,10 @@
     </div>
     <div id="summary" class="tab-pane fade">
       @include('opportunities.partials._summary')
+    </div>
+
+    <div id="reports" class="tab-pane fade">
+      @include('reports.partials._index')
     </div>
   </div>
 </div>

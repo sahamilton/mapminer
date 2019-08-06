@@ -93,7 +93,7 @@ Route::group(
         Route::post('branches/dashboard', ['as'=>'branches.dashboard', 'uses'=>'BranchDashboardController@selectBranch']);
         Route::get('manager/{person}/dashboard', ['as'=>'manager.dashboard', 'uses'=>'MgrDashboardController@manager']);
         Route::post('manager/dashboard', ['as'=>'dashboard.select', 'uses'=>'DashboardController@select']);
-            Route::resource('branchdashboard', 'BranchDashboardController');
+        Route::resource('branchdashboard', 'BranchDashboardController');
         //   Manager Dashboard
         Route::resource('mgrdashboard', 'MgrDashboardController');
         Route::post('namdashboard/select', ['as'=>'namdashboard.select', 'uses'=>'NAMDashboardController@select']);
@@ -288,7 +288,10 @@ Route::group(
         Route::post('mylead/{id}/close', ['as'=>'mylead.close', 'uses'=>'MyLeadsController@close']);
         Route::resource('myleadsactivity', 'MyLeadsActivityController');
         Route::resource('myleadscontact', 'MyLeadsContactController');
-    
+        
+        Route::post('reports/{report}/run', ['as'=>'reports.run', 'uses'=>'ReportsController@run']);
+
+        Route::resource('reports', 'ReportsController', ['only' => ['index', 'show']]);
        
         //     AJAX Links
         //     // Move these to api routes
@@ -313,11 +316,11 @@ Route::group(
 
 
         //   Training
-        Route::resource('training', 'TrainingController')->only(['index', 'show']);
+        Route::resource('training', 'TrainingController', ['only' => ['index', 'show']]);
         //   Impersonate
         Route::impersonate();
         //     User (Profile) settings
-        Route::resource('user', 'UsersController')->only(['show', 'edit', 'update']);
+        Route::resource('user', 'UsersController', ['only' => ['index', 'show', 'update']]);;
         
         // legacy login address
         Route::get(
@@ -493,13 +496,15 @@ Route::group(
         Route::get('leads/{id}/person/{sid}/source', ['as'=>'leads.personsource', 'uses'=>'LeadsController@getPersonSourceLeads'])
         Route::get('lead/branch/{bid?}', ['as'=>'leads.branch', 'uses'=>'LeadsController@branches']);
         Route::resource('leads', 'LeadsController');*/
+
+        
         //     Salesnotes
         Route::get('salesnotes/filedelete/{file}', ['as'=>'salesnotes.filedelete', 'uses'=>'SalesNotesController@filedelete']);
         Route::get('salesnotes/create/{companyId}', ['as'=>'salesnotes.cocreate', 'uses'=>'SalesNotesController@createSalesNotes']);
-                //   OrderImports
+        //   OrderImports
         
-                Route::resource('orderimport', 'OrderImportController');
-                //   Prospect Source / LeadSource
+        Route::resource('orderimport', 'OrderImportController');
+        //   Prospect Source / LeadSource
         
         Route::get('leadsource/{leadsource}/announce', ['as'=>'leadsource.announce', 'uses'=>'LeadsEmailController@announceLeads']);
         Route::post('leadsource/{leadsource}/email', ['as'=>'sendleadsource.message', 'uses'=>'LeadsEmailController@email']);
@@ -614,7 +619,7 @@ Route::group(
 
         Route::post('lastlogged', ['as'=>'lastlogged', 'uses'=>'Admin\AdminUsersController@lastlogged']);
         //   Reports
-        Route::post('reports/{report}/run', ['as'=>'reports.run', 'uses'=>'ReportsController@run']);
+        //Route::post('reports/{report}/run', ['as'=>'reports.run', 'uses'=>'ReportsController@run']);
 
         Route::post('reports/{report}/send', ['as'=>'reports.send', 'uses'=>'ReportsController@send']);
 
@@ -622,7 +627,7 @@ Route::group(
         Route::post('reports/{report}/removerecipient', ['as'=>'reports.removerecipient', 'uses'=>'ReportsController@removeRecipient']);
 
 
-        Route::resource('reports', 'ReportsController');
+        Route::resource('reports', 'ReportsController', ['except'=>['index','show']]);
         //   User Role Management
 
         Route::resource('roles', 'Admin\AdminRolesController');

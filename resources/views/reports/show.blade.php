@@ -10,9 +10,10 @@
     <i class="fas fa-file-download"></i>
     Run Report
     </a>
-    @if($report->distribution->count()>0)
+    @if($report->distribution->count()>0 && auth()->user()->hasRole('admin'))
 <a class="btn btn-success"
-    data-href="{{route('reports.send',$report->id)}}" data-toggle="modal" 
+    data-href="{{route('reports.send',$report->id)}}" 
+    data-toggle="modal" 
     data-target="#run-report" 
     data-title = "{{$report->report}}" 
     href="#">
@@ -21,9 +22,12 @@
     </a>
     @endif
 <p>
+    @if(auth()->user()->hasRole('admin'))
+
     <a href="{{route('reports.edit',$report->id)}}">
         <i class="fas fa-pencil-alt"></i>Edit
     </a>
+    @endif
 </p>
 <p><a href="{{route('reports.index')}}">Back to all reports</a></p>
 <p>{{$report->description}}</p>
@@ -31,6 +35,8 @@
 <p><label><strong>Job:</strong></label>\App\Jobs\{{ucwords($report->job)}}</p>
 <p><label><strong>Export:</strong></label>\App\Exports\{{ucwords($report->export)}}</p>
 <p>{!! $report->details !!}</p>
+@if(auth()->user()->hasRole('admin'))
+
 <div class="container">
     <div class="float-left" style="margin-bottom:10px">
         
@@ -43,19 +49,19 @@
             </form>
         
     </div>
+    @include('reports.partials._distribution')
 
-@include('reports.partials._distribution')
 
+    @if($report->roledistribution->count() >0)
+        @include('reports.partials._roleDistribution')
+    @endif
 
-@if($report->roledistribution->count() >0)
-    @include('reports.partials._roleDistribution')
+    @if($report->companyDistribution->count() >0)
+        @include('reports.partials._companydistribution')
+    @endif
+    </div>
+    @include('reports.partials._removerecipient')
+    @include('reports.partials._variableselector')
 @endif
-
-@if($report->companyDistribution->count() >0)
-    @include('reports.partials._companydistribution')
-@endif
-</div>
-@include('reports.partials._removerecipient')
-@include('reports.partials._variableselector')
 @include('partials._scripts')
 @endsection

@@ -84,5 +84,10 @@ class Report extends Model
             }
         );
     }
+
+    public function scopePublicReports($query)
+    {
+        return $query->where('public', 1);
+    }
    
 }

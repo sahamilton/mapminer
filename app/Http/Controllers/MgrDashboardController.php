@@ -101,8 +101,10 @@ class MgrDashboardController extends DashboardController
         $this->_checkBranches();
             
         $data = $this->_getDashBoardData();
-
-        return response()->view('opportunities.mgrindex', compact('data'));
+        $reports = \App\Report::publicReports()->get();
+        $managers = $this->manager->load('directReports')->directReports;
+        
+        return response()->view('opportunities.mgrindex', compact('data', 'reports', 'managers'));
 
     }
     /**
