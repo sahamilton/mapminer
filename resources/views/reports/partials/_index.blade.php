@@ -7,7 +7,9 @@
     <thead>
         <th>Report</th>
         <th>Description</th>
-        
+        @if(auth()->user()->hasRole('admin'))
+        <th>Public</th>
+        @endif
         <th>Actions</th>
     </thead>
     <tbody>
@@ -24,9 +26,15 @@
             </td>
            
             <td>{{ucwords($report->description)}}</td>            
-            
+             @if(auth()->user()->hasRole('admin'))
+                <td>
+                    @if($report->public)
+                    Public
+                    @endif
+                </td>
+             @endif
             <td>
-                @if(auth()->user()->hasRole('admin'))
+               @if(auth()->user()->hasRole('admin'))
                     @include('reports.partials._actions')
                 @else
                 <a class="btn btn-success"
@@ -46,5 +54,6 @@
 </table>
 
 </div>
-
+@if(! auth()->user()->hasRole('admin'))
 @include('reports.partials._variableselector')
+@endif
