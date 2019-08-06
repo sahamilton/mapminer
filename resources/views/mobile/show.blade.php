@@ -1,6 +1,6 @@
-@extends('site.layouts.default')
+@extends('site.layouts.mobile')
 @section('content')
-
+<div class="container"  style="margin-bottom:80px">
 <h2>{{$address->businessname}}</h2>
 <p><a href="{{route('mobile.index')}}">Return to Mobile View</a></p>
 <p>
@@ -33,7 +33,7 @@
         aria-selected="false">
 
     <strong>Open Opportunities ({{$address->openOpportunities->count()}})</strong>
-
+</a>
 @endif
 
 
@@ -99,7 +99,7 @@
     
 
   </div>
-
+</div>
 
 @include('partials._modal')
 @include('opportunities.partials._closemodal')
