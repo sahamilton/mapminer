@@ -331,4 +331,39 @@ class ReportsController extends Controller {
             ->where('accounttypes_id', 1)
             ->orderBy('companyname')->get();
     }
+    private function _checkValidJob($class)
+    {
+        $check = ['Jobs','Exports'];
+        foreach ($check as $type) {
+            if (! $this->_checkClassExists($class, $type)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private function _checkClassExists($class, $type) {
+
+       
+    
+        switch($type) {
+
+        case "Jobs":
+             $dir = "\App\\Jobs\\";
+            break;
+
+        case "Exports":
+            $dir = "\App\\Exports\\";
+            $class = $class.'Export';
+            break;
+        }
+        
+        if (class_exists($dir . $class)) {
+            return true;
+        } else {
+
+            return false;
+        }
+        
+    }
 }
