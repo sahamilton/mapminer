@@ -1,4 +1,4 @@
-@if ($report->period_from)
+@if ($report->period)
 <div class="form-group form-group-lg">
     <label for='fromdate'>From:</label>
     <input class="form-control" 

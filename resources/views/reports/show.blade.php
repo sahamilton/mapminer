@@ -31,9 +31,14 @@
 </p>
 <p><a href="{{route('reports.index')}}">Back to all reports</a></p>
 <p>{{$report->description}}</p>
+@if($report->object)
 <p><label><strong>Model:</strong></label>{{ucwords($report->object)}}</p>
+@endif
 <p><label><strong>Job:</strong></label>\App\Jobs\{{ucwords($report->job)}}</p>
 <p><label><strong>Export:</strong></label>\App\Exports\{{ucwords($report->export)}}</p>
+<p><label><strong>Use Period Selector:</strong></label>
+    @if($report->period == 1) Yes @else No @endif
+</p>
 <p>{!! $report->details !!}</p>
 @if(auth()->user()->hasRole('admin'))
 

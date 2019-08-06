@@ -9,6 +9,7 @@ use App\Jobs\Top50WeeklyReport;
 use App\Jobs\ActivityOpportunityReport;
 use App\Jobs\AccountActivities;
 use App\Jobs\BranchOpportunities;
+use App\Jobs\BranchActivitiesDetail;
 use App\Jobs\BranchStats;
 use App\Jobs\RebuildPeople;
 use App\Jobs\BranchLogins;
@@ -43,7 +44,7 @@ class Kernel extends ConsoleKernel
             $schedule->job(new WeeklyActivityReminder($period))
                 ->weekly()
                 ->sundays()
-                ->at('19:52');
+                ->at('20:45');
 
             $schedule->job(new RebuildPeople())
                 ->dailyAt('21:12');
@@ -98,7 +99,7 @@ class Kernel extends ConsoleKernel
             $period['to'] = Carbon::now()->subWeek()->endOfWeek();
             $schedule->job(new BranchActivitiesDetail($period))
                 ->weekly()
-                ->tuedays()
+                ->tuesdays()
                 ->at('03:59');
 
         }   

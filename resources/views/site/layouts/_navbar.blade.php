@@ -113,7 +113,7 @@
             </li>    
                         
           </ul>
-        
+
           @include('site.layouts.partials._rightnav')
                
           <!-- ./ nav-collapse -->

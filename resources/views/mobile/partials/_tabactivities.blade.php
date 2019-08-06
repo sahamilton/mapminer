@@ -1,8 +1,7 @@
-<table id ='responsive'  class="table-bordered nowrap" style="width:100%">>
+<table id ='responsive'  class="display responsive no-wrap" width="100%">
     <thead>
 
     <th>Date</th>
-    <th>Created by</th>
     <th>Activity</th>
     <th>Contact</th>
     <th>Notes</th>
@@ -13,15 +12,9 @@
     <tbody>
          @foreach($address->activities as $activity)
   
-            <tr>
+            <tr @if($activity->completed) class="success" @endif>
                 <td>{{$activity->activity_date ? $activity->activity_date->format('M j, Y'):''}}</td>
-                <td>
-                    @if($activity->user)
-                        {{$activity->user->person->fullName()}}
-                    @else
-                    No Long with Company
-                    @endif
-                </td>
+                
                 <td>@if($activity->type)
                     {{$activity->type->activity}}
                     @endif

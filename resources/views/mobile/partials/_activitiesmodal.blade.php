@@ -2,6 +2,10 @@
   <style>
 body.modal-open .activity_date, .followup_date {
     z-index: 1200 !important;
+
+}
+body {
+  width:100%;
 }
 </style>
 

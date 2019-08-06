@@ -16,4 +16,9 @@
     </form>
 </div>
 @include('partials._scripts')
+<script>
+    $(document).ready(function() {
+  $('#summernote').summernote();
+});
+</script>
 @endsection

@@ -1,5 +1,5 @@
 <h2>Location Details</h2>
-<div id="map-container">
+<div id="map-container" style="margin-bottom:80px">
 	<div style="float:left;width:300px">
 
 		
@@ -35,6 +35,6 @@
 		@endif
 		
 	</div>
-	 <div id="map" style="height:300px;width:500px;border:red solid 1px">
+	 <div id="map" style="height:300px;width:300px;border:red solid 1px">
 	</div>
 </div>

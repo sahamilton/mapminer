@@ -13,8 +13,12 @@ class SalesOrg extends \Eloquent
     public $table = 'persons';
     // Don't forget to fill this array
     protected $fillable = ['title','name'];
-
-    public function SalesOrgRole()
+    /**
+     * [salesOrgRole description]
+     *
+     * @return relationship [<description>]
+     */
+    public function salesOrgRole()
     {
         return $this->hasMany(Person::class, 'position');
     }
@@ -39,6 +43,13 @@ class SalesOrg extends \Eloquent
     // Identify people who have sales rep role
     // but are not in the sales organization
     // hierarchy
+    /**
+     * [salesRepsOutsideOrg Identify people who have sales rep role
+     * but are not in the sales organization
+     * hierarchy
+     * 
+     * @return array Id of salesreps outside sales org
+     */
     public function salesRepsOutsideOrg()
     {
         $topDog = Person::findOrFail($this->topdog);
@@ -72,7 +83,12 @@ class SalesOrg extends \Eloquent
         );
         return $team->toJson();
     }
-
+    /**
+     * [getCapoDiCapo id the top of the sales org
+     * refactor to programmatically get topdog.
+     * 
+     * @return Person topDog
+     */
     public function getCapoDiCapo()
     {
 

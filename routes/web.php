@@ -566,8 +566,9 @@ Route::group(
         Route::post('branchassignments/send', ['as'=>'branchassignments.send', 'uses'=>'Admin\BranchManagementController@emailAssignments']);
         Route::get('branch/manage', ['as'=>'branch.management', 'uses'=>'Admin\BranchManagementController@index']);
         Route::get('branch/check', ['as'=>'branch.check', 'uses'=>'Admin\AdminUsersController@checkBranchAssignments']);
+        
 
-       // Route::get('branch/{branch}/purge', ['as'=>'branch.purge','uses'=>'BranchesController@delete']);
+        // Route::get('branch/{branch}/purge', ['as'=>'branch.purge','uses'=>'BranchesController@delete']);
         
         //   Campaigns (email)
         Route::resource('campaigns', 'CampaignController');
@@ -701,12 +702,12 @@ Route::group(
         Route::get(
             'testjob', function () {
                  //$company = App\Company::findOrFail(532);
-                /* $period['from'] = \Carbon\Carbon::now()->subWeek()->startOfWeek();
-                 $period['to'] = \Carbon\Carbon::now()->subWeek()->endOfWeek();
-                 App\Jobs\Top50WeeklyReport::dispatch();
-               */
+                $period['from'] = \Carbon\Carbon::now()->subWeek()->startOfWeek();
+                $period['to'] = \Carbon\Carbon::now()->subWeek()->endOfWeek();
+                // App\Jobs\Top50WeeklyReport::dispatch();
+               
                  //App\Jobs\AccountActivities::dispatch($company, $period);
-                //App\Jobs\BranchOpportunities::dispatch($period);
+                App\Jobs\BranchOpportunities::dispatch($period);
                  //App\Jobs\RebuildPeople::dispatch();
                 //App\Jobs\BranchLogins::dispatch($period);
                  /*$filesInFolder = \File::files(storage_path('backups'));
@@ -718,12 +719,14 @@ Route::group(
                  }
                  
                  }
-                
-                 App\Jobs\WeeklyOpportunitiesReminder::dispatch();*/
+                 $period['from'] = now();
+                 $period['to'] = now()->addWeek();
+                 App\Jobs\WeeklyActivityReminder::dispatch($period);
+                 App\Jobs\WeeklyOpportunitiesReminder::dispatch();
                  $period['from'] = \Carbon\Carbon::now()->subWeek()->startOfWeek();
                  $period['to'] = \Carbon\Carbon::now();
                 App\Jobs\BranchStats::dispatch($period);
-                /*//App\Jobs\ActivityOpportunityReport::dispatch();
+                App\Jobs\ActivityOpportunityReport::dispatch();
                 //App\Jobs\ActivityOpportunityReport::dispatch();
                 
                 //App\Jobs\ZipBackup::dispatch('MMProd20190123');
