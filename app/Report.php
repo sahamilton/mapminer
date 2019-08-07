@@ -104,9 +104,4 @@ class Report extends Model
         return $query->where('public', 1);
     }
 
-    public function scopePublicReports($query)
-    {
-        return $query->where('public', 1);
-    }
-   
 }

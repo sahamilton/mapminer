@@ -35,7 +35,7 @@
 					@if(! $loop->last):@endif
 					@endforeach
 				</td>
-				<td>{{$branch->newleads}}</td>
+				<td>{{$branch->newbranchleads}}</td>
 				<td>{{$branch->logacall}}</td>
 				<td>{{$branch->salesapptsscheduled}}</td>
 				<td>{{$branch->salesappts}}</td>
