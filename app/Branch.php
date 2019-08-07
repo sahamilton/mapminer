@@ -262,6 +262,21 @@ class Branch extends Model implements HasPresenter
             ->whereDoesntHave('opportunities'); 
 
     }
+
+    public function branchLeads()
+    {
+        return  $this->belongsToMany(Address::class, 'address_branch', 'branch_id', 'address_id')
+            ->whereDoesntHave('opportunities')->where('lead_source_id', 4); 
+    }
+    
+    public function scopeBranchLeadsPeriod($query, $period)
+    {
+        return $query->whereHas(
+            'branchLeads', function ($q) {
+                $q->whereBetween('address_branch.created_at', [$period['from'], $period['to']]);
+            }
+        );
+    }
     /**
      * [allLeads description]
      * 
@@ -723,6 +738,14 @@ class Branch extends Model implements HasPresenter
                         }
                     );
             },
+            'leads as newbranchleads'=>function ($query) {
+                $query->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']])
+                    ->where(
+                        function ($q) {
+                            $q->where('lead_source_id', 4);
+                        }
+                    );
+            },
             'activities'=>function ($query) {
                 $query->whereBetween(
                     'activity_date', [$this->period['from'],$this->period['to']]
@@ -739,6 +762,18 @@ class Branch extends Model implements HasPresenter
                 )
                     ->where('completed', 1)
                     ->where('activitytype_id', 4);
+            },
+            'activities as logacall'=>function ($query) {
+                $query->whereBetween(
+                    'activity_date', [$this->period['from'],$this->period['to']]
+                )
+                    ->where('completed', 1)
+                    ->where('activitytype_id', 13);
+            },
+            'activities as salesapptsscheduled'=>function ($query) {
+                $query->whereBetween(
+                    'activity_date', [$this->period['from'],$this->period['to']]
+                )->where('activitytype_id', 4);
             },
             'opportunities as opened'=>function ($query) {
                 $query->whereBetween(

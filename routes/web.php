@@ -700,7 +700,7 @@ Route::group(
                 // App\Jobs\Top50WeeklyReport::dispatch();
                
                  //App\Jobs\AccountActivities::dispatch($company, $period);
-                App\Jobs\BranchOpportunities::dispatch($period);
+                //App\Jobs\BranchOpportunities::dispatch($period);
                  //App\Jobs\RebuildPeople::dispatch();
                 //App\Jobs\BranchLogins::dispatch($period);
                  /*$filesInFolder = \File::files(storage_path('backups'));
@@ -718,9 +718,9 @@ Route::group(
                  App\Jobs\WeeklyOpportunitiesReminder::dispatch();
                  $period['from'] = \Carbon\Carbon::now()->subWeek()->startOfWeek();
                  $period['to'] = \Carbon\Carbon::now();
-                App\Jobs\BranchStats::dispatch($period);
-                App\Jobs\ActivityOpportunityReport::dispatch();
-                //App\Jobs\ActivityOpportunityReport::dispatch();
+                App\Jobs\BranchStats::dispatch($period);*/
+                App\Jobs\ActivityOpportunity::dispatch($period);
+                /*//App\Jobs\ActivityOpportunityReport::dispatch();
                 
                 //App\Jobs\ZipBackup::dispatch('MMProd20190123');
                 //App\Jobs\UploadToDropbox::dispatch('MMProd20190123');

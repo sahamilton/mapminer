@@ -181,7 +181,7 @@ class ReportsController extends Controller {
         
         // check if period selector
         // check model
-        $team = $this->_getMyTeam($request);
+        $team = $this->_getMyTeam(request());
    
         if ($myBranches = $this->_getMyBranches(request('manager'))) {
             if (request()->has('fromdate')) {
@@ -204,7 +204,7 @@ class ReportsController extends Controller {
                 }
 
             } else {
-                return Excel::download(new $export($period, $myBranches), $report->job . 'Activities.csv');
+                return Excel::download(new $export($period, $myBranches), $report->job . '.csv');
             }
             
         } else {

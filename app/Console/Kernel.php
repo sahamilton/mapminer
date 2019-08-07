@@ -60,7 +60,13 @@ class Kernel extends ConsoleKernel
                 ->sundays()
                 ->at('23:15');
             
-            
+            // RVP Reports
+            //$period['from'] = Carbon::yesterday()->startOfDay();
+            //$period['to'] = Carbon::yesterday()->endOfDay();
+            //$schedule->job(new DailyBranch($period))
+             //   ->dailyAt('02:15');
+             
+             
             // Josh Hammer report
             $period['from'] = \Carbon\Carbon::now()->subWeek()->startOfWeek();
             $period['to'] = \Carbon\Carbon::now()->subWeek()->endOfWeek();
