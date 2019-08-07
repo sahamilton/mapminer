@@ -723,6 +723,14 @@ class Branch extends Model implements HasPresenter
                         }
                     );
             },
+            'leads as newleads'=>function ($query) {
+                $query->whereBetween('address_branch.created_at', [$this->period['from'],$this->period['to']])
+                    ->where(
+                        function ($q) {
+                            $q->where('addresses.lead_source_id', 4);
+                        }
+                    );
+            },
             'activities'=>function ($query) {
                 $query->whereBetween(
                     'activity_date', [$this->period['from'],$this->period['to']]
@@ -737,8 +745,20 @@ class Branch extends Model implements HasPresenter
                 $query->whereBetween(
                     'activity_date', [$this->period['from'],$this->period['to']]
                 )
-                    ->where('completed', 1)
-                    ->where('activitytype_id', 4);
+                ->where('completed', 1)
+                ->where('activitytype_id', 4);
+            },
+            'activities as logacall'=>function ($query) {
+                $query->whereBetween(
+                    'activity_date', [$this->period['from'],$this->period['to']]
+                )
+                ->where('completed', 1)
+                ->where('activitytype_id', 13);
+            },
+            'activities as salesapptsscheduled'=>function ($query) {
+                $query->whereBetween(
+                    'activity_date', [$this->period['from'],$this->period['to']]
+                )->where('activitytype_id', 4);
             },
             'opportunities as opened'=>function ($query) {
                 $query->whereBetween(

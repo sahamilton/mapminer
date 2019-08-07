@@ -55,5 +55,7 @@
 
 </div>
 @if(! auth()->user()->hasRole('admin'))
-@include('reports.partials._variableselector')
+    @include('reports.partials._variableselector')
+@else
+    @include('partials._modal')
 @endif

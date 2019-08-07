@@ -324,9 +324,17 @@ class Person extends NodeModel implements HasPresenter
     public function postName()
     {
 
-        return addslashes($this->attributes['lastname']) . ', ' . addslashes($this->attributes['firstname']) ;
+        return addslashes($this->attributes['lastname']) . ', ' . addslashes($this->attributes['firstname']);
     }
-    
+    /**
+     * [distribution description]
+     * 
+     * @return [type] [description]
+     */
+    public function distribution()
+    {
+        return ['name'=>$this->fullName(), 'email'=>$this->userdetails->email];
+    }
     /**
      * [currentleads description]
      * 

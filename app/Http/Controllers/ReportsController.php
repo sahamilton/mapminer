@@ -199,8 +199,8 @@ class ReportsController extends Controller {
    
         if ($myBranches = $this->_getMyBranches(request('manager'))) {
             if (request()->has('fromdate')) {
-                $period['from']=Carbon::parse(request('fromdate'));
-                $period['to'] = Carbon::parse(request('todate'));
+                $period['from']=Carbon::parse(request('fromdate'))->startOfDay();
+                $period['to'] = Carbon::parse(request('todate'))->endOfDay();
             }
             $export = "\App\Exports\\". $report->export;
             if ($report->object) {
@@ -213,6 +213,11 @@ class ReportsController extends Controller {
                 case 'Role':
                    
                     return Excel::download(new $export(request('role'), $team), $report->job . '.csv');
+
+                break;
+
+                case 'User':
+                    return Excel::download(new $export($period, [request('manager')]), $report->job . 'Activities.csv');
 
                 break;
                 }

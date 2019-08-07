@@ -702,11 +702,11 @@ Route::group(
         Route::get(
             'testjob', function () {
                  //$company = App\Company::findOrFail(532);
-                $period['from'] = \Carbon\Carbon::now()->subWeek()->startOfWeek();
-                $period['to'] = \Carbon\Carbon::now()->subWeek()->endOfWeek();
+                $period['from'] = \Carbon\Carbon::yesterday()->startOfDay();
+                $period['to'] = \Carbon\Carbon::yesterday()->endOfDay();
                 // App\Jobs\Top50WeeklyReport::dispatch();
-                $user = App\User::findOrFail();
-                App\Job\DailyBranch::dispatch($period, $user);
+                $user = App\User::findOrFail(468);
+                App\Jobs\DailyBranch::dispatch($period, $user);
                  //App\Jobs\AccountActivities::dispatch($company, $period);
                 //App\Jobs\BranchOpportunities::dispatch($period);
                  //App\Jobs\RebuildPeople::dispatch();

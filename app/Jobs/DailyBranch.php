@@ -3,8 +3,13 @@
 namespace App\Jobs;
 
 use \Carbon\Carbon;
-use App\User;
+use App\Person;
 use App\Branch;
+use App\Report;
+use Mail;
+use Excel;
+use App\Mail\DailyBranchReport;
+use App\Exports\DailyBranchExport;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -16,18 +21,20 @@ class DailyBranch implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     public $period;
     public $user;
-    public $person;
+    
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(array $period, User $user)
+    public function __construct()
     {
-        $this->period = $period;
-        $this->user = $user;
-        $this->person = Person::where('user_id', $user->id)->findOrFail();
+       
+        
+        $this->period['from'] = Carbon::yesterday()->startOfDay();
+        $this->period['to'] = Carbon::yesterday()->endOfDay();
+        
 
     }
 
@@ -38,12 +45,21 @@ class DailyBranch implements ShouldQueue
      */
     public function handle()
     {
-        $branches = $this->person->myBranches();
+        $class= str_replace("App\Jobs\\", "", get_class($this));
+        $job = Report::where('job', $class)->with('distribution')->firstOrFail();
+     
+        foreach ($job->distribution as $recipient) {
 
-        $data = Branch::summaryStats($this->period)->get();
-        dd($data);
-        // first get all users - with role ('RVP')?
-        // then get their branches - myteam -> my branches
-        // then get their data ($this->period); ->map
+            $this->person = Person::where('user_id', $recipient->id)->firstOrFail();
+       
+            $file = "/public/reports/".$this->person->firstname."_".$this->person->lastname."_dailyreport_". $this->period['from']->format('Y-m-d'). ".xlsx";
+            
+            Excel::store(
+                new DailyBranchExport($this->period, [$this->person->id]), $file
+            );
+            $distribution = [$this->person->distribution()];
+            Mail::to($distribution)->send(new DailyBranchReport($file, $this->period, $this->person));
+        
+        }
     }
 }
