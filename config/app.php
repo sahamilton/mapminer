@@ -189,7 +189,7 @@ return [
         App\Providers\DropboxServiceProvider::class,
         Laravel\Scout\ScoutServiceProvider::class,
         ScoutEngines\Elasticsearch\ElasticsearchProvider::class,
-        Reportico\Reportico\ReporticoServiceProvider::class,
+       
        
 
 
