@@ -705,9 +705,10 @@ Route::group(
                 $period['from'] = \Carbon\Carbon::now()->subWeek()->startOfWeek();
                 $period['to'] = \Carbon\Carbon::now()->subWeek()->endOfWeek();
                 // App\Jobs\Top50WeeklyReport::dispatch();
-               
+                $user = App\User::findOrFail();
+                App\Job\DailyBranch::dispatch($period, $user);
                  //App\Jobs\AccountActivities::dispatch($company, $period);
-                App\Jobs\BranchOpportunities::dispatch($period);
+                //App\Jobs\BranchOpportunities::dispatch($period);
                  //App\Jobs\RebuildPeople::dispatch();
                 //App\Jobs\BranchLogins::dispatch($period);
                  /*$filesInFolder = \File::files(storage_path('backups'));
