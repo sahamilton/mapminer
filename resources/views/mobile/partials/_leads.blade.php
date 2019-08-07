@@ -1,6 +1,6 @@
 
 <div class="container">
-<table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
+<table id ='responsive6'  class="display responsive no-wrap" width="100%">
     <thead>
         <th>Company</th>
         <th>Address</th>
