@@ -13,7 +13,7 @@
          @foreach($address->activities as $activity)
   
             <tr @if($activity->completed) class="success" @endif>
-                <td>{{$activity->activity_date ? $activity->activity_date->format('M j, Y'):''}}</td>
+                <td>{{$activity->activity_date ? $activity->activity_date->format('Y-m-d'):''}}</td>
                 
                 <td>@if($activity->type)
                     {{$activity->type->activity}}

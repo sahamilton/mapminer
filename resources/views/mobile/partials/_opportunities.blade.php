@@ -1,5 +1,5 @@
 <div class="container">
-<table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
+<table id ='responsive5'  class="display responsive no-wrap" width="100%">
     <thead>
         <th>Opportunity</th>
         <th>Address</th>
