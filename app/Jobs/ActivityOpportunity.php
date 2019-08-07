@@ -15,7 +15,7 @@ use App\Mail\WeeklyActivityOpportunityReport;
 use App\Exports\ActivityOpportunityExport;
 
 
-class ActivityOpportunityReport implements ShouldQueue
+class ActivityOpportunity implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     public $period;
