@@ -1,7 +1,7 @@
 
 @php $statuses = ['open','closed - won','closed - lost']; @endphp
 
-<table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
+<table id ='responsive4'  class="display responsive no-wrap" width="100%">
     <thead>
       <th>Title</th>
       <th>Date Opened</th>
