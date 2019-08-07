@@ -8,11 +8,12 @@
 		<tr>
 			<th><b>Branch Name</b></th>
 			<th><b>Branch ID</b></th>
-			<th><b>Branch Manager</b></th>
 			<th><b># New Leads Created</b></th>
 			<th><b># Log A Call Activities</b></th>
 			<th><b># Sales Appointments Scheduled</b></th>
 			<th><b># Sales Appointments Completed</b></th>
+			<th><b>Branch Manager</b></th>
+			<th><b>Reports To</b></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -21,16 +22,22 @@
 			<tr>
 				<td>{{$branch->branchname}}</td>
 				<td>{{$branch->id}}</td>
-				<td>
-					@foreach ($branch->manager as $manager)
-					{{$manager->fullName()}}
-					@if(! $loop->last)/@endif
-					@endforeach
-				</td>
 				<td>{{$branch->newleads}}</td>
 				<td>{{$branch->logacall}}</td>
 				<td>{{$branch->salesapptsscheduled}}</td>
 				<td>{{$branch->salesappts}}</td>
+				<td>
+					@foreach ($branch->manager as $manager)
+					{{$manager->fullName()}}
+					@if(! $loop->last):@endif
+					@endforeach
+				</td>
+				<td>
+					@foreach ($branch->manager as $manager)
+					{{$manager->reportsTo->fullName()}}
+					@if(! $loop->last):@endif
+					@endforeach
+				</td>
 
 			</tr>
 		@endforeach
