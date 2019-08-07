@@ -83,6 +83,7 @@ class MgrDashboardController extends DashboardController
      */
     public function index()
     {
+        
         request()->session()->forget('branch');
 
         if (! $this->period) {

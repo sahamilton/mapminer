@@ -1,4 +1,4 @@
-@if ($report->period)
+
 <div class="form-group form-group-lg">
     <label for='fromdate'>From:</label>
     <input class="form-control" 
@@ -24,7 +24,7 @@
         <strong>{{$errors->has('todate') ? $errors->first('todate')  : ''}}</strong>
     </span>
 </div>
-@endif
+
 
 
 <div class="form-group form-group-lg">
@@ -46,8 +46,10 @@
         <strong>{{$errors->has('manager') ? $errors->first('manager')  : ''}}</strong>
     </span>
 </div>
-@if($report->object == 'Company')
-    @include('reports.partials._companyselector')
-@elseif ($report->object == 'Role')
-    @include('reports.partials._roleselector')
+@if(auth()->user()->hasRole('admin'))
+    @if( $report->object == 'Company')
+        @include('reports.partials._companyselector')
+    @elseif ($report->object == 'Role')
+        @include('reports.partials._roleselector')
+    @endif
 @endif
