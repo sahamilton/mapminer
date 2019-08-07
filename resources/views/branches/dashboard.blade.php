@@ -1,7 +1,7 @@
 @extends('site.layouts.calendar')
 @section('content')
 
-<div class="container">
+<div class="container" style="margin-bottom:100px">
 
 <h2>{{$branch->branchname}} Dashboard</h2>
 @include('branches.partials._periodselector')
@@ -16,8 +16,8 @@
 	@include('opportunities.partials._dashboardselect')
 @endif
 
-<div class="col-sm-10 offset-1">
-	<table class='table table-striped table-bordered table-condensed table-hover sorttable'>
+<div class="col-sm-12">
+	<table id ='responsive6'  class="display responsive no-wrap" width="100%">
 
 		<thead style="background-color:#E77C22;  color:#fff;">
 			<th colspan=6 class="text-center">Summary</th>
@@ -44,7 +44,7 @@
 	</table>
 </div>
 
-	<div class="card">
+	<div class="col-sm-10 offset-1">
 		<div class="card-header">
 			<h4>Activities Calendar</h4>
 			<p><a href="{{route('upcomingactivity.branch',$branch->id)}}">Upcoming Activities</a></p>
@@ -57,8 +57,8 @@
 		</div>
 	</div>
 	 
-	
-	<div class="card float-left" style="margin-top:10px">
+	<div class="row" style="margin-bottom:100px">
+	<div class="col-sm-6 float-left" style="margin-top:10px">
 		<div class="card-header">
 			<h4>Sales Pipeline</h4>
 		</div>
@@ -67,7 +67,7 @@
 			@include('charts._pipechart')
 		</div>
 	</div>
-	<div class="card float-right" style="margin-top:10px">
+	<div class="col-sm-6 float-right" style="margin-top:10px">
 		<div class="card-header">
 			<h4>Activities</h4>
 		</div>
@@ -76,7 +76,7 @@
 				@include('charts._branchactivitiestype')
 		</div>
 	</div>
-
-
+</div>
+</div>
 @include('partials._scripts')
 @endsection
