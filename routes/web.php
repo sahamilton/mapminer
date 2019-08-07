@@ -726,9 +726,9 @@ Route::group(
                  App\Jobs\WeeklyOpportunitiesReminder::dispatch();
                  $period['from'] = \Carbon\Carbon::now()->subWeek()->startOfWeek();
                  $period['to'] = \Carbon\Carbon::now();
-                App\Jobs\BranchStats::dispatch($period);
-                App\Jobs\ActivityOpportunityReport::dispatch();
-                //App\Jobs\ActivityOpportunityReport::dispatch();
+                App\Jobs\BranchStats::dispatch($period);*/
+                App\Jobs\ActivityOpportunity::dispatch($period);
+                /*//App\Jobs\ActivityOpportunityReport::dispatch();
                 
                 //App\Jobs\ZipBackup::dispatch('MMProd20190123');
                 //App\Jobs\UploadToDropbox::dispatch('MMProd20190123');

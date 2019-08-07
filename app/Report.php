@@ -75,14 +75,33 @@ class Report extends Model
         $period['from'] = $this->period_from;
         return $period;
     }
-
+    /**
+     * [getDistribution description]
+     * 
+     * @return [type] [description]
+     */
     public function getDistribution()
     {
-        return $this->distribution->map(
+        $distribution = $this->distribution->map(
             function ($user) {
                 return ['email'=>$user->email, 'name'=>$user->person->fullName()];
             }
         );
+        if ($distribution->count()==0) {
+            $distribution = [['email'=>config('mapminer.system_contact'), 'name'=>'Unknown Recipient']];
+        }
+        return $distribution;
+    }
+    /**
+     * [scopePublicReports description]
+     * 
+     * @param [type] $query [description]
+     * 
+     * @return [type]        [description]
+     */
+    public function scopePublicReports($query)
+    {
+        return $query->where('public', 1);
     }
 
     public function scopePublicReports($query)

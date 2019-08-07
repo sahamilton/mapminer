@@ -29,6 +29,7 @@ class ActivityOpportunity implements ShouldQueue
     {
      
         $this->period = $period;
+        
         $this->branches = $branches;
     }
 
@@ -41,13 +42,13 @@ class ActivityOpportunity implements ShouldQueue
     {
         // create the file
         $file = '/public/reports/actopptywkrpt'. Carbon::now()->timestamp. ".xlsx";
-        
-        Excel::store(new ActivityOpportunityExport($this->period), $this->branches);
+        Excel::store(new ActivityOpportunityExport($this->period, $this->branches), $file);
         $class= str_replace("App\Jobs\\", "", get_class($this));
         $report = Report::with('distribution', 'distribution.person')
             ->where('job', $class)
             ->firstOrFail();
         $distribution = $report->getDistribution();
+        
         Mail::to($distribution)
             ->send(new WeeklyActivityOpportunityReport($file, $this->period));
     }
