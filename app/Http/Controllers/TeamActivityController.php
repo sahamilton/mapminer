@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 use App\Person;
 use Illuminate\Http\Request;
 use Excel;
-use App\Exports\TeamLoginsExport;
+use App\Exports\MyTeamLoginsExport;
 
 class TeamActivityController extends Controller
 {
@@ -62,7 +62,7 @@ class TeamActivityController extends Controller
         if ($people = $this->_getTeamLogins($person)) {
             
             return Excel::download(
-                new TeamLoginsExport($people), $people->first()->fullName() . '\'s Team logins.csv'
+                new MyTeamLoginsExport($people), $people->first()->fullName() . '\'s Team logins.csv'
             );
         }
         return redirect()->route('home')

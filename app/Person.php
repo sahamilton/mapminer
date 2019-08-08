@@ -153,6 +153,11 @@ class Person extends NodeModel implements HasPresenter
         return $query->descendantsAndSelf();
     }
 
+    public function team()
+    {
+        return $this->descendantsAndSelf()->with('branchesServiced');
+    }
+
     /**
      * [myTeam description]
      * 

@@ -1,8 +1,10 @@
 <h2>All Reports</h2>
 <div class="container">
+    @can('manage_users')
     <div class="float-right">
         <a href="{{route('reports.create')}}" class="btn btn-info">Add Report</a>
     </div>
+    @endcan
 <table id ='sorttable8' class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
         <th>Report</th>

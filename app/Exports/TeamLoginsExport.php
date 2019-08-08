@@ -1,5 +1,4 @@
-2<?php
-
+<?php
 namespace App\Exports;
 
 use App\Person;
@@ -7,17 +6,18 @@ use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
 class TeamLoginsExport implements FromView
 {
-    public $people;
+    
     /**
      * [__construct description]
      * 
-     * @param [type] $people [description]
+     * @param Array $period [description]
+     * @param array $person [description]
      */
-    public function __construct($people)
+    public function __construct(Array $period, array $person)
     {
-        $this->people = $people;
+        $this->period = $period;
+        $this->person = $person;
     }
-    
     /**
      * [view description]
      * 
@@ -25,7 +25,16 @@ class TeamLoginsExport implements FromView
      */
     public function view(): View
     {
-        $people = $this->people;
-        return view('team.export', compact('people'));
+        
+        $me = Person::findOrFail($this->person[0]);
+        $person = $me->descendantsAndSelf()->with('branchesServiced', 'userdetails', 'userdetails.roles', 'userdetails.usage')
+            ->get();
+        
+        
+        dd($person->first());
+       
+        $period = $this->period;
+
+        return view('reports.dailybranch', compact('branches', 'period', 'person'));
     }
 }

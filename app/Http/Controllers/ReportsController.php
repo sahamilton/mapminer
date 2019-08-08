@@ -217,7 +217,8 @@ class ReportsController extends Controller {
                 break;
 
                 case 'User':
-                    return Excel::download(new $export($period, [request('manager')]), $report->job . 'Activities.csv');
+                
+                    return Excel::download(new $export($period, [request('manager')]), $report->job . '.csv');
 
                 break;
                 }
