@@ -17,7 +17,7 @@ class TeamLoginsExport implements FromView
     public function __construct(Array $period, Array $manager)
     {
         $this->period = $period;
-        $this->manager = $manager[0];
+        $this->manager = $manager;
     }
     /**
      * [view description]
@@ -27,8 +27,9 @@ class TeamLoginsExport implements FromView
     public function view(): View
     {
        
-        $me = Person::findOrFail($this->manager);
-        $people = $me->descendantsAndSelf()
+        $manager = Person::findOrFail($this->manager[0]);
+        dd($manager);
+        $people = $manager->descendantsAndSelf()
             ->with('branchesServiced', 'userdetails', 'userdetails.roles')
             ->with(
                 ['userdetails.usage' => function ($query) {
