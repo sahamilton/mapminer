@@ -92,7 +92,7 @@ class BranchDashboardController extends DashboardController
         } else {
             $this->myBranches = $this->_getBranches();
      
-            if (count($this->myBranches)>0) {
+            if (count($this->myBranches) > 0) {
                 $branch = array_keys($this->myBranches);
                 return redirect()->route('dashboard.show', $branch[0]);
             } else {
