@@ -702,11 +702,11 @@ Route::group(
         Route::get(
             'testjob', function () {
                  //$company = App\Company::findOrFail(532);
-                $period['from'] = \Carbon\Carbon::yesterday()->startOfDay();
+                $period['from'] = \Carbon\Carbon::now()->subMonth()->startOfDay();
                 $period['to'] = \Carbon\Carbon::yesterday()->endOfDay();
                 // App\Jobs\Top50WeeklyReport::dispatch();
-                $user = App\User::findOrFail(468);
-                App\Jobs\DailyBranch::dispatch($period, $user);
+                App\Jobs\TeamLogins::dispatch($period, 493);
+                //App\Jobs\DailyBranch::dispatch($period, $user);
                  //App\Jobs\AccountActivities::dispatch($company, $period);
                 //App\Jobs\BranchOpportunities::dispatch($period);
                  //App\Jobs\RebuildPeople::dispatch();
@@ -727,7 +727,7 @@ Route::group(
                  $period['from'] = \Carbon\Carbon::now()->subWeek()->startOfWeek();
                  $period['to'] = \Carbon\Carbon::now();
                 App\Jobs\BranchStats::dispatch($period);*/
-                App\Jobs\ActivityOpportunity::dispatch($period);
+                //App\Jobs\ActivityOpportunity::dispatch($period);
                 /*//App\Jobs\ActivityOpportunityReport::dispatch();
                 
                 //App\Jobs\ZipBackup::dispatch('MMProd20190123');

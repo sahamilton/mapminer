@@ -6,17 +6,18 @@ use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
 class TeamLoginsExport implements FromView
 {
-    
+    public $manager;
+    public $period;
     /**
      * [__construct description]
      * 
      * @param Array $period [description]
      * @param array $person [description]
      */
-    public function __construct(Array $period, array $person)
+    public function __construct(Array $period, Array $manager)
     {
         $this->period = $period;
-        $this->person = $person;
+        $this->manager = $manager[0];
     }
     /**
      * [view description]
@@ -25,16 +26,19 @@ class TeamLoginsExport implements FromView
      */
     public function view(): View
     {
-        
-        $me = Person::findOrFail($this->person[0]);
-        $person = $me->descendantsAndSelf()->with('branchesServiced', 'userdetails', 'userdetails.roles', 'userdetails.usage')
-            ->get();
-        
-        
-        dd($person->first());
        
+        $me = Person::findOrFail($this->manager);
+        $people = $me->descendantsAndSelf()
+            ->with('branchesServiced', 'userdetails', 'userdetails.roles')
+            ->with(
+                ['userdetails.usage' => function ($query) {
+                    $query->whereBetween("track.created_at", [$this->period['from'], $this->period['to']]);
+                }
+                ]
+            )->get();
+                     
         $period = $this->period;
 
-        return view('reports.dailybranch', compact('branches', 'period', 'person'));
+        return view('reports.dailybranch', compact('period', 'people'));
     }
 }

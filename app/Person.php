@@ -186,7 +186,10 @@ class Person extends NodeModel implements HasPresenter
             ->withTimestamps()
             ->addSelect('branch_person.updated_at', \DB::raw("MAX(branch_person.updated_at) AS lastdate"))->get();
     }
-
+    public function mapminerUsage()
+    {
+        return $this->hasManyThrough(Track::class, User::class);
+    }
     /**
      * [scopeStaleBranchAssignments description]
      * 

@@ -16,7 +16,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 class TeamLogins implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-    public $branches;
+    public $manager;
     public $period;
     
     /**
@@ -24,10 +24,10 @@ class TeamLogins implements ShouldQueue
      * 
      * @param Array $period [description]
      */
-    public function __construct(Array $period, Array $branches=null)
+    public function __construct(Array $period, Array $manager)
     {
         $this->period = $period;
-        $this->branches = $branches;
+        $this->manager = $manager;
     }
 
     /**
@@ -39,7 +39,7 @@ class TeamLogins implements ShouldQueue
     {
         $file = '/public/reports/teamlogins'. $this->period['to']->timestamp. ".xlsx";
 
-        Excel::store(new TeamLoginsExport($this->period, $this->branches), $file);
+        Excel::store(new TeamLoginsExport($this->period, $this->manager), $file);
         
         $class= str_replace("App\Jobs\\", "", get_class($this));
         $report = Report::with('distribution')
