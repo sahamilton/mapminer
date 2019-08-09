@@ -28,7 +28,7 @@ class TeamLoginsExport implements FromView
     {
        
         $manager = Person::findOrFail($this->manager[0]);
-        dd($manager);
+
         $people = $manager->descendantsAndSelf()
             ->with('branchesServiced', 'userdetails', 'userdetails.roles')
             ->with(
