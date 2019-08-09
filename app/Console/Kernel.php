@@ -63,7 +63,7 @@ class Kernel extends ConsoleKernel
             // RVP Daily Branch Report
             // 
             $schedule->job(new DailyBranch)
-                ->dailyAt('21:12');
+                ->weekdays()->at('21:12');
             // 
             
             // Josh Hammer report
