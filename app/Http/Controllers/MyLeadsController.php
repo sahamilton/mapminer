@@ -167,11 +167,13 @@ class MyLeadsController extends BaseController
      */
     public function store(MyLeadFormRequest $request)
     {
+       
 
         // we need to geocode this address
         if (! $data = $this->_cleanseInput($request)) {
             return redirect()->back()->withError('Unable to geocode that address');
         }
+
         $data['branch'] = $this->branch->findOrFail(request('branch'));
        
         $dupes = $this->lead->duplicate($data['lead']['lng'], $data['lead']['lat'])->get();
@@ -212,7 +214,12 @@ class MyLeadsController extends BaseController
                 }
             }
         }
-        return redirect()->route('address.show', $lead)->withMessage('Lead Created');
+        if (request()->has('source') && request('source') == 'mobile') {
+                return redirect()->route('mobile.show', $lead)->withMessage('Lead Created');
+        } else {
+            return redirect()->route('address.show', $lead)->withMessage('Lead Created');
+        }
+        
     }
     /**
      * [_cleanseInput description]

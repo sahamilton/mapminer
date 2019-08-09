@@ -1,5 +1,15 @@
-
 <div class="container">
+  <div class="float-right">
+  <a class="btn btn-info"
+    data-href="{{route('myleads.store')}}" 
+    data-toggle="modal" 
+    data-target="#add-lead" 
+    data-title = "activity" 
+    href="#">
+    Add Lead
+  </a>
+</div>
+
 <table id ='responsive6'  class="display responsive no-wrap" width="100%">
     <thead>
         <th>Company</th>
@@ -40,3 +50,4 @@
     </tbody>
 </table>
 </div>
+@include('mobile.partials._leadsmodal')

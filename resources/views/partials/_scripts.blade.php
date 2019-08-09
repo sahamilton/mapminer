@@ -82,7 +82,11 @@ $(document).ready(function()
 	$(document).on('show.bs.modal','#unassign-lead', function(e) {
     	$(this).find('#title').html($(e.relatedTarget).data('title'));
 		$(this).find('#action-form').attr('action',$(e.relatedTarget).data('href'));
-	});	
+	});
+    $(document).on('show.bs.modal','#add-lead', function(e) {
+        $(this).find('#title').html($(e.relatedTarget).data('title'));
+        $(this).find('#action-form').attr('action',$(e.relatedTarget).data('href'));
+    });	
 	$(document).on('show.bs.modal','#add-locationcontact', function(e) {
     	$(this).find('#title').html($(e.relatedTarget).data('title'));
 		$(this).find('input#address_id').val($(e.relatedTarget).data('pk'));

@@ -1,11 +1,11 @@
 <div class="container">
 <table id ='responsive5'  class="display responsive no-wrap" width="100%">
     <thead>
-        <th>Opportunity</th>
+        <th>Opportunity!!</th>
         <th>Address</th>
         <th>Expected Close</th>
         <th>Distance</th>
-        <th>Last Activity</th>
+        <th>Actions</th>
     </thead>
     <tbody>
         @foreach($results as $result)
@@ -14,7 +14,7 @@
             
             <td><a href="{{route('mobile.show',$result->address_id)}}">{{$result->title}}</a></td>
             <td>{{$result->address->address->fullAddress()}}</td>
-            <td>{{$result->expected_close}}</td>
+            <td>{{$result->expected_close->format('Y-m-d')}}</td>
             <td>{{number_format($result->distance,2)}} mi</td>
             <td>
                 @if($result->address->address->lastActivity->count() >0)
@@ -29,7 +29,7 @@
                            href="#">
 
                <i class="fas fa-plus-circle text-success"></i>Add Activity</a>
-            </td>
+            
         </tr>
         @endforeach
     </tbody>
