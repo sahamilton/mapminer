@@ -79,14 +79,16 @@ class BranchDashboardController extends DashboardController
      */
     public function index()
     {
-     
+        
         if (! $this->period) {
             $this->period = $this->activity->getPeriod();
         }
+
         $this->manager = $this->person
             ->where('user_id', '=', auth()->user()->id)->first();
-        if (! session('branch')) {
+        if (session('branch')) {
             $branch = session('branch');
+            return redirect()->route('dashboard.show', $branch);
         } else {
             $this->myBranches = $this->_getBranches();
      
@@ -98,10 +100,7 @@ class BranchDashboardController extends DashboardController
                     ->withWarning("You are not assigned to any branches. You can assign yourself here or contact Sales Ops");
             }
         }
-        
-          
        
-
     }
 
     /**
@@ -141,6 +140,7 @@ class BranchDashboardController extends DashboardController
      */
     public function show($branch)
     {
+        
         if (! session()->has('branch') or $branch != session('branch') ) {
             session(['branch'=>$branch]);
         }
