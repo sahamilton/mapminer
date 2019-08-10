@@ -4,6 +4,7 @@
 $distances = [1=>'1 mile',2=>'2 miles',5=>'5 miles', 10=>'10 miles',25=>'25 miles'];
 
 @endphp
+
 <div class="container" style="margin-bottom:40px">
     <div class="col-md-5">
         <h2><a href="{{route('mobile.index')}}">Branch View</a></h2>
@@ -62,28 +63,21 @@ $distances = [1=>'1 mile',2=>'2 miles',5=>'5 miles', 10=>'10 miles',25=>'25 mile
 
             </select>
         </div>
-        <div id="pac-container" class="form-group mx-sm-3 mb-2">
-            
-            
-            <input 
-            id="pac-input" 
-            class="form-control {{ $errors->has('search') ? ' has-error' : ''}}" 
-            type="text" 
-            name="search" 
-            
-            value="{{$searchaddress}}"
-            id="search"
-            required
-           
-            placeholder='Enter address or check Help Support for auto geocoding' />
-            <span class="form-group-addon">
-            <button type="submit" class= "btn btn-success">
-
-
-            <i class="fas fa-search" aria-hidden="true"></i> </button>
-        </span>
-        </div>
-        
+       
+       <div id="pac-container" class="input-group mx-sm-3 mb-2">
+          
+          <input 
+          id="pac-input"
+          type="text" 
+          class="form-control  {{ $errors->has('search') ? ' has-error' : ''}}" 
+          placeholder="Enter address or check Help Support for auto geocoding" 
+          aria-label="Search term" 
+          value="{{$searchaddress}}"
+          name="search"
+          aria-describedby="basic-addon">
+          <div class="input-group-append">
+            <button class="btn btn-success" type="submit">Search!</button>
+          </div>
     </form>
 
 
