@@ -5,7 +5,6 @@ use App\Presenters\LocationPresenter;
 use McCool\LaravelAutoPresenter\HasPresenter;
 use Illuminate\Http\Request;
 use \Carbon\Carbon;
-
 class Branch extends Model implements HasPresenter
 {
     use Geocode;

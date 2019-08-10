@@ -27,7 +27,7 @@
             method="post" 
             >
            @csrf
-        @include('reports.partials._parameterform')
+          @include('reports.partials._parameterform')
           <div class="float-right">
            <button 
            type="button" 

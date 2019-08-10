@@ -201,7 +201,10 @@ class ReportsController extends Controller {
             if (request()->has('fromdate')) {
                 $period['from']=Carbon::parse(request('fromdate'))->startOfDay();
                 $period['to'] = Carbon::parse(request('todate'))->endOfDay();
+            } else {
+                $period = null;
             }
+
             $export = "\App\Exports\\". $report->export;
             if ($report->object) {
                 switch ($report->object) {
@@ -224,6 +227,7 @@ class ReportsController extends Controller {
                 }
 
             } else {
+                
                 return Excel::download(new $export($period, $myBranches), $report->job . '.csv');
             }
             
