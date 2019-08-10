@@ -1,6 +1,7 @@
 <table>
 	<thead>
-		<tr><th colspan="3">Sales Meetings and Won Opportunities by Branch</th></tr>
+		<tr></tr>
+		<tr><th>Sales Meetings and Won Opportunities by Branch</th></tr>
 		<tr><th>For the period  {{$period['from']->format('M jS,Y')}} to {{$period['to']->format('M jS,Y')}}</th></tr>
 		<tr></tr>
 		<tr>

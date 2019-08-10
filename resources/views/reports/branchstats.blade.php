@@ -1,7 +1,8 @@
 <table>
 	<thead>
-		<tr><th colspan="10"><h2>Branch Statistics</h2></th></tr>
-		<tr><th colspan="10"><h4>For the period from {{$period['from']->format('M jS,Y')}} to {{$period['to']->format('M jS,Y')}}</h4></th></tr>
+		<tr></tr>
+		<tr><th colspan="10">Branch Statistics</th></tr>
+		<tr><th colspan="10"><h4>For the period from {{$period['from']->format('M jS,Y')}} to {{$period['to']->format('M jS,Y')}}</th></tr>
 		<tr></tr>
 		<tr>
 			<th><b>Branch Name</b></th>

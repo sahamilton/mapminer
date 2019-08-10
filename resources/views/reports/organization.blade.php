@@ -1,6 +1,6 @@
 <table>
     <thead>
-        <tr><th colspan="10"><h2>Organization Report</h2></th></tr>
+        <tr><th colspan="10">Organization Report</th></tr>
         
         <tr>
             <th><b>Person</b></th>

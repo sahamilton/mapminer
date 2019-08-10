@@ -1,6 +1,8 @@
 <table>
-	<thead><tr><th colspan="8"><h2>Branch Open Opportunities</h2></th></tr>
-		<tr><th colspan="8"><h4>As of {{$period['to']->format('M jS,Y')}}</h4></th></tr>
+	<thead>
+		<tr></tr>
+		<tr><th>Branch Open Opportunities</th></tr>
+		<tr><th>As of {{$period['to']->format('M jS,Y')}}</th></tr>
 		<tr></tr>
 		<tr>
 			<th><b>Branch ID</b></th>

@@ -201,8 +201,10 @@ class ReportsController extends Controller {
             if (request()->has('fromdate')) {
                 $period['from']=Carbon::parse(request('fromdate'))->startOfDay();
                 $period['to'] = Carbon::parse(request('todate'))->endOfDay();
+            } elseif (session()->has('period')) {
+                $period=session('period');
             } else {
-                $period = null;
+                $period = [];
             }
 
             $export = "\App\Exports\\". $report->export;

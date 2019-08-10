@@ -2,18 +2,9 @@
 
 <table>
 	<thead>
-		<tr>
-			<th colspan="3">
-				<h2>{{$company->companyname}} opportunities</h2>
-			</th>
-		</tr>
-		<tr>
-			<th>
-				<h4>
-					For the period from  {{$period['from']->format('M jS,Y')}} to {{$period['to']->format('M jS,Y')}}
-				</h4>
-			</th>
-		</tr>
+		<tr></tr>
+		<tr><th>{{$company->companyname}} opportunities</th></tr>
+		<tr><th>For the period from  {{$period['from']->format('M jS,Y')}} to {{$period['to']->format('M jS,Y')}}</th></tr>
 		<tr></tr>
 		<tr>
 			<th><b>Address</b></th>
