@@ -48,17 +48,17 @@ class BranchActivitiesDetailExport implements FromView
                 and activities.activitytype_id = activity_type.id 
                 and activities.completed =1 
                 and branch_id = branches.id ";
-                if ($this->branches) {
-                    $query.= " and branch_id in ('" . implode("','", array_keys($this->branches))."')";
-                } 
-            $query.= " group by branchname, week, activity ) a
+        if ($this->branches) {
+            $query.= " and branch_id in ('" . implode("','", array_keys($this->branches))."')";
+        } 
+        $query.= " group by branchname, week, activity ) a  
                 where persons.id = branch_person.person_id
                 and branch_person.role_id = 9
                 and branch_person.branch_id = branches.id
                 and branches.branchname = a.branchname  
                 ORDER BY `a`.`week`  ASC";
 
-         $results = \DB::select($query);
+        $results = \DB::select($query);
          
         return view('reports.branchactivitiesdetail', compact('results', 'period'));
     }
