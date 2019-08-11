@@ -9,6 +9,7 @@ use App\Report;
 use App\Role;
 use App\Company;
 use App\Person;
+use App\SalesOrg;
 use Illuminate\Http\Request;
 use App\Http\Requests\AddRecipientReportRequest;
 use \App\Exports\OpenTop50BranchOpportunitiesExport;
@@ -18,6 +19,7 @@ class ReportsController extends Controller {
     public $company;
     public $person;
     public $report;
+    public $salesorg;
 
     /**
      * [__construct description]
@@ -28,12 +30,13 @@ class ReportsController extends Controller {
      * @param Person  $person  [description]
      */
     public function __construct(
-        Branch $branch, Company $company, Report $report, Person $person
+        Branch $branch, Company $company, Report $report, Person $person, SalesOrg $salesorg
     ) {
         $this->branch = $branch;
         $this->company = $company;
         $this->report = $report;
         $this->person = $person;
+        $this->salesorg = $salesorg;
     }
     /**
      * Display a listing of the resource.
@@ -192,12 +195,12 @@ class ReportsController extends Controller {
      */
     public function run(Report $report, Request $request)
     {
-        
-        // check if period selector
-        // check model
-        $team = $this->_getMyTeam(request());
-   
-        if ($myBranches = $this->_getMyBranches(request('manager'))) {
+ 
+        if ($data = $this->_getMyBranches($request)) {
+            $manager = $data['manager'];
+            $myBranches = $data['branches'];
+            $team = $data['team'];
+            
             if (request()->has('fromdate')) {
                 $period['from']=Carbon::parse(request('fromdate'))->startOfDay();
                 $period['to'] = Carbon::parse(request('todate'))->endOfDay();
@@ -206,7 +209,7 @@ class ReportsController extends Controller {
             } else {
                 $period = [];
             }
-
+            
             $export = "\App\Exports\\". $report->export;
             if ($report->object) {
                 switch ($report->object) {
@@ -222,8 +225,8 @@ class ReportsController extends Controller {
                 break;
 
                 case 'User':
-                
-                    return Excel::download(new $export($period, [request('manager')]), $report->job . '.csv');
+                    
+                    return Excel::download(new $export($period, [$manager->id]), $report->job . '.csv');
 
                 break;
                 }
@@ -250,7 +253,10 @@ class ReportsController extends Controller {
     public function send(Report $report, Request $request)
     {
         
-        if ($myBranches = $this->_getMyBranches(request('manager'))) {
+        if ($data = $this->_getMyBranches($request)) {
+            $manager = $data['manager'];
+            $myBranches = $data['branches'];
+            $team = $data['team'];
             $period['from']=Carbon::parse(request('fromdate'));
             $period['to'] = Carbon::parse(request('todate'));
             $job = "\App\Jobs\\". $report->job; 
@@ -258,7 +264,7 @@ class ReportsController extends Controller {
                 $company = $this->company->findOrFail(request('company'));
                 dispatch(new $job($company, $period, $myBranches));
             } else {
-                dispatch(new $job( $period, $myBranches));
+                dispatch(new $job($period, $myBranches));
             }   
             return redirect()->back();
         } else {
@@ -267,6 +273,13 @@ class ReportsController extends Controller {
         }
 
     }
+    /**
+     * [_getObject description]
+     * 
+     * @param Report $report [description]
+     * 
+     * @return [type]         [description]
+     */
     private function _getObject(Report $report)
     {
         $object['name'] = $report->object;
@@ -284,15 +297,20 @@ class ReportsController extends Controller {
             
         }
     }
-    private function _getMyTeam(Request $request)
+    /**
+     * [_getMyTeam description]
+     * 
+     * @param Request $request [description]
+     * 
+     * @return [type]           [description]
+     */
+    private function _getMyTeam(Person $person)
     {
-        if (request()->filled('manager')) {
-            return $team = $this->person->findOrFail(request('manager'))
-                ->descendants()
-                ->pluck('id')
-                ->toArray();
-        }
-        return null;
+       
+        return $person->getDescendants()
+            ->pluck('id')
+            ->toArray();
+
     }
 
     /**
@@ -300,23 +318,25 @@ class ReportsController extends Controller {
      * 
      * @return [type] [description]
      */
-    private function _getMyBranches($manager=null)
+    private function _getMyBranches(Request $request)
     {
       
-        if ($manager) {
-            $person = $this->person->findOrFail($manager);
-            return array_keys($this->person->myBranches($person));
-        }
-
-        if (auth()->user()->hasRole(['evp','svp','rvp','market_manager'])) {
+        if (request()->filled('manager')) {
+            $person = $this->person->findOrFail(request('manager'));
+            $branches = $this->person->myBranches($person);
+            
+        } elseif (auth()->user()->hasRole(['evp','svp','rvp','market_manager'])) {
             $person = $this->person->where('user_id', auth()->user()->id)->first();
-            return array_keys($this->person->myBranches($person));
+            $branches = $this->person->myBranches($person);
         } elseif (auth()->user()->hasRole(['admin', 'sales_ops'])) {
-            return Branch::all()->pluck('id')->toarray();
+            $person = $this->salesorg->getCapoDiCapo();
+            $branches = Branch::all()->pluck('id')->toarray();
         } else {
             return false;
 
         }
+        $team = $this->_getMyTeam($person);
+        return $data = ['team'=>$team, 'manager'=>$person, 'branches'=>$branches];
     }
     /**
      * GetManagers returns collection of all managers except BM's

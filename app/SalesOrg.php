@@ -1,7 +1,7 @@
 <?php
 namespace App;
 
-class SalesOrg extends \Eloquent
+class SalesOrg extends Model
 {
 
     use Geocode;

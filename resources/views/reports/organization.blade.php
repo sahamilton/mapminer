@@ -1,5 +1,6 @@
 <table>
     <thead>
+        <tr></tr>
         <tr><th colspan="10">Organization Report</th></tr>
         
         <tr>

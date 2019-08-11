@@ -1,4 +1,4 @@
-<table id ='responsive'  class="display responsive no-wrap" width="100%">
+<table id ='responsive3'  class="display responsive no-wrap" width="100%">
     <thead>
 
     <th>Date</th>

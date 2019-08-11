@@ -7,7 +7,7 @@
       <i class="fas fa-file-invoice-dollar"></i> 
   Create New Opportunity
 </a>
-<table id ='responsive3'  class="display responsive no-wrap" width="100%">
+<table id ='responsive5'  class="display responsive no-wrap" width="100%">
     <thead>
 
         <th>Date Opened</th>

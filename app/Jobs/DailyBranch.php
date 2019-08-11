@@ -47,9 +47,9 @@ class DailyBranch implements ShouldQueue
     {
         $class= str_replace("App\Jobs\\", "", get_class($this));
         $job = Report::where('job', $class)->with('distribution')->firstOrFail();
-     
+        
         foreach ($job->distribution as $recipient) {
-
+            
             $this->person = Person::where('user_id', $recipient->id)->firstOrFail();
        
             $file = "/public/reports/".$this->person->firstname."_".$this->person->lastname."_dailyreport_". $this->period['from']->format('Y-m-d'). ".xlsx";

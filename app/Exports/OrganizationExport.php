@@ -11,7 +11,7 @@ class OrganizationExport implements FromView
     public $roles;
     public $manager;
 
-    public function __construct(Array $roles, Array $manager=null)
+    public function __construct(Array $roles=null, Array $manager=null)
     {
         $this->roles = $roles;
         $this->manager = $manager;
@@ -26,13 +26,17 @@ class OrganizationExport implements FromView
     public function view(): View
     {
         
-
-        $people = Person::whereHas(
-            'userdetails.roles', function ($q) { 
-                $q->whereIn('roles.id', $this->roles);
-            }
-        )
-        ->with('branchesServiced');
+       
+        $people = new Person();
+        if ($this->roles) {
+            $people = $people->whereHas(
+                'userdetails.roles', function ($q) { 
+                    $q->whereIn('roles.id', $this->roles);
+                }
+            );
+        }
+        
+        $people = $people->with('branchesServiced');
         if ($this->manager) {
   
             $people = $people->whereIn('id', $this->manager);
