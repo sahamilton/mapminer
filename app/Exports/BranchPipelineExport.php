@@ -33,7 +33,7 @@ class BranchPipelineExport implements FromView
     public function view(): View
     {
        
-        $branches = Branch::with('manager')->whereIn('id', $this->branches)->get();
+        $branches = Branch::with('manager')->whereIn('id', array_keys($this->branches))->get();
       
        
         $query = "select branches.id,
@@ -46,8 +46,9 @@ class BranchPipelineExport implements FromView
                  and expected_close is not null
                  and expected_close >= '". now()->startOfMonth() . "'
                  and value > 0
-                 and branches.id in ('" . implode("','", $this->branches) ."')
+                 and branches.id in ('" . implode("','", array_keys($this->branches)) ."')
                  group by month, branchname order by branchname, month";
+       
         $results = \DB::select($query);              
         $period = $this->_createPeriods();
         return view('reports.branchpipeline', compact('results', 'period', 'branches'));
