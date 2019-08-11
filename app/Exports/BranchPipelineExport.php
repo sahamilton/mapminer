@@ -53,7 +53,11 @@ class BranchPipelineExport implements FromView
         $period = $this->_createPeriods();
         return view('reports.branchpipeline', compact('results', 'period', 'branches'));
     }
-
+    /**
+     * [_createPeriods Create an array of the 6 months into the future]
+     * 
+     * @return [type] [description]
+     */
     private function _createPeriods()
     {
         $start = new Carbon('first day of this month');

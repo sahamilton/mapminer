@@ -65,7 +65,7 @@ class ActivityOpportunityExport implements FromView
                  
                  on branches.id = b.branch_id ";
         if ($this->branch) {
-            $query.=" where branches.id in ('" . implode("','", $this->branch) ."') "; 
+            $query.=" where branches.id in ('" . implode("','", array_keys($this->branch)) ."') "; 
         } 
         $query.=" ORDER BY branches.id  ASC ";
         $results = \DB::select($query);

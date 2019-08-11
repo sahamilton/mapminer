@@ -28,6 +28,7 @@ class BranchLoginsExport implements FromView
      */
     public function view(): View
     {
+        
         $query= "select branches.id as branchid, branchname, count(track.id) as logins,
             count(track.id)/datediff( '". $this->period['to'] ."','". $this->period['from']."') as avgdaily
             from track, persons,branch_person, branches
@@ -36,12 +37,12 @@ class BranchLoginsExport implements FromView
             and persons.id = branch_person.person_id
             and branch_person.branch_id = branches.id ";
         if ($this->branches) {
-            $query.= " and branches.id in ('".implode("','", $this->branches) ."')";
+            $query.= " and branches.id in ('".implode("','", array_keys($this->branches)) ."')";
         }
         $query.=" group by branches.id, branchname ";
 
         $results = \DB::select($query);
-        $branches = $this->branches;
+        $branches = array_keys($this->branches);
         $period = $this->period;
         return view('reports.branchlogins', compact('results', 'period', 'branches'));
     }

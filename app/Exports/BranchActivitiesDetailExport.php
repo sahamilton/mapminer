@@ -49,7 +49,7 @@ class BranchActivitiesDetailExport implements FromView
                 and activities.completed =1 
                 and branch_id = branches.id ";
                 if ($this->branches) {
-                    $query.= " and branch_id in ('" . implode("','", $this->branches)."')";
+                    $query.= " and branch_id in ('" . implode("','", array_keys($this->branches))."')";
                 } 
             $query.= " group by branchname, week, activity ) a
                 where persons.id = branch_person.person_id
