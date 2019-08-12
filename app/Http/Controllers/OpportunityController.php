@@ -76,7 +76,7 @@ class OpportunityController extends Controller
             return redirect()->back()
                 ->withWarning("You are not assigned to any branches. Please contact Sales Operations");
         }
-        if(session()->has('branch')) {
+        if (session()->has('branch')) {
             $data = $this->getBranchData([session('branch')]);
         } else {
             $data = $this->getBranchData([array_keys($myBranches)][0]);
@@ -84,6 +84,7 @@ class OpportunityController extends Controller
         
 
         $data['period'] = $this->period;
+      
         return response()->view(
             'opportunities.index', 
             compact('data', 'activityTypes', 'myBranches', 'period')
