@@ -45,6 +45,7 @@ class BranchLogins implements ShouldQueue
         $report = Report::with('distribution')
             ->where('job', $class)
             ->firstOrFail();
+    
         $distribution = $report->getDistribution();
         Mail::to($distribution)
             ->send(new BranchLoginsReport($file, $this->period));   

@@ -705,7 +705,7 @@ Route::group(
                 $period['from'] = \Carbon\Carbon::now()->subMonth()->startOfDay();
                 $period['to'] = \Carbon\Carbon::yesterday()->endOfDay();
                 // App\Jobs\Top50WeeklyReport::dispatch();
-                App\Jobs\TeamLogins::dispatch($period, 493);
+                App\Jobs\BranchLogins::dispatch($period);
                 //App\Jobs\DailyBranch::dispatch($period, $user);
                  //App\Jobs\AccountActivities::dispatch($company, $period);
                 //App\Jobs\BranchOpportunities::dispatch($period);

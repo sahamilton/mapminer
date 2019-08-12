@@ -19,6 +19,7 @@ class BranchLoginsExport implements FromView
     {
         $this->period = $period;
         $this->branches = $branches;
+
     }
 
     /**
@@ -42,7 +43,14 @@ class BranchLoginsExport implements FromView
         $query.=" group by branches.id, branchname ";
 
         $results = \DB::select($query);
-        $branches = array_keys($this->branches);
+        
+        if ($this->branches) {
+            
+            $branches = array_keys($this->branches);
+        } else {
+            
+            $branches = $this->branches;
+        }
         $period = $this->period;
         return view('reports.branchlogins', compact('results', 'period', 'branches'));
     }
