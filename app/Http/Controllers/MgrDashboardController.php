@@ -14,6 +14,7 @@ use App\Note;
 use App\Http\Requests\OpportunityFormRequest;
 use App\Opportunity;
 use App\Person;
+use App\SalesOrg;
 use \Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Collection;
@@ -31,6 +32,7 @@ class MgrDashboardController extends DashboardController
     public $opportunity;
     public $period = [];
     public $person;
+    public $salesorg;
     public $track;
 
     public $keys = [];
@@ -46,6 +48,7 @@ class MgrDashboardController extends DashboardController
      * @param Contact       $contact       [description]
      * @param Opportunity   $opportunity   [description]
      * @param Person        $person        [description]
+     * @param Salesorg      $salesorg      [<description>]
      * @param Track         $track         [description]
      */
     public function __construct(
@@ -57,8 +60,10 @@ class MgrDashboardController extends DashboardController
         Contact $contact,
         Opportunity $opportunity,
         Person $person,
+        SalesOrg $salesorg,
         Track $track
     ) {
+            $this->activity = $activity;
             $this->address = $address;
             $this->addressbranch = $addressbranch;
             $this->branch = $branch;
@@ -66,7 +71,7 @@ class MgrDashboardController extends DashboardController
             $this->contact = $contact;
             $this->opportunity = $opportunity;
             $this->person = $person;
-            $this->activity = $activity;
+            $this->salesorg = $salesorg;
             $this->track = $track;    
        
     }
@@ -78,21 +83,29 @@ class MgrDashboardController extends DashboardController
      */
     public function index()
     {
-      
+        
+        request()->session()->forget('branch');
 
         if (! $this->period) {
             $this->period = $this->activity->getPeriod();
         }
-
-        $this->manager = $this->person->where('user_id', '=', auth()->user()->id)->firstOrFail();
+        if (auth()->user()->hasRole(['admin'])) {
+            $this->manager = $this->salesorg->getCapoDiCapo();
+        } else {
+            $this->manager = $this->person->where('user_id', '=', auth()->user()->id)->firstOrFail();
+        }
+        
         // get associated branches
+    
         $this->myBranches = array_keys($this->_getBranches());
         // redirect if only one or no branches
         $this->_checkBranches();
             
         $data = $this->_getDashBoardData();
-
-        return response()->view('opportunities.mgrindex', compact('data'));
+        $reports = \App\Report::publicReports()->get();
+        $managers = $this->manager->load('directReports')->directReports;
+        
+        return response()->view('opportunities.mgrindex', compact('data', 'reports', 'managers'));
 
     }
     /**
@@ -154,7 +167,8 @@ class MgrDashboardController extends DashboardController
      */
     public function manager(Request $request, Person $manager=null)
     {
-      
+        
+        request()->session()->forget('branch');
         if (! $this->period) {
             $this->period = $this->activity->getPeriod();
         }
@@ -223,8 +237,11 @@ class MgrDashboardController extends DashboardController
     private function _displayDashboard($data)
     {
         
-        if ($data['branches']->count() > 1) {     
-             return response()->view('opportunities.mgrindex', compact('data', 'myBranches'));
+        if ($data['branches']->count() > 1) { 
+            $reports = \App\Report::publicReports()->get();
+            $managers = $data['team']['me']->directReports()->get();
+            
+            return response()->view('opportunities.mgrindex', compact('data', 'myBranches', 'reports', 'managers'));
           
         } else {
 
@@ -277,7 +294,6 @@ class MgrDashboardController extends DashboardController
             ->where('reports_to', '=', $this->manager->id)
             ->with('branchesServiced')
             ->withRoles($teamroles) 
-            
             ->get();
        
         // get all branch managers

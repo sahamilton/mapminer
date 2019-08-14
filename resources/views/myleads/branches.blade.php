@@ -57,8 +57,11 @@
                 {{$lead->businessname}}
             </a>
         </td>
-        
-        <td>{{$lead->assignedToBranch->where('id','=',$branch->id)->first()->pivot->created_at->format("Y-m-d")}}</td>
+        <td>
+            
+        {{$lead->assignedToBranch->where('id','=',$branch->id)->first()->pivot->created_at->format("Y-m-d")}}
+       
+        </td>
         <td>{{$lead->fullAddress()}}</td>
         <td>
             @if($lead->leadsource)
@@ -66,8 +69,10 @@
             @endif
         </td>
         <td>
-            @if($lead->lastActivity->count()==1)
+            @if($lead->lastActivity->count() > 0)
+                  
                 {{$lead->lastActivity->first()->activity_date->format('Y-m-d')}}
+            
             @endif
         </td>
         <td>

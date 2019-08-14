@@ -1,17 +1,8 @@
 <table>
 	<thead>
-		<tr>
-			<th colspan="3">
-				<h2>Top50 Open Opportunities by Branch</h2>
-			</th>
-		</tr>
-		<tr>
-			<th>
-				<h4>
-					For the week ending {{$period->format('M jS,Y')}}
-				</h4>
-			</th>
-		</tr>
+		<tr></tr>
+		<tr><th>Top50 Open Opportunities by Branch</th></tr>
+		<tr><th>For the week ending {{$period['to']->format('M jS,Y')}}</th></tr>
 		<tr></tr>
 		<tr>
 			<th><b>Branch Id</b></th>

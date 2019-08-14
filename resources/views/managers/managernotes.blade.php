@@ -4,7 +4,7 @@
 <p><a href="{{route('managers.view')}}">Back to account manager views</a></p>
 <p>
 
-<a href="{{route('exportlocationnotes',$companyID)}}" 
+<a href="{{route('exportlocationnotes',$company->id)}}" 
 title="Download {{$data['title']}} as a CSV / Excel file">
     <i class="fas fa-cloud-download-alt" aria-hidden="true"></i> Download {{$data['title']}}
 </a>

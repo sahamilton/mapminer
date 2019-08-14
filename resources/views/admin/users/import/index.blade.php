@@ -35,11 +35,6 @@
 		      aria-selected="true">
 		    <strong>Users to Create ({{count($data['newUsers'])}})</strong>
 		  </a>
-
-		  
-	    
-
-
 		</div>
 	</nav>
 

@@ -2,9 +2,13 @@
 @section('content')
 <div class="container">
 <h1>{{$training->title}}</h1>
-<p><a href="{{route('training.index')}}">Return to all training videos</a></p>
+<p><a href="{{route('training.index')}}">Return to all trainings</a></p>
 <h4>{{$training->description}}</h4>
-<iframe width="800" height="600" frameborder="0" allowfullscreen="true" style="box-sizing: border-box; margin-bottom:5px; max-width: 100%; border: 1px solid rgba(0,0,0,1); background-color: rgba(255,255,255,0); box-shadow: 0px 2px 4px rgba(0,0,0,0.1);" src="{{$training->reference}}"></iframe>
+@if($training->type == 'fleeq')
+@include('training.partials._fleeq')
+@endif
+<p>Link: <a href="{{$training->reference}}">{{$training->reference}}</a></p>
+
 @can('manage_training')
  <div class="row">
  	<a href="{{route('training.edit',$training->id)}}">

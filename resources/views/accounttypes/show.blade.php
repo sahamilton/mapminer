@@ -3,9 +3,9 @@
 <div class="page-header">
 <?php
         
-		$arraystuff= $accounttype->toArray();
-		;
-?>	
+        $arraystuff= $accounttype->toArray();
+        ;
+?>  
 
 <h1> All {{$arraystuff[0]['type']}} Accounts </h1>
 <a href="{{ route('company') }}" title='show all accountss'>All Accounts</a>

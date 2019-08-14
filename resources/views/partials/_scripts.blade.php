@@ -28,6 +28,10 @@ $(document).ready(function()
     	$(this).find('#title').html($(e.relatedTarget).data('title'));
 		$(this).find('#action-form').attr('action',$(e.relatedTarget).data('href'));
 	});	
+    $(document).on('show.bs.modal','#run-report', function(e) {
+        $(this).find('#title').html($(e.relatedTarget).data('title'));
+        $(this).find('#period-form').attr('action',$(e.relatedTarget).data('href'));
+    }); 
 	$(document).on('show.bs.modal','#confirm-opportunitydelete', function(e) {
     	$(this).find('#title').html($(e.relatedTarget).data('title'));
 		$(this).find('#action-form').attr('action',$(e.relatedTarget).data('href'));
@@ -36,11 +40,17 @@ $(document).ready(function()
     	$(this).find('#title').html($(e.relatedTarget).data('title'));
 		$(this).find('#action-form').attr('action',$(e.relatedTarget).data('href'));
 	});	
-	$(document).on('show.bs.modal','#add-activity', function(e) {
+	$(document).on('show.bs.modal','#add_activity', function(e) {
     	$(this).find('#title').html($(e.relatedTarget).data('title'));
-    	$(this).find('#address_id').html($(e.relatedTarget).data('id'));
+
+    	$(this).find('input#address_id').val($(e.relatedTarget).data('id'));
 		$(this).find('#action-form').attr('action',$(e.relatedTarget).data('href'));
-	});	
+	});
+    $(document).on('show.bs.modal','#remove-recipient', function(e) {
+        $(this).find('#title').html($(e.relatedTarget).data('title'));
+        $(this).find('#user').val($(e.relatedTarget).data('pk'));
+        $(this).find('#action-form').attr('action',$(e.relatedTarget).data('href'));
+    });	
 	$(document).on('show.bs.modal','#accept-lead', function(e) {
     	$(this).find('.warning').attr('href', $(e.relatedTarget).data('href'));
 		$(this).find('#title').html($(e.relatedTarget).data('title'));
@@ -72,7 +82,11 @@ $(document).ready(function()
 	$(document).on('show.bs.modal','#unassign-lead', function(e) {
     	$(this).find('#title').html($(e.relatedTarget).data('title'));
 		$(this).find('#action-form').attr('action',$(e.relatedTarget).data('href'));
-	});	
+	});
+    $(document).on('show.bs.modal','#add-lead', function(e) {
+        $(this).find('#title').html($(e.relatedTarget).data('title'));
+        $(this).find('#action-form').attr('action',$(e.relatedTarget).data('href'));
+    });	
 	$(document).on('show.bs.modal','#add-locationcontact', function(e) {
     	$(this).find('#title').html($(e.relatedTarget).data('title'));
 		$(this).find('input#address_id').val($(e.relatedTarget).data('pk'));
@@ -96,6 +110,12 @@ $(document).ready(function()
     $( "#fromdatepicker" ).datepicker({ altField : "#fromdate",
     altFormat: "yyyy-mm-dd"});
    
+
+    $("[id^=responsive]").DataTable( {
+    
+        responsive: true
+    } );
+
 	$("[id^=sorttable]").DataTable();
 	$.fn.editable.defaults.mode = 'inline';
 	$.fn.editableform.buttons = '<button type="submit" class="btn btn-info editable-submit"><i class="fa fa-fw fa-check"></i></button>' + '<button type="button" class="btn btn-danger editable-cancel"><i class="fas fa-window-close"></i></button>' ;

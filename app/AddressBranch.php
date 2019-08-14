@@ -70,4 +70,37 @@ class AddressBranch extends Model
             ->groupBy(['branch_id','yearweek'])
             ->orderBy('yearweek', 'asc');
     }
+    /**
+     * [scopeOpenOpportunities description]
+     * 
+     * @param [type] $query [description]
+     * 
+     * @return [type]        [description]
+     */
+    public function scopeOpenOpportunities($query)
+    {
+        $this->opportunities()->where('closed', 0);
+    }
+    /** 
+     * [scopeWonOpportunities description]
+     * 
+     * @param [type] $query [description]
+     * 
+     * @return [type]        [description]
+     */
+    public function scopeWonOpportunities($query)
+    {
+        $this->opportunities()->where('closed', 1);
+    }
+    /**
+     * [scopeLostOpportunities description]
+     * 
+     * @param [type] $query [description]
+     * 
+     * @return [type]        [description]
+     */
+    public function scopeLostOpportunities($query)
+    {
+        $this->opportunities()->where('closed', 2);
+    }
 }

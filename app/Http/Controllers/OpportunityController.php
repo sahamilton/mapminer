@@ -66,7 +66,7 @@ class OpportunityController extends Controller
      */
     public function index()
     {
-     
+        
         if (! $this->period) {
             $this->period = $this->activity->getPeriod();
         }
@@ -76,10 +76,15 @@ class OpportunityController extends Controller
             return redirect()->back()
                 ->withWarning("You are not assigned to any branches. Please contact Sales Operations");
         }
+        if (session()->has('branch')) {
+            $data = $this->getBranchData([session('branch')]);
+        } else {
+            $data = $this->getBranchData([array_keys($myBranches)][0]);
+        }
         
-        $data = $this->getBranchData([array_keys($myBranches)[0]]);
 
         $data['period'] = $this->period;
+      
         return response()->view(
             'opportunities.index', 
             compact('data', 'activityTypes', 'myBranches', 'period')
@@ -95,11 +100,13 @@ class OpportunityController extends Controller
      */
     public function branchOpportunities(Branch $branch, Request $request)
     {
+       
         $myBranches = $this->person->myBranches();
 
         if (! $this->period) {
             $this->period = $this->activity->getPeriod();
         }
+        // check that user is assigned to branch
         if ($branch->id) {
          
             if (! array_key_exists($branch->id, $myBranches)) {
@@ -116,8 +123,7 @@ class OpportunityController extends Controller
 
         $activityTypes = $activityTypes = ActivityType::all();
        
-        
-         $data['period'] = $this->period;
+        $data['period'] = $this->period;
         return response()->view(
             'opportunities.index', 
             compact('data', 'activityTypes', 'myBranches')
@@ -360,6 +366,7 @@ class OpportunityController extends Controller
     public function close(Request $request, $opportunity)
     {
         $data= request()->except('_token');
+        $branch = $opportunity->branch_id;
         $data['actual_close'] = Carbon::now();
         $opportunity->update($data);
         $opportunity->load('address', 'address.address', 'address.address.company');
@@ -375,8 +382,8 @@ class OpportunityController extends Controller
                 );
             $address->update(['company_id' => $company->id]);
         }
+        return redirect()->route('opportunities.branch', $branch)->withMessage('Opportunity closed');
 
-        return redirect()->back()->withMessage('Opportunity closed');
     }
     /**
      * [toggle description]

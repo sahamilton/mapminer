@@ -6,10 +6,16 @@ use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use App\Jobs\WeeklyActivityReminder;
 use App\Jobs\Top50WeeklyReport;
-use App\Jobs\ActivityOpportunityReport;
+use App\Jobs\ActivityOpportunity;
 use App\Jobs\AccountActivities;
+use App\Jobs\BranchOpportunities;
+use App\Jobs\BranchActivitiesDetail;
 use App\Jobs\BranchStats;
+use App\Jobs\DailyBranch;
+use App\Jobs\RebuildPeople;
+use App\Jobs\BranchLogins;
 use App\Company;
+use Carbon\Carbon;
 
 class Kernel extends ConsoleKernel
 {
@@ -34,43 +40,73 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         if (config('app.env') == 'production') {
-            $schedule->job(new WeeklyActivityReminder())
+            $period['from'] = Carbon::now();
+            $period['to'] = Carbon::now()->addWeek();
+            $schedule->job(new WeeklyActivityReminder($period))
                 ->weekly()
                 ->sundays()
-                ->at('19:52');
+                ->at('20:45');
 
+            $schedule->job(new RebuildPeople())
+                ->dailyAt('21:12');
 
             $schedule->command('db:backup')
                 ->dailyAt('22:58');
             
             // Stephanie Harp Report
-            $period['from'] = \Carbon\Carbon::now()->subWeek()->startOfWeek();
-            $period['to'] = \Carbon\Carbon::now()->subWeek()->endOfWeek();
+            $period['from'] = Carbon::now()->subWeek()->startOfWeek();
+            $period['to'] = Carbon::now()->subWeek()->endOfWeek();
             $schedule->job(new BranchStats($period))
                 ->weekly()
                 ->sundays()
                 ->at('23:15');
-            
-            //Amy Starr Report
-            $schedule->job(new Top50WeeklyReport())
-                ->weekly()
-                ->fridays()
-                ->at('06:59');
+            // RVP Daily Branch Report
+            // 
+            $schedule->job(new DailyBranch)
+                ->weekdays()->at('21:12');
+            // 
             
             // Josh Hammer report
-            $schedule->job(new ActivityOpportunityReport())
+            $period['from'] = \Carbon\Carbon::now()->subWeek()->startOfWeek();
+            $period['to'] = \Carbon\Carbon::now()->subWeek()->endOfWeek();
+            $schedule->job(new ActivityOpportunity($period))
                 ->weekly()
                 ->wednesdays()
                 ->at('04:59');
             
             // Walmart job
             $company = Company::findOrFail(532);
-            $period['from'] = \Carbon\Carbon::now()->subWeek()->startOfWeek();
-            $period['to'] = \Carbon\Carbon::now()->subWeek()->endOfWeek();
+            $period['from'] = Carbon::now()->subWeek()->startOfWeek();
+            $period['to'] = Carbon::now()->subWeek()->endOfWeek();
             $schedule->job(new AccountActivities($company, $period))
                 ->weekly()
                 ->sundays()
                 ->at('18:30');
+            
+            // Branch Stats Report
+            $period['from'] = Carbon::now()->subMonth(2)->startOfMonth();  
+            $period['to'] = Carbon::now()->subWeek()->endOfWeek();
+            $schedule->job(new BranchStats($period))
+                ->weekly()
+                ->wednesdays()
+                ->at('01:59');
+            
+            // Branch Login Report
+            $period['from'] = Carbon::now()->subMonth(2)->startOfMonth();  
+            $period['to'] = Carbon::now()->subWeek()->endOfWeek();
+            $schedule->job(new BranchLogins($period))
+                ->weekly()
+                ->mondays()
+                ->at('03:59');
+                
+            // Branch Activities Report
+            $period['from'] = Carbon::now()->subMonth(2)->startOfMonth();  
+            $period['to'] = Carbon::now()->subWeek()->endOfWeek();
+            $schedule->job(new BranchActivitiesDetail($period))
+                ->weekly()
+                ->tuesdays()
+                ->at('03:59');
+
         }   
     }
 

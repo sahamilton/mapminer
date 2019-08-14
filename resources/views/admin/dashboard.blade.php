@@ -76,6 +76,15 @@ $cumulative = array();
           aria-selected="true">Location Health
       </a>
     </li>
+
+     <li class="nav-item">
+      <a class="nav-link" 
+          data-toggle="tab" 
+          href="#menu4" 
+          aria-controls="menu4" 
+          aria-selected="true">Reports
+      </a>
+    </li>
   </ul>
 
   <div class="tab-content">
@@ -94,7 +103,7 @@ $cumulative = array();
     <div id="menu1" class="tab-pane fade">
       <h3>Account Activity</h3>
 
-        @include('admin.partials.watchers')
+      
         @include('admin.partials.newNotes')
         @include('admin.partials.newLeadNotes')  
         @include('admin.partials.newProjectNotes') 
@@ -109,6 +118,11 @@ $cumulative = array();
       @include('admin.partials.nocontacts')
       @include('admin.partials.nogeocode')
     </div>
+    <div id="menu4" class="tab-pane fade">
+      <h3>Reports</h3>
+      @include('reports.partials._index')
+    </div>
+
   </div>
 
 

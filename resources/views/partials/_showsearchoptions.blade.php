@@ -1,7 +1,6 @@
-<?php if(null!== Session::get('businesstype'))
-{
-	echo "<h4>Filtered by</h4>";
-	echo "<ul>";
-	echo "<li>" .Session::get('businesstype')."</li>";
-	echo "</ul>";
-}
+@if (null!== Session::get('businesstype')) 
+<h4>Filtered by</h4>
+    <ul>
+        <li>{{Session::get('businesstype')}}</li>
+    </ul>
+@endif

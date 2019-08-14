@@ -12,12 +12,12 @@ use Carbon\Carbon;
 
 class User extends Authenticatable
 {
- use Notifiable,HasRoles, Geocode, SearchableTrait,SoftDeletes;
+    use Notifiable,HasRoles, Geocode, SearchableTrait, SoftDeletes;
 
 
- protected $expiration = '2880';
+    protected $expiration = '2880';
 
- protected $searchable = [
+    protected $searchable = [
         /**
          * Columns and their priority in search results.
          * Columns with higher values are more important.
@@ -39,13 +39,21 @@ class User extends Authenticatable
         ],
     ];
     
-
+    /**
+     * [canImpersonate description]
+     * 
+     * @return [type] [description]
+     */
     public function canImpersonate()
     {
         return $this->hasRole('admin');
     }
     
-
+    /**
+     * [canBeImpersonated description]
+     * 
+     * @return [type] [description]
+     */
     public function canBeImpersonated()
     {
         return  ! $this->hasRole(['admin','sales_operations']);
@@ -61,128 +69,232 @@ class User extends Authenticatable
                 'avatar'];
     /**
      * Get user by username
+     * 
      * @param $username
+     * 
      * @return mixed
      */
 
     public $dates=['lastlogin','created_at','updated_at','deleted_at','nonews'];
-
-     public function person()
-     {
-          return $this->hasOne(Person::class,'user_id')->orderBy('lastname','firstname')
-          ->withDefault('No longer with the company');
-     }
-
+    /**
+     * [person description]
+     * 
+     * @return [type] [description]
+     */
+    public function person()
+    {
+        return $this->hasOne(Person::class, 'user_id')->orderBy('lastname', 'firstname')
+            ->withDefault('No longer with the company');
+    }
+    /**
+     * [deletedperson description]
+     * 
+     * @return [type] [description]
+     */
+    public function deletedperson()
+    {
+        return $this->hasOne(Person::class, 'user_id')->onlyTrashed()
+            ->withDefault('No longer with the company');
+    }
+    /**
+     * [fullName description]
+     * 
+     * @return [type] [description]
+     */
     public function fullName()
     {
-        if($this->person){
-            return $this->person->postName();
-        }else{
+        if ($this->person) {
+            return $this->person->fullName();
+        } else {
             return null;
         }
     }
 
-    public function personWithOutGeo(){
-        return $this->hasOne(Person::class,'user_id');
+    /**
+     * [postName description]
+     * 
+     * @return [type] [description]
+     */
+    public function postName()
+    {
+        if ($this->person) {
+            return $this->person->postName();
+        } else {
+            return null;
+        }
     }
 
-     public function usage()
-     {
-          return $this->hasMany(Track::class,'user_id');
-     }
-
-    public function scopeFirstLogin($query, Carbon $date){
-
-    // this doesnt make sense
-    return $query->whereHas('usage',function ($q) use ($date){
-        $q->where('roles.id','=',$role);
-        });
-    }
-
-    public function firstLogin(){
-        return $this->hasMany(Track::class,'user_id');
-    }
-
-    public function active(){
-        return $this->where('confirmed','=',1);
-    }
     
-    public function activities(){
+    /**
+     * [personWithOutGeo description]
+     * 
+     * @return [type] [description]
+     */
+    public function personWithOutGeo()
+    {
+        return $this->hasOne(Person::class, 'user_id');
+    }
+    /**
+     * [usage description]
+     * 
+     * @return [type] [description]
+     */
+    public function usage()
+    {
+          return $this->hasMany(Track::class, 'user_id');
+    }
+    /**
+     * [scopeFirstLogin description]
+     * 
+     * @param [type] $query [description]
+     * @param Carbon $date  [description]
+     * 
+     * @return [type]        [description]
+     */
+    public function scopeFirstLogin($query, Carbon $date)
+    {
+
+        return $query->whereHas(
+            'usage', function ($q) use ($date) {
+                $q->where('roles.id', '=', $role);
+            }
+        );
+    }
+    /**
+     * [firstLogin description]
+     * 
+     * @return [type] [description]
+     */
+    public function firstLogin()
+    {
+        return $this->hasMany(Track::class, 'user_id');
+    }
+    /**
+     * [active description]
+     * 
+     * @return [type] [description]
+     */
+    public function active()
+    {
+        return $this->where('confirmed', '=', 1);
+    }
+    /**
+     * [activities description]
+     * 
+     * @return [type] [description]
+     */
+    public function activities()
+    {
         return $this->hasMany(Activity::class);
     }
 
-
+    /**
+     * [manager description]
+     * 
+     * @return [type] [description]
+     */
     public function manager() 
     {
 
-        return $this->belongsTo(User::class,'mgrid','id');
+        return $this->belongsTo(User::class, 'mgrid', 'id');
     }
 
     /**
-    * Rank documents
-    *
-    */
-
+     * Rank documents
+     *
+     * @return [type] [<description>]
+     */
     public function rankings()
     {
         return $this->belongsToMany(Document::class)->withPivot('rank');
     }
-
+    /**
+     * [latestlogin description]
+     * 
+     * @return [type] [description]
+     */
     public function latestlogin()
     {
         return $this->hasMany(Track::class)->max('lastactivity');
     }
-
+    /**
+     * [reports description]
+     * 
+     * @return [type] [description]
+     */
     public function reports() 
     {
 
-        return $this->hasMany(User::class,'id','mgrid');
+        return $this->hasMany(User::class, 'id', 'mgrid');
     }
+    /**
+     * [roles description]
+     * 
+     * @return [type] [description]
+     */
     public function roles()
     {
         return $this->belongsToMany(Role::class);
     }
-
-    public function serviceline ()
+    /**
+     * [serviceline description]
+     * 
+     * @return [type] [description]
+     */
+    public function serviceline()
     {
         return $this->belongsToMany(Serviceline::class)->withTimestamps();
 
     }
 
 
-    public function watching () {
-        return $this->belongsToMany(Address::class,'location_user');
+    public function watching () 
+    {
+        return $this->belongsToMany(Address::class, 'location_user');
 
     }
       
 
-    /*public function getUserByUsername( $username )
+    /**
+     * [position description]
+     * 
+     * @return [type] [description]
+     */
+    public function position()
     {
-        return $this->where('username', '=', $username)->first();
-    }
-    */
-    public function position(){
         $position = $this->person()
-                ->select('lat','lng')
-                ->whereNotNull('lat')
-                ->first();
+            ->select('lat', 'lng')
+            ->whereNotNull('lat')
+            ->first();
         
-        if($position){
-                return implode(",",$position->toArray());
+        if ($position) {
+                return implode(",", $position->toArray());
         }
         return "39.50,98.35";
     }
-
-    public function setAccess(){
+    /**
+     * [setAccess description]
+     *
+     * @return [<description>]
+     */
+    public function setAccess()
+    {
         return $this->api_token ."tbmm".Crypt::encrypt(now());
     }
+    /**
+     * [getAccess description]
+     * 
+     * @param [type] $id [description]
+     * 
+     * @return [type]     [description]
+     */
+    public function getAccess($id)
+    {
+        if (Crypt::decrypt(substr($id, strpos($id, 'tbmm')+4, strlen($id)))->diffInMinutes() < $this->expiration) {
 
-    public function getAccess($id){
-        if( Crypt::decrypt(substr($id,strpos($id,'tbmm')+4,strlen($id)))->diffInMinutes() < $this->expiration){
-
-        return $this->where('api_token','=',substr($id,0,strpos($id,'tbmm')))->first();
-    }else{
-        return false;
+            return $this->where('api_token', '=', substr($id, 0, strpos($id, 'tbmm')))->first();
+        } else {
+            return false;
         }
     }
 
@@ -202,7 +314,7 @@ class User extends Authenticatable
      */
     public function saveRoles($inputRoles)
     {
-        if(! empty($inputRoles)) {
+        if (! empty($inputRoles)) {
             $this->roles()->sync($inputRoles);
         } else {
             $this->roles()->detach();
@@ -249,14 +361,14 @@ class User extends Authenticatable
         $user = \Auth::user();
         $redirectTo = false;
 
-        if(empty($user->id) && ! $ifValid) // Not logged in redirect, set session.
+        if (empty($user->id) && ! $ifValid) // Not logged in redirect, set session.
         {
             \Session::put('loginRedirect', $redirect);
             $redirectTo = \Redirect::to('user/login')
-                ->with( 'notice', \Lang::get('user/user.login_first') );
-        }
-        elseif(!empty($user->id) && $ifValid) // Valid user, we want to redirect.
-        {
+                ->with('notice', \Lang::get('user/user.login_first'));
+        } elseif (!empty($user->id) && $ifValid) {
+        // Valid user, we want to redirect.
+        
             $redirectTo = \Redirect::to($redirect);
         }
 
@@ -285,7 +397,8 @@ class User extends Authenticatable
      * @return [type] [description]
      */
 
-    public function setApiToken(){
+    public function setApiToken()
+    {
 
         return $this->api_token = md5(uniqid(mt_rand(), true));
         
@@ -297,11 +410,14 @@ class User extends Authenticatable
      * @param  int $role  Role id
      * @return QueryBuilder        [description]
      */
-      public function scopeWithRole($query,$role){
-        return $query->whereHas('roles',function ($q) use ($role){
-          $q->where('roles.id','=',$role);
-        });
-      }
+    public function scopeWithRole($query,$role) 
+    {
+        return $query->whereHas(
+            'roles', function ($q) use ($role) {
+                $q->where('roles.id', '=', $role);
+            }
+        );
+    }
       /**
        * scopeLastLogin Select last login of user]
        * @param  QueryBuilder $query    [description]
@@ -309,12 +425,12 @@ class User extends Authenticatable
        * @return QueryBuilder          [description]
        */
 
-    public function scopeLastLogin($query,$interval=null){
-
-       if($interval){
-            return $query->whereBetween('lastlogin',[$interval['from'],$interval['to']]);
+    public function scopeLastLogin($query,$interval=null)
+    {
+        if ($interval) {
+            return $query->whereBetween('lastlogin', [$interval['from'],$interval['to']]);
         }
-       return $query->whereNull('lastlogin');
+        return $query->whereNull('lastlogin');
     }
 
 
@@ -330,10 +446,12 @@ class User extends Authenticatable
     public function scopeUpcomingActivities($query,$nextdays)
     {
        
-        return $query->with(['activities',function ($q) use($nextdays){
-                $q->where('activity_date','>',now())
-                ->where('activity_date','<=',Carbon::now()->addDays($nextdays));
-            }]);
+        return $query->with(
+            ['activities',function ($q) use ($nextdays) {
+                $q->where('activity_date', '>', now())
+                    ->where('activity_date', '<=', Carbon::now()->addDays($nextdays));
+            }]
+        );
 
     }
 

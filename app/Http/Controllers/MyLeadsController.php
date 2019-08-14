@@ -21,9 +21,16 @@ class MyLeadsController extends BaseController
     public $branch;
 
 
-
-    public function __construct(Address $lead, Person $person, Branch $branch)
-    {
+    /**
+     * [__construct description]
+     * 
+     * @param Address $lead   [description]
+     * @param Person  $person [description]
+     * @param Branch  $branch [description]
+     */
+    public function __construct(
+        Address $lead, Person $person, Branch $branch
+    ) {
 
         $this->lead = $lead;
         $this->person = $person;
@@ -31,26 +38,36 @@ class MyLeadsController extends BaseController
     }
 
     /**
-     * Display a listing of all leads.
-     *
-     * @return \Illuminate\Http\Response
+     * [index description]
+     * 
+     * @param  [type] $branch [description]
+     * @return [type]         [description]
      */
     public function index($branch=null)
     {
-                
+              
         if (!  $myBranches = $this->person->myBranches()) {
             return redirect()->back()->withError('You are not assigned to any branches');
         }
-        if (! $branch) {
-          $branch = array_keys($myBranches);
-          $branch = reset($branch);
-        } else {
+
+        if (! $branch && ! session('branch')) {
+
+            $branch = array_keys($myBranches);
+            // get first branch
+            $branch = reset($branch);
+            session(['branch'=>$branch]);
+
+        } elseif (session('branch')) {
+            $branch = session('branch');
+        
+        } else {   
             if (! in_array($branch->id, array_keys($this->person->myBranches()))) {
                 return redirect()->back()->withError('That is not one of your branches');
             }
             $branch = $branch->id;
+            session(['branch'=>$branch]);
         }
-       
+        
         $data = $this->_getBranchLeads([$branch]);
       
         $title= $data['branches']->first()->branchname . " leads";
@@ -150,7 +167,8 @@ class MyLeadsController extends BaseController
      */
     public function store(MyLeadFormRequest $request)
     {
-        
+       
+
         // we need to geocode this address
         if (! $data = $this->_cleanseInput($request)) {
             return redirect()->back()->withError('Unable to geocode that address');
@@ -160,10 +178,10 @@ class MyLeadsController extends BaseController
        
         $dupes = $this->lead->duplicate($data['lead']['lng'], $data['lead']['lat'])->get();
 
-        /* if ($dupes->count()>0) {
-            return response()->view('addresses.duplicates',compact('dupes','data'));
-        } 
-        */
+        //if ($dupes->count()>0) {
+            //return response()->view('addresses.duplicates', compact('dupes', 'data'));
+        //} 
+        
         
         $lead = $this->lead->create($data['lead']);
        
@@ -196,7 +214,12 @@ class MyLeadsController extends BaseController
                 }
             }
         }
-        return redirect()->route('address.show', $lead)->withMessage('Lead Created');
+        if (request()->has('source') && request('source') == 'mobile') {
+                return redirect()->route('mobile.show', $lead)->withMessage('Lead Created');
+        } else {
+            return redirect()->route('address.show', $lead)->withMessage('Lead Created');
+        }
+        
     }
     /**
      * [_cleanseInput description]
@@ -209,13 +232,15 @@ class MyLeadsController extends BaseController
     {
         $address = $this->_getAddress($request); 
         $geocode = app('geocoder')->geocode($address)->get();
+
         if ($geocode->count()==0) {
             
             return false;
         }
         
         $data['lead'] = $this->lead->getGeoCode($geocode);
-
+        $data['lead'] = $this->_fillAddress($request, $data['lead']);
+        $data['lead']['user_id'] = auth()->user()->id;
         $data['lead']['businessname'] =request('companyname');
       
         $data['lead']['phone'] = preg_replace("/[^0-9]/", "", request('phone'));
@@ -226,6 +251,26 @@ class MyLeadsController extends BaseController
 
        
         return $data;
+    }
+    /**
+     * [_fillAddress description]
+     * 
+     * @param Request $request [description]
+     * @param Array   $lead    [description]
+     * 
+     * @return [type]           [description]
+     */
+    private function _fillAddress(Request $request, Array $lead)
+    {
+     
+        $fields = ['address','city','state','zip'];
+        foreach ($fields as $field) {
+            if (! $lead[$field] or str_replace(" ", "", $lead[$field])=='') {
+                $lead[$field] = request($field);
+            }
+        }
+        return $lead;
+
     }
 
     /**

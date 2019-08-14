@@ -49,14 +49,23 @@ class ActivityController extends Controller
      */
     public function index()
     {
-     
+       
         if (! $myBranches = $this->person->myBranches()) {
             return redirect()->back()
                 ->withError('You are not assigned to any branches');
         }
 
-        $branches = array_keys($myBranches);
-        $branch = $this->branch->findOrFail(reset($branches));
+        
+        if (session('branch')) {
+            $branch = $this->branch->findOrFail(session('branch'));
+
+        } else {
+            $branches = array_keys($myBranches);
+            $branch = $this->branch->findOrFail(reset($branches));
+            session(['branch'=>$branch->id]);
+        }
+    
+       
         $data = $this->_getBranchActivities($branch);
        
         $title= $data['branches']->first()->branchname . " activities";
@@ -134,7 +143,7 @@ class ActivityController extends Controller
      * 
      * @return [type]         [description]
      */
-    private function _getBranchActivities($branch,$from=null)
+    private function _getBranchActivities(Branch $branch,$from=null)
     {
        
        
@@ -197,9 +206,10 @@ class ActivityController extends Controller
      */
     public function store(ActivityFormRequest $request)
     {
-    
+        
         // can we detect the branch here?
-        $data = $this->_parseData($request);
+        $data = $this->_parseData($request); 
+
         $activity = Activity::create($data['activity']);
 
         if (request()->filled('followup_date')) {
@@ -212,7 +222,12 @@ class ActivityController extends Controller
             $activity->relatedContact()->attach($data['contact']['contact']);
         }
         $activity->load('relatedContact');
-        return redirect()->route('address.show', $data['activity']['address_id']);
+        if (request()->has('mobile')) {
+            return redirect()->route('mobile.show', $data['activity']['address_id']);
+        } else {
+            return redirect()->route('address.show', $data['activity']['address_id']);
+        }
+        
     }
 
     /**

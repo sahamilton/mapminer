@@ -5,7 +5,6 @@ use App\Presenters\LocationPresenter;
 use McCool\LaravelAutoPresenter\HasPresenter;
 use Illuminate\Http\Request;
 use \Carbon\Carbon;
-
 class Branch extends Model implements HasPresenter
 {
     use Geocode;
@@ -93,7 +92,19 @@ class Branch extends Model implements HasPresenter
         
         return $this->hasMany(Activity::class);
     }
-
+    /**
+     * [openActivities description]
+     * 
+     * @return [type] [description]
+     */
+    public function openActivities()
+    {
+        
+        return $this->hasMany(Activity::class)
+            ->whereCompleted(0)
+            ->orWhereNull('completed');
+    }
+    
     /**
      * [activitiesbytype description]
      * 
@@ -131,6 +142,26 @@ class Branch extends Model implements HasPresenter
     {
  
         return $this->hasManyThrough(Opportunity::class, AddressBranch::class, 'branch_id', 'address_branch_id', 'id', 'id')->where('closed', '=', 0);
+    }
+    /**
+     * [opportunitiesClosingThisWeek description]
+     * 
+     * @return [type] [description]
+     */
+    public function opportunitiesClosingThisWeek()
+    {
+        return $this->hasManyThrough(Opportunity::class, AddressBranch::class, 'branch_id', 'address_branch_id', 'id', 'id')->where('closed', '=', 0)
+            ->whereBetween('expected_close', [now(), now()->addWeek()]);
+    }
+    /**
+     * [pastDueOpportunities description]
+     * 
+     * @return [type] [description]
+     */
+    public function pastDueOpportunities()
+    {
+        return $this->hasManyThrough(Opportunity::class, AddressBranch::class, 'branch_id', 'address_branch_id', 'id', 'id')->where('closed', '=', 0)
+            ->where('expected_close', '<', now());
     }
     /**
      * [closedOpportunities description]
@@ -176,6 +207,7 @@ class Branch extends Model implements HasPresenter
      */
     public function marketmanager()
     {
+       
         return $this->relatedPeople($this->marketManagerRole);
     }
     /**
@@ -230,6 +262,29 @@ class Branch extends Model implements HasPresenter
 
     }
 
+    public function branchLeads()
+    {
+        return  $this->belongsToMany(Address::class, 'address_branch', 'branch_id', 'address_id')
+            ->whereDoesntHave('opportunities')->where('lead_source_id', 4); 
+    }
+    
+    public function scopeBranchLeadsPeriod($query, $period)
+    {
+        return $query->whereHas(
+            'branchLeads', function ($q) {
+                $q->whereBetween('address_branch.created_at', [$period['from'], $period['to']]);
+            }
+        );
+    }
+    /**
+     * [allLeads description]
+     * 
+     * @return [type] [description]
+     */
+    public function allLeads()
+    {
+        return  $this->belongsToMany(Address::class, 'address_branch', 'branch_id', 'address_id');
+    }
     /**
      * [leadsBySourceCount description]
      * 
@@ -386,7 +441,22 @@ class Branch extends Model implements HasPresenter
         }
         return $managers;
     }
-
+    /**
+     * [rebuildBranchXMLfile description]
+     * 
+     * @return [type] [description]
+     */
+    public function rebuildBranchXMLfile()
+    {
+        
+        $branches = $this->with('servicelines')->get();
+        $xml = response()->view('branches.xml', compact('branches'))
+            ->header('Content-Type', 'text/xml');
+        $file = file_put_contents(
+            storage_path() . '/app/public/uploads/branches.xml', $xml
+        );
+        return true;
+    }
 
     /**
      * [orders description]
@@ -488,6 +558,7 @@ class Branch extends Model implements HasPresenter
         }
 
     }
+
     /**
      * [checkIfMyBranch description]
      * 
@@ -543,6 +614,103 @@ class Branch extends Model implements HasPresenter
         return $data;
     }
     /**
+     * [scopeBranchOpportunities description]
+     * 
+     * @param [type] $query  [description]
+     * @param [type] $period [description]
+     * 
+     * @return [type]         [description]
+     */
+    public function scopeBranchOpenOpportunities($query, $period)
+    {
+        $this->period = $period;
+        return $query->withCount( 
+            ['opportunities as open'=>function ($query) {
+                $query->whereClosed(0)        
+                    ->where(
+                        function ($q) {
+                            $q->where('actual_close', '>', $this->period['to'])
+                                ->orwhereNull('actual_close');
+                        }
+                    )
+                ->where('opportunities.created_at', '<', $this->period['to']);
+            },
+            'opportunities as openvalue' => function ($query) {
+                $query->select(\DB::raw("SUM(value) as openvalue"))
+                    ->where(
+                        function ($q) {
+                            $q->where('actual_close', '>', $this->period['to'])
+                                ->orwhereNull('actual_close');
+                        }
+                    )
+                ->where('opportunities.created_at', '<', $this->period['to']);
+            }
+            ]
+        );
+
+    }
+    /**
+     * [scopeAgingOpportunities description]
+     * 
+     * @param [type] $query [description]
+     * @param [type] $age   [description]
+     * 
+     * @return [type]        [description]
+     */
+    public function scopeAgingOpportunities($query, $age)
+    {
+        $period = now()->subDays($age);
+        return $query->with(
+            ['opportunities', function ($query) use ($period) {
+                            $query->where('closed', 0)
+                                ->where('opportunities.created_at', '<', $period);
+                        }]
+        );
+        
+        
+
+
+    }
+
+    /**
+     * [scopeMobileStats description]
+     * 
+     * @param [type] $query [description]
+     * 
+     * @return [type]        [description]
+     */
+    public function scopeMobileStats($query)
+    {
+        return $query->with(       
+            ['leads'=>function ($query) {
+                $query->where(
+                    function ($q) {
+                        $q->whereDoesntHave('opportunities');
+                    }
+                );
+            },
+            
+            'activities'=>function ($query) {
+                $query->where('completed', 0);
+            },
+            'activities.address',
+            'opportunities'=>function ($query) {
+                $query->whereClosed(0)        
+                    ->where(
+                        function ($q) {
+                            $q->where('actual_close', '>', now())
+                                ->orwhereNull('actual_close');
+                        }
+                    )
+                ->where('opportunities.created_at', '<', now());
+            },
+            'opportunities.address'
+
+            ]
+        );
+
+    }
+    /**
      * [scopeSummaryStats description]
      * 
      * @param [type] $query  [description]
@@ -569,18 +737,59 @@ class Branch extends Model implements HasPresenter
                         }
                     );
             },
+            'leads as newbranchleads'=>function ($query) {
+                $query->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']])
+                    ->where(
+                        function ($q) {
+                            $q->where('lead_source_id', 4);
+                        }
+                    );
+            },
             'activities'=>function ($query) {
                 $query->whereBetween(
                     'activity_date', [$this->period['from'],$this->period['to']]
                 )
                     ->where('completed', 1);
             },
+            'activities as openactivities'=>function ($query) {
+                $query->where('completed', 0)->orWhereNull('completed');
+                    
+            },
             'activities as salesappts'=>function ($query) {
                 $query->whereBetween(
                     'activity_date', [$this->period['from'],$this->period['to']]
                 )
+                ->where('completed', 1)
+                ->where('activitytype_id', 4);
+            },
+            'activities as logacall'=>function ($query) {
+                $query->whereBetween(
+                    'activity_date', [$this->period['from'],$this->period['to']]
+                )
+                ->where('completed', 1)
+                ->where('activitytype_id', 13);
+            },
+            'activities as salesapptsscheduled'=>function ($query) {
+                $query->whereBetween(
+                    'activity_date', [$this->period['from'],$this->period['to']]
+                )->where('activitytype_id', 4);
+            },
+            'activities as logacall'=>function ($query) {
+                $query->whereBetween(
+                    'activity_date', [$this->period['from'],$this->period['to']]
+                )
                     ->where('completed', 1)
-                    ->where('activitytype_id', 4);
+                    ->where('activitytype_id', 13);
+            },
+            'activities as salesapptsscheduled'=>function ($query) {
+                $query->whereBetween(
+                    'activity_date', [$this->period['from'],$this->period['to']]
+                )->where('activitytype_id', 4);
+            },
+            'opportunities as opened'=>function ($query) {
+                $query->whereBetween(
+                    'opportunities.created_at', [$this->period['from'],$this->period['to']]
+                );
             },
             'opportunities as won'=>function ($query) {
                 $query->whereClosed(1)
@@ -606,7 +815,7 @@ class Branch extends Model implements HasPresenter
             },
             'opportunities as open'=>function ($query) {
                 $query->whereClosed(0)        
-                    ->where(
+                    ->OrWhere(
                         function ($q) {
                             $q->where('actual_close', '>', $this->period['to'])
                                 ->orwhereNull('actual_close');
@@ -620,6 +829,17 @@ class Branch extends Model implements HasPresenter
                     ->whereBetween(
                         'actual_close', [$this->period['from'],$this->period['to']]
                     );
+            },
+            'opportunities as openvalue' => function ($query) {
+                $query->select(\DB::raw("SUM(value) as wonvalue"))
+                    ->whereClosed(0)        
+                    ->where(
+                        function ($q) {
+                            $q->where('actual_close', '>', $this->period['to'])
+                                ->orwhereNull('actual_close');
+                        }
+                    )
+                ->where('opportunities.created_at', '<', $this->period['to']);
             }
             ]
         );

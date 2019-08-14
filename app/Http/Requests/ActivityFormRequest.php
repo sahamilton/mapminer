@@ -25,7 +25,10 @@ class ActivityFormRequest extends FormRequest
     {
         return [
             'activity_date'=>'date:required',
+            'activitytype_id'=>'required',
+            'note'=>'required',
             'followup_date'=>'date|nullable|after:activity_date',
+            'followup_activity'=>'required_with:followup_date',
             'location_id' => 'required_without:address_id',
             'address_id' => 'required_without:location_id',
             'branch_id'=>'required',

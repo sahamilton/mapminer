@@ -16,14 +16,15 @@ class WeeklyActivityReminder implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     public $user;
+    public $period;
     /**
-     * Create a new job instance.
-     *
-     * @return void
+     * [__construct description]
+     * 
+     * @param Array $period [description]
      */
-    public function __construct()
+    public function __construct(Array $period)
     {
-        
+        $this->period = $period;
     }
 
     /**
@@ -36,7 +37,7 @@ class WeeklyActivityReminder implements ShouldQueue
         $users = User::whereHas(
             'activities', function ($q) {
                 $q->whereBetween(
-                    'activity_date', [Carbon::now(),Carbon::now()->addWeek()]
+                    'activity_date', [$this->period['from'], $this->period['to']]
                 )->whereNull('completed');
             }
         )
@@ -52,9 +53,10 @@ class WeeklyActivityReminder implements ShouldQueue
        
         foreach ($users as $user) {
             
-            Mail::to($user->email, $user->person->fullName())
+            Mail::to([['email'=>$user->email, 'name'=>$user->person->fullName()]])
                 
                 ->send(new SendWeeklyActivityReminder($user, $user->activities));
+              
         }
     }
 }

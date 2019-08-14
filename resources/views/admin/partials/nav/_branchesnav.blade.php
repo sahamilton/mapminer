@@ -15,12 +15,7 @@
             </a>
         </li>
         
-        <li>
-            <a class="dropdown-item" 
-            href="{{ route('region.index') }}">
-                <i class="fas fa-map-marked"></i> Manage Regions
-            </a>
-        </li>
+
         
         <li>
             <a class="dropdown-item" 

@@ -9,26 +9,27 @@
 
 <p>Contact <a href="mailto:{{config('mapminer.system_contact')}}" title="Email {{config('mapminer.support')}}">{{config('mapminer.support')}}</a> for any training or support issues.</p>
 <fieldset><legend>Technical Details</legend>
-<p><strong>Mapminer Version:</strong> {{config('mapminer.app_version')}}</p>
+<p><strong>Mapminer Version:</strong> {{ucwords(exec('git describe --tags'))}} </p>
+<p><strong>Mapminer Branch:</strong> {{ ucwords(exec('git rev-parse --abbrev-ref HEAD'))}} </p>
 @if(auth()->user()->hasRole('admin'))
 <p><strong>Environment: </strong>
 {{App::environment()}} </p>
 <p><strong>Laravel Version:</strong>  {{App::version()}}</p>
-	<p><strong>Branch:</strong>
-		<?php echo ucwords(exec('git rev-parse --abbrev-ref HEAD'));?></p>
-	<p><strong>
-		<a href="{{route('versions.index')}}" title="See all versions">Git Version:</a>
-	</strong> {{$version}} </p>
+    <p><strong>Branch:</strong>
+        <?php echo ucwords(exec('git rev-parse --abbrev-ref HEAD'));?></p>
+    <p><strong>
+        <a href="{{route('versions.index')}}" title="See all versions">Git Version:</a>
+    </strong> {{$version}} </p>
 
-	<p><strong>PHP Version:</strong> {{ phpversion()}} </p>
-	@php
-	$results = \DB::select( \DB::raw("select version()") );
+    <p><strong>PHP Version:</strong> {{ phpversion()}} </p>
+    @php
+    $results = \DB::select( \DB::raw("select version()") );
 $db_version = $results[0]->{'version()'};
 @endphp
-	<p><strong>Database Version:</strong> {{$db_version}}</p> 
-	<p><strong>Server Address:</strong> {{$_SERVER['SERVER_ADDR']}}</p>
-	<p><strong>Server Name:</strong> {{gethostname()}}</p>
-	<p><strong>Database:</strong> {{env('DB_DATABASE')}}</p>
+    <p><strong>Database Version:</strong> {{$db_version}}</p> 
+    <p><strong>Server Address:</strong> {{$_SERVER['SERVER_ADDR']}}</p>
+    <p><strong>Server Name:</strong> {{gethostname()}}</p>
+    <p><strong>Database:</strong> {{env('DB_DATABASE')}}</p>
 @endif
 </fieldset>
 </div>

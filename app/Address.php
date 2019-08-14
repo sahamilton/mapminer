@@ -26,7 +26,9 @@ class Address extends Model
         'phone',
         'lead_source_id',
         'customer_id',
-        'description'];
+        'description',
+        'duns',
+        'naic'];
     
     protected $searchable = [
         'businessname',
@@ -180,17 +182,24 @@ class Address extends Model
     }
 
     /**
-     * [lastActivity description]
+     * [openActivities description]
      * 
      * @return [type] [description]
      */
+    public function openActivities()
+    {
+        return $this->hasMany(Activity::class)->where('completed', 0);
+    }
+
+    /**
+     * [lastActivity description]
+     * 
+     * @return [type] [description]
+    */
     public function lastActivity()
     {
-        return $this->hasMany(Activity::class)
-            ->where('completed', 1)
-            ->orderBy('activity_date', 'desc')
-            ->take(1);
-    }
+        return $this->hasMany(Activity::class)->where('completed', 1)->latest();
+    } 
     /**
      * [fullAddress description]
      * 
@@ -309,6 +318,33 @@ class Address extends Model
             'address_id', 'address_branch_id', 'id', 'id'
         );
     }
+
+    /**
+     * [opportunities description]
+     * 
+     * @return [type] [description]
+     */
+    public function openOpportunities()
+    {
+ 
+        return $this->hasManyThrough(
+            Opportunity::class, AddressBranch::class, 
+            'address_id', 'address_branch_id', 'id', 'id'
+        )->where('closed', 0);
+    }
+
+    /**
+     * [opportunities description]
+     * 
+     * @return [type] [description]
+     */
+    public function campaigns()
+    {
+ 
+        return $this->belongsToMany(Salesactivity::class);
+    }
+
+
     /**
      * [servicedBy description]
      * 
@@ -408,7 +444,11 @@ class Address extends Model
             )  < ".$close_in_metres 
         );
     }
-
+    /**
+     * [addressType description]
+     * 
+     * @return [type] [description]
+     */
     public function addressType()
     {
         if ($this->has('opportunities')) {

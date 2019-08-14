@@ -12,12 +12,8 @@ use App\Mail\SendWeeklyActivityReminder;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get(
-    '/', ['as'=>'welcome',function () {
+Route::get('/', ['as'=>'welcome','uses'=>'HomeController@index']);
 
-        return view('welcome');
-    }]
-);
     
         
 Route::get('testinbound', ['as'=>'testinbound', 'uses'=>'InboundMailController@inbound']);
@@ -97,14 +93,17 @@ Route::group(
         Route::post('branches/dashboard', ['as'=>'branches.dashboard', 'uses'=>'BranchDashboardController@selectBranch']);
         Route::get('manager/{person}/dashboard', ['as'=>'manager.dashboard', 'uses'=>'MgrDashboardController@manager']);
         Route::post('manager/dashboard', ['as'=>'dashboard.select', 'uses'=>'DashboardController@select']);
-            Route::resource('branchdashboard', 'BranchDashboardController');
+        Route::resource('branchdashboard', 'BranchDashboardController');
         //   Manager Dashboard
         Route::resource('mgrdashboard', 'MgrDashboardController');
+        Route::post('namdashboard/select', ['as'=>'namdashboard.select', 'uses'=>'NAMDashboardController@select']);
+        Route::resource('namdashboard', 'NAMDashboardController');
         //   Dashboard
         Route::resource('dashboard', 'DashboardController');
-        
-        //   Branch Pipeline
-            Route::get('branch/pipeline', ['as'=>'branches.pipeline', 'uses'=>"OpportunityController@pipeline"]);
+        // Branch Next Week View
+        Route::resource('branchsummary', 'BranchSummaryController');
+        //   Branch PipelineMyLea
+        Route::get('branch/pipeline', ['as'=>'branches.pipeline', 'uses'=>"OpportunityController@pipeline"]);
            
         //   Branch Leads
         Route::get('branch/leads/{branch?}', ['as'=>'branch.leads', 'uses'=>'MyLeadsController@index']);
@@ -146,7 +145,8 @@ Route::group(
         
         Route::post('findme', ['as'=>'findme', 'uses'=>'GeoCodingController@findMe']);
         Route::get('findme', ['as'=>'findme', 'uses'=>'MapsController@findme']);
-        
+        // Industries
+        Route::resource('naic', 'NaicsController');
         //     Industry Focus
         Route::resource('/industryfocus', 'PersonIndustryController');
     
@@ -167,7 +167,7 @@ Route::group(
         //     Managers
         Route::get('manage/account', ['as'=>'managers.view', 'uses'=>'ManagersController@manager']);
         Route::post('manage/account', ['as'=>'managers.changeview', 'uses'=>'ManagersController@selectaccounts']);
-        Route::get('locationnotes/{companyID}', ['as'=>'locationnotes.show', 'uses'=>'ManagersController@showManagerNotes']);
+        Route::get('locationnotes/{company}', ['as'=>'locationnotes.show', 'uses'=>'ManagersController@showManagerNotes']);
         
         //     Maps
         Route::get('api/mylocalbranches/{distance}/{latLng}/{limit?}', ['as' => 'map.mybranches', 'uses' => 'MapsController@findLocalBranches']);
@@ -234,7 +234,7 @@ Route::group(
         
         //     Sales Campaigns
         Route::get('campaigns', ['as'=>'salescampaigns', 'uses'=>'SalesActivityController@mycampaigns']);
-        Route::resource('salesactivity', 'SalesActivityController', ['only' => ['show']]);
+        //Route::resource('salesactivity', 'SalesActivityController', ['only' => ['show']]);
         
         //   Sales organization
         Route::get('salesorg/coverage', ['as'=>'salescoverage', 'uses'=>'SalesOrgController@salesCoverageMap']);
@@ -288,7 +288,10 @@ Route::group(
         Route::post('mylead/{id}/close', ['as'=>'mylead.close', 'uses'=>'MyLeadsController@close']);
         Route::resource('myleadsactivity', 'MyLeadsActivityController');
         Route::resource('myleadscontact', 'MyLeadsContactController');
-    
+        
+        Route::post('reports/{report}/run', ['as'=>'reports.run', 'uses'=>'ReportsController@run']);
+
+        Route::resource('reports', 'ReportsController', ['only' => ['index', 'show']]);
        
         //     AJAX Links
         //     // Move these to api routes
@@ -313,11 +316,11 @@ Route::group(
 
 
         //   Training
-        Route::resource('training', 'TrainingController')->only(['index', 'show']);
+        Route::resource('training', 'TrainingController', ['only' => ['index', 'show']]);
         //   Impersonate
         Route::impersonate();
         //     User (Profile) settings
-        Route::resource('user', 'UsersController')->only(['show', 'edit', 'update']);
+        Route::resource('user', 'UsersController', ['only' => ['index', 'show', 'update']]);;
         
         // legacy login address
         Route::get(
@@ -329,6 +332,13 @@ Route::group(
             
             }
         );
+        Route::get('mobile/{address}/show', ['as'=>'mobile.show', 'uses'=>'MobileController@show']);
+        Route::get('mobile/{address}/check', ['as'=>'mobile.checkaddress','uses'=>'MobileController@check']);
+        Route::get('mobile/searchaddress', ['as'=>'mobile.searchaddress', 'uses'=>'MobileController@searchaddress']);
+
+        Route::post('mobile/search', ['as'=>'mobile.search', 'uses'=>'MobileController@search']);
+        Route::post('mobile/select', ['as'=>'mobile.select', 'uses'=>'MobileController@select']);
+        Route::resource('mobile', 'MobileController');
     }
 );
     
@@ -355,6 +365,8 @@ Route::group(
         Route::get('branchmap', ['as'=>'branches.genmap', 'uses'=>'BranchesController@rebuildBranchMap']);
         Route::get('branches/export', ['as'=>'branches.export', 'uses'=>'BranchesController@export']);
         Route::get('branches/team/export', ['as'=>'branches.team.export', 'uses'=>'BranchesController@exportTeam']);
+        Route::get('branch/{branch}/reassign', ['as'=>'branchReassign','uses'=>'BranchesController@reassignBranch']);
+        Route::post('branch/{branch}/reassign', ['as'=>'branch.reassign','uses'=>'BranchesController@reassign']);
         Route::resource('branches', 'BranchesController', ['except'=>['index', 'show']]);
         
         //     Companies
@@ -441,10 +453,9 @@ Route::group(
         //     Project Source
         Route::resource('projectsource', 'ProjectSourceController');
 
-
-        //   Reports
-        Route::resource('reports', 'ReportsController');
         
+
+        //Leads Import       
         Route::get('leads/import/{id?}', ['as'=>'prospects.importfile', 'uses'=>'LeadImportController@getFile']);
         Route::get('leads/import/assigned/{id?}', ['as'=>'assigned_prospects.importfile', 'uses'=>'LeadAssignedImportController@getFile']);
         
@@ -485,13 +496,15 @@ Route::group(
         Route::get('leads/{id}/person/{sid}/source', ['as'=>'leads.personsource', 'uses'=>'LeadsController@getPersonSourceLeads'])
         Route::get('lead/branch/{bid?}', ['as'=>'leads.branch', 'uses'=>'LeadsController@branches']);
         Route::resource('leads', 'LeadsController');*/
+
+        
         //     Salesnotes
         Route::get('salesnotes/filedelete/{file}', ['as'=>'salesnotes.filedelete', 'uses'=>'SalesNotesController@filedelete']);
         Route::get('salesnotes/create/{companyId}', ['as'=>'salesnotes.cocreate', 'uses'=>'SalesNotesController@createSalesNotes']);
-                //   OrderImports
+        //   OrderImports
         
-                Route::resource('orderimport', 'OrderImportController');
-                //   Prospect Source / LeadSource
+        Route::resource('orderimport', 'OrderImportController');
+        //   Prospect Source / LeadSource
         
         Route::get('leadsource/{leadsource}/announce', ['as'=>'leadsource.announce', 'uses'=>'LeadsEmailController@announceLeads']);
         Route::post('leadsource/{leadsource}/email', ['as'=>'sendleadsource.message', 'uses'=>'LeadsEmailController@email']);
@@ -508,11 +521,11 @@ Route::group(
         Route::get('salesnotes/filedelete/{file}', ['as'=>'salesnotes.filedelete', 'uses'=>'SalesNotesController@filedelete']);
         Route::get('salesnotes/create/{company}', ['as'=>'salesnotes.cocreate', 'uses'=>'SalesNotesController@createSalesNotes']);
         
-        //   Sales Activity
+        //   Sales Activity / Campaigns
 
         Route::get('salesactivity/{vertical}/vertical', ['as'=>'salesactivity.vertical', 'uses'=>'SalesActivityController@index']);
         Route::post('salesactivity/updateteam', ['as'=>'salesactivity.modifyteam', 'uses'=>'SalesActivityController@updateteam']);
-        Route::resource('salesactivity', 'SalesActivityController', ['except' => ['show']]);
+        Route::resource('salesactivity', 'Admin\SalesActivityManagementController');
 
         Route::get('campaigndocs/{id}', ['as'=>'salesdocuments.index', 'uses'=>'SalesActivityController@campaignDocuments']);
         Route::get('campaign/{id}/announce', ['as'=>'campaign.announce', 'uses'=>'CampaignEmailController@announceCampaign']);
@@ -534,7 +547,7 @@ Route::group(
         Route::get('watchlist/{userid}', ['as'=>'watch.mywatchexport', 'uses'=>'WatchController@export']);
 
         //     //   Search
-        Route::get('/user/find', 'SearchController@searchUsers');
+        Route::get('user/find', 'SearchController@searchUsers');
 
         
         Route::get('/person/{person}/find', ['as'=>'person.details', 'uses'=>'PersonSearchController@find']);
@@ -553,7 +566,10 @@ Route::group(
         Route::post('branchassignments/send', ['as'=>'branchassignments.send', 'uses'=>'Admin\BranchManagementController@emailAssignments']);
         Route::get('branch/manage', ['as'=>'branch.management', 'uses'=>'Admin\BranchManagementController@index']);
         Route::get('branch/check', ['as'=>'branch.check', 'uses'=>'Admin\AdminUsersController@checkBranchAssignments']);
-        Route::get('branch/nomanager/{mgr}', ['as'=>'branch.nomanager', 'uses'=>'Admin\BranchManagementController@noManagers']);
+        
+
+        // Route::get('branch/{branch}/purge', ['as'=>'branch.purge','uses'=>'BranchesController@delete']);
+        
         //   Campaigns (email)
         Route::resource('campaigns', 'CampaignController');
 
@@ -569,8 +585,7 @@ Route::group(
         //   Database Backups
         Route::resource('database', 'DatabaseBackupManagerController');
 
-        //   Reports
-        Route::resource('reports', 'ReportsController');
+        
 
         //   User Management
 
@@ -580,7 +595,10 @@ Route::group(
 
         Route::post('users/bulkimport', ['as'=>'admin.users.bulkimport', 'uses'=>'UsersImportController@import']);
         Route::post('users/import', ['as'=>'users.mapfields', 'uses'=>'UsersImportController@mapfields']);
+        Route::get('users/deleted', ['as'=>'deleted.users', 'uses'=>'Admin\AdminUsersController@deleted']);
+        Route::get('users/{id}/restore', ['as'=>'users.restore', 'uses'=>'Admin\AdminUsersController@restore']);
 
+        Route::delete('users/{id}/purge', ['as'=>'users.permdestroy', 'uses'=>'Admin\AdminUsersController@permdeleted']);
 
         Route::post('user/usererrors', ['as'=>'fixusercreateerrors', 'uses'=>'UsersImportController@fixUserErrors']);
         Route::post('user/importcleanse/delete', ['as'=>'user.importdelete', 'uses'=>'UserImportCleanseController@bulkdestroy']);
@@ -601,7 +619,16 @@ Route::group(
         Route::resource('users', 'Admin\AdminUsersController');
 
         Route::post('lastlogged', ['as'=>'lastlogged', 'uses'=>'Admin\AdminUsersController@lastlogged']);
+        //   Reports
+        //Route::post('reports/{report}/run', ['as'=>'reports.run', 'uses'=>'ReportsController@run']);
 
+        Route::post('reports/{report}/send', ['as'=>'reports.send', 'uses'=>'ReportsController@send']);
+
+        Route::post('reports/{report}/addrecipient', ['as'=>'reports.addrecipient', 'uses'=>'ReportsController@addRecipient']);
+        Route::post('reports/{report}/removerecipient', ['as'=>'reports.removerecipient', 'uses'=>'ReportsController@removeRecipient']);
+
+
+        Route::resource('reports', 'ReportsController', ['except'=>['index','show']]);
         //   User Role Management
 
         Route::resource('roles', 'Admin\AdminRolesController');
@@ -674,11 +701,16 @@ Route::group(
         //   Jobs
         Route::get(
             'testjob', function () {
-                 $company = App\Company::findOrFail(532);
-                 $period['from'] = \Carbon\Carbon::now()->subWeek()->startOfWeek();
-                 $period['to'] = \Carbon\Carbon::now()->subWeek()->endOfWeek();
-                 App\Jobs\AccountActivities::dispatch($company, $period);
-            
+                 //$company = App\Company::findOrFail(532);
+                $period['from'] = \Carbon\Carbon::now()->subMonth()->startOfDay();
+                $period['to'] = \Carbon\Carbon::yesterday()->endOfDay();
+                // App\Jobs\Top50WeeklyReport::dispatch();
+                App\Jobs\BranchLogins::dispatch($period);
+                //App\Jobs\DailyBranch::dispatch($period, $user);
+                 //App\Jobs\AccountActivities::dispatch($company, $period);
+                //App\Jobs\BranchOpportunities::dispatch($period);
+                 //App\Jobs\RebuildPeople::dispatch();
+                //App\Jobs\BranchLogins::dispatch($period);
                  /*$filesInFolder = \File::files(storage_path('backups'));
                  foreach ($filesInFolder as $file){
                  if(pathinfo($file)['extension'] == 'sql'){
@@ -688,11 +720,15 @@ Route::group(
                  }
                  
                  }
+                 $period['from'] = now();
+                 $period['to'] = now()->addWeek();
+                 App\Jobs\WeeklyActivityReminder::dispatch($period);
+                 App\Jobs\WeeklyOpportunitiesReminder::dispatch();
                  $period['from'] = \Carbon\Carbon::now()->subWeek()->startOfWeek();
-                 $period['to'] = \Carbon\Carbon::now()->subWeek()->endOfWeek();
-                App\Jobs\BranchStats::dispatch($period);
-                //App\Jobs\ActivityOpportunityReport::dispatch();
-                //App\Jobs\ActivityOpportunityReport::dispatch();
+                 $period['to'] = \Carbon\Carbon::now();
+                App\Jobs\BranchStats::dispatch($period);*/
+                //App\Jobs\ActivityOpportunity::dispatch($period);
+                /*//App\Jobs\ActivityOpportunityReport::dispatch();
                 
                 //App\Jobs\ZipBackup::dispatch('MMProd20190123');
                 //App\Jobs\UploadToDropbox::dispatch('MMProd20190123');

@@ -29,8 +29,8 @@ class MyLeadFormRequest extends FormRequest
     {
         
         return [
-            'address'=>'required_without:street',
-            'street'=>'required_without:address',
+            'address'=>'required:street',
+            
             'companyname'=>'required|filled',
             'phone'=>'sometimes|nullable|numeric',
             'email'=>'sometimes|nullable|email',

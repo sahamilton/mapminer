@@ -2,9 +2,9 @@
 
 	@if((isset($activity->salesprocess) && $activity->salesprocess->contains('step',$value))
 	or is_array(old('salesprocess')) && in_array($key,old('salesprocess')))
-	<input type="checkbox" name="salesprocess[]" checked value="{{$key}}">{{$value}}
+	<p><input type="checkbox" name="salesprocess[]" checked value="{{$key}}">{{$value}} </p>
 	@else
-	<input type="checkbox" name="salesprocess[]"  value="{{$key}}">{{$value}}
+	<p><input type="checkbox" name="salesprocess[]"  value="{{$key}}">{{$value}} </p>
 	@endif
 
 @endforeach

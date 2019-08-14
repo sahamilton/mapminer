@@ -4,16 +4,17 @@ namespace App\Observers;
 
 use Mail;
 use App\Person;
+use App\Jobs\RebuildPeople;
 use App\Mail\PersonNotification;
 
 class PersonObserver
 {
+    
     /**
-     * Those are the names of the observable function
-     *
-     * @author Ajay Kumar
+     * [$observableEventNames description]
+     * 
+     * @var [type]
      */
-
     private $observableEventNames  = [
                 "creating",
                 "created",
@@ -28,16 +29,41 @@ class PersonObserver
             ];
 
 
-
+    /**
+     * [created description]
+     * 
+     * @param Person $person [description]
+     * 
+     * @return [type]         [description]
+     */
     public function created(Person $person)
     {
-       
+        RebuildPeople::dispatch();
         // return Mail::queue(new PersonNotification($person));
     }
 
-    public function deleting(Person $person)
+    /**
+     * [updated description]
+     * 
+     * @param Person $person [description]
+     * 
+     * @return [type]         [description]
+     */
+    public function updated(Person $person)
     {
-        // set all direct reports to null
+        //RebuildPeople::dispatch();
+        // return Mail::queue(new PersonNotification($person));
+    }
+    /**
+     * [deleting description]
+     * 
+     * @param Person $person [description]
+     * 
+     * @return [type]         [description]
+     */
+    public function deleted(Person $person)
+    {
+        //RebuildPeople::dispatch();
         // return Mail::queue(new PersonNotification($person));
     }
 }

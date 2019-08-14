@@ -1,11 +1,18 @@
-@extends ('site.layouts.default')
+@extends('site.layouts.calendar')
 @section('content')
 <div class="container">
     <h2>Sales Campaigns</h2>
     <div class="float-right">
         <a href ="{{route('salesactivity.create')}}">
 
-            <button class="btn btn-success" ><i class="far fa-briefcase" aria-hidden="true"> </i> Add Sales Campaign</button>
+<<<<<<< HEAD
+            <button class="btn btn-success" >
+                <i class="fas fa-plus-circle"></i>
+                 Add Sales Campaign
+             </button>
+=======
+            <button class="btn btn-success" ><i class="fas fa-plus-circle"></i> </i> Add Sales Campaign</button>
+>>>>>>> master
         </a>
     </div> 
     <ul class="nav nav-tabs">

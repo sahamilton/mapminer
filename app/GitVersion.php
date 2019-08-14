@@ -16,7 +16,11 @@ class GitVersion extends Model
     const MINOR = 5;
     const PATCH = 17;
 
-
+    /**
+     * [get description]
+     * 
+     * @return [type] [description]
+     */
     public static function get()
     {
         $commitHash = trim(exec('git log --pretty="%h" -n1 HEAD'));
@@ -27,7 +31,11 @@ class GitVersion extends Model
         $commitDate->setTimezone(new \DateTimeZone('America/Los_Angeles'));
         return sprintf('%s (%s),commited %s', $branch, $commitHash, $commitDate->format('M jS Y @ g:m a'));
     }
-    
+    /**
+     * [history description]
+     * 
+     * @return [type] [description]
+     */
     public function history()
     {
         $lastCommit = $this->max('commitdate');
@@ -61,7 +69,13 @@ class GitVersion extends Model
         $this->insert($history);
     }
     
-
+    /**
+     * [insert description]
+     * 
+     * @param [type] $history [description]
+     * 
+     * @return [type]          [description]
+     */
     public function insert($history)
     {
  

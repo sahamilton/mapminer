@@ -1,4 +1,21 @@
 Good Queries
+
+//       Open but Closed opportunities
+
+select branchname, concat_ws(' ', persons.firstname, persons.lastname), concat_ws(' ', b.firstname, b.lastname) as createdby,  addresses.businessname, opportunities.title, opportunities.created_at, actual_close
+from branches, branch_person, addresses, opportunities, persons, persons b
+
+where opportunities.closed = 0
+and opportunities.actual_close is not null
+and opportunities.branch_id = branches.id
+and branches.id = branch_person.branch_id
+and branch_person.role_id = 9
+and branch_person.person_id = persons.id
+and opportunities.user_id = b.user_id
+and opportunities.address_id = addresses.id
+order by branches.id
+
+
 //*************************************************
 
 SELECT branch_id,count(*)
@@ -9,12 +26,46 @@ and actual_close  between date('2019-04-01') and date('2019-04-08')
 group by branch_id;
 
 
+// Get all branch activities grouped by week, activity type & branch
+
+select  a.branchname,
+         concat_ws(' ',firstname,lastname) as manager, 
+         STR_TO_DATE(concat(CAST(week AS CHAR),' Monday'),'%X%V %W') as weekbegin, 
+         a.activity, 
+         a.activitycount
+        from persons, branch_person, branches, 
+        (
+            select branchname, 
+            concat(YEAR(activity_date),
+            WEEK(activity_date)) as week,
+            activity, count(activities.id) as activitycount
+            from activities, branches, activity_type 
+            where activities.activity_date between '2019-07-01'  and '2019-07-31' 
+            and activities.activitytype_id = activity_type.id 
+            and activities.completed =1 
+            and branch_id = branches.id
+            group by branchname, week, activity ) a
+          where persons.id = branch_person.person_id
+          and branch_person.role_id = 9
+          and branch_person.branch_id = branches.id
+          and branches.branchname = a.branchname  
+          ORDER BY `a`.`week`  ASC
+
+//******************************************************************
+
 SELECT branch_id,count(*)
 FROM `activities` 
 where
 activitytype_id = 4
 and activity_date  between date('2019-04-01') and date('2019-04-08')
 group by branch_id;
+
+//***************** Open Opportunities Aging
+select count(id) as open, 
+round(datediff( now(), created_at) / 7)) as weeks, 
+branch_id from opportunities 
+where opportunities.closed is null or opportunities.closed = 0 
+group by branch_id, weeks ORDER BY `branch_id`, weeks
 
 
 /// Weekly Report
@@ -170,8 +221,8 @@ select address_branch.branch_id,
 count(address_branch.id) as leads,
 count(b.id) + count(c.id) + count(d.id) as opptys,
 count(a.id) / count(address_branch.id) as conv,
-avg(datediff(a.created_at,address_branch.created_at)) as lagdays,
-avg(datediff(a.actual_close,a.created_at)) as velocitydays,
+avg(datediff(a.created_at, address_branch.created_at)) as lagdays,
+avg(datediff(a.actual_close, a.created_at)) as velocitydays,
 avg(a.value) as avgdeal,
 count(b.id) as open,
 count(c.id) as won,
@@ -181,7 +232,7 @@ from address_branch
 
 left join opportunities a on address_branch.id = a.address_branch_id
 left join opportunities b on address_branch.id = b.address_branch_id and b.closed = 0
-left join opportunities c on address_branch.id = c.address_branch_id and c.closed =1
+left join opportunities c on address_branch.id = c.address_branch_id and c.closed = 1
 left join opportunities d on address_branch.id = d.address_branch_id and d.closed = 2
 where address_branch.created_at > '2019-03-01'
 //where address_branch.branch_id in ()
@@ -197,3 +248,6 @@ group by branchname
 branch::whereHas(opportunities,function($q){
   $q->where('closed','=',0);
 })->select('branchname', DB::raw('count(opportunities.id) as open,count(opportunities.top50 as top50'))->groupBy('branchname')->get();
+ /// Get random addresses
+SELECT @min := MIN(id), @max := MAX(id) FROM addresses;
+SELECT DISTINCT id, businessname, street, address2, city, state, zip, lat, lng FROM addresses AS a JOIN ( SELECT FLOOR(@min + (@max - @min + 1) * RAND()) AS id FROM addresses LIMIT 50 -- more than 10 (to compensate for dups) ) b USING (id) LIMIT 25

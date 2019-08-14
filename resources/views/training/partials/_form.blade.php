@@ -3,7 +3,7 @@
 
     <div class="form-group{{ $errors->has('title') ? ' has-error' : '' }}">
         <label class="col-md-2 control-label">Title</label>
-              <div class="input-group input-group-lg ">
+          <div class="input-group input-group-lg ">
             <input type="text" required 
             class="form-control" 
             name='title' 
@@ -31,7 +31,7 @@
      </div> 
 <!-- reference -->
     <div class="form-group{{ $errors->has('reference') ? ' has-error' : '' }}">
-        <label class="col-md-2 control-label">Reference</label>
+        <label class="col-md-2 control-label">Reference (URL):</label>
         <div class="input-group input-group-lg ">
                 <input type="text" 
                 class="form-control" 
@@ -45,19 +45,28 @@
             </div>
     </div>
  <!-- type -->
+ @php
+ $types =['fleeq'=>'video','link'=>'link'];
+ @endphp
         <div class="form-group{{ $errors->has('type') ? ' has-error' : '' }}">
             <label class="col-md-2 control-label">Type</label>
               <div class="input-group input-group-lg ">
-                    <input 
-                    type="text" 
-                    class="form-control" 
-                    name='type' 
-                    description="type" 
-                    required
-                    value="{!! old('type') , isset($training) ? $training->type : "" !!}" placeholder="type">
-                    <span class="help-block">
-                        <strong>{{ $errors->has('type') ? $errors->first('type') : ''}}</strong>
-                        </span>
+                <select name="type" 
+                    id="type"
+                    class="form-control">
+                    @foreach ($types as $key=>$type)
+                        <option 
+                        @if (
+                        isset($training) && $training->type == $type) 
+                        selected 
+                        @endif
+                        value="{{$key}}">{{$type}}</option>
+
+                    @endforeach
+                </select>
+                <span class="help-block">
+                    <strong>{{ $errors->has('type') ? $errors->first('type') : ''}}</strong>
+                    </span>
                 </div>
         </div>
            

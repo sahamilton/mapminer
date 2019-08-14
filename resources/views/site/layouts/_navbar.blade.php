@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-md ml-auto navbar-light" >
 
-  <a href="{{ route('findme') }}" class="navbar-brand"><img src="{{ asset('assets/img/PRlogo.png')}}"  width ='164' ></a> <!--     <nav class="navbar navbar-toggleable-sm navbar-light bg-faded">
+  <a href="{{ route('welcome') }}" class="navbar-brand"><img src="{{ asset('assets/img/PRlogo.png')}}"  width ='164' ></a> <!--     <nav class="navbar navbar-toggleable-sm navbar-light bg-faded">
 <nav class="navbar navbar-toggleable-sm navbar-light bg-faded"> -->
    
   <!-- Toggler/collapsibe Button -->
@@ -113,7 +113,7 @@
             </li>    
                         
           </ul>
-        
+
           @include('site.layouts.partials._rightnav')
                
           <!-- ./ nav-collapse -->

@@ -24,12 +24,7 @@
         <i class="fas fa-book-reader"></i> Sales Library
     </a>
 </li>
-<li class="nav-item">
-    <a class="nav-link" 
-    href="{{ route('process.index') }}">
-        <i class="fas fa-funnel-dollar"></i> Sales Process
-    </a>
-</li>
+
 <li class="nav-item">
     <a class="nav-link" 
     href="{{ route('salesactivity.index') }}">
@@ -53,5 +48,12 @@
     <a class="nav-link" 
     href="{{ route('leadstatus.index') }}">
         <i class="fas fa-signal"></i> Lead Status
+    </a>
+</li>
+<div class="dropdown-divider"></div>
+<li class="nav-item">
+    <a class="nav-link" 
+    href="{{ route('reports.index') }}">
+        <i class="fas fa-file-download"></i> Reports
     </a>
 </li>

@@ -26,7 +26,7 @@
          @foreach($location->activities as $activity)
   
             <tr>
-                <td>{{$activity->activity_date ? $activity->activity_date->format('M j, Y'):''}}</td>
+                <td>{{$activity->activity_date ? $activity->activity_date->format('Y-m-d'):''}}</td>
                 <td>
                     @if($activity->user)
                         {{$activity->user->person->fullName()}}

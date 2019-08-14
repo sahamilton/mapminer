@@ -5,6 +5,7 @@
 <div class="row">
 <div class="col-md-6">
 @include('emails.partials._verticals')
+@include('emails.partials._campaigns')
 </div>
 <div class="col-md-6">
 @include('emails.partials._roles')

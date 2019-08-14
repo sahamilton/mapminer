@@ -192,12 +192,14 @@ class BranchManagementController extends Controller
      */
     public function change(Request $request, User $user)
     {
+        
         $person = $user->person()->with('branchesServiced')->first();
         $role = $user->roles()->first();
-
+     
         if ($person->branchesServiced->contains('id', request('id'))) {
             $person->branchesServiced()->detach(request('id'));
         } else {
+
             $person->branchesServiced()
                 ->attach([request('id')=>['role_id'=>$role->id]]);
         }

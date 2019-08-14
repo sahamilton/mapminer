@@ -13,7 +13,7 @@ class Company extends NodeModel
          'accounttypes_id'=>'required',
     ];
     public $limit = 2000;
-
+    public $period;
     protected $searchable = [
         /**
          * Columns and their priority in search results.
@@ -35,7 +35,7 @@ class Company extends NodeModel
     ];
 
     // Don't forget to fill this array
-    protected $fillable = ['companyname', 'vertical','person_id','c','customer_id','parent_id'];
+    protected $fillable = ['companyname', 'vertical','person_id','c','customer_id','parent_id','accounttypes_id'];
     /**
      * [type description]
      * 
@@ -240,4 +240,125 @@ class Company extends NodeModel
     {
         return $this->ancestors();
     }
+    /**
+     * [scopeSummaryStats description]
+     * 
+     * @param [type] $query  [description]
+     * @param [type] $period [description]
+     * 
+     * @return [type]         [description]
+     */
+    public function scopeSummaryStats($query,$period)
+    {
+        $this->period = $period;
+        return $query->withCount(       
+            ['locations as leads'=>function ($query) {
+                $query->whereHas(
+                    'assignedToBranch', function ($q) {
+                        $q->where('address_branch.created_at', '<=', $this->period['to'])
+                            ->where(
+                                function ($q) {
+                                    $q->whereDoesntHave('opportunities');
+                                }
+                            );
+                    }
+                );
+            },
+            'locations as activities'=>function ($query) {
+                $query->whereHas(
+                    'activities', function ($query) {
+                        $query->whereBetween(
+                            'activity_date', [$this->period['from'],$this->period['to']]
+                        )->where('completed', 1);
+                    }
+                );
+            },
+            'locations as salesappointments'=>function ($query) {
+                $query->whereHas(
+                    'activities', function ($query) {
+                        $query->whereBetween(
+                            'activity_date', [$this->period['from'],$this->period['to']]
+                        )->where('completed', 1)
+                            ->where('activitytype_id', 4);
+                    }
+                );
+            },
+            'locations as newopportunities'=>function ($query) {
+                $query->whereHas(
+                    'opportunities', function ($query) {
+                        $query->whereBetween(
+                            'opportunities.created_at', [$this->period['from'],$this->period['to']]
+                        );
+                    }
+                );
+            },
+            'locations as wonopportunities'=>function ($query) {
+                $query->whereHas(
+                    'opportunities', function ($query) {
+                        $query->whereClosed(1)
+                            ->whereBetween(
+                                'actual_close', [$this->period['from'],$this->period['to']]
+                            );
+                    }
+                );
+            },
+            'locations as opportunitieslost'=>function ($query) {
+                $query->whereHas(
+                    'opportunities', function ($query) {
+                        $query->whereClosed(2)
+                            ->whereBetween(
+                                'actual_close', [$this->period['from'],$this->period['to']]
+                            );
+                    }
+                );
+            },
+            'locations as opportunitiesopen'=>function ($query) {
+                $query->whereHas(
+                    'opportunities', function ($query) {
+                        $query->whereClosed(0)        
+                            ->OrWhere(
+                                function ($q) {
+                                    $q->where('actual_close', '>', $this->period['to'])
+                                        ->orwhereNull('actual_close');
+                                }
+                            )
+                        ->where('opportunities.created_at', '<', $this->period['to']);
+                    }
+                );
+            },
+            'locations as wonvalue'=>function ($query) {
+                $query->whereHas(
+                    'opportunities', function ($q) {
+                        $q->select(\DB::raw("SUM(value) as wonvalue"))
+                            ->where('closed', 1)
+                            ->whereBetween(
+                                'actual_close', [$this->period['from'],$this->period['to']]
+                            );
+                    }
+                );
+            },
+            'locations as openvalue'=>function ($query) {
+                $query->whereHas(
+                    'opportunities', function ($q) {
+                        $q->select(\DB::raw("SUM(value) as wonvalue"))
+                            ->whereClosed(0)        
+                            ->OrWhere(
+                                function ($q1) {
+                                    $q1->where('actual_close', '>', $this->period['to'])
+                                        ->orwhereNull('actual_close');
+                                }
+                            )
+                        ->where('opportunities.created_at', '<', $this->period['to']);
+                    }
+                );
+            }
+
+            ]
+        );
+
+
+
+    }
+
+
 }

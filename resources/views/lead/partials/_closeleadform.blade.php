@@ -18,30 +18,31 @@ $rank = ($location->lead->salesteam->first()->pivot->rating ? $location->lead->s
         <form method="post" action="{{route('mylead.close',$location->lead->id)}}">
         {{csrf_field()}}
         <div class="form-group">
-                    <label class="col-md-4 control-label">Lead Rating:</label>
-                    <div style="font-size:150%" data-rating="{{$rank}}" 
-                    id="rank" 
-                    class='starrr col-md-6'></div>
-                    <input type="hidden" name="ranking" id="ranking" value="{{$rank}}" />
+          <label class="col-md-4 control-label">Lead Rating:</label>
+            <div style="font-size:150%" data-rating="{{$rank}}" 
+              id="rank" 
+              class='starrr col-md-6'></div>
+              <input type="hidden" name="ranking" id="ranking" value="{{$rank}}" />
                     
-                    <select  id="ranklist">
-                      @foreach ($rankingstatuses as $key=>$value)
-                      <option 
-                      @if($key == $rank) selected @endif value="{{$key}}">{{$value}}</option>
-                      @endforeach
-        </select>
+              <select  id="ranklist">
+                @foreach ($rankingstatuses as $key=>$value)
+                <option 
+                @if($key == $rank) selected @endif value="{{$key}}">{{$value}}</option>
+                @endforeach
+          </select>
         </div>
 
          <div class="form-group{{ $errors->has('comments') ? ' has-error' : '' }}">
-                <label class="col-md-4 control-label">Comments</label>
-                <div class="col-md-6">
-                    <textarea required class="form-control" name='comments' title="comments" value="{{ old('comments') }}"></textarea>
+            <label class="col-md-4 control-label">Comments</label>
+            <div class="col-md-6">
+              <textarea required class="form-control" name='comments' title="comments" value="{{ old('comments') }}"></textarea>
                   
-                        <span class="help-block">
-                        <strong>{{$errors->has('comments') ? $errors->first('comments')  : ''}}</strong>
-                        </span>
-        
-                </div>
+                <span class="help-block">
+                  <strong>
+                    {{$errors->has('comments') ? $errors->first('comments')  : ''}}
+                  </strong>
+                </span>
+             </div>
             </div>
             <div class="float-right">
            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button> <input type="submit" value="Close Lead" class="btn btn-danger" />

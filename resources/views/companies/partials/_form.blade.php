@@ -39,6 +39,29 @@
         </div>
     </div>
 
+<!-- Company Type -->
+
+<div class="form-group{{ $errors->has('accounttypes_id)') ? ' has-error' : '' }}">
+        <label class="col-md-2 control-label">Company Type:</label>
+           <div class="input-group input-group-lg ">
+            <select  required class="form-control" name='accounttypes_id'>
+                <option value=null>Not Assigned</option>
+            @foreach ($types as $type)
+                <option @if(isset($company) && $company->accounttypes_id == $type->id)
+                    selected 
+            @endif
+                value="{{$type->id}}">{{$type->type}}
+              
+
+                
+            </option>
+            @endforeach
+            </select>
+            <span class="help-block">
+                <strong>{{ $errors->has('accounttypes_id') ? $errors->first('accounttypes_id') : ''}}</strong>
+                </span>
+        </div>
+    </div>
 @include('companies.partials._verticalselector')
 
 

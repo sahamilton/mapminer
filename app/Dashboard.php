@@ -28,7 +28,7 @@ class Dashboard extends Model
     {
 
         $this->manager = $this->person->myTeam($person)->get();
-
+        
         return $this->manager->map(
             function ($reports) {
                 return $reports->branchesServiced->count();

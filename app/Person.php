@@ -7,7 +7,7 @@ use McCool\LaravelAutoPresenter\HasPresenter;
 
 class Person extends NodeModel implements HasPresenter
 {
-    use Geocode,Filters,SoftDeletes,FullTextSearch;
+    use Geocode, Filters, SoftDeletes, FullTextSearch;
     public $salesroles = ['5','9'];
     // Add your validation rules here
     public static $rules = [
@@ -39,45 +39,102 @@ class Person extends NodeModel implements HasPresenter
         'firstname',
         'lastname'
     ];
-    
+    /**
+     * [reportsTo description]
+     * 
+     * @return [type] [description]
+     */
     public function reportsTo()
     {
         return $this->belongsTo(Person::class, 'reports_to', 'id');
     }
-    public function reportChain(){
-       return $this->getAncestorsWithoutRoot();
+    /**
+     * [reportChain description]
+     * 
+     * @return [type] [description]
+     */
+    public function reportChain()
+    {
+        return $this->getAncestorsWithoutRoot();
     }
+    /**
+     * [directReports description]
+     * 
+     * @return [type] [description]
+     */
     public function directReports()
     {
         return $this->hasMany(Person::class, 'reports_to');
     }
 
-    // not sure this works!
-
+    /**
+     * [salesRole description]
+     * not sure this works!
+     * 
+     * @return [type] [description]
+     */
     public function salesRole()
     {
         return $this->belongsTo(SalesOrg::class, 'id', 'position');
     }
-    
+    /**
+     * [branchesServiced description]
+     * 
+     * @return [type] [description]
+     */
     public function branchesServiced()
     {
 
         return $this->belongsToMany(Branch::class)
-        ->withTimestamps()
-        ->withPivot('role_id');
+            ->withTimestamps()
+            ->withPivot('role_id')
+            ->orderBy('branchname');
     }
-    public function myBranches()
+    /**
+     * [getMyBranches finds branch managers in reporting
+     * strucuture and returns their branches as array]
+     * 
+     * @return array list of branches serviced by reports
+     */
+    public function getMyBranches()
     {
-        $myteam = $this->myTeam()->has('branchesServiced')->get();
+       
+        $branches = $this->descendantsAndSelf()
+            ->withRoles([9])
+            ->with('branchesServiced')
+            ->get()
+            ->map(
+                function ($branch) { 
+                    return $branch->branchesServiced->pluck('id')->toArray();
+                }
+            );
+        return array_unique($branches->flatten()->toArray());
+    }
+
+
+
+    /**
+     * [myBranches description]
+     * 
+     * @return [type] [description]
+     */
+    public function myBranches(Person $person=null)
+    {
+        if (! $person && auth()->user()->hasRole('admin')) {
+            return Branch::all()->pluck('branchname', 'id')->toArray();
+        }
+        $myteam = $this->myTeam($person)->has('branchesServiced')->get();
 
         $data=[];
 
-        $teammembers =  $myteam->map(function ($team) {
+        $teammembers =  $myteam->map(
+            function ($team) {
            
                 return $team->branchesServiced;
-        });
+            }
+        );
 
-       foreach ($teammembers as $member) {
+        foreach ($teammembers as $member) {
        
             foreach ($member->pluck('branchname', 'id') as $id => $branchname) {
                 if (! array_key_exists($id, $data)) {
@@ -85,82 +142,109 @@ class Person extends NodeModel implements HasPresenter
                 }
             }
         }
-
+        ksort($data);
         return $data;
     }
-
+    /**
+     * [myBranchTeam description]
+     * 
+     * @param array $myBranches [description]
+     * 
+     * @return [type]             [description]
+     */
     public function myBranchTeam(array $myBranches)
     {
         
         $branches = Branch::whereIn('id', $myBranches)->with('manager')->get();
         
-        $team = $branches->map(function ($branch) {
-            return $branch->manager->pluck('user_id');
-        });
+        $team = $branches->map(
+            function ($branch) {
+                return $branch->manager->pluck('user_id');
+            }
+        );
         return $team->flatten();
     }
-
+    /**
+     * [scopeMyReports description]
+     * 
+     * @param [type] $query [description]
+     * 
+     * @return [type]        [description]
+     */
     public function scopeMyReports($query)
     {
         return $query->descendantsAndSelf();
     }
 
+    public function team()
+    {
+        return $this->descendantsAndSelf()->with('branchesServiced');
+    }
+
     /**
      * [myTeam description]
-     * @return [type] [description]
+     * 
+     * @param Person|null $person [description]
+     * 
+     * @return [type]              [description]
      */
     public function myTeam(Person $person=null)
     {
-        if($person){
+        
+        if ($person) {
             return $person->descendantsAndSelf()->with('branchesServiced');
         }
+       
         return $this->where('user_id', '=', auth()->user()->id)->firstOrFail()
-                ->descendantsAndSelf()->with('branchesServiced');
+            ->descendantsAndSelf()->with('branchesServiced');
     }
     /**
      * [lastUpdatedBranches description]
+     * 
      * @return [type] [description]
      */
     public function lastUpdatedBranches()
     {
         return $this->belongsToMany(Branch::class)
-        ->withTimestamps()
-        ->addSelect('branch_person.updated_at', \DB::raw("MAX(branch_person.updated_at) AS lastdate"))->get();
+            ->withTimestamps()
+            ->addSelect('branch_person.updated_at', \DB::raw("MAX(branch_person.updated_at) AS lastdate"))->get();
     }
-
+    public function mapminerUsage()
+    {
+        return $this->hasManyThrough(Track::class, User::class);
+    }
     /**
      * [scopeStaleBranchAssignments description]
-     * @param  [type] $query [description]
-     * @param  [type] $roles [description]
+     * 
+     * @param [type] $query [description]
+     * @param [type] $roles [description]
+     * 
      * @return [type]        [description]
      */
     public function scopeStaleBranchAssignments($query, $roles)
     {
-        return $query->whereHas('userdetails.roles', function ($q) use ($roles) {
-            $q->whereIn('roles.id', $roles);
-        });
-        // removed for first time pass
-        /*->where(function($q){
-            $q->doesntHave('branchesServiced')
-            ->orWhereHas('branchesServiced',function($q){
-                $q->where('branch_person.updated_at','<',now()->subMonth(2))
-                ->orWhereNull('branch_person.updated_at');
-            });
-        });*/
+        return $query->whereHas(
+            'userdetails.roles', function ($q) use ($roles) {
+                $q->whereIn('roles.id', $roles);
+            }
+        );
+        
     }
 
     /**
      * [manages description]
+     * 
      * @return [type] [description]
      */
     public function manages()
     {
         
         return $this->belongsToMany(Branch::class)
-        ->withTimestamps()->withPivot('role_id');
+            ->withTimestamps()->withPivot('role_id');
     }
     /**
      * [comments description]
+     * 
      * @return [type] [description]
      */
     public function comments()
@@ -170,15 +254,17 @@ class Person extends NodeModel implements HasPresenter
     }
     /**
      * [managesAccount description]
+     * 
      * @return [type] [description]
      */
     public function managesAccount()
     {
         
-        return $this->hasMany(Company::class);
+        return $this->hasMany(Company::class)->orderBy('companyname');
     }
     /**
      * [emailcampaigns description]
+     * 
      * @return [type] [description]
      */
     public function emailcampaigns()
@@ -187,6 +273,7 @@ class Person extends NodeModel implements HasPresenter
     }
     /**
      * [projects description]
+     * 
      * @return [type] [description]
      */
     public function projects()
@@ -195,6 +282,7 @@ class Person extends NodeModel implements HasPresenter
     }
     /**
      * Return user details of person
+     * 
      * @return relation [description]
      */
     public function userdetails()
@@ -203,6 +291,7 @@ class Person extends NodeModel implements HasPresenter
     }
     /**
      * Author of news
+     * 
      * @return relation [description]
      */
     public function authored()
@@ -212,104 +301,130 @@ class Person extends NodeModel implements HasPresenter
     }
     /**
      * [scopeManages description]
-     * @param  [type] $query [description]
-     * @param  [type] $roles [description]
+     * 
+     * @param [type] $query [description]
+     * @param [type] $roles [description]
+     * 
      * @return [type]        [description]
      */
     public function scopeManages($query, $roles)
     {
-        return $query->wherehas('userdetails.roles', function ($q) use ($roles) {
+        return $query->wherehas(
+            'userdetails.roles', function ($q) use ($roles) {
+
                     $q->whereIn('role_id', $roles);
-        });
+            }
+        );
     }
     /**
      * [scopeLeadsByType description]
-     * @param  [type] $query  [description]
-     * @param  [type] $id     [description]
-     * @param  [type] $status [description]
+     * 
+     * @param [type] $query  [description]
+     * @param [type] $id     [description]
+     * @param [type] $status [description]
+     * 
      * @return [type]         [description]
      */
     public function scopeLeadsByType($query, $id, $status)
     {
      
-        return $query->belongsToMany(Lead::class, 'lead_person_status', 'person_id', 'related_id')
-                ->where('lead_source_id', '=', $id)
-                ->withPivot('created_at', 'updated_at', 'status_id', 'rating')
-                ->wherePivot('status_id', 2);
+        return $query->belongsToMany(
+            Lead::class, 'lead_person_status', 'person_id', 'related_id'
+        )
+            ->where('lead_source_id', '=', $id)
+            ->withPivot('created_at', 'updated_at', 'status_id', 'rating')
+            ->wherePivot('status_id', 2);
     }
     /**
      * Create concatenated full name
+     * 
      * @return [type] [description]
      */
     public function fullName()
     {
-        if(! isset($this->attributes['firstname'])){
+        if (! isset($this->attributes['firstname'])) {
             return 'No longer a Mapminer User';
         }
-        return $this->attributes['firstname'] . ' ' . $this->attributes['lastname'];
+        return addslashes($this->attributes['firstname']) . ' ' . addslashes($this->attributes['lastname']);
     }
     /**
-     * Return concatenated name, 
+     * Return concatenated name,
+     *  
      * @return [type] [description]
      */
     public function postName()
     {
 
-        return $this->attributes['lastname'] . ', ' . $this->attributes['firstname'];
+        return addslashes($this->attributes['lastname']) . ', ' . addslashes($this->attributes['firstname']);
     }
-    
+    /**
+     * [distribution description]
+     * 
+     * @return [type] [description]
+     */
+    public function distribution()
+    {
+        return ['name'=>$this->fullName(), 'email'=>$this->userdetails->email];
+    }
     /**
      * [currentleads description]
+     * 
      * @return [type] [description]
      */
     public function currentleads()
     {
         return $this->belongsToMany(Lead::class, 'lead_person_status', 'person_id', 'related_id')
             
-            ->whereHas('leadsource', function ($q) {
-                $q->where('datefrom', '<=', date('Y-m-d'))
-                  ->where('dateto', '>=', date('Y-m-d'));
-            })->withPivot('created_at', 'updated_at', 'status_id', 'rating');
+            ->whereHas(
+                'leadsource', function ($q) {
+                    $q->where('datefrom', '<=', date('Y-m-d'))
+                        ->where('dateto', '>=', date('Y-m-d'));
+                }
+            )->withPivot('created_at', 'updated_at', 'status_id', 'rating');
     }
     /**
      * [leads description]
+     * 
      * @return [type] [description]
      */
     public function leads()
     {
         return $this->belongsToMany(Lead::class, 'lead_person_status', 'person_id', 'related_id')
-        ->withPivot('created_at', 'updated_at', 'status_id', 'rating');
+            ->withPivot('created_at', 'updated_at', 'status_id', 'rating');
     }
     /**
      * [offeredleads description]
+     * 
      * @return [type] [description]
      */
     public function offeredleads()
     {
         return $this->belongsToMany(Lead::class, 'lead_person_status', 'person_id', 'related_id')
-        ->wherePivot('status_id', 1)
-        ->withPivot('created_at', 'updated_at', 'status_id', 'rating');
+            ->wherePivot('status_id', 1)
+            ->withPivot('created_at', 'updated_at', 'status_id', 'rating');
     }
     
     /**
      * [openleads description]
+     * 
      * @return [type] [description]
      */
     public function openleads()
     {
         return $this->belongsToMany(Lead::class, 'lead_person_status', 'person_id', 'related_id')
-        ->wherePivot('status_id', 2)
-        ->withPivot('created_at', 'updated_at', 'status_id', 'rating');
+            ->wherePivot('status_id', 2)
+            ->withPivot('created_at', 'updated_at', 'status_id', 'rating');
     }
     /**
      * [closedleads description]
+     * 
      * @return [type] [description]
      */
     public function closedleads()
     {
         return $this->belongsToMany(Lead::class, 'lead_person_status', 'person_id', 'related_id')
-        ->wherePivot('status_id', 3)
-        ->withPivot('created_at', 'updated_at', 'status_id', 'rating');
+            ->wherePivot('status_id', 3)
+            ->withPivot('created_at', 'updated_at', 'status_id', 'rating');
     }
     /**
      * [scopeLeadsWithStatus description]
