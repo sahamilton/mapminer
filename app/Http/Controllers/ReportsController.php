@@ -195,7 +195,7 @@ class ReportsController extends Controller {
      */
     public function run(Report $report, Request $request)
     {
- 
+        
         if ($data = $this->_getMyBranches($request)) {
             $manager = $data['manager'];
             $myBranches = $data['branches'];

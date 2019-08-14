@@ -91,6 +91,29 @@ class Person extends NodeModel implements HasPresenter
             ->orderBy('branchname');
     }
     /**
+     * [getMyBranches finds branch managers in reporting
+     * strucuture and returns their branches as array]
+     * 
+     * @return array list of branches serviced by reports
+     */
+    public function getMyBranches()
+    {
+       
+        $branches = $this->descendantsAndSelf()
+            ->withRoles([9])
+            ->with('branchesServiced')
+            ->get()
+            ->map(
+                function ($branch) { 
+                    return $branch->branchesServiced->pluck('id')->toArray();
+                }
+            );
+        return array_unique($branches->flatten()->toArray());
+    }
+
+
+
+    /**
      * [myBranches description]
      * 
      * @return [type] [description]

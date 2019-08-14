@@ -1,4 +1,3 @@
-@if($report->period)
 <div class="form-group form-group-lg">
     <label for='fromdate'>From:</label>
     <input class="form-control" 
@@ -24,10 +23,6 @@
         <strong>{{$errors->has('todate') ? $errors->first('todate')  : ''}}</strong>
     </span>
 </div>
-@else
-<input type="hidden" name="period" value="" />
-@endif
-
 
 <div class="form-group form-group-lg">
     <label for='manager'>Manager:</label>

@@ -38,11 +38,21 @@
             <td>
                @if(auth()->user()->hasRole('admin'))
                     @include('reports.partials._actions')
-                @else
+                @elseif ($report->period==1)
                 <a class="btn btn-success"
                     data-href="{{route('reports.run',$report->id)}}" 
                     data-toggle="modal" 
                     data-target="#run-report" 
+                    data-title = "{{$report->report}}" 
+                    href="#">
+                    <i class="fas fa-file-download"></i>
+                    Run Report
+                    </a>
+                @else
+                <a class="btn btn-success"
+                    data-href="{{route('reports.run',$report->id)}}" 
+                    data-toggle="modal" 
+                    data-target="#run-report-wop" 
                     data-title = "{{$report->report}}" 
                     href="#">
                     <i class="fas fa-file-download"></i>
@@ -58,6 +68,7 @@
 </div>
 @if(! auth()->user()->hasRole('admin'))
     @include('reports.partials._variableselector')
+    @include('reports.partials._variableselectorwop')
 @else
     @include('partials._modal')
 @endif
