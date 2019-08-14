@@ -50,8 +50,9 @@ class ReportsController extends Controller {
             $reports = $reports->publicReports();
         }
         $reports = $reports->get();
-        
-        return response()->view('reports.index', compact('reports'));
+        $person = $this->person->where('user_id', auth()->user()->id)->with('directReports')->firstOrFail();
+        $managers = $person->directReports;
+        return response()->view('reports.index', compact('reports', 'managers'));
     }
 
     /**

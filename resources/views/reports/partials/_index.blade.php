@@ -5,7 +5,7 @@
         <a href="{{route('reports.create')}}" class="btn btn-info">Add Report</a>
     </div>
     @endcan
-<table id ='sorttable8' class='table table-striped table-bordered table-condensed table-hover'>
+<table id ='responsive8' class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
         <th>Report</th>
         <th>Description</th>

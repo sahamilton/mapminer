@@ -14,30 +14,32 @@ class CompaniesExport implements FromView
       
     }
     /**
-    * @return \Illuminate\Support\Collection
-    */
+     * [view description]
+     * 
+     * @return [type] [description]
+     */
     public function view(): View
     {
-    	$companies = Company::with('industryVertical','managedBy','serviceline')
+        $companies = Company::with('industryVertical', 'managedBy', 'serviceline')
 
-				
-				->get();
-    	return view('companies.exportcompanies',compact('companies'));
+                
+                ->get();
+        return view('companies.exportcompanies', compact('companies'));
 
     }
 }
 /*Excel::download('AllCompanies',function($excel){
-			$excel->sheet('Companies',function($sheet) {
-				$companies = $this->company
+            $excel->sheet('Companies',function($sheet) {
+                $companies = $this->company
 
-				->with('industryVertical','managedBy','serviceline')
+                ->with('industryVertical','managedBy','serviceline')
 
-				->whereHas('serviceline', function($q){
-							    $q->whereIn('serviceline_id', $this->userServiceLines);
+                ->whereHas('serviceline', function($q){
+                                $q->whereIn('serviceline_id', $this->userServiceLines);
 
-							})
-				->get();
+                            })
+                ->get();
 
-				$sheet->loadview('companies.exportcompanies',compact('companies'));
-			});
-		})->download('csv');*/
+                $sheet->loadview('companies.exportcompanies',compact('companies'));
+            });
+        })->download('csv');*/
