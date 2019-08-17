@@ -10,6 +10,7 @@ use App\Role;
 use App\Company;
 use App\Person;
 use App\SalesOrg;
+use App\Http\Requests\ReportFormRequest;
 use Illuminate\Http\Request;
 use App\Http\Requests\AddRecipientReportRequest;
 use \App\Exports\OpenTop50BranchOpportunitiesExport;
@@ -73,7 +74,7 @@ class ReportsController extends Controller {
      * 
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ReportFormRequest $request)
     {   
 
         $report = $this->report->create(request()->all());
@@ -263,9 +264,9 @@ class ReportsController extends Controller {
             $job = "\App\Jobs\\". $report->job; 
             if (request()->has('company')) {
                 $company = $this->company->findOrFail(request('company'));
-                dispatch(new $job($company, $period, $myBranches));
+                dispatch(new $job($company, $period, $myBranches, $report));
             } else {
-                dispatch(new $job($period, $myBranches));
+                dispatch(new $job($period, $myBranches, $report));
             }   
             return redirect()->back();
         } else {

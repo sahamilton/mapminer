@@ -36,7 +36,7 @@ class Report extends Model
      */
     public function distribution()
     {
-        return $this->belongsToMany(User::class, 'report_distribution');
+        return $this->belongsToMany(User::class, 'report_distribution')->withTimestamps();
     }
     /**
      * RoleDistribution [description]
@@ -45,7 +45,7 @@ class Report extends Model
      */
     public function roleDistribution()
     {
-        return $this->belongsToMany(Role::class, 'report_distribution');
+        return $this->belongsToMany(Role::class, 'report_distribution')->withTimestamps();
     }
 
     /**
@@ -82,9 +82,10 @@ class Report extends Model
      */
     public function getDistribution()
     {
+        
         $distribution = $this->distribution->map(
-            function ($user) {
-                return ['email'=>$user->email, 'name'=>$user->person->fullName()];
+            function ($person) {
+                return ['email'=>$person->userdetails->email, 'name'=>$person->fullName()];
             }
         );
         if ($distribution->count()==0) {
