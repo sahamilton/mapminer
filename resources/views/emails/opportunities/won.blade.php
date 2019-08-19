@@ -1,12 +1,9 @@
 @component('mail::message')
-# Introduction
+# Opportunity Won
 
-The body of your message.
+The {{$opportunity->branch->branch->branchname}} branch has won the {{$opportunity->title}} opportunity at {{$opportunity->address->address->businessname}}, {{$opportunity->address->address->city}} valued at ${{number_format($opportunity->value,2)}}.
 
-@component('mail::button', ['url' => ''])
-Button Text
-@endcomponent
 
-Thanks,<br>
+Congratulations!<br>
 {{ config('app.name') }}
 @endcomponent

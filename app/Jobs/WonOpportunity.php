@@ -2,6 +2,9 @@
 
 namespace App\Jobs;
 
+use App\Opportunity;
+use Mail;
+use App\Mail\WonOpportunityNotification;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -12,14 +15,16 @@ class WonOpportunity implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    public $opportunity;
+
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(Opportunity $opportunity)
     {
-        //
+        $this->opportunity = $opportunity;
     }
 
     /**
@@ -29,6 +34,33 @@ class WonOpportunity implements ShouldQueue
      */
     public function handle()
     {
-        //
+        $this->opportunity->load('branch', 'branch.branch.manager');
+        $distribution = $this->_getDistribution();
+        
+        Mail::to($distribution)->send(new WonOpportunityNotification($this->opportunity)); 
+    }
+
+
+    private function _getDistribution()
+    {
+       
+  
+        $managers =$this->opportunity->branch->branch->manager->map(
+            function ($mgr) { 
+                return $mgr->ancestorsAndSelf()->with('userdetails')->get(); 
+            }
+        );
+        
+        $list = [];
+        foreach ($managers as $manager) {
+            foreach ($manager as $mgr) {
+                if (in_array($mgr->business_title, ['Market Manager', 'RVP'])) {
+                    $list[] = ['name'=>$mgr->fullName(), 'email'=>$mgr->userdetails->email];
+                }
+                
+            }
+            
+        }
+        return $list;
     }
 }

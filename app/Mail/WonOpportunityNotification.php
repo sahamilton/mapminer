@@ -32,8 +32,8 @@ class WonOpportunityNotification extends Mailable
      */
     public function build()
     {
-        $this->opportunity->load('branch', 'branchmanager');
         
+
         return $this->markdown('emails.opportunities.won');
     }
 }

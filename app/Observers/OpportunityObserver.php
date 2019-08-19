@@ -2,10 +2,83 @@
 
 namespace App\Observers;
 
+use App\Jobs\WonOpportunity;
 use App\Opportunity;
 
 class OpportunityObserver
 {
+    // limit to eric lynn's branches
+    public $branches = [ "7254",
+             "1678",
+             "1687",
+             "1693",
+             "2666",
+             "1686",
+             "1708",
+             "1677",
+             "1689",
+             "8058",
+             "1684",
+             "1691",
+             "1679",
+             "1676",
+             "1160",
+             "1159",
+             "3300",
+             "1152",
+             "1151",
+             "1161",
+             "2256",
+             "1153",
+             "7386",
+             "1875",
+             "1610",
+             "1611",
+             "3424",
+             "1605",
+             "1878",
+             "1661",
+             "1668",
+             "1669",
+             "7262",
+             "1665",
+             "3062",
+             "3063",
+             "7261",
+             "2681",
+             "3064",
+             "3426",
+             "1115",
+             "2255",
+             "2752",
+             "2961",
+             "2254",
+             "2753",
+             "1150",
+             "2702",
+             "1149",
+             "2751",
+             "2700",
+             "3400",
+             "3403",
+             "3430",
+             "3431",
+             "3433",
+             "8038",
+             "3434",
+             "3418",
+             "3422",
+             "3404",
+             "3411",
+             "3417",
+             "2685",
+             "2686",
+             "2684",
+             "3401",
+             "3416",
+             "3413",
+             "1455",
+            ];
     /**
      * Handle the opportunity "created" event.
      *
@@ -20,13 +93,16 @@ class OpportunityObserver
     /**
      * Handle the opportunity "updated" event.
      *
-     * @param  \App\Opportunity  $opportunity
+     * @param \App\Opportunity $opportunity 
+     * 
      * @return void
      */
     public function updated(Opportunity $opportunity)
     {
-        if ($opportunity->won == 1) {
-            return Mail::queue(new WonOpportunityNotification($opportunity));
+        // limiting to Eric Lynn's branches
+        if ($opportunity->closed == 1 && in_array($opportunity->branch_id, $this->branches)) {
+            
+             WonOpportunity::dispatch($opportunity);
         }
     }
 
