@@ -33,15 +33,14 @@ class DailyBranchExport implements FromView
     {
         
         $person = Person::where('id', $this->person)->firstOrFail();
+        $myBranches= $person->getMyBranches();
         
-        $myBranches = $person->getMyBranches();
         
         $branches = Branch::summaryStats($this->period)
             ->with('manager', 'manager.reportsTo')
             ->whereIn('id', $myBranches)->get();
         
         $period = $this->period;
-        
         return view('reports.dailybranchstats', compact('branches', 'period', 'person'));
     }
 }

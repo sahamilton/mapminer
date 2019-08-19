@@ -40,6 +40,6 @@ class Top50WeekReportExport implements FromView
 
         $opportunities->groupBy('branch_id')->get();
  
-       return view('reports.weeklyreport', compact('opportunities', 'period'));
+        return view('reports.weeklyreport', compact('opportunities', 'period'));
     }
 }

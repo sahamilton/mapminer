@@ -10,8 +10,10 @@ class FeedbackExport implements FromView
 {
     
     /**
-    * @return \Illuminate\Support\Collection
-    */
+     * [view description]
+     * 
+     * @return [type] [description]
+     */
     public function view(): View
     {
         $feedback = $feedback =  Feedback::with('providedBy', 'comments', 'comments.by')->get();

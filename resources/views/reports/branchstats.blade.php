@@ -17,6 +17,7 @@
 			<th><b>Sum of Won Value</b></th>
 			<th><b># Open Leads</b></th>
 			<th><b># Completed Activities</b></th>
+			<th><b># Completed Sales Appts</b></th>
 			
 		</tr>
 
@@ -42,6 +43,7 @@
 				<td>{{$branch->wonvalue}}</td>
 				<td>{{$branch->leads_count}}</td>
 				<td>{{$branch->activities_count}}</td>
+				<td>{{$branch->salesappts_count}}</td>
 				
 			</tr>
 		@endforeach

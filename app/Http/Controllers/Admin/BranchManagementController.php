@@ -12,6 +12,8 @@ use App\Http\Controllers\BaseController;
 use App\BranchManagement;
 use App\Http\Requests\BranchAssignmentRequest;
 use Mail;
+use Excel;
+use App\Exports\BranchManagerExport;
 
 
 use Illuminate\Http\Request;
@@ -28,6 +30,16 @@ class BranchManagementController extends BaseController
     public $branchmanagement;
     
     public $branchRoles = [3,5,11,9,13];
+    /**
+     * [__construct description]
+     * 
+     * @param Branch           $branch           [description]
+     * @param Person           $person           [description]
+     * @param Role             $role             [description]
+     * @param BranchManagement $branchmanagement [description]
+     * @param Serviceline      $serviceline      [description]
+     * @param Campaign         $campaign         [description]
+     */
     public function __construct(
         Branch $branch,
         Person $person,
@@ -46,7 +58,11 @@ class BranchManagementController extends BaseController
         $this->branchmanagement = $branchmanagement;
         parent::__construct($this->branch);
     }
-
+    /**
+     * [index description]
+     * 
+     * @return [type] [description]
+     */
     public function index()
     {
 
@@ -55,27 +71,28 @@ class BranchManagementController extends BaseController
 
         $roles = $this->role->whereIn('id', $this->branchRoles)->get();
  
-        $branches = $this->branchesWithoutManagers();
-        $people = $this->managersWithoutBranches();
+        $branches = $this->_branchesWithoutManagers();
+        $people = $this->_managersWithoutBranches();
 
         return response()->view('admin.branches.manage', compact('branches', 'people', 'roles'));
     }
 
-        /**
-     * Display a listing of the resource.
-     * Get list of sales people with stale branch assignments
-     * @return \Illuminate\Http\Response
+    /**
+     * [select description]
+     * 
+     * @return [type] [description]
      */
-
     public function select()
     {
 
-            $roles = $this->role->wherehas('permissions', function ($q) {
+            $roles = $this->role->wherehas(
+                'permissions', function ($q) {
                     $q->where('permissions.name', '=', 'service_branches');
-            })
-            ->pluck('name', 'id')->toArray();
-            
-            $servicelines = $this->serviceline->whereIn('id', $this->userServiceLines)->get()->pluck('ServiceLine', 'id')->toArray();
+                }
+            )
+                ->pluck('name', 'id')->toArray();
+                
+                $servicelines = $this->serviceline->whereIn('id', $this->userServiceLines)->get()->pluck('ServiceLine', 'id')->toArray();
 
             
             // we need to move this to a model, db or config
@@ -83,33 +100,39 @@ class BranchManagementController extends BaseController
      
             return response()->view('admin.branches.select', compact('roles', 'message', 'servicelines'));
     }
-
+    /**
+     * [confirm description]
+     * 
+     * @param BranchAssignmentRequest $request [description]
+     * 
+     * @return [type]                           [description]
+     */
     public function confirm(BranchAssignmentRequest $request)
     {
         
     
         $recipients = $this->branchmanagement->getRecipients($request);
         $test = request('test');
-        $campaign = $this->createCampaign($request);
+        $campaign = $this->_createCampaign($request);
       
         return response()->view('admin.branches.confirm', compact('recipients', 'test', 'campaign'));
     }
     /**
-     * Email the selected roles
-     *
-     * @param  Request  $request
-     * @return \Illuminate\Http\Response
+     * [emailAssignments description]
+     * 
+     * @param Request $request [description]
+     * 
+     * @return [type]           [description]
      */
-
     public function emailAssignments(Request $request)
     {
 
-            $emails = 0;
+        $emails = 0;
            
         if (request('id')) {
             $campaign = $this->campaign->findOrFail(request('campaign_id'));
             $recipients = $this->branchmanagement->getConfirmedRecipients($request);
-            $this->addRecipients($campaign, $recipients);
+            $this->_addRecipients($campaign, $recipients);
             $campaign->update(['expiration' => Carbon::now()->addDays(request('days'))]);
                 
             //$campaign = $this->createCampaign($recipients,$request);
@@ -119,37 +142,69 @@ class BranchManagementController extends BaseController
         }
             return redirect()->route('branchassignment.check')->withMessage('No emails sent.');
     }
-
-    private function createCampaign($request)
+    /**
+     * [_createCampaign description]
+     * 
+     * @param [type] $request [description]
+     * 
+     * @return [type]          [description]
+     */
+    private function _createCampaign($request)
     {
         
         return $this->campaign->create(['type'=>'branch assignment email','test'=>request('test'),'route'=>'branchassignment.check','message'=>request('message'),'created_by'=>auth()->user()->id]);
     }
-
-    private function addRecipients($campaign, $recipients)
+    /**
+     * [_addRecipients description]
+     * 
+     * @param [type] $campaign   [description]
+     * @param [type] $recipients [description]
+     */
+    private function _addRecipients($campaign, $recipients)
     {
         return $campaign->participants()->attach($recipients);
     }
     
-
-    private function branchesWithoutManagers()
+    /**
+     * [_branchesWithoutManagers description]
+     * 
+     * @return [type] [description]
+     */
+    private function _branchesWithoutManagers()
     {
         return $this->branch
             ->doesntHave('manager')
-            ->orWhere(function ($q) {
-                $q->doesntHave('businessmanager')
-                ->doesntHave('marketmanager');
-            })
+            ->orWhere(
+                function ($q) {
+                    $q->doesntHave('businessmanager')
+                        ->doesntHave('marketmanager');
+                }
+            )
             ->with('servicelines', 'manager', 'marketmanager', 'businessmanager')
             ->get();
     }
-
-    private function managersWithoutBranches()
+    /**
+     * [_managersWithoutBranches description]
+     * 
+     * @return [type] [description]
+     */
+    private function _managersWithoutBranches()
     {
         return $this->person
-        ->with('userdetails.roles', 'reportsTo', 'userdetails.serviceline')
-        ->doesntHave('manages')
-        ->manages($this->branchRoles)
-        ->get();
+            ->with('userdetails.roles', 'reportsTo', 'userdetails.serviceline')
+            ->doesntHave('manages')
+            ->manages($this->branchRoles)
+            ->get();
+    }
+    /**
+     * [noManagers description]
+     * 
+     * @param string $mgr [description]
+     * 
+     * @return [type]      [description]
+     */
+    public function noManagers(string $mgr)
+    {
+        return Excel::download(new BranchManagerExport($mgr), 'ManagerLessBranch.csv');
     }
 }

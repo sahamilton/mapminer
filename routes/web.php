@@ -705,7 +705,7 @@ Route::group(
                 $period['from'] = \Carbon\Carbon::now()->subMonth()->startOfDay();
                 $period['to'] = \Carbon\Carbon::yesterday()->endOfDay();
                 // App\Jobs\Top50WeeklyReport::dispatch();
-                App\Jobs\BranchLogins::dispatch($period);
+                //App\Jobs\BranchLogins::dispatch($period);
                 //App\Jobs\DailyBranch::dispatch($period, $user);
                  //App\Jobs\AccountActivities::dispatch($company, $period);
                 //App\Jobs\BranchOpportunities::dispatch($period);
@@ -722,12 +722,12 @@ Route::group(
                  }
                  $period['from'] = now();
                  $period['to'] = now()->addWeek();
-                 App\Jobs\WeeklyActivityReminder::dispatch($period);
-                 App\Jobs\WeeklyOpportunitiesReminder::dispatch();
-                 $period['from'] = \Carbon\Carbon::now()->subWeek()->startOfWeek();
+                 App\Jobs\WeeklyActivityReminder::dispatch($period);*/
+                 //App\Jobs\WeeklyOpportunitiesReminder::dispatch();
+                 /*$period['from'] = \Carbon\Carbon::now()->subWeek()->startOfWeek();
                  $period['to'] = \Carbon\Carbon::now();
                 App\Jobs\BranchStats::dispatch($period);*/
-                //App\Jobs\ActivityOpportunity::dispatch($period);
+                App\Jobs\ActivityOpportunity::dispatch($period);
                 /*//App\Jobs\ActivityOpportunityReport::dispatch();
                 
                 //App\Jobs\ZipBackup::dispatch('MMProd20190123');

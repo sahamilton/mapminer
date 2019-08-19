@@ -14,12 +14,14 @@ class CompanyWithLocationsExport implements FromView
       
     }
     /**
-    * @return \Illuminate\Support\Collection
-    */
+     * [view description]
+     * 
+     * @return [type] [description]
+     */
     public function view(): View
     {
-    	$company = $this->company->load('locations');
-    	return view('locations.exportlocations',compact('company'));
+        $company = $this->company->load('locations');
+        return view('locations.exportlocations', compact('company'));
 
     }
 }

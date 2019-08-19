@@ -10,7 +10,12 @@ class LeadSourceExport implements FromView
 {
     public $leadsource;
     public $statuses;
-
+    /**
+     * [__construct description]
+     * 
+     * @param LeadSource $leadsource [description]
+     * @param [type]     $statuses   [description]
+     */
     public function __construct(LeadSource $leadsource, $statuses)
     {
         $this->leadsource = $leadsource;
@@ -18,20 +23,22 @@ class LeadSourceExport implements FromView
     }
     
     /**
-    * @return \Illuminate\Support\View
-    */
+     * [view description]
+     * 
+     * @return [type] [description]
+     */
     public function view(): View
     {
- 		/*Excel::download('Prospects'.time(), function ($excel) use ($id) {
+        /*Excel::download('Prospects'.time(), function ($excel) use ($id) {
             $excel->sheet('Prospects', function ($sheet) use ($id) {
                
                 $sheet->loadView('leadsource.export', compact('leadsource', 'statuses'));
             });
         })->download('csv');*/
 
- 		$leadsource = $this->leadsource;
- 		$statuses = $this->statuses;
- 	
-       return view('leadsource.export', compact('leadsource', 'statuses'));
+        $leadsource = $this->leadsource;
+        $statuses = $this->statuses;
+    
+        return view('leadsource.export', compact('leadsource', 'statuses'));
     }
 }

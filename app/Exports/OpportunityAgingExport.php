@@ -25,11 +25,13 @@ class OpportunityAgingExport implements FromView
     }
     
     /**
-    * @return \Illuminate\Support\View
-    */
+     * [view description]
+     * 
+     * @return [type] [description]
+     */
     public function view(): View
     {
- 		$data = $this->data;
-       return view('persons.export',compact('data'));
+        $data = $this->data;
+        return view('persons.export', compact('data'));
     }
 }
