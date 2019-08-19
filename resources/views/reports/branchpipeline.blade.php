@@ -3,14 +3,14 @@
     <thead>
         <tr></tr>
         <tr><th colspan="9">Branch Pipeline</th></tr>
-        <tr><th colspan='9'>For the period from {{now()->format('M Y')}} to {{now()->addMonths(5)->format('M Y')}}</th></tr>
+        <tr><th colspan='9'>For the period from {{$period['from']->format('Y-m-d')}} to {{$period['to']->format('Y-m-d')}}</th></tr>
         <tr></tr>
         <tr>
             <th><b>Branch ID</b></th>
             <th><b>Branch Name</b></th>
             <th><b>Branch Manager</b></th>
-            @foreach ($period as $month)
-            <th><b>{{$month}}</b></th>
+            @foreach ($periods as $per)
+            <th><b>{{$per}}</b></th>
             @endforeach
             
         </tr>
@@ -19,13 +19,6 @@
     <tbody>
         @foreach ($branches as $branch)
         
-        @php 
-        $branchresults = array_values(array_intersect_key($results,  array_flip(array_keys(array_column($results, 'id'), $branch->id))));
-        
-        
-
-        @endphp
-
             <tr>
                 <td>{{$branch->id}}</td>
 
@@ -36,31 +29,18 @@
                     {{$manager->fullName()}}
                     @if(! $loop->last)/@endif
                     @endforeach
-                </td>
-                @foreach ($period as $month)
+                </td> 
+                @foreach($periods as $per)
+                    @php $opp = $branch->opportunities->where('yearweek', $per); @endphp
                     <td>
-                        @if($branchresults)
-                            
-                            @php $monthkey = array_keys(array_column($branchresults,'month'), $month); 
-                            $thismonth = reset($monthkey);
-
-                            @endphp
-                           
-                            @if(isset($branchresults[$thismonth]))
-                                 
-                                {{$branchresults[$thismonth]->value}}
-                            @else
-                                
-                            0
-
-                            @endif
-                            
-                            
+                        @if($opp->count() ==1)
+                            ${{number_format($opp->first()->funnel,0)}}
                         @else
                         0
                         @endif
                     </td>
-                   @endforeach
+                    
+                @endforeach
                 
             </tr>
         @endforeach

@@ -704,8 +704,8 @@ Route::group(
                  //$company = App\Company::findOrFail(532);
                 $period['from'] = \Carbon\Carbon::now()->subMonth()->startOfDay();
                 $period['to'] = \Carbon\Carbon::yesterday()->endOfDay();
-                $opportunity = App\Opportunity::has('branch')->first();
-                App\Jobs\WonOpportunity::dispatch($opportunity);
+                //$opportunity = App\Opportunity::has('branch')->first();
+                //App\Jobs\WonOpportunity::dispatch($opportunity);
                 // App\Jobs\Top50WeeklyReport::dispatch();
                 //App\Jobs\BranchLogins::dispatch($period);
                 //App\Jobs\DailyBranch::dispatch($period, $user);
@@ -719,9 +719,9 @@ Route::group(
                  $filename = pathinfo($file)['filename'];
                  App\Jobs\ZipBackUp::withChain([new App\Jobs\UploadToDropbox($filename)])
                         ->dispatch($filename)->onQueue('mapminer');
-                 }
+                 }*/
                  
-                 }
+                 /*}
                  $period['from'] = now();
                  $period['to'] = now()->addWeek();
                  App\Jobs\WeeklyActivityReminder::dispatch($period);*/

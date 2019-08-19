@@ -226,14 +226,23 @@ class Opportunity extends Model
         return $query->selectRaw('FROM_DAYS(TO_DAYS(actual_close) -MOD(TO_DAYS(actual_close) -2, 7)) as yearweek,count(*) as opportunities')
             ->groupBy(['yearweek']);
     } 
-
-    public function scopeOpenMonthlyFunnel($query)
+    /**
+     * [scopeOpenWeeklyFunnel description]
+     * 
+     * @param [type] $query  [description]
+     * @param [type] $period [description]
+     * 
+     * @return [type]         [description]
+     */
+    public function scopeOpenWeeklyFunnel($query, $period)
     {
         return $query->selectRaw(
-            "opportunities.branch_id, DATE_FORMAT(opportunities.expected_close,'%Y%m') 
-              as month,sum(`value`) as funnel"
-        )
-            ->groupBy(['opportunities.branch_id','month'])
-            ->orderBy('month', 'asc');
+            "opportunities.branch_id, FROM_DAYS(TO_DAYS(actual_close) -MOD(TO_DAYS(actual_close) -2, 7)) as yearweek 
+              ,sum(`value`) as funnel"
+        )->whereBetween('expected_close', [$period['from'], $period['to']])
+            ->where('closed', 0)
+            ->groupBy(['opportunities.branch_id','yearweek'])
+            ->orderBy('yearweek', 'asc');
+
     }         
 }

@@ -12,6 +12,7 @@ class BranchPipelineExport implements FromView
     
    
     public $branches;
+    public $period;
     
     /**
      * [__construct description]
@@ -21,6 +22,10 @@ class BranchPipelineExport implements FromView
     public function __construct(Array $period = null, Array $branches=null)
     {
         $this->branches = $branches;
+        if (! $period) {
+            $this->period['from']= now()->startOfWeek();
+            $this->period['to'] = now()->addWeeks(8)->endOfWeek();
+        }
        
        
     }
@@ -32,11 +37,23 @@ class BranchPipelineExport implements FromView
      */
     public function view(): View
     {
+        $period['from'] = now()->startOfWeek();
+        $period['to'] = now()->addWeeks(8)->endOfWeek();
+        $branches = Branch::with('manager')
+            ->whereIn('id', array_keys($this->branches))
+            ->with(
+                ['opportunities' => function ($q) use ($period) {
+                    $q->whereBetween('expected_close', [$period['from'], $period['to']])
+                        ->where('closed', 0)
+                        ->selectRaw('FROM_DAYS(TO_DAYS(expected_close) -MOD(TO_DAYS(expected_close) -2, 7)) as yearweek, sum(value) as funnel')
+                        ->groupBy('expected_close');
+                }
+                ]
+            )
+            ->get();
        
-        $branches = Branch::with('manager')->whereIn('id', array_keys($this->branches))->get();
-      
        
-        $query = "select branches.id,
+       /* $query = "select branches.id,
              DATE_FORMAT(opportunities.expected_close,'%Y%m') 
               as month, 
               sum(opportunities.value) as value
@@ -49,25 +66,29 @@ class BranchPipelineExport implements FromView
                  and branches.id in ('" . implode("','", array_keys($this->branches)) ."')
                  group by month, branchname order by branchname, month";
        
-        $results = \DB::select($query);              
-        $period = $this->_createPeriods();
-        return view('reports.branchpipeline', compact('results', 'period', 'branches'));
+        $results = \DB::select($query);  */            
+        $periods = $this->_createPeriods($period);
+       
+        return view('reports.branchpipeline', compact('periods', 'period', 'branches'));
     }
     /**
      * [_createPeriods Create an array of the 6 months into the future]
      * 
      * @return [type] [description]
      */
-    private function _createPeriods()
+    private function _createPeriods($period)
     {
-        $start = new Carbon('first day of this month');
-        
-        for ($i = 0; $i <= 5; $i++) {
-            $period[$i] = $start->format('Ym');
-            $start->addMonth()->format('Ym');
+        $start = clone($period['from']);
+        $end = clone($period['to']);
+        $pers = array();
+        for ($i = 0; $start <= $end; $i++) {
+
+            $pers[$i] = clone($start);
+            $pers[$i] = $pers[$i]->format('Y-m-d');
+            $start->addWeek();
+
         }
-        
-        
-        return $period;
+
+        return $pers;
     }
 }
