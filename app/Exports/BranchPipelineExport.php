@@ -25,6 +25,8 @@ class BranchPipelineExport implements FromView
         if (! $period) {
             $this->period['from']= now()->startOfWeek();
             $this->period['to'] = now()->addWeeks(8)->endOfWeek();
+        } else {
+            $this->period = $period;
         }
        
        
@@ -37,13 +39,12 @@ class BranchPipelineExport implements FromView
      */
     public function view(): View
     {
-        $period['from'] = now()->startOfWeek();
-        $period['to'] = now()->addWeeks(8)->endOfWeek();
+        
         $branches = Branch::with('manager')
             ->whereIn('id', array_keys($this->branches))
             ->with(
-                ['opportunities' => function ($q) use ($period) {
-                    $q->whereBetween('expected_close', [$period['from'], $period['to']])
+                ['opportunities' => function ($q)  {
+                    $q->whereBetween('expected_close', [$this->period['from'], $this->period['to']])
                         ->where('closed', 0)
                         ->selectRaw('FROM_DAYS(TO_DAYS(expected_close) -MOD(TO_DAYS(expected_close) -2, 7)) as yearweek, sum(value) as funnel')
                         ->groupBy('expected_close');
@@ -67,8 +68,8 @@ class BranchPipelineExport implements FromView
                  group by month, branchname order by branchname, month";
        
         $results = \DB::select($query);  */            
-        $periods = $this->_createPeriods($period);
-       
+        $periods = $this->_createPeriods();
+        $period = $this->period;
         return view('reports.branchpipeline', compact('periods', 'period', 'branches'));
     }
     /**
@@ -76,10 +77,10 @@ class BranchPipelineExport implements FromView
      * 
      * @return [type] [description]
      */
-    private function _createPeriods($period)
+    private function _createPeriods()
     {
-        $start = clone($period['from']);
-        $end = clone($period['to']);
+        $start = clone($this->period['from']);
+        $end = clone($this->period['to']);
         $pers = array();
         for ($i = 0; $start <= $end; $i++) {
 
