@@ -1,7 +1,7 @@
 <div class="container">
 <table id ='responsive5'  class="display responsive no-wrap" width="100%">
     <thead>
-        <th>Opportunity!!</th>
+        <th>Opportunity</th>
         <th>Address</th>
         <th>Expected Close</th>
         <th>Distance</th>
@@ -14,7 +14,11 @@
             
             <td><a href="{{route('mobile.show',$result->address_id)}}">{{$result->title}}</a></td>
             <td>{{$result->address->address->fullAddress()}}</td>
-            <td>{{$result->expected_close->format('Y-m-d')}}</td>
+            <td>
+                @if($result->expected_close)
+                    {{$result->expected_close->format('Y-m-d')}}
+                @endif
+            </td>
             <td>{{number_format($result->distance,2)}} mi</td>
             <td>
                 @if($result->address->address->lastActivity->count() >0)
