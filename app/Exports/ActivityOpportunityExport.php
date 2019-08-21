@@ -32,7 +32,7 @@ class ActivityOpportunityExport implements FromView
      */
     public function view(): View
     {
-
+        
         $query = "select branches.id as branch_id,
             branches.branchname as branchname, 
             a.salesmeetings,

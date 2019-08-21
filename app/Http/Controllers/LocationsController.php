@@ -337,15 +337,17 @@ class LocationsController extends BaseController
         $data['location'] = asset(Storage::url($file));
         $data['basepath'] = base_path()."/public".Storage::url($file);
         // read first line headers of import file
-        $locations = Excel::import($data['basepath'], function ($reader) {
-        })->first();
+        $locations = Excel::import(
+            $data['basepath'], function ($reader) {
+            }
+        )->first();
 
         if ($this->location->fillable !== array_keys($locations->toArray())) {
             dd($this->location->fillable, array_keys($locations->toArray()));
             
             return redirect()->back()
-            ->withInput(request()->all())
-            ->withErrors(['upload'=>['Invalid file format.  Check the fields:', array_diff($this->location->fillable, array_keys($locations->toArray())), array_diff(array_keys($locations->toArray()), $this->location->fillable)]]);
+                ->withInput(request()->all())
+                ->withErrors(['upload'=>['Invalid file format.  Check the fields:', array_diff($this->location->fillable, array_keys($locations->toArray())), array_diff(array_keys($locations->toArray()), $this->location->fillable)]]);
         }
 
         $data['table'] ='locations';

@@ -49,8 +49,13 @@ class UserFormRequest extends FormRequest
             $branchrules = ['branches'=>'required_without:branchstring',
                         'branchstring'=>'required_without:branches',];
         }
-        return array_merge($salesrules, $branchrules, $rules) ;
+        return array_merge($salesrules, $branchrules, $rules);
     }
+    /**
+     * [messages description]
+     * 
+     * @return [type] [description]
+     */
     public function messages()
     {
         return [

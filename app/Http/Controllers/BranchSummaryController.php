@@ -46,7 +46,7 @@ class BranchSummaryController extends Controller
 
             $activities = $this->_getThisWeeksBranchActivities($branch);
             $upcoming = $this->_getUpcomingOpportunities($branch);
-            dd($activities->count(), $upcoming);
+           
             return response()->view('branches.summary', compact('upcoming', 'activities', 'branches'));
 
         } else {

@@ -300,7 +300,7 @@ trait Geocode
      */
     public function distanceFromMe($collection)
     {
-        dd($collection);
+        
         $myPosition = $this->getMyPosition();
         return $collection->map(
             function ($item) use ($myPosition) {

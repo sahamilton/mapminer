@@ -31,6 +31,7 @@ class ActivityOpportunity implements ShouldQueue
         $this->period = $period;
         
         $this->branches = $branches;
+
     }
 
     /**
@@ -47,9 +48,9 @@ class ActivityOpportunity implements ShouldQueue
         $report = Report::with('distribution', 'distribution.person', 'distribution.person.userdetails')
             ->where('job', $class)
             ->firstOrFail();
-        dd($report);
+     
         $distribution = $report->getDistribution();
-        dd($distribution);
+       
         Mail::to($distribution)
             ->send(new WeeklyActivityOpportunityReport($file, $this->period));
     }

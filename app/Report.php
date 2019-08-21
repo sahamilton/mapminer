@@ -82,15 +82,17 @@ class Report extends Model
      */
     public function getDistribution()
     {
-        
+      
         $distribution = $this->distribution->map(
-            function ($person) {
-                return ['email'=>$person->userdetails->email, 'name'=>$person->fullName()];
+            function ($user) {
+                return ['email'=>$user->email, 'name'=>$user->person->fullName()];
             }
         );
+     
         if ($distribution->count()==0) {
             $distribution = [['email'=>config('mapminer.system_contact'), 'name'=>'Unknown Recipient']];
-        }
+        } 
+      
         return $distribution;
     }
     /**

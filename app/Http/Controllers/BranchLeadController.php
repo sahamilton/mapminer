@@ -153,6 +153,6 @@ class BranchLeadController extends Controller
                 BranchLead::create($data);
             }
         }
-        dd($a, 'unassigned');
+       
     }
 }
