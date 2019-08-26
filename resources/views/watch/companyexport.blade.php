@@ -28,14 +28,14 @@
 			<td>
 				@foreach ($location->watchedBy as $watcher)
 					{{$watcher->person->fullName()}}
-					@if(! $loop->last)<br />@endif
+					@if(! $loop->last) / @endif
 				@endforeach
 			</td>
 			<td>
 				@foreach ($location->relatedNotes as $note)
 					{{$note->note}}-
 					@if($note->writtenBy){{$note->writtenBy->person->postName()}} -@endif  {{$note->created_at->format('m-d-Y')}}
-					@if(! $loop->last)<br />@endif
+					@if(! $loop->last) / @endif
 				@endforeach
 			</td>
 			</tr>

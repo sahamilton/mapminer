@@ -207,7 +207,7 @@ class WatchController extends BaseController {
                 ->has('watchedBy')
                 ->with('relatedNotes', 'relatedNotes.writtenBy', 'company', 'watchedBy', 'watchedBy.person')
                 ->get();
-            return Excel::download(new CompanyWatchExport($result), 'Activities.csv');
+            return Excel::download(new CompanyWatchExport($result), 'ActiveWatcher.csv');
             /*Excel::download(
                 'Watch_List_for_', function ($excel) use ($accounts) {
                     $excel->sheet(
