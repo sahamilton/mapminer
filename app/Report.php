@@ -82,7 +82,7 @@ class Report extends Model
      */
     public function getDistribution()
     {
-      
+       
         $distribution = $this->distribution->map(
             function ($user) {
                 return ['email'=>$user->email, 'name'=>$user->person->fullName()];

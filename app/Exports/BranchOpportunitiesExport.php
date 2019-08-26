@@ -38,7 +38,6 @@ class BranchOpportunitiesExport implements FromView
             $branches =$branches->whereIn('id', array_keys($this->branches));
         }   
         $branches = $branches->get();
-     
 
         $period = $this->period;
         return view('reports.branchopportunities', compact('branches', 'period'));

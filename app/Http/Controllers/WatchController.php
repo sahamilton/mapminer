@@ -5,133 +5,135 @@ use App\Watch;
 use App\User;
 use App\Location;
 use App\Document;
+use App\Address;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\WatchListExport;
 use App\Exports\UsersExport;
+use App\Exports\CompanyWatchExport;
 
 class WatchController extends BaseController {
-	protected $watch;
-	public $document;
-	
-	
-	/**
-	 * Display a listing of locations on watch list
-	 *
-	 * @return Response
-	 */
-	public function __construct(Watch $watch, Document $document) 
-	{
-		$this->document = $document;
-		$this->watch = $watch;
-	}
-	
-	
-	public function index()
-	{
-	
-		$watchlist = $this->watch->getMyWatchList(auth()->user()->id);
-		
-		return response()->view('watch.index', compact('watchlist'));
+    protected $watch;
+    public $document;
+    
+    
+    /**
+     * Display a listing of locations on watch list
+     *
+     * @return Response
+     */
+    public function __construct(Watch $watch, Document $document) 
+    {
+        $this->document = $document;
+        $this->watch = $watch;
+    }
+    
+    
+    public function index()
+    {
+    
+        $watchlist = $this->watch->getMyWatchList(auth()->user()->id);
+        
+        return response()->view('watch.index', compact('watchlist'));
 
-	}
+    }
 
-	
-	/**
-	 * Create a new watched locationed
-	 *
-	 * @return list of watched locations
-	 */
-	
-	public function create($id)
-	{
-		
-		$this->watch->create(['user_id'=>auth()->user()->id,'address_id'=>$id]);
-	    return redirect()->route('watch.index');
-	}
-	
-	/**
-	 * Store new watched location
-	 *
-	 * 
-	 */
-	protected function add($id) {
-		
-		
-		return $this->watch->create(['user_id'=>auth()->user()->id,'address_id'=>$id]);
-		
-	}
-	
-	
-	/**
-	 * Remove the specified watched location.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function destroy($id)
-	{
-		$this->delete($id);
-		
+    
+    /**
+     * Create a new watched locationed
+     *
+     * @return list of watched locations
+     */
+    
+    public function create($id)
+    {
+        
+        $this->watch->create(['user_id'=>auth()->user()->id,'address_id'=>$id]);
+        return redirect()->route('watch.index');
+    }
+    
+    /**
+     * Store new watched location
+     *
+     * 
+     */
+    protected function add($id) {
+        
+        
+        return $this->watch->create(['user_id'=>auth()->user()->id,'address_id'=>$id]);
+        
+    }
+    
+    
+    /**
+     * Remove the specified watched location.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function destroy($id)
+    {
+        $this->delete($id);
+        
 
-		return redirect()->route('watch.index');
-	}
-	
-	/**
-	 * Delete the specified watched location from storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	
-	public function delete($id) {
-		
-		$watch = $this->watch->find($id);
-		
-		if ($watch && $watch->destroy($id)) {
-			return redirect()->route('watch.index')->with('success','Watch item deleted');
-		}
-		return redirect()->route('watch.index')->with('error','Unable to delete that item');
-	}
-	/**
-	 * Show watch list for user.
-	 *
-	 * @param  int  $user_id
-	 * @return list of watched locations for given user
-	 */
-	
-	
-	public function watching($user) {
-		
-		
-		$watch = $this->watch->getMyWatchList($user->id);
-		
-		
-		return response()->view('watch.show', compact('watch','user'));
-		
-		
-	}
-	
-	
-	
-	/**
-	 * Create CSV of watch list.
-	 *
-	 * @return Response
-	 */
-	
-	public function export ($id=NULL) {
-		if (! $id) {
-			$id = auth()->id();
-		}
-		$user = User::find($id);
-		return Excel::download(new WatchListExport($id), 'Watch_List_for_'.$user->fullName().'.csv');
-		/*Excel::download('Watch_List_for_'.$user->fullName(),function($excel) use($id) {
-			$excel->sheet('Watching',function($sheet) use($id) {
-				$result = $this->watch->getMyWatchList($id);
-				$sheet->loadview('watch.export',compact('result'));
-			});
-		})->download('csv');*/
+        return redirect()->route('watch.index');
+    }
+    
+    /**
+     * Delete the specified watched location from storage.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    
+    public function delete($id) {
+        
+        $watch = $this->watch->find($id);
+        
+        if ($watch && $watch->destroy($id)) {
+            return redirect()->route('watch.index')->with('success','Watch item deleted');
+        }
+        return redirect()->route('watch.index')->with('error','Unable to delete that item');
+    }
+    /**
+     * Show watch list for user.
+     *
+     * @param  int  $user_id
+     * @return list of watched locations for given user
+     */
+    
+    
+    public function watching($user) {
+        
+        
+        $watch = $this->watch->getMyWatchList($user->id);
+        
+        
+        return response()->view('watch.show', compact('watch','user'));
+        
+        
+    }
+    
+    
+    
+    /**
+     * Create CSV of watch list.
+     *
+     * @return Response
+     */
+    
+    public function export ($id=NULL) {
+        if (! $id) {
+            $id = auth()->id();
+        }
+        $user = User::find($id);
+        return Excel::download(new WatchListExport($id), 'Watch_List_for_'.$user->fullName().'.csv');
+        /*Excel::download('Watch_List_for_'.$user->fullName(),function($excel) use($id) {
+            $excel->sheet('Watching',function($sheet) use($id) {
+                $result = $this->watch->getMyWatchList($id);
+                $sheet->loadview('watch.export',compact('result'));
+            });
+        })->download('csv');*/
     }
     
     
@@ -201,15 +203,25 @@ class WatchController extends BaseController {
 
         if (request()->has('id')) {
             $accounts = explode(",", str_replace("'", "", request('id')));
-
-            Excel::download('Watch_List_for_', function ($excel) use ($accounts) {
-                $excel->sheet('Watching', function ($sheet) use ($accounts) {
-                    $result = Location::whereIn('company_id', $accounts)->has('watchedBy')
-                    ->with('relatedNotes', 'relatedNotes.writtenBy', 'company', 'watchedBy', 'watchedBy.person')
-                    ->get();
-                    $sheet->loadview('watch.companyexport', compact('result'));
-                });
-            })->download('csv');
+            $result = Address::whereIn('company_id', $accounts)
+                ->has('watchedBy')
+                ->with('relatedNotes', 'relatedNotes.writtenBy', 'company', 'watchedBy', 'watchedBy.person')
+                ->get();
+            return Excel::download(new CompanyWatchExport($result), 'Activities.csv');
+            /*Excel::download(
+                'Watch_List_for_', function ($excel) use ($accounts) {
+                    $excel->sheet(
+                        'Watching', function ($sheet) use ($accounts) {
+                            $result = Location::whereIn('company_id', $accounts)->has('watchedBy')
+                                ->with('relatedNotes', 'relatedNotes.writtenBy', 'company', 'watchedBy', 'watchedBy.person')
+                                ->get();
+                            dd($result);
+                            $sheet->loadview('watch.companyexport', compact('result'));
+                        }
+                    );
+                }
+            )->download('csv');
+            */
         }
     }
 

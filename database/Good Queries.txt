@@ -244,10 +244,39 @@ from branches,opportunities
 where branches.id = opportunities.branch_id
 and opportunities.closed = 0
 group by branchname
+/////////////////////////////////////////////////
 
 branch::whereHas(opportunities,function($q){
   $q->where('closed','=',0);
 })->select('branchname', DB::raw('count(opportunities.id) as open,count(opportunities.top50 as top50'))->groupBy('branchname')->get();
  /// Get random addresses
+
 SELECT @min := MIN(id), @max := MAX(id) FROM addresses;
 SELECT DISTINCT id, businessname, street, address2, city, state, zip, lat, lng FROM addresses AS a JOIN ( SELECT FLOOR(@min + (@max - @min + 1) * RAND()) AS id FROM addresses LIMIT 50 -- more than 10 (to compensate for dups) ) b USING (id) LIMIT 25
+
+
+/////////////////////////////////////////////////
+Check if branch managers report to the branches MM
+
+SELECT a.branch_id, 
+    concat_ws(' ', c.firstname, c.lastname) as 'Branch Manager', 
+    concat_ws(' ', e.firstname, e.lastname) as 'Reports to Manager',
+    concat_ws(' ', f.firstname, f.lastname) as 'Who Reports',
+    concat_ws(' ', d.firstname, d.lastname) as 'Branch MM',
+    concat_ws(' ', g.firstname, g.lastname) as 'Who Reports'
+    
+from persons c, persons d, persons e, persons f, persons g, branch_person a
+
+left join branch_person b
+on a.branch_id = b.branch_id
+
+where a.role_id = 9
+and c.deleted_at is null
+and d.deleted_at is null
+and b.role_id = 3
+and a.person_id = c.id
+and b.person_id != c.reports_to
+and b.person_id = d.id
+and c.reports_to = e.id
+and e.reports_to = f.id
+and d.reports_to = g.id

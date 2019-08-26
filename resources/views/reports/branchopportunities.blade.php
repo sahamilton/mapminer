@@ -17,6 +17,7 @@
 	</thead>
 	<tbody>
 		@foreach ($branches as $branch)
+
 			<tr>
 				<td>{{$branch->id}}</td>
 				<td>{{$branch->branchname}}</td>

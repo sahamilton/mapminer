@@ -1,5 +1,6 @@
 <h4>Active Watchers</h4>
-@php $accountstring = implode(",",$data['accounts']); @endphp
+
+@php $accountstring = implode(",",array_keys($data['accounts'])); @endphp
 
 <a href="{{route('company.watchexport')}}?id='{{strip_tags($accountstring)}}'" title="Download {{$data['title']}}watch list as a CSV / Excel file"><i class="fas fa-cloud-download-alt" aria-hidden="true"></i></i> Download Watch List</a>
 
