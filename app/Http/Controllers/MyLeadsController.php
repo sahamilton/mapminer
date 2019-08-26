@@ -45,7 +45,7 @@ class MyLeadsController extends BaseController
      */
     public function index($branch=null)
     {
-              
+        
         if (!  $myBranches = $this->person->myBranches()) {
             return redirect()->back()->withError('You are not assigned to any branches');
         }
@@ -58,6 +58,11 @@ class MyLeadsController extends BaseController
             session(['branch'=>$branch]);
 
         } elseif (session('branch')) {
+
+            if (! in_array(session('branch'), array_keys($this->person->myBranches()))) {
+                
+                return redirect()->back()->withError('Something has gone wrong here. Please advise Sales Operations');
+            }
             $branch = session('branch');
         
         } else {   
@@ -69,7 +74,7 @@ class MyLeadsController extends BaseController
         }
         
         $data = $this->_getBranchLeads([$branch]);
-      
+        
         $title= $data['branches']->first()->branchname . " leads";
 
         return response()->view('myleads.branches', compact('data', 'myBranches', 'title'));
