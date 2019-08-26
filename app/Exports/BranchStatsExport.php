@@ -29,12 +29,14 @@ class BranchStatsExport implements FromView
      */
     public function view(): View
     {
+        
+       
         if ($this->branches) {
-            $branch = Branch::whereIn('id', $this->branches);
+            $branch = Branch::whereIn('id', array_keys($this->branches));
         } else {
             $branch = new Branch;
         }
-
+       
         $branches = $branch->summaryStats($this->period)
             ->with('manager')->get();
        

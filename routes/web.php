@@ -702,8 +702,10 @@ Route::group(
         Route::get(
             'testjob', function () {
                  //$company = App\Company::findOrFail(532);
-                $period['from'] = \Carbon\Carbon::now()->subMonth()->startOfDay();
-                $period['to'] = \Carbon\Carbon::yesterday()->endOfDay();
+                $period['from'] = \Carbon\Carbon::now()->subWeek()->startOfWeek()->startOfDay();
+                $period['to'] = \Carbon\Carbon::now()->subWeek()->endOfWeek()->endOfDay();;
+
+                App\Jobs\ActivityOpportunity::dispatch($period);
                 //$opportunity = App\Opportunity::has('branch')->first();
                 //App\Jobs\WonOpportunity::dispatch($opportunity);
                 // App\Jobs\Top50WeeklyReport::dispatch();
