@@ -6,7 +6,7 @@
 @php $statuses = ['open','closed - won','closed - lost']; @endphp
 @include('maps.partials._form')
 <h2>Pipeline Opportunities</h2>
-<p><a href="{{route('dashboard.index')}}">Return To Branch Dashboard</a></p>
+<p><a href="{{route('dashboard.show', session('branch'))}}">Return To Branch Dashboard</a></p>
 
 @if(count($myBranches)>1)
 

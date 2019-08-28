@@ -322,6 +322,7 @@ Route::group(
         //     User (Profile) settings
         Route::resource('user', 'UsersController', ['only' => ['show', 'update']]);;
         
+        Route::get('resetpassword', ['as'=>'reset.password', 'uses'=>'Auth\\ResetPasswordController@showResetForm']);
         // legacy login address
         Route::get(
             'user/login', function () {

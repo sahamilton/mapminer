@@ -17,7 +17,7 @@
 			id="branchselect" 
 			name="branch" 
 			onchange="this.form.submit()">
-				<option value="">Select</option>
+				
 				@foreach ($data['branches'] as $key=>$branchname)
 					<option {{$branch->id == $key ? 'selected' :''}} value="{{$key}}">{{$branchname}}</option>
 				@endforeach 

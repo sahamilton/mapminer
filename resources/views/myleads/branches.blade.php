@@ -2,7 +2,7 @@
 @section('content')
 
 <h1>{{$title}}</h1>
-<p><a href="{{route('dashboard.index')}}">Return To Branch Dashboard</a></p>
+<p><a href="{{route('dashboard.show', $data['branches']->first()->id)}}">Return To Branch Dashboard</a></p>
 @if(count($myBranches)>1)
     <div class="col-sm-4">
         <form name="selectbranch" method="post" action="{{route('leads.branch')}}" >

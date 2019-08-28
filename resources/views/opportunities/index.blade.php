@@ -3,7 +3,7 @@
 <div class="container">
 <h2>{{$data['branches']->first()->branchname}} Branch Opportunities</h2>
 
-<p><a href="{{route('dashboard.index')}}">Return To Branch Dashboard</a></p>
+<p><a href="{{route('dashboard.show', $data['branches']->first()->id)}}">Return To Branch Dashboard</a></p>
 @php $activityTypes = \App\ActivityType::all(); @endphp
 @if(count($myBranches)>1)
 
