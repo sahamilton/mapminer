@@ -320,7 +320,7 @@ Route::group(
         //   Impersonate
         Route::impersonate();
         //     User (Profile) settings
-        Route::resource('user', 'UsersController', ['only' => ['index', 'show', 'update']]);;
+        Route::resource('user', 'UsersController', ['only' => ['show', 'update']]);;
         
         // legacy login address
         Route::get(
