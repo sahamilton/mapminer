@@ -32,8 +32,8 @@ class DailyBranch implements ShouldQueue
     {
        
         
-        $this->period['from'] = Carbon::yesterday()->startOfDay();
-        $this->period['to'] = Carbon::yesterday()->endOfDay();
+        $this->period['from'] = Carbon::today()->startOfDay();
+        $this->period['to'] = Carbon::today()->endOfDay();
         
 
     }
