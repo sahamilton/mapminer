@@ -60,22 +60,29 @@ class UserImportCleanseController extends Controller
     }
     public function createNewUsers(Request $request)
     {
-        // we need to chunk this //
-
-        $import = $this->import->whereIn('id', request('insert'))->chunk(25, function ($users) {
-            foreach ($users as $import) {
-                $newuser = $this->user->create($import->toArray());
-                $newuser->roles()->sync([$import->role_id]);
-                $import->user_id=$newuser->id;
-                $person = $this->person->create($import->toArray());
-                $import->person_id = $person->id;
-                $import->save();
-            }
-        });
+        
+        $import = $this->import->whereIn('id', request('insert'))
+            ->chunk(
+                25, function ($users) {
+                    foreach ($users as $import) {
+                        
+                        $newuser = $this->user->create(array_filter($import->toArray()));
+                        $newuser->roles()->sync([request('role')[$import->id]]);
+                        $import->user_id=$newuser->id;
+                        $person = $this->person->create(array_filter($import->toArray()));
+                        $import->person_id = $person->id;
+                        $import->save();
+                    }
+                }
+            );
         return redirect()->route('importcleanse.index')->withMessage("All created");
     }
 
+    private function _cleanseImport($data)
+    {
 
+        return $data;
+    }
 
     public function bulkdestroy(Request $request)
     {

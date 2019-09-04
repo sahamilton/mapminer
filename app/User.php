@@ -433,16 +433,14 @@ class User extends Authenticatable
         return $query->whereNull('lastlogin');
     }
 
-
-    
-
     /**
-   * scopeLastLogin Select last login of user]
-   * @param  QueryBuilder $query    [description]
-   * @param  Array $interval intervale['from','to']
-   * @return QueryBuilder          [description]
-   */
-
+     * [scopeUpcomingActivities description]
+     * 
+     * @param [type] $query    [description]
+     * @param [type] $nextdays [description]
+     * 
+     * @return [type]           [description]
+     */
     public function scopeUpcomingActivities($query,$nextdays)
     {
        

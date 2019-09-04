@@ -766,8 +766,8 @@ class Branch extends Model implements HasPresenter
                 $query->whereBetween(
                     'activity_date', [$this->period['from'],$this->period['to']]
                 )
-                ->where('completed', 1)
-                ->where('activitytype_id', 13);
+                    ->where('completed', 1)
+                    ->where('activitytype_id', 13);
             },
             'activities as salesapptsscheduled'=>function ($query) {
                 $query->whereBetween(

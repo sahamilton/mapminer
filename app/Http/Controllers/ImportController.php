@@ -35,7 +35,7 @@ class ImportController extends BaseController
     protected function uploadfile($file)
     {
        
-        $file = $file->store('public/uploads');
+        $file = $file->store('uploads');
         $data['file'] = $file;
         $data['linkfile'] = asset(\Storage::url($file));
        

@@ -7,8 +7,8 @@
 <h2>@if(isset($title)) {{$title}} @endif</h2>
 
 <form method="post" 
-	action ="{{route($data['route'])}}" 
-	name = "mapfields">
+    action ="{{route($data['route'])}}" 
+    name = "mapfields">
 {{csrf_field()}}
 <table class="table">
 <thead>
@@ -66,30 +66,20 @@
 <!-- / File location -->
 <input type="submit" class="btn btn-success" value="Map Fields" />
 
-@if(isset($data['lead_source_id']))
-    <input type="hidden" name="lead_source_id" value="{{$data['lead_source_id']}}" />
-@endif
 @if(isset($data['additionaldata']))
     @foreach ($data['additionaldata'] as $key=>$value)
     <input type="hidden" name="additionaldata[{{$key}}]" value="{{$value}}" />
     @endforeach
 @endif
-@if(isset($data['serviceline']))
-<input type="hidden" name="serviceline" value="{{$data['serviceline']}}" />
-@endif
-@if(isset($data['step']))
-<input type = "hidden" name="step" value="{{$data['step']}}" />
-@endif
-@if(isset($data['contacts']))
-<input type = "hidden" name="contacts" value="{{$data['contacts']}}" />
-@endif
-@if(isset($data['branch_ids']))
-    <input type = "hidden" name="branch_ids" value="{{$data['branch_ids']}}" />
-@endif
+@php $hidden = ['lead_source_id', 'serviceline', 'step', 'contacts', 'branch_ids', 'file', 'type']; @endphp
 
-<input type="hidden" name="type" value="{{$data['type']}}" />
+@foreach ($hidden as $hide)
+    @if(isset($data[$hide]))
+        <input type="hidden" name="{{$hide}}" value="{{$data[$hide]}}" />
+    @endif
+
+@endforeach
+
 </form>
 </div>
-
-
 @endsection

@@ -606,7 +606,11 @@ Route::group(
         Route::post('user/importcleanse/insert', ['as'=>'user.importinsert', 'uses'=>'UserImportCleanseController@createNewUsers']);
         Route::get('user/importfinal', ['as'=>'user.importfinal', 'uses'=>'UserImportCleanseController@importAllUsers']);
         Route::get('user/importflush', ['as'=>'importcleanse.flush', 'uses'=>'UserImportCleanseController@flush']);
-        Route::resource('user/importcleanse', 'UserImportCleanseController');
+
+        Route::get('user/bulkdelete', ['as'=>'bulkdelete', 'uses'=>'Admin\AdminUsersController@bulkdelete']);
+        Route::post('user/bulkdelete', ['as'=>'users.bulkdelete', 'uses'=>'Admin\AdminUsersController@confirmDelete']);
+        Route::post('user/massdelete', ['as'=>'users.massdelete', 'uses'=>'Admin\AdminUsersController@massDelete']);
+        Route::resource('user/importcleanse', 'UsersImportController');
 
 
 

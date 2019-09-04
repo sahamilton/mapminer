@@ -42,8 +42,13 @@ class UsersImportController extends ImportController
     public function index()
     {
 
-        $imports = $this->import->whereNull('person_id')->orWhereNull('user_id')->get();
-        return response()->view('admin.users.import.index', compact('imports'));
+        $newPeople = $this->import->whereNull('person_id')
+            ->orWhereNull('user_id')
+            ->get();
+
+        $roles = \App\Role::all();
+
+        return response()->view('admin.users.import.new', compact('newPeople', 'roles'));
     }
     /**
      * [getFile description]
@@ -72,9 +77,10 @@ class UsersImportController extends ImportController
     public function import(UsersImportFormRequest $request)
     {
 
-
+       
         $this->import->truncate();
         $data = $this->uploadfile(request()->file('upload'));
+
         $data['table']='usersimport';
            
         $data['type']=request('type');
@@ -87,7 +93,7 @@ class UsersImportController extends ImportController
         $_addColumns = ['branches','role_id','mgr_emp_id','manager','reports_to','industry','address','city','state','zip','serviceline','hiredate','business_title','fullname'];
         $addColumn = $this->_addColumns($_addColumns);
 
-          $columns = array_merge($this->import->getTableColumns('users'), $this->import->getTableColumns('persons'), $addColumn);
+        $columns = array_merge($this->import->getTableColumns('users'), $this->import->getTableColumns('persons'), $addColumn);
 
 
         $requiredFields = $this->import->requiredFields;
@@ -106,7 +112,9 @@ class UsersImportController extends ImportController
 
     
         $data = $this->getData(request()->all());
+        $data['table'] = 'usersimport';
         $this->import->setFields($data);
+
         if ($multiple = $this->import->detectDuplicateSelections(request('fields'))) {
             return redirect()->route('users.importfile')->withError(['You have to mapped a field more than once.  Field: '. implode(' , ', $multiple)]);
         }
@@ -114,11 +122,13 @@ class UsersImportController extends ImportController
         if ($missing = $this->import->validateImport(request('fields'))) {
             return redirect()->route('users.importfile')->withError(['You have to map all required fields.  Missing: '. implode(' , ', $missing)]);
         }
-      
+        
         if ($this->import->import()) {
             $this->import->postImport();
           
             return redirect()->route('importcleanse.index');
+        } else {
+            dd('whoops');
         }
     }
 

@@ -827,4 +827,24 @@ class AdminUsersController extends BaseController
 
         return redirect()->route('deleted.users')->withWarning($user->deletedperson->fullName() . ' has been permanently deleted');
     }
+
+    public function bulkdelete()
+    {
+        return response()->view('admin.users.import.deleteusers');
+    }
+
+    public function confirmDelete(Request $request)
+    {
+        $users = $this->user
+            ->with('person', 'person.reportsTo', 'person.directReports')
+            ->whereIn('employee_id', explode("\r\n", request('user_ids')))
+            ->get();
+        return response()->view('admin.users.import.deleteconfirm', compact('users'));
+    }
+
+    public function massDelete(Request $request)
+    {
+        $this->user->whereIn('id', request('user_id'))->delete();
+        return redirect()->route('users.index')->withMessage('Users deleted');
+    }
 }

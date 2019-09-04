@@ -4,12 +4,13 @@
 <h4>New Users to Create</h4>
 <form name="createnewusers" method="post" action = "{{route('user.importinsert')}}" >
 	@csrf
-<table class="table" id ="nosorttable">
+<table class="table table-striped table-bordered" id ="nosorttable">
 	<thead>
 		<th><input type="checkbox" checked id="checkAll"></th>
 		<th>First Name</th>
 		<th>Last Name</th>
 		<th>Employee ID</th>
+		<th>Business Title</th>
 		<th>Role</th>
 		<th>Manager</th>
 		<th>Manager Employee Id</th>
@@ -21,13 +22,16 @@
 				<td>{{$person->firstname}}</td>
 				<td>{{$person->lastname}}</td>
 				<td>{{$person->employee_id}}</td>
+				<td>{{$person->business_title}}</td>
 				<td>
-					@if($person->role)
-						{{$person->role->name}}
-					@endif
+					<select name="role[{{$person->id}}]" >
+						@foreach ($roles as $role)
+							<option value="{{$role->id}}">{{$role->display_name}}</option>
+						@endforeach
+					</select>
 				</td>
 				<td>{{$person->manager}}</td>
-				<td>{{$person->mgr_emp_id}}</td>
+				<td>{{$person->reports_to}}</td>
 			</tr>
 		@endforeach
 	</tbody>
