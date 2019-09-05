@@ -713,7 +713,7 @@ Route::group(
                 //App\Jobs\BranchLogins::dispatch($period);
                 //App\Jobs\DailyBranch::dispatch($period, $user);
                  //App\Jobs\AccountActivities::dispatch($company, $period);
-                App\Jobs\BranchOpportunities::dispatch($period);
+                //App\Jobs\BranchOpportunities::dispatch($period);
                  //App\Jobs\RebuildPeople::dispatch();
                 //App\Jobs\BranchLogins::dispatch($period);
                  /*$filesInFolder = \File::files(storage_path('backups'));
@@ -730,8 +730,8 @@ Route::group(
                  App\Jobs\WeeklyActivityReminder::dispatch($period);*/
                  //App\Jobs\WeeklyOpportunitiesReminder::dispatch();
                  /*$period['from'] = \Carbon\Carbon::now()->subWeek()->startOfWeek();
-                 $period['to'] = \Carbon\Carbon::now();
-                App\Jobs\BranchStats::dispatch($period);*/
+                 $period['to'] = \Carbon\Carbon::now();*/
+                App\Jobs\BranchStats::dispatch($period);
                 //App\Jobs\ActivityOpportunity::dispatch($period);
                 /*//App\Jobs\ActivityOpportunityReport::dispatch();
                 

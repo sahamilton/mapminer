@@ -43,7 +43,7 @@
 				<td>{{$branch->wonvalue}}</td>
 				<td>{{$branch->leads_count}}</td>
 				<td>{{$branch->activities_count}}</td>
-				<td>{{$branch->salesappts_count}}</td>
+				<td>{{$branch->salesappts}}</td>
 				
 			</tr>
 		@endforeach

@@ -295,3 +295,6 @@ and branch_person.role_id = 9
 and branch_person.person_id = persons.id
 and persons.deleted_at is null
 >>>>>>> Stashed changes
+
+///////////// Find branches with multiple managers
+SELECT branch_id, count(person_id) as COUNT FROM `branch_person`, persons WHERE role_id = 9 and persons.id = person_id and persons.deleted_at is null group by branch_id having count >1

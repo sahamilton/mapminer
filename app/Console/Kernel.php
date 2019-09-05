@@ -83,14 +83,14 @@ class Kernel extends ConsoleKernel
                 ->sundays()
                 ->at('18:30');
             
-            // Branch Stats Report
+            /* Branch Stats Report
             $period['from'] = Carbon::now()->subMonth(2)->startOfMonth();  
             $period['to'] = Carbon::now()->subWeek()->endOfWeek();
             $schedule->job(new BranchStats($period))
                 ->weekly()
                 ->wednesdays()
                 ->at('01:59');
-            
+            */
             // Branch Login Report
             $period['from'] = Carbon::now()->subMonth(2)->startOfMonth();  
             $period['to'] = Carbon::now()->subWeek()->endOfWeek();

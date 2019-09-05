@@ -748,8 +748,7 @@ class Branch extends Model implements HasPresenter
             'activities'=>function ($query) {
                 $query->whereBetween(
                     'activity_date', [$this->period['from'],$this->period['to']]
-                )
-                    ->where('completed', 1);
+                )->where('completed', 1);
             },
             'activities as openactivities'=>function ($query) {
                 $query->where('completed', 0)->orWhereNull('completed');
@@ -758,8 +757,7 @@ class Branch extends Model implements HasPresenter
             'activities as salesappts'=>function ($query) {
                 $query->whereBetween(
                     'activity_date', [$this->period['from'],$this->period['to']]
-                )
-                    ->where('completed', 1)
+                )->where('completed', 1)
                     ->where('activitytype_id', 4);
             },
             'activities as logacall'=>function ($query) {
