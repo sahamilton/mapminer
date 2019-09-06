@@ -1,3 +1,4 @@
+
 Good Queries
 
 //       Open but Closed opportunities
@@ -298,3 +299,35 @@ and persons.deleted_at is null
 
 ///////////// Find branches with multiple managers
 SELECT branch_id, count(person_id) as COUNT FROM `branch_person`, persons WHERE role_id = 9 and persons.id = person_id and persons.deleted_at is null group by branch_id having count >1
+
+
+/////////////////////////////////////
+//Get leads with no activities or opportunities for region
+
+SELECT addresses.*, address_branch.branch_id, leadsources.source FROM `addresses`, leadsources, address_branch left join activities on address_branch.address_id = activities.address_id left join opportunities on address_branch.id = opportunities.address_branch_id WHERE addresses.lead_source_id = leadsources.id and address_branch.address_id = addresses.id and address_branch.branch_id in (1711, 1702, 1701, 1719, 1707, 1713, 1788, 3024, 1754, 1752, 1780, 2924, 1750, 1742, 1751, 2855, 1749, 1770, 1771, 2852, 7250, 1753, 1740, 1756, 8026, 2898, 2928, 8064, 2861, 1767, 1807, 1852, 1459, 2814, 1746, 1806, 2931, 1802, 2643, 1794, 1748, 1808, 1460) and activities.id is null and opportunities.id is null
+
+//////
+REmoved from branch.php
+
+    /*
+    Calculate bounding box coordinates
+
+    
+    private function _getPositionCoordinates($lat, $lng, $distance)
+    {
+        
+
+        $coordinates['lat']= $lat;
+        $coordinates['lon'] = $lng;
+        $coordinates['dist'] = $distance;
+        $location = Geolocation::fromDegrees($lat, $lng);
+        $box = $location->boundingCoordinates($distance, 'mi');
+
+        $coordinates['rlon1'] = $box['min']->degLon;
+        $coordinates['rlon2'] = $box['max']->degLon;
+        $coordinates['rlat1'] = $box['min']->degLat;
+        $coordinates['rlat2'] = $box['max']->degLat;
+    
+        return $coordinates;
+    }
+    */

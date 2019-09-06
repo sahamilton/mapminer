@@ -261,13 +261,24 @@ class Branch extends Model implements HasPresenter
             ->whereDoesntHave('opportunities'); 
 
     }
-
+    /**
+     * [branchLeads description]
+     * 
+     * @return [type] [description]
+     */
     public function branchLeads()
     {
         return  $this->belongsToMany(Address::class, 'address_branch', 'branch_id', 'address_id')
             ->whereDoesntHave('opportunities')->where('lead_source_id', 4); 
     }
-    
+    /**
+     * [scopeBranchLeadsPeriod description]
+     * 
+     * @param [type] $query  [description]
+     * @param [type] $period [description]
+     * 
+     * @return [type]         [description]
+     */
     public function scopeBranchLeadsPeriod($query, $period)
     {
         return $query->whereHas(
@@ -333,28 +344,6 @@ class Branch extends Model implements HasPresenter
 
     
    
-    /*
-    Calculate bounding box coordinates
-
-    
-    private function getPositionCoordinates($lat, $lng, $distance)
-    {
-        
-
-        $coordinates['lat']= $lat;
-        $coordinates['lon'] = $lng;
-        $coordinates['dist'] = $distance;
-        $location = Geolocation::fromDegrees($lat, $lng);
-        $box = $location->boundingCoordinates($distance, 'mi');
-
-        $coordinates['rlon1'] = $box['min']->degLon;
-        $coordinates['rlon2'] = $box['max']->degLon;
-        $coordinates['rlat1'] = $box['min']->degLat;
-        $coordinates['rlat2'] = $box['max']->degLat;
-    
-        return $coordinates;
-    }
-    */
     /**
      * [getBranchIdFromid description]
      * 
@@ -519,6 +508,31 @@ class Branch extends Model implements HasPresenter
             $request['lat']= $latlng['lat'];
             $request['lng']= $latlng['lng'];
             return $request;
+
+    }
+    /**
+     * [scopeDeadLeads description]
+     * 
+     * @param [type] $query [description]
+     * 
+     * @return [type]        [description]
+     */
+    public function scopeDeadLeads($query, $period)
+    {
+
+        return $query->withCount(
+            ['leads as deadleads'=>function ($query) use ($period) {
+                $query
+                    ->where('addresses.lead_source_id', "!=", 4)
+                    ->where('address_branch.created_at', '<', $period['from'])
+                    ->where(
+                        function ($q) {
+                            $q->whereDoesntHave('opportunities')
+                                ->whereDoesntHave('activities');
+                        }
+                    );
+            }]
+        );
 
     }
     /**
