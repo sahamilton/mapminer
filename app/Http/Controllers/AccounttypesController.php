@@ -2,15 +2,18 @@
 namespace App\Http\Controllers;
 
 use App\AccountType;
+use App\Company;
 use App\Http\Requests\AccountTypeRequest;
 
 class AccounttypesController extends BaseController
 {
 
     public $accounttype;
-    public function __construct(Accounttype $accounttype)
+    public $company;
+    public function __construct(Accounttype $accounttype, Company $company)
     {
         $this->accounttype = $accounttype;
+        $this->company = $company;
     }
 
 
@@ -21,7 +24,7 @@ class AccounttypesController extends BaseController
      */
     public function index()
     {
-        $accounttypes = $this->accounttype->active()->get();
+        $accounttypes = $this->accounttype->withCount('companies')->get();
         
         return response()->view('accounttypes.index', compact('accounttypes'));
     }
@@ -56,13 +59,14 @@ class AccounttypesController extends BaseController
      * @param  int  $id
      * @return Response
      */
-    public function show($id)
+    public function show(AccountType $type)
     {
-        //$accounttype = Accounttype::where('id','=',$id)->get();
-        //$accounttype->load('companies');
-        $accounttype = $this->accounttype->where('id', '=', $id)->get();
         
-        return response()->view('accounttypes.show', compact('accounttype'));
+        $companies = $this->company->where('accounttypes_id', $type->id)->companyStats()->get();
+        
+        return response()->view('accounttypes.show', compact('companies', 'type'));
+
+    
     }
 
     /**
