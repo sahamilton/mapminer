@@ -58,7 +58,7 @@ class Kernel extends ConsoleKernel
             $period['to'] = Carbon::now()->subWeek()->endOfWeek();
             $schedule->job(new BranchStats($period))
                 ->weekly()
-                ->sundays()
+                ->mondays()
                 ->at('23:15');
             // RVP Daily Branch Report
             // 
@@ -82,15 +82,7 @@ class Kernel extends ConsoleKernel
                 ->weekly()
                 ->sundays()
                 ->at('18:30');
-            
-            // Branch Stats Report
-            $period['from'] = Carbon::now()->subMonth(2)->startOfMonth();  
-            $period['to'] = Carbon::now()->subWeek()->endOfWeek();
-            $schedule->job(new BranchStats($period))
-                ->weekly()
-                ->wednesdays()
-                ->at('01:59');
-            
+          
             // Branch Login Report
             $period['from'] = Carbon::now()->subMonth(2)->startOfMonth();  
             $period['to'] = Carbon::now()->subWeek()->endOfWeek();

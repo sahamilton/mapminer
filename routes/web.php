@@ -46,8 +46,6 @@ Route::group(
         Route::get('followup', ['as'=>'followup', 'uses'=>'ActivityController@future']);
         Route::resource('activity', 'ActivityController');
         
-           //     AccountTypes
-        Route::resource('accounttype', 'AccounttypesController', ['only' => ['index', 'show']]);
         //     Address
         Route::post('address/{address}/rating', ['as'=>'address.rating', 'uses'=>'AddressController@rating']);
         Route::resource('address', 'AddressController');
@@ -354,7 +352,8 @@ Route::group(
         
         //   Activity types
             Route::resource('activitytype', 'ActivityTypeController');
-        
+           //     AccountTypes
+        Route::resource('accounttype', 'AccounttypesController');
         //   Address
         Route::get('address/import', ['as'=>'address.importfile', 'uses'=>'AddressImportController@getfile']);
         
@@ -717,7 +716,7 @@ Route::group(
                 //App\Jobs\BranchLogins::dispatch($period);
                 //App\Jobs\DailyBranch::dispatch($period, $user);
                  //App\Jobs\AccountActivities::dispatch($company, $period);
-                App\Jobs\BranchOpportunities::dispatch($period);
+                //App\Jobs\BranchOpportunities::dispatch($period);
                  //App\Jobs\RebuildPeople::dispatch();
                 //App\Jobs\BranchLogins::dispatch($period);
                  /*$filesInFolder = \File::files(storage_path('backups'));
@@ -734,8 +733,8 @@ Route::group(
                  App\Jobs\WeeklyActivityReminder::dispatch($period);*/
                  //App\Jobs\WeeklyOpportunitiesReminder::dispatch();
                  /*$period['from'] = \Carbon\Carbon::now()->subWeek()->startOfWeek();
-                 $period['to'] = \Carbon\Carbon::now();
-                App\Jobs\BranchStats::dispatch($period);*/
+                 $period['to'] = \Carbon\Carbon::now();*/
+                App\Jobs\BranchStats::dispatch($period);
                 //App\Jobs\ActivityOpportunity::dispatch($period);
                 /*//App\Jobs\ActivityOpportunityReport::dispatch();
                 

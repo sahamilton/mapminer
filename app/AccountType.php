@@ -12,7 +12,7 @@ class AccountType extends Model
     ];
 
     // Don't forget to fill this array
-    protected $fillable = [];
+    protected $fillable = ['type'];
     /**
      * [companies description]
      * 

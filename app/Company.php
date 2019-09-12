@@ -359,6 +359,21 @@ class Company extends NodeModel
 
 
     }
-
+    public function scopeCompanyStats($query)
+    {
+        return $query->withCount('locations')
+            ->withCount(
+                ['locations as leads' => function ($q) {
+                    $q->whereHas('assignedToBranch');
+                },
+                'locations as opportunities' => function ($q) {
+                    $q->whereHas('opportunities');
+                },
+                'locations as worked' => function ($q) {
+                    $q->whereHas('activities');
+                }
+                ]
+            );
+    }
 
 }
