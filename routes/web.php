@@ -46,8 +46,6 @@ Route::group(
         Route::get('followup', ['as'=>'followup', 'uses'=>'ActivityController@future']);
         Route::resource('activity', 'ActivityController');
         
-           //     AccountTypes
-        Route::resource('accounttype', 'AccounttypesController', ['only' => ['index', 'show']]);
         //     Address
         Route::post('address/{address}/rating', ['as'=>'address.rating', 'uses'=>'AddressController@rating']);
         Route::resource('address', 'AddressController');
@@ -354,7 +352,8 @@ Route::group(
         
         //   Activity types
             Route::resource('activitytype', 'ActivityTypeController');
-        
+           //     AccountTypes
+        Route::resource('accounttype', 'AccounttypesController');
         //   Address
         Route::get('address/import', ['as'=>'address.importfile', 'uses'=>'AddressImportController@getfile']);
         

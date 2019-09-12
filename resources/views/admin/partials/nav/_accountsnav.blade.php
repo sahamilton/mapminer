@@ -4,6 +4,12 @@
     <ul class="dropdown-menu">
         <li>
             <a class="dropdown-item" 
+            href="{{ route('accounttype.index') }}">
+                <i class="fas fa-layer-group"></i> Account Types
+            </a>
+        </li>
+        <li>
+            <a class="dropdown-item" 
             href="{{ route('company.index') }}">
                 <i class="fas fa-wrench"></i> Manage Accounts
             </a>

@@ -50,7 +50,7 @@ class AccounttypesController extends BaseController
 
         $this->accounttype->create(request()->all());
 
-        return redirect()->route('accounttypes.index');
+        return redirect()->route('accounttype.index');
     }
 
     /**
@@ -75,9 +75,9 @@ class AccounttypesController extends BaseController
      * @param  int  $id
      * @return Response
      */
-    public function edit($id)
+    public function edit(Accounttype $accounttype)
     {
-        $accounttype = $this->accounttype->find($id);
+        
 
         return response()->view('accounttypes.edit', compact('accounttype'));
     }
@@ -88,12 +88,12 @@ class AccounttypesController extends BaseController
      * @param  int  $id
      * @return Response
      */
-    public function update($id, AccountTypeRequest $request)
+    public function update(Accounttype $accounttype, AccountTypeRequest $request)
     {
 
-        $accounttype = $this->accounttype->findOrFail($id)->update(request()->all());
+        $accounttype->update(request()->all());
 
-        return redirect()->route('accounttypes.index');
+        return redirect()->route('accounttype.index');
     }
 
     /**
@@ -102,10 +102,10 @@ class AccounttypesController extends BaseController
      * @param  int  $id
      * @return Response
      */
-    public function destroy($id)
+    public function destroy(Accounttype $accounttype)
     {
-        $this->accounttype->destroy($id);
+        $accounttype->delete();
 
-        return redirect()->route('accounttypes.index');
+        return redirect()->route('accounttype.index');
     }
 }
