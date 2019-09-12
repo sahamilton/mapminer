@@ -56,7 +56,7 @@ class User extends Authenticatable
      */
     public function canBeImpersonated()
     {
-        return  ! $this->hasRole(['admin','sales_operations']);
+        return  ! $this->hasRole(['admin']);
     }
 
     public $fillable = [

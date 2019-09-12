@@ -79,17 +79,20 @@ class BranchDashboardController extends DashboardController
      */
     public function index()
     {
+
         
         if (! $this->period) {
             $this->period = $this->activity->getPeriod();
         }
-
+        session()->forget('branch');
         $this->manager = $this->person
             ->where('user_id', '=', auth()->user()->id)->first();
         if (session('branch')) {
+            
             $branch = session('branch');
             return redirect()->route('dashboard.show', $branch);
         } else {
+          
             $this->myBranches = $this->_getBranches();
      
             if (count($this->myBranches) > 0) {
@@ -221,13 +224,14 @@ class BranchDashboardController extends DashboardController
      */
     private function _getBranches()
     {
-      
-        if (auth()->user()->hasRole('admin') 
-            or auth()->user()->hasRole('sales_operations')
-        ) {
+        
+        if (auth()->user()->hasRole('admin')) {
        
             return $this->branch->all()->pluck('branchname', 'id')->toArray();
-        
+        } elseif (auth()->user()->hasRole('sales_operations')) {
+            $manager = $this->person->findOrFail(auth()->user()->person->reports_to);
+            
+            return $this->person->myBranches($manager);
         } else {
       
              return  $this->person->myBranches();

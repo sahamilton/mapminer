@@ -120,6 +120,7 @@ class Person extends NodeModel implements HasPresenter
      */
     public function myBranches(Person $person=null)
     {
+        
         if (! $person && auth()->user()->hasRole('admin')) {
             return Branch::all()->pluck('branchname', 'id')->toArray();
         }

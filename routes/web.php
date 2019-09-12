@@ -728,9 +728,10 @@ Route::group(
                  }*/
                  
                  /*}
+                 */
                  $period['from'] = now();
                  $period['to'] = now()->addWeek();
-                 App\Jobs\WeeklyActivityReminder::dispatch($period);*/
+                 App\Jobs\WeeklyActivityReminder::dispatch($period);
                  //App\Jobs\WeeklyOpportunitiesReminder::dispatch();
                  /*$period['from'] = \Carbon\Carbon::now()->subWeek()->startOfWeek();
                  $period['to'] = \Carbon\Carbon::now();*/
