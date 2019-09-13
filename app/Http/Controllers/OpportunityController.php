@@ -72,6 +72,7 @@ class OpportunityController extends Controller
         }
         $activityTypes = $activityTypes = ActivityType::all();
         $myBranches = $this->person->myBranches();
+        
         if (! $myBranches) {
             return redirect()->back()
                 ->withWarning("You are not assigned to any branches. Please contact Sales Operations");

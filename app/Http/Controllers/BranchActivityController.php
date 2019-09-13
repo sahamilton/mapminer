@@ -21,7 +21,7 @@ class BranchActivityController extends Controller
        
         $branch = array_keys($myBranches);
 
-        $data = $this->getBranchActivities([reset($branch)]);
+        $data = $this->_getBranchActivities([reset($branch)]);
         
         $title= $data['branches']->first()->branchname . " activities";
          return response()->view('activities.index', compact('activities', 'data')); 
@@ -53,35 +53,40 @@ class BranchActivityController extends Controller
         }
        
          
-        $data = $this->getBranchActivities([$branch]);
+        $data = $this->_getBranchActivities([$branch]);
        
         $title= $data['branches']->first()->branchname . " activities";
 
         return response()->view('activities.index', compact('data', 'myBranches', 'title'));
     }
     /**
-     * [getBranchActivities description]
-     * @param  Array  $branch [description]
+     * [_getBranchActivities description]
+     * 
+     * @param Array  $branch [description]
+     * 
      * @return [type]         [description]
      */
-    private function getBranchActivities(Array $branch) {
+    private function _getBranchActivities(Array $branch) 
+    {
         $data['activities'] = $this->getUpcomingActivities($branch);
         $data['calendar'] = $this->getUpcomingCalendar($data['activities']);
 
-        $data['branches'] = $this->getBranches($branch);
+        $data['branches'] = $this->_getBranches($branch);
         return $data;
     }
     /**
-     * [getBranches description]
-     * @param  Array  $branches [description]
+     * [_getBranches description]
+     * 
+     * @param Array $branches [description]
+     * 
      * @return [type]           [description]
      */
-     private function getBranches(Array $branches)
-       {
+    private function _getBranches(Array $branches)
+    {
         return  $this->branch->with('manager')
             ->whereIn('id', $branches)
             ->get();
-       }
+    }
     /**
      * [getUpcomingCalendar description]
      * @param  [type] $activities [description]
