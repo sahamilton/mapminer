@@ -84,7 +84,7 @@ class BranchDashboardController extends DashboardController
         if (! $this->period) {
             $this->period = $this->activity->getPeriod();
         }
-        session()->forget('branch');
+
         $this->manager = $this->person
             ->where('user_id', '=', auth()->user()->id)->first();
         if (session('branch')) {

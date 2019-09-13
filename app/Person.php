@@ -123,6 +123,10 @@ class Person extends NodeModel implements HasPresenter
         
         if (! $person && auth()->user()->hasRole('admin')) {
             return Branch::all()->pluck('branchname', 'id')->toArray();
+        } elseif (! $person && auth()->user()->hasRole('admin')) {
+            
+            $person = $this->person->findOrFail(auth()->user()->person->reports_to);
+
         }
         $myteam = $this->myTeam($person)->has('branchesServiced')->get();
 
