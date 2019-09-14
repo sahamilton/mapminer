@@ -41,7 +41,7 @@ class SalesOrgController extends BaseController
      */
     public function index()
     {
-
+        
         $salesperson = $this->_loadSalesOrgRelations($this->_getSalesLeaders());
         return response()->view('salesorg.salesmanagerlist', compact('salesperson'));
     }
