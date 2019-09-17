@@ -7,7 +7,7 @@ use Maatwebsite\Excel\Concerns\FromView;
 use Carbon\Carbon;
 use App\Branch;
 
-class BranchOpportunitiesExport implements FromView
+class BranchOpenOpportunitiesDetailExport implements FromView
 {
     public $period;
     public $branches;
@@ -32,16 +32,15 @@ class BranchOpportunitiesExport implements FromView
     public function view(): View
     {
         
-        $branches = Branch::branchOpenOpportunities($this->period)
-            ->with('manager');
+        $branches = Branch::branchOpenOpportunitiesDetail($this->period);
   
         if ($this->branches) {
-            $branches =$branches->whereIn('id', $this->branches);
+            $branches =$branches->whereIn('id', array_keys($this->branches));
         }   
         $branches = $branches->get();
-   
+       
         $period = $this->period;
-        return view('reports.branchopportunities', compact('branches', 'period'));
+        return view('reports.branchopenopportunitiesdetail', compact('branches', 'period'));
 
     }
 }

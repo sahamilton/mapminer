@@ -331,3 +331,13 @@ REmoved from branch.php
         return $coordinates;
     }
     */
+   
+   /* Details of opportunties
+   select branch_id, branchname, businessname, title, opportunities.created_at, duration, requirements, value, expected_close
+from opportunities, branches, addresses
+where closed =0
+and expected_close > '2019-09-15'
+and opportunities.branch_id = branches.id
+and opportunities.address_id = addresses.id
+order by branch_id
+    */

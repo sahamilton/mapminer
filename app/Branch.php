@@ -535,6 +535,14 @@ class Branch extends Model implements HasPresenter
         );
 
     }
+
+    public function managementTeam()
+    {
+        return $this->manager->first()->getAncestorsAndSelf()->sortByDesc('depth');
+     
+        //return null;
+        
+    }
     /**
      * [scopeGetActivitiesByType description]
      * 
@@ -663,6 +671,38 @@ class Branch extends Model implements HasPresenter
         );
 
     }
+    /**
+     * [scopeBranchOpportunitiesDetail description]
+     * 
+     * @param [type] $query  [description]
+     * @param [type] $period [description]
+     * 
+     * @return [type]         [description]
+     */
+    public function scopeBranchOpenOpportunitiesDetail($query, $period)
+    {
+        $this->period = $period;
+
+        return $query
+            ->has('opportunities')
+            ->with( 
+                ['opportunities'=>function ($query) {
+                    $query->whereClosed(0)        
+                        ->where(
+                            function ($q) {
+                                $q->where('actual_close', '>', $this->period['to'])
+                                    ->orwhereNull('actual_close');
+                            }
+                        )
+
+                    ->where('opportunities.created_at', '<', $this->period['to'])
+                    ->with('address.address');
+                }
+                ]
+            );
+    }
+
+
     /**
      * [scopeAgingOpportunities description]
      * 

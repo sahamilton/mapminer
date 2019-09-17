@@ -59,6 +59,12 @@ class Opportunity extends Model
         }
         return null;
     }
+
+    public function status()
+    {
+        $statuses =[0=>'open', 1=>'won', 2=>'lost'];
+        return $statuses[$this->closed];
+    }
     /**
      * [closed description]
      * 
