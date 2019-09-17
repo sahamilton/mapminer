@@ -7,95 +7,125 @@ use Illuminate\Database\Eloquent\Model;
 class LocationPostImport extends Model
 {
     
-	public $table = 'addresses_import';
+    public $table = 'addresses_import';
     public $fillable = ['address_id'];
-
-	public function getAddressMatchData($request)
+    /**
+     * [getAddressMatchData description]
+     * 
+     * @param [type] $request [description]
+     * 
+     * @return [type]          [description]
+     */
+    public function getAddressMatchData($request)
     {
-    	$company_id = request('additionaldata')['company_id'];
-    	return returnAddressMatchData($company_id);
-    	
+        $company_id = request('additionaldata')['company_id'];
+        return returnAddressMatchData($company_id);
+        
     }
 
+    public function dunsMatchAddress()
+    {
+        $data = [];
+        $duns = $this->pluck('duns')->toArray();
+        $data['matched'] = Address::whereIn('duns', $duns)->get();
+        $matched = $data['matched']->pluck('duns')->toArray();
+        
+        $data['add'] = $this->whereNotIn('duns', $matched)->get();
+        return $data;
+    }
+    /**
+     * [returnAddressMatchData description]
+     * 
+     * @param Company $company [description]
+     * 
+     * @return [type]           [description]
+     */
     public function returnAddressMatchData(Company $company)
     {
-    	/* ST_Distance_Sphere(
+        /* ST_Distance_Sphere(
                 point(lng, lat),
                 point(". $longitude . ", " . $latitude .")
             )  < ".$close_in_metres );*/
-    	$data['company'] = $company;
-    	$this->distance = "ST_Distance_Sphere(point(addresses.lng,addresses.lat),point(addresses_import.lng,addresses_import.lat))";
-    	
-    	$data['matched'] = $this->geoMatchAddresses($company->id);
-    	$this->updateImportTable($data['matched']);
-    	$data['add'] = $this->geoAddAddresses($data['matched']);
-    	$data['delete']  = $this->geoDeleteAddress( $company->id);
-    	return $data;
+        $data['company'] = $company;
+        $this->distance = "ST_Distance_Sphere(point(addresses.lng,addresses.lat),point(addresses_import.lng,addresses_import.lat))";
+        
+        $data['matched'] = $this->_geoMatchAddresses($company->id);
+        $this->_updateImportTable($data['matched']);
+        $data['add'] = $this->_geoAddAddresses($data['matched']);
+        $data['delete']  = $this->_geoDeleteAddress( $company->id);
+        return $data;
     }
-    /*
-    function geoMatchAddress
-    @return array
-	join between import table and final table based on proximity
-
+    /**
+     * [_geoMatchAddresses description]
+     * 
+     * @param [type] $company_id [description]
+     * 
+     * @return [type]             [description]
      */
-    private function geoMatchAddresses($company_id)
+    private function _geoMatchAddresses($company_id)
     {
-    	
-    	$query = "select addresses_import.id  as id, 
-    	addresses.id as import_ref
-    	 from addresses,addresses_import where addresses.company_id = addresses_import.company_id 
-		and addresses_import.company_id = " .$company_id . 
-		" and " . $this->distance ." < 50";
+        
+        $query = "select addresses_import.id  as id, 
+        addresses.id as import_ref
+         from addresses,addresses_import where addresses.company_id = addresses_import.company_id 
+        and addresses_import.company_id = " .$company_id . 
+        " and " . $this->distance ." < 50";
     
-		return  \DB::select($query); 
-    	// update import table with existing id
-    	
+        return  \DB::select($query); 
+        // update import table with existing id
+        
     }
-    /*
-    geoAddAddress
-    return array 
-    difference between matched and imported set
+    /**
+     * [_geoAddAddresses description]
+     * 
+     * @param [type] $data [description]
+     * 
+     * @return [type]       [description]
      */
-    private function geoAddAddresses($data)
+    private function _geoAddAddresses($data)
     {
-    	$match=[];
-    	foreach($data as $el){
+        $match=[];
+        foreach ($data as $el) {
 
-    	    		$match[] = $el->id;
-    	    	}
+                    $match[] = $el->id;
+        }
 
-    	return \DB::table('addresses_import')->whereNotIn('id',$match)->get(); 
+        return \DB::table('addresses_import')->whereNotIn('id', $match)->get(); 
  
     }
-    /*
-    function geoDeleteAddress
-    @ return array
-    find unmatched between import table and final table
+    /**
+     * [_geoDeleteAddress description]
+     * 
+     * @param [type] $company_id [description]
+     * 
+     * @return [type]             [description]
      */
-   private function geoDeleteAddress( $company_id)
+    private function _geoDeleteAddress( $company_id)
     {
-    	
-    	$query = "select addresses.*  FROM addresses left join addresses_import  on ". $this->distance . " < 10  where addresses.company_id = " .$company_id. " and addresses_import.id is null";
-    	
-  		return \DB::select($query); 
-  	
+        
+        $query = "select addresses.*  FROM addresses left join addresses_import  on ". $this->distance . " < 10  where addresses.company_id = " .$company_id. " and addresses_import.id is null";
+        
+        return \DB::select($query); 
+    
     }
-    /*
-    @function updateImportTable
-    @return boolean
-    insert matched id into import table
+    /**
+     * [_updateImportTable description]
+     * 
+     * @param [type] $data [description]
+     * 
+     * @return [type]       [description]
      */
-   private function updateImportTable($data)
+    private function _updateImportTable($data)
     {
 
-    	foreach ($data as $el){
-    		\DB::table('addresses_import')
-		    ->where('id', $el->id)
-		    ->update(['import_ref' => $el->import_ref]);
-    		
-    	}
-    	
-    	return true;
+        foreach ($data as $el) {
+            \DB::table('addresses_import')
+                ->where('id', $el->id)
+                ->update(['import_ref' => $el->import_ref]);
+            
+        }
+        
+        return true;
     }
     
    

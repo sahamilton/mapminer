@@ -41,7 +41,7 @@ class Imports extends Model
         if (! $this->temptable) {
             $this->temptable = $this->table . "_import";
         }
-        
+
             
 
     }
@@ -136,6 +136,24 @@ class Imports extends Model
        return $this->_executeQuery("TRUNCATE TABLE ". $this->temptable); 
     }
     /**
+     * [_import_csv description]
+     * 
+     * @return [type] [description]
+     */
+    private function _importCSV()
+    {
+        $filename =  str_replace("\\","/",storage_path('app/'. $this->importfilename));
+        
+        $query = "LOAD DATA LOCAL INFILE '".$filename."' INTO TABLE ". $this->temptable." CHARACTER SET latin1 FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '\"' ESCAPED BY '\"' LINES TERMINATED BY '\\n'  IGNORE 1 LINES (".$this->fields.");";
+
+
+        try {
+            return  \DB::connection()->getpdo()->exec($query);
+        } catch (Exception $e) {
+             throw new Exception('Something really has gone wrong with the import:\r\n<br />'.$query, 0, $e);
+        }
+    }
+    /**
      * [_addLeadSourceRef description]
      * 
      * @param [type] $request [description]
@@ -144,11 +162,9 @@ class Imports extends Model
      */
     private function _addLeadSourceRef($request)
     {
-        // need to fix the type field
         
-        /*
         return $this->_executeQuery("update ".$this->temptable." set lead_source_id='".request('lead_source_id')."'");
-        */
+       
     }
     /**
      * [_addCreateAtField description]
@@ -333,24 +349,7 @@ class Imports extends Model
     }
 
 
-    /**
-     * [_import_csv description]
-     * 
-     * @return [type] [description]
-     */
-    private function _importCSV()
-    {
-        $filename =  str_replace("\\","/",storage_path('app/'. $this->importfilename));
-        
-        $query = sprintf("LOAD DATA LOCAL INFILE '".$filename."' INTO TABLE ". $this->temptable." CHARACTER SET latin1 FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '\"' ESCAPED BY '\"' LINES TERMINATED BY '\\n'  IGNORE 1 LINES (".$this->fields.");", $filename);
-
-
-        try {
-            return  \DB::connection()->getpdo()->exec($query);
-        } catch (Exception $e) {
-             throw new Exception('Something really has gone wrong with the import:\r\n<br />'.$query, 0, $e);
-        }
-    }
+    
     /*
     private function _truncateImport($table)
     {

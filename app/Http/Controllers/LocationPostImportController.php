@@ -12,8 +12,18 @@ class LocationPostImportController extends Controller
     public $company;
     public $import;
     public $address;
-    public function __construct(LocationPostImport $import, Company $company,Address $address)
-    {
+    /**
+     * [__construct description]
+     * 
+     * @param LocationPostImport $import  [description]
+     * @param Company            $company [description]
+     * @param Address            $address [description]
+     */
+    public function __construct(
+        LocationPostImport $import, 
+        Company $company,
+        Address $address
+    ) {
         $this->company = $company;
         $this->import = $import;
         $this->address = $address;
@@ -25,15 +35,25 @@ class LocationPostImportController extends Controller
      */
     public function index()
     {
-
        
         $import = $this->import->first();
 
-        $this->company = $this->company->findOrFail($import->company_id);
+        // what happens if no company?
+        if ($this->company = $this->company->find($import->company_id)) {
+            $data = $this->import->returnAddressMatchData($this->company);
+            
+        } else {
+            
+            $data = $this->import->dunsMatchAddress();            
+            $this->_addNewLocations($data);
+            $message = 'Imported ' . $data['add']->count(). ' locations. Matched ' . $data['matched']->count() . ' existing locations';
+            return redirect()->route('locations.importfile')->withMessage($message);
+            
+        }
+        
+        
 
-        $data = $this->import->returnAddressMatchData($this->company);
-
-        return response()->view('location.imports',compact('data'));
+        
     }
 
    
@@ -44,43 +64,50 @@ class LocationPostImportController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request 
+     * 
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        $company = $this->company->findOrFail(request('company_id'));
-        $data = $this->import->returnAddressMatchData($company);
+        
+        if ($company = $this->company->find(request('company_id'))) {
+            $data = $this->import->returnAddressMatchData($company);
+        }
+        
         
         if (count($data['delete'])>0) {
-            $this->deleteLocations($data['delete']);
-       }
+            $this->_deleteLocations($data['delete']);
+        }
         if (count($data['add'])>0) {
-            $data = $this->addNewLocations($data);
-            $this->copyAddressIdToImport($data);
+            $data = $this->_addNewLocations($data);
+            $this->_copyAddressIdToImport($data);
         }
       
         if (count($data['matched'])>0) {
-            $this->updateLocations($data);
+            $this->_updateLocations($data);
         }
         
         /// copy all contact information to contacts
         $this->import->truncate();
       
-        return redirect()->route('company.show',$data['company']->id)->withSuccess('Locations imported and updated');
+        return redirect()->route('company.show', $data['company']->id)->withSuccess('Locations imported and updated');
     }
 
     
     
     /**
-    * Insert new locations into addresses
-    * @param array
-    */
-    private function addNewLocations($data)
+     * [_addNewLocations description]
+     * 
+     * @param [type] $data [description]
+     *
+     * @return [<description>]
+     */
+    private function _addNewLocations($data)
     {
-        $m = $this->getIdsFromArray($data['add']);
-        $insert = $this->import->whereIn('id',$m)->get();
-        $insert = $this->setimport_ref($insert);
+        $m = $this->_getIdsFromArray($data['add']);
+        $insert = $this->import->whereIn('id', $m)->get();
+        $insert = $this->_setImportRef($insert);
         if ($insert->count()>0) {
             \DB::table('addresses')->insert($insert->toArray());
         }
@@ -89,21 +116,21 @@ class LocationPostImportController extends Controller
     }
     
     /**
-    * Copy the effected address id back to import table
-    * 
-    * @param array
-    */
-
-    private function copyAddressIdToImport($data)
+     * [_copyAddressIdToImport description]
+     * 
+     * @param [type] $data [description]
+     * 
+     * @return [type]       [description]
+     */
+    private function _copyAddressIdToImport($data)
     {
     
         $locations = $this->address
-            ->where('company_id','=',$data['company']->id)
+            ->where('company_id', $data['company']->id)
             ->whereNotNull('import_ref')
-            ->pluck('id','import_ref')->toArray();
+            ->pluck('id', 'import_ref')->toArray();
       
-        foreach ($locations as $id=>$ref)
-        {
+        foreach ($locations as $id=>$ref) {
           
             $loc = $this->import->findOrFail($id);
            
@@ -114,17 +141,18 @@ class LocationPostImportController extends Controller
 
     }
     /**
-    * Update all the matched addresses
-    * 
-    * @param array
-    */
-
-    private function updateLocations($data)
+     * [_updateLocations description]
+     * 
+     * @param [type] $data [description]
+     * 
+     * @return [type]       [description]
+     */
+    private function _updateLocations($data)
     {
         //get ids
         
-        $this->updateImportTable($data['matched']);
-        $imports = $this->getMatchedAddresses($data);
+        $this->_updateImportTable($data['matched']);
+        $imports = $this->_getMatchedAddresses($data);
         foreach ($imports as $import) {
             
             $address = $this->address->findOrFail($import->address_id);
@@ -133,13 +161,15 @@ class LocationPostImportController extends Controller
         return true;
     }
     /**
-     * [getMatchedAddresses description]
-     * @param  [type] $data [description]
+     * [_getMatchedAddresses description]
+     * 
+     * @param [type] $data [description]
+     * 
      * @return [type]       [description]
      */
-    private function getMatchedAddresses($data)
+    private function _getMatchedAddresses($data)
     {
-        $match = $this->getIdsFromArray($data['matched']);
+        $match = $this->_getIdsFromArray($data['matched']);
        
         return $this->import->whereNotNull('address_id')->whereIn('id',$match)->get(); 
     
@@ -152,52 +182,56 @@ class LocationPostImportController extends Controller
     *
     *
     */
-    private function deleteLocations($data)
+    private function _deleteLocations($data)
     {
        
-       $m = $this->getIdsFromArray($data);
+       $m = $this->_getIdsFromArray($data);
        
        return  $this->address->whereIn('id',$m)->delete();
     }
     /**
-     * [getIdsFromArray description]
+     * [_getIdsFromArray description]
      * @param  array $data [description]
      * @return array       ids of data array
      */
-    private function getIdsFromArray($data)
+    private function _getIdsFromArray($data)
     {
+      
         $m=[];
         foreach ($data as $el) {
             $m[] = $el->id;
         }
-       return $m;
+        return $m;
     }
-    /*
-    *  Add / remove fields from collection for import ref
-    *
-    *
-    *   @param collection  
-    */
-
-    private function setimport_ref(Collection $collection)
+    /**
+     * [_setImportRef description]
+     * 
+     * @param Collection $collection [description]
+     * 
+     * @return [type]                 [description]
+     */
+    private function _setImportRef(Collection $collection)
     {
-        $collection->map(function ($item)
-        {
-            $item->import_ref = $item->id;
-            $item->user_id = auth()->user()->id;
+        $collection->map(
+            function ($item) {
+                $item->import_ref = $item->id;
+                $item->user_id = auth()->user()->id;
           
-            return array_except($item,['id','address_id','contactphone','email','firstname','lastname','fullname','title']);
-        });
+                return array_except($item, ['id','address_id','contactphone','email','firstname','lastname','fullname','title']);
+            }
+        );
        
         return $collection;
     }
 
-    /*
-    @function updateImportTable
-    @return boolean
-    insert matched id into import table
+    /**
+     * [_updateImportTable description]
+     * 
+     * @param [type] $data [description]
+     * 
+     * @return [type]       [description]
      */
-    private function updateImportTable($data)
+    private function _updateImportTable($data)
     {
 
         foreach ($data as $el) {
