@@ -75,7 +75,7 @@
 		<!-- To make sticky footer need to wrap in a div -->
 		
 	@include ('site.layouts._navbar')
-
+	@include ('site.layouts._alert')
 		<!-- Container -->
 	<div class="container">
     
