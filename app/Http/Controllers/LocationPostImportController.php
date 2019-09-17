@@ -47,7 +47,7 @@ class LocationPostImportController extends Controller
             $data = $this->import->dunsMatchAddress();            
             $this->_addNewLocations($data);
             $message = 'Imported ' . $data['add']->count(). ' locations. Matched ' . $data['matched']->count() . ' existing locations';
-            return redirect()->route('locations.importfile')->withMessage($message);
+            return redirect()->route('leadsource.index')->withMessage($message);
             
         }
         
