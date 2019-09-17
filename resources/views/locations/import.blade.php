@@ -1,6 +1,6 @@
 @extends('admin.layouts.default')
 @section('content')
-@php $importtypes = ['lead','project','location'] @endphp
+@php $importtypes = ['location'] @endphp
 <div class="container">
 <h2>Steps to import locations for  accounts:</h2>
 <ol>
