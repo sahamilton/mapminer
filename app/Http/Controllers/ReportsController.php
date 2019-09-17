@@ -322,7 +322,7 @@ class ReportsController extends Controller {
      */
     private function _getMyBranches(Request $request)
     {
-      
+        
         if (request()->filled('manager')) {
             $person = $this->person->findOrFail(request('manager'));
             $branches = $this->person->myBranches($person);
@@ -331,12 +331,14 @@ class ReportsController extends Controller {
             $person = $this->person->where('user_id', auth()->user()->id)->first();
             $branches = $this->person->myBranches($person);
         } elseif (auth()->user()->hasRole(['admin', 'sales_ops'])) {
+           
             $person = $this->salesorg->getCapoDiCapo();
-            $branches = Branch::all()->pluck('id')->toarray();
+            $branches = array_flip(Branch::all()->pluck('id')->toarray());
         } else {
             return false;
 
         }
+
         $team = $this->_getMyTeam($person);
         return $data = ['team'=>$team, 'manager'=>$person, 'branches'=>$branches];
     }

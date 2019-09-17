@@ -6,7 +6,7 @@
         <tr>
             <th>Branch ID</th>
             <th>Branch Name</th>
-            
+            <th>Branch Manager</th>
             <th>Company</th>
             <th>Opportunity</th>
             <th>Requirements</th>
@@ -26,6 +26,11 @@
             <tr>
                 <td>{{$branch->id}}</td>
                 <td>{{$branch->branchname}}</td>
+                <td>
+                    @foreach ($branch->manager as $manager)
+                        {{$manager->fullName()}}
+                    @endforeach
+                </td>
                 <td>{{$opportunity->address->address->businessname}}</td>
                 <td>{{$opportunity->title}}</td>
                 <td>{{$opportunity->requirements}}</td>
