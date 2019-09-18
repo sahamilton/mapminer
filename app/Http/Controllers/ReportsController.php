@@ -206,8 +206,10 @@ class ReportsController extends Controller {
             if (request()->has('fromdate')) {
                 $period['from']=Carbon::parse(request('fromdate'))->startOfDay();
                 $period['to'] = Carbon::parse(request('todate'))->endOfDay();
+            
             } elseif (session()->has('period')) {
                 $period=session('period');
+            
             } else {
                 $period = [];
             }
@@ -330,10 +332,12 @@ class ReportsController extends Controller {
         } elseif (auth()->user()->hasRole(['evp','svp','rvp','market_manager'])) {
             $person = $this->person->where('user_id', auth()->user()->id)->first();
             $branches = $this->person->myBranches($person);
-        } elseif (auth()->user()->hasRole(['admin', 'sales_ops'])) {
+        
+        } elseif (auth()->user()->hasRole(['admin', 'sales_operations'])) {
            
             $person = $this->salesorg->getCapoDiCapo();
             $branches = array_flip(Branch::all()->pluck('id')->toarray());
+        
         } else {
             return false;
 
@@ -359,6 +363,11 @@ class ReportsController extends Controller {
             }
         )->orderBy('lastname')->orderBy('firstname')->get();
     }
+    /**
+     * [_getManagedCompanies description]
+     * 
+     * @return [type] [description]
+     */
     private function _getManagedCompanies()
     {
 
@@ -367,6 +376,13 @@ class ReportsController extends Controller {
             ->where('accounttypes_id', 1)
             ->orderBy('companyname')->get();
     }
+    /**
+     * [_checkValidJob description]
+     * 
+     * @param [type] $class [description]
+     * 
+     * @return [type]        [description]
+     */
     private function _checkValidJob($class)
     {
         $check = ['Jobs','Exports'];
@@ -377,7 +393,13 @@ class ReportsController extends Controller {
         }
         return true;
     }
-
+    /**
+     * [_checkClassExists description]
+     * 
+     * @param  [type] $class [description]
+     * @param  [type] $type  [description]
+     * @return [type]        [description]
+     */
     private function _checkClassExists($class, $type) {
 
        
