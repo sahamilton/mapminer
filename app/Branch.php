@@ -553,8 +553,7 @@ class Branch extends Model implements HasPresenter
                 where address_branch.address_id = addresses.id
                 and address_branch.branch_id = branches.id
                 and addresses.lead_source_id = leadsources.id
-                and addresses.lead_source_id != 4
-                and address_branch.created_at < '". $period['to']->format('Y-m-d') . "'
+                and address_branch.created_at < '". $period['from']->format('Y-m-d') . "'
                 and opportunities.id is null
                 and activities.id is null
                 and branches.id in ('".$branch."')
