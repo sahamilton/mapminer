@@ -536,6 +536,32 @@ class Branch extends Model implements HasPresenter
 
     }
 
+    /**
+     * [scopeDeadLeadsBySource description]
+     * 
+     * @param [type] $query [description]
+     * 
+     * @return [type]        [description]
+     */
+    public function scopeDeadLeadsBySource($query, $branches, $period)
+    {
+        $branch = implode("','", $branches);
+        $query = "select branches.branchname, leadsources.source, count(address_branch.address_id) as deadleads
+                from leadsources, branches, addresses, address_branch
+                left join opportunities on address_branch.id = opportunities.address_branch_id
+                left join activities on address_branch.address_id = activities.address_id
+                where address_branch.address_id = addresses.id
+                and address_branch.branch_id = branches.id
+                and addresses.lead_source_id = leadsources.id
+                and addresses.lead_source_id != 4
+                and address_branch.created_at < '". $period['to']->format('Y-m-d') . "'
+                and opportunities.id is null
+                and activities.id is null
+                and branches.id in ('".$branch."')
+                group by branches.branchname, leadsources.source";
+                return \DB::select(\DB::raw($query));
+    }
+
     public function managementTeam()
     {
         return $this->manager->first()->getAncestorsAndSelf()->sortByDesc('depth');
