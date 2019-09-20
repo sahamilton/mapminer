@@ -23,7 +23,7 @@ class BranchOpenOpportunitiesDetail implements ShouldQueue
     public function __construct(array $period)
     {
         $this->period = $period;
-    }
+    
 
         $file = '/public/reports/branchopptysdetailrpt'. $this->period['to']->timestamp. ".xlsx";
         Excel::store(new BranchOpenOpportunitiesDetailExport($this->period), $file);
@@ -36,5 +36,6 @@ class BranchOpenOpportunitiesDetail implements ShouldQueue
         
         $distribution = $report->getDistribution();
         
-        Mail::to($distribution)->send(new BranchOpenOpportunitiesDetailsMail($file, $this->period));  
+        Mail::to($distribution)->send(new BranchOpenOpportunitiesDetailsMail($file, $this->period)); 
+    } 
 }

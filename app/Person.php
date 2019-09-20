@@ -98,8 +98,14 @@ class Person extends NodeModel implements HasPresenter
      */
     public function getMyBranches()
     {
-       
-        $branches = $this->descendantsAndSelf()
+        
+        if ($this->userdetails->hasRole('sales_operations') && $this->has('reportsTo')) {
+            $person = $this->reportsTo()->first();
+            $branches = $person->descendantsAndSelf();;
+        } else {
+            $branches = $this->descendantsAndSelf();
+        }
+        $branches = $branches      
             ->withRoles([9])
             ->with('branchesServiced')
             ->get()
@@ -135,7 +141,7 @@ class Person extends NodeModel implements HasPresenter
         if (! $person && auth()->user()->hasRole('admin')) {
             return Branch::all()->pluck('branchname', 'id')->toArray();
         } elseif (! $person && auth()->user()->hasRole('sales_operations')) {
-            //dd(auth()->user()->person->reports_to);
+          
             $person = $this->findOrFail(auth()->user()->person->reports_to);
 
         }
