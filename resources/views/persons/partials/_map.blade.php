@@ -3,11 +3,11 @@
 <div style="clear:both"></div>   
 
 <script type="text/javascript" src="//maps.googleapis.com/maps/api/js?key={{config('maps.api_key')}}"></script>
-@if(isset($people->lat))
+@if(isset($person->lat))
 
 <script type="text/javascript">
 function initialize() {
-  var myLatlng = new google.maps.LatLng({{$people->lat}},{{$people->lng}});
+  var myLatlng = new google.maps.LatLng({{$person->lat}},{{$person->lng}});
   var mapOptions = {
     zoom: 14,
     center: myLatlng
@@ -15,8 +15,8 @@ function initialize() {
   var infoWindow = new google.maps.InfoWindow;
   
   var map = new google.maps.Map(document.getElementById('map'), mapOptions);
-	var name = "{{$people->fullName()}}";
-  var address = "{{$people->address}}";
+	var name = "{{$person->fullName()}}";
+  var address = "{{$person->address}}";
   var html = address;
   
 	var marker = new google.maps.Marker({

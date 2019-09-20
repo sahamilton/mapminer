@@ -110,7 +110,18 @@ class Person extends NodeModel implements HasPresenter
             );
         return array_unique($branches->flatten()->toArray());
     }
-
+    public function branchesManaged()
+    {
+        $team = $this->descendantsAndSelf()
+            ->withRoles([9])
+                
+            ->with('branchesServiced.manager')->get();
+        return $team->map(
+            function ($people) {
+                return $people->branchesServiced;
+            }
+        )->flatten()->unique()->sortBy('id');
+    }
 
 
     /**

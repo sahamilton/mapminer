@@ -1,5 +1,5 @@
 
-@if($people->lat && $people->lng)
+@if($person->lat && $person->lng)
 <div id="branchmap" class="float-right" style="height:400px;width:600px;border:red solid 1px"/></div> 
  
 
@@ -7,7 +7,7 @@
 
 <script type="text/javascript">
 function initialize() {
-  var myLatlng = new google.maps.LatLng({{$people->lat}},{{$people->lng}});
+  var myLatlng = new google.maps.LatLng({{$person->lat}},{{$person->lng}});
   var mapOptions = {
     zoom: 10,
     center: myLatlng
@@ -15,8 +15,8 @@ function initialize() {
   var infoWindow = new google.maps.InfoWindow;
   
   var map = new google.maps.Map(document.getElementById('branchmap'), mapOptions);
-	var name = "{{$people->fullName()}}";
-  var address = "{{$people->address}}";
+	var name = "{{$person->fullName()}}";
+  var address = "{{$person->address}}";
   var html = address;
   @if(isset($branchmarkers))
   var branches = {!! $branchmarkers !!};

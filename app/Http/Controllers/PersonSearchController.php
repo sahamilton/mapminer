@@ -26,40 +26,36 @@ class PersonSearchController extends Controller
      */
     public function find(Person $person)
     {
-       
+        $branches = $person->branchesManaged();
+        
         $track = $this->track
-              ->where('user_id', '=', $person->user_id)
-              ->whereNotNull('lastactivity')
-              ->orderBy('created_at', 'desc')
-              ->get();
+            ->where('user_id', $person->user_id)
+            ->whereNotNull('lastactivity')
+            ->orderBy('created_at', 'desc')
+            ->get();
 
 
         //note remove manages & manages.servicedby
-        $people = $person
-            ->with(
-                'directReports',
+        $person
+            ->load(
+                
                 'directReports.userdetails.roles',
-                'directReports.branchesServiced',
                 'reportsTo',
                 'userdetails.serviceline',
-                'managesAccount',
+                'userdetails.roles',
                 'managesAccount.countlocations',
                 'managesAccount.industryVertical',
                 'userdetails',
-                'industryfocus',
-                'userdetails.roles',
-                'branchesServiced',
-                'branchesServiced.servicedBy'
-            )
-
-            ->findOrFail($person->id);
-        if ($people->has('branchesServiced')) {
-            $branchmarkers = $people->branchesServiced->toJson();
+                'industryfocus'
+            );
+        
+        if ($branches) {
+            $branchmarkers = $branches->toJson();
         }
-        if (count($people->directReports)>0) {
-            $salesrepmarkers = $this->person->jsonify($people->directReports);
+        if (count($person->directReports)>0) {
+            $salesrepmarkers = $this->person->jsonify($person->directReports);
         }
 
-        return response()->view('persons.details', compact('people', 'track', 'branchmarkers', 'salesrepmarkers'));
+        return response()->view('persons.details', compact('person', 'track', 'branches', 'branchmarkers', 'salesrepmarkers'));
     }
 }
