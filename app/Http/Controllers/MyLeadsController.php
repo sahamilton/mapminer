@@ -337,12 +337,14 @@ class MyLeadsController extends BaseController
         } else {
             $branch = request('branch');
         }
-        $address = $this->lead->findOrFail(request('address_id'));
+        $address = $this->lead->with('activities', 'opportunities')->findOrFail(request('address_id'));
        
-        $address->assignedToBranch()->sync($branch);
-        // auth()->user()->person
+        $this->_reassignToBranch($address, $branch);
+        $address->load('activities', 'opportunities', 'assignedToBranch');
+        // auth()->user()->person;
         // address
-       
+        //need to update any opportunities associated with the lead
+ dd($address);
         $this->_notifyLeadReassignment($branch, $address);
         
          // branch manager
@@ -391,5 +393,36 @@ class MyLeadsController extends BaseController
             return false;
         }
         return $branches;
+    }
+
+    private function _reassignToBranch(Address $address, Array $branches)
+    {
+        if ($address->activities->count()) {
+            $this->_reassignActivities($address->activities, $branches);
+        }
+        if ($address->opportunities->count()) {
+            $this->_reassignOpportunities($address->opportunities, $branches);
+        }
+        
+        return $address->assignedToBranch()->sync($branches);
+    }
+    private function _reassignActivities($activities, $branches)
+    {
+        foreach ($branches as $branch) {
+            foreach ($activities as $activity) {
+                $activity->update(['branch_id'=> $branch]);
+            }
+        }
+       
+    }
+
+    private function _reassignOpportunities($opportunities, $branches)
+    {
+        foreach ($branches as $branch) {
+            foreach ($opportunities as $opportunity) {
+              
+                $opportunity->update(['branch_id'=> $branch]); 
+            } 
+        } 
     }
 }
