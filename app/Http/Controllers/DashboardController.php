@@ -41,6 +41,7 @@ class DashboardController extends Controller
         if ($branchCount > 1 or auth()->user()->hasRole('admin')) {
             return redirect()->route('mgrdashboard.index');
         } else {
+            
             return redirect()->route('branchdashboard.index');
         }
         

@@ -180,7 +180,7 @@ class MyLeadsController extends BaseController
         }
 
         $data['branch'] = $this->branch->findOrFail(request('branch'));
-       
+        
         $dupes = $this->lead->duplicate($data['lead']['lng'], $data['lead']['lat'])->get();
 
         //if ($dupes->count()>0) {
@@ -189,9 +189,9 @@ class MyLeadsController extends BaseController
         
         
         $lead = $this->lead->create($data['lead']);
-       
+        
         $lead->assignedToBranch()->attach($data['branch']);
-
+       
         
         if (isset($data['contact'])) {
         

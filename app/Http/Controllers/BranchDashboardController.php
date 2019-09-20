@@ -79,14 +79,17 @@ class BranchDashboardController extends DashboardController
      */
     public function index()
     {
-
-        
+        if (session()->has('impersonated_by')) {
+            session()->forget('branch');
+        }
+       
         if (! $this->period) {
             $this->period = $this->activity->getPeriod();
         }
 
         $this->manager = $this->person
             ->where('user_id', '=', auth()->user()->id)->first();
+        
         if (session('branch')) {
             
             $branch = session('branch');
