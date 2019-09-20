@@ -343,8 +343,7 @@ class MyLeadsController extends BaseController
         $address->load('activities', 'opportunities', 'assignedToBranch');
         // auth()->user()->person;
         // address
-        //need to update any opportunities associated with the lead
- dd($address);
+       
         $this->_notifyLeadReassignment($branch, $address);
         
          // branch manager
