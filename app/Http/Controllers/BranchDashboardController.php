@@ -144,18 +144,18 @@ class BranchDashboardController extends DashboardController
      * 
      * @return [type]         [description]
      */
-    public function show($branch)
+    public function show(Branch $branch)
     {
         
-        if (! session()->has('branch') or $branch != session('branch') ) {
-            session(['branch'=>$branch]);
+        if (! session()->has('branch') or $branch->id != session('branch') ) {
+            session(['branch'=>$branch->id]);
         }
         
         $this->period = $this->activity->getPeriod();
 
-        $branch = $this->branch->with('manager')->findOrFail($branch);
+        $branch->load('manager');
 
-        if ($branch->manager->count()>1 
+        if ($branch->manager->count() > 1 
             && $branch->manager->where(
                 'user_id', '=', auth()->user()->id
             )->count()==1 
@@ -176,7 +176,7 @@ class BranchDashboardController extends DashboardController
         }
         $this->myBranches = [$branch->id];
         $data = $this->_getDashBoardData();
-     
+    
      
         return response()->view('branches.dashboard', compact('data', 'branch'));
 
@@ -311,7 +311,7 @@ class BranchDashboardController extends DashboardController
 
      
         return $this->opportunity
-            ->selectRaw('branch_id,YEARWEEK(expected_close,3) as yearweek,sum(value) as total')
+            ->selectRaw('branch_id,YEARWEEK(expected_close,0) as yearweek,sum(value) as total')
             ->where('value', '>', 0)
             ->whereIn('branch_id', $this->myBranches)
             
@@ -338,19 +338,33 @@ class BranchDashboardController extends DashboardController
     {
      
         $chartdata = [];
-     
+        
         foreach ($pipeline as $item) {
-          
-            $chartdata[$item->yearweek]=$item->total;
+            $date = Carbon::now();
+            $date->setISODate(substr($item->yearweek, 0, 4), substr($item->yearweek, 4,2))->endOfWeek();
+            $chartdata[$date->format('Y-m-d')]=$item->total;
             
         }
-      
+        
         $from = Carbon::now();
         $to = Carbon::now()->addMonth(2);
         $keys =  $this->_yearWeekBetween($from, $to);
-       
+        
         $data['keys'] = "'".implode("','", $keys)."'";
-        $data['data'] = implode(",", $chartdata); 
+       
+        $data['data']=[];
+        
+        foreach ($keys as $key) {
+            if (isset($chartdata[$key])) {
+                $data['data'][$key] = $chartdata[$key];
+            } else {
+                $data['data'][$key] = 0;
+            }
+            
+        }
+        
+        $data['data'] = implode(",", $data['data']); 
+    
         return $data;
      
     }

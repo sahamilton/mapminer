@@ -41,7 +41,7 @@ class DashboardController extends Controller
         if ($branchCount > 1 or auth()->user()->hasRole('admin')) {
             return redirect()->route('mgrdashboard.index');
         } else {
-            
+
             return redirect()->route('branchdashboard.index');
         }
         
@@ -55,10 +55,10 @@ class DashboardController extends Controller
      * 
      * @return [type]         [description]
      */
-    public function show($branch)
+    public function show(Branch $branch)
     {
        
-        $branch = $this->branch->with('manager')->findOrFail($branch);
+        $branch->load('manager');
         return redirect()->route('branchdashboard.show',  $branch->id);
         
     }

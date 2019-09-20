@@ -219,6 +219,7 @@ class MyLeadsController extends BaseController
                 }
             }
         }
+
         if (request()->has('source') && request('source') == 'mobile') {
                 return redirect()->route('mobile.show', $lead)->withMessage('Lead Created');
         } else {

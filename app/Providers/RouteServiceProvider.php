@@ -31,10 +31,12 @@ class RouteServiceProvider extends ServiceProvider
         Route::model('accounttype', \App\AccountType::class);
         Route::model('address', \App\Address::class);
         Route::model('branch', \App\Branch::class);
+        Route::model('branchdashboard', \App\Branch::class);
         Route::model('branchlead', \App\Branch::class);
         Route::model('company', \App\Company::class);
         Route::model('contact', \App\Contact::class);
         Route::model('customer', \App\Customer::class);
+        Route::model('dashboard', \App\Branch::class);
         Route::model('feedback', \App\Feedback::class);
         Route::model('feedback_comment', \App\FeedbackComments::class);
         Route::model('branchsummary', \App\Branch::class);
