@@ -337,7 +337,16 @@ class MyLeadsController extends BaseController
         } else {
             $branch = request('branch');
         }
-        $address = $this->lead->with('activities', 'opportunities')->findOrFail(request('address_id'));
+        $address = $this->lead->whereHas(
+            'activities', function ($q) {
+                $q->open();
+            }
+        )->whereHas(
+            'opportunities', function ($q) {
+                $q->open();
+            }
+        )
+        ->findOrFail(request('address_id'));
        
         $this->_reassignToBranch($address, $branch);
         $address->load('activities', 'opportunities', 'assignedToBranch');
