@@ -171,8 +171,11 @@ class Opportunity extends Model
      * 
      * @return [type]         [description]
      */
-    public function scopeOpen($query, $period)
+    public function scopeOpen($query, $period=null)
     {
+        if (! $period) {
+            $period['to'] = now();
+        }
         return $query->where(
             function ($q) use ($period) {
                 $q->where('actual_close', '>', $period['to'])

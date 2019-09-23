@@ -188,7 +188,7 @@ class Address extends Model
      */
     public function openActivities()
     {
-        return $this->hasMany(Activity::class)->where('completed', 0);
+        return $this->hasMany(Activity::class)->whereNull('completed');
     }
 
     /**
