@@ -98,7 +98,7 @@ class ReportsController extends Controller {
     public function show(Report $report)
     {
         $report->load(
-            'distribution', 'roleDistribution', 'companyDistribution', 'companyDistribution.managedBy'
+            'distribution', 'roleDistribution', 'companyDistribution.managedBy'
         );
         if ($report->object) {
             $object = $this->_getObject($report);
@@ -106,6 +106,7 @@ class ReportsController extends Controller {
             $object=null;
         }
         $managers = $this->_getManagers();
+       
         return response()->view('reports.show', compact('report', 'object', 'managers'));
     }
 
@@ -373,7 +374,7 @@ class ReportsController extends Controller {
 
         return $this->company
             ->whereHas('managedBy')
-            ->where('accounttypes_id', 1)
+            ->whereIn('accounttypes_id', [1,4])
             ->orderBy('companyname')->get();
     }
     /**
