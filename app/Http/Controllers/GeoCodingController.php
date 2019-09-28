@@ -47,11 +47,12 @@ class GeoCodingController extends BaseController
     
     
     /**
-     * @return [type]
+     * [findMe description]
+     * 
+     * @param FindMeFormRequest $request [description]
+     * 
+     * @return [type]                     [description]
      */
-
-    /**  This needs some serious refactoring! **/
-
     public function findMe(FindMeFormRequest $request)
     {
     
@@ -107,8 +108,8 @@ class GeoCodingController extends BaseController
         
         $watchlist = [];
         $data['vertical'] = null;
-        
-        $data = $this->getViewData($data);
+        dd($data);
+        $data = $this->_getViewData($data);
 
         $filtered = $this->location->isFiltered(['companies','locations'], ['vertical','business','segment'], null);
         if (isset($data['company'])) {
@@ -122,8 +123,9 @@ class GeoCodingController extends BaseController
         if (count($data['result'])==0) {
             session()->flash('warning', 'No results found. Consider increasing your search distance');
         }
-        $servicelines = $this->serviceline->whereIn('id', $this->userServiceLines)
-                            ->get();
+        $servicelines = $this->serviceline
+            ->whereIn('id', $this->userServiceLines)
+            ->get();
 
         if (isset($data['view']) && $data['view'] == 'list') {
             if ($data['type']=='people') {
@@ -146,7 +148,7 @@ class GeoCodingController extends BaseController
             
             return response()->view('maps.list', compact('data', 'watchlist', 'filtered', 'company', 'servicelines'));
         } else {
-            $data = $this->setZoomLevel($data);
+            $data = $this->_setZoomLevel($data);
 
             
 
@@ -156,12 +158,13 @@ class GeoCodingController extends BaseController
     }
     
     /**
-     * Get view data
-     * @param  array  $data
-     * @return array $data
+     * [_getViewData description]
+     * 
+     * @param [type] $data [description]
+     * 
+     * @return [type]       [description]
      */
-    
-    private function getViewData($data)
+    private function _getViewData($data)
     {
 
         if (method_exists($this, 'get'.ucwords($data['type']).'MapData')) {
@@ -170,7 +173,7 @@ class GeoCodingController extends BaseController
             $data = $this->$method($data);
         } else {
             // get default map view
-            $data= $this->getLocationMapData($data);
+            $data= $this->_getLocationMapData($data);
         }
         
         $data['datalocation']=$data['urllocation'] . '/'. $data['distance'].'/'.$data['latlng'];
@@ -180,8 +183,14 @@ class GeoCodingController extends BaseController
 
         return $data;
     }
-
-    private function getBranchMapData($data)
+    /**
+     * [_getBranchMapData description]
+     * 
+     * @param [type] $data [description]
+     * 
+     * @return [type]       [description]
+     */
+    private function _getBranchMapData($data)
     {
         $data['urllocation'] = "api/mylocalbranches";
         $data['title'] ='Branch Locations';
@@ -189,7 +198,14 @@ class GeoCodingController extends BaseController
         $data['companyname']=null;
         return $data;
     }
-    private function getLocationMapData($data)
+    /**
+     * [_getLocationMapData description]
+     * 
+     * @param [type] $data [description]
+     * 
+     * @return [type]       [description]
+     */
+    private function _getLocationMapData($data)
     {
         $data['urllocation'] ="api/address";
         $data['title'] ='Nearby Locations';
@@ -197,7 +213,14 @@ class GeoCodingController extends BaseController
         $data['companyname']=null;
         return $data;
     }
-    private function getCompanyMapData($data)
+    /**
+     * [_getCompanyMapData description]
+     * 
+     * @param [type] $data [description]
+     * 
+     * @return [type]       [description]
+     */
+    private function _getCompanyMapData($data)
     {
         $data['urllocation'] ="api/mylocalaccounts";
         $data['title'] = (isset($data['companyname']) ? $data['companyname'] : 'Company') ." Locations";
@@ -205,8 +228,14 @@ class GeoCodingController extends BaseController
         $data['vertical'] = $data['company']->vertical;
         return $data;
     }
-
-    private function getProjectsMapData($data)
+    /**
+     * [_getProjectsMapData description]
+     * 
+     * @param [type] $data [description]
+     * 
+     * @return [type]       [description]
+     */
+    private function _getProjectsMapData($data)
     {
         $data['urllocation'] ="api/mylocalprojects";
         $data['title'] = "Project Locations";
@@ -214,8 +243,14 @@ class GeoCodingController extends BaseController
         $data['companyname']=null;
         return $data;
     }
-
-    private function getPeopleMapData($data)
+    /**
+     * [_getPeopleMapData description]
+     * 
+     * @param [type] $data [description]
+     * 
+     * @return [type]       [description]
+     */
+    private function _getPeopleMapData($data)
     {
         $data['urllocation'] ="api/mylocalpeople";
         $data['title'] = "People Locations";
@@ -223,8 +258,14 @@ class GeoCodingController extends BaseController
         $data['companyname']=null;
         return $data;
     }
-
-    private function getMyLeadsMapData($data)
+    /**
+     * [_getMyLeadsMapData description]
+     * 
+     * @param [type] $data [description]
+     * 
+     * @return [type]       [description]
+     */
+    private function _getMyLeadsMapData($data)
     {
         $data['urllocation'] ="api/myleads";
         $data['title'] = "Lead Locations";
@@ -234,12 +275,13 @@ class GeoCodingController extends BaseController
     }
     
     /**
-     * Add map zoom level to data array
-     * @param  array  $data
-     * @return array $data
+     * [_setZoomLevel description]
+     * 
+     * @param array $data [description]
+     *
+     * @return array $data [<description>] 
      */
-    
-    private function setZoomLevel($data)
+    private function _setZoomLevel($data)
     {
         
         $levels = \Config::get('app.zoom_levels');
@@ -253,11 +295,12 @@ class GeoCodingController extends BaseController
     }
     
     /**
-     * Find locations or branches based on location and distance
-     * @param  array  $data
-     * @return array $result
+     * [getGeoListData description]
+     * 
+     * @param [type] $data [description]
+     * 
+     * @return [type]       [description]
      */
-     
     public function getGeoListData($data)
     {
 
@@ -272,44 +315,77 @@ class GeoCodingController extends BaseController
             return $this->$method($location, $data, $company);
         } else {
             // get default map view
-            $method = 'getLocationListData';
+            $method = '_getLocationListData';
             return $this->$method($location, $data, $company);
         }
     }
-    
-    private function getBranchListData($location, $data)
+    /**
+     * [_getBranchListData description]
+     * 
+     * @param [type] $location [description]
+     * @param [type] $data     [description]
+     * 
+     * @return [type]           [description]
+     */
+    private function _getBranchListData($location, $data)
     {
         
         return $this->branch
-            ->whereHas('servicelines', function ($q) {
-                $q->whereIn('servicelines.id', $this->userServiceLines);
-            })
+            ->whereHas(
+                'servicelines', function ($q) {
+                    $q->whereIn('servicelines.id', $this->userServiceLines);
+                }
+            )
             ->nearby($location, $data['distance'])
             ->get();
     }
-
-    private function getProjectsListData($location, $data)
+    /**
+     * [_getProjectsListData description]
+     * 
+     * @param [type] $location [description]
+     * @param [type] $data     [description]
+     * 
+     * @return [type]           [description]
+     */
+    private function _getProjectsListData($location, $data)
     {
 
         return $this->project
-                ->whereHas('source', function ($q) {
+            ->whereHas(
+                'source', function ($q) {
                     $q->where('status', '=', 'open');
-                })
-                ->nearby($location, $data['distance'])
-                ->with('owner')
-                ->get();
+                }
+            )
+            ->nearby($location, $data['distance'])
+            ->with('owner')
+            ->get();
     }
-
-    private function getCompanyListData($location, $data, $company)
+    /**
+     * [_getCompanyListData description]
+     * 
+     * @param [type] $location [description]
+     * @param [type] $data     [description]
+     * @param [type] $company  [description]
+     * 
+     * @return [type]           [description]
+     */
+    private function _getCompanyListData($location, $data, $company)
     {
         return $this->location
-                ->where('company_id', '=', $company->id)
-                ->nearby($location, $data['distance'])
-                ->with('company')
-                ->get();
+            ->where('company_id', '=', $company->id)
+            ->nearby($location, $data['distance'])
+            ->with('company')
+            ->get();
     }
-
-    private function getLocationListData($location, $data)
+    /**
+     * [_getLocationListData description]
+     * 
+     * @param [type] $location [description]
+     * @param [type] $data     [description]
+     * 
+     * @return [type]           [description]
+     */
+    private function _getLocationListData($location, $data)
     {
         
         $addresses = $this->address;
@@ -317,20 +393,34 @@ class GeoCodingController extends BaseController
             $addresses->whereIn('addressable_type', session('geo.addressType'));
         }
         return $addresses->nearby($location, $data['distance'])
-                ->with('company')
-                
-                ->get();
+            ->with('company')
+            
+            ->get();
     }
-
-    private function getPeopleListData($location, $data)
+    /**
+     * [_getPeopleListData description]
+     * 
+     * @param [type] $location [description]
+     * @param [type] $data     [description]
+     * 
+     * @return [type]           [description]
+     */
+    private function _getPeopleListData($location, $data)
     {
         return $this->person
-                ->nearby($location, $data['distance'])
-                ->with('userdetails.roles')
-                ->get();
+            ->nearby($location, $data['distance'])
+            ->with('userdetails.roles')
+            ->get();
     }
-
-    private function getMyLeadsListData($location, $data)
+    /**
+     * [_getMyLeadsListData description]
+     * 
+     * @param [type] $location [description]
+     * @param [type] $data     [description]
+     * 
+     * @return [type]           [description]
+     */
+    private function _getMyLeadsListData($location, $data)
     {
         
         return $this->lead->myLeads($statuses = [1,2], $all = true)
@@ -340,10 +430,12 @@ class GeoCodingController extends BaseController
     }
     
     /**
-     * Generate branches XML based on results
-     * @param  array  $result
-     * @return view  */
-     
+     * [getMyLocation description] Not sure this is used!
+     * 
+     * @param Request $request [description]
+     * 
+     * @return [type]           [description]
+     */
     public function getMyLocation(Request $request)
     {
 
@@ -359,7 +451,7 @@ class GeoCodingController extends BaseController
                 
                 return response()->view('maps.list', compact('data', 'filtered'));
             } else {
-                $data = $this->setZoomLevel($data);
+                $data = $this->_setZoomLevel($data);
                 if ($data['view'] =='branch') {
                     $data['urllocation'] = "api/mylocalbranches";
                 } else {
