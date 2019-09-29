@@ -27,9 +27,12 @@ class LeadSource extends Model
     public function assigned()
     {
 
-        return $this->whereHas('addresses', function ($q) {
-             $q->has('assignedToBranch');
-        })->with('addresses');
+        return $this->whereHas(
+            'addresses', function ($q) {
+                $q->has('assignedToBranch');
+            }
+        )
+        ->with('addresses');
 
      /* return $this->selectRaw('`leadsources`.*, count(`address`.`id`) as assigned')
           ->join('leads','leadsources.id','=','leads.lead_source_id')

@@ -91,6 +91,22 @@ class Person extends NodeModel implements HasPresenter
             ->orderBy('branchname');
     }
     /**
+     * [managers description]
+     * 
+     * @return [type] [description]
+     */
+    public function managers()
+    {
+        $roles = [14,6,7,3];
+
+        return $this->wherehas(
+            'userdetails.roles', function ($q) use ($roles) {
+
+                    $q->whereIn('role_id', $roles);
+            }
+        )->orderBy('lastname')->orderBy('firstname')->get();
+    }
+    /**
      * [getMyBranches finds branch managers in reporting
      * strucuture and returns their branches as array]
      * 
@@ -116,6 +132,8 @@ class Person extends NodeModel implements HasPresenter
             );
         return array_unique($branches->flatten()->toArray());
     }
+
+    
     public function branchesManaged()
     {
         $team = $this->descendantsAndSelf()

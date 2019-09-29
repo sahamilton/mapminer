@@ -514,7 +514,10 @@ Route::group(
         Route::get('leadsource/{leadsource}/addleads', ['as'=>'leadsource.addleads', 'uses'=>'LeadImportController@getFile']);
         
         Route::get('leadsource/{leadsource}/state/{state}', ['as'=>'leadsource.unassigned.state', 'uses'=>'LeadSourceController@unassignedstate']);
-        Route::get('leadsource/{leadsource}/flush', ['as'=>'leadsource.flushleads', 'uses'=>'LeadSourceController@flushLeads']);
+        Route::get('leadsource/flush', ['as'=>'leadsource.flush', 'uses'=>'LeadSourceController@flushManagerLeads']);
+        Route::post('leadsource/mgrflush', ['as'=>'leadsource.mgrflush', 'uses'=>'LeadSourceController@flushManagerLeadsConfirm']);
+        Route::post('leadsource/finalflush', ['as'=>'leadsource.finalflush', 'uses'=>'LeadSourceController@flushManagerLeadsFinal']);
+        Route::get('leadsource/{leadsource}/flushleads', ['as'=>'leadsource.flushleads', 'uses'=>'LeadSourceController@flushLeads']);
         Route::resource('leadsource', 'LeadSourceController');
         
         //     Salesnotes

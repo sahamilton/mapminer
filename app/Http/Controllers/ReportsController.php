@@ -105,7 +105,7 @@ class ReportsController extends Controller {
         } else {
             $object=null;
         }
-        $managers = $this->_getManagers();
+        $managers = $this->person->managers();
        
         return response()->view('reports.show', compact('report', 'object', 'managers'));
     }
@@ -347,23 +347,7 @@ class ReportsController extends Controller {
         $team = $this->_getMyTeam($person);
         return $data = ['team'=>$team, 'manager'=>$person, 'branches'=>$branches];
     }
-    /**
-     * GetManagers returns collection of all managers except BM's
-     * 
-     * @return Collection [description]
-     */
-    private function _getManagers()
-    {
-        //evp, svp, rvp & MM roles
-        $roles = [14,6,7,3];
-
-        return $this->person->wherehas(
-            'userdetails.roles', function ($q) use ($roles) {
-
-                    $q->whereIn('role_id', $roles);
-            }
-        )->orderBy('lastname')->orderBy('firstname')->get();
-    }
+    
     /**
      * [_getManagedCompanies description]
      * 

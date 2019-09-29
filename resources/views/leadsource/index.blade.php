@@ -1,4 +1,4 @@
-@extends('admin/layouts/default')
+@extends('admin.layouts.default')
 @section('content')
 
 <h1>Lead Sources</h1>

@@ -50,6 +50,12 @@
         <i class="fas fa-signal"></i> Lead Status
     </a>
 </li>
+<li class="nav-item">
+    <a class="nav-link" 
+    href="{{ route('leadsource.flush') }}">
+        <i class="fa fa-shower" aria-hidden="true"></i> Flush Leads
+    </a>
+</li>
 <div class="dropdown-divider"></div>
 <li class="nav-item">
     <a class="nav-link" 

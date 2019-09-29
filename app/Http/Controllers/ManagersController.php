@@ -460,7 +460,7 @@ class ManagersController extends BaseController {
     private function _getManagers($id)
     {
         
-            $managers = $this->persons
+        $managers = $this->persons
             ->has('managesAccount')
             ->select(\DB::raw("CONCAT(firstname,' ',lastname) AS name"), 'id')
             ->firstOrFail($id);
@@ -468,7 +468,7 @@ class ManagersController extends BaseController {
         if ($managers) {
             return $managers->toArray();
         }
-            return $this->getAllManagers();
+        return $this->getAllManagers();
     }
     private function getAllManagers()
     {
