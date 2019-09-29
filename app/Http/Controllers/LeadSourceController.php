@@ -413,7 +413,7 @@ class LeadSourceController extends Controller
         if (request()->has('export')) {
             $file = '/public/flushed/staleLeads'. $manager->id. ".xlsx";
         
-            Excel::store(new StaleLeadsExport($leads, $manager),  $file);
+            Excel::download(new StaleLeadsExport($leads, $manager),  $file);
         }
         $deleted = $leads->count(); 
         
