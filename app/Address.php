@@ -1,7 +1,7 @@
 <?php
 
 namespace App;
-
+use Carbon\Carbon;
 class Address extends Model
 {
     use Geocode,Filters, FullTextSearch;
@@ -459,5 +459,33 @@ class Address extends Model
         } else {
             return 'prospect';
         }
+    }
+    /**
+     * [scopeStaleLeads description]
+     * 
+     * @param [type] $query      [description]
+     * @param [type] $leadsource [description]
+     * @param [type] $branches   [description]
+     * @param [type] $before     [description]
+     * 
+     * @return [type]             [description]
+     */
+    public function scopeStaleLeads(
+        $query, 
+        array $leadsource, 
+        array $branches, 
+        Carbon $before
+    ) {
+        return $query
+            ->whereIn('lead_source_id', $leadsource)
+            ->whereHas(
+                'assignedToBranch', function ($qb) use ($branches) {
+                        $qb->whereIn('branch_id', $branches);
+                }
+            )
+            ->where('created_at', '<=', $before)
+            ->doesntHave('activities')
+            ->doesntHave('opportunities')
+            ->get();
     }
 }

@@ -4,7 +4,7 @@
 	<h4>Error</h4>
 	Please check the form below for errors
     @foreach($errors->all() as $error)
-       <li> {{$error}}</li>
+       <li> {!!$error!!}</li>
 
     @endforeach
 </div>
@@ -16,10 +16,10 @@
 	<h4>Success</h4>
     @if(is_array($message))
         @foreach ($message as $m)
-            {{ $m }}
+            {!! $m !!}
         @endforeach
     @else
-        {{ $message }}
+        {!! $message !!}
     @endif
 </div>
 @endif
@@ -30,10 +30,10 @@
 	<h4>Error</h4>
     @if(is_array($message))
     @foreach ($message as $m)
-    {{ $m }}
+    {!! $m !!}
     @endforeach
     @else
-    {{ $message }}
+    {!! $message !!}
     @endif
 </div>
 @endif
@@ -44,10 +44,10 @@
 	<h4>Warning</h4>
     @if(is_array($message))
     @foreach ($message as $m)
-    {{ $m }}
+    {!! $m !!}
     @endforeach
     @else
-    {{ $message }}
+    {!! $message !!}
     @endif
 </div>
 @endif
@@ -58,16 +58,16 @@
 	<h4>Info</h4>
     @if(is_array($message))
     @foreach ($message as $m)
-    {{ $m }}
+    {!! $m !!}
     @endforeach
     @else
-    {{ $message }}
+    {!! $message !!}
     @endif
 </div>
 @endif
 
 @if(session()->has('message'))
     <div class="alert alert-success">
-        {{ session()->get('message') }}
+        {!! session()->get('message') !!}
     </div>
 @endif

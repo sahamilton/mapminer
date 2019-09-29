@@ -12,15 +12,18 @@ use App\LeadSource;
 use App\LeadStatus;
 use App\Person;
 use App\SearchFilter;;
-use App\Exports\StaleLeadsExport;
+
 
 use Excel;
 use Carbon\Carbon;
 
 use App\Http\Requests\LeadSourceFormRequest;
 use App\Http\Requests\LeadSourceAddLeadsFormRequest;
-use App\Exports\LeadSourceExport;
+use App\Http\Requests\FlushStaleLeadsRequest;
 
+use App\Exports\LeadSourceExport;
+use App\Jobs\StaleLeads;
+use App\Exports\StaleLeadsExport;
 
 class LeadSourceController extends Controller
 {
@@ -350,7 +353,15 @@ class LeadSourceController extends Controller
     public function flushManagerLeads()
     {
         
-        $leadsources = $this->leadsource->all();
+        $leadsources = $this->leadsource->withCount(
+            ['leads'=>function ($q) {
+                $q->whereHas('assignedToBranch')
+
+                    ->doesntHave('activities')
+                    ->doesntHave('opportunities');
+            }
+            ]
+        )->get();
         $managers = $this->person->managers();
         
         return response()->view('leadsource.flush', compact('managers', 'leadsources'));
@@ -362,13 +373,24 @@ class LeadSourceController extends Controller
      * 
      * @return [type]           [description]
      */
-    public function flushManagerLeadsConfirm(Request $request)
+    public function flushManagerLeadsConfirm(FlushStaleLeadsRequest $request)
     {
-        $before = Carbon::parse(request('datefrom'));
+        
+        $before = Carbon::parse(request('before'));
+
         $leadsource = request('leadsource');
         $manager = $this->person->findOrFail(request('manager'));
         $branches = $manager->branchesManaged()->pluck('id')->toArray();
-        $leads = $leads = $this->_getStaleLeads($leadsource, $branches)->count();
+
+        $leads = $this->address->staleLeads($leadsource, $branches, $before)->count();
+        if ($leads ==0) {
+            return redirect()->route('leadsource.flush')
+                ->withMessage(
+                    "There are zero stale leads assigned to " . 
+                    $manager->fullName() . 
+                    "'s branches from the selected lead sources."
+                );
+        }
         return response()->view('leadsource.confirmflush', compact('leadsource', 'leads', 'manager', 'before'));
     }
     /**
@@ -380,19 +402,25 @@ class LeadSourceController extends Controller
      */
     public function flushManagerLeadsFinal(Request $request)
     {
-        
+        $before = Carbon::parse(request('before'));
         $leadsource = explode(",", str_replace("'", "", request('leadsource')));
         $manager = $this->person->findOrFail(request('manager'));
         $branches = $manager->branchesManaged()->pluck('id')->toArray();
-        $leads = $this->_getStaleLeads($leadsource, $branches);
+        $leads = $this->address->staleLeads($leadsource, $branches, $before);
         if (request()->has('export')) {
-            $file = '/public/flushed/staleLeads'. $manager->id. ".xlsx";
-        
-            Excel::download(new StaleLeadsExport($leads, $manager),  $file);
+            $file = 'flushed/staleLeads_'. $manager->id ."_".now()->timestamp . ".xlsx";
+            dispatch(new StaleLeads($leads, $manager, $file));
+            
         }
         $deleted = $leads->count(); 
         $this->address->destroy($leads->pluck('id')->toArray());
-        return redirect()->route('leadsource.flush')->withMessage($deleted . " stale leads assigned to " . $manager->fullName() . "'s branches have been deleted");
+        return redirect()->route('leadsource.flush')
+            ->withMessage(
+                $deleted . " stale leads assigned to " . 
+                $manager->fullName() . 
+                "'s branches from the selected leadsources have been deleted, 
+                The deleted leads are stored <a href=\"" . secure_url('storage/'. $file) ."\">here</a>"
+            );
     }
     /**
      * [addLeads description]
@@ -406,28 +434,7 @@ class LeadSourceController extends Controller
         
         return response()->view('leadsource.addleads', compact('leadsource'));
     }
-    /**
-     * [_getStaleLeads description]
-     * 
-     * @param array $leadsource [description]
-     * @param array $branches   [description]
-     * 
-     * @return [type]             [description]
-     */
-    private function _getStaleLeads(array $leadsource, array $branches)
-    {
-        return $this->address
-            ->whereIn('lead_source_id', $leadsource)
-            ->whereHas(
-                'assignedToBranch', function ($qb) use ($branches) {
-                        $qb->whereIn('branch_id', $branches);
-                }
-            )
-            
-            ->doesntHave('activities')
-            ->doesntHave('opportunities')
-            ->get();
-    }
+    
     /**
      * [importLeads description]
      * 

@@ -27,7 +27,7 @@ class DeadLeadsBySource implements ShouldQueue
      
         
         $this->branches = $branches;
-        dd($this->branches);
+        
     }
 
     /**

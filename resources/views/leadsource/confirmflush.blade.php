@@ -30,6 +30,10 @@
          value="{{$manager->id}}" />
 
          <input type="hidden"
+         name="before"
+         value="{{$before->format('Y-m-d')}}" />
+
+         <input type="hidden"
          name="leadsource"
          value="'{{implode("','", $leadsource)}}'" />
     </form>

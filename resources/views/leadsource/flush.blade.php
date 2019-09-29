@@ -16,6 +16,7 @@
           <thead>
             <th><input type="checkbox" id="checkAll"></th>
             <th>LeadSource</th>
+            <th>Stale Leads</th>
             <th>Date Created</th>
           </thead>
           <tbody>
@@ -26,6 +27,9 @@
                 value="{{$leadsource->id}}" />
               </td>
               <td>{{$leadsource->source}}</td>
+              <td class="text-right">
+                {{number_format($leadsource->leads_count,0)}}
+              </td>
               <td>{{$leadsource->created_at->format('Y-m-d')}}</td>
             </tr>
             @endforeach
@@ -41,10 +45,12 @@
               required
               id="manager" 
               value="{{  old('manager')}}">
-              <option value="">All Managers
+              <option value="all">
+                All Managers
               </option>
               @foreach ($managers as $manager)
-              <option value="{{$manager->id}}">{{$manager->fullName()}}
+              <option value="{{$manager->id}}">
+                {{$manager->fullName()}}
               </option>
               @endforeach
             </select>
@@ -57,9 +63,9 @@
           <div class="input-group input-group-lg">
           <input class="form-control" 
               type="text" 
-              name="datefrom"  
+              name="before"  
               id="fromdatepicker" 
-              value="{{  old('datefrom',  \Carbon\Carbon::now()->subYear()->format('m/d/Y')) }}"/>
+              value="{{  old('before',  \Carbon\Carbon::now()->subYear()->format('m/d/Y')) }}"/>
           <span class="help-block">
               <strong>{{$errors->has('datefrom') ? $errors->first('datefrom')  : ''}}</strong>
           </span>
