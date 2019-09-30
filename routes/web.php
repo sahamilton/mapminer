@@ -705,10 +705,10 @@ Route::group(
         //   Jobs
         Route::get(
             'testjob', function () {
-                 //$company = App\Company::findOrFail(532);
+                $companies = App\Company::whereIn('id', [532])->get();
                 $period['from'] = \Carbon\Carbon::now()->subWeek()->startOfWeek()->startOfDay();
                 $period['to'] = \Carbon\Carbon::now()->subWeek()->endOfWeek()->endOfDay();;
-
+                App\Jobs\AccountActivities::dispatch($companies, $period);
                 //App\Jobs\ActivityOpportunity::dispatch($period);
                 //$opportunity = App\Opportunity::has('branch')->first();
                 //App\Jobs\WonOpportunity::dispatch($opportunity);
@@ -728,16 +728,16 @@ Route::group(
                  }*/
                  
                  /*}
-                 */
+                 
                  $period['from'] = now();
                  $period['to'] = now()->addWeek();
-                 App\Jobs\WeeklyActivityReminder::dispatch($period);
+                 App\Jobs\WeeklyActivityReminder::dispatch($period);*/
                  //App\Jobs\WeeklyOpportunitiesReminder::dispatch();
                  /*$period['from'] = \Carbon\Carbon::now()->subWeek()->startOfWeek();
-                 $period['to'] = \Carbon\Carbon::now();*/
-                App\Jobs\BranchStats::dispatch($period);
+                 $period['to'] = \Carbon\Carbon::now();/
+                App\Jobs\BranchStats::dispatch($period);*
                 //App\Jobs\ActivityOpportunity::dispatch($period);
-                /*//App\Jobs\ActivityOpportunityReport::dispatch();
+                //App\Jobs\ActivityOpportunityReport::dispatch();
                 
                 //App\Jobs\ZipBackup::dispatch('MMProd20190123');
                 //App\Jobs\UploadToDropbox::dispatch('MMProd20190123');
