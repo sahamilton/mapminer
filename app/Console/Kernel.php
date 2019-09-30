@@ -75,7 +75,7 @@ class Kernel extends ConsoleKernel
                 ->at('04:59');
             
             // Walmart job
-            $company = Company::findOrFail(532);
+            $company = Company::whereIn('id', [532])->get();
             $period['from'] = Carbon::now()->subWeek()->startOfWeek();
             $period['to'] = Carbon::now()->subWeek()->endOfWeek();
             $schedule->job(new AccountActivities($company, $period))

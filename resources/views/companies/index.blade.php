@@ -1,8 +1,12 @@
 @extends('site/layouts/default')
 @section('content')
 @if(! isset($title))
-<h1>Companies That Have Locations Nearby<span class="text text-danger"><sup>*</sup></span></h1>
-
+@can('manage_accounts')
+<h1>All Companies</h1>
+@else
+<h1>Companies That Have Locations Nearby<span class="text text-danger"><sup>*</sup></span>
+</h1>
+@endcan
 @else
 <h1>{{$title}}</h1>
 <p><a href = "{{route('company.index')}}">Return to all companies</a></p>
@@ -145,6 +149,7 @@
 
 	</tbody>
 	</table>
+<p><span class="text text-danger"><sup>*</sup></span> within 25 miles of your location.</p>
 @include('partials/_modal')
 @include('partials/_scripts')
 @endsection

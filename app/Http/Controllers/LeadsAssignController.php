@@ -11,8 +11,10 @@ use App\Lead;
 use App\Person;
 use App\Role;
 use App\Permission;
+
 use App\Mail\NotifyWebLeadsBranchAssignment;
 use Mail;
+
 use App\Http\Requests\GeoAssignLeadsRequest;
 use App\Jobs\AssignAddressesToBranches;
 
