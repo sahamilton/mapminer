@@ -74,11 +74,11 @@ class Kernel extends ConsoleKernel
                 ->wednesdays()
                 ->at('04:59');
             
-            // Walmart job
-            $company = Company::whereIn('id', [532])->get();
+            // National Account Jobs
+            $companies = Company::whereIn('id', [532])->get();
             $period['from'] = Carbon::now()->subWeek()->startOfWeek();
             $period['to'] = Carbon::now()->subWeek()->endOfWeek();
-            $schedule->job(new AccountActivities($company, $period))
+            $schedule->job(new AccountActivities($companies, $period))
                 ->weekly()
                 ->sundays()
                 ->at('18:30');
