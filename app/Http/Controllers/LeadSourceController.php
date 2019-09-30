@@ -353,15 +353,25 @@ class LeadSourceController extends Controller
     public function flushManagerLeads()
     {
         
-        $leadsources = $this->leadsource->withCount(
-            ['leads'=>function ($q) {
-                $q->whereHas('assignedToBranch')
+        $leadsources = $this->leadsource
+            ->whereHas(
+                'leads', function ($q) {
+                    $q->whereHas('assignedToBranch')
 
-                    ->doesntHave('activities')
-                    ->doesntHave('opportunities');
-            }
-            ]
-        )->get();
+                        ->doesntHave('activities')
+                        ->doesntHave('opportunities');
+                }
+               
+            )
+            ->withCount(
+                ['leads'=>function ($q) {
+                    $q->whereHas('assignedToBranch')
+
+                        ->doesntHave('activities')
+                        ->doesntHave('opportunities');
+                }
+                ]
+            )->get();
         $managers = $this->person->managers();
         
         return response()->view('leadsource.flush', compact('managers', 'leadsources'));

@@ -2,6 +2,7 @@
 @section('content')
 <div class="container">
     <h2>Flush Leads</h2>
+    <p><a href="{{route('leadsource.index')}}">See all lead sources</a></p>
     <form action="{{route('leadsource.mgrflush')}}"
     method="post"
     name="flushleads"
@@ -26,7 +27,11 @@
                 name="leadsource[]" 
                 value="{{$leadsource->id}}" />
               </td>
-              <td>{{$leadsource->source}}</td>
+              <td>
+                  <a href="{{route('leadsource.show',$leadsource->id)}}">
+                   {{$leadsource->source}}
+                 </a>
+              </td>
               <td class="text-right">
                 {{number_format($leadsource->leads_count,0)}}
               </td>
