@@ -12,10 +12,11 @@
         <table id= "sorttable" 
         class= "table table-striped table-bordered"
         data-page-length='100'
+  
         >
 
           <thead>
-            <th><input type="checkbox" id="checkAll"></th>
+            <th><input type="checkbox" id="checkAll">Check All</th>
             <th>LeadSource</th>
             <th>Stale Leads</th>
             <th>Date Created</th>

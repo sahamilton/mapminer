@@ -361,7 +361,6 @@ class LeadSourceController extends Controller
                         ->doesntHave('activities')
                         ->doesntHave('opportunities');
                 }
-               
             )
             ->withCount(
                 ['leads'=>function ($q) {
