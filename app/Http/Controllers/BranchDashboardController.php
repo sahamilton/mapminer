@@ -341,7 +341,10 @@ class BranchDashboardController extends DashboardController
         
         foreach ($pipeline as $item) {
             $date = Carbon::now();
-            $date->setISODate(substr($item->yearweek, 0, 4), substr($item->yearweek, 4,2))->endOfWeek();
+            if ($item->yearweek) {
+                 $date->setISODate(substr($item->yearweek, 0, 4), substr($item->yearweek, 4, 2))->endOfWeek();
+            }
+           
             $chartdata[$date->format('Y-m-d')]=$item->total;
             
         }
