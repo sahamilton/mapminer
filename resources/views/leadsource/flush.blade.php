@@ -12,11 +12,12 @@
         <table id= "sorttable" 
         class= "table table-striped table-bordered"
         data-page-length='100'
-  
+
         >
 
           <thead>
             <th><input type="checkbox" id="checkAll">Check All</th>
+            <th>id</th>
             <th>LeadSource</th>
             <th>Stale Leads</th>
             <th>Date Created</th>
@@ -28,6 +29,7 @@
                 name="leadsource[]" 
                 value="{{$leadsource->id}}" />
               </td>
+              <td>{{$leadsource->id}}</td>
               <td>
                   <a href="{{route('leadsource.show',$leadsource->id)}}">
                    {{$leadsource->source}}
