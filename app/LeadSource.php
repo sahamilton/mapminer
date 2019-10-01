@@ -40,6 +40,12 @@ class LeadSource extends Model
           ->groupBy('leadsources.id');
 */
     }
+
+    public function branchleads()
+    {
+
+      return $this->hasManyThrough(AddressBranch::class, Address::class, 'lead_source_id', 'address_id');
+    }
     public function unassigned()
     {
 

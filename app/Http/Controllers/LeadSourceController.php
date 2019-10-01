@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Address;
 use App\Branch;
+use App\AddressBranch;
 use App\Company;
 use App\Lead;
 use App\LeadSource;
@@ -28,6 +29,7 @@ use App\Exports\StaleLeadsExport;
 class LeadSourceController extends Controller
 {
     public $address;
+    public $addressbranch;
     public $branch;
     public $company;
     public $lead;
@@ -40,33 +42,36 @@ class LeadSourceController extends Controller
     /**
      * [__construct description]
      * 
-     * @param LeadSource   $leadsource [description]
-     * @param LeadStatus   $status     [description]
-     * @param SearchFilter $vertical   [description]
-     * @param Lead         $lead       [description]
-     * @param Person       $person     [description]
-     * @param Branch       $branch     [description]
-     * @param Address      $address    [description]
-     * @param Company      $company    [description]
+     * @param Address       $address       [description]
+     * @param AddressBranch $addressbranch [description]
+     * @param Branch        $branch        [description]
+     * @param Company       $company       [description]
+     * @param Lead          $lead          [description]
+     * @param LeadSource    $leadsource    [description]
+     * @param LeadStatus    $status        [description]
+     * @param Person        $person        [description]
+     * @param SearchFilter  $vertical      [description]
      */
     public function __construct(
+        Address $address,
+        AddressBranch $addressbranch,
+        Branch $branch,
+        Company $company,
+        Lead $lead,
         LeadSource $leadsource,
         LeadStatus $status,
-        SearchFilter $vertical,
-        Lead $lead,
         Person $person,
-        Branch $branch,
-        Address $address,
-        Company $company
+        SearchFilter $vertical
     ) {
+        $this->address = $address;
+        $this->addressbranch = $addressbranch;
+        $this->branch = $branch;
+        $this->company = $company;
+        $this->lead = $lead;
         $this->leadsource = $leadsource;
         $this->leadstatus = $status;
         $this->person = $person;
         $this->vertical=$vertical;
-        $this->lead = $lead;
-            $this->branch = $branch;
-        $this->address = $address;
-        $this->company = $company;
     }
 
     /**
@@ -355,22 +360,19 @@ class LeadSourceController extends Controller
         
         $leadsources = $this->leadsource
             ->whereHas(
-                'leads', function ($q) {
-                    $q->whereHas('assignedToBranch')
-
-                        ->doesntHave('activities')
+                'branchleads', function ($q) {
+                    $q->doesntHave('activities')
                         ->doesntHave('opportunities');
                 }
             )
             ->withCount(
-                ['leads'=>function ($q) {
-                    $q->whereHas('assignedToBranch')
-
-                        ->doesntHave('activities')
+                ['branchleads'=>function ($q) {
+                    $q->doesntHave('activities')
                         ->doesntHave('opportunities');
                 }
                 ]
             )->get();
+        
         $managers = $this->person->managers();
         
         return response()->view('leadsource.flush', compact('managers', 'leadsources'));
@@ -391,7 +393,8 @@ class LeadSourceController extends Controller
         $manager = $this->person->findOrFail(request('manager'));
         $branches = $manager->branchesManaged()->pluck('id')->toArray();
 
-        $leads = $this->address->staleLeads($leadsource, $branches, $before)->count();
+        $leads = $this->addressbranch->staleLeads($leadsource, $branches, $before)->get()->count();
+
         if ($leads ==0) {
             return redirect()->route('leadsource.flush')
                 ->withMessage(
@@ -415,14 +418,24 @@ class LeadSourceController extends Controller
         $leadsource = explode(",", str_replace("'", "", request('leadsource')));
         $manager = $this->person->findOrFail(request('manager'));
         $branches = $manager->branchesManaged()->pluck('id')->toArray();
-        $leads = $this->address->staleLeads($leadsource, $branches, $before);
+        $leads = $this->addressbranch
+            ->staleLeads($leadsource, $branches, $before)
+            ->with('branch')
+            ->get();
+
         if (request()->has('export')) {
             $file = 'flushed/staleLeads_'. $manager->id ."_".now()->timestamp . ".xlsx";
             dispatch(new StaleLeads($leads, $manager, $file));
             
         }
-        $deleted = $leads->count(); 
-        $this->address->destroy($leads->pluck('id')->toArray());
+        $deleted = $leads->count();
+        $this->addressbranch->destroy($leads->pluck('id')->toArray());
+        $addresses = $this->address
+            ->whereDoesntHave('activities')
+            ->whereDoesntHave('opportunities')
+            ->whereIn('id', $leads->pluck('address_id')->toArray())
+            ->delete();
+        
         return redirect()->route('leadsource.flush')
             ->withMessage(
                 $deleted . " stale leads assigned to " . 

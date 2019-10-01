@@ -31,6 +31,7 @@ class StaleLeads implements ShouldQueue
         $this->leads = $leads;
         $this->manager = $manager;
         $this->file =  $file;
+        
     }
 
     /**

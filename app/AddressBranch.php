@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class AddressBranch extends Model
@@ -102,5 +103,38 @@ class AddressBranch extends Model
     public function scopeLostOpportunities($query)
     {
         $this->opportunities()->where('closed', 2);
+    }
+
+    public function leadsource()
+    {
+        return $this->hasManyThrough(LeadSource::class, Address::class, 'id', 'id', 'address_id', 'lead_source_id');
+    }
+
+    /**
+     * [scopeStaleLeads description]
+     * 
+     * @param [type] $query      [description]
+     * @param [type] $leadsource [description]
+     * @param [type] $branches   [description]
+     * @param [type] $before     [description]
+     * 
+     * @return [type]             [description]
+     */
+    public function scopeStaleLeads(
+        $query, 
+        array $leadsource, 
+        array $branches, 
+        Carbon $before
+    ) {
+        return $query
+            ->whereHas(
+                'leadsource', function ($q) use ($leadsource) {
+                    $q->whereIn('leadsources.id', $leadsource);
+                }
+            )
+            ->whereIn('branch_id', $branches)
+            ->where('created_at', '<=', $before)
+            ->doesntHave('activities')
+            ->doesntHave('opportunities');
     }
 }

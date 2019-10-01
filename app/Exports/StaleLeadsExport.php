@@ -20,13 +20,14 @@ class StaleLeadsExport implements FromView
     {
         $this->addresses = $addresses;
         $this->manager = $manager;
+        
     }
     /**
     * @return \Illuminate\Support\Collection
     */
     public function view(): View
     {
-        $addresses = $this->addresses;
+        $addresses = $this->addresses->load('branch', 'address');
         $manager = $this->manager;
         return view('branchleads.flushed', compact('addresses', 'manager'));
     }

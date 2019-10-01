@@ -479,7 +479,7 @@ class Address extends Model
         return $query
             ->whereIn('lead_source_id', $leadsource)
             ->whereHas(
-                'assignedToBranch', function ($qb) use ($branches) {
+                'branchleads', function ($qb) use ($branches) {
                         $qb->whereIn('branch_id', $branches);
                 }
             )

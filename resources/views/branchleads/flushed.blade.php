@@ -17,23 +17,20 @@
 			
 		</tr>
 		@foreach($addresses as $address)
+		
 			<tr>  
 
-				<td>{{$address->id}}</td>
-				<td>{{$address->companyname}}</td>
-				<td>{{$address->street}}</td>
-				<td>{{$address->address2}}</td>
-				<td>{{$address->city}}</td>
-				<td>{{$address->state}}</td>
-				<td>{{$address->zip}}</td>
-				<td>{{$address->phone}}</td>
-				<td>{{$address->lat}}</td>
-				<td>{{$address->lng}}</td>
-				<td>
-					@foreach($address->assignedToBranch as $branch)
-						{{$branch->branchname}}
-					@endforeach
-				</td>
+				<td>{{$address->address_id}}</td>
+				<td>{{$address->address->companyname}}</td>
+				<td>{{$address->address->street}}</td>
+				<td>{{$address->address->address2}}</td>
+				<td>{{$address->address->city}}</td>
+				<td>{{$address->address->state}}</td>
+				<td>{{$address->address->zip}}</td>
+				<td>{{$address->address->phone}}</td>
+				<td>{{$address->address->lat}}</td>
+				<td>{{$address->address->lng}}</td>
+				<td>{{$address->branch->branchname}}</td>
 			</tr>
 		@endforeach
 	</tbody>

@@ -36,7 +36,7 @@
                  </a>
               </td>
               <td class="text-right">
-                {{number_format($leadsource->leads_count,0)}}
+                {{number_format($leadsource->branchleads_count,0)}}
               </td>
               <td>{{$leadsource->created_at->format('Y-m-d')}}</td>
             </tr>
@@ -73,7 +73,7 @@
               type="text" 
               name="before"  
               id="fromdatepicker" 
-              value="{{  old('before',  \Carbon\Carbon::now()->subYear()->format('m/d/Y')) }}"/>
+              value="{{  old('before',  \Carbon\Carbon::now()->subMonth(6)->format('m/d/Y')) }}"/>
           <span class="help-block">
               <strong>{{$errors->has('datefrom') ? $errors->first('datefrom')  : ''}}</strong>
           </span>
