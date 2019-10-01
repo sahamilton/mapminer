@@ -108,7 +108,7 @@ class GeoCodingController extends BaseController
         
         $watchlist = [];
         $data['vertical'] = null;
-        dd($data);
+       
         $data = $this->_getViewData($data);
 
         $filtered = $this->location->isFiltered(['companies','locations'], ['vertical','business','segment'], null);
