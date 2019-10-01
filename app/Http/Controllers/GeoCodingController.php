@@ -311,8 +311,8 @@ class GeoCodingController extends BaseController
         $location->lat = $data['lat'];
         $location->lng = $data['lng'];
         
-        if (method_exists($this, 'get'.ucwords($data['type']).'ListData')) {
-            $method = 'get'.ucwords($data['type']).'ListData';
+        if (method_exists($this, '_get'.ucwords($data['type']).'ListData')) {
+            $method = '_get'.ucwords($data['type']).'ListData';
             return $this->$method($location, $data, $company);
         } else {
             // get default map view
