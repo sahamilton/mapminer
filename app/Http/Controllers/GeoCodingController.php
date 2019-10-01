@@ -55,7 +55,7 @@ class GeoCodingController extends BaseController
      */
     public function findMe(FindMeFormRequest $request)
     {
-    
+      
 
         if (request()->filled('search')) {
             $address = trim(request('search'));
@@ -67,7 +67,7 @@ class GeoCodingController extends BaseController
             $data = request()->all();
         }
 
-    
+        
 
         if ($data['search'] != session('geo.search') or ! $data['lat']) {
             if (preg_match('^Lat:([0-9]*[.][0-9]*).Lng:([-]?[0-9]*[.][0-9]*)^', $data['search'], $string)) {
@@ -166,16 +166,17 @@ class GeoCodingController extends BaseController
      */
     private function _getViewData($data)
     {
-
-        if (method_exists($this, 'get'.ucwords($data['type']).'MapData')) {
-            $method = 'get'.ucwords($data['type']).'MapData';
+        
+        if (method_exists($this, '_get'.ucwords($data['type']).'MapData')) {
+            $method = '_get'.ucwords($data['type']).'MapData';
 
             $data = $this->$method($data);
+
         } else {
             // get default map view
             $data= $this->_getLocationMapData($data);
         }
-        
+ 
         $data['datalocation']=$data['urllocation'] . '/'. $data['distance'].'/'.$data['latlng'];
         if ($data['company']) {
             $data['datalocation'].="/".$data['company']->id;
