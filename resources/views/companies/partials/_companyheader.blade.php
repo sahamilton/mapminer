@@ -1,4 +1,4 @@
-<p><a href="{{route('salesnotes',$data['company']->id)}}" title="Read notes on selling to {{$data['company']->companyname}}">
+<p><a href="{{route('salesnotes.company',$data['company']->id)}}" title="Read notes on selling to {{$data['company']->companyname}}">
 <i class="fas fa-search" aria-hidden="true"></i>  
 Read 'How to Sell to {{$data['company']->companyname}}'</a></p>
 
