@@ -259,7 +259,7 @@ Route::group(
         Route::resource('salesleads', 'SalesLeadsController');
         
         //   Sales Notes
-        Route::get('salesnotes/{company}', ['as'=>'salesnotes', 'uses'=>'SalesNotesController@show']);
+        Route::get('salesnotes/{company}', ['as'=>'salesnotes.company', 'uses'=>'SalesNotesController@show']);
         Route::get('salesnotes/print/{company}', ['as'=>'salesnotes.print', 'uses'=>'SalesNotesController@printSalesNotes']);
         Route::resource('salesnotes', 'SalesNotesController');
         
@@ -500,7 +500,7 @@ Route::group(
         
         //     Salesnotes
         Route::get('salesnotes/filedelete/{file}', ['as'=>'salesnotes.filedelete', 'uses'=>'SalesNotesController@filedelete']);
-        Route::get('salesnotes/create/{companyId}', ['as'=>'salesnotes.cocreate', 'uses'=>'SalesNotesController@createSalesNotes']);
+        Route::get('salesnotes/create/{company}', ['as'=>'salesnotes.cocreate', 'uses'=>'SalesNotesController@createSalesNotes']);
         //   OrderImports
         
         Route::resource('orderimport', 'OrderImportController');
