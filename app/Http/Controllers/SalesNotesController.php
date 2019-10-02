@@ -267,7 +267,7 @@ class SalesNotesController extends BaseController {
         if (count($queryArray)>0) {
             \DB::table('company_howtofield')->insert($queryArray);
         }
-        return redirect()->to('salesnotes/'.$data['companyId']);
+        return redirect()->route('salesnotes', $data['companyId']);
     }
     
 
