@@ -253,7 +253,7 @@ class MyLeadsController extends BaseController
         if (! request()->has('leadsource_id')) {
             $data['lead']['lead_source_id'] = 4;
         }
-        $data['contact'] = $this->cleanseContactData($request);
+        $data['contact'] = $this->_cleanseContactData($request);
 
        
         return $data;
@@ -295,13 +295,13 @@ class MyLeadsController extends BaseController
    
    
     /**
-     * Extract contact information from request
+     * _cleanseContactData Extract contact information from request
      * 
      * @param Request $request [description]
      * 
      * @return array $data [description]
      */
-    public function cleanseContactData(Request $request)
+    private function _cleanseContactData(Request $request)
     {
 
         $data['fullname'] = request('contact');
@@ -326,7 +326,7 @@ class MyLeadsController extends BaseController
      * 
      * @return [type]                           [description]
      */
-    public function reassign(LeadReassignFormRequest $request)
+    public function reassign(LeadReassignFormRequest $request, Address $address)
     {
         
         if (! request()->filled('branch')) {
@@ -338,11 +338,10 @@ class MyLeadsController extends BaseController
             $branch = request('branch');
         }
         
-        $address = $this->lead->with('openActivities', 'openOpportunities')
-            ->findOrFail(request('address_id'));
+        $address->load('openActivities', 'openOpportunities');
     
         $this->_reassignToBranch($address, $branch);
-        $address->load('activities', 'openOpportunities', 'assignedToBranch');
+        $address->load('assignedToBranch');
         // auth()->user()->person;
         // address
       
