@@ -65,26 +65,22 @@ class SalesNotesController extends BaseController {
 
     }
     /**
-     * Display the specified companies howtofield.
-     *
-     * @param  int  $id
-     * @return Response
+     * [show description]
+     * 
+     * @param Company $company [description]
+     * 
+     * @return [type]           [description]
      */
     public function show(Company $company)
     {
-        $company->load('managedBy','managedBy.userdetails');
+        $company->load('managedBy', 'managedBy.userdetails');
     
 
-        $data = $this->salesnote->where('company_id','=',$company->id)
-                ->with('fields')->get();;
+        $data = $this->salesnote
+            ->where('company_id', $company->id)
+            ->with('fields')->get();;
 
-        return response()->view('salesnotes.shownote', compact('data','company'));
-        
-    
-
-
-
-        
+        return response()->view('salesnotes.shownote', compact('data', 'company'));
     }
 
     /**
@@ -93,10 +89,11 @@ class SalesNotesController extends BaseController {
      * @param  int  $id
      * @return Response
      */
-    public function edit(SalesNotesFormRequest $request, $salesnote)
+    public function edit(SalesNotesFormRequest $request, $company)
     {
-    
-        return $this->createSalesNotes($request, $salesnote);
+        $company = $this->company->findOrFail($company);
+     
+        return $this->createSalesNotes($request, $company);
     }
 
     /**
@@ -129,18 +126,17 @@ class SalesNotesController extends BaseController {
 
     public function fileDelete($file)
     {
-        $company_id = substr($file,0,strpos($file,"_"));
+        $company_id = substr($file, 0, strpos($file, "_"));
     
         $attachments = $this->salesnote
-            ->whereIn('howtofield_id',$this->attachmentField)
-            ->where('company_id','=',$company_id)
+            ->whereIn('howtofield_id', $this->attachmentField)
+            ->where('company_id', $company_id)
             ->firstorFail();
     
-        if (count($attachments) != 0 )
-        {
+        if (count($attachments) != 0 ) {
             $data = unserialize(urldecode($attachments->value));
             
-            foreach($data as $key=>$value) {
+            foreach ($data as $key=>$value) {
                 if ($value['filename'] == $file) {
                     unset($data[$key]);
                 }
@@ -167,7 +163,8 @@ class SalesNotesController extends BaseController {
      * @param  integer $id Company Id
      * @return [type]     [description]
      */
-    public function createSalesNotes(SalesNotesFormRequest $request,Company $company) {
+    public function createSalesNotes(SalesNotesFormRequest $request,Company $company) 
+    {
       
         $company->load('managedBy');
         $fields = Howtofield::orderBy('group')->get();
