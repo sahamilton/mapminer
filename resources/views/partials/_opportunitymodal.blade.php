@@ -11,7 +11,7 @@
                 </div>
             
                 <div class="modal-body">
-                    <p>You are about to really f up  and delete <span id='title'>this item</span>.  Note this procedure is irreversible.</p>
+                    <p>You are about delete <span id='title'>this item</span>.  Note this procedure is irreversible.</p>
                     <p>Do you want to proceed?</p>
                     <p class="debug-url"></p>
                 </div>

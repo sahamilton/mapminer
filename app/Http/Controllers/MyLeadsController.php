@@ -342,7 +342,7 @@ class MyLeadsController extends BaseController
             ->findOrFail(request('address_id'));
     
         $this->_reassignToBranch($address, $branch);
-        $address->load('activities', 'opportunities', 'assignedToBranch');
+        $address->load('activities', 'openOpportunities', 'assignedToBranch');
         // auth()->user()->person;
         // address
       
@@ -419,6 +419,7 @@ class MyLeadsController extends BaseController
 
     private function _reassignOpportunities($opportunities, $branches)
     {
+        
         foreach ($branches as $branch) {
             foreach ($opportunities as $opportunity) {
               
