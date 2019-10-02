@@ -398,11 +398,11 @@ class MyLeadsController extends BaseController
 
     private function _reassignToBranch(Address $address, Array $branches)
     {
-        if ($address->activities->count()) {
-            $this->_reassignActivities($address->activities, $branches);
+        if ($address->openActivities->count()) {
+            $this->_reassignActivities($address->openActivities, $branches);
         }
-        if ($address->opportunities->count()) {
-            $this->_reassignOpportunities($address->opportunities, $branches);
+        if ($address->openOpportunities->count()) {
+            $this->_reassignOpportunities($address->openOpportunities, $branches);
         }
         
         return $address->assignedToBranch()->sync($branches);
