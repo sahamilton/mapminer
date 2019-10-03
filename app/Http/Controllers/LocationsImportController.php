@@ -49,7 +49,7 @@ class LocationsImportController extends ImportController
         $data['additionaldata'] = null;
         $data['route'] = 'locations.mapfields';
         // only create a lead source if non included and no company selected.
-        if (! request()->has('lead_source_id') and ! request()->has('company')) {
+        if (! request()->has('lead_source_id')) {
             $data['lead_source_id'] = $this->import->createLeadSource($data)->id;
         }
         
@@ -57,7 +57,7 @@ class LocationsImportController extends ImportController
                 $data['additionaldata']['company_id'] = request('company');
                 $this->import->setDontCreateTemp(true); 
 
-        }else{
+        } else {
                 $this->import->setDontCreateTemp(false);
         }
         
