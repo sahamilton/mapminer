@@ -107,7 +107,7 @@ class Imports extends Model
         $this->_createPositon();
         $this->_updateAdditionalFields($request);
         if (! $this->dontCreateTemp) {
-            dd('dont');
+            
             $this->_copyTempToBaseTable();
             if (request()->filled('contacts')) {
                 $this->_copyAddressIdBackToImportTable(request('lead_source_id'));
