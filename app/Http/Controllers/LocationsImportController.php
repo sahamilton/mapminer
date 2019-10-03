@@ -27,9 +27,9 @@ class LocationsImportController extends ImportController
     public function getFile()
     {
         $requiredFields = $this->import->requiredFields;
-        $branches = Branch::orderBy('id')->get();
+       // $branches = Branch::orderBy('id')->get();
         $companies = $this->company->orderBy('companyname')->pluck('companyname', 'id');
-        return response()->view('locations.import', compact('companies', 'requiredFields', 'branches'));
+        return response()->view('locations.import', compact('companies', 'requiredFields'));
     }
 
     /**
@@ -41,14 +41,15 @@ class LocationsImportController extends ImportController
      */
     public function import(LocationImportFormRequest $request) 
     {
-      
+        
         $data = request()->except('_token');
+        
         $title="Map the locations import file fields";
         $data = array_merge($data, $this->uploadfile(request()->file('upload')));
         $data['additionaldata'] = null;
         $data['route'] = 'locations.mapfields';
-
-        if (! request()->has('lead_source_id')) {
+        // only create a lead source if non included and no company selected.
+        if (! request()->has('lead_source_id') and ! request()->has('company')) {
             $data['lead_source_id'] = $this->import->createLeadSource($data)->id;
         }
         
@@ -59,6 +60,7 @@ class LocationsImportController extends ImportController
         }else{
                 $this->import->setDontCreateTemp(false);
         }
+        
 
         $fields = $this->getFileFields($data);
         $skip = ['id','created_at','updated_at','lead_source_id','serviceline_id','addressable_id','user_id','addressable_type','import_ref'];
@@ -71,7 +73,7 @@ class LocationsImportController extends ImportController
         if (isset($data['branch'])) {
             $data['branch_ids'] = implode(',', $data['branch']);
         }
-       
+        
         return response()->view(
             'imports.mapfields', compact(
                 'columns',
@@ -94,7 +96,7 @@ class LocationsImportController extends ImportController
     {
        
         $data = $this->getData($request);
-       
+        
         if ($error = $this->validateInput($request)) {
             return redirect()->route('locations.importfile')->withError($error)->withInput($data);
         }
@@ -107,11 +109,17 @@ class LocationsImportController extends ImportController
             $this->import->setDontCreateTemp(true);
         }
         if ($fileimport = $this->import->import($request)) {
-           
-            if (request('type')=='location') {
+            
+            if (request()->has('company')) {
+                return redirect()->route('postprocess.index');
+                /// copy from import table to addresses
+                /// return to company view
+            }
+            if (request('type') == 'location' && ! request()->has('company')) {
               
                 return redirect()->route('postprocess.index');
             }
+
             return redirect()->route('leadsource.show', request('lead_source_id'))->with('success', 'Locations imported');
         }
     }

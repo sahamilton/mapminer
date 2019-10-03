@@ -155,11 +155,7 @@ $(document).ready(function()
            		$("<option/>",{value:index,text:item}).appendTo("#segment");
 
         });
-				//in here, for simplicity, you can substitue the HTML for a brand new select box for countries
-				//1.
 				
-			   //2.
-			   // iterate through objects and build HTML here
 			}
 		});
 	});

@@ -95,18 +95,19 @@ class Imports extends Model
             $this->importfilename = str_replace("\\", "/", LeadSource::findOrFail(request('lead_source_id'))->filename);
         }
         
-    
+        
         if (! $this->dontCreateTemp) {
             $this->_createTemporaryImportTable();
         }
         $this->_truncateTempTable();
         $this->_importCSV();
+        
         $this->_addLeadSourceRef($request);
         $this->_addCreateAtField();
         $this->_createPositon();
         $this->_updateAdditionalFields($request);
         if (! $this->dontCreateTemp) {
-
+            dd('dont');
             $this->_copyTempToBaseTable();
             if (request()->filled('contacts')) {
                 $this->_copyAddressIdBackToImportTable(request('lead_source_id'));
@@ -118,7 +119,7 @@ class Imports extends Model
 
             //$this->_truncateTempTable();
         }
-
+        
 
         //
 
@@ -145,7 +146,6 @@ class Imports extends Model
         $filename =  str_replace("\\","/",storage_path('app/'. $this->importfilename));
         
         $query = "LOAD DATA LOCAL INFILE '".$filename."' INTO TABLE ". $this->temptable." CHARACTER SET latin1 FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '\"' ESCAPED BY '\"' LINES TERMINATED BY '\\n'  IGNORE 1 LINES (".$this->fields.");";
-
 
         try {
             return  \DB::connection()->getpdo()->exec($query);

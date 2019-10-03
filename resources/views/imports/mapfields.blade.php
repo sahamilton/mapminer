@@ -71,7 +71,7 @@
     <input type="hidden" name="additionaldata[{{$key}}]" value="{{$value}}" />
     @endforeach
 @endif
-@php $hidden = ['lead_source_id', 'serviceline', 'step', 'contacts', 'branch_ids', 'file', 'type']; @endphp
+@php $hidden = ['lead_source_id', 'serviceline', 'step', 'contacts', 'branch_ids', 'company', 'file', 'type']; @endphp
 
 @foreach ($hidden as $hide)
     @if(isset($data[$hide]))
