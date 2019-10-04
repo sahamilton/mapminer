@@ -19,6 +19,15 @@
                 checked />
           </label>
         </div>
+        <div class="form-check-inline">
+          <label class="form-check-label">Delete addresses from system. 
+            <input type="checkbox" 
+                class="form-check-input" 
+                name= 'delete' 
+                value="1" 
+                 />
+          </label>
+        </div>
         <div class="form-group">
             <input type="submit"
              class="btn btn-info"

@@ -21,7 +21,7 @@
 			<tr>  
 
 				<td>{{$address->address_id}}</td>
-				<td>{{$address->address->companyname}}</td>
+				<td>{{$address->address->businessname}}</td>
 				<td>{{$address->address->street}}</td>
 				<td>{{$address->address->address2}}</td>
 				<td>{{$address->address->city}}</td>

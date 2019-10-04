@@ -430,6 +430,9 @@ class LeadSourceController extends Controller
         }
         $deleted = $leads->count();
         $this->addressbranch->destroy($leads->pluck('id')->toArray());
+        if (request()->has('delete')) {
+            $this->address->destroy($leads->pluck('address_id')->toArray());
+        }
         $addresses = $this->address
             ->whereDoesntHave('activities')
             ->whereDoesntHave('opportunities')
