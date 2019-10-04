@@ -16,6 +16,7 @@ class LeadImportFormRequest extends FormRequest
     public function authorize()
     {
         return true;
+        dd($this->upload->mimetypes);
     }
 
     /**

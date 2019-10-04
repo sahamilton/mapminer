@@ -11,7 +11,9 @@ class LeadSourceAddLeadsFormRequest extends FormRequest
      *
      * @return bool
      */
-    public $mimetypes =['application/vnd.ms-excel','text/plain','text/csv','text/tsv'];
+    public $mimetypes = ['application/vnd.ms-excel','text/plain','text/csv','text/tsv','text/x-c'];
+   
+
     public function authorize()
     {
         return true;

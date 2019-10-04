@@ -48,7 +48,8 @@ class LeadImportController extends ImportController
         $this->leadsources = $leadsource;
     }
 
-    public function getFile(Request $request,LeadSource $leadsource=null,$type=null) {
+    public function getFile(Request $request, LeadSource $leadsource=null,$type=null) 
+    {
 
         $sources= $this->leadsources->all()->pluck('source', 'id');
         if ($sources->count() == 0) {
@@ -64,20 +65,20 @@ class LeadImportController extends ImportController
     }
 
 
-    public function import(LeadImportFormRequest $request)
+    public function import(Request $request)
     {
-       
+        
         $data = $this->uploadfile(request()->file('upload'));
         $title="Map the leads import file fields";
-         $requiredFields = $this->import->requiredFields;
+        $requiredFields = $this->import->requiredFields;
 
         $data['type']=request('type');
 
         if ($data['type']== 'assigned') {
-            $data['table']='leadimport';
+            $data['table']='addresses_import';
             $requiredFields[]='employee_id';
         } else {
-            $data['table']='leadimport';
+            $data['table']='addresses_import';
         }
 
         $data['additionaldata'] = request('additionaldata');
@@ -90,11 +91,14 @@ class LeadImportController extends ImportController
         return response()->view('imports.mapfields', compact('columns', 'fields', 'data', 'company_id', 'skip', 'title', 'requiredFields'));
     }
     
-    public function mapfields(Request $request) {
-     
+    public function mapfields(Request $request) 
+    {
+       
         $data = $this->getData($request);
+
         $this->validateInput($request);
         $this->import->setFields($data);
+       
         if ($this->import->import()) {
             $this->postimport();
         

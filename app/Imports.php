@@ -35,7 +35,7 @@ class Imports extends Model
         $data['fields'][key(array_intersect($data['fields'], array_keys($this->additionaldata)))]='@ignore';
         
         $this->fields = implode(",", $data['fields']);  
-                
+        
         $this->table = $data['table'];
 
         if (! $this->temptable) {
@@ -97,7 +97,7 @@ class Imports extends Model
         
     
         if (! $this->dontCreateTemp) {
-            $this->_createTemporaryImportTable();
+           // $this->_createTemporaryImportTable();
         }
         $this->_truncateTempTable();
         $this->_importCSV();
@@ -143,7 +143,7 @@ class Imports extends Model
     private function _importCSV()
     {
         $filename =  str_replace("\\","/",storage_path('app/'. $this->importfilename));
-        
+       
         $query = "LOAD DATA LOCAL INFILE '".$filename."' INTO TABLE ". $this->temptable." CHARACTER SET latin1 FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '\"' ESCAPED BY '\"' LINES TERMINATED BY '\\n'  IGNORE 1 LINES (".$this->fields.");";
 
 

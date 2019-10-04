@@ -334,6 +334,7 @@ class LeadSourceController extends Controller
      */
     public function destroy(LeadSource $leadsource)
     {
+        dd($leadsource);
         $leadsource->delete();
         return redirect()->route('leadsource.index');
     }
@@ -424,12 +425,12 @@ class LeadSourceController extends Controller
             ->get();
 
         if (request()->has('export')) {
-            $file = 'flushed/staleLeads_'. $manager->id ."_".now()->timestamp . ".xlsx";
-            dispatch(new StaleLeads($leads, $manager, $file));
+            $this->_downloadDeletedLeads($manager, $leads);
             
         }
         $deleted = $leads->count();
         $this->addressbranch->destroy($leads->pluck('id')->toArray());
+        
         if (request()->has('delete')) {
             $this->address->destroy($leads->pluck('address_id')->toArray());
         }
@@ -446,6 +447,12 @@ class LeadSourceController extends Controller
                 "'s branches from the selected leadsources have been deleted, 
                 The deleted leads are stored <a href=\"" . secure_url('storage/'. $file) ."\">here</a>"
             );
+    }
+
+    private function _downloadDeletedLeads($manager, $leads)
+    {
+        $file = 'flushed/staleLeads_'. $manager->id ."_".now()->timestamp . ".xlsx";
+            dispatch(new StaleLeads($leads, $manager, $file));
     }
     /**
      * [addLeads description]
@@ -630,15 +637,21 @@ class LeadSourceController extends Controller
      * 
      * @return [type]           [description]
      */
-    public function export(Request $request, $id)
+    public function export(Request $request, LeadSource $leadsource)
     {
        
         $statuses = $this->lead->statuses;
         $leadsource = $this->leadsource
-            ->with('leads', 'leads.relatedNotes','leads.assignedToBranch')
-            ->findOrFail($id);
+            ->with(
+                ['leads'=>function ($q) {
+                         $q->has('assignedToBranch')
+                             ->orHas('assignedToPerson');
+                }
+                ]
+            )
+            ->findOrFail($leadsource->id);
 
-        return Excel::download(new LeadSourceExport($leadsource, $statuses),'Prospects'.time().'.csv');
+        return Excel::download(new LeadSourceExport($leadsource, $statuses), 'Prospects'.time().'.csv');
         
     }
     /**

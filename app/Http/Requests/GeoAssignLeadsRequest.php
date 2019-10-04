@@ -25,7 +25,7 @@ class GeoAssignLeadsRequest extends FormRequest
     public function rules()
     {
         return [
-            'role' => 'requiredIf:type,role',
+            'roles' => 'requiredIf:type,role',
             'branch' => 'requiredIf:type,specific',
         ];
     }
