@@ -839,6 +839,12 @@ class Branch extends Model implements HasPresenter
                 )->where('completed', 1)
                     ->where('activitytype_id', 4);
             },
+            'activities as sitevisits'=>function ($query) {
+                $query->whereBetween(
+                    'activity_date', [$this->period['from'],$this->period['to']]
+                )->where('completed', 1)
+                    ->where('activitytype_id', 10);
+            },
             'activities as logacall'=>function ($query) {
                 $query->whereBetween(
                     'activity_date', [$this->period['from'],$this->period['to']]
