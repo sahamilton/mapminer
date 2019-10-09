@@ -23,13 +23,16 @@ class OpportunityFormRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'closed'=>'required',
-            'expected_close'=>'required_if:closed,0|date|after_or_equal:today',
-            'actual_close'=>'required_if:closed,1,2|date|before_or_equal:today',
+        
+        $rules['closed'] ='required';
+        if (request('closed') == 0) {
 
-           
-        ];
+            $rules['expected_close'] = 'date|after_or_equal:today';
+        } else {
+            $rules['actual_close'] = 'date|before_or_equal:today';
+        }
+        
+        return $rules;
     }
 
     /**
