@@ -18,6 +18,8 @@
 			<th><b># Open Leads</b></th>
 			<th><b># Completed Activities</b></th>
 			<th><b># Completed Sales Appts</b></th>
+			<th><b># Completed Site Visits</b></th>
+
 			
 		</tr>
 
@@ -44,6 +46,7 @@
 				<td>{{$branch->leads_count}}</td>
 				<td>{{$branch->activities_count}}</td>
 				<td>{{$branch->salesappts}}</td>
+				<td>{{$branch->sitevisits}}</td>
 				
 			</tr>
 		@endforeach

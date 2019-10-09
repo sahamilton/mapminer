@@ -20,8 +20,8 @@
         <div class="form-group{{ $errors->has('person_id)') ? ' has-error' : '' }}">
         <label class="col-md-2 control-label">National Account Manager:</label>
            <div class="input-group input-group-lg ">
-            <select  required class="form-control" name='person_id'>
-                <option value=null>None Assigned</option>
+            <select  class="form-control" name='person_id'>
+                <option value=''>None Assigned</option>
             @foreach ($managers as $manager)
                 <option @if(isset($company) && $company->person_id == $manager->id)
                     selected 

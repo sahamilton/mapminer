@@ -41,7 +41,11 @@ class LocationPostImportController extends Controller
         // what happens if no company?
         if ($this->company = $this->company->find($import->company_id)) {
             $data = $this->import->returnAddressMatchData($this->company);
-            
+           
+            $this->_addNewLocations($data);
+           
+            $message = 'Imported ' . $data['add']->count(). ' locations. Matched ' . count($data['matched']) . ' existing locations';
+            return redirect()->route('company.show', $this->company->id)->withMessage($message);          
         } else {
             
             $data = $this->import->dunsMatchAddress();            

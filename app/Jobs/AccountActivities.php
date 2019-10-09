@@ -5,7 +5,7 @@ namespace App\Jobs;
 use Mail;
 use Excel;
 use App\Address;
-use App\Company;
+use Illuminate\Database\Eloquent\Collection;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
@@ -19,16 +19,16 @@ class AccountActivities implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     
-    public $company;
+    public $companies;
     public $period;
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(Company $company,Array $period)
+    public function __construct(Collection $companies, Array $period)
     {
-        $this->company = $company;
+        $this->companies = $companies;
         $this->period = $period;
 
     }
@@ -40,24 +40,21 @@ class AccountActivities implements ShouldQueue
      */
     public function handle()
     {
-        $companyname = str_replace(" ", "_", $this->company->companyname);
-        $file = "/public/reports/".$this->company->companyname."_activityreport_". Carbon::now()->timestamp. ".xlsx";
-        Excel::store(
-            new AccountActivitiesExport($this->company, $this->period), $file
-        );
-        $this->company->load('managedBy', 'managedBy.userdetails');
-       
-        //$distribution = ['athompson4@trueblue.com'=>'Amy Thompson'];
-       
-        Mail::to([['email'=>$this->company->managedBy->userdetails->email, 'name'=>$this->company->managedBy->fullName()]])
-                
-                ->send(
-                    new AccountActivitiesReport($file, $this->period, $this->company)
-                );
-            
-            
-            
-      
-        
+        foreach ($this->companies as $company) {
+            $companyname = str_replace(" ", "_", $company->companyname);
+            $file = "/public/reports/".$company->companyname."_activityreport_". Carbon::now()->timestamp. ".xlsx";
+            Excel::store(
+                new AccountActivitiesExport($company, $this->period), $file
+            );
+            $company->load('managedBy', 'managedBy.userdetails');
+           
+            //$distribution = ['athompson4@trueblue.com'=>'Amy Thompson'];
+           
+            Mail::to([['email'=>$company->managedBy->userdetails->email, 'name'=>$company->managedBy->fullName()]])
+                    
+                    ->send(
+                        new AccountActivitiesReport($file, $this->period, $company)
+                    );    
+        }  
     }
 }

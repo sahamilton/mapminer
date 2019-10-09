@@ -15,7 +15,7 @@
 
 		<i class="fas fa-search" aria-hidden="true"></i>
 
-		<a href="{{route('salesnotes',$location->company->id)}}" 
+		<a href="{{route('salesnotes.company',$location->company->id)}}" 
 		title="Read notes on selling to {{$location->company->companyname}}"> 
 		Read 'How to Sell to {{$location->company->companyname}}' </a>
 		<fieldset style="border:solid 1px grey;width:90%;padding:5px">

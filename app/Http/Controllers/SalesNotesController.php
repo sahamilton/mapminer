@@ -213,10 +213,193 @@ class SalesNotesController extends BaseController {
 
     public function store(SalesNotesFormRequest $request)
     {
+        if (isset($companyid)) {
+            return redirect()->route('salesnotes',$companyid);
+        }
+        $companies = $this->company->with('salesNotes','serviceline')
+        ->orderBy('companyname')->get();
+        return response()->view('salesnotes.index',compact('companies'));
+            
+
+    }
+
+    /**
+     * Show the form for creating a new howtofield
+     *
+     * @return Response
+     */
+    public function create(Request $request)
+    {
+        $fields = Howtofield::orderBy('group')->get();
+        $groups = Howtofield::select('group')->distinct()->get();
+
+        if (request()->filled('company')) {
+            $company = $this->company->findOrFail(request('company'));
+
+        }
+        return response()->view('salesnotes.create',compact('company','groups','fields'));
+    }
+
+    
+    public function bulkcreate(Request $request)
+    {
+
+
+    }
+    /**
+     * [show description]
+     * 
+     * @param Company $company [description]
+     * 
+     * @return [type]           [description]
+     */
+    public function show(Company $company)
+    {
+        $company->load('managedBy', 'managedBy.userdetails');
+    
+
+        $data = $this->salesnote
+            ->where('company_id', $company->id)
+            ->with('fields')->get();;
+
+        return response()->view('salesnotes.shownote', compact('data', 'company'));
+    }
+
+    /**
+     * Show the form for editing the specified howtofield.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function edit(SalesNotesFormRequest $request, $company)
+    {
+        $company = $this->company->findOrFail($company);
+     
+        return $this->createSalesNotes($request, $company);
+    }
+
+    /**
+     * Update the specified howtofield in storage.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function update(SalesNotesFormRequest $request, $salesnote)
+    {
+        
+
+        $howtofield->update(request()->all());
+        return redirect()->route('salesnotes.index');
+    }
+
+    /**
+     * Remove the specified howtofield from storage.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function destroy($id)
+    {
+        
+        $this->salesnote->destroy($id);
+
+        return redirect()->back();
+    }
+
+    public function fileDelete($file)
+    {
+        $company_id = substr($file, 0, strpos($file, "_"));
+    
+        $attachments = $this->salesnote
+            ->whereIn('howtofield_id', $this->attachmentField)
+            ->where('company_id', $company_id)
+            ->firstorFail();
+    
+        if (count($attachments) != 0 ) {
+            $data = unserialize(urldecode($attachments->value));
+            
+            foreach ($data as $key=>$value) {
+                if ($value['filename'] == $file) {
+                    unset($data[$key]);
+                }
+            }
+            $value = urlencode(serialize($data));   
+            $attachments->value = $value;
+            $attachments->save();
+            // unset file from directory;
+            $path = (public_path('documents/attachments/'.$company_id."/"));
+
+            \File::delete($path . $file);
+
+        }
+
+
+        return redirect()->to('salesnotes/'.$company_id);
+        
+    }
+
+    /**
+     *  Function createSalesNotes
+     *
+     * Create / Edit Sales Notes
+     * @param  integer $id Company Id
+     * @return [type]     [description]
+     */
+    public function createSalesNotes(SalesNotesFormRequest $request,Company $company) 
+    {
+      
+        $company->load('managedBy');
+        $fields = Howtofield::orderBy('group')->get();
+        
+        $salesnote = Salesnote::where('company_id','=',$company->id)->with('fields')->get();
+        $groups = Howtofield::select('group')->distinct()->get();
+        if (count($salesnote)>0) {
+            $data = array();
+            // Fields that need to be convereted to an array
+            
+            foreach($fields as $field) {
+                $field_id = $field->id ;
+                $data[$field_id]['type']=$field->type;
+                $data[$field_id]['id']= $field->id ;
+                $data[$field_id]['group']=$field->group;
+                $data[$field_id]['fieldname']=$field->fieldname;
+                $data[$field_id]['values'] = $field->values;
+                $data[$field_id]['value'] =NULL;
+            }
+            foreach ($salesnote as $note) {
+                $field_id = $note->howtofield_id;
+                if ($note->fields->type == 'checkbox' || $note->fields->type == 'multiple') {
+                    $data[$field_id]['value']= unserialize(urldecode($note->value));
+                    
+                }else{
+                    $data[$field_id]['value']=$note->value;
+                }
+            }
+
+            return response()->view('salesnotes.edit', compact('data','company','groups'));
+        }else{
+            
+            return response()->view('salesnotes.create', compact('fields', 'company', 'groups'));
+        }
+
+        
+    }
+
+    /*
+     * Function storeSalesNotes
+     *
+     * post Sales Notes to db from form
+     *
+     * @param () none
+     * @POST from form
+     * @return none
+     */
+
+    public function store(SalesNotesFormRequest $request, Company $company)
+    {
+        $company = Company::findOrFail(request('companyId'));
 
         $data = request()->all();
-
-
 
         // ALL THIS CAN BE SIMPLIFIED
         if ($request->hasFile('attachment')) {
@@ -240,9 +423,9 @@ class SalesNotesController extends BaseController {
             }
         }
     
-
-        $company = $this->company->findOrFail($data['companyId']);
-        $salesnote = Salesnote::where('company_id', '=', $data['companyId']);
+        
+  
+        $salesnote = Salesnote::where('company_id', '=', $company->id);
         $queryArray=[];
 
         foreach ($data as $key => $value) {
@@ -262,7 +445,7 @@ class SalesNotesController extends BaseController {
         if (count($queryArray)>0) {
             \DB::table('company_howtofield')->insert($queryArray);
         }
-        return redirect()->to('salesnotes/'.$data['companyId']);
+        return redirect()->route('salesnotes.company', $company->id);
     }
     
 

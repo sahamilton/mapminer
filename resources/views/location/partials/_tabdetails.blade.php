@@ -15,7 +15,7 @@ add to opportunity list
 
 		<i class="fas fa-search" aria-hidden="true"></i>
 
-		<a href="{{route('salesnotes',$location->location->company->id)}}" 
+		<a href="{{route('salesnotes.company',$location->location->company->id)}}" 
 		title="Read notes on selling to {{$location->location->company->companyname}}"> 
 		Read 'How to Sell to {{$location->location->company->companyname}}' </a>
 		<fieldset style="border:solid 1px grey;width:90%;padding:5px">

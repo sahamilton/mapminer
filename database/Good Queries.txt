@@ -18,7 +18,7 @@ and activities.id is null
 group by branches.branchname, leadsources.source
 
 
-//       Open but Closed opportunities
+// Open but Closed opportunities
 
 select branchname, concat_ws(' ', persons.firstname, persons.lastname), concat_ws(' ', b.firstname, b.lastname) as createdby,  addresses.businessname, opportunities.title, opportunities.created_at, actual_close
 from branches, branch_person, addresses, opportunities, persons, persons b

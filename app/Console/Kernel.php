@@ -75,7 +75,7 @@ class Kernel extends ConsoleKernel
                 ->at('04:59');
             
             // National Account Jobs
-            $companies = Company::whereIn('id', [532, 43, 41])->get();
+            $companies = Company::whereIn('id', [532])->get();
             $period['from'] = Carbon::now()->subWeek()->startOfWeek();
             $period['to'] = Carbon::now()->subWeek()->endOfWeek();
             $schedule->job(new AccountActivities($companies, $period))

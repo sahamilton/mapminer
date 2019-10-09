@@ -259,7 +259,7 @@ Route::group(
         Route::resource('salesleads', 'SalesLeadsController');
         
         //   Sales Notes
-        Route::get('salesnotes/{company}', ['as'=>'salesnotes', 'uses'=>'SalesNotesController@show']);
+        Route::get('salesnotes/{company}', ['as'=>'salesnotes.company', 'uses'=>'SalesNotesController@show']);
         Route::get('salesnotes/print/{company}', ['as'=>'salesnotes.print', 'uses'=>'SalesNotesController@printSalesNotes']);
         Route::resource('salesnotes', 'SalesNotesController');
         
@@ -500,7 +500,7 @@ Route::group(
         
         //     Salesnotes
         Route::get('salesnotes/filedelete/{file}', ['as'=>'salesnotes.filedelete', 'uses'=>'SalesNotesController@filedelete']);
-        Route::get('salesnotes/create/{companyId}', ['as'=>'salesnotes.cocreate', 'uses'=>'SalesNotesController@createSalesNotes']);
+        Route::get('salesnotes/create/{company}', ['as'=>'salesnotes.cocreate', 'uses'=>'SalesNotesController@createSalesNotes']);
         //   OrderImports
         
         Route::resource('orderimport', 'OrderImportController');
@@ -708,10 +708,10 @@ Route::group(
         //   Jobs
         Route::get(
             'testjob', function () {
-                 //$company = App\Company::findOrFail(532);
+                $companies = App\Company::whereIn('id', [532])->get();
                 $period['from'] = \Carbon\Carbon::now()->subWeek()->startOfWeek()->startOfDay();
                 $period['to'] = \Carbon\Carbon::now()->subWeek()->endOfWeek()->endOfDay();;
-
+                App\Jobs\AccountActivities::dispatch($companies, $period);
                 //App\Jobs\ActivityOpportunity::dispatch($period);
                 //$opportunity = App\Opportunity::has('branch')->first();
                 //App\Jobs\WonOpportunity::dispatch($opportunity);
@@ -731,16 +731,16 @@ Route::group(
                  }*/
                  
                  /*}
-                 */
+                 
                  $period['from'] = now();
                  $period['to'] = now()->addWeek();
-                 App\Jobs\WeeklyActivityReminder::dispatch($period);
+                 App\Jobs\WeeklyActivityReminder::dispatch($period);*/
                  //App\Jobs\WeeklyOpportunitiesReminder::dispatch();
                  /*$period['from'] = \Carbon\Carbon::now()->subWeek()->startOfWeek();
-                 $period['to'] = \Carbon\Carbon::now();*/
-                App\Jobs\BranchStats::dispatch($period);
+                 $period['to'] = \Carbon\Carbon::now();/
+                App\Jobs\BranchStats::dispatch($period);*
                 //App\Jobs\ActivityOpportunity::dispatch($period);
-                /*//App\Jobs\ActivityOpportunityReport::dispatch();
+                //App\Jobs\ActivityOpportunityReport::dispatch();
                 
                 //App\Jobs\ZipBackup::dispatch('MMProd20190123');
                 //App\Jobs\UploadToDropbox::dispatch('MMProd20190123');
