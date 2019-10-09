@@ -92,15 +92,15 @@ class Model extends \Eloquent
     }
     
     /*
-	 * Function export
-	 *
-	 * Create array of locations of logged in users watchlist
-	 *
-	 * @param fields arrary 
-	 *         data array (collection)
-	 *         filename string
-	 * @return (array) csv results
-	 */
+     * Function export
+     *
+     * Create array of locations of logged in users watchlist
+     *
+     * @param fields arrary 
+     *         data array (collection)
+     *         filename string
+     * @return (array) csv results
+     */
     public function export($fields, $data, $name = 'Export')
     {
         
@@ -149,15 +149,15 @@ class Model extends \Eloquent
     
     
     /*
-	 * Function export
-	 *
-	 * Create array of locations of logged in users watchlist
-	 *
-	 * @param fields arrary 
-	 *         data array (collection)
-	 *         filename string
-	 * @return (array) csv results
-	 */
+     * Function export
+     *
+     * Create array of locations of logged in users watchlist
+     *
+     * @param fields arrary 
+     *         data array (collection)
+     *         filename string
+     * @return (array) csv results
+     */
     public function exportArray($fields, $data, $name = 'Export')
     {
         
@@ -246,24 +246,24 @@ class Model extends \Eloquent
         return $this->userRoles;
     }
 /*
-	 * Function getWatchList
-	 *
-	 * Create array of locations of logged in users watchlist
-	 *
-	 * @param () none
-	 * @return (array) mywatchlist
-	 */
+     * Function getWatchList
+     *
+     * Create array of locations of logged in users watchlist
+     *
+     * @param () none
+     * @return (array) mywatchlist
+     */
     public function getWatchList()
     {
 
         $watchlist = User::where('id', '=', auth()->user()->id)->with('watching')->first();
         return $watchlist->watching->pluck('id')->toArray();
         /*foreach($watchlist as $watching) {
-			foreach($watching->watching as $watched) {
-				$mywatchlist[]=$watched->id;
-			}
-		}
-		return $mywatchlist;*/
+            foreach($watching->watching as $watched) {
+                $mywatchlist[]=$watched->id;
+            }
+        }
+        return $mywatchlist;*/
     }
 
     public function manyThroughMany($related, $through, $firstKey, $secondKey, $pivotKey)
