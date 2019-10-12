@@ -15,12 +15,9 @@ use App\Http\Controllers\BaseController;
 class AdminDashboardController extends BaseController
 {
 
-    private $offset; // time offset in seconds from server time and local time
-    private $localTimeZone = 'America/Los_Angeles';
-    private $today;
-    private $trackingField = 'track.lastactivity';
-    private $trackingtable ='track';
-    private $track;
+    private $_offset; // time offset in seconds from server time and local time
+    private $_localTimeZone = 'America/Los_Angeles';
+    private $_today;
 
     public $address;
     public $user;
@@ -29,19 +26,38 @@ class AdminDashboardController extends BaseController
     public $location;
     public $begingingOfTime;
 
-
-    public function __construct(Company $company, Address $address, Track $track, User $user, Person $person)
-    {
+    /**
+     * [__construct description]
+     * 
+     * @param Address $address [description]
+     * @param Company $company [description]
+     * @param Person  $person  [description]
+     * @param Track   $track   [description]
+     * @param User    $user    [description]
+     */
+    public function __construct(
+        Address $address,
+        Company $company, 
+        Person $person,
+        Track $track, 
+        User $user       
+    ) {
         $this->_calculateTimeOffset();
-        $this->track = $track;
-        $this->user = $user;
+        $this->address = $address;
         $this->company = $company;
         $this->person = $person;
-        $this->address = $address;
+        $this->track = $track;
+        $this->user = $user;
         $this->begingingOfTime = Carbon::parse('2014-07-01');
     }
 
-    
+    /**
+     * [dashboard description]
+     * 
+     * @param [type] $filter [description]
+     * 
+     * @return [type]         [description]
+     */
     public function dashboard($filter = null)
     {
 
@@ -75,7 +91,13 @@ class AdminDashboardController extends BaseController
     }
 
 
-
+    /**
+     * [logins description]
+     * 
+     * @param [type] $view [description]
+     * 
+     * @return [type]       [description]
+     */
     public function logins($view = null)
     {
 
@@ -84,7 +106,13 @@ class AdminDashboardController extends BaseController
         $views = $this->_getViews();
         return response()->view('admin.users.newshow', compact('users', 'views', 'view'));
     }
-
+    /**
+     * [downloadlogins description]
+     * 
+     * @param [type] $id [description]
+     * 
+     * @return [type]     [description]
+     */
     public function downloadlogins($id = null)
     {
         
@@ -101,7 +129,11 @@ class AdminDashboardController extends BaseController
 
         return response()->return();
     }
-
+    /**
+     * [_getViews description]
+     * 
+     * @return [type] [description]
+     */
     private function _getViews()
     {
 
@@ -157,19 +189,35 @@ class AdminDashboardController extends BaseController
 
         ];
     }
+    /**
+     * [_getChartColors description]
+     * 
+     * @return [type] [description]
+     */
     private function _getChartColors()
     {
 
         return array_column($this->_getViews(), 'color', 'value');
     }
-
+    /**
+     * [_getUsersByLoginDate description]
+     * 
+     * @param  integer $n [description]
+     * @return [type]    [description]
+     */
     private function _getUsersByLoginDate($n)
     {
         $periods = $this->_getViews();
         $interval = $periods[$n]['interval'];
         return $this->user->lastLogin($interval)->with('person', 'roles', 'serviceline')->get();
     }
-
+    /**
+     * [_createColors description]
+     * 
+     * @param [type] $num [description]
+     * 
+     * @return [type]      [description]
+     */
     private function _createColors($num)
     {
         $colors=[];
@@ -194,7 +242,13 @@ class AdminDashboardController extends BaseController
         return $colors;
     }
 
-
+    /**
+     * [_decToHex description]
+     * 
+     * @param [type] $value [description]
+     * 
+     * @return [type]        [description]
+     */
     private function _decToHex($value)
     {
         if (strlen(dechex($value))<2) {
@@ -215,7 +269,11 @@ class AdminDashboardController extends BaseController
 
 
     }
-    
+    /**
+     * [_getFirstTimers description]
+     * 
+     * @return [type] [description]
+     */
     private function _getFirstTimers()
     {
     
@@ -238,7 +296,11 @@ class AdminDashboardController extends BaseController
 
         return \DB::select(\DB::raw($query));
     }
-
+    /**
+     * [_getWeekLoginCount description]
+     * 
+     * @return [type] [description]
+     */
     private function _getWeekLoginCount()
     {
         $subQuery = $this->track
@@ -258,7 +320,11 @@ class AdminDashboardController extends BaseController
                 ->get();
     }
 
-
+    /**
+     * [_getRoleWeekLoginCount description]
+     * 
+     * @return [type] [description]
+     */
     private function _getRoleWeekLoginCount()
     {
         
@@ -285,7 +351,13 @@ class AdminDashboardController extends BaseController
         
         return $this->_formatRoleWeekData($roleweek);
     }
-    
+    /**
+     * [_formatRoleWeekData description]
+     * 
+     * @param [type] $roleweek [description]
+     * 
+     * @return [type]           [description]
+     */
     private function _formatRoleWeekData($roleweek)
     {
         $data=[];
@@ -317,10 +389,9 @@ class AdminDashboardController extends BaseController
     
 
     /**
-     * Return array of logins by grouped intervals.
-     *
-     *
-     * @return Result array
+     * [_getLastLogins description]
+     * 
+     * @return [type] [description]
      */
     private function _getLastLogins()
     {
@@ -333,9 +404,12 @@ class AdminDashboardController extends BaseController
     }
 
     /**
-
-
-    **/
+     * _buildSelectQuery 
+     * 
+     * @param [type] $query [description]
+     * 
+     * @return [type]        [description]
+     */
     private function _buildSelectQuery($query = null)
     {
         $views = $this->_getViews();
@@ -365,8 +439,7 @@ class AdminDashboardController extends BaseController
     /**
      * Return array of companies that have no sales notes
      *
-     *
-     * @return Result array
+     * @return [type] [description]
      */
     private function _getNoSalesNotes()
     {
@@ -376,7 +449,6 @@ class AdminDashboardController extends BaseController
 
     /**
      * Return array of watchlist count by user.
-     *
      *
      * @return Result array
      */
@@ -393,29 +465,11 @@ class AdminDashboardController extends BaseController
     /**
      * Return array of #locations, #locations without phone number and % by company.
      *
-     *
      * @return Result array
      */
     private function _getLocationsWoContacts()
     {
-        /*
-        $subQuery =(
-            $this->company->
-            ->selectRaw('id,count(locations.id) as withcontacts')
-            ->with('locations','locations.contacts')
-            ->groupBy('companies.id');
-        )
-
-        return
-        \DB::
-        table(\DB::raw('('.$subQuery->toSql().') as ol'))
-        ->selectRaw('companyname,
-                companies.id,
-                count(locations.id) as locations,
-                (count(locations.id)-withcontacts) as without,
-                (((count(locations.id)-withcontacts) / count(locations.id)) * 100) as percent')
-        ->mergeBindings($subQuery->getQuery())
-        */
+       
         $query ="
             select
                 companyname,
@@ -443,24 +497,23 @@ class AdminDashboardController extends BaseController
 
         return \DB::select(\DB::raw($query));
 
-        /**/
+        
     }
     /**
      * Calculate current date time and server vs local timezone offset.
-     *
-     *
+     * 
+     * @return [type] [description]
      */
-
     private function _calculateTimeOffset()
     {
 
         $server_tz = date_default_timezone_get();
-        $local_dtz = new \DateTimeZone($this->localTimeZone);
+        $local_dtz = new \DateTimeZone($this->_localTimeZone);
         $server_dtz = new \DateTimeZone($server_tz);
         $server_dt = new \DateTime("now");
         $local_dt = new \DateTime("now", $local_dtz);
-        $this->offset = $local_dtz->getOffset($local_dt)-$server_dtz->getOffset($server_dt);
-        $this->today =date_format($local_dt, 'Y-m-d');
+        $this->_offset = $local_dtz->getOffset($local_dt)-$server_dtz->getOffset($server_dt);
+        $this->_today =date_format($local_dt, 'Y-m-d');
     }
 
 
@@ -468,7 +521,11 @@ class AdminDashboardController extends BaseController
     {
     }
 
-
+    /**
+     * [_getDuplicateAddresses description]
+     * 
+     * @return [type] [description]
+     */
     private function _getDuplicateAddresses()
     {
         //Query to get duplicate addresses
@@ -483,19 +540,14 @@ class AdminDashboardController extends BaseController
             ->havingRaw("total > 1")
             ->get();
     }
-
+    /**
+     * [_incorrectSegments description]
+     * 
+     * @return [type] [description]
+     */
     private function _incorrectSegments()
     {
 
-        /*return $this->location->with('company','verticalsegment')
-            ->selectRaw('*,
-                    count(locations.id) as incorrect')
-            ->whereNotIn('segment',function($query) {
-               $query->select('vertical')->from('companies')->find();
-            })
-         ->groupBy('company_id')
-         ->get();
-         */
         $query ="
         SELECT
             companies.companyname as account,
@@ -520,13 +572,21 @@ class AdminDashboardController extends BaseController
         order By companies.companyname";
         return \DB::select(\DB::raw($query));
     }
-
+    /**
+     * [_getNoGeocodedLocations description]
+     * 
+     * @return [type] [description]
+     */
     private function _getNoGeocodedLocations()
     {
 
         return Address::where('geostatus', '=', false)->with('company')->get();
     }
-
+    /**
+     * [_recentLocationNotes description]
+     * 
+     * @return [type] [description]
+     */
     private function _recentLocationNotes()
     {
         return Note::where('created_at', '>=', now()->subMonth())
@@ -537,7 +597,11 @@ class AdminDashboardController extends BaseController
         ->get();
     }
 
-
+    /**
+     * [_recentLeadNotes description]
+     * 
+     * @return [type] [description]
+     */
     private function _recentLeadNotes()
     {
         return Note::where('created_at', '>=', now()->subMonth())
@@ -547,7 +611,11 @@ class AdminDashboardController extends BaseController
         ->with(['writtenBy','relatesToLead','writtenBy.person'])
         ->get();
     }
-
+    /**
+     * [_recentProjectNotes description]
+     * 
+     * @return [type] [description]
+     */
     private function _recentProjectNotes()
     {
         return Note::where('created_at', '>=', now()->subMonth())
