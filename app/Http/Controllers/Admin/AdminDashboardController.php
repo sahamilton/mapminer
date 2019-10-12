@@ -65,9 +65,9 @@ class AdminDashboardController extends BaseController
         //$data['_incorrectSegments'] = $this->_incorrectSegments();
 
         $data['nogeocode'] =$this->_getNoGeocodedLocations();
-        $data['_recentLocationNotes'] = $this->_recentLocationNotes();
-        $data['_recentLeadNotes'] = $this->_recentLeadNotes();
-        $data['_recentProjectNotes'] = $this->_recentProjectNotes();
+        $data['recentLocationNotes'] = $this->_recentLocationNotes();
+        $data['recentLeadNotes'] = $this->_recentLeadNotes();
+        $data['recentProjectNotes'] = $this->_recentProjectNotes();
         $color = $this->_getChartColors();
         $reports=\App\Report::withCount('distribution')->get();
         $managers=$this->_getManagers();
@@ -211,7 +211,7 @@ class AdminDashboardController extends BaseController
      */
     private function _getLogins()
     {
-        return $this->track->_getLogins();
+        return $this->track->getLogins();
 
 
     }
