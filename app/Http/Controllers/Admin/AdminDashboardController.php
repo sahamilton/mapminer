@@ -211,7 +211,7 @@ class AdminDashboardController extends BaseController
      */
     private function _getLogins()
     {
-        return $this->track->_getLogins();
+        return $this->track->getLogins();
 
 
     }
