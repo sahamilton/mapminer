@@ -9,7 +9,7 @@
         name='title' 
         required
         description="title" 
-        value="{{ old('title' , isset($opportunity)  ? $opportunity->title : 'Opportunity @ ' . $address->businessname) }}" 
+        value="{{ old('title' , isset($opportunity)  ? $opportunity->title : 'Opportunity @ ' . $location->businessname) }}" 
         placeholder="Opportunity Title">
       <span class="help-block">
         <strong>{{ $errors->has('title') ? $errors->first('title') : ''}}</strong>
