@@ -430,7 +430,7 @@ class Person extends NodeModel implements HasPresenter
      */
     public function leads()
     {
-        return $this->belongsToMany(Lead::class, 'lead_person_status', 'person_id', 'related_id')
+        return $this->belongsToMany(Address::class, 'address_person', 'person_id', 'address_id')
             ->withPivot('created_at', 'updated_at', 'status_id', 'rating');
     }
     /**

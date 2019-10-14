@@ -6,10 +6,20 @@
 <h4>from {{$source->datefrom->format('M j, Y')}} to {{$source->dateto->format('M j, Y')}}</h4>
 <!---- Tab message -->
 <ul class="nav nav-tabs">
-  <li class="nav-item "><a class="nav-link active" data-toggle="tab" href="#home">Message</a></li>
+  <li class="nav-item ">
+    <a class="nav-link active" 
+      data-toggle="tab" 
+      href="#home">Message
+    </a>
+  </li>
   <li class="nav-item">
     <a class="nav-link"  data-toggle="tab" href="#menu1">
-      Branches ({{$branches->count()}})
+      Branches ({{$data['branches']->count()}})
+    </a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link"  data-toggle="tab" href="#menu2">
+      Sales Teams ({{$data['people']->count()}})
     </a>
   </li>
 </ul>
@@ -25,15 +35,24 @@
     </div>
     <form id="campaignmessage" action="{{route('sendleadsource.message',$source->id)}}" method="post">
         {{csrf_field()}}
-        <div class="form-group form-check-inline">
+        <div class="form-group form-inline">
           
-          <label class = "form-control">Test</label>
-          <input type="checkbox" checked name="test" value="1" class="form-control" />
-        </div>
-        <div class="form-group form-check-inline">
+          <label for="Test">Test</label>
+          <input 
+            type="checkbox" 
+            checked 
+            name="test" 
+            value="1" 
+            class="form-control" />
+        
           
-          <label class = "form-control">Notify Managers</label>
-          <input type="checkbox" checked name="managers" value="1" class="form-control" />
+          <label for="Notify Manager">Notify Managers</label>
+          <input 
+            type="checkbox" 
+            checked 
+            name="managers" 
+            value="1" 
+            class="form-control" />
         </div>
          <div class="form-group">
         <button class='disabled'>Edit Text</button>
@@ -50,37 +69,66 @@
   <div id="menu1" class="tab-pane fade">
   <!---- Tab team -->
     <table id="sorttable" class="table table-striped">
-    <thead>
-    <tr>
-    <th>Branch</th>
-    <th>Lead Count</th>
-    <th>Branch Manager</th>
-    <th>Reports To</th>
+        <thead>
+        <tr>
+        <th>Branch</th>
+        <th>Lead Count</th>
+        <th>Branch Manager</th>
+        <th>Reports To</th>
 
-    </tr>
-    </thead>
+        </tr>
+        </thead>
 
-    <tbody>
-    @foreach ($branches as $branch)
-    <tr>
-    <td>{{$branch->branchname}}</td>
-    <td>{{$data[$branch->id]}}</td>
-    <td>
-    @foreach ($branch->manager as $manager)
-        {{$manager->fullName()}}<br />
-      @endforeach
-    </td>
-    <td>
-      @if(isset($manager))
-       {{ $manager->reportsTo->fullName()}};
-      @endif
-    </td>
 
-    </tr>
-    @endforeach
-    </tbody>
+        @foreach ($data['branches'] as $branch)
+        <tr>
+        <td>{{$branch->branchname}}</td>
+        <td>{{$data[$branch->id]}}</td>
+        <td>
+        @foreach ($branch->manager as $manager)
+            {{$manager->fullName()}}<br />
+          @endforeach
+        </td>
+        <td>
+          @if(isset($manager))
+           {{ $manager->reportsTo->fullName()}};
+          @endif
+        </td>
+
+        </tr>
+        @endforeach
+        </tbody>
     </table>
   </div>
+
+  <div id="menu2" class="tab-pane fade">
+  <!---- Tab team -->
+    <table id="sorttable2" class="table table-striped">
+        <thead>
+        <tr>
+        <th>Person</th>
+        <th>Lead Count</th>
+        <th>Reports To</th>
+
+        </tr>
+        </thead>
+        <tbody>
+        
+        @foreach ($data['people'] as $person)
+        
+        <tr>
+          <td>{{$person->fullName()}}</td>
+          <td>{{$person->leads_count}}</td>
+          <td>{{$person->reportsTo->fullName()}}</td>
+        
+
+        </tr>
+        @endforeach
+        </tbody>
+    </table>
+  </div>
+
+
 </div>
 </div>
 @include('partials._scripts')

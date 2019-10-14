@@ -319,10 +319,10 @@ trait Geocode
     public function getBoundingBox($collection)
     {
 
-        $data['maxLat'] = $collection->max('lat')+0.05;
-        $data['minLat'] = $collection->min('lat')-0.05;
-        $data['maxLng'] = $collection->max('lng')-0.05;
-        $data['minLng'] = $collection->min('lng')+0.05;
+        $data['maxLat'] = $collection->max('lat') + 0.05;
+        $data['minLat'] = $collection->min('lat') - 0.05;
+        $data['maxLng'] = $collection->max('lng') - 0.05;
+        $data['minLng'] = $collection->min('lng') + 0.05;
        
         return $data;
     }

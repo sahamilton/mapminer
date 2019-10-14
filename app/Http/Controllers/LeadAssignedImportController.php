@@ -16,14 +16,29 @@ class LeadAssignedImportController extends ImportController
     public $leadsources;
     public $import;
 
-    
+    /**
+     * [__construct description]
+     * 
+     * @param Lead       $lead       [description]
+     * @param LeadSource $leadsource [description]
+     * 
+     * @param LeadImport $import     [description]
+     */
     public function __construct(Lead $lead, LeadSource $leadsource, LeadImport $import)
     {
         $this->lead = $lead;
         $this->import = $import;
         $this->leadsources = $leadsource;
     }
-
+    /**
+     * [getFile description]
+     * 
+     * @param Request $request [description]
+     * @param [type]  $id      [description]
+     * @param [type]  $type    [description]
+     * 
+     * @return [type]           [description]
+     */
     public function getFile(Request $request, $id = null, $type = null)
     {
 
@@ -39,7 +54,13 @@ class LeadAssignedImportController extends ImportController
         return response()->view('leads.import', compact('sources', 'leadsource', 'requiredFields', 'type'));
     }
 
-
+    /**
+     * [import description]
+     * 
+     * @param LeadImportFormRequest $request [description]
+     * 
+     * @return [type]                         [description]
+     */
     public function import(LeadImportFormRequest $request)
     {
      
@@ -57,7 +78,13 @@ class LeadAssignedImportController extends ImportController
         $skip = ['id','created_at','updated_at','lead_source_id','pr_status'];
         return response()->view('imports.mapfields', compact('columns', 'fields', 'data', 'company_id', 'skip', 'title', 'requiredFields'));
     }
-    
+    /**
+     * [mapfields description]
+     * 
+     * @param Request $request [description]
+     * 
+     * @return [type]           [description]
+     */
     public function mapfields(Request $request)
     {
 
@@ -65,24 +92,11 @@ class LeadAssignedImportController extends ImportController
         $this->validateInput($request);
         $this->import->setFields($data);
         if ($this->import->import()) {
-                $this->postimport();
+                $this->_postimport();
 
         
             return redirect()->route('leadsource.index')->with('success', 'Leads imported');
         }
     }
     
-    private function postimport()
-    {
-        //copy to leads
-
-        if (request()->has('assigned')) {
-        // insert into lead_person_status (lead_id,person_id,status)
-        // SELECT leads.id, leadsimport.pid,'2' from leads,leadsimport
-        // where MD5(lower(replace(concat(`leads.companyname`,`leads.businessname`,`leads.address`,`leads.city`,`leads.state`,`leads.zip`),' ',''))) = MD5(lower(replace(concat(`leadsimport.companyname`,`leadsimport.businessname`,`leadsimport.address`,`leadsimport.city`,`leadsimport.state`,`leadsimport.zip`),' ','')))
-        //and leads.leads_source_id = leadsimport.lead_source_id;
-        }
-
-        //truncate leadimport table;
-    }
 }
