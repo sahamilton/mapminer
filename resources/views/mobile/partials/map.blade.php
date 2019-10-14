@@ -2,7 +2,7 @@
 
 <script type="text/javascript">
 function initialize() {
-  var myLatlng = new google.maps.LatLng({{$address->lat}},{{$address->lng}});
+  var myLatlng = new google.maps.LatLng({{$location->lat}},{{$location->lng}});
   var mapOptions = {
     zoom: 14,
     center: myLatlng
@@ -10,8 +10,8 @@ function initialize() {
   var infoWindow = new google.maps.InfoWindow;
   
   var map = new google.maps.Map(document.getElementById('map'), mapOptions);
-	var name = "{{$address->companyname}}";
-  var address = "{{$address->street}}" + " {{$address->city}}" + " {{$address->state}}" + " {{$address->zip}}";
+	var name = "{{$location->companyname}}";
+  var address = "{{$location->street}}" + " {{$location->city}}" + " {{$location->state}}" + " {{$location->zip}}";
   var html =  name +  address;
 	var marker = new google.maps.Marker({
 	  position: myLatlng,

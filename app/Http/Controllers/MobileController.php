@@ -242,8 +242,8 @@ class MobileController extends Controller
         }
      
         
-        $location->load('activities', 'openOpportunities', 'contacts');
-
+        $location = $address->load('activities', 'openOpportunities', 'contacts');
+  
         return response()->view('mobile.show', compact('location', 'branch'));
         
     }

@@ -21,7 +21,7 @@
 
     </thead>
     <tbody>
-         @foreach($address->contacts as $contact)
+         @foreach($location->contacts as $contact)
         
             <tr>
                 <td>

@@ -1,11 +1,11 @@
 @extends('site.layouts.mobile')
 @section('content')
 <div class="container"  style="margin-bottom:80px">
-<h2>{{$address->businessname}}</h2>
+<h2>{{$location->businessname}}</h2>
 <p><a href="{{route('mobile.index')}}">Return to Mobile View</a></p>
 <p>
-    @if($address->company)
-      <i>A location of <a href="{{ route('company.show', $address->company->id) }}">{{$address->company->companyname}}</a></a></i>
+    @if($location->company)
+      <i>A location of <a href="{{ route('company.show', $location->company->id) }}">{{$location->company->companyname}}</a></a></i>
     @endif
 </p>
 
@@ -23,7 +23,7 @@
       aria-selected="true">
     <strong> Details</strong>
   </a>
-@if($address->openOpportunities->count()>0)
+@if($location->openOpportunities->count()>0)
 <a class="nav-item nav-link"  
         data-toggle="tab" 
         href="#opportunities"
@@ -32,7 +32,7 @@
         aria-controls="opportunities"
         aria-selected="false">
 
-    <strong>Open Opportunities ({{$address->openOpportunities->count()}})</strong>
+    <strong>Open Opportunities ({{$location->openOpportunities->count()}})</strong>
 </a>
 @endif
 
@@ -54,7 +54,7 @@
       role="tab"
       aria-controls="activities"
       aria-selected="false">
-        <strong>Activities ({{$address->activities->count()}})</strong>
+        <strong>Activities ({{$location->activities->count()}})</strong>
   </a>
 
 
