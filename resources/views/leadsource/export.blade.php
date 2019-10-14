@@ -21,9 +21,13 @@
 	</td>
 	<td>{{$lead->assignedToBranch->first()->pivot->rating}}</td>
 @else
-	<td>{{$lead->assignedToPerson->first()->fullName()}}</td>
-	<td>{{$statuses[$lead->assignedToPerson->first()->pivot->status_id]}}
+	<td>
+		@foreach ($lead->assignedToPerson as $person)
+			{{$person->fullName()}}
+			@if(! $loop->last) / @endif
+		@endforeach
 	</td>
+	<td>{{$statuses[$lead->assignedToPerson->first()->pivot->status_id]}}</td>
 	<td>{{$lead->assignedToPerson->first()->pivot->rating}}</td>	
 	
 @endif
