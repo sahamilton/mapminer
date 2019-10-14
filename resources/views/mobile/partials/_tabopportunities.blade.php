@@ -23,7 +23,7 @@
 
     </thead>
     <tbody>
-        @foreach ($address->opportunities as $opportunity)
+        @foreach ($location->opportunities as $opportunity)
 
         <tr>
             <td>{{$opportunity->created_at->format('Y-m-d')}}</td>

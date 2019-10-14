@@ -10,7 +10,7 @@
 
     </thead>
     <tbody>
-         @foreach($address->activities as $activity)
+         @foreach($location->activities as $activity)
   
             <tr @if($activity->completed) class="success" @endif>
                 <td>{{$activity->activity_date ? $activity->activity_date->format('Y-m-d'):''}}</td>

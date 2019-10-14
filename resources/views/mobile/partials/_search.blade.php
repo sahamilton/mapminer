@@ -52,7 +52,7 @@ method = 'post' name="mapselector">
         type="text" 
         name="search" 
         
-        value="{{$address}}"
+        value="{{$location}}"
         id="search"
         required
         style='width:300px'
