@@ -394,7 +394,14 @@ class MyLeadsController extends BaseController
         }
         return $branches;
     }
-
+    /**
+     * [_reassignToBranch description]
+     * 
+     * @param Address $address  [description]
+     * @param Array   $branches [description]
+     * 
+     * @return [type]            [description]
+     */
     private function _reassignToBranch(Address $address, Array $branches)
     {
         if ($address->openActivities->count()) {
@@ -406,8 +413,17 @@ class MyLeadsController extends BaseController
         
         return $address->assignedToBranch()->sync($branches);
     }
+    /**
+     * [_reassignActivities description]
+     * 
+     * @param [type] $activities [description]
+     * @param [type] $branches   [description]
+     * 
+     * @return [type]             [description]
+     */
     private function _reassignActivities($activities, $branches)
     {
+    
         foreach ($branches as $branch) {
             foreach ($activities as $activity) {
                 $activity->update(['branch_id'=> $branch]);
@@ -415,7 +431,14 @@ class MyLeadsController extends BaseController
         }
        
     }
-
+    /**
+     * [_reassignOpportunities description]
+     * 
+     * @param [type] $opportunities [description]
+     * @param [type] $branches      [description]
+     * 
+     * @return [type]                [description]
+     */
     private function _reassignOpportunities($opportunities, $branches)
     {
         
