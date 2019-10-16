@@ -425,7 +425,7 @@ class LeadSourceController extends Controller
             ->get();
 
         if (request()->has('export')) {
-            $this->_downloadDeletedLeads($manager, $leads);
+            $file =  $this->_downloadDeletedLeads($manager, $leads);
             
         }
         $deleted = $leads->count();
@@ -439,20 +439,21 @@ class LeadSourceController extends Controller
             ->whereDoesntHave('opportunities')
             ->whereIn('id', $leads->pluck('address_id')->toArray())
             ->delete();
-        
-        return redirect()->route('leadsource.flush')
-            ->withMessage(
-                $deleted . " stale leads assigned to " . 
+        $message = $deleted . " stale leads assigned to " . 
                 $manager->fullName() . 
-                "'s branches from the selected leadsources have been deleted, 
-                The deleted leads are stored <a href=\"" . secure_url('storage/'. $file) ."\">here</a>"
-            );
+                "'s branches from the selected leadsources have been deleted";
+        if (request()->has('delete')) {         
+                $message .=" The deleted leads are stored <a href=\"" . secure_url('storage/'. $file) ."\">here</a>";
+        }
+        return redirect()->route('leadsource.flush')
+            ->withMessage($message);
     }
 
     private function _downloadDeletedLeads($manager, $leads)
     {
         $file = 'flushed/staleLeads_'. $manager->id ."_".now()->timestamp . ".xlsx";
             dispatch(new StaleLeads($leads, $manager, $file));
+            return $file;
     }
     /**
      * [addLeads description]
