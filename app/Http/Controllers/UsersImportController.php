@@ -47,7 +47,11 @@ class UsersImportController extends ImportController
             ->get();
 
         $roles = \App\Role::all();
-
+        if (! $newPeople->count()) {
+           
+            return redirect()->route('importcleanse.flush');
+        }
+       
         return response()->view('admin.users.import.new', compact('newPeople', 'roles'));
     }
     /**

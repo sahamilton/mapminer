@@ -183,7 +183,7 @@ class MyLeadsController extends BaseController
         
         $dupes = $this->lead->duplicate($data['lead']['lng'], $data['lead']['lat'])->get();
 
-        //if ($dupes->count()>0) {
+        //if ($dupes->count() > 0) {
             //return response()->view('addresses.duplicates', compact('dupes', 'data'));
         //} 
         
@@ -291,9 +291,6 @@ class MyLeadsController extends BaseController
         
         return request('address'). ' ' .request('city'). ' ' .request('state'). ' ' .request('zip');
     }
-
-   
-   
     /**
      * _cleanseContactData Extract contact information from request
      * 
@@ -323,6 +320,7 @@ class MyLeadsController extends BaseController
      * [reassign description]
      * 
      * @param LeadReassignFormRequest $request [description]
+     * @param Address                 $address [description]
      * 
      * @return [type]                           [description]
      */
@@ -342,12 +340,10 @@ class MyLeadsController extends BaseController
     
         $this->_reassignToBranch($address, $branch);
         $address->load('assignedToBranch');
-        // auth()->user()->person;
-        // address
       
         $this->_notifyLeadReassignment($branch, $address);
         
-         // branch manager
+
         return redirect()->back()->withSuccess('Lead reassigned');
     }
     /**
@@ -394,7 +390,14 @@ class MyLeadsController extends BaseController
         }
         return $branches;
     }
-
+    /**
+     * [_reassignToBranch description]
+     * 
+     * @param Address $address  [description]
+     * @param Array   $branches [description]
+     * 
+     * @return [type]            [description]
+     */
     private function _reassignToBranch(Address $address, Array $branches)
     {
         if ($address->openActivities->count()) {
@@ -406,6 +409,14 @@ class MyLeadsController extends BaseController
         
         return $address->assignedToBranch()->sync($branches);
     }
+    /**
+     * [_reassignActivities description]
+     * 
+     * @param [type] $activities [description]
+     * @param [type] $branches   [description]
+     * 
+     * @return [type]             [description]
+     */
     private function _reassignActivities($activities, $branches)
     {
         foreach ($branches as $branch) {
@@ -415,7 +426,14 @@ class MyLeadsController extends BaseController
         }
        
     }
-
+    /**
+     * [_reassignOpportunities description]
+     * 
+     * @param [type] $opportunities [description]
+     * @param [type] $branches      [description]
+     * 
+     * @return [type]                [description]
+     */
     private function _reassignOpportunities($opportunities, $branches)
     {
         

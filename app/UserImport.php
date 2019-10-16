@@ -186,8 +186,9 @@ class UserImport extends Imports
     {
 
         $queries =["update usersimport,users,persons
-				set usersimport.reports_to = persons.id 
-				where usersimport.manager = users.email
+				set usersimport.reports_to = persons.id , 
+                usersimport.manager = concat_ws(' ', persons.firstname, persons.lastname)
+				where usersimport.mgr_emp_id = users.employee_id
 				and users.id = persons.user_id"];
         return $this->_executeImportQueries($queries);
     }
