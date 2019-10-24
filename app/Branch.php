@@ -371,7 +371,10 @@ class Branch extends Model implements HasPresenter
             ->pluck('id')->toArray();
     }
         
-    
+    public function campaign()
+    {
+        return $this->belongsToMany(Campaign::class);
+    }
     /**
      * [makeNearbyBranchXML   Generate Mapping xml file from branches results]
      * 

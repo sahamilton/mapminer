@@ -116,7 +116,7 @@ class CampaignController extends Controller
      */
     public function show(Campaign $campaign)
     {
-        $campaign->load('vertical', 'servicelines', 'branches', 'companies.managedBy', 'manager', 'branches');
+        $campaign->load('vertical', 'servicelines', 'branches', 'companies.managedBy', 'manager');
         $comps = $campaign->companies->map(
             function ($company) {
                 return [$company->companyname=>$company->locations->count()];
@@ -126,7 +126,35 @@ class CampaignController extends Controller
 
         return response()->view('campaigns.show', compact('campaign', 'comps'));
     }
+    public function edit(Campaign $campaign)
+    {
+        $verticals = $this->vertical->industrysegments();
+        $companies = $this->company->whereIn('accounttypes_id', [1,4])->get();
+        $servicelines = $this->serviceline->all();
+        $roles = [6=>'svp',7=>'rvp', 3=>'market_manager'];
+        $managers = $this->person->withRoles(array_keys($roles))->with('userdetails.roles')->get();
+        $campaign->load('vertical', 'servicelines',  'manager'); 
+        return response()->view('campaigns.edit', compact('campaign', 'verticals', 'companies', 'managers', 'servicelines'));
+    }
 
+    public function update(Campaign $campaign, Request $request) 
+    {
+        
+        $data = $this->_transformRequest($request);
+        
+        $campaign->update($data);
+        $branches = $this->_getbranchesFromManager($data);
+
+        $campaign->servicelines()->sync($data['serviceline']); 
+  
+        if (isset($data['vertical'])) {
+            $campaign->vertical()->sync($data['vertical']);
+           
+        }
+        $campaign->branches()->sync(array_keys($branches));
+        $campaign->companies()->sync($data['companies']);
+        return redirect()->route('campaigns.show', $campaign->id);
+    }
     /**
      * Remove the specified resource from storage.
      *
@@ -143,11 +171,15 @@ class CampaignController extends Controller
 
     public function details(Campaign $campaign)
     {
-        $campaign->load('branches', 'companies.locations', 'servicelines');
+        
+        $campaign->load('branches', 'companies', 'servicelines');
+        
         $locations = $this->_getLocations($campaign);
         
         $branches = $this->_getBranchesWithinServiceArea($campaign, $locations);
-        dd($branches);
+        
+        $assignments = $this->_assignBranchLeads($locations, $branches);
+        
     }
 
     private function _transformRequest(Request $request)
@@ -176,10 +208,23 @@ class CampaignController extends Controller
     }
     private function _getLocations($campaign)
     {
+        
+        
         $locations = collect($this->address);
         foreach ($campaign->companies as $company) {
-            $locations = $locations->merge($company->locations);
+            $loc = $this->company
+                ->where('id', $company->id)
+                ->with(
+                    [
+                        'locations'=>function ($q) {
+                            $q->doesntHave('assignedToBranch');
+                        }
+                    ]
+                )->firstOrFail();
+
+            $locations = $locations->merge($loc);
         }
+        
         return $locations;
     }
     private function _getBranchesWithinServiceArea($campaign, $locations)
@@ -191,5 +236,22 @@ class CampaignController extends Controller
         return $this->branch->getWithinMBR($box)
             ->find($branch_ids);
         
+    }
+
+    private function _assignBranchLeads($locations, $branches) 
+    {
+       
+        foreach ($locations as $location ) {
+        
+            $branches = $this->branch
+                ->nearby($location, 25, 1)
+                ->whereIn('id', $branches->pluck('id')->toarray())
+                ->get();
+            if ($branches->count()) {
+                foreach ($branches as $branch)
+                    $branch->locations()->attach($location);
+            }
+            
+        }
     }
 }

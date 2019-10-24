@@ -6,7 +6,7 @@
             required 
             class='form-control' 
             name="title" 
-            value="{{old('title', isset($activity->title) ? $activity->title :'' )}}" />
+            value="{{old('title', isset($campaign->title) ? $campaign->title :'' )}}" />
         {!! $errors->first('title', '<p class="help-block">:message</p>') !!}
     </div>
 </div>
@@ -20,7 +20,7 @@
             required 
             class='form-control' 
             data-error="Please provide some description of this campaign" 
-            name="description">{{old('description', isset($activity->description) ? $activity->description :''  )}}
+            name="description">{{old('description', isset($campaign->description) ? $campaign->description :''  )}}
         </textarea>
         {!! $errors->first('description', '<p class="help-block">:message</p>') !!}
     </div>
@@ -37,7 +37,7 @@
             required 
             name='datefrom' 
             class="form-control"  
-            value="{{old('datefrom', isset($activity->datefrom) ? $activity->datefrom->format('m/d/Y') : date('m/d/Y'))}}" />
+            value="{{old('datefrom', isset($campaign->datefrom) ? $campaign->datefrom->format('m/d/Y') : date('m/d/Y'))}}" />
         <span class="input-group-addon">
             <i class="far fa-calendar-alt"></i>
         </span>
@@ -55,7 +55,7 @@
             required 
             name ='dateto' 
             class="form-control"  
-            value="{{old('dateto'), isset($activity->dateto) ? $activity->dateto->format('m/d/Y') : now()->addMonth()->format('m/d/Y') }}"/>
+            value="{{old('dateto'), isset($campaign->dateto) ? $campaign->dateto->format('m/d/Y') : now()->addMonth()->format('m/d/Y') }}"/>
         <span class="input-group-addon">
            <i class="far fa-calendar-alt"></i>
         </span>
@@ -96,7 +96,9 @@
             <select name="manager_id" id="manager" class="form-control input-lg">
                 <option value="">All Managers</option>
                @foreach($managers as $manager) 
-                <option value="{{$manager->id}}">
+                <option 
+                @if ($campaign && $campaign->manager_id == $manager->id) selected @endif
+                value="{{$manager->id}}">
                     {{$manager->fullName()}} 
                         (<em>
                             {{$manager->userdetails->roles->first()->display_name}})
