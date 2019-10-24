@@ -10,6 +10,7 @@ use App\SalesOrg;
 use App\Document;
 use App\Location;
 use App\Address;
+use App\Company;
 use App\Lead;
 use App\LeadStatus;
 use App\Person;
@@ -21,6 +22,7 @@ class SalesActivityController extends BaseController
 {
    
     public $activity;
+    public $company;
     public $vertical;
     public $process;
     public $document;
@@ -34,16 +36,18 @@ class SalesActivityController extends BaseController
      * [__construct description]
      * 
      * @param Address       $location [description]
+     * @param Company       $company  [description]
      * @param Document      $document [description]
      * @param Person        $person   [description]
      * @param Salesactivity $activity [description]
      * @param SalesProcess  $process  [description]
-     * @param SalesOrg      $salesorg  [description]
+     * @param SalesOrg      $salesorg [description]
      * @param SearchFilter  $vertical [description]
      * @param State         $state    [description]
      */
     public function __construct(
         Address $location,
+        Company $company,
         Document $document, 
         Person $person,
         Salesactivity $activity, 
@@ -55,7 +59,7 @@ class SalesActivityController extends BaseController
         $this->location = $location;
         $this->document = $document;
         $this->activity = $activity;
-       
+        $this->company = $company;
         
         $this->person = $person;
         $this->process = $process;
@@ -83,6 +87,7 @@ class SalesActivityController extends BaseController
                 }
             );
         }
+
         $activities = $query->get();
 
         $calendar = \Calendar::addEvents($activities);
@@ -103,7 +108,8 @@ class SalesActivityController extends BaseController
         $salesorg = $this->salesorg->first();
         $salesorgJson = $salesorg->getSalesOrgJson();
        
-
+       
+        
         return response()->view('salesactivity.create', compact('verticals', 'process', 'states', 'salesorgJson'));
     }
 

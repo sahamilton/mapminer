@@ -5,7 +5,9 @@ class SalesOrg extends Model
 {
 
     use Geocode;
+
     public $topdog = 2980;
+    
     // Add your validation rules here
     public static $rules = [
         'title' => 'required'
@@ -52,7 +54,7 @@ class SalesOrg extends Model
      */
     public function salesRepsOutsideOrg()
     {
-        $topDog = Person::findOrFail($this->topdog);
+        $topDog = $this->getCapoDiCapo();
         $salesReps = $topDog->allLeaves()->salesReps()->pluck('id')->toArray();
 
         $salesRoles = Person::salesReps()->pluck('id')->toArray();
@@ -69,19 +71,18 @@ class SalesOrg extends Model
      */
     public function getSalesOrgJson()
     {
-        $topDog = Person::findOrFail($this->topdog);
-
-        $salesteam = $topDog->descendants()->whereHas(
-            'userdetails.roles', function ($q) {
-                $q->whereIn('roles.id', [3,6,7]);
-            }
-        )->get();
-        $team = $salesteam->map(
-            function ($person) {
-                return ['id'=>$person->id,'name'=>$person->fullName(),'reports_to'=>$person->reports_to];
-            }
-        );
-        return $team->toJson();
+        $roles = [6=>'svp',7=>'rvp', 3=>'market_manager'];
+        return $this->getCapoDiCapo()->descendants()->manages(array_keys($roles))->withPrimaryRole()->get();
+        /*dd($topDog);
+           
+        // change this to go off rolename
+        foreach ($roles as $key=>$role) {
+            $salesteam[$role] = $topDog->descendants()
+                ->withRoles([$key])
+                ->selectRaw('concat_ws(" ", firstname, lastname) as fullname, id, reports_to as parent_id')
+                ->get()->toJson();
+        }
+        return $salesteam;*/
     }
     /**
      * [getCapoDiCapo id the top of the sales org

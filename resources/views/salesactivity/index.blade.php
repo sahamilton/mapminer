@@ -5,14 +5,11 @@
     <div class="float-right">
         <a href ="{{route('salesactivity.create')}}">
 
-<<<<<<< HEAD
             <button class="btn btn-success" >
                 <i class="fas fa-plus-circle"></i>
                  Add Sales Campaign
              </button>
-=======
-            <button class="btn btn-success" ><i class="fas fa-plus-circle"></i> </i> Add Sales Campaign</button>
->>>>>>> master
+
         </a>
     </div> 
     <ul class="nav nav-tabs">
@@ -24,7 +21,7 @@
         </li>
 
     </ul>
-
+    
     <div class="tab-content">
         <div id="calendar" class="tab-pane fade show active">
 

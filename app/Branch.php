@@ -5,13 +5,16 @@ use App\Presenters\LocationPresenter;
 use McCool\LaravelAutoPresenter\HasPresenter;
 use Illuminate\Http\Request;
 use \Carbon\Carbon;
+
 class Branch extends Model implements HasPresenter
 {
-    use Geocode;
+    use GeoCode;
     public $table ='branches';
     protected $hidden = ['created_at','updated_at','position'];
     protected $primaryKey = 'id'; // or null
-
+    protected $spatialFields = [
+        'position'
+    ];
     public $incrementing = false;
 
     public $branchManagerRole = 9;
@@ -143,6 +146,9 @@ class Branch extends Model implements HasPresenter
  
         return $this->hasManyThrough(Opportunity::class, AddressBranch::class, 'branch_id', 'address_branch_id', 'id', 'id')->where('closed', '=', 0);
     }
+
+    
+
     /**
      * [opportunitiesClosingThisWeek description]
      * 
@@ -342,7 +348,14 @@ class Branch extends Model implements HasPresenter
         return $this->id ."br@peopleready.com";
     }
 
-    
+    public function scopeGetWithinMBR($query, $box)
+    {
+
+        return $this->where('lat', '<', $box['maxLat'])
+            ->where('lat', '>', $box['minLat'])
+            ->where('lng', '<', $box['maxLng'])
+            ->where('lng', '>', $box['minLng']);
+    }
    
     /**
      * [getBranchIdFromid description]

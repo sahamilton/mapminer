@@ -5,7 +5,7 @@ use Nicolaslopezj\Searchable\SearchableTrait;
 
 class Company extends NodeModel
 {
-    use Filters,SearchableTrait;
+    use Filters,SearchableTrait, Geocode;
     // Add your validation rules here
     public static $rules = [
          'companyname' => 'required',

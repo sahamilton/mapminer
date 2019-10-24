@@ -90,15 +90,30 @@ class Person extends NodeModel implements HasPresenter
             ->withPivot('role_id')
             ->orderBy('branchname');
     }
+    public function scopeManagers($query, $roles=null)
+    {
+        if (! $roles) {
+            $roles = [14,6,7,3];
+        }
+        
+        return $this->wherehas(
+            'userdetails.roles', function ($q) use ($roles) {
+
+                    $q->whereIn('role_id', $roles);
+            }
+        );
+    }
     /**
      * [managers description]
      * 
      * @return [type] [description]
      */
-    public function managers()
+    public function managers($roles=null)
     {
-        $roles = [14,6,7,3];
-
+        if (! $roles) {
+            $roles = [14,6,7,3];
+        }
+        
         return $this->wherehas(
             'userdetails.roles', function ($q) use ($roles) {
 
@@ -112,7 +127,7 @@ class Person extends NodeModel implements HasPresenter
      * 
      * @return array list of branches serviced by reports
      */
-    public function getMyBranches()
+    public function getMyBranches(Array $servicelines=null)
     {
         
         if ($this->userdetails->hasRole('sales_operations') && $this->has('reportsTo')) {
@@ -810,6 +825,10 @@ class Person extends NodeModel implements HasPresenter
             return $this->address;
         }
     }
+    public function primaryRole()
+    {
+        return $this->userdetails()->roles()->first();
+    }
     /**
      * [scopePrimaryRole description]
      * 
@@ -861,5 +880,10 @@ class Person extends NodeModel implements HasPresenter
         return $this->belongsToMany(Address::class)
             ->withPivot('ranking', 'comments')
             ->withTimeStamps();
+    }
+
+    public function scopeWithPrimaryRole()
+    {
+        return $this->userdetails->roles->first();
     }
 }

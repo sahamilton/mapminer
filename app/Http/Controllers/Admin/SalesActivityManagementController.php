@@ -10,6 +10,7 @@ use App\SalesOrg;
 use App\Document;
 use App\Location;
 use App\Address;
+use App\Company;
 use App\Lead;
 use App\LeadStatus;
 use App\Person;
@@ -45,6 +46,7 @@ class SalesActivityManagementController extends BaseController
      */
     public function __construct(
         Address $location,
+        Company $company,
         Document $document, 
         Person $person,
         Salesactivity $activity, 
@@ -56,6 +58,7 @@ class SalesActivityManagementController extends BaseController
         $this->location = $location;
         $this->document = $document;
         $this->activity = $activity;
+        $this->company = $company;
        
         
         $this->person = $person;
@@ -76,18 +79,12 @@ class SalesActivityManagementController extends BaseController
     public function index($vertical = null)
     {
 
-        $query = $this->activity->with('salesprocess', 'vertical', 'states');
-        if ($vertical) {
-            $query = $query->whereHas(
-                'vertical', function ($q) use ($vertical) {
-                    $q->whereIn('vertical_id', [$vertical]);
-                }
-            );
-        }
+        $query = $this->activity->with('salesprocess',  'states');
+        
         $activities = $query->get();
 
         $calendar = \Calendar::addEvents($activities);
-       
+     
         return response()->view('salesactivity.index', compact('activities', 'calendar'));
     }
 
@@ -102,10 +99,10 @@ class SalesActivityManagementController extends BaseController
         $states = $this->state->all();
         $process = $this->process->pluck('step', 'id');
         $salesorg = $this->salesorg->first();
-        $salesorgJson = $salesorg->getSalesOrgJson();
-       
-
-        return response()->view('salesactivity.create', compact('verticals', 'process', 'states', 'salesorgJson'));
+        //$salesorgJson = $salesorg->getSalesOrgJson();
+        $companies = $this->company->whereIn('accounttypes_id', [1,4])->orderBy('companyname')->get();
+        
+        return response()->view('salesactivity.create', compact('verticals', 'process', 'companies', 'states'));
     }
 
     /**
@@ -122,13 +119,11 @@ class SalesActivityManagementController extends BaseController
 
         $activity = $this->activity->create($data);
         foreach (request('salesprocess') as $process) {
-            foreach (request('vertical') as $vertical) {
-                $activity->salesprocess()->attach($process, ['vertical_id'=>$vertical]);
+            foreach (request('companies') as $company) {
+                $activity->salesprocess()->attach($process, ['company_id'=>$company]);
             }
         }
-        foreach (request('org') as $role=>$id) {
-            $activity->campaignparticipants()->attach($id, ['role'=>$role]);
-        }
+        
         $branches = $activity->getCampaignBranches($data);
        
         $activity->campaignBranches()->sync(array_keys($branches));
@@ -163,7 +158,8 @@ class SalesActivityManagementController extends BaseController
     public function show(Salesactivity $activity)
     {
         
-        $activity = $activity->load('salesprocess', 'vertical', 'campaignBranches', 'campaignBranches.manager', 'campaignparticipants', 'campaignparticipants.userdetails.roles');
+        dd($activity->load('companies'));
+        $activity = $activity->load('salesprocess', 'campaignBranches', 'campaignBranches.manager', 'campaignparticipants', 'campaignparticipants.userdetails.roles');
 
         $verticals = array_unique($activity->vertical->pluck('id')->toArray());
 

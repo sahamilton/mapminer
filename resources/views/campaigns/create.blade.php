@@ -3,10 +3,10 @@
 <div class="container">
 <h2>Create Sales Campaign</h2>
 <div class="form-group col-md-6">
-<form method="post" name="createStep" action="{{route('salesactivity.store')}}">
+<form method="post" name="createStep" action="{{route('campaigns.store')}}">
 {{csrf_field()}}
 
-@include('salesactivity.partials._form')
+@include('campaigns.partials._form')
 
 <input type="submit" class="btn btn-success" value="Create Sales Campaign" />
 </form>
@@ -15,5 +15,5 @@
 
 </div>
 
-@include('salesactivity.partials._scripts')
+@include('campaigns.partials._scripts')
 @endsection

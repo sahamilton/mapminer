@@ -253,5 +253,27 @@ class Opportunity extends Model
             ->groupBy(['opportunities.branch_id','yearweek'])
             ->orderBy('yearweek', 'asc');
 
-    }         
+    } 
+
+    public function activities()
+    {
+        return $this->hasManyThrough(Activity::class, BranchLead::class,  'id', 'address_id', 'address_id', 'id');
+    }
+    public function staleOpportunities()
+    {
+        return $this->with(
+            'activities', function ($q) {
+                $q->where('created_at', '>', Carbon::now()->subMonth());
+            }
+        );
+    }
+    public function scopeStaleOpportunities($query)
+    {
+        return $query->where('closed', 0)
+            ->doesntHave(
+                'activities', function ($q) {
+                    $q->where('created_at', '>', Carbon::now()->subMonth());
+                }
+            );
+    }
 }

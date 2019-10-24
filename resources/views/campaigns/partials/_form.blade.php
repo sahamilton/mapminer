@@ -64,11 +64,11 @@
 
 </div>
 
-<legend>Industry Verticals</legend>
+<legend>Industry / Company</legend>
 	<div class="form-group{{ $errors->has('vertical') ? ' has-error' : '' }}">
 		<label class="col-md-4 control-label" for="title">Industry Vertical</label>
 		<div class="input-group input-group-lg ">
-			@include('salesactivity.partials._verticals')
+			@include('campaigns.partials._verticals')
 		 	<span class="help-block{{ $errors->has('vertical') ? ' has-error' : '' }}">
                 <strong>{{$errors->has('vertical') ? $errors->first('vertical')  : ''}}</strong>
             </span>
@@ -76,39 +76,66 @@
 	 </div> 
 
 <!-- / Industry verticals -->
-<legend>Companies</legend>
-    <div class="form-group{{ $errors->has('vertical') ? ' has-error' : '' }}">
-        <label class="col-md-4 control-label" for="title">Companies</label>
+
+    <div class="form-group{{ $errors->has('companies') ? ' has-error' : '' }}">
+        <label class="col-md-4 control-label" for="companies">Companies</label>
         <div class="input-group input-group-lg ">
-            @include('salesactivity.partials._companies')
+            @include('campaigns.partials._companies')
             <span class="help-block{{ $errors->has('vertical') ? ' has-error' : '' }}">
                 <strong>{{$errors->has('companies') ? $errors->first('companies')  : ''}}</strong>
             </span>
          </div>
      </div> 
 <!-- Organization Alignment -->
-@if(isset($salesorgJson))
+
 <legend>Organization</legend>
 <div class="form-group{{ $errors->has('organization') ? ' has-error' : '' }}">
-        <label class="col-md-4 control-label" for="title">Organization</label>
+        <label class="col-md-4 control-label" for="organization">Organization</label>
         <div class="input-group input-group-lg ">
-            @include('salesactivity.partials._organization')
+            
+            <select name="manager_id" id="manager" class="form-control input-lg">
+                <option value="">All Managers</option>
+               @foreach($managers as $manager) 
+                <option value="{{$manager->id}}">
+                    {{$manager->fullName()}} 
+                        (<em>
+                            {{$manager->userdetails->roles->first()->display_name}})
+                        </em>
+                </option>
+                @endforeach
+            </select>
             <span class="help-block{{ $errors->has('organization') ? ' has-error' : '' }}">
                 <strong>{{$errors->has('organization') ? $errors->first('organization')  : ''}}</strong>
             </span>
          </div>
      </div> 
-@endif
-<!-- Sales process Steps -->
-<legend>Sales Process Steps</legend>
-    <div class="form-group{{ $errors->has('salesprocess') ? ' has-error' : '' }}">
-        <label class="col-md-4 control-label" for="salesprocess">Sales Process Steps</label>
-        <div class="input-group input-group-lg ">
-            @include('salesactivity.partials._salesprocess') 
-            <span class="help-block{{ $errors->has('salesprocess') ? ' has-error' : '' }}">
-                <strong>{{$errors->has('salesprocess') ? $errors->first('salesprocess')  : ''}}</strong>
-            </span>
-        </div>
-    </div>
-<!-- / Sales process steps --> 
+<!-- Service Lines -->
+<div class="form-group @if ($errors->has('serviceline')) has-error @endif">
+    <label class="col-md-4 control-label" for="roles">Service Lines</label>
+    
+        <select 
+        required
+        class="form-control" 
+        name="serviceline[]" 
+        id="serviceline" 
+        multiple
+         />
+
+            @foreach ($servicelines as $serviceline)
+                
+                <option 
+                value="{{ $serviceline->id }}"
+                
+                >
+                {{ $serviceline->ServiceLine }}
+            </option>
+                
+            @endforeach
+        </select>
+
+        @if ($errors->has('serviceline')) <p class="help-block">{!! $errors->first('serviceline') !!}</p> @endif
+    
+</div>
+<!-- ./ servicelines -->
+
 @include('partials._verticalsscript') 
