@@ -213,7 +213,7 @@ class CampaignController extends Controller
         $data = request()->except(['_token']);
         $data['datefrom'] = Carbon::parse($data['datefrom']);
         $data['dateto'] = Carbon::parse($data['dateto']);
-        $data['created_by'] = auth()->user()->id;
+        $data['created_by'] = auth()->user()->person()->id;
         if (! $data['manager_id']) {
             
             $data['manager_id'] = $this->salesorg->getCapoDiCapo()->id;
