@@ -79,17 +79,7 @@ class Campaign extends Model
     public function setTeam()
     {
        
-         // RVP & MM reporting to manager-id
-         // account managers
-         // additional people
-         $manager = Person::whereId($this->manager_id)->descendantsAndSelf()->whereHas('roles', function ($q) {
-                $q->whereIn(['6','7','3']);
-         });
-         dd($manager)->get());
-
         
-
-        return $team;
     }
 
 
