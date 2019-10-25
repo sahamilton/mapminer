@@ -74,7 +74,7 @@ class CampaignTrackingController extends Controller
         $branch_ids = $campaign->branches->pluck('id')->toArray();
         $period['from'] = $campaign->datefrom;
         $period['to'] =$campaign->dateto;
-        $branches = $this->branch->whereIn('id', [1369])->summaryCampaignStats($campaign)->get();
+        $branches = $this->branch->whereIn('id', $branch_ids)->summaryCampaignStats($campaign)->get();
    
         return response()->view('campaigns.summary', compact('campaign', 'branches'));
     }
