@@ -16,11 +16,17 @@
 	<p>Descripiton: {{ucwords($campaign->description)}}</p>
 	<p><strong>Created By:</strong>{{$campaign->author ? $campaign->author->fullName() :''}}</p>
 	<p><strong>Created:</strong>{{$campaign->created_at->format('l jS M Y')}}</p>
-	<p><strong>Manager:</strong>{{$campaign->manager->fullName()}}</p>
+	<p><strong>Manager:</strong>
+		@if ($campaign->manager)
+			{{$campaign->manager->fullName()}}
+		@else
+			All Managers
+		@endif
+	</p>
 	
 	<p><strong>Active From:</strong>{{$campaign->dateto ? $campaign->dateto->format('l jS M Y') : ''}}</p>
 	<p><strong>Expires:</strong>{{$campaign->dateto ? $campaign->dateto->format('l jS M Y') : ''}}</p>
-	<p><strong>Branches: (that can service)</strong>
+	<p><strong>Branches:</strong> <em>(that can service)</em>
 		
 			{{$data['branches']->count()}}
 		

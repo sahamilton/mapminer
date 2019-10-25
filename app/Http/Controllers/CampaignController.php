@@ -182,7 +182,7 @@ class CampaignController extends Controller
         $campaign->update(['status'=> 'launched']);
         $campaign->load('vertical', 'servicelines', 'branches', 'companies.managedBy', 'manager', 'team');
         $data = $this->_getCampaignData($campaign);
-        AssignCampaignLeads($data)->dispatch();
+        AssignCampaignLeads::dispatch($data);
         
         return redirect()->route('campaigns.index')->withMessage($campaign->title .' Campaign launched');
         // 
@@ -209,10 +209,15 @@ class CampaignController extends Controller
 
     private function _transformRequest(Request $request)
     {
+       
         $data = request()->except(['_token']);
         $data['datefrom'] = Carbon::parse($data['datefrom']);
         $data['dateto'] = Carbon::parse($data['dateto']);
         $data['created_by'] = auth()->user()->id;
+        if (! $data['manager_id']) {
+            
+            $data['manager_id'] = $this->salesorg->getCapoDiCapo()->id;
+        }
         return $data;
         
     }
@@ -225,15 +230,7 @@ class CampaignController extends Controller
      */
     private function _getbranchesFromManager($data)
     {
-       
-        if (! $data['manager_id']) {
-            return $this->branch->whereHas(
-                'servicelines', function ($q) use ($data) {
-                    $q->whereIn('id', $data['serviceline']);
-                }
-            )->pluck('branchname', 'id')->toArray();
-        }
-
+        
         $manager = $this->person->whereId($data['manager_id'])->firstOrFail();
         return $this->person->myBranches($manager);
     }
@@ -242,6 +239,7 @@ class CampaignController extends Controller
      * 
      * @param [type] $campaign [description]
      * @param [type] $branches [description]
+     * 
      * @return [type]           [description]
      */
     private function _getCompanyLocations(Campaign $campaign, $branches)
@@ -276,6 +274,14 @@ class CampaignController extends Controller
         return $locations->flatten();
         
     }
+    /**
+     * [_getBranchesWithinServiceArea description]
+     * 
+     * @param [type] $campaign  [description]
+     * @param [type] $locations [description]
+     * 
+     * @return [type]            [description]
+     */
     private function _getBranchesWithinServiceArea($campaign, $locations)
     {
         
@@ -290,7 +296,14 @@ class CampaignController extends Controller
         )->find($branch_ids);
         
     }
-
+    /**
+     * [_assignBranchLeads description]
+     * 
+     * @param [type] $locations [description]
+     * @param [type] $branches  [description]
+     * 
+     * @return [type]            [description]
+     */
     private function _assignBranchLeads($locations, $branches) 
     {
         $branch_ids = $branches->pluck('id')->toArray();
