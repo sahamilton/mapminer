@@ -71,7 +71,14 @@ trait Geocode
           
           return $data;
     }
+    public function scopeGetWithinMBR($query, $box)
+    {
 
+        return $this->where('lat', '<', $box['maxLat'])
+            ->where('lat', '>', $box['minLat'])
+            ->where('lng', '<', $box['maxLng'])
+            ->where('lng', '>', $box['minLng']);
+    }
     /**
      * ScopeNearby [description]
      * 
@@ -318,7 +325,6 @@ trait Geocode
      */
     public function getBoundingBox($collection)
     {
-
         $data['maxLat'] = $collection->max('lat') + 0.05;
         $data['minLat'] = $collection->min('lat') - 0.05;
         $data['maxLng'] = $collection->max('lng') - 0.05;

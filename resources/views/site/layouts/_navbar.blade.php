@@ -70,16 +70,9 @@
                 <a class="dropdown-item" href="{{route('salesorg.index')}}">
                 <i class="fas fa-sitemap" aria-hidden="true"> </i>
                   Sales Organization</a>
-                  @if(auth()->user()->hasRole('admin') or auth()->user()->hasRole('sales') or  auth()->user()->hasRole('sales_manager'))
-                            
-                  <a class="dropdown-item" href="{{route('resources.view')}}">
-                  <i class="fas fa-book" aria-hidden="true"> </i>
-                      Sales Library</a>
-                  <a class="dropdown-item" href="{{route('salescampaigns')}}">
-                  <i class="fas fa-calendar-check-o" aria-hidden="true"> </i> 
-                      Sales Campaigns</a>
-
-                  @endif    
+                  <a class="dropdown-item" 
+                  href="{{{ route('branchcampaigns.index') }}}">
+                  <i class="fas fa-tachometer-alt"></i> My Campaigns</a> 
                   
                   
                   

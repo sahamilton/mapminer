@@ -3,13 +3,16 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Salesactivity;
+use App\Campaign;
 use App\Branch;
+use App\Person;
 
 class BranchCampaignController extends Controller
 {
     public $branch;
     public $campaign;
+    public $person;
+    
     /**
      * [__construct description]
      * 
@@ -18,10 +21,12 @@ class BranchCampaignController extends Controller
      */
     public function __construct(
         Branch $branch, 
-        Salesactivity $campaign
+        Campaign $campaign,
+        Person $person
     ) {
         $this->branch = $branch;
         $this->campaign = $campaign;
+        $this->person = $person;
     }
     /**
      * Display a listing of the resource.
@@ -30,23 +35,24 @@ class BranchCampaignController extends Controller
      */
     public function index()
     {
-        $this->myBranches = $this->_getBranches();
-        $campaign = $this->campaign->currentActivities()->get();
-        if ($campaign->count ==0) {
-            return 'threre are no current sales campaigns';
+        //$this->myBranches = $this->branch->getBranches();
+        /**  
+        Testing code [description] 
+        */
+        $myBranches = $this->branch->whereId(1500)->get();
+
+        /**
+         * End test
+         */
+        
+        $campaign = $this->campaign->current(array_keys($myBranches->pluck('branchname', 'id')->toArray()))->get();
+        
+        if (! $campaign->count()) {
+            return redirect()->back()->withMessage('there are no current sales campaigns for your branches');
         }
-        $branchess = $campaign->map(
-            function ($camp) { 
-                return $camp->campaignBranches->pluck('id')->toArray();
-            }
-        );
-        if (count($this->myBranches)>0) {
-            $branch = array_keys($this->myBranches);
-            return redirect()->route('dashboard.show', $branch[0]);
-        } else {
-            return redirect()->route('user.show', auth()->user()->id)
-                ->withWarning("You are not assigned to any branches. You can assign yourself here or contact Sales Ops");
-        }
+        $campaign->load('companies');
+
+        $locations = $this->_getLocationsForMyBranches($campaign, $myBranches);
 
 
     }
@@ -115,5 +121,31 @@ class BranchCampaignController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    private function _getLocationsForMyBranches($campaigns, $branches)
+    {
+        dd($branches);
+        $company_ids = $this->_getCampaignCompanyIDs($campaigns);
+        $leads = $branches->load(
+            ['addresses'=>function ($q) use ($company_ids) {
+                $q->whereIn('company_id', $company_ids);
+            }
+            ]
+        );
+        dd($leads);
+        
+       
+    }
+
+    private function _getCampaignCompanyIDs($campaigns)
+    {
+        $companies = $campaigns->map(
+            function ($campaign) {
+                return $campaign->companies->pluck('id')->toArray();
+
+            }
+        );
+        return $companies->flatten()->toArray();
     }
 }

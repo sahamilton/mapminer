@@ -230,8 +230,8 @@ Route::group(
         Route::get('serviceline/{id}/{type?}', ['as'=>'serviceline.accounts', 'uses'=>'ServicelinesController@show']);
         Route::resource('serviceline', 'ServicelinesController', ['only' => ['index', 'show']]);
         
-        //     Sales Campaigns
-        Route::get('campaigns', ['as'=>'salescampaigns', 'uses'=>'SalesActivityController@mycampaigns']);
+        //     Branch Sales Campaigns
+        Route::resource('branchcampaigns', 'BranchCampaignController');
         //Route::resource('salesactivity', 'SalesActivityController', ['only' => ['show']]);
         
         //   Sales organization
@@ -574,7 +574,7 @@ Route::group(
         // Route::get('branch/{branch}/purge', ['as'=>'branch.purge','uses'=>'BranchesController@delete']);
         
         //   Campaigns (email)
-        Route::get('campaigns/{campaign}/detail', ['as'=>'campaign.details', 'uses'=>'CampaignController@details']);
+        Route::get('campaigns/{campaign}/launch', ['as'=>'campaigns.launch', 'uses'=>'CampaignController@launch']);
         Route::resource('campaigns', 'CampaignController');
 
         //   Construction

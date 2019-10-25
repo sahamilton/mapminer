@@ -348,14 +348,7 @@ class Branch extends Model implements HasPresenter
         return $this->id ."br@peopleready.com";
     }
 
-    public function scopeGetWithinMBR($query, $box)
-    {
-
-        return $this->where('lat', '<', $box['maxLat'])
-            ->where('lat', '>', $box['minLat'])
-            ->where('lng', '<', $box['maxLng'])
-            ->where('lng', '>', $box['minLng']);
-    }
+    
    
     /**
      * [getBranchIdFromid description]
@@ -424,6 +417,27 @@ class Branch extends Model implements HasPresenter
         }
 
         return $dom->saveXML();
+    }
+
+    /**
+     * [getBranches description]
+     * 
+     * @return [type] [description]
+     */
+    public function getBranches()
+    {
+        
+        if (auth()->user()->hasRole('admin')) {
+       
+            return $this->all()->pluck('branchname', 'id')->toArray();
+        } elseif (auth()->user()->hasRole('sales_operations')) {
+            $manager = Person::findOrFail(auth()->user()->person->reports_to);
+            
+            return Person::myBranches($manager);
+        } else {
+      
+             return  Person::myBranches();
+        }
     }
     
     /**

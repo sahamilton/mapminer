@@ -1,12 +1,12 @@
 <?php
 
 namespace App;
-
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Campaign extends Model
 {
-    public $fillable = ['title', 'description', 'datefrom', 'dateto', 'created_by', 'manager_id'];
+    public $fillable = ['title', 'description', 'datefrom', 'dateto', 'created_by', 'manager_id', 'status'];
     public $dates =['datefrom', 'dateto'];
     
     /**
@@ -49,5 +49,21 @@ class Campaign extends Model
     public function servicelines()
     {
         return $this->belongsToMany(Serviceline::class, 'campaign_serviceline', 'campaign_id', 'serviceline_id');
+    }
+
+    public function scopeCurrent($query, Array $branches=null)
+    {
+        
+        $query = $query
+            ->where('datefrom', '<=', Carbon::now()->startOfDay())
+            ->where('dateto', '>=', Carbon::now()->endOfDay());
+        if ($branches) {
+            $query = $query->wherehas(
+                'branches', function ($q) use ($branches) {
+                    $q->whereIn('branches.id', $branches);
+                }
+            );
+        }
+        return $query;
     }
 }

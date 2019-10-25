@@ -16,6 +16,7 @@
 			<th>Date To</th>
 			<th>Author</th>
 			<th>Organization</th>
+			<th>Status</th>
 			<th>Branches</th>
 			
 			
@@ -36,6 +37,7 @@
 				<td>{{$campaign->dateto->format('Y-m-d')}}</td>
 				<td>@if($campaign->author) {{$campaign->author->fullName()}} @endif</td>
 				<td>@if($campaign->manager) {{$campaign->manager->fullName()}} @endif</td>
+				<td>{{$campaign->status}}</td>
 				<td>{{$campaign->branches_count}}</td>
 				
 				<td>

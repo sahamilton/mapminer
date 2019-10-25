@@ -3,12 +3,16 @@
 <div class="container">
 	<h2>Branch Sales Campaign</h2>
 	<p><a href="{{route('campaigns.index')}}">Return to all campaigns</a></p>
-
+	@if($campaign->status == 'planned')
 	<h4>{{ucwords($campaign->title)}}</h4>
 	<div class="float-right">
    		<a href="{{route('campaigns.edit', $campaign->id)}}" class="btn btn-info">Edit Campaign</a>
    </div>
-
+	
+	<p><a href="{{route('campaigns.launch', $campaign->id)}}" class="btn btn-info">Launch Campaign</a></p>
+	@else
+	<p><strong>Status:</strong>{{$campaign->status}}</p>
+	@endif
 	<p>Descripiton: {{ucwords($campaign->description)}}</p>
 	<p><strong>Created By:</strong>{{$campaign->author ? $campaign->author->fullName() :''}}</p>
 	<p><strong>Created:</strong>{{$campaign->created_at->format('l jS M Y')}}</p>
@@ -16,10 +20,10 @@
 	
 	<p><strong>Active From:</strong>{{$campaign->dateto ? $campaign->dateto->format('l jS M Y') : ''}}</p>
 	<p><strong>Expires:</strong>{{$campaign->dateto ? $campaign->dateto->format('l jS M Y') : ''}}</p>
-	<p><strong>Branches:</strong>
-		<a href="{{route('campaign.details', $campaign->id)}}">
-			{{$campaign->branches->count()}}
-		</a>
+	<p><strong>Branches: (that can service)</strong>
+		
+			{{$data['branches']->count()}}
+		
 	</p>
 	<p>
 		@if($campaign->verticals)
@@ -30,18 +34,18 @@
 		@else
 
 			<strong>Companies:</strong>
-			@foreach ($comps as $company)
-				@foreach ($company as $companyname=>$loccount)
+			@foreach ($campaign->companies as $company)
+				
 			
-				<li>{{$companyname}} 
-					({{$loccount}} locations) 
+				<li>{{$company->companyname}} 
+					
 					
 				</li>
-				@endforeach
+			
 			@endforeach
 		@endif
 	</p>
-
+	@include('campaigns.partials._details')
 
 @include ('partials._scripts')
 @endsection()
