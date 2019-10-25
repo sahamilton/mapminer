@@ -9,6 +9,7 @@ use App\Serviceline;
 use App\SalesOrg;
 use App\Addresses;
 use App\Person;
+use App\Jobs\AssignCampaignLeads;
 
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -117,13 +118,21 @@ class CampaignController extends Controller
     public function show(Campaign $campaign)
     {
         if($campaign->status == 'planned') {
+            $campaign->load('vertical', 'servicelines', 'branches', 'companies.managedBy', 'manager', 'team');
             $data = $this->_getCampaignData($campaign);
             return response()->view('campaigns.show', compact('campaign', 'data'));
         }
         
-       
+        dd('We have to show the tracking here');
         
     }
+    /**
+     * [edit description]
+     * 
+     * @param Campaign $campaign [description]
+     * 
+     * @return [type]             [description]
+     */
     public function edit(Campaign $campaign)
     {
         $verticals = $this->vertical->industrysegments();
@@ -149,6 +158,7 @@ class CampaignController extends Controller
             $campaign->vertical()->sync($data['vertical']);
            
         }
+        $team = $this->campaign->setCampaignTeam();
         $campaign->branches()->sync(array_keys($branches));
         $campaign->companies()->sync($data['companies']);
         return redirect()->route('campaigns.show', $campaign->id);
@@ -170,15 +180,10 @@ class CampaignController extends Controller
     public function launch(Campaign $campaign)
     {
         $campaign->update(['status'=> 'launched']);
+        $campaign->load('vertical', 'servicelines', 'branches', 'companies.managedBy', 'manager', 'team');
         $data = $this->_getCampaignData($campaign);
-        // send this to a job
-        foreach ($data['assignments']['branch'] as $branch_id=>$addresses) {
-            $branch = $data['branches']->where($branch_id)->first();
-            foreach ($addresses as $address) {
-                $attach[$address]=['status_id'=>1];
-            }
-            $branch->leads()->attach($attach);
-        }
+        AssignCampaignLeads($data)->dispatch();
+        
         return redirect()->route('campaigns.index')->withMessage($campaign->title .' Campaign launched');
         // 
         // add team
@@ -190,13 +195,13 @@ class CampaignController extends Controller
     }
     private function _getCampaignData(Campaign $campaign)
     {
-        $campaign->load('vertical', 'servicelines', 'branches', 'companies.managedBy', 'manager');
+        
         $branches = $campaign->branches;
 
         $locations = $this->_getCompanyLocations($campaign, $branches);
 
         $data['branches'] = $this->_getBranchesWithinServiceArea($campaign, $locations);
-        
+      
         $data['assignments'] = $this->_assignBranchLeads($locations, $branches);
         $data['locations'] = $locations;
         return $data;

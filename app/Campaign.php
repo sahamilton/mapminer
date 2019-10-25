@@ -66,4 +66,9 @@ class Campaign extends Model
         }
         return $query;
     }
+
+    public function team()
+    {
+        return $this->belongsToMany(Person::class);
+    }
 }

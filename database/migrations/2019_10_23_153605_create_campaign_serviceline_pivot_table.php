@@ -35,6 +35,6 @@ class CreateCampaignServicelinePivotTable extends Migration
      */
     public function down()
     {
-        Schema::drop('document_searchfilter');
+        Schema::drop('campaign_serviceline');
     }
 }

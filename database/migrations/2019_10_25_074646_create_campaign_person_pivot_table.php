@@ -13,21 +13,17 @@ class CreateCampaignPersonPivotTable extends Migration
     public function up()
     {
         Schema::create(
-            'salesactivity_person', function (Blueprint $table) {
-                $table->integer('salesactivity_id')->unsigned()->index();
-               
+            'campaign_person', function (Blueprint $table) {
+                $table->integer('campaign_id')->unsigned()->index();
                 $table->integer('person_id')->unsigned()->index();
-                $table->string('role');
-                $table->primary(['salesactivity_id', 'person_id']);
+                $table->primary(['campaign_id', 'person_id']);
             }
         );
         Schema::table(
-            'salesactivity_person', function (Blueprint $table) {
-              
-                $table->foreign('salesactivity_id')->references('id')->on('salesactivity')->onDelete('cascade');
-               
+            'campaign_person', function (Blueprint $table) {
                 $table->foreign('person_id')->references('id')->on('persons')->onDelete('cascade');
-                
+                $table->foreign('campaign_id')->references('id')->on('campaigns')->onDelete('cascade');
+            
             }
         );
     }
@@ -39,6 +35,6 @@ class CreateCampaignPersonPivotTable extends Migration
      */
     public function down()
     {
-        Schema::drop('salesactivity_person');
+        Schema::drop('campaign_person');
     }
 }
