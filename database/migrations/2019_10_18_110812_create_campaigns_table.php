@@ -28,7 +28,7 @@ class CreateCampaignsTable extends Migration
         Schema::table(
             'campaigns', function (Blueprint $table) {
                 $table->foreign('manager_id')->references('id')->on('persons')->onDelete('set null');
-                $table->foreign('created_by')->references('id')->on('persons')->onDelete('set null');
+                $table->foreign('created_by')->references('id')->on('users')->onDelete('set null');
 
                
             }

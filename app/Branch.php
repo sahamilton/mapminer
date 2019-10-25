@@ -957,4 +957,120 @@ class Branch extends Model implements HasPresenter
             ]
         );
     }
+
+    /**
+     * [scopeSummaryStats description]
+     * 
+     * @param [type] $query  [description]
+     * @param [type] $period [description]
+     * 
+     * @return [type]         [description]
+     */
+    public function scopeSummaryCampaignStats($query,$campaign)
+    {
+        $period['from'] = $campaign->datefrom;
+        $period['to'] = $campaign->dateto;
+        $this->company_ids = $campaign->companies->pluck('id')->toarray();
+        $this->location_ids = $campaign->getLocations();
+
+        $this->period = $period;
+        return $query->withCount(       
+            ['leads'=>function ($query) {
+                $query->whereIn('company_id', $this->company_ids)
+                    ->where('address_branch.created_at', '<=', $this->period['to'])
+                    ->where(
+                        function ($q) {
+                            $q->whereDoesntHave('opportunities')
+                                ->orWhereHas(
+                                    'opportunities', function ($q1) {
+                                        $q1->where(
+                                            'opportunities.created_at', '>', $this->period['to']
+                                        );
+                                    }
+                                );
+                        }
+                    );
+            },
+            
+            'activities'=>function ($query) {
+                $query->whereIn('address_id', $this->location_ids)
+                    ->whereBetween(
+                        'activity_date', [$this->period['from'],$this->period['to']]
+                    )
+                    ->where('completed', 1);
+            },
+            'opportunities as opened'=>function ($query) {
+                $query->whereIn('opportunities.address_id', $this->locations)
+                    ->whereBetween(
+                        'opportunities.created_at', [$this->period['from'],$this->period['to']]
+                    );
+            },
+            'opportunities as won'=>function ($query) {
+                $query->whereIn('opportunities.address_id', $this->locations)
+                    ->whereClosed(1)
+                    ->whereBetween(
+                        'opportunities.created_at', [$this->period['from'],$this->period['to']]
+                    )
+                    ->whereBetween(
+                        'actual_close', [$this->period['from'],$this->period['to']]
+                    );
+            },
+            'opportunities as lost'=>function ($query) {
+                
+                $query->whereIn('opportunities.address_id', $this->locations)
+                    ->whereClosed(2)
+                    ->whereBetween(
+                        'opportunities.created_at', [$this->period['from'],$this->period['to']]
+                    )
+                    ->whereBetween(
+                        'actual_close', [$this->period['from'],$this->period['to']]
+                    );
+            },
+            
+            'opportunities as open'=>function ($query) {
+                $query->whereBetween(
+                    'opportunities.created_at', [$this->period['from'],$this->period['to']]
+                    )
+                    ->whereClosed(0)        
+                    ->OrWhere(
+                        function ($q) {
+                            $q->whereIn('opportunities.address_id', $this->locations)
+                                ->where('actual_close', '>', $this->period['to'])
+                                ->orwhereNull('actual_close');
+                        }
+                    )
+                ->where('opportunities.created_at', '<', $this->period['to'])
+                      ->whereIn('opportunities.address_id', $this->locations)
+                ->where('opportunities.created_at', '<', $this->period['to']);;
+            },
+            'opportunities as wonvalue' => function ($query) {
+                $query->whereIn('opportunities.address_id', $this->locations)
+                    ->whereBetween(
+                        'opportunities.created_at', [$this->period['from'],$this->period['to']]
+                    )
+                    ->select(\DB::raw("SUM(value) as wonvalue"))
+                    ->where('closed', 1)
+                    ->whereBetween(
+                        'actual_close', [$this->period['from'],$this->period['to']]
+                    );
+            },
+            'opportunities as openvalue' => function ($query) {
+                $query->whereIn('opportunities.address_id', $this->locations)
+                    ->whereBetween(
+                        'opportunities.created_at', [$this->period['from'],$this->period['to']]
+                    )
+                    ->select(\DB::raw("SUM(value) as wonvalue"))
+                    ->whereClosed(0)        
+                    ->where(
+                        function ($q) {
+                            $q->where('actual_close', '>', $this->period['to'])
+                                ->orwhereNull('actual_close');
+                        }
+                    )
+                ->where('opportunities.created_at', '<', $this->period['to']);
+            }]
+        );
+    }
+
+
 }

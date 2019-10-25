@@ -7,19 +7,21 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-
+use App\Branch;
 class AssignCampaignLeads implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-    public $data;
+    public $branch_id;
+    public $addresses;
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(Array $data)
+    public function __construct($branch_id, $addresses)
     {
-        $this->data = $data;
+        $this->branch_id = $branch_id;
+        $this->addresses = $addresses;
     }
 
     /**
@@ -29,12 +31,12 @@ class AssignCampaignLeads implements ShouldQueue
      */
     public function handle()
     {
-        foreach ($this->$data['assignments']['branch'] as $branch_id=>$addresses) {
-            $branch = $this->data['branches']->where($branch_id)->first();
-            foreach ($addresses as $address) {
-                $attach[$address]=['status_id'=>1];
-            }
-            $branch->leads()->attach($attach);
+        $attach=[];
+           
+        foreach ($this->addresses as $address) {
+            $attach[$address]=['status_id'=>1];
         }
+        Branch::find($this->branch_id)->leads()->attach($attach);
+
     }
 }

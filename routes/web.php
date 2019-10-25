@@ -574,6 +574,7 @@ Route::group(
         // Route::get('branch/{branch}/purge', ['as'=>'branch.purge','uses'=>'BranchesController@delete']);
         
         //   Campaigns (email)
+        Route::get('campaigns/{campaign}/track', ['as'=>'campaigns.track', 'uses'=>'CampaignTrackingController@show']);
         Route::get('campaigns/{campaign}/launch', ['as'=>'campaigns.launch', 'uses'=>'CampaignController@launch']);
         Route::resource('campaigns', 'CampaignController');
 

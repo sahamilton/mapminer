@@ -82,6 +82,19 @@ class Campaign extends Model
         
     }
 
+    public function getLocations()
+    {
+        
+        return Address::wherehas(
+            'assignedToBranch', function ($q) {
+                $q->whereIn('branches.id', $this->branches()->pluck('id')->toArray());
+            }
+        )
+        ->whereIn('company_id', $this->companies()->pluck('id')->toArray())
+        ->pluck('id')->toArray();
+       
+    }
+
 
 
 

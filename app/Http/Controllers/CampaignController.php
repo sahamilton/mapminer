@@ -117,13 +117,13 @@ class CampaignController extends Controller
      */
     public function show(Campaign $campaign)
     {
-        if($campaign->status == 'planned') {
+        if ($campaign->status == 'planned') {
             $campaign->load('vertical', 'servicelines', 'branches', 'companies.managedBy', 'manager', 'team');
             $data = $this->_getCampaignData($campaign);
             return response()->view('campaigns.show', compact('campaign', 'data'));
         }
         
-        dd('We have to show the tracking here');
+        return redirect()->route('campaigns.track', $campaign->id);
         
     }
     /**
@@ -143,7 +143,7 @@ class CampaignController extends Controller
         $campaign->load('vertical', 'servicelines',  'manager'); 
         return response()->view('campaigns.edit', compact('campaign', 'verticals', 'companies', 'managers', 'servicelines'));
     }
-
+    
     public function update(Campaign $campaign, Request $request) 
     {
         
@@ -158,7 +158,7 @@ class CampaignController extends Controller
             $campaign->vertical()->sync($data['vertical']);
            
         }
-        $team = $this->campaign->setCampaignTeam();
+        //$team = $this->campaign->setCampaignTeam();
         $campaign->branches()->sync(array_keys($branches));
         $campaign->companies()->sync($data['companies']);
         return redirect()->route('campaigns.show', $campaign->id);
@@ -182,7 +182,9 @@ class CampaignController extends Controller
         $campaign->update(['status'=> 'launched']);
         $campaign->load('vertical', 'servicelines', 'branches', 'companies.managedBy', 'manager', 'team');
         $data = $this->_getCampaignData($campaign);
-        AssignCampaignLeads::dispatch($data);
+        foreach ($data['assignments']['branch'] as $branch_id=>$addresses) {
+            AssignCampaignLeads::dispatch($branch_id, $addresses);
+        }
         
         return redirect()->route('campaigns.index')->withMessage($campaign->title .' Campaign launched');
         // 
@@ -213,7 +215,7 @@ class CampaignController extends Controller
         $data = request()->except(['_token']);
         $data['datefrom'] = Carbon::parse($data['datefrom']);
         $data['dateto'] = Carbon::parse($data['dateto']);
-        $data['created_by'] = auth()->user()->person()->id;
+        $data['created_by'] = auth()->user()->id;
         if (! $data['manager_id']) {
             
             $data['manager_id'] = $this->salesorg->getCapoDiCapo()->id;
@@ -306,9 +308,12 @@ class CampaignController extends Controller
      */
     private function _assignBranchLeads($locations, $branches) 
     {
+        //dd($locations, $branches);
         $branch_ids = $branches->pluck('id')->toArray();
+        //$address_ids = $locations->pluck('id')->toArray();
+        $assignments = ['unassigned'=>[],'branch'=>[],'location'=>[]];
+        
 
-        $assignments = [];
         foreach ($locations as $location ) {
             $branch = $this->branch->whereIn('id', $branch_ids)
                 ->nearby($location, 25, 1)
@@ -320,7 +325,9 @@ class CampaignController extends Controller
             } else {
                 $assignments['unassigned'][] = $location->id;
             }
-        }
+        } 
+
+        
         return $assignments;
     }
 
