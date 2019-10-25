@@ -2,10 +2,8 @@
 @section('content')
 <div class="container">
    <h2>{{$campaign->title}} Summary</h2>
-    <p><strong>Status:</strong>{{ucwords($campaign->status)}}</p>
-    <p><strong>Date From:</strong>{{$campaign->datefrom->format('jS, M Y')}}
-        <strong>Date From:</strong>{{$campaign->dateto->format('jS, M Y')}}</p>
-        <p><a href="{[route('campaigns.index')}}">Return to all campaigns</a></p>
+    @include('campaigns.partials._summary')
+        <p><a href="{{route('campaigns.index')}}">Return to all campaigns</a></p>
     <table id="sorttable"
         name="branchsummary"
         class="table table-striped"

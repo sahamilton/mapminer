@@ -46,13 +46,20 @@ class BranchCampaignController extends Controller
          */
         
         $campaign = $this->campaign->current(array_keys($myBranches->pluck('branchname', 'id')->toArray()))->get();
-        
+
         if (! $campaign->count()) {
             return redirect()->back()->withMessage('there are no current sales campaigns for your branches');
         }
-        $campaign->load('companies');
-
-        $locations = $this->_getLocationsForMyBranches($campaign, $myBranches);
+        
+        $campaign = $campaign->first();
+        $branch_ids = array_keys($myBranches->pluck('branchname', 'id')->toArray());
+        $branches = $this->branch
+            ->whereIn('id', $branch_ids)
+            ->summaryCampaignStats($campaign->first())
+            ->get();
+       
+        //$locations = $this->_getLocationsForMyBranches($campaign, $myBranches);
+        return response()->view('campaigns.summary', compact('campaign', 'branches'));
 
 
     }
@@ -127,12 +134,7 @@ class BranchCampaignController extends Controller
     {
         
         $company_ids = $this->_getCampaignCompanyIDs($campaigns);
-        $leads = $branches->load(
-            ['addresses'=>function ($q) use ($company_ids) {
-                $q->whereIn('company_id', $company_ids);
-            }
-            ]
-        );
+        
         dd($leads);
         
        
