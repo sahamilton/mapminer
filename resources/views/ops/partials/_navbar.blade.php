@@ -166,7 +166,7 @@
                         <i class="far fa-book" aria-hidden="true"> </i> Sales Library</a></li>
                         <li {{ (Request::is('admin/process*') ? ' class="active"' : '') }}><a href="{{ route('process.index') }}">
                         <i class="far fa-step-forward" aria-hidden="true"> </i> Sales Process</a></li>
-                        <li {{ (Request::is('admin/salesactivity*') ? ' class="active"' : '') }}><a href="{{ route('campaigns.index') }}">
+                        <li {{ (Request::is('admin/campaigns*') ? ' class="active"' : '') }}><a href="{{ route('campaigns.index') }}">
                         <i class="far fa-calendar-check-o" aria-hidden="true"> </i> Sales Campaigns</a></li>
 
                     @endcan
