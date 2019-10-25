@@ -39,7 +39,7 @@ class BranchCampaignController extends Controller
         /**  
         Testing code [description] 
         */
-        $myBranches = $this->branch->whereId(1500)->get();
+        $myBranches = $this->branch->whereId(1276)->get();
 
         /**
          * End test
@@ -125,7 +125,7 @@ class BranchCampaignController extends Controller
 
     private function _getLocationsForMyBranches($campaigns, $branches)
     {
-        dd($branches);
+        
         $company_ids = $this->_getCampaignCompanyIDs($campaigns);
         $leads = $branches->load(
             ['addresses'=>function ($q) use ($company_ids) {
