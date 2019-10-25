@@ -27,7 +27,7 @@
 
 <li class="nav-item">
     <a class="nav-link" 
-    href="{{ route('salesactivity.index') }}">
+    href="{{ route('campaigns.index') }}">
         <i class="far fa-calendar-alt"></i> Sales Campaign
     </a>
 </li>
