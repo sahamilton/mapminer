@@ -198,7 +198,22 @@ class Address extends Model
     */
     public function lastActivity()
     {
-        return $this->hasMany(Activity::class)->where('completed', 1)->latest();
+        return $this->hasMany(Activity::class)->where('completed', 1)->latest()->limit(1);
+    } 
+    /**
+     * [lastActivity description]
+     * 
+     * @return [type] [description]
+    */
+    public function currentlyActive()
+    {
+        return $this->hasMany(Activity::class)
+            ->where('completed', 1)
+            ->where('activity_date', '>', now()->subMonth())
+            ->latest()
+            ->limit(1);
+        
+        
     } 
     /**
      * [fullAddress description]
@@ -250,7 +265,7 @@ class Address extends Model
         return $this->belongsToMany(
             Branch::class, 'address_branch', 'address_id', 'branch_id'
         )
-            ->withPivot('rating', 'person_id', 'status_id', 'comments')
+            ->withPivot('id', 'rating', 'person_id', 'status_id', 'comments')
             ->withTimeStamps();
     }
     /**

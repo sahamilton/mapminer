@@ -33,7 +33,7 @@
     <label class="control-label col-sm-4" for="datefrom">Date From:</label>
     <div class="input-group date input-group-lg">       
         <input 
-            type="text"  
+            type="text"
             required 
             name='datefrom' 
             class="form-control"  
@@ -51,11 +51,12 @@
     <div class="input-group date input-group-lg">
 
         <input 
-            type="text"  
+            type="text" 
             required 
             name ='dateto' 
-            class="form-control"  
-            value="{{old('dateto'), isset($campaign) ? $campaign->dateto->format('m/d/Y') : now()->addMonth()->format('m/d/Y') }}"/>
+            class="form-control" 
+             value="{{old('datefrom', isset($campaign) ? $campaign->datefrom->format('m/d/Y') : now()->addMonths(3)->format('m/d/Y'))}}" /> 
+            
         <span class="input-group-addon">
            <i class="far fa-calendar-alt"></i>
         </span>

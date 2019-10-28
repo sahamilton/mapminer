@@ -343,4 +343,6 @@ class Activity extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
         return $query->whereCompleted(0);
     }
 
+    
+
 }

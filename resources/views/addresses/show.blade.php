@@ -11,39 +11,11 @@
 
 @include('addresses.partials._ranking')
 
-@include('addresses.partials._opportunity')
-
 <p>Location Source: {{$location->leadsource ? $location->leadsource->source : 'unknown'}}
 {{$location->createdBy ? "Created by " . $location->createdBy->person->fullname() : ''}}</p>
-@if($location->assignedToBranch->count()>0)
-<strong>Assigned to:</strong>
 
-  @foreach ($location->assignedToBranch as $branch)
+    @include('addresses.partials._leadstatus')
 
-    @if(in_array($branch->id,array_keys($myBranches)))
-      @php $owned=true; @endphp
-    @endif
-  <li><a href="{{route('branches.show',$branch->id)}}">{{$branch->branchname}}</a> - @if(isset($statuses[$branch->pivot->status_id])) 
-    {{$statuses[$branch->pivot->status_id]}}
-  @endif
-  
-</li>
-
-  @endforeach
-@if(isset($owned))
- <!--need to check if the address is in my teams leads or sales ops -->
-
-  <div class="row">
-    <div class="col-2-md">
-      <a class="btn btn-warning"
-           data-toggle="modal" 
-           data-target="#reassign" 
-           
-           href="#">Reassign</a>
-</div>
-</div>
-@endif
-@endif
 @include('maps.partials._form')
 
 

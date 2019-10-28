@@ -1,8 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Address;use App\Company;
+use App\Address;
 use App\Branch;
+use App\Company;
 use App\SearchFilter;
 use App\Campaign;
 use App\Serviceline;
@@ -73,11 +74,18 @@ class CampaignController extends Controller
      */
     public function create()
     {
+        
+
         $verticals = $this->vertical->industrysegments();
         $companies = $this->company->whereIn('accounttypes_id', [1,4])->whereHas('locations')->orderBy('companyname')->get();
         $servicelines = $this->serviceline->all();
         $roles = [6=>'svp',7=>'rvp', 3=>'market_manager'];
-        $managers = $this->person->withRoles(array_keys($roles))->with('userdetails.roles')->get();
+        // refactor to Person model
+        $managers = $this->person
+            ->withRoles(array_keys($roles))
+            ->with('userdetails.roles')
+            ->orderBy('lastname')
+            ->orderBy('firstname')->get();
         
        
         return response()->view('campaigns.create', compact('verticals', 'companies', 'managers', 'servicelines'));
@@ -91,7 +99,7 @@ class CampaignController extends Controller
      */
     public function store(Request $request)
     {
-        
+       
         $data = $this->_transformRequest($request);
        
         $branches = $this->_getbranchesFromManager($data);
@@ -118,11 +126,12 @@ class CampaignController extends Controller
     public function show(Campaign $campaign)
     {
         if ($campaign->status == 'planned') {
+           
             $campaign->load('vertical', 'servicelines', 'branches', 'companies.managedBy', 'manager', 'team');
             $data = $this->_getCampaignData($campaign);
             return response()->view('campaigns.show', compact('campaign', 'data'));
         }
-        
+       
         return redirect()->route('campaigns.track', $campaign->id);
         
     }
@@ -215,6 +224,9 @@ class CampaignController extends Controller
         $data = request()->except(['_token']);
         $data['datefrom'] = Carbon::parse($data['datefrom']);
         $data['dateto'] = Carbon::parse($data['dateto']);
+        if (! request()->has('companies')) {
+           $data['companies'] = $this->_getCompaniesInVertical($request);
+        }
         $data['created_by'] = auth()->user()->id;
         if (! $data['manager_id']) {
             
@@ -222,6 +234,11 @@ class CampaignController extends Controller
         }
         return $data;
         
+    }
+
+    private function _getCompaniesInVertical(Request $request)
+    {
+        return $this->company->whereIn('vertical', request('vertical'))->pluck('id')->toArray();
     }
     /**
      * [_getbranchesFromManager description]

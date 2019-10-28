@@ -221,4 +221,7 @@ class AddressController extends Controller
     {
         return request('street'). ' ' .request('city'). ' ' .request('state'). ' ' .request('zip');
     }
+
+
+    
 }

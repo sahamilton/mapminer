@@ -51,7 +51,7 @@ class Campaign extends Model
         return $this->belongsToMany(Serviceline::class, 'campaign_serviceline', 'campaign_id', 'serviceline_id');
     }
 
-    public function scopeCurrent($query, Array $branches=null)
+    public function scopeCurrent($query, Array $branches =null)
     {
         
         $query = $query

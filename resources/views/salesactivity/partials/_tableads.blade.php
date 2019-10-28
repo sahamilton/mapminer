@@ -7,7 +7,7 @@
     </div>
 
    @else
-	<h2>Leads Nearby in these verticals</h2>
+    <h2>Leads Nearby in these verticals</h2>
 <table id ='sorttable1' class='table table-striped table-bordered table-condensed table-hover'>
                 <thead>
 
@@ -26,15 +26,15 @@
             <tbody>
 
             @foreach ($leads as $lead)
-            	<?php $status = $lead->myLeadStatus()->status_id;?>
+                <?php $status = $lead->myLeadStatus()->status_id;?>
                 <tr> 
                 
                 <td>{{$lead->companyname }}</td>
                 <td>
-				@if((null !==$status) && $status == 2)
-					<a href="{{route('salesleads.show',$lead->id)}}" />
-					{{$lead->businessname}}</td>
-				@else
+                @if((null !==$status) && $status == 2)
+                    <a href="{{route('salesleads.show',$lead->id)}}" />
+                    {{$lead->businessname}}</td>
+                @else
                 {{$lead->businessname}}
                 @endif
                 </td>
@@ -55,18 +55,21 @@
 <td>
 
 
-		@if($status == 1) 
-			
-		
+        @if($status == 1) 
+            
+        
             <div class="btn-group">
-			   <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
-				<span class="caret"></span>
-				<span class="sr-only">Toggle Dropdown</span>
-			  </button>
-			  <ul class="dropdown-menu" role="menu">
+               <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
+                <span class="caret"></span>
+                <span class="sr-only">Toggle Dropdown</span>
+              </button>
+              <ul class="dropdown-menu" role="menu">
 
-				<a class="dropdown-item"
-                    data-href="{{route('saleslead.accept',$lead->id)}}" data-toggle="modal" data-target="#accept-lead" data-title = "Some title" href="#">
+                <a class="dropdown-item"
+                    data-href="{{route('saleslead.accept',$lead->id)}}" data-toggle="modal" 
+                    data-target="#accept-lead" 
+                    data-title = "Some title" 
+                    href="#">
                     <i class="far fa-thumbs-up text-success" aria-hidden="true"></i> Claim Lead 
                 </a>
                 <a class="dropdown-item"
@@ -75,9 +78,9 @@
                 </a>
 
                
-			  </ul>
-			</div>
-	@endif
+              </ul>
+            </div>
+    @endif
     </td>
 
     </tr>

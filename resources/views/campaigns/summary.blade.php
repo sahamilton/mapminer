@@ -11,7 +11,8 @@
         <thead>
             <th>Branch</th>
             <th>Branch Name</th>
-            <th>Leads</th>
+            <th>Offered Leads</th>
+            <th>Worked Leads</th>
             <th>Activities</th>
             <th>New Opportunities</th>
             <th>Opportunities Open</th>
@@ -21,11 +22,18 @@
             <th>Opportunities Open Value</th>
         </thead>
         <tbody>
+
             @foreach ($branches as $branch)
-            @if($branch->leads_count > 0)
+            @if($branch->offered_leads_count > 0)
             <tr>
-                <td>{{$branch->id}}</td>
+                <td>
+                    <a 
+                    href="{{route('branchcampaign.show', [$campaign->id, $branch->id])}}">
+                    {{$branch->id}}
+                    </a>
+                </td>
                 <td>{{$branch->branchname}}</td>
+                <td>{{$branch->offered_leads_count}}</td>
                 <td>{{$branch->leads_count}}</td>
                 <td>{{$branch->activities_count}}</td>
                 <td>{{$branch->opened}}</td>

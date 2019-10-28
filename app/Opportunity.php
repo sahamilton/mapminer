@@ -259,20 +259,25 @@ class Opportunity extends Model
     {
         return $this->hasManyThrough(Activity::class, BranchLead::class,  'id', 'address_id', 'address_id', 'id');
     }
-    public function staleOpportunities()
+    
+
+    public function currentlyActive()
     {
-        return $this->with(
-            'activities', function ($q) {
-                $q->where('created_at', '>', Carbon::now()->subMonth());
-            }
-        );
+       
+        return  $this->hasManyThrough(Activity::class, BranchLead::class,  'id', 'address_id', 'address_id', 'id')
+            ->where('completed', 1)
+            ->where('activity_date', '>', now()->subMonth())
+            ->latest()
+            ->limit(1);
+        
+        
     }
     public function scopeStaleOpportunities($query)
     {
         return $query->where('closed', 0)
-            ->doesntHave(
+            ->whereHas(
                 'activities', function ($q) {
-                    $q->where('created_at', '>', Carbon::now()->subMonth());
+                     $q->whereDoesntHave('currentlyActive');
                 }
             );
     }
