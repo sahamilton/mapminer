@@ -14,7 +14,7 @@
 <p>Location Source: {{$location->leadsource ? $location->leadsource->source : 'unknown'}}
 {{$location->createdBy ? "Created by " . $location->createdBy->person->fullname() : ''}}</p>
 
-    @include('addresses.partials._leadstatus')
+@include('addresses.partials._leadstatus')
 
 @include('maps.partials._form')
 
@@ -47,33 +47,6 @@
 
 
 
-
-
-  @if($location->addressable_type == 'project')
- <a class="nav-item nav-link"  
-        data-toggle="tab" 
-        href="#projectdetails"
-        id="project-tab"
-        role="tab"
-        aria-controls="projectdetails"
-        aria-selected="false">
-
-    <strong>Project Details</strong>
-
-  @endif
-  @if($location->addressable_type == 'weblead')
-    <a class="nav-item nav-link"  
-          data-toggle="tab" 
-          href="#weblead"
-          id="weblead-tab"
-          role="tab"
-          aria-controls="weblead"
-          aria-selected="false">
-
-      <strong>Lead Details</strong>
-    </a>
-  @endif
-
     <a class="nav-item nav-link"  
         data-toggle="tab" 
         href="#contacts"
@@ -84,15 +57,16 @@
 
     <strong>Contacts</strong>
   </a>
-  <a class="nav-item nav-link" 
-      data-toggle="tab" 
-      href="#activities"
-      id="activities-tab"
-      role="tab"
-      aria-controls="activities"
-      aria-selected="false">
-        <strong>Activities</strong>
-  </a>
+  
+    <a class="nav-item nav-link" 
+        data-toggle="tab" 
+        href="#activities"
+        id="activities-tab"
+        role="tab"
+        aria-controls="activities"
+        aria-selected="false">
+          <strong>Activities</strong>
+    </a>
 
   <a class="nav-item nav-link" 
       data-toggle="tab" 

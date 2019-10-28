@@ -292,6 +292,20 @@ class Branch extends Model implements HasPresenter
 
     }
     /**
+     * [neglectedLeads description]
+     * 
+     * @return [type] [description]
+     */
+    public function neglectedLeads()
+    {
+        return  $this->belongsToMany(Address::class, 'address_branch', 'branch_id', 'address_id')
+            ->whereDoesntHave('opportunities')
+            ->where('address_branch.created_at', '<', now()->subWeek())
+            ->whereIn('status_id', [1]); 
+
+    }
+    
+    /**
      * [leads description]
      * 
      * @return [type] [description]
@@ -891,6 +905,7 @@ class Branch extends Model implements HasPresenter
                         }
                     );
             },
+            'neglectedLeads',
             'leads as newbranchleads'=>function ($query) {
                 $query->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']])
                     ->where(
@@ -1144,6 +1159,9 @@ class Branch extends Model implements HasPresenter
             'offeredLeads'=>function ($query) {
                 $query->whereIn('company_id', $this->company_ids)
                     ->where('address_branch.created_at', '<=', $this->period['to']);
+            },
+            'neglectedLeads'=>function ($query) {
+                $query->whereIn('company_id', $this->company_ids);
             },
             'staleLeads'=>function ($query) {
                 $query->whereIn('company_id', $this->company_ids);

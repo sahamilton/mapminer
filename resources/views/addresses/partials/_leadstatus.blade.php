@@ -1,16 +1,30 @@
 @if($location->assignedToBranch->count())
-  Assigned to:
-  @foreach ($location->assignedToBranch as $branch)
-
-      @if(in_array($branch->id,array_keys($myBranches)))
-          @php $owned=true; @endphp
-      @endif
-      {{$branch->branchname}}
-  @endforeach
   
+  @foreach ($location->assignedToBranch as $branch)
+      
+      @if(in_array($branch->id,array_keys($myBranches)))
+         
+          @if($branch->pivot->status_id == 1)
+            @php $offered = 1; @endphp
+          @else
+            @php $owned = 1; @endphp
+
+          @endif 
+
+      @endif 
+
+      
+      @if(isset($owned))
+      Assigned to:
+      @else
+      Offered to:
+      {{$branch->branchname}}
+      @endif
+  @endforeach
+ 
   @if(isset($statuses[$branch->pivot->status_id]))
     <div class="btn-group" role="group" >
-      @if($branch->pivot->status_id == 1 && isset($owned))
+      @if(isset($offered))
         
           <form class='form-inline mr-1'
             action = "{{route('branchleads.update',$branch->pivot->id)}}"
@@ -36,7 +50,7 @@
          
        
         @include('addresses.partials._declinemodal')
-        @elseif ($branch->pivot->status_id == 2 && isset($owned))
+        @elseif (isset($owned))
             <button class="btn btn-success mr-2" 
       
           data-toggle="modal" 
