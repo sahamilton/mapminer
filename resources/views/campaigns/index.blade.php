@@ -41,6 +41,7 @@
 				<td>{{$campaign->branches_count}}</td>
 				
 				<td>
+					@if($campaign->status == 'planned')
 					<a 
 					 	data-href="{{route('campaigns.destroy',$campaign->id)}}" 
 						data-toggle="modal" 
@@ -50,6 +51,7 @@
 						href="#">
 
 						<i class="far fa-trash-alt text-danger" aria-hidden="true"> </i> </a>
+					@endif
 			</tr>
 			@endforeach
 		</tbody>
