@@ -42,21 +42,22 @@ class BranchCampaignController extends Controller
         Testing code [description] 
         */
         $person = $this->person->findOrFail(auth()->user()->person->id);
-        
+       
         /**
          * End test
          */
         $myBranches = $this->branch->whereIn('id', array_keys($this->person->myBranches($person)))->get();
         
         $campaign = $this->campaign->current($myBranches->pluck('id')->toArray())->get();
+
        
         if (! $campaign->count()) {
             return redirect()->back()->withMessage('there are no current sales campaigns for your branches');
         }
         $campaign = $campaign->first();
-        
+       
         if ($myBranches->count() == 1) {
-            return redirect()->route('branchcampaign.show', [$campaign->id, $myBranches->first()->id]);
+            return $this->show($campaign, $myBranches->first());
         }
 
         $branch_ids = $myBranches->pluck('id')->toArray();
@@ -82,7 +83,7 @@ class BranchCampaignController extends Controller
     {
         // get my branches
         
-        $person = $this->person->findOrFail(164);
+        $person = $this->person->findOrFail(auth()->user()->person->id);
         $myBranches = $this->person->myBranches($person);
         if (! in_array($branch->id, array_keys($myBranches))) {
             return redirect()->back()->withError('That is not one of your branches');
