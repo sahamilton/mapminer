@@ -113,14 +113,15 @@ class CampaignController extends Controller
         
         $campaign = $this->campaign->create($data);
         
-        $campaign->servicelines()->attach($data['serviceline']); 
+        $campaign->servicelines()->sync($data['serviceline']); 
         
         if (isset($data['vertical'])) {
-            $campaign->vertical()->attach($data['vertical']);
+            $campaign->vertical()->sync($data['vertical']);
            
         }
-        $campaign->branches()->attach(array_keys($branches));
-        $campaign->companies()->attach($data['companies']);
+        $data = $this->_getCampaignData($campaign);
+        $campaign->branches()->sync(array_keys($data['assignments']['branch']));
+        $campaign->companies()->sync($data['companies']);
         return redirect()->route('campaigns.show', $campaign->id);
     }
     /**
@@ -136,7 +137,8 @@ class CampaignController extends Controller
            
             $campaign->load('vertical', 'servicelines', 'branches', 'companies.managedBy', 'manager', 'team');
             $data = $this->_getCampaignData($campaign);
-       
+            
+            
             return response()->view('campaigns.show', compact('campaign', 'data'));
         }
        
@@ -180,10 +182,10 @@ class CampaignController extends Controller
   
         if (isset($data['vertical'])) {
             $campaign->vertical()->sync($data['vertical']);
-           
         }
         //$team = $this->campaign->setCampaignTeam();
-        $campaign->branches()->sync(array_keys($branches));
+        $data['branches'] = $this->_getCampaignData($campaign);
+        $campaign->branches()->sync(array_keys($data['branches']['assignments']['branch']));
         $campaign->companies()->sync($data['companies']);
         return redirect()->route('campaigns.show', $campaign->id);
     }

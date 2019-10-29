@@ -1,6 +1,6 @@
 <div class="col-sm-6" >
     @php $total = 0; @endphp
-<p><strong>Total Assignable Locations:</strong>{{$data['locations']->count()}}</p>
+
 <table id="sorttable"
 name="branches"
 >

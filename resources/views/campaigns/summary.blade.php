@@ -1,4 +1,4 @@
-@extends('admin.layouts.default')
+@extends('layouts.default')
 @section('content')
 <div class="container">
    <h2>{{$campaign->title}} Summary</h2>

@@ -13,7 +13,7 @@
         
 
 
-    <p>Descripiton: {{ucwords($campaign->description)}}</p>
+    <p>Description: {{ucwords($campaign->description)}}</p>
     <p><strong>Created By:</strong>{{$campaign->author ? $campaign->author->fullName() :''}}</p>
     <p><strong>Created:</strong>{{$campaign->created_at->format('l jS M Y')}}</p>
     <p><strong>Manager:</strong>
@@ -31,6 +31,8 @@
             {{$campaign->branches->count()}}
         
     </p>
+    <p><strong>Total Locations:</strong>{{$data['locations']->count()}}</p>
+    
     <p>
         @if($campaign->verticals)
             <strong>Verticals:</strong>
