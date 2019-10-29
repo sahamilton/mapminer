@@ -138,8 +138,15 @@ class Person extends NodeModel implements HasPresenter
         }
         $branches = $branches      
             ->withRoles([9])
-            ->with('branchesServiced')
-            ->get()
+            ->with('branchesServiced');
+        if ($servicelines) {
+            $branches = $branches->whereHas(
+                'serviceline', function ($q) use ($serviceline) {
+                    $q->whereIn('id', $serviceline);
+                }
+            );
+        }
+        $branches = $branches->get()
             ->map(
                 function ($branch) { 
                     return $branch->branchesServiced->pluck('id')->toArray();
@@ -168,7 +175,7 @@ class Person extends NodeModel implements HasPresenter
      * 
      * @return [type] [description]
      */
-    public function myBranches(Person $person=null)
+    public function myBranches(Person $person=null, Array $servicelines=null)
     {
         
         if (! $person && auth()->user()->hasRole('admin')) {
@@ -182,13 +189,17 @@ class Person extends NodeModel implements HasPresenter
         $myteam = $this->myTeam($person)->has('branchesServiced')->get();
 
         $data=[];
+        if ($servicelines) {
 
-        $teammembers =  $myteam->map(
-            function ($team) {
+        } else {
+            $teammembers =  $myteam->map(
+                function ($team) {
            
-                return $team->branchesServiced;
-            }
-        );
+                    return $team->branchesServiced;
+                }
+            );
+        }
+        
 
         foreach ($teammembers as $member) {
        

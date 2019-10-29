@@ -11,29 +11,26 @@ name="branches"
     <th>Current Campaign Leads</th>
 </thead>
 <tbody>
-@foreach ($data['assignments']['branch'] as $branchid=>$leads)
-    @if ($data['branches']->where('id', $branchid)->count())
-    @php $branch = $data['branches']->where('id', $branchid)->first() @endphp
-    @else
-    @php $branch = null @endphp
-    @endif
+
+@foreach ($data['branches'] as $branch)
+   
     <tr>
-    <td>{{$branchid}}</td>
-    <td>@if ($branch)
-        {{$branch->branchname}}
+    <td>{{$branch->id}}</td>
+    <td>{{$branch->branchname}}</td>
+    <td class="text-right">
+        @if(array_key_exists($branch->id, $data['assignments']['branch']))
+
+            @php 
+             $assignable = count($data['assignments']['branch'][$branch->id]); 
+             $total = $total + $assignable 
+             @endphp
+        
+        {{$assignable}}
+        @else
+        0
         @endif
     </td>
-    <td class="text-right">
-        @php $total = $total + count($leads) @endphp
-        {{count($leads)}}
-    </td>
-     <td class="text-right">
-     @if ($branch)
-        {{$branch->leads_count}}
-    @else
-        0
-    @endif
-    </td>
+     <td class="text-right">{{$branch->leads_count}}</td>
     
     
  </tr>

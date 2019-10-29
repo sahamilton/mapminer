@@ -11,7 +11,7 @@
     <div class="pl-10 collapse" 
         id="summary">
         
-
+    
 
     <p>Description: {{ucwords($campaign->description)}}</p>
     <p><strong>Created By:</strong>{{$campaign->author ? $campaign->author->fullName() :''}}</p>

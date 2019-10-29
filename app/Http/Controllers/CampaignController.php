@@ -109,18 +109,18 @@ class CampaignController extends Controller
        
         $data = $this->_transformRequest($request);
       
-        $branches = $this->_getbranchesFromManager($data);
+        $branches = $this->_getbranchesFromManager($request);
         
         $campaign = $this->campaign->create($data);
-        $campaign->branches()->sync(array_keys($branches));
+        $campaign->branches()->sync($branches);
         $campaign->servicelines()->sync($data['serviceline']); 
         
         if (isset($data['vertical'])) {
             $campaign->vertical()->sync($data['vertical']);
            
         }
-        $data['branches'] = $this->_getCampaignData($campaign);
-        $campaign->branches()->sync(array_keys($data['branches']['assignments']['branch']));
+        //$data['branches'] = $this->_getCampaignData($campaign);
+        //$campaign->branches()->sync(array_keys($data['branches']['assignments']['branch']));
         $campaign->companies()->sync($data['companies']);
         return redirect()->route('campaigns.show', $campaign->id);
     }
@@ -134,11 +134,11 @@ class CampaignController extends Controller
     public function show(Campaign $campaign)
     {
         if ($campaign->status == 'planned') {
+
            
             $campaign->load('vertical', 'servicelines', 'branches', 'companies.managedBy', 'manager', 'team');
+ 
             $data = $this->_getCampaignData($campaign);
-            
-            
             return response()->view('campaigns.show', compact('campaign', 'data'));
         }
        
@@ -158,7 +158,12 @@ class CampaignController extends Controller
         $companies = $this->company->whereIn('accounttypes_id', [1,4])->whereHas('locations')->orderBy('companyname')->get();
         $servicelines = $this->serviceline->all();
         $roles = [6=>'svp',7=>'rvp', 3=>'market_manager'];
-        $managers = $this->person->withRoles(array_keys($roles))->with('userdetails.roles')->get();
+        $managers = $this->person
+            ->withRoles(array_keys($roles))
+            ->with('userdetails.roles')
+            ->orderBy('lastname')
+            ->orderBy('firstname')
+            ->get();
         $campaign->load('vertical', 'servicelines',  'manager'); 
         return response()->view('campaigns.edit', compact('campaign', 'verticals', 'companies', 'managers', 'servicelines'));
     }
@@ -177,18 +182,18 @@ class CampaignController extends Controller
        
         $campaign->update($data);
        
-        $branches = $this->_getbranchesFromManager($data);
-        $campaign->branches()->sync(array_keys($branches)); 
+        $data['branches'] = $this->_getbranchesFromManager($request);
+
+        $campaign->branches()->sync($data['branches']); 
+
         $campaign->load('branches');
+
         $campaign->servicelines()->sync($data['serviceline']); 
   
         if (isset($data['vertical'])) {
             $campaign->vertical()->sync($data['vertical']);
         }
-        //$team = $this->campaign->setCampaignTeam();
-        $data['branches'] = $this->_getCampaignData($campaign);
-        
-        $campaign->branches()->sync(array_keys($data['branches']['assignments']['branch']));
+       
         $campaign->companies()->sync($data['companies']);
         return redirect()->route('campaigns.show', $campaign->id);
     }
@@ -235,12 +240,20 @@ class CampaignController extends Controller
     private function _getCampaignData(Campaign $campaign)
     {
         
-        $data['companies'] = $this->_getCompanyLocations($campaign);
-        $unassignedLocations = $this->_getUnassignedLocations($campaign);
+        $data['locations'] = $this->_getCompanyLocations($campaign);
+        $data['branches'] =  $this->_getBranchesWithinServiceArea($campaign, $data['locations']);
+
+        $data['companies'] = $this->_getCompaniesInCampaign($campaign);
+        $unassignedLocations = $this->_getUnassignedLeads($data['companies']);
+        
+        $serviceLocations = $this->_getServiceLocations($campaign);
+        
         $data['branches'] = $this->_getAssignedLeadsForBranches($campaign);
+       
         $data['assignments'] = $this->_assignBranchLeads($unassignedLocations, $campaign);
-        $data['locations'] = $unassignedLocations;
+       
         $data['assigned'] = $this->_getAssignedLocations($campaign);
+
    
 
         return $data;
@@ -287,11 +300,28 @@ class CampaignController extends Controller
      * 
      * @return [type]       [description]
      */
-    private function _getbranchesFromManager($data)
+    private function _getbranchesFromManager(Request $request)
     {
         
-        $manager = $this->person->whereId($data['manager_id'])->firstOrFail();
-        return $this->person->myBranches($manager);
+        $managers = $this->person->whereId([request('manager_id')])->firstOrFail()->descendantsAndSelf()
+            ->with(
+                ['branchesServiced'=>function ($q) {
+                    $q->whereHas(
+                        'servicelines', function ($q1) {
+                            $q1->whereIn('id', [5]);
+                        }
+                    );
+                }
+                ]
+            )->get();
+        $branches = $managers->map(
+            function ($manager) {
+                return $manager->branchesServiced->pluck('id', 'brancname')->toArray();
+            }
+        );
+        $branches = $branches->flatten()->toArray();
+        sort($branches);
+        return $branches;
     }
     /**
      * [_getCompanyLocations get all locations of companies within branch territory (box)]
@@ -304,12 +334,24 @@ class CampaignController extends Controller
     private function _getCompanyLocations(Campaign $campaign)
     {
         
+        $companies = $this->_getCompaniesInCampaign($campaign);
+
+        $locations = $companies->map(
+            function ($company) {
+                return $company->locations;
+            }
+        );
+        return $locations->flatten();
+       
+
+    }
+    private function _getCompaniesInCampaign(Campaign $campaign)
+    {
         $branches = $campaign->branches;
         $company_ids = $campaign->companies->pluck('id')->toArray();
-        // get locations that are not already assigned to a branch
         return $this->company
             ->whereIn('id', $company_ids)
-            ->with('unassigned')
+            ->with('unassigned', 'locations')
             ->with(
                 ['assigned'=>function ($q) use ($branches) {
                     $q->whereHas(
@@ -322,14 +364,13 @@ class CampaignController extends Controller
                 ] 
             )
             ->get();
-
     }
-
-    private function _getUnassignedLocations($campaign)
+    private function _getServiceLocations($campaign)
     {
         $branches = $campaign->branches;
 
         $box = $this->branch->getBoundingBox($branches);
+     
         // get the locations of the companies that are within the MBR
         $locations = $campaign->companies->map(
             function ($company) use ($box) {
@@ -356,6 +397,18 @@ class CampaignController extends Controller
         );
         return $locations->flatten();
     }
+
+    private function _getUnassignedLeads($companies)
+    {
+        $locations = $companies->map(
+            function ($company) {
+                return $company->unassigned;
+
+            }
+        );
+
+        return $locations->flatten();
+    }
     /**
      * [_getBranchesWithinServiceArea description]
      * 
@@ -369,7 +422,7 @@ class CampaignController extends Controller
         
        
         $branch_ids = $campaign->branches->pluck('id')->toarray();
-        $company_ids = $campaign->companies->pluck('id')->toArray();
+       
         $box = $this->address->getBoundingBox($locations);
      
         return $this->branch->getWithinMBR($box)
@@ -380,7 +433,9 @@ class CampaignController extends Controller
     private function _getAssignedLeadsForBranches($campaign)
     {
         $company_ids = $campaign->companies->pluck('id')->toArray();
+        $serviceline_ids = $campaign->servicelines->pluck('id')->toArray();
         $branch_ids = $campaign->branches->pluck('id')->toarray();
+
         return $this->branch->withCount(
             [
                 'leads'=>function ($q) use ($company_ids) {
@@ -390,7 +445,26 @@ class CampaignController extends Controller
                     $q->whereIn('company_id', $company_ids);
                 }
             ]
-        )->find($branch_ids);
+        )->where(
+            function ($q) use ($company_ids) {
+                $q->whereHas(
+                    'leads', function ($q2) use ($company_ids) {
+                        $q2->whereIn('company_id', $company_ids);
+                    }
+                )
+                ->orWhereHas(
+                    'staleLeads', function ($q3) use ($company_ids) {
+                         $q3->whereIn('company_id', $company_ids);
+                    }
+                );
+            }
+        )
+        ->whereHas(
+            'servicelines', function ($q) use ($serviceline_ids) {
+                $q->whereIn('id', $serviceline_ids);
+            }
+        )
+        ->find($branch_ids);
        
     }
     /**
