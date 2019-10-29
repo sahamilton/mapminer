@@ -136,7 +136,7 @@ class CampaignController extends Controller
            
             $campaign->load('vertical', 'servicelines', 'branches', 'companies.managedBy', 'manager', 'team');
             $data = $this->_getCampaignData($campaign);
-            dd(132, $data);
+       
             return response()->view('campaigns.show', compact('campaign', 'data'));
         }
        

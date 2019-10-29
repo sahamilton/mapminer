@@ -1,3 +1,18 @@
+<div class="row" 
+    style="margin-top:20px;margin-bottom:20px">
+        <button 
+        type="button" 
+        class="btn btn-success btn-block col-sm4" 
+        data-toggle="collapse" 
+        data-target="#summary">
+            Summary
+        </button>
+    </div>
+    <div class="pl-10 collapse" 
+        id="summary">
+        
+
+
     <p>Descripiton: {{ucwords($campaign->description)}}</p>
     <p><strong>Created By:</strong>{{$campaign->author ? $campaign->author->fullName() :''}}</p>
     <p><strong>Created:</strong>{{$campaign->created_at->format('l jS M Y')}}</p>
@@ -36,3 +51,4 @@
             @endforeach
         @endif
     </p>
+</div>
