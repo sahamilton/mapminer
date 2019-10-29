@@ -112,7 +112,7 @@ class CampaignController extends Controller
         $branches = $this->_getbranchesFromManager($data);
         
         $campaign = $this->campaign->create($data);
-        
+        $campaign->branches()->sync(array_keys($branches));
         $campaign->servicelines()->sync($data['serviceline']); 
         
         if (isset($data['vertical'])) {
@@ -176,8 +176,10 @@ class CampaignController extends Controller
         $data = $this->_transformRequest($request);
        
         $campaign->update($data);
-        $branches = $this->_getbranchesFromManager($data);
        
+        $branches = $this->_getbranchesFromManager($data);
+        $campaign->branches()->sync(array_keys($branches)); 
+        $campaign->load('branches');
         $campaign->servicelines()->sync($data['serviceline']); 
   
         if (isset($data['vertical'])) {
@@ -185,6 +187,7 @@ class CampaignController extends Controller
         }
         //$team = $this->campaign->setCampaignTeam();
         $data['branches'] = $this->_getCampaignData($campaign);
+        
         $campaign->branches()->sync(array_keys($data['branches']['assignments']['branch']));
         $campaign->companies()->sync($data['companies']);
         return redirect()->route('campaigns.show', $campaign->id);
@@ -227,6 +230,13 @@ class CampaignController extends Controller
         // 
         
     }
+    /**
+     * [_getCampaignData description]
+     * 
+     * @param Campaign $campaign [description]
+     * 
+     * @return [type]             [description]
+     */
     private function _getCampaignData(Campaign $campaign)
     {
         
@@ -235,7 +245,7 @@ class CampaignController extends Controller
         $locations = $this->_getCompanyLocations($campaign, $branches);
 
         $data['branches'] = $this->_getBranchesWithinServiceArea($campaign, $locations);
-      
+       
         $data['assignments'] = $this->_assignBranchLeads($locations, $branches);
         $data['locations'] = $locations;
         return $data;
@@ -244,6 +254,7 @@ class CampaignController extends Controller
      * [_transformRequest description]
      * 
      * @param Request $request [description]
+     * 
      * @return [type]           [description]
      */
     private function _transformRequest(Request $request)
@@ -341,6 +352,7 @@ class CampaignController extends Controller
         $branch_ids = $campaign->branches->pluck('id')->toarray();
         $company_ids = $campaign->companies->pluck('id')->toArray();
         $box = $this->address->getBoundingBox($locations);
+     
         return $this->branch->getWithinMBR($box)->withCount(
             ['leads'=>function ($q) use ($company_ids) {
                 $q->whereIn('company_id', $company_ids);
