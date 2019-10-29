@@ -31,7 +31,11 @@
             {{$campaign->branches->count()}}
         
     </p>
-    <p><strong>Total Locations:</strong>{{$data['locations']->count()}}</p>
+    <p>
+        @if(isset($data))
+        <strong>Total Locations:</strong>{{$data['locations']->count()}}
+    @endif
+</p>
     
     <p>
         @if($campaign->verticals)
