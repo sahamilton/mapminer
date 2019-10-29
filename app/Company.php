@@ -55,6 +55,15 @@ class Company extends NodeModel
                                 
             return $this->hasMany(Address::class);
     }
+
+    public function assigned()
+    {
+        return $this->hasMany(Address::class)->whereHas('assignedToBranch');
+    }
+    public function unassigned()
+    {
+        return $this->hasMany(Address::class)->whereDoesntHave('assignedToBranch');
+    }
     /**
      * [stateLocations description]
      * 
@@ -374,6 +383,28 @@ class Company extends NodeModel
                 }
                 ]
             );
+    }
+
+    public function scopeUnassigned($query)
+    {
+        return $query->with(
+            [
+                'locations as unassigned'=>function ($q) {
+                    $q->doesntHave('assignedToBranch');
+                }
+            ]
+        );  
+    }
+
+    public function scopeAssigned($query)
+    {
+        return $query->with(
+            [
+                'locations as assigned'=>function ($q) {
+                    $q->has('assignedToBranch');
+                }
+            ]
+        );  
     }
 
 }

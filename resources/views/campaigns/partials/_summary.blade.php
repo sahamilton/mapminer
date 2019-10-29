@@ -31,11 +31,12 @@
             {{$campaign->branches->count()}}
         
     </p>
-    <p>
+    
         @if(isset($data))
-        <strong>Total Locations:</strong>{{$data['locations']->count()}}
+       <p> <strong>Total Assignable Locations:</strong>{{$data['locations']->count()}}</p>
+       <p> <strong>Total Assigned Locations:</strong>{{$data['assigned']->count()}}</p>
     @endif
-</p>
+
     
     <p>
         @if($campaign->verticals)
@@ -46,13 +47,22 @@
         @else
 
             <strong>Companies:</strong>
-            @foreach ($campaign->companies as $company)
-                
-            
-                <li>{{$company->companyname}} 
+            <table class="table table->striped col-sm-6">
+                <thead>
+                    <th>Company</th>
+                    <th>Assignable Locations</th>
+                    <th>Assigned Locations</th>
+                </thead>
+                <tbody>
+                @foreach ($campaign->companies as $company)
+                <tr>
+                    <td>{{$company->companyname}}</td>
+                    <td>{{$company->unassigned->count()}}</td>
+                    <td>{{$company->assigned->count()}}</td>
                     
-                    
-                </li>
+                </tr>
+            </tbody>
+        </table>
             
             @endforeach
         @endif

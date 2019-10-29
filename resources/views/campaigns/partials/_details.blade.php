@@ -34,6 +34,8 @@ name="branches"
         0
     @endif
     </td>
+    
+    
  </tr>
  @endforeach
  <tfoot>
