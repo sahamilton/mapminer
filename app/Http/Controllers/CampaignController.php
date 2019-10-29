@@ -27,9 +27,16 @@ class CampaignController extends Controller
     public $serviceline;
 
     /**
-     * [__construct description]
+     * /
      * 
-     * @param Campaign $campaign [description]
+     * @param Address      $address      [description]
+     * @param Branch       $branch       [description]
+     * @param Campaign     $campaign     [description]
+     * @param Company      $company      [description]
+     * @param Person       $person       [description]
+     * @param SearchFilter $searchFilter [description]
+     * @param SalesOrg     $salesorg     [description]
+     * @param Serviceline  $serviceline  [description]
      */
     public function __construct(
         Address $address,
@@ -101,7 +108,7 @@ class CampaignController extends Controller
     {
        
         $data = $this->_transformRequest($request);
-       
+      
         $branches = $this->_getbranchesFromManager($data);
         
         $campaign = $this->campaign->create($data);
@@ -129,6 +136,7 @@ class CampaignController extends Controller
            
             $campaign->load('vertical', 'servicelines', 'branches', 'companies.managedBy', 'manager', 'team');
             $data = $this->_getCampaignData($campaign);
+            dd(132, $data);
             return response()->view('campaigns.show', compact('campaign', 'data'));
         }
        
@@ -152,15 +160,22 @@ class CampaignController extends Controller
         $campaign->load('vertical', 'servicelines',  'manager'); 
         return response()->view('campaigns.edit', compact('campaign', 'verticals', 'companies', 'managers', 'servicelines'));
     }
-    
+    /**
+     * [update description]
+     * 
+     * @param Campaign $campaign [description]
+     * @param Request  $request  [description]
+     * 
+     * @return [type]             [description]
+     */
     public function update(Campaign $campaign, Request $request) 
     {
         
         $data = $this->_transformRequest($request);
-        
+       
         $campaign->update($data);
         $branches = $this->_getbranchesFromManager($data);
-
+       
         $campaign->servicelines()->sync($data['serviceline']); 
   
         if (isset($data['vertical'])) {
@@ -185,7 +200,13 @@ class CampaignController extends Controller
         return redirect()->back()->withMessage("Campaign Deleted");
     }
 
-    
+    /**
+     * [launch description]
+     * 
+     * @param Campaign $campaign [description]
+     * 
+     * @return [type]             [description]
+     */
     public function launch(Campaign $campaign)
     {
         $campaign->update(['status'=> 'launched']);
@@ -217,15 +238,20 @@ class CampaignController extends Controller
         $data['locations'] = $locations;
         return $data;
     }
-
+    /**
+     * [_transformRequest description]
+     * 
+     * @param Request $request [description]
+     * @return [type]           [description]
+     */
     private function _transformRequest(Request $request)
     {
        
         $data = request()->except(['_token']);
         $data['datefrom'] = Carbon::parse($data['datefrom']);
         $data['dateto'] = Carbon::parse($data['dateto']);
-        if (! request()->has('companies')) {
-           $data['companies'] = $this->_getCompaniesInVertical($request);
+        if (request()->has('vertical')) {
+            $data['companies'] = $this->_getCompaniesInVertical($request);
         }
         $data['created_by'] = auth()->user()->id;
         if (! $data['manager_id']) {
@@ -235,7 +261,13 @@ class CampaignController extends Controller
         return $data;
         
     }
-
+    /**
+     * [_getCompaniesInVertical description]
+     * 
+     * @param Request $request [description]
+     * 
+     * @return [type]           [description]
+     */
     private function _getCompaniesInVertical(Request $request)
     {
         return $this->company->whereIn('vertical', request('vertical'))->pluck('id')->toArray();

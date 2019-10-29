@@ -60,9 +60,8 @@ class CampaignTrackingController extends Controller
     public function show(Campaign $campaign, Branch $branch = null)
     {
         // get my branches
-        dd('hreere');
-        $person = $this->person->findOrFail(882);
-        dd($this->person->myBranches($person));
+   
+        
         // // check is one of my branches
         // else return not valid
 
