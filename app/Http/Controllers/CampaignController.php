@@ -119,8 +119,8 @@ class CampaignController extends Controller
             $campaign->vertical()->sync($data['vertical']);
            
         }
-        $data = $this->_getCampaignData($campaign);
-        $campaign->branches()->sync(array_keys($data['assignments']['branch']));
+        $data['branches'] = $this->_getCampaignData($campaign);
+        $campaign->branches()->sync(array_keys($data['branches']['assignments']['branch']));
         $campaign->companies()->sync($data['companies']);
         return redirect()->route('campaigns.show', $campaign->id);
     }
