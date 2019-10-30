@@ -1,30 +1,6 @@
-@if($location->assignedToBranch->count())
-  
-  @foreach ($location->assignedToBranch as $branch)
-      
-      @if(in_array($branch->id,array_keys($myBranches)))
-         
-          @if($branch->pivot->status_id == 1)
-            @php $offered = 1; @endphp
-          @else
-            @php $owned = 1; @endphp
-
-          @endif 
-
-      @endif 
-
-      
-      @if(isset($owned))
-      Assigned to:
-      @else
-      Offered to:
-      {{$branch->branchname}}
-      @endif
-  @endforeach
- 
-  @if(isset($statuses[$branch->pivot->status_id]))
+@if (isset($owned))
     <div class="btn-group" role="group" >
-      @if(isset($offered))
+      @if($owned ==1)
         
           <form class='form-inline mr-1'
             action = "{{route('branchleads.update',$branch->pivot->id)}}"
@@ -50,7 +26,7 @@
          
        
         @include('addresses.partials._declinemodal')
-        @elseif (isset($owned))
+        @elseif ($owned == 2)
             <button class="btn btn-success mr-2" 
       
           data-toggle="modal" 
@@ -67,20 +43,29 @@
 
         @include('addresses.partials._reassignlead')
 
-      @endif
+ 
      </div>
   @endif
+@elseif ($location->assignedToBranch->count())
+  Owned By:
+  @foreach ($location->assignedToBranch as $branch)
+    <li>
+      <a href="{{route('branches.show', $branch->id)}}">
+        {{$branch->branchname}}
+      </a>
+    </li>
+  
+  @endforeach
 @else
-
-<form name="claimlead"
-  method="post"
-  action = "{{route('branchleads.store')}}"
-  >
-  @csrf
-  <input type="hidden" name="address_id" value="{{$location->id}}" />
-  @if (count(array_keys($myBranches))==1)
-  <input type="hidden" name="branch_id" value = "{{array_keys($myBranches)[0]}}" />
-  @endif
-  <input type="submit" class="btn btn-success" value="Claim Lead" />
-</form>
+  <form name="claimlead"
+    method="post"
+    action = "{{route('branchleads.store')}}"
+    >
+    @csrf
+    <input type="hidden" name="address_id" value="{{$location->id}}" />
+    @if (count(array_keys($myBranches))==1)
+    <input type="hidden" name="branch_id" value = "{{array_keys($myBranches)[0]}}" />
+    @endif
+    <input type="submit" class="btn btn-success" value="Claim Lead" />
+  </form>
 @endif

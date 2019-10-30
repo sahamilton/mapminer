@@ -5,7 +5,7 @@
         class="btn btn-success btn-block col-sm4" 
         data-toggle="collapse" 
         data-target="#{{$view}}">
-            {{ucwords($view)}}
+            {{ucwords(parseCamelCase($view))}}
         </button>
     </div>
     <div class="pl-10  @if(! $loop->first) collapse @endif " 

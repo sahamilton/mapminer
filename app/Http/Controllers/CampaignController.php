@@ -477,9 +477,9 @@ class CampaignController extends Controller
      */
     private function _assignBranchLeads($locations,$campaign) 
     {
-        //dd($locations, $branches);
+        
         $branch_ids = $campaign->branches->pluck('id')->toArray();
-        //$address_ids = $locations->pluck('id')->toArray();
+      
         $assignments = ['unassigned'=>[],'branch'=>[],'location'=>[]];
         
 
