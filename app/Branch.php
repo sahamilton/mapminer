@@ -852,12 +852,14 @@ class Branch extends Model implements HasPresenter
                     ->where('completed', 1)
                     ->where('activitytype_id', 13);
             },
-            'activities as salesapptsscheduled'=>function ($query) {
+            'activities as proposals'=>function ($query) {
                 $query->whereBetween(
                     'activity_date', [$this->period['from'],$this->period['to']]
-                )->where('activitytype_id', 4);
+                )
+                    ->where('completed', 1)
+                    ->where('activitytype_id', 7);
             },
-            'activities as logacall'=>function ($query) {
+            'activities as sitevists'=>function ($query) {
                 $query->whereBetween(
                     'activity_date', [$this->period['from'],$this->period['to']]
                 )
