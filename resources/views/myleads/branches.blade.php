@@ -58,8 +58,14 @@
             </a>
         </td>
         <td>
+           @if($lead->assignedToBranch->where('id','=',$branch->id)->first()) 
+            {{$lead->assignedToBranch
+                ->where('id','=',$branch->id)
+                ->first()
+                ->pivot
+                ->created_at->format("Y-m-d")}}
             
-        {{$lead->assignedToBranch->where('id','=',$branch->id)->first()->pivot->created_at->format("Y-m-d")}}
+            @endif
        
         </td>
         <td>{{$lead->fullAddress()}}</td>
