@@ -276,7 +276,7 @@ class Branch extends Model implements HasPresenter
     {
         return  $this->belongsToMany(Address::class, 'address_branch', 'branch_id', 'address_id')
             ->whereDoesntHave('opportunities')
-            ->whereIn('status_id', [1]);  
+            ->whereIn('status_id', [2]);  
 
     }
     /**
