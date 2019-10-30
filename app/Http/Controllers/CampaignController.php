@@ -109,7 +109,7 @@ class CampaignController extends Controller
        
         $data = $this->_transformRequest($request);
       
-        $branches = $this->_getbranchesFromManager($request);
+        $branches = $this->_getbranchesFromManager($request, $data['manager_id']);
         
         $campaign = $this->campaign->create($data);
         $campaign->branches()->sync($branches);
@@ -182,7 +182,7 @@ class CampaignController extends Controller
        
         $campaign->update($data);
        
-        $data['branches'] = $this->_getbranchesFromManager($request);
+        $data['branches'] = $this->_getbranchesFromManager($request, $data['manager_id']);
 
         $campaign->branches()->sync($data['branches']); 
 
@@ -249,9 +249,9 @@ class CampaignController extends Controller
         $serviceLocations = $this->_getServiceLocations($campaign);
         
         $data['branches'] = $this->_getAssignedLeadsForBranches($campaign);
-       
+            
         $data['assignments'] = $this->_assignBranchLeads($unassignedLocations, $campaign);
-       
+        $data['branches'] = $data['branches']->merge($data['assignments']['branches']);
         $data['assigned'] = $this->_getAssignedLocations($campaign);
 
    
@@ -300,15 +300,15 @@ class CampaignController extends Controller
      * 
      * @return [type]       [description]
      */
-    private function _getbranchesFromManager(Request $request)
+    private function _getbranchesFromManager(Request $request, $manager_id)
     {
         
-        $managers = $this->person->whereId([request('manager_id')])->firstOrFail()->descendantsAndSelf()
+        $managers = $this->person->whereId([$manager_id])->firstOrFail()->descendantsAndSelf()
             ->with(
-                ['branchesServiced'=>function ($q) {
+                ['branchesServiced'=>function ($q) use ($request) {
                     $q->whereHas(
-                        'servicelines', function ($q1) {
-                            $q1->whereIn('id', [5]);
+                        'servicelines', function ($q1) use ($request) {
+                            $q1->whereIn('id', request('serviceline'));
                         }
                     );
                 }
@@ -485,7 +485,7 @@ class CampaignController extends Controller
 
         foreach ($locations as $location ) {
             $branch = $this->branch->whereIn('id', $branch_ids)
-                ->nearby($location, 25, 1)
+                ->nearby($location, 50, 1)
                 ->get();
             if ($branch->count()) {
                 $assignments['location'][$location->id][] = $branch->first()->id;
@@ -494,8 +494,10 @@ class CampaignController extends Controller
             } else {
                 $assignments['unassigned'][] = $location->id;
             }
+            
         } 
-
+        
+        $assignments['branches'] = $this->branch->whereIn('id', array_keys($assignments['branch']))->get();
         
         return $assignments;
     }

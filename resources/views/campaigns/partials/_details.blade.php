@@ -13,7 +13,7 @@ name="branches"
 <tbody>
 
 @foreach ($data['branches'] as $branch)
-   
+   @if(! ($branch->leads_count == 0 && ! array_key_exists($branch->id, $data['assignments']['branch'])))
     <tr>
     <td>{{$branch->id}}</td>
     <td>{{$branch->branchname}}</td>
@@ -30,10 +30,17 @@ name="branches"
         0
         @endif
     </td>
-     <td class="text-right">{{$branch->leads_count}}</td>
+     <td class="text-right">
+        @if ($branch->leads_count)
+            {{$branch->leads_count}}
+        @else
+            0
+        @endif
+    </td>
     
     
  </tr>
+ @endif
  @endforeach
  <tfoot>
     <td>Totals</td>
