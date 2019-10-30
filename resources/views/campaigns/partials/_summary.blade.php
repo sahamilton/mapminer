@@ -33,7 +33,7 @@
     </p>
     
         @if(isset($data))
-       <p> <strong>Total Assignable Locations:</strong>{{$data['locations']->count()}}</p>
+       <p> <strong>Total Assignable Locations:</strong>{{$data['locations']['unassigned']->count()}}</p>
        <p> <strong>Total Assigned Locations:</strong>{{$data['assigned']->count()}}</p>
     @endif
 
@@ -47,24 +47,38 @@
         @else
 
             <strong>Companies:</strong>
-            <table class="table table->striped col-sm-6">
+            <div class="row">
+            <table id="sorttable2" class="table table->striped col-sm-6">
                 <thead>
                     <th>Company</th>
                     <th>Assignable Locations</th>
                     <th>Assigned Locations</th>
                 </thead>
                 <tbody>
-                @foreach ($campaign->companies as $company)
+                @foreach ($data['companies'] as $company)
                 <tr>
                     <td>{{$company->companyname}}</td>
-                    <td>{{$company->unassigned->count()}}</td>
-                    <td>{{$company->assigned->count()}}</td>
+                    <td>
+                        {{$company->unassigned->count()}}
+                        @php $totals['unassigned'] = isset($totals['unassigned']) ? $totals['unassigned'] + $company->unassigned->count() : $company->unassigned->count()  @endphp
+                    </td>
+                    <td>
+                        {{$company->assigned->count()}}
+                        @php $totals['assigned'] = isset($totals['assigned']) ? $totals['assigned'] + $company->assigned->count() : $company->assigned->count()  @endphp
+                    </td>
                     
                 </tr>
+                @endforeach
             </tbody>
+            <tfoot>
+                <th>Totals</th>
+                <td>{{$totals['unassigned']}}</td>
+                <td>{{$totals['assigned']}}</td>
+
+            </tfoot>
         </table>
-            
-            @endforeach
+            </div>
+          
         @endif
     </p>
 </div>

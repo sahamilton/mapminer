@@ -240,21 +240,16 @@ class CampaignController extends Controller
     private function _getCampaignData(Campaign $campaign)
     {
         
-        $data['locations'] = $this->_getCompanyLocations($campaign);
-        $data['branches'] =  $this->_getBranchesWithinServiceArea($campaign, $data['locations']);
-
-        $data['companies'] = $this->_getCompaniesInCampaign($campaign);
-        $unassignedLocations = $this->_getUnassignedLeads($data['companies']);
+        // get campaign locations within branch box
+        $data['companies'] = $this->_getLocationsOfCompaniesInCampaign($campaign);
+        $data['locations'] = $this->_getAllLocations($data['companies']);
         
-        $serviceLocations = $this->_getServiceLocations($campaign);
+        $data['branches'] =  $campaign->branches;
+        // assign the unassigned locations  
+        $data['assignments'] = $this->_assignBranchLeads($data['locations']['unassigned'], $campaign);
         
-        $data['branches'] = $this->_getAssignedLeadsForBranches($campaign);
-            
-        $data['assignments'] = $this->_assignBranchLeads($unassignedLocations, $campaign);
-        $data['branches'] = $data['branches']->merge($data['assignments']['branches']);
-        $data['assigned'] = $this->_getAssignedLocations($campaign);
-
-   
+        $data['assigned'] = $data['locations']['assigned'];
+       
 
         return $data;
     }
@@ -333,41 +328,82 @@ class CampaignController extends Controller
      * 
      * @return [type]           [description]
      */
-    private function _getCompanyLocations(Campaign $campaign)
+    private function _getCompanyLocations(Campaign $campaign, $branches)
     {
-        
+       /* $box = $this->branch->getBoundingBox($branches);
         $companies = $this->_getCompaniesInCampaign($campaign);
-
+        dd($companies->first());
         $locations = $companies->map(
-            function ($company) {
-                return $company->locations;
+            function ($company) use ($box) {
+                return $company->locations
+                    ->where('lat', '<', $box['maxLat'])
+                    ->where('lat', '>', $box['minLat'])
+                    ->where('lng', '<', $box['maxLng'])
+                    ->where('lng', '>', $box['minLng']);
             }
         );
+
         return $locations->flatten();
        
-
+    */
     }
-    private function _getCompaniesInCampaign(Campaign $campaign)
+    /**
+     * [_getCompaniesInCampaign description]
+     * 
+     * @param Campaign $campaign [description]
+     * 
+     * @return [type]             [description]
+     */
+    private function _getLocationsOfCompaniesInCampaign(Campaign $campaign)
     {
         $branches = $campaign->branches;
+        $box = $this->branch->getBoundingBox($branches);
         $company_ids = $campaign->companies->pluck('id')->toArray();
         return $this->company
             ->whereIn('id', $company_ids)
-            ->with('unassigned', 'locations')
             ->with(
-                ['assigned'=>function ($q) use ($branches) {
+                [
+                'assigned'=>function ($q) use ($branches) {
                     $q->whereHas(
                         'assignedToBranch', function ($q1) use ($branches) {
                             $q1->whereIn('branch_id', $branches->pluck('id')->toArray());
                         }
                     );
-                        
+                },
+                'unassigned'=>function ($q) use ($box) {
+                    $q->where('lat', '<', $box['maxLat'])
+                        ->where('lat', '>', $box['minLat'])
+                        ->where('lng', '<', $box['maxLng'])
+                        ->where('lng', '>', $box['minLng']);
+                    
                 }
-                ] 
-            )
+                ]
+            ) 
             ->get();
     }
-    private function _getServiceLocations($campaign)
+
+    private function _getAllLocations($companies)
+    {
+        $data['assigned'] = $companies->map(
+            function ($company) {
+                return $company->assigned;
+            }
+        )->flatten();
+        $data['unassigned'] = $companies->map(
+            function ($company) {
+                return $company->unassigned;
+            }
+        )->flatten();
+        return $data;
+    }
+    /**
+     * [_getServiceableLocations description]
+     * 
+     * @param [type] $campaign [description]
+     * 
+     * @return [type]           [description]
+     */
+    private function _getServiceableLocations($campaign)
     {
         $branches = $campaign->branches;
 
@@ -388,23 +424,36 @@ class CampaignController extends Controller
         return $locations->flatten();
         
     }
-
-    private function _getAssignedLocations($campaign)
+    /**
+     * [_getAssignedLocations description]
+     * 
+     * @param  [type] $campaign [description]
+     * @return [type]           [description]
+     */
+    private function _getAssignedLocations($campaign, $branches)
     {
         $locations = $campaign->companies->map(
-            function ($company) {
-                return $company->assigned;
+            function ($company) use ($branches) {
+                return $company->assigned->whereIn('id', $branches);
 
             }
         );
         return $locations->flatten();
     }
 
-    private function _getUnassignedLeads($companies)
+    private function _getUnassignedLeads($companies, Campaign $campaign)
     {
+        $branches = $campaign->branches;
+
+        $box = $this->branch->getBoundingBox($branches);
         $locations = $companies->map(
             function ($company) {
-                return $company->unassigned;
+                return $company->unassigned
+                    ->where('lat', '<', $box['maxLat'])
+                    ->where('lat', '>', $box['minLat'])
+                    ->where('lng', '<', $box['maxLng'])
+                    ->where('lng', '>', $box['minLng']);
+
 
             }
         );
