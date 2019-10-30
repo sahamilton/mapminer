@@ -11,8 +11,8 @@
             <th><b>Branch Manager</b></th>
             <th><b>Reports To</b></th>
             <th><b># New Leads Created</b></th>
-            <th><b># Log A Call Activities</b></th>
-            <th><b># Sales Appointments Scheduled</b></th>
+            <th><b># Proposals Completed</b></th>
+            <th><b># Site Visits Completed</b></th>
             <th><b># Sales Appointments Completed</b></th>
         </tr>
     </thead>
@@ -38,8 +38,8 @@
                     @endforeach
                 </td>
                 <td>{{$branch->newbranchleads}}</td>
-                <td>{{$branch->logacall}}</td>
-                <td>{{$branch->salesapptsscheduled}}</td>
+                <td>{{$branch->proposals}}</td>
+                <td>{{$branch->sitevisits}}</td>
                 <td>{{$branch->salesappts}}</td>
                 
 
