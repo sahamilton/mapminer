@@ -179,7 +179,7 @@ class CampaignController extends Controller
     {
         
         $data = $this->_transformRequest($request);
-       
+        
         $campaign->update($data);
        
         $data['branches'] = $this->_getbranchesFromManager($request, $data['manager_id']);
@@ -273,6 +273,8 @@ class CampaignController extends Controller
         $data['dateto'] = Carbon::parse($data['dateto']);
         if (request()->has('vertical')) {
             $data['companies'] = $this->_getCompaniesInVertical($request);
+        } else {
+            $data['companies'] = request('companies');
         }
         $data['created_by'] = auth()->user()->id;
         if (! $data['manager_id']) {
