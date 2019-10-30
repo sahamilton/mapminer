@@ -485,7 +485,7 @@ class CampaignController extends Controller
 
         foreach ($locations as $location ) {
             $branch = $this->branch->whereIn('id', $branch_ids)
-                ->nearby($location, 50, 1)
+                ->nearby($location, 25, 1)
                 ->get();
             if ($branch->count()) {
                 $assignments['location'][$location->id][] = $branch->first()->id;

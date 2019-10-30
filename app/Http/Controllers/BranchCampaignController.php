@@ -41,13 +41,13 @@ class BranchCampaignController extends Controller
         /**  
         Testing code [description] 
         */
-        $person = $this->person->findOrFail(auth()->user()->person->id);
-       
+        //$person = $this->person->findOrFail(auth()->user()->person->id);
+     ;
         /**
          * End test
          */
-        $myBranches = $this->branch->whereIn('id', array_keys($this->person->myBranches($person)))->get();
-        
+        $myBranches = $this->branch->whereIn('id', array_keys($this->person->myBranches()))->get();
+
         $campaign = $this->campaign->current($myBranches->pluck('id')->toArray())->get();
 
        
@@ -100,7 +100,7 @@ class BranchCampaignController extends Controller
         $branch = $this->branch
             ->campaignDetail($campaign)
             ->findOrFail($branch->id);;
-        $views = ['offered', 'neglectedleads', 'leads', 'activities', 'opportunities'];
+        $views = ['offered', 'neglectedleads', 'leads', 'activities', 'openactivities', 'opportunities','opportunitiesClosingThisWeek', 'staleOpportunities'];
        
         return response()->view('campaigns.branchplanner', compact('campaign', 'campaigns', 'branch', 'views'));
 
