@@ -240,17 +240,19 @@ class CampaignController extends Controller
     private function _getCampaignData(Campaign $campaign)
     {
         
-        // get campaign locations within branch box
+        // get companies in campaign with locations within branch box
         $data['companies'] = $this->_getLocationsOfCompaniesInCampaign($campaign);
+        // extract the locations into assigned and unassigned
         $data['locations'] = $this->_getAllLocations($data['companies']);
-        
-        $data['branches'] =  $this->_getAssignedLeadsForBranches($campaign);
+        // get the branches in campaign that are already servicing the companies locations
+        $data['branches'] =  $this->_getAssignedLeadsForBranches($campaign, $data['locations']['assigned']);
         // assign the unassigned locations  
         $data['assignments'] = $this->_assignBranchLeads($data['locations']['unassigned'], $campaign);
         
-        $data['assigned'] = $data['locations']['assigned'];
+        // Merge the branches that could have locations with those that do
+        
         $data['branches'] = $data['branches']->merge($data['assignments']['branches']);
-       
+        
         return $data;
     }
     /**
@@ -323,11 +325,14 @@ class CampaignController extends Controller
     /**
      
     /**
-     * [_getCompaniesInCampaign description]
+     * [_getCompaniesInCampaign Get assigned leads for company
+     * currently owned by branches in the campaign
+     * and unassigned within the campaign branches service area (box)]
      * 
      * @param Campaign $campaign [description]
      * 
-     * @return [type]             [description]
+     * @return Collection Companies in campaign with locations within
+     * branch service area of campaign
      */
     private function _getLocationsOfCompaniesInCampaign(Campaign $campaign)
     {
@@ -356,7 +361,13 @@ class CampaignController extends Controller
             ) 
             ->get();
     }
-
+    /**
+     * [_getAllLocations description]
+     * 
+     * @param [type] $companies [description]
+     * 
+     * @return [type]            [description]
+     */
     private function _getAllLocations($companies)
     {
         $data['assigned'] = $companies->map(
@@ -393,32 +404,46 @@ class CampaignController extends Controller
             ->find($branch_ids);
         
     }
-
-    private function _getAssignedLeadsForBranches($campaign)
+    /**
+     * [_getAssignedLeadsForBranches description]
+     * 
+     * @param  [type] $campaign [description]
+     * @return [type]           [description]
+     */
+    private function _getAssignedLeadsForBranches($campaign, $assignedLocations)
     {
-        $company_ids = $campaign->companies->pluck('id')->toArray();
+        //$company_ids = $campaign->companies->pluck('id')->toArray();
+        $lead_ids = $assignedLocations->pluck('id')->toArray();
+        
         $serviceline_ids = $campaign->servicelines->pluck('id')->toArray();
         $branch_ids = $campaign->branches->pluck('id')->toarray();
-        return $this->branch->withCount(
-            [
-                'leads'=>function ($q) use ($company_ids) {
-                    $q->whereIn('company_id', $company_ids);
-                }, 
-                'staleLeads'=>function ($q) use ($company_ids) {
-                    $q->whereIn('company_id', $company_ids);
+        return $this->branch
+            ->whereHas(
+                'leads', function ($q) use ($lead_ids) {
+                    $q->whereIn('addresses.id', $lead_ids);
                 }
-            ]
-        )
-        ->whereHas(
-            'servicelines', function ($q) use ($serviceline_ids) {
-                $q->whereIn('id', $serviceline_ids);
-            }
-        )
-        ->find($branch_ids);
+            )
+            ->withCount(
+                [
+                    'leads'=>function ($q) use ($lead_ids) {
+                        $q->whereIn('addresses.id', $lead_ids);
+                    }, 
+                    'staleLeads'=>function ($q) use ($lead_ids) {
+                        $q->whereIn('addresses.id', $lead_ids);
+                    }
+                ]
+            )
+            ->whereHas(
+                'servicelines', function ($q) use ($serviceline_ids) {
+                    $q->whereIn('id', $serviceline_ids);
+                }
+            )
+            ->find($branch_ids);
       
     }
     /**
-     * [_assignBranchLeads description]
+     * [_assignBranchLeads Loop through all assignable locations
+     * and find the nearest branch from the ones in the campaign]
      * 
      * @param [type] $locations [description]
      * @param [type] $branches  [description]

@@ -34,7 +34,7 @@
        <p> <strong>Total Assignable Locations:</strong>{{$data['locations']['unassigned']->count()}}</p>
        <p><strong>Unable to Assign:</strong>{{count($data['assignments']['unassigned'])}}</p>
        <p> <strong>Total Assigned Locations:</strong>{{count($data['assignments']['location'])}}</p>
-       <p> <strong>Total Previously Assigned Locations:</strong>{{$data['assigned']->count()}}</p>
+       <p> <strong>Total Previously Assigned Locations:</strong>{{$data['locations']['assigned']->count()}}</p>
     @endif
 
     
