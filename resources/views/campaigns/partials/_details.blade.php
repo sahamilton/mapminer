@@ -15,7 +15,7 @@ name="branches"
 @foreach ($data['branches'] as $branch)
    @if(! ($branch->leads_count == 0 && ! array_key_exists($branch->id, $data['assignments']['branch'])))
     <tr>
-    <td>{{$branch->id}}</td>
+    <td><a href="{{route('branchcampaign.show', [$campaign->id, $branch->id])}}">{{$branch->id}}</a></td>
     <td>{{$branch->branchname}}</td>
     <td class="text-right">
         @if(array_key_exists($branch->id, $data['assignments']['branch']))

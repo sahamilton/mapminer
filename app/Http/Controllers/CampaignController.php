@@ -411,7 +411,7 @@ class CampaignController extends Controller
      * @param  [type] $campaign [description]
      * @return [type]           [description]
      */
-    private function _getAssignedLeadsForBranches($campaign, $assignedLocations)
+    private function _getAssignedLeadsForBranches($campaign, $assignedLocations) :Array
     {
         $branch = $assignedLocations->map(
             function ($address) {

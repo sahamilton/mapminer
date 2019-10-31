@@ -85,12 +85,13 @@ class BranchCampaignController extends Controller
         
         $person = $this->person->findOrFail(auth()->user()->person->id);
         $myBranches = $this->person->myBranches($person);
+        
         if (! in_array($branch->id, array_keys($myBranches))) {
             return redirect()->back()->withError('That is not one of your branches');
         }
 
         $campaigns = $this->campaign->current([$branch->id])->get();// else return not valid
-
+      
         $campaign->load('companies', 'branches');
         
         if (! in_array($branch->id, $campaign->branches->pluck('id')->toArray())) {
@@ -99,7 +100,8 @@ class BranchCampaignController extends Controller
         
         $branch = $this->branch
             ->campaignDetail($campaign)
-            ->findOrFail($branch->id);;
+            ->findOrFail($branch->id);
+   
         $views = ['offered', 'neglectedLeads', 'leads', 'activities', 'openActivities', 'opportunities','opportunitiesClosingThisWeek', 'staleOpportunities'];
        
         return response()->view('campaigns.branchplanner', compact('campaign', 'campaigns', 'branch', 'views'));

@@ -3,7 +3,7 @@
 @php $totals = []; @endphp
 <div class="container">
    <h2>{{$campaign->title}} Summary</h2>
-    @include('campaigns.partials._summary')
+    
         <p><a href="{{route('campaigns.index')}}">Return to all campaigns</a></p>
     <table id="sorttable"
         name="branchsummary"

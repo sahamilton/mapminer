@@ -52,7 +52,7 @@ class CampaignTrackingController extends Controller
         $period['to'] =$campaign->dateto;
         $branches = $this->branch->whereIn('id', $branch_ids)->summaryCampaignStats($campaign)->get();
       
-      
+
         return response()->view('campaigns.summary', compact('campaign', 'branches'));
     }
 
