@@ -31,8 +31,11 @@ name="branches"
         @endif
     </td>
      <td class="text-right">
-        @if ($branch->leads_count)
-            {{$branch->leads_count}}
+        @if (isset($data['branchesw'][$branch->id]))
+            {{$data['branchesw'][$branch->id]->count()}}
+            @php
+            $totalleads = isset($totalleads) ? $totalleads + $data['branchesw'][$branch->id]->count() : $data['branchesw'][$branch->id]->count()
+            @endphp
         @else
             0
         @endif
@@ -46,7 +49,7 @@ name="branches"
     <td>Totals</td>
     <td>Unassignable {{count($data['assignments']['unassigned'])}}</td>
     <td class="text-right">{{$total}}</td>
-    <td class="text-right">{{$data['branches']->sum('leads_count')}}</td>
+    <td class="text-right">{{$totalleads}}</td>
 </tfoot>
 </tbody>
 </table>
