@@ -174,7 +174,7 @@ class Person extends NodeModel implements HasPresenter
                 return $team->branchesServiced;
             }
         );
-
+   
         foreach ($teammembers as $member) {
        
             foreach ($member->pluck('branchname', 'id') as $id => $branchname) {
