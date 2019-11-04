@@ -30,7 +30,7 @@ class CampaignFormRequest extends FormRequest
             'dateto'=>'required|date|after:datefrom',
             'companies'=>'required_without:vertical',
             'vertical'=>'required_without:companies',
-            'manager'=>'required',
+           
             'serviceline'=>'required',
         ];
     }
