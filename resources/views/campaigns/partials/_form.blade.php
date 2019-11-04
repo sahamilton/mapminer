@@ -20,8 +20,7 @@
             required 
             class='form-control' 
             data-error="Please provide some description of this campaign" 
-            name="description">{{old('description', isset($campaign) ? $campaign->description :''  )}}
-        </textarea>
+            name="description">{{old('description', isset($campaign) ? $campaign->description :''  )}}</textarea>
         {!! $errors->first('description', '<p class="help-block">:message</p>') !!}
     </div>
 </div>
