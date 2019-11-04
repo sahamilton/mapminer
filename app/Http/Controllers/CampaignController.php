@@ -11,6 +11,7 @@ use App\SalesOrg;
 use App\Addresses;
 use App\Person;
 use App\Jobs\AssignCampaignLeads;
+use App\Http\Requests\CampaignFormRequest;
 
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -104,7 +105,7 @@ class CampaignController extends Controller
      * 
      * @return [type]           [description]
      */
-    public function store(Request $request)
+    public function store(CampaignFormRequest $request)
     {
        
         $data = $this->_transformRequest($request);
@@ -175,7 +176,7 @@ class CampaignController extends Controller
      * 
      * @return [type]             [description]
      */
-    public function update(Campaign $campaign, Request $request) 
+    public function update(Campaign $campaign, CampaignFormRequest $request) 
     {
         
         $data = $this->_transformRequest($request);
@@ -279,6 +280,7 @@ class CampaignController extends Controller
             
             $data['manager_id'] = $this->salesorg->getCapoDiCapo()->id;
         }
+
         return $data;
         
     }

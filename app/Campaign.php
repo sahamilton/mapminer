@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Campaign extends Model
 {
     public $fillable = ['title', 'description', 'datefrom', 'dateto', 'created_by', 'manager_id', 'status'];
+    
     public $dates =['datefrom', 'dateto'];
     
     /**
@@ -93,6 +94,13 @@ class Campaign extends Model
         ->whereIn('company_id', $this->companies()->pluck('id')->toArray())
         ->pluck('id')->toArray();
        
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('status', 'launched')
+            ->where('date_from', '>=', now())
+            ->where('date_to', '<=', now());
     }
 
 
