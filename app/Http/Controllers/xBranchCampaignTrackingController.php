@@ -31,7 +31,7 @@ class CampaignTrackingController extends Controller
         $this->address = $address;
         $this->branch = $branch;
         $this->campaign = $campaign;
-        $this->opportunity = $opportunity
+        $this->opportunity = $opportunity;
         $this->person = $person;
     }
     
