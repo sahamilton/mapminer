@@ -582,6 +582,8 @@ Route::group(
         Route::post('campaigns/{campaign}/report', ['as'=>'campaigns.report', 'uses'=>'CampaignController@export']);
         Route::resource('campaigns', 'CampaignController');
 
+        Route::resource('campaigndocuments', 'CampaignDocumentsController');
+
         //   Construction
         Route::resource('/construction', 'ConstructionController');
 

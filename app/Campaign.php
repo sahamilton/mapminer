@@ -83,6 +83,11 @@ class Campaign extends Model
         
     }
 
+    public function documents()
+    {
+        return $this->hasMany(CampaignDocuments::class);
+    }
+
     public function getLocations()
     {
         
