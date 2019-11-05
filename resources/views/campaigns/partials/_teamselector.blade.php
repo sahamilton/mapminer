@@ -7,11 +7,6 @@
         >
     @csrf
     @include('campaigns.partials._mgrselector')
-        <div class="form-group">
-            <input type="submit" 
-                class="btn btn-info"
-                value="Select"
-                />
-        </div>
+   
     </form>
 </div>
