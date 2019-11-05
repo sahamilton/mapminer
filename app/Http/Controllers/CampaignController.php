@@ -231,6 +231,68 @@ class CampaignController extends Controller
        
         
     }
+
+    public function selectReport(Campaign $campaign = null)
+    {
+        
+        $campaigns = $this->_getActiveCampaigns();
+
+        if ($campaign) {
+            $campaign->load('companies', 'servicelines');
+        } elseif ($campaigns) {
+            $campaign  = $campaigns->first();
+            
+        }
+       
+        if (! $campaign) {
+            return redirect()->back()->withError("There are no active campaigns to report on.");
+        }
+        $servicelines = $campaign->servicelines->pluck('id')->toArray();
+
+        $team = $this->_getSalesTeamFromManager($campaign->manager_id, $servicelines);
+        return response()->view('campaigns.selectReport', compact('campaigns', 'campaign', 'team'));
+    }
+    
+
+    public function export(Request $request, Campaign $campaign)
+    {
+        dd(request()->all(), $campaign);
+        // get branches from manager_id
+        // 
+        // get summaryStats from campaign with branches
+        // 
+        // Export report
+    }
+    private function _getActiveCampaigns()
+    {
+        return $this->campaign
+            ->active()
+            ->with('companies', 'servicelines')
+            ->get();
+    }
+    private function _getSalesTeamFromManager($manager_id, $serviceline)
+    {
+        return $this->person->whereId([$manager_id])->firstOrFail()->descendantsAndSelf()
+            ->whereHas(
+                'userdetails.roles', function ($q) {
+                        $q->whereIn('roles.id', ['3','6','7','9']);
+                }
+            )
+            ->with(
+                ['branchesServiced'=>function ($q) use ($serviceline) {
+                    $q->whereHas(
+                        'servicelines', function ($q1) use ($serviceline) {
+                            $q1->whereIn('id', $serviceline);
+                        }
+                    );
+                }
+                ]
+            )
+            ->orderBy('lastname')
+            ->orderBY('firstname')
+            ->get();
+    }
+
     /**
      * [_getCampaignData description]
      * 
@@ -305,17 +367,8 @@ class CampaignController extends Controller
     private function _getbranchesFromManager(Request $request, $manager_id)
     {
         
-        $managers = $this->person->whereId([$manager_id])->firstOrFail()->descendantsAndSelf()
-            ->with(
-                ['branchesServiced'=>function ($q) use ($request) {
-                    $q->whereHas(
-                        'servicelines', function ($q1) use ($request) {
-                            $q1->whereIn('id', request('serviceline'));
-                        }
-                    );
-                }
-                ]
-            )->get();
+        $managers = $this->_getSalesTeamFromManager($manager_id, request('serviceline'));
+
         $branches = $managers->map(
             function ($manager) {
                 return $manager->branchesServiced->pluck('id', 'brancname')->toArray();

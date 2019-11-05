@@ -28,6 +28,6 @@ class BranchCampaignReport extends Mailable
      */
     public function build()
     {
-        return $this->markdown('[=mail.branchcampaign]');
+        return $this->markdown('campaigns.emails.branchcampaign');
     }
 }

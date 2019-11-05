@@ -69,10 +69,11 @@
 		<label class="col-md-4 control-label" for="title">Industry Vertical</label>
 		<div class="input-group input-group-lg ">
 			@include('campaigns.partials._verticals')
-		 	<span class="help-block{{ $errors->has('vertical') ? ' has-error' : '' }}">
+		 	
+		 </div>
+         <span class="help-block{{ $errors->has('vertical') ? ' has-error' : '' }}">
                 <strong>{{$errors->has('vertical') ? $errors->first('vertical')  : ''}}</strong>
             </span>
-		 </div>
 	 </div> 
 
 <!-- / Industry verticals -->
@@ -81,10 +82,11 @@
         <label class="col-md-4 control-label" for="companies">Companies</label>
         <div class="input-group input-group-lg ">
             @include('campaigns.partials._companies')
-            <span class="help-block{{ $errors->has('vertical') ? ' has-error' : '' }}">
+          </div>  
+          <span class="help-block{{ $errors->has('vertical') ? ' has-error' : '' }}">
                 <strong>{{$errors->has('companies') ? $errors->first('companies')  : ''}}</strong>
             </span>
-         </div>
+         
      </div> 
 <!-- Organization Alignment -->
 

@@ -99,8 +99,8 @@ class Campaign extends Model
     public function scopeActive($query)
     {
         return $query->where('status', 'launched')
-            ->where('date_from', '>=', now())
-            ->where('date_to', '<=', now());
+            ->where('datefrom', '<=', now())
+            ->where('dateto', '>=', now());
     }
 
 

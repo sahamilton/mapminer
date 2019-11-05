@@ -179,8 +179,8 @@ class Person extends NodeModel implements HasPresenter
     {
         
         if (auth()->user()->hasRole('admin')) {
-            return [];
-            //return Branch::all()->pluck('branchname', 'id')->toArray();
+            
+            return Branch::all()->pluck('branchname', 'id')->toArray();
         } elseif (! $person && auth()->user()->hasRole('sales_operations')) {
           
             $person = $this->findOrFail(auth()->user()->person->reports_to);

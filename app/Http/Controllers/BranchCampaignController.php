@@ -42,7 +42,7 @@ class BranchCampaignController extends Controller
         Testing code [description] 
         */
         //$person = $this->person->findOrFail(auth()->user()->person->id);
-     ;
+
         /**
          * End test
          */
@@ -65,7 +65,7 @@ class BranchCampaignController extends Controller
             ->whereIn('id', $branch_ids)
             ->summaryCampaignStats($campaign)
             ->get();
-       
+        
         //$locations = $this->_getLocationsForMyBranches($campaign, $myBranches);
         return response()->view('campaigns.summary', compact('campaign', 'branches'));
 
@@ -108,17 +108,14 @@ class BranchCampaignController extends Controller
 
         
     }
-
-    private function _getBranchCampaignSummaryData(Campaign $campaign)
-    {
-        $branch_ids = $campaign->branches->pluck('id')->toArray();
-        return $this->branch
-            ->whereIn('id', $branch_ids)
-            ->summaryCampaignStats($campaign)
-            ->get();
-    }
-
-
+    /**
+     * [_getBranchCampaignDetailData description]
+     * 
+     * @param Campaign $campaign [description]
+     * @param Branch   $branch   [description]
+     * 
+     * @return [type]             [description]
+     */
     private function _getBranchCampaignDetailData(Campaign $campaign, Branch $branch)
     {
         
@@ -127,7 +124,14 @@ class BranchCampaignController extends Controller
             ->campaignDetail($campaign)
             ->findOrFail($branch->id);
     }
-
+    private function _getBranchCampaignSummaryData(Campaign $campaign)
+    {
+        $branch_ids = $campaign->branches->pluck('id')->toArray();
+        return $this->branch
+            ->whereIn('id', $branch_ids)
+            ->summaryCampaignStats($campaign)
+            ->get();
+    }
     
 
 }
