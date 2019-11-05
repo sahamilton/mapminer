@@ -27,7 +27,70 @@ class Campaign extends Model
         return $this->belongsToMany(Person::class)->withPivot('activity')->wherePivot('activity', '!=', 'null');
     }
     /**
-     * [author description]
+     * [team description]
+     * 
+     * @return [type] [description]
+     */
+    public function team()
+    {
+        return $this->belongsToMany(Person::class);
+    }
+
+    public function setTeam()
+    {
+       
+        
+    }
+
+    public function documents()
+    {
+        return $this->hasMany(CampaignDocuments::class);
+    }
+
+    public function getLocations()
+    {
+        
+        return Address::wherehas(
+            'assignedToBranch', function ($q) {
+                $q->whereIn('branches.id', $this->branches()->pluck('id')->toArray());
+            }
+        )
+        ->whereIn('company_id', $this->companies()->pluck('id')->toArray())
+        ->pluck('id')->toArray();
+       
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('status', 'launched')
+            ->where('datefrom', '<=', now())
+            ->where('dateto', '>=', now());
+    }
+
+    public function getSalesTeamFromManager($manager_id, $serviceline)
+    {
+        return Person::whereId([$manager_id])->firstOrFail()->descendantsAndSelf()
+            ->whereHas(
+                'userdetails.roles', function ($q) {
+                        $q->whereIn('roles.id', ['3','6','7']);
+                }
+            )
+            ->with(
+                ['branchesServiced'=>function ($q) use ($serviceline) {
+                    $q->whereHas(
+                        'servicelines', function ($q1) use ($serviceline) {
+                            $q1->whereIn('id', $serviceline);
+                        }
+                    );
+                }
+                ]
+            )
+            ->orderBy('lastname')
+            ->orderBY('firstname')
+            ->get();
+    }
+    /**
+     * [getCampaignServiceLines description]
      * 
      * @return [type] [description]
      */

@@ -6,6 +6,11 @@
 <p>
     @if($location->company)
       <i>A location of <a href="{{ route('company.show', $location->company->id) }}">{{$location->company->companyname}}</a></a></i>
+      @if($location->company->salesnotes)
+        <p><a href="{{route('salesnotes.company',$location->company->id)}}" title="Read notes on selling to {{$location->company->companyname}}">
+    <i class="fas fa-search" aria-hidden="true"></i>  
+Read 'How to Sell to {{$location->company ->companyname}}'</a></p>
+      @endif
     @endif
 </p>
 

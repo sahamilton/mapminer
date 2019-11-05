@@ -576,6 +576,8 @@ Route::group(
         //   Campaigns (email)
         Route::resource('campaigns', 'CampaignController');
 
+        Route::resource('campaigndocuments', 'CampaignDocumentsController');
+
         //   Construction
         Route::resource('/construction', 'ConstructionController');
 
