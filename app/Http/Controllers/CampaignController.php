@@ -182,7 +182,7 @@ class CampaignController extends Controller
         $data = $this->_transformRequest($request);
         
         $campaign->update($data);
-        $servicelines = $this->_getCampaignServicelines($campaign);
+        $servicelines = $campaign->getCampaignServicelines($campaign);
         $data['branches'] = $this->_getbranchesFromManager($servicelines, $data['manager_id']);
 
         $campaign->branches()->sync($data['branches']); 
@@ -261,7 +261,8 @@ class CampaignController extends Controller
         $branches = $this->_getbranchesFromManager($servicelines, request('manager_id'));
         $manager = $this->person->findOrFail(request('manager_id'));
         $branches = $this->branch->whereIn('id', $branches)->summaryCampaignStats($campaign)->get();
-        return response()->view('campaigns.managersummary', compact('campaign', 'branches', 'manager'));
+        $team = $this->campaign->getSalesTeamFromManager($campaign->manager_id, $servicelines);
+        return response()->view('campaigns.managersummary', compact('campaign', 'branches', 'manager', 'team'));
 
         // get summaryStats from campaign with branches
         // 

@@ -3,7 +3,7 @@
 @php $totals = []; @endphp
 <div class="container">
    <h2>{{$manager->fullName()}} {{$campaign->title}} Summary</h2>
-    
+    @include('campaigns.partials._teamselector')
         <p><a href="{{route('campaigns.show', $campaign->id)}}">Return campaign</a></p>
     <table id="sorttable"
         name="branchsummary"

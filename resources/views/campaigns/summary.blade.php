@@ -21,6 +21,7 @@
                 />
             </div>
     </form>
+</div>
     <table id="sorttable"
         name="branchsummary"
         class="table table-striped"
