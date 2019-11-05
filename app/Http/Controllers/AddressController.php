@@ -107,11 +107,17 @@ class AddressController extends Controller
         $branches = $this->branch->nearby($location, 100, 5)->orderBy('distance')->get();
         $rankingstatuses = $this->address->getStatusOptions;
         $people = $this->person->salesReps()->PrimaryRole()->nearby($location, 100, 5)->get();
-        $myBranches = $this->person->myBranches();
+        $myBranches = $this->person->where('user_id', auth()->user()->id)->first()->branchesManaged()->pluck('id')->toArray();
+      
         $ranked = $this->address->getMyRanking($location->ranking);
         $notes = $this->notes->locationNotes($location->id)->get();
-        $owned = $this->_checkIfOwned($address, $myBranches);
-    
+        if ($myBranches) {
+            $owned = $this->_checkIfOwned($address, $myBranches);
+        } else {
+            $owned = false;
+        }
+        
+ 
         return response()->view('addresses.show', compact('location', 'branches', 'rankingstatuses', 'people', 'myBranches', 'ranked', 'notes', 'owned'));
     }
 
@@ -233,6 +239,7 @@ class AddressController extends Controller
                 return $branch->pivot->status_id ==2;
             }
         );
+
         if (! $owner->count()) {
             return 1;
         }

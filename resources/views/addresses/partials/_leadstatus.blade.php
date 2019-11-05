@@ -1,6 +1,6 @@
 @if (isset($owned))
     <div class="btn-group" role="group" >
-      @if($owned ==1)
+      @if($owned == 1)
         
           <form class='form-inline mr-1'
             action = "{{route('branchleads.update',$branch->pivot->id)}}"
@@ -42,10 +42,16 @@
             </div>
 
         @include('addresses.partials._reassignlead')
-
+        @else
+         Assigned to: 
+          @foreach ($location->assignedToBranch as $branch)
+          {{$branch->branchname}}
+          @endforeach
+        @endif
+ 
  
      </div>
-  @endif
+
 @elseif ($location->assignedToBranch->count())
   Owned By:
   @foreach ($location->assignedToBranch as $branch)
