@@ -90,6 +90,14 @@ class Person extends NodeModel implements HasPresenter
             ->withPivot('role_id')
             ->orderBy('branchname');
     }
+    /**
+     * [scopeManagers description]
+     * 
+     * @param [type] $query [description]
+     * @param [type] $roles [description]
+     * 
+     * @return [type]        [description]
+     */
     public function scopeManagers($query, $roles=null)
     {
         if (! $roles) {
@@ -106,7 +114,9 @@ class Person extends NodeModel implements HasPresenter
     /**
      * [managers description]
      * 
-     * @return [type] [description]
+     * @param [type] $roles [description]
+     * 
+     * @return [type]        [description]
      */
     public function managers($roles=null)
     {

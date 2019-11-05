@@ -18,7 +18,9 @@ Read 'How to Sell to {{$location->company ->companyname}}'</a></p>
 
 <p>Location Source: {{$location->leadsource ? $location->leadsource->source : 'unknown'}}
 {{$location->createdBy ? "Created by " . $location->createdBy->person->fullname() : ''}}</p>
-
+@if($location->assignedToBranch)
+@php $branch = $location->assignedToBranch->first() @endphp
+@endif
 @include('addresses.partials._leadstatus')
 
 @include('maps.partials._form')

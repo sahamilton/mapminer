@@ -234,7 +234,8 @@ class AddressController extends Controller
     private function _checkIfOwned(Address $address)
     {
         
-        $myBranches = $this->person->with('branchesServiced')->where('user_id', auth()->user()->id)->get();
+        $myBranches = $this->person->with('branchesServiced')->where('user_id', auth()->user()->id)->first();
+        
         $myBranches = $myBranches->branchesServiced->pluck('id')->toArray();
 
         $ownedBy = $address->assignedToBranch->whereIn('id', $myBranches);
