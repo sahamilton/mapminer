@@ -10,7 +10,7 @@ use App\Branch;
 use App\Campaign;
 use App\Opportunity;
 use App\Person;
-class CampaignTrackingController extends Controller
+class xBranchCampaignTrackingController extends Controller
 {
     public $activity;
     public $address;
