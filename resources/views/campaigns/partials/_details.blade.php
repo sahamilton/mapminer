@@ -48,8 +48,8 @@ name="branches"
  <tfoot>
     <td>Totals</td>
     <td>Unassignable {{count($data['assignments']['unassigned'])}}</td>
-    <td class="text-right">{{$total}}</td>
-    <td class="text-right">{{$totalleads}}</td>
+    <td class="text-right">{{isset($total) ? $total : 0}}</td>
+    <td class="text-right">{{isset($totalleads) ? $totalleads : 0}}</td>
 </tfoot>
 </tbody>
 </table>

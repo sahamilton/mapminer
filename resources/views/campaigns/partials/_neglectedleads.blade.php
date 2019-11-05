@@ -9,7 +9,6 @@
         <th>ZIP</th>
     </thead>
     <tbody>
-       
         @foreach ($branch->neglectedleads as $lead)
         <tr>
             <td>

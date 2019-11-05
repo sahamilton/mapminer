@@ -14,6 +14,7 @@
 	<p><strong>Status:</strong>{{$campaign->status}}</p>
 	@endif
 	@include('campaigns.partials._summary')
+	@include('campaigns.partials._documents')
 	@include('campaigns.partials._details')
 
 @include ('partials._scripts')

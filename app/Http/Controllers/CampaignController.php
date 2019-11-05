@@ -137,7 +137,7 @@ class CampaignController extends Controller
         if ($campaign->status == 'planned') {
 
            
-            $campaign->load('vertical', 'servicelines', 'branches', 'companies.managedBy', 'manager', 'team');
+            $campaign->load('vertical', 'servicelines', 'branches', 'companies.managedBy', 'manager', 'team', 'documents');
  
             $data = $this->_getCampaignData($campaign);
             return response()->view('campaigns.show', compact('campaign', 'data'));
