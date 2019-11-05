@@ -112,7 +112,7 @@ class AddressController extends Controller
         $ranked = $this->address->getMyRanking($location->ranking);
         $notes = $this->notes->locationNotes($location->id)->get();
         if ($myBranches) {
-            $owned = $this->_checkIfOwned($address, $myBranches);
+            $owned = $this->_checkIfOwned($address);
         } else {
             $owned = false;
         }
@@ -227,16 +227,28 @@ class AddressController extends Controller
     {
         return request('street'). ' ' .request('city'). ' ' .request('state'). ' ' .request('zip');
     }
-
-    private function _checkIfOwned(Address $address, Array $myBranches)
+    /**
+     * [_checkIfOwned description]
+     * 
+     * @param Address $address    [description]
+     * @param Array   $myBranches [description]
+     * 
+     * @return integer  $owned: null not owned; 1 = offered; 2 = owned
+     */
+    private function _checkIfOwned(Address $address)
     {
-        $ownedBy = $address->assignedToBranch->whereIn('id', array_keys($myBranches));
+        
+        $myBranches = $this->person->with('branchesServiced')->where('user_id', auth()->user()->id)->get();
+        $myBranches = $myBranches->branchesServiced->pluck('id')->toArray();
+
+        $ownedBy = $address->assignedToBranch->whereIn('id', $myBranches);
+
         if (! $ownedBy->count()) {
             return null;
         }
         $owner = $ownedBy->filter(
             function ($branch) {
-                return $branch->pivot->status_id ==2;
+                return $branch->pivot->status_id == 2;
             }
         );
 
@@ -244,10 +256,6 @@ class AddressController extends Controller
             return 1;
         }
         return 2;
-
-        
-
-        return $owned;
     }
     
 }

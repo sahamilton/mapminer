@@ -154,7 +154,7 @@ class Person extends NodeModel implements HasPresenter
             );
         return array_unique($branches->flatten()->toArray());
     }
-
+    
     
     public function branchesManaged()
     {
@@ -173,7 +173,10 @@ class Person extends NodeModel implements HasPresenter
     /**
      * [myBranches description]
      * 
-     * @return [type] [description]
+     * @param Person|null $person       [description]
+     * @param Array|null  $servicelines [description]
+     * 
+     * @return [type]                    [description]
      */
     public function myBranches(Person $person=null, Array $servicelines=null)
     {
