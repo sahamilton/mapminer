@@ -109,8 +109,8 @@ class CampaignController extends Controller
     {
        
         $data = $this->_transformRequest($request);
-      
-        $branches = $this->_getbranchesFromManager($request, $data['manager_id']);
+        $servicelines = request('serviceline');
+        $branches = $this->_getbranchesFromManager($servicelines, $data['manager_id']);
         
         $campaign = $this->campaign->create($data);
         $campaign->branches()->sync($branches);
@@ -182,8 +182,8 @@ class CampaignController extends Controller
         $data = $this->_transformRequest($request);
         
         $campaign->update($data);
-       
-        $data['branches'] = $this->_getbranchesFromManager($request, $data['manager_id']);
+        $servicelines = $this->_getCampaignServicelines($campaign);
+        $data['branches'] = $this->_getbranchesFromManager($servicelines, $data['manager_id']);
 
         $campaign->branches()->sync($data['branches']); 
 
@@ -256,13 +256,34 @@ class CampaignController extends Controller
 
     public function export(Request $request, Campaign $campaign)
     {
-        dd(request()->all(), $campaign);
-        // get branches from manager_id
-        // 
+        
+        $servicelines = $this->_getCampaignServicelines($campaign);
+        $branches = $this->_getbranchesFromManager($servicelines, request('manager_id'));
+        $manager = $this->person->findOrFail(request('manager_id'));
+        $branches = $this->branch->whereIn('id', $branches)->summaryCampaignStats($campaign)->get();
+        return response()->view('campaigns.managersummary', compact('campaign', 'branches', 'manager'));
+
         // get summaryStats from campaign with branches
         // 
         // Export report
     }
+    /**
+     * [_getCampaignServicelines description]
+     * 
+     * @param Campaign $campaign [description]
+     * 
+     * @return Array             [description]
+     */
+    private function _getCampaignServicelines(Campaign $campaign)
+    {
+        $campaign->load('servicelines');
+        return $campaign->servicelines->pluck('id')->toArray();
+    }
+    /**
+     * [_getActiveCampaigns description]
+     * 
+     * @return [type] [description]
+     */
     private function _getActiveCampaigns()
     {
         return $this->campaign
@@ -270,12 +291,20 @@ class CampaignController extends Controller
             ->with('companies', 'servicelines')
             ->get();
     }
-    private function _getSalesTeamFromManager($manager_id, $serviceline)
+    /**
+     * [_getSalesTeamFromManager description]
+     * 
+     * @param [type] $manager_id  [description]
+     * @param [type] $serviceline [description]
+     * 
+     * @return [type]              [description]
+     */
+    /*private function _getSalesTeamFromManager($manager_id, $serviceline)
     {
         return $this->person->whereId([$manager_id])->firstOrFail()->descendantsAndSelf()
             ->whereHas(
                 'userdetails.roles', function ($q) {
-                        $q->whereIn('roles.id', ['3','6','7','9']);
+                        $q->whereIn('roles.id', ['3','6','7']);
                 }
             )
             ->with(
@@ -291,7 +320,7 @@ class CampaignController extends Controller
             ->orderBy('lastname')
             ->orderBY('firstname')
             ->get();
-    }
+    }*/
 
     /**
      * [_getCampaignData description]
@@ -364,14 +393,14 @@ class CampaignController extends Controller
      * 
      * @return [type]       [description]
      */
-    private function _getbranchesFromManager(Request $request, $manager_id)
+    private function _getbranchesFromManager(Array $servicelines, $manager_id)
     {
         
-        $managers = $this->_getSalesTeamFromManager($manager_id, request('serviceline'));
+        $managers = $this->campaign->getSalesTeamFromManager($manager_id, $servicelines);
 
         $branches = $managers->map(
             function ($manager) {
-                return $manager->branchesServiced->pluck('id', 'brancname')->toArray();
+                return $manager->branchesServiced->pluck('id', 'branchname')->toArray();
             }
         );
         $branches = $branches->flatten()->toArray();

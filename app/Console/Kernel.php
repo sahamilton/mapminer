@@ -12,6 +12,8 @@ use App\Jobs\BranchOpportunities;
 use App\Jobs\BranchActivitiesDetail;
 use App\Jobs\BranchStats;
 use App\Jobs\DailyBranch;
+use App\Jobs\BranchCampaignJob;
+use App\Campaigns;
 use App\Jobs\RebuildPeople;
 use App\Jobs\BranchLogins;
 use App\Company;
@@ -60,6 +62,11 @@ class Kernel extends ConsoleKernel
                 ->weekly()
                 ->mondays()
                 ->at('23:15');
+
+            $schedule->job(new BranchCampaignJob())
+                ->weekly()
+                ->sundays()
+                ->at('15:25');
             // RVP Daily Branch Report
             // 
             $schedule->job(new DailyBranch)

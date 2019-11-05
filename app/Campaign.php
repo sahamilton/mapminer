@@ -103,7 +103,38 @@ class Campaign extends Model
             ->where('dateto', '>=', now());
     }
 
-
-
+    public function getSalesTeamFromManager($manager_id, $serviceline)
+    {
+        return Person::whereId([$manager_id])->firstOrFail()->descendantsAndSelf()
+            ->whereHas(
+                'userdetails.roles', function ($q) {
+                        $q->whereIn('roles.id', ['3','6','7']);
+                }
+            )
+            ->with(
+                ['branchesServiced'=>function ($q) use ($serviceline) {
+                    $q->whereHas(
+                        'servicelines', function ($q1) use ($serviceline) {
+                            $q1->whereIn('id', $serviceline);
+                        }
+                    );
+                }
+                ]
+            )
+            ->orderBy('lastname')
+            ->orderBY('firstname')
+            ->get();
+    }
+    /**
+     * [getCampaignServiceLines description]
+     * 
+     * @return [type] [description]
+     */
+    public function getServicelines()
+    {
+        return $this->servicelines->pluck('id')->toArray();
+    }
+    
+        
 
 }

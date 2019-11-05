@@ -154,8 +154,12 @@ class Person extends NodeModel implements HasPresenter
             );
         return array_unique($branches->flatten()->toArray());
     }
-    
-    
+
+    /**
+     * [branchesManaged description]
+     * 
+     * @return sorted array of all branches servicedS
+     */
     public function branchesManaged()
     {
         $team = $this->descendantsAndSelf()
