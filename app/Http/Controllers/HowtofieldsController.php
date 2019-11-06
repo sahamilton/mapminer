@@ -34,7 +34,10 @@ class HowtofieldsController extends BaseController
      */
     public function create()
     {
-        return response()->view('howtofields.create');
+        $groups = $this->howtofield->select('group')->distinct()->get();
+        $types = $this->howtofield->getTypes();
+
+        return response()->view('howtofields.create', compact('groups', 'types'));
     }
 
     /**
@@ -71,10 +74,11 @@ class HowtofieldsController extends BaseController
      * @param  int  $id
      * @return Response
      */
-    public function edit($howtofield)
+    public function edit(Howtofield $howtofield)
     {
-        
-        return response()->view('howtofields.edit', compact('howtofield'));
+        $groups = $this->howtofield->select('group')->distinct()->get();
+        $types = $this->howtofield->getTypes();
+        return response()->view('howtofields.edit', compact('howtofield', 'groups', 'types'));
     }
 
     /**
@@ -109,4 +113,7 @@ class HowtofieldsController extends BaseController
 
         return redirect()->route('admin.howtofields.index');
     }
+
+
+
 }

@@ -106,10 +106,10 @@ class SalesNotesController extends BaseController {
      * 
      * @return [type]                           [description]
      */
-    public function edit(SalesNotesFormRequest $request, $salesnote)
+    public function edit(SalesNotesFormRequest $request, Company $company)
     {
     
-        return $this->createSalesNotes($request, $salesnote);
+        return $this->createSalesNotes($request, $company);
     }
 
     /**

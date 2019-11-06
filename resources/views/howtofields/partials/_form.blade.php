@@ -1,65 +1,50 @@
-<div>
-{{Form::label('fieldname','Field Name:')}}
-<div class="controls">
-{{Form::text('fieldname')}}
-{{ $errors->first('fieldname') }}
-</div></div>
-
-
-
-<div>
-{{Form::label('required','Required:')}}
-<div class="controls">
-{{Form::checkbox('required','1',false)}}
-{{ $errors->first('required') }}
-</div></div>
-
-<div>
-<?php $types =array('text'=>'text',
-'textarea'=>'textarea',
-'file'=>'file',
-'select'=>'select',
-'multiselect'=>'multiselect',
-'checkbox'=>'checkbox',
-'radio'=>'radio');?>
-{{Form::label('type','Type:')}}
-<div class="controls">
-{{Form::select('type',$types,isset($howtofield->type) ? $howtofield->type : 'text',$attributes=['size'=>'3'])}}
-{{ $errors->first('type') }}
-</div></div>
-
-<div>
-
-{{Form::label('values','Values:')}}
-<div class="controls">
-{{Form::textarea('values')}}
-{{ $errors->first('values') }}
-</div></div>
-
-<div>
-
-{{Form::label('group','Group:')}}
-<div class="controls">
-{{Form::select('group',$groupsSelect,isset($howtofield->group) ? $howtofield->group : head($groupsSelect),$attributes=['size'=>'3'])}}
-{{ $errors->first('groups') }}
-<p style ="margin-top: 10px">
-
-<input type='text' id="addGroup" name='addGroup' /><button type="button"  id="add" >  <i class="fas fa-plus text-success" aria-hidden="true"></i> Add Group</button></p>
-
-</div></div>
-
-
-
-
-<!-- Form Actions -->
-	<div style="margin-top:20px">
-		<div class="controls">
-			<a class="btn btn-link" href="{{ route('company.index') }}">Cancel</a>
-
-			<button type="reset" class="btn">Reset</button>
-
-			<button type="submit" class="btn btn-success">{{$buttonLabel}}</button>
-		</div>
-	</div>
+<div class="form-group{{ $errors->has('fieldname') ? ' has-error' : '' }}">
+    <label class="col-md-4 control-label" for="fieldname">FieldName</label>
+    <div class="input-group input-group-lg col-md-8">
     
-   
+    <input type="text"
+        name="fieldname"
+
+        value="{{old('fieldname', isset($howtofield) ? $howtofield->fieldname :'' )}}" />
+        {!! $errors->first('fieldname', '<p class="help-block">:message</p>') !!}
+    </div>
+</div>
+<div class="form-group{{ $errors->has('required') ? ' has-error' : '' }}">
+    <label class="col-md-4 control-label" for="required">Required:</label>
+    <div class="input-group input-group-lg col-md-8">
+    <input type="checkbox"
+        name="required"
+        />
+    </div>
+</div>
+
+
+<div class="form-group{{ $errors->has('type') ? ' has-error' : '' }}">
+    <label class="col-md-4 control-label" for="type">Type:</label>
+    <div class="input-group input-group-lg col-md-8">
+    <select name="type">
+        @foreach ($types as $key=>$type)
+        <option value="{{$key}}">{{$type}}</option>
+        @endforeach
+    
+    <label for="values">
+        Values:
+    </label>
+    <div class= "form-control" >
+    <textarea name="values" ></textarea>
+        
+    </div>
+</div>
+
+<div class="form-group{{ $errors->has('group') ? ' has-error' : '' }}">
+    <label class="col-md-4 control-label" for="group">Group:</label>
+    <div class="input-group input-group-lg col-md-8">
+    <select name="group"  >
+        @foreach ($groups as $group)
+        <option value="{{$group->group}}">{{$group->group}}</option>
+        @endforeach
+    </select>
+    </div>
+</div>
+<p style ="margin-top: 10px">
+    <input type='text' id="addGroup" name='addGroup' /><button type="button"  id="add" >  <i class="fas fa-plus text-success" aria-hidden="true"></i> Add Group</button></p>
