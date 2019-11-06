@@ -14,4 +14,15 @@ class Howtofield extends Model
         
         return belongsToMany(Company::class);
     }
+
+    public function getTypes()
+    {
+        return ['text'=>'text',
+                'textarea'=>'textarea',
+                'file'=>'file',
+                'select'=>'select',
+                'multiselect'=>'multiselect',
+                'checkbox'=>'checkbox',
+                'radio'=>'radio'];
+    }
 }
