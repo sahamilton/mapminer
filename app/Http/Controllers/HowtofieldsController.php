@@ -36,7 +36,7 @@ class HowtofieldsController extends BaseController
      */
     public function create()
     {
-        $groups = $this->howtofield->where('depth', 1)->get();
+        $groups = $this->howtofield->select('group')->distinct()->get();
         $types = $this->howtofield->getTypes();
 
         return response()->view('howtofields.create', compact('groups', 'types'));
@@ -116,29 +116,6 @@ class HowtofieldsController extends BaseController
         return redirect()->route('admin.howtofields.index');
     }
 
-
-    public function reorder(Request $request)
-    {
-        $data = json_decode(request('id'));
-        $n = 0;
-        foreach ($data as $el) {
-
-            $n++;
-            $item[$el->id] = ['parent_id'=>43, 'sequence'=>$n];
-            $c=0;
-            foreach ($el->children as $child) {
-                
-                $c++;
-                $item[$child->id] = ['parent_id'=>$el->id, 'sequence'=>$c];
-            }
-        }
-        foreach ($item as $key=>$value) {
-            $field = $this->howtofield->findOrFail($key);
-            $field->update($value);
-        }
-        
-        $this->howtofield->rebuild();
-    }
 
 
 }
