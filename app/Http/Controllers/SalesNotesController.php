@@ -49,16 +49,13 @@ class SalesNotesController extends BaseController {
      * 
      * @return [type]           [description]
      */
-    public function create(Request $request)
+    public function create(Request $request, Company $company)
     {
+       
         $fields = Howtofield::orderBy('group')->get();
         $groups = Howtofield::select('group')->distinct()->get();
 
-        if (request()->filled('company')) {
-            $company = $this->company->findOrFail(request('company'));
-
-        }
-        return response()->view('salesnotes.create',compact('company','groups', 'fields'));
+        return response()->view('salesnotes.create', compact('company', 'groups', 'fields'));
     }
     /**
      * [store description]
@@ -106,10 +103,13 @@ class SalesNotesController extends BaseController {
      * 
      * @return [type]                           [description]
      */
-    public function edit(SalesNotesFormRequest $request, Company $company)
+    public function edit(Company $company)
     {
     
-        return $this->createSalesNotes($request, $company);
+        $data = $this->_getSalesNotes($company);
+        $fields = Howtofield::orderBy('group')->get();
+        $groups = Howtofield::select('group')->distinct()->get(); 
+        return response()->view('salesnotes.edit', compact('data', 'company', 'groups', 'fields'));
     }
 
     /**
@@ -120,12 +120,12 @@ class SalesNotesController extends BaseController {
      * 
      * @return [type]                           [description]
      */
-    public function update(SalesNotesFormRequest $request, $salesnote)
+    public function update(Request $request, Company $company)
     {
-        
-
+        //dd(request()->all(), $company);
+        dd($data = $this->_getSalesNotes($company), request()->all());
         $howtofield->update(request()->all());
-        return redirect()->route('salesnotes.index');
+        return redirect()->route('salesnotes.show', $company->id);
     }
 
     /**
@@ -189,43 +189,41 @@ class SalesNotesController extends BaseController {
      * 
      * @return [type]                         [description]
      */
-    public function createSalesNotes(SalesNotesFormRequest $request,Company $company) 
+    private function _getSalesNotes(Company $company) 
     {
         
-        $company->load('managedBy');
+        $company->load('salesNotes');
+        
         $fields = Howtofield::orderBy('group')->get();
         
-        $salesnote = Salesnote::where('company_id', $company->id)->with('fields')->get();
+        $salesnote = $company->salesNotes;
         $groups = Howtofield::select('group')->distinct()->get();
-        if (count($salesnote)>0) {
-            $data = array();
+
+        $data = array();
             // Fields that need to be convereted to an array
             
-            foreach ($fields as $field) {
-                $field_id = $field->id ;
-                $data[$field_id]['type']=$field->type;
-                $data[$field_id]['id']= $field->id ;
-                $data[$field_id]['group']=$field->group;
-                $data[$field_id]['fieldname']=$field->fieldname;
-                $data[$field_id]['values'] = $field->values;
-                $data[$field_id]['value'] =null;
-            }
-            foreach ($salesnote as $note) {
-                $field_id = $note->howtofield_id;
-                if ($note->fields->type == 'checkbox' || $note->fields->type == 'multiple') {
-                    $data[$field_id]['value']= unserialize(urldecode($note->value));
-                    
-                } else {
-                    $data[$field_id]['value']=$note->value;
-                }
-            }
-
-            return response()->view('salesnotes.edit', compact('data', 'company', 'groups'));
-        } else {
-            
-            return response()->view('salesnotes.create', compact('fields','company','groups'));
+        foreach ($fields as $field) {
+            $field_id = $field->id ;
+            $data[$field_id]['type']=$field->type;
+            $data[$field_id]['id']= $field->id ;
+            $data[$field_id]['group']=$field->group;
+            $data[$field_id]['fieldname']=$field->fieldname;
+            $data[$field_id]['values'] = $field->values;
+            $data[$field_id]['value'] =null;
         }
-
+        foreach ($salesnote as $note) {
+     
+            $field_id = $note->howtofield_id;
+            if ($note->type == 'checkbox' || $note->type == 'multiple') {
+                $data[$field_id]['value']= unserialize(urldecode($note->pivot->value));
+                
+            } else {
+                $data[$field_id]['value']=$note->pivot->value;
+            }
+        }
+        return $data;
+            
+        
         
     }
     /**
