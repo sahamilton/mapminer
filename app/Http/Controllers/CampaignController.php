@@ -182,7 +182,7 @@ class CampaignController extends Controller
         $data = $this->_transformRequest($request);
         
         $campaign->update($data);
-        $servicelines = $campaign->getCampaignServicelines($campaign);
+        $servicelines = $this->_getCampaignServicelines($campaign);
         $data['branches'] = $this->_getbranchesFromManager($servicelines, $data['manager_id']);
 
         $campaign->branches()->sync($data['branches']); 
