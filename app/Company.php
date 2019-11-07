@@ -135,7 +135,7 @@ class Company extends NodeModel
      */
     public function salesNotes()
     {
-        return $this->belongsToMany(Howtofield::class);
+        return $this->belongsToMany(Howtofield::class)->withPivot('value');
     }
     
     /**

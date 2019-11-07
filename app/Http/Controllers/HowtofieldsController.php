@@ -7,6 +7,7 @@ use App\Http\Requests\HowtofieldsFormRequest;
 class HowtofieldsController extends BaseController
 {
     public $howtofield;
+    
     /**
      * Display a listing of howtofields
      *
@@ -21,7 +22,7 @@ class HowtofieldsController extends BaseController
      
     public function index()
     {
-        $howtofields = $this->howtofield->get();
+        $howtofields = $this->howtofield->all();
         
         
         return response()->view('howtofields.index', compact('howtofields'));
@@ -48,7 +49,7 @@ class HowtofieldsController extends BaseController
     public function store(HowtofieldsFormRequest $request)
     {
         
-        if (request()->has('addGroup') && request('addGroup') != '') {
+        if (request()->filled('addGroup')) {
             $request->request->add(['group' => request('addGroup')]);
         }
         $this->howtofield->create(request()->all());
@@ -61,9 +62,9 @@ class HowtofieldsController extends BaseController
      * @param  int  $id
      * @return Response
      */
-    public function show($id)
+    public function show(Howtofield $howtofield)
     {
-        $howtofield = $this->howtofield->findOrFail($id);
+        
 
         return response()->view('howtofields.show', compact('howtofield'));
     }
@@ -87,18 +88,18 @@ class HowtofieldsController extends BaseController
      * @param  int  $id
      * @return Response
      */
-    public function update(HowtofieldsFormRequest $request, $howtofield)
+    public function update(HowtofieldsFormRequest $request, Howtofield $howtofield)
     {
         
 
-        if (request()->has('addGroup') && request('addGroup') != '') {
+        if (request()->filled('addGroup')) {
             $request->request->add(['group' => request('addGroup')]);
         }
 
         $howtofield->update(request()->all());
 
 
-        return redirect()->route('admin.howtofields.index');
+        return redirect()->route('howtofields.index');
     }
 
     /**
@@ -111,7 +112,7 @@ class HowtofieldsController extends BaseController
     {
         $this->howtofield->destroy($id);
 
-        return redirect()->route('admin.howtofields.index');
+        return redirect()->route('howtofields.index');
     }
 
 
