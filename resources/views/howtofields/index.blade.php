@@ -1,75 +1,82 @@
 @extends('admin.layouts.default')
 @section('content')
 
-<h1>All How To Fields</h1>
-
+<h2>All How To Fields</h2>
 <div class="float-right">
-<a href="{{{ route('howtofields.create') }}}" class="btn btn-small btn-info iframe">
+<a href="{{{ route('howtofields.create') }}}" 
+class="btn btn-small btn-info iframe">
 
 <i class="fas fa-plus-circle " aria-hidden="true"></i>
 
  Create New Field</a>
 </div>
 
-<table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
-	<thead>
-		<th>Field</th>
-		<th>Reqd</th>
-		<th>Type</th>
-		<th>Values</th>
-		<th>Group</th>
-		<th>Actions</th>
+<div class="dd" id="nestable">
+    <ol class="dd-list">
+        @foreach ($howtofields->where('depth', 1) as $field)
+        
+        <li class="dd-item" data-id="{{$field->id}}">
+            <div class="dd-handle">{{$field->fieldname}}</div>
+           
+                <ol class="dd-list">
+                    @foreach ($field->immediateDescendants()->get() as $subField)
+                    
+                    <li class="dd-item" data-id="{{$subField->id}}">
+                        <div class="dd-handle">{{$subField->fieldname}}</div>
+                    </li>
+                    @endforeach
+                </ol>
+           
+        </li>
+        
+        
+        @endforeach
+    </ol>
+</div>
 
-	</thead>
-	<tbody>
-	@foreach($howtofields as $howtofield)
-		<tr>  
-		<td>{{$howtofield->fieldname}}</td>
-		<td>
-		@if($howtofield->required==0)
-			Yes
-		@else
-			No
-		@endif
-		</td>
-		<td>{{$howtofield->type}}</td>
-		<td>{{$howtofield->values}}</td>
-		<td>{{$howtofield->group}}</td>
-		<td>
-			<div class="btn-group">
-				<button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
-					<span class="caret"></span>
-					<span class="sr-only">Toggle Dropdown</span>
-				</button>
-				<ul class="dropdown-menu" role="menu">
+<script type="text/javascript" 
+src="/js/nestable.js"></script>   
+<script>
+    $(document).ready(function ()
+    {
+
+        var updateOutput = function(e)
+    {
+        var list   = e.length ? e : $(e.target),
+            output = list.data('output');
+        if (window.JSON) {
+
+            var data =JSON.stringify(list.nestable('serialize'));
+       
+             $.ajax({
+                type: 'GET',
+                url: "{{route('howtofields.reorder')}}",
+                dataType: 'json',
+                data: {id: data, api_token:"{{auth()->user()->api_token}}"},
+                success: function(msg) {
+                  alert(msg);
+                }
+              });
+            //, null, 2));
+        } else {
+            output.val('JSON browser support required for this demo.');
+        }
+    };
+
+    // activate Nestable for list 1
+    $('#nestable').nestable({
+        group: 1
+    })
+    .on('change', updateOutput);
+
+   
+    // output initial serialised data
+    updateOutput($('#nestable').data('output', $('#nestable-output')));
 
 
-						<a class="dropdown-item"
-						href="{{route('howtofields.edit', $howtofield->id)}}">
-						<i class="far fa-edit text-info"" aria-hidden="true"></i>
-						Edit  {{$howtofield->fieldname}}
-						</a>
-					
-						<a class="dropdown-item" 
-						data-href="{{route('howtofields.destroy',$howtofield->id)}}" 
+    });
+    
 
-						data-toggle="modal" 
-						data-target="#confirm-delete" 
-						data-title = "location" 
-						href="#">
+</script>
 
-						<i class="far fa-trash-alt text-danger" aria-hidden="true"> </i> 
-						Delete {{$howtofield->fieldname}}
-						</a>
-
-				</ul>
-			</div>	
-		</td>
-		</tr>
-	@endforeach
-
-	</tbody>
-</table>
-@include('partials._modal')
-@include('partials/_scripts')
 @endsection

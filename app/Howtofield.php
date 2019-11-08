@@ -1,14 +1,14 @@
 <?php
 namespace App;
 
-class Howtofield extends Model
+class Howtofield extends NodeModel
 {
 
     // Add your validation rules here
     
     // Don't forget to fill this array
-    protected $fillable = ['fieldname','required','type','values','group','sequence'];
-
+    protected $fillable = ['id', 'fieldname','required','type','values','group','sequence', 'parent_id'];
+    protected $orderColumn = 'sequence';
     public function usedBy()
     {
         
