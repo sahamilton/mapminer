@@ -14,6 +14,20 @@
     <div class="input-group input-group-lg col-md-8">
     <input type="checkbox"
         name="required"
+        value='1'
+        {{(isset($howtofield) && $howtofield->required==1) ? 'checked' : ''}}
+        />
+    </div>
+</div>
+
+<div class="form-group{{ $errors->has('active') ? ' has-error' : '' }}">
+    <label class="col-md-4 control-label" for="active">Active:</label>
+    <div class="input-group input-group-lg col-md-8">
+    <input type="checkbox"
+        name="active"
+        {{(isset($howtofield) && $howtofield->active==0) ? '' : 'checked'}}
+        
+        value='1'
         />
     </div>
 </div>
@@ -24,27 +38,33 @@
     <div class="input-group input-group-lg col-md-8">
     <select name="type">
         @foreach ($types as $key=>$type)
-        <option value="{{$key}}">{{$type}}</option>
+        <option value="{{$key}}"
+        @if (isset($howtofield) && $howtofield->type == $type)
+        selected
+        @endif>{{$type}}</option>
         @endforeach
-    
-    <label for="values">
-        Values:
+    </select>
+    <label for="fieldvalues">
+        Field Values:
     </label>
-    <div class= "form-control" >
-    <textarea name="values" ></textarea>
+    
+    <textarea class= "form-control" name="fieldvalues" >{{isset($howtofield) ? $howtofield->fieldvalues : ''}}</textarea>
         
     </div>
 </div>
 
-<div class="form-group{{ $errors->has('group') ? ' has-error' : '' }}">
-    <label class="col-md-4 control-label" for="group">Group:</label>
+<div class="form-group{{ $errors->has('parent_id') ? ' has-error' : '' }}">
+    <label class="col-md-4 control-label" for="parent_id">Group:</label>
     <div class="input-group input-group-lg col-md-8">
-    <select name="group"  >
-        @foreach ($groups as $group)
-        <option value="{{$group->group}}">{{$group->group}}</option>
+    <select name="parent_id"  >
+        <option value="{{$parents->first()->parent_id}}">Top Level</option>
+        @foreach ($parents as $parent)
+        <option value="{{$parent->id}}"
+            @if(isset($howtofield) && $howtofield->parent_id == $parent->id)
+            selected
+            @endif
+            >{{$parent->fieldname}}</option>
         @endforeach
     </select>
     </div>
 </div>
-<p style ="margin-top: 10px">
-    <input type='text' id="addGroup" name='addGroup' /><button type="button"  id="add" >  <i class="fas fa-plus text-success" aria-hidden="true"></i> Add Group</button></p>

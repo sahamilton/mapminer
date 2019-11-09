@@ -1,6 +1,7 @@
 @extends('admin.layouts.default')
 @section('content')
-
+<link rel="stylesheet" 
+href="{{asset('css/nestable.css')}}">
 <h2>All How To Fields</h2>
 <div class="float-right">
 <a href="{{{ route('howtofields.create') }}}" 
@@ -16,13 +17,41 @@ class="btn btn-small btn-info iframe">
         @foreach ($howtofields->where('depth', 1) as $field)
         
         <li class="dd-item" data-id="{{$field->id}}">
-            <div class="dd-handle">{{$field->fieldname}}</div>
-           
+            <div class="dd-handle">
+                @if(! $field->active)
+               <del class="text-danger">{{$field->fieldname}}</del>
+                @else
+               <span class="text-success">
+                {{$field->fieldname}} 
+            </span>
+                @endif
+                
+                
+            </div>
+           <a href="{{route('howtofields.edit', $field->id)}}"
+            title="Edit {{$field->fieldname}}">
+                    <i class="far fa-edit"></i>
+                </a>
                 <ol class="dd-list">
                     @foreach ($field->immediateDescendants()->get() as $subField)
                     
                     <li class="dd-item" data-id="{{$subField->id}}">
-                        <div class="dd-handle">{{$subField->fieldname}}</div>
+                        <div class="dd-handle">
+                            @if(! $subField->active)
+
+                                <del class="text-danger">{{$subField->fieldname}} </del>
+                            @else
+                               <span class="text-success" >
+                                {{$subField->fieldname}} {{$subField->id}}
+                                </span>
+                             @endif
+                            
+                            
+                        </div>
+                            <a href="{{route('howtofields.edit', $subField->id)}}"
+                                title="Edit {{$subField->fieldname}}">
+                                <i class="far fa-edit"></i>
+                            </a>
                     </li>
                     @endforeach
                 </ol>

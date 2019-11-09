@@ -7,7 +7,7 @@ class Howtofield extends NodeModel
     // Add your validation rules here
     
     // Don't forget to fill this array
-    protected $fillable = ['id', 'fieldname','required','type','values','group','sequence', 'parent_id'];
+    protected $fillable = ['id', 'fieldname','required','type','fieldvalues','fieldgroup','sequence', 'parent_id', 'active'];
     protected $orderColumn = 'sequence';
     public function usedBy()
     {
@@ -17,7 +17,8 @@ class Howtofield extends NodeModel
 
     public function getTypes()
     {
-        return ['text'=>'text',
+        return ['tab'=>'tab',
+                'text'=>'text',
                 'textarea'=>'textarea',
                 'file'=>'file',
                 'select'=>'select',
