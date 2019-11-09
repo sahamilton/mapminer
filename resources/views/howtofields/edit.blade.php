@@ -3,15 +3,13 @@
 
 {{-- Page content --}}
 @section('content')
-<div class="page-header">
-    <h3> Edit </h3>
-        
-
-        <div class="float-right">
-            <a href="{{ route('howtofields.index') }}" class="btn btn-small btn-inverse"><i class="icon-circle-arrow-left icon-white"></i> Back</a>
-        </div>
-    
-</div>
+<div class="container">
+    <h3> Edit {{$howtofield->fieldname}}</h3>
+    <p>
+        <a href="{{ route('howtofields.index') }}" 
+        class="btn btn-small btn-inverse">
+         Back to all fields</a>
+     </p>
 
 
 
@@ -23,18 +21,10 @@ action = "{{route('howtofields.update',$howtofield->id)}}" >
     @include('howtofields/partials/_form')
     <input type="submit"
         name="submit"
+        class = 'btn btn-info'
         value="Update Field" />
 </form>
-
+</div>
     
-<script>
 
-$('#add').click(function() {
-    var addOption = $('#addGroup').val();
-    $('#group').append('<option value="' + addOption + '">' + addOption + '</option>');
-    //alert("You added " + addOption);
-    
-});
-
-</script>
 @endsection

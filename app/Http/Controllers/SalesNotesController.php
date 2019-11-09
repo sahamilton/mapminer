@@ -9,20 +9,28 @@ use Illuminate\Http\Request;
 
 class SalesNotesController extends BaseController {
     public $salesnote;
+    public $howtofield;
+    public $company;
+    public $attachmentField;
+    /**
+     * [__construct description]
+     * 
+     * @param Company   $company   [description]
+     * @param Salesnote $salesnote [description] 
+     */
+    public function __construct(
+        Company $company, 
+        Salesnote $salesnote,
+        Howtofield $howtofield
+    ) {
         
-     public $company;
-     public $attachmentField;
-
-    public function __construct(Company $company, Salesnote $salesnote) {
-        
-        $this->company = $company;
-        $this->salesnote = $salesnote;
-        $this->attachmentField = \DB::table('howtofields')->where('type','=','attachment')->pluck('id');
-        parent::__construct($salesnote);
-        
-
-
-    }
+            $this->company = $company;
+            $this->salesnote = $salesnote;
+            $this->howtofield = $howtofield;
+            $this->attachmentField = $howtofield->where('type', '=', 'attachment')->pluck('id');
+            parent::__construct($salesnote);
+   
+     }
     /**
      * [index description]
      * 
@@ -52,10 +60,10 @@ class SalesNotesController extends BaseController {
     public function create(Request $request, Company $company)
     {
        
-        $fields = Howtofield::orderBy('group')->get();
-        $groups = Howtofield::select('group')->distinct()->get();
+  
+        $fields = $this->howtofield->where('active', 1)->orderBy('sequence')->get();
 
-        return response()->view('salesnotes.create', compact('company', 'groups', 'fields'));
+        return response()->view('salesnotes.create', compact('company', 'fields'));
     }
     /**
      * [store description]
@@ -90,8 +98,9 @@ class SalesNotesController extends BaseController {
 
         $data = $this->salesnote->where('company_id', $company->id)
             ->with('fields')->get();;
+        $fields = $this->howtofield->where('active', 1)->orderBy('sequence')->get();
 
-        return response()->view('salesnotes.shownote', compact('data', 'company'));
+        return response()->view('salesnotes.shownote', compact('data', 'company', 'fields'));
            
     }
 
@@ -105,11 +114,10 @@ class SalesNotesController extends BaseController {
      */
     public function edit(Company $company)
     {
-    
-        $data = $this->_getSalesNotes($company);
-        $fields = Howtofield::orderBy('group')->get();
-        $groups = Howtofield::select('group')->distinct()->get(); 
-        return response()->view('salesnotes.edit', compact('data', 'company', 'groups', 'fields'));
+        $company->load('salesnotes');
+        $fields = $this->howtofield->where('depth', 1)->where('active', 1)->orderBy('sequence')->get();
+         
+        return response()->view('salesnotes.edit', compact('company', 'fields'));
     }
 
     /**

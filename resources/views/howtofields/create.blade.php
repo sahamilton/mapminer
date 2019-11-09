@@ -1,11 +1,4 @@
 @extends('admin/layouts/default')
-<?php $groupsSelect=array();
-
-foreach($groups as $group) {
-    
-    $groupsSelect[$group->group] = str_replace("_", " ", $group->group);
-}
-?>
 
 {{-- Page content --}}
 @section('content')
@@ -27,19 +20,11 @@ action = "{{route('howtofields.store')}}">
     @include('howtofields.partials._form')
     <input type= "submit"
         name="submit"
-        value="Create New Field" />
+        value="Create New Field"
+        class="btn btn-info" />
 
 </form>
     
-<script>
 
-$('#add').click(function() {
-    var addOption = $('#addGroup').val();
-    $('#group').append('<option value="' + addOption + '">' + addOption + '</option>');
-    //alert("You added " + addOption);
-    
-    
-});
-</script>
 
 @endsection

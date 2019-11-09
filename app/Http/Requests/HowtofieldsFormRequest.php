@@ -24,7 +24,7 @@ class HowtofieldsFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'required',
+            'fieldname' => 'required',
             'type'=>'required',
         ];
     }

@@ -14,7 +14,7 @@ class Salesnote extends Model
     public function fields()
     {
         
-        return $this->belongsTo(Howtofield::class, 'howtofield_id');
+        return $this->belongsTo(Howtofield::class, 'howtofield_id')->where('active', 1);
     }
     public function company()
     {

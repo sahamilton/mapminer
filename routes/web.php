@@ -502,7 +502,7 @@ Route::group(
         
         //     Salesnotes
         Route::get('salesnotes/filedelete/{file}', ['as'=>'salesnotes.filedelete', 'uses'=>'SalesNotesController@filedelete']);
-        Route::get('salesnotes/create/{company}', ['as'=>'salesnotes.cocreate', 'uses'=>'SalesNotesController@create']);
+        Route::get('salesnotes/edit/{company}', ['as'=>'salesnotes.cocreate', 'uses'=>'SalesNotesController@edit']);
         //   OrderImports
         
         Route::resource('orderimport', 'OrderImportController');

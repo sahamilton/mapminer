@@ -23,7 +23,9 @@ class HowtofieldsController extends BaseController
      
     public function index()
     {
-        $howtofields = $this->howtofield->whereNull('parent_id')->first()->getDescendants();
+        $howtofields = $this->howtofield
+            ->whereNull('parent_id')
+            ->first()->getDescendants();
       
         
         
@@ -37,10 +39,13 @@ class HowtofieldsController extends BaseController
      */
     public function create()
     {
-        $groups = $this->howtofield->where('depth', 1)->get();
+        $parents = $this->howtofield->where('depth', 1)
+            ->where('active', 1)
+            ->orderBy('sequence')
+            ->get();
         $types = $this->howtofield->getTypes();
 
-        return response()->view('howtofields.create', compact('groups', 'types'));
+        return response()->view('howtofields.create', compact('parents', 'types'));
     }
 
     /**
@@ -48,13 +53,12 @@ class HowtofieldsController extends BaseController
      *
      * @return Response
      */
-    public function store(HowtofieldsFormRequest $request)
+    public function store(Request $request)
     {
         
-        if (request()->filled('addGroup')) {
-            $request->request->add(['group' => request('addGroup')]);
-        }
+        
         $this->howtofield->create(request()->all());
+        $this->howtofield->rebuild();
         return redirect()->route('howtofields.index');
     }
 
@@ -79,9 +83,9 @@ class HowtofieldsController extends BaseController
      */
     public function edit(Howtofield $howtofield)
     {
-        $groups = $this->howtofield->select('group')->distinct()->get();
+        $parents = $this->howtofield->where('depth', 1)->get();
         $types = $this->howtofield->getTypes();
-        return response()->view('howtofields.edit', compact('howtofield', 'groups', 'types'));
+        return response()->view('howtofields.edit', compact('howtofield', 'parents', 'types'));
     }
 
     /**
@@ -93,13 +97,16 @@ class HowtofieldsController extends BaseController
     public function update(HowtofieldsFormRequest $request, Howtofield $howtofield)
     {
         
-
-        if (request()->filled('addGroup')) {
-            $request->request->add(['group' => request('addGroup')]);
-        }
-
         $howtofield->update(request()->all());
-
+        if (! request()->has('active')) {
+        
+            $howtofield->update(['active'=>0]);
+        }
+        if (! request()->has('required')) {
+            $howtofield->update(['required'=>0]);
+        }
+        
+        $howtofield->rebuild();
 
         return redirect()->route('howtofields.index');
     }
