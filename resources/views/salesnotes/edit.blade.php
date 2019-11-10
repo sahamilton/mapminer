@@ -2,7 +2,7 @@
 @section('content')
 <div class="container">
   <h3>Edit Sales Notes for {{$company->companyname}}</h3>
-
+<p><a href="{{route('salesnotes.index')}}" >Return to all salesnotes</a></p>
 
   <form name="editsalesnotes"
     method="post"
