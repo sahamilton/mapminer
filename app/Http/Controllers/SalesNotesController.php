@@ -130,9 +130,9 @@ class SalesNotesController extends BaseController {
      */
     public function update(Request $request, Company $company)
     {
-        //dd(request()->all(), $company);
-        dd($data = $this->_getSalesNotes($company), request()->all());
-        $howtofield->update(request()->all());
+       
+        $data = $this->_reformatRequestData($request);
+        $company->salesnotes()->sync($data);
         return redirect()->route('salesnotes.show', $company->id);
     }
 
@@ -254,6 +254,16 @@ class SalesNotesController extends BaseController {
 
         return response()->view('salesnotes.printnote', compact('data', 'fields', 'company'));
         
+    }
+
+    private function _reformatRequestData(Request $request)
+    {
+        foreach (request()->except(['_token', 'submit','_method']) as $key=>$value) {
+            if ($value) {
+                $data[$key] = ['fieldvalue'=>$value];
+            }
+        }
+        return $data;
     }
     
 }

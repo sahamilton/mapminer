@@ -38,12 +38,12 @@
         @foreach ($fields->where('depth', 1) as $tab)
             <div id="{{$tab->fieldname}}" class="tab-pane show @if($loop->first) active @endif" >
                 @foreach ($tab->getDescendants() as $field)
+
+                @if($data->where('howtofield_id', $field->id)->first())
                     <p><strong>{{$field->fieldname}}</strong></p>
-                        <p>{!!$data->where('howtofield_id', $field->id)->first()->fieldvalue!!}</p>
-                    
-
-
-
+                        <p>{!! $data->where('howtofield_id', $field->id)->first()->fieldvalue!!} </p>
+                 
+                @endif
                 @endforeach
             </div>
         @endforeach
