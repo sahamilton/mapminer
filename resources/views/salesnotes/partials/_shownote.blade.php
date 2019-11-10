@@ -24,7 +24,7 @@
                     
                     @if($data->where('howtofield_id', $field->id)->first())
                         <p><strong>{{$field->fieldname}}</strong></p>
-                            <p>{!! $data->where('howtofield_id', $field->id)->first()->fieldvalue!!} </p>
+                            <p>{!! str_replace("\r\n", "<br />", $data->where('howtofield_id', $field->id)->first()->fieldvalue)!!} </p>
                      
                     @endif
                     @endforeach
