@@ -24,7 +24,7 @@
                     
                     @if($data->where('id', $field->id)->first())
                         <p><strong>{{$field->fieldname}}</strong></p>
-                            <p>{!! $data->where('id', $field->id)->first()->pivot->fieldvalue!!} </p>
+                            <p>{!! str_replace("\r\n", "<br />", $data->where('id', $field->id)->first()->pivot->fieldvalue)!!} </p>
                      
                     @endif
                     @endforeach
