@@ -1,4 +1,4 @@
-<div class='content'>
+   <div class='content'>
         <nav>
            <div class="nav nav-tabs" id="nav-tab" role="tablist">    
                @foreach ($fields->where('depth', 1) as $tab)
@@ -22,9 +22,9 @@
                 <div id="{{$tab->fieldname}}" class="tab-pane show @if($loop->first) active @endif" >
                     @foreach ($tab->getDescendants() as $field)
                     
-                    @if($data->where('howtofield_id', $field->id)->first())
+                    @if($data->where('id', $field->id)->first())
                         <p><strong>{{$field->fieldname}}</strong></p>
-                            <p>{!! $data->where('howtofield_id', $field->id)->first()->fieldvalue!!} </p>
+                            <p>{!! $data->where('id', $field->id)->first()->pivot->fieldvalue!!} </p>
                      
                     @endif
                     @endforeach
