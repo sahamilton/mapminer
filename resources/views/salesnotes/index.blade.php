@@ -3,6 +3,7 @@
 {{-- Page content --}}
 @section('content')
 <h2>Manage Sales Notes</h2>
+<p><a href="{{route('howtofields.index')}}">Manage fields</a></p>
  <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
   <thead>
     <th>Company</th>
@@ -21,7 +22,7 @@
                 @endif
 
 <td> 
-<a href="{{route('company.show',$company->id)}}">{{$company->companyname}}</a>
+<a href="{{route('salesnotes.show',$company->id)}}">{{$company->companyname}}</a>
 </td>
 
 <td>  @if($company->salesnotes->count()>0)
