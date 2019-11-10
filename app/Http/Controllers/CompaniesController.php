@@ -10,6 +10,8 @@ use App\Address;
 use Excel;
 use App\Pagination;
 use App\SearchFilter;
+use App\Salesnote;
+use App\Howtofield;
 use App\Serviceline;
 use Illuminate\Http\Request;
 use App\Exports\CompaniesExport;
@@ -22,8 +24,10 @@ class CompaniesController extends BaseController
     public $user;
     public $company;
     public $address;
+    public $howtofields;
     public $locations;
     public $searchfilter;
+    public $salesnote;
     public $person;
     public $limit = 500;
     public $NAMRole =['4'];
@@ -41,15 +45,19 @@ class CompaniesController extends BaseController
     public function __construct(
         Company $company, 
         Address $address, 
+        Howtofield $howtofield,
         Location $location, 
-        SearchFilter $searchfilter, 
+        SearchFilter $searchfilter,
+        Salesnote $salesnote,
         User $user, 
         Person $person
     ) {
 
         $this->company = $company;
+        $this->howtofield = $howtofield;
         $this->locations = $location;
         $this->searchfilter = $searchfilter;
+        $this->salesnote = $salesnote;
         $this->user = $user;
         $this->person = $person;
         $this->address = $address;
@@ -233,10 +241,17 @@ class CompaniesController extends BaseController
     {
         if (isset($segment)) {
             $data['segment'] = $segment;
+            $company = $this->_getCompanySegmentLocations($company, $segment);
+        } else {
+            $company->load('locations', 'locations.orders', 'managedBy', 'industryVertical', 'salesnotes');
+            $data = [];  
         }
-        $data['state']=null;        
+            
         $data = $this->_getCompanyViewData($company, $data);
-        return response()->view('companies.show', compact('data'));
+        $salesnote = $this->salesnote->where('company_id', $company->id)->get();
+        $fields = $this->howtofield->where('active', 1)->orderBy('sequence')->get();
+      
+        return response()->view('companies.show', compact('data', 'fields', 'company', 'salesnote'));
 
     }
 
@@ -304,10 +319,14 @@ class CompaniesController extends BaseController
     public function stateselector(Request $request)
     {
         
-        $company = $this->company->findOrFail(request('id'));
+        $company = $this->company
+            ->with('locations', 'locations.orders', 'managedBy', 'industryVertical', 'salesnotes')
+            ->findOrFail(request('id'));
         $state = request('state');
+         $salesnote = $this->salesnote->where('company_id', $company->id)->get();
+        $fields = $this->howtofield->where('active', 1)->orderBy('sequence')->get();
         $data = $this->_getStateLocationsAll($company, $state);
-        return response()->view('companies.show', compact('data'));
+        return response()->view('companies.show', compact('data', 'company', 'salesnote', 'fields'));
     }
     /**
      * [stateselect description]
@@ -340,6 +359,17 @@ class CompaniesController extends BaseController
         $data = $this->_getCompanyViewData($company, $data);
         return $data;
     }
+
+    private function _getCompanySegmentLocations(Company $company, $segment)
+    {
+        return $this->company->with(
+            ['locations'=>function ($q) use ($data) {
+                $q->where('segment', $data['segment']);
+            },'locations.orders']
+        )
+        ->with('managedBy', 'industryVertical', 'salesnotes.fields')
+        ->findOrFail($company->id);
+    }
     /**
      * [_getCompanyViewData description]
      * 
@@ -351,22 +381,11 @@ class CompaniesController extends BaseController
     private function _getCompanyViewData(Company $company,$data)
     {
 
-        if (isset($data['segment'])) {
-            $data['company'] = $this->company->with(
-                ['locations'=>function ($q) use ($data) {
-                    $q->where('segment', $data['segment']);
-                },'locations.orders']
-            )
-            ->with('managedBy', 'industryVertical')
-            ->findOrFail($company->id);
-        } else {
-            $data['company'] = $company->load('locations', 'locations.orders', 'managedBy', 'industryVertical');
-        }
-    
+        
 
-        $data['states'] = $this->_getStatesInArray($data['company']->locations);
-
-        if ($data['state']) {
+        $data['states'] = $this->_getStatesInArray($company->locations);
+        
+        if (isset($data['state'])) {
             $data['company'] = $this->company->with(
                 ['locations' => function ($query) use ($data) {
                     $query->where('state', $data['state'])->with('orders');
@@ -376,22 +395,16 @@ class CompaniesController extends BaseController
              ->with('managedBy', 'industryVertical')->findOrFail($company->id);
         }
 
-        
-        if (! $data['company']->isLeaf()) {
-            $data['related'] = $data['company']->getDescendants();
-        } else {
-            $data['related']=false;
-        }
         $data['parent'] = $company->getAncestors();
-        $data['segments'] = $this->_getCompanySegments($data);
+        
         $data['filters'] = $this->searchfilter->vertical();
         $data['mylocation'] = $this->locations->getMyPosition();
-        $data['count'] = $data['company']->locations->count();
-        $data = $this->company->limitLocations($data);
+        $data['count'] = $company->locations->count();
+        $data['limited'] = $company->limitLocations();
 
         $data['segment']='All';
-        //$data['segment'] = $this->getSegmentCompanyInfo($data['company'],$segment);
-        $data['orders'] = $this->_getLocationOrders($data['company']);
+        //$data['segment'] = $this->getSegmentCompanyInfo($company,$segment);
+        $data['orders'] = $this->_getLocationOrders($company);
         
         $data['mywatchlist'] = $this->locations->getWatchList();
 
@@ -411,15 +424,12 @@ class CompaniesController extends BaseController
 
         foreach ($company->locations as $location) {
             
-            if ($location->has('orders')) {
-                $sum = 0;
-                foreach ($location->orders as $order) {
-    
-                    $sum += $order->orders;
+            $data[$location->id] = $location->orders->map(
+                function ($order) {
+                    return $order->sum('orders');
                 }
-                $data[$location->id] = $sum;
-            }
-            
+            );
+
         }
         
         return $data;
@@ -480,20 +490,18 @@ class CompaniesController extends BaseController
      * 
      * @return [type]       [description]
      */
-    private function _getCompanySegments($data)
+    private function _getCompanySegments(Company $company, $data)
     {
         if (isset($data['segment'])) {
-            $company = $this->company->with(
+            $company = $company->with(
                 ['locations'=>function ($q) {
                     $q->groupBy('segment');
                 }]
             )
-            ->findOrFail($data['company']->id);
+            ->findOrFail($company->id);
 
 
-        } else {
-            $company = $data['company'];
-        }
+        } 
         $allSegments = array_keys(
             $company->locations->groupBy('segment')
                 ->toArray()

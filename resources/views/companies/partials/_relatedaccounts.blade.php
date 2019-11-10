@@ -5,8 +5,8 @@
 		<th>Customer ID</th>
     </thead>
     <tbody>
-    	@if($data['parent'])
-			@foreach($data['parent'] as $parent)
+    	
+			@foreach($company->getAncestors() as $parent)
 				<tr> 
 					
 					<td>
@@ -17,9 +17,9 @@
 					<td>{{$parent->customer_id}}</td>
 				</tr>
 			@endforeach
-		@endif
-		@if($data['related'])
-			@foreach ($data['related'] as $child)
+		
+		
+			@foreach ($company->getDescendants() as $child)
 				<tr>
 					<td>Sub Account</td>
 					<td>
@@ -30,6 +30,6 @@
 					<td>{{$child->customer_id}}</td>
 				</tr>
 			@endforeach 
-		@endif   
+ 
     </tbody>
 </table>
