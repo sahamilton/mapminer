@@ -3,6 +3,7 @@
 <link rel="stylesheet" 
 href="{{asset('css/nestable.css')}}">
 <h2>All How To Fields</h2>
+<p><a href="{{route('salesnotes.index')}}">Return to Sales Notes</a></p>
 <div class="float-right">
 <a href="{{{ route('howtofields.create') }}}" 
 class="btn btn-small btn-info iframe">
