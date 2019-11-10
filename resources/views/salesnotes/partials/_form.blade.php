@@ -21,7 +21,11 @@
         @foreach ($fields->where('depth', 1) as $tab)
             <div id="{{$tab->fieldname}}" class="tab-pane show @if($loop->first) active @endif" >
                 @foreach ($tab->getDescendants() as $field)
-                @php $fieldvalue = str_replace("<br />", "\r\n", $company->salesnotes->where('id', $field->id)->first()->pivot->fieldvalue); @endphp
+                @if($company->salesnotes->where('id', $field->id)->first())
+                    @php $fieldvalue = str_replace("<br />", "\r\n", $company->salesnotes->where('id', $field->id)->first()->pivot->fieldvalue); @endphp
+                @else
+                   @php  $fieldvalue=null; @endphp
+                @endif
                 <div class="form-group">
                     <label for="{{$field->fieldname}}">{{$field->fieldname}}</label>
                         @if($field->type =='text')
@@ -67,7 +71,7 @@
                             @else
                                 <input type="text"
                                     name="{{$field->id}}"
-                                    value="{{$field->fieldvalue}}"
+                                    value="{{$fieldvalue}}"
                                 />
                             @endif 
 
