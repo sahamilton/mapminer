@@ -4,17 +4,17 @@
 <div id='results'></div>
 @include('companies.partials._searchbar')
 <h2>
-{{$data['company']->companyname}}
+{{$company->companyname}}
 Locations
-@if ($data['state'])
+@if (isset($data['state']))
  in {{$data['state']}}
 @endif
 </h2>
-@if($data['state'])
-<p><a href= "{{route('company.show',$data['company']->id)}}" >See all {{$data['company']->companyname}} locations</a></p>
+@if(isset($data['state']))
+<p><a href= "{{route('company.show',$company->id)}}" >See all {{$company->companyname}} locations</a></p>
 @endif
-@if($data['company']->parent_id)
-	<p><a href="{{route('company.show',$data['company']->parent_id)}}">See parent company</a></p>
+@if($company->parent_id)
+	<p><a href="{{route('company.show',$company->parent_id)}}">See parent company</a></p>
 @endif
 @include('maps.partials._form')
 <nav>
@@ -51,7 +51,7 @@ Locations
 		aria-selected="false">
 		<strong>Account Actions</strong>
 	</a>
-	@if($data['parent'] or $data['related'])
+	@if(! $company->isLeaf() )
 		<a class="nav-item nav-link"
 			id="nav-related-tab"
 			data-toggle="tab"
@@ -81,24 +81,24 @@ Locations
 		id="nav-profile"
 		role="tabpanel"
 		aria-labelledby="nav-profile-tab">
-		@if (isset($data['company']->industryVertical->filter))
-			<p>{{$data['company']->industryVertical->filter}} Vertical</p>
+		@if (isset($company->industryVertical->filter))
+			<p>{{$company->industryVertical->filter}} Vertical</p>
 		@endif
 		<h4>ServiceLines:</h4>
 		<ul>
-			@foreach($data['company']->serviceline as $serviceline)
+			@foreach($company->serviceline as $serviceline)
 				<li>{{$serviceline->ServiceLine}} </li>
 			@endforeach
 		</ul>
-		<p><strong>Customer ID:</strong> {{$data['company']->customer_id}}</p>
+		<p><strong>Customer ID:</strong> {{$company->customer_id}}</p>
 
 		
 
-		@if(isset($data['company']->managedBy->firstname))
+		@if(isset($company->managedBy->firstname))
 		<p>Account managed by 
-			<a href="{{route('person.show',$data['company']->managedBy->id)}}" 
-				title="See all accounts managed by {{$data['company']->managedBy->fullName()}}">
-				{{$data['company']->managedBy->fullName()}}
+			<a href="{{route('person.show',$company->managedBy->id)}}" 
+				title="See all accounts managed by {{$company->managedBy->fullName()}}">
+				{{$company->managedBy->fullName()}}
 			</a>
 		</p>
 		@endif

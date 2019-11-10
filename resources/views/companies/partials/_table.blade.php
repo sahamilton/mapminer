@@ -16,7 +16,7 @@
     </thead>
     <tbody>
 
-   @foreach($data['company']->locations as $location)
+   @foreach($company->locations as $location)
 
 
     <tr> 
@@ -31,8 +31,8 @@
 	<td>{{$location->city}}</td>
 	<td>
 
-		<a href= "{{route('company.state', ['companyId'=>$data['company']->id,'state'=>$location->state])}}"
-		title="See all {{$location->state}} locations for {{$data['company']->companyname}}">
+		<a href= "{{route('company.state', ['companyId'=>$company->id,'state'=>$location->state])}}"
+		title="See all {{$location->state}} locations for {{$company->companyname}}">
 		{{$location->state}}</a>
 	</td>
 	<td>{{$location->zip}}</td>
@@ -43,7 +43,7 @@
 			Not Specified
 		@elseif (array_key_exists($location->segment,$data['segments']))
 			@if(isset($data['segment']) && $data['segment']=='All')
-				<a href="{{route('company.segment',[$data['company']->id,$location->segment])}}">{{$data['segments'][$location->segment]}}</a>
+				<a href="{{route('company.segment',[$company->id,$location->segment])}}">{{$data['segments'][$location->segment]}}</a>
 			@endif
 		@endif
 	</td>
