@@ -6,11 +6,7 @@
 <p>
     @if($location->company)
       <i>A location of <a href="{{ route('company.show', $location->company->id) }}">{{$location->company->companyname}}</a></a></i>
-      @if($location->company->salesnotes)
-        <p><a href="{{route('salesnotes.company',$location->company->id)}}" title="Read notes on selling to {{$location->company->companyname}}">
-    <i class="fas fa-search" aria-hidden="true"></i>  
-Read 'How to Sell to {{$location->company ->companyname}}'</a></p>
-      @endif
+     
     @endif
 </p>
 
@@ -129,6 +125,19 @@ Read 'How to Sell to {{$location->company ->companyname}}'</a></p>
   </a>
   @endif
 
+  @if($location->company->salesnotes)
+        <a class="nav-item nav-link"  
+        data-toggle="tab" 
+        href="#salesnotes"
+        id="salesnotes-tab"
+        role="tab"
+        aria-controls="salesnotes"
+        aria-selected="false">
+
+    <strong> How to Sell</strong>
+  </a>
+  @endif
+
 
 </div>
 </nav>
@@ -193,6 +202,10 @@ Read 'How to Sell to {{$location->company ->companyname}}'</a></p>
     </div>
     <div id="note" class="tab-pane fade">
      @include('notes.partials._table')
+    </div>
+    <div id="salesnotes" class="tab-pane fade">
+      @php $data = $location->company->salesnotes; @endphp
+     @include('addresses.partials._shownote')
     </div>
 
   </div>
