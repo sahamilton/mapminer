@@ -49,7 +49,7 @@ Locations
 		role="tab"
 		aria-controls="nav-contact"
 		aria-selected="false">
-		<strong>Account Actions</strong>
+		<strong>Sales Notes</strong>
 	</a>
 	@if(! $company->isLeaf() )
 		<a class="nav-item nav-link"
