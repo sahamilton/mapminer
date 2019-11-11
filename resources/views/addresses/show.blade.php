@@ -134,7 +134,7 @@
         aria-controls="salesnotes"
         aria-selected="false">
 
-    <strong> How to Sell</strong>
+    <strong> Sales Notes</strong>
   </a>
   @endif
 
