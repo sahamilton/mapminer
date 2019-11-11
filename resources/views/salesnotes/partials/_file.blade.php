@@ -8,8 +8,8 @@
     <p> 
         <a 
             href ="{{asset('/documents/howtowork/'.$company_name.'.pdf')}}"
-            title="View How To Sell to ". $company->companyname." Notes">
-                View How To Sell to {{$company->companyname}}" Notes
+            title="View Sales Notes for ". $company->companyname." Notes">
+                View SAles Notes for {{$company->companyname}}" Notes
         </a>
     </p>
 @endif
