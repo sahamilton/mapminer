@@ -176,8 +176,8 @@
     <strong> Ratings ({{number_format($location->currentRating(),1)}})</strong>
   </a>
   @endif
-
-  @if($location->company->salesnotes)
+ 
+  @if($location->company && $location->company->salesnotes)
         <a class="nav-item nav-link"  
         data-toggle="tab" 
         href="#salesnotes"
@@ -256,8 +256,10 @@
      @include('notes.partials._table')
     </div>
     <div id="salesnotes" class="tab-pane fade">
+      @if ($location->company && $location->company->salesnotes)
       @php $data = $location->company->salesnotes; @endphp
      @include('addresses.partials._shownote')
+     @endif
     </div>
 
   </div>
