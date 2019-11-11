@@ -4,7 +4,7 @@
 {{-- Page content --}}
 @section('content')
 <div class="container">
-    <h2>How to sell to {{$company->companyname}}</h2>
+    <h2>Sales Notes for {{$company->companyname}}</h2>
 @if(auth()->user()->hasRole('admin'))
 <div class="float-right">
     <a href="{{route('salesnotes.edit', $company->id)}}" class="btn btn-info" value="Create / Edit" >Create / Edit </a>
