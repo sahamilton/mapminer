@@ -41,7 +41,7 @@
 
 		@if (! isset($location->segment) or $location->segment == '') 
 			Not Specified
-		@elseif (array_key_exists($location->segment,$data['segments']))
+		@elseif (isset($data['segent']) && array_key_exists($location->segment,$data['segments']))
 			@if(isset($data['segment']) && $data['segment']=='All')
 				<a href="{{route('company.segment',[$company->id,$location->segment])}}">{{$data['segments'][$location->segment]}}</a>
 			@endif
