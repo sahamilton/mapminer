@@ -17,7 +17,7 @@
 
 		<a href="{{route('salesnotes.company',$location->company->id)}}" 
 		title="Read notes on selling to {{$location->company->companyname}}"> 
-		Read 'How to Sell to {{$location->company->companyname}}' </a>
+		Read 'Sales Notes for {{$location->company->companyname}}' </a>
 		<fieldset style="border:solid 1px grey;width:90%;padding:5px">
 			<p>
 

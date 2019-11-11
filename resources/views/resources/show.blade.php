@@ -3,14 +3,14 @@
 
 <h1>Sales Resources</h1>
 <?php $companies = array();     ?>
-<h4>How to Sell documents based on your watch list</h4>
+<h4>Sales Notes documents based on your watch list</h4>
 @foreach ($watch as $location)
   
     @if($location->watching->company_id && ! in_array($location->watching->company_id, $companies))
             
                 <?php $companies[] = $location->watching->company->id;;?>
                 <p><a href = "{{route('salesnotes.company',$location->watching->company_id) }}">
-                Read "How to Sell to {{$location->watching->company->companyname}}"</a></p>
+                Read "Sales Notes for  {{$location->watching->company->companyname}}"</a></p>
             
     @endif
     

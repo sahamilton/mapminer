@@ -3,7 +3,7 @@
 {{-- Page content --}}
 @section('content')
 <div class="page-header">
-    <h3> Create New How To Field </h3>
+    <h3> Create New Sales Notes Field </h3>
         
 
         <div class="float-right">
