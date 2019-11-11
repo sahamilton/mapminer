@@ -182,8 +182,9 @@ class SalesActivityManagementController extends BaseController
      */
     public function edit(Salesactivity $activity)
     {
-       
+        
         $activity = $activity->load('salesprocess', 'vertical', 'campaignBranches', 'campaignparticipants');
+
         $verticals = $this->vertical->industrysegments();
     
         $process = $this->process->pluck('step', 'id');

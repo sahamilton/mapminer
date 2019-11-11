@@ -11,12 +11,12 @@
 <ul>
 
 @foreach ($groups as $tab) 
-	@if(!isset($n)) 
-		<?php $group = $tab;
-	$n=TRUE;?>	
-	@endif
-	<li>
-   		<a href="#{{str_replace(" ","_", $tab['group'])}}">{{$tab['group']}}</a>
+  @if(!isset($n)) 
+    <?php $group = $tab;
+  $n=TRUE;?>  
+  @endif
+  <li>
+      <a href="#{{str_replace(" ","_", $tab['group'])}}">{{$tab['group']}}</a>
    </li>
 @endforeach
 
