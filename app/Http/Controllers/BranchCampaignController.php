@@ -65,6 +65,7 @@ class BranchCampaignController extends Controller
             ->whereIn('id', $branch_ids)
             ->summaryCampaignStats($campaign)
             ->get();
+      
         $servicelines = $campaign->getServicelines();
         $team = $this->campaign->getSalesTeamFromManager($campaign->manager_id, $servicelines);
         //$locations = $this->_getLocationsForMyBranches($campaign, $myBranches);
