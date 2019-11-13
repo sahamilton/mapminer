@@ -31,7 +31,8 @@
         <tbody>
 
             @foreach ($branches as $branch)
-            @if($branch->offered_leads_count > 0)
+       
+           
             <tr>
                 <td>
                     <a 
@@ -41,8 +42,10 @@
                 </td>
                 <td>{{$branch->branchname}}</td>
                 <td>
+                     
                     {{$branch->offered_leads_count}}
                     @php $totals['offered'] = isset($totals['offered']) ? $totals['offered'] + $branch->offered_leads_count : $branch->offered_leads_count  @endphp
+                    
                 </td>
                 <td>
                     {{$branch->leads_count}}
@@ -78,7 +81,7 @@
                     @php $totals['openvalue'] = isset($totals['openvalue']) ? $totals['openvalue'] + $branch->openvalue : $branch->openvalue  @endphp
                 </td>
             </tr>
-            @endif
+           
             @endforeach
         </tbody>
         <tfoot>
