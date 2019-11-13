@@ -31,6 +31,7 @@ class LocationPostImport extends Model
         $matched = $data['matched']->pluck('duns')->toArray();
         
         $data['add'] = $this->whereNotIn('duns', $matched)->get();
+        
         return $data;
     }
     /**
