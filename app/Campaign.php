@@ -110,7 +110,7 @@ class Campaign extends Model
 
     public function getSalesTeamFromManager($manager_id, $serviceline)
     {
-        return Person::whereId([$manager_id])->firstOrFail()->descendantsAndSelf()
+        $team = Person::whereId([$manager_id])->firstOrFail()->descendantsAndSelf()
             ->whereHas(
                 'userdetails.roles', function ($q) {
                         $q->whereIn('roles.id', ['3','6','7']);
@@ -126,9 +126,9 @@ class Campaign extends Model
                 }
                 ]
             )
-            ->orderBy('lastname')
-            ->orderBY('firstname')
+            
             ->get();
+            return $team->sortBy('lastname');
     }
     /**
      * [getCampaignServiceLines description]
