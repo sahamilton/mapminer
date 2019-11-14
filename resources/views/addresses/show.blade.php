@@ -59,7 +59,7 @@
       aria-selected="true">
     <strong> Details</strong>
   </a>
-@if($location->opportunities->count()>0)
+@if(isset($owned))
 <a class="nav-item nav-link"  
         data-toggle="tab" 
         href="#opportunities"
@@ -198,7 +198,7 @@
     <div id="details" class="tab-pane show active">
      @include('addresses.partials._tabdetails')
     </div>
-    @if($location->opportunities->count() > 0)
+    @if(isset($owned))
     <div id="opportunities" class="tab-pane fade">
 
         @php $data['opportunities'] = $location->opportunities; 

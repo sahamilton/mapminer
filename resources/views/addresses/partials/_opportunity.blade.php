@@ -1,6 +1,5 @@
 
-@if($location->assignedToBranch->count()>0  
-&& array_intersect( array_keys($myBranches),$location->assignedToBranch->pluck('id')->toArray()))
+@if(isset($owned))
 
        <button class="btn btn-success" 
       
