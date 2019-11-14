@@ -7,7 +7,7 @@
 		<th>State</th>
 		<th>ZIP</th>
 		<th>Phone</th>
-		<th>Segment</th>
+
 		<th>Recent Business</th>
 
    		@if(auth()->user()->hasRole('admin'))
@@ -37,10 +37,7 @@
 	</td>
 	<td>{{$location->zip}}</td>
 	<td>{{$location->phone}}</td>
-	<td>
-			Not Specified
-		
-	</td>
+
 	<td>{{$data['orders'][$location->id]}}</td>
 	
 	@if(auth()->user()->hasRole('admin'))
