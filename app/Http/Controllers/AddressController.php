@@ -113,6 +113,7 @@ class AddressController extends Controller
         } else {
             $owned = false;
         }
+        
         $fields = Howtofield::where('active', 1)->orderBy('sequence')->get();
  
         return response()->view('addresses.show', compact('location', 'branches', 'rankingstatuses', 'people', 'myBranches', 'ranked', 'notes', 'owned', 'fields'));

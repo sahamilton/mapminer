@@ -14,16 +14,16 @@
         <form name="addOpportunity" method="post" action="{{route('opportunity.store')}}" >
         @csrf
         @include('opportunities.partials._opportunityform')
-        
-        @if($location->assignedToBranch && count(array_intersect( $location->assignedToBranch->pluck('id')->toArray(),array_keys($myBranches)))==1)
-        @php
-            
-            $branches = $location->assignedToBranch->keyBy('id');
-            $branch_id = array_intersect( $location->assignedToBranch->pluck('id')->toArray(),array_keys($myBranches));
-            
-            $assignedBranch = $branches->get(reset($branch_id));
-           
-        @endphp
+    
+        @if($location->assignedToBranch && count(array_intersect( $location->assignedToBranch->pluck('id')->toArray(),$myBranches))==1)
+          @php
+              
+              $branches = $location->assignedToBranch->keyBy('id');
+              $branch_id = array_intersect( $location->assignedToBranch->pluck('id')->toArray(),$myBranches);
+              
+              $assignedBranch = $branches->get(reset($branch_id));
+             
+          @endphp
         
           <input type="submit" class="btn btn-success" 
           value="add to {{$assignedBranch->branchname}} branch opportunity" />
@@ -33,9 +33,9 @@
         @else
           <select name="branch_id" required >
 
-            @foreach($myBranches as $branch_id=>$branch)
-            @if(in_array($branch_id,$location->assignedToBranch->pluck('id')->toArray()))
-              <option value="{{$branch_id}}">{{$branch}}</option>
+            @foreach($myBranches as $branch)
+            @if(in_array($branch,$location->assignedToBranch->pluck('id')->toArray()))
+              <option value="{{$branch}}">{{$branch}}</option>
             @endif
             @endforeach
           </select>
