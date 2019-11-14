@@ -57,10 +57,17 @@ class Campaign extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
      */
     public function getEventOptions()
     {
-        return [
-            'url' => route('campaigns.show', $this->id),
-            //etc
-        ];
+        
+        if ($this->status=='launched') {
+            return [
+                    'url' => route('campaigns.show', $this->id),
+                    'color'=>'#8800cc',
+                ];
+        } else {
+            return ['url' => route('campaigns.show', $this->id),
+                'color'=>'#cc0088',
+            ];
+        }
     }
     /**
      * Get the end time
