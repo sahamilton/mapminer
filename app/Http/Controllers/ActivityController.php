@@ -76,6 +76,12 @@ class ActivityController extends Controller
         );
        
     }
+
+    public function show(Activity $activity)
+    {
+        $activity->load('branch', 'user.person', 'relatesToAddress', 'type');
+        return response()->view('activities.show', compact('activity'));
+    }
     /**
      * [branchUpcomingActivities description]
      * 

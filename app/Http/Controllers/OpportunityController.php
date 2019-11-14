@@ -345,7 +345,7 @@ class OpportunityController extends Controller
     public function addToBranchLeads(Address $address, Request $request)
     {
  
-
+    
         $test = $this->addressbranch->where('address_id', '=', $address->id)
             ->where('branch_id', '=', request('branch_id'))->get();
         if ($test->count()>0) {
