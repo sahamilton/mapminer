@@ -70,8 +70,8 @@ class CampaignController extends Controller
             ->with('author', 'manager', 'companies', 'vertical')
             ->withCount('branches')
             ->get();
-
-        return response()->view('campaigns.index', compact('campaigns'));
+        $calendar = \Calendar::addEvents($campaigns);
+        return response()->view('campaigns.index', compact('campaigns', 'calendar'));
     }
 
     

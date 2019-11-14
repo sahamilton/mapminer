@@ -4,12 +4,73 @@ namespace App;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
-class Campaign extends Model
+class Campaign extends Model implements \MaddHatter\LaravelFullcalendar\IdentifiableEvent
 {
     public $fillable = ['title', 'description', 'datefrom', 'dateto', 'created_by', 'manager_id', 'status'];
     
     public $dates =['datefrom', 'dateto'];
-    
+    // Methods for Calendar
+    // 
+    /**
+     * [getId description]
+     * 
+     * @return [type] [description]
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Get the event's title
+     *
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    /**
+     * Is it an all day event?
+     *
+     * @return bool
+     */
+    public function isAllDay()
+    {
+        return true;
+    }
+
+    /**
+     * Get the start time
+     *
+     * @return DateTime
+     */
+    public function getStart()
+    {
+        return $this->datefrom;
+    }
+    /**
+     * [getEventOptions description]
+     * 
+     * @return [type] [description]
+     */
+    public function getEventOptions()
+    {
+        return [
+            'url' => route('campaigns.show', $this->id),
+            //etc
+        ];
+    }
+    /**
+     * Get the end time
+     *
+     * @return DateTime
+     */
+    public function getEnd()
+    {
+        return $this->dateto;
+    }
     /**
      * [author description]
      * 
