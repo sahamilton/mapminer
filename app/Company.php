@@ -212,7 +212,7 @@ class Company extends NodeModel
      * 
      * @return [type]       [description]
      */
-    public function limitLocations()
+    public function limitLocations(Array $data)
     {
         if ($this->locations->count() > $this->limit) {
             $locations = Address::where('company_id', '=', $this->id)
