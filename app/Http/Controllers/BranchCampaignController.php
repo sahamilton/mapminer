@@ -35,26 +35,21 @@ class BranchCampaignController extends Controller
      */
     public function index()
     {
-        
-
-        //$this->myBranches = $this->branch->getBranches();
-        /**  
-        Testing code [description] 
-        */
-        //$person = $this->person->findOrFail(auth()->user()->person->id);
-
-        /**
-         * End test
-         */
         $myBranches = $this->branch->whereIn('id', array_keys($this->person->myBranches()))->get();
 
-        $campaign = $this->campaign->current($myBranches->pluck('id')->toArray())->get();
+        $campaigns = $this->campaign->current($myBranches->pluck('id')->toArray())->get();
 
        
-        if (! $campaign->count()) {
+        if (! $campaigns->count()) {
             return redirect()->back()->withMessage('there are no current sales campaigns for your branches');
         }
-        $campaign = $campaign->first();
+        if (session('campaign')) {
+            $campaign = $this->campaign->findOrFail(session('campaign'));
+        } else {
+            $campaign = $campaigns->first();
+            session(['campaign'=>$campaigns->first()->id]);
+        }
+        
        
         if ($myBranches->count() == 1) {
             return $this->show($campaign, $myBranches->first());
@@ -69,11 +64,24 @@ class BranchCampaignController extends Controller
         $servicelines = $campaign->getServicelines();
         $team = $this->campaign->getSalesTeamFromManager($campaign->manager_id, $servicelines);
         //$locations = $this->_getLocationsForMyBranches($campaign, $myBranches);
-        return response()->view('campaigns.summary', compact('campaign', 'branches', 'team'));
+        return response()->view('campaigns.summary', compact('campaign', 'branches', 'campaigns', 'team'));
 
 
     }
+    /**
+     * [change description]
+     * 
+     * @param Request $request [description]
+     * @param Branch  $branch  [description]
+     * 
+     * @return [type]           [description]
+     */
+    public function change(Request $request)
+    {
+        session(['campaign'=>request('campaign_id')]);
 
+        return $this->index();
+    }
     /**
      * [show description]
      * 

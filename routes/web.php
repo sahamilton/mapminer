@@ -231,7 +231,8 @@ Route::group(
         Route::resource('serviceline', 'ServicelinesController', ['only' => ['index', 'show']]);
         
         //     Branch Sales Campaigns
-        //     
+        //
+        Route::post('branchcampaigns/change', ['as'=>'branchcampaign.change', 'uses'=>'BranchCampaignController@change']);     
         Route::get('branchcampaigns/{campaign}/{branch}', ['as'=>'branchcampaign.show', 'uses'=>'BranchCampaignController@show']);
         Route::resource('branchcampaigns', 'BranchCampaignController');
         //Route::resource('salesactivity', 'SalesActivityController', ['only' => ['show']]);

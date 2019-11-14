@@ -253,7 +253,14 @@ class CampaignController extends Controller
         return response()->view('campaigns.selectReport', compact('campaigns', 'campaign', 'team'));
     }
     
-
+    /**
+     * [export description]
+     * 
+     * @param Request  $request  [description]
+     * @param Campaign $campaign [description]
+     * 
+     * @return [type]             [description]
+     */
     public function export(Request $request, Campaign $campaign)
     {
         

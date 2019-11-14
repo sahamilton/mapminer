@@ -10,7 +10,7 @@
         
             @include('campaigns.partials._teamselector')
         
-
+            @include('campaigns.partials._campaignselector')
     <table id="sorttable"
         name="branchsummary"
         class="table table-striped"
