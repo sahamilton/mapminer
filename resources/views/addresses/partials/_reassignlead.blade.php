@@ -25,8 +25,8 @@
               multiple  
               name="branch[]" 
               id="branch">
-                @foreach ($myBranches as $key=>$value)
-                  <option  value="{{$key}}">{{$value}}</option>
+                @foreach ($myBranches as $branch)
+                  <option  value="{{$branch}}">{{$branch}}</option>
                 @endforeach
             </select>
           </div>
