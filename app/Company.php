@@ -224,7 +224,7 @@ class Company extends NodeModel
 
             $data['limited']=$this->locations->count();
         } else {
-            return false;
+            $data['limited'] = null;
         }
         
         $data['distance'] = 200;
