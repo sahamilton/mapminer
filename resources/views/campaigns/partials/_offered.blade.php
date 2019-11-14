@@ -10,7 +10,7 @@
     </thead>
     <tbody>
         @foreach ($branch->offeredLeads as $lead)
-            @if($loop->iteration > 6)
+            @if($loop->iteration < 6)
                 <tr>
                     <td>
                         <a href="{{route('address.show', $lead->id)}}">
