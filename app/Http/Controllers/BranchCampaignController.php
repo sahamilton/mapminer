@@ -111,8 +111,14 @@ class BranchCampaignController extends Controller
         $branch = $this->branch
             ->campaignDetail($campaign)
             ->findOrFail($branch->id);
-   
-        $views = ['offered', 'untouchedLeads', 'leads', 'activities', 'openActivities', 'opportunities','opportunitiesClosingThisWeek', 'staleOpportunities'];
+        
+        $views = [
+            'offered'=>"Sales Initiative Leads", 
+            'untouchedLeads'=>"Untouched Sales Initiatives Leads", 
+            'leads'=>"Campaign Leads", 
+            'activities'=>"Activities", 
+            'opportunitiesClosingThisWeek'=>"Opportunities closing this week", 
+        ];
        
         return response()->view('campaigns.branchplanner', compact('campaign', 'campaigns', 'branch', 'views'));
 

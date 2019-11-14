@@ -1183,8 +1183,8 @@ class Branch extends Model implements HasPresenter
                     ->whereBetween(
                         'activity_date', [$this->period['from'],$this->period['to']]
                     )
-                    ->with('relatesToAddress')
-                    ->where('completed', 1);
+                    ->with('relatesToAddress');
+                    
             },
             'openActivities'=>function ($query) {
                 $query->whereIn('address_id', $this->location_ids)
