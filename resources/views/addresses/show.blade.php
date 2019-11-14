@@ -113,6 +113,7 @@
 
     <strong>Contacts</strong>
   </a>
+  @if(isset($owned))
   <a class="nav-item nav-link" 
       data-toggle="tab" 
       href="#activities"
@@ -122,7 +123,7 @@
       aria-selected="false">
         <strong>Activities</strong>
   </a>
-
+  @endif
   <a class="nav-item nav-link" 
       data-toggle="tab" 
       href="#team"

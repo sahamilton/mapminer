@@ -17,15 +17,16 @@
      action="{{route('branch.lead.add',$location->id)}}" >
         @csrf
         @if(count($myBranches)==1)
-          <input type="submit" class="btn btn-success" value="add to {{array_values($myBranches)[0]}} branch leads" />
+          <input type="submit" class="btn btn-success" 
+          value="add to {{array_values($myBranches)[0]}} branch leads" />
           <input type="hidden" 
           name="branch_id" 
           value="{{array_values($myBranches)[0]}}" >
         @else
           <select name="branch_id" required >
             @if(count($myBranches)>0)
-              @foreach($myBranches as $branch_id=>$branch)
-                <option value="{{$branch_id}}">{{$branch}}</option>
+              @foreach($myBranches as $branch)
+                <option value="{{$branch}}">{{$branch}}</option>
 
               @endforeach
               @else
