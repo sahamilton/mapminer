@@ -39,7 +39,7 @@
 
             {{$statuses[$opportunity->closed]}}
           
-             @if(isset($location) && $opportunity->closed!=1 && array_intersect(array_keys($myBranches),$location->assignedToBranch->pluck('id')->toArray()))
+             @if(isset($owned))
            
             <button class="btn btn-danger" 
                     data-href="{{route('opportunity.close',$opportunity->id)}}"
