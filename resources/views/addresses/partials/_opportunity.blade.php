@@ -12,11 +12,15 @@
    
 @elseif($location->assignedToBranch->count()==0)
 <!-- this is incorrect  --- need to limit it to the address_branch list --->
-     <form name="addBranchLead" method="post" action="{{route('branch.lead.add',$location->id)}}" >
+     <form name="addBranchLead" 
+     method="post" 
+     action="{{route('branch.lead.add',$location->id)}}" >
         @csrf
         @if(count($myBranches)==1)
           <input type="submit" class="btn btn-success" value="add to {{array_values($myBranches)[0]}} branch leads" />
-          <input type="hidden" name="branch_id" value="{{array_keys($myBranches)[0]}}" >
+          <input type="hidden" 
+          name="branch_id" 
+          value="{{array_values($myBranches)[0]}}" >
         @else
           <select name="branch_id" required >
             @if(count($myBranches)>0)
