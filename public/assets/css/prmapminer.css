@@ -111,6 +111,21 @@ body {
 
 }
 
+    .btn-campaign {
+      border:solid 1px #E41B23;
+      background-color:#004E96 !important;
+      color:white;
+
+
+    }
+    .btn-campaign:hover {
+      border:solid 1px #004E96;
+      background-color: #E41B23 !important;
+      color:white;
+
+
+    }
+
 [id^=sorttable] thead {
   cursor: pointer;
   background-color:#E77C22;
