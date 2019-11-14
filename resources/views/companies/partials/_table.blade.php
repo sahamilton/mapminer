@@ -38,14 +38,8 @@
 	<td>{{$location->zip}}</td>
 	<td>{{$location->phone}}</td>
 	<td>
-
-		@if (! isset($location->segment) or $location->segment == '') 
 			Not Specified
-		@elseif (array_key_exists($location->segment,$data['segments']))
-			@if(isset($data['segment']) && $data['segment']=='All')
-				<a href="{{route('company.segment',[$company->id,$location->segment])}}">{{$data['segments'][$location->segment]}}</a>
-			@endif
-		@endif
+		
 	</td>
 	<td>{{$data['orders'][$location->id]}}</td>
 	
