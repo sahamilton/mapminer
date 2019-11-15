@@ -47,9 +47,14 @@
                             </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                     
-              <a class="dropdown-item" href="{{{ route('dashboard.index') }}}">
-              <i class="fas fa-tachometer-alt"></i> My Dashboard</a>
-              
+              <a class="dropdown-item" 
+                href="{{{ route('dashboard.index') }}}">
+                <i class="fas fa-tachometer-alt"></i> 
+                My Dashboard
+              </a>
+              <a class="dropdown-item" 
+                  href="{{{ route('branchcampaigns.index') }}}">
+                  <i class="fas fa-tachometer-alt"></i> My Campaigns</a> 
               <a class="dropdown-item" href="{{{ route('training.index') }}}">
               <i class="fas fa-graduation-cap" aria-hidden="true"></i>
               Mapminer Training</a>
@@ -70,9 +75,7 @@
                 <a class="dropdown-item" href="{{route('salesorg.index')}}">
                 <i class="fas fa-sitemap" aria-hidden="true"> </i>
                   Sales Organization</a>
-                  <a class="dropdown-item" 
-                  href="{{{ route('branchcampaigns.index') }}}">
-                  <i class="fas fa-tachometer-alt"></i> My Campaigns</a> 
+                  
                   
                   
                   
