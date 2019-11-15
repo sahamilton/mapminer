@@ -632,7 +632,7 @@ Route::group(
         //Route::post('reports/{report}/run', ['as'=>'reports.run', 'uses'=>'ReportsController@run']);
 
         Route::post('reports/{report}/send', ['as'=>'reports.send', 'uses'=>'ReportsController@send']);
-
+        Route::get('reports/review', ['as'=>'reports.review', 'uses'=>'ReportsController@review']);
         Route::post('reports/{report}/addrecipient', ['as'=>'reports.addrecipient', 'uses'=>'ReportsController@addRecipient']);
         Route::post('reports/{report}/removerecipient', ['as'=>'reports.removerecipient', 'uses'=>'ReportsController@removeRecipient']);
 
@@ -712,14 +712,15 @@ Route::group(
             'testjob', function () {
                 $companies = App\Company::whereIn('id', [532])->get();
                 $period['from'] = \Carbon\Carbon::now()->subWeek()->startOfWeek()->startOfDay();
-                $period['to'] = \Carbon\Carbon::now()->subWeek()->endOfWeek()->endOfDay();;
-                App\Jobs\AccountActivities::dispatch($companies, $period);
+                $period['to'] = \Carbon\Carbon::now()->subWeek()->endOfWeek()->endOfDay();
+
+                //App\Jobs\AccountActivities::dispatch($companies, $period);
                 //App\Jobs\ActivityOpportunity::dispatch($period);
                 //$opportunity = App\Opportunity::has('branch')->first();
                 //App\Jobs\WonOpportunity::dispatch($opportunity);
                 // App\Jobs\Top50WeeklyReport::dispatch();
                 //App\Jobs\BranchLogins::dispatch($period);
-                //App\Jobs\DailyBranch::dispatch($period, $user);
+                App\Jobs\DailyBranch::dispatch($period);
                  //App\Jobs\AccountActivities::dispatch($company, $period);
                 //App\Jobs\BranchOpportunities::dispatch($period);
                  //App\Jobs\RebuildPeople::dispatch();

@@ -56,6 +56,13 @@ class ReportsController extends Controller {
         return response()->view('reports.index', compact('reports', 'managers'));
     }
 
+
+    public function review()
+    {
+        $files = $files = \Storage::allFiles('public/reports');
+        //dd(Carbon::createFromTimestamp(\Storage::lastModified($files[0])));
+        return response()->view('reports.list', compact('files'));
+    }
     /**
      * Show the form for creating a new resource.
      *
