@@ -54,7 +54,7 @@
               </a>
               <a class="dropdown-item" 
                   href="{{{ route('branchcampaigns.index') }}}">
-                  <i class="fas fa-tachometer-alt"></i> My Campaigns</a> 
+                  <i class="fas fa-tachometer-alt"></i> My Sales Initiatives</a> 
               <a class="dropdown-item" href="{{{ route('training.index') }}}">
               <i class="fas fa-graduation-cap" aria-hidden="true"></i>
               Mapminer Training</a>

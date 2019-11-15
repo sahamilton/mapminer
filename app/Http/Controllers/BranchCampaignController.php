@@ -115,8 +115,8 @@ class BranchCampaignController extends Controller
         $views = [
             'offered'=>"Sales Initiative Leads", 
             'untouchedLeads'=>"Untouched Sales Initiatives Leads", 
-            'leads'=>"Campaign Leads", 
-            'activities'=>"Activities", 
+            'leads'=>"Working Sales Initiatives Leads", 
+            'activities'=>"Sales Initiatives Activities", 
             'opportunitiesClosingThisWeek'=>"Opportunities closing this week", 
         ];
        
