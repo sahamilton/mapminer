@@ -51,8 +51,8 @@ class CampaignTrackingController extends Controller
         $branches = $this->branch->whereIn('id', $branch_ids)->summaryCampaignStats($campaign)->get();
         $servicelines = $campaign->getServicelines();
         $team = $this->campaign->getSalesTeamFromManager($campaign->manager_id, $servicelines);
-
-        return response()->view('campaigns.summary', compact('campaign', 'branches', 'team'));
+        $campaigns = $this->campaign->current()->get();
+        return response()->view('campaigns.summary', compact('campaign', 'branches', 'team', 'campaigns'));
     }
 
 }
