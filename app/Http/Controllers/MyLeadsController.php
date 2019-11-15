@@ -190,7 +190,7 @@ class MyLeadsController extends BaseController
         
         $lead = $this->lead->create($data['lead']);
         
-        $lead->assignedToBranch()->attach($data['branch']);
+        $lead->assignedToBranch()->attach($data['branch'], ['status_id'=>2]);
        
         
         if (isset($data['contact'])) {
