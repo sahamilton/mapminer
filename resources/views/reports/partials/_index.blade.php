@@ -4,6 +4,7 @@
     <div class="float-right">
         <a href="{{route('reports.create')}}" class="btn btn-info">Add Report</a>
     </div>
+    <p><a href="{{route('reports.review')}}">Review stored reports</a></p>
     @endcan
 <table id ='responsive8' class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
