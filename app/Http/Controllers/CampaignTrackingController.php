@@ -9,6 +9,8 @@ use App\Address;
 use App\Branch;
 use App\Campaign;
 use App\Opportunity;
+use Excel;
+use App\Exports\CampaignSummaryExport;
 class CampaignTrackingController extends Controller
 {
     public $activity;
@@ -45,14 +47,32 @@ class CampaignTrackingController extends Controller
     {
         
         $campaign->load('companies', 'branches');
-        
-        $branch_ids = $campaign->branches->pluck('id')->toArray();
-
-        $branches = $this->branch->whereIn('id', $branch_ids)->summaryCampaignStats($campaign)->get();
-        $servicelines = $campaign->getServicelines();
-        $team = $this->campaign->getSalesTeamFromManager($campaign->manager_id, $servicelines);
+        $branches = $this->_getBranchesInCampaign($campaign);
+        $team = $this->_getCampaignBranchTeam($campaign);
         $campaigns = $this->campaign->current()->get();
         return response()->view('campaigns.summary', compact('campaign', 'branches', 'team', 'campaigns'));
+    }
+
+
+    public function export(Campaign $campaign)
+    {
+        $campaign->load('companies', 'branches');
+        $branches = $this->_getBranchesInCampaign($campaign);
+       
+        return Excel::download(new CampaignSummaryExport($campaign, $branches), $campaign->title.time().'Export.csv');
+
+    }
+
+    private function _getBranchesInCampaign(Campaign $campaign)
+    {
+        $branch_ids = $campaign->branches->pluck('id')->toArray();
+        return $this->branch->whereIn('id', $branch_ids)->summaryCampaignStats($campaign)->get();
+    }
+
+    private function _getCampaignBranchTeam(Campaign $campaign)
+    {
+        $servicelines = $campaign->getServicelines();
+        return $this->campaign->getSalesTeamFromManager($campaign->manager_id, $servicelines);
     }
 
 }
