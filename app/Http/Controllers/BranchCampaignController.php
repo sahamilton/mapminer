@@ -35,6 +35,7 @@ class BranchCampaignController extends Controller
      */
     public function index()
     {
+        
         $myBranches = $this->branch->whereIn('id', array_keys($this->person->myBranches()))->get();
 
         $campaigns = $this->campaign->current($myBranches->pluck('id')->toArray())->get();
@@ -64,6 +65,7 @@ class BranchCampaignController extends Controller
         $servicelines = $campaign->getServicelines();
         $team = $this->campaign->getSalesTeamFromManager($campaign->manager_id, $servicelines);
         //$locations = $this->_getLocationsForMyBranches($campaign, $myBranches);
+     
         return response()->view('campaigns.summary', compact('campaign', 'branches', 'campaigns', 'team'));
 
 
@@ -100,7 +102,12 @@ class BranchCampaignController extends Controller
             return redirect()->back()->withError('That is not one of your branches');
         }
 
-        $campaigns = $this->campaign->current([$branch->id])->get();// else return not valid
+        $campaigns = $this->campaign->whereHas(
+            'branches', function ($q) use ($myBranches) {
+                $q->whereIn('branch_id', $myBranches);
+            }
+        )
+        ->current([$branch->id])->get();// else return not valid
       
         $campaign->load('companies', 'branches');
         

@@ -11,7 +11,6 @@
     <div class="pl-10  @if(! $loop->first) collapse @endif " 
         id="{{$view}}">
         @include('campaigns.partials._'.$key)
-
-        {{$view}}
+            {{$view}}
     </div>
 @endforeach

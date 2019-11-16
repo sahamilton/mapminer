@@ -3,7 +3,7 @@
 <div class="container">
     <h2>{{$branch->branchname}} Branch Sales Initiatives from Campaign</h2>
     <h4>{{$campaign->title}}</h4>
-
+    @include('campaigns.partials._campaignselector')
     @include('campaigns.partials._branchdetails')
 
 </div>

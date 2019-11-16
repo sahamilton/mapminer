@@ -1,7 +1,7 @@
 @extends('site.layouts.default')
 @section('content')
 
-@php $statuses = [1=>'offered',2=>'owned']; @endphp
+@php $statuses = [1=>'Offered to',2=>'Owned by']; @endphp
 @include('companies.partials._searchbar')
 <h2>{{$location->businessname}}</h2>
 <p>
@@ -17,6 +17,7 @@
 {{$location->createdBy ? "Created by " . $location->createdBy->person->fullname() : ''}}</p>
 @if($location->assignedToBranch)
 @php $branch = $location->assignedToBranch->first() @endphp
+
 @endif
 @include('addresses.partials._leadstatus')
 

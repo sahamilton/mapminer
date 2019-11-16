@@ -1,6 +1,7 @@
 <table id="sorttable{{$loop->index}}"
     class="table table-striped"
     >
+     
     <thead>
         <th>Business</th>
         <th>Address</th>
