@@ -1,8 +1,6 @@
 @extends('site.layouts.maps')
 @section('content')
-@if(! $news->isEmpty())
-@include('news.newsmodal')
-@endif
+@include('partials._newsflash')
 <h2>Use the Search Options</h2>
 @include('companies.partials._searchbar')
 <div id="message" style="color:#F00">{{\Session::get('message')}}</div>
@@ -22,6 +20,5 @@
 
 
 @include('partials._maps')
-@include('partials._newsscript')
-@include('partials._scripts')
+
 @endsection

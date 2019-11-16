@@ -1,5 +1,6 @@
 @extends('site.layouts.default')
 @section('content')
+
 @php $statuses = [1=>'offered',2=>'owned']; @endphp
 @include('companies.partials._searchbar')
 <h2>{{$location->businessname}}</h2>

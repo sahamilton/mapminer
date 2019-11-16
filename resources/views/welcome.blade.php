@@ -18,10 +18,7 @@
         </div>
     </div>
 @else
- @php $newstand = new \App\News;
-    $news= $newstand->currentNews();
-    @endphp
-@include('news.newsmodal')
+ @include('partials._newsflash')
     <div class="jumbotron" style="margin-top:30px">
         <div class="container" style="position:relative;text-align:center;min-height: 500px">
             <h4>Welcome, {{auth()->user()->person()->first()->firstname}} to the PeopleReady&reg; Mapminer!!</h4>
@@ -40,5 +37,5 @@
 
 @endif
 
-@include('partials._newsscript')
+
 @endsection

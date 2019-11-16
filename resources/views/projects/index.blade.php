@@ -18,6 +18,6 @@
 
 
 @include('partials._maps')
-@include('partials._newsscript')
+
 
 @endsection
