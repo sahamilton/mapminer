@@ -1,6 +1,9 @@
 @extends('site.layouts.default')
 @section('content')
-
+ @php $newstand = new \App\News;
+    $news= $newstand->currentNews();
+    @endphp
+@include('news.newsmodal')
 <div class="container">
   <h2>{{$data['team']['me']->fullName}}'s  Dashboard</h2>
   <p><a href="{{route('manager.dashboard', $data['team']['me'])}}"><i class="fas fa-sync"></i> Refresh</a></p>
@@ -60,4 +63,5 @@
 </div>
 
 @include('partials._scripts')
+@include('partials._newsscript')
 @endsection
