@@ -1,6 +1,10 @@
 @extends('site.layouts.calendar')
 @section('content')
+@php $newstand = new \App\News;
+    $news= $newstand->currentNews();
+@endphp
 
+@include('news.newsmodal')
 <div class="container" style="margin-bottom:100px">
 
 <h2>{{$branch->branchname}} Dashboard</h2>
@@ -80,9 +84,6 @@
 </div>
 </div>
 @include('partials._scripts')
- @php $newstand = new \App\News;
-    $news= $newstand->currentNews();
-    @endphp
-@include('news.newsmodal')
+
 @include('partials._newsscript')
 @endsection
