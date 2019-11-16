@@ -87,18 +87,21 @@ class Campaign extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
     {
         return $this->belongsToMany(Person::class);
     }
-
+    /**
+     * [setTeam description]
+     */
     public function setTeam()
     {
        
         
     }
 
-    public function documents()
-    {
-        return $this->hasMany(CampaignDocuments::class);
-    }
-
+    
+    /**
+     * [getLocations description]
+     * 
+     * @return [type] [description]
+     */
     public function getLocations()
     {
         
@@ -111,14 +114,26 @@ class Campaign extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
         ->pluck('id')->toArray();
        
     }
-
+    /**
+     * 
+     * 
+     * @param  [type] $query [description]
+     * @return [type]        [description]
+     */
     public function scopeActive($query)
     {
         return $query->where('status', 'launched')
             ->where('datefrom', '<=', now())
             ->where('dateto', '>=', now());
     }
-
+    /**
+     * [getSalesTeamFromManager description]
+     * 
+     * @param [type] $manager_id  [description]
+     * @param [type] $serviceline [description]
+     * 
+     * @return [type]              [description]
+     */
     public function getSalesTeamFromManager($manager_id, $serviceline)
     {
         return Person::whereId([$manager_id])->firstOrFail()->descendantsAndSelf()
@@ -159,6 +174,11 @@ class Campaign extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
     {
         return $this->belongsToMany(Company::class);
     }
+    /**
+     * [manager description]
+     * 
+     * @return [type] [description]
+     */
     public function manager()
     {
         return $this->belongsTo(Person::class, 'manager_id', 'id');
@@ -172,7 +192,11 @@ class Campaign extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
     {
         return $this->belongsToMany(Branch::class);
     }
-
+    /**
+     * [vertical description]
+     * 
+     * @return [type] [description]
+     */
     public function vertical()
     {
         return $this->belongsToMany(SearchFilter::class, 'campaign_searchfilter', 'campaign_id', 'searchfilter_id');
@@ -182,7 +206,14 @@ class Campaign extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
     {
         return $this->belongsToMany(Serviceline::class, 'campaign_serviceline', 'campaign_id', 'serviceline_id');
     }
-
+    /**
+     * [scopeCurrent description]
+     * 
+     * @param [type]     $query    [description]
+     * @param Array|null $branches [description]
+     * 
+     * @return [type]               [description]
+     */
     public function scopeCurrent($query, Array $branches =null)
     {
         
@@ -198,69 +229,19 @@ class Campaign extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
         }
         return $query;
     }
+    
     /**
-     * [team description]
+     * [documents description]
      * 
      * @return [type] [description]
      */
-    public function team()
-    {
-        return $this->belongsToMany(Person::class);
-    }
-
-    public function setTeam()
-    {
-       
-        
-    }
-
     public function documents()
     {
         return $this->hasMany(CampaignDocuments::class);
     }
 
-    public function getLocations()
-    {
-        
-        return Address::wherehas(
-            'assignedToBranch', function ($q) {
-                $q->whereIn('branches.id', $this->branches()->pluck('id')->toArray());
-            }
-        )
-        ->whereIn('company_id', $this->companies()->pluck('id')->toArray())
-        ->pluck('id')->toArray();
-       
-    }
-
-    public function scopeActive($query)
-    {
-        return $query->where('status', 'launched')
-            ->where('datefrom', '<=', now())
-            ->where('dateto', '>=', now());
-    }
-
-    public function getSalesTeamFromManager($manager_id, $serviceline)
-    {
-        $team = Person::whereId([$manager_id])->firstOrFail()->descendantsAndSelf()
-            ->whereHas(
-                'userdetails.roles', function ($q) {
-                        $q->whereIn('roles.id', ['3','6','7']);
-                }
-            )
-            ->with(
-                ['branchesServiced'=>function ($q) use ($serviceline) {
-                    $q->whereHas(
-                        'servicelines', function ($q1) use ($serviceline) {
-                            $q1->whereIn('id', $serviceline);
-                        }
-                    );
-                }
-                ]
-            )
-            
-            ->get();
-            return $team->sortBy('lastname');
-    }
+    
+    
     /**
      * [getCampaignServiceLines description]
      * 
