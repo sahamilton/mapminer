@@ -98,15 +98,17 @@ class MgrDashboardController extends DashboardController
         // get associated branches
     
         $this->myBranches = array_keys($this->_getBranches());
-        // redirect if only one or no branches
-        $this->_checkBranches();
-            
-        $data = $this->_getDashBoardData();
-        $reports = \App\Report::publicReports()->get();
-        $managers = $this->manager->load('directReports')->directReports;
         
-        return response()->view('opportunities.mgrindex', compact('data', 'reports', 'managers'));
+        if (count($this->myBranches) < 2) {
+                    return $this->_checkBranches();
 
+        } else {   
+            $data = $this->_getDashBoardData();
+            $reports = \App\Report::publicReports()->get();
+            $managers = $this->manager->load('directReports')->directReports;
+            
+            return response()->view('opportunities.mgrindex', compact('data', 'reports', 'managers'));
+        }
     }
     /**
      * [_checkBranches description]
@@ -115,14 +117,16 @@ class MgrDashboardController extends DashboardController
      */
     private function _checkBranches()
     {
+        
         if (count($this->myBranches)==1) {
-            $branch = array_keys($this->myBranches);
-            return redirect()->route('dashboard.show', $branch[0]);
-        }
-        if (count($this->myBranches)==0) {
+            
+            return redirect()->route('branchdashboard.show', $this->myBranches[0]);
+        
+        } elseif (count($this->myBranches)==0) {
                 return redirect()->route('user.show', auth()->user()->id)
                     ->withWarning("You are not assigned to any branches. You can assign yourself here or contact Sales Ops");
         }
+        
     }
     /**
      * [setPeriod description]
