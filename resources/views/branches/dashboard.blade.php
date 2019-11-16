@@ -80,4 +80,9 @@
 </div>
 </div>
 @include('partials._scripts')
+ @php $newstand = new \App\News;
+    $news= $newstand->currentNews();
+    @endphp
+@include('news.newsmodal')
+@include('partials._newsscript')
 @endsection
