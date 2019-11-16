@@ -62,8 +62,9 @@ class Kernel extends ConsoleKernel
                 ->weekly()
                 ->mondays()
                 ->at('23:15');
-
-            $schedule->job(new BranchCampaignJob())
+                
+            $campaign = App\Campaign::active()->first();
+            $schedule->job(new BranchCampaignJob($campaign))
                 ->weekly()
                 ->sundays()
                 ->at('15:25');
