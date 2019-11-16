@@ -43,9 +43,10 @@
 
         @include('addresses.partials._reassignlead')
         @else
-         Assigned to: 
+          
           @foreach ($location->assignedToBranch as $branch)
-          {{$branch->branchname}}
+          <li><strong>{{$statuses[$branch->pivot->status_id]}}</strong>
+          {{$branch->branchname}}</li>
           @endforeach
         @endif
  
@@ -53,9 +54,9 @@
      </div>
 
 @elseif ($location->assignedToBranch->count())
-  Owned By:
+  
   @foreach ($location->assignedToBranch as $branch)
-    <li>
+    <li><strong>Owned By:</strong>
       <a href="{{route('branches.show', $branch->id)}}">
         {{$branch->branchname}}
       </a>
