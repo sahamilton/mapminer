@@ -5,7 +5,7 @@ use Nicolaslopezj\Searchable\SearchableTrait;
 
 class Company extends NodeModel
 {
-    use Filters,SearchableTrait;
+    use Filters,SearchableTrait, Geocode;
     // Add your validation rules here
     public static $rules = [
          'companyname' => 'required',
@@ -54,6 +54,15 @@ class Company extends NodeModel
     {
                                 
             return $this->hasMany(Address::class);
+    }
+
+    public function assigned()
+    {
+        return $this->hasMany(Address::class)->whereHas('assignedToBranch');
+    }
+    public function unassigned()
+    {
+        return $this->hasMany(Address::class)->whereDoesntHave('assignedToBranch');
     }
     /**
      * [stateLocations description]
@@ -212,19 +221,19 @@ class Company extends NodeModel
      * 
      * @return [type]       [description]
      */
-    public function limitLocations(Array $data)
+    public function limitLocations($location)
     {
         if ($this->locations->count() > $this->limit) {
             $locations = Address::where('company_id', '=', $this->id)
             ->with('orders')
-            ->nearby($data['mylocation'], '200', $this->limit)
+            ->nearby($location, '200', $this->limit)
             ->get();
     
             $this->setRelation('locations', $locations);
 
-            $data['limited']=$this->locations->count();
+            return $this->locations->count();
         } else {
-            $data['limited'] = null;
+            return false;
         }
         
         $data['distance'] = 200;
@@ -374,6 +383,28 @@ class Company extends NodeModel
                 }
                 ]
             );
+    }
+
+    public function scopeUnassigned($query)
+    {
+        return $query->with(
+            [
+                'locations as unassigned'=>function ($q) {
+                    $q->doesntHave('assignedToBranch');
+                }
+            ]
+        );  
+    }
+
+    public function scopeAssigned($query)
+    {
+        return $query->with(
+            [
+                'locations as assigned'=>function ($q) {
+                    $q->has('assignedToBranch');
+                }
+            ]
+        );  
     }
 
 }

@@ -18,21 +18,6 @@ class="btn btn-small btn-info iframe">
         @foreach ($howtofields->where('depth', 1) as $field)
         
         <li class="dd-item" data-id="{{$field->id}}">
-            <div class="dd-handle">
-                @if(! $field->active)
-               <del class="text-danger">{{$field->fieldname}}</del>
-                @else
-               <span class="text-success">
-                {{$field->fieldname}} 
-            </span>
-                @endif
-                
-                
-            </div>
-           <a href="{{route('howtofields.edit', $field->id)}}"
-            title="Edit {{$field->fieldname}}">
-                    <i class="far fa-edit"></i>
-                </a>
                 <ol class="dd-list">
                     @foreach ($field->immediateDescendants()->get() as $subField)
                     

@@ -7,7 +7,7 @@
                 <th>Market Manager</th>
                 <th>Business Manager</th>
 
-                <th>Distance</th>
+                <th>Distance (mi)</th>
 
             </thead>
             <tbody>
@@ -36,7 +36,7 @@
                         @endforeach
                     </td>
                     
-                    <td>{{number_format($branch->distance,1)}} miles</td>
+                    <td>{{number_format($branch->distance,1)}}</td>
                 </tr>  
 
                 @endforeach

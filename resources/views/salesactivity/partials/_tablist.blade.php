@@ -5,8 +5,7 @@
         <th>Title</th>
         <th>From</th>
         <th>To</th>
-        <th>Verticals</th>
-        <th>Sales Process</th>
+        <th>Manager</th>
         <td>Documents</td>
         <th>Actions</th>
         
@@ -21,28 +20,17 @@
        <td>{{$activity->dateto->format('M j, Y') }}</td>
         <td>
         <ul>
-        <?php $filter =array();?>
-        @foreach ($activity->vertical as $vertical)
-            @if(! in_array($vertical->filter,$filter))
-            <li>{{$vertical->filter}} </li>
-            <?php $filter[]=$vertical->filter;?>
-            @endif
-        @endforeach
+        
         </ul>
         </td>
          <td>
-        <?php $filter =array();?>
+    
         <ul>
-        @foreach ($activity->salesprocess as $process)
-            @if(! in_array($process->step,$filter))
-            <li>{{$process->step}} </li>
-            <?php $filter[]=$process->step;?>
-            @endif
-        @endforeach
+        
         </ul>
         </td>
         <td>
-            {{$activity->relatedDocuments()->count()}}
+            
         </td>
 
          <td class="col-md-2">

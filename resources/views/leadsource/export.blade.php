@@ -14,17 +14,22 @@
 <td>{{ $lead->businessname }}</td>
 <td>{{ $lead->fullAddress() }}</td>
 @if($lead->assignedToBranch->count()>0)
-<td>
-	
-	{{$lead->assignedToBranch->first()->branchname}}
-</td>
-<td>@if($lead->assignedToBranch->first()->pivot->status_id)
-	{{$statuses[$lead->assignedToBranch->first()->pivot->status_id]}}
-	@endif
-</td>
-<td>{{$lead->assignedToBranch->first()->pivot->rating}}</td>
+	<td>{{$lead->assignedToBranch->first()->branchname}}</td>
+	<td>@if($lead->assignedToBranch->first()->pivot->status_id)
+			{{$statuses[$lead->assignedToBranch->first()->pivot->status_id]}}
+		@endif
+	</td>
+	<td>{{$lead->assignedToBranch->first()->pivot->rating}}</td>
 @else
-<td></td><td></td><td></td>
+	<td>
+		@foreach ($lead->assignedToPerson as $person)
+			{{$person->fullName()}}
+			@if(! $loop->last) / @endif
+		@endforeach
+	</td>
+	<td>{{$statuses[$lead->assignedToPerson->first()->pivot->status_id]}}</td>
+	<td>{{$lead->assignedToPerson->first()->pivot->rating}}</td>	
+	
 @endif
 @foreach ($lead->relatedNotes as $note)
 @if($loop->first)

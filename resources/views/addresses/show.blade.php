@@ -12,39 +12,13 @@
 
 @include('addresses.partials._ranking')
 
-@include('addresses.partials._opportunity')
-
 <p>Location Source: {{$location->leadsource ? $location->leadsource->source : 'unknown'}}
 {{$location->createdBy ? "Created by " . $location->createdBy->person->fullname() : ''}}</p>
-@if($location->assignedToBranch->count()>0)
-<strong>Assigned to:</strong>
-
-  @foreach ($location->assignedToBranch as $branch)
-
-    @if(in_array($branch->id,array_keys($myBranches)))
-      @php $owned=true; @endphp
-    @endif
-  <li><a href="{{route('branches.show',$branch->id)}}">{{$branch->branchname}}</a> - @if(isset($statuses[$branch->pivot->status_id])) 
-    {{$statuses[$branch->pivot->status_id]}}
-  @endif
-  
-</li>
-
-  @endforeach
-@if(isset($owned))
- <!--need to check if the address is in my teams leads or sales ops -->
-
-  <div class="row">
-    <div class="col-2-md">
-      <a class="btn btn-warning"
-           data-toggle="modal" 
-           data-target="#reassign" 
-           
-           href="#">Reassign</a>
-</div>
-</div>
+@if($location->assignedToBranch)
+@php $branch = $location->assignedToBranch->first() @endphp
 @endif
-@endif
+@include('addresses.partials._leadstatus')
+
 @include('maps.partials._form')
 
 
@@ -76,33 +50,6 @@
 
 
 
-
-
-  @if($location->addressable_type == 'project')
- <a class="nav-item nav-link"  
-        data-toggle="tab" 
-        href="#projectdetails"
-        id="project-tab"
-        role="tab"
-        aria-controls="projectdetails"
-        aria-selected="false">
-
-    <strong>Project Details</strong>
-
-  @endif
-  @if($location->addressable_type == 'weblead')
-    <a class="nav-item nav-link"  
-          data-toggle="tab" 
-          href="#weblead"
-          id="weblead-tab"
-          role="tab"
-          aria-controls="weblead"
-          aria-selected="false">
-
-      <strong>Lead Details</strong>
-    </a>
-  @endif
-
     <a class="nav-item nav-link"  
         data-toggle="tab" 
         href="#contacts"
@@ -113,16 +60,16 @@
 
     <strong>Contacts</strong>
   </a>
-  @if(isset($owned))
-  <a class="nav-item nav-link" 
-      data-toggle="tab" 
-      href="#activities"
-      id="activities-tab"
-      role="tab"
-      aria-controls="activities"
-      aria-selected="false">
-        <strong>Activities</strong>
-  </a>
+  @if($owned && $owned ==2)
+    <a class="nav-item nav-link" 
+        data-toggle="tab" 
+        href="#activities"
+        id="activities-tab"
+        role="tab"
+        aria-controls="activities"
+        aria-selected="false">
+          <strong>Activities</strong>
+    </a>
   @endif
   <a class="nav-item nav-link" 
       data-toggle="tab" 

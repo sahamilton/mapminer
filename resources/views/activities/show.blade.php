@@ -2,7 +2,7 @@
 @section('content')
 <div class="container">
 <h4>Activity at {{$activity->relatesToAddress->businessname}}</h4>
-<p><a href="{{route('address.show', $activity->relatesTOAddress->id)}}">Return to address</a></p>
+<p><a href="{{route('address.show', $activity->relatesToAddress->id)}}">Return to address</a></p>
 <p><strong>Recorded by:</strong>
     @if($activity->user)
     {{$activity->user->person->fullName()}}

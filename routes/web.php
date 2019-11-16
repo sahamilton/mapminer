@@ -230,8 +230,11 @@ Route::group(
         Route::get('serviceline/{id}/{type?}', ['as'=>'serviceline.accounts', 'uses'=>'ServicelinesController@show']);
         Route::resource('serviceline', 'ServicelinesController', ['only' => ['index', 'show']]);
         
-        //     Sales Campaigns
-        Route::get('campaigns', ['as'=>'salescampaigns', 'uses'=>'SalesActivityController@mycampaigns']);
+        //     Branch Sales Campaigns
+        Route::get('branchcampaigns/{campaign}/{branch}', ['as'=>'branchcampaign.show', 'uses'=>'BranchCampaignController@show']);
+        Route::post('branchcampaigns/change', ['as'=>'branchcampaign.change', 'uses'=>'BranchCampaignController@change']);     
+        
+        Route::resource('branchcampaigns', 'BranchCampaignController');
         //Route::resource('salesactivity', 'SalesActivityController', ['only' => ['show']]);
         
         //   Sales organization
@@ -574,6 +577,11 @@ Route::group(
         // Route::get('branch/{branch}/purge', ['as'=>'branch.purge','uses'=>'BranchesController@delete']);
         
         //   Campaigns (email)
+        Route::get('campaigns/{campaign}/track', ['as'=>'campaigns.track', 'uses'=>'CampaignTrackingController@show']);
+        Route::get('campaigns/{campaign}/launch', ['as'=>'campaigns.launch', 'uses'=>'CampaignController@launch']);
+        Route::get('campaigns/reports/{campaign?}', ['as'=>'campaigns.select', 'uses'=>'CampaignController@selectReport']);
+        Route::get('campaigns/{campaign}/export', ['as'=>'campaigns.export', 'uses'=>'CampaignTrackingController@export']);
+        Route::post('campaigns/{campaign}/report', ['as'=>'campaigns.report', 'uses'=>'CampaignController@export']);
         Route::resource('campaigns', 'CampaignController');
 
         Route::resource('campaigndocuments', 'CampaignDocumentsController');

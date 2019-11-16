@@ -71,7 +71,14 @@ trait Geocode
           
           return $data;
     }
+    public function scopeGetWithinMBR($query, $box)
+    {
 
+        return $this->where('lat', '<', $box['maxLat'])
+            ->where('lat', '>', $box['minLat'])
+            ->where('lng', '<', $box['maxLng'])
+            ->where('lng', '>', $box['minLng']);
+    }
     /**
      * ScopeNearby [description]
      * 
@@ -318,11 +325,10 @@ trait Geocode
      */
     public function getBoundingBox($collection)
     {
-
-        $data['maxLat'] = $collection->max('lat')+0.05;
-        $data['minLat'] = $collection->min('lat')-0.05;
-        $data['maxLng'] = $collection->max('lng')-0.05;
-        $data['minLng'] = $collection->min('lng')+0.05;
+        $data['maxLat'] = $collection->max('lat') + 0.05;
+        $data['minLat'] = $collection->min('lat') - 0.05;
+        $data['maxLng'] = $collection->max('lng') - 0.05;
+        $data['minLng'] = $collection->min('lng') + 0.05;
        
         return $data;
     }
@@ -337,7 +343,7 @@ trait Geocode
     public function scopeWithinMBR($query,$box)
     {
         
-        return $query->whereRaw("MBRContains( GeomFromText('LINESTRING(".$box['maxLng']." " .$box['minLat'] . ", ". $box['minLng']." " . $box['maxLat'].")' ),position)");
+        return $query->whereRaw("MBRContains( GeomFromText('LINESTRING(".$box['maxLng']." " .$box['minLat'] . ", ". $box['minLng']." " . $box['maxLat'].")' ), position)");
     }
     /**
      * GeoCodeAddress [description]

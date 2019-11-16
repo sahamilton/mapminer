@@ -1,48 +1,35 @@
-@extends('site.layouts.default')
+@extends('admin.layouts.default')
 @section('content')
 <div class="container">
-	<h2>Communication Campaigns</h2>
-	<table class="table" id="sorttable">
-		<thead>
-			<th>Created</th>
-			<th>Author</th>
-			<th>Type</th>
-			<th>Participants</th>
-			<th>Respondents</th>
-			<th>Is Test</th>
-			<th></th>
-		</thead>
-		<tbody>
-			@foreach ($campaigns as $campaign)
-			
-			<tr>
-				<td><a href="{{route('campaigns.show',$campaign->id)}}"
-					title="See details of this campaign">{{$campaign->created_at->format('Y-m-d')}}</a></td>
-				<td>@if($campaign->author) {{$campaign->author->fullName()}} @endif</td>
-				<td><a href="{{route($campaign->route)}}">{{ucwords($campaign->type)}}</a></td>
-				<td>{{$campaign->participants->count()}}</td>
-				<td>{{$campaign->respondents->count()}}</td>
-				<td>
-					@if($campaign->test == 'null')
-						Yes
-					@else
-						No
-					@endif
-				</td>
-				<td>
-					<a 
-					 	data-href="{{route('campaigns.destroy',$campaign->id)}}" 
-						data-toggle="modal" 
-						data-target="#confirm-delete" 
-						data-title = "campaign"
-						title ="Delete this campaign" 
-						href="#">
+	<h2>Branch Sales Campaigns</h2>
 
-						<i class="far fa-trash-alt text-danger" aria-hidden="true"> </i> </a>
-			</tr>
-			@endforeach
-		</tbody>
-	</table>
+
+	<div class="float-right">
+   		<a href="{{route('campaigns.create')}}" class="btn btn-info">Create New Campaign</a>
+   </div>
+<ul class="nav nav-tabs">
+        <li class="nav-item ">
+            <a class="nav-link active"  data-toggle="tab" href="#calendar">Calendar</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#list">List</a>
+        </li>
+
+    </ul>
+    
+    <div class="tab-content">
+        <div id="calendar" class="tab-pane fade show active">
+
+            <div class='col-md-offset-2 col-md-8' style="margin-top:20px">
+                {!! $calendar->calendar() !!}
+                {!! $calendar->script() !!}
+            </div>  
+        </div>
+        <div id="list" class="tab-pane fade  ">      
+        @include('campaigns.partials._list')
+
+        </div>
+    </div>
 
 @include('partials._modal')
 @include ('partials._scripts')

@@ -91,14 +91,39 @@ class Person extends NodeModel implements HasPresenter
             ->orderBy('branchname');
     }
     /**
+     * [scopeManagers description]
+     * 
+     * @param [type] $query [description]
+     * @param [type] $roles [description]
+     * 
+     * @return [type]        [description]
+     */
+    public function scopeManagers($query, $roles=null)
+    {
+        if (! $roles) {
+            $roles = [14,6,7,3];
+        }
+        
+        return $this->wherehas(
+            'userdetails.roles', function ($q) use ($roles) {
+
+                    $q->whereIn('role_id', $roles);
+            }
+        );
+    }
+    /**
      * [managers description]
      * 
-     * @return [type] [description]
+     * @param [type] $roles [description]
+     * 
+     * @return [type]        [description]
      */
-    public function managers()
+    public function managers($roles=null)
     {
-        $roles = [14,6,7,3];
-
+        if (! $roles) {
+            $roles = [14,6,7,3];
+        }
+        
         return $this->wherehas(
             'userdetails.roles', function ($q) use ($roles) {
 
@@ -112,7 +137,7 @@ class Person extends NodeModel implements HasPresenter
      * 
      * @return array list of branches serviced by reports
      */
-    public function getMyBranches()
+    public function getMyBranches(Array $servicelines=null)
     {
         
         if ($this->userdetails->hasRole('sales_operations') && $this->has('reportsTo')) {
@@ -123,8 +148,15 @@ class Person extends NodeModel implements HasPresenter
         }
         $branches = $branches      
             ->withRoles([9])
-            ->with('branchesServiced')
-            ->get()
+            ->with('branchesServiced');
+        if ($servicelines) {
+            $branches = $branches->whereHas(
+                'serviceline', function ($q) use ($serviceline) {
+                    $q->whereIn('id', $serviceline);
+                }
+            );
+        }
+        $branches = $branches->get()
             ->map(
                 function ($branch) { 
                     return $branch->branchesServiced->pluck('id')->toArray();
@@ -133,7 +165,11 @@ class Person extends NodeModel implements HasPresenter
         return array_unique($branches->flatten()->toArray());
     }
 
-    
+    /**
+     * [branchesManaged description]
+     * 
+     * @return sorted array of all branches servicedS
+     */
     public function branchesManaged()
     {
         $team = $this->descendantsAndSelf()
@@ -151,12 +187,16 @@ class Person extends NodeModel implements HasPresenter
     /**
      * [myBranches description]
      * 
-     * @return [type] [description]
+     * @param Person|null $person       [description]
+     * @param Array|null  $servicelines [description]
+     * 
+     * @return [type]                    [description]
      */
-    public function myBranches(Person $person=null)
+    public function myBranches(Person $person=null, Array $servicelines=null)
     {
         
-        if (! $person && auth()->user()->hasRole('admin')) {
+        if (auth()->user()->hasRole('admin')) {
+            
             return Branch::all()->pluck('branchname', 'id')->toArray();
         } elseif (! $person && auth()->user()->hasRole('sales_operations')) {
           
@@ -167,14 +207,18 @@ class Person extends NodeModel implements HasPresenter
         $myteam = $this->myTeam($person)->has('branchesServiced')->get();
 
         $data=[];
-
-        $teammembers =  $myteam->map(
-            function ($team) {
+        if ($servicelines) {
+            // not used!!
+        } else {
+            $teammembers =  $myteam->map(
+                function ($team) {
            
-                return $team->branchesServiced;
-            }
-        );
-   
+                    return $team->branchesServiced;
+                }
+            );
+        }
+        
+
         foreach ($teammembers as $member) {
        
             foreach ($member->pluck('branchname', 'id') as $id => $branchname) {
@@ -430,7 +474,7 @@ class Person extends NodeModel implements HasPresenter
      */
     public function leads()
     {
-        return $this->belongsToMany(Lead::class, 'lead_person_status', 'person_id', 'related_id')
+        return $this->belongsToMany(Address::class, 'address_person', 'person_id', 'address_id')
             ->withPivot('created_at', 'updated_at', 'status_id', 'rating');
     }
     /**
@@ -810,6 +854,10 @@ class Person extends NodeModel implements HasPresenter
             return $this->address;
         }
     }
+    public function primaryRole()
+    {
+        return $this->userdetails()->roles()->first();
+    }
     /**
      * [scopePrimaryRole description]
      * 
@@ -861,5 +909,10 @@ class Person extends NodeModel implements HasPresenter
         return $this->belongsToMany(Address::class)
             ->withPivot('ranking', 'comments')
             ->withTimeStamps();
+    }
+
+    public function scopeWithPrimaryRole()
+    {
+        return $this->userdetails->roles->first();
     }
 }

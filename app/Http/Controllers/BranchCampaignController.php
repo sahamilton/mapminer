@@ -3,13 +3,16 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Salesactivity;
+use App\Campaign;
 use App\Branch;
+use App\Person;
 
 class BranchCampaignController extends Controller
 {
     public $branch;
     public $campaign;
+    public $person;
+    
     /**
      * [__construct description]
      * 
@@ -18,10 +21,12 @@ class BranchCampaignController extends Controller
      */
     public function __construct(
         Branch $branch, 
-        Salesactivity $campaign
+        Campaign $campaign,
+        Person $person
     ) {
         $this->branch = $branch;
         $this->campaign = $campaign;
+        $this->person = $person;
     }
     /**
      * Display a listing of the resource.
@@ -30,90 +35,119 @@ class BranchCampaignController extends Controller
      */
     public function index()
     {
-        $this->myBranches = $this->_getBranches();
-        $campaign = $this->campaign->currentActivities()->get();
-        if ($campaign->count ==0) {
-            return 'threre are no current sales campaigns';
+        $myBranches = $this->branch->whereIn('id', array_keys($this->person->myBranches()))->get();
+
+        $campaigns = $this->campaign->current($myBranches->pluck('id')->toArray())->get();
+
+       
+        if (! $campaigns->count()) {
+            return redirect()->back()->withMessage('there are no current sales campaigns for your branches');
         }
-        $branchess = $campaign->map(
-            function ($camp) { 
-                return $camp->campaignBranches->pluck('id')->toArray();
-            }
-        );
-        if (count($this->myBranches)>0) {
-            $branch = array_keys($this->myBranches);
-            return redirect()->route('dashboard.show', $branch[0]);
+        if (session('campaign')) {
+            $campaign = $this->campaign->findOrFail(session('campaign'));
         } else {
-            return redirect()->route('user.show', auth()->user()->id)
-                ->withWarning("You are not assigned to any branches. You can assign yourself here or contact Sales Ops");
+            $campaign = $campaigns->first();
+            session(['campaign'=>$campaigns->first()->id]);
+        }
+        
+       
+        if ($myBranches->count() == 1) {
+            return $this->show($campaign, $myBranches->first());
         }
 
+        $branch_ids = $myBranches->pluck('id')->toArray();
+        $branches = $this->branch
+            ->whereIn('id', $branch_ids)
+            ->summaryCampaignStats($campaign)
+            ->get();
+      
+        $servicelines = $campaign->getServicelines();
+        $team = $this->campaign->getSalesTeamFromManager($campaign->manager_id, $servicelines);
+        //$locations = $this->_getLocationsForMyBranches($campaign, $myBranches);
+        return response()->view('campaigns.summary', compact('campaign', 'branches', 'campaigns', 'team'));
+
 
     }
-
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
+     * [change description]
+     * 
+     * @param Request $request [description]
+     * @param Branch  $branch  [description]
+     * 
+     * @return [type]           [description]
      */
-    public function create()
+    public function change(Request $request)
     {
-        //
-    }
+        session(['campaign'=>request('campaign_id')]);
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
+        return $this->index();
     }
+    /**
+     * [show description]
+     * 
+     * @param Campaign $campaign [description]
+     * 
+     * @return [type]             [description]
+     */
+    public function show(Campaign $campaign, Branch $branch = null)
+    {
+        // get my branches
+        
+        $person = $this->person->findOrFail(auth()->user()->person->id);
+        $myBranches = $this->person->myBranches($person);
+        
+        if (! in_array($branch->id, array_keys($myBranches))) {
+            return redirect()->back()->withError('That is not one of your branches');
+        }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
+        $campaigns = $this->campaign->current([$branch->id])->get();// else return not valid
+      
+        $campaign->load('companies', 'branches');
+        
+        if (! in_array($branch->id, $campaign->branches->pluck('id')->toArray())) {
+            return redirect()->back()->withError($branch->branchname . ' is not participating in this campaign.');
+        }
+        
+        $branch = $this->branch
+            ->campaignDetail($campaign)
+            ->findOrFail($branch->id);
+        
+        $views = [
+            'offered'=>"Sales Initiative Leads", 
+            'untouchedLeads'=>"Untouched Sales Initiatives Leads", 
+            'leads'=>"Working Sales Initiatives Leads", 
+            'activities'=>"Sales Initiatives Activities", 
+            'opportunitiesClosingThisWeek'=>"Opportunities closing this week", 
+        ];
+       
+        return response()->view('campaigns.branchplanner', compact('campaign', 'campaigns', 'branch', 'views'));
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        
     }
+    /**
+     * [_getBranchCampaignDetailData description]
+     * 
+     * @param Campaign $campaign [description]
+     * @param Branch   $branch   [description]
+     * 
+     * @return [type]             [description]
+     */
+    private function _getBranchCampaignDetailData(Campaign $campaign, Branch $branch)
+    {
+        
+        return $this->branch
+            
+            ->campaignDetail($campaign)
+            ->findOrFail($branch->id);
+    }
+    private function _getBranchCampaignSummaryData(Campaign $campaign)
+    {
+        $branch_ids = $campaign->branches->pluck('id')->toArray();
+        return $this->branch
+            ->whereIn('id', $branch_ids)
+            ->summaryCampaignStats($campaign)
+            ->get();
+    }
+    
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
 }

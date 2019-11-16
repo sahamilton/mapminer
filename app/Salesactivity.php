@@ -71,7 +71,7 @@ class Salesactivity extends Model implements \MaddHatter\LaravelFullcalendar\Ide
      */
     public function salesprocess()
     {
-        return $this->belongsToMany(SalesProcess::class, 'activity_process_vertical', 'activity_id', 'salesprocess_id')->withPivot('vertical_id');
+        return $this->belongsToMany(SalesProcess::class, 'activity_process_vertical', 'activity_id', 'salesprocess_id')->withPivot('company_id');
     }
     /**
      * [vertical description]
@@ -81,6 +81,15 @@ class Salesactivity extends Model implements \MaddHatter\LaravelFullcalendar\Ide
     public function vertical()
     {
         return $this->belongsToMany(SearchFilter::class, 'activity_process_vertical', 'activity_id', 'vertical_id')->withPivot('salesprocess_id');
+    }
+    /**
+     * [vertical description]
+     * 
+     * @return [type] [description]
+     */
+    public function companies()
+    {
+        return $this->belongsToMany(Company::class, 'activity_process_company', 'activity_id', 'company_id')->withPivot('salesprocess_id');
     }
     /**
      * [relatedDocuments description]

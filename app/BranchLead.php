@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class BranchLead extends Model
 {
-    public $table = 'addresse_branch';
+    public $table = 'address_branch';
 
-    public $fillable = [];
+    public $fillable = ['status_id', 'comments', 'address_id', 'branch_id'];
 
     public function address()
     {
@@ -18,5 +18,10 @@ class BranchLead extends Model
     public function branch()
     {
         return $this->belongsTo(Branch::class);
+    }
+
+    public function activity()
+    {
+        return $this->hasMany(Activity::class, 'address_id', 'address_id');
     }
 }

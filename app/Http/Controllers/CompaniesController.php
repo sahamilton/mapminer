@@ -400,7 +400,7 @@ class CompaniesController extends BaseController
         $data['filters'] = $this->searchfilter->vertical();
         $data['mylocation'] = $this->locations->getMyPosition();
         $data['count'] = $company->locations->count();
-        $data = $company->limitLocations($data);
+        $data['limited'] = $company->limitLocations($data['mylocation']);
 
         $data['segment']='All';
         //$data['segment'] = $this->getSegmentCompanyInfo($company,$segment);

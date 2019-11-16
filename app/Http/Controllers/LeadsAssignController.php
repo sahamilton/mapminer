@@ -12,7 +12,8 @@ use App\Lead;
 use App\Person;
 use App\Role;
 use App\Permission;
-
+use Carbon\Carbon;;
+use App\Jobs\AssignLeadsToPeople;
 use App\Mail\NotifyWebLeadsBranchAssignment;
 use Mail;
 
@@ -31,7 +32,15 @@ class LeadsAssignController extends Controller
     public $leadroles;
     public $distance = 100;
     public $limit = 5;
-    
+    /**
+     * [__construct description]
+     * 
+     * @param LeadSource $leadsource [description]
+     * @param Lead       $lead       [description]
+     * @param Address    $address    [description]
+     * @param Person     $person     [description]
+     * @param Branch     $branch     [description]
+     */
     public function __construct(LeadSource $leadsource, Lead $lead, Address $address, Person $person, Branch $branch)
     {
         $this->leadsource = $leadsource;
@@ -41,7 +50,13 @@ class LeadsAssignController extends Controller
         $this->address = $address;
         $this->leadroles = $this->_setleadRoles();
     }
-
+    /**
+     * [assignLeads description]
+     * 
+     * @param  [type] $leadsource [description]
+     * 
+     * @return [type]             [description]
+     */
     public function assignLeads($leadsource)
     { 
        
@@ -50,14 +65,18 @@ class LeadsAssignController extends Controller
         return response()->view('leads.bulkassign', compact('leadroles', 'leadsource', 'branches'));
     }
      
-    /*
-    
-
-    */
+    /**
+     * [geoAssignLeads description]
+     * 
+     * @param GeoAssignLeadsRequest $request    [description]
+     * @param LeadSource            $leadsource [description]
+     * 
+     * @return [type]                            [description]
+     */
     public function geoAssignLeads(GeoAssignLeadsRequest $request, LeadSource $leadsource)
     {
        
-        if (request('type')== 'specific') {
+        if (request('type') == 'specific') {
 
             $message = $this->_assignToSpecificBranches($request, $leadsource);
         } else {
@@ -82,10 +101,11 @@ class LeadsAssignController extends Controller
                     $message = $assignedCount . ' Leads have been assigned to '. $branchCount . ' branches';
                 } else {
                     $count = $this->_assignLeadsToPeople($leadsource, $box, request('roles'));
-                    $assignedCount = $this->address->where('lead_source_id', '=', $leadsource->id)
+                    $assigned = $this->address->where('lead_source_id', '=', $leadsource->id)
                         ->has('assignedToPerson')
-                        ->get()->count();
-                    $message = $assignedCount . ' Leads have been assigned to '. $count . ' people';
+                        ->get();
+ 
+                    $message = $assigned->count() . ' Leads have been assigned to '. count($count) . ' people';
                 }
             } else {
                 $message ="No leads to assign";
@@ -93,30 +113,55 @@ class LeadsAssignController extends Controller
         }
         return redirect()->route('leadsource.show', $leadsource->id)->withMessage($message);
     }
-
+    /**
+     * [show description]
+     * 
+     * @param Address $address [description]
+     * 
+     * @return [type]           [description]
+     */
     public function show(Address $address)
     {
       
-          $lead = $address->load('contacts', $address->addressable_type);
-          $extrafields = $this->address->getExtraFields('webleads');
+        $lead = $address->load('contacts', $address->addressable_type);
+        $extrafields = $this->address->getExtraFields('webleads');
 
-          // find nearby branches
-          $branches = $this->branch->nearby($address, 25, 5)->get();
-        ;
-       
-            // we should also add serviceline filter?
-          $people = $this->person->nearby($address, 25, 5);
-          
-          $salesrepmarkers =null;
+        // find nearby branches
+        $branches = $this->branch->nearby($address, 25, 5)->get();
     
-          $branchmarkers=$branches->toJson();
-          $address = $address->fullAddress();
+   
+        // we should also add serviceline filter?
+        $people = $this->person->nearby($address, 25, 5);
+      
+        $salesrepmarkers =null;
 
-          $sources = [];
-          return response()->view('leads.showsearch', compact('lead', 'branches', 'people', 'salesrepmarkers', 'branchmarkers', 'extrafields', 'sources', 'address'));
+        $branchmarkers=$branches->toJson();
+        $address = $address->fullAddress();
+
+        $sources = [];
+        return response()->view(
+            'leads.showsearch', compact(
+                'lead', 
+                'branches', 
+                'people', 
+                'salesrepmarkers', 
+                'branchmarkers', 
+                'extrafields', 
+                'sources', 
+                'address'
+            )
+        );
     }
-
-    public function store(Request $request, Address $address) {
+    /**
+     * [store description]
+     * 
+     * @param Request $request [description]
+     * @param Address $address [description]
+     * 
+     * @return [type]           [description]
+     */
+    public function store(Request $request, Address $address) 
+    {
      
         $branches = $this->branch
             ->whereIn('id', request('branch'))
@@ -136,9 +181,16 @@ class LeadsAssignController extends Controller
                 
             }
         }
-        return redirect()->route('address.show', $address->id)->withMessage('Lead has been assigned');
+        return redirect()->route('address.show', $address->id)
+            ->withMessage('Lead has been assigned');
     }
-
+    /**
+     * [singleleadassign description]
+     * 
+     * @param Address $lead [description]
+     * 
+     * @return [type]        [description]
+     */
     public function singleleadassign(Address $lead)
     {
 
@@ -150,7 +202,11 @@ class LeadsAssignController extends Controller
     }
 
 
-
+    /**
+     * [_setleadRoles description]
+     * 
+     * @return [type] [description]
+     */
     private function _setleadRoles()
     {
 
@@ -159,7 +215,13 @@ class LeadsAssignController extends Controller
         return  $roles->roles->pluck('display_name', 'id')->toArray();
     }
 
-
+    /**
+     * [_setLeadAcceptRoles description]
+     * 
+     * @param Request|null $request [description]
+     *
+     * @return [<description>]
+     */
     private function _setLeadAcceptRoles(Request $request = null)
     {
         if ($request && request()->has('roles')) {
@@ -168,12 +230,18 @@ class LeadsAssignController extends Controller
             return $this->_setleadRoles();
         }
     }
-    /*
-    
-    */
-
-    private function _assignToSpecificBranches(Request $request, LeadSource $leadsource)
-    {
+    /**
+     * [_assignToSpecificBranches description]
+     * 
+     * @param Request    $request    [description]
+     * @param LeadSource $leadsource [description]
+     * 
+     * @return [type]                 [description]
+     */
+    private function _assignToSpecificBranches(
+        Request $request, 
+        LeadSource $leadsource
+    ) {
      
         $addresses = $this->address
             ->where('lead_source_id', $leadsource->id)
@@ -190,29 +258,66 @@ class LeadsAssignController extends Controller
 
         return  count($addresses) . " leads assigned to " . count(request('branch')) . ' branches';
     }
+    /**
+     * [_assignLeadsToPeople description]
+     * 
+     * @param LeadSource $leadsource [description]
+     * @param Array      $box        [description]
+     * @param Array      $roles      [description]
+     * 
+     * @return [type]                 [description]
+     */
+    private function _assignLeadsToPeople(
+        LeadSource $leadsource, 
+        Array $box, 
+        Array $roles
+    ) {
+        //dd($leadsource, $box, $roles);
+        //$addresses = $this->_unassignedLeads($leadsource);
+        $count = [];
+        // move this to a queued job
+        $this->address->where('lead_source_id', $leadsource->id)
+            ->doesntHave('assignedToBranch')
+            ->doesntHave('assignedToPerson')
+            ->chunk(
+                200, function ($addresses) use ($roles) {
+                    
+                    AssignLeadsToPeople::dispatch(
+                        $addresses,
+                        $roles,
+                        $this->limit,
+                        $this->distance
+                    );
+                } 
+            );
+        /* foreach ($addresses as $address) {
+            $people = $this->person->withRoles($roles)->nearby($address, $this->distance, $this->limit)->get();
+            
+            foreach ($people as $person) {
 
-    private function _assignLeadsToPeople($leadsource, $box, $roles)
-    {
-
-        $people = $this->person->withRoles($roles)->get();
-       
-        foreach ($people as $person) {
-            $addresses = $this->address->where('lead_source_id', '=', $leadsource->id)
-                ->doesntHave('assignedToBranch')
-                ->doesntHave('assignedToPerson')
-                ->nearby($person, $this->distance, $this->limit)
-                ->pluck('id')
-                ->toArray();
-            foreach ($addresses as $address_id) {
-                $data[] = ['address_id'=>$address_id, 'person_id'=>$person->id, 'status_id'=>1];
+                if (isset($count[$person->id])) {
+                    $count[$person->id]++;
+                } else {
+                    $count[$person->id] = 1;
+                }
+               
+                AddressPerson::insert(['address_id'=>$address->id, 'person_id'=>$person->id, 'status_id'=>2, 'created_at' => Carbon::now()]);
             }
-        }
+            
+            
+        }*/
         
-        AddressPerson::insert($data);
-        return $people->count();
+        return $count;
     }
-  
-    private function _assignBranchesToLeads(LeadSource $leadsource) {
+    /**
+     * [_assignBranchesToLeads description]
+     * 
+     * @param  LeadSource $leadsource [description]
+     * 
+     * @return [type]                 [description]
+     */
+    private function _assignBranchesToLeads(LeadSource $leadsource)
+    {
      
         $addresses = $this->_unassignedLeads($leadsource);
       
@@ -230,42 +335,14 @@ class LeadsAssignController extends Controller
         AddressBranch::insert($data);
         return $addresses->count();              
     }
-               
-    private function _assignLeadsToBranches($leadsource,$box) 
-    {
 
-        $branches = $this->branch->withinMBR($box)->get();
-        // this gets all branches within bounding box
-        foreach ($branches as $branch) {
-            $addresses = $this->address->where('lead_source_id', $leadsource->id)
-                ->doesntHave('assignedToBranch')
-                ->doesntHave('assignedToPerson')
-                ->nearby($branch, $this->distance, $this->limit)
-                ->pluck('id')
-                ->toArray();
-            foreach ($addresses as $address_id) {
-                $data[] = ['address_id'=>$address_id, 'branch_id'=>$branch->id];
-            }
-        }
-        AddressBranch::insert($data);
-        return $branches->count();
-
-        // convert miles to meters
-        /* $distance = $this->distance * 1609;
-
-          $query = "insert into address_branch (branch_id,address_id) 
-                select distinct branches.id as branch_id, addresses.id as address_id 
-                from branches,addresses 
-                left join address_branch
-                on addresses.id = address_branch.address_id
-                where ST_Distance_Sphere(branches.position,addresses.position) < '". $distance."'
-                and lead_source_id = '" . $leadsource->id ."'
-                and address_branch.address_id is null
-                ORDER BY branches.id asc";
-      
-        return \DB::statement($query);*/
-    }
-
+    /**
+     * [_unassignedLeads description]
+     * 
+     * @param LeadSource $leadsource [description]
+     * 
+     * @return [type]                 [description]
+     */
     private function _unassignedLeads(LeadSource $leadsource)
     {
         return $this->address->where('lead_source_id', $leadsource->id)

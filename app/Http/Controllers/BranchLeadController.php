@@ -36,7 +36,7 @@ class BranchLeadController extends Controller
         $this->lead = $lead;
         $this->address = $address;
         $this->branch = $branch;
-        $this->$branchlead = $branchlead;
+        $this->branchlead = $branchlead;
         $this->person = $person;
     }
     /**
@@ -66,7 +66,7 @@ class BranchLeadController extends Controller
      */
     public function create()
     {
-        //
+        dd(request()->all());
     }
 
     /**
@@ -78,7 +78,14 @@ class BranchLeadController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->branchlead->create(
+            [
+                'address_id'=>request('address_id'),
+                'branch_id'=>request('branch_id'),
+                'status_id'=>'2'
+            ]
+        );
+        return redirect()->route('address.show', request('address_id'));
     }
 
     /**
@@ -120,7 +127,9 @@ class BranchLeadController extends Controller
      */
     public function update(Request $request, BranchLead $branchLead)
     {
-        //
+    
+        $branchLead->update(['status_id'=>2]);
+        return redirect()->route('address.show', $branchLead->address_id);
     }
 
     /**
@@ -130,9 +139,12 @@ class BranchLeadController extends Controller
      * 
      * @return [type]                 [description]
      */
-    public function destroy(BranchLead $branchLead)
+    public function destroy(Request $request, BranchLead $branchLead)
     {
-        //
+        
+        $branch = $this->branch->findOrFail($branchLead->branch_id);
+        $branchLead->update(['status_id'=>4, 'comments'=>request('comment')]);
+        return redirect()->route('branchdashboard.show', $branch->id);
     }
     /**
      * [assign description]

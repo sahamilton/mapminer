@@ -6,6 +6,7 @@ use App\LocationPostImport;
 use Illuminate\Http\Request;
 use App\Company;
 use App\Address;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 class LocationPostImportController extends Controller
 {
@@ -35,11 +36,12 @@ class LocationPostImportController extends Controller
      */
     public function index()
     {
-       
+   
         $import = $this->import->first();
-
+        
         // what happens if no company?
         if ($this->company = $this->company->find($import->company_id)) {
+
             $data = $this->import->returnAddressMatchData($this->company);
            
             $this->_addNewLocations($data);
@@ -47,9 +49,11 @@ class LocationPostImportController extends Controller
             $message = 'Imported ' . $data['add']->count(). ' locations. Matched ' . count($data['matched']) . ' existing locations';
             return redirect()->route('company.show', $this->company->id)->withMessage($message);          
         } else {
-            
-            $data = $this->import->dunsMatchAddress();            
+           
+            $data = $this->import->dunsMatchAddress(); 
+                   
             $this->_addNewLocations($data);
+           
             $message = 'Imported ' . $data['add']->count(). ' locations. Matched ' . $data['matched']->count() . ' existing locations';
             return redirect()->route('leadsource.index')->withMessage($message);
             
@@ -111,10 +115,19 @@ class LocationPostImportController extends Controller
     {
         $m = $this->_getIdsFromArray($data['add']);
         $insert = $this->import->whereIn('id', $m)->get();
+
         $insert = $this->_setImportRef($insert);
-        if ($insert->count()>0) {
-            \DB::table('addresses')->insert($insert->toArray());
+       
+        if ($insert->count() > 0) {
+            $n =0;
+            $insert->chunk(
+                1000, function ($subset) {
+                    \DB::table('addresses')->insert($subset->toArray());
+                }
+            );
+            dd($n, 'Finished');
         }
+       
         return $data;
 
     }
@@ -180,18 +193,18 @@ class LocationPostImportController extends Controller
     }
 
     /**
-    * Remove unmatched / new locations from addresses
-    *   
-    * @param array
-    *
-    *
-    */
+     * [_deleteLocations description]
+     * 
+     * @param [type] $data [description]
+     * 
+     * @return [type]       [description]
+     */
     private function _deleteLocations($data)
     {
        
-       $m = $this->_getIdsFromArray($data);
+        $m = $this->_getIdsFromArray($data);
        
-       return  $this->address->whereIn('id',$m)->delete();
+        return  $this->address->whereIn('id', $m)->delete();
     }
     /**
      * [_getIdsFromArray description]
@@ -220,7 +233,7 @@ class LocationPostImportController extends Controller
             function ($item) {
                 $item->import_ref = $item->id;
                 $item->user_id = auth()->user()->id;
-          
+                $item->created_at = Carbon::now();
                 return array_except($item, ['id','address_id','contactphone','email','firstname','lastname','fullname','title']);
             }
         );

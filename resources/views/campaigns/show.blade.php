@@ -1,35 +1,21 @@
 @extends('admin.layouts.default')
 @section('content')
 <div class="container">
-	<h2>Communication Campaign</h2>
+	<h2>Branch Sales Campaign</h2>
 	<p><a href="{{route('campaigns.index')}}">Return to all campaigns</a></p>
-	<h4>{{ucwords($campaign->type)}}</h4>
-	<p><strong>Created By:</strong>{{$campaign->author ? $campaign->author->fullName() :''}}</p>
-	<p><strong>Sent:</strong>{{$campaign->created_at->format('l jS M Y')}}</p>
-	<p><strong>Expires:</strong>{{$campaign->expiration ? $campaign->expiration->format('l jS M Y') .' at ' .$campaign->expiration->format('g:i a') : ''}}</p>
-	<p><strong>Message:</strong>{!!$campaign->message!!}</p>
-
-	<h4>Participants</h4>
-	<table class="table" id="sorttable">
-		<thead>
-			<th>Name</th>
-			<th>Status</th>
-			
-		</thead>
-		<tbody>
-			@foreach ($campaign->participants as $participant)
-			
-			<tr>
-				<td>
-					<a href="{{route('person.details',$participant->id)}}">{{$participant->fullName()}}
-					</a>
-				</td>
-				<td>{{$participant->pivot->activity}}</td>
-			</tr>
-			@endforeach
-		</tbody>
-	</table>
-
+	@if($campaign->status == 'planned')
+	<h4>{{ucwords($campaign->title)}}</h4>
+	<div class="float-right">
+   		<a href="{{route('campaigns.edit', $campaign->id)}}" class="btn btn-info">Edit Campaign</a>
+   </div>
+	
+	<p><a href="{{route('campaigns.launch', $campaign->id)}}" class="btn btn-info">Launch Campaign</a></p>
+	@else
+	<p><strong>Status:</strong>{{$campaign->status}}</p>
+	@endif
+	@include('campaigns.partials._summary')
+	@include('campaigns.partials._documents')
+	@include('campaigns.partials._details')
 
 @include ('partials._scripts')
 @endsection()

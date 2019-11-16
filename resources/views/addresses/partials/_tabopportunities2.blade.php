@@ -19,7 +19,7 @@
     </thead>
       <tbody>
         @foreach ($data['opportunities'] as $opportunity)
-
+         
         <tr>
           <td>
            @if(isset($location) && array_intersect(array_keys($myBranches),$location->assignedToBranch->pluck('id')->toArray()) or auth()->user()->hasRole(['admin', 'sales_operations']))

@@ -8,7 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class AddressPerson extends Model
 {
     public $table = 'address_person';
-    public $fillable = ['person_id','address_id', 'status_id'];
+    public $timestamps = true;
+    public $fillable = ['person_id','address_id', 'status_id','created_at', 'updated_at'];
     /**
      * [orders description]
      * 

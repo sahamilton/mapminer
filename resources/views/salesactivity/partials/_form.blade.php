@@ -76,7 +76,18 @@
 	 </div> 
 
 <!-- / Industry verticals -->
+<legend>Companies</legend>
+    <div class="form-group{{ $errors->has('vertical') ? ' has-error' : '' }}">
+        <label class="col-md-4 control-label" for="title">Companies</label>
+        <div class="input-group input-group-lg ">
+            @include('salesactivity.partials._companies')
+            <span class="help-block{{ $errors->has('vertical') ? ' has-error' : '' }}">
+                <strong>{{$errors->has('companies') ? $errors->first('companies')  : ''}}</strong>
+            </span>
+         </div>
+     </div> 
 <!-- Organization Alignment -->
+@if(isset($salesorgJson))
 <legend>Organization</legend>
 <div class="form-group{{ $errors->has('organization') ? ' has-error' : '' }}">
         <label class="col-md-4 control-label" for="title">Organization</label>
@@ -87,6 +98,7 @@
             </span>
          </div>
      </div> 
+@endif
 <!-- Sales process Steps -->
 <legend>Sales Process Steps</legend>
     <div class="form-group{{ $errors->has('salesprocess') ? ' has-error' : '' }}">

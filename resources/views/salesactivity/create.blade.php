@@ -2,7 +2,7 @@
 @section('content')
 <div class="container">
 <h2>Create Sales Campaign</h2>
-<div class="form-group">
+<div class="form-group col-md-6">
 <form method="post" name="createStep" action="{{route('salesactivity.store')}}">
 {{csrf_field()}}
 

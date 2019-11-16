@@ -334,7 +334,7 @@ class LeadSourceController extends Controller
      */
     public function destroy(LeadSource $leadsource)
     {
-    
+       
         $leadsource->delete();
         return redirect()->route('leadsource.index');
     }

@@ -419,6 +419,7 @@ class MyLeadsController extends BaseController
      */
     private function _reassignActivities($activities, $branches)
     {
+    
         foreach ($branches as $branch) {
             foreach ($activities as $activity) {
                 $activity->update(['branch_id'=> $branch]);
