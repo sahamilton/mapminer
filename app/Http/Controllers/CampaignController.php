@@ -374,8 +374,8 @@ class CampaignController extends Controller
     {
        
         $data = request()->except(['_token']);
-        $data['datefrom'] = Carbon::parse($data['datefrom']);
-        $data['dateto'] = Carbon::parse($data['dateto']);
+        $data['datefrom'] = Carbon::parse($data['datefrom'])->startOfDay();
+        $data['dateto'] = Carbon::parse($data['dateto'])->endOfDay();
         if (request()->has('vertical')) {
             $data['companies'] = $this->_getCompaniesInVertical($request);
         } else {

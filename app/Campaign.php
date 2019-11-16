@@ -123,8 +123,8 @@ class Campaign extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
     public function scopeActive($query)
     {
         return $query->where('status', 'launched')
-            ->where('datefrom', '<=', now())
-            ->where('dateto', '>=', now());
+            ->where('datefrom', '<=', now()->startOfDay())
+            ->where('dateto', '>=', now()->endOfDay());
     }
     /**
      * [getSalesTeamFromManager description]
