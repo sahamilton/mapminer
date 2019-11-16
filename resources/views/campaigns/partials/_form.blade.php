@@ -54,7 +54,7 @@
             required 
             name ='dateto' 
             class="form-control" 
-             value="{{old('datefrom', isset($campaign) ? $campaign->datefrom->format('m/d/Y') : now()->addMonths(3)->format('m/d/Y'))}}" /> 
+             value="{{old('datefrom', isset($campaign) ? $campaign->datefrom->format('m/d/Y') : now()->addWeeks(6)->format('m/d/Y'))}}" /> 
             
         <span class="input-group-addon">
            <i class="far fa-calendar-alt"></i>
