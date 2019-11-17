@@ -31,9 +31,9 @@
     </p>
     
         @if(isset($data))
-       <p> <strong>Total Assignable Locations:</strong>{{$data['locations']['unassigned']->count()}}</p>
+       <p> <strong>Total Assignable Locations:</strong>{{$data['locations']['unassigned']}}</p>
        
-       <p> <strong>Total Previously Assigned Locations:</strong>{{$data['locations']['assigned']->count()}}</p>
+       <p> <strong>Total Previously Assigned Locations:</strong>{{$data['locations']['assigned']}}</p>
     @endif
 
     

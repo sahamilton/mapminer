@@ -139,7 +139,7 @@ class CampaignController extends Controller
            
             $campaign->load('vertical', 'servicelines', 'branches', 'companies.managedBy', 'manager', 'team', 'documents');
             
-            $data = $this->_getCampaignData($campaign);
+            $data = $this->_getCampaignSummaryData($campaign);
             return response()->view('campaigns.show', compact('campaign', 'data'));
         }
        
@@ -336,7 +336,20 @@ class CampaignController extends Controller
             ->orderBY('firstname')
             ->get();
     }*/
-
+    /**
+     * [_getCampaignSummaryData description]
+     * 
+     * @param Campaign $campaign [description]
+     * 
+     * @return [type]             [description]
+     */
+    private function _getCampaignSummaryData(Campaign $campaign)
+    {
+        $data = $this->_getCampaignData($campaign);
+        $data['locations']['unassigned'] = $data['locations']['unassigned']->count();
+        $data['locations']['assigned'] = $data['locations']['assigned']->count();
+        return $data;
+    }
     /**
      * [_getCampaignData description]
      * 
@@ -356,7 +369,7 @@ class CampaignController extends Controller
         // get the branches in campaign that are already servicing the companies locations
         $data['branchesw'] =  $this->_getAssignedLeadsForBranches($campaign, $data['locations']['assigned']);
         // assign the unassigned locations 
-         
+        
         //$data['assignments'] = $this->_assignBranchLeads($data['locations']['unassigned'], $campaign);
         
         // Merge the branches that could have locations with those that do

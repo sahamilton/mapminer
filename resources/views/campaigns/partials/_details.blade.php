@@ -37,8 +37,8 @@ name="branches"
  @endforeach
  <tfoot>
     <td>Totals</td>
-    <td>Unassignable </td>
-    <td class="text-right">{{isset($total) ? $total : 0}}</td>
+    <td>Unassigned </td>
+    <td class="text-right">{{$data['locations']['unassigned']}}</td>
     <td class="text-right">{{isset($totalleads) ? $totalleads : 0}}</td>
 </tfoot>
 </tbody>
