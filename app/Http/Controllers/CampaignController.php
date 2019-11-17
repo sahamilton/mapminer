@@ -138,7 +138,7 @@ class CampaignController extends Controller
 
            
             $campaign->load('vertical', 'servicelines', 'branches', 'companies.managedBy', 'manager', 'team', 'documents');
- 
+            
             $data = $this->_getCampaignData($campaign);
             return response()->view('campaigns.show', compact('campaign', 'data'));
         }
@@ -349,17 +349,19 @@ class CampaignController extends Controller
         
         // get companies in campaign with locations within branch box
         $data['companies'] = $this->_getLocationsOfCompaniesInCampaign($campaign);
+
         // extract the locations into assigned and unassigned
         $data['locations'] = $this->_getAllLocations($data['companies']);
-        
+        $data['branches'] = $this->_getBranchesWithinServiceArea($campaign, $data['locations']['unassigned']);
         // get the branches in campaign that are already servicing the companies locations
         $data['branchesw'] =  $this->_getAssignedLeadsForBranches($campaign, $data['locations']['assigned']);
-        // assign the unassigned locations  
-        $data['assignments'] = $this->_assignBranchLeads($data['locations']['unassigned'], $campaign);
+        // assign the unassigned locations 
+         
+        //$data['assignments'] = $this->_assignBranchLeads($data['locations']['unassigned'], $campaign);
         
         // Merge the branches that could have locations with those that do
         
-        $data['branches'] = $campaign->branches;
+        
     
         return $data;
     }
@@ -495,14 +497,31 @@ class CampaignController extends Controller
     private function _getBranchesWithinServiceArea($campaign, $locations)
     {
         
-       
+  
         $branch_ids = $campaign->branches->pluck('id')->toarray();
+
+
        
         $box = $this->address->getBoundingBox($locations);
      
         return $this->branch->getWithinMBR($box)
             ->find($branch_ids);
-        
+        /*
+        foreach ($branches as $branch) {
+            $branchlocations = $branch
+                ->`($locations, 25)
+                ->get();
+            dd($branch->id, $branchlocations);
+            if ($branch->count()) {
+                $assignments['location'][$location->id][] = $branch->first()->id;
+                $assignments['branch'][$branch->first()->id][] = $location->id;
+            
+            } else {
+                $assignments['unassigned'][] = $location->id;
+            }
+
+        }
+        */
     }
     /**
      * [_getAssignedLeadsForBranches description]
@@ -574,8 +593,23 @@ class CampaignController extends Controller
       
         $assignments = ['unassigned'=>[],'branch'=>[],'location'=>[]];
         
-
-        foreach ($locations as $location ) {
+        $assignments = $locations->chunk(
+            100, function ($location) use ($branch_ids) {
+                $branch = $this->branch->whereIn('id', $branch_ids)
+                    ->nearby($location, 25, 1)
+                    ->get();
+                dd($branch, $branch_ids);
+                if ($branch->count()) {
+                    $assignments['location'][$location->id][] = $branch->first()->id;
+                    $assignments['branch'][$branch->first()->id][] = $location->id;
+                
+                } else {
+                    $assignments['unassigned'][] = $location->id;
+                }
+                return $assignments;
+            }
+        );
+        /* foreach ($locations as $location ) {
             $branch = $this->branch->whereIn('id', $branch_ids)
                 ->nearby($location, 25, 1)
                 ->get();
@@ -587,7 +621,7 @@ class CampaignController extends Controller
                 $assignments['unassigned'][] = $location->id;
             }
             
-        } 
+         } */
         
         $assignments['branches'] = $this->branch->whereIn('id', array_keys($assignments['branch']))->get();
         
