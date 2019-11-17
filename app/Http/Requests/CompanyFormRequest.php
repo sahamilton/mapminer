@@ -25,7 +25,8 @@ class CompanyFormRequest extends FormRequest
     {
         return [
          'companyname' => 'required',
-         'serviceline'=>'required'
+         'serviceline'=>'required',
+         'customer_id'=>'unique:companies,customer_id,' . $this->id,
         ];
 
             //

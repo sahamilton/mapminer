@@ -38,8 +38,7 @@
 	</td>
 	<td>{{$location->zip}}</td>
 	<td>{{$location->phone}}</td>
-
-		@if (! isset($location->segment) or $location->segment == '') 
+	<td>@if (! isset($location->segment) or $location->segment == '') 
 			Not Specified
 		@elseif (isset($data['segent']) && array_key_exists($location->segment,$data['segments']))
 			@if(isset($data['segment']) && $data['segment']=='All')

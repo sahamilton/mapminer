@@ -16,7 +16,7 @@ Locations
 @if($company->parent_id)
 	<p><a href="{{route('company.show',$company->parent_id)}}">See parent company</a></p>
 @endif
-@include('maps.partials._form')
+
 <nav>
 	<div class="nav
 	nav-tabs"
