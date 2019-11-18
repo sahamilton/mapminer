@@ -21,14 +21,8 @@ name="branches"
         
     </td>
      <td class="text-right">
-        @if (isset($data['branchesw'][$branch->id]))
-            {{$data['branchesw'][$branch->id]->count()}}
-            @php
-            $totalleads = isset($totalleads) ? $totalleads + $data['branchesw'][$branch->id]->count() : $data['branchesw'][$branch->id]->count()
-            @endphp
-        @else
-            0
-        @endif
+        @php isset($totalleads) ?  $totalleads = $totalleads + $branch->workedleads : $totalleads = $branch->workedleads @endphp
+       {{$branch->workedleads}}
     </td>
     
     

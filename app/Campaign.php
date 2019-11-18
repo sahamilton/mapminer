@@ -97,10 +97,10 @@ class Campaign extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
         
     }
 
-    public function getUnassignedLocationsOfCampaign()
+    public function getCompanyLocationsOfCampaign()
     {
         $box = $this->getBoundingBox($this->branches);
-       
+        $branches = $this->branches()->pluck('id')->toArray();
         return Company::whereIn('id', $this->companies->pluck('id')->toArray())
             ->with(
                 [
@@ -110,6 +110,13 @@ class Campaign extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
                         ->where('lng', '<', $box['maxLng'])
                         ->where('lng', '>', $box['minLng']);
                     
+                },
+                'assigned'=>function ($q) use ($branches) {
+                    $q->whereHas(
+                        'assignedToBranch', function ($q1) use ($branches) {
+                            $q1->whereIn('branch_id', $branches);
+                        }
+                    )->with('assignedToBranch');
                 }
                 ]
             ) 
