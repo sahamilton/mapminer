@@ -69,10 +69,16 @@
     action = "{{route('branchleads.store')}}"
     >
     @csrf
-    <input type="hidden" name="address_id" value="{{$location->id}}" />
-    @if (count(array_keys($myBranches))==1)
-    <input type="hidden" name="branch_id" value = "{{array_keys($myBranches)[0]}}" />
+    <input type="hidden" 
+    name="address_id" 
+    value="{{$location->id}}" />
+    @if (count($myBranches)==1)
+    <input type="hidden" 
+    name="branch_id" 
+    value = "{{$myBranches[0]}}" />
     @endif
-    <input type="submit" class="btn btn-success" value="Claim Lead" />
+    <input type="submit" 
+    class="btn btn-success" 
+    value="Claim Lead" />
   </form>
 @endif
