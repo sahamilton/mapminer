@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Address;
+use App\AddressBranch;
 use App\Branch;
 use App\Company;
 use App\SearchFilter;
@@ -10,7 +11,7 @@ use App\Serviceline;
 use App\SalesOrg;
 use App\Addresses;
 use App\Person;
-use App\Jobs\AssignCampaignLeads;
+use App\Jobs\AssignCampaignLeadsJob;
 use App\Http\Requests\CampaignFormRequest;
 
 use Carbon\Carbon;
@@ -220,13 +221,12 @@ class CampaignController extends Controller
      */
     public function launch(Campaign $campaign)
     {
-        $campaign->update(['status'=> 'launched']);
-        $campaign->load('vertical', 'servicelines', 'branches', 'companies.managedBy', 'manager', 'team');
-        $data = $this->_getCampaignData($campaign);
-        foreach ($data['assignments']['branch'] as $branch_id=>$addresses) {
-            AssignCampaignLeads::dispatch($branch_id, $addresses);
+       
+        $companies = $campaign->getUnassignedLocationsOfCampaign();
+        foreach ($companies as $company) {
+            AssignCampaignLeadsJob::dispatch($company, $campaign);
         }
-        
+        $campaign->update(['status'=> 'launched']);
         return redirect()->route('campaigns.index')->withMessage($campaign->title .' Campaign launched');
        
         
@@ -361,19 +361,16 @@ class CampaignController extends Controller
     {
         
         // get companies in campaign with locations within branch box
-        $data['companies'] = $this->_getLocationsOfCompaniesInCampaign($campaign);
-
+        
         // extract the locations into assigned and unassigned
-        $data['locations'] = $this->_getAllLocations($data['companies']);
+        $data['locations']['unassigned'] = $campaign->getUnassignedLocationsOfCampaign();
+        $data['locations']['assigned'] = $campaign->getAssignedLocationsOfCampaign();
+
         $data['branches'] = $this->_getBranchesWithinServiceArea($campaign, $data['locations']['unassigned']);
         // get the branches in campaign that are already servicing the companies locations
+     
         $data['branchesw'] =  $this->_getAssignedLeadsForBranches($campaign, $data['locations']['assigned']);
-        // assign the unassigned locations 
-        
-        //$data['assignments'] = $this->_assignBranchLeads($data['locations']['unassigned'], $campaign);
-        
-        // Merge the branches that could have locations with those that do
-        
+       
         
     
         return $data;
@@ -452,7 +449,8 @@ class CampaignController extends Controller
     private function _getLocationsOfCompaniesInCampaign(Campaign $campaign)
     {
         $branches = $campaign->branches;
-        $box = $this->branch->getBoundingBox($branches);
+        $box = $campaign->getBoundingBox($branches);
+
         $company_ids = $campaign->companies->pluck('id')->toArray();
         return $this->company
             ->whereIn('id', $company_ids)
@@ -539,56 +537,45 @@ class CampaignController extends Controller
     /**
      * [_getAssignedLeadsForBranches description]
      * 
-     * @param  [type] $campaign [description]
+     * @param [type] $campaign [description]
+     * 
      * @return [type]           [description]
      */
-    private function _getAssignedLeadsForBranches($campaign, $assignedLocations) :Array
+    private function _getAssignedLeadsForBranches(Campaign $campaign, $assignedLocations) :Array
     {
-        $branch = $assignedLocations->map(
+        
+        $addressbranch = AddressBranch::whereIn('branch_id', $campaign->branches->pluck('id')->toArray())
+            ->whereHas(
+                'address', function ($q) use ($campaign) {
+                    $q->whereIn('company_id', $campaign->companies->pluck('id')->toArray());
+                }
+            )->with('branch')->get();
+        
+        $branch = $addressbranch->map(
             function ($address) {
-                return $address->assignedToBranch->pluck('id')->toArray();
+                
+                return $address->branch->id;
+                    
             }
         );
-        $ids = $branch->unique()->flatten();
-        
+        $ids = $branch->unique()->flatten()->unique();
+        dd($ids, $campaign->branches->pluck('id')->toArray());
         foreach ($ids as $id) {
             
             $data[$id] = $assignedLocations->filter(
-                function ($address) use ($id) {
-                    return $address->assignedToBranch->where('id', $id)->count() > 0;
+                function ($company) use ($id) {
+                    return $company->assigned->map(
+                        function ($address) use ($id) {
+                            return $address->assignedToBranch->where('id', $id)->count() > 0;
+                        }
+                    );
+                    
                 }
             );
         }
+    
         return $data;
-        /*
-        //$company_ids = $campaign->companies->pluck('id')->toArray();
-        $lead_ids = $assignedLocations->pluck('id')->toArray();
-        
-        $serviceline_ids = $campaign->servicelines->pluck('id')->toArray();
-        $branch_ids = $campaign->branches->pluck('id')->toarray();
-        return $this->branch
-            ->whereHas(
-                'leads', function ($q) use ($lead_ids) {
-                    $q->whereIn('addresses.id', $lead_ids);
-                }
-            )
-            ->withCount(
-                [
-                    'leads'=>function ($q) use ($lead_ids) {
-                        $q->whereIn('addresses.id', $lead_ids);
-                    }, 
-                    'staleLeads'=>function ($q) use ($lead_ids) {
-                        $q->whereIn('addresses.id', $lead_ids);
-                    }
-                ]
-            )
-            ->whereHas(
-                'servicelines', function ($q) use ($serviceline_ids) {
-                    $q->whereIn('id', $serviceline_ids);
-                }
-            )
-            ->find($branch_ids);
-      */
+
     }
     /**
      * [_assignBranchLeads Loop through all assignable locations
@@ -599,30 +586,15 @@ class CampaignController extends Controller
      * 
      * @return [type]            [description]
      */
-    private function _assignBranchLeads($locations,$campaign) 
+    private function _assignBranchLeads(Campaign $campaign, $locations) 
     {
         
         $branch_ids = $campaign->branches->pluck('id')->toArray();
       
         $assignments = ['unassigned'=>[],'branch'=>[],'location'=>[]];
         
-        $assignments = $locations->chunk(
-            100, function ($location) use ($branch_ids) {
-                $branch = $this->branch->whereIn('id', $branch_ids)
-                    ->nearby($location, 25, 1)
-                    ->get();
-                dd($branch, $branch_ids);
-                if ($branch->count()) {
-                    $assignments['location'][$location->id][] = $branch->first()->id;
-                    $assignments['branch'][$branch->first()->id][] = $location->id;
-                
-                } else {
-                    $assignments['unassigned'][] = $location->id;
-                }
-                return $assignments;
-            }
-        );
-        /* foreach ($locations as $location ) {
+        
+        foreach ($locations as $location ) {
             $branch = $this->branch->whereIn('id', $branch_ids)
                 ->nearby($location, 25, 1)
                 ->get();
@@ -634,7 +606,7 @@ class CampaignController extends Controller
                 $assignments['unassigned'][] = $location->id;
             }
             
-         } */
+        } 
         
         $assignments['branches'] = $this->branch->whereIn('id', array_keys($assignments['branch']))->get();
         
