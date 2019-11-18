@@ -1,4 +1,5 @@
 @if($campaigns->count() > 1)
+
 <div class="col-sm-6">
     <form
         name="teamselector"

@@ -62,11 +62,11 @@ class Campaign extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
         if ($this->status=='launched') {
             return [
                     'url' => route('campaigns.show', $this->id),
-                    'color'=>'#8800cc',
+                    'color'=>'#e48535',
                 ];
         } else {
             return ['url' => route('campaigns.show', $this->id),
-                'color'=>'#cc0088',
+                'color'=>'#112b46',
             ];
         }
     }

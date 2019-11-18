@@ -223,7 +223,8 @@ class CampaignController extends Controller
     public function launch(Campaign $campaign)
     {
        
-        $companies = $campaign->getUnassignedLocationsOfCampaign();
+        $companies = $campaign->getCompanyLocationsOfCampaign();
+   
         foreach ($companies as $company) {
             AssignCampaignLeadsJob::dispatch($company, $campaign);
         }
@@ -350,10 +351,6 @@ class CampaignController extends Controller
         
         // extract the locations into assigned and unassigned
         $data['companies'] = $campaign->getCompanyLocationsOfCampaign();
-       
-
-        
-     
         $data['branches'] =  $this->_getAssignedLeadsForBranches($campaign);
        
        
