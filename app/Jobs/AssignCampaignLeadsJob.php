@@ -34,7 +34,7 @@ class AssignCampaignLeadsJob implements ShouldQueue
      */
     public function handle()
     {
-
+        
         $branch_ids = $this->campaign->branches->pluck('id')->toArray();
         
         foreach ($this->company->unassigned as $location) {
@@ -49,6 +49,6 @@ class AssignCampaignLeadsJob implements ShouldQueue
             }
         
         }
-
+        // send email to user (?)
     }
 }

@@ -18,7 +18,15 @@ class CampaignTrackingController extends Controller
     public $branch;
     public $campaign;
     public $opportunity;
-
+    /**
+     * [__construct description]
+     * 
+     * @param Activity    $activity    [description]
+     * @param Address     $address     [description]
+     * @param Branch      $branch      [description]
+     * @param Campaign    $campaign    [description]
+     * @param Opportunity $opportunity [description]
+     */
     public function __construct(
         Activity $activity,
         Address $address,
@@ -53,7 +61,13 @@ class CampaignTrackingController extends Controller
         return response()->view('campaigns.summary', compact('campaign', 'branches', 'team', 'campaigns'));
     }
 
-
+    /**
+     * [export description]
+     * 
+     * @param Campaign $campaign [description]
+     * 
+     * @return [type]             [description]
+     */
     public function export(Campaign $campaign)
     {
         $campaign->load('companies', 'branches');
@@ -62,13 +76,25 @@ class CampaignTrackingController extends Controller
         return Excel::download(new CampaignSummaryExport($campaign, $branches), $campaign->title.time().'Export.csv');
 
     }
-
+    /**
+     * [_getBranchesInCampaign description]
+     * 
+     * @param Campaign $campaign [description]
+     * 
+     * @return [type]             [description]
+     */
     private function _getBranchesInCampaign(Campaign $campaign)
     {
         $branch_ids = $campaign->branches->pluck('id')->toArray();
         return $this->branch->whereIn('id', $branch_ids)->summaryCampaignStats($campaign)->get();
     }
-
+    /**
+     * [_getCampaignBranchTeam description]
+     * 
+     * @param Campaign $campaign [description]
+     * 
+     * @return [type]             [description]
+     */
     private function _getCampaignBranchTeam(Campaign $campaign)
     {
         $servicelines = $campaign->getServicelines();
