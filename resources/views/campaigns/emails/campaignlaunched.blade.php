@@ -3,10 +3,10 @@
 
 Hi {{$user->person->firstname}}
 
-The {{campaign->title}} has been launched.  
+The {{$campaign->title}} has been launched.  
 You can see the details at this link
 
-@component('mail::button', ['url' => '{{route('campaign.show', $campaign->id])}}'])
+@component('mail::button', ['url' => route('campaigns.show', $campaign->id)])
 Campaign Details
 @endcomponent
 
