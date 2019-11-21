@@ -10,20 +10,25 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use App\Campaign;
 use App\Company;
 use App\Branch;
+use App\User;
+use App\Jobs\SendCampaignLaunched;
+
 class AssignCampaignLeadsJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     public $campaign;
     public $company;
+    public $user;
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(Company $company, Campaign $campaign)
+    public function __construct(Company $company, Campaign $campaign, User $user)
     {
         $this->campaign = $campaign;
         $this->company = $company;
+        $this->user = $user;
         
     }
 
@@ -37,18 +42,25 @@ class AssignCampaignLeadsJob implements ShouldQueue
         
         $branch_ids = $this->campaign->branches->pluck('id')->toArray();
         
-        foreach ($this->company->unassigned as $location) {
+        $this->company->unassigned->each(
+            function ($location,$key) use ($branch_ids) {
 
-            $branches = Branch::whereIn('id', $branch_ids)
-                ->nearby($location, 25, 1)
-                ->get();
-           
-            foreach ($branches as $branch) {
-
-                $branch->leads()->attach($location->id, ['status_id'=>1]);
+                $branches = Branch::whereIn('id', $branch_ids)
+                    ->nearby($location, 25, 1)
+                    ->get();
+                if ($branches->count()>0) {
+                    $branches->each(
+                        function ($branch, $key) use ($location) {
+                            
+                            $branch->leads()->attach($location->id, ['status_id'=>1]);
+                        }
+                    );
+                }
+                
             }
-        
-        }
-        // send email to user (?)
+        );
+
+        SendCampaignLaunched($this->user, $this->campaign)->dispatch();
+
     }
 }

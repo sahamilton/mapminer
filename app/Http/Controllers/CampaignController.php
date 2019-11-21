@@ -12,6 +12,7 @@ use App\SalesOrg;
 use App\Addresses;
 use App\Person;
 use App\Jobs\AssignCampaignLeadsJob;
+use App\Jobs\SendCampaignLaunched;
 use App\Http\Requests\CampaignFormRequest;
 
 use Carbon\Carbon;
@@ -224,16 +225,23 @@ class CampaignController extends Controller
     {
        
         $companies = $campaign->getCompanyLocationsOfCampaign();
-   
+        
         foreach ($companies as $company) {
-            AssignCampaignLeadsJob::dispatch($company, $campaign);
+            AssignCampaignLeadsJob($company, $campaign)->dispatch();
         }
         $campaign->update(['status'=> 'launched']);
+        SendCampaignLaunched(auth()->user(), $campaign)->dispatch();
         return redirect()->route('campaigns.index')->withMessage($campaign->title .' Campaign launched');
        
         
     }
-
+    /**
+     * [selectReport description]
+     * 
+     * @param Campaign|null $campaign [description]
+     * 
+     * @return [type]                  [description]
+     */
     public function selectReport(Campaign $campaign = null)
     {
         

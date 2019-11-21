@@ -86,7 +86,13 @@ class CampaignTrackingController extends Controller
     private function _getBranchesInCampaign(Campaign $campaign)
     {
         $branch_ids = $campaign->branches->pluck('id')->toArray();
-        return $this->branch->whereIn('id', $branch_ids)->summaryCampaignStats($campaign)->get();
+        $company_ids = $campaign->companies->pluck('id')->toArray();
+        return $this->branch->whereIn('id', $branch_ids)
+            ->whereHas(
+                'leads', function ($q) use ($company_ids) {
+                    $q->whereIn('company_id', $company_ids);
+                }
+            )->summaryCampaignStats($campaign)->get();
     }
     /**
      * [_getCampaignBranchTeam description]
