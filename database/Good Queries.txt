@@ -374,3 +374,11 @@ and opportunities.branch_id = branches.id
 and opportunities.address_id = addresses.id
 order by branch_id
     */
+/************** Companies with location count
+SELECT companies.id, companyname,  type, count(addresses.id) as locations
+FROM `companies`, accounttypes, addresses
+WHERE accounttypes_id = accounttypes.id
+and companies.id = addresses.company_id
+group by companies.id, companyname, type
+order by companyname
+*/
