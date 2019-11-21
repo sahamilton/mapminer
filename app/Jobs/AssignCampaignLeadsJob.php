@@ -18,17 +18,17 @@ class AssignCampaignLeadsJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     public $campaign;
     public $company;
-    public $user;
+  
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(Company $company, Campaign $campaign, User $user)
+    public function __construct(Company $company, Campaign $campaign)
     {
         $this->campaign = $campaign;
         $this->company = $company;
-        $this->user = $user;
+        
         
     }
 
@@ -60,7 +60,7 @@ class AssignCampaignLeadsJob implements ShouldQueue
             }
         );
 
-        SendCampaignLaunched($this->user, $this->campaign)->dispatch();
+        
 
     }
 }

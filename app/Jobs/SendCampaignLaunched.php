@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\User;
 use App\Campaign;
+use Mail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -16,6 +17,7 @@ class SendCampaignLaunched implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public $user;
+    public $campaign;
     /**
      * Create a new job instance.
      *

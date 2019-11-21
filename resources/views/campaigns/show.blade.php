@@ -9,7 +9,7 @@
    		<a href="{{route('campaigns.edit', $campaign->id)}}" class="btn btn-info">Edit Campaign</a>
    </div>
 	
-	<p><a href="{{route('campaigns.launch', $campaign->id)}}" class="btn btn-info">Launch Campaign</a></p>
+	<p><a href="{{route('campaigns.launch', $campaign->id)}}" class="btn btn-warning">Launch Campaign</a></p>
 	@else
 	<p><strong>Status:</strong>{{$campaign->status}}</p>
 	@endif

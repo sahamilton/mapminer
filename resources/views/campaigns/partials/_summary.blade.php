@@ -2,7 +2,7 @@
     style="margin-top:20px;margin-bottom:20px">
         <button 
         type="button" 
-        class="btn btn-info btn-block col-sm4" 
+        class="btn btn-campaign btn-block col-sm4" 
         data-toggle="collapse" 
         data-target="#summary">
             Summary

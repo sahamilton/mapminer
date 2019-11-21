@@ -227,10 +227,10 @@ class CampaignController extends Controller
         $companies = $campaign->getCompanyLocationsOfCampaign();
         
         foreach ($companies as $company) {
-            AssignCampaignLeadsJob($company, $campaign)->dispatch();
+            AssignCampaignLeadsJob::dispatch($company, $campaign);
         }
         $campaign->update(['status'=> 'launched']);
-        SendCampaignLaunched(auth()->user(), $campaign)->dispatch();
+        SendCampaignLaunched::dispatch(auth()->user(), $campaign);
         return redirect()->route('campaigns.index')->withMessage($campaign->title .' Campaign launched');
        
         
