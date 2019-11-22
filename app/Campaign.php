@@ -96,7 +96,11 @@ class Campaign extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
        
         
     }
-
+    /**
+     * [getCompanyLocationsOfCampaign description]
+     * 
+     * @return [type] [description]
+     */
     public function getCompanyLocationsOfCampaign()
     {
         $box = $this->getBoundingBox($this->branches);

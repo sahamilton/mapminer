@@ -382,3 +382,13 @@ and companies.id = addresses.company_id
 group by companies.id, companyname, type
 order by companyname
 */
+
+/* get activities of user
+
+select addresses.id, businessname, activity, activity_date, opportunities.id, opportunities.title
+from  addresses, activity_type, activities
+left join opportunities on activities.address_id = opportunities.address_id
+where activities.user_id = 3693
+and activities.completed = 1 
+and activities.address_id = addresses.id
+and activities.activitytype_id = activity_type.id
