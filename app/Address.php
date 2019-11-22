@@ -198,7 +198,7 @@ class Address extends Model
     */
     public function lastActivity()
     {
-        return $this->hasMany(Activity::class)->where('completed', 1)->latest()->limit(1);
+        return $this->hasMany(Activity::class)->where('completed', 1)->latest();
     } 
     /**
      * [lastActivity description]

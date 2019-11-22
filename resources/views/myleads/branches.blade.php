@@ -49,7 +49,7 @@
     <tbody>
 
     @foreach($data['leads'] as $lead)
-
+ 
     <tr>
         
         <td>
