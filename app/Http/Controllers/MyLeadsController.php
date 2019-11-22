@@ -126,9 +126,10 @@ class MyLeadsController extends BaseController
             }
         )
         ->whereDoesntHave('opportunities')
-        ->with('assignedToBranch', 'opportunities', 'leadsource', 'lastActivity')
+      
+        ->with('assignedToBranch', 'leadsource', 'lastActivity')
         ->get();
-       
+        
         $data['branches'] = $this->_getBranches($branch);
         return $data;
     }
