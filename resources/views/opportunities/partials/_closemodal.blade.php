@@ -25,6 +25,16 @@
             <label class="col-md-4 control-label">Comments</label>
             <textarea name="comments" class="form-control" placeholder="Explain reason for closing"></textarea>
           </div>
+          <div class="form-group">
+            <label class="col-md-4 control-label">Close Date</label>
+           <input class="form-control actual_close" 
+                    type="text" 
+                    required
+                    name="actual_close" 
+                    autocomplete='off' 
+                    id="todatepicker" 
+                    value="{{  old('actual_close', isset($opportunity) && $opportunity->actual_close ? $opportunity->actual_close->format('m/d/Y') : now()->format('m/d/Y') )}}"/>
+            </div>
             <div class="float-right">
             <input type="submit" value="Close Opportunity" class="btn btn-success" />
           </div>
