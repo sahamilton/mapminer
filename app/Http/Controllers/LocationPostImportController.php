@@ -117,15 +117,16 @@ class LocationPostImportController extends Controller
         $insert = $this->import->whereIn('id', $m)->get();
 
         $insert = $this->_setImportRef($insert);
-       
+        
         if ($insert->count() > 0) {
-            $n =0;
-            $insert->chunk(
-                1000, function ($subset) {
-                    \DB::table('addresses')->insert($subset->toArray());
+           
+            $insert->each(
+                function ($item, $key)  {
+                    \DB::table('addresses')->insert($item->toArray()); 
+                   
                 }
             );
-            dd($n, 'Finished');
+            
         }
        
         return $data;
