@@ -31,7 +31,8 @@ class OpportunityFormRequest extends FormRequest
 
             $rules['expected_close'] = 'required|date|after_or_equal:today';
         } else {
-            $rules['actual_close'] = 'required|date|before_or_equal:today';
+            $rules['actual_close'] = 'required_without:expected_close|date|before_or_equal:today';
+            $rules['expected_close'] = 'required_without:actual_close|date|after_or_equal:today';
         }
         
         return $rules;
