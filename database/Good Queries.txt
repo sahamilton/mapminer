@@ -392,3 +392,16 @@ where activities.user_id = 3693
 and activities.completed = 1 
 and activities.address_id = addresses.id
 and activities.activitytype_id = activity_type.id
+
+
+/** debugging reports
+select activities.id, activity_date, address_id, activities.created_at, user_id, activity
+from activities, activity_type
+where branch_id = 1509  
+and completed = 1
+and activities.created_at > '2019-11-20'
+and activities.created_at < '2019-11-21'
+and activities.activitytype_id = activity_type.id
+
+
+ */
