@@ -405,3 +405,19 @@ and activities.activitytype_id = activity_type.id
 
 
  */
+
+/*      Spatial duplicates query
+select addresses_import.id as id, addresses.id as import_ref from addresses,addresses_import where addresses.company_id = addresses_import.company_id and addresses_import.company_id = 388 and ST_Distance_Sphere(addresses.position,addresses_import.position) < 50
+*/
+
+SELECT 
+    a.businessname,
+    COUNT(a.id) 
+    FROM addresses a, addresses b
+    left join address_branch on b.id = address_branch.address_id
+    where a.company_id = 388 
+    and a.company_id = b.company_id
+    and ST_Distance_Sphere(a.position, b.position) < 50
+    and address_branch.address_id is null
+GROUP BY a.businessname
+HAVING COUNT(a.id) > 1
