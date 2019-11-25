@@ -126,12 +126,9 @@ class LocationPostImportController extends Controller
             ->chunk(
                 100, function ($inserts) {
                     foreach ($inserts as $insert) {
-                        $this->_setImportRef($insert)->each(
-                            function ($item, $key) {
-                                \DB::table('addresses')->insert($item->toArray()); 
+                        $item = $this->_setImportRef($insert);
+                        \DB::table('addresses')->insert($item->toArray()); 
                                
-                            }
-                        );
                     }
                     
                 }
@@ -237,17 +234,16 @@ class LocationPostImportController extends Controller
      * 
      * @return [type]                 [description]
      */
-    private function _setImportRef($collection)
+    private function _setImportRef($item)
     {
         
-        return $collection->map(
-            function ($item) {
                 $item->import_ref = $item->id;
                 $item->user_id = auth()->user()->id;
                 $item->created_at = Carbon::now();
+              
                 return array_except($item, ['id','address_id','contactphone','email','firstname','lastname','fullname','title']);
-            }
-        );
+            
+       
     }
 
     /**
