@@ -39,7 +39,7 @@
 
             {{$statuses[$opportunity->closed]}}
           
-             @if(isset($owned))
+             @if(isset($owned) && $opportunity->closed ==0)
            
             <button class="btn btn-danger" 
                     data-href="{{route('opportunity.close',$opportunity->id)}}"
