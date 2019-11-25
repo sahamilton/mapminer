@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Campaign extends Model implements \MaddHatter\LaravelFullcalendar\IdentifiableEvent
 {
+    use GeoCode;
     public $fillable = ['title', 'description', 'datefrom', 'dateto', 'created_by', 'manager_id', 'status'];
     
     public $dates =['datefrom', 'dateto'];
@@ -61,11 +62,11 @@ class Campaign extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
         if ($this->status=='launched') {
             return [
                     'url' => route('campaigns.show', $this->id),
-                    'color'=>'#8800cc',
+                    'color'=>'#e48535',
                 ];
         } else {
             return ['url' => route('campaigns.show', $this->id),
-                'color'=>'#cc0088',
+                'color'=>'#112b46',
             ];
         }
     }
@@ -95,8 +96,56 @@ class Campaign extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
        
         
     }
+    /**
+     * [getCompanyLocationsOfCampaign description]
+     * 
+     * @return [type] [description]
+     */
+    public function getCompanyLocationsOfCampaign()
+    {
+        $box = $this->getBoundingBox($this->branches);
+        $branches = $this->branches()->pluck('id')->toArray();
+        return Company::whereIn('id', $this->companies->pluck('id')->toArray())
+            ->with(
+                [
+                'unassigned'=>function ($q) use ($box) {
+                    $q->where('lat', '<', $box['maxLat'])
+                        ->where('lat', '>', $box['minLat'])
+                        ->where('lng', '<', $box['maxLng'])
+                        ->where('lng', '>', $box['minLng']);
+                    
+                },
+                'assigned'=>function ($q) use ($branches) {
+                    $q->whereHas(
+                        'assignedToBranch', function ($q1) use ($branches) {
+                            $q1->whereIn('branch_id', $branches);
+                        }
+                    )->with('assignedToBranch');
+                }
+                ]
+            ) 
+            ->get();
 
-    
+
+    }
+
+    public function getAssignedLocationsOfCampaign()
+    {
+        $branches = $this->branches()->pluck('id')->toArray();
+        $company_ids = $this->companies->pluck('id')->toArray();
+        return Company::whereIn('id', $company_ids)
+            ->with(
+                [
+                'assigned'=>function ($q) use ($branches) {
+                    $q->whereHas(
+                        'assignedToBranch', function ($q1) use ($branches) {
+                            $q1->whereIn('branch_id', $branches);
+                        }
+                    )->with('assignedToBranch');
+                }
+                ]
+            )->get();
+    }
     /**
      * [getLocations description]
      * 

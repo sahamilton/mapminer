@@ -113,21 +113,26 @@ class LocationPostImportController extends Controller
      */
     private function _addNewLocations($data)
     {
-        $m = $this->_getIdsFromArray($data['add']);
-        $insert = $this->import->whereIn('id', $m)->get();
+        /*User::chunk(100, function ($users) {
+          foreach ($users as $user) {
+            $some_value = ($user->some_field > 0) ? 1 : 0;
+            // might be more logic here
+            $user->update(['some_other_field' => $some_value]);
+          }
+        });*/
 
-        $insert = $this->_setImportRef($insert);
-       
-        if ($insert->count() > 0) {
-            $n =0;
-            $insert->chunk(
-                1000, function ($subset) {
-                    \DB::table('addresses')->insert($subset->toArray());
+        $m = $this->_getIdsFromArray($data['add']);
+        $this->import->whereIn('id', $m)
+            ->chunk(
+                100, function ($inserts) {
+                    foreach ($inserts as $insert) {
+                        $item = $this->_setImportRef($insert);
+                        \DB::table('addresses')->insert($item->toArray()); 
+                               
+                    }
+                    
                 }
             );
-            dd($n, 'Finished');
-        }
-       
         return $data;
 
     }
@@ -188,7 +193,9 @@ class LocationPostImportController extends Controller
     {
         $match = $this->_getIdsFromArray($data['matched']);
        
-        return $this->import->whereNotNull('address_id')->whereIn('id',$match)->get(); 
+        return $this->import->whereNotNull('address_id')
+            ->whereIn('id', $match)
+            ->get(); 
     
     }
 
@@ -227,18 +234,16 @@ class LocationPostImportController extends Controller
      * 
      * @return [type]                 [description]
      */
-    private function _setImportRef(Collection $collection)
+    private function _setImportRef($item)
     {
-        $collection->map(
-            function ($item) {
+        
                 $item->import_ref = $item->id;
                 $item->user_id = auth()->user()->id;
                 $item->created_at = Carbon::now();
+              
                 return array_except($item, ['id','address_id','contactphone','email','firstname','lastname','fullname','title']);
-            }
-        );
+            
        
-        return $collection;
     }
 
     /**

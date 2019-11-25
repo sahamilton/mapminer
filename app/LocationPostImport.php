@@ -53,7 +53,7 @@ class LocationPostImport extends Model
         $data['matched'] = $this->_geoMatchAddresses($company->id);
         $this->_updateImportTable($data['matched']);
         $data['add'] = $this->_geoAddAddresses($data['matched']);
-        $data['delete']  = $this->_geoDeleteAddress( $company->id);
+        $data['delete']  = $this->_geoDeleteAddress($company->id);
         return $data;
     }
     /**

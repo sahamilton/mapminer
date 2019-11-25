@@ -374,7 +374,26 @@ and opportunities.branch_id = branches.id
 and opportunities.address_id = addresses.id
 order by branch_id
     */
-   
+/************** Companies with location count
+SELECT companies.id, companyname,  type, count(addresses.id) as locations
+FROM `companies`, accounttypes, addresses
+WHERE accounttypes_id = accounttypes.id
+and companies.id = addresses.company_id
+group by companies.id, companyname, type
+order by companyname
+*/
+
+/* get activities of user
+
+select addresses.id, businessname, activity, activity_date, opportunities.id, opportunities.title
+from  addresses, activity_type, activities
+left join opportunities on activities.address_id = opportunities.address_id
+where activities.user_id = 3693
+and activities.completed = 1 
+and activities.address_id = addresses.id
+and activities.activitytype_id = activity_type.id
+
+
 /** debugging reports
 select activities.id, activity_date, address_id, activities.created_at, user_id, activity
 from activities, activity_type
@@ -386,3 +405,23 @@ and activities.activitytype_id = activity_type.id
 
 
  */
+
+/*      Spatial duplicates query
+select addresses_import.id as id, addresses.id as import_ref from addresses,addresses_import where addresses.company_id = addresses_import.company_id and addresses_import.company_id = 388 and ST_Distance_Sphere(addresses.position,addresses_import.position) < 50
+*/
+
+SELECT 
+    a.businessname,
+    COUNT(a.id) 
+    FROM addresses a, addresses b
+    left join address_branch on b.id = address_branch.address_id
+    where a.company_id = 388 
+    and a.company_id = b.company_id
+    and ST_Distance_Sphere(a.position, b.position) < 50
+    and address_branch.address_id is null
+GROUP BY a.businessname
+HAVING COUNT(a.id) > 1
+Order By count(a.id) DESC;
+
+/**** delete addresses without address_branch
+delete addresses, address_branch from addresses left join address_branch on addresses.id = address_branch.address_id where addresses.company_id = 388 and address_branch.address_id is null
