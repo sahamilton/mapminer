@@ -421,3 +421,7 @@ SELECT
     and address_branch.address_id is null
 GROUP BY a.businessname
 HAVING COUNT(a.id) > 1
+Order By count(a.id) DESC;
+
+/**** delete addresses without address_branch
+delete addresses, address_branch from addresses left join address_branch on addresses.id = address_branch.address_id where addresses.company_id = 388 and address_branch.address_id is null
