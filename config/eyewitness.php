@@ -79,7 +79,7 @@ return [
      |
      */
 
-    'queue_tube_list' => ['sync' => ['mapminer']],
+    'queue_tube_list' => ['beanstalkd' => ['mapminer']],
 
 
     /*

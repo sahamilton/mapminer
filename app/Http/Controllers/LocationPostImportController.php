@@ -125,12 +125,12 @@ class LocationPostImportController extends Controller
         $this->import->whereIn('id', $m)
             ->chunk(
                 100, function ($inserts) {
-                    foreach ($inserts as $insert) {
-                        $item = $this->_setImportRef($insert);
-                        \DB::table('addresses')->insert($item->toArray()); 
-                               
-                    }
-                    
+                    $inserts->each(
+                        function ($insert) {
+                            $item = $this->_setImportRef($insert);
+                            \DB::table('addresses')->insert($item->toArray()); 
+                        }
+                    );        
                 }
             );
         return $data;

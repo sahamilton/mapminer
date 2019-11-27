@@ -174,7 +174,7 @@ class MyLeadsController extends BaseController
     public function store(MyLeadFormRequest $request)
     {
        
-
+       
         // we need to geocode this address
         if (! $data = $this->_cleanseInput($request)) {
             return redirect()->back()->withError('Unable to geocode that address');
@@ -246,6 +246,7 @@ class MyLeadsController extends BaseController
         }
         
         $data['lead'] = $this->lead->getGeoCode($geocode);
+       
         $data['lead'] = $this->_fillAddress($request, $data['lead']);
         $data['lead']['user_id'] = auth()->user()->id;
         $data['lead']['businessname'] =request('companyname');

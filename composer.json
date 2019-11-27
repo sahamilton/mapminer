@@ -80,7 +80,12 @@
             "@php artisan package:discover --ansi"
         ]
     },
+    
     "config": {
-        "preferred-install": "dist"
+        "preferred-install": "dist",
+        "platform": {
+            "ext-pcntl": "7.1",
+            "ext-posix": "7.1"
+        }
     }
 }

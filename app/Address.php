@@ -448,16 +448,20 @@ class Address extends Model
      * 
      * @return [type]            [description]
      */
-    public function scopeDuplicate($query, $longitude, $latitude)
+    public function scopeDuplicate($query, $longitude, $latitude, $commpany_id= null)
     {
         $close_in_metres = 5;
   
-        return $query->whereRaw(
+        $query = $query->whereRaw(
             "ST_Distance_Sphere(
                 point(lng, lat),
                 point(". $longitude . ", " . $latitude .")
             )  < ".$close_in_metres 
         );
+        if (isset($company_id)) {
+            $query = $query->where('company_id', $company_id);
+        }
+        return $query;
     }
     /**
      * [addressType description]
