@@ -139,16 +139,20 @@ class ReportsController extends Controller {
     public function update(Request $request, Report $report)
     {
 
-
+        
         if (! $this->_checkValidJob(request('job'))) {
             return redirect()->back()->withError('job does not exist');
         }
         $report->update(request()->all());
         if (! request()->has('period')) {
             $report->update(['period'=>0]);
+        } else {
+            $report->update(['period'=>1]);
         }
         if (! request()->has('public')) {
             $report->update(['public'=>0]);
+        } else {
+            $report->update(['public'=>1]);
         }
         return redirect()->route('reports.index');
     }
