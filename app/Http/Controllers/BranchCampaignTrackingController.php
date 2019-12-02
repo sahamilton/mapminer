@@ -67,7 +67,7 @@ class CampaignTrackingController extends Controller
 
         $campaign->load('companies', 'branches');
         
-        if (! in_array($myBranches, $campaign->branches->pluck('id')->toArray()) {
+        if (! in_array($myBranches, $campaign->branches->pluck('id')->toArray())) {
             return redirect()->back()->withError('Your branch(es) are not participating in this campaign.');
         }
         if (count($myBranches) > 0) {
