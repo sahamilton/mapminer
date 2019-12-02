@@ -333,6 +333,8 @@ trait Geocode
        
         return $data;
     }
+
+    
     /**
      * ScopeWithinMBR [description]
      * 

@@ -364,11 +364,15 @@ class OpportunityController extends Controller
      * 
      * @return [type]               [description]
      */
-    public function close(Request $request, $opportunity)
+    public function close(OpportunityFormRequest $request, $opportunity)
     {
+
         $data= request()->except('_token');
         $branch = $opportunity->branch_id;
-        $data['actual_close'] = Carbon::now();
+        if (request()->filled('actual_close')) {
+            $data['actual_close'] = Carbon::now();
+        }
+        
         $opportunity->update($data);
         $opportunity->load('address', 'address.address', 'address.address.company');
             // check to see if the client_id exists else create new company

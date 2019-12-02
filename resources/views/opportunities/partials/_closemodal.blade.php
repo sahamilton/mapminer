@@ -23,7 +23,10 @@
              
           <div class="form-group">
             <label class="col-md-4 control-label">Comments</label>
-            <textarea name="comments" class="form-control" placeholder="Explain reason for closing"></textarea>
+            <textarea name="comments" 
+            required 
+            class="form-control" 
+            placeholder="Explain reason for closing"></textarea>
           </div>
           <div class="form-group">
             <label class="col-md-4 control-label">Close Date</label>

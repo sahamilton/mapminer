@@ -136,11 +136,12 @@ class CampaignController extends Controller
      */
     public function show(Campaign $campaign)
     {
+        
         if ($campaign->status == 'planned') {
 
            
             $campaign->load('vertical', 'servicelines', 'branches', 'companies.managedBy', 'manager', 'team', 'documents');
-            
+          
             $data = $this->_getCampaignSummaryData($campaign);
          
             return response()->view('campaigns.show', compact('campaign', 'data'));
@@ -234,6 +235,39 @@ class CampaignController extends Controller
         return redirect()->route('campaigns.index')->withMessage($campaign->title .' Campaign launched');
        
         
+    }
+
+    public function branchTest(Campaign $campaign, Branch $branch)
+    {
+        // get MBR of branch
+        $companies = $campaign->getCompanyLocationsOfCampaign();
+        $company_ids = $companies->pluck('id')->toArray();
+        // get locations of campaign within MBR
+     
+        $locations = $this->address
+            ->whereHas(
+                'assignedToBranch', function ($q) use ($branch) {
+                    $q->where('branches.id', $branch->id);
+                }
+            )
+            ->whereIn('company_id', $company_ids)
+            ->nearby($branch, 25)
+            ->orderBy('distance')
+            ->get();
+        
+        foreach ($locations as $location) {
+            
+            $allocated = $this->branch
+                ->nearby($location, 25, 1)
+                ->orderBy('distance')
+                ->first();
+            
+            $data[$allocated->id][]=$location->id;
+        }
+        dd($data);
+        // get nearest branch to all locations
+        // get distance from branch to all locations
+
     }
     /**
      * [selectReport description]

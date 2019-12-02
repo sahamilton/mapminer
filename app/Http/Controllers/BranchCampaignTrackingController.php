@@ -61,7 +61,7 @@ class BranchCampaignTrackingController extends Controller
     {
         // get my branches
         $myBranches = $this->person->where('user_id', auth()->user()->id)->getMyBranches();
-        dd($myBranches);
+      
         // // check is one of my branches
         // else return not valid
 

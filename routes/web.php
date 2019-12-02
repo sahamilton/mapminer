@@ -232,6 +232,7 @@ Route::group(
         
         //     Branch Sales Campaigns
         Route::get('branchcampaigns/{campaign}/{branch}', ['as'=>'branchcampaign.show', 'uses'=>'BranchCampaignController@show']);
+
         Route::post('branchcampaigns/change', ['as'=>'branchcampaign.change', 'uses'=>'BranchCampaignController@change']);     
         
         Route::resource('branchcampaigns', 'BranchCampaignController');
@@ -579,6 +580,7 @@ Route::group(
         //   Campaigns (email)
         Route::get('campaigns/{campaign}/track', ['as'=>'campaigns.track', 'uses'=>'CampaignTrackingController@show']);
         Route::get('campaigns/{campaign}/launch', ['as'=>'campaigns.launch', 'uses'=>'CampaignController@launch']);
+        Route::get('campaigns/{campaign}/{branch}/test', ['as'=>'branchcampaign.test', 'uses'=>'CampaignController@branchTest']);
         Route::get('campaigns/reports/{campaign?}', ['as'=>'campaigns.select', 'uses'=>'CampaignController@selectReport']);
         Route::get('campaigns/{campaign}/export', ['as'=>'campaigns.export', 'uses'=>'CampaignTrackingController@export']);
         Route::post('campaigns/{campaign}/report', ['as'=>'campaigns.report', 'uses'=>'CampaignController@export']);
