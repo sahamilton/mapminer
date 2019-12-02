@@ -188,7 +188,7 @@ class Campaign extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
         return Person::whereId([$manager_id])->firstOrFail()->descendantsAndSelf()
             ->whereHas(
                 'userdetails.roles', function ($q) {
-                        $q->whereIn('roles.id', ['3','6','7']);
+                        $q->whereIn('roles.id', ['9']);
                 }
             )
             ->with(
