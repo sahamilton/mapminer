@@ -10,7 +10,7 @@ use App\Branch;
 use App\Campaign;
 use App\Opportunity;
 use App\Person;
-class CampaignTrackingController extends Controller
+class BranchCampaignTrackingController extends Controller
 {
     public $activity;
     public $address;
@@ -60,8 +60,8 @@ class CampaignTrackingController extends Controller
     public function show(Campaign $campaign, Branch $branch = null)
     {
         // get my branches
-   
-        
+        $myBranches = $this->person->where('user_id', auth()->user()->id)->getMyBranches();
+        dd($myBranches);
         // // check is one of my branches
         // else return not valid
 

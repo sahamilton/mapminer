@@ -53,7 +53,7 @@ class CampaignTrackingController extends Controller
      */
     public function show(Campaign $campaign)
     {
-        
+        dd($campaign);
         $campaign->load('companies', 'branches');
         $branches = $this->_getBranchesInCampaign($campaign);
         $team = $this->_getCampaignBranchTeam($campaign);
