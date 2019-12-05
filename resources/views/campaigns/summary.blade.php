@@ -13,7 +13,8 @@
         <p>
             <a href="{{route('campaigns.index')}}">Return to all campaigns</a>
         </p>
-        
+        <p><a href="{{route('campaigns.launch', $campaign->id)}}" class="btn btn-warning">Relaunch Campaign</a></p>
+    
             @include('campaigns.partials._teamselector')
         
             @include('campaigns.partials._campaignselector')
