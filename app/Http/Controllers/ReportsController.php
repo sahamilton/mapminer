@@ -87,9 +87,13 @@ class ReportsController extends Controller {
         $report = $this->report->create(request()->all());
         if (! request()->has('period')) {
             $report->update(['period'=>0]);
+        } else {
+            $report->update(['period'=>1]);
         }
         if (! request()->has('public')) {
             $report->update(['public'=>0]);
+        } else {
+            $report->update(['public'=>1]);
         }
 
         return redirect()->route('reports.show', $report->id);

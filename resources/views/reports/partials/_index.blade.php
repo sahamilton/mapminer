@@ -39,7 +39,7 @@
             <td>
                @if(auth()->user()->hasRole('admin'))
                     @include('reports.partials._actions')
-                @elseif ($report->period==1)
+                @elseif ($report->period == 1)
                 <a class="btn btn-success"
                     data-href="{{route('reports.run',$report->id)}}" 
                     data-toggle="modal" 

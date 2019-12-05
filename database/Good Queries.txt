@@ -425,3 +425,34 @@ Order By count(a.id) DESC;
 
 /**** delete addresses without address_branch
 delete addresses, address_branch from addresses left join address_branch on addresses.id = address_branch.address_id where addresses.company_id = 388 and address_branch.address_id is null
+
+//*********** Sales Reps within 25 miles
+select 
+    addresses.id,
+    addresses.businessname,
+    addresses.street as addressestreet, 
+    addresses.city as loccity, 
+    addresses.state as addressestate,
+    addresses.zip as loczip,
+    persons.id as pid,
+    users.employee_id,
+    concat_ws(' ',persons.firstname,persons.lastname) as repname,
+    persons.phone,
+     3956 * acos(cos(radians(addresses.lat)) 
+            * cos(radians(persons.lat)) 
+            * cos(radians(persons.lng) 
+            - radians(addresses.lng)) 
+            + sin(radians(addresses.lat)) 
+            * sin(radians(persons.lat))) as distance
+    from addresses, persons, role_user, users
+    where addresses.company_id = 38
+    and persons.user_id = role_user.user_id
+    and role_user.role_id = 5
+    and persons.user_id = users.id
+    and
+            3956 * acos(cos(radians(addresses.lat)) 
+            * cos(radians(persons.lat)) 
+            * cos(radians(persons.lng) 
+            - radians(addresses.lng)) 
+            + sin(radians(addresses.lat)) 
+            * sin(radians(persons.lat))) < 25
