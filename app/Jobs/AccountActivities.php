@@ -5,6 +5,7 @@ namespace App\Jobs;
 use Mail;
 use Excel;
 use App\Address;
+use App\Company;
 use Illuminate\Database\Eloquent\Collection;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
@@ -26,7 +27,7 @@ class AccountActivities implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(Collection $companies, Array $period)
+    public function __construct(Company $companies, Array $period)
     {
         $this->companies = $companies;
         $this->period = $period;
@@ -40,7 +41,7 @@ class AccountActivities implements ShouldQueue
      */
     public function handle()
     {
-        foreach ($this->companies as $company) {
+            $company = $this->companies;
             $companyname = str_replace(" ", "_", $company->companyname);
             $file = "/public/reports/".$company->companyname."_activityreport_". Carbon::now()->timestamp. ".xlsx";
             Excel::store(
@@ -55,6 +56,6 @@ class AccountActivities implements ShouldQueue
                     ->send(
                         new AccountActivitiesReport($file, $this->period, $company)
                     );    
-        }  
+         
     }
 }
