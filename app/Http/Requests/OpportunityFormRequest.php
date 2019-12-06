@@ -25,7 +25,7 @@ class OpportunityFormRequest extends FormRequest
     {
         
         $rules['closed'] = 'required';
-        $rules['value'] ='required|numeric|min:1';
+        
              
         if (request('closed') == 0) {
 
@@ -33,8 +33,10 @@ class OpportunityFormRequest extends FormRequest
         } else {
             if (! request()->filled('actual_close') && request()->filled('expected_close')) {
                 request()->merge(['actual_close'=>request('expected_close')]);
+
             } 
             $rules['actual_close'] = 'required_without:expected_close|date|before_or_equal:today';
+            $rules['value'] ='required|numeric|min:1';
 
         }
         
