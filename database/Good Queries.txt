@@ -426,7 +426,7 @@ Order By count(a.id) DESC;
 /**** delete addresses without address_branch
 delete addresses, address_branch from addresses left join address_branch on addresses.id = address_branch.address_id where addresses.company_id = 388 and address_branch.address_id is null
 
-//*********** Sales Reps within 25 miles
+//*********** Closest Sales Reps
 select 
     addresses.id,
     addresses.businessname,
@@ -449,6 +449,7 @@ select
     and persons.user_id = role_user.user_id
     and role_user.role_id = 5
     and persons.user_id = users.id
+  // add if within certain distance
     and
             3956 * acos(cos(radians(addresses.lat)) 
             * cos(radians(persons.lat)) 
@@ -456,3 +457,14 @@ select
             - radians(addresses.lng)) 
             + sin(radians(addresses.lat)) 
             * sin(radians(persons.lat))) < 25
+
+//*************
+SELECT a.code, a.distance
+FROM   places a
+INNER JOIN
+(
+    SELECT   code, MIN(distance) AS mindistance
+    FROM     places
+    GROUP BY code
+) b ON a.code = b.code AND a.distance = b.mindistance
+ORDER BY a.distance

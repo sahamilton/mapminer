@@ -25,7 +25,8 @@ class OpportunityFormRequest extends FormRequest
     {
         
         $rules['closed'] = 'required';
-              
+        $rules['value'] ='required|numeric|min:1';
+             
         if (request('closed') == 0) {
 
             $rules['expected_close'] = 'required|date|after_or_equal:today';
