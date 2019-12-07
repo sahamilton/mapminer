@@ -27,16 +27,15 @@ class BranchCampaignJob implements ShouldQueue
     public function handle()
     {
      
-        foreach (Campaign::active()->get() as $campaign) {
-
+        foreach (Campaign::active()->limit(1)->get() as $campaign) {
+        
             $branches = $this->_getCampaignDetails($campaign);
             foreach ($branches as $branch) {
           
                 Mail::to([['email'=>$branch->manager->first()->userdetails->email, 'name'=>$branch->manager->first()->fullName()]])
                
                     
-                    ->send(new BranchCampaignReport($branch->manager->first(), $branch, $campaign));
-                dd('ok');  
+                    ->send(new BranchCampaignReport($branch->manager->first(), $branch, $campaign));  
 
             } 
         }      
