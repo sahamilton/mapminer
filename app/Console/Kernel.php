@@ -63,13 +63,12 @@ class Kernel extends ConsoleKernel
                 ->mondays()
                 ->at('23:15');
 
-            /*$campaign = Campaign::active()->first();
-            if ($campaign->count()) {
-                $schedule->job(new BranchCampaignJob($campaign))
+            
+            $schedule->job(new BranchCampaignJob())
                 ->weekly()
                 ->sundays()
-                ->at('15:25');
-            }*/
+                ->at('18:25');
+     
             
             // RVP Daily Branch Report
             // 

@@ -10,6 +10,8 @@ use Illuminate\Foundation\Bus\Dispatchable;
 
 use App\Branch;
 use App\Campaign;
+use Mail;
+use App\Mail\BranchCampaignReport;
 
 class BranchCampaignJob implements ShouldQueue
 {
@@ -18,33 +20,52 @@ class BranchCampaignJob implements ShouldQueue
     public $campaign;
     
     /**
-     * Create a new job instance.
-     *
-     * @return void
-     */
-    public function __construct(Campaign $campaign)
-    {
-        $this->campaign = $campaign;
-    }
-
-    /**
      * Execute the job.
      *
      * @return void
      */
     public function handle()
     {
-        //id branches in current campaign
-        foreach ($this->campaign as $campaign) {
+     
+        foreach (Campaign::active()->get() as $campaign) {
 
-            //get stats for the past week for each branch
-            //send email for each branch
-        }
-        $branches = $this->campaign->map(
-            function ($campaign) {
-                return $campaign->branches->pluck('id')->toArray();
-            }
-        );
+            $branches = $this->_getCampaignDetails($campaign);
+            foreach ($branches as $branch) {
+          
+                Mail::to([['email'=>$branch->manager->first()->userdetails->email, 'name'=>$branch->manager->first()->fullName()]])
+               
+                    
+                    ->send(new BranchCampaignReport($branch->manager->first(), $branch, $campaign));
+                dd('ok');  
+
+            } 
+        }      
         
+    }
+    /**
+     * [_getCampaignDetails description]
+     * 
+     * @param Campaign $campaign [description]
+     * 
+     * @return [type]             [description]
+     */
+    private function _getCampaignDetails(Campaign $campaign)
+    {
+        $campaign->load('companies', 'branches');
+        // get companies in campaigns
+        $company_ids = $campaign->companies->pluck('id')->toarray();
+       
+        // get branches in campaign
+        $branch_ids = $campaign->branches->pluck('id')->toarray();
+        // get branch campaign details
+        return  Branch::whereHas(
+            'locations', function ($q) use ($company_ids) {
+                $q->whereIn('company_id', $company_ids);
+            }
+        )
+        ->whereIn('id', $branch_ids)
+        ->with('manager.userdetails')
+        ->campaignDetail($campaign)
+        ->get();
     }
 }

@@ -468,3 +468,11 @@ INNER JOIN
     GROUP BY code
 ) b ON a.code = b.code AND a.distance = b.mindistance
 ORDER BY a.distance
+
+/*************** Declined leads ***
+select companyname, businessname, branchname, address_branch.comments
+from companies, addresses, branches, address_branch
+where address_branch.status_id =4
+and address_branch.address_id = addresses.id
+and addresses.company_id = companies.id
+and address_branch.branch_id = branches.id

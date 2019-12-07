@@ -1,11 +1,16 @@
 @component('mail::message')
-# Introduction
+# Branch {{$branch->branchname}} {{$campaign->title}} Initiatives
+@php
+$views = [
+            'offered'=>"Sales Initiative Leads", 
+            'untouchedLeads'=>"Untouched Sales Initiatives Leads", 
+            'leads'=>"Working Sales Initiatives Leads", 
+            'openActivities'=>"Sales Initiatives Open Activities", 
+            'opportunitiesClosingThisWeek'=>"Opportunities closing this week", 
+        ];
+@endphp
 
-The body of your message.
-
-@component('mail::button', ['url' => ''])
-Button Text
-@endcomponent
+@include('campaigns.emails.partials._branchdetails')
 
 Thanks,<br>
 {{ config('app.name') }}

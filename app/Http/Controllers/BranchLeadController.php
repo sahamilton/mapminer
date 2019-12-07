@@ -66,7 +66,7 @@ class BranchLeadController extends Controller
      */
     public function create()
     {
-        dd(request()->all());
+        
     }
 
     /**

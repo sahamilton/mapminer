@@ -1165,6 +1165,7 @@ class Branch extends Model implements HasPresenter
         $this->location_ids = $campaign->getLocations();
 
         $this->period = $period;
+
         return $query->with(       
             ['leads'=>function ($query) {
                 $query->whereIn('company_id', $this->company_ids)
@@ -1191,8 +1192,9 @@ class Branch extends Model implements HasPresenter
             'openActivities'=>function ($query) {
                 $query->whereIn('address_id', $this->location_ids)
                     ->whereBetween(
-                        'activity_date', [$this->period['from'], now()->addWeeks(1)]
+                        'activity_date', [$this->period['from'], $this->period['to']]
                     )
+                    ->whereNull('completed')
                     ->with('relatesToAddress');
             },
             'openOpportunities'=>function ($query) {

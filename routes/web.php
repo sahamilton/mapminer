@@ -57,7 +57,7 @@ Route::group(
         Route::get('branchleads.import', ['as'=>'branchleads.import', 'uses'=>'BranchLeadImportController@getFile']);
         //   Temporary branch lead assignment
         //Route::get('branchleads/assign', ['as'=>'branchlead.tempassign', 'uses'=>'BranchLeadController@assign']);
-        Route::resource('branchleads', 'BranchLeadController');
+        Route::resource('branchleads', 'mylocalaccounts');
         //     Branches
         Route::get('/branches/{state}/state/', ['as'=>'branches.statelist', 'uses'=>'BranchesController@state']);
         Route::post('/branches/state', ['as'=>'branches.state', 'uses'=>'BranchesController@state']);
@@ -730,8 +730,9 @@ Route::group(
                 //App\Jobs\WonOpportunity::dispatch($opportunity);
                 // App\Jobs\Top50WeeklyReport::dispatch();
                 //App\Jobs\BranchLogins::dispatch($period);
-                App\Jobs\DailyBranch::dispatch($period);
+                //App\Jobs\DailyBranch::dispatch($period);
                  //App\Jobs\AccountActivities::dispatch($company, $period);
+                App\Jobs\BranchCampaignJob::dispatch();
                 //App\Jobs\BranchOpportunities::dispatch($period);
                  //App\Jobs\RebuildPeople::dispatch();
                 //App\Jobs\BranchLogins::dispatch($period);
