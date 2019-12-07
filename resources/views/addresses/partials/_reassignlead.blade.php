@@ -40,9 +40,12 @@
             placeholder ="Enter branch numbers separated by commas" />
           </div>
           <input type="hidden" 
+
           name="address_id" 
           value="{{$location->id}}" />
-          
+          <input type="hidden" 
+          name="current_id" 
+          value="{{$branch->id}}" />
           <div class="float-right">
             <input type="submit" 
             value="Transfer" 

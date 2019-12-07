@@ -338,7 +338,7 @@ class MyLeadsController extends BaseController
             $branch = request('branch');
         }
         
-        $address->load('openActivities', 'openOpportunities');
+        $address->load('openActivities', 'openOpportunities', 'assignedToBranch');
     
         $this->_reassignToBranch($address, $branch);
         $address->load('assignedToBranch');
@@ -402,14 +402,18 @@ class MyLeadsController extends BaseController
      */
     private function _reassignToBranch(Address $address, Array $branches)
     {
+        
         if ($address->openActivities->count()) {
             $this->_reassignActivities($address->openActivities, $branches);
         }
         if ($address->openOpportunities->count()) {
             $this->_reassignOpportunities($address->openOpportunities, $branches);
         }
-        
-        return $address->assignedToBranch()->sync($branches);
+        foreach ($branches as $branch){
+            $data[$branch]= ['status_id'=>1];
+        }
+       
+        return $address->assignedToBranch()->sync($data);
     }
     /**
      * [_reassignActivities description]

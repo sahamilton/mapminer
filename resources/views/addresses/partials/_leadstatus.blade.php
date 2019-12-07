@@ -2,7 +2,7 @@
     <div class="btn-group" role="group" >
       @if($owned == 1)
         
-          <form class='form-inline mr-1'
+        <form class='form-inline mr-1'
             action = "{{route('branchleads.update',$branch->pivot->id)}}"
             method="post"
             >

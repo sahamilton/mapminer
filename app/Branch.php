@@ -1168,11 +1168,11 @@ class Branch extends Model implements HasPresenter
         return $query->with(       
             ['leads'=>function ($query) {
                 $query->whereIn('company_id', $this->company_ids)
-                    ->where('address_branch.created_at', '<=', $this->period['to']);
+                    ->where('address_branch.updated_at', '<=', $this->period['to']);
             },
             'offeredLeads'=>function ($query) {
                 $query->whereIn('company_id', $this->company_ids)
-                    ->where('address_branch.created_at', '<=', $this->period['to']);
+                    ->where('address_branch.updated_at', '<=', $this->period['to']);
             },
             'untouchedLeads'=>function ($query) {
                 $query->whereIn('company_id', $this->company_ids);

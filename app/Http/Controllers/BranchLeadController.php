@@ -78,6 +78,7 @@ class BranchLeadController extends Controller
      */
     public function store(Request $request)
     {
+        
         $this->branchlead->create(
             [
                 'address_id'=>request('address_id'),
@@ -85,6 +86,7 @@ class BranchLeadController extends Controller
                 'status_id'=>'2'
             ]
         );
+  
         return redirect()->route('address.show', request('address_id'));
     }
 
@@ -127,8 +129,9 @@ class BranchLeadController extends Controller
      */
     public function update(Request $request, BranchLead $branchLead)
     {
-    
+        
         $branchLead->update(['status_id'=>2]);
+       
         return redirect()->route('address.show', $branchLead->address_id);
     }
 

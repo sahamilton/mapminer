@@ -94,7 +94,7 @@ class BranchCampaignController extends Controller
     public function show(Campaign $campaign, Branch $branch = null)
     {
         // get my branches
-        
+     
         $person = $this->person->findOrFail(auth()->user()->person->id);
         $myBranches = $this->person->myBranches($person);
         
@@ -104,12 +104,12 @@ class BranchCampaignController extends Controller
 
         $campaigns = $this->campaign->whereHas(
             'branches', function ($q) use ($myBranches) {
-                $q->whereIn('branch_id', $myBranches);
+                $q->whereIn('branch_id', array_keys($myBranches));
             }
         )
         ->current([$branch->id])->get();// else return not valid
-      
-        $campaign->load('companies', 'branches');
+        
+        $campaign->first()->load('companies', 'branches');
         
         if (! in_array($branch->id, $campaign->branches->pluck('id')->toArray())) {
             return redirect()->back()->withError($branch->branchname . ' is not participating in this campaign.');
