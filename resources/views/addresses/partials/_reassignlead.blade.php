@@ -1,5 +1,5 @@
 <!-- Modal -->
-
+@if(count($myBranches) > 0)
 <div id="reassign" class="modal fade" role="dialog">
   <div class="modal-dialog">
 
@@ -59,3 +59,4 @@
     </div>
   </div>
 </div>
+@endif
