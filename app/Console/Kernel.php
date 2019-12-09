@@ -85,14 +85,14 @@ class Kernel extends ConsoleKernel
                 ->at('04:59');
             
             // National Account Jobs
-            $companies = Company::whereIn('id', [532])->get();
+            /* $companies = Company::whereIn('id', [532])->get();
             $period['from'] = Carbon::now()->subWeek()->startOfWeek();
             $period['to'] = Carbon::now()->subWeek()->endOfWeek();
             $schedule->job(new AccountActivities($companies, $period))
                 ->weekly()
                 ->sundays()
                 ->at('18:30');
-          
+            */
             // Branch Login Report
             $period['from'] = Carbon::now()->subMonth(2)->startOfMonth();  
             $period['to'] = Carbon::now()->subWeek()->endOfWeek();
