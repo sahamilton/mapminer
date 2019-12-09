@@ -34,7 +34,7 @@ class BranchCampaignJob implements ShouldQueue
                 Mail::to([['email'=>$branch->manager->first()->userdetails->email, 'name'=>$branch->manager->first()->fullName()]])
                
                     
-                    ->send(new BranchCampaignReport($branch->manager->first(), $branch, $campaign));  
+                    ->queue(new BranchCampaignReport($branch->manager->first(), $branch, $campaign));  
 
             } 
         }      
