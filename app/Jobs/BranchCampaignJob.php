@@ -31,7 +31,6 @@ class BranchCampaignJob implements ShouldQueue
         
             $branches = $this->_getCampaignDetails($campaign);
             foreach ($branches as $branch) {
-          
                 Mail::to([['email'=>$branch->manager->first()->userdetails->email, 'name'=>$branch->manager->first()->fullName()]])
                
                     
@@ -65,6 +64,7 @@ class BranchCampaignJob implements ShouldQueue
         ->whereIn('id', $branch_ids)
         ->with('manager.userdetails')
         ->campaignDetail($campaign)
+        ->upcomingActivities()
         ->get();
     }
 }

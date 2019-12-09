@@ -1031,7 +1031,22 @@ class Branch extends Model implements HasPresenter
             ]
         );
     }
-
+    public function scopeUpcomingActivities($query)
+    {
+        return $query->with(
+            ['activities'=>function ($q) {
+                $q->whereBetween('activity_date', [Carbon::now(),Carbon::now()->addWeek()])
+                    ->where(
+                        function ($q) {
+                            $q->whereNull('completed')
+                                ->orWhere('completed', 0);
+                        }
+                    )
+                    ->with('relatesToAddress')
+                    ->orderBy('activity_date');
+            }]
+        );
+    }
     /**
      * [scopeSummaryStats description]
      * 
@@ -1189,6 +1204,7 @@ class Branch extends Model implements HasPresenter
                     ->with('relatesToAddress');
                     
             },
+
             'openActivities'=>function ($query) {
                 $query->whereIn('address_id', $this->location_ids)
                     ->whereBetween(
