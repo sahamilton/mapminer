@@ -113,7 +113,7 @@ class AddressController extends Controller
         } else {
             $owned = false;
         }
-        
+       
         $fields = Howtofield::where('active', 1)->orderBy('sequence')->get();
  
         return response()->view('addresses.show', compact('location', 'branches', 'rankingstatuses', 'people', 'myBranches', 'ranked', 'notes', 'owned', 'fields'));
@@ -241,17 +241,18 @@ class AddressController extends Controller
         $myBranches = $myBranches->branchesServiced->pluck('id')->toArray();
 
         $ownedBy = $address->assignedToBranch->whereIn('id', $myBranches);
-
+    
         if (! $ownedBy->count()) {
             return null;
         }
+        // find out if the lead is offered or owned
         $owner = $ownedBy->filter(
             function ($branch) {
                 return $branch->pivot->status_id == 2;
             }
         );
-
-        if (! $owner->count()) {
+        
+        if (! $owner) {
             return 1;
         }
         return 2;
