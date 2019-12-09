@@ -50,9 +50,6 @@
                 
             @include('addresses.partials._reassignlead')
         
-
-
-
         @else
           
           @foreach ($location->assignedToBranch as $branch)
