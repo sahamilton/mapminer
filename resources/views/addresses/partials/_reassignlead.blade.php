@@ -13,10 +13,11 @@
         data-dismiss="modal">&times;</button>
       </div>
       <div class="modal-body">
-        
+
         <form method="post" action="{{route('lead.reassign',$location->id)}}">
           @csrf
           @if(count($myBranches)>1)
+         
           <div class="form-group">
             <label class="col-md-2 control-label">Transfer to:</label>
           
@@ -39,13 +40,14 @@
             name="branch_id" 
             placeholder ="Enter branch numbers separated by commas" />
           </div>
+          
           <input type="hidden" 
 
           name="address_id" 
           value="{{$location->id}}" />
           <input type="hidden" 
           name="current_id" 
-          value="{{$branch->id}}" />
+          value="{{$location->assignedToBranch->first()->id}}" />
           <div class="float-right">
             <input type="submit" 
             value="Transfer" 
