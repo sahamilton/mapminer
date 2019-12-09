@@ -42,13 +42,13 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         if (config('app.env') == 'production') {
-           /* $period['from'] = Carbon::now();
+            $period['from'] = Carbon::now();
             $period['to'] = Carbon::now()->addWeek();
             $schedule->job(new WeeklyActivityReminder($period))
                 ->weekly()
                 ->sundays()
                 ->at('20:45');
-            */
+           
             $schedule->job(new RebuildPeople())
                 ->dailyAt('21:12');
 
@@ -64,11 +64,11 @@ class Kernel extends ConsoleKernel
                 ->at('23:15');
 
             
-            $schedule->job(new BranchCampaignJob())
+           /*$schedule->job(new BranchCampaignJob())
                 ->weekly()
                 ->sundays()
                 ->at('18:25');
-     
+            */
             
             // RVP Daily Branch Report
             // 

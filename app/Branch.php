@@ -156,7 +156,8 @@ class Branch extends Model implements HasPresenter
      */
     public function opportunitiesClosingThisWeek()
     {
-        return $this->hasManyThrough(Opportunity::class, AddressBranch::class, 'branch_id', 'address_branch_id', 'id', 'id')->where('closed', '=', 0)
+        return $this->hasManyThrough(Opportunity::class, AddressBranch::class, 'branch_id', 'address_branch_id', 'id', 'id')
+            ->where('closed', '=', 0)
             ->whereBetween('expected_close', [now(), now()->addWeek()]);
     }
     /**
@@ -1172,10 +1173,12 @@ class Branch extends Model implements HasPresenter
      * 
      * @return [type]         [description]
      */
-    public function scopeCampaignDetail($query,$campaign)
+    public function scopeCampaignDetail($query,Campaign $campaign)
     {
+        
         $period['from'] = $campaign->datefrom;
         $period['to'] = $campaign->dateto;
+        
         $this->company_ids = $campaign->companies->pluck('id')->toarray();
         $this->location_ids = $campaign->getLocations();
 
@@ -1218,6 +1221,7 @@ class Branch extends Model implements HasPresenter
                     ->with('address');
             },
             'opportunitiesClosingThisWeek'=>function ($query) {
+                
                 $query->whereIn('opportunities.address_id', $this->location_ids)
                     ->with('address');
             },
