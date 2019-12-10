@@ -1,4 +1,4 @@
-@if (isset($owned))
+@if ($owned)
     <div class="btn-group" role="group" >
       @if($owned == 1)
         
