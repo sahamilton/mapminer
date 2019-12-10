@@ -9,8 +9,8 @@
         <th>ZIP</th>
     </thead>
     <tbody>
-        
-        @foreach ($branch->untouchedleads as $lead)
+       
+        @foreach ($branch->untouchedLeads as $lead)
         <tr>
             <td>
                 <a href="{{route('address.show', $lead->id)}}">

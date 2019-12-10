@@ -177,11 +177,13 @@ img {
     -premailer-cellpadding: 0;
     -premailer-cellspacing: 0;
     -premailer-width: 100%;
+
 }
 
 .table th {
     border-bottom: 1px solid #EDEFF2;
     padding-bottom: 8px;
+    background-color: #04B7F9;
 }
 
 .table td {

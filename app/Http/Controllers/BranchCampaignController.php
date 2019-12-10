@@ -35,6 +35,7 @@ class BranchCampaignController extends Controller
      */
     public function index()
     {
+
         
         $myBranches = $this->branch->whereIn('id', array_keys($this->person->myBranches()))->get();
 
@@ -53,6 +54,7 @@ class BranchCampaignController extends Controller
         
        
         if ($myBranches->count() == 1) {
+
             return $this->show($campaign, $myBranches->first());
         }
 
@@ -97,7 +99,7 @@ class BranchCampaignController extends Controller
      
         $person = $this->person->findOrFail(auth()->user()->person->id);
         $myBranches = $this->person->myBranches($person);
-        
+    
         if (! in_array($branch->id, array_keys($myBranches))) {
             return redirect()->back()->withError('That is not one of your branches');
         }
@@ -118,13 +120,13 @@ class BranchCampaignController extends Controller
         $branch = $this->branch
             ->campaignDetail($campaign)
             ->findOrFail($branch->id);
-        
+       
         $views = [
-            'offered'=>"Sales Initiative Leads", 
-            'untouchedLeads'=>"Untouched Sales Initiatives Leads", 
-            'leads'=>"Working Sales Initiatives Leads", 
-            'activities'=>"Sales Initiatives Activities", 
-            'opportunitiesClosingThisWeek'=>"Opportunities closing this week", 
+            'offered'=>['title'=>"New Sales Initiative Leads", 'detail'=>''],
+            'untouchedLeads'=>['title'=>"Untouched Sales Initiatives Leads", 'detail'=>'Here are the Sales Initiative Leads that you accepted but do not have any activity. Make sure you enter in any activity that has taken place to remove these Leads for the Untouched list.'],
+            'opportunitiesClosingThisWeek'=>['title'=>"Opportunities to Close this Week", 'detail'=>'Make sure you are updating your Opportunities status. Opportunities should be marked Closed – Won once we have billed the our new customer.'],
+            'upcomingActivities'=>['title'=>"Upcoming Activities", 'detail'=>''],
+             
         ];
        
         return response()->view('campaigns.branchplanner', compact('campaign', 'campaigns', 'branch', 'views'));
