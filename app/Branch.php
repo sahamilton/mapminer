@@ -306,7 +306,7 @@ class Branch extends Model implements HasPresenter
 
     }
     /**
-     * [untuchedLeads description]
+     * [untouchedLeads description]
      * 
      * @return [type] [description]
      */
@@ -318,6 +318,22 @@ class Branch extends Model implements HasPresenter
             
             ->whereIn('status_id', [2]); 
 
+    }
+
+    /**
+     * [scopeCampaignUntouchedLeads description]
+     * 
+     * @return [type] [description]
+     */
+    public function scopeCampaignUntouchedLeads($query)
+    {   
+        return $query->with(
+            ['untouchedLeads'=>function ($q) {
+                            $q->whereIn('company_id', ['388']);
+            }
+            ]
+        );
+            
     }
     /**
      * [leads description]
@@ -1111,7 +1127,7 @@ class Branch extends Model implements HasPresenter
                     );
             },
             'offeredLeads'=>function ($query) {
-                $query->whereIn('company_id', $this->company_ids)
+                $query->whereIn('address_id', $this->location_ids)
                     ->where('address_branch.created_at', '<=', $this->period['to']);
             },
             
@@ -1205,33 +1221,25 @@ class Branch extends Model implements HasPresenter
      */
     public function scopeCampaignDetail($query,$campaign)
     {
+     
         $period['from'] = $campaign->datefrom;
         $period['to'] = $campaign->dateto;
         $this->company_ids = $campaign->companies->pluck('id')->toarray();
         $this->location_ids = $campaign->getLocations();
 
         $this->period = $period;
-
+        
         return $query->with(       
-            ['offeredLeads'=>function ($query) {
-                $query->whereIn('address_id', $this->location_ids)
-                    ->where('address_branch.created_at', '>=', $this->period['from'])
-                    ->where('address_branch.created_at', '<=', $this->period['to']);
+            ['offeredLeads'=>function ($q2) {
+                $q2->whereIn('company_id', [388]);
             },
-            'untouchedLeads'=>function ($query) {
-                $query->whereIn('address_id', $this->location_ids)
-                    ->where('address_branch.updated_at', '>=', $this->period['from'])
-                    ->where('address_branch.updated_at', '<=', $this->period['to']);
+            'untouchedLeads'=>function ($q2) {
+                $q2->whereIn('company_id', [388]);
             },
             
             'opportunitiesClosingThisWeek',
-            'upcomingActivities'=>function ($q) {
-                $q->whereHas(
-                    'relatesToaddress', function ($q1) {
-                        $q1->whereIn('id', $this->location_ids);
-                    }
-                );
-            },    
+            'upcomingActivities',
+               
             ]
         );
     }
