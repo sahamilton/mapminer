@@ -7,7 +7,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-use App\Person;
+
 use App\Branch;
 use App\Campaign;
 
@@ -15,7 +15,7 @@ class BranchCampaignReport extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $manager;
+
     public $branch;
     public $campaign;
 
@@ -24,11 +24,12 @@ class BranchCampaignReport extends Mailable
      *
      * @return void
      */
-    public function __construct(Person $manager, Branch $branch, Campaign $campaign)
+    public function __construct(Branch $branch, Campaign $campaign)
     {
-        $this->manager = $manager;
+
         $this->branch = $branch;
         $this->campaign = $campaign;
+
     }
 
     /**
@@ -38,6 +39,10 @@ class BranchCampaignReport extends Mailable
      */
     public function build()
     {
+        $this->branch = $this->branch
+            ->with('manager')
+            ->campaignDetail($this->campaign)
+            ->find($this->branch->id);
         return $this->markdown('campaigns.emails.branchcampaign')
             ->subject($this->branch->branchname . ' Sale Initiative Planner for the '. $this->campaign->title. ' Campaign');
     }

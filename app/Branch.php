@@ -1231,10 +1231,10 @@ class Branch extends Model implements HasPresenter
         
         return $query->with(       
             ['offeredLeads'=>function ($q2) {
-                $q2->whereIn('company_id', [388]);
+                $q2->whereIn('company_id', $this->company_ids);
             },
             'untouchedLeads'=>function ($q2) {
-                $q2->whereIn('company_id', [388]);
+                $q2->whereIn('company_id', $this->company_ids);
             },
             
             'opportunitiesClosingThisWeek',
