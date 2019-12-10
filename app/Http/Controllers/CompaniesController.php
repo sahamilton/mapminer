@@ -243,7 +243,7 @@ class CompaniesController extends BaseController
             $data['segment'] = $segment;
             $company = $this->_getCompanySegmentLocations($company, $segment);
         } else {
-            $company->load('locations', 'locations.orders', 'managedBy', 'industryVertical', 'salesnotes');
+            $company->load('locations', 'locations.orders', 'managedBy', 'industryVertical', 'salesNotes');
             $data = [];  
         }
             
@@ -320,10 +320,10 @@ class CompaniesController extends BaseController
     {
         
         $company = $this->company
-            ->with('locations', 'locations.orders', 'managedBy', 'industryVertical', 'salesnotes')
+            ->with('locations', 'locations.orders', 'managedBy', 'industryVertical', 'salesNotes')
             ->findOrFail(request('id'));
         $state = request('state');
-         $salesnote = $this->salesnote->where('company_id', $company->id)->get();
+        $salesnote = $this->salesnote->where('company_id', $company->id)->get();
         $fields = $this->howtofield->where('active', 1)->orderBy('sequence')->get();
         $data = $this->_getStateLocationsAll($company, $state);
         return response()->view('companies.show', compact('data', 'company', 'salesnote', 'fields'));
@@ -338,11 +338,14 @@ class CompaniesController extends BaseController
      */
     public function stateselect($company,$state=null)
     {
-        
+        $company->load('locations', 'locations.orders', 'managedBy', 'industryVertical', 'salesNotes');
+     
+        $fields = $this->howtofield->where('active', 1)->orderBy('sequence')->get();
+
+        $salesnote = $this->salesnote->where('company_id', $company->id)->get();
         $data = $this->_getStateLocationsAll($company, $state);
-        
-        
-        return response()->view('companies.show', compact('data'));
+     
+        return response()->view('companies.show', compact('data', 'company', 'salesnote', 'fields'));
     }
     /**
      * [_getStateLocationsAll description]

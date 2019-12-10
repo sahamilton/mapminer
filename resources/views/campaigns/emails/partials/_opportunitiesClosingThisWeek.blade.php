@@ -2,9 +2,9 @@
 $statuses = ['0'=>'Open', '1'=>"Closed Won", '2'=>'Closed Lost']
 @endphp
 @component('mail::table')
-|Title|
-|Company|
-|Address|
+|Title
+|Company
+|Address
 |Potential $$|
 |------------- |------------- |------------- |------------- |
 @foreach ($branch->opportunitiesClosingThisWeek as $opportunity)

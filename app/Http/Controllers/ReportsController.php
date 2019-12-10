@@ -233,22 +233,27 @@ class ReportsController extends Controller {
             $export = "\App\Exports\\". $report->export;
             if ($report->object) {
                 switch ($report->object) {
-                case 'Company':
-                    $company = $this->company->findOrFail(request('company'));
-                    return Excel::download(new $export($company, $period, $myBranches), $company->companyname . " " . $report->job . 'Activities.csv');
-                break;
+                    case 'Company':
+                        $company = $this->company->findOrFail(request('company'));
+                        return Excel::download(new $export($company, $period, $myBranches), $company->companyname . " " . $report->job . 'Activities.csv');
+                    break;
 
-                case 'Role':
-                   
-                    return Excel::download(new $export(request('role'), $team), $report->job . '.csv');
+                    case 'Role':
+                       
+                        return Excel::download(new $export(request('role'), $team), $report->job . '.csv');
 
-                break;
+                    break;
 
-                case 'User':
-                    
-                    return Excel::download(new $export($period, [$manager->id]), $report->job . '.csv');
+                    case 'User':
+                        
+                        return Excel::download(new $export($period, [$manager->id]), $report->job . '.csv');
 
-                break;
+                    break;
+
+                    case 'Campaign':
+                        return Excel::download(new $export([$manager->id], $campaign), $report->job . '.csv');
+
+                    break;
                 }
 
             } else {

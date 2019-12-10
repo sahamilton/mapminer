@@ -38,6 +38,7 @@
                     id="todatepicker" 
                     value="{{  old('actual_close', isset($opportunity) && $opportunity->actual_close ? $opportunity->actual_close->format('m/d/Y') : now()->format('m/d/Y') )}}"/>
             </div>
+            
             <div class="float-right">
             <input type="submit" value="Close Opportunity" class="btn btn-success" />
           </div>

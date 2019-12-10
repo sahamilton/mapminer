@@ -14,7 +14,8 @@ class BranchCampaginExport implements FromView
     /**
      * [__construct description]
      * 
-     * @param Array|null $branch [description]
+     * @param Campaign   $campaign [description]
+     * @param Array|null $branch   [description]
      */
     public function __construct(Campaign $campaign, Array $branch=null)
     {

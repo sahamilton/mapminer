@@ -732,7 +732,7 @@ Route::group(
                 //App\Jobs\BranchLogins::dispatch($period);
                 //App\Jobs\DailyBranch::dispatch($period);
                  //App\Jobs\AccountActivities::dispatch($company, $period);
-                App\Jobs\BranchCampaignJob::dispatch();
+                App\Jobs\BranchCampaign::dispatch();
                 //App\Jobs\BranchOpportunities::dispatch($period);
                  //App\Jobs\RebuildPeople::dispatch();
                 //App\Jobs\BranchLogins::dispatch($period);

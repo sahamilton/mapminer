@@ -12,7 +12,7 @@ use App\Jobs\BranchOpportunities;
 use App\Jobs\BranchActivitiesDetail;
 use App\Jobs\BranchStats;
 use App\Jobs\DailyBranch;
-use App\Jobs\BranchCampaignJob;
+use App\Jobs\BranchCampaign;
 use App\Campaign;
 use App\Jobs\RebuildPeople;
 use App\Jobs\BranchLogins;
@@ -66,7 +66,7 @@ class Kernel extends ConsoleKernel
             
            /*$schedule->job(new BranchCampaignJob())
                 ->weekly()
-                ->sundays()
+                ->mondays()
                 ->at('18:25');
             */
             
