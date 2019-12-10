@@ -156,8 +156,9 @@ class Branch extends Model implements HasPresenter
      */
     public function opportunitiesClosingThisWeek()
     {
-        return $this->hasManyThrough(Opportunity::class, AddressBranch::class, 'branch_id', 'address_branch_id', 'id', 'id')->where('closed', '=', 0)
-            ->whereBetween('expected_close', [now(), now()->addWeek()]);
+        return $this->hasManyThrough(Opportunity::class, AddressBranch::class, 'branch_id', 'address_branch_id', 'id', 'id')
+            ->where('closed', '=', 0)
+            ->whereBetween('expected_close', [now()->subDay()->startOfDay(), now()->addWeek()->endOfDay()]);
     }
     /**
      * [pastDueOpportunities description]
@@ -300,7 +301,7 @@ class Branch extends Model implements HasPresenter
     {
         return  $this->belongsToMany(Address::class, 'address_branch', 'branch_id', 'address_id')
             ->whereDoesntHave('opportunities')
-            ->where('address_branch.created_at', '<', now()->subWeek())
+            ->where('address_branch.created_at', '<', now()->subWeek()->startOfDay())
             ->whereIn('status_id', [1]); 
 
     }
@@ -313,8 +314,9 @@ class Branch extends Model implements HasPresenter
     {
         return  $this->belongsToMany(Address::class, 'address_branch', 'branch_id', 'address_id')
             ->whereDoesntHave('opportunities')
-            ->where('address_branch.created_at', '<', now()->subWeek())
-            ->whereIn('status_id', [1]); 
+            ->whereDoesntHave('activities')
+            
+            ->whereIn('status_id', [2]); 
 
     }
     /**
@@ -434,7 +436,11 @@ class Branch extends Model implements HasPresenter
         return $this->whereIn('id', explode(',', $branchstring))
             ->pluck('id')->toArray();
     }
-        
+    /**
+     * [campaign description]
+     * 
+     * @return [type] [description]
+     */
     public function campaign()
     {
         return $this->belongsToMany(Campaign::class);
@@ -844,7 +850,8 @@ class Branch extends Model implements HasPresenter
             ['opportunities', function ($query) use ($period) {
                             $query->where('closed', 0)
                                 ->where('opportunities.created_at', '<', $period);
-                        }]
+            }
+            ]
         );
         
         
@@ -1031,6 +1038,30 @@ class Branch extends Model implements HasPresenter
             ]
         );
     }
+    /**
+     * [upcomingActivities description]
+     * 
+     * @return [type] [description]
+     */
+    public function upcomingActivities()
+    {
+        return $this->hasMany(activity::class)
+            ->whereBetween('activity_date', [Carbon::now()->startOfDay(),Carbon::now()->addWeek()->endOfDay()])
+            ->where(
+                function ($q) {
+                    $q->whereNull('completed')
+                        ->orWhere('completed', 0);
+                }
+            )->orderBy('activity_date', 'ASC');
+
+    }
+    /**
+     * [scopeUpcomingActivities description]
+     * 
+     * @param [type] $query [description]
+     * 
+     * @return [type]        [description]
+     */
     public function scopeUpcomingActivities($query)
     {
         return $query->with(
@@ -1050,8 +1081,8 @@ class Branch extends Model implements HasPresenter
     /**
      * [scopeSummaryStats description]
      * 
-     * @param [type] $query  [description]
-     * @param [type] $period [description]
+     * @param [type] $query    [description]
+     * @param [type] $campaign [description]
      * 
      * @return [type]         [description]
      */
@@ -1182,55 +1213,25 @@ class Branch extends Model implements HasPresenter
         $this->period = $period;
 
         return $query->with(       
-            ['leads'=>function ($query) {
-                $query->whereIn('company_id', $this->company_ids)
-                    ->where('address_branch.updated_at', '<=', $this->period['to']);
-            },
-            'offeredLeads'=>function ($query) {
-                $query->whereIn('company_id', $this->company_ids)
-                    ->where('address_branch.updated_at', '<=', $this->period['to']);
+            ['offeredLeads'=>function ($query) {
+                $query->whereIn('address_id', $this->location_ids)
+                    ->where('address_branch.created_at', '>=', $this->period['from'])
+                    ->where('address_branch.created_at', '<=', $this->period['to']);
             },
             'untouchedLeads'=>function ($query) {
-                $query->whereIn('company_id', $this->company_ids);
-            },
-            'staleLeads'=>function ($query) {
-                $query->whereIn('company_id', $this->company_ids);
-            },
-            'activities'=>function ($query) {
                 $query->whereIn('address_id', $this->location_ids)
-                    ->whereBetween(
-                        'activity_date', [$this->period['from'],$this->period['to']]
-                    )
-                    ->with('relatesToAddress');
-                    
+                    ->where('address_branch.updated_at', '>=', $this->period['from'])
+                    ->where('address_branch.updated_at', '<=', $this->period['to']);
             },
-
-            'openActivities'=>function ($query) {
-                $query->whereIn('address_id', $this->location_ids)
-                    ->whereBetween(
-                        'activity_date', [$this->period['from'], $this->period['to']]
-                    )
-                    ->whereNull('completed')
-                    ->with('relatesToAddress');
-            },
-            'openOpportunities'=>function ($query) {
-                $query->whereIn('opportunities.address_id', $this->location_ids)
-                    ->with('address');
-            },
-            'opportunitiesClosingThisWeek'=>function ($query) {
-                $query->whereIn('opportunities.address_id', $this->location_ids)
-                    ->with('address');
-            },
-            'pastDueOpportunities'=>function ($query) {
-                $query->whereIn('opportunities.address_id', $this->location_ids)
-                    ->with('address');
-            },
-            'staleOpportunities'=>function ($query) {
-                $query->whereIn('opportunities.address_id', $this->location_ids)
-                    ->with('address');
-            },
-    
-
+            
+            'opportunitiesClosingThisWeek',
+            'upcomingActivities'=>function ($q) {
+                $q->whereHas(
+                    'relatesToaddress', function ($q1) {
+                        $q1->whereIn('id', $this->location_ids);
+                    }
+                );
+            },    
             ]
         );
     }

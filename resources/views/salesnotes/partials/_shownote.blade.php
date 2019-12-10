@@ -1,6 +1,6 @@
 <div class='content'>
         <nav>
-           <div class="nav nav-tabs" id="nav-tab" role="tablist">    
+           <div class="nav nav-tabs" id="nav-tab" role="tablist">   
                @foreach ($fields->where('depth', 1) as $tab)
                     
           
@@ -17,16 +17,20 @@
 
             </div>
         </nav>
-        <div class="tab-content" id="nav-tabContent">  
+        <div class="tab-content" id="nav-tabContent"> 
+
             @foreach ($fields->where('depth', 1) as $tab)
                 <div id="{{$tab->fieldname}}" class="tab-pane show @if($loop->first) active @endif" >
                     @foreach ($tab->getDescendants() as $field)
+                 
                     
-                    @if($data->where('howtofield_id', $field->id)->first())
-                        <p><strong>{{$field->fieldname}}</strong></p>
-                            <p>{!! str_replace("\r\n", "<br />", $data->where('howtofield_id', $field->id)->first()->fieldvalue)!!} </p>
-                     
-                    @endif
+                        <p>
+                          <strong>{{$field->fieldname}}</strong>
+                        </p>
+                          @if($salesnote->where('howtofield_id', $field->id)->count() > 0)
+                            <p>{!! $salesnote->where('howtofield_id', $field->id)->first()->fieldvalue!!} </p>
+                          @endif
+                    
                     @endforeach
                 </div>
             @endforeach

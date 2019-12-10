@@ -93,14 +93,13 @@ class SalesNotesController extends BaseController {
      */
     public function show(Company $company)
     {
-        $company->load('managedBy', 'managedBy.userdetails');
+        $company->load('managedBy', 'salesnotes', 'managedBy.userdetails');
     
-
-        $data = $this->salesnote->where('company_id', $company->id)
-            ->with('fields')->get();;
+        $salesnote = $this->salesnote->where('company_id', $company->id)->get();
+        
         $fields = $this->howtofield->where('active', 1)->orderBy('sequence')->get();
 
-        return response()->view('salesnotes.shownote', compact('data', 'company', 'fields'));
+        return response()->view('salesnotes.shownote', compact('salesnote', 'company', 'fields'));
            
     }
 

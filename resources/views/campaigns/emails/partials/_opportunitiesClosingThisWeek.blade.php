@@ -2,11 +2,9 @@
 $statuses = ['0'=>'Open', '1'=>"Closed Won", '2'=>'Closed Lost']
 @endphp
 @component('mail::table')
-|Title|
-|Date Opened|
-|Days Open|
-|Company|
-|Address|
+|Title
+|Company
+|Address
 |Potential $$|
 |Last Activity|
 |------------- |------------- |------------- |------------- |------------- |------------- |------------- |
