@@ -36,15 +36,15 @@
                 </p>
               @endforeach
             </div>
-            <div class="btn-group" role="group" >
-            <button class="btn btn-success mr-2" 
+            
+            <button class="btn btn-success" 
         
               data-toggle="modal" 
               data-target="#createopportunity">New Opportunity</button>
 
               @include('opportunities.partials._createmodal')
                 
-                  <a class="btn btn-warning mr-2"
+                  <a class="btn btn-warning"
                        data-toggle="modal" 
                        data-target="#reassign"
                        href="#">Reassign</a>
@@ -60,7 +60,7 @@
         @endif
  
  
-     </div>
+     
 
 @elseif ($location->assignedToBranch->count())
   
