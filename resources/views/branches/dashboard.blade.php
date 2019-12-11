@@ -23,7 +23,7 @@
 		<thead style="background-color:#E77C22;  color:#fff;">
 			<th colspan=6 class="text-center">Summary</th>
 			<tr>
-				<th class="text-center">Top 50 Open Opportunities</th>
+				<th class="text-center">Top 25 Open Opportunities</th>
 				<th class="text-center">All Open Opportunities</th>
 				<th class="text-center">Won</th>
 				<th class="text-center">Lost</th>
@@ -33,7 +33,7 @@
 		</thead>
 		<tbody>
 			<td class="text-center">
-				<a href="{{route('opportunity.index')}}">{{$data['summary']->first()->top50}}</a></td>
+				<a href="{{route('opportunity.index')}}">{{$data['summary']->first()->Top25}}</a></td>
 			<td class="text-center">{{$data['summary']->first()->open}}</td>
 			<td class="text-center">{{$data['summary']->first()->won}}</td>
 			<td class="text-center">{{$data['summary']->first()->lost}}</td>

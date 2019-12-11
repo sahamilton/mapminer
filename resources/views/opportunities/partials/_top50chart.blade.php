@@ -3,7 +3,7 @@ src="//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
 
 <script>
 
-var barChart = new Chart(cttop50, 
+var barChart = new Chart(ctTop25, 
 {
 
     type: 'bar',
@@ -12,11 +12,11 @@ var barChart = new Chart(cttop50,
   
     data:{
 
-      labels: [{!! $data['team']['top50chart']['chart']['keys'] !!}],
+      labels: [{!! $data['team']['Top25chart']['chart']['keys'] !!}],
 
       datasets:[{
-        label: 'Top 50 Open Opportunities',
-        data: [{!! $data['team']['top50chart']['chart']['data'] !!}],
+        label: 'Top 25 Open Opportunities',
+        data: [{!! $data['team']['Top25chart']['chart']['data'] !!}],
         backgroundColor: 'red'
       }]
     },

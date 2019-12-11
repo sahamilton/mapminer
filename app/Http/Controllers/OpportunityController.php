@@ -402,11 +402,11 @@ class OpportunityController extends Controller
         
         $opportunity = $this->opportunity->findOrFail(request('id'));
  
-        if ($opportunity->top50 == 1) {
-            $opportunity->top50 = null;
+        if ($opportunity->Top25 == 1) {
+            $opportunity->Top25 = null;
         
         } else {
-            $opportunity->top50 = 1;
+            $opportunity->Top25 = 1;
           
         }
         if ($opportunity->save()) {

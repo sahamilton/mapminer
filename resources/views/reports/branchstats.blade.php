@@ -9,7 +9,7 @@
 			<th><b>Branch ID</b></th>
 			<th><b>Branch Manager</b></th>
 			<th><b># Opportunities Opened in Period</b></th>
-			<th><b># Open Top 50 Opportunities</b></th>
+			<th><b># Open Top 25 Opportunities</b></th>
 			<th><b># All Open Opportunities Count</b></th>
 			<th><b>All Open Opportunities Value</b></th>
 			<th><b># Opportunities Lost</b></th>
@@ -37,7 +37,7 @@
 					@endforeach
 				</td>
 				<td>{{$branch->opened}}</td>
-				<td>{{$branch->top50}}</td>
+				<td>{{$branch->Top25}}</td>
 				<td>{{$branch->open}}</td>
 				<td>{{$branch->openvalue}}</td>
 				<td>{{$branch->lost}}</td>

@@ -27,7 +27,7 @@
                     @endif
                 </td>
                 <td>{{$lead->leadsource->source}}</td>
-                <td>{{$lead->pivot->top50}}</td>
+                <td>{{$lead->pivot->Top25}}</td>
                 <td>{{$lead->pivot->rating}}</td>
                 <td>
                     <a 

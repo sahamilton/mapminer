@@ -6,7 +6,7 @@ use App\Opportunity;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
 use Carbon\Carbon;
-class Top50WeekReportExport implements FromView
+class Top25WeekReportExport implements FromView
 {
     public $period;
     public $branch;
@@ -33,7 +33,7 @@ class Top50WeekReportExport implements FromView
             ->orWhere('actual_close', '>', $this->period['to'])
             ->with('branch')
 
-            ->select('branch_id', \DB::raw('count(id) as total,count(top50) as top50, sum(value) as sumvalue'));
+            ->select('branch_id', \DB::raw('count(id) as total,count(Top25) as Top25, sum(value) as sumvalue'));
         if ($this->branch) {
             $opportunities->whereIn('branch_id', implode("','", $this->branch));
         }

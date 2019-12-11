@@ -5,7 +5,7 @@ namespace App\Console;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use App\Jobs\WeeklyActivityReminder;
-use App\Jobs\Top50WeeklyReport;
+use App\Jobs\Top25WeeklyReport;
 use App\Jobs\ActivityOpportunity;
 use App\Jobs\AccountActivities;
 use App\Jobs\BranchOpportunities;

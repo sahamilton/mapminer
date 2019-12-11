@@ -13,7 +13,7 @@ use App\SalesOrg;
 use App\Http\Requests\ReportFormRequest;
 use Illuminate\Http\Request;
 use App\Http\Requests\AddRecipientReportRequest;
-use \App\Exports\OpenTop50BranchOpportunitiesExport;
+use \App\Exports\OpenTop25BranchOpportunitiesExport;
 
 class ReportsController extends Controller {
     public $branch;

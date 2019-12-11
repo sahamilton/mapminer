@@ -7,7 +7,7 @@ use Maatwebsite\Excel\Concerns\FromView;
 use Carbon\Carbon;
 use App\Branch;
 
-class OpenTop50BranchOpportunitiesExport implements FromView
+class OpenTop25BranchOpportunitiesExport implements FromView
 {
     public $period;
     public $branch;

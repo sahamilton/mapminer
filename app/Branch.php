@@ -1013,8 +1013,8 @@ class Branch extends Model implements HasPresenter
                         'actual_close', [$this->period['from'],$this->period['to']]
                     );
             },
-            'opportunities as top50'=>function ($query) {
-                $query->where('opportunities.top50',  1)
+            'opportunities as Top25'=>function ($query) {
+                $query->where('opportunities.Top25',  1)
                     ->where(
                         function ($q) {
                             $q->where('actual_close', '>', $this->period['to'])
@@ -1238,8 +1238,12 @@ class Branch extends Model implements HasPresenter
                 $q2->whereIn('company_id', $this->company_ids);
             },
             
-            'opportunitiesClosingThisWeek',
-            'upcomingActivities',
+            'opportunitiesClosingThisWeek'=>function ($q2) {
+                $q2->whereIn('address_id', $this->locations);
+            },
+            'upcomingActivities'=>function ($q2) {
+                $q2->whereIn('address_id', $this->locations);
+            },
                
             ]
         );
