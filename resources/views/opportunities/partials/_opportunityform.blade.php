@@ -117,4 +117,25 @@
     </span>
   </div>
 </div>
+
+<!-- CSP  -->
+<div class="form-group  {{ $errors->has('csp') ? ' has-error' : ''}}">
+    <label class=" control-label">CSP Opportunity:
+    <div class="input-group checkbox inline input-group-sm">
+        <input 
+        type="checkbox" 
+        class="form-control" 
+        name='csp' 
+        @if(old('csp', isset($opportunity) && $opportunity->csp))
+            checked
+        @endif
+        value="1"
+        title="CSP Opportunity"
+
+        ></label>
+        <span class="help-block">
+            <strong>{{ $errors->has('csp') ? $errors->first('csp') : ''}}</strong>
+        </span>
+    </div>
+</div>
         

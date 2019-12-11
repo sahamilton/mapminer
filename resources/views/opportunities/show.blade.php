@@ -20,7 +20,9 @@
 <p><strong>Expected Value:</strong>{{$opportunity->value}}</p>
 <p><strong>Requirements:</strong>{{$opportunity->requirements}}</p>
 <p><strong>Duration:</strong>{{$opportunity->duration}}</p>
-
+@if($opportunity->csp==1)
+<p><strong> <i class="fas fa-clipboard-list text-success"></i> CSP Opportunity</strong></p>
+@endif
 
 </div>
 @include('partials._modal')

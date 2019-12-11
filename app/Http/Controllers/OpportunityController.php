@@ -230,7 +230,9 @@ class OpportunityController extends Controller
             );
         
         $data = request()->except('_token');
-        
+        if (! request()->filled('csp')) {
+            $data['csp'] = 0;
+        }
         if (request()->filled('expected_close')) {
             $data['expected_close'] = Carbon::parse($data['expected_close']);
         }

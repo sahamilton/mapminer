@@ -18,8 +18,8 @@
     </thead>
       <tbody>
         @foreach ($data['opportunities'] as $opportunity)
-     @if($opportunity->closed == 0)
-      
+        @if($opportunity->closed == 0)
+       
         <tr>
           <td>
             @if(isset($data['branches']) && in_array($data['branches']->first()->id,array_keys($myBranches)))
@@ -31,6 +31,9 @@
               @else
             {{$opportunity->title ?  $opportunity->title : $opportunity->id}}
 
+              @endif
+            @if($opportunity->csp == 1)
+                  <p class="text-success"><i class="fas fa-clipboard-list "></i> CSP Opportunity</p>
               @endif
           </td>
           <td>{{$opportunity->created_at ? $opportunity->created_at->format('Y-m-d') : ''}}

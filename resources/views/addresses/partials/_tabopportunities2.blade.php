@@ -22,7 +22,8 @@
          
         <tr>
           <td>
-           @if(isset($location) && array_intersect(array_keys($myBranches),$location->assignedToBranch->pluck('id')->toArray()) or auth()->user()->hasRole(['admin', 'sales_operations']))
+           
+           @if(isset($location) && array_intersect($myBranches,$location->assignedToBranch->pluck('id')->toArray()) or auth()->user()->hasRole(['admin', 'sales_operations']))
             
             <a href="{{route('opportunity.show',$opportunity->id)}}" title="Review, edit or delete this opportunity">
             {{$opportunity->title ?  $opportunity->title : $opportunity->id}} <i class="fas fa-edit class="text text-info"></i></a>
@@ -30,6 +31,9 @@
               @else
             {{$opportunity->title ?  $opportunity->title : $opportunity->id}}
 
+              @endif
+              @if($opportunity->csp == 1)
+                  <p class="text-success"><i class="fas fa-clipboard-list "></i> CSP Opportunity</p>
               @endif
           </td>
           <td>{{$opportunity->created_at ? $opportunity->created_at->format('Y-m-d') : ''}}
