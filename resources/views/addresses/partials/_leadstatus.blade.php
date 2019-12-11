@@ -1,6 +1,7 @@
 @if ($owned)
-    <div class="btn-group" role="group" >
-      @if($owned == 1)
+
+    
+      @if($branch->pivot->status_id == 1)
         
         <form class='form-inline mr-1'
             action = "{{route('branchleads.update',$branch->pivot->id)}}"
@@ -26,7 +27,7 @@
          
        
         @include('addresses.partials._declinemodal')
-        @elseif ($owned == 2)
+        @elseif ($branch->pivot->status_id == 2)
          
             <div class="col-sm-6">
               @foreach ($location->assignedToBranch as $branch)
@@ -35,7 +36,7 @@
                 </p>
               @endforeach
             </div>
-        
+            <div class="btn-group" role="group" >
             <button class="btn btn-success mr-2" 
         
               data-toggle="modal" 
