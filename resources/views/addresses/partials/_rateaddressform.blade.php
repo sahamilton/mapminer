@@ -1,6 +1,5 @@
 <!-- Modal -->
-@php
-$rank =  3 ;@endphp
+@php $rank =  5 ;@endphp
 <div id="rateaddress" class="modal fade" role="dialog">
   <div class="modal-dialog">
 
@@ -13,12 +12,12 @@ $rank =  3 ;@endphp
       </div>
       <div class="modal-body">
         <p>Please complete this form to rate this locations data</p>
-        <?php $ratings = [1,2,3,4,5];?>
+        @php $ratings = [1,2,3,4,5];@endphp
         <form method="post" action="{{route('address.rating',$location->id)}}">
           @csrf
           <div class="form-group">
             <label class="col-md-2 control-label">Address Rating:</label>
-            <div style="font-size:150%" 
+            <div style="font-size:125%" 
               data-rating="{{$rank}}" 
               id="rank" 
               class='starrr col-md-4'>
