@@ -33,11 +33,11 @@ class BranchCampaign implements ShouldQueue
             $branch = $branches->first();
                 Mail::to([['email'=>$branch->manager->first()->userdetails->email, 'name'=>$branch->manager->first()->fullName()]])
                     ->queue(new BranchCampaignReport($branch, $campaign));  
-            }
+        }
              
-        }      
+    }      
         
-    }
+
     /**
      * [_getCampaignDetails description]
      * 
