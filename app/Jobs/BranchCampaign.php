@@ -47,8 +47,9 @@ class BranchCampaign implements ShouldQueue
      */
     private function _getCampaignDetails(Campaign $campaign)
     {
-        $campaign->load('branches');
+        $campaign->load('branches', 'companies');
         $branch_ids = $campaign->branches->pluck('id')->toarray();
+        $company_ids = $campaign->companies->pluck('id')->toarray();
         // get branch campaign details
         return  Branch::whereHas(
             'locations', function ($q) use ($company_ids) {
