@@ -49,7 +49,7 @@ class Top50WeeklyReport implements ShouldQueue
             ->firstOrFail();
         $distribution = $report->getDistribution();
         Mail::to($distribution)
-            ->send(new SendTop50WeeklyReport($file));
+            ->queue(new SendTop50WeeklyReport($file));
 
         return true;
     }
