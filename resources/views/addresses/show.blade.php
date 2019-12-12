@@ -1,7 +1,7 @@
 @extends('site.layouts.default')
 @section('content')
 
-@php $statuses = [1=>'Offered to',2=>'Owned by']; @endphp
+@php $statuses = [1=>'Offered to',2=>'Owned by','4'=>'Owned by*']; @endphp
 @include('companies.partials._searchbar')
 <h2>{{$location->businessname}}</h2>
 <p>

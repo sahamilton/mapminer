@@ -1231,20 +1231,19 @@ class Branch extends Model implements HasPresenter
         $this->period = $period;
         
         return $query->with(       
-            ['offeredLeads'=>function ($q2) {
-                $q2->whereIn('company_id', $this->company_ids);
+            ['offeredLeads'=>function ($query) {
+                $query->whereIn('address_id', $this->location_ids)
+                    ->where('address_branch.created_at', '>=', $this->period['from'])
+                    ->where('address_branch.created_at', '<=', $this->period['to']);
             },
+            'untouchedLeads'=>function ($query) {
+                $query->whereIn('address_id', $this->location_ids)
+                    ->where('address_branch.updated_at', '>=', $this->period['from'])
+                    ->where('address_branch.updated_at', '<=', $this->period['to']);
             'untouchedLeads'=>function ($q2) {
                 $q2->whereIn('company_id', $this->company_ids);
             },
             
-            'opportunitiesClosingThisWeek'=>function ($q2) {
-                $q2->whereIn('address_id', $this->locations);
-            },
-            'upcomingActivities'=>function ($q2) {
-                $q2->whereIn('address_id', $this->locations);
-            },
-               
             ]
         );
     }
