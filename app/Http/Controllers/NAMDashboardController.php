@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 use App\Person;
 use App\Company;
+use App\Branch;
 use Carbon\Carbon;
+
 use Illuminate\Http\Request;
 
 class NAMDashboardController extends Controller
@@ -54,10 +56,25 @@ class NAMDashboardController extends Controller
      */
     public function select(Request $request)
     {
+        
         $period['from'] = Carbon::now()->subMonth();
         $period['to'] = Carbon::now();
-        $company = $this->company->summaryStats($period)
-            ->where('id', request('account'))->firstOrFail();
-        dd($company);
+        
+        // we need to find all activities, opportunities, leads 
+        $branches = Branch::whereHas(
+            
+            'locations', function ($q) use ($request) {
+                    $q->whereIn('company_id', request('account'));
+            }
+        )->with(
+            ['locations'=>function ($q) use ($request) {
+                    $q->whereIn('company_id', request('account'));
+            }
+            ]
+        )
+        ->get();
+        dd($branches->first());
+        // by branch for these companies
+        // get 
     }
 }

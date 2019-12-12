@@ -4,7 +4,8 @@ action="{{route('namdashboard.select')}}" >
 @csrf
     <div class="form-group">
   <div class="input-group">
-    <select name='account'>
+    <select name='account[]'
+        multiple=""multiple>
 
         @foreach ($manager->managesAccount as $account)
             <option value="{{$account->id}}">{{$account->companyname}}</option>
