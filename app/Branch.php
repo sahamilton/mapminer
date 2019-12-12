@@ -1212,12 +1212,12 @@ class Branch extends Model implements HasPresenter
     }
 
     /**
-     * [scopeSummaryStats description]
+     * [scopeCampaignDetail description]
      * 
-     * @param [type] $query  [description]
-     * @param [type] $period [description]
+     * @param [type]   $query    [description]
+     * @param Campaign $campaign [description]
      * 
-     * @return [type]         [description]
+     * @return [type]             [description]
      */
     public function scopeCampaignDetail($query,Campaign $campaign)
     {
@@ -1236,10 +1236,7 @@ class Branch extends Model implements HasPresenter
                     ->where('address_branch.created_at', '>=', $this->period['from'])
                     ->where('address_branch.created_at', '<=', $this->period['to']);
             },
-            'untouchedLeads'=>function ($query) {
-                $query->whereIn('address_id', $this->location_ids)
-                    ->where('address_branch.updated_at', '>=', $this->period['from'])
-                    ->where('address_branch.updated_at', '<=', $this->period['to']);
+            
             'untouchedLeads'=>function ($q2) {
                 $q2->whereIn('company_id', $this->company_ids);
             },
