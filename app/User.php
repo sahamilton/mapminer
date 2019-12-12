@@ -83,7 +83,9 @@ class User extends Authenticatable
      */
     public function person()
     {
-        return $this->hasOne(Person::class, 'user_id')->orderBy('lastname', 'firstname')
+        return $this->hasOne(Person::class, 'user_id')
+            ->orderBy('lastname', 'asc')
+            ->orderBy('firstname', 'asc')
             ->withDefault('No longer with the company');
     }
     /**

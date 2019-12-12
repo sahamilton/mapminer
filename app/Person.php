@@ -129,7 +129,8 @@ class Person extends NodeModel implements HasPresenter
 
                     $q->whereIn('role_id', $roles);
             }
-        )->orderBy('lastname')->orderBy('firstname')->get();
+        )->orderBy('lastname')
+         ->orderBy('firstname')->get();
     }
     /**
      * [getMyBranches finds branch managers in reporting
@@ -345,7 +346,8 @@ class Person extends NodeModel implements HasPresenter
     public function managesAccount()
     {
         
-        return $this->hasMany(Company::class)->orderBy('companyname');
+        return $this->hasMany(Company::class)
+            ->orderBy('companyname');
     }
     /**
      * [emailcampaigns description]

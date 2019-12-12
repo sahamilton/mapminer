@@ -44,7 +44,7 @@ class SalesNotesController extends BaseController {
             return redirect()->route('salesnotes', $companyid);
         }
         $companies = $this->company->with('salesNotes', 'serviceline')
-            ->orderBy('companyname')->get();
+            ->orderBy('companyname', 'asc')->get();
         return response()->view('salesnotes.index', compact('companies'));
             
 
@@ -61,7 +61,7 @@ class SalesNotesController extends BaseController {
     {
        
   
-        $fields = $this->howtofield->where('active', 1)->orderBy('sequence')->get();
+        $fields = $this->howtofield->where('active', 1)->orderBy('sequence', 'asc')->get();
 
         return response()->view('salesnotes.create', compact('company', 'fields'));
     }
@@ -78,7 +78,7 @@ class SalesNotesController extends BaseController {
             return redirect()->route('salesnotes', $companyid);
         }
         $companies = $this->company->with('salesNotes', 'serviceline')
-            ->orderBy('companyname')->get();
+            ->orderBy('companyname', 'asc')->get();
         return response()->view('salesnotes.index', compact('companies'));
             
 
@@ -97,7 +97,7 @@ class SalesNotesController extends BaseController {
     
         $salesnote = $this->salesnote->where('company_id', $company->id)->get();
         
-        $fields = $this->howtofield->where('active', 1)->orderBy('sequence')->get();
+        $fields = $this->howtofield->where('active', 1)->orderBy('sequence', 'asc')->get();
 
         return response()->view('salesnotes.shownote', compact('salesnote', 'company', 'fields'));
            
@@ -114,7 +114,7 @@ class SalesNotesController extends BaseController {
     public function edit(Company $company)
     {
         $company->load('salesnotes');
-        $fields = $this->howtofield->where('depth', 1)->where('active', 1)->orderBy('sequence')->get();
+        $fields = $this->howtofield->where('depth', 1)->where('active', 1)->orderBy('sequence', 'asc')->get();
          
         return response()->view('salesnotes.edit', compact('company', 'fields'));
     }
@@ -122,10 +122,10 @@ class SalesNotesController extends BaseController {
     /**
      * [update description]
      * 
-     * @param SalesNotesFormRequest $request   [description]
-     * @param [type]                $salesnote [description]
+     * @param Request $request [description]
+     * @param Company $company [description]
      * 
-     * @return [type]                           [description]
+     * @return [type]           [description]
      */
     public function update(Request $request, Company $company)
     {
@@ -201,7 +201,7 @@ class SalesNotesController extends BaseController {
         
         $company->load('salesNotes');
         
-        $fields = Howtofield::orderBy('group')->get();
+        $fields = Howtofield::orderBy('group', 'asc')->get();
         
         $salesnote = $company->salesNotes;
         $groups = Howtofield::select('group')->distinct()->get();
@@ -249,12 +249,19 @@ class SalesNotesController extends BaseController {
         
         $data = Salesnote::where('company_id', $id)->with('fields')->get();
         //$data = $this->getSalesNotes($id);
-        $fields = Howtofield::orderBy('group', 'sequence')->get();
+        $fields = Howtofield::orderBy('group', 'asc')
+            ->orderBy('sequence', 'asc')->get();
 
         return response()->view('salesnotes.printnote', compact('data', 'fields', 'company'));
         
     }
-
+    /**
+     * [_reformatRequestData description]
+     * 
+     * @param Request $request [description]
+     * 
+     * @return [type]           [description]
+     */
     private function _reformatRequestData(Request $request)
     {
         foreach (request()->except(['_token', 'submit','_method']) as $key=>$value) {

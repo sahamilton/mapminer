@@ -38,7 +38,7 @@ class CommentsController extends BaseController
     public function index()
     {
         $comments = $this->comment->with('postedBy', 'postedBy.person')
-            ->orderBy('created_at', 'ASC')
+            ->orderBy('created_at', 'asc')
             ->get();
 
 
@@ -168,7 +168,7 @@ class CommentsController extends BaseController
             'Comments', function ($excel) {
                 $excel->sheet(
                     'Comments', function ($sheet) {
-                        $comments = $this->comment->orderBy('created_at', 'ASC')
+                        $comments = $this->comment->orderBy('created_at', 'asc')
                             ->get();
                         $sheet->loadview('comments.export', compact('comments'));
                     }

@@ -63,8 +63,8 @@ class RegionsController extends BaseController
         $branches = $region->branches()
                 ->with('servicelines', 'manager', 'region', 'servicedBy')
                 ->where('region_id', '=', $region->id)
-                ->orderBy('state', 'ASC')
-                ->orderBy('city', 'ASC')
+                ->orderBy('state', 'asc')
+                ->orderBy('city', 'asc')
                 ->get();
     
                         

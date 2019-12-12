@@ -69,7 +69,7 @@ class SearchController extends Controller
             ->search(request('q'))
             ->nearby($person, 250)
             
-            ->orderBy('distance')
+            ->orderBy('distance', 'asc')
             ->get();
     }
 }
