@@ -1,5 +1,5 @@
 <!-- Modal -->
-@if(count($myBranches) > 0 && $owned)
+@if(count($myBranches))
 <div id="reassign" class="modal fade" role="dialog">
   <div class="modal-dialog">
 

@@ -2,8 +2,8 @@
 
     
       @if($branch->pivot->status_id == 1)
-        
-        <form class='form-inline mr-1'
+        <div class="col-sm-6">
+        <form class='form-inline'
             action = "{{route('branchleads.update',$branch->pivot->id)}}"
             method="post"
             >
@@ -15,6 +15,7 @@
           </form> 
           <button type="submit" 
               class="btn btn-danger"
+
               data-href="{{route('branchleads.destroy',$branch->pivot->id)}}" 
               data-toggle="modal" 
               data-target="#decline-lead" 
@@ -24,7 +25,14 @@
              <i class="far fa-thumbs-down text-white" aria-hidden="true"></i> 
               Decline Lead
             </button>
-         
+             <button type="submit"
+              class="btn btn-warning"
+                       data-toggle="modal" 
+                       data-target="#reassign"
+                       href="#">
+                       <i class="fas fa-random "></i> Reassign</button>
+         </div>       
+        @include('addresses.partials._reassignlead')
        
         @include('addresses.partials._declinemodal')
         @elseif ($branch->pivot->status_id == 2)
@@ -44,10 +52,12 @@
 
               @include('opportunities.partials._createmodal')
                 
-                  <a class="btn btn-warning"
+                  <button type="submit"
+                     class="btn btn-warning"
                        data-toggle="modal" 
                        data-target="#reassign"
-                       href="#">Reassign</a>
+                       href="#">
+                       <i class="fas fa-random "></i> Reassign</button>
                 
             @include('addresses.partials._reassignlead')
         
