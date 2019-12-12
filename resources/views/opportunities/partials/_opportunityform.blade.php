@@ -123,6 +123,7 @@
     <label class=" control-label">CSP Opportunity:
     <div class="input-group checkbox inline input-group-sm">
         <input 
+        title="Check this box if you are using this as your opportunity for the CSP Application Workshop."
         type="checkbox" 
         class="form-control" 
         name='csp' 
