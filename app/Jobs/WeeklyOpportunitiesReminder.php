@@ -43,7 +43,7 @@ class WeeklyOpportunitiesReminder implements ShouldQueue
                 foreach ($branch->manager as $manager) {
 
                     Mail::to([['email'=>$manager->userdetails->email, 'name'=>$manager->fullName()]])
-                    ->send(new SendWeeklyOpportunityReminder($branch, $manager));
+                    ->queue(new SendWeeklyOpportunityReminder($branch, $manager));
                    
                 }
             }

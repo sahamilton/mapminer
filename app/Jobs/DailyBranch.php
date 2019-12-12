@@ -58,7 +58,8 @@ class DailyBranch implements ShouldQueue
                 new DailyBranchExport($this->period, [$this->person->id]), $file
             );
             $distribution = [$this->person->distribution()];
-            Mail::to($distribution)->send(new DailyBranchReport($file, $this->period, $this->person));
+            Mail::to($distribution)
+                ->queue(new DailyBranchReport($file, $this->period, $this->person));
         
         }
     }
