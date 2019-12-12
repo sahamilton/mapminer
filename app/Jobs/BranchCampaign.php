@@ -30,7 +30,7 @@ class BranchCampaign implements ShouldQueue
         foreach (Campaign::active()->limit(1)->get() as $campaign) {
         
             $branches = $this->_getCampaignDetails($campaign);
-            foreach ($branches as $branch) {
+            $branch = $branches->first();
                 Mail::to([['email'=>$branch->manager->first()->userdetails->email, 'name'=>$branch->manager->first()->fullName()]])
                     ->queue(new BranchCampaignReport($branch, $campaign));  
             }
@@ -49,9 +49,16 @@ class BranchCampaign implements ShouldQueue
     {
         $campaign->load('branches');
         $branch_ids = $campaign->branches->pluck('id')->toarray();
+        // get branch campaign details
+        return  Branch::whereHas(
+            'locations', function ($q) use ($company_ids) {
+                $q->whereIn('company_id', $company_ids);
+            }
+        )
+        ->whereIn('id', $branch_ids)
+        ->with('manager.userdetails')
+        ->campaignDetail($campaign)
         
-        return  Branch::whereIn('id', $branch_ids)
-            ->with('manager.userdetails')
-            ->get();
+        ->get();
     }
 }
