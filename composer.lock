@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "dae18f3cc73cf437770239933ac0b185",
+    "content-hash": "ac310dab0758c5e2aa66a391c9b710d3",
     "packages": [
         {
             "name": "algolia/algoliasearch-client-php",
@@ -491,25 +491,25 @@
         },
         {
             "name": "dionera/laravel-beanstalkd-ui",
-            "version": "1.3.0",
+            "version": "2.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Dionera/laravel-beanstalkd-admin-ui.git",
-                "reference": "c001762ef20e9a721a3e6ef6014b8381da1fe996"
+                "reference": "d9e47e1706ea0675beb9d407c42cb1bc28313ef6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Dionera/laravel-beanstalkd-admin-ui/zipball/c001762ef20e9a721a3e6ef6014b8381da1fe996",
-                "reference": "c001762ef20e9a721a3e6ef6014b8381da1fe996",
+                "url": "https://api.github.com/repos/Dionera/laravel-beanstalkd-admin-ui/zipball/d9e47e1706ea0675beb9d407c42cb1bc28313ef6",
+                "reference": "d9e47e1706ea0675beb9d407c42cb1bc28313ef6",
                 "shasum": ""
             },
             "require": {
-                "laravel/framework": "~5.5",
-                "pda/pheanstalk": "~3.0",
-                "php": "^7.0"
+                "laravel/framework": "^5.7.28 | ^6.0",
+                "pda/pheanstalk": "^4.0",
+                "php": "^7.1"
             },
             "require-dev": {
-                "phpspec/phpspec": "^3.0"
+                "phpspec/phpspec": "^5.0"
             },
             "type": "library",
             "extra": {
@@ -535,7 +535,7 @@
                 }
             ],
             "description": "An Admin UI for Beanstalkd and Laravel",
-            "time": "2018-07-17T06:21:46+00:00"
+            "time": "2019-09-16T20:26:31+00:00"
         },
         {
             "name": "dnoegel/php-xdg-base-dir",
@@ -3699,30 +3699,28 @@
         },
         {
             "name": "pda/pheanstalk",
-            "version": "v3.2.1",
+            "version": "v4.0.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/pda/pheanstalk.git",
-                "reference": "57b6e76f1b06ca798e739a8dee92c2dac04fd170"
+                "url": "https://github.com/pheanstalk/pheanstalk.git",
+                "reference": "328708b2cb843c214579a9ac3d1730c074038d6a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pda/pheanstalk/zipball/57b6e76f1b06ca798e739a8dee92c2dac04fd170",
-                "reference": "57b6e76f1b06ca798e739a8dee92c2dac04fd170",
+                "url": "https://api.github.com/repos/pheanstalk/pheanstalk/zipball/328708b2cb843c214579a9ac3d1730c074038d6a",
+                "reference": "328708b2cb843c214579a9ac3d1730c074038d6a",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.0"
+                "ext-mbstring": "*",
+                "php": ">=7.1.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "~4.0"
+                "phpdocumentor/phpdocumentor": "^2",
+                "phpunit/phpunit": "^7",
+                "vimeo/psalm": "^2.0"
             },
             "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "3.1-dev"
-                }
-            },
             "autoload": {
                 "psr-4": {
                     "Pheanstalk\\": "src/"
@@ -3738,6 +3736,11 @@
                     "email": "paul@annesley.cc",
                     "homepage": "http://paul.annesley.cc/",
                     "role": "Developer"
+                },
+                {
+                    "name": "Sam Mousa",
+                    "email": "sam@mousa.nl",
+                    "role": "Maintainer"
                 }
             ],
             "description": "PHP client for beanstalkd queue",
@@ -3745,7 +3748,7 @@
             "keywords": [
                 "beanstalkd"
             ],
-            "time": "2018-09-19T12:16:28+00:00"
+            "time": "2019-01-19T15:11:35+00:00"
         },
         {
             "name": "phenx/php-font-lib",
@@ -4234,28 +4237,29 @@
         },
         {
             "name": "phpoption/phpoption",
-            "version": "1.6.1",
+            "version": "1.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/schmittjoh/php-option.git",
-                "reference": "a8593bf5176bf3d3f2966942c530be19b44ec87c"
+                "reference": "318ad673ba36e53e10ca510aec1c54b4f2a5f2ae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/schmittjoh/php-option/zipball/a8593bf5176bf3d3f2966942c530be19b44ec87c",
-                "reference": "a8593bf5176bf3d3f2966942c530be19b44ec87c",
+                "url": "https://api.github.com/repos/schmittjoh/php-option/zipball/318ad673ba36e53e10ca510aec1c54b4f2a5f2ae",
+                "reference": "318ad673ba36e53e10ca510aec1c54b4f2a5f2ae",
                 "shasum": ""
             },
             "require": {
                 "php": "^5.5.9 || ^7.0"
             },
             "require-dev": {
+                "bamarni/composer-bin-plugin": "^1.3",
                 "phpunit/phpunit": "^4.8.35 || ^5.0 || ^6.0 || ^7.0"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.6-dev"
+                    "dev-master": "1.7-dev"
                 }
             },
             "autoload": {
@@ -4284,7 +4288,7 @@
                 "php",
                 "type"
             ],
-            "time": "2019-12-11T13:45:14+00:00"
+            "time": "2019-12-13T00:10:22+00:00"
         },
         {
             "name": "predis/predis",
