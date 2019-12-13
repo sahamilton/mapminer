@@ -1127,7 +1127,7 @@ class Branch extends Model implements HasPresenter
                     );
             },
             'offeredLeads'=>function ($q) {
-                $$q->whereIn('address_id', $this->location_ids)
+                $q->whereIn('address_id', $this->location_ids)
                     ->where('address_branch.created_at', '<=', $this->period['to']);
             },
             
