@@ -46,9 +46,7 @@ $statuses = ['0'=>'Open', '1'=>"Closed Won", '2'=>'Closed Lost']
           <td>
             @if($opportunity->address->activities->count() >0 )
 
-              {{$opportunity->address->activities->where('completed', 1)->last()->activity_id}}
-             <br />
-            {{$opportunity->address->activities->where('completed',1)->last()->activity_date->format('Y-m-d')}}
+              
             @endif
           </td>
           
