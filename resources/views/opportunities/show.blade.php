@@ -18,7 +18,7 @@
 <p><strong>Date Created:</strong>{{$opportunity->created_at->format('Y-m-d')}}</p>
 <p><strong>Status:</strong>{{$opportunity->closed}}</p>
 <p><strong>Expected Value:</strong>{{$opportunity->value}}</p>
-<p><strong>Expected Close Date:</strong>{{$opportunity->expected_close->format('Y-m-d')}}</p>
+<p><strong>Expected Close Date:</strong>@if($opportunity->expected_close) {{$opportunity->expected_close->format('Y-m-d')}} @endif</p>
 <p><strong>Requirements:</strong>{{$opportunity->requirements}}</p>
 <p><strong>Duration:</strong>{{$opportunity->duration}}</p>
 
