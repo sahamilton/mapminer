@@ -158,7 +158,8 @@ class Branch extends Model implements HasPresenter
     {
         return $this->hasManyThrough(Opportunity::class, AddressBranch::class, 'branch_id', 'address_branch_id', 'id', 'id')
             ->where('closed', '=', 0)
-            ->whereBetween('expected_close', [now()->subDay()->startOfDay(), now()->addWeek()->endOfDay()]);
+            ->whereBetween('expected_close', [now()->subDay()->startOfDay(), now()->addWeek()->endOfDay()])
+            ->with('address.activities.type');
     }
     /**
      * [pastDueOpportunities description]

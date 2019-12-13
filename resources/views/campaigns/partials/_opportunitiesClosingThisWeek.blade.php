@@ -19,15 +19,11 @@ $statuses = ['0'=>'Open', '1'=>"Closed Won", '2'=>'Closed Lost']
         @foreach ($branch->opportunitiesClosingThisWeek as $opportunity)
         <tr>
           <td>
-           @if(isset($location) && array_intersect(array_keys($myBranches),$location->assignedToBranch->pluck('id')->toArray()) or auth()->user()->hasRole(['admin', 'sales_operations']))
-            
+           
             <a href="{{route('opportunity.show',$opportunity->id)}}" title="Review, edit or delete this opportunity">
             {{$opportunity->title ?  $opportunity->title : $opportunity->id}} <i class="fas fa-edit class="text text-info"></i></a>
           
-              @else
-            {{$opportunity->title ?  $opportunity->title : $opportunity->id}}
-
-              @endif
+            
           </td>
           <td>{{$opportunity->created_at ? $opportunity->created_at->format('Y-m-d') : ''}}
           </td>
@@ -44,9 +40,12 @@ $statuses = ['0'=>'Open', '1'=>"Closed Won", '2'=>'Closed Lost']
 
           <td>${{number_format($opportunity->value,2)}}</td>
           <td>
-            @if($opportunity->address->activities->count() >0 )
-
+            @if($opportunity->address->activities->count() >0 && $opportunity->address->activities->where('completed', 1)->last())
               
+              {{$opportunity->address->activities->where('completed', 1)->last()->type->activity}}
+             <br />
+            {{$opportunity->address->activities->where('completed',1)->last()->activity_date->format('Y-m-d')}}
+           
             @endif
           </td>
           
