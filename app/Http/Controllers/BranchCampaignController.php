@@ -36,7 +36,6 @@ class BranchCampaignController extends Controller
     public function index()
     {
 
-        
         $myBranches = $this->branch->whereIn('id', array_keys($this->person->myBranches()))->get();
 
         $campaigns = $this->campaign->current($myBranches->pluck('id')->toArray())->get();
@@ -112,10 +111,10 @@ class BranchCampaignController extends Controller
         ->current([$branch->id])->get();// else return not valid
         
         $campaign->first()->load('companies', 'branches');
-        
+       /* dd($branch->id, $campaign->branches->pluck('id')->toArray());
         if (! in_array($branch->id, $campaign->branches->pluck('id')->toArray())) {
             return redirect()->back()->withError($branch->branchname . ' is not participating in this campaign.');
-        }
+        }*/
         
         $branch = $this->branch
             ->campaignDetail($campaign)
