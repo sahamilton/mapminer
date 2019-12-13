@@ -1,5 +1,4 @@
 <script>
-
 var barChart = new Chart(ctTop25, 
 {
 
