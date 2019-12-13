@@ -1110,12 +1110,12 @@ class Branch extends Model implements HasPresenter
         $this->location_ids = $campaign->getLocations();
         $this->period = $period;
         return $query->withCount(       
-            ['leads'=>function ($query) {
-                $query->whereIn('company_id', $this->company_ids)
+            ['leads'=>function ($q) {
+                $q->whereIn('company_id', $this->company_ids)
                     ->where('address_branch.created_at', '<=', $this->period['to'])
                     ->where(
-                        function ($q) {
-                            $q->whereDoesntHave('opportunities')
+                        function ($q2) {
+                            $q2->whereDoesntHave('opportunities')
                                 ->orWhereHas(
                                     'opportunities', function ($q1) {
                                         $q1->where(
@@ -1126,26 +1126,26 @@ class Branch extends Model implements HasPresenter
                         }
                     );
             },
-            'offeredLeads'=>function ($query) {
-                $query->whereIn('address_id', $this->location_ids)
+            'offeredLeads'=>function ($q) {
+                $$q->whereIn('address_id', $this->location_ids)
                     ->where('address_branch.created_at', '<=', $this->period['to']);
             },
             
-            'activities'=>function ($query) {
-                $query->whereIn('address_id', $this->location_ids)
+            'activities'=>function ($q) {
+                $q->whereIn('address_id', $this->location_ids)
                     ->whereBetween(
                         'activity_date', [$this->period['from'],$this->period['to']]
                     )
                     ->where('completed', 1);
             },
-            'opportunities as opened'=>function ($query) {
-                $query->whereIn('opportunities.address_id', $this->locations)
+            'opportunities as opened'=>function ($q) {
+                $q->whereIn('opportunities.address_id', $this->locations)
                     ->whereBetween(
                         'opportunities.created_at', [$this->period['from'],$this->period['to']]
                     );
             },
-            'opportunities as won'=>function ($query) {
-                $query->whereIn('opportunities.address_id', $this->locations)
+            'opportunities as won'=>function ($q) {
+                $q->whereIn('opportunities.address_id', $this->locations)
                     ->whereClosed(1)
                     ->whereBetween(
                         'opportunities.created_at', [$this->period['from'],$this->period['to']]
@@ -1154,9 +1154,9 @@ class Branch extends Model implements HasPresenter
                         'actual_close', [$this->period['from'],$this->period['to']]
                     );
             },
-            'opportunities as lost'=>function ($query) {
+            'opportunities as lost'=>function ($q) {
                 
-                $query->whereIn('opportunities.address_id', $this->locations)
+                $q->whereIn('opportunities.address_id', $this->locations)
                     ->whereClosed(2)
                     ->whereBetween(
                         'opportunities.created_at', [$this->period['from'],$this->period['to']]
@@ -1166,8 +1166,8 @@ class Branch extends Model implements HasPresenter
                     );
             },
             
-            'opportunities as open'=>function ($query) {
-                $query->whereBetween(
+            'opportunities as open'=>function ($q) {
+                $q->whereBetween(
                     'opportunities.created_at', [$this->period['from'], $this->period['to']]
                 )
                     ->whereClosed(0)        
@@ -1182,8 +1182,8 @@ class Branch extends Model implements HasPresenter
                       ->whereIn('opportunities.address_id', $this->locations)
                 ->where('opportunities.created_at', '<', $this->period['to']);;
             },
-            'opportunities as wonvalue' => function ($query) {
-                $query->whereIn('opportunities.address_id', $this->locations)
+            'opportunities as wonvalue' => function ($q) {
+                $q->whereIn('opportunities.address_id', $this->locations)
                     ->whereBetween(
                         'opportunities.created_at', [$this->period['from'],$this->period['to']]
                     )
@@ -1193,8 +1193,8 @@ class Branch extends Model implements HasPresenter
                         'actual_close', [$this->period['from'],$this->period['to']]
                     );
             },
-            'opportunities as openvalue' => function ($query) {
-                $query->whereIn('opportunities.address_id', $this->locations)
+            'opportunities as openvalue' => function ($q) {
+                $q->whereIn('opportunities.address_id', $this->locations)
                     ->whereBetween(
                         'opportunities.created_at', [$this->period['from'],$this->period['to']]
                     )
@@ -1231,14 +1231,15 @@ class Branch extends Model implements HasPresenter
         $this->period = $period;
         
         return $query->with(       
-            ['offeredLeads'=>function ($query) {
-                $query->whereIn('address_id', $this->location_ids)
+            ['offeredLeads'=>function ($q) {
+                $q->whereIn('address_id', $this->location_ids)
                     ->where('address_branch.created_at', '>=', $this->period['from'])
                     ->where('address_branch.created_at', '<=', $this->period['to']);
             },
-            
-            'untouchedLeads'=>function ($q2) {
-                $q2->whereIn('company_id', $this->company_ids);
+            'untouchedLeads'=>function ($q) {
+                $q->whereIn('address_id', $this->location_ids)
+                    ->where('address_branch.updated_at', '>=', $this->period['from'])
+                    ->where('address_branch.updated_at', '<=', $this->period['to']);
             },
             
             ]
