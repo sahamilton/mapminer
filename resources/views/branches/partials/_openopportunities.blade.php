@@ -24,7 +24,7 @@
           <td>
             @if(in_array($branch->id,array_keys($myBranches)))
             <a href="{{route('opportunity.show',$opportunity->id)}}" title="Review, edit or delete this opportunity">
-            {{$opportunity->title ?  $opportunity->title : $opportunity->id}} <i class="fas fa-edit class="text text-info"></i></a>
+            {{$opportunity->title ?  $opportunity->title : $opportunity->id}} <i class="fas fa-edit text-info"></i></a>
            
                              
 
@@ -33,7 +33,8 @@
 
               @endif
               @if($opportunity->csp == 1)
-                  <p class="text-success"><i class="fas fa-clipboard-list "></i> CSP Opportunity</p>
+                  <p title="This is an opportunity for the CSP Application Workshop." 
+                  class="text-success"><i class="fas fa-clipboard-list "></i> CSP Opportunity</p>
               @endif
           </td>
           <td>{{$opportunity->created_at ? $opportunity->created_at->format('Y-m-d') : ''}}
