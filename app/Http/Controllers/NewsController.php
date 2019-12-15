@@ -44,7 +44,7 @@ class NewsController extends BaseController
                 }
             )
             ->with('author', 'author.person', 'serviceline', 'comments')
-            ->orderBy('datefrom', 'DESC')->get();
+            ->orderBy('datefrom', 'desc')->get();
 
         return response()->view('news.index', compact('news'));
     }
@@ -63,7 +63,7 @@ class NewsController extends BaseController
                 }
             )
         ->with('comments')
-        ->orderBy('datefrom', 'DESC')->get();
+        ->orderBy('datefrom', 'desc')->get();
        
         return response()->view('news.index', compact('news'));
     }

@@ -172,7 +172,6 @@ return [
 
        // Collective\Html\HtmlServiceProvider::class,
       //  MaddHatter\LaravelFullcalendar\ServiceProvider::class,
-        Dionera\BeanstalkdUI\BeanstalkdUIServiceProvider::class,
        // Maatwebsite\Excel\ExcelServiceProvider::class,
         /*
          * Application Service Providers...

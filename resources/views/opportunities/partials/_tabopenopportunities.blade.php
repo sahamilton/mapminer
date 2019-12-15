@@ -8,7 +8,7 @@
       <th>Status</th>
       <th>Company</th>
       <th>Address</th>
-      <th>Top 50</th>
+      <th>Top 25</th>
       <th>Potential Headcount</th>
       <th>Potential Duration (mos)</th>
       <th>Potential $$</th>
@@ -18,8 +18,8 @@
     </thead>
       <tbody>
         @foreach ($data['opportunities'] as $opportunity)
-     @if($opportunity->closed == 0)
-      
+        @if($opportunity->closed == 0)
+       
         <tr>
           <td>
             @if(isset($data['branches']) && in_array($data['branches']->first()->id,array_keys($myBranches)))
@@ -31,6 +31,9 @@
               @else
             {{$opportunity->title ?  $opportunity->title : $opportunity->id}}
 
+              @endif
+            @if($opportunity->csp == 1)
+                  <p class="text-success"><i class="fas fa-clipboard-list "></i> CSP Opportunity</p>
               @endif
           </td>
           <td>{{$opportunity->created_at ? $opportunity->created_at->format('Y-m-d') : ''}}
@@ -57,12 +60,12 @@
             
             <input 
               type="checkbox" 
-              class="top50" 
+              class="Top25" 
               value="{{$opportunity->id}}" 
-              @if($opportunity->top50)
+              @if($opportunity->Top25)
                 checked
               @endif />
-            <span class="d-none">{{$opportunity->top50}}</span>
+            <span class="d-none">{{$opportunity->Top25}}</span>
             
             
           </td>
@@ -112,7 +115,7 @@
 
 <script>
 $( document ).ready(function() {
-    $(".top50").change (function () {
+    $(".Top25").change (function () {
       
       var id = $(this).val();
 

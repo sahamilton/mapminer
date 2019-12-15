@@ -8,7 +8,7 @@
       <th>Status</th>
       <th>Company</th>
       <th>Address</th>
-      <th>Top 50</th>
+      <th>Top 25</th>
       <th>Potential Headcount</th>
       <th>Potential Duration (mos)</th>
       <th>Potential $$</th>
@@ -53,8 +53,8 @@
           <td>{{$opportunity->address->address->fullAddress()}}</td>
           <td>
 
-            <input type="checkbox" id="top50{{$opportunity->id}}" value="{{$opportunity->id}}" 
-            @if($opportunity->top50)
+            <input type="checkbox" id="Top25{{$opportunity->id}}" value="{{$opportunity->id}}" 
+            @if($opportunity->Top25)
             checked/><span class="hidden">1</span>
             @endif
             
@@ -82,7 +82,7 @@
 
 <script>
 $( document ).ready(function() {
-    $("input[id^=top50]").change (function () {
+    $("input[id^=Top25]").change (function () {
       var id = $(this).val();
 
       $.ajax(

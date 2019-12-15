@@ -10,9 +10,9 @@
  </div>
 <div class="row">
   <div style="width: 40%;float:right;border:solid 1px #aaaaaa;margin:5px;">
-    <h4>Top 50 Open Opportunities</h4>
-           <canvas id="cttop50" width="300" height="300"></canvas>
-           @include('charts._top50chart')
+    <h4>Top 25 Open Opportunities</h4>
+           <canvas id="ctTop25" width="300" height="300"></canvas>
+           @include('charts._top25chart')
   </div>
   <div style="width: 40%;float:right;border:solid 1px #aaaaaa;margin:5px;margin-left:5px">
       <h4>Win Loss %</h4>

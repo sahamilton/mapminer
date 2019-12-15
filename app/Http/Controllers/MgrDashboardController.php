@@ -285,7 +285,7 @@ class MgrDashboardController extends DashboardController
        
         $stats = ['leads',
                 'opportunities',
-                'top50',
+                'Top25',
                 'booked',
                 'won',
                 'lost',
@@ -348,9 +348,9 @@ class MgrDashboardController extends DashboardController
                       ->whereIn('id', $branches)
                       ->sum('lost');
 
-                $data['data'][$team->id]['top50'] = $branchdata
+                $data['data'][$team->id]['Top25'] = $branchdata
                       ->whereIn('id', $branches)
-                      ->sum('top50');
+                      ->sum('Top25');
 
                 $data['data'][$team->id]['open'] = $branchdata
                       ->whereIn('id', $branches)
@@ -375,7 +375,7 @@ class MgrDashboardController extends DashboardController
 
         $data['activities'] = $this->chart->getTeamActivityChart($data);
         $data['pipelinechart'] = $this->chart->getTeamPipelineChart($data);
-        $data['top50chart'] = $this->chart->getTeamTop50Chart($data);
+        $data['Top25chart'] = $this->chart->getTeamTop25Chart($data);
         $data['winratiochart'] = $this->chart->getWinRatioChart($data);
         $data['openleadschart'] = $this->chart->getOpenLeadsChart($data);
         $data['activitytypechart'] = $this->chart->getTeamActivityByTypeChart($data);

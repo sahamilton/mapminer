@@ -23,7 +23,7 @@ class SalesProcessController extends Controller
      */
     public function index()
     {
-        $process = $this->process->orderBy('sequence')->get();
+        $process = $this->process->orderBy('sequence', 'asc')->get();
         return response()->view('salesprocess.index', compact('process'));
     }
 

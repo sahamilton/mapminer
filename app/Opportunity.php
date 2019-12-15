@@ -15,7 +15,8 @@ class Opportunity extends Model
                         'requirements',
                         'client_id',
                         'closed',
-                        'top50',
+                        'Top25',
+                        'csp',
                         'title',
                         'duration',
                         'description',
@@ -152,16 +153,16 @@ class Opportunity extends Model
         return $query->where('opportunities.created_at', '<=', $period['to']);
     }
     /**
-     * [scopeTop50 description]
+     * [scopeTop25 description]
      * 
      * @param [type] $query  [description]
      * @param [type] $period [description]
      * 
      * @return [type]         [description]
      */
-    public function scopeTop50($query,$period)
+    public function scopeTop25($query,$period)
     {
-            return $query->where('opportunities.top50', '=', 1);
+            return $query->where('opportunities.Top25', '=', 1);
     }
     /**
      * [scopeOpen description]

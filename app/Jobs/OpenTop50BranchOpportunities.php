@@ -6,15 +6,15 @@ use Mail;
 use Excel;
 use App\Report;
 use Carbon\Carbon;
-use App\Mail\SendTop50WeeklyReport;
-use App\Exports\OpenTop50BranchOpportunitiesExport;
+use App\Mail\SendTop25WeeklyReport;
+use App\Exports\OpenTop25BranchOpportunitiesExport;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 
-class OpenTop50BranchOpportunities implements ShouldQueue
+class OpenTop25BranchOpportunities implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     public $period;
@@ -39,13 +39,13 @@ class OpenTop50BranchOpportunities implements ShouldQueue
         // create the file
         $file = '/public/reports/topopen50wkrpt'. $this->period->timestamp. ".xlsx";
         
-        Excel::store(new OpenTop50BranchOpportunitiesExport($this->period), $file);
+        Excel::store(new OpenTop25BranchOpportunitiesExport($this->period), $file);
         $report = Report::with('distribution')
             ->where('job', $class)
             ->firstOrFail();
         $distribution = $report->getDistribution();
         Mail::to($distribution)              
-                ->send(new SendTop50WeeklyReport($file));
+                ->send(new SendTop25WeeklyReport($file));
 
         
                 

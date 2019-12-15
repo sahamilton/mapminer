@@ -141,19 +141,19 @@ class Chart extends Model
         return $this->_getChartData($chart);
     }
     /**
-     * [getTeamTop50Chart description]
+     * [getTeamTop25Chart description]
      * 
      * @param array $data [description]
      * 
      * @return [type]       [description]
      */
-    public function getTeamTop50Chart(array $data)
+    public function getTeamTop25Chart(array $data)
     {
       
         $chart= array();
         foreach ($data['team'] as $team) {
-            if (isset($data['data'][$team->id]['top50'])) {
-                $chart[$team->postName()]=$data['data'][$team->id]['top50'];
+            if (isset($data['data'][$team->id]['Top25'])) {
+                $chart[$team->postName()]=$data['data'][$team->id]['Top25'];
             } else {
                 $chart[$team->postName()]=0;
             }

@@ -8,7 +8,7 @@
       <th>Status</th>
       <th>Business</th>
       <th>Address</th>
-      <th>Top 50</th>
+      <th>Top 25</th>
       <th>Potential Headcount</th>
       <th>Potential Duration (mos)</th>
       <th>Potential $$</th>
@@ -31,6 +31,9 @@
               @else
             {{$opportunity->title ?  $opportunity->title : $opportunity->id}}
 
+              @endif
+              @if($opportunity->csp == 1)
+                  <p class="text-success"><i class="fas fa-clipboard-list "></i> CSP Opportunity</p>
               @endif
           </td>
           <td>{{$opportunity->created_at ? $opportunity->created_at->format('Y-m-d') : ''}}
@@ -55,8 +58,8 @@
           <td>{{$opportunity->address->address->fullAddress()}}</td>
           <td>
 
-            <input type="checkbox" id="top50{{$opportunity->id}}" value="{{$opportunity->id}}" 
-            @if($opportunity->top50)
+            <input type="checkbox" id="Top25{{$opportunity->id}}" value="{{$opportunity->id}}" 
+            @if($opportunity->Top25)
             checked/><span class="hidden">1</span>
             @endif
             
@@ -106,7 +109,7 @@
 
 <script>
 $( document ).ready(function() {
-    $("input[id^=top50]").change (function () {
+    $("input[id^=Top25]").change (function () {
       var id = $(this).val();
 
       $.ajax(

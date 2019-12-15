@@ -258,7 +258,7 @@ class SearchFiltersController extends BaseController
 
         $vertical = \App\Company::where('id', '=', request('id'))->pluck('vertical');
         $segments = $this->filter->where('parent_id', '=', $vertical)
-            ->orderBy('filter')
+            ->orderBy('filter', 'asc')
             ->pluck('filter', 'id');
 
         //$i=0;
