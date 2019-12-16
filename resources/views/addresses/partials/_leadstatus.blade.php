@@ -1,6 +1,5 @@
 @if ($owned)
 
-    
       @if($branch->pivot->status_id == 1)
         <div class="col-sm-6">
         <form class='form-inline'
@@ -64,8 +63,10 @@
         @else
           
           @foreach ($location->assignedToBranch as $branch)
+           @if($branch->pivot->status_id)
           <li><strong>{{$statuses[$branch->pivot->status_id]}}</strong>
           {{$branch->branchname}}</li>
+          @endif
           @endforeach
         @endif
  
@@ -75,6 +76,7 @@
 @elseif ($location->assignedToBranch->count())
   
   @foreach ($location->assignedToBranch as $branch)
+
     <li><strong>Owned By:</strong>
       <a href="{{route('branches.show', $branch->id)}}">
         {{$branch->branchname}}
