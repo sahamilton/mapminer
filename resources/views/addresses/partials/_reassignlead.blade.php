@@ -1,5 +1,6 @@
 <!-- Modal -->
-@if(count($myBranches))
+@if(count($myBranches) && $location->assignedToBranch->count())
+
 <div id="reassign" class="modal fade" role="dialog">
   <div class="modal-dialog">
 
@@ -40,7 +41,7 @@
             name="branch_id" 
             placeholder ="Enter branch numbers separated by commas" />
           </div>
-         
+     
           <input type="hidden" 
 
           name="address_id" 

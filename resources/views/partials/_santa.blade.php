@@ -11,4 +11,4 @@ img.santa {
     }
 }
 </style>
-<img class="santa" src="/assets/img/cupidsh0.gif" width="20%" />	
+<img class="santa" src="/assets/img/santa.png" width="20%" />	

@@ -66,8 +66,8 @@ class Kernel extends ConsoleKernel
             
             $schedule->job(new BranchCampaign())
                 ->weekly()
-                ->mondays()
-                ->at('8:42');
+                ->sundays()
+                ->at('18:42');
             
             
             // RVP Daily Branch Report
