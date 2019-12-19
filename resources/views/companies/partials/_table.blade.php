@@ -10,7 +10,7 @@
 
 		<th>Segment</th>
 		<th>Recent Business</th>
-		<th>Assigned To Branch</th>
+		<th>Branch Assignment</th>
 
    		@if(auth()->user()->hasRole('admin'))
 			<th>Actions</th>
