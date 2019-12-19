@@ -72,7 +72,7 @@ class CampaignTrackingController extends Controller
     {
         $campaign->load('companies', 'branches');
         $branches = $this->_getBranchesInCampaign($campaign);
-       
+        $branches= $this->_getAllBranchesInCampaign($campaign);
         return Excel::download(new CampaignSummaryExport($campaign, $branches), $campaign->title.time().'Export.csv');
 
     }
@@ -93,6 +93,19 @@ class CampaignTrackingController extends Controller
                     $q->whereIn('company_id', $company_ids);
                 }
             )->summaryCampaignStats($campaign)->get();
+    }
+
+    private function _getAllBranchesInCampaign(Campaign $campaign)
+    {
+        $branch_ids = $this->branch->pluck('id')->toArray();
+        $company_ids = $campaign->companies->pluck('id')->toArray();
+        return $this->branch->whereIn('id', $branch_ids)
+            ->whereHas(
+                'locations', function ($q) use ($company_ids) {
+                    $q->whereIn('company_id', $company_ids);
+                }
+            )->summaryCampaignStats($campaign)->get();
+
     }
     /**
      * [_getCampaignBranchTeam description]

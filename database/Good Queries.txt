@@ -476,3 +476,72 @@ where address_branch.status_id =4
 and address_branch.address_id = addresses.id
 and addresses.company_id = companies.id
 and address_branch.branch_id = branches.id
+
+?********************************************
+select 
+    addresses.id,
+    addresses.businessname,
+    addresses.street as addressestreet, 
+    addresses.city as loccity, 
+    addresses.state as addressestate,
+    addresses.zip as loczip,
+    branches.id as bid,
+    branches.branchname,
+    ST_DISTANCE_SPHERE(branches.position, addresses.position) as distance
+    from addresses, branches
+    where addresses.company_id = 38
+    and
+    ST_DISTANCE_SPHERE(branches.position, addresses.position, 40234) 
+    order by addresses.id asc, distance asc
+
+
+
+SELECT id, type, rate
+FROM
+( ( SELECT id, type, rate, 25-rate AS diff
+    FROM rates
+    WHERE type = 'A'
+      AND rate < 25
+    ORDER BY rate DESC
+      LIMIT 3
+  ) 
+  UNION ALL
+  ( SELECT id, type, rate, rate-25 AS diff
+    FROM rates
+    WHERE type = 'A'
+      AND rate >= 25
+    ORDER BY rate ASC
+      LIMIT 3
+  ) 
+) AS tmp
+ORDER BY diff
+LIMIT 3 ;
+
+
+////////////// Asssign personal leads to branch where not linked
+
+insert into address_branch (address_id, branch_id, status_id) 
+SELECT addresses.id, branch_person.branch_id, 2
+FROM persons, branch_person, addresses
+left join address_branch
+on addresses.id = address_branch.address_id
+where addresses.lead_source_id = 4
+and address_branch.address_id is null
+and addresses.user_id is not null
+and addresses.user_id = persons.user_id
+and persons.id = branch_person.person_id
+and branch_person.role_id =9
+
+////////////// Assign personal leads to branch where not linked, originator no longer with Co but has activities
+
+USE mapminer;
+insert into address_branch
+(address_id, branch_id, status_id)
+select distinct addresses.id, activities.branch_id, 2
+from activities, addresses
+left join address_branch on addresses.id = address_branch.address_id
+where address_branch.address_id is null
+and addresses.lead_source_id = 4
+and addresses.id = activities.address_id
+
+/////////// 

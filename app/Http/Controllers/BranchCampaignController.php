@@ -44,7 +44,8 @@ class BranchCampaignController extends Controller
         if (! $campaigns->count()) {
             return redirect()->back()->withMessage('there are no current sales campaigns for your branches');
         }
-        if (session('campaign')) {
+        
+        if (session('campaign') && session('campaign') != 'all') {
             $campaign = $this->campaign->findOrFail(session('campaign'));
         } else {
             $campaign = $campaigns->first();
@@ -81,7 +82,12 @@ class BranchCampaignController extends Controller
      */
     public function change(Request $request)
     {
-        session(['campaign'=>request('campaign_id')]);
+        
+        if (request('campaign')!= 'all') {
+                session(['campaign'=>request('campaign_id')]);
+        } else {
+            session()->forget('campaign');
+        }
 
         return $this->index();
     }
@@ -111,7 +117,7 @@ class BranchCampaignController extends Controller
         ->current([$branch->id])->get();// else return not valid
         
         $campaign->first()->load('companies', 'branches');
-       /* dd($branch->id, $campaign->branches->pluck('id')->toArray());
+        /* dd($branch->id, $campaign->branches->pluck('id')->toArray());
         if (! in_array($branch->id, $campaign->branches->pluck('id')->toArray())) {
             return redirect()->back()->withError($branch->branchname . ' is not participating in this campaign.');
         }*/
