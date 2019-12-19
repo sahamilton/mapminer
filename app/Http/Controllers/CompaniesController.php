@@ -243,7 +243,7 @@ class CompaniesController extends BaseController
             $data['segment'] = $segment;
             $company = $this->_getCompanySegmentLocations($company, $segment);
         } else {
-            $company->load('locations', 'locations.orders', 'managedBy', 'industryVertical', 'salesNotes');
+            $company->load('locations.orders', 'managedBy', 'industryVertical', 'salesNotes', 'locations.assignedToBranch');
             $data = [];  
         }
             

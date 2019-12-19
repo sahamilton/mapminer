@@ -10,7 +10,7 @@
 
 				@include('maps.partials._form)
 				
-				
+				@include('partials._santa')
 			@else
 				<div id="loginbtn" style="padding-left:0px;padding-top:200px">
 					<a href='login'class='btn btn-lg btn-success'>Login</a>
