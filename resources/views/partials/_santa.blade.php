@@ -2,7 +2,7 @@
 img.santa {
   position: absolute;
   animation: moveImage 15s linear;
-  left: -400px;
+  left: -500px;
 }
 
 @keyframes moveImage {
