@@ -10,6 +10,7 @@
 
 		<th>Segment</th>
 		<th>Recent Business</th>
+		<th>Assigned To Branch</th>
 
    		@if(auth()->user()->hasRole('admin'))
 			<th>Actions</th>
@@ -47,7 +48,11 @@
 		@endif
 	</td>
 	<td>{{$data['orders'][$location->id]}}</td>
-	
+	<td>
+		@foreach ($location->assignedToBranch as $branch)
+			<a href="{{route('branches.show', $branch->id)}}">{{$branch->branchname}}</a>
+		@endforeach
+	</td>
 	@if(auth()->user()->hasRole('admin'))
 		<td>
 
