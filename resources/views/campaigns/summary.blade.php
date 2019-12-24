@@ -9,7 +9,8 @@
                 Export to Excel
         </a>
     </p>
-    @if (auth()->user()->hasRole(['admin', 'sales_operations'])) {
+    {{$campaign->id}}
+    @if (auth()->user()->hasRole(['admin', 'sales_operations']))
         <p>
             <a href="{{route('campaigns.index')}}">Return to all campaigns</a>
         </p>

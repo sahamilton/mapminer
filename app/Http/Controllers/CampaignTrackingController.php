@@ -70,9 +70,12 @@ class CampaignTrackingController extends Controller
      */
     public function export(Campaign $campaign)
     {
+        
         $campaign->load('companies', 'branches');
         $branches = $this->_getBranchesInCampaign($campaign);
-        $branches= $this->_getAllBranchesInCampaign($campaign);
+        //dd($branches);
+        //$branches= $this->_getAllBranchesInCampaign($campaign);
+        //dd($branches);
         return Excel::download(new CampaignSummaryExport($campaign, $branches), $campaign->title.time().'Export.csv');
 
     }
