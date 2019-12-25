@@ -1,7 +1,7 @@
 <style>
 img.santa {
   position: absolute;
-  animation: moveImage 15s linear;
+  animation: moveImage 30s linear;
   left: -500px;
 }
 
@@ -11,4 +11,4 @@ img.santa {
     }
 }
 </style>
-<img class="santa" src="/assets/img/santawalk.gif" width="20%" />	
+<img class="santa" src="/assets/img/santawalk.gif" width="5%" />	
