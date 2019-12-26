@@ -1,7 +1,7 @@
 @extends('site.layouts.calendar')
 @section('content')
 @include('partials._newsflash')
-@include('partials._santa')
+
 <div class="container" style="margin-bottom:100px">
 
 <h2>{{$branch->branchname}} Dashboard</h2>
