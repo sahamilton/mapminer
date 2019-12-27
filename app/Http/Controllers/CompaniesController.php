@@ -318,14 +318,23 @@ class CompaniesController extends BaseController
      */
     public function stateselector(Request $request)
     {
-        
-        $company = $this->company
-            ->with('locations', 'locations.orders', 'managedBy', 'industryVertical', 'salesNotes')
+        $company = $this->company->findOrFail(request('id'));
+        $data = $this->_getStateLocationsAll($company, request('state'));
+        /*$company = $this->company
+            ->with(
+                [
+                    'locations'=>function ($q) {
+                                $q->where('state', request('state'));
+                    }
+                ]
+            )
+            ->with('locations', 'managedBy', 'industryVertical', 'salesNotes')
             ->findOrFail(request('id'));
         $state = request('state');
+        */
         $salesnote = $this->salesnote->where('company_id', $company->id)->get();
         $fields = $this->howtofield->where('active', 1)->orderBy('sequence')->get();
-        $data = $this->_getStateLocationsAll($company, $state);
+        //$data = $this->_getStateLocationsAll($company, $state);
         return response()->view('companies.show', compact('data', 'company', 'salesnote', 'fields'));
     }
     /**
@@ -336,14 +345,27 @@ class CompaniesController extends BaseController
      * 
      * @return [type]          [description]
      */
-    public function stateselect($company,$state=null)
+    public function stateselect(Company $company,$state=null)
     {
-        $company->load('locations', 'locations.orders', 'managedBy', 'industryVertical', 'salesNotes');
+        $data = $this->_getStateLocationsAll($company, $state);
+        /* $company = $this->company
+            ->with(
+                [
+                    'locations'=>function ($q) {
+                                $q->where('state', request('state'));
+                    }
+                ]
+            )
+            ->with('managedBy', 'industryVertical', 'salesNotes')
+            ->findOrFail($company->id);
+        
+        */
+
      
         $fields = $this->howtofield->where('active', 1)->orderBy('sequence')->get();
 
         $salesnote = $this->salesnote->where('company_id', $company->id)->get();
-        $data = $this->_getStateLocationsAll($company, $state);
+        
      
         return response()->view('companies.show', compact('data', 'company', 'salesnote', 'fields'));
     }
@@ -387,7 +409,7 @@ class CompaniesController extends BaseController
         
 
         $data['states'] = $this->_getStatesInArray($company->locations);
-        
+ 
         if (isset($data['state'])) {
             $data['company'] = $this->company->with(
                 ['locations' => function ($query) use ($data) {
@@ -397,7 +419,7 @@ class CompaniesController extends BaseController
             )
              ->with('managedBy', 'industryVertical')->findOrFail($company->id);
         }
-
+        
         $data['parent'] = $company->getAncestors();
         
         $data['filters'] = $this->searchfilter->vertical();

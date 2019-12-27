@@ -18,7 +18,7 @@
     </thead>
     <tbody>
 
-   @foreach($company->locations as $location)
+   @foreach($data['company']->locations as $location)
 
 
     <tr> 
