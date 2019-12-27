@@ -171,6 +171,33 @@ class CompaniesController extends BaseController
 
         return redirect()->route('company.index');
     }
+
+    /**
+     * [show description]
+     * 
+     * @param Company $company [description]
+     * @param [type]  $segment [description]
+     * 
+     * @return [type]           [description]
+     */
+    public function show(Company $company,$segment = null)
+    {
+        if (isset($segment)) {
+            $data['segment'] = $segment;
+            $data['company'] = $this->_getCompanySegmentLocations($company, $segment);
+        } else {
+            $data['company'] = $company->load('locations.orders', 'managedBy', 'industryVertical', 'salesNotes', 'locations.assignedToBranch');
+            
+        }
+            
+        $data = $this->_getCompanyViewData($company, $data);
+        $salesnote = $this->salesnote->where('company_id', $company->id)->get();
+        $fields = $this->howtofield->where('active', 1)->orderBy('sequence')->get();
+      
+        return response()->view('companies.show', compact('data', 'fields', 'company', 'salesnote'));
+
+    }
+
     /**
      * Show the form for editing the specified company.
      *
@@ -229,32 +256,7 @@ class CompaniesController extends BaseController
         return redirect()->route('company.index')->withMessage($company->companyname. ' has been deleted');
     }
 
-    /**
-     * [show description]
-     * 
-     * @param Company $company [description]
-     * @param [type]  $segment [description]
-     * 
-     * @return [type]           [description]
-     */
-    public function show(Company $company,$segment = null)
-    {
-        if (isset($segment)) {
-            $data['segment'] = $segment;
-            $company = $this->_getCompanySegmentLocations($company, $segment);
-        } else {
-            $company->load('locations.orders', 'managedBy', 'industryVertical', 'salesNotes', 'locations.assignedToBranch');
-            $data = [];  
-        }
-            
-        $data = $this->_getCompanyViewData($company, $data);
-        $salesnote = $this->salesnote->where('company_id', $company->id)->get();
-        $fields = $this->howtofield->where('active', 1)->orderBy('sequence')->get();
-      
-        return response()->view('companies.show', compact('data', 'fields', 'company', 'salesnote'));
-
-    }
-
+    
     
 
     /**
@@ -405,8 +407,6 @@ class CompaniesController extends BaseController
      */
     private function _getCompanyViewData(Company $company,$data)
     {
-
-        
 
         $data['states'] = $this->_getStatesInArray($company->locations);
  
