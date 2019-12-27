@@ -47,7 +47,11 @@
 			@endif
 		@endif
 	</td>
-	<td>{{$data['orders'][$location->id]}}</td>
+	<td>
+		@if(isset($data['orders'][$location->id]))
+		{{$data['orders'][$location->id]}}
+		@endif
+	</td>
 	<td>
 		@foreach ($location->assignedToBranch as $branch)
 			<a href="{{route('branches.show', $branch->id)}}">{{$branch->branchname}}</a>

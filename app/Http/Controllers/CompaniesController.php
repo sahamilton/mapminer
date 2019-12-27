@@ -350,25 +350,12 @@ class CompaniesController extends BaseController
     public function stateselect(Company $company,$state=null)
     {
         $data = $this->_getStateLocationsAll($company, $state);
-        /* $company = $this->company
-            ->with(
-                [
-                    'locations'=>function ($q) {
-                                $q->where('state', request('state'));
-                    }
-                ]
-            )
-            ->with('managedBy', 'industryVertical', 'salesNotes')
-            ->findOrFail($company->id);
-        
-        */
-
-     
+            
         $fields = $this->howtofield->where('active', 1)->orderBy('sequence')->get();
 
         $salesnote = $this->salesnote->where('company_id', $company->id)->get();
         
-     
+        
         return response()->view('companies.show', compact('data', 'company', 'salesnote', 'fields'));
     }
     /**
