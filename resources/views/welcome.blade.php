@@ -19,7 +19,7 @@
     </div>
 @else
  @include('partials._newsflash')
-  @include('partials._santa')
+ 
     <div class="jumbotron" style="margin-top:30px">
         <div class="container" style="position:relative;text-align:center;min-height: 500px">
             <h4>Welcome, {{auth()->user()->person()->first()->firstname}} to the PeopleReady&reg; Mapminer!!</h4>
