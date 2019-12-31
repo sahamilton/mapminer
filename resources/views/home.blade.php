@@ -5,7 +5,7 @@
 	<div class="container" style="position:relative;text-align:center">
 		<h4>Welcome to the My PeopleReady&reg; Mapminer</h4>
 		<div id="welcome" style="background-color: white">
-
+			@include('partials._santa')
 			@if(auth()->check()) 
 
 				@include('maps.partials._form)

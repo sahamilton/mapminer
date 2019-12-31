@@ -11,4 +11,4 @@ img.santa {
     }
 }
 </style>
-<img class="santa" src="/assets/img/santawalk.gif" width="5%" />	
+<img class="santa" src="/assets/img/newyear.gif" width="20%" />	

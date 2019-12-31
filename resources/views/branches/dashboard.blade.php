@@ -5,7 +5,7 @@
 <div class="container" style="margin-bottom:100px">
 
 <h2>{{$branch->branchname}} Dashboard</h2>
-
+@include('partials._santa')
 @include('branches.partials._periodselector')
 
 	@foreach ($branch->manager as $manager)
