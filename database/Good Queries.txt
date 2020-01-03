@@ -545,3 +545,23 @@ and addresses.lead_source_id = 4
 and addresses.id = activities.address_id
 
 /////////// 
+Summary of opportunities by branch and quarter
+
+SELECT branchname, concat_ws("-",YEAR(opportunities.created_at), QUARTER(opportunities.created_at)) as Qtr, count(opportunities.id)
+FROM `opportunities` , branches
+
+WHERE opportunities.created_at < '2020-01-01'
+and branch_id = branches.id
+group by branchname, concat_ws("-",YEAR(opportunities.created_at), QUARTER(opportunities.created_at))
+order by branchname
+
+/////////// 
+Summary of activities by branch and quarter
+SELECT branchname, concat_ws("-",YEAR(activity_date), QUARTER(activity_date)) as Qtr, count(activities.id)
+FROM `activities` , branches
+
+WHERE activities.activity_date between '2019-01-01' and '2019-012-31'
+and branch_id = branches.id
+and activities.completed = 1
+group by branchname,concat_ws("-",YEAR(activity_date), QUARTER(activity_date))
+order by branchname
