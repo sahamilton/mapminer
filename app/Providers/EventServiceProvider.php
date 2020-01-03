@@ -15,7 +15,10 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         'Illuminate\Auth\Events\Login' => [
         'App\Listeners\Users\UpdateLastLoggedInAt'],
-        
+         SocialiteProviders\Manager\SocialiteWasCalled::class => 
+            [
+                'SocialiteProviders\\Okta\\OktaExtendSocialite@handle',
+            ],
         'App\Events\FeedbackEvent' => [
         'App\Listeners\FeedbackListener',
         ],
@@ -30,6 +33,6 @@ class EventServiceProvider extends ServiceProvider
     {
         parent::boot();
 
-        //
+       
     }
 }

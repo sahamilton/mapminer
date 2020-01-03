@@ -14,7 +14,8 @@ use App\Mail\SendWeeklyActivityReminder;
 */
 Route::get('/', ['as'=>'welcome','uses'=>'HomeController@index']);
 
-    
+Route::get('login/okta', 'Auth\LoginController@redirectToProvider')->name('login-okta');
+Route::get('login/okta/callback', 'Auth\LoginController@handleProviderCallback');  
         
 Route::get('testinbound', ['as'=>'testinbound', 'uses'=>'InboundMailController@inbound']);
 Route::get('testemail', ['as'=>'testemail', 'uses'=>'InboundMailController@testemail']);
@@ -324,9 +325,9 @@ Route::group(
         //     User (Profile) settings
         Route::resource('user', 'UsersController', ['only' => ['show', 'update']]);;
         
-        Route::get('resetpassword', ['as'=>'reset.password', 'uses'=>'Auth\\ResetPasswordController@showResetForm']);
+        //Route::get('resetpassword', ['as'=>'reset.password', 'uses'=>'Auth\\ResetPasswordController@showResetForm']);
         // legacy login address
-        Route::get(
+       /* Route::get(
             'user/login', function () {
                 if (auth()->check()) {
                     return redirect()->route('welcome');
@@ -334,7 +335,7 @@ Route::group(
                 redirect()->intended('login');
             
             }
-        );
+        );*/
         Route::get('mobile/{address}/show', ['as'=>'mobile.show', 'uses'=>'MobileController@show']);
         Route::get('mobile/{address}/check', ['as'=>'mobile.checkaddress','uses'=>'MobileController@check']);
         Route::get('mobile/searchaddress', ['as'=>'mobile.searchaddress', 'uses'=>'MobileController@searchaddress']);

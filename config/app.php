@@ -169,6 +169,7 @@ return [
          */
 
         Baum\Providers\BaumServiceProvider::class,
+        SocialiteProviders\Manager\ServiceProvider::class,
 
        // Collective\Html\HtmlServiceProvider::class,
       //  MaddHatter\LaravelFullcalendar\ServiceProvider::class,
