@@ -177,6 +177,7 @@ class Person extends NodeModel implements HasPresenter
             ->withRoles([9])
                 
             ->with('branchesServiced.manager')->get();
+        
         return $team->map(
             function ($people) {
                 return $people->branchesServiced;
