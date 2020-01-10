@@ -37,7 +37,7 @@ class FeedbackController extends Controller
             ->closed()
             ->withCount('comments');
 
-        if (! auth()->user()->hasRole(['admin', 'sales_operations'])) {
+        if (! auth()->user()->hasRole(['admin'])) {
             
             $feedback_open = $feedback_open->where('user_id', auth()->user()->id)->get();
             if (count($feedback_open) == 0) {
