@@ -30,23 +30,28 @@ class FeedbackController extends Controller
      */
     public function index()
     {
-        $feedback_open = $this->feedback->with('providedBy','category')
-        ->open()
-        ->withCount('comments');
-        $feedback_closed = $this->feedback->with('providedBy','category')
-        ->closed()
-        ->withCount('comments');
+        $feedback_open = $this->feedback->with('providedBy', 'category')
+            ->open()
+            ->withCount('comments');
+        $feedback_closed = $this->feedback->with('providedBy', 'category')
+            ->closed()
+            ->withCount('comments');
 
         if (! auth()->user()->hasRole('admin')) {
-            $feedback_open = $feedback_open->where('user_id','=',auth()->user()->id)->get();
-            $feedback_closed = $feedback_closed->where('user_id','=',auth()->user()->id)->get();
-            return response()->view('feedback.users',compact('feedback_open','feedback_closed'));
+            
+            $feedback_open = $feedback_open->where('user_id', auth()->user()->id)->get();
+            if (count($feedback_open) == 0) {
+                return redirect()->back()->withMessage("You have no open feedback items");
+            }
+            $feedback_closed = $feedback_closed->where('user_id', auth()->user()->id)->get();
+         
+            return response()->view('feedback.index', compact('feedback_open', 'feedback_closed'));
         }
 
 
         $feedback_open = $feedback_open->get();
         $feedback_closed = $feedback_closed->get();
-        return response()->view('feedback.index',compact('feedback_open','feedback_closed'));
+        return response()->view('feedback.index', compact('feedback_open', 'feedback_closed'));
     }
 
     /**

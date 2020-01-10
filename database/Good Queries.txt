@@ -194,7 +194,7 @@ where addresses.id = address_branch.address_id
 and address_branch.branch_id in ('1506','1518','1522','1525','1552','1589')
 
 /**************************************************************************************/
-
+?????
 /**************************************************************************************/
 select branches.id,branchname, slc( 40.716743, -73.951368, branches.lat, branches.lng) as distance_in_meters,  astext(branches.position) 
 from branches,addresses_import
@@ -325,9 +325,11 @@ from branches,opportunities
 where branches.id = opportunities.branch_id
 and opportunities.closed = 0
 group by branchname
+
 /**************************************************************************************/
 /****************  Eloquent query                                     *****************/
 /**************************************************************************************/
+
 branch::whereHas(opportunities,function($q){
   $q->where('closed','=',0);
 })->select('branchname', DB::raw('count(opportunities.id) as open,count(opportunities.top50 as top50'))->groupBy('branchname')->get();
@@ -364,8 +366,8 @@ and c.reports_to = e.id
 and e.reports_to = f.id
 and d.reports_to = g.id
 
-/**************************************************************************************/
-/////////////////// Open Opportunities with no expected close date
+/**************************************************************************************/            
+/**************** Open Opportunities with no expected close date            ***********/
 /**************************************************************************************/
 select branches.id, branchname, concat_ws(' ', firstname, lastname), title, value, opportunities.created_at
 from opportunities, branches, persons, branch_person
@@ -674,3 +676,13 @@ and address_branch.address_id = addresses.id
 and address_branch.branch_id = branches.id
 
 /**************************************************************************************/
+/****************** Select all branches with managers and MM's ************************/
+/**************************************************************************************/
+
+
+select branches.id, branchname, branches.street, branches.city, branches.state, branches.zip, concat_ws(" ", a.firstname,a.firstname) as BM, concat_ws(" ", m.firstname,m.firstname) as MM
+from branches, branch_person, persons a, persons m
+where branches.id = branch_person.branch_id
+and branch_person.role_id = 9
+and branch_person.person_id = a.id
+and a.reports_to = m.id
