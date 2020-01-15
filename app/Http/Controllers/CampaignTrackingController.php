@@ -113,9 +113,10 @@ class CampaignTrackingController extends Controller
      */
     public function exportCompany(Campaign $campaign)
     {
-        $companies = $campaign->companies()->pluck('id')->toarray();
+        $companies = $campaign->companies()->pluck('id')->toArray();
+        $branches = $campaign->branches()->pluck('id')->toArray();
         $period = $this->_getCampaignPeriod($campaign);
-        $companies = $this->company->whereIn('id', $companies)->summaryStats($period)->get();
+        $companies = $this->company->whereIn('id', $companies)->summaryStats($period, $branches)->get();
         
         return Excel::download(new CampaignCompanyExport($campaign, $companies), $campaign->title.time().'CompanyExport.csv');
 
