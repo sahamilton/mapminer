@@ -63,7 +63,26 @@ class CampaignTrackingController extends Controller
         $branches = $this->_getBranchesInCampaign($campaign);
         $team = $this->_getCampaignBranchTeam($campaign);
         $campaigns = $this->campaign->current()->get();
+       
         return response()->view('campaigns.summary', compact('campaign', 'branches', 'team', 'campaigns'));
+    }
+
+    /**
+     * [summaryByCompany description]
+     * 
+     * @param Campaign $campaign [description]
+     * 
+     * @return [type]             [description]
+     */
+    public function summaryByCompany(Campaign $campaign)
+    {
+        $campaign->load('companies', 'branches');
+        $campaigns = $this->campaign->active()->get();
+        $companies = $campaign->companies->pluck('id')->toarray();
+        $branches =  $campaign->branches->pluck('id')->toArray();
+        $period = $this->_getCampaignPeriod($campaign);
+        $companies = $this->company->whereIn('id', $companies)->summaryStats($period, $branches)->get();
+        return response()->view('campaigns.companysummary', compact('companies', 'campaigns', 'campaign'));
     }
 
     /**

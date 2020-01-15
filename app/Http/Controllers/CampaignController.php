@@ -332,21 +332,7 @@ class CampaignController extends Controller
         // 
         // Export report
     }
-    /**
-     * [summaryByCompany description]
-     * 
-     * @param Campaign $campaign [description]
-     * 
-     * @return [type]             [description]
-     */
-    public function summaryByCompany(Campaign $campaign)
-    {
-        $campaigns = $this->campaign->active()->get();
-        $companies = $campaign->companies()->pluck('id')->toarray();
-        $period = $this->_getCampaignPeriod($campaign);
-        $companies = $this->company->whereIn('id', $companies)->summaryStats($period)->get();
-        return response()->view('campaigns.companysummary', compact('companies', 'campaigns', 'campaign'));
-    }
+    
 
 
     
