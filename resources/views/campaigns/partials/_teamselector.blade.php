@@ -3,7 +3,7 @@
         name="teamselector"
         id="teamselector"
         method="post"
-        action="{{route('campaigns.report', $campaign->id)}}"
+        action="{{route($route, $campaign->id)}}"
         >
     @csrf
     @include('campaigns.partials._mgrselector')

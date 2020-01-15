@@ -22,4 +22,5 @@
      </div> 
 <!-- Organization Alignment -->
 OR
+@php $route = 'campaigns.report'; @endphp
 @include('campaigns.partials._teamselector')

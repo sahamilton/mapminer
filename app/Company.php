@@ -333,7 +333,9 @@ class Company extends NodeModel
                                     ->orwhereNull('actual_close');
                             }
                         )
-                        ->where('opportunities.created_at', '<', $this->period['to']);
+                        ->whereBetween(
+                            'opportunities.created_at', [$this->period['from'], $this->period['to']]
+                        );
                 },
                 'opportunities as won_value'=>function ($query) {
                     
@@ -432,7 +434,9 @@ class Company extends NodeModel
                         }
                     )
                     ->whereIn('branch_id', $this->branches)
-                    ->where('opportunities.created_at', '<', $this->period['to']);
+                    ->whereBetween(
+                        'opportunities.created_at', [$this->period['from'], $this->period['to']]
+                    );
             },
             'opportunities as won_value'=>function ($query) {
                 
@@ -456,6 +460,35 @@ class Company extends NodeModel
                     
                 
             }
+            
+            ]
+        );
+    }
+
+    public function scopeCompanyDetail($query, $period, $branches)
+    {
+        $this->branches = $branches;
+        $this->period = $period;
+        return $query->with(       
+            [
+            'locations'=>function ($query) {
+                $query->whereHas(
+                    'assignedToBranch', function ($q) {
+
+                        $q->where('status_id', 1)
+                            ->whereIn('branch_id', $this->branches)
+                            ->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']]);
+                    }
+                );
+            },
+            'opportunities'=>function ($query) {
+                
+                $query->whereBetween(
+                    'opportunities.created_at', [$this->period['from'],$this->period['to']]
+                )
+                    ->whereIn('branch_id', $this->branches);
+                    
+            },
             
             ]
         );

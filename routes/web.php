@@ -586,7 +586,9 @@ Route::group(
         Route::get('campaigns/{campaign}/export', ['as'=>'campaigns.export', 'uses'=>'CampaignTrackingController@export']);
         Route::get('campaigns/{campaign}/companyexport', ['as'=>'campaigns.company.export', 'uses'=>'CampaignTrackingController@exportCompany']);
         Route::post('campaigns/{campaign}/report', ['as'=>'campaigns.report', 'uses'=>'CampaignController@export']);
+        Route::post('campaigns/{campaign}/company', ['as'=>'campaigns.companyreport', 'uses'=>'CampaignTrackingController@company']);
         Route::get('campaigns/{campaign}/company', ['as'=>'campaigns.company', 'uses'=>'CampaignTrackingController@summaryByCompany']);
+        Route::get('campaigns/{campaign}/company/{company}', ['as'=>'campaigns.company.detail', 'uses'=>'CampaignTrackingController@detailByCompany']);
 
         Route::resource('campaigns', 'CampaignController');
 
