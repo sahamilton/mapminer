@@ -128,7 +128,11 @@ class Campaign extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
 
 
     }
-
+    /**
+     * [getAssignedLocationsOfCampaign description]
+     * 
+     * @return [type] [description]
+     */
     public function getAssignedLocationsOfCampaign()
     {
         $branches = $this->branches()->pluck('id')->toArray();
@@ -300,7 +304,38 @@ class Campaign extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
     {
         return $this->servicelines->pluck('id')->toArray();
     }
-    
+    /**
+     * [scopeCampaignStats description]
+     * 
+     * @return [type] [description]
+     */
+    public function scopeCampaignStats($query)    
+    {
+        return $query->with(
+            [
+                'companies.locations'=>function ($q) { 
+                    $q->with(
+                        [
+                            'assignedToBranch'=>function ($q1) {
+                                $q1->wherePivot('created_at', '=>', $this->datefrom);
+                            }
+                        ]
+                    );
+                    $q->with(
+                        [
+                            'opportunities'=>function ($q1) {
+
+                                $q1->where('opportunities.created_at', '=>', $this->datefrom)
+                                    ->where('closed', 1);
+                            }
+
+                        ]
+                    );
+                }
+            ]
+        );
+
         
+    }
 
 }

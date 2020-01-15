@@ -320,6 +320,19 @@ class Branch extends Model implements HasPresenter
             ->whereIn('status_id', [2]); 
 
     }
+    /**
+     * [rejectedLeads description]
+     * 
+     * @return [type] [description]
+     */
+    public function rejectedLeads()
+    {
+        return  $this->belongsToMany(Address::class, 'address_branch', 'branch_id', 'address_id')
+            ->whereDoesntHave('opportunities')
+            ->whereDoesntHave('activities')
+            
+            ->whereIn('status_id', [4]); 
+    }
 
     /**
      * [scopeCampaignUntouchedLeads description]
@@ -1114,8 +1127,7 @@ class Branch extends Model implements HasPresenter
         return $query->withCount(       
             ['leads'=>function ($q) {
                 $q->whereIn('company_id', $this->company_ids)
-                    ->where('address_branch.created_at', '<=', $this->period['to'])
-                   ;
+                    ->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']]);
             },
             'offeredLeads'=>function ($q) {
                 $q->whereIn('company_id', $this->company_ids);
@@ -1207,7 +1219,7 @@ class Branch extends Model implements HasPresenter
             },
             'opportunities as openvalue' => function ($q) {
                 $q->whereBetween('opportunities.created_at', [$this->period['from'],$this->period['to']])
-                    ->select(\DB::raw("SUM(value) as wonvalue"))
+                    ->select(\DB::raw("SUM(value) as openvalue"))
                     ->whereClosed(0)        
                     ->where(
                         function ($q) {

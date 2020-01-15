@@ -2,25 +2,23 @@
 @section('content')
 @php $totals = []; @endphp
 <div class="container">
-   <h2>{{$campaign->title}} Summary</h2>
-    <p><a href="{{route('campaigns.company', $campaign->id)}}">Show Company Stats</a></p>
+   <h2>{{$campaign->title}} Company Summary</h2>
+   <p><a href="{{route('campaigns.track', $campaign->id)}}">Show Branch Stats</a></p>
     <p>
-        <a href="{{route('campaigns.export', $campaign->id)}}">
+        <a href="{{route('campaigns.company.export', $campaign->id)}}">
             <i class="fas fa-download"></i>
                 Export to Excel
         </a>
     </p>
-    {{$campaign->id}}
     @if (auth()->user()->hasRole(['admin', 'sales_operations']))
         <p>
             <a href="{{route('campaigns.index')}}">Return to all campaigns</a>
         </p>
-        <p><a href="{{route('campaigns.launch', $campaign->id)}}" class="btn btn-warning">Relaunch Campaign</a></p>
-    @endif
-            @include('campaigns.partials._teamselector')
         
+    @endif
+                    
             @include('campaigns.partials._campaignselector')
-            @include('campaigns.partials._campaignsummarytable')
+            @include('campaigns.partials._campaigncompanysummarytable')
     
 </div>
 @include('partials._scripts')

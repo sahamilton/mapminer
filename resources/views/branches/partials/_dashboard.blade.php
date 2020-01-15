@@ -1,4 +1,7 @@
 <div class="row">
+  @if(auth()->user()->id == '1')
+    @include('branches.partials._welcomehome_modal')
+  @endif
   <div id="series_chart_div" 
    style="width: 80%;height:400px;border:solid 1px #aaaaaa;margin:5px;"> 
    <h4>Wins vs Sales Appts</h4>

@@ -686,3 +686,26 @@ where branches.id = branch_person.branch_id
 and branch_person.role_id = 9
 and branch_person.person_id = a.id
 and a.reports_to = m.id
+
+/**************************************************************************************/
+/****** Move all activities, opportunities and leads from one branch to another *******/
+/**************************************************************************************/
+
+update activities set branch_id = newid where branch_id = oldid;
+update opportunities set branch_id = newid where branch_id = oldid;
+update address_branch set branch_id = newid where branch_id = oldid;
+
+
+/************************************************************************************/
+
+select branches.branchname, concat_ws(' ', b.firstname, b.lastname) as bm, concat_ws(" ", m.firstname, m.lastname) as MM, companyname,address_branch.status_id,opportunities.id,opportunities.closed, opportunities.value
+from companies, addresses, branches, branch_person, persons m, persons b, address_branch
+left join opportunities on address_branch.id = opportunities.address_branch_id
+where companies.id in (45,61,68,73,75,90,114,212,223,244,259,325,388,407,441,460,490,492,493,532,1208,1344,1355,1356,1357)
+and companies.id = addresses.company_id
+and addresses.id = address_branch.address_id
+and address_branch.branch_id = branches.id
+and branches.id = branch_person.branch_id
+and branch_person.role_id = 9
+and branch_person.person_id = b.id
+and b.reports_to = m.id

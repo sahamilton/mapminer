@@ -8,15 +8,18 @@ use App\Activity;
 use App\Address;
 use App\Branch;
 use App\Campaign;
+USE App\Company;
 use App\Opportunity;
 use Excel;
 use App\Exports\CampaignSummaryExport;
+use App\Exports\CampaignCompanyExport;
 class CampaignTrackingController extends Controller
 {
     public $activity;
     public $address;
     public $branch;
     public $campaign;
+    PUBLIC $company;
     public $opportunity;
     /**
      * [__construct description]
@@ -32,12 +35,14 @@ class CampaignTrackingController extends Controller
         Address $address,
         Branch $branch,
         Campaign $campaign,
+        Company $company,
         Opportunity $opportunity
     ) {
         $this->activity = $activity;
         $this->address = $address;
         $this->branch = $branch;
         $this->campaign = $campaign;
+        $this->company = $company;
         $this->opportunity = $opportunity;
     }
     
@@ -79,6 +84,24 @@ class CampaignTrackingController extends Controller
         return Excel::download(new CampaignSummaryExport($campaign, $branches), $campaign->title.time().'Export.csv');
 
     }
+
+    /**
+     * [export description]
+     * 
+     * @param Campaign $campaign [description]
+     * 
+     * @return [type]             [description]
+     */
+    public function exportCompany(Campaign $campaign)
+    {
+        $companies = $campaign->companies()->pluck('id')->toarray();
+        $period = $this->_getCampaignPeriod($campaign);
+        $companies = $this->company->whereIn('id', $companies)->summaryStats($period)->get();
+        
+        return Excel::download(new CampaignCompanyExport($campaign, $companies), $campaign->title.time().'CompanyExport.csv');
+
+    }
+
     /**
      * [_getBranchesInCampaign description]
      * 
@@ -123,4 +146,17 @@ class CampaignTrackingController extends Controller
         return $this->campaign->getSalesTeamFromManager($campaign->manager_id, $servicelines);
     }
 
+    /**
+     * [_getCampaignPeriod description]
+     * 
+     * @param Campaign $campaign [description]
+     * 
+     * @return [type]             [description]
+     */
+    private function _getCampaignPeriod(Campaign $campaign)
+    {
+        $period['from'] = $campaign->datefrom;
+        $period['to'] = $campaign->dateto;
+        return $period;
+    }
 }

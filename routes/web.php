@@ -581,9 +581,13 @@ Route::group(
         Route::get('campaigns/{campaign}/track', ['as'=>'campaigns.track', 'uses'=>'CampaignTrackingController@show']);
         Route::get('campaigns/{campaign}/launch', ['as'=>'campaigns.launch', 'uses'=>'CampaignController@launch']);
         Route::get('campaigns/{campaign}/{branch}/test', ['as'=>'branchcampaign.test', 'uses'=>'CampaignController@branchTest']);
+        Route::post('campaigns/stats', ['as'=>'campaigns.stats', 'uses'=>'CampaignController@campaignStats']);
         Route::get('campaigns/reports/{campaign?}', ['as'=>'campaigns.select', 'uses'=>'CampaignController@selectReport']);
         Route::get('campaigns/{campaign}/export', ['as'=>'campaigns.export', 'uses'=>'CampaignTrackingController@export']);
+        Route::get('campaigns/{campaign}/companyexport', ['as'=>'campaigns.company.export', 'uses'=>'CampaignTrackingController@exportCompany']);
         Route::post('campaigns/{campaign}/report', ['as'=>'campaigns.report', 'uses'=>'CampaignController@export']);
+        Route::get('campaigns/{campaign}/company', ['as'=>'campaigns.company', 'uses'=>'CampaignController@summaryByCompany']);
+
         Route::resource('campaigns', 'CampaignController');
 
         Route::resource('campaigndocuments', 'CampaignDocumentsController');

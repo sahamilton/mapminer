@@ -323,10 +323,8 @@ class CampaignController extends Controller
             $manager_id = request('manager_id');
         }
         $branches = $this->_getbranchesFromManager($servicelines, $manager_id);
-        
         $manager = $this->person->findOrFail($manager_id);
         $branches = $this->branch->whereIn('id', $branches)->summaryCampaignStats($campaign)->get();
-
         $team = $this->campaign->getSalesTeamFromManager($campaign->manager_id, $servicelines);
         return response()->view('campaigns.managersummary', compact('campaign', 'branches', 'manager', 'team'));
 
@@ -334,6 +332,25 @@ class CampaignController extends Controller
         // 
         // Export report
     }
+    /**
+     * [summaryByCompany description]
+     * 
+     * @param Campaign $campaign [description]
+     * 
+     * @return [type]             [description]
+     */
+    public function summaryByCompany(Campaign $campaign)
+    {
+        $campaigns = $this->campaign->active()->get();
+        $companies = $campaign->companies()->pluck('id')->toarray();
+        $period = $this->_getCampaignPeriod($campaign);
+        $companies = $this->company->whereIn('id', $companies)->summaryStats($period)->get();
+        return response()->view('campaigns.companysummary', compact('companies', 'campaigns', 'campaign'));
+    }
+
+
+    
+
     /**
      * [_getCampaignServicelines description]
      * 
@@ -358,7 +375,13 @@ class CampaignController extends Controller
             ->with('companies', 'servicelines')
             ->get();
     }
-
+    /**
+     * [_getCampaignSummaryData description]
+     * 
+     * @param Campaign $campaign [description]
+     * 
+     * @return [type]             [description]
+     */
     private function _getCampaignSummaryData(Campaign $campaign)
     {
         $data = $this->_getCampaignData($campaign);
@@ -367,7 +390,13 @@ class CampaignController extends Controller
       
         return $data;
     }
-
+    /**
+     * [_getSummaryLocations description]
+     * 
+     * @param [type] $data [description]
+     * 
+     * @return [type]       [description]
+     */
     private function _getSummaryLocations($data)
     {
        
@@ -448,8 +477,8 @@ class CampaignController extends Controller
     /**
      * [_getbranchesFromManager description]
      * 
-     * @param  Array  $servicelines [description]
-     * @param  [type] $manager_id   [description]
+     * @param Array  $servicelines [description]
+     * @param [type] $manager_id   [description]
      * 
      * @return [type]               [description]
      */
@@ -495,7 +524,7 @@ class CampaignController extends Controller
      * [_getBranchesWithinServiceArea description]
      * 
      * @param [type] $campaign  [description]
-     * @param [type] $locations [description]
+     * @param [type] $companies [description]
      * 
      * @return [type]            [description]
      */
@@ -576,4 +605,31 @@ class CampaignController extends Controller
         return $assignments;
     }
 
+    /**
+     * [campaignStats description]
+     * 
+     * @param  Request $request [description]
+     * 
+     * @return [type]           [description]
+     
+    public function campaignStats(Request $request)
+    {
+        $stats = $this->campaign->campaignStats()->whereIn('id', request('campaigns'));
+        dd($stats);
+        return response()->view('campaigns.stats', compact('stats'));
+    }
+     */
+    /**
+     * [_getCampaignPeriod description]
+     * 
+     * @param Campaign $campaign [description]
+     * 
+     * @return [type]             [description]
+     */
+    private function _getCampaignPeriod(Campaign $campaign)
+    {
+        $period['from'] = $campaign->datefrom;
+        $period['to'] = $campaign->dateto;
+        return $period;
+    }
 }
