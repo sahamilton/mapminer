@@ -21,11 +21,15 @@
                 </a>
             </td>
            @foreach ($fields as $field)
-            <td class="text-right">
+            
                 @if(strpos( $field,'value'))
+                <td class="text-right">
                     ${{number_format($company->$field,0)}}
+                </td>
                 @else
+                 <td class="text-center">
                     {{$company->$field}}
+                </td>
                 @endif
                 @php 
                 $totals[$field] = isset($totals[$field]) ? $totals[$field] + $company->$field : $company->$field  @endphp
@@ -40,13 +44,17 @@
         
         <th>Totals:</th>
         @foreach ($fields as $field)
-            <td class="text-right"> 
+          
                 @if(strpos($field,'value'))
-                   ${{number_format(isset($totals[$field]) ? $totals[$field] : 0,0)}}
+                    <td class="text-right"> 
+                       ${{number_format(isset($totals[$field]) ? $totals[$field] : 0,0)}}
+                   </td>
                 @else
-                    {{number_format(isset($totals[$field]) ? $totals[$field] : 0,0)}}
-                    @endif
-            </td>
+                     <td class="text-center"> 
+                        {{number_format(isset($totals[$field]) ? $totals[$field] : 0,0)}}
+                    </td>
+                @endif
+        
         @endforeach
         
       

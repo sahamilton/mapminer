@@ -23,11 +23,15 @@
             </td>
             <td>{{$branch->branchname}}</td>
              @foreach ($fields as $field)
-            <td class="text-right">
+            
                 @if(strpos( $field,'value'))
-                    ${{number_format($branch->$field,0)}}
+                    <td class="text-right">
+                        ${{number_format($branch->$field,0)}}
+                    </td>
                 @else
-                    {{$branch->$field}}
+                    <td class="text-center">
+                        {{$branch->$field}}
+                    </td>
                 @endif
                 @php 
                 $totals[$field] = isset($totals[$field]) ? $totals[$field] + $branch->$field : $branch->$field  @endphp
@@ -42,12 +46,16 @@
         <th>Totals:</th>
         <td></td>
         @foreach ($fields as $field)
-            <td class="text-right"> 
+            
                 @if(strpos($field,'value'))
-                   ${{number_format(isset($totals[$field]) ? $totals[$field] : 0,0)}}
+                    <td class="text-right"> 
+                       ${{number_format(isset($totals[$field]) ? $totals[$field] : 0,0)}}
+                    </td>
                 @else
-                    {{number_format(isset($totals[$field]) ? $totals[$field] : 0,0)}}
-                    @endif
+                     <td class="text-center">
+                        {{number_format(isset($totals[$field]) ? $totals[$field] : 0,0)}}
+                    </td>
+                @endif
             </td>
         @endforeach
     </tfoot>

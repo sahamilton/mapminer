@@ -1136,19 +1136,33 @@ class Branch extends Model implements HasPresenter
         $this->period = $period;
         return $query->withCount(       
             [
-            'offeredLeads as offered_leads'=>function ($q) {
+                /*
+                $query->whereHas(
+                    'assignedToBranch', function ($q) {
+
+                        $q->where('status_id', 1)
+                            ->whereIn('branch_id', $this->branches)
+                            ->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']]);
+                    }
+                );
+                */
+
+            'locations as offered_leads'=>function ($q) {
                 $q->whereIn('company_id', $this->company_ids)
+                    ->where('status_id', 1)
                     ->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']]);;
                     
             },
 
-            'leads as worked_leads'=>function ($q) {
+            'locations as worked_leads'=>function ($q) {
                 $q->whereIn('company_id', $this->company_ids)
+                    ->where('status_id', 2)
                     ->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']]);;
                     
             },
-            'rejectedleads as rejected_leads'=>function ($q) {
+            'locations as rejected_leads'=>function ($q) {
                 $q->whereIn('company_id', $this->company_ids)
+                    ->where('status_id', 4)
                     ->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']]);;
                     
             },
@@ -1168,24 +1182,15 @@ class Branch extends Model implements HasPresenter
             'opportunities as new_opportunities'=>function ($q) {
                 $q->whereBetween(
                     'opportunities.created_at', [$this->period['from'],$this->period['to']]
-                )->whereHas(
-                    'address.address', function ($q1) {
-                            $q1->whereIn('company_id', $this->company_ids);
-                    }  
-                );
+                )->whereIn('opportunities.address_id', $this->location_ids);
             },
             'opportunities as won_opportunities'=>function ($q) {
+                
                 $q->whereClosed(1)
-                    ->whereBetween(
-                        'opportunities.created_at', [$this->period['from'],$this->period['to']]
-                    )
+                    
                     ->whereBetween(
                         'actual_close', [$this->period['from'],$this->period['to']]
-                    )->whereHas(
-                        'address.address', function ($q1) {
-                                $q1->whereIn('company_id', $this->company_ids);
-                        }  
-                    );
+                    )->whereIn('opportunities.address_id', $this->location_ids);
             },
             'opportunities as lost_opportunities'=>function ($q) {
                 
@@ -1195,45 +1200,42 @@ class Branch extends Model implements HasPresenter
                     )
                     ->whereBetween(
                         'actual_close', [$this->period['from'],$this->period['to']]
-                    )->whereHas(
-                        'address.address', function ($q1) {
-                                $q1->whereIn('company_id', $this->company_ids);
-                        }  
-                    );
+                    )->whereIn('opportunities.address_id', $this->location_ids);
             },
             
             'opportunities as opportunities_open'=>function ($q) {
+                /*
+                 $query->whereClosed(0)        
+
+                    ->whereBetween(
+                        'opportunities.created_at', [$this->period['from'], $this->period['to']]
+                    )
+                    ->whereIn('branch_id', $this->branches);
+                 */
                 $q->whereBetween(
                     'opportunities.created_at', [$this->period['from'], $this->period['to']]
                 )
                     ->whereClosed(0)        
-                    ->OrWhere(
-                        function ($q) {
-                            $q->whereIn('opportunities.address_id', $this->locations)
-                                ->where('actual_close', '>', $this->period['to'])
-                                ->orwhereNull('actual_close');
-                        }
-                    )
-                ->whereBetween('opportunities.created_at', [$this->period['from'], $this->period['to']])
-                //->whereIn('opportunities.address_id', $this->locations)
-                ->whereHas(
-                    'address.address', function ($q1) {
-                            $q1->whereIn('company_id', $this->company_ids);
-                    }  
-                );
+                    
+                    ->whereIn('opportunities.address_id', $this->location_ids);
             },
             'opportunities as won_value' => function ($q) {
-                $q->whereBetween('opportunities.created_at', [$this->period['from'],$this->period['to']])
-                    ->select(\DB::raw("SUM(value) as wonvalue"))
+                /*
+                $query->select(\DB::raw("SUM(value) as wonvalue"))
+                    ->whereClosed(1)
+                    ->whereBetween(
+                        'actual_close', [$this->period['from'],$this->period['to']]
+                    )
+                    ->whereIn('branch_id', $this->branches);
+                    
+
+                 */
+                $q->select(\DB::raw("SUM(value) as wonvalue"))
                     ->where('closed', 1)
                     ->whereBetween(
                         'actual_close', [$this->period['from'],$this->period['to']]
                     )
-                    ->whereHas(
-                        'address.address', function ($q1) {
-                                $q1->whereIn('company_id', $this->company_ids);
-                        }  
-                    );
+                    ->whereIn('opportunities.address_id', $this->location_ids);
             },
             'opportunities as open_value' => function ($q) {
                 $q->whereBetween('opportunities.created_at', [$this->period['from'],$this->period['to']])
@@ -1249,8 +1251,8 @@ class Branch extends Model implements HasPresenter
                         'address.address', function ($q1) {
                                 $q1->whereIn('company_id', $this->company_ids);
                         }  
-                    )
-                    ->where('opportunities.created_at', '<', $this->period['to']);
+                    )->whereIn('opportunities.address_id', $this->location_ids);
+                
             }]
         );
     }
