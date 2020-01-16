@@ -1203,11 +1203,8 @@ class Branch extends Model implements HasPresenter
                     )
                     ->whereIn('branch_id', $this->branches);
                  */
-                $q->whereBetween(
-                    'opportunities.created_at', [$this->period['from'], $this->period['to']]
-                )
-                    ->whereClosed(0)        
-                    
+                $q->where('opportunities.created_at', '<=',  $this->period['to'])
+                    ->whereClosed(0) 
                     ->whereIn('opportunities.address_id', $this->location_ids);
             },
             'opportunities as won_value' => function ($q) {
@@ -1231,18 +1228,19 @@ class Branch extends Model implements HasPresenter
             'opportunities as open_value' => function ($q) {
                 $q->whereBetween('opportunities.created_at', [$this->period['from'],$this->period['to']])
                     ->select(\DB::raw("SUM(value) as openvalue"))
-                    ->whereClosed(0)        
                     ->where(
                         function ($q) {
-                            $q->where('actual_close', '>', $this->period['to'])
-                                ->orwhereNull('actual_close');
+                            $q->whereClosed(0)
+                                ->orWhere(
+                                    function ($q) {
+                                        $q->where('actual_close', '>', $this->period['to'])
+                                            ->orwhereNull('actual_close');
+                                    }
+                                );
                         }
                     )
-                    ->whereHas(
-                        'address.address', function ($q1) {
-                                $q1->whereIn('company_id', $this->company_ids);
-                        }  
-                    )->whereIn('opportunities.address_id', $this->location_ids);
+                    ->where('opportunities.created_at', '<=', $this->period['to'])
+                    ->whereIn('opportunities.address_id', $this->location_ids);
                 
             }]
         );

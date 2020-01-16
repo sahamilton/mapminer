@@ -426,12 +426,19 @@ class Company extends NodeModel
             },
             
             'opportunities as opportunities_open'=>function ($query) {
-                $query->whereClosed(0)        
-
-                    ->whereBetween(
-                        'opportunities.created_at', [$this->period['from'], $this->period['to']]
-                    )
-                    ->whereIn('branch_id', $this->branches);
+                $query->where(
+                    function ($q) {
+                        $q->whereClosed(0)
+                            ->orWhere(
+                                function ($q) {
+                                    $q->where('actual_close', '>', $this->period['to'])
+                                        ->orwhereNull('actual_close');
+                                }
+                            );
+                    }
+                )        
+                ->whereIn('branch_id', $this->branches)
+                ->where('opportunities.created_at', '<=', $this->period['to']);
             },
             'opportunities as won_value'=>function ($query) {
                 
@@ -447,11 +454,19 @@ class Company extends NodeModel
             'opportunities as open_value'=>function ($query) {
                 
                 $query->select(\DB::raw("SUM(value) as wonvalue"))
-                    ->whereClosed(0)        
+                    ->where(
+                        function ($q) {
+                            $q->whereClosed(0)
+                                ->orWhere(
+                                    function ($q) {
+                                        $q->where('actual_close', '>', $this->period['to'])
+                                            ->orwhereNull('actual_close');
+                                    }
+                                );
+                        }
+                    )        
                     ->whereIn('branch_id', $this->branches)
-                    ->whereBetween(
-                        'opportunities.created_at', [$this->period['from'],$this->period['to']]
-                    );
+                    ->where('opportunities.created_at', '<=', $this->period['to']);
                     
                 
             }
