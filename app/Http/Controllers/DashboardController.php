@@ -98,6 +98,7 @@ class DashboardController extends Controller
      */
     protected function getSummaryBranchData() 
     {
+      
         return $this->branch
             ->SummaryStats($this->period)
             ->with('manager', 'manager.reportsTo')

@@ -938,6 +938,7 @@ class Branch extends Model implements HasPresenter
     public function scopeSummaryStats($query,$period)
     {
         $this->period = $period;
+     
         return $query->withCount(       
             ['leads'=>function ($query) {
                 $query->where('address_branch.created_at', '<=', $this->period['to'])
@@ -959,7 +960,7 @@ class Branch extends Model implements HasPresenter
                     'assignedToBranch', function ($q) {
 
                         $q->where('status_id', 1)
-                            ->whereIn('branch_id', $this->branches)
+                            
                             ->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']]);
                     }
                 );
@@ -1195,16 +1196,20 @@ class Branch extends Model implements HasPresenter
             },
             
             'opportunities as opportunities_open'=>function ($q) {
-                /*
-                 $query->whereClosed(0)        
-
-                    ->whereBetween(
-                        'opportunities.created_at', [$this->period['from'], $this->period['to']]
-                    )
-                    ->whereIn('branch_id', $this->branches);
-                 */
+                
                 $q->where('opportunities.created_at', '<=',  $this->period['to'])
-                    ->whereClosed(0) 
+                    ->where(
+                        function ($q) {
+                            $q->whereClosed(0)
+                                ->orWhere(
+                                    function ($q) {
+                                        $q->where('actual_close', '>', $this->period['to'])
+                                            ->orwhereNull('actual_close');
+                                    }
+                                );
+                        }
+                    )
+                    ->where('opportunities.created_at', '<=', $this->period['to'])
                     ->whereIn('opportunities.address_id', $this->location_ids);
             },
             'opportunities as won_value' => function ($q) {
