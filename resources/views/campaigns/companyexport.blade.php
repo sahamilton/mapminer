@@ -1,14 +1,3 @@
-@php $fields= [
-    "offered_leads",
-    "worked_leads",
-    "rejected_leads",
-    "new_opportunities",
-    "won_opportunities",
-    "opportunities_open",
-    "won_value",
-    "open_value" 
-    ] 
-    @endphp
 <table>
     <thead>
         <tr></tr>

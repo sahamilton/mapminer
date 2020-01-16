@@ -8,11 +8,12 @@ class CampaignCompanyExport implements FromView
 {
     public $companies;
     public $campaign;
-
-    public function __construct(Campaign $campaign, $companies)
+    public $fields;
+    public function __construct(Campaign $campaign, $companies, , Array $fields)
     {
         $this->companies = $companies;
         $this->campaign = $campaign;
+        $this->fields = $fields;
     }
 
     /**
@@ -26,7 +27,8 @@ class CampaignCompanyExport implements FromView
             'campaigns.companyexport',  [
                 'companies' => $this->companies,
                 'campaign' => $this->campaign,
-                'fields' =>  [
+                'fields'=>
+                [
                     "offered_leads",
                     "worked_leads",
                     "rejected_leads",
@@ -34,8 +36,9 @@ class CampaignCompanyExport implements FromView
                     "won_opportunities",
                     "opportunities_open",
                     "won_value",
-                    "open_value" 
-                    ] 
+                    "open_value",
+                ]
+
    
             ]
         );

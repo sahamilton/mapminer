@@ -1136,16 +1136,7 @@ class Branch extends Model implements HasPresenter
         $this->period = $period;
         return $query->withCount(       
             [
-                /*
-                $query->whereHas(
-                    'assignedToBranch', function ($q) {
-
-                        $q->where('status_id', 1)
-                            ->whereIn('branch_id', $this->branches)
-                            ->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']]);
-                    }
-                );
-                */
+                
 
             'locations as offered_leads'=>function ($q) {
                 $q->whereIn('company_id', $this->company_ids)
