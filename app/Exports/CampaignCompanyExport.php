@@ -9,7 +9,7 @@ class CampaignCompanyExport implements FromView
     public $companies;
     public $campaign;
     public $fields;
-    public function __construct(Campaign $campaign, $companies, , Array $fields)
+    public function __construct(Campaign $campaign, $companies,  Array $fields)
     {
         $this->companies = $companies;
         $this->campaign = $campaign;
