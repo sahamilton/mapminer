@@ -47,7 +47,21 @@ COUNT(IF(created_at <= DATE_SUB(NOW(), INTERVAL 6 month), 1, null)) AS 6month
 from opportunities
 group by branch_id
 
+
 /**************************************************************************************/
+/********************* Old Open Opportunities past Expected Close  ********************/
+/**************************************************************************************/
+
+select branchname, branches.id, concat_ws(' ', b.firstname, b.lastname) as BM, concat_ws(' ', m.firstname, m.lastname) as MM, addresses.businessname,opportunities.title, opportunities.created_at, opportunities.value, opportunities.expected_close
+from opportunities, branches, addresses, persons b, persons m, branch_person
+where opportunities.expected_close < '2019-12-01'
+and opportunities.closed = 0
+and opportunities.address_id = addresses.id
+and opportunities.branch_id = branches.id
+and branches.id = branch_person.branch_id
+and branch_person.role_id = 9
+and branch_person.person_id = b.id
+and b.reports_to = m.id
 
 /**************************************************************************************/
 

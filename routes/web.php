@@ -724,6 +724,7 @@ Route::group(
         Route::post('api/searchfilters/postAccounts', ['as'=>'postAccountSegments', 'uses'=>'SearchFiltersController@getAccountSegments']);
         Route::resource('searchfilters', 'SearchFiltersController');
         //   Jobs
+        Route::resource('jobs', 'FailedJobsController');
         Route::get(
             'testjob', function () {
                 //$companies = App\Company::whereIn('id', [532])->get();
