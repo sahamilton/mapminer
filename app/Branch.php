@@ -10,6 +10,7 @@ class Branch extends Model implements HasPresenter
 {
     use GeoCode;
     public $table ='branches';
+    public $period;
     protected $hidden = ['created_at','updated_at','position'];
     protected $primaryKey = 'id'; // or null
     protected $spatialFields = [
@@ -49,11 +50,16 @@ class Branch extends Model implements HasPresenter
     ];
     protected $guarded = [];
     public $errors;
+
+    public function setPeriod($period)
+    {
+        $this->period = $period;
+    }
     /**
      * [locations description]
      * 
      * @return [type] [description]
-     */
+     *;
     public function locations()
     {
         return $this->belongsToMany(Address::class);
@@ -294,6 +300,18 @@ class Branch extends Model implements HasPresenter
 
     }
     /**
+     * [leads description]
+     * 
+     * @return [type] [description]
+     */
+    public function workedLeads()
+    {
+        return  $this->belongsToMany(Address::class, 'address_branch', 'branch_id', 'address_id')
+            ->whereIn('address_branch.status_id', [2]); 
+
+    }
+
+    /**
      * [neglectedLeads description]
      * 
      * @return [type] [description]
@@ -330,7 +348,6 @@ class Branch extends Model implements HasPresenter
         return  $this->belongsToMany(Address::class, 'address_branch', 'branch_id', 'address_id')
             ->whereDoesntHave('opportunities')
             ->whereDoesntHave('activities')
-            
             ->whereIn('status_id', [4]); 
     }
 
@@ -343,7 +360,7 @@ class Branch extends Model implements HasPresenter
     {   
         return $query->with(
             ['untouchedLeads'=>function ($q) {
-                            $q->whereIn('company_id', ['388']);
+                    $q->whereIn('company_id', ['388']);
             }
             ]
         );
@@ -471,7 +488,7 @@ class Branch extends Model implements HasPresenter
      * 
      * @return [type] [description]
      */
-    public function campaign()
+    public function campaigns()
     {
         return $this->belongsToMany(Campaign::class);
     }
@@ -1268,8 +1285,8 @@ class Branch extends Model implements HasPresenter
         $this->company_ids = $campaign->companies->pluck('id')->toarray();
         $this->location_ids = $campaign->getLocations();
 
-        $this->period = $period;
-        
+        $this->setPeriod($period);;
+       
         return $query->with(       
             ['offeredLeads'=>function ($q) {
                 $q->whereIn('company_id', $this->company_ids);
@@ -1277,6 +1294,10 @@ class Branch extends Model implements HasPresenter
             },
             'untouchedLeads'=>function ($q) {
                  $q->whereIn('company_id', $this->company_ids);
+            },
+            'workedLeads'=>function ($q) {
+                 $q->whereIn('company_id', $this->company_ids)
+                     ->whereBetween('address_branch.created_at', [$this->period['from'],$this->period['to']]);
             },
             'opportunitiesClosingThisWeek'=>function ($q) {
                 $q->whereHas(

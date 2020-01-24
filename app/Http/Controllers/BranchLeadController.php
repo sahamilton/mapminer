@@ -46,7 +46,7 @@ class BranchLeadController extends Controller
      */
     public function index()
     {
-       
+       dd('hi');
         if (count($this->person->myBranches())>0) {
             $branches = $this->branch->whereIn(
                 'id', array_keys($this->person->myBranches())

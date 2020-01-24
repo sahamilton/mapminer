@@ -120,6 +120,11 @@ class Address extends Model
         return $this->belongsToMany(User::class, 'location_user', 'address_id', 'user_id')
             ->withPivot('created_at', 'updated_at');
     }
+
+    public function campaigns()
+    {
+        return $this->hasManyThrough(CampaignCompany::class, Company::class, 'company_id', 'campaign_id');
+    }
     /**
      * [contacts description]
      * 
@@ -353,11 +358,11 @@ class Address extends Model
      * 
      * @return [type] [description]
      */
-    public function campaigns()
+    /*public function campaigns()
     {
  
         return $this->belongsToMany(Salesactivity::class);
-    }
+    }*/
 
 
     /**
