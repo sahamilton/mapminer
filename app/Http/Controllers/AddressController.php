@@ -10,7 +10,7 @@ use App\Person;
 use App\Howtofield;
 use App\ActivityType;
 
-class AddressController extends Controller
+class AddressController extends BaseController
 {
     public $address;
     public $branch;
@@ -178,7 +178,7 @@ class AddressController extends Controller
     public function findLocations($distance = null, $latlng = null)
     {
        
-        $location = $this->_getLocationLatLng($latlng);
+        $location = $this->getLocationLatLng($latlng);
       
         $result = $this->address->filtered()->nearby($location, $distance)->get();
 
@@ -199,21 +199,7 @@ class AddressController extends Controller
         $address->ranking()->attach($person_id, $data);
         return redirect()->route('address.show', $address->id)->withMessasge("Thanks for rating this location");
     }
-    /**
-     * [_getLocationLatLng description]
-     * 
-     * @param [type] $latlng [description]
-     * 
-     * @return [type]         [description]
-     */
-    private function _getLocationLatLng($latlng)
-    {
-        $position =explode(":", $latlng);
-        $location = new Address;
-        $location->lat = $position[0];
-        $location->lng = $position[1];
-        return $location;
-    }
+    
     /**
      * [_getAddress description]
      * 

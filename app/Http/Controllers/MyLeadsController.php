@@ -45,7 +45,7 @@ class MyLeadsController extends BaseController
      */
     public function index($branch=null)
     {
-        dd('hell');
+       
         if (!  $myBranches = $this->person->myBranches()) {
             return redirect()->back()->withError('You are not assigned to any branches');
         }
@@ -146,23 +146,7 @@ class MyLeadsController extends BaseController
             ->whereIn('id', $branches)
             ->get();
     }
-    /**
-     * [closedleads description]
-     * 
-     * @return [type] [description]
-     */
-    public function closedleads()
-    {
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-    }
+    
 
     /**
      * Store a newly created resource in storage.
@@ -227,6 +211,35 @@ class MyLeadsController extends BaseController
             return redirect()->route('address.show', $lead)->withMessage('Lead Created');
         }
         
+    }
+
+    /**
+     * [findLocations description]
+     * 
+     * @param [type] $distance [description]
+     * @param [type] $latlng   [description]
+     * 
+     * @return [type]           [description]
+     */
+    public function findNearbyLeads(Person $person, $distance = null, $latlng = null)
+    {
+        
+        $location = $this->getLocationLatLng($latlng);
+        $myBranches = array_keys($person->myBranches());
+        $result = $this->lead
+            ->nearby($location, $distance)
+            ->where(
+                function ($q) use ($myBranches) {
+                    $q->doesntHave('assignedToBranch')
+                        ->orWhereHas(
+                            'assignedToBranch', function ($q) use ($myBranches) {
+                                $q->whereIn('branches.id', $myBranches);
+                            }
+                        );
+                }
+            )->get();
+       
+        return response()->view('addresses.xml', compact('result'))->header('Content-Type', 'text/xml');
     }
     /**
      * [_cleanseInput description]

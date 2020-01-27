@@ -45,22 +45,22 @@ class MapsController extends BaseController
     
     /**
      * [findMe description]
-     * @return [type] [description]
+     * @return view search selector
      */
     public function findMe()
     {
     
 
-            $user = $this->user->findOrFail(auth()->id());
-            $nonews = $user->nonews;
-            $now = date('Y-m-d h:i:s');
+        $user = $this->user->findOrFail(auth()->id());
+        $nonews = $user->nonews;
+        $now = date('Y-m-d h:i:s');
 
         if (! isset($nonews)) {
             $nonews = now('America/Vancouver')->subYear()->toDateTimeString();
         }
-            $news = $this->news->currentNews();
-            $filtered = $this->location->isFiltered(['companies'], ['vertical']);
-            return view()->make('maps.showme', compact('news', 'filtered'));
+        $news = $this->news->currentNews();
+        $filtered = $this->location->isFiltered(['companies'], ['vertical']);
+        return view()->make('maps.showme', compact('news', 'filtered'));
     }
     
     
@@ -86,7 +86,7 @@ class MapsController extends BaseController
     public function findLocalBranches($distance = null, $latlng = null, $limit = null)
     {
         
-        $location = $this->_getLocationLatLng($latlng);
+        $location = $this->getLocationLatLng($latlng);
 
         $branches =  $this->branch
             ->whereHas('servicelines', function ($q) {
@@ -110,7 +110,7 @@ class MapsController extends BaseController
     public function findLocalPeople($distance = null, $latlng = null, $limit = null)
     {
         
-        $location = $this->_getLocationLatLng($latlng);
+        $location = $this->getLocationLatLng($latlng);
     
         $persons =  $this->person
             
@@ -132,7 +132,7 @@ class MapsController extends BaseController
     {
     
         
-        $location = $this->_getLocationLatLng($latlng);
+        $location = $this->getLocationLatLng($latlng);
         $locations = $this->address;
         if (session('geo.addressType')) {
             $locations->whereIn('addressable_type', session('geo.addressType'));
@@ -163,39 +163,22 @@ class MapsController extends BaseController
     /**
      * [findMyLeads description]
      * 
-     * @param  [type] $distance [description]
-     * @param  [type] $latlng   [description]
+     * @param [type] $distance [description]
+     * @param [type] $latlng   [description]
      * 
      * @return [type]           [description]
      */
-    public function findMyLeads($distance = null, $latlng = null)
+    public function findMyLeads(Person $person, $distance = null, $latlng = null)
     {
+        dd('Maps Controller 173', 'hrerere');
         
-        $location = $this->_getLocationLatLng($latlng);
+        $location = $this->getLocationLatLng($latlng);
     
         $leads = $this->lead->myLeads([1,2], $all = true);
         
         $result = $leads->nearby($location, $distance)->get();
         return response()->view('myleads.xml', compact('result'))->header('Content-Type', 'text/xml');
     }
-    // hmmmmm I dont think this works~
-    public function getCenterPoint()
-    {
-        return $centerPoint;
-    }
-    /**
-     * [_getLocationLatLng description]
-     * 
-     * @param [type] $latlng [description]
-     * 
-     * @return [type]         [description]
-     */
-    private function _getLocationLatLng($latlng)
-    {
-        $position =explode(":", $latlng);
-        $location = new Location;
-        $location->lat = $position[0];
-        $location->lng = $position[1];
-        return $location;
-    }
+    
+   
 }

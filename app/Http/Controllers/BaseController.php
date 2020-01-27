@@ -68,4 +68,20 @@ class BaseController extends Controller
     
         return Serviceline::whereIn('id', $this->userServiceLines)->pluck('serviceline', 'id')->toArray();
     }
+
+    /**
+     * [_getLocationLatLng description]
+     * 
+     * @param [type] $latlng [description]
+     * 
+     * @return [type]         [description]
+     */
+    protected function getLocationLatLng($latlng)
+    {
+        $position =explode(":", $latlng);
+        $location = new Model;
+        $location->lat = $position[0];
+        $location->lng = $position[1];
+        return $location;
+    }
 }
