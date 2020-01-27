@@ -113,7 +113,40 @@ trait Geocode
       
         return $query;
     }
+    /*
+     * ScopeNewNearby [description]
+     * 
+     * @param [type]  $query    [description]
+     * @param [type]  $location [description]
+     * @param integer $radius   [description]
+     * @param [type]  $limit    [description]
+     * 
+     * @return [type]            [description]
+     */
+    public function scopeNewNearby($query, $location, $radius = 100, $limit = null)
+    {
+    
+        
+        $geocode = Geolocation::fromDegrees($location->lat, $location->lng);
+    
+        $bounding = $geocode->boundingCoordinates($radius, 'mi');
    
+        $sub = $this->selectSub('id', 'lat', 'lng')
+            ->whereBetween('lat', [$bounding['min']->degLat,$bounding['max']->degLat])
+            ->whereBetween('lng', [$bounding['min']->degLon,$bounding['max']->degLon]);
+
+        $query = $query
+            ->select()//pick the columns you want here.
+            ->selectRaw("st_distance_sphere($this->table.position, $location.position) * 0.00062137119 AS distance")
+            ->mergeBindings($sub->getQuery())
+            ->whereRaw("st_distance_sphere($this->table.position, $location.position) * 0.00062137119 < $radius ")
+            ->orderBy('distance', 'ASC');
+        if ($limit) {
+            $query = $query->limit($limit);
+        }
+      
+        return $query;
+    }
     /**
      * LocationsNearbyBranches [description]
      * 

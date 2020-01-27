@@ -67,22 +67,28 @@ class LeadSource extends Model
     public function salesteam($id)
     {
         $query ="SELECT persons.id as id,concat_ws(' ',`firstname`,`lastname`) as `name`,`address_person`.`status_id`, count(*) as count
-      FROM `address_person` ,addresses,persons
-      where address_id = addresses.id 
-      and person_id = persons.id
-      and addresses.lead_source_id = ". $id . "
-      group by name,id,address_person.status_id
-      order by persons.id,address_person.status_id";
+              FROM `address_person` ,addresses,persons
+              where address_id = addresses.id 
+              and person_id = persons.id
+              and addresses.lead_source_id = ". $id . "
+              group by name,id,address_person.status_id
+              order by persons.id,address_person.status_id";
 
         return \DB::select($query);
     }
-
+    /**
+     * [branches description]
+     * @param  [type] $id [description]
+     * @return [type]     [description]
+     */
     public function branches($id)
     {
 
-        return \App\AddressBranch::whereHas('address', function ($q) use ($id) {
-            $q->where('lead_source_id', '=', $id);
-        })
+        return \App\AddressBranch::whereHas(
+            'address', function ($q) use ($id) {
+                $q->where('lead_source_id', '=', $id);
+            }
+        )
         ->select('branch_id', DB::raw('count(*) as leads'))
              ->groupBy('branch_id')->with('branch')->get();
    
@@ -94,7 +100,7 @@ class LeadSource extends Model
               group by branchname,id,address_branch.status_id
               order by branches.id,address_branch.status_id";
 
-      return \DB::select($query); */
+         return \DB::select($query); */
     }
 
     public function assignedTo($id = null)
@@ -142,7 +148,13 @@ class LeadSource extends Model
               ->groupBy('leadsources.id');
               */
     }
-
+    /**
+     * [leadRepStatusSummary description]
+     * 
+     * @param [type] $id [description]
+     * 
+     * @return [type]     [description]
+     */
     public function leadRepStatusSummary($id)
     {
         $query ="select persons.id, 
