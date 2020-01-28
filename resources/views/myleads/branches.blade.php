@@ -3,7 +3,7 @@
 
 <h1>{{$title}}</h1>
 <p><a href="{{route('dashboard.show', $data['branches']->first()->id)}}">Return To Branch Dashboard</a></p>
-@if(count($myBranches)>1)
+@if(count($myBranches) > 1)
     <div class="col-sm-4">
         <form name="selectbranch" method="post" action="{{route('leads.branch')}}" >
         @csrf
@@ -77,14 +77,14 @@
         </td>
         <td>
             @if($lead->campaigns->count())
-                {{$lead->campaigns->last()->title}}
+               <a href="{{route('branchcampaign.show', [$lead->campaigns->last()->id, $data['branches']->first()->id])}}"> 
+                    {{$lead->campaigns->last()->title}}
+                </a>
             @endif
         </td>
         <td>
             @if($lead->lastActivity->count() > 0)
-                  
-                {{$lead->lastActivity->first()->activity_date->format('Y-m-d')}}
-            
+                {{$lead->lastActivity->first()->activity_date->format('Y-m-d')}}        
             @endif
         </td>
         <td>
