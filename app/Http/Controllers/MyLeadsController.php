@@ -78,10 +78,7 @@ class MyLeadsController extends BaseController
         $title= $data['branches']->first()->branchname . " leads";
 
         return response()->view('myleads.branches', compact('data', 'myBranches', 'title'));
-        // how to get the distance for each branch
-        // get my branches
-        // get addresses that are leads that are assigned to a branch
-        //
+        
     }
     /**
      * [branchLeads description]
@@ -120,16 +117,16 @@ class MyLeadsController extends BaseController
      */
     private function _getBranchLeads(Array $branch)
     {
-        $data['leads'] = $this->lead->wherehas(
+        
+        $data['leads'] = $this->lead->whereHas(
             'assignedToBranch', function ($q) use ($branch) {
                 $q->whereIn('branches.id', $branch);
             }
         )
         ->whereDoesntHave('opportunities')
-      
-        ->with('assignedToBranch', 'leadsource', 'lastActivity')
+        ->with('assignedToBranch', 'leadsource', 'lastActivity', 'campaigns')
         ->get();
-        
+        //dd($data['leads']->where('id', '646125')->first());
         $data['branches'] = $this->_getBranches($branch);
         return $data;
     }

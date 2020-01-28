@@ -42,6 +42,7 @@
     <th>Date Added</th>
     <th>Address</th>
     <th>Lead Source</th>
+    <th>Last Campaign</th>
     <th>Last Activity</th>
     <th>Remove</th>
 
@@ -75,6 +76,11 @@
             @endif
         </td>
         <td>
+            @if($lead->campaigns->count())
+                {{$lead->campaigns->last()->title}}
+            @endif
+        </td>
+        <td>
             @if($lead->lastActivity->count() > 0)
                   
                 {{$lead->lastActivity->first()->activity_date->format('Y-m-d')}}
@@ -82,7 +88,7 @@
             @endif
         </td>
         <td>
-           @if($lead->opportunities->count()==0) 
+           
           <a 
             data-href="{{route('branch.lead.remove',$lead->id)}}" 
             data-toggle="modal" 
@@ -91,7 +97,7 @@
             href="#">
                 <i class="fas fa-trash-alt text-danger"></i>
             </a>
-            @endif
+           
         </td>
 
 
