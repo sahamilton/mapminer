@@ -116,7 +116,7 @@ class RouteServiceProvider extends ServiceProvider
     protected function mapAdminRoutes()
     {
         Route::prefix('admin')
-            ->middleware('web')
+            ->middleware(['web', 'admin'])
             ->namespace($this->namespace)
             ->group(base_path('routes/admin.php'));
     }
@@ -132,7 +132,7 @@ class RouteServiceProvider extends ServiceProvider
     protected function mapOpsRoutes()
     {
         Route::prefix('ops')
-            ->middleware('web')
+            ->middleware(['web','ops'])
             ->namespace($this->namespace)
             ->group(base_path('routes/ops.php'));
     }

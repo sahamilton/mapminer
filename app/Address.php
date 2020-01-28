@@ -101,6 +101,15 @@ class Address extends Model
         return $this->hasOne(Customer::class, 'address_id');
     }
     /**
+     * [campaigns description]
+     * 
+     * @return [type] [description]
+     */
+    public function campaigns()
+    {
+        return $this->belongsToMany(Campaign::class);
+    }
+    /**
      * [project description]
      * 
      * @return [type] [description]
@@ -121,10 +130,7 @@ class Address extends Model
             ->withPivot('created_at', 'updated_at');
     }
 
-    public function campaigns()
-    {
-        return $this->hasManyThrough(CampaignCompany::class, Company::class, 'company_id', 'campaign_id');
-    }
+    
     /**
      * [contacts description]
      * 

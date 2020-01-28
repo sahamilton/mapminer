@@ -101,7 +101,12 @@ class AddressController extends BaseController
         }
         // $activities = ActivityType::orderBy('sequence')->pluck('activity','id')->toArray();
 
-        $branches = $this->branch->nearby($location, 100, 5)->orderBy('distance')->get();
+            $branches = $this->branch->nearby($location, 100, 5)->orderBy('distance')->get();
+            $people = $this->person->salesReps()->PrimaryRole()->nearby($location, 100, 5)->get();
+        } else {
+            $people = [];
+            $branches = [];
+        }
         $rankingstatuses = $this->address->getStatusOptions;
         $people = $this->person->salesReps()->PrimaryRole()->nearby($location, 100, 5)->get();
         $myBranches = $this->person->where('user_id', auth()->user()->id)->first()->branchesManaged()->pluck('id')->toArray();

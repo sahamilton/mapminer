@@ -244,7 +244,23 @@ class CampaignController extends Controller
        
         
     }
-
+    public function populateAddressCampaign()
+    {
+        $campaigns = $this->campaign->with('manager', 'companies')->get();
+        foreach ($campaigns as $campaign) {
+            $companies = $campaign->companies->pluck('id')->toarray();
+            
+            $branches = $campaign->manager->getMyBranches();
+            $addresses = $this->address->whereHas(
+                'assignedToBranch', function ($q) use ($branches) {
+                        $q->whereIn('branches.id', $branches);
+                }
+            )->whereIn('company_id', $companies)
+            ->pluck('id')->toArray();
+            $campaign->addresses()->sync($addresses);
+        }
+        
+    }
     public function branchTest(Campaign $campaign, Branch $branch)
     {
         // get MBR of branch

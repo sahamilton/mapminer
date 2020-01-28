@@ -4,8 +4,7 @@ use Illuminate\Http\Request;
  *  Sales Ops  Routes
  *  ------------------------------------------
  */
-Route::group(
-    ['prefix' => 'ops', 'middleware' =>'ops'], function () {
+
         //     Ops Main Page
         Route::get('/', ['as'=>'ops', 'uses'=>'Admin\AdminDashboardController@dashboard']);
         
@@ -215,5 +214,4 @@ Route::group(
         Route::get('/person/{person}/find', ['as'=>'person.details', 'uses'=>'PersonSearchController@find']);
 
         Route::resource('newleads', 'LeadSourceController');
-    }
-);
+  

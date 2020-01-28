@@ -150,6 +150,10 @@ class Campaign extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
                 ]
             )->get();
     }
+    public function addresses()
+    {
+        return $this->belongsToMany(Address::class);
+    }
     /**
      * [getLocations description]
      * 
@@ -168,9 +172,10 @@ class Campaign extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
        
     }
     /**
+     * [scopeActive description]
      * 
+     * @param [type] $query [description]
      * 
-     * @param  [type] $query [description]
      * @return [type]        [description]
      */
     public function scopeActive($query)

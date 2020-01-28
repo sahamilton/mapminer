@@ -4,8 +4,7 @@ use Illuminate\Http\Request;
      *  Admin Routes
      *  ------------------------------------------
      */
-Route::group(
-    ['prefix' => 'admin', 'middleware' =>'admin'], function () {
+
         Route::get('branchassignments/select', ['as'=>'branchassignment.check', 'uses'=>'Admin\BranchManagementController@select']);
         Route::post('branchassignments/email', ['as'=>'branchteam.email', 'uses'=>'Admin\BranchManagementController@confirm']);
         Route::post('branchassignments/send', ['as'=>'branchassignments.send', 'uses'=>'Admin\BranchManagementController@emailAssignments']);
@@ -27,6 +26,7 @@ Route::group(
         Route::post('campaigns/{campaign}/company', ['as'=>'campaigns.companyreport', 'uses'=>'CampaignTrackingController@company']);
         Route::get('campaigns/{campaign}/company', ['as'=>'campaigns.company', 'uses'=>'CampaignTrackingController@summaryByCompany']);
         Route::get('campaigns/{campaign}/company/{company}', ['as'=>'campaigns.company.detail', 'uses'=>'CampaignTrackingController@detailByCompany']);
+        Route::get('campaigns/populate', ['as'=>'campaigns.populate', 'uses'=>'CampaignController@populateAddressCampaign']);
 
         Route::resource('campaigns', 'CampaignController');
 
@@ -216,5 +216,4 @@ Route::group(
         Route::resource('versions', 'GitController');
 
         Route::get('authtest', ['as'=>'test', 'uses'=>'TestController@test']);
-    }
-);
+
