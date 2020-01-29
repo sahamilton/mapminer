@@ -3,61 +3,38 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\User;
-use Illuminate\Support\Facades\Auth;
-use Socialite;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Carbon\Carbon;
 
 class LoginController extends Controller
 {
-    /**
-     * Redirect the user to the Okta authentication page.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function redirectToProvider()
-    {
-        return Socialite::driver('okta')->redirect();
-    }
+    /*
+    |--------------------------------------------------------------------------
+    | Login Controller
+    |--------------------------------------------------------------------------
+    |
+    | This controller handles authenticating users for the application and
+    | redirecting them to your home screen. The controller uses a trait
+    | to conveniently provide its functionality to your applications.
+    |
+    */
+
+    use AuthenticatesUsers;
 
     /**
-     * Obtain the user information from Okta.
+     * Where to redirect users after login.
      *
-     * @return \Illuminate\Http\Response
+     * @var string
      */
-    public function handleProviderCallback(\Illuminate\Http\Request $request)
+    protected $redirectTo = '/findme';
+
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
     {
-        $user = Socialite::driver('okta')->user();
-
-        $localUser = User::where('email', $user->email)->first();
-
-        // create a local user with the email and token from Okta
-        if (! $localUser) {
-            $localUser = User::create(
-                [
-                'email' => $user->email,
-                'name'  => $user->name,
-                'token' => $user->token,
-                ]
-            );
-        } else {
-            // if the user already exists, just update the token:
-            $localUser->token = $user->token;
-            $localUser->save();
-        }
-
-        try {
-            Auth::login($localUser);
-        } catch (\Throwable $e) {
-            return redirect('/login-okta');
-        }
-
-        return redirect('/home');
-    }
-
-    public function logout()
-    {
-        Auth::logout();
-
-        return redirect('/');
+        $this->middleware('guest', ['except' => 'logout']);
     }
 }
