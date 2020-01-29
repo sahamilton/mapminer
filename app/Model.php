@@ -2,8 +2,8 @@
 
 namespace App;
 
-use Illuminate\Support\Facades\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Request;
 
 class Model extends \Eloquent
 {

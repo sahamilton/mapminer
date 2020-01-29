@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Illuminate\Support\Facades\Request;
 use App\Http\Controllers\BaseController;
 use App\Http\Requests\PermissionFormRequest;
 use App\Permission;
 use App\Role;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Request;
 
 class AdminPermissionsController extends BaseController
 {

@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Arr;
 use App\Address;
 use App\Company;
 use App\LocationPostImport;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 
 class LocationPostImportController extends Controller
 {

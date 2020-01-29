@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Request;
 use App\Http\Requests\TrainingFormRequest;
 use App\Role;
 use App\SearchFilter;
 use App\Serviceline;
 use App\Training;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Request;
 
 class TrainingController extends BaseController
 {

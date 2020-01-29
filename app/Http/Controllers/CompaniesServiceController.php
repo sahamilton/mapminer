@@ -33,7 +33,7 @@ class CompaniesServiceController extends BaseController
             }else{
                 $id = request('id');
             }
-    
+
             if (! $company = $company->whereHas('serviceline',function($q) {
                     $q->whereIn('servicelines.id',$this->userServiceLines);
                 })->with('managedBy','industryVertical')
@@ -51,7 +51,7 @@ class CompaniesServiceController extends BaseController
             $data['statecode'] = $state;
             return response()->view('companies.service',compact('data','company','locations','limited','count','segment','states'));
         }
-    
+
     */
 
     public function getServiceDetails($id, $state = null)

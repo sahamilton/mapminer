@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Illuminate\Support\Facades\Request;
 use App\Branch;
 use App\Company;
 use App\Http\Controllers\BaseController;
@@ -17,6 +16,7 @@ use App\Track;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Request;
 
 class AdminUsersController extends BaseController
 {

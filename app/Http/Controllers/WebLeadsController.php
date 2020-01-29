@@ -39,15 +39,15 @@ class WebLeadsController extends ImportController
 
     /*
         public function show($lead) {
-    
+
             $branches = $this->findNearByBranches($lead);
             $people = $this->findNearbySales($branches,$lead);
             $salesrepmarkers = $this->jsonify($people);
             $branchmarkers=$branches->toJson();
             return response()->view('webleads.show',compact('lead','branches','people','salesrepmarkers','branchmarkers'));
-    
+
         }
-    
+
     */
 
     /* public function saleslist() {

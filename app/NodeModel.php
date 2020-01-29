@@ -2,8 +2,8 @@
 
 namespace App;
 
-use Illuminate\Support\Facades\Request;
 use Baum\Node;
+use Illuminate\Support\Facades\Request;
 
 class NodeModel extends Node
 {

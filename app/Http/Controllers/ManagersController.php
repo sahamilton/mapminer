@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Request;
 use App\Address;
 use App\Branch;
 use App\Company;
@@ -12,6 +11,7 @@ use App\SearchFilter;
 use App\User;
 use Excel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Request;
 
 class ManagersController extends BaseController
 {
