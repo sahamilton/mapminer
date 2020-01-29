@@ -1,6 +1,7 @@
 <?php
 
 namespace App;
+use Illuminate\Support\Arr;
 
 trait Filters
 {
@@ -16,7 +17,7 @@ trait Filters
         }
         // get the selected session keys
 
-        $searchKeys = array_flatten(session('Search'));
+        $searchKeys = Arr::flatten(session('Search'));
         if (empty($searchKeys)) {
             return $keys = false;
         }
@@ -47,7 +48,7 @@ trait Filters
             return $filtered;
         }
 
-        $searchFilters = array_flatten(session('Search'));
+        $searchFilters = Arr::flatten(session('Search'));
 
         if (empty($searchFilters)) {
             return $filtered;

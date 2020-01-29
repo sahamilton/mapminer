@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Arr;
 use App\Address;
 use App\Company;
 use App\LocationPostImport;
@@ -225,7 +226,7 @@ class LocationPostImportController extends Controller
         $item->user_id = auth()->user()->id;
         $item->created_at = Carbon::now();
 
-        return array_except($item, ['id', 'address_id', 'contactphone', 'email', 'firstname', 'lastname', 'fullname', 'title']);
+        return Arr::except($item, ['id', 'address_id', 'contactphone', 'email', 'firstname', 'lastname', 'fullname', 'title']);
     }
 
     /**
