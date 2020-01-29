@@ -170,7 +170,7 @@ class CampaignTrackingController extends Controller
         $company_ids = $campaign->companies->pluck('id')->toArray();
         return $this->branch->whereIn('id', $branch_ids)
             ->whereHas(
-                'locations', function ($q) use ($company_ids) {
+                'addresses', function ($q) use ($company_ids) {
                     $q->whereIn('company_id', $company_ids);
                 }
             )->summaryCampaignStats($campaign)->get();

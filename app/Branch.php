@@ -1156,20 +1156,20 @@ class Branch extends Model implements HasPresenter
             [
                 
 
-            'locations as offered_leads'=>function ($q) {
+            'addresses as offered_leads'=>function ($q) {
                 $q->whereIn('company_id', $this->company_ids)
                     ->where('status_id', 1)
                     ->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']]);;
                     
             },
 
-            'locations as worked_leads'=>function ($q) {
+            'addresses as worked_leads'=>function ($q) {
                 $q->whereIn('company_id', $this->company_ids)
                     ->where('status_id', 2)
                     ->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']]);;
                     
             },
-            'locations as rejected_leads'=>function ($q) {
+            'addresses as rejected_leads'=>function ($q) {
                 $q->whereIn('company_id', $this->company_ids)
                     ->where('status_id', 4)
                     ->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']]);;

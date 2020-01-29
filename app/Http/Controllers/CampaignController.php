@@ -561,7 +561,7 @@ class CampaignController extends Controller
         return $this->branch->whereIn('id', $branches)
             ->withCount(
                 [
-                'locations as workedleads'=>function ($q) use ($companies) {
+                'addresses as workedleads'=>function ($q) use ($companies) {
                     $q->whereIn('company_id', $companies);
                 }
 
