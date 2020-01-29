@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ac310dab0758c5e2aa66a391c9b710d3",
+    "content-hash": "dd7283e011800826c6dfb87ef6cc277a",
     "packages": [
         {
             "name": "algolia/algoliasearch-client-php",
@@ -1893,6 +1893,7 @@
                 }
             ],
             "description": "Provides a simple API and specification that abstracts away the details of HTTP into a single PHP function.",
+            "abandoned": true,
             "time": "2018-07-31T13:22:33+00:00"
         },
         {
@@ -1943,6 +1944,7 @@
                 "Guzzle",
                 "stream"
             ],
+            "abandoned": true,
             "time": "2014-10-12T19:18:40+00:00"
         },
         {
@@ -3592,6 +3594,56 @@
             "time": "2019-11-08T13:50:10+00:00"
         },
         {
+            "name": "ocramius/package-versions",
+            "version": "1.4.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Ocramius/PackageVersions.git",
+                "reference": "44af6f3a2e2e04f2af46bcb302ad9600cba41c7d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Ocramius/PackageVersions/zipball/44af6f3a2e2e04f2af46bcb302ad9600cba41c7d",
+                "reference": "44af6f3a2e2e04f2af46bcb302ad9600cba41c7d",
+                "shasum": ""
+            },
+            "require": {
+                "composer-plugin-api": "^1.0.0",
+                "php": "^7.1.0"
+            },
+            "require-dev": {
+                "composer/composer": "^1.6.3",
+                "doctrine/coding-standard": "^5.0.1",
+                "ext-zip": "*",
+                "infection/infection": "^0.7.1",
+                "phpunit/phpunit": "^7.5.17"
+            },
+            "type": "composer-plugin",
+            "extra": {
+                "class": "PackageVersions\\Installer",
+                "branch-alias": {
+                    "dev-master": "2.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "PackageVersions\\": "src/PackageVersions"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Marco Pivetta",
+                    "email": "ocramius@gmail.com"
+                }
+            ],
+            "description": "Composer plugin that provides efficient querying for installed package versions (no runtime IO)",
+            "time": "2019-11-15T16:17:10+00:00"
+        },
+        {
             "name": "opis/closure",
             "version": "3.5.1",
             "source": {
@@ -4881,6 +4933,130 @@
                 "promises"
             ],
             "time": "2019-01-07T21:25:54+00:00"
+        },
+        {
+            "name": "scoutapp/scout-apm-laravel",
+            "version": "v1.2.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/scoutapp/scout-apm-laravel.git",
+                "reference": "fa7b21dfe4543e86363d4daacf8ebbd318b763ec"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/scoutapp/scout-apm-laravel/zipball/fa7b21dfe4543e86363d4daacf8ebbd318b763ec",
+                "reference": "fa7b21dfe4543e86363d4daacf8ebbd318b763ec",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/contracts": "^5.5.0|^6.0",
+                "illuminate/http": "^5.5.0|^6.0",
+                "illuminate/routing": "^5.5.0|^6.0",
+                "illuminate/support": "^5.5.0|^6.0",
+                "illuminate/view": "^5.5.0|^6.0",
+                "php": ">=7.1.0,<7.5.0",
+                "psr/log": "^1.0",
+                "ramsey/uuid": "^3.0",
+                "scoutapp/scout-apm-php": "^4.0"
+            },
+            "require-dev": {
+                "doctrine/coding-standard": "^6.0",
+                "laravel/framework": "^5.5.0|^6.0",
+                "mockery/mockery": "^1.2|^1.3",
+                "phpunit/phpunit": "^7.5.15|^8.4",
+                "roave/security-advisories": "dev-master",
+                "spatie/phpunit-watcher": "^1.10",
+                "vimeo/psalm": "^3.5"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Scoutapm\\Laravel\\Providers\\ScoutApmServiceProvider"
+                    ],
+                    "aliases": {
+                        "ScoutApm": "Scoutapm\\Laravel\\Facades\\ScoutApm"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Scoutapm\\Laravel\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Scout Application Performance Monitoring Agent - https://scoutapm.com",
+            "homepage": "https://scoutapm.com/",
+            "keywords": [
+                "apm",
+                "development",
+                "laravel",
+                "monitoring",
+                "performance"
+            ],
+            "time": "2020-01-09T13:39:10+00:00"
+        },
+        {
+            "name": "scoutapp/scout-apm-php",
+            "version": "v4.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/scoutapp/scout-apm-php.git",
+                "reference": "0596a518606201edbb57d74f03998a7eeaa1a0bf"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/scoutapp/scout-apm-php/zipball/0596a518606201edbb57d74f03998a7eeaa1a0bf",
+                "reference": "0596a518606201edbb57d74f03998a7eeaa1a0bf",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "ext-openssl": "*",
+                "ext-sockets": "*",
+                "ext-zlib": "*",
+                "ocramius/package-versions": "^1.4",
+                "php": ">=7.1.0,<7.5.0",
+                "psr/log": "^1.0",
+                "psr/simple-cache": "^1.0",
+                "ralouphie/getallheaders": "^2.0.5|^3.0",
+                "ramsey/uuid": "^3.0",
+                "webmozart/assert": "^1.0"
+            },
+            "require-dev": {
+                "doctrine/coding-standard": "^6.0",
+                "monolog/monolog": "^1.24",
+                "phpunit/phpunit": "^7.5",
+                "psr/log": "^1.1",
+                "roave/doctrine-simplecache": "^2.2",
+                "spatie/phpunit-watcher": "^1.8",
+                "vimeo/psalm": "^3.4"
+            },
+            "suggest": {
+                "ext-scoutapm": "Recommended for additional recording capability of IO-bound PHP internal functions"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Scoutapm\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Scout Application Performance Monitoring Agent - https://scoutapm.com",
+            "homepage": "https://scoutapm.com/",
+            "keywords": [
+                "apm",
+                "development",
+                "monitoring",
+                "performance"
+            ],
+            "time": "2020-01-08T12:54:26+00:00"
         },
         {
             "name": "smalot/pdfparser",
@@ -7060,6 +7236,54 @@
             "time": "2019-09-10T21:37:39+00:00"
         },
         {
+            "name": "webmozart/assert",
+            "version": "1.6.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/webmozart/assert.git",
+                "reference": "573381c0a64f155a0d9a23f4b0c797194805b925"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/webmozart/assert/zipball/573381c0a64f155a0d9a23f4b0c797194805b925",
+                "reference": "573381c0a64f155a0d9a23f4b0c797194805b925",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.3.3 || ^7.0",
+                "symfony/polyfill-ctype": "^1.8"
+            },
+            "conflict": {
+                "vimeo/psalm": "<3.6.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.8.36 || ^7.5.13"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Webmozart\\Assert\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Bernhard Schussek",
+                    "email": "bschussek@gmail.com"
+                }
+            ],
+            "description": "Assertions to validate method input/output with nice error messages.",
+            "keywords": [
+                "assert",
+                "check",
+                "validate"
+            ],
+            "time": "2019-11-24T13:36:37+00:00"
+        },
+        {
             "name": "willdurand/geocoder",
             "version": "4.2.1",
             "source": {
@@ -9060,54 +9284,6 @@
             ],
             "description": "A small library for converting tokenized PHP source code into XML and potentially other formats",
             "time": "2019-06-13T22:48:21+00:00"
-        },
-        {
-            "name": "webmozart/assert",
-            "version": "1.6.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/webmozart/assert.git",
-                "reference": "573381c0a64f155a0d9a23f4b0c797194805b925"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/webmozart/assert/zipball/573381c0a64f155a0d9a23f4b0c797194805b925",
-                "reference": "573381c0a64f155a0d9a23f4b0c797194805b925",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^5.3.3 || ^7.0",
-                "symfony/polyfill-ctype": "^1.8"
-            },
-            "conflict": {
-                "vimeo/psalm": "<3.6.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^4.8.36 || ^7.5.13"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Webmozart\\Assert\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Bernhard Schussek",
-                    "email": "bschussek@gmail.com"
-                }
-            ],
-            "description": "Assertions to validate method input/output with nice error messages.",
-            "keywords": [
-                "assert",
-                "check",
-                "validate"
-            ],
-            "time": "2019-11-24T13:36:37+00:00"
         }
     ],
     "aliases": [],
