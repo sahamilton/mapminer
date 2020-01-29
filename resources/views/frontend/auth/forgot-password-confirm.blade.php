@@ -1,3 +1,4 @@
+use Illuminate\Support\Facades\Request;
 @extends('site/layouts/default')
 
 {{-- Page title --}}
@@ -19,7 +20,7 @@ Forgot Password ::
 	<div class="control-group{{ $errors->first('password', ' error') }}">
 		<label class="control-label" for="password">New Password</label>
 		<div class="controls">
-			<input type="password" name="password" id="password" value="{{ Input::old('password') }}" />
+			<input type="password" name="password" id="password" value="{{ Request::old('password') }}" />
 			{{ $errors->first('password', '<span class="help-block">:message</span>') }}
 		</div>
 	</div>
@@ -28,7 +29,7 @@ Forgot Password ::
 	<div class="control-group{{ $errors->first('password_confirm', ' error') }}">
 		<label class="control-label" for="password_confirm">Password Confirmation</label>
 		<div class="controls">
-			<input type="password" name="password_confirm" id="password_confirm" value="{{ Input::old('password_confirm') }}" />
+			<input type="password" name="password_confirm" id="password_confirm" value="{{ Request::old('password_confirm') }}" />
 			{{ $errors->first('password_confirm', '<span class="help-block">:message</span>') }}
 		</div>
 	</div>

@@ -1,3 +1,4 @@
+use Illuminate\Support\Facades\Request;
 @extends('site.layouts.default')
 
 {{-- Web site Title --}}
@@ -31,7 +32,7 @@ body {
 			
 				<label class="col-md-2 control-label"  for="first_name">First Name</label>
 				<div class="col-md-10">
-					<input class="form-control" type="text" name="firstname" id="firstname" value="{{ Input::old('firstname', $user->person->firstname) }}" />
+					<input class="form-control" type="text" name="firstname" id="firstname" value="{{ Request::old('firstname', $user->person->firstname) }}" />
 					{{ $errors->first('firstname', '<span class="help-inline">:message</span>') }}
 				</div>
 			
@@ -41,7 +42,7 @@ body {
 			
 				<label class="col-md-2 control-label" for="last_name">Last Name</label>
 				<div class="col-md-10">
-					<input class="form-control" type="text" name="lastname" id="lastname" value="{{ Input::old('lastname', $user->person->lastname) }}" />
+					<input class="form-control" type="text" name="lastname" id="lastname" value="{{ Request::old('lastname', $user->person->lastname) }}" />
 					{{ $errors->first('lastname', '<span class="help-inline">:message</span>') }}
 				</div>
 			
@@ -52,7 +53,7 @@ body {
         <div class="form-group {{{ $errors->has('email') ? 'error' : '' }}}">
             <label class="col-md-2 control-label" for="email">Email</label>
             <div class="col-md-10">
-                <input class="form-control" type ="email" name="email" id="email" value="{{{ Input::old('email', $user->email) }}}" />
+                <input class="form-control" type ="email" name="email" id="email" value="{{{ Request::old('email', $user->email) }}}" />
                 {{ $errors->first('email', '<span class="help-inline">:message</span>') }}
             </div>
         </div>
@@ -62,7 +63,7 @@ body {
         <div class="form-group {{{ $errors->has('address') ? 'error' : '' }}}">
             <label class="col-md-2 control-label" for="address">Address</label>
             <div class="col-md-10">
-                <input class="form-control" type="text" name="address" id="address" value="{{{ Input::old('address', $user->person->fullAddress()) }}}" />
+                <input class="form-control" type="text" name="address" id="address" value="{{{ Request::old('address', $user->person->fullAddress()) }}}" />
                 {{ $errors->first('address', '<span class="help-inline">:message</span>') }}
             </div>
         </div>
@@ -72,7 +73,7 @@ body {
         <div class="form-group {{{ $errors->has('phone') ? 'error' : '' }}}">
             <label class="col-md-2 control-label" for="phone">Phone</label>
             <div class="col-md-10">
-                <input class="form-control" type="text" name="phone" id="phone" value="{{{ Input::old('phone', $user->person->phone) }}}" />
+                <input class="form-control" type="text" name="phone" id="phone" value="{{{ Request::old('phone', $user->person->phone) }}}" />
                 {{ $errors->first('phone', '<span class="help-inline">:message</span>') }}
             </div>
         </div>

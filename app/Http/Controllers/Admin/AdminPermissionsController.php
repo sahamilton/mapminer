@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Illuminate\Support\Facades\Request;
 use App\Http\Controllers\BaseController;
 use App\Http\Requests\PermissionFormRequest;
 use App\Permission;
@@ -66,7 +67,7 @@ class AdminPermissionsController extends BaseController
         $roles = $this->role->all();
 
         // Selected permissions
-        $currentRoles = \Input::old('roles', []);
+        $currentRoles = \Request::old('roles', []);
 
         $permission = $this->permission;
         $title = 'Create New Permission';

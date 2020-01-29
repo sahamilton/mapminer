@@ -2,13 +2,14 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Support\Facades\Request;
 use Illuminate\Foundation\Http\FormRequest;
 
 class NewsFormRequest extends FormRequest
 {
     public function __construct()
     {
-        \Input::merge(['slug' => strtolower(str_replace(' ', '_', \Input::get('title')))]);
+        \Request::merge(['slug' => strtolower(str_replace(' ', '_', \Request::get('title')))]);
     }
 
     /**

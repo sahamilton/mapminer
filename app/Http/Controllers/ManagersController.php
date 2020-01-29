@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Request;
 use App\Address;
 use App\Branch;
 use App\Company;
@@ -284,7 +285,7 @@ class ManagersController extends BaseController
      */
     public function companywatchexport()
     {
-        $id = urldecode(\Input::get('id'));
+        $id = urldecode(\Request::get('id'));
 
         Excel::download(
             'Watch List', function ($excel) use ($id) {

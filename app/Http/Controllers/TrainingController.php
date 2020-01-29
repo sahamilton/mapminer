@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Request;
 use App\Http\Requests\TrainingFormRequest;
 use App\Role;
 use App\SearchFilter;
@@ -45,7 +46,7 @@ class TrainingController extends BaseController
         $roles = Role::all();
         $verticals = $this->getAllVerticals();
         $servicelines = $this->getAllServicelines();
-        $selectedRoles = \Input::old('roles', []);
+        $selectedRoles = \Request::old('roles', []);
         $mode = 'create';
         $training = null;
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Illuminate\Support\Facades\Request;
 use App\Branch;
 use App\Company;
 use App\Http\Controllers\BaseController;
@@ -153,10 +154,10 @@ class AdminUsersController extends BaseController
         $permissions = $this->permission->all();
 
         // Selected groups
-        $selectedRoles = \Input::old('roles', []);
+        $selectedRoles = \Request::old('roles', []);
 
         // Selected permissions
-        $selectedPermissions = \Input::old('permissions', []);
+        $selectedPermissions = \Request::old('permissions', []);
 
         // Title
         $title = 'Create New User';
@@ -618,8 +619,8 @@ class AdminUsersController extends BaseController
         //
         $roleid = Role::where('name', '=', 'User')->pluck('id');
 
-        if (null !== (\Input::get('serviceline'))) {
-            $servicelines = \Input::get('serviceline');
+        if (null !== (\Request::get('serviceline'))) {
+            $servicelines = \Request::get('serviceline');
 
             $users = $this->user->whereIn('email', $newUsers)->get();
 
