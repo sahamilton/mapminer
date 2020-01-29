@@ -14,7 +14,6 @@ class ProjectSourceRequest extends FormRequest
     public function authorize()
     {
         return auth()->user()->can('manage_projects');
-        ;
     }
 
     /**

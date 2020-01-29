@@ -2,13 +2,13 @@
 
 namespace App\Listeners\Users;
 
+use App\Track;
+use App\User;
+use Carbon\Carbon;
 use Illuminate\Auth\Events\Login;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Http\Request;
 use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use App\User;
-use App\Track;
-use Carbon\Carbon;
 
 class UpdateLastLoggedInAt
 {
@@ -30,8 +30,8 @@ class UpdateLastLoggedInAt
     public function handle(Login $event)
     {
         if (\App::environment() != 'local') {
-              $this->updateTrackTable($event);
-              $this->updateUserTable();
+            $this->updateTrackTable($event);
+            $this->updateUserTable();
         }
     }
 
@@ -47,8 +47,8 @@ class UpdateLastLoggedInAt
         // update the user record for last login
         // we don't want to update the updated_at field for logins. Its redundant.
         $user = auth()->user();
-        $user->timestamps =false;
+        $user->timestamps = false;
         $user->update(['lastlogin' => now()]);
-        $user->timestamps =true;
+        $user->timestamps = true;
     }
 }

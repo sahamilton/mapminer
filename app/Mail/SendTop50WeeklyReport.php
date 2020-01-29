@@ -2,19 +2,19 @@
 
 namespace App\Mail;
 
+use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Carbon\Carbon;
 
-class SendTop25WeeklyReport extends Mailable
+class SendTop50WeeklyReport extends Mailable
 {
     use Queueable, SerializesModels;
 
     public $file;
     public $period;
-    
+
     /**
      * Create a new message instance.
      *
@@ -22,9 +22,8 @@ class SendTop25WeeklyReport extends Mailable
      */
     public function __construct($file)
     {
-        $this->file = '/app/'. $file;
+        $this->file = '/app/'.$file;
         $this->period = Carbon::now()->endOfWeek();
-        
     }
 
     /**
@@ -35,11 +34,10 @@ class SendTop25WeeklyReport extends Mailable
     public function build()
     {
         return $this->from('salesoperations@tbmapminer.com', 'Sales Operations')
-            ->markdown('emails.top25openopportunitiesreport')  
+            ->markdown('emails.top25openopportunitiesreport')
             ->subject('Top 25 Opportunities Weekly Report')
             ->attach(
                 storage_path($this->file), ['mime' => 'application/xls']
             );
-            
     }
 }

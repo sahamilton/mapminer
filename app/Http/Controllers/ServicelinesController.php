@@ -1,18 +1,19 @@
 <?php
+
 namespace App\Http\Controllers;
 
-use App\Serviceline;
-use App\Company;
 use App\Branch;
-use Illuminate\Http\Request;
+use App\Company;
 use App\Http\Requests\ServiceLineFormRequest;
+use App\Serviceline;
+use Illuminate\Http\Request;
 
 class ServicelinesController extends BaseController
 {
     public $serviceline;
 
     /**
-     * Display a listing of servicelines
+     * Display a listing of servicelines.
      *
      * @return Response
      */
@@ -21,25 +22,23 @@ class ServicelinesController extends BaseController
         $this->serviceline = $serviceline;
         parent::__construct($serviceline);
     }
-    
+
     public function index()
     {
         $servicelines = $this->serviceline
         ->with('companyCount', 'userCount')
         ->get();
-        
-        
+
         return response()->view('servicelines.index', compact('servicelines'));
     }
 
     /**
-     * Show the form for creating a new serviceline
+     * Show the form for creating a new serviceline.
      *
      * @return Response
      */
     public function create()
     {
-        
         return response()->view('servicelines.create');
     }
 
@@ -50,7 +49,6 @@ class ServicelinesController extends BaseController
      */
     public function store(ServiceLineFormRequest $request)
     {
-
         $this->serviceline->create(request()->all());
 
         return \redirect()->route('serviceline.index');
@@ -62,12 +60,11 @@ class ServicelinesController extends BaseController
      * @param  int  $id
      * @return Response
      */
-    
     public function show($id, $type = null)
     {
-        
+
         // Can the user see this service line?
-                
+
         if (! in_array($id, $this->userServiceLines)) {
             return redirect()->route('serviceline.index');
         }
@@ -78,7 +75,7 @@ class ServicelinesController extends BaseController
                     $q->where('serviceline_id', '=', $id);
                 })
                 ->get();
-            
+
             return response()->view('servicelines.show', compact('serviceline', 'branches'));
         } else {
             $companies = Company::with('managedBy', 'managedBy.userdetails', 'industryVertical', 'serviceline', 'countlocations')
@@ -88,15 +85,13 @@ class ServicelinesController extends BaseController
                     })
             ->get();
             $locationFilter = 'both';
-            
-            $filtered=null;
-            $title = 'All ' .$serviceline->ServiceLine .' Accounts';
-        
+
+            $filtered = null;
+            $title = 'All '.$serviceline->ServiceLine.' Accounts';
+
             return response()->view('companies.index', compact('companies', 'fields', 'title', 'filtered', 'locationFilter'));
         }
     }
-
-        
 
     /**
      * Show the form for editing the specified serviceline.
@@ -107,6 +102,7 @@ class ServicelinesController extends BaseController
     public function edit($id)
     {
         $serviceline = $this->serviceline->find($id);
+
         return response()->view('servicelines.edit', compact('serviceline'));
     }
 
@@ -119,7 +115,7 @@ class ServicelinesController extends BaseController
     public function update(ServiceLineFormRequest $request, $id)
     {
         $serviceline = $this->serviceline->find($id);
-        
+
         $serviceline->update(request()->all());
 
         return redirect()->route('serviceline.index');

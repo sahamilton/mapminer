@@ -2,24 +2,23 @@
 
 namespace App;
 
-use Carbon\Carbon;
 use App\Presenters\LocationPresenter;
-use McCool\LaravelAutoPresenter\HasPresenter;
+use Carbon\Carbon;
 use Geocoder\Laravel\Facades\Geocoder;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use McCool\LaravelAutoPresenter\HasPresenter;
 
-class Weblead extends Model implements HasPresenter
+class WebLead extends Model implements HasPresenter
 {
     use  Geocode;
 
-    public $table= 'webleads';
-              
+    public $table = 'webleads';
+
     public $fillable = [
             'rating',
             'jobs',
             'time_frame',
-            'multiple'];
-   
+            'multiple', ];
 
     public function getPresenterClass()
     {

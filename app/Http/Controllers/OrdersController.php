@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Orders;
 use App\Branch;
+use App\Orders;
 use App\Person;
 use Illuminate\Http\Request;
 
@@ -13,10 +13,9 @@ class OrdersController extends Controller
     public $branch;
     public $person;
 
-
     /**
-     * [__construct description]
-     * 
+     * [__construct description].
+     *
      * @param Orders $order  [description]
      * @param Branch $branch [description]
      * @param Person $person [description]
@@ -36,11 +35,11 @@ class OrdersController extends Controller
     public function index()
     {
         $myBranches = array_keys($this->person->myBranches());
-       
+
         $branchOrders = $this->branch->whereIn('id', $myBranches)
             ->with('orders')
             ->get();
-       
+
         $orders = $branchOrders->map(
             function ($branch) {
                 return $branch->orders->sum('orders');
@@ -49,6 +48,7 @@ class OrdersController extends Controller
 
         return response()->view('orders.index', compact('orders', 'branchOrders'));
     }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -63,7 +63,7 @@ class OrdersController extends Controller
      * Store a newly created resource in storage.
      *
      * @param \Illuminate\Http\Request $request [description]
-     * 
+     *
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -75,18 +75,17 @@ class OrdersController extends Controller
      * Display the specified resource.
      *
      * @param int $id [description]
-     * 
+     *
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
-        
         $orders = $this->orders->where('branch_id', '=', $id)
             ->with('addresses', 'addresses.company')
             ->branchOrders($id)
             ->get();
         $branch = $this->branch->with('manager')->findOrFail($id);
-        
+
         return response()->view('orders.show', compact('branch', 'orders'));
     }
 
@@ -94,7 +93,7 @@ class OrdersController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param int $id [description]
-     * 
+     *
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -107,7 +106,7 @@ class OrdersController extends Controller
      *
      * @param \Illuminate\Http\Request $request [description]
      * @param int                      $id      [description]
-     * 
+     *
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -119,7 +118,7 @@ class OrdersController extends Controller
      * Remove the specified resource from storage.
      *
      * @param int $id [description]
-     * 
+     *
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

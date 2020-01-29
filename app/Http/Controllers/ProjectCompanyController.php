@@ -56,6 +56,7 @@ class ProjectCompanyController extends Controller
         $projectcompany = $this->projectcompany
         ->with('projects', 'employee')
         ->findOrFail($id);
+
         return response()->view('projectcompanies.show', compact('projectcompany'));
     }
 

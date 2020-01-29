@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\SearchFilter;
-use App\PersonIndustry;
 use App\Person;
+use App\PersonIndustry;
+use App\SearchFilter;
 use Illuminate\Http\Request;
 
 class PersonIndustryController extends Controller
 {
-    
     protected $person;
     protected $industry;
     protected $searchfilter;
@@ -20,6 +19,7 @@ class PersonIndustryController extends Controller
         $this->searchfilter = $searchfilter;
         $this->person = $person;
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -30,6 +30,7 @@ class PersonIndustryController extends Controller
         $industries = $this->industry->with('industry')->where('person_id', '=', auth()->user()->person->id)->get()->pluck('industry.id')->toArray();
 
         $filters = $this->searchfilter->where('filter', '=', 'Industry & Segments')->first()->getDescendantsAndSelf();
+
         return response()->view('industries.index', compact('industries', 'filters'));
     }
 
@@ -53,6 +54,7 @@ class PersonIndustryController extends Controller
     {
         $person = $this->person->findOrFail(request('id'));
         $person->industryfocus()->sync(request('vertical'));
+
         return redirect()->route('user.show', auth()->user()->id);
     }
 

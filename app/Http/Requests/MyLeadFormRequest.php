@@ -6,9 +6,6 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class MyLeadFormRequest extends FormRequest
 {
-    
-    
-
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -16,7 +13,6 @@ class MyLeadFormRequest extends FormRequest
      */
     public function authorize()
     {
-       
         return true;
     }
 
@@ -27,21 +23,19 @@ class MyLeadFormRequest extends FormRequest
      */
     public function rules()
     {
-        
         return [
             'address'=>'required:street',
-            
+
             'companyname'=>'required|filled',
             'phone'=>'sometimes|nullable|numeric',
             'email'=>'sometimes|nullable|email',
         ];
     }
+
     protected function prepareForValidation()
     {
-      
-
         if ($this->has('phone')) {
-            $this->merge(['phone'=>preg_replace("/[^0-9]/", "", $this->phone)]);
+            $this->merge(['phone'=>preg_replace('/[^0-9]/', '', $this->phone)]);
         }
     }
 }

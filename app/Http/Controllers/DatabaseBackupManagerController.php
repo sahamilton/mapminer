@@ -11,9 +11,7 @@ class DatabaseBackupManagerController extends Controller
 
     public function __construct(DatabaseBackupManager $database)
     {
-
         $this->database = $database;
-
     }
 
     /**
@@ -25,8 +23,8 @@ class DatabaseBackupManagerController extends Controller
     {
         //dd(storage_path());
         $backups = $this->database->allFiles();
-      
-        return response()->view('database.index',compact('backups'));
+
+        return response()->view('database.index', compact('backups'));
     }
 
     /**
@@ -92,10 +90,9 @@ class DatabaseBackupManagerController extends Controller
      */
     public function destroy($file)
     {
-       //dd(storage_path($this->database->directory .$file));
-       unlink(storage_path($this->database->backupDirectory."\\" .$file));
-        return redirect()->route('database.index')->withMessage("Backup deleted");
+        //dd(storage_path($this->database->directory .$file));
+        unlink(storage_path($this->database->backupDirectory.'\\'.$file));
 
-       
+        return redirect()->route('database.index')->withMessage('Backup deleted');
     }
 }

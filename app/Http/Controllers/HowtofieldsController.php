@@ -1,39 +1,37 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Howtofield;
 use App\Http\Requests\HowtofieldsFormRequest;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+
 class HowtofieldsController extends BaseController
 {
     public $howtofield;
-    
+
     /**
-     * Display a listing of howtofields
+     * Display a listing of howtofields.
      *
      * @return Response
      */
     public function __construct(Howtofield $howtofield)
     {
-        
         $this->howtofield = $howtofield;
     }
-    
-     
+
     public function index()
     {
         $howtofields = $this->howtofield
             ->whereNull('parent_id')
             ->first()->getDescendants();
-      
-        
-        
+
         return response()->view('howtofields.index', compact('howtofields'));
     }
 
     /**
-     * Show the form for creating a new howtofield
+     * Show the form for creating a new howtofield.
      *
      * @return Response
      */
@@ -55,10 +53,9 @@ class HowtofieldsController extends BaseController
      */
     public function store(Request $request)
     {
-        
-        
         $this->howtofield->create(request()->all());
         $this->howtofield->rebuild();
+
         return redirect()->route('howtofields.index');
     }
 
@@ -70,8 +67,6 @@ class HowtofieldsController extends BaseController
      */
     public function show(Howtofield $howtofield)
     {
-        
-
         return response()->view('howtofields.show', compact('howtofield'));
     }
 
@@ -85,6 +80,7 @@ class HowtofieldsController extends BaseController
     {
         $parents = $this->howtofield->where('depth', 1)->get();
         $types = $this->howtofield->getTypes();
+
         return response()->view('howtofields.edit', compact('howtofield', 'parents', 'types'));
     }
 
@@ -96,16 +92,14 @@ class HowtofieldsController extends BaseController
      */
     public function update(HowtofieldsFormRequest $request, Howtofield $howtofield)
     {
-        
         $howtofield->update(request()->all());
         if (! request()->has('active')) {
-        
             $howtofield->update(['active'=>0]);
         }
         if (! request()->has('required')) {
             $howtofield->update(['required'=>0]);
         }
-        
+
         $howtofield->rebuild();
 
         return redirect()->route('howtofields.index');
@@ -124,18 +118,15 @@ class HowtofieldsController extends BaseController
         return redirect()->route('howtofields.index');
     }
 
-
     public function reorder(Request $request)
     {
         $data = json_decode(request('id'));
         $n = 0;
         foreach ($data as $el) {
-
             $n++;
             $item[$el->id] = ['parent_id'=>43, 'sequence'=>$n];
-            $c=0;
+            $c = 0;
             foreach ($el->children as $child) {
-                
                 $c++;
                 $item[$child->id] = ['parent_id'=>$el->id, 'sequence'=>$c];
             }
@@ -144,9 +135,7 @@ class HowtofieldsController extends BaseController
             $field = $this->howtofield->findOrFail($key);
             $field->update($value);
         }
-        
+
         $this->howtofield->rebuild();
     }
-
-
 }

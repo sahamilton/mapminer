@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 
 class CreateAddressBranchPivotTable extends Migration
 {
@@ -14,7 +14,7 @@ class CreateAddressBranchPivotTable extends Migration
     {
         Schema::create('address_branch', function (Blueprint $table) {
             $table->integer('address_id')->unsigned()->index();
-            
+
             $table->string('branch_id', 20)->index()->collation('utf8_general_ci');
             $table->integer('orders');
             $table->string('period');

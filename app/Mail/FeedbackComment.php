@@ -2,12 +2,12 @@
 
 namespace App\Mail;
 
-use Illuminate\Bus\Queueable;
-use Illuminate\Mail\Mailable;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Feedback;
 use App\User;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Mail\Mailable;
+use Illuminate\Queue\SerializesModels;
 
 class FeedbackComment extends Mailable
 {
@@ -15,6 +15,7 @@ class FeedbackComment extends Mailable
 
     public $feedback;
     public $user;
+
     /**
      * Create a new message instance.
      *
@@ -24,9 +25,8 @@ class FeedbackComment extends Mailable
     {
         $this->feedback = $feedback;
         $this->user = User::with('person')->findOrFail(auth()->user()->id);
-
     }
-    
+
     /**
      * Build the message.
      *
@@ -38,6 +38,6 @@ class FeedbackComment extends Mailable
             ->to($this->feedback->providedBy->email)
             ->cc(config('mapminer.system_contact'))
             ->bcc(config('mapminer.developer_email'))
-            ->subject('Feedback Comment');;
+            ->subject('Feedback Comment');
     }
 }

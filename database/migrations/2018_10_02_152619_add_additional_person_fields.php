@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddAdditionalPersonFields extends Migration
 {
@@ -27,7 +27,7 @@ class AddAdditionalPersonFields extends Migration
     public function down()
     {
         Schema::table('persons', function (Blueprint $table) {
-            $table->dropColumn(['hiredate','business_title']);
+            $table->dropColumn(['hiredate', 'business_title']);
         });
     }
 }

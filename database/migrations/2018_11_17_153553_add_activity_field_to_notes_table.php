@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddActivityFieldToNotesTable extends Migration
 {
@@ -29,7 +29,7 @@ class AddActivityFieldToNotesTable extends Migration
     public function down()
     {
         Schema::table('Notes', function (Blueprint $table) {
-            $table->dropColumn(['activity','contact_id','activity_date','followup_date']);
+            $table->dropColumn(['activity', 'contact_id', 'activity_date', 'followup_date']);
         });
     }
 }

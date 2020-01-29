@@ -1,9 +1,9 @@
 <?php
 
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 
-class CreateBranchSalesactivityPivotTable  extends Migration
+class CreateBranchSalesactivityPivotTable extends Migration
 {
     /**
      * Run the migrations.
@@ -15,7 +15,7 @@ class CreateBranchSalesactivityPivotTable  extends Migration
         Schema::create(
             'branch_salesactivity', function (Blueprint $table) {
                 $table->string('branch_id', 20)->collation('utf8_general_ci')->index();
-               
+
                 $table->integer('salesactivity_id')->unsigned()->index();
 
                 $table->primary(['branch_id', 'salesactivity_id']);
@@ -23,11 +23,9 @@ class CreateBranchSalesactivityPivotTable  extends Migration
         );
         Schema::table(
             'branch_salesactivity', function (Blueprint $table) {
-               
                 $table->foreign('branch_id')->references('id')->on('branches')->onDelete('cascade');
-               
+
                 $table->foreign('salesactivity_id')->references('id')->on('salesactivity')->onDelete('cascade');
-               
             }
         );
     }

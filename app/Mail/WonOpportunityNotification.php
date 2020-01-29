@@ -4,14 +4,13 @@ namespace App\Mail;
 
 use App\Opportunity;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
 class WonOpportunityNotification extends Mailable
 {
     use Queueable, SerializesModels;
-
 
     public $opportunity;
 
@@ -32,8 +31,6 @@ class WonOpportunityNotification extends Mailable
      */
     public function build()
     {
-        
-
         return $this->markdown('emails.opportunities.won');
     }
 }

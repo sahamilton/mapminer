@@ -7,14 +7,13 @@ use Goutte\Client;
 class HtmlReader implements TextInterface
 {
     /**
-     * [read description]
-     * 
+     * [read description].
+     *
      * @param  [type] $location [description]
      * @return [type]           [description]
      */
     public function read($location)
     {
-
         $client = new Client();
         $guzzleClient = new \GuzzleHttp\Client(
             [
@@ -34,6 +33,7 @@ class HtmlReader implements TextInterface
         foreach ($plaintext->filter('style') as $node) {
             $node->parentNode->removeChild($node);
         }
+
         return $plaintext->text();
     }
 }

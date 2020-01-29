@@ -3,18 +3,16 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
 class DeadLeadsReport extends Mailable
 {
-   
     use Queueable, SerializesModels;
 
     public $file;
-    
-    
+
     /**
      * Create a new message instance.
      *
@@ -22,10 +20,7 @@ class DeadLeadsReport extends Mailable
      */
     public function __construct($file)
     {
-       
-        $this->file = '/app/'. $file;
-        
-        
+        $this->file = '/app/'.$file;
     }
 
     /**
@@ -35,9 +30,8 @@ class DeadLeadsReport extends Mailable
      */
     public function build()
     {
-        
         return $this->from('salesoperations@tbmapminer.com', 'Sales Operations')
-            ->markdown('emails.deadleadsreport')  
+            ->markdown('emails.deadleadsreport')
             ->subject('Dead Leads Report')
             ->attach(
                 storage_path($this->file), ['mime' => 'application/xls']

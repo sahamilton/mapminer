@@ -5,7 +5,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 use Geocoder\Provider\Chain\Chain;
 use Geocoder\Provider\GeoPlugin\GeoPlugin;
 use Geocoder\Provider\GoogleMaps\GoogleMaps;
@@ -19,9 +18,9 @@ return [
                 'en-US',
                 env('GOOGLE_MAPS_API_KEY'),
             ],
-           
+
          ],
-        
+
          GoogleMaps::class => [
             'us',
             env('GOOGLE_MAPS_API_KEY'),

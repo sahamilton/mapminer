@@ -29,5 +29,4 @@ class LeadReassignFormRequest extends FormRequest
 
         ];
     }
-    
 }

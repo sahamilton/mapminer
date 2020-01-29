@@ -7,11 +7,11 @@ use Illuminate\Http\Request;
 
 class PermissionFormRequest extends FormRequest
 {
-    
     public function __construct(Request $request)
     {
         $this->request = $request;
     }
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -29,7 +29,6 @@ class PermissionFormRequest extends FormRequest
      */
     public function rules()
     {
-
         return ['name' => 'required|unique:permissions,display_name,'.$this->request->get('id')];
     }
 }

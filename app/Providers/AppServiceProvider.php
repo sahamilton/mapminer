@@ -2,18 +2,18 @@
 
 namespace App\Providers;
 
-use App\Observers\PersonObserver;
+use App\Branch;
+use App\Lead;
+use App\Location;
 use App\Observers\BranchObserver;
 use App\Observers\OpportunityObserver;
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Eloquent\Relations\Relation;
-use App\Person;
-use App\Branch;
-use App\Location;
+use App\Observers\PersonObserver;
 use App\Opportunity;
+use App\Person;
 use App\Project;
-use App\Lead;
+use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -24,8 +24,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-
-
         Schema::defaultStringLength(191);
         Person::observe(PersonObserver::class);
         Branch::observe(BranchObserver::class);
@@ -48,7 +46,5 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
- 
-        
     }
 }

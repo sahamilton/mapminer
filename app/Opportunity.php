@@ -2,12 +2,11 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Model;
 
 class Opportunity extends Model
 {
-    
     public $fillable = ['address_id',
                         'branch_id',
                         'address_branch_id',
@@ -23,35 +22,39 @@ class Opportunity extends Model
                         'user_id',
                         'comments',
                         'expected_close',
-                        'actual_close'
+                        'actual_close',
                     ];
-                    
-    public $dates = ['expected_close','actual_close'];
+
+    public $dates = ['expected_close', 'actual_close'];
+
     /**
-     * [branch description]
-     * 
+     * [branch description].
+     *
      * @return [type] [description]
      */
     public function branch()
     {
         return $this->belongsTo(AddressBranch::class, 'address_branch_id')->with('branch');
     }
+
     public function location()
     {
         return $this->belongsTo(Address::class, 'address_id', 'id');
     }
+
     /**
-     * [address description]
-     * 
+     * [address description].
+     *
      * @return [type] [description]
      */
     public function address()
     {
         return $this->belongsTo(AddressBranch::class, 'address_branch_id')->with('address');
     }
+
     /**
-     * [daysOpen description]
-     * 
+     * [daysOpen description].
+     *
      * @return [type] [description]
      */
     public function daysOpen()
@@ -60,77 +63,85 @@ class Opportunity extends Model
             if ($this->actual_close) {
                 return $this->created_at->diffInDays($this->actual_close);
             }
+
             return $this->created_at->diffInDays();
         }
-        return null;
     }
 
     public function status()
     {
-        $statuses =[0=>'open', 1=>'won', 2=>'lost'];
+        $statuses = [0=>'open', 1=>'won', 2=>'lost'];
+
         return $statuses[$this->closed];
     }
+
     /**
-     * [closed description]
-     * 
+     * [closed description].
+     *
      * @return [type] [description]
      */
     public function closed()
     {
         return $this->where('closed', '<>', 0);
     }
+
     /**
-     * [open description]
-     * 
+     * [open description].
+     *
      * @return [type] [description]
      */
     public function open()
     {
         return $this->where('closed', '=', 0);
     }
+
     /**
-     * [createdBy description]
-     * 
+     * [createdBy description].
+     *
      * @return [type] [description]
      */
     public function createdBy()
     {
         return $this->belongsTo(User::class, 'user_id')->with('person');
     }
+
     /**
-     * [scopeOpenFunnel description]\
-     * 
+     * [scopeOpenFunnel description]\.
+     *
      * @param [type] $query [description]
-     * 
+     *
      * @return [type]        [description]
      */
     public function scopeOpenFunnel($query)
     {
-        return $query->selectRaw('branch_id,YEARWEEK(expected_close,3) as yearweek,sum(`value`) as funnel')->groupBy(['branch_id','yearweek'])->orderBy('yearweek', 'asc');
+        return $query->selectRaw('branch_id,YEARWEEK(expected_close,3) as yearweek,sum(`value`) as funnel')->groupBy(['branch_id', 'yearweek'])->orderBy('yearweek', 'asc');
     }
+
     /**
-     * [lost description]
-     * 
+     * [lost description].
+     *
      * @return [type] [description]
      */
     public function lost()
     {
         return $this->where('closed', '=', 2);
     }
+
     /**
-     * [won description]
-     * 
+     * [won description].
+     *
      * @return [type] [description]
      */
     public function won()
     {
         return $this->where('closed', '=', 1);
     }
+
     /**
-     * [getBranchPipeline description]
-     * 
+     * [getBranchPipeline description].
+     *
      * @param array  $branches [description]
-     * 
+     *
      * @return [type]           [description]
      */
     public function getBranchPipeline(array $branches)
@@ -142,45 +153,48 @@ class Opportunity extends Model
             ->with('address', 'branch')
             ->orderBy('branch_id')
             ->get();
-
     }
+
     /**
-     * [scopeThisPeriod description]
-     * 
+     * [scopeThisPeriod description].
+     *
      * @param [type] $query  [description]
      * @param [type] $period [description]
-     * 
+     *
      * @return [type]         [description]
      */
-    public function scopeThisPeriod($query,$period)
+    public function scopeThisPeriod($query, $period)
     {
         return $query->where('opportunities.created_at', '<=', $period['to']);
     }
+
     /**
-     * [scopeTop25 description]
-     * 
+     * [scopeTop25 description].
+     *
      * @param [type] $query  [description]
      * @param [type] $period [description]
-     * 
+     *
      * @return [type]         [description]
      */
-    public function scopeTop25($query,$period)
+    public function scopeTop25($query, $period)
     {
-            return $query->where('opportunities.Top25', '=', 1);
+        return $query->where('opportunities.Top25', '=', 1);
     }
+
     /**
-     * [scopeOpen description]
-     * 
+     * [scopeOpen description].
+     *
      * @param [type] $query  [description]
      * @param [type] $period [description]
-     * 
+     *
      * @return [type]         [description]
      */
-    public function scopeOpen($query, $period=null)
+    public function scopeOpen($query, $period = null)
     {
         if (! $period) {
             $period['to'] = now();
         }
+
         return $query->where(
             function ($q) use ($period) {
                 $q->where('actual_close', '>', $period['to'])
@@ -188,101 +202,102 @@ class Opportunity extends Model
             }
         )
         ->where('opportunities.created_at', '<=', $period['to']);
-    } 
+    }
+
     /**
-     * [scopeClosed description]
-     * 
+     * [scopeClosed description].
+     *
      * @param [type] $query  [description]
      * @param [type] $period [description]
-     * 
+     *
      * @return [type]         [description]
      */
     public function scopeClosed($query, $period)
     {
         return $query->where('Closed', '<>', 0)
-            ->whereBetween('actual_close', [$period['from'],$period['to']]);
-    }  
+            ->whereBetween('actual_close', [$period['from'], $period['to']]);
+    }
+
     /**
-     * [scopeWon description]
-     * 
+     * [scopeWon description].
+     *
      * @param [type] $query  [description]
      * @param [type] $period [description]
-     * 
+     *
      * @return [type]         [description]
      */
     public function scopeWon($query, $period)
     {
         return $query->whereClosed(1)
-            ->whereBetween('actual_close', [$period['from'],$period['to']]);
-    } 
+            ->whereBetween('actual_close', [$period['from'], $period['to']]);
+    }
+
     /**
-     * [scopeLost description]
-     * 
+     * [scopeLost description].
+     *
      * @param [type] $query  [description]
      * @param [type] $period [description]
-     * 
+     *
      * @return [type]         [description]
      */
     public function scopeLost($query, $period)
     {
         return $query->whereClosed(2)
-            ->whereBetween('actual_close', [$period['from'],$period['to']]);
-    } 
+            ->whereBetween('actual_close', [$period['from'], $period['to']]);
+    }
+
     /**
-     * [scopeSevenDayCount description]
-     * 
+     * [scopeSevenDayCount description].
+     *
      * @param [type] $query [description]
-     * 
+     *
      * @return [type]        [description]
      */
     public function scopeSevenDayCount($query)
     {
         return $query->selectRaw('FROM_DAYS(TO_DAYS(actual_close) -MOD(TO_DAYS(actual_close) -2, 7)) as yearweek,count(*) as opportunities')
             ->groupBy(['yearweek']);
-    } 
+    }
+
     /**
-     * [scopeOpenWeeklyFunnel description]
-     * 
+     * [scopeOpenWeeklyFunnel description].
+     *
      * @param [type] $query  [description]
      * @param [type] $period [description]
-     * 
+     *
      * @return [type]         [description]
      */
     public function scopeOpenWeeklyFunnel($query, $period)
     {
         return $query->selectRaw(
-            "opportunities.branch_id, FROM_DAYS(TO_DAYS(actual_close) -MOD(TO_DAYS(actual_close) -2, 7)) as yearweek 
-              ,sum(`value`) as funnel"
+            'opportunities.branch_id, FROM_DAYS(TO_DAYS(actual_close) -MOD(TO_DAYS(actual_close) -2, 7)) as yearweek 
+              ,sum(`value`) as funnel'
         )->whereBetween('expected_close', [$period['from'], $period['to']])
             ->where('closed', 0)
-            ->groupBy(['opportunities.branch_id','yearweek'])
+            ->groupBy(['opportunities.branch_id', 'yearweek'])
             ->orderBy('yearweek', 'asc');
-
-    } 
+    }
 
     public function activities()
     {
-        return $this->hasManyThrough(Activity::class, BranchLead::class,  'id', 'address_id', 'address_id', 'id');
+        return $this->hasManyThrough(Activity::class, BranchLead::class, 'id', 'address_id', 'address_id', 'id');
     }
-    
 
     public function currentlyActive()
     {
-       
-        return  $this->hasManyThrough(Activity::class, BranchLead::class,  'id', 'address_id', 'address_id', 'id')
+        return  $this->hasManyThrough(Activity::class, BranchLead::class, 'id', 'address_id', 'address_id', 'id')
             ->where('completed', 1)
             ->where('activity_date', '>', now()->subMonth())
             ->latest()
             ->limit(1);
-        
-        
     }
+
     public function scopeStaleOpportunities($query)
     {
         return $query->where('closed', 0)
             ->whereHas(
                 'activities', function ($q) {
-                     $q->whereDoesntHave('currentlyActive');
+                    $q->whereDoesntHave('currentlyActive');
                 }
             );
     }

@@ -2,13 +2,13 @@
 
 namespace App\Mail;
 
-use App\Person;
 use App\Address;
 use App\Branch;
+use App\Person;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
 class NotifyWebLeadsBranchAssignment extends Mailable
 {
@@ -17,6 +17,7 @@ class NotifyWebLeadsBranchAssignment extends Mailable
     public $branch;
     public $emails;
     public $manager;
+
     /**
      * Create a new message instance.
      *

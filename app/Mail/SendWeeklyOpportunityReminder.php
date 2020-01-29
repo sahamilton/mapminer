@@ -5,15 +5,16 @@ namespace App\Mail;
 use App\Branch;
 use App\Person;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
 class SendWeeklyOpportunityReminder extends Mailable
 {
     use Queueable, SerializesModels;
     public $branch;
     public $manager;
+
     /**
      * Create a new message instance.
      *
@@ -32,7 +33,6 @@ class SendWeeklyOpportunityReminder extends Mailable
      */
     public function build()
     {
-       
         return $this->markdown('emails.upcomingopportunities')
             ->subject('Closing Opportunities');
     }

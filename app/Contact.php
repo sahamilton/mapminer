@@ -6,8 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Contact extends Model
 {
-    protected $fillable=['id','fullname','firstname','lastname','title','email','contactphone','comments','location_id','user_id','address_id'];
-
+    protected $fillable = ['id', 'fullname', 'firstname', 'lastname', 'title', 'email', 'contactphone', 'comments', 'location_id', 'user_id', 'address_id'];
 
     public function location()
     {
@@ -21,8 +20,9 @@ class Contact extends Model
 
     public function fullName()
     {
-        return $this->firstname . " " . $this->lastname;
+        return $this->firstname.' '.$this->lastname;
     }
+
     public function relatedActivities()
     {
         return $this->belongsToMany(Activity::class, 'activity_contact');

@@ -7,18 +7,20 @@ use Illuminate\Database\Eloquent\Model;
 class CompanyReport extends Model
 {
     public $table = 'company_report';
+
     /**
-     * [company description]
-     * 
+     * [company description].
+     *
      * @return [type] [description]
      */
     public function company()
     {
         return $this->belongsTo(Company::class);
     }
+
     /**
-     * [distribution description]
-     * 
+     * [distribution description].
+     *
      * @return [type] [description]
      */
     public function distribution()

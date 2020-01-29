@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddAdditionalFieldsToUsersimport extends Migration
 {
@@ -37,7 +37,7 @@ class AddAdditionalFieldsToUsersimport extends Migration
     public function down()
     {
         Schema::table('usersimport', function (Blueprint $table) {
-            $table->dropColumn(['address','city','state','zip','person_id','reports_to','manager','industry','branches','business_title','hiredate','mgr_emp_id']);
+            $table->dropColumn(['address', 'city', 'state', 'zip', 'person_id', 'reports_to', 'manager', 'industry', 'branches', 'business_title', 'hiredate', 'mgr_emp_id']);
         });
     }
 }

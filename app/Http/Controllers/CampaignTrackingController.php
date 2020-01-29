@@ -2,38 +2,39 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
 use App\Activity;
 use App\Address;
 use App\Branch;
 use App\Campaign;
-USE App\Company;
+use App\Company;
+use App\Exports\CampaignCompanyExport;
+use App\Exports\CampaignSummaryExport;
 use App\Opportunity;
 use Excel;
-use App\Exports\CampaignSummaryExport;
-use App\Exports\CampaignCompanyExport;
+use Illuminate\Http\Request;
+
 class CampaignTrackingController extends Controller
 {
     public $activity;
     public $address;
     public $branch;
     public $campaign;
-    PUBLIC $company;
+    public $company;
     public $opportunity;
     public $fields = [
-                    "offered_leads",
-                    "worked_leads",
-                    "rejected_leads",
-                    "new_opportunities",
-                    "won_opportunities",
-                    "opportunities_open",
-                    "won_value",
-                    "open_value",
+                    'offered_leads',
+                    'worked_leads',
+                    'rejected_leads',
+                    'new_opportunities',
+                    'won_opportunities',
+                    'opportunities_open',
+                    'won_value',
+                    'open_value',
                 ];
+
     /**
-     * [__construct description]
-     * 
+     * [__construct description].
+     *
      * @param Activity    $activity    [description]
      * @param Address     $address     [description]
      * @param Branch      $branch      [description]
@@ -55,70 +56,66 @@ class CampaignTrackingController extends Controller
         $this->company = $company;
         $this->opportunity = $opportunity;
     }
-    
-
-    
 
     /**
-     * [show description]
-     * 
+     * [show description].
+     *
      * @param Campaign $campaign [description]
-     * 
+     *
      * @return [type]             [description]
      */
     public function show(Campaign $campaign)
     {
-      
         $campaign->load('companies', 'branches');
         $branches = $this->_getBranchesInCampaign($campaign);
 
         $team = $this->_getCampaignBranchTeam($campaign);
- 
+
         $campaigns = $this->campaign->current()->get();
-        $fields =  $this->fields;
-       
+        $fields = $this->fields;
+
         return response()->view('campaigns.summary', compact('campaign', 'branches', 'team', 'campaigns', 'fields'));
     }
- 
+
     public function company(Request $request, Campaign $campaign)
     {
-        
         return $this->summaryByCompany($campaign, request('manager_id'));
     }
+
     /**
-     * [summaryByCompany description]
-     * 
+     * [summaryByCompany description].
+     *
      * @param Campaign $campaign [description]
-     * 
+     *
      * @return [type]             [description]
      */
-    public function summaryByCompany(Campaign $campaign, $manager=null)
+    public function summaryByCompany(Campaign $campaign, $manager = null)
     {
         $campaign->load('companies', 'branches');
         $campaigns = $this->campaign->active()->get();
         $companies = $campaign->companies->pluck('id')->toarray();
-        $branches =  $campaign->branches->pluck('id')->toArray();
+        $branches = $campaign->branches->pluck('id')->toArray();
         $period = $this->_getCampaignPeriod($campaign);
         if (! $manager) {
             $manager = $campaign->manager_id;
         }
         $fields = $this->fields;
-    
+
         $team = $this->_getCampaignBranchTeam($campaign, $manager);
         $companies = $this->company->whereIn('id', $companies)->summaryStats($period, $branches)->get();
+
         return response()->view('campaigns.companysummary', compact('companies', 'campaigns', 'campaign', 'team', 'fields'));
     }
 
     /**
-     * [export description]
-     * 
+     * [export description].
+     *
      * @param Campaign $campaign [description]
-     * 
+     *
      * @return [type]             [description]
      */
     public function export(Campaign $campaign)
     {
-        
         $campaign->load('companies', 'branches');
         $branches = $this->_getBranchesInCampaign($campaign);
         $fields = $this->fields;
@@ -126,14 +123,13 @@ class CampaignTrackingController extends Controller
         //$branches= $this->_getAllBranchesInCampaign($campaign);
         //dd($branches);
         return Excel::download(new CampaignSummaryExport($campaign, $branches, $fields), $campaign->title.time().'Export.csv');
-
     }
 
     /**
-     * [export description]
-     * 
+     * [export description].
+     *
      * @param Campaign $campaign [description]
-     * 
+     *
      * @return [type]             [description]
      */
     public function exportCompany(Campaign $campaign)
@@ -143,31 +139,30 @@ class CampaignTrackingController extends Controller
         $period = $this->_getCampaignPeriod($campaign);
         $companies = $this->company->whereIn('id', $companies)->summaryStats($period, $branches)->get();
         $fields = $this->fields;
+
         return Excel::download(new CampaignCompanyExport($campaign, $companies, $fields), $campaign->title.time().'CompanyExport.csv');
-
     }
-
 
     public function detailByCompany(Campaign $campaign, Company $company)
     {
-      
         $period = $this->_getCampaignPeriod($campaign);
         $branches = $campaign->branches()->pluck('id')->toArray();
         $company = $this->company->whereId($company->id)->companyDetail($period, $branches)->get();
         dd($company);
-       
     }
+
     /**
-     * [_getBranchesInCampaign description]
-     * 
+     * [_getBranchesInCampaign description].
+     *
      * @param Campaign $campaign [description]
-     * 
+     *
      * @return [type]             [description]
      */
     private function _getBranchesInCampaign(Campaign $campaign)
     {
         $branch_ids = $campaign->branches->pluck('id')->toArray();
         $company_ids = $campaign->companies->pluck('id')->toArray();
+
         return $this->branch->whereIn('id', $branch_ids)
             ->whereHas(
                 'locations', function ($q) use ($company_ids) {
@@ -180,42 +175,44 @@ class CampaignTrackingController extends Controller
     {
         $branch_ids = $this->branch->pluck('id')->toArray();
         $company_ids = $campaign->companies->pluck('id')->toArray();
+
         return $this->branch->whereIn('id', $branch_ids)
             ->whereHas(
                 'locations', function ($q) use ($company_ids) {
                     $q->whereIn('company_id', $company_ids);
                 }
             )->summaryCampaignStats($campaign)->get();
-
     }
+
     /**
-     * [_getCampaignBranchTeam description]
-     * 
+     * [_getCampaignBranchTeam description].
+     *
      * @param Campaign $campaign [description]
-     * 
+     *
      * @return [type]             [description]
      */
-    private function _getCampaignBranchTeam(Campaign $campaign, $manager=null)
+    private function _getCampaignBranchTeam(Campaign $campaign, $manager = null)
     {
         $servicelines = $campaign->getServicelines();
         if (! $manager) {
-            $manager= $campaign->manager_id;
+            $manager = $campaign->manager_id;
         }
-       
+
         return $this->campaign->getSalesTeamFromManager($manager, $servicelines);
     }
 
     /**
-     * [_getCampaignPeriod description]
-     * 
+     * [_getCampaignPeriod description].
+     *
      * @param Campaign $campaign [description]
-     * 
+     *
      * @return [type]             [description]
      */
     private function _getCampaignPeriod(Campaign $campaign)
     {
         $period['from'] = $campaign->datefrom;
         $period['to'] = $campaign->dateto;
+
         return $period;
     }
 }

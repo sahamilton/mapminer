@@ -1,4 +1,5 @@
 <?php
+
 namespace App;
 
 class Watch extends Model
@@ -10,37 +11,36 @@ class Watch extends Model
     ];
 
     // Don't forget to fill this array
-    protected $fillable = ['user_id','location_id','address_id'];
-    
+    protected $fillable = ['user_id', 'location_id', 'address_id'];
+
     public function watchedBy()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
-    
+
     public function watching()
     {
         return $this->belongsTo(Address::class, 'address_id', 'id');
     }
-    
+
     public function watchnotes()
     {
         return $this->hasMany(Note::class, 'related_id', 'location_id')->where('type', '=', 'location');
     }
-    
+
     public function exportWatchList($fields, $watchList)
     {
-
-        $output='';
+        $output = '';
         foreach ($fields as $field) {
             if (is_array($field)) {
                 foreach ($field as $key => $value) {
-                    $output.=$key.",";
+                    $output .= $key.',';
                 }
             } else {
-                $output.=$field.",";
+                $output .= $field.',';
             }
         }
-        $output.="\n";
+        $output .= "\n";
         foreach ($watchList as $row) {
             reset($fields);
             foreach ($fields as $field) {
@@ -48,61 +48,56 @@ class Watch extends Model
                     foreach ($field as $key => $value) {
                         if ($key == 'notes') {
                             foreach ($row->$value as $watched) {
-                                $string =$this->cleanseString($watched->note);
-                                $output.= $string."  |  ";
+                                $string = $this->cleanseString($watched->note);
+                                $output .= $string.'  |  ';
                             }
-                            $output.=",";
+                            $output .= ',';
                         } else {
                             // remove non printing characters from string then remove any commas
-                            $string =$this->cleanseString($row->watching[0]->$key->$value);
-                        
-                            $output.=$string.",";
+                            $string = $this->cleanseString($row->watching[0]->$key->$value);
+
+                            $output .= $string.',';
                         }
                     }
                 } else {
-                    if (!$row->watching[0]->$field) {
-                         $output.=",";
+                    if (! $row->watching[0]->$field) {
+                        $output .= ',';
                     } else {
-                         // remove non printing characters from string then remove any commas
-                         $string =$this->cleanseString($row->watching[0]->$field);
-                         $output.=$string.",";
+                        // remove non printing characters from string then remove any commas
+                        $string = $this->cleanseString($row->watching[0]->$field);
+                        $output .= $string.',';
                     }
                 }
             }
-            $output.="\n";
+            $output .= "\n";
         }
+
         return $output;
     }
-    
+
     private function cleanseString($string)
     {
         $string = preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $string);
-        $string = str_replace(",", " ", $string);
+        $string = str_replace(',', ' ', $string);
+
         return $string;
     }
 
-	
+    /**
+     * Return watch list.
+     *
+     * @param  int  $id
+     * @return array watchList
+     */
+    public function getMyWatchList($id = null)
+    {
+        if (! $id) {
+            $id = auth()->user()->id;
+        }
 
+        return $this->with('watching', 'watching.company', 'watchnotes')
 
-	/**
-	 * Return watch list.
-	 *
-	 * @param  int  $id
-	 * @return array watchList
-	 */
-	
-	public function getMyWatchList($id=null) {
-		if(! $id){
-			$id = auth()->user()->id;
-		}
-	
-		 return $this->with('watching','watching.company','watchnotes')
-		
-		->where("user_id","=", $id)
-		->get();
-
-		
-	}
-	
-	
+        ->where('user_id', '=', $id)
+        ->get();
+    }
 }

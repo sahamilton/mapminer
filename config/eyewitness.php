@@ -18,7 +18,6 @@ return [
 
     'api_enabled' => env('EYEWITNESS_API_ENABLED', true),
 
-
     /*
      |--------------------------------------------------------------------------
      | Application token & secret key
@@ -36,7 +35,6 @@ return [
 
     'app_token' => env('EYEWITNESS_APP_TOKEN', 'Z59JrwdTp4WDrSEm'),
     'secret_key' => env('EYEWITNESS_SECRET_KEY', 'NPzJsCQSzFU8xUQn8jGIpvHHWpOnsprKRVym4k75TKkyN6SGxoZkwRYQPMrC'),
-
 
     /*
      |--------------------------------------------------------------------------
@@ -57,7 +55,6 @@ return [
     'monitor_log' => true,
     'monitor_composer_lock' => true,
     'monitor_maintenance_mode' => true,
-
 
     /*
      |--------------------------------------------------------------------------
@@ -81,7 +78,6 @@ return [
 
     'queue_tube_list' => ['beanstalkd' => ['mapminer']],
 
-
     /*
      |--------------------------------------------------------------------------
      | Database status monitoring list
@@ -103,7 +99,6 @@ return [
 
     'database_connections' => null,
 
-
     /*
      |--------------------------------------------------------------------------
      | Database replication monitoring list
@@ -124,7 +119,6 @@ return [
 
     'monitor_database_replication' => false,
 
-
     /*
      |--------------------------------------------------------------------------
      | Composer.lock location
@@ -141,7 +135,6 @@ return [
      */
 
     'composer_lock_file_location' => base_path('composer.lock'),
-
 
     /*
      |--------------------------------------------------------------------------
@@ -166,7 +159,6 @@ return [
 
     'send_queued_emails' => false,
 
-
     /*
      |--------------------------------------------------------------------------
      | Email frequency
@@ -189,7 +181,6 @@ return [
 
     'email_frequency' => 180,
 
-
     /*
      |--------------------------------------------------------------------------
      | Capture cron scheduler output
@@ -205,7 +196,6 @@ return [
      */
 
     'capture_cron_output' => true,
-
 
     /*
      |--------------------------------------------------------------------------
@@ -225,7 +215,6 @@ return [
 
     'allow_failed_job_exception_data' => true,
     'allow_failed_job_payload_data' => true,
-
 
     /*
      |--------------------------------------------------------------------------
@@ -248,7 +237,6 @@ return [
     'routes_queue' => true,
     'routes_log' => true,
     'routes_scheduler' => true,
-
 
     /*
      |--------------------------------------------------------------------------

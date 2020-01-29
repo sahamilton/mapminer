@@ -9,17 +9,15 @@ use App\AddressBranch;
 use App\Branch;
 use App\Company;
 use App\Contact;
-use App\Note;
 use App\Http\Requests\OpportunityFormRequest;
+use App\Note;
 use App\Opportunity;
 use App\Person;
-use \Carbon\Carbon;
-
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class OpportunityController extends BaseController
 {
-    
     public $address;
     public $addressbranch;
     public $branch;
@@ -30,8 +28,8 @@ class OpportunityController extends BaseController
     public $period;
 
     /**
-     * [__construct description]
-     * 
+     * [__construct description].
+     *
      * @param Activity      $activity      [description]
      * @param Address       $address       [description]
      * @param AddressBranch $addressbranch [description]
@@ -56,7 +54,6 @@ class OpportunityController extends BaseController
         $this->opportunity = $opportunity;
         $this->person = $person;
         $this->activity = $activity;
-        
     }
 
     /**
@@ -66,42 +63,40 @@ class OpportunityController extends BaseController
      */
     public function index()
     {
-        
         if (! $this->period) {
             $this->period = $this->activity->getPeriod();
         }
         $activityTypes = $activityTypes = ActivityType::all();
         $myBranches = $this->person->myBranches();
-        
+
         if (! $myBranches) {
             return redirect()->back()
-                ->withWarning("You are not assigned to any branches. Please contact Sales Operations");
+                ->withWarning('You are not assigned to any branches. Please contact Sales Operations');
         }
         if (session()->has('branch')) {
             $data = $this->_getBranchData([session('branch')]);
         } else {
             $data = $this->_getBranchData([array_keys($myBranches)][0]);
         }
-        
 
         $data['period'] = $this->period;
-      
+
         return response()->view(
-            'opportunities.index', 
+            'opportunities.index',
             compact('data', 'activityTypes', 'myBranches', 'period')
         );
     }
+
     /**
-     * [branchOpportunities description]
-     * 
+     * [branchOpportunities description].
+     *
      * @param Branch  $branch  [description]
      * @param Request $request [description]
-     * 
+     *
      * @return [type]           [description]
      */
     public function branchOpportunities(Branch $branch, Request $request)
     {
-       
         $myBranches = $this->person->myBranches();
 
         if (! $this->period) {
@@ -109,43 +104,39 @@ class OpportunityController extends BaseController
         }
         // check that user is assigned to branch
         if ($branch->id) {
-         
             if (! array_key_exists($branch->id, $myBranches)) {
-                 return redirect()->back()
-                     ->withWarning("You are not assigned to " .$branch->branchname);
+                return redirect()->back()
+                     ->withWarning('You are not assigned to '.$branch->branchname);
             }
         }
         if (request()->has('branch')) {
-
             $data = $this->_getBranchData([request('branch')]);
         } else {
-             $data = $this->_getBranchData([$branch->id]);
+            $data = $this->_getBranchData([$branch->id]);
         }
 
         $activityTypes = $activityTypes = ActivityType::all();
-       
+
         $data['period'] = $this->period;
+
         return response()->view(
-            'opportunities.index', 
+            'opportunities.index',
             compact('data', 'activityTypes', 'myBranches')
         );
     }
-   
+
     /**
-     * [_getBranchData description]
-     * 
+     * [_getBranchData description].
+     *
      * @param array $branches [description]
-     * 
+     *
      * @return [type]           [description]
      */
     private function _getBranchData(array $branches)
     {
-        $data['branches'] =$this->_getBranches($branches);
-
+        $data['branches'] = $this->_getBranches($branches);
 
         $data['opportunities'] = $this->_getOpportunities($branches);
-
-       
 
         $data['addresses'] = $data['opportunities']->map(
             function ($opportunity) {
@@ -160,38 +151,38 @@ class OpportunityController extends BaseController
                 }
             }
         );
-       
-       
+
         return $data;
     }
+
     /**
-     * [findLocations description]
-     * 
+     * [findLocations description].
+     *
      * @param [type] $distance [description]
      * @param [type] $latlng   [description]
-     * 
+     *
      * @return [type]           [description]
      */
     public function findOpportunities($distance = null, $latlng = null)
     {
-       
         $location = $this->getLocationLatLng($latlng);
-      
+
         $result = $this->address->whereHas(
-            
+
             'opportunities', function ($q) use ($location, $distance) {
                 $q->where('closed', 0);
             }
         )->nearby($location, $distance)
         ->with('opportunities')->get();
-      
+
         return response()->view('opportunities.xml', compact('result'))->header('Content-Type', 'text/xml');
     }
+
     /**
-     * [getBranches description]
-     * 
+     * [getBranches description].
+     *
      * @param [type] $branches [description]
-     * 
+     *
      * @return [type]           [description]
      */
     private function _getBranches($branches)
@@ -200,11 +191,12 @@ class OpportunityController extends BaseController
             ->whereIn('id', $branches)
             ->get();
     }
+
     /**
-     * [_getOpportunities description]
-     * 
+     * [_getOpportunities description].
+     *
      * @param [type] $branches [description]
-     * 
+     *
      * @return [type]           [description]
      */
     private function _getOpportunities($branches, $location = null)
@@ -218,10 +210,10 @@ class OpportunityController extends BaseController
         if ($location) {
             $opportunities = $opportunities->nearby($location);
         }
+
         return $opportunities->get();
-       
     }
-        
+
     /**
      * Show the form for creating a new resource.
      *
@@ -236,12 +228,12 @@ class OpportunityController extends BaseController
      * Store a newly created resource in storage.
      *
      * @param \Illuminate\Http\Request $request [description]
-     * 
+     *
      * @return \Illuminate\Http\Response
      */
     public function store(OpportunityFormRequest $request)
     {
-        
+
         //need to remove it from all the other branches when an oppty is created
         $address = $this->address->findOrFail(request('address_id'));
         $address->assignedToBranch()->sync([request('branch_id')]);
@@ -250,10 +242,10 @@ class OpportunityController extends BaseController
             ->where('address_id', '=', request('address_id'))
             ->where('branch_id', '=', request('branch_id'))
             ->firstOrCreate(
-                ['address_id'=>request('address_id'), 
-                'branch_id'=>request('branch_id')]
+                ['address_id'=>request('address_id'),
+                'branch_id'=>request('branch_id'), ]
             );
-        
+
         $data = request()->except('_token');
         if (! request()->filled('csp')) {
             $data['csp'] = 0;
@@ -261,7 +253,7 @@ class OpportunityController extends BaseController
         if (request()->filled('expected_close')) {
             $data['expected_close'] = Carbon::parse($data['expected_close']);
         }
-        if (in_array(request('closed'), ['1','2'])) {
+        if (in_array(request('closed'), ['1', '2'])) {
             $data['actual_close'] = request('expected_close');
         }
         if (isset($data['actual_close'])) {
@@ -272,21 +264,20 @@ class OpportunityController extends BaseController
 
         $join->opportunities()->create($data);
 
-        return redirect()->back()->withMessage("Added to branch opportunities");
+        return redirect()->back()->withMessage('Added to branch opportunities');
     }
 
     /**
      * Display the specified resource.
      *
      * @param \App\Opportunity $opportunity [description]
-     * 
+     *
      * @return \Illuminate\Http\Response
      */
     public function show(Opportunity $opportunity)
     {
         $opportunity->load('branch', 'address');
-        
-      
+
         return response()->view('opportunities.show', compact('opportunity'));
     }
 
@@ -294,12 +285,11 @@ class OpportunityController extends BaseController
      * Show the form for editing the specified resource.
      *
      * @param \App\Opportunity $opportunity [description]
-     * 
+     *
      * @return \Illuminate\Http\Response
      */
     public function edit(Opportunity $opportunity)
     {
-       
         return response()->view('opportunities.edit', compact('opportunity'));
     }
 
@@ -308,13 +298,12 @@ class OpportunityController extends BaseController
      *
      * @param \Illuminate\Http\Request $request     [description]
      * @param \App\Opportunity         $opportunity [description]
-     * 
+     *
      * @return \Illuminate\Http\Response
      */
     public function update(OpportunityFormRequest $request, Opportunity $opportunity)
     {
-        
-        $data = request()->except(['_token','_method','submit']);
+        $data = request()->except(['_token', '_method', 'submit']);
         $data['user_id'] = auth()->user()->id;
         if ($data['expected_close']) {
             $data['expected_close'] = Carbon::parse($data['expected_close']);
@@ -323,7 +312,7 @@ class OpportunityController extends BaseController
             $data['actual_close'] = Carbon::parse($data['actual_close']);
         }
         $opportunity->update($data);
-        
+
         return redirect()->route(
             'address.show', $opportunity->address_id
         )
@@ -334,36 +323,37 @@ class OpportunityController extends BaseController
      * Remove the specified resource from storage.
      *
      * @param \App\Opportunity $opportunity [description]
-     * 
+     *
      * @return \Illuminate\Http\Response
      */
     public function destroy(Opportunity $opportunity)
     {
-        
         $address = $opportunity->address->address_id;
         $opportunity->delete();
+
         return redirect()->route('address.show', $address)
             ->withMessage('Opportunity deleted');
     }
+
     /**
-     * [remove description] 
-     * 
+     * [remove description].
+     *
      * @param Address $address [description]
      * @param Request $request [description]
-     * 
+     *
      * @return [type]           [description]
      */
     public function remove(Address $address, Request $request)
     {
-        
         $address->assignedToBranch()->detach(request('branch_id'));
-       
+
         return redirect()->route('branch.leads', request('branch_id'))
             ->withMessage('Lead removed');
     }
+
     /**
-     * [addToBranchLeads description]
-     * 
+     * [addToBranchLeads description].
+     *
      * @param Address $address [description]
      * @param Request $request [description]
      *
@@ -371,76 +361,72 @@ class OpportunityController extends BaseController
      */
     public function addToBranchLeads(Address $address, Request $request)
     {
- 
-    
         $test = $this->addressbranch->where('address_id', '=', $address->id)
             ->where('branch_id', '=', request('branch_id'))->get();
-        if ($test->count()>0) {
+        if ($test->count() > 0) {
             return redirect()->back()
-                ->withError($address->businessname .' is already on the branch '. request('branch_id'). ' leads list');
+                ->withError($address->businessname.' is already on the branch '.request('branch_id').' leads list');
         }
 
         $address->assignedToBranch()->attach(request('branch_id'));
+
         return redirect()->back()->withMessage('Added to Branch Leads');
     }
+
     /**
-     * [close description]
-     * 
+     * [close description].
+     *
      * @param Request $request     [description]
      * @param [type]  $opportunity [description]
-     * 
+     *
      * @return [type]               [description]
      */
     public function close(OpportunityFormRequest $request, $opportunity)
     {
-
-        $data= request()->except('_token');
+        $data = request()->except('_token');
         $branch = $opportunity->branch_id;
         if (request()->filled('actual_close')) {
             $data['actual_close'] = Carbon::now();
         }
-        
+
         $opportunity->update($data);
         $opportunity->load('address', 'address.address', 'address.address.company');
-            // check to see if the client_id exists else create new company
+        // check to see if the client_id exists else create new company
         if (request()->filled('client_id')) {
             $company = Company::where('client_id', '=', request('client_id'))
                 ->firstOrCreate(
                     [
                     'companyname'=>$address->address->businessname,
                     'accounttypes_id'=>3,
-                    'customer_id'=>request('client_id')
+                    'customer_id'=>request('client_id'),
                     ]
                 );
             $address->update(['company_id' => $company->id]);
         }
-        return redirect()->route('opportunities.branch', $branch)->withMessage('Opportunity closed');
 
+        return redirect()->route('opportunities.branch', $branch)->withMessage('Opportunity closed');
     }
+
     /**
-     * [toggle description]
-     * 
+     * [toggle description].
+     *
      * @param Request $request [description]
-     * 
+     *
      * @return [type]           [description]
      */
     public function toggle(Request $request)
     {
-        
         $opportunity = $this->opportunity->findOrFail(request('id'));
- 
+
         if ($opportunity->Top25 == 1) {
             $opportunity->Top25 = null;
-        
         } else {
             $opportunity->Top25 = 1;
-          
         }
         if ($opportunity->save()) {
             return response()->json(
                 ['message'=>'success'], 200
             );
-        }      
-        
+        }
     }
 }

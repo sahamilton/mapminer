@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\FailedJob;
+use Illuminate\Http\Request;
 
 class FailedJobsController extends Controller
 {
@@ -13,6 +13,7 @@ class FailedJobsController extends Controller
     {
         $this->job = $job;
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -21,10 +22,10 @@ class FailedJobsController extends Controller
     public function index()
     {
         $jobs = $this->job->orderBy('failed_at', 'desc')->get();
+
         return response()->view('failedjobs.index', compact('jobs'));
     }
 
-    
     /**
      * Display the specified resource.
      *
@@ -36,8 +37,6 @@ class FailedJobsController extends Controller
         return response()->view('failedjobs.show', compact('job'));
     }
 
-    
-
     /**
      * Remove the specified resource from storage.
      *
@@ -47,6 +46,7 @@ class FailedJobsController extends Controller
     public function destroy(FailedJob $job)
     {
         $job->delete();
+
         return redirect()->route('failedjobs.index')->withMessage('job record deleted');
     }
 }

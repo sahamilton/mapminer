@@ -2,28 +2,30 @@
 
 namespace App\Exports;
 
+use App\Branch;
+use App\Role;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
-use App\Role;
-use App\Branch;
 
 class BranchTeamExport implements FromView
 {
     public $roles;
     public $branch;
+
     /**
-     * [__construct description]
-     * 
-     * @param Array|null $branch [description]
+     * [__construct description].
+     *
+     * @param array|null $branch [description]
      */
-    public function __construct(Array $branch=null)
+    public function __construct(array $branch = null)
     {
         $this->branch = $branch;
         $this->roles = Role::pluck('name', 'id')->toArray();
     }
+
     /**
-     * [view description]
-     * 
+     * [view description].
+     *
      * @return [type] [description]
      */
     public function view(): View
@@ -34,7 +36,7 @@ class BranchTeamExport implements FromView
         }
         $result->get();
         $roles = $this->roles;
-        return view('branches.exportteam', compact('result', 'roles'));
 
+        return view('branches.exportteam', compact('result', 'roles'));
     }
 }

@@ -4,10 +4,10 @@ namespace App\Jobs;
 
 use App\Person;
 use Illuminate\Bus\Queueable;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 
 class ProcessGeoCode implements ShouldQueue
 {
@@ -44,18 +44,18 @@ class ProcessGeoCode implements ShouldQueue
             $person->update($data);
         }
     }
+
     /**
-     * Geocode Persons address
-     * 
-     * @param Object Person $person [description]
-     * 
+     * Geocode Persons address.
+     *
+     * @param object Person $person [description]
+     *
      * @return [type]         [description]
      */
     private function _getLatLng($person)
     {
-      
         $geoCode = app('geocoder')->geocode($person->fullAddress())->get();
-       
+
         return $person->getGeoCode($geoCode);
     }
 }

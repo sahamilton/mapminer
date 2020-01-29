@@ -8,7 +8,7 @@ class LeadContact extends Contact
 {
     protected $table = 'contacts';
 
-    protected $fillable = ['lead_id','contact','contacttitle','description','contactphone','contactemail'];
+    protected $fillable = ['lead_id', 'contact', 'contacttitle', 'description', 'contactphone', 'contactemail'];
 
     public function relatedlead()
     {

@@ -6,8 +6,8 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class LocationImportFormRequest extends FormRequest
 {
-    
-    public $mimetypes = ['application/vnd.ms-excel','text/plain','text/csv','text/tsv','text/x-c','text/x-fortran'];
+    public $mimetypes = ['application/vnd.ms-excel', 'text/plain', 'text/csv', 'text/tsv', 'text/x-c', 'text/x-fortran'];
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -26,9 +26,9 @@ class LocationImportFormRequest extends FormRequest
     public function rules()
     {
         return [
-           'upload' => 'required|file|mimetypes:'.implode(",",$this->mimetypes),
-           'description'=> 'required', 
-           
+           'upload' => 'required|file|mimetypes:'.implode(',', $this->mimetypes),
+           'description'=> 'required',
+
         ];
     }
 }

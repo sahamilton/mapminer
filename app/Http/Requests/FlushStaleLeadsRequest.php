@@ -24,9 +24,9 @@ class FlushStaleLeadsRequest extends FormRequest
     public function rules()
     {
         return [
-            'before'=>'required|before:' . now(),
+            'before'=>'required|before:'.now(),
             'leadsource'=>'required',
-            'manager'=>'required'
+            'manager'=>'required',
         ];
     }
 }

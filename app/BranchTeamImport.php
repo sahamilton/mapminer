@@ -8,20 +8,20 @@ class BranchTeamImport extends Imports
 {
     public $table = 'branchteamimport';
 
-    public $requiredFields = ['branch_id','person_id','role_id'];
-    public $fillable = ['branch_id','role_id','person_id'];
+    public $requiredFields = ['branch_id', 'person_id', 'role_id'];
+    public $fillable = ['branch_id', 'role_id', 'person_id'];
 
     public function checkForErrors()
     {
         $errors['missingPeople'] = $this->missingPeople();
         $errors['missingBranches'] = $this->missingBranches();
         $errors['missingRoles'] = $this->missingRoles();
+
         return $errors;
     }
 
     private function missingPeople()
     {
-      
         return  $this->select('person_id')
             ->leftJoin('persons', function ($join) {
                 $join->on('branchteamimport.person_id', '=', 'persons.id');

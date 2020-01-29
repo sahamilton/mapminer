@@ -11,7 +11,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-         Model::unguard();
+        Model::unguard();
 
         $this->call(ActivityTable::class);
     }

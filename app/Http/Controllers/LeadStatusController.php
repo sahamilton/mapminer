@@ -2,23 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\LeadStatusFormRequest;
 use App\LeadStatus;
 use Illuminate\Http\Request;
-use App\Http\Requests\LeadStatusFormRequest;
 
 class LeadStatusController extends Controller
 {
     public $leadstatus;
 
     /**
-     * [__construct description]
-     * 
+     * [__construct description].
+     *
      * @param LeadStatus $leadstatus [description]
      */
     public function __construct(LeadStatus $leadstatus)
     {
         $this->leadstatus = $leadstatus;
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -27,7 +28,7 @@ class LeadStatusController extends Controller
     public function index()
     {
         $leadstatuses = $this->leadstatus->with('leads')->get();
- 
+
         return response()->view('leadstatus.index', compact('leadstatuses'));
     }
 
@@ -45,12 +46,11 @@ class LeadStatusController extends Controller
      * Store a newly created resource in storage.
      *
      * @param \Illuminate\Http\Request  $request
-     * 
+     *
      * @return \Illuminate\Http\Response
      */
     public function store(LeadStatusFormRequest $request)
     {
-
         $this->leadstatus->create(request()->all());
 
         return redirect()->route('leadstatus.index');
@@ -60,13 +60,12 @@ class LeadStatusController extends Controller
      * Display the specified resource.
      *
      * @param \ int  $id
-     * 
+     *
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
         $leadstatus = $this->leadstatus->with('leads', 'leads.leadsource', 'leads.ownedBy')->findOrFail($id);
-  
 
         return response()->view('leadstatus.show', compact('leadstatus'));
     }
@@ -74,27 +73,27 @@ class LeadStatusController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param int $id 
-     * 
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
         $leadstatus = $this->leadstatus->findOrFail($id);
+
         return response()->view('leadstatus.edit', compact('leadstatus'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request 
-     * @param int                      $id 
-     * 
+     * @param \Illuminate\Http\Request $request
+     * @param int                      $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
-
         $this->leadstatus->where('id', '=', $id)->update(request()->except('_method', '_token'));
 
         return redirect()->route('leadstatus.index');
@@ -103,13 +102,14 @@ class LeadStatusController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param int $id 
-     * 
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
         $thisleadstatus->destroy($id);
+
         return redirect()->route('leadstatus.index');
     }
 }

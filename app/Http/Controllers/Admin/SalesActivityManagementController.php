@@ -2,26 +2,24 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Salesactivity;
-use App\State;
-use App\SearchFilter;
-use App\SalesProcess;
-use App\SalesOrg;
-use App\Document;
-use App\Location;
 use App\Address;
 use App\Company;
+use App\Document;
+use App\Http\Controllers\BaseController;
+use App\Http\Requests\SalesActivityFormRequest;
 use App\Lead;
 use App\LeadStatus;
+use App\Location;
 use App\Person;
-use App\Http\Controllers\BaseController;
-
-use App\Http\Requests\SalesActivityFormRequest;
+use App\Salesactivity;
+use App\SalesOrg;
+use App\SalesProcess;
+use App\SearchFilter;
+use App\State;
 use Illuminate\Http\Request;
 
 class SalesActivityManagementController extends BaseController
 {
-   
     public $activity;
     public $vertical;
     public $process;
@@ -31,10 +29,9 @@ class SalesActivityManagementController extends BaseController
     public $person;
     public $state;
 
-
     /**
-     * [__construct description]
-     * 
+     * [__construct description].
+     *
      * @param Address       $location [description]
      * @param Document      $document [description]
      * @param Person        $person   [description]
@@ -47,11 +44,11 @@ class SalesActivityManagementController extends BaseController
     public function __construct(
         Address $location,
         Company $company,
-        Document $document, 
+        Document $document,
         Person $person,
-        Salesactivity $activity, 
-        SalesProcess $process, 
-        SalesOrg $salesorg, 
+        Salesactivity $activity,
+        SalesProcess $process,
+        SalesOrg $salesorg,
         SearchFilter $vertical,
         State $state
     ) {
@@ -59,8 +56,7 @@ class SalesActivityManagementController extends BaseController
         $this->document = $document;
         $this->activity = $activity;
         $this->company = $company;
-       
-        
+
         $this->person = $person;
         $this->process = $process;
         $this->salesorg = $salesorg;
@@ -70,21 +66,20 @@ class SalesActivityManagementController extends BaseController
     }
 
     /**
-     * [index description]
-     * 
+     * [index description].
+     *
      * @param [type] $vertical [description]
-     * 
+     *
      * @return [type]           [description]
      */
     public function index($vertical = null)
     {
+        $query = $this->activity->with('salesprocess', 'states');
 
-        $query = $this->activity->with('salesprocess',  'states');
-        
         $activities = $query->get();
 
         $calendar = \Calendar::addEvents($activities);
-     
+
         return response()->view('salesactivity.index', compact('activities', 'calendar'));
     }
 
@@ -100,21 +95,20 @@ class SalesActivityManagementController extends BaseController
         $process = $this->process->pluck('step', 'id');
         $salesorg = $this->salesorg->first();
         //$salesorgJson = $salesorg->getSalesOrgJson();
-        $companies = $this->company->whereIn('accounttypes_id', [1,4])->orderBy('companyname')->get();
-        
+        $companies = $this->company->whereIn('accounttypes_id', [1, 4])->orderBy('companyname')->get();
+
         return response()->view('salesactivity.create', compact('verticals', 'process', 'companies', 'states'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request 
-     * 
+     * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function store(SalesActivityFormRequest $request)
     {
-
         $data = $this->setDates(request()->all());
 
         $activity = $this->activity->create($data);
@@ -123,23 +117,23 @@ class SalesActivityManagementController extends BaseController
                 $activity->salesprocess()->attach($process, ['company_id'=>$company]);
             }
         }
-        
+
         $branches = $activity->getCampaignBranches($data);
-       
+
         $activity->campaignBranches()->sync(array_keys($branches));
 
         return redirect()->route('salesactivity.index');
     }
+
     /**
-     * [mycampaigns description]
-     * 
+     * [mycampaigns description].
+     *
      * @return [type] [description]
      */
     public function mycampaigns()
     {
-       
         $activities = $this->activity->with('salesprocess', 'vertical')
-         
+
             ->where('datefrom', '<=', date('Y-m-d'))
             ->where('dateto', '>=', date('Y-m-d'))
             ->get();
@@ -149,56 +143,52 @@ class SalesActivityManagementController extends BaseController
     }
 
     /**
-     * [show description]
-     * 
+     * [show description].
+     *
      * @param Salesactivity $activity [description]
-     * 
+     *
      * @return [type]                  [description]
      */
     public function show(Salesactivity $activity)
     {
-        
         dd($activity->load('companies'));
         $activity = $activity->load('salesprocess', 'campaignBranches', 'campaignBranches.manager', 'campaignparticipants', 'campaignparticipants.userdetails.roles');
 
         $verticals = array_unique($activity->vertical->pluck('id')->toArray());
 
         $statuses = LeadStatus::pluck('status', 'id')->toArray();
-  
-        return response()->view('salesactivity.manageshow', compact('activity', 'verticals', 'statuses'));
 
+        return response()->view('salesactivity.manageshow', compact('activity', 'verticals', 'statuses'));
     }
 
     /**
-     * [edit description]
-     * 
+     * [edit description].
+     *
      * @param SAlesactivity $activity [description]
-     * 
+     *
      * @return [type]                  [description]
      */
     public function edit(Salesactivity $activity)
     {
-        
         $activity = $activity->load('salesprocess', 'vertical', 'campaignBranches', 'campaignparticipants');
 
         $verticals = $this->vertical->industrysegments();
-    
+
         $process = $this->process->pluck('step', 'id');
-        
+
         return response()->view('salesactivity.edit', compact('activity', 'process', 'verticals'));
     }
 
     /**
-     * [update description]
-     * 
+     * [update description].
+     *
      * @param SalesActivityFormRequest $request  [description]
      * @param Salesactivity            $activity [description]
-     * 
+     *
      * @return [type]                             [description]
      */
     public function update(SalesActivityFormRequest $request, Salesactivity $activity)
     {
-        
         $data = $this->setDates(request()->all());
 
         $activity->update($data);
@@ -211,83 +201,81 @@ class SalesActivityManagementController extends BaseController
         }
         $reps = $activity->campaignSalesReps();
         $activity->campaignparticipants()->sync($reps);
+
         return redirect()->route('salesactivity.index');
     }
 
     /**
-     * [destroy description]
-     * 
+     * [destroy description].
+     *
      * @param SAlesactivity $activity [description]
-     * 
+     *
      * @return [type]                  [description]
      */
     public function destroy(Salesactivity $activity)
     {
         $activity->delete();
+
         return redirect()->route('salesactivity.index');
     }
+
     /**
-     * [campaignDocuments description]
-     * 
+     * [campaignDocuments description].
+     *
      * @param [type] $id [description]
-     * 
+     *
      * @return [type]     [description]
      */
     public function campaignDocuments($id)
     {
         $activity = $this->activity->findOrFail($id);
         $documents = $activity->relatedDocuments();
+
         return response()->view('salesactivity.campaigndocuments', compact('activity', 'documents'));
     }
+
     /**
-     * [changeteam description]
-     * 
+     * [changeteam description].
+     *
      * @param Request $request [description]
-     * 
+     *
      * @return [type]           [description]
      */
     public function changeteam(Request $request)
     {
-
-
         $activity = $this->activity->findOrFail(request('campaign_id'));
         $team = request('id');
         switch (request('action')) {
         case 'add':
             if ($activity->campaignparticipants()->attach($team)) {
                 return 'success';
-                ;
             } else {
                 return 'error';
             }
             break;
-            
+
         case 'remove':
             if ($activity->campaignparticipants()->detach($team)) {
                 return 'success';
-                ;
             } else {
                 return 'error';
             }
 
-            
             break;
         }
     }
+
     /**
-     * [updateteam description]
-     * 
+     * [updateteam description].
+     *
      * @param Request $request [description]
-     * 
+     *
      * @return [type]           [description]
      */
     public function updateteam(Request $request)
     {
-
-
         $activity = $this->activity->findOrFail(request('campaign_id'));
         // need to get all the sales reps in these verticals
-       
 
         $vertical = request('vertical');
 

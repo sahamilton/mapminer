@@ -5,15 +5,16 @@ namespace App\Mail;
 use App\Campaign;
 use App\User;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
 class SendCampaignLaunchedMail extends Mailable
 {
     use Queueable, SerializesModels;
     public $user;
     public $campaign;
+
     /**
      * Create a new message instance.
      *
@@ -33,8 +34,7 @@ class SendCampaignLaunchedMail extends Mailable
     public function build()
     {
         return $this->from('salesoperations@tbmapminer.com', 'Sales Operations')
-            ->markdown('campaigns.emails.campaignlaunched')  
-            ->subject($this->campaign->title . ' Launched');
-
+            ->markdown('campaigns.emails.campaignlaunched')
+            ->subject($this->campaign->title.' Launched');
     }
 }

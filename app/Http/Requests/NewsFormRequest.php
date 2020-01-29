@@ -8,10 +8,7 @@ class NewsFormRequest extends FormRequest
 {
     public function __construct()
     {
-
-
-
-        \Input::merge(['slug' => strtolower(str_replace(" ", "_", \Input::get('title')))]);
+        \Input::merge(['slug' => strtolower(str_replace(' ', '_', \Input::get('title')))]);
     }
 
     /**
@@ -34,10 +31,10 @@ class NewsFormRequest extends FormRequest
         return [
          'title' => 'required|min:5',
          'news' => 'required',
-         'datefrom' => 'required|date' ,
+         'datefrom' => 'required|date',
          'dateto' => 'required|date|after:startdate',
          'serviceline'=> 'required',
-         'slug'=>'required|alpha_dash|unique:news,slug,'. $this->get('id'),
+         'slug'=>'required|alpha_dash|unique:news,slug,'.$this->get('id'),
         ];
     }
 }

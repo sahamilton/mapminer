@@ -30,7 +30,7 @@ class LocationFormRequest extends FormRequest
         'state' => 'required|exists:states,statecode',
         'zip' => 'required',
         'company_id' => 'required',
-        'businesstype' => 'required'
+        'businesstype' => 'required',
         ];
     }
 }

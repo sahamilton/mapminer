@@ -2,21 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use Excel;
-use Carbon\Carbon;
 use App\Branch;
-use App\Report;
-use App\Role;
 use App\Company;
-use App\Person;
-use App\SalesOrg;
+use App\Exports\OpenTop25BranchOpportunitiesExport;
+use App\Http\Requests\AddRecipientReportRequest;
 use App\Http\Requests\ReportFormRequest;
 use App\Http\Requests\RunReportFormRequest;
+use App\Person;
+use App\Report;
+use App\Role;
+use App\SalesOrg;
+use Carbon\Carbon;
+use Excel;
 use Illuminate\Http\Request;
-use App\Http\Requests\AddRecipientReportRequest;
-use \App\Exports\OpenTop25BranchOpportunitiesExport;
 
-class ReportsController extends Controller {
+class ReportsController extends Controller
+{
     public $branch;
     public $company;
     public $person;
@@ -24,8 +25,8 @@ class ReportsController extends Controller {
     public $salesorg;
 
     /**
-     * [__construct description]
-     * 
+     * [__construct description].
+     *
      * @param Branch  $branch  [description]
      * @param Company $company [description]
      * @param Report  $report  [description]
@@ -40,6 +41,7 @@ class ReportsController extends Controller {
         $this->person = $person;
         $this->salesorg = $salesorg;
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -54,9 +56,9 @@ class ReportsController extends Controller {
         $reports = $reports->get();
         $person = $this->person->where('user_id', auth()->user()->id)->with('directReports')->firstOrFail();
         $managers = $person->directReports;
+
         return response()->view('reports.index', compact('reports', 'managers'));
     }
-
 
     public function review()
     {
@@ -64,6 +66,7 @@ class ReportsController extends Controller {
         //dd(Carbon::createFromTimestamp(\Storage::lastModified($files[0])));
         return response()->view('reports.list', compact('files'));
     }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -72,19 +75,19 @@ class ReportsController extends Controller {
     public function create()
     {
         $objects = ['company', 'user'];
+
         return response()->view('reports.create', compact('objects'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request 
-     * 
+     * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function store(ReportFormRequest $request)
-    {   
-
+    {
         $report = $this->report->create(request()->all());
         if (! request()->has('period')) {
             $report->update(['period'=>0]);
@@ -104,7 +107,7 @@ class ReportsController extends Controller {
      * Display the specified resource.
      *
      * @param \App\Report  $report
-     * 
+     *
      * @return \Illuminate\Http\Response
      */
     public function show(Report $report)
@@ -115,10 +118,10 @@ class ReportsController extends Controller {
         if ($report->object) {
             $object = $this->_getObject($report);
         } else {
-            $object=null;
+            $object = null;
         }
         $managers = $this->person->managers();
-       
+
         return response()->view('reports.show', compact('report', 'object', 'managers'));
     }
 
@@ -126,7 +129,7 @@ class ReportsController extends Controller {
      * Show the form for editing the specified resource.
      *
      * @param  \App\Report  $report
-     * 
+     *
      * @return \Illuminate\Http\Response
      */
     public function edit(Report $report)
@@ -143,8 +146,6 @@ class ReportsController extends Controller {
      */
     public function update(Request $request, Report $report)
     {
-
-        
         if (! $this->_checkValidJob(request('job'))) {
             return redirect()->back()->withError('job does not exist');
         }
@@ -159,36 +160,38 @@ class ReportsController extends Controller {
         } else {
             $report->update(['public'=>1]);
         }
+
         return redirect()->route('reports.index');
     }
 
     /**
-     * [addRecipient description]
-     * 
+     * [addRecipient description].
+     *
      * @param AddRecipientReportRequest $request [description]
      * @param Report                    $report  [description]
      */
     public function addRecipient(AddRecipientReportRequest $request, Report $report)
     {
-        
         $user = \App\User::where('email', request('email'))->where('confirmed', 1)->first();
-       
+
         $report->distribution()->attach($user);
+
         return redirect()->route('reports.show', $report->id);
     }
+
     /**
-     * [removeRecipient description]
-     * 
+     * [removeRecipient description].
+     *
      * @param  AddRecipientReportRequest $request [description]
      * @param  Report                    $report  [description]
-     * 
+     *
      * @return [type]                             [description]
      */
     public function removeRecipient(Request $request, Report $report)
     {
-        
         $user = \App\User::where('id', request('user'))->first();
         $report->distribution()->detach($user);
+
         return redirect()->route('reports.show', $report->id);
     }
 
@@ -200,117 +203,110 @@ class ReportsController extends Controller {
      */
     public function destroy(Report $report)
     {
-       
         $report->delete();
-        return redirect()->route('reports.index')->withMessage($report->report . ' Report deleted');
+
+        return redirect()->route('reports.index')->withMessage($report->report.' Report deleted');
     }
+
     /**
-     * [run description]
-     * 
+     * [run description].
+     *
      * @param Report  $report  [description]
      * @param Request $request [description]
-     * 
+     *
      * @return [type]           [description]
      */
     public function run(Report $report, RunReportFormRequest $request)
     {
-        
         if ($data = $this->_getMyBranches($request)) {
-          
             $manager = $data['manager'];
             $myBranches = $data['branches'];
             $team = $data['team'];
-            
+
             if (request()->has('fromdate')) {
-                $period['from']=Carbon::parse(request('fromdate'))->startOfDay();
+                $period['from'] = Carbon::parse(request('fromdate'))->startOfDay();
                 $period['to'] = Carbon::parse(request('todate'))->endOfDay();
-            
             } elseif (session()->has('period')) {
-                $period=session('period');
-            
+                $period = session('period');
             } else {
                 $period = [];
             }
-            
-            $export = "\App\Exports\\". $report->export;
+
+            $export = "\App\Exports\\".$report->export;
             if ($report->object) {
                 switch ($report->object) {
                     case 'Company':
                         $company = $this->company->findOrFail(request('company'));
-                        return Excel::download(new $export($company, $period, $myBranches), $company->companyname . " " . $report->job . 'Activities.csv');
+
+                        return Excel::download(new $export($company, $period, $myBranches), $company->companyname.' '.$report->job.'Activities.csv');
                     break;
 
                     case 'Role':
-                       
-                        return Excel::download(new $export(request('role'), $team), $report->job . '.csv');
+
+                        return Excel::download(new $export(request('role'), $team), $report->job.'.csv');
 
                     break;
 
                     case 'User':
-                        
-                        return Excel::download(new $export($period, [$manager->id]), $report->job . '.csv');
+
+                        return Excel::download(new $export($period, [$manager->id]), $report->job.'.csv');
 
                     break;
 
                     case 'Campaign':
-                        return Excel::download(new $export([$manager->id], $campaign), $report->job . '.csv');
+                        return Excel::download(new $export([$manager->id], $campaign), $report->job.'.csv');
 
                     break;
                 }
-
             } else {
-                
-                return Excel::download(new $export($period, $myBranches), $report->job . '.csv');
+                return Excel::download(new $export($period, $myBranches), $report->job.'.csv');
             }
-            
         } else {
             return redirect()->route('welcome');
         }
-
     }
 
     /**
-     * [run description]
-     * 
+     * [run description].
+     *
      * @param Report  $report  [description]
      * @param Request $request [description]
-     * 
+     *
      * @return [type]           [description]
      */
     public function send(Report $report, Request $request)
     {
-        
         if ($data = $this->_getMyBranches($request)) {
             $manager = $data['manager'];
             $myBranches = $data['branches'];
             $team = $data['team'];
-            $period['from']=Carbon::parse(request('fromdate'));
+            $period['from'] = Carbon::parse(request('fromdate'));
             $period['to'] = Carbon::parse(request('todate'));
-            $job = "\App\Jobs\\". $report->job; 
+            $job = "\App\Jobs\\".$report->job;
             if (request()->has('company')) {
                 $company = $this->company->findOrFail(request('company'));
                 dispatch(new $job($company, $period, $myBranches, $report));
             } else {
                 dispatch(new $job($period, $myBranches, $report));
-            }   
+            }
+
             return redirect()->back();
         } else {
-            
             return redirect()->route('welcome');
         }
-
     }
+
     /**
-     * [_getObject description]
-     * 
+     * [_getObject description].
+     *
      * @param Report $report [description]
-     * 
+     *
      * @return [type]         [description]
      */
     private function _getObject(Report $report)
     {
         $object['name'] = $report->object;
-        switch ($report->object){
+        switch ($report->object) {
         case 'Company':
 
             return $this->_getManagedCompanies();
@@ -321,114 +317,105 @@ class ReportsController extends Controller {
 
             break;
 
-            
         }
     }
+
     /**
-     * [_getMyTeam description]
-     * 
+     * [_getMyTeam description].
+     *
      * @param Request $request [description]
-     * 
+     *
      * @return [type]           [description]
      */
     private function _getMyTeam(Person $person)
     {
-       
         return $person->getDescendants()
             ->pluck('id')
             ->toArray();
-
     }
 
     /**
-     * [_getMyBranches description]
-     * 
+     * [_getMyBranches description].
+     *
      * @return [type] [description]
      */
     private function _getMyBranches(Request $request)
     {
-        
         if (request()->filled('manager')) {
             $person = $this->person->findOrFail(request('manager'));
             $branches = $this->person->myBranches($person);
-            
-        } elseif (auth()->user()->hasRole(['evp','svp','rvp','market_manager'])) {
+        } elseif (auth()->user()->hasRole(['evp', 'svp', 'rvp', 'market_manager'])) {
             $person = $this->person->where('user_id', auth()->user()->id)->first();
             $branches = $this->person->myBranches($person);
-        
         } elseif (auth()->user()->hasRole(['admin', 'sales_operations'])) {
-           
             $person = $this->salesorg->getCapoDiCapo();
             $branches = array_flip(Branch::all()->pluck('id')->toarray());
-        
         } else {
             return false;
-
         }
 
         $team = $this->_getMyTeam($person);
+
         return $data = ['team'=>$team, 'manager'=>$person, 'branches'=>$branches];
     }
-    
+
     /**
-     * [_getManagedCompanies description]
-     * 
+     * [_getManagedCompanies description].
+     *
      * @return [type] [description]
      */
     private function _getManagedCompanies()
     {
-
         return $this->company
             ->whereHas('managedBy')
-            ->whereIn('accounttypes_id', [1,4])
+            ->whereIn('accounttypes_id', [1, 4])
             ->orderBy('companyname')->get();
     }
+
     /**
-     * [_checkValidJob description]
-     * 
+     * [_checkValidJob description].
+     *
      * @param [type] $class [description]
-     * 
+     *
      * @return [type]        [description]
      */
     private function _checkValidJob($class)
     {
-        $check = ['Jobs','Exports'];
+        $check = ['Jobs', 'Exports'];
         foreach ($check as $type) {
             if (! $this->_checkClassExists($class, $type)) {
                 return false;
             }
         }
+
         return true;
     }
+
     /**
-     * [_checkClassExists description]
-     * 
+     * [_checkClassExists description].
+     *
      * @param  [type] $class [description]
      * @param  [type] $type  [description]
      * @return [type]        [description]
      */
-    private function _checkClassExists($class, $type) {
+    private function _checkClassExists($class, $type)
+    {
+        switch ($type) {
 
-       
-    
-        switch($type) {
-
-        case "Jobs":
+        case 'Jobs':
              $dir = "\App\\Jobs\\";
             break;
 
-        case "Exports":
+        case 'Exports':
             $dir = "\App\\Exports\\";
             $class = $class.'Export';
             break;
         }
-        
-        if (class_exists($dir . $class)) {
+
+        if (class_exists($dir.$class)) {
             return true;
         } else {
-
             return false;
         }
-        
     }
 }

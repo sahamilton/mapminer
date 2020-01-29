@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddNodeFieldsToHowtoTable extends Migration
 {
@@ -15,11 +15,11 @@ class AddNodeFieldsToHowtoTable extends Migration
     {
         Schema::table(
             'howtofields', function (Blueprint $table) {
-                 $table->integer('parent_id')->unsigned()->nullable()->index();
-                 $table->integer('lft')->index()->nullable();
-                 $table->integer('rgt')->index()->nullable();
-                 $table->integer('depth')->index()->nullable();
-                 $table->boolean('active')->default(1)->index();
+                $table->integer('parent_id')->unsigned()->nullable()->index();
+                $table->integer('lft')->index()->nullable();
+                $table->integer('rgt')->index()->nullable();
+                $table->integer('depth')->index()->nullable();
+                $table->boolean('active')->default(1)->index();
             }
         );
     }

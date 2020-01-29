@@ -6,9 +6,9 @@ class XlxsReader extends TextInterface
 {
     public function read($input_file)
     {
-        $xml_filename = "xl/sharedStrings.xml"; //content file name
+        $xml_filename = 'xl/sharedStrings.xml'; //content file name
         $zip_handle = new ZipArchive;
-        $output_text = "";
+        $output_text = '';
         if (true === $zip_handle->open($input_file)) {
             if (($xml_index = $zip_handle->locateName($xml_filename)) !== false) {
                 $xml_datas = $zip_handle->getFromIndex($xml_index);
@@ -17,12 +17,13 @@ class XlxsReader extends TextInterface
 
                 $output_text .= strip_tags($dom->saveXML());
             } else {
-                $output_text .="";
+                $output_text .= '';
             }
             $zip_handle->close();
         } else {
-            $output_text .="";
+            $output_text .= '';
         }
+
         return $output_text;
     }
 }

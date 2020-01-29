@@ -1,12 +1,12 @@
 <?php
+
 namespace App\Http\Controllers;
 
-use App\Region;
 use App\Http\Requests\RegionFormRequest;
+use App\Region;
 
 class RegionsController extends BaseController
 {
-
     protected $region;
 
     public function __construct(Region $region)
@@ -14,9 +14,8 @@ class RegionsController extends BaseController
         $this->region = $region;
     }
 
-
     /**
-     * Display a listing of regions
+     * Display a listing of regions.
      *
      * @return Response
      */
@@ -28,7 +27,7 @@ class RegionsController extends BaseController
     }
 
     /**
-     * Show the form for creating a new region
+     * Show the form for creating a new region.
      *
      * @return Response
      */
@@ -44,8 +43,6 @@ class RegionsController extends BaseController
      */
     public function store(RegionFormRequest $request)
     {
-        
-
         $this->region->create(request()->all());
 
         return redirect()->route('region.index');
@@ -59,15 +56,13 @@ class RegionsController extends BaseController
      */
     public function show(Region $region)
     {
-                
         $branches = $region->branches()
                 ->with('servicelines', 'manager', 'region', 'servicedBy')
                 ->where('region_id', '=', $region->id)
                 ->orderBy('state', 'asc')
                 ->orderBy('city', 'asc')
                 ->get();
-    
-                        
+
         return response()->view('regions.show', compact('region', 'branches'));
     }
 
@@ -79,7 +74,6 @@ class RegionsController extends BaseController
      */
     public function edit(Region $region)
     {
-        
         return response()->view('regions.edit', compact('region'));
     }
 
@@ -91,8 +85,6 @@ class RegionsController extends BaseController
      */
     public function update(RegionFormRequest $request, Region $region)
     {
-        
-
         $region->update(request()->all());
 
         return redirect()->route('region.index')->withMessage('Region updated');
@@ -106,7 +98,6 @@ class RegionsController extends BaseController
      */
     public function destroy(Region $region)
     {
-        
         $region->delete();
 
         return redirect()->route('region.index')->withWarning('Region deleted');

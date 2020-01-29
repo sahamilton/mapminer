@@ -1,14 +1,16 @@
 <?php
 
 namespace App;
+
 use Carbon\Carbon;
+
 class Address extends Model
 {
     use Geocode,Filters, FullTextSearch;
     public $table = 'addresses';
 
     public $timestamps = true;
-    
+
     public $fillable = [
         'addressable_id',
         'addressable_type',
@@ -28,14 +30,14 @@ class Address extends Model
         'customer_id',
         'description',
         'duns',
-        'naic'];
-    
+        'naic', ];
+
     protected $searchable = [
         'businessname',
         'street',
         'city',
         'zip',
-        'state'
+        'state',
 
     ];
     protected $hidden = ['position'];
@@ -48,110 +50,116 @@ class Address extends Model
             'state',
             'zip',
             'lat',
-            'lng',];
-    
-    public $addressStatusOptions =  [
+            'lng', ];
+
+    public $addressStatusOptions = [
         1=>'Location data is completely inaccurate.',
         2=>'Location data is incomplete and / or not useful.',
         3=>'Location data is mostly accurate but contact data is inaccurate.',
         4=>'Location data is accurate and contact data is mostly accurate.',
-        5=>'Location and contact data is very accurate'
+        5=>'Location and contact data is very accurate',
       ];
 
     public $addressType = [
             'location'=>'National Account Location',
-            'project'=>'Construction Project', 
+            'project'=>'Construction Project',
             'lead'=>'Web Lead',
-            'customer'=>'Customer'];
-    
+            'customer'=>'Customer', ];
+
     /**
-     * [lead description]
-     * 
+     * [lead description].
+     *
      * @return [type] [description]
      */
     public function lead()
     {
         return $this->hasOne(Lead::class, 'address_id');
     }
+
     /**
-     * [weblead description]
-     * 
+     * [weblead description].
+     *
      * @return [type] [description]
      */
     public function weblead()
     {
         return $this->hasOne(WebLead::class, 'address_id');
     }
+
     /**
-     * [location description]
-     * 
+     * [location description].
+     *
      * @return [type] [description]
      */
     public function location()
     {
         return $this->hasOne(Location::class, 'address_id');
     }
+
     /**
-     * [customer description]
-     * 
+     * [customer description].
+     *
      * @return [type] [description]
      */
     public function customer()
     {
         return $this->hasOne(Customer::class, 'address_id');
     }
+
     /**
-     * [campaigns description]
-     * 
+     * [campaigns description].
+     *
      * @return [type] [description]
      */
     public function campaigns()
     {
         return $this->belongsToMany(Campaign::class);
     }
+
     /**
-     * [project description]
-     * 
+     * [project description].
+     *
      * @return [type] [description]
      */
     public function project()
     {
         return $this->hasOne(Project::class, 'address_id');
     }
+
     /**
-     * [watchedBy description]
-     * 
+     * [watchedBy description].
+     *
      * @return [type] [description]
      */
     public function watchedBy()
     {
-
         return $this->belongsToMany(User::class, 'location_user', 'address_id', 'user_id')
             ->withPivot('created_at', 'updated_at');
     }
 
-    
     /**
-     * [contacts description]
-     * 
+     * [contacts description].
+     *
      * @return [type] [description]
      */
     public function contacts()
     {
         return $this->hasMany(Contact::class, 'address_id', 'id');
     }
+
     /**
-     * [company description]
-     * 
+     * [company description].
+     *
      * @return [type] [description]
      */
     public function company()
     {
         return $this->belongsTo(Company::class, 'company_id', 'id');
     }
+
     /**
-     * [relatedNotes description]
-     * 
+     * [relatedNotes description].
+     *
      * @return [type] [description]
      */
     public function relatedNotes()
@@ -159,9 +167,10 @@ class Address extends Model
         return $this->hasMany(Note::class, 'related_id', 'addressable_id')
             ->with('writtenBy');
     }
-    /** 
-     * [state description]
-     * 
+
+    /**
+     * [state description].
+     *
      * @return [type] [description]
      */
     public function state()
@@ -170,21 +179,21 @@ class Address extends Model
     }
 
     /**
-     * [orders description]
-     * 
+     * [orders description].
+     *
      * @return [type] [description]
      */
     public function orders()
     {
- 
         return $this->hasManyThrough(
-            Orders::class, AddressBranch::class, 
+            Orders::class, AddressBranch::class,
             'address_id', 'address_branch_id', 'id', 'id'
         );
     }
+
     /**
-     * [activities description]
-     * 
+     * [activities description].
+     *
      * @return [type] [description]
      */
     public function activities()
@@ -193,8 +202,8 @@ class Address extends Model
     }
 
     /**
-     * [openActivities description]
-     * 
+     * [openActivities description].
+     *
      * @return [type] [description]
      */
     public function openActivities()
@@ -203,19 +212,20 @@ class Address extends Model
     }
 
     /**
-     * [lastActivity description]
-     * 
+     * [lastActivity description].
+     *
      * @return [type] [description]
-    */
+     */
     public function lastActivity()
     {
         return $this->hasMany(Activity::class)->where('completed', 1)->latest();
-    } 
+    }
+
     /**
-     * [lastActivity description]
-     * 
+     * [lastActivity description].
+     *
      * @return [type] [description]
-    */
+     */
     public function currentlyActive()
     {
         return $this->hasMany(Activity::class)
@@ -223,39 +233,39 @@ class Address extends Model
             ->where('activity_date', '>', now()->subMonth())
             ->latest()
             ->limit(1);
-        
-        
-    } 
+    }
+
     /**
-     * [fullAddress description]
-     * 
+     * [fullAddress description].
+     *
      * @return [type] [description]
      */
     public function fullAddress()
     {
-        return $this->street ." "
-        . $this->address2." ".$this->city." ".$this->state." ".$this->zip;
+        return $this->street.' '
+        .$this->address2.' '.$this->city.' '.$this->state.' '.$this->zip;
     }
+
     /**
-     * [industryVertical description]
-     * 
+     * [industryVertical description].
+     *
      * @return [type] [description]
      */
     public function industryVertical()
     {
         return $this->hasOne(SearchFilter::class, 'id', 'vertical');
     }
+
     /**
-     * [scopeFiltered description]
-     * 
+     * [scopeFiltered description].
+     *
      * @param [type] $query [description]
-     * 
+     *
      * @return [type]        [description]
      */
     public function scopeFiltered($query)
     {
-        
-        if ((! $keys= $this->getSearchKeys(['companies'], ['vertical'])) 
+        if ((! $keys = $this->getSearchKeys(['companies'], ['vertical']))
             && session('geo.addressType')
         ) {
             return $query->whereIn('addressable_type', session('geo.addressType'));
@@ -266,9 +276,10 @@ class Address extends Model
             return $query;
         }
     }
+
     /**
-     * [assignedToBranch description]
-     * 
+     * [assignedToBranch description].
+     *
      * @return [type] [description]
      */
     public function assignedToBranch()
@@ -279,9 +290,10 @@ class Address extends Model
             ->withPivot('id', 'rating', 'person_id', 'status_id', 'comments')
             ->withTimeStamps();
     }
+
     /**
-     * [claimedByBranch description]
-     * 
+     * [claimedByBranch description].
+     *
      * @return [type] [description]
      */
     public function claimedByBranch()
@@ -292,9 +304,10 @@ class Address extends Model
             ->withPivot('rating', 'person_id', 'status_id', 'comments')
             ->withTimeStamps()->whereIn('status_id', [2]);
     }
+
     /**
-     * [closed description]
-     * 
+     * [closed description].
+     *
      * @return [type] [description]
      */
     public function closed()
@@ -305,9 +318,10 @@ class Address extends Model
             ->withPivot('rating', 'person_id', 'status_id', 'comments')
             ->withTimeStamps()->whereIn('status_id', [3]);
     }
+
     /**
-     * [assignedToPerson description]
-     * 
+     * [assignedToPerson description].
+     *
      * @return [type] [description]
      */
     public function assignedToPerson()
@@ -318,80 +332,80 @@ class Address extends Model
             ->withPivot('rating', 'person_id', 'status_id', 'comments')
             ->withTimeStamps();
     }
+
     /**
-     * [scopeType description]
-     * 
+     * [scopeType description].
+     *
      * @param [type] $query [description]
      * @param [type] $type  [description]
-     * 
+     *
      * @return [type]        [description]
      */
     public function scopeType($query, $type)
     {
         return $query->where('addressable_type', '=', $type);
     }
-   
+
     /**
-     * [opportunities description]
-     * 
+     * [opportunities description].
+     *
      * @return [type] [description]
      */
     public function opportunities()
     {
- 
         return $this->hasManyThrough(
-            Opportunity::class, AddressBranch::class, 
+            Opportunity::class, AddressBranch::class,
             'address_id', 'address_branch_id', 'id', 'id'
         );
     }
 
     /**
-     * [opportunities description]
-     * 
+     * [opportunities description].
+     *
      * @return [type] [description]
      */
     public function openOpportunities()
     {
- 
         return $this->hasManyThrough(
-            Opportunity::class, AddressBranch::class, 
+            Opportunity::class, AddressBranch::class,
             'address_id', 'address_branch_id', 'id', 'id'
         )->where('closed', 0);
     }
 
     /**
-     * [opportunities description]
-     * 
+     * [opportunities description].
+     *
      * @return [type] [description]
      */
     /*public function campaigns()
     {
- 
+
         return $this->belongsToMany(Salesactivity::class);
     }*/
 
-
     /**
-     * [servicedBy description]
-     * 
+     * [servicedBy description].
+     *
      * @return [type] [description]
      */
     public function servicedBy()
     {
         return $this->belongsTo(Branch::class, 'branch_id', 'id');
     }
+
     /**
-     * [leadsource description]
-     * 
+     * [leadsource description].
+     *
      * @return [type] [description]
      */
     public function leadsource()
     {
         return $this->belongsTo(LeadSource::class, 'lead_source_id', 'id');
     }
+
     /**
-     * [ranking description]
-     * 
+     * [ranking description].
+     *
      * @return [type] [description]
      */
     public function ranking()
@@ -400,46 +414,50 @@ class Address extends Model
             ->withPivot('ranking', 'comments', 'status_id')
             ->withTimeStamps();
     }
+
     /**
-     * [currentRating description]
-     * 
+     * [currentRating description].
+     *
      * @return [type] [description]
      */
     public function currentRating()
     {
         return $this->ranking()->average('ranking');
     }
+
     /**
-     * [getMyRanking description]
-     * 
+     * [getMyRanking description].
+     *
      * @param [type] $rankings [description]
-     * 
+     *
      * @return [type]           [description]
      */
     public function getMyRanking($rankings)
     {
-       
         foreach ($rankings as $ranking) {
             if ($ranking->pivot->person_id == auth()->user()->person->id) {
                 return $ranking->pivot;
             }
         }
+
         return false;
     }
+
     /**
-     * [createdBy description]
-     * 
+     * [createdBy description].
+     *
      * @return [type] [description]
      */
     public function createdBy()
     {
         return $this->belongsTo(User::class, 'user_id', 'id')->with('person');
     }
+
     /**
-     * [getExtraFields description]
-     * 
+     * [getExtraFields description].
+     *
      * @param [type] $type [description]
-     * 
+     *
      * @return [type]       [description]
      */
     public function getExtraFields($type)
@@ -448,35 +466,39 @@ class Address extends Model
             ->whereDestination('extra')
             ->whereNotNull('fieldname')
             ->pluck('fieldname')->toArray();
+
         return array_unique($fields);
     }
+
     /**
-     * [scopeDuplicate description]
-     * 
+     * [scopeDuplicate description].
+     *
      * @param [type] $query     [description]
      * @param [type] $longitude [description]
      * @param [type] $latitude  [description]
-     * 
+     *
      * @return [type]            [description]
      */
-    public function scopeDuplicate($query, $longitude, $latitude, $commpany_id= null)
+    public function scopeDuplicate($query, $longitude, $latitude, $commpany_id = null)
     {
         $close_in_metres = 5;
-  
+
         $query = $query->whereRaw(
-            "ST_Distance_Sphere(
+            'ST_Distance_Sphere(
                 point(lng, lat),
-                point(". $longitude . ", " . $latitude .")
-            )  < ".$close_in_metres 
+                point('.$longitude.', '.$latitude.')
+            )  < '.$close_in_metres
         );
         if (isset($company_id)) {
             $query = $query->where('company_id', $company_id);
         }
+
         return $query;
     }
+
     /**
-     * [addressType description]
-     * 
+     * [addressType description].
+     *
      * @return [type] [description]
      */
     public function addressType()
@@ -485,32 +507,32 @@ class Address extends Model
             return 'opportunity';
         } elseif ($this->has('assignedToBranch')) {
             return 'lead';
-
         } else {
             return 'prospect';
         }
     }
+
     /**
-     * [scopeStaleLeads description]
-     * 
+     * [scopeStaleLeads description].
+     *
      * @param [type] $query      [description]
      * @param [type] $leadsource [description]
      * @param [type] $branches   [description]
      * @param [type] $before     [description]
-     * 
+     *
      * @return [type]             [description]
      */
     public function scopeStaleLeads(
-        $query, 
-        array $leadsource, 
-        array $branches, 
+        $query,
+        array $leadsource,
+        array $branches,
         Carbon $before
     ) {
         return $query
             ->whereIn('lead_source_id', $leadsource)
             ->whereHas(
                 'branchleads', function ($qb) use ($branches) {
-                        $qb->whereIn('branch_id', $branches);
+                    $qb->whereIn('branch_id', $branches);
                 }
             )
             ->where('created_at', '<=', $before)

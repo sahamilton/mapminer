@@ -2,11 +2,11 @@
 
 namespace App\Mail;
 
+use App\User;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use App\User;
 
 class UserNotification extends Mailable
 {
@@ -14,8 +14,6 @@ class UserNotification extends Mailable
     public $user;
     public $action;
     public $changes;
-
-
 
     /**
      * Create a new message instance.
@@ -26,7 +24,7 @@ class UserNotification extends Mailable
     {
         $this->user = $user->with('person')->first();
         //$this->person = Person::where('id','=',$this->user->person_id)->first();
-    
+
         dd($this->user);
     }
 
@@ -37,7 +35,6 @@ class UserNotification extends Mailable
      */
     public function build()
     {
-    
         if ($this->user->status == 'active') {
             return $this->markdown('emails.usernotification')
                 ->to($this->user->email);

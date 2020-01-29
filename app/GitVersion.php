@@ -2,38 +2,39 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Model;
 
 class GitVersion extends Model
 {
-
-    protected $table='gittracking';
-    protected $dates =['commitdate'];
-    protected $fillable = ['hash','author','message','commitdate'];
+    protected $table = 'gittracking';
+    protected $dates = ['commitdate'];
+    protected $fillable = ['hash', 'author', 'message', 'commitdate'];
 
     const MAJOR = 2;
     const MINOR = 5;
     const PATCH = 17;
 
     /**
-     * [get description]
-     * 
+     * [get description].
+     *
      * @return [type] [description]
      */
     public static function get()
     {
         $commitHash = trim(exec('git log --pretty="%h" -n1 HEAD'));
         $version = trim(exec('git tag'));
-        $branch = str_replace("(HEAD -> ", "", exec('git log -n1 -s --pretty=%d HEAD')). " branch";
-        $branch = str_replace(")", "", $branch);
+        $branch = str_replace('(HEAD -> ', '', exec('git log -n1 -s --pretty=%d HEAD')).' branch';
+        $branch = str_replace(')', '', $branch);
         $commitDate = new \DateTime(trim(exec('git log -n1 --pretty=%ci HEAD')));
         $commitDate->setTimezone(new \DateTimeZone('America/Los_Angeles'));
+
         return sprintf('%s (%s),commited %s', $branch, $commitHash, $commitDate->format('M jS Y @ g:m a'));
     }
+
     /**
-     * [history description]
-     * 
+     * [history description].
+     *
      * @return [type] [description]
      */
     public function history()
@@ -46,16 +47,16 @@ class GitVersion extends Model
         exec($command, $output);
         $history = [];
         foreach ($output as $line) {
-            if (strpos($line, 'commit')===0) {
-                if (!empty($commit)) {
+            if (strpos($line, 'commit') === 0) {
+                if (! empty($commit)) {
                     array_push($history, $commit);
                     unset($commit);
                 }
-                $commit['hash']   = substr($line, strlen('commit'));
-            } else if (strpos($line, 'Author')===0) {
+                $commit['hash'] = substr($line, strlen('commit'));
+            } elseif (strpos($line, 'Author') === 0) {
                 $commit['author'] = substr($line, strlen('Author:'));
-            } else if (strpos($line, 'Date')===0) {
-                $commit['commitdate']   = substr($line, strlen('Date:'));
+            } elseif (strpos($line, 'Date') === 0) {
+                $commit['commitdate'] = substr($line, strlen('Date:'));
             }
             if (isset($commit['message'])) {
                 $commit['message'] .= $line;
@@ -63,27 +64,26 @@ class GitVersion extends Model
                 $commit['message'] = $line;
             }
         }
-        if (!empty($commit)) {
+        if (! empty($commit)) {
             array_push($history, $commit);
         }
         $this->insert($history);
     }
-    
+
     /**
-     * [insert description]
-     * 
+     * [insert description].
+     *
      * @param [type] $history [description]
-     * 
+     *
      * @return [type]          [description]
      */
     public function insert($history)
     {
- 
         foreach ($history as $commit) {
             if (! $this->where('hash', '=', $commit['hash'])->first()) {
                 $commit['commitdate'] = Carbon::parse($commit['commitdate']);
-                $commit['message'] = preg_replace("#(\A\N* -0[7,8]00 )#", "", $commit['message']);
-                $commit['author'] = preg_replace("#( <\N*>)#", "", $commit['author']);
+                $commit['message'] = preg_replace("#(\A\N* -0[7,8]00 )#", '', $commit['message']);
+                $commit['author'] = preg_replace("#( <\N*>)#", '', $commit['author']);
                 $this->create($commit);
             }
         }

@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateReportDistributionTable extends Migration
 {
@@ -18,7 +18,7 @@ class CreateReportDistributionTable extends Migration
                 $table->increments('id');
                 $table->integer('report_id')->index()->unsigned();
                 $table->integer('user_id')->index()->unsigned();
-                $table->enum('type', ['to','cc','bcc'])->default('to');
+                $table->enum('type', ['to', 'cc', 'bcc'])->default('to');
                 $table->timestamps();
             }
         );

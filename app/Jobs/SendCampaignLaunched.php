@@ -2,15 +2,15 @@
 
 namespace App\Jobs;
 
-use App\User;
 use App\Campaign;
-use Mail;
+use App\Mail\SendCampaignLaunchedMail;
+use App\User;
 use Illuminate\Bus\Queueable;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use App\Mail\SendCampaignLaunchedMail;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
+use Mail;
 
 class SendCampaignLaunched implements ShouldQueue
 {
@@ -18,6 +18,7 @@ class SendCampaignLaunched implements ShouldQueue
 
     public $user;
     public $campaign;
+
     /**
      * Create a new job instance.
      *
@@ -36,9 +37,8 @@ class SendCampaignLaunched implements ShouldQueue
      */
     public function handle()
     {
-         Mail::to([['email'=>$this->user->email, 'name'=>$this->user->person->fullName()]])
-                
+        Mail::to([['email'=>$this->user->email, 'name'=>$this->user->person->fullName()]])
+
                 ->send(new SendCampaignLaunchedMail($this->user, $this->campaign));
     }
-              
 }

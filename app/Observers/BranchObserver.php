@@ -1,26 +1,29 @@
 <?php
 
 namespace App\Observers;
+
 use App\Branch;
 use App\Jobs\RebuildBranchesXMLJob;
+
 class BranchObserver
 {
-        private $observableEventNames  = [
-                "created",
-                "updated",
-                "deleted",
-                "saved",
-                "restored",
+    private $observableEventNames = [
+                'created',
+                'updated',
+                'deleted',
+                'saved',
+                'restored',
             ];
     //
     //
     //$this->_rebuildXMLfile();
     //
+
     /**
-     * [created description]
-     * 
+     * [created description].
+     *
      * @param Branch $branch [description]
-     * 
+     *
      * @return [type]         [description]
      */
     public function created(Branch $branch)
@@ -28,22 +31,24 @@ class BranchObserver
         RebuildBranchesXMLJob::dispatch();
         // return Mail::queue(new PersonNotification($person));
     }
+
     /**
-     * [updated description]
-     * 
+     * [updated description].
+     *
      * @param Branch $branch [description]
-     * 
+     *
      * @return [type]         [description]
      */
     public function updated(Branch $branch)
     {
         RebuildBranchesXMLJob::dispatch();
     }
+
     /**
-     * [deleting description]
-     * 
+     * [deleting description].
+     *
      * @param Branch $branch [description]
-     * 
+     *
      * @return [type]         [description]
      */
     public function deleting(Branch $branch)

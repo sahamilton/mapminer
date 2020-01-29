@@ -2,13 +2,13 @@
 
 namespace App\Mail;
 
+use App\Branch;
+use App\LeadSource;
+use App\Person;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use App\Branch;
-use App\Person;
-use App\LeadSource;
 
 class NotifyManagersLeadsAssignment extends Mailable
 {
@@ -17,9 +17,10 @@ class NotifyManagersLeadsAssignment extends Mailable
     public $manager;
     public $branches;
     public $leadsource;
+
     /**
-     * [__construct description]
-     * 
+     * [__construct description].
+     *
      * @param [type]     $data       [description]
      * @param Person     $manager    [description]
      * @param LeadSource $leadsource [description]
@@ -42,6 +43,6 @@ class NotifyManagersLeadsAssignment extends Mailable
     {
         return $this->markdown('emails.managerleads')
             ->subject('New Leads assigned to your team')
-            ->to($this->manager['email'], $this->manager['firstname'] ." ". $this->manager['lastname']);
+            ->to($this->manager['email'], $this->manager['firstname'].' '.$this->manager['lastname']);
     }
 }

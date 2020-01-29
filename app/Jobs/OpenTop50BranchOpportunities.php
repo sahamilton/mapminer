@@ -2,22 +2,23 @@
 
 namespace App\Jobs;
 
-use Mail;
-use Excel;
+use App\Exports\OpenTop25BranchOpportunitiesExport;
+use App\Mail\SendTop25WeeklyReport;
 use App\Report;
 use Carbon\Carbon;
-use App\Mail\SendTop25WeeklyReport;
-use App\Exports\OpenTop25BranchOpportunitiesExport;
+use Excel;
 use Illuminate\Bus\Queueable;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
+use Mail;
 
-class OpenTop25BranchOpportunities implements ShouldQueue
+class OpenTop50BranchOpportunities implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     public $period;
+
     /**
      * Create a new job instance.
      *
@@ -37,19 +38,14 @@ class OpenTop25BranchOpportunities implements ShouldQueue
     {
 
         // create the file
-        $file = '/public/reports/topopen50wkrpt'. $this->period->timestamp. ".xlsx";
-        
+        $file = '/public/reports/topopen50wkrpt'.$this->period->timestamp.'.xlsx';
+
         Excel::store(new OpenTop25BranchOpportunitiesExport($this->period), $file);
         $report = Report::with('distribution')
             ->where('job', $class)
             ->firstOrFail();
         $distribution = $report->getDistribution();
-        Mail::to($distribution)              
+        Mail::to($distribution)
                 ->send(new SendTop25WeeklyReport($file));
-
-        
-                
-        
-
     }
 }

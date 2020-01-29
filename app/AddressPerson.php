@@ -9,54 +9,58 @@ class AddressPerson extends Model
 {
     public $table = 'address_person';
     public $timestamps = true;
-    public $fillable = ['person_id','address_id', 'status_id','created_at', 'updated_at'];
+    public $fillable = ['person_id', 'address_id', 'status_id', 'created_at', 'updated_at'];
     /**
-     * [orders description]
-     * 
+     * [orders description].
+     *
      * @return [type] [description]
      */
-    
+
     /**
-     * [branch description]
-     * 
+     * [branch description].
+     *
      * @return [type] [description]
      */
     public function person()
     {
         return $this->belongsTo(Person::class, 'person_id', 'id');
     }
+
     /**
-     * [address description]
-     * 
+     * [address description].
+     *
      * @return [type] [description]
      */
     public function address()
     {
         return $this->belongsTo(Address::class, 'address_id', 'id');
     }
+
     /**
-     * [activities description]
-     * 
+     * [activities description].
+     *
      * @return [type] [description]
      */
     public function activities()
     {
         return $this->hasMany(Activity::class, 'address_id', 'address_id');
     }
+
     /**
-     * [opportunities description]
-     * 
+     * [opportunities description].
+     *
      * @return [type] [description]
      */
     public function opportunities()
     {
         return $this->hasMany(Opportunity::class, 'address_branch_id', 'id');
     }
+
     /**
-     * [scopeActivityChart description]
-     * 
+     * [scopeActivityChart description].
+     *
      * @param [type] $query [description]
-     * 
+     *
      * @return [type]        [description]
      */
     public function scopeActivityChart($query)
@@ -66,36 +70,39 @@ class AddressPerson extends Model
             YEARWEEK(activities.expected_close,3) as yearweek,
             sum(activities.value) as funnel'
         )
-            ->groupBy(['person_id','yearweek'])
+            ->groupBy(['person_id', 'yearweek'])
             ->orderBy('yearweek', 'asc');
     }
+
     /**
-     * [scopeOpenOpportunities description]
-     * 
+     * [scopeOpenOpportunities description].
+     *
      * @param [type] $query [description]
-     * 
+     *
      * @return [type]        [description]
      */
     public function scopeOpenOpportunities($query)
     {
         $this->opportunities()->where('closed', 0);
     }
-    /** 
-     * [scopeWonOpportunities description]
-     * 
+
+    /**
+     * [scopeWonOpportunities description].
+     *
      * @param [type] $query [description]
-     * 
+     *
      * @return [type]        [description]
      */
     public function scopeWonOpportunities($query)
     {
         $this->opportunities()->where('closed', 1);
     }
+
     /**
-     * [scopeLostOpportunities description]
-     * 
+     * [scopeLostOpportunities description].
+     *
      * @param [type] $query [description]
-     * 
+     *
      * @return [type]        [description]
      */
     public function scopeLostOpportunities($query)
@@ -109,19 +116,19 @@ class AddressPerson extends Model
     }
 
     /**
-     * [scopeStaleLeads description]
-     * 
+     * [scopeStaleLeads description].
+     *
      * @param [type] $query      [description]
      * @param [type] $leadsource [description]
      * @param [type] $branches   [description]
      * @param [type] $before     [description]
-     * 
+     *
      * @return [type]             [description]
      */
     public function scopeStaleLeads(
-        $query, 
-        array $leadsource, 
-        array $person, 
+        $query,
+        array $leadsource,
+        array $person,
         Carbon $before
     ) {
         return $query

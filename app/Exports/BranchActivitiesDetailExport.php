@@ -5,27 +5,26 @@ namespace App\Exports;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
 
-
 class BranchActivitiesDetailExport implements FromView
 {
-    
     public $period;
     public $branches;
+
     /**
-     * [__construct description]
-     * 
-     * @param Array      $period   [description]
-     * @param Array|null $branches [description]
+     * [__construct description].
+     *
+     * @param array      $period   [description]
+     * @param array|null $branches [description]
      */
-    public function __construct(Array $period, Array $branches=null)
+    public function __construct(array $period, array $branches = null)
     {
         $this->period = $period;
         $this->branches = $branches;
     }
 
     /**
-     * [view description]
-     * 
+     * [view description].
+     *
      * @return [type] [description]
      */
     public function view(): View
@@ -49,17 +48,17 @@ class BranchActivitiesDetailExport implements FromView
                 and activities.completed =1 
                 and branch_id = branches.id ";
         if ($this->branches) {
-            $query.= " and branch_id in ('" . implode("','", array_keys($this->branches))."')";
-        } 
-        $query.= " group by branchname, week, activity ) a  
+            $query .= " and branch_id in ('".implode("','", array_keys($this->branches))."')";
+        }
+        $query .= ' group by branchname, week, activity ) a  
                 where persons.id = branch_person.person_id
                 and branch_person.role_id = 9
                 and branch_person.branch_id = branches.id
                 and branches.branchname = a.branchname  
-                ORDER BY `a`.`week`  ASC";
+                ORDER BY `a`.`week`  ASC';
 
         $results = \DB::select($query);
-         
+
         return view('reports.branchactivitiesdetail', compact('results', 'period'));
     }
 }

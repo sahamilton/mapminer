@@ -2,21 +2,22 @@
 
 namespace App\Jobs;
 
-use App\OrderImport;
 use App\Company;
+use App\OrderImport;
 use Illuminate\Bus\Queueable;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 
 class ProcessNewCompanies implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     public $import;
+
     /**
-     * [__construct description]
-     * 
+     * [__construct description].
+     *
      * @param OrderImport $import [description]
      */
     public function __construct(OrderImport $import)
@@ -31,7 +32,6 @@ class ProcessNewCompanies implements ShouldQueue
      */
     public function handle()
     {
-      
         if (! $company = Company::where(
             'customer_id', '=', $this->import->customer_id
         )->first()

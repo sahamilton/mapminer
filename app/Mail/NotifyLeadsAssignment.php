@@ -2,13 +2,13 @@
 
 namespace App\Mail;
 
-use App\Person;
 use App\Branch;
 use App\LeadSource;
+use App\Person;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
 class NotifyLeadsAssignment extends Mailable
 {
@@ -17,6 +17,7 @@ class NotifyLeadsAssignment extends Mailable
     public $manager;
     public $leadsource;
     public $branch;
+
     /**
      * Create a new message instance.
      *
@@ -26,7 +27,7 @@ class NotifyLeadsAssignment extends Mailable
     {
         $this->data = $data;
         $this->branch = $branch;
-        
+
         $this->manager = $manager;
 
         $this->leadsource = $leadsource;
@@ -39,8 +40,6 @@ class NotifyLeadsAssignment extends Mailable
      */
     public function build()
     {
-        
-      
         return $this->from('salesoperations@tbmapminer.com', 'Sales Operations')
             ->markdown('emails.leadsnotify')
             ->subject('New Leads Assigned');

@@ -1,4 +1,5 @@
 <?php
+
 namespace App;
 
 use Carbon\Carbon;
@@ -6,27 +7,24 @@ use Illuminate\Database\Eloquent\Model;
 
 class Track extends Model
 {
-
     // Add your validation rules here
     public static $rules;
     protected $table = 'track';
     // Don't forget to fill this array
-    public $fillable = ['user_id','lastactivity'];
+    public $fillable = ['user_id', 'lastactivity'];
     public $dates = ['lastactivity'];
     public $errors;
-    
 
     /**
-     * [scopeLastLogin description]
-     * 
+     * [scopeLastLogin description].
+     *
      * @param [type] $query    [description]
      * @param [type] $interval [description]
-     * 
+     *
      * @return [type]           [description]
      */
     public function scopeLastLogin($query, $interval = null)
     {
-
         $sub = $query->selectRaw('`user_id`,max(`lastactivity`) as `lastlogin`')
             ->groupBy('user_id');
         // this should be a join
@@ -35,30 +33,33 @@ class Track extends Model
         if ($interval) {
             return $lastlogin->whereBetween('max.lastlogin', $interval);
         }
-            return $lastlogin->whereNull('max.laslogin');
+
+        return $lastlogin->whereNull('max.laslogin');
     }
+
     /**
-     * [user description]
-     * 
+     * [user description].
+     *
      * @return [type] [description]
      */
     public function user()
     {
         return $this->belongsTo(User::class);
     }
+
     /**
-     * [getLogins description]
-     * 
+     * [getLogins description].
+     *
      * @param array|null $users [description]
-     * 
+     *
      * @return [type]            [description]
      */
     public function getLogins(array $users = null)
     {
         if ($users) {
-            $subQuery =($this->whereHas(
+            $subQuery = ($this->whereHas(
                 'user', function ($q) {
-                        $q->where('confirmed', '=', 1);
+                    $q->where('confirmed', '=', 1);
                 }
             )
             ->whereIn('user_id', $users)
@@ -70,9 +71,9 @@ class Track extends Model
             ->whereNotNull('lastactivity')
             ->groupBy('user_id'));
         } else {
-            $subQuery =($this->whereHas(
+            $subQuery = ($this->whereHas(
                 'user', function ($q) {
-                        $q->where('confirmed', '=', 1);
+                    $q->where('confirmed', '=', 1);
                 }
             )
             ->selectRaw(

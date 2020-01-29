@@ -2,13 +2,13 @@
 
 namespace App\Mail;
 
-use App\Person;
-use App\Lead;
 use App\Branch;
+use App\Lead;
+use App\Person;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
 class NotifyWebLeadsAssignment extends Mailable
 {
@@ -16,6 +16,7 @@ class NotifyWebLeadsAssignment extends Mailable
     public $lead;
     public $branch;
     public $person;
+
     /**
      * Create a new message instance.
      *
@@ -34,7 +35,7 @@ class NotifyWebLeadsAssignment extends Mailable
      * @return $this
      */
     public function build()
-    {         
+    {
         return $this->markdown('emails.webleadsnotify')
             ->to($this->person->userdetails->email, $this->person->postName())
             ->subject('New Lead');

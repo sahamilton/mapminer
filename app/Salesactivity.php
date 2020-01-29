@@ -4,18 +4,19 @@ namespace App;
 
 class Salesactivity extends Model implements \MaddHatter\LaravelFullcalendar\IdentifiableEvent
 {
-    public $table='salesactivity';
-    public $fillable=['datefrom','dateto','title','description'];
-    public $dates = ['datefrom','dateto'];
-// Methods for Calendar
-// 
+    public $table = 'salesactivity';
+    public $fillable = ['datefrom', 'dateto', 'title', 'description'];
+    public $dates = ['datefrom', 'dateto'];
+
+    // Methods for Calendar
+//
     public function getId()
     {
         return $this->id;
     }
 
     /**
-     * Get the event's title
+     * Get the event's title.
      *
      * @return string
      */
@@ -35,7 +36,7 @@ class Salesactivity extends Model implements \MaddHatter\LaravelFullcalendar\Ide
     }
 
     /**
-     * Get the start time
+     * Get the start time.
      *
      * @return DateTime
      */
@@ -43,9 +44,10 @@ class Salesactivity extends Model implements \MaddHatter\LaravelFullcalendar\Ide
     {
         return $this->datefrom;
     }
+
     /**
-     * [getEventOptions description]
-     * 
+     * [getEventOptions description].
+     *
      * @return [type] [description]
      */
     public function getEventOptions()
@@ -55,8 +57,9 @@ class Salesactivity extends Model implements \MaddHatter\LaravelFullcalendar\Ide
             //etc
         ];
     }
+
     /**
-     * Get the end time
+     * Get the end time.
      *
      * @return DateTime
      */
@@ -64,41 +67,44 @@ class Salesactivity extends Model implements \MaddHatter\LaravelFullcalendar\Ide
     {
         return $this->dateto;
     }
+
     /**
-     * [salesprocess description]
-     * 
+     * [salesprocess description].
+     *
      * @return [type] [description]
      */
     public function salesprocess()
     {
         return $this->belongsToMany(SalesProcess::class, 'activity_process_vertical', 'activity_id', 'salesprocess_id')->withPivot('company_id');
     }
+
     /**
-     * [vertical description]
-     * 
+     * [vertical description].
+     *
      * @return [type] [description]
      */
     public function vertical()
     {
         return $this->belongsToMany(SearchFilter::class, 'activity_process_vertical', 'activity_id', 'vertical_id')->withPivot('salesprocess_id');
     }
+
     /**
-     * [vertical description]
-     * 
+     * [vertical description].
+     *
      * @return [type] [description]
      */
     public function companies()
     {
         return $this->belongsToMany(Company::class, 'activity_process_company', 'activity_id', 'company_id')->withPivot('salesprocess_id');
     }
+
     /**
-     * [relatedDocuments description]
-     * 
+     * [relatedDocuments description].
+     *
      * @return [type] [description]
      */
     public function relatedDocuments()
     {
-     
         return Document::whereHas(
             'process', function ($q) {
                 $q->whereIn('id', $this->salesprocess()->pluck('salesprocess_id'));
@@ -114,26 +120,28 @@ class Salesactivity extends Model implements \MaddHatter\LaravelFullcalendar\Ide
     }
 
     /**
-     * [campaignleads description]
-     * 
+     * [campaignleads description].
+     *
      * @return [type] [description]
      */
     public function campaignLeads()
     {
         return $this->belongsToMany(Address::class);
     }
+
     /**
-     * [states description]
-     * 
+     * [states description].
+     *
      * @return [type] [description]
      */
     public function states()
     {
         return $this->belongsToMany(State::class);
     }
+
     /**
-     * [relatedSalesReps description]
-     * 
+     * [relatedSalesReps description].
+     *
      * @return [type] [description]
      */
     public function relatedSalesReps()
@@ -144,53 +152,57 @@ class Salesactivity extends Model implements \MaddHatter\LaravelFullcalendar\Ide
             }
         )->get();
     }
+
     /**
-     * [currentActivities description]
-     * 
+     * [currentActivities description].
+     *
      * @return [type] [description]
-     
+
     public function currentActivities()
     {
 
         return $this->where('datefrom', '<=', date('Y-m-d'))
             ->where('dateto', '>=', date('Y-m-d'));
     }*/
+
     /**
-     * [scopeCurrentActivities description]
-     * 
+     * [scopeCurrentActivities description].
+     *
      * @param Query $query [<description>]
-     * 
+     *
      * @return [type] [description]
      */
     public function scopeCurrentActivities($query)
     {
-
         return $query->where('datefrom', '<=', now())
             ->where('dateto', '>=', now());
     }
+
     /**
-     * [campaignparticipants description]
-     * 
+     * [campaignparticipants description].
+     *
      * @return [type] [description]
      */
     public function campaignparticipants()
     {
         return $this->belongsToMany(Person::class)->withPivot('role');
     }
+
     /**
-     * [campaignBranches description]
-     * 
+     * [campaignBranches description].
+     *
      * @return [type] [description]
      */
     public function campaignBranches()
     {
         return $this->belongsToMany(Branch::class);
     }
+
     /**
-     * [campaignSalesReps description]
-     * 
+     * [campaignSalesReps description].
+     *
      * @return [type] [description]
-    
+
     public function campaignSalesReps()
     {
         $verticals = $this->vertical->pluck('id')->toArray();
@@ -218,23 +230,24 @@ class Salesactivity extends Model implements \MaddHatter\LaravelFullcalendar\Ide
             ->whereNotNull('lng')
             ->get();
     } */
+
     /**
-     * [getCampaignBranches description]
-     * 
+     * [getCampaignBranches description].
+     *
      * @param [type] $request [description]
-     * 
+     *
      * @return [type]          [description]
      */
     public function getCampaignBranches($request)
     {
         if (isset($request['org']['mm'])) {
             return Person::findOrFail($request['org']['mm'])->myBranches();
-            
         } elseif (isset($request['org']['rvp'])) {
             return Person::findOrFail($request['org']['rvp'])->myBranches();
         } elseif (isset($request['org']['rvp'])) {
             return Person::findOrFail($request['org']['svp'])->myBranches();
         }
+
         return Branch::all()->pluck('branchname', 'id')->toArray();
     }
 }

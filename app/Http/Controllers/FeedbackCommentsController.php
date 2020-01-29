@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Mail;
-use App\Mail\FeedbackClosed;
-use App\Mail\FeedbackComment;
+use App\Events\FeedbackEvent;
 use App\Feedback;
 use App\FeedbackComments;
-use App\Events\FeedbackEvent;
+use App\Mail\FeedbackClosed;
+use App\Mail\FeedbackComment;
 use Illuminate\Http\Request;
+use Mail;
 
 class FeedbackCommentsController extends Controller
 {
@@ -20,6 +20,7 @@ class FeedbackCommentsController extends Controller
         $this->comments = $comments;
         $this->feedback = $feedback;
     }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -28,8 +29,7 @@ class FeedbackCommentsController extends Controller
      */
     public function store(Request $request)
     {
-      
-        $feedback = $this->feedback->with('providedBy','comments')->findOrFail(request('feedback_id'));
+        $feedback = $this->feedback->with('providedBy', 'comments')->findOrFail(request('feedback_id'));
         $data = request()->except('_token');
         $data['user_id'] = auth()->user()->id;
         $feedback->comments()->create($data);
@@ -38,9 +38,9 @@ class FeedbackCommentsController extends Controller
             $feedback->update(['status'=>'closed']);
         }
         event(new FeedbackEvent($feedback));
-        return redirect()->route('feedback.show',$feedback->id)->withMessage('Thanks for commenting on this feedback');
-    }
 
+        return redirect()->route('feedback.show', $feedback->id)->withMessage('Thanks for commenting on this feedback');
+    }
 
     /**
      * Remove the specified resource from storage.
@@ -50,8 +50,8 @@ class FeedbackCommentsController extends Controller
      */
     public function destroy(FeedbackComments $comments)
     {
-        
         $comments->delete();
-        return redirect()->back()->withMessage("Comment deleted");
+
+        return redirect()->back()->withMessage('Comment deleted');
     }
 }

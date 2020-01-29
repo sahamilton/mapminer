@@ -7,7 +7,7 @@ return [
     | Credits
     |--------------------------------------------------------------------------
     |
-    | 
+    |
     |
     */
     'author' => 'Stephen Hamilton',
@@ -16,18 +16,15 @@ return [
     'website' => 'https://www.OkosPartners.com',
     'client' => 'TrueBlue, Inc.',
 
-
     /*
     |--------------------------------------------------------------------------
     | App Version
     |--------------------------------------------------------------------------
     |
-    | 
+    |
     |
     */
     'app_version' => trim(exec('git tag')),
-
-
 
     /*
     |--------------------------------------------------------------------------
@@ -40,7 +37,7 @@ return [
     */
 
     'default_address'=>'1015 A St, Tacoma, WA 98402',
-    'default_location'=>['lat'=>'39.8282','lng'=>'-98.5795'],
+    'default_location'=>['lat'=>'39.8282', 'lng'=>'-98.5795'],
     /*
     |--------------------------------------------------------------------------
     | System Contact
@@ -54,7 +51,6 @@ return [
     'support'=>'Sales Operations',
     'system_contact'=>env('MAPMINER_CONTACT', 'salesoperations@trueblue.com'),
 
-    
     'timeframes'=>[
         'today'=>'Today',
         'yesterday'=>'Yesterday',
@@ -71,7 +67,6 @@ return [
 
     ],
 
-
      /*
     |--------------------------------------------------------------------------
     | Old Configs
@@ -81,24 +76,21 @@ return [
     |
     */
 
-
-
     'available_language' => ['en'],
-    
-    'search_radius'=>['2'=>'2','5'=>'5','10'=>'10','25'=>'25','50'=>'50','75'=>'75','100'=>'100','250'=>'250'],
-    
-    'zoom_levels'=>['2'=>'13','5'=>'12','10'=>'11','25'=>'10','50'=>'9','75'=>'8','100'=>'8','250'=>'6'],
-   
+
+    'search_radius'=>['2'=>'2', '5'=>'5', '10'=>'10', '25'=>'25', '50'=>'50', '75'=>'75', '100'=>'100', '250'=>'250'],
+
+    'zoom_levels'=>['2'=>'13', '5'=>'12', '10'=>'11', '25'=>'10', '50'=>'9', '75'=>'8', '100'=>'8', '250'=>'6'],
+
     'default_radius'=>['10'=>'10'],
-    
-    'mysql_data_loc'=>app_path() .'/storage/uploads/',
-    
+
+    'mysql_data_loc'=>app_path().'/storage/uploads/',
+
     'api_key' => env('GOOGLE_MAPS_API_KEY', 'AIzaSyCzMYQy-JSMClnXr82HGmVp3YHYzZUOTTg'),
-    
+
     'location_limit'=>env('LOCATION_LIMIT', 2000),
 
     'default_lat'=>'39.8282',
     'default_lng'=>'-98.5795',
-
 
 ];

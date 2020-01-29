@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class FeedbackComments extends Model
 {
-    public $fillable = ['user_id','comment','feedback_id'];
+    public $fillable = ['user_id', 'comment', 'feedback_id'];
 
     public function feedback()
     {

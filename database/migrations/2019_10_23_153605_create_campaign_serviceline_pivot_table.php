@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 
 class CreateCampaignServicelinePivotTable extends Migration
 {
@@ -23,7 +23,6 @@ class CreateCampaignServicelinePivotTable extends Migration
             'campaign_serviceline', function (Blueprint $table) {
                 $table->foreign('serviceline_id')->references('id')->on('servicelines')->onDelete('cascade');
                 $table->foreign('campaign_id')->references('id')->on('campaigns')->onDelete('cascade');
-            
             }
         );
     }

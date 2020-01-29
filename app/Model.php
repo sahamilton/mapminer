@@ -1,7 +1,8 @@
 <?php
+
 namespace App;
 
-use \Carbon\Carbon;
+use Carbon\Carbon;
 
 class Model extends \Eloquent
 {
@@ -9,58 +10,59 @@ class Model extends \Eloquent
     public $userServiceLines;
     public $userVerticals;
     public $userRoles;
-    
- 
-    
+
     public function getTableColumns($table, array $skip = null)
     {
-        $query = "SHOW COLUMNS FROM ".$table;
+        $query = 'SHOW COLUMNS FROM '.$table;
         if ($skip) {
-            $query = $query . " WHERE Field NOT IN ('". implode("','", $skip)."')";
+            $query = $query." WHERE Field NOT IN ('".implode("','", $skip)."')";
         }
+
         return \DB::select(\DB::raw($query));
     }
 
     public function isValid($data)
     {
-            $validation = Validator::make($data, static::$rules);
-            
+        $validation = Validator::make($data, static::$rules);
+
         if ($validation->passes()) {
             return true;
         }
-            
-            $this->errors = $validation->messages();
-            return false;
+
+        $this->errors = $validation->messages();
+
+        return false;
     }
-        
+
     public function checkImportFileType($rules)
     {
         // Make sure we have a file
 
-            $file = Input::file('upload');
-            // Make sure its a CSV file - test #1
-            $mimes = ['application/vnd.ms-excel','text/plain','text/csv','text/tsv','text/x-c'];
-        if (!in_array($file->getMimeType(), $mimes)) {
+        $file = Input::file('upload');
+        // Make sure its a CSV file - test #1
+        $mimes = ['application/vnd.ms-excel', 'text/plain', 'text/csv', 'text/tsv', 'text/x-c'];
+        if (! in_array($file->getMimeType(), $mimes)) {
             return Redirect::back()->withErrors(['Only CSV files are allowed']);
         }
-            return $file;
+
+        return $file;
     }
+
     public function checkImportFileStructure($filename)
     {
         // map the file to the fields
         $datafile = fopen($filename, 'r');
-            
+
         $data = fgetcsv($datafile);
-            
+
         return $data;
     }
-            
+
     public function fullAddress()
     {
-        return $this->street.' ' .$this->address2.' ' .$this->city.' ' .$this->state.' ' .$this->zip;
+        return $this->street.' '.$this->address2.' '.$this->city.' '.$this->state.' '.$this->zip;
     }
-    
-    
+
     public function rawQuery($query, $error, $type)
     {
         $result = [];
@@ -72,191 +74,191 @@ class Model extends \Eloquent
                 case 'select':
                     $result = \DB::select(\DB::raw($query));
                     break;
-                
+
                 case 'update':
                     $result = \DB::select(\DB::raw($query));
                     break;
 
-                
-            
                 default:
                     $result = \DB::select(\DB::raw($query));
                     break;
             }
-            echo $query . ";<br />";
+            echo $query.';<br />';
         } catch (\Exception $e) {
-            echo $error . "<br />". $query;
+            echo $error.'<br />'.$query;
             exit;
         }
+
         return $result;
     }
-    
+
     /*
      * Function export
      *
      * Create array of locations of logged in users watchlist
      *
-     * @param fields arrary 
+     * @param fields arrary
      *         data array (collection)
      *         filename string
      * @return (array) csv results
      */
     public function export($fields, $data, $name = 'Export')
     {
-        
-        $filename = "attachment; filename=\"". time() . '-' .$name.".csv\"";
-        $output='';
+        $filename = 'attachment; filename="'.time().'-'.$name.'.csv"';
+        $output = '';
         foreach ($fields as $field) {
             if (! is_array($field)) {
-                $output.=$field.",";
+                $output .= $field.',';
             } else {
-                $output.= $field[key($field)].",";
+                $output .= $field[key($field)].',';
             }
         }
-         $output.="\n";
+        $output .= "\n";
         foreach ($data as $row) {
             reset($fields);
             foreach ($fields as $field) {
                 if (! is_array($field)) {
                     if (! $row->$field) {
-                        $output.=",";
+                        $output .= ',';
                     } else {
-                        $output.=str_replace(",", " ", strip_tags($row->$field)).",";
+                        $output .= str_replace(',', ' ', strip_tags($row->$field)).',';
                     }
                 } else {
                     $key = key($field);
                     $element = $field[key($field)];
-                    
+
                     if (! isset($row->$key->$element)) {
-                        $output.=",";
+                        $output .= ',';
                     } else {
-                        $output.=str_replace(",", " ", strip_tags($row->$key->$element)).",";
+                        $output .= str_replace(',', ' ', strip_tags($row->$key->$element)).',';
                     }
                 }
             }
-            $output.="\n";
+            $output .= "\n";
         }
 
-          $headers = [
+        $headers = [
               'Content-Type' => 'text/csv',
-              'Content-Disposition' => $filename ,
+              'Content-Disposition' => $filename,
           ];
-          $results['headers'] = $headers;
-          $results['output'] = $output;
-    
-          return $results;
+        $results['headers'] = $headers;
+        $results['output'] = $output;
+
+        return $results;
     }
-    
-    
+
     /*
      * Function export
      *
      * Create array of locations of logged in users watchlist
      *
-     * @param fields arrary 
+     * @param fields arrary
      *         data array (collection)
      *         filename string
      * @return (array) csv results
      */
     public function exportArray($fields, $data, $name = 'Export')
     {
-        
-        $filename = "attachment; filename=\"". time() . '-' .$name.".csv\"";
-        $output='';
+        $filename = 'attachment; filename="'.time().'-'.$name.'.csv"';
+        $output = '';
         foreach ($fields as $field) {
             if (! is_array($field)) {
-                $output.=$field.",";
+                $output .= $field.',';
             } else {
-                $output.= $field[key($field)].",";
+                $output .= $field[key($field)].',';
             }
         }
-         $output.="\n";
+        $output .= "\n";
         foreach ($data as $row) {
             reset($fields);
             foreach ($fields as $field) {
                 if (! is_array($field)) {
                     if (! $row[$field]) {
-                        $output.=",";
+                        $output .= ',';
                     } else {
-                        $cleanText = preg_replace("/\r|\n/", "", $row[$field]);
-                        $output.=str_replace(",", " ", strip_tags($cleanText)).",";
+                        $cleanText = preg_replace("/\r|\n/", '', $row[$field]);
+                        $output .= str_replace(',', ' ', strip_tags($cleanText)).',';
                     }
                 } else {
                     $key = key($field);
                     $element = $field[key($field)];
-                    
+
                     if (! isset($row[$key][$element])) {
-                        $output.=",";
+                        $output .= ',';
                     } else {
-                        $cleanText = preg_replace("/\r|\n/", "", $row[$key][$element]);
-                        $output.=str_replace(",", " ", strip_tags($cleanText)).",";
+                        $cleanText = preg_replace("/\r|\n/", '', $row[$key][$element]);
+                        $output .= str_replace(',', ' ', strip_tags($cleanText)).',';
                     }
                 }
             }
-            $output.="\n";
+            $output .= "\n";
         }
 
-          $headers = [
+        $headers = [
               'Content-Type' => 'text/csv',
-              'Content-Disposition' => $filename ,
+              'Content-Disposition' => $filename,
           ];
-          $results['headers'] = $headers;
-          $results['output'] = $output;
-    
-          return $results;
+        $results['headers'] = $headers;
+        $results['output'] = $output;
+
+        return $results;
     }
+
     public function scopeServiceLine($query)
     {
         $servicelines = $this->getUserServiceLines();
-       
+
         return $query->whereHas('serviceline', function ($q) use ($servicelines) {
-                $q->whereIn('serviceline', $servicelines);
+            $q->whereIn('serviceline', $servicelines);
         });
     }
 
-    
     public function getUserServiceLines()
     {
-        
-        $this->userServicelines= auth()->user()->serviceline()->pluck('servicelines.id')->toArray();
+        $this->userServicelines = auth()->user()->serviceline()->pluck('servicelines.id')->toArray();
 
-        session()->put('user.servicelines', $this->userServicelines) ;
+        session()->put('user.servicelines', $this->userServicelines);
+
         return $this->userServicelines;
     }
 
     public function scopeFiltered($query)
     {
-        if (!$keys= $this->getSearchKeys(['companies'], ['vertical'])) {
+        if (! $keys = $this->getSearchKeys(['companies'], ['vertical'])) {
             return $query;
         }
+
         return $query->whereIn('vertical', $keys);
     }
 
     public function getUserVerticals()
     {
-        $this->userVerticals= auth()->user()->person->industryfocus()->pluck('search_filter_id')->toArray();
-        session()->put('user.verticals', $this->userVerticals) ;
+        $this->userVerticals = auth()->user()->person->industryfocus()->pluck('search_filter_id')->toArray();
+        session()->put('user.verticals', $this->userVerticals);
+
         return $this->userVerticals;
     }
 
     public function getUserRoles()
     {
-        $this->userRoles= auth()->user()->roles->pluck('id')->toArray();
-        session()->put('user.roles', $this->userRoles) ;
+        $this->userRoles = auth()->user()->roles->pluck('id')->toArray();
+        session()->put('user.roles', $this->userRoles);
+
         return $this->userRoles;
     }
-/*
-     * Function getWatchList
-     *
-     * Create array of locations of logged in users watchlist
-     *
-     * @param () none
-     * @return (array) mywatchlist
-     */
+
+    /*
+         * Function getWatchList
+         *
+         * Create array of locations of logged in users watchlist
+         *
+         * @param () none
+         * @return (array) mywatchlist
+         */
     public function getWatchList()
     {
-
         $watchlist = User::where('id', '=', auth()->user()->id)->with('watching')->first();
+
         return $watchlist->watching->pluck('id')->toArray();
         /*foreach($watchlist as $watching) {
             foreach($watching->watching as $watched) {
@@ -274,19 +276,19 @@ class Model extends \Eloquent
         $pivot = $throughModel->getTable();
 
         return $model
-           ->join($pivot, $pivot . '.' . $pivotKey, '=', $table . '.' . $secondKey)
-           ->select($table . '.*')
-           ->where($pivot . '.' . $firstKey, '=', $this->id);
+           ->join($pivot, $pivot.'.'.$pivotKey, '=', $table.'.'.$secondKey)
+           ->select($table.'.*')
+           ->where($pivot.'.'.$firstKey, '=', $this->id);
     }
 
     public function removeNullsFromSelect($data)
     {
-        
         foreach ($data as $key => $value) {
-            if ($value[0]==null) {
+            if ($value[0] == null) {
                 unset($data[$key]);
             }
         }
+
         return $data;
     }
 
@@ -301,16 +303,17 @@ class Model extends \Eloquent
         } elseif (! empty($mixed)) {
             return false;
         }
+
         return true;
     }
 
     public function createOldColors($num)
     {
-        $colors=[];
+        $colors = [];
         $int = 0;
         // value must be between [0, 510]
-        for ($int; $int<$num; $int++) {
-            $i = 1/$num + ($int*(1/$num));
+        for ($int; $int < $num; $int++) {
+            $i = 1 / $num + ($int * (1 / $num));
             $value = min(max(0, $i), 1) * 508;
             if ($value < 255) {
                 $greenValue = 255;
@@ -322,36 +325,35 @@ class Model extends \Eloquent
                 $greenValue = 256 - ($value * $value / 255);
                 $greenValue = round($greenValue);
             }
-            
-            $colors[$int]= "#" .  $this->decToHex($redValue). $this->decToHex($greenValue) . "00";
+
+            $colors[$int] = '#'.$this->decToHex($redValue).$this->decToHex($greenValue).'00';
         }
+
         return $colors;
     }
+
     private function decToHex($value)
     {
-        if (strlen(dechex($value))<2) {
-            return "0".dechex($value);
+        if (strlen(dechex($value)) < 2) {
+            return '0'.dechex($value);
         } else {
             return dechex($value);
         }
     }
 
-  public function createColors($len)
-  {
-    $frequency = .3;
-
-    
-
-    for ($i = 0; $i < $len; $i = ++$i)
+    public function createColors($len)
     {
-       $red = $this->decToHex((sin($frequency*$i + 0) * 127) + 128);
-       $grn = $this->decToHex((sin($frequency*$i + 2) * 127) + 128);
-       
-       $blu = $this->decToHex((sin($frequency*$i + 4) * 127) + 128);
-       
+        $frequency = .3;
 
-       $color[]="#".$red.$grn.$blu;
+        for ($i = 0; $i < $len; $i = ++$i) {
+            $red = $this->decToHex((sin($frequency * $i + 0) * 127) + 128);
+            $grn = $this->decToHex((sin($frequency * $i + 2) * 127) + 128);
+
+            $blu = $this->decToHex((sin($frequency * $i + 4) * 127) + 128);
+
+            $color[] = '#'.$red.$grn.$blu;
+        }
+
+        return $color;
     }
-    return $color;
-  }
 }

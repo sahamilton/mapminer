@@ -1,4 +1,5 @@
 <?php
+
 namespace App;
 
 trait HasRoles
@@ -12,6 +13,7 @@ trait HasRoles
     {
         return $this->belongsToMany(Role::class);
     }
+
     /**
      * Assign the given role to the user.
      *
@@ -24,15 +26,15 @@ trait HasRoles
             Role::whereName($role)->firstOrFail()
         );
     }
+
     /**
      * Determine if the user has the given role.
      *
      * @param  mixed $role
-     * @return boolean
+     * @return bool
      */
     public function hasRole($role)
     {
-        
         if (is_string($role)) {
             return $this->roles->contains('name', $role);
         } elseif (is_array($role)) {
@@ -41,15 +43,18 @@ trait HasRoles
                     return true;
                 }
             }
+
             return false;
         }
-        return !! $role->intersect($this->roles)->count();
+
+        return (bool) $role->intersect($this->roles)->count();
     }
+
     /**
      * Determine if the user may perform the given permission.
      *
      * @param  Permission $permission
-     * @return boolean
+     * @return bool
      */
     public function hasPermission(Permission $permission)
     {
@@ -60,7 +65,7 @@ trait HasRoles
      * Determine if the user may perform the given permission.
      *
      * @param  Permission $permission
-     * @return boolean
+     * @return bool
      */
     public function myRoles()
     {

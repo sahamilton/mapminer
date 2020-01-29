@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\User;
 use App\Http\Controllers\Controller;
+use App\User;
 use Illuminate\Support\Facades\Auth;
 use Socialite;
 
@@ -57,6 +57,7 @@ class LoginController extends Controller
     public function logout()
     {
         Auth::logout();
+
         return redirect('/');
     }
 }

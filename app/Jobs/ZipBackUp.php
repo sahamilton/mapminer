@@ -3,10 +3,10 @@
 namespace App\Jobs;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 
 class ZipBackUp implements ShouldQueue
 {
@@ -14,16 +14,16 @@ class ZipBackUp implements ShouldQueue
     public $file;
     public $db;
     public $path;
+
     /**
-     * [__construct description]
-     * 
+     * [__construct description].
+     *
      * @param [type] $file [description]
      */
     public function __construct($file)
     {
-        
         $this->file = $file;
-        $this->path =  storage_path('backups/');
+        $this->path = storage_path('backups/');
         $this->db = env('DB_DATABASE');
     }
 
@@ -34,11 +34,9 @@ class ZipBackUp implements ShouldQueue
      */
     public function handle()
     {
-       
         $zip = new \ZipArchive();
-        $zip->open($this->path. $this->file . '.zip', \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
-        $zip->addFile($this->path.$this->file.".sql", $this->file.".sql");
+        $zip->open($this->path.$this->file.'.zip', \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
+        $zip->addFile($this->path.$this->file.'.sql', $this->file.'.sql');
         $zip->close();
-
     }
 }

@@ -8,15 +8,14 @@ use Illuminate\Http\Request;
 
 class PersonSearchController extends Controller
 {
-
     protected $person;
     protected $track;
+
     public function __construct(Person $person, Track $track)
     {
         $this->person = $person;
         $this->track = $track;
     }
-
 
     /**
      * Display the specified resource.
@@ -27,18 +26,17 @@ class PersonSearchController extends Controller
     public function find(Person $person)
     {
         $branches = $person->branchesManaged();
-        
+
         $track = $this->track
             ->where('user_id', $person->user_id)
             ->whereNotNull('lastactivity')
             ->orderBy('created_at', 'desc')
             ->get();
 
-
         //note remove manages & manages.servicedby
         $person
             ->load(
-                
+
                 'directReports.userdetails.roles',
                 'reportsTo',
                 'userdetails.serviceline',
@@ -48,11 +46,11 @@ class PersonSearchController extends Controller
                 'userdetails',
                 'industryfocus'
             );
-        
+
         if ($branches) {
             $branchmarkers = $branches->toJson();
         }
-        if (count($person->directReports)>0) {
+        if (count($person->directReports) > 0) {
             $salesrepmarkers = $this->person->jsonify($person->directReports);
         }
 

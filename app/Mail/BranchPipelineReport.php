@@ -3,9 +3,9 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
 class BranchPipelineReport extends Mailable
 {
@@ -18,12 +18,10 @@ class BranchPipelineReport extends Mailable
      *
      * @return void
      */
-
-    public function __construct($file, $period=null)
+    public function __construct($file, $period = null)
     {
-        $this->file = '/app/'. $file;
+        $this->file = '/app/'.$file;
         $this->period = $period;
-        
     }
 
     /**
@@ -34,11 +32,10 @@ class BranchPipelineReport extends Mailable
     public function build()
     {
         return $this->from('salesoperations@tbmapminer.com', 'Sales Operations')
-            ->markdown('emails.branchpipelinereport')  
+            ->markdown('emails.branchpipelinereport')
             ->subject('Branch Pipeline Report')
             ->attach(
                 storage_path($this->file), ['mime' => 'application/xls']
             );
-            
     }
 }

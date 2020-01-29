@@ -2,21 +2,22 @@
 
 namespace App;
 
-use Carbon\Carbon;
 use App\Presenters\LocationPresenter;
-use McCool\LaravelAutoPresenter\HasPresenter;
+use Carbon\Carbon;
 use Geocoder\Laravel\Facades\Geocoder;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use McCool\LaravelAutoPresenter\HasPresenter;
 
 class Lead extends Model
 {
     use SoftDeletes, Geocode, Addressable;
-    public $dates = ['created_at','updated_at','deleted_at','datefrom','dateto','position'];
-    public $table= 'leads';
+    public $dates = ['created_at', 'updated_at', 'deleted_at', 'datefrom', 'dateto', 'position'];
+    public $table = 'leads';
     public $assignTo;
-    public $type='temp';
+    public $type = 'temp';
+
     /**
-     * [__construct description]
+     * [__construct description].
      */
     public function __construct()
     {
@@ -30,78 +31,81 @@ class Lead extends Model
             'state',
             'zip',
             'lat',
-            'lng',];
-            
-    public $fillable = ['description','address_id'];
-    public $statuses = [1=>'Offered',2=>'Claimed',3=>'Closed'];
-    
-    public $getStatusOptions =  [
+            'lng', ];
+
+    public $fillable = ['description', 'address_id'];
+    public $statuses = [1=>'Offered', 2=>'Claimed', 3=>'Closed'];
+
+    public $getStatusOptions = [
         1=>'Prospect data is completely inaccurate. No project or project completed.',
         2=>'Prospect data is incomplete and / or not useful.',
         3=>'Prospect data is accurate but there is no sales / service opportunity.',
         4=>'Prospect data is accurate and there is a possibility of sales / service.',
-        5=>'Prospect data is accurate and there is a definite opportunity for sales / service'
+        5=>'Prospect data is accurate and there is a definite opportunity for sales / service',
       ];
+
     /**
-     * [leadsource description]
-     * 
+     * [leadsource description].
+     *
      * @return [type] [description]
      */
     public function leadsource()
     {
         return $this->belongsTo(LeadSource::class, 'lead_source_id');
-
     }
+
     /**
-     * [setType description]
-     * 
+     * [setType description].
+     *
      * @param [type] $type [description]
      *
      * @return [type] [<description>]
      */
     public function setType($type)
     {
-
-        $this->type= $type;
-
+        $this->type = $type;
     }
+
     /**
-     * [salesteam description]
-     * 
+     * [salesteam description].
+     *
      * @return [type] [description]
      */
     public function salesteam()
     {
-
         return $this->belongsToMany(Person::class, 'lead_person_status', 'related_id', 'person_id')
             ->withPivot('created_at', 'updated_at', 'status_id', 'rating');
     }
+
     /**
-     * [branches description]
-     * 
+     * [branches description].
+     *
      * @return [type] [description]
      */
     public function branches()
     {
         return $this->belongsTo(Branch::class, 'branch_id', 'id');
     }
+
     /**
-     * [relatedNotes description]
-     * 
+     * [relatedNotes description].
+     *
      * @param [type] $type [description]
-     * 
+     *
      * @return [type]       [description]
      */
-    public function relatedNotes($type=null) 
+    public function relatedNotes($type = null)
     {
         if (! $type) {
-            $type="lead";
+            $type = 'lead';
         }
+
         return $this->hasMany(Note::class, 'related_id')->where('type', $type)->with('writtenBy');
     }
+
     /**
-     * [getPresenterClass description]
-     * 
+     * [getPresenterClass description].
+     *
      * @return [type] [description]
      */
     public function getPresenterClass()
@@ -111,11 +115,12 @@ class Lead extends Model
 
     public function contacts()
     {
-      return $this->hasMany(LeadContact::class, 'address_id', 'id');
+        return $this->hasMany(LeadContact::class, 'address_id', 'id');
     }
+
     /**
-     * [setDatefromAttribute description]
-     * 
+     * [setDatefromAttribute description].
+     *
      * @param [type] $value [description]
      *
      * @return [type] $value[<description>]
@@ -124,9 +129,10 @@ class Lead extends Model
     {
         $this->attributes['datefrom'] = Carbon::createFromFormat('m/d/Y', $value);
     }
+
     /**
-     * [setDatetoAttribute description]
-     * 
+     * [setDatetoAttribute description].
+     *
      * @param [type] $value [description]
      *
      * @return [type] $value[<description>]
@@ -135,87 +141,92 @@ class Lead extends Model
     {
         $this->attributes['dateto'] = Carbon::createFromFormat('m/d/Y', $value);
     }
+
     /**
-     * [vertical description]
-     * 
+     * [vertical description].
+     *
      * @return [type] [description]
      */
     public function vertical()
     {
         return $this->belongsToMany(SearchFilter::class, 'lead_searchfilter', 'lead_id', 'searchfilter_id');
-
     }
-  
+
     /**
-     * [createLeadFromGeo description]
-     * 
+     * [createLeadFromGeo description].
+     *
      * @param [type] $geoCode [description]
-     * 
+     *
      * @return [type]          [description]
      */
     public function createLeadFromGeo($geoCode)
     {
-          $coords = $this->getGeoCode($geoCode);
-          $this->lat = $coords['lat'];
-          $this->lng = $coords['lng'];
+        $coords = $this->getGeoCode($geoCode);
+        $this->lat = $coords['lat'];
+        $this->lng = $coords['lng'];
         if (isset($coords['address'])) {
             $this->address = $coords['address'];
         }
-          $this->city = $coords['city'];
-          $this->state = $coords['state'];
-          $this->zip = $coords['zip'];
-          return $this;
+        $this->city = $coords['city'];
+        $this->state = $coords['state'];
+        $this->zip = $coords['zip'];
+
+        return $this;
     }
+
     /**
-     * [rankLead description]
-     * 
+     * [rankLead description].
+     *
      * @param [type] $salesteam [description]
-     * 
+     *
      * @return [type]            [description]
      */
     public function rankLead($salesteam)
     {
-          $ranking = null;
-    
+        $ranking = null;
+
         foreach ($salesteam as $team) {
-            $ratings[$team->id]=[];
+            $ratings[$team->id] = [];
             foreach ($team->closedleads as $lead) {
                 if ($lead->pivot->rating) {
                     $ratings[$team->id][] = $lead->pivot->rating;
                 }
             }
-     
-            if (count($ratings[$team->id])>0) {
-                   $ranking[$team->id] = array_sum($ratings[$team->id]) / count($ratings[$team->id]);
+
+            if (count($ratings[$team->id]) > 0) {
+                $ranking[$team->id] = array_sum($ratings[$team->id]) / count($ratings[$team->id]);
             }
         }
+
         return $ranking;
     }
+
     /**
-     * [leadStatus description]
-     * 
+     * [leadStatus description].
+     *
      * @return [type] [description]
      */
     public function leadStatus()
     {
-
         return $this->belongsToMany(LeadStatus::class, 'lead_person_status', 'related_id', 'status_id')
             ->withPivot('created_at', 'updated_at', 'person_id', 'rating');
     }
+
     /**
-     * [ownedBy description]
-     * 
+     * [ownedBy description].
+     *
      * @return [type] [description]
      */
     public function ownedBy()
     {
         return $this->belongsToMany(Person::class, 'lead_person_status', 'related_id', 'person_id')
             ->withPivot('status_id', 'rating', 'type')
-            ->wherePivotIn('status_id', [2,3]);
+            ->wherePivotIn('status_id', [2, 3]);
     }
+
     /**
-     * [closedLead description]
-     * 
+     * [closedLead description].
+     *
      * @return [type] [description]
      */
     public function closedLead()
@@ -224,31 +235,31 @@ class Lead extends Model
             ->withPivot('status_id', 'rating', 'type')
             ->wherePivot('status_id', '=', 3);
     }
+
     /**
-     * [leadRank description]
-     * 
+     * [leadRank description].
+     *
      * @return [type] [description]
      */
     public function leadRank()
     {
         $teams = $this->salesteam()->get();
-    
-        $rank=null;
-        $count=null;
+
+        $rank = null;
+        $count = null;
         foreach ($teams as $team) {
             $rank = $rank + $team->pivot->sum('rating');
             $count = $count + $team->pivot->count('rating');
         }
-        if ($count >0) {
+        if ($count > 0) {
             return $rank / $count;
         }
-        return null;
     }
 
     public function leadOwner($id)
     {
-        $ownStatuses = [2,5,6];
-            $lead = $this->with('salesteam')
+        $ownStatuses = [2, 5, 6];
+        $lead = $this->with('salesteam')
                 ->whereHas(
                     'leadsource', function ($q) {
                         $q->where('datefrom', '<=', date('Y-m-d'))
@@ -266,52 +277,55 @@ class Lead extends Model
                 if (in_array($team->pivot->status_id, $ownStatuses)) {
                     return $team;
                 }
-                return null;
+
+                return;
             }
         }
     }
+
     /**
-     * [webLead description]
-     * 
+     * [webLead description].
+     *
      * @return [type] [description]
      */
     public function webLead()
     {
         return $this->hasOne(Weblead::class);
     }
+
     /**
-     * [tempLead description]
-     * 
+     * [tempLead description].
+     *
      * @return [type] [description]
      */
     public function tempLead()
     {
         return $this->hasOne(Templead::class);
     }
+
     /**
-     * [scopeExtraFields description]
-     * 
+     * [scopeExtraFields description].
+     *
      * @param [type] $query [description]
      * @param [type] $table [description]
-     * 
+     *
      * @return [type] $query [description]
      */
     public function scopeExtraFields($query, $table)
     {
-            
-             return $query->leftjoin($table .' as ExtraFields', 'leads.id', '=', 'ExtraFields.lead_id');
+        return $query->leftjoin($table.' as ExtraFields', 'leads.id', '=', 'ExtraFields.lead_id');
     }
+
     /**
-     * [ownsLead description]
-     * 
+     * [ownsLead description].
+     *
      * @param [type] $id [description]
-     * 
+     *
      * @return [type]     [description]
      */
     public function ownsLead($id)
     {
-
-        $ownStatuses = [2,5,6];
+        $ownStatuses = [2, 5, 6];
         if ($lead = $this->with('salesteam')->whereHas(
             'leadsource', function ($q) {
                 $q->where('datefrom', '<=', date('Y-m-d'))
@@ -329,36 +343,35 @@ class Lead extends Model
                 }
             }
         }
-        return null;
     }
 
     /**
-     * [myLeads description]
-     * 
+     * [myLeads description].
+     *
      * @return [type] [description]
      */
     public function myLeads()
     {
         return $this->belongsToMany(Person::class, 'lead_person_status', 'related_id', 'person_id')
             ->withPivot('status_id', 'rating', 'type')
-            ->wherePivotIn('status_id', [2,3]);
+            ->wherePivotIn('status_id', [2, 3]);
     }
+
     /**
-     * [myLeadStatus description]
-     * 
+     * [myLeadStatus description].
+     *
      * @return [type] [description]
      */
     public function myLeadStatus()
     {
-      
-        return $this->salesteam()->wherePivot('person_id', '=', auth()->user()->person->id)->first(['status_id','rating']);
+        return $this->salesteam()->wherePivot('person_id', '=', auth()->user()->person->id)->first(['status_id', 'rating']);
     }
-    
+
     /**
-     * [leadsByStatus description]
-     * 
+     * [leadsByStatus description].
+     *
      * @param [type] $id [description]
-     * 
+     *
      * @return [type]     [description]
      */
     public function leadsByStatus($id)
@@ -375,15 +388,13 @@ class Lead extends Model
         )
         ->get();
     }
-   
 
-    
     /**
-     * [rankMyLead description]
-     * 
+     * [rankMyLead description].
+     *
      * @param [type] $salesteam [description]
      * @param [type] $id        [description]
-     * 
+     *
      * @return [type]            [description]
      */
     public function rankMyLead($salesteam, $id = null)
@@ -397,11 +408,12 @@ class Lead extends Model
             }
         }
     }
+
     /**
-     * [history description]
-     * 
+     * [history description].
+     *
      * @param [type] $id [description]
-     * 
+     *
      * @return [type]     [description]
      */
     public function history($id = null)
@@ -416,8 +428,8 @@ class Lead extends Model
                     $history[$this->id]['status'][$team->pivot->status_id]['owner'] = null;
                     $history[$this->id]['status'][$team->pivot->status_id]['status'] = null;
                 }
-          
-                $history[$this->id]['status'][$team->pivot->status_id]['count'] +=1;
+
+                $history[$this->id]['status'][$team->pivot->status_id]['count'] += 1;
                 $history[$this->id]['status'][$team->pivot->status_id]['activitydate'] = $team->pivot->created_at;
                 $history[$this->id]['status'][$team->pivot->status_id]['owner'] = $team->pivot->person_id;
                 $history[$this->id]['status'][$team->pivot->status_id]['status'] = $team->pivot->status_id;
@@ -426,9 +438,10 @@ class Lead extends Model
 
         return $history;
     }
+
     /**
-     * [openleads description]
-     * 
+     * [openleads description].
+     *
      * @return [type] [description]
      */
     public function openleads()
@@ -436,9 +449,10 @@ class Lead extends Model
         return $this->belongsToMany(Person::class, 'lead_person_status', 'related_id', 'person_id')
             ->wherePivot('status_id', 2);
     }
+
     /**
-     * [closedleads description]
-     * 
+     * [closedleads description].
+     *
      * @return [type] [description]
      */
     public function closedleads()
@@ -447,11 +461,12 @@ class Lead extends Model
             ->withPivot('created_at', 'updated_at', 'status_id', 'rating')
             ->wherePivot('status_id', 3);
     }
+
     /**
-     * [findNearByPeople description]
-     * 
+     * [findNearByPeople description].
+     *
      * @param [type] $data [description]
-     * 
+     *
      * @return [type]       [description]
      */
     public function findNearByPeople($data)
@@ -459,16 +474,15 @@ class Lead extends Model
         $this->userServiceLines = session()->has('user.servicelines')
         && session()->get('user.servicelines') ? session()->get('user.servicelines') : $this->getUserServiceLines();
         if (is_array($data)) {
-              $location = new \stdClass;
-              $location->lat = $data['lat'];
-              $location->lng = $data['lng'];
+            $location = new \stdClass;
+            $location->lat = $data['lat'];
+            $location->lng = $data['lng'];
         } else {
             $location = $data;
-            $data['distance']=100;
-            $data['number']=5;
+            $data['distance'] = 100;
+            $data['number'] = 5;
         }
 
-        
         return Person::whereHas(
             'userdetails.serviceline', function ($q) {
                 $q->whereIn('servicelines.id', $this->userServiceLines);
@@ -484,38 +498,39 @@ class Lead extends Model
     }
 
     /**
-     * [findNearByBranches description]
-     * 
+     * [findNearByBranches description].
+     *
      * @param [type] $data [description]
-     * 
+     *
      * @return [type]       [description]
      */
     public function findNearByBranches($data)
     {
         if (is_array($data)) {
-                $location = new \stdClass;
-                $location->lat = $data['lat'];
-                $location->lng = $data['lng'];
+            $location = new \stdClass;
+            $location->lat = $data['lat'];
+            $location->lng = $data['lng'];
         } else {
             $location = $data;
-            $data['distance']=100;
-            $data['number']=5;
+            $data['distance'] = 100;
+            $data['number'] = 5;
         }
-          
+
         return Branch::whereHas(
             'servicelines', function ($q) {
                 $q->whereIn('servicelines.id', $this->userServiceLines);
             }
         )
         ->with('salesTeam')->nearby($location, $data['distance'], $data['number'])
-            
+
         ->get();
     }
+
     /**
-     * [unassignedLeads description]
-     * 
+     * [unassignedLeads description].
+     *
      * @param LeadSource $leadsource [description]
-     * 
+     *
      * @return [type]                 [description]
      */
     public function unassignedLeads(LeadSource $leadsource)
@@ -529,9 +544,10 @@ class Lead extends Model
                 }
             )->get();
     }
+
     /**
-     * [getMyLeads description]
-     * 
+     * [getMyLeads description].
+     *
      * @return [type] [description]
      */
     public function getMyLeads()

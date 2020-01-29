@@ -4,15 +4,16 @@ namespace App\Mail;
 
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
 class WeeklyActivityOpportunityReport extends Mailable
 {
     use Queueable, SerializesModels;
     public $file;
     public $period;
+
     /**
      * Create a new message instance.
      *
@@ -20,7 +21,7 @@ class WeeklyActivityOpportunityReport extends Mailable
      */
     public function __construct($file, array $period)
     {
-        $this->file = 'app'. $file;
+        $this->file = 'app'.$file;
         $this->period = $period;
     }
 
@@ -37,6 +38,5 @@ class WeeklyActivityOpportunityReport extends Mailable
             ->attach(
                 storage_path($this->file), ['mime' => 'application/xls']
             );
-
     }
 }

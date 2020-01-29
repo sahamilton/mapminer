@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\GitVersion;
+use Illuminate\Http\Request;
 
 class AdminAboutController extends Controller
 {
     protected $version;
+
     public function __construct(GitVersion $version)
     {
         $this->version = $version;
@@ -16,6 +17,7 @@ class AdminAboutController extends Controller
     public function getInfo()
     {
         $version = $this->version->get();
+
         return response()->view('site.about', compact('version'));
     }
 }

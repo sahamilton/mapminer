@@ -1,22 +1,23 @@
 <?php
+
 namespace App;
 
 class SalesOrg extends Model
 {
-
     use Geocode;
 
     public $topdog = 2980;
-    
+
     // Add your validation rules here
     public static $rules = [
-        'title' => 'required'
+        'title' => 'required',
     ];
     public $table = 'persons';
     // Don't forget to fill this array
-    protected $fillable = ['title','name'];
+    protected $fillable = ['title', 'name'];
+
     /**
-     * [salesOrgRole description]
+     * [salesOrgRole description].
      *
      * @return relationship [<description>]
      */
@@ -26,13 +27,12 @@ class SalesOrg extends Model
     }
 
     /**
-     * [getSalesOrg description]
-     * 
+     * [getSalesOrg description].
+     *
      * @return [type] [description]
      */
     public function getSalesOrg()
     {
-
         return Person::with('userdetails', 'userdetails.roles', 'userdetails.serviceline', 'industryfocus')
             ->whereHas(
                 'userdetails.roles', function ($q) {
@@ -42,14 +42,16 @@ class SalesOrg extends Model
         ->whereNotNull('lat')
         ->get();
     }
+
     // Identify people who have sales rep role
     // but are not in the sales organization
     // hierarchy
+
     /**
      * [salesRepsOutsideOrg Identify people who have sales rep role
      * but are not in the sales organization
-     * hierarchy
-     * 
+     * hierarchy.
+     *
      * @return array Id of salesreps outside sales org
      */
     public function salesRepsOutsideOrg()
@@ -60,21 +62,24 @@ class SalesOrg extends Model
         $salesRoles = Person::salesReps()->pluck('id')->toArray();
 
         $diff = [];
-        
+
         $diff['insiders'] = array_diff($salesRoles, $salesReps);
+
         return $diff;
     }
+
     /**
-     * [getSalesOrgJson description]
-     * 
+     * [getSalesOrgJson description].
+     *
      * @return [type] [description]
      */
     public function getSalesOrgJson()
     {
-        $roles = [6=>'svp',7=>'rvp', 3=>'market_manager'];
+        $roles = [6=>'svp', 7=>'rvp', 3=>'market_manager'];
+
         return $this->getCapoDiCapo()->descendants()->manages(array_keys($roles))->withPrimaryRole()->get();
         /*dd($topDog);
-           
+
         // change this to go off rolename
         foreach ($roles as $key=>$role) {
             $salesteam[$role] = $topDog->descendants()
@@ -84,15 +89,15 @@ class SalesOrg extends Model
         }
         return $salesteam;*/
     }
+
     /**
      * [getCapoDiCapo id the top of the sales org
      * refactor to programmatically get topdog.
-     * 
+     *
      * @return Person topDog
      */
     public function getCapoDiCapo()
     {
-
         return Person::findOrFail($this->topdog);
     }
 }

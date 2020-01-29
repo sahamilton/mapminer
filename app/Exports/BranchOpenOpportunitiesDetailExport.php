@@ -2,44 +2,43 @@
 
 namespace App\Exports;
 
+use App\Branch;
+use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
-use Carbon\Carbon;
-use App\Branch;
 
 class BranchOpenOpportunitiesDetailExport implements FromView
 {
     public $period;
     public $branches;
 
-    /** 
-     * [__construct description]
-     * 
-     * @param Array      $period   [description]
-     * @param Array|null $branches [description]
+    /**
+     * [__construct description].
+     *
+     * @param array      $period   [description]
+     * @param array|null $branches [description]
      */
-    public function __construct(Array $period, Array $branches = null)
+    public function __construct(array $period, array $branches = null)
     {
         $this->period = $period;
         $this->branches = $branches;
     }
 
     /**
-     * View
-     * 
+     * View.
+     *
      * @return \Illuminate\Support\Collection
      */
     public function view(): View
     {
-        
         $branches = Branch::branchOpenOpportunitiesDetail($this->period);
-  
+
         if ($this->branches) {
-            $branches =$branches->whereIn('id', array_keys($this->branches));
-        }   
+            $branches = $branches->whereIn('id', array_keys($this->branches));
+        }
         $branches = $branches->with('manager')->get();
         $period = $this->period;
-        return view('reports.branchopenopportunitiesdetail', compact('branches', 'period'));
 
+        return view('reports.branchopenopportunitiesdetail', compact('branches', 'period'));
     }
 }

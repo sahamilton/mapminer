@@ -1,9 +1,9 @@
 <?php
+
 namespace App;
 
 class State extends Model
 {
-
     // Add your validation rules here
     public static $rules = [
         // 'title' => 'required'
@@ -13,38 +13,43 @@ class State extends Model
     {
         return $this->all()->pluck('fullstate', 'statecode')->toarray();
     }
+
     // Don't forget to fill this array
     protected $fillable = [];
+
     /**
-     * [branches description]
-     * 
+     * [branches description].
+     *
      * @return [type] [description]
      */
     public function branches()
     {
         return $this->hasMany(Branch::class, 'statecode', 'state');
     }
+
     /**
-     * [locations description]
-     * 
+     * [locations description].
+     *
      * @return [type] [description]
      */
     public function locations()
     {
         return $this->hasMany(Location::class, 'statecode', 'state');
     }
+
     /**
-     * [addresses description]
-     * 
+     * [addresses description].
+     *
      * @return [type] [description]
      */
     public function addresses()
     {
         return $this->hasMany(Address::class, 'statecode', 'state');
     }
+
     /**
-     * [people description]
-     * 
+     * [people description].
+     *
      * @return [type] [description]
      */
     public function people()
@@ -56,5 +61,4 @@ class State extends Model
     {
         return $this->belongsToMany(Salesactivity::class);
     }
-
 }

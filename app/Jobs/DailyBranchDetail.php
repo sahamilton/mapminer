@@ -2,20 +2,20 @@
 
 namespace App\Jobs;
 
-use \Carbon\Carbon;
-use App\Person;
-use App\User;
 use App\Branch;
-use App\Report;
-use Mail;
-use Excel;
-use App\Mail\DailyBranchReport;
 use App\Exports\DailyBranchExport;
+use App\Mail\DailyBranchReport;
+use App\Person;
+use App\Report;
+use App\User;
+use Carbon\Carbon;
+use Excel;
 use Illuminate\Bus\Queueable;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
+use Mail;
 
 class DailyBranchDetail implements ShouldQueue
 {
@@ -23,7 +23,6 @@ class DailyBranchDetail implements ShouldQueue
     public $period;
     public $user;
     public $person;
-    
 
     /**
      * Create a new job instance.
@@ -32,13 +31,10 @@ class DailyBranchDetail implements ShouldQueue
      */
     public function __construct(User $recipient)
     {
-       
-        
         $this->period['from'] = Carbon::yesterday()->startOfDay();
         $this->period['to'] = Carbon::yesterday()->endOfDay();
         $this->user = $recipient;
         $this->person = $recipient->person;
-
     }
 
     /**
@@ -50,16 +46,15 @@ class DailyBranchDetail implements ShouldQueue
     {
 
             // send this to a queued job
-                   
-            $file = "/public/reports/".$this->person->firstname."_".$this->person->lastname."_dailyreport_". $this->period['from']->format('Y-m-d'). ".xlsx";
-            
-            Excel::store(
+
+        $file = '/public/reports/'.$this->person->firstname.'_'.$this->person->lastname.'_dailyreport_'.$this->period['from']->format('Y-m-d').'.xlsx';
+
+        Excel::store(
                 new DailyBranchExport($this->period, [$this->person->id]), $file
             );
-            $distribution = [$this->person->distribution()];
-            Mail::to($distribution)
+        $distribution = [$this->person->distribution()];
+        Mail::to($distribution)
                 ->queue(new DailyBranchReport($file, $this->period, $this->person));
-
     }
 
     /**
@@ -70,6 +65,5 @@ class DailyBranchDetail implements ShouldQueue
      */
     public function failed(Exception $exception)
     {
-       
     }
 }

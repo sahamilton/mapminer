@@ -1,6 +1,7 @@
 <?php
 
 namespace App;
+
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
@@ -8,13 +9,14 @@ class Campaign extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
 {
     use GeoCode;
     public $fillable = ['title', 'description', 'datefrom', 'dateto', 'created_by', 'manager_id', 'status'];
-    
-    public $dates =['datefrom', 'dateto'];
+
+    public $dates = ['datefrom', 'dateto'];
     // Methods for Calendar
-    // 
+    //
+
     /**
-     * [getId description]
-     * 
+     * [getId description].
+     *
      * @return [type] [description]
      */
     public function getId()
@@ -23,7 +25,7 @@ class Campaign extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
     }
 
     /**
-     * Get the event's title
+     * Get the event's title.
      *
      * @return string
      */
@@ -43,7 +45,7 @@ class Campaign extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
     }
 
     /**
-     * Get the start time
+     * Get the start time.
      *
      * @return DateTime
      */
@@ -51,15 +53,15 @@ class Campaign extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
     {
         return $this->datefrom;
     }
+
     /**
-     * [getEventOptions description]
-     * 
+     * [getEventOptions description].
+     *
      * @return [type] [description]
      */
     public function getEventOptions()
     {
-        
-        if ($this->status=='launched') {
+        if ($this->status == 'launched') {
             return [
                     'url' => route('campaigns.show', $this->id),
                     'color'=>'#e48535',
@@ -70,8 +72,9 @@ class Campaign extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
             ];
         }
     }
+
     /**
-     * Get the end time
+     * Get the end time.
      *
      * @return DateTime
      */
@@ -79,32 +82,34 @@ class Campaign extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
     {
         return $this->dateto;
     }
+
     /**
-     * [team description]
-     * 
+     * [team description].
+     *
      * @return [type] [description]
      */
     public function team()
     {
         return $this->belongsToMany(Person::class);
     }
+
     /**
-     * [setTeam description]
+     * [setTeam description].
      */
     public function setTeam()
     {
-       
-        
     }
+
     /**
-     * [getCompanyLocationsOfCampaign description]
-     * 
+     * [getCompanyLocationsOfCampaign description].
+     *
      * @return [type] [description]
      */
     public function getCompanyLocationsOfCampaign()
     {
         $box = $this->getBoundingBox($this->branches);
         $branches = $this->branches()->pluck('id')->toArray();
+
         return Company::whereIn('id', $this->companies->pluck('id')->toArray())
             ->with(
                 [
@@ -113,7 +118,6 @@ class Campaign extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
                         ->where('lat', '>', $box['minLat'])
                         ->where('lng', '<', $box['maxLng'])
                         ->where('lng', '>', $box['minLng']);
-                    
                 },
                 'assigned'=>function ($q) use ($branches) {
                     $q->whereHas(
@@ -121,22 +125,22 @@ class Campaign extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
                             $q1->whereIn('branch_id', $branches);
                         }
                     )->with('assignedToBranch');
-                }
+                },
                 ]
-            ) 
+            )
             ->get();
-
-
     }
+
     /**
-     * [getAssignedLocationsOfCampaign description]
-     * 
+     * [getAssignedLocationsOfCampaign description].
+     *
      * @return [type] [description]
      */
     public function getAssignedLocationsOfCampaign()
     {
         $branches = $this->branches()->pluck('id')->toArray();
         $company_ids = $this->companies->pluck('id')->toArray();
+
         return Company::whereIn('id', $company_ids)
             ->with(
                 [
@@ -146,22 +150,23 @@ class Campaign extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
                             $q1->whereIn('branch_id', $branches);
                         }
                     )->with('assignedToBranch');
-                }
+                },
                 ]
             )->get();
     }
+
     public function addresses()
     {
         return $this->belongsToMany(Address::class);
     }
+
     /**
-     * [getLocations description]
-     * 
+     * [getLocations description].
+     *
      * @return [type] [description]
      */
     public function getLocations()
     {
-        
         return Address::wherehas(
             'assignedToBranch', function ($q) {
                 $q->whereIn('branches.id', $this->branches()->pluck('id')->toArray());
@@ -169,13 +174,13 @@ class Campaign extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
         )
         ->whereIn('company_id', $this->companies()->pluck('id')->toArray())
         ->pluck('id')->toArray();
-       
     }
+
     /**
-     * [scopeActive description]
-     * 
+     * [scopeActive description].
+     *
      * @param [type] $query [description]
-     * 
+     *
      * @return [type]        [description]
      */
     public function scopeActive($query)
@@ -184,12 +189,13 @@ class Campaign extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
             ->where('datefrom', '<=', now()->startOfDay())
             ->where('dateto', '>=', now()->endOfDay());
     }
+
     /**
-     * [getSalesTeamFromManager description]
-     * 
+     * [getSalesTeamFromManager description].
+     *
      * @param [type] $manager_id  [description]
      * @param [type] $serviceline [description]
-     * 
+     *
      * @return [type]              [description]
      */
     public function getSalesTeamFromManager($manager_id, $serviceline)
@@ -199,7 +205,7 @@ class Campaign extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
             ->limitDepth(1)
             ->whereHas(
                 'userdetails.roles', function ($q) {
-                        $q->whereIn('roles.id', ['9', '3']);
+                    $q->whereIn('roles.id', ['9', '3']);
                 }
             )
             ->with(
@@ -209,52 +215,57 @@ class Campaign extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
                             $q1->whereIn('id', $serviceline);
                         }
                     );
-                }
+                },
                 ]
             )
             ->orderBy('lastname')
             ->orderBY('firstname')
             ->get();
     }
+
     /**
-     * [getCampaignServiceLines description]
-     * 
+     * [getCampaignServiceLines description].
+     *
      * @return [type] [description]
      */
     public function author()
     {
         return $this->belongsTo(User::class, 'created_by', 'id');
     }
+
     /**
-     * [companies description]
-     * 
+     * [companies description].
+     *
      * @return [type] [description]
      */
     public function companies()
     {
         return $this->belongsToMany(Company::class);
     }
+
     /**
-     * [manager description]
-     * 
+     * [manager description].
+     *
      * @return [type] [description]
      */
     public function manager()
     {
         return $this->belongsTo(Person::class, 'manager_id', 'id');
     }
+
     /**
-     * [branches description]
-     * 
+     * [branches description].
+     *
      * @return [type] [description]
      */
     public function branches()
     {
         return $this->belongsToMany(Branch::class);
     }
+
     /**
-     * [vertical description]
-     * 
+     * [vertical description].
+     *
      * @return [type] [description]
      */
     public function vertical()
@@ -266,15 +277,16 @@ class Campaign extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
     {
         return $this->belongsToMany(Serviceline::class, 'campaign_serviceline', 'campaign_id', 'serviceline_id');
     }
+
     /**
-     * [scopeCurrent description]
-     * 
+     * [scopeCurrent description].
+     *
      * @param [type]     $query    [description]
-     * @param Array|null $branches [description]
-     * 
+     * @param array|null $branches [description]
+     *
      * @return [type]               [description]
      */
-    public function scopeCurrent($query, Array $branches =null)
+    public function scopeCurrent($query, array $branches = null)
     {
         $query = $query
             ->where('datefrom', '<=', Carbon::now()->startOfDay())
@@ -286,12 +298,13 @@ class Campaign extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
                 }
             );
         }
+
         return $query;
     }
-    
+
     /**
-     * [documents description]
-     * 
+     * [documents description].
+     *
      * @return [type] [description]
      */
     public function documents()
@@ -299,49 +312,44 @@ class Campaign extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
         return $this->hasMany(CampaignDocuments::class);
     }
 
-    
-    
     /**
-     * [getCampaignServiceLines description]
-     * 
+     * [getCampaignServiceLines description].
+     *
      * @return [type] [description]
      */
     public function getServicelines()
     {
         return $this->servicelines->pluck('id')->toArray();
     }
+
     /**
-     * [scopeCampaignStats description]
-     * 
+     * [scopeCampaignStats description].
+     *
      * @return [type] [description]
      */
-    public function scopeCampaignStats($query)    
+    public function scopeCampaignStats($query)
     {
         return $query->with(
             [
-                'companies.locations'=>function ($q) { 
+                'companies.locations'=>function ($q) {
                     $q->with(
                         [
                             'assignedToBranch'=>function ($q1) {
                                 $q1->wherePivot('created_at', '=>', $this->datefrom);
-                            }
+                            },
                         ]
                     );
                     $q->with(
                         [
                             'opportunities'=>function ($q1) {
-
                                 $q1->where('opportunities.created_at', '=>', $this->datefrom)
                                     ->where('closed', 1);
-                            }
+                            },
 
                         ]
                     );
-                }
+                },
             ]
         );
-
-        
     }
-
 }

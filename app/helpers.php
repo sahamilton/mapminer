@@ -1,10 +1,10 @@
 <?php
 
 /**
- * [parseCamelCase description]
- * 
+ * [parseCamelCase description].
+ *
  * @param [type] $str [description]
- * 
+ *
  * @return [type]      [description]
  */
 function parseCamelCase($str)

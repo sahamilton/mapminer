@@ -2,26 +2,25 @@
 
 namespace App\Console;
 
-use Illuminate\Console\Scheduling\Schedule;
-use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
-use App\Jobs\WeeklyActivityReminder;
-use App\Jobs\Top25WeeklyReport;
-use App\Jobs\ActivityOpportunity;
+use App\Campaign;
+use App\Company;
 use App\Jobs\AccountActivities;
-use App\Jobs\BranchOpportunities;
+use App\Jobs\ActivityOpportunity;
 use App\Jobs\BranchActivitiesDetail;
+use App\Jobs\BranchCampaign;
+use App\Jobs\BranchLogins;
+use App\Jobs\BranchOpportunities;
 use App\Jobs\BranchStats;
 use App\Jobs\DailyBranch;
-use App\Jobs\BranchCampaign;
-use App\Campaign;
 use App\Jobs\RebuildPeople;
-use App\Jobs\BranchLogins;
-use App\Company;
+use App\Jobs\Top25WeeklyReport;
+use App\Jobs\WeeklyActivityReminder;
 use Carbon\Carbon;
+use Illuminate\Console\Scheduling\Schedule;
+use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
 class Kernel extends ConsoleKernel
 {
-    
     /**
      * The Artisan commands provided by your application.
      *
@@ -36,7 +35,7 @@ class Kernel extends ConsoleKernel
      * Define the application's command schedule.
      *
      * @param \Illuminate\Console\Scheduling\Schedule $schedule [description]
-     * 
+     *
      * @return void
      */
     protected function schedule(Schedule $schedule)
@@ -48,13 +47,13 @@ class Kernel extends ConsoleKernel
                 ->weekly()
                 ->sundays()
                 ->at('20:45');
-           
+
             $schedule->job(new RebuildPeople())
                 ->dailyAt('21:12');
 
             $schedule->command('db:backup')
                 ->dailyAt('22:58');
-            
+
             // Stephanie Harp Report
             $period['from'] = Carbon::now()->subWeek()->startOfWeek();
             $period['to'] = Carbon::now()->subWeek()->endOfWeek();
@@ -63,19 +62,17 @@ class Kernel extends ConsoleKernel
                 ->mondays()
                 ->at('23:15');
 
-            
             $schedule->job(new BranchCampaign())
                 ->weekly()
                 ->sundays()
                 ->at('18:42');
-            
-            
+
             // RVP Daily Branch Report
-            // 
+            //
             $schedule->job(new DailyBranch)
                 ->daily()->at('02:12');
-            // 
-            
+            //
+
             // Josh Hammer report
             $period['from'] = \Carbon\Carbon::now()->subWeek()->startOfWeek();
             $period['to'] = \Carbon\Carbon::now()->subWeek()->endOfWeek();
@@ -83,7 +80,7 @@ class Kernel extends ConsoleKernel
                 ->weekly()
                 ->wednesdays()
                 ->at('04:59');
-            
+
             // National Account Jobs
             /* $companies = Company::whereIn('id', [532])->get();
             $period['from'] = Carbon::now()->subWeek()->startOfWeek();
@@ -94,22 +91,21 @@ class Kernel extends ConsoleKernel
                 ->at('18:30');
             */
             // Branch Login Report
-            $period['from'] = Carbon::now()->subMonth(2)->startOfMonth();  
+            $period['from'] = Carbon::now()->subMonth(2)->startOfMonth();
             $period['to'] = Carbon::now()->subWeek()->endOfWeek();
             $schedule->job(new BranchLogins($period))
                 ->weekly()
                 ->mondays()
                 ->at('03:59');
-                
+
             // Branch Activities Report
-            $period['from'] = Carbon::now()->subMonth(2)->startOfMonth();  
+            $period['from'] = Carbon::now()->subMonth(2)->startOfMonth();
             $period['to'] = Carbon::now()->subWeek()->endOfWeek();
             $schedule->job(new BranchActivitiesDetail($period))
                 ->weekly()
                 ->tuesdays()
                 ->at('01:59');
-
-        }   
+        }
     }
 
     /**

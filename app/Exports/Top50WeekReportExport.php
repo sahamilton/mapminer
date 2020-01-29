@@ -3,27 +3,29 @@
 namespace App\Exports;
 
 use App\Opportunity;
+use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
-use Carbon\Carbon;
-class Top25WeekReportExport implements FromView
+
+class Top50WeekReportExport implements FromView
 {
     public $period;
     public $branch;
 
     /**
-     * [__construct description]
-     * 
+     * [__construct description].
+     *
      * @param Carbon $period [description]
      */
-    public function __construct(Array $period, Array $branch=null)
+    public function __construct(array $period, array $branch = null)
     {
-           $this->period = $period;
-           $this->branch = $branch;
+        $this->period = $period;
+        $this->branch = $branch;
     }
+
     /**
-     * [view description]
-     * 
+     * [view description].
+     *
      * @return [type] [description]
      */
     public function view(): View
@@ -39,7 +41,7 @@ class Top25WeekReportExport implements FromView
         }
 
         $opportunities->groupBy('branch_id')->get();
- 
+
         return view('reports.weeklyreport', compact('opportunities', 'period'));
     }
 }

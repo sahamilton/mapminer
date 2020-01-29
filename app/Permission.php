@@ -6,15 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Permission extends Model
 {
-    public $fillable = ['name','display_name'];
+    public $fillable = ['name', 'display_name'];
+
     /**
-     * [roles description]
-     * 
+     * [roles description].
+     *
      * @return [type] [description]
      */
     public function roles()
     {
-        
-            return $this->belongsToMany(Role::class);
+        return $this->belongsToMany(Role::class);
     }
 }

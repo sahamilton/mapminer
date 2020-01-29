@@ -2,11 +2,11 @@
 
 namespace App\Mail;
 
+use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Carbon\Carbon;
 
 class BranchStatsReport extends Mailable
 {
@@ -14,7 +14,7 @@ class BranchStatsReport extends Mailable
 
     public $file;
     public $period;
-    
+
     /**
      * Create a new message instance.
      *
@@ -22,9 +22,8 @@ class BranchStatsReport extends Mailable
      */
     public function __construct($file, $period)
     {
-        $this->file = '/app/'. $file;
+        $this->file = '/app/'.$file;
         $this->period = $period;
-        
     }
 
     /**
@@ -35,11 +34,10 @@ class BranchStatsReport extends Mailable
     public function build()
     {
         return $this->from('salesoperations@tbmapminer.com', 'Sales Operations')
-            ->markdown('emails.branchstatsreport')  
+            ->markdown('emails.branchstatsreport')
             ->subject('Branch Statistics Weekly Report')
             ->attach(
                 storage_path($this->file), ['mime' => 'application/xls']
             );
-            
     }
 }

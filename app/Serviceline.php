@@ -1,27 +1,27 @@
 <?php
+
 namespace App;
 
 class Serviceline extends Model
 {
-
     // Add your validation rules here
     public static $rules = [
-        'ServiceLine' => 'required'
+        'ServiceLine' => 'required',
     ];
 
     // Don't forget to fill this array
-    protected $fillable = ['ServiceLine','color'];
-
+    protected $fillable = ['ServiceLine', 'color'];
 
     public function providedBy()
     {
-            return $this->belongsToMany(Branch::class);
+        return $this->belongsToMany(Branch::class);
     }
+
     public function companiesServed()
     {
-            return $this->belongsToMany(Company::class);
+        return $this->belongsToMany(Company::class);
     }
-    
+
     public function usersServing()
     {
         return $this->belongsToMany(User::class);

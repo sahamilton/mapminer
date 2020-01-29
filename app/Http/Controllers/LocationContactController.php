@@ -2,19 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use \App\Contact;
 use App\AddressBranch;
 use App\Branch;
-
-use App\Person;
+use App\Contact;
+use App\Locations;
 use App\Opportunity;
-use \App\Locations;
+use App\Person;
+use Illuminate\Http\Request;
 use JeroenDesloovere\VCard\VCard;
 
 class LocationContactController extends Controller
 {
-    
     public $contact;
     public $person;
     public $branch;
@@ -25,6 +23,7 @@ class LocationContactController extends Controller
         $this->person = $person;
         $this->branch = $branch;
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -34,41 +33,42 @@ class LocationContactController extends Controller
     {
         $myBranches = $this->person->myBranches();
         $data = $this->getBranchContacts(array_keys($myBranches));
-        $title = "Branch " . reset($myBranches) . " Contacts";
-         return response()->view('contacts.index', compact('data', 'title','myBranches'));
+        $title = 'Branch '.reset($myBranches).' Contacts';
+
+        return response()->view('contacts.index', compact('data', 'title', 'myBranches'));
     }
 
     public function branchContacts(Branch $branch, Request $request)
     {
-     
-
         if (request()->has('branch')) {
             $data = $this->getBranchContacts([request('branch')]);
         } else {
             $data = $this->getBranchContact([$branch->id]);
         }
 
-       
         $myBranches = $this->person->myBranches();
 
-        $title = "Branch " . $data['branches']->first()->branchname . " Contacts";
-        return response()->view('contacts.index', compact('data', 'title', 'myBranches'));
+        $title = 'Branch '.$data['branches']->first()->branchname.' Contacts';
 
+        return response()->view('contacts.index', compact('data', 'title', 'myBranches'));
     }
+
     private function getBranchContacts($branches)
     {
         $opportunity = Opportunity::whereIn('branch_id', $branches)->pluck('address_id')->toArray();
-            
+
         $customer = AddressBranch::whereIn('branch_id', $branches)->pluck('address_id')->toArray();
-        $data['branches'] =$this->_getBranches($branches);
-        $data['contacts']=$this->contact->whereIn('address_id', array_merge($opportunity, $customer))->with('location')->get();
-         return  $data;
+        $data['branches'] = $this->_getBranches($branches);
+        $data['contacts'] = $this->contact->whereIn('address_id', array_merge($opportunity, $customer))->with('location')->get();
+
+        return  $data;
     }
+
     /**
-     * [_getBranches description]
-     * 
+     * [_getBranches description].
+     *
      * @param [type] $branches [description]
-     * 
+     *
      * @return [type]           [description]
      */
     private function _getBranches($branches)
@@ -78,7 +78,6 @@ class LocationContactController extends Controller
             ->get();
     }
 
-     
     /**
      * Show the form for creating a new resource.
      *
@@ -92,26 +91,25 @@ class LocationContactController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request 
-     * 
+     * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-
         $data = request()->all();
 
-        $data['user_id']= auth()->user()->id;
+        $data['user_id'] = auth()->user()->id;
         $contact = $this->contact->create($data);
-        
+
         return redirect()->route('address.show', request('address_id'));
     }
 
     /**
-     * [show description]
-     * 
+     * [show description].
+     *
      * @param [type] $contact [description]
-     * 
+     *
      * @return [type]          [description]
      */
     public function show($contact)
@@ -120,10 +118,10 @@ class LocationContactController extends Controller
     }
 
     /**
-     * [edit description]
-     * 
+     * [edit description].
+     *
      * @param [type] $contact [description]
-     * 
+     *
      * @return [type]          [description]
      */
     public function edit($contact)
@@ -132,54 +130,54 @@ class LocationContactController extends Controller
     }
 
     /**
-     * [update description]
-     * 
+     * [update description].
+     *
      * @param Request $request [description]
      * @param [type]  $contact [description]
-     * 
+     *
      * @return [type]           [description]
      */
     public function update(Request $request, $contact)
     {
-        
         $contact->update(request()->all());
 
         return redirect()->route('address.show', $contact->address_id);
     }
 
     /**
-     * [destroy description]
-     * 
+     * [destroy description].
+     *
      * @param [type] $contact [description]
-     * 
+     *
      * @return [type]          [description]
      */
     public function destroy($contact)
     {
-        
         $contact->delete();
+
         return redirect()->back();
     }
+
     /**
-     * [vcard description]
-     * 
+     * [vcard description].
+     *
      * @param [type] $id [description]
-     * 
+     *
      * @return [type]     [description]
      */
     public function vcard($id)
     {
         \Debugbar::disable();
-            $vcard = new VCard;
-            $contact = $this->contact
+        $vcard = new VCard;
+        $contact = $this->contact
                 ->with('location')
                 ->findOrFail($id);
-            $vcard->addName($contact->fullName(), null, null, null, null);
-            // add work data
-            $vcard->addCompany($contact->location->businessname);
-            $vcard->addPhoneNumber($contact->phone, 'PREF;WORK');
-            $vcard->addAddress(null, $contact->location->address2, $contact->location->street, $contact->location->city, null, $contact->location->zip, null);
-            $vcard->addURL(route('locations.show', $contact->location_id));
-            $vcard->download();
+        $vcard->addName($contact->fullName(), null, null, null, null);
+        // add work data
+        $vcard->addCompany($contact->location->businessname);
+        $vcard->addPhoneNumber($contact->phone, 'PREF;WORK');
+        $vcard->addAddress(null, $contact->location->address2, $contact->location->street, $contact->location->city, null, $contact->location->zip, null);
+        $vcard->addURL(route('locations.show', $contact->location_id));
+        $vcard->download();
     }
 }

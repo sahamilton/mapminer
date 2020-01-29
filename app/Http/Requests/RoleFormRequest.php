@@ -13,7 +13,6 @@ class RoleFormRequest extends FormRequest
      */
     public function authorize()
     {
-   
         return auth()->user()->hasRole('admin');
     }
 
@@ -24,9 +23,7 @@ class RoleFormRequest extends FormRequest
      */
     public function rules()
     {
-        
-
-        return [ 'name' => 'required',
-        'name'  => 'unique:roles,name,'. $this->segment(3)];
+        return ['name' => 'required',
+        'name'  => 'unique:roles,name,'.$this->segment(3), ];
     }
 }

@@ -4,9 +4,9 @@ namespace App\Mail;
 
 use App\Company;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
 class AccountOpportunitiesReport extends Mailable
 {
@@ -15,14 +15,15 @@ class AccountOpportunitiesReport extends Mailable
     public $file;
     public $period;
     public $company;
+
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($file, array $period,Company $company)
+    public function __construct($file, array $period, Company $company)
     {
-        $this->file = 'app'. $file;
+        $this->file = 'app'.$file;
         $this->period = $period;
         $this->company = $company;
     }
@@ -34,10 +35,9 @@ class AccountOpportunitiesReport extends Mailable
      */
     public function build()
     {
-        
         return $this->from('salesoperations@tbmapminer.com', 'Sales Operations')
             ->markdown('emails/accountopportunities')
-            ->subject($this->company->companyname .' Opportunities Report')
+            ->subject($this->company->companyname.' Opportunities Report')
             ->attach(storage_path($this->file), ['mime' => 'application/xls']);
     }
 }

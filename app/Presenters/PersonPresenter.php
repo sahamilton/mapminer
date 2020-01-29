@@ -9,6 +9,6 @@ class PersonPresenter extends BasePresenter
 {
     public function fullName()
     {
-        return $this->wrappedObject->firstname . ' '. $this->wrappedObject->lastname;
+        return $this->wrappedObject->firstname.' '.$this->wrappedObject->lastname;
     }
 }

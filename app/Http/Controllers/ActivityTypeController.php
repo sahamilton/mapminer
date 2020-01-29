@@ -2,21 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Person;
 use App\ActivityType;
+use App\Person;
 use Illuminate\Http\Request;
 
 class ActivityTypeController extends Controller
 {
-    
     public $activitytype;
 
-
-    public function __construct(ActivityType $activitytype,Person $person)
+    public function __construct(ActivityType $activitytype, Person $person)
     {
         $this->activitytype = $activitytype;
         $this->person = $person;
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -25,7 +24,8 @@ class ActivityTypeController extends Controller
     public function index()
     {
         $activitytypes = $this->activitytype->withCount('activities')->get();
-        return response()->view('activitytypes.index',compact('activitytypes'));
+
+        return response()->view('activitytypes.index', compact('activitytypes'));
     }
 
     /**
@@ -35,7 +35,7 @@ class ActivityTypeController extends Controller
      */
     public function create()
     {
-         return response()->view('activitytypes.create');
+        return response()->view('activitytypes.create');
     }
 
     /**
@@ -47,7 +47,8 @@ class ActivityTypeController extends Controller
     public function store(Request $request)
     {
         $type = $this->activitytype->create(request()->except('_token'));
-        return redirect()->route('activitytype.index')->withSuccess("New Activity Type Created");
+
+        return redirect()->route('activitytype.index')->withSuccess('New Activity Type Created');
     }
 
     /**
@@ -58,16 +59,14 @@ class ActivityTypeController extends Controller
      */
     public function show(ActivityType $activityType)
     {
-        $activityType= $this->activitytype->with('activities')
+        $activityType = $this->activitytype->with('activities')
                 ->findOrFail($activityType->id);
-       $users = $activityType->activities->pluck('id','user_id')->toArray();
-       $people = $this->person->whereIn('user_id',array_keys($users))->with(['activities'=>function ($q) use ($activityType) {
-            $q->where('activitytype_id','=',$activityType->id);
-       }])->with('userdetails','userdetails.roles')->get();
+        $users = $activityType->activities->pluck('id', 'user_id')->toArray();
+        $people = $this->person->whereIn('user_id', array_keys($users))->with(['activities'=>function ($q) use ($activityType) {
+            $q->where('activitytype_id', '=', $activityType->id);
+        }])->with('userdetails', 'userdetails.roles')->get();
 
-
-     
-        return response()->view('activitytypes.show',compact('activityType','people'));
+        return response()->view('activitytypes.show', compact('activityType', 'people'));
     }
 
     /**
@@ -78,7 +77,7 @@ class ActivityTypeController extends Controller
      */
     public function edit(ActivityType $activitytype)
     {
-        return response()->view('activitytypes.edit',compact('activitytype'));
+        return response()->view('activitytypes.edit', compact('activitytype'));
     }
 
     /**
@@ -91,7 +90,8 @@ class ActivityTypeController extends Controller
     public function update(Request $request, ActivityType $activityType)
     {
         $activityType->update(request()->except('_token'));
-        return redirect()->route('activitytype.index')->withSuccess("Activity Type Updated");
+
+        return redirect()->route('activitytype.index')->withSuccess('Activity Type Updated');
     }
 
     /**
@@ -102,8 +102,8 @@ class ActivityTypeController extends Controller
      */
     public function destroy(ActivityType $activityType)
     {
-       $activityType->delete();
-       return redirect()->route('activitytype.index')->withWarning("Activity Type Deleted");
+        $activityType->delete();
 
+        return redirect()->route('activitytype.index')->withWarning('Activity Type Deleted');
     }
 }

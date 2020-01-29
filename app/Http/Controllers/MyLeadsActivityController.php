@@ -3,14 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\MyLead;
-use Carbon\Carbon;
 use App\MyLeadActivity;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class MyLeadsActivityController extends Controller
 {
     public $mylead;
     public $activity;
+
     public function __construct(MyLead $mylead, MyLeadActivity $activity)
     {
         $this->activity = $activity;
@@ -45,10 +46,10 @@ class MyLeadsActivityController extends Controller
      */
     public function store(Request $request)
     {
-        
         $data = $this->cleanseData($request);
-       
+
         $this->activity->create($data);
+
         return redirect()->route('myleads.show', request('lead_id'))->withMessage('Activity recorded');
     }
 
@@ -104,15 +105,15 @@ class MyLeadsActivityController extends Controller
 
     private function cleanseData(Request $request)
     {
-        $data =['user_id' => auth()->user()->id,
+        $data = ['user_id' => auth()->user()->id,
         'related_id'=> request('lead_id'),
         'type'=>'mylead',
         'activity'=>request('activity'),
-        'activity_date'=>Carbon::parse(request('activitydate'))];
+        'activity_date'=>Carbon::parse(request('activitydate')), ];
         if (request()->has('followupdate')) {
             $data['followup_date'] = Carbon::parse(request('followupdate'));
         }
-       
+
         return array_merge(request()->all(), $data);
     }
 }

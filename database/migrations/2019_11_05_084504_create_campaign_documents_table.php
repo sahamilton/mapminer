@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateCampaignDocumentsTable extends Migration
 {
@@ -20,7 +20,7 @@ class CreateCampaignDocumentsTable extends Migration
                 $table->string('link');
                 $table->string('title');
                 $table->text('description');
-                $table->enum('type', ['pdf','excel','powerpoint', 'url']);
+                $table->enum('type', ['pdf', 'excel', 'powerpoint', 'url']);
                 $table->timestamps();
             }
         );

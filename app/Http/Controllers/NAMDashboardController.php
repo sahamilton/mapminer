@@ -1,30 +1,32 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Person;
-use App\Company;
-use App\Branch;
-use Carbon\Carbon;
 
+use App\Branch;
+use App\Company;
+use App\Person;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class NAMDashboardController extends Controller
 {
     public $company;
     public $person;
+
     /**
-     * [__construct description]
-     * 
+     * [__construct description].
+     *
      * @param Company $company [description]
      * @param Person  $person  [description]
      */
     public function __construct(
-        Company $company, 
+        Company $company,
         Person $person
     ) {
         $this->company = $company;
-        $this->person = $person;     
+        $this->person = $person;
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -32,10 +34,9 @@ class NAMDashboardController extends Controller
      */
     public function index()
     {
-        
         $manager = $this->person->with('managesAccount')->findOrFail(auth()->user()->person->id);
-        return response()->view('managers.namdashboard', compact('manager'));
 
+        return response()->view('managers.namdashboard', compact('manager'));
     }
 
     /**
@@ -48,6 +49,7 @@ class NAMDashboardController extends Controller
     {
         //
     }
+
     /**
      * Display the specified resource.
      *
@@ -56,25 +58,24 @@ class NAMDashboardController extends Controller
      */
     public function select(Request $request)
     {
-        
         $period['from'] = Carbon::now()->subMonth();
         $period['to'] = Carbon::now();
-        
-        // we need to find all activities, opportunities, leads 
+
+        // we need to find all activities, opportunities, leads
         $branches = Branch::whereHas(
-            
+
             'locations', function ($q) use ($request) {
-                    $q->whereIn('company_id', request('account'));
+                $q->whereIn('company_id', request('account'));
             }
         )->with(
             ['locations'=>function ($q) use ($request) {
-                    $q->whereIn('company_id', request('account'));
-            }
+                $q->whereIn('company_id', request('account'));
+            },
             ]
         )
         ->get();
         dd($branches->first());
         // by branch for these companies
-        // get 
+        // get
     }
 }

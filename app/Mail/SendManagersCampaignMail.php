@@ -3,15 +3,16 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
 class SendManagersCampaignMail extends Mailable
 {
     use Queueable, SerializesModels;
     public $manager;
     public $data;
+
     /**
      * Create a new message instance.
      *
@@ -19,7 +20,7 @@ class SendManagersCampaignMail extends Mailable
      */
     public function __construct($data, $manager)
     {
-        $this->manager= $manager;
+        $this->manager = $manager;
         $this->data = $data;
     }
 
@@ -32,6 +33,6 @@ class SendManagersCampaignMail extends Mailable
     {
         return $this->markdown('emails.managerscampaign')
             ->subject('New Sales Campaign for your team')
-            ->to($this->manager['email'], $this->manager['firstname'] . " " . $this->manager['lastname']);
+            ->to($this->manager['email'], $this->manager['firstname'].' '.$this->manager['lastname']);
     }
 }

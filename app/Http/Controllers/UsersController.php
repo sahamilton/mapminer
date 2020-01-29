@@ -2,31 +2,30 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\User;
 use App\Branch;
-
 use App\Http\Requests\UserProfileFormRequest;
+use App\User;
+use Illuminate\Http\Request;
 
 class UsersController extends Controller
 {
     public $user;
 
     public $branch;
+
     public function __construct(User $user, Branch $branch)
     {
         $this->user = $user;
         $this->branch = $branch;
     }
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-
     public function show(User $user)
     {
-        
         $user->load(
             'person',
             'serviceline',
@@ -47,36 +46,39 @@ class UsersController extends Controller
         if ($user->person->lat && $user->person->lng) {
             $branches = $this->branch->nearby($user->person, 100, 5)->get();
         }
+
         return response()->view(
-            'site.user.profile', 
+            'site.user.profile',
             compact('user', 'branchmarkers', 'salesrepmarkers', 'branches')
         );
     }
+
     /**
-     * [edit description]
-     * 
+     * [edit description].
+     *
      * @param [type] $user [description]
-     * 
+     *
      * @return [type]       [description]
      */
     public function edit($user)
     {
         $user = $this->user->with('person')->findOrFail(auth()->user()->id);
+
         return response()->view('site.user.update', compact('user'));
     }
+
     /**
-     * [update description]
-     * 
+     * [update description].
+     *
      * @param UserProfileFormRequest $request [description]
-     * 
+     *
      * @return [type]                          [description]
      */
     public function update(UserProfileFormRequest $request)
     {
-        
         $user = $this->user->with('person')->findOrFail(auth()->user()->id);
 
-        if (request()->filled('oldpassword') 
+        if (request()->filled('oldpassword')
             && ! \Hash::check(request('oldpassword'), auth()->user()->password)
         ) {
             return  back()->withInput()->withErrors(
@@ -92,7 +94,7 @@ class UsersController extends Controller
         }
         $user->person()->update(
             $request->only(
-                ['firstname','lastname','address','phone']
+                ['firstname', 'lastname', 'address', 'phone']
             )
         );
 
@@ -103,19 +105,21 @@ class UsersController extends Controller
 
             unset($data['fulladdress']);
         } else {
-            $data['address']=null;
-            $data['city']=null;
-            $data['state']=null;
-            $dta['zip']=null;
-            $data['lat']=null;
-            $data['lng']=null;
+            $data['address'] = null;
+            $data['city'] = null;
+            $data['state'] = null;
+            $dta['zip'] = null;
+            $data['lat'] = null;
+            $data['lng'] = null;
         }
         $user->person()->update($data);
+
         return redirect()->route('profile');
     }
+
     /**
-     * [seeder description]
-     * 
+     * [seeder description].
+     *
      * @return [type] [description]
      */
     public function seeder()
@@ -124,22 +128,22 @@ class UsersController extends Controller
         foreach ($users as $user) {
             $user->seeder();
         }
-        echo "All done";
+        echo 'All done';
     }
+
     /**
-     * [resetApiToken description]
-     * 
+     * [resetApiToken description].
+     *
      * @return [type] [description]
      */
     public function resetApiToken()
     {
         $users = $this->user->whereNull('api_token')->get();
         foreach ($users as $user) {
-         
             $user->update(['api_token'=>md5(uniqid(mt_rand(), true))]);
-         
         }
+
         return redirect()->route('users.index')
-            ->withMessage('Update '. $users->count() . ' api tokens');
+            ->withMessage('Update '.$users->count().' api tokens');
     }
 }

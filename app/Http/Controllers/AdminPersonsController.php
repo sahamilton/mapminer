@@ -1,40 +1,38 @@
 <?php
+
 namespace App\Http\Controllers;
 
-use App\Person;
-use App\Permission;
 use App\Http\Requests\PersonFormRequest;
+use App\Permission;
+use App\Person;
 
 class AdminPersonsController extends BaseController
 {
-
-
     protected $person;
     protected $permission;
+
     public function __construct(Person $person, Permission $permission)
     {
-        
         $this->person = $person;
-       
+
         $this->permission = $permission;
         parent::__construct($person);
     }
-    
+
     /**
-     * Display a listing of People
+     * Display a listing of People.
      *
      * @return Response
      */
     public function index()
     {
-        
         $persons = $this->person->all();
-        
+
         return response()->view('admin.persons.index', compact('persons'));
     }
 
     /**
-     * Show the form for creating a new Person
+     * Show the form for creating a new Person.
      *
      * @return Response
      */
@@ -50,8 +48,8 @@ class AdminPersonsController extends BaseController
      */
     public function store(PersonFormRequest $request)
     {
-        
         $this->person->create(request()->all());
+
         return redirect()->route('person.index');
     }
 
@@ -63,47 +61,42 @@ class AdminPersonsController extends BaseController
      */
     public function show($id)
     {
-        
-        
         if ($id->mgrtype == 'branch') {
             $people = $this->person->with('manages')->findorFail($id->id);
-            $branches= $people->manages;
+            $branches = $people->manages;
 
-            
             return response()->view('persons.showlist', compact('people', 'branches'));
         } else {
             $people = $this->person->with('managesAccount')->findorFail($id->id);
             $accounts = $people->managesAccount;
-            
-            
+
             return response()->view('persons.showaccount', compact('people', 'accounts'));
         }
     }
-    
+
     public function showmap($id)
     {
-        
         $data['people'] = $this->person->with('manages')->findorFail($id);
-        
+
         /// We need to calculate the persons 'center point' based on their branches.
         // This should be moved to the model and maybe to a Maps model and made more generic.
         // or we could have a 'home' location as a field on every persons i.e. their lat / lng.
         // If we have stored the persons lat lng we can access that here
-        
+
         if ($data['people']->lat) {
             $data['lat'] = $data['people']->lat;
             $data['lng'] = $data['people']->lng;
-        
+
         // else we can calculate the average lat lng from the branches a persons manages
         } else {
-            $latSum = $lngSum = $maxLat = $minLat = $maxLng = $minLng= $n = '';
+            $latSum = $lngSum = $maxLat = $minLat = $maxLng = $minLng = $n = '';
             foreach ($data['people']->manages as $branch) {
                 $n++;
                 $latSum = $latSum + $branch->lat;
                 $lngSum = $lngSum + $branch->lng;
                 $branch->lat > $maxLat ? $maxLat = $branch->lat : '';
                 $branch->lat < $minLat ? $minLat = $branch->lat : '';
-                $branch->lng > $maxLng ? $maxLng= $branch->lng : '';
+                $branch->lng > $maxLng ? $maxLng = $branch->lng : '';
                 $branch->lat > $minLat ? $minLng = $branch->lng : '';
             }
             $avgLat = $latSum / $n;
@@ -135,8 +128,6 @@ class AdminPersonsController extends BaseController
     public function update(PersonFormRequest $request, $person)
     {
         //$Person = Person::findOrFail($id);
-
-        
 
         $person->update(request()->all());
 

@@ -3,12 +3,11 @@
 namespace App\Jobs;
 
 use App\Report;
-
 use Illuminate\Bus\Queueable;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 
 class DailyBranch implements ShouldQueue
 {
@@ -16,7 +15,6 @@ class DailyBranch implements ShouldQueue
     public $period;
     public $user;
     public $person;
-    
 
     /**
      * Create a new job instance.
@@ -25,8 +23,6 @@ class DailyBranch implements ShouldQueue
      */
     public function __construct()
     {
-               
-
     }
 
     /**
@@ -36,12 +32,10 @@ class DailyBranch implements ShouldQueue
      */
     public function handle()
     {
-        $class= str_replace("App\Jobs\\", "", get_class($this));
+        $class = str_replace("App\Jobs\\", '', get_class($this));
         $job = Report::where('job', $class)->with('distribution.person')->firstOrFail();
         foreach ($job->distribution as $recipient) {
-
             DailyBranchDetail::dispatch($recipient);
-        
         }
     }
 
@@ -53,6 +47,5 @@ class DailyBranch implements ShouldQueue
      */
     public function failed(Exception $exception)
     {
-       
     }
 }

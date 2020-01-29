@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Lead;
 use App\Address;
-use App\Person;
 use App\Branch;
 use App\BranchLead;
+use App\Lead;
+use App\Person;
 use Illuminate\Http\Request;
 
 class BranchLeadController extends Controller
@@ -18,8 +18,8 @@ class BranchLeadController extends Controller
     public $branchlead;
 
     /**
-     * [__construct description]
-     * 
+     * [__construct description].
+     *
      * @param Lead       $lead       [description]
      * @param Person     $person     [description]
      * @param BranchLead $branchlead [description]
@@ -27,10 +27,10 @@ class BranchLeadController extends Controller
      * @param Address    $address    [description]
      */
     public function __construct(
-        Lead $lead, 
-        Person $person, 
-        BranchLead $branchlead, 
-        Branch $branch, 
+        Lead $lead,
+        Person $person,
+        BranchLead $branchlead,
+        Branch $branch,
         Address $address
     ) {
         $this->lead = $lead;
@@ -39,6 +39,7 @@ class BranchLeadController extends Controller
         $this->branchlead = $branchlead;
         $this->person = $person;
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -46,8 +47,8 @@ class BranchLeadController extends Controller
      */
     public function index()
     {
-       dd('hi');
-        if (count($this->person->myBranches())>0) {
+        dd('hi');
+        if (count($this->person->myBranches()) > 0) {
             $branches = $this->branch->whereIn(
                 'id', array_keys($this->person->myBranches())
             )
@@ -55,7 +56,7 @@ class BranchLeadController extends Controller
         } else {
             $branches = $this->branch->withCount('leads')->with('manager')->get();
         }
-        
+
         return response()->view('branchleads.index', compact('branches'));
     }
 
@@ -66,40 +67,37 @@ class BranchLeadController extends Controller
      */
     public function create()
     {
-        
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param \Illuminate\Http\Request $request [description]
-     * 
+     *
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        
         $this->branchlead->create(
             [
                 'address_id'=>request('address_id'),
                 'branch_id'=>request('branch_id'),
-                'status_id'=>'2'
+                'status_id'=>'2',
             ]
         );
-  
+
         return redirect()->route('address.show', request('address_id'));
     }
 
     /**
-     * [show description]
-     * 
+     * [show description].
+     *
      * @param Branch $branch [description]
-     * 
+     *
      * @return [type]         [description]
      */
     public function show(Branch $branch)
     {
-       
         $branch = $branch->load(
             'leads', 'manager', 'leads.industryVertical', 'leads.leadsource'
         );
@@ -108,10 +106,10 @@ class BranchLeadController extends Controller
     }
 
     /**
-     * [edit description]
-     * 
+     * [edit description].
+     *
      * @param BranchLead $branchLead [description]
-     * 
+     *
      * @return [type]                 [description]
      */
     public function edit(BranchLead $branchLead)
@@ -120,54 +118,53 @@ class BranchLeadController extends Controller
     }
 
     /**
-     * [update description]
-     * 
+     * [update description].
+     *
      * @param Request    $request    [description]
      * @param BranchLead $branchLead [description]
-     * 
+     *
      * @return [type]                 [description]
      */
     public function update(Request $request, BranchLead $branchLead)
     {
-        
         $branchLead->update(['status_id'=>2]);
-       
+
         return redirect()->route('address.show', $branchLead->address_id);
     }
 
     /**
-     * [destroy description]
-     * 
+     * [destroy description].
+     *
      * @param BranchLead $branchLead [description]
-     * 
+     *
      * @return [type]                 [description]
      */
     public function destroy(Request $request, BranchLead $branchLead)
     {
-        
         $branch = $this->branch->findOrFail($branchLead->branch_id);
         $branchLead->update(['status_id'=>4, 'comments'=>request('comment')]);
+
         return redirect()->route('branchdashboard.show', $branch->id);
     }
+
     /**
-     * [assign description]
-     * 
+     * [assign description].
+     *
      * @return [type] [description]
      */
     public function assign()
     {
-        $leads = $this->address       
+        $leads = $this->address
             ->where('addressable_type', '=', 'lead')
             ->get();
-        $a=$leads->count();
+        $a = $leads->count();
         foreach ($leads as $lead) {
             $branch = $this->branch->nearby($lead, '25', 1)->get();
-            if ($branch->count()>0) {
+            if ($branch->count() > 0) {
                 $data = ['branch_id'=>$branch->first()->id, 'address_id'=>$lead->id];
                 $a--;
                 BranchLead::create($data);
             }
         }
-       
     }
 }
