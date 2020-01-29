@@ -497,7 +497,9 @@ and addresses_import.company_id = 388
 and ST_Distance_Sphere(addresses.position,addresses_import.position, 40233) < 50
 
 /**************************************************************************************/
+/*
 
+/**************************************************************************************/
 SELECT 
     a.businessname,
     COUNT(a.id) 
@@ -676,11 +678,6 @@ FROM addresses
                HAVING COUNT(dist) > 1) dup
            ON addresses.id = dup.id;
 
-
-
-
-
-
 /***************************************************************************************/
 /****************** get count of leads by branch to be allocated ***********************/
 /***************************************************************************************/
@@ -832,3 +829,19 @@ and branches.id = branch_person.branch_id
 and branch_person.role_id = 9
 and branch_person.person_id = b.id
 and b.reports_to = m.id
+
+/******************************************************************************************/
+/***************************** Select duplicates from branch ******************************/
+/******************************************************************************************/
+select * from addresses, address_branch 
+where address_branch.branch_id = 2255 
+and addresses.id = address_branch.address_id 
+and addresses.position in (
+  select b.position from ( 
+    select a.position, count(a.id) 
+    from addresses a, address_branch 
+    where address_branch.branch_id =2255 
+    and address_branch.address_id = a.id 
+    group by a.position having count(a.id) >1) b
+  ) 
+order by position
