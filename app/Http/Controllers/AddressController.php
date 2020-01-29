@@ -95,11 +95,12 @@ class AddressController extends BaseController
             'createdBy',
             'assignedToBranch'
         );
-
+        
         if ($address->addressable_type) {
             $location->load($address->addressable_type);
         }
         // $activities = ActivityType::orderBy('sequence')->pluck('activity','id')->toArray();
+        if ($location->lat && $location->lng) {
 
             $branches = $this->branch->nearby($location, 100, 5)->orderBy('distance')->get();
             $people = $this->person->salesReps()->PrimaryRole()->nearby($location, 100, 5)->get();
@@ -108,7 +109,6 @@ class AddressController extends BaseController
             $branches = [];
         }
         $rankingstatuses = $this->address->getStatusOptions;
-        $people = $this->person->salesReps()->PrimaryRole()->nearby($location, 100, 5)->get();
         $myBranches = $this->person->where('user_id', auth()->user()->id)->first()->branchesManaged()->pluck('id')->toArray();
       
         $ranked = $this->address->getMyRanking($location->ranking);
@@ -118,7 +118,7 @@ class AddressController extends BaseController
         } else {
             $owned = false;
         }
-       
+        
         $fields = Howtofield::where('active', 1)->orderBy('sequence')->get();
  
         return response()->view('addresses.show', compact('location', 'branches', 'rankingstatuses', 'people', 'myBranches', 'ranked', 'notes', 'owned', 'fields'));
