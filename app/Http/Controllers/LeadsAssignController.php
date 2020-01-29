@@ -320,7 +320,7 @@ class LeadsAssignController extends Controller
     {
      
         $addresses = $this->_unassignedLeads($leadsource);
-      
+        // add assingment query here
         foreach ($addresses as $address) {
             $branches = $this->branch
                 ->nearby($address, $this->distance, $this->limit)

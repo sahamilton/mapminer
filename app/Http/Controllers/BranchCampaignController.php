@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Campaign;
 use App\Branch;
 use App\Person;
+use Carbon\Carbon;
 
 class BranchCampaignController extends Controller
 {
@@ -37,9 +38,9 @@ class BranchCampaignController extends Controller
     {
 
         $myBranches = $this->branch->whereIn('id', array_keys($this->person->myBranches()))->get();
-
+        
         $campaigns = $this->campaign->current($myBranches->pluck('id')->toArray())->get();
-
+    
        
         if (! $campaigns->count()) {
             return redirect()->back()->withMessage('there are no current sales campaigns for your branches');
@@ -100,8 +101,7 @@ class BranchCampaignController extends Controller
      */
     public function show(Campaign $campaign, Branch $branch = null)
     {
-        // get my branches
-     
+        
         $person = $this->person->findOrFail(auth()->user()->person->id);
         $myBranches = $this->person->myBranches($person);
     
@@ -117,19 +117,20 @@ class BranchCampaignController extends Controller
         ->current([$branch->id])->get();// else return not valid
         
         $campaign->first()->load('companies', 'branches');
-        /* dd($branch->id, $campaign->branches->pluck('id')->toArray());
-        if (! in_array($branch->id, $campaign->branches->pluck('id')->toArray())) {
-            return redirect()->back()->withError($branch->branchname . ' is not participating in this campaign.');
-        }*/
-        
+                
         $branch = $this->branch
             ->campaignDetail($campaign)
             ->findOrFail($branch->id);
        
         $views = [
-            'offered'=>['title'=>"New Sales Initiative Leads", 'detail'=>''],
+            'offered'=>['title'=>"New Sales Initiative Leads", 'detail'=>'These leads have been offered to your branch.  You must either accept or decline them before you can record any activities or opportunities on them'],
+
             'untouchedLeads'=>['title'=>"Untouched Sales Initiatives Leads", 'detail'=>'Here are the Sales Initiative Leads that you accepted but do not have any activity. Make sure you enter in any activity that has taken place to remove these Leads for the Untouched list.'],
+
+            'workedLeads'=>['title'=>'Worked Leads', 'details'=>'These are your campaign leads'],
+
             'opportunitiesClosingThisWeek'=>['title'=>"Opportunities to Close this Week", 'detail'=>'Make sure you are updating your Opportunities status. Opportunities should be marked Closed – Won once we have billed the our new customer.'],
+
             'upcomingActivities'=>['title'=>"Upcoming Activities", 'detail'=>''],
              
         ];
@@ -150,10 +151,16 @@ class BranchCampaignController extends Controller
     {
         
         return $this->branch
-            
             ->campaignDetail($campaign)
             ->findOrFail($branch->id);
     }
+    /**
+     * [_getBranchCampaignSummaryData description]
+     * 
+     * @param Campaign $campaign [description]
+     * 
+     * @return [type]             [description]
+     */
     private function _getBranchCampaignSummaryData(Campaign $campaign)
     {
         $branch_ids = $campaign->branches->pluck('id')->toArray();

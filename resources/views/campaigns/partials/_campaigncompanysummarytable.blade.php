@@ -1,42 +1,41 @@
 <table id="sorttable"
-    name="branchsummary"
+    name="companysummary"
     class="table table-striped"
     >
     <thead>
-        <th>Branch</th>
-        <th>Branch Name</th>
+        <th>Company</th>
         @foreach ($fields as $field)
         <th>{{ucwords(str_replace("_"," ", $field))}}</th>
         @endforeach
     </thead>
     <tbody>
 
-        @foreach ($branches as $branch)
-   
+        @foreach ($companies as $company)
+    
+
        
         <tr>
             <td>
-                <a 
-                href="{{route('branchcampaign.show', [$campaign->id, $branch->id])}}">
-                {{$branch->id}}
+                <a href="{{route('campaigns.company.detail', [$campaign->id, $company->id])}}">
+                    {{$company->companyname}}
                 </a>
             </td>
-            <td>{{$branch->branchname}}</td>
-             @foreach ($fields as $field)
+           @foreach ($fields as $field)
             
                 @if(strpos( $field,'value'))
-                    <td class="text-right">
-                        ${{number_format($branch->$field,0)}}
-                    </td>
+                <td class="text-right">
+                    ${{number_format($company->$field,0)}}
+                </td>
                 @else
-                    <td class="text-center">
-                        {{$branch->$field}}
-                    </td>
+                 <td class="text-center">
+                    {{$company->$field}}
+                </td>
                 @endif
                 @php 
-                $totals[$field] = isset($totals[$field]) ? $totals[$field] + $branch->$field : $branch->$field  @endphp
+                $totals[$field] = isset($totals[$field]) ? $totals[$field] + $company->$field : $company->$field  @endphp
             </td>
             @endforeach
+            
         </tr>
        
         @endforeach
@@ -44,19 +43,20 @@
     <tfoot>
         
         <th>Totals:</th>
-        <td></td>
         @foreach ($fields as $field)
-            
+          
                 @if(strpos($field,'value'))
                     <td class="text-right"> 
                        ${{number_format(isset($totals[$field]) ? $totals[$field] : 0,0)}}
-                    </td>
+                   </td>
                 @else
-                     <td class="text-center">
+                     <td class="text-center"> 
                         {{number_format(isset($totals[$field]) ? $totals[$field] : 0,0)}}
                     </td>
                 @endif
-            </td>
+        
         @endforeach
+        
+      
     </tfoot>
 </table>

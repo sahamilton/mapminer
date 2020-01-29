@@ -3,8 +3,10 @@
 @php $totals = []; @endphp
 <div class="container">
    <h2>{{$manager->fullName()}} {{$campaign->title}} Summary</h2>
+    @php $route = 'campaigns.report'; @endphp
     @include('campaigns.partials._teamselector')
-        <p><a href="{{route('campaigns.show', $campaign->id)}}">Return campaign</a></p>
+    <p><a href="{{route('campaigns.show', $campaign->id)}}">Return campaign</a></p>
+    <p><a href="{{route('campaigns.company', $campaign->id)}}">Show Company Stats</a></p>
     <table id="sorttable"
         name="branchsummary"
         class="table table-striped"

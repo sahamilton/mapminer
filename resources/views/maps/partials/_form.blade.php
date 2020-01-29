@@ -1,33 +1,45 @@
-<?php 
+@php
 // Default values
 $session = Session::get('geo');
 
 if (! isset($session)) {
-  if (Session::has('geo.type')) {
+    if (Session::has('geo.type')) {
 
-  $session = array('type'=>'accounts','distance'=>'10','address'=>NULL,'view'=>'maps','lat'=>session('geo.lat'),'lng'=>session('geo.lng'));
-  } else {
-    $session = array('type'=>'accounts','distance'=>'10','address'=>NULL,'view'=>'maps','lat'=>'39.8282','lng'=>'-98.5795');
-  }
+        $session = ['type'=>'accounts',
+          'distance'=>'10',
+          'address'=>null,
+          'view'=>'maps',
+          'lat'=>session('geo.lat'),
+          'lng'=>session('geo.lng')];
+    } else {
+        $session = ['type'=>'accounts',
+          'distance'=>'10',
+          'address'=>null,
+          'view'=>'maps',
+          'lat'=>config('mapminer.default_location.lat'),
+          'lng'=>config('mapminer.default_location.lng')];
+    }
 }
 
-foreach($session as $key=>$value)
-{
-  if(!isset($data[$key])){
-    $data[$key] = $value;
-  }
+foreach ($session as $key=>$value) {
+    if (! isset($data[$key])) {
+        $data[$key] = $value;
+    }
 }
-$types = ['location'=>'All locations','branch'=>'Branches','people'=>'People'];
-// added to filter out Centerline
+$types = [
+    'location'=>'All locations',
+    'branch'=>'Branches',
+    'people'=>'People', 'myleads'=>'Leads', 
+    'opportunities'=>'Opportunities'];
 
-if (isset($data['type']) && $data['type'] == 'company' && isset($company)){
-  $types['company'] = $company->companyname .' locations';
+if (isset($data['type']) && $data['type'] == 'company' && isset($company)) {
+    $types['company'] = $company->companyname .' locations';
 }
 
 $views = array('map'=>'map','list'=>'list');
 $values = Config::get('app.search_radius');
 
-?>
+@endphp
 
 <form class="form-inline" action="{{route('findme')}}" 
 method = 'post' name="mapselector">

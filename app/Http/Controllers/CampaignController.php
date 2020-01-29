@@ -244,7 +244,23 @@ class CampaignController extends Controller
        
         
     }
-
+    public function populateAddressCampaign()
+    {
+        $campaigns = $this->campaign->with('manager', 'companies')->get();
+        foreach ($campaigns as $campaign) {
+            $companies = $campaign->companies->pluck('id')->toarray();
+            
+            $branches = $campaign->manager->getMyBranches();
+            $addresses = $this->address->whereHas(
+                'assignedToBranch', function ($q) use ($branches) {
+                        $q->whereIn('branches.id', $branches);
+                }
+            )->whereIn('company_id', $companies)
+            ->pluck('id')->toArray();
+            $campaign->addresses()->sync($addresses);
+        }
+        
+    }
     public function branchTest(Campaign $campaign, Branch $branch)
     {
         // get MBR of branch
@@ -323,17 +339,20 @@ class CampaignController extends Controller
             $manager_id = request('manager_id');
         }
         $branches = $this->_getbranchesFromManager($servicelines, $manager_id);
-        
         $manager = $this->person->findOrFail($manager_id);
         $branches = $this->branch->whereIn('id', $branches)->summaryCampaignStats($campaign)->get();
-
-        $team = $this->campaign->getSalesTeamFromManager($campaign->manager_id, $servicelines);
+        $team = $this->campaign->getSalesTeamFromManager($manager_id, $servicelines);
         return response()->view('campaigns.managersummary', compact('campaign', 'branches', 'manager', 'team'));
 
         // get summaryStats from campaign with branches
         // 
         // Export report
     }
+    
+
+
+    
+
     /**
      * [_getCampaignServicelines description]
      * 
@@ -358,7 +377,13 @@ class CampaignController extends Controller
             ->with('companies', 'servicelines')
             ->get();
     }
-
+    /**
+     * [_getCampaignSummaryData description]
+     * 
+     * @param Campaign $campaign [description]
+     * 
+     * @return [type]             [description]
+     */
     private function _getCampaignSummaryData(Campaign $campaign)
     {
         $data = $this->_getCampaignData($campaign);
@@ -367,7 +392,13 @@ class CampaignController extends Controller
       
         return $data;
     }
-
+    /**
+     * [_getSummaryLocations description]
+     * 
+     * @param [type] $data [description]
+     * 
+     * @return [type]       [description]
+     */
     private function _getSummaryLocations($data)
     {
        
@@ -448,8 +479,8 @@ class CampaignController extends Controller
     /**
      * [_getbranchesFromManager description]
      * 
-     * @param  Array  $servicelines [description]
-     * @param  [type] $manager_id   [description]
+     * @param Array  $servicelines [description]
+     * @param [type] $manager_id   [description]
      * 
      * @return [type]               [description]
      */
@@ -495,7 +526,7 @@ class CampaignController extends Controller
      * [_getBranchesWithinServiceArea description]
      * 
      * @param [type] $campaign  [description]
-     * @param [type] $locations [description]
+     * @param [type] $companies [description]
      * 
      * @return [type]            [description]
      */
@@ -576,4 +607,31 @@ class CampaignController extends Controller
         return $assignments;
     }
 
+    /**
+     * [campaignStats description]
+     * 
+     * @param  Request $request [description]
+     * 
+     * @return [type]           [description]
+     
+    public function campaignStats(Request $request)
+    {
+        $stats = $this->campaign->campaignStats()->whereIn('id', request('campaigns'));
+        dd($stats);
+        return response()->view('campaigns.stats', compact('stats'));
+    }
+     */
+    /**
+     * [_getCampaignPeriod description]
+     * 
+     * @param Campaign $campaign [description]
+     * 
+     * @return [type]             [description]
+     */
+    private function _getCampaignPeriod(Campaign $campaign)
+    {
+        $period['from'] = $campaign->datefrom;
+        $period['to'] = $campaign->dateto;
+        return $period;
+    }
 }

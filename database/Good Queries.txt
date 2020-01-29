@@ -1,7 +1,8 @@
 
 Good Queries
-// Dead Leads
-
+/**************************************************************************************/
+/ ****************  Dead Leads                                                  *******/
+/**************************************************************************************/
 select branches.branchname, 
 leadsources.source, 
 count(address_branch.address_id) as deadleads
@@ -17,9 +18,9 @@ and opportunities.id is null
 and activities.id is null
 group by branches.branchname, leadsources.source
 
-
-// Open but Closed opportunities
-
+/**************************************************************************************/
+/*********************** Open but Closed opportunities ********************************/
+/**************************************************************************************/
 select branchname, concat_ws(' ', persons.firstname, persons.lastname), concat_ws(' ', b.firstname, b.lastname) as createdby,  addresses.businessname, opportunities.title, opportunities.created_at, actual_close
 from branches, branch_person, addresses, opportunities, persons, persons b
 
@@ -32,7 +33,10 @@ and branch_person.person_id = persons.id
 and opportunities.user_id = b.user_id
 and opportunities.address_id = addresses.id
 order by branches.id
-/*********************************************
+
+/**************************************************************************************/
+/****************** Get count of Branch opportunities by month                 ********/
+/**************************************************************************************/
 SELECT branch_id, 
 COUNT(IF(created_at <= DATE_SUB(NOW(), INTERVAL 1 month), 1, null)) AS month, 
 COUNT(IF(created_at <= DATE_SUB(NOW(), INTERVAL 2 month), 1, null)) AS 2month,
@@ -43,7 +47,23 @@ COUNT(IF(created_at <= DATE_SUB(NOW(), INTERVAL 6 month), 1, null)) AS 6month
 from opportunities
 group by branch_id
 
-//*************************************************
+
+/**************************************************************************************/
+/********************* Old Open Opportunities past Expected Close  ********************/
+/**************************************************************************************/
+
+select branchname, branches.id, concat_ws(' ', b.firstname, b.lastname) as BM, concat_ws(' ', m.firstname, m.lastname) as MM, addresses.businessname,opportunities.title, opportunities.created_at, opportunities.value, opportunities.expected_close
+from opportunities, branches, addresses, persons b, persons m, branch_person
+where opportunities.expected_close < '2019-12-01'
+and opportunities.closed = 0
+and opportunities.address_id = addresses.id
+and opportunities.branch_id = branches.id
+and branches.id = branch_person.branch_id
+and branch_person.role_id = 9
+and branch_person.person_id = b.id
+and b.reports_to = m.id
+
+/**************************************************************************************/
 
 SELECT branch_id,count(*)
 FROM `opportunities` 
@@ -52,8 +72,9 @@ closed = 1
 and actual_close  between date('2019-04-01') and date('2019-04-08')
 group by branch_id;
 
-
-// Get all branch activities grouped by week, activity type & branch
+/**************************************************************************************/ 
+/***********  Get all branch activities grouped by week, activity type & branch  ******/
+/**************************************************************************************/
 
 select  a.branchname,
          concat_ws(' ',firstname,lastname) as manager, 
@@ -78,7 +99,9 @@ select  a.branchname,
           and branches.branchname = a.branchname  
           ORDER BY `a`.`week`  ASC
 
-//******************************************************************
+/**************************************************************************************/
+
+/**************************************************************************************/
 
 SELECT branch_id,count(*)
 FROM `activities` 
@@ -87,19 +110,21 @@ activitytype_id = 4
 and activity_date  between date('2019-04-01') and date('2019-04-08')
 group by branch_id;
 
-//***************** Open Opportunities Aging
+/**************************************************************************************/
+/***************** Open Opportunities Aging                                     *******/
+/**************************************************************************************/
+
 select count(id) as open, 
 round(datediff( now(), created_at) / 7)) as weeks, 
 branch_id from opportunities 
 where opportunities.closed is null or opportunities.closed = 0 
 group by branch_id, weeks ORDER BY `branch_id`, weeks
 
-
-/// Weekly Report
-
-select branches.id,branches.branchname, a.salesmeetings,b.opportunitieswon,b.value from 
-
-branches
+/**************************************************************************************/
+/*****************  Weekly Report                                               *******/
+/**************************************************************************************/
+select branches.id,branches.branchname, a.salesmeetings,b.opportunitieswon,b.value 
+from branches
 
 left join 
 (select branch_id, count(activities.id) as salesmeetings 
@@ -122,53 +147,77 @@ left join
      on branches.id = b.branch_id  
 ORDER BY `b`.`opportunitieswon`  DESC 
 
-///
+/**************************************************************************************/
 
+/**************************************************************************************/
 
 insert ignore into address_branch 
 (address_id,branch_id, top50)
 select distinct address_id,branch_id,top50
 from opportunities 
 where opportunities.address_branch_id =0
-//*************************************************
+
+/**************************************************************************************/
+
+/**************************************************************************************/
+
 update opportunities,address_branch
 set opportunities.address_branch_id = address_branch.id
 where opportunities.address_id = address_branch.address_id
 and opportunities.branch_id = address_branch.branch_id
 and opportunities.address_branch_id = 0
 
-//*************************************************
+/**************************************************************************************/
+
+/**************************************************************************************/
 
 update opportunities, address_branch,activities
 set closed = 2 where activities.activitytype_id = 9
 and opportunities.address_branch_id = address_branch.id
 and address_branch.address_id = activities.address_id
-//*************************************************
-SELECT addresses.id, businessname, addresses.street,addresses.city,addresses.state,branches.id as branchid,branchname, ST_Distance_Sphere(branches.position,addresses.position)  as distance
+
+/**************************************************************************************/
+
+/**************************************************************************************/
+
+SELECT addresses.id, businessname, addresses.street,addresses.city,addresses.state,branches.id as branchid,branchname, ST_Distance_Sphere(branches.position,addresses.position, 40233) * 000623  as distance
 FROM `addresses`,address_branch,branches
 where addresses.id = address_branch.address_id 
 and address_branch.branch_id = branches.id
 and branches.id in (1115,1149,1150,2254,2255,2702,2751,2752,2753,2961)
 ORDER BY addresses.id, distance asc
-//**************************************************
-update addresses set position = POINT(lng, lat);
-update addresses set position = ST_GeomFromText(ST_AsText(position), 4326);
-update branches set position = POINT(lng, lat);
-update branches set position = ST_GeomFromText(ST_AsText(position), 4326);
-update persons set position = POINT(lng, lat);
-update persons set position = ST_GeomFromText(ST_AsText(position), 4326);
-//**************************************************
+
+/**************************************************************************************/
+/**********  Set SRID                                                  ***************/
+/**************************************************************************************/
+
+//update addresses set position = POINT(lng, lat);
+update addresses set position = ST_GeomFromText(ST_AsText(POINT(lng, lat)), 4326);
+//update branches set position = POINT(lat, lng);
+update branches set position = ST_GeomFromText(ST_AsText(POINT(lng, lat)), 4326);
+//update persons set position = POINT(lat, lng);
+update persons set position = ST_GeomFromText(ST_AsText(POINT(lng, lat)), 4326);
+
+/**************************************************************************************/
+
+/**************************************************************************************/
 select addresses.id, addresses.businessname, concat_ws(' ',addresses.street,addresses.city,addresses.state) as fullAddress,addresses.lat,addresses.lng,branches.id,branches.branchname,branches.lat,branches.lng,
-ST_Distance_Sphere(addresses.position,branches.position)/40633 AS distance
+ST_Distance_Sphere(addresses.position,branches.position, 40233) * .000623 AS distance
 from addresses,address_branch, branches
 where addresses.id = address_branch.address_id
 and address_branch.branch_id in ('1506','1518','1522','1525','1552','1589')
-//**************************************************
+
+/**************************************************************************************/
+?????
+/**************************************************************************************/
 select branches.id,branchname, slc( 40.716743, -73.951368, branches.lat, branches.lng) as distance_in_meters,  astext(branches.position) 
 from branches,addresses_import
 where MBRContains(envelope(linestring(point(addresses_import.max(lng), addresses_import.max(lat)), point(addresses_import.min(lng), addresses_import.min(lat))), branches.position) 
 order by distance_in_meters limit 10
-//**************************************************
+
+/**************************************************************************************/
+
+/**************************************************************************************/
 
 SELECT 
        CONCAT('LINESTRING(',
@@ -178,14 +227,19 @@ SELECT
               ')') AS box
    FROM addresses_import
 
-//*************************************************
+/**************************************************************************************/
+
+/**************************************************************************************/
    SELECT *
   FROM branches
  WHERE MBRContains(
         GeomFromText( envelope('LINESTRING(33.20434400000000 -118.47817100000000,34.09832500000000 -117.35715400000000)') ),
        	POINT(lng, lat))
 
-//*****************************************
+/**************************************************************************************/
+
+/**************************************************************************************/
+
 select persons.user_id,  activities.id
 from persons,branch_person,address_branch,activities
 where persons.id = branch_person.person_id
@@ -194,9 +248,19 @@ and branch_person.branch_id = address_branch.branch_id
 and address_branch.address_id = activities.address_id
 and activities.user_id = 0;
 
-//*****************************************
-SELECT activities.id, persons.user_id FROM `activities`,address_branch,branch_person,persons WHERE activities.user_id =0 and activities.address_id = address_branch.address_id and address_branch.branch_id = branch_person.branch_id and branch_person.person_id = persons.id
-//***************************************
+/**************************************************************************************/
+
+/**************************************************************************************/
+
+SELECT activities.id, persons.user_id 
+FROM `activities`,address_branch,branch_person,persons 
+WHERE activities.user_id =0 and activities.address_id = address_branch.address_id 
+and address_branch.branch_id = branch_person.branch_id 
+and branch_person.person_id = persons.id
+
+/**************************************************************************************/
+
+/**************************************************************************************/
 insert into activities
 
 (`activity_date`,`activitytype_id`,`address_id`,`branch_id`,`user_id`,`relatedActivity`,`created_at`,`note`)
@@ -206,16 +270,20 @@ select * from (SELECT
 
 update`activities` set completed = 1 WHERE activity_date < '2019-03-30';
 
-**********************************************************************
-get closed won opportunities by branch / date
+/**************************************************************************************/
+/***************** get closed won opportunities by branch / date        ***************/
+/**************************************************************************************/
+
 SELECT branch_id,DATE_FORMAT(actual_close, '%Y/%m/%d') as dateclosed, count(id) 
 FROM `opportunities` 
 WHERE actual_close is not null
 and actual_close between cast('2019-01-01' as date) and cast('2019-03-31' as date)
 group by branch_id,dateclosed
 
-*********************************************************************
-Get sales appt activities by branch / date
+/**************************************************************************************/
+/*************** Get sales appt activities by branch / date                 ***********/
+/**************************************************************************************/
+
 SELECT address_branch.branch_id as branch,DATE_FORMAT(activity_date, '%Y/%m/%d') as activitydate, count(activities.id) 
 FROM `activities` , address_branch
 WHERE activity_date between cast('2019-01-01' as date) and cast('2019-03-31' as date)
@@ -223,22 +291,22 @@ and activitytype_id =4
 and activities.address_id = address_branch.address_id
 group by branch,activitydate
 
-**************************************************
-Get all opportunities, activities, contacts for branch
+/**************************************************************************************/
+/******************* Get all opportunities, activities, contacts for branch ***********/
+/**************************************************************************************/
+
 select addresses.id as aid, addresses.businessname,addresses.street,addresses.city,addresses.state,addresses.zip,addresses.phone,addresses.lat,addresses.lng, 
 address_branch.id as abid,
 opportunities.id as oppid, opportunities.description,opportunities.comments,opportunities.expected_close,opportunities.closed, opportunities.top50,opportunities.value,opportunities.requirements,opportunities.actual_close,opportunities.duration, 
 activities.id as actid, activities.activity_date,activities.activitytype_id,activities.followup_date,activities.note, 
-contacts.id as cid, contacts.fullname,contacts.firstname,contacts.lastname,contacts.title,contacts.contactphone,contacts.email from addresses,address_branch left join opportunities on address_branch.id = opportunities.address_branch_id left join activities on address_branch.address_id = activities.address_id left join contacts on address_branch.address_id = contacts.address_id where address_branch.branch_id = 7383 and address_branch.address_id = addresses.id
-///
-25502,52206,186508,186510,186513,186514,186516,186518,186521,186522,186523,186524,186525,186529,186530,186532,186534,186541,336208,336210,336215,336235,336772,336778,336806,336818,337387,338053,338062,338910,346450,346746,346806,346879,346908,346930,347126,347216,348528,348554,348632,349264,349311,349320,349323,358967,359037,391242,391244,391249,391268,391273,392636,392642
+contacts.id as cid, contacts.fullname,contacts.firstname,contacts.lastname,contacts.title,contacts.contactphone,contacts.email 
+from addresses,address_branch 
+left join opportunities on address_branch.id = opportunities.address_branch_id 
+left join activities on address_branch.address_id = activities.address_id 
+left join contacts on address_branch.address_id = contacts.address_id where address_branch.branch_id = 7383 
+and address_branch.address_id = addresses.id
 
-SELECT 
-    IF(ISNULL(user_id), 'NULL', 'NOT NULL') as myfield, 
-    COUNT(*) 
-FROM addresses 
 
-GROUP BY myfield
 ****************************************************
 KPI's
 ****************************************************
@@ -265,29 +333,30 @@ where address_branch.created_at > '2019-03-01'
 //where address_branch.branch_id in ()
 group by address_branch.branch_id
 
-//////////////////////////////
+/**************************************************************************************/
 select branchname,count(opportunities.id),count(opportunities.top50)
 from branches,opportunities
 where branches.id = opportunities.branch_id
 and opportunities.closed = 0
 group by branchname
-/////////////////////////////////////////////////
+
+/**************************************************************************************/
+/****************  Eloquent query                                     *****************/
+/**************************************************************************************/
 
 branch::whereHas(opportunities,function($q){
   $q->where('closed','=',0);
 })->select('branchname', DB::raw('count(opportunities.id) as open,count(opportunities.top50 as top50'))->groupBy('branchname')->get();
 
-
- /// Get random addresses
-
+/**************************************************************************************/
+/***   Get random addresses
+/**************************************************************************************/
 SELECT @min := MIN(id), @max := MAX(id) FROM addresses;
 SELECT DISTINCT id, businessname, street, address2, city, state, zip, lat, lng FROM addresses AS a JOIN ( SELECT FLOOR(@min + (@max - @min + 1) * RAND()) AS id FROM addresses LIMIT 50 -- more than 10 (to compensate for dups) ) b USING (id) LIMIT 25
 
-<<<<<<< Updated upstream
-
-/////////////////////////////////////////////////
+/**************************************************************************************/
 Check if branch managers report to the branches MM
-
+/**************************************************************************************/
 SELECT a.branch_id, 
     concat_ws(' ', c.firstname, c.lastname) as 'Branch Manager', 
     concat_ws(' ', e.firstname, e.lastname) as 'Reports to Manager',
@@ -310,8 +379,10 @@ and b.person_id = d.id
 and c.reports_to = e.id
 and e.reports_to = f.id
 and d.reports_to = g.id
-=======
-/////////////////// Open Opportunities with no expected close date
+
+/**************************************************************************************/            
+/**************** Open Opportunities with no expected close date            ***********/
+/**************************************************************************************/
 select branches.id, branchname, concat_ws(' ', firstname, lastname), title, value, opportunities.created_at
 from opportunities, branches, persons, branch_person
 where opportunities.expected_close = null
@@ -321,15 +392,23 @@ and branches.id = branch_person.branch_id
 and branch_person.role_id = 9
 and branch_person.person_id = persons.id
 and persons.deleted_at is null
->>>>>>> Stashed changes
-
-///////////// Find branches with multiple managers
-SELECT branch_id, count(person_id) as COUNT FROM `branch_person`, persons WHERE role_id = 9 and persons.id = person_id and persons.deleted_at is null group by branch_id having count >1
 
 
-/////////////////////////////////////
-//Get leads with no activities or opportunities for region
+/**************************************************************************************/
+/************************ Find branches with multiple managers              ***********/
+/**************************************************************************************/
+SELECT branch_id, count(person_id) as COUNT 
+FROM `branch_person`, persons 
+WHERE role_id = 9 
+and persons.id = person_id 
+and persons.deleted_at is null 
+group by branch_id 
+having count >1
 
+
+/**************************************************************************************/
+/************  Get leads with no activities or opportunities for region  **************/
+/**************************************************************************************/
 SELECT addresses.*, address_branch.branch_id, leadsources.source 
 FROM `addresses`, leadsources, address_branch 
 left join activities on address_branch.address_id = activities.address_id 
@@ -339,11 +418,10 @@ and address_branch.branch_id in (1711, 1702, 1701, 1719, 1707, 1713, 1788, 3024,
 and activities.id is null 
 and opportunities.id is null
 
-//////
-REmoved from branch.php
-
-    /*
-    Calculate bounding box coordinates
+/**************************************************************************************/
+/************ REmoved from branch.php Calculate bounding box coordinates **************/
+/**************************************************************************************/
+   
 
     
     private function _getPositionCoordinates($lat, $lng, $distance)
@@ -364,8 +442,9 @@ REmoved from branch.php
         return $coordinates;
     }
     */
-   
-   /* Details of opportunties
+/**************************************************************************************/   
+/* Details of opportunties
+/**************************************************************************************/
    select branch_id, branchname, businessname, title, opportunities.created_at, duration, requirements, value, expected_close
 from opportunities, branches, addresses
 where closed =0
@@ -373,18 +452,20 @@ and expected_close > '2019-09-15'
 and opportunities.branch_id = branches.id
 and opportunities.address_id = addresses.id
 order by branch_id
-    */
+
+/**************************************************************************************/
 /************** Companies with location count
+/**************************************************************************************/
 SELECT companies.id, companyname,  type, count(addresses.id) as locations
 FROM `companies`, accounttypes, addresses
 WHERE accounttypes_id = accounttypes.id
 and companies.id = addresses.company_id
 group by companies.id, companyname, type
 order by companyname
-*/
 
+/**************************************************************************************/
 /* get activities of user
-
+/**************************************************************************************/
 select addresses.id, businessname, activity, activity_date, opportunities.id, opportunities.title
 from  addresses, activity_type, activities
 left join opportunities on activities.address_id = opportunities.address_id
@@ -393,8 +474,9 @@ and activities.completed = 1
 and activities.address_id = addresses.id
 and activities.activitytype_id = activity_type.id
 
-
+/**************************************************************************************/
 /** debugging reports
+/**************************************************************************************/
 select activities.id, activity_date, address_id, activities.created_at, user_id, activity
 from activities, activity_type
 where branch_id = 1509  
@@ -405,11 +487,19 @@ and activities.activitytype_id = activity_type.id
 
 
  */
+/**************************************************************************************/
+/********************  Spatial duplicates query                                  ******/
+/**************************************************************************************/
+select addresses_import.id as id, addresses.id as import_ref 
+from addresses,addresses_import 
+where addresses.company_id = addresses_import.company_id 
+and addresses_import.company_id = 388 
+and ST_Distance_Sphere(addresses.position,addresses_import.position, 40233) < 50
 
-/*      Spatial duplicates query
-select addresses_import.id as id, addresses.id as import_ref from addresses,addresses_import where addresses.company_id = addresses_import.company_id and addresses_import.company_id = 388 and ST_Distance_Sphere(addresses.position,addresses_import.position) < 50
-*/
+/**************************************************************************************/
+/*
 
+/**************************************************************************************/
 SELECT 
     a.businessname,
     COUNT(a.id) 
@@ -417,16 +507,24 @@ SELECT
     left join address_branch on b.id = address_branch.address_id
     where a.company_id = 388 
     and a.company_id = b.company_id
-    and ST_Distance_Sphere(a.position, b.position) < 50
+    and ST_Distance_Sphere(a.position, b.position, 40233) < 50
     and address_branch.address_id is null
 GROUP BY a.businessname
 HAVING COUNT(a.id) > 1
 Order By count(a.id) DESC;
 
+/**************************************************************************************/
 /**** delete addresses without address_branch
-delete addresses, address_branch from addresses left join address_branch on addresses.id = address_branch.address_id where addresses.company_id = 388 and address_branch.address_id is null
+/**************************************************************************************/
+delete addresses, address_branch 
+from addresses 
+left join address_branch on addresses.id = address_branch.address_id 
+where addresses.company_id = 388 
+and address_branch.address_id is null
 
-//*********** Closest Sales Reps
+/**************************************************************************************/
+/*************** Closest Sales Reps                                          **********/
+/**************************************************************************************/
 select 
     addresses.id,
     addresses.businessname,
@@ -467,9 +565,12 @@ INNER JOIN
     FROM     places
     GROUP BY code
 ) b ON a.code = b.code AND a.distance = b.mindistance
+
 ORDER BY a.distance
 
-/*************** Declined leads ***
+/**************************************************************************************/
+/*************** Declined leads                                                 ******/
+/**************************************************************************************/
 select companyname, businessname, branchname, address_branch.comments
 from companies, addresses, branches, address_branch
 where address_branch.status_id =4
@@ -477,7 +578,30 @@ and address_branch.address_id = addresses.id
 and addresses.company_id = companies.id
 and address_branch.branch_id = branches.id
 
-?********************************************
+/**************************************************************************************/
+/*************** Closest branches to company locations        OLD                ******/
+/**************************************************************************************/
+select addresses.id,addresses.street, addresses.city, addresses.state,branches.id, branchname,branches.city,branches.state,
+(3956 * acos(cos(radians(addresses.lat)) 
+                     * cos(radians(branches.lat)) 
+                     * cos(radians(branches.lng) 
+                     - radians(addresses.lng)) 
+                     + sin(radians(addresses.lat)) 
+                     * sin(radians(branches.lat)))) as branchdistance
+from addresses
+left join branches on 
+                   (3956 * acos(cos(radians(addresses.lat)) 
+                     * cos(radians(branches.lat)) 
+                     * cos(radians(branches.lng) 
+                     - radians(addresses.lng)) 
+                     + sin(radians(addresses.lat)) 
+                     * sin(radians(branches.lat)))) < 25
+where addresses.company_id = 388
+order by addresses.id, branchdistance
+/**************************************************************************************/
+/*************** Closest branches to company locations        OLD                ******/
+/**************************************************************************************/
+
 select 
     addresses.id,
     addresses.businessname,
@@ -487,14 +611,98 @@ select
     addresses.zip as loczip,
     branches.id as bid,
     branches.branchname,
-    ST_DISTANCE_SPHERE(branches.position, addresses.position) as distance
+    ST_DISTANCE_SPHERE(branches.position, addresses.position) * .0.00062137119 as distance
     from addresses, branches
     where addresses.company_id = 38
     and
-    ST_DISTANCE_SPHERE(branches.position, addresses.position, 40234) 
+    ST_DISTANCE_SPHERE(branches.position, addresses.position)  *0.0.00062137119 < 25
     order by addresses.id asc, distance asc
 
+/**************************************************************************************/
+/*************** Closest branches to company locations        OLD                ******/
+/**************************************************************************************/
+select 
+    addresses.id,
+    addresses.businessname,
+    addresses.street as addressestreet, 
+    addresses.city as loccity, 
+    addresses.state as addressestate,
+    addresses.zip as loczip,
+    branches.id as bid,
+    branches.branchname,
+    branches.street,
+    branches.city,
+    branches.state,
+    st_distance_sphere(point(branches.lng, branches.lat), point(addresses.lng, addresses.lat)) *.00062137119 as distance
 
+    from addresses, branches
+    where addresses.company_id = 38
+    and
+    ST_DISTANCE_SPHERE(branches.position, addresses.position) * .00062137119 < 25 
+    order by addresses.id asc, distance asc
+
+/**************************************************************************************/
+/*************** Closest branches to unallocated company locations  New          ******/
+/**************************************************************************************/
+select 
+    a.id,
+    b.id,
+    st_distance_sphere(a.position, b.position)  * 0.00062137119 dist 
+from addresses a
+left join address_branch on a.id = address_branch.address_id
+inner join branches b
+    on b.id = (
+        select b1.id
+        from branches b1,  branch_serviceline s
+        where st_distance_sphere(a.position, b1.position, 40233) * 0.00062137119 < b1.radius
+        and b1.id = s.branch_id
+        and s.serviceline_id in (5)
+        order by st_distance_sphere(a.position, b1.position) 
+        limit 1
+    )
+where a.company_id in (388)
+and address_branch.address_id is null
+
+// Duplicates
+
+select addresses.*
+FROM addresses
+   INNER JOIN (SELECT 
+              addresses.id as id,
+               st_distance_sphere(a.position, b.position)  * 0.00062137119 dist,
+
+               FROM   addresses a, branches b, address_branch
+               where addresses.id = address_branch.address_id
+               and address_branch.branch_id = 4489
+               GROUP  BY dist
+               HAVING COUNT(dist) > 1) dup
+           ON addresses.id = dup.id;
+
+/***************************************************************************************/
+/****************** get count of leads by branch to be allocated ***********************/
+/***************************************************************************************/
+
+select 
+    count(a.id),
+    b.id
+    
+from addresses a
+left join address_branch on a.id = address_branch.address_id
+inner join branches b
+    on b.id = (
+        select b1.id
+        from branches b1
+        where st_distance_sphere(a.position, b1.position) * 0.00062137119 < 25 
+        order by st_distance_sphere(a.position, b1.position) 
+        limit 1
+    )
+where a.company_id = 388
+and address_branch.address_id is null
+group by b.id
+
+/***************************************************************************************/
+/********************************                           ****************************/
+/***************************************************************************************/
 
 SELECT id, type, rate
 FROM
@@ -517,8 +725,9 @@ FROM
 ORDER BY diff
 LIMIT 3 ;
 
-
-////////////// Asssign personal leads to branch where not linked
+/**************************************************************************************/
+/*****  Asssign personal leads to branch where not linked                        ******/
+/**************************************************************************************/
 
 insert into address_branch (address_id, branch_id, status_id) 
 SELECT addresses.id, branch_person.branch_id, 2
@@ -532,8 +741,10 @@ and addresses.user_id = persons.user_id
 and persons.id = branch_person.person_id
 and branch_person.role_id =9
 
-////////////// Assign personal leads to branch where not linked, originator no longer with Co but has activities
-
+/**************************************************************************************/
+/*****       Assign personal leads to branch where not linked, originator        ******/
+/*****  no longer with Co but has activities                                     ******/
+/**************************************************************************************/
 USE mapminer;
 insert into address_branch
 (address_id, branch_id, status_id)
@@ -544,4 +755,93 @@ where address_branch.address_id is null
 and addresses.lead_source_id = 4
 and addresses.id = activities.address_id
 
-/////////// 
+/**************************************************************************************/
+/***** Summary of opportunities by branch and quarter                            ******/
+/**************************************************************************************/
+
+SELECT branchname, concat_ws("-",YEAR(opportunities.created_at), QUARTER(opportunities.created_at)) as Qtr, count(opportunities.id)
+FROM `opportunities` , branches
+
+WHERE opportunities.created_at < '2020-01-01'
+and branch_id = branches.id
+group by branchname, concat_ws("-",YEAR(opportunities.created_at), QUARTER(opportunities.created_at))
+order by branchname
+
+/**************************************************************************************/
+/***** Summary of activities by branch and quarter                               ******/
+/**************************************************************************************/
+
+SELECT branchname, concat_ws("-",YEAR(activity_date), QUARTER(activity_date)) as Qtr, count(activities.id)
+FROM `activities` , branches
+
+WHERE activities.activity_date between '2019-01-01' and '2019-012-31'
+and branch_id = branches.id
+and activities.completed = 1
+group by branchname,concat_ws("-",YEAR(activity_date), QUARTER(activity_date))
+order by branchname
+
+/**************************************************************************************/
+/***** Get all related leads, activities and opportunities of a branch (closing) ******/
+/**************************************************************************************/
+
+SELECT branches.branchname,
+addresses.id, addresses.businessname, addresses.street, addresses.city, addresses.state,
+activities.activity_date, activities.completed, activities.note,
+opportunities.title, opportunities.description, opportunities.requirements, opportunities.duration
+FROM `addresses`, branches, address_branch
+left join activities on address_branch.address_id = activities.address_id
+left join opportunities on address_branch.id = opportunities.address_branch_id
+WHERE address_branch.branch_id = 3216
+and address_branch.address_id = addresses.id
+and address_branch.branch_id = branches.id
+
+/**************************************************************************************/
+/****************** Select all branches with managers and MM's ************************/
+/**************************************************************************************/
+
+
+select branches.id, branchname, branches.street, branches.city, branches.state, branches.zip, concat_ws(" ", a.firstname,a.firstname) as BM, concat_ws(" ", m.firstname,m.firstname) as MM
+from branches, branch_person, persons a, persons m
+where branches.id = branch_person.branch_id
+and branch_person.role_id = 9
+and branch_person.person_id = a.id
+and a.reports_to = m.id
+
+/**************************************************************************************/
+/****** Move all activities, opportunities and leads from one branch to another *******/
+/**************************************************************************************/
+
+update activities set branch_id = newid where branch_id = oldid;
+update opportunities set branch_id = newid where branch_id = oldid;
+update address_branch set branch_id = newid where branch_id = oldid;
+
+
+/************************************************************************************/
+
+select branches.branchname, concat_ws(' ', b.firstname, b.lastname) as bm, concat_ws(" ", m.firstname, m.lastname) as MM, companyname,address_branch.status_id,opportunities.id,opportunities.closed, opportunities.value
+from companies, addresses, branches, branch_person, persons m, persons b, address_branch
+left join opportunities on address_branch.id = opportunities.address_branch_id
+where companies.id in (45,61,68,73,75,90,114,212,223,244,259,325,388,407,441,460,490,492,493,532,1208,1344,1355,1356,1357)
+and companies.id = addresses.company_id
+and addresses.id = address_branch.address_id
+and address_branch.branch_id = branches.id
+and branches.id = branch_person.branch_id
+and branch_person.role_id = 9
+and branch_person.person_id = b.id
+and b.reports_to = m.id
+
+/******************************************************************************************/
+/***************************** Select duplicates from branch ******************************/
+/******************************************************************************************/
+select * from addresses, address_branch 
+where address_branch.branch_id = 2255 
+and addresses.id = address_branch.address_id 
+and addresses.position in (
+  select b.position from ( 
+    select a.position, count(a.id) 
+    from addresses a, address_branch 
+    where address_branch.branch_id =2255 
+    and address_branch.address_id = a.id 
+    group by a.position having count(a.id) >1) b
+  ) 
+order by position

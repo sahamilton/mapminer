@@ -2,14 +2,8 @@
 
 namespace App\Jobs;
 
-use \Carbon\Carbon;
-use App\Person;
-use App\Branch;
 use App\Report;
-use Mail;
-use Excel;
-use App\Mail\DailyBranchReport;
-use App\Exports\DailyBranchExport;
+
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -21,6 +15,7 @@ class DailyBranch implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     public $period;
     public $user;
+    public $person;
     
 
     /**
@@ -30,11 +25,7 @@ class DailyBranch implements ShouldQueue
      */
     public function __construct()
     {
-       
-        
-        $this->period['from'] = Carbon::yesterday()->startOfDay();
-        $this->period['to'] = Carbon::yesterday()->endOfDay();
-        
+               
 
     }
 
@@ -46,21 +37,22 @@ class DailyBranch implements ShouldQueue
     public function handle()
     {
         $class= str_replace("App\Jobs\\", "", get_class($this));
-        $job = Report::where('job', $class)->with('distribution')->firstOrFail();
-        
+        $job = Report::where('job', $class)->with('distribution.person')->firstOrFail();
         foreach ($job->distribution as $recipient) {
-            
-            $this->person = Person::where('user_id', $recipient->id)->firstOrFail();
-       
-            $file = "/public/reports/".$this->person->firstname."_".$this->person->lastname."_dailyreport_". $this->period['from']->format('Y-m-d'). ".xlsx";
-            
-            Excel::store(
-                new DailyBranchExport($this->period, [$this->person->id]), $file
-            );
-            $distribution = [$this->person->distribution()];
-            Mail::to($distribution)
-                ->queue(new DailyBranchReport($file, $this->period, $this->person));
+
+            DailyBranchDetail::dispatch($recipient);
         
         }
+    }
+
+    /**
+     * The job failed to process.
+     *
+     * @param  Exception  $exception
+     * @return void
+     */
+    public function failed(Exception $exception)
+    {
+       
     }
 }

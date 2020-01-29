@@ -17,7 +17,7 @@ use \Carbon\Carbon;
 
 use Illuminate\Http\Request;
 
-class OpportunityController extends Controller
+class OpportunityController extends BaseController
 {
     
     public $address;
@@ -78,9 +78,9 @@ class OpportunityController extends Controller
                 ->withWarning("You are not assigned to any branches. Please contact Sales Operations");
         }
         if (session()->has('branch')) {
-            $data = $this->getBranchData([session('branch')]);
+            $data = $this->_getBranchData([session('branch')]);
         } else {
-            $data = $this->getBranchData([array_keys($myBranches)][0]);
+            $data = $this->_getBranchData([array_keys($myBranches)][0]);
         }
         
 
@@ -117,9 +117,9 @@ class OpportunityController extends Controller
         }
         if (request()->has('branch')) {
 
-            $data = $this->getBranchData([request('branch')]);
+            $data = $this->_getBranchData([request('branch')]);
         } else {
-             $data = $this->getBranchData([$branch->id]);
+             $data = $this->_getBranchData([$branch->id]);
         }
 
         $activityTypes = $activityTypes = ActivityType::all();
@@ -132,13 +132,13 @@ class OpportunityController extends Controller
     }
    
     /**
-     * [getBranchData description]
+     * [_getBranchData description]
      * 
      * @param array $branches [description]
      * 
      * @return [type]           [description]
      */
-    public function getBranchData(array $branches)
+    private function _getBranchData(array $branches)
     {
         $data['branches'] =$this->_getBranches($branches);
 
@@ -164,7 +164,29 @@ class OpportunityController extends Controller
        
         return $data;
     }
-
+    /**
+     * [findLocations description]
+     * 
+     * @param [type] $distance [description]
+     * @param [type] $latlng   [description]
+     * 
+     * @return [type]           [description]
+     */
+    public function findOpportunities($distance = null, $latlng = null)
+    {
+       
+        $location = $this->getLocationLatLng($latlng);
+      
+        $result = $this->address->whereHas(
+            
+            'opportunities', function ($q) use ($location, $distance) {
+                $q->where('closed', 0);
+            }
+        )->nearby($location, $distance)
+        ->with('opportunities')->get();
+      
+        return response()->view('opportunities.xml', compact('result'))->header('Content-Type', 'text/xml');
+    }
     /**
      * [getBranches description]
      * 
@@ -185,16 +207,19 @@ class OpportunityController extends Controller
      * 
      * @return [type]           [description]
      */
-    private function _getOpportunities($branches)
+    private function _getOpportunities($branches, $location = null)
     {
-
-        return $this->opportunity
+        $opportunities = $this->opportunity
             ->whereIn('branch_id', $branches)
             ->with('address', 'branch', 'address.activities')
             ->thisPeriod($this->period)
             ->orderBy('branch_id')
-            ->distinct()
-            ->get();
+            ->distinct();
+        if ($location) {
+            $opportunities = $opportunities->nearby($location);
+        }
+        return $opportunities->get();
+       
     }
         
     /**

@@ -10,7 +10,7 @@ use App\Person;
 use App\Howtofield;
 use App\ActivityType;
 
-class AddressController extends Controller
+class AddressController extends BaseController
 {
     public $address;
     public $branch;
@@ -95,15 +95,20 @@ class AddressController extends Controller
             'createdBy',
             'assignedToBranch'
         );
-
+        
         if ($address->addressable_type) {
             $location->load($address->addressable_type);
         }
         // $activities = ActivityType::orderBy('sequence')->pluck('activity','id')->toArray();
+        if ($location->lat && $location->lng) {
 
-        $branches = $this->branch->nearby($location, 100, 5)->orderBy('distance')->get();
+            $branches = $this->branch->nearby($location, 100, 5)->orderBy('distance')->get();
+            $people = $this->person->salesReps()->PrimaryRole()->nearby($location, 100, 5)->get();
+        } else {
+            $people = [];
+            $branches = [];
+        }
         $rankingstatuses = $this->address->getStatusOptions;
-        $people = $this->person->salesReps()->PrimaryRole()->nearby($location, 100, 5)->get();
         $myBranches = $this->person->where('user_id', auth()->user()->id)->first()->branchesManaged()->pluck('id')->toArray();
       
         $ranked = $this->address->getMyRanking($location->ranking);
@@ -113,7 +118,7 @@ class AddressController extends Controller
         } else {
             $owned = false;
         }
-       
+        
         $fields = Howtofield::where('active', 1)->orderBy('sequence')->get();
  
         return response()->view('addresses.show', compact('location', 'branches', 'rankingstatuses', 'people', 'myBranches', 'ranked', 'notes', 'owned', 'fields'));
@@ -178,7 +183,7 @@ class AddressController extends Controller
     public function findLocations($distance = null, $latlng = null)
     {
        
-        $location = $this->_getLocationLatLng($latlng);
+        $location = $this->getLocationLatLng($latlng);
       
         $result = $this->address->filtered()->nearby($location, $distance)->get();
 
@@ -199,21 +204,7 @@ class AddressController extends Controller
         $address->ranking()->attach($person_id, $data);
         return redirect()->route('address.show', $address->id)->withMessasge("Thanks for rating this location");
     }
-    /**
-     * [_getLocationLatLng description]
-     * 
-     * @param [type] $latlng [description]
-     * 
-     * @return [type]         [description]
-     */
-    private function _getLocationLatLng($latlng)
-    {
-        $position =explode(":", $latlng);
-        $location = new Address;
-        $location->lat = $position[0];
-        $location->lng = $position[1];
-        return $location;
-    }
+    
     /**
      * [_getAddress description]
      * 

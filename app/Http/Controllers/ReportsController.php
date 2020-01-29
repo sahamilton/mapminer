@@ -11,6 +11,7 @@ use App\Company;
 use App\Person;
 use App\SalesOrg;
 use App\Http\Requests\ReportFormRequest;
+use App\Http\Requests\RunReportFormRequest;
 use Illuminate\Http\Request;
 use App\Http\Requests\AddRecipientReportRequest;
 use \App\Exports\OpenTop25BranchOpportunitiesExport;
@@ -211,10 +212,11 @@ class ReportsController extends Controller {
      * 
      * @return [type]           [description]
      */
-    public function run(Report $report, Request $request)
+    public function run(Report $report, RunReportFormRequest $request)
     {
         
         if ($data = $this->_getMyBranches($request)) {
+          
             $manager = $data['manager'];
             $myBranches = $data['branches'];
             $team = $data['team'];

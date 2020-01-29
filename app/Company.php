@@ -41,6 +41,11 @@ class Company extends NodeModel
      * 
      * @return [type] [description]
      */
+    public function assigned()
+    {
+        return $this->hasMany(Address::class)->whereHas('assignedToBranch');
+    }
+
     public function type()
     {
         return $this->belongsTo(AccountType::class, 'accounttypes_id');
@@ -56,13 +61,22 @@ class Company extends NodeModel
             return $this->hasMany(Address::class);
     }
 
-    public function assigned()
-    {
-        return $this->hasMany(Address::class)->whereHas('assignedToBranch');
-    }
+    
     public function unassigned()
     {
         return $this->hasMany(Address::class)->whereDoesntHave('assignedToBranch');
+    }
+
+    public function opportunities()
+    {
+        return $this->hasManyThrough(
+            Opportunity::class,
+            Address::class,
+            'company_id', // Foreign key on users table...
+            'address_id', // Foreign key on posts table...
+            'id', // Local key on countries table...
+            'id' // Local key on users table...
+        );
     }
     /**
      * [stateLocations description]
@@ -109,6 +123,11 @@ class Company extends NodeModel
     public function managedBy()
     {
         return $this->belongsTo(Person::class, 'person_id');
+    }
+
+    public function campaigns()
+    {
+        return $this->belongsToMany(Campaign::class);
     }
     /**
      * [serviceline description]
@@ -257,117 +276,240 @@ class Company extends NodeModel
      * 
      * @return [type]         [description]
      */
-    public function scopeSummaryStats($query,$period)
+    public function scopeSummaryStats($query,$period, $branches=null)
     {
-        $this->period = $period;
-        return $query->withCount(       
-            ['locations as leads'=>function ($query) {
-                $query->whereHas(
-                    'assignedToBranch', function ($q) {
-                        $q->where('address_branch.created_at', '<=', $this->period['to'])
-                            ->where(
-                                function ($q) {
-                                    $q->whereDoesntHave('opportunities');
-                                }
-                            );
-                    }
-                );
-            },
-            'locations as activities'=>function ($query) {
-                $query->whereHas(
-                    'activities', function ($query) {
-                        $query->whereBetween(
-                            'activity_date', [$this->period['from'],$this->period['to']]
-                        )->where('completed', 1);
-                    }
-                );
-            },
-            'locations as salesappointments'=>function ($query) {
-                $query->whereHas(
-                    'activities', function ($query) {
-                        $query->whereBetween(
-                            'activity_date', [$this->period['from'],$this->period['to']]
-                        )->where('completed', 1)
-                            ->where('activitytype_id', 4);
-                    }
-                );
-            },
-            'locations as newopportunities'=>function ($query) {
-                $query->whereHas(
-                    'opportunities', function ($query) {
-                        $query->whereBetween(
+        if ($branches) {
+            return $this->_summaryBranchStats($query, $period, $branches);
+        } else {
+            $this->period = $period;
+            $this->branches = $branches;
+
+            return $query->withCount(       
+                [
+                'locations as offered_leads'=>function ($query) {
+                    $query->whereHas(
+                        'assignedToBranch', function ($q) {
+                            $q->where('status_id', 1)
+                                ->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']]);
+                        }
+                    );
+                },
+                'locations as worked_leads'=>function ($query) {
+                    $query->whereHas(
+                        'assignedToBranch', function ($q) {
+                            $q->where('status_id', 2)
+                                ->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']]);
+                        }
+                    );
+                },
+                'locations as rejected_leads'=>function ($query) {
+                    $query->whereHas(
+                        'assignedToBranch', function ($q) {
+                            $q->where('status_id', 4)
+                                ->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']]);
+                        }
+                    );
+                },
+                
+                'opportunities as new_opportunities'=>function ($query) {
+                    
+                    $query->whereBetween(
+                        'opportunities.created_at', [$this->period['from'],$this->period['to']]
+                    );
+                        
+                },
+                'opportunities as won_opportunities'=>function ($query) {
+                    $query->whereClosed(1)
+                        ->whereBetween(
+                            'actual_close', [$this->period['from'],$this->period['to']]
+                        );
+                },
+                
+                'opportunities as opportunities_open'=>function ($query) {
+                    $query->whereClosed(0)        
+                        ->OrWhere(
+                            function ($q) {
+                                $q->where('actual_close', '>', $this->period['to'])
+                                    ->orwhereNull('actual_close');
+                            }
+                        )
+                        ->whereBetween(
+                            'opportunities.created_at', [$this->period['from'], $this->period['to']]
+                        );
+                },
+                'opportunities as won_value'=>function ($query) {
+                    
+                    $query->select(\DB::raw("SUM(value) as wonvalue"))
+                        ->whereClosed(1)
+                        ->whereBetween(
+                            'actual_close', [$this->period['from'],$this->period['to']]
+                        );
+                        
+                   
+                },
+                'opportunities as open_value'=>function ($query) {
+                    
+                    $query->select(\DB::raw("SUM(value) as wonvalue"))
+                        ->whereClosed(0)        
+                        
+                        ->whereBetween(
                             'opportunities.created_at', [$this->period['from'],$this->period['to']]
                         );
+                        
+                    
+                }
+                
+                ]
+            );
+        }
+        
+    }
+    /**
+     * [_summaryBranchStats description]
+     * 
+     * @param [type] $query    [description]
+     * @param [type] $period   [description]
+     * @param [type] $branches [description]
+     * 
+     * @return [type]           [description]
+     */
+    private function _summaryBranchStats($query, $period, $branches)
+    {
+        $this->period = $period;
+        $this->branches = $branches;
+        
+        return $query->withCount(       
+            [
+            'locations as offered_leads'=>function ($query) {
+                $query->whereHas(
+                    'assignedToBranch', function ($q) {
+
+                        $q->where('status_id', 1)
+                            ->whereIn('branch_id', $this->branches)
+                            ->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']]);
                     }
                 );
             },
-            'locations as wonopportunities'=>function ($query) {
+            'locations as worked_leads'=>function ($query) {
                 $query->whereHas(
-                    'opportunities', function ($query) {
-                        $query->whereClosed(1)
-                            ->whereBetween(
-                                'actual_close', [$this->period['from'],$this->period['to']]
-                            );
+                    'assignedToBranch', function ($q) {
+                        $q->where('status_id', 2)
+                            ->whereIn('branch_id', $this->branches)
+                            ->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']]);
                     }
                 );
             },
-            'locations as opportunitieslost'=>function ($query) {
+            'locations as rejected_leads'=>function ($query) {
                 $query->whereHas(
-                    'opportunities', function ($query) {
-                        $query->whereClosed(2)
-                            ->whereBetween(
-                                'actual_close', [$this->period['from'],$this->period['to']]
-                            );
+                    'assignedToBranch', function ($q) {
+                        $q->where('status_id', 4)
+                            ->whereIn('branch_id', $this->branches)
+                            ->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']]);
                     }
                 );
             },
-            'locations as opportunitiesopen'=>function ($query) {
-                $query->whereHas(
-                    'opportunities', function ($query) {
-                        $query->whereClosed(0)        
-                            ->OrWhere(
+            
+            'opportunities as new_opportunities'=>function ($query) {
+                
+                $query->whereBetween(
+                    'opportunities.created_at', [$this->period['from'],$this->period['to']]
+                )
+                    ->whereIn('branch_id', $this->branches);
+                    
+            },
+            'opportunities as won_opportunities'=>function ($query) {
+                $query->whereClosed(1)
+                    ->whereBetween(
+                        'actual_close', [$this->period['from'],$this->period['to']]
+                    )
+                    ->whereIn('branch_id', $this->branches);
+            },
+            
+            'opportunities as opportunities_open'=>function ($query) {
+                $query->where(
+                    function ($q) {
+                        $q->whereClosed(0)
+                            ->orWhere(
                                 function ($q) {
                                     $q->where('actual_close', '>', $this->period['to'])
                                         ->orwhereNull('actual_close');
                                 }
-                            )
-                        ->where('opportunities.created_at', '<', $this->period['to']);
-                    }
-                );
-            },
-            'locations as wonvalue'=>function ($query) {
-                $query->whereHas(
-                    'opportunities', function ($q) {
-                        $q->select(\DB::raw("SUM(value) as wonvalue"))
-                            ->where('closed', 1)
-                            ->whereBetween(
-                                'actual_close', [$this->period['from'],$this->period['to']]
                             );
                     }
-                );
+                )        
+                ->whereIn('branch_id', $this->branches)
+                ->where('opportunities.created_at', '<=', $this->period['to']);
             },
-            'locations as openvalue'=>function ($query) {
-                $query->whereHas(
-                    'opportunities', function ($q) {
-                        $q->select(\DB::raw("SUM(value) as wonvalue"))
-                            ->whereClosed(0)        
-                            ->OrWhere(
-                                function ($q1) {
-                                    $q1->where('actual_close', '>', $this->period['to'])
-                                        ->orwhereNull('actual_close');
-                                }
-                            )
-                        ->where('opportunities.created_at', '<', $this->period['to']);
-                    }
-                );
+            'opportunities as won_value'=>function ($query) {
+                
+                $query->select(\DB::raw("SUM(value) as wonvalue"))
+                    ->whereClosed(1)
+                    ->whereBetween(
+                        'actual_close', [$this->period['from'],$this->period['to']]
+                    )
+                    ->whereIn('branch_id', $this->branches);
+                    
+               
+            },
+            'opportunities as open_value'=>function ($query) {
+                
+                $query->select(\DB::raw("SUM(value) as wonvalue"))
+                    ->where(
+                        function ($q) {
+                            $q->whereClosed(0)
+                                ->orWhere(
+                                    function ($q) {
+                                        $q->where('actual_close', '>', $this->period['to'])
+                                            ->orwhereNull('actual_close');
+                                    }
+                                );
+                        }
+                    )        
+                    ->whereIn('branch_id', $this->branches)
+                    ->where('opportunities.created_at', '<=', $this->period['to']);
+                    
+                
             }
-
+            
             ]
         );
-
-
-
     }
+
+    public function scopeCompanyDetail($query, $period, $branches)
+    {
+        $this->branches = $branches;
+        $this->period = $period;
+        return $query->with(       
+            [
+            'locations'=>function ($query) {
+                $query->whereHas(
+                    'assignedToBranch', function ($q) {
+
+                        $q->where('status_id', 1)
+                            ->whereIn('branch_id', $this->branches)
+                            ->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']]);
+                    }
+                );
+            },
+            'opportunities'=>function ($query) {
+                
+                $query->whereBetween(
+                    'opportunities.created_at', [$this->period['from'],$this->period['to']]
+                )
+                    ->whereIn('branch_id', $this->branches);
+                    
+            },
+            
+            ]
+        );
+    }
+    /**
+     * [scopeCompanyStats description]
+     * 
+     * @param [type] $query [description]
+     * 
+     * @return [type]        [description]
+     */
     public function scopeCompanyStats($query)
     {
         return $query->withCount('locations')

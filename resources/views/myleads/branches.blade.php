@@ -3,7 +3,7 @@
 
 <h1>{{$title}}</h1>
 <p><a href="{{route('dashboard.show', $data['branches']->first()->id)}}">Return To Branch Dashboard</a></p>
-@if(count($myBranches)>1)
+@if(count($myBranches) > 1)
     <div class="col-sm-4">
         <form name="selectbranch" method="post" action="{{route('leads.branch')}}" >
         @csrf
@@ -42,6 +42,7 @@
     <th>Date Added</th>
     <th>Address</th>
     <th>Lead Source</th>
+    <th>Last Campaign</th>
     <th>Last Activity</th>
     <th>Remove</th>
 
@@ -75,14 +76,19 @@
             @endif
         </td>
         <td>
-            @if($lead->lastActivity->count() > 0)
-                  
-                {{$lead->lastActivity->first()->activity_date->format('Y-m-d')}}
-            
+            @if($lead->campaigns->count())
+               <a href="{{route('branchcampaign.show', [$lead->campaigns->last()->id, $data['branches']->first()->id])}}"> 
+                    {{$lead->campaigns->last()->title}}
+                </a>
             @endif
         </td>
         <td>
-           @if($lead->opportunities->count()==0) 
+            @if($lead->lastActivity->count() > 0)
+                {{$lead->lastActivity->first()->activity_date->format('Y-m-d')}}        
+            @endif
+        </td>
+        <td>
+           
           <a 
             data-href="{{route('branch.lead.remove',$lead->id)}}" 
             data-toggle="modal" 
@@ -91,7 +97,7 @@
             href="#">
                 <i class="fas fa-trash-alt text-danger"></i>
             </a>
-            @endif
+           
         </td>
 
 

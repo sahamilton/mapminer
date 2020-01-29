@@ -128,7 +128,11 @@ class Campaign extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
 
 
     }
-
+    /**
+     * [getAssignedLocationsOfCampaign description]
+     * 
+     * @return [type] [description]
+     */
     public function getAssignedLocationsOfCampaign()
     {
         $branches = $this->branches()->pluck('id')->toArray();
@@ -145,6 +149,10 @@ class Campaign extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
                 }
                 ]
             )->get();
+    }
+    public function addresses()
+    {
+        return $this->belongsToMany(Address::class);
     }
     /**
      * [getLocations description]
@@ -164,9 +172,10 @@ class Campaign extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
        
     }
     /**
+     * [scopeActive description]
      * 
+     * @param [type] $query [description]
      * 
-     * @param  [type] $query [description]
      * @return [type]        [description]
      */
     public function scopeActive($query)
@@ -185,10 +194,12 @@ class Campaign extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
      */
     public function getSalesTeamFromManager($manager_id, $serviceline)
     {
-        return Person::whereId([$manager_id])->firstOrFail()->descendantsAndSelf()
+        return Person::whereId([$manager_id])->firstOrFail()
+            ->descendantsAndSelf()
+            ->limitDepth(1)
             ->whereHas(
                 'userdetails.roles', function ($q) {
-                        $q->whereIn('roles.id', ['9']);
+                        $q->whereIn('roles.id', ['9', '3']);
                 }
             )
             ->with(
@@ -265,7 +276,6 @@ class Campaign extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
      */
     public function scopeCurrent($query, Array $branches =null)
     {
-        
         $query = $query
             ->where('datefrom', '<=', Carbon::now()->startOfDay())
             ->where('dateto', '>=', Carbon::now()->endOfDay());
@@ -300,7 +310,38 @@ class Campaign extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
     {
         return $this->servicelines->pluck('id')->toArray();
     }
-    
+    /**
+     * [scopeCampaignStats description]
+     * 
+     * @return [type] [description]
+     */
+    public function scopeCampaignStats($query)    
+    {
+        return $query->with(
+            [
+                'companies.locations'=>function ($q) { 
+                    $q->with(
+                        [
+                            'assignedToBranch'=>function ($q1) {
+                                $q1->wherePivot('created_at', '=>', $this->datefrom);
+                            }
+                        ]
+                    );
+                    $q->with(
+                        [
+                            'opportunities'=>function ($q1) {
+
+                                $q1->where('opportunities.created_at', '=>', $this->datefrom)
+                                    ->where('closed', 1);
+                            }
+
+                        ]
+                    );
+                }
+            ]
+        );
+
         
+    }
 
 }

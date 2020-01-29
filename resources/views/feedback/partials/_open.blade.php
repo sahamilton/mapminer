@@ -10,7 +10,9 @@
 		<th>Biz Rating</th>
 		<th>Tech Rating</th>
 		<th>Comments</th>
+		@if(auth()->user()->hasRole('admin'))
 		<th>Actions</th>
+		@endif
 
 	</thead>
 	<tbody>
@@ -37,6 +39,7 @@
 		<td>{{$item->biz_rating}}</td>
 		<td>{{$item->tech_rating}}</td>
 		<td>{{$item->comments_count}}</td>
+		@if(auth()->user()->hasRole('admin'))
 		<td>
 			<div class="btn-group">
 				<button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
@@ -79,6 +82,7 @@
 				</ul>
 			</div>	
 		</td>
+		@endif
 		</tr>
 	@endforeach
 

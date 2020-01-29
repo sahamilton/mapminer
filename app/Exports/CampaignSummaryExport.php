@@ -8,11 +8,13 @@ class CampaignSummaryExport implements FromView
 {
     public $branches;
     public $campaign;
+    public $fields;
 
-    public function __construct(Campaign $campaign, $branches)
+    public function __construct(Campaign $campaign, $branches, Array $fields)
     {
         $this->branches = $branches;
         $this->campaign = $campaign;
+        $this->fields = $fields;
     }
 
     /**
@@ -24,8 +26,9 @@ class CampaignSummaryExport implements FromView
     {
         return view(
             'campaigns.summaryexport',  [
-                'branches' => $this->branches,
-                'campaign' => $this->campaign
+            'branches' => $this->branches,
+            'campaign' => $this->campaign,
+            'fields'=>$this->fields,
             ]
         );
     }

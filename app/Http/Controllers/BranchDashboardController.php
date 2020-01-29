@@ -79,6 +79,7 @@ class BranchDashboardController extends DashboardController
      */
     public function index()
     {
+  
         if (session()->has('impersonated_by')) {
             session()->forget('branch');
         }
@@ -146,7 +147,7 @@ class BranchDashboardController extends DashboardController
      */
     public function show(Branch $branch)
     {
-        
+       
         if (! session()->has('branch') or $branch->id != session('branch') ) {
             session(['branch'=>$branch->id]);
         }
@@ -165,7 +166,7 @@ class BranchDashboardController extends DashboardController
             )->first();
         } else {
             $this->manager = $branch->manager->first();
-        }
+        } 
         if (! $this->manager) {
             return redirect()->route('dashboard.index')
                 ->withWarning(
@@ -174,6 +175,7 @@ class BranchDashboardController extends DashboardController
                     . ". Notify Sales Opersations"
                 );
         }
+
         $this->myBranches = [$branch->id];
         $data = $this->_getDashBoardData();
     
@@ -198,9 +200,10 @@ class BranchDashboardController extends DashboardController
             ->where('reports_to', $this->manager->id) 
             ->WithRoles($teamroles)     
             ->get();
+
           //$data['team']= $this->myTeamsOpportunities();
         $data['summary'] = $this->getSummaryBranchData();
-    
+   
         //$data['activitychart'] =  $this->_getActivityChartData();
         $data['activitychart'] = $this->chart->getBranchActivityByTypeChart(
             $this->_getActivityTypeChartData()

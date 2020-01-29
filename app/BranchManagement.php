@@ -84,23 +84,29 @@ class BranchManagement extends Model
     {
         
         $recipients = $this->person->inServiceLine(request('serviceline'))
-                    ->staleBranchAssignments(request('roles'))
-                    ->with('userdetails', 'branchesServiced', 'userdetails.roles', 'userdetails.serviceline');
+            ->staleBranchAssignments(request('roles'))
+            ->with('userdetails', 'branchesServiced', 'userdetails.roles', 'userdetails.serviceline');
 
         if (request('test')) {
             $recipients->inRandomOrder()
-                    ->limit(5);
+                ->limit(5);
         }
             return $recipients->get();
     }
-
+    /**
+     * [getConfirmedRecipients description]
+     * 
+     * @param Request $request [description]
+     * 
+     * @return [type]           [description]
+     */
     public function getConfirmedRecipients(Request $request)
     {
 
         return $this->person
-                    ->whereIn('id', request('id'))
-                    ->with('userdetails', 'branchesServiced', 'userdetails.roles')
-                    ->get();
+                ->whereIn('id', request('id'))
+                ->with('userdetails', 'branchesServiced', 'userdetails.roles')
+                ->get();
     }
 
     public function getCampaignId()

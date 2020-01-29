@@ -101,6 +101,15 @@ class Address extends Model
         return $this->hasOne(Customer::class, 'address_id');
     }
     /**
+     * [campaigns description]
+     * 
+     * @return [type] [description]
+     */
+    public function campaigns()
+    {
+        return $this->belongsToMany(Campaign::class);
+    }
+    /**
      * [project description]
      * 
      * @return [type] [description]
@@ -120,6 +129,8 @@ class Address extends Model
         return $this->belongsToMany(User::class, 'location_user', 'address_id', 'user_id')
             ->withPivot('created_at', 'updated_at');
     }
+
+    
     /**
      * [contacts description]
      * 
@@ -353,11 +364,11 @@ class Address extends Model
      * 
      * @return [type] [description]
      */
-    public function campaigns()
+    /*public function campaigns()
     {
  
         return $this->belongsToMany(Salesactivity::class);
-    }
+    }*/
 
 
     /**

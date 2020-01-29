@@ -36,6 +36,10 @@ class Opportunity extends Model
     {
         return $this->belongsTo(AddressBranch::class, 'address_branch_id')->with('branch');
     }
+    public function location()
+    {
+        return $this->belongsTo(Address::class, 'address_id', 'id');
+    }
     /**
      * [address description]
      * 

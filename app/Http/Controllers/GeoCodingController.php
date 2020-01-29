@@ -56,7 +56,7 @@ class GeoCodingController extends BaseController
     public function findMe(FindMeFormRequest $request)
     {
       
-
+        
         if (request()->filled('search')) {
             $address = trim(request('search'));
         }
@@ -68,38 +68,9 @@ class GeoCodingController extends BaseController
         }
 
         
-
-        if ($data['search'] != session('geo.search') or ! $data['lat']) {
-            if (preg_match('^Lat:([0-9]*[.][0-9]*).Lng:([-]?[0-9]*[.][0-9]*)^', $data['search'], $string)) {
-                $data['lat']=$string[1];
-                $data['lng'] = $string[2];
-                $geocode = app('geocoder')->reverse($data['lat'], $data['lng'])->get();
-                if (! $geocode or count($geocode)==0) {
-                    return redirect()->back()->withInput()->with('error', 'Unable to Geocode address:'.request('address'));
-                }
-                if ($geocode->first()->getFormattedAddress()) {
-                    $data['search']= $geocode->first()->getFormattedAddress();
-                }
-            } else {
-                $geocode = app('geocoder')->geocode($data['search'])->get();
-
-                //reset the geo session
-                if (! $geocode or count($geocode)==0) {
-                    return redirect()->back()->withInput()->with('error', 'Unable to Geocode address:'.request('address'));
-                }
-                
-                
-                $data = array_merge($data, $this->location->getGeoCode($geocode));
-            }
-        }
-    
-        $data['latlng'] = $data['lat'].":".$data['lng'];
+        // get position from address
+        $data = $this->_getPostionFromAddress($data);
         
-        // we have to do this in case the lat / lng was set via the browser
-        if (! isset($data['fulladdress'])) {
-            $data['fulladdress'] = $data['search'];
-        }
-
         if (! request()->has('addressType') or count(request('addressType'))==0) {
             $data['addressType'] = ['customer','project','lead','location'];
         }
@@ -118,7 +89,7 @@ class GeoCodingController extends BaseController
             $company=null;
         }
 
-        $data['result'] = $this->getGeoListData($data);
+        $data['result'] = $this->_getGeoListData($data);
 
         if (count($data['result'])==0) {
             session()->flash('warning', 'No results found. Consider increasing your search distance');
@@ -126,8 +97,9 @@ class GeoCodingController extends BaseController
         $servicelines = $this->serviceline
             ->whereIn('id', $this->userServiceLines)
             ->get();
-
+        // check which type of view to return
         if (isset($data['view']) && $data['view'] == 'list') {
+        // list view
             if ($data['type']=='people') {
                 return response()->view('maps.peoplelist', compact('data'));
             }
@@ -148,15 +120,54 @@ class GeoCodingController extends BaseController
             
             return response()->view('maps.list', compact('data', 'watchlist', 'filtered', 'company', 'servicelines'));
         } else {
+            // map view
             $data = $this->_setZoomLevel($data);
-
-            
-
     
             return response()->view('maps.map', compact('data', 'filtered', 'servicelines', 'company'));
         }
     }
-    
+    /**
+     * [_getPostionFromAddress description]
+     * 
+     * @param [type] $data [description]
+     * 
+     * @return [type]       [description]
+     */
+    private function _getPostionFromAddress($data)
+    {
+        if ($data['search'] != session('geo.search') or ! $data['lat']) {
+            // get geocode from lat lng
+            if (preg_match('^Lat:([0-9]*[.][0-9]*).Lng:([-]?[0-9]*[.][0-9]*)^', $data['search'], $string)) {
+                $data['lat']=$string[1];
+                $data['lng'] = $string[2];
+                $geocode = app('geocoder')->reverse($data['lat'], $data['lng'])->get();
+                if (! $geocode or count($geocode)==0) {
+                    return redirect()->back()->withInput()->with('error', 'Unable to Geocode address:'.request('address'));
+                }
+                if ($geocode->first()->getFormattedAddress()) {
+                    $data['search']= $geocode->first()->getFormattedAddress();
+                }
+            } else {
+                // get geocode from address
+                $geocode = app('geocoder')->geocode($data['search'])->get();
+
+                //reset the geo session
+                if (! $geocode or count($geocode)==0) {
+                    return redirect()->back()->withInput()->with('error', 'Unable to Geocode address:'.request('address'));
+                }
+                
+                
+                $data = array_merge($data, $this->location->getGeoCode($geocode));
+            }
+        }
+        $data['latlng'] = $data['lat'].":".$data['lng'];
+        
+        // we have to do this in case the lat / lng was set via the browser
+        if (! isset($data['fulladdress'])) {
+            $data['fulladdress'] = $data['search'];
+        }
+        return $data;
+    }
     /**
      * [_getViewData description]
      * 
@@ -166,7 +177,7 @@ class GeoCodingController extends BaseController
      */
     private function _getViewData($data)
     {
-        
+        //dd(method_exists($this, '_get'.ucwords($data['type']) .'MapData'), '_get'.ucwords($data['type']).'MapData');
         if (method_exists($this, '_get'.ucwords($data['type']).'MapData')) {
             $method = '_get'.ucwords($data['type']).'MapData';
 
@@ -260,6 +271,21 @@ class GeoCodingController extends BaseController
         return $data;
     }
     /**
+     * [__getOpportunitiesMapData description]
+     * 
+     * @param [type] $data [description]
+     * 
+     * @return [type]       [description]
+     */
+    private function _getOpportunitiesMapData($data)
+    {
+        $data['urllocation'] ="api/opportunity";
+        $data['title'] = "Open Opportunity Locations";
+        $data['company']=null;
+        $data['companyname']=null;
+        return $data;
+    }
+    /**
      * [_getMyLeadsMapData description]
      * 
      * @param [type] $data [description]
@@ -268,7 +294,8 @@ class GeoCodingController extends BaseController
      */
     private function _getMyLeadsMapData($data)
     {
-        $data['urllocation'] ="api/myleads";
+        
+        $data['urllocation'] ="api/myleads/" . auth()->user()->person->id;
         $data['title'] = "Lead Locations";
         $data['company']=null;
         $data['companyname']=null;
@@ -285,7 +312,7 @@ class GeoCodingController extends BaseController
     private function _setZoomLevel($data)
     {
         
-        $levels = \Config::get('app.zoom_levels');
+        $levels = config('app.zoom_levels');
         $data['zoomLevel']='10';
         if (isset($data['distance']) && array_key_exists($data['distance'], $levels)) {
             $data['zoomLevel']= $levels[$data['distance']];
@@ -296,13 +323,13 @@ class GeoCodingController extends BaseController
     }
     
     /**
-     * [getGeoListData description]
+     * [_getGeoListData description]
      * 
      * @param [type] $data [description]
      * 
      * @return [type]       [description]
      */
-    public function getGeoListData($data)
+    private function _getGeoListData($data)
     {
 
 
@@ -310,7 +337,7 @@ class GeoCodingController extends BaseController
         $location = new Location;
         $location->lat = $data['lat'];
         $location->lng = $data['lng'];
-        
+        // dd(method_exists($this, '_get'.ucwords($data['type']).'ListData'), '_get'.ucwords($data['type']).'ListData');
         if (method_exists($this, '_get'.ucwords($data['type']).'ListData')) {
             $method = '_get'.ucwords($data['type']).'ListData';
             return $this->$method($location, $data, $company);
@@ -424,10 +451,21 @@ class GeoCodingController extends BaseController
     private function _getMyLeadsListData($location, $data)
     {
         
-        return $this->lead->myLeads($statuses = [1,2], $all = true)
-            ->with('leadsource')
+        
+        $myBranches = array_keys($this->person->find(auth()->user()->person->id)->myBranches());
+
+        return $this->address
             ->nearby($location, $data['distance'])
-            ->get();
+            ->where(
+                function ($q) use ($myBranches) {
+                    $q->doesntHave('assignedToBranch')
+                        ->orWhereHas(
+                            'assignedToBranch', function ($q) use ($myBranches) {
+                                $q->whereIn('branches.id', $myBranches);
+                            }
+                        );
+                }
+            )->get();
     }
     
     /**
@@ -448,7 +486,7 @@ class GeoCodingController extends BaseController
 
             $data['latlng'] = $data['lat'].":".$data['lng'];
             if ($data['type'] == 'list') {
-                $data['result'] = $this->getGeoListData($data);
+                $data['result'] = $this->_getGeoListData($data);
                 
                 return response()->view('maps.list', compact('data', 'filtered'));
             } else {
