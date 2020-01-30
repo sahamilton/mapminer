@@ -147,14 +147,21 @@ class CampaignTrackingController extends Controller
 
     }
 
-
+    /**
+     * [detailByCompany description]
+     * 
+     * @param Campaign $campaign [description]
+     * @param Company  $company  [description]
+     * 
+     * @return [type]             [description]
+     */
     public function detailByCompany(Campaign $campaign, Company $company)
     {
       
         $period = $this->_getCampaignPeriod($campaign);
         $branches = $campaign->branches()->pluck('id')->toArray();
         $company = $this->company->whereId($company->id)->companyDetail($period, $branches)->get();
-        dd($company);
+       
        
     }
     /**
@@ -175,9 +182,16 @@ class CampaignTrackingController extends Controller
                 }
             )->summaryCampaignStats($campaign)->get();
     }
-
+    /**
+     * [_getAllBranchesInCampaign description]
+     * 
+     * @param Campaign $campaign [description]
+     * 
+     * @return [type]             [description]
+     */
     private function _getAllBranchesInCampaign(Campaign $campaign)
     {
+        // this doesnt make much sense!
         $branch_ids = $this->branch->pluck('id')->toArray();
         $company_ids = $campaign->companies->pluck('id')->toArray();
         return $this->branch->whereIn('id', $branch_ids)

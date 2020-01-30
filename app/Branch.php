@@ -1153,8 +1153,7 @@ class Branch extends Model implements HasPresenter
         $this->location_ids = $campaign->getLocations();
         $this->period = $period;
         return $query->withCount(       
-            [
-                
+            [ 
 
             'addresses as offered_leads'=>function ($q) {
                 $q->whereIn('company_id', $this->company_ids)

@@ -141,22 +141,30 @@ class Person extends NodeModel implements HasPresenter
     public function getMyBranches(Array $servicelines=null)
     {
         
+        
         if ($this->userdetails->hasRole('sales_operations') && $this->has('reportsTo')) {
             $person = $this->reportsTo()->first();
-            $branches = $person->descendantsAndSelf();;
+            $branches = $person->descendantsAndSelf()->withRoles([9]);
         } else {
-            $branches = $this->descendantsAndSelf();
+            $branches = $this->descendantsAndSelf()->withRoles([9]);
         }
-        $branches = $branches      
-            ->withRoles([9])
-            ->with('branchesServiced');
+        
         if ($servicelines) {
-            $branches = $branches->whereHas(
-                'serviceline', function ($q) use ($serviceline) {
-                    $q->whereIn('id', $serviceline);
-                }
+            $branches = $branches->with(
+                [
+                    'branchesServiced' => function ($q) use ($servicelines) {
+                        $q->whereHas(
+                            'servicelines', function ($q1) use ($servicelines) {
+                                $q1->whereIn('servicelines.id', $servicelines);
+                            }
+                        );
+                    }
+                ]
             );
+        } else {
+            $branches = $branches->with('branchesServiced');
         }
+        
         $branches = $branches->get()
             ->map(
                 function ($branch) { 
@@ -199,14 +207,23 @@ class Person extends NodeModel implements HasPresenter
         
         if (auth()->user()->hasRole('admin')) {
             
-            return Branch::all()->pluck('branchname', 'id')->toArray();
+            return Branch::whereHas(
+                'serviceline', function ($q) use ($servicelines) {
+                    $q->whereIn('serviceline.id', $servicelines);
+                }
+            )->pluck('branchname', 'id')->toArray();
         } elseif (! $person && auth()->user()->hasRole('sales_operations')) {
           
             $person = $this->findOrFail(auth()->user()->person->reports_to);
 
         }
        
-        $myteam = $this->myTeam($person)->has('branchesServiced')->get();
+        $myteam = $this->myTeam($person)->whereHas(
+            'branchesServiced', function ($q) use ($servicelines) {
+                dd($servicelines);
+                 $q->whereIn('serviceline.id', $servicelines);
+            }
+        )->get();
 
         $data=[];
         if ($servicelines) {

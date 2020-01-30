@@ -96,15 +96,56 @@ class Campaign extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
        
         
     }
+    public function getCampaignBranches()
+    {
+        // get managers team
+        $team = $this->getCampaignBranchTeam();
+        // get branches of team filtered by serviceline
+        //$branches = $this->getBranchesServiced($team);
+
+        $branches = $team->map(
+            function ($manager) {
+                return $manager->branchesServiced->pluck('id', 'branchname')->toArray();
+            }
+        );
+        $branches = $branches->flatten()->toArray();
+        sort($branches);
+      
+        return $branches;
+    }
+
+    public function getCampaignBranchTeam()
+    {
+      
+        return Person::whereId($this->manager->id)->firstOrFail()
+            ->descendantsAndSelf()
+            ->whereHas(
+                'userdetails.roles', function ($q) {
+                        $q->whereIn('roles.id', ['9']);
+                }
+            )
+            ->with(
+                [
+                    'branchesServiced' => function ($q) {
+                        $q->whereHas(
+                            'servicelines', function ($q1) {
+                                $q1->whereIn('id', $this->servicelines->pluck('id')->toArray());
+                            }
+                        );
+                    }
+                ]
+            )
+            ->get();
+    }
     /**
      * [getCompanyLocationsOfCampaign description]
      * 
      * @return [type] [description]
      */
-    public function getCompanyLocationsOfCampaign()
+    public function getCompanyLocationsOfCampaign($branches)
     {
-        $box = $this->getBoundingBox($this->branches);
-        $branches = $this->branches()->pluck('id')->toArray();
+        $box = $this->getBoundingBox($branches);
+        
         return Company::whereIn('id', $this->companies->pluck('id')->toArray())
             ->with(
                 [
@@ -118,7 +159,7 @@ class Campaign extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
                 'assigned'=>function ($q) use ($branches) {
                     $q->whereHas(
                         'assignedToBranch', function ($q1) use ($branches) {
-                            $q1->whereIn('branch_id', $branches);
+                            $q1->whereIn('branch_id', $branches->pluck('id')->toArray());
                         }
                     )->with('assignedToBranch');
                 }

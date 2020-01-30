@@ -13,7 +13,7 @@ name="branches"
 <tbody>
 
 @foreach ($data['branches'] as $branch)
-  
+    
     <tr>
     <td><a href="{{route('branchcampaign.show', [$campaign->id, $branch->id])}}">{{$branch->id}}</a></td>
     <td>{{$branch->branchname}}</td>
