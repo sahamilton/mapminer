@@ -24,13 +24,10 @@
     
     <p><strong>Active From:</strong>{{$campaign->datefrom ? $campaign->datefrom->format('l jS M Y') : ''}}</p>
     <p><strong>Expires:</strong>{{$campaign->dateto ? $campaign->dateto->format('l jS M Y') : ''}}</p>
-    <p><strong>Branches:</strong> <em>(that can service)</em>
-        
-            {{$campaign->branches->count()}}
-        
-    </p>
-    
-        @if(isset($data))
+    @if(isset($data)) 
+        <p><strong>Branches:</strong> <em>(that can service)</em>
+                {{$data['branches']->count()}}
+        </p>
        <p> <strong>Total Assignable Locations:</strong>{{$data['locations']['unassigned']}}</p>
        
        <p> <strong>Total Previously Assigned Locations:</strong>{{$data['locations']['assigned']}}</p>
