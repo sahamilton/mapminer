@@ -406,8 +406,8 @@ class CampaignController extends Controller
     {
         $data = $this->_getCampaignData($campaign);
         
-        $data['locations'] = $this->_getSummaryLocations($data['companies']);
-      
+        $data['locations'] = $this->_getSummaryLocations($campaign, $data['companies']);
+ 
         return $data;
     }
     /**
@@ -417,7 +417,7 @@ class CampaignController extends Controller
      * 
      * @return [type]       [description]
      */
-    private function _getSummaryLocations($data)
+    private function _getSummaryLocations(Campaign $campaign, $data)
     {
         
         $result['unassigned'] = $data->map(
@@ -425,7 +425,7 @@ class CampaignController extends Controller
                 return $company->unassigned;
             }
         );
-
+        $result['assignable'] = $this->_getBranchAssignableSummary($campaign, $result['unassigned']);
         $result['unassigned'] = $result['unassigned']->flatten()->count();
         $result['assigned'] = $data->map(
             function ($company) {
@@ -433,8 +433,17 @@ class CampaignController extends Controller
             }
         );
         $result['assigned'] = $result['assigned']->flatten()->count();
-
+        
         return $result;
+    }
+    private function _getBranchAssignableSummary(Campaign $campaign, $result)
+    {
+       
+        $assignable = $campaign->getAssignableLocationsofCampaign($result->flatten()->pluck('id')->toArray());
+        foreach ($assignable as $branch) {
+            $data[$branch->branch] = $branch->assignable;
+        }
+        return $data;
     }
     /**
      * [_getCampaignData description]
@@ -550,7 +559,7 @@ class CampaignController extends Controller
     {
         
         $servicelines = $campaign->servicelines->pluck('id')->toArray();
-        $branches = $campaign->getCampaignBranches();
+        $branches = $campaign->getCampaignBranches()->pluck('id')->toArray();
         //$branches = $campaign->branches->pluck('id')->toArray();
         $companies = $campaign->companies->pluck('id')->toArray();
         

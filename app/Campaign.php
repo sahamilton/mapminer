@@ -100,17 +100,14 @@ class Campaign extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
     {
         // get managers team
         $team = $this->getCampaignBranchTeam();
-        // get branches of team filtered by serviceline
-        //$branches = $this->getBranchesServiced($team);
-
+       
         $branches = $team->map(
             function ($manager) {
-                return $manager->branchesServiced->pluck('id', 'branchname')->toArray();
+                return $manager->branchesServiced;
             }
-        );
-        $branches = $branches->flatten()->toArray();
-        sort($branches);
-      
+        )
+        ->flatten()
+        ->unique();
         return $branches;
     }
 
@@ -142,8 +139,10 @@ class Campaign extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
      * 
      * @return [type] [description]
      */
-    public function getCompanyLocationsOfCampaign($branches)
+    public function getCompanyLocationsOfCampaign()
     {
+        
+        $branches = $this->getCampaignBranches();
         $box = $this->getBoundingBox($branches);
         
         return Company::whereIn('id', $this->companies->pluck('id')->toArray())
@@ -166,6 +165,36 @@ class Campaign extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
                 ]
             ) 
             ->get();
+
+
+    }
+    public function getAssignableLocationsofCampaign($addresses)
+    {
+        
+        $branches = $this->getCampaignBranches()->pluck('id')->toArray();
+        $query = "select 
+            count(a.id) as assignable,
+            b.id as branch
+ 
+            from addresses a
+            left join address_branch on a.id = address_branch.address_id
+            inner join branches b
+                on b.id = (
+                    select b1.id
+                    from branches b1,  branch_serviceline s
+                    where st_distance_sphere(a.position, b1.position, 40233) * 0.00062137119 < b1.radius
+                    and b1.id = s.branch_id
+                    and s.serviceline_id in (5)
+                    and b1.id in ('". implode("','", $branches). "')
+                    order by st_distance_sphere(a.position, b1.position) 
+                    limit 1
+                )
+            where a.id in ('". implode("','", $addresses) . "')
+            and address_branch.address_id is null
+            group by branch";
+        return \DB::select(\DB::raw($query));
+       
+
 
 
     }

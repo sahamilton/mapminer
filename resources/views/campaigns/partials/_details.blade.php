@@ -18,7 +18,10 @@ name="branches"
     <td><a href="{{route('branchcampaign.show', [$campaign->id, $branch->id])}}">{{$branch->id}}</a></td>
     <td>{{$branch->branchname}}</td>
     <td class="text-right">
-        
+        @if(isset($data['locations']['assignable'][$branch->id]))
+            @php isset($assignable) ?  $assignable = $assignable + $data['locations']['assignable'][$branch->id] : $assignable = $data['locations']['assignable'][$branch->id]  @endphp
+                {{$data['locations']['assignable'][$branch->id]}}
+        @endif
     </td>
      <td class="text-right">
         @php isset($totalleads) ?  $totalleads = $totalleads + $branch->workedleads : $totalleads = $branch->workedleads @endphp
@@ -31,8 +34,9 @@ name="branches"
  @endforeach
  <tfoot>
     <td>Totals</td>
-    <td>Unassigned </td>
-    <td class="text-right">{{$data['locations']['unassigned']}}</td>
+    <td>Unassignable:{{$data['locations']['unassigned'] - $assignable }}</td>
+    <td class="text-right">{{isset($assignable) ? $assignable : 0}}</td>
+    
     <td class="text-right">{{isset($totalleads) ? $totalleads : 0}}</td>
 </tfoot>
 </tbody>
