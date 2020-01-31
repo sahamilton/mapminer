@@ -450,6 +450,17 @@ class Address extends Model
             ->pluck('fieldname')->toArray();
         return array_unique($fields);
     }
+
+    public function scopeDuplicate($query)
+    {
+        return $query->where(
+            'position', '=', function ($q) { 
+                $q->from('addresses')
+                    ->select('position')
+                    ->where('position', '=', $this->position);
+            }
+        );
+    }
     /**
      * [scopeDuplicate description]
      * 
@@ -459,7 +470,7 @@ class Address extends Model
      * 
      * @return [type]            [description]
      */
-    public function scopeDuplicate($query, $longitude, $latitude, $commpany_id= null)
+    public function scopeDuplicateDistance($query, $longitude, $latitude, $commpany_id= null)
     {
         $close_in_metres = 5;
   

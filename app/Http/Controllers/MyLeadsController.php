@@ -163,7 +163,7 @@ class MyLeadsController extends BaseController
 
         $data['branch'] = $this->branch->findOrFail(request('branch'));
         
-        $dupes = $this->lead->duplicate($data['lead']['lng'], $data['lead']['lat'])->get();
+        $dupes = $this->lead->duplicateDistance($data['lead']['lng'], $data['lead']['lat'])->get();
 
         //if ($dupes->count() > 0) {
             //return response()->view('addresses.duplicates', compact('dupes', 'data'));
