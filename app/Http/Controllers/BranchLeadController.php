@@ -170,4 +170,11 @@ class BranchLeadController extends Controller
         }
        
     }
+
+    public function showDuplicates()
+    {
+
+        
+        return resposne()->view('branchleads.duplicates', compact('leads'));
+    }
 }

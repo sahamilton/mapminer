@@ -204,6 +204,9 @@ class Person extends NodeModel implements HasPresenter
      */
     public function myBranches(Person $person=null, Array $servicelines=null)
     {
+        if (! $servicelines) {
+            $servicelines = auth()->user()->serviceline()->pluck('servicelines.id')->toArray();
+        }
         
         if (auth()->user()->hasRole('admin')) {
             
@@ -220,22 +223,24 @@ class Person extends NodeModel implements HasPresenter
        
         $myteam = $this->myTeam($person)->whereHas(
             'branchesServiced', function ($q) use ($servicelines) {
-                dd($servicelines);
-                 $q->whereIn('serviceline.id', $servicelines);
+                $q->whereHas(
+                    'servicelines', function ($q1) use ($servicelines) {
+                        $q1->whereIn('servicelines.id', $servicelines);
+                    }
+                );
+                 
             }
         )->get();
-
+       
         $data=[];
-        if ($servicelines) {
-            // not used!!
-        } else {
+        
             $teammembers =  $myteam->map(
                 function ($team) {
            
                     return $team->branchesServiced;
                 }
             );
-        }
+      
         
 
         foreach ($teammembers as $member) {
