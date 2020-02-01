@@ -45,6 +45,7 @@ COUNT(IF(created_at <= DATE_SUB(NOW(), INTERVAL 4 month), 1, null)) AS 4month,
 COUNT(IF(created_at <= DATE_SUB(NOW(), INTERVAL 5 month), 1, null)) AS 5month,
 COUNT(IF(created_at <= DATE_SUB(NOW(), INTERVAL 6 month), 1, null)) AS 6month
 from opportunities
+where opportunities.closed = 0
 group by branch_id
 
 
@@ -664,6 +665,50 @@ where a.company_id in (388)
 and address_branch.address_id is null
 
 // Duplicates
+    select a1.id, businessname, street, city, state, zip
+    from 
+    addresses a1, address_branch 
+    where position in 
+      (
+        select * from 
+        (
+          select  a.position, count(a.id) as duplicate
+          from addresses a, 
+          addresses b, address_branch
+          where a.position = b.position
+          and a.id = address_branch.address_id
+          and b.id = address_branch.address_id
+          and address_branch.branch_id = 2255
+          group by a.position
+          having duplicate  > 1
+        )  z 
+      )
+    and a1.id = address_branch.address_id
+    and address_branch.branch_id = 2255
+    order by position
+
+
+select * from addresses, address_branch where addresses.id = address_branch.address_id and address_branch.branch_id = 2255 and position = (select position from addresses where id = 679227)
+
+public function duplicate(Address $address) {
+  return $this->whereHas(
+    'assignedToBranch', function ($q) {
+      $q->where('branches.id', 2255);
+    }
+  )->where('position', function ($q) use($address){
+        $q->from('addresses')->select('position')->where('addresses.id', '=', $address);
+    }
+  )->get();
+}
+
+  $address = Address::whereHas('assignedToBranch', function ($q) { $q->where('branches.id', 2255);})->where('position','=', function ($q) { $q->from('addresses')->select('position')->where('addresses.id', 6679227);})->count();
+
+$data= User::from('User as u')
+         ->select('distinct u.name')
+         ->join('Member as m','u.id','m.userId')
+         ->whereRaw('u.name is not null')
+         ->get();
+
 
 select addresses.*
 FROM addresses

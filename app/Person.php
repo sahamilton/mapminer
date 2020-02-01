@@ -206,13 +206,14 @@ class Person extends NodeModel implements HasPresenter
     {
         if (! $servicelines) {
             $servicelines = auth()->user()->serviceline()->pluck('servicelines.id')->toArray();
+            
         }
         
         if (auth()->user()->hasRole('admin')) {
-            
+          
             return Branch::whereHas(
-                'serviceline', function ($q) use ($servicelines) {
-                    $q->whereIn('serviceline.id', $servicelines);
+                'servicelines', function ($q) use ($servicelines) {
+                    $q->whereIn('servicelines.id', $servicelines);
                 }
             )->pluck('branchname', 'id')->toArray();
         } elseif (! $person && auth()->user()->hasRole('sales_operations')) {
@@ -232,7 +233,7 @@ class Person extends NodeModel implements HasPresenter
             }
         )->get();
        
-        $data=[];
+        $data = [];
         
             $teammembers =  $myteam->map(
                 function ($team) {

@@ -175,6 +175,6 @@ class BranchLeadController extends Controller
     {
 
         
-        return resposne()->view('branchleads.duplicates', compact('leads'));
+        return response()->view('branchleads.duplicates', compact('leads'));
     }
 }

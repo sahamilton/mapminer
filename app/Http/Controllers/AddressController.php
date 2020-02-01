@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Address;
+use App\Activity;
+use App\Opportunity;
 use App\Branch;
 use App\Note;
 use App\Person;
@@ -203,6 +205,89 @@ class AddressController extends BaseController
         $person_id = auth()->user()->person->id;
         $address->ranking()->attach($person_id, $data);
         return redirect()->route('address.show', $address->id)->withMessasge("Thanks for rating this location");
+    }
+    
+
+    public function duplicates(Address $address)
+    {
+        $dupes = $address->load('duplicates')->duplicates;
+        return response()->view('addresses.duplicates', compact('dupes'));
+    }
+
+    public function mergeAddress(Request $request)
+    {
+        // get all addresses
+        $fulladdresses = $this->address
+            ->with('activities', 'opportunities')
+            ->whereIn('id', request('address'))
+            ->orderBy('created_at', 'asc')
+            ->get();
+        //get oldest address
+        $oldestaddress = $fulladdresses->first();
+        // get addresses that will be merged
+        $addresses = $fulladdresses->slice(1);
+       
+        //change all opportunities and activities to oldest address
+        if (! $this->_updateMergedAddressActivities($addresses, $oldestaddress)) {
+            dd('Error 230');
+        }
+
+        if (! $this->_updateMergedAddressOpportunities($addresses, $oldestaddress)) {
+            dd('Error 234');
+        }
+        //delete all but oldest address
+        if (! $this->_deleteMergedAddresses($addresses)) {
+             dd('Error 238');
+        }
+        //return to oldest address
+        return redirect()->route('address.show', $oldestaddress->id)->withMesssage("Duplicate addresses have been merged");
+        
+    }
+
+    private function _updateMergedAddressActivities($addresses, $oldestaddress)
+    {
+        $activities = $addresses->map(
+            function ($address) {
+                if ($address->activities->isNotEmpty()) {
+                    
+                    return $address->activities->pluck('id');
+                }
+            }
+        );
+        $activities = array_filter($activities->flatten()->toArray());
+        if (count($activities) >0) {
+            return Activity::whereIn('id', $activities)->update(['address_id' => $oldestaddress->id]);
+        }
+        return true;
+    }
+
+    private function _updateMergedAddressOpportunities($addresses, $oldestaddress)
+    {
+        $opportunities = $addresses->map(
+            function ($address) {
+                if ($address->opportunities->isNotEmpty()) {
+                    
+                    return $address->opportunities->pluck('id');
+                }
+            }
+        );
+
+        $opportunities = array_filter($opportunities->flatten()->toArray());
+        if (count($opportunities) > 0 ) {
+            return Opportunity::whereIn('id', $opportunities)->update(['address_id' => $oldestaddress->id]);
+        }
+        return true;
+    }
+
+    private function _deleteMergedAddresses($addresses)
+    {
+        $delete_ids = $addresses->pluck('id')->toArray();
+        if (count($delete_ids) > 0) {
+            return $this->address->whereIn('id', $delete_ids)->delete();
+           
+        }
+        return true;
+        
     }
     
     /**

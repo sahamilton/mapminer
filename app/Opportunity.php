@@ -277,6 +277,15 @@ class Opportunity extends Model
         
         
     }
+    public function scopeStale($query)
+    {
+
+        return $query->where('closed', 0)
+            ->where('expected_close', '<', now()->subMOnths(2));
+           
+
+
+    }
     public function scopeStaleOpportunities($query)
     {
         return $query->where('closed', 0)

@@ -47,6 +47,8 @@ Route::group(
         Route::resource('activity', 'ActivityController');
         
         //     Address
+        Route::post('address/merge', ['as'=>'addresses.merge', 'uses'=>'AddressController@mergeAddress']);
+        Route::get('address/{address}/duplicates', ['as'=>'address.duplicates', 'uses'=>'AddressController@duplicates']);
         Route::post('address/{address}/rating', ['as'=>'address.rating', 'uses'=>'AddressController@rating']);
         Route::resource('address', 'AddressController');
         
@@ -130,8 +132,9 @@ Route::group(
         Route::post('contact/branch', ['as'=>'contact.branch', 'uses'=>'LocationContactController@branchcontacts']);
         Route::get('contacts/branch/{branch}', ['as'=>'contacts.branch', 'uses'=>'LocationContactController@branchcontacts']);
         Route::resource('mycontacts', 'MyContactsController');
-        
-           
+        Route::post('dataquality/details', ['as'=>'dataquality.details', 'uses'=>"DataQualityController@details"]);
+        Route::post('dataquality/branch', ['as'=>'dataquality.branch', 'uses'=>'DataQualityController@branch']); 
+        Route::resource('dataquality', 'DataQualityController');  
            //   Documents
         Route::resource('docs', 'DocumentsController', ['only' => ['index', 'show']]);
         

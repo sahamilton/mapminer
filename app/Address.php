@@ -450,17 +450,16 @@ class Address extends Model
             ->pluck('fieldname')->toArray();
         return array_unique($fields);
     }
-
-    public function scopeDuplicate($query)
+    /**
+     * [duplicates description]
+     * 
+     * @return [type] [description]
+     */
+    public function duplicates()
     {
-        return $query->where(
-            'position', '=', function ($q) { 
-                $q->from('addresses')
-                    ->select('position')
-                    ->where('position', '=', $this->position);
-            }
-        );
+        return $this->hasMany(Address::class, 'position', 'position');
     }
+    
     /**
      * [scopeDuplicate description]
      * 
