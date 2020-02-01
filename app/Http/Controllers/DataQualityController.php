@@ -146,6 +146,7 @@ class DataQualityController extends Controller
 
     public function details(Request $request)
     {
+        
         $branches = auth()->user()->person->myBranches();
         $branch = $this->branch->findOrFail(request('branch'));
         $data = $this->_getDataMetrics($branch, request('metric'));
@@ -171,7 +172,7 @@ class DataQualityController extends Controller
 
     private function _getDataMetrics($branch, $metric)
     {
-       
+        
         return $data[$metric] = $this->data->$metric(null, $branch->id);
         
     }

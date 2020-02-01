@@ -16,6 +16,7 @@ class DataQuality extends Model
 
     public function staleOpenOpportunities($count = null, $branch=null)
     {
+        
         if (! $branch) {
             $branch = array_keys(auth()->user()->person->myBranches())[0];
             
@@ -26,7 +27,7 @@ class DataQuality extends Model
           
             return Opportunity::stale()->where('branch_id', $branch)->count();
         }
-        return Opportunity::stale()->whereIn('branch_id', $myBranches)->get();
+        return Opportunity::stale()->with('address.address.activities')->where('branch_id', $branch)->get();
         
 
     }
