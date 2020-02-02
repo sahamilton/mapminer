@@ -1103,7 +1103,7 @@ class Branch extends Model implements HasPresenter
      */
     public function upcomingActivities()
     {
-        return $this->hasMany(activity::class)
+        return $this->hasMany(Activity::class)
             ->whereBetween('activity_date', [Carbon::now()->startOfDay(),Carbon::now()->addWeek()->endOfDay()])
             ->where(
                 function ($q) {
@@ -1111,7 +1111,7 @@ class Branch extends Model implements HasPresenter
                         ->orWhere('completed', 0);
                 }
             )->with('relatesToAddress')
-            ->orderBy('activity_date', 'ASC');
+            ->orderBy('activity_date', 'asc');
 
     }
     /**

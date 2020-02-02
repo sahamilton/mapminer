@@ -45,6 +45,16 @@ class AddressBranch extends Model
     {
         return $this->hasMany(Activity::class, 'address_id', 'address_id');
     }
+
+    /**
+     * [activities description]
+     * 
+     * @return [type] [description]
+     */
+    public function lastactivity()
+    {
+        return $this->hasMany(Activity::class, 'address_id', 'address_id')->latest();
+    }
     /**
      * [opportunities description]
      * 
@@ -136,5 +146,25 @@ class AddressBranch extends Model
             ->where('created_at', '<=', $before)
             ->doesntHave('activities')
             ->doesntHave('opportunities');
+    }
+    /**
+     * [scopeStaleBranchLeads description]
+     * @param  [type] $query [description]
+     * @return [type]        [description]
+     */
+    public function scopeStaleBranchLeads($query) {
+        return $query
+            
+            ->where('created_at', '<=', now()->subMonths(3))
+            ->where(
+                function ($q) {
+                    $q->doesntHave('activities')
+                        ->orWhereHas(
+                            'lastactivity', function ($q1) {
+                                $q1->where('created_at', '<=', now()->subMonths(3));
+                            }
+                        );
+                }
+            )->doesntHave('opportunities');
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Branch;
 use App\DataQuality;
+
 use Illuminate\Http\Request;
 
 class DataQualityController extends Controller
@@ -165,15 +166,24 @@ class DataQualityController extends Controller
     private function _getSummaryDataMetrics($branch)
     {
         foreach ($this->metrics as $metric) {
-            $data[$metric] = $this->data->$metric('count', $branch->id);
+            $dataquality = $this->_dataQualityModel($metric);
+            $data[$metric] = $dataquality->count($branch);
+
         }
         return $data;
     }
 
     private function _getDataMetrics($branch, $metric)
     {
+        $dataquality = $this->_dataQualityModel($metric);
+        return $data[$metric] = $dataquality->details($branch);
+        //return $data[$metric] = $this->data->$metric(null, $branch->id);
         
-        return $data[$metric] = $this->data->$metric(null, $branch->id);
-        
+    }
+
+    private function _dataQualityModel($metric)
+    {
+        $model = 'App\DataQuality\DQ'.ucwords($metric);
+        return $dataquality = new $model;
     }
 }

@@ -302,7 +302,7 @@ class Activity extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
      */
     public function scopeUpcomingActivities($query)
     {
-        return $query->where('followup_date', '>', now()->whereUserId(auth()->user()->id));
+        return $query->where('followup_date', '>', now())->whereUserId(auth()->user()->id);
     }
 
     /**
@@ -341,6 +341,22 @@ class Activity extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
     public function scopeOpen($query)
     {
         return $query->whereCompleted(0);
+    }
+    /**
+     * [scopeMissed description]
+     * 
+     * @param  [type] $query [description]
+     * @return [type]        [description]
+     */
+    public function scopeMissed($query)
+    {
+        return $query->where(
+            function ($q) {
+                $q->whereNull('completed')
+                    ->orWhere('completed', 0);
+            }
+        )
+        ->where('followup_date', '<=', now());
     }
 
     

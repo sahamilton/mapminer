@@ -2,6 +2,7 @@
 @section('content')
 <div class="container">
     <h4>{{$branch->branchname}} {{parseCamelCase($metric)}}</h4>
+    <p><a href="{{route('dataquality.index')}}">Return to all data quality metrics.</a></p>
     <form 
         name="dataQualityDetails"
         method="post"
