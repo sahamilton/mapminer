@@ -32,7 +32,7 @@ class ActivityOpportunityExport implements FromView
      */
     public function view(): View
     {
-        
+  
         $query = "select branches.id as branch_id,
             branches.branchname as branchname, 
             a.salesmeetings,
@@ -58,19 +58,19 @@ class ActivityOpportunityExport implements FromView
                      select opportunities.branch_id, count(opportunities.id) as opportunitieswon,sum(value) as value 
                      from opportunities 
                      where opportunities.closed = 1 
-                     and opportunities.actual_close between '"
-                     . $this->period['from'] . 
-                        "' and '"
-                    . $this->period['to'] .
-                     "' group by opportunities.branch_id) b 
+                     and opportunities.actual_close 
+                     between '" . $this->period['from'] . "'
+                     and '" . $this->period['to'] . "'
+                     group by opportunities.branch_id) b 
                  
                  on branches.id = b.branch_id ";
         if ($this->branch) {
-            $query.=" where branches.id in ('" . implode("','", $this->branch) ."') "; 
+            $query.=" where branches.id in ("."'".implode("','", array_keys($this->branch))."'".") "; 
         } 
         $query.=" ORDER BY branches.id  ASC ";
  
-        $results = \DB::select($query);
+        $results =  \DB::select(\DB::raw($query), ['branch'=>"'".implode("','", array_keys($this->branch))."'"]);
+
         $period = $this->period;
         return view('reports.actopptyreport', compact('results', 'period'));
     }

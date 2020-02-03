@@ -42,7 +42,7 @@ class ActivityOpportunity implements ShouldQueue
     public function handle()
     {
         // create the file
-        
+
         $file = '/public/reports/actopptywkrpt'. Carbon::now()->timestamp. ".xlsx";
         Excel::store(new ActivityOpportunityExport($this->period, $this->branches), $file);
         $class= str_replace("App\Jobs\\", "", get_class($this));

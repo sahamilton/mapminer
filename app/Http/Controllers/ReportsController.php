@@ -347,11 +347,11 @@ class ReportsController extends Controller {
      */
     private function _getMyBranches(Request $request)
     {
-        
+     
         if (request()->filled('manager')) {
             $person = $this->person->findOrFail(request('manager'));
             $branches = $this->person->myBranches($person);
-            
+
         } elseif (auth()->user()->hasRole(['evp','svp','rvp','market_manager'])) {
             $person = $this->person->where('user_id', auth()->user()->id)->first();
             $branches = $this->person->myBranches($person);
