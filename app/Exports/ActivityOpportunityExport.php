@@ -69,7 +69,7 @@ class ActivityOpportunityExport implements FromView
         } 
         $query.=" ORDER BY branches.id  ASC ";
  
-        $results =  \DB::select(\DB::raw($query), ['branch'=>"'".implode("','", array_keys($this->branch))."'"]);
+        $results =  \DB::select(\DB::raw($query));
 
         $period = $this->period;
         return view('reports.actopptyreport', compact('results', 'period'));
