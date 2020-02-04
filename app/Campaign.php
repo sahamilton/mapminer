@@ -168,15 +168,23 @@ class Campaign extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
 
 
     }
-    public function getAssignableLocationsofCampaign($addresses)
+    public function getAssignableLocationsofCampaign($addresses, $count = false)
     {
         
         $branches = $this->getCampaignBranches()->pluck('id')->toArray();
-        $query = "select 
+
+        if ($count) {
+            $query = "select 
             count(a.id) as assignable,
-            b.id as branch
- 
-            from addresses a
+            b.id as branch ";
+        } else {
+            $query = "select 
+            a.id,
+            b.id as branch ";
+        }
+        
+
+        $query.="from addresses a
             left join address_branch on a.id = address_branch.address_id
             inner join branches b
                 on b.id = (
@@ -190,8 +198,10 @@ class Campaign extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
                     limit 1
                 )
             where a.id in ('". implode("','", $addresses) . "')
-            and address_branch.address_id is null
-            group by branch";
+            and address_branch.address_id is null";
+        if ($count) {
+            $query.=" group by branch";
+        }
         return \DB::select(\DB::raw($query));
        
 
@@ -269,7 +279,7 @@ class Campaign extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
             ->limitDepth(1)
             ->whereHas(
                 'userdetails.roles', function ($q) {
-                        $q->whereIn('roles.id', ['9', '3']);
+                        $q->whereIn('roles.id', ['9']);
                 }
             )
             ->with(
@@ -413,5 +423,17 @@ class Campaign extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
 
         
     }
-
+    public function scopeLocations($query) {
+        $query->with(
+            ['companies.locations'=>function ($q) {
+                $q->has('assignedToBranch');
+            }
+            ]
+        );
+    }
+    public function getAddressesInCampaign()
+    {
+        return Address::whereIn('company_id', $this->companies->pluck('id')->toArray())
+            ->has('assignedToBranch')->get();
+    }
 }

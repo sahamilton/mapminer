@@ -71,12 +71,12 @@ class CampaignTrackingController extends Controller
       
         $campaign->load('companies', 'branches');
         $branches = $this->_getBranchesInCampaign($campaign);
-
+    
         $team = $this->_getCampaignBranchTeam($campaign);
  
         $campaigns = $this->campaign->current()->get();
         $fields =  $this->fields;
-       
+        
         return response()->view('campaigns.summary', compact('campaign', 'branches', 'team', 'campaigns', 'fields'));
     }
  
@@ -175,6 +175,7 @@ class CampaignTrackingController extends Controller
     {
         $branch_ids = $campaign->branches->pluck('id')->toArray();
         $company_ids = $campaign->companies->pluck('id')->toArray();
+
         return $this->branch->whereIn('id', $branch_ids)
             ->whereHas(
                 'addresses', function ($q) use ($company_ids) {
@@ -215,7 +216,7 @@ class CampaignTrackingController extends Controller
         if (! $manager) {
             $manager= $campaign->manager_id;
         }
-       
+        
         return $this->campaign->getSalesTeamFromManager($manager, $servicelines);
     }
 

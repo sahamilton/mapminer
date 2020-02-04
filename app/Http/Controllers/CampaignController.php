@@ -12,6 +12,8 @@ use App\SalesOrg;
 use App\Addresses;
 use App\Person;
 use App\Jobs\AssignCampaignLeadsJob;
+use App\Jobs\AssignAddressesToCampaignJob; 
+use App\Jobs\AssignBranchesToCampaignJob;
 use App\Jobs\SendCampaignLaunched;
 use App\Http\Requests\CampaignFormRequest;
 
@@ -232,12 +234,16 @@ class CampaignController extends Controller
      */
     public function launch(Campaign $campaign)
     {
-       
         $companies = $campaign->getCompanyLocationsOfCampaign();
-        
+               
         foreach ($companies as $company) {
-            AssignCampaignLeadsJob::dispatch($company, $campaign);
+            AssignCampaignLeadsJob::withChain(
+                [
+                    new AssignAddressesToCampaignJob($company, $campaign)
+                ]
+            )->dispatch($company, $campaign);
         }
+        AssignBranchesToCampaignJob::dispatch($campaign);
         $campaign->update(['status'=> 'launched']);
         SendCampaignLaunched::dispatch(auth()->user(), $campaign);
         return redirect()->route('campaigns.index')->withMessage($campaign->title .' Campaign launched');
@@ -253,21 +259,10 @@ class CampaignController extends Controller
     {
         $campaigns = $this->campaign->with('manager', 'companies')->get();
         foreach ($campaigns as $campaign) {
-            $companies = $campaign->companies->pluck('id')->toarray();
+            foreach ($campaign->companies as $company) {
+                AssignAddresesToCampaignJob::dispatch($company, $campaign);
+            }
             
-            $branches = $campaign->manager->getMyBranches();
-            $addresses = $this->address->whereHas(
-                'assignedToBranch', function ($q) use ($branches) {
-                        $q->whereIn('branches.id', $branches);
-                }
-            )
-            ->whereDoesntHave(
-                'campaign', function ($q) use ($campaign) {
-                    $q->where('campaigns.id', '=', $campaign->id);
-                }
-            )->whereIn('company_id', $companies)
-            ->pluck('id')->toArray();
-            $campaign->addresses()->sync($addresses);
         }
         
     }
@@ -438,8 +433,8 @@ class CampaignController extends Controller
     }
     private function _getBranchAssignableSummary(Campaign $campaign, $result)
     {
-       
-        $assignable = $campaign->getAssignableLocationsofCampaign($result->flatten()->pluck('id')->toArray());
+        $addresses = $result->flatten()->pluck('id')->toArray();
+        $assignable = $campaign->getAssignableLocationsofCampaign($addresses, $count = true);
         foreach ($assignable as $branch) {
             $data[$branch->branch] = $branch->assignable;
         }

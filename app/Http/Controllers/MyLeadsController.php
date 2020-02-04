@@ -163,20 +163,17 @@ class MyLeadsController extends BaseController
 
         $data['branch'] = $this->branch->findOrFail(request('branch'));
         
-         
-        
         
         $lead = $this->lead->create($data['lead']);
         
         $lead->assignedToBranch()->attach($data['branch'], ['status_id'=>2]);
         $dupes = $this->lead->duplicateDistance($data['lead']['lng'], $data['lead']['lat'])->get();
 
-        
-        
         if (isset($data['contact'])) {
         
             $lead->contacts()->create($data['contact']);
         }
+        // probably do away with this....
         if (request()->filled('addressable_type')) {
             switch (request('addressable_type')) {
             case 'weblead':
@@ -191,8 +188,9 @@ class MyLeadsController extends BaseController
         if ($dupes->count() > 0) {
             return response()->view('addresses.duplicates', compact('dupes', 'data'));
         }
-
+        // send this to a job
         if (request('notify')==1) {
+            // 
             $branches = \App\Branch::with('manager', 'manager.userdetails')->whereIn('id', array_keys($data['branch']))->get();
            
             foreach ($branches as $branch) {
@@ -201,7 +199,7 @@ class MyLeadsController extends BaseController
                 }
             }
         }
-
+        // not sure that this is being used anymore
         if (request()->has('source') && request('source') == 'mobile') {
                 return redirect()->route('mobile.show', $lead)->withMessage('Lead Created');
         } else {
