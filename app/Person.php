@@ -209,7 +209,7 @@ class Person extends NodeModel implements HasPresenter
             
         }
         
-        if (auth()->user()->hasRole('admin')) {
+        if (auth()->user()->hasRole('admin') && ! $person) {
           
             return Branch::whereHas(
                 'servicelines', function ($q) use ($servicelines) {

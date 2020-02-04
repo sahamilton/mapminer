@@ -1,6 +1,11 @@
 @extends('site.layouts.default')
 @section('content')
 <h1>Possible Duplicate Locations</h1>  
+@if(isset($data))
+
+
+
+@endif
 <form 
 name="mergeaddresses"
 method="post"
@@ -35,7 +40,10 @@ action="{{route('addresses.merge')}}"
 					<td>{{$account->city}}</td>
 					<td>{{$account->state}}</td>
 					<td>{{$account->zip}}</td>
-					<td><input type="checkbox" checked name="address[]" value="{{$account->id}}"/></td>
+					<td>
+						Merge into<input type="radio" {{$loop->first ? 'checked' : ''}} name='primary' value ="{{$account->id}}" />
+						<input type="checkbox" checked name="address[]" value="{{$account->id}}"/>
+					</td>
 					
 
 				</tr>

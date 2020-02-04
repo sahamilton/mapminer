@@ -163,17 +163,15 @@ class MyLeadsController extends BaseController
 
         $data['branch'] = $this->branch->findOrFail(request('branch'));
         
-        $dupes = $this->lead->duplicateDistance($data['lead']['lng'], $data['lead']['lat'])->get();
-
-        //if ($dupes->count() > 0) {
-            //return response()->view('addresses.duplicates', compact('dupes', 'data'));
-        //} 
+         
         
         
         $lead = $this->lead->create($data['lead']);
         
         $lead->assignedToBranch()->attach($data['branch'], ['status_id'=>2]);
-       
+        $dupes = $this->lead->duplicateDistance($data['lead']['lng'], $data['lead']['lat'])->get();
+
+        
         
         if (isset($data['contact'])) {
         
@@ -190,7 +188,9 @@ class MyLeadsController extends BaseController
         } else {
             $lead->load('contacts');
         }
-    
+        if ($dupes->count() > 0) {
+            return response()->view('addresses.duplicates', compact('dupes', 'data'));
+        }
 
         if (request('notify')==1) {
             $branches = \App\Branch::with('manager', 'manager.userdetails')->whereIn('id', array_keys($data['branch']))->get();

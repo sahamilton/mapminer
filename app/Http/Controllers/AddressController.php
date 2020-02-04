@@ -7,6 +7,7 @@ use App\Address;
 use App\Activity;
 use App\Opportunity;
 use App\Branch;
+use App\Contact;
 use App\Note;
 use App\Person;
 use App\Howtofield;
@@ -216,35 +217,42 @@ class AddressController extends BaseController
 
     public function mergeAddress(Request $request)
     {
-        // get all addresses
-        $fulladdresses = $this->address
-            ->with('activities', 'opportunities')
+        
+        // get all addresses except primary
+        $addresses = $this->address
+            ->with('activities', 'opportunities', 'contacts')
             ->whereIn('id', request('address'))
+            ->where('id', '!=', request('primary'))
             ->orderBy('created_at', 'asc')
             ->get();
-        //get oldest address
-        $oldestaddress = $fulladdresses->first();
-        // get addresses that will be merged
-        $addresses = $fulladdresses->slice(1);
+        //get primary address
+        $primaryaddress = $this->address->findOrFail(request('primary'));
        
-        //change all opportunities and activities to oldest address
-        if (! $this->_updateMergedAddressActivities($addresses, $oldestaddress)) {
+        
+        
+        //change all opportunities,activities, contacts to primary address
+        if (! $this->_updateMergedAddressActivities($addresses, $primaryaddress)) {
             dd('Error 230');
         }
 
-        if (! $this->_updateMergedAddressOpportunities($addresses, $oldestaddress)) {
+        if (! $this->_updateMergedAddressOpportunities($addresses, $primaryaddress)) {
             dd('Error 234');
         }
-        //delete all but oldest address
+
+        if (! $this->_updateMergedAddressContacts($addresses, $primaryaddress)) {
+            dd('Error 241');
+        }
+
+        //delete all but primary address
         if (! $this->_deleteMergedAddresses($addresses)) {
              dd('Error 238');
         }
         //return to oldest address
-        return redirect()->route('address.show', $oldestaddress->id)->withMesssage("Duplicate addresses have been merged");
+        return redirect()->route('address.show', $primaryaddress->id)->withMesssage("Duplicate addresses have been merged");
         
     }
 
-    private function _updateMergedAddressActivities($addresses, $oldestaddress)
+    private function _updateMergedAddressActivities($addresses, $primaryaddress)
     {
         $activities = $addresses->map(
             function ($address) {
@@ -256,12 +264,12 @@ class AddressController extends BaseController
         );
         $activities = array_filter($activities->flatten()->toArray());
         if (count($activities) >0) {
-            return Activity::whereIn('id', $activities)->update(['address_id' => $oldestaddress->id]);
+            return Activity::whereIn('id', $activities)->update(['address_id' => $primaryaddress->id]);
         }
         return true;
     }
 
-    private function _updateMergedAddressOpportunities($addresses, $oldestaddress)
+    private function _updateMergedAddressOpportunities($addresses, $primaryaddress)
     {
         $opportunities = $addresses->map(
             function ($address) {
@@ -274,11 +282,27 @@ class AddressController extends BaseController
 
         $opportunities = array_filter($opportunities->flatten()->toArray());
         if (count($opportunities) > 0 ) {
-            return Opportunity::whereIn('id', $opportunities)->update(['address_id' => $oldestaddress->id]);
+            return Opportunity::whereIn('id', $opportunities)->update(['address_id' => $primaryaddress->id]);
         }
         return true;
     }
+    private function _updateMergedAddressContacts($addresses, $primaryaddress)
+    {
 
+        $contacts = $addresses->map(
+            function ($address) {
+                if ($address->contacts->isNotEmpty()) {
+                    
+                    return $address->contacts->pluck('id');
+                }
+            }
+        );
+        $contacts = array_filter($contacts->flatten()->toArray());
+        if (count($contacts) > 0 ) {
+            return Contact::whereIn('id', $contacts)->update(['address_id' => $primaryaddress->id]);
+        }
+        return true; 
+    }
     private function _deleteMergedAddresses($addresses)
     {
         $delete_ids = $addresses->pluck('id')->toArray();
