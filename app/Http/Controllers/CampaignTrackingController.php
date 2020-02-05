@@ -71,9 +71,8 @@ class CampaignTrackingController extends Controller
       
         $campaign->load('companies', 'branches');
         $branches = $this->_getBranchesInCampaign($campaign);
-    
         $team = $this->_getCampaignBranchTeam($campaign);
- 
+      
         $campaigns = $this->campaign->current()->get();
         $fields =  $this->fields;
         

@@ -1147,31 +1147,31 @@ class Branch extends Model implements HasPresenter
      */
     public function scopeSummaryCampaignStats($query,$campaign)
     {
-        $period['from'] = $campaign->datefrom;
-        $period['to'] = $campaign->dateto;
+        $this->period['from'] = $campaign->datefrom;
+        $this->period['to'] = $campaign->dateto;
         $this->company_ids = $campaign->companies->pluck('id')->toarray();
         $this->location_ids = $campaign->getLocations();
-        $this->period = $period;
+
         return $query->withCount(       
             [ 
 
             'addresses as offered_leads'=>function ($q) {
                 $q->whereIn('company_id', $this->company_ids)
-                    ->where('status_id', 1)
+                    ->where('status_id', '=', '1')
                     ->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']]);;
                     
             },
 
             'addresses as worked_leads'=>function ($q) {
                 $q->whereIn('company_id', $this->company_ids)
-                    ->where('status_id', 2)
-                    ->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']]);;
+                    ->where('status_id', '2')
+                    ->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']]);
                     
             },
             'addresses as rejected_leads'=>function ($q) {
                 $q->whereIn('company_id', $this->company_ids)
-                    ->where('status_id', 4)
-                    ->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']]);;
+                    ->where('status_id', '4')
+                    ->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']]);
                     
             },
             
@@ -1229,16 +1229,7 @@ class Branch extends Model implements HasPresenter
                     ->whereIn('opportunities.address_id', $this->location_ids);
             },
             'opportunities as won_value' => function ($q) {
-                /*
-                $query->select(\DB::raw("SUM(value) as wonvalue"))
-                    ->whereClosed(1)
-                    ->whereBetween(
-                        'actual_close', [$this->period['from'],$this->period['to']]
-                    )
-                    ->whereIn('branch_id', $this->branches);
-                    
-
-                 */
+                
                 $q->select(\DB::raw("SUM(value) as wonvalue"))
                     ->where('closed', 1)
                     ->whereBetween(

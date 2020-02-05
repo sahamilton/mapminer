@@ -52,7 +52,7 @@ class AssignCampaignLeadsJob implements ShouldQueue
 
         foreach ($this->_getBranchAddresses($assignable) as $branch_id=>$addresses) {
             $branch = Branch::findOrFail($branch_id);
-           
+            $branch_ids[] = $branch_id;
            
             $branch->leads()->attach($addresses);
         }

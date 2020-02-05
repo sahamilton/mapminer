@@ -274,12 +274,13 @@ class Campaign extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
      */
     public function getSalesTeamFromManager($manager_id, $serviceline)
     {
+        
         return Person::whereId([$manager_id])->firstOrFail()
             ->descendantsAndSelf()
             ->limitDepth(1)
             ->whereHas(
                 'userdetails.roles', function ($q) {
-                        $q->whereIn('roles.id', ['9']);
+                        $q->whereIn('roles.id', ['9','3','7','6']);
                 }
             )
             ->with(

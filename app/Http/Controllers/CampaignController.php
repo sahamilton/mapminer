@@ -351,9 +351,14 @@ class CampaignController extends Controller
         } else {
             $manager_id = request('manager_id');
         }
-        $branches = $this->_getbranchesFromManager($servicelines, $manager_id);
+        $servicelines = $campaign->getServicelines();
+        
+
         $manager = $this->person->findOrFail($manager_id);
+        $branches = array_keys($manager->myBranches($manager));
+        
         $branches = $this->branch->whereIn('id', $branches)->summaryCampaignStats($campaign)->get();
+
         $team = $this->campaign->getSalesTeamFromManager($manager_id, $servicelines);
         return response()->view('campaigns.managersummary', compact('campaign', 'branches', 'manager', 'team'));
 
