@@ -118,8 +118,9 @@ class CampaignController extends Controller
        
         $data = $this->_transformRequest($request);
         $servicelines = request('serviceline');
-        $branches = $this->_getbranchesFromManager($servicelines, $data['manager_id']);
-        
+        $manager = Person::findOrFail($data['manager_id']);
+        $branches = array_keys($manager->myBranches($manager));
+ 
         $campaign = $this->campaign->create($data);
         $campaign->branches()->sync($branches);
         $campaign->servicelines()->sync($data['serviceline']); 
@@ -246,7 +247,7 @@ class CampaignController extends Controller
         AssignBranchesToCampaignJob::dispatch($campaign);
         $campaign->update(['status'=> 'launched']);
         SendCampaignLaunched::dispatch(auth()->user(), $campaign);
-        return redirect()->route('campaigns.index')->withMessage($campaign->title .' Campaign launched');
+        return redirect()->route('campaigns.index')->withMessage($campaign->title .' Campaign launched. You will receive an email when all leads have been assigned.');
        
         
     }
@@ -356,7 +357,7 @@ class CampaignController extends Controller
 
         $manager = $this->person->findOrFail($manager_id);
         $branches = array_keys($manager->myBranches($manager));
-        
+
         $branches = $this->branch->whereIn('id', $branches)->summaryCampaignStats($campaign)->get();
 
         $team = $this->campaign->getSalesTeamFromManager($manager_id, $servicelines);

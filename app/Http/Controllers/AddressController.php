@@ -81,7 +81,7 @@ class AddressController extends BaseController
      */
     public function show(Address $address)
     {
-        // $ranking = $this->address->with('ranking')->myRanking()->findOrFail($address->id);
+        
        
         $location = $address->load(
             'contacts',
@@ -104,7 +104,7 @@ class AddressController extends BaseController
         if ($address->addressable_type) {
             $location->load($address->addressable_type);
         }
-        // $activities = ActivityType::orderBy('sequence')->pluck('activity','id')->toArray();
+
         if ($location->lat && $location->lng) {
 
             $branches = $this->branch->nearby($location, 100, 5)->orderBy('distance')->get();
@@ -159,8 +159,7 @@ class AddressController extends BaseController
         $data['businessname'] =request('companyname');
       
         $data['phone'] = preg_replace("/[^0-9]/", "", request('phone'));
-       
-   
+
         $address->update($data);
         return redirect()->route('address.show', $address->id)->withMessage('Location updated');
     }
@@ -285,7 +284,7 @@ class AddressController extends BaseController
             }
         );
         $activities = array_filter($activities->flatten()->toArray());
-        if (count($activities) >0) {
+        if (count($activities) > 0) {
             return Activity::whereIn('id', $activities)->update(['address_id' => $primaryaddress->id]);
         }
         return true;
