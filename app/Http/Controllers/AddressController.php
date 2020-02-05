@@ -12,6 +12,8 @@ use App\Note;
 use App\Person;
 use App\Howtofield;
 use App\ActivityType;
+use App\Http\Requests\MergeAddressFormRequest;
+
 
 class AddressController extends BaseController
 {
@@ -77,7 +79,7 @@ class AddressController extends BaseController
      * 
      * @return [type]          [description]
      */
-    public function show($address)
+    public function show(Address $address)
     {
         // $ranking = $this->address->with('ranking')->myRanking()->findOrFail($address->id);
        
@@ -208,14 +210,26 @@ class AddressController extends BaseController
         return redirect()->route('address.show', $address->id)->withMessasge("Thanks for rating this location");
     }
     
-
+    /**
+     * [duplicates description]
+     * 
+     * @param Address $address [description]
+     * 
+     * @return [type]           [description]
+     */
     public function duplicates(Address $address)
     {
         $dupes = $address->load('duplicates')->duplicates;
         return response()->view('addresses.duplicates', compact('dupes'));
     }
-
-    public function mergeAddress(Request $request)
+    /**
+     * [mergeAddress description]
+     * 
+     * @param MergeAddressFormRequest $request [description]
+     * 
+     * @return [type]                           [description]
+     */
+    public function mergeAddress(MergeAddressFormRequest $request)
     {
         
         // get all addresses except primary
@@ -225,33 +239,41 @@ class AddressController extends BaseController
             ->where('id', '!=', request('primary'))
             ->orderBy('created_at', 'asc')
             ->get();
+        if (! $addresses->count()) {
+            return redirect()->back()->withError('You must select an address to merge');
+        }
         //get primary address
         $primaryaddress = $this->address->findOrFail(request('primary'));
-       
-        
-        
+                
         //change all opportunities,activities, contacts to primary address
         if (! $this->_updateMergedAddressActivities($addresses, $primaryaddress)) {
-            dd('Error 230');
+            return redirect()->back()->withError('Unable to merge address activities');
         }
 
         if (! $this->_updateMergedAddressOpportunities($addresses, $primaryaddress)) {
-            dd('Error 234');
+            return redirect()->back()->withError('Unable to merge address opportunities');
         }
 
         if (! $this->_updateMergedAddressContacts($addresses, $primaryaddress)) {
-            dd('Error 241');
+            return redirect()->back()->withError('Unable to merge address contacts');
         }
 
         //delete all but primary address
         if (! $this->_deleteMergedAddresses($addresses)) {
-             dd('Error 238');
+             return redirect()->back()->withError('Unable to delete duplicate addresses');
         }
         //return to oldest address
         return redirect()->route('address.show', $primaryaddress->id)->withMesssage("Duplicate addresses have been merged");
         
     }
-
+    /**
+     * [_updateMergedAddressActivities description]
+     * 
+     * @param [type] $addresses      [description]
+     * @param [type] $primaryaddress [description]
+     * 
+     * @return [type]                 [description]
+     */
     private function _updateMergedAddressActivities($addresses, $primaryaddress)
     {
         $activities = $addresses->map(
@@ -268,7 +290,14 @@ class AddressController extends BaseController
         }
         return true;
     }
-
+    /**
+     * [_updateMergedAddressOpportunities description]
+     * 
+     * @param [type] $addresses      [description]
+     * @param [type] $primaryaddress [description]
+     * 
+     * @return [type]                 [description]
+     */
     private function _updateMergedAddressOpportunities($addresses, $primaryaddress)
     {
         $opportunities = $addresses->map(
@@ -286,6 +315,14 @@ class AddressController extends BaseController
         }
         return true;
     }
+    /**
+     * [_updateMergedAddressContacts description]
+     * 
+     * @param collection   $addresses      [description]
+     * @param integer      $primaryaddress [description]
+     * 
+     * @return [type]                 [description]
+     */
     private function _updateMergedAddressContacts($addresses, $primaryaddress)
     {
 
@@ -303,6 +340,13 @@ class AddressController extends BaseController
         }
         return true; 
     }
+    /**
+     * [_deleteMergedAddresses description]
+     * 
+     * @param collection $addresses [description]
+     * 
+     * @return [type]            [description]
+     */
     private function _deleteMergedAddresses($addresses)
     {
         $delete_ids = $addresses->pluck('id')->toArray();

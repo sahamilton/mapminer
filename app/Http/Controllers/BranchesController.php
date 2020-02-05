@@ -445,7 +445,7 @@ class BranchesController extends BaseController {
             ->update(['branch_id'=> $newbranch]);
       
         $activities = $this->activity
-            ->where('completed', 0)
+            ->whereNull('completed')
             ->where('branch_id', $branch->id)
             ->update(['branch_id'=> $newbranch]);
 
