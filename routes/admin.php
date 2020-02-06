@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
         Route::post('branchassignments/email', ['as'=>'branchteam.email', 'uses'=>'Admin\BranchManagementController@confirm']);
         Route::post('branchassignments/send', ['as'=>'branchassignments.send', 'uses'=>'Admin\BranchManagementController@emailAssignments']);
         Route::get('branch/manage', ['as'=>'branch.management', 'uses'=>'Admin\BranchManagementController@index']);
+        Route::get('branch/manage/export', ['as'=>'branches.manage.export', 'uses'=>'Admin\BranchManagementController@export']);
         Route::get('branch/check', ['as'=>'branch.check', 'uses'=>'Admin\AdminUsersController@checkBranchAssignments']);
         
 
@@ -129,8 +130,6 @@ use Illuminate\Http\Request;
 
         Route::resource('training', 'TrainingController')->except(['index', 'show']);
         ;
-
-
 
         //   Admin Dashboard
         Route::get('watching/{user}', ['as'=>'watch.watching', 'uses'=>'WatchController@watching']);

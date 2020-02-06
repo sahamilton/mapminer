@@ -13,7 +13,7 @@ use App\BranchManagement;
 use App\Http\Requests\BranchAssignmentRequest;
 use Mail;
 use Excel;
-use App\Exports\BranchManagerExport;
+use App\Exports\BranchManagementSheet;
 
 
 use Illuminate\Http\Request;
@@ -77,6 +77,17 @@ class BranchManagementController extends BaseController
         return response()->view('admin.branches.manage', compact('branches', 'people', 'roles'));
     }
 
+    public function export()
+    {
+        $roles = $this->role->whereIn('id', $this->branchRoles)->get();
+        $branches = $this->_branchesWithoutManagers();
+        $people = $this->_managersWithoutBranches();
+        $views = ['branches', 'managers'];
+        foreach($views as $view) {
+
+         return Excel::download(new BranchManagementSheet($roles, $branches, $people, $view), now()->format('Y-m-d') ." " . $view. ' branchmanagement.csv');
+        }
+    }
     /**
      * [select description]
      * 

@@ -2,7 +2,12 @@
 @section('content')
 <div class="container">
     <h2>Manage Branches</h2>
-
+    <p>
+        <i class="far fa-file-excel"></i>
+        <a href="{{route('branches.manage.export')}}">
+            Export to Excel
+        </a>
+    </p>
     <div class="float-right"><a href="{{route('branches.index')}}" class="btn btn-small btn-info iframe">Manage All branches</a></div>
 
     <ul class="nav nav-tabs">

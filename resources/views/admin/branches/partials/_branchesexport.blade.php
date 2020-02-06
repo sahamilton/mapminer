@@ -1,6 +1,6 @@
-<p><span style="color:red">*</span> Either do not have a branch manager or do not have either a business manager or market manager</p>
-<table id ='sorttable1' class='table table-striped table-bordered table-condensed table-hover'>
-<thead>
+<table>
+<tbody>
+	<tr>
 	<th>Branch Id</th>
 	<th>Branch Name</th>
 	<th>Serviceline</th>
@@ -10,17 +10,14 @@
 	<th>Branch Manager</th>
 	<th>Business Manager</th>
 	<th>Market Manager</th>
+	</tr>
 
-</thead>
-<tbody>
+
 	@foreach($branches as $branch)
 
 		<tr>
 
-			<td><a href="{{route('branches.edit',$branch->id)}}" title="Edit {{$branch->branchname}} branch details"><i class="far fa-edit text-info"" aria-hidden="true"> </i>{{$branch->id}}</a>
-				<a href="{{route('branches.show',$branch->id)}}" target="_blank" title="Review {{$branch->branchname}} branch details"><i class="far fa-eye" aria-hidden="true"></i></a>
-
-			</td>
+			<td>{{$branch->id}}</td>
 			<td>{{$branch->branchname}}</td>
 			<td>
 				<ul style=" list-style-type: none;">
