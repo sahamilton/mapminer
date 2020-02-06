@@ -76,17 +76,22 @@ class BranchManagementController extends BaseController
 
         return response()->view('admin.branches.manage', compact('branches', 'people', 'roles'));
     }
-
-    public function export()
+    /**
+     * [export description]
+     * 
+     * @param  string $type [description]
+     * 
+     * @return [type]       [description]
+     */
+    public function export(string $type)
     {
+        
         $roles = $this->role->whereIn('id', $this->branchRoles)->get();
         $branches = $this->_branchesWithoutManagers();
         $people = $this->_managersWithoutBranches();
-        $views = ['branches', 'managers'];
-        foreach($views as $view) {
+     
+         return Excel::download(new BranchManagementSheet($roles, $branches, $people, $type), now()->format('Y-m-d') ." " . $type. ' branchmanagement.csv');
 
-         return Excel::download(new BranchManagementSheet($roles, $branches, $people, $view), now()->format('Y-m-d') ." " . $view. ' branchmanagement.csv');
-        }
     }
     /**
      * [select description]
