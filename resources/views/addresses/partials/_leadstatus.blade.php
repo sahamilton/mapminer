@@ -85,6 +85,7 @@
   
   @endforeach
 @else
+
   <form name="claimlead"
     method="post"
     action = "{{route('branchleads.store')}}"
@@ -94,10 +95,16 @@
     name="address_id" 
     value="{{$location->id}}" />
     @if (count($myBranches)==1)
-    <input type="hidden" 
-    name="branch_id" 
-    value = "{{$myBranches[0]}}" />
+      <input type="hidden" 
+      name="branch_id" 
+      value = "{{$myBranches[0]}}" />
+    @else
+      @foreach ($myBranches as $branch_id)
+        Branch {{$branch_id}}:
+        <input type="radio" {{$loop->first ? 'checked' : ''}} name="branch_id" value="{{$branch_id}}" />
+      @endforeach
     @endif
+    
     <input type="submit" 
     class="btn btn-success" 
     value="Claim Lead" />
