@@ -35,7 +35,14 @@ class Company extends NodeModel
     ];
 
     // Don't forget to fill this array
-    protected $fillable = ['companyname', 'vertical','person_id','c','customer_id','parent_id','accounttypes_id'];
+    protected $fillable = [
+                'companyname', 
+                'vertical',
+                'person_id',
+                'customer_id',
+                'parent_id',
+                'accounttypes_id'
+            ];
     /**
      * [type description]
      * 

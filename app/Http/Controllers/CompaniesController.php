@@ -235,7 +235,7 @@ class CompaniesController extends BaseController
      */
     public function update(CompanyFormRequest $request, Company $company)
     {
-       
+        
         $company->update(request()->all());
         $company->serviceline()->sync(request('serviceline'));
 
