@@ -66,7 +66,7 @@ class Person extends NodeModel implements HasPresenter
     {
         return $this->hasMany(Person::class, 'reports_to');
     }
-
+   
     /**
      * [salesRole description]
      * not sure this works!
@@ -196,6 +196,20 @@ class Person extends NodeModel implements HasPresenter
      */
     public function myBranches(Person $person=null, Array $servicelines=null)
     {
+        if (! $person ) {
+            $user = $this->_getPersonFromAuth();
+       
+            $person = $user->person;
+            if ($user->hasRole(['admin', 'sales_operations'])) {
+                return $this->_getBranchesInServicelines($user->serviceline);
+            } else {
+               return $this->_getBranchesFromTeam($person); 
+            }
+        } else {
+
+            return $this->_getBranchesFromTeam($person);
+        }
+    }  
        // check if role is admin or sales ops
        // get all branches if so4
 
@@ -221,21 +235,22 @@ class Person extends NodeModel implements HasPresenter
             $person = $this->findOrFail(auth()->user()->person->reports_to);
 
         }*/
-      
+    private function _getBranchesFromTeam(Person $person)
+    {
         $myteam = $this->myTeam($person)->has('branchesServiced')->get();
 
         $data=[];
         $teammembers=[];
-        if ($servicelines) {
+        /* if ($servicelines) {
             // not used!!
-        } else {
+        } else {*/
             $teammembers =  $myteam->map(
                 function ($team) {
            
                     return $team->branchesServiced;
                 }
             );
-        }
+        //}
         
 
         foreach ($teammembers as $member) {
@@ -267,6 +282,21 @@ class Person extends NodeModel implements HasPresenter
             }
         );
         return $team->flatten();
+    }
+
+    private function _getPersonFromAuth()
+    {
+        
+        return User::with('roles', 'person', 'serviceline')->findOrFail(auth()->user()->id);
+    }
+    private function _getBranchesInServicelines($servicelines)
+    {
+        return Branch::whereHas(
+            'servicelines', function ($q) use ($servicelines) {
+                $q->whereIn('id', $servicelines->pluck('id')->toArray());
+            }
+        )->orderBy('id')
+        ->pluck('branchname', 'id')->toArray();
     }
     /**
      * [scopeMyReports description]

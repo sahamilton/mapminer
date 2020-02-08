@@ -282,4 +282,6 @@ class Opportunity extends Model
                 }
             );
     }
+
+    
 }

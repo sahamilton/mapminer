@@ -797,6 +797,79 @@ class Branch extends Model implements HasPresenter
         }
         return $data;
     }
+
+    public function scopeSummaryBranchOpportunities($query, array $period)
+    {
+        $this->period = $period;
+
+        return $query->withCount( 
+            [
+            'opportunities as open'=>function ($query) {
+                $query        
+                    ->where(
+                        function ($q) {
+                            $q->where('actual_close', '>', $this->period['to'])
+                                ->orwhereNull('actual_close');
+                        }
+                    )->where('opportunities.created_at', '<=', $this->period['to']);
+            },
+            'opportunities as openvalue' => function ($query) {
+                $query->select(\DB::raw("SUM(value) as openvalue"))
+                    ->where(
+                        function ($q) {
+                            $q->where('actual_close', '>', $this->period['to'])
+                                ->orwhereNull('actual_close');
+                        }
+                    )
+                ->where('opportunities.created_at', '<=', $this->period['to']);
+            },
+            'opportunities as won'=>function ($query) {
+                $query->whereClosed(1)        
+                    ->where(
+                        function ($q) {
+                            $q->whereBetween('actual_close', [$this->period['from'], $this->period['to']]);
+                        }
+                    )->where('opportunities.created_at', '<=', $this->period['to']);
+            },
+            'opportunities as wonvalue' => function ($query) {
+                $query->whereClosed(1)
+                    ->select(\DB::raw("SUM(value) as wonvalue"))
+                    ->where(
+                        function ($q) {
+
+                            $q->whereBetween('actual_close', [$this->period['from'], $this->period['to']]);
+                        }
+                    )
+                ->where('opportunities.created_at', '<=', $this->period['to']);
+            }, 
+            'opportunities as lost'=>function ($query) {
+                $query->whereClosed(2)        
+                    ->where(
+                        function ($q) {
+                            $q->whereBetween('actual_close', [$this->period['from'], $this->period['to']]);
+                        }
+                    )->where('opportunities.created_at', '<=', $this->period['to']);
+            },
+            'opportunities as lostvalue' => function ($query) {
+                $query->whereClosed(2)
+                    ->select(\DB::raw("SUM(value) as lostvalue"))
+                    ->where(
+                        function ($q) {
+                            $q->where('actual_close', '>', now())
+                                ->orwhereNull('actual_close');
+                        }
+                    )
+                ->where('opportunities.created_at', '<=', $this->period['to']);
+            },
+            'opportunities as created'=>function ($query) {
+                $query->whereBetween('opportunities.created_at', [$this->period['from'],$this->period['to']]);
+            }
+            ]
+        );
+
+
+
+    }
     /**
      * [scopeBranchOpportunities description]
      * 

@@ -70,27 +70,55 @@ class OpportunityController extends Controller
         if (! $this->period) {
             $this->period = $this->activity->getPeriod();
         }
+
         $activityTypes = $activityTypes = ActivityType::all();
         $myBranches = $this->person->myBranches();
-     
+       
         if (! $myBranches) {
             return redirect()->back()
                 ->withWarning("You are not assigned to any branches. Please contact Sales Operations");
         }
-        if (session()->has('branch')) {
-            $data = $this->getBranchData([session('branch')]);
-        } else {
-            
-            $data = $this->getBranchData([array_keys($myBranches)[0]]);
-        }
-        
 
         $data['period'] = $this->period;
-      
+
+        if (count($myBranches) == 1 ) {
+            session(['branch'=>array_keys($myBranches)[0]]);
+            $data = $this->getBranchData([session('branch')]);
+            return response()->view(
+                'opportunities.index', 
+                compact('data', 'activityTypes', 'myBranches', 'period')
+            );
+
+        } else {
+            
+            $data['summary'] = $this->_getBranchSummaryData(array_keys($myBranches), $data['period']);
+           
+            return response()->view(
+                'opportunities.summary', 
+                compact('data', 'activityTypes', 'myBranches')
+            );
+        }
+             
+        
+    }
+
+    public function showBranchOpportunities(Branch $branch)
+    {
+        $myBranches = $this->person->myBranches();
+        if ($branch->id) {
+         
+            if (! array_key_exists($branch->id, $myBranches)) {
+                 return redirect()->back()
+                     ->withWarning("You are not assigned to " .$branch->branchname);
+            }
+        }
+        session(['branch'=>array_keys($branch->id)]);
+        $data = $this->getBranchData([session('branch')]);
         return response()->view(
             'opportunities.index', 
             compact('data', 'activityTypes', 'myBranches', 'period')
         );
+
     }
     /**
      * [branchOpportunities description]
@@ -103,12 +131,13 @@ class OpportunityController extends Controller
     public function branchOpportunities(Branch $branch, Request $request)
     {
        
-        $myBranches = $this->person->myBranches();
+        
 
         if (! $this->period) {
             $this->period = $this->activity->getPeriod();
         }
         // check that user is assigned to branch
+        $myBranches = $this->person->myBranches();
         if ($branch->id) {
          
             if (! array_key_exists($branch->id, $myBranches)) {
@@ -131,7 +160,12 @@ class OpportunityController extends Controller
             compact('data', 'activityTypes', 'myBranches')
         );
     }
-   
+    private function _getBranchSummaryData(array $branches, $period)
+    {
+        return $this->branch->summaryBranchOpportunities($period)
+            ->whereIn('id', $branches)
+            ->get();
+    } 
     /**
      * [getBranchData description]
      * 

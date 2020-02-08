@@ -1,4 +1,4 @@
-@extends('site/layouts/default')
+@extends('site.layouts.default')
 @section('content')
 @if (auth()->user()->hasRole('admin'))
 <div class="float-right">
@@ -138,6 +138,6 @@
     </tbody>
     </table>
 
-@include('partials/_scripts')
-@include('partials/_modal')
+@include('partials._scripts')
+@include('partials._modal')
 @endsection
