@@ -66,13 +66,13 @@ class OpportunityController extends Controller
      */
     public function index()
     {
-        
+       
         if (! $this->period) {
             $this->period = $this->activity->getPeriod();
         }
         $activityTypes = $activityTypes = ActivityType::all();
         $myBranches = $this->person->myBranches();
-        
+     
         if (! $myBranches) {
             return redirect()->back()
                 ->withWarning("You are not assigned to any branches. Please contact Sales Operations");
@@ -80,7 +80,8 @@ class OpportunityController extends Controller
         if (session()->has('branch')) {
             $data = $this->getBranchData([session('branch')]);
         } else {
-            $data = $this->getBranchData([array_keys($myBranches)][0]);
+            
+            $data = $this->getBranchData([array_keys($myBranches)[0]]);
         }
         
 

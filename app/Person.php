@@ -196,9 +196,12 @@ class Person extends NodeModel implements HasPresenter
      */
     public function myBranches(Person $person=null, Array $servicelines=null)
     {
-        
+        if (! $servicelines) {
+            $servicelines = auth()->user()->serviceline->pluck('id')->toArray();
+         
+        }
         if (auth()->user()->hasRole('admin') && ! $person) {
-          
+           
             return Branch::whereHas(
                 'servicelines', function ($q) use ($servicelines) {
                     $q->whereIn('servicelines.id', $servicelines);
