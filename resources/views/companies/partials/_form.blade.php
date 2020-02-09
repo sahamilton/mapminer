@@ -44,8 +44,8 @@
 <div class="form-group{{ $errors->has('accounttypes_id)') ? ' has-error' : '' }}">
         <label class="col-md-2 control-label">Company Type:</label>
            <div class="input-group input-group-lg ">
-            <select  required class="form-control" name='accounttypes_id'>
-                <option value=null>Not Assigned</option>
+            <select  class="form-control" name='accounttypes_id'>
+                <option value=''>Not Assigned</option>
             @foreach ($types as $type)
                 <option @if(isset($company) && $company->accounttypes_id == $type->id)
                     selected 
@@ -96,7 +96,7 @@
                 class="form-control" 
                 name='customer_id' 
                 description="Customer Number" 
-                value="{!! old('companyname', isset($company) ? $company->customer_id : "") !!}" 
+                value="{!! old('customer_id', isset($company) ? $company->customer_id : "") !!}" 
                 placeholder="Customer Number">
                 <span class="help-block">
                     <strong>{{ $errors->has('companyname') ? $errors->first('companyname') : ''}}</strong>

@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Requests;
-
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CompanyFormRequest extends FormRequest
@@ -26,9 +26,8 @@ class CompanyFormRequest extends FormRequest
         return [
          'companyname' => 'required',
          'serviceline'=>'required',
-         'customer_id'=>'unique:companies,customer_id,' . $this->id,
+         'customer_id'=>Rule::unique('companies', 'customer_id')->ignore($this->company),
         ];
 
-            //
     }
 }

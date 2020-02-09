@@ -13,6 +13,7 @@ use App\Note;
 use App\Http\Requests\OpportunityFormRequest;
 use App\Opportunity;
 use App\Person;
+use App\SalesOrg;
 use \Carbon\Carbon;
 
 use Illuminate\Http\Request;
@@ -47,15 +48,17 @@ class OpportunityController extends BaseController
         Branch $branch,
         Contact $contact,
         Opportunity $opportunity,
-        Person $person
+        Person $person,
+        SalesOrg $salesorg
     ) {
+        $this->activity = $activity;
         $this->address = $address;
         $this->addressbranch = $addressbranch;
         $this->branch = $branch;
         $this->contact = $contact;
         $this->opportunity = $opportunity;
         $this->person = $person;
-        $this->activity = $activity;
+        $this->salesorg = $salesorg;
         
     }
 
@@ -66,30 +69,68 @@ class OpportunityController extends BaseController
      */
     public function index()
     {
-        
+        $person = auth()->user()->person;
+     
         if (! $this->period) {
             $this->period = $this->activity->getPeriod();
         }
+
         $activityTypes = $activityTypes = ActivityType::all();
         $myBranches = $this->person->myBranches();
-        
+       
         if (! $myBranches) {
             return redirect()->back()
                 ->withWarning("You are not assigned to any branches. Please contact Sales Operations");
         }
-        if (session()->has('branch')) {
-            $data = $this->_getBranchData([session('branch')]);
-        } else {
-            $data = $this->_getBranchData([array_keys($myBranches)][0]);
-        }
-        
-
+        session(['branch'=>array_keys($myBranches)[0]]);
         $data['period'] = $this->period;
-      
+
+        if (count($myBranches) == 1 ) {
+            
+            $data = $this->_getBranchData([session('branch')]);
+            return response()->view(
+                'opportunities.index', 
+                compact('data', 'activityTypes', 'myBranches', 'period')
+            );
+
+        } else {
+            $person = $this->_getManagers();
+            $managers = $person->load('directReports')->directReports;
+          
+            $data['summary'] = $this->_getBranchSummaryData(array_keys($myBranches));
+           
+            return response()->view(
+                'opportunities.summary', 
+                compact('data', 'activityTypes', 'myBranches', 'managers', 'person')
+            );
+        }
+             
+        
+    }
+    /**
+     * [showBranchOpportunities description]
+     * 
+     * @param  Branch $branch [description]
+     * 
+     * @return [type]         [description]
+     */
+    public function showBranchOpportunities(Branch $branch)
+    {
+        $myBranches = $this->person->myBranches();
+        if ($branch->id) {
+         
+            if (! array_key_exists($branch->id, $myBranches)) {
+                 return redirect()->back()
+                     ->withWarning("You are not assigned to " .$branch->branchname);
+            }
+        }
+        session(['branch'=>$branch->id]);
+        $data = $this->_getBranchData([session('branch')]);
         return response()->view(
             'opportunities.index', 
             compact('data', 'activityTypes', 'myBranches', 'period')
         );
+
     }
     /**
      * [branchOpportunities description]
@@ -101,13 +142,11 @@ class OpportunityController extends BaseController
      */
     public function branchOpportunities(Branch $branch, Request $request)
     {
-       
-        $myBranches = $this->person->myBranches();
-
         if (! $this->period) {
             $this->period = $this->activity->getPeriod();
         }
         // check that user is assigned to branch
+        $myBranches = $this->person->myBranches();
         if ($branch->id) {
          
             if (! array_key_exists($branch->id, $myBranches)) {
@@ -130,11 +169,63 @@ class OpportunityController extends BaseController
             compact('data', 'activityTypes', 'myBranches')
         );
     }
-   
+    /**
+     * [branchOpportunities description]
+     * 
+     * @param Branch  $branch  [description]
+     * @param Request $request [description]
+     * 
+     * @return [type]           [description]
+     */
+    public function managerOpportunities(Request $request)
+    {
+        $person = $this->person->findOrFail(request('manager'));
+        if (! $this->period) {
+            $this->period = $this->activity->getPeriod();
+        }
+        $data['period']= $this->period;
+        // need to get my team
+        // auth()->user()->person->myteam();
+        // check that user is assigned to branch
+        $myBranches = $this->person->myBranches($person);
+
+        if (count($myBranches) == 1 ) {
+            
+            $data = $this->_getBranchData([session('branch')]);
+            return response()->view(
+                'opportunities.index', 
+                compact('data', 'activityTypes', 'myBranches', 'period')
+            );
+
+        } else {
+            
+            $data['summary'] = $this->_getBranchSummaryData(array_keys($myBranches), $this->period);
+           
+            $managers = $person->load('directReports')->directReports;
+            return response()->view(
+                'opportunities.summary', 
+                compact('data', 'activityTypes', 'myBranches', 'person', 'managers')
+            );
+        }
+    }
+    /**
+     * [_getBranchSummaryData description]
+     * 
+     * @param array  $branches [description]
+     * @param [type] $period   [description]
+     * 
+     * @return [type]           [description]
+     */
+    private function _getBranchSummaryData(array $branches)
+    {
+        return $this->branch->summaryBranchOpportunities($this->period)
+            ->whereIn('id', $branches)
+            ->get();
+    } 
     /**
      * [_getBranchData description]
-     * 
-     * @param array $branches [description]
+     *  
+     * @param array  $branches [description]
      * 
      * @return [type]           [description]
      */
@@ -142,10 +233,7 @@ class OpportunityController extends BaseController
     {
         $data['branches'] =$this->_getBranches($branches);
 
-
         $data['opportunities'] = $this->_getOpportunities($branches);
-
-       
 
         $data['addresses'] = $data['opportunities']->map(
             function ($opportunity) {
@@ -160,8 +248,6 @@ class OpportunityController extends BaseController
                 }
             }
         );
-       
-       
         return $data;
     }
     /**
@@ -221,7 +307,16 @@ class OpportunityController extends BaseController
         return $opportunities->get();
        
     }
-        
+      
+    private function _getManagers()
+    {
+        if (auth()->user()->hasRole(['admin'])) {
+            $manager = $this->salesorg->getCapoDiCapo();
+        } else {
+            $manager = $this->person->where('user_id', '=', auth()->user()->id)->firstOrFail();
+        }
+        return $manager;
+    }  
     /**
      * Show the form for creating a new resource.
      *

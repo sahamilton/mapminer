@@ -79,7 +79,7 @@ class BranchDashboardController extends DashboardController
      */
     public function index()
     {
-  
+    
         if (session()->has('impersonated_by')) {
             session()->forget('branch');
         }
@@ -94,11 +94,12 @@ class BranchDashboardController extends DashboardController
         if (session('branch')) {
             
             $branch = session('branch');
+
             return redirect()->route('dashboard.show', $branch);
         } else {
            
             $this->myBranches = $this->_getBranches();
-    ;
+            
             if (count($this->myBranches) > 0) {
                 $branch = array_keys($this->myBranches);
                 return redirect()->route('dashboard.show', $branch[0]);
@@ -239,7 +240,7 @@ class BranchDashboardController extends DashboardController
             
             return $this->person->myBranches($manager);
         } else {
-      
+            
              return  $this->person->myBranches();
         }
     }

@@ -66,7 +66,7 @@ class Person extends NodeModel implements HasPresenter
     {
         return $this->hasMany(Person::class, 'reports_to');
     }
-
+   
     /**
      * [salesRole description]
      * not sure this works!
@@ -204,44 +204,61 @@ class Person extends NodeModel implements HasPresenter
      */
     public function myBranches(Person $person=null, Array $servicelines=null)
     {
-        if (! $servicelines) {
-            $servicelines = auth()->user()->serviceline()->pluck('servicelines.id')->toArray();
-            
+        if (! $person ) {
+            $user = $this->_getPersonFromAuth();
+       
+            $person = $user->person;
+            if ($user->hasRole(['admin', 'sales_operations'])) {
+                return $this->_getBranchesInServicelines($user->serviceline);
+            } else {
+               return $this->_getBranchesFromTeam($person); 
+            }
+        } else {
+
+            return $this->_getBranchesFromTeam($person);
         }
-        
-        if (auth()->user()->hasRole('admin') && ! $person) {
-          
-            return Branch::whereHas(
-                'servicelines', function ($q) use ($servicelines) {
-                    $q->whereIn('servicelines.id', $servicelines);
-                }
-            )->pluck('branchname', 'id')->toArray();
+    }  
+       // check if role is admin or sales ops
+       // get all branches if so4
+
+        /*if ($person) {
+            $servicelines = $person->userdetails()->serviceline->pluck('id')->toArray();
+        } else {
+
+            if (! $servicelines) {
+                $servicelines = auth()->user()->serviceline->pluck('id')->toArray();
+             
+            }
+
+            if (auth()->user()->hasRole('admin')  {
+               
+                return Branch::whereHas(
+                    'servicelines', function ($q) use ($servicelines) {
+                        $q->whereIn('servicelines.id', $servicelines);
+                    }
+                )->pluck('branchname', 'id')->toArray();
+            }
         } elseif (! $person && auth()->user()->hasRole('sales_operations')) {
           
             $person = $this->findOrFail(auth()->user()->person->reports_to);
 
-        }
-       
-        $myteam = $this->myTeam($person)->whereHas(
-            'branchesServiced', function ($q) use ($servicelines) {
-                $q->whereHas(
-                    'servicelines', function ($q1) use ($servicelines) {
-                        $q1->whereIn('servicelines.id', $servicelines);
-                    }
-                );
-                 
-            }
-        )->get();
-       
-        $data = [];
-        
+        }*/
+    private function _getBranchesFromTeam(Person $person)
+    {
+        $myteam = $this->myTeam($person)->has('branchesServiced')->get();
+
+        $data=[];
+        $teammembers=[];
+        /* if ($servicelines) {
+            // not used!!
+        } else {*/
             $teammembers =  $myteam->map(
                 function ($team) {
            
                     return $team->branchesServiced;
                 }
             );
-      
+        //}
         
 
         foreach ($teammembers as $member) {
@@ -273,6 +290,21 @@ class Person extends NodeModel implements HasPresenter
             }
         );
         return $team->flatten();
+    }
+
+    private function _getPersonFromAuth()
+    {
+        
+        return User::with('roles', 'person', 'serviceline')->findOrFail(auth()->user()->id);
+    }
+    private function _getBranchesInServicelines($servicelines)
+    {
+        return Branch::whereHas(
+            'servicelines', function ($q) use ($servicelines) {
+                $q->whereIn('id', $servicelines->pluck('id')->toArray());
+            }
+        )->orderBy('id')
+        ->pluck('branchname', 'id')->toArray();
     }
     /**
      * [scopeMyReports description]
