@@ -78,12 +78,12 @@ class OpportunityController extends Controller
             return redirect()->back()
                 ->withWarning("You are not assigned to any branches. Please contact Sales Operations");
         }
-
+        session(['branch'=>array_keys($myBranches)[0]]);
         $data['period'] = $this->period;
 
         if (count($myBranches) == 1 ) {
-            session(['branch'=>array_keys($myBranches)[0]]);
-            $data = $this->getBranchData([session('branch')]);
+            
+            $data = $this->_getBranchData([session('branch')]);
             return response()->view(
                 'opportunities.index', 
                 compact('data', 'activityTypes', 'myBranches', 'period')
@@ -101,7 +101,13 @@ class OpportunityController extends Controller
              
         
     }
-
+    /**
+     * [showBranchOpportunities description]
+     * 
+     * @param  Branch $branch [description]
+     * 
+     * @return [type]         [description]
+     */
     public function showBranchOpportunities(Branch $branch)
     {
         $myBranches = $this->person->myBranches();
@@ -112,8 +118,8 @@ class OpportunityController extends Controller
                      ->withWarning("You are not assigned to " .$branch->branchname);
             }
         }
-        session(['branch'=>array_keys($branch->id)]);
-        $data = $this->getBranchData([session('branch')]);
+        session(['branch'=>$branch->id]);
+        $data = $this->_getBranchData([session('branch')]);
         return response()->view(
             'opportunities.index', 
             compact('data', 'activityTypes', 'myBranches', 'period')
@@ -130,9 +136,6 @@ class OpportunityController extends Controller
      */
     public function branchOpportunities(Branch $branch, Request $request)
     {
-       
-        
-
         if (! $this->period) {
             $this->period = $this->activity->getPeriod();
         }
@@ -147,9 +150,9 @@ class OpportunityController extends Controller
         }
         if (request()->has('branch')) {
 
-            $data = $this->getBranchData([request('branch')]);
+            $data = $this->_getBranchData([request('branch')]);
         } else {
-             $data = $this->getBranchData([$branch->id]);
+             $data = $this->_getBranchData([$branch->id]);
         }
 
         $activityTypes = $activityTypes = ActivityType::all();
@@ -160,6 +163,49 @@ class OpportunityController extends Controller
             compact('data', 'activityTypes', 'myBranches')
         );
     }
+    /**
+     * [branchOpportunities description]
+     * 
+     * @param Branch  $branch  [description]
+     * @param Request $request [description]
+     * 
+     * @return [type]           [description]
+     */
+    public function managerOpportunities(Person $person)
+    {
+        if (! $this->period) {
+            $this->period = $this->activity->getPeriod();
+        }
+        // need to get my team
+        // auth()->user()->person->myteam();
+        // check that user is assigned to branch
+        $myBranches = $this->person->myBranches($person);
+        if (count($myBranches) == 1 ) {
+            
+            $data = $this->_getBranchData([session('branch')]);
+            return response()->view(
+                'opportunities.index', 
+                compact('data', 'activityTypes', 'myBranches', 'period')
+            );
+
+        } else {
+            
+            $data['summary'] = $this->_getBranchSummaryData(array_keys($myBranches), $data['period']);
+           
+            return response()->view(
+                'opportunities.summary', 
+                compact('data', 'activityTypes', 'myBranches')
+            );
+        }
+    }
+    /**
+     * [_getBranchSummaryData description]
+     * 
+     * @param array  $branches [description]
+     * @param [type] $period   [description]
+     * 
+     * @return [type]           [description]
+     */
     private function _getBranchSummaryData(array $branches, $period)
     {
         return $this->branch->summaryBranchOpportunities($period)
@@ -167,20 +213,17 @@ class OpportunityController extends Controller
             ->get();
     } 
     /**
-     * [getBranchData description]
-     * 
-     * @param array $branches [description]
+     * [_getBranchData description]
+     *  
+     * @param array  $branches [description]
      * 
      * @return [type]           [description]
      */
-    public function getBranchData(array $branches)
+    private function _getBranchData(array $branches)
     {
         $data['branches'] =$this->_getBranches($branches);
 
-
         $data['opportunities'] = $this->_getOpportunities($branches);
-
-       
 
         $data['addresses'] = $data['opportunities']->map(
             function ($opportunity) {
@@ -195,8 +238,6 @@ class OpportunityController extends Controller
                 }
             }
         );
-       
-       
         return $data;
     }
 
