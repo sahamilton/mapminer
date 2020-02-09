@@ -56,15 +56,13 @@
                   href="{{{ route('branchcampaigns.index') }}}">
                  <i class="fas fa-chart-line"></i>
                   My Sales Initiatives</a> 
+              
               <a class="dropdown-item" href="{{{ route('training.index') }}}">
               <i class="fas fa-graduation-cap" aria-hidden="true"></i>
               Mapminer Training</a>
 
               
-              @can('manage_opportunities')
-              
-
-              @endcan
+             
             </div>
           </li>
 

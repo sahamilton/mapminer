@@ -13,6 +13,7 @@ use App\Note;
 use App\Http\Requests\OpportunityFormRequest;
 use App\Opportunity;
 use App\Person;
+use App\SalesOrg;
 use \Carbon\Carbon;
 
 use Illuminate\Http\Request;
@@ -47,15 +48,17 @@ class OpportunityController extends Controller
         Branch $branch,
         Contact $contact,
         Opportunity $opportunity,
-        Person $person
+        Person $person,
+        SalesOrg $salesorg
     ) {
+        $this->activity = $activity;
         $this->address = $address;
         $this->addressbranch = $addressbranch;
         $this->branch = $branch;
         $this->contact = $contact;
         $this->opportunity = $opportunity;
         $this->person = $person;
-        $this->activity = $activity;
+        $this->salesorg = $salesorg;
         
     }
 
@@ -66,7 +69,8 @@ class OpportunityController extends Controller
      */
     public function index()
     {
-       
+        $person = auth()->user()->person;
+     
         if (! $this->period) {
             $this->period = $this->activity->getPeriod();
         }
@@ -90,12 +94,14 @@ class OpportunityController extends Controller
             );
 
         } else {
-            
-            $data['summary'] = $this->_getBranchSummaryData(array_keys($myBranches), $data['period']);
+            $person = $this->_getManagers();
+            $managers = $person->load('directReports')->directReports;
+          
+            $data['summary'] = $this->_getBranchSummaryData(array_keys($myBranches));
            
             return response()->view(
                 'opportunities.summary', 
-                compact('data', 'activityTypes', 'myBranches')
+                compact('data', 'activityTypes', 'myBranches', 'managers', 'person')
             );
         }
              
@@ -171,15 +177,18 @@ class OpportunityController extends Controller
      * 
      * @return [type]           [description]
      */
-    public function managerOpportunities(Person $person)
+    public function managerOpportunities(Request $request)
     {
+        $person = $this->person->findOrFail(request('manager'));
         if (! $this->period) {
             $this->period = $this->activity->getPeriod();
         }
+        $data['period']= $this->period;
         // need to get my team
         // auth()->user()->person->myteam();
         // check that user is assigned to branch
         $myBranches = $this->person->myBranches($person);
+
         if (count($myBranches) == 1 ) {
             
             $data = $this->_getBranchData([session('branch')]);
@@ -190,11 +199,12 @@ class OpportunityController extends Controller
 
         } else {
             
-            $data['summary'] = $this->_getBranchSummaryData(array_keys($myBranches), $data['period']);
+            $data['summary'] = $this->_getBranchSummaryData(array_keys($myBranches), $this->period);
            
+            $managers = $person->load('directReports')->directReports;
             return response()->view(
                 'opportunities.summary', 
-                compact('data', 'activityTypes', 'myBranches')
+                compact('data', 'activityTypes', 'myBranches', 'person', 'managers')
             );
         }
     }
@@ -206,9 +216,9 @@ class OpportunityController extends Controller
      * 
      * @return [type]           [description]
      */
-    private function _getBranchSummaryData(array $branches, $period)
+    private function _getBranchSummaryData(array $branches)
     {
-        return $this->branch->summaryBranchOpportunities($period)
+        return $this->branch->summaryBranchOpportunities($this->period)
             ->whereIn('id', $branches)
             ->get();
     } 
@@ -272,7 +282,16 @@ class OpportunityController extends Controller
             ->distinct()
             ->get();
     }
-        
+      
+    private function _getManagers()
+    {
+        if (auth()->user()->hasRole(['admin'])) {
+            $manager = $this->salesorg->getCapoDiCapo();
+        } else {
+            $manager = $this->person->where('user_id', '=', auth()->user()->id)->firstOrFail();
+        }
+        return $manager;
+    }  
     /**
      * Show the form for creating a new resource.
      *

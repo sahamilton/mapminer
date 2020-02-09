@@ -1,10 +1,15 @@
 @extends('site.layouts.default')
 @section('content')
-<div class="container" name="summaryOpportynities" >
-<h4>Summary Opportunities</h4>
+<div class="container" name="summaryOpportunities" >
+
+<h4>{{$person->fullName()}}'s Summary Opportunities</h4>
+<p><a href="{{route('opportunity.index')}}">Return to all Opportunities</a></p>
  @php $total = []; 
-    $fields = ['open', 'created', 'openvalue', 'won', 'wonvalue']; @endphp
- @endphp   
+    $fields = ['open', 'created', 'openvalue', 'won', 'wonvalue']; 
+@endphp
+    @if($managers->count())
+    @include('opportunities.partials._teamselector')
+    @endif
     @include('branches.partials._periodselector')
     <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>    
         <thead>
