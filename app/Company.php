@@ -293,6 +293,13 @@ class Company extends NodeModel
 
             return $query->withCount(       
                 [
+                'locations as supplied_leads'=>function ($query) {
+                    $query->whereHas(
+                        'assignedToBranch', function ($q) {
+                            $q->where('address_branch.created_at', '<=', $this->period['to']);
+                        }
+                    );
+                },
                 'locations as offered_leads'=>function ($query) {
                     $query->whereHas(
                         'assignedToBranch', function ($q) {
@@ -305,6 +312,14 @@ class Company extends NodeModel
                     $query->whereHas(
                         'assignedToBranch', function ($q) {
                             $q->where('status_id', 2)
+                                ->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']]);
+                        }
+                    );
+                },
+                'locations as touched_leads'=>function ($query) {
+                    $query->whereHas(
+                        'assignedToBranch', function ($q) {
+                            $q->where('status_id', '>', 1)
                                 ->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']]);
                         }
                     );

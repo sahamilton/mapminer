@@ -1227,11 +1227,15 @@ class Branch extends Model implements HasPresenter
 
         return $query->withCount(       
             [ 
-
+            'addresses as supplied_leads'=>function ($q) {
+                $q->whereIn('company_id', $this->company_ids)
+                    ->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']]);
+                    
+            },
             'addresses as offered_leads'=>function ($q) {
                 $q->whereIn('company_id', $this->company_ids)
                     ->where('status_id', '=', '1')
-                    ->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']]);;
+                    ->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']]);
                     
             },
 
@@ -1244,6 +1248,12 @@ class Branch extends Model implements HasPresenter
             'addresses as rejected_leads'=>function ($q) {
                 $q->whereIn('company_id', $this->company_ids)
                     ->where('status_id', '4')
+                    ->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']]);
+                    
+            },
+            'addresses as touched_leads'=>function ($q) {
+                $q->whereIn('company_id', $this->company_ids)
+                    ->where('status_id', '>', '1')
                     ->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']]);
                     
             },
