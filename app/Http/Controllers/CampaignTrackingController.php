@@ -22,7 +22,7 @@ class CampaignTrackingController extends Controller
     PUBLIC $company;
     public $opportunity;
     public $fields = [
-                    "supplied_lead",
+                    "supplied_leads",
                     "offered_leads",
                     "worked_leads",
                     "rejected_leads",
