@@ -50,7 +50,22 @@ class Activity extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
     {
         return true;
     }
-
+    /**
+     * [priorActivity description]
+     * @return [type] [description]
+     */
+    public function priorActivity()
+    {
+        return $this->hasOne(Activity::class, 'relatedActivity', 'id');
+    }
+    /**
+     * [relatedActivity description]
+     * @return [type] [description]
+     */
+    public function followupActivity()
+    {
+        return $this->belongsTo(Activity::class, 'relatedActivity', 'id');
+    }
     /**
      * Get the start time
      *
