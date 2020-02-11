@@ -236,7 +236,7 @@ class ActivityController extends Controller
         } else {
             return redirect()->route('address.show', $data['activity']['address_id']);
         }
-        dd($activity->load('relatedActivity'));
+        
     }
 
     /**
