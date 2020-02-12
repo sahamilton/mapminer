@@ -13,6 +13,7 @@ use App\SearchFilter;
 use App\Salesnote;
 use App\Howtofield;
 use App\Serviceline;
+use App\AccountType;
 use Illuminate\Http\Request;
 use App\Exports\CompaniesExport;
 use App\Http\Requests\CompanyFormRequest;
@@ -84,7 +85,7 @@ class CompaniesController extends BaseController
             );
         } 
         $companies = $companies->withCount('locations')
-            ->with('managedBy', 'managedBy.userdetails', 'industryVertical', 'serviceline')
+            ->with('managedBy', 'managedBy.userdetails', 'industryVertical', 'serviceline', 'type')
             ->get();
 
         $locationFilter = 'both';
@@ -130,7 +131,14 @@ class CompaniesController extends BaseController
         );
     }
 
-
+    public function byType(AccountType $type)
+    {
+        $companies =$this->company->where('accounttypes_id', $type->id)
+            ->with('managedBy', 'managedBy.userdetails', 'industryVertical', 'serviceline', 'type')
+            ->get();
+        $locationFilter = 'both';
+        return response()->view('companies.type', compact('companies', 'type'));
+    }
 
     /**
      * Show the form for creating a new company

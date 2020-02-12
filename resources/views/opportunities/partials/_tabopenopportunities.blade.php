@@ -25,10 +25,7 @@
             @if(isset($data['branches']) && in_array($data['branches']->first()->id,array_keys($myBranches)))
             <a href="{{route('opportunity.show',$opportunity->id)}}" title="Review, edit or delete this opportunity">
             {{$opportunity->title ?  $opportunity->title : $opportunity->id}} <i class="fas fa-edit text text-info"></i></a>
-           
-                             
-
-              @else
+            @else
             {{$opportunity->title ?  $opportunity->title : $opportunity->id}}
 
               @endif
@@ -50,10 +47,7 @@
             @endif
           </td>
           <td>
-          
-            <a href= "{{route('address.show',$opportunity->address->address->id)}}">
-              {{$opportunity->address->address->businessname}}
-            </a>
+            <a href= "{{route('address.show',$opportunity->address->address->id)}}">{{$opportunity->address->address->businessname}}</a>
           </td>
           <td>{{$opportunity->address->address->fullAddress()}}</td>
           <td>

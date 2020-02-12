@@ -25,13 +25,17 @@ class CompaniesExportController extends BaseController
     public function index()
     {
         $companies = $this->company
-                        ->whereHas('serviceline', function($q) {
-                                $q->whereIn('serviceline_id', $this->userServiceLines);
+            ->whereHas(
+                'serviceline', function ($q) {
+                    $q->whereIn('serviceline_id', $this->userServiceLines);
 
-                            })
-                        ->orderBy('companyname')->pluck('companyname','id');
+                }
+            )
+            
+            ->orderBy('companyname')
+            ->pluck('companyname', 'id');
 
-        return response()->view('locations.export',compact('companies'));
+        return response()->view('locations.export', compact('companies'));
     }
 
 

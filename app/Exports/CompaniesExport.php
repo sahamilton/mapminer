@@ -20,7 +20,7 @@ class CompaniesExport implements FromView
      */
     public function view(): View
     {
-        $companies = Company::with('industryVertical', 'managedBy', 'serviceline')
+        $companies = Company::with('industryVertical', 'managedBy', 'serviceline', 'type')
 
                 
                 ->get();

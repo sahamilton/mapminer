@@ -1,37 +1,12 @@
 @extends('site/layouts/default')
 @section('content')
-@if(! isset($title))
-@can('manage_accounts')
-<h1>All Companies</h1>
-<p><a href="{{route('allcompanies.export')}}">Export to Excel</a></p>
-@else
-<h1>Companies That Have Locations Nearby<span class="text text-danger"><sup>*</sup></span>
-</h1>
-@endcan
-@else
-<h1>{{$title}}</h1>
+
+
+<h1>All {{$type->type}} Companies</h1>
+
 <p><a href = "{{route('company.index')}}">Return to all companies</a></p>
-@endif
 
 
-
-@include('partials/_showsearchoptions')
-@include('partials/advancedsearch')
-@include('partials.companyfilter')
-
-
-@if (auth()->user()->hasRole('admin') or auth()->user()->hasRole('sales_operations'))
-
-
-
-<div class="float-right">
-<a href="{{ route('company.create') }}" class="btn btn-small btn-info iframe">
-
-<i class="fas fa-plus-circle " aria-hidden="true"></i>
-
- Create New Account</a>
-</div>
-@endif
 
 	<table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
 		<thead>
@@ -158,7 +133,6 @@
 
 	</tbody>
 	</table>
-<p><span class="text text-danger"><sup>*</sup></span> within 25 miles of your location.</p>
 @include('partials/_modal')
 @include('partials/_scripts')
 @endsection

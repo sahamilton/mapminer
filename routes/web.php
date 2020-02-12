@@ -122,6 +122,7 @@ Route::group(
         Route::get('/company/{company}/statemap/{state}', ['as'=>'company.statemap', 'uses'=>'CompaniesController@statemap']);
         Route::get('/company/vertical/{vertical}', ['as'=>'company.vertical', 'uses'=>'CompaniesController@vertical']);
         Route::get('/company/{company}/segment/{segment}', ['as'=>'company.segment', 'uses'=>'CompaniesController@show']);
+        Route::get('/company/{accounttype}', ['as'=>'company.type', 'uses'=>'CompaniesController@byType']);
         
         Route::resource('company', 'CompaniesController', ['only' => ['index', 'show']]);
         
