@@ -6,6 +6,7 @@
 			<td>Serviceline</td>
 			<td>Vertical</td>
 			<td>Locations</td>
+			<td>Type</td>
 
 			<td>Managed By</td>
 		</tr>
@@ -30,9 +31,14 @@
 					{{$company->locationcount()->count}}
 
 				@endif
-				
-				<td>@if($company->managedBy)
-					{{$company->managedBy->fullName()}}
+				<td>
+					@if($company->type)
+						{{$company->type->type}}
+					@endif
+				</td>
+				<td>
+					@if($company->managedBy)
+						{{$company->managedBy->fullName()}}
 					@endif
 				</td>
 			</tr>
