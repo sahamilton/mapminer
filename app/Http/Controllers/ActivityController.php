@@ -194,16 +194,6 @@ class ActivityController extends Controller
    
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param \Illuminate\Http\Request $request [description]
@@ -305,7 +295,7 @@ class ActivityController extends Controller
             $data['followup']['note'] = " ";
             $data['followup']['activity_date'] = $data['activity']['followup_date'];
             $data['followup']['activitytype_id'] = request('followup_activity');
-            $data['followup']['address_id'] = request('address_id');
+            $data['followup']['address_id'] = $data['activity']['address_id'];
             $data['followup']['branch_id']= request('branch_id');
             $data['followup']['followup_date'] = null;
             $data['followup']['user_id'] = auth()->user()->id;
@@ -347,10 +337,23 @@ class ActivityController extends Controller
     public function update(ActivityFormRequest $request, Activity $activity)
     {
         
-        
+        $activity->load('followupActivity');
         $data = $this->_parseData($request);
-       
+        
         $activity->update($data['activity']);
+        if (request()->filled('followup_date')) {
+            
+            if ($activity->followupActivity) {
+                $activity->followupActivity->update($data['followup']);
+            } else {
+               
+                $followup = Activity::create($data['followup']);
+
+                $activity->followupActivity()->associate($followup);
+            } 
+            
+            
+        }
    
         return redirect()->route('address.show', $activity->address_id);
     }
