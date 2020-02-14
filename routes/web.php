@@ -193,7 +193,7 @@ Route::group(
         //     Opportunity
         Route::post('/branchlead/{address}', ['as'=>'branch.lead.add', 'uses'=>'OpportunityController@addToBranchLeads']);
         Route::post('/opportunities/{opportunity}/close/', ['as'=>'opportunity.close', 'uses'=>'OpportunityController@close']);
-        Route::post('/opportunities/branch/', ['as'=>'opportunity.branch', 'uses'=>'   OpportunityController@branchOpportunities']);
+        Route::post('/opportunities/branch/', ['as'=>'opportunity.branch', 'uses'=>'OpportunityController@branchOpportunities']);
         Route::post('/opportunities/manager/', ['as'=>'opportunity.manager', 'uses'=>'OpportunityController@managerOpportunities']);
         Route::get('/opportunities/branch/{branch}', ['as'=>'opportunities.branch', 'uses'=>'OpportunityController@branchOpportunities']);
         Route::delete('opportunity/{opportunity}/destroy', ['as'=>'opportunity.remove', 'uses'=>'OpportunityController@destroy']);
