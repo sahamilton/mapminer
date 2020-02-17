@@ -3,7 +3,9 @@
 @if(! isset($title))
 @can('manage_accounts')
 <h1>All Companies</h1>
-<p><a href="{{route('allcompanies.export')}}">Export to Excel</a></p>
+<p><a href="{{route('allcompanies.export')}}">
+<i class="far fa-file-excel"></i>
+Export to Excel</a></p>
 @else
 <h1>Companies That Have Locations Nearby<span class="text text-danger"><sup>*</sup></span>
 </h1>

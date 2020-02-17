@@ -1,7 +1,9 @@
 @extends('site/layouts/default')
 @section('content')
 
-<div id='results'></div>
+<div id='results'>
+	<a href="{{route('company.index')}}">Show All Companies</a>
+</div>
 @include('companies.partials._searchbar')
 <h2>
 {{$company->companyname}}
