@@ -226,7 +226,7 @@ class ActivityController extends Controller
         } else {
             return redirect()->route('address.show', $data['activity']['address_id']);
         }
-        dd($activity->load('relatedActivity'));
+        dd('Please report this error: Activity Controller # 229' . $activity->load('relatedActivity'));
     }
 
     /**

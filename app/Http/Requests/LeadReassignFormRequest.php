@@ -7,9 +7,6 @@ use Illuminate\Foundation\Http\FormRequest;
 class LeadReassignFormRequest extends FormRequest
 {
    
-
-    
-
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -40,7 +37,7 @@ class LeadReassignFormRequest extends FormRequest
     private function _getValid()
     {
         $valid = [];
-        dd($this->request);
+        
         if (isset($this->request->branch)) {
             $valid[] = $this->request->branch;
             dd(46, $this->request->branch);
