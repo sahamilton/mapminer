@@ -123,8 +123,9 @@ Route::group(
         Route::get('/company/vertical/{vertical}', ['as'=>'company.vertical', 'uses'=>'CompaniesController@vertical']);
         Route::get('/company/{company}/segment/{segment}', ['as'=>'company.segment', 'uses'=>'CompaniesController@show']);
         Route::get('/company/{accounttype}', ['as'=>'company.type', 'uses'=>'CompaniesController@byType']);
-        
-        Route::resource('company', 'CompaniesController', ['only' => ['index', 'show']]);
+        Route::get('/companies', ['as'=>'company.index', 'uses'=>'CompaniesController@index']);
+        Route::get('/companies/{company}', ['as'=>'company.show', 'uses'=>'CompaniesController@show']);
+        //Route::resource('companies', 'CompaniesController', ['only' => ['index', 'show']])->name('company');
         
         
         //   Contacts

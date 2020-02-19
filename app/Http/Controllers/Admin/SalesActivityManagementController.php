@@ -158,8 +158,8 @@ class SalesActivityManagementController extends BaseController
     public function show(Salesactivity $activity)
     {
         
-        dd($activity->load('companies'));
-        $activity = $activity->load('salesprocess', 'campaignBranches', 'campaignBranches.manager', 'campaignparticipants', 'campaignparticipants.userdetails.roles');
+        
+        $activity = $activity->load('salesprocess', 'campaignBranches', 'campaignBranches.manager', 'campaignparticipants', 'campaignparticipants.userdetails.roles', 'companies');
 
         $verticals = array_unique($activity->vertical->pluck('id')->toArray());
 
