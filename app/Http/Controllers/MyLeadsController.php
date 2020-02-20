@@ -173,7 +173,7 @@ class MyLeadsController extends BaseController
      */
     public function store(MyLeadFormRequest $request)
     {
-       
+        
        
         // we need to geocode this address
         if (! $data = $this->_cleanseInput($request)) {
@@ -191,9 +191,9 @@ class MyLeadsController extends BaseController
         
         $lead = $this->lead->create($data['lead']);
         
-        $lead->assignedToBranch()->attach($data['branch'], ['status_id'=>2]);
-       
+        $lead->assignedToBranch()->attach($data['branch']->id, ['status_id'=>'2']);
         
+
         if (isset($data['contact'])) {
         
             $lead->contacts()->create($data['contact']);
