@@ -265,7 +265,7 @@ class Address extends Model
         return $this->belongsToMany(
             Branch::class, 'address_branch', 'address_id', 'branch_id'
         )
-            ->withPivot('rating', 'person_id', 'status_id', 'comments')
+            ->withPivot('id', 'rating', 'person_id', 'status_id', 'comments')
             ->withTimeStamps();
     }
     /**

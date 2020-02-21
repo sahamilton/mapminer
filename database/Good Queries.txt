@@ -723,3 +723,14 @@ and branches.id = branch_person.branch_id
 and branch_person.role_id = 9
 and branch_person.person_id = b.id
 and b.reports_to = m.id
+
+/*****************************************************************************/
+/******************** Leads assigned to more than one branch *****************/
+/*****************************************************************************/
+select addresses.id as address_id, branchname, addresses.businessname, addresses.city, addresses.state, address_branch.created_at
+from addresses, address_branch, branches 
+where
+addresses.id = address_branch.address_id 
+and address_branch.branch_id = branches.id
+and addresses.id in (select address_id as id from (
+    select count(id), address_id from address_branch where status_id =2  and branch_id is not null group by address_id having count(id) >1) a)
