@@ -154,7 +154,7 @@ class MyLeadsController extends BaseController
      */
     public function store(MyLeadFormRequest $request)
     {
-       
+        
        
         // we need to geocode this address
         if (! $data = $this->_cleanseInput($request)) {

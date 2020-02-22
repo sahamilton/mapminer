@@ -209,7 +209,7 @@ class Address extends Model
     */
     public function lastActivity()
     {
-        return $this->hasMany(Activity::class)->where('completed', 1)->latest();
+        return $this->hasMany(Activity::class)->where('completed', 1)->orderBy('activity_date', 'desc');
     } 
     /**
      * [lastActivity description]
