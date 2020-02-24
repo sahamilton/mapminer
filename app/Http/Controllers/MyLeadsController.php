@@ -126,7 +126,7 @@ class MyLeadsController extends BaseController
         ->whereDoesntHave('opportunities')
         ->with('assignedToBranch', 'leadsource', 'lastActivity', 'campaigns')
         ->get();
-        //dd($data['leads']->where('id', '646125')->first());
+        
         $data['branches'] = $this->_getBranches($branch);
         return $data;
     }
@@ -166,7 +166,7 @@ class MyLeadsController extends BaseController
         
         $lead = $this->lead->create($data['lead']);
         
-        $lead->assignedToBranch()->attach($data['branch'], ['status_id'=>2]);
+        $lead->assignedToBranch()->attach($data['branch']->id, ['status_id'=>2]);
         $dupes = $this->lead->duplicateDistance($data['lead']['lng'], $data['lead']['lat'])->get();
 
         if (isset($data['contact'])) {

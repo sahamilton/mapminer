@@ -875,9 +875,9 @@ and branch_person.role_id = 9
 and branch_person.person_id = b.id
 and b.reports_to = m.id
 
-/******************************************************************************************/
-/***************************** Select duplicates from branch ******************************/
-/******************************************************************************************/
+/**************************************************************************/
+/************************** Select duplicates from branch *****************/
+/**************************************************************************/
 select * from addresses, address_branch 
 where address_branch.branch_id = 2255 
 and addresses.id = address_branch.address_id 
@@ -890,3 +890,13 @@ and addresses.position in (
     group by a.position having count(a.id) >1) b
   ) 
 order by position
+//***************************************************************
+/************** Select deleted / non confirmed people and branch **********/
+SELECT concat_ws(' ', firstname, lastname) as name, branchname, roles.name as role
+FROM users, persons, branch_person, branches, roles
+where (users.deleted_at is not null or users.confirmed !=1)
+and users.id = persons.user_id
+and persons.id = branch_person.person_id
+and branch_person.role_id = roles.id
+and branch_person.branch_id = branches.id
+
