@@ -63,34 +63,40 @@ trait Filters
     
         if (! isset($vertical)) {
             $allFilters = SearchFilter::whereIn('searchtable', $searchtable)
-            ->whereIn('searchcolumn', $searchcolumn)
-            ->where('type', '=', 'group')
-            ->pluck('id');
+                ->whereIn('searchcolumn', $searchcolumn)
+                ->where('type', '=', 'group')
+                ->pluck('id');
             
         //}elseif (isset($vertical)){
         } else {
             // If vertical is set see if all the segments of that vertical are set.
 
             $allFilters =   SearchFilter::where('parent_id', '=', $vertical)
-            ->orWhere('id', '=', $vertical)
-            ->orWhere(function ($query) use ($searchtable, $searchcolumn) {
-                    $query->whereIn('searchtable', $searchtable)
-                    ->whereIn('searchcolumn', $searchcolumn)
-                    ->where('canbenull', '=', 1);
-            })
-            ->orWhere(function ($query) use ($searchtable, $searchcolumn) {
+                ->orWhere('id', '=', $vertical)
+                ->orWhere(
+                    function ($query) use ($searchtable, $searchcolumn) {
+                        $query->whereIn('searchtable', $searchtable)
+                            ->whereIn('searchcolumn', $searchcolumn)
+                            ->where('canbenull', '=', 1);
+                    }
+                )
+                ->orWhere(
+                    function ($query) use ($searchtable, $searchcolumn) {
                     
-                    $query->whereIn('searchtable', $searchtable)
-                    ->where('inactive', '=', 1)
-                    ->whereIn('searchcolumn', $searchcolumn)
-                    ->where('type', '=', 'group');
-            })
-            ->orWhere(function ($query) use ($searchtable, $searchcolumn) {
+                        $query->whereIn('searchtable', $searchtable)
+                            ->where('inactive', '=', 1)
+                            ->whereIn('searchcolumn', $searchcolumn)
+                            ->where('type', '=', 'group');
+                    }
+                )
+                ->orWhere(
+                    function ($query) use ($searchtable, $searchcolumn) {
                 
-                $query->where('searchtable', '=', 'locations')
-                ->where('inactive', '=', 1)->where('searchcolumn', '=', 'segment')
-                ->where('canbenull', '=', 1);
-            })
+                        $query->where('searchtable', '=', 'locations')
+                            ->where('inactive', '=', 1)->where('searchcolumn', '=', 'segment')
+                            ->where('canbenull', '=', 1);
+                    }
+                )
                 ->pluck('id');
             
             if (count($allFilters) == 0) {
@@ -98,9 +104,9 @@ trait Filters
             }
         
         /*}  else {
-			
-			$allFilters = SearchFilter::where('type','=','group')->pluck('id');
-			*/
+            
+            $allFilters = SearchFilter::where('type','=','group')->pluck('id');
+            */
         }
 
         

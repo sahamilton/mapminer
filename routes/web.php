@@ -56,9 +56,10 @@ Route::group(
         Route::post('change/avatar', ['as'=>'change.avatar', 'uses'=>'AvatarController@store']);
         
         //   Branch Leads
-        Route::get('branchleads.import', ['as'=>'branchleads.import', 'uses'=>'BranchLeadImportController@getFile']);
+        Route::get('branchleads/import', ['as'=>'branchleads.import', 'uses'=>'BranchLeadImportController@getFile']);
         //   Temporary branch lead assignment
         //Route::get('branchleads/assign', ['as'=>'branchlead.tempassign', 'uses'=>'BranchLeadController@assign']);
+        Route::get('branchleads/stale', ['as'=>'branchleads.staleleads', 'uses'=>'BranchLeadController@staleLeads']);
         Route::resource('branchleads', 'BranchLeadController');
         //     Branches
         Route::get('/branches/{state}/state/', ['as'=>'branches.statelist', 'uses'=>'BranchesController@state']);

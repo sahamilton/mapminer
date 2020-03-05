@@ -391,8 +391,8 @@ class LeadSourceController extends Controller
         $before = Carbon::parse(request('before'));
 
         $leadsource = request('leadsource');
-        $manager = $this->person->findOrFail(request('manager'));
-        $branches = $manager->branchesManaged()->pluck('id')->toArray();
+        $branches = $this->_getBranches($request);
+        
 
         $leads = $this->addressbranch->staleLeads($leadsource, $branches, $before)->get()->count();
 
@@ -417,20 +417,20 @@ class LeadSourceController extends Controller
     {
         $before = Carbon::parse(request('before'));
         $leadsource = explode(",", str_replace("'", "", request('leadsource')));
-        $manager = $this->person->findOrFail(request('manager'));
-        $branches = $manager->branchesManaged()->pluck('id')->toArray();
+        $branches = $this->_getBranches($request);
         $leads = $this->addressbranch
             ->staleLeads($leadsource, $branches, $before)
             ->with('branch')
             ->get();
-
+        dd(request()->all(), $leads);
         if (request()->has('export')) {
             $file =  $this->_downloadDeletedLeads($manager, $leads);
             
         }
         $deleted = $leads->count();
+        // delete the address / branch relationship
         $this->addressbranch->destroy($leads->pluck('id')->toArray());
-        
+        // delete the actual lead
         if (request()->has('delete')) {
             $this->address->destroy($leads->pluck('address_id')->toArray());
         }
@@ -440,7 +440,7 @@ class LeadSourceController extends Controller
             ->whereIn('id', $leads->pluck('address_id')->toArray())
             ->delete();
         $message = $deleted . " stale leads assigned to " . 
-                $manager->fullName() . 
+                isset($manager) ? $manager->fullName() : "All manager" . 
                 "'s branches from the selected leadsources have been deleted";
         if (request()->has('delete')) {         
                 $message .=" The deleted leads are stored <a href=\"" . secure_url('storage/'. $file) ."\">here</a>";
@@ -448,7 +448,14 @@ class LeadSourceController extends Controller
         return redirect()->route('leadsource.flush')
             ->withMessage($message);
     }
-
+    /**
+     * [_downloadDeletedLeads description]
+     * 
+     * @param [type] $manager [description]
+     * @param [type] $leads   [description]
+     * 
+     * @return [type]          [description]
+     */
     private function _downloadDeletedLeads($manager, $leads)
     {
         $file = 'flushed/staleLeads_'. $manager->id ."_".now()->timestamp . ".xlsx";
@@ -492,7 +499,23 @@ class LeadSourceController extends Controller
             return redirect()->route('leadsource.index');
         }
     }
-    
+    /**
+     * [_getBranches description]
+     * 
+     * @param  Request $request [description]
+     * 
+     * @return [type]           [description]
+     */
+    private function _getBranches(Request $request)
+    {
+       
+        if (request('manager') == 'all') {
+            return $this->branch->get()->pluck('id')->toArray();
+        } else {
+            $manager = $this->person->findOrFail(request('manager'));
+            return  $manager->branchesManaged()->pluck('id')->toArray();
+        }
+    }
     /**
      * Method to remove commas from fields that cause problem with maps
      * 

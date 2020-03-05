@@ -176,7 +176,36 @@ class BranchLeadController extends Controller
         }
        
     }
-
+    /**
+     * [branchStaleLeads description]
+     * 
+     * @param Branch $branch [description]
+     * 
+     * @return [type]         [description]
+     */
+    public function branchStaleLeads(Branch $branch)
+    {
+        $branch->load('staleLeads');
+        return response()->view('branchleads.staledetail', compact('branch'));
+    }
+    /**
+     * [staleLeads description]
+     * 
+     * @return [type] [description]
+     */
+    public function staleLeads()
+    {
+        if (count($this->person->myBranches()) >0 ) {
+            $branches = $this->branch->select('id', 'branchname')->whereIn(
+                'id', array_keys($this->person->myBranches())
+            )->withCount('staleLeads')->get();
+        
+       
+            return response()->view('branchleads.staleleads', compact('branches'));
+        } else {
+            return redirect()->back()->withError("You have no branches");
+        }
+    }
     public function showDuplicates()
     {
 

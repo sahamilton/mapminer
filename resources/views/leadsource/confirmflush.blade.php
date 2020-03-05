@@ -3,7 +3,7 @@
 <div class="container">
     <h2>Flush Stale Leads</h2>
     <div class="alert alert-warning">
-        <p>There are {{$leads}} leads created before {{$before->format('Y-m-d')}} that have no associated activities and no associated opportunities in the selected leadsources assigned to {{$manager->fullName()}}'s branches.</p>
+        <p>There are {{$leads}} leads created before {{$before->format('Y-m-d')}} that have no associated activities and no associated opportunities in the selected leadsources assigned to {{isset($manager) ?  $manager->fullName() . "'s" : 'All Managers'}} branches.</p>
     </div>
     <form action="{{route('leadsource.finalflush')}}"
         method="post"
@@ -36,7 +36,7 @@
          </div>
          <input type="hidden"
          name="manager"
-         value="{{$manager->id}}" />
+         value="{{isset($manager) ? $manager->id : 'all'}}" />
 
          <input type="hidden"
          name="before"
