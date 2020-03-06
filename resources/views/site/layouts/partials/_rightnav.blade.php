@@ -1,6 +1,15 @@
  
       <ul class="navbar-nav ml-auto justify-content-end" style="margin-right:60px"> 
-           
+              @if(auth()->user()->hasRole('branch_manager'))
+              <li class="nav-item">
+                <a  class="nav-link" 
+                href="#"
+                data-href="" 
+                data-toggle="modal" 
+                data-target="#quickAdd" >
+                    <i class="fas fa-plus" style="color:green"> </i> Quick Add</a>
+                </li>
+              @endif
                <li class="nav-item">
                 <a  class="nav-link" href="#"
                 data-href="" 
@@ -86,3 +95,4 @@
               </li>
             </ul>
             @include('feedback.partials._feedback')
+            @include('partials._quickaddmodal')

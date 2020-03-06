@@ -80,7 +80,7 @@ Route::group(
         //   Branch Activities
         Route::get('branch/{branch}/activities', ['as'=>'activity.branch', 'uses'=>'ActivityController@branchActivities']);
         Route::get('branch/{branch}/upcoming', ['as'=>'upcomingactivity.branch', 'uses'=>'ActivityController@branchUpcomingActivities']);
-            
+        Route::post('/branch/quickAdd', ['as'=>'quickadd', 'uses'=>'BranchesController@quickadd']);
         Route::post(
             'branch/activities', ['as'=>'activities.branch', 'uses'=>'ActivityController@branchActivities']
         );

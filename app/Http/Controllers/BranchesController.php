@@ -220,6 +220,12 @@ class BranchesController extends BaseController {
         );
         return true;
     }
+
+    public function quickadd(Request $request)
+    {
+
+        dd(request()->all());
+    }
     /**
      * [show description]
      * 
