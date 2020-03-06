@@ -34,6 +34,11 @@
           <a class="dropdown-item" href="{{route('salesorg.index')}}">
                 <i class="fas fa-sitemap" aria-hidden="true"> </i>
                  People</a>
+          @if(auth()->user()->hasRole('branch_manager'))
+          <a class="dropdown-item" href="{{route('search.leads')}}">
+                <i class="fas fa-sitemap" aria-hidden="true"> </i>
+                 Leads</a>
+          @endif
           
           
                            
@@ -105,11 +110,23 @@
 
                 </div>
               
-            </li>    
+            </li> 
+             
               @if(auth()->user()->hasRole('branch_manager'))
+              
+                @include('branchleads.partials._searchbar')
+              
+              
               <li class="nav-item">
-              @livewire('lead-search')
-            </li>
+                  <a  class="nav-link" 
+                  href="#"
+                  data-href="" 
+                  data-toggle="modal" 
+                  data-target="#add_lead" >
+                      <i class="fas fa-plus" style="color:green"> </i> Add Lead</a>
+                  </li>
+
+              @include('branchleads.partials._mylead')
               @endif          
           </ul>
 

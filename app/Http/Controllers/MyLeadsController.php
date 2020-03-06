@@ -161,7 +161,7 @@ class MyLeadsController extends BaseController
     public function store(MyLeadFormRequest $request)
     {
         
-       
+        
         // we need to geocode this address
         if (! $data = $this->_cleanseInput($request)) {
             return redirect()->back()->withError('Unable to geocode that address');
@@ -191,9 +191,11 @@ class MyLeadsController extends BaseController
         } else {
             $lead->load('contacts');
         }
+
         if ($dupes->count() > 0) {
             return response()->view('addresses.duplicates', compact('dupes', 'data'));
         }
+
         // send this to a job
         if (request('notify')==1) {
             // 

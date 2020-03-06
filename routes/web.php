@@ -35,6 +35,7 @@ Route::get('/home', ['as'=>'home', 'uses'=>'HomeController@index']);
 Route::group(
     ['middleware' => 'auth'], function () {
         Route::get('/company/find', 'SearchController@searchCompanies');
+        Route::get('/myleads/find', 'SearchController@searchMyLeads');
         //     About
         Route::get('about', ['as'=>'about', 'uses'=>'AdminAboutController@getInfo']);
         
@@ -158,7 +159,7 @@ Route::group(
     
         Route::post('lead/{address}/reassign', ['as'=>'lead.reassign', 'uses'=>'MyLeadsController@reassign']);
         //     Locations
-        
+        Route::get('search/leads', ['as'=>'search.leads', 'uses'=>'SearchController@leads']);
         Route::get('location/{id}/branches', ['as' => 'assign.location', 'uses' => 'LocationsController@getClosestBranch']);
         Route::get('locations/{id}/vcard', ['as'=>'locations.vcard', 'uses'=>'LocationsController@vcard']);
         Route::get('location/{locationId}/branchmap', ['as' => 'nearby.location', 'uses' => 'LocationsController@getClosestBranchMap']);

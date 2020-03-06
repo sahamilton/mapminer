@@ -22,7 +22,7 @@
         {{csrf_field()}}
         <input type="hidden" 
         name="branch" 
-        value="{{$branch->id}}" />
+        value="{{session('branch')}}" />
         @include('myleads.partials._form')
           <div class="float-right">
            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button> <input type="submit" value="Add Lead" class="btn btn-danger" />

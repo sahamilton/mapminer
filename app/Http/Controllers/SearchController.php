@@ -72,4 +72,24 @@ class SearchController extends Controller
             ->orderBy('distance', 'asc')
             ->get();
     }
+
+    public function searchMyLeads(Request $request)
+    {
+
+        $branches = auth()->user()->person->myBranches();
+
+        return Address::whereHas(
+            'assignedToBranch', function ($q) use ($branches) {
+                $q->whereIn('branch_id', array_keys($branches));
+            }
+        )
+        ->search(request('q'))
+        ->get();
+    }
+
+    public function leads()
+    {
+        
+        return response()->view('search.leads');
+    }
 }

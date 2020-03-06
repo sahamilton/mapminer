@@ -32,6 +32,6 @@
 
 </table>
    
-@include('partials/_scripts')
+@include('partials._scripts')
 
 @endsection
