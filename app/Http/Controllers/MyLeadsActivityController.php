@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\MyLead;
+use App\AddressBranch;
 use Carbon\Carbon;
 use App\MyLeadActivity;
 use Illuminate\Http\Request;
@@ -11,7 +11,7 @@ class MyLeadsActivityController extends Controller
 {
     public $mylead;
     public $activity;
-    public function __construct(MyLead $mylead, MyLeadActivity $activity)
+    public function __construct(AddressBranch $mylead, MyLeadActivity $activity)
     {
         $this->activity = $activity;
         $this->mylead = $mylead;
@@ -34,7 +34,11 @@ class MyLeadsActivityController extends Controller
      */
     public function create()
     {
-        //
+        $branches = auth()->user()->person->myBranches();
+        $leads = $this->mylead
+            ->whereIn('branch_id', array_keys($branches))
+            ->get();
+        dd($leads, $branches);
     }
 
     /**

@@ -11,7 +11,7 @@ aria-labelledby="myModalLabel" aria-hidden="true">
                     <h4 class="modal-title" id="myModalLabel">Quick Add</h4>
                 </div>
                 @php
-                $types = ['activity', 'lead', 'opportunity'];
+                $types = ['','activity', 'lead', 'opportunity'];
                 @endphp
                 <div class="modal-body">
 				    <form 
@@ -21,7 +21,9 @@ aria-labelledby="myModalLabel" aria-hidden="true">
                     @csrf
                     <div class= "form-group">
                         <label >Quick Add</label>
-                        <select id='type'
+                        <select 
+                        onchange="this.form.submit()"
+                        id='type'
                         name="type"
                         >
                             @foreach ($types as $type)

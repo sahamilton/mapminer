@@ -106,7 +106,11 @@
                 </div>
               
             </li>    
-                        
+              @if(auth()->user()->hasRole('branch_manager'))
+              <li class="nav-item">
+              @livewire('lead-search')
+            </li>
+              @endif          
           </ul>
 
           @include('site.layouts.partials._rightnav')

@@ -80,6 +80,12 @@ class MyLeadsController extends BaseController
         return response()->view('myleads.branches', compact('data', 'myBranches', 'title'));
         
     }
+
+    public function create()
+    {
+        $branches = auth()->user()->person->myBranches();
+        return response()->view('lead.create', compact('branches'));
+    }
     /**
      * [branchLeads description]
      * 

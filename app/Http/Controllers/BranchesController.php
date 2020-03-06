@@ -223,8 +223,12 @@ class BranchesController extends BaseController {
 
     public function quickadd(Request $request)
     {
+        $destinations = [
+            'lead'=>'myleads.create',
+            'activity'=>'myleadsactivity.create',
 
-        dd(request()->all());
+            ];
+        return redirect()->route($destinations[request('type')]);
     }
     /**
      * [show description]
