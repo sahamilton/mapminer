@@ -272,6 +272,7 @@ class BranchDashboardController extends DashboardController
         return $this->activity
             ->with('relatesToAddress')
             ->whereIn('branch_id', $this->myBranches)
+            ->whereBetween('activity_date', [now()->subMonth(3), now()->addMonth(6)])
             ->get();
 
     }
