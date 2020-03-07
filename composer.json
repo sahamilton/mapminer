@@ -47,7 +47,7 @@
         "livewire/livewire": "^1.0"
     },
     "require-dev": {
-        "barryvdh/laravel-debugbar": "^3.1",
+        "barryvdh/laravel-debugbar": "^3.2.5",
         "fzaninotto/faker": "^1.4",
         "mockery/mockery": "0.9.*",
         "phpunit/phpunit": "^7.0",
