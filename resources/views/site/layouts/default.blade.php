@@ -49,7 +49,7 @@
 	src="//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js">
 	
 	</script>
-
+	@livewireStyles
 
 	<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
 	<!--[if lt IE 9]>
@@ -96,7 +96,7 @@
 @include('site.layouts.footer')
 </div>	</div>
 		
-
+@livewireScripts
 		@include('partials.besnappy')
 
 		@yield('scripts')
