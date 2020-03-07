@@ -42,9 +42,8 @@
                             @include('includes._sort-icon', ['field' => 'state'])
                         </a>
                     </th>
-                    <th>
-                        Open Opportunities
-                    </th>
+                    <th>Open Opportunities</th>
+                    <th>Last activity</th>
 
                     
                 </tr>

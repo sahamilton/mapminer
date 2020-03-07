@@ -36,7 +36,8 @@ class LeadTable extends Component
                     $q->whereIn('branch_id', array_keys($branches));
                 }
             )
-            ->withCount('openOpportunities', 'activities')
+            ->with('lastActivity', 'openOpportunities')
+            
             ->search($this->search)
             ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
             ->paginate($this->perPage),
