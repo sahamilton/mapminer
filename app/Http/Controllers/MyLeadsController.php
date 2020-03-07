@@ -168,12 +168,11 @@ class MyLeadsController extends BaseController
         }
 
         $data['branch'] = $this->branch->findOrFail(request('branch'));
-        
-        
+
         $lead = $this->lead->create($data['lead']);
         
         $lead->assignedToBranch()->attach($data['branch']->id, ['status_id'=>2]);
-        $dupes = $this->lead->duplicateDistance($data['lead']['lng'], $data['lead']['lat'])->get();
+        $dupes = $this->_getDuplicateLeads($data);
 
         if (isset($data['contact'])) {
         
@@ -466,5 +465,28 @@ class MyLeadsController extends BaseController
                 $opportunity->update(['branch_id'=> $branch]); 
             } 
         } 
+    }
+    /**
+     * [_getDuplicateLeads description]
+     * 
+     * @param Array $data [description]
+     * 
+     * @return Collection       [description]
+     */
+    private function _getDuplicateLeads(Array $data)
+    {
+        
+        return $this->lead
+            ->where(
+                function ($q) use ($data) {
+                    $q->whereDoesntHave('assignedToBranch')
+                        ->orWhereHas(
+                            'assignedToBranch', function ($q) use ($data) {
+                                $q->where('branch_id', $data['branch']->id);
+                            }
+                        );
+                }
+            )->duplicateDistance($data['lead']['lng'], $data['lead']['lat'])
+            ->get();
     }
 }

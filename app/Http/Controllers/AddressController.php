@@ -218,7 +218,7 @@ class AddressController extends BaseController
      */
     public function duplicates(Address $address)
     {
-        $dupes = $address->load('duplicates')->duplicates;
+        $dupes = $address->load('duplicates', 'assignedToBranch')->duplicates;
         return response()->view('addresses.duplicates', compact('dupes'));
     }
     /**

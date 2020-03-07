@@ -34,7 +34,7 @@ action="{{route('addresses.merge')}}"
 		
 				<tr>
 					
-					<td><a href="">{{$account->businessname}}</a></td>
+					<td><a href="{{route('address.show', $account->id)}}">{{$account->businessname}}</a></td>
 					<td>{{$account->addressable_type}}</td>
 					<td>{{$account->street}}</td>
 					<td>{{$account->city}}</td>
