@@ -34,6 +34,36 @@ and opportunities.user_id = b.user_id
 and opportunities.address_id = addresses.id
 order by branches.id
 
+/*********************************************************************
+/**************** Stale Opportunities ********************************
+/*********************************************************************
+select branchname, count(opportunities.id) 
+from branches, opportunities 
+where branches.id = opportunities.branch_id 
+and opportunities.closed = 0 and 
+opportunities.created_at <= DATE_FORMAT( CURRENT_DATE - INTERVAL 3 MONTH, '%Y/%m/%d' ) 
+group by branchname
+
+/************ expected close - 3 months ago
+select branchname, count(opportunities.id) 
+from branches, opportunities 
+where branches.id = opportunities.branch_id 
+and opportunities.closed = 0 and 
+opportunities.expected_close <= DATE_FORMAT( CURRENT_DATE - INTERVAL 3 MONTH, '%Y/%m/%d' ) 
+group by branchname
+
+/************* with no activities
+SELECT branchname, count(opportunities.id)
+from branches, opportunities
+LEFT JOIN activities 
+ON activities.address_id = opportunities.address_id
+AND activities.activity_date <= DATE_FORMAT( CURRENT_DATE - INTERVAL 1 MONTH, '%Y/%m/%d' )
+where branches.id = opportunities.branch_id
+and opportunities.created_at <= DATE_FORMAT( CURRENT_DATE - INTERVAL 2 MONTH, '%Y/%m/%d' )
+and opportunities.closed = 0
+and activities.activity_date is null
+group by branchname
+
 /**************************************************************************************/
 /****************** Get count of Branch opportunities by month                 ********/
 /**************************************************************************************/
