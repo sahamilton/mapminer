@@ -285,14 +285,16 @@ class Company extends NodeModel
      */
     public function scopeSummaryStats($query,$period, $branches=null)
     {
+
         if ($branches) {
             return $this->_summaryBranchStats($query, $period, $branches);
         } else {
             $this->period = $period;
             $this->branches = $branches;
-
+            
             return $query->withCount(       
                 [
+                
                 'locations as supplied_leads'=>function ($query) {
                     $query->whereHas(
                         'assignedToBranch', function ($q) {
@@ -402,6 +404,15 @@ class Company extends NodeModel
         
         return $query->withCount(       
             [
+            'locations as supplied_leads'=>function ($query) {
+                $query->whereHas(
+                    'assignedToBranch', function ($q) {
+
+                        $q->whereIn('branch_id', $this->branches)
+                            ->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']]);
+                    }
+                );
+            },
             'locations as offered_leads'=>function ($query) {
                 $query->whereHas(
                     'assignedToBranch', function ($q) {

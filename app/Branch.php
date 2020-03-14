@@ -192,6 +192,7 @@ class Branch extends Model implements HasPresenter
     {
         return $this->hasManyThrough(Opportunity::class, AddressBranch::class, 'branch_id', 'address_branch_id', 'id', 'id')
             ->where('closed', '=', 0)
+            ->where('opportunities.created_at', '>', now()->subMonth(3))
             ->whereDoesntHave('currentlyActive');
               
             
@@ -1234,7 +1235,7 @@ class Branch extends Model implements HasPresenter
             },
             'addresses as offered_leads'=>function ($q) {
                 $q->whereIn('company_id', $this->company_ids)
-                    ->where('status_id', '=', '1')
+                    ->where('status_id', '1')
                     ->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']]);
                     
             },
