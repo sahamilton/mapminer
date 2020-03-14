@@ -512,26 +512,29 @@ class Company extends NodeModel
     {
         $this->branches = $branches;
         $this->period = $period;
-        return $query->with(       
+
+        return $query->withCount(       
             [
-            'locations'=>function ($query) {
+            'locations',
+            'locations as assigned'=>function ($query) {
+                $query->has('assignedToBranch');
+            },
+            'locations as offered'=>function ($query) {
                 $query->whereHas(
                     'assignedToBranch', function ($q) {
-
-                        $q->where('status_id', 1)
-                            ->whereIn('branch_id', $this->branches)
-                            ->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']]);
+                        $q->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']]);
                     }
                 );
             },
-            'opportunities'=>function ($query) {
-                
-                $query->whereBetween(
-                    'opportunities.created_at', [$this->period['from'],$this->period['to']]
-                )
-                    ->whereIn('branch_id', $this->branches);
-                    
+            'locations as worked'=>function ($query) {
+                $query->whereHas(
+                    'assignedToBranch', function ($q) {
+                        $q->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']])
+                            ->where('status_id', 2);
+                    }
+                );
             },
+
             
             ]
         );
