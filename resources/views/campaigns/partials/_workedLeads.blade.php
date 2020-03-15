@@ -10,7 +10,7 @@
     </thead>
     <tbody>
         
-        @foreach ($branch->workedleads as $lead)
+        @foreach ($branch->workedLeads as $lead)
         <tr>
             <td>
                 <a href="{{route('address.show', $lead->id)}}">

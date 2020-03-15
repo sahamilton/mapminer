@@ -104,7 +104,7 @@ class BranchCampaignController extends Controller
         
         $person = $this->person->findOrFail(auth()->user()->person->id);
         $myBranches = $this->person->myBranches($person);
-    
+        
         if (! in_array($branch->id, array_keys($myBranches))) {
             return redirect()->back()->withError('That is not one of your branches');
         }
@@ -116,14 +116,14 @@ class BranchCampaignController extends Controller
         )
         ->current([$branch->id])->get();// else return not valid
         
-        $campaign->first()->load('companies', 'branches');
+        $campaign->load('companies', 'branches');
                 
         $branch = $this->branch
             ->campaignDetail($campaign)
             ->findOrFail($branch->id);
-       
+        
         $views = [
-            'offered'=>['title'=>"New Sales Initiative Leads", 'detail'=>'These leads have been offered to your branch.  You must either accept or decline them before you can record any activities or opportunities on them'],
+            'offeredLeads'=>['title'=>"New Sales Initiative Leads", 'detail'=>'These leads have been offered to your branch.  You must either accept or decline them before you can record any activities or opportunities on them'],
 
             'untouchedLeads'=>['title'=>"Untouched Sales Initiatives Leads", 'detail'=>'Here are the Sales Initiative Leads that you accepted but do not have any activity. Make sure you enter in any activity that has taken place to remove these Leads for the Untouched list.'],
 

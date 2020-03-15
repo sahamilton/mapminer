@@ -1046,13 +1046,11 @@ class Branch extends Model implements HasPresenter
                         }
                     );
             },
-            'leads as offered_leads'=>function ($query) {
+            'offeredLeads'=>function ($query) {
                 $query->whereHas(
                     'assignedToBranch', function ($q) {
 
-                        $q->where('status_id', 1)
-                            
-                            ->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']]);
+                        $q->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']]);
                     }
                 );
             },
@@ -1233,22 +1231,19 @@ class Branch extends Model implements HasPresenter
                     ->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']]);
                     
             },
-            'addresses as offered_leads'=>function ($q) {
+            'offeredLeads'=>function ($q) {
                 $q->whereIn('company_id', $this->company_ids)
-                    ->where('status_id', '1')
                     ->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']]);
                     
             },
 
-            'addresses as worked_leads'=>function ($q) {
+            'workedLeads'=>function ($q) {
                 $q->whereIn('company_id', $this->company_ids)
-                    ->where('status_id', '2')
                     ->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']]);
                     
             },
-            'addresses as rejected_leads'=>function ($q) {
+            'rejectedLeads'=>function ($q) {
                 $q->whereIn('company_id', $this->company_ids)
-                    ->where('status_id', '4')
                     ->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']]);
                     
             },
@@ -1357,10 +1352,11 @@ class Branch extends Model implements HasPresenter
         $period['to'] = $campaign->dateto;
         
         $this->company_ids = $campaign->companies->pluck('id')->toarray();
+        
         $this->location_ids = $campaign->getLocations();
 
         $this->setPeriod($period);;
-       
+        
         return $query->with(       
             ['offeredLeads'=>function ($q) {
                 $q->whereIn('company_id', $this->company_ids);
