@@ -92,11 +92,11 @@ trait Geocode
     public function scopeNearby($query, $location, $radius = 100, $limit = null)
     {
     
-      
+        
         $geocode = Geolocation::fromDegrees($location->lat, $location->lng);
-    
+        
         $bounding = $geocode->boundingCoordinates($radius, 'mi');
-   
+        
         $sub = $this->selectSub('id', 'lat', 'lng')
             ->whereBetween('lat', [$bounding['min']->degLat,$bounding['max']->degLat])
             ->whereBetween('lng', [$bounding['min']->degLon,$bounding['max']->degLon]);
@@ -130,7 +130,7 @@ trait Geocode
         $geocode = Geolocation::fromDegrees($location->lat, $location->lng);
     
         $bounding = $geocode->boundingCoordinates($radius, 'mi');
-   
+       
         $sub = $this->selectSub('id', 'lat', 'lng')
             ->whereBetween('lat', [$bounding['min']->degLat,$bounding['max']->degLat])
             ->whereBetween('lng', [$bounding['min']->degLon,$bounding['max']->degLon]);
@@ -251,6 +251,7 @@ trait Geocode
      */
     public function scopeAssociateCompanyLocationsBranches(Company $company, $radius = 25)
     {
+        
         $query = "select distinct branches.id as branch_id, addresses.id as address_id 
                     from branches,addresses 
                     left join address_branch
@@ -269,6 +270,7 @@ trait Geocode
      */
     private function _haversine($location)
     {
+        
         return "(3956 * acos(cos(radians($location->lat)) 
                      * cos(radians($this->table.lat)) 
                      * cos(radians($this->table.lng) 

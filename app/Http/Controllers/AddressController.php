@@ -82,7 +82,7 @@ class AddressController extends BaseController
     public function show(Address $address)
     {
         
-       
+        
         $location = $address->load(
             'contacts',
             'contacts.relatedActivities',
@@ -104,15 +104,18 @@ class AddressController extends BaseController
         if ($address->addressable_type) {
             $location->load($address->addressable_type);
         }
-
+       
         if ($location->lat && $location->lng) {
 
-            $branches = $this->branch->nearby($location, 100, 5)->orderBy('distance')->get();
-            $people = $this->person->salesReps()->PrimaryRole()->nearby($location, 100, 5)->get();
+           $branches = $this->branch->nearby($location, 25, 5)->orderBy('distance')->get();
+            
+            $people = $this->person->salesReps()->PrimaryRole()->nearby($location, 25, 5)->get();
+
         } else {
             $people = [];
             $branches = [];
         }
+      
         $rankingstatuses = $this->address->getStatusOptions;
         $myBranches = $this->person->where('user_id', auth()->user()->id)->first()->branchesManaged()->pluck('id')->toArray();
       
