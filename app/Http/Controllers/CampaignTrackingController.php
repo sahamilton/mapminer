@@ -40,6 +40,7 @@ class CampaignTrackingController extends Controller
      * @param Address     $address     [description]
      * @param Branch      $branch      [description]
      * @param Campaign    $campaign    [description]
+     * @param Company     $company     [description]
      * @param Opportunity $opportunity [description]
      */
     public function __construct(
@@ -57,10 +58,7 @@ class CampaignTrackingController extends Controller
         $this->company = $company;
         $this->opportunity = $opportunity;
     }
-    
-
-    
-
+   
     /**
      * [show description]
      * 
@@ -80,7 +78,14 @@ class CampaignTrackingController extends Controller
         
         return response()->view('campaigns.summary', compact('campaign', 'branches', 'team', 'campaigns', 'fields'));
     }
- 
+    /**
+     * [company description]
+     * 
+     * @param Request  $request  [description]
+     * @param Campaign $campaign [description]
+     * 
+     * @return [type]             [description]
+     */
     public function company(Request $request, Campaign $campaign)
     {
         
@@ -90,6 +95,7 @@ class CampaignTrackingController extends Controller
      * [summaryByCompany description]
      * 
      * @param Campaign $campaign [description]
+     * @param [type]   $manager  [description]
      * 
      * @return [type]             [description]
      */
@@ -165,7 +171,7 @@ class CampaignTrackingController extends Controller
         dd($company);
         $assignedBranches = $company->locations->map(
             function ($location) {
-                if ($location->assignedToBranch->isNotEmpty()){
+                if ($location->assignedToBranch->isNotEmpty()) {
                     return $location->assignedToBranch->pluck('branchname');
                 }
                 
@@ -218,6 +224,7 @@ class CampaignTrackingController extends Controller
      * [_getCampaignBranchTeam description]
      * 
      * @param Campaign $campaign [description]
+     * @param [type]   $manager  [description]
      * 
      * @return [type]             [description]
      */

@@ -121,7 +121,7 @@ class BranchCampaignController extends Controller
         $branch = $this->branch
             ->campaignDetail($campaign)
             ->findOrFail($branch->id);
-        
+       
         $views = [
             'offeredLeads'=>['title'=>"New Sales Initiative Leads", 'detail'=>'These leads have been offered to your branch.  You must either accept or decline them before you can record any activities or opportunities on them'],
 

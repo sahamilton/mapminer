@@ -122,6 +122,7 @@ class CampaignController extends Controller
         $branches = array_keys($manager->myBranches($manager));
  
         $campaign = $this->campaign->create($data);
+        // this has to go to a back ground job
         $campaign->branches()->sync($branches);
         $campaign->servicelines()->sync($data['serviceline']); 
         
@@ -150,7 +151,7 @@ class CampaignController extends Controller
             $campaign->load('vertical', 'servicelines', 'branches', 'companies.managedBy', 'manager', 'team', 'documents');
             
             $data = $this->_getCampaignSummaryData($campaign);
-         
+            
             return response()->view('campaigns.show', compact('campaign', 'data'));
         }
        
@@ -197,9 +198,10 @@ class CampaignController extends Controller
         $data = $this->_transformRequest($request);
         
         $campaign->update($data);
-        $servicelines = $this->_getCampaignServicelines($campaign);
-        $data['branches'] = $this->_getbranchesFromManager($servicelines, $data['manager_id']);
 
+        $servicelines = $this->_getCampaignServicelines($campaign);
+        $manager = Person::findOrFail($data['manager_id']);
+        $data['branches'] = array_keys($manager->myBranches($manager));
         $campaign->branches()->sync($data['branches']); 
 
         $campaign->load('branches');
@@ -420,7 +422,7 @@ class CampaignController extends Controller
      */
     private function _getSummaryLocations(Campaign $campaign, $data)
     {
-        
+       
         $result['unassigned'] = $data->map(
             function ($company) {
                 return $company->unassigned;

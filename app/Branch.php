@@ -1238,8 +1238,7 @@ class Branch extends Model implements HasPresenter
             },
 
             'workedLeads'=>function ($q) {
-                $q->whereIn('company_id', $this->company_ids)
-                    ->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']]);
+                $q->whereIn('company_id', $this->company_ids);
                     
             },
             'rejectedLeads'=>function ($q) {
@@ -1366,8 +1365,7 @@ class Branch extends Model implements HasPresenter
                  $q->whereIn('company_id', $this->company_ids);
             },
             'workedLeads'=>function ($q) {
-                 $q->whereIn('company_id', $this->company_ids)
-                     ->whereBetween('address_branch.created_at', [$this->period['from'],$this->period['to']]);
+                 $q->whereIn('company_id', $this->company_ids);
             },
             'opportunitiesClosingThisWeek'=>function ($q) {
                 $q->whereHas(
