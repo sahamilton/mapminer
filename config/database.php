@@ -51,7 +51,8 @@ return [
             'prefix' => '',
             'strict' => false,
             'engine' => null,
-            'options'    => [PDO::MYSQL_ATTR_LOCAL_INFILE=>true],
+            'options'    => [PDO::MYSQL_ATTR_LOCAL_INFILE=>true,
+                PDO::ATTR_EMULATE_PREPARES=>true],
         ],
 
         'pgsql' => [

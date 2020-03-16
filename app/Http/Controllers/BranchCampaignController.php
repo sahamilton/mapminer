@@ -13,6 +13,18 @@ class BranchCampaignController extends Controller
     public $branch;
     public $campaign;
     public $person;
+    public $fields = [
+                    "supplied_leads",
+                    "offered_leads_count",
+                    "worked_leads_count",
+                    "rejected_leads_count",
+                    "touched_leads",
+                    "new_opportunities",
+                    "won_opportunities",
+                    "opportunities_open",
+                    "won_value",
+                    "open_value",
+                ];
     
     /**
      * [__construct description]
@@ -68,8 +80,8 @@ class BranchCampaignController extends Controller
         $servicelines = $campaign->getServicelines();
         $team = $this->campaign->getSalesTeamFromManager($campaign->manager_id, $servicelines);
         //$locations = $this->_getLocationsForMyBranches($campaign, $myBranches);
-     
-        return response()->view('campaigns.summary', compact('campaign', 'branches', 'campaigns', 'team'));
+        $fields=$this->fields;
+        return response()->view('campaigns.summary', compact('campaign', 'branches', 'campaigns', 'team', 'fields'));
 
 
     }
