@@ -79,11 +79,8 @@ class BranchCampaignController extends Controller
       
         $servicelines = $campaign->getServicelines();
         $team = $this->campaign->getSalesTeamFromManager($campaign->manager_id, $servicelines);
-        //$locations = $this->_getLocationsForMyBranches($campaign, $myBranches);
         $fields=$this->fields;
         return response()->view('campaigns.summary', compact('campaign', 'branches', 'campaigns', 'team', 'fields'));
-
-
     }
     /**
      * [change description]
