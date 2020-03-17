@@ -1268,7 +1268,11 @@ class Branch extends Model implements HasPresenter
             'opportunities as new_opportunities'=>function ($q) {
                 $q->whereBetween(
                     'opportunities.created_at', [$this->period['from'],$this->period['to']]
-                )->whereIn('opportunities.address_id', $this->location_ids);
+                )->whereHas(
+                    'location', function ($q1) {
+                        $q1->whereIn('company_id', $this->company_ids);
+                    }
+                );
             },
             'opportunities as won_opportunities'=>function ($q) {
                 
@@ -1276,7 +1280,11 @@ class Branch extends Model implements HasPresenter
                     
                     ->whereBetween(
                         'actual_close', [$this->period['from'],$this->period['to']]
-                    )->whereIn('opportunities.address_id', $this->location_ids);
+                    )->whereHas(
+                        'location', function ($q1) {
+                            $q1->whereIn('company_id', $this->company_ids);
+                        }
+                    );
             },
             'opportunities as lost_opportunities'=>function ($q) {
                 
@@ -1286,7 +1294,11 @@ class Branch extends Model implements HasPresenter
                     )
                     ->whereBetween(
                         'actual_close', [$this->period['from'],$this->period['to']]
-                    )->whereIn('opportunities.address_id', $this->location_ids);
+                    )->whereHas(
+                        'location', function ($q1) {
+                            $q1->whereIn('company_id', $this->company_ids);
+                        }
+                    );
             },
             
             'opportunities as opportunities_open'=>function ($q) {
@@ -1304,7 +1316,11 @@ class Branch extends Model implements HasPresenter
                         }
                     )
                     ->where('opportunities.created_at', '<=', $this->period['to'])
-                    ->whereIn('opportunities.address_id', $this->location_ids);
+                    ->whereHas(
+                        'location', function ($q1) {
+                            $q1->whereIn('company_id', $this->company_ids);
+                        }
+                    );
             },
             'opportunities as won_value' => function ($q) {
                 
@@ -1313,7 +1329,11 @@ class Branch extends Model implements HasPresenter
                     ->whereBetween(
                         'actual_close', [$this->period['from'],$this->period['to']]
                     )
-                    ->whereIn('opportunities.address_id', $this->location_ids);
+                    ->whereHas(
+                        'location', function ($q1) {
+                            $q1->whereIn('company_id', $this->company_ids);
+                        }
+                    );
             },
             'opportunities as open_value' => function ($q) {
                 $q->whereBetween('opportunities.created_at', [$this->period['from'],$this->period['to']])
@@ -1330,7 +1350,11 @@ class Branch extends Model implements HasPresenter
                         }
                     )
                     ->where('opportunities.created_at', '<=', $this->period['to'])
-                    ->whereIn('opportunities.address_id', $this->location_ids);
+                    ->whereHas(
+                        'location', function ($q1) {
+                            $q1->whereIn('company_id', $this->company_ids);
+                        }
+                    );
                 
             }]
         );

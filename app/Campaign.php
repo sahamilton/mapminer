@@ -358,10 +358,7 @@ class Campaign extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
     public function scopeCurrent($query, Array $branches =null)
     {
         
-        $query = $query
-            ->where('datefrom', '<=', Carbon::now()->startOfDay())
-            ->where('dateto', '>=', Carbon::now()->endOfDay());
-        $query->when(
+        $query = $query->active()->when(
             $branches, function ($q) use ($branches) {
                 return $q->wherehas(
                     'branches', function ($q) use ($branches) {

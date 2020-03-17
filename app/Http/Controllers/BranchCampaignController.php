@@ -69,7 +69,7 @@ class BranchCampaignController extends Controller
         if ($myBranches->count() == 1) {
 
             return $this->show($campaign, $myBranches->first());
-        }
+        } 
 
         $branch_ids = $myBranches->pluck('id')->toArray();
         $branches = $this->branch
