@@ -155,15 +155,17 @@ class OpportunityController extends BaseController
             }
         }
         if (request()->has('branch')) {
-
+           
             $data = $this->_getBranchData([request('branch')]);
         } else {
-             $data = $this->_getBranchData([$branch->id]);
+
+            $data = $this->_getBranchData([$branch->id]);
         }
 
         $activityTypes = $activityTypes = ActivityType::all();
        
         $data['period'] = $this->period;
+        
         return response()->view(
             'opportunities.index', 
             compact('data', 'activityTypes', 'myBranches')
@@ -235,19 +237,9 @@ class OpportunityController extends BaseController
 
         $data['opportunities'] = $this->_getOpportunities($branches);
 
-        $data['addresses'] = $data['opportunities']->map(
-            function ($opportunity) {
-                return $opportunity->address;
-            }
-        );
+        
 
-        $data['activities'] = $data['addresses']->map(
-            function ($address) {
-                if ($address) {
-                    return $address->activities;
-                }
-            }
-        );
+        
         return $data;
     }
     /**
@@ -297,7 +289,11 @@ class OpportunityController extends BaseController
     {
         $opportunities = $this->opportunity
             ->whereIn('branch_id', $branches)
-            ->with('address', 'branch', 'address.activities')
+            ->with(
+                ['address.address'=> function ($query) {
+                    $query->withLastActivityId();
+                },'address.address.lastActivity']
+            )
             ->thisPeriod($this->period)
             ->orderBy('branch_id')
             ->distinct();

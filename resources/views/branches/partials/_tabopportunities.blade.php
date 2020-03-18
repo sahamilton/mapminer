@@ -24,7 +24,8 @@
           <td>
             @if(in_array($branch->id,array_keys($myBranches)))
             <a href="{{route('opportunity.show',$opportunity->id)}}" title="Review, edit or delete this opportunity">
-            {{$opportunity->title ?  $opportunity->title : $opportunity->id}} <i class="fas fa-edit class="text text-info"></i></a>
+            {{$opportunity->title ?  $opportunity->title : $opportunity->id}} 
+            <i class="fas fa-edit" class="text text-info"></i></a>
            
                              
 
@@ -70,11 +71,10 @@
             @endif
           </td>
           <td>
-            @if($opportunity->address->activities->count() >0 )
-
-              {{$opportunity->address->activities->last()->activity_id}}
+            @if($opportunity->address->address->lastActivity->count() >0 )
+              {{$opportunity->address->address->lastActivity->activity_date->format('Y-m-d')}}
              <br />
-            {{$opportunity->address->activities->last()->activity_date->format('Y-m-d')}}
+            
             @endif
           </td>
           

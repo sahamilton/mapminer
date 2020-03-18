@@ -69,14 +69,18 @@
           <td>
             @if($opportunity->expected_close )
             {{$opportunity->expected_close->format('Y-m-d')}}
+            @if($opportunity->expected_close->diff(now())->m > 1)
+              <br /><i class="fas fa-exclamation-triangle text-danger" title="Stale Opportunity!"></i>
+            @endif
             @endif
           </td>
           <td>
-            @if($opportunity->address->activities->count() >0 )
+            @if($opportunity->address->address->lastActivity)
 
-              {{$opportunity->address->activities->last()->activity_id}}
-             <br />
-            {{$opportunity->address->activities->last()->activity_date->format('Y-m-d')}}
+            {{$opportunity->address->address->lastActivity->activity_date->format('Y-m-d')}}
+            @if($opportunity->expected_close->diff(now())->m > 1)
+              <br /><i class="fas fa-exclamation-triangle text-danger" title="Stale Account!"></i>
+            @endif
             @endif
           </td>
           
