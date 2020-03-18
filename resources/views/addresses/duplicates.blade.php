@@ -27,6 +27,7 @@ action="{{route('addresses.merge')}}"
 			<th>City</th>
 			<th>State</th>
 			<th>ZIP</th>
+			<th>Assigned To Branch</th>
 			<th>Merge</th>
 		</thead>
 		<tbody>
@@ -41,8 +42,19 @@ action="{{route('addresses.merge')}}"
 					<td>{{$account->state}}</td>
 					<td>{{$account->zip}}</td>
 					<td>
+						@foreach ($account->assignedToBranch as $branch)
+							<li>{{$branch->branchname}}</li>
+						@endforeach
+					</td>
+					</td>
+					<td>
+						
+						@if(array_intersect($account->assignedToBranch->pluck('id')->toArray(), $myBranches))
 						Merge into<input type="radio" {{$loop->first ? 'checked' : ''}} name='primary' value ="{{$account->id}}" />
 						<input type="checkbox" checked name="address[]" value="{{$account->id}}"/>
+						@else
+						<p class="text-danger">No Owned by any of your branches</p>
+						@endif
 					</td>
 					
 

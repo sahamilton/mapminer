@@ -161,7 +161,8 @@ class MyLeadsController extends BaseController
     public function store(MyLeadFormRequest $request)
     {
         
-        
+        $myBranches = auth()->user()->person->getMyBranches();
+
         // we need to geocode this address
         if (! $data = $this->_cleanseInput($request)) {
             return redirect()->back()->withError('Unable to geocode that address');
@@ -173,7 +174,7 @@ class MyLeadsController extends BaseController
         
         $lead->assignedToBranch()->attach($data['branch']->id, ['status_id'=>2]);
         $dupes = $this->_getDuplicateLeads($data);
-
+      
         if (isset($data['contact'])) {
         
             $lead->contacts()->create($data['contact']);
@@ -192,7 +193,7 @@ class MyLeadsController extends BaseController
         }
 
         if ($dupes->count() > 1) {
-            return response()->view('addresses.duplicates', compact('dupes', 'data'));
+            return response()->view('addresses.duplicates', compact('dupes', 'data', 'myBranches'));
         }
 
         // send this to a job
@@ -477,16 +478,8 @@ class MyLeadsController extends BaseController
     {
         
         return $this->lead
-            ->where(
-                function ($q) use ($data) {
-                    $q->whereDoesntHave('assignedToBranch')
-                        ->orWhereHas(
-                            'assignedToBranch', function ($q) use ($data) {
-                                $q->where('branch_id', $data['branch']->id);
-                            }
-                        );
-                }
-            )->duplicateDistance($data['lead']['lng'], $data['lead']['lat'])
+            ->with('assignedToBranch')
+            ->duplicateDistance($data['lead']['lng'], $data['lead']['lat'])
             ->get();
     }
 }
