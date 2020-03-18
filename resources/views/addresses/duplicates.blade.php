@@ -53,7 +53,7 @@ action="{{route('addresses.merge')}}"
 						Merge into<input type="radio" {{$loop->first ? 'checked' : ''}} name='primary' value ="{{$account->id}}" />
 						<input type="checkbox" checked name="address[]" value="{{$account->id}}"/>
 						@else
-						<p class="text-danger">No Owned by any of your branches</p>
+						<p class="text-danger">Not Owned by any of your branches</p>
 						@endif
 					</td>
 					

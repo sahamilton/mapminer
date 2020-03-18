@@ -244,7 +244,7 @@ class AddressController extends BaseController
             ->orderBy('created_at', 'asc')
             ->get();
         if (! $addresses->count()) {
-            return redirect()->back()->withError('You must select an address to merge');
+            return redirect()->back()->withError('You must select more than one address to merge');
         }
         //get primary address
         $primaryaddress = $this->address->findOrFail(request('primary'));

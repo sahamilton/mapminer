@@ -25,7 +25,7 @@
         class="form-control" 
         name='address' 
         description="address" 
-        value="{{ old('address', isset($location) ? $location->address : '' )}}" 
+        value="{{isset($location) ? $location->address : '' }}" 
         placeholder="street address">
         <span class="help-block">
             <strong>{{ $errors->has('address') ? $errors->first('address') : ''}}</strong>
@@ -43,7 +43,7 @@
         value="{{ old('city', isset($location) ? $location->city : '' )}}" 
         placeholder="city">
         <span class="help-block">
-            <strong>{{ $errors->has('address') ? $errors->first('address') : ''}}</strong>
+            <strong>{{ $errors->has('city') ? $errors->first('city') : ''}}</strong>
         </span>
     </div>
 </div>
