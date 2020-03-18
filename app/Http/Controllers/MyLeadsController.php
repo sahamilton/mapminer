@@ -191,7 +191,7 @@ class MyLeadsController extends BaseController
             $lead->load('contacts');
         }
 
-        if ($dupes->count() > 0) {
+        if ($dupes->count() > 1) {
             return response()->view('addresses.duplicates', compact('dupes', 'data'));
         }
 
