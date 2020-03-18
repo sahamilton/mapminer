@@ -98,7 +98,8 @@ class AddressController extends BaseController
             'ranking',
             'leadsource',
             'createdBy',
-            'assignedToBranch'
+            'assignedToBranch',
+            'duplicates'
         );
         
         if ($address->addressable_type) {
@@ -128,7 +129,7 @@ class AddressController extends BaseController
         }
         
         $fields = Howtofield::where('active', 1)->orderBy('sequence')->get();
- 
+        
         return response()->view('addresses.show', compact('location', 'branches', 'rankingstatuses', 'people', 'myBranches', 'ranked', 'notes', 'owned', 'fields'));
     }
 
@@ -222,7 +223,8 @@ class AddressController extends BaseController
     public function duplicates(Address $address)
     {
         $dupes = $address->load('duplicates', 'assignedToBranch')->duplicates;
-        return response()->view('addresses.duplicates', compact('dupes'));
+        $myBranches = auth()->user()->person->getMyBranches();
+        return response()->view('addresses.duplicates', compact('dupes', 'myBranches'));
     }
     /**
      * [mergeAddress description]

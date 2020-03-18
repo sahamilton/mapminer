@@ -1,8 +1,14 @@
 <h2>Location Details</h2>
+@if($location->duplicates->count() > 1)
+	<div class="alert alert-danger">
+		<p><strong>Possible Duplicate(s)</strong> {{$location->duplicates->count()}}- 
+			<a href="{{route('address.duplicates', $location->id)}}"><button class="btn btn-danger">Merge?</button></a></p>
+	</div>
+@endif
 <div id="map-container">
 	<div style="float:left;width:300px">
 
-		
+
 
 		<fieldset style="border:solid 1px grey;width:90%;padding:5px">
 			<p>
