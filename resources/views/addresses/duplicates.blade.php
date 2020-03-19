@@ -49,7 +49,7 @@ action="{{route('addresses.merge')}}"
 					</td>
 					<td>
 						
-						@if(array_intersect($account->assignedToBranch->pluck('id')->toArray(), $myBranches))
+						@if(array_intersect($account->assignedToBranch->pluck('id')->toArray(), $myBranches) or  $account->assignedToBranch->count()==0)
 						Merge into<input type="radio" {{$loop->first ? 'checked' : ''}} name='primary' value ="{{$account->id}}" />
 						<input type="checkbox" checked name="address[]" value="{{$account->id}}"/>
 						@else

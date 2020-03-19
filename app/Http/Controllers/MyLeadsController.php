@@ -96,23 +96,32 @@ class MyLeadsController extends BaseController
      */
     public function branchLeads(Request $request, Branch $branch)
     {
-
+        
         if (request()->has('branch')) {
-            $branch = request('branch');
+            $branch_id = request('branch');
         } else {
-            $branch = $branch->id;
+            $branch_id = $branch->id;
         }
         $myBranches = $this->person->myBranches();
        
-        if (! ( $myBranches)  or ! in_array($branch, array_keys($myBranches))) {
+        if (! ( $myBranches)  or ! in_array($branch_id, array_keys($myBranches))) {
             return redirect()->back()->withError('You are not assigned to any branches');
         }
        
          
-        $data = $this->_getBranchLeads([$branch]);
-       
-        $title= $data['branches']->first()->branchname . " leads";
-        return response()->view('myleads.branches', compact('data', 'myBranches', 'title'));
+        $branch = $this->branch
+            ->with(
+                ['leads'=> function ($query) {
+                    $query->withLastActivityId();
+                },'leads.lastActivity','leads.leadsource']
+            )->find($branch_id);
+        $campaigns = Campaign::current([$branch_id])->with('companies')->get();
+        $campaign_ids = $campaigns->map(function ($campaign){
+                return [$campaign->title=>$campaign->companies->pluck('id')->toArray()];
+            }
+        );
+        $title= $branch->branchname . " leads";
+        return response()->view('myleads.branches', compact( 'branch', 'myBranches', 'campaign_ids', 'title'));
     }
     /**
      * [_getBranchLeads description]
