@@ -1,7 +1,7 @@
 @extends('site.layouts.default')
 @section('content')
 
-<h1>{{$title}}</h1>
+<h1>{{$branch->branchname . " leads"}}</h1>
 <p><a href="{{route('dashboard.show', $branch->id)}}">Return To Branch Dashboard</a></p>
 
 @if(count($myBranches) > 1)
@@ -42,13 +42,14 @@
         <th>Date Added</th>
         <th>Address</th>
         <th>Lead Source</th>
-        <th>Last Campaign</th>
+        <th>Current Campaign</th>
         <th>Last Activity</th>
         <th>Remove</th>
     </thead>
     <tbody>
 
     @foreach($branch->leads as $lead)
+
     <tr>
         <td>
             <a href="{{route('address.show',$lead->id)}}">
@@ -73,15 +74,15 @@
             @endif
         </td>
         <td>
-            @if($lead->campaigns && $lead->campaigns->count())
-               <a href="{{route('branchcampaign.show', [$lead->campaigns->last()->id, $branch->id])}}"> 
-                    {{$lead->campaigns->last()->title}}
-                </a>
-            @endif
+            @foreach ($campaign_ids as $title=>$companies)
+                @if(in_array($lead->company_id, $companies))
+                    {{$title}}<br />
+                @endif
+            @endforeach
         </td>
         <td>
             @if($lead->lastActivity)
-                {{$lead->lastActivity->first()->activity_date->format('Y-m-d')}}        
+                {{$lead->lastActivity->activity_date->format('Y-m-d')}}        
             @endif
         </td>
         <td>
