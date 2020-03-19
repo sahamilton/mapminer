@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use App\Address;
 use App\Branch;
+use App\Campaign;
 use Illuminate\Http\Request;
 use App\Person;
 use App\LeadStatus;
@@ -43,43 +44,42 @@ class MyLeadsController extends BaseController
      * @param  [type] $branch [description]
      * @return [type]         [description]
      */
-    public function index($branch=null)
+    public function index()
     {
-       
+        // Do you have any branches
+        // If branch chosen is it one of yours
+        // Else if session is set
+        // then get the first branch
         if (!  $myBranches = $this->person->myBranches()) {
             return redirect()->back()->withError('You are not assigned to any branches');
         }
 
-        if (! $branch && ! session('branch')) {
+        $branch_ids = array_keys($myBranches);
+        // get first branch
+        $branch_id = reset($branch_ids);
+        session(['branch'=>$branch_id]);
 
-            $branch = array_keys($myBranches);
-            // get first branch
-            $branch = reset($branch);
-            session(['branch'=>$branch]);
-
-        } elseif (session('branch')) {
-
-            if (! in_array(session('branch'), array_keys($this->person->myBranches()))) {
-                
-                return redirect()->back()->withError('Something has gone wrong here. Please advise Sales Operations');
+        $branch = $this->branch
+            ->with(
+                ['leads'=> function ($query) {
+                    $query->withLastActivityId();
+                },'leads.lastActivity','leads.leadsource']
+            )->find($branch_id);
+        
+        
+        $title= $branch->branchname . " leads";
+        $campaigns = Campaign::current([$branch_id])->with('companies')->get();
+        $campaign_ids = $campaigns->map(function ($campaign){
+                return [$campaign->title=>$campaign->companies->pluck('id')->toArray()];
             }
-            $branch = session('branch');
+        );
         
-        } else {   
-            if (! in_array($branch->id, array_keys($this->person->myBranches()))) {
-                return redirect()->back()->withError('That is not one of your branches');
-            }
-            $branch = $branch->id;
-            session(['branch'=>$branch]);
-        }
+ 
         
-        $data = $this->_getBranchLeads([$branch]);
-        
-        $title= $data['branches']->first()->branchname . " leads";
-
-        return response()->view('myleads.branches', compact('data', 'myBranches', 'title'));
+        return response()->view('myleads.branches', compact( 'branch', 'myBranches', 'campaign_ids', 'title'));
         
     }
+
 
     public function create()
     {

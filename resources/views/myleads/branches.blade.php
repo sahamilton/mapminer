@@ -2,7 +2,7 @@
 @section('content')
 
 <h1>{{$title}}</h1>
-<p><a href="{{route('dashboard.show', $data['branches']->first()->id)}}">Return To Branch Dashboard</a></p>
+<p><a href="{{route('dashboard.show', $branch->id)}}">Return To Branch Dashboard</a></p>
 
 @if(count($myBranches) > 1)
     <div class="col-sm-4">
@@ -14,14 +14,14 @@
                 name="branch" 
                 onchange="this.form.submit()">
                 @foreach ($myBranches as $key=>$branchname)
-                    <option {{$data['branches']->first()->id == $key ? 'selected' : ''}} value="{{$key}}">{{$branchname}}</option>
+                    <option {{$branch->id == $key ? 'selected' : ''}} value="{{$key}}">{{$branchname}}</option>
                 @endforeach 
             </select>
 
         </form>
     </div>
 @endif
-@php $branch = $data['branches']->first(); @endphp    
+   
 <div class="row float-right">
         <button type="button" 
             class="btn btn-info float-right" 
@@ -50,7 +50,7 @@
     </thead>
     <tbody>
 
-    @foreach($data['leads'] as $lead)
+    @foreach($branch->leads as $lead)
  
     <tr>
         
@@ -78,7 +78,7 @@
         </td>
         <td>
             @if($lead->campaigns && $lead->campaigns->count())
-               <a href="{{route('branchcampaign.show', [$lead->campaigns->last()->id, $data['branches']->first()->id])}}"> 
+               <a href="{{route('branchcampaign.show', [$lead->campaigns->last()->id, $branch->id])}}"> 
                     {{$lead->campaigns->last()->title}}
                 </a>
             @endif
