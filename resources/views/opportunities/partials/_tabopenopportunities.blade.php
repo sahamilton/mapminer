@@ -78,13 +78,15 @@
             @endif
             @endif
           </td>
+          
           <td>
             @if($opportunity->address->address->lastActivity)
 
             {{$opportunity->address->address->lastActivity->activity_date->format('Y-m-d')}}
-            @if($opportunity->expected_close->diff(now())->m > 1)
-              <br /><i class="fas fa-exclamation-triangle text-danger" title="Stale Account!"></i>
-            @endif
+              @if($opportunity->address->address->lastActivity->activity_date->diff(now())->m > 1)
+                <br /><i class="fas fa-exclamation-triangle text-danger" title="Stale Account!"></i>
+              @endif
+            
             @endif
           </td>
           
