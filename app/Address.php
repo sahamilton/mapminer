@@ -224,7 +224,7 @@ class Address extends Model
     }
     
     /**
-     * [lastActivity description]
+     * [currentlyActive description]
      * 
      * @return [type] [description]
     */

@@ -111,15 +111,14 @@ class MyLeadsController extends BaseController
          
         $branch = $this->branch
             ->with(
-                ['leads'=> function ($query) {
-                    $query->withLastActivityId();
-                },'leads.lastActivity','leads.leadsource']
+                ['leads','leads.lastActivity','leads.leadsource']
             )->find($branch_id);
         $campaigns = Campaign::current([$branch_id])->with('companies')->get();
         $campaign_ids = $campaigns->map(function ($campaign){
                 return [$campaign->title=>$campaign->companies->pluck('id')->toArray()];
             }
         );
+        
         $title= $branch->branchname . " leads";
         return response()->view('myleads.branches', compact( 'branch', 'myBranches', 'campaign_ids', 'title'));
     }

@@ -51,7 +51,7 @@
     <tbody>
 
     @foreach($branch->leads as $lead)
- 
+   
     <tr>
         
         <td>
