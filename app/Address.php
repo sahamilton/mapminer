@@ -222,15 +222,7 @@ class Address extends Model
         return $query->select()->selectSub('select id as last_activity_id from activities where address_id = addresses.id and completed=1 order by activities.created_at desc limit 1', 'last_activity_id');
        
     }
-    /**
-     * [lastActivity description]
-     * 
-     * @return [type] [description]
-    */
-    public function lastActivity()
-    {
-        return $this->hasMany(Activity::class)->where('completed', 1)->orderBy('activity_date', 'desc')->limit(1);
-    } 
+    
     /**
      * [lastActivity description]
      * 
