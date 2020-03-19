@@ -290,9 +290,7 @@ class OpportunityController extends BaseController
         $opportunities = $this->opportunity
             ->whereIn('branch_id', $branches)
             ->with(
-                ['address.address'=> function ($query) {
-                    $query->withLastActivityId();
-                },'address.address.lastActivity']
+                ['address.address','address.address.lastActivity']
             )
             ->thisPeriod($this->period)
             ->orderBy('branch_id')
