@@ -290,11 +290,14 @@ class OpportunityController extends BaseController
         $opportunities = $this->opportunity
             ->whereIn('branch_id', $branches)
             ->with(
-                ['address.address','address.address.lastActivity']
+                ['address.address'=>function ($query) {
+                    $query->withLastActivityId();
+                },'address.address.lastActivity']
             )
             ->thisPeriod($this->period)
             ->orderBy('branch_id')
             ->distinct();
+           
         if ($location) {
             $opportunities = $opportunities->nearby($location);
         }
