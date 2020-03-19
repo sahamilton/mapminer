@@ -201,7 +201,27 @@ class Address extends Model
     {
         return $this->hasMany(Activity::class)->whereNull('completed');
     }
-
+    /**
+     * [lastActivity description]
+     * 
+     * @return [type] [description]
+     */
+    public function lastActivity()
+    {
+        return $this->belongsTo(Activity::class);
+    }
+    /**
+     * [scopeWithLastActivityId description]
+     * 
+     * @param [type] $query [description]
+     * 
+     * @return [type]        [description]
+     */
+    public function scopeWithLastActivityId($query)
+    {
+        return $query->select()->selectSub('select id as last_activity_id from activities where address_id = addresses.id and completed=1 order by activities.created_at desc limit 1', 'last_activity_id');
+       
+    }
     /**
      * [lastActivity description]
      * 
