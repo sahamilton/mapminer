@@ -70,17 +70,21 @@
           <td>{{$opportunity->requirements}}</td>
           <td>{{$opportunity->duration}}</td>
           <td>{{$opportunity->value}}</td>
-          <td>
+                    <td>
             @if($opportunity->expected_close )
             {{$opportunity->expected_close->format('Y-m-d')}}
-            
+            @if($opportunity->expected_close->diff(now())->m > 1)
+              <br /><i class="fas fa-exclamation-triangle text-danger" title="Stale Opportunity!"></i>
+            @endif
             @endif
           </td>
           <td>
             @if($opportunity->address->address->lastActivity)
 
             {{$opportunity->address->address->lastActivity->activity_date->format('Y-m-d')}}
-            
+            @if($opportunity->expected_close->diff(now())->m > 1)
+              <br /><i class="fas fa-exclamation-triangle text-danger" title="Stale Account!"></i>
+            @endif
             @endif
           </td>
           
