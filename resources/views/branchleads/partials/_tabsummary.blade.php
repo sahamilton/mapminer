@@ -9,7 +9,7 @@
          @foreach($branches as $branch)
 
             <tr>
-                <td><a href="{{route('branchleads.show',$branch->id)}}">{{ $branch->branchname}} </a></td>
+                <td><a href="{{route('lead.branch',$branch->id)}}">{{ $branch->branchname}} </a></td>
                 <td>
                     @foreach ($branch->manager as $manager)
                         {{$manager->fullName()}}

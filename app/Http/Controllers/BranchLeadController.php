@@ -46,7 +46,7 @@ class BranchLeadController extends Controller
      */
     public function index()
     {
-       
+        
         if (count($this->person->myBranches())>0) {
             $branches = $this->branch->whereIn(
                 'id', array_keys($this->person->myBranches())
@@ -103,28 +103,13 @@ class BranchLeadController extends Controller
      * 
      * @return [type]         [description]
      */
-    public function show(Branch $branch)
+    public function show(BranchLead $branch)
     {
-       
-        $branch = $branch->load(
-            'leads', 'manager', 'leads.industryVertical', 'leads.leadsource'
-        );
-
+        
         return response()->view('branchleads.show', compact('branch'));
     }
 
-    /**
-     * [edit description]
-     * 
-     * @param BranchLead $branchLead [description]
-     * 
-     * @return [type]                 [description]
-     */
-    public function edit(BranchLead $branchLead)
-    {
-        //
-    }
-
+    
     /**
      * [update description]
      * 
