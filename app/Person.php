@@ -220,67 +220,29 @@ class Person extends NodeModel implements HasPresenter
             return $this->_getBranchesFromTeam($person);
         }
     }  
-       // check if role is admin or sales ops
-       // get all branches if so4
-
-        /*if ($person) {
-            $servicelines = $person->userdetails()->serviceline->pluck('id')->toArray();
-        } else {
-
-            if (! $servicelines) {
-                $servicelines = auth()->user()->serviceline->pluck('id')->toArray();
-             
-            }
-
-            if (auth()->user()->hasRole('admin')  {
-               
-                return Branch::whereHas(
-                    'servicelines', function ($q) use ($servicelines) {
-                        $q->whereIn('servicelines.id', $servicelines);
-                    }
-                )->pluck('branchname', 'id')->toArray();
-            }
-        } elseif (! $person && auth()->user()->hasRole('sales_operations')) {
-          
-            $person = $this->findOrFail(auth()->user()->person->reports_to);
-
-        }*/
+    /**
+     * [_getBranchesFromTeam description]
+     * 
+     * @param Person $person [description]
+     * 
+     * @return [type]         [description]
+     */
     private function _getBranchesFromTeam(Person $person)
     {
-        $myteam = $this->myTeam($person)
+        $mybranchteam = $this->myTeam($person)
             ->whereHas(
                 'userdetails.roles', function ($q) {
                     $q->whereIn('role_id', $this->branchroles);
                 }
             )
-            ->has('branchesServiced')->get();
+            ->with('branchesServiced')->get();
 
-        $data=[];
-        $teammembers=[];
-        /* if ($servicelines) {
-            // not used!!
-        } else {*/
-            $teammembers =  $myteam->map(
-                function ($team) {
-           
-                    return $team->branchesServiced;
-                }
-            );
-        //}
-        
-
-        foreach ($teammembers as $member) {
-       
-            foreach ($member->pluck('branchname', 'id') as $id => $branchname) {
-                if (! array_key_exists($id, $data)) {
-                    $data[$id]=$branchname;
-                }
+        $branches =  $mybranchteam->map(
+            function ($team) {
+                return $team->branchesServiced;
             }
-        }
-
-        ksort($data);
-   
-        return $data;
+        );
+        return $branches->flatten()->unique()->sort()->pluck('branchname', 'id')->toArray();
     }
     /**
      * [myBranchTeam description]
