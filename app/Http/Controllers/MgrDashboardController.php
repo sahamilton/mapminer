@@ -268,7 +268,7 @@ class MgrDashboardController extends DashboardController
         
         } else {
       
-             return  $this->person->myBranches();
+             return $this->person->myBranches();
         }
     }
     

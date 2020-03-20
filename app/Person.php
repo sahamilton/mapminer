@@ -9,6 +9,7 @@ class Person extends NodeModel implements HasPresenter
 {
     use Geocode, Filters, SoftDeletes, FullTextSearch;
     public $salesroles = ['5','9'];
+    public $branchroles = ['9'];
     // Add your validation rules here
     public static $rules = [
         'email'=>'required',
@@ -246,7 +247,13 @@ class Person extends NodeModel implements HasPresenter
         }*/
     private function _getBranchesFromTeam(Person $person)
     {
-        $myteam = $this->myTeam($person)->has('branchesServiced')->get();
+        $myteam = $this->myTeam($person)
+            ->whereHas(
+                'userdetails.roles', function ($q) {
+                    $q->whereIn('role_id', $this->branchroles);
+                }
+            )
+            ->has('branchesServiced')->get();
 
         $data=[];
         $teammembers=[];
@@ -270,7 +277,9 @@ class Person extends NodeModel implements HasPresenter
                 }
             }
         }
+
         ksort($data);
+   
         return $data;
     }
     /**
