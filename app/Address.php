@@ -356,7 +356,30 @@ class Address extends Model
             'address_id', 'address_branch_id', 'id', 'id'
         );
     }
+    public function scopeOrderByColumn($query, $field, $dir) 
+    {
+        
+        switch($field) {
+        case 'lastActivity': return $query->orderByLastActivityDate();
 
+        default: return $query->orderBy($field, $dir);
+        }
+
+
+    }
+
+    public function scopeOrderByLastActivityDate($query, $dir='asc')
+    {
+        $query->orderBy(
+            Activity::select('activity_date')
+                ->whereColumn('activities.address_id', 'addresses.id')
+                ->whereCompleted(1)
+                ->latest()
+                ->take(1)->get(),
+            $dir
+        );
+
+    }
     /**
      * [opportunities description]
      * 

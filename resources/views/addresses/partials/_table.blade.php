@@ -13,6 +13,6 @@
                {{$lead->open_opportunities_count}}
             @endif 
         </td>
-        <td>{{$lead->lastActivity->count() ? $lead->lastActivity->activity_date->format('Y-m-d') : ''}}</td>
+        <td>{{$lead->lastActivity ? $lead->lastActivity->activity_date->format('Y-m-d') : ''}}</td>
     </tr>
 @endforeach
