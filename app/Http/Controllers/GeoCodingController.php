@@ -69,8 +69,12 @@ class GeoCodingController extends BaseController
 
         
         // get position from address
-        $data = $this->_getPostionFromAddress($data);
+        if (! $data = $this->_getPostionFromAddress($data) ) {
+
+            return redirect()->back()->withInput()->with('error', 'Unable to Geocode address:'.request('search'));
         
+        }
+
         if (! request()->has('addressType') or count(request('addressType'))==0) {
             $data['addressType'] = ['customer','project','lead','location'];
         }
@@ -142,7 +146,7 @@ class GeoCodingController extends BaseController
                 $data['lng'] = $string[2];
                 $geocode = app('geocoder')->reverse($data['lat'], $data['lng'])->get();
                 if (! $geocode or count($geocode)==0) {
-                    return redirect()->back()->withInput()->with('error', 'Unable to Geocode address:'.request('address'));
+                    return false;
                 }
                 if ($geocode->first()->getFormattedAddress()) {
                     $data['search']= $geocode->first()->getFormattedAddress();
@@ -153,7 +157,7 @@ class GeoCodingController extends BaseController
 
                 //reset the geo session
                 if (! $geocode or count($geocode)==0) {
-                    return redirect()->back()->withInput()->with('error', 'Unable to Geocode address:'.request('address'));
+                    return false;
                 }
                 
                 

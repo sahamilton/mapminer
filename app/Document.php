@@ -3,11 +3,11 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Laravel\Scout\Searchable;
+
 
 class Document extends Model
 {
-    use Searchable;
+
     public $table='documents';
 
     public $dates =['datefrom','dateto'];
