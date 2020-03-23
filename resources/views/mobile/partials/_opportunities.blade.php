@@ -21,8 +21,8 @@
             </td>
             <td>{{number_format($result->distance,2)}} mi</td>
             <td>
-                @if($result->address->address->lastActivity->count() >0)
-                    {{$result->address->address->lastActivity->first()->activity_date->format('Y-m-d')}}
+                @if($result->address->address->lastActivity)
+                    {{$result->address->address->lastActivity->activity_date->format('Y-m-d')}}
                 @endif
                 <br /><a 
                     data-href="" 
@@ -32,7 +32,7 @@
                            data-title = "{{$result->businessname}}" 
                            href="#">
 
-               <i class="fas fa-plus-circle text-success"></i>Add Activity</a>
+               <i class="fas fa-plus-circle text-success"></i>Add Activity </a>
             
         </tr>
         @endforeach

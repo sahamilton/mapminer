@@ -34,8 +34,8 @@ body {
          @include('mobile.partials._activitynewform')
          <input type="hidden" 
             name = "address_id" 
-           
-            value = "{{$location->id}}" />
+            id="address_id"
+            value = "" />
          <input 
               type="hidden" 
               name="branch_id" 
