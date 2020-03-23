@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6ff1d76939769c26a5e29470c3c52693",
+    "content-hash": "973a9e997140186b814d97f7220bed65",
     "packages": [
         {
             "name": "algolia/algoliasearch-client-php",
@@ -1204,63 +1204,6 @@
                 "parser"
             ],
             "time": "2019-12-30T22:54:17+00:00"
-        },
-        {
-            "name": "eyewitness/eye",
-            "version": "v2.0.7",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/eyewitness/eye.git",
-                "reference": "b6c38db231f6da09741c9f7982252ca03aaa2b43"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/eyewitness/eye/zipball/b6c38db231f6da09741c9f7982252ca03aaa2b43",
-                "reference": "b6c38db231f6da09741c9f7982252ca03aaa2b43",
-                "shasum": ""
-            },
-            "require": {
-                "guzzlehttp/guzzle": "5.*|6.*",
-                "laravel/framework": "~5.0.14|~5.1"
-            },
-            "require-dev": {
-                "mockery/mockery": "^0.9.4",
-                "orchestra/testbench": "~3.4",
-                "phpunit/phpunit": "~5.7"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Eyewitness\\Eye\\EyeServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Eyewitness\\Eye\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Laurence",
-                    "email": "laurence@eyewitness.io"
-                }
-            ],
-            "description": "Eyewitness.io client for Laravel 5 applications",
-            "homepage": "https://github.com/eyewitness/eye",
-            "keywords": [
-                "cron",
-                "eyewitness",
-                "laravel 5",
-                "monitor",
-                "queue"
-            ],
-            "time": "2018-05-30T11:38:14+00:00"
         },
         {
             "name": "fabpot/goutte",
@@ -2870,16 +2813,16 @@
         },
         {
             "name": "league/flysystem",
-            "version": "1.0.65",
+            "version": "1.0.66",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/flysystem.git",
-                "reference": "8f17b3ba67097aafb8318cd5c553b1acf7c891c8"
+                "reference": "021569195e15f8209b1c4bebb78bd66aa4f08c21"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/8f17b3ba67097aafb8318cd5c553b1acf7c891c8",
-                "reference": "8f17b3ba67097aafb8318cd5c553b1acf7c891c8",
+                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/021569195e15f8209b1c4bebb78bd66aa4f08c21",
+                "reference": "021569195e15f8209b1c4bebb78bd66aa4f08c21",
                 "shasum": ""
             },
             "require": {
@@ -2950,20 +2893,20 @@
                 "sftp",
                 "storage"
             ],
-            "time": "2020-03-08T18:53:20+00:00"
+            "time": "2020-03-17T18:58:12+00:00"
         },
         {
             "name": "livewire/livewire",
-            "version": "v1.0.4",
+            "version": "v1.0.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/livewire/livewire.git",
-                "reference": "8bbb099df73608ad6b31469629d33d8fc74a3773"
+                "reference": "af54a661d95ae5cc253ba3759105bfd9b522421e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/livewire/livewire/zipball/8bbb099df73608ad6b31469629d33d8fc74a3773",
-                "reference": "8bbb099df73608ad6b31469629d33d8fc74a3773",
+                "url": "https://api.github.com/repos/livewire/livewire/zipball/af54a661d95ae5cc253ba3759105bfd9b522421e",
+                "reference": "af54a661d95ae5cc253ba3759105bfd9b522421e",
                 "shasum": ""
             },
             "require": {
@@ -3007,7 +2950,7 @@
                 }
             ],
             "description": "A front-end framework for Laravel.",
-            "time": "2020-03-14T16:27:59+00:00"
+            "time": "2020-03-18T16:38:43+00:00"
         },
         {
             "name": "maatwebsite/excel",
@@ -4300,20 +4243,20 @@
         },
         {
             "name": "phpoption/phpoption",
-            "version": "1.7.2",
+            "version": "1.7.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/schmittjoh/php-option.git",
-                "reference": "77f7c4d2e65413aff5b5a8cc8b3caf7a28d81959"
+                "reference": "4acfd6a4b33a509d8c88f50e5222f734b6aeebae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/schmittjoh/php-option/zipball/77f7c4d2e65413aff5b5a8cc8b3caf7a28d81959",
-                "reference": "77f7c4d2e65413aff5b5a8cc8b3caf7a28d81959",
+                "url": "https://api.github.com/repos/schmittjoh/php-option/zipball/4acfd6a4b33a509d8c88f50e5222f734b6aeebae",
+                "reference": "4acfd6a4b33a509d8c88f50e5222f734b6aeebae",
                 "shasum": ""
             },
             "require": {
-                "php": "^5.5.9 || ^7.0"
+                "php": "^5.5.9 || ^7.0 || ^8.0"
             },
             "require-dev": {
                 "bamarni/composer-bin-plugin": "^1.3",
@@ -4351,7 +4294,7 @@
                 "php",
                 "type"
             ],
-            "time": "2019-12-15T19:35:24+00:00"
+            "time": "2020-03-21T18:07:53+00:00"
         },
         {
             "name": "predis/predis",
@@ -6823,56 +6766,6 @@
                 "dump"
             ],
             "time": "2020-02-24T13:10:00+00:00"
-        },
-        {
-            "name": "tamayo/laravel-scout-elastic",
-            "version": "3.0.9",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/ErickTamayo/laravel-scout-elastic.git",
-                "reference": "a8e5be767ba8d747d3a46c0b9805a25cfb9860d1"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/ErickTamayo/laravel-scout-elastic/zipball/a8e5be767ba8d747d3a46c0b9805a25cfb9860d1",
-                "reference": "a8e5be767ba8d747d3a46c0b9805a25cfb9860d1",
-                "shasum": ""
-            },
-            "require": {
-                "elasticsearch/elasticsearch": "^5.0",
-                "laravel/scout": "^3.0|^4.0",
-                "php": ">=5.6.4"
-            },
-            "require-dev": {
-                "fzaninotto/faker": "~1.4",
-                "mockery/mockery": "0.9.*",
-                "phpunit/phpunit": "~5.0"
-            },
-            "suggest": {
-                "elasticsearch/elasticsearch": "Required to use the Elasticsearch engine (^5.0)."
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "ScoutEngines\\Elasticsearch\\ElasticsearchProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "ScoutEngines\\Elasticsearch\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "description": "Elastic Driver for Laravel Scout",
-            "keywords": [
-                "elastic",
-                "elasticsearch",
-                "laravel",
-                "scout"
-            ],
-            "time": "2018-04-22T02:42:44+00:00"
         },
         {
             "name": "tecnickcom/tcpdf",
