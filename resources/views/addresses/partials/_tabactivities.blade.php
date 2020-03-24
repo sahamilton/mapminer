@@ -1,3 +1,4 @@
+  @if($owned && $owned ==2)
  <div class="float-right">
     <a class="btn btn-info" 
         title="Add Activity"
@@ -10,6 +11,7 @@
         Add Activity
         </a>
     </div>
+    @endif
  <table id ='sorttable' class='table table-striped table-bordered table-condensed table-hover'>
     <thead>
 
