@@ -59,7 +59,7 @@ class Branch extends Model implements HasPresenter
      * [locations description]
      * 
      * @return [type] [description]
-     *;
+     */
     public function locations()
     {
         return $this->belongsToMany(Address::class);
