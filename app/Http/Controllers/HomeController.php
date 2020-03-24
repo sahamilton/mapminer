@@ -25,19 +25,27 @@ class HomeController extends Controller
     {
         $agent = new \Jenssegers\Agent\Agent;
       
+        if ($route = $this->_chooseRoute()) {
+            return redirect()->route($route);
+        }
+
+        return view('welcome');
+    }
+
+    private function _chooseRoute()
+    {
         if (auth()->user()->hasRole(['svp','rvp','evp','market_manager'])) {
-            return redirect()->route('dashboard.index');
+            $route ='dashboard.index';
         } elseif (auth()->user()->hasRole(['branch_manager'])) {
             if ($agent->isMobile()) {
-                return redirect()->route('mobile.index');  
+                $route = 'mobile.index';  
             } else {
-                return redirect()->route('dashboard.index');
+                $route = 'dashboard.index';
             }
     
         } else {
-            return view('welcome');
+            return false;
         }
-
-       // return view('welcome');
+        return $route;
     }
 }
