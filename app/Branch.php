@@ -1231,17 +1231,17 @@ class Branch extends Model implements HasPresenter
                     ->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']]);
                     
             },
-            'offeredLeads'=>function ($q) {
+            'offeredLeads as offered_leads'=>function ($q) {
                 $q->whereIn('company_id', $this->company_ids)
                     ->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']]);
                     
             },
 
-            'workedLeads'=>function ($q) {
+            'workedLeads as worked_leads'=>function ($q) {
                 $q->whereIn('company_id', $this->company_ids);
                     
             },
-            'rejectedLeads'=>function ($q) {
+            'rejectedLeads as rejected_leads'=>function ($q) {
                 $q->whereIn('company_id', $this->company_ids)
                     ->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']]);
                     
@@ -1249,6 +1249,11 @@ class Branch extends Model implements HasPresenter
             'addresses as touched_leads'=>function ($q) {
                 $q->whereIn('company_id', $this->company_ids)
                     ->where('status_id', '>', '1')
+                    ->whereHas(
+                        'activities', function ($q1) {
+                            $q1->whereBetween('activity_date', [$this->period['from'], $this->period['to']]);
+                        }
+                    )
                     ->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']]);
                     
             },
