@@ -432,6 +432,21 @@ class Company extends NodeModel
                     }
                 );
             },
+            'locations as touched_leads'=>function ($query) {
+                $query->whereHas(
+                    'assignedToBranch', function ($q) {
+                        $q->where('status_id', '>', 1)
+                            ->whereIn('branch_id', $this->branches)
+                            ->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']]);
+                    }
+                )->whereHas(
+                    'activities', function ($q) {
+                        $q->where('completed', 1)
+                            ->whereIn('activities.branch_id', $this->branches)
+                            ->whereBetween('activity_date', [$this->period['from'], $this->period['to']]);
+                    }
+                );
+            },
             'locations as rejected_leads'=>function ($query) {
                 $query->whereHas(
                     'assignedToBranch', function ($q) {

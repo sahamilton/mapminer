@@ -23,9 +23,9 @@ class CampaignTrackingController extends Controller
     public $opportunity;
     public $fields = [
                     "supplied_leads",
-                    "offered_leads_count",
-                    "worked_leads_count",
-                    "rejected_leads_count",
+                    "offered_leads",
+                    "worked_leads",
+                    "rejected_leads",
                     "touched_leads",
                     "new_opportunities",
                     "won_opportunities",

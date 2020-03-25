@@ -2,6 +2,7 @@
     name="companysummary"
     class="table table-striped"
     >
+
     <thead>
         <th>Company</th>
         @foreach ($fields as $field)
@@ -11,7 +12,7 @@
     <tbody>
 
         @foreach ($companies as $company)
-    
+        
 
        
         <tr>

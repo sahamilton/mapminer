@@ -939,3 +939,35 @@ where (users.deleted_at is not null or users.confirmed !=1)
 and users.id = persons.user_id
 and persons.id = b.person_id) a )
 
+/******************************************************************
+/************  New Campaign Aggregation Query *********************
+/******************************************************************
+SELECT branchname,
+COUNT(CASE WHEN address_branch.status_id = 1  then 1 END) as offeredleads,
+COUNT(CASE WHEN address_branch.status_id = 1  and address_branch.created_at between '2020-03-13' and '2020-04-31' then 1 END) as newleads,
+COUNT(CASE WHEN address_branch.status_id = 2  then 1 END) as workedleads,
+COUNT(CASE WHEN address_branch.status_id = 3  then 1 END) as rejectedleads,
+COUNT(CASE WHEN opportunities.id is not null and opportunities.closed = 0 and opportunities.created_at  < '2020-03-13' then 1 END) as campaignopenopportunities,
+COUNT(CASE WHEN opportunities.id is not null and opportunities.closed = 0 and opportunities.created_at  between '2020-03-13' and '2020-04-21' then 1 END) as campaignnewopportunities,
+COUNT(CASE WHEN opportunities.id is not null and opportunities.closed = 1 and opportunities.actual_close  between '2020-03-13' and '2020-04-21'then 1 END) as campaignwonopportunities,
+SUM(CASE WHEN opportunities.id is not null and opportunities.closed = 0 and opportunities.created_at  between '2020-03-13' and '2020-04-21' then opportunities.value else 0 END) as campaignnewopportunitiesvalue,
+SUM(CASE WHEN opportunities.id is not null and opportunities.closed = 1 and opportunities.actual_close  between '2020-03-13' and '2020-04-21'then opportunities.value else 0 END) as campaignwonopportunitiesvalue
+
+from branches, addresses, address_branch
+left join opportunities on address_branch.id = opportunities.address_branch_id
+where address_branch.address_id = addresses.id
+and addresses.company_id in 
+(41,43,45,61,68,72,73,74,75,76,81,99,102,120,160,223,239,240,243,244,259,291,315,325,342)
+and address_branch.branch_id = branches.id
+group by branchname
+/****************************************************************
+/*********************  Add leads of orphaned activites back
+/****************************************************************
+insert into address_branch (address_id, branch_id, created_at, note, status_id) 
+select activities.address_id, activities.branch_id, min(activities.created_at),'restored 3-24-2020', 2 
+from activities 
+left join address_branch on activities.address_id = address_branch.address_id 
+and activities.branch_id = address_branch.branch_id 
+where activities.branch_id is not null
+and address_branch.id is null group by activities.address_id, activities.branch_id
+/******************************************************************
