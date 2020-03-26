@@ -168,7 +168,7 @@ class CampaignTrackingController extends Controller
         $period = $this->_getCampaignPeriod($campaign);
         $branches = $campaign->branches()->pluck('id')->toArray();
         $company = $this->company->companyDetail($period, $branches)->findOrFail($company->id);
-        dd($company);
+        
         $assignedBranches = $company->locations->map(
             function ($location) {
                 if ($location->assignedToBranch->isNotEmpty()) {
@@ -191,14 +191,9 @@ class CampaignTrackingController extends Controller
     private function _getBranchesInCampaign(Campaign $campaign)
     {
         $branch_ids = $campaign->branches->pluck('id')->toArray();
-        $company_ids = $campaign->companies->pluck('id')->toArray();
-
+        
         return $this->branch->whereIn('id', $branch_ids)
-            ->whereHas(
-                'addresses', function ($q) use ($company_ids) {
-                    $q->whereIn('company_id', $company_ids);
-                }
-            )->summaryCampaignStats($campaign)->get();
+            ->summaryCampaignStats($campaign)->get();
     }
     /**
      * [_getAllBranchesInCampaign description]

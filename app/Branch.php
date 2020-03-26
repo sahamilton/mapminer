@@ -1222,7 +1222,7 @@ class Branch extends Model implements HasPresenter
         $this->period['from'] = $campaign->datefrom;
         $this->period['to'] = $campaign->dateto;
         $this->company_ids = $campaign->companies->pluck('id')->toarray();
-        $this->location_ids = $campaign->getLocations();
+        
 
         return $query->withCount(       
             [ 
