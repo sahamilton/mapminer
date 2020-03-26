@@ -287,8 +287,10 @@ class Company extends NodeModel
     {
 
         if ($branches) {
+           ;
             return $this->_summaryBranchStats($query, $period, $branches);
         } else {
+
             $this->period = $period;
             $this->branches = $branches;
             
@@ -314,7 +316,7 @@ class Company extends NodeModel
                     $query->whereHas(
                         'assignedToBranch', function ($q) {
                             $q->where('status_id', 2)
-                                ->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']]);
+                                ->where('address_branch.created_at', '<=', $this->period['to']);
                         }
                     );
                 },
@@ -324,15 +326,23 @@ class Company extends NodeModel
                             $q->where('status_id', '>', 1)
                                 ->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']]);
                         }
+                    )
+                    ->whereHas(
+                        'activities', function ($q1) {
+                            $q1->whereBetween('activity_date', [$this->period['from'], $this->period['to']]);
+                        }
                     );
                 },
                 'locations as rejected_leads'=>function ($query) {
                     $query->whereHas(
                         'assignedToBranch', function ($q) {
                             $q->where('status_id', 4)
-                                ->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']]);
+                                ->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']])
+                                ->whereDoesntHave('opportunities')
+                                ->whereDoesntHave('activities');
                         }
                     );
+                    
                 },
                 
                 'opportunities as new_opportunities'=>function ($query) {
@@ -366,27 +376,31 @@ class Company extends NodeModel
                     $query->select(\DB::raw("SUM(value) as wonvalue"))
                         ->whereClosed(1)
                         ->whereBetween(
-                            'actual_close', [$this->period['from'],$this->period['to']]
+                            'actual_close', [$this->period['from'], $this->period['to']]
                         );
                         
                    
                 },
-                'opportunities as open_value'=>function ($query) {
-                    
-                    $query->select(\DB::raw("SUM(value) as wonvalue"))
-                        ->whereClosed(0)        
-                        
-                        ->whereBetween(
-                            'opportunities.created_at', [$this->period['from'],$this->period['to']]
+                'opportunities as open_value' => function ($q) {
+                    $q->where('opportunities.created_at', '<=', $this->period['to'])
+                        ->select(\DB::raw("SUM(value) as openvalue"))
+                        ->where(
+                            function ($q) {
+                                $q->whereClosed(0)
+                                    ->orWhere(
+                                        function ($q) {
+                                            $q->where('actual_close', '>', $this->period['to'])
+                                                ->orwhereNull('actual_close');
+                                        }
+                                    );
+                            }
                         );
-                        
                     
-                }
                 
+                }
                 ]
             );
         }
-        
     }
     /**
      * [_summaryBranchStats description]
@@ -428,7 +442,7 @@ class Company extends NodeModel
                     'assignedToBranch', function ($q) {
                         $q->where('status_id', 2)
                             ->whereIn('branch_id', $this->branches)
-                            ->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']]);
+                            ->where('address_branch.created_at', '<=', $this->period['to']);
                     }
                 );
             },
@@ -452,9 +466,11 @@ class Company extends NodeModel
                     'assignedToBranch', function ($q) {
                         $q->where('status_id', 4)
                             ->whereIn('branch_id', $this->branches)
+                            
                             ->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']]);
                     }
-                );
+                )->whereDoesntHave('opportunities')
+                            ->whereDoesntHave('activities');
             },
             
             'opportunities as new_opportunities'=>function ($query) {

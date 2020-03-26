@@ -6,6 +6,12 @@
 
 
 @endif
+<a href=""><button 
+	name="ignore"
+	class="btn btn-success">Ignore
+</button>
+</a>
+	
 <form 
 name="mergeaddresses"
 method="post"
@@ -15,6 +21,10 @@ action="{{route('addresses.merge')}}"
 	name="mergeAddressesBtn"
 	class="btn btn-danger"
 	value="Merge Addresses" />
+<input type="submit"
+	name="mergeAddressesBtn"
+	class="btn btn-success"
+	value="Ignore" />
 @csrf
 
 

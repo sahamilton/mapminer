@@ -1238,7 +1238,8 @@ class Branch extends Model implements HasPresenter
             },
 
             'workedLeads as worked_leads'=>function ($q) {
-                $q->whereIn('company_id', $this->company_ids);
+                $q->whereIn('company_id', $this->company_ids)
+                    ->where('address_branch.created_at', '<=', $this->period['to']);
                     
             },
             'rejectedLeads as rejected_leads'=>function ($q) {
@@ -1251,7 +1252,8 @@ class Branch extends Model implements HasPresenter
                     ->where('status_id', '>', '1')
                     ->whereHas(
                         'activities', function ($q1) {
-                            $q1->whereBetween('activity_date', [$this->period['from'], $this->period['to']]);
+                            $q1->where('completed', 1)
+                                ->whereBetween('activity_date', [$this->period['from'], $this->period['to']]);
                         }
                     )
                     ->whereBetween('address_branch.created_at', [$this->period['from'], $this->period['to']]);
@@ -1341,7 +1343,7 @@ class Branch extends Model implements HasPresenter
                     );
             },
             'opportunities as open_value' => function ($q) {
-                $q->whereBetween('opportunities.created_at', [$this->period['from'],$this->period['to']])
+                $q->where('opportunities.created_at', '<=', $this->period['to'])
                     ->select(\DB::raw("SUM(value) as openvalue"))
                     ->where(
                         function ($q) {
@@ -1354,7 +1356,6 @@ class Branch extends Model implements HasPresenter
                                 );
                         }
                     )
-                    ->where('opportunities.created_at', '<=', $this->period['to'])
                     ->whereHas(
                         'location', function ($q1) {
                             $q1->whereIn('company_id', $this->company_ids);
