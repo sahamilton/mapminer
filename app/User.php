@@ -434,7 +434,15 @@ class User extends Authenticatable
         }
         return $query->whereNull('lastlogin');
     }
-
+    public function scopeWithLastLoginId($query)
+    {
+        return $query->select('users.*')->selectSub('select id as last_login_id from track where user_id = users.id order by track.created_at desc limit 1', 'last_login_id');
+       
+    }
+    public function lastLogin()
+    {
+        return $this->belongsTo(Track::class);
+    }
     /**
      * [scopeUpcomingActivities description]
      * 

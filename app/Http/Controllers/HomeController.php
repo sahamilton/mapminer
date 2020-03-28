@@ -37,7 +37,7 @@ class HomeController extends Controller
         if (auth()->user()->hasRole(['svp','rvp','evp','market_manager'])) {
             $route ='dashboard.index';
         } elseif (auth()->user()->hasRole(['branch_manager'])) {
-            if ($agent->isMobile()) {
+            if (isset($agent) && $agent->isMobile()) {
                 $route = 'mobile.index';  
             } else {
                 $route = 'dashboard.index';

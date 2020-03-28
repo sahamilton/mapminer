@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Person;
+use App\User;
 use App\Track;
 use Illuminate\Http\Request;
 
@@ -26,13 +27,12 @@ class PersonSearchController extends Controller
      */
     public function find(Person $person)
     {
+        
+        $user = User::withLastLoginId()->withCount('usage')->with('lastLogin', 'roles','serviceline' )->find($person->user_id);
+
         $branches = $person->branchesManaged();
         
-        $track = $this->track
-            ->where('user_id', $person->user_id)
-            ->whereNotNull('lastactivity')
-            ->orderBy('created_at', 'desc')
-            ->get();
+        
 
 
         //note remove manages & manages.servicedby
@@ -41,11 +41,10 @@ class PersonSearchController extends Controller
                 
                 'directReports.userdetails.roles',
                 'reportsTo',
-                'userdetails.serviceline',
-                'userdetails.roles',
+                
                 'managesAccount.countlocations',
                 'managesAccount.industryVertical',
-                'userdetails',
+                
                 'industryfocus'
             );
         
@@ -56,6 +55,6 @@ class PersonSearchController extends Controller
             $salesrepmarkers = $this->person->jsonify($person->directReports);
         }
 
-        return response()->view('persons.details', compact('person', 'track', 'branches', 'branchmarkers', 'salesrepmarkers'));
+        return response()->view('persons.details', compact('person', 'track', 'branches', 'branchmarkers', 'salesrepmarkers', 'user'));
     }
 }

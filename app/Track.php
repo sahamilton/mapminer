@@ -35,7 +35,7 @@ class Track extends Model
         if ($interval) {
             return $lastlogin->whereBetween('max.lastlogin', $interval);
         }
-            return $lastlogin->whereNull('max.laslogin');
+        return $lastlogin->whereNull('max.lastlogin');
     }
     /**
      * [user description]

@@ -13,7 +13,7 @@
 		
 		@can('manage_users')
 		<a class="btn btn-danger float-right" 
-                data-href="{{route('users.destroy',$person->user_id)}}" 
+                data-href="{{route('users.destroy',$user->id)}}" 
 				data-toggle="modal" 
 				data-target="#confirm-delete" 
 				data-title = "{{$person->fullName()}}" 
@@ -31,7 +31,7 @@
 		<div class="list-group-item">
 			<p class="list-group-item-text"><strong>Role Details</strong></p>
 			<ul style="list-style-type: none;">
-			@foreach ($person->userdetails->roles as $role)
+			@foreach ($user->roles as $role)
 				<li>{{$role->display_name}}</li>
 			@endforeach
 			</ul>
@@ -44,7 +44,7 @@
 				<li>Person id: {{$person->id}}</li>
 				<li>Employee id: {{$person->userdetails->employee_id}}</li>
 				<li><strong>Servicelines:</strong><ul>
-					@foreach ($person->userdetails->serviceline as $serviceline)
+					@foreach ($user->serviceline as $serviceline)
 						<li>{{$serviceline->ServiceLine}}</li>
 					@endforeach
 				</ul>
@@ -156,10 +156,10 @@
 						<a href="{{route('team.show',$person->id)}}" class="btn btn-info">	See Teams Mapminer Usage</a>
 						</div>
 						@endif
-						<li>Total Logins: {{$track->count()}}</li>
+						<li>Total Logins: {{$user->usage_count}}</li>
 						<li>Last Login:
-							@if($track->count()>0)
-							{{$track->first()->lastactivity->format('Y-m-d')}}
+							@if($user->lastLogin)
+							{{$user->lastLogin->lastactivity->format('Y-m-d')}}
 						@endif
 					</li>
 							
