@@ -68,22 +68,35 @@ class AdminDashboardController extends BaseController
         $data['firsttimers'] = $this->_getFirstTimers();
         $data['weekcount'] = $this->_getWeekLoginCount();
         $data['roleweekcount'] = $this->_getRoleWeekLoginCount();
-        
+
+        $data['recentLocationNotes'] = [];
+        $data['recentLeadNotes'] = [];
+        $data['recentProjectNotes'] = [];
+        $data['nosalesnotes'] =  [];
+        $data['duplicates'] = [];
+        $data['nocontact'] =[];
+        $data['nogeocode']  =[];
+        /*
         $data['watchlists'] = $this->_getWatchListCount();
         //dd($data['watchlists']->first());
+        */
         $data['nosalesnotes'] = $this->_getNoSalesNotes();
         //$data['locations'] = $this->countLocations()->count;
 
-        $data['duplicates'] =$this->_getDuplicateAddresses();
+        /*$data['duplicates'] =$this->_getDuplicateAddresses();
+        */
         $data['nocontact'] =$this->_getLocationsWoContacts();
         $data['locationnotes'] =$this->_getLocationsNotes();
 
         //$data['_incorrectSegments'] = $this->_incorrectSegments();
 
         $data['nogeocode'] =$this->_getNoGeocodedLocations();
-        $data['recentLocationNotes'] = $this->_recentLocationNotes();
+        /*$data['recentLocationNotes'] = $this->_recentLocationNotes();
+        
         $data['recentLeadNotes'] = $this->_recentLeadNotes();
         $data['recentProjectNotes'] = $this->_recentProjectNotes();
+        */
+        
         $color = $this->_getChartColors();
         $reports=\App\Report::withCount('distribution')->get();
         $managers=$this->_getManagers();
