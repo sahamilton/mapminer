@@ -15,7 +15,7 @@ class Track extends Model
     public $dates = ['lastactivity'];
     public $errors;
     
-
+    
     /**
      * [scopeLastLogin description]
      * 

@@ -114,8 +114,8 @@ class AdminDashboardController extends BaseController
     public function logins($view = null)
     {
 
-
         $users = $this->_getUsersByLoginDate($view);
+
         $views = $this->_getViews();
         return response()->view('admin.users.newshow', compact('users', 'views', 'view'));
     }
@@ -221,8 +221,25 @@ class AdminDashboardController extends BaseController
     private function _getUsersByLoginDate($n)
     {
         $periods = $this->_getViews();
+        
         $interval = $periods[$n]['interval'];
-        return $this->user->lastLogin($interval)->with('person', 'roles', 'serviceline')->get();
+        
+        return $this->user
+            ->when(
+                $interval, function ($query) use ($interval) {
+                    $query->whereHas(
+                        'usage', function ($q) use ($interval) {
+                            $q->whereBetween('lastactivity', $interval);
+                        }
+                    );
+                }
+            )
+            ->when(
+                ! $interval, function ($query) {
+                    $query->doesntHave('usage');
+                }
+            )
+            ->with('person', 'roles', 'serviceline')->get();
     }
     /**
      * [_createColors description]
