@@ -421,9 +421,14 @@ class MgrDashboardController extends DashboardController
     {
       
         $track = $this->person->whereIn('id', $team)
-            ->with('userdetails', 'userdetails.usage')
+            ->with(
+                ['userdetails'=>function ($q) {
+                    $q->withCount('usage');
+                }
+                ]
+            )
             ->get();
-        
+        dd($track->first());
         return $track->map(
             function ($person) {
          

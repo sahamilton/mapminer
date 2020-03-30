@@ -41,6 +41,7 @@ class TeamActivityController extends Controller
      */
     public function show(Person $person)
     {
+  
         if ($people = $this->_getTeamLogins($person)) {
         
             return response()->view('team.activity', compact('people'));
@@ -78,25 +79,27 @@ class TeamActivityController extends Controller
      */
     private function _getTeamLogins(Person $person)
     {
-       
-        $myTeam = $this->person->where(
-            'user_id', '=', auth()->user()->id
-        )->firstOrFail()
-            ->descendantsAndSelf()->pluck('id')->toArray();
         
-        if (! in_array($person->id, $myTeam) 
-            && ! auth()->user()->hasRole('admin')
-        ) {
-
+        if (! $this->_inMyTeam($person)) {
             return false;
-        } else {
+        }
 
-            $persons = $person->getDescendantsAndSelf();
+        $persons = $person->getDescendantsAndSelf();
             return $persons->map(
                 function ($person) {
-                    return $person->load('userdetails', 'userdetails.usage', 'userdetails.roles');
+                    return $person->load('userdetails', 'userdetails.roles');
                 }
             );
+        dd($persons->first());
+    }
+    private function _inMyTeam(Person $person)
+    {
+        if (! auth()->user()->hasRole('admin')) {
+            $team = $person->getDescendantsAndSelf()->pluck('id')->toArray();
+            if (! in_array(auth()->user()->person->id, $team)) {
+                return false;
+            }
         }
+        return true;
     }
 }

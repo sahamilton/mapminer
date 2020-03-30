@@ -226,20 +226,17 @@ class AdminDashboardController extends BaseController
         
         return $this->user
             ->when(
-                $interval, function ($query) use ($interval) {
-                    $query->whereHas(
-                        'usage', function ($q) use ($interval) {
-                            $q->whereBetween('lastactivity', $interval);
-                        }
-                    );
+                $interval, function ($q) use ($interval) {
+                    $q->whereBetween('lastlogin', $interval);
                 }
             )
-            ->when(
-                ! $interval, function ($query) {
-                    $query->doesntHave('usage');
+            ->when (
+                ! $interval, function ($q) {
+                    $q->whereNull('lastlogin');
                 }
             )
-            ->with('person', 'roles', 'serviceline')->get();
+            ->with('person', 'roles', 'serviceline')
+            ->get();
     }
     /**
      * [_createColors description]
