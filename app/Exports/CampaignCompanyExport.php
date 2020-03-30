@@ -27,17 +27,7 @@ class CampaignCompanyExport implements FromView
             'campaigns.companyexport',  [
                 'companies' => $this->companies,
                 'campaign' => $this->campaign,
-                'fields'=>
-                [
-                    "offered_leads",
-                    "worked_leads",
-                    "rejected_leads",
-                    "new_opportunities",
-                    "won_opportunities",
-                    "opportunities_open",
-                    "won_value",
-                    "open_value",
-                ]
+                'fields'=>$this->fields,
 
    
             ]
