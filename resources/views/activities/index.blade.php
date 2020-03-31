@@ -48,7 +48,7 @@
 	      role="tab" 
 	      aria-controls="details" 
 	      aria-selected="false">
-	    <strong> Completed ({{$data['activities']->where('completed', '=' ,1)->count()}})</strong>
+	    <strong> Completed in the past 3 Months ({{$data['activities']->where('completed', '=' ,1)->count()}})</strong>
 	  </a>
 
 	</div>

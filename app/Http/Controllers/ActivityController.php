@@ -65,7 +65,7 @@ class ActivityController extends Controller
             session(['branch'=>$branch->id]);
         }
     
-       
+      
         $data = $this->_getBranchActivities($branch);
        
         $title= $data['branches']->first()->branchname . " activities";
@@ -151,19 +151,17 @@ class ActivityController extends Controller
      */
     private function _getBranchActivities(Branch $branch,$from=null)
     {
-       
-       
-
-        $data['activities'] = $this->activity->myBranchActivities([$branch->id]); 
-        if ($from) {
-            $data['activities']= $data['activities']
-                ->where('activity_date', '>=', Carbon::now()->startOfDay())
-                ->whereNull('completed');
-        }
-
-        $data['activities'] =  $data['activities']->with(
-            'relatesToAddress', 'relatedContact', 'type', 'user'
-        )->get();
+        $data['activities'] = $this->activity->myBranchActivities([$branch->id])
+            ->when(
+                $from, function ($q) {
+                    $q->where('activity_date', '>=', Carbon::now()->startOfDay())
+                        ->whereNull('completed');
+                }
+            )
+            ->where('activity_date', '>', now()->subMonths(3))
+            ->with(
+                'relatesToAddress', 'relatedContact', 'type', 'user'
+            )->get();
 
         $data['branches'] =  $this->_getbranches([$branch->id]);
 
