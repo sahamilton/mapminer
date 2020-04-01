@@ -22,7 +22,7 @@ class BranchStatsReport extends Mailable
      */
     public function __construct($file, $period)
     {
-        $this->file = 'app'. $file;
+        $this->file =  $file;
         $this->period = $period;
         
     }
