@@ -150,6 +150,7 @@
 				</div>
 			@endcan
 				<div class="list-group-item"><p class="list-group-item-text"><strong>Activity</strong></p>
+					
 					<ul style="list-style-type: none;">
 						@if($person->directReports->count()>0)
 						<div class="float-right">
@@ -159,7 +160,7 @@
 						<li>Total Logins: {{$user->usage_count}}</li>
 						<li>Last Login:
 							
-							@if($user->lastLogin && $user->lastLogin->lastactivity)
+							@if($user->lastLogin)
 							{{$user->lastLogin->lastactivity->format('Y-m-d')}}
 						@endif
 					</li>

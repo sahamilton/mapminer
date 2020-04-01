@@ -143,7 +143,7 @@ class User extends Authenticatable
      */
     public function usage()
     {
-          return $this->hasMany(Track::class, 'user_id');
+          return $this->hasMany(Track::class, 'user_id')->whereNotNull('lastactivity');
     }
     /**
      * [scopeFirstLogin description]
@@ -436,7 +436,7 @@ class User extends Authenticatable
     }
     public function scopeWithLastLoginId($query)
     {
-        return $query->select('users.*')->selectSub('select id as last_login_id from track where user_id = users.id order by track.created_at desc limit 1', 'last_login_id');
+        return $query->select('users.*')->selectSub('select id as last_login_id from track where user_id = users.id and lastactivity is not null order by track.created_at desc limit 1', 'last_login_id');
        
     }
     public function lastLogin()
