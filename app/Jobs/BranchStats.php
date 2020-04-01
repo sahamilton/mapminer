@@ -4,11 +4,14 @@ namespace App\Jobs;
 
 use Mail;
 use Excel;
+use App\Branch;
 use Carbon\Carbon;
 use App\Report;
 use App\Mail\BranchStatsReport;
 use App\Exports\BranchStatsExport;
+use App\JObs\SendBranchStatsReportJob;
 use Illuminate\Bus\Queueable;
+
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -18,7 +21,9 @@ class BranchStats implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     public $period;
-
+    public $report;
+    public $file;
+    public $distribution;
     /**
      * [__construct description]
      * @param Array $period [description]
@@ -38,17 +43,19 @@ class BranchStats implements ShouldQueue
     public function handle()
     {
         
-        
-        // create the file
-        $file = '/public/reports/branchstatsrpt'. $this->period['to']->timestamp. ".xlsx";
-        
-        Excel::store(new BranchStatsExport($this->period), $file);
-        $class= str_replace("App\Jobs\\", "", get_class($this));
-        $report = Report::with('distribution')
-            ->where('job', $class)
+        $this->report = Report::with('distribution')
+            ->where('job', 'BranchStats')
             ->firstOrFail();
-        $distribution = $report->getDistribution();
-        Mail::to($distribution)->send(new BranchStatsReport($file, $this->period));   
+        $this->distribution = $this->report->getDistribution();
+        // create the file
+        $this->file = '/public/reports/branchstatsrpt'. $this->period['to']->timestamp. ".xlsx";
 
+        (new BranchStatsExport($this->period))->queue($this->file)->chain(
+            [
+
+            Mail::to($this->distribution)->send(new BranchStatsReport($this->file, $this->period)),
+            ]
+        );
+        
     }
 }

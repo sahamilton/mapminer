@@ -141,31 +141,27 @@ class Person extends NodeModel implements HasPresenter
      */
     public function getMyBranches(Array $servicelines=null)
     {
-        
-        
         if ($this->userdetails->hasRole(['sales_operations', 'admin'])) { 
-            return Branch::pluck('branchname', 'id')->toArray();
+            return Branch::when(
+                $servicelines, function ($q1) use ($servicelines) {
+                    $q1->whereIn('servicelines.id', $servicelines);
+                }
+            )->pluck('id')->toArray();
         } else {
             $branches = $this->descendantsAndSelf()->withRoles([9]);
         }
         
-        if ($servicelines) {
-            $branches = $branches->with(
-                [
-                    'branchesServiced' => function ($q) use ($servicelines) {
-                        $q->whereHas(
-                            'servicelines', function ($q1) use ($servicelines) {
-                                $q1->whereIn('servicelines.id', $servicelines);
-                            }
-                        );
-                    }
-                ]
-            );
-        } else {
-            $branches = $branches->with('branchesServiced');
-        }
-        
-        $branches = $branches->get()
+        $branches = $branches->with('branchesServiced')
+            ->when(
+                $servicelines, function ($q) use ($servicelines) {
+                    $q->whereHas(
+                        'servicelines', function ($q1) use ($servicelines) {
+                            $q1->whereIn('servicelines.id', $servicelines);
+                        }
+                    );
+                }
+            )
+            ->get()
             ->map(
                 function ($branch) { 
                     return $branch->branchesServiced->pluck('id')->toArray();

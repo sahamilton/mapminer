@@ -174,7 +174,7 @@ use Illuminate\Http\Request;
                 //App\Jobs\WonOpportunity::dispatch($opportunity);
                 // App\Jobs\Top50WeeklyReport::dispatch();
                 //App\Jobs\BranchLogins::dispatch($period);
-                App\Jobs\DailyBranch::dispatch($period);
+                //App\Jobs\DailyBranch::dispatch($period);
                  //App\Jobs\AccountActivities::dispatch($company, $period);
                 //App\Jobs\BranchCampaign::dispatch();
                 //App\Jobs\BranchOpportunities::dispatch($period);
@@ -194,16 +194,16 @@ use Illuminate\Http\Request;
                  $period['to'] = now()->addWeek();
                  App\Jobs\WeeklyActivityReminder::dispatch($period);*/
                  //App\Jobs\WeeklyOpportunitiesReminder::dispatch();
-                 /*$period['from'] = \Carbon\Carbon::now()->subWeek()->startOfWeek();
-                 $period['to'] = \Carbon\Carbon::now();/
-                App\Jobs\BranchStats::dispatch($period);*
+                 $period['from'] = \Carbon\Carbon::now()->subWeek()->startOfWeek();
+                 $period['to'] = \Carbon\Carbon::now();
+                App\Jobs\BranchStats::dispatch($period);
                 //App\Jobs\ActivityOpportunity::dispatch($period);
                 //App\Jobs\ActivityOpportunityReport::dispatch();
                 
                 //App\Jobs\ZipBackup::dispatch('MMProd20190123');
                 //App\Jobs\UploadToDropbox::dispatch('MMProd20190123');
                 //Mail::queue(new App\Mail\ConfirmBackup('MMProd20190123'));
-                */
+                
             }
         );
 
