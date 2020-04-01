@@ -158,7 +158,8 @@
 						@endif
 						<li>Total Logins: {{$user->usage_count}}</li>
 						<li>Last Login:
-							@if($user->lastLogin)
+							
+							@if($user->lastLogin && $user->lastLogin->lastactivity)
 							{{$user->lastLogin->lastactivity->format('Y-m-d')}}
 						@endif
 					</li>

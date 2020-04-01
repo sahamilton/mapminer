@@ -61,7 +61,7 @@ class Kernel extends ConsoleKernel
             $schedule->job(new BranchStats($period))
                 ->weekly()
                 ->mondays()
-                ->at('23:15');
+                ->at('23:05');
 
             
             $schedule->job(new BranchCampaign())
