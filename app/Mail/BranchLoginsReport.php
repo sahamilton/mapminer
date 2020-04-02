@@ -19,7 +19,7 @@ class BranchLoginsReport extends Mailable
      */
     public function __construct(String $file, Array $period)
     {
-        $this->file = '/app/'. $file;
+        $this->file = 'app'. $file;
         $this->period = $period;
     }
 

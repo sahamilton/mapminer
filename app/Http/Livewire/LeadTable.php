@@ -29,7 +29,7 @@ class LeadTable extends Component
     public function render()
     {
         $branches = auth()->user()->person->myBranches();
-
+        
         return view('livewire.lead-table', [
             'leads' => Address::whereHas(
                 'assignedToBranch', function ($q) use ($branches) {

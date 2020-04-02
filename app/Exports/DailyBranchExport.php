@@ -19,7 +19,7 @@ class DailyBranchExport implements FromView
      * 
      * @param Array $period [description]
      */
-    public function __construct(Array $period, array $person)
+    public function __construct(Array $period, Array $person)
     {
         $this->period = $period;
         $this->person = $person;
@@ -34,11 +34,9 @@ class DailyBranchExport implements FromView
         
         $person = Person::whereIn('id', $this->person)->firstOrFail();
         $myBranches= $person->getMyBranches();
-      
-  
         $branches = Branch::summaryStats($this->period)
             ->with('manager', 'manager.reportsTo')
-            ->whereIn('id', array_keys($myBranches))->get();
+            ->whereIn('id', $myBranches)->get();
         
         $period = $this->period;
         return view('reports.dailybranchstats', compact('branches', 'period', 'person'));
