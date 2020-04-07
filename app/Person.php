@@ -5,19 +5,44 @@ namespace App;
 use App\Presenters\LocationPresenter;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use McCool\LaravelAutoPresenter\HasPresenter;
-
-class Person extends NodeModel implements HasPresenter
+use Kalnoy\Nestedset\NodeTrait;
+class Person extends Model implements HasPresenter
 {
-    use Geocode, Filters, SoftDeletes, FullTextSearch;
-    public $salesroles = ['5', '9'];
+    use Geocode, Filters, SoftDeletes, FullTextSearch, NodeTrait;
+    public $salesroles = ['5','9'];
+    public $branchroles = ['9'];
     // Add your validation rules here
     public static $rules = [
         'email'=>'required',
         'mgrtype' => 'required',
     ];
+    public function getLftName()
+    {
+        return 'lft';
+    }
 
-    protected $table = 'persons';
-    protected $hidden = ['created_at', 'updated_at', 'deleted_at', 'position'];
+    public function getRgtName()
+    {
+        return 'rgt';
+    }
+
+    public function getParentIdName()
+    {
+        return 'reports_to';
+    }
+
+    // Specify parent id attribute mutator
+    public function setParentAttribute($value)
+    {
+        $this->setParentIdAttribute($value);
+    }
+    protected $table ='persons';
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+        'deleted_at',
+        'position'
+    ];
     protected $parentColumn = 'reports_to';
 
     // Don't forget to fill this array

@@ -1,17 +1,18 @@
 <?php
 
 namespace App;
-
+use Kalnoy\Nestedset\NodeTrait;
 /**
- * SearchFilter.
- */
-class SearchFilter extends NodeModel
+* SearchFilter
+*/
+class SearchFilter extends Model
 {
-    /**
-     * Table name.
-     *
-     * @var string
-     */
+    use NodeTrait;
+  /**
+   * Table name.
+   *
+   * @var string
+   */
     protected $table = 'searchfilters';
 
     public $tables = ['companies', 'locations'];

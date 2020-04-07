@@ -92,11 +92,21 @@ class TeamActivityController extends Controller
         } else {
             $persons = $person->getDescendantsAndSelf();
 
+        return $person->getDescendantsAndSelf();
             return $persons->map(
                 function ($person) {
                     return $person->load('userdetails', 'userdetails.usage', 'userdetails.roles');
                 }
             );
+        //dd($persons->first());
+    }
+    private function _inMyTeam(Person $person)
+    {
+        if (! auth()->user()->hasRole('admin')) {
+            $team = $person->getDescendantsAndSelf()->pluck('id')->toArray();
+            if (! in_array(auth()->user()->person->id, $team)) {
+                return false;
+            }
         }
     }
 }

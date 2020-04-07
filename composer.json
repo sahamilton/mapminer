@@ -10,27 +10,24 @@
     "type": "project",
     "require": {
         "php": ">=7.0.0",
-       
-        "baum/baum": "^2.0",
-        
-        "fabpot/goutte": "^3.1",
-        "guzzlehttp/guzzle": "~5.3|~6.0",
-        "jeroendesloovere/vcard": "^1.5",
-        "laravel/framework": "^6.13",
-        
+        "laravel/framework": "^7.0",
         "laravel/tinker": "^2.0",
         "laravelcollective/html": "^6.0",
-        "maatwebsite/excel": "^3.1.16",
+        "bugsnag/bugsnag-laravel": "^2.4",
+        
+        "guzzlehttp/guzzle": "~5.3|~6.0",
+        "jeroendesloovere/vcard": "^1.5",
+        
+        "maatwebsite/excel": "^3.1",
+
         
         "smalot/pdfparser": "^0.14.0",
-       
         "toin0u/geocoder-laravel": "^4.0",
         "dompdf/dompdf": "~0.6.1",
         "h4cc/wkhtmltopdf-amd64": "0.12.x",
         "nicolaslopezj/searchable": "1.*",
         "mccool/laravel-auto-presenter": "^7.0",
-
-        "askedio/laravel-soft-cascade": "^6.0",
+        "askedio/laravel-soft-cascade": "^7.0",
         "fideloper/proxy": "^4.0",
         
         "lab404/laravel-impersonate": "^1.2",
@@ -40,7 +37,11 @@
         "predis/predis": "^1.1",
         "doctrine/dbal": "^2.10",
         "pda/pheanstalk": "^4.0",
-        "dionera/laravel-beanstalkd-ui": "^2.0"
+        "dionera/laravel-beanstalkd-ui": "^2.0",
+        "livewire/livewire": "^1.0",
+        "spatie/laravel-fractal": "^5.7",
+        "kalnoy/nestedset": "^5.0",
+        "laravel/ui": "^2.0"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.1",
@@ -50,8 +51,7 @@
         "symfony/css-selector": "3.1.*",
         "symfony/dom-crawler": "3.1.*",
         "laracasts/generators": "^1.1",
-        "nunomaduro/collision": "^3.0",
-        "facade/ignition": "^1.4"
+        "filp/whoops": "^2.0"
     },
     "autoload": {
         "files": [

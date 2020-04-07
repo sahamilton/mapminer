@@ -168,9 +168,6 @@ return [
          * Package Service Providers...
          */
 
-        Baum\Providers\BaumServiceProvider::class,
-        SocialiteProviders\Manager\ServiceProvider::class,
-
        // Collective\Html\HtmlServiceProvider::class,
       //  MaddHatter\LaravelFullcalendar\ServiceProvider::class,
        // Maatwebsite\Excel\ExcelServiceProvider::class,

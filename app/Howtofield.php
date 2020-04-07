@@ -1,15 +1,35 @@
 <?php
 
 namespace App;
-
-class Howtofield extends NodeModel
 {
+    use NodeTrait;
     // Add your validation rules here
 
     // Don't forget to fill this array
     protected $fillable = ['id', 'fieldname', 'required', 'type', 'fieldvalues', 'fieldgroup', 'sequence', 'parent_id', 'active'];
     protected $orderColumn = 'sequence';
 
+    
+    public function getLftName()
+    {
+        return 'lft';
+    }
+
+    public function getRgtName()
+    {
+        return 'rgt';
+    }
+
+    public function getParentIdName()
+    {
+        return 'reports_to';
+    }
+
+    // Specify parent id attribute mutator
+    public function setParentAttribute($value)
+    {
+        $this->setParentIdAttribute($value);
+    }
     public function usedBy()
     {
         return belongsToMany(Company::class);

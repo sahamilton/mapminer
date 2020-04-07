@@ -57,13 +57,16 @@ class SalesOrgController extends BaseController
      */
     public function show(Request $request, Person $salesperson)
     {
+      
+        
         if ($salesperson->isLeaf()) {
             $salesorg = $this->_loadSalesOrgRelations($salesperson);
 
             return response()->view('salesorg.map', compact('salesorg'));
         } else {
             $salesteam = $this->_loadSalesOrgRelations($salesperson);
-            if (request()->has('view') && request('view') == 'list') {
+            
+            if (request()->has('view') && request('view')=='list') {
                 return response()->view('salesorg.salesmanagerlist', compact('salesperson'));
             }
 
@@ -215,7 +218,7 @@ class SalesOrgController extends BaseController
      *
      * @return [type]                          [description]
      */
-    public function find(LeadAddressFormRequest $request)
+    public function find(Request $request)
     {
         $geoCode = app('geocoder')->geocode(request('address'))->get();
 

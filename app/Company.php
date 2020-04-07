@@ -3,10 +3,10 @@
 namespace App;
 
 use Nicolaslopezj\Searchable\SearchableTrait;
-
-class Company extends NodeModel
+use Kalnoy\Nestedset\NodeTrait;
+class Company extends Model
 {
-    use Filters,SearchableTrait, Geocode;
+    use Filters,SearchableTrait, Geocode, NodeTrait;
     // Add your validation rules here
     public static $rules = [
          'companyname' => 'required',
@@ -31,7 +31,26 @@ class Company extends NodeModel
         ],
 
     ];
+    public function getLftName()
+    {
+        return 'lft';
+    }
 
+    public function getRgtName()
+    {
+        return 'rgt';
+    }
+
+    public function getParentIdName()
+    {
+        return 'reports_to';
+    }
+
+    // Specify parent id attribute mutator
+    public function setParentAttribute($value)
+    {
+        $this->setParentIdAttribute($value);
+    }
     // Don't forget to fill this array
     protected $fillable = ['companyname', 'vertical', 'person_id', 'c', 'customer_id', 'parent_id', 'accounttypes_id'];
 

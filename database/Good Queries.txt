@@ -845,3 +845,89 @@ and addresses.position in (
     group by a.position having count(a.id) >1) b
   ) 
 order by position
+//***************************************************************
+/************** Select deleted / non confirmed people and branch **********/
+SELECT concat_ws(' ', firstname, lastname) as name, persons.id as PID, branchname, roles.name as role
+FROM users, persons, branch_person, branches, roles
+where (users.deleted_at is not null or users.confirmed !=1)
+and users.id = persons.user_id
+and persons.id = branch_person.person_id
+and branch_person.role_id = roles.id
+and branch_person.branch_id = branches.id
+
+/****************************************************************
+/********** delete selection above *******************************
+/****************************************************************
+delete from branch_person where person_id in (select * from (SELECT persons.id as PID
+FROM users, persons, branch_person b
+where (users.deleted_at is not null or users.confirmed !=1)
+and users.id = persons.user_id
+and persons.id = b.person_id) a )
+
+/******************************************************************
+/************  New Campaign Aggregation Query *********************
+/******************************************************************
+SELECT branchname,
+COUNT(CASE WHEN address_branch.status_id = 1  then 1 END) as offeredleads,
+COUNT(CASE WHEN address_branch.status_id = 1  and address_branch.created_at between '2020-03-13' and '2020-04-31' then 1 END) as newleads,
+COUNT(CASE WHEN address_branch.status_id = 2  then 1 END) as workedleads,
+COUNT(CASE WHEN address_branch.status_id = 3  then 1 END) as rejectedleads,
+COUNT(CASE WHEN opportunities.id is not null and opportunities.closed = 0 and opportunities.created_at  < '2020-03-13' then 1 END) as campaignopenopportunities,
+COUNT(CASE WHEN opportunities.id is not null and opportunities.closed = 0 and opportunities.created_at  between '2020-03-13' and '2020-04-21' then 1 END) as campaignnewopportunities,
+COUNT(CASE WHEN opportunities.id is not null and opportunities.closed = 1 and opportunities.actual_close  between '2020-03-13' and '2020-04-21'then 1 END) as campaignwonopportunities,
+SUM(CASE WHEN opportunities.id is not null and opportunities.closed = 0 and opportunities.created_at  between '2020-03-13' and '2020-04-21' then opportunities.value else 0 END) as campaignnewopportunitiesvalue,
+SUM(CASE WHEN opportunities.id is not null and opportunities.closed = 1 and opportunities.actual_close  between '2020-03-13' and '2020-04-21'then opportunities.value else 0 END) as campaignwonopportunitiesvalue
+
+from branches, addresses, address_branch
+left join opportunities on address_branch.id = opportunities.address_branch_id
+where address_branch.address_id = addresses.id
+and addresses.company_id in 
+(41,43,45,61,68,72,73,74,75,76,81,99,102,120,160,223,239,240,243,244,259,291,315,325,342)
+and address_branch.branch_id = branches.id
+group by branchname
+/****************************************************************
+/*********************  Add leads of orphaned activites back
+/****************************************************************
+insert into address_branch (address_id, branch_id, created_at, note, status_id) 
+select activities.address_id, activities.branch_id, min(activities.created_at),'restored 3-24-2020', 2 
+from activities 
+left join address_branch on activities.address_id = address_branch.address_id 
+and activities.branch_id = address_branch.branch_id 
+where activities.branch_id is not null
+and address_branch.id is null group by activities.address_id, activities.branch_id
+/******************************************************************
+SELECT branchname, addresses.id, addresses.businessname, addresses.street, addresses.city, addresses.state, addresses.zip, addresses.lat, addresses.lng,concat_ws(' ', firstname, lastname) as created_by, ST_Distance_Sphere(addresses.position, branches.position) / 1604 AS distance, leadsources.source, leadsources.created_at
+from addresses, address_branch, branches, leadsources, persons
+where addresses.id = address_branch.address_id
+and address_branch.branch_id = branches.id
+and addresses.lead_source_id = leadsources.id
+and ST_Distance_Sphere(addresses.position, branches.position) / 1604 > 100
+and addresses.user_id = persons.user_id
+order by branchname, distance desc
+
+
+////////////////////
+SELECT ASWKT(position) AS `aswkt`, X(position) AS `lat`, Y(position) AS `lng` from branches limit 10
+/******************************************************/
+/*********** Move leads based on geo from one branch **/
+/*********** to another (closing?)   ******************/
+/******************************************************/
+
+select 
+    a.id,
+    b.id 
+from address_branch, addresses a
+left join address_branch on a.id = address_branch.address_id
+inner join branches b
+    on b.id = (
+        select b1.id
+        from branches b1,  branch_serviceline s
+        where st_distance_sphere(a.position, b1.position, 40233) * 0.00062137119 < b1.radius
+        and b1.id = s.branch_id
+        and s.serviceline_id in (5)
+        and b1.id != 9001
+        order by st_distance_sphere(a.position, b1.position) 
+        limit 1
+    )
+where a.id = address_branch.address_id
+and address_branch.branch_id = 9001
