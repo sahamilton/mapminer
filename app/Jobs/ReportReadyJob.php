@@ -9,7 +9,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use App\Mail\BranchStatsReport;
+use App\Mail\SendReport;
 
 class ReportReadyJob implements ShouldQueue
 {
@@ -39,7 +39,7 @@ class ReportReadyJob implements ShouldQueue
     {
        
         foreach ($this->distribution as $user) {
-            $email = new BranchStatsReport($this->file, $this->period);
+            $email = new SendReport($this->file, $this->period);
             Mail::to($user->email)->send($email);
         }
         
