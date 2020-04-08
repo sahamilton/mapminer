@@ -7,7 +7,7 @@ use \Carbon\Carbon;
 
 class Activity extends Model implements \MaddHatter\LaravelFullcalendar\IdentifiableEvent
 {
-    use GeoCode;
+    use GeoCode, \Awobaz\Compoships\Compoships;
     protected $dates = ['activity_date','followup_date'];
     public $fillable = ['activity_date','followup_date','activitytype_id','address_id','note','user_id','relatedActivity','completed','followup_activity','branch_id'];
     //public $activities = ['phone','email','meeting','proposal','quote'];

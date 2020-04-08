@@ -7,7 +7,7 @@ use Carbon\Carbon;
 
 class Opportunity extends Model
 {
-    
+    use \Awobaz\Compoships\Compoships;
     public $fillable = ['address_id',
                         'branch_id',
                         'address_branch_id',
