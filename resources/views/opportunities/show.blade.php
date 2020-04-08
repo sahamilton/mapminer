@@ -14,7 +14,8 @@
 
 <h2><strong>Opportunity </strong>{{$opportunity->title}}</h2>
 <p><strong>Branch:</strong>{{$opportunity->branch->branch->branchname}}</p>
-<p><strong>Location:</strong>{{$opportunity->address->address->fullAddress()}}</p>
+<p><strong>Location:</strong>
+    <a href="{{route('address.show', $opportunity->address_id)}}">{{$opportunity->address->address->fullAddress()}}</a></p>
 <p><strong>Date Created:</strong>{{$opportunity->created_at->format('Y-m-d')}}</p>
 <p><strong>Status:</strong>{{$opportunity->closed}}</p>
 <p><strong>Expected Value:</strong>{{$opportunity->value}}</p>

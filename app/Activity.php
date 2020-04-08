@@ -3,7 +3,7 @@
 namespace App;
 
 use \Carbon\Carbon;
-use Awobaz\Compoships\Database\Eloquent\Model;
+
 
 class Activity extends Model implements \MaddHatter\LaravelFullcalendar\IdentifiableEvent
 {
