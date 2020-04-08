@@ -2,7 +2,7 @@
 
 namespace App;
 
-use Awobaz\Compoships\Database\Eloquent\Model;
+
 use Carbon\Carbon;
 
 class Opportunity extends Model
