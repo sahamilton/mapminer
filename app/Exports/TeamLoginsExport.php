@@ -26,7 +26,7 @@ class TeamLoginsExport implements FromView
      */
     public function view(): View
     {
-       
+        
         $manager = Person::findOrFail($this->manager[0]);
 
         $people = $manager->descendantsAndSelf()

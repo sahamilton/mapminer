@@ -17,6 +17,7 @@ class BranchStatsExport implements FromQuery, ShouldQueue, WithHeadings, WithMap
     use Exportable;
 
     public $period;
+    public $branches;
 
     public $fields = [
         'branchname'=>'Branch',
@@ -35,14 +36,21 @@ class BranchStatsExport implements FromQuery, ShouldQueue, WithHeadings, WithMap
     ];
 
     
-    public function __construct(array $period)
+    public function __construct(array $period, array $branches = null)
     {
         $this->period = $period;
+        $this->branches = $branches;
     }
 
     public function headings(): array
     {
-        return $this->fields;
+        return [
+            [' '],
+            ['Branch Stats'],
+            ['for the period ', $this->period['from']->format('Y-m-d') , ' to ',$this->period['to']->format('Y-m-d')],
+            [' ' ],
+            $this->fields
+        ];
     }
     
     
@@ -74,6 +82,11 @@ class BranchStatsExport implements FromQuery, ShouldQueue, WithHeadings, WithMap
     public function query()
     {
         return Branch::summaryStats($this->period)
-            ->with('manager:id,firstname,lastname');
+            ->with('manager:id,firstname,lastname')
+            ->when(
+                $this->branches, function ($q) {
+                    $q->whereIn('id', $this->branches);
+                }
+            );
     }
 }

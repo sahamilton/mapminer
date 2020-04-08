@@ -41,7 +41,7 @@ class BranchPipelineExport implements FromView
     {
         
         $branches = Branch::with('manager')
-            ->whereIn('id', array_keys($this->branches))
+            ->whereIn('id', $this->branches)
             ->with(
                 ['opportunities' => function ($q)  {
                     $q->whereBetween('expected_close', [$this->period['from'], $this->period['to']])
@@ -52,22 +52,7 @@ class BranchPipelineExport implements FromView
                 ]
             )
             ->get();
-       
-       
-       /* $query = "select branches.id,
-             DATE_FORMAT(opportunities.expected_close,'%Y%m') 
-              as month, 
-              sum(opportunities.value) as value
-                from opportunities, branches
-                 where opportunities.branch_id = branches.id
-                 and opportunities.closed = 0
-                 and expected_close is not null
-                 and expected_close >= '". now()->startOfMonth() . "'
-                 and value > 0
-                 and branches.id in ('" . implode("','", array_keys($this->branches)) ."')
-                 group by month, branchname order by branchname, month";
-       
-        $results = \DB::select($query);  */            
+         
         $periods = $this->_createPeriods();
         $period = $this->period;
         return view('reports.branchpipeline', compact('periods', 'period', 'branches'));

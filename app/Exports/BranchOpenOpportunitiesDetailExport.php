@@ -35,7 +35,7 @@ class BranchOpenOpportunitiesDetailExport implements FromView
         $branches = Branch::branchOpenOpportunitiesDetail($this->period);
   
         if ($this->branches) {
-            $branches =$branches->whereIn('id', array_keys($this->branches));
+            $branches =$branches->whereIn('id', $this->branches);
         }   
         $branches = $branches->with('manager')->get();
         $period = $this->period;

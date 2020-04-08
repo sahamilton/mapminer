@@ -30,7 +30,7 @@ class StaleOpportunitiesSummaryExport implements FromView
     */
     public function view(): View
     {
-        $branches = Branch::withCount('staleOpportunities')->whereIn('id', array_keys($this->branches))->get();
+        $branches = Branch::withCount('staleOpportunities')->whereIn('id', $this->branches)->get();
         return view('opportunities.stale', compact('branches'));
     }
 }

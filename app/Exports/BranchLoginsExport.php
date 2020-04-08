@@ -38,7 +38,7 @@ class BranchLoginsExport implements FromView
             and persons.id = branch_person.person_id
             and branch_person.branch_id = branches.id ";
         if ($this->branches) {
-            $query.= " and branches.id in ('".implode("','", array_keys($this->branches)) ."')";
+            $query.= " and branches.id in ('".implode("','", $this->branches) ."')";
         }
         $query.=" group by branches.id, branchname ";
 

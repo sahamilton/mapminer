@@ -30,7 +30,7 @@ class StaleLeadsSummaryExport implements FromView
     */
     public function view(): View
     {
-        $branches = Branch::withCount('staleLeads')->whereIn('id', array_keys($this->branches))->get();
+        $branches = Branch::withCount('staleLeads')->whereIn('id', $this->branches)->get();
         return view('leads.stale', compact('branches'));
     }
 }

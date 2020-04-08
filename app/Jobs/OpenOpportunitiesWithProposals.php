@@ -19,6 +19,7 @@ class OpenOpportunitiesWithProposals implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     public $period;
+    public $branches;
     public $report;
     public $file;
     public $distribution;
@@ -26,12 +27,13 @@ class OpenOpportunitiesWithProposals implements ShouldQueue
      * [__construct description]
      * @param Array $period [description]
      */
-    public function __construct(Array $period)
+    public function __construct(Array $period, Array $branches=null)
     {
-        $period= now();
-        $this->period = $period;
         
+        $this->period = $period;
 
+        $this->branches = $branches;
+        
     }
 
     /**
@@ -41,7 +43,7 @@ class OpenOpportunitiesWithProposals implements ShouldQueue
      */
     public function handle()
     {
-        
+      
         $report = Report::with('distribution')
             ->where('job', 'OpenOpportunitiesWithProposals')
             ->firstOrFail();
@@ -49,7 +51,7 @@ class OpenOpportunitiesWithProposals implements ShouldQueue
         // create the file
         $this->file = '/public/reports/openopportunitieswithproposals'. Carbon::now()->timestamp.'.xlsx';
         
-        (new OpenOpportunitiesWithProposalsExport($this->period))->store($this->file)->chain(
+        (new OpenOpportunitiesWithProposalsExport($this->period, $this->branches))->store($this->file)->chain(
             [
                 new ReportReadyJob($report->distribution, $this->period, $this->file, $report)
 

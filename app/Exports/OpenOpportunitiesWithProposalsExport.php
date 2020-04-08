@@ -15,6 +15,7 @@ class OpenOpportunitiesWithProposalsExport implements FromQuery, ShouldQueue, Wi
     use Exportable;
 
     public $period;
+    public $branches;
 
     public $fields = [
         'branchname'=>'Branch',
@@ -26,15 +27,18 @@ class OpenOpportunitiesWithProposalsExport implements FromQuery, ShouldQueue, Wi
     ];
 
     
-    public function __construct(array $period)
+    public function __construct(array $period, array $branches=null)
     {
         $this->period = $period;
+        $this->branches = $branches;
+
     }
 
     public function headings(): array
     {
         return [[' '],
             ['Open Opportunities with Proposals'],
+            [' created in the period from', $this->period['from']->format('Y-m-d'), 'to', $this->period['to']->format('Y-m-d')],
             [' '],
             $this->fields];
     }
@@ -43,7 +47,6 @@ class OpenOpportunitiesWithProposalsExport implements FromQuery, ShouldQueue, Wi
     public function map($branch): array
     {
 
-        
         $n=0;
         foreach ($branch->opportunities as $opportunity) {
 
@@ -93,15 +96,13 @@ class OpenOpportunitiesWithProposalsExport implements FromQuery, ShouldQueue, Wi
         ];
     }
 
-    /**
-    * @return \Illuminate\Support\Collection
-    */
+    
     public function query()
     {
         return Branch::with('manager')
             ->whereHas(
                 'opportunities', function ($q) {
-                    $q->where('opportunities.created_at', '>', now()->subMonth(3))
+                    $q->whereBetween('opportunities.created_at', [$this->period['from'], $this->period['to']])
                         ->whereHas(
                             'relatedActivities', function ($q) { 
                                 $q->where('activitytype_id', 7);
@@ -115,7 +116,7 @@ class OpenOpportunitiesWithProposalsExport implements FromQuery, ShouldQueue, Wi
             ->with(
                 [
                     'opportunities'=>function ($q) {
-                        $q->where('opportunities.created_at', '>', now()->subMonth(3))
+                        $q->whereBetween('opportunities.created_at', [$this->period['from'], $this->period['to']])
                             ->whereHas(
                                 'relatedActivities', function ($q) {
                                     $q->where('activitytype_id', 7);
@@ -127,6 +128,10 @@ class OpenOpportunitiesWithProposalsExport implements FromQuery, ShouldQueue, Wi
                             ->with('address');
                     }
                 ]
+            )->when(
+                $this->branches, function ($q) {
+                    $q->whereIn('branches.id', $this->branches);
+                }
             );
     }
 }
