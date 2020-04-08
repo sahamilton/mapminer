@@ -184,8 +184,7 @@ return [
        // Geocoder\Laravel\Providers\GeocoderService::class,
 
         App\Providers\DropboxServiceProvider::class,
-        Laravel\Scout\ScoutServiceProvider::class,
-        ScoutEngines\Elasticsearch\ElasticsearchProvider::class,
+
 
     ],
 
