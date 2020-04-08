@@ -24,6 +24,7 @@ class OpenOpportunitiesWithProposalsExport implements FromQuery, ShouldQueue, Wi
         'businessname' => 'Business',
         'title' => 'Opportunity',
         'value' => 'Value',
+        'opened' => 'Date Opened',
         'expected_close' => 'Expected Close',
         'last_activity' => 'Last Activity'
     ];
@@ -62,6 +63,7 @@ class OpenOpportunitiesWithProposalsExport implements FromQuery, ShouldQueue, Wi
                 case 'manager':
                     $detail[$n][] = $branch->manager->count() ? $branch->manager->first()->fullName() :'';
                     break;
+
                 case 'reportsto':
                     $detail[$n][] = $branch->manager->count() && $branch->manager->first()->reportsTo->count() ? $branch->manager->first()->reportsTo->fullName() :'';
                     break;
@@ -76,6 +78,10 @@ class OpenOpportunitiesWithProposalsExport implements FromQuery, ShouldQueue, Wi
 
                 case 'value':
                     $detail[$n][]= $opportunity->value;
+                    break;
+
+                case 'opened':
+                    $detail[$n][]= $opportunity->created_at->format('m/d/Y');
                     break;
 
                 case 'expected_close':
@@ -104,13 +110,15 @@ class OpenOpportunitiesWithProposalsExport implements FromQuery, ShouldQueue, Wi
         return [
             'F' => NumberFormat::FORMAT_CURRENCY_USD,
             'G' => NumberFormat::FORMAT_DATE_DDMMYYYY,
-            'H' => NumberFormat::FORMAT_DATE_DDMMYYYY
+            'H' => NumberFormat::FORMAT_DATE_DDMMYYYY,
+            'I' => NumberFormat::FORMAT_DATE_DDMMYYYY,
         ];
     }
 
     
     public function query()
     {
+        
         return Branch::with('manager.reportsTo')
             ->whereHas(
                 'opportunities', function ($q) {
@@ -144,7 +152,7 @@ class OpenOpportunitiesWithProposalsExport implements FromQuery, ShouldQueue, Wi
                 ]
             )->when(
                 $this->branches, function ($q) {
-                    $q->whereIn('branches.id', $this->branches);
+                    $q->whereIn('id', $this->branches);
                 }
             );
     }
