@@ -7,7 +7,7 @@ use Excel;
 use App\Branch;
 use Carbon\Carbon;
 use App\Report;
-use App\Exports\OpenOpportunitiesWithProposals;
+use App\Exports\OpenOpportunitiesWithProposalsExport;
 use Illuminate\Bus\Queueable;
 
 use Illuminate\Queue\SerializesModels;
@@ -47,10 +47,10 @@ class OpenOpportunitiesWithProposals implements ShouldQueue
         
         // create the file
         $this->file = '/public/reports/openopportunitieswithproposals'. Carbon::now()->timestamp.'.xlsx';
-       
+        
         (new OpenOpportunitiesWithProposalsExport($this->period))->store($this->file)->chain(
             [
-                new ReportReadyJob($report->distribution, $this->period, $this->file)
+                new ReportReadyJob($report->distribution, $this->period, $this->file, $report)
 
             ]
         );

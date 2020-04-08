@@ -1,5 +1,5 @@
 <?php
-
+namespace App\Exports;
 use App\Branch;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Maatwebsite\Excel\Concerns\FromQuery;
@@ -35,37 +35,51 @@ class OpenOpportunitiesWithProposalsExport implements FromQuery, ShouldQueue, Wi
     {
         return [[' '],
             ['Open Opportunities with Proposals'],
-
+            [' '],
             $this->fields];
     }
     
     
     public function map($branch): array
     {
+
         
-        foreach ($this->fields as $key=>$field) {
-            switch ($key) {
-            
-            case 'manager':
-                $detail[] = $branch->manager->count() ? $branch->manager->first()->fullName() :'';
-                break;
+        $n=0;
+        foreach ($branch->opportunities as $opportunity) {
+            $line = [];
+            foreach ($this->fields as $key=>$field) {
+                switch ($key) {
+                
+                case 'branchname':
+                    $line[$n][] = $branch->branchname;
+                    break;
+                
+                case 'manager':
+                    $line[$n][] = $branch->manager->count() ? $branch->manager->first()->fullName() :'';
+                    break;
+                case 'businessname':
+                    $line[$n][]= $opportunity->address->address->businessname;
+                    break;
+                
+                case 'title':
+                    $line[$n][]= $opportunity->title;
+                    break;
+                case 'value':
+                    $line[$n][]= $opportunity->value;
+                    break;
 
-            case 'businessname':
-                $detail[]= $branch->opportunity->address->businessname;
-                break;
+                case 'expected_close':
+                    $line[$n][] = $opportunity->expected_close->format('Y-m-d');
+                    break;
+                
+                default:
+                    $line[$n][] = $opportunity->$key;
+                    break;
+                }
+                $n++; 
+            }
+            $detail[] = $line;
             
-            case 'title':
-                $detail[]= $branch->opportunity->title;
-                break;
-
-            case 'expected_close':
-                $detail[] = $branch->opportunity->title;
-                break;
-            
-            default:
-                $detail[]=$branch->$key;
-                break;
-            } 
         }
         return $detail;
        
@@ -86,24 +100,31 @@ class OpenOpportunitiesWithProposalsExport implements FromQuery, ShouldQueue, Wi
     {
         return Branch::with('manager')
             ->whereHas(
-                'openOpportunities', function ($q) {
+                'opportunities', function ($q) {
                     $q->where('opportunities.created_at', '>', now()->subMonth(3))
                         ->whereHas(
                             'relatedActivities', function ($q) { 
                                 $q->where('activitytype_id', 7);
                             }
-                        );
+                        )
+                        ->whereClosed(0)
+                        ->whereNotNull('expected_close')
+                        ->whereNotNull('value');
                 }       
             )
             ->with(
                 [
-                    'openOpportunities'=>function ($q) {
+                    'opportunities'=>function ($q) {
                         $q->where('opportunities.created_at', '>', now()->subMonth(3))
                             ->whereHas(
                                 'relatedActivities', function ($q) {
                                     $q->where('activitytype_id', 7);
                                 }
-                            )->with('address');
+                            )
+                            ->whereClosed(0)
+                            ->whereNotNull('expected_close')
+                            ->whereNotNull('value')
+                            ->with('address');
                     }
                 ]
             );
