@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use Mail;
 use App\User;
+use App\Report;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -17,17 +18,19 @@ class ReportReadyJob implements ShouldQueue
     public $distribution;
     public $period;
     public $file;
+    public $report;
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($distribution, $period, $file)
+    public function __construct($distribution, $period, $file, Report $report)
     {
         
         $this->distribution = $distribution;
         $this->period = $period;
         $this->file = $file;
+        $this->report = $report;
     }
     
     /**
@@ -39,7 +42,7 @@ class ReportReadyJob implements ShouldQueue
     {
        
         foreach ($this->distribution as $user) {
-            $email = new SendReport($this->file, $this->period);
+            $email = new SendReport($this->file, $this->period, $this->report, $user);
             Mail::to($user->email)->send($email);
         }
         

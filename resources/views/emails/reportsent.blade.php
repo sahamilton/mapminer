@@ -3,7 +3,7 @@
  
 {{$user->person->firstname}}
 
-Attached is your {{strtolower($report->report)}} for 
+Attached is your {{strtolower($report->report)}} report for 
 @if ($period['to']->diffInDays($period['from']) > 0)
 the period from {{$period['from']->format('jS M, Y')}} to {{$period['to']->format('jS M, Y')}}.
 @else

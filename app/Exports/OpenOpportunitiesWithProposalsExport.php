@@ -46,40 +46,40 @@ class OpenOpportunitiesWithProposalsExport implements FromQuery, ShouldQueue, Wi
         
         $n=0;
         foreach ($branch->opportunities as $opportunity) {
-            $line = [];
+
             foreach ($this->fields as $key=>$field) {
                 switch ($key) {
                 
                 case 'branchname':
-                    $line[$n][] = $branch->branchname;
+                    $detail[$n][] = $branch->branchname;
                     break;
                 
                 case 'manager':
-                    $line[$n][] = $branch->manager->count() ? $branch->manager->first()->fullName() :'';
+                    $detail[$n][] = $branch->manager->count() ? $branch->manager->first()->fullName() :'';
                     break;
                 case 'businessname':
-                    $line[$n][]= $opportunity->address->address->businessname;
+                    $detail[$n][]= $opportunity->address->address->businessname;
                     break;
                 
                 case 'title':
-                    $line[$n][]= $opportunity->title;
+                    $detail[$n][]= $opportunity->title;
                     break;
                 case 'value':
-                    $line[$n][]= $opportunity->value;
+                    $detail[$n][]= $opportunity->value;
                     break;
 
                 case 'expected_close':
-                    $line[$n][] = $opportunity->expected_close->format('Y-m-d');
+                    $detail[$n][] = $opportunity->expected_close->format('m/d/Y');
                     break;
                 
                 default:
-                    $line[$n][] = $opportunity->$key;
+                    $detail[$n][] = $opportunity->$key;
                     break;
                 }
-                $n++; 
+                
             }
-            $detail[] = $line;
-            
+
+            $n++; 
         }
         return $detail;
        
@@ -88,8 +88,8 @@ class OpenOpportunitiesWithProposalsExport implements FromQuery, ShouldQueue, Wi
     public function columnFormats(): array
     {
         return [
-            'F' => NumberFormat::FORMAT_CURRENCY_USD,
-            'I' => NumberFormat::FORMAT_CURRENCY_USD,
+            'E' => NumberFormat::FORMAT_CURRENCY_USD,
+            'F' => NumberFormat::FORMAT_DATE_DDMMYYYY,
         ];
     }
 

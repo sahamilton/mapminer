@@ -28,6 +28,7 @@ class OpenOpportunitiesWithProposals implements ShouldQueue
      */
     public function __construct(Array $period)
     {
+        $period= now();
         $this->period = $period;
         
 
