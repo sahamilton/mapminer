@@ -20,6 +20,7 @@ class OpenOpportunitiesWithProposalsExport implements FromQuery, ShouldQueue, Wi
     public $fields = [
         'branchname'=>'Branch',
         'manager'=>'Manager',
+        'reportsto'=>'Reports To',
         'businessname'=>'Business',
         'title'=>'Opportunity',
         'value'=>'Value',
@@ -60,6 +61,10 @@ class OpenOpportunitiesWithProposalsExport implements FromQuery, ShouldQueue, Wi
                 case 'manager':
                     $detail[$n][] = $branch->manager->count() ? $branch->manager->first()->fullName() :'';
                     break;
+                case 'reportsto':
+                    $detail[$n][] = $branch->manager->count() && $branch->manager->first()->reportsTo->count() ? $branch->manager->first()->reportsTo->fullName() :'';
+                    break;
+
                 case 'businessname':
                     $detail[$n][]= $opportunity->address->address->businessname;
                     break;
@@ -99,7 +104,7 @@ class OpenOpportunitiesWithProposalsExport implements FromQuery, ShouldQueue, Wi
     
     public function query()
     {
-        return Branch::with('manager')
+        return Branch::with('manager.reportsTo')
             ->whereHas(
                 'opportunities', function ($q) {
                     $q->whereBetween('opportunities.created_at', [$this->period['from'], $this->period['to']])
