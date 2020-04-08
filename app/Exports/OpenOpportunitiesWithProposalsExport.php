@@ -18,13 +18,14 @@ class OpenOpportunitiesWithProposalsExport implements FromQuery, ShouldQueue, Wi
     public $branches;
 
     public $fields = [
-        'branchname'=>'Branch',
-        'manager'=>'Manager',
-        'reportsto'=>'Reports To',
-        'businessname'=>'Business',
-        'title'=>'Opportunity',
-        'value'=>'Value',
-        'expected_close'=>'Expected Close'
+        'branchname' => 'Branch',
+        'manager' => 'Manager',
+        'reportsto' => 'Reports To',
+        'businessname' => 'Business',
+        'title' => 'Opportunity',
+        'value' => 'Value',
+        'expected_close' => 'Expected Close',
+        'last_activity' => 'Last Activity'
     ];
 
     
@@ -50,7 +51,7 @@ class OpenOpportunitiesWithProposalsExport implements FromQuery, ShouldQueue, Wi
 
         $n=0;
         foreach ($branch->opportunities as $opportunity) {
-
+            
             foreach ($this->fields as $key=>$field) {
                 switch ($key) {
                 
@@ -72,6 +73,7 @@ class OpenOpportunitiesWithProposalsExport implements FromQuery, ShouldQueue, Wi
                 case 'title':
                     $detail[$n][]= $opportunity->title;
                     break;
+
                 case 'value':
                     $detail[$n][]= $opportunity->value;
                     break;
@@ -79,7 +81,11 @@ class OpenOpportunitiesWithProposalsExport implements FromQuery, ShouldQueue, Wi
                 case 'expected_close':
                     $detail[$n][] = $opportunity->expected_close->format('m/d/Y');
                     break;
-                
+
+                case 'last_activity':
+                    $detail[$n][] = $opportunity->lastActivity->count() ? $opportunity->lastActivity->activity_date->format('m/d/Y') : '';
+                    break;
+
                 default:
                     $detail[$n][] = $opportunity->$key;
                     break;
@@ -96,8 +102,9 @@ class OpenOpportunitiesWithProposalsExport implements FromQuery, ShouldQueue, Wi
     public function columnFormats(): array
     {
         return [
-            'E' => NumberFormat::FORMAT_CURRENCY_USD,
-            'F' => NumberFormat::FORMAT_DATE_DDMMYYYY,
+            'F' => NumberFormat::FORMAT_CURRENCY_USD,
+            'G' => NumberFormat::FORMAT_DATE_DDMMYYYY,
+            'H' => NumberFormat::FORMAT_DATE_DDMMYYYY
         ];
     }
 
@@ -127,6 +134,8 @@ class OpenOpportunitiesWithProposalsExport implements FromQuery, ShouldQueue, Wi
                                     $q->where('activitytype_id', 7);
                                 }
                             )
+                            ->withLastActivityId()
+                            ->with('lastActivity')
                             ->whereClosed(0)
                             ->whereNotNull('expected_close')
                             ->whereNotNull('value')

@@ -263,6 +263,28 @@ class Opportunity extends Model
         return $this->hasMany(Activity::class, ['address_id', 'branch_id'], ['address_id', 'branch_id']);
 
     }
+    /**
+     * [lastActivity description]
+     * 
+     * @return [type] [description]
+     */
+    public function lastActivity()
+    {
+        return $this->belongsTo(Activity::class);
+    }
+    /**
+     * [scopeWithLastActivityId description]
+     * 
+     * @param [type] $query [description]
+     * 
+     * @return [type]        [description]
+     */
+    public function scopeWithLastActivityId($query)
+    {
+        return $query->select('opportunities.*')->selectSub('select id as last_activity_id from activities where opportunities.address_id = activities.address_id and opportunities.branch_id = activities.branch_id and completed =1 order by activities.created_at desc limit 1', 'last_activity_id');
+       
+    }
+
     public function activities()
     {
         return $this->hasManyThrough(Activity::class, BranchLead::class,  'id', 'address_id', 'address_id', 'id')
