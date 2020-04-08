@@ -2,7 +2,7 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+use Awobaz\Compoships\Database\Eloquent\Model;
 use Carbon\Carbon;
 
 class Opportunity extends Model
@@ -257,12 +257,16 @@ class Opportunity extends Model
             ->where('closed', 0)
             ->groupBy(['opportunities.branch_id','yearweek'])
             ->orderBy('yearweek', 'asc');
-
     } 
+    public function relatedActivities()
+    {
+        return $this->hasMany(Activity::class, ['address_id', 'branch_id'], ['address_id', 'branch_id']);
 
+    }
     public function activities()
     {
-        return $this->hasManyThrough(Activity::class, BranchLead::class,  'id', 'address_id', 'address_id', 'id');
+        return $this->hasManyThrough(Activity::class, BranchLead::class,  'id', 'address_id', 'address_id', 'id')
+            ->where('activity_date', '>', $this->created_at)->where('completed', 1);
     }
     
 

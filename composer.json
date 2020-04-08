@@ -42,7 +42,8 @@
         "pda/pheanstalk": "^4.0",
         "dionera/laravel-beanstalkd-ui": "^2.0",
         "livewire/livewire": "^1.0",
-        "spatie/laravel-fractal": "^5.7"
+        "spatie/laravel-fractal": "^5.7",
+        "awobaz/compoships": "^1.1"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.2.5",

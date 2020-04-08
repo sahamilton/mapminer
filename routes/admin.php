@@ -167,7 +167,7 @@ use Illuminate\Http\Request;
                 //$companies = App\Company::whereIn('id', [532])->get();
                 $period['from'] = \Carbon\Carbon::now()->subDay()->startOfDay();
                 $period['to'] = \Carbon\Carbon::now()->subDay()->endOfDay();
-
+                App\Jobs\OpenOpportunitiesWithProposals::dispatch($period);
                 //App\Jobs\AccountActivities::dispatch($companies, $period);
                 //App\Jobs\ActivityOpportunity::dispatch($period);
                 //$opportunity = App\Opportunity::has('branch')->first();
