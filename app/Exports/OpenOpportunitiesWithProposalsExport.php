@@ -25,7 +25,8 @@ class OpenOpportunitiesWithProposalsExport implements FromQuery, ShouldQueue, Wi
         'title' => 'Opportunity',
         'value' => 'Value',
         'opened' => 'Date Opened',
-        'expected_close' => 'Expected Close'
+        'expected_close' => 'Expected Close',
+        'last_activity' => 'Last Activity'
     ];
 
     
@@ -127,6 +128,7 @@ class OpenOpportunitiesWithProposalsExport implements FromQuery, ShouldQueue, Wi
                                 $q->where('activitytype_id', 7);
                             }
                         )
+                        
                         ->whereClosed(0)
                         ->whereNotNull('expected_close')
                         ->whereNotNull('value');
@@ -141,8 +143,8 @@ class OpenOpportunitiesWithProposalsExport implements FromQuery, ShouldQueue, Wi
                                     $q->where('activitytype_id', 7);
                                 }
                             )
-                           // ->withLastActivityId()
-                           // ->with('lastActivity')
+                            ->withLastActivityId()
+                            ->with('lastActivity')
                             ->whereClosed(0)
                             ->whereNotNull('expected_close')
                             ->whereNotNull('value')
