@@ -3,7 +3,7 @@
 namespace App\Jobs;
 
 use App\Report;
-
+use \ErrorException;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -23,9 +23,9 @@ class DailyBranch implements ShouldQueue
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(array $period)
     {
-               
+            $this->period = $period;   
 
     }
 
@@ -37,10 +37,12 @@ class DailyBranch implements ShouldQueue
     public function handle()
     {
         $class= str_replace("App\Jobs\\", "", get_class($this));
-        $job = Report::where('job', $class)->with('distribution.person')->firstOrFail();
-        foreach ($job->distribution as $recipient) {
+        $report = Report::where('job', $class)->with('distribution')->firstOrFail();
+        foreach ($report->distribution as $recipient) {
 
-            DailyBranchDetail::dispatch($recipient);
+            $branches = $recipient->person->getMyBranches();
+            
+            DailyBranchDetail::dispatch($recipient, $report,$branches, $this->period);
         
         }
     }
@@ -51,8 +53,8 @@ class DailyBranch implements ShouldQueue
      * @param  Exception  $exception
      * @return void
      */
-    public function failed(Exception $exception)
+    public function failed($exception)
     {
-       
+       dd($exception);
     }
 }

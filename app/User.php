@@ -392,6 +392,10 @@ class User extends Authenticatable
         return $this->email;
     }
 
+    public function getFormattedEmail()
+    {
+        return ['email'=>$this->email, 'name'=>$this->person->fullName()];
+    }
 
 
     /**

@@ -21,8 +21,11 @@ class DailyBranchDetail implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     public $period;
+    public $branches;
     public $user;
     public $person;
+    public $file;
+    public $report;
     
 
     /**
@@ -30,14 +33,21 @@ class DailyBranchDetail implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(User $recipient)
+    public function __construct(User $user, Report $report,$branches, array $period = null)
     {
        
+        if (! $period) {
+
+            $this->period['from'] = Carbon::yesterday()->startOfDay();
+            $this->period['to'] = Carbon::yesterday()->endOfDay();
+        } else {
+            $this->period = $period;
+        }
+        $this->user = $user;
+        $this->person = $user->person;
+        $this->report = $report;
+        $this->branches = $branches;
         
-        $this->period['from'] = Carbon::yesterday()->startOfDay();
-        $this->period['to'] = Carbon::yesterday()->endOfDay();
-        $this->user = $recipient;
-        $this->person = $recipient->person;
 
     }
 
@@ -49,17 +59,22 @@ class DailyBranchDetail implements ShouldQueue
     public function handle()
     {
 
-            // send this to a queued job
-                   
-            $file = "/public/reports/".$this->person->firstname."_".$this->person->lastname."_dailyreport_". $this->period['from']->format('Y-m-d'). ".xlsx";
-            
-            Excel::store(
+        // send this to a queued job
+               
+        $this->file = "/public/reports/".$this->person->firstname."_".$this->person->lastname."_dailyreport_". $this->period['from']->format('Y-m-d'). ".xlsx";
+        (new DailyBranchExport($this->period, $this->branches))->store($this->file)->chain(
+            [
+                new ReportReadyJob($this->user, $this->period, $this->file, $this->report)
+
+            ]
+        );
+            /*Excel::store(
                 new DailyBranchExport($this->period, [$this->person->id]), $file
             );
             $distribution = [$this->person->distribution()];
             Mail::to($distribution)
                 ->queue(new DailyBranchReport($file, $this->period, $this->person));
-
+            */
     }
 
     /**
@@ -68,7 +83,7 @@ class DailyBranchDetail implements ShouldQueue
      * @param  Exception  $exception
      * @return void
      */
-    public function failed(Exception $exception)
+    public function failed(\Exception $exception)
     {
        
     }

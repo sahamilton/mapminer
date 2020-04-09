@@ -40,11 +40,22 @@ class ReportReadyJob implements ShouldQueue
      */
     public function handle()
     {
-       
-        foreach ($this->distribution as $user) {
-            $email = new SendReport($this->file, $this->period, $this->report, $user);
-            Mail::to($user->email)->send($email);
+        // if this distribution is class App User
+        // 
+        // else
+        // 
+        // 
+        if (is_a($this->distribution, 'App\User')) {
+
+            $email = new SendReport($this->file, $this->period, $this->report, $this->distribution);
+                Mail::to([$this->distribution->getFormattedEmail()])->send($email);
+        } else {
+            foreach ($this->distribution as $user) {
+                $email = new SendReport($this->file, $this->period, $this->report, $user);
+                Mail::to([$user->getFormattedEmail()])->send($email);
+            }
         }
+        
         
     }
 }
