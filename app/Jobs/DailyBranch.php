@@ -23,7 +23,7 @@ class DailyBranch implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(array $period)
+    public function __construct(array $period = null)
     {
             $this->period = $period;   
 
