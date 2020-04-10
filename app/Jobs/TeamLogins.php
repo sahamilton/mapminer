@@ -39,15 +39,18 @@ class TeamLogins implements ShouldQueue
     {
         $file = '/public/reports/teamlogins'. $this->period['to']->timestamp. ".xlsx";
 
-        Excel::store(new TeamLoginsExport($this->period, $this->manager), $file);
         
         $class= str_replace("App\Jobs\\", "", get_class($this));
         $report = Report::with('distribution')
             ->where('job', $class)
             ->firstOrFail();
-        $distribution = $report->getDistribution();
-        Mail::to($distribution)
-            ->send(new TeamLoginsReport($file, $this->period));   
+        
+        (new TeamLoginsExport($this->period, $this->manager))->store($this->file)->chain(
+            [
+                new ReportReadyJob($report->distribution, $this->period, $this->file, $this->report)
+
+            ]
+        );  
 
     }
 }

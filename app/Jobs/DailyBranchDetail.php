@@ -68,13 +68,6 @@ class DailyBranchDetail implements ShouldQueue
 
             ]
         );
-            /*Excel::store(
-                new DailyBranchExport($this->period, [$this->person->id]), $file
-            );
-            $distribution = [$this->person->distribution()];
-            Mail::to($distribution)
-                ->queue(new DailyBranchReport($file, $this->period, $this->person));
-            */
     }
 
     /**
@@ -83,7 +76,7 @@ class DailyBranchDetail implements ShouldQueue
      * @param  Exception  $exception
      * @return void
      */
-    public function failed(\Exception $exception)
+    public function failed($exception)
     {
        
     }

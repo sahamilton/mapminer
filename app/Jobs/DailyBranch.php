@@ -38,6 +38,7 @@ class DailyBranch implements ShouldQueue
     {
         $class= str_replace("App\Jobs\\", "", get_class($this));
         $report = Report::where('job', $class)->with('distribution')->firstOrFail();
+        
         foreach ($report->distribution as $recipient) {
 
             $branches = $recipient->person->getMyBranches();

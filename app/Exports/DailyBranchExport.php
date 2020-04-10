@@ -23,7 +23,7 @@ class DailyBranchExport implements FromQuery, ShouldQueue, WithHeadings, WithMap
         'branchname'=>'Branch',
         'manager'=>'Manager',
         'reportsto'=>'Reports To',
-        'newLeads'=>'# New Leads Created',
+        'newbranchleads'=>'# New Leads Created',
         'proposals'=>'# Completed Proposals',
         'salesappts'=>'# Completed Sales Appts',
         'sitevisits'=>'# Completed Site Visits'
@@ -41,6 +41,7 @@ class DailyBranchExport implements FromQuery, ShouldQueue, WithHeadings, WithMap
         
         $this->period = $period;
         $this->branches = $branches;
+   
        
     }
         

@@ -424,13 +424,15 @@ class User extends Authenticatable
             }
         );
     }
-      /**
-       * scopeLastLogin Select last login of user]
-       * @param  QueryBuilder $query    [description]
-       * @param  Array $interval intervale['from','to']
-       * @return QueryBuilder          [description]
-       */
 
+    /**
+     * ScopeLastLogin Select last login of user]
+     * 
+     * @param QueryBuilder $query    [description]
+     * @param Array        $interval interval['from','to']
+     * 
+     * @return QueryBuilder [description]
+     */
     public function scopeLastLogin($query,$interval=null)
     {
         if ($interval) {
@@ -465,6 +467,11 @@ class User extends Authenticatable
             }]
         );
 
+    }
+
+    public function scopeTotalLogins()
+    {
+        return $this->withCount('usage');
     }
 
 
