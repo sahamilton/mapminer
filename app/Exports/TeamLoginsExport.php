@@ -60,7 +60,7 @@ class TeamLoginsExport implements FromQuery, ShouldQueue, WithHeadings, WithMapp
                 break;
             case 'branches':
                 $detail[] = $person->branchesServiced->count() ? implode(
-                    ",", $person->branchesServiced
+                    ";", $person->branchesServiced
                         ->pluck("branchname")
                         ->toArray()
                 ) : '';
@@ -68,7 +68,7 @@ class TeamLoginsExport implements FromQuery, ShouldQueue, WithHeadings, WithMapp
                 break;
             case 'role':
                 $detail[] = $person->userdetails->roles->count() ? implode(
-                    ",", $person->userdetails
+                    ";", $person->userdetails
                         ->roles->pluck('display_name')
                         ->toArray()
                 ) : '';
