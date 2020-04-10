@@ -24,18 +24,38 @@ class BranchOpenOpportunitiesDetail implements ShouldQueue
     {
         $this->period = $period;
     
+    }
 
-        $file = '/public/reports/branchopptysdetailrpt'. $this->period['to']->timestamp. ".xlsx";
-        Excel::store(new BranchOpenOpportunitiesDetailExport($this->period), $file);
-        
+    /**
+     * Execute the job.
+     *
+     * @return void
+     */
+    public function handle()
+    {
+        if (! $this->report = $this->_getReport()) {
+            dd('No Distribution for this report');
+        } 
+        $this->file = '/public/reports/'.$this->report->filename.'_'. $this->period['to']->timestamp. ".xlsx";
+        (new BranchOpenOpportunitiesDetailExport($this->period))
+            ->store($this->file)
+            ->chain(
+                [
+                    new ReportReadyJob($this->report->distribution, $this->period, $this->file, $this->report)
+
+                ]
+            );  
+
+    }
+
+    private function _getReport()
+    {
         $class= str_replace("App\Jobs\\", "", get_class($this));
-        
-        $report = Report::with('distribution')
+        return Report::whereHas('distribution')
+            ->with('distribution')
             ->where('job', $class)
-            ->firstOrFail();
-        
-        $distribution = $report->getDistribution();
-        
-        Mail::to($distribution)->send(new BranchOpenOpportunitiesDetailsMail($file, $this->period)); 
-    } 
+            ->first();
+    }
+       
+    
 }
