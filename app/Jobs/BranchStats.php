@@ -52,7 +52,7 @@ class BranchStats implements ShouldQueue
        
         (new BranchStatsExport($this->period))->store($this->file)->chain(
             [
-                new ReportReadyJob($report->distribution, $this->period, $this->file)
+                new ReportReadyJob($report->distribution, $this->period, $this->file, $report)
 
             ]
         );
