@@ -100,11 +100,11 @@ class TeamLoginsExport implements FromQuery, ShouldQueue, WithHeadings, WithMapp
         
         $manager = Person::findOrFail($this->manager[0]);
         return $manager->descendantsAndSelf()
-            ->with('branchesServiced', 'userdetails', 'userdetails.roles')
+            ->with('branchesServiced')
             ->with(
                 ['userdetails'=>function ($q) {
                     $q->withLastLoginId()
-                        ->with('lastlogin')
+                        ->with('lastlogin', 'roles')
                         ->totalLogins($this->period);
                 }
                 ]

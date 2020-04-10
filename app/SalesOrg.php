@@ -6,12 +6,24 @@ class SalesOrg extends Model
 
     use Geocode;
 
-    public $topdog = 2980;
-    
+    public $topdog;
+    public function __construct()
+    {
+        $this->topdog = config('mapminer.topdog');
+    }
     // Add your validation rules here
     public static $rules = [
         'title' => 'required'
     ];
+
+    public function getTopDog()
+    {
+        return $this->topdog;
+    }
+    public function setTopDog()
+    {
+        return $this->topdog = config('mapminer.topdog');
+    }
     public $table = 'persons';
     // Don't forget to fill this array
     protected $fillable = ['title','name'];
@@ -93,6 +105,6 @@ class SalesOrg extends Model
     public function getCapoDiCapo()
     {
 
-        return Person::findOrFail($this->topdog);
+        return Person::findOrFail(config('mapminer.topdog'));
     }
 }

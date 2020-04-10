@@ -941,4 +941,15 @@ class Person extends NodeModel implements HasPresenter
     {
         return $this->userdetails->roles->first();
     }
+    /**
+     * [getCapoDiCapo id the top of the sales org
+     * refactor to programmatically get topdog.
+     * 
+     * @return Person topDog
+     */
+    public function getCapoDiCapo()
+    {
+
+        return $this->findOrFail(config('mapminer.topdog'));
+    }
 }

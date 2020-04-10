@@ -221,7 +221,7 @@ class ReportsController extends Controller {
     {
         
         if ($data = $this->_getMyBranches($request)) {
-         
+            
             $manager = $data['manager'];
             $myBranches = $data['branches'];
             $team = $data['team'];
@@ -361,9 +361,11 @@ class ReportsController extends Controller {
             
 
         } else {
-
-            $person = $this->person->where('user_id', auth()->user()->id)->first();
-            
+            if (auth()->user()->hasRole(['sales_operations', 'admin'])) {
+                $person = $this->person->getCapoDiCapo();
+            } else {
+                $person = $this->person->where('user_id', auth()->user()->id)->first();
+            }
             $branches = $person->getMyBranches();
         
         } 
