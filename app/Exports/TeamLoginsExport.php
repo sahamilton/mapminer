@@ -43,7 +43,7 @@ class TeamLoginsExport implements FromQuery, ShouldQueue, WithHeadings, WithMapp
     {
         return [
             [' '],
-            ['Branch Logins'],
+            ['Team Member Logins'],
             ['for the period ', $this->period['from']->format('Y-m-d') , ' to ',$this->period['to']->format('Y-m-d')],
             [' ' ],
             $this->fields
