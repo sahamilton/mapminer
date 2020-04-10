@@ -1,16 +1,41 @@
 <?php
-
 namespace App\Exports;
 
-use App\Opportunity;
-use Illuminate\Contracts\View\View;
-use Maatwebsite\Excel\Concerns\FromView;
-use Carbon\Carbon;
+use App\Branch;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Maatwebsite\Excel\Concerns\FromQuery;
+use Maatwebsite\Excel\Concerns\Exportable;
+use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithMapping;
+use Maatwebsite\Excel\Concerns\WithColumnFormatting;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
-class ActivityOpportunityExport implements FromView
+
+class ActivityOpportunityExport implements FromQuery, ShouldQueue, WithHeadings, WithMapping, WithColumnFormatting,ShouldAutoSize
 {
+    use Exportable;
     public $period;
-    public $branch;
+    public $branches;
+    /*
+    <th><b>Branch</b></th>
+            <th><b>Branch Name</b></th>
+            <th><b>Sales Meetings</b></th>
+            <th><b>Opportunities Won</b></th>
+            <th><b>Sum of Value</b></th> 
+
+     */
+    public $fields = [
+        'branchname'=>'Branch',
+        'manager'=>'Manager',
+        'reportsto'=>'Reports To',
+        'salesappts'=>'# Completed Sales Appts',
+        'won'=>'# Opportunities Won',
+        'wonvalue'=>'Sum of Won Value'
+        
+        
+    ];
+
 
     /**
      * [__construct description]
@@ -22,7 +47,64 @@ class ActivityOpportunityExport implements FromView
     public function __construct(array $period, array $branches=null)
     {
         $this->period = $period;
-        $this->branch = $branches;
+        $this->branches = $branches;
+
+    }
+
+    public function headings(): array
+    {
+        return [
+            [' '],
+            ['TAHA report'],
+            ['for the period ', $this->period['from']->format('Y-m-d') , ' to ',$this->period['to']->format('Y-m-d')],
+            [' ' ],
+            $this->fields
+        ];
+    }
+    
+    
+    public function map($branch): array
+    {
+        
+        foreach ($this->fields as $key=>$field) {
+            switch($key) {
+            case 'manager':
+                $detail[] = $branch->manager->count() ? $branch->manager->first()->fullName() :'';
+                break;
+
+            case 'reportsto':
+                $detail[] = $branch->manager->count() && $branch->manager->first()->reportsTo->count() ? $branch->manager->first()->reportsTo->fullName() :'';
+                break;
+
+            default:
+                $detail[]=$branch->$key;
+                break;
+
+            }
+            
+        }
+        return $detail;
+       
+    }
+
+    public function columnFormats(): array
+    {
+        return [
+            'F' => NumberFormat::FORMAT_CURRENCY_USD,
+        ];
+    }
+
+
+
+    public function query()
+    {
+        return Branch::summaryStats($this->period)
+            ->with('manager.reportsTo')
+            ->when(
+                $this->branches, function ($q) {
+                    $q->whereIn('id', $this->branches);
+                }
+            );
     }
 
     /**
@@ -30,7 +112,7 @@ class ActivityOpportunityExport implements FromView
      * 
      * @return [type] [description]
      */
-    public function view(): View
+    /*public function view(): View
     {
   
         $query = "select branches.id as branch_id,
@@ -73,5 +155,6 @@ class ActivityOpportunityExport implements FromView
 
         $period = $this->period;
         return view('reports.actopptyreport', compact('results', 'period'));
-    }
+    }*/
+    
 }

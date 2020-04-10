@@ -42,9 +42,6 @@ class AccountOpportunities implements ShouldQueue
      */
     public function handle()
     {
-        
-        
-
         $companyname = str_replace(" ", "_", $this->company->companyname);
         $file = "/public/reports/".$this->company->companyname."_opportunityreport_". Carbon::now()->timestamp. ".xlsx";
         Excel::store(new AccountOpportunitiesExport($this->company, $this->period), $file);
