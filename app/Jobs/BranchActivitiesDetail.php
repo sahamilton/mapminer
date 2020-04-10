@@ -17,15 +17,23 @@ class BranchActivitiesDetail implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     public $period;
+    public $file;
+    public $report;
     
     /**
      * [__construct description]
      * 
      * @param array $period [description]
      */
-    public function __construct(array $period)
+    public function __construct(array $period=null)
     {
-        $this->period = $period;
+        
+        if (! $period) {
+            $this->period = ['from'=>\Carbon\Carbon::now()->subWeek(4)->startOfWeek(),'to'=>\Carbon\Carbon::now()->endOfWeek()];
+            
+        } else {
+            $this->period = $period;
+        }
     }
 
     /**
@@ -35,15 +43,27 @@ class BranchActivitiesDetail implements ShouldQueue
      */
     public function handle()
     {
-        $file = '/public/reports/branchactivitiesdetail'. $this->period['to']->timestamp. ".xlsx";
-        Excel::store(new BranchActivitiesDetailExport($this->period), $file);
-      
-        $class= str_replace("App\Jobs\\", "", get_class($this));
-        $report = Report::with('distribution')
-            ->where('job', $class)
-            ->firstOrFail();
-        $distribution = $report->getDistribution();
-        Mail::to($distribution)->send(new BranchActivitiesDetailReport($file, $this->period));   
+        if (! $this->report = $this->_getReport()) {
+            dd('No Distribution for this report');
+        } 
+        $this->file = '/public/reports/branchactivitiesdetail'. $this->period['to']->timestamp. ".xlsx";
+        (new BranchActivitiesDetailExport($this->period))
+            ->store($this->file)
+            ->chain(
+                [
+                    new ReportReadyJob($this->report->distribution, $this->period, $this->file, $this->report)
 
+                ]
+            );  
+
+    }
+
+    private function _getReport()
+    {
+        $class= str_replace("App\Jobs\\", "", get_class($this));
+        return Report::whereHas('distribution')
+            ->with('distribution')
+            ->where('job', $class)
+            ->first();
     }
 }
