@@ -1,16 +1,33 @@
 <?php
-
 namespace App\Exports;
 
-use Illuminate\Contracts\View\View;
-use Maatwebsite\Excel\Concerns\FromView;
+use App\Branch;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Maatwebsite\Excel\Concerns\FromQuery;
+use Maatwebsite\Excel\Concerns\Exportable;
+use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithMapping;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use App\ActivityType;
+use Carbon\Carbon;
+use App\Person;
 
-
-class BranchActivitiesDetailExport implements FromView
+class BranchActivitiesDetailExport implements FromQuery, ShouldQueue, WithHeadings,WithMapping,ShouldAutoSize
 {
+    use Exportable;
+
     
     public $period;
     public $branches;
+    public $types;
+    public $fields = [
+        'branchname'=>'Branch',
+        'manager'=>'Manager',
+        'week'=>'Week Begining',
+        'activity'=>'Activity',
+        'count'=>'Count'
+        ]; 
+ 
     /**
      * [__construct description]
      * 
@@ -21,45 +38,88 @@ class BranchActivitiesDetailExport implements FromView
     {
         $this->period = $period;
         $this->branches = $branches;
-    }
+        $this->types = ActivityType::pluck('activity', 'id')->toArray();
 
+    }
     /**
-     * [view description]
+     * [headings description]
      * 
      * @return [type] [description]
      */
-    public function view(): View
+    public function headings(): array
     {
-        $period = $this->period;
-        $query = "select  a.branchname,
-             concat_ws(' ',firstname,lastname) as manager, 
-             STR_TO_DATE(concat(CAST(week AS CHAR),' Monday'),'%X%V %W') as weekbegin, 
-             a.activity, 
-             a.activitycount
-            from persons, branch_person, branches, 
-            (
-                select branchname, 
-                concat(YEAR(activity_date),
-                WEEK(activity_date)) as week,
-                activity, count(activities.id) as activitycount
-                from activities, branches, activity_type 
-                where activities.activity_date between '"
-                .$period['from']."'  and '".$period['to']."' 
-                and activities.activitytype_id = activity_type.id 
-                and activities.completed =1 
-                and branch_id = branches.id ";
-        if ($this->branches) {
-            $query.= " and branch_id in ('" . implode("','", $this->branches)."')";
-        } 
-        $query.= " group by branchname, week, activity ) a  
-                where persons.id = branch_person.person_id
-                and branch_person.role_id = 9
-                and branch_person.branch_id = branches.id
-                and branches.branchname = a.branchname  
-                ORDER BY `a`.`week`  ASC";
+        return [
+           [' '],
+           ['Branch Activities Detail'],
+           ['for '. $this->period['to']->format('M jS, Y')],
+           [' '],
+           $this->fields,
+        ];
+  
+    }
+    /**
+     * [map description]
+     * 
+     * @param [type] $branch [description]
+     * 
+     * @return [type]         [description]
+     */
+    public function map($branch): array
+    { 
+        $n=0;
+        foreach ($branch->ActivityTypeCount as $item) {
+            
+            foreach ($this->fields as $key=>$field) {
+                
+                switch($key) {
+                case 'branchname':
+                    $line[$n][] = $branch->branchname;
+                    break;
+                case 'manager':
+                    $line[$n][] = $branch->manager->count() ? $branch->manager->first()->fullName() :'';
+                    break;
+                case 'activity':
+                    $line[$n][] = $this->types[$item->$key];
+                    break;
+                default:
+                    $line[$n][] = $item->$key;
+                    break;
+                }
+                
+            }
+            $n++;
+        }
+        if (isset($line)) {
+            $detail= $line;
+            
+        } else {
+            $detail=[[
+                            $branch->branchname,
+                            $branch->manager->count() ? $branch->manager->first()->fullName() :''
+                        ]];
+        }
+        return $detail;
 
-        $results = \DB::select($query);
-         
-        return view('reports.branchactivitiesdetail', compact('results', 'period'));
+       
+    }
+    /**
+     * [query description]
+     * 
+     * @return [type] [description]
+     */
+    public function query()
+    {
+        return Branch::with('manager.reportsTo')
+            ->when(
+                isset($this->branches), function ($q) {
+                    $q->whereIn('branches.id', $this->branches);
+                }
+            )->with(
+                [
+                    'ActivityTypeCount'=>function ($q) {
+                        $q->whereBetween('activity_date', [$this->period['from'], $this->period['to']]);
+                    }
+                ]
+            );
     }
 }
