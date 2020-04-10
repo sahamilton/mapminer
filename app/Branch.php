@@ -102,6 +102,19 @@ class Branch extends Model implements HasPresenter
         return $this->hasMany(Activity::class);
     }
     /**
+     * [activityTypeCount description]
+     * 
+     * @return [type] [description]
+     */
+    public function activityTypeCount()
+    {
+        return $this->activities()
+            ->selectRaw(
+                'branch_id,activitytype_id as activity,DATE_ADD(activity_date, INTERVAL(-WEEKDAY(activity_date)) DAY) as week,count(*) as count'
+            )
+            ->groupBy(['branch_id','week','activitytype_id']);
+    }
+    /**
      * [openActivities description]
      * 
      * @return [type] [description]

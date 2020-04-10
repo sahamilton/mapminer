@@ -67,7 +67,7 @@ class BranchActivitiesDetailExport implements FromQuery, ShouldQueue, WithHeadin
     public function map($branch): array
     { 
         $n=0;
-        foreach ($branch->ActivityTypeCount as $item) {
+        foreach ($branch->activityTypeCount as $item) {
             
             foreach ($this->fields as $key=>$field) {
                 
@@ -116,7 +116,7 @@ class BranchActivitiesDetailExport implements FromQuery, ShouldQueue, WithHeadin
                 }
             )->with(
                 [
-                    'ActivityTypeCount'=>function ($q) {
+                    'activityTypeCount'=>function ($q) {
                         $q->whereBetween('activity_date', [$this->period['from'], $this->period['to']]);
                     }
                 ]
