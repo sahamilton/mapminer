@@ -469,9 +469,19 @@ class User extends Authenticatable
 
     }
 
-    public function scopeTotalLogins()
+    public function scopeTotalLogins($query, $period=null)
     {
-        return $this->withCount('usage');
+        return $query->withCount(
+            ['usage'=>function ($q) use ($period) {
+                $q->when(
+                    $period, function ($q1) use ($period) {
+                        $q1->whereBetween('created_at', [$period['from'], $period['to']]);
+                    }
+                );
+            }
+            ]
+        );
+        
     }
 
 

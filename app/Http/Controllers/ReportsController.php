@@ -100,6 +100,7 @@ class ReportsController extends Controller {
         } else {
             $report->update(['public'=>1]);
         }
+        $report->update(['filename' => strtolower(str_replace(" ", "_", $report->title))]);
 
         return redirect()->route('reports.show', $report->id);
     }
@@ -220,7 +221,7 @@ class ReportsController extends Controller {
     {
         
         if ($data = $this->_getMyBranches($request)) {
-          
+         
             $manager = $data['manager'];
             $myBranches = $data['branches'];
             $team = $data['team'];
