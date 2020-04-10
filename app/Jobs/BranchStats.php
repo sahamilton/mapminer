@@ -48,7 +48,7 @@ class BranchStats implements ShouldQueue
             ->firstOrFail();
         
         // create the file
-        $this->file = '/public/reports/branchstatsrpt'. Carbon::now()->timestamp.'.xlsx';
+        $this->file = '/public/reports/'.$report->filename. Carbon::now()->timestamp.'.xlsx';
        
         (new BranchStatsExport($this->period))->store($this->file)->chain(
             [

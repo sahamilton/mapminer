@@ -58,10 +58,14 @@ class ReportsController extends Controller {
     }
 
 
-    public function review()
+    public function review($filename = null)
     {
         $files = $files = \Storage::allFiles('public/reports');
-        //dd(Carbon::createFromTimestamp(\Storage::lastModified($files[0])));
+        
+        if ($filename) {
+            $files = preg_grep('/'.$filename.'/', $files);
+        }
+        
         return response()->view('reports.list', compact('files'));
     }
     /**
