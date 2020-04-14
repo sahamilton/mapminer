@@ -221,7 +221,7 @@ class ReportsController extends Controller {
     {
         
         if ($data = $this->_getMyBranches($request)) {
-            dd($report, request()->all(), $data);
+          
             $manager = $data['manager'];
             $myBranches = $data['branches'];
             $team = $data['team'];
