@@ -14,6 +14,7 @@ class DailyBranchExport implements FromView
     public $branches;
     public $person;
 
+    
     /**
      * [__construct description]
      * 
