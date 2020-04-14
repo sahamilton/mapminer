@@ -260,7 +260,7 @@ class ReportsController extends Controller {
                 break;
 
             default:
-                dd($export);
+                
                 return Excel::download(new $export($period, $myBranches), $report->job . '.csv');
                 break;
 
