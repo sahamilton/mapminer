@@ -39,11 +39,11 @@ class DailyBranchExport implements FromQuery, ShouldQueue, WithHeadings, WithMap
      */
     public function __construct(Array $period, array $branches)
     {
-        
+        dd("diagnostic", $branches);
         $this->period = $period;
         $this->branches = $branches;
-        dd("diagnostic", $this->branches);
         
+
        
     }
         
