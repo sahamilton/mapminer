@@ -13,7 +13,7 @@ use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
 
-class DailyBranchExport implements FromQuery, WithHeadings, WithMapping, WithColumnFormatting,ShouldAutoSize
+class DailyBranchExport implements FromQuery, WithHeadings, WithMapping, WithColumnFormatting, ShouldAutoSize
 {
     use Exportable;
     public $period;
@@ -39,7 +39,7 @@ class DailyBranchExport implements FromQuery, WithHeadings, WithMapping, WithCol
      */
     public function __construct(Array $period, array $branches)
     {
-        dd("diagnostic", $branches);
+       
         $this->period = $period;
         $this->branches = $branches;
         
@@ -94,12 +94,12 @@ class DailyBranchExport implements FromQuery, WithHeadings, WithMapping, WithCol
 
     public function query()
     {
-        return Branch::summaryStats($this->period)
+        dd(Branch::summaryStats($this->period)
             ->with('manager.reportsTo')
             ->when(
                 $this->branches, function ($q) {
                     $q->whereIn('id', $this->branches);
                 }
-            );
+            )->get());
     }
 }
