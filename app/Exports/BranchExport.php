@@ -21,8 +21,8 @@ class BranchExport implements FromView
         $this->roles = Role::pluck('name', 'id')->toArray();
     }
     /**
-    * @return \Illuminate\Support\Collection
-    */
+     * 
+     */
     public function view(): View
     {
         $result = Branch::with('address', 'manager');
