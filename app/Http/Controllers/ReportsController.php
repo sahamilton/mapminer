@@ -123,7 +123,7 @@ class ReportsController extends Controller {
             $object=null;
         }
         $managers = $this->person->managers();
-       
+        
         return response()->view('reports.show', compact('report', 'object', 'managers'));
     }
 
@@ -221,7 +221,7 @@ class ReportsController extends Controller {
     {
         
         if ($data = $this->_getMyBranches($request)) {
-          
+
             $manager = $data['manager'];
             $myBranches = $data['branches'];
             $team = $data['team'];
@@ -238,35 +238,33 @@ class ReportsController extends Controller {
             }
             
             $export = "\App\Exports\\". $report->export;
-            if ($report->object) {
-                switch ($report->object) {
-                case 'Company':
-                    $company = $this->company->findOrFail(request('company'));
-                    return Excel::download(new $export($company, $period, $myBranches), $company->companyname . " " . $report->job . 'Activities.csv');
+            
+            switch ($report->object) {
+            case 'Company':
+                $company = $this->company->findOrFail(request('company'));
+                return Excel::download(new $export($company, $period, $myBranches), $company->companyname . " " . $report->job . 'Activities.csv');
                 break;
 
-                case 'Role':
-                   
-                    return Excel::download(new $export(request('role'), $team), $report->job . '.csv');
-
+            case 'Role':
+               
+                return Excel::download(new $export(request('role'), $team), $report->job . '.csv');
                 break;
 
-                case 'User':
-                    
-                    return Excel::download(new $export($period, [$manager->id]), $report->job . '.csv');
-
-                break;
-
-                case 'Campaign':
-                    return Excel::download(new $export([$manager->id], $campaign), $report->job . '.csv');
-
-                break;
-                }
-
-            } else {
+            case 'User':
                 
+                return Excel::download(new $export($period, [$manager->id]), $report->job . '.csv');
+                break;
+
+            case 'Campaign':
+                return Excel::download(new $export([$manager->id], $campaign), $report->job . '.csv');
+                break;
+
+            default:
+                dd($export);
                 return Excel::download(new $export($period, $myBranches), $report->job . '.csv');
-            }
+                break;
+
+            } 
             
         } else {
             return redirect()->route('welcome');

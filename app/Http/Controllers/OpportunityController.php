@@ -110,7 +110,7 @@ class OpportunityController extends BaseController
     /**
      * [showBranchOpportunities description]
      * 
-     * @param  Branch $branch [description]
+     * @param Branch $branch [description]
      * 
      * @return [type]         [description]
      */
