@@ -200,6 +200,7 @@ class Person extends NodeModel implements HasPresenter
      */
     public function myBranches(Person $person=null, Array $servicelines=null)
     {
+        
         if (! $person ) {
             $user = $this->_getPersonFromAuth();
             
@@ -209,8 +210,6 @@ class Person extends NodeModel implements HasPresenter
             } else {
                 return $this->_getBranchesFromTeam($person); 
             }
-        } elseif (auth()->user()->hasRole(['admin'])) {
-            return Branch::pluck('branchname', 'id')->toArray();
         } else {
             
             return $this->_getBranchesFromTeam($person);

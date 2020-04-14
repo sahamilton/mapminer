@@ -336,6 +336,16 @@ class CampaignController extends Controller
         $team = $this->_getSalesTeamFromManager($campaign->manager_id, $servicelines);
         return response()->view('campaigns.selectReport', compact('campaigns', 'campaign', 'team'));
     }
+
+    public function select(Campaign $campaign, Person $manager)
+    {
+        $branches = array_keys($manager->myBranches($manager));
+        $servicelines = $campaign->getServicelines();
+        $branches = $this->branch->whereIn('id', $branches)->summaryCampaignStats($campaign)->get();
+
+        $team = $this->campaign->getSalesTeamFromManager($manager->id, $servicelines);
+        return response()->view('campaigns.managersummary', compact('campaign', 'branches', 'manager', 'team'));
+    }
     
     /**
      * [export description]
@@ -357,9 +367,10 @@ class CampaignController extends Controller
         $servicelines = $campaign->getServicelines();
         
 
-        $manager = $this->person->findOrFail($manager_id);
-        $branches = array_keys($manager->myBranches($manager));
+        $manager = $this->person->with('reportsTo')->findOrFail($manager_id);
 
+        $branches = array_keys($manager->myBranches($manager));
+       
         $branches = $this->branch->whereIn('id', $branches)->summaryCampaignStats($campaign)->get();
 
         $team = $this->campaign->getSalesTeamFromManager($manager_id, $servicelines);

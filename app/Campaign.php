@@ -168,6 +168,14 @@ class Campaign extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
 
 
     }
+    /**
+     * [getAssignableLocationsofCampaign description]
+     * 
+     * @param [type]  $addresses [description]
+     * @param boolean $count     [description]
+     * 
+     * @return [type]             [description]
+     */
     public function getAssignableLocationsofCampaign($addresses, $count = false)
     {
         
@@ -277,10 +285,10 @@ class Campaign extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
         
         return Person::whereId([$manager_id])->firstOrFail()
             ->descendantsAndSelf()
-            ->limitDepth(1)
+     
             ->whereHas(
                 'userdetails.roles', function ($q) {
-                        $q->whereIn('roles.id', ['9','3','7','6']);
+                        $q->whereIn('roles.id', ['3','7','6']);
                 }
             )
             ->with(

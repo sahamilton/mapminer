@@ -23,6 +23,7 @@ use Illuminate\Http\Request;
         Route::get('campaigns/reports/{campaign?}', ['as'=>'campaigns.select', 'uses'=>'CampaignController@selectReport']);
         Route::get('campaigns/{campaign}/export', ['as'=>'campaigns.export', 'uses'=>'CampaignTrackingController@export']);
         Route::get('campaigns/{campaign}/companyexport', ['as'=>'campaigns.company.export', 'uses'=>'CampaignTrackingController@exportCompany']);
+        Route::get('campaigns/{campaign}/manager/{person}', ['as'=>'campaigns.manager', 'uses'=>'CampaignController@select']);
         Route::post('campaigns/{campaign}/report', ['as'=>'campaigns.report', 'uses'=>'CampaignController@export']);
         Route::post('campaigns/{campaign}/company', ['as'=>'campaigns.companyreport', 'uses'=>'CampaignTrackingController@company']);
         Route::get('campaigns/{campaign}/company', ['as'=>'campaigns.company', 'uses'=>'CampaignTrackingController@summaryByCompany']);

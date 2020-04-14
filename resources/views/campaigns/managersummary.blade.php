@@ -4,6 +4,7 @@
 <div class="container">
    <h2>{{$manager->fullName()}} {{$campaign->title}} Summary</h2>
     @php $route = 'campaigns.report'; @endphp
+    <p><a href="{{route('campaigns.manager', [$campaign->id, $manager->reportsTo->id])}}">View {{$manager->reportsTo->fullName()}} Campaign Summary</a></p>
     @include('campaigns.partials._teamselector')
     <p><a href="{{route('campaigns.show', $campaign->id)}}">Return campaign</a></p>
     <p><a href="{{route('campaigns.company', $campaign->id)}}">Show Company Stats</a></p>
@@ -17,12 +18,12 @@
             <th>Offered Leads</th>
             <th>Worked Leads</th>
             <th>Activities</th>
-            <th>New Opportunities</th>
-            <th>Opportunities Open</th>
-            <th>Opportunities Won</th>
-            <th>Opportunities Lost</th>
-            <th>Opportunities Won Value</th>
-            <th>Opportunities Open Value</th>
+            <th># New</th>
+            <th># Open</th>
+            <th># Won</th>
+            <th># Lost</th>
+            <th>$ Won</th>
+            <th>$ Open</th>
         </thead>
         <tbody>
 
@@ -68,12 +69,12 @@
                     @php $totals['lost'] = isset($totals['lost']) ? $totals['lost'] + $branch->lost_opportunities : $branch->lost_opportunities  @endphp
 
                 </td>
-                <td>
-                    ${{number_format($branch->won_value,2)}}
+                <td class="text-right">
+                    ${{number_format($branch->won_value,0)}}
                     @php $totals['wonvalue'] = isset($totals['wonvalue']) ? $totals['wonvalue'] + $branch->won_value : $branch->won_value  @endphp
                 </td>
-                <td>
-                    ${{number_format($branch->open_value,2)}}
+                <td class="text-right">
+                    ${{number_format($branch->open_value, 0)}}
                     @php $totals['openvalue'] = isset($totals['openvalue']) ? $totals['openvalue'] + $branch->open_value : $branch->open_value  @endphp
                 </td>
             </tr>
@@ -90,8 +91,8 @@
             <td>{{isset($totals['open']) ? $totals['open'] : 0}}</td>
             <td>{{isset($totals['won']) ? $totals['won'] : 0}}</td>
             <td>{{isset($totals['lost']) ? $totals['lost'] : 0}}</td>
-            <td>${{isset($totals['wonvalue']) ? number_format($totals['wonvalue'],2) : 0}}</td>
-            <td>${{isset($totals['openvalue']) ? number_format($totals['openvalue'],2) :0 }}</td>
+            <td class="text-right">${{isset($totals['wonvalue']) ? number_format($totals['wonvalue'],0) : 0}}</td>
+            <td class="text-right">${{isset($totals['openvalue']) ? number_format($totals['openvalue'],0) :0 }}</td>
         </tfoot>
     </table>
     
