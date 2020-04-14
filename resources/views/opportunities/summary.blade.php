@@ -52,7 +52,7 @@
             <th>Totals:</th>
             @if(count($total))
                 @foreach ($fields as $field)
-                {{dd($total)}}
+               
                 <th class="text-right">@if(strpos($field, 'value')) $ @endif{{number_format($total[$field],0)}}</th>
                 @endforeach
             @endif
