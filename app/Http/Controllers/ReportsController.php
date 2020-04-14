@@ -241,6 +241,7 @@ class ReportsController extends Controller {
             
             switch ($report->object) {
             case 'Company':
+
                 $company = $this->company->findOrFail(request('company'));
                 return Excel::download(new $export($company, $period, $myBranches), $company->companyname . " " . $report->job . 'Activities.csv');
                 break;
@@ -256,11 +257,12 @@ class ReportsController extends Controller {
                 break;
 
             case 'Campaign':
+
                 return Excel::download(new $export([$manager->id], $campaign), $report->job . '.csv');
                 break;
 
             default:
-                
+                dd($export);
                 return Excel::download(new $export($period, $myBranches), $report->job . '.csv');
                 break;
 
