@@ -24,8 +24,8 @@ class RunReportFormRequest extends FormRequest
     public function rules()
     {
         return [
-            "fromdate"=>"date|before:todate",
-            "todate"=>"date|after:fromdate",
+            "fromdate"=>"date|before_or_equal:todate",
+            "todate"=>"date|after_or_equal:fromdate",
            
         ];
     }
