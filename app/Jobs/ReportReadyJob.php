@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use Mail;
+use App\Mail\SendReport;
 use App\User;
 use App\Report;
 use Illuminate\Bus\Queueable;
@@ -26,7 +27,7 @@ class ReportReadyJob implements ShouldQueue
      */
     public function __construct($distribution, $period, $file, Report $report)
     {
-        
+        dd($file);
         $this->distribution = $distribution;
         $this->period = $period;
         $this->file = $file;

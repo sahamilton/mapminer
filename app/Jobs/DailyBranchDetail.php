@@ -8,6 +8,7 @@ use App\User;
 use App\Branch;
 use App\Report;
 use Mail;
+use App\Mail\SendReport;
 use Excel;
 use App\Mail\DailyBranchReport;
 use App\Exports\DailyBranchExport;
@@ -33,9 +34,9 @@ class DailyBranchDetail implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(User $user, Report $report,$branches, array $period = null)
+    public function __construct(User $user, Report $report,$branches, $file, array $period = null)
     {
-       
+        
         if (! $period) {
 
             $this->period['from'] = Carbon::yesterday()->startOfDay();
@@ -47,6 +48,7 @@ class DailyBranchDetail implements ShouldQueue
         $this->person = $user->person;
         $this->report = $report;
         $this->branches = $branches;
+        $this->file = $file;
         
 
     }
@@ -61,13 +63,15 @@ class DailyBranchDetail implements ShouldQueue
 
         // send this to a queued job
                
-        $this->file = "/public/reports/".$this->person->firstname."_".$this->person->lastname."_dailyreport_". $this->period['from']->format('Y-m-d'). ".xlsx";
-        (new DailyBranchExport($this->period, $this->branches))->store($this->file)->chain(
-            [
-                new ReportReadyJob($this->user, $this->period, $this->file, $this->report)
-
-            ]
-        );
+        /*(new InvoicesExport)->queue('invoices.xlsx')->chain([
+            new NotifyUserOfCompletedExport(request()->user()),
+        ]);
+        */
+        
+        (new DailyBranchExport($this->period, $this->branches))
+            ->store($this->file);
+        Mail::to([$this->user->getFormattedEmail()])
+                        ->send(new SendReport($this->file, $this->period, $this->report, $this->user));
     }
 
     /**

@@ -10,6 +10,7 @@ use App\Role;
 use App\Company;
 use App\Person;
 use App\SalesOrg;
+use Illuminate\Support\Str;
 use App\Http\Requests\ReportFormRequest;
 use App\Http\Requests\RunReportFormRequest;
 use Illuminate\Http\Request;
@@ -142,8 +143,9 @@ class ReportsController extends Controller {
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Report  $report
+     * @param \Illuminate\Http\Request $request 
+     * @param \App\Report              $report 
+     * 
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Report $report)
@@ -286,7 +288,9 @@ class ReportsController extends Controller {
     {
         
         if ($data = $this->_getMyBranches($request)) {
+
             $manager = $data['manager'];
+
             $myBranches = $data['branches'];
             $team = $data['team'];
             $period['from']=Carbon::parse(request('fromdate'));
