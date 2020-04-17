@@ -103,7 +103,7 @@ class GeoCodingController extends BaseController
             ->get();
         // check which type of view to return
         if (isset($data['view']) && $data['view'] == 'list') {
-        // list view
+            // list view
             if ($data['type']=='people') {
                 return response()->view('maps.peoplelist', compact('data'));
             }
