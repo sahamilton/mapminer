@@ -36,7 +36,7 @@ class DailyBranchDetail implements ShouldQueue
      */
     public function __construct(User $user, Report $report,$branches, $file, array $period = null)
     {
-       
+        
         if (! $period) {
 
             $this->period['from'] = Carbon::yesterday()->startOfDay();
