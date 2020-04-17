@@ -13,7 +13,7 @@ use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
 
-class DailyBranch implements FromQuery, WithHeadings, WithMapping, WithColumnFormatting,ShouldQueue, ShouldAutoSize
+class DailyBranchExport implements FromQuery, WithHeadings, WithMapping, WithColumnFormatting, ShouldAutoSize
 {
     use Exportable;
     public $period;
@@ -91,7 +91,11 @@ class DailyBranch implements FromQuery, WithHeadings, WithMapping, WithColumnFor
     }
 
 
-
+    /**
+     * [query description]
+     * 
+     * @return [type] [description]
+     */
     public function query()
     {
        
