@@ -192,9 +192,14 @@ class AddressController extends BaseController
     {
        
         $location = $this->getLocationLatLng($latlng);
-      
-        $result = $this->address->filtered()->nearby($location, $distance)->get();
+        $myBranches = auth()->user()->person->getMyBranches();
+        $myLeads = $this->address->filtered()->myLeads()->nearby($location, $distance)
+            ->withCount('assignedToBranch', 'openOpportunities')->get();
 
+        $unassignedLeads = $this->address->filtered()->unassigned()->nearby($location, $distance)->get();
+        
+        $result = $myLeads->merge($unassignedLeads);
+        
         return response()->view('addresses.xml', compact('result'))->header('Content-Type', 'text/xml');
     }
     /**

@@ -356,6 +356,7 @@ class Address extends Model
             'address_id', 'address_branch_id', 'id', 'id'
         );
     }
+
     public function scopeOrderByColumn($query, $field, $dir) 
     {
         
@@ -379,6 +380,21 @@ class Address extends Model
             $dir
         );
 
+    }
+    /**
+     * Return addresses assigned to users branch(es)
+     * 
+     * @param [type] $query [description]
+     * 
+     * @return [type]        [description]
+     */
+    public function scopeMyLeads($query)
+    {
+        return $query->whereHas(
+            'assignedToBranch', function ($q) { 
+                $q->whereIn('branches.id', auth()->user()->person->getMyBranches()); 
+            }
+        );
     }
     /**
      * [opportunities description]
@@ -562,5 +578,10 @@ class Address extends Model
             ->doesntHave('activities')
             ->doesntHave('opportunities')
             ->get();
+    }
+
+    public function scopeUnassigned($query)
+    {
+        return $query->whereDoesntHave('assignedToBranch');
     }
 }

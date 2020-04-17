@@ -10,8 +10,34 @@ class Model extends \Eloquent
     public $userVerticals;
     public $userRoles;
     
- 
-    
+    /**
+     * [scopeWithAndWhereHas description]
+     * 
+     * @param [type] $query      [description]
+     * @param [type] $relation   [description]
+     * @param [type] $constraint [description]
+     * 
+     * @return [type]             [description]
+     */
+    public function scopeWithAndWhereHas($query, $relation, $constraint) 
+    {
+        return $query->whereHas($relation, $constraint)
+            ->with([$relation => $constraint]);
+    }
+    /**
+     * [scopeWithCountAndWhereHas description]
+     * 
+     * @param [type] $query      [description]
+     * @param [type] $relation   [description]
+     * @param [type] $constraint [description]
+     * 
+     * @return [type]             [description]
+     */
+    public function scopeWithCountAndWhereHas($query, $relation, $constraint) 
+    {
+        return $query->whereHas($relation, $constraint)
+            ->withCount([$relation => $constraint]);
+    }
     public function getTableColumns($table, array $skip = null)
     {
         $query = "SHOW COLUMNS FROM ".$table;

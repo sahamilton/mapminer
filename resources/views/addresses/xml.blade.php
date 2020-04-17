@@ -4,7 +4,13 @@
 	locationweb="{{route('address.show', $row->id)}}" 
 	name="{{trim($row->businessname)}}"
 	account="{{trim($row->companyname)}}"
-	type="{{$row->addressable_type}}"
+    @if($row->open_opportunities_count > 0)
+	type="opportunity"
+    @elseif (isset($row->assigned_to_branch_count))
+    type="branchlead"
+    @else
+    type="lead"
+    @endif
 	address="{{ trim($row->street)}} {{trim($row->city)}} {{ trim($row->state)}}"
 	lat="{{ $row->lat}}"
 	lng="{{ $row->lng}}"
