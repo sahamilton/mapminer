@@ -38,10 +38,11 @@
             'zoomLevel':{{$data['zoomLevel']}}, 
             'infowindowTemplatePath' : '{{asset('maps/templates/infowindow-description.html')}}','listTemplatePath' : '{{asset('maps/templates/location-list-description.html')}}'} );
       		   $('#cp2').colorpicker();
-		 });
+		    }
+     );
    
     </script>
 
 
 @endsection
-@include('partials._scripts')
+
