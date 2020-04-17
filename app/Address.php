@@ -219,7 +219,7 @@ class Address extends Model
      */
     public function scopeWithLastActivityId($query)
     {
-        return $query->select('addresses.*')->selectSub('select id as last_activity_id from activities where address_id = addresses.id and completed=1 order by activities.created_at desc limit 1', 'last_activity_id');
+         return $query->select('addresses.*')->selectSub('select id as last_activity_id from activities where address_id = addresses.id and completed=1 order by activities.activity_date desc limit 1', 'last_activity_id');
        
     }
     
