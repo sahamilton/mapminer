@@ -94,7 +94,7 @@ class GeoCodingController extends BaseController
         }
 
         $data['result'] = $this->_getGeoListData($data);
-
+        
         if (count($data['result'])==0) {
             session()->flash('warning', 'No results found. Consider increasing your search distance');
         }
@@ -469,7 +469,7 @@ class GeoCodingController extends BaseController
                             }
                         );
                 }
-            )->get();
+            )->with('assignedToBranch')->get();
     }
     
     /**
