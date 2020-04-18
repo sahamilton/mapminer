@@ -30,7 +30,10 @@ class DailyBranch implements ShouldQueue
      */
     public function __construct(array $period = null)
     {
-            $this->period = $period;   
+        if (! $period) {
+            $period = ['from'=>now()->subDay()->startOfDay(), 'to'=>now()->subDay()->endOfDay()];
+        }
+        $this->period = $period;    
 
     }
 
