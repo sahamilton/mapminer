@@ -69,7 +69,7 @@ class DailyBranchDetail implements ShouldQueue
         */
         
         (new DailyBranchExport($this->period, $this->branches))
-            ->store($this->file);
+            ->queue($this->file);
         Mail::to([$this->user->getFormattedEmail()])
                         ->send(new SendReport($this->file, $this->period, $this->report, $this->user));
     }
