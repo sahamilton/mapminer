@@ -27,7 +27,7 @@ class ReportReadyJob implements ShouldQueue
      */
     public function __construct($distribution, $period, $file, Report $report)
     {
-        dd($file);
+        
         $this->distribution = $distribution;
         $this->period = $period;
         $this->file = $file;
