@@ -26,6 +26,7 @@ class BranchStats implements ShouldQueue
     public $distribution;
 
     public $timeout = 1200;
+
     /**
      * [__construct description]
      * @param Array $period [description]
@@ -48,7 +49,7 @@ class BranchStats implements ShouldQueue
         $report = Report::with('distribution')
             ->where('job', 'BranchStats')
             ->firstOrFail();
-        dd($report->distribution);
+        
         // create the file
         $this->file = '/public/reports/'.$report->filename. Carbon::now()->timestamp.'.xlsx';
        
