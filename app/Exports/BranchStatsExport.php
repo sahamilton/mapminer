@@ -21,6 +21,7 @@ class BranchStatsExport implements FromQuery, ShouldQueue, WithHeadings, WithMap
 
     public $fields = [
         'branchname'=>'Branch',
+        'id'=>'ID',
         'manager'=>'Manager',
         'opened'=>'# Opportunities Opened in Period',
         'Top25'=>'# Open Top 25 Opportunities',
