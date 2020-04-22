@@ -246,7 +246,7 @@ class ReportsController extends Controller {
                 //return (new InvoicesExport)->download('invoices.xlsx');
                 //
                 $report = new \App\Exports\DailyBranchExport($period, $myBranches);
-                dd($report);
+                dd($report->download('myfile'));
 
 
             
