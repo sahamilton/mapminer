@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Exports;
+namespace App\Exports\Old;
 
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
@@ -8,7 +8,7 @@ use Carbon\Carbon;
 use App\Branch;
 use App\Person;
 
-class DailyBranchExport implements FromView
+class OldDailyBranchExport implements FromView
 {
     public $period;
     public $branches;
