@@ -245,7 +245,8 @@ class ReportsController extends Controller {
                 //dd($export, $report->job, $report);
                 //return (new InvoicesExport)->download('invoices.xlsx');
                 //
-                new \App\Exports\DailyBranchExport($period, $myBranches);
+                $report = new \App\Exports\DailyBranchExport($period, $myBranches);
+                dd($report);
 
 
             
