@@ -265,7 +265,7 @@ class ReportsController extends Controller {
 
             default:
                 //dd($export, $report->job, $report);
-                return Excel::download(new App\Exports\DailyBranchExport($period, $myBranches), $report->job . '.csv');
+                return Excel::download(new \App\Exports\DailyBranchExport($period, $myBranches), $report->job . '.csv');
                 break;
 
             } 
