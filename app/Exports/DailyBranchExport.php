@@ -42,7 +42,7 @@ class DailyBranchExport implements FromQuery, WithHeadings, WithMapping, WithCol
        
         $this->period = $period;
         $this->branches = $branches;
-        
+        dd($this->branches);
 
        
     }
