@@ -244,7 +244,7 @@ class ReportsController extends Controller {
 
                 //dd($export, $report->job, $report);
                 //return (new InvoicesExport)->download('invoices.xlsx');
-                return (new \App\Exports\DailyBranchExport($period, $myBranches))->download($report->job . '.csv');
+                Excel::download(new \App\Exports\DailyBranchExport($period, $myBranches), $report->job . '.csv');
 
 
             
