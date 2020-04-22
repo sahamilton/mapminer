@@ -33,7 +33,7 @@ class DailyBranch
         if (! $period) {
             $period = ['from'=>now()->subDay()->startOfDay(), 'to'=>now()->subDay()->endOfDay()];
         }
-        $this->period = $period;   
+        $this->period = $period;    
 
     }
 

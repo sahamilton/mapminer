@@ -31,14 +31,14 @@
         <td>{{$lead->leadsource->source}}</td>
         
         <td>
-            @if($lead->salesteam->count() > 0)
-                {{$statuses[$lead->salesteam->first()->pivot->status_id]}}
+            @if($lead->assignedToBranch->count() > 0)
+                {{$statuses[$lead->assignedToBranch->first()->pivot->status_id]}}
             @else
                 Unclaimed
             @endif
         </td>
-        <td> @if($lead->salesteam->count() > 0)
-            @if($lead->salesteam->first()->pivot->status_id==1)
+        <td> @if($lead->assignedToBranch->count() >0)
+           
             <div class="btn-group">
                <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
                 <span class="caret"></span>
@@ -55,7 +55,7 @@
                
               </ul>
             </div>
-            @endif
+            
         @endif
     </td>
 

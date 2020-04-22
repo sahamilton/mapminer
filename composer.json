@@ -43,7 +43,8 @@
         "dionera/laravel-beanstalkd-ui": "^2.0",
         "livewire/livewire": "^1.0",
         "spatie/laravel-fractal": "^5.7",
-        "awobaz/compoships": "^1.1"
+        "awobaz/compoships": "^1.1",
+        "morrislaptop/laravel-queue-clear": "^1.2"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.2.5",
