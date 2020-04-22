@@ -166,8 +166,8 @@ use Illuminate\Http\Request;
         Route::get(
             'testjob', function () {
                 //$companies = App\Company::whereIn('id', [532])->get();
-                $period['from'] = \Carbon\Carbon::now()->subDay()->startOfDay();
-                $period['to'] = \Carbon\Carbon::now()->subDay()->endOfDay();
+                $period['from'] = \Carbon\Carbon::now()->subWeek()->startOfWeek()->startOfDay();
+                $period['to'] = \Carbon\Carbon::now()->subWeek()->startOfWeek()->endOfDay();
                 //App\Jobs\OpenOpportunitiesWithProposals::dispatch($period);
                 //App\Jobs\AccountActivities::dispatch($companies, $period);
                 //App\Jobs\ActivityOpportunity::dispatch($period);
