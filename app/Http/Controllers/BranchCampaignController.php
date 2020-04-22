@@ -52,7 +52,7 @@ class BranchCampaignController extends Controller
         $myBranches = $this->branch->whereIn('id', array_keys($this->person->myBranches()))->get();
         
         $campaigns = $this->campaign->current($myBranches->pluck('id')->toArray())->get();
-    
+        
        
         if (! $campaigns->count()) {
             return redirect()->back()->withMessage('there are no current sales campaigns for your branches');

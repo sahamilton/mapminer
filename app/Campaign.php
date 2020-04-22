@@ -366,15 +366,16 @@ class Campaign extends Model implements \MaddHatter\LaravelFullcalendar\Identifi
     public function scopeCurrent($query, Array $branches =null)
     {
         
-        $query = $query->active()->when(
-            $branches, function ($q) use ($branches) {
-                return $q->wherehas(
-                    'branches', function ($q) use ($branches) {
-                        $q->whereIn('branches.id', $branches);
-                    }
-                );
-            }
-        );
+        $query = $query->active()
+            ->when(
+                $branches, function ($q) use ($branches) {
+                    return $q->wherehas(
+                        'branches', function ($q) use ($branches) {
+                            $q->whereIn('branches.id', $branches);
+                        }
+                    );
+                }
+            );
         
         return $query;
     }
