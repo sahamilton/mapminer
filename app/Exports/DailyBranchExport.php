@@ -42,7 +42,7 @@ class DailyBranchExport implements FromQuery, WithHeadings, WithMapping, WithCol
        
         $this->period = $period;
         $this->branches = $branches;
-        dd($this->branches);
+
 
        
     }
@@ -98,8 +98,8 @@ class DailyBranchExport implements FromQuery, WithHeadings, WithMapping, WithCol
      */
     public function query()
     {
-        dd($this->branches);
-        return Branch::summaryStats($this->period)
+        
+        return Branch::query()->summaryStats($this->period)
             ->with('manager.reportsTo')
             ->when(
                 $this->branches, function ($q) {
