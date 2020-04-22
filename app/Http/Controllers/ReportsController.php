@@ -223,7 +223,7 @@ class ReportsController extends Controller {
     {
         
         if ($data = $this->_getMyBranches($request)) {
-            dd($data);
+
             $manager = $data['manager'];
             $myBranches = $data['branches'];
             $team = $data['team'];
@@ -264,7 +264,7 @@ class ReportsController extends Controller {
                 break;
 
             default:
-                
+                dd($export);
                 return Excel::download(new $export($period, $myBranches), $report->job . '.csv');
                 break;
 
