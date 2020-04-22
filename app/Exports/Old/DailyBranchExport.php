@@ -32,7 +32,7 @@ class DailyBranchExport implements FromView
      */
     public function view(): View
     {
-        
+        dd('hrere');
         $person = Person::whereIn('id', $this->person)->firstOrFail();
         $myBranches= $person->getMyBranches();
         $branches = Branch::summaryStats($this->period)
@@ -40,6 +40,6 @@ class DailyBranchExport implements FromView
             ->whereIn('id', $myBranches)->get();
         
         $period = $this->period;
-        return view('reports.dailybranchstats', compact('branches', 'period', 'person'));
+        //return view('reports.dailybranchstats', compact('branches', 'period', 'person'));
     }
 }
