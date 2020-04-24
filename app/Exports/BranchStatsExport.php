@@ -73,6 +73,7 @@ class BranchStatsExport implements FromQuery, ShouldQueue, WithHeadings, WithMap
     public function columnFormats(): array
     {
         return [
+            'B'=>NumberFormat::FORMAT_TEXT,
             'F' => NumberFormat::FORMAT_CURRENCY_USD,
             'I' => NumberFormat::FORMAT_CURRENCY_USD,
         ];

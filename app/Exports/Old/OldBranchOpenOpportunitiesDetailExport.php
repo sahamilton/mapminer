@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Exports;
+namespace App\Exports\Old;
 
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
 use Carbon\Carbon;
 use App\Branch;
 
-class BranchOpenOpportunitiesDetailExport implements FromView
+class OldBranchOpenOpportunitiesDetailExport implements FromView
 {
     public $period;
     public $branches;
