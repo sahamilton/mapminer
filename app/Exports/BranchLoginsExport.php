@@ -17,6 +17,7 @@ class BranchLoginsExport implements FromQuery, ShouldQueue, WithHeadings,WithMap
 
     
     public $period;
+    public $diff;
     public $branches;
     public $fields = [
         'branchname'=>'Branch',
@@ -36,7 +37,7 @@ class BranchLoginsExport implements FromQuery, ShouldQueue, WithHeadings,WithMap
     {
         $this->period = $period;
         $this->branches = $branches;
-
+        $this->diff = $this->period['from']->diff($this->period['to'])->days +1;
 
     }
     /**
@@ -80,7 +81,7 @@ class BranchLoginsExport implements FromQuery, ShouldQueue, WithHeadings,WithMap
                 $detail[] = $branch->manager->count() ? $branch->manager->first()->userdetails->usage_count : '';
                 break;
             case 'avg':
-                $detail[] = $branch->manager->count() ? $branch->manager->first()->userdetails->usage_count /$this->period['from']->diff($this->period['to'])->days : '';
+                $detail[] = $branch->manager->count() ? $branch->manager->first()->userdetails->usage_count / $this->diff: '';
                 break;
             default:
                 $detail[] = $branch->$key;
@@ -101,16 +102,16 @@ class BranchLoginsExport implements FromQuery, ShouldQueue, WithHeadings,WithMap
     public function query()
     {
         return Branch::with(
-                [
-                    'manager.userdetails'=>function ($q) {
-                        $q->totalLogins($this->period);
-                    }
-                ]
-            )
-            ->when(
-                isset($this->branches), function ($q) {
-                    $q->whereIn('branches.id', $this->branches);
+            [
+                'manager.userdetails'=>function ($q) {
+                    $q->totalLogins($this->period);
                 }
-            );
+            ]
+        )
+        ->when(
+            isset($this->branches), function ($q) {
+                $q->whereIn('branches.id', $this->branches);
+            }
+        );
     }
 }

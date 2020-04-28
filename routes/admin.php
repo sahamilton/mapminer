@@ -166,16 +166,16 @@ use Illuminate\Http\Request;
         Route::get(
             'testjob', function () {
                 //$companies = App\Company::whereIn('id', [532])->get();
-                $period['from'] = \Carbon\Carbon::now()->subDay()->startOfDay();
-                $period['to'] = \Carbon\Carbon::now()->subDay()->endOfDay();
+                $period['from'] = \Carbon\Carbon::now()->subMonth(2)->startOfMonth()->startOfDay();  
+                $period['to'] = \Carbon\Carbon::now()->subWeek()->endOfWeek()->endOfDay();
                 //App\Jobs\OpenOpportunitiesWithProposals::dispatch($period);
                 //App\Jobs\AccountActivities::dispatch($companies, $period);
                 //App\Jobs\ActivityOpportunity::dispatch($period);
                 //$opportunity = App\Opportunity::has('branch')->first();
                 //App\Jobs\WonOpportunity::dispatch($opportunity);
                 // App\Jobs\Top50WeeklyReport::dispatch();
-                //App\Jobs\BranchLogins::dispatch($period);
-                App\Jobs\DailyBranch::dispatch($period);
+                App\Jobs\BranchLogins::dispatch($period);
+               // App\Jobs\DailyBranch::dispatch($period);
                  //App\Jobs\AccountActivities::dispatch($company, $period);
                 //App\Jobs\BranchCampaign::dispatch();
                 //App\Jobs\BranchOpportunities::dispatch($period);

@@ -122,11 +122,11 @@ class AddressController extends BaseController
       
         $ranked = $this->address->getMyRanking($location->ranking);
         $notes = $this->notes->locationNotes($location->id)->get();
-        if ($myBranches) {
-            $owned = $this->_checkIfOwned($address, $myBranches);
-        } else {
-            $owned = false;
-        }
+        //if ($myBranches) {
+        $owned = $this->_checkIfOwned($address, $myBranches);
+        //} else {
+        //    $owned = false;
+        //}
        
         $fields = Howtofield::where('active', 1)->orderBy('sequence')->get();
         

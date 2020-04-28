@@ -1,0 +1,45 @@
+validation query:
+select addresses.id, addresses.businessname, addresses.city, addresses.state, activities.note, address_branch.created_at,addresses.created_at from addresses, activities, address_branch where activities.user_id = 3351 and activities.created_at between '2020-04-21' and '2020-04-22' and activities.address_id = addresses.id and address_branch.address_id = addresses.id
+
+select branchname,CONCAT_WS(" ", persons.firstname, persons.lastname ) AS createdBy, branch_person.branch_id AS assignedBranch, 
+addresses.id AS addressId, addresses.businessname, addresses.city,addresses.state, 
+persons.city,persons.state,  
+ST_Distance_Sphere(branches.position,addresses.position) * .000621371192  as distance
+from addresses, address_branch, branches, persons, branch_person
+where addresses.created_at between '2020-04-21' and '2020-04-22'
+and addresses.user_id = persons.user_id
+and addresses.id = address_branch.address_id
+and address_branch.branch_id = branches.id
+AND persons.id = branch_person.person_id
+and ST_Distance_Sphere(branches.position,addresses.position) * .000621371192 > 25
+order by distance desc
+
+USE `mapminer`;
+select branchname,  concat_ws(" ", persons.firstname,persons.lastname) as createdBy, branch_person.branch_id AS assignedBranch,
+addresses.id as addressId,  addresses.businessname,addresses.city,addresses.state, persons.city,persons.state, activities.note, completed, followup_date, ST_Distance_Sphere(branches.position,addresses.position) * .000621371192  as distance
+from addresses, address_branch, branches, persons, activities, branch_person
+where activities.created_at between '2020-04-21' and '2020-04-22'
+and activities.user_id = persons.user_id
+and addresses.id = activities.address_id
+and addresses.id= address_branch.address_id
+and address_branch.branch_id = branches.id
+AND persons.id = branch_person.person_id
+and ST_Distance_Sphere(branches.position,addresses.position) * .000621371192 > 25
+ORDER BY `distance`  DESC
+
+select branchname, concat_ws(" ", persons.firstname,persons.lastname) as createdBy,branch_person.branch_id AS assignedBranch, addresses.id as addressId, addresses.businessname, addresses.city,addresses.state, persons.city,persons.state, opportunities.closed, opportunities.description, ST_Distance_Sphere(branches.position,addresses.position) * .000621371192 as distance from addresses, branches, persons, opportunities,branch_person where opportunities.updated_at between '2020-04-21' and '2020-04-22' and opportunities.user_id = persons.user_id and addresses.id = opportunities.address_id and opportunities.branch_id = branches.id AND persons.id = branch_person.person_id and ST_Distance_Sphere(branches.position,addresses.position) * .000621371192 > 25 ORDER BY `distance` DESC
+
+
+select
+addresses.id, businessname, addresses.street, addresses.city, addresses.state, note, completed, a.branchname as actBranch,concat_ws(" ", e.firstname, e.lastname) as activitymanager, b.branchname as leadBranch, concat_ws(" ", e.firstname, e.lastname) as activitymanager, concat_ws(" ", f.firstname, f.lastname) as leadmanager, activities.updated_at, address_branch.updated_at, ST_Distance_Sphere(a.position,addresses.position) * .000621371192 as activitydistance, ST_Distance_Sphere(b.position,addresses.position) * .000621371192 as leaddistance
+from addresses, address_branch, activities, branches a, branches b, branch_person , persons e, persons f
+where activities.created_at between '2020-04-21' and '2020-04-22'
+and activities.address_id = address_branch.address_id
+and address_branch.branch_id != activities.branch_id
+and address_branch.address_id = addresses.id
+and activities.branch_id = a.id
+and activities.user_id = e.user_id
+and b.id = branch_person.branch_id
+and branch_person.role_id = 9
+and branch_person.person_id = f.id
+and address_branch.branch_id = b.id  

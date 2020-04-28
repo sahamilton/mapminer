@@ -18,6 +18,8 @@ class BranchLogins implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     public $branches;
     public $period;
+    public $file;
+    public $report;
     
     /**
      * [__construct description]
@@ -37,18 +39,30 @@ class BranchLogins implements ShouldQueue
      */
     public function handle()
     {
-        $file = '/public/reports/branchlogins'. $this->period['to']->timestamp. ".xlsx";
+        $this->file = '/public/reports/branchlogins'. $this->period['to']->timestamp. ".xlsx";
 
-        Excel::store(new BranchLoginsExport($this->period, $this->branches), $file);
-        
+        //Excel::store(new BranchLoginsExport($this->period, $this->branches), $file);
+        //$distribution = $report->getDistribution();
+        //Mail::to($distribution)
+            //->send(new BranchLoginsReport($file, $this->period));
+
+        //$this->file = '/public/reports/branchactivitiesdetail'. $this->period['to']->timestamp. ".xlsx";
         $class= str_replace("App\Jobs\\", "", get_class($this));
-        $report = Report::with('distribution')
+        $this->report = Report::with('distribution')
             ->where('job', $class)
             ->firstOrFail();
     
-        $distribution = $report->getDistribution();
-        Mail::to($distribution)
-            ->send(new BranchLoginsReport($file, $this->period));   
+        (new BranchLoginsExport($this->period, $this->branches))
+            ->store($this->file)
+            ->chain(
+                [
+                    new ReportReadyJob($this->report->distribution, $this->period, $this->file, $this->report)
+
+                ]
+            ); 
+        
+       
+           
 
     }
 }
