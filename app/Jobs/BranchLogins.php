@@ -5,6 +5,7 @@ namespace App\Jobs;
 use Mail;
 use Excel;
 use App\Report;
+use Carbon\Carbon;
 use App\Exports\BranchLoginsExport;
 use App\Mail\BranchLoginsReport;
 use Illuminate\Bus\Queueable;
@@ -26,8 +27,11 @@ class BranchLogins implements ShouldQueue
      * 
      * @param Array $period [description]
      */
-    public function __construct(Array $period, Array $branches=null)
+    public function __construct(Array $period =null, Array $branches=null)
     {
+        if (! $period) {
+            $period = ['from'=>Carbon::now()->subMonth()->startOfMonth()->startOfDay(), 'to'=>now()->subMonth()->endOfMonth()->endOfDay()];
+        }
         $this->period = $period;
         $this->branches = $branches;
     }
@@ -41,12 +45,6 @@ class BranchLogins implements ShouldQueue
     {
         $this->file = '/public/reports/branchlogins'. $this->period['to']->timestamp. ".xlsx";
 
-        //Excel::store(new BranchLoginsExport($this->period, $this->branches), $file);
-        //$distribution = $report->getDistribution();
-        //Mail::to($distribution)
-            //->send(new BranchLoginsReport($file, $this->period));
-
-        //$this->file = '/public/reports/branchactivitiesdetail'. $this->period['to']->timestamp. ".xlsx";
         $class= str_replace("App\Jobs\\", "", get_class($this));
         $this->report = Report::with('distribution')
             ->where('job', $class)
