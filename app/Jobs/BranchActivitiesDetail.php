@@ -5,6 +5,7 @@ namespace App\Jobs;
 use Mail;
 use Excel;
 use App\Report;
+use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use App\Exports\BranchActivitiesDetailExport;
 use App\Mail\BranchActivitiesDetailReport;
@@ -29,7 +30,8 @@ class BranchActivitiesDetail implements ShouldQueue
     {
         
         if (! $period) {
-            $this->period = ['from'=>\Carbon\Carbon::now()->subWeek(4)->startOfWeek(),'to'=>\Carbon\Carbon::now()->endOfWeek()];
+            $this->period =  ['from'=>Carbon::now()->subMonth(2)->startOfMonth(), 'to' => Carbon::now()->subWeek()->endOfWeek()];
+           
             
         } else {
             $this->period = $period;
