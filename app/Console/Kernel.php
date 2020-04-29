@@ -97,9 +97,8 @@ class Kernel extends ConsoleKernel
             $period['from'] = Carbon::now()->subMonth(2)->startOfMonth()->startOfDay();  
             $period['to'] = Carbon::now()->subWeek()->endOfWeek()->endOfDay();
             $schedule->job(new BranchLogins($period))
-                ->weekly()
-                ->tuesdays()
-                ->at('03:59');
+                ->monthlyOn(1, '1:17');()
+               
                 
             // Branch Activities Report
             $period['from'] = Carbon::now()->subMonth(2)->startOfMonth();  

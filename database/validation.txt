@@ -16,7 +16,7 @@ order by distance desc
 
 USE `mapminer`;
 select branchname,  concat_ws(" ", persons.firstname,persons.lastname) as createdBy, branch_person.branch_id AS assignedBranch,
-addresses.id as addressId,  addresses.businessname,addresses.city,addresses.state, persons.city,persons.state, activities.note, completed, followup_date, ST_Distance_Sphere(branches.position,addresses.position) * .000621371192  as distance
+addresses.id as addressId,  addresses.businessname,addresses.city,addresses.state, persons.city,persons.state, activities.id as actId, address_branch.id as AddBrnchId, activities.note, completed, followup_date, ST_Distance_Sphere(branches.position,addresses.position) * .000621371192  as distance
 from addresses, address_branch, branches, persons, activities, branch_person
 where activities.created_at between '2020-04-21' and '2020-04-22'
 and activities.user_id = persons.user_id
