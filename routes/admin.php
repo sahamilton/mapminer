@@ -166,9 +166,9 @@ use Illuminate\Http\Request;
         Route::get(
             'testjob', function () {
                 //$companies = App\Company::whereIn('id', [532])->get();
-                $period =  ['from'=>\Carbon\Carbon::now()->subMonth(2)->startOfMonth(), 
+                $period =  ['from'=>\Carbon\Carbon::now()->subWeek()->startOfWeek(), 
                     'to' => \Carbon\Carbon::now()->subWeek()->endOfWeek()];
-                App\Jobs\BranchActivitiesDetail::dispatch($period);
+                //App\Jobs\BranchActivitiesDetail::dispatch($period);
                 //App\Jobs\OpenOpportunitiesWithProposals::dispatch($period);
                 //App\Jobs\AccountActivities::dispatch($companies, $period);
                 //App\Jobs\ActivityOpportunity::dispatch($period);
@@ -179,7 +179,7 @@ use Illuminate\Http\Request;
                // App\Jobs\DailyBranch::dispatch($period);
                  //App\Jobs\AccountActivities::dispatch($company, $period);
                 //App\Jobs\BranchCampaign::dispatch();
-                //App\Jobs\BranchOpportunities::dispatch($period);
+                App\Jobs\BranchOpportunities::dispatch($period);
                  //App\Jobs\RebuildPeople::dispatch();
                 //App\Jobs\BranchLogins::dispatch($period);
                  /*$filesInFolder = \File::files(storage_path('backups'));

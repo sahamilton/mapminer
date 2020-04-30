@@ -57,12 +57,20 @@ class BranchStatsExport implements FromQuery, ShouldQueue, WithHeadings, WithMap
     
     public function map($branch): array
     {
-        
         foreach ($this->fields as $key=>$field) {
-            if ($key == 'manager') {
+            switch($key) {
+            case 'manager':
                 $detail[] = $branch->manager->count() ? $branch->manager->first()->fullName() :'';
-            } else {
-                $detail[]=$branch->$key; 
+                break;
+
+            case 'reportsto':
+                $detail[] = $branch->manager->count() && $branch->manager->first()->reportsTo->count() ? $branch->manager->first()->reportsTo->fullName() :'';
+                break;
+
+            default:
+                $detail[]=$branch->$key;
+                break;
+
             }
             
         }

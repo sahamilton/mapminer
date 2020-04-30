@@ -39,16 +39,18 @@ class DeadLeads implements ShouldQueue
     {
         // create the file
         
-        $file = '/public/reports/deadleadsrpt'. Carbon::now()->timestamp. ".xlsx";
-        Excel::store(new DeadLeadsExport($this->period, $this->branches), $file);
-        $class= str_replace("App\Jobs\\", "", get_class($this));
-        $report = Report::with('distribution', 'distribution.person', 'distribution.person.userdetails')
-            ->where('job', $class)
+        $report = Report::with('distribution')
+            ->where('job', 'DeadLeads')
             ->firstOrFail();
-     
-        $distribution = $report->getDistribution();
+        
+        // create the file
+        $this->file = '/public/reports/'.$report->filename. Carbon::now()->timestamp.'.xlsx';
        
-        Mail::to($distribution)
-            ->send(new DeadLeadsReport($file));
+        (new DeadLeadsExport($this->period, $this->branches))->store($this->file)->chain(
+            [
+                new ReportReadyJob($report->distribution, $this->period, $this->file, $report)
+
+            ]
+        );
     }
 }
