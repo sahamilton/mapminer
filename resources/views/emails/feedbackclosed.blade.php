@@ -12,7 +12,7 @@ Page Ref: {{$feedback->url}}
 
 Feedback: {{$feedback->feedback}}
 
-Date: {{$feedback->updated_at->format('F js, Y')}}
+Date: {{$feedback->updated_at->format('F jS, Y')}}
 
 Originally posted By: {{$feedback->providedBy->person->fullName()}}
 

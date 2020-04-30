@@ -178,7 +178,9 @@ class ReportsController extends Controller {
     public function addRecipient(AddRecipientReportRequest $request, Report $report)
     {
         
-        $user = \App\User::where('email', request('email'))->where('confirmed', 1)->first();
+        if (! $user = \App\User::where('email', request('email'))->where('confirmed', 1)->first()) {
+            return redirect()->back()->withError('Not a valid Mapminer user');
+        }
        
         $report->distribution()->attach($user);
         return redirect()->route('reports.show', $report->id);

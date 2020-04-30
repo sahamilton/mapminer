@@ -118,16 +118,16 @@ class AddressController extends BaseController
         }
       
         $rankingstatuses = $this->address->getStatusOptions;
-        $myBranches = $this->person->where('user_id', auth()->user()->id)->first()->branchesManaged()->pluck('id')->toArray();
+        $myBranches = $this->person->where('user_id', auth()->user()->id)->first()->getMyBranches();
       
         $ranked = $this->address->getMyRanking($location->ranking);
         $notes = $this->notes->locationNotes($location->id)->get();
-        if ($myBranches) {
-            $owned = $this->_checkIfOwned($address);
-        } else {
-            $owned = false;
-        }
-        
+        //if ($myBranches) {
+        $owned = $this->_checkIfOwned($address, $myBranches);
+        //} else {
+        //    $owned = false;
+        //}
+       
         $fields = Howtofield::where('active', 1)->orderBy('sequence')->get();
         
         return response()->view('addresses.show', compact('location', 'branches', 'rankingstatuses', 'people', 'myBranches', 'ranked', 'notes', 'owned', 'fields'));
@@ -386,15 +386,13 @@ class AddressController extends BaseController
      * 
      * @return integer  $owned: null not owned; 1 = offered; 2 = owned
      */
-    private function _checkIfOwned(Address $address)
+    private function _checkIfOwned(Address $address, Array $myBranches)
     {
         
-        $myBranches = $this->person->with('branchesServiced')->where('user_id', auth()->user()->id)->first();
+        //$myBranches = $this->person->where('user_id', auth()->user()->id)->first()->getMyBranches();
         
-        $myBranches = $myBranches->branchesServiced->pluck('id')->toArray();
-
         $ownedBy = $address->assignedToBranch->whereIn('id', $myBranches);
-    
+        
         if (! $ownedBy->count()) {
             return null;
         }
@@ -406,9 +404,9 @@ class AddressController extends BaseController
         );
         
         if (! $owner) {
-            return 1;
+            return null;
         }
-        return 2;
+        return true;
     }
     
 }

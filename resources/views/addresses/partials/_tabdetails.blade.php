@@ -24,7 +24,7 @@
 			 <p>Lat: {{number_format($location->lat,4)}};<br /> Lng: {{number_format($location->lng,4)}}</p>
 		 </fieldset>
 
-		@if(auth()->user()->hasRole('admin') or $location->user_id == auth()->user()->id)
+		@if($owned)
 		<a class="text text-info" href="{{route('address.edit',$location->id)}}" 
 		title="Edit this location">
 		<i class="far fa-edit"></i>
@@ -39,7 +39,6 @@
 	
 		@endif
 		@elseif ($location->createdBy)
-
 
 			<p>Lead Created by: <a href="{{route('user.show',$location->createdBy->id)}}">{{$location->createdBy->postName()}}</a></p>
 

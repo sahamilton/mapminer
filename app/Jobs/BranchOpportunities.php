@@ -5,6 +5,7 @@ namespace App\Jobs;
 use Mail;
 use Excel;
 use App\Report;
+use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use App\Exports\BranchOpportunitiesExport;
 use App\Mail\BranchOpportunitiesReport;
@@ -17,14 +18,19 @@ class BranchOpportunities implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     public $period;
-    
+    public $report;
+    public $file;
     /**
      * [__construct description]
      * 
      * @param array $period [description]
      */
-    public function __construct(array $period)
+    public function __construct(array $period = null)
     {
+        if (! $period) {
+            $period = ['to'=>now()->subWeek()->startOfWeek(), 
+            'to'=>now()->subWeek()->endOfWeek()];
+        }
         $this->period = $period;
     }
 
@@ -35,18 +41,25 @@ class BranchOpportunities implements ShouldQueue
      */
     public function handle()
     {
-        $file = '/public/reports/branchopptysrpt'. $this->period['to']->timestamp. ".xlsx";
-        Excel::store(new BranchOpportunitiesExport($this->period), $file);
-        
-        $class= str_replace("App\Jobs\\", "", get_class($this));
-        
-        $report = Report::with('distribution')
-            ->where('job', $class)
+        $this->report = Report::with('distribution')
+            ->where('job', 'BranchOpportunities')
             ->firstOrFail();
         
-        $distribution = $report->getDistribution();
+        $this->file = "public/reports/". $this->report->filename.$this->period['to']->timestamp. ".xlsx";
+
+        $report = Report::with('distribution')
+            ->where('job', 'BranchStats')
+            ->firstOrFail();
         
-        Mail::to($distribution)->send(new BranchOpportunitiesReport($file, $this->period));   
+        // create the file
+        $this->file = '/public/reports/'.$this->report->filename. Carbon::now()->timestamp.'.xlsx';
+       
+        (new BranchOpportunitiesExport($this->period))->store($this->file)->chain(
+            [
+                new ReportReadyJob($this->report->distribution, $this->period, $this->file, $this->report)
+
+            ]
+        );  
         
     }
 }

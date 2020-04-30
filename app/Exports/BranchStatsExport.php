@@ -21,6 +21,7 @@ class BranchStatsExport implements FromQuery, ShouldQueue, WithHeadings, WithMap
 
     public $fields = [
         'branchname'=>'Branch',
+        'id'=>'ID',
         'manager'=>'Manager',
         'opened'=>'# Opportunities Opened in Period',
         'Top25'=>'# Open Top 25 Opportunities',
@@ -56,12 +57,20 @@ class BranchStatsExport implements FromQuery, ShouldQueue, WithHeadings, WithMap
     
     public function map($branch): array
     {
-        
         foreach ($this->fields as $key=>$field) {
-            if ($key == 'manager') {
+            switch($key) {
+            case 'manager':
                 $detail[] = $branch->manager->count() ? $branch->manager->first()->fullName() :'';
-            } else {
-                $detail[]=$branch->$key; 
+                break;
+
+            case 'reportsto':
+                $detail[] = $branch->manager->count() && $branch->manager->first()->reportsTo->count() ? $branch->manager->first()->reportsTo->fullName() :'';
+                break;
+
+            default:
+                $detail[]=$branch->$key;
+                break;
+
             }
             
         }
@@ -72,6 +81,7 @@ class BranchStatsExport implements FromQuery, ShouldQueue, WithHeadings, WithMap
     public function columnFormats(): array
     {
         return [
+            'B'=>NumberFormat::FORMAT_TEXT,
             'F' => NumberFormat::FORMAT_CURRENCY_USD,
             'I' => NumberFormat::FORMAT_CURRENCY_USD,
         ];

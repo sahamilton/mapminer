@@ -1,10 +1,10 @@
 <?php
-namespace App\Exports;
+namespace App\Exports\Old;
 
 use App\Person;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
-class TeamLoginsExport implements FromView
+class OldTeamLoginsExport implements FromView
 {
     public $manager;
     public $period;

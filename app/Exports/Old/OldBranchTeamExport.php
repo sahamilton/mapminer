@@ -1,5 +1,5 @@
 <?php
-namespace App\Exports;
+namespace App\Exports\Old;
 
 use App\Branch;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -13,7 +13,7 @@ use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use Carbon\Carbon;
 use App\Person;
 
-class BranchTeamExport implements FromQuery, ShouldQueue, WithHeadings, WithMapping, ShouldAutoSize
+class OldBranchTeamExport implements FromQuery, ShouldQueue, WithHeadings, WithMapping, ShouldAutoSize
 {
     
     public $roles;

@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Exports;
+namespace App\Old\Exports;
 
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
 
-class BranchLoginsExport implements FromView
+class OldBranchLoginsExport implements FromView
 {
     
     public $period;

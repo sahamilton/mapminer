@@ -33,7 +33,7 @@
       role="tab" 
       aria-controls="details" 
       aria-selected="true">
-    <strong> Details</strong>
+    <strong>  Details</strong>
   </a>
 @if(isset($owned))
 <a class="nav-item nav-link"  
