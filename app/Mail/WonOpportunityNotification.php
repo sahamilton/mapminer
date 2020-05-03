@@ -33,7 +33,23 @@ class WonOpportunityNotification extends Mailable
     public function build()
     {
         
+        $replyTo = $this->_getBranchManagerDetails();
 
-        return $this->markdown('emails.opportunities.won');
+        return $this->replyTo($replyTo)->markdown('emails.opportunities.won');
+    }
+
+    private function _getBranchManagerDetails()
+    {
+       
+  
+        $managers =$this->opportunity->branch->branch->manager;
+        
+        $list = [];
+        foreach ($managers as $mgr) {
+            
+            $list[] = ['name'=>$mgr->fullName(), 'email'=>$mgr->userdetails->email];
+            
+        }
+        return $list;
     }
 }
