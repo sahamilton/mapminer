@@ -183,8 +183,9 @@ class MgrDashboardController extends DashboardController
           
             $this->manager = $this->person->findOrFail(request('manager'));
         }
-       
-        $team = $this->manager->descendantsAndSelf()
+        // This should be getMyBranches
+        $this->myBranches = $manager->getMyBranches();
+        /*$team = $this->manager->descendantsAndSelf()
             ->with('branchesServiced')->get();
         
         $branches = $team->map(
@@ -193,7 +194,7 @@ class MgrDashboardController extends DashboardController
             }
         ); 
         
-        $this->myBranches = array_unique($branches->flatten()->toArray());
+        $this->myBranches = array_unique($branches->flatten()->toArray());*/
        
         if (count($this->myBranches)==0) {
             return redirect()->back()->withMessage($this->manager->fullName().' is not assigned to any branches');
