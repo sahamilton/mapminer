@@ -224,7 +224,7 @@ class AddressController extends BaseController
     {
         $dupes = $address->load('duplicates', 'assignedToBranch')->duplicates;
         $myBranches = auth()->user()->person->getMyBranches();
-        return response()->view('addresses.duplicates', compact('dupes', 'myBranches'));
+        return response()->view('addresses.duplicates', compact('address', 'dupes', 'myBranches'));
     }
     /**
      * [mergeAddress description]
@@ -235,6 +235,10 @@ class AddressController extends BaseController
      */
     public function mergeAddress(MergeAddressFormRequest $request)
     {
+       
+        if (request('mergeAddressesBtn') != 'Merge Addresses') {
+            return redirect()->route('address.show', request('original'));
+        }
         
         // get all addresses except primary
         $addresses = $this->address

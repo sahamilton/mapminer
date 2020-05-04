@@ -6,12 +6,7 @@
 
 
 @endif
-<a href=""><button 
-	name="ignore"
-	class="btn btn-success">Ignore
-</button>
-</a>
-	
+
 <form 
 name="mergeaddresses"
 method="post"
@@ -73,6 +68,7 @@ action="{{route('addresses.merge')}}"
 		</tbody>
 
 	</table>
+	<input type="hidden" name="original" value="{{$address->id}}" />
 </form>
 @include('partials/_scripts')
 
