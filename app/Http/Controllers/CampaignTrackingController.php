@@ -177,7 +177,7 @@ class CampaignTrackingController extends Controller
                 
             }
         );
-        dd($assignedBranches->unique()->flatten());
+        
         return response()->view('campaigns.companydetail', compact('period', 'campaign', 'company'));
        
     }
