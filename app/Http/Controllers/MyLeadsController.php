@@ -118,30 +118,30 @@ class MyLeadsController extends BaseController
 
         $data['branch'] = $this->branch->findOrFail(request('branch'));
 
-        $lead = $this->lead->create($data['lead']);
+        $address = $this->lead->create($data['lead']);
         
-        $lead->assignedToBranch()->attach($data['branch']->id, ['status_id'=>2]);
+        $address->assignedToBranch()->attach($data['branch']->id, ['status_id'=>2]);
         $dupes = $this->_getDuplicateLeads($data);
       
         if (isset($data['contact'])) {
         
-            $lead->contacts()->create($data['contact']);
+            $address->contacts()->create($data['contact']);
         }
         // probably do away with this....
         if (request()->filled('addressable_type')) {
             switch (request('addressable_type')) {
             case 'weblead':
-                    $lead->weblead()->create(request()->all());
+                    $address->weblead()->create(request()->all());
                 break;
             }
            
-            $lead->load('contacts', request('addressable_type'));
+            $address->load('contacts', request('addressable_type'));
         } else {
-            $lead->load('contacts');
+            $address->load('contacts');
         }
 
         if ($dupes->count() > 1) {
-            return response()->view('addresses.duplicates', compact('dupes', 'data', 'myBranches'));
+            return response()->view('addresses.duplicates', compact('address', 'dupes', 'data', 'myBranches'));
         }
 
         // send this to a job
