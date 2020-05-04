@@ -157,9 +157,9 @@ class MyLeadsController extends BaseController
         }
         // not sure that this is being used anymore
         if (request()->has('source') && request('source') == 'mobile') {
-                return redirect()->route('mobile.show', $lead)->withMessage('Lead Created');
+                return redirect()->route('mobile.show', $address)->withMessage('Lead Created');
         } else {
-            return redirect()->route('address.show', $lead)->withMessage('Lead Created');
+            return redirect()->route('address.show', $address)->withMessage('Lead Created');
         }
         
     }
