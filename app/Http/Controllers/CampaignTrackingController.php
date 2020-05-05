@@ -167,18 +167,10 @@ class CampaignTrackingController extends Controller
       
         $period = $this->_getCampaignPeriod($campaign);
         $branches = $campaign->branches()->pluck('id')->toArray();
-        $company = $this->company->companyDetail($period, $branches)->findOrFail($company->id);
-        
-        $assignedBranches = $company->locations->map(
-            function ($location) {
-                if ($location->assignedToBranch->isNotEmpty()) {
-                    return $location->assignedToBranch->pluck('branchname');
-                }
-                
-            }
-        );
-        
-        return response()->view('campaigns.companydetail', compact('period', 'campaign', 'company'));
+        //$company = $this->company->companyDetail($period, $branches)->findOrFail($company->id);
+        $branches = $this->branch->whereIn('id', $branches)->summaryCampaignStats($campaign, [$company->id])->get();
+        $fields =$this->fields;
+        return response()->view('campaigns.companydetail', compact('period', 'campaign', 'company', 'branches', 'fields'));
        
     }
     /**

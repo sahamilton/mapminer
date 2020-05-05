@@ -1230,11 +1230,16 @@ class Branch extends Model implements HasPresenter
      * 
      * @return [type]         [description]
      */
-    public function scopeSummaryCampaignStats($query,$campaign)
+    public function scopeSummaryCampaignStats($query,Campaign $campaign, array $companies=null)
     {
         $this->period['from'] = $campaign->datefrom;
         $this->period['to'] = $campaign->dateto;
-        $this->company_ids = $campaign->companies->pluck('id')->toarray();
+        if (! $companies) {
+            $this->company_ids = $campaign->companies->pluck('id')->toarray();
+        } else {
+            $this->company_ids = $companies;
+        }
+        
         
 
         return $query->withCount(       
@@ -1387,13 +1392,17 @@ class Branch extends Model implements HasPresenter
      * 
      * @return [type]             [description]
      */
-    public function scopeCampaignDetail($query,Campaign $campaign)
+    public function scopeCampaignDetail($query,Campaign $campaign, array $companies=null)
     {
      
         $period['from'] = $campaign->datefrom;
         $period['to'] = $campaign->dateto;
+        if(! $companies) {
+            $this->company_ids = $campaign->companies->pluck('id')->toarray();
+        }else {
+            $this->company_ids = $companies;
+        }
         
-        $this->company_ids = $campaign->companies->pluck('id')->toarray();
         
         $this->location_ids = $campaign->getLocations();
 
