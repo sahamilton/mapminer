@@ -82,8 +82,8 @@ class BranchStatsExport implements FromQuery, ShouldQueue, WithHeadings, WithMap
     {
         return [
             'B'=>NumberFormat::FORMAT_TEXT,
-            'F' => NumberFormat::FORMAT_CURRENCY_USD,
-            'I' => NumberFormat::FORMAT_CURRENCY_USD,
+            'G' => NumberFormat::FORMAT_CURRENCY_USD,
+            'J' => NumberFormat::FORMAT_CURRENCY_USD,
         ];
     }
 
