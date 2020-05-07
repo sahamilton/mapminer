@@ -8,9 +8,16 @@
             @endforeach
         </div>
     @endif
+<form 
+name="searchfilters"
+method="post"
+action="searchfitlers.store">
+@csrf
 
-{{Form::open(array('url'=>'/admin/searchfilters'))}}
+
 @include('filters.partials._filterform')
-{{Form::submit('Create Filter',array('class'=>'btn btn-primary'))}}
+<input type="submit"
+class="btn btn-primary" />
+</form>
 @include('partials/_scripts')
 @endsection

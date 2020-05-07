@@ -2,15 +2,23 @@
 @section('content')
 
 <h2>Edit Comment</h2>
-<?php $buttonLabel = 'Edit Comment';?>
+@php $buttonLabel = 'Edit Comment';@endphp
+<form
+name="comment"
+method="post"
+action = "{{route('comment.update', $commet->id)}}"
+>
+@csrf
+@method="patch"
 
-{{Form::model($comment,['method'=>'PATCH','route'=>['comment.update', $comment->id]]) }}
+<div class="form-group">
+    <label for="comment">Feedback:</label>
+
 <div>
-{{Form::label('comment','Feedback:')}}
-<div>
-{{Form::textarea('comment')}}
-{{ $errors->first('comment') }}
-</div></div>
+    <textarea name="comment"></textarea>
+        {{ $errors->first('comment') }}
+    </div>
+</div>
 <input type="hidden" name="slug" value="{{$comment->relatesTo->slug}}" />
 <input type="submit" class="btn btn-info" name="submit" value="Edit Comment" />
 {{Form::close()}}

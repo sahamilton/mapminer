@@ -168,7 +168,7 @@ return [
          * Package Service Providers...
          */
 
-        Baum\Providers\BaumServiceProvider::class,
+
 
        // Collective\Html\HtmlServiceProvider::class,
       //  MaddHatter\LaravelFullcalendar\ServiceProvider::class,

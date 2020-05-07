@@ -2,9 +2,15 @@
 @section('content')
 <h1>Edit Filter</h1>
 	
+<form
+name="searchfilters"
+method="post"
+action="{{route('searchfilters.update',$filter->id}}">
+@csrf
+@method="patch"
 
-{{Form::open(array('route'=>['searchfilters.update',$filter->id], 'method' => 'PATCH'))}}
 @include('filters.partials._filterform')
-{{Form::submit('Edit Filter',array('class'=>'btn btn-primary'))}}
+<input type="submit" class="btn btn-primary">
+</form>
 @include('partials/_scripts')
 @endsection

@@ -11,18 +11,18 @@
     "require": {
         "php": ">=7.0.0",
         "algolia/algoliasearch-client-php": "^1.18",
-        "baum/baum": "~1.1",
+        "baum/baum": "2.0.0-alpha1",
         "bugsnag/bugsnag-laravel": "^2.4",
         
         "elasticsearch/elasticsearch": "^5.2",
-        "fabpot/goutte": "^3.1",
-        "guzzlehttp/guzzle": "~5.3|~6.0",
+        "fabpot/goutte": "~4.0",
+        "guzzlehttp/guzzle": "~6.0",
         "jeroendesloovere/vcard": "^1.5",
-        "laravel/framework": "^5.7.0",
+        "laravel/framework": "^6.0",
         "laravel/tinker": "^1.0",
-        "laravelcollective/html": "^5.3.0",
+        "laravelcollective/html": "^6.0",
         "maatwebsite/excel": "^3.1",
-        "maddhatter/laravel-fullcalendar": "^1.2",
+        
         
         "smalot/pdfparser": "^0.14.0",
         "toin0u/geocoder-laravel": "^4.0",
@@ -30,7 +30,7 @@
         "h4cc/wkhtmltopdf-amd64": "0.12.x",
         "nicolaslopezj/searchable": "1.*",
         "mccool/laravel-auto-presenter": "^7.0",
-        "askedio/laravel-soft-cascade": "5.6",
+        "askedio/laravel-soft-cascade": "^6.0",
         "fideloper/proxy": "^4.0",
         "jjaffeux/postmark-inbound-php": "^3.0",
         "lab404/laravel-impersonate": "^1.2",
@@ -47,16 +47,14 @@
         "morrislaptop/laravel-queue-clear": "^1.2"
     },
     "require-dev": {
-        "barryvdh/laravel-debugbar": "^3.2.5",
-        "fzaninotto/faker": "^1.4",
-        "mockery/mockery": "0.9.*",
-        "phpunit/phpunit": "^7.0",
-        "symfony/css-selector": "3.1.*",
-        "symfony/dom-crawler": "3.1.*",
-        "laracasts/generators": "^1.1",
-        "filp/whoops": "^2.0",
-        "beyondcode/laravel-dump-server": "^1.0",
-        "nunomaduro/collision": "^2.0"
+        "facade/ignition": "^1.4",
+        "fzaninotto/faker": "^1.9.1",
+        "laravel/ui": "^1.2",
+        "mockery/mockery": "^1.0",
+        "nunomaduro/collision": "^3.0",
+        "phpunit/phpunit": "^8.0",
+        "barryvdh/laravel-debugbar": "^3.2",
+        "laracasts/generators": "^1.1"
     },
     "autoload": {
         "files": [
