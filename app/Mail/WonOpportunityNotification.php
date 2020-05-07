@@ -14,6 +14,7 @@ class WonOpportunityNotification extends Mailable
 
 
     public $opportunity;
+    public $branchManager;
 
     /**
      * Create a new message instance.
@@ -33,9 +34,9 @@ class WonOpportunityNotification extends Mailable
     public function build()
     {
         
-        $replyTo = $this->_getBranchManagerDetails();
+        $this->branchManager = $this->_getBranchManagerDetails();
 
-        return $this->replyTo($replyTo)->markdown('emails.opportunities.won');
+        return $this->replyTo($this->branchManager)->markdown('emails.opportunities.won');
     }
 
     private function _getBranchManagerDetails()

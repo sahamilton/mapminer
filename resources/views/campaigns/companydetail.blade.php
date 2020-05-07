@@ -5,6 +5,6 @@
     <h4>{{$campaign->title}} Campaign</h4>
     
     <p>Active from {{$campaign->datefrom->format('Y-m-d')}} to {{$campaign->dateto->format('Y-m-d')}}</p>
-    <div class="warning">View under development</div>
+    @include('campaigns.partials._companycampaignsummarytable')
 </div>
 @endsection

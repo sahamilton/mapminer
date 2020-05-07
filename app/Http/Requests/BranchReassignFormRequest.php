@@ -25,9 +25,9 @@ class BranchReassignFormRequest extends FormRequest
      */
     public function rules()
     {
-
+        
         return [
-            'newbranch'=>'required_without:nearbranch|exists:branches,id',
+            'newbranch'=>'required_without:nearbranch',
             'nearbranch'=>'required_without:newbranch'
 
 
