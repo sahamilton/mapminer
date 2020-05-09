@@ -54,8 +54,7 @@
 
 		<div id="calendar"  class="card-body" >
 	
-			{!! $data['calendar']->calendar() !!}
-			{!! $data['calendar']->script() !!}
+			
 		</div>
 	</div>
 	 
@@ -81,5 +80,6 @@
 </div>
 </div>
 @include('partials._scripts')
+@include('partials._calendarscript')
 
 @endsection

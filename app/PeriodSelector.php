@@ -37,18 +37,18 @@ trait PeriodSelector
      */
     public function getPeriod($period=null)
     {
-        if (session('period')) {
-            $this->period = session('period');
-            return $this->period;
-        }
-        if ($period && method_exists($this, $period)) {
-            $this->period = $this->$period();
+       
+        if (! $period && session('period')) {
+            
+                $this->period = session('period');
+            
+        } elseif ($period && method_exists($this, $period)) {
+                $this->period = $this->$period(); 
+            
         } else {
-            $this->period = $this->thisWeek(); 
-            $this->period['period'] = $this->default;
+                $this->period['period'] = $this->default; 
+                
         }
-        
-
         session()->put('period', $this->period);
         return $this->period;
     }

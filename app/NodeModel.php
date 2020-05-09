@@ -6,7 +6,20 @@ use \Baum\Node;
 class NodeModel extends Node
 {
     
+    // 'parent_id' column name
+    protected $parentColumn = 'parent_id';
 
+      // 'lft' column name
+      protected $leftColumnName = 'lft';
+
+      // 'rgt' column name
+      protected $rightColumnName = 'rgt';
+
+      // 'depth' column name
+      protected $depthColumnName = 'depth';
+
+      // guard attributes from mass-assignment
+      protected $guarded = array('id', 'parent_id', 'lft', 'rgt', 'depth');
 
     public function isValid($data)
     {
@@ -96,15 +109,15 @@ class NodeModel extends Node
     }
     
     /*
-	 * Function export
-	 *
-	 * Create array of locations of logged in users watchlist
-	 *
-	 * @param fields arrary 
-	 *         data array (collection)
-	 *         filename string
-	 * @return (array) csv results
-	 */
+     * Function export
+     *
+     * Create array of locations of logged in users watchlist
+     *
+     * @param fields arrary 
+     *         data array (collection)
+     *         filename string
+     * @return (array) csv results
+     */
     public function export($fields, $data, $name = 'Export')
     {
         
@@ -153,15 +166,15 @@ class NodeModel extends Node
     
     
     /*
-	 * Function export
-	 *
-	 * Create array of locations of logged in users watchlist
-	 *
-	 * @param fields arrary 
-	 *         data array (collection)
-	 *         filename string
-	 * @return (array) csv results
-	 */
+     * Function export
+     *
+     * Create array of locations of logged in users watchlist
+     *
+     * @param fields arrary 
+     *         data array (collection)
+     *         filename string
+     * @return (array) csv results
+     */
     public function exportArray($fields, $data, $name = 'Export')
     {
         

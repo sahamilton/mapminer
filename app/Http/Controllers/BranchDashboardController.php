@@ -79,7 +79,7 @@ class BranchDashboardController extends DashboardController
      */
     public function index()
     {
-    
+        dd(82, 'hrere');
         if (session()->has('impersonated_by')) {
             session()->forget('branch');
         }
@@ -180,7 +180,6 @@ class BranchDashboardController extends DashboardController
         $this->myBranches = [$branch->id];
         $data = $this->_getDashBoardData();
     
-     
         return response()->view('branches.dashboard', compact('data', 'branch'));
 
     }
@@ -258,8 +257,8 @@ class BranchDashboardController extends DashboardController
      */
     private function _getUpcomingCalendar($activities)
     {
-       
-          return \Calendar::addEvents($activities);
+        return [];
+        //return \Calendar::addEvents($activities);
     }    
     /**
      * [_getActivities description]

@@ -119,7 +119,7 @@ class Person extends NodeModel implements HasPresenter
      * 
      * @return [type]        [description]
      */
-    public function managers($roles=null)
+    public function managers(Array $roles=null)
     {
         if (! $roles) {
             $roles = [14,6,7,3];

@@ -137,7 +137,7 @@ use Illuminate\Http\Request;
         Route::get('userlogin/{view?}', ['as'=>'admin.showlogins', 'uses'=>'Admin\AdminDashboardController@logins']);
         Route::get('userlogin/download/{view?}', ['as'=>'admin.downloadlogins', 'uses'=>'Admin\AdminDashboardController@downloadlogins']);
         Route::get('/', ['as'=>'dashboard', 'uses'=>'Admin\AdminDashboardController@dashboard']);
-
+        Route::post('dashboard/select', ['as'=>'dashboard.select', 'uses'=>'DashboardController@select']);
         //     Comments
         Route::get('comment/download', ['as'=>'comment.download', 'uses'=>'CommentsController@download']);
 

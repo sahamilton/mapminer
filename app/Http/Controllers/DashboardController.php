@@ -33,18 +33,30 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        if (auth()->user()->hasRole('national_account_manager')) {
-            return redirect()->route('namdashboard.index');
-        }
-        $branchCount = $this->dashboard->checkBranchCount();
-        
-        if ($branchCount > 1 or auth()->user()->hasRole('admin')) {
-            return redirect()->route('mgrdashboard.index');
-        } else {
+        $myRoles = auth()->user()->roles->pluck('name')->toArray();
+        $roles = ['national_account_manager', 'admin', 'branch_manager'];
+        $role = array_intersect($myRoles, $roles);
 
-            return redirect()->route('branchdashboard.index');
-        }
+        switch ($role[0]) {
+
+        case 'national_account_manager':
+            return redirect()->route('namdashboard.index');
+            break;
         
+        case 'branch_manager';
+            return redirect()->route('branchdashboard.index');
+            break;
+
+        case 'admin':
+            $managers = $this->_selectDashboard();
+            return response()->view('dashboard.select', compact('managers'));
+            break;
+
+        case 'default':
+            return redirect()->route('mgrdashboard.index');
+            break;
+
+        }       
 
 
     }
@@ -55,11 +67,33 @@ class DashboardController extends Controller
      * 
      * @return [type]         [description]
      */
-    public function show(Branch $branch)
+    public function select(Request $request)
     {
-       
-        $branch->load('manager');
-        return redirect()->route('branchdashboard.show',  $branch->id);
+        $manager = $this->person->with('userdetails.roles')->findOrFail(request('manager'));
+        
+        $role =  $manager->userdetails->roles->pluck('name')->toArray();
+        
+        switch ($role[0]) {
+
+        case 'national_account_manager':
+            return redirect()->route('namdashboard.index');
+            break;
+        
+        case 'branch_manager';
+        
+            return redirect()->route('branchdashboard.index');
+            break;
+
+        case 'admin':
+            $managers = $this->_selectDashboard();
+            return response()->view('dashboard.select', compact('managers'));
+            break;
+
+        case 'default':
+            return redirect()->route('mgrdashboard.index');
+            break;
+
+        }
         
     }
     /**
@@ -69,9 +103,9 @@ class DashboardController extends Controller
      * 
      * @return [type]           [description]
      */
-    public function select(Request $request)
+    public function show(Request $request)
     {
-        
+        dd(request()->all());
         $this->manager = $this->person->with('manages')
             ->findOrFail(request('manager'));
      
@@ -106,6 +140,11 @@ class DashboardController extends Controller
             ->whereIn('id', $this->myBranches)
             ->get(); 
 
+    }
+
+    private function _selectDashboard()
+    {
+        return $this->person->managers([3,4,6,7,9]);
     }
    
 }

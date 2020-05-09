@@ -11,7 +11,7 @@
     "require": {
         "php": ">=7.0.0",
         "algolia/algoliasearch-client-php": "^1.18",
-        "baum/baum": "2.0.0-alpha1",
+        "baum/baum": "v2.x-dev",
         "bugsnag/bugsnag-laravel": "^2.4",
         
         "elasticsearch/elasticsearch": "^5.2",
@@ -19,7 +19,7 @@
         "guzzlehttp/guzzle": "~6.0",
         "jeroendesloovere/vcard": "^1.5",
         "laravel/framework": "^6.0",
-        "laravel/tinker": "^1.0",
+        "laravel/tinker": "^2.0",
         "laravelcollective/html": "^6.0",
         "maatwebsite/excel": "^3.1",
         
@@ -48,11 +48,10 @@
     },
     "require-dev": {
         "facade/ignition": "^1.4",
-        "fzaninotto/faker": "^1.9.1",
-        "laravel/ui": "^1.2",
+        "fzaninotto/faker":"dev-master",
         "mockery/mockery": "^1.0",
         "nunomaduro/collision": "^3.0",
-        "phpunit/phpunit": "^8.0",
+        "phpunit/phpunit": "^8.5",
         "barryvdh/laravel-debugbar": "^3.2",
         "laracasts/generators": "^1.1"
     },

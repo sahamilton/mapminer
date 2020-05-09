@@ -10,18 +10,19 @@ class EventTransformer extends  Fractal\TransformerAbstract
     /**
      * [transform description]
      * 
-     * @param  Event  $event [description]
+     * @param  Activity  $activity [description]
      * 
      * @return [type]        [description]
      */
-    public function transform($event)
+    public function transform(Activity $activity)
     {
+   
         return [
-            'id'      => (int) $event->id,
-            'title'   => $event->address ? $event->address->businessname : 'No Name',
-            'type'    => $event->activityType ? $event->activityType->activity : 'Unknown',
-            'start'   => $event->activity_date,
-            'completed' => $event->completed ? '1' : '0',
+            'id'      => (int) $activity->id,
+            'title'   => $activity->relatesToAddress ? $activity->relatesToAddress->businessname : 'No Name',
+            'type'    => $activity->type ? $activity->type->activity : 'Unknown',
+            'start'   => $activity->activity_date,
+            'completed' => $activity->completed ? '1' : '0',
 
         ];
     }

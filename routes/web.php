@@ -95,7 +95,11 @@ Route::group(
         Route::post('branches/dashboard', ['as'=>'branches.dashboard', 'uses'=>'BranchDashboardController@selectBranch']);
         Route::get('manager/{person}/dashboard', ['as'=>'manager.dashboard', 'uses'=>'MgrDashboardController@manager']);
         Route::post('manager/dashboard', ['as'=>'dashboard.select', 'uses'=>'DashboardController@select']);
+        Route::get('dashboard', ['as'=>'dashboard', 'uses'=>'DashboardController@index']);
         Route::resource('branchdashboard', 'BranchDashboardController');
+        
+        Route::resource('calendar', 'CalendarController')->except(['show']);
+        Route::get('cal/{period}', ['as'=>'cal.month', 'uses'=>'CalendarController@getCalPeriod']);
         //   Manager Dashboard
         Route::resource('mgrdashboard', 'MgrDashboardController');
         Route::post('namdashboard/select', ['as'=>'namdashboard.select', 'uses'=>'NAMDashboardController@select']);
