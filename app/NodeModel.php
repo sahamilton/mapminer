@@ -6,7 +6,19 @@ use \Baum\Node;
 class NodeModel extends Node
 {
     
+    protected $parentColumn = 'parent_id';
 
+      // 'lft' column name
+    protected $leftColumnName = 'lft';
+
+      // 'rgt' column name
+    protected $rightColumnName = 'rgt';
+
+      // 'depth' column name
+    protected $depthColumnName = 'depth';
+
+      // guard attributes from mass-assignment
+    protected $guarded = array('id', 'parent_id', 'lft', 'rgt', 'depth');
 
     public function isValid($data)
     {

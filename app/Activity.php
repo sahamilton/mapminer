@@ -5,7 +5,7 @@ namespace App;
 use \Carbon\Carbon;
 
 
-class Activity extends Model implements \MaddHatter\LaravelFullcalendar\IdentifiableEvent
+class Activity extends Model 
 {
     use GeoCode, \Awobaz\Compoships\Compoships;
     protected $dates = ['activity_date','followup_date'];
