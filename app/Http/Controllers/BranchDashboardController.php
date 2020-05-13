@@ -79,7 +79,7 @@ class BranchDashboardController extends DashboardController
      */
     public function index()
     {
-        dd(82, 'hrere');
+        
         if (session()->has('impersonated_by')) {
             session()->forget('branch');
         }

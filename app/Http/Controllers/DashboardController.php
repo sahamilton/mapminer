@@ -103,12 +103,12 @@ class DashboardController extends Controller
      * 
      * @return [type]           [description]
      */
-    public function show(Request $request)
+    public function show(Branch $branch)
     {
-        dd(request()->all());
+        
         $this->manager = $this->person->with('manages')
-            ->findOrFail(request('manager'));
-     
+            ->findOrFail(auth()->user()->person->id);
+       
         $branchCount = $this->dashboard->checkBranchCount($this->manager);
         
         if ($branchCount > 1) {
