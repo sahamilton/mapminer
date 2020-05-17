@@ -951,4 +951,21 @@ class Person extends NodeModel implements HasPresenter
 
         return $this->findOrFail(config('mapminer.topdog'));
     }
+
+    public function inMyTeam(Person $person)
+    {
+        if (auth()->user()->hasRole('admin')) {
+            return true;
+        }
+        return $person->isDescendantOf(auth()->user()->person);
+    }
+
+    public function inMyAccounts(Company $company)
+    {
+        if (auth()->user()->hasRole('admin')) {
+            return true;
+        }
+        return auth()->user()->person->managesAccount->contains('id', $company->id);
+
+    }
 }

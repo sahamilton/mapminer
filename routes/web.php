@@ -105,6 +105,10 @@ Route::group(
         Route::post('namdashboard/select', ['as'=>'namdashboard.select', 'uses'=>'NAMDashboardController@select']);
         Route::resource('namdashboard', 'NAMDashboardController');
         //   Dashboard
+        Route::get('newdashboard', ['as'=>'newdashboard', 'uses'=>'NewDashboardController@index']);
+        Route::get('newdashboard/{company}/company', ['as'=>'newdashboard.company', 'uses'=>'NewDashboardController@showCompany']);
+        Route::get('newdashboard/{person}/manager', ['as'=>'newdashboard.manager', 'uses'=>'NewDashboardController@showManager']);
+        
         Route::resource('dashboard', 'DashboardController');
         // Branch Next Week View
         Route::resource('branchsummary', 'BranchSummaryController');

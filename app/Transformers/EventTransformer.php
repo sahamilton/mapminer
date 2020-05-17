@@ -1,7 +1,8 @@
 <?php
 
-namespace App;
+namespace App\Transfomers;
 
+use App\Activity;
 use Illuminate\Database\Eloquent\Model;
 use League\Fractal;
 

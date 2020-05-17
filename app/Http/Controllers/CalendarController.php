@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
    
 use \Fractal;
-use App\EventTransformer;
+use App\Transformers\EventTransformer;
 use App\Activity;
 use Illuminate\Http\Request;
 use Redirect,Response;

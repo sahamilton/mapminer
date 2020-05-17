@@ -4,7 +4,7 @@ namespace App;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
-class Campaign extends Model implements \MaddHatter\LaravelFullcalendar\IdentifiableEvent
+class Campaign extends Model 
 {
     use GeoCode;
     public $fillable = ['title', 'description', 'datefrom', 'dateto', 'created_by', 'manager_id', 'status'];

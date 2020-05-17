@@ -46,7 +46,7 @@ trait PeriodSelector
                 $this->period = $this->$period(); 
             
         } else {
-                $this->period['period'] = $this->default; 
+                $this->period = $this->thisWeek(); 
                 
         }
         session()->put('period', $this->period);
