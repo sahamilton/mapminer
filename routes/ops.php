@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
         Route::get('/', ['as'=>'ops', 'uses'=>'Admin\AdminDashboardController@dashboard']);
         
         //   Activity types
-            Route::resource('activitytype', 'ActivityTypeController');
+        Route::resource('activitytype', 'ActivityTypeController');
            //     AccountTypes
         Route::resource('accounttype', 'AccounttypesController');
         //   Address

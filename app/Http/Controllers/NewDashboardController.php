@@ -6,17 +6,24 @@ use App\Person;
 use App\Campaign;
 use App\Company;
 use App\ActivityType;
-
+use App\Chart;
+use App\Activity;
+use App\PeriodSelector;
 use Illuminate\Http\Request;
 
 class NewDashboardController extends Controller
 {
+    use PeriodSelector;
+    public $activity;
     public $branch;
     public $person;
     public $company;
+    public $chart;
     public $campaign;
-    public $period;
+    
     public $fields = [
+                    "unassigned_leads",
+                    "active_leads",
                     "supplied_leads",
                     "offered_leads",
                     "worked_leads",
@@ -30,13 +37,23 @@ class NewDashboardController extends Controller
                     "open_value",
                 ];
 
-    public function __construct(Branch $branch, Campaign $campaign, Company $company, Person $person) 
-    {
+    public function __construct(
+        Activity $activity,
+        Branch $branch, 
+        Campaign $campaign, 
+        Chart $chart,
+        Company $company, 
+        Person $person
+    ) {
+        $this->activity = $activity;
         $this->branch = $branch;
         $this->campaign = $campaign;
+        $this->chart = $chart;
         $this->company = $company;
         $this->person = $person;
-        $this->period = $this->branch->getPeriod('lastMonth');
+        
+    
+        
     }
     /**
      * Display a listing of the resource.
@@ -50,10 +67,7 @@ class NewDashboardController extends Controller
         switch($roles[0]) {
         // check role
         case 'NAM':
-            if (! $nam = $this->person->has('managesAccount')
-                    ->with('managesAccount')
-                    ->find(auth()->user()->person->id)
-                ) {
+            if (! $nam = $this->_getNamAccounts()) {
                 return redirect()->back()->withMessage('You are not assigned to any companies');
             } 
             $company = $nam->managesAccount->first();
@@ -84,7 +98,13 @@ class NewDashboardController extends Controller
             break;     
         } 
     }
-
+    private function _getNamAccounts()
+    {
+        return $this->person->has('managesAccount')
+                ->with('managesAccount')
+                ->find(auth()->user()->person->id);
+                
+    }
     public function show(Person $manager)
     {
        
@@ -106,7 +126,30 @@ class NewDashboardController extends Controller
         return redirect()->back()->withError('You are not assigned to ' . $branch->branchname. ' branch');
         
     }
-   
+    public function showLeads(Person $person)
+    {
+        
+        $person->load('userdetails.roles');
+        if (in_array('national_account_manager', $person->userdetails->roles->pluck('name')->toArray())) {
+            $fields = [
+                    'unassigned_leads',
+                    'top_25leads',
+                    'open_leads',
+                    'new_leads',
+                    'active_leads'
+                ];
+
+            $companies = $this->_getNAMDashboard($person, $fields);
+            $period = $this->period;
+            $type="Leads";
+
+            return response()->view('dashboards.namcompanydashboard', compact('person', 'companies', 'fields', 'period', 'type'));
+        }
+        dd($person->userdetails->roles->pluck('name')->toArray());
+        //depending on roles get leads
+        // is this person you or in your team
+        // else )
+    }
     public function showManager(Person $person)
     {
         
@@ -114,12 +157,23 @@ class NewDashboardController extends Controller
 
             $myBranches = $this->branch->whereIn('id', $person->getMyBranches())->get();
             if ($person->userdetails->hasRole(['national_account_manager'])) {
-                
-                if (! $companies = $this->_getNAMDashboard($person)) {
+                $fields = [
+                    'top_25opportunities', 
+                    'won_opportunities',
+                    'won_value', 
+                    'lost_opportunities', 
+                    'open_opportunities',
+                    'active_opportunities',
+                    'active_value',
+                    'open_leads',
+                    'unassigned_leads', 
+                    'active_leads'
+                ];
+                if (! $companies = $this->_getNAMDashboard($person, $fields)) {
                     return redirect()->back()->withError($person->fullName() . ' is not assigned to any accounts');
                 } 
                 $data = $this->_getNAMChartData($companies);
-                
+              
                 $period = $this->period;
                 return response()->view('dashboards.namdashboard', compact('companies', 'person', 'period', 'data'));
 
@@ -145,9 +199,10 @@ class NewDashboardController extends Controller
 
     public function showCompany(Company $company)
     {
+        
         if ($this->_isValidCompany($company)) {
             $branches = $this->_getCompanyDashboard($company);
-            
+           
             $person = $company->load('managedBy')->managedBy;
             $period = $this->period;
             $fields = $this->fields;
@@ -159,36 +214,42 @@ class NewDashboardController extends Controller
 
    
 
-    public function setPeriod(Request $request)
+   /* public function setPeriod(Request $request)
     {
         
-        $this->period = $this->branch->setPeriod($request);
+        $this->period = $this->activity->setPeriod(request('period'));
         
         session(['period'=>$this->period]);
-    }
+
+        return redirect()->back();
+    }*/
 
     public function setBranch(Request $request)
     {
         $this->branch = $this->branch->findOrFail(request('branch'));
         session(['branch'=>$this->branch->id]);
+        return redirect()->back();
     }
 
     public function setManager(Request $request)
     {
         $this->manager = $this->person->findOrFail(request('manager'));
         session(['manager'=> $this->manager->id]);
+        return redirect()->back();
     }
 
     public function setCompany(Request $request)
     {
         $this->company = $this->company->findOrFail(request('company'));
         session(['company'=>$this->company->id]);
+        return redirect()->back();
     }
 
     public function setCampaign(Request $request)
     {
         $this->campaign = $this->campaign->findOrFail(request('campaign'));
         session(['campaign'=>$this->campaign->id]);
+        return redirect()->back();
     }
 
     private function _isValidBranch()
@@ -222,19 +283,21 @@ class NewDashboardController extends Controller
         dd(198, $person);
     }
 
-    private function _getNAMDashboard(Person $person)
+    private function _getNAMDashboard(Person $person,array $fields)
     {
-    
+        if (! $this->period) {
+            $this->period = $this->getPeriod();
+        }
         $person->load('managesAccount');
 
         if ($person->managesAccount->count() >0 ) {
-                $fields = ['Top25', 'won_opportunities', 'lost_opportunities', 'open_opportunities', 'open_leads', 'active_leads'];
+                
                 $accounts = $person->managesAccount->pluck('id')->toArray();
                 return $this->company
-                    ->pipeline()
+                    
                     ->activitySummary($this->period)
                     ->opportunitySummary($this->period, $fields)
-                    ->leadSummary($this->period, $fields )
+                    ->leadSummary($this->period, $fields)
                     ->whereIn('id', $accounts)->get();
         }
         return false;
@@ -250,6 +313,9 @@ class NewDashboardController extends Controller
      */
     private function _getCompanyDashboard(Company $company)
     { 
+        if (! $this->period) {
+            $this->period = $this->getPeriod();
+        }
         // id branches that have assigned leads for this company
         $branches = $company->assigned->map(
             function ($address) {
@@ -257,7 +323,7 @@ class NewDashboardController extends Controller
             }
         );
         $branch_ids = array_unique($branches->flatten()->toArray());
-        
+       
         return $this->branch->summaryCompanyStats($this->period, [$company->id])
             ->whereIn('id', $branch_ids)->get();
         
@@ -265,31 +331,139 @@ class NewDashboardController extends Controller
     private function _getNAMChartData($companies)
     {
         $data['team']['activitytypechart'] = $this->_getActivityChartData($companies);
+        $data['team']['leadstypechart'] = $this->_getLeadsTypeChartData($companies);
+        $data['team']['winratiochart']['chart'] = $this->_getWinLossChartData($companies);
+        $data['team']['opportunitytypechart'] = $this->_getOpportunityTypeChartData($companies);
 
         return $data;
     }
     private function _getActivityChartData($companies)
     {
         $activityTypes = ActivityType::all();
-        $data['labels'] = $companies->pluck('companyname')->toArray();
-       
-        foreach ($companies as $company) {
-           
-            foreach ($activityTypes as $type) {
-                $field = str_replace(" ", "_", $type->activity);
-                
+        
+        $data['labels'] = implode("','", $companies->pluck('companyname')->toArray());
+
+        foreach ($activityTypes as $type) {
+            $field = str_replace(" ", "_", $type->activity);
+            $data['data'][$type->activity]['color'] = $type->color;
+            $data['data'][$type->activity]['labels'] = $data['labels'];
+            $codata = [];
+            foreach ($companies as $company) {
                 if (isset($company->$field)) {
-                    $data[$company->companyname]['data'][$field] = $company->$field;
-                    $data[$company->companyname]['color'][$field] = $type->color;
+                    $codata[] = $company->$field;
+                    
+                } else {
+                    $codata[]  = 0;
                 }
+                
             }
+            $data['data'][$type->activity]['data'] = implode(",", $codata);
 
         }
+        
         return $data;
 
+    }
+    private function _getWinLossChartData($companies)
+    {
+        $data['keys'] = "'". implode("','", $companies->pluck('companyname')->toArray())."'";
+        $codata = null;
+        foreach ($companies as $company) {
+            if (($company->won_opportunities + $company->lost_opportunities) > 0) {
+                //dd($company->won_opportunities / ($company->won_opportunities + $company->lost_opportunities));
+                $codata.= ($company->won_opportunities / ($company->won_opportunities + $company->lost_opportunities) ) * 100 .",";
+            } else {
+                $codata.= '0,';
+                    
+            }
+            
+        }
+        $data['data']=rtrim($codata,',');
+
+        return $data;
+    }
+    private function _getOpportunityTypeChartData($companies)
+    {
+        $data['labels'] = "'". implode("','", $companies->pluck('companyname')->toArray())."'";
+        $codata = null;
+        $fields = ['open_opportunities', 'top_25opportunities'];
+        $colors = $this->chart->createColors(count($fields));
+        $n = 0;
+
+        foreach ($fields as $field) {
+            $data['data'][$field]['color'] = $colors[$n];
+            $data['data'][$field]['labels'] = $data['labels'];
+            $n++;
+            $codata = [];
+            foreach ($companies as $company) {
+                switch ($field) {
+                case 'open_opportunities':
+                    $codata[] = $company->$field - $company->top_25opportunities;
+                    break;
+                
+                default:
+                    if (isset($company->$field)) {
+                        $codata[] = $company->$field;
+                        
+                    } else {
+                            $codata[]  = 0;
+                    }
+                    break;
+                }
+
+
+            }
+            $data['data'][$field]['data'] = implode(",", $codata);
+        }
+       
+       
+        return $data;
+    }
+    private function _getLeadsTypeChartData($companies)
+    {
+        // we need open leads, active leads, 
+        $data['labels'] = implode("','", $companies->pluck('companyname')->toArray());
+        $fields = ['stale', 'active_leads','unassigned_leads'];
+        $colors = $this->chart->createColors(count($fields));
+        $n = 0;
+
+        foreach ($fields as $field) {
+            $data['data'][$field]['color'] = $colors[$n];
+            $data['data'][$field]['labels'] = $data['labels'];
+            $n++;
+            $codata = [];
+            foreach ($companies as $company) {
+                
+                switch ($field) {
+
+                case 'stale':
+                    $codata[] = $company->open_leads - $company->active_leads;
+                    break;
+
+                default:
+                    if (isset($company->$field)) {
+                        $codata[] = $company->$field;
+                        
+                    } else {
+                            $codata[]  = 0;
+                    }
+
+                    break;
+
+                }
+                
+            }      
+            $data['data'][$field]['data'] = implode(",", $codata);
+           
+        }
+        
+      
+        return $data;
     }
     private function _getCampaignDashboard(Campaign $campaign)
     {
         dd(208, $campaign);
     }
+
+   
 }

@@ -40,6 +40,8 @@ class Company extends NodeModel
                 "won_opportunities",
                 "lost_opportunities",
                 "open_opportunities",
+                "active_opportunities",
+                "active_value",
                 "won_value",
                 "open_value",
                 "lost_value"];
@@ -320,9 +322,65 @@ class Company extends NodeModel
         }
         $this->fields = $fields;
         $this->period = $period;
-  
+    
         
         return $query->when(
+            in_array('unassigned_leads', $this->fields), function ($q) {
+                $q->withCount(       
+                    [
+                        'locations as unassigned_leads'=>function ($query) {
+
+                            $query->whereDoesntHave('assignedToBranch')
+                                ->orWhereHas(
+                                    'assignedToBranch', function ($q1) {
+                                        $q1->where('address_branch.created_at', '>', $this->period['to']);
+                                    }
+                                );
+                                
+                           
+                        }
+                    ]
+                );
+            }
+        )
+        ->when(
+            in_array('top_25leads', $this->fields), function ($q) {
+
+                $q->withCount(       
+                    [
+                        'locations as top_25leads'=>function ($query) {
+
+                            $query->WhereHas(
+                                'assignedToBranch', function ($q1) {
+                                    $q1->where('top50',  1);
+                                }
+                            );
+                                
+                           
+                        }
+                    ]
+                );
+            }
+        )
+        ->when(
+            in_array('new_leads', $this->fields), function ($q) {
+                $q->withCount(       
+                    [
+                        'locations as new_leads'=>function ($query) {
+
+                            $query->WhereHas(
+                                'assignedToBranch', function ($q1) {
+                                    $q1->whereBetween('address_branch.created_at',  [$this->period['to'], $this->period['from']]);
+                                }
+                            );
+                                
+                           
+                        }
+                    ]
+                );
+            }
+        )
+        ->when(
             in_array('supplied_leads', $this->fields), function ($q) {
                 $q->withCount(       
                     [
@@ -381,18 +439,16 @@ class Company extends NodeModel
                 );
             }
         )->when(
+            // note that this and touched leads should return the same
+            // consider merging.
             in_array('active_leads', $this->fields), function ($q) {
                 $q->withCount(       
                     [
                         'locations as active_leads'=>function ($query) {
                             $query->whereHas(
-                                'assignedToBranch', function ($q) {
-                                    $q->where('status_id', '>', 1);
-                                }
-                            )
-                            ->whereHas(
                                 'activities', function ($q1) {
-                                    $q1->whereBetween('activity_date', [$this->period['from'], $this->period['to']]);
+                                    $q1->whereBetween('activity_date', [$this->period['from'], $this->period['to']])
+                                        ->where('completed', 1);
                                 }
                             );
                         }
@@ -508,10 +564,48 @@ class Company extends NodeModel
                 );
             }
         )->when(
-            in_array('Top25', $this->fields), function ($q) {
+            in_array('active_opportunities', $this->fields), function ($q) {
                 $q->withCount(       
                     [
-                        'opportunities as Top25'=>function ($query) {
+                        'opportunities as active_opportunities'=>function ($query) {
+                            $query->whereClosed(0)        
+                                ->OrWhere(
+                                    function ($q) {
+                                        $q->where('actual_close', '>', $this->period['to'])
+                                            ->orwhereNull('actual_close');
+                                    }
+                                )->has('currentlyActive')
+                                
+                                ->where('opportunities.created_at', '<=', $this->period['to']);
+                        }
+                    ]
+                );
+            }
+        )
+        ->when(
+            in_array('active_value', $this->fields), function ($q) {
+                $q->withCount(       
+                    [
+                        'opportunities as active_value'=>function ($query) {
+                            $query->select(\DB::raw("SUM(value) as active_value"))
+                                ->whereClosed(0)        
+                                ->OrWhere(
+                                    function ($q) {
+                                        $q->where('actual_close', '>', $this->period['to'])
+                                            ->orwhereNull('actual_close');
+                                    }
+                                )
+                                ->has('currentlyActive')
+                                ->where('opportunities.created_at', '<=', $this->period['to']);
+                        }
+                    ]
+                );
+            }
+        )->when(
+            in_array('top_25opportunities', $this->fields), function ($q) {
+                $q->withCount(       
+                    [
+                        'opportunities as top_25opportunities'=>function ($query) {
                             $query->where('opportunities.Top25',  1)
                                 ->whereClosed(0)        
                                 ->OrWhere(
@@ -529,7 +623,7 @@ class Company extends NodeModel
             in_array('Top25value', $this->fields), function ($q) {
                 $q->withCount(       
                     [
-                        'opportunities as Top25'=>function ($query) {
+                        'opportunities as Top25value'=>function ($query) {
                             $query->select(\DB::raw("SUM(value) as Top25value"))
                                 ->where('opportunities.Top25',  1)
                                 ->where(

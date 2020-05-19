@@ -30,8 +30,7 @@
                     {{$company->$field}}
                 </td>
                 @endif
-                @php 
-                $totals[$field] = isset($totals[$field]) ? $totals[$field] + $company->$field : $company->$field  @endphp
+                
             </td>
             @endforeach
             
@@ -43,14 +42,14 @@
         
         <th>Totals:</th>
         @foreach ($fields as $field)
-          
+                
                 @if(strpos($field,'value'))
                     <td class="text-right"> 
-                       ${{number_format(isset($totals[$field]) ? $totals[$field] : 0,0)}}
+                       ${{number_format($companies->sum($field),0)}}
                    </td>
                 @else
                      <td class="text-center"> 
-                        {{number_format(isset($totals[$field]) ? $totals[$field] : 0,0)}}
+                        {{number_format($companies->sum($field),0)}}
                     </td>
                 @endif
         

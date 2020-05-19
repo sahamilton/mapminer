@@ -1,5 +1,5 @@
 <script>
-{{dd($data['team']['activitytypechart'])}}
+
 
 var numberWithCommas = function(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -11,15 +11,16 @@ var activityTypeChart = new Chart(ctb,
     resize:true,
 
     data:{
-      labels: ['{!!  implode(",",$data['team']['activitytypechart']['labels']) !!}'],
+      labels: ['{!!  $data['team']['activitytypechart']['labels'] !!}'],
       datasets: [
-       @foreach ($data['team']['activitytypechart'] as $key=>$value) 
+       @foreach ($data['team']['activitytypechart']['data'] as $key=>$value) 
        
         {
+          
           label: '{!! $key !!}',
           data: [{{$value['data']}}],
-          backgroundColor:'{{$value['color']}}',
-      },
+          backgroundColor:'#{{$value['color']}}',
+        },
       @endforeach      
      ]
     },

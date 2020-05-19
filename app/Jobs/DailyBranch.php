@@ -44,8 +44,8 @@ class DailyBranch
      */
     public function handle()
     {
-        $class= str_replace("App\Jobs\\", "", get_class($this));
-        $this->report = Report::where('job', $class)->with('distribution')->firstOrFail();
+        
+        $this->report = Report::where('job', 'DailyBranch')->with('distribution')->firstOrFail();
         
         foreach ($this->report->distribution as $recipient) {
             $this->file = "/public/reports/". strtolower(Str::slug($recipient->person->fullName()." ".$this->report->filename ." ". $this->period['from']->format('Y-m-d'), '_')). ".xlsx";

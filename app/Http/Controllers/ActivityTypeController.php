@@ -46,6 +46,7 @@ class ActivityTypeController extends Controller
      */
     public function store(Request $request)
     {
+        
         $type = $this->activitytype->create(request()->except('_token'));
         return redirect()->route('activitytype.index')->withSuccess("New Activity Type Created");
     }
@@ -90,6 +91,7 @@ class ActivityTypeController extends Controller
      */
     public function update(Request $request, ActivityType $activityType)
     {
+        
         $activityType->update(request()->except('_token'));
         return redirect()->route('activitytype.index')->withSuccess("Activity Type Updated");
     }
