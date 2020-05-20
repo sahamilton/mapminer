@@ -4,6 +4,7 @@
     <h2>{{$person->fullName()}}'s Account Dashboard</h2>
     @include('dashboards.partials._periodselector')
     @include('dashboards.partials._namsummary')
+   
     <div class="row">
         <div style="width: 40%;float:right;border:solid 1px #aaaaaa;margin:5px;">
             <h4><a href="">Open Opportunities</a></h4>
@@ -11,9 +12,9 @@
             @include('charts._openopportunitytypechart')
         </div>
         <div style="width: 40%;float:right;border:solid 1px #aaaaaa;margin:5px;margin-left:5px">
-            <h4>Win Loss %</h4>
-            <canvas id="ctw" width="300" height="300" style="float-right"></canvas>
-            @include('charts._winlosschart')
+            <h4>Opportuntiy Value</h4>
+            <canvas id="ctopportunitiesvalue" width="300" height="300" style="float-right"></canvas>
+            @include('charts._openopportunityvaluechart')
         </div>
     </div>
     <div class="row">

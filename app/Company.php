@@ -501,6 +501,7 @@ class Company extends NodeModel
 
     public function scopeOpportunitySummary($query, $period, $fields = null)
     {
+    
         if (! $fields) {
             $fields = $this->opportunityFields;
         }
@@ -620,11 +621,11 @@ class Company extends NodeModel
                 );
             }
         )->when(
-            in_array('Top25value', $this->fields), function ($q) {
+            in_array('top_25value', $this->fields), function ($q) {
                 $q->withCount(       
                     [
-                        'opportunities as Top25value'=>function ($query) {
-                            $query->select(\DB::raw("SUM(value) as Top25value"))
+                        'opportunities as top_25value'=>function ($query) {
+                            $query->select(\DB::raw("SUM(value) as top25_value"))
                                 ->where('opportunities.Top25',  1)
                                 ->where(
                                     function ($q) {
@@ -677,7 +678,7 @@ class Company extends NodeModel
                     [
                         'opportunities as open_value' => function ($q) {
                             $q->where('opportunities.created_at', '<=', $this->period['to'])
-                                ->select(\DB::raw("SUM(value) as openvalue"))
+                                ->select(\DB::raw("SUM(value) as open_value"))
                                 ->where(
                                     function ($q) {
                                         $q->whereClosed(0)

@@ -135,8 +135,10 @@ class NewDashboardController extends Controller
                     'unassigned_leads',
                     'top_25leads',
                     'open_leads',
+                    'open_value',
                     'new_leads',
-                    'active_leads'
+                    'active_leads',
+                    'active_value'
                 ];
 
             $companies = $this->_getNAMDashboard($person, $fields);
@@ -159,6 +161,7 @@ class NewDashboardController extends Controller
             if ($person->userdetails->hasRole(['national_account_manager'])) {
                 $fields = [
                     'top_25opportunities', 
+                    'top_25value',
                     'won_opportunities',
                     'won_value', 
                     'lost_opportunities', 
@@ -166,6 +169,7 @@ class NewDashboardController extends Controller
                     'active_opportunities',
                     'active_value',
                     'open_leads',
+                    'open_value',
                     'unassigned_leads', 
                     'active_leads'
                 ];
@@ -353,8 +357,9 @@ class NewDashboardController extends Controller
     {
         $data['team']['activitytypechart'] = $this->_getActivityChartData($companies);
         $data['team']['leadstypechart'] = $this->_getLeadsTypeChartData($companies);
-        $data['team']['winratiochart']['chart'] = $this->_getWinLossChartData($companies);
+        //$data['team']['winratiochart']['chart'] = $this->_getWinLossChartData($companies);
         $data['team']['opportunitytypechart'] = $this->_getOpportunityTypeChartData($companies);
+        $data['team']['opportunityvaluechart'] = $this->_getOpportunityValueChartData($companies);
 
         return $data;
     }
@@ -422,6 +427,42 @@ class NewDashboardController extends Controller
                     $codata[] = $company->$field - $company->top_25opportunities;
                     break;
                 
+                default:
+                    if (isset($company->$field)) {
+                        $codata[] = $company->$field;
+                        
+                    } else {
+                            $codata[]  = 0;
+                    }
+                    break;
+                }
+
+
+            }
+            $data['data'][$field]['data'] = implode(",", $codata);
+        }
+       
+       
+        return $data;
+    }
+    private function _getOpportunityValueChartData($companies)
+    {
+        $data['labels'] = "'". implode("','", $companies->pluck('companyname')->toArray())."'";
+        $codata = null;
+        $fields = ['open_value', 'top_25value', 'active_value'];
+        $colors = $this->chart->createColors(count($fields));
+        $n = 0;
+
+        foreach ($fields as $field) {
+            $data['data'][$field]['color'] = $colors[$n];
+            $data['data'][$field]['labels'] = $data['labels'];
+            $n++;
+            $codata = [];
+            foreach ($companies as $company) {
+                switch ($field) {
+               /* case 'open_value':
+                    $codata[] = $company->open_value - ($company->top_25value + $company->active_value);
+                    break; */           
                 default:
                     if (isset($company->$field)) {
                         $codata[] = $company->$field;
