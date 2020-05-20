@@ -255,4 +255,44 @@ class Chart extends Model
         return $chart;
 
     }
+
+    public function createColors($num)
+    {
+        $colors=[];
+        $int = 0;
+        // value must be between [0, 510]
+        for ($int; $int<$num; $int++) {
+            $i = 1/$num + ($int*(1/$num));
+            $value = min(max(0, $i), 1) * 508;
+            if ($value < 255) {
+                $greenValue = 255;
+                $redValue = sqrt($value) * 16;
+                $redValue = round($redValue);
+            } else {
+                $redValue = 255;
+                $value = $value - 255;
+                $greenValue = 256 - ($value * $value / 255);
+                $greenValue = round($greenValue);
+            }
+            
+            $colors[$int]= "#" .  $this->_decToHex($redValue). $this->_decToHex($greenValue) . "00";
+        }
+        return $colors;
+    }
+
+    /**
+     * [_decToHex description]
+     * 
+     * @param [type] $value [description]
+     * 
+     * @return [type]        [description]
+     */
+    private function _decToHex($value)
+    {
+        if (strlen(dechex($value))<2) {
+            return "0".dechex($value);
+        } else {
+            return dechex($value);
+        }
+    }
 }

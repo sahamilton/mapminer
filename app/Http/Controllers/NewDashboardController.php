@@ -201,11 +201,18 @@ class NewDashboardController extends Controller
     {
         
         if ($this->_isValidCompany($company)) {
-            $branches = $this->_getCompanyDashboard($company);
+            $fields = [
+                'open_leads',
+                'top_25leads',
+                'active_leads',
+                
+                
+            ];
+            $branches = $this->_getCompanyDashboard($company, $fields);
            
             $person = $company->load('managedBy')->managedBy;
             $period = $this->period;
-            $fields = $this->fields;
+            
             return response()->view('dashboards.nambranchdashboard', compact('branches', 'person', 'period', 'fields', 'company'));
         }
         return redirect()->back()->witherror($company->companyname . ' is not one of your assigned accounts');
@@ -283,7 +290,7 @@ class NewDashboardController extends Controller
         dd(198, $person);
     }
 
-    private function _getNAMDashboard(Person $person,array $fields)
+    private function _getNAMDashboard(Person $person, array $fields)
     {
         if (! $this->period) {
             $this->period = $this->getPeriod();
@@ -311,7 +318,7 @@ class NewDashboardController extends Controller
      * 
      * @return colelction      [description]
      */
-    private function _getCompanyDashboard(Company $company)
+    private function _getCompanyDashboard(Company $company, array $fields)
     { 
         if (! $this->period) {
             $this->period = $this->getPeriod();
@@ -323,8 +330,8 @@ class NewDashboardController extends Controller
             }
         );
         $branch_ids = array_unique($branches->flatten()->toArray());
-       
-        return $this->branch->summaryCompanyStats($this->period, [$company->id])
+        
+        return $this->branch->companyLeadSummary($this->period, [$company->id], $fields)
             ->whereIn('id', $branch_ids)->get();
         
     }
