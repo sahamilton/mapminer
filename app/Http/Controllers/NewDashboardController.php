@@ -218,8 +218,22 @@ class NewDashboardController extends Controller
         return redirect()->back()->witherror($company->companyname . ' is not one of your assigned accounts');
         
     }
-
-   
+    /**
+     * [showCompanyBranch description]
+     * 
+     * @param  Company $company [description]
+     * @param  Branch  $branch  [description]
+     * 
+     * @return [type]           [description]
+     */
+    public function showCompanyBranch(Company $company, Branch $branch)
+    {
+        $this->period = $this->getPeriod();
+        // check that user can see this company
+        // check that user can see this branch
+        $branch = $this->branch->companyDetail($company, $this->period)->findOrFail($branch->id);
+        dd($branch);
+    }
 
    /* public function setPeriod(Request $request)
     {

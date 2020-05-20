@@ -6,7 +6,7 @@
         <th>Branch</th>
         <th>Branch Name</th>
         @foreach ($fields as $field)
-        <th>{{ucwords(str_replace("_"," ", $field))}}</th>
+        <th><a href="" style="color: #000000">{{ucwords(str_replace("_"," ", $field))}}</a></th>
         @endforeach
     </thead>
     <tbody>
@@ -17,7 +17,7 @@
         <tr>
             <td>
                 <a 
-                href="">
+                href="{{route('newdashboard.branchdetail', [$company->id, $branch->id])}}">
                 {{$branch->id}}
                 </a>
             </td>
