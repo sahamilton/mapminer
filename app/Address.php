@@ -580,8 +580,117 @@ class Address extends Model
             ->get();
     }
 
-    public function scopeUnassigned($query)
+    public function scopeUnassigned($query, $period=null)
     {
-        return $query->whereDoesntHave('assignedToBranch');
+        return $query->whereDoesntHave('assignedToBranch')
+            ->when(
+                $period, function ($q1) use ($period) {
+                    $q1->orWhereHas(
+                        'assignedToBranch', function ($q1) {
+                            $q1->where('address_branch.created_at', '>', $this->period['to']);
+                        }
+                    );
+                }
+            );
+    }
+
+    public function scopeTop25($query, $period=null)
+    {
+        return $query->whereHas(
+            'assignedToBranch', function ($q1) {
+                $q1->where('top50',  1);
+            }
+        )->when(
+            $period,  function ($q) use ($period) {
+                $q->where('address_branch.created_at', '>=', $this->period['to']);
+            }
+        );
+         
+    }
+
+    public function scopeNewLeads($query, $period)
+    {
+        return $query->whereHas(
+            'assignedToBranch', function ($q1) use ($period) {
+                $q1->whereBetween('address_branch.created_at',  [$period['to'], $period['from']]);
+            }
+        );
+         
+    }
+
+    public function scopeSuppliedLeads($query, $period)
+    {
+        return $query->whereHas(
+            'assignedToBranch', function ($q) use ($period) {
+                $q->where('address_branch.created_at', '<=', $period['to']);
+            }
+        );
+    }
+
+    public function scopeOpenLeads($query, $period)
+    {
+        return $query->whereHas(
+            'assignedToBranch', function ($q1) use ($period) {
+                $q1->where('status_id', 2)
+                    ->where('address_branch.created_at', '>=', $period['to']);
+            }
+        );
+    }
+
+    public function scopeOfferedLeads($query, $period)
+    {
+        return $query->whereHas(
+            'assignedToBranch', function ($q) use ($period) {
+                $q->where('status_id', 1)
+                    ->whereBetween('address_branch.created_at', [$period['from'], $period['to']]);
+            }
+        );
+    }
+
+    public function scopeWorkedLeads($query, $period)
+    {
+        return $query->whereHas(
+            'assignedToBranch', function ($q) use ($period) {
+                $q->where('status_id', 2)
+                    ->where('address_branch.created_at', '<=', $period['to']);
+            }
+        );
+    }
+
+    public function scopeActiveLeads($query, $period)
+    {
+        return $query->whereHas(
+            'activities', function ($q) use ($period) {
+                $q->whereBetween('activity_date', [$period['from'], $period['to']])
+                    ->where('completed', 1);
+            }
+        );
+    }
+
+    public function scopeTouchedLeads($query, $period)
+    {
+        return $query->whereHas(
+            'assignedToBranch', function ($q) use ($period) {
+                $q->where('status_id', '>', 1)
+                    ->whereBetween('address_branch.created_at', [$period['from'], $period['to']]);
+            }
+        )
+        ->whereHas(
+            'activities', function ($q) use ($period) {
+                $q->whereBetween('activity_date', [$period['from'], $period['to']]);
+            }
+        );
+    }
+
+    public function scopeRejectedLeads($query, $period)
+    {
+        return $query->whereHas(
+            'assignedToBranch', function ($q) use ($period) {
+                $q->where('status_id', 4)
+                    ->whereBetween('address_branch.created_at', [$period['from'], $period['to']])
+                    ->whereDoesntHave('opportunities')
+                    ->whereDoesntHave('activities');
+            }
+        );
     }
 }

@@ -48,9 +48,18 @@ class Branch extends Model implements HasPresenter
         'position'
     ];
 
-    public $activityFields;
+    
     public $company_ids;
 
+    public $activityFields = [
+            '4'=>'Sales Appointment',
+            '5'=>'Stop By',
+            '7'=>'Proposal',
+            '10'=>'Site Visit',
+            '13'=>'Log a call',
+            '14'=>'In Person'
+
+    ];
     public $leadFields = [
             'open_leads',
             'active_leads',
@@ -62,17 +71,19 @@ class Branch extends Model implements HasPresenter
             
         ];
     public $opportunityFields = [
-                "new_opportunities",
-                "Top25",
-                "Top25value",
-                "won_opportunities",
-                "lost_opportunities",
-                "open_opportunities",
                 "active_opportunities",
+                "lost_opportunities",
+                "new_opportunities",
+                "open_opportunities",
+                "top25_opportunities",
+                "won_opportunities",
                 "active_value",
-                "won_value",
+                "lost_value",
+                "new_value",
                 "open_value",
-                "lost_value"];
+                "top25_value",
+                "won_value"
+                ];
 
     protected $guarded = [];
     public $errors;
@@ -859,76 +870,152 @@ class Branch extends Model implements HasPresenter
         return $data;
     }
 
-    public function scopeSummaryBranchOpportunities($query, array $period)
+    public function scopeSummaryOpportunities($query, array $period, array $fields=null)
     {
         $this->period = $period;
+        if (! $fields) {
+            $fields = $this->opportunityFields;
+        }
+        /*
+                "active_opportunities",
+                "lost_opportunities",
+                "new_opportunities",
+                "open_opportunities",
+                "top25_opportunities",
+                "won_opportunities",
+                "active_value",
+                "lost_value",
+                "new_value",
+                "open_value",
+                "top25_value",
+                "won_value"
 
-        return $query->withCount( 
-            [
-            'opportunities as open'=>function ($query) {
-                $query        
-                    ->where(
-                        function ($q) {
-                            $q->where('actual_close', '>', $this->period['to'])
-                                ->orwhereNull('actual_close');
-                        }
-                    )->where('opportunities.created_at', '<=', $this->period['to']);
-            },
-            'opportunities as openvalue' => function ($query) {
-                $query->select(\DB::raw("SUM(value) as openvalue"))
-                    ->where(
-                        function ($q) {
-                            $q->where('actual_close', '>', $this->period['to'])
-                                ->orwhereNull('actual_close');
-                        }
-                    )
-                ->where('opportunities.created_at', '<=', $this->period['to']);
-            },
-            'opportunities as won'=>function ($query) {
-                $query->whereClosed(1)        
-                    ->where(
-                        function ($q) {
-                            $q->whereBetween('actual_close', [$this->period['from'], $this->period['to']]);
-                        }
-                    )->where('opportunities.created_at', '<=', $this->period['to']);
-            },
-            'opportunities as wonvalue' => function ($query) {
-                $query->whereClosed(1)
-                    ->select(\DB::raw("SUM(value) as wonvalue"))
-                    ->where(
-                        function ($q) {
+         */
+        $this->fields = $fields;
+        return $query
+            ->when(
+                in_array('active_opportunities', $this->fields), function ($q) {
+                    $q->withCount( 
+                        [
+                            'opportunities as active_opportunities'=>function ($query) {
+                                $query->currentlyActive($this->period);
+                            }
+                        ]
+                    );
+                }
+            )
+            ->when(
+                in_array('lost_opportunities', $this->fields), function ($q) {
+                    $q->withCount( 
+                        [
+                            'opportunities as lost_opportunities'=>function ($query) {
+                                $query->lost($this->period);
+                            }
+                        ]
+                    );
+                }
+            )
+           
+            ->when(
+                in_array('new_opportunities', $this->fields), function ($q) {
+                    $q->withCount( 
+                        [
+                            'opportunities as new_opportunities'=>function ($query) {
+                                $query->newOpportunities($this->period);
+                            }
+                        ]
+                    );
+                }
+            )
+            ->when(
+                in_array('open_opportunities', $this->fields), function ($q) {
+                    $q->withCount( 
+                        [
+                            'opportunities as open_opportunities'=>function ($query) {
+                                $query->open($this->period);
+                            }
+                        ]
+                    );
+                }
+            )
+            ->when(
+                in_array('top25_opportunities', $this->fields), function ($q) {
+                    $q->withCount( 
+                        [
+                            'opportunities as top25_opportunities'=>function ($query) {
+                                $query->top25($this->period);
+                            }
+                        ]
+                    );
+                }
+            )
+            ->when(
+                in_array('won_opportunities', $this->fields), function ($q) {
+                    $q->withCount( 
+                        [
+                            'opportunities as won_opportunities'=>function ($query) {
+                                $query->won($this->period);
 
-                            $q->whereBetween('actual_close', [$this->period['from'], $this->period['to']]);
-                        }
-                    )
-                ->where('opportunities.created_at', '<=', $this->period['to']);
-            }, 
-            'opportunities as lost'=>function ($query) {
-                $query->whereClosed(2)        
-                    ->where(
-                        function ($q) {
-                            $q->whereBetween('actual_close', [$this->period['from'], $this->period['to']]);
-                        }
-                    )->where('opportunities.created_at', '<=', $this->period['to']);
-            },
-            'opportunities as lostvalue' => function ($query) {
-                $query->whereClosed(2)
-                    ->select(\DB::raw("SUM(value) as lostvalue"))
-                    ->where(
-                        function ($q) {
-                            $q->where('actual_close', '>', now())
-                                ->orwhereNull('actual_close');
-                        }
-                    )
-                ->where('opportunities.created_at', '<=', $this->period['to']);
-            },
-            'opportunities as created'=>function ($query) {
-                $query->whereBetween('opportunities.created_at', [$this->period['from'],$this->period['to']]);
-            }
-            ]
-        );
-
-
+                            }
+                        ]
+                    );
+                }
+            )
+            ->when(
+                in_array('active_value', $this->fields), function ($q) {
+                    $q->withCount( 
+                        [
+                            'opportunities as active_value' => function ($query) {
+                                $query->activeValue($this->period);
+                            }
+                        ]
+                    );
+                }
+            )
+            ->when(
+                in_array('lost_value', $this->fields), function ($q) {
+                    $q->withCount( 
+                        [
+                            'opportunities as lost_value' => function ($query) {
+                                $query->lostValue($this->period);
+                            }
+                        ]
+                    );
+                }
+            )
+            ->when(
+                in_array('new_value', $this->fields), function ($q) {
+                    $q->withCount( 
+                        [
+                            'opportunities as new_value'=>function ($query) {
+                                $query->newValue($this->period);
+                            }
+                        ]
+                    );
+                }
+            )
+            ->when(
+                in_array('open_value', $this->fields), function ($q) {
+                    $q->withCount( 
+                        [
+                            'opportunities as open_value' => function ($query) {
+                                $query->openValue($this->period);
+                            }
+                        ]
+                    );
+                }
+            )
+            ->when(
+                in_array('won_value', $this->fields), function ($q) {
+                    $q->withCount( 
+                        [
+                            'opportunities as won_value' => function ($query) {
+                                $query->wonValue($this->period);
+                            }
+                        ]
+                    );
+                }
+            );
 
     }
     /**
@@ -1725,17 +1812,7 @@ class Branch extends Model implements HasPresenter
                                     $q1->whereIn('company_id', $this->company_ids);
 
                                 }
-                            )
-                            ->select(\DB::raw("SUM(value) as active_value"))
-                                ->whereClosed(0)        
-                                ->OrWhere(
-                                    function ($q) {
-                                        $q->where('actual_close', '>', $this->period['to'])
-                                            ->orwhereNull('actual_close');
-                                    }
-                                )
-                                ->has('currentlyActive')
-                                ->where('opportunities.created_at', '<=', $this->period['to']);
+                            )->activeValue($this->period);
                         }
                     ]
                 );
@@ -1751,16 +1828,8 @@ class Branch extends Model implements HasPresenter
                                     $q1->whereIn('company_id', $this->company_ids);
 
                                 }
-                            )
-                            ->where('opportunities.Top25',  1)
-                                ->whereClosed(0)        
-                                ->OrWhere(
-                                    function ($q) {
-                                        $q->where('actual_close', '>', $this->period['to'])
-                                            ->orwhereNull('actual_close');
-                                    }
-                                )
-                            ->where('opportunities.created_at', '<=', $this->period['to']);
+                            )->top25($this->period);
+                           
                         }
                     ]
                 );
@@ -1776,16 +1845,7 @@ class Branch extends Model implements HasPresenter
                                     $q1->whereIn('company_id', $this->company_ids);
 
                                 }
-                            )
-                            ->select(\DB::raw("SUM(value) as Top25value"))
-                                ->where('opportunities.Top25',  1)
-                                ->where(
-                                    function ($q) {
-                                        $q->where('actual_close', '>', $this->period['to'])
-                                            ->orwhereNull('actual_close');
-                                    }
-                                )
-                            ->where('opportunities.created_at', '<', $this->period['to']);
+                            )->top25Value($this->period);
                         }
                     ]
                 );
@@ -1802,12 +1862,7 @@ class Branch extends Model implements HasPresenter
                                     $q1->whereIn('company_id', $this->company_ids);
 
                                 }
-                            )
-                            ->select(\DB::raw("SUM(value) as wonvalue"))
-                                ->whereClosed(1)
-                                ->whereBetween(
-                                    'actual_close', [$this->period['from'], $this->period['to']]
-                                );
+                            )->wonValue($this->period);
                                 
                            
                         }
@@ -1826,12 +1881,7 @@ class Branch extends Model implements HasPresenter
                                     $q1->whereIn('company_id', $this->company_ids);
 
                                 }
-                            )
-                            ->select(\DB::raw("SUM(value) as wonvalue"))
-                                ->whereClosed(2)
-                                ->whereBetween(
-                                    'actual_close', [$this->period['from'], $this->period['to']]
-                                );
+                            )->lostValue($this->period);
                                 
                            
                         }
@@ -1849,20 +1899,7 @@ class Branch extends Model implements HasPresenter
                                     $q1->whereIn('company_id', $this->company_ids);
 
                                 }
-                            )
-                            ->where('opportunities.created_at', '<=', $this->period['to'])
-                                ->select(\DB::raw("SUM(value) as openvalue"))
-                                ->where(
-                                    function ($q) {
-                                        $q->whereClosed(0)
-                                            ->orWhere(
-                                                function ($q) {
-                                                    $q->where('actual_close', '>', $this->period['to'])
-                                                        ->orwhereNull('actual_close');
-                                                }
-                                            );
-                                    }
-                                );
+                            )->openValue($this->period);
                         }
                     ]
                 );
@@ -1870,6 +1907,33 @@ class Branch extends Model implements HasPresenter
         );
 
     }
+
+    public function scopeActivitySummary($query, array $period, array $fields=null)
+    {
+        if (! $fields) {
+            $fields = $this->activityFields;
+        }
+
+        $this->period = $period;
+        $this->fields = $fields;
+        
+        return $query->with(
+            [
+                'activities'=>function ($q) {
+                    $q->whereHas(
+                        'type', function ($q1) {
+                            $q1->whereIn('activity', $this->fields);
+                        }
+                    )->completed()
+                        ->periodActivities($this->period)
+                        ->typeCount();
+                }
+            ]
+        );
+    }
+    
+
+
     public function scopeCompanyActivitySummary($query, array $period, array $fields=null)
     {
         if (! $fields) {

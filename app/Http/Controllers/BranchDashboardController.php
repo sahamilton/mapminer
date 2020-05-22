@@ -286,7 +286,7 @@ class BranchDashboardController extends DashboardController
         return $this->activity->whereIn('branch_id', $this->myBranches)
             ->periodActivities($this->period)
             ->completed()
-            ->typeCount()
+            ->typeDayCount()
             ->get();
        
     }

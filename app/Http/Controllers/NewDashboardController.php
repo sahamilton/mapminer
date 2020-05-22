@@ -120,6 +120,7 @@ class NewDashboardController extends Controller
      */
     public function showBranch(Branch $branch)
     {
+       
         if ($this->_isValidBranch($branch)) {
             return $this->_getBranchDashboard($branch->id);
         } 
@@ -183,7 +184,9 @@ class NewDashboardController extends Controller
 
             } elseif ($myBranches->count()==1) {
                 
-                return $this->_getBranchDashboard($myBranches->first());
+                $branch = $this->_getBranchDashboard($myBranches->first());
+                dd($branch);
+                //return response()->view(, compact('branch'))
 
             } elseif ($myBranches->count() >1) {
                 
@@ -236,7 +239,7 @@ class NewDashboardController extends Controller
         // check that user can see this company
         // check that user can see this branch
         $branch = $this->branch->companyDetail($company, $this->period)->findOrFail($branch->id);
-        dd($branch);
+        return response()->view('branches.dashboard', compact('data', 'branch'));
     }
 
    /* public function setPeriod(Request $request)
@@ -300,7 +303,13 @@ class NewDashboardController extends Controller
 
     private function _getBranchDashboard(Branch $branch)
     {
-        dd(193, $branch);
+        $this->perdiod = $this->getPeriod();
+        return $this->branch
+            ->SummaryStats($this->period)
+            ->with('manager', 'manager.reportsTo', 'upcomingActivities')
+            
+            ->whereIn('id', [$branch->id])
+            ->get();
     }
 
     private function _getManagerBranchDashboard(Person $person)
@@ -449,7 +458,7 @@ class NewDashboardController extends Controller
     {
         $data['labels'] = "'". implode("','", $companies->pluck('companyname')->toArray())."'";
         $codata = null;
-        $fields = ['open_value', 'top_25value', 'active_value'];
+        $fields = ['top_25value', 'active_value', 'stale_value'];
         $colors = $this->chart->createColors(count($fields));
         $n = 0;
 
@@ -460,9 +469,9 @@ class NewDashboardController extends Controller
             $codata = [];
             foreach ($companies as $company) {
                 switch ($field) {
-               /* case 'open_value':
-                    $codata[] = $company->open_value - ($company->top_25value + $company->active_value);
-                    break; */           
+                case 'stale_value':
+                    $codata[] = $company->open_value - $company->active_value;
+                    break;            
                 default:
                     if (isset($company->$field)) {
                         $codata[] = $company->$field;

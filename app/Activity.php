@@ -219,7 +219,7 @@ class Activity extends Model
      * 
      * @return [type]         [description]
      */
-    public function scopeTypeCount($query)
+    public function scopeTypeDayCount($query)
     {
 
         return $query->selectRaw("DATE_FORMAT(`activity_date`,'%Y-%m-%d') as day,`activitytype_id`,count(activities.id) as activities")
@@ -228,6 +228,17 @@ class Activity extends Model
             ->orderBy('day');
             
     }
+    public function scopeTypeCount($query)
+    {
+        return $query->selectRaw("activity_type.activity,count(activities.id) as activities")
+            ->leftJoin('activity_type', 'activities.activitytype_id', '=', 'activity_type.id')
+           
+            ->groupBy(['activity_type.activity'])
+            ->orderBy('activitytype_id');
+
+    }
+
+    
 
     /**
      * [scopeSevenDayTypeCount description]

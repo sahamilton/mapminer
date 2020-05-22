@@ -412,7 +412,7 @@ class ActivityController extends Controller
         return $this->activity->whereIn('branch_id', [$branch->id])
             ->periodActivities($this->period)
             ->completed()
-            ->typeCount()
+            ->typeDayCount()
             ->get();
     }
     /**
